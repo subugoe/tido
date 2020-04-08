@@ -1,6 +1,8 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
+const path = require('path')
+
 module.exports = function (ctx) {
   return {
     // app boot file (/src/boot)
@@ -42,7 +44,16 @@ module.exports = function (ctx) {
       //            (not treeshaking Quasar; biggest bundle size; convenient)
       all: 'auto',
 
-      components: [],
+      components: [
+        'QHeader',
+        'QLayout',
+        'QPageContainer',
+        'QPage',
+        // 'QRouteTab',
+        'QSplitter',
+        // 'QTabs',
+        'QToolbar',
+      ],
       directives: [],
 
       // Quasar plugins
@@ -67,6 +78,11 @@ module.exports = function (ctx) {
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
+        cfg.resolve.alias = {
+          ...cfg.resolve.alias, // This adds the existing alias
+
+          '@': path.resolve(__dirname, './src/'),
+        },
         cfg.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
