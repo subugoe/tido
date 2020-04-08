@@ -1,0 +1,78 @@
+cache:
+  paths:
+  - node_modules/
+
+stages:
+  - build
+  - deploy
+
+build:
+  image: node:latest
+  stage: build
+  script:
+   - yarn
+   - yarn run build
+  artifacts:
+    paths:
+     - dist/
+
+pages:
+  image: node:latest
+  only:
+    - master
+    - develop
+  stage: deploy
+  script:
+   - cp --remove-destination --recursive dist/* public
+  artifacts:
+    paths:
+     - public
+
+production:
+  image: node:latest
+  only:
+    - master
+  stage: deploy
+  script:
+   - yarn
+   - yarn run build
+   - mkdir emo-viewer && mv dist/js/* emo-viewer/
+  artifacts:
+    expire_in: 5 yrs
+    paths:
+     - emo-viewer
+
+# when a git flow release is made, a tag will be pushed starting this job. it
+# will keep the resulting artifact from the job declared in `JOB_NUMBER_TO_PRESERVE`
+# and it will set up a Gitlab release at the repo. therefore the merge message starting
+# at the release branch should be written in markdown, using a backslash as escape character
+# `\` before `#`.
+release:
+  image: docker.gitlab.gwdg.de/fontane-notizbuecher/build:latest
+  stage: deploy
+  only:
+    - tags
+  variables:
+    JOB_NUMBER_TO_PRESERVE: 1
+  script:
+    # it is also possible to query for a job name by altering the jq filter
+    - 'curl --output jobs.json --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/pipelines/$CI_PIPELINE_ID/jobs"'
+    - CI_JOB_TARGET=$(jq ".[$((JOB_NUMBER_TO_PRESERVE - 1))].id" < jobs.json)
+    - echo $CI_JOB_TARGET
+    # keep artifact (release will link there)
+    - 'curl --request POST --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/jobs/$CI_JOB_TARGET/artifacts/keep"'
+    # create release data
+    # parse commit message (markdown, lines starting with “\”)
+    - MARKDOWN=$(echo "$CI_COMMIT_MESSAGE" | sed 's=^\\==g')
+    # prepare the json file
+    - 'jq
+      ".name = \"$CI_PROJECT_PATH $CI_COMMIT_TAG\" |
+      .tag_name = \"$CI_COMMIT_TAG\" |
+      .description = \"$MARKDOWN\" |
+      .assets.links[0].name = \"package\" |
+      .assets.links[0].url = \"https://gitlab.gwdg.de/$CI_PROJECT_PATH/-/jobs/$CI_JOB_TARGET/artifacts/download\"
+      " < .gitlab/gitlab-release.json.tmpl > gitlab-release.json'
+    - 'curl --header "Content-Type: application/json" --header "PRIVATE-TOKEN: $GITLAB_TOKEN" --data @gitlab-release.json --request POST $CI_API_V4_URL/projects/$CI_PROJECT_ID/releases'
+  artifacts:
+    paths:
+      - gitlab-release.json
