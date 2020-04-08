@@ -3,7 +3,6 @@
     <button
       :class="[ css['nav-arrow'], css['nav-arrow--left'] ]"
       :title="titleprev"
-      v-html="previous()"
       :disabled="itemindex <= 0"
       @click="
         --itemindex;
@@ -12,12 +11,13 @@
         updateMetadata(sequenceindex);
         updateTreeNodes(sequenceindex);"
       >
+      <img height="24" width="24" src="~assets/icons/arrow-alt-left--normal.svg" />
+      <span aria-hidden="true">{{ captionprev }}</span>
     </button>
 
     <button
       :class="[ css['nav-arrow'], css['nav-arrow--right'] ]"
       :title="titlenext"
-      v-html="next()"
       :disabled="itemindex >= itemurls.length - 1"
       @click="
         ++itemindex;
@@ -26,6 +26,8 @@
         updateMetadata(sequenceindex);
         updateTreeNodes(sequenceindex);"
       >
+      <span aria-hidden="true">{{ captionnext }}</span>
+      <img height="24" width="24" src="~assets/icons/arrow-alt-right--normal.svg" />
     </button>
   </div>
 </template>
@@ -40,14 +42,6 @@ export default {
     return {
       css: cssmap,
     };
-  },
-  methods: {
-    previous() {
-      return `${this.vectors['arrow-alt-left']}<span aria-hidden="true">${this.captionprev}</span>`;
-    },
-    next() {
-      return `<span aria-hidden="true">${this.captionnext}</span>${this.vectors['arrow-alt-right']}`;
-    },
   },
   computed: {
     captionprev() {
