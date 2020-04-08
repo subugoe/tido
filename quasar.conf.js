@@ -13,7 +13,8 @@ module.exports = function (ctx) {
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
-      'app.scss'
+      // 'app.scss'
+      'emo-quasar.css'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -32,7 +33,7 @@ module.exports = function (ctx) {
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
-      iconSet: 'material-icons', // Quasar icon set
+      // iconSet: 'material-icons', // Quasar icon set
       lang: 'en-us', // Quasar language pack
 
       // Possible values for "all":
@@ -44,20 +45,12 @@ module.exports = function (ctx) {
       //            (not treeshaking Quasar; biggest bundle size; convenient)
       all: 'auto',
 
-      components: [
-        'QHeader',
-        'QLayout',
-        'QPageContainer',
-        'QPage',
-        // 'QRouteTab',
-        'QSplitter',
-        // 'QTabs',
-        'QToolbar',
-      ],
-      directives: [],
+      // components: [],
+      // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [],
+      cssAddon: true
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie

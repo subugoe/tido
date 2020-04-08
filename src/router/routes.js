@@ -1,18 +1,8 @@
-//
-// const routes = [
-//   {
-//     path: '/',
-//     component: () => import('layouts/MainLayout.vue'),
-//     children: [
-//       { path: '', component: () => import('pages/Index.vue') },
-//     ],
-//   },
-// ];
 const routes = [
   {
     path: '/',
     name: 'EmoViewer',
-    component: () => import('layouts/EmoViewer.vue'),
+    component: () => import('src/EmoViewer.vue'),
   },
 ];
 // Always leave this as last one
