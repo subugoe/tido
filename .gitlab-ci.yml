@@ -18,9 +18,10 @@ build:
 
 pages:
   image: node:latest
-  only:
-    - master
-    - develop
+# at the very early stage lets deploy for every branch
+#  only:
+#    - master
+#    - develop
   stage: deploy
   script:
    - cp --remove-destination --recursive dist/* public
