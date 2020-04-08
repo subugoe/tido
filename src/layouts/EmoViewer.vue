@@ -97,7 +97,7 @@ export default {
           this.collection = data;
           this.label = this.getLabel(data);
 
-          data.sequence.map(seq => this.getManifest(seq.id));
+          data.sequence.map((seq) => this.getManifest(seq.id));
         });
     },
     getConfig() {
@@ -121,7 +121,7 @@ export default {
           this.manifests.push(data);
           this.tree.push({ label: data.label, nodes: data.sequence });
 
-          data.sequence.map(seq => this.itemurls.push(seq.id));
+          data.sequence.map((seq) => this.itemurls.push(seq.id));
           // make sure that urls are set just once on init
           if (!this.itemurl) {
             this.itemurl = data.sequence[0].id;

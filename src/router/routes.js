@@ -11,8 +11,8 @@
 const routes = [
   {
     path: '/',
-    name: 'TwinView',
-    component: () => import('@/pages/quasar-twinview.vue'),
+    name: 'EmoViewer',
+    component: () => import('layouts/EmoViewer.vue'),
   },
 ];
 // Always leave this as last one

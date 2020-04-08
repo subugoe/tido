@@ -10,8 +10,8 @@ build:
   image: node:latest
   stage: build
   script:
-   - yarn
-   - yarn run build
+   - npm install
+   - npm run build
   artifacts:
     paths:
      - dist/
@@ -34,8 +34,8 @@ production:
     - master
   stage: deploy
   script:
-   - yarn
-   - yarn run build
+   - npm install
+   - npm run build
    - mkdir emo-viewer && mv dist/js/* emo-viewer/
   artifacts:
     expire_in: 5 yrs
