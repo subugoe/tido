@@ -10,8 +10,8 @@ build:
   image: node:latest
   stage: build
   script:
-   - npm install
-   - npm run build
+   - npm install --global @quasar/cli
+   - quasar build
   artifacts:
     paths:
      - dist/
@@ -28,7 +28,7 @@ pages:
     paths:
      - public
 
-production:
+.production:
   image: node:latest
   only:
     - master
@@ -47,7 +47,7 @@ production:
 # and it will set up a Gitlab release at the repo. therefore the merge message starting
 # at the release branch should be written in markdown, using a backslash as escape character
 # `\` before `#`.
-release:
+.release:
   image: docker.gitlab.gwdg.de/fontane-notizbuecher/build:latest
   stage: deploy
   only:
