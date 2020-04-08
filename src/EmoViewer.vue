@@ -196,7 +196,7 @@ export default {
   },
   created() {
     this.getConfig();
-    this.getVectors();
+    // this.getVectors();
 
     this.init();
 
