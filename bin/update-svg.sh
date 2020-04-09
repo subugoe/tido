@@ -10,7 +10,7 @@ usage() {
 [ $# -ge 1 ] && usage
 
 SOURCE_PATH="node_modules/frontend-templating/src/icon/"
-[ $# -eq 0 ] && TARGET_PATH="src/assets/icons/" || TARGET_PATH=$1
+TARGET_PATH="src/statics/icons/"
 
 declare -a SVG=(\
 	"angle-double-right--light.svg"\

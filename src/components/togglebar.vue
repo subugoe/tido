@@ -7,7 +7,7 @@
         :title="toggleTitle(idx)"
         @click="updateStatus(idx);"
         >
-        <img style="height: 24px; width: 24px;" :src="toggleIcon(idx)" />`;
+        <img style="height: 24px; width: 24px;" :src="toggleIcon(idx)" />
         <span aria-hidden="true">{{ name }}</span>
       </button>
     </li>
