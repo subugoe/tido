@@ -26,7 +26,6 @@ export default {
   name: 'Togglebar',
   props: {
     status: Object,
-    vectors: Object,
   },
   data() {
     return {

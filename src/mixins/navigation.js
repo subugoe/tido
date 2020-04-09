@@ -2,7 +2,6 @@ export default {
   props: {
     itemurls: Array,
     manifests: Array,
-    vectors: Object,
   },
   data() {
     return {

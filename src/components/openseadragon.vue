@@ -19,7 +19,6 @@ export default {
   name: 'OpenSeadragon',
   props: {
     imageurl: String,
-    vectors: Object,
   },
   data() {
     return {

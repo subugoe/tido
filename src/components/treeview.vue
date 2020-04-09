@@ -9,7 +9,9 @@
       ]"
       @click="clicked = !clicked;"
       >
-      <div class="tree__icon" v-html="vectors['caret-right']"></div>
+      <div class="tree__icon">
+        <img style="height: 16px; width: 16px;" src="statics/icons/caret-right--light.svg" />
+      </div>
       <div class="tree__text">{{ label }}</div>
     </button>
 
@@ -24,17 +26,15 @@
           ]"
           @click="clicked = !clicked;"
           >
-          <div
-            :class="['tree__icon', clicked ? 'tree__icon--active' : '']"
-            v-html="vectors['caret-right']"
-            >
+          <div :class="['tree__icon', clicked ? 'tree__icon--active' : '']">
+            <img style="height: 16px; width: 16px;" src="statics/icons/caret-right--light.svg" />
           </div>
           <div class="tree__text tree__text--2">{{ label }}</div>
         </button>
 
         <div v-else>
           <ul class="tree-data-item__list">
-            <li class="tree__data-item" v-html="dataItem"></li>
+            <li class="tree__data-item">{{ dataItem }}</li>
           </ul>
         </div>
       </li>
@@ -57,9 +57,7 @@
           :label="node.label ? node.label : node.id"
           :manifests="manifests"
           :tree="node.nodes"
-          :vectors="vectors"
-        >
-        </Treeview>
+        />
       </div>
     </div>
   </nav>
@@ -75,7 +73,6 @@ export default {
     label: String,
     manifests: Array,
     tree: [Array, Object],
-    vectors: Object,
   },
   data() {
     return {
@@ -107,11 +104,11 @@ export default {
     },
     dataItem() {
       if (this.isactive) {
-        return `${this.vectors['angle-double-right']}
+        return `<img style="height: 16px; width: 16px;" src="statics/icons/angle-double-right--light.svg" />
           <span class="tree__data-item--active">${this.label}</span>`;
       }
       return `<button class="item-with-icon">
-                ${this.vectors['angle-right']}
+                <img style="height: 16px; width: 16px;" src="statics/icons/angle-right--light.svg" />
                   <span>${this.label}</span>
               </button>`;
     },

@@ -4,28 +4,16 @@
       :collection="collection"
       :itemurl="itemurl"
       :manifests="manifests"
-      :vectors="vectors"
-      >
-    </Infobar>
+    />
 
     <div class="sub-viewer-1__nav">
-      <Togglebar
-        :status="status"
-        :vectors="vectors"
-        >
-      </Togglebar>
+      <Togglebar :status="status" />
 
-      <Navbar
-        :itemurls="itemurls"
-        :manifests="manifests"
-        :vectors="vectors"
-        >
-      </Navbar>
+      <Navbar :itemurls="itemurls" :manifests="manifests" />
     </div>
 
-
     <div style="overflow: hidden; position: relative;">
-      <div v-if="status.treeview" class="panel">
+      <div v-if="status.treeview" style="float: left; width: 25%;">
         <Toolbar heading="Treeview" />
         <q-separator />
 
@@ -36,12 +24,10 @@
           :label="label"
           :manifests="manifests"
           :tree="tree"
-          :vectors="vectors"
-          >
-        </Treeview>
+        />
       </div>
 
-      <div v-if="status.text" class="panel">
+      <div v-if="status.text" style="float: left; width: 25%;">
         <Toolbar heading="Text" />
         <q-separator />
 
@@ -49,31 +35,21 @@
           :key="itemurl"
           :itemurl="itemurl"
           :request="request"
-          >
-        </Content>
+        />
       </div>
 
-      <div v-if="status.image && imageurl" class="panel">
+      <div v-if="status.image && imageurl" style="float: left; width: 25%;">
         <Toolbar heading="Image" />
         <q-separator />
 
-        <OpenSeadragon
-          :key="imageurl"
-          :imageurl="imageurl"
-          :vectors="vectors"
-          >
-        </OpenSeadragon>
+        <OpenSeadragon :key="imageurl" :imageurl="imageurl" />
       </div>
 
-      <div v-if="status.metadata && manifests.length" class="panel">
+      <div v-if="status.metadata && manifests.length" style="float: left; width: 25%;">
         <Toolbar heading="Metadata" />
         <q-separator />
 
-        <Metadata
-          :collection="collection"
-          :manifests="manifests"
-          >
-        </Metadata>
+        <Metadata :collection="collection" :manifests="manifests" />
       </div>
     </div>
   </div>
@@ -130,7 +106,6 @@ export default {
         'skip-forward',
         'undo--normal',
       ],
-      vectors: {},
     };
   },
   methods: {
@@ -182,7 +157,7 @@ export default {
         });
     },
     getVectors() {
-      const path = '/#/src/assets/icons/';
+      const path = 'statics/icons/';
 
       this.vectornames.forEach((svg) => {
         this.request(`${path}${svg}.svg`, 'text')
@@ -199,8 +174,6 @@ export default {
   },
   created() {
     this.getConfig();
-    this.getVectors();
-
     this.init();
 
     this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
@@ -221,10 +194,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="css">
-.panel {
-  float: left;
-  width: 25%;
-}
-</style>
