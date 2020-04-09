@@ -5,7 +5,8 @@
         v-for="(btn, idx) in buttons" :key="idx"
         class="image__interact-button"
         :id="btn.id"
-        ><img style="height: 24px; width: 24px;" :src="btn.svg" />
+        >
+        <img :src="btn.svg" :alt="btn.id" />
       </button>
     </nav>
   </figure>
