@@ -6,7 +6,7 @@
         class="image__interact-button"
         :id="btn.id"
         >
-        <img :src="btn.svg" :alt="btn.id" />
+        <img style="height: 24px; width: 24px;" :src="btn.svg" />
       </button>
     </nav>
   </figure>

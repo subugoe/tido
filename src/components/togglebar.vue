@@ -7,14 +7,14 @@
         :title="toggleTitle(idx)"
         @click="updateStatus(idx);"
         >
-        <img style="height: 24px; width: 24px;" :src="toggleIcon(idx)" />
+        <img style="height: 16px; width: 16px;" :src="toggleIcon(idx)" />
         <span aria-hidden="true">{{ name }}</span>
       </button>
     </li>
 
     <li>
       <button class="sub-viewer-1-reset" title="Reset Tabs" @click="resetPanelStatus();">
-        <img style="height: 24px; width: 24px;" src="statics/icons/undo--normal.svg" />
+        <img style="height: 16px; width: 16px;" src="statics/icons/undo--normal.svg" />
         <span aria-hidden="true">{{ 'Reset Tabs' | capitalize }}</span>
       </button>
     </li>
