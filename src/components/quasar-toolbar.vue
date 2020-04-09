@@ -1,5 +1,5 @@
 <template>
-  <q-toolbar class="bg-grey-3 sticky">
+  <q-toolbar class="bg-grey-3">
     <q-toolbar-title class="text-bold">
       {{ heading | capitalize }}
     </q-toolbar-title>
@@ -22,11 +22,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="css">
-  .sticky {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0px;
-  }
-</style>
