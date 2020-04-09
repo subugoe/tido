@@ -1,6 +1,13 @@
 <template>
   <div class="sub-viewer-1__info">
-    <div v-html="breadcrumbs"></div>
+    <!-- <div v-html="breadcrumbs"></div> -->
+    <div>
+      {{ cutstring(collectiontitle) }}
+      <img style="height: 32px; width: 32px;" src="statics/icons/angle-right--light.svg" />
+      {{ cutstring(manifesttitle) }}
+      <img style="height: 32px; width: 32px;" src="statics/icons/angle-right--light.svg" />
+      {{ cutstring(itemurl) }}
+    </div>
   </div>
 </template>
 
@@ -24,16 +31,13 @@ export default {
         + this.vectors['angle-right']
         + this.cutstring(this.manifesttitle)
         + this.vectors['angle-right']
-        + this.cutstring(this.itemlabel);
+        + this.cutstring(this.itemurl);
     },
     collectiontitle() {
       return this.collection.title ? this.collection.title[0].title : 'Manifest';
     },
     manifesttitle() {
       return this.manifests[this.sequenceindex].label;
-    },
-    itemlabel() {
-      return this.itemurl.replace(/.*(\d)+\/(\d)+.*/, 'Item $1-$2');
     },
   },
   methods: {

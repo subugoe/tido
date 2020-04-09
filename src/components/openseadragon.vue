@@ -5,8 +5,7 @@
         v-for="(btn, idx) in buttons" :key="idx"
         class="image__interact-button"
         :id="btn.id"
-        v-html="btn.svg"
-        >
+        ><img style="height: 24px; width: 24px;" :src="btn.svg" />
       </button>
     </nav>
   </figure>
@@ -24,10 +23,10 @@ export default {
   data() {
     return {
       buttons: [
-        { id: 'zoom-in', svg: this.vectors['search-plus'] },
-        { id: 'zoom-out', svg: this.vectors['search-minus'] },
-        { id: 'default', svg: this.vectors.expand },
-        { id: 'fullscreen', svg: this.vectors['expand-alt'] },
+        { id: 'zoom-in', svg: 'statics/icons/search-plus--light.svg' },
+        { id: 'zoom-out', svg: 'statics/icons/search-minus--light.svg' },
+        { id: 'default', svg: 'statics/icons/expand--light.svg' },
+        { id: 'fullscreen', svg: 'statics/icons/expand-alt--light.svg' },
       ],
       options: {
         id: 'openseadragon',

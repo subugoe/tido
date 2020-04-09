@@ -22,63 +22,83 @@
         >
       </Navbar>
     </div>
+
+
     <div style="overflow: hidden; position: relative;">
-      <Treeview v-if="status.treeview"
-        style="float: left; width: 25%;"
-        :depth="0"
-        :itemurl="itemurl"
-        :itemurls="itemurls"
-        :label="label"
-        :manifests="manifests"
-        :tree="tree"
-        :vectors="vectors"
-        >
-      </Treeview>
+      <div v-if="status.treeview" class="panel">
+        <Toolbar heading="Treeview" />
+        <q-separator />
 
-      <Content v-if="status.text"
-        style="float: left; width: 25%;"
-        :key="itemurl"
-        :itemurl="itemurl"
-        :request="request"
-        >
-      </Content>
+        <Treeview
+          :depth="0"
+          :itemurl="itemurl"
+          :itemurls="itemurls"
+          :label="label"
+          :manifests="manifests"
+          :tree="tree"
+          :vectors="vectors"
+          >
+        </Treeview>
+      </div>
 
-      <OpenSeadragon v-if="status.image && imageurl"
-        style="float: left; width: 25%;"
-        :key="imageurl"
-        :imageurl="imageurl"
-        :vectors="vectors"
-        >
-      </OpenSeadragon>
+      <div v-if="status.text" class="panel">
+        <Toolbar heading="Text" />
+        <q-separator />
 
-      <Metadata v-if="status.metadata && manifests.length"
-        style="float: left; width: 25%;"
-        :collection="collection"
-        :manifests="manifests"
-        >
-      </Metadata>
+        <Content
+          :key="itemurl"
+          :itemurl="itemurl"
+          :request="request"
+          >
+        </Content>
+      </div>
+
+      <div v-if="status.image && imageurl" class="panel">
+        <Toolbar heading="Image" />
+        <q-separator />
+
+        <OpenSeadragon
+          :key="imageurl"
+          :imageurl="imageurl"
+          :vectors="vectors"
+          >
+        </OpenSeadragon>
+      </div>
+
+      <div v-if="status.metadata && manifests.length" class="panel">
+        <Toolbar heading="Metadata" />
+        <q-separator />
+
+        <Metadata
+          :collection="collection"
+          :manifests="manifests"
+          >
+        </Metadata>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Infobar from '@/components/infobar.vue';
-import Navbar from '@/components/navbar.vue';
-import Togglebar from '@/components/togglebar.vue';
 import Content from '@/components/content.vue';
+import Infobar from '@/components/infobar.vue';
 import Metadata from '@/components/metadata.vue';
+import Navbar from '@/components/navbar.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
+import Toolbar from '@/components/quasar-toolbar.vue';
+import Togglebar from '@/components/togglebar.vue';
 import Treeview from '@/components/treeview.vue';
 
 export default {
   name: 'EmoViewer',
   components: {
-    Infobar,
-    Navbar,
-    Togglebar,
     Content,
+    Infobar,
     Metadata,
+    Navbar,
     OpenSeadragon,
+    Togglebar,
+    Toolbar,
     Treeview,
   },
   data() {
@@ -119,23 +139,6 @@ export default {
       const data = await (responsetype === 'text' ? response.text() : response.json());
 
       return data;
-    },
-    // Keycodes: 69 ==== 'e' 77 === 'm' 79 === 'o'
-    // Type 'emo' (without quotes) to toggle the NavBar!
-    extendNavigation() {
-      let code = '';
-
-      window.addEventListener('keyup', (event) => {
-        code += event.keyCode;
-
-        if (code.length > 6) {
-          code = '';
-        }
-        if (code === '697779') {
-          code = '';
-          this.extended = !this.extended;
-        }
-      });
     },
     getCollection(url) {
       this.request(url)
@@ -179,7 +182,7 @@ export default {
         });
     },
     getVectors() {
-      const path = 'assets/icons/';
+      const path = '/#/src/assets/icons/';
 
       this.vectornames.forEach((svg) => {
         this.request(`${path}${svg}.svg`, 'text')
@@ -196,7 +199,7 @@ export default {
   },
   created() {
     this.getConfig();
-    // this.getVectors();
+    this.getVectors();
 
     this.init();
 
@@ -218,3 +221,10 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="css">
+.panel {
+  float: left;
+  width: 25%;
+}
+</style>
