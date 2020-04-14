@@ -1,8 +1,8 @@
 <template>
-  <div class="sub-viewer-1__nav-arrows">
-    <button
-      class="sub-viewer-1__nav-arrow sub-viewer-1__nav-arrow--left"
-      :title="titleprev"
+  <div class="q-gutter-sm">
+    <q-btn
+      unelevated
+      color="black"
       :disabled="itemindex <= 0"
       @click="
         --itemindex;
@@ -11,13 +11,16 @@
         updateMetadata(sequenceindex);
         updateTreeNodes(sequenceindex);"
       >
-      <img height="24" width="24" src="statics/icons/arrow-alt-left--normal.svg" />
-      <span aria-hidden="true">{{ captionprev }}</span>
-    </button>
-
-    <button
-      class="sub-viewer-1__nav-arrow sub-viewer-1__nav-arrow--right"
-      :title="titlenext"
+      <q-icon
+        :name="fasArrowLeft"
+        size="24px"
+        class="q-pr-sm"
+        />
+      {{ captionprev }}
+    </q-btn>
+    <q-btn
+      unelevated
+      color="black"
       :disabled="itemindex >= itemurls.length - 1"
       @click="
         ++itemindex;
@@ -26,17 +29,26 @@
         updateMetadata(sequenceindex);
         updateTreeNodes(sequenceindex);"
       >
-      <span aria-hidden="true">{{ captionnext }}</span>
-      <img height="24" width="24" src="statics/icons/arrow-alt-right--normal.svg" />
-    </button>
+      {{ captionnext }}
+      <q-icon
+        :name="fasArrowRight"
+        size="24px"
+        class="q-pl-sm"
+        />
+    </q-btn>
   </div>
 </template>
 
 <script>
 import Navigation from '@/mixins/navigation';
+import { fasArrowRight, fasArrowLeft } from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Navbar',
   mixins: [Navigation],
+  created() {
+    this.fasArrowRight = fasArrowRight;
+    this.fasArrowLeft = fasArrowLeft;
+  },
 };
 </script>

@@ -1,21 +1,19 @@
 <template>
   <div>
-    <div>
-      <Infobar v-if="manifests.length"
-        :collection="collection"
-        :itemurl="itemurl"
-        :manifests="manifests"
-      />
+    <Infobar v-if="manifests.length"
+      :collection="collection"
+      :itemurl="itemurl"
+      :manifests="manifests"
+    />
 
-      <div class="sub-viewer-1__nav">
-        <Togglebar :status="status" />
+    <div class="sub-viewer-1__nav">
+      <Togglebar :status="status" />
 
-        <Navbar :itemurls="itemurls" :manifests="manifests" />
-      </div>
+      <Navbar :itemurls="itemurls" :manifests="manifests" />
     </div>
 
-    <div style="overflow: hidden;">
-      <div v-if="status.treeview" style="float: left;" :class="{ width: panelwidth }">
+    <div style="overflow: hidden; position: relative;">
+      <div v-if="status.treeview" style="float: left; width: 25%;">
         <Toolbar heading="Treeview" />
 
         <Treeview
@@ -28,21 +26,19 @@
         />
       </div>
 
-      <div v-if="status.text" style="float: left;" :class="{ width: panelwidth }">
+      <div v-if="status.text" style="float: left; width: 25%;">
         <Toolbar heading="Text" />
 
         <Content :key="itemurl" :itemurl="itemurl" :request="request" />
       </div>
 
-      <div v-if="status.image && imageurl" style="float: left;" :class="{ width: panelwidth }">
+      <div v-if="status.image && imageurl" style="float: left; width: 25%;">
         <Toolbar heading="Image" />
 
         <OpenSeadragon :key="imageurl" :imageurl="imageurl" />
       </div>
 
-      <div v-if="status.metadata && manifests.length"
-        style="float: left;" :class="{ width: panelwidth }"
-        >
+      <div v-if="status.metadata && manifests.length" style="float: left; width: 25%;">
         <Toolbar heading="Metadata" />
 
         <Metadata :collection="collection" :manifests="manifests" />
@@ -87,21 +83,6 @@ export default {
       },
       tree: [],
     };
-  },
-  computed: {
-    panelwidth() {
-      let activePanels = 0;
-      Object.keys(this.status).forEach((panel) => {
-        if (panel) {
-          // eslint-disable-next-line no-console
-          console.log(`Panel: ${panel} Active: ${activePanels}`);
-          activePanels += 1;
-        }
-      });
-      const width = 100 / activePanels;
-
-      return `${width}%`;
-    },
   },
   methods: {
     async request(url, responsetype = 'json') {
@@ -185,8 +166,6 @@ export default {
 
     this.$root.$on('update-panel-status', (status) => {
       this.status = status;
-      // eslint-disable-next-line no-console
-      console.log(`width: ${this.panelwidth}`);
     });
   },
 };

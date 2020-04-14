@@ -1,16 +1,24 @@
 <template>
-  <div class="sub-viewer-1__info">
-    <div>
-      {{ cutstring(collectiontitle) }}
-      <img style="height: 32px; width: 32px;" src="statics/icons/angle-right--light.svg" />
-      {{ cutstring(manifesttitle) }}
-      <img style="height: 32px; width: 32px;" src="statics/icons/angle-right--light.svg" />
-      {{ cutstring(itemurl) }}
-    </div>
-  </div>
+  <h1 class="text-h3 q-px-sm q-mb-md">
+    <span>{{ cutstring(collectiontitle) }}</span>
+    <q-icon
+      :name="fasChevronRight"
+      size="40px"
+      class="q-pb-sm"
+    />
+    <span>{{ cutstring(manifesttitle) }}</span>
+    <q-icon
+      :name="fasChevronRight"
+      size="40px"
+      class="q-pb-sm"
+    />
+    <span>{{ cutstring(itemurl) }}</span>
+  </h1>
 </template>
 
 <script>
+import { fasChevronRight } from '@quasar/extras/fontawesome-v5';
+
 export default {
   name: 'Infobar',
   props: {
@@ -22,6 +30,9 @@ export default {
     return {
       sequenceindex: 0,
     };
+  },
+  created() {
+    this.fasChevronRight = fasChevronRight;
   },
   computed: {
     collectiontitle() {
