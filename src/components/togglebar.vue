@@ -1,31 +1,45 @@
 <template>
-  <ul class="sub-viewer-1-nav__items" title="Tab options">
-    <li v-for="(name, idx) in panels" :key="idx">
-      <button
-        class="sub-viewer-1-nav-item"
-        :aria-selected="toggleAria(idx)"
-        :title="toggleTitle(idx)"
-        @click="updateStatus(idx);"
-        >
-        <img style="height: 16px; width: 16px;" :src="toggleIcon(idx)" />
-        <span aria-hidden="true">{{ name }}</span>
-      </button>
-    </li>
-
-    <li>
-      <button class="sub-viewer-1-reset" title="Reset Tabs" @click="resetPanelStatus();">
-        <img style="height: 16px; width: 16px;" src="statics/icons/undo--normal.svg" />
-        <span aria-hidden="true">{{ 'Reset Tabs' | capitalize }}</span>
-      </button>
-    </li>
-  </ul>
+  <div class="q-gutter-sm sub-viewer-1-nav__items" title="Tab options">
+    <q-btn
+      v-for="(name, idx) in panels"
+      :key="idx"
+      outline
+      :aria-selected="toggleAria(idx)"
+      :title="toggleTitle(idx)"
+      @click="updateStatus(idx)"
+      >
+      <q-icon
+        :name="toggleIcon(idx)"
+        size="24px"
+        class="q-pr-sm" />
+      {{ name }}
+    </q-btn>
+    <q-btn
+      @click="resetPanelStatus"
+      no-caps
+      flat
+      color="black">
+      <q-icon
+        :name="fasUndo"
+        size="16px"
+        class="q-pr-xs" />
+      Reset Tabs
+    </q-btn>
+  </div>
 </template>
 
 <script>
+import { fasUndo, fasCircle, fasCheckCircle } from '@quasar/extras/fontawesome-v5';
+
 export default {
   name: 'Togglebar',
   props: {
     status: Object,
+  },
+  created() {
+    this.fasUndo = fasUndo;
+    this.fasCircle = fasCircle;
+    this.fasCheckCircle = fasCheckCircle;
   },
   data() {
     return {
@@ -49,8 +63,8 @@ export default {
     },
     toggleIcon(id) {
       return this.status[this.panels[id]]
-        ? 'statics/icons/check-circle--normal.svg'
-        : 'statics/icons/circle--normal.svg';
+        ? fasCheckCircle
+        : fasCircle;
     },
     togglePath(id) {
       return this.status[this.panels[id]]

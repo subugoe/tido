@@ -1,8 +1,8 @@
 <template>
-  <div :class="css['nav-arrows']">
-    <button
-      :class="[ css['nav-arrow'], css['nav-arrow--left'] ]"
-      :title="titleprev"
+  <div class="q-gutter-sm">
+    <q-btn
+      unelevated
+      color="black"
       :disabled="itemindex <= 0"
       @click="
         --itemindex;
@@ -11,13 +11,16 @@
         updateMetadata(sequenceindex);
         updateTreeNodes(sequenceindex);"
       >
-      <img height="24" width="24" src="statics/icons/arrow-alt-left--normal.svg" />
-      <span aria-hidden="true">{{ captionprev }}</span>
-    </button>
-
-    <button
-      :class="[ css['nav-arrow'], css['nav-arrow--right'] ]"
-      :title="titlenext"
+      <q-icon
+        :name="fasArrowLeft"
+        size="24px"
+        class="q-pr-sm"
+        />
+      {{ captionprev }}
+    </q-btn>
+    <q-btn
+      unelevated
+      color="black"
       :disabled="itemindex >= itemurls.length - 1"
       @click="
         ++itemindex;
@@ -26,14 +29,19 @@
         updateMetadata(sequenceindex);
         updateTreeNodes(sequenceindex);"
       >
-      <span aria-hidden="true">{{ captionnext }}</span>
-      <img height="24" width="24" src="statics/icons/arrow-alt-right--normal.svg" />
-    </button>
+      {{ captionnext }}
+      <q-icon
+        :name="fasArrowRight"
+        size="24px"
+        class="q-pl-sm"
+        />
+    </q-btn>
   </div>
 </template>
 
 <script>
 import Navigation, { cssmap } from '@/mixins/navigation';
+import { fasArrowRight, fasArrowLeft } from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Navbar',
@@ -42,6 +50,10 @@ export default {
     return {
       css: cssmap,
     };
+  },
+  created() {
+    this.fasArrowRight = fasArrowRight;
+    this.fasArrowLeft = fasArrowLeft;
   },
   computed: {
     captionprev() {

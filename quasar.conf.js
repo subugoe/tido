@@ -47,6 +47,8 @@ module.exports = function (ctx) {
       // components: [],
       // directives: [],
 
+      iconSet: 'fontawesome-v5',
+
       // Quasar plugins
       plugins: [],
       cssAddon: true
