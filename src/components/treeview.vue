@@ -34,7 +34,7 @@
 
         <div v-else>
           <ul class="tree-data-item__list">
-            <li class="tree__data-item">{{ dataItem }}</li>
+            <li class="tree__data-item" v-html="dataItem"></li>
           </ul>
         </div>
       </li>
@@ -105,7 +105,7 @@ export default {
     dataItem() {
       if (this.isactive) {
         return `<img style="height: 16px; width: 16px;" src="statics/icons/angle-double-right--light.svg" />
-          <span class="tree__data-item--active">${this.label}</span>`;
+                <span class="tree__data-item--active">${this.label}</span>`;
       }
       return `<button class="item-with-icon">
                 <img style="height: 16px; width: 16px;" src="statics/icons/angle-right--light.svg" />

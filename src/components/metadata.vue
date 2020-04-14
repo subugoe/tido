@@ -1,8 +1,8 @@
 <template>
-  <div :class="[ css['metadata'], css['fixed'] ]">
+  <div :class="[ css.metadata, css.fixed ]">
     <ul>
       <li v-if="Object.keys(collection).length" :class="css.item">
-        <div :class="[ 'heading-style--4', css.heading ]">
+        <div :class="[ css.headingstyle, css.heading ]">
           Collection
         </div>
         <div :class="css.label">
@@ -26,7 +26,7 @@
       </li>
 
       <li :class="css.item">
-        <div :class="[ 'heading-style--4', css.heading ]">
+        <div :class="[ css.headingstyle, css.heading ]">
           Manifest {{ sequenceindex + 1 }} / {{ manifests.length }}
         </div>
         <div :class="css.label">
@@ -41,8 +41,6 @@
 </template>
 
 <script>
-import { cssmap } from '@/mixins/navigation';
-
 export default {
   name: 'Metadata',
   props: {
@@ -51,7 +49,15 @@ export default {
   },
   data() {
     return {
-      css: cssmap,
+      css: {
+        description: 'objectlist-1__descr',
+        fixed: 'objectlist-1--fixed',
+        heading: 'objectlist-1__heading',
+        headingstyle: 'heading-style--4',
+        item: 'objectlist-1__item',
+        label: 'objectlist-1__label',
+        metadata: 'objectlist-1',
+      },
       sequenceindex: 0,
     };
   },

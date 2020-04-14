@@ -1,21 +1,22 @@
 <template>
   <div>
-    <Infobar v-if="manifests.length"
-      :collection="collection"
-      :itemurl="itemurl"
-      :manifests="manifests"
-    />
+    <div>
+      <Infobar v-if="manifests.length"
+        :collection="collection"
+        :itemurl="itemurl"
+        :manifests="manifests"
+      />
 
-    <div class="sub-viewer-1__nav">
-      <Togglebar :status="status" />
+      <div class="sub-viewer-1__nav">
+        <Togglebar :status="status" />
 
-      <Navbar :itemurls="itemurls" :manifests="manifests" />
+        <Navbar :itemurls="itemurls" :manifests="manifests" />
+      </div>
     </div>
 
-    <div style="overflow: hidden; position: relative;">
-      <div v-if="status.treeview" style="float: left; width: 25%;">
+    <div style="overflow: hidden;">
+      <div v-if="status.treeview" style="float: left;" :class="{ width: panelwidth }">
         <Toolbar heading="Treeview" />
-        <q-separator />
 
         <Treeview
           :depth="0"
@@ -27,27 +28,22 @@
         />
       </div>
 
-      <div v-if="status.text" style="float: left; width: 25%;">
+      <div v-if="status.text" style="float: left;" :class="{ width: panelwidth }">
         <Toolbar heading="Text" />
-        <q-separator />
 
-        <Content
-          :key="itemurl"
-          :itemurl="itemurl"
-          :request="request"
-        />
+        <Content :key="itemurl" :itemurl="itemurl" :request="request" />
       </div>
 
-      <div v-if="status.image && imageurl" style="float: left; width: 25%;">
+      <div v-if="status.image && imageurl" style="float: left;" :class="{ width: panelwidth }">
         <Toolbar heading="Image" />
-        <q-separator />
 
         <OpenSeadragon :key="imageurl" :imageurl="imageurl" />
       </div>
 
-      <div v-if="status.metadata && manifests.length" style="float: left; width: 25%;">
+      <div v-if="status.metadata && manifests.length"
+        style="float: left;" :class="{ width: panelwidth }"
+        >
         <Toolbar heading="Metadata" />
-        <q-separator />
 
         <Metadata :collection="collection" :manifests="manifests" />
       </div>
@@ -90,23 +86,22 @@ export default {
         image: true, text: true, metadata: true, treeview: true,
       },
       tree: [],
-      vectornames: [
-        'angle-double-right--light',
-        'angle-right--light',
-        'arrow-alt-left--normal',
-        'arrow-alt-right--normal',
-        'caret-right--light',
-        'check-circle--normal',
-        'circle--normal',
-        'expand-alt--light',
-        'expand--light',
-        'search-plus--light',
-        'search-minus--light',
-        'skip-back',
-        'skip-forward',
-        'undo--normal',
-      ],
     };
+  },
+  computed: {
+    panelwidth() {
+      let activePanels = 0;
+      Object.keys(this.status).forEach((panel) => {
+        if (panel) {
+          // eslint-disable-next-line no-console
+          console.log(`Panel: ${panel} Active: ${activePanels}`);
+          activePanels += 1;
+        }
+      });
+      const width = 100 / activePanels;
+
+      return `${width}%`;
+    },
   },
   methods: {
     async request(url, responsetype = 'json') {
@@ -190,6 +185,8 @@ export default {
 
     this.$root.$on('update-panel-status', (status) => {
       this.status = status;
+      // eslint-disable-next-line no-console
+      console.log(`width: ${this.panelwidth}`);
     });
   },
 };
