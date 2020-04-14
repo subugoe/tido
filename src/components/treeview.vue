@@ -10,7 +10,7 @@
       @click="clicked = !clicked;"
       >
       <div class="tree__icon">
-        <img style="height: 16px; width: 16px;" src="statics/icons/caret-right--light.svg" />
+        <q-icon size="40px" :name="fasCaretRight" />
       </div>
       <div class="tree__text">{{ label }}</div>
     </button>
@@ -27,7 +27,7 @@
           @click="clicked = !clicked;"
           >
           <div :class="['tree__icon', clicked ? 'tree__icon--active' : '']">
-            <img style="height: 16px; width: 16px;" src="statics/icons/caret-right--light.svg" />
+            <q-icon size="40px" :name="fasCaretRight" />
           </div>
           <div class="tree__text tree__text--2">{{ label }}</div>
         </button>
@@ -64,6 +64,12 @@
 </template>
 
 <script>
+import {
+  fasCaretRight,
+  fasAngleRight,
+  fasAngleDoubleRight,
+} from '@quasar/extras/fontawesome-v5';
+
 export default {
   name: 'Treeview',
   props: {
@@ -104,11 +110,11 @@ export default {
     },
     dataItem() {
       if (this.isactive) {
-        return `<img style="height: 16px; width: 16px;" src="statics/icons/angle-double-right--light.svg" />
+        return `<q-icon class="q-pb-sm" size="40px" :name="fasAngleDoubleRight" />
                 <span class="tree__data-item--active">${this.label}</span>`;
       }
       return `<button class="item-with-icon">
-                <img style="height: 16px; width: 16px;" src="statics/icons/angle-right--light.svg" />
+                <q-icon class="q-pb-sm" size="40px" :name="fasAngleRight" />
                   <span>${this.label}</span>
               </button>`;
     },
@@ -147,6 +153,11 @@ export default {
       }
       return sequenceidx;
     },
+  },
+  created() {
+    this.fasAngleRight = fasAngleRight;
+    this.fasAngleDoubleRight = fasAngleDoubleRight;
+    this.fasCaretRight = fasCaretRight;
   },
   mounted() {
     this.clicked = this.depth === 0;

@@ -1,73 +1,38 @@
 <template>
-  <div>
-    <Infobar v-if="manifests.length"
+  <q-layout view="hHh lpr fff">
+    <Header
       :collection="collection"
       :itemurl="itemurl"
+      :itemurls="itemurls"
       :manifests="manifests"
+      :status="status"
     />
 
-    <div class="sub-viewer-1__nav">
-      <Togglebar :status="status" />
-
-      <Navbar :itemurls="itemurls" :manifests="manifests" />
-    </div>
-
-    <div style="overflow: hidden; position: relative;">
-      <div v-if="status.treeview" style="float: left; width: 25%;">
-        <Toolbar heading="Treeview" />
-
-        <Treeview
-          :depth="0"
-          :itemurl="itemurl"
-          :itemurls="itemurls"
-          :label="label"
-          :manifests="manifests"
-          :tree="tree"
-        />
-      </div>
-
-      <div v-if="status.text" style="float: left; width: 25%;">
-        <Toolbar heading="Text" />
-
-        <Content :key="itemurl" :itemurl="itemurl" :request="request" />
-      </div>
-
-      <div v-if="status.image && imageurl" style="float: left; width: 25%;">
-        <Toolbar heading="Image" />
-
-        <OpenSeadragon :key="imageurl" :imageurl="imageurl" />
-      </div>
-
-      <div v-if="status.metadata && manifests.length" style="float: left; width: 25%;">
-        <Toolbar heading="Metadata" />
-
-        <Metadata :collection="collection" :manifests="manifests" />
-      </div>
-    </div>
-  </div>
+    <q-page-container>
+      <MainView
+        :collection="collection"
+        :depth="0"
+        :imageurl="imageurl"
+        :itemurl="itemurl"
+        :itemurls="itemurls"
+        :label="label"
+        :manifests="manifests"
+        :request="request"
+        :tree="tree"
+      />
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script>
-import Content from '@/components/content.vue';
-import Infobar from '@/components/infobar.vue';
-import Metadata from '@/components/metadata.vue';
-import Navbar from '@/components/navbar.vue';
-import OpenSeadragon from '@/components/openseadragon.vue';
-import Toolbar from '@/components/quasar-toolbar.vue';
-import Togglebar from '@/components/togglebar.vue';
-import Treeview from '@/components/treeview.vue';
+import MainView from '@/views/quasar-mainview.vue';
+import Header from '@/components/quasar-header.vue';
 
 export default {
   name: 'EmoViewer',
   components: {
-    Content,
-    Infobar,
-    Metadata,
-    Navbar,
-    OpenSeadragon,
-    Togglebar,
-    Toolbar,
-    Treeview,
+    MainView,
+    Header,
   },
   data() {
     return {
@@ -97,7 +62,9 @@ export default {
           this.collection = data;
           this.label = this.getLabel(data);
 
-          data.sequence.map((seq) => this.getManifest(seq.id));
+          if (Array.isArray(data.sequence)) {
+            data.sequence.map((seq) => this.getManifest(seq.id));
+          }
         });
     },
     getConfig() {
@@ -121,9 +88,11 @@ export default {
           this.manifests.push(data);
           this.tree.push({ label: data.label, nodes: data.sequence });
 
-          data.sequence.map((seq) => this.itemurls.push(seq.id));
+          if (Array.isArray(data.sequence)) {
+            data.sequence.map((seq) => this.itemurls.push(seq.id));
+          }
           // make sure that urls are set just once on init
-          if (!this.itemurl) {
+          if (!this.itemurl && data.sequence[0] !== 'undefined') {
             this.itemurl = data.sequence[0].id;
             this.getImageUrl(this.itemurl);
           }
@@ -131,16 +100,6 @@ export default {
             this.label = this.getLabel(data);
           }
         });
-    },
-    getVectors() {
-      const path = 'statics/icons/';
-
-      this.vectornames.forEach((svg) => {
-        this.request(`${path}${svg}.svg`, 'text')
-          .then((data) => {
-            this.vectors[svg.replace(/(.*)--(light|normal)$/, '$1')] = data;
-          });
-      });
     },
     init() {
       return this.config.entrypoint.match(/collection.json\s?$/)

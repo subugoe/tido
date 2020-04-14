@@ -1,19 +1,25 @@
 <template>
   <figure id="openseadragon" style="height: 100vh; overflow: hidden;">
     <nav>
-      <button style="margin-left: 8px; margin-top: 8px;"
+      <q-btn
         v-for="(btn, idx) in buttons" :key="idx"
-        class="image__interact-button"
+        class="q-ml-sm q-mt-sm image__interact-button"
         :id="btn.id"
         >
-        <img style="height: 24px; width: 24px;" :src="btn.svg" />
-      </button>
+        <q-icon size="40px" :name="btn.svg" />
+      </q-btn>
     </nav>
   </figure>
 </template>
 
 <script>
 import OpenSeadragon from 'openseadragon';
+import {
+  fasSearchPlus,
+  fasSearchMinus,
+  fasExpand,
+  fasExpandArrowsAlt,
+} from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'OpenSeadragon',
@@ -23,10 +29,10 @@ export default {
   data() {
     return {
       buttons: [
-        { id: 'zoom-in', svg: 'statics/icons/search-plus--light.svg' },
-        { id: 'zoom-out', svg: 'statics/icons/search-minus--light.svg' },
-        { id: 'default', svg: 'statics/icons/expand--light.svg' },
-        { id: 'fullscreen', svg: 'statics/icons/expand-alt--light.svg' },
+        { id: 'zoom-in', svg: fasSearchPlus },
+        { id: 'zoom-out', svg: fasSearchMinus },
+        { id: 'default', svg: fasExpand },
+        { id: 'fullscreen', svg: fasExpandArrowsAlt },
       ],
       options: {
         id: 'openseadragon',

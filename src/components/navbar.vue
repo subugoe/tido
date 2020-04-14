@@ -18,6 +18,7 @@
         />
       {{ captionprev }}
     </q-btn>
+
     <q-btn
       unelevated
       color="black"

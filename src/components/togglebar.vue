@@ -1,29 +1,32 @@
 <template>
-  <div class="q-gutter-sm sub-viewer-1-nav__items" title="Tab options">
-    <q-btn
+  <div class="q-gutter-sm" title="Tab options">
+    <q-btn outline
       v-for="(name, idx) in panels"
-      :key="idx"
-      outline
       :aria-selected="toggleAria(idx)"
+      :key="idx"
       :title="toggleTitle(idx)"
       @click="updateStatus(idx)"
       >
       <q-icon
-        :name="toggleIcon(idx)"
+        class="q-pr-sm"
         size="24px"
-        class="q-pr-sm" />
+        :name="toggleIcon(idx)"
+      />
       {{ name }}
     </q-btn>
+
     <q-btn
-      @click="resetPanelStatus"
-      no-caps
       flat
-      color="black">
+      no-caps
+      title="Reset Tabs"
+      @click="resetPanelStatus"
+      >
       <q-icon
-        :name="fasUndo"
+        class="q-pr-xs"
         size="16px"
-        class="q-pr-xs" />
-      Reset Tabs
+        :name="fasUndo"
+      />
+      {{ 'Reset Tabs' | capitalize }}
     </q-btn>
   </div>
 </template>
@@ -35,11 +38,6 @@ export default {
   name: 'Togglebar',
   props: {
     status: Object,
-  },
-  created() {
-    this.fasUndo = fasUndo;
-    this.fasCircle = fasCircle;
-    this.fasCheckCircle = fasCheckCircle;
   },
   data() {
     return {
@@ -62,14 +60,7 @@ export default {
       return !!this.status[this.panels[id]];
     },
     toggleIcon(id) {
-      return this.status[this.panels[id]]
-        ? fasCheckCircle
-        : fasCircle;
-    },
-    togglePath(id) {
-      return this.status[this.panels[id]]
-        ? this.svg['check-circle']
-        : this.svg.circle;
+      return this.status[this.panels[id]] ? fasCheckCircle : fasCircle;
     },
     toggleTitle(id) {
       const caption = this.ucfirst(this.panels[id]);
@@ -82,6 +73,11 @@ export default {
       this.status[this.panels[id]] = !this.status[this.panels[id]];
       this.$root.$emit('update-panel-status', this.status);
     },
+  },
+  created() {
+    this.fasUndo = fasUndo;
+    this.fasCircle = fasCircle;
+    this.fasCheckCircle = fasCheckCircle;
   },
 };
 </script>
