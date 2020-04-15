@@ -103,27 +103,27 @@ $typography-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI
 // @import "quasar";
 
 
-@import "./node_modules/frontend-templating/src/scss/vars";
+// @import "./node_modules/frontend-templating/src/scss/vars";
 
 // @import "../../node_modules/golden-layout/src/css/goldenlayout-base";
 
-@import "./node_modules/frontend-templating/src/scss/base/reset";
-@import "./node_modules/frontend-templating/src/scss/base/font-face";
-@import "./node_modules/frontend-templating/src/scss/base/basic";
-@import "./node_modules/frontend-templating/src/scss/base/layout";
-@import "./node_modules/frontend-templating/src/scss/base/helper";
-@import "./node_modules/frontend-templating/src/scss/base/a11y";
+// @import "./node_modules/frontend-templating/src/scss/base/reset";
+// @import "./node_modules/frontend-templating/src/scss/base/font-face";
+// @import "./node_modules/frontend-templating/src/scss/base/basic";
+// @import "./node_modules/frontend-templating/src/scss/base/layout";
+// @import "./node_modules/frontend-templating/src/scss/base/helper";
+// @import "./node_modules/frontend-templating/src/scss/base/a11y";
 
-@import "./node_modules/frontend-templating/src/scss/elements/headings";
-@import "./node_modules/frontend-templating/src/scss/elements/buttons";
+// @import "./node_modules/frontend-templating/src/scss/elements/headings";
+// @import "./node_modules/frontend-templating/src/scss/elements/buttons";
 
-@import "./node_modules/frontend-templating/src/scss/blocks/objectlist-1";
-@import "./node_modules/frontend-templating/src/scss/blocks/content";
-@import "./node_modules/frontend-templating/src/scss/blocks/treeview-1";
+// @import "./node_modules/frontend-templating/src/scss/blocks/objectlist-1";
+// @import "./node_modules/frontend-templating/src/scss/blocks/content";
+// @import "./node_modules/frontend-templating/src/scss/blocks/treeview-1";
 // @import "blocks/top-1";
 // @import "blocks/misc-links-1";
 // @import "./node_modules/frontend-templating/src/scss/blocks/goldenlayout";
-@import "./node_modules/frontend-templating/src/scss/blocks/sub-viewer-1";
+// @import "./node_modules/frontend-templating/src/scss/blocks/sub-viewer-1";
 // @import "blocks/logo-block-1";
 
 // @import "form";
@@ -135,4 +135,4 @@ $typography-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI
 // @import "pages/page-buttons";
 // @import "pages/page-headings";
 
-@import "./node_modules/frontend-templating/src/scss/shame";
+// @import "./node_modules/frontend-templating/src/scss/shame";

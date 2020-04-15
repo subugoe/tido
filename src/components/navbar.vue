@@ -1,5 +1,5 @@
 <template>
-  <div class="q-gutter-sm">
+  <div class="">
     <q-btn
       unelevated
       color="black"

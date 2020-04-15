@@ -1,16 +1,24 @@
 <template>
   <q-header elevated class="bg-white text-black">
+    <div>
     <Infobar v-if="manifests.length"
-      class="sub-viewer-1__info"
       :collection="collection"
       :itemurl="itemurl"
       :manifests="manifests"
     />
+    </div>
 
-    <div class="sub-viewer-1__nav">
-      <Togglebar :status="status" />
+    <div class="row justify-center q-px-sm">
+      <Navbar
+        class="col col-md-4"
+        :itemurls="itemurls"
+        :manifests="manifests"
+      />
 
-      <Navbar :itemurls="itemurls" :manifests="manifests" />
+      <Togglebar
+        class="col col-md-8"
+        :status="status"
+      />
     </div>
   </q-header>
 </template>
@@ -36,3 +44,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+div {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+</style>
+
+<style>
+
+</style>

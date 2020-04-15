@@ -1,15 +1,13 @@
 <template>
-  <h1 class="text-h5 text-bold text-uppercase q-px-sm q-mb-md">
-    <span>{{ cut(collectiontitle) }}</span>
-
-    <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
-
-    <span>{{ cut(manifesttitle) }}</span>
-
-    <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
-
-    <span>{{ cut(itemurl) }}</span>
-  </h1>
+  <div class="row justify-center">
+    <h1 class="col-12 col-auto q-px-sm text-h5 text-bold text-uppercase">
+      <span>{{ cut(collectiontitle) }}</span>
+      <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
+      <span>{{ cut(manifesttitle) }}</span>
+      <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
+      <span>{{ cut(itemurl) }}</span>
+    </h1>
+  </div>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="q-gutter-sm" title="Tab options">
+  <div class="" title="Tab options">
     <q-btn outline
       v-for="(name, idx) in panels"
       :aria-selected="toggleAria(idx)"
