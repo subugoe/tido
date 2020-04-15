@@ -88,7 +88,7 @@ export default {
           this.manifests.push(data);
           this.tree.push({ label: data.label, nodes: data.sequence });
 
-          if (Array.isArray(data.sequence)) {
+          if (Array.isArray(data.sequence) && data.sequence[0] !== 'undefined') {
             data.sequence.map((seq) => this.itemurls.push(seq.id));
           }
           // make sure that urls are set just once on init
