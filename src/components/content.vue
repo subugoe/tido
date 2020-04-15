@@ -1,5 +1,5 @@
 <template>
-  <div class="sub-viewer-1-text" v-html="content"></div>
+  <div class="" v-html="content"></div>
 </template>
 
 <script>
