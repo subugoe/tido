@@ -1,5 +1,5 @@
 <template>
-  <div class="" title="Tab options">
+  <div>
     <q-btn outline
       v-for="(name, idx) in panels"
       :aria-selected="toggleAria(idx)"
@@ -81,3 +81,12 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+button {
+  margin-right: 8px;
+}
+button:last-of-type {
+  margin-right: 0;
+}
+</style>

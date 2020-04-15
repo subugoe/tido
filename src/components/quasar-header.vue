@@ -2,13 +2,14 @@
   <q-header elevated class="bg-white text-black">
     <div>
     <Infobar v-if="manifests.length"
+      class="q-px-md"
       :collection="collection"
       :itemurl="itemurl"
       :manifests="manifests"
     />
     </div>
 
-    <div class="row justify-center q-px-sm">
+    <div class="row justify-center q-px-md q-mb-md">
       <Navbar
         class="col col-md-4"
         :itemurls="itemurls"
@@ -48,10 +49,7 @@ export default {
 <style scoped>
 div {
   max-width: 1200px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
-</style>
-
-<style>
-
 </style>

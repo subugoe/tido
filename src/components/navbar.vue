@@ -1,8 +1,8 @@
 <template>
-  <div class="">
+  <div>
     <q-btn
       unelevated
-      color="black"
+      color="black q-pr-sm"
       :disabled="itemindex <= 0"
       @click="
         --itemindex;
@@ -53,3 +53,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+button:first-of-type {
+  margin-right: 8px;
+}
+</style>
