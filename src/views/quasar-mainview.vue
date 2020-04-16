@@ -66,7 +66,8 @@ import Content from '@/components/content.vue';
 import Metadata from '@/components/metadata.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
 import Toolbar from '@/components/quasar-toolbar.vue';
-import Treeview from '@/components/treeview.vue';
+// import Treeview from '@/components/treeview.vue';
+import Treeview from '@/components/quasar-tree.vue';
 
 export default {
   name: 'TwinView',

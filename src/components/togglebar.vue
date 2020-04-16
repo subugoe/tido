@@ -17,7 +17,7 @@
       title="Reset Tabs"
       @click="resetPanelStatus"
       >
-      <q-iconc class="q-pr-xs" size="16px" :name="fasUndo" />
+      <q-icon class="q-pr-xs" size="16px" :name="fasUndo" />
       {{ 'Reset Tabs' | capitalize }}
     </q-btn>
   </div>
