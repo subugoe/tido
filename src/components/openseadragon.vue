@@ -3,10 +3,14 @@
     <nav>
       <q-btn
         v-for="(btn, idx) in buttons" :key="idx"
-        class="q-ml-sm q-mt-sm image__interact-button"
+        class="q-mr-sm q-mb-sm"
+        color="black"
+        outline
+        round
+        size="md"
         :id="btn.id"
         >
-        <q-icon size="40px" :name="btn.svg" />
+        <q-icon size="sm" :name="btn.svg" />
       </q-btn>
     </nav>
   </figure>
