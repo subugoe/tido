@@ -1,5 +1,5 @@
 <template>
-  <div class="" v-html="content"></div>
+  <div v-html="content"></div>
 </template>
 
 <script>
@@ -25,3 +25,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+div {
+  margin: 16px;
+}
+</style>
