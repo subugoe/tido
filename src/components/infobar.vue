@@ -1,6 +1,6 @@
 <template>
-  <div class="row justify-center">
-    <h1 class="col-12 col-auto text-h5 text-bold text-uppercase">
+  <div class="">
+    <h1 class="text-h5 text-bold text-uppercase">
       <span>{{ cut(collectiontitle) }}</span>
       <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
       <span>{{ cut(manifesttitle) }}</span>
