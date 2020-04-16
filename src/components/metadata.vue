@@ -29,6 +29,7 @@
         </q-item-section>
       </q-item>
     </q-list>
+    <q-separator inset class="q-mt-md q-mb-sm" />
     <q-list>
       <q-item>
         <q-item-section class="text-h6">
