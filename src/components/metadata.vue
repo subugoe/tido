@@ -6,7 +6,7 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label overline>Title:</q-item-label>
+          <q-item-label overline class="text-uppercase">Title:</q-item-label>
           <q-item-label>
             {{ collection.title ? collection.title[0].title : '' }}
           </q-item-label>
@@ -14,7 +14,7 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label overline>Collector:</q-item-label>
+          <q-item-label overline class="text-uppercase">Collector:</q-item-label>
           <q-item-label>
             {{ collection.collector ? collection.collector.name : '' }}
             </q-item-label>
@@ -22,7 +22,7 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label overline>Description:</q-item-label>
+          <q-item-label overline class="text-uppercase">Description:</q-item-label>
           <q-item-label>
             {{ collection.description }}
           </q-item-label>
@@ -37,7 +37,7 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label overline>Label:</q-item-label>
+          <q-item-label overline class="text-uppercase">Label:</q-item-label>
           <q-item-label>{{ manifesttitle }}</q-item-label>
         </q-item-section>
       </q-item>
