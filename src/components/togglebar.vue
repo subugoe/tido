@@ -1,6 +1,8 @@
 <template>
   <div>
-    <q-btn outline
+    <q-btn
+      outline
+      class="q-mb-md"
       v-for="(name, idx) in panels"
       :aria-selected="toggleAria(idx)"
       :key="idx"
@@ -13,11 +15,12 @@
 
     <q-btn
       flat
+      class="q-mb-md"
       no-caps
       title="Reset Tabs"
       @click="resetPanelStatus"
       >
-      <q-iconc class="q-pr-xs" size="16px" :name="fasUndo" />
+      <q-icon class="q-pr-xs" size="16px" :name="fasUndo" />
       {{ 'Reset Tabs' | capitalize }}
     </q-btn>
   </div>

@@ -1,23 +1,30 @@
 <template>
   <q-header elevated class="bg-white text-black">
-    <div>
-    <Infobar v-if="manifests.length"
-      class="q-px-md"
-      :collection="collection"
-      :itemurl="itemurl"
-      :manifests="manifests"
-    />
+    <div class="bar row justify-center">
+      <Infobar v-if="manifests.length"
+        class="col-12 col-auto q-px-md"
+        :collection="collection"
+        :itemurl="itemurl"
+        :manifests="manifests"
+      />
     </div>
 
-    <div class="row justify-center q-px-md q-mb-md">
+    <div class="bar row q-px-md justify-sm-between">
       <Navbar
-        class="col col-md-4"
+        class="col col-xs-12 col-md-4 row justify-xs-center justify-md-start q-mb-md"
         :itemurls="itemurls"
         :manifests="manifests"
       />
 
       <Togglebar
-        class="col col-md-8"
+        class="
+          col
+          column-xs
+          col-xs-12
+          col-md-auto
+          row-sm
+          justify-sm-evenly
+          content-sm-center"
         :status="status"
       />
     </div>
@@ -47,7 +54,7 @@ export default {
 </script>
 
 <style scoped>
-div {
+.bar {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
