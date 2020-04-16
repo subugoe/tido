@@ -7,11 +7,7 @@
       :title="toggleTitle(idx)"
       @click="updateStatus(idx)"
       >
-      <q-icon
-        class="q-pr-sm"
-        size="24px"
-        :name="toggleIcon(idx)"
-      />
+      <q-icon class="q-pr-sm" size="24px" :name="toggleIcon(idx)" />
       {{ name }}
     </q-btn>
 
@@ -21,11 +17,7 @@
       title="Reset Tabs"
       @click="resetPanelStatus"
       >
-      <q-icon
-        class="q-pr-xs"
-        size="16px"
-        :name="fasUndo"
-      />
+      <q-iconc class="q-pr-xs" size="16px" :name="fasUndo" />
       {{ 'Reset Tabs' | capitalize }}
     </q-btn>
   </div>
