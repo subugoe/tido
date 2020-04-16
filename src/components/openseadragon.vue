@@ -56,3 +56,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+figure {
+  margin: 16px;
+}
+</style>
