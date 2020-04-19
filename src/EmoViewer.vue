@@ -11,11 +11,8 @@
     <q-page-container>
       <MainView
         :collection="collection"
-        :depth="0"
         :imageurl="imageurl"
         :itemurl="itemurl"
-        :itemurls="itemurls"
-        :label="label"
         :manifests="manifests"
         :request="request"
         :tree="tree"
@@ -62,8 +59,10 @@ export default {
           this.collection = data;
           this.label = this.getLabel(data);
 
+          this.tree.push({ label: this.label, children: [] });
+
           if (Array.isArray(data.sequence)) {
-            data.sequence.map((seq) => this.getManifest(seq.id));
+            data.sequence.map((seq, seqidx) => this.getManifest(seq.id, seqidx));
           }
         });
     },
@@ -76,28 +75,63 @@ export default {
           this.imageurl = data.image && data.image.id ? data.image.id : '';
         });
     },
+    getItemurls(sequence, seqidx) {
+      const urls = [];
+
+      if (Array.isArray(sequence)) {
+        sequence.forEach((obj) => {
+          urls.push(
+            {
+              label: obj.id,
+              handler: (node) => {
+                if (this.itemurl !== node.label) {
+                  this.$root.$emit('update-item', node.label);
+                }
+                let idx = 0;
+                this.itemurls.forEach((item, index) => {
+                  if (item === node.label) {
+                    idx = index;
+                  }
+                });
+
+                this.$root.$emit('update-item-index', idx);
+                this.$root.$emit('update-metadata', seqidx);
+                this.$root.$emit('update-sequence-index', seqidx);
+              },
+            },
+          );
+        });
+      } else {
+        urls.push({ label: sequence.id });
+      }
+      return urls;
+    },
     getLabel(data) {
       if (Object.keys(this.collection).length) {
         return data.title && data.title[0].title ? data.title[0].title : data.label;
       }
       return 'Manifest';
     },
-    getManifest(url) {
+    getManifest(url, seqidx) {
       this.request(url)
         .then((data) => {
           this.manifests.push(data);
-          this.tree.push({ label: data.label, nodes: data.sequence });
+
+          if (!this.label) {
+            this.label = this.getLabel(data);
+          }
+
+          this.tree[0].children.push(
+            { label: data.label, children: this.getItemurls(data.sequence, seqidx) },
+          );
 
           if (Array.isArray(data.sequence) && data.sequence[0] !== 'undefined') {
             data.sequence.map((seq) => this.itemurls.push(seq.id));
           }
           // make sure that urls are set just once on init
-          if (!this.itemurl && data.sequence[0] !== 'undefined') {
+          if (!this.itemurl) {
             this.itemurl = data.sequence[0].id;
             this.getImageUrl(this.itemurl);
-          }
-          if (!this.label) {
-            this.label = this.getLabel(data);
           }
         });
     },

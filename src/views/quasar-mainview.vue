@@ -1,15 +1,11 @@
 <template>
   <q-page>
     <q-splitter v-model="splitterone" :limits="[0, 100]">
-      <template v-if="panels.treeview" v-slot:before>
+      <template v-show="panels.treeview" v-slot:before>
         <Toolbar heading="Treeview" />
         <q-separator />
 
         <Treeview
-          :depth="depth"
-          :itemurl="itemurl"
-          :itemurls="itemurls"
-          :label="label"
           :manifests="manifests"
           :tree="tree"
           >
@@ -18,7 +14,7 @@
 
       <template v-slot:after>
         <q-splitter v-model="splittertwo" :limits="[0, 100]">
-          <template v-if="panels.text" v-slot:before>
+          <template v-show="panels.text" v-slot:before>
             <Toolbar heading="Text" />
             <q-separator />
 
@@ -32,7 +28,7 @@
 
           <template v-slot:after>
             <q-splitter v-model="splitterthree" :limits="[0, 100]">
-              <template v-if="panels.image && imageurl" v-slot:before>
+              <template v-show="panels.image && imageurl" v-slot:before>
                 <Toolbar heading="Image" />
                 <q-separator />
 
@@ -43,11 +39,11 @@
                 </OpenSeadragon>
               </template>
 
-              <template v-if="panels.metadata && manifests.length" v-slot:after>
+              <template v-show="panels.metadata" v-slot:after>
                 <Toolbar heading="Metadata" />
                 <q-separator />
 
-                <Metadata
+                <Metadata v-if="manifests.length"
                   :collection="collection"
                   :manifests="manifests"
                   >
@@ -66,11 +62,10 @@ import Content from '@/components/content.vue';
 import Metadata from '@/components/metadata.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
 import Toolbar from '@/components/quasar-toolbar.vue';
-// import Treeview from '@/components/treeview.vue';
 import Treeview from '@/components/quasar-tree.vue';
 
 export default {
-  name: 'TwinView',
+  name: 'MainView',
   components: {
     Content,
     Metadata,
@@ -80,11 +75,8 @@ export default {
   },
   props: {
     collection: Object,
-    depth: Number,
     imageurl: String,
     itemurl: String,
-    itemurls: Array,
-    label: String,
     manifests: Array,
     request: Function,
     tree: Array,
