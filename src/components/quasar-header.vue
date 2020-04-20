@@ -13,7 +13,7 @@
       <Navbar
         class="
           col
-          col-md-5
+          col-md-6
           col-xs-12
           column-xs
           justify-md-start

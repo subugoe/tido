@@ -1,7 +1,8 @@
 <template>
   <div>
     <q-btn
-      outline
+      flat
+      dense
       size="md"
       class="q-mb-md"
       v-for="(name, idx) in panels"
@@ -10,26 +11,31 @@
       :title="toggleTitle(idx)"
       @click="updateStatus(idx)"
       >
-      <q-icon class="q-pr-xs" size="16px" :name="toggleIcon(idx)" />
+      <q-icon class="q-pr-xs" size="xs" :name="toggleIcon(idx)" />
       {{ name }}
     </q-btn>
 
     <q-btn
       flat
+      dense
       size="md"
       class="q-mb-md"
       no-caps
       title="Reset Tabs"
       @click="resetPanelStatus"
       >
-      <q-icon class="q-pr-xs" size="16px" :name="fasUndo" />
+      <q-icon class="q-pr-xs" size="xs" :name="fasUndo" />
       {{ 'Reset Tabs' | capitalize }}
     </q-btn>
   </div>
 </template>
 
 <script>
-import { fasUndo, fasCircle, fasCheckCircle } from '@quasar/extras/fontawesome-v5';
+import {
+  fasUndo,
+  fasCircle,
+  fasCheckCircle,
+} from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Togglebar',
