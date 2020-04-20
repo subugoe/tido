@@ -79,7 +79,9 @@ export default {
 
 <style lang="scss" scoped>
 button {
-  margin-right: 8px;
+  @media (min-width: 600px) {
+    margin-right: 8px;
+  }
 }
 button:last-of-type {
   margin-right: 0;

@@ -11,7 +11,15 @@
 
     <div class="bar row q-px-md justify-sm-between">
       <Navbar
-        class="col col-xs-12 col-md-4 row justify-xs-center justify-md-start q-mb-md"
+        class="
+          col
+          col-md-4
+          col-xs-12
+          column-xs
+          justify-md-start
+          justify-xs-center
+          row-sm
+          "
         :itemurls="itemurls"
         :manifests="manifests"
       />
@@ -19,12 +27,13 @@
       <Togglebar
         class="
           col
-          column-xs
-          col-xs-12
           col-md-auto
-          row-sm
+          col-xs-12
+          column-xs
+          content-sm-center
           justify-sm-evenly
-          content-sm-center"
+          row-sm
+          "
         :status="status"
       />
     </div>
