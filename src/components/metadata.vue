@@ -33,7 +33,7 @@
     <q-list>
       <q-item>
         <q-item-section class="text-h6">
-          Manifest {{ sequenceindex + 1 }} / {{ manifests.length }}
+          Manuscript {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
       <q-item>
