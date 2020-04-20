@@ -2,6 +2,7 @@
   <div>
     <q-btn
       outline
+      size="md"
       class="q-mb-md"
       v-for="(name, idx) in panels"
       :aria-selected="toggleAria(idx)"
@@ -9,12 +10,13 @@
       :title="toggleTitle(idx)"
       @click="updateStatus(idx)"
       >
-      <q-icon class="q-pr-sm" size="24px" :name="toggleIcon(idx)" />
+      <q-icon class="q-pr-xs" size="16px" :name="toggleIcon(idx)" />
       {{ name }}
     </q-btn>
 
     <q-btn
       flat
+      size="md"
       class="q-mb-md"
       no-caps
       title="Reset Tabs"

@@ -24,13 +24,15 @@
       color="teal"
       class="q-mb-md"
       standout
-      style="max-width: 150px"
       type="number"
       placeholder="Page"
       dense
     >
       <template v-slot:append>
-        <q-icon :name="fasCheck" />
+        <q-icon
+          :name="fasCheck"
+          size="20px"
+          />
       </template>
     </q-input>
 
@@ -78,6 +80,7 @@ button:first-of-type {
   }
 }
 .q-input {
+  width: 100%;
   @media (min-width: 600px) {
     margin-right: 8px;
     width: 150px;
