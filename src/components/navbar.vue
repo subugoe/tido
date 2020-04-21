@@ -16,7 +16,7 @@
         :name="fasArrowLeft"
         size="24px"
         class="q-pr-sm"
-        />
+      />
       {{ captionprev }}
     </q-btn>
 
@@ -27,12 +27,12 @@
       type="number"
       placeholder="Page"
       dense
-    >
+      >
       <template v-slot:append>
         <q-icon
           :name="fasCheck"
           size="20px"
-          />
+        />
       </template>
     </q-input>
 
@@ -53,7 +53,7 @@
         :name="fasArrowRight"
         size="24px"
         class="q-pl-sm"
-        />
+      />
     </q-btn>
   </div>
 </template>

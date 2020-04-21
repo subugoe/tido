@@ -87,6 +87,7 @@ export default {
                 if (this.itemurl !== node.label) {
                   this.$root.$emit('update-item', node.label);
                 }
+
                 let idx = 0;
                 this.itemurls.forEach((item, index) => {
                   if (item === node.label) {
@@ -110,7 +111,7 @@ export default {
       if (Object.keys(this.collection).length) {
         return data.title && data.title[0].title ? data.title[0].title : data.label;
       }
-      return 'Manifest';
+      return data.label ? data.label : 'Manifest <small>(No label available)</small>';
     },
     getManifest(url, seqidx) {
       this.request(url)
@@ -121,15 +122,15 @@ export default {
             this.label = this.getLabel(data);
           }
 
-          this.tree[0].children.push(
-            { label: data.label, children: this.getItemurls(data.sequence, seqidx) },
-          );
-
           if (Array.isArray(data.sequence) && data.sequence[0] !== 'undefined') {
             data.sequence.map((seq) => this.itemurls.push(seq.id));
           }
+
+          this.tree[0].children.push(
+            { label: data.label, children: this.getItemurls(data.sequence, seqidx) },
+          );
           // make sure that urls are set just once on init
-          if (!this.itemurl) {
+          if (!this.itemurl && data.sequence[0]) {
             this.itemurl = data.sequence[0].id;
             this.getImageUrl(this.itemurl);
           }
