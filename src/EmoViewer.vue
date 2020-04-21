@@ -39,23 +39,6 @@ export default {
       itemurl: '',
       itemurls: [],
       label: '',
-      manifestlabels: [
-        'Cod. Arab. 236 Copenhagen',
-        'Cod. ARABE 3637',
-        'Borg. Arab. 201',
-        'Vat. Arab. 2054',
-        'Vat. Arab. 74',
-        'Sbath 25',
-        'Or. 1292. The Arabic Text in Leiden.',
-        'Mingana Arabic Christian 93',
-        'Cod. Sach. 339',
-        'Vat. Syriac 424',
-        'Brit. Libr. Or. 9321',
-        'Paris. ar. 3656',
-        'Cambrigde Add 3497',
-        'DFM 00614',
-        'GCAA 00486',
-      ],
       manifests: [],
       status: {
         image: true, text: true, metadata: true, treeview: true,
@@ -92,6 +75,15 @@ export default {
           this.imageurl = data.image && data.image.id ? data.image.id : '';
         });
     },
+    getItemIndex(nodelabel) {
+      let idx = 0;
+      this.itemurls.forEach((item, index) => {
+        if (item === nodelabel) {
+          idx = index;
+        }
+      });
+      return idx;
+    },
     getItemurls(sequence, label) {
       const urls = [];
 
@@ -101,20 +93,12 @@ export default {
             {
               label: obj.id,
               handler: (node) => {
-                if (this.itemurl !== node.label) {
-                  this.$root.$emit('update-item', node.label);
+                if (this.itemurl === node.label) {
+                  return;
                 }
-
-                let idx = 0;
-                this.itemurls.forEach((item, index) => {
-                  if (item === node.label) {
-                    idx = index;
-                  }
-                });
-
-                this.$root.$emit('update-item-index', idx);
-                this.$root.$emit('update-metadata', label, this.manifestlabels);
-                this.$root.$emit('update-sequence-index', label, this.manifestlabels);
+                this.$root.$emit('update-item', node.label);
+                this.$root.$emit('update-item-index', this.getItemIndex(node.label));
+                this.$root.$emit('update-sequence-index', label);
               },
             },
           );

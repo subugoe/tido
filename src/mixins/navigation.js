@@ -13,8 +13,8 @@ export default {
     updateItem() {
       this.$root.$emit('update-item', this.itemurls[this.itemindex]);
     },
-    updateMetadata() {
-      this.$root.$emit('update-metadata', this.sequenceindex);
+    updateSequenceIndex() {
+      this.$root.$emit('update-sequence-index', this.sequenceindex);
     },
     updateTreeNodes() {
       this.$root.$emit('update-tree-nodes', this.sequenceindex);

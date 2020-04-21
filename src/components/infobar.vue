@@ -42,9 +42,9 @@ export default {
     this.fasChevronRight = fasChevronRight;
   },
   mounted() {
-    this.$root.$on('update-metadata', (nodelabel, manifestlabels) => {
-      manifestlabels.forEach((label, index) => {
-        if (label === nodelabel) {
+    this.$root.$on('update-sequence-index', (nodelabel) => {
+      this.manifests.forEach((manifest, index) => {
+        if (manifest.label === nodelabel) {
           this.sequenceindex = index;
         }
       });

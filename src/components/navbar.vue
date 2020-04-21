@@ -9,7 +9,7 @@
         --itemindex;
         sequenceindex = computedsequenceindex;
         updateItem(itemurls[itemindex]);
-        updateMetadata(sequenceindex);
+        updateSequenceIndex(sequenceindex);
         updateTreeNodes(sequenceindex);"
       >
       <q-icon
@@ -45,7 +45,7 @@
         ++itemindex;
         sequenceindex = computedsequenceindex;
         updateItem(itemurls[itemindex]);
-        updateMetadata(sequenceindex);
+        updateSequenceIndex(sequenceindex);
         updateTreeNodes(sequenceindex);"
       >
       {{ captionnext }}
