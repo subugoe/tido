@@ -39,6 +39,23 @@ export default {
       itemurl: '',
       itemurls: [],
       label: '',
+      manifestlabels: [
+        'Cod. Arab. 236 Copenhagen',
+        'Cod. ARABE 3637',
+        'Borg. Arab. 201',
+        'Vat. Arab. 2054',
+        'Vat. Arab. 74',
+        'Sbath 25',
+        'Or. 1292. The Arabic Text in Leiden.',
+        'Mingana Arabic Christian 93',
+        'Cod. Sach. 339',
+        'Vat. Syriac 424',
+        'Brit. Libr. Or. 9321',
+        'Paris. ar. 3656',
+        'Cambrigde Add 3497',
+        'DFM 00614',
+        'GCAA 00486',
+      ],
       manifests: [],
       status: {
         image: true, text: true, metadata: true, treeview: true,
@@ -62,7 +79,7 @@ export default {
           this.tree.push({ label: this.label, children: [] });
 
           if (Array.isArray(data.sequence)) {
-            data.sequence.map((seq, seqidx) => this.getManifest(seq.id, seqidx));
+            data.sequence.forEach((seq) => this.getManifest(seq.id));
           }
         });
     },
@@ -75,7 +92,7 @@ export default {
           this.imageurl = data.image && data.image.id ? data.image.id : '';
         });
     },
-    getItemurls(sequence, seqidx) {
+    getItemurls(sequence, label) {
       const urls = [];
 
       if (Array.isArray(sequence)) {
@@ -96,8 +113,8 @@ export default {
                 });
 
                 this.$root.$emit('update-item-index', idx);
-                this.$root.$emit('update-metadata', seqidx);
-                this.$root.$emit('update-sequence-index', seqidx);
+                this.$root.$emit('update-metadata', label, this.manifestlabels);
+                this.$root.$emit('update-sequence-index', label, this.manifestlabels);
               },
             },
           );
@@ -113,7 +130,7 @@ export default {
       }
       return data.label ? data.label : 'Manifest <small>(No label available)</small>';
     },
-    getManifest(url, seqidx) {
+    getManifest(url) {
       this.request(url)
         .then((data) => {
           this.manifests.push(data);
@@ -127,7 +144,7 @@ export default {
           }
 
           this.tree[0].children.push(
-            { label: data.label, children: this.getItemurls(data.sequence, seqidx) },
+            { label: data.label, children: this.getItemurls(data.sequence, data.label) },
           );
           // make sure that urls are set just once on init
           if (!this.itemurl && data.sequence[0]) {

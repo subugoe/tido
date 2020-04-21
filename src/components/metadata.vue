@@ -64,8 +64,12 @@ export default {
     },
   },
   mounted() {
-    this.$root.$on('update-metadata', (index) => {
-      this.sequenceindex = index;
+    this.$root.$on('update-metadata', (nodelabel, manifestlabels) => {
+      manifestlabels.forEach((label, index) => {
+        if (label === nodelabel) {
+          this.sequenceindex = index;
+        }
+      });
     });
   },
 };
