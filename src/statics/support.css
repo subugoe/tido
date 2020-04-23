@@ -1,0 +1,23 @@
+.bibl
+.date
+.dateline
+.italic
+.note-comment
+.object
+.org
+.person
+.place
+.rs-person
+.seg
+.signed
+.superscript
+.unknown-element {
+  display: inline;
+}
+.italic {
+  font-style: italic;
+}
+.underline {
+  display: inline;
+  text-decoration: underline;
+}
