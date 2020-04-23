@@ -1,5 +1,5 @@
 <template>
-  <div v-html="content"></div>
+  <div :id="nodeid" v-html="content"></div>
 </template>
 
 <script>
@@ -7,12 +7,29 @@ export default {
   name: 'Content',
   props: {
     itemurl: String,
+    manifests: Array,
     request: Function,
   },
   data() {
     return {
       content: '',
+      nodeid: '__text',
     };
+  },
+  methods: {
+    getSupport(obj) {
+      if (obj.type === 'css') {
+        this.request(obj.url, 'text')
+          .then((data) => {
+            const styleElement = document.createElement('style');
+
+            styleElement.innerText = data.replace(
+              /^|}|,/gm, (x) => x.concat('#', this.nodeid, ' '),
+            );
+            document.head.appendChild(styleElement);
+          });
+      }
+    },
   },
   created() {
     this.request(this.itemurl)
@@ -25,6 +42,8 @@ export default {
       .catch(() => {
         // nested async request. promise is pending, so JSON_parse fails
       });
+
+    // this.manifests[index].support.map(this.getSupport);
   },
 };
 </script>

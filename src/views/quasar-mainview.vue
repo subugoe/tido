@@ -21,6 +21,7 @@
             <Content
               :key="itemurl"
               :itemurl="itemurl"
+              :manifests="manifests"
               :request="request"
               >
             </Content>
