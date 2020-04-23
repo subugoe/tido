@@ -21,6 +21,9 @@ export default {
           .then((content) => {
             this.content = content;
           });
+      })
+      .catch(() => {
+        // nested async request. promise is pending, so JSON_parse fails
       });
   },
 };

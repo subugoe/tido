@@ -2,7 +2,11 @@
   <q-header elevated class="bg-white text-black">
     <div class="bar row justify-center">
       <Infobar v-if="manifests.length"
-        class="col-12 col-auto q-px-md"
+        class="
+          col-auto
+          col-12
+          q-px-md
+          "
         :collection="collection"
         :itemurl="itemurl"
         :manifests="manifests"

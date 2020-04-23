@@ -1,8 +1,8 @@
 const routes = [
   {
     path: '/',
-    name: 'EmoViewer',
-    component: () => import('src/EmoViewer.vue'),
+    name: 'Viewer',
+    component: () => import('src/views/quasar-mainview.vue'),
   },
 ];
 // Always leave this as last one

@@ -13,7 +13,6 @@ module.exports = function (ctx) {
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
       // 'app.scss'
-      '~src/statics/emo-quasar.css'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -32,7 +31,7 @@ module.exports = function (ctx) {
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
-      // iconSet: 'material-icons', // Quasar icon set
+      iconSet: 'fontawesome-v5',
       lang: 'en-us', // Quasar language pack
 
       // Possible values for "all":
@@ -46,8 +45,6 @@ module.exports = function (ctx) {
 
       // components: [],
       // directives: [],
-
-      iconSet: 'fontawesome-v5',
 
       // Quasar plugins
       plugins: [],
@@ -110,8 +107,8 @@ module.exports = function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'Emo Viewer',
-        short_name: 'Emo Viewer',
+        name: 'EMo Viewer',
+        short_name: 'EMo Viewer',
         description: 'Viewer for the modular framework to present digital editions',
         display: 'standalone',
         orientation: 'portrait',

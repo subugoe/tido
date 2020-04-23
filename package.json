@@ -2,18 +2,15 @@
   "name": "viewer",
   "version": "0.0.1",
   "description": "Viewer for the modular framework to present digital editions",
-  "productName": "Emo Viewer",
+  "productName": "EMo Viewer",
   "cordovaId": "de.uni-goettingen.sub.emo",
   "capacitorId": "",
   "author": "Mathias Göbel <goebel@sub.uni-goettingen.de>",
   "private": true,
   "scripts": {
     "build": "quasar build",
-    "build:css": "bin/build-css.sh",
     "dev": "quasar dev",
-    "lint": "eslint --ext .js,.vue src",
-    "update:svg": "bin/update-svg.sh",
-    "watch:css": "bin/watch-css.sh"
+    "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
     "@quasar/extras": "^1.6.4",
@@ -28,13 +25,7 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-loader": "^3.0.3",
     "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-vue": "^6.1.2",
-    "node-sass": "^4.13.1",
-    "nodemon": "^2.0.3",
-    "postcss-calc": "^7.0.2",
-    "postcss-custom-properties": "^9.1.1",
-    "sass": "^1.26.3",
-    "sass-loader": "^8.0.2"
+    "eslint-plugin-vue": "^6.1.2"
   },
   "engines": {
     "node": ">= 10.18.1",
