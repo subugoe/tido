@@ -1,7 +1,7 @@
 const routes = [
   {
     path: '/',
-    name: 'Viewer',
+    name: 'MainView',
     component: () => import('src/views/quasar-mainview.vue'),
   },
 ];

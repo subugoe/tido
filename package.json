@@ -25,7 +25,8 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-loader": "^3.0.3",
     "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-vue": "^6.1.2"
+    "eslint-plugin-vue": "^6.1.2",
+    "sass-loader": "^8.0.2"
   },
   "engines": {
     "node": ">= 10.18.1",
