@@ -14,6 +14,7 @@ export default {
     return {
       content: '',
       nodeid: '__text',
+      sequenceindex: 0,
     };
   },
   methods: {
@@ -42,8 +43,13 @@ export default {
       .catch(() => {
         // nested async request. promise is pending, so JSON_parse fails
       });
-
-    // this.manifests[index].support.map(this.getSupport);
+  },
+  mounted() {
+    this.$root.$on('update-sequence-index', (index) => {
+      if (this.manifests[index].support) {
+        this.manifests[index].support.map(this.getSupport);
+      }
+    });
   },
 };
 </script>
