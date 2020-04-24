@@ -108,8 +108,7 @@ export default {
               }
               this.$root.$emit('update-item', node.label);
               this.$root.$emit('update-item-index', this.getItemIndex(node.label));
-              this.$root.$emit('update-nav-sequence', this.getSequenceIndex(label));
-              this.$root.$emit('update-sequence-index', label);
+              this.$root.$emit('update-sequence-index', this.getSequenceIndex(label));
             },
           },
         );
@@ -148,10 +147,10 @@ export default {
           }
         });
     },
-    getSequenceIndex(nodelabel) {
+    getSequenceIndex(label) {
       let index = 0;
       this.manifests.forEach((manifest, idx) => {
-        if (manifest.label === nodelabel) {
+        if (manifest.label === label) {
           index = idx;
         }
       });

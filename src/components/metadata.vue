@@ -64,12 +64,8 @@ export default {
     },
   },
   mounted() {
-    this.$root.$on('update-sequence-index', (nodelabel) => {
-      this.manifests.forEach((manifest, index) => {
-        if (manifest.label === nodelabel) {
-          this.sequenceindex = index;
-        }
-      });
+    this.$root.$on('update-sequence-index', (index) => {
+      this.sequenceindex = index;
     });
   },
 };
