@@ -4,7 +4,7 @@
       <q-btn
         v-for="(btn, idx) in buttons" :key="idx"
         class="q-mr-sm q-mb-sm"
-        color="black"
+        color="grey-8"
         outline
         round
         size="md"

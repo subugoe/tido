@@ -29,7 +29,7 @@ export default {
     this.fasCaretRight = fasCaretRight;
   },
   mounted() {
-    this.$root.$on('update-tree-nodes', (index) => {
+    this.$root.$on('update-sequence-index', (index) => {
       this.expanded.push(this.manifests[index].label);
     });
   },

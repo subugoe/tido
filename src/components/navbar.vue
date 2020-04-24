@@ -9,8 +9,7 @@
         --itemindex;
         sequenceindex = computedsequenceindex;
         updateItem(itemurls[itemindex]);
-        updateSequenceIndex(sequenceindex);
-        updateTreeNodes(sequenceindex);"
+        updateSequenceIndex(sequenceindex);"
       >
       <q-icon
         :name="fasArrowLeft"
@@ -45,8 +44,7 @@
         ++itemindex;
         sequenceindex = computedsequenceindex;
         updateItem(itemurls[itemindex]);
-        updateSequenceIndex(sequenceindex);
-        updateTreeNodes(sequenceindex);"
+        updateSequenceIndex(sequenceindex);"
       >
       {{ captionnext }}
       <q-icon

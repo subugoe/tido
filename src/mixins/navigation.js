@@ -16,9 +16,6 @@ export default {
     updateSequenceIndex() {
       this.$root.$emit('update-sequence-index', this.sequenceindex);
     },
-    updateTreeNodes() {
-      this.$root.$emit('update-tree-nodes', this.sequenceindex);
-    },
   },
   computed: {
     captionnext() {

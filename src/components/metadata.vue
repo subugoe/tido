@@ -2,7 +2,7 @@
   <div>
     <q-list v-if="Object.keys(collection).length">
       <q-item>
-        <q-item-section class="text-h6 text-uppercase">Collection</q-item-section>
+        <q-item-section class="text-h6">Collection</q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
@@ -34,7 +34,7 @@
 
     <q-list>
       <q-item>
-        <q-item-section class="text-h6 text-uppercase">
+        <q-item-section class="text-h6">
           Manuscript {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
@@ -50,16 +50,14 @@
 
     <q-list>
       <q-item>
-        <q-item-section class="text-h6 text-uppercase">
+        <q-item-section class="text-h6">
           Page {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
           <q-item-label overline class="text-uppercase">Pagelabel:</q-item-label>
-          <q-item-label>
-            <small style="color: red;">1st draft. Yet buggy ...</small>
-          </q-item-label>
+          <q-item-label>{{ }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
