@@ -5,6 +5,7 @@
       :icon="fasCaretRight"
       :nodes="tree"
       node-key="label"
+      label-key="labelKey"
       >
     </q-tree>
   </div>

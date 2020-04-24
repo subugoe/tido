@@ -36,7 +36,6 @@ export default {
       collection: {},
       config: {},
       imageurl: '',
-      itemcontent: {},
       itemurl: '',
       itemurls: [],
       label: '',
@@ -60,7 +59,7 @@ export default {
           this.collection = data;
           this.label = this.getLabel(data);
 
-          this.tree.push({ label: this.label, children: [] });
+          this.tree.push({ label: this.label, labelKey: this.label, children: [] });
 
           if (Array.isArray(data.sequence)) {
             data.sequence.forEach((seq) => this.getManifest(seq.id));
@@ -77,14 +76,17 @@ export default {
         });
     },
     getItemContent(itemurl) {
+      const itemcontent = {};
+
       this.request(itemurl)
         .then((data) => {
-          this.itemcontent.collectiontitle = data.title ? data.title : 'No Title provided';
-          this.itemcontent.contenturl = data.content;
-          this.itemcontent.imageurl = data.image && data.image.id ? data.image.id : '';
-          this.itemcontent.itemlanguage = data.language;
-          this.itemcontent.pagenumber = data.n ? data.n : 'No pagenumber provided';
+          itemcontent.collectiontitle = data.title ? data.title : 'No Title provided';
+          itemcontent.contenturl = data.content;
+          itemcontent.imageurl = data.image && data.image.id ? data.image.id : '';
+          itemcontent.itemlanguage = data.language;
+          itemcontent.pagenumber = data.n ? data.n : 'No pagenumber provided';
         });
+      return itemcontent;
     },
     getItemIndex(nodelabel) {
       let idx = 0;
@@ -97,11 +99,12 @@ export default {
     },
     getItemUrls(sequence, label) {
       const urls = [];
-
+      let ctr = 0;
       sequence.forEach((obj) => {
         urls.push(
           {
             label: obj.id,
+            labelKey: ctr += 1,
             handler: (node) => {
               if (this.itemurl === node.label) {
                 return;
@@ -134,7 +137,11 @@ export default {
           this.manifests.push(data);
 
           this.tree[0].children.push(
-            { label: data.label, children: this.getItemUrls(data.sequence, data.label) },
+            {
+              label: data.label,
+              labelKey: data.label,
+              children: this.getItemUrls(data.sequence, data.label),
+            },
           );
 
           if (!this.label) {

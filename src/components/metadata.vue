@@ -2,7 +2,7 @@
   <div>
     <q-list v-if="Object.keys(collection).length">
       <q-item>
-        <q-item-section class="text-h6">Collection</q-item-section>
+        <q-item-section class="text-h6 text-uppercase">Collection</q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
@@ -29,10 +29,12 @@
         </q-item-section>
       </q-item>
     </q-list>
+
     <q-separator inset class="q-mt-md q-mb-sm" />
+
     <q-list>
       <q-item>
-        <q-item-section class="text-h6">
+        <q-item-section class="text-h6 text-uppercase">
           Manuscript {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
@@ -40,6 +42,24 @@
         <q-item-section>
           <q-item-label overline class="text-uppercase">Label:</q-item-label>
           <q-item-label>{{ manifesttitle }}</q-item-label>
+        </q-item-section>
+      </q-item>
+    </q-list>
+
+    <q-separator inset class="q-mt-md q-mb-sm" />
+
+    <q-list>
+      <q-item>
+        <q-item-section class="text-h6 text-uppercase">
+          Page {{ itemindex + 1 }} / {{ itemcount }}
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section>
+          <q-item-label overline class="text-uppercase">Pagelabel:</q-item-label>
+          <q-item-label>
+            <small style="color: red;">1st draft. Yet buggy ...</small>
+          </q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
@@ -51,10 +71,12 @@ export default {
   name: 'Metadata',
   props: {
     collection: Object,
+    itemurl: String,
     manifests: Array,
   },
   data() {
     return {
+      itemindex: 0,
       sequenceindex: 0,
     };
   },
@@ -62,10 +84,21 @@ export default {
     manifesttitle() {
       return this.manifests[this.sequenceindex].label;
     },
+    itemcount() {
+      return this.manifests[this.sequenceindex].sequence.length;
+    },
   },
   mounted() {
     this.$root.$on('update-sequence-index', (index) => {
       this.sequenceindex = index;
+    });
+
+    this.$root.$on('update-item', (url) => {
+      this.manifests[this.sequenceindex].sequence.forEach((item, index) => {
+        if (item.id === url) {
+          this.itemindex = index;
+        }
+      });
     });
   },
 };

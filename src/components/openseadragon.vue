@@ -1,5 +1,5 @@
 <template>
-  <figure id="openseadragon" style="height: 100vh; overflow: hidden;">
+  <figure id="openseadragon">
     <nav>
       <q-btn
         v-for="(btn, idx) in buttons" :key="idx"
@@ -63,6 +63,8 @@ export default {
 
 <style scoped>
 figure {
+  height: 100vh;
   margin: 16px;
+  overflow: hidden;
 }
 </style>

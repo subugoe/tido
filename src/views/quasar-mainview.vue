@@ -46,6 +46,7 @@
 
                 <Metadata v-if="manifests.length"
                   :collection="collection"
+                  :itemurl="itemurl"
                   :manifests="manifests"
                   >
                 </Metadata>
