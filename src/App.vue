@@ -2,10 +2,10 @@
   <div id="q-app">
     <q-layout view="hHh lpr fff">
       <Header
-        :collection="collection"
-        :itemurl="itemurl"
+        :collectiontitle="collectiontitle"
         :itemurls="itemurls"
         :manifests="manifests"
+        :pagelabel="pagelabel"
         :status="status"
       />
 
@@ -14,7 +14,9 @@
           :collection="collection"
           :imageurl="imageurl"
           :itemurl="itemurl"
+          :language="itemlanguage"
           :manifests="manifests"
+          :pagelabel="pagelabel"
           :request="request"
           :tree="tree"
         />
@@ -34,11 +36,15 @@ export default {
   data() {
     return {
       collection: {},
+      collectiontitle: '',
+      contenturl: '',
       config: {},
       imageurl: '',
+      itemlanguage: '',
       itemurl: '',
       itemurls: [],
       label: '',
+      pagelabel: '',
       manifests: [],
       status: {
         image: true, text: true, metadata: true, treeview: true,
@@ -69,24 +75,15 @@ export default {
     getConfig() {
       this.config = JSON.parse(document.getElementById('emo-config').text);
     },
-    getImageUrl(url) {
+    getItemData(url) {
       this.request(url)
         .then((data) => {
+          this.collectiontitle = data.title;
+          this.contenturl = data.content;
           this.imageurl = data.image && data.image.id ? data.image.id : '';
+          this.itemlanguage = data.language;
+          this.pagelabel = data.n ? data.n : 'No pagelabel :(';
         });
-    },
-    getItemContent(itemurl) {
-      const itemcontent = {};
-
-      this.request(itemurl)
-        .then((data) => {
-          itemcontent.collectiontitle = data.title ? data.title : 'No Title provided';
-          itemcontent.contenturl = data.content;
-          itemcontent.imageurl = data.image && data.image.id ? data.image.id : '';
-          itemcontent.itemlanguage = data.language;
-          itemcontent.pagenumber = data.n ? data.n : 'No pagenumber provided';
-        });
-      return itemcontent;
     },
     getItemIndex(nodelabel) {
       let idx = 0;
@@ -100,6 +97,7 @@ export default {
     getItemUrls(sequence, label) {
       const urls = [];
       let ctr = 0;
+
       sequence.forEach((obj) => {
         urls.push(
           {
@@ -150,7 +148,7 @@ export default {
           // make sure that urls are set just once on init
           if (!this.itemurl && data.sequence[0]) {
             this.itemurl = data.sequence[0].id;
-            this.getImageUrl(data.sequence[0].id);
+            this.getItemData(data.sequence[0].id);
           }
         });
     },
@@ -182,7 +180,7 @@ export default {
       // NOTE: Set imageurl to an empty string. Otherwise, if there is no corresponding image,
       // the "preceding" image according to the "preceding" itemurl will be shown.
       this.imageurl = '';
-      this.getImageUrl(url);
+      this.getItemData(url);
     });
 
     this.$root.$on('update-panel-status', (status) => {

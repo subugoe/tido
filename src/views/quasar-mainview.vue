@@ -46,8 +46,9 @@
 
                 <Metadata v-if="manifests.length"
                   :collection="collection"
-                  :itemurl="itemurl"
+                  :language="language"
                   :manifests="manifests"
+                  :pagelabel="pagelabel"
                   >
                 </Metadata>
               </template>
@@ -79,7 +80,9 @@ export default {
     collection: Object,
     imageurl: String,
     itemurl: String,
+    language: String,
     manifests: Array,
+    pagelabel: String,
     request: Function,
     tree: Array,
   },

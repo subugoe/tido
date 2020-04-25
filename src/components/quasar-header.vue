@@ -7,9 +7,9 @@
           col-12
           q-px-md
           "
-        :collection="collection"
-        :itemurl="itemurl"
+        :collectiontitle="collectiontitle"
         :manifests="manifests"
+        :pagelabel="pagelabel"
       />
     </div>
 
@@ -57,10 +57,10 @@ export default {
     Togglebar,
   },
   props: {
-    collection: Object,
-    itemurl: String,
+    collectiontitle: String,
     itemurls: Array,
     manifests: Array,
+    pagelabel: String,
     status: Object,
   },
 };
