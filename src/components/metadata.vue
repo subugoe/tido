@@ -56,7 +56,7 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Pagelabel:</q-item-label>
+          <q-item-label overline class="text-uppercase">Label:</q-item-label>
           <q-item-label>{{ }}</q-item-label>
         </q-item-section>
       </q-item>

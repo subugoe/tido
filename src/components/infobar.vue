@@ -5,7 +5,7 @@
       <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
       <span>{{ cut(manifesttitle) }}</span>
       <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
-      <span>{{ cut(itemurl) }}</span>
+      <span>Page {{ itemindex + 1 }}</span>
     </h1>
   </div>
 </template>
@@ -17,11 +17,11 @@ export default {
   name: 'Infobar',
   props: {
     collection: Object,
-    itemurl: String,
     manifests: Array,
   },
   data() {
     return {
+      itemindex: 0,
       sequenceindex: 0,
     };
   },
@@ -44,6 +44,14 @@ export default {
   mounted() {
     this.$root.$on('update-sequence-index', (index) => {
       this.sequenceindex = index;
+    });
+
+    this.$root.$on('update-item', (url) => {
+      this.manifests[this.sequenceindex].sequence.forEach((item, index) => {
+        if (item.id === url) {
+          this.itemindex = index;
+        }
+      });
     });
   },
 };
