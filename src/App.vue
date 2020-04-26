@@ -12,8 +12,8 @@
       <q-page-container>
         <router-view
           :collection="collection"
+          :contenturl="contenturl"
           :imageurl="imageurl"
-          :itemurl="itemurl"
           :language="itemlanguage"
           :manifests="manifests"
           :pagelabel="pagelabel"

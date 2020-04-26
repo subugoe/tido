@@ -19,8 +19,8 @@
             <q-separator />
 
             <Content
-              :key="itemurl"
-              :itemurl="itemurl"
+              :key="contenturl"
+              :contenturl="contenturl"
               :manifests="manifests"
               :request="request"
               >
@@ -78,8 +78,8 @@ export default {
   },
   props: {
     collection: Object,
+    contenturl: String,
     imageurl: String,
-    itemurl: String,
     language: String,
     manifests: Array,
     pagelabel: String,

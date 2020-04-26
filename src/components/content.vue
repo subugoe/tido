@@ -6,7 +6,7 @@
 export default {
   name: 'Content',
   props: {
-    itemurl: String,
+    contenturl: String,
     manifests: Array,
     request: Function,
   },
@@ -32,17 +32,8 @@ export default {
       }
     },
   },
-  created() {
-    this.request(this.itemurl)
-      .then((data) => {
-        this.request(data.content, 'text')
-          .then((content) => {
-            this.content = content;
-          });
-      })
-      .catch(() => {
-        // nested async request. promise is pending, so JSON_parse fails
-      });
+  async created() {
+    this.content = await this.request(this.contenturl, 'text').then((data) => data);
   },
   mounted() {
     this.$root.$on('update-sequence-index', (index) => {
