@@ -1,16 +1,15 @@
 <template>
   <q-header elevated class="bg-white text-black">
-    <div class="bar row justify-center">
+    <div class="bar row justify-between items-center">
       <Infobar v-if="manifests.length"
-        class="
-          col-auto
-          col-12
-          q-px-md
-          "
+        class="col-xs-12 col-md-11 q-pl-md"
         :collectiontitle="collectiontitle"
         :manifests="manifests"
         :pagelabel="pagelabel"
       />
+      <Language
+        class="col-xs-12 col-md-1 q-pr-md content-md-end"
+        />
     </div>
 
     <div class="bar row q-px-md justify-sm-between">
@@ -48,6 +47,7 @@
 import Infobar from '@/components/infobar.vue';
 import Navbar from '@/components/navbar.vue';
 import Togglebar from '@/components/togglebar.vue';
+import Language from '@/components/language.vue';
 
 export default {
   name: 'Header',
@@ -55,6 +55,7 @@ export default {
     Infobar,
     Navbar,
     Togglebar,
+    Language,
   },
   props: {
     collectiontitle: String,
