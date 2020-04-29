@@ -5,8 +5,9 @@
         v-for="(btn, idx) in buttons" :key="idx"
         class="q-mr-sm q-mb-sm"
         color="grey-8"
-        outline
+        style="background: #FFFFFF"
         round
+        flat
         size="md"
         :id="btn.id"
         >
