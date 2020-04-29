@@ -46,6 +46,7 @@
 
                 <Metadata v-if="manifests.length"
                   :collection="collection"
+                  :config="config"
                   :language="language"
                   :manifests="manifests"
                   :pagelabel="pagelabel"
@@ -78,6 +79,7 @@ export default {
   },
   props: {
     collection: Object,
+    config: Object,
     contenturl: String,
     imageurl: String,
     language: String,

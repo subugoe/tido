@@ -1,5 +1,6 @@
 export default {
   props: {
+    config: Object,
     itemurls: Array,
     manifests: Array,
   },
@@ -23,13 +24,13 @@ export default {
 
       return this.sequenceindex < this.sequencecount - 1
       && lastindexes[this.sequenceindex] === this.itemindex
-        ? 'Next Manifest'
-        : 'Next Item';
+        ? `Next ${this.config.manifestlabel}`
+        : `Next ${this.config.itemlabel}`;
     },
     captionprev() {
       return this.sequenceindex > 0 && this.firstiteminsequence === this.itemindex
-        ? 'Prev Manifest'
-        : 'Prev Item';
+        ? `Prev ${this.config.manifestlabel}`
+        : `Prev ${this.config.itemlabel}`;
     },
     computedsequenceindex() {
       const itemcount = this.itemspersequence;

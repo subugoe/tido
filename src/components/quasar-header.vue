@@ -20,6 +20,7 @@
           justify-xs-center
           row-sm
           "
+        :config="config"
         :itemurls="itemurls"
         :manifests="manifests"
       />
@@ -42,20 +43,21 @@
 
 <script>
 import Infobar from '@/components/infobar.vue';
+// import Language from '@/components/language.vue';
 import Navbar from '@/components/navbar.vue';
 import Togglebar from '@/components/togglebar.vue';
-// import Language from '@/components/language.vue';
 
 export default {
   name: 'Header',
   components: {
     Infobar,
+    // Language,
     Navbar,
     Togglebar,
-    // Language,
   },
   props: {
     collectiontitle: String,
+    config: Object,
     itemurls: Array,
     manifests: Array,
     pagelabel: String,

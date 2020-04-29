@@ -3,6 +3,7 @@
     <q-layout view="hHh lpr fff">
       <Header
         :collectiontitle="collectiontitle"
+        :config="config"
         :itemurls="itemurls"
         :manifests="manifests"
         :pagelabel="pagelabel"
@@ -12,6 +13,7 @@
       <q-page-container>
         <router-view
           :collection="collection"
+          :config="config"
           :contenturl="contenturl"
           :imageurl="imageurl"
           :language="itemlanguage"
@@ -102,7 +104,7 @@ export default {
         urls.push(
           {
             label: obj.id,
-            labelKey: ctr += 1,
+            labelKey: `${this.config.itemlabel} ${ctr += 1}`,
             handler: (node) => {
               if (this.itemurl === node.label) {
                 return;

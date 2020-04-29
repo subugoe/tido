@@ -22,10 +22,11 @@
     <q-input
       color="teal"
       class="q-mb-md"
+      dense
+      min="1"
       standout
       type="number"
-      placeholder="Page"
-      dense
+      :placeholder="config.itemlabel"
       >
       <template v-slot:append>
         <q-icon

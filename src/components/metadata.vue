@@ -35,7 +35,7 @@
     <q-list>
       <q-item>
         <q-item-section class="text-h6 caps">
-          Manuscript {{ sequenceindex + 1 }} / {{ manifests.length }}
+          {{ config.manifestlabel }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
       <q-item>
@@ -51,7 +51,7 @@
     <q-list>
       <q-item>
         <q-item-section class="text-h6 caps">
-          Page {{ itemindex + 1 }} / {{ itemcount }}
+          {{ config.itemlabel }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
       <q-item>
@@ -75,6 +75,7 @@ export default {
   name: 'Metadata',
   props: {
     collection: Object,
+    config: Object,
     language: String,
     manifests: Array,
     pagelabel: String,
