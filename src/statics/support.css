@@ -21,3 +21,9 @@
   display: inline;
   text-decoration: underline;
 }
+
+
+/* AHIKAR */
+#__text {
+  direction: rtl;
+}
