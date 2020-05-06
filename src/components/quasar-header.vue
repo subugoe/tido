@@ -43,7 +43,6 @@
 
 <script>
 import Infobar from '@/components/infobar.vue';
-// import Language from '@/components/language.vue';
 import Navbar from '@/components/navbar.vue';
 import Togglebar from '@/components/togglebar.vue';
 
@@ -51,7 +50,6 @@ export default {
   name: 'Header',
   components: {
     Infobar,
-    // Language,
     Navbar,
     Togglebar,
   },
