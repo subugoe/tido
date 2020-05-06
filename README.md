@@ -2,6 +2,8 @@
 
 Viewer for the modular framework to present digital editions
 
+Demo: https://subugoe.pages.gwdg.de/emo/Qviewer/
+
 ## Install the dependencies
 ```bash
 npm install
