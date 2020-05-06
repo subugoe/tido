@@ -2,6 +2,8 @@
 
 Viewer for the modular framework to present digital editions
 
+..
+
 ## Install the dependencies
 ```bash
 npm install
