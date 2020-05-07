@@ -10,8 +10,8 @@ build:
   image: node:latest
   stage: build
   script:
-   - npm install
    - npm install --global @quasar/cli
+   - npm install
    - quasar build
   artifacts:
     paths:
@@ -19,9 +19,10 @@ build:
 
 pages:
   image: node:latest
-  only:
-    - master
-    - develop
+# at the very early stage lets deploy for every branch
+#  only:
+#    - master
+#    - develop
   stage: deploy
   script:
    - cp --remove-destination --recursive dist/* public
@@ -35,8 +36,8 @@ pages:
     - master
   stage: deploy
   script:
-   - yarn
-   - yarn run build
+   - npm install
+   - npm run build
    - mkdir emo-viewer && mv dist/js/* emo-viewer/
   artifacts:
     expire_in: 5 yrs

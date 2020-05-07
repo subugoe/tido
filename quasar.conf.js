@@ -1,17 +1,19 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
+const path = require('path')
+
 module.exports = function (ctx) {
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
-    boot: [
-    ],
+    boot: [],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
-      'app.scss'
+      // 'app.scss'
+      '../statics/support.css'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -24,13 +26,13 @@ module.exports = function (ctx) {
       // 'line-awesome',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
-      'roboto-font', // optional, you are not bound to it
-      'material-icons' // optional, you are not bound to it
+      // 'roboto-font', // optional, you are not bound to it
+      // 'material-icons' // optional, you are not bound to it
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
-      iconSet: 'material-icons', // Quasar icon set
+      iconSet: 'fontawesome-v5',
       lang: 'en-us', // Quasar language pack
 
       // Possible values for "all":
@@ -42,11 +44,12 @@ module.exports = function (ctx) {
       //            (not treeshaking Quasar; biggest bundle size; convenient)
       all: 'auto',
 
-      components: [],
-      directives: [],
+      // components: [],
+      // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [],
+      cssAddon: true
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
@@ -67,6 +70,11 @@ module.exports = function (ctx) {
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
+        cfg.resolve.alias = {
+          ...cfg.resolve.alias, // This adds the existing alias
+
+          '@': path.resolve(__dirname, './src/'),
+        },
         cfg.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
@@ -83,7 +91,7 @@ module.exports = function (ctx) {
     devServer: {
       https: false,
       port: 8080,
-      open: true // opens browser window automatically
+      open: false // opens browser window automatically
     },
 
     // animations: 'all', // --- includes all animations
@@ -100,8 +108,8 @@ module.exports = function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'Emo Viewer',
-        short_name: 'Emo Viewer',
+        name: 'EMo Viewer',
+        short_name: 'EMo Viewer',
         description: 'Viewer for the modular framework to present digital editions',
         display: 'standalone',
         orientation: 'portrait',

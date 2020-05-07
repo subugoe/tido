@@ -1,19 +1,14 @@
-
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/Index.vue') },
-    ],
+    name: 'MainView',
+    component: () => import('src/views/quasar-mainview.vue'),
   },
 ];
-
 // Always leave this as last one
 if (process.env.MODE !== 'ssr') {
   routes.push({
     path: '*',
-    component: () => import('pages/Error404.vue'),
   });
 }
 
