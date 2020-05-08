@@ -1,5 +1,6 @@
 <template>
   <div class="bottom">
+    <q-separator />
     <Language />
   </div>
 </template>
@@ -14,3 +15,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.bottom {
+  background: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+</style>

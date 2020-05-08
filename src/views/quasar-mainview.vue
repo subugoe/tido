@@ -58,7 +58,6 @@
         </q-splitter>
       </template>
     </q-splitter>
-    <q-separator />
     <Bottom />
   </q-page>
 </template>
