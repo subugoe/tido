@@ -6,6 +6,7 @@
   "cordovaId": "de.uni-goettingen.sub.emo",
   "capacitorId": "",
   "author": "Mathias Göbel <goebel@sub.uni-goettingen.de>",
+  "contributors": ["Nils Windisch"],
   "private": true,
   "scripts": {
     "build": "quasar build",
