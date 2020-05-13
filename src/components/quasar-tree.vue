@@ -1,11 +1,14 @@
 <template>
   <div class="q-pa-md q-gutter-sm">
-    <q-tree
+    <q-tree style="cursor: pointer;"
       :expanded.sync="expanded"
       :icon="fasCaretRight"
+      label-key="labelKey"
       :nodes="tree"
       node-key="label"
-      label-key="labelKey"
+      :selected.sync="selected"
+      selected-color="grey"
+      text-color="black"
       >
     </q-tree>
   </div>
@@ -23,6 +26,7 @@ export default {
   data() {
     return {
       expanded: ['The Story and Proverbs of Ahikar the Wise'],
+      selected: null,
     };
   },
   created() {
