@@ -1,33 +1,60 @@
 # Emo Viewer (viewer)
 
-Viewer for the modular framework to present digital editions
+Viewer for the modular framework to present digital editions.
 
 Demo: https://subugoe.pages.gwdg.de/emo/Qviewer/
 
-## Install the dependencies
+
+## Getting Started
+
+### Prerequisites
+
+To get the EMo Viewer up and running you should have the following software installed:
+
+* npm
+* vue-cli (globally installed)
+* vue-cli-service-global (globally installed)
+
+For using the development mode you also need
+* quasar-cli (globally installed)
+
+To get all dependencies via `npm`, simply run
+
+```bash
+npm install -g @vue/cli @vue/cli-service-global @quasar/cli
+```
+
+### Installing
+
+### Get the Dependencies
 
 ```bash
 npm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### Start the App in Development Mode (Hot-Code Reloading, Error Reporting, etc.)
 
 ```bash
 quasar dev
 ```
 
-### Lint the files
+### Lint the Files
 
 ```bash
 npm run lint
 ```
 
-### Build the app for production
+### Build the App for Production
 
 ```bash
 quasar build
 ```
 
-### Customize the configuration
+### Customize the Configuration
 
 See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+
+
+## Authors
+
+See the list of [contributors](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/graphs/develop) who participated in this project.
