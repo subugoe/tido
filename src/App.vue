@@ -1,6 +1,6 @@
 <template>
   <div id="q-app">
-    <q-layout view="hHh lpr fff">
+    <q-layout view="hHh lpr fFf">
       <Header
         :collectiontitle="collectiontitle"
         :config="config"
@@ -23,17 +23,21 @@
           :tree="tree"
         />
       </q-page-container>
+
+      <Footer />
     </q-layout>
   </div>
 </template>
 
 <script>
 import Header from '@/components/quasar-header.vue';
+import Footer from '@/components/quasar-footer.vue';
 
 export default {
   name: 'Viewer',
   components: {
     Header,
+    Footer,
   },
   data() {
     return {

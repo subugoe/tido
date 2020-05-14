@@ -58,7 +58,6 @@
         </q-splitter>
       </template>
     </q-splitter>
-    <Bottom />
   </q-page>
 </template>
 
@@ -68,7 +67,6 @@ import Metadata from '@/components/metadata.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
 import Toolbar from '@/components/quasar-toolbar.vue';
 import Treeview from '@/components/quasar-tree.vue';
-import Bottom from '@/components/quasar-bottom.vue';
 
 export default {
   name: 'MainView',
@@ -78,7 +76,6 @@ export default {
     OpenSeadragon,
     Toolbar,
     Treeview,
-    Bottom,
   },
   props: {
     collection: Object,
