@@ -2,8 +2,9 @@
 
 Viewer for the modular framework to present digital editions.
 
-Demo: https://subugoe.pages.gwdg.de/emo/Qviewer/
+Demo: https://subugoe.pages.gwdg.de/emo/Qviewer/develop
 
+(for newer branches the demo is deployed in a directory named with branch name lowercased, shortened to 63 bytes, and with everything except `0-9` and `a-z` replaced with `-` (CI_COMMIT_REF_SLUG). Also the commit short hash can be used to see a demo.
 
 ## Getting Started
 
@@ -58,3 +59,10 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 ## Authors
 
 See the list of [contributors](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/graphs/develop) who participated in this project.
+
+## Dockerfile
+The dockerfile is used at GitLab CI. It needs to be updated, when either node or quasar-cli should be updated.
+```
+docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/qviewer/node . 
+docker push docker.gitlab.gwdg.de/subugoe/emo/qviewer/node
+```

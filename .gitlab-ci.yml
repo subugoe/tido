@@ -5,12 +5,12 @@ cache:
 stages:
   - build
   - deploy
+  - preserve-pages
 
 build:
-  image: node:latest
+  image: docker.gitlab.gwdg.de/subugoe/emo/qviewer/node:latest
   stage: build
   script:
-   - npm install --global @quasar/cli
    - npm install
    - quasar build
   artifacts:
@@ -18,17 +18,35 @@ build:
      - dist/
 
 pages:
-  image: node:latest
+  image: docker.gitlab.gwdg.de/mgoebel/swiss_knife/fedora:latest
 # at the very early stage lets deploy for every branch
 #  only:
 #    - master
 #    - develop
   stage: deploy
+  cache:
+    untracked: true
+    paths:
+      - public
+  when: always
   script:
-   - cp --remove-destination --recursive dist/* public
+   - curl $(base64 --decode <<< ${wannaBeBlob})/data.tar.gz --output data.tar.gz
+   - tar -xzf data.tar.gz
+   - mkdir -p public/${CI_COMMIT_SHORT_SHA}
+   - cp --remove-destination --recursive dist/spa/* public/${CI_COMMIT_SHORT_SHA}
+   - mkdir -p public/${CI_COMMIT_REF_SLUG}
+   - cp --remove-destination --recursive dist/spa/* public/${CI_COMMIT_REF_SLUG}
   artifacts:
+    name: "$CI_COMMIT_SHORT_SHA"
     paths:
      - public
+
+pushback:
+  image: docker.gitlab.gwdg.de/mgoebel/swiss_knife/fedora:latest
+  stage: preserve-pages
+  script:
+    - tar -czf data.tar.gz public
+    - lftp -c "set ssl:verify-certificate no && open $(base64 --decode <<< ${wannaBeBlob}) && put data.tar.gz -o test.tar.gzad"
 
 .production:
   image: node:latest
