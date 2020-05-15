@@ -36,7 +36,10 @@ pages:
    - cp --remove-destination --recursive dist/spa/* public/${CI_COMMIT_SHORT_SHA}
    - mkdir -p public/${CI_COMMIT_REF_SLUG}
    - cp --remove-destination --recursive dist/spa/* public/${CI_COMMIT_REF_SLUG}
-  artifacts:
+  environment:
+    name: ${CI_COMMIT_REF_SLUG}
+    url: https://subugoe.pages.gwdg.de/emo/Qviewer/${CI_COMMIT_REF_SLUG}/#/
+   artifacts:
     name: "$CI_COMMIT_SHORT_SHA"
     paths:
      - public
