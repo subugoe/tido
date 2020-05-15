@@ -46,7 +46,7 @@ pushback:
   stage: preserve-pages
   script:
     - tar -czf data.tar.gz public
-    - lftp -c "set ssl:verify-certificate no && open $(base64 --decode <<< ${wannaBeBlob}) && put data.tar.gz -o test.tar.gzad"
+    - lftp -c "set ssl:verify-certificate no && open $(base64 --decode <<< ${wannaBeBlob}) && put data.tar.gz"
 
 .production:
   image: node:latest
