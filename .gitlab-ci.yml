@@ -39,7 +39,7 @@ pages:
   environment:
     name: ${CI_COMMIT_REF_SLUG}
     url: https://subugoe.pages.gwdg.de/emo/Qviewer/${CI_COMMIT_REF_SLUG}/
-   artifacts:
+  artifacts:
     name: "$CI_COMMIT_SHORT_SHA"
     paths:
      - public
