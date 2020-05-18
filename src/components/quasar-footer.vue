@@ -1,6 +1,6 @@
 <template>
   <q-footer bordered reveal class="bg-white">
-    <Language />
+    <Language v-if="standalone" />
   </q-footer>
 </template>
 
@@ -11,6 +11,9 @@ export default {
   name: 'Footer',
   components: {
     Language,
+  },
+  props: {
+    standalone: Boolean,
   },
 };
 </script>

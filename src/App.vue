@@ -24,7 +24,9 @@
         />
       </q-page-container>
 
-      <Footer />
+      <Footer
+        :standalone="config.standalone"
+      />
     </q-layout>
   </div>
 </template>

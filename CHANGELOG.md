@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3] - 2020-05-18
+### Added
+- extended config object in index.html by a key named "standalone" (Possible values: true || false).
+This indicates if the viewer will be used embedded or standalone respectively.
+If used in the latter case, the language toggle shows up in the footer and vice versa.
+
 ## [0.0.2] - 2020-05-15
 ### Added
 - openseadragon.vue: Event listener for fullscreen change
