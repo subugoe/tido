@@ -24,6 +24,7 @@ import {
   fasSearchMinus,
   fasExpand,
   fasExpandArrowsAlt,
+  fasCompressArrowsAlt,
 } from '@quasar/extras/fontawesome-v5';
 
 export default {
@@ -58,6 +59,14 @@ export default {
     const viewer = new OpenSeadragon.Viewer(this.options);
     OpenSeadragon.setString('Tooltips.Home', 'Default View');
     OpenSeadragon.setString('Tooltips.FullPage', 'Toggle Fullscreen');
+
+    document.addEventListener('fullscreenchange', () => {
+      Object.values(this.buttons).forEach((v) => {
+        if (v.id === 'fullscreen') {
+          v.svg = document.fullscreenElement !== null ? fasCompressArrowsAlt : fasExpandArrowsAlt;
+        }
+      });
+    });
   },
 };
 </script>
