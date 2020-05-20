@@ -43,8 +43,8 @@ npm install
 ```bash
 quasar dev
 ```
-
-### Lint the Files
+ 
+### Lint the files
 
 ```bash
 npm run lint
