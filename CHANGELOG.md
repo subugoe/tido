@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.6] - 2020-05-20
+### Added
+- added titles in the footer for Language- and Info-icon
+
+### Fixed
+- icons side by side via css float
+
 ## [0.0.4] - 2020-05-19
 ### Added
 - Text can now be zoomed in and out to a max of 32px and min of 8px. The fontsize defaults to 14px. It is tracked during browsing.
