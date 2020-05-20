@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.4] - 2020-05-19
+### Added
+- Text can now be zoomed in and out to a max of 32px and min of 8px. The fontsize defaults to 14px. It is tracked during browsing.
+- Software info includes links to documentation, source code and bug reporting
+
 ## [0.0.3] - 2020-05-18
 ### Added
 - extended config object in index.html by a key named "standalone" (Possible values: true || false).
