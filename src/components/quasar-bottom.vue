@@ -1,8 +1,9 @@
 <template>
-  <q-footer bordered reveal class="bg-white">
-    <Language v-if="standalone" />
+  <div class="bottom">
+    <q-separator />
+    <Language />
     <Softwareinfo />
-  </q-footer>
+  </div>
 </template>
 
 <script>
@@ -10,13 +11,20 @@ import Language from '@/components/language.vue';
 import Softwareinfo from '@/components/softwareinfo.vue';
 
 export default {
-  name: 'Footer',
+  name: 'Bottom',
   components: {
     Language,
     Softwareinfo,
   },
-  props: {
-    standalone: Boolean,
-  },
 };
 </script>
+
+<style>
+.bottom {
+  background: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+}
+</style>
