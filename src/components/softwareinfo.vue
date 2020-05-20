@@ -1,13 +1,13 @@
 <template>
 
-  <div class="softwareinfo">
+  <div class="softwareinfo col-xs-auto">
     <q-btn
       flat
       color="grey"
-      size="sm"
       label=""
+      title="Project info"
       @click="infobox = true">
-      <q-icon size="sm" :name="fasInfoCircle" />
+      <q-icon size="xs" :name="fasInfoCircle" />
     </q-btn>
     <q-dialog v-model="infobox">
       <q-card>
@@ -19,7 +19,7 @@
             Slim, easy to use and mobile-friendly text and image viewer
           </p>
           <p>Author: State and University Library Göttingen (SUB Göttingen)</p>
-          <p class="q-mb-none">Version 0.0.1, License AGPL-3.0</p>
+          <p class="q-mb-none">Version 0.5.0, License AGPL-3.0</p>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
