@@ -1,14 +1,16 @@
 <template>
-
-  <div class="language">
+  <div class="language col-xs-auto">
     <q-btn
       flat
       color="grey"
-      label="">
+      label=""
+      title="Change language"
+      >
       <q-icon
         class=""
         size="md"
-        :name="fasLanguage" />
+        :name="fasLanguage"
+      />
       <q-menu
         fit
         anchor="center middle"
@@ -22,7 +24,6 @@
             <q-item-section>DE</q-item-section>
           </q-item>
         </q-list>
-
       </q-menu>
     </q-btn>
       <!--

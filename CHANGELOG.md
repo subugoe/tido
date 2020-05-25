@@ -6,12 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
 ## [0.0.5] - 2020-05-20
 ### Added
 - add a contribution guideline
+- added titles in the footer for Language- and Info-icon
 
 ### Changed
 - make README more comprehensible for outsiders
+
+### Fixed
+- icons side by side via css float
 
 ## [0.0.4] - 2020-05-19
 ### Added

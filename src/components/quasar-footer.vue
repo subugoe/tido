@@ -1,5 +1,5 @@
 <template>
-  <q-footer bordered reveal class="bg-white">
+  <q-footer bordered reveal class="bg-white row justify-start items-center ">
     <Language v-if="standalone" />
     <Softwareinfo />
   </q-footer>
