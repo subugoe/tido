@@ -13,11 +13,12 @@ If you can, please provide use cases for this feature.
 Shall we add your feature to the documentation?
 * [ ] I've already did it!
 * [ ] At least I added a headline to the documentation.
+* [ ] Not applicable
 
 ## Function Documentation
 * [ ] Of course I prepared all my functions with an appropriate documentation.
 
-## Are there parts of the documentation we have to adjust?
+## Are There Parts of the Documentation We Have to Adjust?
 * [ ] No.
 * [ ] Yes, but I'd like someone else to do it.
 * [ ] Yes, and I already did!
@@ -38,4 +39,4 @@ Add all related issues and especially those to be closed.
 
 # Logs and Screenshots
 
-/cc @schneider210 @mgoebel
+/cc [Mathias Göbel](https://gitlab.gwdg.de/mgoebel), [Frank Schneider](https://gitlab.gwdg.de/schneider210), [Michelle Weidling](https://gitlab.gwdg.de/mrodzis)

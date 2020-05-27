@@ -11,6 +11,6 @@ Is this feature an enhancement of existing code or a completely new feature?
   * [ ] new feature
 
 # Related Tickets
-Add all related issues if applicable.
+Add all related issues (if applicable).
 
-/cc @mgoebel, @schneider210
+/cc [Mathias Göbel](https://gitlab.gwdg.de/mgoebel), [Frank Schneider](https://gitlab.gwdg.de/schneider210), [Michelle Weidling](https://gitlab.gwdg.de/mrodzis)

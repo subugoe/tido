@@ -36,7 +36,7 @@ How much impact does this bug have on the product or further development?
 # Program and – if applicable – dependency version
 Which version of the software did you use?
 
-# Related Tickets
-Add related issues if applicable.
+# Related tickets
+Add related issues (if applicable).
 
-/cc @mgoebel, @schneider210
+/cc [Mathias Göbel](https://gitlab.gwdg.de/mgoebel), [Frank Schneider](https://gitlab.gwdg.de/schneider210), [Michelle Weidling](https://gitlab.gwdg.de/mrodzis)
