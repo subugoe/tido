@@ -22,6 +22,7 @@ To get the EMo Viewer up and running you should have the following software inst
 * vue-cli-service-global (globally installed)
 
 For using the development mode you also need
+
 * quasar-cli (globally installed)
 
 To get all dependencies via `npm`, simply run
@@ -43,7 +44,7 @@ npm install
 ```bash
 quasar dev
 ```
- 
+
 ### Lint the files
 
 ```bash
@@ -60,16 +61,17 @@ quasar build
 
 See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
-
 ## Authors
 
 See the list of [contributors](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/graphs/develop) who participated in this project.
 Please notice our [contribution guidelines](CONTRIBUTING.md) which contains all necessary information about the development workflow.
 
 ## Dockerfile
+
 The dockerfile is used at GitLab CI.
 It needs to be updated, when either node or quasar-cli should be updated.
-```
+
+```bash
 docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/qviewer/node .
 docker push docker.gitlab.gwdg.de/subugoe/emo/qviewer/node
 ```
