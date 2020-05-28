@@ -1,16 +1,18 @@
-# Description
+# Bug
+
+## Description
 
 Just leave a short summary what the bug is about and where you came to notice it.
 
-## I expected the following to happen:
+### I expected the following to happen:
 
 …
 
-## On the contrary, I observed:
+### On the contrary, I observed:
 
 …
 
-# How to reproduce the bug
+## How to reproduce the bug
 
 Please describe briefly how you discovered the bug and what a developer has to do to reproduce it.
 
@@ -20,7 +22,7 @@ _Steps:_
 * Step 2
 * ...
 
-# Severity
+## Severity
 
 How much impact does this bug have on the product or further development?
 
@@ -29,24 +31,24 @@ How much impact does this bug have on the product or further development?
 * [ ] Critical
 * [ ] Blocker
 
-# Platform
+## Platform
 
 * [ ] Unix
 * [ ] Windows
 * [ ] MacOS
 
-# Browser
+## Browser
 
 * [ ] Safari
 * [ ] Chrome/Chromium
 * [ ] Firefox
 * [ ] Other: ?
 
-# Program and – if applicable – dependency version
+## Program and – if applicable – dependency version
 
 Which version of the software did you use?
 
-# Related tickets
+## Related tickets
 
 Add related issues (if applicable).
 

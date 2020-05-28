@@ -9,7 +9,6 @@ Issues are created and assigned by the project's Product Owner during a sprint p
 As soon as you start working on a assigned issue, switch its label to `Doing`.
 This will cause the issue to be moved into the right list of the repository's [board](https://gitlab.gwdg.de/subugoe/emo/QViewer/-/boards).
 
-
 ## Internal Workflow
 
 ### Reporting Bugs or Change Requests
