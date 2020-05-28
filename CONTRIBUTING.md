@@ -14,7 +14,8 @@ This will cause the issue to be moved into the right list of the repository's [b
 ### Reporting Bugs or Change Requests
 
 Bugs and change requests are managed by the project's Product Owner.
-Please report any problems that aren't related to to bugfix/feature you're working on right now to her/him.
+Please report any problems that aren't related to the bugfix/feature you're working on right now to her/him.
+Bug reports can also be handed it via [mail](mailto:gitlab+subugoe-emo-qviewer-10921-issue-@gwdg.de).
 She/he will create an issue in the correct repository and ask for assignees in the course of the next sprint planning.
 
 ### Git Flow
@@ -49,8 +50,8 @@ This means that this person has to approve the MR, otherwise the merge cannot be
 Although GitLab sends notifications to everybody who is newly assigned to a MR, she should notify the MUST assignee personally (in case he or she doesn't notice the mail sent by GitLab).
 The MR settings are:
 
-* The MR is associated with the current sprint's [milestone](https://gitlab.gwdg.de/groups/subugoe/ahiqar/-/milestones).
-* The boxes for "Squash Commit" and "Deleting branch after Merge" are ticked
+    * The MR is associated with the current sprint's [milestone](https://gitlab.gwdg.de/groups/subugoe/ahiqar/-/milestones).
+    * The boxes for "Squash Commit" and "Deleting branch after Merge" are ticked
 
 5. The MUST assignee reviews the changes according to style, variable naming, understandability, documentation provided, functionality, etc.
 If everything is to his or her liking, he or she approves the MR.
