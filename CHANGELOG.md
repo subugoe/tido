@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.6] - 2020-05-29
+
+### Changes
+
+- add user stories and 'definition of done' criteria to issue templates (where applicable).
+this should improve the development workflow for all stakeholders.
+
 ## [0.0.5] - 2020-05-20
 
 ### Added
