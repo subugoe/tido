@@ -15,6 +15,7 @@
           :collection="collection"
           :config="config"
           :contenturl="contenturl"
+          :fontsize="fontsize"
           :imageurl="imageurl"
           :language="itemlanguage"
           :manifests="manifests"
@@ -47,6 +48,7 @@ export default {
       collectiontitle: '',
       contenturl: '',
       config: {},
+      fontsize: 14,
       imageurl: '',
       itemlanguage: '',
       itemurl: '',
@@ -193,6 +195,9 @@ export default {
 
     this.$root.$on('update-panel-status', (status) => {
       this.status = status;
+    });
+    this.$root.$on('change-fontsize', (fontsize) => {
+      this.fontsize = fontsize;
     });
   },
 };

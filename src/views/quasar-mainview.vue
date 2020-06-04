@@ -21,6 +21,7 @@
             <Content
               :key="contenturl"
               :contenturl="contenturl"
+              :fontsize="fontsize"
               :manifests="manifests"
               :request="request"
               >
@@ -81,6 +82,7 @@ export default {
     collection: Object,
     config: Object,
     contenturl: String,
+    fontsize: Number,
     imageurl: String,
     language: String,
     manifests: Array,
