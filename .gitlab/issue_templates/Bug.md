@@ -1,14 +1,15 @@
-# Bug
+# Bugs
 
 ## Description
 
-Just leave a short summary what the bug is about and where you came to notice it.
+Just leave a short summary what the bug is about and in which context you noticed it.
+Feel free to delete sections that doesn't suit the case you're dealing with.
 
-### I expected the following to happen:
+### I expected the following to happen
 
 …
 
-### On the contrary, I observed:
+### On the contrary, I observed
 
 …
 
@@ -48,8 +49,8 @@ How much impact does this bug have on the product or further development?
 
 Which version of the software did you use?
 
-## Related tickets
+## Related Tickets
 
-Add related issues (if applicable).
+Add related issues.
 
 /cc [Mathias Göbel](https://gitlab.gwdg.de/mgoebel), [Frank Schneider](https://gitlab.gwdg.de/schneider210), [Michelle Weidling](https://gitlab.gwdg.de/mrodzis)

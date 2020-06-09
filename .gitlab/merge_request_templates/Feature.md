@@ -2,12 +2,21 @@
 
 We welcome every new feature to the upstream branch!
 
-But at first we ask you to fill in the following information about your feature.
-So please take a few minutes to make this great thing even better.
+Please fill in the following information about your feature.
+Feel free to delete sections that doesn't suit the case you're dealing with.
 
 ## Summary
 
 This MR provides…
+
+## Does the result of the MR comply to our "definition of done"?
+
+* [ ] Unit tests passed
+* [ ] Code reviewed
+* [ ] Acceptance criteria met
+* [ ] Functional tests passed
+* [ ] Non-Functional requirements met
+* [ ] Product Owner accepts the User Story
 
 ## Use Cases
 
@@ -19,13 +28,12 @@ Shall we add your feature to the documentation?
 
 * [ ] I've already did it!
 * [ ] At least I added a headline to the documentation.
-* [ ] Not applicable
 
 ### Function Documentation
 
-* [ ] Of course I prepared all my functions with an appropriate documentation.
+* [ ] Of course I provided all my functions with an appropriate documentation.
 
-### Are There Parts of the Documentation We Have to Adjust?
+### Are there parts of the documentation we have to adjust
 
 * [ ] No.
 * [ ] Yes, but I'd like someone else to do it.
@@ -36,6 +44,7 @@ Shall we add your feature to the documentation?
 Are we able to test this new feature?
 
 * [ ] Yes, everything can be done via unit tests.
+* [ ] Yes, you can test by following these steps: …
 * [ ] No, it is not possible.
 
 ## Changelog
