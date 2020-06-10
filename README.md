@@ -11,19 +11,45 @@ Demo: <https://subugoe.pages.gwdg.de/emo/Qviewer/develop>
 (For newer branches the demo is deployed in a directory named with branch name lowercased, shortened to 63 bytes, and with everything except `0-9` and `a-z` replaced with `-` (CI_COMMIT_REF_SLUG).
 Also the commit short hash can be used to see a demo.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Overview:**
+
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installing](#installing)
+  - [Get the Dependencies](#get-the-dependencies)
+  - [Start the App in Development Mode (Hot-Code Reloading, Error Reporting, etc.)](#start-the-app-in-development-mode-hot-code-reloading-error-reporting-etc)
+  - [Lint the files](#lint-the-files)
+  - [Build the App for Production](#build-the-app-for-production)
+  - [Customize the Configuration](#customize-the-configuration)
+- [Dockerfile](#dockerfile)
+- [Connecting the Viewer with a Backend](#connecting-the-viewer-with-a-backend)
+- [Integration](#integration)
+  - [Standalone](#standalone)
+    - [As a GitLab page](#as-a-gitlab-page)
+    - [By using Apache](#by-using-apache)
+    - [Sample integration in the Ahikar project](#sample-integration-in-the-ahikar-project)
+  - [Embedded in a website](#embedded-in-a-website)
+- [Contributing](#contributing)
+- [Versioning](#versioning)
+- [Authors](#authors)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Getting Started
 
 ### Prerequisites
 
 To get the EMo Viewer up and running you should have the following software installed:
 
-* npm
-* vue-cli (globally installed)
-* vue-cli-service-global (globally installed)
+- npm
+- vue-cli (globally installed)
+- vue-cli-service-global (globally installed)
 
 For using the development mode you also need
 
-* quasar-cli (globally installed)
+- quasar-cli (globally installed)
 
 To get all dependencies via `npm`, simply run
 
