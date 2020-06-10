@@ -135,6 +135,10 @@ Apache directory for exposing it to the web e.g. `/usr/local/apache2/htdocs/fron
 
 @@TODO
 
+## Architecture
+
+![How the EMo viewer works](img/emo_architecture.png)
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
