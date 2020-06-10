@@ -82,6 +82,33 @@ To establish a link to the backend, the viewer's entrypoint in `src/index.templa
 
 The entrypoint should point to the collection you want to be displayed.
 
+## Integration
+
+### Standalone
+
+#### As a GitLab page
+
+In order to use the QViewer in combination with GitLab pages you can keep to the following steps:
+
+1. Fork this repository
+2. Make sure you have CI/CD and GitLab pages enabled in your new project.
+You can set it up at `Settings > General > Visibility, project features, permissions`.
+Tick the boxes labelled `Pipeline` and `Pages`.
+3. @@TODO
+
+#### By using Apache
+
+In case you have a server with `apache2` installed you can simply copy the QViewer's into your preferred and configured
+Apache directory for exposing it to the web e.g. `/usr/local/apache2/htdocs/frontend`.
+
+#### Sample integration in the Ahikar project
+
+![Sample integration in the Ahikar project](img/pages_interplay.png)
+
+### Embedded in a website
+
+@@TODO
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
