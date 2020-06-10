@@ -31,6 +31,7 @@ Also the commit short hash can be used to see a demo.
     - [By using Apache](#by-using-apache)
     - [Sample integration in the Ahikar project](#sample-integration-in-the-ahikar-project)
   - [Embedded in a website](#embedded-in-a-website)
+- [Architecture](#architecture)
 - [Contributing](#contributing)
 - [Versioning](#versioning)
 - [Authors](#authors)
