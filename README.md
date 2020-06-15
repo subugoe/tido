@@ -90,7 +90,22 @@ Locate the `index.template.html` file inside the root of your project dir and fi
 
 *Please note:* it's a json object. So if you are going to make changes and you have to quote these, use double quotes, not single ones.
 
-![config](./config.png "configure the Viewer")
+```html
+    <script id="emo-config" type="application/json">
+    {
+      "entrypoint": "https://ahikar-test.sub.uni-goettingen.de/api/textapi/ahikar/3r9ps/collection.json",
+      "itemlabel": "Page",
+      "manifestlabel": "Manuscript",
+      "standalone": true,
+      "panels": {
+        "image": true,
+        "text": true,
+        "metadata": false,
+        "treeview": false
+      }
+    }
+    </script>
+```
 
 ### The keys in detail
 
@@ -112,22 +127,13 @@ This change affects the captions of the navigational tools, e.g. the navbuttons 
 - **standalone:**
   - denotes if the Viewer will be used as a single page application on its own or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
 
-  Defaults to "**true**" (Note: do not quote this value as it is a boolean)
+  Defaults to "**true**" (Note: do not quote this value since it is a boolean)
 
 - **panels:**
   - it's a nested object. Its keys correspond to the panelnames, e.g. "treeview", "text", "image", "metadata".
   Set either value to **false** if you don't want the Viewer to show the appropriate panel/s.
 
   Defaults to **true** for every panel
-
-  ```json
-  {
-    "treeview": true,
-    "text": true,
-    "image": true,
-    "metadata": true
-  }
-  ```
 
 ## Dockerfile
 
