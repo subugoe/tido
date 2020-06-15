@@ -88,7 +88,7 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
 Locate the `index.template.html` file inside the root of your project dir and find the script section:
 
-*Please note:* it's a json object. So if you are going to make changes and you have to quote these, use double quotes, not single ones.
+*Please note:* it's a json object. So if you are going to make any changes and you have to quote these, use double quotes but single ones.
 
 ```html
     <script id="emo-config" type="application/json">
@@ -114,23 +114,23 @@ Locate the `index.template.html` file inside the root of your project dir and fi
 - **itemlabel:**
   - the label of the item respectively
 
-  Assuming your collection consists of letters, so you'd maybe want to name it "letter" or just "sheet" for instance.
+  Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.
 This change affects the captions of the navigational tools, e.g. the navbuttons in the header as well as the prefix of each treenode displayed and the metadata section
 
   Defaults to "**Page**"
 
 - **manifestlabel:**
-  - same as above related to the manifest title.
+  - same as above related to the manifest title
 
   Defaults to "**Manuscript**"
 
 - **standalone:**
-  - denotes if the Viewer will be used as a single page application on its own or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
+  - denotes if the Viewer will be used as a single page application on it's own or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
 
   Defaults to "**true**" (Note: do not quote this value since it is a boolean)
 
 - **panels:**
-  - it's a nested object. Its keys correspond to the panelnames, e.g. "treeview", "text", "image", "metadata".
+  - it's a nested object. It's keys correspond to the panelnames, e.g. "treeview", "text", "image", "metadata".
   Set either value to **false** if you don't want the Viewer to show the appropriate panel/s.
 
   Defaults to **true** for every panel
