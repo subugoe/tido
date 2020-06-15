@@ -82,6 +82,10 @@ To establish a link to the backend, the viewer's entrypoint in `src/index.templa
 
 The entrypoint should point to the collection you want to be displayed.
 
+## Architecture
+
+![Architecture diagram of the EMo viewer](img/emo_architecture.png)
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
