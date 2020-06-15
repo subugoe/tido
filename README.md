@@ -11,19 +11,42 @@ Demo: <https://subugoe.pages.gwdg.de/emo/Qviewer/develop>
 (For newer branches the demo is deployed in a directory named with branch name lowercased, shortened to 63 bytes, and with everything except `0-9` and `a-z` replaced with `-` (CI_COMMIT_REF_SLUG).
 Also the commit short hash can be used to see a demo.
 
+**Overview:**
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installing](#installing)
+  - [Get the Dependencies](#get-the-dependencies)
+  - [Start the App in Development Mode (Hot-Code Reloading, Error Reporting, etc.)](#start-the-app-in-development-mode-hot-code-reloading-error-reporting-etc)
+  - [Lint the files](#lint-the-files)
+  - [Build the App for Production](#build-the-app-for-production)
+  - [Customize the Configuration](#customize-the-configuration)
+- [Configure the Viewer](#configure-the-viewer)
+  - [The keys in detail](#the-keys-in-detail)
+- [Dockerfile](#dockerfile)
+- [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend)
+- [Contributing](#contributing)
+- [Versioning](#versioning)
+- [Authors](#authors)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Getting Started
 
 ### Prerequisites
 
 To get the EMo Viewer up and running you should have the following software installed:
 
-* npm
-* vue-cli (globally installed)
-* vue-cli-service-global (globally installed)
+- npm
+- vue-cli (globally installed)
+- vue-cli-service-global (globally installed)
 
 For using the development mode you also need
 
-* quasar-cli (globally installed)
+- quasar-cli (globally installed)
 
 To get all dependencies via `npm`, simply run
 
@@ -61,6 +84,57 @@ quasar build
 
 See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
+## Configure the Viewer
+
+Locate the `index.template.html` file inside the root of your project dir and find the script section:
+
+*Please note:* it's a json object. So if you are going to make any changes and you have to quote these, use double quotes but single ones.
+
+```html
+    <script id="emo-config" type="application/json">
+    {
+      "entrypoint": "https://ahikar-test.sub.uni-goettingen.de/api/textapi/ahikar/3r9ps/collection.json",
+      "itemlabel": "Page",
+      "manifestlabel": "Manuscript",
+      "standalone": true,
+      "panels": {
+        "image": true,
+        "text": true,
+        "metadata": false,
+        "treeview": false
+      }
+    }
+    </script>
+```
+
+### The keys in detail
+
+- **entrypoint:**
+  - to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed. (Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
+- **itemlabel:**
+  - the label of the item respectively
+
+  Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.
+This change affects the captions of the navigational tools, e.g. the navbuttons in the header as well as the prefix of each treenode displayed and the metadata section
+
+  Defaults to "**Page**"
+
+- **manifestlabel:**
+  - same as above related to the manifest title
+
+  Defaults to "**Manuscript**"
+
+- **standalone:**
+  - denotes if the Viewer will be used as a single page application on it's own or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
+
+  Defaults to "**true**" (Note: do not quote this value since it is a boolean)
+
+- **panels:**
+  - it's a nested object. It's keys correspond to the panelnames, e.g. "treeview", "text", "image", "metadata".
+  Set either value to **false** if you don't want the Viewer to show the appropriate panel/s.
+
+  Defaults to **true** for every panel
+
 ## Dockerfile
 
 The dockerfile is used at GitLab CI.
@@ -71,7 +145,7 @@ docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/qviewer/node .
 docker push docker.gitlab.gwdg.de/subugoe/emo/qviewer/node
 ```
 
-## Connecting the Viewer with a Backend
+## Connecting the Viewer to a Backend
 
 The viewer expects JSON that complies to the [SUB's generic TextAPI](https://subugoe.pages.gwdg.de/emo/text-api/) in order to function properly.
 To establish a link to the backend, the viewer's entrypoint in `src/index.template.html` has to be modified:

@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - an architecture diagram giving an overview of how the EMo Viewer works and interacts with a backend.
 
+## [0.0.7] - 2020-06-12
+
+### Added
+
+- information in the README on how to configure the Viewer
+
 ## [0.0.6] - 2020-06-09
 
 ### Added
