@@ -88,6 +88,7 @@ export default {
     manifests: Array,
     pagelabel: String,
     request: Function,
+    status: Object,
     tree: Array,
   },
   data() {
@@ -111,9 +112,7 @@ export default {
         { state: [0, 0, 1, 0], ratio: [0, 0, 0.1] },
         { state: [0, 0, 0, 1], ratio: [100, 0, 0] },
       ],
-      panels: {
-        treeview: true, text: true, image: true, metadata: true,
-      },
+      panels: {},
       splitterone: 25,
       splittertwo: 33,
       splitterthree: 50,
@@ -137,6 +136,12 @@ export default {
         }
       });
     },
+  },
+  created() {
+    Object.entries(this.status).forEach(([panel, state]) => {
+      this.panels[panel] = state;
+    });
+    this.setSplitterRatio(this.panels);
   },
   mounted() {
     this.$root.$on('update-panel-status', (status) => {

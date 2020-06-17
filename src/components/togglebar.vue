@@ -44,7 +44,7 @@ export default {
   },
   data() {
     return {
-      panels: ['treeview', 'text', 'image', 'metadata'],
+      panels: [],
     };
   },
   filters: {
@@ -81,6 +81,13 @@ export default {
     this.fasUndo = fasUndo;
     this.fasCircle = fasCircle;
     this.fasCheckCircle = fasCheckCircle;
+
+    // just show the panel buttons needed according to the config
+    Object.entries(this.status).forEach(([panel, state]) => {
+      if (state === true) {
+        this.panels.push(panel);
+      }
+    });
   },
 };
 </script>
