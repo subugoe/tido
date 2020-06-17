@@ -21,6 +21,7 @@
           :manifests="manifests"
           :pagelabel="pagelabel"
           :request="request"
+          :status="status"
           :tree="tree"
         />
       </q-page-container>
@@ -56,9 +57,7 @@ export default {
       label: '',
       pagelabel: '',
       manifests: [],
-      status: {
-        image: true, text: true, metadata: true, treeview: true,
-      },
+      status: {},
       tree: [],
     };
   },
@@ -84,6 +83,10 @@ export default {
     },
     getConfig() {
       this.config = JSON.parse(document.getElementById('emo-config').text);
+
+      if (Object.keys(this.config.panels).length) {
+        this.status = this.config.panels;
+      }
     },
     getItemData(url) {
       this.request(url)
