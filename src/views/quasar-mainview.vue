@@ -5,11 +5,16 @@
         <Toolbar heading="Treeview" />
         <q-separator />
 
-        <Treeview
-          :manifests="manifests"
-          :tree="tree"
-          >
-        </Treeview>
+        <div style="height: 100vh; max-height: 450px; overflow: auto;">
+
+          <q-infinite-scroll>
+            <Treeview
+              :manifests="manifests"
+              :tree="tree"
+              >
+            </Treeview>
+          </q-infinite-scroll>
+        </div>
       </template>
 
       <template v-slot:after>
@@ -18,14 +23,19 @@
             <Toolbar heading="Text" />
             <q-separator />
 
-            <Content
-              :key="contenturl"
-              :contenturl="contenturl"
-              :fontsize="fontsize"
-              :manifests="manifests"
-              :request="request"
-              >
-            </Content>
+            <div style="height: 100vh; max-height: 450px; overflow: auto;">
+
+              <q-infinite-scroll>
+                <Content
+                  :key="contenturl"
+                  :contenturl="contenturl"
+                  :fontsize="fontsize"
+                  :manifests="manifests"
+                  :request="request"
+                  >
+                </Content>
+              </q-infinite-scroll>
+            </div>
           </template>
 
           <template v-slot:after>
@@ -34,25 +44,35 @@
                 <Toolbar heading="Image" />
                 <q-separator />
 
-                <OpenSeadragon
-                  :key="imageurl"
-                  :imageurl="imageurl"
-                  >
-                </OpenSeadragon>
+                <div style="height: 100vh; max-height: 450px; overflow: auto;">
+
+                  <q-infinite-scroll>
+                    <OpenSeadragon
+                      :key="imageurl"
+                      :imageurl="imageurl"
+                      >
+                    </OpenSeadragon>
+                  </q-infinite-scroll>
+                </div>
               </template>
 
               <template v-show="panels.metadata" v-slot:after>
                 <Toolbar heading="Metadata" />
                 <q-separator />
 
-                <Metadata v-if="manifests.length"
-                  :collection="collection"
-                  :config="config"
-                  :language="language"
-                  :manifests="manifests"
-                  :pagelabel="pagelabel"
-                  >
-                </Metadata>
+                <div style="height: 100vh; max-height: 450px; overflow: auto;">
+
+                  <q-infinite-scroll>
+                    <Metadata v-if="manifests.length"
+                      :collection="collection"
+                      :config="config"
+                      :language="language"
+                      :manifests="manifests"
+                      :pagelabel="pagelabel"
+                      >
+                    </Metadata>
+                  </q-infinite-scroll>
+                </div>
               </template>
             </q-splitter>
           </template>
