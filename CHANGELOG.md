@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added behaviour to Optimize scroll panels.
 
+### Fixed
+
+- item is now highlighted when the user clicks a nav navbuttons
+- click events are bound for the zoom icons are now bound to the embracing buttons instead of the icons
 ## [0.0.9] - 2020-06-16
 
 ### Added
