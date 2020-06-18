@@ -5,7 +5,7 @@
         <Toolbar heading="Treeview" />
         <q-separator />
 
-        <div style="height: 100vh; max-height: 450px; overflow: auto;">
+        <div class="scrollPanel">
 
           <q-infinite-scroll>
             <Treeview
@@ -23,7 +23,7 @@
             <Toolbar heading="Text" />
             <q-separator />
 
-            <div style="height: 100vh; max-height: 450px; overflow: auto;">
+            <div class="scrollPanel">
 
               <q-infinite-scroll>
                 <Content
@@ -44,7 +44,7 @@
                 <Toolbar heading="Image" />
                 <q-separator />
 
-                <div style="height: 100vh; max-height: 450px; overflow: auto;">
+                <div class="scrollPanel">
 
                   <q-infinite-scroll>
                     <OpenSeadragon
@@ -60,7 +60,7 @@
                 <Toolbar heading="Metadata" />
                 <q-separator />
 
-                <div style="height: 100vh; max-height: 450px; overflow: auto;">
+                <div class="scrollPanel">
 
                   <q-infinite-scroll>
                     <Metadata v-if="manifests.length"
@@ -171,3 +171,13 @@ export default {
   },
 };
 </script>
+
+<style lang="css" scoped>
+  .scrollPanel {
+    max-height: 450px;
+    overflow: auto;
+  }
+  .scrollPanel::-webkit-scrollbar {
+    display: none;
+  }
+</style>
