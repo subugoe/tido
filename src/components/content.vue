@@ -6,12 +6,12 @@
       round
       flat
       size="md"
+      @click="increase()"
       >
       <q-icon
         size="sm"
         :name="fasSearchPlus"
         title="Increase"
-        @click="increase()"
       />
     </q-btn>
     <q-btn
@@ -20,12 +20,12 @@
       round
       flat
       size="md"
+      @click="decrease()"
       >
       <q-icon
         size="sm"
         :name="fasSearchMinus"
         title="Decrease"
-        @click="decrease()"
       />
     </q-btn>
 
