@@ -176,6 +176,8 @@ export default {
   .scrollPanel {
     max-height: 450px;
     overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   .scrollPanel::-webkit-scrollbar {
     display: none;
