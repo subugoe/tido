@@ -35,7 +35,7 @@
     <q-list>
       <q-item>
         <q-item-section class="text-h6 caps">
-          {{ config.manifestlabel }} {{ sequenceindex + 1 }} / {{ manifests.length }}
+          {{ config.labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
       <q-item>
@@ -51,7 +51,7 @@
     <q-list>
       <q-item>
         <q-item-section class="text-h6 caps">
-          {{ config.itemlabel }} {{ itemindex + 1 }} / {{ itemcount }}
+          {{ config.labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
       <q-item>

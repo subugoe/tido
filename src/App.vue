@@ -1,7 +1,7 @@
 <template>
   <div id="q-app">
     <q-layout view="hHh lpr fFf">
-      <Header
+      <Header v-if="config.headers.all"
         :collectiontitle="collectiontitle"
         :config="config"
         :itemurls="itemurls"
@@ -115,7 +115,7 @@ export default {
         urls.push(
           {
             label: obj.id,
-            labelKey: `${this.config.itemlabel} ${ctr += 1}`,
+            labelKey: `${this.config.labels.item} ${ctr += 1}`,
             handler: (node) => {
               if (this.itemurl === node.label) {
                 return;

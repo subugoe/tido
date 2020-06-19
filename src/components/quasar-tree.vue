@@ -36,6 +36,9 @@ export default {
     this.$root.$on('update-sequence-index', (index) => {
       this.expanded.push(this.manifests[index].label);
     });
+    this.$root.$on('update-item', (item) => {
+      this.selected = item;
+    });
   },
 };
 </script>
