@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.11] - 2020-06-19
+
+### Added
+
+- config option (index.html): switch off the headerbars individually (e.g. Infobar, NavBar, ToggleBar)
+
+### Changed
+
+- default itemlabel from `Page` to `Sheet`
+- config options: labels for item and manifest are gathered under `labels`
+- header can also be switched off completely by setting the appropriate value to *false*
+
+### Fixed
+- items are highlighted consecutively when browsing by navbuttons
+
+## [0.0.10] - 2020-06-17
+
+### Added
+
+- config option (index.html): switch off the header including all of it's components
+
 ## [0.0.9] - 2020-06-16
 
 ### Added

@@ -24,13 +24,13 @@ export default {
 
       return this.sequenceindex < this.sequencecount - 1
       && lastindexes[this.sequenceindex] === this.itemindex
-        ? `Next ${this.config.manifestlabel}`
-        : `Next ${this.config.itemlabel}`;
+        ? `Next ${this.config.labels.manifest}`
+        : `Next ${this.config.labels.item}`;
     },
     captionprev() {
       return this.sequenceindex > 0 && this.firstiteminsequence === this.itemindex
-        ? `Prev ${this.config.manifestlabel}`
-        : `Prev ${this.config.itemlabel}`;
+        ? `Prev ${this.config.labels.manifest}`
+        : `Prev ${this.config.labels.item}`;
     },
     computedsequenceindex() {
       const itemcount = this.itemspersequence;

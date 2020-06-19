@@ -24,15 +24,23 @@
     <script id="emo-config" type="application/json">
     {
       "entrypoint": "https://ahikar-test.sub.uni-goettingen.de/api/textapi/ahikar/3r9ps/collection.json",
-      "itemlabel": "Page",
-      "manifestlabel": "Manuscript",
-      "standalone": true,
+      "headers": {
+        "all": true,
+        "info": true,
+        "navigation": true,
+        "toggle": true
+      },
+      "labels": {
+        "item": "Sheet",
+        "manifest": "Manuscript"
+      },
       "panels": {
         "image": true,
         "text": true,
         "metadata": true,
         "treeview": true
-      }
+      },
+      "standalone": true
     }
     </script>
 
