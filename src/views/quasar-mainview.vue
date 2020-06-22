@@ -44,16 +44,11 @@
                 <Toolbar heading="Image" />
                 <q-separator />
 
-                <div class="scrollPanel">
-
-                  <q-infinite-scroll>
-                    <OpenSeadragon
-                      :key="imageurl"
-                      :imageurl="imageurl"
-                      >
-                    </OpenSeadragon>
-                  </q-infinite-scroll>
-                </div>
+                <OpenSeadragon
+                  :key="imageurl"
+                  :imageurl="imageurl"
+                  >
+                </OpenSeadragon>
               </template>
 
               <template v-show="panels.metadata" v-slot:after>

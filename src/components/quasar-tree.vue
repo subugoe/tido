@@ -6,7 +6,6 @@
       label-key="labelKey"
       :nodes="tree"
       node-key="label"
-      :selected.sync="selected"
       selected-color="grey"
       text-color="black"
       >

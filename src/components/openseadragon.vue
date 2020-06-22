@@ -1,6 +1,6 @@
 <template>
-  <figure id="openseadragon">
-    <nav>
+  <div>
+    <div style="margin: 16px;">
       <q-btn
         v-for="(btn, idx) in buttons" :key="idx"
         class="q-mr-sm q-mb-sm"
@@ -12,8 +12,13 @@
         >
         <q-icon size="sm" :name="btn.svg" />
       </q-btn>
-    </nav>
-  </figure>
+    </div>
+    <div>
+      <figure id="openseadragon">
+        <nav />
+      </figure>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -71,9 +76,9 @@ export default {
 </script>
 
 <style scoped>
-figure {
-  height: 100vh;
-  margin: 16px;
-  overflow: hidden;
-}
+  figure {
+    height: 50vh;
+    margin: 8px;
+    overflow: hidden;
+  }
 </style>

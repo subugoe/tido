@@ -1,36 +1,44 @@
 <template>
-  <div style="margin: 16px;">
-    <q-btn
-      class="q-mr-sm q-mb-sm cursor-pointer"
-      color="grey-8"
-      round
-      flat
-      size="md"
-      @click="increase()"
-      >
-      <q-icon
-        size="sm"
-        :name="fasSearchPlus"
-        title="Increase"
-      />
-    </q-btn>
-    <q-btn
-      class="q-mr-sm q-mb-sm cursor-pointer"
-      color="grey-8"
-      round
-      flat
-      size="md"
-      @click="decrease()"
-      >
-      <q-icon
-        size="sm"
-        :name="fasSearchMinus"
-        title="Decrease"
-      />
-    </q-btn>
-
-  <div class="content" :style="`font-size: ${fontsize}px`" :id="nodeid" v-html="content"></div>
-</div>
+  <div>
+    <div class="row iconPosition">
+      <div style="margin: 16px;">
+        <q-btn
+          class="q-mr-sm q-mb-sm cursor-pointer iconPosition"
+          color="grey-8"
+          round
+          flat
+          size="md"
+          @click="increase()"
+          >
+          <q-icon
+            size="sm"
+            :name="fasSearchPlus"
+            title="Increase"
+          />
+        </q-btn>
+        <q-btn
+          class="q-mr-sm q-mb-sm cursor-pointer iconPosition"
+          color="grey-8"
+          round
+          flat
+          size="md"
+          @click="decrease()"
+          >
+          <q-icon
+            size="sm"
+            :name="fasSearchMinus"
+            title="Decrease"
+          />
+        </q-btn>
+      </div>
+    </div>
+    <div class="row">
+      <div
+        class="col-md-10 offset-md-1" :style="`font-size: ${fontsize}px`"
+        :id="nodeid" v-html="content">
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -97,7 +105,12 @@ export default {
 </script>
 
 <style scoped>
-.content {
-  margin: 16px;
-}
+  .content {
+    margin: 16px;
+  }
+  .iconPosition {
+    position: sticky;
+    top: 0;
+    background: #fff;
+  }
 </style>
