@@ -1,7 +1,7 @@
 <template>
   <q-header elevated class="bg-white text-black">
     <div class="bar row justify-between items-center">
-      <Infobar v-if="manifests.length"
+      <Infobar v-if="config.headers.info && manifests.length"
         class="col-xs-12 q-pl-md"
         :collectiontitle="collectiontitle"
         :manifests="manifests"
@@ -10,7 +10,7 @@
     </div>
 
     <div class="bar row q-px-md justify-sm-between">
-      <Navbar
+      <Navbar v-if="config.headers.navigation"
         class="
           col
           col-md-6
@@ -25,7 +25,7 @@
         :manifests="manifests"
       />
 
-      <Togglebar
+      <Togglebar v-if="config.headers.toggle"
         class="
           col
           col-md-auto

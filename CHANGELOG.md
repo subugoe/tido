@@ -15,6 +15,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - item is now highlighted when the user clicks a nav navbuttons
 - click events are bound for the zoom icons are now bound to the embracing buttons instead of the icons
+## [0.0.11] - 2020-06-19
+
+### Added
+
+- config option (index.html): switch off the headerbars individually (e.g. Infobar, NavBar, ToggleBar)
+
+### Changed
+
+- default itemlabel from `Page` to `Sheet`
+- config options: labels for item and manifest are gathered under `labels`
+- header can also be switched off completely by setting the appropriate value to *false*
+
+### Fixed
+- items are highlighted consecutively when browsing by navbuttons
+
+## [0.0.10] - 2020-06-17
+
+### Added
+
+- config option (index.html): switch off the header including all of it's components
+
 ## [0.0.9] - 2020-06-16
 
 ### Added

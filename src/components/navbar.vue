@@ -19,14 +19,14 @@
       {{ captionprev }}
     </q-btn>
 
-    <q-input
+    <!-- <q-input
       color="teal"
       class="q-mb-md"
       dense
       min="1"
       standout
       type="number"
-      :placeholder="config.itemlabel"
+      :placeholder="config.labels.item"
       >
       <template v-slot:append>
         <q-icon
@@ -34,7 +34,7 @@
           size="20px"
         />
       </template>
-    </q-input>
+    </q-input> -->
 
     <q-btn
       unelevated

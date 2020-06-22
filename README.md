@@ -93,47 +93,70 @@ Locate the `index.template.html` file inside the root of your project dir and fi
 ```html
     <script id="emo-config" type="application/json">
     {
-      "entrypoint": "https://ahikar-test.sub.uni-goettingen.de/api/textapi/ahikar/3r9ps/collection.json",
-      "itemlabel": "Page",
-      "manifestlabel": "Manuscript",
-      "standalone": true,
+      "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
+      "headers": {
+        "all": true,
+        "info": false,
+        "navigation": true,
+        "toggle": true
+      },
+      "labels": {
+        "item": "Sheet",
+        "manifest": "Manuscript"
+      },
       "panels": {
         "image": true,
-        "text": true,
-        "metadata": false,
-        "treeview": false
-      }
+        "text": false,
+        "metadata": true,
+        "treeview": true
+      },
+      "standalone": true
     }
     </script>
 ```
 
 ### The keys in detail
 
-- **entrypoint:**
+- **entrypoint**
   - to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed. (Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
-- **itemlabel:**
-  - the label of the item respectively
+- **headers**
+  - **all**
+     - set this value to `false` if you want to completely switch off all the headerbars at once. This value is preceeding. If it's set to false, the other settings for the individual bars are not taken into account.
+      *(A use case might be to embed the Viewer into an existing website and you simply need more space)*
+  - **info**
+     - set this value to `false` if you want to switch off the Infobar (breadcrumbs)
+  - **navigation**
+     - set this value to `false` if you want to switch off the NavBar
+  - **toggle**
+     - set this value to `false` if you want to switch off the ToggleBar. Please *note*: if you turn this one off, you won't be able to toggle the panels anymore
 
-  Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.
+    All header values default to **true**
+
+- **labels**
+  - **item**
+     - the label of the item respectively
+
+ Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.
 This change affects the captions of the navigational tools, e.g. the navbuttons in the header as well as the prefix of each treenode displayed and the metadata section
 
-  Defaults to "**Page**"
+  Defaults to **Sheet**
 
-- **manifestlabel:**
-  - same as above related to the manifest title
+  - **manifest**
+     - same as for `item` but related to the manifest title
 
-  Defaults to "**Manuscript**"
+  Defaults to **Manuscript**
 
-- **standalone:**
-  - denotes if the Viewer will be used as a single page application on it's own or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
-
-  Defaults to "**true**" (Note: do not quote this value since it is a boolean)
-
-- **panels:**
-  - it's a nested object. It's keys correspond to the panelnames, e.g. "treeview", "text", "image", "metadata".
+- **panels**
+  - It's keys correspond to the panelnames, e.g. "treeview", "text", "image", "metadata".
   Set either value to **false** if you don't want the Viewer to show the appropriate panel/s.
 
   Defaults to **true** for every panel
+
+  - **standalone**
+
+     - denotes if the Viewer will be used as a single page application on it's own or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
+
+  Defaults to **true**
 
 ## Dockerfile
 
