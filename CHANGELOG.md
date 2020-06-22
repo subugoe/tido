@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.12] - 2020-06-22
+
+### Added
+
+- Added behaviour to Optimize scroll panels.
+- Fixed panel icons to top of the panel.
+
+### Fixed
+
+- item is now highlighted when the user clicks a nav navbuttons
+- click events are bound for the zoom icons are now bound to the embracing buttons instead of the icons
 ## [0.0.11] - 2020-06-19
 
 ### Added
