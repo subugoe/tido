@@ -1,20 +1,18 @@
 <template>
   <div class="q-pa-md q-gutter-sm">
-    <q-tree style="cursor: pointer;"
-      :expanded.sync="expanded"
-      :icon="fasCaretRight"
+    <q-tree
+      class="view-tree"
       label-key="labelKey"
-      :nodes="tree"
       node-key="label"
-      selected-color="grey"
-      text-color="black"
-      >
+      :expanded.sync="expanded"
+      :nodes="tree"
+    >
     </q-tree>
   </div>
 </template>
 
 <script>
-import { fasCaretRight } from '@quasar/extras/fontawesome-v5';
+import matIcons from 'quasar/icon-set/material-icons';
 
 export default {
   name: 'Treeview',
@@ -29,7 +27,7 @@ export default {
     };
   },
   created() {
-    this.fasCaretRight = fasCaretRight;
+    this.$q.iconSet.set(matIcons);
   },
   mounted() {
     this.$root.$on('update-sequence-index', (index) => {
