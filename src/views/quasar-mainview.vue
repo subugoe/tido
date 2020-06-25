@@ -39,11 +39,13 @@
                 <Toolbar heading="Image" />
                 <q-separator />
 
-                <OpenSeadragon
-                  :key="imageurl"
-                  :imageurl="imageurl"
-                  >
-                </OpenSeadragon>
+                <div style="overflow:hidden">
+                  <OpenSeadragon
+                    :key="imageurl"
+                    :imageurl="imageurl"
+                    >
+                  </OpenSeadragon>
+                </div>
               </template>
 
               <template v-show="panels.metadata" v-slot:after>

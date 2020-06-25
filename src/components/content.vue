@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="row iconPosition">
-      <div style="margin: 16px;">
+      <div class="content">
         <q-btn
-          class="q-mr-sm q-mb-sm cursor-pointer iconPosition"
+          class="q-mr-sm q-mb-sm cursor-pointer"
           color="grey-8"
-          round
           flat
+          round
           size="md"
           @click="increase()"
           >
@@ -17,7 +17,7 @@
           />
         </q-btn>
         <q-btn
-          class="q-mr-sm q-mb-sm cursor-pointer iconPosition"
+          class="q-mr-sm q-mb-sm cursor-pointer"
           color="grey-8"
           round
           flat
