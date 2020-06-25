@@ -5,16 +5,11 @@
         <Toolbar heading="Treeview" />
         <q-separator />
 
-        <div class="scrollPanel">
-
-          <q-infinite-scroll>
-            <Treeview
-              :manifests="manifests"
-              :tree="tree"
-              >
-            </Treeview>
-          </q-infinite-scroll>
-        </div>
+        <Treeview
+          :manifests="manifests"
+          :tree="tree"
+          >
+        </Treeview>
       </template>
 
       <template v-slot:after>
