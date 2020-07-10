@@ -22,6 +22,8 @@ We only rely on previous artifacts for new pipelines.
 
 ### Added
 
+- remove artifacts from blob that are older than 2 weeks.
+this generally speeds up the build process and prevents errors since GitLab can only handle artifacts up to a certain size.
 - Configured to anchor manifest title to top of the panel.
 
 ## [0.0.12] - 2020-06-22
@@ -35,6 +37,7 @@ We only rely on previous artifacts for new pipelines.
 
 - item is now highlighted when the user clicks a nav navbuttons
 - click events are bound for the zoom icons are now bound to the embracing buttons instead of the icons
+
 ## [0.0.11] - 2020-06-19
 
 ### Added
@@ -48,6 +51,7 @@ We only rely on previous artifacts for new pipelines.
 - header can also be switched off completely by setting the appropriate value to *false*
 
 ### Fixed
+
 - items are highlighted consecutively when browsing by navbuttons
 
 ## [0.0.10] - 2020-06-17
