@@ -18,6 +18,10 @@ build:
      - dist/
 
 pages:
+  before_script:
+    - dnf install -y jq
+    - dnf install -y zip
+    - dnf install -y unzip
   image: docker.gitlab.gwdg.de/mgoebel/swiss_knife/fedora:latest
 # at the very early stage lets deploy for every branch
 #  only:
@@ -30,12 +34,8 @@ pages:
       - public
   when: always
   script:
-   - curl $(base64 --decode <<< ${wannaBeBlob})/data.tar.gz --output data.tar.gz
-   - tar -xzf data.tar.gz
-   - mkdir -p public/${CI_COMMIT_SHORT_SHA}
-   - cp --remove-destination --recursive dist/spa/* public/${CI_COMMIT_SHORT_SHA}
-   - mkdir -p public/${CI_COMMIT_REF_SLUG}
-   - cp --remove-destination --recursive dist/spa/* public/${CI_COMMIT_REF_SLUG}
+   - bash update-artifacts.sh
+   - bash gitlab-remove-old-artifacts.sh
   environment:
     name: ${CI_COMMIT_REF_SLUG}
     url: https://subugoe.pages.gwdg.de/emo/Qviewer/${CI_COMMIT_REF_SLUG}/
@@ -45,11 +45,16 @@ pages:
      - public
 
 pushback:
+  before_script:
+    - dnf install -y zip
   image: docker.gitlab.gwdg.de/mgoebel/swiss_knife/fedora:latest
   stage: preserve-pages
   script:
-    - tar -czf data.tar.gz public
-    - lftp -c "set ssl:verify-certificate no && open $(base64 --decode <<< ${wannaBeBlob}) && put data.tar.gz"
+    -  zip -r updated-artifact.zip public
+  artifacts:
+    name: "updated-artifact"
+    paths:
+      - updated-artifact.zip
 
 .production:
   image: node:latest
