@@ -4,8 +4,8 @@
       <Infobar v-if="config.headers.info && manifests.length"
         class="col-xs-12 q-pl-md"
         :collectiontitle="collectiontitle"
+        :itemlabel="itemlabel"
         :manifests="manifests"
-        :pagelabel="pagelabel"
       />
     </div>
 
@@ -18,8 +18,7 @@
           column-xs
           justify-md-start
           justify-xs-center
-          row-sm
-          "
+          row-sm"
         :config="config"
         :itemurls="itemurls"
         :manifests="manifests"
@@ -33,8 +32,7 @@
           column-xs
           content-sm-center
           justify-sm-evenly
-          row-sm
-          "
+          row-sm"
         :status="status"
       />
     </div>
@@ -56,18 +54,18 @@ export default {
   props: {
     collectiontitle: String,
     config: Object,
+    itemlabel: String,
     itemurls: Array,
     manifests: Array,
-    pagelabel: String,
     status: Object,
   },
 };
 </script>
 
 <style scoped>
-.bar {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
+  .bar {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 </style>

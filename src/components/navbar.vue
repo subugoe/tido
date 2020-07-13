@@ -73,16 +73,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-button:first-of-type {
-  @media (min-width: 600px) {
-    margin-right: 8px;
+  button:first-of-type {
+    @media (min-width: 600px) {
+      margin-right: 8px;
+    }
   }
-}
-.q-input {
-  width: 100%;
-  @media (min-width: 600px) {
-    margin-right: 8px;
-    width: 150px;
+  .q-input {
+    width: 100%;
+    @media (min-width: 600px) {
+      margin-right: 8px;
+      width: 150px;
+    }
   }
-}
 </style>

@@ -4,9 +4,9 @@
       <Header v-if="config.headers.all"
         :collectiontitle="collectiontitle"
         :config="config"
+        :itemlabel="itemlabel"
         :itemurls="itemurls"
         :manifests="manifests"
-        :pagelabel="pagelabel"
         :status="status"
       />
 
@@ -17,18 +17,16 @@
           :contenturl="contenturl"
           :fontsize="fontsize"
           :imageurl="imageurl"
+          :itemlabel="itemlabel"
           :language="itemlanguage"
           :manifests="manifests"
-          :pagelabel="pagelabel"
           :request="request"
           :status="status"
           :tree="tree"
         />
       </q-page-container>
 
-      <Footer
-        :standalone="config.standalone"
-      />
+      <Footer :standalone="config.standalone" />
     </q-layout>
   </div>
 </template>
@@ -51,11 +49,11 @@ export default {
       config: {},
       fontsize: 14,
       imageurl: '',
+      itemlabel: '',
       itemlanguage: '',
       itemurl: '',
       itemurls: [],
       label: '',
-      pagelabel: '',
       manifests: [],
       status: {},
       tree: [],
@@ -74,7 +72,17 @@ export default {
           this.collection = data;
           this.label = this.getLabel(data);
 
-          this.tree.push({ label: this.label, labelKey: this.label, children: [] });
+          this.tree.push(
+            {
+              children: [],
+              handler: (node) => {
+                this.$root.$emit('update-tree-knots', node.label);
+              },
+              label: this.label,
+              'label-key': this.label,
+              selectable: false,
+            },
+          );
 
           if (Array.isArray(data.sequence)) {
             data.sequence.forEach((seq) => this.getManifest(seq.id));
@@ -92,10 +100,11 @@ export default {
       this.request(url)
         .then((data) => {
           this.collectiontitle = data.title;
+
           this.contenturl = data.content;
           this.imageurl = data.image && data.image.id ? data.image.id : '';
+          this.itemlabel = data.n ? data.n : 'No itemlabel :(';
           this.itemlanguage = data.language;
-          this.pagelabel = data.n ? data.n : 'No pagelabel :(';
         });
     },
     getItemIndex(nodelabel) {
@@ -115,7 +124,7 @@ export default {
         urls.push(
           {
             label: obj.id,
-            labelKey: `${this.config.labels.item} ${ctr += 1}`,
+            'label-key': `${this.config.labels.item} ${ctr += 1}`,
             handler: (node) => {
               if (this.itemurl === node.label) {
                 return;
@@ -149,9 +158,13 @@ export default {
 
           this.tree[0].children.push(
             {
-              label: data.label,
-              labelKey: data.label,
               children: this.getItemUrls(data.sequence, data.label),
+              label: data.label,
+              'label-key': data.label,
+              handler: (node) => {
+                this.$root.$emit('update-tree-knots', node.label);
+              },
+              selectable: false,
             },
           );
 

@@ -22,9 +22,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.q-toolbar {
-  min-height: 40px;
-}
-<style>
