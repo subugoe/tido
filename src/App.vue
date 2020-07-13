@@ -118,13 +118,14 @@ export default {
     },
     getItemUrls(sequence, label) {
       const urls = [];
-      let ctr = 0;
 
       sequence.forEach((obj) => {
+        const pagelabel = this.getPageLabel(obj.id);
+
         urls.push(
           {
             label: obj.id,
-            'label-key': `${this.config.labels.item} ${ctr += 1}`,
+            'label-key': `${this.config.labels.item} ${pagelabel}`,
             handler: (node) => {
               if (this.itemurl === node.label) {
                 return;
@@ -177,6 +178,9 @@ export default {
             this.getItemData(data.sequence[0].id);
           }
         });
+    },
+    getPageLabel(itemurl) {
+      return itemurl.replace(/.*-(.*)\/latest.*$/, '$1');
     },
     getSequenceIndex(label) {
       let index = 0;
