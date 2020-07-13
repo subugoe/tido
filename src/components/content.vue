@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row sticky">
-      <div class="content">
+      <div>
         <q-btn
           class="q-mr-sm q-mb-sm cursor-pointer"
           color="grey-8"
@@ -33,10 +33,9 @@
         </q-btn>
       </div>
     </div>
-
-    <div class="row">
+    <div class="row" style="display:contents">
       <div
-        class="col-md-10 offset-md-1" :style="`font-size: ${fontsize}px`"
+        :style="`font-size: ${fontsize}px`"
         :id="nodeid" v-html="content">
       </div>
     </div>
@@ -109,10 +108,5 @@ export default {
 <style scoped>
   .content {
     margin: 16px;
-  }
-  .sticky {
-    position: sticky;
-    top: 0;
-    background: #fff;
   }
 </style>

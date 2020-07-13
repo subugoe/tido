@@ -1,0 +1,14 @@
+// global extra classes
+.scrollPanel {
+  position: relative;
+
+  .sticky {
+    background: #fff;
+    display: flex;
+    justify-content: flex-start;
+    left: 0;
+    position: sticky;
+    top: 0;
+    width: 100%;
+  }
+}

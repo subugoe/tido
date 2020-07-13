@@ -20,17 +20,20 @@
             <Toolbar heading="Text" />
             <q-separator />
 
-            <div class="scrollPanel">
-              <q-infinite-scroll>
-                <Content
-                  :key="contenturl"
-                  :contenturl="contenturl"
-                  :fontsize="fontsize"
-                  :manifests="manifests"
-                  :request="request"
-                  >
-                </Content>
-              </q-infinite-scroll>
+            <div class="q-pa-md q-gutter-sm">
+              <div class="scrollPanel">
+
+                <q-infinite-scroll>
+                  <Content
+                    :key="contenturl"
+                    :contenturl="contenturl"
+                    :fontsize="fontsize"
+                    :manifests="manifests"
+                    :request="request"
+                    >
+                  </Content>
+                </q-infinite-scroll>
+              </div>
             </div>
           </template>
 
@@ -41,12 +44,14 @@
                 <Toolbar heading="Image" />
                 <q-separator />
 
-                <div style="overflow:hidden">
-                  <OpenSeadragon
-                    :key="imageurl"
-                    :imageurl="imageurl"
-                    >
-                  </OpenSeadragon>
+                <div class="q-pa-md q-gutter-sm" style="overflow:hidden">
+                  <div class="scrollPanel">
+                    <OpenSeadragon
+                      :key="imageurl"
+                      :imageurl="imageurl"
+                      >
+                    </OpenSeadragon>
+                  </div>
                 </div>
               </template>
 
@@ -166,12 +171,14 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
+  @import '../css/quasar.responsive.scss';
+
   .scrollPanel {
-    max-height: 450px;
-    overflow: auto;
     -ms-overflow-style: none;
+    overflow: auto;
     scrollbar-width: none;
+    @include makeResponsiveHeight();
   }
   .scrollPanel::-webkit-scrollbar {
     display: none;

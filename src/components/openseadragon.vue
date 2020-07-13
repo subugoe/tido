@@ -1,6 +1,6 @@
 <template>
   <figure id="openseadragon">
-    <nav>
+    <nav class="sticky">
       <q-btn
         v-for="(btn, idx) in buttons" :key="idx"
         class="q-mr-sm q-mb-sm"
@@ -75,7 +75,7 @@ export default {
   figure {
     display: inline-block;
     height: 75vh;
-    margin: 16px;
+    margin: 0;
     width: 95%
   }
 </style>
