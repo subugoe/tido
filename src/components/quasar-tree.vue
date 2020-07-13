@@ -20,9 +20,17 @@
       label-key="label-key"
       node-key="label"
       :expanded.sync="expanded"
+      :filter="filter"
+      :filter-method="search"
       :nodes="tree"
       :selected.sync="selected"
       >
+      <template v-slot:default-body={node}>
+        <div
+          v-if="!node.children"
+          :id="`selectedItem-${node['label']}`">
+        </div>
+      </template>
     </q-tree>
 <!-- ^^ these ones go up here
     :filter="filter"
