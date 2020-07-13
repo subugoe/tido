@@ -1,0 +1,23 @@
+@mixin makeResponsiveHeight {
+  $sizes: (
+    "400px": "15vh",
+    "450px": "39vh",
+    "500px": "55vh",
+    "600px": "59vh",
+    "660px": "63vh",
+    "700px": "64vh",
+    "750px": "67vh",
+    "800px": "69vh",
+    "900px": "72vh",
+    "980px": "75vh",
+    "1200px": "79vh",
+    "1300px": "80vh",
+    "1800px": "86vh"
+  );
+
+  @each $minheight, $height in $sizes {
+    @media (min-height: #{$minheight}) {
+      height: #{$height};
+    }
+  }
+}

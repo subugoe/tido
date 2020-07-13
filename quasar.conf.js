@@ -14,7 +14,8 @@ module.exports = function (ctx) {
     css: [
       // 'app.scss'
       '../statics/support.css',
-      '/quasar.treeview.scss'
+      '/quasar.treeview.scss',
+      '/quasar.global.scss'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
