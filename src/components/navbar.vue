@@ -5,11 +5,7 @@
       color="black q-pr-sm"
       class="q-mb-md"
       :disabled="itemindex <= 0"
-      @click="
-        --itemindex;
-        sequenceindex = computedsequenceindex;
-        updateItem(itemurls[itemindex]);
-        updateSequenceIndex(sequenceindex);"
+      @click="toggleSheet(--itemindex)"
       >
       <q-icon
         :name="fasArrowLeft"
@@ -41,11 +37,7 @@
       class="q-mb-md"
       color="black"
       :disabled="itemindex >= itemurls.length - 1"
-      @click="
-        ++itemindex;
-        sequenceindex = computedsequenceindex;
-        updateItem(itemurls[itemindex]);
-        updateSequenceIndex(sequenceindex);"
+      @click="toggleSheet(++itemindex)"
       >
       {{ captionnext }}
       <q-icon
@@ -68,6 +60,19 @@ export default {
     this.fasArrowRight = fasArrowRight;
     this.fasArrowLeft = fasArrowLeft;
     this.fasCheck = fasCheck;
+  },
+  methods: {
+    toggleSheet(itemIndex) {
+      const link = this.itemurls[itemIndex];
+      const tree = document.getElementsByClassName('view-tree')[0];
+
+      window.location.hash = `selectedItem-${link}`;
+      tree.scrollBy(0, -80);
+
+      this.sequenceindex = this.computedsequenceindex;
+      this.updateItem(this.itemurls[itemIndex]);
+      this.updateSequenceIndex(this.sequenceindex);
+    },
   },
 };
 </script>
