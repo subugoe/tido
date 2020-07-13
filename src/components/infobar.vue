@@ -5,7 +5,7 @@
       <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
       <span>{{ cut(manifesttitle) }}</span>
       <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
-      <span>{{ pagelabel }}</span>
+      <span>{{ itemlabel }}</span>
     </h1>
   </div>
 </template>
@@ -17,8 +17,8 @@ export default {
   name: 'Infobar',
   props: {
     collectiontitle: String,
+    itemlabel: String,
     manifests: Array,
-    pagelabel: String,
   },
   data() {
     return {
@@ -45,6 +45,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

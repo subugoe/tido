@@ -1,11 +1,12 @@
 <template>
   <q-page>
     <q-splitter v-model="splitterone" :limits="[0, 100]">
+
       <template v-show="panels.treeview" v-slot:before>
         <Toolbar heading="Treeview" />
         <q-separator />
 
-        <Treeview
+        <Treeview v-if="tree.length && manifests.length"
           :manifests="manifests"
           :tree="tree"
           >
@@ -14,12 +15,12 @@
 
       <template v-slot:after>
         <q-splitter v-model="splittertwo" :limits="[0, 100]">
+
           <template v-show="panels.text" v-slot:before>
             <Toolbar heading="Text" />
             <q-separator />
 
             <div class="scrollPanel">
-
               <q-infinite-scroll>
                 <Content
                   :key="contenturl"
@@ -35,6 +36,7 @@
 
           <template v-slot:after>
             <q-splitter v-model="splitterthree" :limits="[0, 100]">
+
               <template v-show="panels.image && imageurl" v-slot:before>
                 <Toolbar heading="Image" />
                 <q-separator />
@@ -53,14 +55,13 @@
                 <q-separator />
 
                 <div class="scrollPanel">
-
                   <q-infinite-scroll>
                     <Metadata v-if="manifests.length"
                       :collection="collection"
                       :config="config"
                       :language="language"
                       :manifests="manifests"
-                      :pagelabel="pagelabel"
+                      :itemlabel="itemlabel"
                       >
                     </Metadata>
                   </q-infinite-scroll>
@@ -96,9 +97,9 @@ export default {
     contenturl: String,
     fontsize: Number,
     imageurl: String,
+    itemlabel: String,
     language: String,
     manifests: Array,
-    pagelabel: String,
     request: Function,
     status: Object,
     tree: Array,
@@ -137,6 +138,7 @@ export default {
       Object.values(status).forEach((state) => {
         activePanels.push(state ? 1 : 0);
       });
+
       return activePanels;
     },
     setSplitterRatio(status) {

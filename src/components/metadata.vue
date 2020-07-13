@@ -4,6 +4,7 @@
       <q-item>
         <q-item-section class="text-h6 caps">Collection</q-item-section>
       </q-item>
+
       <q-item>
         <q-item-section>
           <q-item-label overline class="text-uppercase">Title:</q-item-label>
@@ -12,6 +13,7 @@
           </q-item-label>
         </q-item-section>
       </q-item>
+
       <q-item>
         <q-item-section>
           <q-item-label overline class="text-uppercase">Collector:</q-item-label>
@@ -20,6 +22,7 @@
             </q-item-label>
         </q-item-section>
       </q-item>
+
       <q-item>
         <q-item-section>
           <q-item-label overline class="text-uppercase">Description:</q-item-label>
@@ -38,6 +41,7 @@
           {{ config.labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
+
       <q-item>
         <q-item-section>
           <q-item-label overline class="text-uppercase">Label:</q-item-label>
@@ -54,12 +58,14 @@
           {{ config.labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
+
       <q-item>
         <q-item-section>
           <q-item-label overline class="text-uppercase">Label:</q-item-label>
-          <q-item-label>{{ pagelabel }}</q-item-label>
+          <q-item-label>{{ itemlabel }}</q-item-label>
         </q-item-section>
       </q-item>
+
       <q-item>
         <q-item-section>
           <q-item-label overline class="text-uppercase">Language:</q-item-label>
@@ -76,9 +82,9 @@ export default {
   props: {
     collection: Object,
     config: Object,
+    itemlabel: String,
     language: String,
     manifests: Array,
-    pagelabel: String,
   },
   data() {
     return {
@@ -111,7 +117,7 @@ export default {
 </script>
 
 <style scoped>
-.caps {
-  font-variant: small-caps;
-}
+  .caps {
+    font-variant: small-caps;
+  }
 </style>

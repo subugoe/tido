@@ -5,8 +5,8 @@
         v-for="(btn, idx) in buttons" :key="idx"
         class="q-mr-sm q-mb-sm"
         color="grey-8"
-        round
         flat
+        round
         size="md"
         :id="btn.id"
         >
@@ -56,6 +56,7 @@ export default {
   mounted() {
     // eslint-disable-next-line no-unused-vars
     const viewer = new OpenSeadragon.Viewer(this.options);
+
     OpenSeadragon.setString('Tooltips.Home', 'Default View');
     OpenSeadragon.setString('Tooltips.FullPage', 'Toggle Fullscreen');
 
@@ -73,8 +74,8 @@ export default {
 <style scoped>
   figure {
     display: inline-block;
-    height: 60vh;
+    height: 75vh;
     margin: 16px;
-    width: 100%;
+    width: 95%
   }
 </style>

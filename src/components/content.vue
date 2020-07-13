@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row iconPosition">
+    <div class="row sticky">
       <div class="content">
         <q-btn
           class="q-mr-sm q-mb-sm cursor-pointer"
@@ -16,6 +16,7 @@
             title="Increase"
           />
         </q-btn>
+
         <q-btn
           class="q-mr-sm q-mb-sm cursor-pointer"
           color="grey-8"
@@ -32,6 +33,7 @@
         </q-btn>
       </div>
     </div>
+
     <div class="row">
       <div
         class="col-md-10 offset-md-1" :style="`font-size: ${fontsize}px`"
@@ -108,7 +110,7 @@ export default {
   .content {
     margin: 16px;
   }
-  .iconPosition {
+  .sticky {
     position: sticky;
     top: 0;
     background: #fff;

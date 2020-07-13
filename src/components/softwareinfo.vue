@@ -6,19 +6,22 @@
       color="grey"
       label=""
       title="Project info"
-      @click="infobox = true">
+      @click="infobox = true"
+      >
       <q-icon size="xs" :name="fasInfoCircle" />
     </q-btn>
+
     <q-dialog v-model="infobox">
       <q-card>
         <q-card-section class="">
-          <div class="text-h5 q-pb-md">
-              EMo Viewer
-          </div>
+          <div class="text-h5 q-pb-md">EMo Viewer</div>
+
           <p class="text-weight-bold">
             Slim, easy to use and mobile-friendly text and image viewer
           </p>
+
           <p>Author: State and University Library Göttingen (SUB Göttingen)</p>
+
           <p class="q-mb-none">Version 0.5.0, License AGPL-3.0</p>
         </q-card-section>
 
@@ -32,6 +35,7 @@
             <q-icon :name="fasBook" size="md" class="q-pr-md" />
             Documentation
           </q-btn>
+
           <q-btn
             flat
             href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/"
@@ -41,6 +45,7 @@
             <q-icon :name="fasCode" size="md" class="q-pr-md" />
             Source Code
           </q-btn>
+
           <q-btn
             flat
             href="mailto:gitlab+subugoe-emo-qviewer-10921-issue-@gwdg.de"
@@ -54,7 +59,6 @@
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Close" v-close-popup />
         </q-card-actions>
-
       </q-card>
     </q-dialog>
   </div>

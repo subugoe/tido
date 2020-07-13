@@ -82,7 +82,7 @@ export default {
     this.fasCircle = fasCircle;
     this.fasCheckCircle = fasCheckCircle;
 
-    // just show the panel buttons needed according to the config
+    // just show the toggle buttons needed according to the config
     Object.entries(this.status).forEach(([panel, state]) => {
       if (state === true) {
         this.panels.push(panel);
@@ -93,12 +93,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-button {
-  @media (min-width: 600px) {
-    margin-right: 8px;
+  button {
+    @media (min-width: 600px) {
+      margin-right: 8px;
+    }
   }
-}
-button:last-of-type {
-  margin-right: 0;
-}
+  button:last-of-type {
+    margin-right: 0;
+  }
 </style>

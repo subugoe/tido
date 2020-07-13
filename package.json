@@ -5,14 +5,17 @@
   "productName": "EMo Viewer",
   "cordovaId": "de.uni-goettingen.sub.emo",
   "capacitorId": "",
-  "author": "Mathias Göbel <goebel@sub.uni-goettingen.de>",
+  "author": [
+    "Mathias Göbel <goebel@sub.uni-goettingen.de>",
+    "Frank Schneider <frank.schneider@sub.uni-goettingen.de>"
+  ],
   "contributors": [
     "Nils Windisch"
   ],
   "private": true,
   "scripts": {
     "build": "quasar build",
-    "dev": "quasar dev",
+    "dev": "quasar dev --modern",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
