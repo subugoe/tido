@@ -15,23 +15,6 @@
       {{ captionprev }}
     </q-btn>
 
-    <!-- <q-input
-      color="teal"
-      class="q-mb-md"
-      dense
-      min="1"
-      standout
-      type="number"
-      :placeholder="config.labels.item"
-      >
-      <template v-slot:append>
-        <q-icon
-          :name="fasCheck"
-          size="20px"
-        />
-      </template>
-    </q-input> -->
-
     <q-btn
       unelevated
       class="q-mb-md"
@@ -60,19 +43,6 @@ export default {
     this.fasArrowRight = fasArrowRight;
     this.fasArrowLeft = fasArrowLeft;
     this.fasCheck = fasCheck;
-  },
-  methods: {
-    toggleSheet(itemIndex) {
-      const link = this.itemurls[itemIndex];
-      const tree = document.getElementsByClassName('view-tree')[0];
-
-      window.location.hash = `selectedItem-${link}`;
-      tree.scrollBy(0, -80);
-
-      this.sequenceindex = this.computedsequenceindex;
-      this.updateItem(this.itemurls[itemIndex]);
-      this.updateSequenceIndex(this.sequenceindex);
-    },
   },
 };
 </script>

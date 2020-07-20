@@ -66,14 +66,14 @@ export default {
       let textsize = this.fontsize;
 
       textsize -= textsize > min ? 1 : 0;
-      this.$root.$emit('change-fontsize', textsize);
+      this.$root.$emit('update-fontsize', textsize);
     },
     increase() {
       const max = 32;
       let textsize = this.fontsize;
 
       textsize += textsize < max ? 1 : 0;
-      this.$root.$emit('change-fontsize', textsize);
+      this.$root.$emit('update-fontsize', textsize);
     },
     getSupport(obj) {
       if (obj.type === 'css') {

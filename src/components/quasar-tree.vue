@@ -1,27 +1,10 @@
 <template>
   <div class="q-pa-md q-gutter-sm">
-    <!-- <q-input
-      filled
-      label="Filter by label ..."
-      ref="filter"
-      v-model="filter"
-      >
-      <template v-slot:append>
-        <q-icon v-if="filter !== ''"
-          class="cursor-pointer"
-          @click="resetSearch"
-          :name="fasTimes"
-        />
-      </template>
-    </q-input>
- -->
     <q-tree
       class="view-tree"
       label-key="label-key"
       node-key="label"
       :expanded.sync="expanded"
-      :filter="filter"
-      :filter-method="search"
       :nodes="tree"
       :selected.sync="selected"
       >
@@ -32,16 +15,11 @@
         </div>
       </template>
     </q-tree>
-<!-- ^^ these ones go up here
-    :filter="filter"
-    :filter-method="search"
- -->
   </div>
 </template>
 
 <script>
 import matIcons from 'quasar/icon-set/material-icons';
-// import { fasTimes } from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Treeview',
@@ -52,24 +30,12 @@ export default {
   data() {
     return {
       expanded: [],
-      // filter: '',
       selected: this.manifests[0].sequence[0].id,
       sequenceindex: 0,
     };
   },
-  // methods: {
-  //   resetSearch() {
-  //     this.filter = '';
-  //     this.$refs.filter.focus();
-  //   },
-  //   search(node, filter) {
-  //     const f = filter.toLowerCase();
-  //     return node.label && node.label.toLowerCase().indexOf(f) > -1;
-  //   },
-  // },
   created() {
     this.$q.iconSet.set(matIcons);
-    // this.fasTimes = fasTimes;
   },
   mounted() {
     this.$root.$on('update-item', (item) => {

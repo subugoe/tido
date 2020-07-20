@@ -5,14 +5,14 @@
       dense
       size="md"
       class="q-mb-md"
-      v-for="(name, idx) in panels"
+      v-for="(name, idx) in togglekeys"
       :aria-selected="toggleAria(idx)"
       :key="idx"
       :title="toggleTitle(idx)"
-      @click="updateStatus(idx)"
+      @click="toggleIcon(idx); updateStatus(idx)"
       >
       <q-icon class="q-pr-xs" size="xs" :name="toggleIcon(idx)" />
-      {{ name }}
+      {{ panelstates[name].name }}
     </q-btn>
 
     <q-btn
@@ -40,11 +40,13 @@ import {
 export default {
   name: 'Togglebar',
   props: {
-    status: Object,
+    imageurl: String,
+    panelstates: Object,
   },
   data() {
     return {
-      panels: [],
+      togglekeys: [],
+      states: {},
     };
   },
   filters: {
@@ -53,28 +55,49 @@ export default {
     },
   },
   methods: {
+    keyExists(needle = '', haystack = []) {
+      const index = haystack.indexOf(needle);
+      return [index > -1, index];
+    },
     resetPanelStatus() {
-      for (let index = 0; index < this.panels.length; index += 1) {
-        this.status[this.panels[index]] = true;
+      // NOTE: just loop over the initial states formerly configured to be shown (e.g. *true*)
+      // filtered result goes into *togglekeys*.
+      // leave the initial panel/s configured to be not shown (e.g. *false*) untouched!
+      for (let idx = 0; idx < this.togglekeys.length; idx += 1) {
+        this.panelstates[this.togglekeys[idx]].show = true;
       }
-      this.$root.$emit('update-panel-status', this.status);
+      this.$root.$emit('update-panel-status', this.updateEmitter(this.panelstates));
     },
     toggleAria(id) {
-      return !!this.status[this.panels[id]];
+      return !!this.panelstates[this.togglekeys[id]].show;
     },
     toggleIcon(id) {
-      return this.status[this.panels[id]] ? fasCheckCircle : fasCircle;
+      return this.panelstates[this.togglekeys[id]].show ? fasCheckCircle : fasCircle;
     },
     toggleTitle(id) {
-      const caption = this.ucfirst(this.panels[id]);
-      return this.status[this.panels[id]] ? `Hide ${caption} Tab` : `Show ${caption} Tab`;
+      const caption = this.ucfirst(this.panelstates[this.togglekeys[id]].name);
+
+      return this.panelstates[this.togglekeys[id]].show
+        ? `Hide ${caption} Tab`
+        : `Show ${caption} Tab`;
     },
     ucfirst(s) {
       return s.charAt(0).toUpperCase() + s.slice(1);
     },
+    updateEmitter(status) {
+      Object.entries(status).forEach(([panel, state]) => {
+        this.states[panel] = state.show;
+      });
+      return this.states;
+    },
     updateStatus(id) {
-      this.status[this.panels[id]] = !this.status[this.panels[id]];
-      this.$root.$emit('update-panel-status', this.status);
+      // NOTE: leave the initial panelstates untouched! Configured by the project only!
+      // original panelstates needed in resetPanelStatus() to look up the initial states,
+      // which otherwise would be incidentally overwritten; hence: => *statecopy*
+      const statecopy = this.panelstates;
+      statecopy[this.togglekeys[id]].show = !statecopy[this.togglekeys[id]].show;
+
+      this.$root.$emit('update-panel-status', this.updateEmitter(statecopy));
     },
   },
   created() {
@@ -83,9 +106,24 @@ export default {
     this.fasCheckCircle = fasCheckCircle;
 
     // just show the toggle buttons needed according to the config
-    Object.entries(this.status).forEach(([panel, state]) => {
-      if (state === true) {
-        this.panels.push(panel);
+    Object.entries(this.panelstates).forEach(([panel, state]) => {
+      if (state.show === true) {
+        this.togglekeys.push(panel);
+      }
+    });
+  },
+  mounted() {
+    this.resetPanelStatus();
+
+    this.$root.$on('update-item', () => {
+      if (this.panelstates.image.show) {
+        const [haskey, index] = this.keyExists('image', this.togglekeys);
+        // check, if image key hasn't been deleted yet
+        if (haskey && !this.imageurl) {
+          this.togglekeys.splice(index, 1);
+        } else if (!haskey && this.imageurl) {
+          this.togglekeys.push('image');
+        }
       }
     });
   },
