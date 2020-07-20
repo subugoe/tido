@@ -2,8 +2,8 @@
   <q-page>
     <q-splitter v-model="splitterone" :limits="[0, 100]">
 
-      <template v-show="panels.treeview" v-slot:before>
-        <Toolbar heading="Treeview" />
+      <template v-show="config.panels.tree.show && states.tree" v-slot:before>
+        <Toolbar :heading="config.panels.tree.name" />
         <q-separator />
 
         <Treeview v-if="tree.length && manifests.length"
@@ -16,8 +16,8 @@
       <template v-slot:after>
         <q-splitter v-model="splittertwo" :limits="[0, 100]">
 
-          <template v-show="panels.text" v-slot:before>
-            <Toolbar heading="Text" />
+          <template v-show="config.panels.text.show && states.text" v-slot:before>
+            <Toolbar :heading="config.panels.text.name" />
             <q-separator />
 
             <div class="q-pa-md q-gutter-sm">
@@ -40,8 +40,8 @@
           <template v-slot:after>
             <q-splitter v-model="splitterthree" :limits="[0, 100]">
 
-              <template v-show="panels.image && imageurl" v-slot:before>
-                <Toolbar heading="Image" />
+              <template v-show="config.panels.image.show && states.image && imageurl" v-slot:before>
+                <Toolbar :heading="config.panels.image.name" />
                 <q-separator />
 
                 <div class="q-pa-md q-gutter-sm" style="overflow:hidden">
@@ -55,8 +55,8 @@
                 </div>
               </template>
 
-              <template v-show="panels.metadata" v-slot:after>
-                <Toolbar heading="Metadata" />
+              <template v-show="config.panels.metadata.show && states.metadata" v-slot:after>
+                <Toolbar :heading="config.panels.metadata.name" />
                 <q-separator />
 
                 <div class="scrollPanel">
@@ -106,34 +106,33 @@ export default {
     language: String,
     manifests: Array,
     request: Function,
-    status: Object,
     tree: Array,
   },
   data() {
     return {
-      // status: image, text, metadata, treeview
+      // status: tree, text, image, metadata
       matrix: [
         { state: [1, 1, 1, 1], ratio: [25, 33, 50] },
         { state: [0, 0, 0, 0], ratio: [0, 0, 0] },
-        { state: [1, 1, 1, 0], ratio: [0, 33, 50] },
-        { state: [1, 1, 0, 1], ratio: [33, 50, 100] },
+        { state: [1, 1, 1, 0], ratio: [33, 50, 100] },
+        { state: [1, 1, 0, 1], ratio: [33, 50, 0] },
         { state: [1, 0, 1, 1], ratio: [33, 0, 50] },
-        { state: [1, 0, 1, 0], ratio: [0, 0, 50] },
-        { state: [1, 0, 0, 1], ratio: [50, 0, 100] },
-        { state: [1, 1, 0, 0], ratio: [0, 50, 100] },
-        { state: [1, 0, 0, 0], ratio: [0, 0, 100] },
-        { state: [0, 1, 1, 1], ratio: [33, 50, 0] },
-        { state: [0, 1, 1, 0], ratio: [0, 50, 0] },
-        { state: [0, 1, 0, 1], ratio: [50, 100, 0] },
+        { state: [1, 0, 1, 0], ratio: [33, 0, 100] },
+        { state: [1, 0, 0, 1], ratio: [50, 0, 0] },
+        { state: [1, 1, 0, 0], ratio: [50, 100, 0] },
+        { state: [1, 0, 0, 0], ratio: [100, 0, 0] },
+        { state: [0, 1, 1, 1], ratio: [0, 33, 50] },
+        { state: [0, 1, 1, 0], ratio: [0, 50, 100] },
+        { state: [0, 1, 0, 1], ratio: [0, 50, 0] },
         { state: [0, 1, 0, 0], ratio: [0, 100, 0] },
-        { state: [0, 0, 1, 1], ratio: [50, 0, 0] },
-        { state: [0, 0, 1, 0], ratio: [0, 0, 0.1] },
-        { state: [0, 0, 0, 1], ratio: [100, 0, 0] },
+        { state: [0, 0, 1, 1], ratio: [0, 0, 50] },
+        { state: [0, 0, 1, 0], ratio: [0, 0, 100] },
+        { state: [0, 0, 0, 1], ratio: [0, 0, 0] },
       ],
-      panels: {},
       splitterone: 25,
       splittertwo: 33,
       splitterthree: 50,
+      states: {},
     };
   },
   methods: {
@@ -146,26 +145,36 @@ export default {
 
       return activePanels;
     },
+    // hide image panel if the actual item doesn't contain an imageurl
+    setPanelState() {
+      this.states.image = this.config.panels.image.show && !(this.imageurl === '');
+      this.setSplitterRatio(this.states);
+    },
     setSplitterRatio(status) {
-      const panels = this.getActivePanels(status);
+      const panelstates = this.getActivePanels(status);
 
-      this.matrix.forEach((obj) => {
-        if (JSON.stringify(obj.state) === JSON.stringify(panels)) {
-          [this.splitterone, this.splittertwo, this.splitterthree] = obj.ratio;
+      this.matrix.forEach((mtrx) => {
+        if (JSON.stringify(mtrx.state) === JSON.stringify(panelstates)) {
+          [this.splitterone, this.splittertwo, this.splitterthree] = mtrx.ratio;
         }
       });
     },
   },
   created() {
-    Object.entries(this.status).forEach(([panel, state]) => {
-      this.panels[panel] = state;
+    Object.entries(this.config.panels).forEach(([panel, states]) => {
+      this.states[panel] = states.show;
     });
-    this.setSplitterRatio(this.panels);
+    this.setSplitterRatio(this.states);
   },
   mounted() {
+    // emitted from @/components/togglebar.vue only
     this.$root.$on('update-panel-status', (status) => {
-      this.panels = status;
+      this.states = status;
       this.setSplitterRatio(status);
+    });
+    // toggle the image panel depending on imageurl. no url, no panel (and vice versa)
+    this.$root.$on('update-item', () => {
+      this.setPanelState();
     });
   },
 };

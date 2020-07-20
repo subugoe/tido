@@ -11,6 +11,17 @@ export default {
     };
   },
   methods: {
+    toggleSheet(itemIndex) {
+      const link = this.itemurls[itemIndex];
+      const tree = document.getElementsByClassName('view-tree')[0];
+
+      window.location.hash = `selectedItem-${link}`;
+      tree.scrollBy(0, -80);
+
+      this.sequenceindex = this.computedsequenceindex;
+      this.updateItem(this.itemurls[itemIndex]);
+      this.updateSequenceIndex(this.sequenceindex);
+    },
     updateItem() {
       this.$root.$emit('update-item', this.itemurls[this.itemindex]);
     },

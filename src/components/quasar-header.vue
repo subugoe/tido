@@ -33,7 +33,8 @@
           content-sm-center
           justify-sm-evenly
           row-sm"
-        :status="status"
+        :imageurl="imageurl"
+        :panelstates="config.panels"
       />
     </div>
   </q-header>
@@ -54,10 +55,10 @@ export default {
   props: {
     collectiontitle: String,
     config: Object,
+    imageurl: String,
     itemlabel: String,
     itemurls: Array,
     manifests: Array,
-    status: Object,
   },
 };
 </script>

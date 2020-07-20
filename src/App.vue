@@ -4,10 +4,10 @@
       <Header v-if="config.headers.all"
         :collectiontitle="collectiontitle"
         :config="config"
+        :imageurl="imageurl"
         :itemlabel="itemlabel"
         :itemurls="itemurls"
         :manifests="manifests"
-        :status="status"
       />
 
       <q-page-container>
@@ -21,7 +21,6 @@
           :language="itemlanguage"
           :manifests="manifests"
           :request="request"
-          :status="status"
           :tree="tree"
         />
       </q-page-container>
@@ -49,13 +48,13 @@ export default {
       config: {},
       fontsize: 14,
       imageurl: '',
+      isCollection: false,
       itemlabel: '',
       itemlanguage: '',
       itemurl: '',
       itemurls: [],
       label: '',
       manifests: [],
-      status: {},
       tree: [],
     };
   },
@@ -67,6 +66,8 @@ export default {
       return data;
     },
     getCollection(url) {
+      this.isCollection = true;
+
       this.request(url)
         .then((data) => {
           this.collection = data;
@@ -91,10 +92,6 @@ export default {
     },
     getConfig() {
       this.config = JSON.parse(document.getElementById('emo-config').text);
-
-      if (Object.keys(this.config.panels).length) {
-        this.status = this.config.panels;
-      }
     },
     getItemData(url) {
       this.request(url)
@@ -104,7 +101,8 @@ export default {
           this.contenturl = data.content;
           this.imageurl = data.image && data.image.id ? data.image.id : '';
           this.itemlabel = data.n ? data.n : 'No itemlabel :(';
-          this.itemlanguage = data.language;
+          // eslint-disable-next-line prefer-destructuring
+          this.itemlanguage = data['x-langString'].split(',')[0];
         });
     },
     getItemIndex(nodelabel) {
@@ -148,6 +146,11 @@ export default {
     getManifest(url) {
       this.request(url)
         .then((data) => {
+          // if the entrypoint points to a single manifest, initialize the tree
+          if (this.isCollection === false) {
+            this.tree.push({ label: '', 'label-key': this.config.labels.manifest, children: [] });
+          }
+
           if (!Array.isArray(data.sequence)) {
             data.sequence = [data.sequence];
           }
@@ -204,20 +207,17 @@ export default {
     this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   },
   mounted() {
+    this.$root.$on('update-fontsize', (fontsize) => {
+      this.fontsize = fontsize;
+    });
+
     this.$root.$on('update-item', (url) => {
       this.itemurl = url;
       this.$router.push({ query: { itemurl: url } });
       // NOTE: Set imageurl to an empty string. Otherwise, if there is no corresponding image,
-      // the "preceding" image according to the "preceding" itemurl will be shown.
+      // the "preceding" image according to the "preceding" item will be shown.
       this.imageurl = '';
       this.getItemData(url);
-    });
-
-    this.$root.$on('update-panel-status', (status) => {
-      this.status = status;
-    });
-    this.$root.$on('change-fontsize', (fontsize) => {
-      this.fontsize = fontsize;
     });
   },
 };
