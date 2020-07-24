@@ -1,11 +1,10 @@
 <template>
 
-  <div class="softwareinfo col-xs-auto">
+  <div class="softwareinfo col-xs-auto" title="Project info">
     <q-btn
       flat
       color="grey"
       label=""
-      title="Project info"
       @click="infobox = true"
       >
       <q-icon size="xs" :name="fasInfoCircle" />
@@ -20,9 +19,11 @@
             Slim, easy to use and mobile-friendly text and image viewer
           </p>
 
-          <p>Author: State and University Library Göttingen (SUB Göttingen)</p>
+          <p>Copyright (c) 2020 Göttingen University - Göttingen State and University Library</p>
 
-          <p class="q-mb-none">Version 0.5.0, License AGPL-3.0</p>
+          <p class="q-mb-none">
+            Version 0.1.0, licensed under GNU Affero General Public License v3.0
+          </p>
         </q-card-section>
 
         <q-card-section class="q-pt-none">

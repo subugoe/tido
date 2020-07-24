@@ -84,8 +84,8 @@
 import Content from '@/components/content.vue';
 import Metadata from '@/components/metadata.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
-import Toolbar from '@/components/quasar-toolbar.vue';
-import Treeview from '@/components/quasar-tree.vue';
+import Toolbar from '@/components/toolbar.vue';
+import Treeview from '@/components/tree.vue';
 
 export default {
   name: 'MainView',
@@ -136,20 +136,28 @@ export default {
     };
   },
   methods: {
+    /**
+      * prepare panel's showcases to match against matrix's state
+      * caller: *setSplitterRatio()*
+      *
+      * @param object status
+      *
+      * @return array activePanels
+      */
     getActivePanels(status) {
       const activePanels = [];
 
       Object.values(status).forEach((state) => {
         activePanels.push(state ? 1 : 0);
       });
-
       return activePanels;
     },
-    // hide image panel if the actual item doesn't contain an imageurl
-    setPanelState() {
-      this.states.image = this.config.panels.image.show && !(this.imageurl === '');
-      this.setSplitterRatio(this.states);
-    },
+    /**
+      * match activePanels against matrix's state and provide the appropriate splitter ratio
+      * caller: limited to this file / view only
+      *
+      * @param object status
+      */
     setSplitterRatio(status) {
       const panelstates = this.getActivePanels(status);
 
@@ -161,27 +169,30 @@ export default {
     },
   },
   created() {
+    // filter the panel's showcases and leave the config object untouched
     Object.entries(this.config.panels).forEach(([panel, states]) => {
       this.states[panel] = states.show;
     });
     this.setSplitterRatio(this.states);
   },
   mounted() {
-    // emitted from @/components/togglebar.vue only
+    // emitted by @/components/togglebar.vue
     this.$root.$on('update-panel-status', (status) => {
       this.states = status;
       this.setSplitterRatio(status);
     });
-    // toggle the image panel depending on imageurl. no url, no panel (and vice versa)
+    // toggle the image panel depending on imageurl.
+    // if no url is provided, the image panel will be hidden
     this.$root.$on('update-item', () => {
-      this.setPanelState();
+      this.states.image = this.config.panels.image.show && !(this.imageurl === '');
+      this.setSplitterRatio(this.states);
     });
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  @import '../css/quasar.responsive.scss';
+  @import '../css/responsive-heights.scss';
 
   .scrollPanel {
     -ms-overflow-style: none;

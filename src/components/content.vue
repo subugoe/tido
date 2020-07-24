@@ -8,12 +8,12 @@
           flat
           round
           size="md"
+          title="Increase Textsize"
           @click="increase()"
           >
           <q-icon
             size="sm"
             :name="fasSearchPlus"
-            title="Increase"
           />
         </q-btn>
 
@@ -23,17 +23,17 @@
           round
           flat
           size="md"
+          title="Decrease Textsize"
           @click="decrease()"
           >
           <q-icon
             size="sm"
             :name="fasSearchMinus"
-            title="Decrease"
           />
         </q-btn>
       </div>
     </div>
-    <div class="row" style="display:contents">
+    <div class="row" style="display: contents">
       <div
         :style="`font-size: ${fontsize}px`"
         :id="nodeid" v-html="content">
@@ -104,9 +104,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-  .content {
-    margin: 16px;
-  }
-</style>

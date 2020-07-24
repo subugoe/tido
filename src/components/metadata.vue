@@ -18,7 +18,7 @@
         <q-item-section>
           <q-item-label overline class="text-uppercase">Collector:</q-item-label>
           <q-item-label>
-            {{ collection.collector ? collection.collector.name : '' }}
+            {{ collection.collector && collection.collector.name ? collection.collector.name : '' }}
             </q-item-label>
         </q-item-section>
       </q-item>
@@ -31,9 +31,9 @@
           </q-item-label>
         </q-item-section>
       </q-item>
-    </q-list>
 
-    <q-separator inset class="q-mt-md q-mb-sm" />
+      <q-separator inset class="q-mt-md q-mb-sm" />
+    </q-list>
 
     <q-list>
       <q-item>
@@ -93,11 +93,11 @@ export default {
     };
   },
   computed: {
-    manifesttitle() {
-      return this.manifests[this.sequenceindex].label;
-    },
     itemcount() {
       return this.manifests[this.sequenceindex].sequence.length;
+    },
+    manifesttitle() {
+      return this.manifests[this.sequenceindex].label;
     },
   },
   mounted() {
@@ -105,7 +105,10 @@ export default {
       this.sequenceindex = index;
     });
 
-    this.$root.$on('update-item', (url) => {
+    this.$root.$on('update-item', (url, seqindex = null) => {
+      if (seqindex !== null) {
+        this.sequenceindex = seqindex;
+      }
       this.manifests[this.sequenceindex].sequence.forEach((item, index) => {
         if (item.id === url) {
           this.itemindex = index;
