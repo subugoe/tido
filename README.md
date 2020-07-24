@@ -16,23 +16,65 @@ Also the commit short hash can be used to see a demo.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
+- [Viewer components](#viewer-components)
+- [Latest version](#latest-version)
+- [Integration](#integration)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Installing](#installing)
-  - [Get the Dependencies](#get-the-dependencies)
-  - [Start the App in Development Mode (Hot-Code Reloading, Error Reporting, etc.)](#start-the-app-in-development-mode-hot-code-reloading-error-reporting-etc)
-  - [Lint the files](#lint-the-files)
-  - [Build the App for Production](#build-the-app-for-production)
-  - [Customize the Configuration](#customize-the-configuration)
+  - [Installation](#installation)
+    - [Set up `nvm` and the recent stable version of `node.js`](#set-up-nvm-and-the-recent-stable-version-of-nodejs)
+    - [Set up `global` project requirements via `npm`](#set-up-global-project-requirements-via-npm)
+    - [Clone the repository](#clone-the-repository)
+    - [Get the dependencies](#get-the-dependencies)
+- [Usage](#usage)
+  - [Start the Viewer in `development` mode (hot reloading, error reporting, etc.)](#start-the-viewer-in-development-mode-hot-reloading-error-reporting-etc)
+    - [`Lint` the files](#lint-the-files)
+    - [`Build` the app for production](#build-the-app-for-production)
+- [Customize the Configuration](#customize-the-configuration)
 - [Configure the Viewer](#configure-the-viewer)
   - [The keys in detail](#the-keys-in-detail)
 - [Dockerfile](#dockerfile)
 - [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend)
+- [Architecture](#architecture)
 - [Contributing](#contributing)
 - [Versioning](#versioning)
 - [Authors](#authors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Viewer components
+![Viewer components](img/Viewer.png)
+
+## Latest version
+To embed the viewer for production, the latest compiled and minified version is
+available at: https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build
+
+## Integration
+To include the viewer on a website add the following to your `index.html` file:
+
+```html
+<noscript>
+  <strong>We're sorry but TextViewer doesn't work properly without JavaScript enabled.
+  	Please enable it to continue.
+  </strong>
+</noscript>
+
+<script id="emo-config" type="application/json">
+  {
+	...
+  }
+</script>
+
+<div id=q-app></div>
+
+<script src=js/app.[CHECKSUM].js></script>
+<script src=js/runtime.[CHECKSUM].js></script>
+<script src=js/vendor.[CHECKSUM].js></script>
+
+```
+
+and replace `[CHECKSUM]` with the values from the release you are going to use.
 
 ## Getting Started
 
@@ -44,16 +86,17 @@ To get the EMo Viewer up and running you should have the following software inst
 - **npm**
 - **nvm**
 
-
 **Note**:
 
-We recommend to make use of *nvm*, since there might be issues with npm regarding permissions.
+We recommend to make use of `nvm`, since there might be issues with npm regarding permissions.
 The main purpose of `nvm` is to have multiple node versions installed in regards to different projects which might demand some sort of backwards compatibility.
 It enables you to just switch to the appropriate node version.
 Besides it also keeps track of resolving permission issues,
 since all your global installations go to your home directory (~/.nvm/) instead of being applied systemwide.
 
-#### Set up *nvm* and the recent stable version of *node.js*
+### Installation
+
+#### Set up `nvm` and the recent stable version of `node.js`
 
   ```bash
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
@@ -63,7 +106,7 @@ since all your global installations go to your home directory (~/.nvm/) instead 
 
 After the nvm installation is done, please `restart` your shell session once. That's due to changes to your profile environment.
 
-#### Set up *global* project requirements via npm
+#### Set up `global` project requirements via `npm`
 
   ```bash
   npm install -g @vue/cli @vue/cli-service-global @quasar/cli
@@ -75,8 +118,6 @@ After the nvm installation is done, please `restart` your shell session once. Th
   git clone git@gitlab.gwdg.de:subugoe/emo/viewer.git
   ```
 
-### Installation
-
 #### Get the dependencies
 
 Head over to your project directory, where you just cloned the repository to as described above and get all the dependencies needed by simply typing:
@@ -86,36 +127,38 @@ Head over to your project directory, where you just cloned the repository to as 
   npm install
   ```
 
-That's it. You now should be able to run the Viewer.
+That's it. You should now be able to run the Viewer.
 
 ## Usage
 
-### Start the App in Development Mode (Hot-Code Reloading, Error Reporting, etc.)
-
-#### Start a local instance of a dev server
+### Start the Viewer in `development` mode (hot reloading, error reporting, etc.)
 
 ```bash
 npm run dev
 ```
 (usually located at: `localhost:8080`)
 
-#### Lint the files
+#### `Lint` the files
 
 ```bash
 npm run lint
 ```
 
-#### Build the App for Production
+#### `Build` the app for production
 
 ```bash
 npm run build
 ```
 
-### Customize the Configuration
+**Note**: The complete build is located at /dist/spa/.
+
+## Customize the Configuration
 
 See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
 ## Configure the Viewer
+
+As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component. If you intend to hide a component, just toggle it's corresponding key-value to `false`.
 
 Locate the `index.template.html` file inside the root of your project dir and find the script section:
 
@@ -124,12 +167,12 @@ Locate the `index.template.html` file inside the root of your project dir and fi
 It's a json object. So if you are going to make any changes and you have to quote these, use double quotes but single ones.
 
 ```html
-    <script id="emo-config" type="application/json">
+<script id="emo-config" type="application/json">
     {
       "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
       "headers": {
         "all": true,
-        "info": false,
+        "info": true,
         "navigation": true,
         "toggle": true
       },
@@ -138,10 +181,22 @@ It's a json object. So if you are going to make any changes and you have to quot
         "manifest": "Manuscript"
       },
       "panels": {
-        "image": true,
-        "text": false,
-        "metadata": true,
-        "treeview": true
+        "tree": {
+          "name": "Contents",
+          "show": true
+        },
+        "text": {
+          "name": "Text",
+          "show": true
+        },
+        "image": {
+          "name": "Image",
+          "show": true
+        },
+        "metadata": {
+          "name": "Metadata",
+          "show": true
+        }
       },
       "standalone": true
     }
@@ -152,44 +207,65 @@ It's a json object. So if you are going to make any changes and you have to quot
 
 - **entrypoint**
 
-	to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed. (Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
+	to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed.<br />
+	(Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
+
+	**Note**: You have to provide at least a valid entrypoint (see above). Otherwise the Viewer won't show anything at all!
+
 - **headers**
-  - **all**
 
-		set this value to `false` if you want to completely switch off all the headerbars at once. This value takes precedence. If it's set to *false*, the other settings for the individual bars are not taken into account.
-      *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
-  - **info**
+  - **all**<br />
+    set this value to `false` if you want to completely switch off all the headerbars at once.<br />
+    This value takes precedence over the other *header-keys*.<br />
+    If it's set to *false*, the other settings for the individual bars are not taken into account.<br />
+    *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
 
-		set this value to `false` if you want to switch off the Infobar (breadcrumbs)
-  - **navigation**
+  - **info**<br />
+    set this value to `false` if you want to switch off the Infobar (a.k.a. breadcrumbs)
+  - **navigation**<br />
+    set this value to `false` if you want to switch off the NavBar
+  - **toggle**<br />
+    set this value to `false` if you want to switch off the ToggleBar.
 
-		set this value to `false` if you want to switch off the NavBar
-  - **toggle**
+    **Note**: if you turn this one off, you won't be able to toggle the panels anymore.
 
-		set this value to `false` if you want to switch off the ToggleBar.
-
-		**Note**: if you turn this one off, you won't be able to toggle the panels anymore.
-
-		All header values default to **true**
+    All header values default to `true`
 
 - **labels**
-  - **item**: the label of the item respectively
 
-		Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.
-This change affects the captions of the navbuttons located in the headerbar and the metadata section.
+  - **item**:<br />
+    the label of the item respectively
 
-		Defaults to **Sheet**
+    Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.<br />
+    This change affects the captions of the navbuttons located in the headerbar and the metadata section.<br />
 
-  - **manifest**: same as for `item` but related to the manifest title
+		Defaults to `Sheet`
 
-		Defaults to **Manuscript**
+  - **manifest**:<br />
+    same as for `item` but related to the manifest title<br />
+
+		Defaults to `Manuscript`
 
 - **panels**
 
-	It's keys correspond to the panelnames, e.g. "treeview", "text", "image", "metadata".
-  	Set either value to **false** if you don't want the Viewer to show the appropriate panel/s.
+	It's keys correspond to the panelnames, e.g. "contents", "text", "image", "metadata".
+	Each key consists of further sub-keys: `name` and `show`.
+  	Change either name-key according to your liking and set either show-key to **false** if you don't want the Viewer to show the appropriate panel/s.
+  	
+  	Example given:
 
-	Defaults to **true** for every panel
+    ```json
+    {
+      "panels": {
+        "tree": {
+          "name": "ToC",
+          "show": false
+        }
+      }
+    }
+    ```
+
+	Defaults to **true** for every `show`-key
 
 - **standalone**
 

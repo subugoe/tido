@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import Header from '@/components/quasar-header.vue';
-import Footer from '@/components/quasar-footer.vue';
+import Header from '@/components/header.vue';
+import Footer from '@/components/footer.vue';
 
 export default {
   name: 'Viewer',
@@ -59,12 +59,30 @@ export default {
     };
   },
   methods: {
+    /**
+      * get resources using JavaScript's native fetch api
+      * caller: *getCollection()*, *getItemData()*, *getManifest()*
+      *         *@/components/content.vue::getSupport()*, *@/components/content.vue::created-hook*
+      *
+      * @param string url
+      * @param string responsetype
+      *
+      * @return promise data
+      */
     async request(url, responsetype = 'json') {
       const response = await fetch(url);
       const data = await (responsetype === 'text' ? response.text() : response.json());
 
       return data;
     },
+    /**
+      * get collection data according to 'entrypoint'
+      * (number of requests equal the number of manifests contained within a collection)
+      * initialize the tree's root node
+      * caller: *init()*
+      *
+      * @param string url
+      */
     getCollection(url) {
       this.isCollection = true;
 
@@ -90,9 +108,19 @@ export default {
           }
         });
     },
+    /**
+      * get config object (JSON) from index.html
+      * caller: *created-hook*
+      */
     getConfig() {
       this.config = JSON.parse(document.getElementById('emo-config').text);
     },
+    /**
+      * fetch all data provided on 'item level'
+      * caller: *mounted-hook*, *getManifest()*
+      *
+      * @param string url
+      */
     getItemData(url) {
       this.request(url)
         .then((data) => {
@@ -105,6 +133,13 @@ export default {
           this.itemlanguage = data['x-langString'].split(',')[0];
         });
     },
+    /**
+      * caller: *getItemUrls()*
+      *
+      * @param string nodelabel
+      *
+      * @return number idx
+      */
     getItemIndex(nodelabel) {
       let idx = 0;
       this.itemurls.forEach((item, index) => {
@@ -114,6 +149,15 @@ export default {
       });
       return idx;
     },
+    /**
+      * get all itemurls hosted by each manifest's sequence to populate the aprropriate tree node
+      * caller: *getManifest()*
+      *
+      * @param array sequence
+      * @param string label
+      *
+      * @return array urls
+      */
     getItemUrls(sequence, label) {
       const urls = [];
 
@@ -128,7 +172,9 @@ export default {
               if (this.itemurl === node.label) {
                 return;
               }
-              this.$root.$emit('update-item', node.label);
+              // node.label === itemurl
+              // @param label === manifest label; passed by getManifest()
+              this.$root.$emit('update-item', node.label, this.getSequenceIndex(label));
               this.$root.$emit('update-item-index', this.getItemIndex(node.label));
               this.$root.$emit('update-sequence-index', this.getSequenceIndex(label));
             },
@@ -137,12 +183,26 @@ export default {
       });
       return urls;
     },
+    /**
+      * get the collection label, if provided; otherwise get the manifest label
+      * caller: *getCollection()*, *getManifest()*
+      *
+      * @param object data
+      *
+      * @return string 'label'
+      */
     getLabel(data) {
       if (Object.keys(this.collection).length) {
         return data.title && data.title[0].title ? data.title[0].title : data.label;
       }
       return data.label ? data.label : 'Manifest <small>(No label available)</small>';
     },
+    /**
+      * get all the data provided on 'manifest level'
+      * caller: *init()*, *getCollection()*
+      *
+      * @param string url
+      */
     getManifest(url) {
       this.request(url)
         .then((data) => {
@@ -182,9 +242,24 @@ export default {
           }
         });
     },
+    /**
+      * extract the 'label part' of the itemurl
+      * caller: *getItemUrls()*
+      *
+      * @param string itemurl
+      *
+      * @return string 'label part'
+      */
     getPageLabel(itemurl) {
       return itemurl.replace(/.*-(.*)\/latest.*$/, '$1');
     },
+    /**
+      * caller: *getItemUrls()*
+      *
+      * @param string label
+      *
+      * @return number index
+      */
     getSequenceIndex(label) {
       let index = 0;
       this.manifests.forEach((manifest, idx) => {
@@ -194,6 +269,12 @@ export default {
       });
       return index;
     },
+    /**
+      * decide whether to start with a collection or a single manifest
+      * caller: *created-hook*
+      *
+      * @return function getCollection() | getManifest()
+      */
     init() {
       return this.config.entrypoint.match(/collection.json\s?$/)
         ? this.getCollection(this.config.entrypoint)
@@ -207,10 +288,22 @@ export default {
     this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   },
   mounted() {
+    /**
+      * listen to fontsize change (user interaction). emitted in @/components/content.vue
+      * in- or rather decrease fontsize of the text by 1px
+      * default fontsize: 14px
+      *
+      * @param number fontsize
+      */
     this.$root.$on('update-fontsize', (fontsize) => {
       this.fontsize = fontsize;
     });
-
+    /**
+      * listen to item change (user interaction).
+      * emitted in: *getItemurls*; handler for tree nodes. fired on user interaction
+      *
+      * @param string url
+      */
     this.$root.$on('update-item', (url) => {
       this.itemurl = url;
       this.$router.push({ query: { itemurl: url } });

@@ -1,28 +1,41 @@
 {
   "name": "viewer",
-  "version": "0.0.22",
+  "version": "0.0.24",
   "description": "Viewer for the modular framework to present digital editions",
   "productName": "EMo Viewer",
+  "keywords": [
+    "viewer",
+    "emo",
+    "digital editions",
+    "vue",
+    "quasar",
+    "openseadragon",
+    "sub"
+  ],
   "cordovaId": "de.uni-goettingen.sub.emo",
   "capacitorId": "",
-  "author": [
-    "Mathias Göbel <goebel@sub.uni-goettingen.de>",
-    "Frank Schneider <frank.schneider@sub.uni-goettingen.de>"
-  ],
-  "contributors": [
-    "Nils Windisch",
-    "Manikanth Dindigala"
-  ],
-  "private": true,
-  "scripts": {
-    "build": "quasar build",
-    "dev": "quasar dev --modern",
-    "lint": "eslint --ext .js,.vue src"
+  "bugs": {
+    "email": "gitlab+subugoe-emo-qviewer-10921-issue-@gwdg.de"
   },
+  "license": {
+    "license": "AGPL-3.0-or-later"
+  },
+  "author": "Frank Schneider <frank.schneider@sub.uni-goettingen.de>",
+  "contributors": [
+    "Manikanth Dindigala <dindigala@sub.uni-goettingen.de>",
+    "Mathias Göbel <goebel@sub.uni-goettingen.de>",
+    "Michelle Weidling <weidling@sub.uni-goettingen.de>",
+    "Nils Windisch <windisch@sub.uni-goettingen.de>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.gwdg.de/subugoe/emo/Qviewer.git"
+  },
+  "private": true,
   "dependencies": {
-    "@quasar/extras": "^1.8.2",
+    "@quasar/extras": "^1.9.0",
     "openseadragon": "^2.4.2",
-    "quasar": "^1.12.11"
+    "quasar": "^1.12.13"
   },
   "devDependencies": {
     "@quasar/app": "^1.9.6",
@@ -37,14 +50,19 @@
     "sass": "^1.26.10",
     "sass-loader": "8.0.2"
   },
+  "browserslist": [
+    "last 1 version, not dead, ie >= 11"
+  ],
   "engines": {
     "node": ">= 10.18.1",
     "npm": ">= 6.13.4"
   },
-  "browserslist": [
-    "last 1 version, not dead, ie >= 11"
-  ],
   "resolutions": {
     "@babel/parser": "7.7.5"
+  },
+  "scripts": {
+    "build": "quasar build --modern",
+    "dev": "quasar dev --modern",
+    "lint": "eslint --ext .js,.vue src"
   }
 }

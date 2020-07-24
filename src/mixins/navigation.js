@@ -19,11 +19,11 @@ export default {
       tree.scrollBy(0, -80);
 
       this.sequenceindex = this.computedsequenceindex;
-      this.updateItem(this.itemurls[itemIndex]);
+      this.updateItem(this.itemurls[itemIndex], this.sequenceindex);
       this.updateSequenceIndex(this.sequenceindex);
     },
     updateItem() {
-      this.$root.$emit('update-item', this.itemurls[this.itemindex]);
+      this.$root.$emit('update-item', this.itemurls[this.itemindex], this.sequenceindex);
     },
     updateSequenceIndex() {
       this.$root.$emit('update-sequence-index', this.sequenceindex);
