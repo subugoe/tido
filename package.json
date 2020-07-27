@@ -1,6 +1,6 @@
 {
   "name": "viewer",
-  "version": "0.0.24",
+  "version": "1.0.0",
   "description": "Viewer for the modular framework to present digital editions",
   "productName": "EMo Viewer",
   "keywords": [
@@ -31,7 +31,7 @@
     "type": "git",
     "url": "https://gitlab.gwdg.de/subugoe/emo/Qviewer.git"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@quasar/extras": "^1.9.0",
     "openseadragon": "^2.4.2",
