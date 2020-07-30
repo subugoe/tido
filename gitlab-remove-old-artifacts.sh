@@ -25,8 +25,11 @@ for entry in *
         last_modified_in_s=$(date -d $last_modified +%s)
         # difference in days
         diff=$((($current_date_in_s - $last_modified_in_s) / (24*3600)))
-        # remove entries that are older than 2 weeks ...
-        if [[ $diff -gt 14 ]]; then
+        # preserve content of development branch ...
+        if [[ ${entry} = "develop" ]]; then
+            :
+        # ... remove other entries that are older than 2 weeks ...
+        elif [[ $diff -gt 14 ]]; then
             rm -r $entry
         ## ... keep the single commit entries ...
         #elif [[ ${#entry} == 8  && ${entry} =~ [a-z0-9] ]]; then

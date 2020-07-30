@@ -5,19 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1]- 2020-07-30
+
+### Changed
+
+- The content of the development branch is no longer purged from the artifacts, even if the branch hasn't been updated for 14 days.
+This way we ensure that <https://subugoe.pages.gwdg.de/emo/Qviewer/develop/#/> always works.
+
 ## [1.0.0] - 2020-07-27
 
 ### Added
+
 - Preparation for EMo Viewer initial release v1.0.0
 
 ## [0.1.0] - 2020-07-24
 
 ### Fixed
+
 - bug in navigation: itemindex was updated too late; lacking the corresponding sequenceindex. passed the latter to listener
 
 ## [0.0.24] - 2020-07-22
 
 ### Added
+
 - license AGPL v3.0
 - NOTICE
 - license info in softwareinfo
@@ -90,7 +100,6 @@ We only rely on previous artifacts for new pipelines.
 ### Fixed
 
 - Reverted the changes and fixed the icons to nest inside image.
-
 
 ## [0.0.14] - 2020-06-23
 
