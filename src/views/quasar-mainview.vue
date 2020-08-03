@@ -2,27 +2,76 @@
   <q-page>
     <q-splitter v-model="splitterone" :limits="[0, 100]">
 
-      <template v-show="config.panels.tree.show && states.tree" v-slot:before>
-        <Toolbar :heading="config.panels.tree.name" />
+      <template v-show="config.panels.tabs.show && states.tabs" v-slot:before>
+        <Toolbar :heading="config.panels.tabs.name" />
+
         <q-separator />
 
-        <Treeview v-if="tree.length && manifests.length"
-          :manifests="manifests"
-          :tree="tree"
-          >
-        </Treeview>
+        <q-card>
+          <q-tabs v-model="tab"
+            align="right"
+            active-bg-color="grey-4"
+            >
+            <q-tab name="contents" label="Contents" @click="updateTab()" />
+            <q-tab name="meta" label="Metadata" @click="updateTab()" />
+          </q-tabs>
+
+          <q-separator />
+
+          <q-tab-panels v-model="tab" animated keep-alive>
+            <q-tab-panel name="contents">
+              <Treeview v-if="tree.length && manifests.length"
+                :manifests="manifests"
+                :tree="tree"
+                >
+              </Treeview>
+            </q-tab-panel>
+
+            <q-tab-panel name="meta">
+              <div class="scrollpanel">
+                <Metadata v-if="manifests.length"
+                  :collection="collection"
+                  :config="config"
+                  :language="language"
+                  :manifests="manifests"
+                  :itemlabel="itemlabel"
+                  >
+                </Metadata>
+              </div>
+            </q-tab-panel>
+          </q-tab-panels>
+        </q-card>
       </template>
 
       <template v-slot:after>
         <q-splitter v-model="splittertwo" :limits="[0, 100]">
 
+          <template v-show="config.panels.image.show && states.image && imageurl" v-slot:before>
+            <Toolbar :heading="config.panels.image.name" />
+
+            <q-separator />
+
+            <div class="q-pa-md q-gutter-sm overflow-hidden">
+              <div class="scrollpanel">
+                <OpenSeadragon
+                  :key="imageurl"
+                  :imageurl="imageurl"
+                  >
+                </OpenSeadragon>
+              </div>
+            </div>
+          </template>
+
+      <template v-slot:after>
+        <q-splitter v-model="splitterthree" :limits="[0, 100]">
+
           <template v-show="config.panels.text.show && states.text" v-slot:before>
             <Toolbar :heading="config.panels.text.name" />
+
             <q-separator />
 
             <div class="q-pa-md q-gutter-sm">
-              <div class="scrollPanel">
-
+              <div class="scrollpanel">
                 <q-infinite-scroll>
                   <Content
                     :key="contenturl"
@@ -37,46 +86,19 @@
             </div>
           </template>
 
-          <template v-slot:after>
-            <q-splitter v-model="splitterthree" :limits="[0, 100]">
+          <template v-show="config.panels.annotations.show && states.annotations" v-slot:after>
+            <Toolbar :heading="config.panels.annotations.name" />
 
-              <template v-show="config.panels.image.show && states.image && imageurl" v-slot:before>
-                <Toolbar :heading="config.panels.image.name" />
-                <q-separator />
+            <q-separator />
 
-                <div class="q-pa-md q-gutter-sm" style="overflow:hidden">
-                  <div class="scrollPanel">
-                    <OpenSeadragon
-                      :key="imageurl"
-                      :imageurl="imageurl"
-                      >
-                    </OpenSeadragon>
-                  </div>
-                </div>
-              </template>
-
-              <template v-show="config.panels.metadata.show && states.metadata" v-slot:after>
-                <Toolbar :heading="config.panels.metadata.name" />
-                <q-separator />
-
-                <div class="scrollPanel">
-                  <q-infinite-scroll>
-                    <Metadata v-if="manifests.length"
-                      :collection="collection"
-                      :config="config"
-                      :language="language"
-                      :manifests="manifests"
-                      :itemlabel="itemlabel"
-                      >
-                    </Metadata>
-                  </q-infinite-scroll>
-                </div>
-              </template>
-            </q-splitter>
           </template>
         </q-splitter>
       </template>
+
+        </q-splitter>
+      </template>
     </q-splitter>
+
   </q-page>
 </template>
 
@@ -110,7 +132,7 @@ export default {
   },
   data() {
     return {
-      // status: tree, text, image, metadata
+      // status: tree, image, text, annotations
       matrix: [
         { state: [1, 1, 1, 1], ratio: [25, 33, 50] },
         { state: [0, 0, 0, 0], ratio: [0, 0, 0] },
@@ -133,6 +155,7 @@ export default {
       splittertwo: 33,
       splitterthree: 50,
       states: {},
+      tab: '',
     };
   },
   methods: {
@@ -167,6 +190,9 @@ export default {
         }
       });
     },
+    updateTab() {
+      this.$root.$emit('update-tab', this.tab);
+    },
   },
   created() {
     // filter the panel's showcases and leave the config object untouched
@@ -174,6 +200,8 @@ export default {
       this.states[panel] = states.show;
     });
     this.setSplitterRatio(this.states);
+
+    this.tab = this.config.panels.tabs.default;
   },
   mounted() {
     // emitted by @/components/togglebar.vue
@@ -194,13 +222,13 @@ export default {
 <style lang="scss" scoped>
   @import '../css/responsive-heights.scss';
 
-  .scrollPanel {
+  .scrollpanel {
     -ms-overflow-style: none;
     overflow: auto;
     scrollbar-width: none;
     @include makeResponsiveHeight();
   }
-  .scrollPanel::-webkit-scrollbar {
+  .scrollpanel::-webkit-scrollbar {
     display: none;
   }
 </style>

@@ -8,15 +8,18 @@ export default {
     return {
       itemindex: 0,
       sequenceindex: 0,
+      tab: '',
     };
   },
   methods: {
     toggleSheet(itemIndex) {
-      const link = this.itemurls[itemIndex];
-      const tree = document.getElementsByClassName('view-tree')[0];
+      if (this.tab !== 'contents') {
+        const link = this.itemurls[itemIndex];
+        window.location.hash = `selectedItem-${link}`;
 
-      window.location.hash = `selectedItem-${link}`;
-      tree.scrollBy(0, -80);
+        const tree = document.getElementsByClassName('view-tree')[0];
+        tree.scrollBy(0, -80);
+      }
 
       this.sequenceindex = this.computedsequenceindex;
       this.updateItem(this.itemurls[itemIndex], this.sequenceindex);
@@ -90,6 +93,10 @@ export default {
     },
   },
   mounted() {
+    this.$root.$on('update-tab', (tab) => {
+      this.tab = tab;
+    });
+
     this.$root.$on('update-item-index', (index) => {
       this.itemindex = index;
     });
