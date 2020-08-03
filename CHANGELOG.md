@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2020-08-03
+
+### Fixed
+- fix tree bug if meta panel is active. implement listener for active panel tab
+
+## [1.1.0] - 2020-07-29
+
+### Added
+- metadata panel exchanged by annotation panel (no content yet). therefore metadata goes into the tree panel.
+both of the latter became tabs inside this one panel.
+- panel order changed to: contents / metadata (tabs), image, text, annotations
+
 ## [1.0.1]- 2020-07-30
 
 ### Changed

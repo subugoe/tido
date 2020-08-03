@@ -2,8 +2,8 @@
   <div>
     <q-btn
       unelevated
-      color="black q-pr-sm"
       class="q-mb-md"
+      color="black q-pr-sm"
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
       >
