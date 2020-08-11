@@ -1,5 +1,5 @@
 <template>
-  <q-header elevated class="bg-white text-black">
+  <q-header id="header" elevated class="bg-white text-black">
     <div class="bar row justify-between items-center">
       <Infobar v-if="config.headers.info && manifests.length"
         class="col-xs-12 q-pl-md"
@@ -64,9 +64,14 @@ export default {
 </script>
 
 <style scoped>
+  #header {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
   .bar {
-    max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
+    max-width: 1200px;
   }
 </style>

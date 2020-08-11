@@ -1,0 +1,6 @@
+@mixin makeResponsiveHeight
+  $sizesSreen: ("400px": "28vh","450px": "36vh", "500px": "43vh", "550px": "50vh", "600px": "52vh", "630px": "55vh", "660px": "56vh", "700px": "60vh", "750px": "62vh", "800px": "65vh", "900px": "68vh", "980px": "71vh", "1200px": "76vh", "1300px": "78vh", "1800px": "84vh")
+
+  @each $minheight, $height in $sizesSreen
+    @media (min-height: #{$minheight})
+      height: #{$height}

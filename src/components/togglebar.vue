@@ -1,31 +1,29 @@
 <template>
   <div>
-    <q-btn
-      flat
-      dense
-      size="md"
-      class="q-mb-md"
-      v-for="(name, idx) in togglekeys"
-      :aria-selected="toggleAria(idx)"
-      :key="idx"
-      :title="toggleTitle(idx)"
-      @click="toggleIcon(idx); updateStatus(idx)"
-      >
-      <q-icon class="q-pr-xs" size="xs" :name="toggleIcon(idx)" />
-      {{ panelstates[name].name }}
-    </q-btn>
+    <q-btn-dropdown class="q-mb-md" color="black" label="Toggle panels ..." split>
+      <q-list>
+        <q-item v-for="(name, idx) in togglekeys" :key="idx"
+          clickable
+          :aria-selected="toggleAria(idx)"
+          :title="toggleTitle(idx)"
+          @click="toggleIcon(idx); updateStatus(idx)"
+          >
+          <q-icon class="q-pr-xs" size="xs" :name="toggleIcon(idx)" />
+          {{ panelstates[name].name | capitalize }}
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
 
     <q-btn
-      flat
-      dense
-      size="md"
       class="q-mb-md"
+      dense
+      flat
       no-caps
-      title="Reset Tabs"
+      title="Reset panels to default view"
       @click="resetPanelStatus"
       >
       <q-icon class="q-pr-xs" size="xs" :name="fasUndo" />
-      {{ 'Reset Tabs' | capitalize }}
+      {{ 'Reset Panels' | capitalize }}
     </q-btn>
   </div>
 </template>
@@ -45,8 +43,8 @@ export default {
   },
   data() {
     return {
-      togglekeys: [],
       states: {},
+      togglekeys: [],
     };
   },
   filters: {
@@ -61,8 +59,7 @@ export default {
     },
     resetPanelStatus() {
       // NOTE: just loop over the initial states formerly configured to be shown (e.g. *true*)
-      // filtered result goes into *togglekeys*.
-      // leave the initial panel/s configured to be not shown (e.g. *false*) untouched!
+      // leave the initial panel/s configured to be hidden (e.g. *false*) untouched!
       for (let idx = 0; idx < this.togglekeys.length; idx += 1) {
         this.panelstates[this.togglekeys[idx]].show = true;
       }
@@ -130,13 +127,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-  button {
-    @media (min-width: 600px) {
-      margin-right: 8px;
-    }
-  }
-  button:last-of-type {
-    margin-right: 0;
-  }
+<style lang="sass" scoped>
+  button
+    @media (min-width: 600px)
+      margin-right: 8px
+  button:last-of-type
+    margin-right: 0
 </style>
