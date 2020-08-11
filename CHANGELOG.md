@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2020-08-03
+
+### Changed
+- The logic of using splitters for mainview is removed and made use of Grid in order to make viewer responsive.
+
+### Added
+- Moved toggle buttons from the header into a dropdown menu items.
+
 ## [1.1.1] - 2020-08-03
 
 ### Fixed

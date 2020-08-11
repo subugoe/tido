@@ -1,6 +1,6 @@
 {
   "name": "viewer",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Viewer for the modular framework to present digital editions",
   "productName": "EMo Viewer",
   "keywords": [
@@ -33,7 +33,7 @@
   },
   "private": false,
   "dependencies": {
-    "@quasar/extras": "^1.9.0",
+    "@quasar/extras": "^1.9.3",
     "openseadragon": "^2.4.2",
     "quasar": "^1.12.13"
   },

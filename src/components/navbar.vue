@@ -1,9 +1,9 @@
 <template>
   <div>
     <q-btn
-      unelevated
       class="q-mb-md"
-      color="black q-pr-sm"
+      color="black"
+      unelevated
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
       >
@@ -16,9 +16,9 @@
     </q-btn>
 
     <q-btn
-      unelevated
       class="q-mb-md"
       color="black"
+      unelevated
       :disabled="itemindex >= itemurls.length - 1"
       @click="toggleSheet(++itemindex)"
       >
@@ -47,17 +47,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-  button:first-of-type {
-    @media (min-width: 600px) {
-      margin-right: 8px;
-    }
-  }
-  .q-input {
-    width: 100%;
-    @media (min-width: 600px) {
-      margin-right: 8px;
-      width: 150px;
-    }
-  }
+<style lang="sass" scoped>
+  button:first-of-type
+    @media (min-width: 600px)
+      margin-right: 8px
+  .q-input
+    width: 100%
+    @media (min-width: 600px)
+      margin-right: 8px
+      width: 150px
 </style>
