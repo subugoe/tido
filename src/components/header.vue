@@ -13,7 +13,7 @@
       <Navbar v-if="config.headers.navigation"
         class="
           col
-          col-md-6
+          col-md-4
           col-xs-12
           column-xs
           justify-md-start
@@ -24,7 +24,7 @@
         :manifests="manifests"
       />
 
-      <Togglebar v-if="config.headers.toggle"
+      <ToggleIndex v-if="config.headers.toggle"
         class="
           col
           col-md-auto
@@ -43,14 +43,14 @@
 <script>
 import Infobar from '@/components/infobar.vue';
 import Navbar from '@/components/navbar.vue';
-import Togglebar from '@/components/togglebar.vue';
+import ToggleIndex from '@/components/togglebar/toggleIndex.vue';
 
 export default {
   name: 'Header',
   components: {
     Infobar,
     Navbar,
-    Togglebar,
+    ToggleIndex,
   },
   props: {
     collectiontitle: String,

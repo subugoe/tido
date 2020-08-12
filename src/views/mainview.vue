@@ -128,7 +128,7 @@ export default {
     this.tab = this.config.panels.tabs.default;
   },
   mounted() {
-    // emitted by @/components/togglebar.vue
+    // emitted by @/components/toggleIndex.vue
     this.$root.$on('update-panel-status', (status) => {
       this.states = status;
     });

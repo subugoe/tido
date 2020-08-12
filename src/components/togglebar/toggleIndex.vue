@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-btn-dropdown class="q-mb-md" color="black" label="Toggle panels ..." split>
+    <ToggleFilter>
       <q-list>
         <q-item v-for="(name, idx) in togglekeys" :key="idx"
           clickable
@@ -12,7 +12,7 @@
           {{ panelstates[name].name | capitalize }}
         </q-item>
       </q-list>
-    </q-btn-dropdown>
+    </ToggleFilter>
 
     <q-btn
       class="q-mb-md"
@@ -34,12 +34,16 @@ import {
   fasCircle,
   fasCheckCircle,
 } from '@quasar/extras/fontawesome-v5';
+import ToggleFilter from './toggleFilter';
 
 export default {
-  name: 'Togglebar',
+  name: 'ToggleIndex',
   props: {
     imageurl: String,
     panelstates: Object,
+  },
+  components: {
+    ToggleFilter,
   },
   data() {
     return {
