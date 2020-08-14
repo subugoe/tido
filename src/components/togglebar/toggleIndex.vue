@@ -1,30 +1,30 @@
 <template>
   <div>
     <ToggleFilter>
-      <q-list>
-        <q-item v-for="(name, idx) in togglekeys" :key="idx"
+      <q-list class="toggle-list">
+        <q-item v-for="(name, idx) in togglekeys"
           clickable
+          v-close-popup
           :aria-selected="toggleAria(idx)"
+          :key="idx"
           :title="toggleTitle(idx)"
           @click="toggleIcon(idx); updateStatus(idx)"
           >
           <q-icon class="q-pr-xs" size="xs" :name="toggleIcon(idx)" />
           {{ panelstates[name].name | capitalize }}
         </q-item>
+        <q-item
+          class="bg-grey-4"
+          clickable
+          title="Reset panels to default view"
+          v-close-popup
+          @click="resetPanelStatus"
+          >
+           <q-icon class="q-pr-xs" size="xs" :name="fasUndo" />
+          {{ 'Reset Panels' | capitalize }}
+        </q-item>
       </q-list>
     </ToggleFilter>
-
-    <q-btn
-      class="q-mb-md"
-      dense
-      flat
-      no-caps
-      title="Reset panels to default view"
-      @click="resetPanelStatus"
-      >
-      <q-icon class="q-pr-xs" size="xs" :name="fasUndo" />
-      {{ 'Reset Panels' | capitalize }}
-    </q-btn>
   </div>
 </template>
 
@@ -137,4 +137,7 @@ export default {
       margin-right: 8px
   button:last-of-type
     margin-right: 0
+  .toggle-list
+    > *
+      align-items: center
 </style>

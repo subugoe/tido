@@ -8,7 +8,7 @@
       <slot />
     </q-btn-dropdown>
 
-    <div class="without-dropdown" v-else>
+    <div class="q-mb-md without-dropdown" v-else>
       <slot />
     </div>
   </section>
