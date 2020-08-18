@@ -1,100 +1,20 @@
 <template>
   <q-page>
-    <div class="row panels-target">
-<!-- 1st panel; defaults to Tree | Meta -->
-      <div class="col-12 col-sm-6 col-md-3" v-show="config.panels.tabs.show && states.tabs">
-        <Toolbar :heading="config.panels.tabs.name" />
-
-        <q-card flat>
-          <q-tabs v-model="tab" active-bg-color="grey-4" align="right">
-            <q-tab name="contents" label="Contents" />
-            <q-tab name="meta" label="Metadata" />
-          </q-tabs>
-
-          <q-separator />
-
-          <q-tab-panels v-model="tab" animated class="content-panel" keep-alive>
-            <q-tab-panel name="contents">
-              <Treeview v-if="tree.length && manifests.length"
-                :manifests="manifests"
-                :tree="tree"
-              />
-            </q-tab-panel>
-
-            <q-tab-panel name="meta">
-              <div class="scroll-panel">
-                <Metadata v-if="manifests.length"
-                  :collection="collection"
-                  :config="config"
-                  :itemlabel="itemlabel"
-                  :language="language"
-                  :manifests="manifests"
-                />
-              </div>
-            </q-tab-panel>
-          </q-tab-panels>
-        </q-card>
-      </div>
-
-<!-- 2nd panel; defaults to Image -->
-      <div class="col-12 col-sm-6 col-md-3"
-        v-show="config.panels.image.show && states.image && imageurl"
-        >
-        <Toolbar :heading="config.panels.image.name" />
-
-        <div class="q-pa-md q-gutter-sm overflow-hidden">
-          <div class="scroll-panel">
-            <OpenSeadragon :key="imageurl" :imageurl="imageurl" />
-          </div>
-        </div>
-      </div>
-
-<!-- 3rd panel; defaults to Text -->
-      <div class="col-12 col-sm-6 col-md-3" v-show="config.panels.text.show && states.text">
-        <Toolbar :heading="config.panels.text.name" />
-
-        <div class="q-pa-md q-gutter-sm">
-          <div class="scroll-panel">
-            <q-infinite-scroll>
-              <Content
-                :key="contenturl"
-                :contenturl="contenturl"
-                :fontsize="fontsize"
-                :manifests="manifests"
-                :request="request"
-              />
-            </q-infinite-scroll>
-          </div>
-        </div>
-      </div>
-
-<!-- 4th panel; defaults to Annotations -->
-      <div
-        class="col-12 col-sm-6 col-md-3"
-        v-show="config.panels.annotations.show && states.annotations"
-        >
-        <Toolbar :heading="config.panels.annotations.name" />
-
-      </div>
-    </div>
+    <MainViewPanels :panels="panels" :componentProps="panelsProps" />
   </q-page>
 </template>
 
 <script>
 import Content from '@/components/content.vue';
-import Metadata from '@/components/metadata.vue';
+import MainViewPanels from '@/components/util/mainViewPanels.vue';
+import Metadata from '@/components/tab-panels/Metadata.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
-import Toolbar from '@/components/toolbar.vue';
-import Treeview from '@/components/tree.vue';
+import Treeview from '@/components/tab-panels/TreeView.vue';
 
 export default {
   name: 'MainView',
   components: {
-    Content,
-    Metadata,
-    OpenSeadragon,
-    Toolbar,
-    Treeview,
+    MainViewPanels,
   },
   props: {
     collection: Object,
@@ -112,7 +32,83 @@ export default {
     return {
       states: {},
       tab: '',
+      panels: [
+        {
+          component: Content,
+          name: 'text',
+          show: true,
+          tabs: [],
+          toolbar: 'Content',
+        },
+        {
+          component: null,
+          name: 'tabs',
+          show: true,
+          tabs: {
+            children: [
+              {
+                component: Treeview,
+                label: 'Contents',
+                name: 'content',
+              },
+              {
+                component: Metadata,
+                label: 'Metadata',
+                name: 'meta',
+              },
+            ],
+            model: 'content',
+          },
+          toolbar: 'Content & Metadata',
+        },
+        {
+          component: OpenSeadragon,
+          name: 'image',
+          show: true,
+          tabs: [],
+          toolbar: 'Image',
+        },
+        {
+          component: null,
+          name: 'annotations',
+          show: true,
+          tabs: [],
+          toolbar: 'Annotation',
+        },
+      ],
     };
+  },
+  computed: {
+    panelsProps() {
+      return {
+        direct: {
+          image: {
+            imageurl: this.imageurl,
+            key: this.imageurl,
+          },
+          text: {
+            contenturl: this.contenturl,
+            fontsize: this.fontsize,
+            key: this.contenturl,
+            manifests: this.manifests,
+            request: this.request,
+          },
+        },
+        tabs: {
+          meta: {
+            collection: this.collection,
+            config: this.config,
+            itemlabel: this.itemlabel,
+            language: this.language,
+            manifests: this.manifests,
+          },
+          content: {
+            manifests: this.manifests,
+            tree: this.tree,
+          },
+        },
+      };
+    },
   },
   methods: {
     updateTab() {
@@ -131,6 +127,9 @@ export default {
     // emitted by @/components/toggleIndex.vue
     this.$root.$on('update-panel-status', (status) => {
       this.states = status;
+      this.panels.forEach((p, i) => {
+        this.panels[i].show = status[p.name];
+      });
     });
     // hide image panel, if no imageurl is provided
     this.$root.$on('update-item', () => {
@@ -139,21 +138,3 @@ export default {
   },
 };
 </script>
-
-<style lang="sass" scoped>
-  @import '../css/responsive-heights.sass'
-
-  .panels-target
-    > *
-      border-right: 1px solid #ddd
-      flex: auto
-
-  .scroll-panel
-    -ms-overflow-style: none
-    overflow: auto
-    scrollbar-width: none
-    @include makeResponsiveHeight()
-
-  .scroll-panel::-webkit-scrollbar
-    display: none
-</style>
