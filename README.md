@@ -181,20 +181,40 @@ It's a json object. So if you are going to make any changes and you have to quot
         "manifest": "Manuscript"
       },
       "panels": {
-        "tree": {
-          "name": "Contents",
-          "show": true
-        },
-        "text": {
-          "name": "Text",
-          "show": true
+        "annotations": {
+          "heading": "Annotations",
+          "order": 4,
+          "show": true,
+          "tab": false
         },
         "image": {
-          "name": "Image",
-          "show": true
+          "heading": "Image",
+          "order": 2,
+          "show": true,
+          "tab": false
         },
-        "metadata": {
-          "name": "Metadata",
+        "meta": {
+          "heading": "Metadata",
+          "order": 4,
+          "show": true,
+          "tab": true
+        },
+        "text": {
+          "heading": "Text",
+          "order": 3,
+          "show": true,
+          "tab": false
+        },
+        "tree": {
+          "heading": "Treeview",
+          "order": 5,
+          "show": true,
+          "tab": true
+        },
+        "tabs": {
+          "default": "Treeview",
+          "heading": "Tabs",
+          "order": 1,
           "show": true
         }
       },
@@ -237,20 +257,23 @@ It's a json object. So if you are going to make any changes and you have to quot
     the label of the item respectively
 
     Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.<br />
-    This change affects the captions of the navbuttons located in the headerbar and the metadata section.<br />
+    This change affects the captions of the navbuttons located in the headerbar and the metadata section.
 
-		Defaults to `Sheet`
+    Defaults to `Sheet`
 
   - **manifest**:<br />
     same as for `item` but related to the manifest title<br />
 
-		Defaults to `Manuscript`
+    Defaults to `Manuscript`
 
 - **panels**
 
-	It's keys correspond to the panelnames, e.g. "contents", "text", "image", "metadata".
-	Each key consists of further sub-keys: `name` and `show`.
-  	Change either name-key according to your liking and set either show-key to **false** if you don't want the Viewer to show the appropriate panel/s.
+	It's keys correspond to the panelnames, e.g. "contents", "text", "image" and so on.
+	<br />
+	**Note:** Pls **leave these keys UNTOUCHED** since these are for internal use only!
+	<br /><br />
+	Each of these keys consists of further sub-keys: `heading`, `order`, `show` and `tab`.
+  	Change either sub-key according to your liking. (Set either show-key to **false** for instance, if you don't want the Viewer to show the appropriate panel/s)
   	
   	Example given:
 
@@ -258,14 +281,20 @@ It's a json object. So if you are going to make any changes and you have to quot
     {
       "panels": {
         "tree": {
-          "name": "ToC",
-          "show": false
+          "heading": "toC",
+          "order": 3,
+          "show": false,
+          "tab": false
         }
       }
     }
     ```
 
-	Defaults to **true** for every `show`-key
+  - **heading** refers to the caption in each panel's toolbar
+  - **order** means the order in which the panels will appear from left to right
+  - **show** toggles (show or rather hide) the appropriate panel respectively
+  - **tab** denotes, if the panel will be grouped together with others inside a single panel
+
 
 - **standalone**
 

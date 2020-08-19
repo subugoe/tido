@@ -2,16 +2,27 @@
   <div>
     <ToggleFilter>
       <q-list class="toggle-list">
-        <q-item v-for="(name, idx) in togglekeys"
+        <q-item v-for="(name, idx) in togglekeys" :key="idx"
+          class="bg-grey-2"
           clickable
           v-close-popup
           :aria-selected="toggleAria(idx)"
-          :key="idx"
           :title="toggleTitle(idx)"
           @click="toggleIcon(idx); updateStatus(idx)"
           >
-          <q-icon class="q-pr-xs" size="xs" :name="toggleIcon(idx)" />
-          {{ panelstates[name].name | capitalize }}
+          <q-icon class="q-pr-xs q-mt-xs" size="xs" :name="toggleIcon(idx)" />
+          <q-item-section>{{ panelstates[name].heading | capitalize }}</q-item-section>
+        </q-item>
+
+        <q-item
+          class="bg-grey-5"
+          clickable
+          v-close-popup
+          title="Reset panels to default view"
+          @click="resetPanelStatus"
+          >
+          <q-icon class="q-pr-xs q-mt-xs" size="xs" :name="fasUndo" />
+          <q-item-section>{{ 'Reset Panels' | capitalize }}</q-item-section>
         </q-item>
         <q-item
           class="bg-grey-4"
@@ -34,7 +45,8 @@ import {
   fasCircle,
   fasCheckCircle,
 } from '@quasar/extras/fontawesome-v5';
-import ToggleFilter from './toggleFilter';
+
+import ToggleFilter from '@/components/togglebar/toggleFilter.vue';
 
 export default {
   name: 'ToggleIndex',
@@ -47,7 +59,6 @@ export default {
   },
   data() {
     return {
-      states: {},
       togglekeys: [],
     };
   },
@@ -63,11 +74,10 @@ export default {
     },
     resetPanelStatus() {
       // NOTE: just loop over the initial states formerly configured to be shown (e.g. *true*)
-      // leave the initial panel/s configured to be hidden (e.g. *false*) untouched!
+      // and leave the initial panel/s configured to be hidden (e.g. *false*) untouched!
       for (let idx = 0; idx < this.togglekeys.length; idx += 1) {
         this.panelstates[this.togglekeys[idx]].show = true;
       }
-      this.$root.$emit('update-panel-status', this.updateEmitter(this.panelstates));
     },
     toggleAria(id) {
       return !!this.panelstates[this.togglekeys[id]].show;
@@ -76,7 +86,7 @@ export default {
       return this.panelstates[this.togglekeys[id]].show ? fasCheckCircle : fasCircle;
     },
     toggleTitle(id) {
-      const caption = this.ucfirst(this.panelstates[this.togglekeys[id]].name);
+      const caption = this.ucfirst(this.panelstates[this.togglekeys[id]].heading);
 
       return this.panelstates[this.togglekeys[id]].show
         ? `Hide ${caption} Tab`
@@ -85,20 +95,8 @@ export default {
     ucfirst(s) {
       return s.charAt(0).toUpperCase() + s.slice(1);
     },
-    updateEmitter(status) {
-      Object.entries(status).forEach(([panel, state]) => {
-        this.states[panel] = state.show;
-      });
-      return this.states;
-    },
     updateStatus(id) {
-      // NOTE: leave the initial panelstates untouched! Configured by the project only!
-      // original panelstates needed in resetPanelStatus() to look up the initial states,
-      // which otherwise would be incidentally overwritten; hence: => *statecopy*
-      const statecopy = this.panelstates;
-      statecopy[this.togglekeys[id]].show = !statecopy[this.togglekeys[id]].show;
-
-      this.$root.$emit('update-panel-status', this.updateEmitter(statecopy));
+      this.panelstates[this.togglekeys[id]].show = !this.panelstates[this.togglekeys[id]].show;
     },
   },
   created() {
@@ -106,8 +104,13 @@ export default {
     this.fasCircle = fasCircle;
     this.fasCheckCircle = fasCheckCircle;
 
+    const panels = Object.entries(this.panelstates).sort((a, b) => a[1].order - b[1].order);
+
     // just show the toggle buttons needed according to the config
-    Object.entries(this.panelstates).forEach(([panel, state]) => {
+    panels.forEach(([panel, state]) => {
+      if (state.tab === true) {
+        state.show = false;
+      }
       if (state.show === true) {
         this.togglekeys.push(panel);
       }

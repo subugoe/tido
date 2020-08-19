@@ -9,10 +9,7 @@
       :selected.sync="selected"
       >
       <template v-slot:default-body={node}>
-        <div
-          v-if="!node.children"
-          :id="`selectedItem-${node['label']}`">
-        </div>
+        <div v-if="!node.children" :id="`selectedItem-${node['label']}`"></div>
       </template>
     </q-tree>
   </div>
@@ -38,12 +35,12 @@ export default {
     this.$q.iconSet.set(matIcons);
   },
   mounted() {
+    // expand the root node as well as the first knot which contains the actual item selected
+    this.expanded.push(this.tree[0].label, this.manifests[0].label);
+
     this.$root.$on('update-item', (item) => {
       this.selected = item;
     });
-
-    // expand the root node as well as the first knot which contains the actual item selected
-    this.expanded.push(this.tree[0].label, this.manifests[0].label);
 
     this.$root.$on('update-sequence-index', (index) => {
       if (index !== this.sequenceindex) {
