@@ -1,7 +1,7 @@
 <template>
   <div>
     <ToggleFilter>
-      <q-list class="toggle-list">
+      <q-list>
         <q-item v-for="(name, idx) in togglekeys" :key="idx"
           class="bg-grey-2"
           clickable
@@ -23,16 +23,6 @@
           >
           <q-icon class="q-pr-xs q-mt-xs" size="xs" :name="fasUndo" />
           <q-item-section>{{ 'Reset Panels' | capitalize }}</q-item-section>
-        </q-item>
-        <q-item
-          class="bg-grey-4"
-          clickable
-          title="Reset panels to default view"
-          v-close-popup
-          @click="resetPanelStatus"
-          >
-           <q-icon class="q-pr-xs" size="xs" :name="fasUndo" />
-          {{ 'Reset Panels' | capitalize }}
         </q-item>
       </q-list>
     </ToggleFilter>
@@ -140,7 +130,4 @@ export default {
       margin-right: 8px
   button:last-of-type
     margin-right: 0
-  .toggle-list
-    > *
-      align-items: center
 </style>
