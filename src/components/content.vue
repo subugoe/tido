@@ -1,35 +1,39 @@
 <template>
-  <div>
-    <div class="row sticky">
-      <div>
-        <q-btn
-          class="q-mr-sm q-mb-sm cursor-pointer"
-          color="grey-8"
-          flat
-          round
-          size="md"
-          title="Increase Textsize"
-          @click="increase()"
-          >
-          <q-icon :name="fasSearchPlus" size="sm" />
-        </q-btn>
+  <div class="q-pa-md q-gutter-sm">
+    <div class="scroll">
+      <q-infinite-scroll>
+        <div class="row sticky">
+          <div>
+            <q-btn
+              class="q-mr-sm q-mb-sm cursor-pointer"
+              color="grey-8"
+              flat
+              round
+              size="md"
+              title="Increase Textsize"
+              @click="increase()"
+              >
+              <q-icon :name="fasSearchPlus" size="sm" />
+            </q-btn>
 
-        <q-btn
-          class="q-mr-sm q-mb-sm cursor-pointer"
-          color="grey-8"
-          flat
-          round
-          size="md"
-          title="Decrease Textsize"
-          @click="decrease()"
-          >
-          <q-icon :name="fasSearchMinus" />
-        </q-btn>
-      </div>
-    </div>
+            <q-btn
+              class="q-mr-sm q-mb-sm cursor-pointer"
+              color="grey-8"
+              flat
+              round
+              size="md"
+              title="Decrease Textsize"
+              @click="decrease()"
+              >
+              <q-icon :name="fasSearchMinus" />
+            </q-btn>
+          </div>
+        </div>
 
-    <div class="row" style="display: contents">
-      <div :id="nodeid" :style="`font-size: ${fontsize}px`" v-html="content"></div>
+        <div class="row" style="display: contents">
+          <div :id="nodeid" :style="`font-size: ${fontsize}px`" v-html="content"></div>
+        </div>
+      </q-infinite-scroll>
     </div>
   </div>
 </template>

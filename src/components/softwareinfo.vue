@@ -1,6 +1,6 @@
 <template>
 
-  <div class="softwareinfo col-xs-auto" title="Project info">
+  <div class="col-xs-auto" title="Project info">
     <q-btn
       flat
       color="grey"
@@ -22,7 +22,7 @@
           <p>Copyright (c) 2020 Göttingen University - Göttingen State and University Library</p>
 
           <p class="q-mb-none">
-            Version 1.2.0, licensed under GNU Affero General Public License v3.0
+            Version 1.3.0, licensed under GNU Affero General Public License v3.0
           </p>
         </q-card-section>
 
@@ -71,8 +71,7 @@ import {
   fasBug,
   fasCode,
   fasBook,
-}
-  from '@quasar/extras/fontawesome-v5';
+} from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Softwareinfo',

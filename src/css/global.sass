@@ -1,4 +1,6 @@
 // global extra classes
+@import '../css/responsive-heights.sass'
+
 .scroll-panel
   position: relative
   .sticky
@@ -23,3 +25,16 @@
 .without-dropdown
   > *
     display: flex
+
+.caps
+  font-variant: small-caps
+
+.scroll
+  -ms-overflow-style: none
+  overflow: auto
+  scrollbar-width: none
+
+  @include makeResponsiveHeight()
+
+.scroll::-webkit-scrollbar
+  display: none

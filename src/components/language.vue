@@ -1,5 +1,5 @@
 <template>
-  <div class="language col-xs-auto">
+  <div class="col-xs-auto">
     <q-btn
       color="grey"
       flat
