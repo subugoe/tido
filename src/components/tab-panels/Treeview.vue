@@ -1,12 +1,12 @@
 <template>
-  <Treeview v-if="tree.length && manifests.length"
+  <Tree v-if="tree.length && manifests.length"
     :manifests="manifests"
     :tree="tree"
   />
 </template>
 
 <script>
-import Treeview from '@/components/tree.vue';
+import Tree from '@/components/tree.vue';
 
 export default {
   props: {
@@ -14,7 +14,7 @@ export default {
     manifests: Array,
   },
   components: {
-    Treeview,
+    Tree,
   },
 };
 </script>

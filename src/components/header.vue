@@ -36,7 +36,6 @@
           justify-sm-evenly
           row-sm"
         :imageurl="imageurl"
-        :panelstates="config.panels"
       />
     </div>
   </q-header>

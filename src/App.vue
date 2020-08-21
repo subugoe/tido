@@ -36,9 +36,9 @@
 import Content from '@/components/content.vue';
 import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
-import Metadata from '@/components/tab-panels/Metadata.vue';
+import Metadata from '@/components/tab-panels/metadata.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
-import Treeview from '@/components/tab-panels/TreeView.vue';
+import Treeview from '@/components/tab-panels/treeview.vue';
 
 export default {
   name: 'Viewer',
@@ -104,7 +104,7 @@ export default {
           name: 'annotations',
           show: true,
           tabs: [],
-          toolbar: 'Annotation',
+          toolbar: 'Annotations',
         },
       ],
     };

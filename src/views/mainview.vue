@@ -9,27 +9,30 @@
 
           <!-- Shows the nested tab components  -->
           <q-card v-if="p.tabs.children" flat>
-            <q-tabs
-              class="content-tabs"
-              v-model="p.tabs.model"
-              v-for="(tab,i) in p.tabs.children"
-              :key="`pt${i}`"
-              active-bg-color="grey-4"
-              align="right"
-              >
-              <q-tab :name="tab.name" :label="tab.label" />
-            </q-tabs>
+            <div class="tabs-container">
+              <q-tabs
+                class="content-tabs"
+                v-model="p.tabs.model"
+                v-for="(tab,i) in p.tabs.children"
+                :key="`pt${i}`"
+                active-bg-color="grey-4"
+                align="right"
+                >
+                <q-tab :name="tab.name" :label="tab.label" />
+              </q-tabs>
+            </div>
             <q-separator />
-            <q-tab-panels v-model="p.tabs.model" class="content-panel" animated>
+
+            <q-tab-panels v-model="p.tabs.model" class="content-panel" keep-alive animated>
               <q-tab-panel :name="tab.name" v-for="(tab,i) in p.tabs.children" :key="`ppt${i}`">
-                <component :is="tab.component" v-bind="componentProps.tabs[tab.name]"></component>
+                <component :is="tab.component" v-bind="componentProps.tabs[tab.name]" />
               </q-tab-panel>
             </q-tab-panels>
           </q-card>
 
           <!-- Shows the Direct components  -->
           <div v-else class="q-pa-md q-gutter-sm overflow-hidden">
-            <component :is="p.component" v-bind="componentProps.direct[p.name]"></component>
+            <component :is="p.component" v-bind="componentProps.direct[p.name]" />
           </div>
         </div>
       </div>
@@ -60,7 +63,6 @@ export default {
   },
   data() {
     return {
-      states: {},
       tab: '',
     };
   },
@@ -105,29 +107,6 @@ export default {
       this.$root.$emit('update-tab', this.tab);
     },
   },
-  created() {
-    // filter the panel's showcases and leave the config object untouched
-    Object.entries(this.config.panels).forEach(([panel, states]) => {
-      this.states[panel] = states.show;
-    });
-
-    this.tab = this.config.panels.tabs.default;
-  },
-  mounted() {
-    // emitted by @/components/toggleIndex.vue
-    this.$root.$on('update-panel-status', (status) => {
-      this.states = status;
-      this.panels.forEach((p, i) => {
-        this.panels[i].show = status[p.name];
-
-        if (status[p.name] === undefined) this.panels[i].show = true;
-      });
-    });
-    // hide image panel, if no imageurl is provided
-    this.$root.$on('update-item', () => {
-      this.states.image = this.config.panels.image.show && !(this.imageurl === '');
-    });
-  },
 };
 </script>
 
@@ -139,4 +118,9 @@ export default {
 
   .content-tabs
     display: inline-block
+
+  .tabs-container
+    display: flex
+    > *
+      flex: 1
 </style>
