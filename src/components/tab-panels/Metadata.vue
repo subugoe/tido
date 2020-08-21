@@ -26,15 +26,3 @@ export default {
   },
 };
 </script>
-<style lang="sass" scoped>
-  @import '../../css/responsive-heights.sass'
-
-  .scroll-panel
-    -ms-overflow-style: none
-    overflow: auto
-    scrollbar-width: none
-    @include makeResponsiveHeight()
-
-  .scroll-panel::-webkit-scrollbar
-    display: none
-</style>

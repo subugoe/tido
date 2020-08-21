@@ -25,6 +25,8 @@
       />
 
       <ToggleIndex v-if="config.headers.toggle"
+        :config="config"
+        :panels="panels"
         class="
           col
           col-md-auto
@@ -59,6 +61,7 @@ export default {
     itemlabel: String,
     itemurls: Array,
     manifests: Array,
+    panels: Array,
   },
 };
 </script>

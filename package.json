@@ -35,7 +35,8 @@
   "dependencies": {
     "@quasar/extras": "^1.9.3",
     "openseadragon": "^2.4.2",
-    "quasar": "^1.12.13"
+    "quasar": "^1.12.13",
+    "vuedraggable": "^2.24.0"
   },
   "devDependencies": {
     "@quasar/app": "^1.9.6",

@@ -1,20 +1,49 @@
 <template>
   <q-page>
-    <MainViewPanels :panels="panels" :componentProps="panelsProps" />
+    <section>
+      <div class="row panels-target">
+        <div v-for="(p,i) in panels" :key="`pc${i}`" v-show="p.show"
+          class="col-12 col-sm-6 col-md-3"
+          >
+          <Toolbar :heading="p.toolbar" />
+
+          <!-- Shows the nested tab components  -->
+          <q-card v-if="p.tabs.children" flat>
+            <q-tabs
+              class="content-tabs"
+              v-model="p.tabs.model"
+              v-for="(tab,i) in p.tabs.children"
+              :key="`pt${i}`"
+              active-bg-color="grey-4"
+              align="right"
+              >
+              <q-tab :name="tab.name" :label="tab.label" />
+            </q-tabs>
+            <q-separator />
+            <q-tab-panels v-model="p.tabs.model" class="content-panel" animated>
+              <q-tab-panel :name="tab.name" v-for="(tab,i) in p.tabs.children" :key="`ppt${i}`">
+                <component :is="tab.component" v-bind="componentProps.tabs[tab.name]"></component>
+              </q-tab-panel>
+            </q-tab-panels>
+          </q-card>
+
+          <!-- Shows the Direct components  -->
+          <div v-else class="q-pa-md q-gutter-sm overflow-hidden">
+            <component :is="p.component" v-bind="componentProps.direct[p.name]"></component>
+          </div>
+        </div>
+      </div>
+    </section>
   </q-page>
 </template>
 
 <script>
-import Content from '@/components/content.vue';
-import MainViewPanels from '@/components/util/mainViewPanels.vue';
-import Metadata from '@/components/tab-panels/Metadata.vue';
-import OpenSeadragon from '@/components/openseadragon.vue';
-import Treeview from '@/components/tab-panels/TreeView.vue';
+import Toolbar from '@/components/toolbar.vue';
 
 export default {
   name: 'MainView',
   components: {
-    MainViewPanels,
+    Toolbar,
   },
   props: {
     collection: Object,
@@ -25,6 +54,7 @@ export default {
     itemlabel: String,
     language: String,
     manifests: Array,
+    panels: Array,
     request: Function,
     tree: Array,
   },
@@ -32,54 +62,10 @@ export default {
     return {
       states: {},
       tab: '',
-      panels: [
-        {
-          component: Content,
-          name: 'text',
-          show: true,
-          tabs: [],
-          toolbar: 'Content',
-        },
-        {
-          component: null,
-          name: 'tabs',
-          show: true,
-          tabs: {
-            children: [
-              {
-                component: Treeview,
-                label: 'Contents',
-                name: 'content',
-              },
-              {
-                component: Metadata,
-                label: 'Metadata',
-                name: 'meta',
-              },
-            ],
-            model: 'content',
-          },
-          toolbar: 'Content & Metadata',
-        },
-        {
-          component: OpenSeadragon,
-          name: 'image',
-          show: true,
-          tabs: [],
-          toolbar: 'Image',
-        },
-        {
-          component: null,
-          name: 'annotations',
-          show: true,
-          tabs: [],
-          toolbar: 'Annotation',
-        },
-      ],
     };
   },
   computed: {
-    panelsProps() {
+    componentProps() {
       return {
         direct: {
           image: {
@@ -106,6 +92,10 @@ export default {
             manifests: this.manifests,
             tree: this.tree,
           },
+          contentt: {
+            manifests: this.manifests,
+            tree: this.tree,
+          },
         },
       };
     },
@@ -129,6 +119,8 @@ export default {
       this.states = status;
       this.panels.forEach((p, i) => {
         this.panels[i].show = status[p.name];
+
+        if (status[p.name] === undefined) this.panels[i].show = true;
       });
     });
     // hide image panel, if no imageurl is provided
@@ -138,3 +130,13 @@ export default {
   },
 };
 </script>
+
+<style lang="sass" scoped>
+  .panels-target
+    > *
+      border-right: 1px solid #ddd
+      flex: auto
+
+  .content-tabs
+    display: inline-block
+</style>

@@ -1,20 +1,21 @@
 <template>
-  <div>
+  <div class="q-d-flex">
     <ToggleFilter>
       <q-list class="toggle-list">
-        <q-item v-for="(name, idx) in togglekeys"
+        <q-item v-for="(name, idx) in togglekeys" :key="idx"
+          class="bg-grey-2"
           clickable
           v-close-popup
           :aria-selected="toggleAria(idx)"
-          :key="idx"
           :title="toggleTitle(idx)"
           @click="toggleIcon(idx); updateStatus(idx)"
           >
           <q-icon class="q-pr-xs" size="xs" :name="toggleIcon(idx)" />
           {{ panelstates[name].name | capitalize }}
         </q-item>
+
         <q-item
-          class="bg-grey-4"
+          class="bg-grey-5"
           clickable
           title="Reset panels to default view"
           v-close-popup
@@ -25,6 +26,8 @@
         </q-item>
       </q-list>
     </ToggleFilter>
+
+    <PanelsPosition :panelboxes="panels"/>
   </div>
 </template>
 
@@ -34,15 +37,20 @@ import {
   fasCircle,
   fasCheckCircle,
 } from '@quasar/extras/fontawesome-v5';
-import ToggleFilter from './toggleFilter';
+
+import PanelsPosition from '@/components/togglebar/panelsposition';
+import ToggleFilter from '@/components/togglebar/toggleFilter.vue';
 
 export default {
   name: 'ToggleIndex',
   props: {
+    config: Object,
     imageurl: String,
+    panels: Array,
     panelstates: Object,
   },
   components: {
+    PanelsPosition,
     ToggleFilter,
   },
   data() {

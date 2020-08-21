@@ -29,7 +29,7 @@
     </div>
 
     <div class="row" style="display: contents">
-      <div :id="nodeid" :style="`font-size: ${fontsize}px`" v-html="content"></div>
+      <div class="scroll-panel" :id="nodeid" :style="`font-size: ${fontsize}px`" v-html="content" />
     </div>
   </div>
 </template>
