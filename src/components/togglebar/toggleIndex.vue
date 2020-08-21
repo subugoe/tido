@@ -6,11 +6,11 @@
           class="bg-grey-2"
           clickable
           v-close-popup
-          :title="p.name"
+          :title="handleToggleTitle(i)"
           @click="() => handleStatusPanel(i)"
           >
-          <q-icon class="q-pr-xs text-capitalize" size="xs" :name="renderCheckIcon(i)" />
-          {{ p.toolbar }}
+          <q-icon class="q-pr-xs" size="xs" :name="renderCheckIcon(i)" />
+          {{ p.toolbar.toUpperCase() }}
         </q-item>
 
         <q-item
@@ -21,7 +21,7 @@
           @click="()=> handleStatusPanel(-1, true)"
           >
            <q-icon class="q-pr-xs text-capitalize" size="xs" :name="fasUndo" />
-          {{ 'Reset Panels' }}
+          {{ 'Reset' }}
         </q-item>
       </q-list>
     </ToggleFilter>
@@ -62,6 +62,10 @@ export default {
         return i === idx ? { ...obj, show: !obj.show } : obj;
       });
       this.$root.$emit('panels-position', updatedPanel);
+    },
+    // Display Toggle Title when hover over
+    handleToggleTitle(idx) {
+      return this.panels[idx].show ? `Hide ${this.panels[idx].name} Tab` : `Show ${this.panels[idx].name} Tab`;
     },
   },
   created() {

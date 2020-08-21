@@ -1,8 +1,7 @@
 <template>
   <section class="panel-position">
-    <q-btn class="btn-panel" @click="status = true" flat>
-      <q-icon :name="panelicon" />
-    </q-btn>
+    <q-btn class="btn-panel" :icon="panelicon" @click="status = true" label="Configure" flat />
+
     <q-dialog v-model="status" persistent transition-show="scale" transition-hide="scale">
       <q-card class="bg-teal text-white" style="width: 450px">
         <q-card-section>

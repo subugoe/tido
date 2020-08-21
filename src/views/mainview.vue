@@ -16,7 +16,6 @@
                 v-for="(tab,i) in p.tabs.children"
                 :key="`pt${i}`"
                 active-bg-color="grey-4"
-                align="right"
                 >
                 <q-tab :name="tab.name" :label="tab.label" />
               </q-tabs>

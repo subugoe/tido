@@ -36,9 +36,9 @@
 import Content from '@/components/content.vue';
 import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
-import Metadata from '@/components/tab-panels/metadata.vue';
+import Metadatatab from '@/components/tab-panels/metadatatab.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
-import Treeview from '@/components/tab-panels/treeview.vue';
+import Treeviewtab from '@/components/tab-panels/treeviewtab.vue';
 
 export default {
   name: 'Viewer',
@@ -71,12 +71,12 @@ export default {
           tabs: {
             children: [
               {
-                component: Treeview,
+                component: Treeviewtab,
                 label: 'Contents',
                 name: 'content',
               },
               {
-                component: Metadata,
+                component: Metadatatab,
                 label: 'Metadata',
                 name: 'meta',
               },
