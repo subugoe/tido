@@ -65,7 +65,10 @@ export default {
     },
     // Display Toggle Title when hover over
     handleToggleTitle(idx) {
-      return this.panels[idx].show ? `Hide ${this.panels[idx].name} Tab` : `Show ${this.panels[idx].name} Tab`;
+      const titleName = this.panels[idx].name;
+      const titleUpper = `${titleName[0].toUpperCase()}${titleName.slice(1)}`;
+
+      return this.panels[idx].show ? `Hide ${titleUpper} Tab` : `Show ${titleUpper} Tab`;
     },
   },
   created() {
