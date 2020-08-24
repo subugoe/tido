@@ -5,7 +5,7 @@
     <q-dialog v-model="status" persistent transition-show="scale" transition-hide="scale">
       <q-card class="bg-teal text-white" style="width: 450px">
         <q-card-section>
-          <div class="text-h6 text-capitalize">Customize panels</div>
+          <div class="text-h6 text-capitalize">Customize Panels</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">

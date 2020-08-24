@@ -180,28 +180,64 @@ It's a json object. So if you are going to make any changes and you have to quot
         "item": "Sheet",
         "manifest": "Manuscript"
       },
-      "panels": {
-        "tree": {
-          "name": "Contents",
-          "show": true
-        },
-        "text": {
-          "name": "Text",
-          "show": true
-        },
-        "image": {
-          "name": "Image",
-          "show": true
-        },
-        "metadata": {
-          "name": "Metadata",
-          "show": true
-        }
-      },
       "standalone": true
     }
     </script>
 ```
+
+The data structure of the panels are inside app.vue component. You can work on this data structure to make any required changes.
+
+data() {
+  return {
+    .
+    .
+    .
+    panels: [
+      {
+        component: null,
+        name: 'tabs',
+        show: true,
+        tabs: {
+          children: [
+            {
+              component: Treeviewtab,
+              label: 'Contents',
+              name: 'content',
+            },
+            {
+              component: Metadatatab,
+              label: 'Metadata',
+              name: 'meta',
+            },
+          ],
+          model: 'content',
+        },
+        toolbar: 'Tabs',
+      },
+      {
+        component: OpenSeadragon,
+        name: 'image',
+        show: true,
+        tabs: [],
+        toolbar: 'Image',
+      },
+      {
+        component: Content,
+        name: 'text',
+        show: true,
+        tabs: [],
+        toolbar: 'Content',
+      },
+      {
+        component: null,
+        name: 'annotations',
+        show: true,
+        tabs: [],
+        toolbar: 'Annotations',
+      },
+    ],
+  }
+}
 
 ### The keys in detail
 
@@ -237,35 +273,45 @@ It's a json object. So if you are going to make any changes and you have to quot
     the label of the item respectively
 
     Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.<br />
-    This change affects the captions of the navbuttons located in the headerbar and the metadata section.<br />
+    This change affects the captions of the navbuttons located in the headerbar and the metadata section.
 
-		Defaults to `Sheet`
+    Defaults to `Sheet`
 
   - **manifest**:<br />
     same as for `item` but related to the manifest title<br />
 
-		Defaults to `Manuscript`
+    Defaults to `Manuscript`
 
 - **panels**
 
-	It's keys correspond to the panelnames, e.g. "contents", "text", "image", "metadata".
-	Each key consists of further sub-keys: `name` and `show`.
+	It's keys correspond to the panelnames, e.g. "contents", "text", "image" and so on.
+  <br />
+  **Note:** Pls **leave these keys UNTOUCHED** since these are for internal use only!
+  <br /><br />
+	Each object inside panels consists of keys: `component`, `name`, `show`, `tab` and `toolbar`.
   	Change either name-key according to your liking and set either show-key to **false** if you don't want the Viewer to show the appropriate panel/s.
-  	
+
   	Example given:
 
     ```json
     {
-      "panels": {
-        "tree": {
-          "name": "ToC",
-          "show": false
-        }
+      panels: {
+        {
+          component: toC,
+          name: 'text',
+          show: false,
+          tabs: false,
+          toolbar: 'toC',
+        },
       }
     }
     ```
 
-	Defaults to **true** for every `show`-key
+  - **Component** Refers to the required component that we are integrating.
+  - **name** Refers to the caption in each panel's toolbar.
+  - **show** toggles (show or rather hide) the appropriate panel respectively.
+  - **tabs** denotes, if the panel will be grouped together with others inside a single panel.
+  - **toolbar** displays the related component on toolbar and can able to toggle panels.
 
 - **standalone**
 

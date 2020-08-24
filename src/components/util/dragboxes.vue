@@ -3,7 +3,10 @@
     <p>Just drag and drop panels</p>
     <Draggable v-model="results" @change="$emit('updated', results)">
       <transition-group class="panel-container">
-        <div class="panel-box" v-for="(box, i) in results" :key="`box${i}`" v-text="box.toolbar" />
+        <div v-for="(box, i) in results" :key="`box${i}`"
+          class="panel-box unselect-text"
+          v-text="box.toolbar"
+          />
       </transition-group>
     </Draggable>
   </section>
