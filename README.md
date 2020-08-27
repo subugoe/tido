@@ -187,57 +187,59 @@ It's a json object. So if you are going to make any changes and you have to quot
 
 The data structure of the panels are inside app.vue component. You can work on this data structure to make any required changes.
 
-data() {
-  return {
-    .
-    .
-    .
-    panels: [
-      {
-        component: null,
-        name: 'tabs',
-        show: true,
-        tabs: {
-          children: [
-            {
-              component: Treeviewtab,
-              label: 'Contents',
-              name: 'content',
-            },
-            {
-              component: Metadatatab,
-              label: 'Metadata',
-              name: 'meta',
-            },
-          ],
-          model: 'content',
+```html
+  data() {
+    return {
+      .
+      .
+      .
+      panels: [
+        {
+          component: null,
+          name: 'tabs',
+          show: true,
+          tabs: {
+            children: [
+              {
+                component: Treeviewtab,
+                label: 'Contents',
+                name: 'content',
+              },
+              {
+                component: Metadatatab,
+                label: 'Metadata',
+                name: 'meta',
+              },
+            ],
+            model: 'content',
+          },
+          toolbar: 'Tabs',
         },
-        toolbar: 'Tabs',
-      },
-      {
-        component: OpenSeadragon,
-        name: 'image',
-        show: true,
-        tabs: [],
-        toolbar: 'Image',
-      },
-      {
-        component: Content,
-        name: 'text',
-        show: true,
-        tabs: [],
-        toolbar: 'Content',
-      },
-      {
-        component: null,
-        name: 'annotations',
-        show: true,
-        tabs: [],
-        toolbar: 'Annotations',
-      },
-    ],
+        {
+          component: OpenSeadragon,
+          name: 'image',
+          show: true,
+          tabs: [],
+          toolbar: 'Image',
+        },
+        {
+          component: Content,
+          name: 'text',
+          show: true,
+          tabs: [],
+          toolbar: 'Content',
+        },
+        {
+          component: null,
+          name: 'annotations',
+          show: true,
+          tabs: [],
+          toolbar: 'Annotations',
+        },
+      ],
+    }
   }
-}
+```
 
 ### The keys in detail
 
