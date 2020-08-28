@@ -21,7 +21,7 @@
           @click="()=> handleStatusPanel(-1, true)"
           >
            <q-icon class="q-pr-xs text-capitalize" size="xs" :name="fasUndo" />
-          {{ 'Reset' }}
+          {{ 'RESET' }}
         </q-item>
       </q-list>
     </ToggleFilter>
@@ -50,7 +50,7 @@ export default {
     ToggleFilter,
   },
   methods: {
-    // Show icon of checkbox depend on current status
+    // show checkbox icon depending on the current status
     renderCheckIcon(idx) {
       return this.panels[idx].show ? fasCheckCircle : fasCircle;
     },
@@ -63,7 +63,7 @@ export default {
       });
       this.$root.$emit('panels-position', updatedPanel);
     },
-    // Display Toggle Title when hover over
+    // display toggle title when hovering
     handleToggleTitle(idx) {
       const titleName = this.panels[idx].name;
       const titleUpper = `${titleName[0].toUpperCase()}${titleName.slice(1)}`;
@@ -72,10 +72,10 @@ export default {
     },
   },
   created() {
-    // Mount the fonts
-    this.fasUndo = fasUndo;
-    this.fasCircle = fasCircle;
+    // mount the fonts
     this.fasCheckCircle = fasCheckCircle;
+    this.fasCircle = fasCircle;
+    this.fasUndo = fasUndo;
   },
 };
 </script>
@@ -86,6 +86,7 @@ export default {
       margin-right: 8px
   button:last-of-type
     margin-right: 0
+
   .toggle-list
     > *
       align-items: center

@@ -43,9 +43,10 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+  .btn-panel
+    height: 75%
+
   .panel-position
     display: flex
     justify-content: center
-  .btn-panel
-    height: 75%
 </style>

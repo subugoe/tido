@@ -51,6 +51,7 @@ export default {
   button:first-of-type
     @media (min-width: 600px)
       margin-right: 8px
+
   .q-input
     width: 100%
     @media (min-width: 600px)

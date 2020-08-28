@@ -1,12 +1,13 @@
 <template>
   <section>
-    <p>Just drag and drop panels</p>
+    <p>Drag and drop the buttons to reorder the panels</p>
+
     <Draggable v-model="results" @change="$emit('updated', results)">
       <transition-group class="panel-container">
         <div v-for="(box, i) in results" :key="`box${i}`"
           class="panel-box unselect-text"
-          v-text="box.toolbar"
-          />
+          v-html="box.toolbar"
+        />
       </transition-group>
     </Draggable>
   </section>
@@ -38,12 +39,13 @@ export default {
   .panel-container
     display: flex
     flex-wrap: wrap
+
   .panel-box
-    color: black
     background-color: white
-    padding: 10px
-    margin: 5px
-    text-transform: capitalize
-    cursor: pointer
     border-radius: 10px
+    color: black
+    cursor: pointer
+    margin: 5px
+    padding: 10px
+    text-transform: uppercase
 </style>

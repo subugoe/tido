@@ -71,11 +71,10 @@ export default {
 };
 </script>
 
-<style scoped>
-  figure {
-    display: inline-block;
-    height: 75vh;
-    margin: 0;
+<style lang="sass" scoped>
+  figure
+    display: inline-block
+    height: 75vh
+    margin: 0
     width: 95%
-  }
 </style>

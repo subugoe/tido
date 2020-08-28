@@ -118,9 +118,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-  .caps {
-    font-variant: small-caps;
-  }
-</style>
