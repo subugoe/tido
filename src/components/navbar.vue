@@ -8,9 +8,9 @@
       @click="toggleSheet(--itemindex)"
       >
       <q-icon
+        class="q-pr-sm"
         :name="fasArrowLeft"
         size="24px"
-        class="q-pr-sm"
       />
       {{ captionprev }}
     </q-btn>

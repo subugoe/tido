@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scroll">
     <q-list v-if="Object.keys(collection).length">
       <q-item>
         <q-item-section class="text-h6 caps">Collection</q-item-section>
@@ -38,7 +38,7 @@
     <q-list>
       <q-item>
         <q-item-section class="text-h6 caps">
-          {{ config.labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
+          {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
 
@@ -55,7 +55,7 @@
     <q-list>
       <q-item>
         <q-item-section class="text-h6 caps">
-          {{ config.labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
+          {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
 
@@ -81,8 +81,8 @@ export default {
   name: 'Metadata',
   props: {
     collection: Object,
-    config: Object,
     itemlabel: String,
+    labels: Object,
     language: String,
     manifests: Array,
   },

@@ -13,12 +13,14 @@
 
       <q-page-container>
         <router-view
+          :annotations="annotations"
           :collection="collection"
           :config="config"
           :contenturl="contenturl"
           :fontsize="fontsize"
           :imageurl="imageurl"
           :itemlabel="itemlabel"
+          :labels="config.labels"
           :language="itemlanguage"
           :manifests="manifests"
           :panels="panels"
@@ -141,6 +143,11 @@ export default {
         .then((data) => {
           this.collection = data;
           this.label = this.getLabel(data);
+
+          this.request(data.annotationCollection)
+            .then((annotations) => {
+              this.annotations = annotations.annotationCollection;
+            });
 
           this.tree.push(
             {
