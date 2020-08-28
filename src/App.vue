@@ -8,6 +8,7 @@
         :itemlabel="itemlabel"
         :itemurls="itemurls"
         :manifests="manifests"
+        :panels="panels"
       />
 
       <q-page-container>
@@ -22,6 +23,7 @@
           :labels="config.labels"
           :language="itemlanguage"
           :manifests="manifests"
+          :panels="panels"
           :request="request"
           :tree="tree"
         />
@@ -33,8 +35,12 @@
 </template>
 
 <script>
-import Header from '@/components/header.vue';
+import Content from '@/components/content.vue';
 import Footer from '@/components/footer.vue';
+import Header from '@/components/header.vue';
+import Metadatatab from '@/components/tab-panels/metadatatab.vue';
+import OpenSeadragon from '@/components/openseadragon.vue';
+import Treeviewtab from '@/components/tab-panels/treeviewtab.vue';
 
 export default {
   name: 'Viewer',
@@ -59,6 +65,50 @@ export default {
       label: '',
       manifests: [],
       tree: [],
+      panels: [
+        {
+          component: null,
+          name: 'tabs',
+          show: true,
+          tabs: {
+            children: [
+              {
+                component: Treeviewtab,
+                label: 'Contents',
+                name: 'content',
+              },
+              {
+                component: Metadatatab,
+                label: 'Metadata',
+                name: 'meta',
+              },
+            ],
+            model: 'content',
+          },
+          toolbar: 'Tabs',
+        },
+        {
+          component: OpenSeadragon,
+          name: 'image',
+          show: true,
+          tabs: [],
+          toolbar: 'Image',
+        },
+        {
+          component: Content,
+          name: 'text',
+          show: true,
+          tabs: [],
+          toolbar: 'Content',
+        },
+        {
+          component: null,
+          name: 'annotations',
+          show: true,
+          tabs: [],
+          toolbar: 'Annotations',
+        },
+      ],
     };
   },
   methods: {
@@ -305,6 +355,9 @@ export default {
       */
     this.$root.$on('update-fontsize', (fontsize) => {
       this.fontsize = fontsize;
+    });
+    this.$root.$on('panels-position', (newPanels) => {
+      this.panels = newPanels;
     });
     /**
       * listen to item change (user interaction).

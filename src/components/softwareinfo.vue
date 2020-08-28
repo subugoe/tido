@@ -1,6 +1,6 @@
 <template>
 
-  <div class="col-xs-auto" title="Project info">
+  <div class="softwareinfo col-xs-auto" title="Project info">
     <q-btn
       flat
       color="grey"
@@ -67,11 +67,12 @@
 
 <script>
 import {
-  fasInfoCircle,
+  fasBook,
   fasBug,
   fasCode,
-  fasBook,
-} from '@quasar/extras/fontawesome-v5';
+  fasInfoCircle,
+}
+  from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Softwareinfo',
@@ -81,10 +82,10 @@ export default {
     };
   },
   created() {
-    this.fasInfoCircle = fasInfoCircle;
+    this.fasBook = fasBook;
     this.fasBug = fasBug;
     this.fasCode = fasCode;
-    this.fasBook = fasBook;
+    this.fasInfoCircle = fasInfoCircle;
   },
 };
 </script>
