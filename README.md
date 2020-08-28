@@ -180,47 +180,65 @@ It's a json object. So if you are going to make any changes and you have to quot
         "item": "Sheet",
         "manifest": "Manuscript"
       },
-      "panels": {
-        "annotations": {
-          "heading": "Annotations",
-          "order": 4,
-          "show": true,
-          "tab": false
-        },
-        "image": {
-          "heading": "Image",
-          "order": 2,
-          "show": true,
-          "tab": false
-        },
-        "meta": {
-          "heading": "Metadata",
-          "order": 4,
-          "show": true,
-          "tab": true
-        },
-        "text": {
-          "heading": "Text",
-          "order": 3,
-          "show": true,
-          "tab": false
-        },
-        "tree": {
-          "heading": "Treeview",
-          "order": 5,
-          "show": true,
-          "tab": true
-        },
-        "tabs": {
-          "default": "Treeview",
-          "heading": "Tabs",
-          "order": 1,
-          "show": true
-        }
-      },
       "standalone": true
     }
     </script>
+```
+
+The data structure of the panels are inside app.vue component. You can work on this data structure to make any required changes.
+
+```html
+  data() {
+    return {
+      .
+      .
+      .
+      panels: [
+        {
+          component: null,
+          name: 'tabs',
+          show: true,
+          tabs: {
+            children: [
+              {
+                component: Treeviewtab,
+                label: 'Contents',
+                name: 'content',
+              },
+              {
+                component: Metadatatab,
+                label: 'Metadata',
+                name: 'meta',
+              },
+            ],
+            model: 'content',
+          },
+          toolbar: 'Tabs',
+        },
+        {
+          component: OpenSeadragon,
+          name: 'image',
+          show: true,
+          tabs: [],
+          toolbar: 'Image',
+        },
+        {
+          component: Content,
+          name: 'text',
+          show: true,
+          tabs: [],
+          toolbar: 'Content',
+        },
+        {
+          component: null,
+          name: 'annotations',
+          show: true,
+          tabs: [],
+          toolbar: 'Annotations',
+        },
+      ],
+    }
+  }
 ```
 
 ### The keys in detail
@@ -269,32 +287,33 @@ It's a json object. So if you are going to make any changes and you have to quot
 - **panels**
 
 	It's keys correspond to the panelnames, e.g. "contents", "text", "image" and so on.
-	<br />
-	**Note:** Pls **leave these keys UNTOUCHED** since these are for internal use only!
-	<br /><br />
-	Each of these keys consists of further sub-keys: `heading`, `order`, `show` and `tab`.
-  	Change either sub-key according to your liking. (Set either show-key to **false** for instance, if you don't want the Viewer to show the appropriate panel/s)
-  	
+  <br />
+  **Note:** Pls **leave these keys UNTOUCHED** since these are for internal use only!
+  <br /><br />
+	Each object inside panels consists of keys: `component`, `name`, `show`, `tab` and `toolbar`.
+  	Change either name-key according to your liking and set either show-key to **false** if you don't want the Viewer to show the appropriate panel/s.
+
   	Example given:
 
     ```json
     {
-      "panels": {
-        "tree": {
-          "heading": "toC",
-          "order": 3,
-          "show": false,
-          "tab": false
-        }
+      panels: {
+        {
+          component: toC,
+          name: 'text',
+          show: false,
+          tabs: false,
+          toolbar: 'toC',
+        },
       }
     }
     ```
 
-  - **heading** refers to the caption in each panel's toolbar
-  - **order** means the order in which the panels will appear from left to right
-  - **show** toggles (show or rather hide) the appropriate panel respectively
-  - **tab** denotes, if the panel will be grouped together with others inside a single panel
-
+  - **Component** Refers to the required component that we are integrating.
+  - **name** Refers to the caption in each panel's toolbar.
+  - **show** toggles (show or rather hide) the appropriate panel respectively.
+  - **tabs** denotes, if the panel will be grouped together with others inside a single panel.
+  - **toolbar** displays the related component on toolbar and can able to toggle panels.
 
 - **standalone**
 

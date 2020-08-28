@@ -25,6 +25,8 @@
       />
 
       <ToggleIndex v-if="config.headers.toggle"
+        :config="config"
+        :panels="panels"
         class="
           col
           col-md-auto
@@ -34,7 +36,6 @@
           justify-sm-evenly
           row-sm"
         :imageurl="imageurl"
-        :panelstates="config.panels"
       />
     </div>
   </q-header>
@@ -59,6 +60,7 @@ export default {
     itemlabel: String,
     itemurls: Array,
     manifests: Array,
+    panels: Array,
   },
 };
 </script>
