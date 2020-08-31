@@ -5,37 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2020-08-28
+
+### Fixed
+
+- the CI artifacts created on the `develop` and `main` branch are no longer automatically removed
+after 30 days.
+
 ## [1.3.0] - 2020-08-24
 
 ### Added
+
 - Refactored mainview template. Components are dynamic now and the order is configurable
 - New button to the toggle bar so that user can able to configure order of the panels dynamically.
-- created a new re-usabla component to drag and drop panels.
+- created a new re-usable component to drag and drop panels.
 
 ### Changed
+
 - refactored toggleIndex component.
 
 ## [1.2.1] - 2020-08-12
 
 ### Changed
+
 - refactored toggleBar to toggleIndex / toggleFilter according to window size. toggle switches at 1100px
 
 ## [1.2.0] - 2020-08-03
 
 ### Changed
+
 - The logic of using splitters for mainview is removed and made use of Grid in order to make viewer responsive.
 
 ### Added
+
 - Moved toggle buttons from the header into a dropdown menu items.
 
 ## [1.1.1] - 2020-08-03
 
 ### Fixed
+
 - fix tree bug if meta panel is active. implement listener for active panel tab
 
 ## [1.1.0] - 2020-07-29
 
 ### Added
+
 - metadata panel exchanged by annotation panel (no content yet). therefore metadata goes into the tree panel.
 both of the latter became tabs inside this one panel.
 - panel order changed to: contents / metadata (tabs), image, text, annotations

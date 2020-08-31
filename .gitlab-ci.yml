@@ -7,8 +7,11 @@ stages:
   - deploy
   - preserve-pages
 
-build:
+build_test:
   image: docker.gitlab.gwdg.de/subugoe/emo/qviewer/node:latest
+  except:
+   - main
+   - develop
   stage: build
   script:
    - npm install
@@ -16,6 +19,20 @@ build:
   artifacts:
     paths:
      - dist/
+
+build_main_and_develop:
+  image: docker.gitlab.gwdg.de/subugoe/emo/qviewer/node:latest
+  only:
+   - main
+   - develop
+  stage: build
+  script:
+   - npm install
+   - quasar build
+  artifacts:
+    paths:
+     - dist/
+    expire_in: never
 
 pages:
   before_script:
@@ -25,7 +42,7 @@ pages:
   image: docker.gitlab.gwdg.de/mgoebel/swiss_knife/fedora:latest
 # at the very early stage lets deploy for every branch
 #  only:
-#    - master
+#    - main
 #    - develop
   stage: deploy
   cache:
@@ -59,7 +76,7 @@ pushback:
 .production:
   image: node:latest
   only:
-    - master
+    - main
   stage: deploy
   script:
    - npm install
