@@ -5,7 +5,7 @@
     <Draggable v-model="results" @change="$emit('updated', results)">
       <transition-group class="panel-container">
         <div v-for="(box, i) in results" :key="`box${i}`"
-          class="panel-box unselect-text"
+          class="panel-box unselect-text bg-grey"
           v-html="box.toolbar"
         />
       </transition-group>
