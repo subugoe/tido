@@ -1,23 +1,19 @@
 <template>
-  <div class="q-pa-md q-gutter-sm overflow-hidden">
-    <div class="scroll">
-      <figure id="openseadragon" class="scroll-panel">
-        <nav class="sticky">
-          <q-btn
-            v-for="(btn, idx) in buttons" :key="idx"
-            class="q-mr-sm q-mb-sm"
-            color="grey-8"
-            flat
-            round
-            size="md"
-            :id="btn.id"
-            >
-            <q-icon size="sm" :name="btn.svg" />
-          </q-btn>
-        </nav>
-      </figure>
-    </div>
-  </div>
+  <figure id="openseadragon" style="margin-top: 0px; padding: 8px">
+    <nav class="sticky">
+      <q-btn
+        v-for="(btn, idx) in buttons" :key="idx"
+        class="q-mr-sm q-mb-sm"
+        color="grey-8"
+        flat
+        round
+        size="md"
+        :id="btn.id"
+        >
+        <q-icon size="sm" :name="btn.svg" />
+      </q-btn>
+    </nav>
+  </figure>
 </template>
 
 <script>

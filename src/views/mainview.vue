@@ -52,6 +52,7 @@ export default {
     fontsize: Number,
     imageurl: String,
     itemlabel: String,
+    label: Object,
     language: String,
     manifests: Array,
     panels: Array,
