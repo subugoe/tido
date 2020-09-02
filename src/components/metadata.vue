@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Collection-->
     <q-list v-if="Object.keys(collection).length">
       <q-item>
         <q-item-section class="text-h6 caps">Collection</q-item-section>
@@ -35,27 +36,57 @@
       <q-separator inset class="q-mt-md q-mb-sm" />
     </q-list>
 
+    <!-- Manifest-->
     <q-list>
       <q-item>
         <q-item-section class="text-h6 caps">
-          {{ config.labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
+          {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
 
       <q-item>
         <q-item-section>
           <q-item-label overline class="text-uppercase">Label:</q-item-label>
-          <q-item-label>{{ manifesttitle }}</q-item-label>
+          <q-item-label>{{ title }}</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item>
+        <q-item-section>
+          <q-item-label overline class="text-uppercase">Year:</q-item-label>
+          <q-item-label>{{ date }}</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item>
+        <q-item-section>
+          <q-item-label overline class="text-uppercase">Editor:</q-item-label>
+          <q-item-label>{{ editor }}</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item>
+        <q-item-section>
+          <q-item-label overline class="text-uppercase">Location:</q-item-label>
+          <q-item-label>{{ location }}</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item>
+        <q-item-section>
+          <q-item-label overline class="text-uppercase">Origin:</q-item-label>
+          <q-item-label>{{ origin }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
 
     <q-separator inset class="q-mt-md q-mb-sm" />
 
+    <!-- Item-->
     <q-list>
       <q-item>
         <q-item-section class="text-h6 caps">
-          {{ config.labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
+          {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
 
@@ -81,7 +112,6 @@ export default {
   name: 'Metadata',
   props: {
     collection: Object,
-    config: Object,
     itemlabel: String,
     labels: Object,
     language: String,
@@ -94,10 +124,27 @@ export default {
     };
   },
   computed: {
+    date() {
+      return this.manifests[this.sequenceindex]['x-date'];
+    },
+    editor() {
+      let editors = '';
+
+      Object.values(this.manifests[this.sequenceindex]['x-editor']).forEach((ed) => {
+        editors += `${ed.name}, `;
+      });
+      return editors.slice(0, -2);
+    },
     itemcount() {
       return this.manifests[this.sequenceindex].sequence.length;
     },
-    manifesttitle() {
+    location() {
+      return this.manifests[this.sequenceindex]['x-location'];
+    },
+    origin() {
+      return this.manifests[this.sequenceindex]['x-origin'];
+    },
+    title() {
       return this.manifests[this.sequenceindex].label;
     },
   },
