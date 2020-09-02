@@ -22,7 +22,7 @@
           <p>Copyright (c) 2020 Göttingen University - Göttingen State and University Library</p>
 
           <p class="q-mb-none">
-            Version 1.3.0, licensed under GNU Affero General Public License v3.0
+            Version 1.3.2, licensed under GNU Affero General Public License v3.0
           </p>
         </q-card-section>
 
