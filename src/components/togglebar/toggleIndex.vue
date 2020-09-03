@@ -10,7 +10,7 @@
           @click="() => handleStatusPanel(i)"
           >
           <q-icon class="q-pr-xs" size="xs" :name="renderCheckIcon(i)" />
-          {{ p.toolbar.toUpperCase() }}
+          {{ p.panel_label.toUpperCase() }}
         </q-item>
 
         <q-item
@@ -20,13 +20,13 @@
           v-close-popup
           @click="()=> handleStatusPanel(-1, true)"
           >
-           <q-icon class="q-pr-xs text-capitalize" size="xs" :name="fasUndo" />
+          <q-icon class="q-pr-xs text-capitalize" size="xs" :name="fasUndo" />
           {{ 'RESET' }}
         </q-item>
       </q-list>
     </ToggleFilter>
 
-    <PanelsPosition :panelboxes="panels"/>
+    <PanelsPosition :panelboxes="panels" />
   </div>
 </template>
 
@@ -65,10 +65,12 @@ export default {
     },
     // display toggle title when hovering
     handleToggleTitle(idx) {
-      const titleName = this.panels[idx].name;
+      const titleName = this.panels[idx].panel_label;
       const titleUpper = `${titleName[0].toUpperCase()}${titleName.slice(1)}`;
 
-      return this.panels[idx].show ? `Hide ${titleUpper} Tab` : `Show ${titleUpper} Tab`;
+      return this.panels[idx].show
+        ? `Hide ${titleUpper} Panel`
+        : `Show ${titleUpper} Panel`;
     },
   },
   created() {
@@ -86,8 +88,4 @@ export default {
       margin-right: 8px
   button:last-of-type
     margin-right: 0
-
-  .toggle-list
-    > *
-      align-items: center
 </style>

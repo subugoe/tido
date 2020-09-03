@@ -4,33 +4,41 @@
       <div v-for="(p, i) in panels" :key="`pc${i}`" v-show="p.show"
         class="col-12 col-sm-6 col-md-3"
         >
-        <Toolbar :heading="p.toolbar" />
+        <Toolbar :heading="p.panel_label" />
 
         <q-separator />
 
-        <!-- shows the nested tab components -->
-        <q-card v-if="p.tabs.children" flat>
-          <div class="tabs-container">
-            <q-tabs v-model="p.tabs.model" v-for="(tab, i) in p.tabs.children" :key="`pt${i}`"
-              active-bg-color="grey-4"
-              class="content-tabs"
-              >
-              <q-tab :name="tab.name" :label="tab.label" />
-            </q-tabs>
+        <div v-if="p.connector.length != 0">
+          <!-- shows the nested tab components -->
+          <q-card v-if="p.connector.length > 1" flat>
+            <div class="tabs-container">
+              <q-tabs v-for="(tab, i) in p.connector" :key="`pt${i}`"
+                active-bg-color="grey-4"
+                class="content-tabs"
+                v-model="p.tab_model"
+                >
+                <q-tab :name="`tab${i}`" :label="tab.label" />
+              </q-tabs>
+            </div>
+
+            <q-separator />
+
+            <q-tab-panels v-model="p.tab_model" animated class="content-panel" keep-alive>
+              <q-tab-panel v-for="(tab, i) in p.connector"
+                :key="`co${i}`"
+                :name="`tab${i}`"
+                >
+                <component :is="tab.component" v-bind="componentProps[tab.id]" />
+              </q-tab-panel>
+            </q-tab-panels>
+          </q-card>
+
+          <!-- shows the panels -->
+          <div v-else  class="q-pa-md q-gutter-sm overflow-hidden">
+            <component v-if="p.connector.length === 1" :is="p.connector[0].component"
+              v-bind="componentProps[p.connector[0].id]"
+              />
           </div>
-
-          <q-separator />
-
-          <q-tab-panels v-model="p.tabs.model" animated class="content-panel" keep-alive>
-            <q-tab-panel :name="tab.name" v-for="(tab, i) in p.tabs.children" :key="i">
-              <component :is="tab.component" v-bind="$props" :key="keys[tab.name]" />
-            </q-tab-panel>
-          </q-tab-panels>
-        </q-card>
-
-        <!-- shows the panels -->
-        <div v-else class="q-pa-md q-gutter-sm overflow-hidden">
-          <component :is="p.component" v-bind="$props" :key="keys[p.name]" />
         </div>
       </div>
     </div>
@@ -60,10 +68,30 @@ export default {
     tree: Array,
   },
   computed: {
-    keys() {
+    componentProps() {
       return {
-        image: this.imageurl,
-        text: this.contenturl,
+        1: {
+          manifests: this.manifests,
+          tree: this.tree,
+        },
+        2: {
+          collection: this.collection,
+          config: this.config,
+          itemlabel: this.itemlabel,
+          language: this.language,
+          manifests: this.manifests,
+        },
+        3: {
+          imageurl: this.imageurl,
+          key: this.imageurl,
+        },
+        4: {
+          contenturl: this.contenturl,
+          fontsize: this.fontsize,
+          key: this.contenturl,
+          manifests: this.manifests,
+          request: this.request,
+        },
       };
     },
   },
@@ -73,11 +101,6 @@ export default {
 <style lang="sass" scoped>
   .content-tabs
     display: inline-block
-
-  .panels-target
-    > *
-      border-right: 1px solid #ddd
-      flex: auto
 
   .tabs-container
     display: flex
