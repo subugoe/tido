@@ -55,12 +55,11 @@ export default {
   },
   props: {
     collection: Object,
-    config: Object,
     contenturl: String,
     fontsize: Number,
     imageurl: String,
     itemlabel: String,
-    label: Object,
+    labels: Object,
     language: String,
     manifests: Array,
     panels: Array,
