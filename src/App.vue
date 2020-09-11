@@ -35,12 +35,9 @@
 </template>
 
 <script>
-import Content from '@/components/content.vue';
 import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
-import Metadatatab from '@/components/tab-panels/metadatatab.vue';
-import OpenSeadragon from '@/components/openseadragon.vue';
-import Treeviewtab from '@/components/tab-panels/treeviewtab.vue';
+import PanelsMixin from '@/config/panels.js';
 
 export default {
   name: 'Viewer',
@@ -48,6 +45,7 @@ export default {
     Header,
     Footer,
   },
+  mixins: [PanelsMixin],
   data() {
     return {
       annotations: {},
@@ -65,50 +63,6 @@ export default {
       label: '',
       manifests: [],
       tree: [],
-      panels: [
-        {
-          component: null,
-          name: 'tabs',
-          show: true,
-          tabs: {
-            children: [
-              {
-                component: Treeviewtab,
-                label: 'Contents',
-                name: 'content',
-              },
-              {
-                component: Metadatatab,
-                label: 'Metadata',
-                name: 'meta',
-              },
-            ],
-            model: 'content',
-          },
-          toolbar: 'Tabs',
-        },
-        {
-          component: OpenSeadragon,
-          name: 'image',
-          show: true,
-          tabs: [],
-          toolbar: 'Image',
-        },
-        {
-          component: Content,
-          name: 'text',
-          show: true,
-          tabs: [],
-          toolbar: 'Content',
-        },
-        {
-          component: null,
-          name: 'annotations',
-          show: true,
-          tabs: [],
-          toolbar: 'Annotations',
-        },
-      ],
     };
   },
   methods: {
