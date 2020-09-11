@@ -11,7 +11,7 @@
             class="effected"
             @dragleave.prevent="dragHighlightComponent($event, false)"
             @dragover.prevent="dragHighlightComponent($event)"
-            @drop="recevingComponent($event)"
+            @drop="receivingComponent($event)"
             :unique-index="idx"
             >
             <div>
@@ -99,19 +99,16 @@ export default {
     addPanel() {
       this.$root.$emit('add-panel');
     },
-    setpanels() {
-      this.panels = this.data;
-    },
-    handlePanelLabel(e, index) {
-      this.$root.$emit('update-panellabel', { v: e.target.value, index });
-    },
     dragHighlightComponent(event, isEnter = true) {
       const element = event.target.classList.contains('effected');
       const outline = isEnter && element ? '1px solid grey' : '';
 
       event.target.style.outline = outline;
     },
-    recevingComponent(e) {
+    handlePanelLabel(e, index) {
+      this.$root.$emit('update-panellabel', { v: e.target.value, index });
+    },
+    receivingComponent(e) {
       const element = e.target;
       const targetElID = element.getAttribute('unique-index');
 
@@ -125,6 +122,9 @@ export default {
         idC: this.dragged,
         to: targetElID,
       });
+    },
+    setpanels() {
+      this.panels = this.data;
     },
   },
   created() {

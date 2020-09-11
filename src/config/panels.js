@@ -5,7 +5,7 @@ import Treeviewtab from '@/components/tab-panels/treeviewtab.vue';
 import { v4 as uuidv4 } from 'uuid';
 
 // -- Panels --
-// Connector required "component id"
+// Connector requires "component id" that combines panels into tabs.
 const panels = [
   {
     id: uuidv4(),
@@ -89,13 +89,6 @@ export default {
     this.$root.$on('panels-position', (newPanels) => {
       this.panels = newPanels;
     });
-    this.$root.$on('remove-panel', (id) => {
-      this.panels = this.panels.filter((c) => c.id !== id);
-    });
-    this.$root.$on('update-panellabel', (payload) => {
-      const value = payload.v || ' ';
-      this.panels[payload.index].panel_label = value;
-    });
 
     this.$root.$on('add-panel', () => {
       const newPanel = {
@@ -107,6 +100,12 @@ export default {
       };
       this.panels.push(newPanel);
     });
+
+    this.$root.$on('update-panellabel', (payload) => {
+      const value = payload.v || ' ';
+      this.panels[payload.index].panel_label = value;
+    });
+
     this.$root.$on('handle-connector', (payload) => {
       const {
         from,
@@ -126,10 +125,14 @@ export default {
 
         fromPanel.connector = fromPanel.connector.filter((c) => c.id !== idC);
 
-        // Check if the last one of panel then remove the panel
+        // Check if it is the last component inside the panel, then remove the panel
 
         if (!fromPanel.connector.length) this.$root.$emit('remove-panel', fromPanel.id);
       }
+    });
+
+    this.$root.$on('remove-panel', (id) => {
+      this.panels = this.panels.filter((c) => c.id !== id);
     });
   },
 };

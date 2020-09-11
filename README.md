@@ -158,8 +158,6 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
 ## Configure the Viewer
 
-As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component. If you intend to hide a component, just toggle it's corresponding key-value to `false`.
-
 Locate the `index.template.html` file inside the root of your project dir and find the script section:
 
 **Note**:
@@ -167,7 +165,7 @@ Locate the `index.template.html` file inside the root of your project dir and fi
 It's a json object. So if you are going to make any changes and you have to quote these, use double quotes but single ones.
 
 ```html
-<script id="emo-config" type="application/json">
+  <script id="emo-config" type="application/json">
     {
       "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
       "headers": {
@@ -182,65 +180,48 @@ It's a json object. So if you are going to make any changes and you have to quot
       },
       "standalone": true
     }
-    </script>
+  </script>
 ```
 
-The data structure of the panels are inside app.vue component. You can work on this data structure to make any required changes.
+## Configure Panels
+
+In order to configure the panels, locate the `panels.js` file inside the `src/components/config` of your project dir and find the panels section:
+
+**Note**:
+
+As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component. If you intend to hide a component, just toggle it's corresponding key-value to `false`.
+
+It's an array structure. So if you are going to make any changes and you have to quote these, use double quotes but single ones.
 
 ```html
-  data() {
-    return {
-      .
-      .
-      .
-      panels: [
-        {
-          component: null,
-          name: 'tabs',
-          show: true,
-          tabs: {
-            children: [
-              {
-                component: Treeviewtab,
-                label: 'Contents',
-                name: 'content',
-              },
-              {
-                component: Metadatatab,
-                label: 'Metadata',
-                name: 'meta',
-              },
-            ],
-            model: 'content',
-          },
-          toolbar: 'Tabs',
-        },
-        {
-          component: OpenSeadragon,
-          name: 'image',
-          show: true,
-          tabs: [],
-          toolbar: 'Image',
-        },
-        {
-          component: Content,
-          name: 'text',
-          show: true,
-          tabs: [],
-          toolbar: 'Content',
-        },
-        {
-          component: null,
-          name: 'annotations',
-          show: true,
-          tabs: [],
-          toolbar: 'Annotations',
-        },
-      ],
-    }
-  }
+  const panels = [
+    {
+      id: uuidv4(),
+      connector: [1, 2],
+      panel_label: 'Tabs',
+      show: true,
+      tab_model: null,
+    },
+    {
+      id: uuidv4(),
+      connector: [3],
+      panel_label: 'Image',
+      show: true,
+    },
+    {
+      id: uuidv4(),
+      connector: [4],
+      panel_label: 'Text',
+      show: true,
+    },
+    {
+      id: uuidv4(),
+      connector: [5],
+      panel_label: 'Annotations',
+      show: true,
+    },
+  ];
 ```
-
 ### The keys in detail
 
 - **entrypoint**
@@ -284,42 +265,44 @@ The data structure of the panels are inside app.vue component. You can work on t
 
     Defaults to `Manuscript`
 
-- **panels**
-
-	It's keys correspond to the panelnames, e.g. "contents", "text", "image" and so on.
-  <br />
-  **Note:** Pls **leave these keys UNTOUCHED** since these are for internal use only!
-  <br /><br />
-	Each object inside panels consists of keys: `component`, `name`, `show`, `tab` and `toolbar`.
-  	Change either name-key according to your liking and set either show-key to **false** if you don't want the Viewer to show the appropriate panel/s.
-
-  	Example given:
-
-    ```json
-    {
-      panels: {
-        {
-          component: toC,
-          name: 'text',
-          show: false,
-          tabs: false,
-          toolbar: 'toC',
-        },
-      }
-    }
-    ```
-
-  - **Component** Refers to the required component that we are integrating.
-  - **name** Refers to the caption in each panel's toolbar.
-  - **show** toggles (show or rather hide) the appropriate panel respectively.
-  - **tabs** denotes, if the panel will be grouped together with others inside a single panel.
-  - **toolbar** displays the related component on toolbar and can able to toggle panels.
-
 - **standalone**
 
 	denotes if the Viewer will be used as a single page application on it's own or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
 
 	Defaults to **true**
+
+- **Panels Configure**
+
+  - **panels**
+
+	It's keys correspond to the panelnames, e.g. "contents", "text", "image" and so on.
+  <br />
+  **Note:** Pls **leave these keys UNTOUCHED** since these are for internal use only!
+  <br /><br />
+	Each object inside panels consists of keys: `id`, `connector`, `pane_label`, `show` and `tab_model`.
+  	Change either panel_label-key according to your liking and set either show-key to **false** if you don't want the Viewer to show the appropriate panel/s.
+
+  	Example given:
+
+    ```json
+    {
+      panels: [
+        {
+          id: uuidv4(),
+          connector: [1, 2],
+          panel_label: 'Tabs',
+          show: true,
+          tab_model: null,
+        },
+      ]
+    }
+    ```
+
+  - **id** Provides unique id always instead of hard coded id's.
+  - **connector** Groups together the panels as tabs (works on user configure as well).
+  - **panel_label** Refers to the caption in each panel's toolbar
+  - **show** toggles (show or rather hide) the appropriate panel respectively.
+  - **tab_model** Represents to displays panels in a tab when loading for the first time.
 
 ## Dockerfile
 
