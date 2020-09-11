@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored drag and drop component in order to make it user configurable.
 - Moved panel data structure into a separate component where panels can be configured.
+
 ## [1.3.3] - 2020-09-10
 
 ### Changed
