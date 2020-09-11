@@ -11,6 +11,7 @@ export default {
       tab: '',
     };
   },
+
   methods: {
     toggleSheet(itemIndex) {
       const link = this.itemurls[itemIndex];
@@ -25,9 +26,11 @@ export default {
       this.updateItem(this.itemurls[itemIndex], this.sequenceindex);
       this.updateSequenceIndex(this.sequenceindex);
     },
+
     updateItem() {
       this.$root.$emit('update-item', this.itemurls[this.itemindex], this.sequenceindex);
     },
+
     updateSequenceIndex() {
       this.$root.$emit('update-sequence-index', this.sequenceindex);
     },
@@ -41,11 +44,13 @@ export default {
         ? `Next ${this.config.labels.manifest}`
         : `Next ${this.config.labels.item}`;
     },
+
     captionprev() {
       return this.sequenceindex > 0 && this.firstiteminsequence === this.itemindex
         ? `Prev ${this.config.labels.manifest}`
         : `Prev ${this.config.labels.item}`;
     },
+
     computedsequenceindex() {
       const itemcount = this.itemspersequence;
 
@@ -59,8 +64,10 @@ export default {
           sequenceidx += 1;
         }
       }
+
       return sequenceidx;
     },
+
     firstiteminsequence() {
       const itemcount = this.itemspersequence;
 
@@ -68,16 +75,20 @@ export default {
       for (let ctr = 0; ctr < this.sequenceindex; ctr += 1) {
         itemidx += itemcount[ctr];
       }
+
       return itemidx;
     },
+
     itemspersequence() {
       const itemcount = [];
 
       for (let ctr = 0; ctr < this.sequencecount; ctr += 1) {
         itemcount[ctr] = this.manifests[ctr].sequence.length;
       }
+
       return itemcount;
     },
+
     lastiteminsequence() {
       const lastindexes = [];
 
@@ -86,8 +97,10 @@ export default {
           ? this.manifests[seqidx].sequence.length - 1
           : lastindexes[(seqidx - 1)] + this.manifests[seqidx].sequence.length;
       }
+
       return lastindexes;
     },
+
     sequencecount() {
       return this.manifests.length;
     },
