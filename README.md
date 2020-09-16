@@ -194,6 +194,7 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
 It's an array structure. So if you are going to make any changes and you have to quote these, use double quotes but single ones.
 
 ```html
+
   const panels = [
     {
       id: uuidv4(),
@@ -221,6 +222,7 @@ It's an array structure. So if you are going to make any changes and you have to
       show: true,
     },
   ];
+
 ```
 ### The keys in detail
 
