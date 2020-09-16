@@ -104,7 +104,7 @@ since all your global installations go to your home directory (~/.nvm/) instead 
 
 #### Set up `nvm` and the recent stable version of `node.js`
 
-<!-- TODO: These steps don't work on my system. When I try `nvm install stable` I get Command 'nvm' not found, but there are 13 similar ones. -->
+<!-- TODO: These steps don't work on my system. When I try `nvm install stable` I get "Command 'nvm' not found, but there are 13 similar ones." -->
   ```bash
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
   nvm install stable
@@ -175,7 +175,7 @@ Locate the `index.template.html` file inside the root of your project dir and fi
 **Note**:
 
 It's a JSON object.
-<!-- TODO: I'm not sure what the following sentence mean. Should I use double or single quotes? Or should I use double quotes only once instead of escaping them? -->
+<!-- TODO: I'm not sure what the following sentence means. Should I use double or single quotes? Or should I use double quotes only once instead of escaping them? -->
 So if you are going to make any changes and you have to quote these, use double quotes but single ones.
 
 ```html
