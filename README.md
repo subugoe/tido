@@ -51,7 +51,7 @@ Also the commit short hash can be used to see a demo.
 <!-- TODO: maybe we should refer to the latest release at this point? -->
 
 To embed the viewer for production, the latest compiled and minified version is
-available at: https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build
+available at: <https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build>
 
 ## Integration
 
@@ -60,13 +60,13 @@ To include the viewer on a website add the following to your `index.html` file:
 ```html
 <noscript>
   <strong>We're sorry but TextViewer doesn't work properly without JavaScript enabled.
-  	Please enable it to continue.
+  Please enable it to continue.
   </strong>
 </noscript>
 
 <script id="emo-config" type="application/json">
   {
-	...
+    ...
   }
 </script>
 
@@ -206,7 +206,7 @@ In order to configure the panels, locate the `panels.js` file inside the `src/co
 **Note**:
 
 As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
-If you intend to hide a component, just toggle it's corresponding key-value to `false`.
+If you intend to hide a component, just toggle its corresponding key-value to `false`.
 
 It's an array structure.
 <!-- TODO: cf. comment above -->
@@ -240,7 +240,6 @@ So if you are going to make any changes and you have to quote these, use double 
       show: true,
     },
   ];
-
 ```
 
 ### The keys in detail
@@ -250,14 +249,14 @@ So if you are going to make any changes and you have to quote these, use double 
 	to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed.<br />
 	(Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
 
-	**Note**: You have to provide at least a valid entrypoint (see above). Otherwise the Viewer won't show anything at all!
+	**Note**: You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
 
 - **headers**
 
   - **all**<br />
     set this value to `false` if you want to completely switch off all the headerbars at once.<br />
     This value takes precedence over the other *header-keys*.<br />
-    If it's set to *false*, the other settings for the individual bars are not taken into account.<br />
+    If it is set to *false*, the other settings for the individual bars are not taken into account.<br />
     *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
 
   - **info**<br />
@@ -296,7 +295,7 @@ So if you are going to make any changes and you have to quote these, use double 
 
   - **panels**
 
-	Its keys correspond to the panelnames, e.g. "contents", "text", "image" and so on.
+  Its keys correspond to the panelnames, e.g. "contents", "text", "image" and so on.
   <br />
   **Note:** Please **leave these keys UNTOUCHED** since these are for internal use only!
   <br /><br />
