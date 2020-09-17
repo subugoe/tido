@@ -16,7 +16,6 @@ Also the commit short hash can be used to see a demo.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Viewer components](#viewer-components)
 - [Latest version](#latest-version)
 - [Integration](#integration)
@@ -44,25 +43,28 @@ Also the commit short hash can be used to see a demo.
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Viewer components
+
 ![Viewer components](img/Viewer.png)
 
 ## Latest version
+
 To embed the viewer for production, the latest compiled and minified version is
-available at: https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build
+available at: <https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/packages/25>
 
 ## Integration
+
 To include the viewer on a website add the following to your `index.html` file:
 
 ```html
 <noscript>
   <strong>We're sorry but TextViewer doesn't work properly without JavaScript enabled.
-  	Please enable it to continue.
+  Please enable it to continue.
   </strong>
 </noscript>
 
 <script id="emo-config" type="application/json">
   {
-	...
+    ...
   }
 </script>
 
@@ -75,6 +77,8 @@ To include the viewer on a website add the following to your `index.html` file:
 ```
 
 and replace `[CHECKSUM]` with the values from the release you are going to use.
+
+<!-- TODO: looking at https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/packages/25 I'm not sure I get where I should look for for the checksums. in the release's index.html? -->
 
 ## Getting Started
 
@@ -100,11 +104,14 @@ since all your global installations go to your home directory (~/.nvm/) instead 
 
   ```bash
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+  nvm install node
   nvm install stable
   ```
+
 **Note**:
 
-After the nvm installation is done, please `restart` your shell session once. That's due to changes to your profile environment.
+After the nvm installation is done, please `restart` your shell session once.
+That's due to changes to your profile environment.
 
 #### Set up `global` project requirements via `npm`
 
@@ -120,7 +127,7 @@ After the nvm installation is done, please `restart` your shell session once. Th
 
 #### Get the dependencies
 
-Head over to your project directory, where you just cloned the repository to as described above and get all the dependencies needed by simply typing:
+Head over to your project directory, where you just cloned the repository to as described above and get all the dependencies needed by typing:
 
   ```bash
   cd /path/to/projectdir
@@ -136,6 +143,7 @@ That's it. You should now be able to run the Viewer.
 ```bash
 npm run dev
 ```
+
 (usually located at: `localhost:8080`)
 
 #### `Lint` the files
@@ -150,7 +158,7 @@ npm run lint
 npm run build
 ```
 
-**Note**: The complete build is located at /dist/spa/.
+**Note**: The complete build is located at `/dist/spa/`.
 
 ## Customize the Configuration
 
@@ -158,11 +166,13 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
 ## Configure the Viewer
 
-Locate the `index.template.html` file inside the root of your project dir and find the script section:
+Locate the `index.template.html` file inside the root of your project dir and find the script section.
 
 **Note**:
 
-It's a json object. So if you are going to make any changes and you have to quote these, use double quotes but single ones.
+It's a JSON object.
+<!-- TODO: I'm not sure what the following sentence means. Should I use double or single quotes? Or should I use double quotes only once instead of escaping them? -->
+So if you are going to make any changes and you have to quote these, use double quotes but single ones.
 
 ```html
   <script id="emo-config" type="application/json">
@@ -185,13 +195,14 @@ It's a json object. So if you are going to make any changes and you have to quot
 
 ## Configure Panels
 
-In order to configure the panels, locate the `panels.js` file inside the `src/components/config` of your project dir and find the panels section:
+In order to configure the panels, locate the `panels.js` file inside the `src/config` of your project dir and find the panels section.
 
 **Note**:
 
-As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component. If you intend to hide a component, just toggle it's corresponding key-value to `false`.
+As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
+If you intend to hide a component, just toggle its corresponding key-value to `false`.
 
-It's an array structure. So if you are going to make any changes and you have to quote these, use double quotes but single ones.
+It's an array structure.
 
 ```html
   const panels = [
@@ -222,6 +233,7 @@ It's an array structure. So if you are going to make any changes and you have to
     },
   ];
 ```
+
 ### The keys in detail
 
 - **entrypoint**
@@ -229,14 +241,14 @@ It's an array structure. So if you are going to make any changes and you have to
 	to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed.<br />
 	(Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
 
-	**Note**: You have to provide at least a valid entrypoint (see above). Otherwise the Viewer won't show anything at all!
+	**Note**: You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
 
 - **headers**
 
   - **all**<br />
     set this value to `false` if you want to completely switch off all the headerbars at once.<br />
     This value takes precedence over the other *header-keys*.<br />
-    If it's set to *false*, the other settings for the individual bars are not taken into account.<br />
+    If it is set to *false*, the other settings for the individual bars are not taken into account.<br />
     *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
 
   - **info**<br />
@@ -248,7 +260,7 @@ It's an array structure. So if you are going to make any changes and you have to
 
     **Note**: if you turn this one off, you won't be able to toggle the panels anymore.
 
-    All header values default to `true`
+    All header values default to `true`.
 
 - **labels**
 
@@ -258,26 +270,26 @@ It's an array structure. So if you are going to make any changes and you have to
     Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.<br />
     This change affects the captions of the navbuttons located in the headerbar and the metadata section.
 
-    Defaults to `Sheet`
+    Defaults to `Sheet`.
 
   - **manifest**:<br />
     same as for `item` but related to the manifest title<br />
 
-    Defaults to `Manuscript`
+    Defaults to `Manuscript`.
 
 - **standalone**
 
 	denotes if the Viewer will be used as a single page application on it's own or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
 
-	Defaults to **true**
+	Defaults to **true**.
 
 - **Panels Configure**
 
   - **panels**
 
-	It's keys correspond to the panelnames, e.g. "contents", "text", "image" and so on.
+  Its keys correspond to the panelnames, e.g. "contents", "text", "image" and so on.
   <br />
-  **Note:** Pls **leave these keys UNTOUCHED** since these are for internal use only!
+  **Note:** Please **leave these keys UNTOUCHED** since these are for internal use only!
   <br /><br />
 	Each object inside panels consists of keys: `id`, `connector`, `pane_label`, `show` and `tab_model`.
   	Change either panel_label-key according to your liking and set either show-key to **false** if you don't want the Viewer to show the appropriate panel/s.
@@ -298,7 +310,7 @@ It's an array structure. So if you are going to make any changes and you have to
     }
     ```
 
-  - **id** Provides unique id always instead of hard coded id's.
+  - **id** Provides unique id always instead of hard coded IDs.
   - **connector** Groups together the panels as tabs (works on user configure as well).
   - **panel_label** Refers to the caption in each panel's toolbar
   - **show** toggles (show or rather hide) the appropriate panel respectively.
@@ -306,8 +318,8 @@ It's an array structure. So if you are going to make any changes and you have to
 
 ## Dockerfile
 
-The dockerfile is used at GitLab CI.
-It needs to be updated, when either node or quasar-cli should be updated.
+The dockerfile is used for GitLab CI.
+It needs to be updated when either `node` or `quasar-cli` should be updated.
 
 ```bash
 docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/qviewer/node .
