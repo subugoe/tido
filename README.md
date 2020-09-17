@@ -107,6 +107,7 @@ since all your global installations go to your home directory (~/.nvm/) instead 
 <!-- TODO: These steps don't work on my system. When I try `nvm install stable` I get "Command 'nvm' not found, but there are 13 similar ones." -->
   ```bash
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+  nvm install node
   nvm install stable
   ```
 
@@ -168,9 +169,7 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
 ## Configure the Viewer
 
-Locate the `index.template.html` file inside the root of your project dir and find the script section:
-
-<!-- TODO: is there something missing here? -->
+Locate the `index.template.html` file inside the root of your project dir and find the script section.
 
 **Note**:
 
@@ -199,9 +198,7 @@ So if you are going to make any changes and you have to quote these, use double 
 
 ## Configure Panels
 
-In order to configure the panels, locate the `panels.js` file inside the `src/config` of your project dir and find the panels section:
-
-<!-- TODO: is there something missing here? -->
+In order to configure the panels, locate the `panels.js` file inside the `src/config` of your project dir and find the panels section.
 
 **Note**:
 
@@ -209,8 +206,6 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
 If you intend to hide a component, just toggle its corresponding key-value to `false`.
 
 It's an array structure.
-<!-- TODO: cf. comment above -->
-So if you are going to make any changes and you have to quote these, use double quotes but single ones.
 
 ```html
   const panels = [
