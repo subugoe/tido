@@ -48,10 +48,8 @@ Also the commit short hash can be used to see a demo.
 
 ## Latest version
 
-<!-- TODO: maybe we should refer to the latest release at this point? -->
-
 To embed the viewer for production, the latest compiled and minified version is
-available at: <https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build>
+available at: <https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/packages/25>
 
 ## Integration
 
@@ -104,7 +102,6 @@ since all your global installations go to your home directory (~/.nvm/) instead 
 
 #### Set up `nvm` and the recent stable version of `node.js`
 
-<!-- TODO: These steps don't work on my system. When I try `nvm install stable` I get "Command 'nvm' not found, but there are 13 similar ones." -->
   ```bash
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
   nvm install node
