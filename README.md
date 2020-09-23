@@ -122,7 +122,7 @@ That's due to changes to your profile environment.
 #### Clone the repository
 
   ```bash
-  git clone git@gitlab.gwdg.de:subugoe/emo/viewer.git
+  git clone git@gitlab.gwdg.de:subugoe/emo/Qviewer.git
   ```
 
 #### Get the dependencies
