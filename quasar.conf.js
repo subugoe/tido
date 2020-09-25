@@ -13,8 +13,8 @@ module.exports = function (ctx) {
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
       '../statics/support.css',
-      '/global.sass',
-      '/treeview.sass'
+      '/global.scss',
+      '/treeview.scss'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras

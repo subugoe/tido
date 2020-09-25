@@ -82,10 +82,13 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-  button
-    @media (min-width: 600px)
-      margin-right: 8px
-  button:last-of-type
-    margin-right: 0
+<style lang="scss" scoped>
+  button {
+    @media (min-width: 600px) {
+      margin-right: 8px;
+    }
+  }
+  button:last-of-type {
+    margin-right: 0;
+  }
 </style>
