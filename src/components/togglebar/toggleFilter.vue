@@ -14,9 +14,10 @@
   </section>
 </template>
 
-<style lang="sass" scoped>
-  #filterBtns
-    align-items: center
-    display: flex
-    justify-content: center
+<style lang="scss" scoped>
+  #filterBtns {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
 </style>

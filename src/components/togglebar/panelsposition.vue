@@ -42,11 +42,13 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-  .btn-panel
-    height: 75%
+<style lang="scss" scoped>
+  .btn-panel {
+    height: 75%;
+  }
 
-  .panel-position
-    display: flex
-    justify-content: center
+  .panel-position {
+    display: flex;
+    justify-content: center;
+  }
 </style>

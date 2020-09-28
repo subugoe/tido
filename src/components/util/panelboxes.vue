@@ -135,36 +135,45 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-  .panels
-    > *
-      column-gap: 20px
-      display: grid
-      grid-template-columns: 1fr 1fr 1fr 1fr
+<style lang="scss" scoped>
+  .panels {
+    > * {
+      column-gap: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
 
-    div.p-c
-      position: relative
-      > *
-        background-color: #eee
-        height: 300px
-        padding: 15px 10px
+    div.p-c {
+      position: relative;
+      > * {
+        background-color: #eee;
+        height: 300px;
+        padding: 15px 10px;
+      }
+    }
 
-    header
-      display: flex
+    header {
+      display: flex;
+    }
 
-    .components-list
-      > *
-        background-color: white
-        border-radius: 5px
-        cursor: move
-        margin: 10px 0
-        padding: 10px
+    .components-list {
+      > * {
+        background-color: white;
+        border-radius: 5px;
+        cursor: move;
+        margin: 10px 0;
+        padding: 10px;
 
-        &:active, &:focus
-          outline: 1px solid blue
+        &:active, &:focus {
+          outline: 1px solid blue;
+        }
+      }
+    }
 
-    .actions
-      left: -10px
-      position: absolute
-      top: -10px
+    .actions {
+      left: -10px;
+      position: absolute;
+      top: -10px;
+    }
+  }
 </style>

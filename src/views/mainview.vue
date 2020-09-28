@@ -50,6 +50,11 @@ import Toolbar from '@/components/toolbar.vue';
 
 export default {
   name: 'MainView',
+  // watch: {
+  //   '$q.dark.isActive'(val) {
+  //     console.log(val ? 'On dark mode' : 'On light mode');
+  //   },
+  // },
   components: {
     Toolbar,
   },
@@ -97,12 +102,15 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-  .content-tabs
-    display: inline-block
+<style lang="scss" scoped>
+  .content-tabs {
+    display: inline-block;
+  }
 
-  .tabs-container
-    display: flex
-    > *
-      flex: 1
+  .tabs-container {
+    display: flex;
+    > * {
+      flex: 1;
+    }
+  }
 </style>
