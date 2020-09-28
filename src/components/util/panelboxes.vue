@@ -17,7 +17,7 @@
             <div>
               <header>
                 <input
-                  class="hidden-txtinput"
+                  class="hidden-textinput"
                   type="text"
                   :value="panel.panel_label"
                   @input="(e) => handlePanelLabel(e, idx)"
