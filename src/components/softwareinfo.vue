@@ -1,10 +1,11 @@
 <template>
 
-  <div class="softwareinfo col-xs-auto" title="Project info">
+  <div class="softwareinfo col-xs-auto">
     <q-btn
       flat
       color="grey"
       label=""
+      title="Project Info"
       @click="infobox = true"
       >
       <q-icon size="xs" :name="fasInfoCircle" />
