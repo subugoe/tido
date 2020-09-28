@@ -82,6 +82,7 @@ export default {
           collection: this.collection,
           config: this.config,
           itemlabel: this.itemlabel,
+          labels: this.labels,
           language: this.language,
           manifests: this.manifests,
         },

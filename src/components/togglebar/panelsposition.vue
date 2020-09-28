@@ -1,11 +1,11 @@
 <template>
   <section class="panel-position">
-    <q-btn class="btn-panel" :icon="panelicon" @click="status = true" label="Configure" flat />
+    <q-btn class="btn-panel" :icon="panelicon" @click="status = true" label="Customize" flat />
 
     <q-dialog v-model="status" persistent transition-show="scale" transition-hide="scale">
       <q-card class="bg-white text-black" style="width: 600px">
         <q-card-section>
-          <div class="text-h6 text-capitalize">Customize Panels</div>
+          <div class="text-h6 text-uppercase">Customize Panels</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
