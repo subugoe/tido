@@ -1,6 +1,14 @@
 // global extra classes
 @import './responsive-heights.scss';
 
+body {
+  height: 100vh;
+  overflow-y: hidden;
+  @media (max-width: 1023px) {
+    overflow-y: auto !important;
+  }
+}
+
 .scroll-panel {
   position: relative;
   .sticky {
