@@ -7,6 +7,7 @@
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
       >
+      <!-- TODO: Size is best set with Quasar'xs-xl -->
       <q-icon
         class="q-pr-sm"
         :name="fasArrowLeft"
