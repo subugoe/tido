@@ -3,7 +3,7 @@
     <ToggleFilter>
       <q-list class="toggle-list">
         <q-item v-for="(p, i) in panels" :key="`toggle${i}`"
-          class="bg-grey-2"
+          :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-2'"
           clickable
           v-close-popup
           :title="handleToggleTitle(i)"
@@ -14,7 +14,7 @@
         </q-item>
 
         <q-item
-          class="bg-grey-5"
+          :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-5'"
           clickable
           title="Reset panels to default view"
           v-close-popup

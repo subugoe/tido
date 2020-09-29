@@ -1,4 +1,5 @@
 <template>
+  <!-- FIXME: remove inline style -->
   <figure id="openseadragon" style="margin-top: 0px; padding: 8px">
     <nav class="sticky">
       <q-btn

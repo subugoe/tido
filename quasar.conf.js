@@ -45,6 +45,8 @@ module.exports = function (ctx) {
       //            (not treeshaking Quasar; biggest bundle size; convenient)
       all: 'auto',
 
+      dark: 'auto', // or Boolean true/false
+
       // components: [],
       // directives: [],
 

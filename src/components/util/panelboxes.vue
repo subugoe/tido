@@ -13,12 +13,14 @@
             @dragover.prevent="dragHighlightComponent($event)"
             @drop="receivingComponent($event)"
             :unique-index="idx"
+            :class="$q.dark.isActive ? 'bg-grey-8 text-white' : 'bg-grey-1 text-black'"
             >
             <div>
               <header>
                 <input
                   class="hidden-textinput"
                   type="text"
+                  :class="$q.dark.isActive ? 'bg-grey-8 text-white' : 'bg-grey-1 text-black'"
                   :value="panel.panel_label"
                   @input="(e) => handlePanelLabel(e, idx)"
                 />
@@ -30,6 +32,7 @@
                   <div v-for="(comp,i) in panel.connector" :key="`pi${i}`"
                     draggable="true"
                     v-text="comp.label"
+                    :class="$q.dark.isActive ? 'bg-black text-white' : 'bg-grey-1 text-black'"
                     @dragstart="dragged = comp.id; draggedPanelIdx = idx"
                     @dragend="dragged = null; draggedPanelIdx = null"
                   />
@@ -158,13 +161,14 @@ export default {
 
     .components-list {
       > * {
-        background-color: white;
+        background-color: $light;
         border-radius: 5px;
         cursor: move;
         margin: 10px 0;
         padding: 10px;
 
         &:active, &:focus {
+          // FIXME: Quasar color variables
           outline: 1px solid blue;
         }
       }

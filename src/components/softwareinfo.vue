@@ -13,7 +13,7 @@
 
     <q-dialog v-model="infobox">
       <q-card>
-        <q-card-section class="">
+        <q-card-section>
           <div class="text-h5 q-pb-md">EMo Viewer</div>
 
           <p class="text-weight-bold">
