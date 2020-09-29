@@ -13,7 +13,7 @@
           <q-card v-if="p.connector.length > 1" flat>
             <div class="tabs-container">
               <q-tabs v-for="(tab, i) in p.connector" :key="`pt${i}`"
-                active-bg-color="grey-4"
+                :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
                 class="content-tabs"
                 v-model="p.tab_model"
                 >

@@ -297,6 +297,8 @@ export default {
     this.getConfig();
     this.init();
 
+    this.$q.dark.set('auto');
+
     this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   },
   mounted() {
