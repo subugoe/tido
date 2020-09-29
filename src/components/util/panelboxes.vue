@@ -161,13 +161,14 @@ export default {
 
     .components-list {
       > * {
-        background-color: white;
+        background-color: $light;
         border-radius: 5px;
         cursor: move;
         margin: 10px 0;
         padding: 10px;
 
         &:active, &:focus {
+          // FIXME: Quasar color variables
           outline: 1px solid blue;
         }
       }
