@@ -6,7 +6,6 @@
       title="Change language"
       >
       <q-icon
-        class=""
         size="md"
         :name="fasLanguage"
       />
