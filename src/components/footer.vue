@@ -1,5 +1,10 @@
 <template>
-  <q-footer bordered reveal class="bg-white row justify-start items-center ">
+  <q-footer
+    bordered
+    reveal
+    :class="$q.dark.isActive ? 'bg-black' : 'bg-white'"
+    class="row justify-start items-center"
+    >
     <Language v-if="standalone" />
     <Softwareinfo />
   </q-footer>

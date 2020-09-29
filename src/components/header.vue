@@ -1,5 +1,9 @@
 <template>
-  <q-header id="header" elevated class="bg-white text-black">
+  <q-header
+    id="header"
+    elevated
+    :class="$q.dark.isActive ? 'bg-black text-white' : 'bg-white text-black'"
+    >
     <div class="bar row justify-between items-center">
       <Infobar v-if="config.headers.info && manifests.length"
         class="col-xs-12 q-pl-md"

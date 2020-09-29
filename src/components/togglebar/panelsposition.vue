@@ -3,7 +3,10 @@
     <q-btn class="btn-panel" :icon="panelicon" @click="status = true" label="Customize" flat />
 
     <q-dialog v-model="status" persistent transition-show="scale" transition-hide="scale">
-      <q-card class="bg-white text-black" style="width: 600px">
+      <q-card
+        :class="$q.dark.isActive ? 'bg-black' : 'bg-white text-black'"
+        style="width: 600px"
+        >
         <q-card-section>
           <div class="text-h6 text-uppercase">Customize Panels</div>
         </q-card-section>
@@ -12,7 +15,10 @@
           <Dragpanelboxes :data="panelboxes" />
         </q-card-section>
 
-        <q-card-actions align="right" class="bg-white text-black">
+        <q-card-actions
+          align="right"
+          :class="$q.dark.isActive ? 'bg-black' : 'bg-white'"
+          >
           <q-btn flat label="OK" v-close-popup />
         </q-card-actions>
       </q-card>

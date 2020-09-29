@@ -1,5 +1,7 @@
 <template>
-  <q-toolbar class="bg-grey-2">
+  <q-toolbar
+    :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-2'"
+    >
     <q-toolbar-title class="text-h6 absolute-center">
       {{ heading | capitalize }}
     </q-toolbar-title>
