@@ -23,7 +23,7 @@
           <p>Copyright (c) 2020 Göttingen University - Göttingen State and University Library</p>
 
           <p class="q-mb-none">
-            Version 1.3.2, licensed under GNU Affero General Public License v3.0
+            Version {{ version }}, licensed under GNU Affero General Public License v3.0
           </p>
         </q-card-section>
 
@@ -74,12 +74,14 @@ import {
   fasInfoCircle,
 }
   from '@quasar/extras/fontawesome-v5';
+import { version } from '../../package.json';
 
 export default {
   name: 'Softwareinfo',
   data() {
     return {
       infobox: false,
+      version: '',
     };
   },
   created() {
@@ -87,6 +89,8 @@ export default {
     this.fasBug = fasBug;
     this.fasCode = fasCode;
     this.fasInfoCircle = fasInfoCircle;
+
+    this.version = version;
   },
 };
 </script>
