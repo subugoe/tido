@@ -1,6 +1,6 @@
 <template>
   <!-- FIXME: remove inline style -->
-  <figure id="openseadragon" style="margin-top: 0px; padding: 8px">
+  <figure id="openseadragon" style="margin-top: 0; padding: 8px">
     <nav class="sticky">
       <q-btn
         v-for="(btn, idx) in buttons" :key="idx"

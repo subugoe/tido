@@ -6,7 +6,7 @@
       <!-- FIXME: remove inline style -->
       <q-card
         :class="$q.dark.isActive ? 'bg-black' : 'bg-white text-black'"
-        style="width: 600px"
+        style="width: 600px;"
         >
         <q-card-section>
           <div class="text-h6 text-uppercase">Customize Panels</div>

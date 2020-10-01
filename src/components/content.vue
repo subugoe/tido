@@ -29,7 +29,7 @@
     </div>
 
     <!-- FIXME: remove inline style -->
-    <div class="row" style="display: contents">
+    <div class="row" style="display: contents;">
       <!-- FIXME: remove inline style -->
       <div class="scroll-panel" :id="nodeid" :style="`font-size: ${fontsize}px`" v-html="content" />
     </div>

@@ -16,6 +16,7 @@
             :class="$q.dark.isActive ? 'bg-grey-8 text-white' : 'bg-grey-1 text-black'"
             >
             <div>
+              <!-- FIXME: use a div or alike, but not HTML header tag -->
               <header>
                 <input
                   class="hidden-textinput"
@@ -146,10 +147,12 @@ export default {
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 
-    div.p-c {
+    // FIXME: class name not self explanatory
+    .p-c {
       position: relative;
+
       > * {
-        background-color: #eee;
+        background-color: $light;
         height: 300px;
         padding: 15px 10px;
       }
@@ -159,18 +162,16 @@ export default {
       display: flex;
     }
 
-    .components-list {
-      > * {
-        background-color: $light;
-        border-radius: 5px;
-        cursor: move;
-        margin: 10px 0;
-        padding: 10px;
+    .components-list > * {
+      background-color: $light;
+      border-radius: 5px;
+      cursor: move;
+      margin: 10px 0;
+      padding: 10px;
 
-        &:active, &:focus {
-          // FIXME: Quasar color variables
-          outline: 1px solid blue;
-        }
+      &:active,
+      &:focus {
+        outline: 1px solid $blue-6;
       }
     }
 

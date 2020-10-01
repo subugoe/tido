@@ -16,7 +16,7 @@
         self="center middle"
         >
         <!-- FIXME: remove inline style -->
-        <q-list style="min-width: 100px">
+        <q-list style="min-width: 100px;">
           <q-item clickable v-close-popup>
             <q-item-section>EN</q-item-section>
           </q-item>

@@ -104,12 +104,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
   .content-tabs {
     display: inline-block;
   }
 
   .tabs-container {
     display: flex;
+
     > * {
       flex: 1;
     }
