@@ -1,6 +1,6 @@
 {
   "name": "@subugoe/qviewer",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Viewer for the modular framework to present digital editions",
   "productName": "EMo Viewer",
   "keywords": [
@@ -59,7 +59,7 @@
     "last 1 version, not dead, ie >= 11"
   ],
   "engines": {
-    "node": ">= 10.18.1",
+    "node": ">= 14.0.0",
     "npm": ">= 6.13.4"
   },
   "resolutions": {
