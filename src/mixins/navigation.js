@@ -1,7 +1,7 @@
 export default {
   props: {
-    config: Object,
     itemurls: Array,
+    labels: Object,
     manifests: Array,
   },
   data() {
@@ -41,14 +41,14 @@ export default {
 
       return this.sequenceindex < this.sequencecount - 1
       && lastindexes[this.sequenceindex] === this.itemindex
-        ? `Next ${this.config.labels.manifest}`
-        : `Next ${this.config.labels.item}`;
+        ? `Next ${this.labels.manifest}`
+        : `Next ${this.labels.item}`;
     },
 
     captionprev() {
       return this.sequenceindex > 0 && this.firstiteminsequence === this.itemindex
-        ? `Prev ${this.config.labels.manifest}`
-        : `Prev ${this.config.labels.item}`;
+        ? `Prev ${this.labels.manifest}`
+        : `Prev ${this.labels.item}`;
     },
 
     computedsequenceindex() {

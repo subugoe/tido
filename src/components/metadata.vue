@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scroll-panel">
     <!-- Collection-->
     <q-list v-if="Object.keys(collection).length">
       <q-item>
@@ -53,7 +53,7 @@
 
       <q-item>
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Year:</q-item-label>
+          <q-item-label overline class="text-uppercase">Year of creation:</q-item-label>
           <q-item-label>{{ date }}</q-item-label>
         </q-item-section>
       </q-item>
@@ -67,7 +67,7 @@
 
       <q-item>
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Location:</q-item-label>
+          <q-item-label overline class="text-uppercase">Current location:</q-item-label>
           <q-item-label>{{ location }}</q-item-label>
         </q-item-section>
       </q-item>
