@@ -22,14 +22,12 @@
           justify-md-start
           justify-xs-center
           row-sm"
-        :config="config"
         :itemurls="itemurls"
+        :labels="config.labels"
         :manifests="manifests"
       />
 
       <ToggleIndex v-if="config.headers.toggle"
-        :config="config"
-        :panels="panels"
         class="
           col
           col-md-auto
@@ -38,7 +36,7 @@
           content-sm-center
           justify-sm-evenly
           row-sm"
-        :imageurl="imageurl"
+        :panels="panels"
       />
     </div>
   </q-header>

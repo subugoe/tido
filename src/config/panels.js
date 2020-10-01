@@ -1,7 +1,8 @@
 import Content from '@/components/content.vue';
-import Metadatatab from '@/components/tab-panels/metadatatab.vue';
+import Metadata from '@/components/metadata.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
-import Treeviewtab from '@/components/tab-panels/treeviewtab.vue';
+import Treeview from '@/components/tree.vue';
+
 import { v4 as uuidv4 } from 'uuid';
 
 // -- Panels --
@@ -38,11 +39,11 @@ export default {
   data: () => ({
     components: {
       1: {
-        component: Treeviewtab,
+        component: Treeview,
         label: 'Contents',
       },
       2: {
-        component: Metadatatab,
+        component: Metadata,
         label: 'Metadata',
       },
       3: {
@@ -69,7 +70,7 @@ export default {
     },
 
     setupPanels() {
-      // will change all id => component
+      // will change all ids => component
       this.panels = this.panels.map((item) => {
         const newConnectors = item.connector.map(
           (c) => (typeof c === 'number' ? this.findComponent(c) : c),
@@ -115,7 +116,7 @@ export default {
       const component = this.findComponent([idC]);
 
       if (from !== to) {
-        // Add the componet to the new panel
+        // Add the component to the new panel
 
         this.panels[to].connector.push(component);
 

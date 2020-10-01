@@ -6,6 +6,7 @@
       node-key="label"
       :expanded.sync="expanded"
       :nodes="tree"
+      :selected-color="$q.dark.isActive ? 'grey' : ''"
       :selected.sync="selected"
       >
       <template v-slot:default-body={node}>
