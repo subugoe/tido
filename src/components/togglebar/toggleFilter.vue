@@ -1,5 +1,5 @@
 <template>
-  <section id="filterBtns">
+  <section class="filter-buttons">
     <q-btn-dropdown v-if="$q.screen.width < 1100"
       class="q-mb-md"
       color="black"
@@ -15,7 +15,7 @@
 </template>
 
 <style lang="scss" scoped>
-  #filterBtns {
+  .filter-buttons {
     align-items: center;
     display: flex;
     justify-content: center;

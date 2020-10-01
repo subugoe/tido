@@ -1,6 +1,5 @@
 <template>
   <q-header
-    id="header"
     elevated
     :class="$q.dark.isActive ? 'bg-black text-white' : 'bg-white text-black'"
     >
@@ -70,11 +69,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  #header {
+  header {
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
   }
+
   .bar {
     margin-left: auto;
     margin-right: auto;

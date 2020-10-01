@@ -1,10 +1,9 @@
-@import './responsive-heights.scss';
-
 .view-tree {
-  overflow-y: scroll;
   @include makeResponsiveHeight();
   -ms-overflow-style: none;
+  overflow-y: scroll;
   scrollbar-width: none;
+
   .q-tree__node-collapsible .q-tree__children {
     > .q-tree__node--parent {
       > .q-tree__node-header {
@@ -19,9 +18,11 @@
       }
     }
   }
+
   .q-tree__node-header-content.col.row.no-wrap.items-center {
     z-index: 99;
   }
+
   .q-tree__children {
     cursor: pointer;
   }

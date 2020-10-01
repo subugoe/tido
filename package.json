@@ -55,8 +55,7 @@
     "sass": "^1.26.10",
     "sass-loader": "8.0.2",
     "stylelint": "^13.7.2",
-    "stylelint-config-sass-guidelines": "^7.1.0",
-    "stylelint-config-standard": "^20.0.0"
+    "stylelint-config-sass-guidelines": "^7.1.0"
   },
   "browserslist": [
     "last 1 version, not dead, ie >= 11"
@@ -71,6 +70,7 @@
   "scripts": {
     "build": "quasar build --modern",
     "dev": "quasar dev --modern",
-    "lint": "eslint --ext .js,.vue src"
+    "lint": "eslint --ext .js,.vue src",
+    "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'"
   }
 }

@@ -88,6 +88,7 @@ export default {
       margin-right: 8px;
     }
   }
+
   button:last-of-type {
     margin-right: 0;
   }
