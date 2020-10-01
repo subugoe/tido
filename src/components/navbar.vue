@@ -2,7 +2,7 @@
   <div>
     <q-btn
       class="q-mb-md"
-      color=$dark
+      color=dark
       unelevated
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
@@ -18,7 +18,7 @@
 
     <q-btn
       class="q-mb-md"
-      color=$dark
+      color=dark
       unelevated
       :disabled="itemindex >= itemurls.length - 1"
       @click="toggleSheet(++itemindex)"
