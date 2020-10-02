@@ -42,7 +42,7 @@ body {
 }
 
 .scroll-panel {
-  @include makeResponsiveHeight();
+  @include make-responsive-height();
   overflow: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
