@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <h1 class="text-h5 text-bold text-uppercase">
+  <div class="info-bar">
+    <h1 class="info-bar__title text-h5 text-bold text-uppercase">
       <span>{{ cut(collectiontitle) }}</span>
       <!-- FIXME: Size is best set with Quasar'xs-xl -->
-      <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
+      <q-icon class="info-bar__icon q-pb-sm" size="40px" :name="fasChevronRight" />
       <span>{{ cut(manifesttitle) }}</span>
       <!-- FIXME: Size is best set with Quasar'xs-xl -->
-      <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
+      <q-icon class="info-bar__icon q-pb-sm" size="40px" :name="fasChevronRight" />
       <span>{{ itemlabel }}</span>
     </h1>
   </div>
@@ -47,3 +47,26 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.info-bar {
+  background-color: $color-info-bar__background;
+  @media (prefers-color-scheme: dark) {
+    background-color: $color-info-bar__background--dark;
+  }
+}
+
+.info-bar__title {
+  color: $color-info-bar__title;
+  @media (prefers-color-scheme: dark) {
+    color: $color-info-bar__title--dark;
+  }
+}
+
+.info-bar__icon {
+  fill: $color-info-bar__icon;
+  @media (prefers-color-scheme: dark) {
+    fill: $color-info-bar__icon--dark;
+  }
+}
+</style>

@@ -13,3 +13,12 @@
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
 $light: #fff;
+// INFO BAR
+$color-info-bar__background: $light !default;
+$color-info-bar__background--dark: $dark !default;
+
+$color-info-bar__title: $dark !default;
+$color-info-bar__title--dark: $light !default;
+
+$color-info-bar__icon: $dark !default;
+$color-info-bar__icon--dark: $light !default;
