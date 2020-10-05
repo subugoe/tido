@@ -65,9 +65,15 @@ export default {
 
 <style lang="scss" scoped>
 header {
+  background-color: $color-header__background;
+  color: $color-header__font-color;
   left: 0;
   position: absolute;
   top: 0;
+  @media (prefers-color-scheme: dark) {
+    background-color: $color-header__background--dark;
+    color: $color-header__font-color--dark;
+  }
 }
 
 .bar {

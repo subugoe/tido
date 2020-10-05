@@ -15,6 +15,12 @@
 $light: #fff;
 $dark: #1d1d1d;
 
+// HEADER
+$color-header__background: $light !default;
+$color-header__background--dark: $dark !default;
+$color-header__font-color: $dark !default;
+$color-header__font-color--dark: $light !default;
+
 // INFO BAR
 $color-info-bar__background: $light !default;
 $color-info-bar__background--dark: $dark !default;
