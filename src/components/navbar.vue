@@ -66,12 +66,14 @@ button:first-of-type {
     background-color: $color-nav-bar__button__background--dark;
     color: $color-nav-bar__button__font-color--dark;
   }
+
   svg {
     fill: $color-nav-bar__icon;
     @media (prefers-color-scheme: dark) {
       fill: $color-nav-bar__icon--dark;
     }
   }
+
   &:active,
   &:hover,
   &:focus {
@@ -80,6 +82,7 @@ button:first-of-type {
       background-color: $color-nav-bar__button__background--active-dark;
     }
   }
+
   &:disabled {
     background-color: $color-nav-bar__button__background--disabled;
     @media (prefers-color-scheme: dark) {
