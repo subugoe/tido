@@ -1,8 +1,14 @@
 body {
+  // FIXME: don't use !important
+  background-color: $color-body__background !important;
   height: 100vh;
   overflow-y: hidden;
   @media (max-width: 1023px) {
     overflow-y: auto !important;
+  }
+  @media (prefers-color-scheme: dark) {
+    // FIXME: don't use !important
+    background-color: $color-body__background--dark !important;
   }
 }
 

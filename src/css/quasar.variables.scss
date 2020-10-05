@@ -15,6 +15,10 @@
 $light: #fff;
 $dark: #1d1d1d;
 
+// BODY
+$color-body__background: $light !default;
+$color-body__background--dark: $dark !default;
+
 // HEADER
 $color-header__background: $light !default;
 $color-header__background--dark: $dark !default;
