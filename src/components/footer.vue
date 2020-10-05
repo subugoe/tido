@@ -27,6 +27,11 @@ export default {
 
 <style lang="scss" scoped>
 footer {
-  
+  background-color: $color-footer__background;
+  color: $color-footer__font-color;
+  @media (prefers-color-scheme: dark) {
+    background-color: $color-footer__background--dark;
+    color: $color-footer__font-color--dark;
+  }
 }
 </style>
