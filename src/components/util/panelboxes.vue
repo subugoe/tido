@@ -42,8 +42,7 @@
 
               <div class="actions">
                 <q-btn
-                  class="only-bedrag"
-                  color="blue"
+                  class="only-bedrag panel-boxes__handle"
                   round
                   size="xs"
                   title="Drag and drop the panels to reorder."
@@ -140,6 +139,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.panel-boxes__handle {
+  background-color: $color-panel-boxes__handle__background;
+  color: $color-panel-boxes__handle__font;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $color-panel-boxes__handle__background--dark;
+    color: $color-panel-boxes__handle__font--dark;
+  }
+
+&:active,
+  &:hover,
+  &:focus {
+    background-color: $color-panel-boxes__handle__background--active;
+    color: $color-panel-boxes__handle__font--active;
+  }
+
+  svg {
+    fill: lime;
+  }
+}
+
 .panels {
   > * {
     column-gap: 20px;
