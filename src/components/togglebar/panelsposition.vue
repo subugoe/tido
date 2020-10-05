@@ -1,11 +1,22 @@
 <template>
   <section class="panel-position">
-    <q-btn class="btn-panel" :icon="panelicon" @click="status = true" label="Customize" flat />
+    <q-btn
+      class="panel-position__button"
+      :icon="panelicon"
+      @click="status = true"
+      label="Customize"
+      flat
+      />
 
-    <q-dialog v-model="status" persistent transition-show="scale" transition-hide="scale">
+    <q-dialog
+      v-model="status"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+      >
       <!-- FIXME: remove inline style -->
       <q-card
-        :class="$q.dark.isActive ? 'bg-black' : 'bg-white text-black'"
+        class="panel-position__modal"
         style="width: 600px;"
         >
         <q-card-section>
@@ -16,11 +27,12 @@
           <Dragpanelboxes :data="panelboxes" />
         </q-card-section>
 
-        <q-card-actions
-          align="right"
-          :class="$q.dark.isActive ? 'bg-black' : 'bg-white'"
-          >
-          <q-btn flat label="OK" v-close-popup />
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="OK"
+            v-close-popup
+            />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -50,8 +62,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-panel {
+.panel-position__button {
+  background-color: $color-panel-position__button__background;
+  color: $color-panel-position__button__font;
   height: 75%;
+  @media (prefers-color-scheme: dark) {
+    background-color: $color-panel-position__button__background--dark;
+    color: $color-panel-position__button__font--dark;
+  }
+
+  &:active,
+  &:hover,
+  &:focus {
+    background-color: $color-panel-position__button__background--active;
+    color: $color-panel-position__button__font--active;
+  }
+}
+
+.panel-position__modal {
+  background-color: $color-panel-position__modal__background;
+  color: $color-panel-position__modal__font;
 }
 
 .panel-position {
