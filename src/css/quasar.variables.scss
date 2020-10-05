@@ -24,3 +24,28 @@ $color-info-bar__title--dark: $light !default;
 
 $color-info-bar__icon: $dark !default;
 $color-info-bar__icon--dark: $light !default;
+
+// NAV BAR
+$color-nav-bar__background: $light;
+$color-nav-bar__font-color: $dark;
+
+$color-nav-bar__button__font-color: $light !default;
+$color-nav-bar__button__font-color--active: $light !default;
+$color-nav-bar__button__font-color--disabled: $light !default;
+$color-nav-bar__button__font-color--dark: $dark !default;
+$color-nav-bar__button__font-color--active-dark: $light !default;
+$color-nav-bar__button__font-color--disabled-dark: $light !default;
+
+$color-nav-bar__button__background: $dark !default;
+$color-nav-bar__button__background--active: $dark !default;
+$color-nav-bar__button__background--disabled: $dark !default;
+$color-nav-bar__button__background--dark: $light !default;
+$color-nav-bar__button__background--active-dark: $dark !default;
+$color-nav-bar__button__background--disabled-dark: $dark !default;
+
+$color-nav-bar__icon: $light !default;
+$color-nav-bar__icon--active: $light !default;
+$color-nav-bar__icon--disabled: $light !default;
+$color-nav-bar__icon--dark: $light !default;
+$color-nav-bar__icon--active-dark: $light !default;
+$color-nav-bar__icon--disabled-dark: $light !default;

@@ -1,8 +1,7 @@
 <template>
-  <div>
+  <div class="nav-bar">
     <q-btn
-      class="q-mb-md"
-      color=dark
+      class="nav-bar__button q-mb-md"
       unelevated
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
@@ -17,8 +16,7 @@
     </q-btn>
 
     <q-btn
-      class="q-mb-md"
-      color=dark
+      class="nav-bar__button q-mb-md"
       unelevated
       :disabled="itemindex >= itemurls.length - 1"
       @click="toggleSheet(++itemindex)"
@@ -50,17 +48,51 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  button:first-of-type {
-    @media (min-width: 600px) {
-      margin-right: 8px;
-    }
+button:first-of-type {
+  @media (min-width: 600px) {
+    margin-right: 8px;
   }
+}
 
-  .q-input {
-    width: 100%;
-    @media (min-width: 600px) {
-      margin-right: 8px;
-      width: 150px;
+.nav-bar {
+  background-color: $color-nav-bar__background;
+  color: $color-nav-bar__font-color;
+}
+
+.nav-bar__button {
+  background-color: $color-nav-bar__button__background;
+  color: $color-nav-bar__button__font-color;
+  @media (prefers-color-scheme: dark) {
+    background-color: $color-nav-bar__button__background--dark;
+    color: $color-nav-bar__button__font-color--dark;
+  }
+  svg {
+    fill: $color-nav-bar__icon;
+    @media (prefers-color-scheme: dark) {
+      fill: $color-nav-bar__icon--dark;
     }
   }
+  &:active,
+  &:hover,
+  &:focus {
+    background-color: $color-nav-bar__button__background--active;
+    @media (prefers-color-scheme: dark) {
+      background-color: $color-nav-bar__button__background--active-dark;
+    }
+  }
+  &:disabled {
+    background-color: $color-nav-bar__button__background--disabled;
+    @media (prefers-color-scheme: dark) {
+      background-color: $color-nav-bar__button__background--disabled-dark;
+    }
+  }
+}
+
+.q-input {
+  width: 100%;
+  @media (min-width: 600px) {
+    margin-right: 8px;
+    width: 150px;
+  }
+}
 </style>
