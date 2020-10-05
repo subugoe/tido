@@ -57,6 +57,10 @@ button:first-of-type {
 .nav-bar {
   background-color: $color-nav-bar__background;
   color: $color-nav-bar__font-color;
+  @media (prefers-color-scheme: dark) {
+    background-color: $color-nav-bar__background--dark;
+    color: $color-nav-bar__font-color--dark;
+  }
 }
 
 .nav-bar__button {

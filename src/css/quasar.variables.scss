@@ -34,18 +34,20 @@ $color-info-bar__icon--dark: $light !default;
 // NAV BAR
 $color-nav-bar__background: $light;
 $color-nav-bar__font-color: $dark;
+$color-nav-bar__background--dark: $dark;
+$color-nav-bar__font-color--dark: $dark;
 
 $color-nav-bar__button__font-color: $light !default;
 $color-nav-bar__button__font-color--active: $light !default;
 $color-nav-bar__button__font-color--disabled: $light !default;
-$color-nav-bar__button__font-color--dark: $dark !default;
+$color-nav-bar__button__font-color--dark: $light !default;
 $color-nav-bar__button__font-color--active-dark: $light !default;
 $color-nav-bar__button__font-color--disabled-dark: $light !default;
 
 $color-nav-bar__button__background: $dark !default;
 $color-nav-bar__button__background--active: $dark !default;
 $color-nav-bar__button__background--disabled: $dark !default;
-$color-nav-bar__button__background--dark: $light !default;
+$color-nav-bar__button__background--dark: $dark !default;
 $color-nav-bar__button__background--active-dark: $dark !default;
 $color-nav-bar__button__background--disabled-dark: $dark !default;
 
