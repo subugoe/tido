@@ -72,16 +72,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.content-tabs {
+  display: inline-block;
+}
 
-  .content-tabs {
-    display: inline-block;
+.tabs-container {
+  display: flex;
+
+  > * {
+    flex: 1;
   }
-
-  .tabs-container {
-    display: flex;
-
-    > * {
-      flex: 1;
-    }
-  }
+}
 </style>
