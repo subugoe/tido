@@ -83,6 +83,15 @@ $color-panel-position__button__font--dark: $light;
 $color-panel-position__button__font--active-dark: $light;
 $color-panel-position__modal__background: $light;
 $color-panel-position__modal__font: $dark;
+
+// PANEL BOXES
+$color-panel-boxes__handle__background: $dark;
+$color-panel-boxes__handle__background--active: $primary;
+$color-panel-boxes__handle__background--dark: $light;
+$color-panel-boxes__handle__font: $light;
+$color-panel-boxes__handle__font--active: $light;
+$color-panel-boxes__handle__font--dark: $dark;
+
 // FOOTER
 $color-footer__background: $light !default;
 $color-footer__background--dark: $dark !default;
