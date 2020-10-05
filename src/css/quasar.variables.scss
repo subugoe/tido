@@ -62,6 +62,13 @@ $color-nav-bar__icon--dark: $light !default;
 $color-nav-bar__icon--active-dark: $light !default;
 $color-nav-bar__icon--disabled-dark: $light !default;
 
+// TOGGLE FILTER
+$color-toggle-filter__button__background: $dark;
+$color-toggle-filter__button__background--active: $primary;
+$color-toggle-filter__button__background--dark: $black;
+$color-toggle-filter__button__font: $light;
+$color-toggle-filter__button__font--active: $light;
+$color-toggle-filter__button__font--dark: $light;
 // FOOTER
 $color-footer__background: $light !default;
 $color-footer__background--dark: $dark !default;
