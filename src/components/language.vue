@@ -1,7 +1,6 @@
 <template>
   <div class="col-xs-auto">
     <q-btn
-      color="grey"
       flat
       title="Change language"
       >

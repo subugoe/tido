@@ -3,7 +3,6 @@
   <div class="softwareinfo col-xs-auto">
     <q-btn
       flat
-      color="grey"
       label=""
       title="Project Info"
       @click="infobox = true"
