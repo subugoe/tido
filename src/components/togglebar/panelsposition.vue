@@ -50,12 +50,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .btn-panel {
-    height: 75%;
-  }
+.btn-panel {
+  height: 75%;
+}
 
-  .panel-position {
-    display: flex;
-    justify-content: center;
-  }
+.panel-position {
+  display: flex;
+  justify-content: center;
+}
 </style>
