@@ -16,8 +16,9 @@
     </q-btn>
 
     <q-btn
-      class="nav-bar__button q-mb-md"
+      class="nav-bar__button q-mb-md manual-focus"
       unelevated
+      manual-focus
       :disabled="itemindex >= itemurls.length - 1"
       @click="toggleSheet(++itemindex)"
       >
@@ -56,19 +57,19 @@ button:first-of-type {
 
 .nav-bar {
   background-color: $color-nav-bar__background;
-  color: $color-nav-bar__font-color;
+  color: $color-nav-bar__font;
   @media (prefers-color-scheme: dark) {
     background-color: $color-nav-bar__background--dark;
-    color: $color-nav-bar__font-color--dark;
+    color: $color-nav-bar__font--dark;
   }
 }
 
 .nav-bar__button {
   background-color: $color-nav-bar__button__background;
-  color: $color-nav-bar__button__font-color;
+  color: $color-nav-bar__button__font;
   @media (prefers-color-scheme: dark) {
     background-color: $color-nav-bar__button__background--dark;
-    color: $color-nav-bar__button__font-color--dark;
+    color: $color-nav-bar__button__font--dark;
   }
 
   svg {
@@ -81,9 +82,16 @@ button:first-of-type {
   &:active,
   &:hover,
   &:focus {
+    svg {
+      fill: $color-nav-bar__icon--active;
+      @media (prefers-color-scheme: dark) {
+        fill: $color-nav-bar__icon--active-dark;
+      }
+    }
     background-color: $color-nav-bar__button__background--active;
     @media (prefers-color-scheme: dark) {
       background-color: $color-nav-bar__button__background--active-dark;
+      color: $color-nav-bar__button__font--active-dark;
     }
   }
 
