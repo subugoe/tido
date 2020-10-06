@@ -1,5 +1,5 @@
 <template>
-  <section class="panel-boxs">
+  <section>
     <div class="panels">
       <Panelsdraggable
         handle=".only-bedrag"
@@ -19,7 +19,7 @@
               <!-- FIXME: use a div or alike, but not HTML header tag -->
               <header>
                 <input
-                  class="hidden-textinput"
+                  class="panel-textinput"
                   type="text"
                   :class="$q.dark.isActive ? 'bg-grey-8 text-white' : 'bg-grey-1 text-black'"
                   :value="panel.panel_label"
@@ -43,7 +43,7 @@
               <div class="actions">
                 <q-btn
                   class="only-bedrag"
-                  color="blue"
+                  color="dark"
                   round
                   size="xs"
                   title="Drag and drop the panels to reorder."
@@ -54,7 +54,7 @@
           </div>
         </div>
         <q-btn v-if="panels.length < 4"
-          color="secondary"
+          color="$grey-4"
           flat
           size="large"
           slot="footer"
@@ -79,7 +79,9 @@ export default {
     draggedPanelIdx: null,
     panels: [],
   }),
-  props: { data: Array },
+  props: {
+    data: Array,
+  },
   mounted() {
     this.setpanels();
   },
@@ -110,7 +112,10 @@ export default {
       event.target.style.outline = outline;
     },
     handlePanelLabel(e, index) {
-      this.$root.$emit('update-panellabel', { v: e.target.value, index });
+      this.$root.$emit('update-panellabel', {
+        v: e.target.value,
+        index,
+      });
     },
     receivingComponent(e) {
       const element = e.target;
@@ -146,7 +151,6 @@ export default {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
-
     // FIXME: class name not self explanatory
     .p-c {
       position: relative;
@@ -168,11 +172,6 @@ export default {
       cursor: move;
       margin: 10px 0;
       padding: 10px;
-
-      &:active,
-      &:focus {
-        outline: 1px solid $blue-6;
-      }
     }
 
     .actions {

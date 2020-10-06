@@ -2,32 +2,30 @@
   <div>
     <q-btn
       class="q-mb-md"
-      color=dark
       unelevated
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
       >
-      <!-- FIXME: Size is best set with Quasar'xs-xl -->
+
       <q-icon
         class="q-pr-sm"
         :name="fasArrowLeft"
-        size="24px"
+        size="sm"
       />
       {{ captionprev }}
     </q-btn>
 
     <q-btn
       class="q-mb-md"
-      color=dark
       unelevated
       :disabled="itemindex >= itemurls.length - 1"
       @click="toggleSheet(++itemindex)"
       >
       {{ captionnext }}
-      <!-- FIXME: Size is best set with Quasar'xs-xl -->
+
       <q-icon
         :name="fasArrowRight"
-        size="24px"
+        size="sm"
         class="q-pl-sm"
       />
     </q-btn>

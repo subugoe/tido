@@ -2,7 +2,7 @@
   <section class="panel-position">
     <q-btn class="btn-panel" :icon="panelicon" @click="status = true" label="Customize" flat />
 
-    <q-dialog v-model="status" persistent transition-show="scale" transition-hide="scale">
+      <q-dialog v-model="status" transition-show="scale" transition-hide="scale">
       <!-- FIXME: remove inline style -->
       <q-card
         :class="$q.dark.isActive ? 'bg-black' : 'bg-white text-black'"

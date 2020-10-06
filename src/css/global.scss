@@ -50,23 +50,24 @@ body {
   display: none;
 }
 
-.unselect-text {
-  -webkit-touch-callout: none;
-  user-select: none;
-}
-
 .panels-target > * {
   border-right: 1px solid #ddd !important;
   flex: auto;
 }
 
-.toggle-list > * {
+.toggle-list .q-item {
   align-items: center;
 }
 
-.hidden-textinput {
+.panel-textinput {
   background: transparent;
   border: 0;
   outline: none;
   width: 100%;
+}
+
+.q-tabs__content {
+  .q-tab {
+    width: 100%;
+  }
 }

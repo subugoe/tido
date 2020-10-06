@@ -2,11 +2,9 @@
   <div>
     <h1 class="text-h5 text-bold text-uppercase">
       <span>{{ cut(collectiontitle) }}</span>
-      <!-- FIXME: Size is best set with Quasar'xs-xl -->
-      <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
+      <q-icon class="q-pb-sm" size="md" :name="fasChevronRight" />
       <span>{{ cut(manifesttitle) }}</span>
-      <!-- FIXME: Size is best set with Quasar'xs-xl -->
-      <q-icon class="q-pb-sm" size="40px" :name="fasChevronRight" />
+      <q-icon class="q-pb-sm" size="md" :name="fasChevronRight" />
       <span>{{ itemlabel }}</span>
     </h1>
   </div>
