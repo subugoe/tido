@@ -13,7 +13,6 @@ const panels = [
     connector: [1, 2],
     panel_label: 'Tabs',
     show: true,
-    tab_model: null,
   },
   {
     id: uuidv4(),
