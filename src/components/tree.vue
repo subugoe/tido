@@ -5,11 +5,12 @@
       label-key="label-key"
       node-key="label"
       :expanded.sync="expanded"
+      :icon="fasCaretRight"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       :selected.sync="selected"
       >
-      <template v-slot:default-body={node}>
+      <template v-slot:default-body="{node}">
         <div v-if="!node.children" :id="`selectedItem-${node['label']}`"></div>
       </template>
     </q-tree>
@@ -17,7 +18,8 @@
 </template>
 
 <script>
-import matIcons from 'quasar/icon-set/material-icons';
+import { fasCaretRight } from '@quasar/extras/fontawesome-v5';
+import treestore from '@/stores/treestore.js';
 
 export default {
   name: 'Treeview',
@@ -28,19 +30,28 @@ export default {
   data() {
     return {
       expanded: [],
-      selected: this.manifests[0].sequence[0].id,
+      selected: null,
       sequenceindex: 0,
     };
   },
   created() {
-    this.$q.iconSet.set(matIcons);
+    this.fasCaretRight = fasCaretRight;
   },
   mounted() {
-    // expand the root node as well as the first knot which contains the actual item selected
-    this.expanded.push(this.tree[0].label, this.manifests[0].label);
+    // select tree node
+    this.selected = treestore.state.selectedItemTree || this.manifests[0].sequence[0].id;
 
-    this.$root.$on('update-item', (item) => {
+    // expand the first level
+    this.expanded.push(this.tree[0].label);
+    // expand second label - dynamic
+    const finalSeqIdx = treestore.state.seqTree || 0;
+
+    this.expanded.push(this.manifests[finalSeqIdx].label);
+
+    this.$root.$on('update-item', (item, seqIdx) => {
       this.selected = item;
+      treestore.updateselectedtreeitem(item);
+      treestore.updatetreesequence(seqIdx);
     });
 
     this.$root.$on('update-sequence-index', (index) => {
@@ -87,14 +98,10 @@ export default {
       z-index: 999;
     }
   }
-}
 
-.q-tree__node-header-content.col.row.no-wrap.items-center {
-  z-index: 99;
-}
-
-.q-tree__children {
-  cursor: pointer;
+  .q-tree__children {
+    cursor: pointer;
+  }
 }
 
 .view-tree::-webkit-scrollbar {

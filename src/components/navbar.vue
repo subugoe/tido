@@ -7,10 +7,11 @@
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
       >
-      <!-- FIXME: Size is best set with Quasar'xs-xl -->
+
       <q-icon
         class="q-pr-sm"
         :name="fasArrowLeft"
+        size="sm"
       />
       {{ captionprev }}
     </q-btn>
@@ -24,9 +25,10 @@
       @click="toggleSheet(++itemindex)"
       >
       {{ captionnext }}
-      <!-- FIXME: Size is best set with Quasar'xs-xl -->
+
       <q-icon
         :name="fasArrowRight"
+        size="sm"
         class="q-pl-sm"
       />
     </q-btn>

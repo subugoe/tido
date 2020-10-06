@@ -9,12 +9,7 @@
       outline
       />
 
-    <q-dialog
-      v-model="status"
-      persistent
-      transition-show="scale"
-      transition-hide="scale"
-      >
+      <q-dialog v-model="status" transition-show="scale" transition-hide="scale">
       <!-- FIXME: remove inline style -->
       <q-card style="width: 600px;">
         <q-card-section>
