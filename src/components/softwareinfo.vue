@@ -13,6 +13,7 @@
     <q-dialog v-model="infobox">
       <q-card>
         <q-card-section>
+          <!-- FIXME: this is an actual headding, but marked as DIV -->
           <div class="text-h5 q-pb-md">EMo Viewer</div>
 
           <p class="text-weight-bold">
@@ -76,8 +77,7 @@ import {
   fasBug,
   fasCode,
   fasInfoCircle,
-}
-  from '@quasar/extras/fontawesome-v5';
+} from '@quasar/extras/fontawesome-v5';
 import { version } from '../../package.json';
 
 export default {
