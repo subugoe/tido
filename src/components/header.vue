@@ -1,5 +1,8 @@
 <template>
-  <q-header elevated>
+  <q-header
+    elevated
+    :class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'"
+    >
     <div class="bar row justify-between items-center">
       <Infobar v-if="config.headers.info && manifests.length"
         class="col-xs-12 q-pl-md"
@@ -65,15 +68,9 @@ export default {
 
 <style lang="scss" scoped>
 header {
-  background-color: $color-header__background;
-  color: $color-header__font-color;
   left: 0;
   position: absolute;
   top: 0;
-  @media (prefers-color-scheme: dark) {
-    background-color: $color-header__background--dark;
-    color: $color-header__font-color--dark;
-  }
 }
 
 .bar {

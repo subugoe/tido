@@ -1,6 +1,6 @@
 <template>
 
-  <div class="softwareinfo col-xs-auto">
+  <div class="col-xs-auto">
     <q-btn
       flat
       label=""
@@ -57,8 +57,13 @@
           </q-btn>
         </q-card-section>
 
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Close" v-close-popup />
+        <q-card-actions align="right">
+          <q-btn
+            :class="$q.dark.isActive ? 'text-white' : 'text-black'"
+            flat
+            label="Close"
+            v-close-popup
+            />
         </q-card-actions>
       </q-card>
     </q-dialog>

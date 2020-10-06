@@ -42,8 +42,9 @@
 
               <div class="actions">
                 <q-btn
-                  class="only-bedrag panel-boxes__handle"
+                  class="only-bedrag panel-boxes__handle bg-accent text-white"
                   round
+                  flat
                   size="xs"
                   title="Drag and drop the panels to reorder."
                   :icon="fasArrowsAlt"
@@ -139,27 +140,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.panel-boxes__handle {
-  background-color: $color-panel-boxes__handle__background;
-  color: $color-panel-boxes__handle__font;
-
-  @media (prefers-color-scheme: dark) {
-    background-color: $color-panel-boxes__handle__background--dark;
-    color: $color-panel-boxes__handle__font--dark;
-  }
-
-&:active,
-  &:hover,
-  &:focus {
-    background-color: $color-panel-boxes__handle__background--active;
-    color: $color-panel-boxes__handle__font--active;
-  }
-
-  svg {
-    fill: lime;
-  }
-}
-
 .panels {
   > * {
     column-gap: 20px;
@@ -172,7 +152,7 @@ export default {
     position: relative;
 
     > * {
-      background-color: $light;
+      // background-color: $light;
       height: 300px;
       padding: 15px 10px;
     }
@@ -183,7 +163,7 @@ export default {
   }
 
   .components-list > * {
-    background-color: $light;
+    // background-color: $light;
     border-radius: 5px;
     cursor: move;
     margin: 10px 0;

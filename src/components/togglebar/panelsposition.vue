@@ -1,11 +1,12 @@
 <template>
   <section class="panel-position">
     <q-btn
-      class="panel-position__button"
+      class="q-mb-md"
       :icon="panelicon"
+      size="md"
       @click="status = true"
       label="Customize"
-      flat
+      outline
       />
 
     <q-dialog
@@ -15,10 +16,7 @@
       transition-hide="scale"
       >
       <!-- FIXME: remove inline style -->
-      <q-card
-        class="panel-position__modal"
-        style="width: 600px;"
-        >
+      <q-card style="width: 600px;">
         <q-card-section>
           <div class="text-h6 text-uppercase">Customize Panels</div>
         </q-card-section>
@@ -62,28 +60,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.panel-position__button {
-  background-color: $color-panel-position__button__background;
-  color: $color-panel-position__button__font;
-  height: 75%;
-  @media (prefers-color-scheme: dark) {
-    background-color: $color-panel-position__button__background--dark;
-    color: $color-panel-position__button__font--dark;
-  }
-
-  &:active,
-  &:hover,
-  &:focus {
-    background-color: $color-panel-position__button__background--active;
-    color: $color-panel-position__button__font--active;
-  }
-}
-
-.panel-position__modal {
-  background-color: $color-panel-position__modal__background;
-  color: $color-panel-position__modal__font;
-}
-
 .panel-position {
   display: flex;
   justify-content: center;

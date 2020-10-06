@@ -1,8 +1,9 @@
 <template>
-  <div class="nav-bar">
+  <div>
     <q-btn
-      class="nav-bar__button q-mb-md"
+      class="q-mb-md"
       unelevated
+      :color="$q.dark.isActive ? 'grey-8' : 'accent'"
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
       >
@@ -10,15 +11,15 @@
       <q-icon
         class="q-pr-sm"
         :name="fasArrowLeft"
-        size="24px"
       />
       {{ captionprev }}
     </q-btn>
 
     <q-btn
-      class="nav-bar__button q-mb-md manual-focus"
+      class="q-mb-md"
+      size="md"
       unelevated
-      manual-focus
+      :color="$q.dark.isActive ? 'grey-8' : 'accent'"
       :disabled="itemindex >= itemurls.length - 1"
       @click="toggleSheet(++itemindex)"
       >
@@ -26,7 +27,6 @@
       <!-- FIXME: Size is best set with Quasar'xs-xl -->
       <q-icon
         :name="fasArrowRight"
-        size="24px"
         class="q-pl-sm"
       />
     </q-btn>
@@ -52,54 +52,6 @@ export default {
 button:first-of-type {
   @media (min-width: 600px) {
     margin-right: 8px;
-  }
-}
-
-.nav-bar {
-  background-color: $color-nav-bar__background;
-  color: $color-nav-bar__font;
-  @media (prefers-color-scheme: dark) {
-    background-color: $color-nav-bar__background--dark;
-    color: $color-nav-bar__font--dark;
-  }
-}
-
-.nav-bar__button {
-  background-color: $color-nav-bar__button__background;
-  color: $color-nav-bar__button__font;
-  @media (prefers-color-scheme: dark) {
-    background-color: $color-nav-bar__button__background--dark;
-    color: $color-nav-bar__button__font--dark;
-  }
-
-  svg {
-    fill: $color-nav-bar__icon;
-    @media (prefers-color-scheme: dark) {
-      fill: $color-nav-bar__icon--dark;
-    }
-  }
-
-  &:active,
-  &:hover,
-  &:focus {
-    svg {
-      fill: $color-nav-bar__icon--active;
-      @media (prefers-color-scheme: dark) {
-        fill: $color-nav-bar__icon--active-dark;
-      }
-    }
-    background-color: $color-nav-bar__button__background--active;
-    @media (prefers-color-scheme: dark) {
-      background-color: $color-nav-bar__button__background--active-dark;
-      color: $color-nav-bar__button__font--active-dark;
-    }
-  }
-
-  &:disabled {
-    background-color: $color-nav-bar__button__background--disabled;
-    @media (prefers-color-scheme: dark) {
-      background-color: $color-nav-bar__button__background--disabled-dark;
-    }
   }
 }
 
