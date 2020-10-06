@@ -19,7 +19,7 @@
               <!-- FIXME: use a div or alike, but not HTML header tag -->
               <header>
                 <input
-                  class="panel-textinput"
+                  class="panel-textinput text-uppercase"
                   type="text"
                   :class="$q.dark.isActive ? 'bg-grey-8 text-white' : 'bg-grey-1 text-black'"
                   :value="panel.panel_label"
