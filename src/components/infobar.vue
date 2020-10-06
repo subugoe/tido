@@ -2,9 +2,17 @@
   <div>
     <h1 class="text-h5 text-bold text-uppercase">
       <span>{{ cut(collectiontitle) }}</span>
-      <q-icon class="q-pb-sm" size="md" :name="fasChevronRight" />
+      <q-icon
+        class="q-pb-xs"
+        size="sm"
+        :name="fasChevronRight"
+        />
       <span>{{ cut(manifesttitle) }}</span>
-      <q-icon class="q-pb-sm" size="md" :name="fasChevronRight" />
+      <q-icon
+        class="q-pb-xs"
+        size="sm"
+        :name="fasChevronRight"
+        />
       <span>{{ itemlabel }}</span>
     </h1>
   </div>
