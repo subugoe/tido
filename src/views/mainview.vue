@@ -30,7 +30,7 @@
           </q-card>
 
           <!-- shows the panels -->
-          <div v-else-if="p.connector.length === 1" class="q-pa-md q-gutter-sm overflow-hidden">
+          <div v-else-if="p.connector.length === 1" class="q-pa-sm q-gutter-sm overflow-hidden">
             <component :is="p.connector[0].component" :key="keys[p.connector[0].id]" v-bind="$props" />
           </div>
         </div>
