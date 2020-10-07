@@ -16,9 +16,9 @@ Also the commit short hash can be used to see a demo.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Viewer components](#viewer-components)
-- [Latest version](#latest-version)
-- [Integration](#integration)
+- [Latest version and integration](#latest-version-and-integration)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -27,12 +27,15 @@ Also the commit short hash can be used to see a demo.
     - [Clone the repository](#clone-the-repository)
     - [Get the dependencies](#get-the-dependencies)
 - [Usage](#usage)
-  - [Start the Viewer in `development` mode (hot reloading, error reporting, etc.)](#start-the-viewer-in-development-mode-hot-reloading-error-reporting-etc)
-    - [`Lint` the files](#lint-the-files)
+  - [Start the Viewer in `development mode` (hot reloading, error reporting, etc.)](#start-the-viewer-in-development-mode-hot-reloading-error-reporting-etc)
+    - [`Linting`](#linting)
+    - [`Testing`](#testing)
     - [`Build` the app for production](#build-the-app-for-production)
 - [Customize the Configuration](#customize-the-configuration)
 - [Configure the Viewer](#configure-the-viewer)
   - [The keys in detail](#the-keys-in-detail)
+- [Configure the panels](#configure-the-panels)
+    - [The keys in detail:](#the-keys-in-detail)
 - [Dockerfile](#dockerfile)
 - [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend)
 - [Architecture](#architecture)
@@ -46,16 +49,43 @@ Also the commit short hash can be used to see a demo.
 
 ![Viewer components](img/Viewer.png)
 
-## Latest version
+## Latest version and integration
 
-To embed the viewer for production, the latest compiled and minified version is
-available at: <https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/packages/25>
+To embed the viewer for production, the latest compiled and minified version is available at:
+https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop
 
-## Integration
+It is a zip archive. You can extract the build by typing:
+
+```bash
+unzip artifacts.zip
+```
+
+This creates the following folder structure containing the actual build:
+```
+dist/spa/
+├── css
+│   ├── 2.5b2a42f3.css
+│   ├── app.222a6363.css
+│   └── vendor.2303fac8.css
+├── index.html
+└── js
+    ├── 2.5d86d581.js
+    ├── app.297a75a4.js
+    └── vendor.f055a028.js
+```
 
 To include the viewer on a website add the following to your `index.html` file:
 
 ```html
+<head>
+  ...
+
+  <link href=css/app.[CHECKSUM].css rel=stylesheet>
+  <link href=css/vendor.[CHECKSUM].css rel=stylesheet>
+</head>
+
+...
+
 <noscript>
   <strong>We're sorry but TextViewer doesn't work properly without JavaScript enabled.
   Please enable it to continue.
@@ -71,14 +101,12 @@ To include the viewer on a website add the following to your `index.html` file:
 <div id=q-app></div>
 
 <script src=js/app.[CHECKSUM].js></script>
-<script src=js/runtime.[CHECKSUM].js></script>
 <script src=js/vendor.[CHECKSUM].js></script>
-
 ```
 
-and replace `[CHECKSUM]` with the values from the release you are going to use.
+and replace `[CHECKSUM]` with the values from the release you are going to use.<br />
 
-<!-- TODO: looking at https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/packages/25 I'm not sure I get where I should look for for the checksums. in the release's index.html? -->
+**Note**: The **checksums** change in each build. So please make sure to copy the ones from  **dist/spa/index.html**.
 
 ## Getting Started
 
@@ -138,19 +166,30 @@ That's it. You should now be able to run the Viewer.
 
 ## Usage
 
-### Start the Viewer in `development` mode (hot reloading, error reporting, etc.)
+### Start the Viewer in `development mode` (hot reloading, error reporting, etc.)
 
 ```bash
 npm run dev
 ```
 
-(usually located at: `localhost:8080`)
+(usually located at: `localhost:8080` since this port isn't already occupied)
 
-#### `Lint` the files
+#### `Linting`
 
 ```bash
-npm run lint
+npm run lint # to lint js- and vue-files
+
+npm run lint:scss # to lint the styles
 ```
+
+#### `Testing`
+
+```bash
+npm run test:unit
+```
+
+The Viewer makes use of **jest** in collaboration with the *expect-library*.
+Tests reside under **tests/unit/specs/** and are supposed to have a file ending of either `*.test.js` or `*.spec.js`.
 
 #### `Build` the app for production
 
@@ -166,73 +205,47 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
 ## Configure the Viewer
 
-Locate the `index.template.html` file inside the root of your project dir and find the script section.
+There are two files in regards to configuration. Both deal with the Viewer's startup behaviour.<br />
 
-**Note**:
+- a) configure the Viewer (**src/index.template.html**)
+  - show or hide individual bars (info, navigation, toggles)
+  - rename labels
+  - tell the Viewer how it will be used (standalone / embedded)
 
-It's a JSON object.
-<!-- TODO: I'm not sure what the following sentence means. Should I use double or single quotes? Or should I use double quotes only once instead of escaping them? -->
-So if you are going to make any changes and you have to quote these, use double quotes but single ones.
+- b) configure the panels (**src/config/panels.js**)
+  - set the order of the panels
+  - group the components inside a panel (e.g. turn them into tabs)
+  - rename the panel headings
+  - switch the panel/s off completely
+
+a) Locate the `script` section in the `index.template.html` file:
 
 ```html
   <script id="emo-config" type="application/json">
-    {
-      "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
-      "headers": {
-        "all": true,
-        "info": true,
-        "navigation": true,
-        "toggle": true
-      },
-      "labels": {
-        "item": "Sheet",
-        "manifest": "Manuscript"
-      },
-      "standalone": true
-    }
-  </script>
+  {
+    "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
+    "headers": {
+      "all": true,
+      "info": true,
+      "navigation": true,
+      "toggle": true
+    },
+    "labels": {
+      "item": "Sheet",
+      "manifest": "Manuscript"
+    },
+    "standalone": true
+  }
+</script>
 ```
 
-## Configure Panels
-
-In order to configure the panels, locate the `panels.js` file inside the `src/config` of your project dir and find the panels section.
-
 **Note**:
+It's a *JSON* object.
+So if you are going to make any changes and you have to quote these, use *double quotes* only.
 
 As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
 If you intend to hide a component, just toggle its corresponding key-value to `false`.
 
-It's an array structure.
-
-```html
-  const panels = [
-    {
-      id: uuidv4(),
-      connector: [1, 2],
-      panel_label: 'Tabs',
-      show: true,
-      tab_model: null,
-    },
-    {
-      id: uuidv4(),
-      connector: [3],
-      panel_label: 'Image',
-      show: true,
-    },
-    {
-      id: uuidv4(),
-      connector: [4],
-      panel_label: 'Text',
-      show: true,
-    },
-    {
-      id: uuidv4(),
-      connector: [5],
-      panel_label: 'Annotations',
-      show: true,
-    },
-  ];
-```
 
 ### The keys in detail
 
@@ -247,8 +260,8 @@ It's an array structure.
 
   - **all**<br />
     set this value to `false` if you want to completely switch off all the headerbars at once.<br />
-    This value takes precedence over the other *header-keys*.<br />
-    If it is set to *false*, the other settings for the individual bars are not taken into account.<br />
+    This value takes **precedence** over the other *header-keys*.<br />
+    If it is set to `false`, the other settings for the individual bars are not taken into account.<br />
     *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
 
   - **info**<br />
@@ -279,42 +292,84 @@ It's an array structure.
 
 - **standalone**
 
-	denotes if the Viewer will be used as a single page application on it's own or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
+	denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
 
-	Defaults to **true**.
+	Defaults to `true`.
 
-- **Panels Configure**
+## Configure the panels
 
-  - **panels**
+b) In order to configure the panels, locate the `panels.js` file inside the `src/config` folder of your project dir and find the *panels* constant at the top of the file:
 
-  Its keys correspond to the panelnames, e.g. "contents", "text", "image" and so on.
-  <br />
-  **Note:** Please **leave these keys UNTOUCHED** since these are for internal use only!
-  <br /><br />
-	Each object inside panels consists of keys: `id`, `connector`, `pane_label`, `show` and `tab_model`.
-  	Change either panel_label-key according to your liking and set either show-key to **false** if you don't want the Viewer to show the appropriate panel/s.
-
-  	Example given:
-
-    ```json
+```js
+  const panels = [
     {
-      panels: [
-        {
-          id: uuidv4(),
-          connector: [1, 2],
-          panel_label: 'Tabs',
-          show: true,
-          tab_model: null,
-        },
-      ]
-    }
-    ```
+      id: uuidv4(),
+      connector: [1, 2],
+      panel_label: 'Tabs',
+      show: true,
+    },
+    {
+      id: uuidv4(),
+      connector: [3],
+      panel_label: 'Image',
+      show: true,
+    },
+    {
+      id: uuidv4(),
+      connector: [4],
+      panel_label: 'Text',
+      show: true,
+    },
+    {
+      id: uuidv4(),
+      connector: [5],
+      panel_label: 'Annotations',
+      show: true,
+    },
+  ];
+```
 
-  - **id** Provides unique id always instead of hard coded IDs.
-  - **connector** Groups together the panels as tabs (works on user configure as well).
-  - **panel_label** Refers to the caption in each panel's toolbar
-  - **show** toggles (show or rather hide) the appropriate panel respectively.
-  - **tab_model** Represents to displays panels in a tab when loading for the first time.
+Each object inside that constant consists of similar keys: `id`, `connector`, `pane_label` and `show`.<br />
+
+Example given:
+
+To rename a panel heading, change the corresponding `panel_label` according to your liking.<br />
+If you don't want the Viewer to show a specific panel at all, set the appropriate `show`-key to **false**
+
+```json
+  {
+    id: uuidv4(),
+    connector: [1, 2],
+    panel_label: 'My-unique-panelname',
+    show: false
+  }
+```
+
+#### The keys in detail:
+  - **id** provides unique IDs. **Note: please leave this value untouched; it's meant for internal use only!**<br />
+
+  - **connector** groups panels as tabs, if you provide more than one number (e.g. [3, 4]), otherwise it shows the appropriate panel
+    - the numbers are supposed to be *unique*, so please make sure not to repeat these. (maximum value is **5** according to the maximum number of panels that can be shown at once)
+    - the numbers are referring to the respective components defined next to the js-constant.
+
+```js
+  components: {
+    1: {
+      component: Treeview,
+      label: 'Contents',
+    },
+    2: {
+      component: Metadata,
+      label: 'Metadata',
+    },
+    // ...
+  };
+```
+
+  - **panel_label** refers to the caption / heading in each panel's *toolbar* (**Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.)
+  - **show** toggles (`show` or rather `hide`) the appropriate panel
+
+**Note**: Modifying this *connector* and *panel_label* works on user configuration as well.<br />
 
 ## Dockerfile
 
