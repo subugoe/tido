@@ -157,7 +157,6 @@ export default {
     position: relative;
 
     > * {
-      // background-color: $light;
       height: 300px;
       padding: 15px 10px;
     }
@@ -168,7 +167,6 @@ export default {
   }
 
   .components-list > * {
-    // background-color: $light;
     border-radius: 5px;
     cursor: move;
     margin: 10px 0;
@@ -176,7 +174,7 @@ export default {
 
     &:active,
     &:focus {
-      outline: 1px solid $blue-6;
+      outline: 1px solid $accent;
     }
   }
 
