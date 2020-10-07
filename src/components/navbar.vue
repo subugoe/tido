@@ -61,7 +61,7 @@ button:first-of-type {
   width: 100%;
   @media (min-width: 600px) {
     margin-right: 8px;
-    width: 150px;
+    width: 160px;
   }
 }
 </style>

@@ -147,7 +147,7 @@ export default {
 <style lang="scss" scoped>
 .panels {
   > * {
-    column-gap: 20px;
+    column-gap: 24px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
   }
@@ -157,8 +157,8 @@ export default {
     position: relative;
 
     > * {
-      height: 300px;
-      padding: 15px 10px;
+      height: 240px;
+      padding: 24px 8px;
     }
   }
 
@@ -167,21 +167,17 @@ export default {
   }
 
   .components-list > * {
-    border-radius: 5px;
+    background-color: $light;
+    border-radius: 2px;
     cursor: move;
-    margin: 10px 0;
-    padding: 10px;
-
-    &:active,
-    &:focus {
-      outline: 1px solid $accent;
-    }
+    margin: 8px 0;
+    padding: 8px;
   }
 
   .actions {
-    left: -10px;
+    left: -8px;
     position: absolute;
-    top: -10px;
+    top: -8px;
   }
 }
 </style>
