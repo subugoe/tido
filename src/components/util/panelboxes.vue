@@ -145,39 +145,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .panels {
+.panels {
+  > * {
+    column-gap: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  // FIXME: class name not self explanatory
+  .p-c {
+    position: relative;
+
     > * {
-      column-gap: 20px;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
-    // FIXME: class name not self explanatory
-    .p-c {
-      position: relative;
-
-      > * {
-        background-color: $light;
-        height: 300px;
-        padding: 15px 10px;
-      }
-    }
-
-    header {
-      display: flex;
-    }
-
-    .components-list > * {
-      background-color: $light;
-      border-radius: 5px;
-      cursor: move;
-      margin: 10px 0;
-      padding: 10px;
-    }
-
-    .actions {
-      left: -10px;
-      position: absolute;
-      top: -10px;
+      height: 240px;
+      padding: 24px 8px;
     }
   }
+
+  header {
+    display: flex;
+  }
+
+  .components-list > * {
+    background-color: $light;
+    border-radius: 2px;
+    cursor: move;
+    margin: 8px 0;
+    padding: 8px;
+  }
+
+  .actions {
+    left: -8px;
+    position: absolute;
+    top: -8px;
+  }
+}
 </style>
