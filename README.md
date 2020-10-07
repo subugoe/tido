@@ -106,7 +106,7 @@ To include the viewer on a website add the following to your `index.html` file:
 
 and replace `[CHECKSUM]` with the values from the release you are going to use.<br />
 
-**Note**: The **checksums** change in each build. So please make sure to copy the ones from  **dist/spa/index.html**.
+**Note**: The **CHECKSUMs** change in each build. So please make sure to copy the ones from  **dist/spa/index.html**.
 
 ## Getting Started
 
@@ -220,6 +220,9 @@ There are two files in regards to configuration. Both deal with the Viewer's sta
 
 a) Locate the `script` section in the `index.template.html` file:
 
+
+As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
+
 ```html
   <script id="emo-config" type="application/json">
   {
@@ -240,12 +243,7 @@ a) Locate the `script` section in the `index.template.html` file:
 ```
 
 **Note**:
-It's a *JSON* object.
-So if you are going to make any changes and you have to quote these, use *double quotes* only.
-
-As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
-If you intend to hide a component, just toggle its corresponding key-value to `false`.
-
+It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels*), please use *double quotes* only.
 
 ### The keys in detail
 
@@ -331,10 +329,12 @@ b) In order to configure the panels, locate the `panels.js` file inside the `src
 
 Each object inside that constant consists of similar keys: `id`, `connector`, `pane_label` and `show`.<br />
 
+As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
+If you intend to hide a component, just toggle its corresponding key-value to `false`.
+
 Example given:
 
 To rename a panel heading, change the corresponding `panel_label` according to your liking.<br />
-If you don't want the Viewer to show a specific panel at all, set the appropriate `show`-key to **false**
 
 ```json
   {
