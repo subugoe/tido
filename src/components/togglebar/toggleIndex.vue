@@ -2,17 +2,20 @@
   <div class="q-d-flex">
     <ToggleFilter>
       <q-list class="toggle-list">
-        <q-item v-for="(p, i) in panels" :key="`toggle${i}`"
-          :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-9 text-white'"
-          clickable
-          flat
-          v-close-popup
-          :title="handleToggleTitle(i)"
-          @click="() => handleStatusPanel(i)"
-          >
-          <q-icon class="q-pr-xs" size="xs" :name="renderCheckIcon(i)" />
-          {{ p.panel_label.toUpperCase() }}
-        </q-item>
+        <div v-for="(p, i) in panels" :key="`toggle${i}`">
+          <q-item
+            :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-9 text-white'"
+            clickable
+            flat
+            v-close-popup
+            :title="handleToggleTitle(i)"
+            @click="() => handleStatusPanel(i)"
+            >
+            <q-icon class="q-pr-xs" size="xs" :name="renderCheckIcon(i)" />
+            {{ p.panel_label.toUpperCase() }}
+          </q-item>
+        </div>
+
         <q-item
           :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-8 text-white'"
           clickable
@@ -97,5 +100,4 @@ button:last-of-type {
 .q-item {
   min-height: 0;
 }
-
 </style>
