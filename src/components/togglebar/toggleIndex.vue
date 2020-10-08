@@ -3,7 +3,7 @@
     <ToggleFilter>
       <q-list class="toggle-list">
         <div v-for="(p, i) in panels" :key="`toggle${i}`">
-          <q-item v-if="p.show"
+          <q-item
             :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-2'"
             clickable
             v-close-popup
@@ -85,13 +85,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  button {
-    @media (min-width: 600px) {
-      margin-right: 8px;
-    }
+button {
+  @media (min-width: 600px) {
+    margin-right: 8px;
   }
+}
 
-  button:last-of-type {
-    margin-right: 0;
-  }
+button:last-of-type {
+  margin-right: 0;
+}
 </style>

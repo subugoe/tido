@@ -80,7 +80,7 @@ export default {
           connector: newConnectors,
         };
       });
-      return this.panels;
+      return this.panels.filter((p) => p.show);
     },
   },
   mounted() {
