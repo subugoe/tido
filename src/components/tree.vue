@@ -79,7 +79,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import './src/css/helper';
 
 .view-tree {
@@ -87,6 +87,22 @@ export default {
   -ms-overflow-style: none;
   overflow-y: scroll;
   scrollbar-width: none;
+
+  .q-tree__node-collapsible .q-tree__children {
+    >.q-tree__node--parent {
+      >.q-tree__node-header {
+        background-color: $light;
+        left: 0;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+
+        @media (prefers-color-scheme: dark) {
+          background-color: $grey-9;
+        }
+      }
+    }
+  }
 
   .q-tree__node-header-content.col.row.no-wrap.items-center {
     z-index: 99;
