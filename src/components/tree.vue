@@ -78,33 +78,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-@import './src/css/helper';
-
-.view-tree {
-  @include make-responsive-height();
-  -ms-overflow-style: none;
-  overflow-y: scroll;
-  scrollbar-width: none;
-}
-
-.q-tree__node-collapsible .q-tree__children {
-  > .q-tree__node--parent {
-    > .q-tree__node-header {
-      left: 0;
-      position: sticky;
-      top: 0;
-      z-index: 999;
-    }
-  }
-
-  .q-tree__children {
-    cursor: pointer;
-  }
-}
-
-.view-tree::-webkit-scrollbar {
-  display: none;
-}
-</style>
