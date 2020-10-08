@@ -6,7 +6,8 @@ import Treeview from '@/components/tree.vue';
 import { v4 as uuidv4 } from 'uuid';
 
 // -- Panels --
-// Connector requires "component id" that combines panels into tabs.
+// each connector requires at least one "component id" to get the appropriate panel rendered.
+// providing more than one id turns the panels into tabs.
 const panels = [
   {
     id: uuidv4(),
