@@ -1,5 +1,5 @@
 <template>
-  <figure class="osd" id="openseadragon">
+  <figure class="seadragon" id="openseadragon">
     <nav class="sticky">
       <q-btn
         v-for="(btn, idx) in buttons" :key="idx"
@@ -79,7 +79,7 @@ export default {
     width: 100%;
   }
 
-  .osd {
+  .seadragon {
     margin-top: 0;
     padding: 8px;
   }
