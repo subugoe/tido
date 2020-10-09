@@ -29,6 +29,7 @@
     </div>
 
     <!-- FIXME: remove inline style -->
+    <!-- FIXME: Current implementations in most browsers will remove from the accessibility tree any element with a display value of contents (but descendants will remain). This will cause the element itself to no longer be announced by screen reading technology. https://developer.mozilla.org/en-US/docs/Web/CSS/display#Accessibility_concerns -->
     <div class="row" style="display: contents;">
       <!-- FIXME: remove inline style -->
       <div
