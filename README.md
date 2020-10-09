@@ -351,7 +351,7 @@ Example given:
 
 Assuming you want to combine the *Metadata*, *Text* and *Annotations* panels:
 
-```json
+```js
   {
     id: uuidv4(),
     connector: [2, 4, 5],
