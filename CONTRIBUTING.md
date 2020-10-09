@@ -62,3 +62,15 @@ The MUST assignee informs the developer over the review being done.
 7. The developer merges her changes into the development branch.
 
 If a merge conflict occurs the person who has proposed the MR is responsible for solving all conflicts.
+
+## Coding Guidelines
+
+### (S)CSS
+
+* Measure things by 8, so 2,4,8,12,16,20,24 etc, but not 3,5,8,10,15 etc. you get the idea; there should never be an odd number
+* Follow BEM class naming. There are like a gazillion ideas on how to do it, but at least stick to the core idea of Block/Element/Modifier as seen e.g. here http://getbem.com/introduction/ and https://css-tricks.com/bem-101/ (referenced by MDN)
+* Always lint code use npm run lint:css which uses Stylelint with Scss config/rules (insert link to stylelint rules file here as soon as there is a main branch)
+* Make css class name self explanatory (see BEM)
+* No id for styling, stick to classes. If you need to access CSS class names for JS, write one and prepend "js-" and make sure to not attach any CSS to it.
+* Use color variables instead of color values (or names) and have a file where all vars are defined
+* When using vue.js and Scss go with global Scss files or scoped Scss (within vue.js files) but avoid mixing it at all cost. Global mixin and varibales Scss files are fine, but Scss within a single vue.js file should never affect styling anywhere else.
