@@ -1,6 +1,5 @@
 <template>
-  <!-- FIXME: remove inline style -->
-  <figure id="openseadragon" style="margin-top: 0; padding: 8px;">
+  <figure id="openseadragon">
     <nav class="sticky">
       <q-btn
         v-for="(btn, idx) in buttons" :key="idx"
@@ -55,8 +54,8 @@ export default {
     };
   },
   mounted() {
-    // eslint-disable-next-line no-unused-vars
     const viewer = new OpenSeadragon.Viewer(this.options);
+    viewer.controlsFadeDelay = 1000;
 
     OpenSeadragon.setString('Tooltips.Home', 'Default View');
     OpenSeadragon.setString('Tooltips.FullPage', 'Toggle Fullscreen');
@@ -77,6 +76,7 @@ export default {
     display: inline-block;
     height: 75vh;
     margin: 0;
-    width: 95%;
+    padding: 8px;
+    width: 100%;
   }
 </style>
