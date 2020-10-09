@@ -327,49 +327,41 @@ b) In order to configure the panels, locate the `panels.js` file inside the `src
   ];
 ```
 
+It consists of four objects according to the maximum number of panels, that can be shown at once.<br />
 Each object inside that constant consists of similar keys: `id`, `connector`, `pane_label` and `show`.<br />
 
-As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
-If you intend to hide a component, just toggle its corresponding key-value to `false`.
+#### The keys in detail:
+  - **id** provides unique IDs. (**Note**: please leave this value untouched; it's meant for internal use only!)<br />
+
+  - **connector** references the component id/s according to the appropriate panel/s or rather tab/s:
+    - 1 = Treeview
+    - 2 = Metadata
+    - 3 = OpenSeadragon
+    - 4 = Content / Text
+    - 5 = Annotations
+
+    **Note**: These IDs are supposed to be *unique*, so please make sure not to repeat these!
+
+  - **panel_label** refers to the heading in each panel's *toolbar* (**Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.)
+  - **show** toggles (`show` or rather `hide`) the appropriate panel respectively
+
+**Note**: Modifying the *connector* and the *panel_label* works on user configuration as well.<br />
 
 Example given:
 
-To rename a panel heading, change the corresponding `panel_label` according to your liking.<br />
+Assuming you want to combine the *Metadata*, *Text* and *Annotations* panels:
 
-```json
+```js
   {
     id: uuidv4(),
-    connector: [1, 2],
-    panel_label: 'My-unique-panelname',
-    show: false
+    connector: [2, 4, 5],
+    panel_label: 'Meta, Text & Anno',
+    show: true
   }
 ```
 
-#### The keys in detail:
-  - **id** provides unique IDs. **Note: please leave this value untouched; it's meant for internal use only!**<br />
-
-  - **connector** groups panels as tabs, if you provide more than one number (e.g. [3, 4]), otherwise it shows the appropriate panel
-    - the numbers are supposed to be *unique*, so please make sure not to repeat these. (maximum value is **5** according to the maximum number of panels that can be shown at once)
-    - the numbers are referring to the respective components defined next to the js-constant.
-
-```js
-  components: {
-    1: {
-      component: Treeview,
-      label: 'Contents',
-    },
-    2: {
-      component: Metadata,
-      label: 'Metadata',
-    },
-    // ...
-  };
-```
-
-  - **panel_label** refers to the caption / heading in each panel's *toolbar* (**Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.)
-  - **show** toggles (`show` or rather `hide`) the appropriate panel
-
-**Note**: Modifying this *connector* and *panel_label* works on user configuration as well.<br />
+To rename a panel heading, change the corresponding `panel_label` according to your needs.<br />
+If you intend to hide a component, just toggle its corresponding *show-key* to `false`.
 
 ## Dockerfile
 

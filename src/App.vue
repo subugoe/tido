@@ -141,8 +141,12 @@ export default {
           this.contenturl = data.content;
           this.imageurl = data.image && data.image.id ? data.image.id : '';
           this.itemlabel = data.n ? data.n : 'No itemlabel :(';
-          // eslint-disable-next-line prefer-destructuring
-          this.itemlanguage = data['x-langString'].split(',')[0];
+
+          // note: the scholars didn't mark the item language yet, so atm the API provides them all.
+          // since we know, we are dealing with the arabic part of the collection, we define the language to be arabic.
+          const [arabic] = data['x-langString'].split(',');
+
+          this.itemlanguage = arabic;
         });
     },
     /**
