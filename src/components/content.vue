@@ -4,26 +4,33 @@
       <div>
         <q-btn
           class="q-mr-sm q-mb-sm cursor-pointer"
-          color="grey-8"
           flat
           round
           size="md"
           title="Increase Textsize"
           @click="increase()"
           >
-          <q-icon :name="fasSearchPlus" size="sm" />
+          <q-icon
+            :name="fasSearchPlus"
+            size="sm"
+            :color="$q.dark.isActive ? 'white' : 'accent'"
+            />
         </q-btn>
 
         <q-btn
           class="q-mr-sm q-mb-sm cursor-pointer"
-          color="grey-8"
           flat
           round
           size="md"
           title="Decrease Textsize"
+          :color="$q.dark.isActive ? 'white' : 'accent'"
           @click="decrease()"
           >
-          <q-icon :name="fasSearchMinus" />
+          <q-icon
+            :name="fasSearchMinus"
+            size="sm"
+            :color="$q.dark.isActive ? 'white' : 'accent'"
+            />
         </q-btn>
       </div>
     </div>
