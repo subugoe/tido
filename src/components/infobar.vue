@@ -58,7 +58,7 @@ export default {
 
 <style lang="scss" scoped>
 .title {
-  letter-spacing: 2px;
   font-size: 28px !important;
+  letter-spacing: 2px;
 }
 </style>

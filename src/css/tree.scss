@@ -27,9 +27,9 @@
     }
 
     .q-tree__node-header-content {
-      color: white !important;
+      color: $light !important;
       @media (prefers-color-scheme: dark) {
-        color: black !important;
+        color: $dark !important;
       }
     }
   }
@@ -47,14 +47,14 @@
   color: var(--q-color-primary);
   letter-spacing: 2px;
   @media (prefers-color-scheme: dark) {
-    color: white;
+    color: $light;
   }
 }
 
 .q-tab__indicator {
   color: var(--q-color-accent);
   @media (prefers-color-scheme: dark) {
-    color: white;
+    color: $light;
   }
 }
 
@@ -62,7 +62,7 @@
   color: var(--q-color-primary);
   letter-spacing: 2px;
   @media (prefers-color-scheme: dark) {
-    color: white;
+    color: $light;
   }
 }
 
