@@ -6,6 +6,7 @@
           <q-item
             clickable
             flat
+            :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
             v-close-popup
             :title="handleToggleTitle(i)"
             @click="() => handleStatusPanel(i)"
