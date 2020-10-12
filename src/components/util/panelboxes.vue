@@ -1,12 +1,12 @@
 <template>
   <section>
-    <div class="panels">
+    <div class="panels__wrap">
       <Panelsdraggable
         handle=".only-bedrag"
         v-model="panels"
         @change="$root.$emit('panels-position', panels)"
         >
-        <div class="p-c" v-for="(panel, idx) in panels" v-show="panel.show" :key="`pa${idx}`">
+        <div class="panels" v-for="(panel, idx) in panels" v-show="panel.show" :key="`pa${idx}`">
           <div
             class="effected"
             @dragleave.prevent="dragHighlightComponent($event, false)"
@@ -16,8 +16,7 @@
             :class="$q.dark.isActive ? 'bg-grey-8 text-white' : 'bg-grey-1 text-black'"
             >
             <div>
-              <!-- FIXME: use a div or alike, but not HTML header tag -->
-              <header>
+              <div class="panel__header">
                 <input
                   class="panel-textinput text-uppercase"
                   type="text"
@@ -25,7 +24,7 @@
                   :value="panel.panel_label"
                   @input="(e) => handlePanelLabel(e, idx)"
                 />
-              </header>
+              </div>
               <q-separator />
 
               <div class="components-list">
@@ -145,25 +144,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.panels {
+.panels__wrap {
   > * {
     column-gap: 24px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-
-  // FIXME: class name not self explanatory
-  .p-c {
-    position: relative;
-
-    > * {
-      height: 240px;
-      padding: 24px 8px;
-    }
-  }
-
-  header {
-    display: flex;
   }
 
   .components-list > * {
@@ -179,5 +164,18 @@ export default {
     position: absolute;
     top: -8px;
   }
+}
+
+.panels {
+  position: relative;
+
+  > * {
+    height: 240px;
+    padding: 24px 8px;
+  }
+}
+
+.panel__header {
+  display: flex;
 }
 </style>

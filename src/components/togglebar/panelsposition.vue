@@ -1,7 +1,7 @@
 <template>
-  <section class="panel-position">
+  <section class="panel__position">
     <q-btn
-      class="q-mb-md"
+      class="panel__button"
       :icon="panelicon"
       size="md"
       @click="status = true"
@@ -9,9 +9,15 @@
       outline
       />
 
-      <q-dialog v-model="status" transition-show="scale" transition-hide="scale">
-      <!-- FIXME: remove inline style -->
-      <q-card style="width: 600px;">
+      <q-dialog
+        v-model="status"
+        transition-show="scale"
+        transition-hide="scale"
+        >
+      <q-card
+        :class="$q.dark.isActive ? 'bg-black' : 'bg-white text-black'"
+        class="panel__card"
+        >
         <q-card-section>
           <div class="text-h6 text-uppercase">Customize Panels</div>
         </q-card-section>
@@ -55,8 +61,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.panel-position {
+.panel__position {
   display: flex;
   justify-content: center;
+}
+
+.panel__card {
+  width: 600px;
+}
+
+.panel__button {
+  height: 75%;
 }
 </style>
