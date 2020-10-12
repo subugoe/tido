@@ -3,8 +3,9 @@
   <section class="filter-buttons">
     <q-btn-dropdown
       v-if="$q.screen.width < 1100"
-      outline
-      :color="$q.dark.isActive ? 'bg-black' : 'grey-12'"
+      flat
+      split
+      :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-9'"
       class="q-mb-md q-mr-md"
       label="Toggle Panels"
       >
