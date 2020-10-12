@@ -65,5 +65,4 @@ export default {
 .panel__button {
   height: 75%;
 }
-
 </style>

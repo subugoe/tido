@@ -15,9 +15,9 @@
 </template>
 
 <style lang="scss" scoped>
-  .filter-buttons {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-  }
+.filter-buttons {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
 </style>
