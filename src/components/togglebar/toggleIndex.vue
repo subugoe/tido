@@ -28,7 +28,7 @@
       </q-list>
     </ToggleFilter>
 
-    <PanelsPosition :panelboxes="panels" />
+    <!-- <PanelsPosition :panelboxes="panels" /> -->
   </div>
 </template>
 
@@ -39,7 +39,7 @@ import {
   fasCheckCircle,
 } from '@quasar/extras/fontawesome-v5';
 
-import PanelsPosition from '@/components/togglebar/panelsposition';
+// import PanelsPosition from '@/components/togglebar/panelsposition';
 import ToggleFilter from '@/components/togglebar/toggleFilter.vue';
 
 export default {
@@ -48,7 +48,7 @@ export default {
     panels: Array,
   },
   components: {
-    PanelsPosition,
+    // PanelsPosition,
     ToggleFilter,
   },
   methods: {
