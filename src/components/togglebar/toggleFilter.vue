@@ -4,11 +4,11 @@
     <q-btn-dropdown
       v-if="$q.screen.width < 1100"
       :dropdown-icon="dropicon"
+      outline
       flat
-      split
-      :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-9'"
+      :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-4 text-black'"
       class="q-mb-md q-mr-md"
-      label="Toggle panels ..."
+      label="Toggle panels"
       >
       <slot />
     </q-btn-dropdown>

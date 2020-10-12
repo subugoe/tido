@@ -1,10 +1,20 @@
 <template>
   <div>
-    <h1 class="text-h5 text-bold text-uppercase">
+    <h1 class="title text-h4 text-bold text-uppercase">
       <span>{{ cut(collectiontitle) }}</span>
-      <q-icon class="q-pb-xs" size="sm" :name="fasChevronRight" />
+      <q-icon
+        class="q-pb-xs q-pr-sm q-pl-sm"
+        size="sm"
+        :color="$q.dark.isActive ? 'white' : 'accent'"
+        :name="fasChevronRight"
+        />
       <span>{{ cut(manifesttitle) }}</span>
-      <q-icon class="q-pb-xs" size="sm" :name="fasChevronRight" />
+      <q-icon
+        class="q-pb-xs q-pr-sm q-pl-sm"
+        size="sm"
+        :color="$q.dark.isActive ? 'white' : 'accent'"
+        :name="fasChevronRight"
+        />
       <span>{{ itemlabel }}</span>
     </h1>
   </div>
@@ -45,3 +55,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.title {
+  letter-spacing: 2px;
+  font-size: 28px !important;
+}
+</style>

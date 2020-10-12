@@ -3,7 +3,7 @@
     <q-btn
       class="q-mb-md"
       unelevated
-      :color="$q.dark.isActive ? 'grey-8' : 'accent'"
+      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
       >
@@ -20,7 +20,7 @@
       class="q-mb-md"
       size="md"
       unelevated
-      :color="$q.dark.isActive ? 'grey-8' : 'accent'"
+      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex >= itemurls.length - 1"
       @click="toggleSheet(++itemindex)"
       >

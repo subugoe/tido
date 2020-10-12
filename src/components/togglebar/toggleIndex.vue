@@ -4,33 +4,41 @@
       <q-list class="toggle-list">
         <div v-for="(p, i) in panels" :key="`toggle${i}`">
           <q-item
-            :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-9 text-white'"
             clickable
             flat
             v-close-popup
             :title="handleToggleTitle(i)"
             @click="() => handleStatusPanel(i)"
             >
-            <q-icon class="q-pr-xs" size="xs" :name="renderCheckIcon(i)" />
+            <q-icon
+              class="q-pr-xs"
+              size="xs"
+              :color="$q.dark.isActive ? 'bg-black' : 'accent'"
+              :name="renderCheckIcon(i)"
+              />
             {{ p.panel_label.toUpperCase() }}
           </q-item>
         </div>
 
         <q-item
-          :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-8 text-white'"
           clickable
           flat
           title="Reset panels to default view"
           v-close-popup
           @click="()=> handleStatusPanel(-1, true)"
           >
-          <q-icon class="q-pr-xs" size="xs" :name="fasUndo" />
+          <q-icon
+            class="q-pr-xs"
+            size="xs"
+            :color="$q.dark.isActive ? 'bg-black' : 'accent'"
+            :name="fasUndo"
+            />
           {{ 'RESET' }}
         </q-item>
       </q-list>
     </ToggleFilter>
 
-    <PanelsPosition :panelboxes="panels" />
+    <!-- <PanelsPosition :panelboxes="panels" /> -->
   </div>
 </template>
 
@@ -41,7 +49,7 @@ import {
   fasCheckCircle,
 } from '@quasar/extras/fontawesome-v5';
 
-import PanelsPosition from '@/components/togglebar/panelsposition';
+// import PanelsPosition from '@/components/togglebar/panelsposition';
 import ToggleFilter from '@/components/togglebar/toggleFilter.vue';
 
 export default {
@@ -50,7 +58,7 @@ export default {
     panels: Array,
   },
   components: {
-    PanelsPosition,
+    // PanelsPosition,
     ToggleFilter,
   },
   methods: {

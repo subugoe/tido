@@ -1,7 +1,7 @@
 <template>
   <q-header
     elevated
-    :class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'"
+    :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
     >
     <div class="bar row justify-between items-center">
       <Infobar v-if="config.headers.info && manifests.length"

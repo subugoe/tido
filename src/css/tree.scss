@@ -7,7 +7,7 @@
   .q-tree__node-collapsible .q-tree__children {
     >.q-tree__node--parent {
       >.q-tree__node-header {
-        background-color: $light;
+        background-color: $grey-3;
         left: 0;
         position: sticky;
         top: 0;
@@ -20,12 +20,49 @@
     }
   }
 
+  .q-tree__node--selected {
+    background-color: var(--q-color-accent);
+    @media (prefers-color-scheme: dark) {
+      background-color: $grey-3;
+    }
+
+    .q-tree__node-header-content {
+      color: white !important;
+      @media (prefers-color-scheme: dark) {
+        color: black !important;
+      }
+    }
+  }
+
   .q-tree__node-header-content.col.row.no-wrap.items-center {
     z-index: 99;
   }
 
   .q-tree__children {
     cursor: pointer;
+  }
+}
+
+.q-tab__label {
+  color: var(--q-color-primary);
+  letter-spacing: 2px;
+  @media (prefers-color-scheme: dark) {
+    color: white;
+  }
+}
+
+.q-tab__indicator {
+  color: var(--q-color-accent);
+  @media (prefers-color-scheme: dark) {
+    color: white;
+  }
+}
+
+.q-toolbar__title {
+  color: var(--q-color-primary);
+  letter-spacing: 2px;
+  @media (prefers-color-scheme: dark) {
+    color: white;
   }
 }
 

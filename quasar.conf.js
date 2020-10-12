@@ -50,7 +50,14 @@ module.exports = function (ctx) {
 
       // Quasar plugins
       plugins: [],
-      cssAddon: true
+      cssAddon: true,
+      config: {
+        brand: {
+          primary: '#212121',
+          secondary: '#eee',
+          accent: '#1a3771'
+        }
+      }
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
