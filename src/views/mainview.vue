@@ -1,7 +1,9 @@
 <template>
   <section>
     <div v-if="ready" class="row panels-target">
-      <div v-for="(p, i) in panels" :key="`pc${i}`" v-show="p.show && p.connector.length"
+      <div
+        v-for="(p, i) in panels" :key="`pc${i}`"
+        v-show="p.show && p.connector.length"
         class="col-12 col-sm-6 col-md-3"
         >
         <Toolbar :heading="p.panel_label" />
@@ -12,7 +14,8 @@
           <!-- shows the nested tabs -->
           <q-card v-if="p.connector.length > 1" flat>
             <div class="tabs-container">
-              <q-tabs class="content-tabs" v-for="(tab, i) in p.connector" :key="`pt${i}`"
+              <q-tabs
+                class="content-tabs" v-for="(tab, i) in p.connector" :key="`pt${i}`"
                 :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
                 v-model="p.tab_model"
                 >
@@ -22,7 +25,12 @@
 
             <q-separator />
 
-            <q-tab-panels v-model="p.tab_model" animated class="content-panel" keep-alive>
+            <q-tab-panels
+              v-model="p.tab_model"
+              animated
+              class="content-panel"
+              keep-alive
+              >
               <q-tab-panel v-for="(tab, i) in p.connector" :key="`co${i}`" :name="`tab${i}`">
                 <component :is="tab.component" :key="keys[tab.id]" v-bind="$props" />
               </q-tab-panel>
@@ -30,7 +38,9 @@
           </q-card>
 
           <!-- shows the panels -->
-          <div v-else-if="p.connector.length === 1" class="q-pa-sm overflow-hidden">
+          <div
+            v-else-if="p.connector.length === 1"
+            class="q-pa-sm overflow-hidden">
             <component :is="p.connector[0].component" :key="keys[p.connector[0].id]" v-bind="$props" />
           </div>
         </div>
