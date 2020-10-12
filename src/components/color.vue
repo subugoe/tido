@@ -23,6 +23,7 @@
             <q-item-section>Default</q-item-section>
           </q-item>
 
+          <!-- FIXME: emove this code, when feature is done -->
           <!--
           <q-item
             clickable
@@ -58,8 +59,10 @@ export default {
   },
   methods: {
     changeColorsTo(color) {
-      console.log(this.$q.dark.isActive);
+      // FIXME: remove this code, when feature is done
+      // console.log(this.$q.dark.isActive);
       if (color === 'default') {
+        // FIXME: remove this code, when feature is done
         // this.$q.dark.set(false);
         if (this.$q.dark.isActive === false) {
           colors.setBrand('primary', this.$q.config.brand.primary);
@@ -67,11 +70,13 @@ export default {
           colors.setBrand('accent', this.$q.config.brand.accent);
         }
       }
+      // FIXME: remove this code, when feature is done
       // if (color === 'dark') {
       //   this.$q.dark.set(true);
       // }
       if (color === 'unicorn') {
         if (this.$q.dark.isActive === false) {
+          // FIXME: remove this code, when feature is done
           // this.$q.dark.set(false);
           colors.setBrand('primary', 'purple');
           colors.setBrand('secondary', 'lightgrey');
