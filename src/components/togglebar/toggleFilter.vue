@@ -3,6 +3,7 @@
     <q-btn-dropdown v-if="$q.screen.width < 1100"
       class="q-mb-md"
       color="black"
+      :dropdown-icon="dropicon"
       label="Toggle panels ..."
       >
       <slot />
@@ -14,10 +15,22 @@
   </section>
 </template>
 
+<script>
+import { fasCaretDown } from '@quasar/extras/fontawesome-v5';
+
+export default {
+  computed: {
+    dropicon() {
+      return fasCaretDown;
+    },
+  },
+};
+</script>
+
 <style lang="scss" scoped>
-  .filter-buttons {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-  }
+.filter-buttons {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
 </style>
