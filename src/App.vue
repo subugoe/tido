@@ -306,9 +306,12 @@ export default {
     this.init();
 
     // TODO: check if colors are defined in index.template.html, if not, use colors from quasar.conf.js
-    colors.setBrand('primary', this.config.colors.primary);
-    colors.setBrand('secondary', this.config.colors.secondary);
-    colors.setBrand('accent', this.config.colors.accent);
+    // console.log(this.config.colors.primary);
+    if (this.config.colors.primary !== 'false') {
+      colors.setBrand('primary', this.config.colors.primary);
+      colors.setBrand('secondary', this.config.colors.secondary);
+      colors.setBrand('accent', this.config.colors.accent);
+    }
 
     this.$q.dark.set('auto');
 
