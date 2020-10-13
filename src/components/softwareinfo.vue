@@ -30,7 +30,7 @@
         <q-card-section class="q-pt-none">
           <q-btn
             flat
-            href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/blob/develop/README.md"
+            href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/blob/main/README.md"
             target="_blank"
             type="a"
             >
