@@ -35,14 +35,11 @@
       </div>
     </div>
 
-    <!-- FIXME: remove inline style -->
-    <!-- FIXME: Current implementations in most browsers will remove from the accessibility tree any element with a display value of contents (but descendants will remain). This will cause the element itself to no longer be announced by screen reading technology. https://developer.mozilla.org/en-US/docs/Web/CSS/display#Accessibility_concerns -->
-    <div class="row" style="display: contents;">
-      <!-- FIXME: remove inline style -->
+    <div class="row">
       <div
         class="scroll-panel"
+        ref="contentsize"
         :id="nodeid"
-        :style="`font-size: ${fontsize}px`"
         v-html="content"
         />
     </div>
@@ -66,6 +63,11 @@ export default {
       nodeid: '__text',
       sequenceindex: 0,
     };
+  },
+  watch: {
+    fontsize() {
+      this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
+    },
   },
   methods: {
     decrease() {
@@ -103,6 +105,8 @@ export default {
     this.content = await this.request(this.contenturl, 'text').then((data) => data);
   },
   mounted() {
+    this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
+
     this.$root.$on('update-sequence-index', (index) => {
       if (this.manifests[index].support) {
         this.manifests[index].support.map(this.getSupport);
