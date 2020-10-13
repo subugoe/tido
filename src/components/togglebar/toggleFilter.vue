@@ -6,7 +6,7 @@
       :dropdown-icon="dropicon"
       outline
       flat
-      :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-4 text-black'"
+      :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
       class="q-mb-md q-mr-md"
       label="Toggle panels"
       >
