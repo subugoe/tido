@@ -29,7 +29,10 @@
         />
       </q-page-container>
 
-      <Footer :standalone="config.standalone" />
+      <Footer
+        :standalone="config.standalone"
+        :projectcolors="config.colors"
+        />
     </q-layout>
   </div>
 </template>
@@ -38,6 +41,7 @@
 import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
 import PanelsMixin from '@/config/panels.js';
+import { colors } from 'quasar';
 
 export default {
   name: 'Viewer',
@@ -300,6 +304,11 @@ export default {
   created() {
     this.getConfig();
     this.init();
+
+    // TODO: check if colors are defined in index.template.html, if not, use colors from quasar.conf.js
+    colors.setBrand('primary', this.config.colors.primary);
+    colors.setBrand('secondary', this.config.colors.secondary);
+    colors.setBrand('accent', this.config.colors.accent);
 
     this.$q.dark.set('auto');
 

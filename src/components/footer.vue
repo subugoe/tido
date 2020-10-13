@@ -6,7 +6,7 @@
     :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
     >
     <Language v-if="standalone" />
-    <Color />
+    <Color :projectcolors="projectcolors" />
     <Softwareinfo />
   </q-footer>
 </template>
@@ -25,6 +25,7 @@ export default {
   },
   props: {
     standalone: Boolean,
+    projectcolors: Object,
   },
 };
 </script>

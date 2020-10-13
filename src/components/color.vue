@@ -1,5 +1,7 @@
 <template>
   <div class="col-xs-auto colors">
+    <!-- // FIXME: remove this code, when feature is done -->
+    <!-- <div>|{{ projectcolors }}|</div> -->
     <q-btn
       flat
       title="Change color"
@@ -36,6 +38,14 @@
 
           <q-item
             clickable
+            @click="() => changeColorsTo('subugoe')"
+            v-close-popup
+            >
+            <q-item-section>SUBUGOE</q-item-section>
+          </q-item>
+
+          <q-item
+            clickable
             @click="() => changeColorsTo('unicorn')"
             v-close-popup
             >
@@ -55,7 +65,23 @@ import { colors } from 'quasar';
 export default {
   name: 'color',
   created() {
+    // this.getConfig();
+    // this.projectcolors = projectcolors;
     this.fasPalette = fasPalette;
+  },
+  // data() {
+  //   return {
+  //     config: {},
+  //   };
+  // },
+  props: {
+    projectcolors: Object,
+  },
+  computed: {
+    asdf() {
+      // console.log(this.$colors);
+      return this.$colors.primary;
+    },
   },
   methods: {
     changeColorsTo(color) {
@@ -65,15 +91,23 @@ export default {
         // FIXME: remove this code, when feature is done
         // this.$q.dark.set(false);
         if (this.$q.dark.isActive === false) {
-          colors.setBrand('primary', this.$q.config.brand.primary);
-          colors.setBrand('secondary', this.$q.config.brand.secondary);
-          colors.setBrand('accent', this.$q.config.brand.accent);
+          colors.setBrand('primary', this.projectcolors.primary);
+          colors.setBrand('secondary', this.projectcolors.secondary);
+          colors.setBrand('accent', this.projectcolors.accent);
+          // colors.setBrand('primary', this.$q.config.brand.primary);
+          // colors.setBrand('secondary', this.$q.config.brand.secondary);
+          // colors.setBrand('accent', this.$q.config.brand.accent);
         }
       }
       // FIXME: remove this code, when feature is done
       // if (color === 'dark') {
       //   this.$q.dark.set(true);
       // }
+      if (color === 'subugoe') {
+        colors.setBrand('primary', this.$q.config.brand.primary);
+        colors.setBrand('secondary', this.$q.config.brand.secondary);
+        colors.setBrand('accent', this.$q.config.brand.accent);
+      }
       if (color === 'unicorn') {
         if (this.$q.dark.isActive === false) {
           // FIXME: remove this code, when feature is done
