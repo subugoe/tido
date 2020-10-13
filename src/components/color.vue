@@ -94,6 +94,7 @@ export default {
           colors.setBrand('primary', this.projectcolors.primary);
           colors.setBrand('secondary', this.projectcolors.secondary);
           colors.setBrand('accent', this.projectcolors.accent);
+          // FIXME: remove this code, when feature is done
           // colors.setBrand('primary', this.$q.config.brand.primary);
           // colors.setBrand('secondary', this.$q.config.brand.secondary);
           // colors.setBrand('accent', this.$q.config.brand.accent);
