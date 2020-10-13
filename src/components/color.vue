@@ -1,7 +1,5 @@
 <template>
   <div class="col-xs-auto colors">
-    <!-- // FIXME: remove this code, when feature is done -->
-    <!-- <div>|{{ projectcolors }}|</div> -->
     <q-btn
       flat
       title="Change color"
@@ -10,7 +8,6 @@
         :name="fasPalette"
         size="xs"
       />
-
       <q-menu
         anchor="center middle"
         fit
@@ -24,26 +21,14 @@
             >
             <q-item-section>Default</q-item-section>
           </q-item>
-
-          <!-- FIXME: emove this code, when feature is done -->
-          <!--
           <q-item
             clickable
-            @click="() => changeColorsTo('dark')"
+            @click="() => changeColorsTo('emo')"
             v-close-popup
+            v-if="projectcolors.primary !== 'false'"
             >
-            <q-item-section>Contrast Mode</q-item-section>
+            <q-item-section>EMo</q-item-section>
           </q-item>
-          -->
-
-          <q-item
-            clickable
-            @click="() => changeColorsTo('subugoe')"
-            v-close-popup
-            >
-            <q-item-section>SUBUGOE</q-item-section>
-          </q-item>
-
           <q-item
             clickable
             @click="() => changeColorsTo('unicorn')"
@@ -51,7 +36,6 @@
             >
             <q-item-section>Unicorn</q-item-section>
           </q-item>
-
         </q-list>
       </q-menu>
     </q-btn>
@@ -77,46 +61,34 @@ export default {
   props: {
     projectcolors: Object,
   },
-  computed: {
-    asdf() {
-      // console.log(this.$colors);
-      return this.$colors.primary;
-    },
-  },
+  // computed: {
+  //   asdf() {
+  //     // console.log(this.$colors);
+  //     return this.$colors.primary;
+  //   },
+  // },
   methods: {
     changeColorsTo(color) {
-      // FIXME: remove this code, when feature is done
-      // console.log(this.$q.dark.isActive);
       if (color === 'default') {
-        // FIXME: remove this code, when feature is done
-        // this.$q.dark.set(false);
-        if (this.$q.dark.isActive === false) {
+        if (this.projectcolors.primary !== 'false') {
           colors.setBrand('primary', this.projectcolors.primary);
           colors.setBrand('secondary', this.projectcolors.secondary);
           colors.setBrand('accent', this.projectcolors.accent);
-          // FIXME: remove this code, when feature is done
-          // colors.setBrand('primary', this.$q.config.brand.primary);
-          // colors.setBrand('secondary', this.$q.config.brand.secondary);
-          // colors.setBrand('accent', this.$q.config.brand.accent);
+        } else {
+          colors.setBrand('primary', this.$q.config.brand.primary);
+          colors.setBrand('secondary', this.$q.config.brand.secondary);
+          colors.setBrand('accent', this.$q.config.brand.accent);
         }
       }
-      // FIXME: remove this code, when feature is done
-      // if (color === 'dark') {
-      //   this.$q.dark.set(true);
-      // }
-      if (color === 'subugoe') {
+      if (color === 'emo') {
         colors.setBrand('primary', this.$q.config.brand.primary);
         colors.setBrand('secondary', this.$q.config.brand.secondary);
         colors.setBrand('accent', this.$q.config.brand.accent);
       }
       if (color === 'unicorn') {
-        if (this.$q.dark.isActive === false) {
-          // FIXME: remove this code, when feature is done
-          // this.$q.dark.set(false);
-          colors.setBrand('primary', 'purple');
-          colors.setBrand('secondary', 'lightgrey');
-          colors.setBrand('accent', 'hotpink');
-        }
+        colors.setBrand('primary', 'purple');
+        colors.setBrand('secondary', 'lightgrey');
+        colors.setBrand('accent', 'hotpink');
       }
     },
   },

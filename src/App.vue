@@ -304,18 +304,14 @@ export default {
   created() {
     this.getConfig();
     this.init();
+    this.$q.dark.set('auto');
+    this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
-    // TODO: check if colors are defined in index.template.html, if not, use colors from quasar.conf.js
-    // console.log(this.config.colors.primary);
     if (this.config.colors.primary !== 'false') {
       colors.setBrand('primary', this.config.colors.primary);
       colors.setBrand('secondary', this.config.colors.secondary);
       colors.setBrand('accent', this.config.colors.accent);
     }
-
-    this.$q.dark.set('auto');
-
-    this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   },
   mounted() {
     /**
