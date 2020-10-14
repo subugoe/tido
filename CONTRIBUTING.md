@@ -68,7 +68,7 @@ If a merge conflict occurs the person who has proposed the MR is responsible for
 ### (S)CSS
 
 * Measure things by 8, so 2,4,8,12,16,20,24 etc, but not 3,5,8,10,15 etc. you get the idea; there should never be an odd number
-* Follow BEM class naming. There are like a gazillion ideas on how to do it, but at least stick to the core idea of Block/Element/Modifier as seen e.g. here http://getbem.com/introduction/ and https://css-tricks.com/bem-101/ (referenced by MDN)
+* Follow BEM class naming. There are like a gazillion ideas on how to do it, but at least stick to the core idea of Block/Element/Modifier as seen e.g. here [BEM Intro](http://getbem.com/introduction/) and [BEM 101](https://css-tricks.com/bem-101/) (referenced by MDN)
 * Always lint code use npm run lint:css which uses Stylelint with Scss config/rules (insert link to stylelint rules file here as soon as there is a main branch)
 * Make css class name self explanatory (see BEM)
 * No id for styling, stick to classes. If you need to access CSS class names for JS, write one and prepend "js-" and make sure to not attach any CSS to it.

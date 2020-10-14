@@ -4,6 +4,7 @@ Viewer for the modular framework to present digital editions.
 
 **Note:**
 Although the EMo Viewer is designed as a generic viewer for digital editions, it is currently developed within the scope of the [Ahiqar project](https://gitlab.gwdg.de/subugoe/ahiqar).
+
 This is the reason for "Ahiqar" being mentioned several times in the docs of this repo.
 
 Demo: <https://subugoe.pages.gwdg.de/emo/Qviewer/develop>
@@ -11,11 +12,10 @@ Demo: <https://subugoe.pages.gwdg.de/emo/Qviewer/develop>
 (For newer branches the demo is deployed in a directory named with branch name lowercased, shortened to 63 bytes, and with everything except `0-9` and `a-z` replaced with `-` (CI_COMMIT_REF_SLUG).
 Also the commit short hash can be used to see a demo.
 
-**Overview:**
+## Overview
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 
 - [Viewer components](#viewer-components)
 - [Latest version and integration](#latest-version-and-integration)
@@ -35,7 +35,7 @@ Also the commit short hash can be used to see a demo.
 - [Configure the Viewer](#configure-the-viewer)
   - [The keys in detail](#the-keys-in-detail)
 - [Configure the panels](#configure-the-panels)
-    - [The keys in detail:](#the-keys-in-detail)
+  - [The keys in detail:](#the-keys-in-detail)
 - [Dockerfile](#dockerfile)
 - [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend)
 - [Architecture](#architecture)
@@ -51,9 +51,7 @@ Also the commit short hash can be used to see a demo.
 
 ## Latest version and integration
 
-To embed the viewer for production, the latest compiled and minified version is available at:
-https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop
-
+To embed the viewer for production get [the latest compiled and minified version is available](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)  
 It is a zip archive. You can extract the build by typing:
 
 ```bash
@@ -61,7 +59,8 @@ unzip artifacts.zip
 ```
 
 This creates the following folder structure containing the actual build:
-```
+
+```bash
 dist/spa/
 ├── css
 │   ├── 2.5b2a42f3.css
@@ -104,9 +103,11 @@ To include the viewer on a website add the following to your `index.html` file:
 <script src=js/vendor.[CHECKSUM].js></script>
 ```
 
-and replace `[CHECKSUM]` with the values from the release you are going to use.<br />
+and replace `[CHECKSUM]` with the values from the release you are going to use.
 
-**Note**: The **CHECKSUMs** change in each build. So please make sure to copy the ones from  **dist/spa/index.html**.
+**Note**:
+
+The **CHECKSUMs** change in each build. So please make sure to copy the ones from  **dist/spa/index.html**.
 
 ## Getting Started
 
@@ -120,11 +121,10 @@ To get the EMo Viewer up and running you should have the following software inst
 
 **Note**:
 
-We recommend to make use of `nvm`, since there might be issues with npm regarding permissions.
-The main purpose of `nvm` is to have multiple node versions installed in regards to different projects which might demand some sort of backwards compatibility.
-It enables you to just switch to the appropriate node version.
-Besides it also keeps track of resolving permission issues,
-since all your global installations go to your home directory (~/.nvm/) instead of being applied systemwide.
+We recommend to make use of `nvm`, since there might be issues with npm regarding permissions.  
+The main purpose of `nvm` is to have multiple node versions installed in regards to different projects which might demand some sort of backwards compatibility.  
+It enables you to just switch to the appropriate node version.  
+Besides it also keeps track of resolving permission issues, since all your global installations go to your home directory (~/.nvm/) instead of being applied systemwide.
 
 ### Installation
 
@@ -138,29 +138,29 @@ since all your global installations go to your home directory (~/.nvm/) instead 
 
 **Note**:
 
-After the nvm installation is done, please `restart` your shell session once.
+After the nvm installation is done, please `restart` your shell session once.  
 That's due to changes to your profile environment.
 
 #### Set up `global` project requirements via `npm`
 
-  ```bash
-  npm install -g @vue/cli @vue/cli-service-global @quasar/cli
-  ```
+```bash
+npm install -g @vue/cli @vue/cli-service-global @quasar/cli
+```
 
 #### Clone the repository
 
-  ```bash
-  git clone git@gitlab.gwdg.de:subugoe/emo/Qviewer.git
-  ```
+```bash
+git clone git@gitlab.gwdg.de:subugoe/emo/Qviewer.git
+```
 
 #### Get the dependencies
 
 Head over to your project directory, where you just cloned the repository to as described above and get all the dependencies needed by typing:
 
-  ```bash
-  cd /path/to/projectdir
-  npm install
-  ```
+```bash
+cd /path/to/projectdir
+npm install
+```
 
 That's it. You should now be able to run the Viewer.
 
@@ -178,7 +178,6 @@ npm run dev
 
 ```bash
 npm run lint # to lint js- and vue-files
-
 npm run lint:scss # to lint the styles
 ```
 
@@ -188,7 +187,7 @@ npm run lint:scss # to lint the styles
 npm run test:unit
 ```
 
-The Viewer makes use of **jest** in collaboration with the *expect-library*.
+The Viewer makes use of **jest** in collaboration with the *expect-library*.  
 Tests reside under **tests/unit/specs/** and are supposed to have a file ending of either `*.test.js` or `*.spec.js`.
 
 #### `Build` the app for production
@@ -205,7 +204,7 @@ See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
 
 ## Configure the Viewer
 
-There are two files in regards to configuration. Both deal with the Viewer's startup behaviour.<br />
+There are two files in regards to configuration. Both deal with the Viewer's startup behaviour.
 
 - a) configure the Viewer (**src/index.template.html**)
   - show or hide individual bars (info, navigation, toggles)
@@ -219,7 +218,6 @@ There are two files in regards to configuration. Both deal with the Viewer's sta
   - switch the panel/s off completely
 
 a) Locate the `script` section in the `index.template.html` file:
-
 
 As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
 
@@ -243,56 +241,66 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
 ```
 
 **Note**:
+
 It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels*), please use *double quotes* only.
 
-### The keys in detail
+### The Keys in Detail
 
 - **entrypoint**
 
-	to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed.<br />
-	(Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
+  to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed.
+  (Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
 
-	**Note**: You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
+  **Note**:
+  
+  You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
 
 - **headers**
 
-  - **all**<br />
-    set this value to `false` if you want to completely switch off all the headerbars at once.<br />
-    This value takes **precedence** over the other *header-keys*.<br />
-    If it is set to `false`, the other settings for the individual bars are not taken into account.<br />
+  - **all**
+
+    set this value to `false` if you want to completely switch off all the headerbars at once.  
+    This value takes **precedence** over the other *header-keys*.  
+    If it is set to `false`, the other settings for the individual bars are not taken into account.
+
     *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
 
-  - **info**<br />
-    set this value to `false` if you want to switch off the Infobar (a.k.a. breadcrumbs)
-  - **navigation**<br />
+  - **info**
+
+    set this value to `false` if you want to switch off the Infobar (a.k.a. breadcrumbs)  
+
+  - **navigation**
+
     set this value to `false` if you want to switch off the NavBar
-  - **toggle**<br />
+
+  - **toggle**
+
     set this value to `false` if you want to switch off the ToggleBar.
 
-    **Note**: if you turn this one off, you won't be able to toggle the panels anymore.
+    **Note**:
+
+    if you turn this one off, you won't be able to toggle the panels anymore.
 
     All header values default to `true`.
 
 - **labels**
 
-  - **item**:<br />
-    the label of the item respectively
+  - **item**:
 
-    Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.<br />
-    This change affects the captions of the navbuttons located in the headerbar and the metadata section.
-
+    The label of the item respectively  
+    Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.  
+    This change affects the captions of the navbuttons located in the headerbar and the metadata section.  
     Defaults to `Sheet`.
 
-  - **manifest**:<br />
-    same as for `item` but related to the manifest title<br />
+  - **manifest**:
 
+    Same as for `item` but related to the manifest title.  
     Defaults to `Manuscript`.
 
 - **standalone**
 
-	denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
-
-	Defaults to `true`.
+  denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.  
+  Defaults to `true`.
 
 ## Configure the panels
 
@@ -327,25 +335,40 @@ b) In order to configure the panels, locate the `panels.js` file inside the `src
   ];
 ```
 
-It consists of four objects according to the maximum number of panels, that can be shown at once.<br />
-Each object inside that constant consists of similar keys: `id`, `connector`, `pane_label` and `show`.<br />
+It consists of four objects according to the maximum number of panels, that can be shown at once.  
+Each object inside that constant consists of similar keys: `id`, `connector`, `pane_label` and `show`.
 
-#### The keys in detail:
-  - **id** provides unique IDs. (**Note**: please leave this value untouched; it's meant for internal use only!)<br />
+### The Panel Keys in Detail
 
-  - **connector** references the component id/s according to the appropriate panel/s or rather tab/s:
-    - 1 = Treeview
-    - 2 = Metadata
-    - 3 = OpenSeadragon
-    - 4 = Content / Text
-    - 5 = Annotations
+- **id**
 
-    **Note**: These IDs are supposed to be *unique*, so please make sure not to repeat these!
+  provides unique IDs. (**Note**: please leave this value untouched; it's meant for internal use only!)
 
-  - **panel_label** refers to the heading in each panel's *toolbar* (**Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.)
-  - **show** toggles (`show` or rather `hide`) the appropriate panel respectively
+- **connector**
 
-**Note**: Modifying the *connector* and the *panel_label* works on user configuration as well.<br />
+  references the component id/s according to the appropriate panel/s or rather tab/s:
+
+  - 1 = Treeview
+  - 2 = Metadata
+  - 3 = OpenSeadragon
+  - 4 = Content / Text
+  - 5 = Annotations
+
+  **Note**:
+  
+  These IDs are supposed to be *unique*, so please make sure not to repeat these!
+
+- **panel_label**
+
+  refers to the heading in each panel's *toolbar* (**Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.)
+
+- **show**
+
+  toggles (`show` or rather `hide`) the appropriate panel respectively
+
+**Note**:
+
+Modifying the *connector* and the *panel_label* works on user configuration as well.
 
 Example given:
 
@@ -360,12 +383,12 @@ Assuming you want to combine the *Metadata*, *Text* and *Annotations* panels:
   }
 ```
 
-To rename a panel heading, change the corresponding `panel_label` according to your needs.<br />
+To rename a panel heading, change the corresponding `panel_label` according to your needs.  
 If you intend to hide a component, just toggle its corresponding *show-key* to `false`.
 
 ## Dockerfile
 
-The dockerfile is used for GitLab CI.
+The dockerfile is used for GitLab CI.  
 It needs to be updated when either `node` or `quasar-cli` should be updated.
 
 ```bash
@@ -375,7 +398,7 @@ docker push docker.gitlab.gwdg.de/subugoe/emo/qviewer/node
 
 ## Connecting the Viewer to a Backend
 
-The viewer expects JSON that complies to the [SUB's generic TextAPI](https://subugoe.pages.gwdg.de/emo/text-api/) in order to function properly.
+The viewer expects JSON that complies to the [SUB's generic TextAPI](https://subugoe.pages.gwdg.de/emo/text-api/) in order to function properly.  
 To establish a link to the backend, the viewer's entrypoint in `src/index.template.html` has to be modified:
 
 ```html
