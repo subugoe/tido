@@ -49,6 +49,7 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-vue": "^7.0.0",
+    "markdownlint-cli": "^0.24.0",
     "node-sass": "^4.14.1",
     "sass": "^1.26.11",
     "sass-loader": "8.0.2",
@@ -80,6 +81,7 @@
     "dev": "quasar dev --modern",
     "lint": "eslint --ext .js,.vue src",
     "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
+    "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
     "test:unit": "jest --updateSnapshot"
   },
   "publishConfig": {
