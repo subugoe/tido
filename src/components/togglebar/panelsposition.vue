@@ -1,6 +1,13 @@
 <template>
   <section class="panel__position">
-    <q-btn class="panel__button" :icon="panelicon" @click="status = true" label="Customize" flat />
+    <q-btn
+      class="panel__button"
+      :icon="panelicon"
+      size="md"
+      @click="status = true"
+      label="Customize"
+      outline
+      />
 
       <q-dialog
         v-model="status"
@@ -19,11 +26,12 @@
           <Dragpanelboxes :data="panelboxes" />
         </q-card-section>
 
-        <q-card-actions
-          align="right"
-          :class="$q.dark.isActive ? 'bg-black' : 'bg-white'"
-          >
-          <q-btn flat label="OK" v-close-popup />
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="OK"
+            v-close-popup
+            />
         </q-card-actions>
       </q-card>
     </q-dialog>

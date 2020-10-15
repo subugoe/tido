@@ -1,9 +1,8 @@
 <template>
 
-  <div class="softwareinfo col-xs-auto">
+  <div class="col-xs-auto">
     <q-btn
       flat
-      color="grey"
       label=""
       title="Project Info"
       @click="infobox = true"
@@ -14,6 +13,7 @@
     <q-dialog v-model="infobox">
       <q-card>
         <q-card-section>
+          <!-- FIXME: this is an actual headding, but marked as DIV -->
           <div class="text-h5 q-pb-md">EMo Viewer</div>
 
           <p class="text-weight-bold">
@@ -30,7 +30,7 @@
         <q-card-section class="q-pt-none">
           <q-btn
             flat
-            href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/blob/develop/README.md"
+            href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/blob/main/README.md"
             target="_blank"
             type="a"
             >
@@ -58,8 +58,13 @@
           </q-btn>
         </q-card-section>
 
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Close" v-close-popup />
+        <q-card-actions align="right">
+          <q-btn
+            :class="$q.dark.isActive ? 'text-white' : 'text-black'"
+            flat
+            label="Close"
+            v-close-popup
+            />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -72,8 +77,7 @@ import {
   fasBug,
   fasCode,
   fasInfoCircle,
-}
-  from '@quasar/extras/fontawesome-v5';
+} from '@quasar/extras/fontawesome-v5';
 import { version } from '../../package.json';
 
 export default {

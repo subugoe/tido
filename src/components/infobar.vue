@@ -8,6 +8,7 @@
       <q-icon
         class="q-pb-xs q-pl-sm q-pr-sm"
         size="sm"
+        :color="$q.dark.isActive ? 'white' : 'accent'"
         :name="fasChevronRight"
         />
       <span>Sheet {{ itemlabel }}</span>
@@ -45,3 +46,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.title {
+  font-size: 28px !important;
+  letter-spacing: 2px;
+}
+</style>

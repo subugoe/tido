@@ -10,7 +10,7 @@ body {
   position: relative;
 
   .sticky {
-    background: $light;
+    // background: $light;
     display: flex;
     justify-content: flex-start;
     left: 0;
@@ -31,8 +31,11 @@ body {
   }
 }
 
-.content-panel .q-tab-panel > * {
-  padding: 0 !important;
+.content-panel .q-tab-panel {
+  padding: 8px;
+  > * {
+    padding: 0 !important;
+  }
 }
 
 .without-dropdown > * {
@@ -64,10 +67,4 @@ body {
   border: 0;
   outline: none;
   width: 100%;
-}
-
-.q-tabs__content {
-  .q-tab {
-    width: 100%;
-  }
 }

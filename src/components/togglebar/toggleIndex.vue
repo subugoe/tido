@@ -4,25 +4,35 @@
       <q-list class="toggle-list">
         <div v-for="(p, i) in panels" :key="`toggle${i}`">
           <q-item
-            :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-2'"
             clickable
+            flat
             v-close-popup
             :title="handleToggleTitle(i)"
             @click="() => handleStatusPanel(i)"
             >
-            <q-icon class="q-pr-xs" size="xs" :name="renderCheckIcon(i)" />
+            <q-icon
+              class="q-pr-xs"
+              size="xs"
+              :color="$q.dark.isActive ? 'bg-black' : 'accent'"
+              :name="renderCheckIcon(i)"
+              />
             {{ p.panel_label.toUpperCase() }}
           </q-item>
         </div>
 
         <q-item
-          :class="$q.dark.isActive ? 'bg-black' : 'bg-grey-5'"
           clickable
+          flat
           title="Reset panels to default view"
           v-close-popup
           @click="()=> handleStatusPanel(-1, true)"
           >
-          <q-icon class="q-pr-xs text-capitalize" size="xs" :name="fasUndo" />
+          <q-icon
+            class="q-pr-xs"
+            size="xs"
+            :color="$q.dark.isActive ? 'black' : 'accent'"
+            :name="fasUndo"
+            />
           {{ 'RESET' }}
         </q-item>
       </q-list>
@@ -93,5 +103,9 @@ button {
 
 button:last-of-type {
   margin-right: 0;
+}
+
+.q-item {
+  min-height: 0;
 }
 </style>

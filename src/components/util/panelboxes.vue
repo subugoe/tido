@@ -41,9 +41,9 @@
 
               <div class="actions">
                 <q-btn
-                  class="only-bedrag"
-                  color="dark"
+                  class="only-bedrag panel-boxes__handle bg-accent text-white"
                   round
+                  flat
                   size="xs"
                   title="Drag and drop the panels to reorder."
                   :icon="fasArrowsAlt"

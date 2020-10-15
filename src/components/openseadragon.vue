@@ -4,10 +4,10 @@
       <q-btn
         v-for="(btn, idx) in buttons" :key="idx"
         class="q-mr-sm q-mb-sm"
-        color="grey-8"
         flat
         round
         size="md"
+        :color="$q.dark.isActive ? 'white' : 'accent'"
         :id="btn.id"
         >
         <q-icon size="sm" :name="btn.svg" />
@@ -76,7 +76,6 @@ figure {
   display: inline-block;
   height: 75vh;
   margin: 0;
-  padding: 8px;
   width: 100%;
 }
 </style>

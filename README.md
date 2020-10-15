@@ -210,6 +210,7 @@ There are two files in regards to configuration. Both deal with the Viewer's sta
   - show or hide individual bars (info, navigation, toggles)
   - rename labels
   - tell the Viewer how it will be used (standalone / embedded)
+  - change the color scheme
 
 - b) configure the panels (**src/config/panels.js**)
   - set the order of the panels
@@ -235,7 +236,12 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
       "item": "Sheet",
       "manifest": "Manuscript"
     },
-    "standalone": true
+    "standalone": true,
+    "colors": {
+      "primary": "false",
+      "secondary": "false",
+      "accent": "false"
+    }
   }
 </script>
 ```
@@ -299,8 +305,19 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
 
 - **standalone**
 
-  denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.  
+  denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
+
   Defaults to `true`.
+
+- **colors**
+
+  Set the colors used in the frontend.
+
+  `primary` and `accent` should be a darker tone, so that white text is visible if used as background. It's the other way around with `secondary`.
+
+  Hex values (like `#a1a1a1`) or color names (like `hotpink`) can be used.
+
+  If any value is left `false`, a default color scheme will be used.
 
 ## Configure the panels
 

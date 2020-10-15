@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md q-gutter-sm">
+  <div class="q-pa-md">
     <q-tree
       class="view-tree"
       label-key="label-key"

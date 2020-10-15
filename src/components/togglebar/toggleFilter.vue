@@ -1,15 +1,22 @@
 <template>
+  <!-- FIXME: semantically this is not a section -->
   <section class="filter-buttons">
-    <q-btn-dropdown v-if="$q.screen.width < 1100"
-      class="q-mb-md"
-      color="black"
+    <q-btn-dropdown
+      v-if="$q.screen.width < 1100"
       :dropdown-icon="dropicon"
-      label="Toggle panels ..."
+      outline
+      flat
+      :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
+      class="q-mb-md q-mr-md"
+      label="Toggle panels"
       >
       <slot />
     </q-btn-dropdown>
 
-    <div class="q-mb-md without-dropdown" v-else>
+    <div
+      class="q-mb-md without-dropdown q-mr-md"
+      v-else
+      >
       <slot />
     </div>
   </section>
