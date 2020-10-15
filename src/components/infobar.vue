@@ -1,22 +1,18 @@
 <template>
   <div>
-    <h1 class="title text-h4 text-bold text-uppercase">
-      <span>{{ cut(collectiontitle) }}</span>
-      <q-icon
-        class="q-pb-xs q-pr-sm q-pl-sm"
-        size="sm"
-        :color="$q.dark.isActive ? 'white' : 'accent'"
-        :name="fasChevronRight"
-        />
-      <span>{{ cut(manifesttitle) }}</span>
-      <q-icon
-        class="q-pb-xs q-pr-sm q-pl-sm"
-        size="sm"
-        :color="$q.dark.isActive ? 'white' : 'accent'"
-        :name="fasChevronRight"
-        />
-      <span>{{ itemlabel }}</span>
+    <h1 class="text-h4 text-bold text-uppercase">
+      {{ collectiontitle }}
     </h1>
+    <h2 class="text-h5 text-bold text-uppercase q-mt-none q-mb-ml">
+      <span>{{ manifesttitle }}</span>
+      <q-icon
+        class="q-pb-xs q-pl-sm q-pr-sm"
+        size="sm"
+        :color="$q.dark.isActive ? 'white' : 'accent'"
+        :name="fasChevronRight"
+        />
+      <span>Sheet {{ itemlabel }}</span>
+    </h2>
   </div>
 </template>
 
@@ -38,11 +34,6 @@ export default {
   computed: {
     manifesttitle() {
       return this.manifests[this.sequenceindex].label;
-    },
-  },
-  methods: {
-    cut(s) {
-      return s.length > 30 ? `${s.substring(0, 26)} ...` : s;
     },
   },
   created() {
