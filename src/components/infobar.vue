@@ -1,18 +1,16 @@
 <template>
   <div>
-    <h1 class="text-h4 text-center text-bold text-uppercase">
-      <!-- <span>{{ cut(collectiontitle) }}</span> -->
+    <h1 class="text-h4 text-bold text-uppercase">
       {{ collectiontitle }}
-      <!-- <span>{{ cut(manifesttitle) }}</span> -->
     </h1>
-    <h2 class="text-h5 text-center text-bold text-uppercase q-mt-none q-mb-ml">
+    <h2 class="text-h5 text-bold text-uppercase q-mt-none q-mb-ml">
       <span>{{ manifesttitle }}</span>
       <q-icon
-        class="q-pb-xs"
+        class="q-pb-xs q-pl-sm q-pr-sm"
         size="sm"
         :name="fasChevronRight"
         />
-      <span>{{ itemlabel }}</span>
+      <span>Sheet {{ itemlabel }}</span>
     </h2>
   </div>
 </template>
