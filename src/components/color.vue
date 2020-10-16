@@ -49,24 +49,11 @@ import { colors } from 'quasar';
 export default {
   name: 'color',
   created() {
-    // this.getConfig();
-    // this.projectcolors = projectcolors;
     this.fasPalette = fasPalette;
   },
-  // data() {
-  //   return {
-  //     config: {},
-  //   };
-  // },
   props: {
     projectcolors: Object,
   },
-  // computed: {
-  //   asdf() {
-  //     // console.log(this.$colors);
-  //     return this.$colors.primary;
-  //   },
-  // },
   methods: {
     changeColorsTo(color) {
       if (color === 'default') {
