@@ -238,9 +238,9 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
     },
     "standalone": true,
     "colors": {
-      "primary": "false",
-      "secondary": "false",
-      "accent": "false"
+      "primary": false,
+      "secondary": false,
+      "accent": false
     }
   }
 </script>
