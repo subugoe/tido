@@ -57,7 +57,7 @@ export default {
   methods: {
     changeColorsTo(color) {
       if (color === 'default') {
-        if (!this.projectcolors.primary) {
+        if (this.projectcolors.primary) {
           colors.setBrand('primary', this.projectcolors.primary);
           colors.setBrand('secondary', this.projectcolors.secondary);
           colors.setBrand('accent', this.projectcolors.accent);
