@@ -315,9 +315,9 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
 
   `primary` and `accent` should be a darker tone, so that white text is visible if used as background. It's the other way around with `secondary`.
 
-  Hex values (like `#a1a1a1`) or color names (like `hotpink`) can be used.
+  Hex values (like `#a1a1a1`) or color names (like `hotpink`) are fine.
 
-  If any value is left `false`, a default color scheme will be used.
+  If any value is left blank (e.g. `"primary": "",`), a default color scheme will be used.
 
 ## Configure the panels
 

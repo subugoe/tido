@@ -307,7 +307,7 @@ export default {
     this.$q.dark.set('auto');
     this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
-    if (this.config.colors.primary !== 'false') {
+    if (this.config.colors.primary && this.config.colors.secondary && this.config.colors.accent) {
       colors.setBrand('primary', this.config.colors.primary);
       colors.setBrand('secondary', this.config.colors.secondary);
       colors.setBrand('accent', this.config.colors.accent);
