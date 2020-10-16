@@ -30,7 +30,7 @@
           <q-icon
             class="q-pr-xs"
             size="xs"
-            :color="$q.dark.isActive ? 'black' : 'accent'"
+            :color="$q.dark.isActive ? 'white' : 'accent'"
             :name="fasUndo"
             />
           {{ 'RESET' }}
