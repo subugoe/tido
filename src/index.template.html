@@ -24,6 +24,11 @@
     <script id="emo-config" type="application/json">
     {
       "entrypoint": "https://ahikar-test.sub.uni-goettingen.de/api/textapi/ahikar/3r9ps/collection.json",
+      "colors": {
+        "primary": "",
+        "secondary": "",
+        "accent": ""
+      },
       "headers": {
         "all": true,
         "info": true,
@@ -34,12 +39,28 @@
         "item": "Sheet",
         "manifest": "Manuscript"
       },
-      "standalone": true,
-      "colors": {
-        "primary": "black",
-        "secondary": "papayawhip",
-        "accent": "darkred"
-      }
+      "meta": {
+        "collection": {
+          "all": true,
+          "collector": true,
+          "description": true,
+          "title": true
+        },
+        "manifest": {
+          "all": true,
+          "creation": true,
+          "editor": true,
+          "label": true,
+          "location": true,
+          "origin": true
+        },
+        "item": {
+          "all": true,
+          "label": true,
+          "language": true
+        }
+      },
+      "standalone": true
     }
     </script>
 

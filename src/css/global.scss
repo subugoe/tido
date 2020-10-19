@@ -33,6 +33,7 @@ body {
 
 .content-panel .q-tab-panel {
   padding: 8px;
+
   > * {
     padding: 0 !important;
   }
@@ -66,5 +67,9 @@ body {
   background: transparent;
   border: 0;
   outline: none;
+  width: 100%;
+}
+
+.q-tabs__content .q-tab {
   width: 100%;
 }

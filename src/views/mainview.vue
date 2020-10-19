@@ -59,6 +59,7 @@ export default {
   },
   props: {
     collection: Object,
+    config: Object,
     contenturl: String,
     fontsize: Number,
     imageurl: String,

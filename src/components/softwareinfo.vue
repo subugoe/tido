@@ -13,8 +13,7 @@
     <q-dialog v-model="infobox">
       <q-card>
         <q-card-section>
-          <!-- FIXME: this is an actual headding, but marked as DIV -->
-          <div class="text-h5 q-pb-md">EMo Viewer</div>
+          <h1 class="text-h5 q-pb-md">EMo Viewer</h1>
 
           <p class="text-weight-bold">
             Slim, easy to use and mobile-friendly text and image viewer
