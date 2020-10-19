@@ -25,7 +25,7 @@
             clickable
             @click="() => changeColorsTo('emo')"
             v-close-popup
-            v-if="projectcolors.primary"
+            v-if="projectcolors.primary && projectcolors.secondary && projectcolors.accent"
             >
             <q-item-section>EMo</q-item-section>
           </q-item>
@@ -57,7 +57,7 @@ export default {
   methods: {
     changeColorsTo(color) {
       if (color === 'default') {
-        if (this.projectcolors.primary) {
+        if (this.projectcolors.primary && this.projectcolors.secondary && this.projectcolors.accent) {
           colors.setBrand('primary', this.projectcolors.primary);
           colors.setBrand('secondary', this.projectcolors.secondary);
           colors.setBrand('accent', this.projectcolors.accent);
