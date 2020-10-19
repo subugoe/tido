@@ -1,6 +1,5 @@
 <template>
-  <!-- FIXME: semantically this is not a section -->
-  <section class="filter-buttons">
+  <div class="filter-buttons">
     <q-btn-dropdown
       v-if="$q.screen.width < 1100"
       :dropdown-icon="dropicon"
@@ -19,7 +18,7 @@
       >
       <slot />
     </div>
-  </section>
+  </div>
 </template>
 
 <script>

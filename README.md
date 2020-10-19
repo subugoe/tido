@@ -17,8 +17,8 @@ Also the commit short hash can be used to see a demo.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Viewer components](#viewer-components)
-- [Latest version and integration](#latest-version-and-integration)
+- [Viewer Components](#viewer-components)
+- [Latest Version and Integration](#latest-version-and-integration)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -26,16 +26,16 @@ Also the commit short hash can be used to see a demo.
     - [Set up `global` project requirements via `npm`](#set-up-global-project-requirements-via-npm)
     - [Clone the repository](#clone-the-repository)
     - [Get the dependencies](#get-the-dependencies)
-- [Usage](#usage)
-  - [Start the Viewer in `development mode` (hot reloading, error reporting, etc.)](#start-the-viewer-in-development-mode-hot-reloading-error-reporting-etc)
+  - [Usage](#usage)
+    - [`development mode` (hot reloading, error reporting, etc.)](#development-mode-hot-reloading-error-reporting-etc)
     - [`Linting`](#linting)
     - [`Testing`](#testing)
-    - [`Build` the app for production](#build-the-app-for-production)
-- [Customize the Configuration](#customize-the-configuration)
-- [Configure the Viewer](#configure-the-viewer)
-  - [The keys in detail](#the-keys-in-detail)
-- [Configure the panels](#configure-the-panels)
-  - [The keys in detail:](#the-keys-in-detail)
+    - [`Building` the app for production](#building-the-app-for-production)
+- [Configuration](#configuration)
+  - [a) Configure the Viewer](#a-configure-the-viewer)
+    - [The Keys in Detail](#the-keys-in-detail)
+  - [b) Configure the Panels](#b-configure-the-panels)
+    - [The Panel Keys in Detail](#the-panel-keys-in-detail)
 - [Dockerfile](#dockerfile)
 - [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend)
 - [Architecture](#architecture)
@@ -45,13 +45,13 @@ Also the commit short hash can be used to see a demo.
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Viewer components
+## Viewer Components
 
 ![Viewer components](img/Viewer.png)
 
-## Latest version and integration
+## Latest Version and Integration
 
-To embed the viewer for production get [the latest compiled and minified version is available](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)  
+To embed the viewer for production [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)  
 It is a zip archive. You can extract the build by typing:
 
 ```bash
@@ -164,9 +164,9 @@ npm install
 
 That's it. You should now be able to run the Viewer.
 
-## Usage
+### Usage
 
-### Start the Viewer in `development mode` (hot reloading, error reporting, etc.)
+#### `development mode` (hot reloading, error reporting, etc.)
 
 ```bash
 npm run dev
@@ -177,8 +177,9 @@ npm run dev
 #### `Linting`
 
 ```bash
-npm run lint # to lint js- and vue-files
-npm run lint:scss # to lint the styles
+npm run lint            # to lint js- and vue-files
+npm run lint:scss       # to lint the styles
+npm run lint:markdown   # to lint the markdown
 ```
 
 #### `Testing`
@@ -190,7 +191,7 @@ npm run test:unit
 The Viewer makes use of **jest** in collaboration with the *expect-library*.  
 Tests reside under **tests/unit/specs/** and are supposed to have a file ending of either `*.test.js` or `*.spec.js`.
 
-#### `Build` the app for production
+#### `Building` the app for production
 
 ```bash
 npm run build
@@ -198,27 +199,28 @@ npm run build
 
 **Note**: The complete build is located at `/dist/spa/`.
 
-## Customize the Configuration
+## Configuration
 
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+The Viewer is build with *Vue.js* and *Quasar*.
+If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf) (Configuring quasar.conf.js).
 
-## Configure the Viewer
-
-There are two files in regards to configuration. Both deal with the Viewer's startup behaviour.
+There are two files in regards to configuration:
 
 - a) configure the Viewer (**src/index.template.html**)
+  - change the color scheme
   - show or hide individual bars (info, navigation, toggles)
   - rename labels
-  - tell the Viewer how it will be used (standalone / embedded)
-  - change the color scheme
+  - usage (standalone / embedded)
 
 - b) configure the panels (**src/config/panels.js**)
   - set the order of the panels
   - group the components inside a panel (e.g. turn them into tabs)
   - rename the panel headings
-  - switch the panel/s off completely
+  - switch the panel/s off
 
-a) Locate the `script` section in the `index.template.html` file:
+### a) Configure the Viewer
+
+Locate the `script` section in the `index.template.html` file:
 
 As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
 
@@ -226,6 +228,11 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
   <script id="emo-config" type="application/json">
   {
     "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
+    "colors": {
+      "primary": "",
+      "secondary": "grey",
+      "accent": "darkred"
+    },
     "headers": {
       "all": true,
       "info": true,
@@ -236,21 +243,37 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
       "item": "Sheet",
       "manifest": "Manuscript"
     },
-    "standalone": true,
-    "colors": {
-      "primary": false,
-      "secondary": false,
-      "accent": false
-    }
+    "meta": {
+      "collection": {
+        "all": true,
+        "collector": true,
+        "description": true,
+        "title": true
+      },
+      "manifest": {
+        "all": true,
+        "creation": true,
+        "editor": true,
+        "label": true,
+        "location": true,
+        "origin": true
+      },
+      "item": {
+        "all": true,
+        "label": true,
+        "language": true
+      }
+    },
+    "standalone": true
   }
 </script>
 ```
 
 **Note**:
 
-It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels*), please use *double quotes* only.
+It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels* or colors), please use *double quotes* only.
 
-### The Keys in Detail
+#### The Keys in Detail
 
 - **entrypoint**
 
@@ -258,8 +281,18 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
   (Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
 
   **Note**:
-  
+
   You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
+
+- **colors**
+
+  Set the colors used in the frontend.
+
+  `primary` and `accent` should be a darker tone, so that white text is visible if used as background. It's the other way around with `secondary`.
+
+  Hex values (like `#a1a1a1`) or color names (like `hotpink`) are fine.
+
+  If any value is left blank (e.g. `"primary": "",`), a default color scheme will be used.
 
 - **headers**
 
@@ -303,25 +336,32 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
     Same as for `item` but related to the manifest title.  
     Defaults to `Manuscript`.
 
+- **meta**
+
+  set either of the values to `false` to switch it off. if you set an `all`-key to `false` the other fields within the same object aren't taken into account.
+
+  e.g. neither of *collector*, *description* and *title* will be displayed:
+
+  ```json
+  "meta": {
+    "collection": {
+      "all": false,
+      "collector": true,
+      "description": true,
+      "title": true
+    }
+  }
+  ```
+
 - **standalone**
 
   denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
 
   Defaults to `true`.
 
-- **colors**
+### b) Configure the Panels
 
-  Set the colors used in the frontend.
-
-  `primary` and `accent` should be a darker tone, so that white text is visible if used as background. It's the other way around with `secondary`.
-
-  Hex values (like `#a1a1a1`) or color names (like `hotpink`) are fine.
-
-  If any value is left blank (e.g. `"primary": "",`), a default color scheme will be used.
-
-## Configure the panels
-
-b) In order to configure the panels, locate the `panels.js` file inside the `src/config` folder of your project dir and find the *panels* constant at the top of the file:
+In order to configure the panels, locate the `panels.js` file inside the `src/config` folder of your project dir and find the *panels* constant at the top of the file:
 
 ```js
   const panels = [
@@ -355,7 +395,7 @@ b) In order to configure the panels, locate the `panels.js` file inside the `src
 It consists of four objects according to the maximum number of panels, that can be shown at once.  
 Each object inside that constant consists of similar keys: `id`, `connector`, `pane_label` and `show`.
 
-### The Panel Keys in Detail
+#### The Panel Keys in Detail
 
 - **id**
 
@@ -372,7 +412,7 @@ Each object inside that constant consists of similar keys: `id`, `connector`, `p
   - 5 = Annotations
 
   **Note**:
-  
+
   These IDs are supposed to be *unique*, so please make sure not to repeat these!
 
 - **panel_label**

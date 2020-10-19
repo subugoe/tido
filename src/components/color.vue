@@ -43,11 +43,11 @@
 </template>
 
 <script>
-import { fasPalette } from '@quasar/extras/fontawesome-v5';
 import { colors } from 'quasar';
+import { fasPalette } from '@quasar/extras/fontawesome-v5';
 
 export default {
-  name: 'color',
+  name: 'Color',
   created() {
     this.fasPalette = fasPalette;
   },
