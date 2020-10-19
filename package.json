@@ -51,9 +51,11 @@
     "eslint-plugin-vue": "^7.0.0",
     "markdownlint-cli": "^0.24.0",
     "node-sass": "^4.14.1",
+    "prettier": "2.1.2",
     "sass": "^1.26.11",
     "sass-loader": "8.0.2",
     "stylelint": "^13.7.2",
+    "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-sass-guidelines": "^7.1.0"
   },
   "browserslist": [
@@ -82,7 +84,8 @@
     "lint": "eslint --ext .js,.vue src",
     "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
-    "test:unit": "jest --updateSnapshot"
+    "test:unit": "jest --updateSnapshot",
+    "stylelint-check": "node_modules/.bin/stylelint-config-prettier-check"
   },
   "publishConfig": {
     "@subugoe:registry": "https://gitlab.gwdg.de/api/v4/projects/10921/packages/npm/"
