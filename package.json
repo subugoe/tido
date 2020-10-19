@@ -17,9 +17,7 @@
   "bugs": {
     "email": "gitlab+subugoe-emo-qviewer-10921-issue-@gwdg.de"
   },
-  "license": {
-    "license": "AGPL-3.0-or-later"
-  },
+  "license": "AGPL-3.0-or-later",
   "author": "Göttingen State and University Library - SUB",
   "contributors": [
     "Manikanth Dindigala <dindigala@sub.uni-goettingen.de>",
