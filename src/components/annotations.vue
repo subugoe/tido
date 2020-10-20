@@ -1,9 +1,17 @@
 <template>
   <div>
     <q-list>
-      <q-item v-for="anno in Object.entries(annotations)" :key="anno.id">
+      <q-item
+        v-for="anno in Object.entries(annotations)"
+        :key="anno.id"
+      >
         <q-item-section>
-          <q-item-label overline class="text-uppercase">{{ anno[0] }}</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            {{ anno[0] }}
+          </q-item-label>
           <q-item-label>{{ anno[1] }}</q-item-label>
         </q-item-section>
       </q-item>
@@ -18,15 +26,9 @@ export default {
     annotations: Object,
   },
   data() {
-    return {
-
-    };
+    return {};
   },
-  methods: {
-
-  },
-  mounted() {
-
-  },
+  mounted() {},
+  methods: {},
 };
 </script>

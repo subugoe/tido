@@ -10,7 +10,7 @@
         size="sm"
         :color="$q.dark.isActive ? 'white' : 'accent'"
         :name="fasChevronRight"
-        />
+      />
       <span>Sheet {{ itemlabel }}</span>
     </h2>
   </div>

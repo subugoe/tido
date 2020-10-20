@@ -2,39 +2,46 @@
   <section>
     <div class="panels__wrap">
       <Panelsdraggable
-        handle=".only-bedrag"
         v-model="panels"
+        handle=".only-bedrag"
         @change="$root.$emit('panels-position', panels)"
+      >
+        <div
+          v-for="(panel, idx) in panels"
+          v-show="panel.show"
+          :key="`pa${idx}`"
+          class="panels"
         >
-        <div class="panels" v-for="(panel, idx) in panels" v-show="panel.show" :key="`pa${idx}`">
           <div
             class="effected"
+            :unique-index="idx"
+            :class="$q.dark.isActive ? 'bg-grey-8 text-white' : 'bg-grey-1 text-black'"
             @dragleave.prevent="dragHighlightComponent($event, false)"
             @dragover.prevent="dragHighlightComponent($event)"
             @drop="receivingComponent($event)"
-            :unique-index="idx"
-            :class="$q.dark.isActive ? 'bg-grey-8 text-white' : 'bg-grey-1 text-black'"
-            >
+          >
             <div>
               <div class="panel__header">
                 <input
                   class="panel-textinput text-uppercase"
-                  type="text"
                   :class="$q.dark.isActive ? 'bg-grey-8 text-white' : 'bg-grey-1 text-black'"
+                  type="text"
                   :value="panel.panel_label"
                   @input="(e) => handlePanelLabel(e, idx)"
-                />
+                >
               </div>
               <q-separator />
 
               <div class="components-list">
                 <template v-if="panel.connector.length">
-                  <div v-for="(comp,i) in panel.connector" :key="`pi${i}`"
+                  <div
+                    v-for="(comp,i) in panel.connector"
+                    :key="`pi${i}`"
                     draggable="true"
-                    v-text="comp.label"
                     :class="$q.dark.isActive ? 'bg-black text-white' : 'bg-grey-1 text-black'"
                     @dragstart="dragged = comp.id; draggedPanelIdx = idx"
                     @dragend="dragged = null; draggedPanelIdx = null"
+                    v-text="comp.label"
                   />
                 </template>
               </div>
@@ -52,11 +59,12 @@
             </div>
           </div>
         </div>
-        <q-btn v-if="panels.length < 4"
+        <q-btn
+          v-if="panels.length < 4"
+          slot="footer"
           color="$grey-4"
           flat
           size="large"
-          slot="footer"
           :icon="fasPlus"
           @click="addPanel"
         />
@@ -73,22 +81,14 @@ export default {
   components: {
     Panelsdraggable,
   },
+  props: {
+    data: Array,
+  },
   data: () => ({
     dragged: null,
     draggedPanelIdx: null,
     panels: [],
   }),
-  props: {
-    data: Array,
-  },
-  mounted() {
-    this.setpanels();
-  },
-  watch: {
-    data() {
-      this.setpanels();
-    },
-  },
   computed: {
     panelsEmptyConnectors() {
       let result = false;
@@ -99,6 +99,19 @@ export default {
 
       return result;
     },
+  },
+  watch: {
+    data() {
+      this.setpanels();
+    },
+  },
+  mounted() {
+    this.setpanels();
+  },
+  created() {
+    this.fasPlus = fasPlus;
+    this.fasTrash = fasTrash;
+    this.fasArrowsAlt = fasArrowsAlt;
   },
   methods: {
     addPanel() {
@@ -134,11 +147,6 @@ export default {
     setpanels() {
       this.panels = this.data;
     },
-  },
-  created() {
-    this.fasPlus = fasPlus;
-    this.fasTrash = fasTrash;
-    this.fasArrowsAlt = fasArrowsAlt;
   },
 };
 </script>

@@ -6,8 +6,7 @@
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
-      >
-
+    >
       <q-icon
         class="q-pr-sm"
         :name="fasArrowLeft"
@@ -23,7 +22,7 @@
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex >= itemurls.length - 1"
       @click="toggleSheet(++itemindex)"
-      >
+    >
       {{ captionnext }}
 
       <q-icon

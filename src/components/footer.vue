@@ -4,7 +4,7 @@
     reveal
     class="row justify-start items-center"
     :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
-    >
+  >
     <Language v-if="standalone" />
     <Color :projectcolors="projectcolors" />
     <Softwareinfo />

@@ -9,9 +9,14 @@
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       :selected.sync="selected"
+    >
+      <template
+        v-slot:default-body="{node}"
       >
-      <template v-slot:default-body="{node}">
-        <div v-if="!node.children" :id="`selectedItem-${node['label']}`"></div>
+        <div
+          v-if="!node.children"
+          :id="`selectedItem-${node['label']}`"
+        />
       </template>
     </q-tree>
   </div>

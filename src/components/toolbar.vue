@@ -9,15 +9,15 @@
 <script>
 export default {
   name: 'Toolbar',
+  filters: {
+    capitalize(s) {
+      return s.toUpperCase();
+    },
+  },
   props: {
     heading: {
       type: String,
       required: true,
-    },
-  },
-  filters: {
-    capitalize(s) {
-      return s.toUpperCase();
     },
   },
 };

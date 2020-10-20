@@ -3,7 +3,7 @@
     <q-btn
       flat
       title="Change language"
-      >
+    >
       <q-icon
         :name="fasLanguage"
         size="md"
@@ -13,13 +13,19 @@
         anchor="center middle"
         fit
         self="center middle"
-        >
+      >
         <q-list>
-          <q-item clickable v-close-popup>
+          <q-item
+            v-close-popup
+            clickable
+          >
             <q-item-section>DE</q-item-section>
           </q-item>
 
-          <q-item clickable v-close-popup>
+          <q-item
+            v-close-popup
+            clickable
+          >
             <q-item-section>{{ lang }}</q-item-section>
           </q-item>
         </q-list>

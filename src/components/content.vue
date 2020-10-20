@@ -9,12 +9,12 @@
           size="md"
           title="Increase Textsize"
           @click="increase()"
-          >
+        >
           <q-icon
             :name="fasSearchPlus"
             size="sm"
             :color="$q.dark.isActive ? 'white' : 'accent'"
-            />
+          />
         </q-btn>
 
         <q-btn
@@ -25,23 +25,23 @@
           title="Decrease Textsize"
           :color="$q.dark.isActive ? 'white' : 'accent'"
           @click="decrease()"
-          >
+        >
           <q-icon
             :name="fasSearchMinus"
             size="sm"
             :color="$q.dark.isActive ? 'white' : 'accent'"
-            />
+          />
         </q-btn>
       </div>
     </div>
 
     <div class="row">
       <div
-        class="scroll-panel"
-        ref="contentsize"
         :id="nodeid"
+        ref="contentsize"
+        class="scroll-panel"
         v-html="content"
-        />
+      />
     </div>
   </div>
 </template>
@@ -68,6 +68,21 @@ export default {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
     },
+  },
+  async created() {
+    this.fasSearchPlus = fasSearchPlus;
+    this.fasSearchMinus = fasSearchMinus;
+
+    this.content = await this.request(this.contenturl, 'text').then((data) => data);
+  },
+  mounted() {
+    this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
+
+    this.$root.$on('update-sequence-index', (index) => {
+      if (this.manifests[index].support) {
+        this.manifests[index].support.map(this.getSupport);
+      }
+    });
   },
   methods: {
     decrease() {
@@ -97,21 +112,6 @@ export default {
           });
       }
     },
-  },
-  async created() {
-    this.fasSearchPlus = fasSearchPlus;
-    this.fasSearchMinus = fasSearchMinus;
-
-    this.content = await this.request(this.contenturl, 'text').then((data) => data);
-  },
-  mounted() {
-    this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
-
-    this.$root.$on('update-sequence-index', (index) => {
-      if (this.manifests[index].support) {
-        this.manifests[index].support.map(this.getSupport);
-      }
-    });
   },
 };
 </script>

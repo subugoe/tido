@@ -8,14 +8,14 @@
       :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
       class="q-mb-md q-mr-md"
       label="Toggle panels"
-      >
+    >
       <slot />
     </q-btn-dropdown>
 
     <div
-      class="q-mb-md without-dropdown q-mr-md"
       v-else
-      >
+      class="q-mb-md without-dropdown q-mr-md"
+    >
       <slot />
     </div>
   </div>

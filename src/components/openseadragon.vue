@@ -2,15 +2,19 @@
   <figure id="openseadragon">
     <nav class="sticky">
       <q-btn
-        v-for="(btn, idx) in buttons" :key="idx"
+        v-for="(btn, idx) in buttons"
+        :id="btn.id"
+        :key="idx"
         class="q-mr-sm q-mb-sm"
         flat
         round
         size="md"
         :color="$q.dark.isActive ? 'white' : 'accent'"
-        :id="btn.id"
-        >
-        <q-icon size="sm" :name="btn.svg" />
+      >
+        <q-icon
+          size="sm"
+          :name="btn.svg"
+        />
       </q-btn>
     </nav>
   </figure>

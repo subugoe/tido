@@ -3,12 +3,19 @@
     <!-- Collection-->
     <q-list v-if="Object.keys(collection).length && config.meta.collection.all">
       <q-item>
-        <q-item-section class="text-h6 caps">Collection</q-item-section>
+        <q-item-section class="text-h6 caps">
+          Collection
+        </q-item-section>
       </q-item>
 
       <q-item v-if="config.meta.collection.title">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Title:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Title:
+          </q-item-label>
           <q-item-label>
             {{ collection.title ? collection.title[0].title : '' }}
           </q-item-label>
@@ -17,23 +24,37 @@
 
       <q-item v-if="config.meta.collection.collector">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Collector:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Collector:
+          </q-item-label>
           <q-item-label>
             {{ collection.collector && collection.collector.name ? collection.collector.name : '' }}
-            </q-item-label>
+          </q-item-label>
         </q-item-section>
       </q-item>
 
       <q-item v-if="config.meta.collection.description">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Description:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Description:
+          </q-item-label>
           <q-item-label>
             {{ collection.description }}
           </q-item-label>
         </q-item-section>
       </q-item>
 
-      <q-separator v-if="showSeparator(config.meta.collection.all)" inset class="q-mt-md q-mb-sm" />
+      <q-separator
+        v-if="showSeparator(config.meta.collection.all)"
+        inset
+        class="q-mt-md q-mb-sm"
+      />
     </q-list>
 
     <!-- Manifest-->
@@ -46,41 +67,70 @@
 
       <q-item v-if="config.meta.manifest.label">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Label:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Label:
+          </q-item-label>
           <q-item-label>{{ title }}</q-item-label>
         </q-item-section>
       </q-item>
 
       <q-item v-if="config.meta.manifest.creation">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Year of creation:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Year of creation:
+          </q-item-label>
           <q-item-label>{{ date }}</q-item-label>
         </q-item-section>
       </q-item>
 
       <q-item v-if="config.meta.manifest.editor">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Editor:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Editor:
+          </q-item-label>
           <q-item-label>{{ editor }}</q-item-label>
         </q-item-section>
       </q-item>
 
       <q-item v-if="config.meta.manifest.location">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Current location:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Current location:
+          </q-item-label>
           <q-item-label>{{ location }}</q-item-label>
         </q-item-section>
       </q-item>
 
       <q-item v-if="config.meta.manifest.origin">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Origin:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Origin:
+          </q-item-label>
           <q-item-label>{{ origin }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
 
-    <q-separator v-if="showSeparator(config.meta.manifest.all)" inset class="q-mt-md q-mb-sm" />
+    <q-separator
+      v-if="showSeparator(config.meta.manifest.all)"
+      inset
+      class="q-mt-md q-mb-sm"
+    />
 
     <!-- Item-->
     <q-list v-if="config.meta.item.all">
@@ -92,14 +142,24 @@
 
       <q-item v-if="config.meta.item.label">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Label:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Label:
+          </q-item-label>
           <q-item-label>{{ itemlabel }}</q-item-label>
         </q-item-section>
       </q-item>
 
       <q-item v-if="config.meta.item.language">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Language:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Language:
+          </q-item-label>
           <q-item-label>{{ language }}</q-item-label>
         </q-item-section>
       </q-item>
@@ -123,11 +183,6 @@ export default {
       itemindex: 0,
       sequenceindex: 0,
     };
-  },
-  methods: {
-    showSeparator(showme) {
-      return showme === true;
-    },
   },
   computed: {
     date() {
@@ -169,6 +224,11 @@ export default {
         }
       });
     });
+  },
+  methods: {
+    showSeparator(showme) {
+      return showme === true;
+    },
   },
 };
 </script>

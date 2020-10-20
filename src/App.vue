@@ -1,7 +1,8 @@
 <template>
   <div id="q-app">
     <q-layout view="hHh lpr fFf">
-      <Header v-if="config.headers.all"
+      <Header
+        v-if="config.headers.all"
         :collectiontitle="collectiontitle"
         :config="config"
         :imageurl="imageurl"
@@ -32,7 +33,7 @@
       <Footer
         :standalone="config.standalone"
         :projectcolors="config.colors"
-        />
+      />
     </q-layout>
   </div>
 </template>
@@ -68,6 +69,47 @@ export default {
       manifests: [],
       tree: [],
     };
+  },
+  created() {
+    this.getConfig();
+    this.init();
+    this.$q.dark.set('auto');
+    this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+    if (this.config.colors.primary && this.config.colors.secondary && this.config.colors.accent) {
+      colors.setBrand('primary', this.config.colors.primary);
+      colors.setBrand('secondary', this.config.colors.secondary);
+      colors.setBrand('accent', this.config.colors.accent);
+    }
+  },
+  mounted() {
+    /**
+      * listen to fontsize change (user interaction). emitted in @/components/content.vue
+      * in- or rather decrease fontsize of the text by 1px
+      * default fontsize: 14px
+      *
+      * @param number fontsize
+      */
+    this.$root.$on('update-fontsize', (fontsize) => {
+      this.fontsize = fontsize;
+    });
+    this.$root.$on('panels-position', (newPanels) => {
+      this.panels = newPanels;
+    });
+    /**
+      * listen to item change (user interaction).
+      * emitted in: *getItemurls*; handler for tree nodes. fired on user interaction
+      *
+      * @param string url
+      */
+    this.$root.$on('update-item', (url) => {
+      this.itemurl = url;
+      this.$router.push({ query: { itemurl: url } });
+      // NOTE: Set imageurl to an empty string. Otherwise, if there is no corresponding image,
+      // the "preceding" image according to the "preceding" item will be shown.
+      this.imageurl = '';
+      this.getItemData(url);
+    });
   },
   methods: {
     /**
@@ -301,46 +343,6 @@ export default {
         : this.getManifest(this.config.entrypoint);
     },
   },
-  created() {
-    this.getConfig();
-    this.init();
-    this.$q.dark.set('auto');
-    this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
-    if (this.config.colors.primary && this.config.colors.secondary && this.config.colors.accent) {
-      colors.setBrand('primary', this.config.colors.primary);
-      colors.setBrand('secondary', this.config.colors.secondary);
-      colors.setBrand('accent', this.config.colors.accent);
-    }
-  },
-  mounted() {
-    /**
-      * listen to fontsize change (user interaction). emitted in @/components/content.vue
-      * in- or rather decrease fontsize of the text by 1px
-      * default fontsize: 14px
-      *
-      * @param number fontsize
-      */
-    this.$root.$on('update-fontsize', (fontsize) => {
-      this.fontsize = fontsize;
-    });
-    this.$root.$on('panels-position', (newPanels) => {
-      this.panels = newPanels;
-    });
-    /**
-      * listen to item change (user interaction).
-      * emitted in: *getItemurls*; handler for tree nodes. fired on user interaction
-      *
-      * @param string url
-      */
-    this.$root.$on('update-item', (url) => {
-      this.itemurl = url;
-      this.$router.push({ query: { itemurl: url } });
-      // NOTE: Set imageurl to an empty string. Otherwise, if there is no corresponding image,
-      // the "preceding" image according to the "preceding" item will be shown.
-      this.imageurl = '';
-      this.getItemData(url);
-    });
-  },
 };
 </script>
