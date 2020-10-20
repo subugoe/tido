@@ -3,7 +3,7 @@
     <q-btn
       flat
       title="Change color"
-      >
+    >
       <q-icon
         :name="fasPalette"
         size="xs"
@@ -12,28 +12,28 @@
         anchor="center middle"
         fit
         self="center middle"
-        >
+      >
         <q-list>
           <q-item
+            v-close-popup
             clickable
             @click="() => changeColorsTo('default')"
-            v-close-popup
-            >
+          >
             <q-item-section>Default</q-item-section>
           </q-item>
           <q-item
+            v-if="projectcolors.primary && projectcolors.secondary && projectcolors.accent"
+            v-close-popup
             clickable
             @click="() => changeColorsTo('emo')"
-            v-close-popup
-            v-if="projectcolors.primary && projectcolors.secondary && projectcolors.accent"
-            >
+          >
             <q-item-section>EMo</q-item-section>
           </q-item>
           <q-item
+            v-close-popup
             clickable
             @click="() => changeColorsTo('unicorn')"
-            v-close-popup
-            >
+          >
             <q-item-section>Unicorn</q-item-section>
           </q-item>
         </q-list>
@@ -48,11 +48,14 @@ import { fasPalette } from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Color',
+  props: {
+    projectcolors: {
+      type: Object,
+      required: true,
+    },
+  },
   created() {
     this.fasPalette = fasPalette;
-  },
-  props: {
-    projectcolors: Object,
   },
   methods: {
     changeColorsTo(color) {

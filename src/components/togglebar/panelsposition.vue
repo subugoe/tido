@@ -4,22 +4,24 @@
       class="panel__button"
       :icon="panelicon"
       size="md"
-      @click="status = true"
       label="Customize"
       outline
-      />
+      @click="status = true"
+    />
 
-      <q-dialog
-        v-model="status"
-        transition-show="scale"
-        transition-hide="scale"
-        >
+    <q-dialog
+      v-model="status"
+      transition-show="scale"
+      transition-hide="scale"
+    >
       <q-card
         :class="$q.dark.isActive ? 'bg-black' : 'bg-white text-black'"
         class="panel__card"
-        >
+      >
         <q-card-section>
-          <div class="text-h6 text-uppercase">Customize Panels</div>
+          <div class="text-h6 text-uppercase">
+            Customize Panels
+          </div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -28,10 +30,10 @@
 
         <q-card-actions align="right">
           <q-btn
+            v-close-popup
             flat
             label="OK"
-            v-close-popup
-            />
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>

@@ -2,9 +2,10 @@
   <q-header
     elevated
     :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
-    >
+  >
     <div class="bar row justify-between items-center">
-      <Infobar v-if="config.headers.info && manifests.length"
+      <Infobar
+        v-if="config.headers.info && manifests.length"
         class="col-xs-12 q-pl-md"
         :collectiontitle="collectiontitle"
         :itemlabel="itemlabel"
@@ -13,7 +14,8 @@
     </div>
 
     <div class="bar row q-px-md justify-sm-between">
-      <Navbar v-if="config.headers.navigation"
+      <Navbar
+        v-if="config.headers.navigation"
         class="
           col
           col-md-4
@@ -27,7 +29,8 @@
         :manifests="manifests"
       />
 
-      <ToggleIndex v-if="config.headers.toggle"
+      <ToggleIndex
+        v-if="config.headers.toggle"
         class="
           col
           col-md-auto

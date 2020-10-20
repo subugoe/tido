@@ -1,19 +1,23 @@
 <template>
-
   <div class="col-xs-auto">
     <q-btn
       flat
       label=""
       title="Project Info"
       @click="infobox = true"
-      >
-      <q-icon size="xs" :name="fasInfoCircle" />
+    >
+      <q-icon
+        size="xs"
+        :name="fasInfoCircle"
+      />
     </q-btn>
 
     <q-dialog v-model="infobox">
       <q-card>
         <q-card-section>
-          <h1 class="text-h5 q-pb-md">EMo Viewer</h1>
+          <h1 class="text-h5 q-pb-md">
+            EMo Viewer
+          </h1>
 
           <p class="text-weight-bold">
             Slim, easy to use and mobile-friendly text and image viewer
@@ -32,8 +36,12 @@
             href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/blob/main/README.md"
             target="_blank"
             type="a"
-            >
-            <q-icon :name="fasBook" size="md" class="q-pr-md" />
+          >
+            <q-icon
+              :name="fasBook"
+              size="md"
+              class="q-pr-md"
+            />
             Documentation
           </q-btn>
 
@@ -42,8 +50,12 @@
             href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/"
             target="_blank"
             type="a"
-            >
-            <q-icon :name="fasCode" size="md" class="q-pr-md" />
+          >
+            <q-icon
+              :name="fasCode"
+              size="md"
+              class="q-pr-md"
+            />
             Source Code
           </q-btn>
 
@@ -51,19 +63,23 @@
             flat
             href="mailto:gitlab+subugoe-emo-qviewer-10921-issue-@gwdg.de"
             type="a"
-            >
-            <q-icon :name="fasBug" size="md" class="q-pr-md" />
+          >
+            <q-icon
+              :name="fasBug"
+              size="md"
+              class="q-pr-md"
+            />
             Report a Bug
           </q-btn>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn
+            v-close-popup
             :class="$q.dark.isActive ? 'text-white' : 'text-black'"
             flat
             label="Close"
-            v-close-popup
-            />
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>

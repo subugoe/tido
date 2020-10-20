@@ -2,37 +2,40 @@
   <div class="q-d-flex">
     <ToggleFilter>
       <q-list class="toggle-list">
-        <div v-for="(p, i) in panels" :key="`toggle${i}`">
+        <div
+          v-for="(p, i) in panels"
+          :key="`toggle${i}`"
+        >
           <q-item
+            v-close-popup
             clickable
             flat
-            v-close-popup
             :title="handleToggleTitle(i)"
             @click="() => handleStatusPanel(i)"
-            >
+          >
             <q-icon
               class="q-pr-xs"
               size="xs"
               :color="$q.dark.isActive ? 'bg-black' : 'accent'"
               :name="renderCheckIcon(i)"
-              />
+            />
             {{ p.panel_label.toUpperCase() }}
           </q-item>
         </div>
 
         <q-item
+          v-close-popup
           clickable
           flat
           title="Reset panels to default view"
-          v-close-popup
           @click="()=> handleStatusPanel(-1, true)"
-          >
+        >
           <q-icon
             class="q-pr-xs"
             size="xs"
             :color="$q.dark.isActive ? 'white' : 'accent'"
             :name="fasUndo"
-            />
+          />
           {{ 'RESET' }}
         </q-item>
       </q-list>
@@ -54,12 +57,18 @@ import ToggleFilter from '@/components/togglebar/toggleFilter.vue';
 
 export default {
   name: 'ToggleIndex',
-  props: {
-    panels: Array,
-  },
   components: {
     // PanelsPosition,
     ToggleFilter,
+  },
+  props: {
+    panels: Array,
+  },
+  created() {
+    // mount the fonts
+    this.fasCheckCircle = fasCheckCircle;
+    this.fasCircle = fasCircle;
+    this.fasUndo = fasUndo;
   },
   methods: {
     // show checkbox icon depending on the current status
@@ -84,12 +93,6 @@ export default {
         ? `Hide ${titleUpper} Panel`
         : `Show ${titleUpper} Panel`;
     },
-  },
-  created() {
-    // mount the fonts
-    this.fasCheckCircle = fasCheckCircle;
-    this.fasCircle = fasCircle;
-    this.fasUndo = fasUndo;
   },
 };
 </script>
