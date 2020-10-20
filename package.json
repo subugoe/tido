@@ -84,6 +84,7 @@
     "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
     "test:unit": "jest --updateSnapshot",
+    "format-check": "node_modules/.bin/prettier --check 'src/**/*.{js,scss,vue}'",
     "stylelint-check": "node_modules/.bin/stylelint-config-prettier-check"
   },
   "publishConfig": {
