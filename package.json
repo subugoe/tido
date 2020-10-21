@@ -89,6 +89,7 @@
   },
   "husky": {
     "hooks": {
+      "pre-commit": "npm run lint:scss",
       "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
     }
   }
