@@ -5,8 +5,11 @@
   scrollbar-width: none;
 
   .q-tree__node-collapsible .q-tree__children {
+    /* FIXME: scss linting error because to much nesting */
+    /* stylelint-disable */
     >.q-tree__node--parent {
       >.q-tree__node-header {
+        /* stylelint-ensable */
         background-color: $grey-3;
         left: 0;
         position: sticky;
