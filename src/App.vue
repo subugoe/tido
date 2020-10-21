@@ -31,18 +31,18 @@
       </q-page-container>
 
       <Footer
-        :standalone="config.standalone"
         :projectcolors="config.colors"
+        :standalone="config.standalone"
       />
     </q-layout>
   </div>
 </template>
 
 <script>
+import { colors } from 'quasar';
 import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
 import PanelsMixin from '@/config/panels.js';
-import { colors } from 'quasar';
 
 export default {
   name: 'Viewer',
@@ -73,8 +73,9 @@ export default {
   created() {
     this.getConfig();
     this.init();
-    this.$q.dark.set('auto');
     this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+    this.$q.dark.set('auto');
 
     if (this.config.colors.primary && this.config.colors.secondary && this.config.colors.accent) {
       colors.setBrand('primary', this.config.colors.primary);
@@ -143,11 +144,6 @@ export default {
         .then((data) => {
           this.collection = data;
           this.label = this.getLabel(data);
-
-          this.request(data.annotationCollection)
-            .then((annotations) => {
-              this.annotations = annotations.annotationCollection;
-            });
 
           this.tree.push(
             {

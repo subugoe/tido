@@ -49,7 +49,10 @@ export default {
     Dragpanelboxes,
   },
   props: {
-    panelboxes: Array,
+    panelboxes: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     status: false,

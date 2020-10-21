@@ -171,12 +171,30 @@
 export default {
   name: 'Metadata',
   props: {
-    config: Object,
-    collection: Object,
-    itemlabel: String,
-    labels: Object,
-    language: String,
-    manifests: Array,
+    config: {
+      type: Object,
+      default: () => {},
+    },
+    collection: {
+      type: Object,
+      default: () => {},
+    },
+    itemlabel: {
+      type: String,
+      default: () => '',
+    },
+    labels: {
+      type: Object,
+      default: () => {},
+    },
+    language: {
+      type: String,
+      default: () => '',
+    },
+    manifests: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {

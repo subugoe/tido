@@ -62,7 +62,10 @@ export default {
     ToggleFilter,
   },
   props: {
-    panels: Array,
+    panels: {
+      type: Array,
+      default: () => [],
+    },
   },
   created() {
     // mount the fonts

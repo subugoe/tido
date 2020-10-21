@@ -23,11 +23,15 @@
 export default {
   name: 'Annotations',
   props: {
-    annotations: Object,
+    annotations: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {};
   },
+  created() {},
   mounted() {},
   methods: {},
 };

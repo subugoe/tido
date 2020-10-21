@@ -11,7 +11,7 @@
       :selected.sync="selected"
     >
       <template
-        v-slot:default-body="{node}"
+        #default-body="{node}"
       >
         <div
           v-if="!node.children"
@@ -29,8 +29,14 @@ import treestore from '@/stores/treestore.js';
 export default {
   name: 'Treeview',
   props: {
-    manifests: Array,
-    tree: Array,
+    manifests: {
+      type: Array,
+      default: () => [],
+    },
+    tree: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {

@@ -33,7 +33,10 @@ import {
 export default {
   name: 'OpenSeadragon',
   props: {
-    imageurl: String,
+    imageurl: {
+      type: String,
+      default: () => '',
+    },
   },
   data() {
     return {

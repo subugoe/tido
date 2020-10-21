@@ -1,8 +1,8 @@
 <template>
   <q-footer
     bordered
-    reveal
     class="row justify-start items-center"
+    reveal
     :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
   >
     <Language v-if="standalone" />
@@ -12,20 +12,23 @@
 </template>
 
 <script>
+import Color from '@/components/color.vue';
 import Language from '@/components/language.vue';
 import Softwareinfo from '@/components/softwareinfo.vue';
-import Color from '@/components/color.vue';
 
 export default {
   name: 'Footer',
   components: {
+    Color,
     Language,
     Softwareinfo,
-    Color,
   },
   props: {
+    projectcolors: {
+      type: Object,
+      default: () => {},
+    },
     standalone: Boolean,
-    projectcolors: Object,
   },
 };
 </script>

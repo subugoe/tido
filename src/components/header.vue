@@ -58,13 +58,34 @@ export default {
     ToggleIndex,
   },
   props: {
-    collectiontitle: String,
-    config: Object,
-    imageurl: String,
-    itemlabel: String,
-    itemurls: Array,
-    manifests: Array,
-    panels: Array,
+    collectiontitle: {
+      type: String,
+      default: () => '',
+    },
+    config: {
+      type: Object,
+      default: () => {},
+    },
+    imageurl: {
+      type: String,
+      default: () => '',
+    },
+    itemlabel: {
+      type: String,
+      default: () => '',
+    },
+    itemurls: {
+      type: Array,
+      default: () => [],
+    },
+    manifests: {
+      type: Array,
+      default: () => [],
+    },
+    panels: {
+      type: Array,
+      default: () => [],
+    },
   },
 };
 </script>
