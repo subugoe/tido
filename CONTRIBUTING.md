@@ -31,6 +31,10 @@ All issues will be arranged in [milestones](https://gitlab.gwdg.de/groups/subugo
 Milestones are always group-wide, so we combine tickets from all repositories associated with Ahiqar to a single milestone.
 The milestone number is increased with each sprint in accordance to [Semantic Versioning](https://semver.org/).
 
+### Controlled Commits
+
+Husky and Commitizen is used and you are advised to not bypass things. If there is no other way as to deactivate a linter do it on line/block basis and add a FIXME comment.
+
 ### Merge Requests (MR)
 
 Merge requests should be peer reviewed before merging them into `develop`.
