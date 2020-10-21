@@ -34,7 +34,14 @@
         </q-btn>
       </div>
     </div>
+    <!-- FIXME: => 'v-html' directive can lead to XSS attack  vue/no-v-html
 
+      Vue v1 supported triple braces to show html ({{{ ... }}}).
+      This has been considered deprecated and isn't available anymore.
+      Also Vue's directive "v-text" is considered deprecated (won't be available in v3).
+      It represents text *as is* anyways and therefor isn't an alternative, since it would show html tags in the text.
+      Atm there doesn't seem to be an alternative to "v-html" in regards to presenting xml/html.
+    -->
     <div class="row">
       <div
         :id="nodeid"
@@ -52,10 +59,22 @@ import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
 export default {
   name: 'Content',
   props: {
-    contenturl: String,
-    fontsize: Number,
-    manifests: Array,
-    request: Function,
+    contenturl: {
+      type: String,
+      default: () => '',
+    },
+    fontsize: {
+      type: Number,
+      default: () => 14,
+    },
+    manifests: {
+      type: Array,
+      default: () => [],
+    },
+    request: {
+      type: Function,
+      default: null,
+    },
   },
   data() {
     return {

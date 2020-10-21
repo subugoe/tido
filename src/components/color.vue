@@ -17,7 +17,7 @@
           <q-item
             v-close-popup
             clickable
-            @click="() => changeColorsTo('default')"
+            @click="changeColorsTo('default')"
           >
             <q-item-section>Default</q-item-section>
           </q-item>
@@ -25,14 +25,14 @@
             v-if="projectcolors.primary && projectcolors.secondary && projectcolors.accent"
             v-close-popup
             clickable
-            @click="() => changeColorsTo('emo')"
+            @click="changeColorsTo('emo')"
           >
             <q-item-section>EMo</q-item-section>
           </q-item>
           <q-item
             v-close-popup
             clickable
-            @click="() => changeColorsTo('unicorn')"
+            @click="changeColorsTo('unicorn')"
           >
             <q-item-section>Unicorn</q-item-section>
           </q-item>

@@ -82,7 +82,10 @@ export default {
     Panelsdraggable,
   },
   props: {
-    data: Array,
+    data: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     dragged: null,

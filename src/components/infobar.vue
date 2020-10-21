@@ -22,9 +22,18 @@ import { fasChevronRight } from '@quasar/extras/fontawesome-v5';
 export default {
   name: 'Infobar',
   props: {
-    collectiontitle: String,
-    itemlabel: String,
-    manifests: Array,
+    collectiontitle: {
+      type: String,
+      default: () => '',
+    },
+    itemlabel: {
+      type: String,
+      default: () => '',
+    },
+    manifests: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {

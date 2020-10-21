@@ -5,9 +5,9 @@
       class="row panels-target"
     >
       <div
-        v-for="(p, i) in panels"
+        v-for="(p, index) in panels"
         v-show="p.show && p.connector.length"
-        :key="`pc${i}`"
+        :key="`pc${index}`"
         class="col-12 col-sm-6 col-md-3"
       >
         <Toolbar :heading="p.panel_label" />
@@ -44,9 +44,9 @@
               keep-alive
             >
               <q-tab-panel
-                v-for="(tab, i) in p.connector"
-                :key="`co${i}`"
-                :name="`tab${i}`"
+                v-for="(tab, idx) in p.connector"
+                :key="`co${idx}`"
+                :name="`tab${idx}`"
               >
                 <component
                   :is="tab.component"
@@ -83,18 +83,54 @@ export default {
     Toolbar,
   },
   props: {
-    collection: Object,
-    config: Object,
-    contenturl: String,
-    fontsize: Number,
-    imageurl: String,
-    itemlabel: String,
-    labels: Object,
-    language: String,
-    manifests: Array,
-    panels: Array,
-    request: Function,
-    tree: Array,
+    collection: {
+      type: Object,
+      default: () => {},
+    },
+    config: {
+      type: Object,
+      default: () => {},
+    },
+    contenturl: {
+      type: String,
+      default: () => '',
+    },
+    fontsize: {
+      type: Number,
+      default: () => 14,
+    },
+    imageurl: {
+      type: String,
+      default: () => '',
+    },
+    itemlabel: {
+      type: String,
+      default: () => '',
+    },
+    labels: {
+      type: Object,
+      default: () => {},
+    },
+    language: {
+      type: String,
+      default: () => '',
+    },
+    manifests: {
+      type: Array,
+      default: () => [],
+    },
+    panels: {
+      type: Array,
+      default: () => [],
+    },
+    request: {
+      type: Function,
+      default: () => null,
+    },
+    tree: {
+      type: Array,
+      default: () => [],
+    },
   },
   computed: {
     ready() {
