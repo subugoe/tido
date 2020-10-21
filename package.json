@@ -86,5 +86,10 @@
   },
   "publishConfig": {
     "@subugoe:registry": "https://gitlab.gwdg.de/api/v4/projects/10921/packages/npm/"
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+    }
   }
 }
