@@ -79,7 +79,14 @@
   "scripts": {
     "build": "quasar build --modern",
     "dev": "quasar dev --modern",
-    "lint": "eslint --ext .js,.vue src",
+    "lint": "npm run lint:vue && npm run lint:js && npm run lint:scss && npm run lint:markdown",
+    "test": "npm run test:unit",
+    "fix": "npm run fix:vue && npm run fix:js && npm run fix:scss",
+    "fix:vue": "eslint --fix --ext .vue src",
+    "fix:js": "eslint --fix --ext .js src",
+    "fix:scss": "node_modules/.bin/stylelint --fix 'src/**/*.scss'",
+    "lint:vue": "eslint --ext .vue src",
+    "lint:js": "eslint --ext .js src",
     "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
     "test:unit": "jest --updateSnapshot"
