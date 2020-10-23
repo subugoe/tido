@@ -54,10 +54,15 @@
     "sass": "^1.26.11",
     "sass-loader": "8.0.2",
     "stylelint": "^13.7.2",
-    "stylelint-config-sass-guidelines": "^7.1.0"
+    "stylelint-8-point-grid": "^1.0.0",
+    "stylelint-config-sass-guidelines": "^7.1.0",
+    "stylelint-no-unsupported-browser-features": "^4.0.0"
   },
   "browserslist": [
-    "last 1 version, not dead, ie >= 11"
+    "last 1 version",
+    "not dead",
+    "not IE 11",
+    "> 3%"
   ],
   "engines": {
     "node": ">= 14.0.0",
