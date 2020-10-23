@@ -96,7 +96,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint && npm run test",
+      "pre-commit": "npm run fix && npm run lint && npm run test",
       "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
     }
   }
