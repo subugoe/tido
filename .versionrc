@@ -1,0 +1,19 @@
+{
+  "commitUrlFormat": "https://gitlab.gwdg.de/subugoe/emo/qviewer/-/commit/{{hash}}",
+  "compareUrlFormat": "https://gitlab.gwdg.de/subugoe/emo/qviewer/compare/{{previousTag}}...{{currentTag}}",
+  "issueUrlFormat": "https://gitlab.gwdg.de/subugoe/emo/qviewer/-/issues/{{id}}",
+  "types": [
+    {"type": "chore", "section":"Chore", "hidden": false},
+    {"type": "revert", "section":"Reverts", "hidden": false},
+    {"type": "feat", "section": "Features", "hidden": false},
+    {"type": "fix", "section": "Bug Fixes", "hidden": false},
+    {"type": "improvement", "section": "Improvements", "hidden": false},
+    {"type": "docs", "section":"Docs", "hidden": false},
+    {"type": "style", "section":"Styling", "hidden": false},
+    {"type": "refactor", "section":"Refactoring", "hidden": false},
+    {"type": "perf", "section":"Performance", "hidden": false},
+    {"type": "test", "section":"Tests", "hidden": false},
+    {"type": "build", "section":"Build System", "hidden": false},
+    {"type": "ci", "section":"Continuos Integration", "hidden":false}
+  ]
+}
