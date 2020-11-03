@@ -39,10 +39,9 @@ update-ahikar:
   only:
     - develop
   variables:
-    UPDATE: true
-    UPSTREAM_COMMIT_SHA: $CI_COMMIT_SHA
-  trigger:
-    - subugoe/ahiqar/frontend
+    UPDATE: "true"
+    UPSTREAM_COMMIT_SHA: "${CI_COMMIT_SHA}"
+  trigger: "subugoe/ahiqar/frontend"
 
 pages:
   before_script:
