@@ -34,6 +34,15 @@ build_main_and_develop:
      - dist/
     expire_in: never
 
+update-ahikar:
+  stage: deploy
+  only:
+    - develop
+  variables:
+    UPDATE: "true"
+    UPSTREAM_COMMIT_SHA: "${CI_COMMIT_SHA}"
+  trigger: "subugoe/ahiqar/frontend"
+
 pages:
   before_script:
     - dnf install -y jq
