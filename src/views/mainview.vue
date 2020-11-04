@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     ready() {
-      return Object.keys(this.collection).length && this.manifests.length && this.tree.length;
+      return this.manifests.length && this.tree.length;
     },
     keys() {
       return { 3: this.imageurl, 4: this.contenturl };
