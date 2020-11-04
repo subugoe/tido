@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add npmrc to gitignore, since the hardcoded access token is needed
 - extend package.json to prepare the inclusion for the files to be released
 
+### Fixed
+
+- fix link to quasar.conf
+
 ## [1.4.5] - 2020-11-04
 
 ### Fixed

@@ -51,7 +51,7 @@ Also the commit short hash can be used to see a demo.
 
 ## Latest Version and Integration
 
-To embed the viewer for production [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)  
+To embed the viewer for production [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)
 It is a zip archive. You can extract the build by typing:
 
 ```bash
@@ -76,31 +76,37 @@ dist/spa/
 To include the viewer on a website add the following to your `index.html` file:
 
 ```html
+  ...
+
 <head>
   ...
 
+  <link href=css/2.[CHECKSUM].css rel=stylesheet>
   <link href=css/app.[CHECKSUM].css rel=stylesheet>
   <link href=css/vendor.[CHECKSUM].css rel=stylesheet>
 </head>
 
-...
+<body>
+  ...
 
-<noscript>
-  <strong>We're sorry but TextViewer doesn't work properly without JavaScript enabled.
-  Please enable it to continue.
-  </strong>
-</noscript>
+  <noscript>
+    <strong>We're sorry but TextViewer doesn't work properly without JavaScript enabled.
+    Please enable it to continue.
+    </strong>
+  </noscript>
 
-<script id="emo-config" type="application/json">
-  {
-    ...
-  }
-</script>
+  <script id="emo-config" type="application/json">
+    {
+      ... // please make sure to copy the whole config object from dist/spa/index.html
+    }
+  </script>
 
-<div id=q-app></div>
+  <div id=q-app></div>
 
-<script src=js/app.[CHECKSUM].js></script>
-<script src=js/vendor.[CHECKSUM].js></script>
+  <script src=js/2.[CHECKSUM].js></script>
+  <script src=js/app.[CHECKSUM].js></script>
+  <script src=js/vendor.[CHECKSUM].js></script>
+</body>
 ```
 
 and replace `[CHECKSUM]` with the values from the release you are going to use.
@@ -202,7 +208,7 @@ npm run build
 ## Configuration
 
 The Viewer is build with *Vue.js* and *Quasar*.
-If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf) (Configuring quasar.conf.js).
+If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf-js) (Configuring quasar.conf.js).
 
 There are two files in regards to configuration:
 
