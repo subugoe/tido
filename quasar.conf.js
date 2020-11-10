@@ -18,6 +18,14 @@ module.exports = function (ctx) {
     // https://github.com/quasarframework/quasar/tree/dev/extras
     // extras: [],
 
+    // components: [],
+
+    cssAddon: true,
+
+    dark: 'auto', // or Boolean true/false
+
+    // directives: [],
+
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
       // Possible values for "all":
@@ -37,20 +45,16 @@ module.exports = function (ctx) {
         }
       },
 
-      // components: [],
-
-      cssAddon: true,
-
-      dark: 'auto', // or Boolean true/false
-
-      // directives: [],
-
       iconSet: 'fontawesome-v5',
 
       lang: 'en-us', // Quasar language pack
 
       // Quasar plugins
       // plugins: []
+    },
+
+    htmlVariables: {
+      title: 'EMo Viewer'
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
