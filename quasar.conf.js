@@ -100,6 +100,10 @@ module.exports = function (ctx) {
       open: false // opens browser window automatically
     },
 
+    vendor: {
+      disable: false,
+    },
+
     // animations: 'all', // --- includes all animations
     // https://quasar.dev/options/animations
     // animations: [],

@@ -277,7 +277,7 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
 
 **Note**:
 
-It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels* or colors), please use *double quotes* only.
+It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels* or *colors*), please use *double quotes* only.
 
 #### The Keys in Detail
 
