@@ -1,10 +1,11 @@
 {
   "name": "@subugoe/qviewer",
   "version": "1.4.5",
-  "description": "Viewer for the modular framework to present digital editions",
+  "description": "Slim, easy to use and mobile-friendly text and image viewer presenting digital editions",
   "productName": "EMo Viewer",
   "keywords": [
     "digital editions",
+    "edition",
     "emo",
     "openseadragon",
     "quasar",

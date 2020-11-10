@@ -61,7 +61,7 @@ unzip artifacts.zip
 This creates the following folder structure containing the actual build:
 
 ```bash
-dist/spa/
+dist/
 ├── css
 │   ├── 2.5b2a42f3.css
 │   ├── app.222a6363.css
@@ -97,7 +97,7 @@ To include the viewer on a website add the following to your `index.html` file:
 
   <script id="emo-config" type="application/json">
     {
-      ... // please make sure to copy the whole config object from dist/spa/index.html
+      ... // please make sure to copy the whole config object from dist/index.html
     }
   </script>
 
@@ -113,7 +113,7 @@ and replace `[CHECKSUM]` with the values from the release you are going to use.
 
 **Note**:
 
-The **CHECKSUMs** change in each build. So please make sure to copy the ones from  **dist/spa/index.html**.
+The **CHECKSUMs** change in each build. So please make sure to copy the ones from  **dist/index.html**.
 
 ## Getting Started
 

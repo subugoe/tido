@@ -16,24 +16,10 @@ module.exports = function (ctx) {
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
-    extras: [
-      // 'ionicons-v4',
-      // 'mdi-v4',
-      // 'fontawesome-v5',
-      // 'eva-icons',
-      // 'themify',
-      // 'line-awesome',
-      // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
-
-      // 'roboto-font', // optional, you are not bound to it
-      // 'material-icons' // optional, you are not bound to it
-    ],
+    // extras: [],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
-      iconSet: 'fontawesome-v5',
-      lang: 'en-us', // Quasar language pack
-
       // Possible values for "all":
       // * 'auto' - Auto-import needed Quasar components & directives
       //            (slightly higher compile time; next to minimum bundle size; most convenient)
@@ -43,21 +29,28 @@ module.exports = function (ctx) {
       //            (not treeshaking Quasar; biggest bundle size; convenient)
       all: 'auto',
 
-      dark: 'auto', // or Boolean true/false
-
-      // components: [],
-      // directives: [],
-
-      // Quasar plugins
-      plugins: [],
-      cssAddon: true,
       config: {
         brand: {
           primary: '#212121',
           secondary: '#eee',
           accent: '#1a3771'
         }
-      }
+      },
+
+      // components: [],
+
+      cssAddon: true,
+
+      dark: 'auto', // or Boolean true/false
+
+      // directives: [],
+
+      iconSet: 'fontawesome-v5',
+
+      lang: 'en-us', // Quasar language pack
+
+      // Quasar plugins
+      // plugins: []
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
@@ -68,10 +61,10 @@ module.exports = function (ctx) {
       distDir: 'dist',
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
+      // analyze: true,
+      // gzip: true,
       // rtl: false, // https://quasar.dev/options/rtl-support
       // showProgress: false,
-      // gzip: true,
-      // analyze: true,
 
       // Options below are automatically set depending on the env, set them if you want to override
       // preloadChunks: false,
@@ -86,12 +79,12 @@ module.exports = function (ctx) {
         },
         cfg.module.rules.push({
           enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
           exclude: /node_modules/,
+          loader: 'eslint-loader',
           options: {
             formatter: require('eslint').CLIEngine.getFormatter('stylish')
-          }
+          },
+          test: /\.(js|vue)$/
         })
       }
     },
@@ -105,7 +98,7 @@ module.exports = function (ctx) {
 
     // animations: 'all', // --- includes all animations
     // https://quasar.dev/options/animations
-    animations: [],
+    // animations: [],
 
     // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
@@ -119,7 +112,7 @@ module.exports = function (ctx) {
       manifest: {
         name: 'EMo Viewer',
         short_name: 'EMo Viewer',
-        description: 'Viewer for the modular framework to present digital editions',
+        description: 'Slim, easy to use and mobile-friendly text and image viewer presenting digital editions',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -185,7 +178,7 @@ module.exports = function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'viewer'
+        appId: 'q-app'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
