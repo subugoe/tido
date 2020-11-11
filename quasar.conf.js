@@ -54,7 +54,7 @@ module.exports = function (ctx) {
     },
 
     htmlVariables: {
-      title: 'EMo Viewer'
+      title: 'TOV'
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
