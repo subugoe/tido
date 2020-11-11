@@ -8,6 +8,6 @@ artifact=$(curl --output old-artifact.zip --header "PRIVATE-TOKEN: $API_TOKEN" "
 # add current data to artifact
 unzip -u old-artifact.zip
 mkdir -p public/${CI_COMMIT_SHORT_SHA}
-cp --remove-destination --recursive dist/spa/* public/${CI_COMMIT_SHORT_SHA}
+cp --remove-destination --recursive dist/* public/${CI_COMMIT_SHORT_SHA}
 mkdir -p public/${CI_COMMIT_REF_SLUG}
-cp --remove-destination --recursive dist/spa/* public/${CI_COMMIT_REF_SLUG}
+cp --remove-destination --recursive dist/* public/${CI_COMMIT_REF_SLUG}
