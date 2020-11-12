@@ -1,16 +1,23 @@
 <template>
   <div class="col-xs-auto">
     <q-select
+      dense
       v-model="lang"
-      label="Change language"
       :options="langs"
+      options-dense
     >
-      <q-icon
-        :name="fasLanguage"
-        size="md"
-      />
+      <template v-slot:prepend>
+        <q-icon
+          :name="fasLanguage"
+          size="md"
+        />
+      </template>
     </q-select>
+
     {{ $t('view') }}
+    {{ $t('textsize') }}
+    {{ $t('image') }}
+    {{ $t('sheet') }}
   </div>
 </template>
 
@@ -32,12 +39,6 @@ export default {
     lang(lang) {
       this.$i18n.locale = lang.value;
       this.$q.lang.set(lang.value);
-      // eslint-disable-next-line
-      console.log(lang);
-
-      // import(`quasar/lang/${lang.value}`).then(language => {
-      //   this.$q.lang.set(language.default);
-      // });
     },
   },
   created() {
