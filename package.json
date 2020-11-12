@@ -51,7 +51,6 @@
     "eslint-plugin-vue": "^7.0.0",
     "husky": "^4.3.0",
     "markdownlint-cli": "^0.24.0",
-    "node-sass": "^4.14.1",
     "sass": "^1.26.11",
     "sass-loader": "8.0.2",
     "standard-version": "^9.0.0",
