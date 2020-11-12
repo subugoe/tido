@@ -43,6 +43,7 @@
       Atm there doesn't seem to be an alternative to "v-html" in regards to presenting xml/html.
     -->
     <div class="row">
+      <!-- eslint-disable -->
       <div
         :id="nodeid"
         ref="contentsize"

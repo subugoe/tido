@@ -1,36 +1,16 @@
 <template>
   <div class="col-xs-auto">
-    <q-btn
-      flat
-      title="Change language"
+    <q-select
+      v-model="lang"
+      label="Change language"
+      :options="langs"
     >
       <q-icon
         :name="fasLanguage"
         size="md"
       />
-
-      <q-menu
-        anchor="center middle"
-        fit
-        self="center middle"
-      >
-        <q-list>
-          <q-item
-            v-close-popup
-            clickable
-          >
-            <q-item-section>DE</q-item-section>
-          </q-item>
-
-          <q-item
-            v-close-popup
-            clickable
-          >
-            <q-item-section>{{ lang }}</q-item-section>
-          </q-item>
-        </q-list>
-      </q-menu>
-    </q-btn>
+    </q-select>
+    {{ $t('view') }}
   </div>
 </template>
 
@@ -41,8 +21,24 @@ export default {
   name: 'Language',
   data() {
     return {
-      lang: 'EN',
+      langs: [
+        { label: 'DE', value: 'de' },
+        { label: 'EN', value: 'en-us' },
+      ],
+      lang: this.$i18n.locale,
     };
+  },
+  watch: {
+    lang(lang) {
+      this.$i18n.locale = lang.value;
+      this.$q.lang.set(lang.value);
+      // eslint-disable-next-line
+      console.log(lang);
+
+      // import(`quasar/lang/${lang.value}`).then(language => {
+      //   this.$q.lang.set(language.default);
+      // });
+    },
   },
   created() {
     this.fasLanguage = fasLanguage;
