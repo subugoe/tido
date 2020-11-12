@@ -1,5 +1,8 @@
 export default {
   sheet: 'Seite',
+  Sheet: 'Seite',
+  manuscript: 'Manuskript',
+  Manuscript: 'Manuskript',
   image: 'Bild',
   annotations: 'Annotationen',
   reset: 'Reset',
@@ -9,4 +12,7 @@ export default {
   increase: 'vergrössere',
   decrease: 'verkleinere',
   textsize: 'Textgrösse',
+  collection: 'Sammlung',
+  next: 'Nächste',
+  prev: 'Vorherige',
 };

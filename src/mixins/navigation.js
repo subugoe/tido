@@ -41,14 +41,14 @@ export default {
 
       return this.sequenceindex < this.sequencecount - 1
       && lastindexes[this.sequenceindex] === this.itemindex
-        ? `Next ${this.labels.manifest}`
-        : `Next ${this.labels.item}`;
+        ? `${this.$t('next')} ${this.$t(this.labels.manifest)}`
+        : `${this.$t('next')} ${this.$t(this.labels.item)}`;
     },
 
     captionprev() {
       return this.sequenceindex > 0 && this.firstiteminsequence === this.itemindex
-        ? `Prev ${this.labels.manifest}`
-        : `Prev ${this.labels.item}`;
+        ? `${this.$t('prev')} ${this.$t(this.labels.manifest)}`
+        : `${this.$t('prev')} ${this.$t(this.labels.item)}`;
     },
 
     computedsequenceindex() {

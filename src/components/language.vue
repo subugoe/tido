@@ -1,23 +1,17 @@
 <template>
   <div class="col-xs-auto">
     <q-select
-      dense
       v-model="lang"
       :options="langs"
       options-dense
     >
-      <template v-slot:prepend>
+      <template #prepend>
         <q-icon
           :name="fasLanguage"
           size="md"
         />
       </template>
     </q-select>
-
-    {{ $t('view') }}
-    {{ $t('textsize') }}
-    {{ $t('image') }}
-    {{ $t('sheet') }}
   </div>
 </template>
 

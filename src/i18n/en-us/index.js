@@ -1,5 +1,8 @@
 export default {
   sheet: 'Sheet',
+  Sheet: 'Sheet',
+  manuscript: 'Manuscript',
+  Manuscript: 'Manuscript',
   image: 'Image',
   annotations: 'Annotations',
   reset: 'Reset',
@@ -9,4 +12,7 @@ export default {
   increase: 'increase',
   decrease: 'decrease',
   textsize: 'Textsize',
+  collection: 'Collection',
+  next: 'Next',
+  prev: 'Prev',
 };
