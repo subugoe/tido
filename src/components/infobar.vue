@@ -11,7 +11,7 @@
         :color="$q.dark.isActive ? 'white' : 'accent'"
         :name="fasChevronRight"
       />
-      <span>{{ $t('sheet') }} {{ itemlabel }}</span>
+      <span>{{ $t('Sheet') }} {{ itemlabel }}</span>
     </h2>
   </div>
 </template>

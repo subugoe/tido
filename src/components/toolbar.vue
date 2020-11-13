@@ -1,7 +1,7 @@
 <template>
   <q-toolbar>
     <q-toolbar-title class="text-h6 absolute-center">
-      {{ heading | capitalize }}
+      {{ $t(heading) | capitalize }}
     </q-toolbar-title>
   </q-toolbar>
 </template>

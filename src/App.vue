@@ -266,7 +266,7 @@ export default {
         .then((data) => {
           // if the entrypoint points to a single manifest, initialize the tree
           if (this.isCollection === false) {
-            this.tree.push({ label: '', 'label-key': this.config.labels.manifest, children: [] });
+            this.tree.push({ label: '', 'label-key': this.$t(this.config.labels.manifest), children: [] });
           }
 
           if (!Array.isArray(data.sequence)) {

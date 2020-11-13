@@ -4,7 +4,7 @@
     <q-list v-if="Object.keys(collection).length && config.meta.collection.all">
       <q-item>
         <q-item-section class="text-h6 caps">
-          Collection
+          {{ $t('Collection') }}
         </q-item-section>
       </q-item>
 
@@ -14,7 +14,7 @@
             overline
             class="text-uppercase"
           >
-            Title:
+            {{ $t('Title') }}:
           </q-item-label>
           <q-item-label>
             {{ collection.title ? collection.title[0].title : '' }}
@@ -28,7 +28,7 @@
             overline
             class="text-uppercase"
           >
-            Collector:
+            {{ $t('Collector') }}:
           </q-item-label>
           <q-item-label>
             {{ collection.collector && collection.collector.name ? collection.collector.name : '' }}
@@ -42,7 +42,7 @@
             overline
             class="text-uppercase"
           >
-            Description:
+            {{ $t('Description') }}:
           </q-item-label>
           <q-item-label>
             {{ collection.description }}
@@ -61,7 +61,7 @@
     <q-list v-if="config.meta.manifest.all">
       <q-item>
         <q-item-section class="text-h6 caps">
-          {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
+          {{ $t(labels.manifest) }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
 
@@ -83,7 +83,7 @@
             overline
             class="text-uppercase"
           >
-            Year of creation:
+            {{ $t('Year') }}:
           </q-item-label>
           <q-item-label>{{ date }}</q-item-label>
         </q-item-section>
@@ -95,7 +95,7 @@
             overline
             class="text-uppercase"
           >
-            Editor:
+            {{ $t('Editor') }}:
           </q-item-label>
           <q-item-label>{{ editor }}</q-item-label>
         </q-item-section>
@@ -107,7 +107,7 @@
             overline
             class="text-uppercase"
           >
-            Current location:
+            {{ $t('Location') }}:
           </q-item-label>
           <q-item-label>{{ location }}</q-item-label>
         </q-item-section>
@@ -119,7 +119,7 @@
             overline
             class="text-uppercase"
           >
-            Origin:
+            {{ $t('Origin') }}:
           </q-item-label>
           <q-item-label>{{ origin }}</q-item-label>
         </q-item-section>
@@ -136,7 +136,7 @@
     <q-list v-if="config.meta.item.all">
       <q-item>
         <q-item-section class="text-h6 caps">
-          {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
+          {{ $t(labels.item) }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
 
@@ -158,7 +158,7 @@
             overline
             class="text-uppercase"
           >
-            Language:
+            {{ $t('Language') }}:
           </q-item-label>
           <q-item-label>{{ language }}</q-item-label>
         </q-item-section>

@@ -1,7 +1,7 @@
 <template>
   <div class="filter-buttons">
     <q-btn-dropdown
-      v-if="$q.screen.width < 1100"
+      v-if="$q.screen.width < 1200"
       :dropdown-icon="dropicon"
       outline
       flat

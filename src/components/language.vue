@@ -2,8 +2,8 @@
   <div class="col-xs-auto">
     <q-select
       v-model="lang"
+      :color="$q.dark.isActive ? 'white' : 'accent'"
       :options="langs"
-      options-dense
     >
       <template #prepend>
         <q-icon

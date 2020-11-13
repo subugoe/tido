@@ -7,7 +7,7 @@
           flat
           round
           size="md"
-          title="Increase Textsize"
+          :title="$t('Increase')"
           @click="increase()"
         >
           <q-icon
@@ -22,7 +22,7 @@
           flat
           round
           size="md"
-          title="Decrease Textsize"
+          :title="$t('Decrease')"
           :color="$q.dark.isActive ? 'white' : 'accent'"
           @click="decrease()"
         >
