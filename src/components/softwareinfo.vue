@@ -19,13 +19,13 @@
           </h1>
 
           <p class="text-weight-bold">
-            Slim, easy to use and mobile-friendly text and image viewer
+            {{ $t('Info_Description') }}
           </p>
 
-          <p>Copyright (c) 2020 Göttingen University - Göttingen State and University Library</p>
+          <p>{{ $t('Info_Copyright') }}</p>
 
           <p class="q-mb-none">
-            Version {{ version }}, licensed under GNU Affero General Public License v3.0
+            Version {{ version }}, {{ $t('Info_License') }}
           </p>
         </q-card-section>
 
@@ -41,7 +41,7 @@
               size="md"
               class="q-pr-md"
             />
-            Documentation
+            {{ $t('Info_Docs') }}
           </q-btn>
 
           <q-btn
@@ -55,7 +55,7 @@
               size="md"
               class="q-pr-md"
             />
-            Source Code
+            {{ $t('Info_Sourcecode') }}
           </q-btn>
 
           <q-btn
@@ -68,7 +68,7 @@
               size="md"
               class="q-pr-md"
             />
-            Report a Bug
+            {{ $t('Info_Bugs') }}
           </q-btn>
         </q-card-section>
 
@@ -77,7 +77,7 @@
             v-close-popup
             :class="$q.dark.isActive ? 'text-white' : 'text-black'"
             flat
-            label="Close"
+            :label="$t('Info_Close')"
           />
         </q-card-actions>
       </q-card>
