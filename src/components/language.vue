@@ -26,7 +26,7 @@ export default {
         { label: 'DE', value: 'de' },
         { label: 'EN', value: 'en-us' },
       ],
-      lang: this.$i18n.locale,
+      lang: 'EN',
     };
   },
   watch: {
