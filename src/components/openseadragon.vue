@@ -10,6 +10,7 @@
         round
         size="md"
         :color="$q.dark.isActive ? 'white' : 'accent'"
+        :title="$t(btn.tooltip)"
       >
         <q-icon
           size="sm"
@@ -41,10 +42,10 @@ export default {
   data() {
     return {
       buttons: [
-        { id: 'zoom-in', svg: fasSearchPlus },
-        { id: 'zoom-out', svg: fasSearchMinus },
-        { id: 'default', svg: fasExpand },
-        { id: 'fullscreen', svg: fasExpandArrowsAlt },
+        { id: 'zoom-in', svg: fasSearchPlus, tooltip: 'OSD_Zoomin' },
+        { id: 'zoom-out', svg: fasSearchMinus, tooltip: 'OSD_Zoomout' },
+        { id: 'default', svg: fasExpand, tooltip: 'OSD_Home' },
+        { id: 'fullscreen', svg: fasExpandArrowsAlt, tooltip: 'OSD_FullPage' },
       ],
       options: {
         id: 'openseadragon',
@@ -63,9 +64,6 @@ export default {
   mounted() {
     const viewer = new OpenSeadragon.Viewer(this.options);
     viewer.controlsFadeDelay = 1000;
-
-    OpenSeadragon.setString('Tooltips.Home', 'Default View');
-    OpenSeadragon.setString('Tooltips.FullPage', 'Toggle Fullscreen');
 
     document.addEventListener('fullscreenchange', () => {
       Object.values(this.buttons).forEach((v) => {
