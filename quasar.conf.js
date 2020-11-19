@@ -2,7 +2,6 @@
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
 const path = require('path')
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = function (ctx) {
   return {
@@ -55,7 +54,7 @@ module.exports = function (ctx) {
     },
 
     htmlVariables: {
-      title: 'TOV'
+      title: 'qViewer'
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
@@ -77,19 +76,6 @@ module.exports = function (ctx) {
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
-        cfg.output = {
-          filename: '[name].qviewer.js',
-          library: 'qviewer'
-        },
-        // cfg.plugins = [
-        //   new MiniCssExtractPlugin(
-        //     {
-        //       filename: '[name].css',
-        //       chunkFilename: '[id].css',
-        //       ignoreOrder: false, // Enable to remove warnings about conflicting order
-        //     }
-        //   )
-        // ],
         cfg.resolve.alias = {
           ...cfg.resolve.alias, // This adds the existing alias
 
@@ -104,11 +90,7 @@ module.exports = function (ctx) {
               formatter: require('eslint').CLIEngine.getFormatter('stylish')
             },
             test: /\.(js|vue)$/
-          }
-          // {
-          //   test: /\.scss$/,
-          //   use: [MiniCssExtractPlugin.loader, 'css-loader'],
-          // }
+          },
         )
       }
     },
