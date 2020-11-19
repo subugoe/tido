@@ -76,6 +76,10 @@ module.exports = function (ctx) {
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
+        cfg.entry = ['./src/App.vue', './src/css/style.scss'],
+        cfg.output = {
+          filename: '[name].js',
+        },
         cfg.resolve.alias = {
           ...cfg.resolve.alias, // This adds the existing alias
 
@@ -90,7 +94,7 @@ module.exports = function (ctx) {
               formatter: require('eslint').CLIEngine.getFormatter('stylish')
             },
             test: /\.(js|vue)$/
-          },
+          }
         )
       }
     },
