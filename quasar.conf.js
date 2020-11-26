@@ -72,11 +72,10 @@ module.exports = function (ctx) {
 
       // Options below are automatically set depending on the env, set them if you want to override
       // preloadChunks: false,
-      // extractCSS: false,
+      extractCSS: false,
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
-        cfg.entry = ['./src/App.vue', './src/css/style.scss'],
         cfg.output = {
           filename: '[name].js',
         },
