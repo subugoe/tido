@@ -54,7 +54,7 @@ module.exports = function (ctx) {
     },
 
     htmlVariables: {
-      title: 'qViewer'
+      title: 'EMo Viewer'
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
