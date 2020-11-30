@@ -19,7 +19,7 @@
             clickable
             @click="changeColorsTo('default')"
           >
-            <q-item-section>Default</q-item-section>
+            <q-item-section>{{ $t('default') }}</q-item-section>
           </q-item>
           <q-item
             v-if="projectcolors.primary && projectcolors.secondary && projectcolors.accent"

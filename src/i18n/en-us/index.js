@@ -4,6 +4,7 @@ export default {
   Collector: 'Collector',
   Contents: 'Contents',
   Decrease: 'Decrease',
+  default: 'Default',
   Defaultview: 'Reset panels to default view',
   Description: 'Description',
   Editor: 'Editor',

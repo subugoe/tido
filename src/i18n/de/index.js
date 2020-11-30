@@ -4,6 +4,7 @@ export default {
   Collector: 'Kollektor',
   Contents: 'Inhalt',
   Decrease: 'Verkleinern',
+  default: 'Standard',
   Defaultview: 'Ansicht zurücksetzen',
   Description: 'Beschreibung',
   Editor: 'Herausgeber',
