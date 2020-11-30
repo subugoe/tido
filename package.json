@@ -1,10 +1,10 @@
 {
   "name": "@subugoe/qviewer",
-  "version": "1.4.17",
+  "version": "1.4.19",
   "description": "Slim, easy to use and mobile-friendly text and image viewer presenting digital editions",
   "productName": "EMo Viewer",
   "keywords": [
-    "digital editions",
+    "digital",
     "edition",
     "emo",
     "openseadragon",
@@ -96,7 +96,7 @@
     "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
     "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:vue": "eslint --ext .vue src",
-    "publish": "npm run build && npm run tweak:build && npm publish",
+    "release": "npm run build && npm run tweak:build && npm publish",
     "test": "npm run test:unit",
     "test:unit": "jest --updateSnapshot",
     "tweak:build": "./tweak_build.sh",
