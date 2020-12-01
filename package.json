@@ -1,16 +1,17 @@
 {
   "name": "@subugoe/qviewer",
-  "version": "1.4.5",
-  "description": "Viewer for the modular framework to present digital editions",
+  "version": "1.4.19",
+  "description": "Slim, easy to use and mobile-friendly text and image viewer presenting digital editions",
   "productName": "EMo Viewer",
   "keywords": [
-    "viewer",
+    "digital",
+    "edition",
     "emo",
-    "digital editions",
-    "vue",
-    "quasar",
     "openseadragon",
-    "sub"
+    "quasar",
+    "sub",
+    "viewer",
+    "vue"
   ],
   "cordovaId": "de.uni-goettingen.sub.emo",
   "capacitorId": "",
@@ -32,33 +33,34 @@
   },
   "private": false,
   "dependencies": {
-    "@quasar/extras": "^1.9.7",
+    "@quasar/extras": "^1.9.10",
     "openseadragon": "^2.4.2",
-    "quasar": "^1.14.0",
-    "vuedraggable": "^2.24.1"
+    "quasar": "^1.14.5",
+    "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
-    "@quasar/app": "^2.1.0",
-    "@quasar/quasar-app-extension-testing-unit-jest": "^2.0.0",
+    "@quasar/app": "^2.1.8",
+    "@quasar/quasar-app-extension-testing-unit-jest": "^2.1.0",
+    "@vue/cli-service": "^4.5.9",
     "autoprefixer": "9.8.6",
     "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.2",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^7.10.0",
-    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb-base": "^14.2.1",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-vue": "^7.0.0",
+    "eslint-plugin-vue": "^7.1.0",
     "husky": "^4.3.0",
-    "markdownlint-cli": "^0.24.0",
+    "markdownlint-cli": "^0.25.0",
     "node-sass": "^4.14.1",
-    "sass": "^1.26.11",
+    "sass": "^1.29.0",
     "sass-loader": "8.0.2",
     "standard-version": "^9.0.0",
-    "stylelint": "^13.7.2",
+    "stylelint": "^13.8.0",
     "stylelint-8-point-grid": "^1.0.0",
     "stylelint-config-sass-guidelines": "^7.1.0",
-    "stylelint-no-unsupported-browser-features": "^4.0.0"
+    "stylelint-no-unsupported-browser-features": "^4.1.4"
   },
   "browserslist": [
     "last 1 version",
@@ -86,19 +88,25 @@
   "scripts": {
     "build": "quasar build --modern",
     "dev": "quasar dev --modern",
-    "lint": "npm run lint:vue && npm run lint:js && npm run lint:scss && npm run lint:markdown",
-    "test": "npm run test:unit",
     "fix": "npm run fix:vue && npm run fix:js && npm run fix:scss",
-    "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version",
-    "fix:vue": "eslint --fix --ext .vue src",
     "fix:js": "eslint --fix --ext .js src",
     "fix:scss": "node_modules/.bin/stylelint --fix 'src/**/*.scss'",
-    "lint:vue": "eslint --ext .vue src",
+    "fix:vue": "eslint --fix --ext .vue src",
+    "lint": "npm run lint:vue && npm run lint:js && npm run lint:scss && npm run lint:markdown",
     "lint:js": "eslint --ext .js src",
-    "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
-    "test:unit": "jest --updateSnapshot"
+    "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
+    "lint:vue": "eslint --ext .vue src",
+    "release": "npm run build && npm run tweak:build && npm publish",
+    "test": "npm run test:unit",
+    "test:unit": "jest --updateSnapshot",
+    "tweak:build": "./tweak_build.sh",
+    "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version"
   },
+  "files": [
+    "dist",
+    "src/statics"
+  ],
   "publishConfig": {
     "@subugoe:registry": "https://gitlab.gwdg.de/api/v4/projects/10921/packages/npm/"
   },

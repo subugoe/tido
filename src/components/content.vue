@@ -37,12 +37,12 @@
     <!-- FIXME: => 'v-html' directive can lead to XSS attack  vue/no-v-html
 
       Vue v1 supported triple braces to show html ({{{ ... }}}).
-      This has been considered deprecated and isn't available anymore.
-      Also Vue's directive "v-text" is considered deprecated (won't be available in v3).
-      It represents text *as is* anyways and therefor isn't an alternative, since it would show html tags in the text.
+      These have been considered deprecated and aren't available anymore as is Vue's directive "v-text".
+      The latter represents text *as is* anyways, e.g. it would show html tags in the text.
       Atm there doesn't seem to be an alternative to "v-html" in regards to presenting xml/html.
     -->
     <div class="row">
+      <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div
         :id="nodeid"
         ref="contentsize"
