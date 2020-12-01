@@ -84,9 +84,6 @@ dist/
 
 To include the viewer on a website (in **either** case) copy the following code snippet to the end of the body tag in your `index.html` file:
 
-<details>
-<summary>Click to open ...</summary>
-
 ```html
 <body>
   ...
@@ -148,7 +145,6 @@ To include the viewer on a website (in **either** case) copy the following code 
 ```
 
 **Note**: Please make sure to provide a valid *entrypoint* that points to the manifest / collection that you want to be displayed.
-</details>
 
 ## Getting Started
 
