@@ -1,5 +1,5 @@
 <template>
-  <div class="col-xs-auto">
+  <div class="q-pl-md">
     <q-select
       v-model="lang"
       :color="$q.dark.isActive ? 'white' : 'accent'"
