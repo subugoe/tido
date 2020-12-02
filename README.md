@@ -19,6 +19,9 @@ Also the commit short hash can be used to see a demo.
 
 - [Viewer Components](#viewer-components)
 - [Latest Version and Integration](#latest-version-and-integration)
+  - [A) Installation via npm](#a-installation-via-npm)
+  - [B) Download the bundle](#b-download-the-bundle)
+  - [Integration](#integration)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -51,63 +54,97 @@ Also the commit short hash can be used to see a demo.
 
 ## Latest Version and Integration
 
-To embed the viewer for production [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)  
-It is a zip archive. You can extract the build by typing:
+There are two options - **A)** and **B)** - to get the Viewer. Please follow these steps to include it for production:
+
+### A) Installation via npm
+
+- **Authentication**: `echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >> .npmrc`
+- **Installation**: `npm i @subugoe/qviewer`
+- **Integration**: `import '@subugoe/qviewer/dist/qviewer'` (add this line to your **main.js** file)
+
+### B) Download the bundle
+
+As an **alternative** to the npm package you can download the artifact: [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)
+
+It is a zip archive. Extract the downloaded build by typing:
 
 ```bash
 unzip artifacts.zip
 ```
 
-This creates the following folder structure containing the actual build:
+This creates the following folder structure:
 
 ```bash
-dist/spa/
-├── css
-│   ├── 2.5b2a42f3.css
-│   ├── app.222a6363.css
-│   └── vendor.2303fac8.css
+dist/
 ├── index.html
-└── js
-    ├── 2.5d86d581.js
-    ├── app.297a75a4.js
-    └── vendor.f055a028.js
+└── qviewer.js
 ```
 
-To include the viewer on a website add the following to your `index.html` file:
+### Integration
+
+To include the viewer on a website (in **either** case) copy the following code snippet to the end of the body tag in your `index.html` file:
 
 ```html
-<head>
+<body>
   ...
 
-  <link href=css/app.[CHECKSUM].css rel=stylesheet>
-  <link href=css/vendor.[CHECKSUM].css rel=stylesheet>
-</head>
+  <noscript>
+    <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled.
+      Please enable it to continue.
+    </strong>
+  </noscript>
 
-...
-
-<noscript>
-  <strong>We're sorry but TextViewer doesn't work properly without JavaScript enabled.
-  Please enable it to continue.
-  </strong>
-</noscript>
-
-<script id="emo-config" type="application/json">
+  <script id="emo-config" type="application/json">
   {
-    ...
+    "entrypoint": "",
+    "colors": {
+      "primary": "",
+      "secondary": "",
+      "accent": ""
+    },
+    "headers": {
+      "all": true,
+      "info": true,
+      "navigation": true,
+      "toggle": true
+    },
+    "labels": {
+      "item": "Sheet",
+      "manifest": "Manuscript"
+    },
+    "meta": {
+      "collection": {
+        "all": true,
+        "collector": true,
+        "description": true,
+        "title": true
+      },
+      "manifest": {
+        "all": true,
+        "creation": true,
+        "editor": true,
+        "label": true,
+        "location": true,
+        "origin": true
+      },
+      "item": {
+        "all": true,
+        "label": true,
+        "language": true
+      }
+    },
+    "standalone": true
   }
-</script>
+  </script>
 
-<div id=q-app></div>
+  <script src="dist/qviewer.js"></script>
 
-<script src=js/app.[CHECKSUM].js></script>
-<script src=js/vendor.[CHECKSUM].js></script>
+  <div id="q-app"></div>
+</body>
+
 ```
 
-and replace `[CHECKSUM]` with the values from the release you are going to use.
-
-**Note**:
-
-The **CHECKSUMs** change in each build. So please make sure to copy the ones from  **dist/spa/index.html**.
+**Note**: Please make sure to provide a valid *entrypoint* that points to the manifest / collection that you want to be displayed.
 
 ## Getting Started
 
@@ -132,7 +169,6 @@ Besides it also keeps track of resolving permission issues, since all your globa
 
   ```bash
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-  nvm install node
   nvm install stable
   ```
 
@@ -202,7 +238,7 @@ npm run build
 ## Configuration
 
 The Viewer is build with *Vue.js* and *Quasar*.
-If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf) (Configuring quasar.conf.js).
+If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf-js) (Configuring quasar.conf.js).
 
 There are two files in regards to configuration:
 
@@ -271,7 +307,7 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
 
 **Note**:
 
-It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels* or colors), please use *double quotes* only.
+It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels* or *colors*), please use *double quotes* only.
 
 #### The Keys in Detail
 
