@@ -42,7 +42,8 @@
 import { colors } from 'quasar';
 import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
-import PanelsMixin from '@/config/panels.js';
+import Panels from '@/mixins/panels';
+import { conf } from '@/statics/config';
 
 export default {
   name: 'Viewer',
@@ -50,7 +51,7 @@ export default {
     Header,
     Footer,
   },
-  mixins: [PanelsMixin],
+  mixins: [Panels],
   data() {
     return {
       annotations: {},
@@ -167,7 +168,7 @@ export default {
       * caller: *created-hook*
       */
     getConfig() {
-      this.config = JSON.parse(document.getElementById('emo-config').text);
+      this.config = conf;
     },
     /**
       * fetch all data provided on 'item level'
