@@ -51,7 +51,7 @@
       </q-item>
 
       <q-separator
-        v-if="showSeparator(config.meta.collection.all)"
+        v-if="showSeparator(config.meta.collection.all && (config.meta.manifest.all || config.meta.item.all))"
         inset
         class="q-mt-md q-mb-sm"
       />
@@ -127,7 +127,7 @@
     </q-list>
 
     <q-separator
-      v-if="showSeparator(config.meta.manifest.all)"
+      v-if="showSeparator(config.meta.manifest.all && config.meta.item.all)"
       inset
       class="q-mt-md q-mb-sm"
     />
