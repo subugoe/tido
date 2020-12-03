@@ -132,7 +132,6 @@ Besides it also keeps track of resolving permission issues, since all your globa
 
   ```bash
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-  nvm install node
   nvm install stable
   ```
 
@@ -177,9 +176,11 @@ npm run dev
 #### `Linting`
 
 ```bash
-npm run lint            # to lint js- and vue-files
-npm run lint:scss       # to lint the styles
+npm run lint            # to lint all the files at once
+npm run lint:js         # to lint js files only
 npm run lint:markdown   # to lint the markdown
+npm run lint:scss       # to lint the styles
+npm run lint:vue        # to lint vue files only
 ```
 
 #### `Testing`
@@ -307,7 +308,7 @@ const conf = {
 
   - **panels**
 
-    set this value to `false` if you want to switch off headings of the panels
+    set this value to `false` if you want to switch off the panels' headings
 
   - **toggle**
 
