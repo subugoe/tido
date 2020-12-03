@@ -32,9 +32,9 @@ Also the commit short hash can be used to see a demo.
     - [`Testing`](#testing)
     - [`Building` the app for production](#building-the-app-for-production)
 - [Configuration](#configuration)
-  - [a) Configure the Viewer](#a-configure-the-viewer)
+  - [Configure the Viewer (**conf** object)](#configure-the-viewer-conf-object)
     - [The Keys in Detail](#the-keys-in-detail)
-  - [b) Configure the Panels](#b-configure-the-panels)
+  - [Configure the Panels (**panels** array)](#configure-the-panels-panels-array)
     - [The Panel Keys in Detail](#the-panel-keys-in-detail)
 - [Dockerfile](#dockerfile)
 - [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend)
@@ -204,74 +204,67 @@ npm run build
 The Viewer is build with *Vue.js* and *Quasar*.
 If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf) (Configuring quasar.conf.js).
 
-There are two files in regards to configuration:
+You can fully customize the Viewer's behaviour in a config file located in **src/statics/config.js**.
 
-- a) configure the Viewer (**src/index.template.html**)
-  - change the color scheme
-  - show or hide individual bars (info, navigation, toggles)
-  - rename labels
-  - usage (standalone / embedded)
+This file consists of two JS constants - **conf** and **panels** - whereas the latter provides explicit config options for the panels respectively.
 
-- b) configure the panels (**src/config/panels.js**)
-  - set the order of the panels
-  - group the components inside a panel (e.g. turn them into tabs)
-  - rename the panel headings
-  - switch the panel/s off
+There are options to
 
-### a) Configure the Viewer
+- change the color scheme
+- show or hide individual bars (info, navigation, toggles)
+- group multiple components inside a single panel
+- set the order of the panels
+- rename labels and / or panel headings
+- filter individual metadata fields
+- and **more** ...
 
-Locate the `script` section in the `index.template.html` file:
+### Configure the Viewer (**conf** object)
 
 As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
 
-```html
-  <script id="emo-config" type="application/json">
-  {
-    "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
-    "colors": {
-      "primary": "",
-      "secondary": "grey",
-      "accent": "darkred"
+```js
+const conf = {
+  entrypoint: 'https://{server}{/prefix}/{collection}/collection.json',
+  colors: {
+    primary: '',
+    secondary: '',
+    accent: '',
+  },
+  headers: {
+    all: true,
+    info: true,
+    navigation: true,
+    panels: true,
+    toggle: true,
+  },
+  labels: {
+    item: 'Sheet',
+    manifest: 'Manuscript',
+  },
+  meta: {
+    collection: {
+      all: true,
+      collector: true,
+      description: true,
+      title: true,
     },
-    "headers": {
-      "all": true,
-      "info": true,
-      "navigation": true,
-      "toggle": true
+    manifest: {
+      all: true,
+      creation: true,
+      editor: true,
+      label: true,
+      location: true,
+      origin: true,
     },
-    "labels": {
-      "item": "Sheet",
-      "manifest": "Manuscript"
+    item: {
+      all: true,
+      label: true,
+      language: true,
     },
-    "meta": {
-      "collection": {
-        "all": true,
-        "collector": true,
-        "description": true,
-        "title": true
-      },
-      "manifest": {
-        "all": true,
-        "creation": true,
-        "editor": true,
-        "label": true,
-        "location": true,
-        "origin": true
-      },
-      "item": {
-        "all": true,
-        "label": true,
-        "language": true
-      }
-    },
-    "standalone": true
-  }
-</script>
+  },
+  standalone: true,
+};
 ```
-
-**Note**:
-
-It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels* or colors), please use *double quotes* only.
 
 #### The Keys in Detail
 
@@ -311,6 +304,10 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
   - **navigation**
 
     set this value to `false` if you want to switch off the NavBar
+
+  - **panels**
+
+    set this value to `false` if you want to switch off headings of the panels
 
   - **toggle**
 
@@ -359,37 +356,35 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
 
   Defaults to `true`.
 
-### b) Configure the Panels
-
-In order to configure the panels, locate the `panels.js` file inside the `src/config` folder of your project dir and find the *panels* constant at the top of the file:
+### Configure the Panels (**panels** array)
 
 ```js
-  const panels = [
-    {
-      id: uuidv4(),
-      connector: [1, 2],
-      panel_label: 'Tabs',
-      show: true,
-    },
-    {
-      id: uuidv4(),
-      connector: [3],
-      panel_label: 'Image',
-      show: true,
-    },
-    {
-      id: uuidv4(),
-      connector: [4],
-      panel_label: 'Text',
-      show: true,
-    },
-    {
-      id: uuidv4(),
-      connector: [5],
-      panel_label: 'Annotations',
-      show: true,
-    },
-  ];
+const panels = [
+  {
+    id: uuidv4(),
+    connector: [1],
+    panel_label: 'Tabs',
+    show: true,
+  },
+  {
+    id: uuidv4(),
+    connector: [4, 5],
+    panel_label: 'Text',
+    show: true,
+  },
+  {
+    id: uuidv4(),
+    connector: [3],
+    panel_label: 'Image',
+    show: true,
+  },
+  {
+    id: uuidv4(),
+    connector: [2],
+    panel_label: 'Metadata',
+    show: true,
+  },
+];
 ```
 
 It consists of four objects according to the maximum number of panels, that can be shown at once.  
@@ -411,13 +406,26 @@ Each object inside that constant consists of similar keys: `id`, `connector`, `p
   - 4 = Content / Text
   - 5 = Annotations
 
-  **Note**:
+  **Note**: These IDs are supposed to be *unique*, so please make sure not to repeat these!
 
-  These IDs are supposed to be *unique*, so please make sure not to repeat these!
+  Example given:
+
+  Assuming you want to combine the **Metadata**, **Text** and **Annotations** panels, the configuration would look like this:
+
+  ```js
+    {
+      id: uuidv4(),
+      connector: [2, 4, 5],
+      panel_label: 'Meta, Text & Anno',
+      show: true
+    }
+  ```
 
 - **panel_label**
 
-  refers to the heading in each panel's *toolbar* (**Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.)
+  refers to the heading in each panel's *toolbar*. To rename it, change the corresponding `panel_label` according to your needs.
+
+  **Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.
 
 - **show**
 
@@ -425,23 +433,7 @@ Each object inside that constant consists of similar keys: `id`, `connector`, `p
 
 **Note**:
 
-Modifying the *connector* and the *panel_label* works on user configuration as well.
-
-Example given:
-
-Assuming you want to combine the *Metadata*, *Text* and *Annotations* panels:
-
-```js
-  {
-    id: uuidv4(),
-    connector: [2, 4, 5],
-    panel_label: 'Meta, Text & Anno',
-    show: true
-  }
-```
-
-To rename a panel heading, change the corresponding `panel_label` according to your needs.  
-If you intend to hide a component, just toggle its corresponding *show-key* to `false`.
+Modifying the **connector** and the **panel_label** works on **user configuration** as well.
 
 ## Dockerfile
 

@@ -66,8 +66,14 @@ const conf = {
 const panels = [
   {
     id: uuidv4(),
-    connector: [1, 2],
+    connector: [1],
     panel_label: 'Tabs',
+    show: true,
+  },
+  {
+    id: uuidv4(),
+    connector: [4, 5],
+    panel_label: 'Text',
     show: true,
   },
   {
@@ -78,14 +84,8 @@ const panels = [
   },
   {
     id: uuidv4(),
-    connector: [4],
-    panel_label: 'Text',
-    show: true,
-  },
-  {
-    id: uuidv4(),
-    connector: [5],
-    panel_label: 'Annotations',
+    connector: [2],
+    panel_label: 'Metadata',
     show: true,
   },
 ];

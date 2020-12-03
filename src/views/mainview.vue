@@ -10,7 +10,10 @@
         :key="`pc${index}`"
         class="col-12 col-sm-6 col-md-3"
       >
-        <Toolbar :heading="p.panel_label" />
+        <Toolbar
+          v-if="config.headers.panels"
+          :heading="p.panel_label"
+        />
 
         <q-separator />
 
