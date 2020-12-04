@@ -20,7 +20,7 @@
           </h1>
 
           <p class="text-weight-bold">
-          Text vIewer for Digital Objects
+            Text vIewer for Digital Objects
           </p>
 
           <p>Copyright (c) 2020 Göttingen University - Göttingen State and University Library</p>
