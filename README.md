@@ -221,7 +221,7 @@ There are options to
 
 ### Configure the Viewer (**conf** object)
 
-As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
+As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate element.
 
 ```js
 const conf = {
@@ -326,12 +326,14 @@ const conf = {
 
     The label of the item respectively  
     Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.  
-    This change affects the captions of the navbuttons located in the headerbar and the metadata section.  
+    This change affects the captions of the navbuttons located in the headerbar and the metadata section.
+
     Defaults to `Sheet`.
 
   - **manifest**:
 
-    Same as for `item` but related to the manifest title.  
+    Same as for `item` but related to the manifest title.
+
     Defaults to `Manuscript`.
 
 - **meta**
@@ -353,7 +355,7 @@ const conf = {
 
 - **standalone**
 
-  denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
+  denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
 
   Defaults to `true`.
 
@@ -407,11 +409,11 @@ Each object inside that constant consists of similar keys: `id`, `connector`, `p
   - 4 = Content / Text
   - 5 = Annotations
 
-  **Note**: These IDs are supposed to be *unique*, so please make sure not to repeat these!
+  **Note**: These **IDs** are supposed to be **unique**, so please make sure not to repeat these!
 
   Example given:
 
-  Assuming you want to combine the **Metadata**, **Text** and **Annotations** panels, the configuration would look like this:
+  Assuming you want to combine the **Metadata**, **Text** and **Annotations** panels, the configuration could look like this:
 
   ```js
     {
