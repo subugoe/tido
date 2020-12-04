@@ -1,9 +1,9 @@
-# EMo Viewer
+# TIDO
 
-Viewer for the modular framework to present digital editions.
+Text vIewer for Digital Objects.
 
 **Note:**
-Although the EMo Viewer is designed as a generic viewer for digital editions, it is currently developed within the scope of the [Ahiqar project](https://gitlab.gwdg.de/subugoe/ahiqar).
+Although TIDO is designed as a generic viewer for digital editions, it is currently developed within the scope of the [Ahiqar project](https://gitlab.gwdg.de/subugoe/ahiqar).
 
 This is the reason for "Ahiqar" being mentioned several times in the docs of this repo.
 
@@ -152,7 +152,7 @@ To include the viewer on a website, copy the following code snippet to the end o
 
 ### Prerequisites
 
-To get the EMo Viewer up and running you should have the following software installed:
+To get TIDO up and running you should have the following software installed:
 
 - **curl**
 - **npm**
@@ -504,7 +504,7 @@ The entrypoint should point to the collection you want to be displayed.
 
 ## Architecture
 
-![Architecture diagram of the EMo viewer](img/emo_architecture.png)
+![Architecture diagram of TIDO](img/emo_architecture.png)
 
 ## Contributing
 

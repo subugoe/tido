@@ -125,7 +125,7 @@ module.exports = function (ctx) {
       manifest: {
         name: 'TIDO',
         short_name: 'TIDO',
-        description: 'Slim, easy to use and mobile-friendly text and image viewer',
+        description: 'Text vIever for Digital Objects',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
