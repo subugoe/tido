@@ -62,6 +62,8 @@ There are two options - **A)** and **B)** - to get the Viewer. Please follow the
 - **Installation**: `npm i @subugoe/qviewer`
 - **Integration**: `import '@subugoe/qviewer/dist/qviewer'` (add this line to your **main.js** file)
 
+Please **Note**: `main.js` serves as your *entrypoint* usually located at **/[projectdir]/src/main.js** or maybe inside your **public** folder. It depends on your individual project setup.
+
 ### B) Download the bundle
 
 As an **alternative** to the npm package you can download the artifact: [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)
@@ -82,7 +84,7 @@ dist/
 
 ### Integration
 
-To include the viewer on a website (in **either** case) copy the following code snippet to the end of the body tag in your `index.html` file:
+To include the viewer on a website, copy the following code snippet to the end of the body tag inside your `index.html` file:
 
 ```html
 <body>
@@ -94,7 +96,7 @@ To include the viewer on a website (in **either** case) copy the following code 
     </strong>
   </noscript>
 
-  <script id="emo-config" type="application/json">
+  <script id="tido-config" type="application/json">
   {
     "entrypoint": "",
     "colors": {
@@ -261,7 +263,7 @@ Locate the `script` section in the `index.template.html` file:
 As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
 
 ```html
-  <script id="emo-config" type="application/json">
+  <script id="tido-config" type="application/json">
   {
     "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
     "colors": {

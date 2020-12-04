@@ -123,9 +123,9 @@ module.exports = function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'EMo Viewer',
-        short_name: 'EMo Viewer',
-        description: 'Slim, easy to use and mobile-friendly text and image viewer presenting digital editions',
+        name: 'TIDO',
+        short_name: 'TIDO',
+        description: 'Slim, easy to use and mobile-friendly text and image viewer',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

@@ -1,15 +1,14 @@
 {
   "name": "@subugoe/qviewer",
   "version": "1.4.20",
-  "description": "Slim, easy to use and mobile-friendly text and image viewer presenting digital editions",
+  "description": "Slim, easy to use and mobile-friendly text and image viewer",
   "productName": "TIDO",
   "keywords": [
-    "digital",
     "edition",
-    "emo",
     "openseadragon",
     "quasar",
-    "sub",
+    "subugoe",
+    "TIDO",
     "viewer",
     "vue"
   ],

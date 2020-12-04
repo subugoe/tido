@@ -167,7 +167,7 @@ export default {
       * caller: *created-hook*
       */
     getConfig() {
-      this.config = JSON.parse(document.getElementById('emo-config').text);
+      this.config = JSON.parse(document.getElementById('tido-config').text);
     },
     /**
       * fetch all data provided on 'item level'
