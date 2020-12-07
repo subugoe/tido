@@ -359,6 +359,13 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
 
   Defaults to `true`.
 
+  **rtl**
+
+  this option supports text to be displayed from right to left inside the text panel (e.g. arabic).
+  set this value to `false` if you want to disable it or rather if you want to display text which is read from left to right (e.g. english).
+
+  Defaults to `true`.
+
 ### b) Configure the Panels
 
 In order to configure the panels, locate the `panels.js` file inside the `src/config` folder of your project dir and find the *panels* constant at the top of the file:
