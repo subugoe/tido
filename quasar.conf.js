@@ -12,7 +12,7 @@ module.exports = function (ctx) {
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
-      '/style.scss'
+      'style.scss'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -50,7 +50,9 @@ module.exports = function (ctx) {
 
       // Quasar plugins
       plugins: [],
+
       cssAddon: true,
+
       config: {
         brand: {
           primary: '#212121',
@@ -66,6 +68,9 @@ module.exports = function (ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
+      output: {
+        filename: '[name].js',
+      },
 
       // rtl: false, // https://quasar.dev/options/rtl-support
       // showProgress: false,
@@ -74,7 +79,7 @@ module.exports = function (ctx) {
 
       // Options below are automatically set depending on the env, set them if you want to override
       // preloadChunks: false,
-      // extractCSS: false,
+      extractCSS: false,
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
@@ -99,7 +104,7 @@ module.exports = function (ctx) {
     devServer: {
       https: false,
       port: 8080,
-      open: false // opens browser window automatically
+      open: true // opens browser window automatically
     },
 
     // animations: 'all', // --- includes all animations
@@ -116,36 +121,36 @@ module.exports = function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'EMo Viewer',
-        short_name: 'EMo Viewer',
-        description: 'Viewer for the modular framework to present digital editions',
+        name: 'TIDO',
+        short_name: 'TIDO',
+        description: 'Text vIewer for Digital Objects',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
         theme_color: '#027be3',
         icons: [
           {
-            src: 'statics/icons/icon-128x128.png',
+            src: 'icons/icon-128x128.png',
             sizes: '128x128',
             type: 'image/png'
           },
           {
-            src: 'statics/icons/icon-192x192.png',
+            src: 'icons/icon-192x192.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'statics/icons/icon-256x256.png',
+            src: 'icons/icon-256x256.png',
             sizes: '256x256',
             type: 'image/png'
           },
           {
-            src: 'statics/icons/icon-384x384.png',
+            src: 'icons/icon-384x384.png',
             sizes: '384x384',
             type: 'image/png'
           },
           {
-            src: 'statics/icons/icon-512x512.png',
+            src: 'icons/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png'
           }
@@ -156,7 +161,6 @@ module.exports = function (ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
     cordova: {
       // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
-      id: 'de.uni-goettingen.sub.emo'
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
@@ -184,7 +188,7 @@ module.exports = function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'viewer'
+        appId: 'TIDO'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration

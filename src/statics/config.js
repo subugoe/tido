@@ -3,7 +3,6 @@
   =====================
   src/statics/config.js
 
-  This file serves as a single point for configuration purposes.
   Please refer to our README for detailed instructions!
 */
 import { v4 as uuidv4 } from 'uuid';

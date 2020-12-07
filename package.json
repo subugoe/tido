@@ -1,16 +1,14 @@
 {
   "name": "@subugoe/qviewer",
   "version": "1.4.5",
-  "description": "Viewer for the modular framework to present digital editions",
-  "productName": "EMo Viewer",
+  "description": "Text vIewer for Digital Objects",
+  "productName": "TIDO",
   "keywords": [
-    "viewer",
-    "emo",
-    "digital editions",
-    "vue",
-    "quasar",
     "openseadragon",
-    "sub"
+    "quasar",
+    "subugoe",
+    "TIDO",
+    "vue"
   ],
   "cordovaId": "de.uni-goettingen.sub.emo",
   "capacitorId": "",
@@ -86,19 +84,23 @@
   "scripts": {
     "build": "quasar build --modern",
     "dev": "quasar dev --modern",
-    "lint": "npm run lint:vue && npm run lint:js && npm run lint:scss && npm run lint:markdown",
-    "test": "npm run test:unit",
     "fix": "npm run fix:vue && npm run fix:js && npm run fix:scss",
-    "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version",
-    "fix:vue": "eslint --fix --ext .vue src",
     "fix:js": "eslint --fix --ext .js src",
     "fix:scss": "node_modules/.bin/stylelint --fix 'src/**/*.scss'",
-    "lint:vue": "eslint --ext .vue src",
+    "fix:vue": "eslint --fix --ext .vue src",
+    "lint": "npm run lint:vue && npm run lint:js && npm run lint:scss && npm run lint:markdown",
     "lint:js": "eslint --ext .js src",
-    "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
-    "test:unit": "jest --updateSnapshot"
+    "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
+    "lint:vue": "eslint --ext .vue src",
+    "test": "npm run test:unit",
+    "test:unit": "jest --updateSnapshot",
+    "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version"
   },
+  "files": [
+    "dist",
+    "src/statics"
+  ],
   "publishConfig": {
     "@subugoe:registry": "https://gitlab.gwdg.de/api/v4/projects/10921/packages/npm/"
   },
