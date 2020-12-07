@@ -8,7 +8,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 const conf = {
-  entrypoint: 'https://ahikar-test.sub.uni-goettingen.de/api/textapi/ahikar/3r9ps/collection.json',
+  entrypoint: '',
   colors: {
     primary: '',
     secondary: '',
