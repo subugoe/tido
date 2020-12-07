@@ -51,8 +51,8 @@ const conf = {
 
 // -- Configuration for the panels --
 
-// each "connector" requires at least one "component id" to get the appropriate panel rendered;
-// providing more than one id turns the panels into tabs.
+// each "connector" requires at least one "component id" to render the appropriate panel;
+// providing more than one id groups the corresponding components inside a single panel.
 
 // -- Component IDs for reference --
 
