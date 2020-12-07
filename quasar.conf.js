@@ -62,6 +62,10 @@ module.exports = function (ctx) {
       }
     },
 
+    htmlVariables: {
+      title: 'TIDO'
+    },
+
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
     supportIE: false,
 
