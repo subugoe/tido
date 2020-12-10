@@ -19,8 +19,8 @@ Also the commit short hash can be used to see a demo.
 
 - [Viewer Components](#viewer-components)
 - [Latest Version and Integration](#latest-version-and-integration)
-  - [A) Installation via npm](#a-installation-via-npm)
-  - [B) Download the bundle](#b-download-the-bundle)
+  - [A) Installation via npm (Integration)](#a-installation-via-npm-integration)
+  - [B) Download the bundle (Standalone)](#b-download-the-bundle-standalone)
   - [Integration](#integration)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -54,17 +54,25 @@ Also the commit short hash can be used to see a demo.
 
 ## Latest Version and Integration
 
-There are two options - **A)** and **B)** - to get the Viewer. Please follow these steps to include it for production:
+There are two options - **A)** and **B)** - to get the Viewer depending on it's usage.
 
-### A) Installation via npm
+Please follow these steps to include it for production:
 
-- **Authentication**: `echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >> .npmrc`
-- **Installation**: `npm i @subugoe/qviewer`
-- **Integration**: `import '@subugoe/qviewer/dist/qviewer'` (add this line to your **main.js** file)
+### A) Installation via npm (Integration)
 
-Please **Note**: `main.js` serves as your *entrypoint* usually located at **/[projectdir]/src/main.js** or maybe inside your **public** folder. It depends on your individual project setup.
+Assuming you already have a running project:
 
-### B) Download the bundle
+```bash
+cd /path/to/your/projectdir/
+```
+
+- **Registry setup**: `echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >> .npmrc`
+- **Installation**: `npm i @subugoe/tido`
+- **Integration**: `import '@subugoe/tido/dist/tido'` (add this line to your **main.js** file)
+
+**Note**: `main.js` serves as your *entrypoint* usually located at **/[projectdir]/src/main.js** (depending on your individual project setup).
+
+### B) Download the bundle (Standalone)
 
 As an **alternative** to the npm package you can download the artifact: [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)
 
@@ -79,7 +87,7 @@ This creates the following folder structure:
 ```bash
 dist/
 ├── index.html
-└── qviewer.js
+└── tido.js
 ```
 
 ### Integration
@@ -139,7 +147,7 @@ To include the viewer on a website, copy the following code snippet to the end o
   }
   </script>
 
-  <script src="dist/qviewer.js"></script>
+  <script src="dist/tido.js"></script>
 
   <div id="q-app"></div>
 </body>
