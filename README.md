@@ -17,14 +17,17 @@ Also the commit short hash can be used to see a demo.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Viewer Components](#viewer-components)
 - [Latest Version and Integration](#latest-version-and-integration)
-  - [A) Installation via npm (Integration)](#a-installation-via-npm-integration)
-  - [B) Download the bundle (Standalone)](#b-download-the-bundle-standalone)
+  - [A) Installation via npm](#a-installation-via-npm)
+    - [Prerequisite: Access Token](#prerequisite-access-token)
+    - [Authentication](#authentication)
+    - [Registry setup](#registry-setup)
+    - [Installation](#installation)
+  - [B) Download the bundle](#b-download-the-bundle)
   - [Integration](#integration)
-- [Getting Started](#getting-started)
+- [Getting Started (Developers)](#getting-started-developers)
   - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+  - [Environment setup](#environment-setup)
     - [Set up `nvm` and the recent stable version of `node.js`](#set-up-nvm-and-the-recent-stable-version-of-nodejs)
     - [Set up `global` project requirements via `npm`](#set-up-global-project-requirements-via-npm)
     - [Clone the repository](#clone-the-repository)
@@ -39,6 +42,7 @@ Also the commit short hash can be used to see a demo.
     - [The Keys in Detail](#the-keys-in-detail)
   - [b) Configure the Panels](#b-configure-the-panels)
     - [The Panel Keys in Detail](#the-panel-keys-in-detail)
+- [Viewer Components](#viewer-components)
 - [Dockerfile](#dockerfile)
 - [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend)
 - [Architecture](#architecture)
@@ -48,31 +52,51 @@ Also the commit short hash can be used to see a demo.
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Viewer Components
-
-![Viewer components](img/Viewer.png)
-
 ## Latest Version and Integration
 
 There are two options - **A)** and **B)** - to get the Viewer depending on it's usage.
 
 Please follow these steps to include it for production:
 
-### A) Installation via npm (Integration)
+### A) Installation via npm
 
-Assuming you already have a running project:
+#### Prerequisite: Access Token
+
+**Note**: if you don't have an **Access Token**, please head over to the GitLab page and create it:
+[Create personal access token](https://gitlab.gwdg.de/-/profile/personal_access_tokens)
+(otherwise you can skip this step).
+
+Enter an arbitrary **name** and tick the **api** box under **scopes**. Click **Create personal access token** hereafter.
+
+#### Authentication
+
+To authenticate, configure **npm** accordingly:
 
 ```bash
-cd /path/to/your/projectdir/
+npm config set '//gitlab.gwdg.de/api/v4/packages/npm/:_authToken' "$AUTH_TOKEN"
 ```
 
-- **Registry setup**: `echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >> .npmrc`
-- **Installation**: `npm i @subugoe/tido`
-- **Integration**: `import '@subugoe/tido/dist/tido'` (add this line to your **main.js** file)
+**Note**: replace $AUTH_TOKEN with your valid Auth-Token (that you - maybe - just created before).
 
-**Note**: `main.js` serves as your *entrypoint* usually located at **/[projectdir]/src/main.js** (depending on your individual project setup).
+#### Registry setup
 
-### B) Download the bundle (Standalone)
+Since npm communicates with the package api, it's necessary to setup a valid entrypoint.
+
+Set it up with the following command:
+
+```bash
+echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
+```
+
+**Note**: fire this command inside the **root** of your **project directory**.
+
+#### Installation
+
+```bash
+npm i @subugoe/tido
+```
+
+### B) Download the bundle
 
 As an **alternative** to the npm package you can download the artifact: [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)
 
@@ -92,14 +116,30 @@ dist/
 
 ### Integration
 
-To include the viewer on a website, copy the following code snippet to the end of the body tag inside your `index.html` file:
+The integration depends on the option you chose from above; e.g. installation via npm or rather bundle download.
+
+**A)** If you installed *TIDO* with **npm**, add this line to your **main.js** file:
+
+```js
+import '@subugoe/tido/dist/tido'
+```
+
+**Note**: `main.js` serves as your *entrypoint* usually located at **/[projectdir]/src/main.js**. It depends on your individual project setup.
+
+**B)** If you **downloaded** *TIDO* as a **bundle**, reference the js file accordingly at the end of the body tag inside your **index.html** file:
+
+```html
+<script src="dist/tido.js"></script>
+```
+
+**Finally** copy the config object into your entrypoint file (usually **index.html**):
 
 ```html
 <body>
   ...
 
   <noscript>
-    <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled.
+    <strong>We're sorry but TIDO doesn't work properly without JavaScript enabled.
       Please enable it to continue.
     </strong>
   </noscript>
@@ -147,8 +187,6 @@ To include the viewer on a website, copy the following code snippet to the end o
   }
   </script>
 
-  <script src="dist/tido.js"></script>
-
   <div id="q-app"></div>
 </body>
 
@@ -156,7 +194,7 @@ To include the viewer on a website, copy the following code snippet to the end o
 
 **Note**: Please make sure to provide a valid *entrypoint* that points to the manifest / collection that you want to be displayed.
 
-## Getting Started
+## Getting Started (Developers)
 
 ### Prerequisites
 
@@ -173,19 +211,17 @@ The main purpose of `nvm` is to have multiple node versions installed in regards
 It enables you to just switch to the appropriate node version.  
 Besides it also keeps track of resolving permission issues, since all your global installations go to your home directory (~/.nvm/) instead of being applied systemwide.
 
-### Installation
+### Environment setup
 
 #### Set up `nvm` and the recent stable version of `node.js`
 
-  ```bash
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-  nvm install stable
-  ```
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+nvm install stable
+```
 
 **Note**:
-
-After the nvm installation is done, please `restart` your shell session once.  
-That's due to changes to your profile environment.
+After the nvm installation is done, please `restart` your shell session once. That's due to changes to your profile environment.
 
 #### Set up `global` project requirements via `npm`
 
@@ -247,7 +283,7 @@ npm run build
 
 ## Configuration
 
-The Viewer is build with *Vue.js* and *Quasar*.
+The Viewer is build with **Vue.js** and **Quasar**.
 If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf-js) (Configuring quasar.conf.js).
 
 There are two files in regards to configuration:
@@ -488,6 +524,10 @@ Assuming you want to combine the *Metadata*, *Text* and *Annotations* panels:
 
 To rename a panel heading, change the corresponding `panel_label` according to your needs.  
 If you intend to hide a component, just toggle its corresponding *show-key* to `false`.
+
+## Viewer Components
+
+![Viewer components](img/Viewer.png)
 
 ## Dockerfile
 
