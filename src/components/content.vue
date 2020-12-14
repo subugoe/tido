@@ -44,9 +44,9 @@
     <div class="row">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div
+        :class="['scroll-panel', config.rtl ? 'rtl-support' : '']"
         :id="nodeid"
         ref="contentsize"
-        class="scroll-panel"
         v-html="content"
       />
     </div>
@@ -59,6 +59,10 @@ import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
 export default {
   name: 'Content',
   props: {
+    config: {
+      type: Object,
+      default: () => {},
+    },
     contenturl: {
       type: String,
       default: () => '',
@@ -134,3 +138,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  .rtl-support {
+    direction: rtl;
+  }
+</style>
