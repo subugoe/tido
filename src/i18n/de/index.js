@@ -2,6 +2,7 @@ export default {
   Annotations: 'Annotationen',
   Collection: 'Kollektion',
   Collector: 'Kollektor',
+  Colorscheme: 'Farbschema ändern',
   Contents: 'Inhalt',
   Decrease: 'Verkleinern',
   default: 'Standard',

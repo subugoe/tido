@@ -2,7 +2,7 @@
   <div class="col-xs-auto colors">
     <q-btn
       flat
-      title="Change color"
+      :title="$t('Colorscheme')"
     >
       <q-icon
         :name="fasPalette"
