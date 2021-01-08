@@ -31,7 +31,7 @@
   },
   "private": false,
   "dependencies": {
-    "@quasar/extras": "^1.9.12",
+    "@quasar/extras": "^1.9.13",
     "openseadragon": "^2.4.2",
     "quasar": "^1.15.0",
     "vuedraggable": "^2.24.3"
@@ -39,7 +39,7 @@
   "devDependencies": {
     "@quasar/app": "^2.1.14",
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.1.0",
-    "@vue/cli-service": "^4.5.9",
+    "@vue/cli-service": "^4.5.10",
     "autoprefixer": "9.8.6",
     "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.2",
@@ -48,11 +48,11 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-vue": "^7.4.0",
-    "husky": "^4.3.6",
+    "eslint-plugin-vue": "^7.4.1",
+    "husky": "^4.3.7",
     "markdownlint-cli": "^0.26.0",
     "node-sass": "^4.14.1",
-    "sass": "^1.32.0",
+    "sass": "^1.32.2",
     "sass-loader": "8.0.2",
     "standard-version": "^9.1.0",
     "stylelint": "^13.8.0",
