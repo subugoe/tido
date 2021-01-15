@@ -38,8 +38,7 @@
   },
   "devDependencies": {
     "@quasar/app": "^2.1.14",
-    "@quasar/quasar-app-extension-testing-unit-jest": "^2.1.0",
-    "@vue/cli-service": "^4.5.10",
+    "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.1",
     "autoprefixer": "9.8.6",
     "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.2",
@@ -52,7 +51,7 @@
     "husky": "^4.3.7",
     "markdownlint-cli": "^0.26.0",
     "node-sass": "^4.14.1",
-    "sass": "^1.32.2",
+    "sass": "^1.32.4",
     "sass-loader": "8.0.2",
     "standard-version": "^9.1.0",
     "stylelint": "^13.8.0",
