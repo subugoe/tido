@@ -41,7 +41,7 @@ update-ahikar:
   variables:
     UPDATE: "true"
     UPSTREAM_COMMIT_SHA: "${CI_COMMIT_SHA}"
-  trigger: "subugoe/ahiqar/frontend"
+  trigger: "subugoe/ahiqar/ahiqar-tido"
 
 pages:
   before_script:

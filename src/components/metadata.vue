@@ -22,7 +22,7 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.collection.collector">
+      <q-item v-if="config.meta.collection.collector && collection.collector.name">
         <q-item-section>
           <q-item-label
             overline
@@ -36,7 +36,7 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.collection.description">
+      <q-item v-if="config.meta.collection.description && collection.description">
         <q-item-section>
           <q-item-label
             overline
@@ -65,7 +65,7 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.manifest.label">
+      <q-item v-if="config.meta.manifest.label && title">
         <q-item-section>
           <q-item-label
             overline
@@ -77,7 +77,7 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.manifest.creation">
+      <q-item v-if="config.meta.manifest.creation && date">
         <q-item-section>
           <q-item-label
             overline
@@ -89,7 +89,7 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.manifest.editor">
+      <q-item v-if="config.meta.manifest.editor && editor">
         <q-item-section>
           <q-item-label
             overline
@@ -101,7 +101,7 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.manifest.location">
+      <q-item v-if="config.meta.manifest.location && location">
         <q-item-section>
           <q-item-label
             overline
@@ -113,7 +113,7 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.manifest.origin">
+      <q-item v-if="config.meta.manifest.origin && origin">
         <q-item-section>
           <q-item-label
             overline
@@ -207,12 +207,15 @@ export default {
       return this.manifests[this.sequenceindex]['x-date'];
     },
     editor() {
-      let editors = '';
+      if (Array.isArray(this.manifests[this.sequenceindex]['x-editor'])) {
+        let editors = '';
 
-      Object.values(this.manifests[this.sequenceindex]['x-editor']).forEach((ed) => {
-        editors += `${ed.name}, `;
-      });
-      return editors.slice(0, -2);
+        Object.values(this.manifests[this.sequenceindex]['x-editor']).forEach((ed) => {
+          editors += `${ed.name}, `;
+        });
+        return editors.slice(0, -2);
+      }
+      return '';
     },
     itemcount() {
       return this.manifests[this.sequenceindex].sequence.length;
