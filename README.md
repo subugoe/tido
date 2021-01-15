@@ -124,7 +124,7 @@ import '@subugoe/tido/dist/tido'
 
   <script id="tido-config" type="application/json">
   {
-    "entrypoint": "",
+    "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
     "colors": {
       "primary": "",
       "secondary": "",
