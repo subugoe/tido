@@ -167,7 +167,7 @@ export default {
       * caller: *created-hook*
       */
     getConfig() {
-      this.config = JSON.parse(document.getElementById('emo-config').text);
+      this.config = JSON.parse(document.getElementById('tido-config').text);
     },
     /**
       * fetch all data provided on 'item level'
@@ -178,17 +178,16 @@ export default {
     getItemData(url) {
       this.request(url)
         .then((data) => {
-          this.collectiontitle = data.title;
-
+          this.collectiontitle = data.title.title;
           this.contenturl = data.content;
           this.imageurl = data.image && data.image.id ? data.image.id : '';
           this.itemlabel = data.n ? data.n : 'No itemlabel :(';
 
           // note: the scholars didn't mark the item language yet, so atm the API provides them all.
           // since we know, we are dealing with the arabic part of the collection, we define the language to be arabic.
-          const [arabic] = data['x-langString'].split(',');
+          const [language] = data['x-langString'] ? data['x-langString'].split(',') : data.lang;
 
-          this.itemlanguage = arabic;
+          this.itemlanguage = language;
         });
     },
     /**
