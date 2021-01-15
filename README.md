@@ -19,8 +19,6 @@ Also the commit short hash can be used to see a demo.
 
 - [Latest Version and Integration](#latest-version-and-integration)
   - [A) Installation via npm](#a-installation-via-npm)
-    - [Prerequisite: Access Token](#prerequisite-access-token)
-    - [Authentication](#authentication)
     - [Registry setup](#registry-setup)
     - [Installation](#installation)
   - [B) Download the bundle](#b-download-the-bundle)
@@ -60,29 +58,9 @@ Please follow these steps to include it for production:
 
 ### A) Installation via npm
 
-#### Prerequisite: Access Token
-
-**Note**: if you don't have an **Access Token**, please head over to the GitLab page and create it:
-[Create personal access token](https://gitlab.gwdg.de/-/profile/personal_access_tokens)
-(otherwise you can skip this step).
-
-Enter an arbitrary **name** and tick the **api** box under **scopes**. Click **Create personal access token** hereafter.
-
-#### Authentication
-
-To authenticate, configure **npm** accordingly:
-
-```bash
-npm config set '//gitlab.gwdg.de/api/v4/packages/npm/:_authToken' "$AUTH_TOKEN"
-```
-
-**Note**: replace $AUTH_TOKEN with your valid Auth-Token (that you - maybe - just created before).
-
 #### Registry setup
 
 Since npm communicates with the package api, it's necessary to setup a valid entrypoint.
-
-Set it up with the following command:
 
 ```bash
 echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
