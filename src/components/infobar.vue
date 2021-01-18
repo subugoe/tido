@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="text-h4 text-bold text-uppercase">
-      {{ collectiontitle }}
+      {{ ahiqar ? $t('cTitle') : collectiontitle }}
     </h1>
     <h2 class="text-h5 text-bold text-uppercase q-mt-none q-mb-ml">
       <span>{{ manifesttitle }}</span>
@@ -37,6 +37,7 @@ export default {
   },
   data() {
     return {
+      ahiqar: true,
       sequenceindex: 0,
     };
   },

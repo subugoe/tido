@@ -17,7 +17,7 @@
             {{ $t('Title') }}:
           </q-item-label>
           <q-item-label>
-            {{ collection.title ? collection.title[0].title : '' }}
+            {{ collection.title ? $t('cTitle') : '' }}
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -71,7 +71,7 @@
             overline
             class="text-uppercase"
           >
-            Label:
+            {{ $t('Label') }}:
           </q-item-label>
           <q-item-label>{{ title }}</q-item-label>
         </q-item-section>
@@ -146,7 +146,7 @@
             overline
             class="text-uppercase"
           >
-            Label:
+            {{ $t('Label') }}:
           </q-item-label>
           <q-item-label>{{ itemlabel }}</q-item-label>
         </q-item-section>
