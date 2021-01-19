@@ -12,28 +12,22 @@ module.exports = function (ctx) {
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: [
-      '/style.scss'
+      'style.scss'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
-    extras: [
-      // 'ionicons-v4',
-      // 'mdi-v4',
-      // 'fontawesome-v5',
-      // 'eva-icons',
-      // 'themify',
-      // 'line-awesome',
-      // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
+    // extras: [],
 
-      // 'roboto-font', // optional, you are not bound to it
-      // 'material-icons' // optional, you are not bound to it
-    ],
+    // components: [],
+
+    cssAddon: true,
+
+    dark: 'auto', // or Boolean true/false
+
+    // directives: [],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
-      iconSet: 'fontawesome-v5',
-      lang: 'en-us', // Quasar language pack
-
       // Possible values for "all":
       // * 'auto' - Auto-import needed Quasar components & directives
       //            (slightly higher compile time; next to minimum bundle size; most convenient)
@@ -43,21 +37,24 @@ module.exports = function (ctx) {
       //            (not treeshaking Quasar; biggest bundle size; convenient)
       all: 'auto',
 
-      dark: 'auto', // or Boolean true/false
-
-      // components: [],
-      // directives: [],
-
-      // Quasar plugins
-      plugins: [],
-      cssAddon: true,
       config: {
         brand: {
           primary: '#212121',
           secondary: '#eee',
           accent: '#1a3771'
         }
-      }
+      },
+
+      iconSet: 'fontawesome-v5',
+
+      lang: 'en-us', // Quasar language pack
+
+      // Quasar plugins
+      // plugins: []
+    },
+
+    htmlVariables: {
+      title: 'TIDO'
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
@@ -65,33 +62,39 @@ module.exports = function (ctx) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
+      distDir: 'dist',
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
+      // analyze: true,
+      // gzip: true,
       // rtl: false, // https://quasar.dev/options/rtl-support
       // showProgress: false,
-      // gzip: true,
-      // analyze: true,
 
       // Options below are automatically set depending on the env, set them if you want to override
       // preloadChunks: false,
-      // extractCSS: false,
+      extractCSS: false,
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
+        cfg.output = {
+          filename: '[name].js',
+        },
         cfg.resolve.alias = {
           ...cfg.resolve.alias, // This adds the existing alias
 
           '@': path.resolve(__dirname, './src/'),
         },
-        cfg.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /node_modules/,
-          options: {
-            formatter: require('eslint').CLIEngine.getFormatter('stylish')
+        cfg.module.rules.push(
+          {
+            enforce: 'pre',
+            exclude: /node_modules/,
+            loader: 'eslint-loader',
+            options: {
+              formatter: require('eslint').CLIEngine.getFormatter('stylish')
+            },
+            test: /\.(js|vue)$/
           }
-        })
+        )
       }
     },
 
@@ -102,9 +105,13 @@ module.exports = function (ctx) {
       open: false // opens browser window automatically
     },
 
+    vendor: {
+      disable: false,
+    },
+
     // animations: 'all', // --- includes all animations
     // https://quasar.dev/options/animations
-    animations: [],
+    // animations: [],
 
     // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
@@ -116,9 +123,9 @@ module.exports = function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'EMo Viewer',
-        short_name: 'EMo Viewer',
-        description: 'Viewer for the modular framework to present digital editions',
+        name: 'TIDO',
+        short_name: 'TIDO',
+        description: 'Text vIever for Digital Objects',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -184,7 +191,7 @@ module.exports = function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'viewer'
+        appId: 'q-app'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration

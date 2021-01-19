@@ -16,11 +16,11 @@
       <q-card>
         <q-card-section>
           <h1 class="text-h5 q-pb-md">
-            EMo Viewer
+            TIDO
           </h1>
 
           <p class="text-weight-bold">
-            Slim, easy to use and mobile-friendly text and image viewer
+            Text vIewer for Digital Objects
           </p>
 
           <p>Copyright (c) 2020 Göttingen University - Göttingen State and University Library</p>
