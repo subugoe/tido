@@ -43,7 +43,6 @@ import { colors } from 'quasar';
 import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
 import Panels from '@/mixins/panels';
-import { conf } from '@/statics/config';
 
 export default {
   name: 'Viewer',
@@ -168,7 +167,7 @@ export default {
       * caller: *created-hook*
       */
     getConfig() {
-      this.config = conf;
+      this.config = JSON.parse(document.getElementById('tido-config').text);
     },
     /**
       * fetch all data provided on 'item level'

@@ -1,13 +1,14 @@
 {
-  "name": "@subugoe/qviewer",
-  "version": "1.4.5",
-  "description": "Text vIewer for Digital Objects",
+  "name": "@subugoe/tido",
+  "version": "1.4.21",
+  "description": "Text vIever for Digital Objects",
   "productName": "TIDO",
   "keywords": [
     "openseadragon",
     "quasar",
     "subugoe",
     "TIDO",
+    "viewer",
     "vue"
   ],
   "cordovaId": "de.uni-goettingen.sub.emo",
@@ -93,13 +94,15 @@
     "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
     "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:vue": "eslint --ext .vue src",
+    "release": "npm run build && npm run tweak:build && npm publish",
     "test": "npm run test:unit",
     "test:unit": "jest --updateSnapshot",
+    "tweak:build": "./tweak_build.sh",
     "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version"
   },
   "files": [
     "dist",
-    "src/statics"
+    "src/statics/support.css"
   ],
   "publishConfig": {
     "@subugoe:registry": "https://gitlab.gwdg.de/api/v4/projects/10921/packages/npm/"

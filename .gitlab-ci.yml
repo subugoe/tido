@@ -15,7 +15,8 @@ build_test:
   stage: build
   script:
    - npm install
-   - quasar build
+   - npm run build
+   - npm run tweak:build
   artifacts:
     paths:
      - dist/
@@ -28,7 +29,8 @@ build_main_and_develop:
   stage: build
   script:
    - npm install
-   - quasar build
+   - npm run build
+   - npm run tweak:build
   artifacts:
     paths:
      - dist/
@@ -90,11 +92,12 @@ pushback:
   script:
    - npm install
    - npm run build
-   - mkdir emo-viewer && mv dist/js/* emo-viewer/
+   - npm run tweak:build
+   - mkdir tido && mv dist/* tido/
   artifacts:
     expire_in: 5 yrs
     paths:
-     - emo-viewer
+     - tido
 
 # when a git flow release is made, a tag will be pushed starting this job. it
 # will keep the resulting artifact from the job declared in `JOB_NUMBER_TO_PRESERVE`
