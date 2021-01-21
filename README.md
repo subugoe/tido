@@ -1,9 +1,9 @@
-# EMo Viewer
+# TIDO
 
-Viewer for the modular framework to present digital editions.
+Text vIewer for Digital Objects.
 
 **Note:**
-Although the EMo Viewer is designed as a generic viewer for digital editions, it is currently developed within the scope of the [Ahiqar project](https://gitlab.gwdg.de/subugoe/ahiqar).
+Although TIDO is designed as a generic viewer for digital editions, it is currently developed within the scope of the [Ahiqar project](https://gitlab.gwdg.de/subugoe/ahiqar).
 
 This is the reason for "Ahiqar" being mentioned several times in the docs of this repo.
 
@@ -17,11 +17,15 @@ Also the commit short hash can be used to see a demo.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Viewer Components](#viewer-components)
 - [Latest Version and Integration](#latest-version-and-integration)
-- [Getting Started](#getting-started)
+  - [A) Installation via npm](#a-installation-via-npm)
+    - [Registry setup](#registry-setup)
+    - [Installation](#installation)
+  - [B) Download the bundle](#b-download-the-bundle)
+  - [Integration](#integration)
+- [Getting Started (Developers)](#getting-started-developers)
   - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+  - [Environment setup](#environment-setup)
     - [Set up `nvm` and the recent stable version of `node.js`](#set-up-nvm-and-the-recent-stable-version-of-nodejs)
     - [Set up `global` project requirements via `npm`](#set-up-global-project-requirements-via-npm)
     - [Clone the repository](#clone-the-repository)
@@ -36,6 +40,7 @@ Also the commit short hash can be used to see a demo.
     - [The Keys in Detail](#the-keys-in-detail)
   - [b) Configure the Panels](#b-configure-the-panels)
     - [The Panel Keys in Detail](#the-panel-keys-in-detail)
+- [Viewer Components](#viewer-components)
 - [Dockerfile](#dockerfile)
 - [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend)
 - [Architecture](#architecture)
@@ -45,75 +50,133 @@ Also the commit short hash can be used to see a demo.
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Viewer Components
-
-![Viewer components](img/Viewer.png)
-
 ## Latest Version and Integration
 
-To embed the viewer for production [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)  
-It is a zip archive. You can extract the build by typing:
+There are two options - **A)** and **B)** - to get the Viewer depending on it's usage.
+
+Please follow these steps to include it for production:
+
+### A) Installation via npm
+
+#### Registry setup
+
+Since npm communicates with the package api, it's necessary to setup a valid entrypoint.
+
+```bash
+echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
+```
+
+**Note**: fire this command inside the **root** of your **project directory**.
+
+#### Installation
+
+```bash
+npm i @subugoe/tido
+```
+
+### B) Download the bundle
+
+As an **alternative** to the npm package you can download the artifact: [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)
+
+It is a zip archive. Extract the downloaded build by typing:
 
 ```bash
 unzip artifacts.zip
 ```
 
-This creates the following folder structure containing the actual build:
+This creates the following folder structure:
 
 ```bash
-dist/spa/
-├── css
-│   ├── 2.5b2a42f3.css
-│   ├── app.222a6363.css
-│   └── vendor.2303fac8.css
+dist/
 ├── index.html
-└── js
-    ├── 2.5d86d581.js
-    ├── app.297a75a4.js
-    └── vendor.f055a028.js
+└── tido.js
 ```
 
-To include the viewer on a website add the following to your `index.html` file:
+### Integration
+
+The integration depends on the option you chose from above; e.g. installation via npm or rather bundle download.
+
+**A)** If you installed *TIDO* with **npm**, add this line to your **main.js** file:
+
+```js
+import '@subugoe/tido/dist/tido'
+```
+
+**Note**: `main.js` serves as your *entrypoint* usually located at **/[projectdir]/src/main.js**. It depends on your individual project setup.
+
+**B)** If you **downloaded** *TIDO* as a **bundle**, reference the js file accordingly at the end of the body tag inside your **index.html** file:
 
 ```html
-<head>
-  ...
-
-  <link href=css/app.[CHECKSUM].css rel=stylesheet>
-  <link href=css/vendor.[CHECKSUM].css rel=stylesheet>
-</head>
-
-...
-
-<noscript>
-  <strong>We're sorry but TextViewer doesn't work properly without JavaScript enabled.
-  Please enable it to continue.
-  </strong>
-</noscript>
-
-<script id="emo-config" type="application/json">
-  {
-    ...
-  }
-</script>
-
-<div id=q-app></div>
-
-<script src=js/app.[CHECKSUM].js></script>
-<script src=js/vendor.[CHECKSUM].js></script>
+<script src="dist/tido.js"></script>
 ```
 
-and replace `[CHECKSUM]` with the values from the release you are going to use.
+**Finally** copy the config object into your entrypoint file (usually **index.html**):
 
-**Note**:
+```html
+<body>
+  ...
 
-The **CHECKSUMs** change in each build. So please make sure to copy the ones from  **dist/spa/index.html**.
+  <noscript>
+    <strong>We're sorry but TIDO doesn't work properly without JavaScript enabled.
+      Please enable it to continue.
+    </strong>
+  </noscript>
 
-## Getting Started
+  <script id="tido-config" type="application/json">
+  {
+    "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
+    "colors": {
+      "primary": "",
+      "secondary": "",
+      "accent": ""
+    },
+    "headers": {
+      "all": true,
+      "info": true,
+      "navigation": true,
+      "toggle": true
+    },
+    "labels": {
+      "item": "Sheet",
+      "manifest": "Manuscript"
+    },
+    "meta": {
+      "collection": {
+        "all": true,
+        "collector": true,
+        "description": true,
+        "title": true
+      },
+      "manifest": {
+        "all": true,
+        "creation": true,
+        "editor": true,
+        "label": true,
+        "location": true,
+        "origin": true
+      },
+      "item": {
+        "all": true,
+        "label": true,
+        "language": true
+      }
+    },
+    "standalone": true
+  }
+  </script>
+
+  <div id="q-app"></div>
+</body>
+
+```
+
+**Note**: Please make sure to provide a valid *entrypoint* that points to the manifest / collection that you want to be displayed.
+
+## Getting Started (Developers)
 
 ### Prerequisites
 
-To get the EMo Viewer up and running you should have the following software installed:
+To get TIDO up and running you should have the following software installed:
 
 - **curl**
 - **npm**
@@ -126,20 +189,17 @@ The main purpose of `nvm` is to have multiple node versions installed in regards
 It enables you to just switch to the appropriate node version.  
 Besides it also keeps track of resolving permission issues, since all your global installations go to your home directory (~/.nvm/) instead of being applied systemwide.
 
-### Installation
+### Environment setup
 
 #### Set up `nvm` and the recent stable version of `node.js`
 
-  ```bash
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-  nvm install node
-  nvm install stable
-  ```
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+nvm install stable
+```
 
 **Note**:
-
-After the nvm installation is done, please `restart` your shell session once.  
-That's due to changes to your profile environment.
+After the nvm installation is done, please `restart` your shell session once. That's due to changes to your profile environment.
 
 #### Set up `global` project requirements via `npm`
 
@@ -201,8 +261,8 @@ npm run build
 
 ## Configuration
 
-The Viewer is build with *Vue.js* and *Quasar*.
-If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf) (Configuring quasar.conf.js).
+The Viewer is build with **Vue.js** and **Quasar**.
+If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf-js) (Configuring quasar.conf.js).
 
 There are two files in regards to configuration:
 
@@ -225,7 +285,7 @@ Locate the `script` section in the `index.template.html` file:
 As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
 
 ```html
-  <script id="emo-config" type="application/json">
+  <script id="tido-config" type="application/json">
   {
     "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
     "colors": {
@@ -271,7 +331,7 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
 
 **Note**:
 
-It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels* or colors), please use *double quotes* only.
+It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels* or *colors*), please use *double quotes* only.
 
 #### The Keys in Detail
 
@@ -450,6 +510,10 @@ Assuming you want to combine the *Metadata*, *Text* and *Annotations* panels:
 To rename a panel heading, change the corresponding `panel_label` according to your needs.  
 If you intend to hide a component, just toggle its corresponding *show-key* to `false`.
 
+## Viewer Components
+
+![Viewer components](img/Viewer.png)
+
 ## Dockerfile
 
 The dockerfile is used for GitLab CI.  
@@ -473,7 +537,7 @@ The entrypoint should point to the collection you want to be displayed.
 
 ## Architecture
 
-![Architecture diagram of the EMo viewer](img/emo_architecture.png)
+![Architecture diagram of TIDO](img/emo_architecture.png)
 
 ## Contributing
 

@@ -15,7 +15,7 @@
       <q-card>
         <q-card-section>
           <h1 class="text-h5 q-pb-md">
-            EMo Viewer
+            TIDO
           </h1>
 
           <p class="text-weight-bold">
