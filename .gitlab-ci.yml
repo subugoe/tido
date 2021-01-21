@@ -14,6 +14,7 @@ build_test:
    - develop
   stage: build
   script:
+   - ./set_entrypoint_ci.sh
    - npm install
    - npm run build
    - npm run tweak:build
@@ -28,6 +29,7 @@ build_main_and_develop:
    - develop
   stage: build
   script:
+   - ./set_entrypoint_ci.sh
    - npm install
    - npm run build
    - npm run tweak:build
