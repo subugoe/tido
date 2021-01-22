@@ -134,6 +134,7 @@ import '@subugoe/tido/dist/tido'
       "all": true,
       "info": true,
       "navigation": true,
+      "panels": true,
       "toggle": true
     },
     "labels": {
@@ -161,6 +162,7 @@ import '@subugoe/tido/dist/tido'
         "language": true
       }
     },
+    "rtl": false,
     "standalone": true
   }
   </script>
@@ -290,31 +292,44 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
     "colors": {
       "primary": "",
-      "secondary": "grey",
-      "accent": "darkred"
+      "secondary": "",
+      "accent": ""
     },
     "headers": {
       "all": true,
       "info": true,
       "navigation": true,
+      "panels": true,
       "toggle": true
     },
-    manifest: {
-      all: true,
-      creation: true,
-      editor: true,
-      label: true,
-      location: true,
-      origin: true,
+    "labels": {
+      "item": "Sheet",
+      "manifest": "Manuscript"
     },
-    item: {
-      all: true,
-      label: true,
-      language: true,
+    "meta": {
+      "collection": {
+        "all": true,
+        "collector": true,
+        "description": true,
+        "title": true
+      },
+      "manifest": {
+        "all": true,
+        "creation": true,
+        "editor": true,
+        "label": true,
+        "location": true,
+        "origin": true
+      },
+      "item": {
+        "all": true,
+        "label": true,
+        "language": true
+      }
     },
-  },
-  standalone: true,
-};
+    "rtl": false,
+    "standalone": true
+  };
 ```
 
 **Note**:
@@ -406,6 +421,14 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
     }
   }
   ```
+
+- **rtl (right to left)**
+
+  refers to the direction the text inside the text panel will be displayed.
+
+  set the value to `true` if you want text to be displayed from right to left; e.g. Arabic.
+
+  Defaults to `false`.
 
 - **standalone**
 
