@@ -4,7 +4,6 @@ import OpenSeadragon from '@/components/openseadragon.vue';
 import Treeview from '@/components/tree.vue';
 
 import { v4 as uuidv4 } from 'uuid';
-import { panels } from '@/statics/config';
 
 export default {
   data: () => ({
@@ -30,7 +29,7 @@ export default {
         label: 'Annotations',
       },
     },
-    panels,
+    panels: [],
   }),
   methods: {
     findComponent(id) {
@@ -38,6 +37,18 @@ export default {
         id,
         ...this.components[id],
       };
+    },
+
+    // read the panel config and extend it by unique IDs
+    preparePanels() {
+      // get the "panels part" from the json object defined in src/index.template.html
+      [this.panels] = [JSON.parse(document.getElementById('tido-config').text).panels];
+
+      // each panel needs a unique ID to distinguish it from one another (dynamic components)
+      // since it's not a config option, the IDs are pushed after reading the related panel config options
+      Object.values(this.panels).forEach((panel) => {
+        panel.id = uuidv4();
+      });
     },
 
     setupPanels() {
@@ -56,6 +67,7 @@ export default {
     },
   },
   mounted() {
+    this.preparePanels();
     this.panels = this.setupPanels();
 
     this.$root.$on('panels-position', (newPanels) => {

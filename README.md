@@ -36,9 +36,8 @@ Also the commit short hash can be used to see a demo.
     - [`Testing`](#testing)
     - [`Building` the app for production](#building-the-app-for-production)
 - [Configuration](#configuration)
-  - [Configure the Viewer (**conf** object)](#configure-the-viewer-conf-object)
-    - [The Keys in Detail](#the-keys-in-detail)
-  - [Configure the Panels (**panels** array)](#configure-the-panels-panels-array)
+  - [The Keys in Detail](#the-keys-in-detail)
+  - [Configure the Panels](#configure-the-panels)
     - [The Panel Keys in Detail](#the-panel-keys-in-detail)
 - [Viewer Components](#viewer-components)
 - [Dockerfile](#dockerfile)
@@ -60,7 +59,7 @@ Please follow these steps to include it for production:
 
 #### Registry setup
 
-Since npm communicates with the package api, it's necessary to setup a valid entrypoint.
+Since npm communicates with the package api, it's necessary to setup a valid endpoint.
 
 ```bash
 echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
@@ -162,6 +161,28 @@ import '@subugoe/tido/dist/tido'
         "language": true
       }
     },
+    "panels": [
+      {
+        "connector": [1],
+        "panel_label": "Contents",
+        "show": true
+      },
+      {
+        "connector": [3],
+        "panel_label": "Image",
+        "show": true
+      },
+      {
+        "connector": [4],
+        "panel_label": "Text",
+        "show": true
+      },
+      {
+        "connector": [2],
+        "panel_label": "Metadata",
+        "show": true
+      }
+    ],
     "rtl": false,
     "standalone": true
   }
@@ -268,9 +289,7 @@ npm run build
 The Viewer is build with **Vue.js** and **Quasar**.
 If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf-js) (Configuring quasar.conf.js).
 
-You can fully customize the Viewer's behaviour in a config file located in **src/statics/config.js**.
-
-This file consists of two JS constants - **conf** and **panels** - whereas the latter provides explicit config options for the panels respectively.
+You can fully customize the Viewer's behaviour:
 
 There are options to
 
@@ -281,8 +300,6 @@ There are options to
 - rename labels and / or panel headings
 - filter individual metadata fields
 - and **more** ...
-
-### Configure the Viewer (**conf** object)
 
 As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate element.
 
@@ -327,25 +344,44 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
         "language": true
       }
     },
+    "panels": [
+      {
+        "connector": [1],
+        "panel_label": "Contents",
+        "show": true
+      },
+      {
+        "connector": [3],
+        "panel_label": "Image",
+        "show": true
+      },
+      {
+        "connector": [4],
+        "panel_label": "Text",
+        "show": true
+      },
+      {
+        "connector": [2],
+        "panel_label": "Metadata",
+        "show": true
+      }
+    ],
     "rtl": false,
     "standalone": true
-  };
+  }
+  </script>
 ```
 
-**Note**:
+**Note**: It's a *JSON* object. So if you are going to make any changes and you have to quote these (e.g. see *labels* or *colors*), please use **double quotes** only.
 
-It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels* or *colors*), please use *double quotes* only.
-
-#### The Keys in Detail
+### The Keys in Detail
 
 - **entrypoint**
 
   to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed.
   (Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
 
-  **Note**:
-
-  You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
+  **Note**: You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
 
 - **colors**
 
@@ -436,54 +472,48 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
 
   Defaults to `true`.
 
-### Configure the Panels (**panels** array)
+### Configure the Panels
 
-```js
-const panels = [
+```json
+"panels": [
   {
-    id: uuidv4(),
-    connector: [1],
-    panel_label: 'Tabs',
-    show: true,
+    "connector": [1],
+    "panel_label": "Contents",
+    "show": true
   },
   {
-    id: uuidv4(),
-    connector: [4, 5],
-    panel_label: 'Text',
-    show: true,
+    "connector": [3],
+    "panel_label": "Image",
+    "show": true
   },
   {
-    id: uuidv4(),
-    connector: [3],
-    panel_label: 'Image',
-    show: true,
+    "connector": [4],
+    "panel_label": "Text",
+    "show": true
   },
   {
-    id: uuidv4(),
-    connector: [2],
-    panel_label: 'Metadata',
-    show: true,
-  },
-];
+    "connector": [2],
+    "panel_label": "Metadata",
+    "show": true
+  }
+],
+
 ```
 
-It consists of four objects according to the maximum number of panels, that can be shown at once.  
-Each object inside that constant consists of similar keys: `id`, `connector`, `pane_label` and `show`.
+The panel-array consists of four objects according to the maximum number of panels, that can be shown at once.
+
+Each object inside that constant consists of similar keys: `connector`, `pane_label` and `show`.
 
 #### The Panel Keys in Detail
 
-- **id**
-
-  provides unique IDs. (**Note**: please leave this value untouched; it's meant for internal use only!)
-
 - **connector**
 
-  references the component id/s according to the appropriate panel/s or rather tab/s:
+  The numbers below reflect each component's (Text, Image, Meta, ...) id.
 
   - 1 = Treeview
   - 2 = Metadata
-  - 3 = OpenSeadragon
-  - 4 = Content / Text
+  - 3 = Image
+  - 4 = Text
   - 5 = Annotations
 
   **Note**: These **IDs** are supposed to be **unique**, so please make sure not to repeat these!
@@ -494,7 +524,6 @@ Each object inside that constant consists of similar keys: `id`, `connector`, `p
 
   ```js
     {
-      id: uuidv4(),
       connector: [2, 4, 5],
       panel_label: 'Meta, Text & Anno',
       show: true
@@ -512,8 +541,6 @@ Each object inside that constant consists of similar keys: `id`, `connector`, `p
   toggles (`show` or rather `hide`) the appropriate panel respectively
 
 **Note**:
-
-Modifying the **connector** and the **panel_label** works on **user configuration** as well.
 
 ## Viewer Components
 

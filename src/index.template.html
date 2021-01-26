@@ -17,9 +17,21 @@
       <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
 
+    <!--
+    Quick reference for the panel config (panels.connector)
+    The numbers below reflect each component's id. For detailed instructions please refer to the README.md!
+
+    - 1 = Treeview
+    - 2 = Metadata
+    - 3 = Image
+    - 4 = Text / Content
+    - 5 = Annotations
+
+    Note: These IDs are supposed to be unique, so please make sure not to repeat these!
+    -->
     <script id="tido-config" type="application/json">
     {
-      "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
+      "entrypoint": "https://ahikar-test.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
       "colors": {
         "primary": "",
         "secondary": "",
@@ -57,6 +69,28 @@
           "language": true
         }
       },
+      "panels": [
+        {
+          "connector": [1],
+          "panel_label": "Contents",
+          "show": true
+        },
+        {
+          "connector": [3],
+          "panel_label": "Image",
+          "show": true
+        },
+        {
+          "connector": [4],
+          "panel_label": "Text",
+          "show": true
+        },
+        {
+          "connector": [2],
+          "panel_label": "Metadata",
+          "show": true
+        }
+      ],
       "rtl": false,
       "standalone": true
     }
