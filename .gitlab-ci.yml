@@ -41,7 +41,7 @@ build_main_and_develop:
 update-ahikar:
   stage: deploy
   only:
-    - develop
+    - main
   variables:
     UPDATE: "true"
     UPSTREAM_COMMIT_SHA: "${CI_COMMIT_SHA}"
