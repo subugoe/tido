@@ -42,7 +42,7 @@
 import { colors } from 'quasar';
 import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
-import PanelsMixin from '@/config/panels.js';
+import Panels from '@/mixins/panels';
 
 export default {
   name: 'Viewer',
@@ -50,7 +50,7 @@ export default {
     Header,
     Footer,
   },
-  mixins: [PanelsMixin],
+  mixins: [Panels],
   data() {
     return {
       annotations: {},

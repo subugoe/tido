@@ -23,7 +23,7 @@
             Text vIewer for Digital Objects
           </p>
 
-          <p>Copyright (c) 2020 Göttingen University - Göttingen State and University Library</p>
+          <p>Copyright (c) {{ actualYear }} Göttingen University - Göttingen State and University Library</p>
 
           <p class="q-mb-none">
             Version {{ version }}, licensed under GNU Affero General Public License v3.0
@@ -102,6 +102,12 @@ export default {
       infobox: false,
       version: '',
     };
+  },
+  computed: {
+    actualYear() {
+      const d = new Date();
+      return d.getFullYear();
+    },
   },
   created() {
     this.fasBook = fasBook;
