@@ -5,36 +5,6 @@ import Treeview from '@/components/tree.vue';
 
 import { v4 as uuidv4 } from 'uuid';
 
-// -- Panels --
-// each connector requires at least one "component id" to get the appropriate panel rendered.
-// providing more than one id turns the panels into tabs.
-const panels = [
-  {
-    id: uuidv4(),
-    connector: [1, 2],
-    panel_label: 'Tabs',
-    show: true,
-  },
-  {
-    id: uuidv4(),
-    connector: [3],
-    panel_label: 'Image',
-    show: true,
-  },
-  {
-    id: uuidv4(),
-    connector: [4],
-    panel_label: 'Text',
-    show: true,
-  },
-  {
-    id: uuidv4(),
-    connector: [5],
-    panel_label: 'Annotations',
-    show: true,
-  },
-];
-
 export default {
   data: () => ({
     components: {
@@ -59,7 +29,7 @@ export default {
         label: 'Annotations',
       },
     },
-    panels,
+    panels: [],
   }),
   methods: {
     findComponent(id) {
@@ -67,6 +37,18 @@ export default {
         id,
         ...this.components[id],
       };
+    },
+
+    // read the panel config and extend it by unique IDs
+    preparePanels() {
+      // get the "panels part" from the json object defined in src/index.template.html
+      [this.panels] = [JSON.parse(document.getElementById('tido-config').text).panels];
+
+      // each panel needs a unique ID to distinguish it from one another (dynamic components)
+      // since it's not a config option, the IDs are pushed after reading the related panel config options
+      Object.values(this.panels).forEach((panel) => {
+        panel.id = uuidv4();
+      });
     },
 
     setupPanels() {
@@ -85,6 +67,7 @@ export default {
     },
   },
   mounted() {
+    this.preparePanels();
     this.panels = this.setupPanels();
 
     this.$root.$on('panels-position', (newPanels) => {

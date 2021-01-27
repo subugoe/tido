@@ -22,7 +22,7 @@
             {{ $t('Info_Description') }}
           </p>
 
-          <p>{{ $t('Info_Copyright') }}</p>
+          <p>Copyright (c) {{ actualYear }} Göttingen University - Göttingen State and University Library</p>
 
           <p class="q-mb-none">
             Version {{ version }}, {{ $t('Info_License') }}
@@ -101,6 +101,12 @@ export default {
       infobox: false,
       version: '',
     };
+  },
+  computed: {
+    actualYear() {
+      const d = new Date();
+      return d.getFullYear();
+    },
   },
   created() {
     this.fasBook = fasBook;

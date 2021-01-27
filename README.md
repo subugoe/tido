@@ -36,9 +36,8 @@ Also the commit short hash can be used to see a demo.
     - [`Testing`](#testing)
     - [`Building` the app for production](#building-the-app-for-production)
 - [Configuration](#configuration)
-  - [a) Configure the Viewer](#a-configure-the-viewer)
-    - [The Keys in Detail](#the-keys-in-detail)
-  - [b) Configure the Panels](#b-configure-the-panels)
+  - [The Keys in Detail](#the-keys-in-detail)
+  - [Configure the Panels](#configure-the-panels)
     - [The Panel Keys in Detail](#the-panel-keys-in-detail)
 - [Viewer Components](#viewer-components)
 - [Dockerfile](#dockerfile)
@@ -60,7 +59,7 @@ Please follow these steps to include it for production:
 
 #### Registry setup
 
-Since npm communicates with the package api, it's necessary to setup a valid entrypoint.
+Since npm communicates with the package api, it's necessary to setup a valid endpoint.
 
 ```bash
 echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
@@ -134,6 +133,7 @@ import '@subugoe/tido/dist/tido'
       "all": true,
       "info": true,
       "navigation": true,
+      "panelheadings": true,
       "toggle": true
     },
     "labels": {
@@ -161,6 +161,29 @@ import '@subugoe/tido/dist/tido'
         "language": true
       }
     },
+    "panels": [
+      {
+        "connector": [1],
+        "panel_label": "Contents",
+        "show": true
+      },
+      {
+        "connector": [3],
+        "panel_label": "Image",
+        "show": true
+      },
+      {
+        "connector": [4],
+        "panel_label": "Text",
+        "show": true
+      },
+      {
+        "connector": [2],
+        "panel_label": "Metadata",
+        "show": true
+      }
+    ],
+    "rtl": false,
     "standalone": true
   }
   </script>
@@ -237,9 +260,11 @@ npm run dev
 #### `Linting`
 
 ```bash
-npm run lint            # to lint js- and vue-files
-npm run lint:scss       # to lint the styles
+npm run lint            # to lint all the files at once
+npm run lint:js         # to lint js files only
 npm run lint:markdown   # to lint the markdown
+npm run lint:scss       # to lint the styles
+npm run lint:vue        # to lint vue files only
 ```
 
 #### `Testing`
@@ -264,25 +289,19 @@ npm run build
 The Viewer is build with **Vue.js** and **Quasar**.
 If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf-js) (Configuring quasar.conf.js).
 
-There are two files in regards to configuration:
+You can fully customize the Viewer's behaviour:
 
-- a) configure the Viewer (**src/index.template.html**)
-  - change the color scheme
-  - show or hide individual bars (info, navigation, toggles)
-  - rename labels
-  - usage (standalone / embedded)
+There are options to
 
-- b) configure the panels (**src/config/panels.js**)
-  - set the order of the panels
-  - group the components inside a panel (e.g. turn them into tabs)
-  - rename the panel headings
-  - switch the panel/s off
+- change the color scheme
+- show or hide individual bars (info, navigation, toggles)
+- group multiple components inside a single panel
+- set the order of the panels
+- rename labels and / or panel headings
+- filter individual metadata fields
+- and **more** ...
 
-### a) Configure the Viewer
-
-Locate the `script` section in the `index.template.html` file:
-
-As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate component.
+As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate element.
 
 ```html
   <script id="tido-config" type="application/json">
@@ -290,13 +309,14 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
     "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
     "colors": {
       "primary": "",
-      "secondary": "grey",
-      "accent": "darkred"
+      "secondary": "",
+      "accent": ""
     },
     "headers": {
       "all": true,
       "info": true,
       "navigation": true,
+      "panelheadings": true,
       "toggle": true
     },
     "labels": {
@@ -324,25 +344,44 @@ As a rule of thumb, every key with a boolean value (e.g. *true* or *false*) defa
         "language": true
       }
     },
+    "panels": [
+      {
+        "connector": [1],
+        "panel_label": "Contents",
+        "show": true
+      },
+      {
+        "connector": [3],
+        "panel_label": "Image",
+        "show": true
+      },
+      {
+        "connector": [4],
+        "panel_label": "Text",
+        "show": true
+      },
+      {
+        "connector": [2],
+        "panel_label": "Metadata",
+        "show": true
+      }
+    ],
+    "rtl": false,
     "standalone": true
   }
-</script>
+  </script>
 ```
 
-**Note**:
+**Note**: It's a *JSON* object. So if you are going to make any changes and you have to quote these (e.g. see *labels* or *colors*), please use **double quotes** only.
 
-It's a *JSON* object. So if you are going to make any changes and you have to quote these (see *labels* or *colors*), please use *double quotes* only.
-
-#### The Keys in Detail
+### The Keys in Detail
 
 - **entrypoint**
 
   to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed.
   (Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
 
-  **Note**:
-
-  You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
+  **Note**: You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
 
 - **colors**
 
@@ -372,6 +411,10 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
 
     set this value to `false` if you want to switch off the NavBar
 
+  - **panelheadings**
+
+    set this value to `false` if you want to switch off the panels' headings respectively
+
   - **toggle**
 
     set this value to `false` if you want to switch off the ToggleBar.
@@ -388,12 +431,14 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
 
     The label of the item respectively  
     Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.  
-    This change affects the captions of the navbuttons located in the headerbar and the metadata section.  
+    This change affects the captions of the navbuttons located in the headerbar and the metadata section.
+
     Defaults to `Sheet`.
 
   - **manifest**:
 
-    Same as for `item` but related to the manifest title.  
+    Same as for `item` but related to the manifest title.
+
     Defaults to `Manuscript`.
 
 - **meta**
@@ -413,102 +458,89 @@ It's a *JSON* object. So if you are going to make any changes and you have to qu
   }
   ```
 
+- **rtl (right to left)**
+
+  refers to the direction the text inside the text panel will be displayed.
+
+  set the value to `true` if you want text to be displayed from right to left; e.g. Arabic.
+
+  Defaults to `false`.
+
 - **standalone**
 
-  denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to "false". That way the language toggle in the footer section will not show up.
+  denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
 
   Defaults to `true`.
 
-  **rtl**
+### Configure the Panels
 
-  this option supports text to be displayed from right to left inside the text panel (e.g. arabic).
-  set this value to `false` if you want to disable it or rather if you want to display text which is read from left to right (e.g. english).
+```json
+"panels": [
+  {
+    "connector": [1],
+    "panel_label": "Contents",
+    "show": true
+  },
+  {
+    "connector": [3],
+    "panel_label": "Image",
+    "show": true
+  },
+  {
+    "connector": [4],
+    "panel_label": "Text",
+    "show": true
+  },
+  {
+    "connector": [2],
+    "panel_label": "Metadata",
+    "show": true
+  }
+],
 
-  Defaults to `true`.
-
-### b) Configure the Panels
-
-In order to configure the panels, locate the `panels.js` file inside the `src/config` folder of your project dir and find the *panels* constant at the top of the file:
-
-```js
-  const panels = [
-    {
-      id: uuidv4(),
-      connector: [1, 2],
-      panel_label: 'Tabs',
-      show: true,
-    },
-    {
-      id: uuidv4(),
-      connector: [3],
-      panel_label: 'Image',
-      show: true,
-    },
-    {
-      id: uuidv4(),
-      connector: [4],
-      panel_label: 'Text',
-      show: true,
-    },
-    {
-      id: uuidv4(),
-      connector: [5],
-      panel_label: 'Annotations',
-      show: true,
-    },
-  ];
 ```
 
-It consists of four objects according to the maximum number of panels, that can be shown at once.  
-Each object inside that constant consists of similar keys: `id`, `connector`, `pane_label` and `show`.
+The panel-array consists of four objects according to the maximum number of panels, that can be shown at once.
+
+Each object inside that constant consists of similar keys: `connector`, `pane_label` and `show`.
 
 #### The Panel Keys in Detail
 
-- **id**
-
-  provides unique IDs. (**Note**: please leave this value untouched; it's meant for internal use only!)
-
 - **connector**
 
-  references the component id/s according to the appropriate panel/s or rather tab/s:
+  The numbers below reflect each component's (Text, Image, Meta, ...) id.
 
   - 1 = Treeview
   - 2 = Metadata
-  - 3 = OpenSeadragon
-  - 4 = Content / Text
+  - 3 = Image
+  - 4 = Text
   - 5 = Annotations
 
-  **Note**:
+  **Note**: These **IDs** are supposed to be **unique**, so please make sure not to repeat these!
 
-  These IDs are supposed to be *unique*, so please make sure not to repeat these!
+  Example given:
+
+  Assuming you want to combine the **Metadata**, **Text** and **Annotations** panels, the configuration could look like this:
+
+  ```js
+    {
+      connector: [2, 4, 5],
+      panel_label: 'Meta, Text & Anno',
+      show: true
+    }
+  ```
 
 - **panel_label**
 
-  refers to the heading in each panel's *toolbar* (**Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.)
+  refers to the heading in each panel's *toolbar*. To rename it, change the corresponding `panel_label` according to your needs.
+
+  **Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.
 
 - **show**
 
   toggles (`show` or rather `hide`) the appropriate panel respectively
 
 **Note**:
-
-Modifying the *connector* and the *panel_label* works on user configuration as well.
-
-Example given:
-
-Assuming you want to combine the *Metadata*, *Text* and *Annotations* panels:
-
-```js
-  {
-    id: uuidv4(),
-    connector: [2, 4, 5],
-    panel_label: 'Meta, Text & Anno',
-    show: true
-  }
-```
-
-To rename a panel heading, change the corresponding `panel_label` according to your needs.  
-If you intend to hide a component, just toggle its corresponding *show-key* to `false`.
 
 ## Viewer Components
 
