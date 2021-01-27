@@ -133,7 +133,7 @@ import '@subugoe/tido/dist/tido'
       "all": true,
       "info": true,
       "navigation": true,
-      "panels": true,
+      "panelheadings": true,
       "toggle": true
     },
     "labels": {
@@ -316,7 +316,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       "all": true,
       "info": true,
       "navigation": true,
-      "panels": true,
+      "panelheadings": true,
       "toggle": true
     },
     "labels": {
@@ -411,9 +411,9 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
     set this value to `false` if you want to switch off the NavBar
 
-  - **panels**
+  - **panelheadings**
 
-    set this value to `false` if you want to switch off the panels' headings
+    set this value to `false` if you want to switch off the panels' headings respectively
 
   - **toggle**
 

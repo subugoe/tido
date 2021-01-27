@@ -11,7 +11,7 @@
         class="col-12 col-sm-6 col-md-3"
       >
         <Toolbar
-          v-if="config.headers.panels"
+          v-if="config.headers.panelheadings"
           :heading="p.panel_label"
         />
 
