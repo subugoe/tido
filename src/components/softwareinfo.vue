@@ -22,7 +22,7 @@
             {{ $t('Info_Description') }}
           </p>
 
-          <p>Copyright (c) {{ actualYear }} Göttingen University - Göttingen State and University Library</p>
+          <p>Copyright (c) {{ actualYear }} {{ $t('Info_Copyright') }}</p>
 
           <p class="q-mb-none">
             Version {{ version }}, {{ $t('Info_License') }}

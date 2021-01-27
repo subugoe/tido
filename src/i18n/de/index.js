@@ -15,7 +15,7 @@ export default {
   Increase: 'Vergrössern',
   Info_Bugs: 'Fehlerbericht',
   Info_Close: 'Schliessen',
-  Info_Copyright: 'Copyright (c) 2021 Universität Göttingen - Staats- und Universitätsbibliothok Göttingen',
+  Info_Copyright: 'Universität Göttingen - Staats- und Universitätsbibliothok Göttingen',
   Info_Description: 'Schlanker, benutzerfreundlicher und mobile-freundlicher Text- und Bildbetrachter',
   Info_Docs: 'Dokumentation',
   Info_License: 'lizensiert unter GNU Affero General Public License v3.0',

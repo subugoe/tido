@@ -15,7 +15,7 @@ export default {
   Increase: 'Increase',
   Info_Bugs: 'Report a Bug',
   Info_Close: 'Close',
-  Info_Copyright: 'Copyright (c) 2021 Göttingen University - Göttingen State and University Library',
+  Info_Copyright: 'Göttingen University - Göttingen State and University Library',
   Info_Description: 'Slim, easy to use and mobile-friendly text and image viewer',
   Info_Docs: 'Documentation',
   Info_License: 'licensed under GNU Affero General Public License v3.0',
