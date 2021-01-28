@@ -1,9 +1,74 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.5.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.0.0...v1.5.0) (2021-01-28)
+
+
+### Features
+
+* ability to write a changelog ([3a42097](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/3a42097f18165ece0f9f263a77c5ca5a67db1572))
+* enable project specific text styling ([ae7202e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/ae7202e4905eccd78071067e54683e0f8a22b391))
+* refactored sytles of toggle bar. ([28f3a04](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/28f3a04c7d6097c88845d640eadbc43105169b1f))
+* reference correct repo URLs ([6e0477c](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/6e0477cd7d80599d3fbd114451126edb6c5c3536))
+* release our viewer via npm ([861d3d0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/861d3d067df7b1c3c128d995383b63c0a081c80b))
+* release: resolve conflicts and merge develop into main ([74b7247](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/74b72473c978129b8166e7b24250dd04eb235585))
+* trigger update on downstream project ([0f048fb](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/0f048fb63c9eaa87932b7e1bb0e20c632570148e))
+* update Ahiqar repo name ([4d3445b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/4d3445b55ada2fc686dd5ab4043cde132e4709fe)), closes [#115](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/issues/115)
+
+
+### Bug Fixes
+
+* add missing package.json.lock ([821d180](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/821d1804392c60199cbacc0630a5548a5f77742b))
+* Addressing review comments and a11y. ([d3a7c5d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/d3a7c5d3d993c876e256d31a9f1eb9544d33c89e))
+* display meta items only if provided by the api ([ab15468](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/ab154687df711aa1ffb6306cb454832cfec430c1))
+* fix displaying of single manifest ([d71c467](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/d71c467c1baa5a34abd5aa10054fa0a5fc6c81ad))
+* fixed the bug regarding metadata and refactored OSD stylings. ([41f6c06](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/41f6c06a71d107314eaad8af7bae1afea3f93b12))
+* Fixed toggle buttons disappear, anchoring manifest title to top. ([928be0d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/928be0da657890c85ec17b7d2f950dcf66c72c4c))
+* gitlab CI syntax ([10fb37e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/10fb37e75a00875880bac80fa37e58c9db425a9e))
+* make css classname understandable ([ce1ea7f](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/ce1ea7f053cc4efabc7c427773a9bc18b3766406))
+* patch the entrypoint for the Ahikar demo / dev branch ([b0fe3db](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/b0fe3db7d37426b1cc900ead319e500fd6cfb775))
+* Quasar's helper setBrand requires two strings as parameters, hence we should leave the config object with an empty string to disable it ([bc34791](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/bc3479143053d58a9570b75e0827d74ddd8bde01))
+* remove obsolete css class and fix code hint from json to js in the README ([8752731](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/875273183dbe898795ed90cc9175e2cbea22b356))
+* run npm run fix with pre commit hook ([58f6453](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/58f6453c727c6f84af7d742d9b771a95109845ce))
+* upload missing file ([6b89854](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/6b89854acfb314af0a1ceb3973aa63d41ca79cfc))
+* upload missing script ([e9f755b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/e9f755b2a725d98982fad2ab393ac692c34843e0))
+
+
+### Docs
+
+* add (S)CSS coding guidelines ([e47485b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/e47485b81c650b5084f5692893c7885560e68b56))
+* rewrite connector config; refactor: eslint-disable-next-line; switch back to test server (index.html) ([74b8f52](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/74b8f522e3f395efc710fac2a1041854adcce9f3))
+* update CONTRIBUTING.md with notes about the usage of husky and commitizen ([9c19ddb](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/9c19ddb9d05c709f2c3e4b829037f60529ea764d))
+
+
+### Refactoring
+
+* addressed fixme comments. ([fd1f696](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/fd1f696f50ea97584f8c82dcb5da3022a3127839))
+* deactivated customize buttom from toggle bar. ([6473034](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/64730348fc0a28d6a2fd3b709e53a40047920bf6))
+* moved tree scoped style to new file. ([15734cc](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/15734cc9c6107d74f1c0aed9c8cf26583dc63b76))
+* npm run lint and fix scripts ([c956e32](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/c956e329a192c1e2c3060c15bd7f01994cb18948))
+
+
+### Build System
+
+* add pre commit hook for linting, fixing and testing ([b4d756d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/b4d756de677831d0d48158af63242457bcd1bdd6))
+* improve styleint rules ([bd573a7](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/bd573a7beed69901049b86cab307f2b860609829))
+
+
+### Continuos Integration
+
+* add .gitlab-ci.yml ([e7dd59d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/e7dd59d8c3fd80b18e29f87346befdb8fc7a0fb2))
+* change branch which triggers ahiqar-tido update ([e03333c](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/e03333c9942458544d5d7d2f50575d309de6baba))
+* fix typo ([7de35dd](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/7de35dde1533f19fd9593f66121f73f66e569b08))
+* keep main and develop artifacts ([c8f65e4](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/c8f65e473c30fc7ee5a2288b050b0495c4348fa3)), closes [#55](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/issues/55)
+
+
+### Chore
+
+* add stmt to CHANGELOG ([d679512](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/d679512f008b1e681810dd7ac56b76302f4295e9))
+* remove unnecessary passages from GitLab templates, add passage concerning README ([f75c118](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/f75c118aedf02000ae6a09988e9f0f1ae3f58476))
+* revert icon state and adjust quasar.conf according to new product name ([71145a0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/71145a07741ff6a5b6aa777dd7892cce168854c5))
 
 ## [1.4.5] - 2020-11-02
 
