@@ -1,49 +1,69 @@
 <template>
-  <div class="q-pa-md q-gutter-sm">
+  <div class="q-pa-md">
     <q-tree
       class="view-tree"
       label-key="label-key"
       node-key="label"
       :expanded.sync="expanded"
+      :icon="fasCaretRight"
       :nodes="tree"
+      :selected-color="$q.dark.isActive ? 'grey' : ''"
       :selected.sync="selected"
+    >
+      <template
+        #default-body="{node}"
       >
-      <template v-slot:default-body={node}>
         <div
           v-if="!node.children"
-          :id="`selectedItem-${node['label']}`">
-        </div>
+          :id="`selectedItem-${node['label']}`"
+        />
       </template>
     </q-tree>
   </div>
 </template>
 
 <script>
-import matIcons from 'quasar/icon-set/material-icons';
+import { fasCaretRight } from '@quasar/extras/fontawesome-v5';
+import treestore from '@/stores/treestore.js';
 
 export default {
   name: 'Treeview',
   props: {
-    manifests: Array,
-    tree: Array,
+    manifests: {
+      type: Array,
+      default: () => [],
+    },
+    tree: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
       expanded: [],
-      selected: this.manifests[0].sequence[0].id,
+      selected: null,
       sequenceindex: 0,
     };
   },
   created() {
-    this.$q.iconSet.set(matIcons);
+    this.fasCaretRight = fasCaretRight;
   },
   mounted() {
-    this.$root.$on('update-item', (item) => {
-      this.selected = item;
-    });
+    // select tree node
+    this.selected = treestore.state.selectedItemTree || this.manifests[0].sequence[0].id;
 
-    // expand the root node as well as the first knot which contains the actual item selected
-    this.expanded.push(this.tree[0].label, this.manifests[0].label);
+    // expand the first level
+    this.expanded.push(this.tree[0].label);
+    // expand second label - dynamic
+    const finalSeqIdx = treestore.state.seqTree || 0;
+
+    this.expanded.push(this.manifests[finalSeqIdx].label);
+
+    this.$root.$on('update-item', (item, seqIdx) => {
+      this.selected = item;
+      treestore.updateselectedtreeitem(item);
+      treestore.updatetreesequence(seqIdx);
+    });
 
     this.$root.$on('update-sequence-index', (index) => {
       if (index !== this.sequenceindex) {

@@ -1,20 +1,75 @@
-// global extra classes
-.scrollPanel {
+body {
+  height: 100vh;
+  overflow-y: hidden;
+  @media (max-width: 1023px) {
+    overflow-y: auto !important;
+  }
+}
+
+.scroll-panel {
   position: relative;
 
   .sticky {
-    background: #fff;
+    // background: $light;
     display: flex;
     justify-content: flex-start;
     left: 0;
     position: sticky;
     top: 0;
     width: 100%;
-    z-index: 999999;
+    z-index: 99;
   }
 }
+
+.caps {
+  font-variant: small-caps;
+}
+
 .openseadragon-canvas {
   &:focus {
     outline: none;
   }
+}
+
+.content-panel .q-tab-panel {
+  padding: 8px;
+
+  > * {
+    padding: 0 !important;
+  }
+}
+
+.without-dropdown > * {
+  display: flex;
+}
+
+.scroll-panel {
+  @include make-responsive-height();
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scroll-panel::-webkit-scrollbar {
+  display: none;
+}
+
+.panels-target > * {
+  border-right: 1px solid #ddd !important;
+  flex: auto;
+}
+
+.toggle-list .q-item {
+  align-items: center;
+}
+
+.panel-textinput {
+  background: transparent;
+  border: 0;
+  outline: none;
+  width: 100%;
+}
+
+.q-tabs__content .q-tab {
+  width: 100%;
 }

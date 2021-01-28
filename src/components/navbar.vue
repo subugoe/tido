@@ -1,31 +1,33 @@
 <template>
   <div>
     <q-btn
-      unelevated
-      color="black q-pr-sm"
       class="q-mb-md"
+      unelevated
+      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex <= 0"
       @click="toggleSheet(--itemindex)"
-      >
+    >
       <q-icon
-        :name="fasArrowLeft"
-        size="24px"
         class="q-pr-sm"
+        :name="fasArrowLeft"
+        size="sm"
       />
       {{ captionprev }}
     </q-btn>
 
     <q-btn
-      unelevated
       class="q-mb-md"
-      color="black"
+      size="md"
+      unelevated
+      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex >= itemurls.length - 1"
       @click="toggleSheet(++itemindex)"
-      >
+    >
       {{ captionnext }}
+
       <q-icon
         :name="fasArrowRight"
-        size="24px"
+        size="sm"
         class="q-pl-sm"
       />
     </q-btn>
@@ -48,16 +50,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  button:first-of-type {
-    @media (min-width: 600px) {
-      margin-right: 8px;
-    }
+button:first-of-type {
+  @media (min-width: 600px) {
+    margin-right: 8px;
   }
-  .q-input {
-    width: 100%;
-    @media (min-width: 600px) {
-      margin-right: 8px;
-      width: 150px;
-    }
+}
+
+.q-input {
+  width: 100%;
+  @media (min-width: 600px) {
+    margin-right: 8px;
+    width: 160px;
   }
+}
 </style>

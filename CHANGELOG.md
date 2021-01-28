@@ -5,19 +5,142 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### Added
+
+## [1.4.5] - 2020-11-02
+
+### Fixed
+
+- remove collection check in mainView to keep single manifests displayed as well.
+
+## [1.4.4] - 2020-11-02
+
+### Added
+
+- Update downstream projects via CI pipeline trigger.
+
+## [1.4.3] - 2020-10-05
+
+### Added
+
+- New local store for tree component.
+
+### Fixed
+
+- re-rendering of components when drag and drop on dialog modal.
+
+## [1.4.2] - 2020-10-01
+
+### Added
+
+- .nvmrc containing node version
+
+### Fixed
+
+- quoting in css/responsive-heights.scss
+
+## [1.4.1] - 2020-09-29
+
+### Added
+
+- Add config for unit tests via jest. testfiles goto *tests/unit/specs/*test.js*
+
+### Changed
+
+- delete tab-folder with components. provided a computed prop to wait for conditional changes
+
+## [1.4.0] - 2020-09-11
+
+### Added
+
+- Refactored drag and drop component in order to make it user configurable.
+- Moved panel data structure into a separate component where panels can be configured.
+
+## [1.3.3] - 2020-09-10
+
+### Changed
+
+- GitLab templates have been tidied up.
+Also a passage explicitly mentioning the README has been added to them (where applicable).
+
+## [1.3.2] - 2020-09-02
+
+### Added
+
+- additional metadata on manifestlevel. e.g. `date`, `editor`, `origin`, `location`
+
+## [1.3.1] - 2020-08-28
+
+### Fixed
+
+- the CI artifacts created on the `develop` and `main` branch are no longer automatically removed
+after 30 days.
+
+## [1.3.0] - 2020-08-24
+
+### Added
+
+- Refactored mainview template. Components are dynamic now and the order is configurable
+- New button to the toggle bar so that user can able to configure order of the panels dynamically.
+- created a new re-usable component to drag and drop panels.
+
+### Changed
+
+- refactored toggleIndex component.
+
+## [1.2.1] - 2020-08-12
+
+### Changed
+
+- refactored toggleBar to toggleIndex / toggleFilter according to window size. toggle switches at 1100px
+
+## [1.2.0] - 2020-08-03
+
+### Changed
+
+- The logic of using splitters for mainview is removed and made use of Grid in order to make viewer responsive.
+
+### Added
+
+- Moved toggle buttons from the header into a dropdown menu items.
+
+## [1.1.1] - 2020-08-03
+
+### Fixed
+
+- fix tree bug if meta panel is active. implement listener for active panel tab
+
+## [1.1.0] - 2020-07-29
+
+### Added
+
+- metadata panel exchanged by annotation panel (no content yet). therefore metadata goes into the tree panel.
+both of the latter became tabs inside this one panel.
+- panel order changed to: contents / metadata (tabs), image, text, annotations
+
+## [1.0.1]- 2020-07-30
+
+### Changed
+
+- The content of the development branch is no longer purged from the artifacts, even if the branch hasn't been updated for 14 days.
+This way we ensure that <https://subugoe.pages.gwdg.de/emo/Qviewer/develop/#/> always works.
+
 ## [1.0.0] - 2020-07-27
 
 ### Added
+
 - Preparation for EMo Viewer initial release v1.0.0
 
 ## [0.1.0] - 2020-07-24
 
 ### Fixed
+
 - bug in navigation: itemindex was updated too late; lacking the corresponding sequenceindex. passed the latter to listener
 
 ## [0.0.24] - 2020-07-22
 
 ### Added
+
 - license AGPL v3.0
 - NOTICE
 - license info in softwareinfo
@@ -90,7 +213,6 @@ We only rely on previous artifacts for new pipelines.
 ### Fixed
 
 - Reverted the changes and fixed the icons to nest inside image.
-
 
 ## [0.0.14] - 2020-06-23
 

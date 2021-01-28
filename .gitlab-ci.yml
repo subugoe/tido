@@ -14,8 +14,10 @@ build_test:
    - develop
   stage: build
   script:
+   - ./set_entrypoint_ci.sh
    - npm install
-   - quasar build
+   - npm run build
+   - npm run tweak:build
   artifacts:
     paths:
      - dist/
@@ -27,12 +29,23 @@ build_main_and_develop:
    - develop
   stage: build
   script:
+   - ./set_entrypoint_ci.sh
    - npm install
-   - quasar build
+   - npm run build
+   - npm run tweak:build
   artifacts:
     paths:
      - dist/
     expire_in: never
+
+update-ahikar:
+  stage: deploy
+  only:
+    - main
+  variables:
+    UPDATE: "true"
+    UPSTREAM_COMMIT_SHA: "${CI_COMMIT_SHA}"
+  trigger: "subugoe/ahiqar/ahiqar-tido"
 
 pages:
   before_script:
@@ -40,6 +53,10 @@ pages:
     - dnf install -y zip
     - dnf install -y unzip
   image: docker.gitlab.gwdg.de/mgoebel/swiss_knife/fedora:latest
+# at the very early stage lets deploy for every branch
+#  only:
+#    - main
+#    - develop
   stage: deploy
   cache:
     untracked: true
@@ -77,11 +94,12 @@ pushback:
   script:
    - npm install
    - npm run build
-   - mkdir emo-viewer && mv dist/js/* emo-viewer/
+   - npm run tweak:build
+   - mkdir tido && mv dist/* tido/
   artifacts:
     expire_in: 5 yrs
     paths:
-     - emo-viewer
+     - tido
 
 # when a git flow release is made, a tag will be pushed starting this job. it
 # will keep the resulting artifact from the job declared in `JOB_NUMBER_TO_PRESERVE`

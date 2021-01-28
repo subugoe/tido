@@ -1,7 +1,11 @@
 <template>
-  <q-header elevated class="bg-white text-black">
+  <q-header
+    elevated
+    :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
+  >
     <div class="bar row justify-between items-center">
-      <Infobar v-if="config.headers.info && manifests.length"
+      <Infobar
+        v-if="config.headers.info && manifests.length"
         class="col-xs-12 q-pl-md"
         :collectiontitle="collectiontitle"
         :itemlabel="itemlabel"
@@ -10,21 +14,23 @@
     </div>
 
     <div class="bar row q-px-md justify-sm-between">
-      <Navbar v-if="config.headers.navigation"
+      <Navbar
+        v-if="config.headers.navigation"
         class="
           col
-          col-md-6
+          col-md-4
           col-xs-12
           column-xs
           justify-md-start
           justify-xs-center
           row-sm"
-        :config="config"
         :itemurls="itemurls"
+        :labels="config.labels"
         :manifests="manifests"
       />
 
-      <Togglebar v-if="config.headers.toggle"
+      <ToggleIndex
+        v-if="config.headers.toggle"
         class="
           col
           col-md-auto
@@ -33,8 +39,7 @@
           content-sm-center
           justify-sm-evenly
           row-sm"
-        :imageurl="imageurl"
-        :panelstates="config.panels"
+        :panels="panels"
       />
     </div>
   </q-header>
@@ -43,30 +48,58 @@
 <script>
 import Infobar from '@/components/infobar.vue';
 import Navbar from '@/components/navbar.vue';
-import Togglebar from '@/components/togglebar.vue';
+import ToggleIndex from '@/components/togglebar/toggleIndex.vue';
 
 export default {
   name: 'Header',
   components: {
     Infobar,
     Navbar,
-    Togglebar,
+    ToggleIndex,
   },
   props: {
-    collectiontitle: String,
-    config: Object,
-    imageurl: String,
-    itemlabel: String,
-    itemurls: Array,
-    manifests: Array,
+    collectiontitle: {
+      type: String,
+      default: () => '',
+    },
+    config: {
+      type: Object,
+      default: () => {},
+    },
+    imageurl: {
+      type: String,
+      default: () => '',
+    },
+    itemlabel: {
+      type: String,
+      default: () => '',
+    },
+    itemurls: {
+      type: Array,
+      default: () => [],
+    },
+    manifests: {
+      type: Array,
+      default: () => [],
+    },
+    panels: {
+      type: Array,
+      default: () => [],
+    },
   },
 };
 </script>
 
-<style scoped>
-  .bar {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+<style lang="scss" scoped>
+header {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.bar {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1200px;
+}
 </style>

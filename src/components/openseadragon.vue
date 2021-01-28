@@ -2,15 +2,19 @@
   <figure id="openseadragon">
     <nav class="sticky">
       <q-btn
-        v-for="(btn, idx) in buttons" :key="idx"
+        v-for="(btn, idx) in buttons"
+        :id="btn.id"
+        :key="idx"
         class="q-mr-sm q-mb-sm"
-        color="grey-8"
         flat
         round
         size="md"
-        :id="btn.id"
-        >
-        <q-icon size="sm" :name="btn.svg" />
+        :color="$q.dark.isActive ? 'white' : 'accent'"
+      >
+        <q-icon
+          size="sm"
+          :name="btn.svg"
+        />
       </q-btn>
     </nav>
   </figure>
@@ -29,7 +33,10 @@ import {
 export default {
   name: 'OpenSeadragon',
   props: {
-    imageurl: String,
+    imageurl: {
+      type: String,
+      default: () => '',
+    },
   },
   data() {
     return {
@@ -54,8 +61,8 @@ export default {
     };
   },
   mounted() {
-    // eslint-disable-next-line no-unused-vars
     const viewer = new OpenSeadragon.Viewer(this.options);
+    viewer.controlsFadeDelay = 1000;
 
     OpenSeadragon.setString('Tooltips.Home', 'Default View');
     OpenSeadragon.setString('Tooltips.FullPage', 'Toggle Fullscreen');
@@ -71,11 +78,11 @@ export default {
 };
 </script>
 
-<style scoped>
-  figure {
-    display: inline-block;
-    height: 75vh;
-    margin: 0;
-    width: 95%
-  }
+<style lang="scss" scoped>
+figure {
+  display: inline-block;
+  height: 75vh;
+  margin: 0;
+  width: 100%;
+}
 </style>

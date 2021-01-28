@@ -1,0 +1,74 @@
+.view-tree {
+  @include make-responsive-height();
+  -ms-overflow-style: none;
+  overflow-y: scroll;
+  scrollbar-width: none;
+
+  .q-tree__node-collapsible .q-tree__children {
+    /* FIXME: scss linting error because to much nesting */
+    /* stylelint-disable */
+    >.q-tree__node--parent {
+      >.q-tree__node-header {
+        /* stylelint-ensable */
+        background-color: $grey-3;
+        left: 0;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+
+        @media (prefers-color-scheme: dark) {
+          background-color: $grey-9;
+        }
+      }
+    }
+  }
+
+  .q-tree__node--selected {
+    background-color: var(--q-color-accent);
+    @media (prefers-color-scheme: dark) {
+      background-color: $grey-3;
+    }
+
+    .q-tree__node-header-content {
+      color: $light !important;
+      @media (prefers-color-scheme: dark) {
+        color: $dark !important;
+      }
+    }
+  }
+
+  .q-tree__node-header-content.col.row.no-wrap.items-center {
+    z-index: 99;
+  }
+
+  .q-tree__children {
+    cursor: pointer;
+  }
+}
+
+.q-tab__label {
+  color: var(--q-color-primary);
+  letter-spacing: 2px;
+  @media (prefers-color-scheme: dark) {
+    color: $light;
+  }
+}
+
+.q-tab__indicator {
+  color: var(--q-color-accent);
+  @media (prefers-color-scheme: dark) {
+    color: $light;
+  }
+}
+
+.q-toolbar__title {
+  color: var(--q-color-primary);
+  letter-spacing: 2px;
+  @media (prefers-color-scheme: dark) {
+    color: $light;
+  }
+}
+
+.view-tree::-webkit-scrollbar {
+  display: none;
+}

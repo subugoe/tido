@@ -1,74 +1,165 @@
 <template>
-  <div>
-    <q-list v-if="Object.keys(collection).length">
+  <div class="scroll-panel">
+    <!-- Collection-->
+    <q-list v-if="Object.keys(collection).length && config.meta.collection.all">
       <q-item>
-        <q-item-section class="text-h6 caps">Collection</q-item-section>
+        <q-item-section class="text-h6 caps">
+          Collection
+        </q-item-section>
       </q-item>
 
-      <q-item>
+      <q-item v-if="config.meta.collection.title">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Title:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Title:
+          </q-item-label>
           <q-item-label>
             {{ collection.title ? collection.title[0].title : '' }}
           </q-item-label>
         </q-item-section>
       </q-item>
 
-      <q-item>
+      <q-item v-if="config.meta.collection.collector && collection.collector.name">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Collector:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Collector:
+          </q-item-label>
           <q-item-label>
             {{ collection.collector && collection.collector.name ? collection.collector.name : '' }}
-            </q-item-label>
+          </q-item-label>
         </q-item-section>
       </q-item>
 
-      <q-item>
+      <q-item v-if="config.meta.collection.description && collection.description">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Description:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Description:
+          </q-item-label>
           <q-item-label>
             {{ collection.description }}
           </q-item-label>
         </q-item-section>
       </q-item>
 
-      <q-separator inset class="q-mt-md q-mb-sm" />
+      <q-separator
+        v-if="showSeparator(config.meta.collection.all && (config.meta.manifest.all || config.meta.item.all))"
+        inset
+        class="q-mt-md q-mb-sm"
+      />
     </q-list>
 
-    <q-list>
+    <!-- Manifest-->
+    <q-list v-if="config.meta.manifest.all">
       <q-item>
         <q-item-section class="text-h6 caps">
-          {{ config.labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
+          {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
 
-      <q-item>
+      <q-item v-if="config.meta.manifest.label && title">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Label:</q-item-label>
-          <q-item-label>{{ manifesttitle }}</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Label:
+          </q-item-label>
+          <q-item-label>{{ title }}</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item v-if="config.meta.manifest.creation && date">
+        <q-item-section>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Year of creation:
+          </q-item-label>
+          <q-item-label>{{ date }}</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item v-if="config.meta.manifest.editor && editor">
+        <q-item-section>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Editor:
+          </q-item-label>
+          <q-item-label>{{ editor }}</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item v-if="config.meta.manifest.location && location">
+        <q-item-section>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Current location:
+          </q-item-label>
+          <q-item-label>{{ location }}</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item v-if="config.meta.manifest.origin && origin">
+        <q-item-section>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Origin:
+          </q-item-label>
+          <q-item-label>{{ origin }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
 
-    <q-separator inset class="q-mt-md q-mb-sm" />
+    <q-separator
+      v-if="showSeparator(config.meta.manifest.all && config.meta.item.all)"
+      inset
+      class="q-mt-md q-mb-sm"
+    />
 
-    <q-list>
+    <!-- Item-->
+    <q-list v-if="config.meta.item.all">
       <q-item>
         <q-item-section class="text-h6 caps">
-          {{ config.labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
+          {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
 
-      <q-item>
+      <q-item v-if="config.meta.item.label">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Label:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Label:
+          </q-item-label>
           <q-item-label>{{ itemlabel }}</q-item-label>
         </q-item-section>
       </q-item>
 
-      <q-item>
+      <q-item v-if="config.meta.item.language">
         <q-item-section>
-          <q-item-label overline class="text-uppercase">Language:</q-item-label>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Language:
+          </q-item-label>
           <q-item-label>{{ language }}</q-item-label>
         </q-item-section>
       </q-item>
@@ -80,11 +171,30 @@
 export default {
   name: 'Metadata',
   props: {
-    collection: Object,
-    config: Object,
-    itemlabel: String,
-    language: String,
-    manifests: Array,
+    config: {
+      type: Object,
+      default: () => {},
+    },
+    collection: {
+      type: Object,
+      default: () => {},
+    },
+    itemlabel: {
+      type: String,
+      default: () => '',
+    },
+    labels: {
+      type: Object,
+      default: () => {},
+    },
+    language: {
+      type: String,
+      default: () => '',
+    },
+    manifests: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -93,10 +203,30 @@ export default {
     };
   },
   computed: {
+    date() {
+      return this.manifests[this.sequenceindex]['x-date'];
+    },
+    editor() {
+      if (Array.isArray(this.manifests[this.sequenceindex]['x-editor'])) {
+        let editors = '';
+
+        Object.values(this.manifests[this.sequenceindex]['x-editor']).forEach((ed) => {
+          editors += `${ed.name}, `;
+        });
+        return editors.slice(0, -2);
+      }
+      return '';
+    },
     itemcount() {
       return this.manifests[this.sequenceindex].sequence.length;
     },
-    manifesttitle() {
+    location() {
+      return this.manifests[this.sequenceindex]['x-location'];
+    },
+    origin() {
+      return this.manifests[this.sequenceindex]['x-origin'];
+    },
+    title() {
       return this.manifests[this.sequenceindex].label;
     },
   },
@@ -116,11 +246,10 @@ export default {
       });
     });
   },
+  methods: {
+    showSeparator(showme) {
+      return showme === true;
+    },
+  },
 };
 </script>
-
-<style scoped>
-  .caps {
-    font-variant: small-caps;
-  }
-</style>

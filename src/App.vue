@@ -1,38 +1,48 @@
 <template>
   <div id="q-app">
     <q-layout view="hHh lpr fFf">
-      <Header v-if="config.headers.all"
+      <Header
+        v-if="config.headers.all"
         :collectiontitle="collectiontitle"
         :config="config"
         :imageurl="imageurl"
         :itemlabel="itemlabel"
         :itemurls="itemurls"
         :manifests="manifests"
+        :panels="panels"
       />
 
       <q-page-container>
         <router-view
+          :annotations="annotations"
           :collection="collection"
           :config="config"
           :contenturl="contenturl"
           :fontsize="fontsize"
           :imageurl="imageurl"
           :itemlabel="itemlabel"
+          :labels="config.labels"
           :language="itemlanguage"
           :manifests="manifests"
+          :panels="panels"
           :request="request"
           :tree="tree"
         />
       </q-page-container>
 
-      <Footer :standalone="config.standalone" />
+      <Footer
+        :projectcolors="config.colors"
+        :standalone="config.standalone"
+      />
     </q-layout>
   </div>
 </template>
 
 <script>
-import Header from '@/components/header.vue';
+import { colors } from 'quasar';
 import Footer from '@/components/footer.vue';
+import Header from '@/components/header.vue';
+import Panels from '@/mixins/panels';
 
 export default {
   name: 'Viewer',
@@ -40,8 +50,10 @@ export default {
     Header,
     Footer,
   },
+  mixins: [Panels],
   data() {
     return {
+      annotations: {},
       collection: {},
       collectiontitle: '',
       contenturl: '',
@@ -57,6 +69,48 @@ export default {
       manifests: [],
       tree: [],
     };
+  },
+  created() {
+    this.getConfig();
+    this.init();
+    this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+    this.$q.dark.set('auto');
+
+    if (this.config.colors.primary && this.config.colors.secondary && this.config.colors.accent) {
+      colors.setBrand('primary', this.config.colors.primary);
+      colors.setBrand('secondary', this.config.colors.secondary);
+      colors.setBrand('accent', this.config.colors.accent);
+    }
+  },
+  mounted() {
+    /**
+      * listen to fontsize change (user interaction). emitted in @/components/content.vue
+      * in- or rather decrease fontsize of the text by 1px
+      * default fontsize: 14px
+      *
+      * @param number fontsize
+      */
+    this.$root.$on('update-fontsize', (fontsize) => {
+      this.fontsize = fontsize;
+    });
+    this.$root.$on('panels-position', (newPanels) => {
+      this.panels = newPanels;
+    });
+    /**
+      * listen to item change (user interaction).
+      * emitted in: *getItemurls*; handler for tree nodes. fired on user interaction
+      *
+      * @param string url
+      */
+    this.$root.$on('update-item', (url) => {
+      this.itemurl = url;
+      this.$router.push({ query: { itemurl: url } });
+      // NOTE: Set imageurl to an empty string. Otherwise, if there is no corresponding image,
+      // the "preceding" image according to the "preceding" item will be shown.
+      this.imageurl = '';
+      this.getItemData(url);
+    });
   },
   methods: {
     /**
@@ -113,7 +167,7 @@ export default {
       * caller: *created-hook*
       */
     getConfig() {
-      this.config = JSON.parse(document.getElementById('emo-config').text);
+      this.config = JSON.parse(document.getElementById('tido-config').text);
     },
     /**
       * fetch all data provided on 'item level'
@@ -124,13 +178,16 @@ export default {
     getItemData(url) {
       this.request(url)
         .then((data) => {
-          this.collectiontitle = data.title;
-
+          this.collectiontitle = data.title.title;
           this.contenturl = data.content;
           this.imageurl = data.image && data.image.id ? data.image.id : '';
           this.itemlabel = data.n ? data.n : 'No itemlabel :(';
-          // eslint-disable-next-line prefer-destructuring
-          this.itemlanguage = data['x-langString'].split(',')[0];
+
+          // note: the scholars didn't mark the item language yet, so atm the API provides them all.
+          // since we know, we are dealing with the arabic part of the collection, we define the language to be arabic.
+          const [language] = data['x-langString'] ? data['x-langString'].split(',') : data.lang;
+
+          this.itemlanguage = language;
         });
     },
     /**
@@ -281,37 +338,6 @@ export default {
         : this.getManifest(this.config.entrypoint);
     },
   },
-  created() {
-    this.getConfig();
-    this.init();
 
-    this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-  },
-  mounted() {
-    /**
-      * listen to fontsize change (user interaction). emitted in @/components/content.vue
-      * in- or rather decrease fontsize of the text by 1px
-      * default fontsize: 14px
-      *
-      * @param number fontsize
-      */
-    this.$root.$on('update-fontsize', (fontsize) => {
-      this.fontsize = fontsize;
-    });
-    /**
-      * listen to item change (user interaction).
-      * emitted in: *getItemurls*; handler for tree nodes. fired on user interaction
-      *
-      * @param string url
-      */
-    this.$root.$on('update-item', (url) => {
-      this.itemurl = url;
-      this.$router.push({ query: { itemurl: url } });
-      // NOTE: Set imageurl to an empty string. Otherwise, if there is no corresponding image,
-      // the "preceding" image according to the "preceding" item will be shown.
-      this.imageurl = '';
-      this.getItemData(url);
-    });
-  },
 };
 </script>
