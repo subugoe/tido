@@ -32,7 +32,7 @@ export default {
   watch: {
     lang(lang) {
       this.$i18n.locale = lang.value;
-      this.$q.lang.set(lang.value);
+      this.$q.lang.isoName = lang.value;
     },
   },
   created() {
