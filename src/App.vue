@@ -143,7 +143,7 @@ export default {
       this.request(url)
         .then((data) => {
           this.collection = data;
-          this.label = this.getLabel(data);
+          this.collectiontitle = this.getLabel(data);
 
           this.tree.push(
             {
@@ -151,8 +151,8 @@ export default {
               handler: (node) => {
                 this.$root.$emit('update-tree-knots', node.label);
               },
-              label: this.label,
-              'label-key': this.label,
+              label: this.collectiontitle,
+              'label-key': this.collectiontitle,
               selectable: false,
             },
           );
@@ -178,16 +178,12 @@ export default {
     getItemData(url) {
       this.request(url)
         .then((data) => {
-          this.collectiontitle = data.title.title;
+          // eslint-disable-next-line no-console
+          console.log(data);
           this.contenturl = data.content;
           this.imageurl = data.image && data.image.id ? data.image.id : '';
           this.itemlabel = data.n ? data.n : 'No itemlabel :(';
-
-          // note: the scholars didn't mark the item language yet, so atm the API provides them all.
-          // since we know, we are dealing with the arabic part of the collection, we define the language to be arabic.
-          const [language] = data['x-langString'] ? data['x-langString'].split(',') : data.lang;
-
-          this.itemlanguage = language;
+          this.itemlanguage = data.lang[0] ? data.lang[0] : data.langAlt[0];
         });
     },
     /**
@@ -288,10 +284,6 @@ export default {
               selectable: false,
             },
           );
-
-          if (!this.label) {
-            this.label = this.getLabel(data);
-          }
           // make sure that urls are set just once on init
           if (!this.itemurl && data.sequence[0]) {
             this.itemurl = data.sequence[0].id;

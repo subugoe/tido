@@ -1,24 +1,10 @@
 <template>
   <div class="scroll-panel">
     <!-- Collection-->
-    <q-list v-if="Object.keys(collection).length && config.meta.collection.all">
+    <q-list v-if="config.meta.collection.all && Object.keys(collection).length">
       <q-item>
         <q-item-section class="text-h6 caps">
           Collection
-        </q-item-section>
-      </q-item>
-
-      <q-item v-if="config.meta.collection.title">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Title:
-          </q-item-label>
-          <q-item-label>
-            {{ collection.title ? collection.title[0].title : '' }}
-          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -30,13 +16,29 @@
           >
             Collector:
           </q-item-label>
+
           <q-item-label>
-            {{ collection.collector && collection.collector.name ? collection.collector.name : '' }}
+            {{ collection.collector.name }}
           </q-item-label>
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.collection.description && collection.description">
+      <q-item v-if="config.meta.collection.title && collection.title[0].title">
+        <q-item-section>
+          <q-item-label
+            overline
+            class="text-uppercase"
+          >
+            Title:
+          </q-item-label>
+
+          <q-item-label>
+            {{ collection.title[0].title }}
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item v-if="collection.description">
         <q-item-section>
           <q-item-label
             overline
@@ -73,57 +75,34 @@
           >
             Label:
           </q-item-label>
+
           <q-item-label>{{ title }}</q-item-label>
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.manifest.creation && date">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Year of creation:
-          </q-item-label>
-          <q-item-label>{{ date }}</q-item-label>
-        </q-item-section>
-      </q-item>
+      <!--  this part renders the metadata object provided by the manifest object according to the generic API specs given:
+            pls refer to https://subugoe.pages.gwdg.de/emo/text-api/page/specs/#manifest-object
+      -->
+      <div v-if="manifests[sequenceindex].metadata">
+        <q-item
+          v-for="(meta, idx) in manifests[sequenceindex].metadata"
+          :key="idx"
+        >
+          <q-item-section>
+            <q-item-label
+              overline
+              class="text-uppercase"
+            >
+              {{ meta.key }}:
+            </q-item-label>
 
-      <q-item v-if="config.meta.manifest.editor && editor">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Editor:
-          </q-item-label>
-          <q-item-label>{{ editor }}</q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-item v-if="config.meta.manifest.location && location">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Current location:
-          </q-item-label>
-          <q-item-label>{{ location }}</q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-item v-if="config.meta.manifest.origin && origin">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Origin:
-          </q-item-label>
-          <q-item-label>{{ origin }}</q-item-label>
-        </q-item-section>
-      </q-item>
+            <q-item-label>{{ meta.value }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </div>
+      <!--
+          End of metadata object
+      -->
     </q-list>
 
     <q-separator
@@ -203,28 +182,8 @@ export default {
     };
   },
   computed: {
-    date() {
-      return this.manifests[this.sequenceindex]['x-date'];
-    },
-    editor() {
-      if (Array.isArray(this.manifests[this.sequenceindex]['x-editor'])) {
-        let editors = '';
-
-        Object.values(this.manifests[this.sequenceindex]['x-editor']).forEach((ed) => {
-          editors += `${ed.name}, `;
-        });
-        return editors.slice(0, -2);
-      }
-      return '';
-    },
     itemcount() {
       return this.manifests[this.sequenceindex].sequence.length;
-    },
-    location() {
-      return this.manifests[this.sequenceindex]['x-location'];
-    },
-    origin() {
-      return this.manifests[this.sequenceindex]['x-origin'];
     },
     title() {
       return this.manifests[this.sequenceindex].label;
@@ -247,8 +206,8 @@ export default {
     });
   },
   methods: {
-    showSeparator(showme) {
-      return showme === true;
+    showSeparator(condition) {
+      return condition === true;
     },
   },
 };
