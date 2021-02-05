@@ -40,12 +40,20 @@
 
 <script>
 import { colors } from 'quasar';
+import { metadataApi } from '@/mixins/metadataApi';
 import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
 import Panels from '@/mixins/panels';
 
+metadataApi.forEach((m) => {
+  Object.entries(m).forEach(([level, data]) => {
+    // eslint-disable-next-line no-console
+    console.log('level: ', level, 'data: ', data.displayable, data.mandatory);
+  });
+});
+
 export default {
-  name: 'Viewer',
+  name: 'TiDO',
   components: {
     Header,
     Footer,
@@ -178,8 +186,6 @@ export default {
     getItemData(url) {
       this.request(url)
         .then((data) => {
-          // eslint-disable-next-line no-console
-          console.log(data);
           this.contenturl = data.content;
           this.imageurl = data.image && data.image.id ? data.image.id : '';
           this.itemlabel = data.n ? data.n : 'No itemlabel :(';
