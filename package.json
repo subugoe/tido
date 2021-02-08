@@ -31,7 +31,7 @@
   },
   "private": false,
   "dependencies": {
-    "@quasar/extras": "^1.9.14",
+    "@quasar/extras": "^1.9.16",
     "openseadragon": "^2.4.2",
     "quasar": "^1.15.1",
     "vuedraggable": "^2.24.3"
@@ -43,7 +43,7 @@
     "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.2",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^7.18.0",
+    "eslint": "^7.19.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.1",
@@ -51,7 +51,7 @@
     "husky": "^4.3.7",
     "markdownlint-cli": "^0.26.0",
     "node-sass": "^4.14.1",
-    "sass": "^1.32.5",
+    "sass": "^1.32.6",
     "sass-loader": "8.0.2",
     "standard-version": "^9.1.0",
     "stylelint": "^13.9.0",
