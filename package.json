@@ -38,8 +38,7 @@
   },
   "devDependencies": {
     "@quasar/app": "^2.1.14",
-    "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.1",
-    "autoprefixer": "9.8.6",
+    "autoprefixer": "^9.8.6",
     "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.3",
     "cz-conventional-changelog": "^3.3.0",
