@@ -32,6 +32,7 @@
   "private": false,
   "dependencies": {
     "@quasar/extras": "^1.9.16",
+    "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.1",
     "openseadragon": "^2.4.2",
     "quasar": "^1.15.3",
     "vuedraggable": "^2.24.3"
