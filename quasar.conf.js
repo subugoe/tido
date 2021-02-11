@@ -50,7 +50,15 @@ module.exports = function (ctx) {
       lang: 'en-us', // Quasar language pack
 
       // Quasar plugins
-      // plugins: []
+      plugins: [
+        'Notify',
+      ],
+      config: {
+        notify: {
+          color: 'cyan',
+          textColor: 'white',
+        },
+      }
     },
 
     htmlVariables: {

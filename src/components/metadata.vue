@@ -46,6 +46,7 @@
           >
             Description:
           </q-item-label>
+
           <q-item-label>
             {{ collection.description }}
           </q-item-label>
@@ -147,6 +148,15 @@
 </template>
 
 <script>
+import { metadataApi } from '@/mixins/metadataApi';
+
+metadataApi.forEach((m) => {
+  Object.entries(m).forEach(([level, data]) => {
+    // eslint-disable-next-line no-console
+    console.log(level.toUpperCase(), '\n\ndisplayable: ', data.displayable, '\nmandatory: ', data.mandatory);
+  });
+});
+
 export default {
   name: 'Metadata',
   props: {

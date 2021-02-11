@@ -40,17 +40,9 @@
 
 <script>
 import { colors } from 'quasar';
-import { metadataApi } from '@/mixins/metadataApi';
 import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
 import Panels from '@/mixins/panels';
-
-metadataApi.forEach((m) => {
-  Object.entries(m).forEach(([level, data]) => {
-    // eslint-disable-next-line no-console
-    console.log('level: ', level, 'data: ', data.displayable, data.mandatory);
-  });
-});
 
 export default {
   name: 'TiDO',
