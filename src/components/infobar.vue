@@ -20,7 +20,7 @@
         :name="fasChevronRight"
       />
 
-      <span>Sheet {{ itemlabel }}</span>
+      <span v-if="item.n">Sheet {{ item.n }}</span>
     </h2>
   </div>
 </template>
@@ -35,9 +35,9 @@ export default {
       type: String,
       default: () => '',
     },
-    itemlabel: {
-      type: String,
-      default: () => '',
+    item: {
+      type: Object,
+      default: () => {},
     },
     manifests: {
       type: Array,

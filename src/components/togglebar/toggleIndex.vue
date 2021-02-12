@@ -19,7 +19,7 @@
               :color="$q.dark.isActive ? 'bg-black' : 'accent'"
               :name="renderCheckIcon(i)"
             />
-            {{ p.panel_label.toUpperCase() }}
+            {{ p.label.toUpperCase() }}
           </q-item>
         </div>
 
@@ -89,7 +89,7 @@ export default {
     },
     // display toggle title when hovering
     handleToggleTitle(idx) {
-      const titleName = this.panels[idx].panel_label;
+      const titleName = this.panels[idx].label;
       const titleUpper = `${titleName[0].toUpperCase()}${titleName.slice(1)}`;
 
       return this.panels[idx].show

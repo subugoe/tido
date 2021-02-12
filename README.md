@@ -18,11 +18,11 @@ Also the commit short hash can be used to see a demo.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Latest Version and Integration](#latest-version-and-integration)
-  - [A) Installation via npm](#a-installation-via-npm)
+  - [Get the Viewer](#get-the-viewer)
     - [Registry setup](#registry-setup)
     - [Installation](#installation)
-  - [B) Download the bundle](#b-download-the-bundle)
   - [Integration](#integration)
+  - [Config](#config)
 - [Getting Started (Developers)](#getting-started-developers)
   - [Prerequisites](#prerequisites)
   - [Environment setup](#environment-setup)
@@ -51,15 +51,13 @@ Also the commit short hash can be used to see a demo.
 
 ## Latest Version and Integration
 
-There are two options - **A)** and **B)** - to get the Viewer depending on it's usage.
+TiDO is provided as **npm package**. Please follow the steps below to include it for production:
 
-Please follow these steps to include it for production:
-
-### A) Installation via npm
+### Get the Viewer
 
 #### Registry setup
 
-Since npm communicates with the package api, it's necessary to setup a valid endpoint.
+Since npm communicates with the package API, it is necessary to setup a valid endpoint.
 
 ```bash
 echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
@@ -73,29 +71,9 @@ echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
 npm i @subugoe/tido
 ```
 
-### B) Download the bundle
-
-As an **alternative** to the npm package you can download the artifact: [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)
-
-It is a zip archive. Extract the downloaded build by typing:
-
-```bash
-unzip artifacts.zip
-```
-
-This creates the following folder structure:
-
-```bash
-dist/
-├── index.html
-└── tido.js
-```
-
 ### Integration
 
-The integration depends on the option you chose from above; e.g. installation via npm or rather bundle download.
-
-**A)** If you installed *TIDO* with **npm**, add this line to your **main.js** file:
+Add this line to your **main.js** file:
 
 ```js
 import '@subugoe/tido/dist/tido'
@@ -103,11 +81,7 @@ import '@subugoe/tido/dist/tido'
 
 **Note**: `main.js` serves as your *entrypoint* usually located at **/[projectdir]/src/main.js**. It depends on your individual project setup.
 
-**B)** If you **downloaded** *TIDO* as a **bundle**, reference the js file accordingly at the end of the body tag inside your **index.html** file:
-
-```html
-<script src="dist/tido.js"></script>
-```
+### Config
 
 **Finally** copy the config object into your entrypoint file (usually **index.html**):
 
@@ -116,7 +90,7 @@ import '@subugoe/tido/dist/tido'
   ...
 
   <noscript>
-    <strong>We're sorry but TIDO doesn't work properly without JavaScript enabled.
+    <strong>We're sorry but TiDO doesn't work properly without JavaScript enabled.
       Please enable it to continue.
     </strong>
   </noscript>
@@ -133,7 +107,6 @@ import '@subugoe/tido/dist/tido'
       "all": true,
       "info": true,
       "navigation": true,
-      "panelheadings": true,
       "toggle": true
     },
     "labels": {
@@ -142,44 +115,38 @@ import '@subugoe/tido/dist/tido'
     },
     "meta": {
       "collection": {
-        "all": true,
-        "collector": true,
-        "description": true,
-        "title": true
+        "show": true
       },
       "manifest": {
-        "all": true,
-        "creation": true,
-        "editor": true,
-        "label": true,
-        "location": true,
-        "origin": true
+        "show": true
       },
       "item": {
-        "all": true,
-        "label": true,
-        "language": true
+        "show": true
       }
     },
     "panels": [
       {
         "connector": [1],
-        "panel_label": "Contents",
+        "heading": true,
+        "label": "Contents",
         "show": true
       },
       {
         "connector": [3],
-        "panel_label": "Image",
+        "heading": true,
+        "label": "Image",
         "show": true
       },
       {
         "connector": [4],
-        "panel_label": "Text",
+        "heading": true,
+        "label": "Text",
         "show": true
       },
       {
         "connector": [2],
-        "panel_label": "Metadata",
+        "heading": true,
+        "label": "Metadata",
         "show": true
       }
     ],
@@ -316,7 +283,6 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       "all": true,
       "info": true,
       "navigation": true,
-      "panelheadings": true,
       "toggle": true
     },
     "labels": {
@@ -325,44 +291,38 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     },
     "meta": {
       "collection": {
-        "all": true,
-        "collector": true,
-        "description": true,
-        "title": true
+        "show": true
       },
       "manifest": {
-        "all": true,
-        "creation": true,
-        "editor": true,
-        "label": true,
-        "location": true,
-        "origin": true
+        "show": true
       },
       "item": {
-        "all": true,
-        "label": true,
-        "language": true
+        "show": true
       }
     },
     "panels": [
       {
         "connector": [1],
-        "panel_label": "Contents",
+        "heading": true,
+        "label": "Contents",
         "show": true
       },
       {
         "connector": [3],
-        "panel_label": "Image",
+        "heading": true,
+        "label": "Image",
         "show": true
       },
       {
         "connector": [4],
-        "panel_label": "Text",
+        "heading": true,
+        "label": "Text",
         "show": true
       },
       {
         "connector": [2],
-        "panel_label": "Metadata",
+        "heading": true,
+        "label": "Metadata",
         "show": true
       }
     ],
@@ -411,10 +371,6 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
     set this value to `false` if you want to switch off the NavBar
 
-  - **panelheadings**
-
-    set this value to `false` if you want to switch off the panels' headings respectively
-
   - **toggle**
 
     set this value to `false` if you want to switch off the ToggleBar.
@@ -423,7 +379,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
     if you turn this one off, you won't be able to toggle the panels anymore.
 
-    All header values default to `true`.
+    All header values default to `true`
 
 - **labels**
 
@@ -433,29 +389,32 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.  
     This change affects the captions of the navbuttons located in the headerbar and the metadata section.
 
-    Defaults to `Sheet`.
+    Defaults to `Sheet`
 
   - **manifest**:
 
     Same as for `item` but related to the manifest title.
 
-    Defaults to `Manuscript`.
+    Defaults to `Manuscript`
 
 - **meta**
 
-  set either of the values to `false` to switch it off. if you set an `all`-key to `false` the other fields within the same object aren't taken into account.
+  set either of the `show`-keys to `false` to hide the appropriate section.
 
-  e.g. neither of *collector*, *description* and *title* will be displayed:
+  e.g. no metadata related to the manifest will be displayed:
 
   ```json
   "meta": {
     "collection": {
-      "all": false,
-      "collector": true,
-      "description": true,
-      "title": true
+      "show": true
+    },
+    "manifest": {
+      "show": false
+    },
+    "item": {
+      "show": true
     }
-  }
+  },
   ```
 
 - **rtl (right to left)**
@@ -464,13 +423,13 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   set the value to `true` if you want text to be displayed from right to left; e.g. Arabic.
 
-  Defaults to `false`.
+  Defaults to `false`
 
 - **standalone**
 
   denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
 
-  Defaults to `true`.
+  Defaults to `true`
 
 ### Configure the Panels
 
@@ -478,22 +437,26 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 "panels": [
   {
     "connector": [1],
-    "panel_label": "Contents",
+    "heading": true,
+    "label": "Contents",
     "show": true
   },
   {
     "connector": [3],
-    "panel_label": "Image",
+    "heading": true,
+    "label": "Image",
     "show": true
   },
   {
     "connector": [4],
-    "panel_label": "Text",
+    "heading": true,
+    "label": "Text",
     "show": true
   },
   {
     "connector": [2],
-    "panel_label": "Metadata",
+    "heading": true,
+    "label": "Metadata",
     "show": true
   }
 ],
@@ -525,14 +488,20 @@ Each object inside that constant consists of similar keys: `connector`, `pane_la
   ```js
     {
       connector: [2, 4, 5],
-      panel_label: 'Meta, Text & Anno',
+      label: 'Meta, Text & Anno',
       show: true
     }
   ```
 
-- **panel_label**
+- **heading**
 
-  refers to the heading in each panel's *toolbar*. To rename it, change the corresponding `panel_label` according to your needs.
+  set this value to false to hide a panel's heading
+
+  Defaults to `true`
+
+- **label**
+
+  refers to the heading in each panel's *toolbar*. To rename it, change the corresponding `label` according to your needs.
 
   **Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.
 

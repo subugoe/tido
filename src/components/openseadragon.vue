@@ -5,11 +5,11 @@
         v-for="(btn, idx) in buttons"
         :id="btn.id"
         :key="idx"
+        :color="$q.dark.isActive ? 'white' : 'accent'"
         class="q-mr-sm q-mb-sm"
         flat
         round
         size="md"
-        :color="$q.dark.isActive ? 'white' : 'accent'"
       >
         <q-icon
           size="sm"

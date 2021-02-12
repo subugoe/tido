@@ -5,8 +5,7 @@
         v-if="config.headers.all"
         :collectiontitle="collectiontitle"
         :config="config"
-        :imageurl="imageurl"
-        :itemlabel="itemlabel"
+        :item="item"
         :itemurls="itemurls"
         :manifests="manifests"
         :panels="panels"
@@ -20,9 +19,9 @@
           :contenturl="contenturl"
           :fontsize="fontsize"
           :imageurl="imageurl"
-          :itemlabel="itemlabel"
+          :item="item"
           :labels="config.labels"
-          :language="itemlanguage"
+          :language="language"
           :manifests="manifests"
           :panels="panels"
           :request="request"
@@ -61,11 +60,11 @@ export default {
       fontsize: 14,
       imageurl: '',
       isCollection: false,
-      itemlabel: '',
-      itemlanguage: '',
+      item: {},
       itemurl: '',
       itemurls: [],
       label: '',
+      language: '',
       manifests: [],
       tree: [],
     };
@@ -73,15 +72,9 @@ export default {
   created() {
     this.getConfig();
     this.init();
+
+    this.setColors();
     this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-
-    this.$q.dark.set('auto');
-
-    if (this.config.colors.primary && this.config.colors.secondary && this.config.colors.accent) {
-      colors.setBrand('primary', this.config.colors.primary);
-      colors.setBrand('secondary', this.config.colors.secondary);
-      colors.setBrand('accent', this.config.colors.accent);
-    }
   },
   mounted() {
     /**
@@ -114,7 +107,7 @@ export default {
   },
   methods: {
     /**
-      * get resources using JavaScript's native fetch api
+      * get resources using JavaScript's native fetch API
       * caller: *getCollection()*, *getItemData()*, *getManifest()*
       *         *@/components/content.vue::getSupport()*, *@/components/content.vue::created-hook*
       *
@@ -128,6 +121,25 @@ export default {
       const data = await (responsetype === 'text' ? response.text() : response.json());
 
       return data;
+    },
+    /**
+      * get annotations of the current item
+      * caller: *getItemData()*
+      *
+      * @param string url
+      */
+    getAnnotations(url) {
+      this.request(url)
+        .then((annotations) => {
+          this.request(annotations.annotationCollection.first)
+            .then((current) => {
+              this.annotations = current.annotationPage;
+            });
+        })
+        .catch(() => {
+          this.$q.notify({ message: 'No annotations available' });
+          this.$root.$emit('remove-panel', this.panels[2].id);
+        });
     },
     /**
       * get collection data according to 'entrypoint'
@@ -145,19 +157,9 @@ export default {
           this.collection = data;
           this.collectiontitle = this.getLabel(data);
 
-          this.tree.push(
-            {
-              children: [],
-              handler: (node) => {
-                this.$root.$emit('update-tree-knots', node.label);
-              },
-              label: this.collectiontitle,
-              'label-key': this.collectiontitle,
-              selectable: false,
-            },
-          );
+          this.initTree(this.collectiontitle);
 
-          if (Array.isArray(data.sequence)) {
+          if (Array.isArray(data.sequence) && data.sequence.length) {
             data.sequence.forEach((seq) => this.getManifest(seq.id));
           }
         });
@@ -178,10 +180,13 @@ export default {
     getItemData(url) {
       this.request(url)
         .then((data) => {
-          this.contenturl = data.content;
-          this.imageurl = data.image && data.image.id ? data.image.id : '';
-          this.itemlabel = data.n ? data.n : 'No itemlabel :(';
-          this.itemlanguage = data.lang[0] ? data.lang[0] : data.langAlt[0];
+          this.item = data;
+
+          this.contenturl = data.content || '';
+          this.imageurl = data.image.id || '';
+          this.language = data.lang[0] || data.langAlt[0];
+
+          this.getAnnotations(data.annotationCollection);
         });
     },
     /**
@@ -243,10 +248,10 @@ export default {
       * @return string 'label'
       */
     getLabel(data) {
-      if (Object.keys(this.collection).length) {
-        return data.title && data.title[0].title ? data.title[0].title : data.label;
+      if (this.isCollection) {
+        return data.title[0].title || 'Collection';
       }
-      return data.label ? data.label : 'Manifest <small>(No label available)</small>';
+      return data.label || 'Manifest';
     },
     /**
       * get all the data provided on 'manifest level'
@@ -257,33 +262,25 @@ export default {
     getManifest(url) {
       this.request(url)
         .then((data) => {
-          // if the entrypoint points to a single manifest, initialize the tree
-          if (this.isCollection === false) {
-            this.tree.push({ label: '', 'label-key': this.config.labels.manifest, children: [] });
-          }
-
+          // FIXME: typecasting if manifest holds a single item. should be fixed in the API instead!
           if (!Array.isArray(data.sequence)) {
             data.sequence = [data.sequence];
           }
-
-          if (data.sequence[0] !== 'undefined') {
-            data.sequence.map((seq) => this.itemurls.push(seq.id));
-          }
           this.manifests.push(data);
 
-          this.tree[0].children.push(
-            {
-              children: this.getItemUrls(data.sequence, data.label),
-              label: data.label,
-              'label-key': data.label,
-              handler: (node) => {
-                this.$root.$emit('update-tree-knots', node.label);
-              },
-              selectable: false,
-            },
-          );
+          // if manifest contains items push these onto the item pool (itemurls)
+          if (data.sequence.length) {
+            data.sequence.map((seq) => this.itemurls.push(seq.id));
+          }
+
+          if (!this.isCollection) {
+            // given a single manifest, initialize the tree
+            this.tree.push({ children: [], label: '', 'label-key': this.config.labels.manifest });
+          }
+          this.populateTree(data.sequence, data.label);
+
           // make sure that urls are set just once on init
-          if (!this.itemurl && data.sequence[0]) {
+          if (!this.itemurl && data.sequence[0].id) {
             this.itemurl = data.sequence[0].id;
             this.getItemData(data.sequence[0].id);
           }
@@ -320,14 +317,63 @@ export default {
       * decide whether to start with a collection or a single manifest
       * caller: *created-hook*
       *
-      * @return function getCollection() | getManifest()
+      * @return function getCollection() || getManifest()
       */
     init() {
       return this.config.entrypoint.match(/collection.json\s?$/)
         ? this.getCollection(this.config.entrypoint)
         : this.getManifest(this.config.entrypoint);
     },
-  },
+    /**
+      * initialize the tree node (collection only)
+      * caller: *getCollection()*
+      *
+      * @param string cTitle
+      */
+    initTree(cTitle) {
+      this.tree.push(
+        {
+          children: [],
+          label: cTitle,
+          'label-key': cTitle,
+          selectable: false,
+          handler: (node) => {
+            this.$root.$emit('update-tree-knots', node.label);
+          },
+        },
+      );
+    },
+    /**
+      * caller: *getManifest()*
+      *
+      * @param array sequence
+      * @param string mLabel
+      */
+    populateTree(sequence, mLabel) {
+      this.tree[0].children.push(
+        {
+          children: this.getItemUrls(sequence, mLabel),
+          label: mLabel,
+          'label-key': mLabel,
+          handler: (node) => {
+            this.$root.$emit('update-tree-knots', node.label);
+          },
+          selectable: false,
+        },
+      );
+    },
+    setColors() {
+      this.$q.dark.set('auto');
+      // filter all colors that have been set (index.html)
+      const colours = Object.entries(this.config.colors).filter((c) => c[1] !== '');
 
+      // actually only set a brand, if ALL the colors are set
+      if (Object.keys(this.config.colors).length === colours.length) {
+        colours.forEach((color) => {
+          colors.setBrand(color[0].toString(), this.config.colors[color[0]]);
+        });
+      }
+    },
+  },
 };
 </script>

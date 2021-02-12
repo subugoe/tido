@@ -1,22 +1,23 @@
 <template>
-  <div>
-    <q-list>
-      <q-item
-        v-for="anno in Object.entries(annotations)"
-        :key="anno.id"
-      >
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            {{ anno[0] }}
-          </q-item-label>
-          <q-item-label>{{ anno[1] }}</q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
-  </div>
+  <q-list v-if="Array.isArray(annotations.items)">
+    <q-item
+      v-for="annotation in annotations.items"
+      :key="annotation.id"
+    >
+      <q-item-section>
+        <q-item-label
+          overline
+          class="text-uppercase"
+        >
+          {{ annotation.bodyValue }}
+        </q-item-label>
+
+        <q-item-label>
+          {{ annotation.target.id }}
+        </q-item-label>
+      </q-item-section>
+    </q-item>
+  </q-list>
 </template>
 
 <script>
@@ -29,10 +30,12 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+
+    };
   },
-  created() {},
-  mounted() {},
-  methods: {},
+  mounted() {
+
+  },
 };
 </script>

@@ -34,17 +34,11 @@
         </q-btn>
       </div>
     </div>
-    <!-- FIXME: => 'v-html' directive can lead to XSS attack  vue/no-v-html
 
-      Vue v1 supported triple braces to show html ({{{ ... }}}).
-      These have been considered deprecated and aren't available anymore as is Vue's directive "v-text".
-      The latter represents text *as is* anyways, e.g. it would show html tags in the text.
-      Atm there doesn't seem to be an alternative to "v-html" in regards to presenting xml/html.
-    -->
     <div class="row">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div
-        :class="['scroll-panel', config.rtl ? 'rtl-support' : '']"
+        :class="['scroll-panel', config.rtl ? 'rtl' : '']"
         :id="nodeid"
         ref="contentsize"
         v-html="content"
@@ -99,11 +93,13 @@ export default {
     this.content = await this.request(this.contenturl, 'text').then((data) => data);
   },
   mounted() {
+    // eslint-disable-next-line no-console
+    console.log(document.getElementById('N4.4.2.4.4.14.2.3').innerText);
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
     this.$root.$on('update-sequence-index', (index) => {
       if (this.manifests[index].support) {
-        this.manifests[index].support.map(this.getSupport);
+        // this.getSupport(this.manifests[index].support);
       }
     });
   },
@@ -122,9 +118,9 @@ export default {
       textsize += textsize < max ? 1 : 0;
       this.$root.$emit('update-fontsize', textsize);
     },
-    getSupport(obj) {
-      if (obj.type === 'css') {
-        this.request(obj.url, 'text')
+    getSupport(support) {
+      if (support.type === 'css') {
+        this.request(support.url, 'text')
           .then((data) => {
             const styleElement = document.createElement('style');
 
@@ -140,7 +136,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .rtl-support {
+  .rtl {
     direction: rtl;
   }
 </style>

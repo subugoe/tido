@@ -42,6 +42,10 @@ module.exports = function (ctx) {
           primary: '#212121',
           secondary: '#eee',
           accent: '#1a3771'
+        },
+        notify: {
+          color: 'cyan',
+          textColor: 'white',
         }
       },
 
@@ -53,16 +57,10 @@ module.exports = function (ctx) {
       plugins: [
         'Notify',
       ],
-      config: {
-        notify: {
-          color: 'cyan',
-          textColor: 'white',
-        },
-      }
     },
 
     htmlVariables: {
-      title: 'TIDO'
+      Title: 'TiDO'
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie

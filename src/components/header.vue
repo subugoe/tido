@@ -8,7 +8,7 @@
         v-if="config.headers.info && manifests.length"
         class="col-xs-12 q-pl-md"
         :collectiontitle="collectiontitle"
-        :itemlabel="itemlabel"
+        :item="item"
         :manifests="manifests"
       />
     </div>
@@ -66,13 +66,9 @@ export default {
       type: Object,
       default: () => {},
     },
-    imageurl: {
-      type: String,
-      default: () => '',
-    },
-    itemlabel: {
-      type: String,
-      default: () => '',
+    item: {
+      type: Object,
+      default: () => {},
     },
     itemurls: {
       type: Array,

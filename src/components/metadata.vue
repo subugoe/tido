@@ -1,14 +1,14 @@
 <template>
   <div class="scroll-panel">
     <!-- Collection-->
-    <q-list v-if="config.meta.collection.all && Object.keys(collection).length">
+    <q-list v-if="config.meta.collection.show && Object.keys(collection).length">
       <q-item>
         <q-item-section class="text-h6 caps">
           Collection
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.collection.collector && collection.collector.name">
+      <q-item v-if="collection.collector.name">
         <q-item-section>
           <q-item-label
             overline
@@ -23,7 +23,7 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.collection.title && collection.title[0].title">
+      <q-item v-if="collection.title[0].title">
         <q-item-section>
           <q-item-label
             overline
@@ -54,21 +54,21 @@
       </q-item>
 
       <q-separator
-        v-if="showSeparator(config.meta.collection.all && (config.meta.manifest.all || config.meta.item.all))"
+        v-if="showSeparator(config.meta.collection.show && (config.meta.manifest.show || config.meta.item.show))"
         inset
         class="q-mt-md q-mb-sm"
       />
     </q-list>
 
     <!-- Manifest-->
-    <q-list v-if="config.meta.manifest.all">
+    <q-list v-if="config.meta.manifest.show">
       <q-item>
         <q-item-section class="text-h6 caps">
           {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.manifest.label && title">
+      <q-item v-if="title">
         <q-item-section>
           <q-item-label
             overline
@@ -107,20 +107,20 @@
     </q-list>
 
     <q-separator
-      v-if="showSeparator(config.meta.manifest.all && config.meta.item.all)"
+      v-if="showSeparator(config.meta.manifest.show && config.meta.item.show)"
       inset
       class="q-mt-md q-mb-sm"
     />
 
     <!-- Item-->
-    <q-list v-if="config.meta.item.all">
+    <q-list v-if="config.meta.item.show">
       <q-item>
         <q-item-section class="text-h6 caps">
           {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.item.label">
+      <q-item v-if="item.n">
         <q-item-section>
           <q-item-label
             overline
@@ -128,11 +128,12 @@
           >
             Label:
           </q-item-label>
-          <q-item-label>{{ itemlabel }}</q-item-label>
+
+          <q-item-label>{{ item.n }}</q-item-label>
         </q-item-section>
       </q-item>
 
-      <q-item v-if="config.meta.item.language">
+      <q-item v-if="language">
         <q-item-section>
           <q-item-label
             overline
@@ -168,9 +169,9 @@ export default {
       type: Object,
       default: () => {},
     },
-    itemlabel: {
-      type: String,
-      default: () => '',
+    item: {
+      type: Object,
+      default: () => {},
     },
     labels: {
       type: Object,

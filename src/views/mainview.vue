@@ -11,8 +11,8 @@
         class="col-12 col-sm-6 col-md-3"
       >
         <Toolbar
-          v-if="config.headers.panelheadings"
-          :heading="p.panel_label"
+          v-if="p.heading"
+          :heading="p.label"
         />
 
         <q-separator />
@@ -86,6 +86,10 @@ export default {
     Toolbar,
   },
   props: {
+    annotations: {
+      type: Object,
+      default: () => {},
+    },
     collection: {
       type: Object,
       default: () => {},
@@ -106,9 +110,9 @@ export default {
       type: String,
       default: () => '',
     },
-    itemlabel: {
-      type: String,
-      default: () => '',
+    item: {
+      type: Object,
+      default: () => {},
     },
     labels: {
       type: Object,

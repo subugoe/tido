@@ -31,7 +31,7 @@
   },
   "private": false,
   "dependencies": {
-    "@quasar/extras": "^1.9.16",
+    "@quasar/extras": "^1.9.17",
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.1",
     "openseadragon": "^2.4.2",
     "quasar": "^1.15.3",
@@ -56,7 +56,7 @@
     "standard-version": "^9.1.0",
     "stylelint": "^13.10.0",
     "stylelint-8-point-grid": "^1.0.0",
-    "stylelint-config-sass-guidelines": "^7.1.0",
+    "stylelint-config-sass-guidelines": "^8.0.0",
     "stylelint-no-unsupported-browser-features": "^4.1.4"
   },
   "browserslist": [
