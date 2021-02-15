@@ -137,7 +137,6 @@ export default {
             });
         })
         .catch(() => {
-          this.$q.notify({ message: 'No annotations available' });
           this.$root.$emit('remove-panel', this.panels[2].id);
         });
     },
@@ -273,13 +272,13 @@ export default {
             data.sequence.map((seq) => this.itemurls.push(seq.id));
           }
 
+          // given a single manifest, initialize the tree
           if (!this.isCollection) {
-            // given a single manifest, initialize the tree
             this.tree.push({ children: [], label: '', 'label-key': this.config.labels.manifest });
           }
           this.populateTree(data.sequence, data.label);
 
-          // make sure that urls are set just once on init
+          // make sure that urls are set only once on init
           if (!this.itemurl && data.sequence[0].id) {
             this.itemurl = data.sequence[0].id;
             this.getItemData(data.sequence[0].id);

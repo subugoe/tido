@@ -93,8 +93,7 @@ export default {
     this.content = await this.request(this.contenturl, 'text').then((data) => data);
   },
   mounted() {
-    // eslint-disable-next-line no-console
-    console.log(document.getElementById('N4.4.2.4.4.14.2.3').innerText);
+    // const classes = document.getElementsByClassName('persName');
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
     this.$root.$on('update-sequence-index', (index) => {

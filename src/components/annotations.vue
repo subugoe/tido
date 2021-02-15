@@ -31,11 +31,33 @@ export default {
   },
   data() {
     return {
-
+      IDs: [],
     };
   },
-  mounted() {
+  computed: {
+    /**
+    * get target IDs
+    * caller: *mounted-hook*
+    */
+    getAnnotationIds() {
+      const IDs = [];
+      const targetURIs = [];
 
+      if (Array.isArray(this.annotations.items)) {
+        this.annotations.items.forEach((item) => {
+          targetURIs.push(item.target.id);
+        });
+        targetURIs.forEach((target) => {
+          IDs.push(targetURIs.split('/')[target.length - 1]);
+        });
+      }
+      // eslint-disable-next-line no-console
+      console.log(':: ANNOTATIONS ::', IDs);
+      return IDs;
+    },
+  },
+  mounted() {
+    this.IDs = this.getAnnotationIds;
   },
 };
 </script>

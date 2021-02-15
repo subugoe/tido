@@ -68,7 +68,7 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="title">
+      <q-item v-if="mLabel">
         <q-item-section>
           <q-item-label
             overline
@@ -77,7 +77,7 @@
             Label:
           </q-item-label>
 
-          <q-item-label>{{ title }}</q-item-label>
+          <q-item-label>{{ mLabel }}</q-item-label>
         </q-item-section>
       </q-item>
 
@@ -196,7 +196,7 @@ export default {
     itemcount() {
       return this.manifests[this.sequenceindex].sequence.length;
     },
-    title() {
+    mLabel() {
       return this.manifests[this.sequenceindex].label;
     },
   },
