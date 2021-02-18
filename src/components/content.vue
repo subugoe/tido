@@ -115,8 +115,8 @@ export default {
       const personNames = document.getElementsByClassName('persName');
 
       Object.values(personNames).forEach((item) => {
-        // eslint-disable-next-line no-console
-        console.log(item);
+        // // eslint-disable-next-line no-console
+        // console.log(item);
         item.style.color = 'red';
       });
       // const ids = Object.values(personNames).filter((name) => this.annotationIds.includes(name.id));

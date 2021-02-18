@@ -136,10 +136,11 @@ export default {
               if (current.annotationPage.items !== null) {
                 this.annotations = current.annotationPage;
               }
+            })
+            .catch(() => {
+              this.$q.notify({ message: 'No Annotaions available' });
+              // this.$root.$emit('remove-panel', this.panels[2].id);
             });
-        })
-        .catch(() => {
-          this.$root.$emit('remove-panel', this.panels[2].id);
         });
     },
     /**
