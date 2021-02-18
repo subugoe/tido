@@ -138,28 +138,9 @@ export default {
               }
             })
             .catch(() => {
-              this.$q.notify({ message: 'No Annotaions available' });
-              // this.$root.$emit('remove-panel', this.panels[2].id);
+              this.$q.notify({ message: 'No annotations available' });
             });
         });
-    },
-    /**
-    * get target IDs to match against the appropriate text parts
-    * caller: *getItemData()*
-    */
-    getAnnotationIds() {
-      const targetURIs = [];
-
-      this.annotationIds = [];
-      if (Array.isArray(this.annotations.items)) {
-        this.annotations.items.forEach((item) => {
-          targetURIs.push(item.target.id);
-        });
-        targetURIs.forEach((target) => {
-          const split = target.split('/');
-          this.annotationIds.push(split[split.length - 1]);
-        });
-      }
     },
     /**
       * get collection data according to 'entrypoint'

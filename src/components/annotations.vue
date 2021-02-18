@@ -1,6 +1,9 @@
 <template>
-  <div class="scroll-panel">
-    <q-list v-if="Object.keys(annotations).length">
+  <div
+    v-if="Object.keys(annotations).length"
+    class="scroll-panel"
+  >
+    <q-list>
       <q-item>
         <q-item-section class="text-h6 caps">
           Part of:

@@ -93,34 +93,12 @@ export default {
     this.content = await this.request(this.contenturl, 'text').then((data) => data);
   },
   mounted() {
-    const pNames = document.getElementsByClassName('persName');
-
-    Object.values(pNames).map((name) => name.classList.add('personName'));
-
-    // Object.values(pNames).forEach((item) => {
-    //   // eslint-disable-next-line no-console
-    //   console.log(item);
-    //   item.style.color = 'red';
-    // });
-
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
     this.$root.$on('update-sequence-index', (index) => {
       if (this.manifests[index].support && this.sequenceindex !== index) {
         // this.getSupport(this.manifests[index].support);
       }
-    });
-
-    this.$root.$on('update-item', () => {
-      const personNames = document.getElementsByClassName('persName');
-
-      Object.values(personNames).forEach((item) => {
-        // // eslint-disable-next-line no-console
-        // console.log(item);
-        item.style.color = 'red';
-      });
-      // const ids = Object.values(personNames).filter((name) => this.annotationIds.includes(name.id));
-      // ids.forEach((id) => id.classList.add('personName'));
     });
   },
   methods: {
@@ -161,8 +139,5 @@ export default {
 <style lang="scss" scoped>
   .rtl {
     direction: rtl;
-  }
-  .personName {
-    color: red;
   }
 </style>
