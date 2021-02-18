@@ -63,7 +63,6 @@ export default {
       item: {},
       itemurl: '',
       itemurls: [],
-      label: '',
       language: '',
       manifests: [],
       tree: [],
