@@ -55,8 +55,8 @@
 
       <q-separator
         v-if="showSeparator(config.meta.collection.show && (config.meta.manifest.show || config.meta.item.show))"
-        inset
         class="q-mt-md q-mb-sm"
+        inset
       />
     </q-list>
 
@@ -149,14 +149,6 @@
 </template>
 
 <script>
-import { metadataApi } from '@/mixins/metadataApi';
-
-metadataApi.forEach((m) => {
-  Object.entries(m).forEach(([level, data]) => {
-    // eslint-disable-next-line no-console
-    console.log(level.toUpperCase(), '\n\ndisplayable: ', data.displayable, '\nmandatory: ', data.mandatory);
-  });
-});
 
 export default {
   name: 'Metadata',

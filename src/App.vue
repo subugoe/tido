@@ -133,12 +133,32 @@ export default {
         .then((annotations) => {
           this.request(annotations.annotationCollection.first)
             .then((current) => {
-              this.annotations = current.annotationPage;
+              if (current.annotationPage.items !== null) {
+                this.annotations = current.annotationPage;
+              }
             });
         })
         .catch(() => {
           this.$root.$emit('remove-panel', this.panels[2].id);
         });
+    },
+    /**
+    * get target IDs to match against the appropriate text parts
+    * caller: *getItemData()*
+    */
+    getAnnotationIds() {
+      const targetURIs = [];
+
+      this.annotationIds = [];
+      if (Array.isArray(this.annotations.items)) {
+        this.annotations.items.forEach((item) => {
+          targetURIs.push(item.target.id);
+        });
+        targetURIs.forEach((target) => {
+          const split = target.split('/');
+          this.annotationIds.push(split[split.length - 1]);
+        });
+      }
     },
     /**
       * get collection data according to 'entrypoint'
@@ -205,6 +225,17 @@ export default {
       return idx;
     },
     /**
+      * extract the 'label part' of the itemurl
+      * caller: *getItemUrls()*
+      *
+      * @param string itemurl
+      *
+      * @return string 'label part'
+      */
+    getItemLabel(itemurl) {
+      return itemurl.replace(/.*-(.*)\/latest.*$/, '$1');
+    },
+    /**
       * get all itemurls hosted by each manifest's sequence to populate the aprropriate tree node
       * caller: *getManifest()*
       *
@@ -216,13 +247,13 @@ export default {
     getItemUrls(sequence, label) {
       const urls = [];
 
-      sequence.forEach((obj) => {
-        const pagelabel = this.getPageLabel(obj.id);
+      sequence.forEach((item) => {
+        const itemLabel = this.getItemLabel(item.id);
 
         urls.push(
           {
-            label: obj.id,
-            'label-key': `${this.config.labels.item} ${pagelabel}`,
+            label: item.id,
+            'label-key': `${this.config.labels.item} ${itemLabel}`,
             handler: (node) => {
               if (this.itemurl === node.label) {
                 return;
@@ -284,17 +315,6 @@ export default {
             this.getItemData(data.sequence[0].id);
           }
         });
-    },
-    /**
-      * extract the 'label part' of the itemurl
-      * caller: *getItemUrls()*
-      *
-      * @param string itemurl
-      *
-      * @return string 'label part'
-      */
-    getPageLabel(itemurl) {
-      return itemurl.replace(/.*-(.*)\/latest.*$/, '$1');
     },
     /**
       * caller: *getItemUrls()*
