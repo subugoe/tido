@@ -11,7 +11,7 @@
         :color="$q.dark.isActive ? 'white' : 'accent'"
         :name="fasChevronRight"
       />
-      <span>Sheet {{ itemlabel }}</span>
+      <span>Sheet {{ item.n }}</span>
     </h2>
   </div>
 </template>
@@ -26,9 +26,9 @@ export default {
       type: String,
       default: () => '',
     },
-    itemlabel: {
-      type: String,
-      default: () => '',
+    item: {
+      type: Object,
+      default: () => {},
     },
     manifests: {
       type: Array,
