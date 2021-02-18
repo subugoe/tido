@@ -1,4 +1,4 @@
-const metadataApi = [
+const metadataSpecs = [
   {
     collection: {
       displayable: [
@@ -70,4 +70,4 @@ const metadataApi = [
   },
 ];
 
-export { metadataApi };
+export { metadataSpecs };

@@ -150,6 +150,19 @@
 
 <script>
 
+import { metadataSpecs } from '@/mixins/metadataSpecs';
+
+metadataSpecs.forEach((m) => {
+  Object.entries(m).forEach(([level, data]) => {
+    // eslint-disable-next-line no-console
+    console.log(
+      level.toUpperCase(),
+      '\n\ndisplayable: ', data.displayable,
+      '\nmandatory: ', data.mandatory,
+    );
+  });
+});
+
 export default {
   name: 'Metadata',
   props: {
