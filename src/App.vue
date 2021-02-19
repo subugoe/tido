@@ -170,14 +170,12 @@ export default {
       this.config = JSON.parse(document.getElementById('tido-config').text);
 
       if (!this.config.entrypoint) {
-        setTimeout(() => {
-          this.$q.notify({
-            html: true,
-            progress: true,
-            type: 'secondary',
-            message: 'NO ENTRYPOINT SET! ==> <a href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/blob/main/README.md" target="_blank">README</a>',
-          });
-        }, 500);
+        this.$q.notify({
+          html: true,
+          progress: true,
+          type: 'secondary',
+          message: 'NO ENTRYPOINT SET! ==> <a href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/blob/main/README.md" target="_blank">README</a>',
+        });
       }
     },
     /**
