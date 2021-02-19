@@ -8,47 +8,20 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="collection.collector.name">
+      <q-item
+        v-for="(itm, key) in mSpecs.collection"
+        :key="key"
+      >
         <q-item-section>
           <q-item-label
             overline
             class="text-uppercase"
           >
-            Collector:
+            {{ key }}:
           </q-item-label>
 
           <q-item-label>
-            {{ collection.collector.name }}
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-item v-if="collection.title[0].title">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Title:
-          </q-item-label>
-
-          <q-item-label>
-            {{ collection.title[0].title }}
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-item v-if="collection.description">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Description:
-          </q-item-label>
-
-          <q-item-label>
-            {{ collection.description }}
+            {{ itm }}
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -68,16 +41,21 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="mLabel">
+      <q-item
+        v-for="(itm, key) in mSpecs.manifest"
+        :key="key"
+      >
         <q-item-section>
           <q-item-label
             overline
             class="text-uppercase"
           >
-            Label:
+            {{ key }}:
           </q-item-label>
 
-          <q-item-label>{{ mLabel }}</q-item-label>
+          <q-item-label>
+            {{ itm }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -120,28 +98,21 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="item.n">
+      <q-item
+        v-for="(itm, key) in mSpecs.item"
+        :key="key"
+      >
         <q-item-section>
           <q-item-label
             overline
             class="text-uppercase"
           >
-            Label:
+            {{ key }}:
           </q-item-label>
 
-          <q-item-label>{{ item.n }}</q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-item v-if="language">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Language:
+          <q-item-label>
+            {{ itm }}
           </q-item-label>
-          <q-item-label>{{ language }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
@@ -149,19 +120,6 @@
 </template>
 
 <script>
-
-import { metadataSpecs } from '@/mixins/metadataSpecs';
-
-metadataSpecs.forEach((m) => {
-  Object.entries(m).forEach(([level, data]) => {
-    // eslint-disable-next-line no-console
-    console.log(
-      level.toUpperCase(),
-      '\n\ndisplayable: ', data.displayable,
-      '\nmandatory: ', data.mandatory,
-    );
-  });
-});
 
 export default {
   name: 'Metadata',
@@ -194,6 +152,23 @@ export default {
   data() {
     return {
       itemindex: 0,
+      mSpecs: {
+        collection: {
+          Collector: this.collection.collector.name,
+          Description: this.collection.description,
+          Title: this.collection.title[0].title,
+        },
+        manifest: {
+          // Label: this.manifests[this.sequenceindex].label,
+          // License: this.manifests[this.sequenceindex].license,
+        },
+        item: {
+          // 'Image License': this.item.image.license.id,
+          // 'Image Notes': this.item.image.license.notes,
+          Label: this.item.n,
+          Language: this.item.lang[0],
+        },
+      },
       sequenceindex: 0,
     };
   },
