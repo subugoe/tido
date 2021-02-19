@@ -42,6 +42,9 @@ module.exports = function (ctx) {
           primary: '#212121',
           secondary: '#eee',
           accent: '#1a3771'
+        },
+        notify: {
+          color: 'dark-grey',
         }
       },
 
@@ -50,7 +53,9 @@ module.exports = function (ctx) {
       lang: 'en-us', // Quasar language pack
 
       // Quasar plugins
-      // plugins: []
+      plugins: [
+        'Notify'
+      ]
     },
 
     htmlVariables: {
