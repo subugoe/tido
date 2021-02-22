@@ -9,19 +9,19 @@
       </q-item>
 
       <q-item
-        v-for="(itm, key) in mSpecs.collection"
-        :key="key"
+        v-for="(mCollection, index) in metadataCollection"
+        :key="index"
       >
-        <q-item-section>
+        <q-item-section v-if="Object.keys(mCollection).length">
           <q-item-label
             overline
             class="text-uppercase"
           >
-            {{ key }}:
+            {{ mCollection.id }}:
           </q-item-label>
 
           <q-item-label>
-            {{ itm }}
+            {{ mCollection.data }}
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -34,7 +34,7 @@
     </q-list>
 
     <!-- Manifest-->
-    <q-list v-if="config.meta.manifest.all">
+    <q-list v-if="config.meta.manifest.all && itemcount">
       <q-item>
         <q-item-section class="text-h6 caps">
           {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
@@ -42,19 +42,19 @@
       </q-item>
 
       <q-item
-        v-for="(itm, key) in mSpecs.manifest"
-        :key="key"
+        v-for="(mManifest, index) in metadataManifest"
+        :key="index"
       >
         <q-item-section>
           <q-item-label
             overline
             class="text-uppercase"
           >
-            {{ key }}:
+            {{ mManifest.id }}:
           </q-item-label>
 
           <q-item-label>
-            {{ itm }}
+            {{ mManifest.data }}
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -99,19 +99,19 @@
       </q-item>
 
       <q-item
-        v-for="(itm, key) in mSpecs.item"
-        :key="key"
+        v-for="(mItem, index) in metadataItem"
+        :key="index"
       >
-        <q-item-section>
+        <q-item-section v-if="Object.keys(mItem).length">
           <q-item-label
             overline
             class="text-uppercase"
           >
-            {{ key }}:
+            {{ mItem.id }}:
           </q-item-label>
 
           <q-item-label>
-            {{ itm }}
+            {{ mItem.data }}
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -152,23 +152,6 @@ export default {
   data() {
     return {
       itemindex: 0,
-      mSpecs: {
-        collection: {
-          Collector: this.collection.collector.name,
-          Description: this.collection.description,
-          Title: this.collection.title[0].title,
-        },
-        manifest: {
-          // Label: this.manifests[this.sequenceindex].label,
-          // License: this.manifests[this.sequenceindex].license,
-        },
-        item: {
-          // 'Image License': this.item.image.license.id,
-          // 'Image Notes': this.item.image.license.notes,
-          Label: this.item.n,
-          Language: this.item.lang[0],
-        },
-      },
       sequenceindex: 0,
     };
   },
@@ -176,8 +159,48 @@ export default {
     itemcount() {
       return this.manifests[this.sequenceindex].sequence.length;
     },
-    mLabel() {
-      return this.manifests[this.sequenceindex].label;
+    metadataCollection() {
+      const metadata = [
+        { id: 'Title', data: this.collection.title[0].title },
+        { id: 'Collector', data: this.collection.collector.name },
+      ];
+
+      if (this.collection.description) {
+        metadata.push({ id: 'Description', data: this.collection.description });
+      }
+      return metadata;
+    },
+    metadataItem() {
+      const metadata = [];
+
+      if (this.item.n) {
+        metadata.push(
+          { id: 'Label', data: this.item.n },
+        );
+      }
+      if (this.item.lang) {
+        metadata.push(
+          { id: 'Language', data: this.item.lang[0] },
+        );
+      }
+      if (this.item.image) {
+        metadata.push(
+          { id: 'Image License', data: this.item.image.license.id },
+          { id: 'Image Notes', data: this.item.image.license.notes },
+        );
+      }
+
+      return metadata;
+    },
+    metadataManifest() {
+      const metadata = [];
+
+      metadata.push(
+        { id: 'Label', data: this.manifests[this.sequenceindex].label },
+        { id: 'License', data: this.manifests[this.sequenceindex].license },
+      );
+
+      return metadata;
     },
   },
   mounted() {
