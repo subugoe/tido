@@ -40,28 +40,8 @@
             overline
             class="text-uppercase"
           >
-            Type:
+            Type: {{ annotation.body.value }}
           </q-item-label>
-
-          <q-item-label>{{ annotation.body.value }}</q-item-label>
-
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Language:
-          </q-item-label>
-
-          <q-item-label>{{ annotation.target.language }}</q-item-label>
-
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Target:
-          </q-item-label>
-
-          <q-item-label>{{ annotation.target.id }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
@@ -81,9 +61,6 @@ export default {
     return {
 
     };
-  },
-  created() {
-
   },
 };
 </script>

@@ -31,7 +31,7 @@
     -->
     <script id="tido-config" type="application/json">
     {
-      "entrypoint": "https://ahikar-test.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
+      "entrypoint": "https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
       "colors": {
         "primary": "",
         "secondary": "",
@@ -60,27 +60,27 @@
       },
       "panels": [
         {
-          "connector": [1],
+          "connector": [1, 2],
           "heading": true,
           "label": "Contents",
           "show": true
         },
         {
-          "connector": [4, 3],
+          "connector": [3],
           "heading": true,
-          "label": "Text & Image",
+          "label": "Image",
+          "show": true
+        },
+        {
+          "connector": [4],
+          "heading": true,
+          "label": "Text",
           "show": true
         },
         {
           "connector": [5],
           "heading": true,
           "label": "Annotations",
-          "show": true
-        },
-        {
-          "connector": [2],
-          "heading": true,
-          "label": "Metadata",
           "show": true
         }
       ],
