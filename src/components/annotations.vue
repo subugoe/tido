@@ -43,7 +43,7 @@
             Type:
           </q-item-label>
 
-          <q-item-label>{{ annotation.bodyValue }}</q-item-label>
+          <q-item-label>{{ annotation.body.value }}</q-item-label>
 
           <q-item-label
             overline
