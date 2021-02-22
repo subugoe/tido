@@ -17,7 +17,7 @@
             overline
             class="text-uppercase"
           >
-            {{ mCollection.id }}:
+            {{ mCollection.id }}
           </q-item-label>
 
           <q-item-label>
@@ -50,7 +50,7 @@
             overline
             class="text-uppercase"
           >
-            {{ mManifest.id }}:
+            {{ mManifest.id }}
           </q-item-label>
 
           <q-item-label>
@@ -72,7 +72,7 @@
               overline
               class="text-uppercase"
             >
-              {{ meta.key }}:
+              {{ meta.key }}
             </q-item-label>
 
             <q-item-label>{{ meta.value }}</q-item-label>
@@ -107,7 +107,7 @@
             overline
             class="text-uppercase"
           >
-            {{ mItem.id }}:
+            {{ mItem.id }}
           </q-item-label>
 
           <q-item-label>
@@ -183,7 +183,7 @@ export default {
           { id: 'Language', data: this.item.lang[0] },
         );
       }
-      if (this.item.image) {
+      if (this.item.image && this.item.image.license) {
         metadata.push(
           { id: 'Image License', data: this.item.image.license.id },
           { id: 'Image Notes', data: this.item.image.license.notes },
