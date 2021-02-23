@@ -44,7 +44,7 @@ import Header from '@/components/header.vue';
 import Panels from '@/mixins/panels';
 
 export default {
-  name: 'TiDO',
+  name: 'TIDO',
   components: {
     Header,
     Footer,

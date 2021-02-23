@@ -59,9 +59,6 @@
         </q-item-section>
       </q-item>
 
-      <!--  this part renders the metadata object provided by the manifest object according to the generic API specs given:
-            pls refer to https://subugoe.pages.gwdg.de/emo/text-api/page/specs/#manifest-object
-      -->
       <div v-if="manifests[sequenceindex].metadata">
         <q-item
           v-for="(meta, idx) in manifests[sequenceindex].metadata"
@@ -79,9 +76,6 @@
           </q-item-section>
         </q-item>
       </div>
-      <!--
-          End of metadata object
-      -->
     </q-list>
 
     <q-separator
@@ -197,8 +191,13 @@ export default {
 
       metadata.push(
         { id: 'Label', data: this.manifests[this.sequenceindex].label },
-        { id: 'License', data: this.manifests[this.sequenceindex].license },
       );
+
+      if (Array.isArray(this.manifests[this.sequenceindex].license)) {
+        metadata.push(
+          { id: 'License', data: this.manifests[this.sequenceindex].license[0].id },
+        );
+      }
 
       return metadata;
     },
