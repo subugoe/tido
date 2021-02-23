@@ -103,7 +103,7 @@ export default {
 
     this.$root.$on('update-sequence-index', (index) => {
       if (this.manifests[index].support) {
-        this.manifests[index].support.map(this.getSupport);
+        // this.manifests[index].support.map(this.getSupport);
       }
     });
   },

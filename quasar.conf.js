@@ -44,7 +44,7 @@ module.exports = function (ctx) {
           accent: '#1a3771'
         },
         notify: {
-          color: 'dark-grey',
+          color: 'gray'
         }
       },
 
