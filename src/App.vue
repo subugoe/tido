@@ -6,7 +6,7 @@
         :collectiontitle="collectiontitle"
         :config="config"
         :imageurl="imageurl"
-        :itemlabel="itemlabel"
+        :item="item"
         :itemurls="itemurls"
         :manifests="manifests"
         :panels="panels"
@@ -14,15 +14,14 @@
 
       <q-page-container>
         <router-view
-          :annotations="annotations"
           :collection="collection"
           :config="config"
           :contenturl="contenturl"
           :fontsize="fontsize"
           :imageurl="imageurl"
-          :itemlabel="itemlabel"
+          :item="item"
           :labels="config.labels"
-          :language="itemlanguage"
+          :language="language"
           :manifests="manifests"
           :panels="panels"
           :request="request"
@@ -45,7 +44,7 @@ import Header from '@/components/header.vue';
 import Panels from '@/mixins/panels';
 
 export default {
-  name: 'Viewer',
+  name: 'TIDO',
   components: {
     Header,
     Footer,
@@ -53,7 +52,6 @@ export default {
   mixins: [Panels],
   data() {
     return {
-      annotations: {},
       collection: {},
       collectiontitle: '',
       contenturl: '',
@@ -61,11 +59,10 @@ export default {
       fontsize: 14,
       imageurl: '',
       isCollection: false,
-      itemlabel: '',
-      itemlanguage: '',
+      item: {},
       itemurl: '',
       itemurls: [],
-      label: '',
+      language: '',
       manifests: [],
       tree: [],
     };
@@ -143,7 +140,7 @@ export default {
       this.request(url)
         .then((data) => {
           this.collection = data;
-          this.label = this.getLabel(data);
+          this.collectiontitle = this.getLabel(data);
 
           this.tree.push(
             {
@@ -151,8 +148,8 @@ export default {
               handler: (node) => {
                 this.$root.$emit('update-tree-knots', node.label);
               },
-              label: this.label,
-              'label-key': this.label,
+              label: this.collectiontitle,
+              'label-key': this.collectiontitle,
               selectable: false,
             },
           );
@@ -178,16 +175,10 @@ export default {
     getItemData(url) {
       this.request(url)
         .then((data) => {
-          this.collectiontitle = data.title.title;
-          this.contenturl = data.content;
-          this.imageurl = data.image && data.image.id ? data.image.id : '';
-          this.itemlabel = data.n ? data.n : 'No itemlabel :(';
+          this.item = data;
 
-          // note: the scholars didn't mark the item language yet, so atm the API provides them all.
-          // since we know, we are dealing with the arabic part of the collection, we define the language to be arabic.
-          const [language] = data['x-langString'] ? data['x-langString'].split(',') : data.lang;
-
-          this.itemlanguage = language;
+          this.contenturl = data.content || '';
+          this.imageurl = data.image.id || '';
         });
     },
     /**
@@ -207,6 +198,17 @@ export default {
       return idx;
     },
     /**
+      * extract the 'label part' of the itemurl
+      * caller: *getItemUrls()*
+      *
+      * @param string itemurl
+      *
+      * @return string 'label part'
+      */
+    getItemLabel(itemurl) {
+      return itemurl.replace(/.*-(.*)\/latest.*$/, '$1');
+    },
+    /**
       * get all itemurls hosted by each manifest's sequence to populate the aprropriate tree node
       * caller: *getManifest()*
       *
@@ -218,13 +220,13 @@ export default {
     getItemUrls(sequence, label) {
       const urls = [];
 
-      sequence.forEach((obj) => {
-        const pagelabel = this.getPageLabel(obj.id);
+      sequence.forEach((item) => {
+        const itemLabel = this.getItemLabel(item.id);
 
         urls.push(
           {
-            label: obj.id,
-            'label-key': `${this.config.labels.item} ${pagelabel}`,
+            label: item.id,
+            'label-key': `${this.config.labels.item} ${itemLabel}`,
             handler: (node) => {
               if (this.itemurl === node.label) {
                 return;
@@ -288,27 +290,12 @@ export default {
               selectable: false,
             },
           );
-
-          if (!this.label) {
-            this.label = this.getLabel(data);
-          }
           // make sure that urls are set just once on init
           if (!this.itemurl && data.sequence[0]) {
             this.itemurl = data.sequence[0].id;
             this.getItemData(data.sequence[0].id);
           }
         });
-    },
-    /**
-      * extract the 'label part' of the itemurl
-      * caller: *getItemUrls()*
-      *
-      * @param string itemurl
-      *
-      * @return string 'label part'
-      */
-    getPageLabel(itemurl) {
-      return itemurl.replace(/.*-(.*)\/latest.*$/, '$1');
     },
     /**
       * caller: *getItemUrls()*

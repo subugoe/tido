@@ -106,9 +106,9 @@ export default {
       type: String,
       default: () => '',
     },
-    itemlabel: {
-      type: String,
-      default: () => '',
+    item: {
+      type: Object,
+      default: () => {},
     },
     labels: {
       type: Object,
