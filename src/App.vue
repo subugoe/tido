@@ -5,6 +5,7 @@
         v-if="config.headers.all"
         :collectiontitle="collectiontitle"
         :config="config"
+        :imageurl="imageurl"
         :item="item"
         :itemurls="itemurls"
         :manifests="manifests"
@@ -44,7 +45,7 @@ import Header from '@/components/header.vue';
 import Panels from '@/mixins/panels';
 
 export default {
-  name: 'TiDO',
+  name: 'TIDO',
   components: {
     Header,
     Footer,
@@ -184,7 +185,7 @@ export default {
 
           this.contenturl = data.content || '';
           this.imageurl = data.image.id || '';
-          this.language = data.lang[0] || data.langAlt[0];
+          // this.language = data.lang[0] || data.langAlt[0];
 
           this.getAnnotations(data.annotationCollection);
         });
@@ -273,7 +274,6 @@ export default {
     getManifest(url) {
       this.request(url)
         .then((data) => {
-          // FIXME: typecasting if manifest holds a single item. should be fixed in the API instead!
           if (!Array.isArray(data.sequence)) {
             data.sequence = [data.sequence];
           }

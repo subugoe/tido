@@ -8,82 +8,57 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="collection.collector.name">
-        <q-item-section>
+      <q-item
+        v-for="(mCollection, index) in metadataCollection"
+        :key="index"
+      >
+        <q-item-section v-if="Object.keys(mCollection).length">
           <q-item-label
             overline
             class="text-uppercase"
           >
-            Collector:
+            {{ mCollection.id }}
           </q-item-label>
 
           <q-item-label>
-            {{ collection.collector.name }}
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-item v-if="collection.title[0].title">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Title:
-          </q-item-label>
-
-          <q-item-label>
-            {{ collection.title[0].title }}
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-item v-if="collection.description">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Description:
-          </q-item-label>
-
-          <q-item-label>
-            {{ collection.description }}
+            {{ mCollection.data }}
           </q-item-label>
         </q-item-section>
       </q-item>
 
       <q-separator
-        v-if="showSeparator(config.meta.collection.show && (config.meta.manifest.show || config.meta.item.show))"
+        v-if="showSeparator(config.meta.collection.all && (config.meta.manifest.all || config.meta.item.all))"
         class="q-mt-md q-mb-sm"
         inset
       />
     </q-list>
 
     <!-- Manifest-->
-    <q-list v-if="config.meta.manifest.show">
+    <q-list v-if="config.meta.manifest.all && itemcount">
       <q-item>
         <q-item-section class="text-h6 caps">
           {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
 
-      <q-item v-if="mLabel">
+      <q-item
+        v-for="(mManifest, index) in metadataManifest"
+        :key="index"
+      >
         <q-item-section>
           <q-item-label
             overline
             class="text-uppercase"
           >
-            Label:
+            {{ mManifest.id }}
           </q-item-label>
 
-          <q-item-label>{{ mLabel }}</q-item-label>
+          <q-item-label>
+            {{ mManifest.data }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
-      <!--  this part renders the metadata object provided by the manifest object according to the generic API specs given:
-            pls refer to https://subugoe.pages.gwdg.de/emo/text-api/page/specs/#manifest-object
-      -->
       <div v-if="manifests[sequenceindex].metadata">
         <q-item
           v-for="(meta, idx) in manifests[sequenceindex].metadata"
@@ -94,16 +69,13 @@
               overline
               class="text-uppercase"
             >
-              {{ meta.key }}:
+              {{ meta.key }}
             </q-item-label>
 
             <q-item-label>{{ meta.value }}</q-item-label>
           </q-item-section>
         </q-item>
       </div>
-      <!--
-          End of metadata object
-      -->
     </q-list>
 
     <q-separator
@@ -120,28 +92,21 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-if="item.n">
-        <q-item-section>
+      <q-item
+        v-for="(mItem, index) in metadataItem"
+        :key="index"
+      >
+        <q-item-section v-if="Object.keys(mItem).length">
           <q-item-label
             overline
             class="text-uppercase"
           >
-            Label:
+            {{ mItem.id }}
           </q-item-label>
 
-          <q-item-label>{{ item.n }}</q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-item v-if="language">
-        <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            Language:
+          <q-item-label>
+            {{ mItem.data }}
           </q-item-label>
-          <q-item-label>{{ language }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
@@ -188,8 +153,53 @@ export default {
     itemcount() {
       return this.manifests[this.sequenceindex].sequence.length;
     },
-    mLabel() {
-      return this.manifests[this.sequenceindex].label;
+    metadataCollection() {
+      const metadata = [
+        { id: 'Title', data: this.collection.title[0].title },
+        { id: 'Collector', data: this.collection.collector.name },
+      ];
+
+      if (this.collection.description) {
+        metadata.push({ id: 'Description', data: this.collection.description });
+      }
+      return metadata;
+    },
+    metadataItem() {
+      const metadata = [];
+
+      if (this.item.n) {
+        metadata.push(
+          { id: 'Label', data: this.item.n },
+        );
+      }
+      if (this.item.lang) {
+        metadata.push(
+          { id: 'Language', data: this.item.lang[0] },
+        );
+      }
+      if (this.item.image && this.item.image.license) {
+        metadata.push(
+          { id: 'Image License', data: this.item.image.license.id },
+          { id: 'Image Notes', data: this.item.image.license.notes },
+        );
+      }
+
+      return metadata;
+    },
+    metadataManifest() {
+      const metadata = [];
+
+      metadata.push(
+        { id: 'Label', data: this.manifests[this.sequenceindex].label },
+      );
+
+      if (Array.isArray(this.manifests[this.sequenceindex].license)) {
+        metadata.push(
+          { id: 'License', data: this.manifests[this.sequenceindex].license[0].id },
+        );
+      }
+
+      return metadata;
     },
   },
   mounted() {

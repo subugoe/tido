@@ -19,7 +19,6 @@
         :color="$q.dark.isActive ? 'white' : 'accent'"
         :name="fasChevronRight"
       />
-
       <span v-if="item.n">Sheet {{ item.n }}</span>
     </h2>
   </div>

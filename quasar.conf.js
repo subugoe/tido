@@ -44,8 +44,7 @@ module.exports = function (ctx) {
           accent: '#1a3771'
         },
         notify: {
-          color: 'cyan',
-          textColor: 'white',
+          color: 'gray'
         }
       },
 
@@ -55,8 +54,8 @@ module.exports = function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Notify',
-      ],
+        'Notify'
+      ]
     },
 
     htmlVariables: {

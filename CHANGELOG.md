@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.5.0...v1.6.0) (2021-02-23)
+
+
+### Features
+
+* provide and render metadata object according to API specs ([c93ed76](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/c93ed76044e07bafba7cccbbae67318e3062e3af))
+* provide data structure with mandatory and optional fields for all meta levels to keep the markup lean ([29edf1b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/29edf1b5742f00ebfd31aecbb02c5c7f866f2c31))
+* provide mixin refelcting mandatory metadata according to the specs given ([b328c87](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/b328c877697104b49d2285d7a5da7c80046bec44))
+
+
+### Bug Fixes
+
+* license for the text part; remove comment from the metadata and rename TiDO to TIDO according to review ([375aa9c](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/375aa9c791e5d9b3c18e13ae908c858858f5e909))
+* remove all obsolete config options regarding the metadata due to refactoring. we didn't agree on what to configure yet. ([57f3e6a](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/57f3e6a1e6909762ea69d1e1531060fe99c3798b))
+* remove colon and entrypoint ([d7c05ee](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/d7c05eed2a37ecfb4238c9fbdfc96f80afb9f0f2))
+
+
+### Chore
+
+* debug & prepare data for matching ([636bc78](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/636bc7818f3827eeee55a478f5a1fb3d9e7a70cf))
+* rename core component to TiDO ([4381ade](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/4381ade9ca3148017135a43b042394cad02e9660))
+
 ## [1.5.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.0.0...v1.5.0) (2021-01-28)
 
 

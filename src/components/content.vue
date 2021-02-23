@@ -96,8 +96,8 @@ export default {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
     this.$root.$on('update-sequence-index', (index) => {
-      if (this.manifests[index].support && this.sequenceindex !== index) {
-        // this.getSupport(this.manifests[index].support);
+      if (this.manifests[index].support) {
+        // this.manifests[index].support.map(this.getSupport);
       }
     });
   },
