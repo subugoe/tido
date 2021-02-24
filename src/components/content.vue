@@ -34,17 +34,11 @@
         </q-btn>
       </div>
     </div>
-    <!-- FIXME: => 'v-html' directive can lead to XSS attack  vue/no-v-html
 
-      Vue v1 supported triple braces to show html ({{{ ... }}}).
-      These have been considered deprecated and aren't available anymore as is Vue's directive "v-text".
-      The latter represents text *as is* anyways, e.g. it would show html tags in the text.
-      Atm there doesn't seem to be an alternative to "v-html" in regards to presenting xml/html.
-    -->
     <div class="row">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div
-        :class="['scroll-panel', config.rtl ? 'rtl-support' : '']"
+        :class="['scroll-panel', config.rtl ? 'rtl' : '']"
         :id="nodeid"
         ref="contentsize"
         v-html="content"
@@ -63,10 +57,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    contenturl: {
-      type: String,
-      default: () => '',
-    },
     fontsize: {
       type: Number,
       default: () => 14,
@@ -78,6 +68,10 @@ export default {
     request: {
       type: Function,
       default: null,
+    },
+    transcription: {
+      type: String,
+      default: () => '',
     },
   },
   data() {
@@ -96,7 +90,7 @@ export default {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
 
-    this.content = await this.request(this.contenturl, 'text').then((data) => data);
+    this.content = await this.request(this.transcription, 'text').then((data) => data);
   },
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
@@ -140,7 +134,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .rtl-support {
+  .rtl {
     direction: rtl;
   }
 </style>

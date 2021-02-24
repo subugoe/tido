@@ -94,10 +94,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    contenturl: {
-      type: String,
-      default: () => '',
-    },
     fontsize: {
       type: Number,
       default: () => 14,
@@ -130,6 +126,14 @@ export default {
       type: Function,
       default: () => null,
     },
+    transcription: {
+      type: String,
+      default: () => '',
+    },
+    transliteration: {
+      type: String,
+      default: () => '',
+    },
     tree: {
       type: Array,
       default: () => [],
@@ -140,7 +144,7 @@ export default {
       return this.manifests.length && this.tree.length;
     },
     keys() {
-      return { 3: this.imageurl, 4: this.contenturl };
+      return { 3: this.imageurl, 4: this.transcription };
     },
   },
 };

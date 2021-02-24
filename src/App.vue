@@ -16,7 +16,6 @@
         <router-view
           :collection="collection"
           :config="config"
-          :contenturl="contenturl"
           :fontsize="fontsize"
           :imageurl="imageurl"
           :item="item"
@@ -25,6 +24,8 @@
           :manifests="manifests"
           :panels="panels"
           :request="request"
+          :transcription="transcription"
+          :transliteration="transliteration"
           :tree="tree"
         />
       </q-page-container>
@@ -54,7 +55,6 @@ export default {
     return {
       collection: {},
       collectiontitle: '',
-      contenturl: '',
       config: {},
       fontsize: 14,
       imageurl: '',
@@ -64,6 +64,8 @@ export default {
       itemurls: [],
       language: '',
       manifests: [],
+      transcription: '',
+      transliteration: '',
       tree: [],
     };
   },
@@ -167,6 +169,18 @@ export default {
       this.config = JSON.parse(document.getElementById('tido-config').text);
     },
     /**
+      * caller: *getItemData()*
+      *
+      * @param string array
+      *
+      * @return array
+      */
+    getContent(content) {
+      return [
+        content[0].url, content[1].url,
+      ];
+    },
+    /**
       * fetch all data provided on 'item level'
       * caller: *mounted-hook*, *getManifest()*
       *
@@ -177,7 +191,8 @@ export default {
         .then((data) => {
           this.item = data;
 
-          this.contenturl = data.content || '';
+          [this.transcription, this.transliteration] = this.getContent(data.content);
+
           this.imageurl = data.image.id || '';
         });
     },
