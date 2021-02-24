@@ -27,14 +27,14 @@
       </q-item>
 
       <q-separator
-        v-if="showSeparator(config.meta.collection.all && (config.meta.manifest.all || config.meta.item.all))"
+        v-if="showSeparator(config.meta.collection.show && (config.meta.manifest.show || config.meta.item.show))"
         class="q-mt-md q-mb-sm"
         inset
       />
     </q-list>
 
     <!-- Manifest-->
-    <q-list v-if="config.meta.manifest.all && itemcount">
+    <q-list v-if="config.meta.manifest.show && itemcount">
       <q-item>
         <q-item-section class="text-h6 caps">
           {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
