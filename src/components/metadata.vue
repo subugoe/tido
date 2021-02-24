@@ -176,8 +176,12 @@ export default {
       if (this.item.image && this.item.image.license) {
         metadata.push(
           { id: 'Image License', data: this.item.image.license.id },
-          { id: 'Image Notes', data: this.item.image.license.notes },
         );
+        if (this.item.image.license.notes) {
+          metadata.push(
+            { id: 'Image Notes', data: this.item.image.license.notes },
+          );
+        }
       }
 
       return metadata;
