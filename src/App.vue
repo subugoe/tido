@@ -5,7 +5,6 @@
         v-if="config.headers.all"
         :collectiontitle="collectiontitle"
         :config="config"
-        :imageurl="imageurl"
         :item="item"
         :itemurls="itemurls"
         :manifests="manifests"
@@ -22,7 +21,6 @@
           :imageurl="imageurl"
           :item="item"
           :labels="config.labels"
-          :language="language"
           :manifests="manifests"
           :panels="panels"
           :request="request"
@@ -64,7 +62,6 @@ export default {
       item: {},
       itemurl: '',
       itemurls: [],
-      language: '',
       manifests: [],
       tree: [],
     };
@@ -185,7 +182,6 @@ export default {
 
           this.contenturl = data.content || '';
           this.imageurl = data.image.id || '';
-          // this.language = data.lang[0] || data.langAlt[0];
 
           this.getAnnotations(data.annotationCollection);
         });

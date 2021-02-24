@@ -118,10 +118,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    language: {
-      type: String,
-      default: () => '',
-    },
     manifests: {
       type: Array,
       default: () => [],
