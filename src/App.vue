@@ -20,7 +20,6 @@
           :imageurl="imageurl"
           :item="item"
           :labels="config.labels"
-          :language="language"
           :manifests="manifests"
           :panels="panels"
           :request="request"
@@ -62,7 +61,6 @@ export default {
       item: {},
       itemurl: '',
       itemurls: [],
-      language: '',
       manifests: [],
       transcription: '',
       transliteration: '',
