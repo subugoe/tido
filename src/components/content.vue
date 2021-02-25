@@ -57,6 +57,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    contenturls: {
+      type: Array,
+      default: () => [],
+    },
     fontsize: {
       type: Number,
       default: () => 14,
@@ -90,7 +94,7 @@ export default {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
 
-    this.content = await this.request(this.transcription, 'text').then((data) => data);
+    this.content = await this.request(this.contenturls[0], 'text').then((data) => data);
   },
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;

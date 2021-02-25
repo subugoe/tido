@@ -94,6 +94,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    contenturls: {
+      type: Array,
+      default: () => [],
+    },
     fontsize: {
       type: Number,
       default: () => 14,
@@ -122,14 +126,6 @@ export default {
       type: Function,
       default: () => null,
     },
-    transcription: {
-      type: String,
-      default: () => '',
-    },
-    transliteration: {
-      type: String,
-      default: () => '',
-    },
     tree: {
       type: Array,
       default: () => [],
@@ -137,10 +133,10 @@ export default {
   },
   computed: {
     ready() {
-      return this.manifests.length && this.tree.length;
+      return this.manifests.length && this.tree.length && this.contenturls.length;
     },
     keys() {
-      return { 3: this.imageurl, 4: this.transcription };
+      return { 3: this.imageurl, 4: this.contenturls[0] };
     },
   },
 };
