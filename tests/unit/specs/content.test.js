@@ -9,8 +9,6 @@ describe('Content component', () => {
     expect(component.props).toHaveProperty('contenturls')
   })
 
-  console.log(component.props.contenturls.type)
-
   it('is of type array', () => {
     expect(typeof component.props.transcription.type).toBe('function')
   })
