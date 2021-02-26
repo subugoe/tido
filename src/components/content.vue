@@ -38,7 +38,7 @@
     <div class="row">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div
-        :class="['scroll-panel', config.rtl ? 'rtl' : '']"
+        :class="['scroll-panel', config.rtl ? 'rtl' : '', highlight ? 'red' : '']"
         :id="nodeid"
         ref="contentsize"
         v-html="content"
@@ -77,6 +77,7 @@ export default {
   data() {
     return {
       content: '',
+      highlight: '',
       nodeid: '__text',
       sequenceindex: 0,
     };
@@ -99,6 +100,10 @@ export default {
       if (this.manifests[index].support) {
         // this.manifests[index].support.map(this.getSupport);
       }
+    });
+
+    this.$root.$on('update-annotation-id', (id, contentType) => {
+      document.getElementById(id).style.color = contentType === 'Place' ? 'red' : 'blue';
     });
   },
   methods: {

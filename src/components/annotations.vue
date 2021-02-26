@@ -39,6 +39,7 @@
           <q-item-label
             overline
             class="text-uppercase"
+            @click="getAnnotationId(annotation.target.id, annotation.body['x-content-type'])"
           >
             Type: {{ annotation.body.value }}
           </q-item-label>
@@ -61,6 +62,14 @@ export default {
     return {
 
     };
+  },
+  methods: {
+    getAnnotationId(targetId, contentType) {
+      const split = targetId.split('/');
+      const id = split[split.length - 1];
+
+      this.$root.$emit('update-annotation-id', id, contentType);
+    },
   },
 };
 </script>
