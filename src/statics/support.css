@@ -7,3 +7,6 @@
 
   This file is going to be included via SCSS!
 */
+.token {
+  display: inline-block;
+}
