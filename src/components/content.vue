@@ -38,7 +38,7 @@
     <div class="row">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div
-        :class="['scroll-panel', config.rtl ? 'rtl' : '', highlight ? 'red' : '']"
+        :class="['scroll-panel', config.rtl ? 'rtl' : '']"
         :id="nodeid"
         ref="contentsize"
         v-html="content"
@@ -77,7 +77,6 @@ export default {
   data() {
     return {
       content: '',
-      highlight: '',
       nodeid: '__text',
       sequenceindex: 0,
     };
@@ -103,7 +102,20 @@ export default {
     });
 
     this.$root.$on('update-annotation-id', (id, contentType) => {
-      document.getElementById(id).style.color = contentType === 'Place' ? 'red' : 'blue';
+      const entityColors = {
+        Motif: 'green',
+        Person: 'blue',
+        Place: 'red',
+      };
+
+      const entity = document.getElementById(id);
+      const highlight = entityColors[contentType];
+
+      if (entity.style !== null && entity.style !== null) {
+        entity.style.color = entity.style.color === '' ? highlight : '';
+      }
+      // eslint-disable-next-line no-console
+      console.log(entity.style.color);
     });
   },
   methods: {
@@ -122,7 +134,7 @@ export default {
       this.$root.$emit('update-fontsize', textsize);
     },
     getSupport(support) {
-      if (support.type === 'css') {
+      if (support.type === 'css' && support.url) {
         this.request(support.url, 'text')
           .then((data) => {
             const styleElement = document.createElement('style');
