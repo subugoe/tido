@@ -111,7 +111,7 @@ export default {
       const entity = document.getElementById(id);
       const highlight = entityColors[contentType];
 
-      if (entity.style !== null && entity.style !== null) {
+      if (entity !== null && entity.style !== null) {
         entity.style.color = entity.style.color === '' ? highlight : '';
       }
       // eslint-disable-next-line no-console
