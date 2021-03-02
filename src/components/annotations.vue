@@ -1,34 +1,33 @@
 <template>
   <div
     v-if="Object.keys(annotations).length"
-    class="scroll-panel"
+    class="scroll-panel q-ma-md"
   >
+    <q-btn-group spread>
+      <q-btn
+        :icon="mdiAccount"
+        label="Names"
+        outline
+      />
+      <q-btn
+        :icon="mdiMapMarker"
+        label="Places"
+        outline
+      />
+      <q-btn
+        :icon="mdiComment"
+        label="Comments"
+        outline
+      />
+    </q-btn-group>
+
     <q-list>
-      <q-item>
-        <q-item-section class="text-h6 caps">
-          Part of:
-        </q-item-section>
-      </q-item>
-
-      <q-item>
-        <q-item-section>
-          <q-item-label>
-            {{ annotations.partOf.label }}
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-
       <q-item>
         <q-item-section class="text-uppercase">
           Total: {{ annotations.items.length }} / {{ annotations.partOf.total }}
         </q-item-section>
       </q-item>
     </q-list>
-
-    <q-separator
-      class="q-mt-md q-mb-sm"
-      inset
-    />
 
     <q-list v-if="Array.isArray(annotations.items)">
       <q-item
@@ -50,6 +49,8 @@
 </template>
 
 <script>
+import { mdiAccount, mdiMapMarker, mdiComment } from '@quasar/extras/mdi-v5';
+
 export default {
   name: 'Annotations',
   props: {
@@ -63,6 +64,12 @@ export default {
 
     };
   },
+  created() {
+    this.mdiAccount = mdiAccount;
+    this.mdiMapMarker = mdiMapMarker;
+    this.mdiComment = mdiComment;
+  },
+
   methods: {
     getAnnotationId(targetId, contentType) {
       const split = targetId.split('/');
