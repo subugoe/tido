@@ -114,6 +114,8 @@ export default {
       if (entity !== null && entity.style !== null) {
         entity.style.color = entity.style.color === '' ? highlight : '';
       }
+      // eslint-disable-next-line no-console
+      console.log(entity.style.color);
     });
   },
   methods: {
