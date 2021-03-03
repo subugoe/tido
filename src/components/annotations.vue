@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="Array.isArray(annotations.items) && annotations.items.length"
-    class="scroll-panel q-ma-md"
-  >
+  <div class="q-ma-sm">
     <!-- <q-btn-toggle
       v-model="toggles"
       :options="[
@@ -14,15 +11,15 @@
       toggle-color="grey"
     /> -->
 
-    <div class="q-mb-md">
+    <div class="sticky q-mb-md">
       <q-toolbar>
         <q-toolbar-title class="text-uppercase">
-          Show / hide data types
+          Show / hide data types ( {{ annotations.items.length }} / {{ annotations.partOf.total }} )
         </q-toolbar-title>
       </q-toolbar>
 
       <q-btn-group
-        class="sticky q-mt-md"
+        class="q-mt-md"
         spread
       >
         <q-btn
@@ -46,29 +43,21 @@
       </q-btn-group>
     </div>
 
-    <!-- <q-list>
-      <q-item>
-        <q-item-section class="text-uppercase">
-          Total: {{ annotations.items.length }} / {{ annotations.partOf.total }}
-        </q-item-section>
-      </q-item>
-    </q-list> -->
-
     <div class="q-mt-md">
       <q-toolbar>
         <q-toolbar-title class="text-uppercase">
-          List of names in sheet
+          List of annotations in sheet
         </q-toolbar-title>
       </q-toolbar>
 
-      <q-list v-if="Array.isArray(annotations.items)">
+      <q-list>
         <q-item
           v-for="annotation in annotations.items"
           :key="annotation.id"
           class="q-pa-sm"
         >
           <q-item-section avatar>
-            <q-icon :name="mdiAccount" />
+            <q-icon :name="contentTypes[annotation.body['x-content-type']]" />
           </q-item-section>
 
           <q-item-section>
@@ -99,15 +88,24 @@ export default {
   },
   data() {
     return {
+      contentTypes: {
+        Comment: mdiComment,
+        Person: mdiAccount,
+        Place: mdiMapMarker,
+      },
       toggles: null,
     };
+  },
+  computed: {
+    entities() {
+      return Array.isArray(this.annotations.items) && this.annotations.items.length;
+    },
   },
   created() {
     this.mdiAccount = mdiAccount;
     this.mdiMapMarker = mdiMapMarker;
     this.mdiComment = mdiComment;
   },
-
   methods: {
     getAnnotationId(targetId, contentType) {
       const split = targetId.split('/');

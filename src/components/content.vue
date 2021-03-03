@@ -111,11 +111,9 @@ export default {
       const entity = document.getElementById(id);
       const highlight = entityColors[contentType];
 
-      if (entity !== null && entity.style !== null) {
-        entity.style.color = entity.style.color === '' ? highlight : '';
+      if (entity !== null) {
+        entity.style.backgroundColor = entity.style.backgroundColor === '' ? highlight : '';
       }
-      // eslint-disable-next-line no-console
-      console.log(entity.style.color);
     });
   },
   methods: {
