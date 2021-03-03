@@ -1,16 +1,5 @@
 <template>
   <div class="q-ma-sm">
-    <!-- <q-btn-toggle
-      v-model="toggles"
-      :options="[
-        { label: 'Names', icon: mdiAccount, value: '1' },
-        { label: 'Places', icon: mdiMapMarker, value: '2' },
-        { label: 'Comments', icon: mdiComment, value: '3' },
-      ]"
-      spread
-      toggle-color="grey"
-    /> -->
-
     <div class="sticky q-mb-md">
       <q-toolbar>
         <q-toolbar-title class="text-uppercase">
@@ -18,33 +7,26 @@
         </q-toolbar-title>
       </q-toolbar>
 
-      <q-btn-group
-        class="q-mt-md"
+      <q-btn-toggle
+        v-model="toggle"
+        clearable
+        :options="[
+          { label: 'Names', icon: mdiAccount, value: 'Person' },
+          { label: 'Places', icon: mdiMapMarker, value: 'Place' },
+          { label: 'Comments', icon: mdiComment, value: 'Comment' },
+        ]"
         spread
-      >
-        <q-btn
-          dense
-          :icon="mdiAccount"
-          label="Names"
-          outline
-        />
-        <q-btn
-          dense
-          :icon="mdiMapMarker"
-          label="Places"
-          outline
-        />
-        <q-btn
-          dense
-          :icon="mdiComment"
-          label="Comments"
-          outline
-        />
-      </q-btn-group>
+        toggle-color="white"
+        toggle-text-color="black"
+        @click="filterTypes(toggle)"
+      />
     </div>
 
-    <div class="q-mt-md">
-      <q-toolbar>
+    <div
+      v-if="entities"
+      class="q-mt-md"
+    >
+      <q-toolbar v-if="toggle && items.length">
         <q-toolbar-title class="text-uppercase">
           List of annotations in sheet
         </q-toolbar-title>
@@ -52,9 +34,10 @@
 
       <q-list>
         <q-item
-          v-for="annotation in annotations.items"
+          v-for="annotation in items"
           :key="annotation.id"
           class="q-pa-sm"
+          @click="getAnnotationId(annotation.target.id, annotation.body['x-content-type'])"
         >
           <q-item-section avatar>
             <q-icon :name="contentTypes[annotation.body['x-content-type']]" />
@@ -64,7 +47,6 @@
             <q-item-label
               overline
               class="text-uppercase"
-              @click="getAnnotationId(annotation.target.id, annotation.body['x-content-type'])"
             >
               {{ annotation.body.value }}
             </q-item-label>
@@ -93,7 +75,8 @@ export default {
         Person: mdiAccount,
         Place: mdiMapMarker,
       },
-      toggles: null,
+      items: [],
+      toggle: null,
     };
   },
   computed: {
@@ -107,6 +90,9 @@ export default {
     this.mdiComment = mdiComment;
   },
   methods: {
+    filterTypes(type) {
+      this.items = this.annotations.items.filter((t) => type === t.body['x-content-type']);
+    },
     getAnnotationId(targetId, contentType) {
       const split = targetId.split('/');
       const id = split[split.length - 1];
@@ -116,3 +102,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  .person {
+    background-color: 'white';
+  }
+</style>
