@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="Object.keys(annotations).length"
+    v-if="Array.isArray(annotations.items) && annotations.items.length"
     class="scroll-panel q-ma-md"
   >
     <!-- <q-btn-toggle
