@@ -147,9 +147,6 @@ export default {
     this.mdiMapMarker = mdiMapMarker;
     this.mdiComment = mdiComment;
   },
-  mounted() {
-
-  },
   methods: {
     getAnnotationId(targetId, contentType) {
       const split = targetId.split('/');
