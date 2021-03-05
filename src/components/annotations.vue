@@ -17,7 +17,7 @@
         spread
         :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
         :options="entity.options"
-        @click="filterTypes(entity.model)"
+        @click="annotationType = entity.model"
       />
     </div>
 
@@ -36,7 +36,6 @@
         <q-item
           v-for="annotation in items"
           :key="annotation.id"
-          @click="getAnnotationId(annotation.target.id, annotation.body['x-content-type'])"
         >
           <q-item-section avatar>
             <q-icon :name="entity.icons[annotation.body['x-content-type']]" />
@@ -46,6 +45,7 @@
             <q-item-label
               overline
               class="text-uppercase"
+              @click="getAnnotationId(annotation.target.id, annotation.body['x-content-type'])"
             >
               {{ annotation.body.value }}
             </q-item-label>
@@ -95,6 +95,7 @@ export default {
   },
   data() {
     return {
+      annotationType: '',
       entity: {
         icons: {
           Comment: mdiComment,
@@ -108,7 +109,6 @@ export default {
           { label: 'Comments', icon: mdiComment, value: 'Comment' },
         ],
       },
-      items: [],
       modifiers: [
         {
           label: 'Highlight',
@@ -138,8 +138,8 @@ export default {
     };
   },
   computed: {
-    current() {
-      return null;
+    items() {
+      return this.annotations.filter((type) => this.annotationType === type.body['x-content-type']);
     },
   },
   created() {
@@ -151,15 +151,10 @@ export default {
 
   },
   methods: {
-    filterTypes(type) {
-      this.items = this.annotations.filter((t) => type === t.body['x-content-type']);
-    },
     getAnnotationId(targetId, contentType) {
       const split = targetId.split('/');
       const id = split[split.length - 1];
 
-      // eslint-disable-next-line no-console
-      console.log('__ANNOTATION_ID__', targetId, contentType);
       this.$root.$emit('update-annotation-id', id, contentType);
     },
   },

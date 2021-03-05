@@ -49,6 +49,7 @@
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
+import { mdiAccount, mdiMapMarker, mdiComment } from '@quasar/extras/mdi-v5';
 
 export default {
   name: 'Content',
@@ -94,6 +95,10 @@ export default {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
 
+    this.mdiAccount = mdiAccount;
+    this.mdiMapMarker = mdiMapMarker;
+    this.mdiComment = mdiComment;
+
     this.content = await this.request(this.contenturls[0], 'text').then((data) => data);
   },
   mounted() {
@@ -106,17 +111,20 @@ export default {
     });
 
     this.$root.$on('update-annotation-id', (id, contentType) => {
-      const entityColors = {
-        Motif: 'green',
-        Person: 'blue',
-        Place: 'red',
+      const entityIcons = {
+        Comment: this.mdiComment,
+        Person: this.mdiAccount,
+        Place: this.mdiMapMarker,
       };
 
       const entity = document.getElementById(id);
-      const highlight = entityColors[contentType];
+      const icon = entityIcons[contentType];
+
+      // eslint-disable-next-line no-console
+      console.log('__CONTENT::ANNOTATION_ID__', id, contentType, icon);
 
       if (entity !== null) {
-        entity.style.backgroundColor = entity.style.backgroundColor === '' ? highlight : '';
+        entity.style.backgroundColor = entity.style.backgroundColor ? '' : 'red';
       }
     });
   },
@@ -136,18 +144,16 @@ export default {
       this.$root.$emit('update-fontsize', textsize);
     },
     getSupport(support) {
-      if (support.type === 'css' && support.url) {
+      if (Object.keys(support).length && support.type === 'css' && support.url) {
         this.request(support.url, 'text')
-          .then((data) => {
-            const styleElement = document.createElement('style');
+          .then(() => {
+            const styleElement = document.createElement('link');
 
-            styleElement.innerText = data.replace(
-              /^|}|,/gm, (x) => x.concat('#', this.nodeid, ' '),
-            );
+            // FIXME: content goes here ...
             document.head.appendChild(styleElement);
           })
-          .catch((e) => {
-            this.$q.notify({ message: `${e.message}: ${support.url}` });
+          .catch(() => {
+            // this.$q.notify({ message: `${e.message}: ${support.url}` });
           });
       }
     },
