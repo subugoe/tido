@@ -43,9 +43,10 @@
 
           <q-item-section>
             <q-item-label
+              :class="[entity.selected ? 'highlight' : '']"
               overline
               class="text-uppercase"
-              @click="getAnnotationId(annotation.target.id, annotation.body['x-content-type'])"
+              @click="entity.selected = !entity.selected; getAnnotationId(annotation.target.id, annotation.body['x-content-type'])"
             >
               {{ annotation.body.value }}
             </q-item-label>
@@ -108,6 +109,7 @@ export default {
           { label: 'Places', icon: mdiMapMarker, value: 'Place' },
           { label: 'Comments', icon: mdiComment, value: 'Comment' },
         ],
+        selected: false,
       },
       modifiers: [
         {
@@ -139,7 +141,10 @@ export default {
   },
   computed: {
     items() {
-      return this.annotations.filter((type) => this.annotationType === type.body['x-content-type']);
+      if (this.annotations.length) {
+        return this.annotations.filter((type) => this.annotationType === type.body['x-content-type']);
+      }
+      return [];
     },
   },
   created() {
@@ -157,3 +162,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  .highlight {
+    background-color: 'grey';
+  }
+</style>

@@ -111,20 +111,17 @@ export default {
     });
 
     this.$root.$on('update-annotation-id', (id, contentType) => {
-      const entityIcons = {
-        Comment: this.mdiComment,
-        Person: this.mdiAccount,
-        Place: this.mdiMapMarker,
+      const entityColors = {
+        Comment: 'red',
+        Person: 'grey',
+        Place: 'green',
       };
 
       const entity = document.getElementById(id);
-      const icon = entityIcons[contentType];
-
-      // eslint-disable-next-line no-console
-      console.log('__CONTENT::ANNOTATION_ID__', id, contentType, icon);
+      const color = entityColors[contentType];
 
       if (entity !== null) {
-        entity.style.backgroundColor = entity.style.backgroundColor ? '' : 'red';
+        entity.style.color = entity.style.color !== '' ? '' : color;
       }
     });
   },
@@ -149,7 +146,6 @@ export default {
           .then(() => {
             const styleElement = document.createElement('link');
 
-            // FIXME: content goes here ...
             document.head.appendChild(styleElement);
           })
           .catch(() => {
