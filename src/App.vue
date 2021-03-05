@@ -16,7 +16,7 @@
           :annotations="annotations"
           :collection="collection"
           :config="config"
-          :contenturl="contenturl"
+          :contenturls="contenturls"
           :fontsize="fontsize"
           :imageurl="imageurl"
           :item="item"
@@ -54,8 +54,8 @@ export default {
       annotations: {},
       collection: {},
       collectiontitle: '',
-      contenturl: '',
       config: {},
+      contenturls: [],
       fontsize: 14,
       imageurl: '',
       isCollection: false,
@@ -170,6 +170,26 @@ export default {
       this.config = JSON.parse(document.getElementById('tido-config').text);
     },
     /**
+      * filter all urls that match either of the MIME types "application/xhtml+xml" and "text/html"
+      * caller: *getItemData()*
+      *
+      * @param string array
+      *
+      * @return array
+      */
+    getContentUrl(content) {
+      const urls = [];
+
+      if (Array.isArray(content) && content.length) {
+        content.forEach((c) => {
+          if (c.type.match(/(application\/xhtml\+xml|text\/html)/)) {
+            urls.push(c.url);
+          }
+        });
+      }
+      return urls;
+    },
+    /**
       * fetch all data provided on 'item level'
       * caller: *mounted-hook*, *getManifest()*
       *
@@ -180,7 +200,7 @@ export default {
         .then((data) => {
           this.item = data;
 
-          this.contenturl = data.content || '';
+          this.contenturls = this.getContentUrl(data.content);
           this.imageurl = data.image.id || '';
 
           this.getAnnotations(data.annotationCollection);

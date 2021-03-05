@@ -98,9 +98,9 @@ export default {
       type: Object,
       default: () => {},
     },
-    contenturl: {
-      type: String,
-      default: () => '',
+    contenturls: {
+      type: Array,
+      default: () => [],
     },
     fontsize: {
       type: Number,
@@ -137,10 +137,10 @@ export default {
   },
   computed: {
     ready() {
-      return this.manifests.length && this.tree.length;
+      return this.manifests.length && this.tree.length && this.contenturls.length;
     },
     keys() {
-      return { 3: this.imageurl, 4: this.contenturl };
+      return { 3: this.imageurl, 4: this.contenturls[0] };
     },
   },
 };
