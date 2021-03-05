@@ -141,13 +141,15 @@ export default {
   methods: {
     filterTypes(type) {
       this.items = this.annotations.items.filter((t) => type === t.body['x-content-type']);
+      // eslint-disable-next-line no-console
+      console.log('__FILTER_TYPES__', type, this.items);
     },
     getAnnotationId(targetId, contentType) {
       const split = targetId.split('/');
       const id = split[split.length - 1];
 
       // eslint-disable-next-line no-console
-      console.log(targetId, contentType);
+      console.log('__ANNOTATION_ID__', targetId, contentType);
       this.$root.$emit('update-annotation-id', id, contentType);
     },
   },
