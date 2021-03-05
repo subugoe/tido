@@ -147,7 +147,7 @@ export default {
             document.head.appendChild(styleElement);
           })
           .catch((e) => {
-            this.$q.notify({ message: `${e.name}: ${e.message}` });
+            this.$q.notify({ message: `${e.message}: ${support.url}` });
           });
       }
     },

@@ -13,6 +13,7 @@
 
       <q-page-container>
         <router-view
+          :annotationcontext="annotationcontext"
           :annotations="annotations"
           :collection="collection"
           :config="config"
@@ -51,7 +52,8 @@ export default {
   mixins: [Panels],
   data() {
     return {
-      annotations: {},
+      annotationcontext: {},
+      annotations: [],
       collection: {},
       collectiontitle: '',
       config: {},
@@ -130,8 +132,10 @@ export default {
         .then((annotations) => {
           this.request(annotations.annotationCollection.first)
             .then((current) => {
-              if (current.annotationPage.items !== null) {
-                this.annotations = current.annotationPage;
+              this.annotationcontext = current.annotationPage;
+
+              if (current.annotationPage.items && current.annotationPage.items.length) {
+                this.annotations = current.annotationPage.items;
               }
             })
             .catch(() => {

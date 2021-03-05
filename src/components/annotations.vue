@@ -1,29 +1,32 @@
 <template>
-  <div class="q-ma-sm scroll-panel">
-    <!-- Toggle data types -->
+  <div
+    v-if="annotations.length"
+    class="q-ma-sm scroll-panel"
+  >
+    <!-- Data type Toggles -->
     <div>
-      <q-toolbar v-if="annotations && annotations.items">
+      <q-toolbar>
         <q-toolbar-title class="text-uppercase">
-          Show / hide data types ( {{ annotations.items.length }} / {{ annotations.partOf.total }} )
+          Show / hide data types ( {{ annotations.length }} / {{ annotationcontext.partOf.total }} )
         </q-toolbar-title>
       </q-toolbar>
 
       <q-btn-toggle
-        v-model="typeModel"
+        v-model="entity.model"
         clearable
         spread
         :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
-        :options="typeOptions"
-        @click="filterTypes(typeModel)"
+        :options="entity.options"
+        @click="filterTypes(entity.model)"
       />
     </div>
 
     <!-- List of Anotations -->
     <div
-      v-if="items"
-      class="scroll q-mt-lg"
+      v-if="items.length"
+      class="q-mt-lg"
     >
-      <q-toolbar v-if="items.length">
+      <q-toolbar>
         <q-toolbar-title class="text-uppercase">
           List of annotations in sheet
         </q-toolbar-title>
@@ -36,7 +39,7 @@
           @click="getAnnotationId(annotation.target.id, annotation.body['x-content-type'])"
         >
           <q-item-section avatar>
-            <q-icon :name="types[annotation.body['x-content-type']]" />
+            <q-icon :name="entity.icons[annotation.body['x-content-type']]" />
           </q-item-section>
 
           <q-item-section>
@@ -81,13 +84,30 @@ import { mdiAccount, mdiMapMarker, mdiComment } from '@quasar/extras/mdi-v5';
 export default {
   name: 'Annotations',
   props: {
-    annotations: {
+    annotationcontext: {
       type: Object,
       default: () => {},
+    },
+    annotations: {
+      type: Array,
+      default: () => [],
     },
   },
   data() {
     return {
+      entity: {
+        icons: {
+          Comment: mdiComment,
+          Person: mdiAccount,
+          Place: mdiMapMarker,
+        },
+        model: null,
+        options: [
+          { label: 'Names', icon: mdiAccount, value: 'Person' },
+          { label: 'Places', icon: mdiMapMarker, value: 'Place' },
+          { label: 'Comments', icon: mdiComment, value: 'Comment' },
+        ],
+      },
       items: [],
       modifiers: [
         {
@@ -115,22 +135,11 @@ export default {
           ],
         },
       ],
-      typeModel: null,
-      typeOptions: [
-        { label: 'Names', icon: mdiAccount, value: 'Person' },
-        { label: 'Places', icon: mdiMapMarker, value: 'Place' },
-        { label: 'Comments', icon: mdiComment, value: 'Comment' },
-      ],
-      types: {
-        Comment: mdiComment,
-        Person: mdiAccount,
-        Place: mdiMapMarker,
-      },
     };
   },
   computed: {
-    entities() {
-      return Array.isArray(this.annotations.items) && this.annotations.items.length;
+    current() {
+      return null;
     },
   },
   created() {
@@ -138,11 +147,12 @@ export default {
     this.mdiMapMarker = mdiMapMarker;
     this.mdiComment = mdiComment;
   },
+  mounted() {
+
+  },
   methods: {
     filterTypes(type) {
-      this.items = this.annotations.items.filter((t) => type === t.body['x-content-type']);
-      // eslint-disable-next-line no-console
-      console.log('__FILTER_TYPES__', type, this.items);
+      this.items = this.annotations.filter((t) => type === t.body['x-content-type']);
     },
     getAnnotationId(targetId, contentType) {
       const split = targetId.split('/');
