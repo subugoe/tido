@@ -104,7 +104,7 @@ export default {
       }
     });
 
-    this.$root.$on('update-annotation-id', (id, contentType) => {
+    this.$root.$on('update-entity-id', (id, contentType) => {
       const entityColors = {
         Comment: 'red',
         Person: 'grey',

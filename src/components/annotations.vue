@@ -7,7 +7,7 @@
     <div>
       <q-toolbar>
         <q-toolbar-title class="text-uppercase">
-          Show / hide data types ( {{ annotations.length }} / {{ annotationcontext.partOf.total }} )
+          Show / hide data types
         </q-toolbar-title>
       </q-toolbar>
 
@@ -34,11 +34,11 @@
 
       <q-list>
         <q-item
-          v-for="annotation in items"
-          :key="annotation.id"
+          v-for="(annotation, index) in items"
+          :key="index"
         >
           <q-item-section avatar>
-            <q-icon :name="entity.icons[annotation.body['x-content-type']]" />
+            <q-icon :name="entity.icons[annotation.contenttype]" />
           </q-item-section>
 
           <q-item-section>
@@ -46,9 +46,9 @@
               :class="[entity.selected ? 'highlight' : '']"
               overline
               class="text-uppercase"
-              @click="entity.selected = !entity.selected; getAnnotationId(annotation.target.id, annotation.body['x-content-type'])"
+              @click="getEntityId(index, annotation.contenttype)"
             >
-              {{ annotation.body.value }}
+              {{ annotation.text }} ( {{ annotation.comment }} )
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -85,7 +85,7 @@ import { mdiAccount, mdiMapMarker, mdiComment } from '@quasar/extras/mdi-v5';
 export default {
   name: 'Annotations',
   props: {
-    annotationcontext: {
+    annotationids: {
       type: Object,
       default: () => {},
     },
@@ -97,6 +97,7 @@ export default {
   data() {
     return {
       annotationType: '',
+      entityid: '',
       entity: {
         icons: {
           Comment: mdiComment,
@@ -142,7 +143,7 @@ export default {
   computed: {
     items() {
       if (this.annotations.length) {
-        return this.annotations.filter((type) => this.annotationType === type.body['x-content-type']);
+        return Object.values(this.annotationids).filter((type) => this.annotationType === type.contenttype);
       }
       return [];
     },
@@ -152,12 +153,17 @@ export default {
     this.mdiMapMarker = mdiMapMarker;
     this.mdiComment = mdiComment;
   },
-  methods: {
-    getAnnotationId(targetId, contentType) {
-      const split = targetId.split('/');
-      const id = split[split.length - 1];
+  mounted() {
 
-      this.$root.$emit('update-annotation-id', id, contentType);
+  },
+  methods: {
+    getEntityId(targetId, contentType) {
+      // const split = targetId.split('/');
+      // this.entityid = split[split.length - 1];
+
+      this.$root.$emit('update-entity-id', this.entityid, contentType);
+      // eslint-disable-next-line
+      console.log('__ANNOTATIONS__', this.annotationids);
     },
   },
 };

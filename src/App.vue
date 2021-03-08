@@ -13,7 +13,7 @@
 
       <q-page-container>
         <router-view
-          :annotationcontext="annotationcontext"
+          :annotationids="annotationids"
           :annotations="annotations"
           :collection="collection"
           :config="config"
@@ -52,7 +52,7 @@ export default {
   mixins: [Panels],
   data() {
     return {
-      annotationcontext: {},
+      annotationids: {},
       annotations: [],
       collection: {},
       collectiontitle: '',
@@ -132,16 +132,38 @@ export default {
         .then((annotations) => {
           this.request(annotations.annotationCollection.first)
             .then((current) => {
-              this.annotationcontext = current.annotationPage;
-
               if (current.annotationPage.items && current.annotationPage.items.length) {
                 this.annotations = current.annotationPage.items;
+                this.annotationids = this.getAnnotationIds(this.annotations);
               }
             })
             .catch(() => {
               this.$q.notify({ message: 'No annotations available' });
             });
         });
+    },
+    /**
+      * get annotation IDs of the current item
+      * and extract the corresponding text part
+      *
+      * caller: *getAnnotations()*
+      *
+      * @param array annotations
+      *
+      * @return object target
+      */
+    getAnnotationIds(annotations) {
+      const target = {};
+
+      annotations.forEach((item) => {
+        const split = item.target.id.split('/');
+        const id = split[split.length - 1];
+
+        const entity = document.getElementById(id);
+        target[id] = { text: entity.innerText, comment: item.body.value, contenttype: item.body['x-content-type'] };
+      });
+
+      return target;
     },
     /**
       * get collection data according to 'entrypoint'

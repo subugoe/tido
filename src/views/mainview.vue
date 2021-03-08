@@ -86,7 +86,7 @@ export default {
     Toolbar,
   },
   props: {
-    annotationcontext: {
+    annotationids: {
       type: Object,
       default: () => {},
     },
