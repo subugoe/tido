@@ -80,6 +80,14 @@ export default {
       sequenceindex: 0,
     };
   },
+  computed: {
+    supportType() {
+      const { support } = this.manifests[this.sequenceindex];
+
+      return Object.keys(support).length && support[this.sequenceindex].type === 'css' && support.url !== '';
+    },
+  },
+
   watch: {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
@@ -89,33 +97,21 @@ export default {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
 
-    this.mdiAccount = mdiAccount;
-    this.mdiMapMarker = mdiMapMarker;
-    this.mdiComment = mdiComment;
+    this.content = await this.request(this.contenturls[0], 'text').then((data) => {
+      if (this.supportType) {
+        this.getSupport(this.manifests[0].support);
+      }
 
-    this.content = await this.request(this.contenturls[0], 'text').then((data) => data);
+      return data;
+    });
   },
+
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
     this.$root.$on('update-sequence-index', (index) => {
-      if (Array.isArray(this.manifests[index].support) && this.manifests[index].support.length) {
-        this.manifests[index].support.map(this.getSupport);
-      }
-    });
-
-    this.$root.$on('update-entity-id', (id, contentType) => {
-      const entityColors = {
-        Comment: 'red',
-        Person: 'grey',
-        Place: 'green',
-      };
-
-      const entity = document.getElementById(id);
-      const color = entityColors[contentType];
-
-      if (entity !== null) {
-        entity.style.color = entity.style.color !== '' ? '' : color;
+      if (this.supportType) {
+        this.getSupport(this.manifests[index].support);
       }
     });
   },
@@ -135,17 +131,15 @@ export default {
       this.$root.$emit('update-fontsize', textsize);
     },
     getSupport(support) {
-      if (Object.keys(support).length && support.type === 'css' && support.url) {
-        this.request(support.url, 'text')
-          .then(() => {
-            const styleElement = document.createElement('link');
+      this.request(support[this.sequenceindex].url, 'text')
+        .then(() => {
+          const styleElement = document.createElement('link');
 
-            document.head.appendChild(styleElement);
-          })
-          .catch(() => {
-            // this.$q.notify({ message: `${e.message}: ${support.url}` });
-          });
-      }
+          styleElement.setAttribute('rel', 'stylesheet');
+          styleElement.setAttribute('href', support[this.sequenceindex].url);
+
+          document.head.appendChild(styleElement);
+        });
     },
   },
 };

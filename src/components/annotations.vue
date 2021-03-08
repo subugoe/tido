@@ -28,7 +28,13 @@
     >
       <q-toolbar>
         <q-toolbar-title class="text-uppercase">
-          List of annotations in sheet
+          List of annotations
+          <q-chip
+            :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
+            square
+          >
+            {{ items.length }}
+          </q-chip>
         </q-toolbar-title>
       </q-toolbar>
 
