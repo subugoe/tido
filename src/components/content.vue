@@ -83,6 +83,14 @@ export default {
       sequenceindex: 0,
     };
   },
+  computed: {
+    supportType() {
+      const { support } = this.manifests[this.sequenceindex];
+
+      return Object.keys(support).length && support[this.sequenceindex].type === 'css' && support.url !== '';
+    },
+  },
+
   watch: {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
@@ -93,17 +101,20 @@ export default {
     this.fasSearchMinus = fasSearchMinus;
 
     this.content = await this.request(this.contenturls[0], 'text').then((data) => {
-      this.getSupport(this.manifests[0].support, this.sequenceindex);
+      if (this.supportType) {
+        this.getSupport(this.manifests[0].support);
+      }
 
       return data;
     });
   },
+
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
     this.$root.$on('update-sequence-index', (index) => {
-      if (Object.keys(this.manifests[index].support).length) {
-        this.getSupport(this.manifests[index].support, this.sequenceindex);
+      if (this.supportType) {
+        this.getSupport(this.manifests[index].support);
       }
     });
   },
@@ -122,18 +133,16 @@ export default {
       textsize += textsize < max ? 1 : 0;
       this.$root.$emit('update-fontsize', textsize);
     },
-    getSupport(obj, index) {
-      if (obj[index].type === 'css') {
-        this.request(obj[index].url, 'text')
-          .then(() => {
-            const styleElement = document.createElement('link');
+    getSupport(support) {
+      this.request(support[this.sequenceindex].url, 'text')
+        .then(() => {
+          const styleElement = document.createElement('link');
 
-            styleElement.setAttribute('rel', 'stylesheet');
-            styleElement.setAttribute('href', obj[index].url);
+          styleElement.setAttribute('rel', 'stylesheet');
+          styleElement.setAttribute('href', support[this.sequenceindex].url);
 
-            document.head.appendChild(styleElement);
-          });
-      }
+          document.head.appendChild(styleElement);
+        });
     },
   },
 };
