@@ -74,10 +74,6 @@ export default {
       type: Function,
       default: null,
     },
-    transcription: {
-      type: String,
-      default: () => '',
-    },
   },
   data() {
     return {
