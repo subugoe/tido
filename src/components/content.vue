@@ -48,7 +48,7 @@
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
-import { mdiAccount, mdiMapMarker, mdiComment } from '@quasar/extras/mdi-v5';
+// import { mdiAccount, mdiMapMarker, mdiComment } from '@quasar/extras/mdi-v5';
 
 export default {
   name: 'Content',
@@ -105,13 +105,28 @@ export default {
       return data;
     });
   },
-
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
     this.$root.$on('update-sequence-index', (index) => {
       if (this.supportType) {
         this.getSupport(this.manifests[index].support);
+      }
+    });
+
+    this.$root.$on('update-entity-id', (id, contentType) => {
+      const entityColors = {
+        Comment: 'grey',
+        Person: 'blue',
+        Place: 'cyan',
+      };
+
+      const entity = document.getElementById(id);
+      const color = entityColors[contentType];
+
+      if (entity !== null) {
+        entity.style.backgroundColor = entity.style.backgroundColor !== '' ? '' : color;
+        // entity.innerHTML += '<span class="fas fasSearchMinus"></span>';
       }
     });
   },
