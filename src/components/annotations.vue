@@ -38,7 +38,7 @@
           :key="index"
         >
           <q-item-section avatar>
-            <q-icon :name="entity.icons[annotation.contenttype]" />
+            <q-icon :name="entity.icons[annotation[1].contenttype]" />
           </q-item-section>
 
           <q-item-section>
@@ -46,9 +46,9 @@
               :class="[entity.selected ? 'highlight' : '']"
               overline
               class="text-uppercase"
-              @click="getEntityId(index, annotation.contenttype)"
+              @click="$root.$emit('update-entity-id', annotation[0], annotation[1].contenttype)"
             >
-              {{ annotation.text }} ( {{ annotation.comment }} )
+              {{ annotation[1].text }} ( {{ annotation[1].comment }} )
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -97,7 +97,6 @@ export default {
   data() {
     return {
       annotationType: '',
-      entityid: '',
       entity: {
         icons: {
           Comment: mdiComment,
@@ -143,7 +142,7 @@ export default {
   computed: {
     items() {
       if (this.annotations.length) {
-        return Object.values(this.annotationids).filter((type) => this.annotationType === type.contenttype);
+        return Object.entries(this.annotationids).filter((type) => this.annotationType === type[1].contenttype);
       }
       return [];
     },
@@ -152,19 +151,6 @@ export default {
     this.mdiAccount = mdiAccount;
     this.mdiMapMarker = mdiMapMarker;
     this.mdiComment = mdiComment;
-  },
-  mounted() {
-
-  },
-  methods: {
-    getEntityId(targetId, contentType) {
-      // const split = targetId.split('/');
-      // this.entityid = split[split.length - 1];
-
-      this.$root.$emit('update-entity-id', this.entityid, contentType);
-      // eslint-disable-next-line
-      console.log('__ANNOTATIONS__', this.annotationids);
-    },
   },
 };
 </script>
