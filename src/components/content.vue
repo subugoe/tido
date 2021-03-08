@@ -39,7 +39,6 @@
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div
         :class="['scroll-panel', config.rtl ? 'rtl' : '']"
-        :id="nodeid"
         ref="contentsize"
         v-html="content"
       />
@@ -78,7 +77,6 @@ export default {
   data() {
     return {
       content: '',
-      nodeid: '__text',
       sequenceindex: 0,
     };
   },
