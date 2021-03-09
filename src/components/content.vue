@@ -88,6 +88,8 @@ export default {
   computed: {
     supportType() {
       const { support } = this.manifests[this.sequenceindex];
+      // eslint-disable-next-line no-console
+      console.log('__CONTENT-SUPPORTTYPE-PROP__', support);
 
       return Object.keys(support).length && support.url !== '';
     },
@@ -164,6 +166,9 @@ export default {
       support.forEach((s) => {
         this.request(s.url, 'text')
           .then(() => {
+            // eslint-disable-next-line no-console
+            console.log('__CONTENT-SUPPORTTYPE-INSIDE-FUNC__', s);
+
             const styleElement = document.createElement('link');
 
             styleElement.setAttribute('rel', 'stylesheet');
