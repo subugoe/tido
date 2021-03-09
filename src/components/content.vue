@@ -78,6 +78,11 @@ export default {
     return {
       content: '',
       sequenceindex: 0,
+      typeMap: {
+        Place: 'placeName',
+        Person: 'persName',
+        Comment: 'comment',
+      },
     };
   },
   computed: {
@@ -128,6 +133,16 @@ export default {
         entity.style.backgroundColor = entity.style.backgroundColor !== '' ? '' : color;
         // entity.innerHTML += '<span class="fas fasSearchMinus"></span>';
       }
+    });
+
+    this.$root.$on('update-highlighting', (model, type) => {
+      const entities = document.getElementsByClassName(this.typeMap[type]);
+      // eslint-disable-next-line no-console
+      console.log('__ENTITIES__', entities);
+
+      Object.values(entities).forEach((e) => {
+        e.classList.toggle(this.typeMap[type], true);
+      });
     });
   },
   methods: {

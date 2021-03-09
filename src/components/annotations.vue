@@ -77,6 +77,7 @@
               :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
               :options="modifier.options"
               size="md"
+              @click="dynamicEvent(modifier.event, modifier.model)"
             />
           </span>
         </div>
@@ -119,6 +120,7 @@ export default {
       },
       modifiers: [
         {
+          event: 'highlight',
           label: 'Highlight',
           limit: 0,
           model: null,
@@ -127,19 +129,21 @@ export default {
           ],
         },
         {
+          event: 'sortByOrder',
           label: 'Sorting order',
           limit: 1,
           model: null,
           options: [
-            { label: 'Alphabetic', value: 1 }, { label: 'Appearance', value: 0 },
+            { label: 'Alphabetic', value: 'alpha' }, { label: 'Appearance', value: 'sequence' },
           ],
         },
         {
+          event: 'sortByDirection',
           label: 'Sorting direction',
           limit: 1,
           model: null,
           options: [
-            { label: 'Ascending', value: 1 }, { label: 'Descending', value: 0 },
+            { label: 'Ascending', value: 'asc' }, { label: 'Descending', value: 'desc' },
           ],
         },
       ],
@@ -157,6 +161,24 @@ export default {
     this.mdiAccount = mdiAccount;
     this.mdiMapMarker = mdiMapMarker;
     this.mdiComment = mdiComment;
+  },
+  methods: {
+    dynamicEvent(event, model) {
+      this[event](model);
+    },
+    highlight(model) {
+      this.$root.$emit('update-highlighting', model, this.annotationType);
+    },
+    sortByOrder(model) {
+      return model === 'alpha'
+        ? this.items.sort((x, y) => x[1].text.localeCompare(y[1].text))
+        : this.items;
+    },
+    sortByDirection(model) {
+      return model === 'asc'
+        ? this.items.sort((x, y) => x[1].text.localeCompare(y[1].text))
+        : this.items.reverse();
+    },
   },
 };
 </script>
