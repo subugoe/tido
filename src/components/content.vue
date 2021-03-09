@@ -89,7 +89,7 @@ export default {
     supportType() {
       const { support } = this.manifests[this.sequenceindex];
 
-      return Object.keys(support).length && support[this.sequenceindex].type === 'css' && support.url !== '';
+      return Object.keys(support).length && support.url !== '';
     },
   },
 
@@ -161,15 +161,17 @@ export default {
       this.$root.$emit('update-fontsize', textsize);
     },
     getSupport(support) {
-      this.request(support[this.sequenceindex].url, 'text')
-        .then(() => {
-          const styleElement = document.createElement('link');
+      support.forEach((s) => {
+        this.request(s.url, 'text')
+          .then(() => {
+            const styleElement = document.createElement('link');
 
-          styleElement.setAttribute('rel', 'stylesheet');
-          styleElement.setAttribute('href', support[this.sequenceindex].url);
+            styleElement.setAttribute('rel', 'stylesheet');
+            styleElement.setAttribute('href', s.url);
 
-          document.head.appendChild(styleElement);
-        });
+            document.head.appendChild(styleElement);
+          });
+      });
     },
   },
 };
