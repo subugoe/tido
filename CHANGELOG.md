@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.6.0...v1.7.0) (2021-03-10)
+
+
+### Features
+
+* adjust content type/s according to the recently introduced content key from the API ([5c946fc](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/5c946fce6d9486e009441f11089aa138c12c1e3a))
+* filter contenturls according to a matching mime-type "application/xhtml+xml" and "text/html" ([ffcb7ce](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/ffcb7ce5196098952328e3b213a0a0db875bd0e8))
+* implemented Tido to add css styles from Ahikar ([a46ac66](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/a46ac6680116ac76bc98a7f4742dd32fb5cbb3c4))
+
+
+### Bug Fixes
+
+* refactor logic to fix subject array list ([9d2c5c3](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/9d2c5c31ee45680a95baa509ca3aaab9d8b03d8e))
+* warning bug related to stylesheet from support obj ([a592b9b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/a592b9b23ecc5107343c019ed7adfa0c1278beb9))
+
+
+### Chore
+
+* add basic unit test. to be expanded ([418c6ba](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/418c6ba95c5701b7cb3b1c18236bcf0b8f8dc217))
+* adjust unit test according to the change of the datatype ([9be7de2](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/9be7de257e671d934c7add46305d8e5136af7ff3))
+* remove entrypoint ([03f95f0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/03f95f0319e91a752f020dec0cba331ae2480a71))
+* remove log stmt ([2cfde38](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/2cfde380b2559894b5201c760a94f2c8cbf2871f))
+* remove obsolete property "language" ([9313da5](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/9313da5549c8a3650981a971e16128aec6638030))
+
+
+### Refactoring
+
+* refactor support logic according to review comments ([73c04c9](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/73c04c971d972ca78bf6394c4d321755161ff59c))
+
 ## [1.6.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.5.0...v1.6.0) (2021-02-23)
 
 
