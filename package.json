@@ -31,14 +31,14 @@
   },
   "private": false,
   "dependencies": {
-    "@quasar/extras": "^1.9.18",
+    "@quasar/extras": "^1.9.19",
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.1",
     "openseadragon": "^2.4.2",
-    "quasar": "^1.15.4",
+    "quasar": "^1.15.5",
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
-    "@quasar/app": "^2.1.15",
+    "@quasar/app": "^2.2.1",
     "autoprefixer": "^9.8.6",
     "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.3",
@@ -54,7 +54,7 @@
     "sass": "^1.32.8",
     "sass-loader": "^10.1.1",
     "standard-version": "^9.1.1",
-    "stylelint": "^13.11.0",
+    "stylelint": "^13.12.0",
     "stylelint-8-point-grid": "^1.0.0",
     "stylelint-config-sass-guidelines": "^8.0.0",
     "stylelint-no-unsupported-browser-features": "^4.1.4"
