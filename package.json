@@ -101,8 +101,7 @@
     "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version"
   },
   "files": [
-    "dist",
-    "src/statics/support.css"
+    "dist"
   ],
   "publishConfig": {
     "@subugoe:registry": "https://gitlab.gwdg.de/api/v4/projects/10921/packages/npm/"
