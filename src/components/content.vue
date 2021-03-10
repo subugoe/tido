@@ -164,12 +164,13 @@ export default {
       support.forEach((s) => {
         this.request(s.url, 'text')
           .then(() => {
-            const styleElement = document.createElement('link');
+            const supportUrl = document.createElement('link');
 
-            styleElement.setAttribute('rel', 'stylesheet');
-            styleElement.setAttribute('href', s.url);
+            if (s.type === 'css') supportUrl.setAttribute('rel', 'stylesheet');
 
-            document.head.appendChild(styleElement);
+            supportUrl.setAttribute('href', s.url);
+
+            document.head.appendChild(supportUrl);
           });
       });
     },
