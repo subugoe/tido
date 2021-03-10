@@ -3,31 +3,17 @@
     <div class="row sticky">
       <div>
         <q-btn
+          v-for="(button, index) in buttons"
+          :key="index"
           class="q-mr-sm q-mb-sm cursor-pointer"
           flat
           round
           size="md"
-          title="Increase Textsize"
-          @click="increase()"
+          :title="button.title"
+          @click="dynamicEvent(button.event)"
         >
           <q-icon
-            :name="fasSearchPlus"
-            size="sm"
-            :color="$q.dark.isActive ? 'white' : 'accent'"
-          />
-        </q-btn>
-
-        <q-btn
-          class="q-mr-sm q-mb-sm cursor-pointer"
-          flat
-          round
-          size="md"
-          title="Decrease Textsize"
-          :color="$q.dark.isActive ? 'white' : 'accent'"
-          @click="decrease()"
-        >
-          <q-icon
-            :name="fasSearchMinus"
+            :name="button.icon"
             size="sm"
             :color="$q.dark.isActive ? 'white' : 'accent'"
           />
@@ -76,6 +62,10 @@ export default {
   },
   data() {
     return {
+      buttons: [
+        { event: 'increase', icon: fasSearchPlus, title: 'Increase Textsize' },
+        { event: 'decrease', icon: fasSearchMinus, title: 'Decrease Textsize' },
+      ],
       content: '',
       sequenceindex: 0,
       typeMap: {
@@ -92,16 +82,12 @@ export default {
       return Object.keys(support).length && support.url !== '';
     },
   },
-
   watch: {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
     },
   },
   async created() {
-    this.fasSearchPlus = fasSearchPlus;
-    this.fasSearchMinus = fasSearchMinus;
-
     this.content = await this.request(this.contenturls[0], 'text').then((data) => {
       if (this.supportType) {
         this.getSupport(this.manifests[0].support);
@@ -146,6 +132,9 @@ export default {
     });
   },
   methods: {
+    dynamicEvent(event) {
+      this[event]();
+    },
     decrease() {
       const min = 8;
       let textsize = this.fontsize;
