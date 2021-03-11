@@ -52,7 +52,7 @@ export default {
   mixins: [Panels],
   data() {
     return {
-      annotationids: {},
+      annotationids: [],
       annotations: [],
       collection: {},
       collectiontitle: '',
@@ -150,20 +150,25 @@ export default {
       *
       * @param array annotations
       *
-      * @return object target
+      * @return array identifiers
       */
     getAnnotationIds(annotations) {
-      const target = {};
+      const identifiers = [];
 
       annotations.forEach((item) => {
         const split = item.target.id.split('/');
         const id = split[split.length - 1];
 
         const entity = document.getElementById(id);
-        target[id] = { text: entity.innerText, comment: item.body.value, contenttype: item.body['x-content-type'] };
+        identifiers.push({
+          id,
+          comment: item.body.value,
+          contenttype: item.body['x-content-type'],
+          text: entity.innerText,
+        });
       });
 
-      return target;
+      return identifiers;
     },
     /**
       * get collection data according to 'entrypoint'

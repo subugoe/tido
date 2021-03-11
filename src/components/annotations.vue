@@ -44,7 +44,7 @@
           :key="index"
         >
           <q-item-section avatar>
-            <q-icon :name="entity.icons[annotation[1].contenttype]" />
+            <q-icon :name="entity.icons[annotation.contenttype]" />
           </q-item-section>
 
           <q-item-section>
@@ -52,9 +52,9 @@
               :class="[entity.selected ? 'highlight' : '']"
               overline
               class="text-uppercase"
-              @click="$root.$emit('update-entity-id', annotation[0], annotation[1].contenttype)"
+              @click="$root.$emit('toggle-entity-highlighting', annotation.id, annotation.contenttype)"
             >
-              {{ annotation[1].text }} ( {{ annotation[1].comment }} )
+              {{ annotation.text }} ({{ annotation.comment }})
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -74,7 +74,7 @@
           <span class="float-right">
             <q-btn-toggle
               v-model="modifier.model"
-              :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
+              :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent text-white'"
               :options="modifier.options"
               size="md"
               @click="dynamicEvent(modifier.event, modifier.model)"
@@ -93,8 +93,8 @@ export default {
   name: 'Annotations',
   props: {
     annotationids: {
-      type: Object,
-      default: () => {},
+      type: Array,
+      default: () => [],
     },
     annotations: {
       type: Array,
@@ -110,7 +110,7 @@ export default {
           Person: mdiAccount,
           Place: mdiMapMarker,
         },
-        model: null,
+        model: [],
         options: [
           { label: 'Names', icon: mdiAccount, value: 'Person' },
           { label: 'Places', icon: mdiMapMarker, value: 'Place' },
@@ -120,10 +120,10 @@ export default {
       },
       modifiers: [
         {
-          event: 'highlight',
+          event: 'highlightingMode',
           label: 'Highlight',
           limit: 0,
-          model: null,
+          model: 0,
           options: [
             { label: 'All', value: 1 }, { label: 'None', value: 0 },
           ],
@@ -141,7 +141,7 @@ export default {
           event: 'sortByDirection',
           label: 'Sorting direction',
           limit: 1,
-          model: null,
+          model: 'asc',
           options: [
             { label: 'Ascending', value: 'asc' }, { label: 'Descending', value: 'desc' },
           ],
@@ -151,10 +151,7 @@ export default {
   },
   computed: {
     items() {
-      if (this.annotations.length) {
-        return Object.entries(this.annotationids).filter((type) => this.annotationType === type[1].contenttype);
-      }
-      return [];
+      return Object.values(this.annotationids).filter((type) => this.annotationType === type.contenttype);
     },
   },
   created() {
@@ -166,18 +163,18 @@ export default {
     dynamicEvent(event, model) {
       this[event](model);
     },
-    highlight(model) {
-      this.$root.$emit('update-highlighting', model, this.annotationType);
+    highlightingMode(model) {
+      this.$root.$emit('toggle-highlighting-mode', model, this.annotationType);
     },
     sortByOrder(model) {
       return model === 'alpha'
-        ? this.items.sort((x, y) => x[1].text.localeCompare(y[1].text))
-        : this.items;
+        ? this.items.sort((x, y) => x.text.localeCompare(y.text))
+        : this.items.reverse();
     },
     sortByDirection(model) {
-      return model === 'asc'
-        ? this.items.sort((x, y) => x[1].text.localeCompare(y[1].text))
-        : this.items.reverse();
+      return model === 'desc' && this.modifiers[2].model !== 'desc'
+        ? this.items.reverse()
+        : this.items;
     },
   },
 };

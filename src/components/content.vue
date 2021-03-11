@@ -99,36 +99,26 @@ export default {
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
+    this.$root.$on('toggle-entity-highlighting', (id) => {
+      const entity = document.getElementById(id);
+
+      if (entity !== null) {
+        entity.style.textDecoration = entity.style.textDecoration ? '' : 'underline overline solid 2px';
+      }
+    });
+
+    this.$root.$on('toggle-highlighting-mode', (model, type) => {
+      const entities = document.getElementsByClassName(this.typeMap[type]);
+
+      Object.values(entities).forEach((e) => {
+        e.style.textDecoration = !model ? '' : 'underline overline solid 3px';
+      });
+    });
+
     this.$root.$on('update-sequence-index', (index) => {
       if (this.supportType) {
         this.getSupport(this.manifests[index].support);
       }
-    });
-
-    this.$root.$on('update-entity-id', (id, contentType) => {
-      const entityColors = {
-        Comment: 'grey',
-        Person: 'blue',
-        Place: 'cyan',
-      };
-
-      const entity = document.getElementById(id);
-      const color = entityColors[contentType];
-
-      if (entity !== null) {
-        entity.style.backgroundColor = entity.style.backgroundColor !== '' ? '' : color;
-        // entity.innerHTML += '<span class="fas fasSearchMinus"></span>';
-      }
-    });
-
-    this.$root.$on('update-highlighting', (model, type) => {
-      const entities = document.getElementsByClassName(this.typeMap[type]);
-      // eslint-disable-next-line no-console
-      console.log('__ENTITIES__', entities);
-
-      Object.values(entities).forEach((e) => {
-        e.classList.toggle(this.typeMap[type], true);
-      });
     });
   },
   methods: {
@@ -167,7 +157,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .rtl {
     direction: rtl;
   }

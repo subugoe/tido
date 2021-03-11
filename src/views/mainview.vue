@@ -87,8 +87,8 @@ export default {
   },
   props: {
     annotationids: {
-      type: Object,
-      default: () => {},
+      type: Array,
+      default: () => [],
     },
     annotations: {
       type: Array,
