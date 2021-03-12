@@ -50,10 +50,6 @@ body {
   scrollbar-width: none;
 }
 
-.scroll-panel::-webkit-scrollbar {
-  display: none;
-}
-
 .panels-target > * {
   border-right: 1px solid #ddd !important;
   flex: auto;
