@@ -103,7 +103,7 @@ export default {
       const entity = document.getElementById(id);
 
       if (entity !== null) {
-        entity.style.textDecoration = entity.style.textDecoration ? '' : 'underline overline solid 2px';
+        entity.style.borderBottom = entity.style.borderBottom ? '' : 'thick solid';
       }
     });
 
@@ -111,7 +111,7 @@ export default {
       const entities = document.getElementsByClassName(this.typeMap[type]);
 
       Object.values(entities).forEach((e) => {
-        e.style.textDecoration = !model ? '' : 'underline overline solid 3px';
+        e.style.borderBottom = !model ? '' : 'solid';
       });
     });
 
