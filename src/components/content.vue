@@ -103,16 +103,20 @@ export default {
       const entity = document.getElementById(id);
 
       if (entity !== null) {
-        entity.style.borderBottom = entity.style.borderBottom ? '' : 'thick solid';
+        entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
       }
     });
 
-    this.$root.$on('toggle-highlighting-mode', (model, type) => {
-      const entities = document.getElementsByClassName(this.typeMap[type]);
+    this.$root.$on('toggle-highlighting-mode', (model, types) => {
+      if (Array.isArray(types) && types.length) {
+        types.forEach((type) => {
+          const entities = document.getElementsByClassName(this.typeMap[type]);
 
-      Object.values(entities).forEach((e) => {
-        e.style.borderBottom = !model ? '' : 'solid';
-      });
+          Object.values(entities).forEach((e) => {
+            e.style.borderBottom = !model ? '' : 'solid';
+          });
+        });
+      }
     });
 
     this.$root.$on('update-sequence-index', (index) => {

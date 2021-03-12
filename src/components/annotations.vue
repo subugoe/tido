@@ -4,20 +4,33 @@
     class="q-ma-sm scroll-panel"
   >
     <!-- Data type Toggles -->
-    <div>
+    <div class="text-uppercase">
       <q-toolbar>
-        <q-toolbar-title class="text-uppercase">
+        <q-toolbar-title>
           Show / hide data types
         </q-toolbar-title>
       </q-toolbar>
 
-      <q-btn-toggle
-        v-model="entity.model"
-        clearable
-        spread
-        :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
-        :options="entity.options"
-        @click="annotationType = entity.model"
+      <q-toggle
+        v-model="dataTypes.model"
+        :icon="mdiAccount"
+        label="Names"
+        size="lg"
+        val="Person"
+      />
+      <q-toggle
+        v-model="dataTypes.model"
+        :icon="mdiMapMarker"
+        label="Places"
+        size="lg"
+        val="Place"
+      />
+      <q-toggle
+        v-model="dataTypes.model"
+        :icon="mdiComment"
+        label="Comments"
+        size="lg"
+        val="Comment"
       />
     </div>
 
@@ -42,17 +55,17 @@
         <q-item
           v-for="(annotation, index) in items"
           :key="index"
+          @click="dataTypes.selected = !dataTypes.selected"
         >
           <q-item-section avatar>
-            <q-icon :name="entity.icons[annotation.contenttype]" />
+            <q-icon :name="dataTypes.icons[annotation.contenttype]" />
           </q-item-section>
 
           <q-item-section>
             <q-item-label
-              :class="[entity.selected ? 'highlight' : '']"
+              :class="['text-uppercase', dataTypes.selected ? highlight : '']"
               overline
-              class="text-uppercase"
-              @click="$root.$emit('toggle-entity-highlighting', annotation.id, annotation.contenttype)"
+              @click="highlightEntity(annotation.id, annotation.contenttype)"
             >
               {{ annotation.text }} ({{ annotation.comment }})
             </q-item-label>
@@ -100,11 +113,17 @@ export default {
       type: Array,
       default: () => [],
     },
+    config: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {
-      annotationType: '',
-      entity: {
+      highlight: {
+        active: true,
+      },
+      dataTypes: {
         icons: {
           Comment: mdiComment,
           Person: mdiAccount,
@@ -132,7 +151,7 @@ export default {
           event: 'sortByOrder',
           label: 'Sorting order',
           limit: 1,
-          model: null,
+          model: 'sequence',
           options: [
             { label: 'Alphabetic', value: 'alpha' }, { label: 'Appearance', value: 'sequence' },
           ],
@@ -151,7 +170,7 @@ export default {
   },
   computed: {
     items() {
-      return Object.values(this.annotationids).filter((type) => this.annotationType === type.contenttype);
+      return Object.values(this.annotationids).filter((type) => this.dataTypes.model.includes(type.contenttype));
     },
   },
   created() {
@@ -159,12 +178,22 @@ export default {
     this.mdiMapMarker = mdiMapMarker;
     this.mdiComment = mdiComment;
   },
+  mounted() {
+    if (this.config.annotationmode === true) {
+      this.dataTypes.model = ['Person', 'Place', 'Comment'];
+      this.modifiers[0].model = 1;
+      this.highlightingMode(this.modifiers[0].model);
+    }
+  },
   methods: {
     dynamicEvent(event, model) {
       this[event](model);
     },
+    highlightEntity(id, type) {
+      this.$root.$emit('toggle-entity-highlighting', id, type);
+    },
     highlightingMode(model) {
-      this.$root.$emit('toggle-highlighting-mode', model, this.annotationType);
+      this.$root.$emit('toggle-highlighting-mode', model, this.dataTypes.model);
     },
     sortByOrder(model) {
       return model === 'alpha'
@@ -179,9 +208,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-  .highlight {
-    background-color: 'grey';
-  }
-</style>
