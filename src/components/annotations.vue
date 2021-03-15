@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="annotations.length"
-    class="q-ma-sm scroll-panel"
+    class="q-ma-sm"
   >
     <!-- Data type Toggles -->
     <div class="text-uppercase">
@@ -12,29 +12,17 @@
       </q-toolbar>
 
       <q-toggle
-        v-model="dataTypes.model"
-        :icon="mdiAccount"
-        label="Names"
+        v-for="(type, index) in types"
+        :key="index"
+        v-model="typeModel"
+        :icon="type.icon"
+        :label="type.label"
         size="lg"
-        val="Person"
-      />
-      <q-toggle
-        v-model="dataTypes.model"
-        :icon="mdiMapMarker"
-        label="Places"
-        size="lg"
-        val="Place"
-      />
-      <q-toggle
-        v-model="dataTypes.model"
-        :icon="mdiComment"
-        label="Comments"
-        size="lg"
-        val="Comment"
+        :val="type.value"
       />
     </div>
 
-    <!-- List of Anotations -->
+    <!-- List of Annotations -->
     <div
       v-if="items.length"
       class="q-mt-lg"
@@ -55,15 +43,16 @@
         <q-item
           v-for="(annotation, index) in items"
           :key="index"
-          @click="dataTypes.selected = !dataTypes.selected"
+          :active="false"
+          class="cursor-pointer"
         >
           <q-item-section avatar>
-            <q-icon :name="dataTypes.icons[annotation.contenttype]" />
+            <q-icon :name="icons[annotation.contenttype]" />
           </q-item-section>
 
           <q-item-section>
             <q-item-label
-              :class="['text-uppercase', dataTypes.selected ? highlight : '']"
+              class="text-uppercase"
               overline
               @click="highlightEntity(annotation.id, annotation.contenttype)"
             >
@@ -72,10 +61,25 @@
           </q-item-section>
         </q-item>
       </q-list>
+
+      <!-- <div
+        v-for="(annotation, index) in items"
+        :key="index"
+      >
+        <q-btn
+          flat
+          padding="sm"
+          :icon="icons[annotation.contenttype]"
+          :label="annotation.text"
+          @click="highlightEntity(annotation.id, annotation.contenttype)"
+        >
+          <span class="q-pl-md">({{ annotation.comment }})</span>
+        </q-btn>
+      </div> -->
     </div>
 
     <!-- Modifiers -->
-    <div class="absolute-bottom">
+    <div>
       <div
         v-for="(modifier, index) in modifiers"
         :key="index"
@@ -120,26 +124,14 @@ export default {
   },
   data() {
     return {
-      highlight: {
-        active: true,
-      },
-      dataTypes: {
-        icons: {
-          Comment: mdiComment,
-          Person: mdiAccount,
-          Place: mdiMapMarker,
-        },
-        model: [],
-        options: [
-          { label: 'Names', icon: mdiAccount, value: 'Person' },
-          { label: 'Places', icon: mdiMapMarker, value: 'Place' },
-          { label: 'Comments', icon: mdiComment, value: 'Comment' },
-        ],
-        selected: false,
+      icons: {
+        Comment: mdiComment,
+        Person: mdiAccount,
+        Place: mdiMapMarker,
       },
       modifiers: [
         {
-          event: 'highlightingMode',
+          event: 'highlightMode',
           label: 'Highlight',
           limit: 0,
           model: 0,
@@ -148,7 +140,7 @@ export default {
           ],
         },
         {
-          event: 'sortByOrder',
+          event: 'sortOrder',
           label: 'Sorting order',
           limit: 1,
           model: 'sequence',
@@ -157,7 +149,7 @@ export default {
           ],
         },
         {
-          event: 'sortByDirection',
+          event: 'sortDirection',
           label: 'Sorting direction',
           limit: 1,
           model: 'asc',
@@ -166,24 +158,33 @@ export default {
           ],
         },
       ],
+      typeModel: [],
+      types: [
+        { icon: mdiAccount, label: 'Names', value: 'Person' },
+        { icon: mdiMapMarker, label: 'Places', value: 'Place' },
+        { icon: mdiComment, label: 'Comments', value: 'Comment' },
+      ],
     };
   },
   computed: {
     items() {
-      return Object.values(this.annotationids).filter((type) => this.dataTypes.model.includes(type.contenttype));
+      return Object.values(this.annotationids).filter((type) => this.typeModel.includes(type.contenttype));
     },
   },
   created() {
-    this.mdiAccount = mdiAccount;
-    this.mdiMapMarker = mdiMapMarker;
-    this.mdiComment = mdiComment;
+    if (this.config.annotationmode === true) {
+      // show all Annotations at start
+      this.typeModel = ['Person', 'Place', 'Comment'];
+      // set the appropriate model: 1 === 'All'
+      this.modifiers[0].model = 1;
+      // emit the state (orresponding listener to be found in in @components/content.vue)
+      this.highlightMode(this.modifiers[0].model);
+    }
   },
   mounted() {
-    if (this.config.annotationmode === true) {
-      this.dataTypes.model = ['Person', 'Place', 'Comment'];
-      this.modifiers[0].model = 1;
-      this.highlightingMode(this.modifiers[0].model);
-    }
+    this.$root.$on('update-item', () => {
+      // TODO: Update computed property (items) on item update
+    });
   },
   methods: {
     dynamicEvent(event, model) {
@@ -192,18 +193,16 @@ export default {
     highlightEntity(id, type) {
       this.$root.$emit('toggle-entity-highlighting', id, type);
     },
-    highlightingMode(model) {
-      this.$root.$emit('toggle-highlighting-mode', model, this.dataTypes.model);
+    highlightMode(model) {
+      this.$root.$emit('toggle-highlight-mode', model, this.typeModel);
     },
-    sortByOrder(model) {
+    sortDirection() {
+      return this.items.reverse();
+    },
+    sortOrder(model) {
       return model === 'alpha'
         ? this.items.sort((x, y) => x.text.localeCompare(y.text))
-        : this.items.reverse();
-    },
-    sortByDirection(model) {
-      return model === 'desc' && this.modifiers[2].model !== 'desc'
-        ? this.items.reverse()
-        : this.items;
+        : this.items.sort((x, y) => x.id.localeCompare(y.id));
     },
   },
 };

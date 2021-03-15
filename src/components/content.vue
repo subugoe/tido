@@ -99,6 +99,10 @@ export default {
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
+    if (this.config.annotationmode) {
+      this.highlight();
+    }
+
     this.$root.$on('toggle-entity-highlighting', (id) => {
       const entity = document.getElementById(id);
 
@@ -107,16 +111,8 @@ export default {
       }
     });
 
-    this.$root.$on('toggle-highlighting-mode', (model, types) => {
-      if (Array.isArray(types) && types.length) {
-        types.forEach((type) => {
-          const entities = document.getElementsByClassName(this.typeMap[type]);
-
-          Object.values(entities).forEach((e) => {
-            e.style.borderBottom = !model ? '' : 'solid';
-          });
-        });
-      }
+    this.$root.$on('toggle-highlight-mode', (model, types) => {
+      this.highlight(model, types);
     });
 
     this.$root.$on('update-sequence-index', (index) => {
@@ -156,6 +152,17 @@ export default {
             document.head.appendChild(supportUrl);
           });
       });
+    },
+    highlight(model = 1, types = Object.keys(this.typeMap)) {
+      if (Array.isArray(types) && types.length) {
+        types.forEach((type) => {
+          const entities = document.getElementsByClassName(this.typeMap[type]);
+
+          Object.values(entities).forEach((e) => {
+            e.style.borderBottom = !model ? '' : 'solid';
+          });
+        });
+      }
     },
   },
 };
