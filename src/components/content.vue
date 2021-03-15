@@ -99,6 +99,8 @@ export default {
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
+    this.addIcons();
+
     if (this.config.annotationmode) {
       this.highlight();
     }
@@ -122,6 +124,18 @@ export default {
     });
   },
   methods: {
+    addIcons() {
+      Object.values(this.typeMap).forEach((type) => {
+        const entities = document.getElementsByClassName(type);
+
+        const icon = document.createElement('span');
+        icon.classList.add('fas fa-search-minus');
+
+        entities.values.forEach((entity) => {
+          entity.appendChild(icon);
+        });
+      });
+    },
     dynamicEvent(event) {
       this[event]();
     },
@@ -154,6 +168,9 @@ export default {
       });
     },
     highlight(model = 1, types = Object.keys(this.typeMap)) {
+      // eslint-disable-next-line no-console
+      console.log('__CONTENT__', model, types);
+
       if (Array.isArray(types) && types.length) {
         types.forEach((type) => {
           const entities = document.getElementsByClassName(this.typeMap[type]);

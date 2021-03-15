@@ -172,13 +172,13 @@ export default {
     },
   },
   created() {
-    if (this.config.annotationmode === true) {
+    if (this.config.annotationmode) {
       // show all Annotations at start
       this.typeModel = ['Person', 'Place', 'Comment'];
       // set the appropriate model: 1 === 'All'
       this.modifiers[0].model = 1;
       // emit the state (orresponding listener to be found in in @components/content.vue)
-      this.highlightMode(this.modifiers[0].model);
+      this.highlightMode();
     }
   },
   mounted() {
