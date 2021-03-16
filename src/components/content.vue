@@ -99,7 +99,7 @@ export default {
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
-    this.addIcons();
+    // this.addIcons();
 
     if (this.config.annotationmode) {
       this.highlight();
