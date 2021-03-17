@@ -16,7 +16,8 @@
             :color="$q.dark.isActive ? 'white' : 'accent'"
           />
         </q-btn>
-
+      </div>
+      <div>
         <q-btn
           class="q-mr-sm q-mb-sm cursor-pointer"
           flat
@@ -33,6 +34,9 @@
           />
         </q-btn>
       </div>
+      <div class="column key-button">
+        <KeyDialog :map="avalClasses" />
+      </div>
     </div>
 
     <div class="row">
@@ -48,9 +52,12 @@
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
+import { getClasses } from '@/components/textstyles/highlights.js';
+import KeyDialog from '@/components/textstyles/keysdialog.vue';
 
 export default {
   name: 'Content',
+  components: { KeyDialog },
   props: {
     config: {
       type: Object,
@@ -77,12 +84,12 @@ export default {
       default: () => '',
     },
   },
-  data() {
-    return {
-      content: '',
-      sequenceindex: 0,
-    };
-  },
+  data: () => ({
+    avalClasses: {},
+    content: '',
+    sequenceindex: 0,
+    status: false,
+  }),
   computed: {
     supportType() {
       const { support } = this.manifests[this.sequenceindex];
@@ -101,6 +108,8 @@ export default {
     this.fasSearchMinus = fasSearchMinus;
 
     this.content = await this.request(this.contenturls[0], 'text').then((data) => {
+      this.avalClasses = getClasses(data);
+
       if (this.supportType) {
         this.getSupport(this.manifests[0].support);
       }
@@ -135,16 +144,15 @@ export default {
     },
     getSupport(support) {
       support.forEach((s) => {
-        this.request(s.url, 'text')
-          .then(() => {
-            const supportUrl = document.createElement('link');
+        this.request(s.url, 'text').then(() => {
+          const supportUrl = document.createElement('link');
 
-            if (s.type === 'css') supportUrl.setAttribute('rel', 'stylesheet');
+          if (s.type === 'css') supportUrl.setAttribute('rel', 'stylesheet');
 
-            supportUrl.setAttribute('href', s.url);
+          supportUrl.setAttribute('href', s.url);
 
-            document.head.appendChild(supportUrl);
-          });
+          document.head.appendChild(supportUrl);
+        });
       });
     },
   },
@@ -152,7 +160,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .rtl {
-    direction: rtl;
-  }
+.rtl {
+  direction: rtl;
+}
+
+.key-button {
+  padding-left: 24px;
+}
 </style>
