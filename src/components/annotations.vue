@@ -5,7 +5,7 @@
   >
     <!-- Data type Toggles -->
     <div class="text-uppercase">
-      <q-toolbar>
+      <q-toolbar class="q-pa-none">
         <q-toolbar-title>
           Show / hide data types
         </q-toolbar-title>
@@ -19,23 +19,18 @@
         :label="type.label"
         size="lg"
         :val="type.value"
+        color="accent"
       />
     </div>
 
     <!-- List of Annotations -->
     <div
       v-if="items.length"
-      class="q-mt-lg"
+      class="q-mt-lg q-pb-lg"
     >
-      <q-toolbar>
+      <q-toolbar class="q-pl-none">
         <q-toolbar-title class="text-uppercase">
-          List of annotations
-          <q-chip
-            :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
-            square
-          >
-            {{ items.length }}
-          </q-chip>
+          List of annotations ({{ items.length }})
         </q-toolbar-title>
       </q-toolbar>
 
@@ -56,7 +51,12 @@
               overline
               @click="highlightEntity(annotation.id, annotation.contenttype)"
             >
-              {{ annotation.text }} ({{ annotation.comment }})
+              <div class="q-mb-xs text-body1">
+                {{ annotation.text }}
+              </div>
+              <div>
+                ({{ annotation.comment }})
+              </div>
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -83,20 +83,27 @@
       <div
         v-for="(modifier, index) in modifiers"
         :key="index"
-        class="q-pa-md"
+        class="q-pb-md"
       >
-        <div v-if="items.length > modifier.limit">
-          <span class="text-uppercase">{{ modifier.label }}</span>
-
-          <span class="float-right">
-            <q-btn-toggle
-              v-model="modifier.model"
-              :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent text-white'"
-              :options="modifier.options"
-              size="md"
-              @click="dynamicEvent(modifier.event, modifier.model)"
-            />
-          </span>
+        <div
+          v-if="items.length > modifier.limit"
+          class="column"
+        >
+          <span class="col q-pb-xs text-uppercase text-weight-regular">{{ modifier.label }}</span>
+          <q-btn-toggle
+            v-model="modifier.model"
+            toggle-color="accent"
+            color="white"
+            text-color="primary"
+            :options="modifier.options"
+            size="md"
+            no-caps
+            class="custom-toggle"
+            style="border: 1px solid grey-5;"
+            unelevated
+            spread
+            @click="dynamicEvent(modifier.event, modifier.model)"
+          />
         </div>
       </div>
     </div>
@@ -207,3 +214,9 @@ export default {
   },
 };
 </script>
+
+<style lang="css" scoped>
+.custom-toggle {
+  border: 1px solid #ababab;
+}
+</style>
