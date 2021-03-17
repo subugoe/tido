@@ -8,10 +8,16 @@
       @click="status = true"
     />
 
-    <q-dialog v-model="status" transition-hide="scale" transition-show="scale">
+    <q-dialog
+      v-model="status"
+      transition-hide="scale"
+      transition-show="scale"
+    >
       <q-card :class="$q.dark.isActive ? 'bg-black' : 'bg-white text-black'">
         <q-card-section>
-          <div class="text-h6 text-uppercase">Text Style Keys</div>
+          <div class="text-h6 text-uppercase">
+            Text Style Keys
+          </div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -31,7 +37,11 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn v-close-popup label="OK" flat />
+          <q-btn
+            v-close-popup
+            label="OK"
+            flat
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -39,7 +49,7 @@
 </template>
 
 <script>
-import textLabels from "./highlights";
+import textLabels from './highlights';
 
 export default {
   props: {
