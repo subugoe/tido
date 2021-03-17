@@ -39,6 +39,10 @@ import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
 export default {
   name: 'Content',
   props: {
+    annotationids: {
+      type: Array,
+      default: () => [],
+    },
     config: {
       type: Object,
       default: () => {},
@@ -68,11 +72,11 @@ export default {
       ],
       content: '',
       sequenceindex: 0,
-      typeMap: {
-        Place: 'placeName',
-        Person: 'persName',
-        'Editorial Comment': 'Editorial Comment',
-      },
+      types: [
+        'Editorial Comment',
+        'Person',
+        'Place',
+      ],
     };
   },
   computed: {
@@ -97,10 +101,8 @@ export default {
     });
   },
   mounted() {
-    // this.addIcons();
-
     if (this.config.annotationmode) {
-      this.highlight(1);
+      this.highlight(1, this.types);
     }
 
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
@@ -124,26 +126,6 @@ export default {
     });
   },
   methods: {
-    addIcons() {
-      Object.values(this.typeMap).forEach((type) => {
-        const entities = document.getElementsByClassName(type);
-        // eslint-disable-next-line no-console
-        console.log(type, entities);
-
-        const icons = {
-          Person: this.mdiAccount,
-          Place: this.mdiMapMarker,
-        };
-
-        // const icon = document.createElement('span');
-        // icon.classList.add('mdi mdi-account');
-        Object.values(entities).forEach((entity) => {
-          // eslint-disable-next-line no-console
-          console.log(entity);
-          entity.setAttribute('data-icon', `${icons[type]}`);
-        });
-      });
-    },
     dynamicEvent(event) {
       this[event]();
     },
@@ -175,13 +157,18 @@ export default {
           });
       });
     },
-    highlight(model = 1, types = Object.keys(this.typeMap)) {
-      if (Array.isArray(types) && types.length) {
-        types.forEach((type) => {
-          const entities = document.getElementsByClassName(this.typeMap[type]);
+    highlight(model, types) {
+      this.types = types;
 
-          Object.values(entities).forEach((e) => {
-            e.style.borderBottom = !model ? '' : 'solid';
+      if (this.annotationids.length && Array.isArray(this.types) && this.types.length) {
+        this.types.forEach((type) => {
+          const idsByType = this.annotationids.filter((entity) => entity.contenttype === type);
+
+          idsByType.forEach((typeId) => {
+            const e = document.getElementById(typeId.id);
+            if (e !== null) {
+              e.style.borderBottom = !model ? '' : 'solid';
+            }
           });
         });
       }
@@ -194,7 +181,4 @@ export default {
   .rtl {
     direction: rtl;
   }
-  [data-icon]::after {
-  content: attr(data-icon);
-}
 </style>

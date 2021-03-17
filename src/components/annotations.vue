@@ -42,7 +42,7 @@
           active-class="active-item"
           clickable
           :active="annotation.selected"
-          @click="annotation.selected = !annotation.selected"
+          @click="annotation.selected = !annotation.selected; highlightEntity(annotation.id)"
         >
           <q-item-section avatar>
             <q-icon :name="icons[annotation.contenttype]" />
@@ -52,7 +52,6 @@
             <q-item-label
               class="text-uppercase"
               overline
-              @click="highlightEntity(annotation.id)"
             >
               <div class="q-mb-xs text-body1">
                 {{ annotation.text }}
