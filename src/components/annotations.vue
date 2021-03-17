@@ -38,8 +38,11 @@
         <q-item
           v-for="(annotation, index) in items"
           :key="index"
-          :active="false"
           class="cursor-pointer"
+          active-class="active-item"
+          clickable
+          :active="annotation.selected"
+          @click="annotation.selected = !annotation.selected"
         >
           <q-item-section avatar>
             <q-icon :name="icons[annotation.contenttype]" />
@@ -80,16 +83,16 @@
 
           <q-btn-toggle
             v-model="modifier.model"
-            toggle-color="accent"
-            color="white"
-            text-color="primary"
             :options="modifier.options"
-            size="md"
-            no-caps
             class="custom-toggle"
-            style="border: 1px solid grey-5;"
-            unelevated
+            color="white"
+            no-caps
+            size="md"
             spread
+            style="border: 1px solid grey-5;"
+            text-color="primary"
+            toggle-color="accent"
+            unelevated
             @click="dynamicEvent(modifier.event, modifier.model)"
           />
         </div>
@@ -204,6 +207,9 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.active-item {
+  background-color: lightgrey;
+}
 .custom-toggle {
   border: 1px solid #ababab;
 }

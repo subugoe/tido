@@ -165,6 +165,7 @@ export default {
           id,
           comment: item.body.value,
           contenttype: item.body['x-content-type'],
+          selected: this.config.annotationmode,
           text: entity.innerText,
         });
       });
