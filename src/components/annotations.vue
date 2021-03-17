@@ -182,6 +182,11 @@ export default {
     this.$root.$on('update-item', () => {
       // TODO: Update computed property (items) on item update
     });
+
+    this.$root.$on('toggle-annotation-highlighting', (id) => {
+      // eslint-disable-next-line no-console
+      console.log(id);
+    });
   },
   methods: {
     dynamicEvent(event, model) {

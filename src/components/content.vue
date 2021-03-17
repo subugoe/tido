@@ -101,11 +101,13 @@ export default {
     });
   },
   mounted() {
+    this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
+
     if (this.config.annotationmode) {
-      this.highlight(1, this.types);
+      this.$root.$emit('toggle-highlight-mode', 1, this.types);
     }
 
-    this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
+    this.toggleAnnotationHighlighting();
 
     this.$root.$on('toggle-entity-highlighting', (id) => {
       const entity = document.getElementById(id);
@@ -172,6 +174,25 @@ export default {
           });
         });
       }
+    },
+    test(id) {
+      this.$root.$emit('toggle-annotation-highlighting', id);
+    },
+    toggleAnnotationHighlighting() {
+      setTimeout(() => {
+        if (this.annotationids.length) {
+          // implicitly cast annotationids to type array to ease the iteration
+          const entities = this.annotationids.filter((entity) => entity);
+
+          entities.forEach((entity) => {
+            const id = document.getElementById(entity.id);
+
+            if (id !== null) {
+              id.onclick = this.test(entity.id);
+            }
+          });
+        }
+      }, 1500);
     },
   },
 };
