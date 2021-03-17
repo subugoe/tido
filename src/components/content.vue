@@ -13,9 +13,9 @@
           @click="dynamicEvent(button.event)"
         >
           <q-icon
+            :color="$q.dark.isActive ? 'white' : 'accent'"
             :name="button.icon"
             size="sm"
-            :color="$q.dark.isActive ? 'white' : 'accent'"
           />
         </q-btn>
       </div>
@@ -71,7 +71,7 @@ export default {
       typeMap: {
         Place: 'placeName',
         Person: 'persName',
-        Comment: 'comment',
+        'Editorial Comment': 'Editorial Comment',
       },
     };
   },
@@ -97,13 +97,13 @@ export default {
     });
   },
   mounted() {
-    this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
-
     // this.addIcons();
 
     if (this.config.annotationmode) {
-      this.highlight();
+      this.highlight(1);
     }
+
+    this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
     this.$root.$on('toggle-entity-highlighting', (id) => {
       const entity = document.getElementById(id);
@@ -127,12 +127,20 @@ export default {
     addIcons() {
       Object.values(this.typeMap).forEach((type) => {
         const entities = document.getElementsByClassName(type);
+        // eslint-disable-next-line no-console
+        console.log(type, entities);
 
-        const icon = document.createElement('span');
-        icon.classList.add('fas fa-search-minus');
+        const icons = {
+          Person: this.mdiAccount,
+          Place: this.mdiMapMarker,
+        };
 
-        entities.values.forEach((entity) => {
-          entity.appendChild(icon);
+        // const icon = document.createElement('span');
+        // icon.classList.add('mdi mdi-account');
+        Object.values(entities).forEach((entity) => {
+          // eslint-disable-next-line no-console
+          console.log(entity);
+          entity.setAttribute('data-icon', `${icons[type]}`);
         });
       });
     },
@@ -168,9 +176,6 @@ export default {
       });
     },
     highlight(model = 1, types = Object.keys(this.typeMap)) {
-      // eslint-disable-next-line no-console
-      console.log('__CONTENT__', model, types);
-
       if (Array.isArray(types) && types.length) {
         types.forEach((type) => {
           const entities = document.getElementsByClassName(this.typeMap[type]);
@@ -189,4 +194,7 @@ export default {
   .rtl {
     direction: rtl;
   }
+  [data-icon]::after {
+  content: attr(data-icon);
+}
 </style>

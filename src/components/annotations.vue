@@ -17,9 +17,9 @@
         v-model="typeModel"
         :icon="type.icon"
         :label="type.label"
-        size="lg"
         :val="type.value"
         color="accent"
+        size="lg"
       />
     </div>
 
@@ -49,7 +49,7 @@
             <q-item-label
               class="text-uppercase"
               overline
-              @click="highlightEntity(annotation.id, annotation.contenttype)"
+              @click="highlightEntity(annotation.id)"
             >
               <div class="q-mb-xs text-body1">
                 {{ annotation.text }}
@@ -61,21 +61,6 @@
           </q-item-section>
         </q-item>
       </q-list>
-
-      <!-- <div
-        v-for="(annotation, index) in items"
-        :key="index"
-      >
-        <q-btn
-          flat
-          padding="sm"
-          :icon="icons[annotation.contenttype]"
-          :label="annotation.text"
-          @click="highlightEntity(annotation.id, annotation.contenttype)"
-        >
-          <span class="q-pl-md">({{ annotation.comment }})</span>
-        </q-btn>
-      </div> -->
     </div>
 
     <!-- Modifiers -->
@@ -89,7 +74,10 @@
           v-if="items.length > modifier.limit"
           class="column"
         >
-          <span class="col q-pb-xs text-uppercase text-weight-regular">{{ modifier.label }}</span>
+          <span class="col q-pb-xs text-uppercase text-weight-regular">
+            {{ modifier.label }}
+          </span>
+
           <q-btn-toggle
             v-model="modifier.model"
             toggle-color="accent"
@@ -132,7 +120,7 @@ export default {
   data() {
     return {
       icons: {
-        Comment: mdiComment,
+        'Editorial Comment': mdiComment,
         Person: mdiAccount,
         Place: mdiMapMarker,
       },
@@ -169,7 +157,7 @@ export default {
       types: [
         { icon: mdiAccount, label: 'Names', value: 'Person' },
         { icon: mdiMapMarker, label: 'Places', value: 'Place' },
-        { icon: mdiComment, label: 'Comments', value: 'Comment' },
+        { icon: mdiComment, label: 'Comments', value: 'Editorial Comment' },
       ],
     };
   },
@@ -181,10 +169,10 @@ export default {
   created() {
     if (this.config.annotationmode) {
       // show all Annotations at start
-      this.typeModel = ['Person', 'Place', 'Comment'];
+      this.typeModel = ['Person', 'Place', 'Editorial Comment'];
       // set the appropriate model: 1 === 'All'
       this.modifiers[0].model = 1;
-      // emit the state (orresponding listener to be found in in @components/content.vue)
+      // emit the state (corresponding listener to be found in in @components/content.vue)
       this.highlightMode();
     }
   },
@@ -197,8 +185,8 @@ export default {
     dynamicEvent(event, model) {
       this[event](model);
     },
-    highlightEntity(id, type) {
-      this.$root.$emit('toggle-entity-highlighting', id, type);
+    highlightEntity(id) {
+      this.$root.$emit('toggle-entity-highlighting', id);
     },
     highlightMode(model) {
       this.$root.$emit('toggle-highlight-mode', model, this.typeModel);

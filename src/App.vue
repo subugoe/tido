@@ -160,6 +160,7 @@ export default {
         const id = split[split.length - 1];
 
         const entity = document.getElementById(id);
+
         identifiers.push({
           id,
           comment: item.body.value,
