@@ -165,7 +165,7 @@ export default {
   },
   computed: {
     items() {
-      return Object.values(this.annotationids).filter((type) => this.typeModel.includes(type.contenttype));
+      return this.annotationids.filter((type) => this.typeModel.includes(type.contenttype));
     },
   },
   created() {
@@ -175,7 +175,7 @@ export default {
       // set the appropriate model: 1 === 'All'
       this.modifiers[0].model = 1;
       // emit the state (corresponding listener to be found in in @components/content.vue)
-      this.highlightMode();
+      this.highlightMode(1);
     }
   },
   mounted() {
@@ -191,6 +191,12 @@ export default {
       this.$root.$emit('toggle-entity-highlighting', id);
     },
     highlightMode(model) {
+      this.annotationids.forEach((entity) => {
+        if (model === 1) {
+          entity.selected = true;
+        } else entity.selected = false;
+      });
+
       this.$root.$emit('toggle-highlight-mode', model, this.typeModel);
     },
     sortDirection() {
