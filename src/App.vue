@@ -236,7 +236,9 @@ export default {
           this.contenturls = this.getContentUrl(data.content);
           this.imageurl = data.image.id || '';
 
-          this.getAnnotations(data.annotationCollection);
+          if (data.annotationCollection) {
+            this.getAnnotations(data.annotationCollection);
+          }
         });
     },
     /**

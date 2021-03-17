@@ -103,11 +103,11 @@ export default {
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
-    if (this.config.annotationmode) {
-      this.$root.$emit('toggle-highlight-mode', 1, this.types);
-    }
-
     this.toggleAnnotationHighlighting();
+
+    if (this.config.annotationmode) {
+      this.highlight(1, this.types);
+    }
 
     this.$root.$on('toggle-entity-highlighting', (id) => {
       const entity = document.getElementById(id);
@@ -175,9 +175,6 @@ export default {
         });
       }
     },
-    test(id) {
-      this.$root.$emit('toggle-annotation-highlighting', id);
-    },
     toggleAnnotationHighlighting() {
       setTimeout(() => {
         if (this.annotationids.length) {
@@ -188,7 +185,7 @@ export default {
             const id = document.getElementById(entity.id);
 
             if (id !== null) {
-              id.onclick = this.test(entity.id);
+              id.onclick = this.$root.$emit('toggle-annotation-highlighting', entity.id);
             }
           });
         }
