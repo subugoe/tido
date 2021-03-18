@@ -4,12 +4,10 @@
     class="q-ma-sm"
   >
     <!-- Data type Toggles -->
-    <div class="text-uppercase">
-      <q-toolbar class="q-pa-none">
-        <q-toolbar-title>
-          Show / hide data types
-        </q-toolbar-title>
-      </q-toolbar>
+    <div>
+      <h3 class="text-body1 q-mb-sm text-weight-medium text-uppercase">
+        Show/hide data types
+      </h3>
 
       <q-toggle
         v-for="(type, index) in types"
@@ -18,29 +16,30 @@
         :icon="type.icon"
         :label="type.label"
         :val="type.value"
-        color="accent"
+        :color="$q.dark.isActive ? 'grey-8' : 'accent'"
         size="lg"
+        dense
+        toggle-order="tf"
+        class="text-uppercase q-mr-lg q-mb-md asdf"
       />
     </div>
 
     <!-- List of Annotations -->
     <div
       v-if="items.length"
-      class="q-mt-lg q-pb-lg"
+      class="q-pt-sm q-pb-xs"
     >
-      <q-toolbar class="q-pl-none">
-        <q-toolbar-title class="text-uppercase">
-          List of annotations ({{ items.length }})
-        </q-toolbar-title>
-      </q-toolbar>
-
+      <h3 class="text-body1 q-mb-sm q-mt-none text-weight-medium text-uppercase">
+        List of Annotations ({{ items.length }})
+      </h3>
       <q-list>
         <q-item
           v-for="(annotation, index) in items"
           :key="index"
-          class="cursor-pointer"
+          class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
           active-class="active-item"
           clickable
+          dense
           :active="annotation.selected"
           @click="annotation.selected = !annotation.selected; highlightEntity(annotation.id)"
         >
@@ -66,7 +65,10 @@
     </div>
 
     <!-- Modifiers -->
-    <div>
+    <div v-if="items.length">
+      <h3 class="text-body1 q-mb-md text-weight-medium text-uppercase">
+        Options
+      </h3>
       <div
         v-for="(modifier, index) in modifiers"
         :key="index"
@@ -84,13 +86,12 @@
             v-model="modifier.model"
             :options="modifier.options"
             class="custom-toggle"
-            color="white"
-            no-caps
-            size="md"
+            :color="$q.dark.isActive ? 'grey-9' : 'white'"
+            size="sm"
             spread
-            style="border: 1px solid grey-5;"
-            text-color="primary"
-            toggle-color="accent"
+            :text-color="$q.dark.isActive ? 'white' : 'primary'"
+            :toggle-color="$q.dark.isActive ? 'grey-1' : 'accent'"
+            :toggle-text-color="$q.dark.isActive ? 'black' : 'white'"
             unelevated
             @click="dynamicEvent(modifier.event, modifier.model)"
           />
@@ -218,9 +219,26 @@ export default {
 
 <style lang="css" scoped>
 .active-item {
-  background-color: lightgrey;
+  background-color: #d3d3d3;
+  color: #000;
 }
+
+@media (prefers-color-scheme: dark) {
+  .active-item {
+    background-color: grey-10;
+  }
+
+  .active-item .q-item__label {
+    color: #000;
+  }
+}
+
 .custom-toggle {
   border: 1px solid #ababab;
 }
+
+/* .asdf .q-toggle__inner .q-toggle__track {
+  background-color: #abecab !important;
+  border: 5px solid #000000;
+} */
 </style>
