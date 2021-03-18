@@ -5,23 +5,19 @@ const textLabels = [
   },
   {
     classes: 'add above',
-    label: 'To set apart from the running text visually.',
+    label: 'Text that has been added later.',
   },
   {
     classes: 'catchwords',
-    label: 'To set apart from the running text and de-emphasized.',
+    label: 'One or more catchwords.',
   },
   {
     classes: 'damage',
-    label: 'This is a damage text.',
+    label: 'This is a damaged text.',
   },
   {
     classes: 'expan',
     label: 'This represents the expanded version of an abbreviation.',
-  },
-  {
-    classes: 'g',
-    label: 'Only the text of tei:g is rendered.',
   },
   {
     classes: 'gap',
@@ -29,15 +25,15 @@ const textLabels = [
   },
   {
     classes: 'hi red',
-    label: 'This is a text.',
+    label: 'This is a rubrication.',
   },
   {
     classes: 'note',
-    label: 'Information encoded in note have added text to the manuscript.',
+    label: 'Text or information added to the manuscript later by a person other than the scribe.',
   },
   {
     classes: 'orig',
-    label: 'Displays a text node.',
+    label: 'The text in its original (not normalized or corrected) appearance in the manuscript.',
   },
   {
     classes: 'ref',
@@ -49,11 +45,11 @@ const textLabels = [
   },
   {
     classes: 'sic',
-    label: 'sic marks text that obviously has errors; usually it is corrected be editor.',
+    label: 'sic marks text that obviously has errors; usually it is corrected by the editor(s).',
   },
   {
     classes: 'persName',
-    label: 'This is a person name.',
+    label: 'This is a person`s name.',
   },
   {
     classes: 'placeName',
