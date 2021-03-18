@@ -13,14 +13,14 @@
         v-for="(type, index) in types"
         :key="index"
         v-model="typeModel"
+        :color="$q.dark.isActive ? 'grey-8' : 'accent'"
         :icon="type.icon"
         :label="type.label"
         :val="type.value"
-        :color="$q.dark.isActive ? 'grey-8' : 'accent'"
-        size="lg"
+        class="text-uppercase q-mr-lg q-mb-md"
         dense
+        size="lg"
         toggle-order="tf"
-        class="text-uppercase q-mr-lg q-mb-md asdf"
       />
     </div>
 
@@ -32,36 +32,40 @@
       <h3 class="text-body1 q-mb-sm q-mt-none text-weight-medium text-uppercase">
         List of Annotations ({{ items.length }})
       </h3>
-      <q-list>
-        <q-item
-          v-for="(annotation, index) in items"
-          :key="index"
-          class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
-          active-class="active-item"
-          clickable
-          dense
-          :active="annotation.selected"
-          @click="annotation.selected = !annotation.selected; highlightEntity(annotation.id)"
-        >
-          <q-item-section avatar>
-            <q-icon :name="icons[annotation.contenttype]" />
-          </q-item-section>
 
-          <q-item-section>
-            <q-item-label
-              class="text-uppercase"
-              overline
-            >
-              <div class="q-mb-xs text-body1">
-                {{ annotation.text }}
-              </div>
-              <div>
-                ({{ annotation.comment }})
-              </div>
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
+      <q-scroll-area class="list-height">
+        <q-list>
+          <q-item
+            v-for="(annotation, index) in items"
+            :key="index"
+            :active="annotation.selected"
+            active-class="active-item"
+            class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
+            clickable
+            dense
+            @click="annotation.selected = !annotation.selected; highlightEntity(annotation.id)"
+          >
+            <q-item-section avatar>
+              <q-icon :name="icons[annotation.contenttype]" />
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label
+                class="text-uppercase"
+                overline
+              >
+                <div class="q-mb-xs text-body1">
+                  {{ annotation.text }}
+                </div>
+
+                <div>
+                  ({{ annotation.comment }})
+                </div>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-scroll-area>
     </div>
 
     <!-- Modifiers -->
@@ -69,6 +73,7 @@
       <h3 class="text-body1 q-mb-md text-weight-medium text-uppercase">
         Options
       </h3>
+
       <div
         v-for="(modifier, index) in modifiers"
         :key="index"
@@ -85,13 +90,13 @@
           <q-btn-toggle
             v-model="modifier.model"
             :options="modifier.options"
-            class="custom-toggle"
             :color="$q.dark.isActive ? 'grey-9' : 'white'"
-            size="sm"
-            spread
             :text-color="$q.dark.isActive ? 'white' : 'primary'"
             :toggle-color="$q.dark.isActive ? 'grey-1' : 'accent'"
             :toggle-text-color="$q.dark.isActive ? 'black' : 'white'"
+            class="custom-toggle"
+            size="sm"
+            spread
             unelevated
             @click="dynamicEvent(modifier.event, modifier.model)"
           />
@@ -166,7 +171,9 @@ export default {
   },
   computed: {
     items() {
-      return this.annotationids.filter((type) => this.typeModel.includes(type.contenttype));
+      return this.annotations.length && this.annotationids.length
+        ? this.annotationids.filter((type) => this.typeModel.includes(type.contenttype))
+        : [];
     },
   },
   created() {
@@ -183,18 +190,48 @@ export default {
     this.$root.$on('update-item', () => {
       // TODO: Update computed property (items) on item update
     });
-
-    this.$root.$on('toggle-annotation-highlighting', (id) => {
-      // eslint-disable-next-line no-console
-      console.log(id);
-    });
   },
   methods: {
     dynamicEvent(event, model) {
       this[event](model);
     },
     highlightEntity(id) {
-      this.$root.$emit('toggle-entity-highlighting', id);
+      const entity = document.getElementById(id);
+
+      if (entity !== null) {
+        entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
+      }
+    },
+    // WIP: Toggle highlighting of annotation when clicking on appropriate text entity
+    toggleHighlighting() {
+      setTimeout(() => {
+        if (this.annotationids.length) {
+          // implicitly (just) cast annotationids to type array to ease the iteration
+          const entities = this.annotationids.filter((entity) => entity);
+
+          entities.forEach((entity) => {
+            const id = document.getElementById(entity.id);
+
+            if (id !== null) {
+              id.onclick = this.$root.$emit('toggle-annotation-highlighting', entity.id);
+            }
+          });
+        }
+      }, 1500);
+    },
+    highlight(model) {
+      if (this.annotationids.length && Array.isArray(this.typeModel) && this.typeModel.length) {
+        this.typeModel.forEach((type) => {
+          const idsByType = this.annotationids.filter((entity) => entity.contenttype === type);
+
+          idsByType.forEach((typeId) => {
+            const e = document.getElementById(typeId.id);
+            if (e !== null) {
+              e.style.borderBottom = !model ? '' : 'solid';
+            }
+          });
+        });
+      }
     },
     highlightMode(model) {
       this.annotationids.forEach((entity) => {
@@ -203,7 +240,7 @@ export default {
         } else entity.selected = false;
       });
 
-      this.$root.$emit('toggle-highlight-mode', model, this.typeModel);
+      this.highlight(model);
     },
     sortDirection() {
       return this.items.reverse();
@@ -237,8 +274,7 @@ export default {
   border: 1px solid #ababab;
 }
 
-/* .asdf .q-toggle__inner .q-toggle__track {
-  background-color: #abecab !important;
-  border: 5px solid #000000;
-} */
+.list-height {
+  height: 27vh;
+}
 </style>

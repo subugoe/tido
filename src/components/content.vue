@@ -34,15 +34,10 @@
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
-// import { mdiAccount, mdiMapMarker, mdiComment } from '@quasar/extras/mdi-v5';
 
 export default {
   name: 'Content',
   props: {
-    annotationids: {
-      type: Array,
-      default: () => [],
-    },
     config: {
       type: Object,
       default: () => {},
@@ -72,11 +67,6 @@ export default {
       ],
       content: '',
       sequenceindex: 0,
-      types: [
-        'Editorial Comment',
-        'Person',
-        'Place',
-      ],
     };
   },
   computed: {
@@ -96,30 +86,11 @@ export default {
       if (this.supportType) {
         this.getSupport(this.manifests[0].support);
       }
-
       return data;
     });
   },
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
-
-    this.toggleAnnotationHighlighting();
-
-    if (this.config.annotationmode) {
-      this.highlight(1, this.types);
-    }
-
-    this.$root.$on('toggle-entity-highlighting', (id) => {
-      const entity = document.getElementById(id);
-
-      if (entity !== null) {
-        entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
-      }
-    });
-
-    this.$root.$on('toggle-highlight-mode', (model, types) => {
-      this.highlight(model, types);
-    });
 
     this.$root.$on('update-sequence-index', (index) => {
       if (this.supportType) {
@@ -159,44 +130,12 @@ export default {
           });
       });
     },
-    highlight(model, types) {
-      this.types = types;
-
-      if (this.annotationids.length && Array.isArray(this.types) && this.types.length) {
-        this.types.forEach((type) => {
-          const idsByType = this.annotationids.filter((entity) => entity.contenttype === type);
-
-          idsByType.forEach((typeId) => {
-            const e = document.getElementById(typeId.id);
-            if (e !== null) {
-              e.style.borderBottom = !model ? '' : 'solid';
-            }
-          });
-        });
-      }
-    },
-    toggleAnnotationHighlighting() {
-      setTimeout(() => {
-        if (this.annotationids.length) {
-          // implicitly cast annotationids to type array to ease the iteration
-          const entities = this.annotationids.filter((entity) => entity);
-
-          entities.forEach((entity) => {
-            const id = document.getElementById(entity.id);
-
-            if (id !== null) {
-              id.onclick = this.$root.$emit('toggle-annotation-highlighting', entity.id);
-            }
-          });
-        }
-      }, 1500);
-    },
   },
 };
 </script>
 
 <style lang="scss">
-  .rtl {
-    direction: rtl;
-  }
+.rtl {
+  direction: rtl;
+}
 </style>
