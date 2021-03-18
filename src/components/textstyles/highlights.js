@@ -68,13 +68,13 @@ const textLabels = [
 const textStyles = textLabels.map((t) => t.classes);
 
 export const getClasses = (html) => {
-  const res = {};
+  const result = {};
 
   textStyles.forEach((className) => {
-    res[className] = html.includes(`class="${className}"`);
+    result[className] = html.includes(`class="${className}"`);
   });
 
-  return res;
+  return result;
 };
 
 export default textLabels;

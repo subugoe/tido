@@ -35,7 +35,7 @@
         </q-btn>
       </div>
       <div class="column key-button">
-        <KeyDialog :map="avalClasses" />
+        <KeyDialog :map="availableClasses" />
       </div>
     </div>
 
@@ -85,7 +85,7 @@ export default {
     },
   },
   data: () => ({
-    avalClasses: {},
+    availableClasses: {},
     content: '',
     sequenceindex: 0,
     status: false,
@@ -108,7 +108,7 @@ export default {
     this.fasSearchMinus = fasSearchMinus;
 
     this.content = await this.request(this.contenturls[0], 'text').then((data) => {
-      this.avalClasses = getClasses(data);
+      this.availableClasses = getClasses(data);
 
       if (this.supportType) {
         this.getSupport(this.manifests[0].support);
