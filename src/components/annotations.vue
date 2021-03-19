@@ -143,9 +143,9 @@ export default {
           event: 'highlightMode',
           label: 'Highlight',
           limit: 0,
-          model: 0,
+          model: false,
           options: [
-            { label: 'All', value: 1 }, { label: 'None', value: 0 },
+            { label: 'All', value: true }, { label: 'None', value: false },
           ],
         },
         {
@@ -181,38 +181,33 @@ export default {
         return [];
       }
       // filter all annotation types that have been selected (typeModel)
-      const filteredAnnotations = this.annotationids.filter((type) => this.typeModel.includes(type.contenttype));
-
-      /* NOTE: items have to be sorted again whenever the *typelModel* is updated!
-
-        use case:
-        e.g. only persons are selected and sorted alphabetically
-        thereafter another annotation type is selected: e.g. Places
-        since the Quasar model is implemented as an array, only the Persons are (still) sorted
-        and all the (additional) Places were just pushed onto the stack; unsorted
-      */
+      let filteredAnnotations = this.annotationids.filter((type) => this.typeModel.includes(type.contenttype));
 
       // determine sorting order and direction
       const sortingOrder = this.options[1].model;
       const sortingDirection = this.options[2].model;
+
       // sort the matching IDs according to the sortingOrder given
-      if (sortingOrder === 'alpha') {
-        filteredAnnotations.sort((x, y) => x.text.localeCompare(y.text));
-      } else filteredAnnotations.sort((x, y) => x.id.localeCompare(y.id));
+      filteredAnnotations = sortingOrder === 'alpha'
+        ? filteredAnnotations.sort((x, y) => x.text.localeCompare(y.text))
+        : filteredAnnotations.sort((x, y) => x.id.localeCompare(y.id));
+
       // determine the sorting direction
-      return sortingDirection === 'asc' ? filteredAnnotations : filteredAnnotations.reverse();
+      return sortingDirection === 'asc'
+        ? filteredAnnotations
+        : filteredAnnotations.reverse();
     },
   },
   created() {
     if (this.config.annotationmode) {
       // show all Annotations at start
       this.typeModel = ['Person', 'Place', 'Editorial Comment'];
-      // set the appropriate model: 1 === 'All'
-      this.options[0].model = 1;
-      // wait a second for the *annotationids* to load and highlight all text entities at start
+      // set the highlight mode: 1 === 'All'
+      this.options[0].model = true;
+      // wait for the *annotationids* to load and highlight all text entities
       setTimeout(() => {
-        this.highlightMode(1);
-      }, 1000);
+        this.highlightMode(true);
+      }, 1500);
     }
   },
   mounted() {
@@ -234,48 +229,43 @@ export default {
     // WIP: Toggle highlighting of annotation when clicking on appropriate text entity
     toggleHighlighting() {
       if (this.annotationids.length) {
-        // implicitly (just) cast annotationids to type array to ease the iteration
-        const entities = this.annotationids.filter((entity) => entity);
-
-        entities.forEach((entity) => {
-          const id = document.getElementById(entity.id);
+        this.annotationids.forEach((annotation) => {
+          const id = document.getElementById(annotation.id);
 
           if (id !== null) {
-            id.onclick = this.highlightTextEntity(entity.id);
+            id.onclick = this.highlightTextEntity(annotation.id);
           }
         });
       }
     },
-    highlight(model) {
-      if (Array.isArray(this.typeModel) && this.typeModel.length && this.annotationids.length) {
+    highlight(mode) {
+      if (this.typeModel.length && this.annotationids.length) {
         this.typeModel.forEach((type) => {
-          const contentTypes = this.annotationids.filter((entity) => entity.contenttype === type);
+          const contentTypes = this.annotationids.filter((annotation) => entity.contenttype === type);
 
           if (Array.isArray(contentTypes) && contentTypes.length) {
             contentTypes.forEach((contentType) => {
-              const e = document.getElementById(contentType.id);
-              if (e !== null) {
-                e.style.borderBottom = !model ? '' : 'solid';
+              const textEntity = document.getElementById(contentType.id);
+              if (textEntity !== null) {
+                textEntity.style.borderBottom = !mode ? '' : 'solid';
               }
             });
           }
         });
       }
     },
-    highlightMode(model) {
-      this.annotationids.forEach((entity) => {
-        if (model === 1) {
-          entity.selected = true;
-        } else entity.selected = false;
+    highlightMode(mode) {
+      this.annotationids.forEach((annotation) => {
+        annotation.selected = mode;
       });
 
-      this.highlight(model);
+      this.highlight(mode);
     },
     sortDirection() {
-      return this.items.reverse();
+      return this.items;
     },
-    sortOrder(model) {
-      return model === 'alpha'
+    sortOrder(order) {
+      return order === 'alpha'
         ? this.items.sort((x, y) => x.text.localeCompare(y.text))
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
     },
