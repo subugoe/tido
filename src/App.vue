@@ -135,7 +135,7 @@ export default {
               if (current.annotationPage.items && current.annotationPage.items.length) {
                 this.annotations = current.annotationPage.items;
                 this.annotationids = this.getAnnotationIds(this.annotations);
-              }
+              } else this.annotationids = [];
             })
             .catch(() => {
               this.$q.notify({ message: 'No annotations available' });

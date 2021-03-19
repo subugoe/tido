@@ -68,6 +68,12 @@
       </q-scroll-area>
     </div>
 
+    <div v-else>
+      <h3 class="text-body1 q-mb-md text-weight-medium text-uppercase">
+        No annotations available
+      </h3>
+    </div>
+
     <!-- Options -->
     <div v-if="items.length">
       <h3 class="text-body1 q-mb-md text-weight-medium text-uppercase">
@@ -171,6 +177,9 @@ export default {
   },
   computed: {
     items() {
+      if (!this.annotationids.length) {
+        return [];
+      }
       // filter all annotation types that have been selected (typeModel)
       const filteredAnnotations = this.annotationids.filter((type) => this.typeModel.includes(type.contenttype));
 
