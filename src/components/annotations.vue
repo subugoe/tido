@@ -70,7 +70,7 @@
 
     <div v-else>
       <h3 class="text-body1 q-mb-md text-weight-medium text-uppercase">
-        No annotations available
+        Click on a data type to show the annotations
       </h3>
     </div>
 
