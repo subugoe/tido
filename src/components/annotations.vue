@@ -241,7 +241,7 @@ export default {
     highlight(mode) {
       if (this.typeModel.length && this.annotationids.length) {
         this.typeModel.forEach((type) => {
-          const contentTypes = this.annotationids.filter((annotation) => entity.contenttype === type);
+          const contentTypes = this.annotationids.filter((annotation) => annotation.contenttype === type);
 
           if (Array.isArray(contentTypes) && contentTypes.length) {
             contentTypes.forEach((contentType) => {
