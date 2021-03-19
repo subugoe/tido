@@ -68,29 +68,29 @@
       </q-scroll-area>
     </div>
 
-    <!-- Modifiers -->
+    <!-- Options -->
     <div v-if="items.length">
       <h3 class="text-body1 q-mb-md text-weight-medium text-uppercase">
         Options
       </h3>
 
       <div
-        v-for="(modifier, index) in modifiers"
+        v-for="(opt, index) in options"
         :key="index"
         class="q-pb-md"
       >
         <div
-          v-if="items.length > modifier.limit"
+          v-if="items.length > opt.limit"
           class="column"
         >
           <span class="col q-pb-xs text-uppercase text-weight-regular">
-            {{ modifier.label }}
+            {{ opt.label }}
           </span>
 
           <q-btn-toggle
-            v-model="modifier.model"
-            :options="modifier.options"
+            v-model="opt.model"
             :color="$q.dark.isActive ? 'grey-9' : 'white'"
+            :options="opt.options"
             :text-color="$q.dark.isActive ? 'white' : 'primary'"
             :toggle-color="$q.dark.isActive ? 'grey-1' : 'accent'"
             :toggle-text-color="$q.dark.isActive ? 'black' : 'white'"
@@ -98,7 +98,7 @@
             size="sm"
             spread
             unelevated
-            @click="dynamicEvent(modifier.event, modifier.model)"
+            @click="dynamicEvent(opt.event, opt.model)"
           />
         </div>
       </div>
@@ -132,7 +132,7 @@ export default {
         Person: mdiAccount,
         Place: mdiMapMarker,
       },
-      modifiers: [
+      options: [
         {
           event: 'highlightMode',
           label: 'Highlight',
@@ -171,9 +171,27 @@ export default {
   },
   computed: {
     items() {
-      return this.annotations.length && this.annotationids.length
-        ? this.annotationids.filter((type) => this.typeModel.includes(type.contenttype))
-        : [];
+      // filter all annotation types that have been selected (typeModel)
+      const filteredAnnotations = this.annotationids.filter((type) => this.typeModel.includes(type.contenttype));
+
+      /* NOTE: items have to be sorted again whenever the *typelModel* is updated!
+
+        use case:
+        e.g. only persons are selected and sorted alphabetically
+        thereafter another annotation type is selected: e.g. Places
+        since the Quasar model is implemented as an array, only the Persons are (still) sorted
+        and all the (additional) Places were just pushed onto the stack; unsorted
+      */
+
+      // determine sorting order and direction
+      const sortingOrder = this.options[1].model;
+      const sortingDirection = this.options[2].model;
+      // sort the matching IDs according to the sortingOrder given
+      if (sortingOrder === 'alpha') {
+        filteredAnnotations.sort((x, y) => x.text.localeCompare(y.text));
+      } else filteredAnnotations.sort((x, y) => x.id.localeCompare(y.id));
+      // determine the sorting direction
+      return sortingDirection === 'asc' ? filteredAnnotations : filteredAnnotations.reverse();
     },
   },
   created() {
@@ -181,7 +199,7 @@ export default {
       // show all Annotations at start
       this.typeModel = ['Person', 'Place', 'Editorial Comment'];
       // set the appropriate model: 1 === 'All'
-      this.modifiers[0].model = 1;
+      this.options[0].model = 1;
       // emit the state (corresponding listener to be found in in @components/content.vue)
       this.highlightMode(1);
     }
