@@ -43,7 +43,7 @@
             class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
             clickable
             dense
-            @click="annotation.selected = !annotation.selected; highlightEntity(annotation.id)"
+            @click="annotation.selected = !annotation.selected; highlightTextEntity(annotation.id)"
           >
             <q-item-section avatar>
               <q-icon :name="icons[annotation.contenttype]" />
@@ -200,8 +200,10 @@ export default {
       this.typeModel = ['Person', 'Place', 'Editorial Comment'];
       // set the appropriate model: 1 === 'All'
       this.options[0].model = 1;
-      // emit the state (corresponding listener to be found in in @components/content.vue)
-      this.highlightMode(1);
+      // wait a second for the *annotationids* to load and highlight all text entities at start
+      setTimeout(() => {
+        this.highlightMode(1);
+      }, 1000);
     }
   },
   mounted() {
@@ -213,7 +215,7 @@ export default {
     dynamicEvent(event, model) {
       this[event](model);
     },
-    highlightEntity(id) {
+    highlightTextEntity(id) {
       const entity = document.getElementById(id);
 
       if (entity !== null) {
@@ -222,32 +224,32 @@ export default {
     },
     // WIP: Toggle highlighting of annotation when clicking on appropriate text entity
     toggleHighlighting() {
-      setTimeout(() => {
-        if (this.annotationids.length) {
-          // implicitly (just) cast annotationids to type array to ease the iteration
-          const entities = this.annotationids.filter((entity) => entity);
+      if (this.annotationids.length) {
+        // implicitly (just) cast annotationids to type array to ease the iteration
+        const entities = this.annotationids.filter((entity) => entity);
 
-          entities.forEach((entity) => {
-            const id = document.getElementById(entity.id);
+        entities.forEach((entity) => {
+          const id = document.getElementById(entity.id);
 
-            if (id !== null) {
-              id.onclick = this.$root.$emit('toggle-annotation-highlighting', entity.id);
-            }
-          });
-        }
-      }, 1500);
+          if (id !== null) {
+            id.onclick = this.highlightTextEntity(entity.id);
+          }
+        });
+      }
     },
     highlight(model) {
-      if (this.annotationids.length && Array.isArray(this.typeModel) && this.typeModel.length) {
+      if (Array.isArray(this.typeModel) && this.typeModel.length && this.annotationids.length) {
         this.typeModel.forEach((type) => {
-          const idsByType = this.annotationids.filter((entity) => entity.contenttype === type);
+          const contentTypes = this.annotationids.filter((entity) => entity.contenttype === type);
 
-          idsByType.forEach((typeId) => {
-            const e = document.getElementById(typeId.id);
-            if (e !== null) {
-              e.style.borderBottom = !model ? '' : 'solid';
-            }
-          });
+          if (Array.isArray(contentTypes) && contentTypes.length) {
+            contentTypes.forEach((contentType) => {
+              const e = document.getElementById(contentType.id);
+              if (e !== null) {
+                e.style.borderBottom = !model ? '' : 'solid';
+              }
+            });
+          }
         });
       }
     },
