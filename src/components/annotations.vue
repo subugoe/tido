@@ -43,7 +43,10 @@
             class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
             clickable
             dense
-            @click="annotation.selected = !annotation.selected; highlightTextEntity(annotation.id)"
+            @click="
+              annotation.selected = !annotation.selected;
+              highlightTextEntity(annotation.id);
+              options[0].model = selectedAll;"
           >
             <q-item-section avatar>
               <q-icon :name="icons[annotation.contenttype]" />
@@ -197,12 +200,16 @@ export default {
         ? filteredAnnotations
         : filteredAnnotations.reverse();
     },
+    selectedAll() {
+      const numberSelected = this.annotationids.filter((id) => id.selected === true);
+      return (numberSelected === this.items.length);
+    },
   },
   created() {
     if (this.config.annotationmode) {
       // show all Annotations at start
       this.typeModel = ['Person', 'Place', 'Editorial Comment'];
-      // set the highlight mode: 1 === 'All'
+      // set the highlight mode; 'All'
       this.options[0].model = true;
       // wait for the *annotationids* to load and highlight all text entities
       setTimeout(() => {
@@ -211,9 +218,7 @@ export default {
     }
   },
   mounted() {
-    this.$root.$on('update-item', () => {
-      // TODO: Update computed property (items) on item update
-    });
+    this.toggleHighlighting();
   },
   methods: {
     dynamicEvent(event, model) {
