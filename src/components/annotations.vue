@@ -199,7 +199,7 @@ export default {
     selectedAll() {
       const numberSelected = this.items.filter((item) => item.selected === true);
 
-      return numberSelected === this.items.length;
+      return numberSelected.length === this.items.length;
     },
   },
   created() {
@@ -211,7 +211,7 @@ export default {
       // wait for the *annotations* to load and highlight all text entities
       setTimeout(() => {
         this.highlightMode(true);
-      }, 1500);
+      }, 2000);
     }
   },
   mounted() {
