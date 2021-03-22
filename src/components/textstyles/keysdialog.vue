@@ -1,6 +1,7 @@
 <template>
   <q-toolbar>
     <q-btn
+      v-if="textModal.length"
       class="text_key"
       label="Keys"
       outline

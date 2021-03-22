@@ -1,23 +1,11 @@
 const textLabels = [
   {
-    classes: 'abbr',
-    label: 'This indicates an abbrevation.',
-  },
-  {
-    classes: 'add above',
-    label: 'Text that has been added later.',
+    classes: 'header',
+    label: 'Represents title of the text.',
   },
   {
     classes: 'catchwords',
     label: 'One or more catchwords.',
-  },
-  {
-    classes: 'damage',
-    label: 'This is a damaged text.',
-  },
-  {
-    classes: 'expan',
-    label: 'This represents the expanded version of an abbreviation.',
   },
   {
     classes: 'gap',
@@ -28,12 +16,13 @@ const textLabels = [
     label: 'This is a rubrication.',
   },
   {
-    classes: 'note',
-    label: 'Text or information added to the manuscript later by a person other than the scribe.',
+    classes: 'no_break',
+    label: 'Describes that a word has begun in the line before and is continued'
+    + 'in the current line.',
   },
   {
-    classes: 'orig',
-    label: 'The text in its original (not normalized or corrected) appearance in the manuscript.',
+    classes: 'note',
+    label: 'Text or information added to the manuscript later by a person other than the scribe.',
   },
   {
     classes: 'ref',
@@ -42,18 +31,6 @@ const textLabels = [
   {
     classes: 'seg',
     label: 'Segments, part of a virtual collection that belongs together in some way.',
-  },
-  {
-    classes: 'sic',
-    label: 'sic marks text that obviously has errors; usually it is corrected by the editor(s).',
-  },
-  {
-    classes: 'persName',
-    label: 'This is a person`s name.',
-  },
-  {
-    classes: 'placeName',
-    label: 'Represents a place name.',
   },
   {
     classes: 'quote colophon',
