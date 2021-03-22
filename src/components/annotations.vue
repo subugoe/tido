@@ -14,6 +14,7 @@
         :key="index"
         v-model="typeModel"
         :color="$q.dark.isActive ? 'grey-8' : 'accent'"
+        :disabled="typeAvailable(type)"
         :icon="type.icon"
         :label="type.label"
         :val="type.value"
@@ -206,7 +207,7 @@ export default {
     if (this.config.annotationmode) {
       // show all Annotations at start
       this.typeModel = ['Person', 'Place', 'Editorial Comment'];
-      // set the highlight mode to 'All'
+      // set the highlight mode to true ('All')
       this.options[0].model = true;
       // wait for the *annotations* to load and highlight all text entities
       setTimeout(() => {
@@ -215,17 +216,18 @@ export default {
     }
   },
   mounted() {
-    this.toggleHighlighting();
+    this.toggleHighlighting(true);
 
     this.$root.$on('update-item', () => {
-      // eslint-disable-next-line no-console
-      console.log('Types', this.typeModel, 'Mode', this.options[0].model, 'Order', this.options[1].model, 'Direction', this.options[2].model, 'Count', this.items.length);
+      this.highlightMode(this.options[0].model);
+      this.toggleHighlighting();
     });
   },
   methods: {
     dynamicEvent(event, model) {
       this[event](model);
     },
+    // highlights annotation/s individually on click (Text panel)
     highlightTextEntity(id) {
       const entity = document.getElementById(id);
 
@@ -233,22 +235,18 @@ export default {
         entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
       }
     },
-    // WIP: Toggle highlighting of annotation when clicking on appropriate text entity
-    toggleHighlighting() {
-      if (this.annotations.length) {
-        this.annotations.forEach((annotation) => {
-          const id = document.getElementById(annotation.id);
+    // highlight either all annotations or none
+    // mode values: true | false
+    highlightMode(mode) {
+      // de/highlights the annotations in the list
+      this.annotations.forEach((annotation) => {
+        annotation.selected = mode;
+      });
 
-          if (id !== null) {
-            id.onclick = this.highlightTextEntity(annotation.id);
-          }
-        });
-      }
-    },
-    highlight(mode) {
+      // de/highlights the annotations in the text panel
       if (this.typeModel.length && this.items.length) {
         this.typeModel.forEach((type) => {
-          const contentTypes = this.annotations.filter((annotation) => annotation.contenttype === type);
+          const contentTypes = this.items.filter((annotation) => annotation.contenttype === type);
 
           if (contentTypes.length) {
             contentTypes.forEach((contentType) => {
@@ -261,13 +259,6 @@ export default {
         });
       }
     },
-    highlightMode(mode) {
-      this.annotations.forEach((annotation) => {
-        annotation.selected = mode;
-      });
-
-      this.highlight(mode);
-    },
     sortDirection() {
       return this.items;
     },
@@ -275,6 +266,31 @@ export default {
       return order === 'alpha'
         ? this.items.sort((x, y) => x.text.localeCompare(y.text))
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
+    },
+    // Toggle highlighting of annotation/s when clicking on appropriate text entity
+    toggleHighlighting(init = false) {
+      setTimeout(() => {
+        if (this.items.length) {
+          this.items.forEach((annotation) => {
+            const entity = document.getElementById(annotation.id);
+
+            if (entity !== null) {
+              entity.onclick = () => {
+                this.highlightTextEntity(annotation.id);
+
+                this.items.forEach((item) => {
+                  if (item.id === annotation.id) item.selected = !item.selected;
+                });
+
+                this.options[0].model = this.selectedAll;
+              };
+            }
+          });
+        }
+      }, (init ? 1500 : 0));
+    },
+    typeAvailable(type) {
+      return this.typeModel.includes(type);
     },
   },
 };
