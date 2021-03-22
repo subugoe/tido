@@ -45,8 +45,8 @@
             dense
             @click="
               annotation.selected = !annotation.selected;
-              highlightTextEntity(annotation.id);
-              options[0].model = selectedAll;"
+              options[0].model = selectedAll;
+              highlightTextEntity(annotation.id);"
           >
             <q-item-section avatar>
               <q-icon :name="icons[annotation.contenttype]" />
@@ -62,7 +62,7 @@
                 </div>
 
                 <div>
-                  ({{ annotation.comment }})
+                  ({{ annotation.description }})
                 </div>
               </q-item-label>
             </q-item-section>
@@ -121,10 +121,6 @@ import { mdiAccount, mdiMapMarker, mdiComment } from '@quasar/extras/mdi-v5';
 export default {
   name: 'Annotations',
   props: {
-    annotationids: {
-      type: Array,
-      default: () => [],
-    },
     annotations: {
       type: Array,
       default: () => [],
@@ -180,11 +176,11 @@ export default {
   },
   computed: {
     items() {
-      if (!this.annotationids.length) {
+      if (!this.annotations.length) {
         return [];
       }
       // filter all annotation types that have been selected (typeModel)
-      let filteredAnnotations = this.annotationids.filter((type) => this.typeModel.includes(type.contenttype));
+      let filteredAnnotations = this.annotations.filter((type) => this.typeModel.includes(type.contenttype));
 
       // determine sorting order and direction
       const sortingOrder = this.options[1].model;
@@ -201,17 +197,18 @@ export default {
         : filteredAnnotations.reverse();
     },
     selectedAll() {
-      const numberSelected = this.annotationids.filter((id) => id.selected === true);
-      return (numberSelected === this.items.length);
+      const numberSelected = this.items.filter((item) => item.selected === true);
+
+      return numberSelected === this.items.length;
     },
   },
   created() {
     if (this.config.annotationmode) {
       // show all Annotations at start
       this.typeModel = ['Person', 'Place', 'Editorial Comment'];
-      // set the highlight mode; 'All'
+      // set the highlight mode to 'All'
       this.options[0].model = true;
-      // wait for the *annotationids* to load and highlight all text entities
+      // wait for the *annotations* to load and highlight all text entities
       setTimeout(() => {
         this.highlightMode(true);
       }, 1500);
@@ -219,6 +216,11 @@ export default {
   },
   mounted() {
     this.toggleHighlighting();
+
+    this.$root.$on('update-item', () => {
+      // eslint-disable-next-line no-console
+      console.log('Types', this.typeModel, 'Mode', this.options[0].model, 'Order', this.options[1].model, 'Direction', this.options[2].model, 'Count', this.items.length);
+    });
   },
   methods: {
     dynamicEvent(event, model) {
@@ -233,8 +235,8 @@ export default {
     },
     // WIP: Toggle highlighting of annotation when clicking on appropriate text entity
     toggleHighlighting() {
-      if (this.annotationids.length) {
-        this.annotationids.forEach((annotation) => {
+      if (this.annotations.length) {
+        this.annotations.forEach((annotation) => {
           const id = document.getElementById(annotation.id);
 
           if (id !== null) {
@@ -244,11 +246,11 @@ export default {
       }
     },
     highlight(mode) {
-      if (this.typeModel.length && this.annotationids.length) {
+      if (this.typeModel.length && this.items.length) {
         this.typeModel.forEach((type) => {
-          const contentTypes = this.annotationids.filter((annotation) => annotation.contenttype === type);
+          const contentTypes = this.annotations.filter((annotation) => annotation.contenttype === type);
 
-          if (Array.isArray(contentTypes) && contentTypes.length) {
+          if (contentTypes.length) {
             contentTypes.forEach((contentType) => {
               const textEntity = document.getElementById(contentType.id);
               if (textEntity !== null) {
@@ -260,7 +262,7 @@ export default {
       }
     },
     highlightMode(mode) {
-      this.annotationids.forEach((annotation) => {
+      this.annotations.forEach((annotation) => {
         annotation.selected = mode;
       });
 

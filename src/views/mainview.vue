@@ -86,10 +86,6 @@ export default {
     Toolbar,
   },
   props: {
-    annotationids: {
-      type: Array,
-      default: () => [],
-    },
     annotations: {
       type: Array,
       default: () => [],

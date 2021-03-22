@@ -13,7 +13,6 @@
 
       <q-page-container>
         <router-view
-          :annotationids="annotationids"
           :annotations="annotations"
           :collection="collection"
           :config="config"
@@ -52,7 +51,6 @@ export default {
   mixins: [Panels],
   data() {
     return {
-      annotationids: [],
       annotations: [],
       collection: {},
       collectiontitle: '',
@@ -122,6 +120,47 @@ export default {
       return data;
     },
     /**
+    * filter the annotation IDs and the matching text part of the current item
+    *
+    * caller: *getAnnotations()*
+    *
+    * @param array annotations
+    *
+    * @return array identifiers
+    */
+    filterAnnotations(annotations) {
+      const identifiers = [];
+
+      annotations.forEach((annotation) => {
+        const id = this.getAnnotationId(annotation);
+
+        identifiers.push({
+          id,
+          contenttype: annotation.body['x-content-type'],
+          description: annotation.body.value,
+          selected: false,
+          text: this.getAnnotationText(id),
+        });
+      });
+
+      return identifiers;
+    },
+    /**
+    * get the annotation id/s of the current item
+    *
+    * caller: *filterAnnotations()*
+    *
+    * @param object annotation
+    *
+    * @return string
+    */
+    getAnnotationId(annotation) {
+      const split = annotation.target.id.split('/');
+      const id = split[split.length - 1];
+
+      return id;
+    },
+    /**
       * get annotations of the current item
       * caller: *getItemData()*
       *
@@ -133,44 +172,26 @@ export default {
           this.request(annotations.annotationCollection.first)
             .then((current) => {
               if (current.annotationPage.items && current.annotationPage.items.length) {
-                this.annotations = current.annotationPage.items;
-                this.annotationids = this.getAnnotationIds(this.annotations);
-              } else this.annotationids = [];
-            })
-            .catch(() => {
-              this.$q.notify({ message: 'No annotations available' });
+                this.annotations = this.filterAnnotations(current.annotationPage.items);
+              } else this.annotations = [];
             });
+        })
+        .catch(() => {
+          this.$q.notify({ message: 'No annotations available' });
         });
     },
     /**
-      * get annotation IDs of the current item
-      * and extract the corresponding text part
+      * match annotation against it's text counterpart
+      * caller: *filterAnnotations()*
       *
-      * caller: *getAnnotations()*
+      * @param string id
       *
-      * @param array annotations
-      *
-      * @return array identifiers
+      * @return string
       */
-    getAnnotationIds(annotations) {
-      const identifiers = [];
+    getAnnotationText(id) {
+      const entity = document.getElementById(id);
 
-      annotations.forEach((item) => {
-        const split = item.target.id.split('/');
-        const id = split[split.length - 1];
-
-        const entity = document.getElementById(id);
-
-        identifiers.push({
-          id,
-          comment: item.body.value,
-          contenttype: item.body['x-content-type'],
-          selected: this.config.annotationmode,
-          text: entity.innerText,
-        });
-      });
-
-      return identifiers;
+      return entity.innerText;
     },
     /**
       * get collection data according to 'entrypoint'
