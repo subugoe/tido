@@ -1,5 +1,23 @@
 <template>
   <div>
+    <q-card>
+      <q-tabs
+        v-model="activeTab"
+        dense
+        class="text-grey q-mb-lg"
+        active-color="$q.dark.isActive ? 'white' : 'accent'"
+        indicator-color="$q.dark.isActive ? 'white' : 'accent'"
+        align="justify"
+        narrow-indicator
+      >
+        <q-tab
+          v-for="(contenturl, i) in contenturls"
+          :key="`content${i}`"
+          :name="contenturl"
+          :label="contenttypes[i]"
+        />
+      </q-tabs>
+    </q-card>
     <div class="row sticky">
       <div>
         <q-btn
@@ -60,6 +78,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    contenttypes: {
+      type: Array,
+      default: () => [],
+    },
     fontsize: {
       type: Number,
       default: () => 14,
@@ -76,13 +98,16 @@ export default {
       type: String,
       default: () => '',
     },
+    transliteration: {
+      type: String,
+      default: () => '',
+    },
   },
-  data() {
-    return {
-      content: '',
-      sequenceindex: 0,
-    };
-  },
+  data: () => ({
+    activeTab: null,
+    content: '',
+    sequenceindex: 0,
+  }),
   computed: {
     supportType() {
       const { support } = this.manifests[this.sequenceindex];
@@ -95,18 +120,23 @@ export default {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
     },
+    activeTab(url) {
+      this.request(url, 'text').then((data) => {
+        if (this.supportType) {
+          this.getSupport(this.manifests[0].support);
+        }
+
+        this.content = data;
+      });
+    },
   },
   async created() {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
 
-    this.content = await this.request(this.contenturls[0], 'text').then((data) => {
-      if (this.supportType) {
-        this.getSupport(this.manifests[0].support);
-      }
+    const [contentUrl] = this.contenturls;
 
-      return data;
-    });
+    this.activeTab = contentUrl;
   },
 
   mounted() {
