@@ -14,7 +14,6 @@
         :key="index"
         v-model="typeModel"
         :color="$q.dark.isActive ? 'grey-8' : 'accent'"
-        :disabled="typeAvailable(type)"
         :icon="type.icon"
         :label="type.label"
         :val="type.value"
@@ -113,6 +112,12 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div v-else>
+    <span class="row justify-center text-h6 text-center text-uppercase">
+      No annotations available
+    </span>
   </div>
 </template>
 
@@ -216,7 +221,7 @@ export default {
     }
   },
   mounted() {
-    this.toggleHighlighting(true);
+    this.toggleHighlighting(1);
 
     this.$root.$on('update-item', () => {
       this.highlightMode(this.options[0].model);
@@ -227,7 +232,7 @@ export default {
     dynamicEvent(event, model) {
       this[event](model);
     },
-    // highlights annotation/s individually on click (Text panel)
+    // highlights annotation/s individually on click (text panel)
     highlightTextEntity(id) {
       const entity = document.getElementById(id);
 
@@ -235,8 +240,7 @@ export default {
         entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
       }
     },
-    // highlight either all annotations or none
-    // mode values: true | false
+    // highlights either all (true) or none (false)
     highlightMode(mode) {
       // de/highlights the annotations in the list
       this.annotations.forEach((annotation) => {
@@ -244,17 +248,13 @@ export default {
       });
 
       // de/highlights the annotations in the text panel
-      if (this.typeModel.length && this.items.length) {
-        this.typeModel.forEach((type) => {
-          const contentTypes = this.items.filter((annotation) => annotation.contenttype === type);
+      if (this.items.length) {
+        this.items.forEach((annotation) => {
+          const textEntity = document.getElementById(annotation.id);
 
-          if (contentTypes.length) {
-            contentTypes.forEach((contentType) => {
-              const textEntity = document.getElementById(contentType.id);
-              if (textEntity !== null) {
-                textEntity.style.borderBottom = !mode ? '' : 'solid';
-              }
-            });
+          if (textEntity !== null) {
+            textEntity.style.borderBottom = !mode ? '' : 'solid';
+            textEntity.style.cursor = !mode ? '' : 'pointer';
           }
         });
       }
@@ -278,19 +278,23 @@ export default {
               entity.onclick = () => {
                 this.highlightTextEntity(annotation.id);
 
-                this.items.forEach((item) => {
+                this.annotations.forEach((item) => {
                   if (item.id === annotation.id) item.selected = !item.selected;
                 });
 
                 this.options[0].model = this.selectedAll;
+
+                const span = document.createElement('span');
+                span.setAttribute('data-icon', '&xe7fb;');
+                entity.appendChild(span);
+
+                // eslint-disable-next-line no-console
+                // console.log(entity);
               };
             }
           });
         }
       }, (init ? 1500 : 0));
-    },
-    typeAvailable(type) {
-      return this.typeModel.includes(type);
     },
   },
 };
@@ -318,5 +322,9 @@ export default {
 
 .list-height {
   height: 27vh;
+}
+
+[data-icon]:after {
+  content: attr(data-icon);
 }
 </style>
