@@ -1,8 +1,8 @@
 <template>
   <div class="scroll-panel">
     <!-- Collection-->
-    <q-list v-if="config.meta.collection.show && Object.keys(collection).length">
-      <q-item>
+    <q-list v-if="config.meta.collection.all && Object.keys(collection).length">
+      <q-item class="q-px-none">
         <q-item-section class="text-h6 caps">
           Collection
         </q-item-section>
@@ -11,6 +11,7 @@
       <q-item
         v-for="(mCollection, index) in metadataCollection"
         :key="index"
+        class="q-px-none"
       >
         <q-item-section v-if="Object.keys(mCollection).length">
           <q-item-label
@@ -34,8 +35,8 @@
     </q-list>
 
     <!-- Manifest-->
-    <q-list v-if="config.meta.manifest.show && itemcount">
-      <q-item>
+    <q-list v-if="config.meta.manifest.all && itemcount">
+      <q-item class="q-px-none">
         <q-item-section class="text-h6 caps">
           {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
@@ -44,6 +45,7 @@
       <q-item
         v-for="(mManifest, index) in metadataManifest"
         :key="index"
+        class="q-px-none"
       >
         <q-item-section>
           <q-item-label
@@ -63,6 +65,7 @@
         <q-item
           v-for="(meta, idx) in manifests[sequenceindex].metadata"
           :key="idx"
+          class="q-px-none"
         >
           <q-item-section>
             <q-item-label
@@ -85,8 +88,8 @@
     />
 
     <!-- Item-->
-    <q-list v-if="config.meta.item.show">
-      <q-item>
+    <q-list v-if="config.meta.item.all">
+      <q-item class="q-px-none">
         <q-item-section class="text-h6 caps">
           {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
@@ -95,6 +98,7 @@
       <q-item
         v-for="(mItem, index) in metadataItem"
         :key="index"
+        class="q-px-none"
       >
         <q-item-section v-if="Object.keys(mItem).length">
           <q-item-label
