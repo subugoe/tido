@@ -16,6 +16,7 @@
           :annotations="annotations"
           :collection="collection"
           :config="config"
+          :contenttypes="contentTypes"
           :contenturls="contenturls"
           :fontsize="fontsize"
           :imageurl="imageurl"
@@ -55,6 +56,7 @@ export default {
       collection: {},
       collectiontitle: '',
       config: {},
+      contentTypes: [],
       contenturls: [],
       fontsize: 14,
       imageurl: '',
@@ -189,9 +191,7 @@ export default {
       * @return string
       */
     getAnnotationText(id) {
-      const entity = document.getElementById(id);
-
-      return entity.innerText;
+      return document.getElementById(id).innerText;
     },
     /**
       * get collection data according to 'entrypoint'
@@ -235,9 +235,13 @@ export default {
       const urls = [];
 
       if (Array.isArray(content) && content.length) {
+        this.contentTypes = [];
+
         content.forEach((c) => {
           if (c.type.match(/(application\/xhtml\+xml|text\/html)/)) {
             urls.push(c.url);
+
+            this.contentTypes.push(c.type.split('type=')[1]);
           }
         });
       }

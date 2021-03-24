@@ -1,5 +1,24 @@
 <template>
   <div>
+    <div>
+      <q-tabs
+        v-model="activeTab"
+        dense
+        class="text-grey q-mb-lg"
+        active-color="$q.dark.isActive ? 'white' : 'accent'"
+        indicator-color="$q.dark.isActive ? 'white' : 'accent'"
+        align="justify"
+        narrow-indicator
+      >
+        <q-tab
+          v-for="(contenturl, i) in contenturls"
+          :key="`content${i}`"
+          :name="contenturl"
+          :label="contenttypes[i]"
+        />
+      </q-tabs>
+    </div>
+
     <div class="row sticky">
       <div>
         <q-btn
@@ -46,6 +65,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    contenttypes: {
+      type: Array,
+      default: () => [],
+    },
     fontsize: {
       type: Number,
       default: () => 14,
@@ -61,6 +84,7 @@ export default {
   },
   data() {
     return {
+      activeTab: null,
       buttons: [
         { event: 'increase', icon: fasSearchPlus, title: 'Increase Textsize' },
         { event: 'decrease', icon: fasSearchMinus, title: 'Decrease Textsize' },
@@ -80,14 +104,23 @@ export default {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
     },
+    activeTab(url) {
+      this.request(url, 'text').then((data) => {
+        if (this.supportType) {
+          this.getSupport(this.manifests[0].support);
+        }
+
+        this.content = data;
+      });
+    },
   },
   async created() {
-    this.content = await this.request(this.contenturls[0], 'text').then((data) => {
-      if (this.supportType) {
-        this.getSupport(this.manifests[0].support);
-      }
-      return data;
-    });
+    this.fasSearchPlus = fasSearchPlus;
+    this.fasSearchMinus = fasSearchMinus;
+
+    const [contentUrl] = this.contenturls;
+
+    this.activeTab = contentUrl;
   },
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
