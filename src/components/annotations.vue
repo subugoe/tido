@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import { mdiAccount, mdiMapMarker, mdiComment } from '@quasar/extras/mdi-v5';
+import { fasUser, fasMapMarker, fasComment } from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Annotations',
@@ -139,9 +139,9 @@ export default {
   data() {
     return {
       icons: {
-        'Editorial Comment': mdiComment,
-        Person: mdiAccount,
-        Place: mdiMapMarker,
+        'Editorial Comment': fasComment,
+        Person: fasUser,
+        Place: fasMapMarker,
       },
       options: [
         {
@@ -174,9 +174,9 @@ export default {
       ],
       typeModel: [],
       types: [
-        { icon: mdiAccount, label: 'Names', value: 'Person' },
-        { icon: mdiMapMarker, label: 'Places', value: 'Place' },
-        { icon: mdiComment, label: 'Comments', value: 'Editorial Comment' },
+        { icon: fasUser, label: 'Names', value: 'Person' },
+        { icon: fasMapMarker, label: 'Places', value: 'Place' },
+        { icon: fasComment, label: 'Comments', value: 'Editorial Comment' },
       ],
     };
   },

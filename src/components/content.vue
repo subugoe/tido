@@ -3,11 +3,11 @@
     <div>
       <q-tabs
         v-model="activeTab"
-        dense
-        class="text-grey q-mb-lg"
         active-color="$q.dark.isActive ? 'white' : 'accent'"
-        indicator-color="$q.dark.isActive ? 'white' : 'accent'"
         align="justify"
+        class="text-grey q-mb-lg"
+        dense
+        indicator-color="$q.dark.isActive ? 'white' : 'accent'"
         narrow-indicator
       >
         <q-tab
