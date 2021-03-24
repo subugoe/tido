@@ -98,10 +98,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    contenttypes: {
-      type: Array,
-      default: () => [],
-    },
     contenturls: {
       type: Array,
       default: () => [],

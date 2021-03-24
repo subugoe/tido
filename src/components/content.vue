@@ -1,24 +1,5 @@
 <template>
   <div>
-    <div>
-      <q-tabs
-        v-model="activeTab"
-        active-color="$q.dark.isActive ? 'white' : 'accent'"
-        align="justify"
-        class="text-grey q-mb-lg"
-        dense
-        indicator-color="$q.dark.isActive ? 'white' : 'accent'"
-        narrow-indicator
-      >
-        <q-tab
-          v-for="(contenturl, i) in contenturls"
-          :key="`content${i}`"
-          :name="contenturl"
-          :label="contenttypes[i]"
-        />
-      </q-tabs>
-    </div>
-
     <div class="row sticky">
       <div>
         <q-btn
@@ -65,10 +46,6 @@ export default {
       type: Array,
       default: () => [],
     },
-    contenttypes: {
-      type: Array,
-      default: () => [],
-    },
     fontsize: {
       type: Number,
       default: () => 14,
@@ -84,7 +61,6 @@ export default {
   },
   data() {
     return {
-      activeTab: null,
       buttons: [
         { event: 'increase', icon: fasSearchPlus, title: 'Increase Textsize' },
         { event: 'decrease', icon: fasSearchMinus, title: 'Decrease Textsize' },
@@ -115,12 +91,12 @@ export default {
     },
   },
   async created() {
-    this.fasSearchPlus = fasSearchPlus;
-    this.fasSearchMinus = fasSearchMinus;
-
-    const [contentUrl] = this.contenturls;
-
-    this.activeTab = contentUrl;
+    this.content = await this.request(this.contenturls[0], 'text').then((data) => {
+      if (this.supportType) {
+        this.getSupport(this.manifests[0].support);
+      }
+      return data;
+    });
   },
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
