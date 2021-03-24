@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-card>
+    <div>
       <q-tabs
         v-model="activeTab"
         dense
@@ -17,7 +17,7 @@
           :label="contenttypes[i]"
         />
       </q-tabs>
-    </q-card>
+    </div>
     <div class="row sticky">
       <div>
         <q-btn
@@ -95,10 +95,6 @@ export default {
       default: null,
     },
     transcription: {
-      type: String,
-      default: () => '',
-    },
-    transliteration: {
       type: String,
       default: () => '',
     },
