@@ -73,19 +73,21 @@
 
     <div v-else>
       <q-card
-        flat
         bordered
+        flat
       >
         <q-card-section class="text-center">
           <q-icon
             :name="fasInfoCircle"
-            size="sm"
-            color="red-9"
             class="q-pr-sm"
+            color="red-9"
+            size="sm"
           />
           <span class="vertical-middle text-body1 text-uppercase">Please note</span>
         </q-card-section>
+
         <q-separator inset />
+
         <q-card-section class="text-body2">
           Toggle at least one data type to <span class="text-no-wrap">show annotations</span>.
         </q-card-section>
@@ -137,7 +139,12 @@
 </template>
 
 <script>
-import { fasUser, fasMapMarker, fasComment, fasInfoCircle } from '@quasar/extras/fontawesome-v5';
+import {
+  fasComment,
+  fasInfoCircle,
+  fasMapMarker,
+  fasUser,
+} from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Annotations',
