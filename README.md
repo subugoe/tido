@@ -39,7 +39,7 @@ Also the commit short hash can be used to see a demo.
   - [The Keys in Detail](#the-keys-in-detail)
   - [Configure the Panels](#configure-the-panels)
     - [The Panel Keys in Detail](#the-panel-keys-in-detail)
-- [Viewer Components](#viewer-components)
+- [Viewer Architecture](#viewer-architecture)
 - [Dockerfile](#dockerfile)
 - [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend)
 - [Architecture](#architecture)
@@ -98,62 +98,51 @@ import '@subugoe/tido/dist/tido'
   <script id="tido-config" type="application/json">
   {
     "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
-    "colors": {
-      "primary": "",
-      "secondary": "",
-      "accent": ""
-    },
-    "headers": {
-      "all": true,
-      "info": true,
-      "navigation": true,
-      "toggle": true
-    },
-    "labels": {
-      "item": "Sheet",
-      "manifest": "Manuscript"
-    },
-    "meta": {
-      "collection": {
-        "show": true
+"annotationmode": true,
+      "colors": {
+        "primary": "",
+        "secondary": "",
+        "accent": ""
       },
-      "manifest": {
-        "show": true
+      "headers": {
+        "all": true,
+        "info": true,
+        "navigation": true,
+        "toggle": true
       },
-      "item": {
-        "show": true
-      }
-    },
-    "panels": [
-      {
-        "connector": [1],
-        "heading": true,
-        "label": "Contents",
-        "show": true
+      "labels": {
+        "item": "Sheet",
+        "manifest": "Manuscript"
       },
-      {
-        "connector": [3],
-        "heading": true,
-        "label": "Image",
-        "show": true
-      },
-      {
-        "connector": [4],
-        "heading": true,
-        "label": "Text",
-        "show": true
-      },
-      {
-        "connector": [2],
-        "heading": true,
-        "label": "Metadata",
-        "show": true
-      }
-    ],
-    "rtl": false,
-    "standalone": true
-  }
-  </script>
+      "panels": [
+        {
+          "connector": [1, 2],
+          "heading": true,
+          "label": "Contents & Meta",
+          "show": true
+        },
+        {
+          "connector": [3],
+          "heading": true,
+          "label": "Image",
+          "show": true
+        },
+        {
+          "connector": [4],
+          "heading": true,
+          "label": "Text",
+          "show": true
+        },
+        {
+          "connector": [5],
+          "heading": true,
+          "label": "Annotations",
+          "show": true
+        }
+      ],
+      "rtl": false,
+      "standalone": true
+    }  </script>
 
   <div id="q-app"></div>
 </body>
@@ -265,7 +254,6 @@ There are options to
 - group multiple components inside a single panel
 - set the order of the panels
 - rename labels and / or panel headings
-- filter individual metadata fields
 - and **more** ...
 
 As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate element.
@@ -274,62 +262,51 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   <script id="tido-config" type="application/json">
   {
     "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
-    "colors": {
-      "primary": "",
-      "secondary": "",
-      "accent": ""
-    },
-    "headers": {
-      "all": true,
-      "info": true,
-      "navigation": true,
-      "toggle": true
-    },
-    "labels": {
-      "item": "Sheet",
-      "manifest": "Manuscript"
-    },
-    "meta": {
-      "collection": {
-        "show": true
+"annotationmode": true,
+      "colors": {
+        "primary": "",
+        "secondary": "",
+        "accent": ""
       },
-      "manifest": {
-        "show": true
+      "headers": {
+        "all": true,
+        "info": true,
+        "navigation": true,
+        "toggle": true
       },
-      "item": {
-        "show": true
-      }
-    },
-    "panels": [
-      {
-        "connector": [1],
-        "heading": true,
-        "label": "Contents",
-        "show": true
+      "labels": {
+        "item": "Sheet",
+        "manifest": "Manuscript"
       },
-      {
-        "connector": [3],
-        "heading": true,
-        "label": "Image",
-        "show": true
-      },
-      {
-        "connector": [4],
-        "heading": true,
-        "label": "Text",
-        "show": true
-      },
-      {
-        "connector": [2],
-        "heading": true,
-        "label": "Metadata",
-        "show": true
-      }
-    ],
-    "rtl": false,
-    "standalone": true
-  }
-  </script>
+      "panels": [
+        {
+          "connector": [1, 2],
+          "heading": true,
+          "label": "Contents & Meta",
+          "show": true
+        },
+        {
+          "connector": [3],
+          "heading": true,
+          "label": "Image",
+          "show": true
+        },
+        {
+          "connector": [4],
+          "heading": true,
+          "label": "Text",
+          "show": true
+        },
+        {
+          "connector": [5],
+          "heading": true,
+          "label": "Annotations",
+          "show": true
+        }
+      ],
+      "rtl": false,
+      "standalone": true
+    }  </script>
 ```
 
 **Note**: It's a *JSON* object. So if you are going to make any changes and you have to quote these (e.g. see *labels* or *colors*), please use **double quotes** only.
@@ -343,9 +320,15 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   **Note**: You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
 
+- **annotationmode**
+
+  if your API provides *annotations* you can toggle whether to start with all of it highlighted or not
+
+  Defaults to `true`
+
 - **colors**
 
-  Set the colors used in the frontend.
+  set the colors used in the frontend.
 
   `primary` and `accent` should be a darker tone, so that white text is visible if used as background. It's the other way around with `secondary`.
 
@@ -375,9 +358,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
     set this value to `false` if you want to switch off the ToggleBar.
 
-    **Note**:
-
-    if you turn this one off, you won't be able to toggle the panels anymore.
+    **Note**: if you turn this one off, you won't be able to toggle the panels anymore.
 
     All header values default to `true`
 
@@ -396,26 +377,6 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     Same as for `item` but related to the manifest title.
 
     Defaults to `Manuscript`
-
-- **meta**
-
-  set either of the `show`-keys to `false` to hide the appropriate section.
-
-  e.g. no metadata related to the manifest will be displayed:
-
-  ```json
-  "meta": {
-    "collection": {
-      "show": true
-    },
-    "manifest": {
-      "show": false
-    },
-    "item": {
-      "show": true
-    }
-  },
-  ```
 
 - **rtl (right to left)**
 
@@ -465,7 +426,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
 The panel-array consists of four objects according to the maximum number of panels, that can be shown at once.
 
-Each object inside that constant consists of similar keys: `connector`, `pane_label` and `show`.
+Each object inside that constant consists of similar keys: `connector`, `heading`, `pane_label` and `show`.
 
 #### The Panel Keys in Detail
 
@@ -485,17 +446,18 @@ Each object inside that constant consists of similar keys: `connector`, `pane_la
 
   Assuming you want to combine the **Metadata**, **Text** and **Annotations** panels, the configuration could look like this:
 
-  ```js
+  ```json
     {
-      connector: [2, 4, 5],
-      label: 'Meta, Text & Anno',
-      show: true
+      "connector": [2, 4, 5],
+      "heading": true,
+      "label": "Meta, Text & Anno",
+      "show": true
     }
   ```
 
 - **heading**
 
-  set this value to false to hide a panel's heading
+  set this value to false to hide a panel's heading individually
 
   Defaults to `true`
 
@@ -511,7 +473,7 @@ Each object inside that constant consists of similar keys: `connector`, `pane_la
 
 **Note**:
 
-## Viewer Components
+## Viewer Architecture
 
 ![Viewer components](img/Viewer.png)
 
