@@ -1,7 +1,7 @@
 <template>
   <div class="scroll-panel">
     <!-- Collection-->
-    <q-list v-if="config.meta.collection.all && Object.keys(collection).length">
+    <q-list v-if="Object.keys(collection).length">
       <q-item class="q-px-none">
         <q-item-section class="text-h6 caps">
           Collection
@@ -28,14 +28,13 @@
       </q-item>
 
       <q-separator
-        v-if="showSeparator(config.meta.collection.show && (config.meta.manifest.show || config.meta.item.show))"
         class="q-mt-md q-mb-sm"
         inset
       />
     </q-list>
 
     <!-- Manifest-->
-    <q-list v-if="config.meta.manifest.all && itemcount">
+    <q-list v-if="itemcount">
       <q-item class="q-px-none">
         <q-item-section class="text-h6 caps">
           {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
@@ -79,16 +78,15 @@
           </q-item-section>
         </q-item>
       </div>
+
+      <q-separator
+        inset
+        class="q-mt-md q-mb-sm"
+      />
     </q-list>
 
-    <q-separator
-      v-if="showSeparator(config.meta.manifest.show && config.meta.item.show)"
-      inset
-      class="q-mt-md q-mb-sm"
-    />
-
     <!-- Item-->
-    <q-list v-if="config.meta.item.all">
+    <q-list>
       <q-item class="q-px-none">
         <q-item-section class="text-h6 caps">
           {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
@@ -181,6 +179,7 @@ export default {
         metadata.push(
           { id: 'Image License', data: this.item.image.license.id },
         );
+
         if (this.item.image.license.notes) {
           metadata.push(
             { id: 'Image Notes', data: this.item.image.license.notes },
@@ -215,17 +214,13 @@ export default {
       if (seqindex !== null) {
         this.sequenceindex = seqindex;
       }
+
       this.manifests[this.sequenceindex].sequence.forEach((item, index) => {
         if (item.id === url) {
           this.itemindex = index;
         }
       });
     });
-  },
-  methods: {
-    showSeparator(condition) {
-      return condition === true;
-    },
   },
 };
 </script>

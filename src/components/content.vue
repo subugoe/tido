@@ -80,15 +80,6 @@ export default {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
     },
-    activeTab(url) {
-      this.request(url, 'text').then((data) => {
-        if (this.supportType) {
-          this.getSupport(this.manifests[0].support);
-        }
-
-        this.content = data;
-      });
-    },
   },
   async created() {
     this.content = await this.request(this.contenturls[0], 'text').then((data) => {
