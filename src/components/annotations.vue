@@ -72,9 +72,24 @@
     </div>
 
     <div v-else>
-      <h3 class="text-body1 q-mb-md text-weight-medium text-uppercase">
-        Click on a data type to show the annotations
-      </h3>
+      <q-card
+        flat
+        bordered
+      >
+        <q-card-section class="text-center">
+          <q-icon
+            :name="fasInfoCircle"
+            size="sm"
+            color="red-9"
+            class="q-pr-sm"
+          />
+          <span class="vertical-middle text-body1 text-uppercase">Please note</span>
+        </q-card-section>
+        <q-separator inset />
+        <q-card-section class="text-body2">
+          Toggle at least one data type to <span class="text-no-wrap">show annotations</span>.
+        </q-card-section>
+      </q-card>
     </div>
 
     <!-- Options -->
@@ -123,6 +138,7 @@
 
 <script>
 import { mdiAccount, mdiMapMarker, mdiComment } from '@quasar/extras/mdi-v5';
+import { fasInfoCircle } from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Annotations',
@@ -209,6 +225,7 @@ export default {
     },
   },
   created() {
+    this.fasInfoCircle = fasInfoCircle;
     if (this.config.annotationmode) {
       // show all Annotations at start
       this.typeModel = ['Person', 'Place', 'Editorial Comment'];
@@ -324,7 +341,7 @@ export default {
   height: 27vh;
 }
 
-[data-icon]:after {
+[data-icon]::after {
   content: attr(data-icon);
 }
 </style>
