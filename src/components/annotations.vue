@@ -14,7 +14,6 @@
         :key="index"
         v-model="typeModel"
         :color="$q.dark.isActive ? 'grey-8' : 'accent'"
-        :disabled="typeModel.includes(type)"
         :icon="type.icon"
         :label="type.label"
         :val="type.value"
