@@ -133,14 +133,17 @@ export default {
 
       annotations.forEach((annotation) => {
         const id = this.getAnnotationId(annotation);
+        const text = this.getAnnotationText(id);
 
-        identifiers.push({
-          id,
-          contenttype: annotation.body['x-content-type'],
-          description: annotation.body.value,
-          selected: false,
-          text: this.getAnnotationText(id),
-        });
+        if (id !== null && text !== false) {
+          identifiers.push({
+            id,
+            contenttype: annotation.body['x-content-type'],
+            description: annotation.body.value,
+            selected: this.config.annotationmode,
+            text,
+          });
+        }
       });
 
       return identifiers;
@@ -168,12 +171,14 @@ export default {
     getAnnotations(url) {
       this.request(url)
         .then((annotations) => {
-          this.request(annotations.annotationCollection.first)
-            .then((current) => {
-              if (current.annotationPage.items && current.annotationPage.items.length) {
-                this.annotations = this.filterAnnotations(current.annotationPage.items);
-              } else this.annotations = [];
-            });
+          if (annotations.annotationCollection.first) {
+            this.request(annotations.annotationCollection.first)
+              .then((current) => {
+                if (current.annotationPage.items && current.annotationPage.items.length) {
+                  this.annotations = this.filterAnnotations(current.annotationPage.items);
+                } else this.annotations = [];
+              });
+          }
         })
         .catch(() => {
           this.$q.notify({ message: 'No annotations available' });
@@ -188,7 +193,9 @@ export default {
       * @return string
       */
     getAnnotationText(id) {
-      return document.getElementById(id).innerText;
+      const element = document.getElementById(id);
+
+      return element !== null ? element.innerText : false;
     },
     /**
       * get collection data according to 'entrypoint'

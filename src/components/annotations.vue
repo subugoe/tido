@@ -14,6 +14,7 @@
         :key="index"
         v-model="typeModel"
         :color="$q.dark.isActive ? 'grey-8' : 'accent'"
+        :disabled="typeModel.includes(type)"
         :icon="type.icon"
         :label="type.label"
         :val="type.value"
@@ -46,7 +47,7 @@
             @click="
               annotation.selected = !annotation.selected;
               options[0].model = selectedAll;
-              highlightTextEntity(annotation.id);"
+              toggleHighlighting(annotation.id);"
           >
             <q-item-section avatar>
               <q-icon :name="icons[annotation.contenttype]" />
@@ -59,10 +60,6 @@
               >
                 <div class="q-mb-xs text-body1">
                   {{ annotation.text }}
-                </div>
-
-                <div>
-                  ({{ annotation.description }})
                 </div>
               </q-item-label>
             </q-item-section>
@@ -83,12 +80,12 @@
             color="red-9"
             size="sm"
           />
-          <span class="vertical-middle text-body1 text-uppercase">Please note</span>
+          <span class="text-body1 text-uppercase vertical-middle">Please note</span>
         </q-card-section>
 
         <q-separator inset />
 
-        <q-card-section class="text-body2">
+        <q-card-section class="text-body2 text-center text-uppercase">
           Toggle at least one data type to <span class="text-no-wrap">show annotations</span>.
         </q-card-section>
       </q-card>
@@ -170,7 +167,7 @@ export default {
           event: 'highlightMode',
           label: 'Highlight',
           limit: 0,
-          model: false,
+          model: null,
           options: [
             { label: 'All', value: true }, { label: 'None', value: false },
           ],
@@ -230,8 +227,16 @@ export default {
       return numberSelected.length === this.items.length;
     },
   },
+  watch: {
+    annotations() {
+      this.highlightMode(this.options[0].model);
+      this.registerHandler();
+    },
+  },
   created() {
     this.fasInfoCircle = fasInfoCircle;
+  },
+  mounted() {
     if (this.config.annotationmode) {
       // show all Annotations at start
       this.typeModel = ['Person', 'Place', 'Editorial Comment'];
@@ -239,45 +244,54 @@ export default {
       this.options[0].model = true;
       // wait for the *annotations* to load and highlight all text entities
       setTimeout(() => {
-        this.highlightMode(true);
+        this.highlightMode(this.config.annotationmode);
+        this.registerHandler();
       }, 2000);
     }
-  },
-  mounted() {
-    this.toggleHighlighting(1);
-
-    this.$root.$on('update-item', () => {
-      this.highlightMode(this.options[0].model);
-      this.toggleHighlighting();
-    });
   },
   methods: {
     dynamicEvent(event, model) {
       this[event](model);
     },
     // highlights annotation/s individually on click (text panel)
-    highlightTextEntity(id) {
+    toggleHighlighting(id) {
       const entity = document.getElementById(id);
 
       if (entity !== null) {
         entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
+        entity.style.cursor = 'pointer';
       }
     },
     // highlights either all (true) or none (false)
     highlightMode(mode) {
-      // de/highlights the annotations in the list
-      this.annotations.forEach((annotation) => {
+      this.items.forEach((annotation) => {
+        // de/highlights the annotations in the list
         annotation.selected = mode;
+
+        const element = document.getElementById(annotation.id);
+
+        if (element !== null) {
+          // de/highlights the annotations in the text panel
+          element.style.borderBottom = mode ? 'solid' : '';
+          element.style.cursor = 'pointer';
+        }
       });
 
-      // de/highlights the annotations in the text panel
+      this.options[0].model = this.selectedAll;
+    },
+    // Toggle highlighting of annotation/s when clicking on appropriate text entity
+    registerHandler() {
       if (this.items.length) {
         this.items.forEach((annotation) => {
-          const textEntity = document.getElementById(annotation.id);
+          const entity = document.getElementById(annotation.id);
 
-          if (textEntity !== null) {
-            textEntity.style.borderBottom = !mode ? '' : 'solid';
-            textEntity.style.cursor = !mode ? '' : 'pointer';
+          if (entity !== null) {
+            entity.onclick = () => {
+              annotation.selected = !annotation.selected;
+
+              this.options[0].model = this.selectedAll;
+              this.toggleHighlighting(annotation.id);
+            };
           }
         });
       }
@@ -289,35 +303,6 @@ export default {
       return order === 'alpha'
         ? this.items.sort((x, y) => x.text.localeCompare(y.text))
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
-    },
-    // Toggle highlighting of annotation/s when clicking on appropriate text entity
-    toggleHighlighting(init = false) {
-      setTimeout(() => {
-        if (this.items.length) {
-          this.items.forEach((annotation) => {
-            const entity = document.getElementById(annotation.id);
-
-            if (entity !== null) {
-              entity.onclick = () => {
-                this.highlightTextEntity(annotation.id);
-
-                this.annotations.forEach((item) => {
-                  if (item.id === annotation.id) item.selected = !item.selected;
-                });
-
-                this.options[0].model = this.selectedAll;
-
-                const span = document.createElement('span');
-                span.setAttribute('data-icon', '&xe7fb;');
-                entity.appendChild(span);
-
-                // eslint-disable-next-line no-console
-                // console.log(entity);
-              };
-            }
-          });
-        }
-      }, (init ? 1500 : 0));
     },
   },
 };
