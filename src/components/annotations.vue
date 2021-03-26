@@ -46,10 +46,10 @@
             @click="
               annotation.selected = !annotation.selected;
               options[0].model = selectedAll;
-              toggleHighlighting(annotation.id);"
+              toggleHighlighting(annotation.id, annotation.contenttype);"
           >
             <q-item-section avatar>
-              <q-icon :name="icons[annotation.contenttype]" />
+              <q-icon :name="icons.sets[annotation.contenttype]" />
             </q-item-section>
 
             <q-item-section>
@@ -142,6 +142,8 @@ import {
   fasUser,
 } from '@quasar/extras/fontawesome-v5';
 
+import '../../node_modules/@quasar/extras/fontawesome-v5/fontawesome-v5.css';
+
 export default {
   name: 'Annotations',
   props: {
@@ -157,9 +159,16 @@ export default {
   data() {
     return {
       icons: {
-        'Editorial Comment': fasComment,
-        Person: fasUser,
-        Place: fasMapMarker,
+        classes: {
+          'Editorial Comment': 'fa-comment',
+          Person: 'fa-user-alt',
+          Place: 'fa-map-marker-alt',
+        },
+        sets: {
+          'Editorial Comment': fasComment,
+          Person: fasUser,
+          Place: fasMapMarker,
+        },
       },
       options: [
         {
@@ -260,10 +269,14 @@ export default {
 
         const element = document.getElementById(annotation.id);
 
+        // de/highlights the annotations in the text panel
         if (element !== null) {
-          // de/highlights the annotations in the text panel
           element.style.borderBottom = mode ? 'solid' : '';
           element.style.cursor = 'pointer';
+
+          if (mode) {
+            element.classList.add('icon', 'fas', this.icons.classes[annotation.contenttype]);
+          } else element.classList.remove('icon', 'fas', this.icons.classes[annotation.contenttype]);
         }
       });
 
@@ -281,8 +294,7 @@ export default {
 
               this.options[0].model = this.selectedAll;
 
-              this.toggleHighlighting(annotation.id);
-              this.toggleIcon(entity);
+              this.toggleHighlighting(annotation.id, annotation.contenttype);
             };
           }
         });
@@ -297,18 +309,17 @@ export default {
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
     },
     // highlights annotation/s individually on click (text panel)
-    toggleHighlighting(id) {
+    toggleHighlighting(id, type) {
       const entity = document.getElementById(id);
 
       if (entity !== null) {
         entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
         entity.style.cursor = 'pointer';
+
+        entity.classList.toggle('icon');
+        entity.classList.toggle('fas');
+        entity.classList.toggle(this.icons.classes[type]);
       }
-    },
-    toggleIcon(entity) {
-      const span = document.createElement('span');
-      span.classList.toggle('icon fas fa-user');
-      entity.appendChild(span);
     },
   },
 };
@@ -334,11 +345,8 @@ export default {
   border: 1px solid #ababab;
 }
 
-.icon::after {
-  display: inline-block;
-  font-family: 'Font Awesome 5 Free';
-  font-style: normal;
-  font-weight: 900;
+.icon {
+  display: inline;
 }
 
 .list-height {

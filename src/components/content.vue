@@ -103,17 +103,17 @@ export default {
       this[event]();
     },
     decrease() {
-      const min = 8;
+      const min = 12;
       let textsize = this.fontsize;
 
-      textsize -= textsize > min ? 1 : 0;
+      textsize -= textsize > min ? 4 : 0;
       this.$root.$emit('update-fontsize', textsize);
     },
     increase() {
-      const max = 32;
+      const max = 24;
       let textsize = this.fontsize;
 
-      textsize += textsize < max ? 1 : 0;
+      textsize += textsize < max ? 4 : 0;
       this.$root.$emit('update-fontsize', textsize);
     },
     getSupport(support) {

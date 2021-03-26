@@ -56,7 +56,7 @@ export default {
       collectiontitle: '',
       config: {},
       contenturls: [],
-      fontsize: 14,
+      fontsize: 16,
       imageurl: '',
       isCollection: false,
       item: {},
