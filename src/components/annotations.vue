@@ -252,15 +252,6 @@ export default {
     dynamicEvent(event, model) {
       this[event](model);
     },
-    // highlights annotation/s individually on click (text panel)
-    toggleHighlighting(id) {
-      const entity = document.getElementById(id);
-
-      if (entity !== null) {
-        entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
-        entity.style.cursor = 'pointer';
-      }
-    },
     // highlights either all (true) or none (false)
     highlightMode(mode) {
       this.items.forEach((annotation) => {
@@ -289,7 +280,9 @@ export default {
               annotation.selected = !annotation.selected;
 
               this.options[0].model = this.selectedAll;
+
               this.toggleHighlighting(annotation.id);
+              this.toggleIcon(entity);
             };
           }
         });
@@ -302,6 +295,20 @@ export default {
       return order === 'alpha'
         ? this.items.sort((x, y) => x.text.localeCompare(y.text))
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
+    },
+    // highlights annotation/s individually on click (text panel)
+    toggleHighlighting(id) {
+      const entity = document.getElementById(id);
+
+      if (entity !== null) {
+        entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
+        entity.style.cursor = 'pointer';
+      }
+    },
+    toggleIcon(entity) {
+      const span = document.createElement('span');
+      span.classList.toggle('icon fas fa-user');
+      entity.appendChild(span);
     },
   },
 };
@@ -327,11 +334,14 @@ export default {
   border: 1px solid #ababab;
 }
 
-.list-height {
-  height: 27vh;
+.icon::after {
+  display: inline-block;
+  font-family: 'Font Awesome 5 Free';
+  font-style: normal;
+  font-weight: 900;
 }
 
-[data-icon]::after {
-  content: attr(data-icon);
+.list-height {
+  height: 27vh;
 }
 </style>

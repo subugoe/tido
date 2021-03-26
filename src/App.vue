@@ -195,7 +195,9 @@ export default {
     getAnnotationText(id) {
       const element = document.getElementById(id);
 
-      return element !== null ? element.innerText : false;
+      return element !== null
+        ? element.innerText
+        : false;
     },
     /**
       * get collection data according to 'entrypoint'
