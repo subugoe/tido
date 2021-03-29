@@ -14,7 +14,7 @@
         :key="index"
         v-model="typeModel"
         :color="$q.dark.isActive ? 'grey-8' : 'accent'"
-        :disabled="typeDisabled"
+        :disable="typeDisabled(type.value)"
         :icon="type.icon"
         :label="type.label"
         :val="type.value"
@@ -47,7 +47,7 @@
             @click="
               annotation.selected = !annotation.selected;
               options[0].model = selectedAll;
-              toggleHighlighting(annotation.id, annotation.contenttype);"
+              toggleHighlighting(annotation);"
           >
             <q-item-section avatar>
               <q-icon :name="icons.sets[annotation.contenttype]" />
@@ -117,7 +117,7 @@
 <script>
 import Notification from '@/components/notification.vue';
 import { fasComment, fasMapMarker, fasUser } from '@quasar/extras/fontawesome-v5';
-
+// css classes used for the text entities
 require('../../node_modules/@quasar/extras/fontawesome-v5/fontawesome-v5.css');
 
 export default {
@@ -140,8 +140,8 @@ export default {
       icons: {
         classes: {
           'Editorial Comment': 'fa-comment',
-          Person: 'fa-user-alt',
-          Place: 'fa-map-marker-alt',
+          Person: 'fa-user',
+          Place: 'fa-map-marker',
         },
         sets: {
           'Editorial Comment': fasComment,
@@ -188,6 +188,15 @@ export default {
     };
   },
   computed: {
+    availableTypes() {
+      // filter all unique annotation (data) types of the current item
+      const availableTypes = [];
+      this.annotations.forEach((annotation) => {
+        if (!availableTypes.includes(annotation.contenttype)) availableTypes.push(annotation.contenttype);
+      });
+
+      return availableTypes;
+    },
     items() {
       if (!this.annotations.length) {
         return [];
@@ -215,20 +224,14 @@ export default {
 
       return selection.length === this.items.length;
     },
-    typeDisabled() {
-      // filter all unique annotation (data) types of the current item
-      const availableTypes = [];
-      this.annotations.forEach((annotation) => {
-        if (!availableTypes.includes(annotation.contenttype)) availableTypes.push(annotation.contenttype);
-      });
-      // FIXME
-      // return this.typeModel.filter((type) => !availableTypes.includes(type));
-      return false;
-    },
   },
   watch: {
     // called on item update
     annotations() {
+      this.typeModel = this.options[0].model
+        ? this.availableTypes
+        : [];
+
       this.highlightMode();
       this.registerHandler();
     },
@@ -241,7 +244,7 @@ export default {
     this.options[0].model = this.config.annotations.show;
     // check whether to start with all annotations highlighted or none
     this.typeModel = this.config.annotations.show
-      ? this.config.annotations.types
+      ? this.availableTypes
       : [];
     // wait for the annotations to load
     setTimeout(() => {
@@ -265,7 +268,7 @@ export default {
           filteredAnnotations = this.annotations.filter((annotation) => type === annotation.contenttype);
         });
         // toggle the highlighting of the appropriate (delta-) type de/selected
-        filteredAnnotations.forEach((annotation) => this.toggleHighlighting(annotation.id, annotation.contenttype));
+        filteredAnnotations.forEach((annotation) => this.toggleHighlighting(annotation));
       }
       // get current state for the next comparison
       this.lastTypeState = this.typeModel;
@@ -305,7 +308,7 @@ export default {
 
             this.options[0].model = this.selectedAll;
 
-            this.toggleHighlighting(annotation.id, annotation.contenttype);
+            this.toggleHighlighting(annotation);
           };
         }
       });
@@ -319,15 +322,18 @@ export default {
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
     },
     // highlights annotation/s individually on click (text panel)
-    toggleHighlighting(id, type) {
-      const entity = document.getElementById(id);
+    toggleHighlighting(annotation) {
+      const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
         entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
 
         entity.classList.toggle('fas');
-        entity.classList.toggle(this.icons.classes[type]);
+        entity.classList.toggle(this.icons.classes[annotation.contenttype]);
       }
+    },
+    typeDisabled(type) {
+      return !this.availableTypes.includes(type);
     },
   },
 };
