@@ -32,7 +32,7 @@
   "private": false,
   "dependencies": {
     "@quasar/extras": "^1.10.0",
-    "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.1",
+    "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.2",
     "openseadragon": "^2.4.2",
     "quasar": "^1.15.9",
     "vuedraggable": "^2.24.3"
@@ -43,7 +43,7 @@
     "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.3",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^7.22.0",
+    "eslint": "^7.23.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.1",

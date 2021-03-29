@@ -32,7 +32,14 @@
     <script id="tido-config" type="application/json">
     {
       "entrypoint": "https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
-      "annotationmode": true,
+      "annotations": {
+        "show": true,
+        "types": [
+          "Person",
+          "Place",
+          "Editorial Comment"
+        ]
+      },
       "colors": {
         "primary": "",
         "secondary": "",

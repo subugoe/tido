@@ -14,6 +14,7 @@
         :key="index"
         v-model="typeModel"
         :color="$q.dark.isActive ? 'grey-8' : 'accent'"
+        :disabled="typeDisabled"
         :icon="type.icon"
         :label="type.label"
         :val="type.value"
@@ -68,26 +69,7 @@
     </div>
 
     <div v-else>
-      <q-card
-        bordered
-        flat
-      >
-        <q-card-section class="text-center">
-          <q-icon
-            :name="fasInfoCircle"
-            class="q-pr-sm"
-            color="red-9"
-            size="sm"
-          />
-          <span class="text-body1 text-uppercase vertical-middle">Please note</span>
-        </q-card-section>
-
-        <q-separator inset />
-
-        <q-card-section class="text-body2 text-center text-uppercase">
-          Toggle at least one data type to <span class="text-no-wrap">show annotations</span>.
-        </q-card-section>
-      </q-card>
+      <Notification message="Toggle at least one data type to show annotations" />
     </div>
 
     <!-- Options -->
@@ -128,24 +110,21 @@
   </div>
 
   <div v-else>
-    <span class="row justify-center text-h6 text-center text-uppercase">
-      No annotations available
-    </span>
+    <Notification message="No annotations available" />
   </div>
 </template>
 
 <script>
-import {
-  fasComment,
-  fasInfoCircle,
-  fasMapMarker,
-  fasUser,
-} from '@quasar/extras/fontawesome-v5';
+import Notification from '@/components/notification.vue';
+import { fasComment, fasMapMarker, fasUser } from '@quasar/extras/fontawesome-v5';
 
-import '../../node_modules/@quasar/extras/fontawesome-v5/fontawesome-v5.css';
+require('../../node_modules/@quasar/extras/fontawesome-v5/fontawesome-v5.css');
 
 export default {
   name: 'Annotations',
+  components: {
+    Notification,
+  },
   props: {
     annotations: {
       type: Array,
@@ -199,6 +178,7 @@ export default {
           ],
         },
       ],
+      lastTypeState: [],
       typeModel: [],
       types: [
         { icon: fasUser, label: 'Names', value: 'Person' },
@@ -230,75 +210,105 @@ export default {
         : filteredAnnotations.reverse();
     },
     selectedAll() {
-      const numberSelected = this.items.filter((item) => item.selected === true);
+      // filter all items that have been selected
+      const selection = this.items.filter((item) => item.selected === true);
 
-      return numberSelected.length === this.items.length;
+      return selection.length === this.items.length;
+    },
+    typeDisabled() {
+      // filter all unique annotation (data) types of the current item
+      const availableTypes = [];
+      this.annotations.forEach((annotation) => {
+        if (!availableTypes.includes(annotation.contenttype)) availableTypes.push(annotation.contenttype);
+      });
+      // FIXME
+      // return this.typeModel.filter((type) => !availableTypes.includes(type));
+      return false;
     },
   },
   watch: {
+    // called on item update
     annotations() {
-      this.highlightMode(this.options[0].model);
+      this.highlightMode();
       this.registerHandler();
     },
-  },
-  created() {
-    this.fasInfoCircle = fasInfoCircle;
+    // called on data type update / toggling
+    typeModel() {
+      this.highlightDiff();
+    },
   },
   mounted() {
-    if (this.config.annotationmode) {
-      // show all Annotations at start
-      this.typeModel = ['Person', 'Place', 'Editorial Comment'];
-      // set the highlight mode to true ('All')
-      this.options[0].model = true;
-      // wait for the *annotations* to load and highlight all text entities
-      setTimeout(() => {
-        this.highlightMode(this.config.annotationmode);
-        this.registerHandler();
-      }, 2000);
-    }
+    this.options[0].model = this.config.annotations.show;
+    // check whether to start with all annotations highlighted or none
+    this.typeModel = this.config.annotations.show
+      ? this.config.annotations.types
+      : [];
+    // wait for the annotations to load
+    setTimeout(() => {
+      this.highlightMode();
+      this.registerHandler();
+    }, 2000);
   },
   methods: {
     dynamicEvent(event, model) {
       this[event](model);
     },
+    highlightDiff() {
+      let delta = [];
+      let filteredAnnotations = [];
+
+      // compare the last type state with the current typeModel according to user selection
+      if (this.lastTypeState !== this.typeModel) {
+        delta = this.typeModel.filter((type) => !this.lastTypeState.includes(type)).concat(this.lastTypeState.filter((type) => !this.typeModel.includes(type)));
+        // filter all annotations that match delta
+        delta.forEach((type) => {
+          filteredAnnotations = this.annotations.filter((annotation) => type === annotation.contenttype);
+        });
+        // toggle the highlighting of the appropriate (delta-) type de/selected
+        filteredAnnotations.forEach((annotation) => this.toggleHighlighting(annotation.id, annotation.contenttype));
+      }
+      // get current state for the next comparison
+      this.lastTypeState = this.typeModel;
+    },
     // highlights either all (true) or none (false)
-    highlightMode(mode) {
+    highlightMode() {
+      const mode = this.options[0].model;
+
       this.items.forEach((annotation) => {
         // de/highlights the annotations in the list
         annotation.selected = mode;
 
-        const element = document.getElementById(annotation.id);
-
-        // de/highlights the annotations in the text panel
-        if (element !== null) {
-          element.style.borderBottom = mode ? 'solid' : '';
-          element.style.cursor = 'pointer';
+        const entity = document.getElementById(annotation.id);
+        // de/highlights the text entities
+        if (entity !== null) {
+          entity.style.borderBottom = mode ? 'solid' : '';
+          entity.style.cursor = 'pointer';
 
           if (mode) {
-            element.classList.add('icon', 'fas', this.icons.classes[annotation.contenttype]);
-          } else element.classList.remove('icon', 'fas', this.icons.classes[annotation.contenttype]);
+            entity.classList.add('fas', this.icons.classes[annotation.contenttype]);
+          } else entity.classList.remove('fas', this.icons.classes[annotation.contenttype]);
         }
       });
-
+      // set button state
       this.options[0].model = this.selectedAll;
     },
     // Toggle highlighting of annotation/s when clicking on appropriate text entity
     registerHandler() {
-      if (this.items.length) {
-        this.items.forEach((annotation) => {
-          const entity = document.getElementById(annotation.id);
+      this.items.forEach((annotation) => {
+        const entity = document.getElementById(annotation.id);
 
-          if (entity !== null) {
-            entity.onclick = () => {
-              annotation.selected = !annotation.selected;
+        if (entity !== null) {
+          entity.style.cursor = 'pointer';
 
-              this.options[0].model = this.selectedAll;
+          entity.onclick = () => {
+            annotation.selected = !annotation.selected;
 
-              this.toggleHighlighting(annotation.id, annotation.contenttype);
-            };
-          }
-        });
-      }
+            this.options[0].model = this.selectedAll;
+
+            this.toggleHighlighting(annotation.id, annotation.contenttype);
+          };
+        }
+      });
     },
     sortDirection() {
       return this.items;
@@ -314,9 +324,7 @@ export default {
 
       if (entity !== null) {
         entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
-        entity.style.cursor = 'pointer';
 
-        entity.classList.toggle('icon');
         entity.classList.toggle('fas');
         entity.classList.toggle(this.icons.classes[type]);
       }
@@ -343,10 +351,6 @@ export default {
 
 .custom-toggle {
   border: 1px solid #ababab;
-}
-
-.icon {
-  display: inline;
 }
 
 .list-height {
