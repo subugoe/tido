@@ -14,6 +14,8 @@
           v-for="(contenturl, i) in contenturls"
           :key="`content${i}`"
           :name="contenturl"
+          :class="contenturls.length == 1 && 'default-cursor'"
+          :disable="contenturls.length == 1"
           :label="contenttypes[i]"
         />
       </q-tabs>
@@ -180,5 +182,9 @@ export default {
 <style lang="scss" scoped>
   .rtl {
     direction: rtl;
+  }
+
+  .default-cursor {
+    cursor: default !important;
   }
 </style>
