@@ -44,10 +44,7 @@
             class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
             clickable
             dense
-            @click="
-              annotation.selected = !annotation.selected;
-              options[0].model = selectedAll;
-              toggleHighlighting(annotation);"
+            @click="toggleHighlighting(annotation)"
           >
             <q-item-section avatar>
               <q-icon :name="icons.sets[annotation.contenttype]" />
@@ -116,7 +113,7 @@
 
 <script>
 import Notification from '@/components/notification.vue';
-import { fasComment, fasMapMarker, fasUser } from '@quasar/extras/fontawesome-v5';
+import { fasComment, fasMapMarkerAlt, fasUser } from '@quasar/extras/fontawesome-v5';
 // css classes used for the text entities
 require('../../node_modules/@quasar/extras/fontawesome-v5/fontawesome-v5.css');
 
@@ -141,12 +138,12 @@ export default {
         classes: {
           'Editorial Comment': 'fa-comment',
           Person: 'fa-user',
-          Place: 'fa-map-marker',
+          Place: 'fa-map-marker-alt',
         },
         sets: {
           'Editorial Comment': fasComment,
           Person: fasUser,
-          Place: fasMapMarker,
+          Place: fasMapMarkerAlt,
         },
       },
       options: [
@@ -182,7 +179,7 @@ export default {
       typeModel: [],
       types: [
         { icon: fasUser, label: 'Names', value: 'Person' },
-        { icon: fasMapMarker, label: 'Places', value: 'Place' },
+        { icon: fasMapMarkerAlt, label: 'Places', value: 'Place' },
         { icon: fasComment, label: 'Comments', value: 'Editorial Comment' },
       ],
     };
@@ -268,7 +265,7 @@ export default {
           filteredAnnotations = this.annotations.filter((annotation) => type === annotation.contenttype);
         });
         // toggle the highlighting of the appropriate (delta-) type de/selected
-        filteredAnnotations.forEach((annotation) => this.toggleHighlighting(annotation));
+        filteredAnnotations.forEach((annotation) => this.toggleHighlighting(annotation, true));
       }
       // get current state for the next comparison
       this.lastTypeState = this.typeModel;
@@ -292,7 +289,7 @@ export default {
           } else entity.classList.remove('fas', this.icons.classes[annotation.contenttype]);
         }
       });
-      // set button state
+      // set button state (All | None)
       this.options[0].model = this.selectedAll;
     },
     // Toggle highlighting of annotation/s when clicking on appropriate text entity
@@ -304,10 +301,6 @@ export default {
           entity.style.cursor = 'pointer';
 
           entity.onclick = () => {
-            annotation.selected = !annotation.selected;
-
-            this.options[0].model = this.selectedAll;
-
             this.toggleHighlighting(annotation);
           };
         }
@@ -322,7 +315,12 @@ export default {
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
     },
     // highlights annotation/s individually on click (text panel)
-    toggleHighlighting(annotation) {
+    toggleHighlighting(annotation, typeChange = false) {
+      // de/highlights the annotations in the list
+      annotation.selected = !annotation.selected;
+
+      if (!typeChange) this.options[0].model = this.selectedAll;
+
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
