@@ -285,7 +285,8 @@ export default {
         const entity = document.getElementById(annotation.id);
         // de/highlights the text entities
         if (entity !== null) {
-          entity.style.borderBottom = mode ? 'solid' : '';
+          entity.style.borderBottom = mode ? '2px solid' : '';
+          entity.style.paddingBottom = '4px';
           entity.style.cursor = 'pointer';
 
           if (mode) {
@@ -328,7 +329,8 @@ export default {
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
-        entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
+        entity.style.borderBottom = entity.style.borderBottom ? '' : '2px solid';
+        entity.style.paddingBottom = '4px';
 
         entity.classList.toggle('fas');
         entity.classList.toggle(this.icons.classes[annotation.contenttype]);
