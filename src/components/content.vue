@@ -3,20 +3,20 @@
     <div>
       <q-tabs
         v-model="activeTab"
-        dense
-        class="text-grey q-mb-lg"
         active-color="$q.dark.isActive ? 'white' : 'accent'"
-        indicator-color="$q.dark.isActive ? 'white' : 'accent'"
         align="justify"
+        class="text-grey q-mb-lg"
+        dense
+        indicator-color="$q.dark.isActive ? 'white' : 'accent'"
         narrow-indicator
       >
         <q-tab
           v-for="(contenturl, i) in contenturls"
           :key="`content${i}`"
-          :name="contenturl"
-          :class="contenturls.length == 1 && 'default-cursor'"
-          :disable="contenturls.length == 1"
+          :class="contenturls.length === 1 && 'default-cursor'"
+          :disable="contenturls.length === 1"
           :label="contenttypes[i]"
+          :name="contenturl"
         />
       </q-tabs>
     </div>
@@ -24,33 +24,19 @@
     <div class="row sticky">
       <div>
         <q-btn
+          v-for="(button, index) in buttons"
+          :key="index"
           class="q-mr-sm q-mb-sm cursor-pointer"
           flat
           round
           size="md"
-          title="Increase Textsize"
-          @click="increase()"
+          :title="button.title"
+          @click="dynamicEvent(button.event)"
         >
           <q-icon
-            :name="fasSearchPlus"
-            size="sm"
             :color="$q.dark.isActive ? 'white' : 'accent'"
-          />
-        </q-btn>
-
-        <q-btn
-          class="q-mr-sm q-mb-sm cursor-pointer"
-          flat
-          round
-          size="md"
-          title="Decrease Textsize"
-          :color="$q.dark.isActive ? 'white' : 'accent'"
-          @click="decrease()"
-        >
-          <q-icon
-            :name="fasSearchMinus"
+            :name="button.icon"
             size="sm"
-            :color="$q.dark.isActive ? 'white' : 'accent'"
           />
         </q-btn>
       </div>
@@ -87,7 +73,7 @@ export default {
     },
     fontsize: {
       type: Number,
-      default: () => 14,
+      default: () => 16,
     },
     manifests: {
       type: Array,
@@ -97,16 +83,18 @@ export default {
       type: Function,
       default: null,
     },
-    transcription: {
-      type: String,
-      default: () => '',
-    },
   },
-  data: () => ({
-    activeTab: null,
-    content: '',
-    sequenceindex: 0,
-  }),
+  data() {
+    return {
+      activeTab: null,
+      buttons: [
+        { event: 'increase', icon: fasSearchPlus, title: 'Increase Textsize' },
+        { event: 'decrease', icon: fasSearchMinus, title: 'Decrease Textsize' },
+      ],
+      content: '',
+      sequenceindex: 0,
+    };
+  },
   computed: {
     supportType() {
       const { support } = this.manifests[this.sequenceindex];
@@ -114,7 +102,6 @@ export default {
       return Object.keys(support).length && support.url !== '';
     },
   },
-
   watch: {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
@@ -127,17 +114,15 @@ export default {
 
         this.content = data;
       });
+
+      this.$root.$emit('update-content', url);
     },
   },
   async created() {
-    this.fasSearchPlus = fasSearchPlus;
-    this.fasSearchMinus = fasSearchMinus;
-
     const [contentUrl] = this.contenturls;
 
     this.activeTab = contentUrl;
   },
-
   mounted() {
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
@@ -148,18 +133,21 @@ export default {
     });
   },
   methods: {
+    dynamicEvent(event) {
+      this[event]();
+    },
     decrease() {
-      const min = 8;
+      const min = 12;
       let textsize = this.fontsize;
 
-      textsize -= textsize > min ? 1 : 0;
+      textsize -= textsize > min ? 4 : 0;
       this.$root.$emit('update-fontsize', textsize);
     },
     increase() {
-      const max = 32;
+      const max = 24;
       let textsize = this.fontsize;
 
-      textsize += textsize < max ? 1 : 0;
+      textsize += textsize < max ? 4 : 0;
       this.$root.$emit('update-fontsize', textsize);
     },
     getSupport(support) {
