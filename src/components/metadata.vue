@@ -15,8 +15,8 @@
       >
         <q-item-section v-if="Object.keys(mCollection).length">
           <q-item-label
-            overline
             class="text-uppercase"
+            overline
           >
             {{ mCollection.id }}
           </q-item-label>
@@ -26,12 +26,12 @@
           </q-item-label>
         </q-item-section>
       </q-item>
-
-      <q-separator
-        class="q-mt-md q-mb-sm"
-        inset
-      />
     </q-list>
+
+    <q-separator
+      class="q-mt-md q-mb-sm"
+      inset
+    />
 
     <!-- Manifest-->
     <q-list v-if="itemcount">
@@ -48,8 +48,8 @@
       >
         <q-item-section>
           <q-item-label
-            overline
             class="text-uppercase"
+            overline
           >
             {{ mManifest.id }}
           </q-item-label>
@@ -68,8 +68,8 @@
         >
           <q-item-section>
             <q-item-label
-              overline
               class="text-uppercase"
+              overline
             >
               {{ meta.key }}
             </q-item-label>
@@ -78,12 +78,12 @@
           </q-item-section>
         </q-item>
       </div>
-
-      <q-separator
-        inset
-        class="q-mt-md q-mb-sm"
-      />
     </q-list>
+
+    <q-separator
+      class="q-mt-md q-mb-sm"
+      inset
+    />
 
     <!-- Item-->
     <q-list>
@@ -100,8 +100,8 @@
       >
         <q-item-section v-if="Object.keys(mItem).length">
           <q-item-label
-            overline
             class="text-uppercase"
+            overline
           >
             {{ mItem.id }}
           </q-item-label>
@@ -178,13 +178,8 @@ export default {
       if (this.item.image && this.item.image.license) {
         metadata.push(
           { id: 'Image License', data: this.item.image.license.id },
+          { id: 'Image Notes', data: this.item.image.license.notes },
         );
-
-        if (this.item.image.license.notes) {
-          metadata.push(
-            { id: 'Image Notes', data: this.item.image.license.notes },
-          );
-        }
       }
 
       return metadata;
@@ -214,7 +209,6 @@ export default {
       if (seqindex !== null) {
         this.sequenceindex = seqindex;
       }
-
       this.manifests[this.sequenceindex].sequence.forEach((item, index) => {
         if (item.id === url) {
           this.itemindex = index;

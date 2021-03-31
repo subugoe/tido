@@ -14,10 +14,10 @@
         :key="index"
         v-model="typeModel"
         :color="$q.dark.isActive ? 'grey-8' : 'accent'"
-        :disable="typeDisabled(type.value)"
-        :icon="type.icon"
+        :disable="typeDisabled(type['content-type'])"
+        :icon="icons[type['content-type']].svg"
         :label="type.label"
-        :val="type.value"
+        :val="type['content-type']"
         class="text-uppercase q-mr-lg q-mb-md"
         dense
         size="lg"
@@ -47,11 +47,10 @@
             @click="toggleHighlighting(annotation)"
           >
             <q-avatar
-              avatar
               class="q-mr-sm"
               size="md"
             >
-              <q-icon :name="icons.sets[annotation.contenttype]" />
+              <q-icon :name="icons[annotation.contenttype].svg" />
             </q-avatar>
 
             <q-item-section>
@@ -118,6 +117,7 @@
 <script>
 import Notification from '@/components/notification.vue';
 import { fasComment, fasMapMarkerAlt, fasUser } from '@quasar/extras/fontawesome-v5';
+
 // css classes used for the text entities
 require('../../node_modules/@quasar/extras/fontawesome-v5/fontawesome-v5.css');
 
@@ -139,16 +139,9 @@ export default {
   data() {
     return {
       icons: {
-        classes: {
-          'Editorial Comment': 'fa-comment',
-          Person: 'fa-user',
-          Place: 'fa-map-marker-alt',
-        },
-        sets: {
-          'Editorial Comment': fasComment,
-          Person: fasUser,
-          Place: fasMapMarkerAlt,
-        },
+        'Editorial Comment': { svg: fasComment, css: 'fa-comment' },
+        Person: { svg: fasUser, css: 'fa-user' },
+        Place: { svg: fasMapMarkerAlt, css: 'fa-map-marker-alt' },
       },
       options: [
         {
@@ -181,11 +174,7 @@ export default {
       ],
       lastTypeState: [],
       typeModel: [],
-      types: [
-        { icon: fasUser, label: 'Names', value: 'Person' },
-        { icon: fasMapMarkerAlt, label: 'Places', value: 'Place' },
-        { icon: fasComment, label: 'Comments', value: 'Editorial Comment' },
-      ],
+      types: [],
     };
   },
   computed: {
@@ -241,6 +230,9 @@ export default {
       this.highlightDiff();
     },
   },
+  created() {
+    this.types = this.config.annotations.types;
+  },
   mounted() {
     this.options[0].model = this.config.annotations.show;
     // check whether to start with all annotations highlighted or none
@@ -285,12 +277,13 @@ export default {
         const entity = document.getElementById(annotation.id);
         // de/highlights the text entities
         if (entity !== null) {
-          entity.style.borderBottom = mode ? 'solid' : '';
+          entity.style.borderBottom = mode ? '2px solid' : '';
           entity.style.cursor = 'pointer';
+          entity.style.paddingBottom = '4px';
 
           if (mode) {
-            entity.classList.add('fas', this.icons.classes[annotation.contenttype]);
-          } else entity.classList.remove('fas', this.icons.classes[annotation.contenttype]);
+            entity.classList.add('fas', this.icons[annotation.contenttype].css);
+          } else entity.classList.remove('fas', this.icons[annotation.contenttype].css);
         }
       });
       // set button state (All | None)
@@ -328,10 +321,11 @@ export default {
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
-        entity.style.borderBottom = entity.style.borderBottom ? '' : 'solid';
+        entity.style.borderBottom = entity.style.borderBottom ? '' : '2px solid';
+        entity.style.paddingBottom = '4px';
 
         entity.classList.toggle('fas');
-        entity.classList.toggle(this.icons.classes[annotation.contenttype]);
+        entity.classList.toggle(this.icons[annotation.contenttype].css);
       }
     },
     typeDisabled(type) {
