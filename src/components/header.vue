@@ -1,5 +1,5 @@
 <template>
-  <q-header
+  <q-toolbar
     elevated
     :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
   >
@@ -42,7 +42,7 @@
         :panels="panels"
       />
     </div>
-  </q-header>
+  </q-toolbar>
 </template>
 
 <script>

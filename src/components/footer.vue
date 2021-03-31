@@ -1,14 +1,16 @@
 <template>
-  <q-footer
-    bordered
-    class="row justify-start items-center"
-    reveal
-    :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
-  >
-    <Language v-if="standalone" />
-    <Color :projectcolors="projectcolors" />
-    <Softwareinfo />
-  </q-footer>
+  <q-toolbar>
+    <div
+      bordered
+      class="row justify-start items-center"
+      reveal
+      :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
+    >
+      <Language v-if="standalone" />
+      <Color :projectcolors="projectcolors" />
+      <Softwareinfo />
+    </div>
+  </q-toolbar>
 </template>
 
 <script>
