@@ -46,9 +46,13 @@
             dense
             @click="toggleHighlighting(annotation)"
           >
-            <q-item-section avatar>
+            <q-avatar
+              avatar
+              class="q-mr-sm"
+              size="md"
+            >
               <q-icon :name="icons.sets[annotation.contenttype]" />
-            </q-item-section>
+            </q-avatar>
 
             <q-item-section>
               <q-item-label
