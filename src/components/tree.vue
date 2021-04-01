@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <q-tree
-      class="view-tree item-content"
+      class="item-content"
       label-key="label-key"
       node-key="label"
       :expanded.sync="expanded"

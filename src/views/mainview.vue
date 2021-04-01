@@ -41,7 +41,6 @@
         <q-tab-panels
           v-model="p.tab_model"
           animated
-          class="content-panel"
           keep-alive
         >
           <q-tab-panel

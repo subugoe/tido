@@ -3,7 +3,7 @@
     <q-tabs
       v-model="activeTab"
       dense
-      class="text-grey q-mb-lg"
+      class="text-grey q-mb-sm"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
       indicator-color="$q.dark.isActive ? 'white' : 'accent'"
       align="justify"
@@ -21,7 +21,7 @@
 
     <div>
       <q-btn
-        class="q-mr-sm q-mb-sm cursor-pointer"
+        class="cursor-pointer"
         flat
         round
         size="md"
@@ -36,7 +36,7 @@
       </q-btn>
 
       <q-btn
-        class="q-mr-sm q-mb-sm cursor-pointer"
+        class="cursor-pointer"
         flat
         round
         size="md"
@@ -54,7 +54,7 @@
 
     <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
     <div
-      :class="['scroll-panel', 'item-content', config.rtl ? 'rtl' : '']"
+      :class="['item-content', config.rtl ? 'rtl' : '']"
       ref="contentsize"
       v-html="content"
     />
@@ -181,5 +181,13 @@ export default {
 
   .default-cursor {
     cursor: default !important;
+  }
+
+  .item-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: scroll;
+    padding: 8px;
   }
 </style>

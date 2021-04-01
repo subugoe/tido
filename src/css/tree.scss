@@ -1,4 +1,4 @@
-.view-tree {
+.item-content {
   .q-tree__node-collapsible .q-tree__children {
     /* FIXME: scss linting error because to much nesting */
     /* stylelint-disable */
@@ -30,10 +30,6 @@
         color: $dark !important;
       }
     }
-  }
-
-  .q-tree__node-header-content.col.row.no-wrap.items-center {
-    z-index: 99;
   }
 
   .q-tree__children {

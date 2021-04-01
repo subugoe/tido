@@ -5,18 +5,16 @@
     class="app"
     style="height: 100vh;"
   >
-    <q-header>
-      <Header
-        v-if="config.headers.all"
-        :collectiontitle="collectiontitle"
-        :config="config"
-        :imageurl="imageurl"
-        :item="item"
-        :itemurls="itemurls"
-        :manifests="manifests"
-        :panels="panels"
-      />
-    </q-header>
+    <Header
+      v-if="config.headers.all"
+      :collectiontitle="collectiontitle"
+      :config="config"
+      :imageurl="imageurl"
+      :item="item"
+      :itemurls="itemurls"
+      :manifests="manifests"
+      :panels="panels"
+    />
 
     <q-page-container class="root">
       <router-view
