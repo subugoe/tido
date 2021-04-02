@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.7.0...v1.8.0) (2021-04-01)
+
+
+### Features
+
+* enable TIDO to display more (+n) text types as tabs ([21df73e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/21df73e17da5210580a6bdea7baa8d5dbebc788f))
+
+
+### Styling
+
+* consistify styling ([dd3e07d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/dd3e07d9af968072724e98c8d51d4e24af185100))
+* un-hide scroll bar in text panel ([dbcc7fb](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/dbcc7fb4523a0ae2aa04920a2a13cd55f9cd5f23))
+* un-hide scroll bar in tree panel ([119ee00](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/119ee002d5f765c1ad514856b275a821d13eb445))
+
+
+### Refactoring
+
+* addressing review comments ([02fae63](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/02fae63bfc6ba2cdcbb8de2d43b5784dc7e2c153))
+* display/show the text type and not make it clickable ([91ff031](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/91ff0315d316e705d0722f78f7567902c586b688))
+
 ## [1.7.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.6.0...v1.7.0) (2021-03-10)
 
 
