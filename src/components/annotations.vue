@@ -44,7 +44,10 @@
             class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
             clickable
             dense
-            @click="toggleHighlighting(annotation)"
+            @click="
+              toggleHighlightList(annotation);
+              toggleHighlightText(annotation, 'list');
+            "
           >
             <q-avatar
               class="q-mr-sm"
@@ -69,7 +72,7 @@
     </div>
 
     <div v-else>
-      <Notification message="Toggle at least one data type to show annotations" />
+      <Notification :message="messages.user" />
     </div>
 
     <!-- Options -->
@@ -102,7 +105,7 @@
             size="sm"
             spread
             unelevated
-            @click="dynamicEvent(opt.event, opt.model)"
+            @click="dynamicEvent(opt.event, opt.model, true)"
           />
         </div>
       </div>
@@ -110,7 +113,7 @@
   </div>
 
   <div v-else>
-    <Notification message="No annotations available" />
+    <Notification :message="messages.none" />
   </div>
 </template>
 
@@ -142,6 +145,10 @@ export default {
         'Editorial Comment': { svg: fasComment, css: 'fa-comment' },
         Person: { svg: fasUser, css: 'fa-user' },
         Place: { svg: fasMapMarkerAlt, css: 'fa-map-marker-alt' },
+      },
+      messages: {
+        none: 'No annotations available',
+        user: 'Toggle at least one data type to show annotations',
       },
       options: [
         {
@@ -192,7 +199,7 @@ export default {
         return [];
       }
       // filter all annotation types that have been selected (typeModel)
-      let filteredAnnotations = this.annotations.filter((type) => this.typeModel.includes(type.contenttype));
+      let filteredAnnotations = this.annotations.filter((type) => this.typeModel.includes(type.contenttype) && type.text !== false);
 
       // determine sorting order and direction
       const sortingOrder = this.options[1].model;
@@ -211,19 +218,14 @@ export default {
     selectedAll() {
       // filter all items that have been selected
       const selection = this.items.filter((item) => item.selected === true);
-
+      // if all the items cuurently shown have been selected, toggle the button state (All)
       return selection.length === this.items.length;
     },
   },
   watch: {
     // called on item update
     annotations() {
-      this.typeModel = this.options[0].model
-        ? this.availableTypes
-        : [];
-
-      this.highlightMode();
-      this.registerHandler();
+      this.init();
     },
     // called on data type update / toggling
     typeModel() {
@@ -234,20 +236,19 @@ export default {
     this.types = this.config.annotations.types;
   },
   mounted() {
-    this.options[0].model = this.config.annotations.show;
-    // check whether to start with all annotations highlighted or none
-    this.typeModel = this.config.annotations.show
-      ? this.availableTypes
-      : [];
-    // wait for the annotations to load
-    setTimeout(() => {
-      this.highlightMode();
-      this.registerHandler();
-    }, 2000);
+    this.init();
   },
   methods: {
-    dynamicEvent(event, model) {
-      this[event](model);
+    getIcon(type) {
+      const span = document.createElement('span');
+
+      span.classList.add('q-ml-sm', 'fas', this.icons[type].css);
+
+      return span;
+    },
+    // bind dynamic events / models to the options
+    dynamicEvent(event, model, state = false) {
+      this[event](model, state);
     },
     highlightDiff() {
       let delta = [];
@@ -261,44 +262,59 @@ export default {
           filteredAnnotations = this.annotations.filter((annotation) => type === annotation.contenttype);
         });
         // toggle the highlighting of the appropriate (delta-) type de/selected
-        filteredAnnotations.forEach((annotation) => this.toggleHighlighting(annotation, true));
+        filteredAnnotations.forEach((annotation) => this.toggleHighlightText(annotation, 'type'));
       }
-      // get current state for the next comparison
+      // get the current state for the next comparison
       this.lastTypeState = this.typeModel;
     },
     // highlights either all (true) or none (false)
     highlightMode() {
-      const mode = this.options[0].model;
-
       this.items.forEach((annotation) => {
-        // de/highlights the annotations in the list
-        annotation.selected = mode;
+        annotation.selected = this.options[0].model;
 
+        this.toggleHighlightText(annotation);
+      });
+    },
+    init() {
+      // check whether to start with all annotations highlighted or none
+      this.options[0].model = this.config.annotations.show;
+      // verify content types and populate typeModel accordingly
+      this.typeModel = this.config.annotations.show
+        ? this.availableTypes
+        : [];
+      // wait for the annotations to load
+      setTimeout(() => {
+        this.highlightMode();
+        this.registerToggles();
+      }, 2000);
+    },
+    // Toggle highlighting of annotation/s when clicking on the appropriate text entity
+    registerToggles() {
+      let current = [];
+
+      if (!this.config.annotations.show) {
+        const types = this.availableTypes;
+
+        current = this.annotations.filter((type) => types.includes(type.contenttype) && type.text !== false);
+      } else current = this.items;
+
+      current.forEach((annotation) => {
         const entity = document.getElementById(annotation.id);
-        // de/highlights the text entities
+
         if (entity !== null) {
-          entity.style.borderBottom = mode ? '2px solid' : '';
+          entity.style.borderBottom = this.config.annotations.show
+            ? '2px solid'
+            : '';
+
           entity.style.cursor = 'pointer';
           entity.style.paddingBottom = '4px';
 
-          if (mode) {
-            entity.classList.add('fas', this.icons[annotation.contenttype].css);
-          } else entity.classList.remove('fas', this.icons[annotation.contenttype].css);
-        }
-      });
-      // set button state (All | None)
-      this.options[0].model = this.selectedAll;
-    },
-    // Toggle highlighting of annotation/s when clicking on appropriate text entity
-    registerHandler() {
-      this.items.forEach((annotation) => {
-        const entity = document.getElementById(annotation.id);
-
-        if (entity !== null) {
-          entity.style.cursor = 'pointer';
-
           entity.onclick = () => {
-            this.toggleHighlighting(annotation);
+            if (!this.typeModel.includes(annotation.contenttype)) {
+              this.typeModel.push(annotation.contenttype);
+            }
+            this.toggleHighlightList(annotation);
+            this.toggleHighlightText(annotation, 'text');
           };
         }
       });
@@ -311,21 +327,38 @@ export default {
         ? this.items.sort((x, y) => x.text.localeCompare(y.text))
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
     },
-    // highlights annotation/s individually on click (text panel)
-    toggleHighlighting(annotation, typeChange = false) {
-      // de/highlights the annotations in the list
+    // de/highlights annotation/s individually (Annotation list)
+    toggleHighlightList(annotation) {
       annotation.selected = !annotation.selected;
-
-      if (!typeChange) this.options[0].model = this.selectedAll;
-
+      // set the button state (All | None)
+      this.options[0].model = this.selectedAll;
+    },
+    toggleHighlightText(annotation, caller = '') {
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
-        entity.style.borderBottom = entity.style.borderBottom ? '' : '2px solid';
-        entity.style.paddingBottom = '4px';
-
-        entity.classList.toggle('fas');
-        entity.classList.toggle(this.icons[annotation.contenttype].css);
+        switch (caller) {
+          case 'type':
+            if (this.options[0].model) {
+              entity.style.borderBottom = entity.style.borderBottom
+                ? ''
+                : '2px solid';
+            } else {
+              entity.style.borderBottom = '';
+            }
+            break;
+          case 'list':
+          case 'text':
+            entity.style.borderBottom = entity.style.borderBottom
+              ? ''
+              : '2px solid';
+            break;
+          default:
+            entity.style.borderBottom = this.options[0].model
+              ? '2px solid'
+              : '';
+            break;
+        }
       }
     },
     typeDisabled(type) {

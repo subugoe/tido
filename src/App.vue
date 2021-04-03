@@ -137,15 +137,13 @@ export default {
         const id = this.getAnnotationId(annotation);
         const text = this.getAnnotationText(id);
 
-        if (id !== null && text !== false) {
-          identifiers.push({
-            id,
-            contenttype: annotation.body['x-content-type'],
-            description: annotation.body.value,
-            selected: this.config.annotationmode,
-            text,
-          });
-        }
+        identifiers.push({
+          id,
+          contenttype: annotation.body['x-content-type'],
+          description: annotation.body.value,
+          selected: this.config.annotationmode,
+          text,
+        });
       });
 
       return identifiers;
