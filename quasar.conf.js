@@ -48,7 +48,7 @@ module.exports = function (ctx) {
         }
       },
 
-      iconSet: 'fontawesome-v5',
+      iconSet: 'svg-fontawesome-v5',
 
       lang: 'en-us', // Quasar language pack
 

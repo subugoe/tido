@@ -233,11 +233,11 @@ export default {
       * filter all urls that match either of the MIME types "application/xhtml+xml" and "text/html"
       * caller: *getItemData()*
       *
-      * @param string array
+      * @param array content
       *
       * @return array
       */
-    getContentUrl(content) {
+    getContentUrls(content) {
       const urls = [];
 
       if (Array.isArray(content) && content.length) {
@@ -264,7 +264,7 @@ export default {
         .then((data) => {
           this.item = data;
 
-          this.contenturls = this.getContentUrl(data.content);
+          this.contenturls = this.getContentUrls(data.content);
           this.imageurl = data.image.id || '';
 
           if (data.annotationCollection) {

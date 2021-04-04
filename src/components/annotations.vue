@@ -15,7 +15,7 @@
         v-model="typeModel"
         :color="$q.dark.isActive ? 'grey-8' : 'accent'"
         :disable="typeDisabled(type['content-type'])"
-        :icon="icons[type['content-type']].svg"
+        :icon="icons[type['content-type']]"
         :label="type.label"
         :val="type['content-type']"
         class="text-uppercase q-mr-lg q-mb-md"
@@ -53,7 +53,7 @@
               class="q-mr-sm"
               size="md"
             >
-              <q-icon :name="icons[annotation.contenttype].svg" />
+              <q-icon :name="icons[annotation.contenttype]" />
             </q-avatar>
 
             <q-item-section>
@@ -118,11 +118,8 @@
 </template>
 
 <script>
+import * as Icons from '@quasar/extras/fontawesome-v5';
 import Notification from '@/components/notification.vue';
-import { fasComment, fasMapMarkerAlt, fasUser } from '@quasar/extras/fontawesome-v5';
-
-// css classes used for the text entities
-require('../../node_modules/@quasar/extras/fontawesome-v5/fontawesome-v5.css');
 
 export default {
   name: 'Annotations',
@@ -141,11 +138,7 @@ export default {
   },
   data() {
     return {
-      icons: {
-        'Editorial Comment': { svg: fasComment, css: 'fa-comment' },
-        Person: { svg: fasUser, css: 'fa-user' },
-        Place: { svg: fasMapMarkerAlt, css: 'fa-map-marker-alt' },
-      },
+      icons: {},
       messages: {
         none: 'No annotations available',
         user: 'Toggle at least one data type to show annotations',
@@ -233,6 +226,10 @@ export default {
     },
   },
   created() {
+    Object.entries(this.config.annotations.icons).forEach(([k, v]) => {
+      this.icons[k] = Icons[v];
+    });
+
     this.types = this.config.annotations.types;
   },
   mounted() {
@@ -240,9 +237,9 @@ export default {
   },
   methods: {
     getIcon(type) {
-      const span = document.createElement('span');
-
-      span.classList.add('q-ml-sm', 'fas', this.icons[type].css);
+      const span = document.createElement('q-icon');
+      span.setAttribute('name', this.icons[type]);
+      // const span = document.createElement('span');
 
       return span;
     },
@@ -337,26 +334,47 @@ export default {
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
+        const icon = this.getIcon(annotation.contenttype);
+        // eslint-disable-next-line no-console
+        console.log(icon);
+
         switch (caller) {
-          case 'type':
-            if (this.options[0].model) {
-              entity.style.borderBottom = entity.style.borderBottom
-                ? ''
-                : '2px solid';
-            } else {
-              entity.style.borderBottom = '';
-            }
-            break;
           case 'list':
           case 'text':
             entity.style.borderBottom = entity.style.borderBottom
               ? ''
               : '2px solid';
+
+            if (entity.style.borderBottom) {
+              entity.appendChild(icon);
+            } else entity.removeChild(entity.lastChild);
+
+            break;
+          case 'type':
+            if (this.options[0].model) {
+              entity.style.borderBottom = entity.style.borderBottom
+                ? ''
+                : '2px solid';
+
+              if (entity.style.borderBottom) {
+                entity.appendChild(icon);
+              } else {
+                entity.removeChild(entity.lastChild);
+              }
+            } else {
+              entity.style.borderBottom = '';
+              entity.removeChild(entity.lastChild);
+            }
             break;
           default:
             entity.style.borderBottom = this.options[0].model
               ? '2px solid'
               : '';
+
+            entity.style.borderBottom = this.options[0].model
+              ? entity.appendChild(icon)
+              : entity.removeChild(entity.lastChild);
+
             break;
         }
       }
