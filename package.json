@@ -34,11 +34,11 @@
     "@quasar/extras": "^1.10.2",
     "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.2",
     "openseadragon": "^2.4.2",
-    "quasar": "^1.15.9",
+    "quasar": "^1.15.10",
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
-    "@quasar/app": "^2.2.3",
+    "@quasar/app": "^2.2.4",
     "autoprefixer": "^9.8.6",
     "babel-eslint": "^10.1.0",
     "commitizen": "^4.2.3",
