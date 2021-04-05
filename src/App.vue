@@ -76,6 +76,9 @@ export default {
     this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   },
   mounted() {
+    this.$root.$on('update-content', () => {
+      this.getItemData(this.itemurl);
+    });
     /**
       * listen to fontsize change (user interaction). emitted in @/components/content.vue
       * in- or rather decrease fontsize of the text by 1px
