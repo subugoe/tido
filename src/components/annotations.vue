@@ -226,11 +226,13 @@ export default {
     },
   },
   created() {
-    Object.entries(this.config.annotations.icons).forEach(([k, v]) => {
-      this.icons[k] = Icons[v];
-    });
-
     this.types = this.config.annotations.types;
+
+    this.types.forEach((type) => {
+      this.icons[type['content-type']] = Icons[type.icon]
+        ? Icons[type.icon]
+        : Icons.fasTimes;
+    });
   },
   mounted() {
     this.init();
@@ -335,8 +337,6 @@ export default {
 
       if (entity !== null) {
         const icon = this.getIcon(annotation.contenttype);
-        // eslint-disable-next-line no-console
-        console.log(icon);
 
         switch (caller) {
           case 'list':
