@@ -350,13 +350,6 @@ export default {
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
-        const icon = this.cssIcons[annotation.contenttype];
-
-        icon.setAttribute('id', `ID_${annotation.id}`);
-        icon.classList.toggle('fas');
-
-        entity.appendChild(icon);
-
         switch (caller) {
           case 'list':
           case 'text':
