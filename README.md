@@ -83,71 +83,7 @@ import '@subugoe/tido/dist/tido'
 
 ### Config
 
-**Finally** copy the config object into your entrypoint file (usually **index.html**):
-
-```html
-<body>
-  ...
-
-  <noscript>
-    <strong>We're sorry but TiDO doesn't work properly without JavaScript enabled.
-      Please enable it to continue.
-    </strong>
-  </noscript>
-
-  <script id="tido-config" type="application/json">
-  {
-    "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
-"annotationmode": true,
-      "colors": {
-        "primary": "",
-        "secondary": "",
-        "accent": ""
-      },
-      "headers": {
-        "all": true,
-        "info": true,
-        "navigation": true,
-        "toggle": true
-      },
-      "labels": {
-        "item": "Sheet",
-        "manifest": "Manuscript"
-      },
-      "panels": [
-        {
-          "connector": [1, 2],
-          "heading": true,
-          "label": "Contents & Meta",
-          "show": true
-        },
-        {
-          "connector": [3],
-          "heading": true,
-          "label": "Image",
-          "show": true
-        },
-        {
-          "connector": [4],
-          "heading": true,
-          "label": "Text",
-          "show": true
-        },
-        {
-          "connector": [5],
-          "heading": true,
-          "label": "Annotations",
-          "show": true
-        }
-      ],
-      "rtl": false,
-      "standalone": true
-    }  </script>
-
-  <div id="q-app"></div>
-</body>
-
-```
+Copy the config object into your **index.html** and follow the instructions given [here](#configuration).
 
 **Note**: Please make sure to provide a valid *entrypoint* that points to the manifest / collection that you want to be displayed.
 
@@ -229,7 +165,8 @@ npm run lint:vue        # to lint vue files only
 npm run test:unit
 ```
 
-The Viewer makes use of **jest** in collaboration with the *expect-library*.  
+The Viewer uses **jest**; a JavaScript test suite.
+
 Tests reside under **tests/unit/specs/** and are supposed to have a file ending of either `*.test.js` or `*.spec.js`.
 
 #### `Building` the app for production
@@ -238,7 +175,7 @@ Tests reside under **tests/unit/specs/** and are supposed to have a file ending 
 npm run build
 ```
 
-**Note**: The complete build is located at `/dist/spa/`.
+**Note**: The complete build is located at `/dist/`.
 
 ## Configuration
 
@@ -259,17 +196,48 @@ There are options to
 As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate element.
 
 ```html
+<body>
+  ...
+
+  <noscript>
+    <strong>We're sorry but TiDO doesn't work properly without JavaScript enabled.
+      Please enable it to continue.
+    </strong>
+  </noscript>
+
   <script id="tido-config" type="application/json">
   {
-    "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
-"annotationmode": true,
+    "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
+    "annotations": {
+        "show": true,
+        "types": [
+          {
+            "content-type": "Person",
+            "css": "fa-user",
+            "icon": "fasUser",
+            "label": "Names"
+          },
+          {
+            "content-type": "Place",
+            "css": "fa-map-marker-alt",
+            "icon": "fasMapMarkerAlt",
+            "label": "Places"
+          },
+          {
+            "content-type": "Editorial Comment",
+            "css": "fa-comment",
+            "icon": "fasComment",
+            "label": "Comments"
+          }
+        ]
+      },
       "colors": {
         "primary": "",
         "secondary": "",
         "accent": ""
       },
       "headers": {
-        "all": true,
+        "show": true,
         "info": true,
         "navigation": true,
         "toggle": true
@@ -307,6 +275,10 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       "rtl": false,
       "standalone": true
     }  </script>
+
+  <div id="q-app"></div>
+</body>
+
 ```
 
 **Note**: It's a *JSON* object. So if you are going to make any changes and you have to quote these (e.g. see *labels* or *colors*), please use **double quotes** only.
@@ -320,11 +292,37 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   **Note**: You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
 
-- **annotationmode**
+- **annotations**
 
-  if your API provides *annotations* you can toggle whether to start with all of it highlighted or not
+  - **show**
 
-  Defaults to `true`
+      if your API provides *annotations* you can toggle whether to start with all of it highlighted or not
+
+      Defaults to `true`
+
+  - **types**
+
+      the types-array consists of an arbitrary number of objects, each representing an annotation type (e.g. Person, Place, Organization, ...).
+
+      each object in turn consists of similar building blocks:
+
+    - **content-type**
+
+        refers to the **x-content-type** in the **API** you are using.
+
+        **Note**: This content-type should match it's API-counterpart explicitely, otherwise TIDO isn't able to show the related annotations.
+
+    - **css**
+
+        TIDO uses [Font Awesome Icons](https://www.fontawesome.com). Provide a css class that fits your needs.
+
+    - **icon**
+
+        same as above but the related SVG (both are needed)
+
+    - **label**
+
+        The label of the annotation type respectively
 
 - **colors**
 
@@ -338,27 +336,27 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
 - **headers**
 
-  - **all**
+  - **show**
 
-    set this value to `false` if you want to completely switch off all the headerbars at once.  
-    This value takes **precedence** over the other *header-keys*.  
-    If it is set to `false`, the other settings for the individual bars are not taken into account.
+      set this value to `false` if you want to completely switch off all the headerbars at once.  
+      This value takes **precedence** over the other *header-keys*.  
+      If it is set to `false`, the other settings for the individual bars are not taken into account.
 
-    *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
+      *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
 
   - **info**
 
-    set this value to `false` if you want to switch off the Infobar (a.k.a. breadcrumbs)  
+      set this value to `false` if you want to switch off the Infobar (a.k.a. breadcrumbs)  
 
   - **navigation**
 
-    set this value to `false` if you want to switch off the NavBar
+      set this value to `false` if you want to switch off the NavBar
 
   - **toggle**
 
-    set this value to `false` if you want to switch off the ToggleBar.
+      set this value to `false` if you want to switch off the ToggleBar.
 
-    **Note**: if you turn this one off, you won't be able to toggle the panels anymore.
+      **Note**: if you turn this one off, you won't be able to toggle the panels anymore.
 
     All header values default to `true`
 
@@ -366,29 +364,29 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   - **item**:
 
-    The label of the item respectively  
-    Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.  
-    This change affects the captions of the navbuttons located in the headerbar and the metadata section.
+      The label of the item respectively  
+      Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.  
+      This change affects the captions of the navbuttons located in the headerbar and the metadata section.
 
-    Defaults to `Sheet`
+      Defaults to `Sheet`
 
   - **manifest**:
 
-    Same as for `item` but related to the manifest title.
+      Same as for `item` but related to the manifest title.
 
-    Defaults to `Manuscript`
+      Defaults to `Manuscript`
 
 - **rtl (right to left)**
 
-  refers to the direction the text inside the text panel will be displayed.
+    refers to the direction the text inside the text panel will be displayed.
 
-  set the value to `true` if you want text to be displayed from right to left; e.g. Arabic.
+    set the value to `true` if you want text to be displayed from right to left; e.g. Arabic.
 
-  Defaults to `false`
+    Defaults to `false`
 
 - **standalone**
 
-  denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
+    denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
 
   Defaults to `true`
 

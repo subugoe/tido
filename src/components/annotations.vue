@@ -45,8 +45,8 @@
             clickable
             dense
             @click="
-              toggleHighlightList(annotation);
-              toggleHighlightText(annotation, 'list');
+              toggleListHighlighting(annotation);
+              toggleTextHighlighting(annotation, 'list');
             "
           >
             <q-avatar
@@ -76,7 +76,10 @@
     </div>
 
     <!-- Options -->
-    <div v-if="items.length">
+    <div
+      v-if="items.length"
+      class="q-mb-sm"
+    >
       <h3 class="text-body1 q-mb-md text-weight-medium text-uppercase">
         Options
       </h3>
@@ -121,6 +124,8 @@
 import * as Icons from '@quasar/extras/fontawesome-v5';
 import Notification from '@/components/notification.vue';
 
+require('../../node_modules/@quasar/extras/fontawesome-v5/fontawesome-v5.css');
+
 export default {
   name: 'Annotations',
   components: {
@@ -138,6 +143,7 @@ export default {
   },
   data() {
     return {
+      cssIcons: {},
       icons: {},
       messages: {
         none: 'No annotations available',
@@ -154,7 +160,7 @@ export default {
           ],
         },
         {
-          event: 'sortOrder',
+          event: 'sortingOrder',
           label: 'Sorting order',
           limit: 1,
           model: 'sequence',
@@ -163,7 +169,7 @@ export default {
           ],
         },
         {
-          event: 'sortDirection',
+          event: 'sortingDirection',
           label: 'Sorting direction',
           limit: 1,
           model: 'asc',
@@ -228,27 +234,33 @@ export default {
   created() {
     this.types = this.config.annotations.types;
 
-    this.types.forEach((type) => {
-      this.icons[type['content-type']] = Icons[type.icon]
-        ? Icons[type.icon]
-        : Icons.fasTimes;
-    });
+    this.createIcons();
   },
   mounted() {
     this.init();
   },
   methods: {
-    getIcon(type) {
-      const span = document.createElement('q-icon');
-      span.setAttribute('name', this.icons[type]);
-      // const span = document.createElement('span');
+    createIcons() {
+      this.types.forEach((type) => {
+        // create SVGs for the data type toggles and the list alike
+        this.icons[type['content-type']] = Icons[type.icon]
+          ? Icons[type.icon]
+          : Icons.fasTimes; // fallback if icon doesn't exist
 
-      return span;
+        // create icons based on css classes for the text entities
+        const span = document.createElement('span');
+
+        span.setAttribute('class', 'q-mr-sm');
+        span.classList.add('fas', type.css);
+
+        this.cssIcons[type['content-type']] = span;
+      });
     },
     // bind dynamic events / models to the options
     dynamicEvent(event, model, state = false) {
       this[event](model, state);
     },
+    // de/highlights all text entities matching the type toggle de/selected
     highlightDiff() {
       let delta = [];
       let filteredAnnotations = [];
@@ -261,7 +273,7 @@ export default {
           filteredAnnotations = this.annotations.filter((annotation) => type === annotation.contenttype);
         });
         // toggle the highlighting of the appropriate (delta-) type de/selected
-        filteredAnnotations.forEach((annotation) => this.toggleHighlightText(annotation, 'type'));
+        filteredAnnotations.forEach((annotation) => this.toggleTextHighlighting(annotation, 'type'));
       }
       // get the current state for the next comparison
       this.lastTypeState = this.typeModel;
@@ -271,7 +283,7 @@ export default {
       this.items.forEach((annotation) => {
         annotation.selected = this.options[0].model;
 
-        this.toggleHighlightText(annotation);
+        this.toggleTextHighlighting(annotation);
       });
     },
     init() {
@@ -289,13 +301,13 @@ export default {
     },
     // Toggle highlighting of annotation/s when clicking on the appropriate text entity
     registerToggles() {
-      let current = [];
+      let current = this.items;
 
       if (!this.config.annotations.show) {
         const types = this.availableTypes;
 
-        current = this.annotations.filter((type) => types.includes(type.contenttype) && type.text !== false);
-      } else current = this.items;
+        current = this.annotations.filter((annotation) => types.includes(annotation.contenttype) && annotation.text !== false);
+      }
 
       current.forEach((annotation) => {
         const entity = document.getElementById(annotation.id);
@@ -309,34 +321,41 @@ export default {
           entity.style.paddingBottom = '4px';
 
           entity.onclick = () => {
+            // manipulate type stack when a text entity is clicked and the appropriate data toggle is currently inactive
             if (!this.typeModel.includes(annotation.contenttype)) {
               this.typeModel.push(annotation.contenttype);
             }
-            this.toggleHighlightList(annotation);
-            this.toggleHighlightText(annotation, 'text');
+
+            this.toggleListHighlighting(annotation);
+            this.toggleTextHighlighting(annotation, 'text');
           };
         }
       });
     },
-    sortDirection() {
+    sortingDirection() {
       return this.items;
     },
-    sortOrder(order) {
+    sortingOrder(order) {
       return order === 'alpha'
         ? this.items.sort((x, y) => x.text.localeCompare(y.text))
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
     },
     // de/highlights annotation/s individually (Annotation list)
-    toggleHighlightList(annotation) {
+    toggleListHighlighting(annotation) {
       annotation.selected = !annotation.selected;
       // set the button state (All | None)
       this.options[0].model = this.selectedAll;
     },
-    toggleHighlightText(annotation, caller = '') {
+    toggleTextHighlighting(annotation, caller = '') {
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
-        const icon = this.getIcon(annotation.contenttype);
+        const icon = this.cssIcons[annotation.contenttype];
+
+        icon.setAttribute('id', `ID_${annotation.id}`);
+        icon.classList.toggle('fas');
+
+        entity.appendChild(icon);
 
         switch (caller) {
           case 'list':
@@ -345,36 +364,49 @@ export default {
               ? ''
               : '2px solid';
 
-            if (entity.style.borderBottom) {
-              entity.appendChild(icon);
-            } else entity.removeChild(entity.lastChild);
-
             break;
           case 'type':
             if (this.options[0].model) {
               entity.style.borderBottom = entity.style.borderBottom
                 ? ''
                 : '2px solid';
-
-              if (entity.style.borderBottom) {
-                entity.appendChild(icon);
-              } else {
-                entity.removeChild(entity.lastChild);
-              }
             } else {
+              annotation.selected = false;
               entity.style.borderBottom = '';
-              entity.removeChild(entity.lastChild);
             }
+
             break;
           default:
             entity.style.borderBottom = this.options[0].model
               ? '2px solid'
               : '';
 
-            entity.style.borderBottom = this.options[0].model
-              ? entity.appendChild(icon)
-              : entity.removeChild(entity.lastChild);
+            break;
+        }
+      }
+    },
+    toggleIcon(annotation, caller, entity) {
+      const icon = this.cssIcons[annotation.contenttype];
 
+      if (icon !== null) {
+        icon.setAttribute('id', `ID_${annotation.id}`);
+
+        switch (caller) {
+          case 'type':
+            this.items.forEach(() => {
+              if (this.options[0].model) {
+                if (entity.style.borderBottom) {
+                  icon.parentNode.removeChild(icon);
+                } else {
+                  entity.appendChild(icon);
+                }
+              } else {
+                icon.parentNode.removeChild(icon);
+              }
+            });
+
+            break;
+          default:
             break;
         }
       }

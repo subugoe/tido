@@ -115,7 +115,7 @@ export default {
         this.content = data;
       });
 
-      this.$root.$emit('update-content', url);
+      this.$root.$emit('update-content');
     },
   },
   async created() {

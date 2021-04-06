@@ -2,7 +2,7 @@
   <div id="q-app">
     <q-layout view="hHh lpr fFf">
       <Header
-        v-if="config.headers.all"
+        v-if="config.headers.show"
         :collectiontitle="collectiontitle"
         :config="config"
         :item="item"
@@ -76,6 +76,7 @@ export default {
     this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   },
   mounted() {
+    // if an item consists of multiple text types, update the annotations (currently attached to the DOM)
     this.$root.$on('update-content', () => {
       this.getItemData(this.itemurl);
     });
