@@ -1,5 +1,8 @@
 <template>
-  <figure id="openseadragon" class="item">
+  <figure
+    id="openseadragon"
+    class="item"
+  >
     <nav>
       <q-btn
         v-for="(btn, idx) in buttons"

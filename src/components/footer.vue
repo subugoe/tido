@@ -1,10 +1,11 @@
 <template>
-  <q-toolbar>
+  <q-toolbar
+    :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
+  >
     <div
       bordered
       class="row justify-start items-center"
       reveal
-      :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
     >
       <Language v-if="standalone" />
       <Color :projectcolors="projectcolors" />

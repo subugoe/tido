@@ -13,7 +13,10 @@
       />
     </q-toolbar>
 
-    <q-toolbar>
+    <q-toolbar
+      elevated
+      :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
+    >
       <Navbar
         v-if="config.headers.navigation"
         :itemurls="itemurls"
