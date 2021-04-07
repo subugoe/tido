@@ -58,14 +58,19 @@
       ref="contentsize"
       v-html="content"
     />
+
+    <KeyDialog class="key-button" :map="availableClasses" />
   </div>
 </template>
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
+import { getClasses } from '@/components/textstyles/highlights.js';
+import KeyDialog from '@/components/textstyles/keysdialog.vue';
 
 export default {
   name: 'Content',
+  components: { KeyDialog },
   props: {
     config: {
       type: Object,
@@ -98,8 +103,10 @@ export default {
   },
   data: () => ({
     activeTab: null,
+    availableClasses: {},
     content: '',
     sequenceindex: 0,
+    status: false,
   }),
   computed: {
     supportType() {
@@ -115,6 +122,8 @@ export default {
     },
     activeTab(url) {
       this.request(url, 'text').then((data) => {
+        this.availableClasses = getClasses(data);
+
         if (this.supportType) {
           this.getSupport(this.manifests[0].support);
         }
@@ -175,19 +184,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .rtl {
-    direction: rtl;
-  }
+.rtl {
+  direction: rtl;
+}
 
-  .default-cursor {
-    cursor: default !important;
-  }
+.default-cursor {
+  cursor: default !important;
+}
 
-  .item-content {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    overflow: scroll;
-    padding: 8px;
-  }
+.item-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: scroll;
+  padding: 8px;
+}
+
+.key-button {
+  display: contents;
+}
 </style>
