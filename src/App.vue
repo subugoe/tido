@@ -1,40 +1,45 @@
 <template>
-  <div id="q-app">
-    <q-layout view="hHh lpr fFf">
-      <Header
-        v-if="config.headers.all"
-        :collectiontitle="collectiontitle"
+  <q-layout
+    id="q-app"
+    view="hHh Lpr fFf"
+    class="app"
+    style="height: 100vh;"
+  >
+    <Header
+      v-if="config.headers.all"
+      :collectiontitle="collectiontitle"
+      :config="config"
+      :imageurl="imageurl"
+      :item="item"
+      :itemurls="itemurls"
+      :manifests="manifests"
+      :panels="panels"
+    />
+
+    <q-page-container class="root">
+      <router-view
+        :collection="collection"
         :config="config"
+        :contenttypes="contentTypes"
+        :contenturls="contenturls"
+        :fontsize="fontsize"
         :imageurl="imageurl"
         :item="item"
-        :itemurls="itemurls"
+        :labels="config.labels"
         :manifests="manifests"
         :panels="panels"
+        :request="request"
+        :tree="tree"
       />
+    </q-page-container>
 
-      <q-page-container>
-        <router-view
-          :collection="collection"
-          :config="config"
-          :contenttypes="contentTypes"
-          :contenturls="contenturls"
-          :fontsize="fontsize"
-          :imageurl="imageurl"
-          :item="item"
-          :labels="config.labels"
-          :manifests="manifests"
-          :panels="panels"
-          :request="request"
-          :tree="tree"
-        />
-      </q-page-container>
-
+    <q-footer>
       <Footer
         :projectcolors="config.colors"
         :standalone="config.standalone"
       />
-    </q-layout>
-  </div>
+    </q-footer>
+  </q-layout>
 </template>
 
 <script>
@@ -352,3 +357,19 @@ export default {
 
 };
 </script>
+
+<style scoped>
+.app {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.root {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+</style>

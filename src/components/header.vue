@@ -1,9 +1,9 @@
 <template>
-  <q-header
-    elevated
-    :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
-  >
-    <div class="bar row justify-between items-center">
+  <q-header>
+    <q-toolbar
+      elevated
+      :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
+    >
       <Infobar
         v-if="config.headers.info && manifests.length"
         class="col-xs-12 q-pl-md"
@@ -11,37 +11,26 @@
         :item="item"
         :manifests="manifests"
       />
-    </div>
+    </q-toolbar>
 
-    <div class="bar row q-px-md justify-sm-between">
+    <q-toolbar
+      elevated
+      :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
+    >
       <Navbar
         v-if="config.headers.navigation"
-        class="
-          col
-          col-md-4
-          col-xs-12
-          column-xs
-          justify-md-start
-          justify-xs-center
-          row-sm"
         :itemurls="itemurls"
         :labels="config.labels"
         :manifests="manifests"
       />
 
+      <q-space />
+
       <ToggleIndex
         v-if="config.headers.toggle"
-        class="
-          col
-          col-md-auto
-          col-xs-12
-          column-xs
-          content-sm-center
-          justify-sm-evenly
-          row-sm"
         :panels="panels"
       />
-    </div>
+    </q-toolbar>
   </q-header>
 </template>
 

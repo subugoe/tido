@@ -1,12 +1,11 @@
 <template>
-  <div class="filter-buttons">
+  <div>
     <q-btn-dropdown
       v-if="$q.screen.width < 1100"
       :dropdown-icon="dropicon"
       outline
       flat
       :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
-      class="q-mb-md q-mr-md"
       label="Toggle panels"
     >
       <slot />
@@ -14,7 +13,7 @@
 
     <div
       v-else
-      class="q-mb-md without-dropdown q-mr-md"
+      class="without-dropdown"
     >
       <slot />
     </div>
@@ -32,11 +31,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.filter-buttons {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-</style>

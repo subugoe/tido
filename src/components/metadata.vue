@@ -1,5 +1,5 @@
 <template>
-  <div class="scroll-panel">
+  <div class="item-content">
     <!-- Collection-->
     <q-list v-if="config.meta.collection.all && Object.keys(collection).length">
       <q-item class="q-px-none">
