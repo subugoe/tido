@@ -1,55 +1,49 @@
 <template>
-  <div>
-    <div>
-      <q-tabs
-        v-model="activeTab"
-        active-color="$q.dark.isActive ? 'white' : 'accent'"
-        align="justify"
-        class="text-grey q-mb-lg"
-        dense
-        indicator-color="$q.dark.isActive ? 'white' : 'accent'"
-        narrow-indicator
-      >
-        <q-tab
-          v-for="(contenturl, i) in contenturls"
-          :key="`content${i}`"
-          :class="contenturls.length === 1 && 'default-cursor'"
-          :disable="contenturls.length === 1"
-          :label="contenttypes[i]"
-          :name="contenturl"
-        />
-      </q-tabs>
-    </div>
-
-    <div class="row sticky">
-      <div>
-        <q-btn
-          v-for="(button, index) in buttons"
-          :key="index"
-          class="q-mr-sm q-mb-sm cursor-pointer"
-          flat
-          round
-          size="md"
-          :title="button.title"
-          @click="dynamicEvent(button.event)"
-        >
-          <q-icon
-            :color="$q.dark.isActive ? 'white' : 'accent'"
-            :name="button.icon"
-            size="sm"
-          />
-        </q-btn>
-      </div>
-    </div>
-
-    <div class="row">
-      <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-      <div
-        :class="['scroll-panel', config.rtl ? 'rtl' : '']"
-        ref="contentsize"
-        v-html="content"
+  <div class="item">
+    <q-tabs
+      v-model="activeTab"
+      dense
+      class="text-grey q-mb-sm"
+      active-color="$q.dark.isActive ? 'white' : 'accent'"
+      indicator-color="$q.dark.isActive ? 'white' : 'accent'"
+      align="justify"
+      narrow-indicator
+    >
+      <q-tab
+        v-for="(contenturl, i) in contenturls"
+        :key="`content${i}`"
+        :name="contenturl"
+        :class="contenturls.length == 1 && 'default-cursor'"
+        :disable="contenturls.length == 1"
+        :label="contenttypes[i]"
       />
+    </q-tabs>
+
+    <div>
+      <q-btn
+        v-for="(button, index) in buttons"
+        :key="index"
+        class="q-mr-sm q-mb-sm cursor-pointer"
+        flat
+        round
+        size="md"
+        :title="button.title"
+        @click="dynamicEvent(button.event)"
+      >
+        <q-icon
+          :color="$q.dark.isActive ? 'white' : 'accent'"
+          :name="button.icon"
+          size="sm"
+        />
+      </q-btn>
     </div>
+
+    <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
+    <div
+      :class="['item-content', config.rtl ? 'rtl' : '']"
+      ref="contentsize"
+      v-html="content"
+    />
   </div>
 </template>
 
@@ -175,5 +169,13 @@ export default {
 
   .default-cursor {
     cursor: default !important;
+  }
+
+  .item-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: scroll;
+    padding: 8px;
   }
 </style>

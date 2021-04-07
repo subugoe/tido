@@ -1,80 +1,75 @@
 <template>
-  <section>
+  <div
+    v-if="ready"
+    class="root panels-target"
+  >
     <div
-      v-if="ready"
-      class="row panels-target"
+      v-for="(p, index) in panels"
+      v-show="p.show && p.connector.length"
+      :key="`pc${index}`"
+      class="item"
     >
-      <div
-        v-for="(p, index) in panels"
-        v-show="p.show && p.connector.length"
-        :key="`pc${index}`"
-        class="col-12 col-sm-6 col-md-3"
+      <Toolbar
+        v-if="p.heading"
+        :heading="p.label"
+      />
+
+      <q-separator />
+
+      <!-- shows the nested tabs -->
+      <q-card
+        v-if="p.connector.length > 1"
+        flat
       >
-        <Toolbar
-          v-if="p.heading"
-          :heading="p.label"
-        />
+        <div class="tabs-container item-content">
+          <q-tabs
+            v-for="(tab, i) in p.connector"
+            :key="`pt${i}`"
+            v-model="p.tab_model"
+            class="content-tabs"
+            :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
+          >
+            <q-tab
+              :name="`tab${i}`"
+              :label="tab.label"
+            />
+          </q-tabs>
+        </div>
 
         <q-separator />
 
-        <div>
-          <!-- shows the nested tabs -->
-          <q-card
-            v-if="p.connector.length > 1"
-            flat
-          >
-            <div class="tabs-container">
-              <q-tabs
-                v-for="(tab, i) in p.connector"
-                :key="`pt${i}`"
-                v-model="p.tab_model"
-                class="content-tabs"
-                :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
-              >
-                <q-tab
-                  :name="`tab${i}`"
-                  :label="tab.label"
-                />
-              </q-tabs>
-            </div>
-
-            <q-separator />
-
-            <q-tab-panels
-              v-model="p.tab_model"
-              animated
-              class="content-panel"
-              keep-alive
-            >
-              <q-tab-panel
-                v-for="(tab, idx) in p.connector"
-                :key="`co${idx}`"
-                :name="`tab${idx}`"
-              >
-                <component
-                  :is="tab.component"
-                  :key="keys[tab.id]"
-                  v-bind="$props"
-                />
-              </q-tab-panel>
-            </q-tab-panels>
-          </q-card>
-
-          <!-- shows the panels -->
-          <div
-            v-else-if="p.connector.length === 1"
-            class="q-pa-sm overflow-hidden"
+        <q-tab-panels
+          v-model="p.tab_model"
+          animated
+          keep-alive
+        >
+          <q-tab-panel
+            v-for="(tab, idx) in p.connector"
+            :key="`co${idx}`"
+            :name="`tab${idx}`"
           >
             <component
-              :is="p.connector[0].component"
-              :key="keys[p.connector[0].id]"
+              :is="tab.component"
+              :key="keys[tab.id]"
               v-bind="$props"
             />
-          </div>
-        </div>
+          </q-tab-panel>
+        </q-tab-panels>
+      </q-card>
+
+      <!-- shows the panels -->
+      <div
+        v-else-if="p.connector.length === 1"
+        class="item-content"
+      >
+        <component
+          :is="p.connector[0].component"
+          :key="keys[p.connector[0].id]"
+          v-bind="$props"
+        />
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -161,5 +156,27 @@ export default {
   > * {
     flex: 1;
   }
+}
+
+.root {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.item-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: scroll;
+  padding: 8px;
 }
 </style>

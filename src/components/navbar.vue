@@ -1,7 +1,6 @@
 <template>
   <div>
     <q-btn
-      class="q-mb-md"
       unelevated
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex <= 0"
@@ -16,7 +15,6 @@
     </q-btn>
 
     <q-btn
-      class="q-mb-md"
       size="md"
       unelevated
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"

@@ -1,6 +1,9 @@
 <template>
-  <figure id="openseadragon">
-    <nav class="sticky">
+  <figure
+    id="openseadragon"
+    class="item"
+  >
+    <nav>
       <q-btn
         v-for="(btn, idx) in buttons"
         :id="btn.id"
