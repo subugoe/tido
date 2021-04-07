@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="ready"
-    class="root panels-target"
+    class="root panel-dividers"
   >
     <div
       v-for="(p, index) in panels"
@@ -17,45 +17,49 @@
       <q-separator />
 
       <!-- shows the nested tabs -->
-      <q-card
+      <div
         v-if="p.connector.length > 1"
-        flat
+        class="item-content"
       >
-        <div class="tabs-container item-content">
-          <q-tabs
-            v-for="(tab, i) in p.connector"
-            :key="`pt${i}`"
-            v-model="p.tab_model"
-            class="content-tabs"
-            :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
-          >
-            <q-tab
-              :label="tab.label"
-              :name="`tab${i}`"
-            />
-          </q-tabs>
-        </div>
-
-        <q-separator />
-
-        <q-tab-panels
-          v-model="p.tab_model"
-          animated
-          keep-alive
+        <q-card
+          flat
         >
-          <q-tab-panel
-            v-for="(tab, idx) in p.connector"
-            :key="`co${idx}`"
-            :name="`tab${idx}`"
+          <div class="tabs-container">
+            <q-tabs
+              v-for="(tab, i) in p.connector"
+              :key="`pt${i}`"
+              v-model="p.tab_model"
+              class="content-tabs"
+              :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
+            >
+              <q-tab
+                :label="tab.label"
+                :name="`tab${i}`"
+              />
+            </q-tabs>
+          </div>
+
+          <q-separator />
+
+          <q-tab-panels
+            v-model="p.tab_model"
+            animated
+            keep-alive
           >
-            <component
-              :is="tab.component"
-              :key="keys[tab.id]"
-              v-bind="$props"
-            />
-          </q-tab-panel>
-        </q-tab-panels>
-      </q-card>
+            <q-tab-panel
+              v-for="(tab, idx) in p.connector"
+              :key="`co${idx}`"
+              :name="`tab${idx}`"
+            >
+              <component
+                :is="tab.component"
+                :key="keys[tab.id]"
+                v-bind="$props"
+              />
+            </q-tab-panel>
+          </q-tab-panels>
+        </q-card>
+      </div>
 
       <!-- shows the panels -->
       <div
