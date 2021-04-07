@@ -30,8 +30,8 @@
             :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
           >
             <q-tab
-              :name="`tab${i}`"
               :label="tab.label"
+              :name="`tab${i}`"
             />
           </q-tabs>
         </div>
@@ -103,7 +103,7 @@ export default {
     },
     fontsize: {
       type: Number,
-      default: () => 14,
+      default: () => 16,
     },
     imageurl: {
       type: String,
@@ -150,21 +150,6 @@ export default {
   display: inline-block;
 }
 
-.tabs-container {
-  display: flex;
-
-  > * {
-    flex: 1;
-  }
-}
-
-.root {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  overflow: hidden;
-}
-
 .item {
   display: flex;
   flex: 1;
@@ -178,5 +163,20 @@ export default {
   flex-direction: column;
   overflow: scroll;
   padding: 8px;
+}
+
+.root {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.tabs-container {
+  display: flex;
+
+  > * {
+    flex: 1;
+  }
 }
 </style>

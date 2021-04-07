@@ -1,9 +1,8 @@
 <template>
   <q-layout
     id="q-app"
-    view="hHh Lpr fFf"
     class="app"
-    style="height: 100vh;"
+    view="hHh Lpr fFf"
   >
     <Header
       v-if="config.headers.show"
@@ -475,6 +474,7 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
+  height: 100vh;
   overflow: hidden;
 }
 

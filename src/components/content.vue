@@ -2,20 +2,20 @@
   <div class="item">
     <q-tabs
       v-model="activeTab"
-      dense
-      class="text-grey q-mb-sm"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
-      indicator-color="$q.dark.isActive ? 'white' : 'accent'"
       align="justify"
+      class="text-grey q-mb-sm"
+      dense
+      indicator-color="$q.dark.isActive ? 'white' : 'accent'"
       narrow-indicator
     >
       <q-tab
         v-for="(contenturl, i) in contenturls"
         :key="`content${i}`"
-        :name="contenturl"
         :class="contenturls.length == 1 && 'default-cursor'"
         :disable="contenturls.length == 1"
         :label="contenttypes[i]"
+        :name="contenturl"
       />
     </q-tabs>
 

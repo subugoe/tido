@@ -1,12 +1,11 @@
 <template>
   <q-header>
     <q-toolbar
-      elevated
       :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
+      elevated
     >
       <Infobar
         v-if="config.headers.info && manifests.length"
-        class="col-xs-12 q-pl-md"
         :collectiontitle="collectiontitle"
         :item="item"
         :manifests="manifests"
@@ -14,8 +13,8 @@
     </q-toolbar>
 
     <q-toolbar
-      elevated
       :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
+      elevated
     >
       <Navbar
         v-if="config.headers.navigation"
