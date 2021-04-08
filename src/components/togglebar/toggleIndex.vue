@@ -7,6 +7,7 @@
           :key="`toggle${i}`"
         >
           <q-item
+            v-if="p.toggle"
             v-close-popup
             clickable
             flat
