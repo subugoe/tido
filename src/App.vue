@@ -62,7 +62,7 @@ export default {
       config: {},
       contentTypes: [],
       contenturls: [],
-      fontsize: 14,
+      fontsize: 100,
       imageurl: '',
       isCollection: false,
       item: {},
@@ -89,7 +89,7 @@ export default {
     /**
       * listen to fontsize change (user interaction). emitted in @/components/content.vue
       * in- or rather decrease fontsize of the text by 1px
-      * default fontsize: 14px
+      * default fontsize: 100%
       *
       * @param number fontsize
       */
