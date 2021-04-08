@@ -1,7 +1,7 @@
 <template>
   <figure
     id="openseadragon"
-    class="item"
+    class="panel"
   >
     <nav>
       <q-btn

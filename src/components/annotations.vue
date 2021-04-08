@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="annotations.length"
-    class="q-ma-sm"
+    class="panel q-ma-sm"
   >
     <!-- Data type Toggles -->
     <div>
@@ -432,6 +432,6 @@ export default {
 }
 
 .list-height {
-  height: 27vh;
+  height: 33vh;
 }
 </style>

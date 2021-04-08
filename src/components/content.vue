@@ -1,5 +1,5 @@
 <template>
-  <div class="item">
+  <div class="panel">
     <q-tabs
       v-model="activeTab"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -40,7 +40,7 @@
 
     <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
     <div
-      :class="['item-content', config.rtl ? 'rtl' : '']"
+      :class="['panel-content', config.rtl ? 'rtl' : '']"
       ref="contentsize"
       v-html="content"
     />
@@ -163,19 +163,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .rtl {
-    direction: rtl;
-  }
+.default-cursor {
+  cursor: default !important;
+}
 
-  .default-cursor {
-    cursor: default !important;
-  }
+.panel-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
+  padding: 8px;
+}
 
-  .item-content {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    overflow: scroll;
-    padding: 8px;
-  }
+.rtl {
+  direction: rtl;
+}
 </style>

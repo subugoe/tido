@@ -7,7 +7,7 @@
       v-for="(p, index) in panels"
       v-show="p.show && p.connector.length"
       :key="`pc${index}`"
-      class="item"
+      class="panel"
     >
       <Toolbar
         v-if="p.heading"
@@ -19,7 +19,7 @@
       <!-- shows the nested tabs -->
       <div
         v-if="p.connector.length > 1"
-        class="item-content"
+        class="panel"
       >
         <q-card
           flat
@@ -29,8 +29,8 @@
               v-for="(tab, i) in p.connector"
               :key="`pt${i}`"
               v-model="p.tab_model"
-              class="content-tabs"
               :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
+              class="tabs"
             >
               <q-tab
                 :label="tab.label"
@@ -50,6 +50,7 @@
               v-for="(tab, idx) in p.connector"
               :key="`co${idx}`"
               :name="`tab${idx}`"
+              class="panel-content"
             >
               <component
                 :is="tab.component"
@@ -64,7 +65,7 @@
       <!-- shows the panels -->
       <div
         v-else-if="p.connector.length === 1"
-        class="item-content"
+        class="panel-content"
       >
         <component
           :is="p.connector[0].component"
@@ -150,23 +151,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content-tabs {
-  display: inline-block;
-}
-
-.item {
+.panel {
   display: flex;
   flex: 1;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
+  scrollbar-width: none;
 }
 
-.item-content {
+.panel-content {
   display: flex;
   flex: 1;
   flex-direction: column;
   overflow: scroll;
   padding: 8px;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 .root {
@@ -182,5 +185,9 @@ export default {
   > * {
     flex: 1;
   }
+}
+
+.tabs {
+  display: inline-block;
 }
 </style>

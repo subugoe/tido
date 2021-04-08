@@ -1,7 +1,6 @@
 <template>
-  <div class="item">
+  <div class="panel">
     <q-tree
-      class="item-content"
       label-key="label-key"
       node-key="label"
       :expanded.sync="expanded"
@@ -91,18 +90,12 @@ export default {
 </script>
 
 <style scoped>
-.item {
+.panel-content {
   display: flex;
   flex: 1;
   flex-direction: column;
-  overflow: hidden;
-}
-
-.item-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: scroll;
+  overflow: auto;
   padding: 8px;
+  scrollbar-width: none;
 }
 </style>
