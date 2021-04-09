@@ -25,6 +25,7 @@
         </div>
 
         <q-item
+          v-if="toggleCounter"
           v-close-popup
           clickable
           flat
@@ -66,6 +67,12 @@ export default {
     panels: {
       type: Array,
       default: () => [],
+    },
+  },
+  computed: {
+    toggleCounter() {
+      const toggleCount = this.panels.filter((panel) => panel.toggle === true);
+      return toggleCount.length > 0;
     },
   },
   created() {
