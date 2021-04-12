@@ -21,45 +21,41 @@
         v-if="p.connector.length > 1"
         class="panel"
       >
-        <q-card
-          flat
-        >
-          <div class="tabs-container">
-            <q-tabs
-              v-for="(tab, i) in p.connector"
-              :key="`pt${i}`"
-              v-model="p.tab_model"
-              :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
-              class="tabs"
-            >
-              <q-tab
-                :label="tab.label"
-                :name="`tab${i}`"
-              />
-            </q-tabs>
-          </div>
-
-          <q-separator />
-
-          <q-tab-panels
+        <div class="tabs-container">
+          <q-tabs
+            v-for="(tab, i) in p.connector"
+            :key="`pt${i}`"
             v-model="p.tab_model"
-            animated
-            keep-alive
+            :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
+            class="tabs"
           >
-            <q-tab-panel
-              v-for="(tab, idx) in p.connector"
-              :key="`co${idx}`"
-              :name="`tab${idx}`"
-              class="panel-content"
-            >
-              <component
-                :is="tab.component"
-                :key="keys[tab.id]"
-                v-bind="$props"
-              />
-            </q-tab-panel>
-          </q-tab-panels>
-        </q-card>
+            <q-tab
+              :label="tab.label"
+              :name="`tab${i}`"
+            />
+          </q-tabs>
+        </div>
+
+        <q-separator />
+
+        <q-tab-panels
+          v-model="p.tab_model"
+          animated
+          keep-alive
+        >
+          <q-tab-panel
+            v-for="(tab, idx) in p.connector"
+            :key="`co${idx}`"
+            :name="`tab${idx}`"
+            class="root"
+          >
+            <component
+              :is="tab.component"
+              :key="keys[tab.id]"
+              v-bind="$props"
+            />
+          </q-tab-panel>
+        </q-tab-panels>
       </div>
 
       <!-- shows the panels -->
@@ -155,21 +151,16 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
-  overflow: auto;
-  scrollbar-width: none;
+  overflow: hidden;
 }
 
 .panel-content {
   display: flex;
   flex: 1;
   flex-direction: column;
-  overflow: scroll;
+  overflow: auto;
+  overflow-x: hidden;
   padding: 8px;
-  scrollbar-width: none;
-}
-
-::-webkit-scrollbar {
-  display: none;
 }
 
 .root {

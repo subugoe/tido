@@ -1,5 +1,5 @@
 <template>
-  <div class="panel">
+  <div class="panel-content">
     <q-tree
       label-key="label-key"
       node-key="label"
@@ -94,8 +94,7 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
-  overflow: auto;
+  overflow: scroll;
   padding: 8px;
-  scrollbar-width: none;
 }
 </style>

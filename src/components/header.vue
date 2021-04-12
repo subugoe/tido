@@ -75,12 +75,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-header {
-  left: 0;
-  position: absolute;
-  top: 0;
-}
-
 .bar {
   margin-left: auto;
   margin-right: auto;

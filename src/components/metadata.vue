@@ -26,12 +26,12 @@
           </q-item-label>
         </q-item-section>
       </q-item>
-    </q-list>
 
-    <q-separator
-      class="q-mt-md q-mb-sm"
-      inset
-    />
+      <q-separator
+        class="q-mt-md q-mb-sm"
+        inset
+      />
+    </q-list>
 
     <!-- Manifest-->
     <q-list v-if="itemcount">

@@ -143,8 +143,8 @@ export default {
   },
   data() {
     return {
-      cssIcons: {},
       icons: {},
+      iconClasses: {},
       messages: {
         none: 'No annotations available',
         user: 'Toggle at least one data type to show annotations',
@@ -240,20 +240,28 @@ export default {
     this.init();
   },
   methods: {
+    // create SVGs for the data type toggles and the list alike
     createIcons() {
       this.types.forEach((type) => {
-        // create SVGs for the data type toggles and the list alike
         this.icons[type['content-type']] = Icons[type.icon]
           ? Icons[type.icon]
           : Icons.fasTimes; // fallback if icon doesn't exist
 
-        // create icons based on css classes for the text entities
-        const span = document.createElement('span');
+        this.iconClasses[type['content-type']] = type.css;
+      });
+    },
+    // create icons based on css classes for the text entities
+    createIconClasses() {
+      this.annotations.forEach((annotation) => {
+        const entity = document.getElementById(annotation.id);
 
-        span.setAttribute('class', 'q-mr-sm');
-        span.classList.add('fas', type.css);
+        if (entity !== null) {
+          entity.classList.add('q-ml-sm', 'fas');
 
-        this.cssIcons[type['content-type']] = span;
+          if (this.config.annotations.show) {
+            entity.classList.add(this.iconClasses[annotation.contenttype]);
+          }
+        }
       });
     },
     // bind dynamic events / models to the options
@@ -294,6 +302,8 @@ export default {
         ? this.availableTypes
         : [];
       // wait for the annotations to load
+      this.createIconClasses();
+
       setTimeout(() => {
         this.highlightMode();
         this.registerToggles();
@@ -350,9 +360,13 @@ export default {
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
+        entity.innerText = `  ${entity.innerText}`;
+
         switch (caller) {
           case 'list':
           case 'text':
+            entity.classList.toggle(this.iconClasses[annotation.contenttype]);
+
             entity.style.borderBottom = entity.style.borderBottom
               ? ''
               : '2px solid';
@@ -360,46 +374,30 @@ export default {
             break;
           case 'type':
             if (this.options[0].model) {
+              if (entity.classList.contains(this.iconClasses[annotation.contenttype])) {
+                entity.classList.remove(this.iconClasses[annotation.contenttype]);
+              } else entity.classList.add(this.iconClasses[annotation.contenttype]);
+
               entity.style.borderBottom = entity.style.borderBottom
                 ? ''
                 : '2px solid';
             } else {
+              entity.classList.remove(this.iconClasses[annotation.contenttype]);
+
               annotation.selected = false;
               entity.style.borderBottom = '';
             }
 
             break;
           default:
+            if (this.options[0].model) {
+              entity.classList.add(this.iconClasses[annotation.contenttype]);
+            } else entity.classList.remove(this.iconClasses[annotation.contenttype]);
+
             entity.style.borderBottom = this.options[0].model
               ? '2px solid'
               : '';
 
-            break;
-        }
-      }
-    },
-    toggleIcon(annotation, caller, entity) {
-      const icon = this.cssIcons[annotation.contenttype];
-
-      if (icon !== null) {
-        icon.setAttribute('id', `ID_${annotation.id}`);
-
-        switch (caller) {
-          case 'type':
-            this.items.forEach(() => {
-              if (this.options[0].model) {
-                if (entity.style.borderBottom) {
-                  icon.parentNode.removeChild(icon);
-                } else {
-                  entity.appendChild(icon);
-                }
-              } else {
-                icon.parentNode.removeChild(icon);
-              }
-            });
-
-            break;
-          default:
             break;
         }
       }
@@ -431,7 +429,15 @@ export default {
   border: 1px solid #ababab;
 }
 
+.panel-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: none;
+  padding: 8px;
+}
+
 .list-height {
-  height: 33vh;
+  height: 25vh;
 }
 </style>
