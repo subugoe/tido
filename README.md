@@ -424,7 +424,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
 The panel-array consists of four objects according to the maximum number of panels, that can be shown at once.
 
-Each object inside that constant consists of similar keys: `connector`, `heading`, `pane_label` and `show`.
+Each object inside that constant consists of similar keys: `connector`, `heading`, `label` and `show`.
 
 #### The Panel Keys in Detail
 
