@@ -7,7 +7,15 @@
       size="md"
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       @click="modalOpen = true"
-    />
+    >
+      <q-space />
+
+      <q-icon
+        :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
+        :name="fasCompass"
+        size="sm"
+      />
+    </q-btn>
 
     <div
       :class="{ 'modal-open': modalOpen }"
@@ -66,7 +74,7 @@
 </template>
 
 <script>
-import { fasWindowClose } from '@quasar/extras/fontawesome-v5';
+import { fasWindowClose, fasCompass } from '@quasar/extras/fontawesome-v5';
 import textLabels from './highlights';
 
 export default {
@@ -89,6 +97,7 @@ export default {
   },
 
   created() {
+    this.fasCompass = fasCompass;
     this.fasWindowClose = fasWindowClose;
   },
 
