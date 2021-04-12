@@ -1,24 +1,39 @@
 <template>
-  <q-toolbar>
+  <div @keydown.esc="modalOpen = false">
     <q-btn
       v-if="textModal.length"
-      class="text_key"
       label="Keys"
       outline
       size="md"
-      @click="status = true"
+      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
+      @click="modalOpen = true"
     />
 
-    <q-dialog
-      v-model="status"
+    <div
+      :class="{ 'modal-open': modalOpen }"
+      class="keyModal"
       transition-hide="scale"
       transition-show="scale"
     >
       <q-card :class="$q.dark.isActive ? 'bg-black' : 'bg-white text-black'">
-        <q-card-section>
+        <q-card-section class="row items-center q-pb-none">
           <div class="text-h6 text-uppercase">
             KEYS
           </div>
+
+          <q-space />
+
+          <q-btn
+            dense
+            flat
+            @click="toggleModal"
+          >
+            <q-icon
+              :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
+              :name="fasWindowClose"
+              size="sm"
+            />
+          </q-btn>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -39,17 +54,19 @@
 
         <q-card-actions align="right">
           <q-btn
-            v-close-popup
-            label="OK"
+            :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
+            label="CLOSE"
             flat
+            @click="toggleModal"
           />
         </q-card-actions>
       </q-card>
-    </q-dialog>
-  </q-toolbar>
+    </div>
+  </div>
 </template>
 
 <script>
+import { fasWindowClose } from '@quasar/extras/fontawesome-v5';
 import textLabels from './highlights';
 
 export default {
@@ -61,7 +78,7 @@ export default {
   },
 
   data: () => ({
-    status: false,
+    modalOpen: false,
     textLabels,
   }),
 
@@ -70,10 +87,37 @@ export default {
       return this.textLabels.filter((t) => this.map[t.classes]);
     },
   },
+
+  created() {
+    this.fasWindowClose = fasWindowClose;
+  },
+
+  methods: {
+    toggleModal() {
+      this.modalOpen = !this.modalOpen;
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+.keyModal {
+  align-items: center;
+  bottom: 0;
+  flex-direction: column;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: scale(0);
+}
+
+.modal-open {
+  display: flex;
+  transform: scale(1);
+}
+
 .text-item {
   align-items: center;
   display: flex;
