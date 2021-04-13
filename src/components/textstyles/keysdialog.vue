@@ -2,19 +2,18 @@
   <div @keydown.esc="modalOpen = false">
     <q-btn
       v-if="textModal.length"
-      label="Keys"
-      outline
-      size="md"
+      unelevated
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       @click="modalOpen = true"
     >
-      <q-space />
-
       <q-icon
-        :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
         :name="fasCompass"
-        size="sm"
+        class="q-pr-md"
+        size="xs"
       />
+      <div class="text-h6 text-uppercase">
+        Keys
+      </div>
     </q-btn>
 
     <div
@@ -28,20 +27,12 @@
           <div class="text-h6 text-uppercase">
             KEYS
           </div>
+        </q-card-section>
 
-          <q-space />
-
-          <q-btn
-            dense
-            flat
-            @click="toggleModal"
-          >
-            <q-icon
-              :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
-              :name="fasWindowClose"
-              size="sm"
-            />
-          </q-btn>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h8">
+            Lorem ipsum dolor sit amut. Lorem ipsum dolor sit amut.
+          </div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -62,11 +53,19 @@
 
         <q-card-actions align="right">
           <q-btn
+            unelevated
             :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
-            label="CLOSE"
-            flat
             @click="toggleModal"
-          />
+          >
+            <q-icon
+              :name="fasWindowClose"
+              class="q-pr-sm"
+              size="xs"
+            />
+            <div class="text-h8 text-uppercase">
+              CLOSE
+            </div>
+          </q-btn>
         </q-card-actions>
       </q-card>
     </div>
