@@ -25,12 +25,23 @@ for entry in *
         last_modified_in_s=$(date -d $last_modified +%s)
         # difference in days
         diff=$((($current_date_in_s - $last_modified_in_s) / (24*3600)))
-        # preserve content of development branch ...
+        # preserve content of development branch except data that doesn't belong here...
         if [[ ${entry} = "develop" ]]; then
-            :
+			cd develop
+			GLOBIGNORE=*.js:*.html
+			rm -rf *
+			unset GLOBIGNORE
+			cd ..
         # ... remove other entries that are older than 2 weeks ...
         elif [[ $diff -gt 14 ]]; then
             rm -r $entry
+		# ... clean up other entries ...
+		else
+			cd $entry
+			GLOBIGNORE=*.js:*.html
+			rm -rf *
+			unset GLOBIGNORE
+			cd ..
         ## ... keep the single commit entries ...
         #elif [[ ${#entry} == 8  && ${entry} =~ [a-z0-9] ]]; then
         #    :
