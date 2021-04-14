@@ -9,7 +9,7 @@ stages:
 
 # Templates
 .build: &build
-   - ./set_entrypoint_ci.sh
+   - bash .ci-scripts/set_entrypoint_ci.sh
    - npm install
    - npm run build
    - npm run tweak:build
@@ -65,8 +65,8 @@ pages:
       - public
   when: always
   script:
-   - bash update-artifacts.sh
-   - bash gitlab-remove-old-artifacts.sh
+   - bash .ci-scripts/update-artifacts.sh
+   - bash .ci-scripts/gitlab-remove-old-artifacts.sh
   environment:
     name: ${CI_COMMIT_REF_SLUG}
     url: https://subugoe.pages.gwdg.de/emo/Qviewer/${CI_COMMIT_REF_SLUG}/
