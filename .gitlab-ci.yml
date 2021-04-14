@@ -49,11 +49,7 @@ update-ahikar:
   trigger: "subugoe/ahiqar/ahiqar-tido"
 
 pages:
-  before_script:
-    - dnf install -y jq
-    - dnf install -y zip
-    - dnf install -y unzip
-  image: docker.gitlab.gwdg.de/mgoebel/swiss_knife/fedora:latest
+  image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
 # at the very early stage lets deploy for every branch
 #  only:
 #    - main
