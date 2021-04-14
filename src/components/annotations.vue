@@ -5,7 +5,7 @@
   >
     <!-- Data type Toggles -->
     <div>
-      <h3 class="text-body1 q-mb-sm text-weight-medium text-uppercase">
+      <h3 class="text-body1 q-mt-none q-mb-md text-weight-medium text-uppercase">
         Show/hide data types
       </h3>
 
@@ -30,7 +30,7 @@
       v-if="items.length"
       class="q-pt-sm q-pb-xs"
     >
-      <h3 class="text-body1 q-mb-sm q-mt-none text-weight-medium text-uppercase">
+      <h3 class="text-body1 q-mb-md q-mt-none text-weight-medium text-uppercase">
         List of Annotations ({{ items.length }})
       </h3>
 
