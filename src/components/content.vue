@@ -53,15 +53,13 @@
     </div>
 
     <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-    <div class="text-content">
-      <div
-        :class="['item-content', config.rtl ? 'rtl' : '']"
-        ref="contentsize"
-        v-html="content"
-      />
+    <div
+      :class="['item-content', config.rtl ? 'rtl' : '']"
+      ref="contentsize"
+      v-html="content"
+    />
 
-      <KeyDialog class="key-button" :map="availableClasses" />
-    </div>
+    <KeyDialog class="key-button" :map="availableClasses" />
   </div>
 </template>
 
@@ -206,13 +204,5 @@ export default {
 
 .rtl {
   direction: rtl;
-}
-
-.text-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
 }
 </style>
