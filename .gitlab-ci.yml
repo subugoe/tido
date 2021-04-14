@@ -36,7 +36,7 @@ build_main_and_develop:
   artifacts:
     paths:
      - dist/
-    expire_in: never
+    expire_in: 1 mos
 
 update-ahikar:
   stage: deploy
