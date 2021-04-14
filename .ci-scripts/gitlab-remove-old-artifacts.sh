@@ -15,22 +15,33 @@
 
 # get current date in seconds–standard procedure for comparing two dates
 current_date=$(date "+%Y%m%d")
-current_date_in_s=$(date -d $current_date "+%s")
+current_date_in_s=$(date -d "$current_date" "+%s")
 
-cd public
+cd public || exit
 
 for entry in *
     do
-        last_modified=$(date -r $entry "+%Y%m%d")
-        last_modified_in_s=$(date -d $last_modified +%s)
+        last_modified=$(date -r "$entry" "+%Y%m%d")
+        last_modified_in_s=$(date -d "$last_modified" +%s)
         # difference in days
-        diff=$((($current_date_in_s - $last_modified_in_s) / (24*3600)))
-        # preserve content of development branch ...
+        diff=$(((current_date_in_s - last_modified_in_s) / (24*3600)))
+        # preserve content of development branch except data that doesn't belong here...
         if [[ ${entry} = "develop" ]]; then
-            :
+			cd develop || exit
+			GLOBIGNORE="*.js:*.html"
+			rm -rf -- *
+			unset GLOBIGNORE
+			cd ..
         # ... remove other entries that are older than 2 weeks ...
         elif [[ $diff -gt 14 ]]; then
-            rm -r $entry
+            rm -r "$entry"
+		# ... clean up other entries ...
+		else
+			cd "$entry" || exit
+			GLOBIGNORE="*.js:*.html"
+			rm -rf -- *
+			unset GLOBIGNORE
+			cd ..
         ## ... keep the single commit entries ...
         #elif [[ ${#entry} == 8  && ${entry} =~ [a-z0-9] ]]; then
         #    :
