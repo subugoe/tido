@@ -1,5 +1,5 @@
 <template>
-  <div @keydown.esc="modalOpen = false">
+  <div>
     <q-btn
       v-if="textModal.length"
       unelevated
@@ -11,14 +11,13 @@
         class="q-pr-md"
         size="xs"
       />
-      <div class="text-h6 text-uppercase">
+      <div>
         Keys
       </div>
     </q-btn>
 
-    <div
-      :class="{ 'modal-open': modalOpen }"
-      class="keyModal"
+    <q-dialog
+      v-model="modalOpen"
       transition-hide="scale"
       transition-show="scale"
     >
@@ -55,20 +54,20 @@
           <q-btn
             unelevated
             :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
-            @click="toggleModal"
+            @click="modalOpen = false"
           >
             <q-icon
               :name="fasWindowClose"
               class="q-pr-sm"
               size="xs"
             />
-            <div class="text-h8 text-uppercase">
+            <div>
               CLOSE
             </div>
           </q-btn>
         </q-card-actions>
       </q-card>
-    </div>
+    </q-dialog>
   </div>
 </template>
 
@@ -99,33 +98,10 @@ export default {
     this.fasCompass = fasCompass;
     this.fasWindowClose = fasWindowClose;
   },
-
-  methods: {
-    toggleModal() {
-      this.modalOpen = !this.modalOpen;
-    },
-  },
 };
 </script>
 
 <style lang="scss" scoped>
-.keyModal {
-  align-items: center;
-  bottom: 0;
-  flex-direction: column;
-  justify-content: center;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transform: scale(0);
-}
-
-.modal-open {
-  display: flex;
-  transform: scale(1);
-}
-
 .text-item {
   align-items: center;
   display: flex;
