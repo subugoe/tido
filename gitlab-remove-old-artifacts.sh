@@ -27,8 +27,8 @@ for entry in *
         diff=$((($current_date_in_s - $last_modified_in_s) / (24*3600)))
         # preserve content of development branch except data that doesn't belong here...
         if [[ ${entry} = "develop" ]]; then
-			cd develop
-			GLOBIGNORE=*.js:*.html
+			cd develop || exit
+			GLOBIGNORE="*.js:*.html"
 			rm -rf *
 			unset GLOBIGNORE
 			cd ..
@@ -37,8 +37,8 @@ for entry in *
             rm -r $entry
 		# ... clean up other entries ...
 		else
-			cd $entry
-			GLOBIGNORE=*.js:*.html
+			cd $entry || exit
+			GLOBIGNORE="*.js:*.html"
 			rm -rf *
 			unset GLOBIGNORE
 			cd ..
