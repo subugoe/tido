@@ -12,6 +12,7 @@
         round
         size="sm"
         :color="$q.dark.isActive ? 'white' : 'accent'"
+        class="q-ml-xs q-mt-xs"
       >
         <q-icon
           size="xs"

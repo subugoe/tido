@@ -1,9 +1,15 @@
 <template>
   <div class="item-content panel__meta">
     <!-- Collection-->
-    <q-list v-if="config.meta.collection.all && Object.keys(collection).length">
-      <q-item class="q-pa-none">
-        <q-item-section class="text-h6 caps">
+    <q-list
+      v-if="config.meta.collection.all && Object.keys(collection).length"
+      dense
+    >
+      <q-item class="no-padding">
+        <q-item-section
+          dense
+          class="text-h6 caps"
+        >
           Collection
         </q-item-section>
       </q-item>
@@ -11,9 +17,13 @@
       <q-item
         v-for="(mCollection, index) in metadataCollection"
         :key="index"
-        class="q-px-none"
+        dense
+        class="q-mb-xs no-padding"
       >
-        <q-item-section v-if="Object.keys(mCollection).length">
+        <q-item-section
+          v-if="Object.keys(mCollection).length"
+          class="q-mb-xs"
+        >
           <q-item-label
             overline
             class="text-uppercase"
@@ -29,8 +39,11 @@
     </q-list>
 
     <!-- Manifest-->
-    <q-list v-if="config.meta.manifest.all && itemcount">
-      <q-item class="q-pa-none">
+    <q-list
+      v-if="config.meta.manifest.all && itemcount"
+      dense
+    >
+      <q-item class="no-padding">
         <q-item-section class="text-h6 caps">
           {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
@@ -39,9 +52,9 @@
       <q-item
         v-for="(mManifest, index) in metadataManifest"
         :key="index"
-        class="q-px-none"
+        class="q-mb-xs no-padding"
       >
-        <q-item-section>
+        <q-item-section class="q-mb-xs">
           <q-item-label
             overline
             class="text-uppercase"
@@ -59,9 +72,9 @@
         <q-item
           v-for="(meta, idx) in manifests[sequenceindex].metadata"
           :key="idx"
-          class="q-px-none"
+          class="q-mb-xs"
         >
-          <q-item-section>
+          <q-item-section class="q-mb-xs">
             <q-item-label
               overline
               class="text-uppercase"
@@ -76,8 +89,11 @@
     </q-list>
 
     <!-- Item-->
-    <q-list v-if="config.meta.item.all">
-      <q-item class="q-pa-none">
+    <q-list
+      v-if="config.meta.item.all"
+      dense
+    >
+      <q-item class="no-padding">
         <q-item-section class="text-h6 caps">
           {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
@@ -86,9 +102,12 @@
       <q-item
         v-for="(mItem, index) in metadataItem"
         :key="index"
-        class="q-px-none"
+        class="q-mb-xs no-padding"
       >
-        <q-item-section v-if="Object.keys(mItem).length">
+        <q-item-section
+          v-if="Object.keys(mItem).length"
+          class="q-mb-xs"
+        >
           <q-item-label
             overline
             class="text-uppercase"
