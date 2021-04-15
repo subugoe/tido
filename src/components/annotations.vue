@@ -429,14 +429,6 @@ export default {
   border: 1px solid #ababab;
 }
 
-.panel-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: none;
-  padding: 8px;
-}
-
 .list-height {
   height: 25vh;
 }

@@ -150,7 +150,7 @@ export default {
           id,
           contenttype: annotation.body['x-content-type'],
           description: annotation.body.value,
-          selected: this.config.annotationmode,
+          selected: this.config.annotations.show,
           text,
         });
       });
