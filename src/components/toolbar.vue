@@ -1,9 +1,7 @@
 <template>
-  <q-toolbar>
-    <q-toolbar-title class="text-h6 absolute-center">
-      {{ heading | capitalize }}
-    </q-toolbar-title>
-  </q-toolbar>
+  <div class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
+    {{ heading | capitalize }}
+  </div>
 </template>
 
 <script>

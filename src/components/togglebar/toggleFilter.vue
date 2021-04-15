@@ -1,12 +1,11 @@
 <template>
   <div>
     <q-btn-dropdown
-      v-if="$q.screen.width < 1100"
+      v-if="$q.screen.width > 10"
       :dropdown-icon="dropicon"
-      outline
       flat
       :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
-      label="Toggle panels"
+      label="Show/Hide Panels"
     >
       <slot />
     </q-btn-dropdown>

@@ -1,8 +1,8 @@
 <template>
-  <div class="item-content">
+  <div class="item-content panel__meta">
     <!-- Collection-->
     <q-list v-if="config.meta.collection.all && Object.keys(collection).length">
-      <q-item class="q-px-none">
+      <q-item class="q-pa-none">
         <q-item-section class="text-h6 caps">
           Collection
         </q-item-section>
@@ -26,17 +26,11 @@
           </q-item-label>
         </q-item-section>
       </q-item>
-
-      <q-separator
-        v-if="showSeparator(config.meta.collection.all && (config.meta.manifest.all || config.meta.item.all))"
-        class="q-mt-md q-mb-sm"
-        inset
-      />
     </q-list>
 
     <!-- Manifest-->
     <q-list v-if="config.meta.manifest.all && itemcount">
-      <q-item class="q-px-none">
+      <q-item class="q-pa-none">
         <q-item-section class="text-h6 caps">
           {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
@@ -81,15 +75,9 @@
       </div>
     </q-list>
 
-    <q-separator
-      v-if="showSeparator(config.meta.manifest.all && config.meta.item.all)"
-      inset
-      class="q-mt-md q-mb-sm"
-    />
-
     <!-- Item-->
     <q-list v-if="config.meta.item.all">
-      <q-item class="q-px-none">
+      <q-item class="q-pa-none">
         <q-item-section class="text-h6 caps">
           {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
@@ -225,3 +213,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.panel__meta {
+  padding: 8px;
+}
+</style>

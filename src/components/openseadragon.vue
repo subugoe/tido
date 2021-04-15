@@ -10,11 +10,11 @@
         :key="idx"
         flat
         round
-        size="md"
+        size="sm"
         :color="$q.dark.isActive ? 'white' : 'accent'"
       >
         <q-icon
-          size="sm"
+          size="xs"
           :name="btn.svg"
         />
       </q-btn>

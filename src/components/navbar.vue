@@ -4,29 +4,35 @@
       unelevated
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex <= 0"
+      size="xs"
+      style="font-size: 14px;"
+      padding="xs"
+      class="q-px-sm"
       @click="toggleSheet(--itemindex)"
     >
       <q-icon
-        class="q-pr-sm"
         :name="fasArrowLeft"
-        size="sm"
+        size="16px"
+        class="q-pr-xs"
       />
       {{ captionprev }}
     </q-btn>
 
     <q-btn
-      size="md"
       unelevated
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex >= itemurls.length - 1"
+      size="xs"
+      style="font-size: 14px;"
+      padding="xs"
+      class="q-px-sm"
       @click="toggleSheet(++itemindex)"
     >
       {{ captionnext }}
-
       <q-icon
         :name="fasArrowRight"
-        size="sm"
-        class="q-pl-sm"
+        size="16px"
+        class="q-pl-xs"
       />
     </q-btn>
   </div>
