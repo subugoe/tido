@@ -103,7 +103,8 @@ clean_up:
     - mkdir -p /tmp/this && cd /tmp/this
     - git clone git@gitlab.gwdg.de:subugoe/emo/QViewer.git
     - cd QViewer
-    - ls
+    - 'sed -i "s#\"entrypoint\": \".*\"#\"entrypoint\": \"\"#" src/index.template.html'
+    - cat src/index.template.html
 
 
 # when a git flow release is made, a tag will be pushed starting this job. it
