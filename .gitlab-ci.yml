@@ -27,6 +27,8 @@ stages:
 clean_up:
   image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
   stage: clean
+  only:
+    - develop
   script:
     - *git
     - bash .ci-scripts/remove_entrypoint.sh
@@ -99,7 +101,6 @@ pushback:
     name: "updated-artifact"
     paths:
       - updated-artifact.zip
-
 
 # when a git flow release is made, a tag will be pushed starting this job. it
 # will keep the resulting artifact from the job declared in `JOB_NUMBER_TO_PRESERVE`
