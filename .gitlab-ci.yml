@@ -32,6 +32,9 @@ clean_up:
   script:
     - *git
     - bash .ci-scripts/remove_entrypoint.sh
+  artifacts:
+    reports:
+      dotenv: build.env
 
 build_test:
   image: docker.gitlab.gwdg.de/subugoe/emo/qviewer/node:latest
