@@ -83,21 +83,6 @@ pushback:
     paths:
       - updated-artifact.zip
 
-.production:
-  image: node:latest
-  only:
-    - main
-  stage: deploy
-  script:
-   - npm install
-   - npm run build
-   - npm run tweak:build
-   - mkdir tido && mv dist/* tido/
-  artifacts:
-    expire_in: 5 yrs
-    paths:
-     - tido
-
 # when a git flow release is made, a tag will be pushed starting this job. it
 # will keep the resulting artifact from the job declared in `JOB_NUMBER_TO_PRESERVE`
 # and it will set up a Gitlab release at the repo. therefore the merge message starting
