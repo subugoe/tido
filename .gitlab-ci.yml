@@ -3,16 +3,26 @@ cache:
   - node_modules/
 
 stages:
+  - clean
   - build
   - deploy
   - preserve-pages
 
 # Templates
 .build: &build
-   - bash .ci-scripts/set_entrypoint_ci.sh
-   - npm install
-   - npm run build
-   - npm run tweak:build
+  - bash .ci-scripts/set_entrypoint_ci.sh
+  - npm install
+  - npm run build
+  - npm run tweak:build
+
+.git: &git
+  - eval $(ssh-agent -s)
+  - echo "$DEPLOY_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan gitlab.gwdg.de  >> ~/.ssh/known_hosts
+  - git config --global user.email "ahiqar-backend@gitlab.gwdg.de"
+  - git config --global user.name "Gitlab CI"
 
 build_test:
   image: docker.gitlab.gwdg.de/subugoe/emo/qviewer/node:latest
@@ -82,6 +92,19 @@ pushback:
     name: "updated-artifact"
     paths:
       - updated-artifact.zip
+
+clean_up:
+  image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
+  stage: clean
+  variables:
+    CLEANED: "true"
+  script:
+    - *git
+    - mkdir -p /tmp/this && cd /tmp/this
+    - git clone git@gitlab.gwdg.de:subugoe/emo/QViewer.git
+    - cd QViewer
+    - ls
+
 
 # when a git flow release is made, a tag will be pushed starting this job. it
 # will keep the resulting artifact from the job declared in `JOB_NUMBER_TO_PRESERVE`
