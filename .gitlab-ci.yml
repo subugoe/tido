@@ -24,6 +24,13 @@ stages:
   - git config --global user.email "tido@gitlab.gwdg.de"
   - git config --global user.name "Gitlab CI"
 
+clean_up:
+  image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
+  stage: clean
+  script:
+    - *git
+    - bash .ci-scripts/remove_entrypoint.sh
+
 build_test:
   image: docker.gitlab.gwdg.de/subugoe/emo/qviewer/node:latest
   except:
@@ -92,19 +99,6 @@ pushback:
     name: "updated-artifact"
     paths:
       - updated-artifact.zip
-
-clean_up:
-  image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
-  stage: clean
-  variables:
-    CLEANED: "true"
-  script:
-    - *git
-    - mkdir -p /tmp/this && cd /tmp/this
-    - git clone git@gitlab.gwdg.de:subugoe/emo/QViewer.git
-    - cd QViewer
-    - 'sed -i "s#\"entrypoint\": \".*\"#\"entrypoint\": \"\"#" src/index.template.html'
-    - cat src/index.template.html
 
 
 # when a git flow release is made, a tag will be pushed starting this job. it
