@@ -9,12 +9,6 @@ stages:
   - preserve-pages
 
 # Templates
-.build: &build
-  - bash .ci-scripts/set_entrypoint_ci.sh
-  - npm install
-  - npm run build
-  - npm run tweak:build
-
 .git: &git
   - eval $(ssh-agent -s)
   - echo "$DEPLOY_KEY" | tr -d '\r' | ssh-add - > /dev/null
@@ -28,6 +22,7 @@ clean_up:
   image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
   stage: clean
   only:
+    - main
     - develop
   script:
     - *git
@@ -43,7 +38,7 @@ build_test:
    - develop
   stage: build
   script:
-   - *build
+   - bash .ci-scripts/build.sh
   artifacts:
     paths:
      - dist/
@@ -55,7 +50,7 @@ build_main_and_develop:
    - develop
   stage: build
   script:
-   - *build
+   - if [[ $CONTINUE_BUILD == "true" ]]; then bash .ci-scripts/build.sh; fi
   artifacts:
     paths:
      - dist/
