@@ -57,12 +57,9 @@
             </q-avatar>
 
             <q-item-section>
-              <q-item-label
-                class="text-uppercase"
-                overline
-              >
-                <div class="q-mb-xs text-body1">
-                  {{ annotation.text }}
+              <q-item-label overline>
+                <div class="text-body1">
+                  {{ annotation.description }}
                 </div>
               </q-item-label>
             </q-item-section>
@@ -253,7 +250,7 @@ export default {
     // create icons based on css classes for the text entities
     createIconClasses() {
       this.annotations.forEach((annotation) => {
-        const entity = document.getElementById(annotation.id);
+        const entity = document.getElementById(annotation.id).firstChild;
 
         if (entity !== null) {
           entity.classList.add('q-ml-sm', 'fas');
@@ -301,13 +298,11 @@ export default {
       this.typeModel = this.config.annotations.show
         ? this.availableTypes
         : [];
-      // wait for the annotations to load
+
       this.createIconClasses();
 
-      setTimeout(() => {
-        this.highlightMode();
-        this.registerToggles();
-      }, 2000);
+      this.highlightMode();
+      this.registerToggles();
     },
     // Toggle highlighting of annotation/s when clicking on the appropriate text entity
     registerToggles() {
@@ -320,7 +315,7 @@ export default {
       }
 
       current.forEach((annotation) => {
-        const entity = document.getElementById(annotation.id);
+        const entity = document.getElementById(annotation.id).firstChild;
 
         if (entity !== null) {
           entity.style.borderBottom = this.config.annotations.show
@@ -357,7 +352,7 @@ export default {
       this.options[0].model = this.selectedAll;
     },
     toggleTextHighlighting(annotation, caller = '') {
-      const entity = document.getElementById(annotation.id);
+      const entity = document.getElementById(annotation.id).firstChild;
 
       if (entity !== null) {
         entity.innerText = `  ${entity.innerText}`;
