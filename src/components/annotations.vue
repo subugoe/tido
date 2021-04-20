@@ -361,7 +361,7 @@ export default {
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
-        entity.innerText = `  ${entity.innerText}`;
+        // entity.innerText = `  ${entity.innerText}`;
 
         switch (caller) {
           case 'list':
@@ -447,7 +447,6 @@ export default {
   bottom: 0;
   background: white;
 }
-
 .annotation-list {
   flex-grow: 1;
 }
