@@ -45,7 +45,12 @@ module.exports = function (ctx) {
         },
         notify: {
           color: 'gray'
-        }
+        },
+        loading: {
+          delay: 300,
+          message: 'Loading the content, plese wait....',
+          spinnerSize: 64,
+        },
       },
 
       iconSet: 'fontawesome-v5',
@@ -54,7 +59,8 @@ module.exports = function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Loading',
       ]
     },
 

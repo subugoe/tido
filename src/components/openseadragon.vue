@@ -1,7 +1,7 @@
 <template>
   <figure
     id="openseadragon"
-    class="item"
+    class="item relative-position"
   >
     <nav>
       <q-btn
@@ -19,6 +19,17 @@
         />
       </q-btn>
     </nav>
+
+    <q-inner-loading :showing="loadingprogress">
+      <q-spinner
+        size="3em"
+        color="primary"
+      />
+
+      <div class="q-pt-md text-uppercase">
+        Loading, please wait....
+      </div>
+    </q-inner-loading>
   </figure>
 </template>
 
@@ -38,6 +49,9 @@ export default {
     imageurl: {
       type: String,
       default: () => '',
+    },
+    loadingprogress: {
+      type: Boolean,
     },
   },
   data() {

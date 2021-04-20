@@ -129,6 +129,12 @@ export default {
       type: Array,
       default: () => [],
     },
+    treecollection: {
+      type: Boolean,
+    },
+    loadingprogress: {
+      type: Boolean,
+    },
   },
   computed: {
     ready() {

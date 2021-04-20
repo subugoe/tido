@@ -1,5 +1,5 @@
 <template>
-  <div class="item-content">
+  <div class="item-content relative-position">
     <!-- Collection-->
     <q-list v-if="config.meta.collection.all && Object.keys(collection).length">
       <q-item class="q-px-none">
@@ -114,6 +114,17 @@
         </q-item-section>
       </q-item>
     </q-list>
+
+    <q-inner-loading :showing="loadingprogress">
+      <q-spinner
+        size="3em"
+        color="primary"
+      />
+
+      <div class="q-pt-md text-uppercase">
+        Loading, please wait....
+      </div>
+    </q-inner-loading>
   </div>
 </template>
 
@@ -141,6 +152,9 @@ export default {
     manifests: {
       type: Array,
       default: () => [],
+    },
+    loadingprogress: {
+      type: Boolean,
     },
   },
   data() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="item">
+  <div class="item relative-position">
     <q-tree
       class="item-content"
       label-key="label-key"
@@ -19,6 +19,17 @@
         />
       </template>
     </q-tree>
+
+    <q-inner-loading :showing="treecollection">
+      <q-spinner
+        size="3em"
+        color="primary"
+      />
+
+      <div class="q-pt-md text-uppercase">
+        Loading, please wait....
+      </div>
+    </q-inner-loading>
   </div>
 </template>
 
@@ -36,6 +47,9 @@ export default {
     tree: {
       type: Array,
       default: () => [],
+    },
+    treecollection: {
+      type: Boolean,
     },
   },
   data() {

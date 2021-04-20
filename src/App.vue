@@ -30,6 +30,9 @@
         :panels="panels"
         :request="request"
         :tree="tree"
+        :treecollection="treecollection"
+        :loadingprogress="loadingprogress"
+        :loadingerror="loadingerror"
       />
     </q-page-container>
 
@@ -70,6 +73,9 @@ export default {
       itemurls: [],
       manifests: [],
       tree: [],
+      treecollection: false,
+      loadingprogress: false,
+      loadingerror: '',
     };
   },
   created() {
@@ -113,6 +119,11 @@ export default {
       this.imageurl = '';
       this.getItemData(url);
     });
+
+    // handle text tabs loading
+    this.$root.$on('textloading', (value) => {
+      this.loadingprogress = value;
+    });
   },
   methods: {
     /**
@@ -139,30 +150,40 @@ export default {
       *
       * @param string url
       */
-    getCollection(url) {
+    async getCollection(url) {
       this.isCollection = true;
+      this.treecollection = true;
 
-      this.request(url)
-        .then((data) => {
-          this.collection = data;
-          this.collectiontitle = this.getLabel(data);
+      try {
+        this.$q.loading.show();
 
-          this.tree.push(
-            {
-              children: [],
-              handler: (node) => {
-                this.$root.$emit('update-tree-knots', node.label);
-              },
-              label: this.collectiontitle,
-              'label-key': this.collectiontitle,
-              selectable: false,
+        const data = await this.request(url);
+
+        this.collection = data;
+        this.collectiontitle = this.getLabel(data);
+
+        this.tree.push(
+          {
+            children: [],
+            handler: (node) => {
+              this.$root.$emit('update-tree-knots', node.label);
             },
-          );
+            label: this.collectiontitle,
+            'label-key': this.collectiontitle,
+            selectable: false,
+          },
+        );
 
-          if (Array.isArray(data.sequence)) {
-            data.sequence.forEach((seq) => this.getManifest(seq.id));
-          }
-        });
+        if (Array.isArray(data.sequence)) {
+          data.sequence.forEach((seq) => this.getManifest(seq.id));
+        }
+      } catch (err) {
+        this.loadingerror = err.response?.data?.message || err.message;
+      } finally {
+        this.$q.loading.hide();
+
+        this.treecollection = false;
+      }
     },
     /**
       * get config object (JSON) from index.html
@@ -201,14 +222,23 @@ export default {
       *
       * @param string url
       */
-    getItemData(url) {
-      this.request(url)
-        .then((data) => {
-          this.item = data;
 
-          this.contenturls = this.getContentUrl(data.content);
-          this.imageurl = data.image.id || '';
-        });
+    async getItemData(url) {
+      this.loadingerror = '';
+      this.loadingprogress = true;
+
+      try {
+        const data = await this.request(url);
+
+        this.item = data;
+
+        this.contenturls = this.getContentUrl(data.content);
+        this.imageurl = data.image.id || '';
+      } catch (err) {
+        this.loadingerror = err.response?.data?.message || err.message;
+      } finally {
+        this.loadingprogress = false;
+      }
     },
     /**
       * caller: *getItemUrls()*

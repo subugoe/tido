@@ -1,5 +1,5 @@
 <template>
-  <div class="item">
+  <div class="item relative-position">
     <q-tabs
       v-model="activeTab"
       dense
@@ -58,6 +58,17 @@
       ref="contentsize"
       v-html="content"
     />
+
+    <q-inner-loading :showing="loadingprogress">
+      <q-spinner
+        size="3em"
+        color="primary"
+      />
+
+      <div class="q-pt-md text-uppercase">
+        Loading, please wait....
+      </div>
+    </q-inner-loading>
   </div>
 </template>
 
@@ -95,6 +106,9 @@ export default {
       type: String,
       default: () => '',
     },
+    loadingprogress: {
+      type: Boolean,
+    },
   },
   data: () => ({
     activeTab: null,
@@ -113,14 +127,16 @@ export default {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
     },
-    activeTab(url) {
-      this.request(url, 'text').then((data) => {
-        if (this.supportType) {
-          this.getSupport(this.manifests[0].support);
-        }
+    async activeTab(url) {
+      this.$root.$emit('textloading', true);
 
-        this.content = data;
-      });
+      const data = await this.request(url, 'text');
+
+      if (this.supportType) this.getSupport(this.manifests[0].support);
+
+      this.content = data;
+
+      this.$root.$emit('textloading', false);
     },
   },
   async created() {
