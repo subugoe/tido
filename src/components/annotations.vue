@@ -28,7 +28,7 @@
     <!-- List of Annotations -->
     <div
       v-if="items.length"
-      class="q-pt-sm q-pb-xs"
+      class="q-pt-sm q-pb-xs annotation-list"
     >
       <h3 class="text-body1 q-mb-md q-mt-none text-weight-medium text-uppercase">
         List of Annotations ({{ items.length }})
@@ -446,5 +446,9 @@ export default {
   position: sticky;
   bottom: 0;
   background: white;
+}
+
+.annotation-list {
+  flex-grow: 1;
 }
 </style>
