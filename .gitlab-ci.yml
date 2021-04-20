@@ -7,6 +7,13 @@ stages:
   - deploy
   - preserve-pages
 
+# Templates
+.build: &build
+   - bash .ci-scripts/set_entrypoint_ci.sh
+   - npm install
+   - npm run build
+   - npm run tweak:build
+
 build_test:
   image: docker.gitlab.gwdg.de/subugoe/emo/qviewer/node:latest
   except:
@@ -14,10 +21,7 @@ build_test:
    - develop
   stage: build
   script:
-   - ./set_entrypoint_ci.sh
-   - npm install
-   - npm run build
-   - npm run tweak:build
+   - *build
   artifacts:
     paths:
      - dist/
@@ -29,14 +33,11 @@ build_main_and_develop:
    - develop
   stage: build
   script:
-   - ./set_entrypoint_ci.sh
-   - npm install
-   - npm run build
-   - npm run tweak:build
+   - *build
   artifacts:
     paths:
      - dist/
-    expire_in: never
+    expire_in: 1 mos
 
 update-ahikar:
   stage: deploy
@@ -48,11 +49,7 @@ update-ahikar:
   trigger: "subugoe/ahiqar/ahiqar-tido"
 
 pages:
-  before_script:
-    - dnf install -y jq
-    - dnf install -y zip
-    - dnf install -y unzip
-  image: docker.gitlab.gwdg.de/mgoebel/swiss_knife/fedora:latest
+  image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
 # at the very early stage lets deploy for every branch
 #  only:
 #    - main
@@ -64,8 +61,8 @@ pages:
       - public
   when: always
   script:
-   - bash update-artifacts.sh
-   - bash gitlab-remove-old-artifacts.sh
+   - bash .ci-scripts/update-artifacts.sh
+   - bash .ci-scripts/gitlab-remove-old-artifacts.sh
   environment:
     name: ${CI_COMMIT_REF_SLUG}
     url: https://subugoe.pages.gwdg.de/emo/Qviewer/${CI_COMMIT_REF_SLUG}/
