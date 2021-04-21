@@ -26,13 +26,13 @@
         :imageurl="imageurl"
         :item="item"
         :labels="config.labels"
+        :loadingerror="loadingerror"
+        :loadingprogress="loadingprogress"
         :manifests="manifests"
         :panels="panels"
         :request="request"
         :tree="tree"
-        :treecollection="treecollection"
-        :loadingprogress="loadingprogress"
-        :loadingerror="loadingerror"
+        :treeloadingprogress="treeloadingprogress"
       />
     </q-page-container>
 
@@ -71,11 +71,11 @@ export default {
       item: {},
       itemurl: '',
       itemurls: [],
+      loadingerror: '',
+      loadingprogress: false,
       manifests: [],
       tree: [],
-      treecollection: false,
-      loadingprogress: false,
-      loadingerror: '',
+      treeloadingprogress: false,
     };
   },
   created() {
@@ -152,7 +152,7 @@ export default {
       */
     async getCollection(url) {
       this.isCollection = true;
-      this.treecollection = true;
+      this.treeloadingprogress = true;
 
       try {
         this.$q.loading.show();
@@ -182,7 +182,7 @@ export default {
       } finally {
         this.$q.loading.hide();
 
-        this.treecollection = false;
+        this.treeloadingprogress = false;
       }
     },
     /**
@@ -321,40 +321,47 @@ export default {
       *
       * @param string url
       */
-    getManifest(url) {
-      this.request(url)
-        .then((data) => {
-          // if the entrypoint points to a single manifest, initialize the tree
-          if (this.isCollection === false) {
-            this.tree.push({ label: '', 'label-key': this.config.labels.manifest, children: [] });
-          }
+    async getManifest(url) {
+      this.loadingprogress = true;
 
-          if (!Array.isArray(data.sequence)) {
-            data.sequence = [data.sequence];
-          }
+      try {
+        const data = await this.request(url);
 
-          if (data.sequence[0] !== 'undefined') {
-            data.sequence.map((seq) => this.itemurls.push(seq.id));
-          }
-          this.manifests.push(data);
+        // if the entrypoint points to a single manifest, initialize the tree
+        if (this.isCollection === false) {
+          this.tree.push({ label: '', 'label-key': this.config.labels.manifest, children: [] });
+        }
 
-          this.tree[0].children.push(
-            {
-              children: this.getItemUrls(data.sequence, data.label),
-              label: data.label,
-              'label-key': data.label,
-              handler: (node) => {
-                this.$root.$emit('update-tree-knots', node.label);
-              },
-              selectable: false,
+        if (!Array.isArray(data.sequence)) {
+          data.sequence = [data.sequence];
+        }
+
+        if (data.sequence[0] !== 'undefined') {
+          data.sequence.map((seq) => this.itemurls.push(seq.id));
+        }
+        this.manifests.push(data);
+
+        this.tree[0].children.push(
+          {
+            children: this.getItemUrls(data.sequence, data.label),
+            label: data.label,
+            'label-key': data.label,
+            handler: (node) => {
+              this.$root.$emit('update-tree-knots', node.label);
             },
-          );
-          // make sure that urls are set just once on init
-          if (!this.itemurl && data.sequence[0]) {
-            this.itemurl = data.sequence[0].id;
-            this.getItemData(data.sequence[0].id);
-          }
-        });
+            selectable: false,
+          },
+        );
+        // make sure that urls are set just once on init
+        if (!this.itemurl && data.sequence[0]) {
+          this.itemurl = data.sequence[0].id;
+          this.getItemData(data.sequence[0].id);
+        }
+      } catch (err) {
+        this.loadingerror = err.response?.data?.message || err.message;
+      } finally {
+        this.loadingprogress = false;
+      }
     },
     /**
       * caller: *getItemUrls()*

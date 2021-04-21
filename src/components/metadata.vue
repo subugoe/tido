@@ -115,23 +115,18 @@
       </q-item>
     </q-list>
 
-    <q-inner-loading :showing="loadingprogress">
-      <q-spinner
-        size="3em"
-        color="primary"
-      />
-
-      <div class="q-pt-md text-uppercase">
-        Loading, please wait....
-      </div>
-    </q-inner-loading>
+    <LoadingProgress :loadingprogress="loadingprogress" />
   </div>
 </template>
 
 <script>
+import LoadingProgress from '@/components/loading.vue';
 
 export default {
   name: 'Metadata',
+  components: {
+    LoadingProgress,
+  },
   props: {
     config: {
       type: Object,
@@ -149,12 +144,12 @@ export default {
       type: Object,
       default: () => {},
     },
+    loadingprogress: {
+      type: Boolean,
+    },
     manifests: {
       type: Array,
       default: () => [],
-    },
-    loadingprogress: {
-      type: Boolean,
     },
   },
   data() {

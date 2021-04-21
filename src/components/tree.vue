@@ -20,25 +20,20 @@
       </template>
     </q-tree>
 
-    <q-inner-loading :showing="treecollection">
-      <q-spinner
-        size="3em"
-        color="primary"
-      />
-
-      <div class="q-pt-md text-uppercase">
-        Loading, please wait....
-      </div>
-    </q-inner-loading>
+    <LoadingProgress :treeloadingprogress="treeloadingprogress" />
   </div>
 </template>
 
 <script>
 import { fasCaretRight } from '@quasar/extras/fontawesome-v5';
+import LoadingProgress from '@/components/loading.vue';
 import treestore from '@/stores/treestore.js';
 
 export default {
   name: 'Treeview',
+  components: {
+    LoadingProgress,
+  },
   props: {
     manifests: {
       type: Array,
@@ -48,7 +43,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    treecollection: {
+    treeloadingprogress: {
       type: Boolean,
     },
   },

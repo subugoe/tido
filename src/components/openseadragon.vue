@@ -20,20 +20,12 @@
       </q-btn>
     </nav>
 
-    <q-inner-loading :showing="loadingprogress">
-      <q-spinner
-        size="3em"
-        color="primary"
-      />
-
-      <div class="q-pt-md text-uppercase">
-        Loading, please wait....
-      </div>
-    </q-inner-loading>
+    <LoadingProgress :loadingprogress="loadingprogress" />
   </figure>
 </template>
 
 <script>
+import LoadingProgress from '@/components/loading.vue';
 import OpenSeadragon from 'openseadragon';
 import {
   fasSearchPlus,
@@ -45,6 +37,9 @@ import {
 
 export default {
   name: 'OpenSeadragon',
+  components: {
+    LoadingProgress,
+  },
   props: {
     imageurl: {
       type: String,

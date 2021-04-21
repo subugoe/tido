@@ -59,24 +59,19 @@
       v-html="content"
     />
 
-    <q-inner-loading :showing="loadingprogress">
-      <q-spinner
-        size="3em"
-        color="primary"
-      />
-
-      <div class="q-pt-md text-uppercase">
-        Loading, please wait....
-      </div>
-    </q-inner-loading>
+    <LoadingProgress :loadingprogress="loadingprogress" />
   </div>
 </template>
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
+import LoadingProgress from '@/components/loading.vue';
 
 export default {
   name: 'Content',
+  components: {
+    LoadingProgress,
+  },
   props: {
     config: {
       type: Object,
@@ -94,6 +89,9 @@ export default {
       type: Number,
       default: () => 14,
     },
+    loadingprogress: {
+      type: Boolean,
+    },
     manifests: {
       type: Array,
       default: () => [],
@@ -105,9 +103,6 @@ export default {
     transcription: {
       type: String,
       default: () => '',
-    },
-    loadingprogress: {
-      type: Boolean,
     },
   },
   data: () => ({

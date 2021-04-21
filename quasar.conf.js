@@ -48,7 +48,7 @@ module.exports = function (ctx) {
         },
         loading: {
           delay: 300,
-          message: 'Loading the content, plese wait....',
+          message: 'Loading, please wait…',
           spinnerSize: 64,
         },
       },

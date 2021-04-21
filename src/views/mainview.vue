@@ -113,6 +113,9 @@ export default {
       type: Object,
       default: () => {},
     },
+    loadingprogress: {
+      type: Boolean,
+    },
     manifests: {
       type: Array,
       default: () => [],
@@ -129,10 +132,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    treecollection: {
-      type: Boolean,
-    },
-    loadingprogress: {
+    treeloadingprogress: {
       type: Boolean,
     },
   },
