@@ -28,44 +28,42 @@
     <!-- List of Annotations -->
     <div
       v-if="items.length"
-      class="q-pt-sm q-pb-xs annotation-list"
+      class="q-pt-sm q-pb-xs annotation-list panel-content"
     >
       <h3 class="text-body1 q-mb-md q-mt-none text-weight-medium text-uppercase">
         List of Annotations ({{ items.length }})
       </h3>
 
-      <q-scroll-area class="list-height">
-        <q-list>
-          <q-item
-            v-for="(annotation, index) in items"
-            :key="index"
-            :active="annotation.selected"
-            active-class="active-item"
-            class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
-            clickable
-            dense
-            @click="
-              toggleListHighlighting(annotation);
-              toggleTextHighlighting(annotation, 'list');
-            "
+      <q-list>
+        <q-item
+          v-for="(annotation, index) in items"
+          :key="index"
+          :active="annotation.selected"
+          active-class="active-item"
+          class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
+          clickable
+          dense
+          @click="
+            toggleListHighlighting(annotation);
+            toggleTextHighlighting(annotation, 'list');
+          "
+        >
+          <q-avatar
+            class="q-mr-sm"
+            size="md"
           >
-            <q-avatar
-              class="q-mr-sm"
-              size="md"
-            >
-              <q-icon :name="icons[annotation.contenttype]" />
-            </q-avatar>
+            <q-icon :name="icons[annotation.contenttype]" />
+          </q-avatar>
 
-            <q-item-section>
-              <q-item-label overline>
-                <div class="text-body1">
-                  {{ annotation.description }}
-                </div>
-              </q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-scroll-area>
+          <q-item-section>
+            <q-item-label overline>
+              <div class="text-body1">
+                {{ annotation.description }}
+              </div>
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
     </div>
 
     <div v-else>
@@ -74,11 +72,11 @@
 
     <!-- Options -->
     <q-expansion-item
-      label="Options"
+      v-if="items.length"
       header-class="text-body1 q-mb-md text-weight-medium text-uppercase"
+      label="Options"
     >
       <div
-        v-if="items.length"
         class="q-mb-sm"
       >
         <div
@@ -122,8 +120,6 @@
 import * as Icons from '@quasar/extras/fontawesome-v5';
 import Notification from '@/components/notification.vue';
 
-require('../../node_modules/@quasar/extras/fontawesome-v5/fontawesome-v5.css');
-
 export default {
   name: 'Annotations',
   components: {
@@ -142,7 +138,6 @@ export default {
   data() {
     return {
       icons: {},
-      iconClasses: {},
       messages: {
         none: 'No annotations available',
         user: 'Toggle at least one data type to show annotations',
@@ -238,43 +233,43 @@ export default {
     this.init();
   },
   methods: {
+    // append icons to the text entities
+    addIcons() {
+      this.annotations.forEach((annotation) => {
+        const entity = document.getElementById(annotation.id);
+
+        if (entity !== null) {
+          const currentIcon = this.types.filter((type) => type['content-type'] === annotation.contenttype)[0].icon;
+          entity.prepend(this.createSVG(currentIcon));
+        }
+      });
+    },
     // create SVGs for the data type toggles and the list alike
     createIcons() {
       this.types.forEach((type) => {
         this.icons[type['content-type']] = Icons[type.icon]
           ? Icons[type.icon]
           : Icons.fasTimes; // fallback if icon doesn't exist
-
-        this.iconClasses[type['content-type']] = type.css;
       });
     },
+    // create SVGs for the text entities
     createSVG(name) {
-      const icon = Icons[name].split('|');
-      const path = icon[0];
-      const viewbox = icon[1];
-      const newSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      newSvg.setAttribute('role', 'presentation');
-      newSvg.setAttribute('viewBox', viewbox);
-      newSvg.setAttribute('role', 'presentation');
-      newSvg.setAttribute('focusable', 'false');
-      newSvg.setAttribute('aria-hidden', 'true');
-      newSvg.setAttribute('class', 'q-icon notranslate q-ml-sm');
+      const [path, viewbox] = Icons[name].split('|');
+
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('class', 'q-icon q-ml-sm');
+      svg.setAttribute('focusable', 'false');
+      svg.setAttribute('role', 'presentation');
+      svg.setAttribute('viewBox', viewbox);
 
       const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      newPath.setAttribute('d', path);
-      newSvg.appendChild(newPath);
 
-      return newSvg;
-    },
-    // create icons based on icon name for the text entities
-    addIcons() {
-      this.annotations.forEach((annotation) => {
-        const entity = document.getElementById(annotation.id);
-        if (entity !== null) {
-          const currentIcon = this.types.filter((type) => type['content-type'] === annotation.contenttype)[0].icon;
-          entity.prepend(this.createSVG(currentIcon));
-        }
-      });
+      newPath.setAttribute('d', path);
+      svg.appendChild(newPath);
+
+      return svg;
     },
     // bind dynamic events / models to the options
     dynamicEvent(event, model, state = false) {
@@ -307,14 +302,17 @@ export default {
       });
     },
     init() {
+      const highlight = this.config.annotations.show;
       // check whether to start with all annotations highlighted or none
-      this.options[0].model = this.config.annotations.show;
+      this.options[0].model = highlight;
       // verify content types and populate typeModel accordingly
-      this.typeModel = this.config.annotations.show
+      this.typeModel = highlight
         ? this.availableTypes
         : [];
 
-      this.addIcons();
+      if (highlight) {
+        this.addIcons();
+      }
 
       this.highlightMode();
       this.registerToggles();
@@ -370,12 +368,17 @@ export default {
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
-        // entity.innerText = `  ${entity.innerText}`;
+        const iconAttached = entity.querySelectorAll('svg');
 
         switch (caller) {
           case 'list':
           case 'text':
-            entity.classList.toggle(this.iconClasses[annotation.contenttype]);
+            // eslint-disable-next-line no-console
+            console.log(entity.querySelectorAll('svg'));
+
+            if (iconAttached.length) {
+              entity.removeChild(entity.firstChild);
+            }
 
             entity.style.borderBottom = entity.style.borderBottom
               ? ''
@@ -384,15 +387,15 @@ export default {
             break;
           case 'type':
             if (this.options[0].model) {
-              if (entity.classList.contains(this.iconClasses[annotation.contenttype])) {
-                entity.classList.remove(this.iconClasses[annotation.contenttype]);
-              } else entity.classList.add(this.iconClasses[annotation.contenttype]);
+              // if (entity.classList.contains(this.iconClasses[annotation.contenttype])) {
+              //   entity.classList.remove(this.iconClasses[annotation.contenttype]);
+              // } else entity.classList.add(this.iconClasses[annotation.contenttype]);
 
               entity.style.borderBottom = entity.style.borderBottom
                 ? ''
                 : '2px solid';
             } else {
-              entity.classList.remove(this.iconClasses[annotation.contenttype]);
+              // entity.classList.remove(this.iconClasses[annotation.contenttype]);
 
               annotation.selected = false;
               entity.style.borderBottom = '';
@@ -400,9 +403,9 @@ export default {
 
             break;
           default:
-            if (this.options[0].model) {
-              entity.classList.add(this.iconClasses[annotation.contenttype]);
-            } else entity.classList.remove(this.iconClasses[annotation.contenttype]);
+            // if (this.options[0].model) {
+            //   entity.classList.add(this.iconClasses[annotation.contenttype]);
+            // } else entity.classList.remove(this.iconClasses[annotation.contenttype]);
 
             entity.style.borderBottom = this.options[0].model
               ? '2px solid'
@@ -435,24 +438,27 @@ export default {
   }
 }
 
-.custom-toggle {
-  border: 1px solid #ababab;
-}
-
-.list-height {
-  height: 25vh;
-}
-
-.q-expansion-item--expanded {
-  position: sticky;
-  bottom: 0;
-  background: white;
-}
 .annotation-list {
   flex-grow: 1;
 }
 
-.fas.fa {
-  /* space  */
+.custom-toggle {
+  border: 1px solid #ababab;
+}
+
+.panel-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
+  overflow-x: hidden;
+  padding: 8px;
+}
+
+.q-expansion-item--expanded {
+  bottom: 0;
+  background: lightgray;
+  color: black;
+  position: sticky;
 }
 </style>
