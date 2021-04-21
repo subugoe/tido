@@ -271,7 +271,8 @@ export default {
       this.annotations.forEach((annotation) => {
         const entity = document.getElementById(annotation.id);
         if (entity !== null) {
-          entity.prepend(this.createSVG(Icons[annotation.contenttype]));
+          const currentIcon = this.types.filter((type) => type['content-type'] === annotation.contenttype)[0].icon;
+          entity.prepend(this.createSVG(currentIcon));
         }
       });
     },
