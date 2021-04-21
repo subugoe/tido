@@ -28,7 +28,7 @@
     <!-- List of Annotations -->
     <div
       v-if="items.length"
-      class="q-pt-sm q-pb-xs"
+      class="q-pt-sm q-pb-xs annotation-list"
     >
       <h3 class="text-body1 q-mb-md q-mt-none text-weight-medium text-uppercase">
         List of Annotations ({{ items.length }})
@@ -73,43 +73,44 @@
     </div>
 
     <!-- Options -->
-    <div
-      v-if="items.length"
-      class="q-mb-sm"
+    <q-expansion-item
+      label="Options"
+      header-class="text-body1 q-mb-md text-weight-medium text-uppercase"
     >
-      <h3 class="text-body1 q-mb-md text-weight-medium text-uppercase">
-        Options
-      </h3>
-
       <div
-        v-for="(opt, index) in options"
-        :key="index"
-        class="q-pb-md"
+        v-if="items.length"
+        class="q-mb-sm"
       >
         <div
-          v-if="items.length > opt.limit"
-          class="column"
+          v-for="(opt, index) in options"
+          :key="index"
+          class="q-pb-md"
         >
-          <span class="col q-pb-xs text-uppercase text-weight-regular">
-            {{ opt.label }}
-          </span>
+          <div
+            v-if="items.length > opt.limit"
+            class="column"
+          >
+            <span class="col q-pb-xs text-uppercase text-weight-regular">
+              {{ opt.label }}
+            </span>
 
-          <q-btn-toggle
-            v-model="opt.model"
-            :color="$q.dark.isActive ? 'grey-9' : 'white'"
-            :options="opt.options"
-            :text-color="$q.dark.isActive ? 'white' : 'primary'"
-            :toggle-color="$q.dark.isActive ? 'grey-1' : 'accent'"
-            :toggle-text-color="$q.dark.isActive ? 'black' : 'white'"
-            class="custom-toggle"
-            size="sm"
-            spread
-            unelevated
-            @click="dynamicEvent(opt.event, opt.model, true)"
-          />
+            <q-btn-toggle
+              v-model="opt.model"
+              :color="$q.dark.isActive ? 'grey-9' : 'white'"
+              :options="opt.options"
+              :text-color="$q.dark.isActive ? 'white' : 'primary'"
+              :toggle-color="$q.dark.isActive ? 'grey-1' : 'accent'"
+              :toggle-text-color="$q.dark.isActive ? 'black' : 'white'"
+              class="custom-toggle"
+              size="sm"
+              spread
+              unelevated
+              @click="dynamicEvent(opt.event, opt.model, true)"
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </q-expansion-item>
   </div>
 
   <div v-else>
@@ -355,7 +356,7 @@ export default {
       const entity = document.getElementById(annotation.id).firstChild;
 
       if (entity !== null) {
-        entity.innerText = `  ${entity.innerText}`;
+        // entity.innerText = `  ${entity.innerText}`;
 
         switch (caller) {
           case 'list':
@@ -426,5 +427,14 @@ export default {
 
 .list-height {
   height: 25vh;
+}
+
+.q-expansion-item--expanded {
+  position: sticky;
+  bottom: 0;
+  background: white;
+}
+.annotation-list {
+  flex-grow: 1;
 }
 </style>
