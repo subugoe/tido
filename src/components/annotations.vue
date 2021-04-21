@@ -238,27 +238,33 @@ export default {
     this.init();
   },
   methods: {
-    // create SVGs for the data type toggles and the list alike
-    createIcons() {
-      this.types.forEach((type) => {
-        this.icons[type['content-type']] = Icons[type.icon]
-          ? Icons[type.icon]
-          : Icons.fasTimes; // fallback if icon doesn't exist
-
-        this.iconClasses[type['content-type']] = type.css;
-      });
+    getIconNameByType() {
+      return 'fasTimes';
     },
-    // create icons based on css classes for the text entities
+    createSVG(name) {
+      const icon = Icons[name].split('|');
+      const path = icon[0];
+      const viewbox = icon[1];
+      const newSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      newSvg.setAttribute('role', 'presentation');
+      newSvg.setAttribute('viewBox', viewbox);
+      newSvg.setAttribute('role', 'presentation');
+      newSvg.setAttribute('focusable', 'false');
+      newSvg.setAttribute('aria-hidden', 'true');
+      newSvg.setAttribute('class', 'q-icon notranslate');
+
+      const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      newPath.setAttribute('d', path);
+      newSvg.appendChild(newPath);
+
+      return newSvg;
+    },
+    // create icons based on icon name for the text entities
     createIconClasses() {
       this.annotations.forEach((annotation) => {
-        const entity = document.getElementById(annotation.id).firstChild;
-
+        const entity = document.getElementById(annotation.id);
         if (entity !== null) {
-          entity.classList.add('q-ml-sm', 'fas');
-
-          if (this.config.annotations.show) {
-            entity.classList.add(this.iconClasses[annotation.contenttype]);
-          }
+          entity.prepend(this.createSVG(Icons[annotation.contenttype]));
         }
       });
     },
@@ -316,7 +322,7 @@ export default {
       }
 
       current.forEach((annotation) => {
-        const entity = document.getElementById(annotation.id).firstChild;
+        const entity = document.getElementById(annotation.id);
 
         if (entity !== null) {
           entity.style.borderBottom = this.config.annotations.show
@@ -353,7 +359,7 @@ export default {
       this.options[0].model = this.selectedAll;
     },
     toggleTextHighlighting(annotation, caller = '') {
-      const entity = document.getElementById(annotation.id).firstChild;
+      const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
         // entity.innerText = `  ${entity.innerText}`;
@@ -436,5 +442,9 @@ export default {
 }
 .annotation-list {
   flex-grow: 1;
+}
+
+.fas.fa {
+  /* space  */
 }
 </style>
