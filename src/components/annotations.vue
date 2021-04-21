@@ -258,7 +258,7 @@ export default {
       newSvg.setAttribute('role', 'presentation');
       newSvg.setAttribute('focusable', 'false');
       newSvg.setAttribute('aria-hidden', 'true');
-      newSvg.setAttribute('class', 'q-icon notranslate');
+      newSvg.setAttribute('class', 'q-icon notranslate q-ml-sm');
 
       const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       newPath.setAttribute('d', path);
@@ -267,7 +267,7 @@ export default {
       return newSvg;
     },
     // create icons based on icon name for the text entities
-    createIconClasses() {
+    addIcons() {
       this.annotations.forEach((annotation) => {
         const entity = document.getElementById(annotation.id);
         if (entity !== null) {
@@ -314,7 +314,7 @@ export default {
         ? this.availableTypes
         : [];
 
-      this.createIconClasses();
+      this.addIcons();
 
       this.highlightMode();
       this.registerToggles();
