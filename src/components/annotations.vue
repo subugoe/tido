@@ -238,8 +238,15 @@ export default {
     this.init();
   },
   methods: {
-    getIconNameByType() {
-      return 'fasTimes';
+    // create SVGs for the data type toggles and the list alike
+    createIcons() {
+      this.types.forEach((type) => {
+        this.icons[type['content-type']] = Icons[type.icon]
+          ? Icons[type.icon]
+          : Icons.fasTimes; // fallback if icon doesn't exist
+
+        this.iconClasses[type['content-type']] = type.css;
+      });
     },
     createSVG(name) {
       const icon = Icons[name].split('|');
