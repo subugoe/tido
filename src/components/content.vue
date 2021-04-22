@@ -169,20 +169,11 @@ export default {
   cursor: default !important;
 }
 
-.panel-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: scroll;
-  overflow-x: hidden;
-  padding: 8px;
-}
-
 .annotation {
-  white-space: nowrap;
   border-bottom: 2px solid;
   cursor: pointer;
   padding-bottom: 4px;
+  white-space: nowrap;
 }
 
 .annotation-disabled {
@@ -192,6 +183,15 @@ export default {
 
 .annotation-disabled > svg {
   display: none;
+}
+
+.panel-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: scroll;
+  overflow-x: hidden;
+  padding: 8px;
 }
 
 .rtl {

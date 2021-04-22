@@ -237,11 +237,17 @@ export default {
 
         if (entity !== null) {
           const currentIcon = this.types.filter((type) => type['content-type'] === annotation.contenttype)[0].icon;
-          entity.prepend(this.createSVG(currentIcon));
+
           entity.classList.toggle('annotation');
+          entity.prepend(this.createSVG(currentIcon));
+
           entity.onclick = () => {
-            entity.classList.toggle('annotation-disabled');
             annotation.selected = !annotation.selected;
+            entity.classList.toggle('annotation-disabled');
+            // manipulate type stack: if the appropriate data toggle is currently inactive, turn it active
+            if (!this.typeModel.includes(annotation.contenttype)) {
+              this.typeModel.push(annotation.contenttype);
+            }
           };
         }
       });
@@ -315,13 +321,14 @@ export default {
         : [];
 
       if (highlight) {
-        // todo: when highlight false no icons will be set
+        // TODO: when highlight === false, no icons will be set
         this.addIcons();
       }
 
       this.highlightMode();
       this.registerToggles();
     },
+    // TODO: verify, if this method is still needed (not sure yet). After refactoring, it currently doesn't do 'anything'
     // Toggle highlighting of annotation/s when clicking on the appropriate text entity
     registerToggles() {
       let current = this.items;
@@ -331,6 +338,7 @@ export default {
 
         current = this.annotations.filter((annotation) => types.includes(annotation.contenttype) && annotation.text !== false);
       }
+
       return current;
     },
     sortingDirection() {
@@ -355,22 +363,22 @@ export default {
           case 'list':
           case 'text':
             entity.classList.toggle('annotation-disabled');
+
             break;
           case 'type':
             annotation.selected = this.options[0].model;
-            if (!this.options[0].model) {
-              entity.classList.add('annotation-disabled');
-            } else {
-              entity.classList.remove('annotation-disabled');
-            }
+
+            // TODO: toggle css class for several annotations that match an appropriate data type (e.g. Person)
             break;
           default:
-            annotation.selected = this.options[0].model; // annotation-list
+            annotation.selected = this.options[0].model;
+
             if (!this.options[0].model) {
               entity.classList.add('annotation-disabled');
             } else {
               entity.classList.remove('annotation-disabled');
             }
+
             break;
         }
       }
