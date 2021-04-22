@@ -109,7 +109,9 @@ export default {
         this.content = data;
       });
 
-      this.$root.$emit('update-content');
+      if (this.contenturls.length > 1) {
+        this.$root.$emit('update-content');
+      }
     },
   },
   async created() {

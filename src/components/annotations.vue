@@ -217,6 +217,8 @@ export default {
   watch: {
     // called on item update
     annotations() {
+      // eslint-disable-next-line no-console
+      console.trace('watcher');
       this.init();
     },
     // called on data type update / toggling
@@ -228,9 +230,6 @@ export default {
     this.types = this.config.annotations.types;
 
     this.createIcons();
-  },
-  mounted() {
-    this.init();
   },
   methods: {
     // append icons to the text entities
