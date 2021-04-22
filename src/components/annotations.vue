@@ -36,8 +36,8 @@
 
       <q-list>
         <q-item
-          v-for="(annotation, index) in items"
-          :key="index"
+          v-for="annotation in items"
+          :key="annotation.sortkey"
           :active="annotation.selected"
           active-class="active-item"
           class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
