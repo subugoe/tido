@@ -164,7 +164,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .default-cursor {
   cursor: default !important;
 }
@@ -183,6 +183,15 @@ export default {
   border-bottom: 2px solid;
   cursor: pointer;
   padding-bottom: 4px;
+}
+
+.annotation-disabled {
+  border-bottom: 0;
+  padding-bottom: inherit;
+}
+
+.annotation-disabled > svg {
+  display: none;
 }
 
 .rtl {

@@ -217,8 +217,6 @@ export default {
   watch: {
     // called on item update
     annotations() {
-      // eslint-disable-next-line no-console
-      console.trace('watcher');
       this.init();
     },
     // called on data type update / toggling
@@ -240,7 +238,11 @@ export default {
         if (entity !== null) {
           const currentIcon = this.types.filter((type) => type['content-type'] === annotation.contenttype)[0].icon;
           entity.prepend(this.createSVG(currentIcon));
-          entity.classList.add('annotation');
+          entity.classList.toggle('annotation');
+          entity.onclick = () => {
+            entity.classList.toggle('annotation-disabled');
+            annotation.selected = !annotation.selected;
+          };
         }
       });
     },
@@ -305,14 +307,16 @@ export default {
       const highlight = this.config.annotations.show;
       // check whether to start with all annotations highlighted or none
       this.options[0].model = highlight;
+
       // verify content types and populate typeModel accordingly
+      // used at top toggles
       this.typeModel = highlight
         ? this.availableTypes
         : [];
 
       if (highlight) {
+        // todo: when highlight false no icons will be set
         this.addIcons();
-        this.addClickEvent();
       }
 
       this.highlightMode();
@@ -327,19 +331,7 @@ export default {
 
         current = this.annotations.filter((annotation) => types.includes(annotation.contenttype) && annotation.text !== false);
       }
-
-      current.forEach((annotation) => {
-        const entity = document.getElementById(annotation.id);
-
-        if (entity !== null) {
-          
-          entity.onclick = () => {
-            // manipulate type stack when a text entity is clicked and
-            // the appropriate data toggle is currently inactive
-            
-          };
-        }
-      });
+      return current;
     },
     sortingDirection() {
       return this.items;
@@ -359,49 +351,21 @@ export default {
       const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
-        const iconAttached = entity.querySelectorAll('svg');
-
         switch (caller) {
           case 'list':
           case 'text':
-            // eslint-disable-next-line no-console
-            console.log(entity.querySelectorAll('svg'));
-
-            if (iconAttached.length) {
-              entity.removeChild(entity.firstChild);
-            }
-
-            entity.style.borderBottom = entity.style.borderBottom
-              ? ''
-              : '2px solid';
-
+            entity.classList.toggle('annotation-disabled');
             break;
           case 'type':
-            if (this.options[0].model) {
-              // if (entity.classList.contains(this.iconClasses[annotation.contenttype])) {
-              //   entity.classList.remove(this.iconClasses[annotation.contenttype]);
-              // } else entity.classList.add(this.iconClasses[annotation.contenttype]);
-
-              entity.style.borderBottom = entity.style.borderBottom
-                ? ''
-                : '2px solid';
-            } else {
-              // entity.classList.remove(this.iconClasses[annotation.contenttype]);
-
-              annotation.selected = false;
-              entity.style.borderBottom = '';
-            }
-
+            annotation.selected = this.options[0].model;
             break;
           default:
-            // if (this.options[0].model) {
-            //   entity.classList.add(this.iconClasses[annotation.contenttype]);
-            // } else entity.classList.remove(this.iconClasses[annotation.contenttype]);
-
-            entity.style.borderBottom = this.options[0].model
-              ? '2px solid'
-              : '';
-
+            annotation.selected = this.options[0].model; // annotation-list
+            if (!this.options[0].model) {
+              entity.classList.add('annotation-disabled');
+            } else {
+              entity.classList.remove('annotation-disabled');
+            }
             break;
         }
       }
