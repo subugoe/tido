@@ -165,22 +165,26 @@ import '@subugoe/tido/dist/tido'
       {
         "connector": [1],
         "panel_label": "Contents",
-        "show": true
+        "show": true,
+        "toggle": true
       },
       {
         "connector": [3],
         "panel_label": "Image",
-        "show": true
+        "show": true,
+        "toggle": true
       },
       {
         "connector": [4],
         "panel_label": "Text",
-        "show": true
+        "show": true,
+        "toggle": false
       },
       {
         "connector": [2],
         "panel_label": "Metadata",
-        "show": true
+        "show": true,
+        "toggle": true
       }
     ],
     "rtl": false,
@@ -306,7 +310,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 ```html
   <script id="tido-config" type="application/json">
   {
-    "entrypoint": "https://{server}{/prefix}/{collection}/collection.json",
+    "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
     "colors": {
       "primary": "",
       "secondary": "",
@@ -348,22 +352,26 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       {
         "connector": [1],
         "panel_label": "Contents",
-        "show": true
+        "show": true,
+        "toggle": true
       },
       {
         "connector": [3],
         "panel_label": "Image",
-        "show": true
+        "show": true,
+        "toggle": true
       },
       {
         "connector": [4],
         "panel_label": "Text",
-        "show": true
+        "show": true,
+        "toggle": false
       },
       {
         "connector": [2],
         "panel_label": "Metadata",
-        "show": true
+        "show": true,
+        "toggle": true
       }
     ],
     "rtl": false,
@@ -479,22 +487,26 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   {
     "connector": [1],
     "panel_label": "Contents",
-    "show": true
+    "show": true,
+    "toggle": true
   },
   {
     "connector": [3],
     "panel_label": "Image",
-    "show": true
+    "show": true,
+    "toggle": true
   },
   {
     "connector": [4],
     "panel_label": "Text",
-    "show": true
+    "show": true,
+    "toggle": false
   },
   {
     "connector": [2],
     "panel_label": "Metadata",
-    "show": true
+    "show": true,
+    "toggle": true
   }
 ],
 
@@ -539,6 +551,12 @@ Each object inside that constant consists of similar keys: `connector`, `pane_la
 - **show**
 
   toggles (`show` or rather `hide`) the appropriate panel respectively
+
+- **toggle**
+
+  whether to show the related panel toggle or not
+
+  Defaults to `true`.
 
 **Note**:
 
