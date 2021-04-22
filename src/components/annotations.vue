@@ -312,6 +312,7 @@ export default {
 
       if (highlight) {
         this.addIcons();
+        this.addClickEvent();
       }
 
       this.highlightMode();
@@ -331,21 +332,11 @@ export default {
         const entity = document.getElementById(annotation.id);
 
         if (entity !== null) {
-          entity.style.borderBottom = this.config.annotations.show
-            ? '2px solid'
-            : '';
-
-          entity.style.cursor = 'pointer';
-          entity.style.paddingBottom = '4px';
-
+          
           entity.onclick = () => {
-            // manipulate type stack when a text entity is clicked and the appropriate data toggle is currently inactive
-            if (!this.typeModel.includes(annotation.contenttype)) {
-              this.typeModel.push(annotation.contenttype);
-            }
-
-            this.toggleListHighlighting(annotation);
-            this.toggleTextHighlighting(annotation, 'text');
+            // manipulate type stack when a text entity is clicked and
+            // the appropriate data toggle is currently inactive
+            
           };
         }
       });

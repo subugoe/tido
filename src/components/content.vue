@@ -180,6 +180,9 @@ export default {
 
 .annotation {
   white-space: nowrap;
+  border-bottom: 2px solid;
+  cursor: pointer;
+  padding-bottom: 4px;
 }
 
 .rtl {
