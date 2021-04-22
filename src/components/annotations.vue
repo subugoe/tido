@@ -358,6 +358,11 @@ export default {
             break;
           case 'type':
             annotation.selected = this.options[0].model;
+            if (!this.options[0].model) {
+              entity.classList.add('annotation-disabled');
+            } else {
+              entity.classList.remove('annotation-disabled');
+            }
             break;
           default:
             annotation.selected = this.options[0].model; // annotation-list
