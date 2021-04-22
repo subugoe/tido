@@ -80,8 +80,8 @@
         class="q-mb-sm"
       >
         <div
-          v-for="(opt, index) in options"
-          :key="index"
+          v-for="(opt, name) in options"
+          :key="name"
           class="q-pb-md"
         >
           <div
@@ -142,8 +142,8 @@ export default {
         none: 'No annotations available',
         user: 'Toggle at least one data type to show annotations',
       },
-      options: [
-        {
+      options: {
+        mode: {
           event: 'highlightMode',
           label: 'Highlight',
           limit: 0,
@@ -152,7 +152,7 @@ export default {
             { label: 'All', value: true }, { label: 'None', value: false },
           ],
         },
-        {
+        sortOrder: {
           event: 'sortingOrder',
           label: 'Sorting order',
           limit: 1,
@@ -161,7 +161,7 @@ export default {
             { label: 'Alphabetic', value: 'alpha' }, { label: 'Appearance', value: 'sequence' },
           ],
         },
-        {
+        sortDirection: {
           event: 'sortingDirection',
           label: 'Sorting direction',
           limit: 1,
@@ -170,7 +170,7 @@ export default {
             { label: 'Ascending', value: 'asc' }, { label: 'Descending', value: 'desc' },
           ],
         },
-      ],
+      },
       lastTypeState: [],
       typeModel: [],
       types: [],
@@ -194,8 +194,8 @@ export default {
       let filteredAnnotations = this.annotations.filter((type) => this.typeModel.includes(type.contenttype) && type.text !== false);
 
       // determine sorting order and direction
-      const sortingOrder = this.options[1].model;
-      const sortingDirection = this.options[2].model;
+      const sortingOrder = this.options.sortOrder.model;
+      const sortingDirection = this.options.sortDirection.model;
 
       // sort the matching IDs according to the sortingOrder given
       filteredAnnotations = sortingOrder === 'alpha'
@@ -304,7 +304,7 @@ export default {
     // highlights either all (true) or none (false)
     highlightMode() {
       this.items.forEach((annotation) => {
-        annotation.selected = this.options[0].model;
+        annotation.selected = this.options.mode.model;
 
         this.toggleTextHighlighting(annotation);
       });
@@ -312,7 +312,7 @@ export default {
     init() {
       const highlight = this.config.annotations.show;
       // check whether to start with all annotations highlighted or none
-      this.options[0].model = highlight;
+      this.options.mode.model = highlight;
 
       // verify content types and populate typeModel accordingly
       // used at top toggles
@@ -353,7 +353,7 @@ export default {
     toggleListHighlighting(annotation) {
       annotation.selected = !annotation.selected;
       // set the button state (All | None)
-      this.options[0].model = this.selectedAll;
+      this.options.mode.model = this.selectedAll;
     },
     toggleTextHighlighting(annotation, caller = '') {
       const entity = document.getElementById(annotation.id);
@@ -366,14 +366,14 @@ export default {
 
             break;
           case 'type':
-            annotation.selected = this.options[0].model;
+            annotation.selected = this.options.mode.model;
 
             // TODO: toggle css class for several annotations that match an appropriate data type (e.g. Person)
             break;
           default:
-            annotation.selected = this.options[0].model;
+            annotation.selected = this.options.mode.model;
 
-            if (!this.options[0].model) {
+            if (!this.options.mode.model) {
               entity.classList.add('annotation-disabled');
             } else {
               entity.classList.remove('annotation-disabled');
