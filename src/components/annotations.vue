@@ -240,6 +240,7 @@ export default {
         if (entity !== null) {
           const currentIcon = this.types.filter((type) => type['content-type'] === annotation.contenttype)[0].icon;
           entity.prepend(this.createSVG(currentIcon));
+          entity.classList.add('annotation');
         }
       });
     },

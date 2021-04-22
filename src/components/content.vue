@@ -178,6 +178,10 @@ export default {
   padding: 8px;
 }
 
+.annotation {
+  white-space: nowrap;
+}
+
 .rtl {
   direction: rtl;
 }
