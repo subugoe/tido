@@ -226,19 +226,37 @@ export default {
   },
   created() {
     this.types = this.config.annotations.types;
-
-    this.createIcons();
   },
   methods: {
+    init() {
+      const highlight = this.config.annotations.show;
+      // check whether to start with all annotations highlighted or none
+      this.options.mode.model = highlight;
+
+      // verify content types and populate typeModel accordingly
+      // used at top toggles
+      this.typeModel = highlight
+        ? this.availableTypes
+        : [];
+
+      if (highlight) {
+        this.addIcons();
+      }
+
+      this.highlightMode();
+      this.createIcons();
+    },
+
     // append icons to the text entities
     addIcons() {
       this.annotations.forEach((annotation) => {
         const entity = document.getElementById(annotation.id);
 
-        if (entity !== null) {
+        if (entity !== null && !entity.classList.contains('annotation')) { // from && this is a workaround second call when 2 text types are initiated
           const currentIcon = this.types.filter((type) => type['content-type'] === annotation.contenttype)[0].icon;
 
           entity.classList.toggle('annotation');
+          if (this.config.annotations.show) entity.classList.toggle('annotation-disabled');
           entity.prepend(this.createSVG(currentIcon));
 
           entity.onclick = () => {
@@ -252,6 +270,7 @@ export default {
         }
       });
     },
+
     // create SVGs for the data type toggles and the list alike
     createIcons() {
       this.types.forEach((type) => {
@@ -260,6 +279,7 @@ export default {
           : Icons.fasTimes; // fallback if icon doesn't exist
       });
     },
+
     // create SVGs for the text entities
     createSVG(name) {
       const [path, viewbox] = Icons[name].split('|');
@@ -279,10 +299,12 @@ export default {
 
       return svg;
     },
+
     // bind dynamic events / models to the options
     dynamicEvent(event, model, state = false) {
       this[event](model, state);
     },
+
     // de/highlights all text entities matching the type toggle de/selected
     highlightDiff() {
       let delta = [];
@@ -301,6 +323,7 @@ export default {
       // get the current state for the next comparison
       this.lastTypeState = this.typeModel;
     },
+
     // highlights either all (true) or none (false)
     highlightMode() {
       this.items.forEach((annotation) => {
@@ -309,52 +332,24 @@ export default {
         this.toggleTextHighlighting(annotation);
       });
     },
-    init() {
-      const highlight = this.config.annotations.show;
-      // check whether to start with all annotations highlighted or none
-      this.options.mode.model = highlight;
 
-      // verify content types and populate typeModel accordingly
-      // used at top toggles
-      this.typeModel = highlight
-        ? this.availableTypes
-        : [];
-
-      if (highlight) {
-        // TODO: when highlight === false, no icons will be set
-        this.addIcons();
-      }
-
-      this.highlightMode();
-      this.registerToggles();
-    },
-    // TODO: verify, if this method is still needed (not sure yet). After refactoring, it currently doesn't do 'anything'
-    // Toggle highlighting of annotation/s when clicking on the appropriate text entity
-    registerToggles() {
-      let current = this.items;
-
-      if (!this.config.annotations.show) {
-        const types = this.availableTypes;
-
-        current = this.annotations.filter((annotation) => types.includes(annotation.contenttype) && annotation.text !== false);
-      }
-
-      return current;
-    },
     sortingDirection() {
       return this.items;
     },
+
     sortingOrder(order) {
       return order === 'alpha'
         ? this.items.sort((x, y) => x.text.localeCompare(y.text))
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
     },
+
     // de/highlights annotation/s individually (Annotation list)
     toggleListHighlighting(annotation) {
       annotation.selected = !annotation.selected;
       // set the button state (All | None)
       this.options.mode.model = this.selectedAll;
     },
+
     toggleTextHighlighting(annotation, caller = '') {
       const entity = document.getElementById(annotation.id);
 
@@ -363,7 +358,6 @@ export default {
           case 'list':
           case 'text':
             entity.classList.toggle('annotation-disabled');
-
             break;
           case 'type':
             annotation.selected = this.options.mode.model;
@@ -372,7 +366,6 @@ export default {
             break;
           default:
             annotation.selected = this.options.mode.model;
-
             if (!this.options.mode.model) {
               entity.classList.add('annotation-disabled');
             } else {
@@ -383,6 +376,7 @@ export default {
         }
       }
     },
+
     typeDisabled(type) {
       return !this.availableTypes.includes(type);
     },
