@@ -72,9 +72,9 @@
         <q-item
           v-for="(meta, idx) in manifests[sequenceindex].metadata"
           :key="idx"
-          class="q-mb-xs"
+          class="q-mb-xs no-padding"
         >
-          <q-item-section class="q-mb-xs">
+          <q-item-section class="q-mb-xs no-padding">
             <q-item-label
               overline
               class="text-uppercase"
