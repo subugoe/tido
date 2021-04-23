@@ -191,7 +191,7 @@ export default {
         return [];
       }
       // filter all annotation types that have been selected (typeModel)
-      let filteredAnnotations = this.annotations.filter((type) => this.typeModel.includes(type.contenttype) && type.text !== false);
+      let filteredAnnotations = this.annotations.filter((annotation) => this.typeModel.includes(annotation.contenttype) && annotation.text !== false);
 
       // determine sorting order and direction
       const sortingOrder = this.options.sortOrder.model;
@@ -228,23 +228,6 @@ export default {
     this.types = this.config.annotations.types;
   },
   methods: {
-    init() {
-      const highlight = this.config.annotations.show;
-      // check whether to start with all annotations highlighted or none
-      this.options.mode.model = highlight;
-
-      // verify content types and populate typeModel accordingly
-      // used at top toggles
-      this.typeModel = highlight
-        ? this.availableTypes
-        : [];
-
-      this.addIcons();
-
-      this.highlightMode();
-      this.createIcons();
-    },
-
     // append icons to the text entities
     addIcons() {
       this.annotations.forEach((annotation) => {
@@ -334,6 +317,22 @@ export default {
 
         this.toggleTextHighlighting(annotation);
       });
+    },
+
+    init() {
+      const highlight = this.config.annotations.show;
+      // check whether to start with all annotations highlighted or none
+      this.options.mode.model = highlight;
+
+      // verify content types and populate typeModel accordingly (used at top toggles)
+      this.typeModel = highlight
+        ? this.availableTypes
+        : [];
+
+      this.addIcons();
+
+      this.highlightMode();
+      this.createIcons();
     },
 
     sortingDirection() {
