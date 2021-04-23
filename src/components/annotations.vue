@@ -360,11 +360,15 @@ export default {
           case 'list':
           case 'text':
             entity.classList.toggle('annotation-disabled');
+
             break;
           case 'type':
-            annotation.selected = this.options.mode.model;
+            annotation.selected = true;
 
-            // TODO: toggle css class for several annotations that match an appropriate data type (e.g. Person)
+            if (!this.typeModel.includes(annotation.contenttype)) {
+              entity.classList.add('annotation-disabled');
+            } else entity.classList.remove('annotation-disabled');
+
             break;
           default:
             annotation.selected = this.options.mode.model;
