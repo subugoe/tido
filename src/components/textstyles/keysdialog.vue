@@ -35,18 +35,14 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <div class="text-list">
+          <div
+            v-for="(text, i) in textModal"
+            :key="`b${i}`"
+          >
             <div
-              v-for="(text, i) in textModal"
-              :key="`b${i}`"
-              class="text-item"
-            >
-              <div
-                :class="['text-overline', text.classes]"
-                style="font-size: 16px;"
-                v-text="text.label"
-              />
-            </div>
+              :class="['text-h8', text.classes]"
+              v-text="text.label"
+            />
           </div>
         </q-card-section>
 
@@ -100,11 +96,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.text-item {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-}
-</style>
