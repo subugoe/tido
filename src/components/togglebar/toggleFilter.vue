@@ -2,7 +2,8 @@
   <div>
     <q-btn-dropdown
       v-if="$q.screen.width < 1200"
-      :dropdown-icon="dropicon"
+      :dropdown-icon="fasCaretDown"
+      outline
       flat
       :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
       label="Show/Hide Panels"
@@ -23,10 +24,9 @@
 import { fasCaretDown } from '@quasar/extras/fontawesome-v5';
 
 export default {
-  computed: {
-    dropicon() {
-      return fasCaretDown;
-    },
+  // keep icon from reactivity
+  created() {
+    this.fasCaretDown = fasCaretDown;
   },
 };
 </script>
