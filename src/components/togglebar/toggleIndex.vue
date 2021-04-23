@@ -1,13 +1,7 @@
 <template>
   <div class="q-d-flex">
-    <q-btn-dropdown
-      v-if="$q.screen.width > 10"
-      flat
-      :dropdown-icon="fasCaretDown"
-      :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
-      label="Show/Hide Panels"
-    >
-      <q-list>
+    <ToggleFilter>
+      <q-list class="toggle-list">
         <div
           v-for="(p, i) in panels"
           :key="`toggle${i}`"
@@ -45,7 +39,7 @@
           {{ 'RESET' }}
         </q-item>
       </q-list>
-    </q-btn-dropdown>
+    </ToggleFilter>
 
     <!-- <PanelsPosition :panelboxes="panels" /> -->
   </div>
@@ -53,18 +47,19 @@
 
 <script>
 import {
-  fasCaretDown,
+  fasUndo,
   fasCircle,
   fasCheckCircle,
-  fasUndo,
 } from '@quasar/extras/fontawesome-v5';
 
 // import PanelsPosition from '@/components/togglebar/panelsposition';
+import ToggleFilter from '@/components/togglebar/toggleFilter.vue';
 
 export default {
   name: 'ToggleIndex',
   components: {
     // PanelsPosition,
+    ToggleFilter,
   },
   props: {
     panels: {
@@ -74,7 +69,6 @@ export default {
   },
   created() {
     // mount the fonts
-    this.fasCaretDown = fasCaretDown;
     this.fasCheckCircle = fasCheckCircle;
     this.fasCircle = fasCircle;
     this.fasUndo = fasUndo;
