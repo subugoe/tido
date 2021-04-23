@@ -1,18 +1,18 @@
 <template>
   <figure
     id="openseadragon"
-    class="item"
+    class="panel"
   >
     <nav>
       <q-btn
         v-for="(btn, idx) in buttons"
         :id="btn.id"
         :key="idx"
+        :color="$q.dark.isActive ? 'white' : 'accent'"
+        class="q-ml-xs q-mt-xs"
         flat
         round
         size="sm"
-        :color="$q.dark.isActive ? 'white' : 'accent'"
-        class="q-ml-xs q-mt-xs"
       >
         <q-icon
           size="xs"

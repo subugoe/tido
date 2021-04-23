@@ -1,14 +1,14 @@
 <template>
-  <div class="item-content panel__meta">
+  <div class="panel-content panel__meta">
     <!-- Collection-->
     <q-list
-      v-if="config.meta.collection.all && Object.keys(collection).length"
+      v-if="Object.keys(collection).length"
       dense
     >
       <q-item class="no-padding">
         <q-item-section
-          dense
           class="text-h6 caps"
+          dense
         >
           Collection
         </q-item-section>
@@ -25,8 +25,8 @@
           class="q-mb-xs"
         >
           <q-item-label
-            overline
             class="text-uppercase"
+            overline
           >
             {{ mCollection.id }}
           </q-item-label>
@@ -40,7 +40,7 @@
 
     <!-- Manifest-->
     <q-list
-      v-if="config.meta.manifest.all && itemcount"
+      v-if="itemcount"
       dense
     >
       <q-item class="no-padding">
@@ -56,8 +56,8 @@
       >
         <q-item-section class="q-mb-xs">
           <q-item-label
-            overline
             class="text-uppercase"
+            overline
           >
             {{ mManifest.id }}
           </q-item-label>
@@ -76,8 +76,8 @@
         >
           <q-item-section class="q-mb-xs no-padding">
             <q-item-label
-              overline
               class="text-uppercase"
+              overline
             >
               {{ meta.key }}
             </q-item-label>
@@ -89,10 +89,7 @@
     </q-list>
 
     <!-- Item-->
-    <q-list
-      v-if="config.meta.item.all"
-      dense
-    >
+    <q-list dense>
       <q-item class="no-padding">
         <q-item-section class="text-h6 caps">
           {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
@@ -109,8 +106,8 @@
           class="q-mb-xs"
         >
           <q-item-label
-            overline
             class="text-uppercase"
+            overline
           >
             {{ mItem.id }}
           </q-item-label>
@@ -224,11 +221,6 @@ export default {
         }
       });
     });
-  },
-  methods: {
-    showSeparator(condition) {
-      return condition === true;
-    },
   },
 };
 </script>

@@ -8,17 +8,9 @@
   }
 }
 
-.without-dropdown > * {
-  display: flex;
-}
-
-.panels-target > * {
+.panel-dividers > * {
   border-right: 1px solid #ddd !important;
   flex: auto;
-}
-
-.toggle-list .q-item {
-  align-items: center;
 }
 
 .panel-textinput {
@@ -30,4 +22,12 @@
 
 .q-tabs__content .q-tab {
   width: 100%;
+}
+
+.toggle-list .q-item {
+  align-items: center;
+}
+
+.without-dropdown > * {
+  display: flex;
 }

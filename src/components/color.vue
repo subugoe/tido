@@ -22,12 +22,12 @@
             <q-item-section>Default</q-item-section>
           </q-item>
           <q-item
-            v-if="projectcolors.primary && projectcolors.secondary && projectcolors.accent"
+            v-if="colorsSet"
             v-close-popup
             clickable
-            @click="changeColorsTo('emo')"
+            @click="changeColorsTo('tido')"
           >
-            <q-item-section>EMo</q-item-section>
+            <q-item-section>TiDO</q-item-section>
           </q-item>
           <q-item
             v-close-popup
@@ -54,31 +54,39 @@ export default {
       required: true,
     },
   },
+  computed: {
+    colorsSet() {
+      return this.projectcolors.primary && this.projectcolors.secondary && this.projectcolors.accent;
+    },
+  },
   created() {
     this.fasPalette = fasPalette;
   },
   methods: {
+    // FIXME: refactor
     changeColorsTo(color) {
-      if (color === 'default') {
-        if (this.projectcolors.primary && this.projectcolors.secondary && this.projectcolors.accent) {
-          colors.setBrand('primary', this.projectcolors.primary);
-          colors.setBrand('secondary', this.projectcolors.secondary);
-          colors.setBrand('accent', this.projectcolors.accent);
-        } else {
+      switch (color) {
+        case 'tido':
           colors.setBrand('primary', this.$q.config.brand.primary);
           colors.setBrand('secondary', this.$q.config.brand.secondary);
           colors.setBrand('accent', this.$q.config.brand.accent);
-        }
-      }
-      if (color === 'emo') {
-        colors.setBrand('primary', this.$q.config.brand.primary);
-        colors.setBrand('secondary', this.$q.config.brand.secondary);
-        colors.setBrand('accent', this.$q.config.brand.accent);
-      }
-      if (color === 'unicorn') {
-        colors.setBrand('primary', 'purple');
-        colors.setBrand('secondary', 'lightgrey');
-        colors.setBrand('accent', 'hotpink');
+          break;
+        case 'unicorn':
+          colors.setBrand('primary', 'purple');
+          colors.setBrand('secondary', 'lightgrey');
+          colors.setBrand('accent', 'hotpink');
+          break;
+        default:
+          if (this.colorsSet) {
+            colors.setBrand('primary', this.projectcolors.primary);
+            colors.setBrand('secondary', this.projectcolors.secondary);
+            colors.setBrand('accent', this.projectcolors.accent);
+          } else {
+            colors.setBrand('primary', this.$q.config.brand.primary);
+            colors.setBrand('secondary', this.$q.config.brand.secondary);
+            colors.setBrand('accent', this.$q.config.brand.accent);
+          }
+          break;
       }
     },
   },

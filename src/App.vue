@@ -1,12 +1,11 @@
 <template>
   <q-layout
     id="q-app"
+    class="root viewport"
     view="hHh Lpr fFf"
-    class="app"
-    style="height: 100vh;"
   >
     <Header
-      v-if="config.headers.all"
+      v-if="config.headers.show"
       :collectiontitle="collectiontitle"
       :config="config"
       :imageurl="imageurl"
@@ -20,6 +19,7 @@
 
     <q-page-container class="root">
       <router-view
+        :annotations="annotations"
         :collection="collection"
         :config="config"
         :contenttypes="contentTypes"
@@ -50,12 +50,13 @@ export default {
   mixins: [Panels],
   data() {
     return {
+      annotations: [],
       collection: {},
       collectiontitle: '',
       config: {},
       contentTypes: [],
       contenturls: [],
-      fontsize: 14,
+      fontsize: 16,
       imageurl: '',
       isCollection: false,
       item: {},
@@ -68,17 +69,15 @@ export default {
   created() {
     this.getConfig();
     this.init();
+
+    this.setColors();
     this.itemurls.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-
-    this.$q.dark.set('auto');
-
-    if (this.config.colors.primary && this.config.colors.secondary && this.config.colors.accent) {
-      colors.setBrand('primary', this.config.colors.primary);
-      colors.setBrand('secondary', this.config.colors.secondary);
-      colors.setBrand('accent', this.config.colors.accent);
-    }
   },
   mounted() {
+    // if an item consists of multiple text types, update the annotations (currently attached to the DOM)
+    this.$root.$on('update-content', () => {
+      this.getItemData(this.itemurl);
+    });
     /**
       * listen to fontsize change (user interaction). emitted in @/components/content.vue
       * in- or rather decrease fontsize of the text by 1px
@@ -109,7 +108,7 @@ export default {
   },
   methods: {
     /**
-      * get resources using JavaScript's native fetch api
+      * get resources using JavaScript's native fetch API
       * caller: *getCollection()*, *getItemData()*, *getManifest()*
       *         *@/components/content.vue::getSupport()*, *@/components/content.vue::created-hook*
       *
@@ -123,6 +122,85 @@ export default {
       const data = await (responsetype === 'text' ? response.text() : response.json());
 
       return data;
+    },
+    /**
+    * filter the annotation IDs and the matching text part of the current item
+    *
+    * caller: *getAnnotations()*
+    *
+    * @param array annotations
+    *
+    * @return array identifiers
+    */
+    filterAnnotations(annotations) {
+      const identifiers = [];
+
+      annotations.forEach((annotation) => {
+        const id = this.getAnnotationId(annotation);
+        const text = this.getAnnotationText(id);
+
+        identifiers.push({
+          id,
+          contenttype: annotation.body['x-content-type'],
+          description: annotation.body.value,
+          selected: this.config.annotations.show,
+          text,
+        });
+      });
+
+      return identifiers;
+    },
+
+    /**
+    * get the annotation id/s of the current item
+    *
+    * caller: *filterAnnotations()*
+    *
+    * @param object annotation
+    *
+    * @return string
+    */
+    getAnnotationId(annotation) {
+      const split = annotation.target.id.split('/');
+
+      return split[split.length - 1];
+    },
+    /**
+      * match annotation against it's text counterpart
+      * caller: *filterAnnotations()*
+      *
+      * @param string id
+      *
+      * @return string
+      */
+    getAnnotationText(id) {
+      const element = document.getElementById(id);
+
+      return element !== null
+        ? element.innerText
+        : false;
+    },
+    /**
+      * get annotations of the current item
+      * caller: *getItemData()*
+      *
+      * @param string url
+      */
+    getAnnotations(url) {
+      this.request(url)
+        .then((annotations) => {
+          if (annotations.annotationCollection.first) {
+            this.request(annotations.annotationCollection.first)
+              .then((current) => {
+                if (current.annotationPage.items && current.annotationPage.items.length) {
+                  this.annotations = this.filterAnnotations(current.annotationPage.items);
+                } else this.annotations = [];
+              });
+          }
+        })
+        .catch(() => {
+          this.$q.notify({ message: 'No annotations available' });
+        });
     },
     /**
       * get collection data according to 'entrypoint'
@@ -140,19 +218,9 @@ export default {
           this.collection = data;
           this.collectiontitle = this.getLabel(data);
 
-          this.tree.push(
-            {
-              children: [],
-              handler: (node) => {
-                this.$root.$emit('update-tree-knots', node.label);
-              },
-              label: this.collectiontitle,
-              'label-key': this.collectiontitle,
-              selectable: false,
-            },
-          );
+          this.initTree(this.collectiontitle);
 
-          if (Array.isArray(data.sequence)) {
+          if (Array.isArray(data.sequence) && data.sequence.length) {
             data.sequence.forEach((seq) => this.getManifest(seq.id));
           }
         });
@@ -168,11 +236,11 @@ export default {
       * filter all urls that match either of the MIME types "application/xhtml+xml" and "text/html"
       * caller: *getItemData()*
       *
-      * @param string array
+      * @param array content
       *
       * @return array
       */
-    getContentUrl(content) {
+    getContentUrls(content) {
       const urls = [];
 
       if (Array.isArray(content) && content.length) {
@@ -199,8 +267,12 @@ export default {
         .then((data) => {
           this.item = data;
 
-          this.contenturls = this.getContentUrl(data.content);
+          this.contenturls = this.getContentUrls(data.content);
           this.imageurl = data.image.id || '';
+
+          if (data.annotationCollection) {
+            this.getAnnotations(data.annotationCollection);
+          }
         });
     },
     /**
@@ -273,10 +345,10 @@ export default {
       * @return string 'label'
       */
     getLabel(data) {
-      if (Object.keys(this.collection).length) {
-        return data.title && data.title[0].title ? data.title[0].title : data.label;
+      if (this.isCollection) {
+        return data.title[0].title || 'Collection';
       }
-      return data.label ? data.label : 'Manifest <small>(No label available)</small>';
+      return data.label || 'Manifest';
     },
     /**
       * get all the data provided on 'manifest level'
@@ -287,33 +359,24 @@ export default {
     getManifest(url) {
       this.request(url)
         .then((data) => {
-          // if the entrypoint points to a single manifest, initialize the tree
-          if (this.isCollection === false) {
-            this.tree.push({ label: '', 'label-key': this.config.labels.manifest, children: [] });
-          }
-
           if (!Array.isArray(data.sequence)) {
             data.sequence = [data.sequence];
           }
-
-          if (data.sequence[0] !== 'undefined') {
-            data.sequence.map((seq) => this.itemurls.push(seq.id));
-          }
           this.manifests.push(data);
 
-          this.tree[0].children.push(
-            {
-              children: this.getItemUrls(data.sequence, data.label),
-              label: data.label,
-              'label-key': data.label,
-              handler: (node) => {
-                this.$root.$emit('update-tree-knots', node.label);
-              },
-              selectable: false,
-            },
-          );
-          // make sure that urls are set just once on init
-          if (!this.itemurl && data.sequence[0]) {
+          // if manifest contains items push these onto the item pool (itemurls)
+          if (data.sequence.length) {
+            data.sequence.map((seq) => this.itemurls.push(seq.id));
+          }
+
+          // given a single manifest, initialize the tree
+          if (!this.isCollection) {
+            this.tree.push({ children: [], label: '', 'label-key': this.config.labels.manifest });
+          }
+          this.populateTree(data.sequence, data.label);
+
+          // make sure that urls are set only once on init
+          if (!this.itemurl && data.sequence[0].id) {
             this.itemurl = data.sequence[0].id;
             this.getItemData(data.sequence[0].id);
           }
@@ -339,30 +402,76 @@ export default {
       * decide whether to start with a collection or a single manifest
       * caller: *created-hook*
       *
-      * @return function getCollection() | getManifest()
+      * @return function getCollection() || getManifest()
       */
     init() {
       return this.config.entrypoint.match(/collection.json\s?$/)
         ? this.getCollection(this.config.entrypoint)
         : this.getManifest(this.config.entrypoint);
     },
-  },
+    /**
+      * initialize the tree node (collection only)
+      * caller: *getCollection()*
+      *
+      * @param string cTitle
+      */
+    initTree(cTitle) {
+      this.tree.push(
+        {
+          children: [],
+          label: cTitle,
+          'label-key': cTitle,
+          selectable: false,
+          handler: (node) => {
+            this.$root.$emit('update-tree-knots', node.label);
+          },
+        },
+      );
+    },
+    /**
+      * caller: *getManifest()*
+      *
+      * @param array sequence
+      * @param string mLabel
+      */
+    populateTree(sequence, mLabel) {
+      this.tree[0].children.push(
+        {
+          children: this.getItemUrls(sequence, mLabel),
+          label: mLabel,
+          'label-key': mLabel,
+          handler: (node) => {
+            this.$root.$emit('update-tree-knots', node.label);
+          },
+          selectable: false,
+        },
+      );
+    },
+    setColors() {
+      this.$q.dark.set('auto');
+      // filter all colors that have been set (index.html)
+      const colours = Object.entries(this.config.colors).filter((c) => c[1] !== '');
 
+      // actually only set a brand, if ALL the colors are set
+      if (Object.keys(this.config.colors).length === colours.length) {
+        colours.forEach((color) => {
+          colors.setBrand(color[0].toString(), this.config.colors[color[0]]);
+        });
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
-.app {
+.root {
   display: flex;
   flex: 1;
   flex-direction: column;
   overflow: hidden;
 }
 
-.root {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
+.viewport {
+  height: 100vh;
 }
 </style>

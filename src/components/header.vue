@@ -62,10 +62,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    imageurl: {
-      type: String,
-      default: () => '',
-    },
     item: {
       type: Object,
       default: () => {},

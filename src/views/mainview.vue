@@ -1,37 +1,37 @@
 <template>
   <div
     v-if="ready"
-    class="root panels-target"
+    class="root panel-dividers"
   >
     <div
       v-for="(p, index) in panels"
       v-show="p.show && p.connector.length"
       :key="`pc${index}`"
-      class="item"
+      class="panel"
     >
       <Toolbar
-        v-if="config.headers.panelheadings"
-        :heading="p.panel_label"
+        v-if="p.heading"
+        :heading="p.label"
       />
 
       <q-separator />
 
       <!-- shows the nested tabs -->
-      <q-card
+      <div
         v-if="p.connector.length > 1"
-        flat
+        class="panel"
       >
-        <div class="tabs-container item-content">
+        <div class="tabs-container">
           <q-tabs
             v-for="(tab, i) in p.connector"
             :key="`pt${i}`"
             v-model="p.tab_model"
-            class="content-tabs"
             :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
+            class="tabs"
           >
             <q-tab
-              :name="`tab${i}`"
               :label="tab.label"
+              :name="`tab${i}`"
             />
           </q-tabs>
         </div>
@@ -47,6 +47,7 @@
             v-for="(tab, idx) in p.connector"
             :key="`co${idx}`"
             :name="`tab${idx}`"
+            class="root"
           >
             <component
               :is="tab.component"
@@ -55,12 +56,12 @@
             />
           </q-tab-panel>
         </q-tab-panels>
-      </q-card>
+      </div>
 
       <!-- shows the panels -->
       <div
         v-else-if="p.connector.length === 1"
-        class="item-content"
+        class="panel-content"
       >
         <component
           :is="p.connector[0].component"
@@ -81,6 +82,10 @@ export default {
     Toolbar,
   },
   props: {
+    annotations: {
+      type: Array,
+      default: () => [],
+    },
     collection: {
       type: Object,
       default: () => {},
@@ -99,7 +104,7 @@ export default {
     },
     fontsize: {
       type: Number,
-      default: () => 14,
+      default: () => 16,
     },
     imageurl: {
       type: String,
@@ -142,8 +147,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content-tabs {
-  display: inline-block;
+.panel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.root {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  overflow: hidden;
 }
 
 .tabs-container {
@@ -154,24 +177,7 @@ export default {
   }
 }
 
-.root {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  overflow: hidden;
-}
-
-.item {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.item-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: scroll;
+.tabs {
+  display: inline-block;
 }
 </style>
