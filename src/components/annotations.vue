@@ -239,9 +239,7 @@ export default {
         ? this.availableTypes
         : [];
 
-      if (highlight) {
-        this.addIcons();
-      }
+      this.addIcons();
 
       this.highlightMode();
       this.createIcons();
@@ -251,7 +249,7 @@ export default {
     addIcons() {
       this.annotations.forEach((annotation) => {
         const entity = document.getElementById(annotation.id);
-
+        entity.classList.toggle('annotation-disabled');
         if (entity !== null && !entity.classList.contains('annotation')) { // from && this is a workaround second call when 2 text types are initiated
           const match = this.types.filter((type) => type['content-type'] === annotation.contenttype);
 
