@@ -6,7 +6,7 @@
     <!-- Data type Toggles -->
     <div>
       <h3 class="text-body1 q-mt-none q-mb-md text-weight-medium text-uppercase">
-        Show/hide data types
+        Toggle data types
       </h3>
 
       <q-toggle
@@ -18,9 +18,9 @@
         :icon="icons[type['content-type']]"
         :label="type.label"
         :val="type['content-type']"
-        class="text-uppercase q-mr-lg q-mb-md"
+        class="text-uppercase q-mr-md q-mb-md"
         dense
-        size="lg"
+        size="md"
         toggle-order="tf"
       />
     </div>
@@ -36,8 +36,8 @@
 
       <q-list>
         <q-item
-          v-for="annotation in items"
-          :key="annotation.sortkey"
+          v-for="(annotation, index) in items"
+          :key="index"
           :active="annotation.selected"
           active-class="active-item"
           class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
@@ -242,7 +242,9 @@ export default {
           }
 
           entity.classList.toggle('annotation');
-          if (this.config.annotations.show) entity.classList.toggle('annotation-disabled');
+          if (this.config.annotations.show) {
+            entity.classList.toggle('annotation-disabled');
+          }
           entity.prepend(this.createSVG(icon));
 
           entity.onclick = () => {
@@ -330,9 +332,9 @@ export default {
         : [];
 
       this.addIcons();
+      this.createIcons();
 
       this.highlightMode();
-      this.createIcons();
     },
 
     sortingDirection() {
