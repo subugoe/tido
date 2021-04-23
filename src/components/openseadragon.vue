@@ -9,13 +9,13 @@
         :id="btn.id"
         :key="idx"
         :color="$q.dark.isActive ? 'white' : 'accent'"
-        class="q-mr-sm q-mb-sm"
+        class="q-ml-xs q-mt-xs"
         flat
         round
-        size="md"
+        size="sm"
       >
         <q-icon
-          size="sm"
+          size="xs"
           :name="btn.svg"
         />
       </q-btn>

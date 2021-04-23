@@ -1,21 +1,14 @@
 <template>
   <div>
-    <h1
-      v-if="collectiontitle"
-      class="text-h4 text-bold text-uppercase"
-    >
+    <h1 class="text-h5 text-bold text-uppercase q-mb-none q-mt-xs">
       {{ collectiontitle }}
     </h1>
-
-    <h2
-      v-if="manifesttitle"
-      class="text-h5 text-bold text-uppercase q-mt-none q-mb-ml"
-    >
+    <h2 class="text-h6 text-bold text-uppercase q-mt-none q-mb-none">
       <span>{{ manifesttitle }}</span>
 
       <q-icon
         class="q-pb-xs q-pl-sm q-pr-sm"
-        size="sm"
+        size="xs"
         :color="$q.dark.isActive ? 'white' : 'accent'"
         :name="fasChevronRight"
       />
@@ -63,10 +56,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.title {
-  font-size: 28px !important;
-  letter-spacing: 2px;
-}
-</style>

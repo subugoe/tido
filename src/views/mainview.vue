@@ -158,7 +158,7 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
-  overflow: auto;
+  overflow: scroll;
   overflow-x: hidden;
   padding: 8px;
 }

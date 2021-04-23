@@ -19,7 +19,7 @@
       />
     </q-tabs>
 
-    <div>
+    <div class="q-px-sm">
       <q-btn
         v-for="(button, index) in buttons"
         :key="index"
