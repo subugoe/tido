@@ -1,49 +1,56 @@
 <template>
-  <q-header>
-    <q-toolbar
-      elevated
-      :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
-    >
-      <Infobar
-        v-if="config.headers.info && manifests.length"
-        class="col-xs-12 q-pl-md"
-        :collectiontitle="collectiontitle"
-        :item="item"
-        :manifests="manifests"
-      />
-    </q-toolbar>
+  <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'">
+    <div class="header__wrap">
+      <q-toolbar>
+        <Infobar
+          v-if="config.headers.info && manifests.length"
+          class="col-xs-12"
+          :collectiontitle="collectiontitle"
+          :item="item"
+          :manifests="manifests"
+        />
+      </q-toolbar>
 
-    <q-toolbar
-      elevated
-      :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
-    >
-      <Navbar
-        v-if="config.headers.navigation"
-        :itemurls="itemurls"
-        :labels="config.labels"
-        :manifests="manifests"
-      />
+      <div>
+        <q-toolbar class="q-pb-sm">
+          <Navbar
+            v-if="config.headers.navigation"
+            :itemurls="itemurls"
+            :labels="config.labels"
+            :manifests="manifests"
+          />
 
-      <q-space />
+          <q-space />
 
-      <ToggleIndex
-        v-if="config.headers.toggle"
-        :panels="panels"
-      />
-    </q-toolbar>
+          <ToggleIndex
+            v-if="config.headers.toggle"
+            :panels="panels"
+          />
+          <Language v-if="standalone" />
+          <Color :projectcolors="projectcolors" />
+          <Softwareinfo />
+        </q-toolbar>
+      </div>
+    </div>
   </q-header>
 </template>
 
 <script>
+import Color from '@/components/color.vue';
 import Infobar from '@/components/infobar.vue';
+import Language from '@/components/language.vue';
 import Navbar from '@/components/navbar.vue';
+import Softwareinfo from '@/components/softwareinfo.vue';
 import ToggleIndex from '@/components/togglebar/toggleIndex.vue';
 
 export default {
   name: 'Header',
   components: {
+    Color,
     Infobar,
+    Language,
     Navbar,
+    Softwareinfo,
     ToggleIndex,
   },
   props: {
@@ -75,20 +82,18 @@ export default {
       type: Array,
       default: () => [],
     },
+    projectcolors: {
+      type: Object,
+      default: () => {},
+    },
+    standalone: Boolean,
   },
 };
 </script>
 
 <style lang="scss" scoped>
-header {
-  left: 0;
-  position: absolute;
-  top: 0;
-}
-
-.bar {
-  margin-left: auto;
-  margin-right: auto;
+.header__wrap {
+  margin: 0 auto;
   max-width: 1200px;
 }
 </style>

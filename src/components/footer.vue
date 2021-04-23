@@ -2,14 +2,16 @@
   <q-toolbar
     :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'"
   >
-    <div
-      bordered
-      class="row justify-start items-center"
-      reveal
-    >
-      <Language v-if="standalone" />
-      <Color :projectcolors="projectcolors" />
-      <Softwareinfo />
+    <div class="footer__wrap">
+      <div
+        bordered
+        class="row justify-center items-center"
+        reveal
+      >
+        <Language v-if="standalone" />
+        <Color :projectcolors="projectcolors" />
+        <Softwareinfo />
+      </div>
     </div>
   </q-toolbar>
 </template>
@@ -35,3 +37,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.footer__wrap {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+</style>

@@ -19,18 +19,18 @@
       />
     </q-tabs>
 
-    <div>
+    <div class="q-px-sm">
       <q-btn
         class="cursor-pointer"
         flat
         round
-        size="md"
+        size="sm"
         title="Increase Textsize"
         @click="increase()"
       >
         <q-icon
           :name="fasSearchPlus"
-          size="sm"
+          size="xs"
           :color="$q.dark.isActive ? 'white' : 'accent'"
         />
       </q-btn>
@@ -39,14 +39,14 @@
         class="cursor-pointer"
         flat
         round
-        size="md"
+        size="sm"
         title="Decrease Textsize"
         :color="$q.dark.isActive ? 'white' : 'accent'"
         @click="decrease()"
       >
         <q-icon
           :name="fasSearchMinus"
-          size="sm"
+          size="xs"
           :color="$q.dark.isActive ? 'white' : 'accent'"
         />
       </q-btn>

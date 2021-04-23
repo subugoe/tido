@@ -14,6 +14,8 @@
       :itemurls="itemurls"
       :manifests="manifests"
       :panels="panels"
+      :projectcolors="config.colors"
+      :standalone="config.standalone"
     />
 
     <q-page-container class="root">
@@ -32,19 +34,11 @@
         :tree="tree"
       />
     </q-page-container>
-
-    <q-footer>
-      <Footer
-        :projectcolors="config.colors"
-        :standalone="config.standalone"
-      />
-    </q-footer>
   </q-layout>
 </template>
 
 <script>
 import { colors } from 'quasar';
-import Footer from '@/components/footer.vue';
 import Header from '@/components/header.vue';
 import Panels from '@/mixins/panels';
 
@@ -52,7 +46,6 @@ export default {
   name: 'TIDO',
   components: {
     Header,
-    Footer,
   },
   mixins: [Panels],
   data() {
