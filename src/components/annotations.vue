@@ -28,44 +28,42 @@
     <!-- List of Annotations -->
     <div
       v-if="items.length"
-      class="q-pt-sm q-pb-xs annotation-list"
+      class="q-pt-sm q-pb-xs annotation-list panel-content"
     >
       <h3 class="text-body1 q-mb-md q-mt-none text-weight-medium text-uppercase">
         List of Annotations ({{ items.length }})
       </h3>
 
-      <q-scroll-area class="list-height">
-        <q-list>
-          <q-item
-            v-for="(annotation, index) in items"
-            :key="index"
-            :active="annotation.selected"
-            active-class="active-item"
-            class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
-            clickable
-            dense
-            @click="
-              toggleListHighlighting(annotation);
-              toggleTextHighlighting(annotation, 'list');
-            "
+      <q-list>
+        <q-item
+          v-for="annotation in items"
+          :key="annotation.sortkey"
+          :active="annotation.selected"
+          active-class="active-item"
+          class="cursor-pointer q-py-xs q-mb-xs q-px-sm"
+          clickable
+          dense
+          @click="
+            toggleListHighlighting(annotation);
+            toggleTextHighlighting(annotation, 'list');
+          "
+        >
+          <q-avatar
+            class="q-mr-sm"
+            size="md"
           >
-            <q-avatar
-              class="q-mr-sm"
-              size="md"
-            >
-              <q-icon :name="icons[annotation.contenttype]" />
-            </q-avatar>
+            <q-icon :name="icons[annotation.contenttype]" />
+          </q-avatar>
 
-            <q-item-section>
-              <q-item-label overline>
-                <div class="text-body1">
-                  {{ annotation.description }}
-                </div>
-              </q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-scroll-area>
+          <q-item-section>
+            <q-item-label overline>
+              <div class="text-body1">
+                {{ annotation.description }}
+              </div>
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
     </div>
 
     <div v-else>
@@ -74,16 +72,16 @@
 
     <!-- Options -->
     <q-expansion-item
-      label="Options"
+      v-if="items.length"
       header-class="text-body1 q-mb-md text-weight-medium text-uppercase"
+      label="Options"
     >
       <div
-        v-if="items.length"
         class="q-mb-sm"
       >
         <div
-          v-for="(opt, index) in options"
-          :key="index"
+          v-for="(opt, name) in options"
+          :key="name"
           class="q-pb-md"
         >
           <div
@@ -122,8 +120,6 @@
 import * as Icons from '@quasar/extras/fontawesome-v5';
 import Notification from '@/components/notification.vue';
 
-require('../../node_modules/@quasar/extras/fontawesome-v5/fontawesome-v5.css');
-
 export default {
   name: 'Annotations',
   components: {
@@ -142,13 +138,12 @@ export default {
   data() {
     return {
       icons: {},
-      iconClasses: {},
       messages: {
         none: 'No annotations available',
         user: 'Toggle at least one data type to show annotations',
       },
-      options: [
-        {
+      options: {
+        mode: {
           event: 'highlightMode',
           label: 'Highlight',
           limit: 0,
@@ -157,7 +152,7 @@ export default {
             { label: 'All', value: true }, { label: 'None', value: false },
           ],
         },
-        {
+        sortOrder: {
           event: 'sortingOrder',
           label: 'Sorting order',
           limit: 1,
@@ -166,7 +161,7 @@ export default {
             { label: 'Alphabetic', value: 'alpha' }, { label: 'Appearance', value: 'sequence' },
           ],
         },
-        {
+        sortDirection: {
           event: 'sortingDirection',
           label: 'Sorting direction',
           limit: 1,
@@ -175,7 +170,7 @@ export default {
             { label: 'Ascending', value: 'asc' }, { label: 'Descending', value: 'desc' },
           ],
         },
-      ],
+      },
       lastTypeState: [],
       typeModel: [],
       types: [],
@@ -199,8 +194,8 @@ export default {
       let filteredAnnotations = this.annotations.filter((type) => this.typeModel.includes(type.contenttype) && type.text !== false);
 
       // determine sorting order and direction
-      const sortingOrder = this.options[1].model;
-      const sortingDirection = this.options[2].model;
+      const sortingOrder = this.options.sortOrder.model;
+      const sortingDirection = this.options.sortDirection.model;
 
       // sort the matching IDs according to the sortingOrder given
       filteredAnnotations = sortingOrder === 'alpha'
@@ -231,41 +226,85 @@ export default {
   },
   created() {
     this.types = this.config.annotations.types;
-
-    this.createIcons();
-  },
-  mounted() {
-    this.init();
   },
   methods: {
+    init() {
+      const highlight = this.config.annotations.show;
+      // check whether to start with all annotations highlighted or none
+      this.options.mode.model = highlight;
+
+      // verify content types and populate typeModel accordingly
+      // used at top toggles
+      this.typeModel = highlight
+        ? this.availableTypes
+        : [];
+
+      if (highlight) {
+        this.addIcons();
+      }
+
+      this.highlightMode();
+      this.createIcons();
+    },
+
+    // append icons to the text entities
+    addIcons() {
+      this.annotations.forEach((annotation) => {
+        const entity = document.getElementById(annotation.id);
+
+        if (entity !== null && !entity.classList.contains('annotation')) { // from && this is a workaround second call when 2 text types are initiated
+          const currentIcon = this.types.filter((type) => type['content-type'] === annotation.contenttype)[0].icon;
+
+          entity.classList.toggle('annotation');
+          if (this.config.annotations.show) entity.classList.toggle('annotation-disabled');
+          entity.prepend(this.createSVG(currentIcon));
+
+          entity.onclick = () => {
+            annotation.selected = !annotation.selected;
+            entity.classList.toggle('annotation-disabled');
+            // manipulate type stack: if the appropriate data toggle is currently inactive, turn it active
+            if (!this.typeModel.includes(annotation.contenttype)) {
+              this.typeModel.push(annotation.contenttype);
+            }
+          };
+        }
+      });
+    },
+
     // create SVGs for the data type toggles and the list alike
     createIcons() {
       this.types.forEach((type) => {
         this.icons[type['content-type']] = Icons[type.icon]
           ? Icons[type.icon]
           : Icons.fasTimes; // fallback if icon doesn't exist
-
-        this.iconClasses[type['content-type']] = type.css;
       });
     },
-    // create icons based on css classes for the text entities
-    createIconClasses() {
-      this.annotations.forEach((annotation) => {
-        const entity = document.getElementById(annotation.id).firstChild;
 
-        if (entity !== null) {
-          entity.classList.add('q-ml-sm', 'fas');
+    // create SVGs for the text entities
+    createSVG(name) {
+      const [path, viewbox] = Icons[name].split('|');
 
-          if (this.config.annotations.show) {
-            entity.classList.add(this.iconClasses[annotation.contenttype]);
-          }
-        }
-      });
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('class', 'q-icon q-ml-sm');
+      svg.setAttribute('focusable', 'false');
+      svg.setAttribute('role', 'presentation');
+      svg.setAttribute('viewBox', viewbox);
+
+      const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+      newPath.setAttribute('d', path);
+      svg.appendChild(newPath);
+
+      return svg;
     },
+
     // bind dynamic events / models to the options
     dynamicEvent(event, model, state = false) {
       this[event](model, state);
     },
+
     // de/highlights all text entities matching the type toggle de/selected
     highlightDiff() {
       let delta = [];
@@ -284,120 +323,60 @@ export default {
       // get the current state for the next comparison
       this.lastTypeState = this.typeModel;
     },
+
     // highlights either all (true) or none (false)
     highlightMode() {
       this.items.forEach((annotation) => {
-        annotation.selected = this.options[0].model;
+        annotation.selected = this.options.mode.model;
 
         this.toggleTextHighlighting(annotation);
       });
     },
-    init() {
-      // check whether to start with all annotations highlighted or none
-      this.options[0].model = this.config.annotations.show;
-      // verify content types and populate typeModel accordingly
-      this.typeModel = this.config.annotations.show
-        ? this.availableTypes
-        : [];
 
-      this.createIconClasses();
-
-      this.highlightMode();
-      this.registerToggles();
-    },
-    // Toggle highlighting of annotation/s when clicking on the appropriate text entity
-    registerToggles() {
-      let current = this.items;
-
-      if (!this.config.annotations.show) {
-        const types = this.availableTypes;
-
-        current = this.annotations.filter((annotation) => types.includes(annotation.contenttype) && annotation.text !== false);
-      }
-
-      current.forEach((annotation) => {
-        const entity = document.getElementById(annotation.id).firstChild;
-
-        if (entity !== null) {
-          entity.style.borderBottom = this.config.annotations.show
-            ? '2px solid'
-            : '';
-
-          entity.style.cursor = 'pointer';
-          entity.style.paddingBottom = '4px';
-
-          entity.onclick = () => {
-            // manipulate type stack when a text entity is clicked and the appropriate data toggle is currently inactive
-            if (!this.typeModel.includes(annotation.contenttype)) {
-              this.typeModel.push(annotation.contenttype);
-            }
-
-            this.toggleListHighlighting(annotation);
-            this.toggleTextHighlighting(annotation, 'text');
-          };
-        }
-      });
-    },
     sortingDirection() {
       return this.items;
     },
+
     sortingOrder(order) {
       return order === 'alpha'
         ? this.items.sort((x, y) => x.text.localeCompare(y.text))
         : this.items.sort((x, y) => x.id.localeCompare(y.id));
     },
+
     // de/highlights annotation/s individually (Annotation list)
     toggleListHighlighting(annotation) {
       annotation.selected = !annotation.selected;
       // set the button state (All | None)
-      this.options[0].model = this.selectedAll;
+      this.options.mode.model = this.selectedAll;
     },
+
     toggleTextHighlighting(annotation, caller = '') {
-      const entity = document.getElementById(annotation.id).firstChild;
+      const entity = document.getElementById(annotation.id);
 
       if (entity !== null) {
-        // entity.innerText = `  ${entity.innerText}`;
-
         switch (caller) {
           case 'list':
           case 'text':
-            entity.classList.toggle(this.iconClasses[annotation.contenttype]);
-
-            entity.style.borderBottom = entity.style.borderBottom
-              ? ''
-              : '2px solid';
-
+            entity.classList.toggle('annotation-disabled');
             break;
           case 'type':
-            if (this.options[0].model) {
-              if (entity.classList.contains(this.iconClasses[annotation.contenttype])) {
-                entity.classList.remove(this.iconClasses[annotation.contenttype]);
-              } else entity.classList.add(this.iconClasses[annotation.contenttype]);
+            annotation.selected = this.options.mode.model;
 
-              entity.style.borderBottom = entity.style.borderBottom
-                ? ''
-                : '2px solid';
-            } else {
-              entity.classList.remove(this.iconClasses[annotation.contenttype]);
-
-              annotation.selected = false;
-              entity.style.borderBottom = '';
-            }
-
+            // TODO: toggle css class for several annotations that match an appropriate data type (e.g. Person)
             break;
           default:
-            if (this.options[0].model) {
-              entity.classList.add(this.iconClasses[annotation.contenttype]);
-            } else entity.classList.remove(this.iconClasses[annotation.contenttype]);
-
-            entity.style.borderBottom = this.options[0].model
-              ? '2px solid'
-              : '';
+            annotation.selected = this.options.mode.model;
+            if (!this.options.mode.model) {
+              entity.classList.add('annotation-disabled');
+            } else {
+              entity.classList.remove('annotation-disabled');
+            }
 
             break;
         }
       }
     },
+
     typeDisabled(type) {
       return !this.availableTypes.includes(type);
     },
@@ -421,20 +400,27 @@ export default {
   }
 }
 
+.annotation-list {
+  flex-grow: 1;
+}
+
 .custom-toggle {
   border: 1px solid #ababab;
 }
 
-.list-height {
-  height: 25vh;
+.panel-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
+  overflow-x: hidden;
+  padding: 8px;
 }
 
 .q-expansion-item--expanded {
-  position: sticky;
   bottom: 0;
-  background: white;
-}
-.annotation-list {
-  flex-grow: 1;
+  background: lightgray;
+  color: black;
+  position: sticky;
 }
 </style>
