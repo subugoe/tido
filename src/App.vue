@@ -135,12 +135,30 @@ export default {
     filterAnnotations(annotations) {
       const identifiers = [];
 
+      function formatter(match) {
+        const num = match.replace(/\.|N/gm, '');
+        const l = 4 - num.length;
+        const zero = '0'.repeat(l);
+        return `${zero}${num}.`;
+      }
+      function sortkey(id) {
+        // prepare sortkey
+        const idForm = id.replace(/N?(\d+)\.?/gm, (match) => formatter(match));
+        const keyPre = `N${idForm.slice(0, -1)}`;
+        const keyPreL = keyPre.split('.').length;
+        const maxLevel = 10;
+        const keyAdd = maxLevel - keyPreL;
+        const key = keyPre + '.0000'.repeat(keyAdd);
+        return key;
+      }
+
       annotations.forEach((annotation) => {
         const id = this.getAnnotationId(annotation);
         const text = this.getAnnotationText(id);
 
         identifiers.push({
           id,
+          sortkey: sortkey(id),
           contenttype: annotation.body['x-content-type'],
           description: annotation.body.value,
           selected: this.config.annotations.show,
@@ -150,6 +168,7 @@ export default {
 
       return identifiers;
     },
+
     /**
     * get the annotation id/s of the current item
     *
@@ -163,6 +182,21 @@ export default {
       const split = annotation.target.id.split('/');
 
       return split[split.length - 1];
+    },
+    /**
+      * match annotation against it's text counterpart
+      * caller: *filterAnnotations()*
+      *
+      * @param string id
+      *
+      * @return string
+      */
+    getAnnotationText(id) {
+      const element = document.getElementById(id);
+
+      return element !== null
+        ? element.innerText
+        : false;
     },
     /**
       * get annotations of the current item
@@ -185,21 +219,6 @@ export default {
         .catch(() => {
           this.$q.notify({ message: 'No annotations available' });
         });
-    },
-    /**
-      * match annotation against it's text counterpart
-      * caller: *filterAnnotations()*
-      *
-      * @param string id
-      *
-      * @return string
-      */
-    getAnnotationText(id) {
-      const element = document.getElementById(id);
-
-      return element !== null
-        ? element.innerText
-        : false;
     },
     /**
       * get collection data according to 'entrypoint'
