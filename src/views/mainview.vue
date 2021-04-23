@@ -160,7 +160,6 @@ export default {
   flex-direction: column;
   overflow: scroll;
   overflow-x: hidden;
-  padding: 8px;
 }
 
 .root {

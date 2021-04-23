@@ -253,11 +253,16 @@ export default {
         const entity = document.getElementById(annotation.id);
 
         if (entity !== null && !entity.classList.contains('annotation')) { // from && this is a workaround second call when 2 text types are initiated
-          const currentIcon = this.types.filter((type) => type['content-type'] === annotation.contenttype)[0].icon;
+          const match = this.types.filter((type) => type['content-type'] === annotation.contenttype);
+
+          let icon = 'fasTimes';
+          if (Array.isArray(match) && match.length && Icons[match[0].icon]) {
+            icon = match[0].icon;
+          }
 
           entity.classList.toggle('annotation');
           if (this.config.annotations.show) entity.classList.toggle('annotation-disabled');
-          entity.prepend(this.createSVG(currentIcon));
+          entity.prepend(this.createSVG(icon));
 
           entity.onclick = () => {
             annotation.selected = !annotation.selected;
@@ -384,7 +389,7 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
 .active-item {
   background-color: #d3d3d3;
   color: #000;
@@ -398,6 +403,22 @@ export default {
   .active-item .q-item__label {
     color: #000;
   }
+}
+
+.annotation {
+  border-bottom: 2px solid;
+  cursor: pointer;
+  padding-bottom: 4px;
+  white-space: nowrap;
+}
+
+.annotation-disabled {
+  border-bottom: 0;
+  padding-bottom: inherit;
+}
+
+.annotation-disabled > svg {
+  display: none;
 }
 
 .annotation-list {

@@ -26,14 +26,14 @@
         class="q-mr-sm q-mb-sm cursor-pointer"
         flat
         round
-        size="md"
+        size="sm"
         :title="button.title"
         @click="dynamicEvent(button.event)"
       >
         <q-icon
           :color="$q.dark.isActive ? 'white' : 'accent'"
           :name="button.icon"
-          size="sm"
+          size="xs"
         />
       </q-btn>
     </div>
@@ -164,25 +164,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .default-cursor {
   cursor: default !important;
-}
-
-.annotation {
-  border-bottom: 2px solid;
-  cursor: pointer;
-  padding-bottom: 4px;
-  white-space: nowrap;
-}
-
-.annotation-disabled {
-  border-bottom: 0;
-  padding-bottom: inherit;
-}
-
-.annotation-disabled > svg {
-  display: none;
 }
 
 .panel-content {

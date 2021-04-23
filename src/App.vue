@@ -135,30 +135,12 @@ export default {
     filterAnnotations(annotations) {
       const identifiers = [];
 
-      function formatter(match) {
-        const num = match.replace(/\.|N/gm, '');
-        const l = 4 - num.length;
-        const zero = '0'.repeat(l);
-        return `${zero}${num}.`;
-      }
-      function sortkey(id) {
-        // prepare sortkey
-        const idForm = id.replace(/N?(\d+)\.?/gm, (match) => formatter(match));
-        const keyPre = `N${idForm.slice(0, -1)}`;
-        const keyPreL = keyPre.split('.').length;
-        const maxLevel = 10;
-        const keyAdd = maxLevel - keyPreL;
-        const key = keyPre + '.0000'.repeat(keyAdd);
-        return key;
-      }
-
       annotations.forEach((annotation) => {
         const id = this.getAnnotationId(annotation);
         const text = this.getAnnotationText(id);
 
         identifiers.push({
           id,
-          sortkey: sortkey(id),
           contenttype: annotation.body['x-content-type'],
           description: annotation.body.value,
           selected: this.config.annotations.show,
