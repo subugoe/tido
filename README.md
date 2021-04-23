@@ -469,6 +469,12 @@ Each object inside that constant consists of similar keys: `connector`, `heading
 
   toggles (`show` or rather `hide`) the appropriate panel respectively
 
+- **toggle**
+
+  whether to show the related panel toggle or not
+
+  Defaults to `true`.
+
 **Note**:
 
 ## Viewer Architecture

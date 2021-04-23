@@ -3,16 +3,33 @@ cache:
   - node_modules/
 
 stages:
+  - clean
   - build
   - deploy
   - preserve-pages
 
 # Templates
-.build: &build
-   - bash .ci-scripts/set_entrypoint_ci.sh
-   - npm install
-   - npm run build
-   - npm run tweak:build
+.git: &git
+  - eval $(ssh-agent -s)
+  - echo "$DEPLOY_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan gitlab.gwdg.de  >> ~/.ssh/known_hosts
+  - git config --global user.email "tido@gitlab.gwdg.de"
+  - git config --global user.name "Gitlab CI"
+
+clean_up:
+  image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
+  stage: clean
+  only:
+    - main
+    - develop
+  script:
+    - *git
+    - bash .ci-scripts/remove_entrypoint.sh
+  artifacts:
+    reports:
+      dotenv: build.env
 
 build_test:
   image: docker.gitlab.gwdg.de/subugoe/emo/qviewer/node:latest
@@ -21,7 +38,7 @@ build_test:
    - develop
   stage: build
   script:
-   - *build
+   - bash .ci-scripts/build.sh
   artifacts:
     paths:
      - dist/
@@ -33,7 +50,7 @@ build_main_and_develop:
    - develop
   stage: build
   script:
-   - *build
+   - if [[ $CONTINUE_BUILD == "true" ]]; then bash .ci-scripts/build.sh; fi
   artifacts:
     paths:
      - dist/
@@ -82,21 +99,6 @@ pushback:
     name: "updated-artifact"
     paths:
       - updated-artifact.zip
-
-.production:
-  image: node:latest
-  only:
-    - main
-  stage: deploy
-  script:
-   - npm install
-   - npm run build
-   - npm run tweak:build
-   - mkdir tido && mv dist/* tido/
-  artifacts:
-    expire_in: 5 yrs
-    paths:
-     - tido
 
 # when a git flow release is made, a tag will be pushed starting this job. it
 # will keep the resulting artifact from the job declared in `JOB_NUMBER_TO_PRESERVE`
