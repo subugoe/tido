@@ -173,6 +173,5 @@ export default {
   flex: 1;
   flex-direction: column;
   overflow: scroll;
-  padding: 8px;
 }
 </style>
