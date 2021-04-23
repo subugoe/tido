@@ -8,9 +8,17 @@
   }
 }
 
+.without-dropdown > * {
+  display: flex;
+}
+
 .panels-target > * {
   border-right: 1px solid #ddd !important;
   flex: auto;
+}
+
+.toggle-list .q-item {
+  align-items: center;
 }
 
 .panel-textinput {
