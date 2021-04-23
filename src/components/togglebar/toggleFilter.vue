@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-btn-dropdown
-      v-if="$q.screen.width > 10"
+      v-if="$q.screen.width < 1200"
       :dropdown-icon="dropicon"
       flat
       :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
