@@ -5,13 +5,14 @@
     </h1>
     <h2 class="text-h6 text-bold text-uppercase q-mt-none q-mb-none">
       <span>{{ manifesttitle }}</span>
+
       <q-icon
         class="q-pb-xs q-pl-sm q-pr-sm"
         size="xs"
         :color="$q.dark.isActive ? 'white' : 'accent'"
         :name="fasChevronRight"
       />
-      <span>Sheet {{ item.n }}</span>
+      <span v-if="item.n">Sheet {{ item.n }}</span>
     </h2>
   </div>
 </template>

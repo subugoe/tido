@@ -26,7 +26,7 @@
                   class="panel-textinput text-uppercase"
                   :class="$q.dark.isActive ? 'bg-grey-8 text-white' : 'bg-grey-1 text-black'"
                   type="text"
-                  :value="panel.panel_label"
+                  :value="panel.label"
                   @input="(e) => handlePanelLabel(e, idx)"
                 >
               </div>

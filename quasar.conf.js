@@ -48,7 +48,7 @@ module.exports = function (ctx) {
         }
       },
 
-      iconSet: 'fontawesome-v5',
+      iconSet: 'svg-fontawesome-v5',
 
       lang: 'en-us', // Quasar language pack
 
@@ -59,7 +59,7 @@ module.exports = function (ctx) {
     },
 
     htmlVariables: {
-      title: 'TIDO'
+      Title: 'TiDO'
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
@@ -68,7 +68,7 @@ module.exports = function (ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       distDir: 'dist',
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       output: {
         filename: '[name].js',
       },

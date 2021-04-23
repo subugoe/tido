@@ -18,11 +18,11 @@ Also the commit short hash can be used to see a demo.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Latest Version and Integration](#latest-version-and-integration)
-  - [A) Installation via npm](#a-installation-via-npm)
+  - [Get the Viewer](#get-the-viewer)
     - [Registry setup](#registry-setup)
     - [Installation](#installation)
-  - [B) Download the bundle](#b-download-the-bundle)
   - [Integration](#integration)
+  - [Config](#config)
 - [Getting Started (Developers)](#getting-started-developers)
   - [Prerequisites](#prerequisites)
   - [Environment setup](#environment-setup)
@@ -39,7 +39,7 @@ Also the commit short hash can be used to see a demo.
   - [The Keys in Detail](#the-keys-in-detail)
   - [Configure the Panels](#configure-the-panels)
     - [The Panel Keys in Detail](#the-panel-keys-in-detail)
-- [Viewer Components](#viewer-components)
+- [Viewer Architecture](#viewer-architecture)
 - [Dockerfile](#dockerfile)
 - [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend)
 - [Architecture](#architecture)
@@ -51,15 +51,13 @@ Also the commit short hash can be used to see a demo.
 
 ## Latest Version and Integration
 
-There are two options - **A)** and **B)** - to get the Viewer depending on it's usage.
+TiDO is provided as **npm package**. Please follow the steps below to include it for production:
 
-Please follow these steps to include it for production:
-
-### A) Installation via npm
+### Get the Viewer
 
 #### Registry setup
 
-Since npm communicates with the package api, it's necessary to setup a valid endpoint.
+Since npm communicates with the package API, it is necessary to setup a valid endpoint.
 
 ```bash
 echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
@@ -73,29 +71,9 @@ echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
 npm i @subugoe/tido
 ```
 
-### B) Download the bundle
-
-As an **alternative** to the npm package you can download the artifact: [get the latest compiled and minified version](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/jobs/artifacts/develop/download?job=build_main_and_develop)
-
-It is a zip archive. Extract the downloaded build by typing:
-
-```bash
-unzip artifacts.zip
-```
-
-This creates the following folder structure:
-
-```bash
-dist/
-├── index.html
-└── tido.js
-```
-
 ### Integration
 
-The integration depends on the option you chose from above; e.g. installation via npm or rather bundle download.
-
-**A)** If you installed *TIDO* with **npm**, add this line to your **main.js** file:
+Add this line to your **main.js** file:
 
 ```js
 import '@subugoe/tido/dist/tido'
@@ -103,99 +81,9 @@ import '@subugoe/tido/dist/tido'
 
 **Note**: `main.js` serves as your *entrypoint* usually located at **/[projectdir]/src/main.js**. It depends on your individual project setup.
 
-**B)** If you **downloaded** *TIDO* as a **bundle**, reference the js file accordingly at the end of the body tag inside your **index.html** file:
+### Config
 
-```html
-<script src="dist/tido.js"></script>
-```
-
-**Finally** copy the config object into your entrypoint file (usually **index.html**):
-
-```html
-<body>
-  ...
-
-  <noscript>
-    <strong>We're sorry but TIDO doesn't work properly without JavaScript enabled.
-      Please enable it to continue.
-    </strong>
-  </noscript>
-
-  <script id="tido-config" type="application/json">
-  {
-    "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
-    "colors": {
-      "primary": "",
-      "secondary": "",
-      "accent": ""
-    },
-    "headers": {
-      "all": true,
-      "info": true,
-      "navigation": true,
-      "panelheadings": true,
-      "toggle": true
-    },
-    "labels": {
-      "item": "Sheet",
-      "manifest": "Manuscript"
-    },
-    "meta": {
-      "collection": {
-        "all": true,
-        "collector": true,
-        "description": true,
-        "title": true
-      },
-      "manifest": {
-        "all": true,
-        "creation": true,
-        "editor": true,
-        "label": true,
-        "location": true,
-        "origin": true
-      },
-      "item": {
-        "all": true,
-        "label": true,
-        "language": true
-      }
-    },
-    "panels": [
-      {
-        "connector": [1],
-        "panel_label": "Contents",
-        "show": true,
-        "toggle": true
-      },
-      {
-        "connector": [3],
-        "panel_label": "Image",
-        "show": true,
-        "toggle": true
-      },
-      {
-        "connector": [4],
-        "panel_label": "Text",
-        "show": true,
-        "toggle": false
-      },
-      {
-        "connector": [2],
-        "panel_label": "Metadata",
-        "show": true,
-        "toggle": true
-      }
-    ],
-    "rtl": false,
-    "standalone": true
-  }
-  </script>
-
-  <div id="q-app"></div>
-</body>
-
-```
+Copy the config object into your **index.html** and follow the instructions given [here](#configuration).
 
 **Note**: Please make sure to provide a valid *entrypoint* that points to the manifest / collection that you want to be displayed.
 
@@ -277,7 +165,8 @@ npm run lint:vue        # to lint vue files only
 npm run test:unit
 ```
 
-The Viewer makes use of **jest** in collaboration with the *expect-library*.  
+The Viewer uses **jest**; a JavaScript test suite.
+
 Tests reside under **tests/unit/specs/** and are supposed to have a file ending of either `*.test.js` or `*.spec.js`.
 
 #### `Building` the app for production
@@ -286,7 +175,7 @@ Tests reside under **tests/unit/specs/** and are supposed to have a file ending 
 npm run build
 ```
 
-**Note**: The complete build is located at `/dist/spa/`.
+**Note**: The complete build is located at `/dist/`.
 
 ## Configuration
 
@@ -302,82 +191,95 @@ There are options to
 - group multiple components inside a single panel
 - set the order of the panels
 - rename labels and / or panel headings
-- filter individual metadata fields
 - and **more** ...
 
 As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate element.
 
 ```html
+<body>
+  ...
+
+  <noscript>
+    <strong>We're sorry but TiDO doesn't work properly without JavaScript enabled.
+      Please enable it to continue.
+    </strong>
+  </noscript>
+
   <script id="tido-config" type="application/json">
   {
     "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
-    "colors": {
-      "primary": "",
-      "secondary": "",
-      "accent": ""
-    },
-    "headers": {
-      "all": true,
-      "info": true,
-      "navigation": true,
-      "panelheadings": true,
-      "toggle": true
-    },
-    "labels": {
-      "item": "Sheet",
-      "manifest": "Manuscript"
-    },
-    "meta": {
-      "collection": {
-        "all": true,
-        "collector": true,
-        "description": true,
-        "title": true
-      },
-      "manifest": {
-        "all": true,
-        "creation": true,
-        "editor": true,
-        "label": true,
-        "location": true,
-        "origin": true
-      },
-      "item": {
-        "all": true,
-        "label": true,
-        "language": true
-      }
-    },
-    "panels": [
-      {
-        "connector": [1],
-        "panel_label": "Contents",
+    "annotations": {
         "show": true,
+        "types": [
+          {
+            "content-type": "Person",
+            "icon": "fasUser",
+            "label": "Names"
+          },
+          {
+            "content-type": "Place",
+            "icon": "fasMapMarkerAlt",
+            "label": "Places"
+          },
+          {
+            "content-type": "Editorial Comment",
+            "icon": "fasComment",
+            "label": "Comments"
+          }
+        ]
+      },
+      "colors": {
+        "primary": "",
+        "secondary": "",
+        "accent": ""
+      },
+      "headers": {
+        "show": true,
+        "info": true,
+        "navigation": true,
         "toggle": true
       },
-      {
-        "connector": [3],
-        "panel_label": "Image",
-        "show": true,
-        "toggle": true
+      "labels": {
+        "item": "Sheet",
+        "manifest": "Manuscript"
       },
-      {
-        "connector": [4],
-        "panel_label": "Text",
-        "show": true,
-        "toggle": false
-      },
-      {
-        "connector": [2],
-        "panel_label": "Metadata",
-        "show": true,
-        "toggle": true
-      }
-    ],
-    "rtl": false,
-    "standalone": true
-  }
-  </script>
+      "panels": [
+        {
+          "connector": [1, 2],
+          "heading": true,
+          "label": "Contents & Meta",
+          "show": true,
+          "toggle": true
+        },
+        {
+          "connector": [3],
+          "heading": true,
+          "label": "Image",
+          "show": true,
+          "toggle": true
+        },
+        {
+          "connector": [4],
+          "heading": true,
+          "label": "Text",
+          "show": true,
+          "toggle": true
+        },
+        {
+          "connector": [5],
+          "heading": true,
+          "label": "Annotations",
+          "show": true,
+          "toggle": true
+        }
+      ],
+      "rtl": false,
+      "standalone": true
+    }  </script>
+
+  <div id="q-app"></div>
+</body>
+
 ```
 
 **Note**: It's a *JSON* object. So if you are going to make any changes and you have to quote these (e.g. see *labels* or *colors*), please use **double quotes** only.
@@ -391,9 +293,37 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   **Note**: You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
 
+- **annotations**
+
+  - **show**
+
+      if your API provides *annotations* you can toggle whether to start with all of it highlighted or not
+
+      Defaults to `true`
+
+  - **types**
+
+      the types-array consists of an arbitrary number of objects, each representing an annotation type (e.g. Person, Place, Organization, ...).
+
+      each object in turn consists of similar building blocks:
+
+    - **content-type**
+
+        refers to the **x-content-type** in the **API** you are using.
+
+        **Note**: This content-type has to match it's API-counterpart explicitely, otherwise TIDO isn't able to show the related annotations.
+
+    - **icon**
+
+        TIDO uses [Font Awesome Icons](https://fontawesome.com/). Choose an icon that fits your needs.
+
+    - **label**
+
+        The label of the annotation type respectively
+
 - **colors**
 
-  Set the colors used in the frontend.
+  set the colors used in the frontend.
 
   `primary` and `accent` should be a darker tone, so that white text is visible if used as background. It's the other way around with `secondary`.
 
@@ -403,82 +333,59 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
 - **headers**
 
-  - **all**
+  - **show**
 
-    set this value to `false` if you want to completely switch off all the headerbars at once.  
-    This value takes **precedence** over the other *header-keys*.  
-    If it is set to `false`, the other settings for the individual bars are not taken into account.
+      set this value to `false` if you want to completely switch off all the headerbars at once.  
+      This value takes **precedence** over the other *header-keys*.  
+      If it is set to `false`, the other settings for the individual bars are not taken into account.
 
-    *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
+      *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
 
   - **info**
 
-    set this value to `false` if you want to switch off the Infobar (a.k.a. breadcrumbs)  
+      set this value to `false` if you want to switch off the Infobar (a.k.a. breadcrumbs)  
 
   - **navigation**
 
-    set this value to `false` if you want to switch off the NavBar
-
-  - **panelheadings**
-
-    set this value to `false` if you want to switch off the panels' headings respectively
+      set this value to `false` if you want to switch off the NavBar
 
   - **toggle**
 
-    set this value to `false` if you want to switch off the ToggleBar.
+      set this value to `false` if you want to switch off the ToggleBar.
 
-    **Note**:
+      **Note**: if you turn this one off, you won't be able to toggle the panels anymore.
 
-    if you turn this one off, you won't be able to toggle the panels anymore.
-
-    All header values default to `true`.
+    All header values default to `true`
 
 - **labels**
 
   - **item**:
 
-    The label of the item respectively  
-    Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.  
-    This change affects the captions of the navbuttons located in the headerbar and the metadata section.
+      The label of the item respectively  
+      Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.  
+      This change affects the captions of the navbuttons located in the headerbar and the metadata section.
 
-    Defaults to `Sheet`.
+      Defaults to `Sheet`
 
   - **manifest**:
 
-    Same as for `item` but related to the manifest title.
+      Same as for `item` but related to the manifest title.
 
-    Defaults to `Manuscript`.
-
-- **meta**
-
-  set either of the values to `false` to switch it off. if you set an `all`-key to `false` the other fields within the same object aren't taken into account.
-
-  e.g. neither of *collector*, *description* and *title* will be displayed:
-
-  ```json
-  "meta": {
-    "collection": {
-      "all": false,
-      "collector": true,
-      "description": true,
-      "title": true
-    }
-  }
-  ```
+      Defaults to `Manuscript`
 
 - **rtl (right to left)**
 
-  refers to the direction the text inside the text panel will be displayed.
+    refers to the direction the text inside the text panel will be displayed.
 
-  set the value to `true` if you want text to be displayed from right to left; e.g. Arabic.
+    set the value to `true` if you want text to be displayed from right to left; e.g. Arabic.
 
-  Defaults to `false`.
+    Defaults to `false`
 
 - **standalone**
 
-  denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
+    denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
 
-  Defaults to `true`.
+  Defaults to `true`
 
 ### Configure the Panels
 
@@ -486,25 +393,29 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 "panels": [
   {
     "connector": [1],
-    "panel_label": "Contents",
+    "heading": true,
+    "label": "Contents",
     "show": true,
     "toggle": true
   },
   {
     "connector": [3],
-    "panel_label": "Image",
+    "heading": true,
+    "label": "Image",
     "show": true,
     "toggle": true
   },
   {
     "connector": [4],
-    "panel_label": "Text",
+    "heading": true,
+    "label": "Text",
     "show": true,
-    "toggle": false
+    "toggle": true
   },
   {
     "connector": [2],
-    "panel_label": "Metadata",
+    "heading": true,
+    "label": "Metadata",
     "show": true,
     "toggle": true
   }
@@ -514,7 +425,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
 The panel-array consists of four objects according to the maximum number of panels, that can be shown at once.
 
-Each object inside that constant consists of similar keys: `connector`, `pane_label` and `show`.
+Each object inside that constant consists of similar keys: `connector`, `heading`, `label` and `show`.
 
 #### The Panel Keys in Detail
 
@@ -534,17 +445,25 @@ Each object inside that constant consists of similar keys: `connector`, `pane_la
 
   Assuming you want to combine the **Metadata**, **Text** and **Annotations** panels, the configuration could look like this:
 
-  ```js
+  ```json
     {
-      connector: [2, 4, 5],
-      panel_label: 'Meta, Text & Anno',
-      show: true
+      "connector": [2, 4, 5],
+      "heading": true,
+      "label": "Meta, Text & Anno",
+      "show": true,
+      "toggle": true
     }
   ```
 
-- **panel_label**
+- **heading**
 
-  refers to the heading in each panel's *toolbar*. To rename it, change the corresponding `panel_label` according to your needs.
+  set this value to false to hide a panel's heading individually
+
+  Defaults to `true`
+
+- **label**
+
+  refers to the heading in each panel's *toolbar*. To rename it, change the corresponding `label` according to your needs.
 
   **Note**: Please make sure to also change the name, if you are going to reorder the panels or turn them into tabs.
 
@@ -560,7 +479,7 @@ Each object inside that constant consists of similar keys: `connector`, `pane_la
 
 **Note**:
 
-## Viewer Components
+## Viewer Architecture
 
 ![Viewer components](img/Viewer.png)
 

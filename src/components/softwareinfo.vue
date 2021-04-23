@@ -2,7 +2,6 @@
   <div class="col-xs-auto">
     <q-btn
       flat
-      label=""
       title="Project Info"
       @click="infobox = true"
     >

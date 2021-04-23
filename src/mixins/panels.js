@@ -1,3 +1,4 @@
+import Annotations from '@/components/annotations.vue';
 import Content from '@/components/content.vue';
 import Metadata from '@/components/metadata.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
@@ -25,7 +26,7 @@ export default {
         label: 'Text',
       },
       5: {
-        component: null,
+        component: Annotations,
         label: 'Annotations',
       },
     },
@@ -77,7 +78,7 @@ export default {
     this.$root.$on('add-panel', () => {
       const newPanel = {
         id: uuidv4(),
-        panel_label: 'New Panel',
+        label: 'New Panel',
         connector: [],
         tab_model: 'tab0',
         show: true,
@@ -87,7 +88,7 @@ export default {
 
     this.$root.$on('update-panellabel', (payload) => {
       const value = payload.v || ' ';
-      this.panels[payload.index].panel_label = value;
+      this.panels[payload.index].label = value;
     });
 
     this.$root.$on('handle-connector', (payload) => {

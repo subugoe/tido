@@ -10,6 +10,6 @@ describe('Content component', () => {
   })
 
   it('is of type array', () => {
-    expect(typeof component.props.transcription.type).toBe('function')
+    expect(typeof component.props.contenturls.type).toBe('function')
   })
 })

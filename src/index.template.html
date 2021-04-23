@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title><%= Title %></title>
 
     <meta charset="utf-8">
     <meta name="description" content="<%= htmlWebpackPlugin.options.productDescription %>">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>">
-
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
   </head>
 
   <body>
     <noscript>
-      <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but <%= Title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
 
     <!--
@@ -31,56 +29,68 @@
     -->
     <script id="tido-config" type="application/json">
     {
-      "entrypoint": "",
+      "entrypoint": "https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
+      "annotations": {
+        "show": true,
+        "types": [
+          {
+            "content-type": "Person",
+            "icon": "fasUser",
+            "label": "Names"
+          },
+          {
+            "content-type": "Place",
+            "icon": "fasMapMarkerAlt",
+            "label": "Places"
+          },
+          {
+            "content-type": "Editorial Comment",
+            "icon": "fasComment",
+            "label": "Comments"
+          }
+        ]
+      },
       "colors": {
         "primary": "",
         "secondary": "",
         "accent": ""
       },
       "headers": {
-        "all": true,
+        "show": true,
         "info": true,
         "navigation": true,
-        "panelheadings": true,
         "toggle": true
       },
       "labels": {
         "item": "Sheet",
         "manifest": "Manuscript"
       },
-      "meta": {
-        "collection": {
-          "all": true
-        },
-        "manifest": {
-          "all": true
-        },
-        "item": {
-          "all": true
-        }
-      },
       "panels": [
         {
-          "connector": [1],
-          "panel_label": "Contents",
+          "connector": [1, 2],
+          "heading": true,
+          "label": "Contents & Meta",
           "show": true,
           "toggle": true
         },
         {
           "connector": [3],
-          "panel_label": "Image",
+          "heading": true,
+          "label": "Image",
           "show": true,
           "toggle": true
         },
         {
           "connector": [4],
-          "panel_label": "Text",
+          "heading": true,
+          "label": "Text",
           "show": true,
           "toggle": true
         },
         {
-          "connector": [2],
-          "panel_label": "Metadata",
+          "connector": [5],
+          "heading": true,
+          "label": "Annotations",
           "show": true,
           "toggle": true
         }
