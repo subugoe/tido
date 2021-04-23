@@ -213,19 +213,16 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
         "types": [
           {
             "content-type": "Person",
-            "css": "fa-user",
             "icon": "fasUser",
             "label": "Names"
           },
           {
             "content-type": "Place",
-            "css": "fa-map-marker-alt",
             "icon": "fasMapMarkerAlt",
             "label": "Places"
           },
           {
             "content-type": "Editorial Comment",
-            "css": "fa-comment",
             "icon": "fasComment",
             "label": "Comments"
           }
@@ -251,25 +248,29 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
           "connector": [1, 2],
           "heading": true,
           "label": "Contents & Meta",
-          "show": true
+          "show": true,
+          "toggle": true
         },
         {
           "connector": [3],
           "heading": true,
           "label": "Image",
-          "show": true
+          "show": true,
+          "toggle": true
         },
         {
           "connector": [4],
           "heading": true,
           "label": "Text",
-          "show": true
+          "show": true,
+          "toggle": true
         },
         {
           "connector": [5],
           "heading": true,
           "label": "Annotations",
-          "show": true
+          "show": true,
+          "toggle": true
         }
       ],
       "rtl": false,
@@ -310,15 +311,11 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
         refers to the **x-content-type** in the **API** you are using.
 
-        **Note**: This content-type should match it's API-counterpart explicitely, otherwise TIDO isn't able to show the related annotations.
-
-    - **css**
-
-        TIDO uses [Font Awesome Icons](https://www.fontawesome.com). Provide a css class that fits your needs.
+        **Note**: This content-type has to match it's API-counterpart explicitely, otherwise TIDO isn't able to show the related annotations.
 
     - **icon**
 
-        same as above but the related SVG (both are needed)
+        TIDO uses [Font Awesome Icons](https://fontawesome.com/). Choose an icon that fits your needs.
 
     - **label**
 
@@ -398,25 +395,29 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     "connector": [1],
     "heading": true,
     "label": "Contents",
-    "show": true
+    "show": true,
+    "toggle": true
   },
   {
     "connector": [3],
     "heading": true,
     "label": "Image",
-    "show": true
+    "show": true,
+    "toggle": true
   },
   {
     "connector": [4],
     "heading": true,
     "label": "Text",
-    "show": true
+    "show": true,
+    "toggle": true
   },
   {
     "connector": [2],
     "heading": true,
     "label": "Metadata",
-    "show": true
+    "show": true,
+    "toggle": true
   }
 ],
 
@@ -449,7 +450,8 @@ Each object inside that constant consists of similar keys: `connector`, `heading
       "connector": [2, 4, 5],
       "heading": true,
       "label": "Meta, Text & Anno",
-      "show": true
+      "show": true,
+      "toggle": true
     }
   ```
 
