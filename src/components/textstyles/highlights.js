@@ -42,16 +42,4 @@ const textLabels = [
   },
 ];
 
-const textStyles = textLabels.map((t) => t.classes);
-
-export const getClasses = (html) => {
-  const result = {};
-
-  textStyles.forEach((className) => {
-    result[className] = html.includes(`class="${className}"`);
-  });
-
-  return result;
-};
-
 export default textLabels;

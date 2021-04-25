@@ -59,13 +59,13 @@
       v-html="content"
     />
 
-    <KeyDialog class="key-button" :map="availableClasses" />
+    <KeyDialog class="key-button q-pa-sm" :map="availableClasses" />
   </div>
 </template>
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
-import { getClasses } from '@/components/textstyles/highlights.js';
+import textLabels from '@/components/textstyles/highlights.js';
 import KeyDialog from '@/components/textstyles/keysdialog.vue';
 
 export default {
@@ -122,7 +122,7 @@ export default {
     },
     activeTab(url) {
       this.request(url, 'text').then((data) => {
-        this.availableClasses = getClasses(data);
+        this.availableClasses = this.getClasses(data);
 
         if (this.supportType) {
           this.getSupport(this.manifests[0].support);
@@ -178,6 +178,16 @@ export default {
             document.head.appendChild(supportUrl);
           });
       });
+    },
+    getClasses(html) {
+      const result = {};
+      const textStyles = textLabels.map((t) => t.classes);
+
+      textStyles.forEach((className) => {
+        result[className] = html.includes(`class="${className}"`);
+      });
+
+      return result;
     },
   },
 };

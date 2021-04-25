@@ -8,7 +8,7 @@
     >
       <q-icon
         :name="fasCompass"
-        class="q-pr-md"
+        class="q-pr-sm"
         size="xs"
       />
       <div>
