@@ -95,7 +95,7 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
-  height: 10vh;
+  height: 100vh;
 }
 
 .item-content {
