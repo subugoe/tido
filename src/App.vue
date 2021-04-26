@@ -252,7 +252,7 @@ export default {
       *
       * @return array
       */
-    getContentUrl(content) {
+    getContentUrls(content) {
       const urls = [];
 
       if (Array.isArray(content) && content.length) {
@@ -279,8 +279,12 @@ export default {
         .then((data) => {
           this.item = data;
 
-          this.contenturls = this.getContentUrl(data.content);
+          this.contenturls = this.getContentUrls(data.content);
           this.imageurl = data.image.id || '';
+
+          if (data.annotationCollection) {
+            this.getAnnotations(data.annotationCollection);
+          }
         });
     },
     /**
