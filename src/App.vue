@@ -1,6 +1,7 @@
 <template>
   <q-layout
     id="q-app"
+    class="root viewport"
     view="hHh Lpr fFf"
     class="app"
     style="height: 100vh;"
@@ -352,17 +353,13 @@ export default {
 </script>
 
 <style scoped>
-.app {
+.root {
   display: flex;
   flex: 1;
   flex-direction: column;
   overflow: hidden;
 }
 
-.root {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
+  height: 100vh;
 }
 </style>
