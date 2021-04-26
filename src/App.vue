@@ -21,6 +21,7 @@
 
     <q-page-container class="root">
       <router-view
+        :annotations="annotations"
         :collection="collection"
         :config="config"
         :contenttypes="contentTypes"
@@ -51,6 +52,7 @@ export default {
   mixins: [Panels],
   data() {
     return {
+      annotations: [],
       collection: {},
       collectiontitle: '',
       config: {},
@@ -124,6 +126,85 @@ export default {
       const data = await (responsetype === 'text' ? response.text() : response.json());
 
       return data;
+    },
+    /**
+    * filter the annotation IDs and the matching text part of the current item
+    *
+    * caller: *getAnnotations()*
+    *
+    * @param array annotations
+    *
+    * @return array identifiers
+    */
+    filterAnnotations(annotations) {
+      const identifiers = [];
+
+      annotations.forEach((annotation) => {
+        const id = this.getAnnotationId(annotation);
+        const text = this.getAnnotationText(id);
+
+        identifiers.push({
+          id,
+          contenttype: annotation.body['x-content-type'],
+          description: annotation.body.value,
+          selected: this.config.annotations.show,
+          text,
+        });
+      });
+
+      return identifiers;
+    },
+
+    /**
+    * get the annotation id/s of the current item
+    *
+    * caller: *filterAnnotations()*
+    *
+    * @param object annotation
+    *
+    * @return string
+    */
+    getAnnotationId(annotation) {
+      const split = annotation.target.id.split('/');
+
+      return split[split.length - 1];
+    },
+    /**
+      * match annotation against it's text counterpart
+      * caller: *filterAnnotations()*
+      *
+      * @param string id
+      *
+      * @return string
+      */
+    getAnnotationText(id) {
+      const element = document.getElementById(id);
+
+      return element !== null
+        ? element.innerText
+        : false;
+    },
+    /**
+      * get annotations of the current item
+      * caller: *getItemData()*
+      *
+      * @param string url
+      */
+    getAnnotations(url) {
+      this.request(url)
+        .then((annotations) => {
+          if (annotations.annotationCollection.first) {
+            this.request(annotations.annotationCollection.first)
+              .then((current) => {
+                if (current.annotationPage.items && current.annotationPage.items.length) {
+                  this.annotations = this.filterAnnotations(current.annotationPage.items);
+                } else this.annotations = [];
+              });
+          }
+        })
+        .catch(() => {
+          this.$q.notify({ message: 'No annotations available' });
+        });
     },
     /**
       * get collection data according to 'entrypoint'
