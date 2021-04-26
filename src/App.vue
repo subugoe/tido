@@ -139,14 +139,12 @@ export default {
 
       annotations.forEach((annotation) => {
         const id = this.getAnnotationId(annotation);
-        const text = this.getAnnotationText(id);
 
         identifiers.push({
           id,
           contenttype: annotation.body['x-content-type'],
           description: annotation.body.value,
           selected: this.config.annotations.show,
-          text,
         });
       });
 
@@ -166,21 +164,6 @@ export default {
       const split = annotation.target.id.split('/');
 
       return split[split.length - 1];
-    },
-    /**
-      * match annotation against it's text counterpart
-      * caller: *filterAnnotations()*
-      *
-      * @param string id
-      *
-      * @return string
-      */
-    getAnnotationText(id) {
-      const element = document.getElementById(id);
-
-      return element !== null
-        ? element.innerText
-        : false;
     },
     /**
       * get annotations of the current item
