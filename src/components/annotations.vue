@@ -24,8 +24,8 @@ export default {
   name: 'Annotations',
   props: {
     annotations: {
-      type: Object,
-      default: () => {},
+      type: Array,
+      default: () => [],
     },
   },
   data() {
