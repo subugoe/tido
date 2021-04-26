@@ -31,7 +31,27 @@
     -->
     <script id="tido-config" type="application/json">
     {
-      "entrypoint": "",
+			"entrypoint": "https://ahikar-test.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
+      "annotations": {
+        "show": true,
+        "types": [
+          {
+            "content-type": "Person",
+            "icon": "fasUser",
+            "label": "Names"
+          },
+          {
+            "content-type": "Place",
+            "icon": "fasMapMarkerAlt",
+            "label": "Places"
+          },
+          {
+            "content-type": "Editorial Comment",
+            "icon": "fasComment",
+            "label": "Comments"
+          }
+        ]
+      },
       "colors": {
         "primary": "",
         "secondary": "",
