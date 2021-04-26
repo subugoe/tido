@@ -5,7 +5,7 @@ const textLabels = [
   },
   {
     classes: 'gap',
-    label: 'Represents words between the breaking words.',
+    label: 'Represents a passage where material has been omitted.',
   },
   {
     classes: 'header',

@@ -24,7 +24,7 @@
       <q-card :class="$q.dark.isActive ? 'bg-black' : 'bg-white text-black'">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6 text-uppercase">
-            KEYS
+            Keys
           </div>
         </q-card-section>
 
@@ -54,11 +54,11 @@
           >
             <q-icon
               :name="fasWindowClose"
-              class="q-pr-sm"
+              class="q-pr-sm text-uppercase"
               size="xs"
             />
             <div>
-              CLOSE
+              Close
             </div>
           </q-btn>
         </q-card-actions>
