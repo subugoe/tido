@@ -3,8 +3,6 @@
     id="q-app"
     class="root viewport"
     view="hHh Lpr fFf"
-    class="app"
-    style="height: 100vh;"
   >
     <Header
       v-if="config.headers.all"
