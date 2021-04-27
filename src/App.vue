@@ -177,7 +177,7 @@ export default {
           if (annotations.annotationCollection.first) {
             this.request(annotations.annotationCollection.first)
               .then((current) => {
-                if (current.annotationPage.items && current.annotationPage.items.length) {
+                if (current.annotationPage.items.length) {
                   this.annotations = this.filterAnnotations(current.annotationPage.items);
                 } else this.annotations = [];
               });
