@@ -6,9 +6,11 @@
     <q-list>
       <q-item
         v-for="annotation in filterAnnotations(annotations)"
-        :key="annotation.id"
-        v-ripple
+        :id="'list' + stripAnnotationId(annotation.target.id)"
+        :key="stripAnnotationId(annotation.id)"
+        class="aktiv"
         clickable
+        @click="toggle(stripAnnotationId(annotation.target.id))"
       >
         <q-item-section avatar>
           <q-icon :name="getIcon(annotation.body['x-content-type'])" />
@@ -40,9 +42,7 @@ export default {
     },
   },
   data() {
-    return {
-      test: [],
-    };
+    return {};
   },
   created() {
     this.icons = Icons;
@@ -54,9 +54,13 @@ export default {
       this.config.annotations.types.forEach((item) => array.push(item.contenttype));
       return array;
     },
+
+    getIconName(contenttype) {
+      return this.config.annotations.types.filter((item) => item.contenttype === contenttype).[0].icon;
+    },
+
     getIcon(contenttype) {
-      const result = this.config.annotations.types.filter((item) => item.contenttype === contenttype);
-      return Icons.[result[0].icon];
+      return Icons.[this.getIconName(contenttype)];
     },
 
     /**
@@ -70,6 +74,8 @@ export default {
       annotations.forEach((annotation) => {
         if (this.availableTypes().filter((item) => item === annotation.body['x-content-type']).length > 0) {
           arr.push(annotation);
+          // function is triggered on list rendering, so we use it as init call to set up the text
+          this.setText(annotation);
         }
       });
       return arr;
@@ -80,13 +86,66 @@ export default {
     * @param object annotation
     * @return string
     */
-    getAnnotationId(annotation) {
-      const split = annotation.target.id.split('/');
+    stripAnnotationId(string) {
+      const split = string.split('/');
       return split[split.length - 1];
+    },
+
+    toggle(id) {
+      document.getElementById(id).classList.toggle('annotation-disabled');
+      document.getElementById(`list${id}`).classList.toggle('aktiv');
+    },
+
+    setText(annotation) {
+      const id = this.stripAnnotationId(annotation.target.id);
+      const contenttype = annotation.body['x-content-type'];
+      const textElement = document.getElementById(id);
+      const newSvg = this.createSVG(this.getIconName(contenttype));
+
+      textElement.prepend(newSvg);
+      textElement.classList.toggle('annotation');
+    },
+
+    createSVG(name) {
+      const [path, viewbox] = Icons[name].split('|');
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('class', 'q-icon q-ml-sm');
+      svg.setAttribute('focusable', 'false');
+      svg.setAttribute('role', 'presentation');
+      svg.setAttribute('viewBox', viewbox);
+
+      const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+      newPath.setAttribute('d', path);
+      svg.appendChild(newPath);
+
+      return svg;
     },
   },
 };
 </script>
 
-<style scoped>
+<style>
+
+/* not in scope to style the text */
+.annotation {
+  border-bottom: 2px solid;
+  padding-bottom: 2px;
+  white-space: nowrap;
+}
+
+.annotation-disabled {
+  border-bottom: 0;
+  padding-bottom: inherit;
+}
+
+.annotation-disabled > svg {
+  display: none;
+}
+
+.aktiv {
+  background-color: whitesmoke;
+}
 </style>
