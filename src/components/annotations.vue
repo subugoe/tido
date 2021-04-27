@@ -3,7 +3,9 @@
     v-if="annotations.length"
     class="q-ma-sm annotations"
   >
-    <q-list>
+    <q-list
+      class="full-width"
+    >
       <q-item
         v-for="annotation in annotations"
         :key="annotation.id"
@@ -56,9 +58,4 @@ export default {
 </script>
 
 <style scoped>
-.annotations {
-  height: 100vh;
-  overflow: auto;
-  position: absolute;
-}
 </style>
