@@ -1,25 +1,32 @@
 <template>
-  <div>
+  <div
+    v-if="annotations.length"
+    class="q-ma-sm annotations"
+  >
     <q-list>
       <q-item
-        v-for="anno in Object.entries(annotations)"
-        :key="anno.id"
+        v-for="annotation in annotations"
+        :key="annotation.id"
+        v-ripple
+        clickable
       >
+        <q-item-section avatar>
+          <q-icon :name="getIcon(annotation.contenttype)" />
+        </q-item-section>
         <q-item-section>
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
-            {{ anno[0] }}
-          </q-item-label>
-          <q-item-label>{{ anno[1] }}</q-item-label>
+          {{ annotation.description }}
         </q-item-section>
       </q-item>
     </q-list>
   </div>
+  <div v-else>
+    <p>One does not simply show annotations.</p>
+  </div>
 </template>
 
 <script>
+import * as Icons from '@quasar/extras/fontawesome-v5';
+
 export default {
   name: 'Annotations',
   props: {
@@ -27,12 +34,33 @@ export default {
       type: Array,
       default: () => [],
     },
+    config: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {};
   },
-  created() {},
+  created() {
+    this.icons = Icons;
+  },
   mounted() {},
-  methods: {},
+  methods: {
+    getIcon(contenttype) {
+      console.log(contenttype);
+      console.log(this.config.annotations.types);
+      const result = this.config.annotations.types.filter((item) => item.contenttype === contenttype);
+      return Icons.[result[0].icon];
+    },
+  },
 };
 </script>
+
+<style scoped>
+.annotations {
+  height: 100vh;
+  overflow: auto;
+  position: absolute;
+}
+</style>
