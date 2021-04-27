@@ -48,8 +48,6 @@ export default {
   mounted() {},
   methods: {
     getIcon(contenttype) {
-      console.log(contenttype);
-      console.log(this.config.annotations.types);
       const result = this.config.annotations.types.filter((item) => item.contenttype === contenttype);
       return Icons.[result[0].icon];
     },
