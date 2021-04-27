@@ -411,7 +411,7 @@ export default {
 .annotation {
   border-bottom: 2px solid;
   cursor: pointer;
-  padding-bottom: 4px;
+  padding-bottom: 8px;
   white-space: nowrap;
 }
 
@@ -442,9 +442,9 @@ export default {
 }
 
 .q-expansion-item--expanded {
+  background: #d3d3d3;
   bottom: 0;
-  background: lightgray;
-  color: black;
+  color: #000;
   position: sticky;
 }
 </style>

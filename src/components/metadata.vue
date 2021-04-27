@@ -31,9 +31,8 @@
             {{ mCollection.id }}
           </q-item-label>
 
-          <q-item-label>
-            {{ mCollection.data }}
-          </q-item-label>
+          <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
+          <q-item-label v-html="mCollection.data" />
         </q-item-section>
       </q-item>
     </q-list>
@@ -62,15 +61,14 @@
             {{ mManifest.id }}
           </q-item-label>
 
-          <q-item-label>
-            {{ mManifest.data }}
-          </q-item-label>
+          <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
+          <q-item-label v-html="mManifest.data" />
         </q-item-section>
       </q-item>
 
       <div v-if="manifests[sequenceindex].metadata">
         <q-item
-          v-for="(meta, idx) in manifests[sequenceindex].metadata"
+          v-for="(meta, idx) in manifestsMetadata"
           :key="idx"
           class="q-mb-xs no-padding"
         >
@@ -82,7 +80,8 @@
               {{ meta.key }}
             </q-item-label>
 
-            <q-item-label>{{ meta.value }}</q-item-label>
+            <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
+            <q-item-label v-html="meta.value" />
           </q-item-section>
         </q-item>
       </div>
@@ -112,9 +111,8 @@
             {{ mItem.id }}
           </q-item-label>
 
-          <q-item-label>
-            {{ mItem.data }}
-          </q-item-label>
+          <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
+          <q-item-label v-html="mItem.data" />
         </q-item-section>
       </q-item>
     </q-list>
@@ -160,12 +158,18 @@ export default {
     metadataCollection() {
       const metadata = [
         { id: 'Title', data: this.collection.title[0].title },
-        { id: 'Collector', data: this.collection.collector.name },
       ];
+      const collectionDescription = this.getMetadataLinks(this.collection.description);
+      const collectorName = this.getMetadataLinks(this.collection.collector.name);
+
+      if (this.collection.collector) {
+        metadata.push({ id: 'Collector', data: collectorName });
+      }
 
       if (this.collection.description) {
-        metadata.push({ id: 'Description', data: this.collection.description });
+        metadata.push({ id: 'Description', data: collectionDescription });
       }
+
       return metadata;
     },
     metadataItem() {
@@ -182,24 +186,42 @@ export default {
         );
       }
       if (this.item.image && this.item.image.license) {
+        const imageLicenseId = this.getMetadataLinks(this.item.image.license.id);
+        const imageLicenseNotes = this.getMetadataLinks(this.item.image.license.notes);
+
         metadata.push(
-          { id: 'Image License', data: this.item.image.license.id },
-          { id: 'Image Notes', data: this.item.image.license.notes },
+          { id: 'Image License', data: imageLicenseId },
+          { id: 'Image Notes', data: imageLicenseNotes },
         );
       }
 
       return metadata;
     },
     metadataManifest() {
+      const manifestLabel = this.getMetadataLinks(this.manifests[this.sequenceindex].label);
       const metadata = [];
 
       metadata.push(
-        { id: 'Label', data: this.manifests[this.sequenceindex].label },
+        { id: 'Label', data: manifestLabel },
       );
 
       if (Array.isArray(this.manifests[this.sequenceindex].license)) {
+        const manifestLicenseNotes = this.getMetadataLinks(this.manifests[this.sequenceindex].license[0].id);
+
         metadata.push(
-          { id: 'License', data: this.manifests[this.sequenceindex].license[0].id },
+          { id: 'License', data: manifestLicenseNotes },
+        );
+      }
+
+      return metadata;
+    },
+    manifestsMetadata() {
+      const metadata = [];
+      const metadataValue = this.getMetadataLinks(this.manifests[this.sequenceindex].metadata[0].value);
+
+      if (Array.isArray(this.manifests[this.sequenceindex].metadata)) {
+        metadata.push(
+          { key: this.manifests[this.sequenceindex].metadata[0].key, value: metadataValue },
         );
       }
 
@@ -221,6 +243,37 @@ export default {
         }
       });
     });
+  },
+  methods: {
+    getMetadataLinks(metadataLinks) {
+      const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
+      const urls = metadataLinks.match(regex);
+
+      if (urls) {
+        urls.forEach((url) => {
+          const parts = url.split('/');
+
+          metadataLinks = metadataLinks.replace(url,
+            `<a
+              href="${url}"
+              rel='noopener noreferrer'
+              style="text-decoration: none;"
+              target="_blank"
+              title="${parts[parts.length - 1]} - open in a new tab or window"
+            >
+              <span>${parts[parts.length - 1]}</span>
+              <svg  viewBox="0 0 512 512" height="10" width="10">
+                <path
+                  fill="currentColor"
+                  d="M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"
+                />
+              </svg>
+            </a>`);
+        });
+      }
+
+      return metadataLinks;
+    },
   },
 };
 </script>
