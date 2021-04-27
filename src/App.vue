@@ -125,50 +125,10 @@ export default {
 
       return data;
     },
-    /**
-    * filter the annotation IDs and the matching text part of the current item
-    *
-    * caller: *getAnnotations()*
-    *
-    * @param array annotations
-    *
-    * @return array identifiers
-    */
-    filterAnnotations(annotations) {
-      const identifiers = [];
 
-      annotations.forEach((annotation) => {
-        const id = this.getAnnotationId(annotation);
-
-        identifiers.push({
-          id,
-          contenttype: annotation.body['x-content-type'],
-          description: annotation.body.value,
-          selected: this.config.annotations.show,
-        });
-      });
-
-      return identifiers;
-    },
-
-    /**
-    * get the annotation id/s of the current item
-    *
-    * caller: *filterAnnotations()*
-    *
-    * @param object annotation
-    *
-    * @return string
-    */
-    getAnnotationId(annotation) {
-      const split = annotation.target.id.split('/');
-
-      return split[split.length - 1];
-    },
     /**
       * get annotations of the current item
       * caller: *getItemData()*
-      *
       * @param string url
       */
     getAnnotations(url) {
@@ -178,7 +138,7 @@ export default {
             this.request(annotations.annotationCollection.first)
               .then((current) => {
                 if (current.annotationPage.items.length) {
-                  this.annotations = this.filterAnnotations(current.annotationPage.items);
+                  this.annotations = current.annotationPage.items;
                 } else this.annotations = [];
               });
           }
