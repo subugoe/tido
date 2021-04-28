@@ -168,4 +168,10 @@ export default {
   overflow: hidden;
 }
 
+.item-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: scroll;
+}
 </style>
