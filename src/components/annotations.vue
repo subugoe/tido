@@ -442,9 +442,11 @@ export default {
 }
 
 .q-expansion-item--expanded {
+  /* TODO: use Quasar color variables */
+  background: D3D3D3;
   bottom: 0;
-  background: lightgray;
-  color: black;
+  /* TODO: use Quasar color variables */
+  color: #000;
   position: sticky;
 }
 </style>
