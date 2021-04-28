@@ -80,6 +80,7 @@ pages:
   script:
    - bash .ci-scripts/update-artifacts.sh
    - bash .ci-scripts/gitlab-remove-old-artifacts.sh
+   - if [[ $CONTINUE_BUILD == "false" && ! -d dist ]]; then bash .ci-scripts/set-404-page.sh; fi
   environment:
     name: ${CI_COMMIT_REF_SLUG}
     url: https://subugoe.pages.gwdg.de/emo/Qviewer/${CI_COMMIT_REF_SLUG}/
