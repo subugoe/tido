@@ -9,6 +9,7 @@
       <q-icon
         size="xs"
         :name="fasInfoCircle"
+        :color="$q.dark.isActive ? 'bg-black' : 'accent'"
       />
     </q-btn>
 
