@@ -5,22 +5,24 @@
   >
     <q-list>
       <q-item
-        v-for="annotation in filterAnnotations(annotations)"
+        v-for="annotation in filterAnnotationTypes(annotations)"
         :id="'list' + stripAnnotationId(annotation.target.id)"
         :key="stripAnnotationId(annotation.id)"
-        class="aktiv"
+        class="active"
         clickable
         @click="toggle(stripAnnotationId(annotation.target.id))"
       >
         <q-item-section avatar>
           <q-icon :name="getIcon(annotation.body['x-content-type'])" />
         </q-item-section>
+
         <q-item-section>
           {{ annotation.body.value }}
         </q-item-section>
       </q-item>
     </q-list>
   </div>
+
   <div v-else>
     <p>One does not simply show annotations.</p>
   </div>
@@ -42,79 +44,31 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+
+    };
+  },
+  computed: {
+    configuredTypes() {
+      const types = [];
+      this.config.annotations.types.forEach((type) => types.push(type.contenttype));
+
+      return types;
+    },
   },
   created() {
     this.icons = Icons;
   },
-  mounted() {},
   methods: {
-    availableTypes() {
-      const array = [];
-      this.config.annotations.types.forEach((item) => array.push(item.contenttype));
-      return array;
-    },
-
-    getIconName(contenttype) {
-      return this.config.annotations.types.filter((item) => item.contenttype === contenttype).[0].icon;
-    },
-
-    getIcon(contenttype) {
-      return Icons.[this.getIconName(contenttype)];
-    },
-
-    /**
-    * filter the annotation for configured ones
-    * TODO: move to computed?
-    * @param array annotations
-    * @return array annotations without unconfigured ones.
-    */
-    filterAnnotations(annotations) {
-      const arr = [];
-      annotations.forEach((annotation) => {
-        if (this.availableTypes().filter((item) => item === annotation.body['x-content-type']).length > 0) {
-          arr.push(annotation);
-          // function is triggered on list rendering, so we use it as init call to set up the text
-          this.setText(annotation);
-        }
-      });
-      return arr;
-    },
-
-    /**
-    * get the annotation id/s of the current item
-    * @param object annotation
-    * @return string
-    */
-    stripAnnotationId(string) {
-      const split = string.split('/');
-      return split[split.length - 1];
-    },
-
-    toggle(id) {
-      document.getElementById(id).classList.toggle('annotation-disabled');
-      document.getElementById(`list${id}`).classList.toggle('aktiv');
-    },
-
-    setText(annotation) {
-      const id = this.stripAnnotationId(annotation.target.id);
-      const contenttype = annotation.body['x-content-type'];
-      const textElement = document.getElementById(id);
-      const newSvg = this.createSVG(this.getIconName(contenttype));
-
-      textElement.prepend(newSvg);
-      textElement.classList.toggle('annotation');
-    },
-
     createSVG(name) {
-      const [path, viewbox] = Icons[name].split('|');
+      const [path, viewBox] = Icons[name].split('|');
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
       svg.setAttribute('aria-hidden', 'true');
       svg.setAttribute('class', 'q-icon q-ml-sm');
       svg.setAttribute('focusable', 'false');
       svg.setAttribute('role', 'presentation');
-      svg.setAttribute('viewBox', viewbox);
+      svg.setAttribute('viewBox', viewBox);
 
       const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 
@@ -123,11 +77,67 @@ export default {
 
       return svg;
     },
+
+    /**
+    * TODO: discuss the goal of this function. It shouldn't turn computed, since it calls another method => setText()
+    *
+    * filter the configured annotation types (index.html)
+    *
+    * @return array of annotations excluding unconfigured ones
+    */
+    filterAnnotationTypes() {
+      const types = [];
+      this.annotations.forEach((annotation) => {
+        if (this.configuredTypes.filter((type) => type === annotation.body['x-content-type']).length > 0) {
+          types.push(annotation);
+          // function is triggered on list rendering, so we use it as init call to set up the text
+          this.setText(annotation);
+        }
+      });
+      return types;
+    },
+
+    getIcon(contentType) {
+      return Icons[this.getIconName(contentType)];
+    },
+
+    getIconName(contentType) {
+      return this.config.annotations.types.filter((annotation) => annotation.contenttype === contentType)[0].icon;
+    },
+
+    setText(annotation) {
+      const contentType = annotation.body['x-content-type'];
+      const svg = this.createSVG(this.getIconName(contentType));
+
+      const id = this.stripAnnotationId(annotation.target.id);
+      const textElement = document.getElementById(id);
+
+      textElement.prepend(svg);
+      textElement.classList.toggle('annotation');
+    },
+
+    /**
+    * get the annotation id of the current item
+    *
+    * @param string url
+    * @return string
+    */
+    stripAnnotationId(url) {
+      return url.split('/').pop();
+    },
+
+    toggle(id) {
+      document.getElementById(id).classList.toggle('annotation-disabled');
+      document.getElementById(`list${id}`).classList.toggle('active');
+    },
   },
 };
 </script>
 
 <style>
+.active {
+  background-color: whitesmoke;
+}
 
 /* not in scope to style the text */
 .annotation {
@@ -143,9 +153,5 @@ export default {
 
 .annotation-disabled > svg {
   display: none;
-}
-
-.aktiv {
-  background-color: whitesmoke;
 }
 </style>
