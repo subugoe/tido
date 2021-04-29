@@ -7,6 +7,7 @@
       <q-icon
         :name="fasLanguage"
         size="md"
+        :color="$q.dark.isActive ? 'bg-black' : 'accent'"
       />
 
       <q-menu
