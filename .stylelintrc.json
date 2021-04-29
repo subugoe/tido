@@ -7,6 +7,10 @@
         "stylelint-no-unsupported-browser-features"
     ],
     "rules": {
+        "plugin/8-point-grid": {
+            "base": 8,
+            "allowlist": ["4px", "2px"]
+        },
         "selector-class-pattern": "[a-z]+",
         "max-nesting-depth": [
             2,
