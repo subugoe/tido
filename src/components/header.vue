@@ -4,11 +4,16 @@
       <q-toolbar>
         <Infobar
           v-if="config.headers.info && manifests.length"
-          class="col-xs-12"
+          class="col-xs-9"
           :collectiontitle="collectiontitle"
           :item="item"
           :manifests="manifests"
         />
+        <div class="row no-wrap justify-end col-xs-3">
+          <Language v-if="standalone" />
+          <Color :projectcolors="projectcolors" />
+          <Softwareinfo />
+        </div>
       </q-toolbar>
 
       <div>
@@ -26,9 +31,6 @@
             v-if="config.headers.toggle"
             :panels="panels"
           />
-          <Language v-if="standalone" />
-          <Color :projectcolors="projectcolors" />
-          <Softwareinfo />
         </q-toolbar>
       </div>
     </div>
