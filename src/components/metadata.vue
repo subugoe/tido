@@ -165,7 +165,7 @@ export default {
       };
 
       return [
-        ...this.collection.title.map((collectionTitle) => (
+        ...this.collection.title.filter((collection) => collection).map((collectionTitle) => (
           { id: mappings[collectionTitle.type] || 'Title', data: collectionTitle.title }
         )),
         { id: 'Collector', data: this.collection?.collector?.name },
