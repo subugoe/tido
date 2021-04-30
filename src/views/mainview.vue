@@ -17,11 +17,11 @@
       <q-separator />
 
       <!-- shows the nested tabs -->
-      <q-card
+      <div
         v-if="p.connector.length > 1"
-        flat
+        class="item-content"
       >
-        <div class="tabs-container item-content">
+        <div class="tabs-container">
           <q-tabs
             v-for="(tab, i) in p.connector"
             :key="`pt${i}`"
@@ -47,6 +47,7 @@
             v-for="(tab, idx) in p.connector"
             :key="`co${idx}`"
             :name="`tab${idx}`"
+            class="q-pa-none"
           >
             <component
               :is="tab.component"
@@ -55,7 +56,7 @@
             />
           </q-tab-panel>
         </q-tab-panels>
-      </q-card>
+      </div>
 
       <!-- shows the panels -->
       <div
@@ -150,12 +151,18 @@ export default {
   display: inline-block;
 }
 
-.tabs-container {
+.item {
   display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
 
-  > * {
-    flex: 1;
-  }
+.item-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .root {
@@ -165,11 +172,12 @@ export default {
   overflow: hidden;
 }
 
-.item {
+.tabs-container {
   display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
+
+  > * {
+    flex: 1;
+  }
 }
 
 </style>
