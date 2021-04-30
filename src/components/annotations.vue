@@ -79,8 +79,6 @@ export default {
     },
 
     /**
-    * TODO: discuss the goal of this function. It shouldn't turn computed, since it calls another method => setText()
-    *
     * filter the configured annotation types (index.html)
     *
     * @return array of annotations excluding unconfigured ones
