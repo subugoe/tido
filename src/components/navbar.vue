@@ -5,7 +5,6 @@
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex <= 0"
       size="xs"
-      style="font-size: 14px;"
       padding="xs"
       class="q-px-sm"
       @click="toggleSheet(--itemindex)"
@@ -23,7 +22,6 @@
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       :disabled="itemindex >= itemurls.length - 1"
       size="xs"
-      style="font-size: 14px;"
       padding="xs"
       class="q-px-sm"
       @click="toggleSheet(++itemindex)"
@@ -54,6 +52,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+button {
+  font-size: 12px !important;
+}
+
 button:first-of-type {
   @media (min-width: 600px) {
     margin-right: 8px;
