@@ -95,14 +95,12 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .item-content {
   display: flex;
-  flex: 1;
+  flex: 0 0 auto;
   flex-direction: column;
-  overflow: scroll;
-  padding: 8px;
+  overflow: auto;
 }
 </style>

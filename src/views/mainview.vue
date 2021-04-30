@@ -81,6 +81,10 @@ export default {
     Toolbar,
   },
   props: {
+    annotations: {
+      type: Array,
+      default: () => [],
+    },
     collection: {
       type: Object,
       default: () => {},
@@ -168,10 +172,4 @@ export default {
   overflow: hidden;
 }
 
-.item-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: scroll;
-}
 </style>
