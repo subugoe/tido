@@ -23,7 +23,7 @@
         :collection="collection"
         :config="config"
         :contenttypes="contentTypes"
-        :contenturls="contenturls"
+        :contenturls="contentUrls"
         :fontsize="fontsize"
         :imageurl="imageurl"
         :item="item"
@@ -55,7 +55,7 @@ export default {
       collectiontitle: '',
       config: {},
       contentTypes: [],
-      contenturls: [],
+      contentUrls: [],
       fontsize: 14,
       imageurl: '',
       isCollection: false,
@@ -222,7 +222,7 @@ export default {
         .then((data) => {
           this.item = data;
 
-          this.contenturls = this.getContentUrls(data.content);
+          this.contentUrls = this.getContentUrls(data.content);
           this.imageurl = data.image.id || '';
 
           if (data.annotationCollection) {
