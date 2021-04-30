@@ -98,6 +98,7 @@ export default {
 }
 
 .url-text {
-  display: inline-block;
+  display: flex;
+  padding-right: 4px;
 }
 </style>

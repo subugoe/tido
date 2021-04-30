@@ -175,7 +175,7 @@ export default {
     metadataItem() {
       return [
         { id: 'Label', data: this.item.n },
-        ...this.item.lang.map((item) => ({ id: 'Language', data: item })),
+        { id: 'Language', data: this.item.lang.join(',') },
         { id: 'Image License', data: this.item.image?.license?.id },
         { id: 'Image Notes', data: this.item.image?.license?.notes },
       ].filter((item) => item.data);
