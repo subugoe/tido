@@ -31,7 +31,27 @@
     -->
     <script id="tido-config" type="application/json">
     {
-      "entrypoint": "",
+			"entrypoint": "",
+      "annotations": {
+        "show": true,
+        "types": [
+          {
+            "contenttype": "Person",
+            "icon": "fasUser",
+            "label": "Names"
+          },
+          {
+            "contenttype": "Place",
+            "icon": "fasMapMarkerAlt",
+            "label": "Places"
+          },
+          {
+            "contenttype": "Editorial Comment",
+            "icon": "fasComment",
+            "label": "Comments"
+          }
+        ]
+      },
       "colors": {
         "primary": "",
         "secondary": "",
@@ -75,6 +95,12 @@
         {
           "connector": [4],
           "panel_label": "Text",
+          "show": true,
+          "toggle": true
+        },
+        {
+          "connector": [5],
+          "panel_label": "Annotations",
           "show": true,
           "toggle": true
         }

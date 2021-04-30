@@ -82,6 +82,10 @@ export default {
     Toolbar,
   },
   props: {
+    annotations: {
+      type: Array,
+      default: () => [],
+    },
     collection: {
       type: Object,
       default: () => {},
