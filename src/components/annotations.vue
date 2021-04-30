@@ -8,7 +8,7 @@
         v-for="annotation in filterAnnotationTypes(annotations)"
         :id="'list' + stripAnnotationId(annotation.target.id)"
         :key="stripAnnotationId(annotation.id)"
-        class="active"
+        class="bg-grey-2"
         clickable
         @click="toggle(stripAnnotationId(annotation.target.id))"
       >
@@ -126,17 +126,13 @@ export default {
 
     toggle(id) {
       document.getElementById(id).classList.toggle('annotation-disabled');
-      document.getElementById(`list${id}`).classList.toggle('active');
+      document.getElementById(`list${id}`).classList.toggle('bg-grey-2');
     },
   },
 };
 </script>
 
 <style>
-.active {
-  background-color: whitesmoke;
-}
-
 /* not in scope to style the text */
 .annotation {
   border-bottom: 2px solid;
