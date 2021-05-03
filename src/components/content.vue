@@ -187,7 +187,8 @@ export default {
     display: flex;
     flex: 1;
     flex-direction: column;
-    overflow: scroll;
+    height: 100vh;
+    overflow: auto;
     padding: 8px;
   }
 </style>

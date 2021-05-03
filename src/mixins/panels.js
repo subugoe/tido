@@ -1,3 +1,4 @@
+import Annotations from '@/components/annotations.vue';
 import Content from '@/components/content.vue';
 import Metadata from '@/components/metadata.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
@@ -25,7 +26,7 @@ export default {
         label: 'Text',
       },
       5: {
-        component: null,
+        component: Annotations,
         label: 'Annotations',
       },
     },

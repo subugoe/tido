@@ -7,6 +7,7 @@
       <q-icon
         :name="fasPalette"
         size="xs"
+        :color="$q.dark.isActive ? 'bg-black' : 'accent'"
       />
       <q-menu
         anchor="center middle"
