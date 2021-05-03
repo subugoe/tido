@@ -11,13 +11,16 @@
         :title="url.linkTitle + '- open in a new tab or window'"
         rel="noopener noreferrer"
         target="_blank"
+        class="content__link q-pl-xs q-pr-xs"
+        :class="$q.dark.isActive ? 'bg-grey-5 text-dark' : 'bg-secondary text-accent'"
       >
         <span>{{ url.linkTitle }}</span>
 
         <q-icon
           :name="fasExternalLinkAlt"
           size="12px"
-          class="q-pl-xs"
+          class="content__link-icon q-pl-xs"
+          :class="$q.dark.isActive ? 'bg-grey-5 text-dark' : 'text-accent'"
         />
       </a>
 
@@ -95,6 +98,34 @@ export default {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
+}
+
+.content__link,
+.content__link-icon {
+  text-decoration: none;
+
+  &:focus,
+  &:hover,
+  &:active,
+  &:focus svg,
+  &:hover svg,
+  &:active svg {
+    background-color: var(--q-color-accent) !important;
+    color: var(--q-color-secondary) !important;
+    fill: var(--q-color-secondary);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &:focus,
+    &:hover,
+    &:active
+    &:focus svg,
+    &:hover svg,
+    &:active svg {
+      background-color: var(--q-color-grey-0) !important;
+      color: var(--q-color-secondary) !important;
+    }
+  }
 }
 
 .url-text {
