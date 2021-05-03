@@ -31,9 +31,7 @@
             {{ mCollection.id }}
           </q-item-label>
 
-          <q-item-label>
-            {{ mCollection.data }}
-          </q-item-label>
+          <MetadataUrls :content="mCollection.data" />
         </q-item-section>
       </q-item>
     </q-list>
@@ -62,9 +60,7 @@
             {{ mManifest.id }}
           </q-item-label>
 
-          <q-item-label>
-            {{ mManifest.data }}
-          </q-item-label>
+          <MetadataUrls :content="mManifest.data" />
         </q-item-section>
       </q-item>
 
@@ -82,7 +78,7 @@
               {{ meta.key }}
             </q-item-label>
 
-            <q-item-label>{{ meta.value }}</q-item-label>
+            <MetadataUrls :content="meta.value" />
           </q-item-section>
         </q-item>
       </div>
@@ -115,9 +111,7 @@
             {{ mItem.id }}
           </q-item-label>
 
-          <q-item-label>
-            {{ mItem.data }}
-          </q-item-label>
+          <MetadataUrls :content="mItem.data" />
         </q-item-section>
       </q-item>
     </q-list>
@@ -125,9 +119,13 @@
 </template>
 
 <script>
+import MetadataUrls from '@/components/urls.vue';
 
 export default {
   name: 'Metadata',
+  components: {
+    MetadataUrls,
+  },
   props: {
     config: {
       type: Object,
@@ -161,52 +159,37 @@ export default {
       return this.manifests[this.sequenceindex].sequence.length;
     },
     metadataCollection() {
-      const metadata = [
-        { id: 'Title', data: this.collection.title[0].title },
-        { id: 'Collector', data: this.collection.collector.name },
-      ];
+      const mappings = {
+        main: 'Title',
+        sub: 'Subtitle',
+      };
 
-      if (this.collection.description) {
-        metadata.push({ id: 'Description', data: this.collection.description });
-      }
-      return metadata;
+      return [
+        ...this.collection.title.filter((collection) => collection).map((collectionTitle) => (
+          { id: mappings[collectionTitle.type] || 'Title', data: collectionTitle.title }
+        )),
+        { id: 'Collector', data: this.collection?.collector?.name },
+        { id: 'Description', data: this.collection?.description },
+      ].filter((collection) => collection.data);
     },
     metadataItem() {
-      const metadata = [];
-
-      if (this.item.n) {
-        metadata.push(
-          { id: 'Label', data: this.item.n },
-        );
-      }
-      if (this.item.lang) {
-        metadata.push(
-          { id: 'Language', data: this.item.lang[0] },
-        );
-      }
-      if (this.item.image && this.item.image.license) {
-        metadata.push(
-          { id: 'Image License', data: this.item.image.license.id },
-          { id: 'Image Notes', data: this.item.image.license.notes },
-        );
-      }
-
-      return metadata;
+      return [
+        { id: 'Label', data: this.item.n },
+        { id: 'Language', data: this.item.lang.join(',') },
+        { id: 'Image License', data: this.item.image?.license?.id },
+        { id: 'Image Notes', data: this.item.image?.license?.notes },
+      ].filter((item) => item.data);
     },
     metadataManifest() {
-      const metadata = [];
-
-      metadata.push(
+      return [
         { id: 'Label', data: this.manifests[this.sequenceindex].label },
-      );
-
-      if (Array.isArray(this.manifests[this.sequenceindex].license)) {
-        metadata.push(
-          { id: 'License', data: this.manifests[this.sequenceindex].license[0].id },
-        );
-      }
-
-      return metadata;
+        ...((this.manifests[this.sequenceindex].license || []).map((manifest) => (
+          { id: 'License', data: manifest.id }
+        ))),
+      ];
+    },
+    manifestsMetadata() {
+      return this.manifests[this.sequenceindex]?.metadata || [];
     },
   },
   mounted() {
@@ -224,11 +207,6 @@ export default {
         }
       });
     });
-  },
-  methods: {
-    showSeparator(condition) {
-      return condition === true;
-    },
   },
 };
 </script>
