@@ -2,6 +2,120 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.8.0...v1.9.0) (2021-05-03)
+
+
+### Features
+
+* add annotation highlight to text panel ([a17bd7c](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/a17bd7cb41701a5e517c8cd8272ca75306a62ece))
+* add basic configuration for annotation panel ([8a6239c](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/8a6239c52b55f965a454207f1622708b41a2d791))
+* add empty annotation panel ([9996d92](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/9996d9267bf1c84f756ff8d43c54d44606e300bb))
+* add icons to annotation list ([483b771](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/483b77178e467abd7d8a80fe7f5a3d13170c61b0))
+* allow 2 and 4 px values in CSS ([8cbdba1](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/8cbdba19b8567149d7b6a0031ab53222d1c01571))
+* completely added annotations panel ([91864dc](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/91864dc7d1e7d4c0ad5e48fff770a4fdccb9ff85))
+* configure to show either of the panel toggles ([ccec6d2](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/ccec6d28f9871aea15c19d5294837a2b1fa7b196))
+* create reusable urls component and implementing links in Metadata panel ([0d809e9](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/0d809e9968ba6c8edb5905c5e13dc088641fbc21))
+* getter for multiple html content serializations ([8ba887d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/8ba887d86a493cc41ea5c1fb8c167b2b230bd6a4))
+* harmonize object keys ([4bd9dc1](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/4bd9dc1ccb5c12cb1f2a6f8242f2bc695f9895b5))
+* move annotation data handling to component ([29fa9b5](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/29fa9b5a1346eee7434bdab6e7123289a02726a8))
+* prepare getter for annotations ([9db4bde](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/9db4bde8079c0049c1f8dc680524786f47e74169))
+* remove getter for annotation body text ([7325b1a](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/7325b1a2427e198a4f3a528582a2dc8a5fe1f8ed))
+
+
+### Bug Fixes
+
+* adjust panels and display content according to screen size ([6e77418](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/6e77418f9cc56c4d6309d25b9f16e8ad5620e9d0))
+* css syntax ([00aea79](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/00aea79b4c64d5d10e6a8c22b62d2e40e63d4af9))
+* make annotation list full-width ([08da9fe](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/08da9fe252d3845107ea1383a5d2122723008dde))
+* no-console ([c2157b6](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/c2157b65e993b53b157f573aefe00e021ef20200))
+* overflow added in mainview ([a1e64d6](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/a1e64d6beb3d95c8e6e2f1d48d04dcfb727d4e7e))
+* overflow/scroll bar issue ([3bc1475](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/3bc1475612f9bcf6fa9da9f5a547e1d6314f4aab))
+* set scroll bar at treeview ([bcb0ee9](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/bcb0ee93b1439f2192d5d2b0817b616e8ef7b170))
+* syntax ([ffaea9e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/ffaea9e2d4db4d72478c5f061b7b180af312f610))
+* typo ([5489f23](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/5489f236d957637c8509171d148bedf9965c3c48))
+
+
+### Reverts
+
+* re-introduce drop-down for panel toggle ([861467a](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/861467a0407fb0eb20e9d5c5cd62ab3ca21dd687))
+* Revert "refactor: moved drop-down logic to same component" ([072762b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/072762b4b3611c1dcecbf9bab7f2c833e2744461))
+
+
+### Tests
+
+* add entry point for testing purposes ([7deaa3e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/7deaa3ef80ce7d62f3a597f5ba3ecdc35195fcf6))
+
+
+### Styling
+
+* add no-padding ([8dcb61a](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/8dcb61a244f82691d6aa45195744cf581a8d443a))
+* added a style class in metadata panel ([a55825b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/a55825b19d279c378813617da33fd0a96b190f0e))
+* adjust icon colors in header ([323d5f9](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/323d5f9906264d60fd6ff4189e0efea9bd3f6484))
+* don't use CSS style ([6035fb7](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/6035fb73c7e162a0bf43b4e0ddc44c55be833028))
+* reposition icons in header ([a195f90](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/a195f90a9d269e8f3822262741c860238625ed0f))
+* save space in metadata panel ([45581fd](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/45581fda3b04ec9562399abfb916dd414626abb8))
+* save space in tree panel ([0cc9115](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/0cc91155fdfcf7c033585d20522efe6813ba0c89))
+
+
+### Improvements
+
+* hide the reset button when TIDO is configured to not show any toggle at all ([2ae93e9](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/2ae93e9389400db7c847adedd09e003d98a4fe8f))
+* switch to quasar color class names ([d7d5963](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/d7d596369eafdcb168bdb412756a2c21febb36a5))
+
+
+### Docs
+
+* adjust README.md ([c9c6332](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/c9c6332cee2ca731816f47f0c32f84e9d303dc27))
+
+
+### Chore
+
+* adhere to consistent camelCase ([49e3921](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/49e3921bb69ec10a5178c8c31e4536198d645a68))
+* condition statement ([df1a41d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/df1a41d3abddbd30145f8bcd66b35562c0c733c4))
+* improve readability, order methods by alpha, refactor some parts to be more JS-ish ([e2c0bac](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/e2c0bac709bb15615c3c8a6c30199a77bdbd2c6b))
+* merge branch 'develop' into feature/[#194](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/issues/194)-links-implement ([a2639eb](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/a2639eb3508b957dd5c172ad6c2b85baa4d14ea2))
+* merge dev state into feature ([6ec8900](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/6ec8900b78494549cc67c9e3093c339aba9954cc))
+* move [@style](https://gitlab.gwdg.de/style) to css class ([cd4b0a0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/cd4b0a043b188081464b80cf994b8b5214402e13))
+* remove entrypoint ([7dfaddc](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/7dfaddc5c62c030eb8179b5d4365aedfd9c21e03))
+* remove TODO after discussion ([134bf23](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/134bf23684b4b75530dd884d545926cd32ca403c))
+
+
+### Refactoring
+
+* adjusted color back and removed entrypoint fromindex template ([a24b74f](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/a24b74fd8fffc1b7ae00bab369e2a1e7f0ee1b25))
+* adjusted header toolbar and styles ([4ac6be6](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/4ac6be6d00418a29976f67d4ec41c701fd303842))
+* change print command ([f2ba241](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/f2ba2410a331da9c01a175327b9d52cb381c723c))
+* consider linting ([1195cac](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/1195cacb58ae8cbd5420005531f7a7484638ee75))
+* consider linting ([ee6f3ab](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/ee6f3ab02cb5da2ca6fc722f54eb3a8fa6e98acc))
+* refactor language and added a space to links ([b59b04e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/b59b04e1303df6c2ad0b3dfab0db9e393324c546))
+* remove dead stage ([95ec4a9](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/95ec4a9a838c4e8f52d624062e3d6757031c4f7d))
+* remove space character inside span ([4f36341](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/4f363419470f1bc2a59c85f12a4ca0af04f7baf7))
+* save space wherever possible ([4fdd5ea](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/4fdd5ea09fa3c6724c16f1aae87ec1ed95dbbcd4))
+* updated styles to make scrolls work back ([36ae6e2](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/36ae6e24c91a9c77695f7618e4d8d6d7b37055ae))
+* work-around to display useful text for links ([87ff816](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/87ff8166e32bcad9dc8fc0fef516ff2ae254f9db))
+
+
+### Continuos Integration
+
+* add draft for cleanup ([ed2bc1c](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/ed2bc1c1c44d59bf8b836e5d15185791ce0c01e7))
+* add script for 404 page ([a1f139b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/a1f139b65c469493073f262de34159552ae0a04b))
+* add set up for removing entry points ([9d49446](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/9d49446bc316323e47eec0dd24fe3d7cc6aa1036))
+* add template ([3aded7e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/3aded7edc7cfb14e7ab01290ec2befe6ebc5a55d))
+* add variables ([40b251b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/40b251be8e6888f8e29e35d0eb9d43696d23599e))
+* execute 404 page script on demand ([8923335](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/89233354cde0b98fe64ee7425474b917c297e7b7))
+* move scripts to separate dir ([acef885](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/acef8854fc0cf9f7235bfada7bbae3e29888660b))
+* move template to script ([45ad009](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/45ad0096301e258e08368030d99883ff7077dd53))
+* remove entry point ([61b2923](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/61b29236169b47248b828bc7beb73a451ad6d493))
+* remove entry point ([7d06f99](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/7d06f99a5ea85eed6fa1c8f3749f8b61d51bbba9))
+* remove entry point ([600d094](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/600d0941531c35d82993a0f02bd0e836fc748a2a))
+* remove entry point ([da24152](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/da241526964f6fabbd9dcd0142024d01fd3dcebb))
+* remove unused data ([8f23173](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/8f2317344fa3d7d7a439614401b394e9f518e561))
+* restrict clean_up to develop [skip ci] ([1916959](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/1916959b2b133c38ecf45663a4e79702d68b0f2a))
+* set expiration date for development artifacts ([4f991ad](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/4f991ad31e1ae6467c028fdea209abfec0e4eaf2))
+* switch to image that has dependencies installed ([5c41768](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/5c41768939f674f32d6ba9acc0354b38477ebb81))
+* test replacement ([1def71d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/1def71dca9aa0756dbabcac39dbd231c68ffe46c))
+* update Git user mail ([943fec7](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/943fec794705fae0b8442ea694729e00f6433e34))
+
 ## [1.8.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.7.0...v1.8.0) (2021-04-01)
 
 
