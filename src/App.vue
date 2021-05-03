@@ -1,9 +1,8 @@
 <template>
   <q-layout
     id="q-app"
+    class="root viewport"
     view="hHh Lpr fFf"
-    class="app"
-    style="height: 100vh;"
   >
     <Header
       v-if="config.headers.all"
@@ -20,10 +19,11 @@
 
     <q-page-container class="root">
       <router-view
+        :annotations="annotations"
         :collection="collection"
         :config="config"
         :contenttypes="contentTypes"
-        :contenturls="contenturls"
+        :contenturls="contentUrls"
         :fontsize="fontsize"
         :imageurl="imageurl"
         :item="item"
@@ -50,11 +50,12 @@ export default {
   mixins: [Panels],
   data() {
     return {
+      annotations: [],
       collection: {},
       collectiontitle: '',
       config: {},
       contentTypes: [],
-      contenturls: [],
+      contentUrls: [],
       fontsize: 14,
       imageurl: '',
       isCollection: false,
@@ -124,6 +125,28 @@ export default {
 
       return data;
     },
+
+    /**
+      * get annotations of the current item
+      * caller: *getItemData()*
+      * @param string url
+      */
+    getAnnotations(url) {
+      this.request(url)
+        .then((annotations) => {
+          if (annotations.annotationCollection.first) {
+            this.request(annotations.annotationCollection.first)
+              .then((current) => {
+                if (current.annotationPage.items.length) {
+                  this.annotations = current.annotationPage.items;
+                } else this.annotations = [];
+              });
+          }
+        })
+        .catch(() => {
+          this.$q.notify({ message: 'No annotations available' });
+        });
+    },
     /**
       * get collection data according to 'entrypoint'
       * (number of requests equal the number of manifests contained within a collection)
@@ -172,7 +195,7 @@ export default {
       *
       * @return array
       */
-    getContentUrl(content) {
+    getContentUrls(content) {
       const urls = [];
 
       if (Array.isArray(content) && content.length) {
@@ -199,8 +222,12 @@ export default {
         .then((data) => {
           this.item = data;
 
-          this.contenturls = this.getContentUrl(data.content);
+          this.contentUrls = this.getContentUrls(data.content);
           this.imageurl = data.image.id || '';
+
+          if (data.annotationCollection) {
+            this.getAnnotations(data.annotationCollection);
+          }
         });
     },
     /**
@@ -352,17 +379,14 @@ export default {
 </script>
 
 <style scoped>
-.app {
+.root {
   display: flex;
   flex: 1;
   flex-direction: column;
   overflow: hidden;
 }
 
-.root {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
+.viewport {
+  height: 100vh;
 }
 </style>

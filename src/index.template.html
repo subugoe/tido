@@ -31,7 +31,27 @@
     -->
     <script id="tido-config" type="application/json">
     {
-      "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
+			"entrypoint": "",
+      "annotations": {
+        "show": true,
+        "types": [
+          {
+            "contenttype": "Person",
+            "icon": "fasUser",
+            "label": "Names"
+          },
+          {
+            "contenttype": "Place",
+            "icon": "fasMapMarkerAlt",
+            "label": "Places"
+          },
+          {
+            "contenttype": "Editorial Comment",
+            "icon": "fasComment",
+            "label": "Comments"
+          }
+        ]
+      },
       "colors": {
         "primary": "",
         "secondary": "",
@@ -61,8 +81,8 @@
       },
       "panels": [
         {
-          "connector": [1],
-          "panel_label": "Contents",
+          "connector": [1, 2],
+          "panel_label": "Contents & Metadata",
           "show": true,
           "toggle": true
         },
@@ -79,8 +99,8 @@
           "toggle": true
         },
         {
-          "connector": [2],
-          "panel_label": "Metadata",
+          "connector": [5],
+          "panel_label": "Annotations",
           "show": true,
           "toggle": true
         }
