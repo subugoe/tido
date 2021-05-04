@@ -11,8 +11,8 @@
         :title="url.linkTitle + '- open in a new tab or window'"
         rel="noopener noreferrer"
         target="_blank"
-        class="content__link q-pl-xs q-pr-xs"
-        :class="$q.dark.isActive ? 'bg-grey-5 text-dark' : 'bg-secondary text-accent'"
+        class="content__link"
+        :class="$q.dark.isActive ? 'text-white' : 'text-accent'"
       >
         <span>{{ url.linkTitle }}</span>
 
@@ -20,7 +20,6 @@
           :name="fasExternalLinkAlt"
           size="12px"
           class="content__link-icon q-pl-xs"
-          :class="$q.dark.isActive ? 'bg-grey-5 text-dark' : 'text-accent'"
         />
       </a>
 
@@ -100,31 +99,20 @@ export default {
   flex-wrap: wrap;
 }
 
-.content__link,
-.content__link-icon {
+.content__link {
+  border-bottom: 1px var(--q-color-accent) dotted;
   text-decoration: none;
 
+  @media (prefers-color-scheme: dark) {
+    border-color: var(--q-color-white);
+  }
+}
+
+.content__link {
   &:focus,
   &:hover,
-  &:active,
-  &:focus svg,
-  &:hover svg,
-  &:active svg {
-    background-color: var(--q-color-accent) !important;
-    color: var(--q-color-secondary) !important;
-    fill: var(--q-color-secondary);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    &:focus,
-    &:hover,
-    &:active
-    &:focus svg,
-    &:hover svg,
-    &:active svg {
-      background-color: var(--q-color-grey-0) !important;
-      color: var(--q-color-secondary) !important;
-    }
+  &:active {
+    border-bottom-style: solid;
   }
 }
 
