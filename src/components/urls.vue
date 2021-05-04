@@ -11,13 +11,15 @@
         :title="url.linkTitle + '- open in a new tab or window'"
         rel="noopener noreferrer"
         target="_blank"
+        class="content__link"
+        :class="$q.dark.isActive ? 'text-white' : 'text-accent'"
       >
         <span>{{ url.linkTitle }}</span>
 
         <q-icon
           :name="fasExternalLinkAlt"
           size="12px"
-          class="q-pl-xs"
+          class="content__link-icon q-pl-xs"
         />
       </a>
 
@@ -95,6 +97,23 @@ export default {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
+}
+
+.content__link {
+  border-bottom: 1px var(--q-color-accent) dotted;
+  text-decoration: none;
+
+  @media (prefers-color-scheme: dark) {
+    border-color: var(--q-color-white);
+  }
+}
+
+.content__link {
+  &:focus,
+  &:hover,
+  &:active {
+    border-bottom-style: solid;
+  }
 }
 
 .url-text {
