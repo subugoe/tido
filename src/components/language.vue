@@ -2,7 +2,7 @@
   <div class="col-xs-auto">
     <q-btn
       flat
-      title="Change language"
+      :title="$t('Change_language')"
     >
       <q-icon
         :name="fasLanguage"
