@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="text-h5 text-bold text-uppercase q-mb-none q-mt-xs">
-      {{ collectiontitle }}
+      {{ ahiqar ? $t('cTitle') : collectiontitle }}
     </h1>
     <h2 class="text-h6 text-bold text-uppercase q-mt-none q-mb-none">
       <span>{{ manifesttitle }}</span>
@@ -11,7 +11,7 @@
         :color="$q.dark.isActive ? 'white' : 'accent'"
         :name="fasChevronRight"
       />
-      <span>Sheet {{ item.n }}</span>
+      <span>{{ $t('Sheet') }} {{ item.n }}</span>
     </h2>
   </div>
 </template>
@@ -37,6 +37,7 @@ export default {
   },
   data() {
     return {
+      ahiqar: true,
       sequenceindex: 0,
     };
   },

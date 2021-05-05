@@ -1,6 +1,6 @@
 <template>
-  <div class="panel__title text-center q-pb-sm q-pt-sm">
-    {{ heading | capitalize }}
+  <div class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
+    {{ $t(heading) | capitalize }}
   </div>
 </template>
 

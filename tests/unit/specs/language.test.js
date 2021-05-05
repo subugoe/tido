@@ -1,11 +1,17 @@
-import LANGUAGE from '@/components/language.vue'
+import LANGUAGE from '@/components/language.vue';
 
-jest.mock('@quasar/extras/fontawesome-v5', () => '')
+jest.mock('@quasar/extras/fontawesome-v5', () => '');
 
-describe('Language component', () => {
-  it('has a data prop "EN"', () => {
-    const lang = LANGUAGE.data()
+describe('Language', () => {
+  it('has a data prop "DE"', () => {
+    const lang = LANGUAGE.data();
 
-    expect(lang.lang).toBe('EN')
-  })
-})
+    expect(lang.langs).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          label: 'DE',
+        }),
+      ])
+    );
+  });
+});
