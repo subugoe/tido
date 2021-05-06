@@ -29,7 +29,7 @@
           v-close-popup
           clickable
           flat
-          :title="$t('Defaultview')"
+          :title="$t('defaultView')"
           @click="()=> handleStatusPanel(-1, true)"
         >
           <q-icon

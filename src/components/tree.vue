@@ -2,7 +2,6 @@
   <div class="item">
     <q-tree
       class="item-content"
-      label-key="label-key"
       node-key="label"
       :expanded.sync="expanded"
       :icon="fasCaretRight"
@@ -18,6 +17,12 @@
           :id="`selectedItem-${node['label']}`"
         />
       </template>
+
+      <template #default-header="prop">
+        <div class="row items-center">
+          <div> {{ prop.node.labelSheet? $t(labels.item):'' }} {{ prop.node['label-key'] }}</div>
+        </div>
+      </template>
     </q-tree>
   </div>
 </template>
@@ -29,6 +34,10 @@ import treestore from '@/stores/treestore.js';
 export default {
   name: 'Treeview',
   props: {
+    labels: {
+      type: Object,
+      default: () => {},
+    },
     manifests: {
       type: Array,
       default: () => [],

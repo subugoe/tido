@@ -3,7 +3,7 @@
     <q-btn
       flat
       label=""
-      :title="$t('Project_Info')"
+      :title="$t('projectInfo')"
       @click="infobox = true"
     >
       <q-icon
@@ -21,13 +21,13 @@
           </h1>
 
           <p class="text-weight-bold">
-            {{ $t('Info_Description') }}
+            {{ $t('infoDescription') }}
           </p>
 
-          <p>Copyright (c) {{ actualYear }} {{ $t('Info_Copyright') }}</p>
+          <p>Copyright (c) {{ actualYear }} {{ $t('infoCopyright') }}</p>
 
           <p class="q-mb-none">
-            Version {{ version }}, {{ $t('Info_License') }}
+            Version {{ version }}, {{ $t('infoLicense') }}
           </p>
         </q-card-section>
 
@@ -43,7 +43,7 @@
               size="md"
               class="q-pr-md"
             />
-            {{ $t('Info_Docs') }}
+            {{ $t('infoDocs') }}
           </q-btn>
 
           <q-btn
@@ -57,7 +57,7 @@
               size="md"
               class="q-pr-md"
             />
-            {{ $t('Info_Sourcecode') }}
+            {{ $t('infoSourcecode') }}
           </q-btn>
 
           <q-btn
@@ -70,7 +70,7 @@
               size="md"
               class="q-pr-md"
             />
-            {{ $t('Info_Bugs') }}
+            {{ $t('infoBugs') }}
           </q-btn>
         </q-card-section>
 
@@ -79,7 +79,7 @@
             v-close-popup
             :class="$q.dark.isActive ? 'text-white' : 'text-black'"
             flat
-            :label="$t('Info_Close')"
+            :label="$t('infoClose')"
           />
         </q-card-actions>
       </q-card>

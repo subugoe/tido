@@ -176,8 +176,8 @@ export default {
       return [
         { id: 'Label', data: this.item.n },
         { id: 'Language', data: this.item.lang.join(',') },
-        { id: 'ImageLicense', data: this.item.image?.license?.id },
-        { id: 'ImageNotes', data: this.item.image?.license?.notes },
+        { id: 'imageLicense', data: this.item.image?.license?.id },
+        { id: 'imageNotes', data: this.item.image?.license?.notes },
       ].filter((item) => item.data);
     },
     metadataManifest() {
