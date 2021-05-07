@@ -10,7 +10,10 @@
           :manifests="manifests"
         />
         <div class="row no-wrap justify-end col-xs-3">
-          <Language v-if="standalone" />
+          <Language
+            v-if="standalone"
+            :config="config"
+          />
           <Color :projectcolors="projectcolors" />
           <Softwareinfo />
         </div>

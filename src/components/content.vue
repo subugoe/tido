@@ -15,7 +15,7 @@
         :name="contenturl"
         :class="contenturls.length == 1 && 'default-cursor'"
         :disable="contenturls.length == 1"
-        :label="contenttypes[i]"
+        :label="$t(contenttypes[i])"
       />
     </q-tabs>
 
@@ -25,7 +25,7 @@
         flat
         round
         size="sm"
-        title="Increase Textsize"
+        :title="$t('Increase')"
         @click="increase()"
       >
         <q-icon
@@ -40,7 +40,7 @@
         flat
         round
         size="sm"
-        title="Decrease Textsize"
+        :title="$t('Decrease')"
         :color="$q.dark.isActive ? 'white' : 'accent'"
         @click="decrease()"
       >

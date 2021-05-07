@@ -2,7 +2,7 @@
   <div class="col-xs-auto colors">
     <q-btn
       flat
-      title="Change color"
+      :title="$t('colorScheme')"
     >
       <q-icon
         :name="fasPalette"
@@ -20,7 +20,7 @@
             clickable
             @click="changeColorsTo('default')"
           >
-            <q-item-section>Default</q-item-section>
+            <q-item-section>{{ $t('default') }}</q-item-section>
           </q-item>
           <q-item
             v-if="projectcolors.primary && projectcolors.secondary && projectcolors.accent"

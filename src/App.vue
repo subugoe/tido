@@ -275,7 +275,8 @@ export default {
         urls.push(
           {
             label: item.id,
-            'label-key': `${this.config.labels.item} ${itemLabel}`,
+            'label-key': `${itemLabel}`,
+            labelSheet: true,
             handler: (node) => {
               if (this.itemurl === node.label) {
                 return;

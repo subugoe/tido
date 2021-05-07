@@ -2,7 +2,7 @@
   <div class="col-xs-auto">
     <q-btn
       flat
-      title="Change language"
+      :title="$t('changeLanguage')"
     >
       <q-icon
         :name="fasLanguage"
@@ -17,17 +17,16 @@
       >
         <q-list>
           <q-item
+            v-for="lang in langs"
+            :key="lang.value"
             v-close-popup
             clickable
+            :class="{'language': selectedLang === lang.value}"
+            @click="handleLanguageChange(lang)"
           >
-            <q-item-section>DE</q-item-section>
-          </q-item>
-
-          <q-item
-            v-close-popup
-            clickable
-          >
-            <q-item-section>{{ lang }}</q-item-section>
+            <q-item-section>
+              {{ lang.label }}
+            </q-item-section>
           </q-item>
         </q-list>
       </q-menu>
@@ -40,13 +39,42 @@ import { fasLanguage } from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Language',
+  props: {
+    config: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
-      lang: 'EN',
+      langs: [
+        { label: 'DE', value: 'de-de' },
+        { label: 'EN', value: 'en-us' },
+      ],
+      selectedLang: 'en-us',
     };
+  },
+  watch: {
+    selectedLang(lang) {
+      this.$i18n.locale = lang;
+    },
+  },
+  mounted() {
+    this.selectedLang = this.config.lang;
   },
   created() {
     this.fasLanguage = fasLanguage;
   },
+  methods: {
+    handleLanguageChange(lang) {
+      this.selectedLang = lang.value;
+    },
+  },
 };
 </script>
+
+<style>
+.language {
+  background-color: #808080;
+}
+</style>

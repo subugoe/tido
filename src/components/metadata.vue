@@ -10,7 +10,7 @@
           dense
           class="text-h6 caps"
         >
-          Collection
+          {{ $t('Collection') }}
         </q-item-section>
       </q-item>
 
@@ -28,7 +28,7 @@
             overline
             class="text-uppercase"
           >
-            {{ mCollection.id }}
+            {{ $t(mCollection.id) }}
           </q-item-label>
 
           <MetadataUrls :content="mCollection.data" />
@@ -43,7 +43,7 @@
     >
       <q-item class="no-padding">
         <q-item-section class="text-h6 caps">
-          {{ labels.manifest }} {{ sequenceindex + 1 }} / {{ manifests.length }}
+          {{ $t(labels.manifest) }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
 
@@ -57,7 +57,7 @@
             overline
             class="text-uppercase"
           >
-            {{ mManifest.id }}
+            {{ $t(mManifest.id) }}
           </q-item-label>
 
           <MetadataUrls :content="mManifest.data" />
@@ -75,7 +75,7 @@
               overline
               class="text-uppercase"
             >
-              {{ meta.key }}
+              {{ $t(meta.key) }}
             </q-item-label>
 
             <MetadataUrls :content="meta.value" />
@@ -91,7 +91,7 @@
     >
       <q-item class="no-padding">
         <q-item-section class="text-h6 caps">
-          {{ labels.item }} {{ itemindex + 1 }} / {{ itemcount }}
+          {{ $t(labels.item) }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
 
@@ -108,7 +108,7 @@
             overline
             class="text-uppercase"
           >
-            {{ mItem.id }}
+            {{ $t(mItem.id) }}
           </q-item-label>
 
           <MetadataUrls :content="mItem.data" />
@@ -176,8 +176,8 @@ export default {
       return [
         { id: 'Label', data: this.item.n },
         { id: 'Language', data: this.item.lang.join(',') },
-        { id: 'Image License', data: this.item.image?.license?.id },
-        { id: 'Image Notes', data: this.item.image?.license?.notes },
+        { id: 'imageLicense', data: this.item.image?.license?.id },
+        { id: 'imageNotes', data: this.item.image?.license?.notes },
       ].filter((item) => item.data);
     },
     metadataManifest() {

@@ -272,6 +272,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
         }
       ],
       "rtl": false,
+      "lang": "en-us",
       "standalone": true
     }  </script>
 ```
@@ -372,6 +373,14 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     set the value to `true` if you want text to be displayed from right to left; e.g. Arabic.
 
     Defaults to `false`
+
+- **lang (language)**
+
+  refers to the default language of the application.
+
+  set the value to `de-de` if you would like to turn the viewer into "German" language by default.
+
+  Defaults to `en-us`
 
 - **standalone**
 

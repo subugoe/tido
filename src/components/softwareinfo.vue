@@ -3,7 +3,7 @@
     <q-btn
       flat
       label=""
-      title="Project Info"
+      :title="$t('projectInfo')"
       @click="infobox = true"
     >
       <q-icon
@@ -21,13 +21,13 @@
           </h1>
 
           <p class="text-weight-bold">
-            Text vIewer for Digital Objects
+            {{ $t('infoDescription') }}
           </p>
 
-          <p>Copyright (c) {{ actualYear }} Göttingen University - Göttingen State and University Library</p>
+          <p>Copyright (c) {{ actualYear }} {{ $t('infoCopyright') }}</p>
 
           <p class="q-mb-none">
-            Version {{ version }}, licensed under GNU Affero General Public License v3.0
+            Version {{ version }}, {{ $t('infoLicense') }}
           </p>
         </q-card-section>
 
@@ -43,7 +43,7 @@
               size="md"
               class="q-pr-md"
             />
-            Documentation
+            {{ $t('infoDocs') }}
           </q-btn>
 
           <q-btn
@@ -57,7 +57,7 @@
               size="md"
               class="q-pr-md"
             />
-            Source Code
+            {{ $t('infoSourcecode') }}
           </q-btn>
 
           <q-btn
@@ -70,7 +70,7 @@
               size="md"
               class="q-pr-md"
             />
-            Report a Bug
+            {{ $t('infoBugs') }}
           </q-btn>
         </q-card-section>
 
@@ -79,7 +79,7 @@
             v-close-popup
             :class="$q.dark.isActive ? 'text-white' : 'text-black'"
             flat
-            label="Close"
+            :label="$t('infoClose')"
           />
         </q-card-actions>
       </q-card>

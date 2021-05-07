@@ -6,15 +6,17 @@
     <nav>
       <q-btn
         v-for="(btn, idx) in buttons"
-        :id="btn.id"
+        :id="$t(btn.tooltip)"
         :key="idx"
         flat
         round
         size="sm"
         :color="$q.dark.isActive ? 'white' : 'accent'"
         class="q-ml-xs q-mt-xs"
+        :title="$t(btn.tooltip)"
       >
         <q-icon
+          :id="btn.id"
           size="xs"
           :name="btn.svg"
         />
@@ -44,10 +46,10 @@ export default {
   data() {
     return {
       buttons: [
-        { id: 'zoom-in', svg: fasSearchPlus },
-        { id: 'zoom-out', svg: fasSearchMinus },
-        { id: 'default', svg: fasExpand },
-        { id: 'fullscreen', svg: fasExpandArrowsAlt },
+        { id: 'zoom-in', svg: fasSearchPlus, tooltip: 'osdZoomin' },
+        { id: 'zoom-out', svg: fasSearchMinus, tooltip: 'osdZoomout' },
+        { id: 'default', svg: fasExpand, tooltip: 'osdHome' },
+        { id: 'fullscreen', svg: fasExpandArrowsAlt, tooltip: 'osdFullPage' },
       ],
       options: {
         id: 'openseadragon',
@@ -66,9 +68,6 @@ export default {
   mounted() {
     const viewer = new OpenSeadragon.Viewer(this.options);
     viewer.controlsFadeDelay = 1000;
-
-    OpenSeadragon.setString('Tooltips.Home', 'Default View');
-    OpenSeadragon.setString('Tooltips.FullPage', 'Toggle Fullscreen');
 
     document.addEventListener('fullscreenchange', () => {
       Object.values(this.buttons).forEach((v) => {

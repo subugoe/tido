@@ -20,7 +20,7 @@
               :color="$q.dark.isActive ? 'bg-black' : 'accent'"
               :name="renderCheckIcon(i)"
             />
-            {{ p.panel_label.toUpperCase() }}
+            {{ $t(p.panel_label).toUpperCase() }}
           </q-item>
         </div>
 
@@ -29,7 +29,7 @@
           v-close-popup
           clickable
           flat
-          title="Reset panels to default view"
+          :title="$t('defaultView')"
           @click="()=> handleStatusPanel(-1, true)"
         >
           <q-icon
@@ -38,7 +38,7 @@
             :color="$q.dark.isActive ? 'white' : 'accent'"
             :name="fasUndo"
           />
-          {{ 'RESET' }}
+          {{ $t('Reset').toUpperCase() }}
         </q-item>
       </q-list>
     </ToggleFilter>
@@ -97,12 +97,12 @@ export default {
     },
     // display toggle title when hovering
     handleToggleTitle(idx) {
-      const titleName = this.panels[idx].panel_label;
+      const titleName = this.$t(this.panels[idx].panel_label);
       const titleUpper = `${titleName[0].toUpperCase()}${titleName.slice(1)}`;
 
       return this.panels[idx].show
-        ? `Hide ${titleUpper} Panel`
-        : `Show ${titleUpper} Panel`;
+        ? `${this.$t('hide')} ${titleUpper} Panel`
+        : `${this.$t('show')} ${titleUpper} Panel`;
     },
   },
 };

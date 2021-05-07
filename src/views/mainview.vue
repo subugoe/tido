@@ -31,7 +31,7 @@
           >
             <q-tab
               :name="`tab${i}`"
-              :label="tab.label"
+              :label="$t(tab.label)"
             />
           </q-tabs>
         </div>

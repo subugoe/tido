@@ -6,7 +6,7 @@
       outline
       flat
       :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
-      label="Show/Hide Panels"
+      :label="$t('showHidePanels')"
     >
       <slot />
     </q-btn-dropdown>
