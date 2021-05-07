@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       langs: [
-        { label: 'DE', value: 'de' },
+        { label: 'DE', value: 'de-de' },
         { label: 'EN', value: 'en-us' },
       ],
       selectedLang: 'en-us',
