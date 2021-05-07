@@ -22,7 +22,7 @@ export default {
   Increase: 'Increase',
   infoBugs: 'Report a Bug',
   infoClose: 'Close',
-  infoCopyright: 'Georg-August-Universität Göttingen',
+  infoCopyright: 'Göttingen State and University Library',
   infoDescription: 'Slim, easy to use and mobile-friendly text and image viewer',
   infoDocs: 'Documentation',
   infoLicense: 'licensed under GNU Affero General Public License v3.0',
