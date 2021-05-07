@@ -6,7 +6,7 @@
     <nav>
       <q-btn
         v-for="(btn, idx) in buttons"
-        :id="btn.id"
+        :id="$t(btn.tooltip)"
         :key="idx"
         flat
         round
@@ -16,6 +16,7 @@
         :title="$t(btn.tooltip)"
       >
         <q-icon
+          :id="btn.id"
           size="xs"
           :name="btn.svg"
         />

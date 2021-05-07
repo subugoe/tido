@@ -39,6 +39,12 @@ import { fasLanguage } from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Language',
+  props: {
+    config: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
       langs: [
@@ -52,6 +58,9 @@ export default {
     selectedLang(lang) {
       this.$i18n.locale = lang;
     },
+  },
+  mounted() {
+    this.selectedLang = this.config.lang;
   },
   created() {
     this.fasLanguage = fasLanguage;
