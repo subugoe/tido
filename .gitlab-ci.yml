@@ -50,7 +50,7 @@ build_main_and_develop:
    - develop
   stage: build
   script:
-   - if [[ $CONTINUE_BUILD == "true" ]]; then bash .ci-scripts/build.sh; fi
+   - if [[ $CONTINUE_BUILD == "true" ]]; then echo "Continue build"; bash .ci-scripts/build.sh; else echo "Stop build"; fi
   artifacts:
     paths:
      - dist/
@@ -78,9 +78,9 @@ pages:
       - public
   when: always
   script:
-   - bash .ci-scripts/update-artifacts.sh
-   - bash .ci-scripts/gitlab-remove-old-artifacts.sh
-   - if [[ $CONTINUE_BUILD == "false" && ! -d dist ]]; then bash .ci-scripts/set-404-page.sh; fi
+    - if [[ $CONTINUE_BUILD == "false" && ! -d dist ]]; then echo "Build not continued. Create 404 page."; bash .ci-scripts/set-404-page.sh; else echo "Proceed page build as usual."; fi
+    - bash .ci-scripts/update-artifacts.sh
+    - bash .ci-scripts/gitlab-remove-old-artifacts.sh
   environment:
     name: ${CI_COMMIT_REF_SLUG}
     url: https://subugoe.pages.gwdg.de/emo/Qviewer/${CI_COMMIT_REF_SLUG}/
