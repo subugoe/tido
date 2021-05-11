@@ -28,6 +28,10 @@
   width: 100%;
 }
 
-.q-tabs__content .q-tab {
-  width: 100%;
+.q-tab__content {
+  padding: 0;
+}
+
+.q-tab {
+  min-height: 32px;
 }
