@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.9.0...v1.10.0) (2021-05-12)
+
+
+### Features
+
+* implement multilanguage-German, add tranlsation, config ([83e62c8](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/83e62c869dff6681517794060a1cad02097efc84))
+
+
+### Refactoring
+
+* add tranlation for sheet and addressing review comments ([007d7e0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/007d7e0b5b127ca867724ecf2bcd7c59a0b97a09))
+* add tranlation for title ([c8209a1](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/c8209a1c9d8dea98969495efffe628bc1be22e83))
+* changed de to genaral way and added statement to readme ([c3cabff](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/c3cabff60962e8acce7f02fba8e0daefcbea30f9))
+* fix translation to icons in image panel and added parameter to make default lang ([7b4bdb8](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/7b4bdb8bf6625742c5cd01da424cb84b93226f3c))
+* renamed copyright ([ccf2190](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/ccf2190f8f352833861869286ce44251d506edc9))
+
+
+### Styling
+
+* consistent border radius for hover items and alike ([40db4bc](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/40db4bceec6f3014925467981b5ebe343a7d2e0f))
+* make tabs in various panel look the same ([9cfa574](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/9cfa574431da94a4c694a6aaab3d444d53867d99))
+* panel title style polishing ([99ce6d6](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/99ce6d6ebcab41b91d5b5bb8420489658675b453))
+* style links in metadata and similar places ([3613876](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/3613876a3226f88b4ee94833a9eb934110d5efb8))
+* style links in metadata more like Quasar likes to do it ([80f9295](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/80f92959d9f2fdeece04d8101e03019f8e5f4343))
+
+
+### Continuos Integration
+
+* add entry point for testing ([b872a41](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/b872a417fe9ad22ac25672b726ed60fd7af2a3e6))
+* add tracing ([252d8fd](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/252d8fdfaec45cf89431372ac4dbe8ea8dfed36d))
+* only add new directory to artifact if build isn't canceled ([5dab803](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/5dab8036b530c596304a624ea0b9e2e9c825f25d))
+* remove entry point ([0e1fd14](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/0e1fd1404dd73d71aadb2fa0f23c48607d4ae8b0))
+* remove entry point ([09389b3](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/09389b3f974f802113c4c6998e28e1db94b7572a))
+
 ## [1.9.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.8.0...v1.9.0) (2021-05-03)
 
 
