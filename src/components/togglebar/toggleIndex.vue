@@ -11,6 +11,7 @@
             v-close-popup
             clickable
             flat
+            class="button"
             :title="handleToggleTitle(i)"
             @click="() => handleStatusPanel(i)"
           >
@@ -29,6 +30,7 @@
           v-close-popup
           clickable
           flat
+          class="button"
           :title="$t('defaultView')"
           @click="()=> handleStatusPanel(-1, true)"
         >
@@ -113,6 +115,10 @@ button {
   @media (min-width: 600px) {
     margin-right: 8px;
   }
+}
+
+.button {
+  border-radius: 3px;
 }
 
 button:last-of-type {
