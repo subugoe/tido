@@ -7,7 +7,6 @@
       active-color="$q.dark.isActive ? 'white' : 'accent'"
       indicator-color="$q.dark.isActive ? 'white' : 'accent'"
       align="justify"
-      narrow-indicator
     >
       <q-tab
         v-for="(contenturl, i) in contenturls"

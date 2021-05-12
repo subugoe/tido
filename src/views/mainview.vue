@@ -28,6 +28,7 @@
             v-model="p.tab_model"
             class="content-tabs"
             :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
+            dense
           >
             <q-tab
               :name="`tab${i}`"
@@ -35,8 +36,6 @@
             />
           </q-tabs>
         </div>
-
-        <q-separator />
 
         <q-tab-panels
           v-model="p.tab_model"
