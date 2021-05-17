@@ -24,15 +24,19 @@
   </div>
 
   <div v-else>
-    <p>One does not simply show annotations.</p>
+    <Notification :message="messages.none" />
   </div>
 </template>
 
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
+import Notification from '@/components/notification.vue';
 
 export default {
   name: 'Annotations',
+  components: {
+    Notification,
+  },
   props: {
     annotations: {
       type: Array,
@@ -45,7 +49,9 @@ export default {
   },
   data() {
     return {
-
+      messages: {
+        none: 'No annotations available',
+      },
     };
   },
   computed: {
