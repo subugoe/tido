@@ -23,8 +23,11 @@
     </q-list>
   </div>
 
-  <div v-else>
-    <Notification :message="messages.none" />
+  <div
+    v-else
+    class="q-pa-sm"
+  >
+    <Notification :message="$t(messages.none)" />
   </div>
 </template>
 
@@ -50,7 +53,7 @@ export default {
   data() {
     return {
       messages: {
-        none: 'No annotations available',
+        none: 'noAnnotationMessage',
       },
     };
   },

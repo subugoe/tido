@@ -10,7 +10,7 @@
         color="red-9"
         size="sm"
       />
-      <span class="text-body1 text-uppercase vertical-middle">Please note</span>
+      <span class="text-body1 text-uppercase vertical-middle">{{ $t('notificationTitle') }}</span>
     </q-card-section>
 
     <q-separator inset />

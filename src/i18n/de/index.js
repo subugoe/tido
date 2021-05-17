@@ -35,6 +35,8 @@ export default {
   Manuscript: 'Manuskript',
   Metadata: 'Metadaten',
   next: 'Näch.',
+  notificationTitle: 'Nicht Annotationen verfügbar',
+  noAnnotationMessage: 'Das aktuelle Blatt enthält keine anzuzeigenden Anmerkungen.',
   Origin: 'Ursprung',
   osdFullPage: 'Vollbildmodus wechseln',
   osdHome: 'Ansicht zurücksetzen',
