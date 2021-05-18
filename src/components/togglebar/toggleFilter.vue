@@ -5,6 +5,9 @@
       :dropdown-icon="fasCaretDown"
       outline
       flat
+      size="12px"
+      padding="xs"
+      class="button__dropdown q-px-sm"
       :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
       :label="$t('showHidePanels')"
     >
@@ -13,7 +16,7 @@
 
     <div
       v-else
-      class="without-dropdown"
+      class="row"
     >
       <slot />
     </div>

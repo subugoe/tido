@@ -1,52 +1,50 @@
 <template>
-  <div class="q-d-flex">
-    <ToggleFilter>
-      <q-list class="toggle-list">
-        <div
-          v-for="(p, i) in panels"
-          :key="`toggle${i}`"
-        >
-          <q-item
-            v-if="p.toggle"
-            v-close-popup
-            clickable
-            flat
-            class="button"
-            :title="handleToggleTitle(i)"
-            @click="() => handleStatusPanel(i)"
-          >
-            <q-icon
-              class="q-pr-xs"
-              size="xs"
-              :color="$q.dark.isActive ? 'bg-black' : 'accent'"
-              :name="renderCheckIcon(i)"
-            />
-            {{ $t(p.panel_label).toUpperCase() }}
-          </q-item>
-        </div>
+  <ToggleFilter>
+    <div
+      v-for="(p, i) in panels"
+      :key="`toggle${i}`"
+    >
+      <q-btn
+        v-if="p.toggle"
+        v-close-popup
+        clickable
+        flat
+        size="12px"
+        padding="xs"
+        class="q-px-sm"
+        :title="handleToggleTitle(i)"
+        @click="() => handleStatusPanel(i)"
+      >
+        <q-icon
+          class="q-pr-xs"
+          size="16px"
+          :color="$q.dark.isActive ? 'bg-black' : 'accent'"
+          :name="renderCheckIcon(i)"
+        />
+        {{ $t(p.panel_label).toUpperCase() }}
+      </q-btn>
+    </div>
 
-        <q-item
-          v-if="toggleCounter"
-          v-close-popup
-          clickable
-          flat
-          class="button"
-          :title="$t('defaultView')"
-          @click="()=> handleStatusPanel(-1, true)"
-        >
-          <q-icon
-            class="q-pr-xs"
-            size="xs"
-            :color="$q.dark.isActive ? 'white' : 'accent'"
-            :name="fasUndo"
-          />
-          {{ $t('Reset').toUpperCase() }}
-        </q-item>
-      </q-list>
-    </ToggleFilter>
-
-    <!-- <PanelsPosition :panelboxes="panels" /> -->
-  </div>
+    <q-btn
+      v-if="toggleCounter"
+      v-close-popup
+      clickable
+      flat
+      size="12px"
+      padding="xs"
+      class="q-px-sm"
+      :title="$t('defaultView')"
+      @click="()=> handleStatusPanel(-1, true)"
+    >
+      <q-icon
+        class="q-pr-xs"
+        size="16px"
+        :color="$q.dark.isActive ? 'white' : 'accent'"
+        :name="fasUndo"
+      />
+      {{ $t('Reset').toUpperCase() }}
+    </q-btn>
+  </ToggleFilter>
 </template>
 
 <script>
@@ -56,13 +54,11 @@ import {
   fasCheckCircle,
 } from '@quasar/extras/fontawesome-v5';
 
-// import PanelsPosition from '@/components/togglebar/panelsposition';
 import ToggleFilter from '@/components/togglebar/toggleFilter.vue';
 
 export default {
   name: 'ToggleIndex',
   components: {
-    // PanelsPosition,
     ToggleFilter,
   },
   props: {
@@ -78,7 +74,6 @@ export default {
     },
   },
   created() {
-    // mount the fonts
     this.fasCheckCircle = fasCheckCircle;
     this.fasCircle = fasCircle;
     this.fasUndo = fasUndo;
@@ -109,23 +104,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-button {
-  @media (min-width: 600px) {
-    margin-right: 8px;
-  }
-}
-
-.button {
-  border-radius: 3px;
-}
-
-button:last-of-type {
-  margin-right: 0;
-}
-
-.q-item {
-  min-height: 0;
-}
-</style>
