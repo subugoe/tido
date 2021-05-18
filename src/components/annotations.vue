@@ -8,7 +8,6 @@
         v-for="annotation in filterAnnotationTypes(annotations)"
         :id="'list' + stripAnnotationId(annotation.target.id)"
         :key="stripAnnotationId(annotation.id)"
-        class="bg-grey-2"
         clickable
         @click="toggle(stripAnnotationId(annotation.target.id))"
       >
@@ -125,6 +124,7 @@ export default {
 
       textElement.prepend(svg);
       textElement.classList.toggle('annotation');
+      textElement.classList.toggle('annotation-disabled');
     },
 
     /**
