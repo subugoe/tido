@@ -119,6 +119,7 @@ export default {
         }
 
         this.content = data;
+        this.$root.$emit('update-content');
       });
     },
   },

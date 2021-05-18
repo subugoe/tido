@@ -44,7 +44,7 @@ export default {
   },
   data() {
     return {
-
+      ids: [],
     };
   },
   computed: {
@@ -57,6 +57,15 @@ export default {
   },
   created() {
     this.icons = Icons;
+  },
+  mounted() {
+    this.$root.$on('update-content', async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const ids = [...document.querySelectorAll('.ab')].map((x) => x.id);
+
+      this.ids = ids;
+    });
   },
   methods: {
     createSVG(name) {
@@ -85,7 +94,11 @@ export default {
     filterAnnotationTypes() {
       const types = [];
       this.annotations.forEach((annotation) => {
-        if (this.configuredTypes.filter((type) => type === annotation.body['x-content-type']).length > 0) {
+        let id = annotation.target.id.split('/');
+
+        id = id[id.length - 1];
+
+        if (this.configuredTypes.filter((type) => type === annotation.body['x-content-type']).length > 0 && this.ids.some((x) => id.startsWith(x))) {
           types.push(annotation);
           // function is triggered on list rendering, so we use it as init call to set up the text
           this.setText(annotation);
