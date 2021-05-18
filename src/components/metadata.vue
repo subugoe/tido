@@ -8,7 +8,7 @@
       <q-item class="no-padding">
         <q-item-section
           dense
-          class="text-h6 caps"
+          class="text-h6 text--smallcaps"
         >
           {{ $t('Collection') }}
         </q-item-section>
@@ -42,7 +42,7 @@
       dense
     >
       <q-item class="no-padding">
-        <q-item-section class="text-h6 caps">
+        <q-item-section class="text-h6 text--smallcaps">
           {{ $t(labels.manifest) }} {{ sequenceindex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
@@ -90,7 +90,7 @@
       dense
     >
       <q-item class="no-padding">
-        <q-item-section class="text-h6 caps">
+        <q-item-section class="text-h6 text--smallcaps">
           {{ $t(labels.item) }} {{ itemindex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
@@ -214,5 +214,9 @@ export default {
 <style lang="scss" scoped>
 .panel__meta {
   padding: 8px;
+}
+
+.text--smallcaps {
+  font-variant: small-caps;
 }
 </style>
