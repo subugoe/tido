@@ -131,21 +131,26 @@ export default {
       * caller: *getItemData()*
       * @param string url
       */
-    getAnnotations(url) {
-      this.request(url)
-        .then((annotations) => {
-          if (annotations.annotationCollection.first) {
-            this.request(annotations.annotationCollection.first)
-              .then((current) => {
-                if (current.annotationPage.items.length) {
-                  this.annotations = current.annotationPage.items;
-                } else this.annotations = [];
-              });
-          }
-        })
-        .catch(() => {
-          this.$q.notify({ message: 'No annotations available' });
-        });
+    async getAnnotations(url) {
+      try {
+        const annotations = await this.request(url);
+
+        if (!annotations.annotationCollection.first) {
+          this.annotations = [];
+          return;
+        }
+
+        const current = await this.request(annotations.annotationCollection.first);
+
+        if (current.annotationPage.items.length) {
+          this.annotations = current.annotationPage.items;
+        } else {
+          this.annotations = [];
+        }
+      } catch (err) {
+        this.annotations = [];
+        this.$q.notify({ message: 'No annotations available' });
+      }
     },
     /**
       * get collection data according to 'entrypoint'
