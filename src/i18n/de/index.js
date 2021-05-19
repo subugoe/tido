@@ -36,7 +36,7 @@ export default {
   Metadata: 'Metadaten',
   next: 'Näch.',
   notificationTitle: 'Keine Annotationen verfügbar',
-  noAnnotationMessage: 'Das aktuelle Blatt enthält keine anzuzeigenden Anmerkungen.',
+  noAnnotationMessage: 'Die aktuelle Ansicht enthält keine Annotationen.',
   Origin: 'Ursprung',
   osdFullPage: 'Vollbildmodus wechseln',
   osdHome: 'Ansicht zurücksetzen',

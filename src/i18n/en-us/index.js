@@ -36,7 +36,7 @@ export default {
   Metadata: 'Metadata',
   next: 'Next',
   notificationTitle: 'No Annotations available',
-  noAnnotationMessage: 'The current sheet has no annotations to display.',
+  noAnnotationMessage: 'The current view has no annotations to display.',
   Origin: 'Origin',
   osdFullPage: 'Toggle full page',
   osdHome: 'Go home',
