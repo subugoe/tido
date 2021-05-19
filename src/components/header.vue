@@ -30,7 +30,7 @@
 
           <q-space />
 
-          <ToggleIndex
+          <TogglePanels
             v-if="config.headers.toggle"
             :panels="panels"
           />
@@ -46,7 +46,7 @@ import Infobar from '@/components/infobar.vue';
 import Language from '@/components/language.vue';
 import Navbar from '@/components/navbar.vue';
 import Softwareinfo from '@/components/softwareinfo.vue';
-import ToggleIndex from '@/components/togglebar/toggleIndex.vue';
+import TogglePanels from '@/components/togglebar/togglePanels.vue';
 
 export default {
   name: 'Header',
@@ -56,7 +56,7 @@ export default {
     Language,
     Navbar,
     Softwareinfo,
-    ToggleIndex,
+    TogglePanels,
   },
   props: {
     collectiontitle: {
