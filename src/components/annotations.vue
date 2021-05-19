@@ -9,10 +9,18 @@
         :id="'list' + stripAnnotationId(annotation.target.id)"
         :key="stripAnnotationId(annotation.id)"
         clickable
+        padding="xs"
+        class="q-pa-sm q-pl-xs q-mb-xs"
         @click="toggle(stripAnnotationId(annotation.target.id))"
       >
-        <q-item-section avatar>
-          <q-icon :name="getIcon(annotation.body['x-content-type'])" />
+        <q-item-section
+          avatar
+          class="q-mr-none"
+        >
+          <q-icon
+            :name="getIcon(annotation.body['x-content-type'])"
+            size="16px"
+          />
         </q-item-section>
 
         <q-item-section>
@@ -147,6 +155,18 @@ export default {
 
 <style>
 /* not in scope to style the text */
+.q-item__section--avatar {
+  min-width: 24px;
+}
+
+.q-item__section--side {
+  padding-right: unset;
+}
+
+.q-item {
+  min-height: unset;
+}
+
 .annotation {
   border-bottom: 2px solid;
   padding-bottom: 2px;
