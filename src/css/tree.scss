@@ -1,8 +1,6 @@
 .item-content {
   .q-tree__node-body.relative-position {
-    /* stylelint-disable */
-    padding: 4px;
-    /* stylelint-enable */
+    padding: 0;
   }
 
   .q-tree__node-collapsible .q-tree__children {
@@ -52,12 +50,20 @@
 
 }
 
+.q-tree {
+  padding: 8px;
+}
+
 .q-tab__label {
   color: var(--q-color-primary);
   letter-spacing: 2px;
   @media (prefers-color-scheme: dark) {
     color: $light;
   }
+}
+
+.q-tree__node {
+  padding-bottom: 0;
 }
 
 .q-tab__indicator {
