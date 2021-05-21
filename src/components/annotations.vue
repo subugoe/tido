@@ -6,12 +6,12 @@
     <q-list>
       <q-item
         v-for="annotation in filterAnnotationTypes(annotations)"
-        :id="'list' + stripAnnotationId(annotation.target.id)"
-        :key="stripAnnotationId(annotation.id)"
+        :id="'list' + annotation.strippedId"
+        :key="annotation.strippedId"
         clickable
         padding="xs"
         class="q-pa-sm q-pl-xs q-mb-xs"
-        @click="toggle(stripAnnotationId(annotation.target.id))"
+        @click="toggle(annotation)"
       >
         <q-item-section
           avatar
@@ -28,6 +28,24 @@
         </q-item-section>
       </q-item>
     </q-list>
+    <div class="fab">
+      <q-fab
+        color="blue"
+        direction="up"
+        label="settings"
+      >
+        <q-fab-action
+          color="primary"
+          label="highlight all"
+          @click="highlight(true)"
+        />
+        <q-fab-action
+          color="primary"
+          label="highlight none"
+          @click="highlight(false)"
+        />
+      </q-fab>
+    </div>
   </div>
 
   <div v-else>
@@ -110,6 +128,8 @@ export default {
           types.push(annotation);
           // function is triggered on list rendering, so we use it as init call to set up the text
           this.setText(annotation);
+          annotation.status = true;
+          annotation.strippedId = this.stripAnnotationId(annotation.target.id);
         }
       });
       return types;
@@ -121,6 +141,10 @@ export default {
 
     getIconName(contentType) {
       return this.config.annotations.types.filter((annotation) => annotation.contenttype === contentType)[0].icon;
+    },
+
+    setStatus(annotation) {
+      annotation.status = true;
     },
 
     setText(annotation) {
@@ -145,9 +169,22 @@ export default {
       return url.split('/').pop();
     },
 
-    toggle(id) {
-      document.getElementById(id).classList.toggle('annotation-disabled');
-      document.getElementById(`list${id}`).classList.toggle('bg-grey-2');
+    toggle(annotation) {
+      annotation.status = annotation.status !== true;
+      document.getElementById(annotation.strippedId).classList.toggle('annotation-disabled');
+      document.getElementById(`list${annotation.strippedId}`).classList.toggle('bg-grey-2');
+    },
+
+    toggleAll() {
+      this.annotations.map((annotation) => this.toggle(annotation));
+    },
+
+    highlight(bool) {
+      this.annotations.filter((a) => a.status === bool).map((annotation) => this.toggle(annotation));
+    },
+
+    toggleStatus(annotation) {
+      annotation.status = annotation.status !== true;
     },
   },
 };
@@ -180,5 +217,10 @@ export default {
 
 .annotation-disabled > svg {
   display: none;
+}
+
+.fab {
+  bottom: 16px;
+  position: fixed;
 }
 </style>
