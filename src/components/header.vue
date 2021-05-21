@@ -1,7 +1,7 @@
 <template>
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'">
     <div class="header__wrap">
-      <q-toolbar>
+      <q-toolbar v-if="config.headers.info">
         <Infobar
           v-if="config.headers.info && manifests.length"
           class="col-xs-9"
@@ -10,6 +10,7 @@
           :manifests="manifests"
         />
         <div class="row no-wrap justify-end col-xs-3">
+          <!-- TODO: make component out of the following and re-use it to avoid duplication -->
           <Language
             v-if="standalone"
             :config="config"
@@ -34,6 +35,19 @@
             v-if="config.headers.toggle"
             :panels="panels"
           />
+
+          <div
+            v-if="!config.headers.info"
+            class="row no-wrap justify-end col-xs-3"
+          >
+            <!-- TODO: make component out of the following and re-use it to avoid duplication -->
+            <Language
+              v-if="standalone"
+              :config="config"
+            />
+            <Color :projectcolors="projectcolors" />
+            <Softwareinfo />
+          </div>
         </q-toolbar>
       </div>
     </div>
