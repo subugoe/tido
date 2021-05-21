@@ -158,6 +158,11 @@ export default {
 .annotation {
   background-color: $grey-4;
   border-bottom: 1px solid;
+  /**
+  * adding a linting exception here,
+  * because 1px is invalid, but needed here
+  * adding a global rule for this would introduce unnecessary error proneness
+  */
   /* stylelint-disable */
   margin: 0 1px;
   padding: 1px 1px 2px 1px;
