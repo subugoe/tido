@@ -153,24 +153,20 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 /* not in scope to style the text */
-.q-item__section--avatar {
-  min-width: 24px;
-}
-
-.q-item__section--side {
-  padding-right: unset;
-}
-
-.q-item {
-  min-height: unset;
-}
-
 .annotation {
-  border-bottom: 2px solid;
-  padding-bottom: 2px;
+  background-color: $grey-4;
+  border-bottom: 1px solid;
+  /* stylelint-disable */
+  margin: 0 1px;
+  padding: 1px 1px 2px 1px;
+  /* stylelint-enable */
   white-space: nowrap;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $grey-9;
+  }
 }
 
 .annotation-disabled {
@@ -180,5 +176,19 @@ export default {
 
 .annotation-disabled > svg {
   display: none;
+}
+</style>
+
+<style lang="scss" scoped>
+.q-item {
+  min-height: unset;
+}
+
+.q-item__section--avatar {
+  min-width: 24px;
+}
+
+.q-item__section--side {
+  padding-right: unset;
 }
 </style>
