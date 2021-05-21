@@ -28,24 +28,33 @@
         </q-item-section>
       </q-item>
     </q-list>
-    <div class="fab">
+    <q-page-sticky
+      position="bottom-right"
+      :offset="[18, 18]"
+    >
       <q-fab
-        color="blue"
+        color="primary"
         direction="up"
-        label="settings"
+        vertical-actions-align="right"
+        :icon="icons.fasCog"
+        :active-icon="icons.fasChevronDown"
       >
         <q-fab-action
           color="primary"
-          label="highlight all"
+          label="highlight all annotations in text"
+          label-position="left"
+          :icon="icons.fasEye"
           @click="highlight(true)"
         />
         <q-fab-action
           color="primary"
-          label="highlight none"
+          label="remove all annotation highlights in text"
+          label-position="left"
+          :icon="icons.fasEyeSlash"
           @click="highlight(false)"
         />
       </q-fab>
-    </div>
+    </q-page-sticky>
   </div>
 
   <div v-else>
@@ -128,7 +137,7 @@ export default {
           types.push(annotation);
           // function is triggered on list rendering, so we use it as init call to set up the text
           this.setText(annotation);
-          annotation.status = true;
+          annotation.status = this.config.annotations.show;
           annotation.strippedId = this.stripAnnotationId(annotation.target.id);
         }
       });
@@ -170,13 +179,15 @@ export default {
     },
 
     toggle(annotation) {
+      // toggle the boolean status value
       annotation.status = annotation.status !== true;
       document.getElementById(annotation.strippedId).classList.toggle('annotation-disabled');
       document.getElementById(`list${annotation.strippedId}`).classList.toggle('bg-grey-2');
     },
 
     toggleAll() {
-      this.annotations.map((annotation) => this.toggle(annotation));
+      // filter for annotations with a status to omit toggling hidden annotations
+      this.annotations.filter((a) => a.status).map((annotation) => this.toggle(annotation));
     },
 
     highlight(bool) {
@@ -219,8 +230,4 @@ export default {
   display: none;
 }
 
-.fab {
-  bottom: 16px;
-  position: fixed;
-}
 </style>
