@@ -30,16 +30,23 @@
     </q-list>
   </div>
 
-  <div v-else>
-    <p>One does not simply show annotations.</p>
+  <div
+    v-else
+    class="q-pa-sm"
+  >
+    <Notification :message="$t(messages.none)" />
   </div>
 </template>
 
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
+import Notification from '@/components/notification.vue';
 
 export default {
   name: 'Annotations',
+  components: {
+    Notification,
+  },
   props: {
     annotations: {
       type: Array,
@@ -52,6 +59,9 @@ export default {
   },
   data() {
     return {
+      messages: {
+        none: 'noAnnotationMessage',
+      },
       ids: [],
     };
   },
