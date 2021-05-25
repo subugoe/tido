@@ -15,7 +15,7 @@
 
     <q-separator inset />
 
-    <q-card-section class="text-body2 text-center text-uppercase">
+    <q-card-section class="text-body2 text-center">
       {{ message }}
     </q-card-section>
   </q-card>
