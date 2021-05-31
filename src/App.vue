@@ -20,7 +20,7 @@
     <q-page-container class="root">
       <router-view
         :annotations="annotations"
-        :annotationloading="annotationloading"
+        :annotation-loading="annotationLoading"
         :collection="collection"
         :config="config"
         :contenttypes="contentTypes"
@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       annotations: [],
-      annotationloading: false,
+      annotationLoading: false,
       collection: {},
       collectiontitle: '',
       config: {},
@@ -135,7 +135,7 @@ export default {
       */
     async getAnnotations(url) {
       this.annotations = [];
-      this.annotationloading = false;
+      this.annotationLoading = false;
 
       try {
         const annotations = await this.request(url);
@@ -156,7 +156,7 @@ export default {
         this.annotations = [];
         this.$q.notify({ message: 'No annotations available' });
       } finally {
-        this.annotationloading = true;
+        this.annotationLoading = true;
       }
     },
     /**

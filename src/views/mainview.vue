@@ -85,7 +85,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    annotationloading: {
+    annotationLoading: {
       type: Boolean,
       default: false,
     },

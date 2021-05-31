@@ -52,7 +52,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    annotationloading: {
+    annotationLoading: {
       type: Boolean,
       default: false,
     },
@@ -86,7 +86,7 @@ export default {
       this.ids = [...doc.body.querySelectorAll('[id]')].map((el) => el.getAttribute('id'));
 
       const interval = setInterval(() => {
-        if (this.annotationloading) {
+        if (this.annotationLoading) {
           this.types = this.filterAnnotationTypes();
 
           clearInterval(interval);
