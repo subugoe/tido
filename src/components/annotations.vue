@@ -5,7 +5,7 @@
   >
     <q-list>
       <q-item
-        v-for="annotation in filterAnnotationTypes(annotations)"
+        v-for="annotation in types"
         :id="'list' + stripAnnotationId(annotation.target.id)"
         :key="stripAnnotationId(annotation.id)"
         clickable
@@ -52,6 +52,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    annotationLoading: {
+      type: Boolean,
+      default: false,
+    },
     config: {
       type: Object,
       default: () => {},
@@ -63,26 +67,31 @@ export default {
         none: 'noAnnotationMessage',
       },
       ids: [],
+      types: [],
     };
   },
   computed: {
     configuredTypes() {
-      const types = [];
-      this.config.annotations.types.forEach((type) => types.push(type.contenttype));
-
-      return types;
+      return this.config.annotations.types.map((type) => type.contenttype);
     },
   },
   created() {
     this.icons = Icons;
   },
   mounted() {
-    this.$root.$on('update-content', async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    this.$root.$on('update-annotations', (content) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(content, 'text/html');
 
-      const ids = [...document.querySelectorAll('.ab')].map((x) => x.id);
+      this.ids = [...doc.body.querySelectorAll('[id]')].map((el) => el.getAttribute('id'));
 
-      this.ids = ids;
+      const interval = setInterval(() => {
+        if (this.annotationLoading) {
+          this.types = this.filterAnnotationTypes();
+
+          clearInterval(interval);
+        }
+      }, 500);
     });
   },
   methods: {
@@ -110,19 +119,17 @@ export default {
     * @return array of annotations excluding unconfigured ones
     */
     filterAnnotationTypes() {
-      const types = [];
-      this.annotations.forEach((annotation) => {
-        let id = annotation.target.id.split('/');
+      return this.annotations.filter((annotation) => {
+        const annotationIds = this.ids.includes(this.stripAnnotationId(annotation.target.id));
 
-        id = id[id.length - 1];
-
-        if (this.configuredTypes.filter((type) => type === annotation.body['x-content-type']).length > 0 && this.ids.some((x) => id.startsWith(x))) {
-          types.push(annotation);
-          // function is triggered on list rendering, so we use it as init call to set up the text
+        if (this.configuredTypes.find((type) => type === annotation.body['x-content-type']) && annotationIds) {
           this.setText(annotation);
+
+          return true;
         }
+
+        return false;
       });
-      return types;
     },
 
     getIcon(contentType) {
