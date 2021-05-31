@@ -24,7 +24,7 @@
         </q-item-section>
 
         <q-item-section>
-          {{ annotation.body.value }}
+          <AnnotationUrls :content="annotation.body.value" />
         </q-item-section>
       </q-item>
     </q-list>
@@ -40,11 +40,13 @@
 
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
+import AnnotationUrls from '@/components/urls.vue';
 import Notification from '@/components/notification.vue';
 
 export default {
   name: 'Annotations',
   components: {
+    AnnotationUrls,
     Notification,
   },
   props: {
