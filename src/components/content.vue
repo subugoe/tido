@@ -112,15 +112,16 @@ export default {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
     },
-    activeTab(url) {
-      this.request(url, 'text').then((data) => {
-        if (this.supportType) {
-          this.getSupport(this.manifests[0].support);
-        }
+    async activeTab(url) {
+      const data = await this.request(url, 'text');
 
-        this.content = data;
-        this.$root.$emit('update-content');
-      });
+      if (this.supportType) {
+        this.getSupport(this.manifests[0].support);
+      }
+
+      this.content = data;
+
+      this.$root.$emit('update-annotations', data);
     },
   },
   async created() {
@@ -175,20 +176,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .rtl {
-    direction: rtl;
-  }
+.rtl {
+  direction: rtl;
+}
 
-  .default-cursor {
-    cursor: default !important;
-  }
+.default-cursor {
+  cursor: default !important;
+}
 
-  .item-content {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    height: 100vh;
-    overflow: auto;
-    padding: 8px;
-  }
+.item-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
+  padding: 8px;
+}
 </style>
