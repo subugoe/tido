@@ -5,7 +5,7 @@
   >
     <q-list>
       <q-item
-        v-for="annotation in filterAnnotationTypes(annotations)"
+        v-for="annotation in hotAnnotations"
         :id="'list' + annotation.strippedId"
         :key="annotation.strippedId"
         clickable
@@ -24,7 +24,7 @@
         </q-item-section>
 
         <q-item-section>
-          {{ annotation.body.value }}
+          <AnnotationUrls :content="annotation.body.value" />
         </q-item-section>
       </q-item>
     </q-list>
@@ -57,20 +57,33 @@
     </q-page-sticky>
   </div>
 
-  <div v-else>
-    <p>One does not simply show annotations.</p>
+  <div
+    v-else
+    class="q-pa-sm"
+  >
+    <Notification :message="$t(messages.none)" />
   </div>
 </template>
 
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
+import AnnotationUrls from '@/components/urls.vue';
+import Notification from '@/components/notification.vue';
 
 export default {
   name: 'Annotations',
+  components: {
+    AnnotationUrls,
+    Notification,
+  },
   props: {
     annotations: {
       type: Array,
       default: () => [],
+    },
+    annotationLoading: {
+      type: Boolean,
+      default: false,
     },
     config: {
       type: Object,
@@ -79,27 +92,35 @@ export default {
   },
   data() {
     return {
+      messages: {
+        none: 'noAnnotationMessage',
+      },
       ids: [],
+      hotAnnotations: [],
     };
   },
   computed: {
     configuredTypes() {
-      const types = [];
-      this.config.annotations.types.forEach((type) => types.push(type.contenttype));
-
-      return types;
+      return this.config.annotations.types.map((type) => type.contenttype);
     },
   },
   created() {
     this.icons = Icons;
   },
   mounted() {
-    this.$root.$on('update-content', async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    this.$root.$on('update-annotations', (content) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(content, 'text/html');
 
-      const ids = [...document.querySelectorAll('.ab')].map((x) => x.id);
+      this.ids = [...doc.body.querySelectorAll('[id]')].map((el) => el.getAttribute('id'));
 
-      this.ids = ids;
+      const interval = setInterval(() => {
+        if (this.annotationLoading) {
+          this.hotAnnotations = this.filterAnnotationTypes();
+
+          clearInterval(interval);
+        }
+      }, 500);
     });
   },
   methods: {
@@ -108,7 +129,7 @@ export default {
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
       svg.setAttribute('aria-hidden', 'true');
-      svg.setAttribute('class', 'q-icon q-ml-sm');
+      svg.setAttribute('class', 'q-icon q-ml-xs');
       svg.setAttribute('focusable', 'false');
       svg.setAttribute('role', 'presentation');
       svg.setAttribute('viewBox', viewBox);
@@ -124,24 +145,19 @@ export default {
     /**
     * filter the configured annotation types (index.html)
     *
-    * @return array of annotations excluding unconfigured ones
+    * @returns array of annotations
     */
     filterAnnotationTypes() {
-      const types = [];
-      this.annotations.forEach((annotation) => {
-        let id = annotation.target.id.split('/');
+      return this.annotations.filter((annotation) => {
+        const annotationIds = this.ids.includes(this.stripAnnotationId(annotation.target.id));
 
-        id = id[id.length - 1];
-
-        if (this.configuredTypes.filter((type) => type === annotation.body['x-content-type']).length > 0 && this.ids.some((x) => id.startsWith(x))) {
-          types.push(annotation);
-          // function is triggered on list rendering, so we use it as init call to set up the text
+        if (this.configuredTypes.find((type) => type === annotation.body['x-content-type']) && annotationIds) {
           this.setText(annotation);
           annotation.status = this.config.annotations.show;
           annotation.strippedId = this.stripAnnotationId(annotation.target.id);
         }
+        return true;
       });
-      return types;
     },
 
     getIcon(contentType) {
@@ -201,24 +217,25 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 /* not in scope to style the text */
-.q-item__section--avatar {
-  min-width: 24px;
-}
-
-.q-item__section--side {
-  padding-right: unset;
-}
-
-.q-item {
-  min-height: unset;
-}
-
 .annotation {
-  border-bottom: 2px solid;
-  padding-bottom: 2px;
+  background-color: $grey-4;
+  border-bottom: 1px solid;
+  /**
+  * adding a linting exception here,
+  * because 1px is invalid, but needed here
+  * adding a global rule for this would introduce unnecessary error proneness
+  */
+  /* stylelint-disable */
+  margin: 0 1px;
+  padding: 1px 1px 2px 1px;
+  /* stylelint-enable */
   white-space: nowrap;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $grey-9;
+  }
 }
 
 .annotation-disabled {
@@ -230,4 +247,18 @@ export default {
   display: none;
 }
 
+</style>
+
+<style lang="scss" scoped>
+.q-item {
+  min-height: unset;
+}
+
+.q-item__section--avatar {
+  min-width: 24px;
+}
+
+.q-item__section--side {
+  padding-right: unset;
+}
 </style>
