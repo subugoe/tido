@@ -11,7 +11,7 @@
         clickable
         padding="xs"
         class="q-pa-sm q-pl-xs q-mb-xs"
-        @click="toggle(annotation)"
+        @click="toggle(annotation); statusCheck();"
       >
         <q-item-section
           avatar
@@ -43,15 +43,17 @@
           color="primary"
           label="highlight all annotations in text"
           label-position="left"
+          :disable="selectedAll"
           :icon="icons.fasEye"
-          @click="highlight(true)"
+          @click="toggleTo(true)"
         />
         <q-fab-action
           color="primary"
           label="remove all annotation highlights in text"
           label-position="left"
+          :disable="selectedNone"
           :icon="icons.fasEyeSlash"
-          @click="highlight(false)"
+          @click="toggleTo(false)"
         />
       </q-fab>
     </q-page-sticky>
@@ -97,6 +99,8 @@ export default {
       },
       ids: [],
       hotAnnotations: [],
+      selectedAll: undefined,
+      selectedNone: undefined,
     };
   },
   computed: {
@@ -117,7 +121,6 @@ export default {
       const interval = setInterval(() => {
         if (this.annotationLoading) {
           this.hotAnnotations = this.filterAnnotationTypes();
-
           clearInterval(interval);
         }
       }, 500);
@@ -143,20 +146,23 @@ export default {
     },
 
     /**
-    * filter the configured annotation types (index.html)
+    * filter for configured annotation types (index.html)
     *
-    * @returns array of annotations
+    * @return array of annotations excluding unconfigured ones
     */
     filterAnnotationTypes() {
       return this.annotations.filter((annotation) => {
-        const annotationIds = this.ids.includes(this.stripAnnotationId(annotation.target.id));
-
+        annotation.strippedId = this.stripAnnotationId(annotation.target.id);
+        const targetId = annotation.strippedId;
+        const annotationIds = this.ids.includes(targetId);
+        this.$set(annotation, 'status', this.config.annotations.show);
         if (this.configuredTypes.find((type) => type === annotation.body['x-content-type']) && annotationIds) {
           this.setText(annotation);
-          annotation.status = this.config.annotations.show;
-          annotation.strippedId = this.stripAnnotationId(annotation.target.id);
+
+          return true;
         }
-        return true;
+
+        return false;
       });
     },
 
@@ -166,10 +172,6 @@ export default {
 
     getIconName(contentType) {
       return this.config.annotations.types.filter((annotation) => annotation.contenttype === contentType)[0].icon;
-    },
-
-    setStatus(annotation) {
-      annotation.status = true;
     },
 
     setText(annotation) {
@@ -184,6 +186,21 @@ export default {
       textElement.classList.toggle('annotation-disabled');
     },
 
+    statusCheck() {
+      const num = this.hotAnnotations.length;
+      const active = this.hotAnnotations.filter((a) => a.status === true).length;
+      if (num === active) {
+        this.selectedAll = false;
+        this.selectedNone = true;
+      } else if (active === 0) {
+        this.selectedAll = true;
+        this.selectedNone = false;
+      } else {
+        this.selectedAll = false;
+        this.selectedNone = false;
+      }
+    },
+
     /**
     * get the annotation id of the current item
     *
@@ -195,23 +212,16 @@ export default {
     },
 
     toggle(annotation) {
-      // toggle the boolean status value
-      annotation.status = annotation.status !== true;
-      document.getElementById(annotation.strippedId).classList.toggle('annotation-disabled');
-      document.getElementById(`list${annotation.strippedId}`).classList.toggle('bg-grey-2');
+      const id = annotation.strippedId;
+      annotation.status = !annotation.status;
+      document.getElementById(id).classList.toggle('annotation-disabled');
+      document.getElementById(`list${id}`).classList.toggle('bg-grey-2');
     },
 
-    toggleAll() {
-      // filter for annotations with a status to omit toggling hidden annotations
-      this.annotations.filter((a) => a.status).map((annotation) => this.toggle(annotation));
-    },
-
-    highlight(bool) {
-      this.annotations.filter((a) => a.status === bool).map((annotation) => this.toggle(annotation));
-    },
-
-    toggleStatus(annotation) {
-      annotation.status = annotation.status !== true;
+    toggleTo(bool) {
+      this.hotAnnotations.filter((a) => a.status === bool).map((annotation) => this.toggle(annotation));
+      this.selectedAll = bool;
+      this.selectedNone = !bool;
     },
   },
 };
@@ -246,7 +256,6 @@ export default {
 .annotation-disabled > svg {
   display: none;
 }
-
 </style>
 
 <style lang="scss" scoped>
