@@ -188,7 +188,7 @@ export default {
 
     statusCheck() {
       const num = this.hotAnnotations.length;
-      const active = this.hotAnnotations.filter((a) => a.status === true).length;
+      const active = this.hotAnnotations.filter((annotation) => annotation.status === true).length;
       if (num === active) {
         this.selectedAll = false;
         this.selectedNone = true;
@@ -219,7 +219,7 @@ export default {
     },
 
     toggleTo(bool) {
-      this.hotAnnotations.filter((a) => a.status === bool).map((annotation) => this.toggle(annotation));
+      this.hotAnnotations.filter((annotation) => annotation.status === bool).map((annotation) => this.toggle(annotation));
       this.selectedAll = bool;
       this.selectedNone = !bool;
     },
