@@ -41,7 +41,7 @@
       >
         <q-fab-action
           color="primary"
-          label="highlight all annotations in text"
+          label="Highlight All Annotations in Text Panel"
           label-position="left"
           :disable="selectedAll"
           :icon="icons.fasEye"
@@ -49,7 +49,7 @@
         />
         <q-fab-action
           color="primary"
-          label="remove all annotation highlights in text"
+          label="Remove All Highlights in Text Panel"
           label-position="left"
           :disable="selectedNone"
           :icon="icons.fasEyeSlash"
