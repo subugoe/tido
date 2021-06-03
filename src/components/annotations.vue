@@ -10,35 +10,11 @@
       :toggle="toggle"
     />
 
-    <q-page-sticky
-      :offset="[18, 18]"
-      position="bottom-right"
-    >
-      <q-fab
-        color="primary"
-        direction="up"
-        vertical-actions-align="right"
-        :active-icon="icons.fasChevronDown"
-        :icon="icons.fasCog"
-      >
-        <q-fab-action
-          color="primary"
-          label="Highlight All Annotations in Text Panel"
-          label-position="left"
-          :disable="selectedAll"
-          :icon="icons.fasEye"
-          @click="toggleTo(true)"
-        />
-        <q-fab-action
-          color="primary"
-          label="Remove All Highlights in Text Panel"
-          label-position="left"
-          :disable="selectedNone"
-          :icon="icons.fasEyeSlash"
-          @click="toggleTo(false)"
-        />
-      </q-fab>
-    </q-page-sticky>
+    <AnnotationOptions
+      :selected-all="selectedAll"
+      :selected-none="selectedNone"
+      :toggle-to="toggleTo"
+    />
   </div>
 
   <div
@@ -51,13 +27,17 @@
 
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
+
 import AnnotationList from '@/components/annotationlist.vue';
+import AnnotationOptions from '@/components/annotationoptions.vue';
+
 import Notification from '@/components/notification.vue';
 
 export default {
   name: 'Annotations',
   components: {
     AnnotationList,
+    AnnotationOptions,
     Notification,
   },
   props: {
@@ -89,9 +69,6 @@ export default {
     configuredTypes() {
       return this.config.annotations.types.map((type) => type.contenttype);
     },
-  },
-  created() {
-    this.icons = Icons;
   },
   mounted() {
     this.$root.$on('update-annotations', (content) => {
