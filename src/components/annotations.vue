@@ -5,13 +5,13 @@
   >
     <q-list>
       <q-item
-        v-for="annotation in types"
-        :id="'list' + stripAnnotationId(annotation.target.id)"
-        :key="stripAnnotationId(annotation.id)"
+        v-for="annotation in hotAnnotations"
+        :id="'list' + annotation.strippedId"
+        :key="annotation.strippedId"
         clickable
         padding="xs"
         class="q-pa-sm q-pl-xs q-mb-xs"
-        @click="toggle(stripAnnotationId(annotation.target.id))"
+        @click="toggle(annotation); statusCheck();"
       >
         <q-item-section
           avatar
@@ -28,6 +28,35 @@
         </q-item-section>
       </q-item>
     </q-list>
+    <q-page-sticky
+      position="bottom-right"
+      :offset="[18, 18]"
+    >
+      <q-fab
+        color="primary"
+        direction="up"
+        vertical-actions-align="right"
+        :icon="icons.fasCog"
+        :active-icon="icons.fasChevronDown"
+      >
+        <q-fab-action
+          color="primary"
+          label="Highlight All Annotations in Text Panel"
+          label-position="left"
+          :disable="selectedAll"
+          :icon="icons.fasEye"
+          @click="toggleTo(true)"
+        />
+        <q-fab-action
+          color="primary"
+          label="Remove All Highlights in Text Panel"
+          label-position="left"
+          :disable="selectedNone"
+          :icon="icons.fasEyeSlash"
+          @click="toggleTo(false)"
+        />
+      </q-fab>
+    </q-page-sticky>
   </div>
 
   <div
@@ -69,7 +98,9 @@ export default {
         none: 'noAnnotationMessage',
       },
       ids: [],
-      types: [],
+      hotAnnotations: [],
+      selectedAll: undefined,
+      selectedNone: undefined,
     };
   },
   computed: {
@@ -89,8 +120,7 @@ export default {
 
       const interval = setInterval(() => {
         if (this.annotationLoading) {
-          this.types = this.filterAnnotationTypes();
-
+          this.hotAnnotations = this.filterAnnotationTypes();
           clearInterval(interval);
         }
       }, 500);
@@ -116,14 +146,16 @@ export default {
     },
 
     /**
-    * filter the configured annotation types (index.html)
+    * filter for configured annotation types (index.html)
     *
     * @return array of annotations excluding unconfigured ones
     */
     filterAnnotationTypes() {
       return this.annotations.filter((annotation) => {
-        const annotationIds = this.ids.includes(this.stripAnnotationId(annotation.target.id));
-
+        annotation.strippedId = this.stripAnnotationId(annotation.target.id);
+        const targetId = annotation.strippedId;
+        const annotationIds = this.ids.includes(targetId);
+        this.$set(annotation, 'status', this.config.annotations.show);
         if (this.configuredTypes.find((type) => type === annotation.body['x-content-type']) && annotationIds) {
           this.setText(annotation);
 
@@ -154,6 +186,21 @@ export default {
       textElement.classList.toggle('annotation-disabled');
     },
 
+    statusCheck() {
+      const num = this.hotAnnotations.length;
+      const active = this.hotAnnotations.filter((annotation) => annotation.status === true).length;
+      if (num === active) {
+        this.selectedAll = false;
+        this.selectedNone = true;
+      } else if (active === 0) {
+        this.selectedAll = true;
+        this.selectedNone = false;
+      } else {
+        this.selectedAll = false;
+        this.selectedNone = false;
+      }
+    },
+
     /**
     * get the annotation id of the current item
     *
@@ -164,9 +211,17 @@ export default {
       return url.split('/').pop();
     },
 
-    toggle(id) {
+    toggle(annotation) {
+      const id = annotation.strippedId;
+      annotation.status = !annotation.status;
       document.getElementById(id).classList.toggle('annotation-disabled');
       document.getElementById(`list${id}`).classList.toggle('bg-grey-2');
+    },
+
+    toggleTo(bool) {
+      this.hotAnnotations.filter((annotation) => annotation.status === bool).map((annotation) => this.toggle(annotation));
+      this.selectedAll = bool;
+      this.selectedNone = !bool;
     },
   },
 };
