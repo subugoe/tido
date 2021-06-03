@@ -1,5 +1,9 @@
 <template>
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'">
+    <ProjectHeader
+      v-if="config.projectheader.show"
+      :projectheader="projectheader"
+    />
     <div class="header__wrap">
       <q-toolbar v-if="config.headers.info">
         <Infobar
@@ -61,6 +65,7 @@ import Language from '@/components/language.vue';
 import Navbar from '@/components/navbar.vue';
 import Softwareinfo from '@/components/softwareinfo.vue';
 import TogglePanels from '@/components/togglebar/togglePanels.vue';
+import ProjectHeader from '@/components/projectheader.vue';
 
 export default {
   name: 'Header',
@@ -71,6 +76,7 @@ export default {
     Navbar,
     Softwareinfo,
     TogglePanels,
+    ProjectHeader,
   },
   props: {
     collectiontitle: {
@@ -106,6 +112,10 @@ export default {
       default: () => {},
     },
     standalone: Boolean,
+    projectheader: {
+      type: Object,
+      default: () => {},
+    },
   },
 };
 </script>
