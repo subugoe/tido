@@ -3,7 +3,10 @@
     v-if="annotations.length"
     class="q-ma-sm annotations"
   >
-    <AnnotationToggles />
+    <AnnotationToggles
+      :config="config"
+      :configured-types="configuredTypes"
+    />
 
     <AnnotationList
       :hot-annotations="hotAnnotations"
