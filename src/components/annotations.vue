@@ -3,6 +3,8 @@
     v-if="annotations.length"
     class="q-ma-sm annotations"
   >
+    <AnnotationToggles />
+
     <AnnotationList
       :hot-annotations="hotAnnotations"
       :get-icon="getIcon"
@@ -28,6 +30,7 @@
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
 
+import AnnotationToggles from '@/components/annotationtoggles.vue';
 import AnnotationList from '@/components/annotationlist.vue';
 import AnnotationOptions from '@/components/annotationoptions.vue';
 
@@ -36,6 +39,7 @@ import Notification from '@/components/notification.vue';
 export default {
   name: 'Annotations',
   components: {
+    AnnotationToggles,
     AnnotationList,
     AnnotationOptions,
     Notification,
