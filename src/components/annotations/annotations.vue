@@ -30,9 +30,9 @@
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
 
-import AnnotationToggles from '@/components/annotationtoggles.vue';
-import AnnotationList from '@/components/annotationlist.vue';
-import AnnotationOptions from '@/components/annotationoptions.vue';
+import AnnotationToggles from '@/components/annotations/toggles.vue';
+import AnnotationList from '@/components/annotations/list.vue';
+import AnnotationOptions from '@/components/annotations/options.vue';
 
 import Notification from '@/components/notification.vue';
 
