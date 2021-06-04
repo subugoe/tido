@@ -4,7 +4,16 @@
     :class="$q.dark.isActive ? 'bg-white text-black' : 'bg-accent'"
   >
     <div class="content">
-      <q-breadcrumbs :class="$q.dark.isActive ? 'text-black' : 'text-white'">
+      <q-breadcrumbs
+        :class="$q.dark.isActive ? 'text-black' : 'text-white'"
+        class="text-weight-medium"
+      >
+        <template v-slot:separator>
+          <q-icon
+            size="1em"
+            :name="fasChevronRight"
+          />
+        </template>
         <q-breadcrumbs-el
           :class="$q.dark.isActive ? 'text-black' : 'text-white'"
           :label="projectheader.title_back"
@@ -25,6 +34,7 @@
 import {
   fasHome,
   fasFileAlt,
+  fasChevronRight,
 } from '@quasar/extras/fontawesome-v5';
 
 export default {
@@ -38,6 +48,7 @@ export default {
   created() {
     this.fasHome = fasHome;
     this.fasFileAlt = fasFileAlt;
+    this.fasChevronRight = fasChevronRight;
   },
 };
 </script>
