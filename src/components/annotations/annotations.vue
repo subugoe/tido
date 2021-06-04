@@ -8,8 +8,8 @@
       :configured-types="configuredTypes"
     />
 
-    <hr/>
-    
+    <q-separator />
+
     <AnnotationList
       :hot-annotations="hotAnnotations"
       :get-icon="getIcon"
