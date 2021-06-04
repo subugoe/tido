@@ -7,7 +7,7 @@
     <q-toggle
       v-for="(type, index) in config.annotations.types"
       :key="index"
-      v-model="typeToggles"
+      v-model="activeTypes"
       :color="$q.dark.isActive ? 'grey-8' : 'accent'"
       :disable="typeDisabled(type.contenttype)"
       :icon="icons[type.icon]"
@@ -31,7 +31,7 @@ export default {
       type: Object,
       default: () => {},
     },
-    configuredTypes: {
+    hotAnnotations: {
       type: Array,
       default: () => [],
     },
@@ -39,15 +39,17 @@ export default {
   data() {
     return {
       icons: {},
-      typeToggles: [],
     };
   },
   created() {
     this.icons = Icons;
   },
   methods: {
+    activeTypes() {
+      return [...new Set(this.hotAnnotations.map((annotation) => annotation.body['x-content-type']))];
+    },
     typeDisabled(type) {
-      return !this.configuredTypes.includes(type);
+      return !this.activeTypes.includes(type);
     },
   },
 };
