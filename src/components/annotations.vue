@@ -132,7 +132,7 @@ export default {
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
       svg.setAttribute('aria-hidden', 'true');
-      svg.setAttribute('class', 'q-icon q-ml-xs');
+      svg.setAttribute('class', 'q-icon q-mx-xs');
       svg.setAttribute('focusable', 'false');
       svg.setAttribute('role', 'presentation');
       svg.setAttribute('viewBox', viewBox);
