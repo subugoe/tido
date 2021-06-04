@@ -8,7 +8,7 @@
         :class="$q.dark.isActive ? 'text-black' : 'text-white'"
         class="text-weight-medium"
       >
-        <template v-slot:separator>
+        <template #separator>
           <q-icon
             size="1em"
             :name="fasChevronRight"
