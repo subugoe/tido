@@ -8,6 +8,8 @@
       :configured-types="configuredTypes"
     />
 
+    <hr/>
+    
     <AnnotationList
       :hot-annotations="hotAnnotations"
       :get-icon="getIcon"
