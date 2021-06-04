@@ -3,60 +3,20 @@
     v-if="annotations.length"
     class="q-ma-sm annotations"
   >
-    <q-list>
-      <q-item
-        v-for="annotation in hotAnnotations"
-        :id="'list' + annotation.strippedId"
-        :key="annotation.strippedId"
-        clickable
-        padding="xs"
-        class="q-pa-sm q-pl-xs q-mb-xs"
-        @click="toggle(annotation); statusCheck();"
-      >
-        <q-item-section
-          avatar
-          class="q-mr-none"
-        >
-          <q-icon
-            :name="getIcon(annotation.body['x-content-type'])"
-            size="16px"
-          />
-        </q-item-section>
+    <AnnotationToggles />
 
-        <q-item-section>
-          <AnnotationUrls :content="annotation.body.value" />
-        </q-item-section>
-      </q-item>
-    </q-list>
-    <q-page-sticky
-      position="bottom-right"
-      :offset="[18, 18]"
-    >
-      <q-fab
-        color="primary"
-        direction="up"
-        vertical-actions-align="right"
-        :icon="icons.fasCog"
-        :active-icon="icons.fasChevronDown"
-      >
-        <q-fab-action
-          color="primary"
-          label="Highlight All Annotations in Text Panel"
-          label-position="left"
-          :disable="selectedAll"
-          :icon="icons.fasEye"
-          @click="toggleTo(true)"
-        />
-        <q-fab-action
-          color="primary"
-          label="Remove All Highlights in Text Panel"
-          label-position="left"
-          :disable="selectedNone"
-          :icon="icons.fasEyeSlash"
-          @click="toggleTo(false)"
-        />
-      </q-fab>
-    </q-page-sticky>
+    <AnnotationList
+      :hot-annotations="hotAnnotations"
+      :get-icon="getIcon"
+      :status-check="statusCheck"
+      :toggle="toggle"
+    />
+
+    <AnnotationOptions
+      :selected-all="selectedAll"
+      :selected-none="selectedNone"
+      :toggle-to="toggleTo"
+    />
   </div>
 
   <div
@@ -69,13 +29,19 @@
 
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
-import AnnotationUrls from '@/components/urls.vue';
+
+import AnnotationToggles from '@/components/annotations/toggles.vue';
+import AnnotationList from '@/components/annotations/list.vue';
+import AnnotationOptions from '@/components/annotations/options.vue';
+
 import Notification from '@/components/notification.vue';
 
 export default {
   name: 'Annotations',
   components: {
-    AnnotationUrls,
+    AnnotationToggles,
+    AnnotationList,
+    AnnotationOptions,
     Notification,
   },
   props: {
@@ -94,11 +60,11 @@ export default {
   },
   data() {
     return {
+      hotAnnotations: [],
+      ids: [],
       messages: {
         none: 'noAnnotationMessage',
       },
-      ids: [],
-      hotAnnotations: [],
       selectedAll: undefined,
       selectedNone: undefined,
     };
@@ -107,9 +73,6 @@ export default {
     configuredTypes() {
       return this.config.annotations.types.map((type) => type.contenttype);
     },
-  },
-  created() {
-    this.icons = Icons;
   },
   mounted() {
     this.$root.$on('update-annotations', (content) => {
@@ -152,16 +115,16 @@ export default {
     */
     filterAnnotationTypes() {
       return this.annotations.filter((annotation) => {
-        annotation.strippedId = this.stripAnnotationId(annotation.target.id);
-        const targetId = annotation.strippedId;
-        const annotationIds = this.ids.includes(targetId);
         this.$set(annotation, 'status', this.config.annotations.show);
+
+        annotation.strippedId = this.stripAnnotationId(annotation.target.id);
+        const annotationIds = this.ids.includes(annotation.strippedId);
+
         if (this.configuredTypes.find((type) => type === annotation.body['x-content-type']) && annotationIds) {
           this.setText(annotation);
 
           return true;
         }
-
         return false;
       });
     },
@@ -189,6 +152,7 @@ export default {
     statusCheck() {
       const num = this.hotAnnotations.length;
       const active = this.hotAnnotations.filter((annotation) => annotation.status === true).length;
+
       if (num === active) {
         this.selectedAll = false;
         this.selectedNone = true;
@@ -212,8 +176,10 @@ export default {
     },
 
     toggle(annotation) {
-      const id = annotation.strippedId;
       annotation.status = !annotation.status;
+
+      const id = annotation.strippedId;
+
       document.getElementById(id).classList.toggle('annotation-disabled');
       document.getElementById(`list${id}`).classList.toggle('bg-grey-2');
     },

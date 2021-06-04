@@ -1,4 +1,4 @@
-import Annotations from '@/components/annotations.vue';
+import Annotations from '@/components/annotations/annotations.vue';
 import Content from '@/components/content.vue';
 import Metadata from '@/components/metadata.vue';
 import OpenSeadragon from '@/components/openseadragon.vue';
