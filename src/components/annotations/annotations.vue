@@ -16,14 +16,15 @@
         @click="activeTab(annotationTab.key)"
       />
     </q-tabs>
+
     <div
-      v-if="currentAnnotation.length"
+      v-if="currentAnnotations.length"
       class="q-ma-sm"
     >
       <AnnotationToggles />
 
       <AnnotationList
-        :hot-annotations="currentAnnotation"
+        :hot-annotations="currentAnnotations"
         :get-icon="getIcon"
         :status-check="statusCheck"
         :toggle="toggle"
@@ -92,22 +93,22 @@ export default {
     configuredTypes() {
       return this.config.annotations.types.map((type) => type.contenttype);
     },
-    currentAnnotation() {
-      const tabFields = this.annotationTabs.find((collection) => collection.key === this.currentTab);
+    currentAnnotations() {
+      const contentType = this.annotationTabs.find((collection) => collection.key === this.currentTab);
 
-      return this.hotAnnotations.filter((annotationCollection) => tabFields.field.includes(annotationCollection.body['x-content-type']));
+      return this.hotAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
     },
     annotationTabs() {
       return [
         {
           collectionTitle: 'Editorial',
           key: 'editorial',
-          field: ['Place', 'Person', 'Editorial Comment'],
+          type: ['Place', 'Person', 'Editorial Comment'],
         },
         {
           collectionTitle: 'Motifs',
           key: 'motifs',
-          field: ['Motif'],
+          type: ['Motif'],
         },
       ];
     },
@@ -122,6 +123,7 @@ export default {
       const interval = setInterval(() => {
         if (this.annotationLoading) {
           this.hotAnnotations = this.filterAnnotationTypes();
+          this.highlightActiveTabContent('editorial');
           clearInterval(interval);
         }
       }, 500);
@@ -130,8 +132,26 @@ export default {
     });
   },
   methods: {
+    highlightActiveTabContent(key) {
+      const contentTypes = this.annotationTabs.find((content) => content.key === key).type;
+
+      this.annotations.forEach((annotation) => {
+        const id = this.stripAnnotationId(annotation.target.id);
+        const textElement = document.getElementById(id);
+
+        if (contentTypes.includes(annotation.body['x-content-type'])) {
+          textElement.classList.add('annotation');
+          textElement.classList.add('annotation-disabled');
+        } else {
+          textElement.classList.remove('annotation');
+          textElement.classList.add('annotation-disabled');
+        }
+      });
+    },
     activeTab(key) {
       this.currentTab = key;
+
+      this.highlightActiveTabContent(key);
     },
     createSVG(name) {
       const [path, viewBox] = Icons[name].split('|');
@@ -188,6 +208,8 @@ export default {
 
       try {
         svg = this.createSVG(this.getIconName(contentType));
+
+        svg.setAttribute('id', `annotation-icon-${id}`);
       } catch (err) {
         svg = null;
       }
@@ -195,9 +217,6 @@ export default {
       if (svg) {
         textElement.prepend(svg);
       }
-
-      textElement.classList.toggle('annotation');
-      textElement.classList.toggle('annotation-disabled');
     },
 
     statusCheck() {
@@ -239,6 +258,13 @@ export default {
       this.hotAnnotations.filter((annotation) => annotation.status === bool).map((annotation) => this.toggle(annotation));
       this.selectedAll = bool;
       this.selectedNone = !bool;
+    },
+    toggleAnnotationList(id) {
+      try {
+        document.getElementById(`list${id}`).classList.toggle('bg-grey-2');
+      } catch (err) {
+        // Error display
+      }
     },
   },
 };
