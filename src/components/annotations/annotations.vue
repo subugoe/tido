@@ -228,17 +228,3 @@ export default {
   display: none;
 }
 </style>
-
-<style lang="scss" scoped>
-.q-item {
-  min-height: unset;
-}
-
-.q-item__section--avatar {
-  min-width: 24px;
-}
-
-.q-item__section--side {
-  padding-right: unset;
-}
-</style>

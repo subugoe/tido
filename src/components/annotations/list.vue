@@ -54,3 +54,17 @@ export default {
   },
 };
 </script>
+
+<style>
+.q-item__section--avatar {
+  min-width: 24px;
+}
+
+.q-item__section--side {
+  padding-right: unset;
+}
+
+.q-item {
+  min-height: unset;
+}
+</style>
