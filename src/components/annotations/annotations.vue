@@ -259,13 +259,6 @@ export default {
       this.selectedAll = bool;
       this.selectedNone = !bool;
     },
-    toggleAnnotationList(id) {
-      try {
-        document.getElementById(`list${id}`).classList.toggle('bg-grey-2');
-      } catch (err) {
-        // Error display
-      }
-    },
   },
 };
 </script>
