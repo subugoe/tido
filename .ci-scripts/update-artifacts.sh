@@ -12,7 +12,7 @@ curl --output old-artifact.zip --header "PRIVATE-TOKEN: $API_TOKEN" "https://git
 # add current data to artifact
 unzip -u old-artifact.zip
 
-if [[ $CONTINUE_BUILD == "true" ]]; then
+if [[ $CONTINUE_BUILD == "true" || ($CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "develop") ]]; then
     mkdir -p public/{${CI_COMMIT_SHORT_SHA},${CI_COMMIT_REF_SLUG}}
     echo public/${CI_COMMIT_SHORT_SHA} public/${CI_COMMIT_REF_SLUG} | xargs -n 1 cp --remove-destination --recursive ${dist_dir}/*
 
