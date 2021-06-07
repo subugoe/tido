@@ -1,69 +1,88 @@
 <template>
-  <div
-    v-if="annotations.length"
-    class="q-ma-sm annotations"
-  >
-    <q-list>
-      <q-item
-        v-for="annotation in hotAnnotations"
-        :id="'list' + annotation.strippedId"
-        :key="annotation.strippedId"
-        clickable
-        padding="xs"
-        class="q-pa-sm q-pl-xs q-mb-xs"
-        @click="toggle(annotation); statusCheck();"
-      >
-        <q-item-section
-          avatar
-          class="q-mr-none"
-        >
-          <q-icon
-            :name="getIcon(annotation.body['x-content-type'])"
-            size="16px"
-          />
-        </q-item-section>
-
-        <q-item-section>
-          <AnnotationUrls :content="annotation.body.value" />
-        </q-item-section>
-      </q-item>
-    </q-list>
-    <q-page-sticky
-      position="bottom-right"
-      :offset="[18, 18]"
+  <div class="annotations">
+    <q-tabs
+      v-model="currentTab"
+      active-color="$q.dark.isActive ? 'white' : 'accent'"
+      align="justify"
+      class="text-grey q-mb-sm"
+      dense
+      indicator-color="$q.dark.isActive ? 'white' : 'accent'"
     >
-      <q-fab
-        color="primary"
-        direction="up"
-        vertical-actions-align="right"
-        :icon="icons.fasCog"
-        :active-icon="icons.fasChevronDown"
-      >
-        <q-fab-action
-          color="primary"
-          label="Highlight All Annotations in Text Panel"
-          label-position="left"
-          :disable="selectedAll"
-          :icon="icons.fasEye"
-          @click="toggleTo(true)"
-        />
-        <q-fab-action
-          color="primary"
-          label="Remove All Highlights in Text Panel"
-          label-position="left"
-          :disable="selectedNone"
-          :icon="icons.fasEyeSlash"
-          @click="toggleTo(false)"
-        />
-      </q-fab>
-    </q-page-sticky>
-  </div>
+      <q-tab
+        v-for="annotationTab in annotationTabs"
+        :key="annotationTab.key"
+        :label="annotationTab.collectionTitle"
+        :name="annotationTab.key"
+        @click="activeTab(annotationTab.key)"
+      />
+    </q-tabs>
 
-  <div
-    v-else
-    class="q-pa-sm"
-  >
-    <Notification :message="$t(messages.none)" />
+    <div
+      v-if="currentAnnotation.length"
+      class="q-ma-sm"
+    >
+      <q-list>
+        <q-item
+          v-for="annotation in currentAnnotation"
+          :id="'list' + annotation.strippedId"
+          :key="annotation.strippedId"
+          clickable
+          padding="xs"
+          class="q-pa-sm q-pl-xs q-mb-xs"
+          @click="toggle(annotation); statusCheck();"
+        >
+          <q-item-section
+            avatar
+            class="q-mr-none"
+          >
+            <q-icon
+              :name="getIcon(annotation.body['x-content-type'])"
+              size="16px"
+            />
+          </q-item-section>
+
+          <q-item-section>
+            <AnnotationUrls :content="annotation.body.value" />
+          </q-item-section>
+        </q-item>
+      </q-list>
+      <q-page-sticky
+        position="bottom-right"
+        :offset="[18, 18]"
+      >
+        <q-fab
+          color="primary"
+          direction="up"
+          vertical-actions-align="right"
+          :icon="icons.fasCog"
+          :active-icon="icons.fasChevronDown"
+        >
+          <q-fab-action
+            color="primary"
+            label="Highlight All Annotations in Text Panel"
+            label-position="left"
+            :disable="selectedAll"
+            :icon="icons.fasEye"
+            @click="toggleTo(true)"
+          />
+          <q-fab-action
+            color="primary"
+            label="Remove All Highlights in Text Panel"
+            label-position="left"
+            :disable="selectedNone"
+            :icon="icons.fasEyeSlash"
+            @click="toggleTo(false)"
+          />
+        </q-fab>
+      </q-page-sticky>
+    </div>
+
+    <div
+      v-else
+      class="q-pa-sm"
+    >
+      <Notification :message="$t(messages.none)" />
+    </div>
   </div>
 </template>
 
@@ -101,11 +120,31 @@ export default {
       hotAnnotations: [],
       selectedAll: undefined,
       selectedNone: undefined,
+      currentTab: 'editorial',
     };
   },
   computed: {
     configuredTypes() {
       return this.config.annotations.types.map((type) => type.contenttype);
+    },
+    currentAnnotation() {
+      const tabFields = this.annotationTabs.find((collection) => collection.key === this.currentTab);
+
+      return this.hotAnnotations.filter((annotationCollection) => tabFields.field.includes(annotationCollection.body['x-content-type']));
+    },
+    annotationTabs() {
+      return [
+        {
+          collectionTitle: 'Editorial',
+          key: 'editorial',
+          field: ['Place', 'Person', 'Editorial Comment'],
+        },
+        {
+          collectionTitle: 'Motifs',
+          key: 'motifs',
+          field: ['Motif'],
+        },
+      ];
     },
   },
   created() {
@@ -124,9 +163,14 @@ export default {
           clearInterval(interval);
         }
       }, 500);
+
+      this.currentTab = 'editorial';
     });
   },
   methods: {
+    activeTab(key) {
+      this.currentTab = key;
+    },
     createSVG(name) {
       const [path, viewBox] = Icons[name].split('|');
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -176,12 +220,20 @@ export default {
 
     setText(annotation) {
       const contentType = annotation.body['x-content-type'];
-      const svg = this.createSVG(this.getIconName(contentType));
-
       const id = this.stripAnnotationId(annotation.target.id);
       const textElement = document.getElementById(id);
+      let svg = null;
 
-      textElement.prepend(svg);
+      try {
+        svg = this.createSVG(this.getIconName(contentType));
+      } catch (err) {
+        svg = null;
+      }
+
+      if (svg) {
+        textElement.prepend(svg);
+      }
+
       textElement.classList.toggle('annotation');
       textElement.classList.toggle('annotation-disabled');
     },
