@@ -22,6 +22,12 @@
         />
         <q-breadcrumbs-el
           :class="$q.dark.isActive ? 'text-black' : 'text-white'"
+          label="Search"
+          to="/"
+          :icon="fasSearch"
+        />
+        <q-breadcrumbs-el
+          :class="$q.dark.isActive ? 'text-black' : 'text-white'"
           :label="projectheader.title_view"
           :icon="fasFileAlt"
         />
@@ -35,6 +41,7 @@ import {
   fasHome,
   fasFileAlt,
   fasChevronRight,
+  fasSearch,
 } from '@quasar/extras/fontawesome-v5';
 
 export default {
@@ -49,6 +56,7 @@ export default {
     this.fasHome = fasHome;
     this.fasFileAlt = fasFileAlt;
     this.fasChevronRight = fasChevronRight;
+    this.fasSearch = fasSearch;
   },
 };
 </script>
