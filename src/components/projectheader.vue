@@ -16,19 +16,19 @@
         </template>
         <q-breadcrumbs-el
           :class="$q.dark.isActive ? 'text-black' : 'text-white'"
-          :label="projectheader.title_back"
+          :label="$t(`${projectheader.title_back}`)"
           to="/"
           :icon="fasHome"
         />
         <q-breadcrumbs-el
           :class="$q.dark.isActive ? 'text-black' : 'text-white'"
-          label="Search"
+          :label="$t('search')"
           to="/"
           :icon="fasSearch"
         />
         <q-breadcrumbs-el
           :class="$q.dark.isActive ? 'text-black' : 'text-white'"
-          :label="projectheader.title_view"
+          :label="$t(`${projectheader.title_view}`)"
           :icon="fasFileAlt"
         />
       </q-breadcrumbs>
