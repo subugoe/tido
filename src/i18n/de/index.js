@@ -14,7 +14,7 @@ export default {
   defaultView: 'Ansicht zurücksetzen',
   Description: 'Beschreibung',
   Editor: 'Herausgeber',
-  Editorial: 'Redaktionell',
+  Editorial: 'Editorisch',
   Editors: 'Herausgeber',
   hide: 'Verstecke',
   Image: 'Digitalisat',
