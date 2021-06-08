@@ -73,8 +73,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .language {
-  background-color: #808080;
+  background-color: $grey-5;
 }
 </style>
