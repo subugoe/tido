@@ -11,7 +11,7 @@
       <q-tab
         v-for="annotationTab in annotationTabs"
         :key="annotationTab.key"
-        :label="annotationTab.collectionTitle"
+        :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
         @click="activeTab(annotationTab.key)"
       />
@@ -24,7 +24,7 @@
       <AnnotationToggles />
 
       <AnnotationList
-        :hot-annotations="currentAnnotations"
+        :configured-annotations="currentAnnotations"
         :get-icon="getIcon"
         :status-check="statusCheck"
         :toggle="toggle"
@@ -79,7 +79,7 @@ export default {
   },
   data() {
     return {
-      hotAnnotations: [],
+      configuredAnnotations: [],
       ids: [],
       messages: {
         none: 'noAnnotationMessage',
@@ -96,7 +96,7 @@ export default {
     currentAnnotations() {
       const contentType = this.annotationTabs.find((collection) => collection.key === this.currentTab);
 
-      return this.hotAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
+      return this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
     },
     annotationTabs() {
       return [
@@ -122,7 +122,7 @@ export default {
 
       const interval = setInterval(() => {
         if (this.annotationLoading) {
-          this.hotAnnotations = this.filterAnnotationTypes();
+          this.configuredAnnotations = this.filterAnnotationTypes();
           this.highlightActiveTabContent('editorial');
           clearInterval(interval);
         }
@@ -220,8 +220,8 @@ export default {
     },
 
     statusCheck() {
-      const num = this.hotAnnotations.length;
-      const active = this.hotAnnotations.filter((annotation) => annotation.status === true).length;
+      const num = this.configuredAnnotations.length;
+      const active = this.configuredAnnotations.filter((annotation) => annotation.status === true).length;
 
       if (num === active) {
         this.selectedAll = false;
@@ -255,7 +255,7 @@ export default {
     },
 
     toggleTo(bool) {
-      this.hotAnnotations.filter((annotation) => annotation.status === bool).map((annotation) => this.toggle(annotation));
+      this.configuredAnnotations.filter((annotation) => annotation.status === bool).map((annotation) => this.toggle(annotation));
       this.selectedAll = bool;
       this.selectedNone = !bool;
     },
