@@ -73,6 +73,6 @@ export default {
 }
 
 .scroll-area {
-  height: 720;
+  height: 75vh;
 }
 </style>
