@@ -4,14 +4,14 @@
     position="bottom-right"
   >
     <q-fab
-      color="primary"
+      color="accent"
       direction="up"
       vertical-actions-align="right"
       :active-icon="fasChevronDown"
       :icon="fasCog"
     >
       <q-fab-action
-        color="primary"
+        color="accent"
         label="Highlight All Annotations in Text Panel"
         label-position="left"
         :disable="selectedAll"
@@ -19,7 +19,7 @@
         @click="toggleTo(true)"
       />
       <q-fab-action
-        color="primary"
+        color="accent"
         label="Remove All Highlights in Text Panel"
         label-position="left"
         :disable="selectedNone"
