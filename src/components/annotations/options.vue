@@ -16,7 +16,7 @@
         label-position="left"
         :disable="selectedAll"
         :icon="fasEye"
-        @click="toggleTo(true)"
+        @click="onHighlightAll"
       />
       <q-fab-action
         color="accent"
@@ -24,7 +24,7 @@
         label-position="left"
         :disable="selectedNone"
         :icon="fasEyeSlash"
-        @click="toggleTo(false)"
+        @click="onHighlightNone"
       />
     </q-fab>
   </q-page-sticky>
@@ -47,7 +47,11 @@ export default {
     selectedNone: {
       type: Boolean,
     },
-    toggleTo: {
+    onHighlightAll: {
+      type: Function,
+      default: () => null,
+    },
+    onHighlightNone: {
       type: Function,
       default: () => null,
     },
