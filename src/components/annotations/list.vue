@@ -59,9 +59,6 @@ export default {
 
 <style lang="scss" scoped>
 .annotation-list {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
   height: 100vh;
   overflow: auto;
   padding: 8px;
