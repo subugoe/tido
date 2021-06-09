@@ -33,7 +33,8 @@
       <AnnotationOptions
         :selected-all="selectedAll"
         :selected-none="selectedNone"
-        :toggle-to="toggleTo"
+        :on-highlight-all="onHighlightAll"
+        :on-highlight-none="onHighlightNone"
       />
     </div>
 
@@ -84,8 +85,8 @@ export default {
       messages: {
         none: 'noAnnotationMessage',
       },
-      selectedAll: undefined,
-      selectedNone: undefined,
+      selectedAll: false,
+      selectedNone: true,
       currentTab: 'editorial',
     };
   },
@@ -150,6 +151,8 @@ export default {
     },
     activeTab(key) {
       this.currentTab = key;
+      this.selectedAll = false;
+      this.selectedNone = true;
 
       this.highlightActiveTabContent(key);
     },
@@ -200,6 +203,20 @@ export default {
       return this.config.annotations.types.filter((annotation) => annotation.contenttype === contentType)[0].icon;
     },
 
+    onHighlightAll() {
+      this.currentAnnotations.forEach((annotation) => this.updateToggleState(annotation, 'remove', 'add'));
+
+      this.selectedAll = true;
+      this.selectedNone = false;
+    },
+
+    onHighlightNone() {
+      this.currentAnnotations.forEach((annotation) => this.updateToggleState(annotation, 'add', 'remove'));
+
+      this.selectedAll = false;
+      this.selectedNone = true;
+    },
+
     setText(annotation) {
       const contentType = annotation.body['x-content-type'];
       const id = this.stripAnnotationId(annotation.target.id);
@@ -248,16 +265,14 @@ export default {
     toggle(annotation) {
       annotation.status = !annotation.status;
 
-      const id = annotation.strippedId;
-
-      document.getElementById(id).classList.toggle('annotation-disabled');
-      document.getElementById(`list${id}`).classList.toggle('bg-grey-2');
+      this.updateToggleState(annotation, 'toggle', 'toggle');
     },
 
-    toggleTo(bool) {
-      this.currentAnnotations.filter((annotation) => annotation.status === bool).map((annotation) => this.toggle(annotation));
-      this.selectedAll = bool;
-      this.selectedNone = !bool;
+    updateToggleState(annotation, text = 'toggle', list = 'toggle') {
+      const id = this.stripAnnotationId(annotation.target.id);
+
+      document.getElementById(id).classList.[text]('annotation-disabled');
+      document.getElementById(`list${id}`).classList.[list]('bg-grey-2');
     },
   },
 };
