@@ -1,33 +1,31 @@
 <template>
-  <q-scroll-area
-    class="scroll-area"
+  <q-list
+    class="annotation-list"
   >
-    <q-list>
-      <q-item
-        v-for="annotation in configuredAnnotations"
-        :id="'list' + annotation.strippedId"
-        :key="annotation.strippedId"
-        class="q-pa-sm q-pl-xs q-mb-xs"
-        clickable
-        padding="xs"
-        @click="toggle(annotation); statusCheck();"
+    <q-item
+      v-for="annotation in configuredAnnotations"
+      :id="'list' + annotation.strippedId"
+      :key="annotation.strippedId"
+      class="q-pa-sm q-pl-xs q-mb-xs"
+      clickable
+      padding="xs"
+      @click="toggle(annotation); statusCheck();"
+    >
+      <q-item-section
+        avatar
+        class="q-mr-none"
       >
-        <q-item-section
-          avatar
-          class="q-mr-none"
-        >
-          <q-icon
-            :name="getIcon(annotation.body['x-content-type'])"
-            size="16px"
-          />
-        </q-item-section>
+        <q-icon
+          :name="getIcon(annotation.body['x-content-type'])"
+          size="16px"
+        />
+      </q-item-section>
 
-        <q-item-section>
-          <AnnotationUrls :content="annotation.body.value" />
-        </q-item-section>
-      </q-item>
-    </q-list>
-  </q-scroll-area>
+      <q-item-section>
+        <AnnotationUrls :content="annotation.body.value" />
+      </q-item-section>
+    </q-item>
+  </q-list>
 </template>
 
 <script>
@@ -60,6 +58,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.annotation-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
+  padding: 8px;
+}
+
 .q-item {
   min-height: unset;
 }
@@ -70,9 +77,5 @@ export default {
 
 .q-item__section--side {
   padding-right: unset;
-}
-
-.scroll-area {
-  height: 75vh;
 }
 </style>
