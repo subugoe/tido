@@ -255,7 +255,7 @@ export default {
     },
 
     toggleTo(bool) {
-      this.configuredAnnotations.filter((annotation) => annotation.status === bool).map((annotation) => this.toggle(annotation));
+      this.currentAnnotations.filter((annotation) => annotation.status === bool).map((annotation) => this.toggle(annotation));
       this.selectedAll = bool;
       this.selectedNone = !bool;
     },
