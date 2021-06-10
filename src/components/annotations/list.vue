@@ -1,7 +1,7 @@
 <template>
   <q-list>
     <q-item
-      v-for="annotation in hotAnnotations"
+      v-for="annotation in configuredAnnotations"
       :id="'list' + annotation.strippedId"
       :key="annotation.strippedId"
       class="q-pa-sm q-pl-xs q-mb-xs"
@@ -39,7 +39,7 @@ export default {
       type: Function,
       default: () => null,
     },
-    hotAnnotations: {
+    configuredAnnotations: {
       type: Array,
       default: () => [],
     },
