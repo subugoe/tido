@@ -1,7 +1,13 @@
 #!/bin/bash
 
+# This script is resposible for determining which artifacts are too old to be
+# kept any longer. The artifacts are needed and preserved for having the
+# environments at hand any time.
 #
-# Some lines have been commented since they don't work properly at the moment.
+# Currently artifacts are kept for two weeks since this is our average sprint
+# duration.
+#
+# Some lines have been commented out since they don't work properly at the moment.
 # We left them in there as a basis in case we want to improve the performance
 # of the build process at a later stage.
 #
