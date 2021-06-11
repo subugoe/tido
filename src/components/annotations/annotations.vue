@@ -1,5 +1,5 @@
 <template>
-  <div class="annotations">
+  <div class="item">
     <q-tabs
       v-model="currentTab"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -17,33 +17,33 @@
       />
     </q-tabs>
 
-    <div
+    <!-- <div
       v-if="currentAnnotations.length"
       class="q-ma-sm"
-    >
-      <AnnotationToggles />
+    > -->
+    <AnnotationToggles />
 
-      <AnnotationList
-        :configured-annotations="currentAnnotations"
-        :get-icon="getIcon"
-        :status-check="statusCheck"
-        :toggle="toggle"
-      />
+    <AnnotationList
+      :configured-annotations="currentAnnotations"
+      :get-icon="getIcon"
+      :status-check="statusCheck"
+      :toggle="toggle"
+    />
 
-      <AnnotationOptions
-        :selected-all="selectedAll"
-        :selected-none="selectedNone"
-        :on-highlight-all="onHighlightAll"
-        :on-highlight-none="onHighlightNone"
-      />
-    </div>
+    <AnnotationOptions
+      :selected-all="selectedAll"
+      :selected-none="selectedNone"
+      :on-highlight-all="onHighlightAll"
+      :on-highlight-none="onHighlightNone"
+    />
+    <!-- </div> -->
 
-    <div
+    <!-- <div
       v-else
       class="q-pa-sm"
     >
       <Notification :message="$t(messages.none)" />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -54,7 +54,7 @@ import AnnotationToggles from '@/components/annotations/toggles.vue';
 import AnnotationList from '@/components/annotations/list.vue';
 import AnnotationOptions from '@/components/annotations/options.vue';
 
-import Notification from '@/components/notification.vue';
+// import Notification from '@/components/notification.vue';
 
 export default {
   name: 'Annotations',
@@ -62,7 +62,7 @@ export default {
     AnnotationToggles,
     AnnotationList,
     AnnotationOptions,
-    Notification,
+    // Notification,
   },
   props: {
     annotations: {
@@ -310,15 +310,15 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-.q-item {
-  min-height: unset;
+.item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 
-.q-item__section--avatar {
-  min-width: 24px;
-}
-
-.q-item__section--side {
-  padding-right: unset;
+.item-content {
+  height: 100vh;
+  overflow: auto;
+  padding: 8px;
 }
 </style>

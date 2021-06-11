@@ -1,5 +1,5 @@
 <template>
-  <q-list>
+  <q-list class="item-content">
     <q-item
       v-for="annotation in configuredAnnotations"
       :id="'list' + annotation.strippedId"
@@ -54,3 +54,23 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.q-item__section--avatar {
+  min-width: 24px;
+}
+
+.q-item__section--side {
+  padding-right: unset;
+}
+
+.q-item {
+  min-height: unset;
+}
+
+.item-content {
+  height: 100vh;
+  overflow: auto;
+  padding: 8px;
+}
+</style>
