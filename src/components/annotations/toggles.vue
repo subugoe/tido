@@ -7,7 +7,7 @@
     <q-toggle
       v-for="(type, index) in config.annotations.types"
       :key="index"
-      v-model="activeTypes"
+      v-model="model"
       :color="$q.dark.isActive ? 'grey-8' : 'accent'"
       :disable="typeDisabled(type.contenttype)"
       :icon="icons[type.icon]"
@@ -18,6 +18,8 @@
       size="md"
       toggle-order="tf"
     />
+
+    <q-separator />
   </div>
 </template>
 
@@ -31,7 +33,7 @@ export default {
       type: Object,
       default: () => {},
     },
-    hotAnnotations: {
+    currentAnnotations: {
       type: Array,
       default: () => [],
     },
@@ -39,17 +41,25 @@ export default {
   data() {
     return {
       icons: {},
+      model: [],
     };
   },
   created() {
     this.icons = Icons;
   },
+  mounted() {
+    this.model = this.activeTypes();
+
+    this.$root.$on('update-item', () => {
+      this.model = this.activeTypes();
+    });
+  },
   methods: {
     activeTypes() {
-      return [...new Set(this.hotAnnotations.map((annotation) => annotation.body['x-content-type']))];
+      return [...new Set(this.currentAnnotations.map((annotation) => annotation.body['x-content-type']))];
     },
     typeDisabled(type) {
-      return !this.activeTypes.includes(type);
+      return !this.activeTypes().includes(type);
     },
   },
 };

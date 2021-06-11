@@ -21,7 +21,11 @@
       v-if="currentAnnotations.length"
       class="q-ma-sm"
     >
-      <AnnotationToggles />
+      <AnnotationToggles
+        v-if="currentTab === 'editorial'"
+        :config="config"
+        :current-annotations="currentAnnotations"
+      />
 
       <AnnotationList
         :configured-annotations="currentAnnotations"
