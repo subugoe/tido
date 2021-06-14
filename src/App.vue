@@ -5,7 +5,7 @@
     view="hHh Lpr fFf"
   >
     <Header
-      v-if="config.headers.all"
+      v-if="config['header_section'].show"
       :collectiontitle="collectiontitle"
       :config="config"
       :imageurl="imageurl"

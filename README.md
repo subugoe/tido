@@ -223,8 +223,8 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
         "secondary": "",
         "accent": ""
       },
-      "headers": {
-        "all": true,
+      "header_section": {
+        "show": true,
         "info": true,
         "navigation": true,
         "panelheadings": true,
@@ -320,7 +320,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   If any value is left blank (e.g. `"primary": "",`), a default color scheme will be used.
 
-- **headers**
+- **header_section**
 
   - **show**
 

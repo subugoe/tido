@@ -1,29 +1,26 @@
 <template>
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'">
     <div class="header__wrap">
-      <q-toolbar v-if="config.headers.info">
+      <q-toolbar v-if="config['header_section'].info">
         <Infobar
-          v-if="config.headers.info && manifests.length"
+          v-if="manifests.length"
           class="col-xs-9"
           :collectiontitle="collectiontitle"
           :item="item"
           :manifests="manifests"
         />
-        <div class="row no-wrap justify-end col-xs-3">
-          <!-- TODO: make component out of the following and re-use it to avoid duplication -->
-          <Language
-            v-if="standalone"
-            :config="config"
-          />
-          <Color :projectcolors="projectcolors" />
-          <Softwareinfo />
-        </div>
+
+        <Tools
+          :config="config"
+          :projectcolors="projectcolors"
+          :standalone="standalone"
+        />
       </q-toolbar>
 
       <div>
         <q-toolbar class="q-pb-sm">
           <Navbar
-            v-if="config.headers.navigation"
+            v-if="config['header_section'].navigation"
             :itemurls="itemurls"
             :labels="config.labels"
             :manifests="manifests"
@@ -32,21 +29,18 @@
           <q-space />
 
           <TogglePanels
-            v-if="config.headers.toggle"
+            v-if="config['header_section'].toggle"
             :panels="panels"
           />
 
           <div
-            v-if="!config.headers.info"
-            class="row no-wrap justify-end col-xs-3"
+            v-if="!config['header_section'].info"
           >
-            <!-- TODO: make component out of the following and re-use it to avoid duplication -->
-            <Language
-              v-if="standalone"
+            <Tools
               :config="config"
+              :projectcolors="projectcolors"
+              :standalone="standalone"
             />
-            <Color :projectcolors="projectcolors" />
-            <Softwareinfo />
           </div>
         </q-toolbar>
       </div>
@@ -55,22 +49,18 @@
 </template>
 
 <script>
-import Color from '@/components/color.vue';
 import Infobar from '@/components/infobar.vue';
-import Language from '@/components/language.vue';
 import Navbar from '@/components/navbar.vue';
-import Softwareinfo from '@/components/softwareinfo.vue';
 import TogglePanels from '@/components/togglebar/togglePanels.vue';
+import Tools from '@/components/tools.vue';
 
 export default {
   name: 'Header',
   components: {
-    Color,
     Infobar,
-    Language,
     Navbar,
-    Softwareinfo,
     TogglePanels,
+    Tools,
   },
   props: {
     collectiontitle: {
