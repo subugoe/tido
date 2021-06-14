@@ -112,6 +112,10 @@ export default {
   },
   mounted() {
     this.$root.$on('update-annotations', (content) => {
+      // reset selected
+      this.selectedAll = undefined;
+      this.selectedNone = undefined;
+
       const parser = new DOMParser();
       const doc = parser.parseFromString(content, 'text/html');
 
