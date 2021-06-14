@@ -191,6 +191,7 @@ There are options to
 - group multiple components inside a single panel
 - set the order of the panels
 - rename labels and / or panel headings
+- switch project header on or off and provide descriptive strings
 - and **more** ...
 
 As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate element.
@@ -273,7 +274,12 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       ],
       "rtl": false,
       "lang": "en-us",
-      "standalone": true
+      "standalone": true,
+      "projectheader": {
+        "show": true,
+        "title_back": "The Syriac, Arabic, and Karshuni Ahiqar Texts",
+        "title_view": "Edition Viewer"
+      }
     }  </script>
 ```
 
@@ -387,6 +393,26 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
 
   Defaults to `true`
+
+- **projectheader**
+
+  - **show**
+
+    defines if a project header should be shown or not.
+
+    Defaults to `false`
+
+  - **title_back**
+
+    defines the string show as first item in the breadcrumb. Shows a "Home Icon"
+
+    Has to be set!
+
+  - **title_view**
+
+    defines the string show as last item in the breadcrumb. Shows a "Document Icon"
+
+    Has to be set!
 
 ### Configure the Panels
 
