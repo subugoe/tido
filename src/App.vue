@@ -154,7 +154,6 @@ export default {
         }
       } catch (err) {
         this.annotations = [];
-        this.$q.notify({ message: 'No annotations available' });
       } finally {
         this.annotationLoading = true;
       }
@@ -387,7 +386,6 @@ export default {
         : this.getManifest(this.config.entrypoint);
     },
   },
-
 };
 </script>
 

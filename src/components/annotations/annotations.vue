@@ -17,18 +17,22 @@
       />
     </q-tabs>
 
-    <!-- <div
-      v-if="currentAnnotations.length"
-      class="q-ma-sm"
-    > -->
     <AnnotationToggles />
 
     <AnnotationList
+      v-if="currentAnnotations.length"
       :configured-annotations="currentAnnotations"
       :get-icon="getIcon"
       :status-check="statusCheck"
       :toggle="toggle"
     />
+
+    <div
+      v-else
+      class="q-pa-sm"
+    >
+      <Notification :message="$t(messages.none)" />
+    </div>
 
     <AnnotationOptions
       :selected-all="selectedAll"
@@ -36,14 +40,6 @@
       :on-highlight-all="onHighlightAll"
       :on-highlight-none="onHighlightNone"
     />
-    <!-- </div> -->
-
-    <!-- <div
-      v-else
-      class="q-pa-sm"
-    >
-      <Notification :message="$t(messages.none)" />
-    </div> -->
   </div>
 </template>
 
@@ -54,7 +50,7 @@ import AnnotationToggles from '@/components/annotations/toggles.vue';
 import AnnotationList from '@/components/annotations/list.vue';
 import AnnotationOptions from '@/components/annotations/options.vue';
 
-// import Notification from '@/components/notification.vue';
+import Notification from '@/components/notification.vue';
 
 export default {
   name: 'Annotations',
@@ -62,7 +58,7 @@ export default {
     AnnotationToggles,
     AnnotationList,
     AnnotationOptions,
-    // Notification,
+    Notification,
   },
   props: {
     annotations: {
@@ -271,8 +267,8 @@ export default {
     updateToggleState(annotation, text = 'toggle', list = 'toggle') {
       const id = this.stripAnnotationId(annotation.target.id);
 
-      document.getElementById(id).classList.[text]('annotation-disabled');
-      document.getElementById(`list${id}`).classList.[list]('bg-grey-2');
+      document.getElementById(id).classList[text]('annotation-disabled');
+      document.getElementById(`list${id}`).classList[list]('bg-grey-2');
     },
   },
 };
