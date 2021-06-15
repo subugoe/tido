@@ -1,8 +1,8 @@
 <template>
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'">
     <div class="header__wrap">
-      <q-toolbar v-if="config['header_section'].info">
-        <Infobar
+      <q-toolbar v-if="config['header_section'].titles">
+        <TitleBar
           v-if="manifests.length"
           class="col-xs-9"
           :collectiontitle="collectiontitle"
@@ -34,7 +34,7 @@
           />
 
           <div
-            v-if="!config['header_section'].info"
+            v-if="!config['header_section'].titles"
           >
             <Tools
               :config="config"
@@ -49,16 +49,16 @@
 </template>
 
 <script>
-import Infobar from '@/components/infobar.vue';
 import Navbar from '@/components/navbar.vue';
+import TitleBar from '@/components/titlebar.vue';
 import TogglePanels from '@/components/togglebar/togglePanels.vue';
 import Tools from '@/components/tools.vue';
 
 export default {
   name: 'Header',
   components: {
-    Infobar,
     Navbar,
+    TitleBar,
     TogglePanels,
     Tools,
   },
