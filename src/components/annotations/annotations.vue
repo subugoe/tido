@@ -1,5 +1,5 @@
 <template>
-  <div class="annotations">
+  <div class="item">
     <q-tabs
       v-model="currentTab"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -13,7 +13,7 @@
         :key="annotationTab.key"
         :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
-        @click="activeTab(annotationTab.key)"
+        @click="activeTab(annotationTab.key,annotationTab.type)"
       />
     </q-tabs>
 
@@ -22,17 +22,24 @@
       class="q-ma-sm"
     >
       <AnnotationToggles
-        v-if="currentTab === 'editorial'"
         :config="config"
         :current-annotations="currentAnnotations"
       />
 
       <AnnotationList
+        v-if="currentAnnotations.length"
         :configured-annotations="currentAnnotations"
         :get-icon="getIcon"
         :status-check="statusCheck"
         :toggle="toggle"
       />
+
+      <div
+        v-else
+        class="q-pa-sm"
+      >
+        <Notification :message="$t(messages.none)" />
+      </div>
 
       <AnnotationOptions
         :selected-all="selectedAll"
@@ -40,13 +47,6 @@
         :on-highlight-all="onHighlightAll"
         :on-highlight-none="onHighlightNone"
       />
-    </div>
-
-    <div
-      v-else
-      class="q-pa-sm"
-    >
-      <Notification :message="$t(messages.none)" />
     </div>
   </div>
 </template>
@@ -85,37 +85,55 @@ export default {
   data() {
     return {
       configuredAnnotations: [],
+      currentTab: '',
       ids: [],
       messages: {
         none: 'noAnnotationMessage',
       },
       selectedAll: false,
       selectedNone: true,
-      currentTab: 'editorial',
     };
   },
   computed: {
+    annotationTabConfig() {
+      return this.config?.annotations?.tabs || {};
+    },
+    annotationTabs() {
+      const contentTypes = {};
+      const annotationTab = {};
+
+      Object.entries(this.annotationTabConfig).forEach(([key, types]) => {
+        types.forEach((type) => {
+          contentTypes[type] = key;
+        });
+
+        annotationTab[key] = {
+          key,
+          collectionTitle: key,
+          type: [],
+        };
+      });
+
+      this.annotations.forEach((curr) => {
+        const contentType = curr.body.['x-content-type'];
+        if (contentTypes[contentType]) {
+          annotationTab[contentTypes[contentType]].type.push(contentType);
+        }
+      });
+
+      return Object.values(annotationTab).filter((x) => x.type.length);
+    },
     configuredTypes() {
       return this.config.annotations.types.map((type) => type.contenttype);
     },
     currentAnnotations() {
       const contentType = this.annotationTabs.find((collection) => collection.key === this.currentTab);
 
+      if (!contentType) {
+        return [];
+      }
+
       return this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
-    },
-    annotationTabs() {
-      return [
-        {
-          collectionTitle: 'Editorial',
-          key: 'editorial',
-          type: ['Place', 'Person', 'Editorial Comment'],
-        },
-        {
-          collectionTitle: 'Motifs',
-          key: 'motifs',
-          type: ['Motif'],
-        },
-      ];
     },
   },
   mounted() {
@@ -131,38 +149,23 @@ export default {
 
       const interval = setInterval(() => {
         if (this.annotationLoading) {
+          const firstTab = this.annotationTabs.find((x) => x.type.length)?.key || '';
+
           this.configuredAnnotations = this.filterAnnotationTypes();
-          this.highlightActiveTabContent('editorial');
+          this.highlightActiveTabContent(this.annotationTabConfig[firstTab] || []);
+          this.currentTab = firstTab;
           clearInterval(interval);
         }
       }, 500);
-
-      this.currentTab = 'editorial';
     });
   },
   methods: {
-    highlightActiveTabContent(key) {
-      const contentTypes = this.annotationTabs.find((content) => content.key === key).type;
-
-      this.annotations.forEach((annotation) => {
-        const id = this.stripAnnotationId(annotation.target.id);
-        const textElement = document.getElementById(id);
-
-        if (contentTypes.includes(annotation.body['x-content-type'])) {
-          textElement.classList.add('annotation');
-          textElement.classList.add('annotation-disabled');
-        } else {
-          textElement.classList.remove('annotation');
-          textElement.classList.add('annotation-disabled');
-        }
-      });
-    },
-    activeTab(key) {
+    activeTab(key, types) {
       this.currentTab = key;
       this.selectedAll = false;
       this.selectedNone = true;
 
-      this.highlightActiveTabContent(key);
+      this.highlightActiveTabContent(types);
     },
     createSVG(name) {
       const [path, viewBox] = Icons[name].split('|');
@@ -211,6 +214,21 @@ export default {
       return this.config.annotations.types.filter((annotation) => annotation.contenttype === contentType)[0].icon;
     },
 
+    highlightActiveTabContent(contentTypes) {
+      this.annotations.forEach((annotation) => {
+        const id = this.stripAnnotationId(annotation.target.id);
+        const textElement = document.getElementById(id);
+
+        if (textElement !== null) {
+          if (contentTypes.includes(annotation.body['x-content-type'])) {
+            textElement.classList.add('annotation', 'annotation-disabled');
+          } else {
+            textElement.classList.remove('annotation');
+            textElement.classList.add('annotation-disabled');
+          }
+        }
+      });
+    },
     onHighlightAll() {
       this.currentAnnotations.forEach((annotation) => this.updateToggleState(annotation, 'remove', 'add'));
 
@@ -279,8 +297,8 @@ export default {
     updateToggleState(annotation, text = 'toggle', list = 'toggle') {
       const id = this.stripAnnotationId(annotation.target.id);
 
-      document.getElementById(id).classList.[text]('annotation-disabled');
-      document.getElementById(`list${id}`).classList.[list]('bg-grey-2');
+      document.getElementById(id).classList[text]('annotation-disabled');
+      document.getElementById(`list${id}`).classList[list]('bg-grey-2');
     },
   },
 };
@@ -314,5 +332,13 @@ export default {
 
 .annotation-disabled > svg {
   display: none;
+}
+</style>
+
+<style lang="scss" scoped>
+.item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 </style>

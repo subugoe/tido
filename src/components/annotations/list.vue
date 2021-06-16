@@ -1,5 +1,5 @@
 <template>
-  <q-list>
+  <q-list class="item-content">
     <q-item
       v-for="annotation in configuredAnnotations"
       :id="'list' + annotation.strippedId"
@@ -55,7 +55,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .q-item__section--avatar {
   min-width: 24px;
 }
@@ -66,5 +66,12 @@ export default {
 
 .q-item {
   min-height: unset;
+}
+
+.item-content {
+  height: 100vh;
+  overflow: auto;
+  padding: 8px;
+  padding-bottom: 72px; // fab icon size + one times the offset of q-page-sticky
 }
 </style>
