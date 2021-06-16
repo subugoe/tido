@@ -334,6 +334,8 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   }
   ```
 
+  **Note**: The strings contained within the group label keys (e.g. *Person*, *Place*, ...) have to match it's API-counterpart explicitely. Please refer to the note above (content-type).
+
 - **colors**
 
   set the colors used in the frontend.
