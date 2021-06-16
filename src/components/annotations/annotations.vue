@@ -13,7 +13,7 @@
         :key="annotationTab.key"
         :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
-        @click="activeTab(annotationTab.key)"
+        @click="activeTab(annotationTab.key,annotationTab.type)"
       />
     </q-tabs>
 
@@ -87,7 +87,7 @@ export default {
       },
       selectedAll: false,
       selectedNone: true,
-      currentTab: 'editorial',
+      currentTab: '',
     };
   },
   computed: {
@@ -97,21 +97,39 @@ export default {
     currentAnnotations() {
       const contentType = this.annotationTabs.find((collection) => collection.key === this.currentTab);
 
+      if (!contentType) {
+        return [];
+      }
+
       return this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
     },
+    annotationTabConfig() {
+      return this.config?.annotations?.tabs || {};
+    },
     annotationTabs() {
-      return [
-        {
-          collectionTitle: 'Editorial',
-          key: 'editorial',
-          type: ['Place', 'Person', 'Editorial Comment'],
-        },
-        {
-          collectionTitle: 'Motifs',
-          key: 'motifs',
-          type: ['Motif'],
-        },
-      ];
+      const contentTypes = {};
+      const annotationTab = {};
+
+      Object.entries(this.annotationTabConfig).forEach(([key, types]) => {
+        types.forEach((type) => {
+          contentTypes[type] = key;
+        });
+
+        annotationTab[key] = {
+          key,
+          collectionTitle: key,
+          type: [],
+        };
+      });
+
+      this.annotations.forEach((curr) => {
+        const contentType = curr.body.['x-content-type'];
+        if (contentTypes[contentType]) {
+          annotationTab[contentTypes[contentType]].type.push(contentType);
+        }
+      });
+
+      return Object.values(annotationTab).filter((x) => x.type.length);
     },
   },
   mounted() {
@@ -127,19 +145,18 @@ export default {
 
       const interval = setInterval(() => {
         if (this.annotationLoading) {
+          const firstTab = this.annotationTabs.find((x) => x.type.length)?.key || '';
+
           this.configuredAnnotations = this.filterAnnotationTypes();
-          this.highlightActiveTabContent('editorial');
+          this.highlightActiveTabContent(this.annotationTabConfig[firstTab] || []);
+          this.currentTab = firstTab;
           clearInterval(interval);
         }
       }, 500);
-
-      this.currentTab = 'editorial';
     });
   },
   methods: {
-    highlightActiveTabContent(key) {
-      const contentTypes = this.annotationTabs.find((content) => content.key === key).type;
-
+    highlightActiveTabContent(contentTypes) {
       this.annotations.forEach((annotation) => {
         const id = this.stripAnnotationId(annotation.target.id);
         const textElement = document.getElementById(id);
@@ -153,12 +170,12 @@ export default {
         }
       });
     },
-    activeTab(key) {
+    activeTab(key, types) {
       this.currentTab = key;
       this.selectedAll = false;
       this.selectedNone = true;
 
-      this.highlightActiveTabContent(key);
+      this.highlightActiveTabContent(types);
     },
     createSVG(name) {
       const [path, viewBox] = Icons[name].split('|');
