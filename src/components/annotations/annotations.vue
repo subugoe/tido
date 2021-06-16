@@ -1,5 +1,5 @@
 <template>
-  <div class="annotations">
+  <div class="item">
     <q-tabs
       v-model="currentTab"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -17,26 +17,15 @@
       />
     </q-tabs>
 
-    <div
+    <AnnotationToggles />
+
+    <AnnotationList
       v-if="currentAnnotations.length"
-      class="q-ma-sm"
-    >
-      <AnnotationToggles />
-
-      <AnnotationList
-        :configured-annotations="currentAnnotations"
-        :get-icon="getIcon"
-        :status-check="statusCheck"
-        :toggle="toggle"
-      />
-
-      <AnnotationOptions
-        :selected-all="selectedAll"
-        :selected-none="selectedNone"
-        :on-highlight-all="onHighlightAll"
-        :on-highlight-none="onHighlightNone"
-      />
-    </div>
+      :configured-annotations="currentAnnotations"
+      :get-icon="getIcon"
+      :status-check="statusCheck"
+      :toggle="toggle"
+    />
 
     <div
       v-else
@@ -44,6 +33,13 @@
     >
       <Notification :message="$t(messages.none)" />
     </div>
+
+    <AnnotationOptions
+      :selected-all="selectedAll"
+      :selected-none="selectedNone"
+      :on-highlight-all="onHighlightAll"
+      :on-highlight-none="onHighlightNone"
+    />
   </div>
 </template>
 
@@ -293,8 +289,8 @@ export default {
     updateToggleState(annotation, text = 'toggle', list = 'toggle') {
       const id = this.stripAnnotationId(annotation.target.id);
 
-      document.getElementById(id).classList.[text]('annotation-disabled');
-      document.getElementById(`list${id}`).classList.[list]('bg-grey-2');
+      document.getElementById(id).classList[text]('annotation-disabled');
+      document.getElementById(`list${id}`).classList[list]('bg-grey-2');
     },
   },
 };
@@ -332,15 +328,9 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-.q-item {
-  min-height: unset;
-}
-
-.q-item__section--avatar {
-  min-width: 24px;
-}
-
-.q-item__section--side {
-  padding-right: unset;
+.item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 </style>
