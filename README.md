@@ -216,7 +216,11 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
             "icon": "fasComment",
             "label": "Comments"
           }
-        ]
+        ],
+        "tabs": {
+          "Editorial": ["Person", "Place", "Editorial Comment"],
+          "Motif": ["Motif"]
+        }
       },
       "colors": {
         "primary": "",
@@ -309,6 +313,21 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     - **label**
 
         The label of the annotation type respectively
+
+  - **tabs**
+
+    the tabs-object represents different types of annotations to be displayed in tabs accordingly.
+    it consists of further extensible sub keys called group labels, either of it representing a single group of annotations, e.g. *editorial*, *motifs*.
+    these labels act as your tab heading and it's naming is up to your liking.
+
+    e.g.
+
+  ```JSON
+  "tabs": {
+    "First group": ["Person", "Place", "Editorial Comment"],
+    "Second one": ["Motif"]
+  }
+  ```
 
 - **colors**
 

@@ -161,10 +161,10 @@ export default {
         const id = this.stripAnnotationId(annotation.target.id);
         const textElement = document.getElementById(id);
 
-        if (contentTypes.includes(annotation.body['x-content-type'])) {
+        if (textElement !== null && contentTypes.includes(annotation.body['x-content-type'])) {
           textElement.classList.add('annotation');
           textElement.classList.add('annotation-disabled');
-        } else {
+        } else if (!contentTypes.includes(annotation.body['x-content-type'])) {
           textElement.classList.remove('annotation');
           textElement.classList.add('annotation-disabled');
         }
