@@ -202,19 +202,24 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     "annotations": {
         "types": [
           {
-            "content-type": "Person",
+            "contenttype": "Person",
             "icon": "fasUser",
             "label": "Names"
           },
           {
-            "content-type": "Place",
+            "contenttype": "Place",
             "icon": "fasMapMarkerAlt",
             "label": "Places"
           },
           {
-            "content-type": "Editorial Comment",
+            "contenttype": "Editorial Comment",
             "icon": "fasComment",
             "label": "Comments"
+          },
+          {
+            "contenttype": "Motif",
+            "icon": "fasHighlighter",
+            "label": "Motifs"
           }
         ],
         "tabs": {
