@@ -163,8 +163,7 @@ export default {
 
         if (textElement !== null) {
           if (contentTypes.includes(annotation.body['x-content-type'])) {
-            textElement.classList.add('annotation');
-            textElement.classList.add('annotation-disabled');
+            textElement.classList.add('annotation', 'annotation-disabled');
           } else {
             textElement.classList.remove('annotation');
             textElement.classList.add('annotation-disabled');
