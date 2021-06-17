@@ -115,7 +115,7 @@ pages:
      - public
 
 # this stage serves for preserving the pages that have been created in the last two weeks.
-# without tihs job the pages would get lost or be overwritten by the 'pages' job.
+# without this job the pages would get lost or be overwritten by the 'pages' job.
 pushback:
   before_script:
     - dnf install -y zip
