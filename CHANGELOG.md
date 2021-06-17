@@ -2,6 +2,86 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.11.0...v1.12.0) (2021-06-17)
+
+
+### Features
+
+* add padding to list not to overlap with FAB ([0db4c91](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/0db4c9184adb9f952da39bc78707539db4793074))
+* fab with highlight all/none ([463333d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/463333dd75e57b784d40cf24fbd08bea38fa1e53))
+* fab with highlight all/none ([3ad837f](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/3ad837fd856e50a9ae4939590a74c95a19230291)), closes [#158](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/issues/158)
+* implement motifs tab in annotations ([f64e38a](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/f64e38a986af103ff27afa7c4ce7d4c9f475cd45))
+* styled fab ([1aaeb65](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/1aaeb6575f9a3200a5d5fb737e3716feacd0bf73))
+
+
+### Bug Fixes
+
+* closes [#275](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/issues/275) by resetting the toggle state on text panel update ([6c6d888](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/6c6d888af5e6d12e0ed2ff57ec32e67c76e62e0a))
+* highlight all or none in respective tab ([2dae09e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/2dae09ee1b70434eb327b51140b5cb6f17c3c346))
+* last element not cut off anymore and list is scrollable ([766d4a4](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/766d4a4a26dbf88ca3faccd3470dd2832ac97a1f))
+* provide scroll area to scroll the list of annotaions wheever it excedd it's viewport ([fba060c](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/fba060cc0e11cb3e8aee0fa528ff293b5a690396))
+
+
+### Styling
+
+* accent color for floating action button annotations panel ([183ca40](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/183ca40ba77912191f9d132ab59d5f7ed164e994)), closes [#282](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/issues/282)
+* adopt the styling from the text panel (content.vue) ([e16bed7](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/e16bed7a91984af7b77ea02de315208bad214f81))
+* basic "style" (fix typo) ([afaa1fc](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/afaa1fca2b8f4150aef22a7a28923fa38b636dbc))
+* changed color style to use quasar variable ([24b230d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/24b230de819a9c2a2629fa5e3096e36a12f0a022))
+* improve icon spacing of annotations in text panel ([d4ffdb8](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/d4ffdb8b44c1b9a5f8bd4384a250416fae64c66b))
+* improve var name ([7bea027](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/7bea0276573e7ccfaf923b03d1d48e4541536a75))
+* introduce new folder for several annotation components ([8cf0e2f](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/8cf0e2f4c55f4f6b044eadd75df030e19dd7e6b8))
+
+
+### Refactoring
+
+* addressing review comments ([55d865b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/55d865b67a13f96db312390ae5427db3b2297159))
+* annotation tabs have to be generic ([dcaad91](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/dcaad915595117cfe0eee48adf7f56d25bc6462a))
+* highlight all or none code refactor ([469e825](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/469e82563d6c5429da8916269e6d17cc35d70aa8))
+* improve maintainability due to modularization ([594a26e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/594a26e8b48b2490c598fa33ffd5607f9af9c747))
+* improvement: split the template into it's main parts (annotationlist) ([a44038d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/a44038d4fb47b952dddd3eb161a536ea404b74a1))
+* logic to add text class names ([5f9e3d8](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/5f9e3d8ab78fe2f4748234b3299afff420ea807c))
+* provide a template for the upcoming annotation toggles to be treated in [#271](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/issues/271) ([39a10d1](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/39a10d146d498f675730f4f92c50a617659675b9))
+* provide new component "annotationlist" ([9190f9e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/9190f9e42b1e01241482525e9799b6845a1471b3))
+* remove obsolete code ([28b9412](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/28b9412034b9cc94083616623cf309ef0a3ff315))
+* renamed prop and added i18n to tab titles ([968ea86](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/968ea86834531ad46cb63d1829e4289f17d4a2ae))
+* show notification if annotations aren't available ([fcff762](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/fcff76247efd9c4d378366bb9460455138657b6a))
+* wrap text elements to if condition ([1d62df8](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/1d62df898f8a776cc8088bded87868965a2b55f2))
+
+
+### Docs
+
+* add docs about stages [skip ci] ([e775784](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/e775784402e02e4468720cabefcd3a4d8cbe82e4))
+* extend docs for ci scripts ([65c3b9d](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/65c3b9de4a34469665d0eb7835395f8bc44fa83c))
+* update README according to the changes in the congig object ([289ad26](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/289ad26a8848685face17b1586599916fb425a57))
+* update README in regards to annotation type configuration ([3e7d78e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/3e7d78ef90c59137bb5ce6312f1770e4d27799de))
+* updated read me ([86ad976](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/86ad976cc2342f2cffbfbb0d5b025589a8032bb8))
+* used suggested translation ([e42d087](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/e42d087e329785922297aece832fb644c8dce85d))
+
+
+### Continuos Integration
+
+* remove entry point ([2a7b302](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/2a7b302e6708978eea73f88c9db33fe44eeab534))
+* remove entry point ([27d5fc4](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/27d5fc472ac11873b9d6558d19e52b04ce99b214))
+* remove entry point ([aabf429](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/aabf4294af609dd14fb7f79871814f2ae4dd8c3e))
+* remove entry point ([bfff14a](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/bfff14a3ccafa41adc5d175c34e6d148db40136a))
+* remove entry point ([579b690](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/579b690e6db85c6953122892023663c0184b07e2))
+* remove entry point ([f722a02](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/f722a025e8c8ca5523996b380f631c9270cf4428))
+* remove entry point ([32d1ac8](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/32d1ac826565fbcba43f04dacbcaa099eb2d2937))
+* remove entry point ([f6ec55e](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/f6ec55e725e189e40bc09ed486b2eddeb3f1e367))
+* remove entry point ([cdf6950](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/cdf6950b650bf745486e1fdec2c0f993f79a1e98))
+
+
+### Chore
+
+* add entrypoint for dev ([888025b](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/888025bc2e5d94fbe0edc23a53008f1bef45d0fb))
+* merge branch 'develop' into feature/[#272](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/issues/272)-annotation-motifs ([3596ab8](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/3596ab87b5433f51971611f381f7cb9aab9864a4))
+* merge develop ([ecceda5](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/ecceda51e109913a14cfc348ff740239ea894194))
+* relabel toggle buttons ([0a1df8c](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/0a1df8c18fa660e213dd5d992510d5d022fe151b))
+* remove obsolete style block ([b1a9996](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/b1a9996201bfa622ca00ef5927d677ee75b5071e))
+* typo ([3ef43aa](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/3ef43aa0f0ad288179fafd7da3830e59567aa430))
+* wIP: try to tackle last list item which is still cut off ([89e018c](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/89e018cbf0b7dc4dc17f166d2e4abfb09afbc99a))
+
 ## [1.11.0](https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/v1.10.0...v1.11.0) (2021-06-01)
 
 
