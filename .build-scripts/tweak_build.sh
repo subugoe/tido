@@ -30,7 +30,7 @@ done
 rm "${FILES[@]}"
 
 # print the result
-ls $DIST_DIR
+ls -l $DIST_DIR
 
 # replace the included js files from the former build by the single one concatenated above
 sed -ri 's:<script\s+src.*</script>:<script src="'${PROD_NAME}'.js"></script>:' ${DIST_DIR}/index.html

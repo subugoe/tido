@@ -202,21 +202,30 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     "annotations": {
         "types": [
           {
-            "content-type": "Person",
+            "contenttype": "Person",
             "icon": "fasUser",
             "label": "Names"
           },
           {
-            "content-type": "Place",
+            "contenttype": "Place",
             "icon": "fasMapMarkerAlt",
             "label": "Places"
           },
           {
-            "content-type": "Editorial Comment",
+            "contenttype": "Editorial Comment",
             "icon": "fasComment",
             "label": "Comments"
+          },
+          {
+            "contenttype": "Motif",
+            "icon": "fasHighlighter",
+            "label": "Motifs"
           }
-        ]
+        ],
+        "tabs": {
+          "Editorial": ["Person", "Place", "Editorial Comment"],
+          "Motif": ["Motif"]
+        }
       },
       "colors": {
         "primary": "",
@@ -309,6 +318,23 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     - **label**
 
         The label of the annotation type respectively
+
+  - **tabs**
+
+    the tabs-object represents different types of annotations to be displayed in tabs accordingly.
+    it consists of further extensible sub keys called group labels, either of it representing a single group of annotations, e.g. *editorial*, *motifs*.
+    these labels act as your tab heading and it's naming is up to your liking.
+
+    e.g.
+
+  ```JSON
+  "tabs": {
+    "First group": ["Person", "Place", "Editorial Comment"],
+    "Second one": ["Motif"]
+  }
+  ```
+
+  **Note**: The strings contained within the group label keys (e.g. *Person*, *Place*, ...) have to match it's API-counterpart explicitely. Please refer to the note above (content-type).
 
 - **colors**
 

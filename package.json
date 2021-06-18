@@ -1,6 +1,6 @@
 {
   "name": "@subugoe/tido",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "description": "Text vIever for Digital Objects",
   "productName": "TIDO",
   "keywords": [
@@ -98,7 +98,7 @@
     "release": "npm run build && npm run tweak:build && npm publish",
     "test": "npm run test:unit",
     "test:unit": "jest --updateSnapshot",
-    "tweak:build": "./tweak_build.sh",
+    "tweak:build": "bash .build-scripts/tweak_build.sh",
     "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version"
   },
   "files": [

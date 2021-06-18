@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# This script remove any entry point given at src/index.template.html.
+# If an entry point is removed, src/index.template.html is committed again
+# to the repository which triggers a new pipeline. Here there variable
+# $CONTINUE_BUILD comes into play.
+# In order to avoid having to build the complete application although the
+# current pipeline will trigger a new one, $CONTINUE_BUILD is set to "false"
+# and prevents a complete build and deployment.
+
 FILE="src/index.template.html"
 
 if grep -q '"entrypoint": ""' "$FILE"; then 

@@ -1,5 +1,5 @@
 <template>
-  <div class="annotations">
+  <div class="item">
     <q-tabs
       v-model="currentTab"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -13,30 +13,19 @@
         :key="annotationTab.key"
         :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
-        @click="activeTab(annotationTab.key)"
+        @click="activeTab(annotationTab.key,annotationTab.type)"
       />
     </q-tabs>
 
-    <div
+    <AnnotationToggles />
+
+    <AnnotationList
       v-if="currentAnnotations.length"
-      class="q-ma-sm"
-    >
-      <AnnotationToggles />
-
-      <AnnotationList
-        :configured-annotations="currentAnnotations"
-        :get-icon="getIcon"
-        :status-check="statusCheck"
-        :toggle="toggle"
-      />
-
-      <AnnotationOptions
-        :selected-all="selectedAll"
-        :selected-none="selectedNone"
-        :on-highlight-all="onHighlightAll"
-        :on-highlight-none="onHighlightNone"
-      />
-    </div>
+      :configured-annotations="currentAnnotations"
+      :get-icon="getIcon"
+      :status-check="statusCheck"
+      :toggle="toggle"
+    />
 
     <div
       v-else
@@ -44,6 +33,13 @@
     >
       <Notification :message="$t(messages.none)" />
     </div>
+
+    <AnnotationOptions
+      :selected-all="selectedAll"
+      :selected-none="selectedNone"
+      :on-highlight-all="onHighlightAll"
+      :on-highlight-none="onHighlightNone"
+    />
   </div>
 </template>
 
@@ -87,7 +83,7 @@ export default {
       },
       selectedAll: false,
       selectedNone: true,
-      currentTab: 'editorial',
+      currentTab: '',
     };
   },
   computed: {
@@ -97,21 +93,39 @@ export default {
     currentAnnotations() {
       const contentType = this.annotationTabs.find((collection) => collection.key === this.currentTab);
 
+      if (!contentType) {
+        return [];
+      }
+
       return this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
     },
+    annotationTabConfig() {
+      return this.config?.annotations?.tabs || {};
+    },
     annotationTabs() {
-      return [
-        {
-          collectionTitle: 'Editorial',
-          key: 'editorial',
-          type: ['Place', 'Person', 'Editorial Comment'],
-        },
-        {
-          collectionTitle: 'Motifs',
-          key: 'motifs',
-          type: ['Motif'],
-        },
-      ];
+      const contentTypes = {};
+      const annotationTab = {};
+
+      Object.entries(this.annotationTabConfig).forEach(([key, types]) => {
+        types.forEach((type) => {
+          contentTypes[type] = key;
+        });
+
+        annotationTab[key] = {
+          key,
+          collectionTitle: key,
+          type: [],
+        };
+      });
+
+      this.annotations.forEach((curr) => {
+        const contentType = curr.body.['x-content-type'];
+        if (contentTypes[contentType]) {
+          annotationTab[contentTypes[contentType]].type.push(contentType);
+        }
+      });
+
+      return Object.values(annotationTab).filter((x) => x.type.length);
     },
   },
   mounted() {
@@ -127,38 +141,38 @@ export default {
 
       const interval = setInterval(() => {
         if (this.annotationLoading) {
+          const firstTab = this.annotationTabs.find((x) => x.type.length)?.key || '';
+
           this.configuredAnnotations = this.filterAnnotationTypes();
-          this.highlightActiveTabContent('editorial');
+          this.highlightActiveTabContent(this.annotationTabConfig[firstTab] || []);
+          this.currentTab = firstTab;
           clearInterval(interval);
         }
       }, 500);
-
-      this.currentTab = 'editorial';
     });
   },
   methods: {
-    highlightActiveTabContent(key) {
-      const contentTypes = this.annotationTabs.find((content) => content.key === key).type;
-
+    highlightActiveTabContent(contentTypes) {
       this.annotations.forEach((annotation) => {
         const id = this.stripAnnotationId(annotation.target.id);
         const textElement = document.getElementById(id);
 
-        if (contentTypes.includes(annotation.body['x-content-type'])) {
-          textElement.classList.add('annotation');
-          textElement.classList.add('annotation-disabled');
-        } else {
-          textElement.classList.remove('annotation');
-          textElement.classList.add('annotation-disabled');
+        if (textElement !== null) {
+          if (contentTypes.includes(annotation.body['x-content-type'])) {
+            textElement.classList.add('annotation', 'annotation-disabled');
+          } else {
+            textElement.classList.remove('annotation');
+            textElement.classList.add('annotation-disabled');
+          }
         }
       });
     },
-    activeTab(key) {
+    activeTab(key, types) {
       this.currentTab = key;
       this.selectedAll = false;
       this.selectedNone = true;
 
-      this.highlightActiveTabContent(key);
+      this.highlightActiveTabContent(types);
     },
     createSVG(name) {
       const [path, viewBox] = Icons[name].split('|');
@@ -275,8 +289,8 @@ export default {
     updateToggleState(annotation, text = 'toggle', list = 'toggle') {
       const id = this.stripAnnotationId(annotation.target.id);
 
-      document.getElementById(id).classList.[text]('annotation-disabled');
-      document.getElementById(`list${id}`).classList.[list]('bg-grey-2');
+      document.getElementById(id).classList[text]('annotation-disabled');
+      document.getElementById(`list${id}`).classList[list]('bg-grey-2');
     },
   },
 };
@@ -314,15 +328,9 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-.q-item {
-  min-height: unset;
-}
-
-.q-item__section--avatar {
-  min-width: 24px;
-}
-
-.q-item__section--side {
-  padding-right: unset;
+.item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 </style>

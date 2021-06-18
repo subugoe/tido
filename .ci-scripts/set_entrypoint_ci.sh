@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# this script sets the entrypoint for TIDO
+# This script sets the entry point for TIDO's GitLab pages. They are not part of version
+# controlling.
 #
-# reason: if an entrypoint is provided, it will be compiled and integrated into the build
-# the build takes precedence and prevents the according config option to take effect
-# on the the other hand, the entrypoint is needed for the demo page to show data
-# https://subugoe.pages.gwdg.de/emo/Qviewer/develop/#/
+# Reason: If an entrypoint is provided, it will be compiled and integrated into the build.
+# Since we still want to have data at our hands when developing and for the official TIDO
+# link, the entry point has to be set without being present in the repository.
 
 
 echo CI_COMMIT_REF_NAME=${CI_COMMIT_REF_NAME}
@@ -23,7 +23,7 @@ case $CI_COMMIT_REF_NAME in
     echo "set entrypoint for testing"
     # TIDO is developed in the context of the Ahiqar project, therefore we use the Ahiqar data for
     # development purposes.
-    ENTRY_POINT=https://ahikar-test.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json
+    ENTRY_POINT=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json
     sed -ri 's|.*("entrypoint"\s*:).*$|\t\t\t\1 "'${ENTRY_POINT}'",|' src/index.template.html
     ;;
 esac

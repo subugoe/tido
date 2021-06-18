@@ -1,6 +1,6 @@
 <template>
   <q-page-sticky
-    :offset="[18, 18]"
+    :offset="[16, 16]"
     position="bottom-right"
   >
     <q-fab
