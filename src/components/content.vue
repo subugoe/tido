@@ -80,7 +80,7 @@ export default {
     },
     fontsize: {
       type: Number,
-      default: () => 14,
+      default: () => 1,
     },
     manifests: {
       type: Array,
@@ -110,7 +110,7 @@ export default {
 
   watch: {
     fontsize() {
-      this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
+      this.$refs.contentsize.style.fontSize = `${this.fontsize}em`;
     },
     async activeTab(url) {
       const data = await this.request(url, 'text');
@@ -134,7 +134,7 @@ export default {
   },
 
   mounted() {
-    this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
+    this.$refs.contentsize.style.fontSize = `${this.fontsize}em`;
 
     this.$root.$on('update-sequence-index', (index) => {
       if (this.supportType) {
@@ -144,17 +144,21 @@ export default {
   },
   methods: {
     decrease() {
-      const min = 8;
+      const min = 0.875;
       let textsize = this.fontsize;
 
-      textsize -= textsize > min ? 1 : 0;
+      textsize -= textsize > min ? 0.125 : 0;
+      if (textsize < min) textsize = min;
+
       this.$root.$emit('update-fontsize', textsize);
     },
     increase() {
-      const max = 32;
+      const max = 1.5;
       let textsize = this.fontsize;
 
-      textsize += textsize < max ? 1 : 0;
+      textsize += textsize < max ? 0.125 : 0;
+      if (textsize > max) textsize = max;
+
       this.$root.$emit('update-fontsize', textsize);
     },
     getSupport(support) {
