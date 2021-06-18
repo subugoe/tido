@@ -5,7 +5,7 @@
     </h3>
 
     <q-toggle
-      v-for="(type, index) in config.annotations.types"
+      v-for="(type, index) in editorialTypes"
       :key="index"
       v-model="model"
       :color="$q.dark.isActive ? 'grey-8' : 'accent'"
@@ -46,6 +46,11 @@ export default {
   },
   created() {
     this.icons = Icons;
+  },
+  computed: {
+    editorialTypes() {
+      return this.config.annotations.types.filter((type) => type.genus === 'editorial');
+    },
   },
   mounted() {
     this.model = this.activeTypes();

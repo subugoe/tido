@@ -31,32 +31,36 @@
     -->
     <script id="tido-config" type="application/json">
     {
-			"entrypoint": "https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/syriac/collection.json",
+			"entrypoint": "https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
       "annotations": {
         "show": true,
         "types": [
           {
             "contenttype": "Person",
             "icon": "fasUser",
-            "label": "Names"
+            "label": "Names",
+            "genus": "editorial"
           },
           {
             "contenttype": "Place",
             "icon": "fasMapMarkerAlt",
-            "label": "Places"
+            "label": "Places",
+            "genus": "editorial"
           },
           {
             "contenttype": "Editorial Comment",
             "icon": "fasComment",
-            "label": "Comments"
+            "label": "Comments",
+            "genus": "editorial"
           },
           {
             "contenttype": "Motif",
             "icon": "fasHighlighter",
-            "label": "Motifs"
+            "label": "Motifs",
+            "genus": "motif"
           }
         ],
-        "tabs":{
+        "tabs": {
           "Editorial": ["Person", "Place", "Editorial Comment"],
           "Motif": ["Motif"]
         }
