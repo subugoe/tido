@@ -17,6 +17,7 @@
       dense
       size="md"
       toggle-order="tf"
+      @click="$root.$emit('update-toggles', model)"
     />
 
     <q-separator />

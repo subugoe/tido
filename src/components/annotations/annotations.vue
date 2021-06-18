@@ -13,7 +13,7 @@
         :key="annotationTab.key"
         :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
-        @click="activeTab(annotationTab.key,annotationTab.type)"
+        @click="activeTab(annotationTab.key, annotationTab.type)"
       />
     </q-tabs>
 
@@ -22,6 +22,7 @@
       class="q-ma-sm"
     >
       <AnnotationToggles
+        v-if="currentTab === 'Editorial'"
         :config="config"
         :current-annotations="currentAnnotations"
       />
@@ -90,6 +91,7 @@ export default {
       messages: {
         none: 'noAnnotationMessage',
       },
+      model: [],
       selectedAll: false,
       selectedNone: true,
     };
@@ -157,6 +159,12 @@ export default {
           clearInterval(interval);
         }
       }, 500);
+    });
+
+    this.model = this.configuredTypes;
+
+    this.$root.$on('update-toggles', (model) => {
+      this.model = model;
     });
   },
   methods: {
