@@ -118,7 +118,7 @@ export default {
         };
       });
 
-      this.annotations.forEach((curr) => {
+      this.configuredAnnotations.forEach((curr) => {
         const contentType = curr.body.['x-content-type'];
         if (contentTypes[contentType]) {
           annotationTab[contentTypes[contentType]].type.push(contentType);
@@ -141,9 +141,10 @@ export default {
 
       const interval = setInterval(() => {
         if (this.annotationLoading) {
+          this.configuredAnnotations = this.filterAnnotationTypes();
+
           const firstTab = this.annotationTabs.find((x) => x.type.length)?.key || '';
 
-          this.configuredAnnotations = this.filterAnnotationTypes();
           this.highlightActiveTabContent(this.annotationTabConfig[firstTab] || []);
           this.currentTab = firstTab;
           clearInterval(interval);
