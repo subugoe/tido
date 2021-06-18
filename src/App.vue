@@ -58,7 +58,7 @@ export default {
       config: {},
       contentTypes: [],
       contentUrls: [],
-      fontsize: 1,
+      fontsize: 16,
       imageurl: '',
       isCollection: false,
       item: {},
@@ -394,7 +394,7 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
-  font-size: 1em;
+  font-size: 16px;
   overflow: hidden;
 }
 

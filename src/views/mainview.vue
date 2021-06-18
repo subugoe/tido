@@ -107,7 +107,7 @@ export default {
     },
     fontsize: {
       type: Number,
-      default: () => 1,
+      default: () => 16,
     },
     imageurl: {
       type: String,
