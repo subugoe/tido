@@ -44,13 +44,13 @@ export default {
       model: [],
     };
   },
-  created() {
-    this.icons = Icons;
-  },
   computed: {
     editorialTypes() {
       return this.config.annotations.types.filter((type) => type.genus === 'editorial');
     },
+  },
+  created() {
+    this.icons = Icons;
   },
   mounted() {
     this.model = this.activeTypes();
