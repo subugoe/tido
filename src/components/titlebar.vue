@@ -20,7 +20,7 @@
 import { fasChevronRight } from '@quasar/extras/fontawesome-v5';
 
 export default {
-  name: 'Infobar',
+  name: 'Titlebar',
   props: {
     collectiontitle: {
       type: String,
