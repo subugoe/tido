@@ -1,7 +1,7 @@
 <template>
   <q-list class="item-content">
     <q-item
-      v-for="annotation in configuredAnnotations"
+      v-for="annotation in renderedAnnotations"
       :id="'list' + annotation.strippedId"
       :key="annotation.strippedId"
       class="q-pa-sm q-pl-xs q-mb-xs"
@@ -39,7 +39,7 @@ export default {
       type: Function,
       default: () => null,
     },
-    configuredAnnotations: {
+    currentAnnotations: {
       type: Array,
       default: () => [],
     },
@@ -50,6 +50,32 @@ export default {
     statusCheck: {
       type: Function,
       default: () => null,
+    },
+  },
+  data() {
+    return {
+      currentTypes: [],
+    };
+  },
+  computed: {
+    renderedAnnotations() {
+      return this.currentAnnotations.filter((current) => this.currentTypes.includes(current.body['x-content-type']));
+    },
+  },
+  mounted() {
+    this.currentTypes = this.getCurrentTypes();
+
+    this.$root.$on('update-item', () => {
+      this.currentTypes = this.getCurrentTypes();
+    });
+
+    this.$root.$on('update-toggles', (model) => {
+      this.currentTypes = model;
+    });
+  },
+  methods: {
+    getCurrentTypes() {
+      return [...new Set(this.currentAnnotations.map((annotation) => annotation.body['x-content-type']))];
     },
   },
 };

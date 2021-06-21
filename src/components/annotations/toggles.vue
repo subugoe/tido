@@ -17,7 +17,6 @@
       dense
       size="md"
       toggle-order="tf"
-      @click="$root.$emit('update-toggles', model)"
     />
 
     <q-separator />
@@ -48,6 +47,11 @@ export default {
   computed: {
     editorialTypes() {
       return this.config.annotations.types.filter((type) => type.genus === 'editorial');
+    },
+  },
+  watch: {
+    model() {
+      this.$root.$emit('update-toggles', this.model);
     },
   },
   created() {

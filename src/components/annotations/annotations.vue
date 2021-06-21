@@ -29,7 +29,7 @@
 
       <AnnotationList
         v-if="currentAnnotations.length"
-        :configured-annotations="currentAnnotations"
+        :current-annotations="currentAnnotations"
         :get-icon="getIcon"
         :status-check="statusCheck"
         :toggle="toggle"
@@ -91,7 +91,6 @@ export default {
       messages: {
         none: 'noAnnotationMessage',
       },
-      model: [],
       selectedAll: false,
       selectedNone: true,
     };
@@ -160,12 +159,6 @@ export default {
           clearInterval(interval);
         }
       }, 500);
-    });
-
-    this.model = this.configuredTypes;
-
-    this.$root.$on('update-toggles', (model) => {
-      this.model = model;
     });
   },
   methods: {
