@@ -24,6 +24,7 @@
         flat
         round
         size="sm"
+        :disable="fontsize >= fontSizeLimits.max"
         :title="$t('Increase')"
         @click="increase()"
       >
@@ -39,6 +40,7 @@
         flat
         round
         size="sm"
+        :disable="fontsize <= fontSizeLimits.min"
         :title="$t('Decrease')"
         :color="$q.dark.isActive ? 'white' : 'accent'"
         @click="decrease()"
@@ -80,7 +82,7 @@ export default {
     },
     fontsize: {
       type: Number,
-      default: () => 14,
+      default: () => 16,
     },
     manifests: {
       type: Array,
@@ -98,6 +100,10 @@ export default {
   data: () => ({
     activeTab: null,
     content: '',
+    fontSizeLimits: {
+      min: 14,
+      max: 24,
+    },
     sequenceindex: 0,
   }),
   computed: {
@@ -144,17 +150,21 @@ export default {
   },
   methods: {
     decrease() {
-      const min = 8;
+      const { min } = this.fontSizeLimits;
       let textsize = this.fontsize;
 
-      textsize -= textsize > min ? 1 : 0;
+      textsize -= textsize > min ? 2 : 0;
+      if (textsize < min) textsize = min;
+
       this.$root.$emit('update-fontsize', textsize);
     },
     increase() {
-      const max = 32;
+      const { max } = this.fontSizeLimits;
       let textsize = this.fontsize;
 
-      textsize += textsize < max ? 1 : 0;
+      textsize += textsize < max ? 2 : 0;
+      if (textsize > max) textsize = max;
+
       this.$root.$emit('update-fontsize', textsize);
     },
     getSupport(support) {
