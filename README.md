@@ -187,7 +187,7 @@ You can fully customize the Viewer's behaviour:
 There are options to
 
 - change the color scheme
-- show or hide individual bars (info, navigation, toggles)
+- show or hide individual bars (titles, navigation, toggles)
 - group multiple components inside a single panel
 - set the order of the panels
 - rename labels and / or panel headings
@@ -232,11 +232,11 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
         "secondary": "",
         "accent": ""
       },
-      "headers": {
-        "all": true,
-        "info": true,
+      "header_section": {
+        "show": true,
         "navigation": true,
         "panelheadings": true,
+        "titles": true,
         "toggle": true
       },
       "labels": {
@@ -346,7 +346,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   If any value is left blank (e.g. `"primary": "",`), a default color scheme will be used.
 
-- **headers**
+- **header_section**
 
   - **show**
 
@@ -356,10 +356,6 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
       *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
 
-  - **info**
-
-      set this value to `false` if you want to switch off the Infobar (a.k.a. breadcrumbs)  
-
   - **navigation**
 
       set this value to `false` if you want to switch off the NavBar
@@ -367,6 +363,10 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   - **panelheadings**
 
     set this value to `false` if you want to switch off the panels' headings respectively
+
+    - **titles**
+
+    set this value to `false` if you want to switch off the Titlebar (a.k.a. breadcrumbs)  
 
   - **toggle**
 
