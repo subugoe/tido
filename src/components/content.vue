@@ -56,7 +56,7 @@
     <div class="custom-font item-content">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div
-        :class="[config.rtl ? 'rtl' : '']"
+        :class="{'rtl': config.rtl}"
         ref="contentsize"
         v-html="content"
       />
