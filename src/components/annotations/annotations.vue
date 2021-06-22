@@ -21,6 +21,7 @@
 
     <AnnotationList
       v-if="currentAnnotations.length"
+      class="custom-font"
       :configured-annotations="currentAnnotations"
       :get-icon="getIcon"
       :status-check="statusCheck"
