@@ -45,7 +45,7 @@ clean_up:
 
 # builds TIDO on feature and bugfix branches.
 build_test:
-  image: docker.gitlab.gwdg.de/subugoe/emo/qviewer/node:latest
+  image: docker.gitlab.gwdg.de/subugoe/emo/tido/node:latest
   except:
    - main
    - develop
@@ -60,7 +60,7 @@ build_test:
 # the software is only built if no entry point has been removed during
 # the 'clean' stage.
 build_main_and_develop:
-  image: docker.gitlab.gwdg.de/subugoe/emo/qviewer/node:latest
+  image: docker.gitlab.gwdg.de/subugoe/emo/tido/node:latest
   only:
    - main
    - develop
@@ -108,7 +108,7 @@ pages:
     - bash .ci-scripts/gitlab-remove-old-artifacts.sh
   environment:
     name: ${CI_COMMIT_REF_SLUG}
-    url: https://subugoe.pages.gwdg.de/emo/Qviewer/${CI_COMMIT_REF_SLUG}/
+    url: https://subugoe.pages.gwdg.de/emo/tido/${CI_COMMIT_REF_SLUG}/
   artifacts:
     name: "$CI_COMMIT_SHORT_SHA"
     paths:
