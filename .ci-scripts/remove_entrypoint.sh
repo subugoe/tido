@@ -16,8 +16,8 @@ if grep -q '"entrypoint": ""' "$FILE"; then
 else
     echo "Entry point has to be removed."
     mkdir -p /tmp/this && cd /tmp/this || exit
-    git clone git@gitlab.gwdg.de:subugoe/emo/QViewer.git
-    cd QViewer || exit
+    git clone git@gitlab.gwdg.de:subugoe/emo/tido.git
+    cd tido || exit
     sed -i 's/"entrypoint": ".*"/"entrypoint": ""/' src/index.template.html
     git add src/index.template.html && git commit -m "ci: remove entry point" && git push
     echo "CONTINUE_BUILD=false" >> build.env

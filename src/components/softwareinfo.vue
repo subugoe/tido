@@ -34,7 +34,7 @@
         <q-card-section class="q-pt-none">
           <q-btn
             flat
-            href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/blob/main/README.md"
+            href="https://gitlab.gwdg.de/subugoe/emo/tido/-/blob/main/README.md"
             target="_blank"
             type="a"
           >
@@ -48,7 +48,7 @@
 
           <q-btn
             flat
-            href="https://gitlab.gwdg.de/subugoe/emo/Qviewer/"
+            href="https://gitlab.gwdg.de/subugoe/emo/tido/"
             target="_blank"
             type="a"
           >
@@ -62,7 +62,7 @@
 
           <q-btn
             flat
-            href="mailto:gitlab+subugoe-emo-qviewer-10921-issue-@gwdg.de"
+            href="mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
             type="a"
           >
             <q-icon

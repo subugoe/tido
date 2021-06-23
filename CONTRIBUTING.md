@@ -5,9 +5,9 @@ Feel free to propose changes whenever the workflow could be improved!
 
 ## Issue Tracker
 
-Issues are created and assigned by the project's Product Owner during a sprint planning in the [issue tracker](https://gitlab.gwdg.de/subugoe/emo/QViewer/-/issues).
+Issues are created and assigned by the project's Product Owner during a sprint planning in the [issue tracker](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues).
 As soon as you start working on a assigned issue, switch its label to `Doing`.
-This will cause the issue to be moved into the right list of the repository's [board](https://gitlab.gwdg.de/subugoe/emo/QViewer/-/boards).
+This will cause the issue to be moved into the right list of the repository's [board](https://gitlab.gwdg.de/subugoe/emo/tido/-/boards).
 
 ## Internal Workflow
 
@@ -15,7 +15,7 @@ This will cause the issue to be moved into the right list of the repository's [b
 
 Bugs and change requests are managed by the project's Product Owner.
 Please report any problems that aren't related to the bugfix/feature you're working on right now to her/him.
-Bug reports can also be handed it via [mail](mailto:gitlab+subugoe-emo-qviewer-10921-issue-@gwdg.de).
+Bug reports can also be handed it via [mail](mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de).
 She/he will create an issue in the correct repository and ask for assignees in the course of the next sprint planning.
 
 ### Git Flow
