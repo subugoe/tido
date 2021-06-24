@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.13.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.12.0...v1.13.0) (2021-06-24)
+
+
+### Features
+
+* display font provided by support object ([cf37200](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/cf372006c8b3980421121adf89349119c08ef1f7))
+* in- or decrease the fontsize in the text panel on click ([139220a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/139220aa98fe798a502d23ae8ca7246bf3673ed1))
+
+
+### Chore
+
+* move build script to new folder to keep the dir root clean/er ([94044fa](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/94044fa1b795cf849477da85b48d99f995a144b8))
+* revert config to original state ([eec6bb3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/eec6bb3d8ab1908f77869b9463c72a6a92594454))
+* switch title toggle to true on init ([a533f92](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/a533f92bb0d58dda217e097eeff732ac0c209acd))
+
+
+### Refactoring
+
+* adding font family to annotation list ([e192e8a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e192e8aaf11ef1f6d80364c1d2a802c77acee721))
+* addressing review comment ([d596c0d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d596c0d2f4ed455950941d6f0e3d13c2a438e933))
+* change fontsize units from em to px according to the revie proposal ([2465db1](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2465db13ba05512e83abe2f05067f2fd875c9908)), closes [/gitlab.gwdg.de/subugoe/emo/Qviewer/-/merge_requests/188#note_341244](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/note_341244)
+* disable buttons whenever the fontsize exceeds the limits defined ([5abadc5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5abadc59130c3b2a322075e64ec94aa4935ac07f)), closes [/gitlab.gwdg.de/subugoe/emo/Qviewer/-/merge_requests/188#note_341352](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/note_341352)
+* display tabs accordingly when there are two text types ([e30c705](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e30c705adc0b594653febc98d6a00e2f7374f081))
+* group the tools (language, sw-info, colors) into a single component ([b993155](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b993155731c835159a846faf6073d1cd8ddf58eb))
+* rename infobar to titlebar, update README and adjust the code appropriately ([fab89b3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/fab89b39ac9687a57fdee1b8583831be1f67d0b5)), closes [/gitlab.gwdg.de/subugoe/emo/Qviewer/-/merge_requests/186#note_338224](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/note_338224)
+* rename qviewer to tido ([405330d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/405330dcf7141b2d5add24279843a696b022348b))
+
+
+### Continuos Integration
+
+* remove entry point ([43cb411](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/43cb4116fedb5590bec5f6d3ca943f639762a8c8))
+* remove entry point ([11f566e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/11f566ec5d30cba66f749b49571a5f38a26c3781))
+* remove entry point ([aeae435](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/aeae43585dccb98e23010aacb10e443d6d5ba655))
+* remove entry point ([ed943b5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ed943b5d96b8da65139a9576c05098ed82077494))
+* use node 12 instead of latest for Docker ([61b0499](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/61b04998cad308b4f9874416825d1185b300f2cb))
+
 ## [1.12.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.11.0...v1.12.0) (2021-06-17)
 
 
