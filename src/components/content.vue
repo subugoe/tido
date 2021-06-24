@@ -53,12 +53,14 @@
       </q-btn>
     </div>
 
-    <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-    <div
-      :class="['item-content', config.rtl ? 'rtl' : '']"
-      ref="contentsize"
-      v-html="content"
-    />
+    <div class="custom-font item-content">
+      <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
+      <div
+        :class="{'rtl': config.rtl}"
+        ref="contentsize"
+        v-html="content"
+      />
+    </div>
   </div>
 </template>
 
@@ -122,7 +124,7 @@ export default {
       const data = await this.request(url, 'text');
 
       if (this.supportType) {
-        this.getSupport(this.manifests[0].support);
+        await this.getSupport(this.manifests[0].support);
       }
 
       this.content = data;
@@ -167,19 +169,45 @@ export default {
 
       this.$root.$emit('update-fontsize', textsize);
     },
-    getSupport(support) {
+    async getSupport(support) {
+      const promises = [];
+
       support.forEach((s) => {
-        this.request(s.url, 'text')
-          .then(() => {
+        const hasElement = document.getElementById(s.url);
+
+        if (!hasElement) {
+          if (s.type === 'font') {
+            promises.push(this.loadFont(s.url));
+          } else {
             const supportUrl = document.createElement('link');
 
-            if (s.type === 'css') supportUrl.setAttribute('rel', 'stylesheet');
-
+            supportUrl.setAttribute('rel', 'stylesheet');
+            supportUrl.setAttribute('type', 'text/css');
             supportUrl.setAttribute('href', s.url);
+            supportUrl.setAttribute('id', s.url);
 
             document.head.appendChild(supportUrl);
-          });
+          }
+        }
       });
+
+      await Promise.all(promises);
+    },
+    async loadFont(url) {
+      let style = 'normal';
+      let weight = 'normal';
+
+      if (url.endsWith('italic.woff')) {
+        style = 'italic';
+      }
+      if (url.endsWith('bold.woff')) {
+        weight = 700; // https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-weight
+      }
+
+      const fontFace = new FontFace('tido', `url(${url})`, { style, weight }); // 'tido' or any family name to represent fonts
+      const loadedFont = await fontFace.load();
+
+      document.fonts.add(loadedFont);
     },
   },
 };
