@@ -7,7 +7,7 @@ Although TIDO is designed as a generic viewer for digital editions, it is curren
 
 This is the reason for "Ahiqar" being mentioned several times in the docs of this repo.
 
-Demo: <https://subugoe.pages.gwdg.de/emo/Qviewer/develop>
+Demo: <https://subugoe.pages.gwdg.de/emo/tido/develop>
 
 (For newer branches the demo is deployed in a directory named with branch name lowercased, shortened to 63 bytes, and with everything except `0-9` and `a-z` replaced with `-` (CI_COMMIT_REF_SLUG).
 Also the commit short hash can be used to see a demo.
@@ -125,7 +125,7 @@ npm install -g @vue/cli @vue/cli-service-global @quasar/cli
 #### Clone the repository
 
 ```bash
-git clone git@gitlab.gwdg.de:subugoe/emo/Qviewer.git
+git clone git@gitlab.gwdg.de:subugoe/emo/tido.git
 ```
 
 #### Get the dependencies
@@ -505,8 +505,8 @@ The dockerfile is used for GitLab CI.
 It needs to be updated when either `node` or `quasar-cli` should be updated.
 
 ```bash
-docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/qviewer/node .
-docker push docker.gitlab.gwdg.de/subugoe/emo/qviewer/node
+docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/tido/node .
+docker push docker.gitlab.gwdg.de/subugoe/emo/tido/node
 ```
 
 ## Connecting the Viewer to a Backend
@@ -530,8 +530,8 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Versioning
 
-We use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/tags).
+We use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://gitlab.gwdg.de/subugoe/emo/tido/-/tags).
 
 ## Authors
 
-See the list of [contributors](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/graphs/develop) who participated in this project.
+See the list of [contributors](https://gitlab.gwdg.de/subugoe/emo/tido/-/graphs/develop) who participated in this project.

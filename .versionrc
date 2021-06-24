@@ -1,7 +1,7 @@
 {
-  "commitUrlFormat": "https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/commit/{{hash}}",
-  "compareUrlFormat": "https://gitlab.gwdg.de/subugoe/emo/Qviewer/compare/{{previousTag}}...{{currentTag}}",
-  "issueUrlFormat": "https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/issues/{{id}}",
+  "commitUrlFormat": "https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/{{hash}}",
+  "compareUrlFormat": "https://gitlab.gwdg.de/subugoe/emo/tido/compare/{{previousTag}}...{{currentTag}}",
+  "issueUrlFormat": "https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/{{id}}",
   "types": [
     {"type": "chore", "section":"Chore", "hidden": false},
     {"type": "revert", "section":"Reverts", "hidden": false},
