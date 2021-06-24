@@ -24,6 +24,7 @@
             :itemurls="itemurls"
             :labels="config.labels"
             :manifests="manifests"
+            :default-view="defaultView"
           />
 
           <q-space />
@@ -63,6 +64,11 @@ export default {
     Tools,
   },
   props: {
+    defaultView: {
+      type: Function,
+      default: () => {},
+    },
+
     collectiontitle: {
       type: String,
       default: () => '',

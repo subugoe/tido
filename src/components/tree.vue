@@ -19,7 +19,10 @@
       </template>
 
       <template #default-header="prop">
-        <div class="row items-center">
+        <div
+          :id="prop.node['label']"
+          class="row items-center"
+        >
           <div> {{ prop.node.labelSheet? $t(labels.item):'' }} {{ prop.node['label-key'] }}</div>
         </div>
       </template>
@@ -68,10 +71,8 @@ export default {
 
     this.expanded.push(this.manifests[finalSeqIdx].label);
 
-    this.$root.$on('update-item', (item, seqIdx) => {
+    this.$root.$on('update-item', (item) => {
       this.selected = item;
-      treestore.updateselectedtreeitem(item);
-      treestore.updatetreesequence(seqIdx);
     });
 
     this.$root.$on('update-sequence-index', (index) => {
