@@ -98,7 +98,29 @@ export default {
         return [];
       }
 
-      return this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
+      const output = this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']))
+        .map((annotation) => ({
+          ...annotation,
+          transformed: this.stripId(annotation.strippedId).split('.').filter((x) => x),
+        }))
+        .sort((a, b) => b.transformed.length - a.transformed.length);
+
+      if (!output.length) {
+        return [];
+      }
+
+      const max = output[0]?.transformed?.length || 0;
+
+      return output.map((x) => {
+        const diff = max - x.transformed.length;
+
+        if (diff > 0) {
+          x.transformed = [...x.transformed, ...new Array(diff).fill(1)].join('');
+        } else {
+          x.transformed = x.transformed.join('');
+        }
+        return x;
+      }).sort((a, b) => a.transformed - b.transformed);
     },
     annotationTabConfig() {
       return this.config?.annotations?.tabs || {};
@@ -280,6 +302,10 @@ export default {
     */
     stripAnnotationId(url) {
       return url.split('/').pop();
+    },
+
+    stripId(val) {
+      return val.replace(/[^.0-9]/g, '');
     },
 
     toggle(annotation) {
