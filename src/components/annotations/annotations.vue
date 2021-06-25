@@ -101,26 +101,32 @@ export default {
       const output = this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']))
         .map((annotation) => ({
           ...annotation,
-          transformed: this.stripId(annotation.strippedId).split('.').filter((x) => x),
+          annotationIdValue: this.stripId(annotation.strippedId).split('.').filter((x) => x),
         }))
-        .sort((a, b) => b.transformed.length - a.transformed.length);
+        .sort((a, b) => b.annotationIdValue.length - a.annotationIdValue.length);
 
       if (!output.length) {
         return [];
       }
 
-      const max = output[0]?.transformed?.length || 0;
+      const annotationIdLength = output[0]?.annotationIdValue?.length || 0;
 
       return output.map((x) => {
-        const diff = max - x.transformed.length;
+        //  Consider this as IP address (annotation ID)
+        //  We will get longest ip address we have ("max" here)
+        //  And if any of ip address part less then max then we are append 1 to it
+        //  e.g Max = [1.2.3.4]
+        //  current = [1.2.3] // Less than max because max has four parts
+        //  So annotationIdValue current will be [1.2.3.1] --> Last 1 is better for comparision.
+        const annotationId = annotationIdLength - x.annotationIdValue.length;
 
-        if (diff > 0) {
-          x.transformed = [...x.transformed, ...new Array(diff).fill(1)].join('');
+        if (annotationId > 0) {
+          x.annotationIdValue = [...x.annotationIdValue, ...new Array(annotationId).fill(1)].join('');
         } else {
-          x.transformed = x.transformed.join('');
+          x.annotationIdValue = x.annotationIdValue.join('');
         }
         return x;
-      }).sort((a, b) => a.transformed - b.transformed);
+      }).sort((a, b) => a.annotationIdValue - b.annotationIdValue);
     },
     annotationTabConfig() {
       return this.config?.annotations?.tabs || {};
@@ -305,7 +311,7 @@ export default {
     },
 
     stripId(val) {
-      return val.replace(/[^.0-9]/g, '');
+      return val.replace(/-/g, '.').replace(/[^.0-9]/g, '');
     },
 
     toggle(annotation) {
