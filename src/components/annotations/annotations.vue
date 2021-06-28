@@ -159,10 +159,6 @@ export default {
   },
   mounted() {
     this.$root.$on('update-annotations', (content) => {
-      // reset selected
-      this.selectedAll = undefined;
-      this.selectedNone = undefined;
-
       const parser = new DOMParser();
       const doc = parser.parseFromString(content, 'text/html');
 
@@ -285,8 +281,8 @@ export default {
     },
 
     statusCheck() {
-      const num = this.configuredAnnotations.length;
-      const active = this.configuredAnnotations.filter((annotation) => annotation.status === true).length;
+      const num = this.currentAnnotations.length;
+      const active = this.currentAnnotations.filter((annotation) => annotation.status === true).length;
 
       if (num === active) {
         this.selectedAll = false;
