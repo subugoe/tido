@@ -98,7 +98,35 @@ export default {
         return [];
       }
 
-      return this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
+      const output = this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']))
+        .map((annotation) => ({
+          ...annotation,
+          annotationIdValue: this.stripId(annotation.strippedId).split('.').filter((x) => x),
+        }))
+        .sort((a, b) => b.annotationIdValue.length - a.annotationIdValue.length);
+
+      if (!output.length) {
+        return [];
+      }
+
+      const annotationIdLength = output[0]?.annotationIdValue?.length || 0;
+
+      return output.map((x) => {
+        //  Consider this as IP address (annotation ID)
+        //  We will get longest ip address we have ("max" here)
+        //  And if any of ip address part less then max then we are append 1 to it
+        //  e.g Max = [1.2.3.4]
+        //  current = [1.2.3] // Less than max because max has four parts
+        //  So annotationIdValue current will be [1.2.3.1] --> Last 1 is better for comparision.
+        const annotationId = annotationIdLength - x.annotationIdValue.length;
+
+        if (annotationId > 0) {
+          x.annotationIdValue = [...x.annotationIdValue, ...new Array(annotationId).fill(1)].join('');
+        } else {
+          x.annotationIdValue = x.annotationIdValue.join('');
+        }
+        return x;
+      }).sort((a, b) => a.annotationIdValue - b.annotationIdValue);
     },
     annotationTabConfig() {
       return this.config?.annotations?.tabs || {};
@@ -131,10 +159,6 @@ export default {
   },
   mounted() {
     this.$root.$on('update-annotations', (content) => {
-      // reset selected
-      this.selectedAll = undefined;
-      this.selectedNone = undefined;
-
       const parser = new DOMParser();
       const doc = parser.parseFromString(content, 'text/html');
 
@@ -257,8 +281,8 @@ export default {
     },
 
     statusCheck() {
-      const num = this.configuredAnnotations.length;
-      const active = this.configuredAnnotations.filter((annotation) => annotation.status === true).length;
+      const num = this.currentAnnotations.length;
+      const active = this.currentAnnotations.filter((annotation) => annotation.status === true).length;
 
       if (num === active) {
         this.selectedAll = false;
@@ -280,6 +304,10 @@ export default {
     */
     stripAnnotationId(url) {
       return url.split('/').pop();
+    },
+
+    stripId(val) {
+      return val.replace(/-/g, '.').replace(/[^.0-9]/g, '');
     },
 
     toggle(annotation) {
