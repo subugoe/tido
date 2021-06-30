@@ -178,21 +178,6 @@ export default {
     });
   },
   methods: {
-    highlightActiveTabContent(contentTypes) {
-      this.annotations.forEach((annotation) => {
-        const id = this.stripAnnotationId(annotation.target.id);
-        const textElement = document.getElementById(id);
-
-        if (textElement !== null) {
-          if (contentTypes.includes(annotation.body['x-content-type'])) {
-            textElement.classList.add('annotation', 'annotation-disabled');
-          } else {
-            textElement.classList.remove('annotation');
-            textElement.classList.add('annotation-disabled');
-          }
-        }
-      });
-    },
     activeTab(key, types) {
       this.currentTab = key;
       this.selectedAll = false;
@@ -245,6 +230,48 @@ export default {
 
     getIconName(contentType) {
       return this.config.annotations.types.filter((annotation) => annotation.contenttype === contentType)[0].icon;
+    },
+
+    highlightActiveTabContent(contentTypes) {
+      this.annotations.forEach((annotation) => {
+        const id = this.stripAnnotationId(annotation.target.id);
+        const textElement = document.getElementById(id);
+
+        if (textElement) {
+          const next = textElement.getAttribute('data-next');
+          const hasContentType = contentTypes.includes(annotation.body['x-content-type']);
+
+          if (hasContentType) {
+            textElement.classList.add('annotation', 'annotation-disabled');
+          } else {
+            textElement.classList.remove('annotation');
+            textElement.classList.add('annotation-disabled');
+          }
+
+          if (next) {
+            this.highlightNestedMotifs(next, hasContentType ? 'add' : 'remove', 'add');
+          }
+        }
+      });
+    },
+
+    highlightNestedMotifs(id, annotationOperation, annotationDisabledOperation) {
+      const element = document.getElementById(id.replace(/#/g, ''));
+
+      if (!element) {
+        return;
+      }
+
+      element.classList[annotationOperation]('annotation');
+      element.classList[annotationDisabledOperation]('annotation-disabled');
+
+      const nextId = element.getAttribute('data-next');
+
+      if (!nextId) {
+        return;
+      }
+
+      this.highlightNestedMotifs(nextId, annotationOperation, annotationDisabledOperation);
     },
 
     onHighlightAll() {
@@ -321,6 +348,26 @@ export default {
 
       document.getElementById(id).classList[text]('annotation-disabled');
       document.getElementById(`list${id}`).classList[list]('bg-grey-2');
+
+      this.updateNestedMotifToggle(document.getElementById(id).getAttribute('data-next'), text);
+    },
+
+    updateNestedMotifToggle(id, annotationClassOperation) {
+      const element = document.getElementById(id.replace(/#/g, ''));
+
+      if (!element) {
+        return;
+      }
+
+      element.classList[annotationClassOperation]('annotation-disabled');
+
+      const nextId = element.getAttribute('data-next');
+
+      if (!nextId) {
+        return;
+      }
+
+      this.updateNestedMotifToggle(nextId, annotationClassOperation);
     },
   },
 };
