@@ -47,6 +47,7 @@
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
 
+import Annotation from '@/mixins/annotation';
 import AnnotationToggles from '@/components/annotations/toggles.vue';
 import AnnotationList from '@/components/annotations/list.vue';
 import AnnotationOptions from '@/components/annotations/options.vue';
@@ -61,6 +62,7 @@ export default {
     AnnotationOptions,
     Notification,
   },
+  mixins: [Annotation],
   props: {
     annotations: {
       type: Array,
@@ -98,35 +100,9 @@ export default {
         return [];
       }
 
-      const output = this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']))
-        .map((annotation) => ({
-          ...annotation,
-          annotationIdValue: this.stripId(annotation.strippedId).split('.').filter((x) => x),
-        }))
-        .sort((a, b) => b.annotationIdValue.length - a.annotationIdValue.length);
+      const annotationType = this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
 
-      if (!output.length) {
-        return [];
-      }
-
-      const annotationIdLength = output[0]?.annotationIdValue?.length || 0;
-
-      return output.map((x) => {
-        //  Consider this as IP address (annotation ID)
-        //  We will get longest ip address we have ("max" here)
-        //  And if any of ip address part less then max then we are append 1 to it
-        //  e.g Max = [1.2.3.4]
-        //  current = [1.2.3] // Less than max because max has four parts
-        //  So annotationIdValue current will be [1.2.3.1] --> Last 1 is better for comparision.
-        const annotationId = annotationIdLength - x.annotationIdValue.length;
-
-        if (annotationId > 0) {
-          x.annotationIdValue = [...x.annotationIdValue, ...new Array(annotationId).fill(1)].join('');
-        } else {
-          x.annotationIdValue = x.annotationIdValue.join('');
-        }
-        return x;
-      }).sort((a, b) => a.annotationIdValue - b.annotationIdValue);
+      return this.sortAnnotation(annotationType);
     },
     annotationTabConfig() {
       return this.config?.annotations?.tabs || {};
@@ -178,21 +154,6 @@ export default {
     });
   },
   methods: {
-    highlightActiveTabContent(contentTypes) {
-      this.annotations.forEach((annotation) => {
-        const id = this.stripAnnotationId(annotation.target.id);
-        const textElement = document.getElementById(id);
-
-        if (textElement !== null) {
-          if (contentTypes.includes(annotation.body['x-content-type'])) {
-            textElement.classList.add('annotation', 'annotation-disabled');
-          } else {
-            textElement.classList.remove('annotation');
-            textElement.classList.add('annotation-disabled');
-          }
-        }
-      });
-    },
     activeTab(key, types) {
       this.currentTab = key;
       this.selectedAll = false;
@@ -296,31 +257,10 @@ export default {
       }
     },
 
-    /**
-    * get the annotation id of the current item
-    *
-    * @param string url
-    * @return string
-    */
-    stripAnnotationId(url) {
-      return url.split('/').pop();
-    },
-
-    stripId(val) {
-      return val.replace(/-/g, '.').replace(/[^.0-9]/g, '');
-    },
-
     toggle(annotation) {
       annotation.status = !annotation.status;
 
       this.updateToggleState(annotation, 'toggle', 'toggle');
-    },
-
-    updateToggleState(annotation, text = 'toggle', list = 'toggle') {
-      const id = this.stripAnnotationId(annotation.target.id);
-
-      document.getElementById(id).classList[text]('annotation-disabled');
-      document.getElementById(`list${id}`).classList[list]('bg-grey-2');
     },
   },
 };
