@@ -1,6 +1,6 @@
 {
   "name": "@subugoe/tido",
-  "version": "1.11.0",
+  "version": "1.13.0",
   "description": "Text vIever for Digital Objects",
   "productName": "TIDO",
   "keywords": [
@@ -14,7 +14,7 @@
   "cordovaId": "de.uni-goettingen.sub.emo",
   "capacitorId": "",
   "bugs": {
-    "email": "gitlab+subugoe-emo-qviewer-10921-issue-@gwdg.de"
+    "email": "gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
   },
   "license": "AGPL-3.0-or-later",
   "author": "Göttingen State and University Library - SUB",
@@ -27,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://gitlab.gwdg.de/subugoe/emo/Qviewer.git"
+    "url": "https://gitlab.gwdg.de/subugoe/emo/tido.git"
   },
   "private": false,
   "dependencies": {
@@ -98,7 +98,7 @@
     "release": "npm run build && npm run tweak:build && npm publish",
     "test": "npm run test:unit",
     "test:unit": "jest --updateSnapshot",
-    "tweak:build": "./tweak_build.sh",
+    "tweak:build": "bash .build-scripts/tweak_build.sh",
     "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version"
   },
   "files": [

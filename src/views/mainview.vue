@@ -10,7 +10,7 @@
       class="item"
     >
       <Toolbar
-        v-if="config.headers.panelheadings"
+        v-if="config['header_section'].panelheadings"
         :heading="p.panel_label"
       />
 
@@ -107,7 +107,7 @@ export default {
     },
     fontsize: {
       type: Number,
-      default: () => 14,
+      default: () => 16,
     },
     imageurl: {
       type: String,

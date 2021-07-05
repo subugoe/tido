@@ -7,7 +7,7 @@ Although TIDO is designed as a generic viewer for digital editions, it is curren
 
 This is the reason for "Ahiqar" being mentioned several times in the docs of this repo.
 
-Demo: <https://subugoe.pages.gwdg.de/emo/Qviewer/develop>
+Demo: <https://subugoe.pages.gwdg.de/emo/tido/develop>
 
 (For newer branches the demo is deployed in a directory named with branch name lowercased, shortened to 63 bytes, and with everything except `0-9` and `a-z` replaced with `-` (CI_COMMIT_REF_SLUG).
 Also the commit short hash can be used to see a demo.
@@ -125,7 +125,7 @@ npm install -g @vue/cli @vue/cli-service-global @quasar/cli
 #### Clone the repository
 
 ```bash
-git clone git@gitlab.gwdg.de:subugoe/emo/Qviewer.git
+git clone git@gitlab.gwdg.de:subugoe/emo/tido.git
 ```
 
 #### Get the dependencies
@@ -187,7 +187,7 @@ You can fully customize the Viewer's behaviour:
 There are options to
 
 - change the color scheme
-- show or hide individual bars (info, navigation, toggles)
+- show or hide individual bars (titles, navigation, toggles)
 - group multiple components inside a single panel
 - set the order of the panels
 - rename labels and / or panel headings
@@ -203,32 +203,41 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     "annotations": {
         "types": [
           {
-            "content-type": "Person",
+            "contenttype": "Person",
             "icon": "fasUser",
             "label": "Names"
           },
           {
-            "content-type": "Place",
+            "contenttype": "Place",
             "icon": "fasMapMarkerAlt",
             "label": "Places"
           },
           {
-            "content-type": "Editorial Comment",
+            "contenttype": "Editorial Comment",
             "icon": "fasComment",
             "label": "Comments"
+          },
+          {
+            "contenttype": "Motif",
+            "icon": "fasHighlighter",
+            "label": "Motifs"
           }
-        ]
+        ],
+        "tabs": {
+          "Editorial": ["Person", "Place", "Editorial Comment"],
+          "Motif": ["Motif"]
+        }
       },
       "colors": {
         "primary": "",
         "secondary": "",
         "accent": ""
       },
-      "headers": {
-        "all": true,
-        "info": true,
+      "header_section": {
+        "show": true,
         "navigation": true,
         "panelheadings": true,
+        "titles": true,
         "toggle": true
       },
       "labels": {
@@ -316,6 +325,23 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
         The label of the annotation type respectively
 
+  - **tabs**
+
+    the tabs-object represents different types of annotations to be displayed in tabs accordingly.
+    it consists of further extensible sub keys called group labels, either of it representing a single group of annotations, e.g. *editorial*, *motifs*.
+    these labels act as your tab heading and it's naming is up to your liking.
+
+    e.g.
+
+  ```JSON
+  "tabs": {
+    "First group": ["Person", "Place", "Editorial Comment"],
+    "Second one": ["Motif"]
+  }
+  ```
+
+  **Note**: The strings contained within the group label keys (e.g. *Person*, *Place*, ...) have to match it's API-counterpart explicitely. Please refer to the note above (content-type).
+
 - **colors**
 
   set the colors used in the frontend.
@@ -326,7 +352,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   If any value is left blank (e.g. `"primary": "",`), a default color scheme will be used.
 
-- **headers**
+- **header_section**
 
   - **show**
 
@@ -336,10 +362,6 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
       *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
 
-  - **info**
-
-      set this value to `false` if you want to switch off the Infobar (a.k.a. breadcrumbs)  
-
   - **navigation**
 
       set this value to `false` if you want to switch off the NavBar
@@ -347,6 +369,10 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   - **panelheadings**
 
     set this value to `false` if you want to switch off the panels' headings respectively
+
+    - **titles**
+
+    set this value to `false` if you want to switch off the Titlebar (a.k.a. breadcrumbs)  
 
   - **toggle**
 
@@ -505,8 +531,8 @@ The dockerfile is used for GitLab CI.
 It needs to be updated when either `node` or `quasar-cli` should be updated.
 
 ```bash
-docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/qviewer/node .
-docker push docker.gitlab.gwdg.de/subugoe/emo/qviewer/node
+docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/tido/node .
+docker push docker.gitlab.gwdg.de/subugoe/emo/tido/node
 ```
 
 ## Connecting the Viewer to a Backend
@@ -530,8 +556,8 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Versioning
 
-We use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/tags).
+We use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://gitlab.gwdg.de/subugoe/emo/tido/-/tags).
 
 ## Authors
 
-See the list of [contributors](https://gitlab.gwdg.de/subugoe/emo/Qviewer/-/graphs/develop) who participated in this project.
+See the list of [contributors](https://gitlab.gwdg.de/subugoe/emo/tido/-/graphs/develop) who participated in this project.

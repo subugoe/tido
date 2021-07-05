@@ -15,16 +15,9 @@ export default {
   methods: {
     toggleSheet(itemIndex) {
       const link = this.itemurls[itemIndex];
-      const tree = document.getElementsByClassName('view-tree');
 
-      if (tree.length) {
-        window.location.hash = `selectedItem-${link}`;
-        tree[0].scrollBy(0, -80);
-      }
-
-      this.sequenceindex = this.computedsequenceindex;
-      this.updateItem(this.itemurls[itemIndex], this.sequenceindex);
-      this.updateSequenceIndex(this.sequenceindex);
+      this.defaultView();
+      this.$router.push({ query: { itemurl: link } });
     },
 
     updateItem() {

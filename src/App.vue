@@ -5,9 +5,10 @@
     view="hHh Lpr fFf"
   >
     <Header
-      v-if="config.headers.all"
+      v-if="config['header_section'].show"
       :collectiontitle="collectiontitle"
       :config="config"
+      :default-view="defaultView"
       :imageurl="imageurl"
       :item="item"
       :itemurls="itemurls"
@@ -41,6 +42,7 @@
 
 <script>
 import { colors } from 'quasar';
+import treestore from '@/stores/treestore.js';
 import Header from '@/components/header.vue';
 import Panels from '@/mixins/panels';
 
@@ -59,15 +61,26 @@ export default {
       config: {},
       contentTypes: [],
       contentUrls: [],
-      fontsize: 14,
+      fontsize: 16,
       imageurl: '',
       isCollection: false,
       item: {},
       itemurl: '',
       itemurls: [],
+      loaded: false,
       manifests: [],
       tree: [],
     };
+  },
+  watch: {
+    '$route.query': {
+      handler: 'onItemUrlChange',
+      immediate: true,
+    },
+    manifests: {
+      handler: 'onItemUrlChange',
+      immediate: false,
+    },
   },
   created() {
     this.getConfig();
@@ -102,16 +115,11 @@ export default {
       *
       * @param string url
       */
-    this.$root.$on('update-item', (url) => {
-      this.itemurl = url;
-      this.$router.push({ query: { itemurl: url } });
-      // NOTE: Set imageurl to an empty string. Otherwise, if there is no corresponding image,
-      // the "preceding" image according to the "preceding" item will be shown.
-      this.imageurl = '';
-      this.getItemData(url);
-    });
   },
   methods: {
+    defaultView() {
+      this.loaded = false;
+    },
     /**
       * get resources using JavaScript's native fetch api
       * caller: *getCollection()*, *getItemData()*, *getManifest()*
@@ -155,7 +163,6 @@ export default {
         }
       } catch (err) {
         this.annotations = [];
-        this.$q.notify({ message: 'No annotations available' });
       } finally {
         this.annotationLoading = true;
       }
@@ -168,30 +175,36 @@ export default {
       *
       * @param string url
       */
-    getCollection(url) {
+    async getCollection(url) {
       this.isCollection = true;
 
-      this.request(url)
-        .then((data) => {
-          this.collection = data;
-          this.collectiontitle = this.getLabel(data);
+      const data = await this.request(url);
 
-          this.tree.push(
-            {
-              children: [],
-              handler: (node) => {
-                this.$root.$emit('update-tree-knots', node.label);
-              },
-              label: this.collectiontitle,
-              'label-key': this.collectiontitle,
-              selectable: false,
-            },
-          );
+      this.collection = data;
+      this.collectiontitle = this.getLabel(data);
 
-          if (Array.isArray(data.sequence)) {
-            data.sequence.forEach((seq) => this.getManifest(seq.id));
-          }
-        });
+      this.tree.push(
+        {
+          children: [],
+          handler: (node) => {
+            this.$root.$emit('update-tree-knots', node.label);
+          },
+          label: this.collectiontitle,
+          'label-key': this.collectiontitle,
+          selectable: false,
+        },
+      );
+
+      if (Array.isArray(data.sequence)) {
+        const promises = [];
+        data.sequence.forEach((seq) => promises.push(this.getManifest(seq.id)));
+
+        await Promise.all(promises);
+      }
+      if (this.manifests?.[0]?.sequence?.[0]?.id && !this.$route.query.itemurl) {
+        this.loaded = false;
+        this.$router.push({ query: { itemurl: this.manifests?.[0]?.sequence?.[0]?.id } });
+      }
     },
     /**
       * get config object (JSON) from index.html
@@ -279,7 +292,7 @@ export default {
       *
       * @return array urls
       */
-    getItemUrls(sequence, label) {
+    getItemUrls(sequence) {
       const urls = [];
 
       sequence.forEach((item) => {
@@ -294,11 +307,8 @@ export default {
               if (this.itemurl === node.label) {
                 return;
               }
-              // node.label === itemurl
-              // @param label === manifest label; passed by getManifest()
-              this.$root.$emit('update-item', node.label, this.getSequenceIndex(label));
-              this.$root.$emit('update-item-index', this.getItemIndex(node.label));
-              this.$root.$emit('update-sequence-index', this.getSequenceIndex(label));
+              this.loaded = false;
+              this.$router.push({ query: { itemurl: node.label } });
             },
           },
         );
@@ -325,40 +335,34 @@ export default {
       *
       * @param string url
       */
-    getManifest(url) {
-      this.request(url)
-        .then((data) => {
-          // if the entrypoint points to a single manifest, initialize the tree
-          if (this.isCollection === false) {
-            this.tree.push({ label: '', 'label-key': this.config.labels.manifest, children: [] });
-          }
+    async getManifest(url) {
+      const data = await this.request(url);
 
-          if (!Array.isArray(data.sequence)) {
-            data.sequence = [data.sequence];
-          }
+      // if the entrypoint points to a single manifest, initialize the tree
+      if (this.isCollection === false) {
+        this.tree.push({ label: '', 'label-key': this.config.labels.manifest, children: [] });
+      }
 
-          if (data.sequence[0] !== 'undefined') {
-            data.sequence.map((seq) => this.itemurls.push(seq.id));
-          }
-          this.manifests.push(data);
+      if (!Array.isArray(data.sequence)) {
+        data.sequence = [data.sequence];
+      }
 
-          this.tree[0].children.push(
-            {
-              children: this.getItemUrls(data.sequence, data.label),
-              label: data.label,
-              'label-key': data.label,
-              handler: (node) => {
-                this.$root.$emit('update-tree-knots', node.label);
-              },
-              selectable: false,
-            },
-          );
-          // make sure that urls are set just once on init
-          if (!this.itemurl && data.sequence[0]) {
-            this.itemurl = data.sequence[0].id;
-            this.getItemData(data.sequence[0].id);
-          }
-        });
+      if (data.sequence[0] !== 'undefined') {
+        data.sequence.map((seq) => this.itemurls.push(seq.id));
+      }
+      this.manifests.push(data);
+
+      this.tree[0].children.push(
+        {
+          children: this.getItemUrls(data.sequence, data.label),
+          label: data.label,
+          'label-key': data.label,
+          handler: (node) => {
+            this.$root.$emit('update-tree-knots', node.label);
+          },
+          selectable: false,
+        },
+      );
     },
     /**
       * caller: *getItemUrls()*
@@ -387,8 +391,46 @@ export default {
         ? this.getCollection(this.config.entrypoint)
         : this.getManifest(this.config.entrypoint);
     },
-  },
 
+    onItemUrlChange() {
+      if (this.loaded) {
+        return;
+      }
+
+      this.itemurl = this.$route.query.itemurl;
+
+      if (!this.itemurl) {
+        return;
+      }
+
+      const item = this.manifests.find((manifest) => manifest.sequence.find((manifestItem) => manifestItem.id === this.itemurl));
+
+      if (!item) {
+        return;
+      }
+
+      const { label } = item;
+      const seqIdx = this.getSequenceIndex(label);
+
+      treestore.updateselectedtreeitem(this.itemurl);
+      treestore.updatetreesequence(seqIdx);
+      this.$root.$emit('update-item', this.itemurl, seqIdx);
+      this.$root.$emit('update-item-index', this.getItemIndex(this.itemurl));
+      this.$root.$emit('update-sequence-index', seqIdx);
+
+      const treeDom = document.getElementById(this.itemurl);
+
+      if (treeDom) {
+        treeDom.scrollIntoView();
+      }
+
+      // NOTE: Set imageurl to an empty string. Otherwise, if there is no corresponding image,
+      // the "preceding" image according to the "preceding" item will be shown.
+      this.imageurl = '';
+      this.getItemData(this.itemurl);
+      this.loaded = true;
+    },
+  },
 };
 </script>
 
@@ -397,6 +439,7 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
+  font-size: 16px;
   overflow: hidden;
 }
 

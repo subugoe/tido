@@ -43,6 +43,12 @@ import { fasArrowRight, fasArrowLeft, fasCheck } from '@quasar/extras/fontawesom
 export default {
   name: 'Navbar',
   mixins: [Navigation],
+  props: {
+    defaultView: {
+      type: Function,
+      default: () => {},
+    },
+  },
   created() {
     this.fasArrowRight = fasArrowRight;
     this.fasArrowLeft = fasArrowLeft;
