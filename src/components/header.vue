@@ -55,9 +55,9 @@
 
 <script>
 import Navbar from '@/components/navbar.vue';
+import ProjectHeader from '@/components/projectheader.vue';
 import TitleBar from '@/components/titlebar.vue';
 import TogglePanels from '@/components/togglebar/togglePanels.vue';
-import ProjectHeader from '@/components/projectheader.vue';
 import Tools from '@/components/tools.vue';
 
 export default {

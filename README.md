@@ -285,9 +285,11 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       "lang": "en-us",
       "standalone": true,
       "projectheader": {
+        "search": "https://subugoe.pages.gwdg.de/ahiqar/website/search.html",
         "show": true,
-        "title_back": "The Syriac, Arabic, and Karshuni Ahiqar Texts",
-        "title_view": "Edition Viewer"
+        "title_homePage_key": "title_homePage",
+        "title_viewer_key": "title_viewer",
+        "website": "https://subugoe.pages.gwdg.de/ahiqar/website/"
       }
     }  </script>
 ```
@@ -422,23 +424,35 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
 - **projectheader**
 
+  - **search**
+
+    Navigates to the search page on website.
+
   - **show**
 
     defines if a project header should be shown or not.
 
     Defaults to `false`
 
-  - **title_back**
+  - **title_homePage_key**
 
     defines the string show as first item in the breadcrumb. Shows a "Home Icon"
 
+    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_homePage".
+
     Has to be set!
 
-  - **title_view**
+  - **title_viewer_key**
 
     defines the string show as last item in the breadcrumb. Shows a "Document Icon"
 
+    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_viewer".
+
     Has to be set!
+
+  - **website**
+
+    Navigates to the Home Page page on website.
 
 ### Configure the Panels
 

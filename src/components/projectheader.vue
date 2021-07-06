@@ -16,19 +16,33 @@
         </template>
         <q-breadcrumbs-el
           :class="$q.dark.isActive ? 'text-black' : 'text-white'"
-          :label="$t(`${projectheader.title_back}`)"
-          to="/"
           :icon="fasHome"
-        />
+        >
+          <a
+            :href="`${projectheader.website}`"
+            :class="$q.dark.isActive ? 'text-black' : 'text-white'"
+            class="header-links"
+          >
+            {{ $t(`${projectheader.title_homePage_key}`) }}
+          </a>
+        </q-breadcrumbs-el>
+
         <q-breadcrumbs-el
           :class="$q.dark.isActive ? 'text-black' : 'text-white'"
-          :label="$t('search')"
-          to="/"
           :icon="fasSearch"
-        />
+        >
+          <a
+            :href="`${projectheader.search}`"
+            :class="$q.dark.isActive ? 'text-black' : 'text-white'"
+            class="header-links"
+          >
+            {{ $t('search') }}
+          </a>
+        </q-breadcrumbs-el>
+
         <q-breadcrumbs-el
           :class="$q.dark.isActive ? 'text-black' : 'text-white'"
-          :label="$t(`${projectheader.title_view}`)"
+          :label="$t(`${projectheader.title_viewer_key}`)"
           :icon="fasFileAlt"
         />
       </q-breadcrumbs>
@@ -66,6 +80,11 @@ export default {
   margin: 0 auto;
   max-width: 1200px;
   padding: 0 12px;
+}
+
+.header-links {
+  margin-left: 8px;
+  text-decoration: none;
 }
 
 .projectheader {
