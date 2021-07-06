@@ -284,7 +284,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       "rtl": false,
       "lang": "en-us",
       "standalone": true,
-      "projectheader": {
+      "breadcrumbNavigation": {
         "search": "https://subugoe.pages.gwdg.de/ahiqar/website/search.html",
         "show": true,
         "title_homePage_key": "title_homePage",
@@ -422,7 +422,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   Defaults to `true`
 
-- **projectheader**
+- **breadcrumbNavigation**
 
   - **search**
 

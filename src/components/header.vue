@@ -1,9 +1,13 @@
 <template>
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'">
-    <ProjectHeader
-      v-if="config.projectheader.show"
-      :projectheader="projectheader"
-    />
+    <div
+      v-if="config.breadcrumbNavigation.show"
+      :class="$q.dark.isActive ? 'bg-white text-black' : 'bg-accent'"
+    >
+      <BreadCrumbNavigation
+        :config="config"
+      />
+    </div>
     <div class="header__wrap">
       <q-toolbar v-if="config['header_section'].titles">
         <TitleBar
@@ -55,7 +59,7 @@
 
 <script>
 import Navbar from '@/components/navbar.vue';
-import ProjectHeader from '@/components/projectheader.vue';
+import BreadCrumbNavigation from '@/components/breadcrumbnavigation.vue';
 import TitleBar from '@/components/titlebar.vue';
 import TogglePanels from '@/components/togglebar/togglePanels.vue';
 import Tools from '@/components/tools.vue';
@@ -66,7 +70,7 @@ export default {
     Navbar,
     TitleBar,
     TogglePanels,
-    ProjectHeader,
+    BreadCrumbNavigation,
     Tools,
   },
   props: {
@@ -108,10 +112,6 @@ export default {
       default: () => {},
     },
     standalone: Boolean,
-    projectheader: {
-      type: Object,
-      default: () => {},
-    },
   },
 };
 </script>

@@ -16,7 +16,6 @@
       :panels="panels"
       :projectcolors="config.colors"
       :standalone="config.standalone"
-      :projectheader="config.projectheader"
     />
 
     <q-page-container class="root">

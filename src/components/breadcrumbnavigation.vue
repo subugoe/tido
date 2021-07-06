@@ -1,7 +1,6 @@
 <template>
   <div
-    class="projectheader q-py-xs"
-    :class="$q.dark.isActive ? 'bg-white text-black' : 'bg-accent'"
+    class="q-py-xs"
   >
     <div class="content">
       <q-breadcrumbs
@@ -19,11 +18,11 @@
           :icon="fasHome"
         >
           <a
-            :href="`${projectheader.website}`"
+            :href="`${config.breadcrumbNavigation.website}`"
             :class="$q.dark.isActive ? 'text-black' : 'text-white'"
             class="header-links"
           >
-            {{ $t(`${projectheader.title_homePage_key}`) }}
+            {{ $t(`${config.breadcrumbNavigation.title_homePage_key}`) }}
           </a>
         </q-breadcrumbs-el>
 
@@ -32,7 +31,7 @@
           :icon="fasSearch"
         >
           <a
-            :href="`${projectheader.search}`"
+            :href="`${config.breadcrumbNavigation.search}`"
             :class="$q.dark.isActive ? 'text-black' : 'text-white'"
             class="header-links"
           >
@@ -42,7 +41,7 @@
 
         <q-breadcrumbs-el
           :class="$q.dark.isActive ? 'text-black' : 'text-white'"
-          :label="$t(`${projectheader.title_viewer_key}`)"
+          :label="$t(`${config.breadcrumbNavigation.title_viewer_key}`)"
           :icon="fasFileAlt"
         />
       </q-breadcrumbs>
@@ -59,9 +58,9 @@ import {
 } from '@quasar/extras/fontawesome-v5';
 
 export default {
-  name: 'ProjectHeader',
+  name: 'BreadcrumbNavigation',
   props: {
-    projectheader: {
+    config: {
       type: Object,
       required: true,
     },
@@ -85,13 +84,6 @@ export default {
 .header-links {
   margin-left: 8px;
   text-decoration: none;
-}
-
-.projectheader {
-  @media (prefers-color-scheme: dark) {
-    background-color: var(--q-color-white);
-    color: var(--q-color-dark);
-  }
 }
 
 .q-breadcrumbs__el-icon {
