@@ -436,7 +436,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   - **title_homePage_key**
 
-    defines the string show as first item in the breadcrumb. Shows a "Home Icon"
+    defines the string shown as first item in the breadcrumb. Shows a "Home Icon"
 
     Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_homePage".
 
@@ -444,7 +444,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   - **title_viewer_key**
 
-    defines the string show as last item in the breadcrumb. Shows a "Document Icon"
+    defines the string shown as last item in the breadcrumb. Shows a "Document Icon"
 
     Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_viewer".
 
