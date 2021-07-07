@@ -56,7 +56,7 @@ export default {
   Text: 'Text',
   Textsize: 'Textsize',
   Title: 'Title',
-  title_homePage: 'The Syriac, Arabic, and Karshuni Ahiqar Texts',
+  title_homepage: 'The Syriac, Arabic, and Karshuni Ahiqar Texts',
   title_viewer: 'Edition Viewer',
   transcription: 'Transcription',
   transliteration: 'Transliteration',

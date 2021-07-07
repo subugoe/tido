@@ -4,45 +4,31 @@
   >
     <div class="content">
       <q-breadcrumbs
-        :class="$q.dark.isActive ? 'text-black' : 'text-white'"
+        :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
         class="text-weight-medium"
       >
         <template #separator>
           <q-icon
-            size="1em"
             :name="fasChevronRight"
+            size="1em"
           />
         </template>
         <q-breadcrumbs-el
-          :class="$q.dark.isActive ? 'text-black' : 'text-white'"
+          :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
           :icon="fasHome"
         >
           <a
+            :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
             :href="`${config.breadcrumbNavigation.website}`"
-            :class="$q.dark.isActive ? 'text-black' : 'text-white'"
             class="header-links"
           >
-            {{ $t(`${config.breadcrumbNavigation.title_homePage_key}`) }}
+            {{ $t(`${config.breadcrumbNavigation.title_homepage_key}`) }}
           </a>
         </q-breadcrumbs-el>
 
         <q-breadcrumbs-el
-          :class="$q.dark.isActive ? 'text-black' : 'text-white'"
-          :icon="fasSearch"
-        >
-          <a
-            :href="`${config.breadcrumbNavigation.search}`"
-            :class="$q.dark.isActive ? 'text-black' : 'text-white'"
-            class="header-links"
-          >
-            {{ $t('search') }}
-          </a>
-        </q-breadcrumbs-el>
-
-        <q-breadcrumbs-el
-          :class="$q.dark.isActive ? 'text-black' : 'text-white'"
-          :label="$t(`${config.breadcrumbNavigation.title_viewer_key}`)"
           :icon="fasFileAlt"
+          :label="$t(`${config.breadcrumbNavigation.title_viewer_key}`)"
         />
       </q-breadcrumbs>
     </div>
@@ -54,7 +40,6 @@ import {
   fasHome,
   fasFileAlt,
   fasChevronRight,
-  fasSearch,
 } from '@quasar/extras/fontawesome-v5';
 
 export default {
@@ -69,7 +54,6 @@ export default {
     this.fasHome = fasHome;
     this.fasFileAlt = fasFileAlt;
     this.fasChevronRight = fasChevronRight;
-    this.fasSearch = fasSearch;
   },
 };
 </script>

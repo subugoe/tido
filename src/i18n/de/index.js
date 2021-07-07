@@ -56,7 +56,7 @@ export default {
   Text: 'Text',
   Textsize: 'Textgrösse',
   Title: 'Titel',
-  title_homePage: 'Die syrischen und arabischen Ahiqar-Texte',
+  title_homepage: 'Die syrischen und arabischen Ahiqar-Texte',
   title_viewer: 'Edition anzeigen',
   transcription: 'Transkription',
   transliteration: 'Transliteration',

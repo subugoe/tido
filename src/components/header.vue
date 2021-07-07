@@ -2,7 +2,7 @@
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'">
     <div
       v-if="config.breadcrumbNavigation.show"
-      :class="$q.dark.isActive ? 'bg-white text-black' : 'bg-accent'"
+      :class="$q.dark.isActive ? 'bg-white' : 'bg-accent'"
     >
       <BreadCrumbNavigation
         :config="config"

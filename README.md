@@ -285,9 +285,8 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       "lang": "en-us",
       "standalone": true,
       "breadcrumbNavigation": {
-        "search": "https://subugoe.pages.gwdg.de/ahiqar/website/search.html",
         "show": true,
-        "title_homePage_key": "title_homePage",
+        "title_homepage_key": "title_homepage",
         "title_viewer_key": "title_viewer",
         "website": "https://subugoe.pages.gwdg.de/ahiqar/website/"
       }
@@ -424,21 +423,17 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
 - **breadcrumbNavigation**
 
-  - **search**
-
-    Navigates to the search page on website.
-
   - **show**
 
     defines if a project header should be shown or not.
 
     Defaults to `false`
 
-  - **title_homePage_key**
+  - **title_homepage_key**
 
     defines the string shown as first item in the breadcrumb. Shows a "Home Icon"
 
-    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_homePage".
+    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_homepage".
 
     Has to be set!
 
