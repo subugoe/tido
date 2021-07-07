@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.14.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.13.0...v1.14.0) (2021-07-07)
+
+
+### Features
+
+* add project header (wip) ([246928a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/246928a05dbe43ef3762b7d3f24ebe4f91eb62fc))
+* add search indicator to project header ([c4e3276](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c4e32762f9c8ec3a30f18db7b9ee4f19d412fca1))
+* adding links in header to navigate and refactor ([8d35274](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8d35274a2b374d246b6eaf5a682930512b14d642))
+* annotations to display default order by appearance ([a9197c7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/a9197c7d4127d6f71c9f7932f28f20d0ba80786a))
+* highlight nested motifs that span over several lines in text panel ([5774ce0](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5774ce05dd85c0546a94944719b979ef7e79f9d7))
+* implementation of bookmarking in default view ([590e284](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/590e284f304d328dbbd58efccef24c86466c2523))
+* provide translations for the header breadcrumbs ([3ee6403](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/3ee6403997042f6694d504895f52af8836234125))
+
+
+### Styling
+
+* improve project header breadcrumb ([ac18c79](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ac18c7934857bfbb5d4c036bdfb4784c807db947))
+
+
+### Chore
+
+* add entrypoint for merge development purpose ([2afa8da](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2afa8daf598bc16d1938f1e61b9e5cdcbd7aa961))
+* merge branch 'develop' into issue/projectheader ([426e4ac](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/426e4ac6839e3fe5dba921565b720c023a667ed4))
+
+
+### Docs
+
+* addressing review comment ([8d50a86](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8d50a86b753933f6f87cdc58e7ae845096c04329))
+* project header and config ([b84e7de](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b84e7decb34500f00537ab643e419c9de6e1df74)), closes [#289](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/289)
+
+
+### Refactoring
+
+* adding comments and renaming ([7ea7317](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7ea7317ec305f913d1ac3639537271d9654eebff))
+* list highlight options ([ef057d8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ef057d81eb46c925aba5f6ea8e9b0ee2363fd7ce))
+* minor code improvement to separators in project header ([ddbf2e2](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ddbf2e23bb2676e165bb1927ad8a4fa4d69221cf))
+* moved dom manipulation logic into mixin file ([171b784](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/171b784ad069910ba4b069c4cceadc4491d4f40c))
+* remove obsolete code ([7ef25ef](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7ef25eff11edeaf660b3841bc8369153e9c61a63))
+* remove search breadcrumb and refactor styles, renames ([af4248b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/af4248b819ac733d2f9e224b87738df85896eedf))
+* renaming and addressing the review comments ([fbceafa](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/fbceafabea164ebb8241db7e47d4f55efdc0caec))
+
+
+### Continuos Integration
+
+* remove entry point ([f5721b5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f5721b59e5abec2249f6ee3e965da9ca3face10c))
+* remove entry point ([1d5efe2](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/1d5efe2bf467b08279d39f50c18d24b6fb4353c4))
+* remove entry point ([8ae5732](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8ae5732ec299e76bcbf53a24fcac0e96d3457644))
+* remove entry point ([5028bff](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5028bffe6e18f0433f0a4b4b2e223ab2b2827e8c))
+
 ## [1.13.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.12.0...v1.13.0) (2021-06-24)
 
 
