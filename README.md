@@ -191,6 +191,7 @@ There are options to
 - group multiple components inside a single panel
 - set the order of the panels
 - rename labels and / or panel headings
+- switch project header on or off and provide descriptive strings
 - and **more** ...
 
 As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate element.
@@ -282,7 +283,13 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       ],
       "rtl": false,
       "lang": "en-us",
-      "standalone": true
+      "standalone": true,
+      "breadcrumbNavigation": {
+        "show": true,
+        "title_homepage_key": "title_homepage",
+        "title_viewer_key": "title_viewer",
+        "website": "https://subugoe.pages.gwdg.de/ahiqar/website/"
+      }
     }  </script>
 ```
 
@@ -413,6 +420,34 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
 
   Defaults to `true`
+
+- **breadcrumbNavigation**
+
+  - **show**
+
+    defines if a project header should be shown or not.
+
+    Defaults to `false`
+
+  - **title_homepage_key**
+
+    defines the string shown as first item in the breadcrumb. Shows a "Home Icon"
+
+    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_homepage".
+
+    Has to be set!
+
+  - **title_viewer_key**
+
+    defines the string shown as last item in the breadcrumb. Shows a "Document Icon"
+
+    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_viewer".
+
+    Has to be set!
+
+  - **website**
+
+    Navigates to the Home Page page on website.
 
 ### Configure the Panels
 
