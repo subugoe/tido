@@ -32,7 +32,11 @@
       v-else
       class="q-pa-sm"
     >
-      <Notification :message="$t(messages.none)" />
+      <Notification
+        :message="$t(messages.none)"
+        title-key="annotationInfoTitle"
+        variant-type="info"
+      />
     </div>
 
     <AnnotationOptions

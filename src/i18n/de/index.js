@@ -1,5 +1,6 @@
 export default {
   Annotations: 'Annotationen',
+  annotationInfoTitle: 'Keine Annotationen verfügbar',
   changeLanguage: 'Sprache ändern',
   Collection: 'Kollektion',
   Collector: 'Kollektor',
@@ -37,7 +38,6 @@ export default {
   Metadata: 'Metadaten',
   Motifs: 'Motive',
   next: 'Näch.',
-  notificationTitle: 'Keine Annotationen verfügbar',
   noAnnotationMessage: 'Die aktuelle Ansicht enthält keine Annotationen.',
   Origin: 'Ursprung',
   osdFullPage: 'Vollbildmodus wechseln',
