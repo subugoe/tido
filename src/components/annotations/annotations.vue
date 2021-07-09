@@ -35,7 +35,7 @@
       <Notification
         :message="$t(messages.none)"
         title-key="annotationInfoTitle"
-        variant-type="info"
+        type="info"
       />
     </div>
 

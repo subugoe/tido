@@ -5,8 +5,8 @@
   >
     <q-card-section class="text-center">
       <q-icon
-        :color="variantColor"
-        :name="variantIcon"
+        :color="color"
+        :name="icon"
         class="q-pr-sm"
         size="sm"
       />
@@ -38,7 +38,7 @@ export default {
       type: String,
       default: () => '',
     },
-    variantType: {
+    type: {
       type: String,
       default: () => '',
     },
@@ -49,8 +49,8 @@ export default {
     };
   },
   computed: {
-    variantColor() {
-      switch (this.variantType) {
+    color() {
+      switch (this.type) {
         case 'info':
           return 'red-9';
         case 'warning':
@@ -59,8 +59,8 @@ export default {
           return 'red-9';
       }
     },
-    variantIcon() {
-      switch (this.variantType) {
+    icon() {
+      switch (this.type) {
         case 'info':
           return fasInfoCircle;
         case 'warning':
