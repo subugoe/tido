@@ -11,7 +11,6 @@
       <q-tab
         v-for="annotationTab in annotationTabs"
         :key="annotationTab.key"
-        :disabled="annotationTab.key===currentTab"
         :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
         @click="activeTab(annotationTab.key,annotationTab.type)"
