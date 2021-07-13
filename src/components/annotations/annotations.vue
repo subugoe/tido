@@ -34,6 +34,7 @@
     >
       <Notification
         :message="$t(messages.none)"
+        :notification-colors="config.notificationColors"
         title-key="annotationInfoTitle"
         type="info"
       />

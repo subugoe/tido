@@ -201,96 +201,100 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   {
     "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
     "annotations": {
-        "types": [
-          {
-            "contenttype": "Person",
-            "icon": "fasUser",
-            "label": "Names"
-          },
-          {
-            "contenttype": "Place",
-            "icon": "fasMapMarkerAlt",
-            "label": "Places"
-          },
-          {
-            "contenttype": "Editorial Comment",
-            "icon": "fasComment",
-            "label": "Comments"
-          },
-          {
-            "contenttype": "Motif",
-            "icon": "fasHighlighter",
-            "label": "Motifs"
-          }
-        ],
-        "tabs": {
-          "Editorial": ["Person", "Place", "Editorial Comment"],
-          "Motif": ["Motif"]
-        }
-      },
-      "colors": {
-        "primary": "",
-        "secondary": "",
-        "accent": ""
-      },
-      "header_section": {
-        "show": true,
-        "navigation": true,
-        "panelheadings": true,
-        "titles": true,
-        "toggle": true
-      },
-      "labels": {
-        "item": "Sheet",
-        "manifest": "Manuscript"
-      },
-      "meta": {
-        "collection": {
-          "all": true
-        },
-        "manifest": {
-          "all": true
-        },
-        "item": {
-          "all": true
-        }
-    },
-      "panels": [
+      "types": [
         {
-          "connector": [1, 2],
-          "panel_label": "Contents & Meta",
-          "show": true,
-          "toggle": true
+          "contenttype": "Person",
+          "icon": "fasUser",
+          "label": "Names"
         },
         {
-          "connector": [3],
-          "panel_label": "Image",
-          "show": true,
-          "toggle": true
+          "contenttype": "Place",
+          "icon": "fasMapMarkerAlt",
+          "label": "Places"
         },
         {
-          "connector": [4],
-          "panel_label": "Text",
-          "show": true,
-          "toggle": true
+          "contenttype": "Editorial Comment",
+          "icon": "fasComment",
+          "label": "Comments"
         },
         {
-          "connector": [5],
-          "panel_label": "Annotations",
-          "show": true,
-          "toggle": true
+          "contenttype": "Motif",
+          "icon": "fasHighlighter",
+          "label": "Motifs"
         }
       ],
-      "rtl": false,
-      "lang": "en-us",
-      "standalone": true,
-      "breadcrumbNavigation": {
-        "show": true,
-        "title_homepage_key": "title_homepage",
-        "title_viewer_key": "title_viewer",
-        "website": "https://subugoe.pages.gwdg.de/ahiqar/website/"
+      "tabs": {
+        "Editorial": ["Person", "Place", "Editorial Comment"],
+        "Motif": ["Motif"]
       }
-    }  </script>
+    },
+    "colors": {
+      "primary": "",
+      "secondary": "",
+      "accent": ""
+    },
+    "header_section": {
+      "show": true,
+      "navigation": true,
+      "panelheadings": true,
+      "titles": true,
+      "toggle": true
+    },
+    "labels": {
+      "item": "Sheet",
+      "manifest": "Manuscript"
+    },
+    "meta": {
+      "collection": {
+        "all": true
+      },
+      "manifest": {
+        "all": true
+      },
+      "item": {
+        "all": true
+      }
+    },
+    "notificationColors": {
+      "info":"blue-9",
+      "warning":"red-9"
+    },
+    "panels": [
+      {
+        "connector": [1, 2],
+        "panel_label": "Contents & Meta",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [3],
+        "panel_label": "Image",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [4],
+        "panel_label": "Text",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [5],
+        "panel_label": "Annotations",
+        "show": true,
+        "toggle": true
+      }
+    ],
+    "rtl": false,
+    "lang": "en-us",
+    "standalone": true,
+    "breadcrumbNavigation": {
+      "show": true,
+      "title_homepage_key": "title_homepage",
+      "title_viewer_key": "title_viewer",
+      "website": "https://subugoe.pages.gwdg.de/ahiqar/website/"
+    }
+  }  </script>
 ```
 
 **Note**: It's a *JSON* object. So if you are going to make any changes and you have to quote these (e.g. see *labels* or *colors*), please use **double quotes** only.
@@ -398,6 +402,18 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       Same as for `item` but related to the manifest title.
 
       Defaults to `Manuscript`
+
+- **notificationColors**
+
+  sets the colors used in frontend to apply for icons in notification messages.
+
+  `info` and `warning` are set to `blue-9` `red-9` respectively which can be changed according to the project requirements.
+
+  There is a re-usable component called notification.vue (src/components/notification.vue) which receives the type of notification (ex: `info` or `warning`). Based on the type we send, this component searches for it and it's respective icon which in turn get's displayed before the title message of Notifications.
+
+  If we do not send any type, than there is no `icon` set to the notification message.
+
+  **Note**: Can add additional types ex: `success`, `error`, `positive`, `negative`. Based on these we need to add them at the component level as well and their icons respectively.
 
 - **rtl (right to left)**
 

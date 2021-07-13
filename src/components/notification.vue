@@ -34,6 +34,10 @@ export default {
       type: String,
       default: () => '',
     },
+    notificationColors: {
+      type: Object,
+      default: () => {},
+    },
     titleKey: {
       type: String,
       default: () => '',
@@ -52,11 +56,11 @@ export default {
     color() {
       switch (this.type) {
         case 'info':
-          return 'red-9';
+          return this.notificationColors?.info ? this.notificationColors.info : '';
         case 'warning':
-          return 'yellow-9';
+          return this.notificationColors?.warning ? this.notificationColors.warning : '';
         default:
-          return 'red-9';
+          return '';
       }
     },
     icon() {
@@ -66,7 +70,7 @@ export default {
         case 'warning':
           return fasExclamationTriangle;
         default:
-          return fasInfoCircle;
+          return '';
       }
     },
   },
