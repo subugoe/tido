@@ -160,6 +160,10 @@ export default {
   },
   methods: {
     activeTab(key, types) {
+      if (this.currentTab === key) {
+        return;
+      }
+
       this.currentTab = key;
       this.selectedAll = false;
       this.selectedNone = true;
