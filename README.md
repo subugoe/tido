@@ -297,7 +297,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   }  </script>
 ```
 
-**Note**: It's a *JSON* object. So if you are going to make any changes and you have to quote these (e.g. see *labels* or *colors*), please use **double quotes** only.
+**Note**: its a *JSON* object. So if you are going to make any changes and you have to quote these (e.g. see *labels* or *colors*), please use **double quotes** only.
 
 ### The Keys in Detail
 
@@ -320,7 +320,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
         refers to the **x-content-type** in the **API** you are using.
 
-        **Note**: This content-type has to match it's API-counterpart explicitely, otherwise TIDO isn't able to show the related annotations.
+        **Note**: This content-type has to match its API-counterpart explicitely, otherwise TIDO isn't able to show the related annotations.
 
     - **icon**
 
@@ -334,7 +334,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
     the tabs-object represents different types of annotations to be displayed in tabs accordingly.
     it consists of further extensible sub keys called group labels, either of it representing a single group of annotations, e.g. *editorial*, *motifs*.
-    these labels act as your tab heading and it's naming is up to your liking.
+    these labels act as your tab heading and its naming is up to your liking.
 
     e.g.
 
@@ -345,13 +345,13 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   }
   ```
 
-  **Note**: The strings contained within the group label keys (e.g. *Person*, *Place*, ...) have to match it's API-counterpart explicitely. Please refer to the note above (content-type).
+  **Note**: The strings contained within the group label keys (e.g. *Person*, *Place*, ...) have to match its API-counterpart explicitely. Please refer to the note above (content-type).
 
 - **colors**
 
   set the colors used in the frontend.
 
-  `primary` and `accent` should be a darker tone, so that white text is visible if used as background. It's the other way around with `secondary`.
+  `primary` and `accent` should be a darker tone, so that white text is visible if used as background. its the other way around with `secondary`.
 
   Hex values (like `#a1a1a1`) or color names (like `hotpink`) are fine.
 
@@ -409,7 +409,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   `info` and `warning` are set to `blue-9` `red-9` respectively which can be changed according to the project requirements.
 
-  There is a re-usable component called notification.vue (src/components/notification.vue) which receives the type of notification (ex: `info` or `warning`). Based on the type we send, this component searches for it and it's respective icon which in turn get's displayed before the title message of Notifications.
+  There is a re-usable component called notification.vue (src/components/notification.vue) which receives the type of notification (ex: `info` or `warning`). Based on the type we send, this component searches for it and its respective icon which in turn gets displayed before the title message of Notifications.
 
   If we do not send any type, than there is no `icon` set to the notification message.
 
