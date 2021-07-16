@@ -5,12 +5,12 @@
   >
     <q-card-section class="text-center">
       <q-icon
-        :name="fasInfoCircle"
+        :color="color"
+        :name="icon"
         class="q-pr-sm"
-        color="red-9"
         size="sm"
       />
-      <span class="text-body1 text-uppercase vertical-middle">{{ $t('notificationTitle') }}</span>
+      <span class="text-body1 text-uppercase vertical-middle">{{ $t(titleKey) }}</span>
     </q-card-section>
 
     <q-separator inset />
@@ -22,12 +22,27 @@
 </template>
 
 <script>
-import { fasInfoCircle } from '@quasar/extras/fontawesome-v5';
+import {
+  fasInfoCircle,
+  fasExclamationTriangle,
+} from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Notification',
   props: {
     message: {
+      type: String,
+      default: () => '',
+    },
+    notificationColors: {
+      type: Object,
+      default: () => {},
+    },
+    titleKey: {
+      type: String,
+      default: () => '',
+    },
+    type: {
       type: String,
       default: () => '',
     },
@@ -37,8 +52,27 @@ export default {
 
     };
   },
-  created() {
-    this.fasInfoCircle = fasInfoCircle;
+  computed: {
+    color() {
+      switch (this.type) {
+        case 'info':
+          return this.notificationColors?.info ? this.notificationColors.info : '';
+        case 'warning':
+          return this.notificationColors?.warning ? this.notificationColors.warning : '';
+        default:
+          return '';
+      }
+    },
+    icon() {
+      switch (this.type) {
+        case 'info':
+          return fasInfoCircle;
+        case 'warning':
+          return fasExclamationTriangle;
+        default:
+          return '';
+      }
+    },
   },
 };
 </script>

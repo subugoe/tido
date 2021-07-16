@@ -78,7 +78,6 @@ export default {
       type: Function,
       default: () => {},
     },
-
     collectiontitle: {
       type: String,
       default: () => '',
