@@ -1,5 +1,5 @@
 <template>
-  <div class="item">
+  <div class="item relative-position">
     <q-tabs
       v-model="currentTab"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -19,8 +19,13 @@
 
     <AnnotationToggles />
 
+    <LoadingProgress
+      v-if="!annotationLoaded || isProcessing"
+      :loadingprogress="!annotationLoaded || isProcessing"
+    />
+
     <AnnotationList
-      v-if="currentAnnotations.length"
+      v-else-if="currentAnnotations.length && annotationLoaded && !isProcessing"
       class="custom-font"
       :configured-annotations="currentAnnotations"
       :get-icon="getIcon"
@@ -29,7 +34,7 @@
     />
 
     <div
-      v-else
+      v-else-if="annotationLoaded && !currentAnnotations.length && !isProcessing"
       class="q-pa-sm"
     >
       <Notification
@@ -57,6 +62,7 @@ import AnnotationToggles from '@/components/annotations/toggles.vue';
 import AnnotationList from '@/components/annotations/list.vue';
 import AnnotationOptions from '@/components/annotations/options.vue';
 
+import LoadingProgress from '@/components/loading.vue';
 import Notification from '@/components/notification.vue';
 
 export default {
@@ -65,6 +71,7 @@ export default {
     AnnotationToggles,
     AnnotationList,
     AnnotationOptions,
+    LoadingProgress,
     Notification,
   },
   mixins: [Annotation],
@@ -73,7 +80,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    annotationLoading: {
+    annotationLoaded: {
       type: Boolean,
       default: false,
     },
@@ -85,13 +92,14 @@ export default {
   data() {
     return {
       configuredAnnotations: [],
+      currentTab: '',
       ids: [],
+      isProcessing: false,
       messages: {
         none: 'noAnnotationMessage',
       },
       selectedAll: false,
       selectedNone: true,
-      currentTab: '',
     };
   },
   computed: {
@@ -139,14 +147,17 @@ export default {
     },
   },
   mounted() {
-    this.$root.$on('update-annotations', (content) => {
+    this.$root.$on('update-annotations', (content, isProcessing) => {
+      this.isProcessing = !!isProcessing;
+
       const parser = new DOMParser();
       const doc = parser.parseFromString(content, 'text/html');
 
       this.ids = [...doc.body.querySelectorAll('[id]')].map((el) => el.getAttribute('id'));
+      this.configuredAnnotations = [];
 
       const interval = setInterval(() => {
-        if (this.annotationLoading) {
+        if (this.annotationLoaded) {
           this.configuredAnnotations = this.filterAnnotationTypes();
 
           const firstTab = this.annotationTabs.find((x) => x.type.length)?.key || '';
@@ -155,7 +166,7 @@ export default {
           this.currentTab = firstTab;
           clearInterval(interval);
         }
-      }, 500);
+      }, 50);
     });
   },
   methods: {

@@ -121,6 +121,8 @@ export default {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
     },
     async activeTab(url) {
+      this.$root.$emit('update-annotations', [], true);
+
       const data = await this.request(url, 'text');
 
       if (this.supportType) {
@@ -129,7 +131,7 @@ export default {
 
       this.content = data;
 
-      this.$root.$emit('update-annotations', data);
+      this.$root.$emit('update-annotations', data, false);
     },
   },
   async created() {
