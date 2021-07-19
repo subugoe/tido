@@ -157,6 +157,21 @@ export default {
         }
       }, 500);
     });
+    this.$root.$on('panels-position', (newPanels) => {
+      const annotationPanelHidden = newPanels.find((x) => x.panel_label === 'Annotations' && !x.show);
+
+      this.currentAnnotations.forEach((annotation) => {
+        const id = this.stripAnnotationId(annotation.target.id);
+        const textElement = document.getElementById(id);
+
+        if (annotationPanelHidden) {
+          textElement.classList.remove('annotation');
+        } else {
+          textElement.classList.add('annotation');
+          textElement.classList.add('annotation-disabled');
+        }
+      });
+    });
   },
   methods: {
     activeTab(key, types) {
