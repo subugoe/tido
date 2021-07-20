@@ -19,13 +19,13 @@
 
     <AnnotationToggles />
 
-    <LoadingProgress
-      v-if="!annotationLoaded || isProcessing"
-      :loadingprogress="!annotationLoaded || isProcessing"
+    <Loading
+      v-if="!isloading || isProcessing"
+      :loading="!isloading || isProcessing"
     />
 
     <AnnotationList
-      v-else-if="currentAnnotations.length && annotationLoaded && !isProcessing"
+      v-else-if="currentAnnotations.length && isloading && !isProcessing"
       class="custom-font"
       :configured-annotations="currentAnnotations"
       :get-icon="getIcon"
@@ -34,7 +34,7 @@
     />
 
     <div
-      v-else-if="annotationLoaded && !currentAnnotations.length && !isProcessing"
+      v-else-if="!currentAnnotations.length && isloading && !isProcessing"
       class="q-pa-sm"
     >
       <Notification
@@ -62,7 +62,7 @@ import AnnotationToggles from '@/components/annotations/toggles.vue';
 import AnnotationList from '@/components/annotations/list.vue';
 import AnnotationOptions from '@/components/annotations/options.vue';
 
-import LoadingProgress from '@/components/loading.vue';
+import Loading from '@/components/loading.vue';
 import Notification from '@/components/notification.vue';
 
 export default {
@@ -71,7 +71,7 @@ export default {
     AnnotationToggles,
     AnnotationList,
     AnnotationOptions,
-    LoadingProgress,
+    Loading,
     Notification,
   },
   mixins: [Annotation],
@@ -80,7 +80,7 @@ export default {
       type: Array,
       default: () => [],
     },
-    annotationLoaded: {
+    isloading: {
       type: Boolean,
       default: false,
     },
@@ -157,7 +157,7 @@ export default {
       this.configuredAnnotations = [];
 
       const interval = setInterval(() => {
-        if (this.annotationLoaded) {
+        if (this.isloading) {
           this.configuredAnnotations = this.filterAnnotationTypes();
 
           const firstTab = this.annotationTabs.find((x) => x.type.length)?.key || '';

@@ -1,6 +1,6 @@
 <template>
   <q-inner-loading
-    :showing="loadingprogress"
+    :showing="loading"
   >
     <q-spinner
       size="3em"
@@ -12,12 +12,9 @@
 <script>
 
 export default {
-  name: 'LoadingProgress',
+  name: 'Loading',
   props: {
-    loadingprogress: {
-      type: Boolean,
-    },
-    textcontentprogress: {
+    loading: {
       type: Boolean,
     },
   },

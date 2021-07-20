@@ -85,10 +85,6 @@ export default {
       type: Array,
       default: () => [],
     },
-    annotationLoaded: {
-      type: Boolean,
-      default: false,
-    },
     collection: {
       type: Object,
       default: () => {},
@@ -113,6 +109,10 @@ export default {
       type: String,
       default: () => '',
     },
+    isloading: {
+      type: Boolean,
+      default: false,
+    },
     item: {
       type: Object,
       default: () => {},
@@ -120,9 +120,6 @@ export default {
     labels: {
       type: Object,
       default: () => {},
-    },
-    loadingprogress: {
-      type: Boolean,
     },
     manifests: {
       type: Array,
