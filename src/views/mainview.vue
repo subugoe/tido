@@ -85,10 +85,6 @@ export default {
       type: Array,
       default: () => [],
     },
-    annotationLoading: {
-      type: Boolean,
-      default: false,
-    },
     collection: {
       type: Object,
       default: () => {},
@@ -112,6 +108,10 @@ export default {
     imageurl: {
       type: String,
       default: () => '',
+    },
+    isloading: {
+      type: Boolean,
+      default: false,
     },
     item: {
       type: Object,

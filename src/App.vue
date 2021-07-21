@@ -21,13 +21,13 @@
     <q-page-container class="root">
       <router-view
         :annotations="annotations"
-        :annotation-loading="annotationLoading"
         :collection="collection"
         :config="config"
         :contenttypes="contentTypes"
         :contenturls="contentUrls"
         :fontsize="fontsize"
         :imageurl="imageurl"
+        :isloading="isLoading"
         :item="item"
         :labels="config.labels"
         :manifests="manifests"
@@ -54,7 +54,6 @@ export default {
   data() {
     return {
       annotations: [],
-      annotationLoading: false,
       collection: {},
       collectiontitle: '',
       config: {},
@@ -63,6 +62,7 @@ export default {
       fontsize: 16,
       imageurl: '',
       isCollection: false,
+      isLoading: false,
       item: {},
       itemurl: '',
       itemurls: [],
@@ -143,7 +143,7 @@ export default {
       */
     async getAnnotations(url) {
       this.annotations = [];
-      this.annotationLoading = false;
+      this.isLoading = false;
 
       try {
         const annotations = await this.request(url);
@@ -163,7 +163,7 @@ export default {
       } catch (err) {
         this.annotations = [];
       } finally {
-        this.annotationLoading = true;
+        this.isLoading = true;
       }
     },
     /**
