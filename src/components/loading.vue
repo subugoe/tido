@@ -14,12 +14,10 @@
 export default {
   name: 'Loading',
   props: {
-    loading: {
-      type: Boolean,
-    },
+
   },
   data: () => ({
-
+    loading: true,
   }),
 };
 </script>

@@ -21,7 +21,6 @@
 
     <Loading
       v-if="!isloading || isProcessing"
-      :loading="!isloading || isProcessing"
     />
 
     <AnnotationList
