@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.15.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.14.0...v1.15.0) (2021-07-21)
+
+
+### Features
+
+* implementation of loading in annotation panel ([41e9596](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/41e9596ec2ba02b96b2c2d9397bd1efcb11e418f))
+* make notification component  configurable ([72620bd](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/72620bd686886ff2d8835126138442b8ec04b323))
+
+
+### Bug Fixes
+
+* disable/not be clickable when there is only one tab ([54b5a8a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/54b5a8a4dea9d1707f182ef65a9ec8b32194d6ea))
+* remove marks in text panel if annotations panel is not visible ([bb3341c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/bb3341cb41c96871a08378c7b1a68daed9a8bc70))
+
+
+### Docs
+
+* typo changes ([3aa047c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/3aa047c227d0f829c3a050c2806bf863a6457e8f))
+
+
+### Refactoring
+
+* add colors to config, updated readme ([afb88a9](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/afb88a9b2b06ed2a71d4ad0888d230043ac619e3))
+* addressing review comments and renaming ([5c5d6df](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5c5d6dffcb569acc41017406832d9daff4d58e70))
+* remove absolete code ([8b1c241](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8b1c2416ec83e7588a2e24ecd89567c1c507e75a))
+* remove prop passing and using state ([58dd2d8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/58dd2d855ae5a10c06e98f8cf62033bd640aac5d))
+* rename according to review comments ([e70531c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e70531c5083677c810598eb647c9f44a66968f23))
+
+
+### Continuos Integration
+
+* remove entry point ([ce25915](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ce25915233bc7bf82dbf9da589c63237d098b202))
+* remove entry point ([d2e86af](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d2e86af9cbac2a4b20e4f4567c8754f63fc509d0))
+* remove entry point ([4edf4b8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4edf4b8b83180deb90924d8e0a2483cdae1c3469))
+* remove entry point ([497ec85](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/497ec8551c1906dd8819a7aeb54914b657e0a920))
+
 ## [1.14.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.13.0...v1.14.0) (2021-07-07)
 
 
