@@ -5,6 +5,7 @@
       :class="$q.dark.isActive ? 'bg-white' : 'bg-accent'"
     >
       <BreadCrumbNavigation
+        v-if="$route.query.source==='external'"
         :config="config"
       />
     </div>
