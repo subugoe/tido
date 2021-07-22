@@ -104,7 +104,7 @@ export default {
     content: '',
     fontSizeLimits: {
       min: 14,
-      max: 24,
+      max: 28,
     },
     sequenceindex: 0,
   }),
