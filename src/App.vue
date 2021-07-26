@@ -202,7 +202,7 @@ export default {
       }
       if (this.manifests?.[0]?.sequence?.[0]?.id && !this.$route.query.itemurl) {
         this.loaded = false;
-        this.$router.push({ query: { itemurl: this.manifests?.[0]?.sequence?.[0]?.id } });
+        this.$router.push({ query: { ...this.$route.query, itemurl: this.manifests?.[0]?.sequence?.[0]?.id } });
       }
     },
     /**
@@ -307,7 +307,7 @@ export default {
                 return;
               }
               this.loaded = false;
-              this.$router.push({ query: { itemurl: node.label } });
+              this.$router.push({ query: { ...this.$route.query, itemurl: node.label } });
             },
           },
         );

@@ -17,7 +17,7 @@ export default {
       const link = this.itemurls[itemIndex];
 
       this.defaultView();
-      this.$router.push({ query: { itemurl: link } });
+      this.$router.push({ query: { ...this.$route.query, itemurl: link } });
     },
 
     updateItem() {

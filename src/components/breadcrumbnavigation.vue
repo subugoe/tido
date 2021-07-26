@@ -15,14 +15,32 @@
         </template>
         <q-breadcrumbs-el
           :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
-          :icon="fasHome"
         >
           <a
             :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
             :href="`${config.breadcrumbNavigation.website}`"
             class="header-links"
           >
+            <q-icon
+              :name="fasHome"
+            />
             {{ $t(`${config.breadcrumbNavigation.title_homepage_key}`) }}
+          </a>
+        </q-breadcrumbs-el>
+
+        <q-breadcrumbs-el
+          v-if="!!searchTerm"
+          :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
+        >
+          <a
+            :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
+            :href="`${config.breadcrumbNavigation.website}search.html?searchTerm=${searchTerm}`"
+            class="header-links"
+          >
+            <q-icon
+              :name="fasSearch"
+            />
+            {{ searchTerm }}
           </a>
         </q-breadcrumbs-el>
 
@@ -40,6 +58,7 @@ import {
   fasHome,
   fasFileAlt,
   fasChevronRight,
+  fasSearch,
 } from '@quasar/extras/fontawesome-v5';
 
 export default {
@@ -50,10 +69,16 @@ export default {
       required: true,
     },
   },
+  computed: {
+    searchTerm() {
+      return this.$route.query.searchTerm;
+    },
+  },
   created() {
     this.fasHome = fasHome;
     this.fasFileAlt = fasFileAlt;
     this.fasChevronRight = fasChevronRight;
+    this.fasSearch = fasSearch;
   },
 };
 </script>
