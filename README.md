@@ -292,7 +292,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       "show": true,
       "title_homepage_key": "title_homepage",
       "title_viewer_key": "title_viewer",
-      "website": "https://subugoe.pages.gwdg.de/ahiqar/website/"
+      "website": "https://ahikar.sub.uni-goettingen.de"
     }
   }  </script>
 ```
