@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.16.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.15.0...v1.16.0) (2021-07-28)
+
+
+### Features
+
+* implementing of search in header and navigating to home or search page accordingly ([7456a18](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7456a18f2343465cc8416f517702b4ddb54a53eb))
+* new domain urls ([e9b5a0b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e9b5a0b66ae2cd6b650e946b41c38270796fb4b7))
+* provide one more zoom lvl in text panel ([36c4535](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/36c453535a25d93b751bd02d973aec3dad3b4310)), closes [#316](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/316)
+
+
+### Continuos Integration
+
+* remove entry point ([7b40d19](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7b40d19b2e3fb6d2bb86b76f7148599923115aa2))
+* remove entry point ([4d41f8b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4d41f8b1d4bec8e579df201f93c7dd53fa006e0e))
+
 ## [1.15.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.14.0...v1.15.0) (2021-07-21)
 
 
