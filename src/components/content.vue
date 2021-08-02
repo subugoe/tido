@@ -53,22 +53,20 @@
       </q-btn>
     </div>
 
-    <div class="custom-font item-content">
+    <div class="custom-font item-content text-content">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-      <div
-        :class="{'rtl': config.rtl}"
-        ref="contentsize"
-        v-html="content"
-      />
+      <div :class="{ rtl: config.rtl }" ref="contentsize" v-html="content" />
     </div>
   </div>
 </template>
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
+import Annotation from '@/mixins/annotation';
 
 export default {
   name: 'Content',
+  mixins: [Annotation],
   props: {
     config: {
       type: Object,
@@ -98,6 +96,10 @@ export default {
       type: String,
       default: () => '',
     },
+    panels: {
+      type: Array,
+      default: () => [],
+    },
   },
   data: () => ({
     activeTab: null,
@@ -121,7 +123,7 @@ export default {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
     },
     async activeTab(url) {
-      this.$root.$emit('update-annotations', [], true);
+      this.$root.$emit('update-annotation-loading', true);
 
       const data = await this.request(url, 'text');
 
@@ -129,9 +131,51 @@ export default {
         await this.getSupport(this.manifests[0].support);
       }
 
-      this.content = data;
+      const annotationPanelHidden = this.panels.find(
+        (x) => x.panel_label === 'Annotations' && !x.show,
+      );
 
-      this.$root.$emit('update-annotations', data, false);
+      const parser = new DOMParser();
+      let dom = parser.parseFromString(data, 'text/html');
+      if (!annotationPanelHidden) {
+        const spans = [
+          ...dom.querySelectorAll('span[data-target]:not([value=""])'),
+        ];
+
+        const spanIds = [
+          ...new Set(
+            spans.map((x) => x
+              .getAttribute('data-target')
+              .replace('_start', '')
+              .replace('_end', '')),
+          ),
+        ];
+
+        spanIds.forEach((selector) => {
+          dom = this.replaceSelectorWithSpan(selector, dom);
+        });
+
+        const dataTargets = [...dom.querySelectorAll('[id]')].map((x) => x.getAttribute('id'));
+
+        dataTargets.forEach((selector) => this.addHighlightToTargetIds(selector, dom));
+      }
+      this.content = dom.documentElement.innerHTML;
+
+      const displayedAnnotations = [
+        ...dom.querySelectorAll('[data-annotation]'),
+      ]
+        .map((x) => x.getAttribute('class'))
+        .reduce((prev, curr) => {
+          (curr || '').split(' ').forEach((c) => {
+            prev[c.replace(/\./g, '')] = true;
+          });
+          return prev;
+        }, {});
+
+      await this.delay(200);
+
+      this.$root.$emit('update-annotations', displayedAnnotations);
+      this.$root.$emit('update-annotation-loading', false);
     },
   },
   async created() {
@@ -153,6 +197,9 @@ export default {
     });
   },
   methods: {
+    async delay(ms = 2500) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    },
     decrease() {
       const { min } = this.fontSizeLimits;
       let textsize = this.fontsize;

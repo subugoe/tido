@@ -13,27 +13,26 @@
         :key="annotationTab.key"
         :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
-        @click="activeTab(annotationTab.key,annotationTab.type)"
+        @click="activeTab(annotationTab.key, annotationTab.type)"
       />
     </q-tabs>
 
     <AnnotationToggles />
 
-    <Loading
-      v-if="!isloading || isProcessing"
-    />
+    <Loading v-if="!isloading || isProcessing" />
 
     <AnnotationList
-      v-else-if="currentAnnotations.length && isloading && !isProcessing"
+      v-else-if="filteredAnnotations.length && isloading && !isProcessing"
       class="custom-font"
-      :configured-annotations="currentAnnotations"
+      :active-annotation="activeAnnotation"
+      :configured-annotations="filteredAnnotations"
+      :content-ids="contentIds"
       :get-icon="getIcon"
-      :status-check="statusCheck"
       :toggle="toggle"
     />
 
     <div
-      v-else-if="!currentAnnotations.length && isloading && !isProcessing"
+      v-else-if="!filteredAnnotations.length && isloading && !isProcessing"
       class="q-pa-sm"
     >
       <Notification
@@ -87,114 +86,163 @@ export default {
       type: Object,
       default: () => {},
     },
+    panels: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
       configuredAnnotations: [],
+      activeAnnotation: {},
+      contentIds: {},
       currentTab: '',
       ids: [],
       isProcessing: false,
       messages: {
         none: 'noAnnotationMessage',
       },
-      selectedAll: false,
-      selectedNone: true,
     };
   },
   computed: {
+    annotationTabs() {
+      return Object.entries(this.tabConfig)
+        .map(([key, type]) => ({
+          key,
+          collectionTitle: key,
+          type,
+        }))
+        .filter((el) => this.annotations.find((x) => el.type.includes(x.body['x-content-type'])));
+    },
+    annotationTabConfig() {
+      return this.config?.annotations?.tabs || {};
+    },
     configuredTypes() {
       return this.config.annotations.types.map((type) => type.contenttype);
     },
     currentAnnotations() {
-      const contentType = this.annotationTabs.find((collection) => collection.key === this.currentTab);
+      const contentType = this.annotationTabs.find(
+        (collection) => collection.key === this.currentTab,
+      );
 
       if (!contentType) {
         return [];
       }
 
-      const annotationType = this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
+      const annotationType = this.configuredAnnotations.filter(
+        (annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']),
+      );
 
       return this.sortAnnotation(annotationType);
     },
-    annotationTabConfig() {
-      return this.config?.annotations?.tabs || {};
+    filteredAnnotations() {
+      if (!this.currentTab) {
+        return [];
+      }
+      const output = this.annotations.filter(
+        (x) => this.tabConfig[this.currentTab].includes(x.body['x-content-type'])
+          && this.contentIds[x.targetId],
+      );
+
+      return this.sortAnnotation(output);
     },
-    annotationTabs() {
-      const contentTypes = {};
-      const annotationTab = {};
+    selectedAll() {
+      return (
+        Object.keys(this.activeAnnotation).length
+        === this.filteredAnnotations.length
+      );
+    },
+    selectedNone() {
+      return !Object.keys(this.activeAnnotation).length;
+    },
+    tabConfig() {
+      return this.config.annotations.tabs;
+    },
+  },
+  watch: {
+    filteredAnnotations: {
+      handler() {
+        this.activeAnnotation = {};
+      },
+      immediate: true,
+    },
+    panels: {
+      handler(curr, prev) {
+        const currentState = curr.find(
+          (x) => x.panel_label === 'Annotations' && x.show,
+        );
+        const previousState = prev.find(
+          (x) => x.panel_label === 'Annotations' && x.show,
+        );
 
-      Object.entries(this.annotationTabConfig).forEach(([key, types]) => {
-        types.forEach((type) => {
-          contentTypes[type] = key;
-        });
+        if (currentState !== previousState) {
+          this.activeAnnotation = {};
 
-        annotationTab[key] = {
-          key,
-          collectionTitle: key,
-          type: [],
-        };
-      });
+          if (currentState) {
+            [
+              ...document.querySelectorAll('[data-annotation-level]'),
+            ].forEach((el) => el.setAttribute('data-annotation-level', 0));
+          } else {
+            [
+              ...document.querySelectorAll('[data-annotation-level]'),
+            ].forEach((el) => el.setAttribute('data-annotation-level', -1));
 
-      this.configuredAnnotations.forEach((curr) => {
-        const contentType = curr.body.['x-content-type'];
-        if (contentTypes[contentType]) {
-          annotationTab[contentTypes[contentType]].type.push(contentType);
+            [
+              ...document.querySelectorAll('[data-annotation-icon]'),
+            ].forEach((el) => el.remove());
+          }
         }
-      });
-
-      return Object.values(annotationTab).filter((x) => x.type.length);
+      },
     },
   },
   mounted() {
-    this.$root.$on('update-annotations', (content, isProcessing) => {
+    this.$root.$on('update-annotations', this.onContentUpdate);
+    this.$root.$on('update-annotation-loading', (isProcessing) => {
       this.isProcessing = !!isProcessing;
-
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(content, 'text/html');
-
-      this.ids = [...doc.body.querySelectorAll('[id]')].map((el) => el.getAttribute('id'));
-      this.configuredAnnotations = [];
-
-      const interval = setInterval(() => {
-        if (this.isloading) {
-          this.configuredAnnotations = this.filterAnnotationTypes();
-
-          const firstTab = this.annotationTabs.find((x) => x.type.length)?.key || '';
-
-          this.highlightActiveTabContent(this.annotationTabConfig[firstTab] || []);
-          this.currentTab = firstTab;
-          clearInterval(interval);
-        }
-      }, 50);
-    });
-    this.$root.$on('panels-position', (newPanels) => {
-      const annotationPanelHidden = newPanels.find((x) => x.panel_label === 'Annotations' && !x.show);
-
-      this.currentAnnotations.forEach((annotation) => {
-        const id = this.stripAnnotationId(annotation.target.id);
-        const textElement = document.getElementById(id);
-
-        if (annotationPanelHidden) {
-          textElement.classList.remove('annotation');
-        } else {
-          textElement.classList.add('annotation');
-          textElement.classList.add('annotation-disabled');
-        }
-      });
     });
   },
   methods: {
-    activeTab(key, types) {
+    activeTab(key) {
       if (this.currentTab === key) {
         return;
       }
 
-      this.currentTab = key;
-      this.selectedAll = false;
-      this.selectedNone = true;
+      this.filteredAnnotations.forEach((x) => this.removeAnnotation(x, -1));
 
-      this.highlightActiveTabContent(types);
+      this.currentTab = key;
+
+      this.highlightActiveContent(this.filteredAnnotations);
     },
+
+    addAnnotation(annotation) {
+      const updated = { ...this.activeAnnotation };
+      let selector = this.stripTargetId(annotation, false);
+
+      if (selector.startsWith('.')) {
+        selector = selector.replace(/\./g, '');
+      }
+
+      this.updateHighlightState(selector, 'INC');
+      this.addIcon(document.getElementById(selector) || document.querySelector(`.${selector}`), annotation);
+      updated[annotation.targetId] = true;
+
+      this.activeAnnotation = updated;
+    },
+
+    addIcon(element, annotation) {
+      const contentType = annotation.body['x-content-type'];
+      try {
+        const svg = this.createSVG(this.getIconName(contentType));
+        svg.setAttribute(
+          'data-annotation-icon',
+          this.stripTargetId(annotation),
+        );
+        element.prepend(svg);
+      } catch (err) {
+        // TODO : Handle Here
+      }
+    },
+
     createSVG(name) {
       const [path, viewBox] = Icons[name].split('|');
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -205,7 +253,10 @@ export default {
       svg.setAttribute('role', 'presentation');
       svg.setAttribute('viewBox', viewBox);
 
-      const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const newPath = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'path',
+      );
 
       newPath.setAttribute('d', path);
       svg.appendChild(newPath);
@@ -213,25 +264,14 @@ export default {
       return svg;
     },
 
-    /**
-    * filter for configured annotation types (index.html)
-    *
-    * @return array of annotations excluding unconfigured ones
-    */
-    filterAnnotationTypes() {
-      return this.annotations.filter((annotation) => {
-        this.$set(annotation, 'status', this.config.annotations.show);
-
-        annotation.strippedId = this.stripAnnotationId(annotation.target.id);
-        const annotationIds = this.ids.includes(annotation.strippedId);
-
-        if (this.configuredTypes.find((type) => type === annotation.body['x-content-type']) && annotationIds) {
-          this.setText(annotation);
-
-          return true;
-        }
-        return false;
-      });
+    onContentUpdate(ids) {
+      try {
+        this.currentTab = this.annotationTabs[0].key;
+        this.contentIds = ids;
+        this.highlightActiveContent(this.filteredAnnotations);
+      } catch (err) {
+        setTimeout(() => this.onContentUpdate(ids), 100);
+      }
     },
 
     getIcon(contentType) {
@@ -239,62 +279,56 @@ export default {
     },
 
     getIconName(contentType) {
-      return this.config.annotations.types.filter((annotation) => annotation.contenttype === contentType)[0].icon;
+      return this.config.annotations.types.filter(
+        (annotation) => annotation.contenttype === contentType,
+      )[0].icon;
     },
 
     onHighlightAll() {
-      this.currentAnnotations.forEach((annotation) => this.updateToggleState(annotation, 'remove', 'add'));
-
-      this.selectedAll = true;
-      this.selectedNone = false;
+      this.filteredAnnotations.forEach(
+        (annotation) => !this.activeAnnotation[annotation.targetId]
+          && this.addAnnotation(annotation),
+      );
     },
 
     onHighlightNone() {
-      this.currentAnnotations.forEach((annotation) => this.updateToggleState(annotation, 'add', 'remove'));
-
-      this.selectedAll = false;
-      this.selectedNone = true;
+      this.filteredAnnotations.forEach(
+        (annotation) => this.activeAnnotation[annotation.targetId]
+          && this.removeAnnotation(annotation),
+      );
     },
 
-    setText(annotation) {
-      const contentType = annotation.body['x-content-type'];
-      const id = this.stripAnnotationId(annotation.target.id);
-      const textElement = document.getElementById(id);
-      let svg = null;
+    removeIcon(annotation) {
+      const stripeId = this.stripTargetId(annotation);
+      const el = document
+        .querySelector(`svg[data-annotation-icon='${stripeId}']`);
 
-      try {
-        svg = this.createSVG(this.getIconName(contentType));
-
-        svg.setAttribute('id', `annotation-icon-${id}`);
-      } catch (err) {
-        svg = null;
-      }
-
-      if (svg) {
-        textElement.prepend(svg);
+      if (el) {
+        el.remove();
       }
     },
 
-    statusCheck() {
-      const num = this.currentAnnotations.length;
-      const active = this.currentAnnotations.filter((annotation) => annotation.status === true).length;
+    removeAnnotation(annotation, level) {
+      const updated = { ...this.activeAnnotation };
+      let selector = this.stripTargetId(annotation, false);
 
-      if (num === active) {
-        this.selectedAll = false;
-        this.selectedNone = true;
-      } else if (active === 0) {
-        this.selectedAll = true;
-        this.selectedNone = false;
-      } else {
-        this.selectedAll = false;
-        this.selectedNone = false;
+      if (selector.startsWith('.')) {
+        selector = selector.replace(/\./g, '');
       }
+
+      this.updateHighlightState(selector, 'DEC', level);
+      this.removeIcon(annotation);
+      delete updated[annotation.targetId];
+      this.activeAnnotation = updated;
     },
 
     toggle(annotation) {
-      annotation.status = !annotation.status;
-
-      this.updateToggleState(annotation, 'toggle', 'toggle');
+      const exists = !!this.activeAnnotation[annotation.targetId];
+      if (exists) {
+        this.removeAnnotation(annotation);
+      } else {
+        this.addAnnotation(annotation);
+      }
     },
   },
 };
@@ -326,8 +360,48 @@ export default {
   padding-bottom: inherit;
 }
 
+.annotation-disabled-overlap {
+  border-bottom: 1px;
+  border-bottom-style: dotted !important;
+  padding-bottom: inherit;
+}
+
 .annotation-disabled > svg {
   display: none;
+}
+
+*[data-annotation-level='0'] {
+  background-color: $grey-3;
+}
+
+*[data-annotation-level='1'],
+*[data-annotation-level='1'] * {
+  background-color: $blue-1;
+  border-bottom: 1px solid #000;
+}
+
+*[data-annotation-level='2'],
+*[data-annotation-level='2'] * {
+  background-color: $blue-2;
+  border-bottom: 1px solid #000;
+}
+
+*[data-annotation-level='3'],
+*[data-annotation-level='3'] * {
+  background-color: $blue-3;
+  border-bottom: 1px solid #000;
+}
+
+*[data-annotation-level='4'],
+*[data-annotation-level='4'] * {
+  background-color: $blue-4;
+  border-bottom: 1px solid #000;
+}
+
+*[data-annotation-level='5'],
+*[data-annotation-level='5'] * {
+  background-color: $blue-5;
+  border-bottom: 1px solid #000;
 }
 </style>
 
