@@ -18,7 +18,7 @@
         >
           <a
             :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
-            :href="`${config.breadcrumbNavigation.website}`"
+            :href="redirectUrl"
             class="header-links"
           >
             <q-icon
@@ -34,7 +34,7 @@
         >
           <a
             :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
-            :href="`${config.breadcrumbNavigation.website}search.html?searchTerm=${searchTerm}`"
+            :href="`${redirectUrl}?searchTerm=${searchTerm}`"
             class="header-links"
           >
             <q-icon
@@ -70,6 +70,9 @@ export default {
     },
   },
   computed: {
+    redirectUrl() {
+      return this.$route.query.redirectUrl || this.config.breadcrumbNavigation.website;
+    },
     searchTerm() {
       return this.$route.query.searchTerm;
     },
