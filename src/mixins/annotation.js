@@ -96,7 +96,7 @@ export default {
 
           if (ended) return;
 
-          if (c.nodeName === 'SPAN' && c.getAttribute('data-annotation')) {
+          if (c.nodeName === 'SPAN' && c.getAttribute('data-annotation') && started) {
             c.classList.add(selector);
           }
 
