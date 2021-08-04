@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.16.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.16.0...v1.16.1) (2021-08-03)
+
+
+### Bug Fixes
+
+* navigating from search breadcrumb to website ([902354f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/902354fcfa0bc079892940c6768ed379a35483ae))
+
+
+### Refactoring
+
+* probit users selecting text in tree view ([e6a101a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e6a101a9b498848acbe56eb5076f435abeb775f1)), closes [#320](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/320)
+
+
+### Continuos Integration
+
+* remove entry point ([506c59b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/506c59bcb6938a76084f1cb59fca5b1a9c383d55))
+* remove entry point ([e9e7c28](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e9e7c28bf1f9817b68ad32f5f2ff774f037cb71a))
+
 ## [1.16.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.15.0...v1.16.0) (2021-07-28)
 
 
