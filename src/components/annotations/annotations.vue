@@ -212,6 +212,8 @@ export default {
       this.currentTab = key;
 
       this.highlightActiveContent(this.filteredAnnotations);
+
+      this.handleTooltip();
     },
 
     addAnnotation(annotation) {
@@ -264,16 +266,6 @@ export default {
       return svg;
     },
 
-    onContentUpdate(ids) {
-      try {
-        this.currentTab = this.annotationTabs[0].key;
-        this.contentIds = ids;
-        this.highlightActiveContent(this.filteredAnnotations);
-      } catch (err) {
-        setTimeout(() => this.onContentUpdate(ids), 100);
-      }
-    },
-
     getIcon(contentType) {
       return Icons[this.getIconName(contentType)];
     },
@@ -282,6 +274,42 @@ export default {
       return this.config.annotations.types.filter(
         (annotation) => annotation.contenttype === contentType,
       )[0].icon;
+    },
+
+    getTooltipId(el) {
+      return `${el.className.split(' ').join('')}annotation-tooltip`;
+    },
+
+    handleTooltip() {
+      const annotationIds = this.filteredAnnotations.reduce((prev, curr) => {
+        let id = this.stripTargetId(curr, false);
+        if (id.startsWith('.')) {
+          id = id.replace('.', '');
+        }
+        prev[id] = curr.body.value;
+        return prev;
+      }, {});
+
+      document.querySelectorAll('[data-annotation]').forEach((el) => {
+        const annotationClasses = el.className.split(' ').map((x) => annotationIds[x]).filter((x) => x);
+        const childOtherNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length;
+        if (annotationClasses.length && !childOtherNodes) {
+          el.addEventListener('mouseenter', () => this.onMouseHover(el, annotationClasses), false);
+          el.addEventListener('mouseout', () => this.onMouseOut(el), false);
+        }
+      });
+    },
+
+    onContentUpdate(ids) {
+      try {
+        this.currentTab = this.annotationTabs[0].key;
+        this.contentIds = ids;
+        this.highlightActiveContent(this.filteredAnnotations);
+
+        this.handleTooltip();
+      } catch (err) {
+        setTimeout(() => this.onContentUpdate(ids), 100);
+      }
     },
 
     onHighlightAll() {
@@ -296,6 +324,32 @@ export default {
         (annotation) => this.activeAnnotation[annotation.targetId]
           && this.removeAnnotation(annotation),
       );
+    },
+
+    onMouseHover(el, annotationClasses) {
+      const tooltipEl = document.createElement('span');
+      tooltipEl.setAttribute('data-annotation-classes', `${el.className}`);
+      tooltipEl.setAttribute('class', 'annotation-tooltip');
+
+      const text = `Text belongs to annotation: "${annotationClasses.join(', ')}"`;
+
+      tooltipEl.innerText = text;
+      tooltipEl.setAttribute('id', this.getTooltipId(el));
+      window.top.el = el;
+
+      const r = el.getBoundingClientRect();
+
+      tooltipEl.style.top = `${r.y + r.height}px`;
+      tooltipEl.style.left = `${r.x}px`;
+
+      document.querySelector('body').append(tooltipEl);
+
+      el.classList.add('annotation-hover');
+    },
+
+    onMouseOut(el) {
+      [...document.querySelectorAll('.annotation-tooltip')].forEach((x) => x.remove());
+      el.classList.remove('annotation-hover');
     },
 
     removeIcon(annotation) {
@@ -402,6 +456,30 @@ export default {
 *[data-annotation-level='5'] * {
   background-color: $blue-5;
   border-bottom: 1px solid #000;
+}
+
+*[data-annotation-level].annotation-hover,
+*[data-annotation-level].annotation-hover * {
+  text-decoration: underline;
+}
+
+.annotation-tooltip {
+  background-color: #fff !important;
+  border-radius: 8px;
+  box-shadow: 0 0 8 -1 rgba(0, 0, 0, 0.5);
+  color: #000 !important;
+  font-size: 16px;
+  left: 0;
+  padding: 12px;
+  position: absolute;
+  text-decoration: none !important;
+  top: 0;
+  width: 200px;
+  z-index: 10000;
+}
+
+.annotation-tooltip {
+  -webkit-touch-callout: none;
 }
 </style>
 
