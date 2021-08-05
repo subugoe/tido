@@ -291,13 +291,27 @@ export default {
       }, {});
 
       document.querySelectorAll('[data-annotation]').forEach((el) => {
-        const annotationClasses = el.className.split(' ').map((x) => annotationIds[x]).filter((x) => x);
         const childOtherNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length;
-        if (annotationClasses.length && !childOtherNodes) {
-          el.addEventListener('mouseenter', () => this.onMouseHover(el, annotationClasses), false);
-          el.addEventListener('mouseout', () => this.onMouseOut(el), false);
+
+        if (!childOtherNodes) {
+          const annotationClasses = this.backTrackNestedAnnotations(el).className.split(' ').map((x) => annotationIds[x]).filter((x) => x);
+
+          if (annotationClasses.length) {
+            el.addEventListener('mouseenter', () => this.onMouseHover(el, annotationClasses), false);
+            el.addEventListener('mouseout', () => this.onMouseOut(el), false);
+          }
         }
       });
+    },
+
+    backTrackNestedAnnotations(el) {
+      let current = el;
+
+      while (current.parentElement.getAttribute('data-annotation') && current.parentElement.childNodes.length === 1) {
+        current = current.parentElement;
+      }
+
+      return current;
     },
 
     onContentUpdate(ids) {
