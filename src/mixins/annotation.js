@@ -90,28 +90,29 @@ export default {
       function replaceRecursive(element) {
         if (!element.childNodes) return;
 
-        [...element.childNodes].forEach((c) => {
-          if (c === start) started = true;
-          if (c === end) ended = true;
+        [...element.childNodes].forEach((childNode) => {
+          if (childNode === start) started = true;
+          if (childNode === end) ended = true;
 
           if (ended) return;
 
-          if (c.nodeName === 'SPAN' && c.getAttribute('data-annotation') && started) {
-            c.classList.add(selector);
+          if (childNode.nodeName === 'SPAN' && childNode.getAttribute('data-annotation') && started) {
+            childNode.classList.add(selector);
           }
 
-          if (c.nodeName === '#text') {
+          if (childNode.nodeName === '#text') {
             if (started) {
-              if (c.textContent && c.textContent.trim()) {
-                const s = document.createElement('span');
-                s.setAttribute('class', selector);
-                s.setAttribute('data-annotation', true);
-                s.innerHTML = c.textContent;
-                c.replaceWith(s);
+              if (childNode.textContent && childNode.textContent.trim()) {
+                const span = document.createElement('span');
+
+                span.setAttribute('class', selector);
+                span.setAttribute('data-annotation', true);
+                span.innerHTML = childNode.textContent;
+                childNode.replaceWith(span);
               }
             }
           } else {
-            replaceRecursive(c);
+            replaceRecursive(childNode);
           }
         });
       }
