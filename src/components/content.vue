@@ -11,7 +11,7 @@
       <q-tab
         v-for="(contenturl, i) in contenturls"
         :key="`content${i}`"
-        :class="{'disabled-tab': contenturl===activeTab}"
+        :class="{'disabled-tab': contenturl === activeTab}"
         :label="$t(contenttypes[i])"
         :name="contenturl"
       />
