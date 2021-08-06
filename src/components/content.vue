@@ -11,10 +11,9 @@
       <q-tab
         v-for="(contenturl, i) in contenturls"
         :key="`content${i}`"
-        :name="contenturl"
-        :class="contenturls.length == 1 && 'default-cursor'"
-        :disable="contenturls.length == 1"
+        :class="{'disabled-tab': contenturl===activeTab}"
         :label="$t(contenttypes[i])"
+        :name="contenturl"
       />
     </q-tabs>
 
@@ -231,5 +230,9 @@ export default {
   height: 100vh;
   overflow: auto;
   padding: 8px;
+}
+
+.disabled-tab {
+  pointer-events: none;
 }
 </style>
