@@ -218,28 +218,6 @@ export default {
       ));
     },
 
-    updateNestedMotifToggle(id, annotationClassOperation) {
-      const element = this.getElementById(id);
-
-      if (!element) {
-        return;
-      }
-
-      this.updateTextContentClass(
-        element,
-        annotationClassOperation,
-        'annotation-disabled',
-      );
-
-      const nextId = element.getAttribute('data-next');
-
-      if (!nextId) {
-        return;
-      }
-
-      this.updateNestedMotifToggle(nextId, annotationClassOperation);
-    },
-
     updateTextContentClass(element, task = 'add', ...className) {
       if (!element) {
         return;
