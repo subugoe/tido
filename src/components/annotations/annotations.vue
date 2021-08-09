@@ -361,7 +361,7 @@ export default {
       });
 
       const text = `<span class="text-body1">
-      ${!isMultiple ? `${this.$t('toolTip_Reference')}` : `${this.$t('toolTip_References')}`} :
+      ${!isMultiple ? `${this.$t('toolTip_Reference')}` : `${this.$t('toolTip_References')}`}:
       </span>
       <br>
       <div class="text-body2">
