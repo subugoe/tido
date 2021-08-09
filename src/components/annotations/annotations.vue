@@ -352,12 +352,12 @@ export default {
 
       let annotationLists = '';
       annotationClasses.forEach((annotationList) => {
-        annotationLists += `<li>
+        annotationLists += `<div class="referenced-annotation">
         ${this.createSVG(this.getIconName(annotationList.contentType)).outerHTML}
           <span>
             ${annotationList.value}
           </span>
-          </li>`;
+          </div>`;
       });
 
       const text = `<span class="text-body1">
@@ -516,20 +516,19 @@ export default {
   -webkit-touch-callout: none;
 }
 
-.text-body2 {
-  list-style-type: none;
-  padding: 8px;
+.referenced-annotation {
+  display: block;
+  margin-bottom: 4px;
 }
 
-.text-body2 > li {
-  margin: none;
-  text-indent: -4px;
+.referenced-annotation:first-of-type {
+  padding-top: 4px;
 }
 
-.text-body2 > li::before {
-  content: '-';
-  text-indent: -4px;
+.referenced-annotation:last-of-type {
+  margin-bottom: 0;
 }
+
 </style>
 
 <style lang="scss" scoped>
