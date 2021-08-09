@@ -348,7 +348,6 @@ export default {
       tooltipEl.setAttribute('data-annotation-classes', `${el.className}`);
       tooltipEl.setAttribute('class', 'annotation-tooltip');
 
-      // TODO: add icon to (before) every annotation reference
       const isMultiple = annotationClasses.length > 1;
 
       let annotationLists = '';
