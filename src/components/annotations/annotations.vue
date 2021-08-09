@@ -478,17 +478,16 @@ export default {
 }
 
 .annotation-tooltip {
-  background-color: #fff !important;
-  border-radius: 8px;
-  box-shadow: 0 0 8 -1 rgba(0, 0, 0, 0.5);
+  background-color: $grey-2 !important;
+  box-shadow: $shadow-1;
   color: #000 !important;
-  font-size: 16px;
+  font-size: 14px;
   left: 0;
-  padding: 12px;
+  padding: 8px;
   position: absolute;
   text-decoration: none !important;
   top: 0;
-  width: 200px;
+  width: 240px;
   z-index: 10000;
 }
 
