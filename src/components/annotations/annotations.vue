@@ -286,7 +286,10 @@ export default {
         if (id.startsWith('.')) {
           id = id.replace('.', '');
         }
-        prev[id] = curr.body.value;
+        prev[id] = {
+          value: curr.body.value,
+          contentType: curr.body['x-content-type'],
+        };
         return prev;
       }, {});
 
@@ -345,12 +348,26 @@ export default {
       tooltipEl.setAttribute('data-annotation-classes', `${el.className}`);
       tooltipEl.setAttribute('class', 'annotation-tooltip');
 
-      // TODO: add translation ability to the string "Referenced Annotation"
-      // TODO: plural/singluar "s" to "Referenced Annotation" depending of count of annotation references
-      // TODO: don't list annotation references via comma, but add a linebreak instead
-      // TODO: start every annotation reference with the follwoing string " - "
       // TODO: add icon to (before) every annotation reference
-      const text = `<span class="text-body1">Referenced Annotation:</span><br><span class="text-body2">${annotationClasses.join(', ')}</span>`;
+      const isMultiple = annotationClasses.length > 1;
+
+      let annotationLists = '';
+      annotationClasses.forEach((annotationList) => {
+        annotationLists += `<li>
+        ${this.createSVG(this.getIconName(annotationList.contentType)).outerHTML}
+          <span>
+            ${annotationList.value}
+          </span>
+          </li>`;
+      });
+
+      const text = `<span class="text-body1">
+      ${!isMultiple ? `${this.$t('toolTip_Reference')}` : `${this.$t('toolTip_References')}`} :
+      </span>
+      <br>
+      <div class="text-body2">
+      ${annotationLists}
+      </div>`;
 
       tooltipEl.innerHTML = text;
       tooltipEl.setAttribute('id', this.getTooltipId(el));
@@ -498,6 +515,21 @@ export default {
 
 .annotation-tooltip {
   -webkit-touch-callout: none;
+}
+
+.text-body2 {
+  list-style-type: none;
+  padding: 8px;
+}
+
+.text-body2 > li {
+  margin: none;
+  text-indent: -4px;
+}
+
+.text-body2 > li::before {
+  content: '-';
+  text-indent: -4px;
 }
 </style>
 

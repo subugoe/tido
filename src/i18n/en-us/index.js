@@ -58,6 +58,8 @@ export default {
   Title: 'Title',
   title_homepage: 'The Syriac, Arabic, and Karshuni Ahiqar Texts',
   title_viewer: 'Edition Viewer',
+  toolTip_Reference: 'Referenced Annotation',
+  toolTip_References: 'Referenced Annotations',
   transcription: 'Transcription',
   transliteration: 'Transliteration',
   Year: 'Year of creation',
