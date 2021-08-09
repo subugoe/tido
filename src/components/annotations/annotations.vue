@@ -345,9 +345,14 @@ export default {
       tooltipEl.setAttribute('data-annotation-classes', `${el.className}`);
       tooltipEl.setAttribute('class', 'annotation-tooltip');
 
-      const text = `Text belongs to annotation: "${annotationClasses.join(', ')}"`;
+      // TODO: add translation ability to the string "Referenced Annotation"
+      // TODO: plural/singluar "s" to "Referenced Annotation" depending of count of annotation references
+      // TODO: don't list annotation references via comma, but add a linebreak instead
+      // TODO: start every annotation reference with the follwoing string " - "
+      // TODO: add icon to (before) every annotation reference
+      const text = `<span class="text-body1">Referenced Annotation:</span><br><span class="text-body2">${annotationClasses.join(', ')}</span>`;
 
-      tooltipEl.innerText = text;
+      tooltipEl.innerHTML = text;
       tooltipEl.setAttribute('id', this.getTooltipId(el));
       window.top.el = el;
 
