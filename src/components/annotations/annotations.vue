@@ -223,8 +223,16 @@ export default {
       }
 
       this.updateHighlightState(selector, 'INC');
-      this.addIcon(document.getElementById(selector) || document.querySelector(`.${selector}`), annotation);
+
+      const el = document.getElementById(selector) || document.querySelector(`.${selector}`);
+
+      this.addIcon(el, annotation);
+
       updated[annotation.targetId] = true;
+
+      if (el) {
+        el.scrollIntoView();
+      }
 
       this.activeAnnotation = updated;
     },
