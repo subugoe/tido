@@ -297,11 +297,12 @@ export default {
         const childOtherNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length;
 
         if (!childOtherNodes) {
-          const annotationClasses = this.backTrackNestedAnnotations(el).className.split(' ').map((x) => annotationIds[x]).filter((x) => x);
+          el = this.backTrackNestedAnnotations(el);
+          const annotationClasses = el.className.split(' ').map((x) => annotationIds[x]).filter((x) => x);
 
           if (annotationClasses.length) {
             el.addEventListener('mouseenter', () => this.onMouseHover(el, annotationClasses), false);
-            el.addEventListener('mouseout', () => this.onMouseOut(el), false);
+            el.addEventListener('mouseout', () => this.onMouseOut(), false);
           }
         }
       });
@@ -344,6 +345,10 @@ export default {
     },
 
     onMouseHover(el, annotationClasses) {
+      if (!el || (el && parseInt(el.getAttribute('data-annotation-level'), 10) <= 0)) {
+        return;
+      }
+
       const tooltipEl = document.createElement('span');
       tooltipEl.setAttribute('data-annotation-classes', `${el.className}`);
       tooltipEl.setAttribute('class', 'annotation-tooltip');
@@ -379,12 +384,11 @@ export default {
 
       document.querySelector('body').append(tooltipEl);
 
-      el.classList.add('annotation-hover');
+      setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
     },
 
-    onMouseOut(el) {
+    onMouseOut() {
       [...document.querySelectorAll('.annotation-tooltip')].forEach((x) => x.remove());
-      el.classList.remove('annotation-hover');
     },
 
     removeIcon(annotation) {
@@ -493,27 +497,28 @@ export default {
   border-bottom: 1px solid #000;
 }
 
-*[data-annotation-level].annotation-hover,
-*[data-annotation-level].annotation-hover * {
-  text-decoration: underline;
-}
-
 .annotation-tooltip {
   background-color: $grey-2 !important;
   box-shadow: $shadow-1;
   color: #000 !important;
   font-size: 14px;
   left: 0;
+  opacity: 0;
   padding: 8px;
   position: absolute;
   text-decoration: none !important;
   top: 0;
+  transition: opacity 0.5s;
   width: 240px;
   z-index: 10000;
 }
 
 .annotation-tooltip {
   -webkit-touch-callout: none;
+}
+
+.annotation-animated-tooltip {
+  opacity: 1;
 }
 
 .referenced-annotation {
