@@ -231,7 +231,7 @@ export default {
       updated[annotation.targetId] = true;
 
       if (el) {
-        el.scrollIntoView();
+        el.scrollIntoView({ behavior: 'smooth' });
       }
 
       this.activeAnnotation = updated;
