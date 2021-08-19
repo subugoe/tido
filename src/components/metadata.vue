@@ -2,7 +2,7 @@
   <div class="item-content panel__meta">
     <!-- Collection-->
     <q-list
-      v-if="config.meta.collection.all && Object.keys(collection).length"
+      v-if="Object.keys(collection).length"
       dense
     >
       <q-item class="no-padding">
@@ -38,7 +38,7 @@
 
     <!-- Manifest-->
     <q-list
-      v-if="config.meta.manifest.all && itemcount"
+      v-if="itemcount"
       dense
     >
       <q-item class="no-padding">
@@ -85,10 +85,7 @@
     </q-list>
 
     <!-- Item-->
-    <q-list
-      v-if="config.meta.item.all"
-      dense
-    >
+    <q-list dense>
       <q-item class="no-padding">
         <q-item-section class="text-h6 text--smallcaps">
           {{ $t(labels.item) }} {{ itemindex + 1 }} / {{ itemcount }}
