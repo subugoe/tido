@@ -231,6 +231,17 @@ export default {
 
     addIcon(element, annotation) {
       const contentType = annotation.body['x-content-type'];
+      let foundSvg = false;
+
+      [...element.children].forEach((el) => {
+        if (el.nodeName === 'svg' && el.getAttribute('data-annotation-icon')) {
+          foundSvg = true;
+        }
+      });
+
+      if (foundSvg) {
+        return;
+      }
       try {
         const svg = this.createSVG(this.getIconName(contentType));
         svg.setAttribute(

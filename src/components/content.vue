@@ -138,7 +138,7 @@ export default {
       let dom = parser.parseFromString(data, 'text/html');
       if (!annotationPanelHidden) {
         const spans = [
-          ...dom.querySelectorAll('span[data-target]:not([value=""])'),
+          ...dom.querySelectorAll('[data-target]:not([value=""])'),
         ];
 
         const spanIds = [
