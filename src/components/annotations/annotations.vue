@@ -308,8 +308,24 @@ export default {
         const childOtherNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length;
 
         if (!childOtherNodes) {
-          el = this.backTrackNestedAnnotations(el);
-          const annotationClasses = el.className.split(' ').map((x) => annotationIds[x]).filter((x) => x);
+          const classNames = [];
+          el = this.backTrackNestedAnnotations(el, classNames);
+          const annotationClasses = [];
+
+          // checks for duplicate class names.
+          classNames
+            .join(' ')
+            .split(' ')
+            .map((x) => annotationIds[x])
+            .filter((x) => x)
+            .reduce((prev, curr) => {
+              if (!prev[curr.value]) {
+                prev[curr.value] = true;
+                annotationClasses.push(curr);
+              }
+
+              return prev;
+            }, {});
 
           if (annotationClasses.length) {
             el.addEventListener('mouseenter', () => this.onMouseHover(el, annotationClasses), false);
@@ -319,14 +335,15 @@ export default {
       });
     },
 
-    backTrackNestedAnnotations(el) {
+    backTrackNestedAnnotations(el, classNames = []) {
       let current = el;
 
       while (current.parentElement.getAttribute('data-annotation') && current.parentElement.childNodes.length === 1) {
+        classNames.push(current.className);
         current = current.parentElement;
       }
 
-      return current;
+      return el;
     },
 
     onContentUpdate(ids) {
@@ -356,7 +373,24 @@ export default {
     },
 
     onMouseHover(el, annotationClasses) {
-      if (!el || (el && parseInt(el.getAttribute('data-annotation-level'), 10) <= 0)) {
+      const queue = [];
+
+      // this logic checks the child spans and classes.
+      queue.push(el);
+      let matched = false;
+
+      while (queue.length) {
+        const popped = queue.pop();
+        if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
+          matched = true;
+        } else {
+          [...popped.children].forEach((child) => {
+            queue.push(child);
+          });
+        }
+      }
+
+      if (!el || !matched) {
         return;
       }
 
