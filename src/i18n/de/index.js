@@ -7,7 +7,6 @@ export default {
   colorScheme: 'Farbschema ändern',
   Contents: 'Inhalt',
   contentsMetadata: 'Inhalt & Metadaten',
-  cTitle: 'Die Geschichte und Redewendungen von Ahikar dem Weisen',
   'Current location': 'Aktueller Standort',
   'Date of creation': 'Erstelldatum',
   Decrease: 'Verkleinern',
