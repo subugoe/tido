@@ -34,7 +34,7 @@
         >
           <a
             :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
-            :href="`${redirectUrl}?searchTerm=${searchTerm}`"
+            :href="`${redirectUrl}search.html?searchTerm=${searchTerm}`"
             class="header-links"
           >
             <q-icon

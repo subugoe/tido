@@ -233,6 +233,17 @@ export default {
 
     addIcon(element, annotation) {
       const contentType = annotation.body['x-content-type'];
+      let foundSvg = false;
+
+      [...element.children].forEach((el) => {
+        if (el.nodeName === 'svg' && el.getAttribute('data-annotation-icon')) {
+          foundSvg = true;
+        }
+      });
+
+      if (foundSvg) {
+        return;
+      }
       try {
         const svg = this.createSVG(this.getIconName(contentType));
         svg.setAttribute(
@@ -429,25 +440,6 @@ export default {
 
 <style lang="scss">
 /* not in scope to style the text */
-.annotation {
-  background-color: $grey-4;
-  border-bottom: 1px solid;
-  /**
-  * adding a linting exception here,
-  * because 1px is invalid, but needed here
-  * adding a global rule for this would introduce unnecessary error proneness
-  */
-  /* stylelint-disable */
-  margin: 0 1px;
-  padding: 1px 1px 2px 1px;
-  /* stylelint-enable */
-  white-space: nowrap;
-
-  @media (prefers-color-scheme: dark) {
-    background-color: $grey-9;
-  }
-}
-
 .annotation-disabled {
   border-bottom: 0;
   padding-bottom: inherit;

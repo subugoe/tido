@@ -3,17 +3,23 @@ export default {
     getAllElementsFromSelector(selector, arr = []) {
       const el = document.getElementById(selector);
       if (el) {
-        arr.push(el);
+        // https://www.geeksforgeeks.org/queue-data-structure/
+        const queue = [];
 
-        [...el.children].forEach((child) => {
-          arr.push(child);
-        });
+        queue.push(el);
+
+        while (queue.length) {
+          const popped = queue.pop();
+          arr.push(popped);
+          [...popped.children].forEach((child) => {
+            queue.push(child);
+          });
+        }
         return arr;
       }
 
       return [...document.querySelectorAll(`.${selector}`)];
     },
-
     getElementById(id) {
       if (!id) {
         return null;
@@ -81,8 +87,8 @@ export default {
     },
 
     replaceSelectorWithSpan(selector, root) {
-      const start = root.querySelector(`span[data-target="${selector}_start"]`);
-      const end = root.querySelector(`span[data-target="${selector}_end"]`);
+      const start = root.querySelector(`[data-target="${selector}_start"]`);
+      const end = root.querySelector(`[data-target="${selector}_end"]`);
 
       let started = false;
       let ended = false;
@@ -90,28 +96,29 @@ export default {
       function replaceRecursive(element) {
         if (!element.childNodes) return;
 
-        [...element.childNodes].forEach((c) => {
-          if (c === start) started = true;
-          if (c === end) ended = true;
+        [...element.childNodes].forEach((childNode) => {
+          if (childNode === start) started = true;
+          if (childNode === end) ended = true;
 
           if (ended) return;
 
-          if (c.nodeName === 'SPAN' && c.getAttribute('data-annotation') && started) {
-            c.classList.add(selector);
+          if (childNode.nodeName === 'SPAN' && childNode.getAttribute('data-annotation') && started) {
+            childNode.classList.add(selector);
           }
 
-          if (c.nodeName === '#text') {
+          if (childNode.nodeName === '#text') {
             if (started) {
-              if (c.textContent && c.textContent.trim()) {
-                const s = document.createElement('span');
-                s.setAttribute('class', selector);
-                s.setAttribute('data-annotation', true);
-                s.innerHTML = c.textContent;
-                c.replaceWith(s);
+              if (childNode.textContent && childNode.textContent.trim()) {
+                const span = document.createElement('span');
+
+                span.setAttribute('class', selector);
+                span.setAttribute('data-annotation', true);
+                span.innerHTML = childNode.textContent;
+                childNode.replaceWith(span);
               }
             }
           } else {
-            replaceRecursive(c);
+            replaceRecursive(childNode);
           }
         });
       }
@@ -183,8 +190,9 @@ export default {
     stripSelector(annotation) {
       return `.${annotation.target.selector.startSelector.value
         .replace("span[data-target='", '')
-        .replace("_start']", '')
-        .replace("_end']", '')}`;
+        .replace("'", '')
+        .replace('_start]', '')
+        .replace('_end]', '')}`;
     },
 
     stripTargetId(annotation, removeDot = true) {
@@ -216,28 +224,6 @@ export default {
         'data-annotation-level',
         level || this.getNewLevel(el, operation),
       ));
-    },
-
-    updateNestedMotifToggle(id, annotationClassOperation) {
-      const element = this.getElementById(id);
-
-      if (!element) {
-        return;
-      }
-
-      this.updateTextContentClass(
-        element,
-        annotationClassOperation,
-        'annotation-disabled',
-      );
-
-      const nextId = element.getAttribute('data-next');
-
-      if (!nextId) {
-        return;
-      }
-
-      this.updateNestedMotifToggle(nextId, annotationClassOperation);
     },
 
     updateTextContentClass(element, task = 'add', ...className) {

@@ -5,10 +5,11 @@
       :class="$q.dark.isActive ? 'bg-white' : 'bg-accent'"
     >
       <BreadCrumbNavigation
-        v-if="$route.query.source==='external'"
+        v-if="$route.query.source === 'external'"
         :config="config"
       />
     </div>
+
     <div class="header__wrap">
       <q-toolbar v-if="config['header_section'].titles">
         <TitleBar
@@ -30,10 +31,10 @@
         <q-toolbar class="q-pb-sm">
           <Navbar
             v-if="config['header_section'].navigation"
+            :default-view="defaultView"
             :itemurls="itemurls"
             :labels="config.labels"
             :manifests="manifests"
-            :default-view="defaultView"
           />
 
           <q-space />
@@ -59,8 +60,8 @@
 </template>
 
 <script>
-import Navbar from '@/components/navbar.vue';
 import BreadCrumbNavigation from '@/components/breadcrumbnavigation.vue';
+import Navbar from '@/components/navbar.vue';
 import TitleBar from '@/components/titlebar.vue';
 import TogglePanels from '@/components/togglebar/togglePanels.vue';
 import Tools from '@/components/tools.vue';
@@ -68,23 +69,23 @@ import Tools from '@/components/tools.vue';
 export default {
   name: 'Header',
   components: {
+    BreadCrumbNavigation,
     Navbar,
     TitleBar,
     TogglePanels,
-    BreadCrumbNavigation,
     Tools,
   },
   props: {
-    defaultView: {
-      type: Function,
-      default: () => {},
-    },
     collectiontitle: {
       type: String,
       default: () => '',
     },
     config: {
       type: Object,
+      default: () => {},
+    },
+    defaultView: {
+      type: Function,
       default: () => {},
     },
     imageurl: {

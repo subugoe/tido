@@ -7,7 +7,6 @@ export default {
   colorScheme: 'Change color',
   Contents: 'Contents',
   contentsMetadata: 'Contents & Metadata',
-  cTitle: 'The Story and Proverbs of Ahiqar the Wise',
   'Current location': 'Current location',
   'Date of creation': 'Date of creation',
   Decrease: 'Decrease',
