@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import Annotation from '@/mixins/annotation';
 import { colors } from 'quasar';
 import treestore from '@/stores/treestore.js';
 import Header from '@/components/header.vue';
@@ -50,7 +51,10 @@ export default {
   components: {
     Header,
   },
-  mixins: [Panels],
+  mixins: [
+    Annotation,
+    Panels,
+  ],
   data() {
     return {
       annotations: [],
@@ -131,7 +135,9 @@ export default {
       */
     async request(url, responsetype = 'json') {
       const response = await fetch(url);
-      const data = await (responsetype === 'text' ? response.text() : response.json());
+      const data = await (responsetype === 'text'
+        ? response.text()
+        : response.json());
 
       return data;
     },
@@ -153,10 +159,12 @@ export default {
           return;
         }
 
-        const current = await this.request(annotations.annotationCollection.first);
+        const current = await this.request(
+          annotations.annotationCollection.first,
+        );
 
         if (current.annotationPage.items.length) {
-          this.annotations = current.annotationPage.items;
+          this.annotations = current.annotationPage.items.map((x) => ({ ...x, targetId: this.stripTargetId(x, true) }));
         } else {
           this.annotations = [];
         }
@@ -182,17 +190,15 @@ export default {
       this.collection = data;
       this.collectiontitle = this.getLabel(data);
 
-      this.tree.push(
-        {
-          children: [],
-          handler: (node) => {
-            this.$root.$emit('update-tree-knots', node.label);
-          },
-          label: this.collectiontitle,
-          'label-key': this.collectiontitle,
-          selectable: false,
+      this.tree.push({
+        children: [],
+        handler: (node) => {
+          this.$root.$emit('update-tree-knots', node.label);
         },
-      );
+        label: this.collectiontitle,
+        'label-key': this.collectiontitle,
+        selectable: false,
+      });
 
       if (Array.isArray(data.sequence)) {
         const promises = [];
@@ -297,20 +303,20 @@ export default {
       sequence.forEach((item) => {
         const itemLabel = this.getItemLabel(item.id);
 
-        urls.push(
-          {
-            label: item.id,
-            'label-key': `${itemLabel}`,
-            labelSheet: true,
-            handler: (node) => {
-              if (this.itemurl === node.label) {
-                return;
-              }
-              this.loaded = false;
-              this.$router.push({ query: { ...this.$route.query, itemurl: node.label } });
-            },
+        urls.push({
+          label: item.id,
+          'label-key': `${itemLabel}`,
+          labelSheet: true,
+          handler: (node) => {
+            if (this.itemurl === node.label) {
+              return;
+            }
+            this.loaded = false;
+            this.$router.push({
+              query: { ...this.$route.query, itemurl: node.label },
+            });
           },
-        );
+        });
       });
       return urls;
     },
@@ -324,9 +330,13 @@ export default {
       */
     getLabel(data) {
       if (Object.keys(this.collection).length) {
-        return data.title && data.title[0].title ? data.title[0].title : data.label;
+        return data.title && data.title[0].title
+          ? data.title[0].title
+          : data.label;
       }
-      return data.label ? data.label : 'Manifest <small>(No label available)</small>';
+      return data.label
+        ? data.label
+        : 'Manifest <small>(No label available)</small>';
     },
     /**
       * get all the data provided on 'manifest level'
@@ -339,7 +349,11 @@ export default {
 
       // if the entrypoint points to a single manifest, initialize the tree
       if (this.isCollection === false) {
-        this.tree.push({ label: '', 'label-key': this.config.labels.manifest, children: [] });
+        this.tree.push({
+          label: '',
+          'label-key': this.config.labels.manifest,
+          children: [],
+        });
       }
 
       if (!Array.isArray(data.sequence)) {
@@ -351,17 +365,15 @@ export default {
       }
       this.manifests.push(data);
 
-      this.tree[0].children.push(
-        {
-          children: this.getItemUrls(data.sequence, data.label),
-          label: data.label,
-          'label-key': data.label,
-          handler: (node) => {
-            this.$root.$emit('update-tree-knots', node.label);
-          },
-          selectable: false,
+      this.tree[0].children.push({
+        children: this.getItemUrls(data.sequence, data.label),
+        label: data.label,
+        'label-key': data.label,
+        handler: (node) => {
+          this.$root.$emit('update-tree-knots', node.label);
         },
-      );
+        selectable: false,
+      });
     },
     /**
       * caller: *getItemUrls()*
