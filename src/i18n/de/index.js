@@ -57,6 +57,8 @@ export default {
   Title: 'Titel',
   title_homepage: 'Die syrischen und arabischen Ahiqar-Texte',
   title_viewer: 'Edition anzeigen',
+  toolTip_Reference: 'Referenzierte Annotation',
+  toolTip_References: 'Referenzierte Annotationen',
   transcription: 'Transkription',
   transliteration: 'Transliteration',
   Year: 'Erstellungsjahr',
