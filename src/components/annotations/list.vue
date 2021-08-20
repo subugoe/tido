@@ -4,10 +4,11 @@
       v-for="annotation in configuredAnnotations"
       :id="'list' + annotation.strippedId"
       :key="annotation.strippedId"
+      :class="{ 'bg-grey-4': !!activeAnnotation[annotation.targetId] }"
       class="q-pa-sm q-pl-xs q-mb-xs"
       clickable
       padding="xs"
-      @click="toggle(annotation); statusCheck();"
+      @click="toggle(annotation)"
     >
       <q-item-section
         avatar
@@ -35,6 +36,10 @@ export default {
     AnnotationUrls,
   },
   props: {
+    activeAnnotation: {
+      type: Object,
+      default: () => {},
+    },
     getIcon: {
       type: Function,
       default: () => null,
@@ -44,10 +49,6 @@ export default {
       default: () => [],
     },
     toggle: {
-      type: Function,
-      default: () => null,
-    },
-    statusCheck: {
       type: Function,
       default: () => null,
     },

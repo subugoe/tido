@@ -13,27 +13,26 @@
         :key="annotationTab.key"
         :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
-        @click="activeTab(annotationTab.key,annotationTab.type)"
+        @click="activeTab(annotationTab.key, annotationTab.type)"
       />
     </q-tabs>
 
     <AnnotationToggles />
 
-    <Loading
-      v-if="!isloading || isProcessing"
-    />
+    <Loading v-if="!isloading || isProcessing" />
 
     <AnnotationList
-      v-else-if="currentAnnotations.length && isloading && !isProcessing"
+      v-else-if="filteredAnnotations.length && isloading && !isProcessing"
       class="custom-font"
-      :configured-annotations="currentAnnotations"
+      :active-annotation="activeAnnotation"
+      :configured-annotations="filteredAnnotations"
+      :content-ids="contentIds"
       :get-icon="getIcon"
-      :status-check="statusCheck"
       :toggle="toggle"
     />
 
     <div
-      v-else-if="!currentAnnotations.length && isloading && !isProcessing"
+      v-else-if="!filteredAnnotations.length && isloading && !isProcessing"
       class="q-pa-sm"
     >
       <Notification
@@ -87,114 +86,176 @@ export default {
       type: Object,
       default: () => {},
     },
+    panels: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
       configuredAnnotations: [],
+      activeAnnotation: {},
+      contentIds: {},
       currentTab: '',
       ids: [],
       isProcessing: false,
       messages: {
         none: 'noAnnotationMessage',
       },
-      selectedAll: false,
-      selectedNone: true,
     };
   },
   computed: {
+    annotationTabs() {
+      return Object.entries(this.tabConfig)
+        .map(([key, type]) => ({
+          key,
+          collectionTitle: key,
+          type,
+        }))
+        .filter((el) => this.annotations.find((x) => el.type.includes(x.body['x-content-type'])));
+    },
+    annotationTabConfig() {
+      return this.config?.annotations?.tabs || {};
+    },
     configuredTypes() {
       return this.config.annotations.types.map((type) => type.contenttype);
     },
     currentAnnotations() {
-      const contentType = this.annotationTabs.find((collection) => collection.key === this.currentTab);
+      const contentType = this.annotationTabs.find(
+        (collection) => collection.key === this.currentTab,
+      );
 
       if (!contentType) {
         return [];
       }
 
-      const annotationType = this.configuredAnnotations.filter((annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']));
+      const annotationType = this.configuredAnnotations.filter(
+        (annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']),
+      );
 
       return this.sortAnnotation(annotationType);
     },
-    annotationTabConfig() {
-      return this.config?.annotations?.tabs || {};
+    filteredAnnotations() {
+      if (!this.currentTab) {
+        return [];
+      }
+      const output = this.annotations.filter(
+        (x) => this.tabConfig[this.currentTab].includes(x.body['x-content-type'])
+          && this.contentIds[x.targetId],
+      );
+
+      return this.sortAnnotation(output);
     },
-    annotationTabs() {
-      const contentTypes = {};
-      const annotationTab = {};
+    selectedAll() {
+      return (
+        Object.keys(this.activeAnnotation).length
+        === this.filteredAnnotations.length
+      );
+    },
+    selectedNone() {
+      return !Object.keys(this.activeAnnotation).length;
+    },
+    tabConfig() {
+      return this.config.annotations.tabs;
+    },
+  },
+  watch: {
+    filteredAnnotations: {
+      handler() {
+        this.activeAnnotation = {};
+      },
+      immediate: true,
+    },
+    panels: {
+      handler(curr, prev) {
+        const currentState = curr.find(
+          (x) => x.panel_label === 'Annotations' && x.show,
+        );
+        const previousState = prev.find(
+          (x) => x.panel_label === 'Annotations' && x.show,
+        );
 
-      Object.entries(this.annotationTabConfig).forEach(([key, types]) => {
-        types.forEach((type) => {
-          contentTypes[type] = key;
-        });
+        if (currentState !== previousState) {
+          this.activeAnnotation = {};
 
-        annotationTab[key] = {
-          key,
-          collectionTitle: key,
-          type: [],
-        };
-      });
+          if (currentState) {
+            [
+              ...document.querySelectorAll('[data-annotation-level]'),
+            ].forEach((el) => el.setAttribute('data-annotation-level', 0));
+          } else {
+            [
+              ...document.querySelectorAll('[data-annotation-level]'),
+            ].forEach((el) => el.setAttribute('data-annotation-level', -1));
 
-      this.configuredAnnotations.forEach((curr) => {
-        const contentType = curr.body.['x-content-type'];
-        if (contentTypes[contentType]) {
-          annotationTab[contentTypes[contentType]].type.push(contentType);
+            [
+              ...document.querySelectorAll('[data-annotation-icon]'),
+            ].forEach((el) => el.remove());
+          }
         }
-      });
-
-      return Object.values(annotationTab).filter((x) => x.type.length);
+      },
     },
   },
   mounted() {
-    this.$root.$on('update-annotations', (content, isProcessing) => {
+    this.$root.$on('update-annotations', this.onContentUpdate);
+    this.$root.$on('update-annotation-loading', (isProcessing) => {
       this.isProcessing = !!isProcessing;
-
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(content, 'text/html');
-
-      this.ids = [...doc.body.querySelectorAll('[id]')].map((el) => el.getAttribute('id'));
-      this.configuredAnnotations = [];
-
-      const interval = setInterval(() => {
-        if (this.isloading) {
-          this.configuredAnnotations = this.filterAnnotationTypes();
-
-          const firstTab = this.annotationTabs.find((x) => x.type.length)?.key || '';
-
-          this.highlightActiveTabContent(this.annotationTabConfig[firstTab] || []);
-          this.currentTab = firstTab;
-          clearInterval(interval);
-        }
-      }, 50);
-    });
-    this.$root.$on('panels-position', (newPanels) => {
-      const annotationPanelHidden = newPanels.find((x) => x.panel_label === 'Annotations' && !x.show);
-
-      this.currentAnnotations.forEach((annotation) => {
-        const id = this.stripAnnotationId(annotation.target.id);
-        const textElement = document.getElementById(id);
-
-        if (annotationPanelHidden) {
-          textElement.classList.remove('annotation');
-        } else {
-          textElement.classList.add('annotation');
-          textElement.classList.add('annotation-disabled');
-        }
-      });
     });
   },
   methods: {
-    activeTab(key, types) {
+    activeTab(key) {
       if (this.currentTab === key) {
         return;
       }
 
-      this.currentTab = key;
-      this.selectedAll = false;
-      this.selectedNone = true;
+      this.filteredAnnotations.forEach((x) => this.removeAnnotation(x, -1));
 
-      this.highlightActiveTabContent(types);
+      this.currentTab = key;
+
+      this.highlightActiveContent(this.filteredAnnotations);
+
+      this.handleTooltip();
     },
+
+    addAnnotation(annotation) {
+      const updated = { ...this.activeAnnotation };
+      let selector = this.stripTargetId(annotation, false);
+
+      if (selector.startsWith('.')) {
+        selector = selector.replace(/\./g, '');
+      }
+
+      this.updateHighlightState(selector, 'INC');
+      this.addIcon(document.getElementById(selector) || document.querySelector(`.${selector}`), annotation);
+      updated[annotation.targetId] = true;
+
+      this.activeAnnotation = updated;
+    },
+
+    addIcon(element, annotation) {
+      const contentType = annotation.body['x-content-type'];
+      let foundSvg = false;
+
+      [...element.children].forEach((el) => {
+        if (el.nodeName === 'svg' && el.getAttribute('data-annotation-icon')) {
+          foundSvg = true;
+        }
+      });
+
+      if (foundSvg) {
+        return;
+      }
+      try {
+        const svg = this.createSVG(this.getIconName(contentType));
+        svg.setAttribute(
+          'data-annotation-icon',
+          this.stripTargetId(annotation),
+        );
+        element.prepend(svg);
+      } catch (err) {
+        // TODO : Handle Here
+      }
+    },
+
     createSVG(name) {
       const [path, viewBox] = Icons[name].split('|');
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -205,7 +266,10 @@ export default {
       svg.setAttribute('role', 'presentation');
       svg.setAttribute('viewBox', viewBox);
 
-      const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const newPath = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'path',
+      );
 
       newPath.setAttribute('d', path);
       svg.appendChild(newPath);
@@ -213,88 +277,196 @@ export default {
       return svg;
     },
 
-    /**
-    * filter for configured annotation types (index.html)
-    *
-    * @return array of annotations excluding unconfigured ones
-    */
-    filterAnnotationTypes() {
-      return this.annotations.filter((annotation) => {
-        this.$set(annotation, 'status', this.config.annotations.show);
-
-        annotation.strippedId = this.stripAnnotationId(annotation.target.id);
-        const annotationIds = this.ids.includes(annotation.strippedId);
-
-        if (this.configuredTypes.find((type) => type === annotation.body['x-content-type']) && annotationIds) {
-          this.setText(annotation);
-
-          return true;
-        }
-        return false;
-      });
-    },
-
     getIcon(contentType) {
       return Icons[this.getIconName(contentType)];
     },
 
     getIconName(contentType) {
-      return this.config.annotations.types.filter((annotation) => annotation.contenttype === contentType)[0].icon;
+      return this.config.annotations.types.filter(
+        (annotation) => annotation.contenttype === contentType,
+      )[0].icon;
+    },
+
+    getTooltipId(el) {
+      return `${el.className.split(' ').join('')}annotation-tooltip`;
+    },
+
+    handleTooltip() {
+      const annotationIds = this.filteredAnnotations.reduce((prev, curr) => {
+        let id = this.stripTargetId(curr, false);
+        if (id.startsWith('.')) {
+          id = id.replace('.', '');
+        }
+        prev[id] = {
+          value: curr.body.value,
+          contentType: curr.body['x-content-type'],
+        };
+        return prev;
+      }, {});
+
+      document.querySelectorAll('[data-annotation]').forEach((el) => {
+        const childOtherNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length;
+
+        if (!childOtherNodes) {
+          const classNames = [];
+          el = this.backTrackNestedAnnotations(el, classNames);
+          const annotationClasses = [];
+
+          // checks for duplicate class names.
+          classNames
+            .join(' ')
+            .split(' ')
+            .map((x) => annotationIds[x])
+            .filter((x) => x)
+            .reduce((prev, curr) => {
+              if (!prev[curr.value]) {
+                prev[curr.value] = true;
+                annotationClasses.push(curr);
+              }
+
+              return prev;
+            }, {});
+
+          if (annotationClasses.length) {
+            el.addEventListener('mouseenter', () => this.onMouseHover(el, annotationClasses), false);
+            el.addEventListener('mouseout', () => this.onMouseOut(), false);
+          }
+        }
+      });
+    },
+
+    backTrackNestedAnnotations(el, classNames = []) {
+      let current = el;
+
+      while (current.parentElement.getAttribute('data-annotation') && current.parentElement.childNodes.length === 1) {
+        classNames.push(current.className);
+        current = current.parentElement;
+      }
+
+      return el;
+    },
+
+    onContentUpdate(ids) {
+      try {
+        this.currentTab = this.annotationTabs[0].key;
+        this.contentIds = ids;
+        this.highlightActiveContent(this.filteredAnnotations);
+
+        this.handleTooltip();
+      } catch (err) {
+        setTimeout(() => this.onContentUpdate(ids), 100);
+      }
     },
 
     onHighlightAll() {
-      this.currentAnnotations.forEach((annotation) => this.updateToggleState(annotation, 'remove', 'add'));
-
-      this.selectedAll = true;
-      this.selectedNone = false;
+      this.filteredAnnotations.forEach(
+        (annotation) => !this.activeAnnotation[annotation.targetId]
+          && this.addAnnotation(annotation),
+      );
     },
 
     onHighlightNone() {
-      this.currentAnnotations.forEach((annotation) => this.updateToggleState(annotation, 'add', 'remove'));
-
-      this.selectedAll = false;
-      this.selectedNone = true;
+      this.filteredAnnotations.forEach(
+        (annotation) => this.activeAnnotation[annotation.targetId]
+          && this.removeAnnotation(annotation),
+      );
     },
 
-    setText(annotation) {
-      const contentType = annotation.body['x-content-type'];
-      const id = this.stripAnnotationId(annotation.target.id);
-      const textElement = document.getElementById(id);
-      let svg = null;
+    onMouseHover(el, annotationClasses) {
+      const queue = [];
 
-      try {
-        svg = this.createSVG(this.getIconName(contentType));
+      // this logic checks the child spans and classes.
+      queue.push(el);
+      let matched = false;
 
-        svg.setAttribute('id', `annotation-icon-${id}`);
-      } catch (err) {
-        svg = null;
+      while (queue.length) {
+        const popped = queue.pop();
+        if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
+          matched = true;
+        } else {
+          [...popped.children].forEach((child) => {
+            queue.push(child);
+          });
+        }
       }
 
-      if (svg) {
-        textElement.prepend(svg);
+      if (!el || !matched) {
+        return;
+      }
+
+      const tooltipEl = document.createElement('span');
+      tooltipEl.setAttribute('data-annotation-classes', `${el.className}`);
+      tooltipEl.setAttribute('class', 'annotation-tooltip');
+
+      const isMultiple = annotationClasses.length > 1;
+
+      let annotationLists = '';
+      annotationClasses.forEach((annotationList) => {
+        annotationLists += `<div class="referenced-annotation">
+        ${this.createSVG(this.getIconName(annotationList.contentType)).outerHTML}
+          <span>
+            ${annotationList.value}
+          </span>
+          </div>`;
+      });
+
+      const text = `<span class="text-body1">
+      ${!isMultiple ? `${this.$t('toolTip_Reference')}` : `${this.$t('toolTip_References')}`}:
+      </span>
+      <br>
+      <div class="text-body2">
+      ${annotationLists}
+      </div>`;
+
+      tooltipEl.innerHTML = text;
+      tooltipEl.setAttribute('id', this.getTooltipId(el));
+      window.top.el = el;
+
+      const r = el.getBoundingClientRect();
+
+      tooltipEl.style.top = `${r.y + r.height}px`;
+      tooltipEl.style.left = `${r.x}px`;
+
+      document.querySelector('body').append(tooltipEl);
+
+      setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
+    },
+
+    onMouseOut() {
+      [...document.querySelectorAll('.annotation-tooltip')].forEach((x) => x.remove());
+    },
+
+    removeIcon(annotation) {
+      const stripeId = this.stripTargetId(annotation);
+      const el = document
+        .querySelector(`svg[data-annotation-icon='${stripeId}']`);
+
+      if (el) {
+        el.remove();
       }
     },
 
-    statusCheck() {
-      const num = this.currentAnnotations.length;
-      const active = this.currentAnnotations.filter((annotation) => annotation.status === true).length;
+    removeAnnotation(annotation, level) {
+      const updated = { ...this.activeAnnotation };
+      let selector = this.stripTargetId(annotation, false);
 
-      if (num === active) {
-        this.selectedAll = false;
-        this.selectedNone = true;
-      } else if (active === 0) {
-        this.selectedAll = true;
-        this.selectedNone = false;
-      } else {
-        this.selectedAll = false;
-        this.selectedNone = false;
+      if (selector.startsWith('.')) {
+        selector = selector.replace(/\./g, '');
       }
+
+      this.updateHighlightState(selector, 'DEC', level);
+      this.removeIcon(annotation);
+      delete updated[annotation.targetId];
+      this.activeAnnotation = updated;
     },
 
     toggle(annotation) {
-      annotation.status = !annotation.status;
-
-      this.updateToggleState(annotation, 'toggle', 'toggle');
+      const exists = !!this.activeAnnotation[annotation.targetId];
+      if (exists) {
+        this.removeAnnotation(annotation);
+      } else {
+        this.addAnnotation(annotation);
+      }
     },
   },
 };
@@ -302,33 +474,92 @@ export default {
 
 <style lang="scss">
 /* not in scope to style the text */
-.annotation {
-  background-color: $grey-4;
-  border-bottom: 1px solid;
-  /**
-  * adding a linting exception here,
-  * because 1px is invalid, but needed here
-  * adding a global rule for this would introduce unnecessary error proneness
-  */
-  /* stylelint-disable */
-  margin: 0 1px;
-  padding: 1px 1px 2px 1px;
-  /* stylelint-enable */
-  white-space: nowrap;
-
-  @media (prefers-color-scheme: dark) {
-    background-color: $grey-9;
-  }
-}
-
 .annotation-disabled {
   border-bottom: 0;
+  padding-bottom: inherit;
+}
+
+.annotation-disabled-overlap {
+  border-bottom: 1px;
+  border-bottom-style: dotted !important;
   padding-bottom: inherit;
 }
 
 .annotation-disabled > svg {
   display: none;
 }
+
+*[data-annotation-level='0'] {
+  background-color: $grey-3;
+}
+
+*[data-annotation-level='1'],
+*[data-annotation-level='1'] * {
+  background-color: $blue-1;
+  border-bottom: 1px solid #000;
+}
+
+*[data-annotation-level='2'],
+*[data-annotation-level='2'] * {
+  background-color: $blue-2;
+  border-bottom: 1px solid #000;
+}
+
+*[data-annotation-level='3'],
+*[data-annotation-level='3'] * {
+  background-color: $blue-3;
+  border-bottom: 1px solid #000;
+}
+
+*[data-annotation-level='4'],
+*[data-annotation-level='4'] * {
+  background-color: $blue-4;
+  border-bottom: 1px solid #000;
+}
+
+*[data-annotation-level='5'],
+*[data-annotation-level='5'] * {
+  background-color: $blue-5;
+  border-bottom: 1px solid #000;
+}
+
+.annotation-tooltip {
+  background-color: $grey-2 !important;
+  box-shadow: $shadow-1;
+  color: #000 !important;
+  font-size: 14px;
+  left: 0;
+  opacity: 0;
+  padding: 8px;
+  position: absolute;
+  text-decoration: none !important;
+  top: 0;
+  transition: opacity 0.5s;
+  width: 240px;
+  z-index: 10000;
+}
+
+.annotation-tooltip {
+  -webkit-touch-callout: none;
+}
+
+.annotation-animated-tooltip {
+  opacity: 1;
+}
+
+.referenced-annotation {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.referenced-annotation:first-of-type {
+  padding-top: 4px;
+}
+
+.referenced-annotation:last-of-type {
+  margin-bottom: 0;
+}
+
 </style>
 
 <style lang="scss" scoped>
