@@ -3,17 +3,23 @@ export default {
     getAllElementsFromSelector(selector, arr = []) {
       const el = document.getElementById(selector);
       if (el) {
-        arr.push(el);
+        // https://www.geeksforgeeks.org/queue-data-structure/
+        const queue = [];
 
-        [...el.children].forEach((child) => {
-          arr.push(child);
-        });
+        queue.push(el);
+
+        while (queue.length) {
+          const popped = queue.pop();
+          arr.push(popped);
+          [...popped.children].forEach((child) => {
+            queue.push(child);
+          });
+        }
         return arr;
       }
 
       return [...document.querySelectorAll(`.${selector}`)];
     },
-
     getElementById(id) {
       if (!id) {
         return null;
@@ -81,8 +87,8 @@ export default {
     },
 
     replaceSelectorWithSpan(selector, root) {
-      const start = root.querySelector(`span[data-target="${selector}_start"]`);
-      const end = root.querySelector(`span[data-target="${selector}_end"]`);
+      const start = root.querySelector(`[data-target="${selector}_start"]`);
+      const end = root.querySelector(`[data-target="${selector}_end"]`);
 
       let started = false;
       let ended = false;
@@ -184,8 +190,9 @@ export default {
     stripSelector(annotation) {
       return `.${annotation.target.selector.startSelector.value
         .replace("span[data-target='", '')
-        .replace("_start']", '')
-        .replace("_end']", '')}`;
+        .replace("'", '')
+        .replace('_start]', '')
+        .replace('_end]', '')}`;
     },
 
     stripTargetId(annotation, removeDot = true) {

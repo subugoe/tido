@@ -212,6 +212,8 @@ export default {
       this.currentTab = key;
 
       this.highlightActiveContent(this.filteredAnnotations);
+
+      this.handleTooltip();
     },
 
     addAnnotation(annotation) {
@@ -239,6 +241,17 @@ export default {
 
     addIcon(element, annotation) {
       const contentType = annotation.body['x-content-type'];
+      let foundSvg = false;
+
+      [...element.children].forEach((el) => {
+        if (el.nodeName === 'svg' && el.getAttribute('data-annotation-icon')) {
+          foundSvg = true;
+        }
+      });
+
+      if (foundSvg) {
+        return;
+      }
       try {
         const svg = this.createSVG(this.getIconName(contentType));
         svg.setAttribute(
@@ -272,16 +285,6 @@ export default {
       return svg;
     },
 
-    onContentUpdate(ids) {
-      try {
-        this.currentTab = this.annotationTabs[0].key;
-        this.contentIds = ids;
-        this.highlightActiveContent(this.filteredAnnotations);
-      } catch (err) {
-        setTimeout(() => this.onContentUpdate(ids), 100);
-      }
-    },
-
     getIcon(contentType) {
       return Icons[this.getIconName(contentType)];
     },
@@ -290,6 +293,77 @@ export default {
       return this.config.annotations.types.filter(
         (annotation) => annotation.contenttype === contentType,
       )[0].icon;
+    },
+
+    getTooltipId(el) {
+      return `${el.className.split(' ').join('')}annotation-tooltip`;
+    },
+
+    handleTooltip() {
+      const annotationIds = this.filteredAnnotations.reduce((prev, curr) => {
+        let id = this.stripTargetId(curr, false);
+        if (id.startsWith('.')) {
+          id = id.replace('.', '');
+        }
+        prev[id] = {
+          value: curr.body.value,
+          contentType: curr.body['x-content-type'],
+        };
+        return prev;
+      }, {});
+
+      document.querySelectorAll('[data-annotation]').forEach((el) => {
+        const childOtherNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length;
+
+        if (!childOtherNodes) {
+          const classNames = [];
+          el = this.backTrackNestedAnnotations(el, classNames);
+          const annotationClasses = [];
+
+          // checks for duplicate class names.
+          classNames
+            .join(' ')
+            .split(' ')
+            .map((x) => annotationIds[x])
+            .filter((x) => x)
+            .reduce((prev, curr) => {
+              if (!prev[curr.value]) {
+                prev[curr.value] = true;
+                annotationClasses.push(curr);
+              }
+
+              return prev;
+            }, {});
+
+          if (annotationClasses.length) {
+            el.addEventListener('mouseenter', () => this.onMouseHover(el, annotationClasses), false);
+            el.addEventListener('mouseout', () => this.onMouseOut(), false);
+          }
+        }
+      });
+    },
+
+    backTrackNestedAnnotations(el, classNames = []) {
+      let current = el;
+
+      while (current.parentElement.getAttribute('data-annotation') && current.parentElement.childNodes.length === 1) {
+        classNames.push(current.className);
+        current = current.parentElement;
+      }
+
+      return el;
+    },
+
+    onContentUpdate(ids) {
+      try {
+        this.currentTab = this.annotationTabs[0].key;
+        this.contentIds = ids;
+        this.highlightActiveContent(this.filteredAnnotations);
+
+        this.handleTooltip();
+      } catch (err) {
+        setTimeout(() => this.onContentUpdate(ids), 100);
+      }
     },
 
     onHighlightAll() {
@@ -304,6 +378,70 @@ export default {
         (annotation) => this.activeAnnotation[annotation.targetId]
           && this.removeAnnotation(annotation),
       );
+    },
+
+    onMouseHover(el, annotationClasses) {
+      const queue = [];
+
+      // this logic checks the child spans and classes.
+      queue.push(el);
+      let matched = false;
+
+      while (queue.length) {
+        const popped = queue.pop();
+        if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
+          matched = true;
+        } else {
+          [...popped.children].forEach((child) => {
+            queue.push(child);
+          });
+        }
+      }
+
+      if (!el || !matched) {
+        return;
+      }
+
+      const tooltipEl = document.createElement('span');
+      tooltipEl.setAttribute('data-annotation-classes', `${el.className}`);
+      tooltipEl.setAttribute('class', 'annotation-tooltip');
+
+      const isMultiple = annotationClasses.length > 1;
+
+      let annotationLists = '';
+      annotationClasses.forEach((annotationList) => {
+        annotationLists += `<div class="referenced-annotation">
+        ${this.createSVG(this.getIconName(annotationList.contentType)).outerHTML}
+          <span>
+            ${annotationList.value}
+          </span>
+          </div>`;
+      });
+
+      const text = `<span class="text-body1">
+      ${!isMultiple ? `${this.$t('toolTip_Reference')}` : `${this.$t('toolTip_References')}`}:
+      </span>
+      <br>
+      <div class="text-body2">
+      ${annotationLists}
+      </div>`;
+
+      tooltipEl.innerHTML = text;
+      tooltipEl.setAttribute('id', this.getTooltipId(el));
+      window.top.el = el;
+
+      const r = el.getBoundingClientRect();
+
+      tooltipEl.style.top = `${r.y + r.height}px`;
+      tooltipEl.style.left = `${r.x}px`;
+
+      document.querySelector('body').append(tooltipEl);
+
+      setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
+    },
+
+    onMouseOut() {
+      [...document.querySelectorAll('.annotation-tooltip')].forEach((x) => x.remove());
     },
 
     removeIcon(annotation) {
@@ -392,6 +530,44 @@ export default {
   background-color: $blue-5;
   border-bottom: 1px solid #000;
 }
+
+.annotation-tooltip {
+  background-color: $grey-2 !important;
+  box-shadow: $shadow-1;
+  color: #000 !important;
+  font-size: 14px;
+  left: 0;
+  opacity: 0;
+  padding: 8px;
+  position: absolute;
+  text-decoration: none !important;
+  top: 0;
+  transition: opacity 0.5s;
+  width: 240px;
+  z-index: 10000;
+}
+
+.annotation-tooltip {
+  -webkit-touch-callout: none;
+}
+
+.annotation-animated-tooltip {
+  opacity: 1;
+}
+
+.referenced-annotation {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.referenced-annotation:first-of-type {
+  padding-top: 4px;
+}
+
+.referenced-annotation:last-of-type {
+  margin-bottom: 0;
+}
+
 </style>
 
 <style lang="scss" scoped>
