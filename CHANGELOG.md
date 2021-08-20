@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.17.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.16.1...v1.17.0) (2021-08-20)
+
+
+### Features
+
+* display nested motifs and refactors of current logic ([ce38ae6](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ce38ae6a8d7cf4c307516e175b7ea3d2d0387a60))
+* implementing hover over text to know which annotation it belongs to ([255907b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/255907b09735888615e88f2a389e0ee8016d9d8d))
+* scrolling text into view when an annotation is selected ([23d0e9d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/23d0e9d5f1d84d006469a9b30e8a25a30703fdce))
+
+
+### Bug Fixes
+
+* color for tab title and separator line in text panel ([3cb3589](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/3cb3589ca627042503336417a7061aaf867562b9))
+* remove obsolete space before the colon ([d90c938](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d90c93817009a91e9e38c4c971dacfe00f03464e))
+* search result list bug fix ([0924dbd](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0924dbd531827da1002c088079dc7b9eafca2172))
+
+
+### Styling
+
+* improve styling of annotations info hover ([9a9dbaa](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/9a9dbaac6ea37b615d6bc82de1f695962a9ea470))
+* improve tool tip content formatting ([ec5b798](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ec5b79811cfcb1b8c7b295141eff45678c892f7d))
+* just minor formatting ([01e247b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/01e247bc69eb2f745b4840717fed40c6bb0116b8))
+
+
+### Refactoring
+
+* add icons to the start of annotation in text panel ([0c12a55](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0c12a55d39e01be9dcb411335794893b4a950af0))
+* addressing review comments ([fa686eb](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/fa686eb7690e89acf0720835bf88d7be295ca879))
+* addressing review comments ([c5346ab](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c5346ab8940cddc5bc3693843882b3573a6877fc))
+* appearance of annotation references tooltip ([dbfaf94](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dbfaf94a6c334c3798900d2b72f2a4ae2b2c0f12))
+* delete project specific code ([f23ef89](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f23ef894852e06f0962f618b5313ac806f1d1301))
+* display tooltip when there is a selected item in annotation list, address review comments ([c70e5f7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c70e5f76f840a64cca67761e4582e45648b236c7))
+* minor method add  according to the data changes ([b08d1ed](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b08d1ed19d4874f6d6ddbf2b545f690a38a5b34c))
+* remove obsolete code ([4e86c8e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4e86c8e7ba2272af7729d73df5e932b64ebf4f85))
+* renamed according to review comments ([00736ca](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/00736ca3cbdfbce39750c7d9b137e2e28e59625e))
+* update logic to hove according to the new data changes ([0e8eb82](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0e8eb82689b63f824d26907dc08b97e903bdfe3e))
+* updated to display nested values in tooltip ([f6e6a50](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f6e6a50b2ebdb26d11199f54f8d326f9fde9d035))
+
+
+### Continuos Integration
+
+* remove entry point ([96a2899](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/96a2899db25a1acc6eb7891344b9adbdd0e6febb))
+* remove entry point ([1e3617c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/1e3617c4d22d0c05abc7c6c57dac6f57aff7a0ea))
+* remove entry point ([b1d9474](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b1d947469b997d3d6a9659063d16ad1bfe00e28d))
+
+
+### Chore
+
+* merge branch 'develop' into feat/[#318](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/318)-text-scroll-into-view ([21a4f3b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/21a4f3b9c28a21184e40bdd9e4058e548a1e07c9))
+* merge branch 'develop' into issue/nested-motif-refactor ([4384015](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4384015f6bc796318f0264be617962c61bf63417))
+* remove obsolete code ([9c26edd](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/9c26edd1102626c6e84162db84f2d9906a247100))
+
 ### [1.16.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.16.0...v1.16.1) (2021-08-03)
 
 
