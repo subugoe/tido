@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <q-tabs
-      v-model="activeTab"
+      v-model="activeTabContents"
       dense
       class="text-grey q-mb-sm"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -79,6 +79,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    contentindex: {
+      type: Number,
+      default: () => 0,
+    },
     fontsize: {
       type: Number,
       default: () => 16,
@@ -86,6 +90,10 @@ export default {
     manifests: {
       type: Array,
       default: () => [],
+    },
+    oncontentindexchange: {
+      type: Function,
+      default: () => null,
     },
     request: {
       type: Function,
@@ -101,7 +109,7 @@ export default {
     },
   },
   data: () => ({
-    activeTab: null,
+    activeTabContents: '',
     content: '',
     fontSizeLimits: {
       min: 14,
@@ -115,75 +123,93 @@ export default {
 
       return Object.keys(support).length && support.url !== '';
     },
+    activeTab() {
+      return this.contenturls[this.contentindex];
+    },
   },
 
   watch: {
     fontsize() {
       this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
     },
-    async activeTab(url) {
-      this.$root.$emit('update-annotation-loading', true);
+    activeTabContents(url) {
+      this.oncontentindexchange(this.contenturls.findIndex((x) => x === url));
+    },
+    activeTab: {
+      async handler(url) {
+        if (!url) {
+          return;
+        }
+        this.$root.$emit('update-annotation-loading', true);
 
-      const data = await this.request(url, 'text');
+        const data = await this.request(url, 'text');
 
-      if (this.supportType) {
-        await this.getSupport(this.manifests[0].support);
-      }
+        if (this.supportType) {
+          await this.getSupport(this.manifests[0].support);
+        }
 
-      const annotationPanelHidden = this.panels.find(
-        (x) => x.panel_label === 'Annotations' && !x.show,
-      );
+        const annotationPanelHidden = this.panels.find(
+          (x) => x.panel_label === 'Annotations' && !x.show,
+        );
 
-      const parser = new DOMParser();
-      let dom = parser.parseFromString(data, 'text/html');
-      if (!annotationPanelHidden) {
-        const spans = [
-          ...dom.querySelectorAll('[data-target]:not([value=""])'),
-        ];
+        const parser = new DOMParser();
+        let dom = parser.parseFromString(data, 'text/html');
+        if (!annotationPanelHidden) {
+          const spans = [
+            ...dom.querySelectorAll('[data-target]:not([value=""])'),
+          ];
 
-        const spanIds = [
-          ...new Set(
-            spans.map((x) => x
-              .getAttribute('data-target')
-              .replace('_start', '')
-              .replace('_end', '')),
-          ),
-        ];
+          const spanIds = [
+            ...new Set(
+              spans.map((x) => x
+                .getAttribute('data-target')
+                .replace('_start', '')
+                .replace('_end', '')),
+            ),
+          ];
 
-        spanIds.forEach((selector) => {
-          dom = this.replaceSelectorWithSpan(selector, dom);
-        });
-
-        const dataTargets = [...dom.querySelectorAll('[id]')].map((x) => x.getAttribute('id'));
-
-        dataTargets.forEach((selector) => this.addHighlightToTargetIds(selector, dom));
-      }
-      this.content = dom.documentElement.innerHTML;
-
-      const displayedAnnotations = [
-        ...dom.querySelectorAll('[data-annotation]'),
-      ]
-        .map((x) => x.getAttribute('class'))
-        .reduce((prev, curr) => {
-          (curr || '').split(' ').forEach((c) => {
-            prev[c.replace(/\./g, '')] = true;
+          spanIds.forEach((selector) => {
+            dom = this.replaceSelectorWithSpan(selector, dom);
           });
-          return prev;
-        }, {});
 
-      await this.delay(200);
+          const dataTargets = [...dom.querySelectorAll('[id]')].map((x) => x.getAttribute('id'));
 
-      this.$root.$emit('update-annotations', displayedAnnotations);
-      this.$root.$emit('update-annotation-loading', false);
+          dataTargets.forEach((selector) => this.addHighlightToTargetIds(selector, dom));
+        }
+        this.content = dom.documentElement.innerHTML;
+
+        const displayedAnnotations = [
+          ...dom.querySelectorAll('[data-annotation]'),
+        ]
+          .map((x) => x.getAttribute('class'))
+          .reduce((prev, curr) => {
+            (curr || '').split(' ').forEach((c) => {
+              prev[c.replace(/\./g, '')] = true;
+            });
+            return prev;
+          }, {});
+
+        await this.delay(200);
+
+        this.$root.$emit('update-annotations', displayedAnnotations);
+        this.$root.$emit('update-annotation-loading', false);
+      },
+      immediate: true,
     },
   },
   async created() {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
 
-    const [contentUrl] = this.contenturls;
+    const activeTab = this.contenturls[this.contentindex];
+    const [contenturls] = this.contenturls[0];
 
-    this.activeTab = contentUrl;
+    this.activeTabContents = activeTab;
+
+    if (!activeTab) {
+      this.oncontentindexchange(0);
+      this.activeTabContents = contenturls;
+    }
   },
 
   mounted() {
@@ -193,6 +219,13 @@ export default {
       if (this.supportType) {
         this.getSupport(this.manifests[index].support);
       }
+    });
+
+    const [contenturls] = this.contenturls[0];
+
+    this.$root.$on('manifest-changed', () => {
+      this.activeTabContents = contenturls;
+      this.oncontentindexchange(0);
     });
   },
   methods: {
