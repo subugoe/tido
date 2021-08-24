@@ -178,6 +178,8 @@ export default {
         }
         this.content = dom.documentElement.innerHTML;
 
+        // to improve performance, here we are trying to get candidates of annotation that are
+        // possibly be the annotation and try to match them with their respective annotations.
         const displayedAnnotations = [
           ...dom.querySelectorAll('[data-annotation]'),
         ]
