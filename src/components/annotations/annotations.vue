@@ -381,20 +381,35 @@ export default {
     },
 
     onMouseHover(el, annotationClasses) {
-      const queue = [];
+      const innerQueue = [];
 
-      // this logic checks the child spans and classes.
-      queue.push(el);
+      // this logic checks the child spans and their classes.
+      innerQueue.push(el);
       let matched = false;
 
-      while (queue.length) {
-        const popped = queue.pop();
+      while (innerQueue.length) {
+        const popped = innerQueue.pop();
         if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
           matched = true;
         } else {
           [...popped.children].forEach((child) => {
-            queue.push(child);
+            innerQueue.push(child);
           });
+        }
+      }
+
+      // this logic checks the outer spans and their classes.
+      if (!matched) {
+        const outerQueue = [];
+        outerQueue.push(el);
+
+        while (outerQueue.length) {
+          const popped = outerQueue.pop();
+          if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
+            matched = true;
+          } else if (popped.parentElement.getAttribute('data-annotation')) {
+            outerQueue.push(popped.parentElement);
+          }
         }
       }
 
