@@ -294,8 +294,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
           "toggle": true
         }
       ],
-      "rtl": false,
-      "standalone": true
+      "rtl": false
   }  </script>
 ```
 
@@ -466,12 +465,6 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     set the value to `true` if you want text to be displayed from right to left; e.g. Arabic.
 
     Defaults to `false`
-
-- **standalone**
-
-    denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
-
-  Defaults to `true`
 
 ### Configure the Panels
 

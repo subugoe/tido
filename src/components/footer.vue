@@ -8,7 +8,8 @@
         class="row justify-center items-center"
         reveal
       >
-        <Language v-if="standalone" />
+        <Language v-if="config['language-switch']" />
+
         <Color :projectcolors="projectcolors" />
         <Softwareinfo />
       </div>
@@ -29,11 +30,15 @@ export default {
     Softwareinfo,
   },
   props: {
+    config: {
+      type: Object,
+      default: () => {},
+    },
     projectcolors: {
       type: Object,
       default: () => {},
     },
-    standalone: Boolean,
+
   },
 };
 </script>
