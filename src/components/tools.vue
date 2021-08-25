@@ -5,21 +5,21 @@
       :config="config"
     />
 
-    <Color :projectcolors="projectcolors" />
+    <!-- <Color :projectcolors="projectcolors" /> -->
 
     <Softwareinfo />
   </div>
 </template>
 
 <script>
-import Color from '@/components/color.vue';
+// import Color from '@/components/color.vue';
 import Language from '@/components/language.vue';
 import Softwareinfo from '@/components/softwareinfo.vue';
 
 export default {
   name: 'Tools',
   components: {
-    Color,
+    // Color,
     Language,
     Softwareinfo,
   },
