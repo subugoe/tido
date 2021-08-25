@@ -75,6 +75,10 @@ export default {
       this.panels = newPanels;
     });
 
+    this.$root.$on('manifest-changed', () => {
+      this.panels = [...this.panels].map((tab) => ({ ...tab, tab_model: 'tab0' }));
+    });
+
     this.$root.$on('add-panel', () => {
       const newPanel = {
         id: uuidv4(),
