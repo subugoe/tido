@@ -16,7 +16,8 @@
     <q-separator inset />
 
     <q-card-section class="text-body2 text-center">
-      {{ message }}
+      <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
+      <span v-html="message" />
     </q-card-section>
   </q-card>
 </template>

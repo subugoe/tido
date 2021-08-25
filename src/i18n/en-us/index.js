@@ -18,6 +18,11 @@ export default {
   Editors: 'Editors',
   hide: 'Hide',
   Image: 'Image',
+  imageErrorMessage: 'Some images are not available outside of the VPN (Virtual Private Network)'
+  + ' of the Georg-August-University Goettingen. If you like to get access please refer to the'
+  + 'guide at <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start"'
+  + 'target="_blank"> Network Services VPN</a>.',
+  imageErrorTitle: 'No Image Available',
   imageLicense: 'Image License',
   imageNotes: 'Image Notes',
   Increase: 'Increase',
