@@ -5,21 +5,24 @@
       :config="config"
     />
 
-    <!-- <Color :projectcolors="projectcolors" /> -->
+    <Color
+      v-if="config.themes && projectColorsSet"
+      :projectcolors="projectcolors"
+    />
 
     <Softwareinfo />
   </div>
 </template>
 
 <script>
-// import Color from '@/components/color.vue';
+import Color from '@/components/color.vue';
 import Language from '@/components/language.vue';
 import Softwareinfo from '@/components/softwareinfo.vue';
 
 export default {
   name: 'Tools',
   components: {
-    // Color,
+    Color,
     Language,
     Softwareinfo,
   },
@@ -33,6 +36,11 @@ export default {
       default: () => {},
     },
     standalone: Boolean,
+  },
+  computed: {
+    projectColorsSet() {
+      return !!Object.values(this.projectcolors).some((color) => color !== null && color !== '');
+    },
   },
 };
 </script>

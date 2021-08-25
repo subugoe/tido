@@ -22,20 +22,14 @@
           >
             <q-item-section>{{ $t('default') }}</q-item-section>
           </q-item>
+
           <q-item
             v-if="projectcolors.primary && projectcolors.secondary && projectcolors.accent"
             v-close-popup
             clickable
-            @click="changeColorsTo('emo')"
+            @click="changeColorsTo('tido')"
           >
-            <q-item-section>EMo</q-item-section>
-          </q-item>
-          <q-item
-            v-close-popup
-            clickable
-            @click="changeColorsTo('unicorn')"
-          >
-            <q-item-section>Unicorn</q-item-section>
+            <q-item-section>TIDO</q-item-section>
           </q-item>
         </q-list>
       </q-menu>
@@ -61,25 +55,13 @@ export default {
   methods: {
     changeColorsTo(color) {
       if (color === 'default') {
-        if (this.projectcolors.primary && this.projectcolors.secondary && this.projectcolors.accent) {
-          colors.setBrand('primary', this.projectcolors.primary);
-          colors.setBrand('secondary', this.projectcolors.secondary);
-          colors.setBrand('accent', this.projectcolors.accent);
-        } else {
-          colors.setBrand('primary', this.$q.config.brand.primary);
-          colors.setBrand('secondary', this.$q.config.brand.secondary);
-          colors.setBrand('accent', this.$q.config.brand.accent);
-        }
-      }
-      if (color === 'emo') {
         colors.setBrand('primary', this.$q.config.brand.primary);
         colors.setBrand('secondary', this.$q.config.brand.secondary);
         colors.setBrand('accent', this.$q.config.brand.accent);
-      }
-      if (color === 'unicorn') {
-        colors.setBrand('primary', 'purple');
-        colors.setBrand('secondary', 'lightgrey');
-        colors.setBrand('accent', 'hotpink');
+      } else if (color === 'tido' && this.projectcolors.primary && this.projectcolors.secondary && this.projectcolors.accent) {
+        colors.setBrand('primary', this.projectcolors.primary);
+        colors.setBrand('secondary', this.projectcolors.secondary);
+        colors.setBrand('accent', this.projectcolors.accent);
       }
     },
   },
