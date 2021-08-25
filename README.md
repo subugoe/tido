@@ -200,100 +200,102 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   <script id="tido-config" type="application/json">
   {
     "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
-    "annotations": {
-      "types": [
+      "annotations": {
+        "show": true,
+        "types": [
+          {
+            "contenttype": "Person",
+            "icon": "fasUser",
+            "label": "Names"
+          },
+          {
+            "contenttype": "Place",
+            "icon": "fasMapMarkerAlt",
+            "label": "Places"
+          },
+          {
+            "contenttype": "Editorial Comment",
+            "icon": "fasComment",
+            "label": "Comments"
+          },
+          {
+            "contenttype": "Motif",
+            "icon": "fasHighlighter",
+            "label": "Motifs"
+          }
+        ],
+        "tabs":{
+          "Editorial": ["Person", "Place", "Editorial Comment"],
+          "Motif": ["Motif"]
+        }
+      },
+      "breadcrumbNavigation": {
+        "show": true,
+        "title_homepage_key": "title_homepage",
+        "title_viewer_key": "title_viewer",
+        "website": "https://ahikar.sub.uni-goettingen.de/website/"
+      },
+      "colors": {
+        "primary": "",
+        "secondary": "",
+        "accent": ""
+      },
+      "header_section": {
+        "show": true,
+        "navigation": true,
+        "panelheadings": true,
+        "titles": true,
+        "toggle": true
+      },
+      "labels": {
+        "item": "Sheet",
+        "manifest": "Manuscript"
+      },
+      "lang": "de-de",
+      "language-switch": true,
+      "meta": {
+        "collection": {
+          "all": true
+        },
+        "manifest": {
+          "all": true
+        },
+        "item": {
+          "all": true
+        }
+      },
+      "notificationColors": {
+        "info":"blue-9",
+        "warning":"red-9"
+      },
+      "panels": [
         {
-          "contenttype": "Person",
-          "icon": "fasUser",
-          "label": "Names"
+          "connector": [1, 2],
+          "panel_label": "contentsMetadata",
+          "show": true,
+          "toggle": true
         },
         {
-          "contenttype": "Place",
-          "icon": "fasMapMarkerAlt",
-          "label": "Places"
+          "connector": [3],
+          "panel_label": "Image",
+          "show": true,
+          "toggle": true
         },
         {
-          "contenttype": "Editorial Comment",
-          "icon": "fasComment",
-          "label": "Comments"
+          "connector": [4],
+          "panel_label": "Text",
+          "show": true,
+          "toggle": true
         },
         {
-          "contenttype": "Motif",
-          "icon": "fasHighlighter",
-          "label": "Motifs"
+          "connector": [5],
+          "panel_label": "Annotations",
+          "show": true,
+          "toggle": true
         }
       ],
-      "tabs": {
-        "Editorial": ["Person", "Place", "Editorial Comment"],
-        "Motif": ["Motif"]
-      }
-    },
-    "colors": {
-      "primary": "",
-      "secondary": "",
-      "accent": ""
-    },
-    "header_section": {
-      "show": true,
-      "navigation": true,
-      "panelheadings": true,
-      "titles": true,
-      "toggle": true
-    },
-    "labels": {
-      "item": "Sheet",
-      "manifest": "Manuscript"
-    },
-    "meta": {
-      "collection": {
-        "all": true
-      },
-      "manifest": {
-        "all": true
-      },
-      "item": {
-        "all": true
-      }
-    },
-    "notificationColors": {
-      "info":"blue-9",
-      "warning":"red-9"
-    },
-    "panels": [
-      {
-        "connector": [1, 2],
-        "panel_label": "Contents & Meta",
-        "show": true,
-        "toggle": true
-      },
-      {
-        "connector": [3],
-        "panel_label": "Image",
-        "show": true,
-        "toggle": true
-      },
-      {
-        "connector": [4],
-        "panel_label": "Text",
-        "show": true,
-        "toggle": true
-      },
-      {
-        "connector": [5],
-        "panel_label": "Annotations",
-        "show": true,
-        "toggle": true
-      }
-    ],
-    "rtl": false,
-    "lang": "en-us",
-    "standalone": true,
-    "breadcrumbNavigation": {
-      "show": true,
-      "title_homepage_key": "title_homepage",
-      "title_viewer_key": "title_viewer",
-      "website": "https://ahikar.sub.uni-goettingen.de"
-    }
+      "rtl": false,
+      "standalone": true
   }  </script>
 ```
 
@@ -346,6 +348,34 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   ```
 
   **Note**: The strings contained within the group label keys (e.g. *Person*, *Place*, ...) have to match its API-counterpart explicitely. Please refer to the note above (content-type).
+
+- **breadcrumbNavigation**
+
+  - **show**
+
+    defines if a project header should be shown or not.
+
+    Defaults to `false`
+
+  - **title_homepage_key**
+
+    defines the string shown as first item in the breadcrumb. Shows a "Home Icon"
+
+    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_homepage".
+
+    Has to be set!
+
+  - **title_viewer_key**
+
+    defines the string shown as last item in the breadcrumb. Shows a "Document Icon"
+
+    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_viewer".
+
+    Has to be set!
+
+  - **website**
+
+    Navigates to the Home Page page on website.
 
 - **colors**
 
@@ -403,6 +433,20 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
       Defaults to `Manuscript`
 
+- **lang (language)**
+
+  refers to the default language of the application.
+
+  set the value to `de-de` if you would like to turn the viewer into "German" language by default.
+
+  Defaults to `en-us`
+
+- **language-switch**
+
+  set this value to `false` if you don't want to switch the language. this setting hides the appropriate toggle.
+
+  Defaults to `true`
+
 - **notificationColors**
 
   sets the colors used in frontend to apply for icons in notification messages.
@@ -423,47 +467,11 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
     Defaults to `false`
 
-- **lang (language)**
-
-  refers to the default language of the application.
-
-  set the value to `de-de` if you would like to turn the viewer into "German" language by default.
-
-  Defaults to `en-us`
-
 - **standalone**
 
     denotes if the Viewer will be used as a single page application or if it will be embedded into an existing page. If you want to use it in the latter case, please toggle the value to `false`. That way the language toggle in the footer section will not show up.
 
   Defaults to `true`
-
-- **breadcrumbNavigation**
-
-  - **show**
-
-    defines if a project header should be shown or not.
-
-    Defaults to `false`
-
-  - **title_homepage_key**
-
-    defines the string shown as first item in the breadcrumb. Shows a "Home Icon"
-
-    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_homepage".
-
-    Has to be set!
-
-  - **title_viewer_key**
-
-    defines the string shown as last item in the breadcrumb. Shows a "Document Icon"
-
-    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_viewer".
-
-    Has to be set!
-
-  - **website**
-
-    Navigates to the Home Page page on website.
 
 ### Configure the Panels
 

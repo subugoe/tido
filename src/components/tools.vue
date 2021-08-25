@@ -1,7 +1,7 @@
 <template>
   <div class="row no-wrap justify-end col-xs-3">
     <Language
-      v-if="standalone"
+      v-if="standalone && config['language-switch']"
       :config="config"
     />
 
