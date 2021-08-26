@@ -23,7 +23,6 @@
         <Tools
           :config="config"
           :projectcolors="projectcolors"
-          :standalone="standalone"
         />
       </q-toolbar>
 
@@ -50,7 +49,6 @@
             <Tools
               :config="config"
               :projectcolors="projectcolors"
-              :standalone="standalone"
             />
           </div>
         </q-toolbar>
@@ -112,7 +110,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    standalone: Boolean,
   },
 };
 </script>
