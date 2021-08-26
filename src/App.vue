@@ -23,6 +23,7 @@
         :annotations="annotations"
         :collection="collection"
         :config="config"
+        :contentindex="contentindex"
         :contenttypes="contentTypes"
         :contenturls="contentUrls"
         :fontsize="fontsize"
@@ -31,6 +32,7 @@
         :item="item"
         :labels="config.labels"
         :manifests="manifests"
+        :oncontentindexchange="oncontentindexchange"
         :panels="panels"
         :request="request"
         :tree="tree"
@@ -61,6 +63,7 @@ export default {
       collection: {},
       collectiontitle: '',
       config: {},
+      contentindex: 0,
       contentTypes: [],
       contentUrls: [],
       fontsize: 16,
@@ -253,7 +256,16 @@ export default {
         .then((data) => {
           this.item = data;
 
+          const previousManifest = (this.contentUrls[0] || '').split('/').pop().split('-')[0];
+
           this.contentUrls = this.getContentUrls(data.content);
+
+          const currentManifest = this.contentUrls[0].split('/').pop().split('-')[0];
+
+          if (previousManifest !== currentManifest) {
+            this.$root.$emit('manifest-changed');
+          }
+
           this.imageurl = data.image.id || '';
 
           if (data.annotationCollection) {
@@ -401,6 +413,10 @@ export default {
       return this.config.entrypoint.match(/collection.json\s?$/)
         ? this.getCollection(this.config.entrypoint)
         : this.getManifest(this.config.entrypoint);
+    },
+
+    oncontentindexchange(index) {
+      this.contentindex = index;
     },
 
     onItemUrlChange() {

@@ -93,6 +93,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    contentindex: {
+      type: Number,
+      default: () => 0,
+    },
     contenttypes: {
       type: Array,
       default: () => [],
@@ -124,6 +128,10 @@ export default {
     manifests: {
       type: Array,
       default: () => [],
+    },
+    oncontentindexchange: {
+      type: Function,
+      default: () => null,
     },
     panels: {
       type: Array,

@@ -11,6 +11,7 @@
       <q-tab
         v-for="annotationTab in annotationTabs"
         :key="annotationTab.key"
+        :class="{'disabled-tab': annotationTab.key === currentTab}"
         :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
         @click="activeTab(annotationTab.key, annotationTab.type)"
@@ -111,8 +112,7 @@ export default {
           key,
           collectionTitle: key,
           type,
-        }))
-        .filter((el) => this.annotations.find((x) => el.type.includes(x.body['x-content-type'])));
+        }));
     },
     annotationTabConfig() {
       return this.config?.annotations?.tabs || {};
@@ -196,9 +196,15 @@ export default {
     },
   },
   mounted() {
+    this.currentTab = this.annotationTabs?.[0].key;
+
     this.$root.$on('update-annotations', this.onContentUpdate);
     this.$root.$on('update-annotation-loading', (isProcessing) => {
       this.isProcessing = !!isProcessing;
+    });
+
+    this.$root.$on('manifest-changed', () => {
+      this.currentTab = this.annotationTabs?.[0].key;
     });
   },
   methods: {
@@ -356,7 +362,6 @@ export default {
 
     onContentUpdate(ids) {
       try {
-        this.currentTab = this.annotationTabs[0].key;
         this.contentIds = ids;
         this.highlightActiveContent(this.filteredAnnotations);
 
@@ -575,5 +580,9 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
+}
+
+.disabled-tab {
+  pointer-events: none;
 }
 </style>
