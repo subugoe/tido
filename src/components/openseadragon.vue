@@ -1,5 +1,17 @@
 <template>
+  <div
+    v-if="errormessage"
+    class="q-pa-sm"
+  >
+    <Notification
+      :message="$t(messages.none)"
+      :notification-colors="config.notificationColors"
+      title-key="imageErrorTitle"
+      type="warning"
+    />
+  </div>
   <figure
+    v-else
     id="openseadragon"
     class="item"
   >
@@ -35,9 +47,22 @@ import {
   fasCompressArrowsAlt,
 } from '@quasar/extras/fontawesome-v5';
 
+import Notification from '@/components/notification.vue';
+
 export default {
   name: 'OpenSeadragon',
+  components: {
+    Notification,
+  },
   props: {
+    config: {
+      type: Object,
+      default: () => {},
+    },
+    errormessage: {
+      type: Boolean,
+      default: () => false,
+    },
     imageurl: {
       type: String,
       default: () => '',
@@ -63,9 +88,16 @@ export default {
         homeButton: 'default',
         fullPageButton: 'fullscreen',
       },
+      messages: {
+        none: 'imageErrorMessage',
+      },
     };
   },
   mounted() {
+    if (this.errormessage) {
+      return;
+    }
+
     const viewer = new OpenSeadragon.Viewer(this.options);
     viewer.controlsFadeDelay = 1000;
 

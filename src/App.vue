@@ -25,6 +25,7 @@
         :contentindex="contentindex"
         :contenttypes="contentTypes"
         :contenturls="contentUrls"
+        :errormessage="errormessage"
         :fontsize="fontsize"
         :imageurl="imageurl"
         :isloading="isLoading"
@@ -65,6 +66,7 @@ export default {
       contentindex: 0,
       contentTypes: [],
       contentUrls: [],
+      errormessage: false,
       fontsize: 16,
       imageurl: '',
       isCollection: false,
@@ -270,6 +272,18 @@ export default {
           if (data.annotationCollection) {
             this.getAnnotations(data.annotationCollection);
           }
+
+          fetch(this.imageurl).then((response) => {
+            if (response.status === 200 || response.status === 201) {
+              this.errormessage = false;
+            } else {
+              // for vpn error.
+              this.errormessage = true;
+            }
+          }).catch(() => {
+            // for CORS error.
+            this.errormessage = true;
+          });
         });
     },
     /**
