@@ -1,7 +1,7 @@
 <template>
   <div class="row no-wrap justify-end col-xs-3">
     <Language
-      v-if="standalone"
+      v-if="config['language-switch']"
       :config="config"
     />
 
@@ -35,7 +35,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    standalone: Boolean,
   },
   computed: {
     projectColorsSet() {
