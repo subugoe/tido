@@ -399,6 +399,11 @@ export default {
         },
         selectable: false,
       });
+
+      if (this.manifests?.[0]?.sequence?.[0]?.id && !this.$route.query.itemurl) {
+        this.loaded = false;
+        this.$router.push({ query: { ...this.$route.query, itemurl: this.manifests?.[0]?.sequence?.[0]?.id } });
+      }
     },
     /**
       * caller: *getItemUrls()*
