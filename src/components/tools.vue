@@ -8,6 +8,7 @@
     <Color
       v-if="config.themes && projectColorsSet"
       :projectcolors="projectcolors"
+      :config="config"
     />
 
     <Softwareinfo />
@@ -38,7 +39,7 @@ export default {
   },
   computed: {
     projectColorsSet() {
-      return !!Object.values(this.projectcolors).some((color) => color !== null && color !== '');
+      return !!Object.values(this.projectcolors).every((color) => color !== null && color !== '');
     },
   },
 };
