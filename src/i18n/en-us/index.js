@@ -60,7 +60,7 @@ export default {
   Text: 'Text',
   Textsize: 'Textsize',
   Title: 'Title',
-  title_homepage: 'The Syriac, Arabic, and Karshuni Ahiqar Texts',
+  title_homepage: 'The Story of Ahiqar in its Syriac and Arabic Tradition',
   title_viewer: 'Edition Viewer',
   toolTip_Reference: 'Referenced Annotation',
   toolTip_References: 'Referenced Annotations',
