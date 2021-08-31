@@ -5,7 +5,11 @@
       :config="config"
     />
 
-    <Color :projectcolors="projectcolors" />
+    <Color
+      v-if="config.themes && projectColorsSet"
+      :projectcolors="projectcolors"
+      :config="config"
+    />
 
     <Softwareinfo />
   </div>
@@ -31,6 +35,11 @@ export default {
     projectcolors: {
       type: Object,
       default: () => {},
+    },
+  },
+  computed: {
+    projectColorsSet() {
+      return !!Object.values(this.projectcolors).every((color) => color !== null && color !== '');
     },
   },
 };

@@ -16,26 +16,16 @@
       >
         <q-list>
           <q-item
+            v-for="theme in themes"
+            :key="theme.value"
             v-close-popup
             clickable
-            @click="changeColorsTo('default')"
+            :class="{'theme': selectedTheme === theme.value}"
+            @click="changeColorsTo(theme.value)"
           >
-            <q-item-section>{{ $t('default') }}</q-item-section>
-          </q-item>
-          <q-item
-            v-if="projectcolors.primary && projectcolors.secondary && projectcolors.accent"
-            v-close-popup
-            clickable
-            @click="changeColorsTo('emo')"
-          >
-            <q-item-section>EMo</q-item-section>
-          </q-item>
-          <q-item
-            v-close-popup
-            clickable
-            @click="changeColorsTo('unicorn')"
-          >
-            <q-item-section>Unicorn</q-item-section>
+            <q-item-section>
+              {{ theme.label }}
+            </q-item-section>
           </q-item>
         </q-list>
       </q-menu>
@@ -50,36 +40,42 @@ import { fasPalette } from '@quasar/extras/fontawesome-v5';
 export default {
   name: 'Color',
   props: {
+    config: {
+      type: Object,
+      default: () => {},
+    },
     projectcolors: {
       type: Object,
       required: true,
     },
+  },
+  data: () => ({
+    themes: [
+      { label: 'Default', value: 'default' },
+      { label: 'TIDO', value: 'tido' },
+    ],
+    selectedTheme: '',
+  }),
+  mounted() {
+    if (this.config.themes) {
+      this.selectedTheme = 'tido';
+    }
   },
   created() {
     this.fasPalette = fasPalette;
   },
   methods: {
     changeColorsTo(color) {
+      this.selectedTheme = color;
+
       if (color === 'default') {
-        if (this.projectcolors.primary && this.projectcolors.secondary && this.projectcolors.accent) {
-          colors.setBrand('primary', this.projectcolors.primary);
-          colors.setBrand('secondary', this.projectcolors.secondary);
-          colors.setBrand('accent', this.projectcolors.accent);
-        } else {
-          colors.setBrand('primary', this.$q.config.brand.primary);
-          colors.setBrand('secondary', this.$q.config.brand.secondary);
-          colors.setBrand('accent', this.$q.config.brand.accent);
-        }
-      }
-      if (color === 'emo') {
         colors.setBrand('primary', this.$q.config.brand.primary);
         colors.setBrand('secondary', this.$q.config.brand.secondary);
         colors.setBrand('accent', this.$q.config.brand.accent);
-      }
-      if (color === 'unicorn') {
-        colors.setBrand('primary', 'purple');
-        colors.setBrand('secondary', 'lightgrey');
-        colors.setBrand('accent', 'hotpink');
+      } else if (color === 'tido' && this.projectcolors.primary && this.projectcolors.secondary && this.projectcolors.accent) {
+        colors.setBrand('primary', this.projectcolors.primary);
+        colors.setBrand('secondary', this.projectcolors.secondary);
+        colors.setBrand('accent', this.projectcolors.accent);
       }
     },
   },
@@ -91,5 +87,9 @@ export default {
   @media (prefers-color-scheme: dark) {
     display: none;
   }
+}
+
+.theme {
+  background-color: $grey-5;
 }
 </style>
