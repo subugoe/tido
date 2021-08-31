@@ -2,6 +2,59 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.18.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.17.0...v1.18.0) (2021-08-31)
+
+
+### Features
+
+* displaying error message for images when there is no vpn ([39e7461](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/39e7461d19b973d8c7101fd91739705ab9c82c97))
+* implement config option for the language switch ([91add1c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/91add1c0fa50b9319fd277b84ee493313b19c497))
+* make the theme switch toggleable ([72326cf](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/72326cf250e8823a9b0c9346c2d7c8739a9e5253))
+* when changing sheet the selected tab remains open ([b263c29](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b263c29c7e676e3c9dad03058e7af2e13e488ef2))
+
+
+### Bug Fixes
+
+* displaying tido with single manifest ([b92a445](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b92a445a602358ba022bc47db5e053d9d3885930))
+* hover over tooltip for outer spans and it's selected text ([b455cf4](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b455cf4386a420aae69ef77d26a923ff89eb8662))
+* revert the conf option in regards to the review comment ([2d14d59](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2d14d592c50fb679a2a3a5b060fe4413d7cb0cf2)), closes [/gitlab.gwdg.de/subugoe/emo/tido/-/merge_requests/217#note_375950](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/note_375950)
+
+
+### Styling
+
+* just syntax fixes according to linter ([f727765](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f7277652e081dec13f3e401f73972d7019441c48))
+
+
+### Chore
+
+* delete the footer component (according to review) ([c12f581](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c12f5816ca996e0ebf9accb52dc9f34fa670b0d6)), closes [/gitlab.gwdg.de/subugoe/emo/tido/-/merge_requests/215#note_375185](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/note_375185)
+* merge latest changes from develop ([8b0c87d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8b0c87dd0e29e279c5bf73a7182d929cc3696348))
+* set default value to `true` ([56338a5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/56338a55953721b223d7d01af78a36cebc10469e))
+
+
+### Docs
+
+* modified title according to stake holders requirement ([73edc36](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/73edc36a05ae39a9b449b45d782118ed6712b6b5))
+
+
+### Refactoring
+
+* adding a comment to function ([5c74208](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5c74208e865ecac6ad99357b45e992c58260c555))
+* delete legacy code (standalone) as agreed upon in today's refinement ([26071d5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/26071d5c941ffe5c04e373d43737e83edbfd1889))
+* switch off the color theme toggle. it's already configurable via index file ([fbcc6c8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/fbcc6c8171a6f8d31e9749933c3ea8785eb743dd))
+* updated color check method and refactored display of list item ([00d44e4](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/00d44e4573ec4c45dfa6b6decde9e8d7a0285376))
+
+
+### Continuos Integration
+
+* remove entry point ([3802c0e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/3802c0e3abddb846705f1259b99c69af57c285a0))
+* remove entry point ([5ce146f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5ce146fc35ca27e15bd9d7448a0d45d229de4884))
+* remove entry point ([24406ae](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/24406ae1262398a09408ac52bc36de3ef109a50a))
+* remove entry point ([0eb94db](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0eb94dba0d98fb627f059c9552a2004cfbad8fce))
+* remove entry point ([bb23eee](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/bb23eeea8f670f4345fafc0bb338c093af0d3b66))
+* remove entry point ([8dbca9c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8dbca9cbf46477e2e95b91c1ab2ddc4cd5c6714c))
+* remove entry point ([de6bd9a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/de6bd9a5a126acbf68f36ed495c99a48b65a9b05))
+
 ## [1.17.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.16.1...v1.17.0) (2021-08-20)
 
 
