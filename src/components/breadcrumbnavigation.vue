@@ -34,7 +34,7 @@
         >
           <a
             :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
-            :href="`${redirectUrl}search.html?searchTerm=${searchTerm}`"
+            :href="`${redirectUrl}search.html?searchTerm=${searchTerm}&page=${page}`"
             class="header-links"
           >
             <q-icon
@@ -75,6 +75,9 @@ export default {
     },
     searchTerm() {
       return this.$route.query.searchTerm;
+    },
+    page() {
+      return this.$route.query.page || 1;
     },
   },
   created() {
