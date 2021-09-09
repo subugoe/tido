@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.19.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.18.0...v1.19.0) (2021-09-09)
+
+
+### Features
+
+* adding a method to get page numbers navigating from search ([3eefaf5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/3eefaf5d6a98234201ffe8983f45fd8d58757bcc))
+
 ## [1.18.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.17.0...v1.18.0) (2021-08-31)
 
 
