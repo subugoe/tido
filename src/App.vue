@@ -466,7 +466,7 @@ export default {
       const treeDom = document.getElementById(this.itemurl);
 
       if (treeDom) {
-        treeDom.scrollIntoView();
+        treeDom.scrollIntoView({ block: 'center' });
       }
 
       // NOTE: Set imageurl to an empty string. Otherwise, if there is no corresponding image,

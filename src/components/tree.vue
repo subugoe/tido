@@ -8,6 +8,7 @@
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       :selected.sync="selected"
+      :style="`max-height:${height}px`"
     >
       <template
         #default-body="{node}"
@@ -53,6 +54,7 @@ export default {
   data() {
     return {
       expanded: [],
+      height: 0,
       selected: null,
       sequenceindex: 0,
     };
@@ -61,6 +63,8 @@ export default {
     this.fasCaretRight = fasCaretRight;
   },
   mounted() {
+    this.handleTreePanelHeight();
+
     // select tree node
     this.selected = treestore.state.selectedItemTree || this.manifests[0].sequence[0].id;
 
@@ -96,6 +100,15 @@ export default {
         this.expanded.push(label);
       }
     });
+  },
+  methods: {
+    handleTreePanelHeight() {
+      const el = document.querySelector('.item-content');
+
+      if (el && this.height !== el.clientHeight) {
+        this.height = el.clientHeight;
+      }
+    },
   },
 };
 </script>
