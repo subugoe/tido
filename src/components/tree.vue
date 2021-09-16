@@ -8,7 +8,6 @@
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       :selected.sync="selected"
-      :style="treeStyle"
     >
       <template
         #default-body="{node}"
@@ -59,17 +58,10 @@ export default {
       sequenceindex: 0,
     };
   },
-  computed: {
-    treeStyle() {
-      return `max-height:${this.height}px;`;
-    },
-  },
   created() {
     this.fasCaretRight = fasCaretRight;
   },
   mounted() {
-    this.handleTreePanelHeight();
-
     // select tree node
     this.selected = treestore.state.selectedItemTree || this.manifests[0].sequence[0].id;
 
@@ -106,15 +98,6 @@ export default {
       }
     });
   },
-  methods: {
-    handleTreePanelHeight() {
-      const el = document.querySelector('.item-content');
-
-      if (el && this.height !== el.clientHeight) {
-        this.height = el.clientHeight - (document.querySelector('.tabs-container')?.clientHeight || 0); // Tab spacing height.
-      }
-    },
-  },
 };
 </script>
 
@@ -123,6 +106,7 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
+  height: 100%;
 }
 
 .item-content {
@@ -130,5 +114,9 @@ export default {
   flex: 0 0 auto;
   flex-direction: column;
   overflow: auto;
+}
+
+.q-tree {
+  height: 100%;
 }
 </style>
