@@ -8,7 +8,7 @@
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       :selected.sync="selected"
-      :style="`max-height:${height}px`"
+      :style="treeStyle"
     >
       <template
         #default-body="{node}"
@@ -59,6 +59,11 @@ export default {
       sequenceindex: 0,
     };
   },
+  computed: {
+    treeStyle() {
+      return `max-height:${this.height}px;`;
+    },
+  },
   created() {
     this.fasCaretRight = fasCaretRight;
   },
@@ -106,7 +111,7 @@ export default {
       const el = document.querySelector('.item-content');
 
       if (el && this.height !== el.clientHeight) {
-        this.height = el.clientHeight;
+        this.height = el.clientHeight - (document.querySelector('.tabs-container')?.clientHeight || 0); // Tab spacing height.
       }
     },
   },
