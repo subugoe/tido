@@ -105,6 +105,7 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
+  height: 100%;
 }
 
 .item-content {
@@ -112,5 +113,9 @@ export default {
   flex: 0 0 auto;
   flex-direction: column;
   overflow: auto;
+}
+
+.q-tree {
+  height: 100%;
 }
 </style>
