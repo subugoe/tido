@@ -279,15 +279,25 @@ export default {
     async loadFont(url) {
       let style = 'normal';
       let weight = 'normal';
+      let fontFamily;
 
       if (url.endsWith('italic.woff')) {
+        fontFamily = 'SertoJerusalemItalic';
         style = 'italic';
       }
       if (url.endsWith('bold.woff')) {
+        fontFamily = 'SertoJerusalemBold';
         weight = 700; // https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-weight
       }
+      if (url.endsWith('syrcomedessa.woff')) {
+        fontFamily = 'Estrangelo Edessa';
+      }
+      if (url.endsWith('syrcomjerusalem.woff')) {
+        fontFamily = 'Serto Jerusalem';
+      }
 
-      const fontFace = new FontFace('tido', `url(${url})`, { style, weight }); // 'tido' or any family name to represent fonts
+      const fontFace = new FontFace(fontFamily, `url(${url})`, { style, weight });
+
       const loadedFont = await fontFace.load();
 
       document.fonts.add(loadedFont);
