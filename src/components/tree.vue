@@ -53,7 +53,6 @@ export default {
   data() {
     return {
       expanded: [],
-      height: 0,
       selected: null,
       sequenceindex: 0,
     };
