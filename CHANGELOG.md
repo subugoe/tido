@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.19.0...v1.19.1) (2021-09-17)
+
+
+### Bug Fixes
+
+* minor typo ([8f95424](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8f9542411a57fb51d45fd2af4902b1787d56dd25))
+* refactor logic to display font styles ([ee61e54](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ee61e54a8509021f3f1442607ba228c5327d605b))
+
+
+### Refactoring
+
+* addressing review comments ([50d4c5f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/50d4c5f998281755adf8a5d8e5452b890cd6edde))
+* anchoring manifest title to top ([c59f273](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c59f273766052ad99c9d5882d08aa574530c5bb6))
+* remove redundant value ([1bd6dfe](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/1bd6dfe8dcbed3ce065f1a093898950e766e01fd))
+* remove unnecessary code and modify styles ([3a3cc94](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/3a3cc948b390caa5c29d2c41c962a6a2c3ee4623))
+
+
+### Continuos Integration
+
+* remove entry point ([59af81b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/59af81b4ff95f267719322f48cad4208e911cb9f))
+* remove entry point ([a9ca685](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/a9ca68516fb6b10338058c2c4bf79cfe9439df4e))
+
 ## [1.19.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.18.0...v1.19.0) (2021-09-09)
 
 
