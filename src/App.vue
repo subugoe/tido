@@ -267,23 +267,24 @@ export default {
             this.$root.$emit('manifest-changed');
           }
 
-          this.imageurl = data.image.id || '';
-
           if (data.annotationCollection) {
             this.getAnnotations(data.annotationCollection);
           }
 
-          fetch(this.imageurl).then((response) => {
-            if (response.status === 200 || response.status === 201) {
-              this.errormessage = false;
-            } else {
-              // for vpn error.
+          if (data.image) {
+            this.imageurl = data.image.id || '';
+            fetch(this.imageurl).then((response) => {
+              if (response.status === 200 || response.status === 201) {
+                this.errormessage = false;
+              } else {
+                // for vpn error.
+                this.errormessage = true;
+              }
+            }).catch(() => {
+              // for CORS error.
               this.errormessage = true;
-            }
-          }).catch(() => {
-            // for CORS error.
-            this.errormessage = true;
-          });
+            });
+          }
         });
     },
     /**
