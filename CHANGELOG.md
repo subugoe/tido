@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.19.1...v1.19.2) (2021-09-20)
+
+
+### Bug Fixes
+
+* check if image key is present at API response ([8427dc8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8427dc8387028b39a165235f75e3ff929651747f))
+
 ### [1.19.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.19.0...v1.19.1) (2021-09-17)
 
 
