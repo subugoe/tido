@@ -16,14 +16,16 @@ export default {
   Editor: 'Herausgeber',
   Editorial: 'Editorisch',
   Editors: 'Herausgeber',
+  defaultError: 'Etwas ist schiefgelaufen. Bitte versuchen Sie es später nochmal.',
   hide: 'Verstecke',
   Image: 'Digitalisat',
-  imageErrorMessage: 'Einige Bilder stehen Ihnen außerhalb des Netzwerks der'
+  imageErrorMessageVPN: 'Einige Bilder stehen Ihnen außerhalb des Netzwerks der'
   + ' Georg-August-Universität Göttingen nicht ohne VPN-Zugang zur Verfügung. '
   + 'Wenn Sie Zugang erhalten möchten, nutzen Sie bitte die Anleitung der GWDG zum'
   + ' <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start"'
   + 'target="_blank"> Netzwerk-Service VPN</a>.',
-  imageErrorTitle: 'Keine Bild Verfügbar',
+  imageErrorMessageNotExists: 'Für diese Seite existiert noch kein Bild.',
+  imageErrorTitle: 'Kein Bild verfügbar',
   imageLicense: 'Bildlizenz',
   imageNotes: 'Bildnotizen',
   Increase: 'Vergrössern',
