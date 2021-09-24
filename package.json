@@ -1,7 +1,7 @@
 {
   "name": "@subugoe/tido",
   "version": "1.19.2",
-  "description": "Text vIever for Digital Objects",
+  "description": "Text Viewer for Digital Objects (TIDO)",
   "productName": "TIDO",
   "keywords": [
     "openseadragon",
