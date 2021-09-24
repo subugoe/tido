@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.20.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.19.2...v1.20.0) (2021-09-24)
+
+
+### Features
+
+* add new error strings for images ([ee1d5e6](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ee1d5e6f79c2fc0d8cef2e6e70d67382919b145d)), closes [#339](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/339)
+* add second image error message type ([07f5268](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/07f5268780171463c95284e7b9e92cf7eafad2d3))
+
+
+### Chore
+
+* change package description ([7ab858e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7ab858e05b10bb80f762574567a07e388219f8d8))
+* improve wording ([d28a51f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d28a51f465ca64bc074f64559979d6460ad4c2a3))
+
 ### [1.19.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.19.1...v1.19.2) (2021-09-20)
 
 
