@@ -12,7 +12,7 @@ export default {
   Decrease: 'Decrease',
   default: 'Default',
   defaultView: 'Reset panels to default view',
-  defaultError: 'Something went wrong. Please try again later.',
+  defaultError: 'Something went wrong. Please relaod the page/application and/or try again later.',
   Description: 'Description',
   Editor: 'Editor',
   Editorial: 'Editorial',

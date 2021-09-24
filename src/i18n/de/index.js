@@ -16,11 +16,11 @@ export default {
   Editor: 'Herausgeber',
   Editorial: 'Editorisch',
   Editors: 'Herausgeber',
-  defaultError: 'Etwas ist schiefgelaufen. Bitte versuchen Sie es später nochmal.',
+  defaultError: 'Es ist ein Fehler aufgetreten. Bitte laden sie die App/Seite erneut und/oder versuchen Sie es später zu einem späteren Zeitpunkt noch mal.',
   hide: 'Verstecke',
   Image: 'Digitalisat',
   imageErrorMessageVPN: 'Einige Bilder stehen Ihnen außerhalb des Netzwerks der'
-  + ' Georg-August-Universität Göttingen nicht ohne VPN-Zugang zur Verfügung. '
+  + ' Georg-August-Universität Göttingen ohne VPN-Zugang nicht zur Verfügung. '
   + 'Wenn Sie Zugang erhalten möchten, nutzen Sie bitte die Anleitung der GWDG zum'
   + ' <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start"'
   + 'target="_blank"> Netzwerk-Service VPN</a>.',
@@ -53,12 +53,12 @@ export default {
   osdZoomout: 'Verkleinern',
   'Place of origin': 'Herkunftsort',
   prev: 'Vorh.',
-  projectInfo: 'Projekt info',
+  projectInfo: 'Projekt Informationen',
   Reset: 'Zurücksetzen',
   search: 'Suche',
   Sheet: 'Seite',
   show: 'Zeige',
-  showHidePanels: 'Panels ein- / ausblenden',
+  showHidePanels: 'Panels ein-/ausblenden',
   Tabs: 'Reiter',
   Text: 'Text',
   Textsize: 'Textgrösse',
