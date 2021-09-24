@@ -12,16 +12,18 @@ export default {
   Decrease: 'Decrease',
   default: 'Default',
   defaultView: 'Reset panels to default view',
+  defaultError: 'Something went wrong. Please relaod the page/application and/or try again later.',
   Description: 'Description',
   Editor: 'Editor',
   Editorial: 'Editorial',
   Editors: 'Editors',
   hide: 'Hide',
   Image: 'Image',
-  imageErrorMessage: 'Some images are not available outside of the VPN (Virtual Private Network)'
+  imageErrorMessageVPN: 'Some images are not available outside of the VPN (Virtual Private Network)'
   + ' of the Georg-August-University Goettingen. If you like to get access please refer to the '
   + 'guide at <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start"'
   + 'target="_blank"> Network Services VPN</a>.',
+  imageErrorMessageNotExists: 'An image for this page does not exist yet.',
   imageErrorTitle: 'No Image Available',
   imageLicense: 'Image License',
   imageNotes: 'Image Notes',

@@ -117,6 +117,10 @@ export default {
       type: Boolean,
       default: () => false,
     },
+    errorImage: {
+      type: Object,
+      default: () => null,
+    },
     isloading: {
       type: Boolean,
       default: false,

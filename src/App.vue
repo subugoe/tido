@@ -26,6 +26,7 @@
         :contenttypes="contentTypes"
         :contenturls="contentUrls"
         :errormessage="errormessage"
+        :error-image="errorImage"
         :fontsize="fontsize"
         :imageurl="imageurl"
         :isloading="isLoading"
@@ -67,6 +68,7 @@ export default {
       contentTypes: [],
       contentUrls: [],
       errormessage: false,
+      errorImage: null,
       fontsize: 16,
       imageurl: '',
       isCollection: false,
@@ -272,18 +274,30 @@ export default {
           }
 
           if (data.image) {
-            this.imageurl = data.image.id || '';
+            this.imageurl = data.image.id;
             fetch(this.imageurl).then((response) => {
               if (response.status === 200 || response.status === 201) {
                 this.errormessage = false;
+                this.errorImage = null;
               } else {
                 // for vpn error.
                 this.errormessage = true;
+                this.errorImage = {
+                  messageKey: 'imageErrorMessageVPN',
+                };
               }
             }).catch(() => {
               // for CORS error.
               this.errormessage = true;
+              this.errorImage = {
+                messageKey: 'imageErrorMessageVPN',
+              };
             });
+          } else {
+            this.errormessage = true;
+            this.errorImage = {
+              messageKey: 'imageErrorMessageNotExists',
+            };
           }
         });
     },

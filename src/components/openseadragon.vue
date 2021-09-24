@@ -1,10 +1,10 @@
 <template>
   <div
-    v-if="errormessage"
+    v-if="errorImage"
     class="q-pa-sm"
   >
     <Notification
-      :message="$t(messages.none)"
+      :message="$t(errorImage.messageKey)"
       :notification-colors="config.notificationColors"
       title-key="imageErrorTitle"
       type="warning"
@@ -63,6 +63,10 @@ export default {
       type: Boolean,
       default: () => false,
     },
+    errorImage: {
+      type: Object,
+      default: () => null,
+    },
     imageurl: {
       type: String,
       default: () => '',
@@ -88,13 +92,10 @@ export default {
         homeButton: 'default',
         fullPageButton: 'fullscreen',
       },
-      messages: {
-        none: 'imageErrorMessage',
-      },
     };
   },
   mounted() {
-    if (this.errormessage) {
+    if (this.errorImage !== null) {
       return;
     }
 
