@@ -8,7 +8,7 @@ export default {
   Collector: 'Collector',
   colorScheme: 'Change color',
   Contents: 'Contents',
-  contentsMetadata: 'Contents & Metadata',
+  'Contents & Metadata': 'Contents & Metadata',
   'Current location': 'Current location',
   'Date of creation': 'Date of creation',
   Decrease: 'Decrease',

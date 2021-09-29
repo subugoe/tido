@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="config['language-switch']"
-    class="col-xs-auto"
-  >
+  <div class="col-xs-auto">
     <q-btn
       flat
       :title="$t('changeLanguage')"

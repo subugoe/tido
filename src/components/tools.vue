@@ -1,6 +1,7 @@
 <template>
   <div class="row no-wrap justify-end col-xs-3">
     <Language
+      v-if="config['language-switch']"
       :config="config"
     />
 
