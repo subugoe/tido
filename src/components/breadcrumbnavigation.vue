@@ -34,7 +34,7 @@
         >
           <a
             :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
-            :href="`${redirectUrl}search.html?searchTerm=${searchTerm}&page=${page}`"
+            :href="`${redirectUrl}${searchPageUrl}?${searchQueryParam}=${searchTerm}&page=${page}`"
             class="header-links"
           >
             <q-icon
@@ -73,9 +73,19 @@ export default {
     redirectUrl() {
       return this.$route.query.redirectUrl || this.config.breadcrumbNavigation.website;
     },
+
+    searchPageUrl() {
+      return this.config.breadcrumbNavigation.search_page || '';
+    },
+
+    searchQueryParam() {
+      return this.config.breadcrumbNavigation.search_query_param || 'searchTerm';
+    },
+
     searchTerm() {
       return this.$route.query.searchTerm;
     },
+
     page() {
       return this.$route.query.page || 1;
     },

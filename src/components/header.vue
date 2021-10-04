@@ -1,11 +1,10 @@
 <template>
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'">
     <div
-      v-if="config.breadcrumbNavigation.show"
+      v-if="!!$route.query.source && ($route.query.source === config.breadcrumbNavigation.source)"
       :class="$q.dark.isActive ? 'bg-white' : 'bg-accent'"
     >
       <BreadCrumbNavigation
-        v-if="$route.query.source === 'external'"
         :config="config"
       />
     </div>

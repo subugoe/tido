@@ -230,7 +230,9 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
         }
       },
       "breadcrumbNavigation": {
-        "show": true,
+        "source": "external",
+        "search_page": "search.html",
+        "search_query_param": "searchTerm",
         "title_homepage_key": "title_homepage",
         "title_viewer_key": "title_viewer",
         "website": "https://ahikar.sub.uni-goettingen.de/website/"
@@ -350,25 +352,41 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
 - **breadcrumbNavigation**
 
-  - **show**
+    **Note**: To display the project header or breadcrumb Navigation in TIDO, we need to pass "source" parameter from Website Search resulted page selected item.
 
-    defines if a project header should be shown or not.
+  - **source**
 
-    Defaults to `false`
+    Defines if a project header should be displayed when we navigated from an external website.
+
+    **Note**: This value of source should be same as the one we passed from url parameter of the website.
+
+    Defaults to `external`, can be changed to project specific parameter.
+
+  - **search_page**
+
+    Defines the redirected url to search page when navigating TIDO to a website.
+
+    **Note** We do not need to provide this specifically if the redirection to the search page is handle by routes.
+
+  - **search_query_param**
+
+    Defines query parameter than can be displayed in the search breadcrumb of project header. When clicked on it, we can navigate back to the search page with their results displayed.
+
+    Shows a "Search Icon"
 
   - **title_homepage_key**
 
-    defines the string shown as first item in the breadcrumb. Shows a "Home Icon"
+    Defines the string shown as first item in the breadcrumb. Shows a "Home Icon"
 
-    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_homepage".
+    **Note**: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_homepage".
 
     Has to be set!
 
   - **title_viewer_key**
 
-    defines the string shown as last item in the breadcrumb. Shows a "Document Icon"
+    Defines the string shown as last item in the breadcrumb. Shows a "Document Icon"
 
-    Note: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_viewer".
+    **Note**: To change this title please navigate to "tido/src/i18n/en or tido/src/i18n/de" and find "title_viewer".
 
     Has to be set!
 
