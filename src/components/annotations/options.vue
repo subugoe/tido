@@ -12,7 +12,7 @@
     >
       <q-fab-action
         color="accent"
-        label="Highlight All Annotations in Text Panel"
+        :label="$t('annotationsHighlightAll')"
         label-position="left"
         :disable="selectedAll"
         :icon="fasEye"
@@ -20,7 +20,7 @@
       />
       <q-fab-action
         color="accent"
-        label="Remove All Highlights in Text Panel"
+        :label="$t('annotationsHighlightNone')"
         label-position="left"
         :disable="selectedNone"
         :icon="fasEyeSlash"

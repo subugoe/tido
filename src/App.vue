@@ -105,6 +105,7 @@ export default {
     }
   },
   mounted() {
+    this.$i18n.locale = this.config.lang;
     /**
       * listen to fontsize change (user interaction). emitted in @/components/content.vue
       * in- or rather decrease fontsize of the text by 1px
