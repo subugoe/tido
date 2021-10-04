@@ -231,7 +231,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
       },
       "breadcrumbNavigation": {
         "source": "external",
-        "search_page": "search.html",
+        "search_page_path": "search.html",
         "search_query_param": "searchTerm",
         "title_homepage_key": "title_homepage",
         "title_viewer_key": "title_viewer",
@@ -362,9 +362,9 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
     Defaults to `external`, can be changed to project specific parameter.
 
-  - **search_page**
+  - **search_page_path**
 
-    Defines the redirected url to search page when navigating TIDO to a website.
+    Defines redirected path to search page when navigating from TIDO to a website.
 
     **Note** We do not need to provide this specifically if the redirection to the search page is handle by routes.
 
