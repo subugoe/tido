@@ -31,7 +31,7 @@
     -->
     <script id="tido-config" type="application/json">
     {
-			"entrypoint": "",
+			"entrypoint": "https://ahikar.sub.uni-goettingen.de/api/textapi/ahikar/syriac/collection.json",
       "annotations": {
         "show": true,
         "types": [
@@ -62,7 +62,9 @@
         }
       },
       "breadcrumbNavigation": {
-        "show": true,
+        "source": "external",
+        "search_page_path": "search.html",
+        "search_query_param": "searchTerm",
         "title_homepage_key": "title_homepage",
         "title_viewer_key": "title_viewer",
         "website": "https://ahikar.sub.uni-goettingen.de/website/"
