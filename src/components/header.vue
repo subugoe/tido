@@ -16,14 +16,14 @@
       >
         <TitleBar
           v-if="manifests.length"
-          class="col-xs-12 col-sm-9 q-mb-xs-md q-mb-sm-none"
+          class="col-xs-12 col-sm-9 q-mb-xs-xs q-mb-sm-none"
           :collectiontitle="collectiontitle"
           :item="item"
           :manifests="manifests"
         />
 
         <Tools
-          class="col-xs-12 col-sm-3 items-center justify-center order-xs-first order-sm-last"
+          class="col-xs-12 col-sm-3 items-center justify-sm-end justify-xs-center order-xs-first order-sm-last"
           :config="config"
           :projectcolors="projectcolors"
         />
@@ -36,7 +36,7 @@
           :itemurls="itemurls"
           :labels="config.labels"
           :manifests="manifests"
-          class="row justify-center justify-sm-start col-xs-12 col-sm-8 q-mb-xs-md q-mb-sm-none"
+          class="row justify-center justify-sm-start col-xs-12 col-sm-6 q-mb-xs-md q-mb-sm-none"
         />
 
         <q-space />
@@ -44,7 +44,7 @@
         <TogglePanels
           v-if="config['header_section'].toggle"
           :panels="panels"
-          class="row justify-center justify-sm-end col-xs-12 col-sm-4 q-mb-xs-sm q-mb-sm-none order-xs-first order-sm-last"
+          class="row justify-center justify-sm-end col-xs-12 col-sm-6 q-mb-xs-sm q-mb-sm-none order-xs-first order-sm-last"
         />
 
         <div
