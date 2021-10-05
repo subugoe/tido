@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.20.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.20.0...v1.20.1) (2021-10-05)
+
+
+### Refactoring
+
+* addressing review comments ([ede90bf](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ede90bf6c6b03fb0d29374904759cdff37dd2f1d))
+* addressing review comments ([c9d41e3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c9d41e31a288822448843a1b1232fd1db1e366b9))
+* default language change when the language switch is turned off ([aea97e8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/aea97e8ce0a352bdc66390fe92ad5053655c12b1))
+* make project header configurable ([49dff10](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/49dff10e69128590e29462814466774db784c03c))
+* modify translations according to suggestions ([fa59dc2](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/fa59dc29cc72709ea4b2728d17299227c4596ae6))
+
+
+### Docs
+
+* rename according to new changes ([c142b3f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c142b3fc41311b76b97f381d48d7121b49a1e50e))
+
+
+### Continuos Integration
+
+* remove entry point ([1e83b12](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/1e83b129ac588100a58f8e454d96a6ff0df5a012))
+* remove entry point ([7cfd7fb](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7cfd7fb944807c7d3efa28955f8a5647299cee71))
+
 ## [1.20.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.19.2...v1.20.0) (2021-09-24)
 
 
