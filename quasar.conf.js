@@ -41,6 +41,9 @@ module.exports = function () {
       all: 'auto',
 
       config: {
+        screen: {
+          bodyClasses: true,
+        },
         brand: {
           primary: '#212121',
           secondary: '#eee',
@@ -50,6 +53,8 @@ module.exports = function () {
           color: 'gray',
         },
       },
+
+      cssAddon: true,
 
       iconSet: 'fontawesome-v5',
 
