@@ -124,7 +124,7 @@ export default {
 }
 
 .toolbar {
-  @media (max-width: 599px) {
+  @media (max-width: $breakpoint-xs-max) {
     flex-wrap: wrap !important;
   }
 }

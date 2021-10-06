@@ -175,7 +175,7 @@ export default {
   flex: 1;
   flex-direction: column;
   overflow: hidden;
-  @media (max-width: 800px) {
+  @media (max-width: $breakpoint-sm-custom-md) {
     min-height: 100vh;
   }
 }
@@ -192,7 +192,7 @@ export default {
   flex: 1;
   flex-direction: row;
   overflow: hidden;
-  @media (max-width: 800px) {
+  @media (max-width: $breakpoint-sm-custom-md) {
     flex-direction: column;
     height: auto;
     overflow: scroll;
