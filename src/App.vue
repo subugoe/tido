@@ -506,7 +506,7 @@ export default {
 
 .viewport {
   height: 100vh;
-  @media (max-width: 800px) {
+  @media (max-width: $breakpoint-sm-custom-md) {
     height: auto;
     overflow: scroll;
   }
