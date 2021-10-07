@@ -175,6 +175,9 @@ export default {
   flex: 1;
   flex-direction: column;
   overflow: hidden;
+  @media (max-width: $breakpoint-sm-custom-md) {
+    min-height: 100vh;
+  }
 }
 
 .item-content {
@@ -189,6 +192,11 @@ export default {
   flex: 1;
   flex-direction: row;
   overflow: hidden;
+  @media (max-width: $breakpoint-sm-custom-md) {
+    flex-direction: column;
+    height: auto;
+    overflow: scroll;
+  }
 }
 
 .tabs-container {

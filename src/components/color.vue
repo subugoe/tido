@@ -1,5 +1,5 @@
 <template>
-  <div class="col-xs-auto colors">
+  <div class="colors">
     <q-btn
       flat
       :title="$t('colorScheme')"

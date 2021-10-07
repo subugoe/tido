@@ -1,5 +1,5 @@
 <template>
-  <div class="row no-wrap justify-end col-xs-3">
+  <div class="row no-wrap justify-end">
     <Language
       v-if="config['language-switch']"
       :config="config"

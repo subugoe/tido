@@ -495,7 +495,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .root {
   display: flex;
   flex: 1;
@@ -506,5 +506,9 @@ export default {
 
 .viewport {
   height: 100vh;
+  @media (max-width: $breakpoint-sm-custom-md) {
+    height: auto;
+    overflow: scroll;
+  }
 }
 </style>

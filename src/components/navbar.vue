@@ -6,7 +6,7 @@
       :disabled="itemindex <= 0"
       size="xs"
       padding="xs"
-      class="q-px-sm"
+      class="q-px-sm q-mr-sm"
       @click="toggleSheet(--itemindex)"
     >
       <q-icon
@@ -60,12 +60,6 @@ export default {
 <style lang="scss" scoped>
 button {
   font-size: 12px !important;
-}
-
-button:first-of-type {
-  @media (min-width: 600px) {
-    margin-right: 8px;
-  }
 }
 
 .q-input {
