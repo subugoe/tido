@@ -1,8 +1,5 @@
 <template>
-  <q-page-sticky
-    :offset="[16, 16]"
-    position="bottom-right"
-  >
+  <div class="fab-container">
     <q-fab
       color="accent"
       direction="up"
@@ -27,7 +24,7 @@
         @click="onHighlightNone"
       />
     </q-fab>
-  </q-page-sticky>
+  </div>
 </template>
 
 <script>
@@ -64,3 +61,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  .fab-container {
+    bottom: 16px;
+    position: absolute;
+    right: 16px;
+  }
+</style>
