@@ -1,5 +1,5 @@
 <template>
-  <div class="fabIcon">
+  <div class="fab-container">
     <q-fab
       color="accent"
       direction="up"
@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .fabIcon {
+  .fab-container {
     bottom: 16px;
     position: absolute;
     right: 16px;
