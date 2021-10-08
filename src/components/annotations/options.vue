@@ -1,14 +1,14 @@
 <template>
   <div class="fab-container">
     <q-fab
-      color="accent"
+      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
       direction="up"
       vertical-actions-align="right"
       :active-icon="fasChevronDown"
       :icon="fasCog"
     >
       <q-fab-action
-        color="accent"
+        :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
         :label="$t('annotationsHighlightAll')"
         label-position="left"
         :disable="selectedAll"
@@ -16,7 +16,7 @@
         @click="onHighlightAll"
       />
       <q-fab-action
-        color="accent"
+        :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
         :label="$t('annotationsHighlightNone')"
         label-position="left"
         :disable="selectedNone"
