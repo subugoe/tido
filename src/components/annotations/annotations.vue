@@ -519,36 +519,65 @@ export default {
 
 *[data-annotation-level='0'] {
   background-color: $grey-3;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $grey-9;
+  }
 }
 
 *[data-annotation-level='1'],
 *[data-annotation-level='1'] * {
   background-color: $blue-1;
   border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $grey-6;
+    border-bottom: 1px solid #fff;
+  }
 }
 
 *[data-annotation-level='2'],
 *[data-annotation-level='2'] * {
   background-color: $blue-2;
   border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $grey-7;
+    border-bottom: 1px solid #fff;
+  }
 }
 
 *[data-annotation-level='3'],
 *[data-annotation-level='3'] * {
   background-color: $blue-3;
   border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $grey-8;
+    border-bottom: 1px solid #fff;
+  }
 }
 
 *[data-annotation-level='4'],
 *[data-annotation-level='4'] * {
   background-color: $blue-4;
   border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $grey-9;
+    border-bottom: 1px solid #fff;
+  }
 }
 
 *[data-annotation-level='5'],
 *[data-annotation-level='5'] * {
   background-color: $blue-5;
   border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $grey-10;
+    border-bottom: 1px solid #fff;
+  }
 }
 
 .annotation-tooltip {
@@ -587,7 +616,6 @@ export default {
 .referenced-annotation:last-of-type {
   margin-bottom: 0;
 }
-
 </style>
 
 <style lang="scss" scoped>
