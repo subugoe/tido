@@ -4,7 +4,7 @@
       v-for="annotation in configuredAnnotations"
       :id="'list' + annotation.strippedId"
       :key="annotation.strippedId"
-      :class="$q.dark.isActive ? { 'bg-grey-9': !!activeAnnotation[annotation.targetId] } : { 'bg-grey-4': !!activeAnnotation[annotation.targetId] }"
+      :class="$q.dark.isActive ? { 'bg-grey-9': isActive(annotation) } : { 'bg-grey-4': isActive(annotation) }"
       class="q-pa-sm q-pl-xs q-mb-xs"
       clickable
       padding="xs"
@@ -52,6 +52,11 @@ export default {
     toggle: {
       type: Function,
       default: () => null,
+    },
+  },
+  methods: {
+    isActive(annotation) {
+      return !!this.activeAnnotation[annotation.targetId];
     },
   },
 };
