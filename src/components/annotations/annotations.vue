@@ -528,6 +528,7 @@ export default {
 *[data-annotation-level='1'],
 *[data-annotation-level='1'] * {
   background-color: $blue-1;
+  color: $dark;
   border-bottom: 1px solid #000;
 
   @media (prefers-color-scheme: dark) {
@@ -578,6 +579,10 @@ export default {
     background-color: $grey-10;
     border-bottom: 1px solid #fff;
   }
+}
+
+*[data-annotation-level='2'] *[data-annotation-level='1'] {
+  color: $light;
 }
 
 .annotation-tooltip {
