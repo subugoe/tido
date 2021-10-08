@@ -67,6 +67,7 @@ export default {
 
 .q-item {
   min-height: unset;
+  user-select: none;
 }
 
 .item-content {
