@@ -528,12 +528,12 @@ export default {
 *[data-annotation-level='1'],
 *[data-annotation-level='1'] * {
   background-color: $blue-1;
-  color: $dark;
   border-bottom: 1px solid #000;
 
   @media (prefers-color-scheme: dark) {
-    background-color: $grey-6;
+    background-color: $blue-grey-7;
     border-bottom: 1px solid #fff;
+    color: $light;
   }
 }
 
@@ -543,8 +543,9 @@ export default {
   border-bottom: 1px solid #000;
 
   @media (prefers-color-scheme: dark) {
-    background-color: $grey-7;
+    background-color: $blue-grey-8;
     border-bottom: 1px solid #fff;
+    color: $light;
   }
 }
 
@@ -554,8 +555,9 @@ export default {
   border-bottom: 1px solid #000;
 
   @media (prefers-color-scheme: dark) {
-    background-color: $grey-8;
+    background-color: $blue-grey-9;
     border-bottom: 1px solid #fff;
+    color: $light;
   }
 }
 
@@ -565,8 +567,9 @@ export default {
   border-bottom: 1px solid #000;
 
   @media (prefers-color-scheme: dark) {
-    background-color: $grey-9;
+    background-color: $blue-grey-10;
     border-bottom: 1px solid #fff;
+    color: $light;
   }
 }
 
@@ -576,13 +579,10 @@ export default {
   border-bottom: 1px solid #000;
 
   @media (prefers-color-scheme: dark) {
-    background-color: $grey-10;
+    background-color: #1f2937;
     border-bottom: 1px solid #fff;
+    color: $light;
   }
-}
-
-*[data-annotation-level='2'] *[data-annotation-level='1'] {
-  color: $light;
 }
 
 .annotation-tooltip {
@@ -621,6 +621,7 @@ export default {
 .referenced-annotation:last-of-type {
   margin-bottom: 0;
 }
+
 </style>
 
 <style lang="scss" scoped>
