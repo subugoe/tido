@@ -519,36 +519,70 @@ export default {
 
 *[data-annotation-level='0'] {
   background-color: $grey-3;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $grey-9;
+  }
 }
 
 *[data-annotation-level='1'],
 *[data-annotation-level='1'] * {
   background-color: $blue-1;
   border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $blue-grey-7;
+    border-bottom: 1px solid #fff;
+    color: $light;
+  }
 }
 
 *[data-annotation-level='2'],
 *[data-annotation-level='2'] * {
   background-color: $blue-2;
   border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $blue-grey-8;
+    border-bottom: 1px solid #fff;
+    color: $light;
+  }
 }
 
 *[data-annotation-level='3'],
 *[data-annotation-level='3'] * {
   background-color: $blue-3;
   border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $blue-grey-9;
+    border-bottom: 1px solid #fff;
+    color: $light;
+  }
 }
 
 *[data-annotation-level='4'],
 *[data-annotation-level='4'] * {
   background-color: $blue-4;
   border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $blue-grey-10;
+    border-bottom: 1px solid #fff;
+    color: $light;
+  }
 }
 
 *[data-annotation-level='5'],
 *[data-annotation-level='5'] * {
   background-color: $blue-5;
   border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #1f2937;
+    border-bottom: 1px solid #fff;
+    color: $light;
+  }
 }
 
 .annotation-tooltip {
