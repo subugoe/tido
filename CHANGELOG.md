@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.21.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.20.1...v1.21.0) (2021-10-12)
+
+
+### Features
+
+* unselectable text of list items in annotations panel ([8ba7be3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8ba7be3aac0d61797931ad12808b622b0ba49680)), closes [#345](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/345)
+
+
+### Bug Fixes
+
+* dark mode contrast issues ([d6c723d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d6c723df2e4f4be144b392a4965d85910efdbb17))
+* dark mode contrast issues with text highlighting ([0a29094](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0a290942a56b44de44a347c05387e84acfa8a34a))
+* header responsiveness ([8c9c7a6](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8c9c7a659cc80393986e2775f0faa4cd18c71064))
+* header responsivness ([17424e3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/17424e3871e87d428766ef7fbc344fa2ecbeb389))
+* options icon displayed in it's respectie annotation panel when changed position ([05506a8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/05506a81bd53b1ba1aa93e9c47310c2499a5c390))
+* panels responsivness ([024a060](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/024a060fe4b8121c54bfc7b5ea02c613bc505ad3))
+
+
+### Refactoring
+
+* addressing review comments ([c142edd](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c142edd72d5517f19c1b5c49929d6f872a217458))
+* addressing review comments ([ef6cfe2](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ef6cfe28eae2790a18b6933fdcd37e120633e02c))
+* check if annotation is active ([74ab1d8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/74ab1d8ad07b19d41bfba73b6be0fe148e2da73b))
+* renamed class name ([2e173b1](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2e173b1e66c3d569b0b7f64f2ea56172b14e0725))
+
+
+### Styling
+
+* dark mode contrast issue in text ([6cbc011](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/6cbc0118c6d0321fe0b74c3861da3c196c82a930))
+* modifying colors to fix contrast ([ed736dd](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ed736ddf186e6126352ad3ed6358317c664a1054))
+
+
+### Continuos Integration
+
+* remove entry point ([43cfa0b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/43cfa0bd19a74fd6b52b3546f7129f436b85acc0))
+* remove entry point ([2417212](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/241721270aa01181b88a9baa193a31635863df1a))
+* remove entry point ([580083b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/580083bee95c3ddb9fbbe42aa318f2061ec58537))
+* remove entry point ([3d3e562](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/3d3e5624a0a7f0ccbb5308857edf5c36b3d21a41))
+* remove entry point ([50352df](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/50352dfed5b6a5474c1368927d3f252a2ee7f309))
+
 ### [1.20.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.20.0...v1.20.1) (2021-10-05)
 
 
