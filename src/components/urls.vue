@@ -23,7 +23,8 @@
         />
       </a>
 
-      <span v-else>{{ url.text }}</span>
+      <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
+      <span v-else v-html="url.text" />
     </div>
   </div>
 </template>
