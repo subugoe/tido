@@ -458,14 +458,15 @@ export default {
         return;
       }
 
-      this.itemurl = this.$route.query.itemurl;
+      const { itemurl } = this.$route.query;
 
-      if (!this.itemurl) {
+      if (!itemurl) {
         return;
       }
 
-      const item = this.manifests.find((manifest) => manifest.sequence.find((manifestItem) => manifestItem.id === this.itemurl));
+      this.itemurl = decodeURIComponent(itemurl);
 
+      const item = this.manifests.find((manifest) => manifest.sequence.find((manifestItem) => manifestItem.id === this.itemurl));
       if (!item) {
         return;
       }
