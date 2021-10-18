@@ -17,7 +17,24 @@
       />
     </q-tabs>
 
-    <div class="q-px-sm">
+    <Loading v-if="isLoading && !hasError" />
+
+    <div
+      v-if="hasError"
+      class="q-pa-sm"
+    >
+      <Notification
+        :message="errorTextMessage || $t(errorText.textErrorMessageNotExists)"
+        :notification-colors="config.notificationColors"
+        title-key="textErrorTitle"
+        type="warning"
+      />
+    </div>
+
+    <div
+      v-if="!hasError&& !isLoading"
+      class="q-px-sm"
+    >
       <q-btn
         class="cursor-pointer"
         flat
@@ -62,9 +79,15 @@
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
 import Annotation from '@/mixins/annotation';
+import Loading from '@/components/loading.vue';
+import Notification from '@/components/notification.vue';
 
 export default {
   name: 'Content',
+  components: {
+    Loading,
+    Notification,
+  },
   mixins: [Annotation],
   props: {
     config: {
@@ -82,6 +105,10 @@ export default {
     contentindex: {
       type: Number,
       default: () => 0,
+    },
+    errorText: {
+      type: Object,
+      default: () => null,
     },
     fontsize: {
       type: Number,
@@ -111,20 +138,25 @@ export default {
   data: () => ({
     activeTabContents: '',
     content: '',
+    errorTextMessage: null,
     fontSizeLimits: {
       min: 14,
       max: 28,
     },
+    isLoading: false,
     sequenceindex: 0,
   }),
   computed: {
+    activeTab() {
+      return this.contenturls[this.contentindex];
+    },
+    hasError() {
+      return this.errorText || this.errorTextMessage;
+    },
     supportType() {
       const { support } = this.manifests[this.sequenceindex];
 
       return Object.keys(support).length && support.url !== '';
-    },
-    activeTab() {
-      return this.contenturls[this.contentindex];
     },
   },
 
@@ -137,64 +169,81 @@ export default {
     },
     activeTab: {
       async handler(url) {
-        if (!url) {
-          return;
-        }
-        this.$root.$emit('update-annotation-loading', true);
+        try {
+          if (!url) {
+            return;
+          }
+          this.errorTextMessage = '';
+          this.isLoading = true;
+          this.$root.$emit('update-annotation-loading', true);
 
-        const data = await this.request(url, 'text');
+          const data = await this.request(url, 'text');
 
-        if (this.supportType) {
-          await this.getSupport(this.manifests[0].support);
-        }
+          const { valid, status } = this.isValidTextContent(data);
 
-        const annotationPanelHidden = this.panels.find(
-          (x) => x.panel_label === 'Annotations' && !x.show,
-        );
+          if (!valid) {
+            if (status === 500) {
+              throw new Error(`${this.$t('textErrorMessageNotExists')}`);
+            }
+          }
 
-        const parser = new DOMParser();
-        let dom = parser.parseFromString(data, 'text/html');
-        if (!annotationPanelHidden) {
-          const spans = [
-            ...dom.querySelectorAll('[data-target]:not([value=""])'),
-          ];
+          if (this.supportType) {
+            await this.getSupport(this.manifests[0].support);
+          }
 
-          const spanIds = [
-            ...new Set(
-              spans.map((x) => x
-                .getAttribute('data-target')
-                .replace('_start', '')
-                .replace('_end', '')),
-            ),
-          ];
+          const annotationPanelHidden = this.panels.find(
+            (x) => x.panel_label === 'Annotations' && !x.show,
+          );
 
-          spanIds.forEach((selector) => {
-            dom = this.replaceSelectorWithSpan(selector, dom);
-          });
+          const parser = new DOMParser();
+          let dom = parser.parseFromString(data, 'text/html');
+          if (!annotationPanelHidden) {
+            const spans = [
+              ...dom.querySelectorAll('[data-target]:not([value=""])'),
+            ];
 
-          const dataTargets = [...dom.querySelectorAll('[id]')].map((x) => x.getAttribute('id'));
+            const spanIds = [
+              ...new Set(
+                spans.map((x) => x
+                  .getAttribute('data-target')
+                  .replace('_start', '')
+                  .replace('_end', '')),
+              ),
+            ];
 
-          dataTargets.forEach((selector) => this.addHighlightToTargetIds(selector, dom));
-        }
-        this.content = dom.documentElement.innerHTML;
-
-        // to improve performance, here we are trying to get candidates of annotation that are
-        // possibly be the annotation and try to match them with their respective annotations.
-        const displayedAnnotations = [
-          ...dom.querySelectorAll('[data-annotation]'),
-        ]
-          .map((x) => x.getAttribute('class'))
-          .reduce((prev, curr) => {
-            (curr || '').split(' ').forEach((c) => {
-              prev[c.replace(/\./g, '')] = true;
+            spanIds.forEach((selector) => {
+              dom = this.replaceSelectorWithSpan(selector, dom);
             });
-            return prev;
-          }, {});
 
-        await this.delay(200);
+            const dataTargets = [...dom.querySelectorAll('[id]')].map((x) => x.getAttribute('id'));
 
-        this.$root.$emit('update-annotations', displayedAnnotations);
-        this.$root.$emit('update-annotation-loading', false);
+            dataTargets.forEach((selector) => this.addHighlightToTargetIds(selector, dom));
+          }
+          this.content = dom.documentElement.innerHTML;
+
+          // to improve performance, here we are trying to get candidates of annotation that are
+          // possibly be the annotation and try to match them with their respective annotations.
+          const displayedAnnotations = [
+            ...dom.querySelectorAll('[data-annotation]'),
+          ]
+            .map((x) => x.getAttribute('class'))
+            .reduce((prev, curr) => {
+              (curr || '').split(' ').forEach((c) => {
+                prev[c.replace(/\./g, '')] = true;
+              });
+              return prev;
+            }, {});
+
+          await this.delay(200);
+
+          this.$root.$emit('update-annotations', displayedAnnotations);
+        } catch (err) {
+          this.errorTextMessage = err.message;
+          this.$root.$emit('update-annotations', {});
+        } finally {
+          this.isLoading = false;
+          this.$root.$emit('update-annotation-loading', false);
+        }
       },
       immediate: true,
     },
@@ -215,6 +264,10 @@ export default {
   },
 
   mounted() {
+    if (this.errorText !== null) {
+      return;
+    }
+
     this.$refs.contentsize.style.fontSize = `${this.fontsize}px`;
 
     this.$root.$on('update-sequence-index', (index) => {
@@ -231,6 +284,27 @@ export default {
     });
   },
   methods: {
+    isValidTextContent(text) {
+      try {
+        const parsed = JSON.parse(text);
+        if (!!parsed.status && !(parsed.status === 200 || parsed.status === 201)) {
+          return {
+            valid: false,
+            status: parsed.status, // status value from backend.
+          };
+        }
+
+        return {
+          valid: true,
+          status: 200,
+        };
+      } catch (err) {
+        return {
+          valid: true,
+          status: 200,
+        };
+      }
+    },
     async delay(ms = 2500) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     },
@@ -307,12 +381,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.rtl {
-  direction: rtl;
-}
-
 .default-cursor {
   cursor: default !important;
+}
+
+.disabled-tab {
+  pointer-events: none;
+}
+
+.item {
+  position: relative;
 }
 
 .item-content {
@@ -324,7 +402,7 @@ export default {
   padding: 8px;
 }
 
-.disabled-tab {
-  pointer-events: none;
+.rtl {
+  direction: rtl;
 }
 </style>
