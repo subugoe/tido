@@ -17,7 +17,7 @@
       />
     </q-tabs>
 
-    <Loading v-if="isLoading && !hasError" />
+    <Loading v-if="isLoading" />
 
     <div
       v-if="hasError"
