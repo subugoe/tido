@@ -24,7 +24,7 @@
       class="q-pa-sm"
     >
       <Notification
-        :message="errorTextMessage || $t(errorText.textErrorMessageNotExists)"
+        :message="notificationMessage"
         :notification-colors="config.notificationColors"
         title-key="textErrorTitle"
         type="warning"
@@ -153,6 +153,9 @@ export default {
     hasError() {
       return this.errorText || this.errorTextMessage;
     },
+    notificationMessage() {
+      return this.$t(this.errorTextMessage || this.errorText.textErrorMessageNotExists);
+    },
     supportType() {
       const { support } = this.manifests[this.sequenceindex];
 
@@ -183,7 +186,7 @@ export default {
 
           if (!valid) {
             if (status === 500) {
-              throw new Error(`${this.$t('textErrorMessageNotExists')}`);
+              throw new Error('textErrorMessageNotExists');
             }
           }
 
@@ -239,6 +242,7 @@ export default {
           this.$root.$emit('update-annotations', displayedAnnotations);
         } catch (err) {
           this.errorTextMessage = err.message;
+
           this.$root.$emit('update-annotations', {});
         } finally {
           this.isLoading = false;
