@@ -64,6 +64,8 @@ export default {
   Tabs: 'Reiter',
   'TEI document': 'TEI-Dokument',
   Text: 'Text',
+  textErrorMessageNotExists: 'Für diese Seite existiert noch kein Text.',
+  textErrorTitle: 'Kein Text verfügbar',
   Textsize: 'Textgrösse',
   Title: 'Titel',
   title_homepage: 'Die syrischen und arabischen Ahiqar-Texte',

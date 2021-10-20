@@ -27,6 +27,7 @@
         :contenturls="contentUrls"
         :errormessage="errormessage"
         :error-image="errorImage"
+        :error-text="errorText"
         :fontsize="fontsize"
         :imageurl="imageurl"
         :isloading="isLoading"
@@ -69,6 +70,7 @@ export default {
       contentUrls: [],
       errormessage: false,
       errorImage: null,
+      errorText: null,
       fontsize: 16,
       imageurl: '',
       isCollection: false,
@@ -255,52 +257,63 @@ export default {
       *
       * @param string url
       */
-    getItemData(url) {
-      this.request(url)
-        .then((data) => {
-          this.item = data;
 
-          const previousManifest = (this.contentUrls[0] || '').split('/').pop().split('-')[0];
+    async getContentsItemData(url) {
+      try {
+        const data = await this.request(url);
 
-          this.contentUrls = this.getContentUrls(data.content);
+        this.item = data;
 
-          const currentManifest = this.contentUrls[0].split('/').pop().split('-')[0];
+        const previousManifest = (this.contentUrls[0] || '').split('/').pop().split('-')[0];
 
-          if (previousManifest !== currentManifest) {
-            this.$root.$emit('manifest-changed');
-          }
+        this.contentUrls = this.getContentUrls(data.content);
 
-          if (data.annotationCollection) {
-            this.getAnnotations(data.annotationCollection);
-          }
+        const currentManifest = this.contentUrls[0].split('/').pop().split('-')[0];
 
-          if (data.image) {
-            this.imageurl = data.image.id;
-            fetch(this.imageurl).then((response) => {
-              if (response.status === 200 || response.status === 201) {
-                this.errormessage = false;
-                this.errorImage = null;
-              } else {
-                // for vpn error.
-                this.errormessage = true;
-                this.errorImage = {
-                  messageKey: 'imageErrorMessageVPN',
-                };
-              }
-            }).catch(() => {
-              // for CORS error.
-              this.errormessage = true;
-              this.errorImage = {
-                messageKey: 'imageErrorMessageVPN',
-              };
-            });
+        if (previousManifest !== currentManifest) {
+          this.$root.$emit('manifest-changed');
+        }
+
+        if (data.annotationCollection) {
+          this.getAnnotations(data.annotationCollection);
+        }
+      } catch (err) {
+        this.errorText = {
+          messageKey: 'textErrorMessageNotExists',
+        };
+      }
+    },
+
+    async getImageItemData(url) {
+      const data = await this.request(url);
+
+      if (data.image) {
+        this.imageurl = data.image.id;
+        try {
+          const response = await fetch(this.imageurl);
+          if (response.status === 200 || response.status === 201) {
+            this.errormessage = false;
+            this.errorImage = null;
           } else {
+            // for vpn error.
             this.errormessage = true;
             this.errorImage = {
-              messageKey: 'imageErrorMessageNotExists',
+              messageKey: 'imageErrorMessageVPN',
             };
           }
-        });
+        } catch (err) {
+          // for CORS error.
+          this.errormessage = true;
+          this.errorImage = {
+            messageKey: 'imageErrorMessageVPN',
+          };
+        }
+      } else {
+        this.errormessage = true;
+        this.errorImage = {
+          messageKey: 'imageErrorMessageNotExists',
+        };
+      }
     },
     /**
       * caller: *getItemUrls()*
@@ -489,7 +502,10 @@ export default {
       // NOTE: Set imageurl to an empty string. Otherwise, if there is no corresponding image,
       // the "preceding" image according to the "preceding" item will be shown.
       this.imageurl = '';
-      this.getItemData(this.itemurl);
+
+      this.getContentsItemData(this.itemurl);
+      this.getImageItemData(this.itemurl);
+
       this.loaded = true;
     },
   },

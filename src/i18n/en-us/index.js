@@ -63,6 +63,8 @@ export default {
   Tabs: 'Tabs',
   'TEI document': 'TEI document',
   Text: 'Text',
+  textErrorMessageNotExists: 'A text for this page does not exist yet.',
+  textErrorTitle: 'No Text Available',
   Textsize: 'Textsize',
   Title: 'Title',
   title_homepage: 'The Story of Ahiqar in its Syriac and Arabic Tradition',

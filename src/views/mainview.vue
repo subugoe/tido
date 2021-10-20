@@ -121,6 +121,10 @@ export default {
       type: Object,
       default: () => null,
     },
+    errorText: {
+      type: Object,
+      default: () => null,
+    },
     isloading: {
       type: Boolean,
       default: false,
