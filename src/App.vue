@@ -401,15 +401,6 @@ export default {
     async getManifest(url) {
       const data = await this.request(url);
 
-      // if the entrypoint points to a single manifest, initialize the tree
-      if (this.isCollection === false) {
-        this.tree.push({
-          label: '',
-          'label-key': this.config.labels.manifest,
-          children: [],
-        });
-      }
-
       if (!Array.isArray(data.sequence)) {
         data.sequence = [data.sequence];
       }
@@ -419,15 +410,19 @@ export default {
       }
       this.manifests.push(data);
 
-      this.tree[0].children.push({
-        children: this.getItemUrls(data.sequence, data.label),
-        label: data.label,
-        'label-key': data.label,
-        handler: (node) => {
-          this.$root.$emit('update-tree-knots', node.label);
-        },
-        selectable: false,
-      });
+      if (this.isCollection) {
+        this.tree[0].children.push({
+          children: this.getItemUrls(data.sequence, data.label),
+          label: data.label,
+          'label-key': data.label,
+          handler: (node) => {
+            this.$root.$emit('update-tree-knots', node.label);
+          },
+          selectable: false,
+        });
+      } else {
+        this.tree.push(...this.getItemUrls(data.sequence, data.label));
+      }
 
       if (this.manifests?.[0]?.sequence?.[0]?.id && !this.$route.query.itemurl) {
         this.loaded = false;
