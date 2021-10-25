@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.22.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.21.0...v1.22.0) (2021-10-25)
+
+
+### Features
+
+* text panel error message notification ([89753ef](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/89753ef975037bd4ffe77dc7665f54345cf6c7b8))
+
+
+### Bug Fixes
+
+* third party application short notation the bookmarking doesn't open to exact shared sheet ([09c012e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/09c012e88f49686cce6d524bbd52f7c4c1d2396d))
+
+
+### Refactoring
+
+* addressing review comments ([b355fa2](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b355fa27630cf7df9f6a6ebf00e7b11908f91aa6))
+* display project specific styling in annotation panel ([deb9b24](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/deb9b241afe2248c5530c07557a81688365bc179))
+* hide collection and manuscript title when tido loads with singel manuscript ([0c696aa](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0c696aa91f31965e762d834b03ab798296164a65))
+* removing extra condition for loading spinner ([e447d7a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e447d7a99caad01c1102939370a2541f627f54f0))
+
+
+### Styling
+
+* reduced indentation of tree sheet title ([2ef8fd5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2ef8fd5ab359bf328ac0cb3b23cd191be27cabb5))
+* reduced indentation of tree sheet title ([0da4f49](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0da4f49769b9230ea259aa87005bf47665da22c3))
+
+
+### Continuos Integration
+
+* remove entry point ([ada8b18](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ada8b18ccdf1876a2187d18b098c1c70de7e2fb7))
+* remove entry point ([c4c0dc9](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c4c0dc98e2c383d734da1563da1d3456da8686d8))
+* remove entry point ([1732334](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/173233410602e67954a7706ebc41704d1aef6c65))
+* remove entry point ([d00c90e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d00c90e88b04070a2eafbd12436215a253f00eb9))
+
 ## [1.21.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.20.1...v1.21.0) (2021-10-12)
 
 
