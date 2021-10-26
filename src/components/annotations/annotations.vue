@@ -23,7 +23,7 @@
     <Loading v-if="!isloading || isProcessing" />
 
     <AnnotationList
-      v-else-if="filteredAnnotations.length && isloading && !isProcessing"
+      v-else-if="filteredAnnotations.length && isloading && !isProcessing && !isAnnotationTypeText"
       class="custom-font"
       :active-annotation="activeAnnotation"
       :configured-annotations="filteredAnnotations"
@@ -32,19 +32,28 @@
       :toggle="toggle"
     />
 
+    <div v-else-if="isAnnotationTypeText && filteredAnnotations.length">
+      <Enlaeterung
+        v-for="item in filteredAnnotations"
+        :key="item.target.id"
+        :annotation="item"
+      />
+    </div>
+
     <div
       v-else-if="!filteredAnnotations.length && isloading && !isProcessing"
       class="q-pa-sm"
     >
       <Notification
-        :message="$t(messages.none)"
+        :message="$t(isAnnotationTypeText ? messages.empty : messages.none)"
         :notification-colors="config.notificationColors"
-        title-key="annotationInfoTitle"
+        :title-key="isAnnotationTypeText ? 'noErläuterungMessageTitle' : 'annotationInfoTitle'"
         type="info"
       />
     </div>
 
     <AnnotationOptions
+      v-if="!isAnnotationTypeText"
       :selected-all="selectedAll"
       :selected-none="selectedNone"
       :on-highlight-all="onHighlightAll"
@@ -63,6 +72,7 @@ import AnnotationOptions from '@/components/annotations/options.vue';
 
 import Loading from '@/components/loading.vue';
 import Notification from '@/components/notification.vue';
+import Enlaeterung from '@/components/enlaeterung.vue';
 
 export default {
   name: 'Annotations',
@@ -72,6 +82,7 @@ export default {
     AnnotationOptions,
     Loading,
     Notification,
+    Enlaeterung,
   },
   mixins: [Annotation],
   props: {
@@ -102,17 +113,32 @@ export default {
       isProcessing: false,
       messages: {
         none: 'noAnnotationMessage',
+        empty: 'noErläuterungMessage',
       },
     };
   },
   computed: {
+    isAnnotationTypeText() {
+      return this.tabConfig[this.currentTab]?.contentType === 'text';
+    },
     annotationTabs() {
       return Object.entries(this.tabConfig)
-        .map(([key, type]) => ({
-          key,
-          collectionTitle: key,
-          type,
-        }));
+        .map(([key, data]) => {
+          if (Array.isArray(data)) {
+            return {
+              key,
+              collectionTitle: key,
+              contentType: 'annotation',
+              type: data,
+            };
+          }
+          return {
+            key,
+            collectionTitle: key,
+            contentType: data.contentType || 'annotation',
+            type: data.type,
+          };
+        });
     },
     annotationTabConfig() {
       return this.config?.annotations?.tabs || {};
@@ -139,11 +165,18 @@ export default {
       if (!this.currentTab) {
         return [];
       }
-      const output = this.annotations.filter(
-        (x) => this.tabConfig[this.currentTab].includes(x.body['x-content-type'])
-          && this.contentIds[x.targetId],
-      );
-
+      let output = [];
+      const activeEntities = (Array.isArray(this.tabConfig[this.currentTab]) ? this.tabConfig[this.currentTab] : this.tabConfig[this.currentTab].type || []);
+      if (this.isAnnotationTypeText) {
+        output = this.annotations.filter(
+          (x) => activeEntities.includes(x.body['x-content-type']),
+        );
+      } else {
+        output = this.annotations.filter(
+          (x) => activeEntities.includes(x.body['x-content-type'])
+            && this.contentIds[x.targetId],
+        );
+      }
       return this.sortAnnotation(output);
     },
     selectedAll() {
