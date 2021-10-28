@@ -31,7 +31,7 @@
     -->
     <script id="tido-config" type="application/json">
     {
-      "entrypoint": "https://ahikar.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
+      "entrypoint": "http://127.0.0.1:1745/tido/gfl/Z_1822-02-20_k/manifest.json",
       "annotations": {
         "show": true,
         "types": [
@@ -54,15 +54,21 @@
             "contenttype": "Motif",
             "icon": "fasHighlighter",
             "label": "Motifs"
+          },
+          {
+            "contenttype": "Notes",
+            "label": "Note"
+          },
+          {
+            "contenttype": "Erläuterung",
+            "annotationType": "text",
+            "label": "Erläuterung"
           }
         ],
         "tabs":{
           "Editorial": ["Person", "Place", "Editorial Comment"],
           "Motif": ["Motif"],
-          "Erläuterung": {
-            "contentType":"text",
-            "type":["Erläuterung"]
-          }
+          "Erläuterung": ["Erläuterung", "Notes"]
         }
       },
       "breadcrumbNavigation": {

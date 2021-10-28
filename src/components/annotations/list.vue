@@ -6,9 +6,9 @@
       :key="annotation.strippedId"
       :class="$q.dark.isActive ? { 'bg-grey-9': isActive(annotation) } : { 'bg-grey-4': isActive(annotation) }"
       class="q-pa-sm q-pl-xs q-mb-xs"
-      clickable
+      :clickable="!isText(annotation)"
       padding="xs"
-      @click="toggle(annotation)"
+      @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
       <q-item-section
         avatar
@@ -41,6 +41,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    config: {
+      type: Object,
+      default: () => {},
+    },
     getIcon: {
       type: Function,
       default: () => null,
@@ -54,9 +58,20 @@ export default {
       default: () => null,
     },
   },
+  computed: {
+    annotationTypesMapping() {
+      return this.config.annotations.types.reduce((prev, curr) => {
+        prev[curr.contenttype] = curr.annotationType || 'annotation';
+        return prev;
+      }, {});
+    },
+  },
   methods: {
     isActive(annotation) {
       return !!this.activeAnnotation[annotation.targetId];
+    },
+    isText(annotation) {
+      return this.annotationTypesMapping[annotation.body['x-content-type']] === 'text';
     },
   },
 };
