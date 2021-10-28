@@ -1,4 +1,9 @@
 export default {
+  computed: {
+    tidoConfig() {
+      return JSON.parse(document.getElementById('tido-config').text);
+    },
+  },
   methods: {
     getAllElementsFromSelector(selector, arr = []) {
       const el = document.getElementById(selector);
@@ -129,6 +134,10 @@ export default {
     sortAnnotation(annotations) {
       if (!annotations?.length) {
         return [];
+      }
+
+      if (this.tidoConfig.annotations.sortList) {
+        return annotations;
       }
 
       const output = annotations
