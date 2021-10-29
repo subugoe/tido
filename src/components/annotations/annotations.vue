@@ -159,22 +159,21 @@ export default {
       if (!this.currentTab) {
         return [];
       }
-      let output = [];
-      const activeEntities = (Array.isArray(this.tabConfig[this.currentTab]) ? this.tabConfig[this.currentTab] : this.tabConfig[this.currentTab].type || []);
-      if (this.isAnnotationTypeText) {
-        output = this.annotations.filter(
-          (x) => activeEntities.includes(x.body['x-content-type']),
-        );
-      } else {
-        output = this.annotations.filter(
-          (x) => activeEntities.includes(x.body['x-content-type'])
-            && this.contentIds[x.targetId],
-        );
-      }
+      const output = this.annotations.filter(
+        (x) => {
+          if (this.annotationTypesMapping[x.body['x-content-type']] === 'text') {
+            return this.activeEntities.includes(x.body['x-content-type']);
+          }
+          return this.activeEntities.includes(x.body['x-content-type']) && this.contentIds[x.targetId];
+        },
+      );
       return this.sortAnnotation(output);
     },
     isAnnotationTypeText() {
-      return this.annotationTypesMapping[this.currentTab] === 'text';
+      return this.activeEntities.some((x) => this.annotationTypesMapping[x] === 'text');
+    },
+    activeEntities() {
+      return (Array.isArray(this.tabConfig[this.currentTab]) ? this.tabConfig[this.currentTab] : this.tabConfig[this.currentTab].type || []);
     },
     selectedAll() {
       return (
