@@ -142,8 +142,8 @@ export default {
     annotationTypesMapping() {
       return this.config.annotations.types.reduce((prev, curr) => {
         prev[curr.contenttype] = {
-          type:curr.annotationType || 'annotation',
-          displayWhen:curr.displayWhen
+          type: curr.annotationType || 'annotation',
+          displayWhen: curr.displayWhen,
         };
         return prev;
       }, {});
