@@ -131,50 +131,6 @@ export default {
       return root;
     },
 
-    sortAnnotation(annotations) {
-      if (!annotations?.length) {
-        return [];
-      }
-
-      if (this.tidoConfig.annotations.sortList) {
-        return annotations;
-      }
-
-      const output = annotations
-        .map((annotation) => ({
-          ...annotation,
-          annotationIdValue: this.stripId(this.stripTargetId(annotation, false)).split('.').filter((x) => x),
-        }))
-        .sort(
-          (a, b) => b.annotationIdValue.length - a.annotationIdValue.length,
-        );
-
-      const annotationIdLength = output[0]?.annotationIdValue?.length || 0;
-
-      return output
-        .map((x) => {
-          //  Consider this as IP address (annotation ID)
-          //  We will get longest ip address we have ("max" here)
-          //  And if any of ip address part less then max then we are append 1 to it
-          //  e.g Max = [1.2.3.4]
-          //  current = [1.2.3] // Less than max because max has four parts
-          //  So annotationIdValue current will be [1.2.3.1] --> Last 1 is better for comparision.
-          const annotationId = annotationIdLength - x.annotationIdValue.length;
-
-          if (annotationId > 0) {
-            x.annotationIdValue = [
-              ...x.annotationIdValue,
-              ...new Array(annotationId).fill(1),
-            ].join('');
-          } else {
-            x.annotationIdValue = x.annotationIdValue.join('');
-          }
-
-          return x;
-        })
-        .sort((a, b) => a.annotationIdValue - b.annotationIdValue);
-    },
-
     /**
      * get the annotation id of the current item
      *

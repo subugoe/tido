@@ -202,7 +202,6 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
     "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
       "annotations": {
         "show": true,
-        "sortList": true,
         "types": [
           {
             "contenttype": "Person",
@@ -319,12 +318,6 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   **Note**: You have to provide at least a valid entry point (see below). Otherwise the Viewer won't show anything at all!
 
 - **annotations**
-
-  - **sortList**
-
-    This key checks to return either the sorted list from backend or perform the sort logic from frontend.
-
-    Default set to `true` if we get the sorted value from the api list. If the list is not sorted, than it is an option to remove this key or set this to `false`
 
   - **types**
 

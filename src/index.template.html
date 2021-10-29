@@ -31,10 +31,9 @@
     -->
     <script id="tido-config" type="application/json">
     {
-      "entrypoint": "http://127.0.0.1:1745/tido/gfl/Z_1822-02-20_k/manifest.json",
+      "entrypoint": "http://127.0.0.1:1745/tido/gfl/TEI_SAMPLE/manifest.json",
       "annotations": {
         "show": true,
-        "sortList": true,
         "types": [
           {
             "contenttype": "Person",
@@ -57,15 +56,16 @@
             "label": "Motifs"
           },
           {
-            "contenttype": "Erläuterung",
+            "contenttype": "Abstract",
             "annotationType": "text",
-            "label": "Erläuterung"
+            "displayWhen": "Edierter Text",
+            "label": "Abstract"
           }
         ],
         "tabs":{
           "Editorial": ["Person", "Place"],
           "Motif": ["Motif"],
-          "Comments": ["Erläuterung", "Editorial Comment"]
+          "Comments": ["Editorial Comment", "Abstract"]
         }
       },
       "breadcrumbNavigation": {

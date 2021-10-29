@@ -89,6 +89,14 @@ export default {
       type: Object,
       default: () => {},
     },
+    contentindex: {
+      type: Number,
+      default: () => 0,
+    },
+    contenttypes: {
+      type: Array,
+      default: () => [],
+    },
     panels: {
       type: Array,
       default: () => [],
@@ -124,7 +132,7 @@ export default {
             key,
             collectionTitle: key,
             contentType: data.contentType || 'annotation',
-            type: data.type,
+            type: data?.type,
           };
         });
     },
@@ -133,7 +141,10 @@ export default {
     },
     annotationTypesMapping() {
       return this.config.annotations.types.reduce((prev, curr) => {
-        prev[curr.contenttype] = curr.annotationType || 'annotation';
+        prev[curr.contenttype] = {
+          type:curr.annotationType || 'annotation',
+          displayWhen:curr.displayWhen
+        };
         return prev;
       }, {});
     },
@@ -153,27 +164,31 @@ export default {
         (annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']),
       );
 
-      return this.sortAnnotation(annotationType);
+      return annotationType;
     },
     filteredAnnotations() {
       if (!this.currentTab) {
         return [];
       }
+
       const output = this.annotations.filter(
         (x) => {
-          if (this.annotationTypesMapping[x.body['x-content-type']] === 'text') {
+          const annotationContentType = this.annotationTypesMapping[x.body['x-content-type']];
+
+          if (annotationContentType?.type === 'text' && annotationContentType?.displayWhen === this.contenttypes[this.contentindex]) {
             return this.activeEntities.includes(x.body['x-content-type']);
           }
           return this.activeEntities.includes(x.body['x-content-type']) && this.contentIds[x.targetId];
         },
       );
-      return this.sortAnnotation(output);
+
+      return output;
     },
     isAnnotationTypeText() {
-      return this.activeEntities.some((x) => this.annotationTypesMapping[x] === 'text');
+      return this.activeEntities.some((x) => this.annotationTypesMapping[x]?.type === 'text');
     },
     activeEntities() {
-      return (Array.isArray(this.tabConfig[this.currentTab]) ? this.tabConfig[this.currentTab] : this.tabConfig[this.currentTab].type || []);
+      return (Array.isArray(this.tabConfig[this.currentTab]) ? this.tabConfig[this.currentTab] : this.tabConfig[this.currentTab]?.type || []);
     },
     selectedAll() {
       return (
