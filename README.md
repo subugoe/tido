@@ -224,15 +224,16 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
             "label": "Motifs"
           },
           {
-            "contenttype": "Erläuterung",
+            "contenttype": "Abstract",
             "annotationType": "text",
-            "label": "Erläuterung"
+            "displayWhen": "Edierter Text",
+            "label": "Abstract"
           }
         ],
         "tabs":{
           "Editorial": ["Person", "Place"],
           "Motif": ["Motif"],
-          "Kommentar": ["Erläuterung", "Editorial Comment"]
+          "Comments": ["Editorial Comment", "Abstract"]
         }
       },
       "breadcrumbNavigation": {
@@ -351,7 +352,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   "tabs": {
     "First group": ["Person", "Place"],
     "Second one": ["Motif"],
-    "Third Group": ["Erläuterung", "Editorial Comment"]
+    "Third Group": ["Abstract", "Editorial Comment"]
   }
   ```
 

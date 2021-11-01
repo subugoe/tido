@@ -11,6 +11,7 @@
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
       <q-item-section
+        v-if="getIcon(annotation.body['x-content-type'])"
         avatar
         class="q-mr-none"
       >
