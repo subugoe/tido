@@ -222,11 +222,18 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
             "contenttype": "Motif",
             "icon": "fasHighlighter",
             "label": "Motifs"
+          },
+          {
+            "contenttype": "Abstract",
+            "annotationType": "text",
+            "displayWhen": "Edierter Text",
+            "label": "Abstract"
           }
         ],
         "tabs":{
-          "Editorial": ["Person", "Place", "Editorial Comment"],
-          "Motif": ["Motif"]
+          "Editorial": ["Person", "Place"],
+          "Motif": ["Motif"],
+          "Comments": ["Editorial Comment", "Abstract"]
         }
       },
       "breadcrumbNavigation": {
@@ -306,10 +313,10 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
 - **entrypoint**
 
-  to link the viewer to a backend, the entrypoint should point to the collection you want to be displayed.
+  to link the viewer to a backend, the entry point should point to the collection you want to be displayed.
   (Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
 
-  **Note**: You have to provide at least a valid entrypoint (see below). Otherwise the Viewer won't show anything at all!
+  **Note**: You have to provide at least a valid entry point (see below). Otherwise the Viewer won't show anything at all!
 
 - **annotations**
 
@@ -323,7 +330,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
         refers to the **x-content-type** in the **API** you are using.
 
-        **Note**: This content-type has to match its API-counterpart explicitely, otherwise TIDO isn't able to show the related annotations.
+        **Note**: This content-type has to match its API-counterpart explicitly, otherwise TIDO isn't able to show the related annotations.
 
     - **icon**
 
@@ -336,19 +343,20 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   - **tabs**
 
     the tabs-object represents different types of annotations to be displayed in tabs accordingly.
-    it consists of further extensible sub keys called group labels, either of it representing a single group of annotations, e.g. *editorial*, *motifs*.
+    it consists of further extensible sub keys called group labels, either of it representing a single group of annotations, e.g. *editorial*, *motifs*, *kommentar*.
     these labels act as your tab heading and its naming is up to your liking.
 
     e.g.
 
   ```JSON
   "tabs": {
-    "First group": ["Person", "Place", "Editorial Comment"],
-    "Second one": ["Motif"]
+    "First group": ["Person", "Place"],
+    "Second one": ["Motif"],
+    "Third Group": ["Abstract", "Editorial Comment"]
   }
   ```
 
-  **Note**: The strings contained within the group label keys (e.g. *Person*, *Place*, ...) have to match its API-counterpart explicitely. Please refer to the note above (content-type).
+  **Note**: The strings contained within the group label keys (e.g. *Person*, *Place*, ...) have to match its API-counterpart explicitly. Please refer to the note above (content-type).
 
 - **breadcrumbNavigation**
 

@@ -26,6 +26,7 @@
       v-else-if="filteredAnnotations.length && isloading && !isProcessing"
       class="custom-font"
       :active-annotation="activeAnnotation"
+      :config="config"
       :configured-annotations="filteredAnnotations"
       :content-ids="contentIds"
       :get-icon="getIcon"
@@ -37,14 +38,15 @@
       class="q-pa-sm"
     >
       <Notification
-        :message="$t(messages.none)"
+        :message="$t(isAnnotationTypeText ? messages.empty : messages.none)"
         :notification-colors="config.notificationColors"
-        title-key="annotationInfoTitle"
+        :title-key="isAnnotationTypeText ? 'commentsInfoTitle' : 'annotationInfoTitle'"
         type="info"
       />
     </div>
 
     <AnnotationOptions
+      v-if="!isAnnotationTypeText"
       :selected-all="selectedAll"
       :selected-none="selectedNone"
       :on-highlight-all="onHighlightAll"
@@ -87,6 +89,14 @@ export default {
       type: Object,
       default: () => {},
     },
+    contentindex: {
+      type: Number,
+      default: () => 0,
+    },
+    contenttypes: {
+      type: Array,
+      default: () => [],
+    },
     panels: {
       type: Array,
       default: () => [],
@@ -102,20 +112,41 @@ export default {
       isProcessing: false,
       messages: {
         none: 'noAnnotationMessage',
+        empty: 'noCommentsMessage',
       },
     };
   },
   computed: {
     annotationTabs() {
       return Object.entries(this.tabConfig)
-        .map(([key, type]) => ({
-          key,
-          collectionTitle: key,
-          type,
-        }));
+        .map(([key, data]) => {
+          if (Array.isArray(data)) {
+            return {
+              key,
+              collectionTitle: key,
+              contentType: 'annotation',
+              type: data,
+            };
+          }
+          return {
+            key,
+            collectionTitle: key,
+            contentType: data.contentType || 'annotation',
+            type: data?.type,
+          };
+        });
     },
     annotationTabConfig() {
       return this.config?.annotations?.tabs || {};
+    },
+    annotationTypesMapping() {
+      return this.config.annotations.types.reduce((prev, curr) => {
+        prev[curr.contenttype] = {
+          type: curr.annotationType || 'annotation',
+          displayWhen: curr.displayWhen,
+        };
+        return prev;
+      }, {});
     },
     configuredTypes() {
       return this.config.annotations.types.map((type) => type.contenttype);
@@ -133,18 +164,31 @@ export default {
         (annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']),
       );
 
-      return this.sortAnnotation(annotationType);
+      return annotationType;
     },
     filteredAnnotations() {
       if (!this.currentTab) {
         return [];
       }
+
       const output = this.annotations.filter(
-        (x) => this.tabConfig[this.currentTab].includes(x.body['x-content-type'])
-          && this.contentIds[x.targetId],
+        (x) => {
+          const annotationContentType = this.annotationTypesMapping[x.body['x-content-type']];
+
+          if (annotationContentType?.type === 'text' && annotationContentType?.displayWhen === this.contenttypes[this.contentindex]) {
+            return this.activeEntities.includes(x.body['x-content-type']);
+          }
+          return this.activeEntities.includes(x.body['x-content-type']) && this.contentIds[x.targetId];
+        },
       );
 
-      return this.sortAnnotation(output);
+      return output;
+    },
+    isAnnotationTypeText() {
+      return this.activeEntities.some((x) => this.annotationTypesMapping[x]?.type === 'text');
+    },
+    activeEntities() {
+      return (Array.isArray(this.tabConfig[this.currentTab]) ? this.tabConfig[this.currentTab] : this.tabConfig[this.currentTab]?.type || []);
     },
     selectedAll() {
       return (
@@ -475,6 +519,9 @@ export default {
     },
 
     removeAnnotation(annotation, level) {
+      if (!this.contentIds[annotation.targetId]) {
+        return;
+      }
       const updated = { ...this.activeAnnotation };
       let selector = this.stripTargetId(annotation, false);
 
@@ -489,6 +536,9 @@ export default {
     },
 
     toggle(annotation) {
+      if (!this.contentIds[annotation.targetId]) {
+        return;
+      }
       const exists = !!this.activeAnnotation[annotation.targetId];
       if (exists) {
         this.removeAnnotation(annotation);
