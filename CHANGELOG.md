@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.23.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.22.0...v1.23.0) (2021-11-02)
+
+
+### Features
+
+* adding a new tab related to enlaeterung ([21664ad](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/21664ad5fd2c67c887dce641b54433c336249657))
+
+
+### Bug Fixes
+
+* sort order of annotation list from backend ([d5a4e4a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d5a4e4aae740e841cb9d3b05d440647869960925))
+
+
+### Refactoring
+
+* add missing colon ([ed28000](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ed28000b31d3163c22362fffb6a9e13f610313d3))
+* remove indentation if there is no icon for annotations and update readme ([15bf470](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/15bf470af2206aee0ee5d784256da97ae8fb5e80))
+* update index.html and readME files ([c20a9f8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c20a9f8bb36bc17a4ccb69104bf6a0967c4b528d))
+* update logic to display erlauterung for text ([9481aea](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/9481aead3f3bf2b9395b1667ad30d9329aab96ac))
+* update logic to display notes and notification message ([dc2e175](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dc2e175cb5086b7dfa5a2ea8aee892e4308bab7a))
+
+
+### Continuos Integration
+
+* remove entry point ([c159287](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c1592878bf2c7393c24f526446e505a05e64db19))
+* remove entry point ([41216b8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/41216b894044491489504a475bd0355a1364ff3e))
+
 ## [1.22.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.21.0...v1.22.0) (2021-10-25)
 
 
