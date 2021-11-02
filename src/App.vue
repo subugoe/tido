@@ -236,20 +236,23 @@ export default {
       * @return array
       */
     getContentUrls(content) {
-      const urls = [];
+      const contentTypes = [];
 
       if (Array.isArray(content) && content.length) {
-        this.contentTypes = [];
-
         content.forEach((c) => {
           if (c.type.match(/(application\/xhtml\+xml|text\/html)/)) {
-            urls.push(c.url);
-
-            this.contentTypes.push(c.type.split('type=')[1]);
+            contentTypes.push({
+              label: c.type.split('type=')[1],
+              priority: this.config?.textContent?.tabs.priority?.[c.type.split('type=')[1]] || 100,
+              url: c.url,
+            });
           }
         });
+        contentTypes.sort((a, b) => a.priority - b.priority);
+
+        this.contentTypes = contentTypes.map((x) => x.label);
       }
-      return urls;
+      return contentTypes.map((x) => x.url);
     },
     /**
       * fetch all data provided on 'item level'

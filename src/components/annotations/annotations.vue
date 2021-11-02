@@ -407,6 +407,12 @@ export default {
     onContentUpdate(ids) {
       try {
         this.contentIds = ids;
+
+        if (!this.isloading || this.isProcessing) {
+          setTimeout(() => this.onContentUpdate(ids), 100);
+          return;
+        }
+
         this.highlightActiveContent(this.filteredAnnotations);
 
         this.handleTooltip();
