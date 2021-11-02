@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.24.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.23.0...v1.24.0) (2021-11-02)
+
+
+### Features
+
+* setting default text panel tab to Edierter text ([19d60ff](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/19d60ffa35328e8cfd2cf70fa42663bb69f37822))
+
+
+### Continuos Integration
+
+* remove entry point ([8faa97e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8faa97e774a36b284a0e66478a17ea9c5b269083))
+
 ## [1.23.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.22.0...v1.23.0) (2021-11-02)
 
 
