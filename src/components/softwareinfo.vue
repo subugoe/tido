@@ -8,7 +8,7 @@
     >
       <q-icon
         size="xs"
-        :name="fasInfoCircle"
+        :name="fasInfo"
         :color="$q.dark.isActive ? 'bg-black' : 'accent'"
       />
     </q-btn>
@@ -92,7 +92,7 @@ import {
   fasBook,
   fasBug,
   fasCode,
-  fasInfoCircle,
+  fasInfo,
 } from '@quasar/extras/fontawesome-v5';
 import { version } from '../../package.json';
 
@@ -114,7 +114,7 @@ export default {
     this.fasBook = fasBook;
     this.fasBug = fasBug;
     this.fasCode = fasCode;
-    this.fasInfoCircle = fasInfoCircle;
+    this.fasInfo = fasInfo;
 
     this.version = version;
   },
