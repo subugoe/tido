@@ -24,7 +24,7 @@
 
       <q-item-section>
         <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-        <span v-html="url.text" />
+        <span v-html="annotation.body.value" />
       </q-item-section>
     </q-item>
   </q-list>
