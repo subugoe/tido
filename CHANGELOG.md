@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.24.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.24.0...v1.24.1) (2021-11-15)
+
+
+### Bug Fixes
+
+* fix the annotation display value ([2b7d583](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2b7d583980c4acefd9294742b1c8720a76724a2f))
+
+
+### Chore
+
+* change app info icon ([dfbcad0](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dfbcad082cf1df2055cf97bd566309fc7e0b26d2)), closes [#351](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/351)
+
+
+### Continuos Integration
+
+* remove entry point ([328ba8e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/328ba8ea8549728e4cecb7535a0f438c7ae5c99c))
+
+
+### Refactoring
+
+* edit display of link for gfl requirement ([b34ae9d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b34ae9d4ffde6abfbda8dd90ac4baf91dbc9ca81))
+
 ## [1.24.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.23.0...v1.24.0) (2021-11-02)
 
 
