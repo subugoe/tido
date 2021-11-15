@@ -23,20 +23,17 @@
       </q-item-section>
 
       <q-item-section>
-        <AnnotationUrls :content="annotation.body.value" />
+        <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
+        <span v-html="annotation.body.value" />
       </q-item-section>
     </q-item>
   </q-list>
 </template>
 
 <script>
-import AnnotationUrls from '@/components/urls.vue';
 
 export default {
   name: 'AnnotationList',
-  components: {
-    AnnotationUrls,
-  },
   props: {
     activeAnnotation: {
       type: Object,
