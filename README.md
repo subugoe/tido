@@ -201,7 +201,6 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   {
     "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
       "annotations": {
-        "show": true,
         "types": [
           {
             "contenttype": "Person",
@@ -248,6 +247,13 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
         "primary": "",
         "secondary": "",
         "accent": ""
+      },
+      "textContent": {
+        "tabs": {
+          "priority": {
+            "Edierter Text": 1
+          }
+        }
       },
       "header_section": {
         "show": true,
@@ -340,6 +346,18 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
         The label of the annotation type respectively
 
+    - **annotationType**
+
+        Represents the type of annotation that needs to be displayed in the list.
+
+        this key is introduced to know the difference between regular annotations which highlights text content respectively and the annotation which is only displayed as text.
+
+    - **displayWhen**
+
+        Represents the way of displaying an annotation when it's a specific type of text content.
+
+        **Note** This value should explicitly match the content type of tabs in text panel that we receive from API content array (ex: *Edierter Text*, *transcription*).
+
   - **tabs**
 
     the tabs-object represents different types of annotations to be displayed in tabs accordingly.
@@ -351,12 +369,12 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   ```JSON
   "tabs": {
     "First group": ["Person", "Place"],
-    "Second one": ["Motif"],
-    "Third Group": ["Abstract", "Editorial Comment"]
+    "Second group": ["Motif"],
+    "Third group": ["Abstract", "Editorial Comment"]
   }
   ```
 
-  **Note**: The strings contained within the group label keys (e.g. *Person*, *Place*, ...) have to match its API-counterpart explicitly. Please refer to the note above (content-type).
+  **Note**: The strings contained within the group keys (e.g. *Person*, *Place*, ...) have to match its API-counterpart explicitly. Please refer to the note above (content-type).
 
 - **breadcrumbNavigation**
 
@@ -483,6 +501,18 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   If we do not send any type, than there is no `icon` set to the notification message.
 
   **Note**: Can add additional types ex: `success`, `error`, `positive`, `negative`. Based on these we need to add them at the component level as well and their icons respectively.
+
+- **textContent**
+
+  - **tabs**
+
+      Represents the tabs that are displayed in text panel. Usually the order of these tabs are displayed in the same way that comes from the content array from API.
+
+      **priority**
+
+      this key is introduced to set the priority order of the tabs based on the project requirements.
+
+      **Note**: The strings contained within the group keys (e.g. *Edierter Text* or example: *Transcription*, ...) have to match its API-counterpart explicitly (content type). The values of keys can be set from 1 to 100 based on the project requirement for tabs order.
 
 - **rtl (right to left)**
 
