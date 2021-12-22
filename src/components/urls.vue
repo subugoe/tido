@@ -7,7 +7,7 @@
     >
       <a
         v-if="url.isLink"
-        :href="url.text"
+        :href="url.url"
         :title="url.linkTitle + '- open in a new tab or window'"
         rel="noopener noreferrer"
         target="_blank"
@@ -24,7 +24,7 @@
       </a>
 
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-      <span v-else v-html="url.text" />
+      <span v-else v-html="url.linkTitle" />
     </div>
   </div>
 </template>
@@ -42,53 +42,69 @@ export default {
   },
   computed: {
     contentUrls() {
-      let { content } = this;
-      const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
-      const urls = [...(content.match(regex) || [])];
+      let i = 0;
+      const output = [];
+      const roundBracketRegex = new RegExp(/\((.*?)\)/);
+      const texts = this.content.split(' ');
+      const urlRegex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%.+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%+.~#?&//=]*)/);
 
-      urls.forEach((url) => {
-        content = content.replace(url, `_-_${url}_-_`);
-      });
+      while (i < texts.length) {
+        let nextWord = texts[i + 1] || '';
+        let text = texts[i];
+        const isCurrentWordUrl = text.match(urlRegex);
+        const isNextWordUrl = nextWord.match(urlRegex);
 
-      const urlContents = content.split('_-_').filter((url) => url);
-
-      const urlText = urlContents.map((urlContent) => ({
-        text: urlContent,
-        isLink: urls.includes(urlContent),
-      }));
-
-      if (urls.length) {
-        const filteredOutput = [];
-        let i = 0;
-
-        while (i < urlText.length) {
-          const element = urlText[i];
-
-          // This first if condition logic checks the string that we get from backend.
-          // Ex text: Max Mustermann (https://d-nb.info/gnd/1143543866).
-          // Here the text is divided into 3 parts of array which takes text from previous element(Max Mustermann ( ),
-          // link from next element(https://d-nb.info/gnd/1143543866) and than the last ) is skipped.
-          if ((urlText[i - 1]?.text || '').endsWith('(') && (urlText[i + 1]?.text || '').endsWith(')') && element.isLink) {
-            filteredOutput.push({ isLink: true, linkTitle: urlText[i - 1]?.text.replace(')', '').replace(' (', ''), text: element.text });
-
+        if (text.match(roundBracketRegex)) {
+          if (!text.match(urlRegex) && isNextWordUrl) {
+            text = this.cleanWord(text);
+            nextWord = this.cleanWord(nextWord);
             i += 1;
-          } else if (element.isLink || !(urlText[i + 1]?.isLink && element.text.endsWith('('))) {
-          // it checks if it's a normal link or current text ends with ( and next item is link.
-            const linkTitle = element.text.split('/').filter((link) => link);
+            texts.splice(i + 1, 1);
 
-            filteredOutput.push({ ...element, linkTitle: linkTitle[linkTitle.length - 1] });
+            output.push({
+              isLink: true,
+              linkTitle: text.split('/').slice(-1)[0] || '',
+              url: nextWord,
+            });
+          } else if (text.match(urlRegex)) {
+            text = this.cleanWord(text);
+
+            output.push({
+              isLink: true,
+              linkTitle: text.split('/').slice(-1)[0] || '',
+              url: text,
+            });
           }
-          i += 1;
-        }
+        } else if (isCurrentWordUrl) {
+          text = this.cleanWord(text);
 
-        return filteredOutput;
+          output.push({
+            isLink: true,
+            linkTitle: text.split('/').slice(-1)[0] || '',
+            url: text,
+          });
+        } else {
+          output.push({ linkTitle: text });
+        }
+        i += 1;
       }
 
-      return urlText;
+      return output;
     },
   },
   created() {
     this.fasExternalLinkAlt = fasExternalLinkAlt;
+  },
+  methods: {
+    cleanWord(text) {
+      text = text.replace(/[{()}]/g, '');
+
+      if (text.endsWith(';')) {
+        text = text.slice(0, -1);
+      }
+
+      return text;
+    },
   },
 };
 </script>
