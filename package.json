@@ -32,7 +32,7 @@
   "private": false,
   "dependencies": {
     "@quasar/extras": "^1.9.14",
-    "openseadragon": "^2.4.2",
+    "openseadragon": "^3.0.0",
     "quasar": "^1.15.1",
     "vue-i18n": "^8.24.4",
     "vuedraggable": "^2.24.3"
