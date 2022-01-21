@@ -15,7 +15,7 @@ Vue.use(Vuex);
  */
 
 export default function TidoStore(/* { ssrContext } */) {
-  const Store = new Vuex.Store({
+  const store = new Vuex.Store({
     modules: {
       annotations,
     },
@@ -25,5 +25,5 @@ export default function TidoStore(/* { ssrContext } */) {
     strict: process.env.DEBUGGING,
   });
 
-  return Store;
+  return store;
 }

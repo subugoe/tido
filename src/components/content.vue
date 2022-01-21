@@ -78,7 +78,6 @@
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
-import Annotation from '@/mixins/annotation';
 import DomMixin from '@/mixins/dom';
 import Loading from '@/components/loading.vue';
 import Notification from '@/components/notification.vue';
@@ -92,7 +91,7 @@ export default {
     Loading,
     Notification,
   },
-  mixins: [Annotation, DomMixin],
+  mixins: [DomMixin],
   props: {
     config: {
       type: Object,

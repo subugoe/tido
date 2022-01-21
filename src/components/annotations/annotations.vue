@@ -58,7 +58,6 @@
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
 
-import Annotation from '@/mixins/annotation';
 import AnnotationToggles from '@/components/annotations/toggles.vue';
 import AnnotationList from '@/components/annotations/list.vue';
 import AnnotationOptions from '@/components/annotations/options.vue';
@@ -69,6 +68,7 @@ import Notification from '@/components/notification.vue';
 import {
   getAnnotationTabs, createTooltip, backTrackNestedAnnotations, isAnnotationSelected, getAnnotationIcon, onlyIf,
 } from '@/utils';
+import * as AnnotationUtils from '@/utils';
 import DomMixin from '@/mixins/dom';
 
 export default {
@@ -80,7 +80,7 @@ export default {
     Loading,
     Notification,
   },
-  mixins: [Annotation, DomMixin],
+  mixins: [DomMixin],
   props: {
     config: {
       type: Object,
@@ -175,7 +175,7 @@ export default {
   watch: {
     currentTab: {
       handler() {
-        this.highlightActiveContent(this.filteredAnnotations);
+        AnnotationUtils.highlightActiveContent(this.filteredAnnotations);
         this.handleTooltip();
       },
     },
@@ -215,7 +215,7 @@ export default {
 
     addAnnotation(annotation) {
       this.$store.dispatch('annotations/addActiveAnnotation', annotation);
-      let selector = this.stripTargetId(annotation, false);
+      let selector = AnnotationUtils.stripTargetId(annotation, false);
 
       if (selector.startsWith('.')) {
         selector = selector.replace(/\./g, '');
@@ -223,7 +223,7 @@ export default {
 
       const el = document.getElementById(selector) || document.querySelector(`.${selector}`);
 
-      this.updateHighlightState(selector, 'INC');
+      AnnotationUtils.updateHighlightState(selector, 'INC');
       if (el) {
         this.addIcon(el, annotation);
       }
@@ -250,7 +250,7 @@ export default {
         const svg = getAnnotationIcon(contentType, this.config.annotations.types);
         svg.setAttribute(
           'data-annotation-icon',
-          this.stripTargetId(annotation),
+          AnnotationUtils.stripTargetId(annotation),
         );
         element.prepend(svg);
       } catch (err) {
@@ -270,7 +270,7 @@ export default {
 
     handleTooltip() {
       const annotationIds = this.filteredAnnotations.reduce((prev, curr) => {
-        let id = this.stripTargetId(curr, false);
+        let id = AnnotationUtils.stripTargetId(curr, false);
         if (id.startsWith('.')) {
           id = id.replace('.', '');
         }
@@ -318,7 +318,7 @@ export default {
           return;
         }
 
-        this.highlightActiveContent(this.filteredAnnotations);
+        AnnotationUtils.highlightActiveContent(this.filteredAnnotations);
 
         this.handleTooltip();
       } catch (err) {
@@ -352,7 +352,7 @@ export default {
     },
 
     removeIcon(annotation) {
-      const stripeId = this.stripTargetId(annotation);
+      const stripeId = AnnotationUtils.stripTargetId(annotation);
       const el = document
         .querySelector(`svg[data-annotation-icon='${stripeId}']`);
 
@@ -366,13 +366,13 @@ export default {
         return;
       }
       this.$store.dispatch('annotations/removeActiveAnnotation', annotation);
-      let selector = this.stripTargetId(annotation, false);
+      let selector = AnnotationUtils.stripTargetId(annotation, false);
 
       if (selector.startsWith('.')) {
         selector = selector.replace(/\./g, '');
       }
 
-      this.updateHighlightState(selector, 'DEC', level);
+      AnnotationUtils.updateHighlightState(selector, 'DEC', level);
       this.removeIcon(annotation);
     },
 

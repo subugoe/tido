@@ -2,13 +2,75 @@ import * as Icons from '@quasar/extras/fontawesome-v5';
 
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
+export function addHighlightToTargetIds(selector, root) {
+  const element = root.getElementById(selector);
+  if (!element) {
+    return;
+  }
+
+  function recursiveAddClass(children) {
+    [...children].forEach((child) => {
+      child.setAttribute('data-annotation', true);
+      child.classList.add(selector);
+      recursiveAddClass(child.children);
+    });
+  }
+
+  if (!element.children.length) {
+    element.setAttribute('data-annotation', true);
+    element.classList.add(selector);
+  }
+
+  recursiveAddClass(element.children);
+}
+
+export function replaceSelectorWithSpan(selector, root) {
+  const start = root.querySelector(`[data-target="${selector}_start"]`);
+  const end = root.querySelector(`[data-target="${selector}_end"]`);
+
+  let started = false;
+  let ended = false;
+
+  function replaceRecursive(element) {
+    if (!element.childNodes) return;
+
+    [...element.childNodes].forEach((childNode) => {
+      if (childNode === start) started = true;
+      if (childNode === end) ended = true;
+
+      if (ended) return;
+
+      if (childNode.nodeName === 'SPAN' && childNode.getAttribute('data-annotation') && started) {
+        childNode.classList.add(selector);
+      }
+
+      if (childNode.nodeName === '#text') {
+        if (started) {
+          if (childNode.textContent && childNode.textContent.trim()) {
+            const span = document.createElement('span');
+
+            span.setAttribute('class', selector);
+            span.setAttribute('data-annotation', true);
+            span.innerHTML = childNode.textContent;
+            childNode.replaceWith(span);
+          }
+        }
+      } else {
+        replaceRecursive(childNode);
+      }
+    });
+  }
+  replaceRecursive(root);
+  return root;
+}
+
 export function addHighlighterAttributes(dom) {
   this.mapUniqueElements(
     this.findDomElements('[data-target]:not([value=""])', dom),
     (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
-  ).forEach((selector) => this.replaceSelectorWithSpan(selector, dom));
+  ).forEach((selector) => replaceSelectorWithSpan(selector, dom));
 
-  this.mapElements(this.findDomElements('[id]', dom), (x) => x.getAttribute('id')).forEach((selector) => this.addHighlightToTargetIds(selector, dom));
+  this.mapElements(this.findDomElements('[id]', dom), (x) => x.getAttribute('id')).forEach((selector) => addHighlightToTargetIds(selector, dom));
 }
 
 export function getAnnotationContentIds(dom) {
@@ -124,6 +186,131 @@ export function createTooltip(element, annotationClasses, config) {
   document.querySelector('body').append(tooltipEl);
 
   setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
+}
+
+export function getElementById(id) {
+  if (!id) {
+    return null;
+  }
+
+  return document.getElementById(id.replace(/#/g, ''));
+}
+
+export function getNewLevel(element, operation) {
+  const currentLevel = parseInt(
+    element.getAttribute('data-annotation-level'),
+    10,
+  );
+  if (operation === 'INC') {
+    return currentLevel + 1;
+  }
+  if (currentLevel !== 0) {
+    return currentLevel - 1;
+  }
+  return currentLevel;
+}
+
+export function highlightActiveId(element) {
+  if (!element) {
+    return;
+  }
+  element.setAttribute('data-annotation-level', 0);
+
+  [...element.children].forEach((child) => {
+    child.setAttribute('data-annotation-level', 0);
+    highlightActiveId(child);
+  });
+}
+
+export function stripId(val) {
+  if (!val) {
+    return '';
+  }
+  return val.replace(/-/g, '.').replace(/[^.0-9]/g, '');
+}
+
+export function stripSelector(annotation) {
+  return `.${annotation.target.selector.startSelector.value
+    .replace("span[data-target='", '')
+    .replace("'", '')
+    .replace('_start]', '')
+    .replace('_end]', '')}`;
+}
+
+export function stripAnnotationId(url) {
+  if (!url) {
+    return '';
+  }
+  return url.split('/').pop();
+}
+
+export function stripTargetId(annotation, removeDot = true) {
+  let output = '';
+  if (annotation.target.selector) {
+    output = stripSelector(annotation);
+  } else {
+    output = stripAnnotationId(annotation.target.id);
+  }
+
+  return removeDot ? output.replace(/\./g, '') : output;
+}
+
+export function updateTextContentClass(element, task = 'add', ...className) {
+  if (!element) {
+    return;
+  }
+  element.classList[task](...className);
+}
+
+export function toggleAnnotationSelector(annotation, text = 'toggle') {
+  const id = annotation.target.selector.startSelector.value
+    .replace("span[data-target='", '')
+    .replace("_start']", '');
+
+  const isOverlap = id.includes('Overlap');
+  [...document.querySelectorAll(`.${id}`)].forEach((el) => updateTextContentClass(
+    el,
+    text,
+    isOverlap ? 'annotation-disabled-overlap' : 'annotation-disabled',
+  ));
+}
+
+export function highlightActiveContent(annotations) {
+  annotations.forEach((el) => {
+    if (el.target.id) {
+      highlightActiveId(getElementById(stripTargetId(el, false)));
+    } else {
+      [...document.querySelectorAll(`.${stripTargetId(el)}`)].map((x) => x.setAttribute('data-annotation-level', 0));
+    }
+  });
+}
+
+export function getAllElementsFromSelector(selector, arr = []) {
+  const el = document.getElementById(selector);
+  if (el) {
+    // https://www.geeksforgeeks.org/queue-data-structure/
+    const queue = [];
+
+    queue.push(el);
+
+    while (queue.length) {
+      const popped = queue.pop();
+      arr.push(popped);
+      [...popped.children].forEach((child) => {
+        queue.push(child);
+      });
+    }
+    return arr;
+  }
+
+  return [...document.querySelectorAll(`.${selector}`)];
+}
+
+export function updateHighlightState(selector, operation, level) {
+  this.getAllElementsFromSelector(selector).forEach((el) => el.setAttribute(
+    'data-annotation-level',
+    level || getNewLevel(el, operation),
+  ));
 }
 
 export const backTrackNestedAnnotations = (el, classNames = []) => {

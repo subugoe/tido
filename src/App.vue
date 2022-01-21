@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import Annotation from '@/mixins/annotation';
+import * as AnnotationUtils from '@/utils';
 import { colors } from 'quasar';
 import treestore from '@/stores/treestore.js';
 import Header from '@/components/header.vue';
@@ -57,7 +57,6 @@ export default {
     Header,
   },
   mixins: [
-    Annotation,
     Panels,
   ],
   data() {
@@ -169,7 +168,7 @@ export default {
         );
 
         if (current.annotationPage.items.length) {
-          this.$store.dispatch('annotations/annotationLoaded', current.annotationPage.items.map((x) => ({ ...x, targetId: this.stripTargetId(x, true) })));
+          this.$store.dispatch('annotations/annotationLoaded', current.annotationPage.items.map((x) => ({ ...x, targetId: AnnotationUtils.stripTargetId(x, true) })));
         } else {
           this.$store.dispatch('annotations/annotationLoaded', []);
         }
