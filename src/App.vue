@@ -49,7 +49,6 @@ import { colors } from 'quasar';
 import treestore from '@/stores/treestore.js';
 import Header from '@/components/header.vue';
 import Panels from '@/mixins/panels';
-import { getAnnotationTabs } from '@/utils';
 
 export default {
   name: 'TIDO',
@@ -267,7 +266,7 @@ export default {
         const currentManifest = this.contentUrls[0].split('/').pop().split('-')[0];
 
         if (previousManifest !== currentManifest) {
-          const tabs = getAnnotationTabs(this.config);
+          const tabs = AnnotationUtils.getAnnotationTabs(this.config);
           this.$store.dispatch('annotations/updateActiveTab', tabs?.[0].key);
           this.$root.$emit('manifest-changed');
         }

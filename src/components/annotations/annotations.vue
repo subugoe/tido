@@ -65,9 +65,6 @@ import AnnotationOptions from '@/components/annotations/options.vue';
 import Loading from '@/components/loading.vue';
 import Notification from '@/components/notification.vue';
 
-import {
-  getAnnotationTabs, createTooltip, backTrackNestedAnnotations, isAnnotationSelected, getAnnotationIcon, onlyIf,
-} from '@/utils';
 import * as AnnotationUtils from '@/utils';
 import DomMixin from '@/mixins/dom';
 
@@ -118,7 +115,7 @@ export default {
       return this.$store.getters['annotations/annotations'];
     },
     annotationTabs() {
-      return getAnnotationTabs(this.config);
+      return AnnotationUtils.getAnnotationTabs(this.config);
     },
     annotationTypesMapping() {
       return this.config.annotations.types.reduce((prev, curr) => {
@@ -247,7 +244,7 @@ export default {
         return;
       }
       try {
-        const svg = getAnnotationIcon(contentType, this.config.annotations.types);
+        const svg = AnnotationUtils.getAnnotationIcon(contentType, this.config.annotations.types);
         svg.setAttribute(
           'data-annotation-icon',
           AnnotationUtils.stripTargetId(annotation),
@@ -286,7 +283,7 @@ export default {
 
         if (!childOtherNodes) {
           const classNames = [];
-          el = backTrackNestedAnnotations(el, classNames);
+          el = AnnotationUtils.backTrackNestedAnnotations(el, classNames);
           const annotationClasses = [];
 
           // checks for duplicate class names.
@@ -341,9 +338,9 @@ export default {
     },
 
     onMouseHover(el, annotationClasses) {
-      onlyIf(
-        isAnnotationSelected(el),
-        createTooltip.bind(this, el, annotationClasses, this.config),
+      AnnotationUtils.onlyIf(
+        AnnotationUtils.isAnnotationSelected(el),
+        AnnotationUtils.createTooltip.bind(this, el, annotationClasses, this.config),
       );
     },
 
