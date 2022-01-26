@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import Annotation from '@/mixins/annotation';
+import * as AnnotationUtils from '@/utils';
 import { colors } from 'quasar';
 import treestore from '@/stores/treestore.js';
 import Header from '@/components/header.vue';
@@ -56,12 +56,10 @@ export default {
     Header,
   },
   mixins: [
-    Annotation,
     Panels,
   ],
   data() {
     return {
-      annotations: [],
       collection: {},
       collectiontitle: '',
       config: {},
@@ -71,7 +69,6 @@ export default {
       errormessage: false,
       errorImage: null,
       errorText: null,
-      fontsize: 16,
       imageurl: '',
       isCollection: false,
       isLoading: false,
@@ -82,6 +79,14 @@ export default {
       manifests: [],
       tree: [],
     };
+  },
+  computed: {
+    fontsize() {
+      return this.$store.getters['annotations/contentFontSize'];
+    },
+    annotations() {
+      return this.$store.getters['annotations/annotations'];
+    },
   },
   watch: {
     '$route.query': {
@@ -108,16 +113,6 @@ export default {
   },
   mounted() {
     this.$i18n.locale = this.config.lang;
-    /**
-      * listen to fontsize change (user interaction). emitted in @/components/content.vue
-      * in- or rather decrease fontsize of the text by 1px
-      * default fontsize: 14px
-      *
-      * @param number fontsize
-      */
-    this.$root.$on('update-fontsize', (fontsize) => {
-      this.fontsize = fontsize;
-    });
     this.$root.$on('panels-position', (newPanels) => {
       this.panels = newPanels;
     });
@@ -157,14 +152,13 @@ export default {
       * @param string url
       */
     async getAnnotations(url) {
-      this.annotations = [];
-      this.isLoading = false;
+      this.$store.dispatch('annotations/loadAnnotations');
 
       try {
         const annotations = await this.request(url);
 
         if (!annotations.annotationCollection.first) {
-          this.annotations = [];
+          this.$store.dispatch('annotations/annotationLoaded', []);
           return;
         }
 
@@ -173,14 +167,12 @@ export default {
         );
 
         if (current.annotationPage.items.length) {
-          this.annotations = current.annotationPage.items.map((x) => ({ ...x, targetId: this.stripTargetId(x, true) }));
+          this.$store.dispatch('annotations/annotationLoaded', current.annotationPage.items.map((x) => ({ ...x, targetId: AnnotationUtils.stripTargetId(x, true) })));
         } else {
-          this.annotations = [];
+          this.$store.dispatch('annotations/annotationLoaded', []);
         }
       } catch (err) {
-        this.annotations = [];
-      } finally {
-        this.isLoading = true;
+        this.$store.dispatch('annotations/annotationLoaded', []);
       }
     },
     /**
@@ -274,6 +266,8 @@ export default {
         const currentManifest = this.contentUrls[0].split('/').pop().split('-')[0];
 
         if (previousManifest !== currentManifest) {
+          const tabs = AnnotationUtils.getAnnotationTabs(this.config);
+          this.$store.dispatch('annotations/updateActiveTab', tabs?.[0].key);
           this.$root.$emit('manifest-changed');
         }
 

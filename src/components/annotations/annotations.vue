@@ -1,7 +1,7 @@
 <template>
   <div class="item relative-position">
     <q-tabs
-      v-model="currentTab"
+      :value="currentTab"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
       align="justify"
       class="text-grey q-mb-sm"
@@ -20,10 +20,10 @@
 
     <AnnotationToggles />
 
-    <Loading v-if="!isloading || isProcessing" />
+    <Loading v-if="isLoading || isProcessing" />
 
     <AnnotationList
-      v-else-if="filteredAnnotations.length && isloading && !isProcessing"
+      v-else-if="filteredAnnotations.length && !isLoading && !isProcessing"
       class="custom-font"
       :active-annotation="activeAnnotation"
       :config="config"
@@ -34,7 +34,7 @@
     />
 
     <div
-      v-else-if="!filteredAnnotations.length && isloading && !isProcessing"
+      v-else-if="!filteredAnnotations.length && !isLoading && !isProcessing"
       class="q-pa-sm"
     >
       <Notification
@@ -58,13 +58,15 @@
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
 
-import Annotation from '@/mixins/annotation';
 import AnnotationToggles from '@/components/annotations/toggles.vue';
 import AnnotationList from '@/components/annotations/list.vue';
 import AnnotationOptions from '@/components/annotations/options.vue';
 
 import Loading from '@/components/loading.vue';
 import Notification from '@/components/notification.vue';
+
+import * as AnnotationUtils from '@/utils';
+import DomMixin from '@/mixins/dom';
 
 export default {
   name: 'Annotations',
@@ -75,16 +77,8 @@ export default {
     Loading,
     Notification,
   },
-  mixins: [Annotation],
+  mixins: [DomMixin],
   props: {
-    annotations: {
-      type: Array,
-      default: () => [],
-    },
-    isloading: {
-      type: Boolean,
-      default: false,
-    },
     config: {
       type: Object,
       default: () => {},
@@ -104,12 +98,6 @@ export default {
   },
   data() {
     return {
-      configuredAnnotations: [],
-      activeAnnotation: {},
-      contentIds: {},
-      currentTab: '',
-      ids: [],
-      isProcessing: false,
       messages: {
         none: 'noAnnotationMessage',
         empty: 'noCommentsMessage',
@@ -117,27 +105,17 @@ export default {
     };
   },
   computed: {
-    annotationTabs() {
-      return Object.entries(this.tabConfig)
-        .map(([key, data]) => {
-          if (Array.isArray(data)) {
-            return {
-              key,
-              collectionTitle: key,
-              contentType: 'annotation',
-              type: data,
-            };
-          }
-          return {
-            key,
-            collectionTitle: key,
-            contentType: data.contentType || 'annotation',
-            type: data?.type,
-          };
-        });
+    activeAnnotation() {
+      return this.$store.getters['annotations/activeAnnotations'];
     },
-    annotationTabConfig() {
-      return this.config?.annotations?.tabs || {};
+    activeEntities() {
+      return (Array.isArray(this.tabConfig[this.currentTab]) ? this.tabConfig[this.currentTab] : this.tabConfig[this.currentTab]?.type || []);
+    },
+    annotations() {
+      return this.$store.getters['annotations/annotations'];
+    },
+    annotationTabs() {
+      return AnnotationUtils.getAnnotationTabs(this.config);
     },
     annotationTypesMapping() {
       return this.config.annotations.types.reduce((prev, curr) => {
@@ -148,23 +126,11 @@ export default {
         return prev;
       }, {});
     },
-    configuredTypes() {
-      return this.config.annotations.types.map((type) => type.contenttype);
+    contentIds() {
+      return this.$store.getters['annotations/contentIds'];
     },
-    currentAnnotations() {
-      const contentType = this.annotationTabs.find(
-        (collection) => collection.key === this.currentTab,
-      );
-
-      if (!contentType) {
-        return [];
-      }
-
-      const annotationType = this.configuredAnnotations.filter(
-        (annotationCollection) => contentType.type.includes(annotationCollection.body['x-content-type']),
-      );
-
-      return annotationType;
+    currentTab() {
+      return this.$store.getters['annotations/activeTab'];
     },
     filteredAnnotations() {
       if (!this.currentTab) {
@@ -184,32 +150,34 @@ export default {
 
       return output;
     },
+    isLoading() {
+      return this.$store.getters['annotations/isLoading'];
+    },
+    isProcessing() {
+      return this.$store.getters['annotations/isContentLoading'];
+    },
     isAnnotationTypeText() {
       return this.activeEntities.some((x) => this.annotationTypesMapping[x]?.type === 'text');
     },
-    activeEntities() {
-      return (Array.isArray(this.tabConfig[this.currentTab]) ? this.tabConfig[this.currentTab] : this.tabConfig[this.currentTab]?.type || []);
-    },
     selectedAll() {
-      return (
-        Object.keys(this.activeAnnotation).length
-        === this.filteredAnnotations.length
-      );
+      return this.$store.getters['annotations/isAllAnnotationSelected'](this.filteredAnnotations.length);
     },
     selectedNone() {
-      return !Object.keys(this.activeAnnotation).length;
+      return this.$store.getters['annotations/isNoAnnotationSelected'];
     },
     tabConfig() {
       return this.config.annotations.tabs;
     },
   },
   watch: {
-    filteredAnnotations: {
+    currentTab: {
       handler() {
-        this.activeAnnotation = {};
+        AnnotationUtils.highlightActiveContent(this.filteredAnnotations);
+        this.handleTooltip();
       },
-      immediate: true,
     },
+    contentIds: 'onContentUpdate',
+    filteredAnnotations: 'resetActiveAnnotations',
     panels: {
       handler(curr, prev) {
         const currentState = curr.find(
@@ -220,73 +188,46 @@ export default {
         );
 
         if (currentState !== previousState) {
-          this.activeAnnotation = {};
+          this.resetActiveAnnotations();
+          const annotations = this.findDomElements('[data-annotation-level]');
 
           if (currentState) {
-            [
-              ...document.querySelectorAll('[data-annotation-level]'),
-            ].forEach((el) => el.setAttribute('data-annotation-level', 0));
+            annotations.forEach((el) => el.setAttribute('data-annotation-level', 0));
           } else {
-            [
-              ...document.querySelectorAll('[data-annotation-level]'),
-            ].forEach((el) => el.setAttribute('data-annotation-level', -1));
-
-            [
-              ...document.querySelectorAll('[data-annotation-icon]'),
-            ].forEach((el) => el.remove());
+            annotations.forEach((el) => el.setAttribute('data-annotation-level', -1));
+            this.findDomElements('[data-annotation-icon]').forEach((el) => el.remove());
           }
         }
       },
     },
   },
   mounted() {
-    this.currentTab = this.annotationTabs?.[0].key;
-
-    this.$root.$on('update-annotations', this.onContentUpdate);
-    this.$root.$on('update-annotation-loading', (isProcessing) => {
-      this.isProcessing = !!isProcessing;
-    });
-
-    this.$root.$on('manifest-changed', () => {
-      this.currentTab = this.annotationTabs?.[0].key;
-    });
+    this.$store.dispatch('annotations/updateActiveTab', this.annotationTabs?.[0].key);
   },
   methods: {
     activeTab(key) {
-      if (this.currentTab === key) {
-        return;
-      }
-
       this.filteredAnnotations.forEach((x) => this.removeAnnotation(x, -1));
-
-      this.currentTab = key;
-
-      this.highlightActiveContent(this.filteredAnnotations);
-
-      this.handleTooltip();
+      this.$store.dispatch('annotations/updateActiveTab', key);
     },
 
     addAnnotation(annotation) {
-      const updated = { ...this.activeAnnotation };
-      let selector = this.stripTargetId(annotation, false);
+      this.$store.dispatch('annotations/addActiveAnnotation', annotation);
+      let selector = AnnotationUtils.stripTargetId(annotation, false);
 
       if (selector.startsWith('.')) {
         selector = selector.replace(/\./g, '');
       }
 
-      this.updateHighlightState(selector, 'INC');
-
       const el = document.getElementById(selector) || document.querySelector(`.${selector}`);
 
-      this.addIcon(el, annotation);
-
-      updated[annotation.targetId] = true;
+      AnnotationUtils.updateHighlightState(selector, 'INC');
+      if (el) {
+        this.addIcon(el, annotation);
+      }
 
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       }
-
-      this.activeAnnotation = updated;
     },
 
     addIcon(element, annotation) {
@@ -303,36 +244,15 @@ export default {
         return;
       }
       try {
-        const svg = this.createSVG(this.getIconName(contentType));
+        const svg = AnnotationUtils.getAnnotationIcon(contentType, this.config.annotations.types);
         svg.setAttribute(
           'data-annotation-icon',
-          this.stripTargetId(annotation),
+          AnnotationUtils.stripTargetId(annotation),
         );
         element.prepend(svg);
       } catch (err) {
-        // TODO : Handle Here
+        // error message
       }
-    },
-
-    createSVG(name) {
-      const [path, viewBox] = Icons[name].split('|');
-      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-
-      svg.setAttribute('aria-hidden', 'true');
-      svg.setAttribute('class', 'q-icon q-mx-xs');
-      svg.setAttribute('focusable', 'false');
-      svg.setAttribute('role', 'presentation');
-      svg.setAttribute('viewBox', viewBox);
-
-      const newPath = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'path',
-      );
-
-      newPath.setAttribute('d', path);
-      svg.appendChild(newPath);
-
-      return svg;
     },
 
     getIcon(contentType) {
@@ -345,13 +265,9 @@ export default {
       )[0].icon;
     },
 
-    getTooltipId(el) {
-      return `${el.className.split(' ').join('')}annotation-tooltip`;
-    },
-
     handleTooltip() {
       const annotationIds = this.filteredAnnotations.reduce((prev, curr) => {
-        let id = this.stripTargetId(curr, false);
+        let id = AnnotationUtils.stripTargetId(curr, false);
         if (id.startsWith('.')) {
           id = id.replace('.', '');
         }
@@ -367,7 +283,7 @@ export default {
 
         if (!childOtherNodes) {
           const classNames = [];
-          el = this.backTrackNestedAnnotations(el, classNames);
+          el = AnnotationUtils.backTrackNestedAnnotations(el, classNames);
           const annotationClasses = [];
 
           // checks for duplicate class names.
@@ -392,28 +308,14 @@ export default {
         }
       });
     },
-
-    backTrackNestedAnnotations(el, classNames = []) {
-      let current = el;
-
-      while (current.parentElement.getAttribute('data-annotation') && current.parentElement.childNodes.length === 1) {
-        classNames.push(current.className);
-        current = current.parentElement;
-      }
-
-      return el;
-    },
-
     onContentUpdate(ids) {
       try {
-        this.contentIds = ids;
-
-        if (!this.isloading || this.isProcessing) {
+        if (this.isLoading || this.isProcessing) {
           setTimeout(() => this.onContentUpdate(ids), 100);
           return;
         }
 
-        this.highlightActiveContent(this.filteredAnnotations);
+        AnnotationUtils.highlightActiveContent(this.filteredAnnotations);
 
         this.handleTooltip();
       } catch (err) {
@@ -436,86 +338,18 @@ export default {
     },
 
     onMouseHover(el, annotationClasses) {
-      const innerQueue = [];
-
-      // this logic checks the child spans and their classes.
-      innerQueue.push(el);
-      let matched = false;
-
-      while (innerQueue.length) {
-        const popped = innerQueue.pop();
-        if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
-          matched = true;
-        } else {
-          [...popped.children].forEach((child) => {
-            innerQueue.push(child);
-          });
-        }
-      }
-
-      // this logic checks the outer spans and their classes.
-      if (!matched) {
-        const outerQueue = [];
-        outerQueue.push(el);
-
-        while (outerQueue.length) {
-          const popped = outerQueue.pop();
-          if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
-            matched = true;
-          } else if (popped.parentElement.getAttribute('data-annotation')) {
-            outerQueue.push(popped.parentElement);
-          }
-        }
-      }
-
-      if (!el || !matched) {
-        return;
-      }
-
-      const tooltipEl = document.createElement('span');
-      tooltipEl.setAttribute('data-annotation-classes', `${el.className}`);
-      tooltipEl.setAttribute('class', 'annotation-tooltip');
-
-      const isMultiple = annotationClasses.length > 1;
-
-      let annotationLists = '';
-      annotationClasses.forEach((annotationList) => {
-        annotationLists += `<div class="referenced-annotation">
-        ${this.createSVG(this.getIconName(annotationList.contentType)).outerHTML}
-          <span>
-            ${annotationList.value}
-          </span>
-          </div>`;
-      });
-
-      const text = `<span class="text-body1">
-      ${!isMultiple ? `${this.$t('toolTip_Reference')}` : `${this.$t('toolTip_References')}`}:
-      </span>
-      <br>
-      <div class="text-body2">
-      ${annotationLists}
-      </div>`;
-
-      tooltipEl.innerHTML = text;
-      tooltipEl.setAttribute('id', this.getTooltipId(el));
-      window.top.el = el;
-
-      const r = el.getBoundingClientRect();
-
-      tooltipEl.style.top = `${r.y + r.height}px`;
-      tooltipEl.style.left = `${r.x}px`;
-
-      document.querySelector('body').append(tooltipEl);
-
-      setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
+      AnnotationUtils.onlyIf(
+        AnnotationUtils.isAnnotationSelected(el),
+        AnnotationUtils.createTooltip.bind(this, el, annotationClasses, this.config),
+      );
     },
 
     onMouseOut() {
-      [...document.querySelectorAll('.annotation-tooltip')].forEach((x) => x.remove());
+      this.findDomElements('.annotation-tooltip').forEach((el) => el.remove());
     },
 
     removeIcon(annotation) {
-      const stripeId = this.stripTargetId(annotation);
+      const stripeId = AnnotationUtils.stripTargetId(annotation);
       const el = document
         .querySelector(`svg[data-annotation-icon='${stripeId}']`);
 
@@ -528,17 +362,19 @@ export default {
       if (!this.contentIds[annotation.targetId]) {
         return;
       }
-      const updated = { ...this.activeAnnotation };
-      let selector = this.stripTargetId(annotation, false);
+      this.$store.dispatch('annotations/removeActiveAnnotation', annotation);
+      let selector = AnnotationUtils.stripTargetId(annotation, false);
 
       if (selector.startsWith('.')) {
         selector = selector.replace(/\./g, '');
       }
 
-      this.updateHighlightState(selector, 'DEC', level);
+      AnnotationUtils.updateHighlightState(selector, 'DEC', level);
       this.removeIcon(annotation);
-      delete updated[annotation.targetId];
-      this.activeAnnotation = updated;
+    },
+
+    resetActiveAnnotations() {
+      return this.$store.dispatch('annotations/resetActiveAnnotations');
     },
 
     toggle(annotation) {
