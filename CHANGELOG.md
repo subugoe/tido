@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.24.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.24.1...v1.24.2) (2022-01-27)
+
+
+### Bug Fixes
+
+* font styles in text panel ([1255bd6](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/1255bd61ac6d1a470c557ee701f07e81c03957f5))
+
+
+### Docs
+
+* update readme file and add missing documentation ([20db0bc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/20db0bca0d2db1810d64608dd518fcd9c657bcaa))
+
+
+### Chore
+
+* remove annotation mixin ([4cd56be](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4cd56bedfcc6a97cc1aa23f3a08a0b60cade5968))
+* remove obsolete file ([6df91e9](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/6df91e92b994fad574fde9d2bb93ae0a84260203))
+* upgrade to OpenSeaDragon 3 ([b24777b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b24777b09be99ac34291371306da07d0785ff918))
+
+
+### Refactoring
+
+* implementing stores and code refactor accordingly ([1969b2c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/1969b2c9af995db5dd7a2ff2b5fdeadb2f855f31))
+* remove redundant usage of import statements ([764c350](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/764c3501083558dd2bb6b26fa3522195840a753f))
+
+
+### Continuos Integration
+
+* remove entry point ([eb48316](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/eb483163e12c2f2812a91a72b475233820831f90))
+* remove entry point ([6e01b35](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/6e01b35a39a7dac1df0059cc1cfa51d9999d8241))
+* remove entry point ([e3b817e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e3b817ee266a467647223ec48e5d8b3ed0789b56))
+
 ### [1.24.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.24.0...v1.24.1) (2021-11-15)
 
 
