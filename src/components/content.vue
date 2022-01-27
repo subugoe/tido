@@ -276,8 +276,8 @@ export default {
     async getSupport(support) {
       support.forEach((s) => {
         const hasElement = this.findDomElementById(s.url);
-        onlyIf(s.type === 'font' && hasElement, () => loadFont(s.url));
-        onlyIf(s.type !== 'font' && hasElement, () => loadCss(s.url));
+        onlyIf(s.type === 'font' && !hasElement, () => loadFont(s.url));
+        onlyIf(s.type !== 'font' && !hasElement, () => loadCss(s.url));
       });
     },
   },
