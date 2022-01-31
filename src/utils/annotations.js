@@ -307,7 +307,7 @@ export function getAllElementsFromSelector(selector, arr = []) {
 }
 
 export function updateHighlightState(selector, operation, level) {
-  this.getAllElementsFromSelector(selector).forEach((el) => el.setAttribute(
+  getAllElementsFromSelector(selector).forEach((el) => el.setAttribute(
     'data-annotation-level',
     level || getNewLevel(el, operation),
   ));
