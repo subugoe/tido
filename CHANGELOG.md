@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.24.3](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.24.2...v1.24.3) (2022-01-31)
+
+
+### Bug Fixes
+
+* highlight of annotations on dev instances ([b667396](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b6673969791ee30959965b36ea8dbe9986b6db19))
+
+
+### Continuos Integration
+
+* remove entry point ([3503227](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/350322759879b3cbb7118e1b1d8688345e40e6f9))
+
 ### [1.24.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.24.1...v1.24.2) (2022-01-27)
 
 
