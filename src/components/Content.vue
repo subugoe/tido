@@ -95,12 +95,16 @@ import {
   delay,
   addHighlighterAttributes,
 } from '@/utils';
+import TextHighlight from '@/components/text-highlight';
+import Vue from 'vue/dist/vue.js';
 
 export default {
   name: 'Content',
   components: {
     Loading,
     Notification,
+    // eslint-disable-next-line vue/no-unused-components
+    TextHighlight,
   },
   mixins: [DomMixin],
   props: {
@@ -199,7 +203,27 @@ export default {
 
           addHighlighterAttributes.call(this, dom);
 
+          const TextHighlightClass = Vue.extend(TextHighlight);
+
           this.content = dom.documentElement.innerHTML;
+
+          // eslint-disable-next-line no-inner-declarations
+          function mountChildren(nodes) {
+            nodes.forEach((node) => {
+              const { id } = node;
+              const isAnnotation = node.nodeName !== '#text' && node.getAttribute('data-annotation');
+
+              if (id && isAnnotation) {
+                const textHighlight = new TextHighlightClass({ propsData: { text: node.innerText } });
+                textHighlight.$mount(document.getElementById(id));
+              }
+              mountChildren(node.childNodes);
+            });
+          }
+
+          setTimeout(() => {
+            mountChildren(dom.documentElement.childNodes);
+          }, 100);
 
           if (!annotationPanelHidden) {
             await delay(200);
