@@ -71,14 +71,20 @@
           class="q-mb-xs no-padding"
         >
           <q-item-section class="q-mb-xs no-padding">
-            <q-item-label
-              overline
-              class="text-uppercase"
-            >
-              {{ $t(meta.key) }}
-            </q-item-label>
-
-            <MetadataUrls :content="meta.value" />
+            <MetadataItem
+              v-if="meta.metadata"
+              :item="meta"
+              :key-is-headline="true"
+            />
+            <template v-else>
+              <q-item-label
+                overline
+                class="text-uppercase"
+              >
+                {{ $t(meta.key) }}
+              </q-item-label>
+              <MetadataUrls :content="meta.value" />
+            </template>
           </q-item-section>
         </q-item>
       </div>
@@ -120,10 +126,12 @@
 
 <script>
 import MetadataUrls from '@/components/urls.vue';
+import MetadataItem from '@/components/metadata/MetadataItem';
 
 export default {
   name: 'Metadata',
   components: {
+    MetadataItem,
     MetadataUrls,
   },
   props: {
