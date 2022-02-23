@@ -7,7 +7,8 @@ Although TIDO is designed as a generic viewer for digital editions, it is curren
 
 This is the reason for "Ahiqar" being mentioned several times in the docs of this repo.
 
-Demo: <https://subugoe.pages.gwdg.de/emo/tido/develop>
+Demo with test data : <https://subugoe.pages.gwdg.de/emo/tido/develop>
+Ahiqar reference implementation: <https://ahiqar.uni-goettingen.de/syriac/>
 
 (For newer branches the demo is deployed in a directory named with branch name lowercased, shortened to 63 bytes, and with everything except `0-9` and `a-z` replaced with `-` (CI_COMMIT_REF_SLUG).
 Also the commit short hash can be used to see a demo.
@@ -99,9 +100,9 @@ To get TIDO up and running you should have the following software installed:
 
 **Note**:
 
-We recommend to make use of `nvm`, since there might be issues with npm regarding permissions.  
-The main purpose of `nvm` is to have multiple node versions installed in regards to different projects which might demand some sort of backwards compatibility.  
-It enables you to just switch to the appropriate node version.  
+We recommend to make use of `nvm`, since there might be issues with npm regarding permissions.
+The main purpose of `nvm` is to have multiple node versions installed in regards to different projects which might demand some sort of backwards compatibility.
+It enables you to just switch to the appropriate node version.
 Besides it also keeps track of resolving permission issues, since all your global installations go to your home directory (~/.nvm/) instead of being applied systemwide.
 
 ### Environment setup
@@ -434,8 +435,8 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   - **show**
 
-      set this value to `false` if you want to completely switch off all the headerbars at once.  
-      This value takes **precedence** over the other *header-keys*.  
+      set this value to `false` if you want to completely switch off all the headerbars at once.
+      This value takes **precedence** over the other *header-keys*.
       If it is set to `false`, the other settings for the individual bars are not taken into account.
 
       *(A use case might be to embed the Viewer into an existing website and you simply need more screen space)*
@@ -450,7 +451,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
     - **titles**
 
-    set this value to `false` if you want to switch off the Titlebar (a.k.a. breadcrumbs)  
+    set this value to `false` if you want to switch off the Titlebar (a.k.a. breadcrumbs)
 
   - **toggle**
 
@@ -464,8 +465,8 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   - **item**:
 
-      The label of the item respectively  
-      Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.  
+      The label of the item respectively
+      Assuming your collection consists of letters, you'd maybe want to name it "letter" or just "sheet" for instance.
       This change affects the captions of the navbuttons located in the headerbar and the metadata section.
 
       Defaults to `Sheet`
@@ -609,7 +610,7 @@ Each object inside that constant consists of similar keys: `connector`, `panel_l
 
 ## Dockerfile
 
-The dockerfile is used for GitLab CI.  
+The dockerfile is used for GitLab CI.
 It needs to be updated when either `node` or `quasar-cli` should be updated.
 
 ```bash
@@ -619,7 +620,7 @@ docker push docker.gitlab.gwdg.de/subugoe/emo/tido/node
 
 ## Connecting the Viewer to a Backend
 
-The viewer expects JSON that complies to the [SUB's generic TextAPI](https://subugoe.pages.gwdg.de/emo/text-api/) in order to function properly.  
+The viewer expects JSON that complies to the [SUB's generic TextAPI](https://subugoe.pages.gwdg.de/emo/text-api/) in order to function properly.
 To establish a link to the backend, the viewer's entrypoint in `src/index.template.html` has to be modified:
 
 ```html
