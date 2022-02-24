@@ -74,7 +74,7 @@
             <MetadataItem
               v-if="meta.metadata"
               :item="meta"
-              :key-is-headline="true"
+              :key-is-title="true"
             />
             <template v-else>
               <q-item-label

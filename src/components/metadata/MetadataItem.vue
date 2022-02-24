@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-item-label
-      v-if="keyIsHeadline"
+      v-if="keyIsTitle"
       overline
       class="text-uppercase"
     >
@@ -32,7 +32,7 @@ export default {
       type: Object,
       default: () => {},
     },
-    keyIsHeadline: {
+    keyIsTitle: {
       type: Boolean,
       default: () => false,
     },
