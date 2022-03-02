@@ -31,7 +31,7 @@
             {{ $t(mCollection.id) }}
           </q-item-label>
 
-          <MetadataUrls :content="mCollection.data" />
+          <ContentUrls :content="mCollection.data" />
         </q-item-section>
       </q-item>
     </q-list>
