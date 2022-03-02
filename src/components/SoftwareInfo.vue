@@ -97,7 +97,7 @@ import {
 import { version } from '../../package.json';
 
 export default {
-  name: 'Softwareinfo',
+  name: 'SoftwareInfo',
   data() {
     return {
       infobox: false,

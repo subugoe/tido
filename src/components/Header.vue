@@ -41,7 +41,7 @@
 
         <q-space />
 
-        <TogglePanels
+        <PanelsToggle
           v-if="config['header_section'].toggle"
           :panels="panels"
           class="row justify-center justify-sm-end col-xs-12 col-sm-6 q-mb-xs-sm q-mb-sm-none order-xs-first order-sm-last"
@@ -61,11 +61,11 @@
 </template>
 
 <script>
-import BreadCrumbNavigation from '@/components/breadcrumbnavigation.vue';
-import Navbar from '@/components/navbar.vue';
-import TitleBar from '@/components/titlebar.vue';
-import TogglePanels from '@/components/togglebar/togglePanels.vue';
-import Tools from '@/components/tools.vue';
+import BreadCrumbNavigation from '@/components/BreadcrumbNavigation.vue';
+import Navbar from '@/components/Navbar.vue';
+import TitleBar from '@/components/TitleBar.vue';
+import PanelsToggle from '@/components/togglebar/PanelsToggle.vue';
+import Tools from '@/components/Tools.vue';
 
 export default {
   name: 'Header',
@@ -73,7 +73,7 @@ export default {
     BreadCrumbNavigation,
     Navbar,
     TitleBar,
-    TogglePanels,
+    PanelsToggle,
     Tools,
   },
   props: {

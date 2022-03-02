@@ -9,7 +9,7 @@
       :key="`pc${index}`"
       class="item"
     >
-      <Toolbar
+      <ToolBar
         v-if="config['header_section'].panelheadings"
         :heading="p.panel_label"
       />
@@ -73,12 +73,12 @@
 </template>
 
 <script>
-import Toolbar from '@/components/toolbar.vue';
+import ToolBar from '@/components/ToolBar.vue';
 
 export default {
   name: 'MainView',
   components: {
-    Toolbar,
+    ToolBar,
   },
   props: {
     annotations: {

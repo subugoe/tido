@@ -11,21 +11,21 @@
       :config="config"
     />
 
-    <Softwareinfo />
+    <SoftwareInfo />
   </div>
 </template>
 
 <script>
-import Color from '@/components/color.vue';
-import Language from '@/components/language.vue';
-import Softwareinfo from '@/components/softwareinfo.vue';
+import Color from '@/components/Color.vue';
+import Language from '@/components/Language.vue';
+import SoftwareInfo from '@/components/SoftwareInfo.vue';
 
 export default {
   name: 'Tools',
   components: {
     Color,
     Language,
-    Softwareinfo,
+    SoftwareInfo,
   },
   props: {
     config: {

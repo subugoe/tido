@@ -1,8 +1,8 @@
-import Annotations from '@/components/annotations/annotations.vue';
-import Content from '@/components/content.vue';
-import Metadata from '@/components/metadata.vue';
-import OpenSeadragon from '@/components/openseadragon.vue';
-import Treeview from '@/components/tree.vue';
+import Annotations from '@/components/annotations/Annotations.vue';
+import Content from '@/components/Content.vue';
+import Metadata from '@/components/Metadata.vue';
+import OpenSeadragon from '@/components/OpenSeadragon.vue';
+import Tree from '@/components/Tree.vue';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -10,7 +10,7 @@ export default {
   data: () => ({
     components: {
       1: {
-        component: Treeview,
+        component: Tree,
         label: 'Contents',
       },
       2: {

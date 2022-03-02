@@ -47,7 +47,7 @@
 import * as AnnotationUtils from '@/utils';
 import { colors } from 'quasar';
 import treestore from '@/stores/treestore.js';
-import Header from '@/components/header.vue';
+import Header from '@/components/Header.vue';
 import Panels from '@/mixins/panels';
 
 export default {
