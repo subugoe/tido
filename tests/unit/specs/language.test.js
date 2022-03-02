@@ -1,4 +1,4 @@
-import LANGUAGE from '@/components/language.vue';
+import LANGUAGE from '@/components/Language.vue';
 
 jest.mock('@quasar/extras/fontawesome-v5', () => '');
 
@@ -11,7 +11,7 @@ describe('Language', () => {
         expect.objectContaining({
           label: 'DE',
         }),
-      ])
+      ]),
     );
   });
 });

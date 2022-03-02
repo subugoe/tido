@@ -25,7 +25,7 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <Dragpanelboxes :data="panelboxes" />
+          <PanelBoxes :data="panelboxes" />
         </q-card-section>
 
         <q-card-actions align="right">
