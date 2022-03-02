@@ -60,7 +60,7 @@
             {{ $t(mManifest.id) }}
           </q-item-label>
 
-          <MetadataUrls :content="mManifest.data" />
+          <ContentUrls :content="mManifest.data" />
         </q-item-section>
       </q-item>
 
@@ -83,7 +83,7 @@
               >
                 {{ $t(meta.key) }}
               </q-item-label>
-              <MetadataUrls :content="meta.value" />
+              <ContentUrls :content="meta.value" />
             </template>
           </q-item-section>
         </q-item>
@@ -117,7 +117,7 @@
             {{ $t(mItem.id) }}
           </q-item-label>
 
-          <MetadataUrls :content="mItem.data" />
+          <ContentUrls :content="mItem.data" />
         </q-item-section>
       </q-item>
     </q-list>
@@ -125,14 +125,14 @@
 </template>
 
 <script>
-import MetadataUrls from '@/components/urls.vue';
+import ContentUrls from '@/components/ContentUrls.vue';
 import MetadataItem from '@/components/metadata/MetadataItem';
 
 export default {
   name: 'Metadata',
   components: {
     MetadataItem,
-    MetadataUrls,
+    ContentUrls,
   },
   props: {
     config: {

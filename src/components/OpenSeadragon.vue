@@ -47,7 +47,7 @@ import {
   fasCompressArrowsAlt,
 } from '@quasar/extras/fontawesome-v5';
 
-import Notification from '@/components/notification.vue';
+import Notification from '@/components/Notification.vue';
 
 export default {
   name: 'OpenSeadragon',

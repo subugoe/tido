@@ -41,12 +41,12 @@
 </template>
 
 <script>
-import Dragpanelboxes from '@/components/util/panelboxes.vue';
+import PanelBoxes from '@/components/util/PanelBoxes.vue';
 import { fasSolarPanel } from '@quasar/extras/fontawesome-v5';
 
 export default {
   components: {
-    Dragpanelboxes,
+    PanelBoxes,
   },
   props: {
     panelboxes: {

@@ -79,8 +79,8 @@
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
 import DomMixin from '@/mixins/dom';
-import Loading from '@/components/loading.vue';
-import Notification from '@/components/notification.vue';
+import Loading from '@/components/Loading.vue';
+import Notification from '@/components/Notification.vue';
 import {
   loadFont, onlyIf, loadCss, domParser, getAnnotationContentIds, delay, addHighlighterAttributes,
 } from '@/utils';

@@ -18,11 +18,11 @@
       />
     </q-tabs>
 
-    <AnnotationToggles />
+    <AnnotationsToggles />
 
     <Loading v-if="isLoading || isProcessing" />
 
-    <AnnotationList
+    <AnnotationsList
       v-else-if="filteredAnnotations.length && !isLoading && !isProcessing"
       class="custom-font"
       :active-annotation="activeAnnotation"
@@ -45,7 +45,7 @@
       />
     </div>
 
-    <AnnotationOptions
+    <AnnotationsOptions
       v-if="!isAnnotationTypeText"
       :selected-all="selectedAll"
       :selected-none="selectedNone"
@@ -58,12 +58,12 @@
 <script>
 import * as Icons from '@quasar/extras/fontawesome-v5';
 
-import AnnotationToggles from '@/components/annotations/toggles.vue';
-import AnnotationList from '@/components/annotations/list.vue';
-import AnnotationOptions from '@/components/annotations/options.vue';
+import AnnotationsToggles from '@/components/annotations/AnnotationsToggles.vue';
+import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
+import AnnotationsOptions from '@/components/annotations/AnnotationsOptions.vue';
 
-import Loading from '@/components/loading.vue';
-import Notification from '@/components/notification.vue';
+import Loading from '@/components/Loading.vue';
+import Notification from '@/components/Notification.vue';
 
 import * as AnnotationUtils from '@/utils';
 import DomMixin from '@/mixins/dom';
@@ -71,9 +71,9 @@ import DomMixin from '@/mixins/dom';
 export default {
   name: 'Annotations',
   components: {
-    AnnotationToggles,
-    AnnotationList,
-    AnnotationOptions,
+    AnnotationsToggles,
+    AnnotationsList,
+    AnnotationsOptions,
     Loading,
     Notification,
   },

@@ -36,7 +36,7 @@ import {
 } from '@quasar/extras/fontawesome-v5';
 
 export default {
-  name: 'AnnotationOptions',
+  name: 'AnnotationsOptions',
   props: {
     selectedAll: {
       type: Boolean,

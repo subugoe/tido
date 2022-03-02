@@ -120,7 +120,7 @@ import {
 } from '@quasar/extras/fontawesome-v5';
 
 export default {
-  name: 'TogglePanels',
+  name: 'PanelsToggle',
   props: {
     panels: {
       type: Array,

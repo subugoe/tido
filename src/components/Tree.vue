@@ -35,7 +35,7 @@ import { fasCaretRight } from '@quasar/extras/fontawesome-v5';
 import treestore from '@/stores/treestore.js';
 
 export default {
-  name: 'Treeview',
+  name: 'Tree',
   props: {
     labels: {
       type: Object,

@@ -33,7 +33,7 @@
 <script>
 
 export default {
-  name: 'AnnotationList',
+  name: 'AnnotationsList',
   props: {
     activeAnnotation: {
       type: Object,

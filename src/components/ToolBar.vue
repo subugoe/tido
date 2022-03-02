@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'Toolbar',
+  name: 'ToolBar',
   filters: {
     capitalize(s) {
       return s.toUpperCase();

@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="panels__wrap">
-      <Panelsdraggable
+      <PanelsDraggable
         v-model="panels"
         handle=".only-bedrag"
         @change="$root.$emit('panels-position', panels)"
@@ -68,18 +68,18 @@
           :icon="fasPlus"
           @click="addPanel"
         />
-      </Panelsdraggable>
+      </PanelsDraggable>
     </div>
   </section>
 </template>
 
 <script>
-import Panelsdraggable from 'vuedraggable';
+import PanelsDraggable from 'vuedraggable';
 import { fasPlus, fasTrash, fasArrowsAlt } from '@quasar/extras/fontawesome-v5';
 
 export default {
   components: {
-    Panelsdraggable,
+    PanelsDraggable,
   },
   props: {
     data: {
