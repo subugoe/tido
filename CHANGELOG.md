@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.25.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.24.3...v1.25.0) (2022-03-02)
+
+
+### Features
+
+* render metadata objects recursively as lists ([4c1b9bf](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4c1b9bf30408d50aa2dc7f0c88f3c50be8d97f25))
+
 ### [1.24.3](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.24.2...v1.24.3) (2022-01-31)
 
 
