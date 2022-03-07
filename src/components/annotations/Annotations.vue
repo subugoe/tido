@@ -55,8 +55,6 @@
 </template>
 
 <script>
-import * as Icons from '@quasar/extras/fontawesome-v5';
-
 import AnnotationsToggles from '@/components/annotations/AnnotationsToggles.vue';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import AnnotationsOptions from '@/components/annotations/AnnotationsOptions.vue';

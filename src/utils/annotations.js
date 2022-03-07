@@ -392,7 +392,6 @@ export function addIcon(element, annotation) {
     );
     element.prepend(svg);
   } catch (err) {
-    console.log(err);
     // error message
   }
 }

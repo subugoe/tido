@@ -225,9 +225,9 @@ export default {
             });
           }
 
-          // setTimeout(() => {
-          //   mountChildren(dom.documentElement.childNodes);
-          // }, 100);
+          setTimeout(() => {
+            mountChildren(dom.documentElement.childNodes);
+          }, 100);
 
           if (!annotationPanelHidden) {
             await delay(200);
