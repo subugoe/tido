@@ -29,7 +29,6 @@
       :config="config"
       :configured-annotations="filteredAnnotations"
       :content-ids="contentIds"
-      :get-icon="getIcon"
       :toggle="toggle"
     />
 
@@ -208,58 +207,7 @@ export default {
     },
 
     addAnnotation(annotation) {
-      this.$store.dispatch('annotations/addActiveAnnotation', annotation);
-      let selector = AnnotationUtils.stripTargetId(annotation, false);
-
-      if (selector.startsWith('.')) {
-        selector = selector.replace(/\./g, '');
-      }
-
-      const el = document.getElementById(selector) || document.querySelector(`.${selector}`);
-
-      AnnotationUtils.updateHighlightState(selector, 'INC');
-      if (el) {
-        this.addIcon(el, annotation);
-      }
-
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
-    },
-
-    addIcon(element, annotation) {
-      const contentType = annotation.body['x-content-type'];
-      let foundSvg = false;
-
-      [...element.children].forEach((el) => {
-        if (el.nodeName === 'svg' && el.getAttribute('data-annotation-icon')) {
-          foundSvg = true;
-        }
-      });
-
-      if (foundSvg) {
-        return;
-      }
-      try {
-        const svg = AnnotationUtils.getAnnotationIcon(contentType, this.config.annotations.types);
-        svg.setAttribute(
-          'data-annotation-icon',
-          AnnotationUtils.stripTargetId(annotation),
-        );
-        element.prepend(svg);
-      } catch (err) {
-        // error message
-      }
-    },
-
-    getIcon(contentType) {
-      return Icons[this.getIconName(contentType)];
-    },
-
-    getIconName(contentType) {
-      return this.config.annotations.types.filter(
-        (annotation) => annotation.contenttype === contentType,
-      )[0].icon;
+      this.$store.dispatch('annotations/addActiveAnnotation', annotation.targetId);
     },
 
     handleTooltip() {

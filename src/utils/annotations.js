@@ -370,3 +370,29 @@ export const isAnnotationSelected = (el) => {
 
   return matched;
 };
+
+export function addIcon(element, annotation) {
+  const contentType = annotation.body['x-content-type'];
+  let foundSvg = false;
+
+  [...element.children].forEach((el) => {
+    if (el.nodeName === 'svg' && el.getAttribute('data-annotation-icon')) {
+      foundSvg = true;
+    }
+  });
+
+  if (foundSvg) {
+    return;
+  }
+  try {
+    const svg = getAnnotationIcon(contentType, this.config.annotations.types);
+    svg.setAttribute(
+      'data-annotation-icon',
+      stripTargetId(annotation),
+    );
+    element.prepend(svg);
+  } catch (err) {
+    console.log(err);
+    // error message
+  }
+}

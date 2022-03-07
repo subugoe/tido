@@ -11,14 +11,12 @@
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
       <q-item-section
-        v-if="getIcon(annotation.body['x-content-type'])"
         avatar
         class="q-mr-none"
       >
-        <q-icon
-          :color="$q.dark.isActive ? 'grey-1 text-grey-1' : 'accent'"
-          :name="getIcon(annotation.body['x-content-type'])"
-          size="16px"
+        <AnnotationIcon
+          :content-type="'Person'"
+          :show-icon="true"
         />
       </q-item-section>
 
@@ -32,8 +30,11 @@
 
 <script>
 
+import AnnotationIcon from 'components/annotations/AnnotationIcon';
+
 export default {
   name: 'AnnotationsList',
+  components: { AnnotationIcon },
   props: {
     activeAnnotation: {
       type: Object,

@@ -95,8 +95,9 @@ import {
   delay,
   addHighlighterAttributes,
 } from '@/utils';
-import TextHighlight from '@/components/text-highlight';
+import TextHighlight from '@/components/TextHighlight';
 import Vue from 'vue/dist/vue.js';
+import store from '../store';
 
 export default {
   name: 'Content',
@@ -203,7 +204,7 @@ export default {
 
           addHighlighterAttributes.call(this, dom);
 
-          const TextHighlightClass = Vue.extend(TextHighlight);
+          const TextHighlightClass = Vue.component('TextHighlight', TextHighlight);
 
           this.content = dom.documentElement.innerHTML;
 
@@ -214,16 +215,19 @@ export default {
               const isAnnotation = node.nodeName !== '#text' && node.getAttribute('data-annotation');
 
               if (id && isAnnotation) {
-                const textHighlight = new TextHighlightClass({ propsData: { text: node.innerText } });
+                const textHighlight = new TextHighlightClass({
+                  store,
+                  propsData: { targetId: id, text: node.innerText },
+                });
                 textHighlight.$mount(document.getElementById(id));
               }
               mountChildren(node.childNodes);
             });
           }
 
-          setTimeout(() => {
-            mountChildren(dom.documentElement.childNodes);
-          }, 100);
+          // setTimeout(() => {
+          //   mountChildren(dom.documentElement.childNodes);
+          // }, 100);
 
           if (!annotationPanelHidden) {
             await delay(200);

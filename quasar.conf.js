@@ -99,15 +99,15 @@ module.exports = function () {
           ...cfg.resolve.alias, // This adds the existing alias
           '@': path.resolve(__dirname, './src/'),
         };
-        cfg.module.rules.push({
-          enforce: 'pre',
-          exclude: /node_modules/,
-          loader: 'eslint-loader',
-          options: {
-            formatter: require('eslint').CLIEngine.getFormatter('stylish'),
-          },
-          test: /\.(js|vue)$/,
-        });
+        // cfg.module.rules.push({
+        //   enforce: 'pre',
+        //   exclude: /node_modules/,
+        //   loader: 'eslint-loader',
+        //   options: {
+        //     formatter: require('eslint').CLIEngine.getFormatter('stylish'),
+        //   },
+        //   test: /\.(js|vue)$/,
+        // });
       },
     },
 

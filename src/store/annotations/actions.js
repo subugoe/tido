@@ -1,10 +1,30 @@
-import { request } from '@/utils/http';
 import * as AnnotationUtils from '@/utils';
 
-export const addActiveAnnotation = ({ commit, getters }, annotation) => {
-  const { activeAnnotations } = getters;
-  activeAnnotations[annotation.targetId] = annotation;
-  commit('updateActiveAnnotations', { ...activeAnnotations });
+export const addActiveAnnotation = ({ commit, getters }, targetId) => {
+  const { activeAnnotations, annotations } = getters;
+
+  const newActiveAnnotation = annotations.find((annotation) => targetId === annotation.targetId);
+
+  if (newActiveAnnotation) {
+    activeAnnotations[targetId] = newActiveAnnotation;
+    commit('updateActiveAnnotations', { ...activeAnnotations });
+    let selector = AnnotationUtils.stripTargetId(newActiveAnnotation, false);
+
+    if (selector.startsWith('.')) {
+      selector = selector.replace(/\./g, '');
+    }
+
+    // const el = document.getElementById(selector) || document.querySelector(`.${selector}`);
+
+    // AnnotationUtils.updateHighlightState(selector, 'INC');
+    // if (el) {
+    //   AnnotationUtils.addIcon(el, newActiveAnnotation);
+    // }
+
+    // if (el) {
+    //   el.scrollIntoView({ behavior: 'smooth' });
+    // }
+  }
 };
 
 export const annotationLoaded = ({ commit }, annotations) => {
@@ -25,10 +45,11 @@ export const loadAnnotations = ({ commit }) => {
   commit('updateAnnotations', []);
 };
 
-export const removeActiveAnnotation = ({ commit, getters }, annotation) => {
+export const removeActiveAnnotation = ({ commit, getters, dispatch }, annotation) => {
   const { activeAnnotations } = getters;
   delete activeAnnotations[annotation.targetId];
   commit('updateActiveAnnotations', { ...activeAnnotations });
+  dispatch('hideAnnotationIcon', annotation.targetId);
 };
 
 export const resetActiveAnnotations = ({ commit }) => {
