@@ -1,4 +1,4 @@
-export default function AnnotationState() {
+export default function ConfigState() {
   return {
     config: {},
     initialized: false,
