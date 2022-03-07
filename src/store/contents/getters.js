@@ -16,6 +16,8 @@ export const selectedManifest = (state) => state.manifests.find((manifest) => ma
 
 export const expanded = (state) => state.expanded;
 
+export const contentIndex = (state) => state.contentIndex;
+
 export const selectedSequenceIndex = (state, getters) => {
   const item = getters.selectedManifest;
   if (!item) {

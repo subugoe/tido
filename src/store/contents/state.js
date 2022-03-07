@@ -2,10 +2,11 @@ export default function ContentsState() {
   return {
     collection: {},
     collectionTitle: '',
+    contentIndex: 0,
     contentTypes: [],
     contentUrls: [],
-    contentindex: 0,
     errorText: null,
+    expanded: [],
     image: {},
     isCollection: true,
     item: {},
@@ -14,6 +15,5 @@ export default function ContentsState() {
     loaded: false,
     manifests: [],
     tree: [],
-    expanded: [],
   };
 }

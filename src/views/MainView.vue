@@ -81,14 +81,6 @@ export default {
     ToolBar,
   },
   props: {
-    contentindex: {
-      type: Number,
-      default: () => 0,
-    },
-    oncontentindexchange: {
-      type: Function,
-      default: () => null,
-    },
     panels: {
       type: Array,
       default: () => [],

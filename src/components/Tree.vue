@@ -8,6 +8,7 @@
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       :selected.sync="selected"
+      @update:expanded="handleTreeUpdate"
     >
       <template #default-body="{node}">
         <div
@@ -45,7 +46,7 @@ export default {
     };
   },
   computed: {
-    expandedStore() {
+    expandTree() {
       return this.$store.getters['contents/expanded'];
     },
     config() {
@@ -68,9 +69,9 @@ export default {
     },
   },
   watch: {
-    expandedStore: {
+    expandTree: {
       handler(val) {
-        this.expanded = val;
+        this.expanded = [...val];
       },
       immediate: true,
     },
@@ -103,6 +104,9 @@ export default {
     },
     handleSelectedChange(value) {
       this.navigate(value);
+    },
+    handleTreeUpdate(val) {
+      this.$store.dispatch('contents/updateExpanded', val);
     },
   },
 };

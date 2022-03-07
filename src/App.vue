@@ -11,8 +11,6 @@
 
     <q-page-container class="root">
       <router-view
-        :contentindex="contentindex"
-        :oncontentindexchange="oncontentindexchange"
         :panels="panels"
       />
     </q-page-container>
@@ -31,11 +29,6 @@ export default {
     Header,
   },
   mixins: [Panels, Navigation],
-  data() {
-    return {
-      contentindex: 0,
-    };
-  },
   computed: {
     annotations() {
       return this.$store.getters['annotations/annotations'];
@@ -161,10 +154,6 @@ export default {
       return this.config.entrypoint.match(/collection.json\s?$/)
         ? this.getCollection(this.config.entrypoint)
         : this.getManifest(this.config.entrypoint);
-    },
-
-    oncontentindexchange(index) {
-      this.contentindex = index;
     },
 
     onItemUrlChange(val) {

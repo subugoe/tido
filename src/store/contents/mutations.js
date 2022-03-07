@@ -6,6 +6,14 @@ export const updateCollectionTitle = (state, title) => {
   state.collectionTitle = title;
 };
 
+export const updateContentIndex = (state, update) => {
+  state.contentIndex = update;
+};
+
+export const updateContentIndexChange = (state, contentIndex) => {
+  state.contentIndex = contentIndex;
+};
+
 export const updateContentItem = (
   state,
   {
@@ -16,6 +24,10 @@ export const updateContentItem = (
   state.errorText = errorText;
   state.contentUrls = contentUrls;
   state.contentTypes = contentTypes;
+};
+
+export const updateExpanded = (state, update) => {
+  state.expanded = update;
 };
 
 export const updateIsCollection = (state, update) => {
@@ -56,8 +68,4 @@ export const resetContents = (state) => {
 
 export const updateTree = (state, update) => {
   state.tree = update.tree;
-};
-
-export const updateExpanded = (state, update) => {
-  state.expanded = update;
 };

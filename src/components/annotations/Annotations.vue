@@ -79,10 +79,6 @@ export default {
   },
   mixins: [DomMixin],
   props: {
-    contentindex: {
-      type: Number,
-      default: () => 0,
-    },
     panels: {
       type: Array,
       default: () => [],
@@ -97,6 +93,9 @@ export default {
     };
   },
   computed: {
+    contentIndex() {
+      return this.$store.getters['contents/contentIndex'];
+    },
     contentTypes() {
       return this.$store.getters['contents/contentTypes'];
     },
@@ -139,7 +138,7 @@ export default {
         (x) => {
           const annotationContentType = this.annotationTypesMapping[x.body['x-content-type']];
 
-          if (annotationContentType?.type === 'text' && annotationContentType?.displayWhen === this.contentTypes[this.contentindex]) {
+          if (annotationContentType?.type === 'text' && annotationContentType?.displayWhen === this.contentTypes[this.contentIndex]) {
             return this.activeEntities.includes(x.body['x-content-type']);
           }
           return this.activeEntities.includes(x.body['x-content-type']) && this.contentIds[x.targetId];

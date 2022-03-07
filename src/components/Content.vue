@@ -104,14 +104,6 @@ export default {
   },
   mixins: [DomMixin],
   props: {
-    contentindex: {
-      type: Number,
-      default: () => 0,
-    },
-    oncontentindexchange: {
-      type: Function,
-      default: () => null,
-    },
     transcription: {
       type: String,
       default: () => '',
@@ -133,6 +125,9 @@ export default {
     sequenceindex: 0,
   }),
   computed: {
+    contentIndex() {
+      return this.$store.getters['contents/contentIndex'];
+    },
     contenturls() {
       return this.$store.getters['contents/contentUrls'];
     },
@@ -152,7 +147,7 @@ export default {
       return this.$store.getters['annotations/contentFontSize'];
     },
     activeTab() {
-      return this.contenturls[this.contentindex];
+      return this.contenturls[this.contentIndex];
     },
     contentStyle() {
       return {
@@ -176,7 +171,7 @@ export default {
 
   watch: {
     activeTabContents(url) {
-      this.oncontentindexchange(this.contenturls.findIndex((x) => x === url));
+      this.$store.dispatch('contents/onContentIndexChange', this.contenturls.findIndex((x) => x === url));
     },
     activeTab: {
       async handler(url) {
@@ -226,13 +221,13 @@ export default {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
 
-    const activeTab = this.contenturls[this.contentindex];
+    const activeTab = this.contenturls[this.contentIndex];
     const [contenturls] = this.contenturls[0];
 
     this.activeTabContents = activeTab;
 
     if (!activeTab) {
-      this.oncontentindexchange(0);
+      this.$store.dispatch('contents/onContentIndexChange', 0);
       this.activeTabContents = contenturls;
     }
   },
@@ -252,7 +247,7 @@ export default {
 
     this.$root.$on('manifest-changed', () => {
       this.activeTabContents = contenturls;
-      this.oncontentindexchange(0);
+      this.$store.dispatch('contents/onContentIndexChange', 0);
     });
   },
   methods: {

@@ -102,7 +102,7 @@ export const initCollection = async ({ commit, dispatch }, url) => {
   tree.push({
     children: [],
     handler: (node) => {
-      this.$root.$emit('update-tree-knots', node.label);
+      dispatch('addOrRemoveFromExpanded', node.label);
     },
     label: collectiontitle,
     'label-key': collectiontitle,
@@ -131,6 +131,10 @@ export const initCollection = async ({ commit, dispatch }, url) => {
 
 export const updateItemUrl = ({ commit }, url) => {
   commit('updateItemUrl', url);
+};
+
+export const onContentIndexChange = ({ commit }, index) => {
+  commit('updateContentIndexChange', index);
 };
 
 export const initImageData = async ({ commit }, url) => {
@@ -273,15 +277,23 @@ export const addToExpanded = ({ commit, getters }, label) => {
   commit('updateExpanded', [...expanded]);
 };
 
+export const updateExpanded = ({ commit }, payload) => {
+  commit('updateExpanded', [...payload]);
+};
+
 export const removeFromExpanded = ({ commit, getters }, label) => {
   const expanded = [...getters.expanded];
   const index = expanded.indexOf(label);
-  expanded.splice(index, 1);
-  commit('updateExpanded', [...expanded]);
+
+  if (index > -1) {
+    expanded.splice(index, 1);
+    commit('updateExpanded', [...expanded]);
+  }
 };
 
 export const addOrRemoveFromExpanded = ({ getters, dispatch }, label) => {
   const expanded = [...getters.expanded];
+
   if (expanded.includes(label)) {
     dispatch('removeFromExpanded', label);
   } else {
