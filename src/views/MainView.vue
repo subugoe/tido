@@ -81,65 +81,9 @@ export default {
     ToolBar,
   },
   props: {
-    annotations: {
-      type: Array,
-      default: () => [],
-    },
-    collection: {
-      type: Object,
-      default: () => {},
-    },
-    config: {
-      type: Object,
-      default: () => {},
-    },
     contentindex: {
       type: Number,
       default: () => 0,
-    },
-    contenttypes: {
-      type: Array,
-      default: () => [],
-    },
-    contenturls: {
-      type: Array,
-      default: () => [],
-    },
-    fontsize: {
-      type: Number,
-      default: () => 16,
-    },
-    imageurl: {
-      type: String,
-      default: () => '',
-    },
-    errormessage: {
-      type: Boolean,
-      default: () => false,
-    },
-    errorImage: {
-      type: Object,
-      default: () => null,
-    },
-    errorText: {
-      type: Object,
-      default: () => null,
-    },
-    isloading: {
-      type: Boolean,
-      default: false,
-    },
-    item: {
-      type: Object,
-      default: () => {},
-    },
-    labels: {
-      type: Object,
-      default: () => {},
-    },
-    manifests: {
-      type: Array,
-      default: () => [],
     },
     oncontentindexchange: {
       type: Function,
@@ -149,21 +93,30 @@ export default {
       type: Array,
       default: () => [],
     },
-    request: {
-      type: Function,
-      default: () => null,
-    },
-    tree: {
-      type: Array,
-      default: () => [],
-    },
   },
   computed: {
     ready() {
-      return this.manifests.length && this.tree.length && this.contenturls.length;
+      return (
+        this.manifests.length && this.tree.length && this.contentUrls.length
+      );
+    },
+    manifests() {
+      return this.$store.getters['contents/manifests'];
+    },
+    config() {
+      return this.$store.getters['config/config'];
+    },
+    contentUrls() {
+      return this.$store.getters['contents/contentUrls'];
+    },
+    tree() {
+      return this.$store.getters['contents/tree'];
+    },
+    imageUrl() {
+      return this.$store.getters['contents/imageUrl'];
     },
     keys() {
-      return { 3: this.imageurl, 4: this.contenturls[0] };
+      return { 3: this.imageUrl, 4: this.contentUrls[0] };
     },
   },
 };
@@ -210,5 +163,4 @@ export default {
     flex: 1;
   }
 }
-
 </style>

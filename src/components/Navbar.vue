@@ -7,7 +7,7 @@
       size="xs"
       padding="xs"
       class="q-px-sm q-mr-sm"
-      @click="toggleSheet(--itemindex)"
+      @click="toggleSheet(itemindex - 1)"
     >
       <q-icon
         :name="fasArrowLeft"
@@ -20,11 +20,11 @@
     <q-btn
       unelevated
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
-      :disabled="itemindex >= itemurls.length - 1"
+      :disabled="itemindex >= itemUrls.length - 1"
       size="xs"
       padding="xs"
       class="q-px-sm"
-      @click="toggleSheet(++itemindex)"
+      @click="toggleSheet(itemindex + 1)"
     >
       {{ captionnext }}
       <q-icon
@@ -38,15 +38,18 @@
 
 <script>
 import Navigation from '@/mixins/navigation';
-import { fasArrowRight, fasArrowLeft, fasCheck } from '@quasar/extras/fontawesome-v5';
+import {
+  fasArrowRight,
+  fasArrowLeft,
+  fasCheck,
+} from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Navbar',
   mixins: [Navigation],
-  props: {
-    defaultView: {
-      type: Function,
-      default: () => {},
+  computed: {
+    itemUrls() {
+      return this.$store.getters['contents/itemUrls'];
     },
   },
   created() {

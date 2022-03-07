@@ -134,37 +134,30 @@ export default {
     MetadataItem,
     ContentUrls,
   },
-  props: {
-    config: {
-      type: Object,
-      default: () => {},
-    },
-    collection: {
-      type: Object,
-      default: () => {},
-    },
-    item: {
-      type: Object,
-      default: () => {},
-    },
-    labels: {
-      type: Object,
-      default: () => {},
-    },
-    manifests: {
-      type: Array,
-      default: () => [],
-    },
-  },
-  data() {
-    return {
-      itemindex: 0,
-      sequenceindex: 0,
-    };
-  },
   computed: {
+    config() {
+      return this.$store.getters['config/config'];
+    },
+    item() {
+      return this.$store.getters['contents/item'];
+    },
+    labels() {
+      return this.config.labels;
+    },
+    collection() {
+      return this.$store.getters['contents/collection'];
+    },
+    manifests() {
+      return this.$store.getters['contents/manifests'];
+    },
     itemcount() {
-      return this.manifests[this.sequenceindex].sequence.length;
+      return this.manifests[this.sequenceIndex].sequence.length;
+    },
+    sequenceIndex() {
+      return this.$store.getters['contents/selectedSequenceIndex'];
+    },
+    itemIndex() {
+      return this.$store.getters['contents/selectedItemIndex'];
     },
     metadataCollection() {
       const mappings = {
@@ -173,9 +166,12 @@ export default {
       };
 
       return [
-        ...this.collection.title.filter((collection) => collection).map((collectionTitle) => (
-          { id: mappings[collectionTitle.type] || 'Title', data: collectionTitle.title }
-        )),
+        ...this.collection.title
+          .filter((collection) => collection)
+          .map((collectionTitle) => ({
+            id: mappings[collectionTitle.type] || 'Title',
+            data: collectionTitle.title,
+          })),
         { id: 'Collector', data: this.collection?.collector?.name },
         { id: 'Description', data: this.collection?.description },
       ].filter((collection) => collection.data);
@@ -190,31 +186,16 @@ export default {
     },
     metadataManifest() {
       return [
-        { id: 'Label', data: this.manifests[this.sequenceindex].label },
-        ...((this.manifests[this.sequenceindex].license || []).map((manifest) => (
-          { id: 'License', data: manifest.id }
-        ))),
+        { id: 'Label', data: this.manifests[this.sequenceIndex].label },
+        ...(this.manifests[this.sequenceIndex].license || []).map((manifest) => ({
+          id: 'License',
+          data: manifest.id,
+        })),
       ];
     },
     manifestsMetadata() {
-      return this.manifests[this.sequenceindex]?.metadata || [];
+      return this.manifests[this.sequenceIndex]?.metadata || [];
     },
-  },
-  mounted() {
-    this.$root.$on('update-sequence-index', (index) => {
-      this.sequenceindex = index;
-    });
-
-    this.$root.$on('update-item', (url, seqindex = null) => {
-      if (seqindex !== null) {
-        this.sequenceindex = seqindex;
-      }
-      this.manifests[this.sequenceindex].sequence.forEach((item, index) => {
-        if (item.id === url) {
-          this.itemindex = index;
-        }
-      });
-    });
   },
 };
 </script>

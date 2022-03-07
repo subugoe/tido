@@ -1,3 +1,6 @@
+import { request } from '@/utils/http';
+import * as AnnotationUtils from '@/utils';
+
 export const addActiveAnnotation = ({ commit, getters }, annotation) => {
   const { activeAnnotations } = getters;
   activeAnnotations[annotation.targetId] = annotation;
@@ -42,4 +45,38 @@ export const updateContentLoading = ({ commit }, isLoading) => {
 
 export const updateContentIds = ({ commit }, annotations) => {
   commit('updateContentIds', annotations);
+};
+
+/**
+ * get annotations of the current item
+ * caller: *getItemData()*
+ * @param string url
+ */
+export const initAnnotations = async ({ dispatch }, url) => {
+  dispatch('loadAnnotations');
+
+  try {
+    const annotations = await request(url);
+
+    if (!annotations.annotationCollection.first) {
+      dispatch('annotationLoaded', []);
+      return;
+    }
+
+    const current = await request(annotations.annotationCollection.first);
+
+    if (current.annotationPage.items.length) {
+      dispatch(
+        'annotationLoaded',
+        current.annotationPage.items.map((x) => ({
+          ...x,
+          targetId: AnnotationUtils.stripTargetId(x, true),
+        })),
+      );
+    } else {
+      dispatch('annotationLoaded', []);
+    }
+  } catch (err) {
+    dispatch('annotationLoaded', []);
+  }
 };

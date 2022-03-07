@@ -71,7 +71,11 @@
 
     <div class="custom-font item-content text-content">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-      <div :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle"/>
+      <div
+        :class="{ rtl: config.rtl }"
+        v-html="content"
+        :style="contentStyle"
+      />
     </div>
   </div>
 </template>
@@ -81,8 +85,15 @@ import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
 import DomMixin from '@/mixins/dom';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
+import { request } from '@/utils/http';
 import {
-  loadFont, onlyIf, loadCss, domParser, getAnnotationContentIds, delay, addHighlighterAttributes,
+  loadFont,
+  onlyIf,
+  loadCss,
+  domParser,
+  getAnnotationContentIds,
+  delay,
+  addHighlighterAttributes,
 } from '@/utils';
 
 export default {
@@ -93,41 +104,13 @@ export default {
   },
   mixins: [DomMixin],
   props: {
-    config: {
-      type: Object,
-      default: () => {},
-    },
-    contenturls: {
-      type: Array,
-      default: () => [],
-    },
-    contenttypes: {
-      type: Array,
-      default: () => [],
-    },
     contentindex: {
       type: Number,
       default: () => 0,
     },
-    errorText: {
-      type: Object,
-      default: () => null,
-    },
-    fontsize: {
-      type: Number,
-      default: () => 16,
-    },
-    manifests: {
-      type: Array,
-      default: () => [],
-    },
     oncontentindexchange: {
       type: Function,
       default: () => null,
-    },
-    request: {
-      type: Function,
-      default: null,
     },
     transcription: {
       type: String,
@@ -150,6 +133,24 @@ export default {
     sequenceindex: 0,
   }),
   computed: {
+    contenturls() {
+      return this.$store.getters['contents/contentUrls'];
+    },
+    contenttypes() {
+      return this.$store.getters['contents/contentTypes'];
+    },
+    errorText() {
+      return this.$store.getters['contents/errorText'];
+    },
+    manifests() {
+      return this.$store.getters['contents/manifests'];
+    },
+    config() {
+      return this.$store.getters['config/config'];
+    },
+    fontsize() {
+      return this.$store.getters['annotations/contentFontSize'];
+    },
     activeTab() {
       return this.contenturls[this.contentindex];
     },
@@ -186,7 +187,7 @@ export default {
           this.errorTextMessage = '';
           this.isLoading = true;
           this.$store.dispatch('annotations/updateContentLoading', true);
-          const data = await this.request(url, 'text');
+          const data = await request(url, 'text');
           this.isValidTextContent(data);
 
           if (this.supportType) {
@@ -205,7 +206,10 @@ export default {
 
           if (!annotationPanelHidden) {
             await delay(200);
-            this.$store.dispatch('annotations/updateContentIds', getAnnotationContentIds.call(this, dom));
+            this.$store.dispatch(
+              'annotations/updateContentIds',
+              getAnnotationContentIds.call(this, dom),
+            );
           }
         } catch (err) {
           this.errorTextMessage = err.message;

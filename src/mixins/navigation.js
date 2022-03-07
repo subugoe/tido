@@ -1,45 +1,48 @@
 export default {
-  props: {
-    itemurls: Array,
-    labels: Object,
-    manifests: Array,
-  },
   data() {
     return {
-      itemindex: 0,
-      sequenceindex: 0,
       tab: '',
     };
   },
-
   methods: {
     toggleSheet(itemIndex) {
-      const link = this.itemurls[itemIndex];
-
-      this.defaultView();
-      this.$router.push({ query: { ...this.$route.query, itemurl: link } });
+      const link = this.itemUrls[itemIndex];
+      this.navigate(link);
     },
-
-    updateItem() {
-      this.$root.$emit('update-item', this.itemurls[this.itemindex], this.sequenceindex);
-    },
-
-    updateSequenceIndex() {
-      this.$root.$emit('update-sequence-index', this.sequenceindex);
+    navigate(url) {
+      const isSameQueryUrl = this.$route.query.itemurl === url;
+      if (isSameQueryUrl) {
+        return;
+      }
+      this.$store.dispatch('config/resetInitialized');
+      this.$router.push({ query: { ...this.$route.query, itemurl: url } });
     },
   },
   computed: {
+    manifests() {
+      return this.$store.getters['contents/manifests'];
+    },
+    itemindex() {
+      return this.$store.getters['contents/selectedItemIndex'];
+    },
+    itemUrls() {
+      return this.$store.getters['contents/itemUrls'];
+    },
+    sequenceindex() {
+      return this.$store.getters['contents/selectedSequenceIndex'];
+    },
     captionnext() {
       const lastindexes = this.lastiteminsequence;
 
       return this.sequenceindex < this.sequencecount - 1
-      && lastindexes[this.sequenceindex] === this.itemindex
+        && lastindexes[this.sequenceindex] === this.itemindex
         ? `${this.$t('next')} ${this.$t(this.labels.manifest)}`
         : `${this.$t('next')} ${this.$t(this.labels.item)}`;
     },
 
     captionprev() {
-      return this.sequenceindex > 0 && this.firstiteminsequence === this.itemindex
+      return this.sequenceindex > 0
+        && this.firstiteminsequence === this.itemindex
         ? `${this.$t('prev')} ${this.$t(this.labels.manifest)}`
         : `${this.$t('prev')} ${this.$t(this.labels.item)}`;
     },
@@ -88,7 +91,7 @@ export default {
       for (let seqidx = 0; seqidx < this.sequencecount; seqidx += 1) {
         lastindexes[seqidx] = seqidx === 0
           ? this.manifests[seqidx].sequence.length - 1
-          : lastindexes[(seqidx - 1)] + this.manifests[seqidx].sequence.length;
+          : lastindexes[seqidx - 1] + this.manifests[seqidx].sequence.length;
       }
 
       return lastindexes;
@@ -97,14 +100,16 @@ export default {
     sequencecount() {
       return this.manifests.length;
     },
+    config() {
+      return this.$store.getters['config/config'];
+    },
+    labels() {
+      return this.config.labels || {};
+    },
   },
   mounted() {
     this.$root.$on('update-tab', (tab) => {
       this.tab = tab;
-    });
-
-    this.$root.$on('update-item-index', (index) => {
-      this.itemindex = index;
     });
 
     this.$root.$on('update-sequence-index', (index) => {
