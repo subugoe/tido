@@ -83,10 +83,10 @@ export const initManifest = async ({ commit, dispatch }, url) => {
 
   const response = await getManifest(url, false, dispatch);
 
-  commit('updateManifests', { manifests: [response.manifest] });
-  commit('updateItemUrls', { itemUrls: response.itemUrls });
-  commit('updateLoaded', { loaded: true });
-  commit('updateTree', { tree: response.tree });
+  commit('setManifests', { manifests: [response.manifest] });
+  commit('setItemUrls', { itemUrls: response.itemUrls });
+  commit('setLoaded', { loaded: true });
+  commit('setTree', { tree: response.tree });
 };
 
 export const initCollection = async ({ commit, dispatch }, url) => {
@@ -120,21 +120,21 @@ export const initCollection = async ({ commit, dispatch }, url) => {
       itemUrls.push(...el.itemUrls);
     });
 
-    commit('updateManifests', { manifests });
-    commit('updateItemUrls', { itemUrls });
-    commit('updateLoaded', { loaded: true });
-    commit('updateTree', { tree });
-    commit('updateCollectionTitle', collectiontitle);
-    commit('updateCollection', data);
+    commit('setManifests', { manifests });
+    commit('setItemUrls', { itemUrls });
+    commit('setLoaded', { loaded: true });
+    commit('setTree', { tree });
+    commit('setCollectionTitle', collectiontitle);
+    commit('setCollection', data);
   }
 };
 
-export const updateItemUrl = ({ commit }, url) => {
-  commit('updateItemUrl', url);
+export const setItemUrl = ({ commit }, url) => {
+  commit('setItemUrl', url);
 };
 
 export const onContentIndexChange = ({ commit }, index) => {
-  commit('updateContentIndexChange', index);
+  commit('setContentIndexChange', index);
 };
 
 export const initImageData = async ({ commit }, url) => {
@@ -143,7 +143,7 @@ export const initImageData = async ({ commit }, url) => {
   let hasError = false;
   let errorImage = null;
 
-  commit('updateImageData', {
+  commit('setImageData', {
     imageUrl,
     hasError,
     errorImage,
@@ -177,7 +177,7 @@ export const initImageData = async ({ commit }, url) => {
     };
   }
 
-  commit('updateImageData', {
+  commit('setImageData', {
     imageUrl,
     hasError,
     errorImage,
@@ -260,7 +260,7 @@ export const initContentItem = async (
     };
   }
 
-  commit('updateContentItem', {
+  commit('setContentItem', {
     item,
     errorText,
     contentUrls,

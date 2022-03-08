@@ -5,11 +5,14 @@
     view="hHh Lpr fFf"
   >
     <Header
-      v-if="config['header_section'].show"
+      v-if="isConfigValid && config['header_section'].show"
       :panels="panels"
     />
 
-    <q-page-container class="root">
+    <q-page-container
+      v-if="isConfigValid"
+      class="root"
+    >
       <router-view
         :panels="panels"
       />
@@ -36,6 +39,9 @@ export default {
     config() {
       return this.$store.getters['config/config'];
     },
+    configErrorMessage() {
+      return this.$store.getters['config/configErrorMessage'];
+    },
     collectionTitle() {
       return this.$store.getters['contents/collectionTitle'];
     },
@@ -47,6 +53,9 @@ export default {
     },
     errorText() {
       return this.$store.getters['contents/errorText'];
+    },
+    isConfigValid() {
+      return this.$store.getters['config/isConfigValid'];
     },
     item() {
       return this.$store.getters['contents/item'];
@@ -84,7 +93,12 @@ export default {
       immediate: true,
     },
   },
-  created() {
+  async created() {
+    const isValid = await this.loadConfig();
+
+    if (!isValid) {
+      return;
+    }
     this.init();
 
     this.$q.dark.set('auto');
@@ -117,8 +131,8 @@ export default {
     async getCollection(url) {
       this.$store.dispatch('contents/initCollection', url);
     },
-    loadConfig() {
-      this.$store.dispatch('config/loadConfig');
+    async loadConfig() {
+      return this.$store.dispatch('config/loadConfig');
     },
     /**
      * fetch all data provided on 'item level'
@@ -150,7 +164,6 @@ export default {
      * @return function getCollection() | getManifest()
      */
     init() {
-      this.loadConfig();
       return this.config.entrypoint.match(/collection.json\s?$/)
         ? this.getCollection(this.config.entrypoint)
         : this.getManifest(this.config.entrypoint);
@@ -190,7 +203,7 @@ export default {
       this.itemurl = decodeURIComponent(itemurl);
 
       this.$store.dispatch(
-        'contents/updateItemUrl',
+        'contents/setItemUrl',
         decodeURIComponent(itemurl),
       );
       this.$store.dispatch('config/updateInitialized', { initialized: true });

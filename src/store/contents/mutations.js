@@ -1,20 +1,20 @@
-export const updateCollection = (state, update) => {
+export const setCollection = (state, update) => {
   state.collection = update;
 };
 
-export const updateCollectionTitle = (state, title) => {
+export const setCollectionTitle = (state, title) => {
   state.collectionTitle = title;
 };
 
-export const updateContentIndex = (state, update) => {
+export const setContentIndex = (state, update) => {
   state.contentIndex = update;
 };
 
-export const updateContentIndexChange = (state, contentIndex) => {
+export const setContentIndexChange = (state, contentIndex) => {
   state.contentIndex = contentIndex;
 };
 
-export const updateContentItem = (
+export const setContentItem = (
   state,
   {
     item, errorText, contentUrls, contentTypes,
@@ -30,27 +30,27 @@ export const updateExpanded = (state, update) => {
   state.expanded = update;
 };
 
-export const updateIsCollection = (state, update) => {
+export const setIsCollection = (state, update) => {
   state.isCollection = update.isCollection;
 };
 
-export const updateItemUrl = (state, url) => {
+export const setItemUrl = (state, url) => {
   state.itemUrl = url;
 };
 
-export const updateItemUrls = (state, update) => {
+export const setItemUrls = (state, update) => {
   state.itemUrls = update.itemUrls;
 };
 
-export const updateLoaded = (state, update) => {
+export const setLoaded = (state, update) => {
   state.loaded = update.loaded;
 };
 
-export const updateManifests = (state, update) => {
+export const setManifests = (state, update) => {
   state.manifests = update.manifests;
 };
 
-export const updateImageData = (state, update) => {
+export const setImageData = (state, update) => {
   state.image = { ...update };
 };
 
@@ -66,6 +66,6 @@ export const resetContents = (state) => {
   state.tree = [];
 };
 
-export const updateTree = (state, update) => {
+export const setTree = (state, update) => {
   state.tree = update.tree;
 };

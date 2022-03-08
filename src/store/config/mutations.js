@@ -1,5 +1,7 @@
-export const loadConfig = (state, config) => {
+export const loadConfig = (state, { config, configErrorMessage, isValid }) => {
   state.config = config;
+  state.configErrorMessage = configErrorMessage;
+  state.isValid = isValid;
 };
 
 export const resetInitialized = (state) => {
