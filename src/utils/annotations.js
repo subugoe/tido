@@ -370,3 +370,65 @@ export const isAnnotationSelected = (el) => {
 
   return matched;
 };
+
+export function addIcon(element, annotation) {
+  const contentType = annotation.body['x-content-type'];
+  let foundSvg = false;
+
+  [...element.children].forEach((el) => {
+    if (el.nodeName === 'svg' && el.getAttribute('data-annotation-icon')) {
+      foundSvg = true;
+    }
+  });
+
+  if (foundSvg) {
+    return;
+  }
+  try {
+    const types = [
+      {
+        contenttype: 'Person',
+        icon: 'fasUser',
+        label: 'Names',
+      },
+      {
+        contenttype: 'Place',
+        icon: 'fasMapMarkerAlt',
+        label: 'Places',
+      },
+      {
+        contenttype: 'Editorial Comment',
+        icon: 'fasComment',
+        label: 'Comments',
+      },
+      {
+        contenttype: 'Motif',
+        icon: 'fasHighlighter',
+        label: 'Motifs',
+      },
+      {
+        contenttype: 'Abstract',
+        annotationType: 'text',
+        displayWhen: 'Edierter Text',
+        label: 'Abstract',
+      },
+    ];
+    const svg = getAnnotationIcon(contentType, types);
+    svg.setAttribute(
+      'data-annotation-icon',
+      stripTargetId(annotation),
+    );
+    element.prepend(svg);
+  } catch (err) {
+    // error message
+  }
+}
+
+export function removeIcon(annotation) {
+  const stripeId = stripTargetId(annotation);
+  const el = document.querySelector(`svg[data-annotation-icon='${stripeId}']`);
+
+  if (el) {
+    el.remove();
+  }
+}

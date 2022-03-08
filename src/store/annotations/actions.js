@@ -1,7 +1,32 @@
-export const addActiveAnnotation = ({ commit, getters }, annotation) => {
-  const { activeAnnotations } = getters;
-  activeAnnotations[annotation.targetId] = annotation;
+import * as AnnotationUtils from 'src/utils';
+
+export const addActiveAnnotation = ({ commit, getters }, targetId) => {
+  const { activeAnnotations, annotations } = getters;
+  const newActiveAnnotation = annotations.find((annotation) => annotation.targetId === targetId);
+
+  if (!newActiveAnnotation || activeAnnotations[targetId]) {
+    return;
+  }
+
+  activeAnnotations[targetId] = newActiveAnnotation;
   commit('updateActiveAnnotations', { ...activeAnnotations });
+
+  let selector = AnnotationUtils.stripTargetId(newActiveAnnotation, false);
+
+  if (selector.startsWith('.')) {
+    selector = selector.replace(/\./g, '');
+  }
+
+  const el = document.getElementById(selector) || document.querySelector(`.${selector}`);
+
+  AnnotationUtils.updateHighlightState(selector, 'INC');
+  if (el) {
+    AnnotationUtils.addIcon(el, newActiveAnnotation);
+  }
+
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
 };
 
 export const annotationLoaded = ({ commit }, annotations) => {
@@ -22,9 +47,27 @@ export const loadAnnotations = ({ commit }) => {
   commit('updateAnnotations', []);
 };
 
-export const removeActiveAnnotation = ({ commit, getters }, annotation) => {
-  const { activeAnnotations } = getters;
-  delete activeAnnotations[annotation.targetId];
+export const removeActiveAnnotation = ({ commit, getters }, { targetId, level }) => {
+  const { activeAnnotations, contentIds } = getters;
+
+  if (!contentIds[targetId]) {
+    return;
+  }
+
+  const removeAnnotation = activeAnnotations[targetId];
+  if (!removeAnnotation) {
+    return;
+  }
+
+  let selector = AnnotationUtils.stripTargetId(removeAnnotation, false);
+  if (selector.startsWith('.')) {
+    selector = selector.replace(/\./g, '');
+  }
+
+  AnnotationUtils.updateHighlightState(selector, 'DEC', level);
+  AnnotationUtils.removeIcon(removeAnnotation);
+
+  delete activeAnnotations[targetId];
   commit('updateActiveAnnotations', { ...activeAnnotations });
 };
 

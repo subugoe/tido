@@ -202,6 +202,42 @@ export default {
           addHighlighterAttributes.call(this, dom);
 
           this.content = dom.documentElement.innerHTML;
+          await delay(10);
+
+          // eslint-disable-next-line no-inner-declarations
+          function findHighestParent(el) {
+            const parent = el.parentElement;
+            let result;
+            if (parent.dataset.annotation) {
+              result = findHighestParent(parent);
+            } else {
+              result = el;
+            }
+
+            return result;
+          }
+
+          const elementsToClick = {};
+
+          document.querySelectorAll('[data-annotation]').forEach((el) => {
+            const highestParent = findHighestParent(el);
+
+            if (highestParent.id && !elementsToClick[highestParent.id]) {
+              elementsToClick[highestParent.id] = highestParent;
+            }
+          });
+
+          Object.keys(elementsToClick).forEach((key) => {
+            const element = elementsToClick[key];
+            element.addEventListener('click', () => {
+              this.$store.dispatch('annotations/addActiveAnnotation', key.replace(/\./g, ''));
+              [...element.children].forEach((child) => {
+                if (child.id) {
+                  this.$store.dispatch('annotations/addActiveAnnotation', child.id.replace(/\./g, ''));
+                }
+              });
+            });
+          });
 
           if (!annotationPanelHidden) {
             await delay(200);
