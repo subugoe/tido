@@ -36,14 +36,14 @@ export default {
     annotations() {
       return this.$store.getters['annotations/annotations'];
     },
+    collectionTitle() {
+      return this.$store.getters['contents/collectionTitle'];
+    },
     config() {
       return this.$store.getters['config/config'];
     },
     configErrorMessage() {
       return this.$store.getters['config/configErrorMessage'];
-    },
-    collectionTitle() {
-      return this.$store.getters['contents/collectionTitle'];
     },
     contentTypes() {
       return this.$store.getters['contents/contentTypes'];
@@ -54,9 +54,6 @@ export default {
     errorText() {
       return this.$store.getters['contents/errorText'];
     },
-    isConfigValid() {
-      return this.$store.getters['config/isConfigValid'];
-    },
     item() {
       return this.$store.getters['contents/item'];
     },
@@ -65,6 +62,9 @@ export default {
     },
     itemUrls() {
       return this.$store.getters['contents/itemUrls'];
+    },
+    isConfigValid() {
+      return this.$store.getters['config/isConfigValid'];
     },
     loaded() {
       return this.$store.getters['config/initialized'];

@@ -9,10 +9,10 @@
       align="justify"
     >
       <q-tab
-        v-for="(contenturl, i) in contenturls"
+        v-for="(contenturl, i) in contentUrls"
         :key="`content${i}`"
         :class="{ 'disabled-tab': contenturl === activeTab }"
-        :label="$t(contenttypes[i])"
+        :label="$t(contentTypes[i])"
         :name="contenturl"
       />
     </q-tabs>
@@ -122,16 +122,15 @@ export default {
       max: 28,
     },
     isLoading: false,
-    sequenceindex: 0,
   }),
   computed: {
     contentIndex() {
       return this.$store.getters['contents/contentIndex'];
     },
-    contenturls() {
+    contentUrls() {
       return this.$store.getters['contents/contentUrls'];
     },
-    contenttypes() {
+    contentTypes() {
       return this.$store.getters['contents/contentTypes'];
     },
     errorText() {
@@ -147,7 +146,7 @@ export default {
       return this.$store.getters['annotations/contentFontSize'];
     },
     activeTab() {
-      return this.contenturls[this.contentIndex];
+      return this.contentUrls[this.contentIndex];
     },
     contentStyle() {
       return {
@@ -162,8 +161,11 @@ export default {
         this.errorTextMessage || this.errorText.textErrorMessageNotExists,
       );
     },
+    sequenceIndex() {
+      return this.$store.getters['contents/sequenceIndex'];
+    },
     supportType() {
-      const { support } = this.manifests[this.sequenceindex];
+      const { support } = this.manifests[this.sequenceIndex];
 
       return Object.keys(support).length && support.url !== '';
     },
@@ -171,7 +173,7 @@ export default {
 
   watch: {
     activeTabContents(url) {
-      this.$store.dispatch('contents/onContentIndexChange', this.contenturls.findIndex((x) => x === url));
+      this.$store.dispatch('contents/onContentIndexChange', this.contentUrls.findIndex((x) => x === url));
     },
     activeTab: {
       async handler(url) {
@@ -221,14 +223,14 @@ export default {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
 
-    const activeTab = this.contenturls[this.contentIndex];
-    const [contenturls] = this.contenturls[0];
+    const activeTab = this.contentUrls[this.contentIndex];
+    const [contentUrls] = this.contentUrls[0];
 
     this.activeTabContents = activeTab;
 
     if (!activeTab) {
       this.$store.dispatch('contents/onContentIndexChange', 0);
-      this.activeTabContents = contenturls;
+      this.activeTabContents = contentUrls;
     }
   },
 
@@ -243,10 +245,10 @@ export default {
       }
     });
 
-    const [contenturls] = this.contenturls[0];
+    const [contentUrls] = this.contentUrls[0];
 
     this.$root.$on('manifest-changed', () => {
-      this.activeTabContents = contenturls;
+      this.activeTabContents = contentUrls;
       this.$store.dispatch('contents/onContentIndexChange', 0);
     });
   },

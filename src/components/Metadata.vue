@@ -43,7 +43,7 @@
     >
       <q-item class="no-padding">
         <q-item-section class="text-h6 text--smallcaps">
-          {{ $t(labels.manifest) }} {{ sequenceindex + 1 }} / {{ manifests.length }}
+          {{ $t(labels.manifest) }} {{ sequenceIndex + 1 }} / {{ manifests.length }}
         </q-item-section>
       </q-item>
 
@@ -64,9 +64,9 @@
         </q-item-section>
       </q-item>
 
-      <div v-if="manifests[sequenceindex].metadata">
+      <div v-if="manifests[sequenceIndex].metadata">
         <q-item
-          v-for="(meta, idx) in manifests[sequenceindex].metadata"
+          v-for="(meta, idx) in manifests[sequenceIndex].metadata"
           :key="idx"
           class="q-mb-xs no-padding"
         >
@@ -97,7 +97,7 @@
     >
       <q-item class="no-padding">
         <q-item-section class="text-h6 text--smallcaps">
-          {{ $t(labels.item) }} {{ itemindex + 1 }} / {{ itemcount }}
+          {{ $t(labels.item) }} {{ itemIndex + 1 }} / {{ itemcount }}
         </q-item-section>
       </q-item>
 
