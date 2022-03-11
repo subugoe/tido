@@ -5,7 +5,6 @@
   >
     <Notification
       :message="$t(errorImage.messageKey)"
-      :notification-colors="config.notificationColors"
       title-key="imageErrorTitle"
       type="warning"
     />
@@ -54,24 +53,6 @@ export default {
   components: {
     Notification,
   },
-  props: {
-    config: {
-      type: Object,
-      default: () => {},
-    },
-    errormessage: {
-      type: Boolean,
-      default: () => false,
-    },
-    errorImage: {
-      type: Object,
-      default: () => null,
-    },
-    imageurl: {
-      type: String,
-      default: () => '',
-    },
-  },
   data() {
     return {
       buttons: [
@@ -80,22 +61,32 @@ export default {
         { id: 'default', svg: fasExpand, tooltip: 'osdHome' },
         { id: 'fullscreen', svg: fasExpandArrowsAlt, tooltip: 'osdFullPage' },
       ],
-      options: {
+    };
+  },
+  computed: {
+    imageUrl() {
+      return this.$store.getters['contents/imageUrl'];
+    },
+    errorImage() {
+      return this.$store.getters['contents/errorImage'];
+    },
+    options() {
+      return {
         id: 'openseadragon',
         tileSources: {
           type: 'image',
-          url: this.imageurl,
+          url: this.imageUrl,
         },
         maxZoomLevel: 10,
         zoomInButton: 'zoom-in',
         zoomOutButton: 'zoom-out',
         homeButton: 'default',
         fullPageButton: 'fullscreen',
-      },
-    };
+      };
+    },
   },
   mounted() {
-    if (this.errorImage !== null) {
+    if (this.errorImage) {
       return;
     }
 
@@ -105,7 +96,9 @@ export default {
     document.addEventListener('fullscreenchange', () => {
       Object.values(this.buttons).forEach((v) => {
         if (v.id === 'fullscreen') {
-          v.svg = document.fullscreenElement !== null ? fasCompressArrowsAlt : fasExpandArrowsAlt;
+          v.svg = document.fullscreenElement !== null
+            ? fasCompressArrowsAlt
+            : fasExpandArrowsAlt;
         }
       });
     });

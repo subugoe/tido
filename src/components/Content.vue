@@ -9,10 +9,10 @@
       align="justify"
     >
       <q-tab
-        v-for="(contenturl, i) in contenturls"
+        v-for="(contenturl, i) in contentUrls"
         :key="`content${i}`"
         :class="{ 'disabled-tab': contenturl === activeTab }"
-        :label="$t(contenttypes[i])"
+        :label="$t(contentTypes[i])"
         :name="contenturl"
       />
     </q-tabs>
@@ -71,7 +71,11 @@
 
     <div class="custom-font item-content text-content">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-      <div :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle"/>
+      <div
+        :class="{ rtl: config.rtl }"
+        v-html="content"
+        :style="contentStyle"
+      />
     </div>
   </div>
 </template>
@@ -81,8 +85,15 @@ import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
 import DomMixin from '@/mixins/dom';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
+import { request } from '@/utils/http';
 import {
-  loadFont, onlyIf, loadCss, domParser, getAnnotationContentIds, delay, addHighlighterAttributes,
+  loadFont,
+  onlyIf,
+  loadCss,
+  domParser,
+  getAnnotationContentIds,
+  delay,
+  addHighlighterAttributes,
 } from '@/utils';
 
 export default {
@@ -93,42 +104,6 @@ export default {
   },
   mixins: [DomMixin],
   props: {
-    config: {
-      type: Object,
-      default: () => {},
-    },
-    contenturls: {
-      type: Array,
-      default: () => [],
-    },
-    contenttypes: {
-      type: Array,
-      default: () => [],
-    },
-    contentindex: {
-      type: Number,
-      default: () => 0,
-    },
-    errorText: {
-      type: Object,
-      default: () => null,
-    },
-    fontsize: {
-      type: Number,
-      default: () => 16,
-    },
-    manifests: {
-      type: Array,
-      default: () => [],
-    },
-    oncontentindexchange: {
-      type: Function,
-      default: () => null,
-    },
-    request: {
-      type: Function,
-      default: null,
-    },
     transcription: {
       type: String,
       default: () => '',
@@ -147,11 +122,31 @@ export default {
       max: 28,
     },
     isLoading: false,
-    sequenceindex: 0,
   }),
   computed: {
+    contentIndex() {
+      return this.$store.getters['contents/contentIndex'];
+    },
+    contentUrls() {
+      return this.$store.getters['contents/contentUrls'];
+    },
+    contentTypes() {
+      return this.$store.getters['contents/contentTypes'];
+    },
+    errorText() {
+      return this.$store.getters['contents/errorText'];
+    },
+    manifests() {
+      return this.$store.getters['contents/manifests'];
+    },
+    config() {
+      return this.$store.getters['config/config'];
+    },
+    fontsize() {
+      return this.$store.getters['annotations/contentFontSize'];
+    },
     activeTab() {
-      return this.contenturls[this.contentindex];
+      return this.contentUrls[this.contentIndex];
     },
     contentStyle() {
       return {
@@ -166,8 +161,11 @@ export default {
         this.errorTextMessage || this.errorText.textErrorMessageNotExists,
       );
     },
+    sequenceIndex() {
+      return this.$store.getters['contents/sequenceIndex'];
+    },
     supportType() {
-      const { support } = this.manifests[this.sequenceindex];
+      const { support } = this.manifests[this.sequenceIndex];
 
       return Object.keys(support).length && support.url !== '';
     },
@@ -175,7 +173,7 @@ export default {
 
   watch: {
     activeTabContents(url) {
-      this.oncontentindexchange(this.contenturls.findIndex((x) => x === url));
+      this.$store.dispatch('contents/onContentIndexChange', this.contentUrls.findIndex((x) => x === url));
     },
     activeTab: {
       async handler(url) {
@@ -186,7 +184,7 @@ export default {
           this.errorTextMessage = '';
           this.isLoading = true;
           this.$store.dispatch('annotations/updateContentLoading', true);
-          const data = await this.request(url, 'text');
+          const data = await request(url, 'text');
           this.isValidTextContent(data);
 
           if (this.supportType) {
@@ -205,7 +203,10 @@ export default {
 
           if (!annotationPanelHidden) {
             await delay(200);
-            this.$store.dispatch('annotations/updateContentIds', getAnnotationContentIds.call(this, dom));
+            this.$store.dispatch(
+              'annotations/updateContentIds',
+              getAnnotationContentIds.call(this, dom),
+            );
           }
         } catch (err) {
           this.errorTextMessage = err.message;
@@ -222,14 +223,14 @@ export default {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
 
-    const activeTab = this.contenturls[this.contentindex];
-    const [contenturls] = this.contenturls[0];
+    const activeTab = this.contentUrls[this.contentIndex];
+    const [contentUrls] = this.contentUrls[0];
 
     this.activeTabContents = activeTab;
 
     if (!activeTab) {
-      this.oncontentindexchange(0);
-      this.activeTabContents = contenturls;
+      this.$store.dispatch('contents/onContentIndexChange', 0);
+      this.activeTabContents = contentUrls;
     }
   },
 
@@ -244,11 +245,11 @@ export default {
       }
     });
 
-    const [contenturls] = this.contenturls[0];
+    const [contentUrls] = this.contentUrls[0];
 
     this.$root.$on('manifest-changed', () => {
-      this.activeTabContents = contenturls;
-      this.oncontentindexchange(0);
+      this.activeTabContents = contentUrls;
+      this.$store.dispatch('contents/onContentIndexChange', 0);
     });
   },
   methods: {

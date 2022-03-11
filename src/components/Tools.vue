@@ -27,19 +27,15 @@ export default {
     Language,
     SoftwareInfo,
   },
-  props: {
-    config: {
-      type: Object,
-      default: () => {},
-    },
-    projectcolors: {
-      type: Object,
-      default: () => {},
-    },
-  },
   computed: {
     projectColorsSet() {
       return !!Object.values(this.projectcolors).every((color) => color !== null && color !== '');
+    },
+    config() {
+      return this.$store.getters['config/config'];
+    },
+    projectcolors() {
+      return this.config.colors;
     },
   },
 };

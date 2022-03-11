@@ -79,18 +79,6 @@ export default {
   },
   mixins: [DomMixin],
   props: {
-    config: {
-      type: Object,
-      default: () => {},
-    },
-    contentindex: {
-      type: Number,
-      default: () => 0,
-    },
-    contenttypes: {
-      type: Array,
-      default: () => [],
-    },
     panels: {
       type: Array,
       default: () => [],
@@ -105,6 +93,15 @@ export default {
     };
   },
   computed: {
+    contentIndex() {
+      return this.$store.getters['contents/contentIndex'];
+    },
+    contentTypes() {
+      return this.$store.getters['contents/contentTypes'];
+    },
+    config() {
+      return this.$store.getters['config/config'];
+    },
     activeAnnotation() {
       return this.$store.getters['annotations/activeAnnotations'];
     },
@@ -141,7 +138,7 @@ export default {
         (x) => {
           const annotationContentType = this.annotationTypesMapping[x.body['x-content-type']];
 
-          if (annotationContentType?.type === 'text' && annotationContentType?.displayWhen === this.contenttypes[this.contentindex]) {
+          if (annotationContentType?.type === 'text' && annotationContentType?.displayWhen === this.contentTypes[this.contentIndex]) {
             return this.activeEntities.includes(x.body['x-content-type']);
           }
           return this.activeEntities.includes(x.body['x-content-type']) && this.contentIds[x.targetId];

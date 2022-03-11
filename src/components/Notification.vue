@@ -35,10 +35,6 @@ export default {
       type: String,
       default: () => '',
     },
-    notificationColors: {
-      type: Object,
-      default: () => {},
-    },
     titleKey: {
       type: String,
       default: () => '',
@@ -54,6 +50,12 @@ export default {
     };
   },
   computed: {
+    config() {
+      return this.$store.getters['config/config'];
+    },
+    notificationColors() {
+      return this.config.notificationColors;
+    },
     color() {
       switch (this.type) {
         case 'info':
