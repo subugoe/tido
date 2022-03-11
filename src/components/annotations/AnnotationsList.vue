@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     isActive(annotation) {
-      return !!this.activeAnnotation[annotation.targetId];
+      return !!this.activeAnnotation[annotation.id];
     },
     isText(annotation) {
       return this.annotationTypesMapping[annotation.body['x-content-type']] === 'text';

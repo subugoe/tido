@@ -1,33 +1,51 @@
-import * as AnnotationUtils from '@/utils';
+import * as AnnotationUtils from 'src/utils';
+import * as DomUtils from '@/utils';
 
-export const addActiveAnnotation = ({ commit, getters }, targetId) => {
+export const addHighlightAttributesToText = ({ getters }, dom) => {
+  const { annotations } = getters;
+
+  DomUtils.mapUniqueElements(
+    DomUtils.findDomElements('[data-target]:not([value=""])', dom),
+    (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
+  ).forEach((selector) => AnnotationUtils.replaceSelectorWithSpan(selector, dom));
+
+  annotations.forEach((annotation) => {
+    const { selector } = annotation.target;
+    AnnotationUtils.addHighlightToTargetIds(selector, dom);
+  });
+};
+
+export const addActiveAnnotation = ({ commit, getters }, id) => {
   const { activeAnnotations, annotations } = getters;
+  const newActiveAnnotation = annotations.find((annotation) => annotation.id === id);
 
-  const newActiveAnnotation = annotations.find((annotation) => targetId === annotation.targetId);
+  if (!newActiveAnnotation || activeAnnotations[id]) {
+    return;
+  }
 
-  if (newActiveAnnotation) {
-    activeAnnotations[targetId] = newActiveAnnotation;
-    commit('updateActiveAnnotations', { ...activeAnnotations });
-    let selector = AnnotationUtils.stripTargetId(newActiveAnnotation, false);
+  activeAnnotations[id] = newActiveAnnotation;
+  commit('updateActiveAnnotations', { ...activeAnnotations });
 
-    if (selector.startsWith('.')) {
-      selector = selector.replace(/\./g, '');
-    }
+  let selector = AnnotationUtils.stripTargetId(newActiveAnnotation, false);
 
-    // const el = document.getElementById(selector) || document.querySelector(`.${selector}`);
+  if (selector.startsWith('.')) {
+    selector = selector.replace(/\./g, '');
+  }
 
-    // AnnotationUtils.updateHighlightState(selector, 'INC');
-    // if (el) {
-    //   AnnotationUtils.addIcon(el, newActiveAnnotation);
-    // }
+  const el = document.getElementById(selector) || document.querySelector(`.${selector}`);
 
-    // if (el) {
-    //   el.scrollIntoView({ behavior: 'smooth' });
-    // }
+  AnnotationUtils.updateHighlightState(selector, 'INC');
+  if (el) {
+    AnnotationUtils.addIcon(el, newActiveAnnotation);
+  }
+
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' });
   }
 };
 
 export const annotationLoaded = ({ commit }, annotations) => {
+  console.log('annotationsLoaded');
   commit('updateAnnotationLoading', false);
   commit('updateAnnotations', annotations);
 };
@@ -45,11 +63,28 @@ export const loadAnnotations = ({ commit }) => {
   commit('updateAnnotations', []);
 };
 
-export const removeActiveAnnotation = ({ commit, getters, dispatch }, annotation) => {
-  const { activeAnnotations } = getters;
-  delete activeAnnotations[annotation.targetId];
+export const removeActiveAnnotation = ({ commit, getters }, { targetId, level }) => {
+  const { activeAnnotations, contentIds } = getters;
+
+  if (!contentIds[targetId]) {
+    return;
+  }
+
+  const removeAnnotation = activeAnnotations[targetId];
+  if (!removeAnnotation) {
+    return;
+  }
+
+  let selector = AnnotationUtils.stripTargetId(removeAnnotation, false);
+  if (selector.startsWith('.')) {
+    selector = selector.replace(/\./g, '');
+  }
+
+  AnnotationUtils.updateHighlightState(selector, 'DEC', level);
+  AnnotationUtils.removeIcon(removeAnnotation);
+
+  delete activeAnnotations[targetId];
   commit('updateActiveAnnotations', { ...activeAnnotations });
-  dispatch('hideAnnotationIcon', annotation.targetId);
 };
 
 export const resetActiveAnnotations = ({ commit }) => {

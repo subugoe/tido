@@ -8,6 +8,6 @@ export const resetInitialized = (state) => {
   state.initialized = false;
 };
 
-export const updateInitialized = (state, { initialized }) => {
+export const setInitialized = (state, { initialized }) => {
   state.initialized = initialized;
 };

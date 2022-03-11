@@ -242,6 +242,7 @@ export const initContentItem = async (
   },
   url,
 ) => {
+  console.log('contents/initContentItem');
   let isManifestChanged = false;
   let item = {};
   let errorText = null;

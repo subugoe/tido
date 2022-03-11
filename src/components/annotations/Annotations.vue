@@ -166,6 +166,7 @@ export default {
   watch: {
     currentTab: {
       handler() {
+        this.$store.dispatch('annotations/addHighlightAttributesToText', document.getElementById('text-container'));
         AnnotationUtils.highlightActiveContent(this.filteredAnnotations);
         this.handleTooltip();
       },
@@ -205,7 +206,7 @@ export default {
     },
 
     addAnnotation(annotation) {
-      this.$store.dispatch('annotations/addActiveAnnotation', annotation.targetId);
+      this.$store.dispatch('annotations/addActiveAnnotation', annotation.id);
     },
 
     handleTooltip() {
@@ -252,6 +253,7 @@ export default {
       });
     },
     onContentUpdate(ids) {
+      console.log('annotations onContentUpdate');
       try {
         if (this.isLoading || this.isProcessing) {
           setTimeout(() => this.onContentUpdate(ids), 100);
@@ -268,14 +270,14 @@ export default {
 
     onHighlightAll() {
       this.filteredAnnotations.forEach(
-        (annotation) => !this.activeAnnotation[annotation.targetId]
+        (annotation) => !this.activeAnnotation[annotation.id]
           && this.addAnnotation(annotation),
       );
     },
 
     onHighlightNone() {
       this.filteredAnnotations.forEach(
-        (annotation) => this.activeAnnotation[annotation.targetId]
+        (annotation) => this.activeAnnotation[annotation.id]
           && this.removeAnnotation(annotation),
       );
     },
@@ -291,29 +293,8 @@ export default {
       this.findDomElements('.annotation-tooltip').forEach((el) => el.remove());
     },
 
-    removeIcon(annotation) {
-      const stripeId = AnnotationUtils.stripTargetId(annotation);
-      const el = document
-        .querySelector(`svg[data-annotation-icon='${stripeId}']`);
-
-      if (el) {
-        el.remove();
-      }
-    },
-
     removeAnnotation(annotation, level) {
-      if (!this.contentIds[annotation.targetId]) {
-        return;
-      }
-      this.$store.dispatch('annotations/removeActiveAnnotation', annotation);
-      let selector = AnnotationUtils.stripTargetId(annotation, false);
-
-      if (selector.startsWith('.')) {
-        selector = selector.replace(/\./g, '');
-      }
-
-      AnnotationUtils.updateHighlightState(selector, 'DEC', level);
-      this.removeIcon(annotation);
+      this.$store.dispatch('annotations/removeActiveAnnotation', { id: annotation.id, level });
     },
 
     resetActiveAnnotations() {
@@ -324,7 +305,7 @@ export default {
       if (!this.contentIds[annotation.targetId]) {
         return;
       }
-      const exists = !!this.activeAnnotation[annotation.targetId];
+      const exists = !!this.activeAnnotation[annotation.id];
       if (exists) {
         this.removeAnnotation(annotation);
       } else {

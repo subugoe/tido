@@ -3,25 +3,24 @@ import * as Icons from '@quasar/extras/fontawesome-v5';
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
 export function addHighlightToTargetIds(selector, root) {
-  const element = root.getElementById(selector);
-  if (!element) {
+  const elements = root.querySelectorAll(selector);
+  if (elements.length === 0) {
     return;
   }
 
   function recursiveAddClass(children) {
-    [...children].forEach((child) => {
+    children.forEach((child) => {
       child.setAttribute('data-annotation', true);
       child.classList.add(selector);
       recursiveAddClass(child.children);
     });
   }
 
-  if (!element.children.length) {
+  elements.forEach((element) => {
     element.setAttribute('data-annotation', true);
     element.classList.add(selector);
-  }
-
-  recursiveAddClass(element.children);
+    recursiveAddClass(element.children);
+  });
 }
 
 export function replaceSelectorWithSpan(selector, root) {
@@ -62,15 +61,6 @@ export function replaceSelectorWithSpan(selector, root) {
   }
   replaceRecursive(root);
   return root;
-}
-
-export function addHighlighterAttributes(dom) {
-  this.mapUniqueElements(
-    this.findDomElements('[data-target]:not([value=""])', dom),
-    (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
-  ).forEach((selector) => replaceSelectorWithSpan(selector, dom));
-
-  this.mapElements(this.findDomElements('[id]', dom), (x) => x.getAttribute('id')).forEach((selector) => addHighlightToTargetIds(selector, dom));
 }
 
 export function getAnnotationContentIds(dom) {
@@ -245,12 +235,13 @@ export function stripAnnotationId(url) {
 }
 
 export function stripTargetId(annotation, removeDot = true) {
-  let output = '';
-  if (annotation.target.selector) {
-    output = stripSelector(annotation);
-  } else {
-    output = stripAnnotationId(annotation.target.id);
-  }
+  const output = stripAnnotationId(annotation.target.id);
+  // if (annotation.target.selector) {
+  //   output = stripSelector(annotation);
+  // } else {
+  //   output = ;
+  // }
+  console.log(output);
 
   return removeDot ? output.replace(/\./g, '') : output;
 }
@@ -393,5 +384,15 @@ export function addIcon(element, annotation) {
     element.prepend(svg);
   } catch (err) {
     // error message
+  }
+}
+
+export function removeIcon(annotation) {
+  const stripeId = stripTargetId(annotation);
+  const el = document
+    .querySelector(`svg[data-annotation-icon='${stripeId}']`);
+
+  if (el) {
+    el.remove();
   }
 }
