@@ -54,10 +54,6 @@ export const setManifests = (state, payload) => {
   state.manifests = payload.manifests;
 };
 
-export const setPanels = (state, payload) => {
-  state.panels = payload.panels;
-};
-
 export const setSequenceIndex = (state, payload) => {
   state.sequenceIndex = payload;
 };
@@ -82,6 +78,5 @@ export const resetContents = (state) => {
   state.loaded = false;
   state.manifests = [];
   state.sequenceIndex = 0;
-  state.panels = [];
   state.tree = [];
 };
