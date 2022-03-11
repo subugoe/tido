@@ -3,7 +3,7 @@
     <q-tree
       class="item-content"
       node-key="label"
-      :expanded.sync="expanded"
+      :expanded.sync="expandTreeNodes"
       :icon="fasCaretRight"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
@@ -46,7 +46,7 @@ export default {
     };
   },
   computed: {
-    expandTree() {
+    expandTreeNodes() {
       return this.$store.getters['contents/expanded'];
     },
     config() {
@@ -69,12 +69,6 @@ export default {
     },
   },
   watch: {
-    expandTree: {
-      handler(val) {
-        this.expanded = [...val];
-      },
-      immediate: true,
-    },
     sequenceIndex: {
       handler: 'onSequenceIndexUpdate',
       immediate: true,

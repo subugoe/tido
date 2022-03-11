@@ -1,13 +1,13 @@
-export const setCollection = (state, update) => {
-  state.collection = update;
+export const setCollection = (state, payload) => {
+  state.collection = payload;
 };
 
 export const setCollectionTitle = (state, title) => {
   state.collectionTitle = title;
 };
 
-export const setContentIndex = (state, update) => {
-  state.contentIndex = update;
+export const setContentIndex = (state, payload) => {
+  state.contentIndex = payload;
 };
 
 export const setContentIndexChange = (state, contentIndex) => {
@@ -26,44 +26,44 @@ export const setContentItem = (
   state.contentTypes = contentTypes;
 };
 
-export const updateExpanded = (state, update) => {
-  state.expanded = update;
+export const updateExpanded = (state, payload) => {
+  state.expanded = payload;
 };
 
-export const setImageData = (state, update) => {
-  state.image = { ...update };
+export const setImageData = (state, payload) => {
+  state.image = { ...payload };
 };
 
-export const setIsCollection = (state, update) => {
-  state.isCollection = update.isCollection;
+export const setIsCollection = (state, payload) => {
+  state.isCollection = payload.isCollection;
 };
 
 export const setItemUrl = (state, url) => {
   state.itemUrl = url;
 };
 
-export const setItemUrls = (state, update) => {
-  state.itemUrls = update.itemUrls;
+export const setItemUrls = (state, payload) => {
+  state.itemUrls = payload.itemUrls;
 };
 
-export const setLoaded = (state, update) => {
-  state.loaded = update.loaded;
+export const setLoaded = (state, payload) => {
+  state.loaded = payload.loaded;
 };
 
-export const setManifests = (state, update) => {
-  state.manifests = update.manifests;
+export const setManifests = (state, payload) => {
+  state.manifests = payload.manifests;
 };
 
-export const setPanels = (state, update) => {
-  state.panels = update.panels;
+export const setPanels = (state, payload) => {
+  state.panels = payload.panels;
 };
 
-export const setSequenceIndex = (state, update) => {
-  state.sequenceIndex = update;
+export const setSequenceIndex = (state, payload) => {
+  state.sequenceIndex = payload;
 };
 
-export const setTree = (state, update) => {
-  state.tree = update.tree;
+export const setTree = (state, payload) => {
+  state.tree = payload.tree;
 };
 
 export const resetContents = (state) => {

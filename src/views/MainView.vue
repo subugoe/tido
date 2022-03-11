@@ -51,7 +51,7 @@
             <component
               :is="tab.component"
               :key="keys[tab.id]"
-              v-bind="$props"
+              :panels="panels"
             />
           </q-tab-panel>
         </q-tab-panels>
@@ -65,7 +65,7 @@
         <component
           :is="p.connector[0].component"
           :key="keys[p.connector[0].id]"
-          v-bind="$props"
+          :panels="panels"
         />
       </div>
     </div>
