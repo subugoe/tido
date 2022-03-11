@@ -3,15 +3,14 @@
     <q-tree
       class="item-content"
       node-key="label"
-      :expanded.sync="expanded"
+      :expanded.sync="expandTreeNodes"
       :icon="fasCaretRight"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       :selected.sync="selected"
+      @update:expanded="handleTreeUpdate"
     >
-      <template
-        #default-body="{node}"
-      >
+      <template #default-body="{node}">
         <div
           v-if="!node.children"
           :id="`selectedItem-${node['label']}`"
@@ -23,7 +22,10 @@
           :id="prop.node['label']"
           class="row items-center"
         >
-          <div> {{ prop.node.labelSheet? $t(labels.item):'' }} {{ prop.node['label-key'] }}</div>
+          <div>
+            {{ prop.node.labelSheet ? $t(labels.item) : "" }}
+            {{ prop.node["label-key"] }}
+          </div>
         </div>
       </template>
     </q-tree>
@@ -32,70 +34,74 @@
 
 <script>
 import { fasCaretRight } from '@quasar/extras/fontawesome-v5';
-import treestore from '@/stores/treestore.js';
+import Navigation from '@/mixins/navigation';
 
 export default {
-  name: 'Tree',
-  props: {
-    labels: {
-      type: Object,
-      default: () => {},
-    },
-    manifests: {
-      type: Array,
-      default: () => [],
-    },
-    tree: {
-      type: Array,
-      default: () => [],
-    },
-  },
+  name: 'Treeview',
+  mixins: [Navigation],
   data() {
     return {
       expanded: [],
       selected: null,
-      sequenceindex: 0,
     };
+  },
+  computed: {
+    expandTreeNodes() {
+      return this.$store.getters['contents/expanded'];
+    },
+    config() {
+      return this.$store.getters['config/config'];
+    },
+    labels() {
+      return this.config.labels || {};
+    },
+    itemUrl() {
+      return this.$store.getters['contents/itemUrl'];
+    },
+    tree() {
+      return this.$store.getters['contents/tree'];
+    },
+    sequenceIndex() {
+      return this.$store.getters['contents/selectedSequenceIndex'];
+    },
+    manifests() {
+      return this.$store.getters['contents/manifests'];
+    },
+  },
+  watch: {
+    sequenceIndex: {
+      handler: 'onSequenceIndexUpdate',
+      immediate: true,
+    },
+    itemUrl: {
+      handler(value) {
+        this.selected = value;
+      },
+      immediate: true,
+    },
+    selected: {
+      handler: 'handleSelectedChange',
+      immediate: true,
+    },
   },
   created() {
     this.fasCaretRight = fasCaretRight;
   },
   mounted() {
-    // select tree node
-    this.selected = treestore.state.selectedItemTree || this.manifests[0].sequence[0].id;
-
-    // expand the first level
-    this.expanded.push(this.tree[0].label);
-    // expand second label - dynamic
-    const finalSeqIdx = treestore.state.seqTree || 0;
-
-    this.expanded.push(this.manifests[finalSeqIdx].label);
-
-    this.$root.$on('update-item', (item) => {
-      this.selected = item;
-    });
-
-    this.$root.$on('update-sequence-index', (index) => {
-      if (index !== this.sequenceindex) {
-        this.sequenceindex = index;
-
-        if (!this.expanded.includes(this.manifests[index].label)) {
-          this.expanded.push(this.manifests[index].label);
-        }
+    this.$store.dispatch('contents/addToExpanded', this.tree[0].label);
+  },
+  methods: {
+    onSequenceIndexUpdate(index) {
+      if (!this.expanded.includes(this.manifests[index].label)) {
+        this.$store.dispatch('contents/addToExpanded', this.manifests[index].label);
       }
-    });
-
-    this.$root.$on('update-tree-knots', (label) => {
-      if (this.expanded.includes(label)) {
-        const index = this.expanded.indexOf(label);
-
-        if (index > -1) {
-          this.expanded.splice(index, 1);
-        }
-      } else {
-        this.expanded.push(label);
-      }
-    });
+    },
+    handleSelectedChange(value) {
+      this.navigate(value);
+    },
+    handleTreeUpdate(val) {
+      this.$store.dispatch('contents/updateExpanded', val);
+    },
   },
 };
 </script>

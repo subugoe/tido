@@ -4,9 +4,7 @@
       v-if="!!$route.query.source && ($route.query.source === config.breadcrumbNavigation.source)"
       :class="$q.dark.isActive ? 'bg-white' : 'bg-accent'"
     >
-      <BreadCrumbNavigation
-        :config="config"
-      />
+      <BreadCrumbNavigation :config="config" />
     </div>
 
     <div class="header__wrap">
@@ -17,23 +15,17 @@
         <TitleBar
           v-if="manifests.length"
           class="col-xs-12 col-sm-9 q-mb-xs-xs q-mb-sm-none"
-          :collectiontitle="collectiontitle"
           :item="item"
-          :manifests="manifests"
         />
 
         <Tools
           class="col-xs-12 col-sm-3 items-center justify-sm-end justify-xs-center order-xs-first order-sm-last"
-          :config="config"
-          :projectcolors="projectcolors"
         />
       </q-toolbar>
 
       <q-toolbar class="row toolbar">
         <Navbar
           v-if="config['header_section'].navigation"
-          :default-view="defaultView"
-          :itemurls="itemurls"
           :labels="config.labels"
           :manifests="manifests"
           class="row justify-center justify-sm-start col-xs-12 col-sm-6 q-mb-xs-md q-mb-sm-none"
@@ -50,10 +42,7 @@
         <div
           v-if="!config['header_section'].titles"
         >
-          <Tools
-            :config="config"
-            :projectcolors="projectcolors"
-          />
+          <Tools />
         </div>
       </q-toolbar>
     </div>
@@ -77,41 +66,23 @@ export default {
     Tools,
   },
   props: {
-    collectiontitle: {
-      type: String,
-      default: () => '',
-    },
-    config: {
-      type: Object,
-      default: () => {},
-    },
-    defaultView: {
-      type: Function,
-      default: () => {},
-    },
-    imageurl: {
-      type: String,
-      default: () => '',
-    },
-    item: {
-      type: Object,
-      default: () => {},
-    },
-    itemurls: {
-      type: Array,
-      default: () => [],
-    },
-    manifests: {
-      type: Array,
-      default: () => [],
-    },
     panels: {
       type: Array,
       default: () => [],
     },
-    projectcolors: {
-      type: Object,
-      default: () => {},
+  },
+  computed: {
+    manifests() {
+      return this.$store.getters['contents/manifests'];
+    },
+    config() {
+      return this.$store.getters['config/config'];
+    },
+    projectcolors() {
+      return this.config.colors;
+    },
+    item() {
+      return this.$store.getters['contents/item'];
     },
   },
 };

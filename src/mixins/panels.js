@@ -68,6 +68,10 @@ export default {
     },
   },
   mounted() {
+    if (!this.isConfigValid) {
+      return;
+    }
+
     this.preparePanels();
     this.panels = this.setupPanels();
 

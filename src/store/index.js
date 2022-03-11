@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import annotations from './annotations';
+import config from './config';
+import contents from './contents';
 
 Vue.use(Vuex);
 
@@ -18,6 +20,8 @@ export default function TidoStore(/* { ssrContext } */) {
   const store = new Vuex.Store({
     modules: {
       annotations,
+      config,
+      contents,
     },
 
     // enable strict mode (adds overhead!)
