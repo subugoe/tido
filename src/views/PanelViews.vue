@@ -1,0 +1,128 @@
+<template>
+  <!-- shows the nested tabs -->
+  <div
+    v-if="panel.connector.length > 1"
+    class="item-content"
+  >
+    <div class="tabs-container">
+      <q-tabs
+        v-for="(tab, i) in panel.connector"
+        :key="`pt${i}`"
+        v-model="value"
+        class="content-tabs"
+        :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
+        dense
+      >
+        <q-tab
+          :name="`tab${i}`"
+          :label="$t(tab.label)"
+        />
+      </q-tabs>
+    </div>
+
+    <q-tab-panels
+      v-model="value"
+      animated
+      keep-alive
+    >
+      <q-tab-panel
+        v-for="(tab, idx) in panel.connector"
+        :key="`co${idx}`"
+        :name="`tab${idx}`"
+        class="q-pa-none"
+      >
+        <component
+          :is="tab.component"
+          :key="tab.id"
+        />
+      </q-tab-panel>
+    </q-tab-panels>
+  </div>
+
+  <!-- shows the panels -->
+  <div
+    v-else-if="panel.connector.length === 1"
+    class="item-content"
+  >
+    <component
+      :is="panel.connector[0].component"
+      v-if="imageInit"
+      :key="panel.connector[0].id"
+    />
+  </div>
+</template>
+
+<script>
+import Tree from '@/components/Tree.vue';
+import Annotations from '@/components/annotations/Annotations.vue';
+import Content from '@/components/Content.vue';
+import Metadata from '@/components/Metadata.vue';
+import OpenSeadragon from '@/components/OpenSeadragon.vue';
+
+export default {
+  components: {
+    Tree,
+    Annotations,
+    Content,
+    Metadata,
+    OpenSeadragon,
+  },
+  props: {
+    panel: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  data: () => ({
+    value: '',
+  }),
+  computed: {
+    imageInit() {
+      return this.$store.getters['contents/imageInit'];
+    },
+    keys() {
+      return { 3: this.imageUrl, 4: this.contentUrls[0] };
+    },
+    contentUrls() {
+      return this.$store.getters['contents/contentUrls'];
+    },
+    imageUrl() {
+      return this.$store.getters['contents/imageUrl'];
+    },
+  },
+  watch: {
+    panel: {
+      handler(newVal) {
+        this.value = newVal.tab_model;
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.tabs-container {
+  display: flex;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.content-tabs {
+  display: inline-block;
+}
+
+.item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  @media (max-width: $breakpoint-sm-custom-md) {
+    min-height: 100vh;
+  }
+}
+
+</style>

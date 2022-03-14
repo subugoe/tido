@@ -1,7 +1,10 @@
 <template>
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'">
     <div
-      v-if="!!$route.query.source && ($route.query.source === config.breadcrumbNavigation.source)"
+      v-if="
+        !!$route.query.source &&
+          $route.query.source === config.breadcrumbNavigation.source
+      "
       :class="$q.dark.isActive ? 'bg-white' : 'bg-accent'"
     >
       <BreadCrumbNavigation :config="config" />
@@ -19,7 +22,12 @@
         />
 
         <Tools
-          class="col-xs-12 col-sm-3 items-center justify-sm-end justify-xs-center order-xs-first order-sm-last"
+          class="
+            col-xs-12 col-sm-3
+            items-center
+            justify-sm-end justify-xs-center
+            order-xs-first order-sm-last
+          "
         />
       </q-toolbar>
 
@@ -28,20 +36,28 @@
           v-if="config['header_section'].navigation"
           :labels="config.labels"
           :manifests="manifests"
-          class="row justify-center justify-sm-start col-xs-12 col-sm-6 q-mb-xs-md q-mb-sm-none"
+          class="
+            row
+            justify-center justify-sm-start
+            col-xs-12 col-sm-6
+            q-mb-xs-md q-mb-sm-none
+          "
         />
 
         <q-space />
 
         <PanelsToggle
           v-if="config['header_section'].toggle"
-          :panels="panels"
-          class="row justify-center justify-sm-end col-xs-12 col-sm-6 q-mb-xs-sm q-mb-sm-none order-xs-first order-sm-last"
+          class="
+            row
+            justify-center justify-sm-end
+            col-xs-12 col-sm-6
+            q-mb-xs-sm q-mb-sm-none
+            order-xs-first order-sm-last
+          "
         />
 
-        <div
-          v-if="!config['header_section'].titles"
-        >
+        <div v-if="!config['header_section'].titles">
           <Tools />
         </div>
       </q-toolbar>
@@ -64,12 +80,6 @@ export default {
     TitleBar,
     PanelsToggle,
     Tools,
-  },
-  props: {
-    panels: {
-      type: Array,
-      default: () => [],
-    },
   },
   computed: {
     manifests() {

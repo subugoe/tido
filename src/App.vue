@@ -4,18 +4,13 @@
     class="root viewport"
     view="hHh Lpr fFf"
   >
-    <Header
-      v-if="isConfigValid && config['header_section'].show"
-      :panels="panels"
-    />
+    <Header v-if="isConfigValid && config['header_section'].show" />
 
     <q-page-container
       v-if="isConfigValid"
       class="root"
     >
-      <router-view
-        :panels="panels"
-      />
+      <router-view />
     </q-page-container>
   </q-layout>
 </template>
@@ -23,15 +18,15 @@
 <script>
 import { colors } from 'quasar';
 import Header from '@/components/Header.vue';
-import Panels from '@/mixins/panels';
 import Navigation from '@/mixins/navigation';
+import * as PanelUtils from '@/utils/panels';
 
 export default {
   name: 'TIDO',
   components: {
     Header,
   },
-  mixins: [Panels, Navigation],
+  mixins: [Navigation],
   computed: {
     annotations() {
       return this.$store.getters['annotations/annotations'];
@@ -78,6 +73,9 @@ export default {
     tree() {
       return this.$store.getters['contents/tree'];
     },
+    panels() {
+      return this.$store.getters['contents/panels'];
+    },
   },
   watch: {
     '$route.query': {
@@ -115,9 +113,6 @@ export default {
   },
   mounted() {
     this.$i18n.locale = this.config.lang;
-    this.$root.$on('panels-position', (newPanels) => {
-      this.panels = newPanels;
-    });
   },
   methods: {
     /**
@@ -147,6 +142,7 @@ export default {
         url,
       );
       if (isManifestChanged) {
+        this.$store.dispatch('contents/setPanels', PanelUtils.getNewPanels(this.panels));
         this.$root.$emit('manifest-changed');
       }
     },
@@ -164,6 +160,7 @@ export default {
      * @return function getCollection() | getManifest()
      */
     init() {
+      this.$store.dispatch('contents/initPanels');
       return this.config.entrypoint.match(/collection.json\s?$/)
         ? this.getCollection(this.config.entrypoint)
         : this.getManifest(this.config.entrypoint);
@@ -202,10 +199,7 @@ export default {
 
       this.itemurl = decodeURIComponent(itemurl);
 
-      this.$store.dispatch(
-        'contents/setItemUrl',
-        decodeURIComponent(itemurl),
-      );
+      this.$store.dispatch('contents/setItemUrl', decodeURIComponent(itemurl));
       this.$store.dispatch('config/updateInitialized', { initialized: true });
     },
   },

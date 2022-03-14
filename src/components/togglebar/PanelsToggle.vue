@@ -121,16 +121,13 @@ import {
 
 export default {
   name: 'PanelsToggle',
-  props: {
-    panels: {
-      type: Array,
-      default: () => [],
-    },
-  },
   computed: {
     toggleCounter() {
       const toggleCount = this.panels.filter((panel) => panel.toggle === true);
       return toggleCount.length > 0;
+    },
+    panels() {
+      return this.$store.getters['contents/panels'];
     },
   },
   created() {
@@ -151,7 +148,7 @@ export default {
 
         return i === idx ? { ...obj, show: !obj.show } : obj;
       });
-      this.$root.$emit('panels-position', updatedPanel);
+      this.$store.dispatch('contents/setPanels', updatedPanel);
     },
     // display toggle title when hovering
     handleToggleTitle(idx) {

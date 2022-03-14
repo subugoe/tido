@@ -1,6 +1,7 @@
 import { request } from '@/utils/http';
 import * as AnnotationUtils from '@/utils';
 import * as contentUtils from '@/utils/contents';
+import * as PanelsUtils from '@/utils/panels';
 
 /**
  * extract the 'label part' of the itemurl
@@ -89,6 +90,22 @@ export const initManifest = async ({ commit, dispatch }, url) => {
   commit('setTree', { tree: response.tree });
 };
 
+export const initPanels = ({ dispatch, rootGetters }) => {
+  const isConfigValid = rootGetters['config/isConfigValid'];
+
+  if (!isConfigValid) {
+    return;
+  }
+
+  const config = rootGetters['config/config'];
+  let panels = [];
+
+  panels = PanelsUtils.preparePanels(config);
+  panels = PanelsUtils.setupPanels(panels);
+
+  dispatch('setPanels', panels);
+};
+
 export const initCollection = async ({ commit, dispatch }, url) => {
   const tree = [];
   const manifests = [];
@@ -147,6 +164,7 @@ export const initImageData = async ({ commit }, url) => {
     imageUrl,
     hasError,
     errorImage,
+    init: false,
   });
 
   if (data.image) {
@@ -156,6 +174,11 @@ export const initImageData = async ({ commit }, url) => {
       if (response.status === 200 || response.status === 201) {
         hasError = false;
         errorImage = null;
+      } else if (response.status === 500) {
+        hasError = true;
+        errorImage = {
+          messageKey: 'imageErrorMessageNotExists',
+        };
       } else {
         // for vpn error.
         hasError = true;
@@ -181,6 +204,7 @@ export const initImageData = async ({ commit }, url) => {
     imageUrl,
     hasError,
     errorImage,
+    init: true,
   });
 };
 
@@ -299,4 +323,8 @@ export const addOrRemoveFromExpanded = ({ getters, dispatch }, label) => {
   } else {
     dispatch('addToExpanded', label);
   }
+};
+
+export const setPanels = ({ commit }, payload) => {
+  commit('setPanels', payload);
 };

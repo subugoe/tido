@@ -14,6 +14,7 @@ export default function ContentsState() {
     itemUrls: [],
     loaded: false,
     manifests: [],
+    panels: [],
     sequenceIndex: 0,
     tree: [],
   };

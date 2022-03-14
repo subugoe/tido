@@ -18,6 +18,8 @@ export const isCollection = (state) => state.isCollection;
 
 export const imageHasError = (state) => state.image.hasError;
 
+export const imageInit = (state) => state.image.init;
+
 export const imageUrl = (state) => state.image.imageUrl;
 
 export const itemUrl = (state) => state.itemUrl;
