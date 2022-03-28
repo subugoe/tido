@@ -1,53 +1,41 @@
-import * as AnnotationUtils from 'src/utils';
-import * as DomUtils from '@/utils';
+import { request } from '@/utils/http';
+import * as Utils from 'src/utils';
+
+export const addActiveAnnotation = ({ commit, getters }, annotation) => {
+  const { activeAnnotations } = getters;
+  activeAnnotations[annotation.id] = annotation;
+  commit('updateActiveAnnotations', { ...activeAnnotations });
+};
 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
   const { annotations } = getters;
-
-  DomUtils.mapUniqueElements(
-    DomUtils.findDomElements('[data-target]:not([value=""])', dom),
+  console.log('addHighlightAttributesToText', annotations);
+  Utils.mapUniqueElements(
+    Utils.findDomElements('[data-target]:not([value=""])', dom),
     (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
-  ).forEach((selector) => AnnotationUtils.replaceSelectorWithSpan(selector, dom));
+  ).forEach((selector) => Utils.replaceSelectorWithSpan(selector, dom));
 
   annotations.forEach((annotation) => {
+    const { id } = annotation;
     const { selector } = annotation.target;
-    AnnotationUtils.addHighlightToTargetIds(selector, dom);
+    if (selector) {
+      Utils.addHighlightToElements(selector.value, dom, { annotationId: id });
+    }
   });
 };
 
-export const addActiveAnnotation = ({ commit, getters }, id) => {
-  const { activeAnnotations, annotations } = getters;
-  const newActiveAnnotation = annotations.find((annotation) => annotation.id === id);
-
-  if (!newActiveAnnotation || activeAnnotations[id]) {
-    return;
-  }
-
-  activeAnnotations[id] = newActiveAnnotation;
-  commit('updateActiveAnnotations', { ...activeAnnotations });
-
-  let selector = AnnotationUtils.stripTargetId(newActiveAnnotation, false);
-
-  if (selector.startsWith('.')) {
-    selector = selector.replace(/\./g, '');
-  }
-
-  const el = document.getElementById(selector) || document.querySelector(`.${selector}`);
-
-  AnnotationUtils.updateHighlightState(selector, 'INC');
-  if (el) {
-    AnnotationUtils.addIcon(el, newActiveAnnotation);
-  }
-
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth' });
-  }
-};
-
-export const annotationLoaded = ({ commit }, annotations) => {
-  console.log('annotationsLoaded');
-  commit('updateAnnotationLoading', false);
+export const annotationLoaded = ({ commit, dispatch }, annotations) => {
+  console.log('annotations/annotationLoaded', annotations);
   commit('updateAnnotations', annotations);
+
+  dispatch('addHighlightAttributesToText', document.getElementById('text-container'));
+
+  dispatch(
+    'updateContentIds',
+    Utils.getAnnotationContentIds(),
+  );
+
+  commit('updateAnnotationLoading', false);
 };
 
 export const decreaseContentFontSize = ({ commit, state }) => {
@@ -59,31 +47,14 @@ export const increaseContentFontSize = ({ commit, state }) => {
 };
 
 export const loadAnnotations = ({ commit }) => {
+  console.log('annotations/loadAnnotations');
   commit('updateAnnotationLoading', true);
   commit('updateAnnotations', []);
 };
 
-export const removeActiveAnnotation = ({ commit, getters }, { targetId, level }) => {
-  const { activeAnnotations, contentIds } = getters;
-
-  if (!contentIds[targetId]) {
-    return;
-  }
-
-  const removeAnnotation = activeAnnotations[targetId];
-  if (!removeAnnotation) {
-    return;
-  }
-
-  let selector = AnnotationUtils.stripTargetId(removeAnnotation, false);
-  if (selector.startsWith('.')) {
-    selector = selector.replace(/\./g, '');
-  }
-
-  AnnotationUtils.updateHighlightState(selector, 'DEC', level);
-  AnnotationUtils.removeIcon(removeAnnotation);
-
-  delete activeAnnotations[targetId];
+export const removeActiveAnnotation = ({ commit, getters }, annotation) => {
+  const { activeAnnotations } = getters;
+  delete activeAnnotations[annotation.id];
   commit('updateActiveAnnotations', { ...activeAnnotations });
 };
 
@@ -100,6 +71,7 @@ export const updateContentLoading = ({ commit }, isLoading) => {
 };
 
 export const updateContentIds = ({ commit }, annotations) => {
+  console.log('annotations/updateContentIds');
   commit('updateContentIds', annotations);
 };
 
@@ -122,17 +94,13 @@ export const initAnnotations = async ({ dispatch }, url) => {
     const current = await request(annotations.annotationCollection.first);
 
     if (current.annotationPage.items.length) {
-      dispatch(
-        'annotationLoaded',
-        current.annotationPage.items.map((x) => ({
-          ...x,
-          targetId: AnnotationUtils.stripTargetId(x, true),
-        })),
-      );
+      console.log(current.annotationPage.items.length);
+      dispatch('annotationLoaded', current.annotationPage.items);
     } else {
       dispatch('annotationLoaded', []);
     }
   } catch (err) {
+    console.log(err);
     dispatch('annotationLoaded', []);
   }
 };

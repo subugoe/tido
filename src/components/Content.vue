@@ -181,8 +181,6 @@ export default {
     activeTab: {
       async handler(url) {
         try {
-          console.log('Content activeTab watcher', url);
-
           if (!url) {
             return;
           }
@@ -191,67 +189,26 @@ export default {
           this.$store.dispatch('annotations/updateContentLoading', true);
           const data = await request(url, 'text');
           this.isValidTextContent(data);
-          console.log('active tab watcher await reuest');
 
           if (this.supportType) {
             await this.getSupport(this.manifests[0].support);
           }
 
-          const annotationPanelHidden = this.panels.find(
-            (x) => x.panel_label === 'Annotations' && !x.show,
-          );
+          // const annotationPanelHidden = this.panels.find(
+          //   (x) => x.panel_label === 'Annotations' && !x.show,
+          // );
 
           const dom = domParser(data);
 
-          this.content = dom.documentElement.innerHTML;
-          // await delay(10);
-          //
-          // // eslint-disable-next-line no-inner-declarations
-          // function findHighestParent(el) {
-          //   const parent = el.parentElement;
-          //   let result;
-          //   if (parent.dataset.annotation) {
-          //     result = findHighestParent(parent);
-          //   } else {
-          //     result = el;
-          //   }
-          //
-          //   return result;
-          // }
-          //
-          // const elementsToClick = {};
-          //
-          // document.querySelectorAll('[data-annotation]').forEach((el) => {
-          //   const highestParent = findHighestParent(el);
-          //
-          //   if (highestParent.id && !elementsToClick[highestParent.id]) {
-          //     elementsToClick[highestParent.id] = highestParent;
-          //   }
-          // });
-          //
-          // Object.keys(elementsToClick).forEach((key) => {
-          //   const element = elementsToClick[key];
-          //   element.addEventListener('click', () => {
-          //     this.$store.dispatch('annotations/addActiveAnnotation', key.replace(/\./g, ''));
-          //     [...element.children].forEach((child) => {
-          //       if (child.id) {
-          //         this.$store.dispatch('annotations/addActiveAnnotation', child.id.replace(/\./g, ''));
-          //       }
-          //     });
-          //   });
-          // });
+          // addHighlighterAttributes.call(this, dom);
 
-          if (!annotationPanelHidden) {
-            await delay(200);
-            this.$store.dispatch(
-              'annotations/updateContentIds',
-              getAnnotationContentIds.call(this, dom),
-            );
-          }
+          this.content = dom.documentElement.innerHTML;
         } catch (err) {
           this.errorTextMessage = err.message;
+          console.log('activeTab handler');
           this.$store.dispatch('annotations/updateContentIds', {});
         } finally {
+          console.log('finally');
           this.isLoading = false;
           this.$store.dispatch('annotations/updateContentLoading', false);
         }
@@ -264,8 +221,6 @@ export default {
     this.fasSearchMinus = fasSearchMinus;
 
     const activeTab = this.contentUrls[this.contentIndex];
-
-    console.log('Content created', activeTab);
     const [contentUrls] = this.contentUrls[0];
 
     this.activeTabContents = activeTab;

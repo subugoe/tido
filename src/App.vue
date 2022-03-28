@@ -204,7 +204,7 @@ export default {
       // this.itemUrl = decodeURIComponent(itemurl);
 
       this.$store.dispatch('contents/setItemUrl', decodeURIComponent(itemurl));
-      this.$store.dispatch('config/updateInitialized', { initialized: true });
+      this.$store.dispatch('config/setInitialized', { initialized: true });
     },
   },
 };

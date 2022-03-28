@@ -29,6 +29,7 @@
       :config="config"
       :configured-annotations="filteredAnnotations"
       :content-ids="contentIds"
+      :get-icon="getIcon"
       :toggle="toggle"
     />
 
@@ -55,6 +56,8 @@
 </template>
 
 <script>
+import * as Icons from '@quasar/extras/fontawesome-v5';
+
 import AnnotationsToggles from '@/components/annotations/AnnotationsToggles.vue';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import AnnotationsOptions from '@/components/annotations/AnnotationsOptions.vue';
@@ -62,7 +65,7 @@ import AnnotationsOptions from '@/components/annotations/AnnotationsOptions.vue'
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
 
-import * as AnnotationUtils from '@/utils';
+import * as AnnotationUtils from 'src/utils/annotations';
 import DomMixin from '@/mixins/dom';
 
 export default {
@@ -138,7 +141,7 @@ export default {
           if (annotationContentType?.type === 'text' && annotationContentType?.displayWhen === this.contentTypes[this.contentIndex]) {
             return this.activeEntities.includes(x.body['x-content-type']);
           }
-          return this.activeEntities.includes(x.body['x-content-type']) && this.contentIds[x.targetId];
+          return this.activeEntities.includes(x.body['x-content-type']);
         },
       );
 
@@ -166,7 +169,6 @@ export default {
   watch: {
     currentTab: {
       handler() {
-        this.$store.dispatch('annotations/addHighlightAttributesToText', document.getElementById('text-container'));
         AnnotationUtils.highlightActiveContent(this.filteredAnnotations);
         this.handleTooltip();
       },
@@ -206,12 +208,62 @@ export default {
     },
 
     addAnnotation(annotation) {
-      this.$store.dispatch('annotations/addActiveAnnotation', annotation.id);
+      this.$store.dispatch('annotations/addActiveAnnotation', annotation);
+
+      const { selector } = annotation.target;
+
+      console.log(selector);
+
+      if (selector && selector.value) {
+        const elements = [...document.querySelectorAll(selector.value)];
+
+        AnnotationUtils.updateHighlightState(selector.value, 'INC');
+        if (elements.length) {
+          this.addIcon(elements[0], annotation);
+        }
+
+        elements[0].scrollIntoView({ behavior: 'smooth' });
+      }
+    },
+
+    addIcon(element, annotation) {
+      const contentType = annotation.body['x-content-type'];
+      let foundSvg = false;
+
+      [...element.children].forEach((el) => {
+        if (el.nodeName === 'svg' && el.getAttribute('data-annotation-icon')) {
+          foundSvg = true;
+        }
+      });
+
+      if (foundSvg) {
+        return;
+      }
+      try {
+        const svg = AnnotationUtils.getAnnotationIcon(contentType, this.config.annotations.types);
+        svg.setAttribute(
+          'data-annotation-icon',
+          annotation.id,
+        );
+        element.prepend(svg);
+      } catch (err) {
+        // error message
+      }
+    },
+
+    getIcon(contentType) {
+      return Icons[this.getIconName(contentType)];
+    },
+
+    getIconName(contentType) {
+      return this.config.annotations.types.filter(
+        (annotation) => annotation.contenttype === contentType,
+      )[0].icon;
     },
 
     handleTooltip() {
       const annotationIds = this.filteredAnnotations.reduce((prev, curr) => {
-        let id = AnnotationUtils.stripTargetId(curr, false);
+        let { id } = curr;
         if (id.startsWith('.')) {
           id = id.replace('.', '');
         }
@@ -253,10 +305,10 @@ export default {
       });
     },
     onContentUpdate(ids) {
-      console.log('annotations onContentUpdate');
+      console.log('onContentUpdate', ids);
       try {
         if (this.isLoading || this.isProcessing) {
-          setTimeout(() => this.onContentUpdate(ids), 100);
+          // setTimeout(() => this.onContentUpdate(ids), 100);
           return;
         }
 
@@ -264,6 +316,9 @@ export default {
 
         this.handleTooltip();
       } catch (err) {
+        console.log(err);
+        // TODO: infinite loop here possible: when an error happens in try,
+        // it will happen everytime because the func is recalled in catch
         setTimeout(() => this.onContentUpdate(ids), 100);
       }
     },
@@ -293,8 +348,29 @@ export default {
       this.findDomElements('.annotation-tooltip').forEach((el) => el.remove());
     },
 
+    removeIcon(annotation) {
+      const stripeId = annotation.id;
+      const el = document
+        .querySelector(`svg[data-annotation-icon='${stripeId}']`);
+
+      if (el) {
+        el.remove();
+      }
+    },
+
     removeAnnotation(annotation, level) {
-      this.$store.dispatch('annotations/removeActiveAnnotation', { id: annotation.id, level });
+      if (!this.contentIds[annotation.id]) {
+        return;
+      }
+      this.$store.dispatch('annotations/removeActiveAnnotation', annotation);
+      let selector = annotation.selector.value;
+
+      if (selector.startsWith('.')) {
+        selector = selector.replace(/\./g, '');
+      }
+
+      AnnotationUtils.updateHighlightState(selector, 'DEC', level);
+      this.removeIcon(annotation);
     },
 
     resetActiveAnnotations() {
@@ -302,7 +378,7 @@ export default {
     },
 
     toggle(annotation) {
-      if (!this.contentIds[annotation.targetId]) {
+      if (!this.contentIds[annotation.id]) {
         return;
       }
       const exists = !!this.activeAnnotation[annotation.id];
