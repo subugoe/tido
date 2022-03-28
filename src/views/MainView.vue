@@ -4,89 +4,38 @@
     class="root panels-target"
   >
     <div
-      v-for="(p, index) in panels"
-      v-show="p.show && p.connector.length"
+      v-for="(panel, index) in panels"
+      v-show="panel.show && panel.connector.length"
       :key="`pc${index}`"
       class="item"
     >
       <ToolBar
         v-if="config['header_section'].panelheadings"
-        :heading="p.panel_label"
+        :heading="panel.panel_label"
       />
 
       <q-separator />
 
-      <!-- shows the nested tabs -->
-      <div
-        v-if="p.connector.length > 1"
-        class="item-content"
-      >
-        <div class="tabs-container">
-          <q-tabs
-            v-for="(tab, i) in p.connector"
-            :key="`pt${i}`"
-            v-model="p.tab_model"
-            class="content-tabs"
-            :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
-            dense
-          >
-            <q-tab
-              :name="`tab${i}`"
-              :label="$t(tab.label)"
-            />
-          </q-tabs>
-        </div>
-
-        <q-tab-panels
-          v-model="p.tab_model"
-          animated
-          keep-alive
-        >
-          <q-tab-panel
-            v-for="(tab, idx) in p.connector"
-            :key="`co${idx}`"
-            :name="`tab${idx}`"
-            class="q-pa-none"
-          >
-            <component
-              :is="tab.component"
-              :key="keys[tab.id]"
-              :panels="panels"
-            />
-          </q-tab-panel>
-        </q-tab-panels>
-      </div>
-
-      <!-- shows the panels -->
-      <div
-        v-else-if="p.connector.length === 1"
-        class="item-content"
-      >
-        <component
-          :is="p.connector[0].component"
-          :key="keys[p.connector[0].id]"
-          :panels="panels"
-        />
-      </div>
+      <Panel :panel="panel" />
     </div>
   </div>
 </template>
 
 <script>
 import ToolBar from '@/components/ToolBar.vue';
+import Panel from '@/components/Panel.vue';
+import * as PanelUtils from '@/utils/panels';
 
 export default {
   name: 'MainView',
   components: {
     ToolBar,
-  },
-  props: {
-    panels: {
-      type: Array,
-      default: () => [],
-    },
+    Panel,
   },
   computed: {
+    panels() {
+      return this.$store.getters['contents/panels'];
+    },
     ready() {
       return (
         this.manifests.length && this.tree.length && this.contentUrls.length
@@ -107,8 +56,17 @@ export default {
     imageUrl() {
       return this.$store.getters['contents/imageUrl'];
     },
-    keys() {
-      return { 3: this.imageUrl, 4: this.contentUrls[0] };
+  },
+  methods: {
+    handlePanelChange(value, index) {
+      let panels = PanelUtils.getNewPanels(this.panels);
+
+      panels = panels.map((el, i) => ({
+        ...el,
+        tab_model: i === index ? value : el.tab_model,
+      }));
+
+      this.$store.dispatch('contents/setPanels', panels);
     },
   },
 };

@@ -86,22 +86,27 @@ export default {
     },
   },
   mounted() {
-    if (this.errorImage) {
-      return;
-    }
+    this.init();
+  },
+  methods: {
+    init() {
+      if (this.errorImage) {
+        return;
+      }
 
-    const viewer = new OpenSeadragon.Viewer(this.options);
-    viewer.controlsFadeDelay = 1000;
+      const viewer = new OpenSeadragon.Viewer(this.options);
+      viewer.controlsFadeDelay = 1000;
 
-    document.addEventListener('fullscreenchange', () => {
-      Object.values(this.buttons).forEach((v) => {
-        if (v.id === 'fullscreen') {
-          v.svg = document.fullscreenElement !== null
-            ? fasCompressArrowsAlt
-            : fasExpandArrowsAlt;
-        }
+      document.addEventListener('fullscreenchange', () => {
+        Object.values(this.buttons).forEach((v) => {
+          if (v.id === 'fullscreen') {
+            v.svg = document.fullscreenElement !== null
+              ? fasCompressArrowsAlt
+              : fasExpandArrowsAlt;
+          }
+        });
       });
-    });
+    },
   },
 };
 </script>
