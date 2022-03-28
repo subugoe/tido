@@ -77,14 +77,11 @@ export default {
     value: '',
   }),
   computed: {
-    imageInit() {
-      return this.$store.getters['contents/imageInit'];
-    },
-    keys() {
-      return { 3: this.imageUrl, 4: this.contentUrls[0] };
-    },
     contentUrls() {
       return this.$store.getters['contents/contentUrls'];
+    },
+    imageInit() {
+      return this.$store.getters['contents/imageInit'];
     },
     imageUrl() {
       return this.$store.getters['contents/imageUrl'];

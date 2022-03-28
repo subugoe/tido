@@ -16,21 +16,21 @@
 
       <q-separator />
 
-      <PanelViews :panel="panel" />
+      <Panel :panel="panel" />
     </div>
   </div>
 </template>
 
 <script>
 import ToolBar from '@/components/ToolBar.vue';
-import PanelViews from '@/views/PanelViews.vue';
+import Panel from '@/components/Panel.vue';
 import * as PanelUtils from '@/utils/panels';
 
 export default {
   name: 'MainView',
   components: {
     ToolBar,
-    PanelViews,
+    Panel,
   },
   computed: {
     panels() {
@@ -55,9 +55,6 @@ export default {
     },
     imageUrl() {
       return this.$store.getters['contents/imageUrl'];
-    },
-    keys() {
-      return { 3: this.imageUrl, 4: this.contentUrls[0] };
     },
   },
   methods: {
