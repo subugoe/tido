@@ -1,151 +1,171 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
+<head>
+  <title><%= title %></title>
 
-    <meta charset="utf-8">
-    <meta name="description" content="<%= htmlWebpackPlugin.options.productDescription %>">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>">
+  <meta charset="utf-8">
+  <meta name="description" content="<%= htmlWebpackPlugin.options.productDescription %>">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>">
 
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-  </head>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
 
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
+<body>
+<noscript>
+  <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+</noscript>
 
-    <!--
-    Quick reference for the panel config (panels.connector)
-    The numbers below reflect each component's id. For detailed instructions please refer to the README.md!
+<!--
+Quick reference for the panel config (panels.connector)
+The numbers below reflect each component's id. For detailed instructions please refer to the README.md!
 
-    - 1 = Treeview
-    - 2 = Metadata
-    - 3 = Image
-    - 4 = Text / Content
-    - 5 = Annotations
+- 1 = Treeview
+- 2 = Metadata
+- 3 = Image
+- 4 = Text / Content
+- 5 = Annotations
 
-    Note: These IDs are supposed to be unique, so please make sure not to repeat these!
-    -->
-    <script id="tido-config" type="application/json">
-    {
-      "entrypoint": "",
-      "annotations": {
-        "types": [
-          {
-            "contenttype": "Person",
-            "icon": "fasUser",
-            "label": "Names"
-          },
-          {
-            "contenttype": "Place",
-            "icon": "fasMapMarkerAlt",
-            "label": "Places"
-          },
-          {
-            "contenttype": "Editorial Comment",
-            "icon": "fasComment",
-            "label": "Comments"
-          },
-          {
-            "contenttype": "Motif",
-            "icon": "fasHighlighter",
-            "label": "Motifs"
-          },
-          {
-            "contenttype": "Abstract",
-            "annotationType": "text",
-            "displayWhen": "Edierter Text",
-            "label": "Abstract"
-          }
-        ],
-        "tabs":{
-          "Editorial": ["Person", "Place"],
-          "Motif": ["Motif"],
-          "Comments": ["Editorial Comment", "Abstract"]
-        }
-      },
-      "breadcrumbNavigation": {
-        "source": "external",
-        "search_page_path": "search.html",
-        "search_query_param": "searchTerm",
-        "title_homepage_key": "title_homepage",
-        "title_viewer_key": "title_viewer",
-        "website": "https://ahikar.sub.uni-goettingen.de/website/"
-      },
-      "colors": {
-        "primary": "",
-        "secondary": "",
-        "accent": ""
-      },
-      "header_section": {
-        "show": true,
-        "navigation": true,
-        "panelheadings": true,
-        "titles": true,
-        "toggle": true
-      },
-      "labels": {
-        "item": "Sheet",
-        "manifest": "Manuscript"
-      },
-      "lang": "en-us",
-      "language-switch": true,
-      "meta": {
-        "collection": {
-          "all": true
-        },
-        "manifest": {
-          "all": true
-        },
-        "item": {
-          "all": true
-        }
-      },
-      "notificationColors": {
-        "info":"blue-9",
-        "warning":"red-9"
-      },
-      "panels": [
+Note: These IDs are supposed to be unique, so please make sure not to repeat these!
+-->
+<script id="tido-config" type="application/json">
+  {
+    "entrypoint": "https://dev.gfl.sub.uni-goettingen.de/tido/gfl/sample/manifest.json",
+    "annotations": {
+      "show": true,
+      "types": [
         {
-          "connector": [1, 2],
-          "panel_label": "Contents & Metadata",
-          "show": true,
-          "toggle": true
+          "contenttype": "Person",
+          "icon": "fasUser",
+          "label": "Names"
         },
         {
-          "connector": [3],
-          "panel_label": "Image",
-          "show": true,
-          "toggle": true
+          "contenttype": "Place",
+          "icon": "fasMapMarkerAlt",
+          "label": "Places"
         },
         {
-          "connector": [4],
-          "panel_label": "Text",
-          "show": true,
-          "toggle": true
+          "contenttype": "Editorial Comment",
+          "icon": "fasComment",
+          "label": "Comments"
         },
         {
-          "connector": [5],
-          "panel_label": "Annotations",
-          "show": true,
-          "toggle": true
+          "contenttype": "Org",
+          "icon": "fasLandmark",
+          "label": "Organization"
+        },
+        {
+          "contenttype": "Object",
+          "icon": "fasThLarge",
+          "label": "Object"
+        },
+        {
+          "contenttype": "Date",
+          "icon": "fasCalendar",
+          "label": "Date"
+        },
+        {
+          "contenttype": "Abstract",
+          "annotationType": "text",
+          "displayWhen": "Edierter Text",
+          "label": "Erläuterung"
+        },
+        {
+          "contenttype": "Work",
+          "icon": "fasThLarge",
+          "label": "Werk"
+        },
+        {
+          "contenttype": "Work",
+          "icon": "fasExternalLinkSquareAlt",
+          "label": "Werk"
         }
       ],
-      "rtl": false,
-      "textContent": {
-        "tabs": {
-          "priority": {
-            "Edierter Text": 1
-          }
-        }
+      "tabs":{
+        "Kommentare": ["Abstract", "Editorial Comment"],
+        "Register": ["Person", "Place", "Org", "Object", "Date", "Work"]
+      }
+    },
+    "colors": {
+      "primary": "",
+      "secondary": "",
+      "accent": ""
+    },
+    "header_section": {
+      "show": true,
+      "navigation": true,
+      "panelheadings": true,
+      "titles": true,
+      "toggle": true
+    },
+    "labels": {
+      "item": "Seite",
+      "manifest": "Dokument"
+    },
+    "meta": {
+      "collection": {
+        "all": true
       },
-      "themes": false
+      "manifest": {
+        "all": true
+      },
+      "item": {
+        "all": true
+      }
+    },
+    "panels": [
+      {
+        "connector": [3],
+        "panel_label": "Manuskript",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [4],
+        "panel_label": "Text",
+        "show": true,
+        "toggle": false
+      },
+      {
+        "connector": [5],
+        "panel_label": "Kommentar",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [2, 1],
+        "panel_label": "Dokumentdaten",
+        "show": true,
+        "toggle": true
+      }
+    ],
+    "textContent": {
+      "tabs": {
+        "priority": {
+          "Edierter Text": 1
+        }
+      }
+    },
+    "notificationColors": {
+      "info":"blue-9",
+      "warning":"red-9"
+    },
+    "rtl": false,
+    "themes": false,
+    "standalone": false,
+    "lang": "de-de",
+    "language-switch": false,
+    "breadcrumbNavigation": {
+      "source": "gfl",
+      "title_homepage_key": "GFL Website",
+      "search_query_param": "q",
+      "title_viewer_key": "title_viewer",
+      "website": "https://dev1.gfl.sub.uni-goettingen.de"
     }
-    </script>
+  }
+</script>
 
-    <div id="q-app"></div>
-  </body>
+<div id="q-app"></div>
+</body>
 </html>
