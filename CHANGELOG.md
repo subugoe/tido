@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.26.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.25.0...v1.26.0) (2022-03-29)
+
+
+### Features
+
+* implementing stores for tree and text panel and Refactoring config ([3126969](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/31269695a417b0d4d9b41653381f6ca98afa4f66))
+
+
+### Refactoring
+
+* fix unit tests with new comp names ([d233a8f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d233a8f2ca64edd91eff07df331f758470f8fffe))
+* moving panels to stores and refactor panels mixin file ([fc42b5e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/fc42b5ec4f9b7158c8c383b13bc4bbaa15cc7ac5))
+* rename component and remove obsolete code ([05aa1e4](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/05aa1e44e4c6a935927d523e6545d48f9f39f6fa))
+* rename components according to style guide ([0519ee5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0519ee5e672074150696d0f96197842b4f5d154d))
+
+
+### Continuos Integration
+
+* remove entry point ([845e2ff](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/845e2ff8c4b64a6d4a1a296c1e3585e51756ebf1))
+* remove setting entrypoint on wildcard branches ([d10c2cc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d10c2cc2625550557b09050e5bad26892db0e7e5))
+
 ## [1.25.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.24.3...v1.25.0) (2022-03-02)
 
 
