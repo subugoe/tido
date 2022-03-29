@@ -19,13 +19,6 @@ case $CI_COMMIT_REF_NAME in
     ENTRY_POINT=https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json
     sed -ri 's|.*("entrypoint"\s*:).*$|\t\t\t\1 "'${ENTRY_POINT}'",|' src/index.template.html
     ;;
-  *)
-    echo "set entrypoint for testing"
-    # TIDO is developed in the context of the Ahiqar project, therefore we use the Ahiqar data for
-    # development purposes.
-    ENTRY_POINT=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json
-    sed -ri 's|.*("entrypoint"\s*:).*$|\t\t\t\1 "'${ENTRY_POINT}'",|' src/index.template.html
-    ;;
 esac
 
 [ $? -eq 0 ] && exit 0
