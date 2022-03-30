@@ -1,5 +1,5 @@
 export const contentFontSize = (state) => state.contentFontSize;
-export const contentIds = (state) => state.contentIds;
+// export const contentIds = (state) => state.contentIds;
 export const activeTab = (state) => state.activeTab;
 
 export const activeAnnotations = (state) => state.activeAnnotations;

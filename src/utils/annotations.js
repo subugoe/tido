@@ -1,27 +1,36 @@
 import * as Icons from '@quasar/extras/fontawesome-v5';
+import * as Utils from 'src/utils/index';
 
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
-export function addHighlightToTargetIds(selector, root) {
-  const element = root.getElementById(selector);
-  if (!element) {
+export function addHighlightToElements(selector, root, data) {
+  console.log('addHighlightToElements');
+  const selectedElements = root.querySelectorAll(selector);
+  if (selectedElements.length === 0) {
     return;
   }
 
-  function recursiveAddClass(children) {
-    [...children].forEach((child) => {
-      child.setAttribute('data-annotation', true);
-      child.classList.add(selector);
-      recursiveAddClass(child.children);
+  console.log('addHighlightToElements', selectedElements);
+
+  const { annotationId } = data;
+
+  function recursiveAddClass(elements) {
+    elements.forEach((element) => {
+      element.setAttribute('data-annotation', true);
+
+      let annotationIds = element.hasAttribute('data-annotation-ids')
+        ? element.getAttribute('data-annotation-ids').split(' ')
+        : [];
+      annotationIds = [...annotationIds, annotationId];
+
+      element.setAttribute('data-annotation-ids', annotationIds.join(' '));
+      element.setAttribute('data-annotation-level', 0);
+
+      console.log(element.children);
+      recursiveAddClass([...element.children]);
     });
   }
-
-  if (!element.children.length) {
-    element.setAttribute('data-annotation', true);
-    element.classList.add(selector);
-  }
-
-  recursiveAddClass(element.children);
+  recursiveAddClass(selectedElements);
 }
 
 export function replaceSelectorWithSpan(selector, root) {
@@ -70,16 +79,7 @@ export function addHighlighterAttributes(dom) {
     (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
   ).forEach((selector) => replaceSelectorWithSpan(selector, dom));
 
-  this.mapElements(this.findDomElements('[id]', dom), (x) => x.getAttribute('id')).forEach((selector) => addHighlightToTargetIds(selector, dom));
-}
-
-export function getAnnotationContentIds(dom) {
-  return this.mapElements(this.findDomElements('[data-annotation]', dom), (x) => x.getAttribute('class')).reduce((prev, curr) => {
-    (curr || '').split(' ').forEach((c) => {
-      prev[c.replace(/\./g, '')] = true;
-    });
-    return prev;
-  }, {});
+  this.mapElements(this.findDomElements('[id]', dom), (x) => x.getAttribute('id')).forEach((selector) => addHighlightToElements(selector, dom));
 }
 
 export function getAnnotationTabs(config) {
@@ -210,15 +210,15 @@ export function getNewLevel(element, operation) {
   return currentLevel;
 }
 
-export function highlightActiveId(element) {
-  if (!element) {
+export function setHighlightLevel0(annotationId) {
+  if (!annotationId) {
     return;
   }
   element.setAttribute('data-annotation-level', 0);
 
   [...element.children].forEach((child) => {
     child.setAttribute('data-annotation-level', 0);
-    highlightActiveId(child);
+    setHighlightLevel0(child);
   });
 }
 
@@ -244,17 +244,6 @@ export function stripAnnotationId(url) {
   return url.split('/').pop();
 }
 
-export function stripTargetId(annotation, removeDot = true) {
-  let output = '';
-  if (annotation.target.selector) {
-    output = stripSelector(annotation);
-  } else {
-    output = stripAnnotationId(annotation.target.id);
-  }
-
-  return removeDot ? output.replace(/\./g, '') : output;
-}
-
 export function updateTextContentClass(element, task = 'add', ...className) {
   if (!element) {
     return;
@@ -275,16 +264,6 @@ export function toggleAnnotationSelector(annotation, text = 'toggle') {
   ));
 }
 
-export function highlightActiveContent(annotations) {
-  annotations.forEach((el) => {
-    if (el.target.id) {
-      highlightActiveId(getElementById(stripTargetId(el, false)));
-    } else {
-      [...document.querySelectorAll(`.${stripTargetId(el)}`)].map((x) => x.setAttribute('data-annotation-level', 0));
-    }
-  });
-}
-
 export function getAllElementsFromSelector(selector, arr = []) {
   const el = document.getElementById(selector);
   if (el) {
@@ -303,7 +282,22 @@ export function getAllElementsFromSelector(selector, arr = []) {
     return arr;
   }
 
-  return [...document.querySelectorAll(`.${selector}`)];
+  return [...document.querySelectorAll(selector)];
+}
+
+export function highlightActiveContent(annotations) {
+  annotations.forEach((annotation) => {
+    const selector = Utils.generateTargetSelector(annotation);
+
+    if (selector !== '') {
+      getAllElementsFromSelector(selector)
+        .forEach((element) => {
+          element.setAttribute('data-annotation-level', 0);
+        });
+    } else {
+      // [...document.querySelectorAll(`.${stripTargetId(el)}`)].map((x) => x.setAttribute('data-annotation-level', 0));
+    }
+  });
 }
 
 export function updateHighlightState(selector, operation, level) {
@@ -370,3 +364,28 @@ export const isAnnotationSelected = (el) => {
 
   return matched;
 };
+
+export function generateTargetSelector(annotation) {
+  // This function generates a CSS selector from
+  // different possible sources within the annotation object.
+  // Our first goal is to check for a selector object.
+  // Selectors can have different types e.g. 'CssSelector' or 'SvgSelector'.
+  // If no selector object is present we try to generate a CSS selector from target id.
+
+  let { selector } = annotation.target;
+
+  if (!selector) {
+    const targetId = annotation.target.id;
+
+    if (targetId) {
+      selector = `#${targetId}`;
+    }
+  }
+
+  let selectorValue = '';
+  if (selector.type === 'CssSelector') {
+    selectorValue = selector.value;
+  }
+
+  return selectorValue;
+}

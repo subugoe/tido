@@ -7,7 +7,7 @@ export default {
   methods: {
     toggleSheet(itemIndex) {
       const link = this.itemUrls[itemIndex];
-      this.navigate(link);
+      // this.navigate(link);
     },
     navigate(url) {
       const isSameQueryUrl = this.$route.query.itemurl === url;

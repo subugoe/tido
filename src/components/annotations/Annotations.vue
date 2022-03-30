@@ -28,8 +28,6 @@
       :active-annotation="activeAnnotation"
       :config="config"
       :configured-annotations="filteredAnnotations"
-      :content-ids="contentIds"
-      :get-icon="getIcon"
       :toggle="toggle"
     />
 
@@ -65,7 +63,7 @@ import AnnotationsOptions from '@/components/annotations/AnnotationsOptions.vue'
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
 
-import * as AnnotationUtils from '@/utils';
+import * as AnnotationUtils from 'src/utils/annotations';
 import DomMixin from '@/mixins/dom';
 
 export default {
@@ -123,9 +121,6 @@ export default {
         return prev;
       }, {});
     },
-    contentIds() {
-      return this.$store.getters['annotations/contentIds'];
-    },
     currentTab() {
       return this.$store.getters['annotations/activeTab'];
     },
@@ -141,7 +136,7 @@ export default {
           if (annotationContentType?.type === 'text' && annotationContentType?.displayWhen === this.contentTypes[this.contentIndex]) {
             return this.activeEntities.includes(x.body['x-content-type']);
           }
-          return this.activeEntities.includes(x.body['x-content-type']) && this.contentIds[x.targetId];
+          return this.activeEntities.includes(x.body['x-content-type']);
         },
       );
 
@@ -173,7 +168,6 @@ export default {
         this.handleTooltip();
       },
     },
-    contentIds: 'onContentUpdate',
     filteredAnnotations: 'resetActiveAnnotations',
     panels: {
       handler(curr, prev) {
@@ -209,21 +203,18 @@ export default {
 
     addAnnotation(annotation) {
       this.$store.dispatch('annotations/addActiveAnnotation', annotation);
-      let selector = AnnotationUtils.stripTargetId(annotation, false);
 
-      if (selector.startsWith('.')) {
-        selector = selector.replace(/\./g, '');
-      }
+      const { selector } = annotation.target;
 
-      const el = document.getElementById(selector) || document.querySelector(`.${selector}`);
+      if (selector && selector.value) {
+        const elements = [...document.querySelectorAll(selector.value)];
 
-      AnnotationUtils.updateHighlightState(selector, 'INC');
-      if (el) {
-        this.addIcon(el, annotation);
-      }
+        AnnotationUtils.updateHighlightState(selector.value, 'INC');
+        if (elements.length) {
+          this.addIcon(elements[0], annotation);
+        }
 
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
+        elements[0].scrollIntoView({ behavior: 'smooth' });
       }
     },
 
@@ -244,16 +235,12 @@ export default {
         const svg = AnnotationUtils.getAnnotationIcon(contentType, this.config.annotations.types);
         svg.setAttribute(
           'data-annotation-icon',
-          AnnotationUtils.stripTargetId(annotation),
+          annotation.id,
         );
         element.prepend(svg);
       } catch (err) {
         // error message
       }
-    },
-
-    getIcon(contentType) {
-      return Icons[this.getIconName(contentType)];
     },
 
     getIconName(contentType) {
@@ -264,7 +251,7 @@ export default {
 
     handleTooltip() {
       const annotationIds = this.filteredAnnotations.reduce((prev, curr) => {
-        let id = AnnotationUtils.stripTargetId(curr, false);
+        let { id } = curr;
         if (id.startsWith('.')) {
           id = id.replace('.', '');
         }
@@ -306,9 +293,9 @@ export default {
       });
     },
     onContentUpdate(ids) {
+      console.log('onContentUpdate', ids);
       try {
         if (this.isLoading || this.isProcessing) {
-          setTimeout(() => this.onContentUpdate(ids), 100);
           return;
         }
 
@@ -316,20 +303,23 @@ export default {
 
         this.handleTooltip();
       } catch (err) {
+        console.log(err);
+        // TODO: infinite loop here possible: when an error happens in try,
+        // it will happen everytime because the func is recalled in catch
         setTimeout(() => this.onContentUpdate(ids), 100);
       }
     },
 
     onHighlightAll() {
       this.filteredAnnotations.forEach(
-        (annotation) => !this.activeAnnotation[annotation.targetId]
+        (annotation) => !this.activeAnnotation[annotation.id]
           && this.addAnnotation(annotation),
       );
     },
 
     onHighlightNone() {
       this.filteredAnnotations.forEach(
-        (annotation) => this.activeAnnotation[annotation.targetId]
+        (annotation) => this.activeAnnotation[annotation.id]
           && this.removeAnnotation(annotation),
       );
     },
@@ -346,7 +336,7 @@ export default {
     },
 
     removeIcon(annotation) {
-      const stripeId = AnnotationUtils.stripTargetId(annotation);
+      const stripeId = annotation.id;
       const el = document
         .querySelector(`svg[data-annotation-icon='${stripeId}']`);
 
@@ -356,18 +346,13 @@ export default {
     },
 
     removeAnnotation(annotation, level) {
-      if (!this.contentIds[annotation.targetId]) {
-        return;
-      }
       this.$store.dispatch('annotations/removeActiveAnnotation', annotation);
-      let selector = AnnotationUtils.stripTargetId(annotation, false);
+      const { selector } = annotation.target;
 
-      if (selector.startsWith('.')) {
-        selector = selector.replace(/\./g, '');
+      if (selector && selector.value) {
+        AnnotationUtils.updateHighlightState(selector.value, 'DEC', level);
+        this.removeIcon(annotation);
       }
-
-      AnnotationUtils.updateHighlightState(selector, 'DEC', level);
-      this.removeIcon(annotation);
     },
 
     resetActiveAnnotations() {
@@ -375,10 +360,12 @@ export default {
     },
 
     toggle(annotation) {
-      if (!this.contentIds[annotation.targetId]) {
-        return;
-      }
-      const exists = !!this.activeAnnotation[annotation.targetId];
+      // console.log(this.contentIds);
+      // if (!this.contentIds[annotation.id]) {
+      //   return;
+      // }
+      const exists = !!this.activeAnnotation[annotation.id];
+      console.log('annotation exists', exists);
       if (exists) {
         this.removeAnnotation(annotation);
       } else {

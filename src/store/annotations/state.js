@@ -1,7 +1,7 @@
 export default function AnnotationState() {
   return {
     contentFontSize: 16,
-    contentIds: {},
+    // contentIds: {},
     activeTab: '',
     activeAnnotations: {},
     annotations: [],

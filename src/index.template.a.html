@@ -31,9 +31,8 @@
     -->
     <script id="tido-config" type="application/json">
       {
-        "entrypoint": "https://dev.gfl.sub.uni-goettingen.de/tido/gfl/sample/manifest.json",
+        "entrypoint": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
         "annotations": {
-          "show": true,
           "types": [
             {
               "contenttype": "Person",
@@ -51,41 +50,30 @@
               "label": "Comments"
             },
             {
-              "contenttype": "Org",
-              "icon": "fasLandmark",
-              "label": "Organization"
-            },
-            {
-              "contenttype": "Object",
-              "icon": "fasThLarge",
-              "label": "Object"
-            },
-            {
-              "contenttype": "Date",
-              "icon": "fasCalendar",
-              "label": "Date"
+              "contenttype": "Motif",
+              "icon": "fasHighlighter",
+              "label": "Motifs"
             },
             {
               "contenttype": "Abstract",
               "annotationType": "text",
               "displayWhen": "Edierter Text",
-              "label": "Erläuterung"
-            },
-            {
-              "contenttype": "Work",
-              "icon": "fasThLarge",
-              "label": "Werk"
-            },
-            {
-              "contenttype": "Work",
-              "icon": "fasExternalLinkSquareAlt",
-              "label": "Werk"
+              "label": "Abstract"
             }
           ],
           "tabs":{
-            "Kommentare": ["Abstract", "Editorial Comment"],
-            "Register": ["Person", "Place", "Org", "Object", "Date", "Work"]
+            "Editorial": ["Person", "Place"],
+            "Motif": ["Motif"],
+            "Comments": ["Editorial Comment", "Abstract"]
           }
+        },
+        "breadcrumbNavigation": {
+          "source": "external",
+          "search_page_path": "search.html",
+          "search_query_param": "searchTerm",
+          "title_homepage_key": "title_homepage",
+          "title_viewer_key": "title_viewer",
+          "website": "https://ahikar.sub.uni-goettingen.de/website/"
         },
         "colors": {
           "primary": "",
@@ -100,9 +88,11 @@
           "toggle": true
         },
         "labels": {
-          "item": "Seite",
-          "manifest": "Dokument"
+          "item": "Sheet",
+          "manifest": "Manuscript"
         },
+        "lang": "en-us",
+        "language-switch": true,
         "meta": {
           "collection": {
             "all": true
@@ -114,10 +104,20 @@
             "all": true
           }
         },
+        "notificationColors": {
+          "info":"blue-9",
+          "warning":"red-9"
+        },
         "panels": [
           {
+            "connector": [1, 2],
+            "panel_label": "Contents & Metadata",
+            "show": true,
+            "toggle": true
+          },
+          {
             "connector": [3],
-            "panel_label": "Manuskript",
+            "panel_label": "Image",
             "show": true,
             "toggle": true
           },
@@ -125,21 +125,16 @@
             "connector": [4],
             "panel_label": "Text",
             "show": true,
-            "toggle": false
-          },
-          {
-            "connector": [5],
-            "panel_label": "Kommentar",
-            "show": true,
             "toggle": true
           },
           {
-            "connector": [2, 1],
-            "panel_label": "Dokumentdaten",
+            "connector": [5],
+            "panel_label": "Annotations",
             "show": true,
             "toggle": true
           }
         ],
+        "rtl": false,
         "textContent": {
           "tabs": {
             "priority": {
@@ -147,22 +142,7 @@
             }
           }
         },
-        "notificationColors": {
-          "info":"blue-9",
-          "warning":"red-9"
-        },
-        "rtl": false,
-        "themes": false,
-        "standalone": false,
-        "lang": "de-de",
-        "language-switch": false,
-        "breadcrumbNavigation": {
-          "source": "gfl",
-          "title_homepage_key": "GFL Website",
-          "search_query_param": "q",
-          "title_viewer_key": "title_viewer",
-          "website": "https://dev1.gfl.sub.uni-goettingen.de"
-        }
+        "themes": false
       }
     </script>
 
