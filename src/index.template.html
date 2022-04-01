@@ -30,120 +30,120 @@
     Note: These IDs are supposed to be unique, so please make sure not to repeat these!
     -->
     <script id="tido-config" type="application/json">
-    {
-      "entrypoint": "",
-      "annotations": {
-        "types": [
+      {
+        "entrypoint": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
+        "annotations": {
+          "types": [
+            {
+              "contenttype": "Person",
+              "icon": "fasUser",
+              "label": "Names"
+            },
+            {
+              "contenttype": "Place",
+              "icon": "fasMapMarkerAlt",
+              "label": "Places"
+            },
+            {
+              "contenttype": "Editorial Comment",
+              "icon": "fasComment",
+              "label": "Comments"
+            },
+            {
+              "contenttype": "Motif",
+              "icon": "fasHighlighter",
+              "label": "Motifs"
+            },
+            {
+              "contenttype": "Abstract",
+              "annotationType": "text",
+              "displayWhen": "Edierter Text",
+              "label": "Abstract"
+            }
+          ],
+          "tabs":{
+            "Editorial": ["Person", "Place"],
+            "Motif": ["Motif"],
+            "Comments": ["Editorial Comment", "Abstract"]
+          }
+        },
+        "breadcrumbNavigation": {
+          "source": "external",
+          "search_page_path": "search.html",
+          "search_query_param": "searchTerm",
+          "title_homepage_key": "title_homepage",
+          "title_viewer_key": "title_viewer",
+          "website": "https://ahikar.sub.uni-goettingen.de/website/"
+        },
+        "colors": {
+          "primary": "",
+          "secondary": "",
+          "accent": ""
+        },
+        "header_section": {
+          "show": true,
+          "navigation": true,
+          "panelheadings": true,
+          "titles": true,
+          "toggle": true
+        },
+        "labels": {
+          "item": "Sheet",
+          "manifest": "Manuscript"
+        },
+        "lang": "en-us",
+        "language-switch": true,
+        "meta": {
+          "collection": {
+            "all": true
+          },
+          "manifest": {
+            "all": true
+          },
+          "item": {
+            "all": true
+          }
+        },
+        "notificationColors": {
+          "info":"blue-9",
+          "warning":"red-9"
+        },
+        "panels": [
           {
-            "contenttype": "Person",
-            "icon": "fasUser",
-            "label": "Names"
+            "connector": [1, 2],
+            "panel_label": "Contents & Metadata",
+            "show": true,
+            "toggle": true
           },
           {
-            "contenttype": "Place",
-            "icon": "fasMapMarkerAlt",
-            "label": "Places"
+            "connector": [3],
+            "panel_label": "Image",
+            "show": true,
+            "toggle": true
           },
           {
-            "contenttype": "Editorial Comment",
-            "icon": "fasComment",
-            "label": "Comments"
+            "connector": [4],
+            "panel_label": "Text",
+            "show": true,
+            "toggle": true
           },
           {
-            "contenttype": "Motif",
-            "icon": "fasHighlighter",
-            "label": "Motifs"
-          },
-          {
-            "contenttype": "Abstract",
-            "annotationType": "text",
-            "displayWhen": "Edierter Text",
-            "label": "Abstract"
+            "connector": [5],
+            "panel_label": "Annotations",
+            "show": true,
+            "toggle": true
           }
         ],
-        "tabs":{
-          "Editorial": ["Person", "Place"],
-          "Motif": ["Motif"],
-          "Comments": ["Editorial Comment", "Abstract"]
-        }
-      },
-      "breadcrumbNavigation": {
-        "source": "external",
-        "search_page_path": "search.html",
-        "search_query_param": "searchTerm",
-        "title_homepage_key": "title_homepage",
-        "title_viewer_key": "title_viewer",
-        "website": "https://ahikar.sub.uni-goettingen.de/website/"
-      },
-      "colors": {
-        "primary": "",
-        "secondary": "",
-        "accent": ""
-      },
-      "header_section": {
-        "show": true,
-        "navigation": true,
-        "panelheadings": true,
-        "titles": true,
-        "toggle": true
-      },
-      "labels": {
-        "item": "Sheet",
-        "manifest": "Manuscript"
-      },
-      "lang": "en-us",
-      "language-switch": true,
-      "meta": {
-        "collection": {
-          "all": true
-        },
-        "manifest": {
-          "all": true
-        },
-        "item": {
-          "all": true
-        }
-      },
-      "notificationColors": {
-        "info":"blue-9",
-        "warning":"red-9"
-      },
-      "panels": [
-        {
-          "connector": [1, 2],
-          "panel_label": "Contents & Metadata",
-          "show": true,
-          "toggle": true
-        },
-        {
-          "connector": [3],
-          "panel_label": "Image",
-          "show": true,
-          "toggle": true
-        },
-        {
-          "connector": [4],
-          "panel_label": "Text",
-          "show": true,
-          "toggle": true
-        },
-        {
-          "connector": [5],
-          "panel_label": "Annotations",
-          "show": true,
-          "toggle": true
-        }
-      ],
-      "rtl": false,
-      "textContent": {
-        "tabs": {
-          "priority": {
-            "Edierter Text": 1
+        "rtl": false,
+        "textContent": {
+          "tabs": {
+            "priority": {
+              "Edierter Text": 1
+            }
           }
-        }
-      },
-      "themes": false
-    }
+        },
+        "themes": false
+      }
     </script>
 
     <div id="q-app"></div>

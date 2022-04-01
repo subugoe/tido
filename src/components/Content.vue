@@ -91,9 +91,6 @@ import {
   onlyIf,
   loadCss,
   domParser,
-  getAnnotationContentIds,
-  delay,
-  addHighlighterAttributes,
 } from '@/utils';
 
 export default {
@@ -191,26 +188,11 @@ export default {
             await this.getSupport(this.manifests[0].support);
           }
 
-          const annotationPanelHidden = this.panels.find(
-            (x) => x.panel_label === 'Annotations' && !x.show,
-          );
-
           const dom = domParser(data);
-
-          addHighlighterAttributes.call(this, dom);
-
+          this.$store.dispatch('annotations/addHighlightAttributesToText', dom);
           this.content = dom.documentElement.innerHTML;
-
-          if (!annotationPanelHidden) {
-            await delay(200);
-            this.$store.dispatch(
-              'annotations/updateContentIds',
-              getAnnotationContentIds.call(this, dom),
-            );
-          }
         } catch (err) {
           this.errorTextMessage = err.message;
-          this.$store.dispatch('annotations/updateContentIds', {});
         } finally {
           this.isLoading = false;
           this.$store.dispatch('annotations/updateContentLoading', false);

@@ -29,6 +29,6 @@ export const resetInitialized = ({ commit }) => {
   commit('resetInitialized');
 };
 
-export const updateInitialized = ({ commit }, { initialized }) => {
-  commit('updateInitialized', { initialized });
+export const setInitialized = ({ commit }, initialized) => {
+  commit('setInitialized', { initialized });
 };
