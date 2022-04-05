@@ -131,11 +131,10 @@ export default {
       const output = this.annotations.filter(
         (x) => {
           const annotationContentType = this.annotationTypesMapping[x.body['x-content-type']];
-
-          if (annotationContentType?.type === 'text' && annotationContentType?.displayWhen === this.contentTypes[this.contentIndex]) {
+          if (annotationContentType?.displayWhen === this.contentTypes[this.contentIndex]) {
             return this.activeEntities.includes(x.body['x-content-type']);
           }
-          return this.activeEntities.includes(x.body['x-content-type']);
+          return false;
         },
       );
 
