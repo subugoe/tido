@@ -132,10 +132,16 @@ export default {
         (x) => {
           const annotationContentType = this.annotationTypesMapping[x.body['x-content-type']];
 
-          if (annotationContentType?.type === 'text' && annotationContentType?.displayWhen === this.contentTypes[this.contentIndex]) {
+          // If no "displayWhen" property given
+          // we assume that this annotation type should be displayed at every content tab.
+          // Or "displayWhen" is given and we check if it should be displayed at the current content tab.
+          if (
+            !annotationContentType?.displayWhen
+            || annotationContentType?.displayWhen === this.contentTypes[this.contentIndex]
+          ) {
             return this.activeEntities.includes(x.body['x-content-type']);
           }
-          return this.activeEntities.includes(x.body['x-content-type']);
+          return false;
         },
       );
 
