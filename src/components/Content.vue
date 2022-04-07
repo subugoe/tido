@@ -191,6 +191,7 @@ export default {
           const dom = domParser(data);
           this.$store.dispatch('annotations/addHighlightAttributesToText', dom);
           this.content = dom.documentElement.innerHTML;
+          setTimeout(() => this.$store.dispatch('contents/updateContentDOM'), 0);
         } catch (err) {
           this.errorTextMessage = err.message;
         } finally {

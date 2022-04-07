@@ -83,6 +83,7 @@ export default {
   },
   data() {
     return {
+      filteredAnnotations: [],
       messages: {
         none: 'noAnnotationMessage',
         empty: 'noCommentsMessage',
@@ -123,30 +124,6 @@ export default {
     currentTab() {
       return this.$store.getters['annotations/activeTab'];
     },
-    filteredAnnotations() {
-      if (!this.currentTab) {
-        return [];
-      }
-
-      const output = this.annotations.filter(
-        (x) => {
-          const annotationContentType = this.annotationTypesMapping[x.body['x-content-type']];
-
-          // If no "displayWhen" property given
-          // we assume that this annotation type should be displayed at every content tab.
-          // Or "displayWhen" is given and we check if it should be displayed at the current content tab.
-          if (
-            !annotationContentType?.displayWhen
-            || annotationContentType?.displayWhen === this.contentTypes[this.contentIndex]
-          ) {
-            return this.activeEntities.includes(x.body['x-content-type']);
-          }
-          return false;
-        },
-      );
-
-      return output;
-    },
     isLoading() {
       return this.$store.getters['annotations/isLoading'];
     },
@@ -169,6 +146,7 @@ export default {
   watch: {
     currentTab: {
       handler() {
+        this.setFilteredAnnotations();
         AnnotationUtils.highlightActiveContent(this.filteredAnnotations);
         this.handleTooltip();
       },
@@ -199,8 +177,52 @@ export default {
   },
   mounted() {
     this.$store.dispatch('annotations/updateActiveTab', this.annotationTabs?.[0].key);
+    this.$store.subscribeAction((action) => {
+      if (action.type === 'contents/updateContentDOM') {
+        this.setFilteredAnnotations();
+      }
+    });
   },
   methods: {
+    setFilteredAnnotations() {
+      console.log('setFilteredAnnotations');
+      if (!this.currentTab) {
+        this.filteredAnnotations = [];
+        return;
+      }
+
+      this.filteredAnnotations = this.annotations.filter(
+        (x) => {
+          const annotationContentType = this.annotationTypesMapping[x.body['x-content-type']];
+
+          // First we check if annotation fits to the current tab
+          if (!this.activeEntities.includes(x.body['x-content-type'])) {
+            return false;
+          }
+
+          let isVisible = false;
+
+          if (
+            annotationContentType?.displayWhen
+            && annotationContentType?.displayWhen === this.contentTypes[this.contentIndex]
+          ) {
+            // Next we check if annotation should always be displayed on the current content tab
+            isVisible = true;
+          } else {
+            // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
+            const selector = AnnotationUtils.generateTargetSelector(x);
+            if (selector) {
+              const el = document.querySelector(selector);
+              if (el) {
+                isVisible = true;
+              }
+            }
+          }
+
+          return isVisible;
+        },
+      );
+    },
     switchActiveTab(key) {
       this.filteredAnnotations.forEach((x) => this.removeAnnotation(x, -1));
       this.$store.dispatch('annotations/updateActiveTab', key);

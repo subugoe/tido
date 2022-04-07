@@ -328,3 +328,5 @@ export const addOrRemoveFromExpanded = ({ getters, dispatch }, label) => {
 export const setPanels = ({ commit }, payload) => {
   commit('setPanels', payload);
 };
+
+export const updateContentDOM = () => null;
