@@ -185,7 +185,6 @@ export default {
   },
   methods: {
     setFilteredAnnotations() {
-      console.log('setFilteredAnnotations');
       if (!this.currentTab) {
         this.filteredAnnotations = [];
         return;
