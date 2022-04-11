@@ -16,7 +16,7 @@ export function addHighlightToElements(selector, root, annotationId) {
       element.setAttribute('data-annotation', true);
 
       element.classList.add(strippedAnnotationId);
-      element.setAttribute('data-annotation-level', 0);
+      element.setAttribute('data-annotation-level', -1);
 
       recursiveAddClass([...element.children]);
     });
@@ -180,26 +180,19 @@ export function getNewLevel(element, operation) {
   if (operation === 'INC') {
     return currentLevel + 1;
   }
-  if (currentLevel !== 0) {
+  if (operation === 'DEC') {
     return currentLevel - 1;
   }
   return currentLevel;
 }
 
-export function setHighlightLevelRecursively(element, level = -1) {
-  element.setAttribute('data-annotation-level', level);
+export function highlightTargets(selector, { operation, level }) {
+  // If level is given we set it directly ignoring operation.
 
-  [...element.children].forEach((child) => {
-    setHighlightLevelRecursively(child, level);
+  [...document.querySelectorAll(selector)].forEach((element) => {
+    const newLevel = level !== undefined ? level : getNewLevel(element, operation);
+    element.setAttribute('data-annotation-level', newLevel);
   });
-}
-
-export function increaseHighlightLevelRecursively(element) {
-  setHighlightLevelRecursively(element, getNewLevel(element, 'INC'));
-}
-
-export function decreaseHighlightLevelRecursively(element) {
-  setHighlightLevelRecursively(element, getNewLevel(element, 'DEC'));
 }
 
 export function stripSelector(value) {
@@ -242,34 +235,6 @@ export function toggleAnnotationSelector(annotation, text = 'toggle') {
 
 export function getAllElementsFromSelector(selector) {
   return [...document.querySelectorAll(selector)];
-}
-
-export function highlightActiveContent(annotations) {
-  annotations.forEach((annotation) => {
-    const selector = Utils.generateTargetSelector(annotation);
-
-    if (selector) {
-      getAllElementsFromSelector(selector)
-        .forEach((element) => {
-          element.setAttribute('data-annotation-level', 0);
-        });
-    }
-  });
-}
-
-export function updateHighlightState(selector, operation, level) {
-  getAllElementsFromSelector(selector).forEach((el) => {
-    if (level !== undefined) {
-      setHighlightLevelRecursively(el, level);
-      return;
-    }
-
-    if (operation === 'INC') {
-      increaseHighlightLevelRecursively(el);
-    } else if (operation === 'DEC') {
-      decreaseHighlightLevelRecursively(el);
-    }
-  });
 }
 
 export const backTrackNestedAnnotations = (el, classNames = []) => {

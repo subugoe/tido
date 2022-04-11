@@ -147,11 +147,15 @@ export default {
     currentTab: {
       handler() {
         this.setFilteredAnnotations();
-        AnnotationUtils.highlightActiveContent(this.filteredAnnotations);
         this.handleTooltip();
       },
     },
-    filteredAnnotations: 'resetActiveAnnotations',
+    filteredAnnotations: {
+      handler() {
+        this.resetActiveAnnotations();
+        this.highlightTargetsLevel0();
+      },
+    },
     panels: {
       handler(curr, prev) {
         const currentState = curr.find(
@@ -222,6 +226,7 @@ export default {
         },
       );
     },
+
     switchActiveTab(key) {
       this.filteredAnnotations.forEach((x) => this.removeAnnotation(x, -1));
       this.$store.dispatch('annotations/updateActiveTab', key);
@@ -235,7 +240,7 @@ export default {
       if (selector) {
         const elements = [...document.querySelectorAll(selector)];
 
-        AnnotationUtils.updateHighlightState(selector, 'INC');
+        AnnotationUtils.highlightTargets(selector, { operation: 'INC' });
         if (elements.length) {
           this.addIcon(elements[0], annotation);
         }
@@ -268,6 +273,7 @@ export default {
         // error message
       }
     },
+
     handleTooltip() {
       const annotationIds = this.filteredAnnotations.reduce((prev, curr) => {
         let { id } = curr;
@@ -311,13 +317,30 @@ export default {
         }
       });
     },
+
+    highlightTargetsLevel0() {
+      const mergedSelector = this.filteredAnnotations
+        .reduce((acc, cur) => {
+          const selector = AnnotationUtils.generateTargetSelector(cur);
+          if (acc !== '') {
+            acc += ',';
+          }
+          acc += selector;
+          return acc;
+        }, '');
+
+      if (mergedSelector) {
+        AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
+      }
+    },
+
     onContentUpdate(ids) {
       try {
         if (this.isLoading || this.isProcessing) {
           return;
         }
 
-        AnnotationUtils.highlightActiveContent(this.filteredAnnotations);
+        this.highlightTargetsLevel0();
 
         this.handleTooltip();
       } catch (err) {
@@ -367,7 +390,7 @@ export default {
       const selector = AnnotationUtils.generateTargetSelector(annotation);
 
       if (selector) {
-        AnnotationUtils.updateHighlightState(selector, 'DEC', level);
+        AnnotationUtils.highlightTargets(selector, { operation: 'DEC', level });
         this.removeIcon(annotation);
       }
     },
