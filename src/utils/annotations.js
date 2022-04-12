@@ -1,32 +1,33 @@
 import * as Icons from '@quasar/extras/fontawesome-v5';
+import * as Utils from '@/utils/index';
 
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
-export function addHighlightToTargetIds(selector, root) {
-  const element = root.getElementById(selector);
-  if (!element) {
+export function addHighlightToElements(selector, root, annotationId) {
+  const selectedElements = root.querySelectorAll(selector);
+  if (selectedElements.length === 0) {
     return;
   }
 
-  function recursiveAddClass(children) {
-    [...children].forEach((child) => {
-      child.setAttribute('data-annotation', true);
-      child.classList.add(selector);
-      recursiveAddClass(child.children);
+  const strippedAnnotationId = stripAnnotationId(annotationId);
+
+  function recursiveAddClass(elements) {
+    elements.forEach((element) => {
+      element.setAttribute('data-annotation', true);
+
+      element.classList.add(strippedAnnotationId);
+      element.setAttribute('data-annotation-level', -1);
+
+      recursiveAddClass([...element.children]);
     });
   }
 
-  if (!element.children.length) {
-    element.setAttribute('data-annotation', true);
-    element.classList.add(selector);
-  }
-
-  recursiveAddClass(element.children);
+  recursiveAddClass(selectedElements);
 }
 
-export function replaceSelectorWithSpan(selector, root) {
-  const start = root.querySelector(`[data-target="${selector}_start"]`);
-  const end = root.querySelector(`[data-target="${selector}_end"]`);
+export function replaceSelectorWithSpan(id, root) {
+  const start = root.querySelector(`[data-target="${id}_start"]`);
+  const end = root.querySelector(`[data-target="${id}_end"]`);
 
   let started = false;
   let ended = false;
@@ -41,7 +42,7 @@ export function replaceSelectorWithSpan(selector, root) {
       if (ended) return;
 
       if (childNode.nodeName === 'SPAN' && childNode.getAttribute('data-annotation') && started) {
-        childNode.classList.add(selector);
+        childNode.classList.add(id);
       }
 
       if (childNode.nodeName === '#text') {
@@ -49,7 +50,7 @@ export function replaceSelectorWithSpan(selector, root) {
           if (childNode.textContent && childNode.textContent.trim()) {
             const span = document.createElement('span');
 
-            span.setAttribute('class', selector);
+            span.classList.add(id);
             span.setAttribute('data-annotation', true);
             span.innerHTML = childNode.textContent;
             childNode.replaceWith(span);
@@ -60,26 +61,9 @@ export function replaceSelectorWithSpan(selector, root) {
       }
     });
   }
+
   replaceRecursive(root);
   return root;
-}
-
-export function addHighlighterAttributes(dom) {
-  this.mapUniqueElements(
-    this.findDomElements('[data-target]:not([value=""])', dom),
-    (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
-  ).forEach((selector) => replaceSelectorWithSpan(selector, dom));
-
-  this.mapElements(this.findDomElements('[id]', dom), (x) => x.getAttribute('id')).forEach((selector) => addHighlightToTargetIds(selector, dom));
-}
-
-export function getAnnotationContentIds(dom) {
-  return this.mapElements(this.findDomElements('[data-annotation]', dom), (x) => x.getAttribute('class')).reduce((prev, curr) => {
-    (curr || '').split(' ').forEach((c) => {
-      prev[c.replace(/\./g, '')] = true;
-    });
-    return prev;
-  }, {});
 }
 
 export function getAnnotationTabs(config) {
@@ -188,14 +172,6 @@ export function createTooltip(element, annotationClasses, config) {
   setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
 }
 
-export function getElementById(id) {
-  if (!id) {
-    return null;
-  }
-
-  return document.getElementById(id.replace(/#/g, ''));
-}
-
 export function getNewLevel(element, operation) {
   const currentLevel = parseInt(
     element.getAttribute('data-annotation-level'),
@@ -204,33 +180,26 @@ export function getNewLevel(element, operation) {
   if (operation === 'INC') {
     return currentLevel + 1;
   }
-  if (currentLevel !== 0) {
+  if (operation === 'DEC') {
     return currentLevel - 1;
   }
   return currentLevel;
 }
 
-export function highlightActiveId(element) {
-  if (!element) {
-    return;
-  }
-  element.setAttribute('data-annotation-level', 0);
+export function highlightTargets(selector, { operation, level }) {
+  // If level is given we set it directly ignoring operation.
 
-  [...element.children].forEach((child) => {
-    child.setAttribute('data-annotation-level', 0);
-    highlightActiveId(child);
+  [...document.querySelectorAll(selector)].forEach((element) => {
+    const newLevel = level !== undefined ? level : getNewLevel(element, operation);
+    element.setAttribute('data-annotation-level', newLevel);
   });
 }
 
-export function stripId(val) {
-  if (!val) {
-    return '';
+export function stripSelector(value) {
+  if (!value) {
+    return null;
   }
-  return val.replace(/-/g, '.').replace(/[^.0-9]/g, '');
-}
-
-export function stripSelector(annotation) {
-  return `.${annotation.target.selector.startSelector.value
+  return `.${value
     .replace("span[data-target='", '')
     .replace("'", '')
     .replace('_start]', '')
@@ -242,17 +211,6 @@ export function stripAnnotationId(url) {
     return '';
   }
   return url.split('/').pop();
-}
-
-export function stripTargetId(annotation, removeDot = true) {
-  let output = '';
-  if (annotation.target.selector) {
-    output = stripSelector(annotation);
-  } else {
-    output = stripAnnotationId(annotation.target.id);
-  }
-
-  return removeDot ? output.replace(/\./g, '') : output;
 }
 
 export function updateTextContentClass(element, task = 'add', ...className) {
@@ -275,42 +233,8 @@ export function toggleAnnotationSelector(annotation, text = 'toggle') {
   ));
 }
 
-export function highlightActiveContent(annotations) {
-  annotations.forEach((el) => {
-    if (el.target.id) {
-      highlightActiveId(getElementById(stripTargetId(el, false)));
-    } else {
-      [...document.querySelectorAll(`.${stripTargetId(el)}`)].map((x) => x.setAttribute('data-annotation-level', 0));
-    }
-  });
-}
-
-export function getAllElementsFromSelector(selector, arr = []) {
-  const el = document.getElementById(selector);
-  if (el) {
-    // https://www.geeksforgeeks.org/queue-data-structure/
-    const queue = [];
-
-    queue.push(el);
-
-    while (queue.length) {
-      const popped = queue.pop();
-      arr.push(popped);
-      [...popped.children].forEach((child) => {
-        queue.push(child);
-      });
-    }
-    return arr;
-  }
-
-  return [...document.querySelectorAll(`.${selector}`)];
-}
-
-export function updateHighlightState(selector, operation, level) {
-  getAllElementsFromSelector(selector).forEach((el) => el.setAttribute(
-    'data-annotation-level',
-    level || getNewLevel(el, operation),
-  ));
+export function getAllElementsFromSelector(selector) {
+  return [...document.querySelectorAll(selector)];
 }
 
 export const backTrackNestedAnnotations = (el, classNames = []) => {
@@ -370,3 +294,46 @@ export const isAnnotationSelected = (el) => {
 
   return matched;
 };
+
+export function generateTargetSelector(annotation) {
+  // This function generates a CSS selector from
+  // different possible sources within the annotation object.
+  // Our first goal is to check for a selector object.
+  // Selectors can have different types e.g. 'CssSelector' or 'SvgSelector'.
+  // If no selector object is present we try to generate a CSS selector from target id.
+
+  let result = null;
+
+  const { selector } = annotation.target;
+
+  if (!selector) {
+    let targetId = annotation.target.id;
+
+    if (targetId) {
+      targetId = targetId.split('/').pop();
+      result = `#${targetId}`;
+    }
+  } else if (selector.type === 'CssSelector') {
+    result = handleCssSelector(selector);
+  } else if (selector.type === 'RangeSelector') {
+    result = handleRangeSelector(selector);
+  }
+
+  const isValid = Utils.isSelectorValid(result);
+
+  return isValid ? result : null;
+}
+
+export function handleCssSelector(selector) {
+  return selector.value ?? null;
+}
+
+export function handleRangeSelector(selector) {
+  const { startSelector, endSelector } = selector;
+  if (startSelector && endSelector) {
+    if (startSelector.type === 'CssSelector') {
+      return stripSelector(handleCssSelector(startSelector));
+    }
+  }
+  return null;
+}

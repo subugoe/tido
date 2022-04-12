@@ -79,7 +79,7 @@ export default {
   },
   watch: {
     '$route.query': {
-      handler: 'onQueryChange',
+      handler: 'onRouteQueryChange',
       immediate: true,
     },
     itemUrl: {
@@ -186,7 +186,7 @@ export default {
       }
     },
 
-    onQueryChange() {
+    onRouteQueryChange() {
       if (this.loaded) {
         return;
       }
@@ -197,10 +197,8 @@ export default {
         return;
       }
 
-      this.itemurl = decodeURIComponent(itemurl);
-
       this.$store.dispatch('contents/setItemUrl', decodeURIComponent(itemurl));
-      this.$store.dispatch('config/updateInitialized', { initialized: true });
+      this.$store.dispatch('config/setInitialized', { initialized: true });
     },
   },
 };

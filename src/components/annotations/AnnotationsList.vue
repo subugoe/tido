@@ -11,15 +11,10 @@
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
       <q-item-section
-        v-if="getIcon(annotation.body['x-content-type'])"
         avatar
         class="q-mr-none"
       >
-        <q-icon
-          :color="$q.dark.isActive ? 'grey-1 text-grey-1' : 'accent'"
-          :name="getIcon(annotation.body['x-content-type'])"
-          size="16px"
-        />
+        <AnnotationIcon :content-type="annotation.body['x-content-type']" />
       </q-item-section>
 
       <q-item-section>
@@ -32,8 +27,11 @@
 
 <script>
 
+import AnnotationIcon from 'components/annotations/AnnotationIcon';
+
 export default {
   name: 'AnnotationsList',
+  components: { AnnotationIcon },
   props: {
     activeAnnotation: {
       type: Object,
@@ -42,10 +40,6 @@ export default {
     config: {
       type: Object,
       default: () => {},
-    },
-    getIcon: {
-      type: Function,
-      default: () => null,
     },
     configuredAnnotations: {
       type: Array,
@@ -66,7 +60,7 @@ export default {
   },
   methods: {
     isActive(annotation) {
-      return !!this.activeAnnotation[annotation.targetId];
+      return !!this.activeAnnotation[annotation.id];
     },
     isText(annotation) {
       return this.annotationTypesMapping[annotation.body['x-content-type']] === 'text';
