@@ -258,7 +258,7 @@ export const initContentItem = async (
       .pop()
       .split('-')[0];
 
-    [contentUrls, contentTypes] = getContentUrls(data.content);
+    [contentUrls, contentTypes] = getContentUrls(data.content, config);
 
     const currentManifest = contentUrls[0]
       .split('/')
@@ -328,3 +328,5 @@ export const addOrRemoveFromExpanded = ({ getters, dispatch }, label) => {
 export const setPanels = ({ commit }, payload) => {
   commit('setPanels', payload);
 };
+
+export const updateContentDOM = () => null;

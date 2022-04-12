@@ -18,10 +18,6 @@ export const updateContentFontSize = (state, size) => {
   state.contentFontSize = size;
 };
 
-export const updateContentIds = (state, annotations) => {
-  (state.contentIds = annotations);
-};
-
 export const updateContentLoading = (state, isLoading) => {
   state.isContentLoading = isLoading;
 };
