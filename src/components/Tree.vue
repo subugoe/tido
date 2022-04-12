@@ -84,11 +84,9 @@ export default {
       immediate: true,
     },
     expandTreeNodes: {
-      handler: 'handleExpandTreeNodes',
-      immediate: true,
-    },
-    expanded: {
-      handler: 'handleExpanded',
+      handler(value) {
+        this.expanded = [...value];
+      },
       immediate: true,
     },
   },
@@ -112,16 +110,6 @@ export default {
     },
     handleTreeUpdate(val) {
       this.$store.dispatch('contents/updateExpanded', val);
-    },
-    handleExpanded(values) {
-      if (JSON.stringify(this.expandTreeNodes) !== JSON.stringify(values)) {
-        this.$store.dispatch('contents/updateExpanded', values);
-      }
-    },
-    handleExpandTreeNodes(values) {
-      if (JSON.stringify(values) !== JSON.stringify(this.expanded)) {
-        this.expanded = values;
-      }
     },
   },
 };
