@@ -180,7 +180,6 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('annotations/updateActiveTab', this.annotationTabs?.[0].key);
     this.$store.subscribeAction((action) => {
       if (action.type === 'contents/updateContentDOM') {
         this.setFilteredAnnotations();
