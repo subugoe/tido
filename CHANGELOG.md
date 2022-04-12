@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.26.0...v2.0.0) (2022-04-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* We expect now an annotation target object from the AnnotationAPI that can result in a valid CSS selector. If the target does not provide either a CssSelector or RangeSelector objects, we fallback to target.id build a CSS selector from that. 
+
+### Features
+
+* use CSS selectors for text highlighting ([e656069](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e6560692e3c730570f919fc67b0d6658034787bb))
+
+
+### Bug Fixes
+
+* update the content on manifests change and tree arrow error ([92f74c0](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/92f74c0a53eccb22382ab39fa292a2608c2c725d))
+
+
+### Refactoring
+
+* watch logic to update the state ([f712f7c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f712f7cd45b997f61fc9ceef7ba51cd2996d61ca))
+
+
+### Continuos Integration
+
+* remove entry point ([a53b225](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/a53b22550c79ecd376ea8c67a18736d9b13afb16))
+* remove entry point ([a0473b3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/a0473b304ed7e72d90fea8c850133e7469c4ea69))
+
 ## [1.26.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.25.0...v1.26.0) (2022-03-29)
 
 
