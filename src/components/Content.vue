@@ -173,49 +173,13 @@ export default {
 
   watch: {
     activeTabContents(url) {
-      this.$store.dispatch('contents/onContentIndexChange', this.contentUrls.findIndex((x) => x === url));
+      this.$store.dispatch(
+        'contents/onContentIndexChange',
+        this.contentUrls.findIndex((x) => x === url),
+      );
     },
     activeTab: {
-      async handler(url) {
-        try {
-          if (!url) {
-            return;
-          }
-          this.errorTextMessage = '';
-          this.isLoading = true;
-          this.$store.dispatch('annotations/updateContentLoading', true);
-          const data = await request(url, 'text');
-          this.isValidTextContent(data);
-
-          if (this.supportType) {
-            await this.getSupport(this.manifests[0].support);
-          }
-
-          const annotationPanelHidden = this.panels.find(
-            (x) => x.panel_label === 'Annotations' && !x.show,
-          );
-
-          const dom = domParser(data);
-
-          addHighlighterAttributes.call(this, dom);
-
-          this.content = dom.documentElement.innerHTML;
-
-          if (!annotationPanelHidden) {
-            await delay(200);
-            this.$store.dispatch(
-              'annotations/updateContentIds',
-              getAnnotationContentIds.call(this, dom),
-            );
-          }
-        } catch (err) {
-          this.errorTextMessage = err.message;
-          this.$store.dispatch('annotations/updateContentIds', {});
-        } finally {
-          this.isLoading = false;
-          this.$store.dispatch('annotations/updateContentLoading', false);
-        }
-      },
+      handler: 'handleActiveTab',
       immediate: true,
     },
   },
@@ -246,6 +210,7 @@ export default {
     });
 
     const [contentUrls] = this.contentUrls[0];
+    this.handleActiveTab();
 
     this.$root.$on('manifest-changed', () => {
       this.activeTabContents = contentUrls;
@@ -256,7 +221,47 @@ export default {
     decrease() {
       this.$store.dispatch('annotations/decreaseContentFontSize');
     },
+    async handleActiveTab() {
+      const url = this.activeTab;
+      try {
+        if (!url) {
+          return;
+        }
+        this.errorTextMessage = '';
+        this.isLoading = true;
+        this.$store.dispatch('annotations/updateContentLoading', true);
+        const data = await request(url, 'text');
+        this.isValidTextContent(data);
 
+        if (this.supportType) {
+          await this.getSupport(this.manifests[0].support);
+        }
+
+        const annotationPanelHidden = this.panels.find(
+          (x) => x.panel_label === 'Annotations' && !x.show,
+        );
+
+        const dom = domParser(data);
+
+        addHighlighterAttributes.call(this, dom);
+
+        this.content = dom.documentElement.innerHTML;
+
+        if (!annotationPanelHidden) {
+          await delay(200);
+          this.$store.dispatch(
+            'annotations/updateContentIds',
+            getAnnotationContentIds.call(this, dom),
+          );
+        }
+      } catch (err) {
+        this.errorTextMessage = err.message;
+        this.$store.dispatch('annotations/updateContentIds', {});
+      } finally {
+        this.isLoading = false;
+        this.$store.dispatch('annotations/updateContentLoading', false);
+      }
+    },
     increase() {
       this.$store.dispatch('annotations/increaseContentFontSize');
     },

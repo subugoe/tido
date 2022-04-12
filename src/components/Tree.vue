@@ -3,14 +3,14 @@
     <q-tree
       class="item-content"
       node-key="label"
-      :expanded.sync="expandTreeNodes"
+      :expanded.sync="expanded"
       :icon="fasCaretRight"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       :selected.sync="selected"
       @update:expanded="handleTreeUpdate"
     >
-      <template #default-body="{node}">
+      <template #default-body="{ node }">
         <div
           v-if="!node.children"
           :id="`selectedItem-${node['label']}`"
@@ -83,6 +83,14 @@ export default {
       handler: 'handleSelectedChange',
       immediate: true,
     },
+    expandTreeNodes: {
+      handler: 'handleExpandTreeNodes',
+      immediate: true,
+    },
+    expanded: {
+      handler: 'handleExpanded',
+      immediate: true,
+    },
   },
   created() {
     this.fasCaretRight = fasCaretRight;
@@ -93,7 +101,10 @@ export default {
   methods: {
     onSequenceIndexUpdate(index) {
       if (!this.expanded.includes(this.manifests[index].label)) {
-        this.$store.dispatch('contents/addToExpanded', this.manifests[index].label);
+        this.$store.dispatch(
+          'contents/addToExpanded',
+          this.manifests[index].label,
+        );
       }
     },
     handleSelectedChange(value) {
@@ -101,6 +112,16 @@ export default {
     },
     handleTreeUpdate(val) {
       this.$store.dispatch('contents/updateExpanded', val);
+    },
+    handleExpanded(values) {
+      if (JSON.stringify(this.expandTreeNodes) !== JSON.stringify(values)) {
+        this.$store.dispatch('contents/updateExpanded', values);
+      }
+    },
+    handleExpandTreeNodes(values) {
+      if (JSON.stringify(values) !== JSON.stringify(this.expanded)) {
+        this.expanded = values;
+      }
     },
   },
 };
