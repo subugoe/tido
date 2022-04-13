@@ -85,7 +85,7 @@ import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
 import DomMixin from '@/mixins/dom';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
-import { request } from '@/utils/http';
+import { cachableRequest } from '@/utils/http';
 import {
   loadFont,
   onlyIf,
@@ -177,7 +177,7 @@ export default {
     },
     activeTab: {
       handler: 'handleActiveTab',
-      immediate: true,
+      immediate: false,
     },
   },
   async created() {
@@ -227,7 +227,7 @@ export default {
         this.errorTextMessage = '';
         this.isLoading = true;
         this.$store.dispatch('annotations/updateContentLoading', true);
-        const data = await request(url, 'text');
+        const data = await cachableRequest(url, 'text');
         this.isValidTextContent(data);
 
         if (this.supportType) {

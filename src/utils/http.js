@@ -6,3 +6,17 @@ export async function request(url, responsetype = 'json') {
 
   return data;
 }
+
+const cacheRequest = () => {
+  const cache = {};
+  return async (url, responseType = 'json') => {
+    if (!cache[url]) {
+      const response = await request(url, responseType);
+      cache[url] = response;
+    }
+
+    return cache[url];
+  };
+};
+
+export const cachableRequest = cacheRequest();
