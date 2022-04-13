@@ -16,7 +16,7 @@ case $CI_COMMIT_REF_NAME in
     ;;
   develop)
     echo 'set entrypoint for develop ...'
-    ENTRY_POINT=https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json
+    ENTRY_POINT=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json
     sed -ri 's|.*("entrypoint"\s*:).*$|\t\t\t\1 "'${ENTRY_POINT}'",|' src/index.template.html
     ;;
 esac
