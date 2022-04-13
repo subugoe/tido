@@ -107,35 +107,20 @@ export const createSvgIcon = (name) => {
   return svg;
 };
 
-export function getAnnotationIcon(contentType, types) {
-  const { icon } = types.filter(
-    (annotation) => annotation.contenttype === contentType,
-  )[0];
-
-  const svg = createSvgIcon(icon);
-
-  return svg;
-}
-
-export function createTooltip(element, annotationClasses, config) {
+export function createTooltip(element, data) {
   const tooltipEl = document.createElement('span');
   tooltipEl.setAttribute('data-annotation-classes', `${element.className}`);
   tooltipEl.setAttribute('class', 'annotation-tooltip');
 
-  const isMultiple = annotationClasses.length > 1;
+  const isMultiple = data.length > 1;
 
   let annotationLists = '';
-  annotationClasses.forEach((annotationList) => {
+  data.forEach((item) => {
     annotationLists += `
       <div class="referenced-annotation">
-        ${
-  getAnnotationIcon(
-    annotationList.contentType,
-    config.annotations.types,
-  ).outerHTML
-}
+        ${createSvgIcon(item.name).outerHTML}
           <span>
-            ${annotationList.value}
+            ${item.value}
           </span>
       </div>
       `;
@@ -189,7 +174,8 @@ export function getNewLevel(element, operation) {
 export function highlightTargets(selector, { operation, level }) {
   // If level is given we set it directly ignoring operation.
 
-  [...document.querySelectorAll(selector)].forEach((element) => {
+  const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
+  elements.forEach((element) => {
     const newLevel = level !== undefined ? level : getNewLevel(element, operation);
     element.setAttribute('data-annotation-level', newLevel);
   });
@@ -336,4 +322,38 @@ export function handleRangeSelector(selector) {
     }
   }
   return null;
+}
+
+export function addIcon(element, annotation, iconName) {
+  let foundSvg = false;
+
+  [...element.children].forEach((el) => {
+    if (el.nodeName === 'svg' && el.getAttribute('data-annotation-icon')) {
+      foundSvg = true;
+    }
+  });
+
+  if (foundSvg) {
+    return;
+  }
+  try {
+    const svg = createSvgIcon(iconName);
+    svg.setAttribute(
+      'data-annotation-icon',
+      annotation.id,
+    );
+    element.prepend(svg);
+  } catch (err) {
+    // error message
+  }
+}
+
+export function removeIcon(annotation) {
+  const stripeId = annotation.id;
+  const el = document
+    .querySelector(`svg[data-annotation-icon='${stripeId}']`);
+
+  if (el) {
+    el.remove();
+  }
 }
