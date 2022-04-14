@@ -78,10 +78,6 @@ build_main_and_develop:
 # removing the entry point triggers a new pipeline, the 404 state will only last for a few minutes.
 pages:
   image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
-# at the very early stage lets deploy for every branch
-#  only:
-#    - main
-#    - develop
   stage: deploy
   cache:
     untracked: true
@@ -89,9 +85,7 @@ pages:
       - public
   when: always
   script:
-    - if [[ $CONTINUE_BUILD == "false" && ! -d dist ]]; then echo "Build not continued. Create 404 page."; bash .ci-scripts/set-404-page.sh; else echo "Proceed page build as usual."; fi
-    - bash .ci-scripts/update-artifacts.sh
-    - bash .ci-scripts/gitlab-remove-old-artifacts.sh
+    - ls -la
   environment:
     name: ${CI_COMMIT_REF_SLUG}
     url: https://subugoe.pages.gwdg.de/emo/tido/${CI_COMMIT_REF_SLUG}/
