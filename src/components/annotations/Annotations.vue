@@ -184,6 +184,7 @@ export default {
     this.$store.subscribeAction((action) => {
       if (action.type === 'contents/updateContentDOM') {
         this.setFilteredAnnotations();
+        this.handleTooltip();
       }
     });
   },
@@ -247,16 +248,13 @@ export default {
     },
 
     handleTooltip() {
-      const annotationIds = this.filteredAnnotations.reduce((prev, curr) => {
-        let { id } = curr;
-        if (id.startsWith('.')) {
-          id = id.replace('.', '');
-        }
-        prev[id] = {
+      const annotationIds = this.filteredAnnotations.reduce((acc, curr) => {
+        const { id } = curr;
+        acc[AnnotationUtils.stripAnnotationId(id)] = {
           value: curr.body.value,
           name: this.getIconName(curr.body['x-content-type']),
         };
-        return prev;
+        return acc;
       }, {});
 
       document.querySelectorAll('[data-annotation]')

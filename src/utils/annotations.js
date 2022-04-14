@@ -226,6 +226,8 @@ export function getAllElementsFromSelector(selector) {
 export const backTrackNestedAnnotations = (el, classNames = []) => {
   let current = el;
 
+  classNames.push(current.className);
+
   while (
     current.parentElement.getAttribute('data-annotation')
     && current.parentElement.childNodes.length === 1
