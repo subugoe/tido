@@ -12,13 +12,17 @@ echo CI_COMMIT_REF_NAME=${CI_COMMIT_REF_NAME}
 
 case $CI_COMMIT_REF_NAME in
   main)
-# placeholder for upcoming patches in the main branch
+    echo 'set entrypoint for main ...'
+    # for now we set the main entrypoint the same as develop just to have a working state in Gitlab Pages
+    ENTRY_POINT=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json
     ;;
   develop)
     echo 'set entrypoint for develop ...'
     ENTRY_POINT=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json
-    sed -ri 's|.*("entrypoint"\s*:).*$|\t\t\t\1 "'${ENTRY_POINT}'",|' src/index.template.html
     ;;
 esac
+
+sed -ri 's|.*("entrypoint"\s*:).*$|\t\t\t\1 "'${ENTRY_POINT}'",|' src/index.template.html
+
 
 [ $? -eq 0 ] && exit 0
