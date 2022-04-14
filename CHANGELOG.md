@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.0.0...v2.0.1) (2022-04-14)
+
+
+### Performance
+
+* cache implementation to reduce store actions ([79dab64](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/79dab64f0fd82035f34ffdfb0438008ee37148a8))
+
+
+### Continuos Integration
+
+* build and deploy only to GitLab Pages but use Ahiqar dev endpoint ([222702c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/222702c6a247bc98c1eea7de1e21c45bde2f78d7))
+* remove entry point ([b4944c6](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b4944c66e67d52f34e872c9e7bf669e5f52162c7))
+
 ## [2.0.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v1.26.0...v2.0.0) (2022-04-12)
 
 
