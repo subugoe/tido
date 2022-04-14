@@ -13,3 +13,13 @@ export const getAnnotationIcon = (state) => (type) => {
 
   return icon;
 };
+
+export const annotationTypesMapping = (state) => {
+  return state.config.annotations.types.reduce((acc, curr) => {
+    acc[curr.contenttype] = {
+      type: curr.annotationType || 'annotation',
+      displayWhen: curr.displayWhen,
+    };
+    return acc;
+  }, {});
+};

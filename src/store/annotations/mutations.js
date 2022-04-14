@@ -21,3 +21,7 @@ export const updateContentFontSize = (state, size) => {
 export const updateContentLoading = (state, isLoading) => {
   state.isContentLoading = isLoading;
 };
+
+export const setFilteredAnnotations = (state, payload) => {
+  state.filteredAnnotations = payload;
+};
