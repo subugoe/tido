@@ -1,10 +1,28 @@
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
+import * as AnnotationUtils from 'src/utils/annotations';
 
-export const addActiveAnnotation = ({ commit, getters }, annotation) => {
-  const { activeAnnotations } = getters;
-  activeAnnotations[annotation.id] = annotation;
+export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
+  const { activeAnnotations, annotations } = getters;
+  const newActiveAnnotation = annotations.find((annotation) => annotation.id === id);
+
+  if (!newActiveAnnotation || activeAnnotations[id]) {
+    return;
+  }
+
+  const iconName = rootGetters['config/getAnnotationIcon'](newActiveAnnotation.body['x-content-type']);
+
+  activeAnnotations[id] = newActiveAnnotation;
   commit('updateActiveAnnotations', { ...activeAnnotations });
+
+  const selector = Utils.generateTargetSelector(newActiveAnnotation);
+  const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
+  Utils.highlightTargets(selector, { operation: 'INC' });
+
+  if (elements.length > 0) {
+    Utils.addIcon(elements[0], newActiveAnnotation, iconName);
+    elements[0].scrollIntoView({ behavior: 'smooth' });
+  }
 };
 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
@@ -41,13 +59,35 @@ export const loadAnnotations = ({ commit }) => {
   commit('updateAnnotations', []);
 };
 
-export const removeActiveAnnotation = ({ commit, getters }, annotation) => {
+export const removeActiveAnnotation = ({ commit, getters }, id) => {
   const { activeAnnotations } = getters;
-  delete activeAnnotations[annotation.id];
+
+  const removeAnnotation = activeAnnotations[id];
+  if (!removeAnnotation) {
+    return;
+  }
+
+  delete activeAnnotations[id];
   commit('updateActiveAnnotations', { ...activeAnnotations });
+
+  const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
+  if (selector) {
+    AnnotationUtils.highlightTargets(selector, { operation: 'DEC' });
+    AnnotationUtils.removeIcon(removeAnnotation);
+  }
 };
 
-export const resetActiveAnnotations = ({ commit }) => {
+export const resetActiveAnnotations = ({ commit, getters }) => {
+  const { activeAnnotations } = getters;
+
+  Object.keys(activeAnnotations).forEach((key) => {
+    const activeAnnotation = activeAnnotations[key];
+    const selector = AnnotationUtils.generateTargetSelector(activeAnnotation);
+    if (selector) {
+      AnnotationUtils.highlightTargets(selector, { level: -1 });
+      AnnotationUtils.removeIcon(activeAnnotation);
+    }
+  });
   commit('updateActiveAnnotations', {});
 };
 
