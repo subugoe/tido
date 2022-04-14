@@ -18,9 +18,9 @@
       />
     </q-tabs>
 
-    <AnnotationsToggles/>
+    <AnnotationsToggles />
 
-    <Loading v-if="isLoading || isProcessing"/>
+    <Loading v-if="isLoading || isProcessing" />
 
     <AnnotationsList
       v-else-if="filteredAnnotations.length && !isLoading && !isProcessing"
