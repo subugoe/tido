@@ -89,8 +89,10 @@ pages:
       - public
   when: always
   script:
-    - if [[ $CONTINUE_BUILD == "false" && ! -d dist ]]; then echo "Build not continued. Create 404 page."; bash .ci-scripts/set-404-page.sh; else echo "Proceed page build as usual."; fi
-    - bash .ci-scripts/update-artifacts.sh
+    - mkdir -p ./public/ci-simplify-ci
+    - cp ./dist/* ./public/ci-simplify-ci/
+    # - if [[ $CONTINUE_BUILD == "false" && ! -d dist ]]; then echo "Build not continued. Create 404 page."; bash .ci-scripts/set-404-page.sh; else echo "Proceed page build as usual."; fi
+    # - bash .ci-scripts/update-artifacts.sh
     # - bash .ci-scripts/gitlab-remove-old-artifacts.sh
   environment:
     name: ${CI_COMMIT_REF_SLUG}
