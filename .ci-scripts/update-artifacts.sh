@@ -20,3 +20,5 @@ if [[ $CONTINUE_BUILD == "true" || ($CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BR
 
     [ $? -eq 0 ] && exit 0
 fi
+
+ls -l ${dist_dir}
