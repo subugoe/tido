@@ -1,4 +1,5 @@
 #!/bin/bash
+ls -la
 
 # set exit code !== 0; bash emits '0' on success
 BAD_PARAM=127
