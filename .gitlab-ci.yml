@@ -79,11 +79,11 @@ build_main_and_develop:
 pages:
   image: alpine:latest
   stage: deploy
-#  cache:
-#    untracked: true
-#    paths:
-#      - public
-#  when: always
+  cache:
+    untracked: true
+    paths:
+      - public
+  when: always
   dependencies:
     - build_test
   script:
