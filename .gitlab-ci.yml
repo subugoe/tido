@@ -89,10 +89,11 @@ pages:
   script:
     - mkdir -p ./public
     - cp dist/* public/
+    - ls -la ./public
   environment:
     name: ${CI_COMMIT_REF_SLUG}
     url: https://subugoe.pages.gwdg.de/emo/tido/${CI_COMMIT_REF_SLUG}/
   artifacts:
     name: "$CI_COMMIT_SHORT_SHA"
     paths:
-     - public
+     - public/
