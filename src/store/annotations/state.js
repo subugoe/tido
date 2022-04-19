@@ -4,6 +4,7 @@ export default function AnnotationState() {
     activeTab: '',
     activeAnnotations: {},
     annotations: [],
+    filteredAnnotations: [],
     isLoading: false,
     isContentLoading: false,
   };

@@ -11,3 +11,5 @@ export const annotations = (state) => state.annotations;
 export const isLoading = (state) => state.isLoading;
 
 export const isContentLoading = (state) => state.isContentLoading;
+
+export const filteredAnnotations = (state) => state.filteredAnnotations;

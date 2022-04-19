@@ -25,6 +25,53 @@ export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
   }
 };
 
+export const setFilteredAnnotations = ({ commit, getters, rootGetters }) => {
+  const { activeTab, annotations } = getters;
+  const config = rootGetters['config/config'];
+  const annotationTypesMapping = rootGetters['config/annotationTypesMapping'];
+  const contentTypes = rootGetters['contents/contentTypes'];
+  const contentIndex = rootGetters['contents/contentIndex'];
+
+  const tabConfig = config.annotations.tabs;
+  const activeEntities = tabConfig[activeTab] ?? [];
+
+  const filteredAnnotations = !activeTab
+    ? []
+    : annotations.filter(
+      (x) => {
+        const annotationContentType = annotationTypesMapping[x.body['x-content-type']];
+
+        // First we check if annotation fits to the current tab
+        if (!activeEntities.includes(x.body['x-content-type'])) {
+          return false;
+        }
+
+        let isVisible = false;
+
+        if (
+          annotationContentType?.displayWhen
+          && annotationContentType?.displayWhen === contentTypes[contentIndex]
+        ) {
+          // Next we check if annotation should always be displayed on the current content tab
+          isVisible = true;
+        } else {
+          // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
+          const selector = AnnotationUtils.generateTargetSelector(x);
+          if (selector) {
+            const el = document.querySelector(selector);
+            if (el) {
+              isVisible = true;
+            }
+          }
+        }
+
+        return isVisible;
+      },
+    );
+
+  commit('setFilteredAnnotations', filteredAnnotations);
+};
+
 export const addHighlightAttributesToText = ({ getters }, dom) => {
   const { annotations } = getters;
   Utils.mapUniqueElements(
