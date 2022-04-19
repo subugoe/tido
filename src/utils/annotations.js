@@ -11,10 +11,21 @@ export function addHighlightToElements(selector, root, annotationId) {
 
   const strippedAnnotationId = stripAnnotationId(annotationId);
 
+  function addToAttribute(element, attribute, newValue) {
+    const oldValue = element.getAttribute(attribute);
+    if (oldValue) {
+      if (!oldValue.match(newValue)) {
+        element.setAttribute(attribute, `${oldValue} ${newValue}`);
+      }
+    } else {
+      element.setAttribute(attribute, newValue);
+    }
+  }
+
   function recursiveAddClass(elements) {
     elements.forEach((element) => {
       element.setAttribute('data-annotation', true);
-
+      addToAttribute(element, 'data-annotation-ids', annotationId);
       element.classList.add(strippedAnnotationId);
       element.setAttribute('data-annotation-level', -1);
 

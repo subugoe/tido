@@ -168,3 +168,42 @@ export const initAnnotations = async ({ dispatch }, url) => {
     dispatch('annotationLoaded', []);
   }
 };
+
+export const addHighlightClickListeners = ({ dispatch }) => {
+  document.getElementById('text-content').addEventListener('click', ({ target }) => {
+    let annotationIds = {};
+    getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+    annotationIds = discoverParentAnnotationIds(target, annotationIds);
+    annotationIds = discoverChildAnnotationIds(target, annotationIds);
+
+    Object.keys(annotationIds).forEach((id) => {
+      dispatch('addActiveAnnotation', id);
+    });
+  });
+
+  function getValuesFromAttribute(element, attribute) {
+    const value = element.getAttribute(attribute);
+    return value ? value.split(' ') : [];
+  }
+
+  function discoverParentAnnotationIds(el, annotationIds = {}) {
+    const parent = el.parentElement;
+    if (parent.dataset.annotation) {
+      getValuesFromAttribute(parent, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+      return discoverParentAnnotationIds(parent, annotationIds);
+    }
+    return annotationIds;
+  }
+
+  function discoverChildAnnotationIds(el, annotationIds = {}) {
+    const { children } = el;
+
+    [...children].forEach((child) => {
+      if (child.dataset.annotation) {
+        getValuesFromAttribute(child, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+        annotationIds = discoverChildAnnotationIds(child, annotationIds);
+      }
+    });
+    return annotationIds;
+  }
+};
