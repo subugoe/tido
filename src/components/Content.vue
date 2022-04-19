@@ -185,7 +185,7 @@ export default {
     this.fasSearchMinus = fasSearchMinus;
 
     const activeTab = this.contentUrls[this.contentIndex];
-    const [contentUrls] = this.contentUrls[0];
+    const [contentUrls] = this.contentUrls;
 
     this.activeTabContents = activeTab;
 
@@ -206,11 +206,10 @@ export default {
       }
     });
 
-    const [contentUrls] = this.contentUrls[0];
     this.handleActiveTab();
 
     this.$root.$on('manifest-changed', () => {
-      this.activeTabContents = contentUrls;
+      [this.activeTabContents] = this.contentUrls;
       this.$store.dispatch('contents/onContentIndexChange', 0);
     });
   },
