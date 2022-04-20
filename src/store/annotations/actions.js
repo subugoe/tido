@@ -169,15 +169,21 @@ export const initAnnotations = async ({ dispatch }, url) => {
   }
 };
 
-export const addHighlightClickListeners = ({ dispatch }) => {
+export const addHighlightClickListeners = ({ dispatch, getters }) => {
   document.getElementById('text-content').addEventListener('click', ({ target }) => {
     let annotationIds = {};
     getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
     annotationIds = discoverParentAnnotationIds(target, annotationIds);
     annotationIds = discoverChildAnnotationIds(target, annotationIds);
 
+    const { filteredAnnotations } = getters;
     Object.keys(annotationIds).forEach((id) => {
-      dispatch('addActiveAnnotation', id);
+      // We need to check here if the right annotations panel tab is active
+      // a.k.a. it exists in the current filteredAnnotations
+      const index = filteredAnnotations.findIndex((annotation) => annotation.id === id);
+      if (index > -1) {
+        dispatch('addActiveAnnotation', id);
+      }
     });
   });
 
