@@ -317,6 +317,10 @@ export default {
   display: none;
 }
 
+[data-annotation-level]:not([data-annotation-level ='-1']) {
+  cursor: pointer;
+}
+
 *[data-annotation-level='0'] {
   background-color: $grey-3;
 
