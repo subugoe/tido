@@ -45,7 +45,7 @@ clean_up:
 
 # builds TIDO on feature and bugfix branches.
 build_test:
-  image: docker.gitlab.gwdg.de/subugoe/emo/tido/node:latest
+  image: node:14
   except:
    - main
    - develop
@@ -60,7 +60,7 @@ build_test:
 # the software is only built if no entry point has been removed during
 # the 'clean' stage.
 build_main_and_develop:
-  image: docker.gitlab.gwdg.de/subugoe/emo/tido/node:latest
+  image: node:14
   only:
    - main
    - develop
