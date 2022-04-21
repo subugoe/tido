@@ -16,10 +16,11 @@ unzip -u old-artifact.zip
 # the differentiation between the branches is necessary because $CONTINUE_BUILD is only set on 'main' and 'develop'.
 if [[ $CONTINUE_BUILD == "true" || ($CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "develop") ]]; then
     mkdir -p public/{${CI_COMMIT_SHORT_SHA},${CI_COMMIT_REF_SLUG}}
-    echo public/${CI_COMMIT_SHORT_SHA} public/${CI_COMMIT_REF_SLUG} | xargs -n 1 cp --remove-destination --recursive ${dist_dir}/*
-
     mkdir -p public/${CI_COMMIT_REF_SLUG}/config-tester
+
     cp .gitlab/pages/config-tester/* public/${CI_COMMIT_REF_SLUG}/config-tester/
+
+    echo public/${CI_COMMIT_SHORT_SHA} public/${CI_COMMIT_REF_SLUG} | xargs -n 1 cp --remove-destination --recursive ${dist_dir}/*
 
     [ $? -eq 0 ] && exit 0
 fi
