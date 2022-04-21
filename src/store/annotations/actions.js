@@ -176,13 +176,17 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
     annotationIds = discoverParentAnnotationIds(target, annotationIds);
     annotationIds = discoverChildAnnotationIds(target, annotationIds);
 
-    const { filteredAnnotations } = getters;
+    const { filteredAnnotations, activeAnnotations } = getters;
     Object.keys(annotationIds).forEach((id) => {
       // We need to check here if the right annotations panel tab is active
       // a.k.a. it exists in the current filteredAnnotations
-      const index = filteredAnnotations.findIndex((annotation) => annotation.id === id);
-      if (index > -1) {
-        dispatch('addActiveAnnotation', id);
+      const annotation = filteredAnnotations.find((filtered) => filtered.id === id);
+      if (annotation) {
+        if (activeAnnotations[annotation.id]) {
+          dispatch('removeActiveAnnotation', id);
+        } else {
+          dispatch('addActiveAnnotation', id);
+        }
       }
     });
   });
