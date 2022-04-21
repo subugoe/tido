@@ -7,7 +7,27 @@
   <meta name="msapplication-tap-highlight" content="no">
   <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="config-tester.css">
+  <style>
+    #config-tester-menu {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      right: 10%;
+      display: flex;
+      padding: 20px;
+      background: rgba(255,255,255,0.8);
+      box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+    }
+    #config-tester-menu a {
+      padding: 8px;
+      background: #afafaf;
+      border: 1px solid #777;
+    }
+    #config-tester-menu a.active {
+      background: #ff4400;
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
 <noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
@@ -145,7 +165,7 @@
 }</script>
 <div id="config-tester-menu">
   <a class="active" href="ahiqar.html">Ahiqar</a>
-  <a href="gfl.html">GFL</a>
+  <a href="gfl.html">Ahiqar</a>
 </div>
 <div id="q-app"></div>
 <script src="../tido.js"></script>
