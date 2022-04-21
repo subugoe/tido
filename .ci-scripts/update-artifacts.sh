@@ -5,8 +5,7 @@
 
 dist_dir=$(grep distDir quasar.conf.js | cut -d "'" -f2)
 project_id=10921
-url = "https://gitlab.gwdg.de/api/v4/projects/${project_id}/jobs/artifacts/develop/download"
-curl --output old-artifact.zip --header "PRIVATE-TOKEN: $API_TOKEN" "$url"
+curl --output old-artifact.zip --header "PRIVATE-TOKEN: $API_TOKEN" "https://gitlab.gwdg.de/api/v4/projects/${project_id}/jobs/artifacts/develop/download"
 unzip -u old-artifact.zip
 
 # get and extract the latest 'deploy' artifact which contains the former states/environments
