@@ -18,8 +18,8 @@ if [[ $CONTINUE_BUILD == "true" || ($CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BR
     mkdir -p public/{${CI_COMMIT_SHORT_SHA},${CI_COMMIT_REF_SLUG}}
     echo public/${CI_COMMIT_SHORT_SHA} public/${CI_COMMIT_REF_SLUG} | xargs -n 1 cp --remove-destination --recursive ${dist_dir}/*
 
-    mkdir -public/${CI_COMMIT_REF_SLUG}/config-tester
-    cp .gitlab/pages/* public/${CI_COMMIT_REF_SLUG}/config-tester/
+    mkdir -p public/${CI_COMMIT_REF_SLUG}/config-tester
+    cp .gitlab/pages/config-tester/* public/${CI_COMMIT_REF_SLUG}/config-tester/
 
     [ $? -eq 0 ] && exit 0
 fi
