@@ -9,7 +9,7 @@ project_id=10921
 # Get latest artifact from develop branch
 curl --output old-artifact-develop.zip --header "PRIVATE-TOKEN: $API_TOKEN" "https://gitlab.gwdg.de/api/v4/projects/${project_id}/jobs/artifacts/develop/download?job=pages"
 unzip -u old-artifact-develop.zip -d artifact-develop
-mrdir -p public/develop
+mkdir -p public/develop
 cp artifact-develop/public/develop/* public/develop/
 
 # Setup app build and Config Tester for the current branch
