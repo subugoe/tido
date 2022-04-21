@@ -5,7 +5,7 @@
 
 dist_dir=$(grep distDir quasar.conf.js | cut -d "'" -f2)
 project_id=10921
-url = "https://gitlab.example.com/api/v4/projects/${project_id}/jobs/artifacts/develop/download"
+url = "https://gitlab.gwdg.de/api/v4/projects/${project_id}/jobs/artifacts/develop/download"
 curl --output old-artifact.zip --header "PRIVATE-TOKEN: $API_TOKEN" "$url"
 unzip -u old-artifact.zip
 
