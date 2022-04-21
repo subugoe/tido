@@ -10,6 +10,8 @@
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+  font-family: Arial, sans-serif !important;
+
 }
 #config-tester-menu .config-tester-menu-content {
   display: flex;
@@ -17,6 +19,7 @@
 #config-tester-menu h3 {
   color: #222;
   margin: 0 0 8px 0;
+  font-size: 1.4rem !important;
 }
 #config-tester-menu a {
   padding: 8px 10px;
@@ -24,7 +27,7 @@
   border-radius: 2px;
   color: #222;
   text-decoration: none;
-  font-family: Arial, sans-serif;
+  font-size: 1rem !important;
 }
 #config-tester-menu a + a {
   margin-left: 8px;
