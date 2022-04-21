@@ -5,8 +5,8 @@
 
 cache:
   key: $CI_COMMIT_REF_SLUG
-    paths:
-      - node_modules/
+  paths:
+    - node_modules/
 
 stages:
   - clean
