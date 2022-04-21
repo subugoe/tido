@@ -91,6 +91,7 @@ pages:
   when: always
   script:
     - if [[ $CONTINUE_BUILD == "false" && ! -d dist ]]; then echo "Build not continued. Create 404 page."; bash .ci-scripts/set-404-page.sh; else echo "Proceed page build as usual."; fi
+    - bash .ci-scripts/install-deps.sh
     - bash .ci-scripts/update-artifacts.sh
     - bash .ci-scripts/gitlab-remove-old-artifacts.sh
   environment:
