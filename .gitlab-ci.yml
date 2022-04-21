@@ -3,9 +3,10 @@
 # keep this file slim and clear. please have a look at these scripts for
 # information that goes beyond the documentation of the single stages.
 
-#cache:
-#  paths:
-#  - node_modules/
+cache:
+  key: $CI_COMMIT_REF_SLUG
+    paths:
+      - node_modules/
 
 stages:
   - clean
