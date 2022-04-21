@@ -32,7 +32,7 @@ stages:
 # set to 'false' since src/index.template.html is modified and recomitted which triggers a new
 # pipeline.
 clean_up:
-  image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
+  image: alpine:latest
   stage: clean
   only:
     - main
@@ -78,7 +78,7 @@ build_main_and_develop:
 # 404 page on `main` and `develop` which will replaced during the next pipeline. since
 # removing the entry point triggers a new pipeline, the 404 state will only last for a few minutes.
 pages:
-  image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
+  image: alpine:latest
 # at the very early stage lets deploy for every branch
 #  only:
 #    - main
