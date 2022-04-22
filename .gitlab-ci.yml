@@ -84,10 +84,6 @@ pages:
 #    - main
 #    - develop
   stage: deploy
-  cache:
-    untracked: true
-    paths:
-      - public
   when: always
   script:
     - sh .ci-scripts/install-deps.sh
