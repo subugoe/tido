@@ -6,6 +6,9 @@
 dist_dir=$(grep distDir quasar.conf.js | cut -d "'" -f2)
 project_id=10921
 
+ls
+echo "-----"
+ls -la public
 # Create develop artifact
 curl --output old-artifact-develop.zip --header "PRIVATE-TOKEN: $API_TOKEN" "https://gitlab.gwdg.de/api/v4/projects/${project_id}/jobs/artifacts/develop/download?job=pages"
 unzip -u old-artifact-develop.zip -d artifact-develop
