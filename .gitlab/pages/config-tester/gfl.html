@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head><title>TIDO</title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="config-tester.css">
+</head>
+<body>
+<noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
+  continue.</strong></noscript>
+<script id="tido-config" type="application/json">
+  {
+    "entrypoint": "https://dev.gfl.sub.uni-goettingen.de/tido/gfl/sample/manifest.json",
+    "annotations": {
+      "show": true,
+      "types": [
+        {
+          "contenttype": "Person",
+          "icon": "fasUser",
+          "label": "Names"
+        },
+        {
+          "contenttype": "Place",
+          "icon": "fasMapMarkerAlt",
+          "label": "Places"
+        },
+        {
+          "contenttype": "Editorial Comment",
+          "icon": "fasComment",
+          "label": "Comments"
+        },
+        {
+          "contenttype": "Org",
+          "icon": "fasLandmark",
+          "label": "Organization"
+        },
+        {
+          "contenttype": "Object",
+          "icon": "fasThLarge",
+          "label": "Object"
+        },
+        {
+          "contenttype": "Date",
+          "icon": "fasCalendar",
+          "label": "Date"
+        },
+        {
+          "contenttype": "Abstract",
+          "annotationType": "text",
+          "displayWhen": "Edierter Text",
+          "label": "Erläuterung"
+        },
+        {
+          "contenttype": "Work",
+          "icon": "fasThLarge",
+          "label": "Werk"
+        },
+        {
+          "contenttype": "Work",
+          "icon": "fasExternalLinkSquareAlt",
+          "label": "Werk"
+        }
+      ],
+      "tabs":{
+        "Kommentare": ["Abstract", "Editorial Comment"],
+        "Register": ["Person", "Place", "Org", "Object", "Date", "Work"]
+      }
+    },
+    "colors": {
+      "primary": "",
+      "secondary": "",
+      "accent": ""
+    },
+    "header_section": {
+      "show": true,
+      "navigation": true,
+      "panelheadings": true,
+      "titles": true,
+      "toggle": true
+    },
+    "labels": {
+      "item": "Seite",
+      "manifest": "Dokument"
+    },
+    "meta": {
+      "collection": {
+        "all": true
+      },
+      "manifest": {
+        "all": true
+      },
+      "item": {
+        "all": true
+      }
+    },
+    "panels": [
+      {
+        "connector": [3],
+        "panel_label": "Manuskript",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [4],
+        "panel_label": "Text",
+        "show": true,
+        "toggle": false
+      },
+      {
+        "connector": [5],
+        "panel_label": "Kommentar",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [2, 1],
+        "panel_label": "Dokumentdaten",
+        "show": true,
+        "toggle": true
+      }
+    ],
+    "textContent": {
+      "tabs": {
+        "priority": {
+          "Edierter Text": 1
+        }
+      }
+    },
+    "notificationColors": {
+      "info":"blue-9",
+      "warning":"red-9"
+    },
+    "rtl": false,
+    "themes": false,
+    "standalone": false,
+    "lang": "de-de",
+    "language-switch": false,
+    "breadcrumbNavigation": {
+      "source": "gfl",
+      "title_homepage_key": "GFL Website",
+      "search_query_param": "q",
+      "title_viewer_key": "title_viewer",
+      "website": "https://dev1.gfl.sub.uni-goettingen.de"
+    }
+  }
+</script>
+<div id="config-tester-menu">
+  <h3>Config Tester:</h3>
+  <div class="config-tester-menu-content">
+    <a href="ahiqar.html">Ahiqar</a>
+    <a class="active" href="gfl.html">GFL</a>
+  </div>
+</div>
+<div id="q-app"></div>
+<script src="../tido.js"></script>
+</body>
+</html>

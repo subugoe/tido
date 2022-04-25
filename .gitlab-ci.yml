@@ -4,8 +4,9 @@
 # information that goes beyond the documentation of the single stages.
 
 cache:
+  key: $CI_COMMIT_REF_SLUG
   paths:
-  - node_modules/
+    - node_modules/
 
 stages:
   - clean
@@ -31,7 +32,7 @@ stages:
 # set to 'false' since src/index.template.html is modified and recomitted which triggers a new
 # pipeline.
 clean_up:
-  image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
+  image: alpine:latest
   stage: clean
   only:
     - main
@@ -45,7 +46,7 @@ clean_up:
 
 # builds TIDO on feature and bugfix branches.
 build_test:
-  image: docker.gitlab.gwdg.de/subugoe/emo/tido/node:latest
+  image: node:14
   except:
    - main
    - develop
@@ -60,7 +61,7 @@ build_test:
 # the software is only built if no entry point has been removed during
 # the 'clean' stage.
 build_main_and_develop:
-  image: docker.gitlab.gwdg.de/subugoe/emo/tido/node:latest
+  image: node:14
   only:
    - main
    - develop
@@ -77,21 +78,17 @@ build_main_and_develop:
 # 404 page on `main` and `develop` which will replaced during the next pipeline. since
 # removing the entry point triggers a new pipeline, the 404 state will only last for a few minutes.
 pages:
-  image: docker.gitlab.gwdg.de/mrodzis/docker-images/debian
+  image: alpine:latest
 # at the very early stage lets deploy for every branch
 #  only:
 #    - main
 #    - develop
   stage: deploy
-  cache:
-    untracked: true
-    paths:
-      - public
   when: always
   script:
+    - sh .ci-scripts/install-deps.sh
     - if [[ $CONTINUE_BUILD == "false" && ! -d dist ]]; then echo "Build not continued. Create 404 page."; bash .ci-scripts/set-404-page.sh; else echo "Proceed page build as usual."; fi
     - bash .ci-scripts/update-artifacts.sh
-    - bash .ci-scripts/gitlab-remove-old-artifacts.sh
   environment:
     name: ${CI_COMMIT_REF_SLUG}
     url: https://subugoe.pages.gwdg.de/emo/tido/${CI_COMMIT_REF_SLUG}/

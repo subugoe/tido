@@ -27,8 +27,8 @@ cd public || exit
 
 for entry in *
     do
-        last_modified=$(date -r "$entry" "+%Y%m%d")
-        last_modified_in_s=$(date -d "$last_modified" +%s)
+        last_modified=$(date -r ${entry} "+%Y%m%d")
+        last_modified_in_s=$(date -d ${last_modified} +%s)
         # difference in days
         diff=$(((current_date_in_s - last_modified_in_s) / (24*3600)))
         # preserve content of development branch except data that doesn't belong here...
