@@ -6,17 +6,23 @@
 dist_dir=$(grep distDir quasar.conf.js | cut -d "'" -f2)
 project_id=10921
 
-# get and extract the latest 'deploy' artifact which contains the former states/environments
-jobs=$(curl --header "PRIVATE-TOKEN: $API_TOKEN" "https://gitlab.gwdg.de/api/v4/projects/${project_id}/jobs?scope=success" | jq 'sort_by(.finished_at) | reverse')
-latest_deploy_job_id=$(echo $jobs | jq '.[] | select(.stage == "deploy").id' | sed -n 1p)
-curl --output old-artifact.zip --header "PRIVATE-TOKEN: $API_TOKEN" "https://gitlab.gwdg.de/api/v4/projects/10921/jobs/${latest_deploy_job_id}/artifacts"
-unzip -u old-artifact.zip
+mkdir public
 
-# add current data to artifact. this only takes place if $CONTINUE_BUILD is set to 'true' or we are on a feature/bugfix/… branch.
-# the differentiation between the branches is necessary because $CONTINUE_BUILD is only set on 'main' and 'develop'.
-if [[ $CONTINUE_BUILD == "true" || ($CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "develop") ]]; then
-    mkdir -p public/{${CI_COMMIT_SHORT_SHA},${CI_COMMIT_REF_SLUG}}
-    echo public/${CI_COMMIT_SHORT_SHA} public/${CI_COMMIT_REF_SLUG} | xargs -n 1 cp --remove-destination --recursive ${dist_dir}/*
+# Create branch artifact
+mkdir -p public/${CI_COMMIT_REF_SLUG}/config-tester
+cp --recursive --remove-destination ${dist_dir}/* public/${CI_COMMIT_REF_SLUG}/
+cp --recursive .gitlab/pages/config-tester/* public/${CI_COMMIT_REF_SLUG}/config-tester/
 
-    [ $? -eq 0 ] && exit 0
-fi
+# Create main artifact
+curl --output old-artifact-main.zip --header "PRIVATE-TOKEN: $API_TOKEN" "https://gitlab.gwdg.de/api/v4/projects/${project_id}/jobs/artifacts/main/download?job=pages"
+unzip -u old-artifact-main.zip -d artifact-main
+mkdir -p public/main/config-tester
+cp --recursive artifact-main/public/main/* public/main/
+cp --recursive .gitlab/pages/config-tester/* public/main/config-tester/
+
+# Create develop artifact
+curl --output old-artifact-develop.zip --header "PRIVATE-TOKEN: $API_TOKEN" "https://gitlab.gwdg.de/api/v4/projects/${project_id}/jobs/artifacts/develop/download?job=pages"
+unzip -u old-artifact-develop.zip -d artifact-develop
+mkdir -p public/develop/config-tester
+cp --recursive artifact-develop/public/develop/* public/develop/
+cp --recursive .gitlab/pages/config-tester/* public/develop/config-tester/
