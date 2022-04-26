@@ -188,8 +188,15 @@ export function highlightTargets(selector, { operation, level }) {
   const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
   elements.forEach((element) => {
     const newLevel = level !== undefined ? level : getNewLevel(element, operation);
-    element.setAttribute('data-annotation-level', newLevel);
+    setLevelRecursively(element, newLevel);
   });
+}
+
+export function setLevelRecursively(element, level) {
+  if (element.hasAttribute('data-annotation')) {
+    element.setAttribute('data-annotation-level', level);
+  }
+  [...element.children].forEach((child) => setLevelRecursively(child, level));
 }
 
 export function stripSelector(value) {
