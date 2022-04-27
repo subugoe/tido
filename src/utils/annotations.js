@@ -187,16 +187,16 @@ export function highlightTargets(selector, { operation, level }) {
 
   const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
   elements.forEach((element) => {
-    const newLevel = level !== undefined ? level : getNewLevel(element, operation);
-    setLevelRecursively(element, newLevel);
+    setLevelRecursively(element, { operation, level });
   });
 }
 
-export function setLevelRecursively(element, level) {
+export function setLevelRecursively(element, { operation, level }) {
   if (element.hasAttribute('data-annotation')) {
-    element.setAttribute('data-annotation-level', level);
+    const newLevel = level !== undefined ? level : getNewLevel(element, operation);
+    element.setAttribute('data-annotation-level', newLevel);
   }
-  [...element.children].forEach((child) => setLevelRecursively(child, level));
+  [...element.children].forEach((child) => setLevelRecursively(child, { operation, level }));
 }
 
 export function stripSelector(value) {

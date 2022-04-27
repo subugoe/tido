@@ -171,18 +171,29 @@ export const initAnnotations = async ({ dispatch }, url) => {
 
 export const addHighlightClickListeners = ({ dispatch, getters }) => {
   document.getElementById('text-content').addEventListener('click', ({ target }) => {
+    // The click event handler works like this:
+    // When clicking on the text we pick the whole part of the text which belongs to the highest parent annotation.
+    // Since the annotations can be nested we avoid handling each of them separately
+    // and select/deselect the whole cluster at once.
+    // The actual click target decides whether it should be a selection or a deselection.
+
     let annotationIds = {};
     getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
     annotationIds = discoverParentAnnotationIds(target, annotationIds);
     annotationIds = discoverChildAnnotationIds(target, annotationIds);
 
-    const { filteredAnnotations, activeAnnotations } = getters;
+    const { filteredAnnotations } = getters;
+
+    // We check the highlighting level to determine whether to select or deselect.
+    // TODO: it might be better to check the activeAnnotations instead
+    const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
+
     Object.keys(annotationIds).forEach((id) => {
       // We need to check here if the right annotations panel tab is active
       // a.k.a. it exists in the current filteredAnnotations
       const annotation = filteredAnnotations.find((filtered) => filtered.id === id);
       if (annotation) {
-        if (activeAnnotations[annotation.id]) {
+        if (targetIsSelected) {
           dispatch('removeActiveAnnotation', id);
         } else {
           dispatch('addActiveAnnotation', id);
