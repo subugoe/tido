@@ -77,7 +77,7 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
   Utils.mapUniqueElements(
     Utils.findDomElements('[data-target]:not([value=""])', dom),
     (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
-  ).forEach((selector) => Utils.replaceSelectorWithSpan(selector, dom));
+  ).forEach((selector) => Utils.addRangeHighlightAttributes(selector, dom));
 
   annotations.forEach((annotation) => {
     const { id } = annotation;
@@ -170,13 +170,25 @@ export const initAnnotations = async ({ dispatch }, url) => {
 };
 
 export const addHighlightClickListeners = ({ dispatch, getters }) => {
-  document.getElementById('text-content').addEventListener('click', ({ target }) => {
+  document.querySelector('#text-content>div>*').addEventListener('click', ({ target }) => {
     // The click event handler works like this:
     // When clicking on the text we pick the whole part of the text which belongs to the highest parent annotation.
     // Since the annotations can be nested we avoid handling each of them separately
     // and select/deselect the whole cluster at once.
     // The actual click target decides whether it should be a selection or a deselection.
 
+    // First we make sure to have a valid target.
+    // Although we receive a target from the event it can be a regular HTML element within the annotation.
+    // So we try to find it's nearest parent element that is marked as annotation element.
+    if (!target.dataset.annotation) {
+      target = getNearestParentAnnotation(target);
+    }
+
+    if (!target) {
+      return;
+    }
+
+    // Next we look up which annotations need to be selected
     let annotationIds = {};
     getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
     annotationIds = discoverParentAnnotationIds(target, annotationIds);
@@ -202,6 +214,15 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
     });
   });
 
+  function getNearestParentAnnotation(element) {
+    const parent = element.parentElement;
+    if (parent.dataset.annotation) {
+      return parent;
+    }
+    const higherParent = getNearestParentAnnotation(parent);
+    return higherParent ?? null;
+  }
+
   function getValuesFromAttribute(element, attribute) {
     const value = element.getAttribute(attribute);
     return value ? value.split(' ') : [];
@@ -209,7 +230,7 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
 
   function discoverParentAnnotationIds(el, annotationIds = {}) {
     const parent = el.parentElement;
-    if (parent.dataset.annotation) {
+    if (parent && parent.id !== 'text-content') {
       getValuesFromAttribute(parent, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
       return discoverParentAnnotationIds(parent, annotationIds);
     }

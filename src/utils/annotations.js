@@ -22,21 +22,15 @@ export function addHighlightToElements(selector, root, annotationId) {
     }
   }
 
-  function recursiveAddClass(elements) {
-    elements.forEach((element) => {
-      element.setAttribute('data-annotation', true);
-      addToAttribute(element, 'data-annotation-ids', annotationId);
-      element.classList.add(strippedAnnotationId);
-      element.setAttribute('data-annotation-level', -1);
-
-      recursiveAddClass([...element.children]);
-    });
-  }
-
-  recursiveAddClass(selectedElements);
+  selectedElements.forEach((element) => {
+    element.setAttribute('data-annotation', true);
+    addToAttribute(element, 'data-annotation-ids', annotationId);
+    element.classList.add(strippedAnnotationId);
+    element.setAttribute('data-annotation-level', -1);
+  });
 }
 
-export function replaceSelectorWithSpan(id, root) {
+export function addRangeHighlightAttributes(id, root) {
   const start = root.querySelector(`[data-target="${id}_start"]`);
   const end = root.querySelector(`[data-target="${id}_end"]`);
 
@@ -59,12 +53,8 @@ export function replaceSelectorWithSpan(id, root) {
       if (childNode.nodeName === '#text') {
         if (started) {
           if (childNode.textContent && childNode.textContent.trim()) {
-            const span = document.createElement('span');
-
-            span.classList.add(id);
-            span.setAttribute('data-annotation', true);
-            span.innerHTML = childNode.textContent;
-            childNode.replaceWith(span);
+            element.classList.add(id);
+            element.setAttribute('data-annotation', true);
           }
         }
       } else {
