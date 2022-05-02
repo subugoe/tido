@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.0.1...v2.1.0) (2022-05-02)
+
+
+### Features
+
+* add cursor pointer on text hover ([318f9cd](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/318f9cd2a61914a458bdf6a9346bda07257d5861))
+* add deselecting ([b1a3c79](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b1a3c79a0a9c86d715fbb301e4f5120cff22c9d8))
+* enforce select/deselect on text click for all nested annotations ([53a263f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/53a263f8f583ea7ec5450b5293a4245aa8adb2f2))
+* implement text click to highlight all corresponding annotations ([0d0c99a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0d0c99ac3c84becba8452a8b3a73199c842bffcf)), closes [#365](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/365)
+
+
+### Bug Fixes
+
+* check if clicked text appears in annotations tab ([8f7919a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8f7919a11b42e8fb0cd8795ed7edb115d25d5e3a))
+* range selector hightlighting and get a valid click target at text ([7e0a118](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7e0a118e91fff9cc0dac880130e8457e36a4e228))
+* set highlight level recursively at selecting annotation ([41298f1](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/41298f1b915d9545d0837d189f66e957202622a7))
+* tab highligh when switched between manifests ([662c9be](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/662c9be60ae684096222523d517d9f1df77294ae))
+* tooltip display ([052bc4e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/052bc4e1eac2bf643af908a6db5217227e4d974e))
+
+
+### Refactoring
+
+* move add/remove annotation to store ([c61efcb](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c61efcb5b8b80803bcd5cb722a6511dac86c1e9a))
+* move filtering annotations to store ([76ba773](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/76ba77398b7942745d123c8e82cb38a8de70ed57))
+
+
+### Styling
+
+* fix code style for Quasar CI build ([72b8eee](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/72b8eee1ac257b07d067601246b894eea429eb80))
+* format code ([19caca7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/19caca7422adf12791bbb7197df88078d9fea9fc))
+
+
+### Chore
+
+* add ESLint rule ([d8abe60](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d8abe60e277869b4ed3f57c777d7ff38f9f45fa3))
+
+
+### Continuos Integration
+
+* add config tester overlay for Gitlab Pages and restructure scripts ([02b01a8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/02b01a845c8eddd927b7ca1dabb117d61eaa3895))
+* fix entrypoint issue for branches ([7308e4a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7308e4aa6f66364734cf1923d19621fe823cdb1a))
+* fix setting main endpoint for Gitlab Pages ([e2cf88e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e2cf88eb611b7aee1f3d19407ac914863612025a))
+* remove entry point ([16eb30f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/16eb30f2d6c8eec9ac96bb94570a2ab8a0f3bd83))
+* remove entry point ([3a23e8c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/3a23e8c96b1a0901910b0e805ac4a83fa648d156))
+
 ### [2.0.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.0.0...v2.0.1) (2022-04-14)
 
 
