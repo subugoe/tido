@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <q-tabs
-      v-model="activeTabContents"
+      :value="activeTab"
       dense
       class="text-grey q-mb-sm"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -14,6 +14,7 @@
         :class="{ 'disabled-tab': contenturl === activeTab }"
         :label="$t(contentTypes[i])"
         :name="contenturl"
+        @click="switchActiveTab(contenturl)"
       />
     </q-tabs>
 
@@ -69,7 +70,10 @@
       </q-btn>
     </div>
 
-    <div class="custom-font item-content text-content">
+    <div
+      id="text-content"
+      class="custom-font item-content"
+    >
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div
         :class="{ rtl: config.rtl }"
@@ -111,7 +115,6 @@ export default {
     },
   },
   data: () => ({
-    activeTabContents: '',
     content: '',
     errorTextMessage: null,
     fontSizeLimits: {
@@ -167,32 +170,9 @@ export default {
       return Object.keys(support).length && support.url !== '';
     },
   },
-
-  watch: {
-    activeTabContents(url) {
-      this.$store.dispatch(
-        'contents/onContentIndexChange',
-        this.contentUrls.findIndex((x) => x === url),
-      );
-    },
-    activeTab: {
-      handler: 'handleActiveTab',
-      immediate: false,
-    },
-  },
   async created() {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
-
-    const activeTab = this.contentUrls[this.contentIndex];
-    const [contentUrls] = this.contentUrls;
-
-    this.activeTabContents = activeTab;
-
-    if (!activeTab) {
-      this.$store.dispatch('contents/onContentIndexChange', 0);
-      this.activeTabContents = contentUrls;
-    }
   },
 
   mounted() {
@@ -209,13 +189,19 @@ export default {
     this.handleActiveTab();
 
     this.$root.$on('manifest-changed', () => {
-      [this.activeTabContents] = this.contentUrls;
-      this.$store.dispatch('contents/onContentIndexChange', 0);
+      this.$store.dispatch('contents/setContentIndex', 0);
     });
   },
   methods: {
     decrease() {
       this.$store.dispatch('annotations/decreaseContentFontSize');
+    },
+    switchActiveTab(contentUrl) {
+      this.$store.dispatch(
+        'contents/setContentIndex',
+        this.contentUrls.findIndex((x) => x === contentUrl),
+      );
+      this.handleActiveTab();
     },
     async handleActiveTab() {
       const url = this.activeTab;
@@ -241,6 +227,7 @@ export default {
       } finally {
         setTimeout(() => {
           this.$store.dispatch('contents/updateContentDOM');
+          this.$store.dispatch('annotations/addHighlightClickListeners');
           this.isLoading = false;
           this.$store.dispatch('annotations/updateContentLoading', false);
         }, 100);

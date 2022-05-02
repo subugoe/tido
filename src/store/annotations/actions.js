@@ -77,7 +77,7 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
   Utils.mapUniqueElements(
     Utils.findDomElements('[data-target]:not([value=""])', dom),
     (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
-  ).forEach((selector) => Utils.replaceSelectorWithSpan(selector, dom));
+  ).forEach((selector) => Utils.addRangeHighlightAttributes(selector, dom));
 
   annotations.forEach((annotation) => {
     const { id } = annotation;
@@ -166,5 +166,86 @@ export const initAnnotations = async ({ dispatch }, url) => {
     }
   } catch (err) {
     dispatch('annotationLoaded', []);
+  }
+};
+
+export const addHighlightClickListeners = ({ dispatch, getters }) => {
+  document.querySelector('#text-content>div>*').addEventListener('click', ({ target }) => {
+    // The click event handler works like this:
+    // When clicking on the text we pick the whole part of the text which belongs to the highest parent annotation.
+    // Since the annotations can be nested we avoid handling each of them separately
+    // and select/deselect the whole cluster at once.
+    // The actual click target decides whether it should be a selection or a deselection.
+
+    // First we make sure to have a valid target.
+    // Although we receive a target from the event it can be a regular HTML element within the annotation.
+    // So we try to find it's nearest parent element that is marked as annotation element.
+    if (!target.dataset.annotation) {
+      target = getNearestParentAnnotation(target);
+    }
+
+    if (!target) {
+      return;
+    }
+
+    // Next we look up which annotations need to be selected
+    let annotationIds = {};
+    getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+    annotationIds = discoverParentAnnotationIds(target, annotationIds);
+    annotationIds = discoverChildAnnotationIds(target, annotationIds);
+
+    const { filteredAnnotations } = getters;
+
+    // We check the highlighting level to determine whether to select or deselect.
+    // TODO: it might be better to check the activeAnnotations instead
+    const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
+
+    Object.keys(annotationIds).forEach((id) => {
+      // We need to check here if the right annotations panel tab is active
+      // a.k.a. it exists in the current filteredAnnotations
+      const annotation = filteredAnnotations.find((filtered) => filtered.id === id);
+      if (annotation) {
+        if (targetIsSelected) {
+          dispatch('removeActiveAnnotation', id);
+        } else {
+          dispatch('addActiveAnnotation', id);
+        }
+      }
+    });
+  });
+
+  function getNearestParentAnnotation(element) {
+    const parent = element.parentElement;
+    if (parent.dataset.annotation) {
+      return parent;
+    }
+    const higherParent = getNearestParentAnnotation(parent);
+    return higherParent ?? null;
+  }
+
+  function getValuesFromAttribute(element, attribute) {
+    const value = element.getAttribute(attribute);
+    return value ? value.split(' ') : [];
+  }
+
+  function discoverParentAnnotationIds(el, annotationIds = {}) {
+    const parent = el.parentElement;
+    if (parent && parent.id !== 'text-content') {
+      getValuesFromAttribute(parent, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+      return discoverParentAnnotationIds(parent, annotationIds);
+    }
+    return annotationIds;
+  }
+
+  function discoverChildAnnotationIds(el, annotationIds = {}) {
+    const { children } = el;
+
+    [...children].forEach((child) => {
+      if (child.dataset.annotation) {
+        getValuesFromAttribute(child, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+        annotationIds = discoverChildAnnotationIds(child, annotationIds);
+      }
+    });
+    return annotationIds;
   }
 };

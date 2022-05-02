@@ -11,21 +11,26 @@ export function addHighlightToElements(selector, root, annotationId) {
 
   const strippedAnnotationId = stripAnnotationId(annotationId);
 
-  function recursiveAddClass(elements) {
-    elements.forEach((element) => {
-      element.setAttribute('data-annotation', true);
-
-      element.classList.add(strippedAnnotationId);
-      element.setAttribute('data-annotation-level', -1);
-
-      recursiveAddClass([...element.children]);
-    });
+  function addToAttribute(element, attribute, newValue) {
+    const oldValue = element.getAttribute(attribute);
+    if (oldValue) {
+      if (!oldValue.match(newValue)) {
+        element.setAttribute(attribute, `${oldValue} ${newValue}`);
+      }
+    } else {
+      element.setAttribute(attribute, newValue);
+    }
   }
 
-  recursiveAddClass(selectedElements);
+  selectedElements.forEach((element) => {
+    element.setAttribute('data-annotation', true);
+    addToAttribute(element, 'data-annotation-ids', annotationId);
+    element.classList.add(strippedAnnotationId);
+    element.setAttribute('data-annotation-level', -1);
+  });
 }
 
-export function replaceSelectorWithSpan(id, root) {
+export function addRangeHighlightAttributes(id, root) {
   const start = root.querySelector(`[data-target="${id}_start"]`);
   const end = root.querySelector(`[data-target="${id}_end"]`);
 
@@ -48,12 +53,8 @@ export function replaceSelectorWithSpan(id, root) {
       if (childNode.nodeName === '#text') {
         if (started) {
           if (childNode.textContent && childNode.textContent.trim()) {
-            const span = document.createElement('span');
-
-            span.classList.add(id);
-            span.setAttribute('data-annotation', true);
-            span.innerHTML = childNode.textContent;
-            childNode.replaceWith(span);
+            element.classList.add(id);
+            element.setAttribute('data-annotation', true);
           }
         }
       } else {
@@ -176,9 +177,16 @@ export function highlightTargets(selector, { operation, level }) {
 
   const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
   elements.forEach((element) => {
+    setLevelRecursively(element, { operation, level });
+  });
+}
+
+export function setLevelRecursively(element, { operation, level }) {
+  if (element.hasAttribute('data-annotation')) {
     const newLevel = level !== undefined ? level : getNewLevel(element, operation);
     element.setAttribute('data-annotation-level', newLevel);
-  });
+  }
+  [...element.children].forEach((child) => setLevelRecursively(child, { operation, level }));
 }
 
 export function stripSelector(value) {

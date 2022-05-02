@@ -150,8 +150,8 @@ export const setItemUrl = ({ commit }, url) => {
   commit('setItemUrl', url);
 };
 
-export const onContentIndexChange = ({ commit }, index) => {
-  commit('setContentIndexChange', index);
+export const setContentIndex = ({ commit }, index) => {
+  commit('setContentIndex', index);
 };
 
 export const initImageData = async ({ commit }, url) => {

@@ -10,10 +10,6 @@ export const setContentIndex = (state, payload) => {
   state.contentIndex = payload;
 };
 
-export const setContentIndexChange = (state, contentIndex) => {
-  state.contentIndex = contentIndex;
-};
-
 export const setContentItem = (
   state,
   {
