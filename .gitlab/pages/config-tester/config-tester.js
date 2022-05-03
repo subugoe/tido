@@ -2,13 +2,14 @@ function createConfigTester() {
   const container = document.getElementById('config-tester');
 
   if (container) {
+    const file = window.location.pathname.split('/').pop();
     const template =
       `<div>
           <h3>Config Tester:</h3>
           <div class="config-tester-content">
-            <a class="active" href="ahiqar-syriac.html">Ahiqar Syriac</a>
-            <a class="active" href="ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</a>
-            <a href="gfl.html">GFL</a>
+            <a class="${file === 'ahiqar-syriac.html' ? 'active' : ''}" href="ahiqar-syriac.html">Ahiqar Syriac</a>
+            <a class="${file === 'ahiqar-arabic-karshuni.html' ? 'active' : ''}" href="ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</a>
+            <a class="${file === 'gfl.html' ? 'active' : ''}" href="gfl.html">GFL</a>
           </div>
           <div class="config-tester-collapse" onclick="this.parentElement.parentElement.classList.toggle('collapsed')">
             <span>Show/Hide</span>
