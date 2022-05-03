@@ -50,6 +50,19 @@ Also the commit short hash can be used to see a demo.
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## Preview
+You can preview TIDO at Gitlab Pages with different configurations to compare with.
+Generally the deployment to Pages runs at every branch.
+
+You can access the preview with the following URL syntax:
+
+`[Gitlab Pages base URL]/[branch-name]/config-tester/[project].html`
+
+List of preview configurations:
+- [Ahiqar Syriac](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/ahiqar-syriac.html)
+- [Ahiqar Arabic Karshuni](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/ahiqar-arabic-karshuni.html)
+- [GFL](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/gfl.html)
+
 ## Latest Version and Integration
 
 TiDO is provided as **npm package**. Please follow the steps below to include it for production:
