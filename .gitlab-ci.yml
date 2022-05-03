@@ -9,40 +9,8 @@ cache:
     - node_modules/
 
 stages:
-  - clean
   - build
   - deploy
-  - preserve-pages
-
-# Templates
-.git: &git
-  - eval $(ssh-agent -s)
-  - echo "$DEPLOY_KEY" | tr -d '\r' | ssh-add - > /dev/null
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - ssh-keyscan gitlab.gwdg.de  >> ~/.ssh/known_hosts
-  - git config --global user.email "tido@gitlab.gwdg.de"
-  - git config --global user.name "Gitlab CI"
-
-# this stage checks if an entry point is set in src/index.template.html and removes it.
-# the reasoning behind this is that the entry point should be empty on `develop` and `main`
-# so that releases don't accidentally ship an entry point.
-# during this stage, the variable $CONTINUE_BUILD is set and exported which determines if
-# the following pipeline stages are fully executed. if an entry point has to be removed, it is
-# set to 'false' since src/index.template.html is modified and recomitted which triggers a new
-# pipeline.
-clean_up:
-  image: alpine:latest
-  stage: clean
-  only:
-    - main
-    - develop
-  script:
-    - *git
-    - bash .ci-scripts/remove_entrypoint.sh
-  artifacts:
-    reports:
-      dotenv: build.env
 
 # builds TIDO on feature and bugfix branches.
 build_test:
@@ -57,9 +25,6 @@ build_test:
     paths:
      - dist/
 
-# builds TIDO on `main` and `develop`.
-# the software is only built if no entry point has been removed during
-# the 'clean' stage.
 build_main_and_develop:
   image: node:14
   only:
@@ -73,16 +38,8 @@ build_main_and_develop:
      - dist/
     expire_in: 1 mos
 
-# creates the GitLab pages for the environments.
-# if an entry point has been removed during the 'clean' stage, we temporarily set a custom
-# 404 page on `main` and `develop` which will replaced during the next pipeline. since
-# removing the entry point triggers a new pipeline, the 404 state will only last for a few minutes.
 pages:
   image: alpine:latest
-# at the very early stage lets deploy for every branch
-#  only:
-#    - main
-#    - develop
   stage: deploy
   when: always
   script:
