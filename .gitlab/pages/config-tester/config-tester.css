@@ -13,6 +13,15 @@
   font-family: Arial, sans-serif !important;
   border: 1px solid #ff4400;
   border-top: 0;
+  transition: top 0.4s;
+}
+
+#config-tester.collapsed {
+  top: -88px;
+}
+
+#config-tester .config-tester-collapse {
+  cursor: pointer;
 }
 #config-tester .config-tester-content {
   display: flex;

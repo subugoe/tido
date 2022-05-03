@@ -10,6 +10,9 @@ function createConfigTester() {
             <a class="active" href="ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</a>
             <a href="gfl.html">GFL</a>
           </div>
+          <div class="config-tester-collapse" onclick="this.parentElement.parentElement.classList.toggle('collapsed')">
+            <span>Show/Hide</span>
+          </div>
         </div>`;
 
     appendTemplate(template, container);
