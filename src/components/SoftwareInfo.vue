@@ -94,7 +94,7 @@ import {
   fasCode,
   fasInfo,
 } from '@quasar/extras/fontawesome-v5';
-import { version } from '../../package.json';
+import packageJson from '../../package.json';
 
 export default {
   name: 'SoftwareInfo',
@@ -116,7 +116,7 @@ export default {
     this.fasCode = fasCode;
     this.fasInfo = fasInfo;
 
-    this.version = version;
+    this.version = packageJson.version;
   },
 };
 </script>

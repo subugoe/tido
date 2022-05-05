@@ -7,6 +7,7 @@ export default {
   Collection: 'Collection',
   Collector: 'Collector',
   colorScheme: 'Change color',
+  Comments: 'Comments',
   commentsInfoTitle: 'No Comments Available',
   Contents: 'Contents',
   'Contents & Metadata': 'Contents & Metadata',
@@ -15,17 +16,19 @@ export default {
   Decrease: 'Decrease',
   default: 'Default',
   defaultView: 'Reset panels to default view',
-  defaultError: 'Something went wrong. Please relaod the page/application and/or try again later.',
+  defaultError:
+    'Something went wrong. Please relaod the page/application and/or try again later.',
   Description: 'Description',
   Editor: 'Editor',
   Editorial: 'Editorial',
   Editors: 'Editors',
   hide: 'Hide',
   Image: 'Image',
-  imageErrorMessageVPN: 'Some images are not available outside of the VPN (Virtual Private Network)'
-  + ' of the Georg-August-University Goettingen. If you like to get access please refer to the '
-  + 'guide at <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start"'
-  + 'target="_blank"> Network Services VPN</a>.',
+  imageErrorMessageVPN:
+    'Some images are not available outside of the VPN (Virtual Private Network)'
+    + ' of the Georg-August-University Goettingen. If you like to get access please refer to the '
+    + 'guide at <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start"'
+    + 'target="_blank"> Network Services VPN</a>.',
   imageErrorMessageNotExists: 'An image for this page does not exist yet.',
   imageErrorTitle: 'No Image Available',
   imageLicense: 'Image License',
@@ -34,7 +37,8 @@ export default {
   infoBugs: 'Report a Bug',
   infoClose: 'Close',
   infoCopyright: 'Göttingen State and University Library',
-  infoDescription: 'Slim, easy to use and mobile-friendly text and image viewer',
+  infoDescription:
+    'Slim, easy to use and mobile-friendly text and image viewer',
   infoDocs: 'Documentation',
   infoLicense: 'licensed under GNU Affero General Public License v3.0',
   infoSourcecode: 'Source Code',
@@ -48,7 +52,8 @@ export default {
   Motif: 'Motifs',
   next: 'Next',
   noAnnotationMessage: 'The current view has no annotations to display.',
-  noCommentsMessage: 'The current view does not contain any comments to display',
+  noCommentsMessage:
+    'The current view does not contain any comments to display',
   Origin: 'Origin',
   osdFullPage: 'Toggle full page',
   osdHome: 'Go home',

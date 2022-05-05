@@ -101,11 +101,11 @@ export default {
 }
 
 .content__link {
-  border-bottom: 1px var(--q-color-accent) dotted;
+  border-bottom: 1px var(--q-accent) dotted;
   text-decoration: none;
 
   @media (prefers-color-scheme: dark) {
-    border-color: var(--q-color-white);
+    border-color: var(--q-white);
   }
 }
 

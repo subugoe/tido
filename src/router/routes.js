@@ -7,8 +7,10 @@ const routes = [
 ];
 // Always leave this as last one
 if (process.env.MODE !== 'ssr') {
+  // Always leave this as last one,
+  // but you can also remove it
   routes.push({
-    path: '*',
+    path: '/:catchAll(.*)*',
   });
 }
 

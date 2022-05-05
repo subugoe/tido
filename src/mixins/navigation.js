@@ -107,13 +107,4 @@ export default {
       return this.config.labels || {};
     },
   },
-  mounted() {
-    this.$root.$on('update-tab', (tab) => {
-      this.tab = tab;
-    });
-
-    this.$root.$on('update-sequence-index', (index) => {
-      this.sequenceindex = index;
-    });
-  },
 };

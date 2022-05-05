@@ -112,6 +112,12 @@ export default {
   display: inline-block;
 }
 
+.item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .item {
   display: flex;
   flex: 1;
@@ -121,5 +127,4 @@ export default {
     min-height: 100vh;
   }
 }
-
 </style>

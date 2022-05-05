@@ -1,13 +1,13 @@
 <template>
   <div class="item">
     <q-tree
+      v-model:expanded="expanded"
+      v-model:selected="selected"
       class="item-content"
       node-key="label"
-      :expanded.sync="expanded"
       :icon="fasCaretRight"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
-      :selected.sync="selected"
       @update:expanded="handleTreeUpdate"
     >
       <template #default-body="{ node }">

@@ -1,6 +1,5 @@
 <template>
   <q-layout
-    id="q-app"
     class="root viewport"
     view="hHh Lpr fFf"
   >
@@ -143,7 +142,7 @@ export default {
       );
       if (isManifestChanged) {
         this.$store.dispatch('contents/setPanels', PanelUtils.getNewPanels(this.panels));
-        this.$root.$emit('manifest-changed');
+        this.$store.dispatch('contents/setContentIndex', 0);
       }
     },
 

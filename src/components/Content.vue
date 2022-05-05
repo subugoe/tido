@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <q-tabs
-      :value="activeTab"
+      v-model="activeTab"
       dense
       class="text-grey q-mb-sm"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -180,17 +180,7 @@ export default {
       return;
     }
 
-    this.$root.$on('update-sequence-index', (index) => {
-      if (this.supportType) {
-        this.getSupport(this.manifests[index].support);
-      }
-    });
-
     this.handleActiveTab();
-
-    this.$root.$on('manifest-changed', () => {
-      this.$store.dispatch('contents/setContentIndex', 0);
-    });
   },
   methods: {
     decrease() {

@@ -483,7 +483,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
 
   set the value to `de-de` if you would like to turn the viewer into "German" language by default.
 
-  Defaults to `en-us`
+  Defaults to `en-US`
 
 - **language-switch**
 
