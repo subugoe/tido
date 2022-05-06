@@ -94,7 +94,7 @@ import {
   fasCode,
   fasInfo,
 } from '@quasar/extras/fontawesome-v5';
-import packageJson from '../../package.json';
+import { TIDO_VERSION } from '@/version.js';
 
 export default {
   name: 'SoftwareInfo',
@@ -116,7 +116,7 @@ export default {
     this.fasCode = fasCode;
     this.fasInfo = fasInfo;
 
-    this.version = packageJson.version;
+    this.version = TIDO_VERSION;
   },
 };
 </script>

@@ -107,6 +107,7 @@
     "test": "npm run test:unit",
     "test:unit": "jest --updateSnapshot",
     "tweak:build": "bash .build-scripts/tweak_build.sh",
+    "version": "node -p \"'export const TIDO_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.js",
     "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version"
   },
   "files": [
