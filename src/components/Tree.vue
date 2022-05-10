@@ -8,7 +8,6 @@
       :icon="fasCaretRight"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
-      @update:expanded="handleTreeUpdate"
     >
       <template #default-body="{ node }">
         <div
@@ -107,9 +106,6 @@ export default {
     },
     handleSelectedChange(value) {
       this.navigate(value);
-    },
-    handleTreeUpdate(val) {
-      this.$store.dispatch('contents/updateExpanded', val);
     },
   },
 };

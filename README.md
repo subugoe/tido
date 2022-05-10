@@ -181,7 +181,7 @@ npm run build
 ## Configuration
 
 The Viewer is build with **Vue.js** and **Quasar**.
-If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf-js) (Configuring quasar.conf.js).
+If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf-js) (Configuring quasar.config.js).
 
 You can fully customize the Viewer's behaviour:
 
