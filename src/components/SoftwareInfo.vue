@@ -27,7 +27,7 @@
           <p>Copyright (c) {{ actualYear }} {{ $t('infoCopyright') }}</p>
 
           <p class="q-mb-none">
-            Version {{ version }}, {{ $t('infoLicense') }}
+            Version {{ tidoVersion }}, {{ $t('infoLicense') }}
           </p>
         </q-card-section>
 
@@ -116,7 +116,7 @@ export default {
     this.fasCode = fasCode;
     this.fasInfo = fasInfo;
 
-    this.tidoVersion = packageInfo.tidoVersion;
+    this.tidoVersion = packageInfo.version;
   },
 };
 </script>
