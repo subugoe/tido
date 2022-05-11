@@ -32,6 +32,8 @@ module.exports = configure(function (ctx) {
       title: 'TIDO',
     },
 
+    supportIE: false,
+
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
     css: ['style.scss'],
 
@@ -62,6 +64,8 @@ module.exports = configure(function (ctx) {
 
       cssAddon: true,
 
+      dark: 'auto', // or Boolean true/false
+
       iconSet: 'fontawesome-v5',
 
       lang: 'en-US', // Quasar language pack
@@ -75,6 +79,7 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
+      distDir: 'dist',
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
       // transpile: false,
@@ -92,7 +97,7 @@ module.exports = configure(function (ctx) {
       // analyze: true,
 
       // Options below are automatically set depending on the env, set them if you want to override
-      // extractCSS: false,
+      extractCSS: false,
 
       // https://v2.quasar.dev/quasar-cli-webpack/handling-webpack
       // 'chain' is a webpack-chain object https://github.com/neutrinojs/webpack-chain
@@ -239,7 +244,7 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: '-subugoe-tido',
+        appId: 'q-app',
       },
 
       // 'chain' is a webpack-chain object https://github.com/neutrinojs/webpack-chain
