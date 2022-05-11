@@ -21,7 +21,7 @@
             :key="lang.value"
             v-close-popup
             clickable
-            :class="{'language': selectedLang === lang.value}"
+            :class="{ language: selectedLang === lang.value }"
             @click="handleLanguageChange(lang)"
           >
             <q-item-section>
@@ -49,9 +49,9 @@ export default {
     return {
       langs: [
         { label: 'DE', value: 'de-de' },
-        { label: 'EN', value: 'en-us' },
+        { label: 'EN', value: 'en-US' },
       ],
-      selectedLang: 'en-us',
+      selectedLang: 'en-US',
     };
   },
   watch: {

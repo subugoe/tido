@@ -6,6 +6,7 @@ export default {
   commentsInfoTitle: 'Keine Kommentare verfügbar',
   changeLanguage: 'Sprache ändern',
   Collection: 'Kollektion',
+  Comments: 'Kommentare',
   Collector: 'Kollektor',
   colorScheme: 'Farbschema ändern',
   Contents: 'Inhalt',

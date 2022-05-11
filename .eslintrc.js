@@ -2,7 +2,7 @@ module.exports = {
   root: true,
 
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@babel/eslint-parser',
     sourceType: 'module'
   },
 
@@ -17,7 +17,8 @@ module.exports = {
     // See https://eslint.vuejs.org/rules/#available-rules
     // 'plugin:vue/essential' // Priority A: Essential (Error Prevention)
     // 'plugin:vue/strongly-recommended' // Priority B: Strongly Recommended (Improving Readability)
-    'plugin:vue/recommended', // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
+    // 'plugin:vue/recommended', // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
+    'plugin:vue/vue3-essential',
   ],
 
   // required to lint *.vue files
@@ -50,9 +51,12 @@ module.exports = {
     'prefer-promise-reject-errors': 'off',
     'no-use-before-define': 'off',
     'no-return-assign': 'off',
+    'vue/multi-word-component-names': 'off',
+    'no-promise-executor-return': 'off',
+    'vue/no-deprecated-slot-attribute': 'off',
 
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'max-len': 0
-  }
-}
+    'max-len': 0,
+  },
+};

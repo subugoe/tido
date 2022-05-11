@@ -1,11 +1,9 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { store } from 'quasar/wrappers';
+import { createStore } from 'vuex';
 
 import annotations from './annotations';
 import config from './config';
 import contents from './contents';
-
-Vue.use(Vuex);
 
 /*
  * If not building with SSR mode, you can
@@ -16,8 +14,8 @@ Vue.use(Vuex);
  * with the Store instance.
  */
 
-export default function TidoStore(/* { ssrContext } */) {
-  const store = new Vuex.Store({
+export default store((/* { ssrContext } */) => {
+  const Store = createStore({
     modules: {
       annotations,
       config,
@@ -29,5 +27,5 @@ export default function TidoStore(/* { ssrContext } */) {
     strict: process.env.DEBUGGING,
   });
 
-  return store;
-}
+  return Store;
+});

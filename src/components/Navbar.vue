@@ -37,12 +37,12 @@
 </template>
 
 <script>
-import Navigation from '@/mixins/navigation';
 import {
   fasArrowRight,
   fasArrowLeft,
   fasCheck,
 } from '@quasar/extras/fontawesome-v5';
+import Navigation from '@/mixins/navigation';
 
 export default {
   name: 'Navbar',

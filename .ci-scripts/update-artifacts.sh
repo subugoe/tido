@@ -3,7 +3,7 @@
 # This script takes the old artifacts containing the data needed for the environments and
 # adds the current branch's data to them.
 
-dist_dir=$(grep distDir quasar.conf.js | cut -d "'" -f2)
+dist_dir=$(grep distDir quasar.config.js | cut -d "'" -f2)
 project_id=10921
 
 mkdir public

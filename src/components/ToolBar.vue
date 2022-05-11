@@ -1,6 +1,6 @@
 <template>
   <div class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
-    {{ $t(heading) | capitalize }}
+    {{ capitalizeHeading }}
   </div>
 </template>
 
@@ -18,12 +18,17 @@ export default {
       required: true,
     },
   },
+  computed: {
+    capitalizeHeading() {
+      return this.$t(this.heading).toUpperCase();
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .panel__title {
-  color: var(--q-color-primary);
+  color: var(--q-primary);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 2px;

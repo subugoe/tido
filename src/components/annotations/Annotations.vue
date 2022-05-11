@@ -1,7 +1,7 @@
 <template>
   <div class="item relative-position">
     <q-tabs
-      :value="currentTab"
+      :model-value="currentTab"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
       align="justify"
       class="text-grey q-mb-sm"
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { onlyIf } from 'src/utils';
 import AnnotationsToggles from '@/components/annotations/AnnotationsToggles.vue';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import AnnotationsOptions from '@/components/annotations/AnnotationsOptions.vue';
@@ -63,7 +64,6 @@ import Notification from '@/components/Notification.vue';
 
 import * as AnnotationUtils from '@/utils/annotations';
 import DomMixin from '@/mixins/dom';
-import { onlyIf } from 'src/utils';
 
 export default {
   name: 'Annotations',

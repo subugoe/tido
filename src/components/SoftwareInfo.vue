@@ -27,7 +27,7 @@
           <p>Copyright (c) {{ actualYear }} {{ $t('infoCopyright') }}</p>
 
           <p class="q-mb-none">
-            Version {{ version }}, {{ $t('infoLicense') }}
+            Version {{ tidoVersion }}, {{ $t('infoLicense') }}
           </p>
         </q-card-section>
 
@@ -94,14 +94,14 @@ import {
   fasCode,
   fasInfo,
 } from '@quasar/extras/fontawesome-v5';
-import { version } from '../../package.json';
+import packageInfo from '../../package.json';
 
 export default {
   name: 'SoftwareInfo',
   data() {
     return {
       infobox: false,
-      version: '',
+      tidoVersion: '',
     };
   },
   computed: {
@@ -116,7 +116,7 @@ export default {
     this.fasCode = fasCode;
     this.fasInfo = fasInfo;
 
-    this.version = version;
+    this.tidoVersion = packageInfo.version;
   },
 };
 </script>

@@ -1,6 +1,6 @@
+import * as AnnotationUtils from 'src/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
-import * as AnnotationUtils from 'src/utils/annotations';
 
 export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
   const { activeAnnotations, annotations } = getters;
@@ -12,8 +12,10 @@ export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
 
   const iconName = rootGetters['config/getAnnotationIcon'](newActiveAnnotation.body['x-content-type']);
 
-  activeAnnotations[id] = newActiveAnnotation;
-  commit('updateActiveAnnotations', { ...activeAnnotations });
+  const activeAnnotationsList = { ...activeAnnotations };
+
+  activeAnnotationsList[id] = newActiveAnnotation;
+  commit('updateActiveAnnotations', activeAnnotationsList);
 
   const selector = Utils.generateTargetSelector(newActiveAnnotation);
   const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
@@ -114,8 +116,10 @@ export const removeActiveAnnotation = ({ commit, getters }, id) => {
     return;
   }
 
-  delete activeAnnotations[id];
-  commit('updateActiveAnnotations', { ...activeAnnotations });
+  const activeAnnotationsList = { ...activeAnnotations };
+
+  delete activeAnnotationsList[id];
+  commit('updateActiveAnnotations', activeAnnotationsList);
 
   const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
   if (selector) {

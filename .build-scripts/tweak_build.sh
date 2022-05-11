@@ -13,7 +13,7 @@ PKG_SCOPE=${PKG_NAME%/*}
 PROD_NAME=${PKG_NAME#*/}
 
 # filter distribution dir
-DIST_DIR=$(grep distDir './quasar.conf.js' | cut -d "'" -f2) || dist
+DIST_DIR=$(grep distDir './quasar.config.js' | cut -d "'" -f2) || dist
 
 # get all the js files put out from the build step
 declare -a FILES=( ${DIST_DIR}/*.js )
