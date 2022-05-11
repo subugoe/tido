@@ -10,6 +10,7 @@ mkdir public
 
 # Create branch artifact
 mkdir -p public/${CI_COMMIT_REF_SLUG}/config-tester
+ls ${dist_dir}
 cp --remove-destination ${dist_dir}/* public/${CI_COMMIT_REF_SLUG}/
 cp .gitlab/pages/config-tester/* public/${CI_COMMIT_REF_SLUG}/config-tester/
 
