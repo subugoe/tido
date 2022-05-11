@@ -11,8 +11,8 @@ mkdir public
 # Create branch artifact
 mkdir -p public/${CI_COMMIT_REF_SLUG}/config-tester
 ls ${dist_dir}
-cp --remove-destination ${dist_dir}/* public/${CI_COMMIT_REF_SLUG}/
-cp .gitlab/pages/config-tester/* public/${CI_COMMIT_REF_SLUG}/config-tester/
+cp --recursive --remove-destination ${dist_dir}/* public/${CI_COMMIT_REF_SLUG}/
+cp --recursive .gitlab/pages/config-tester/* public/${CI_COMMIT_REF_SLUG}/config-tester/
 
 # Create main artifact
 curl --output old-artifact-main.zip --header "PRIVATE-TOKEN: $API_TOKEN" "https://gitlab.gwdg.de/api/v4/projects/${project_id}/jobs/artifacts/main/download?job=pages"
