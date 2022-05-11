@@ -3,7 +3,7 @@
 # This script takes the old artifacts containing the data needed for the environments and
 # adds the current branch's data to them.
 
-dist_dir=dist
+dist_dir=dist/spa
 project_id=10921
 
 mkdir public
