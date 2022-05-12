@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.1.0...v2.2.0) (2022-05-12)
+
+
+### Features
+
+* upgrade quasar and vue version, code refactors accordingly. ([16707af](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/16707afea8af907a5754f2c11eb3a97da148f6ab))
+
+
+### Bug Fixes
+
+* add a script to export version. ([43886ac](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/43886ac94a56fab1bd1d14d54b7bf89ec45e4aec))
+* add directory property to config ([eec385f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/eec385fd467f8289d3682856c452538dfbfce85a))
+* click event on tree open or collapse ([b9b826d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b9b826ddf7c89c43009bf0a26014cd2387b187c1))
+* displaying of version on info. ([101c0c5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/101c0c5a6888b800abb38659be2c5ea12a133c40))
+* reverting node version in package file ([7522058](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7522058a4afd55572b12243be8774636193c466b))
+* scroll behavior for text and annotation panel, removed quasar conf file. ([250dee8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/250dee8fda4ac28ab6b432f446476397709e33ff))
+
+
+### Docs
+
+* update README ([42d38e0](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/42d38e0df0cebfc4e1b6b84b5db0ec31fc69cf71))
+
+
+### Continuos Integration
+
+* add collapsing to config tester ([6f39b31](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/6f39b31022980b21c59f67379817995d275ecde0))
+* fix config tester active buttons ([600b00f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/600b00f58efe336ff76e1b6d7165ecea1d31e77c))
+* improve config-tester reusability, add Ahiqar Arabic-Karshuni ([54b8088](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/54b80884c1da58eac91cda8fe7a8e228be8d9fbf))
+* remove clean stage ([14a512e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/14a512e2596210e9b58507213efbc1dda9b293d4))
+
+
+### Refactoring
+
+* importing package file to receive version update. ([7e22f58](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7e22f585cec8736c0f8a69d60e79d69e370291cf))
+
+
+### Chore
+
+* remove entry point. ([c546226](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c546226dd67a8f6da0eee23cdbc7fb95e0e5b913))
+
 ## [2.1.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.0.1...v2.1.0) (2022-05-02)
 
 
