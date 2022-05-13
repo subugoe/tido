@@ -23,11 +23,20 @@ for i in "${FILES[@]}"; do
   cat $i >> ${DIST_DIR}/${PROD_NAME}.js
 done
 
+# get all the js files put out from the build step
+declare -a CHUNKS=( ${DIST_DIR}/*/**.js )
+
+# concatenate all js files
+for i in "${CHUNKS[@]}"; do
+  cat $i >> ${DIST_DIR}/${PROD_NAME}.js
+done
+
 # verify operation
 [ $? -eq 0 ] && echo "$PROD_NAME created succesfully inside $DIST_DIR" || (echo "oops! sth went wrong :/" && exit $BAD_PARAM)
 
 # delete the files from the former build step
 rm "${FILES[@]}"
+rm "${CHUNKS[@]}"
 
 # print the result
 ls -l $DIST_DIR
