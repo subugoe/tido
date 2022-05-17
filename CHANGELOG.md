@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.2.1...v2.2.2) (2022-05-17)
+
+
+### Build System
+
+* remove tweak build from npm scripts ([8f28fbc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8f28fbcd13ad3c82683e46f9fabd8571135117e1))
+
 ### [2.2.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.2.0...v2.2.1) (2022-05-17)
 
 
