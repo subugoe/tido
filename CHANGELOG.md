@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.2.0...v2.2.1) (2022-05-17)
+
+
+### Tests
+
+* script changes to release package. ([d2b638d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d2b638d9523ae54255f8b63cf765fc773eed0f82))
+
+
+### Build System
+
+* remove tweak_build.sh and create files with Quasar build ([4dc3d44](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4dc3d446a3530c0caa194aa19f86cd3b2a57f5c3))
+
 ## [2.2.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.1.0...v2.2.0) (2022-05-12)
 
 
