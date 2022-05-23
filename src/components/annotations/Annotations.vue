@@ -90,6 +90,9 @@ export default {
     };
   },
   computed: {
+    item() {
+      return this.$store.getters['contents/item'];
+    },
     filteredAnnotations() {
       return this.$store.getters['annotations/filteredAnnotations'];
     },
@@ -140,6 +143,10 @@ export default {
     },
   },
   watch: {
+    item: {
+      handler: 'onItemChange',
+      immediate: true,
+    },
     currentTab: {
       handler() {
         this.$store.dispatch('annotations/setFilteredAnnotations');
@@ -185,6 +192,18 @@ export default {
     });
   },
   methods: {
+    async onItemChange(item) {
+      const root = document.getElementById('text-content');
+      this.$store.dispatch('contents/updateContentDOM');
+
+      if (item.annotationCollection) {
+        await this.$store.dispatch('annotations/initAnnotations', item.annotationCollection, {
+          root: true,
+        });
+        await this.$store.dispatch('annotations/addHighlightAttributesToText', root);
+        await this.$store.dispatch('annotations/addHighlightClickListeners');
+      }
+    },
     switchActiveTab(key) {
       this.resetActiveAnnotations();
       this.filteredAnnotations.forEach((annotation) => {

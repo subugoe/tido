@@ -9,11 +9,7 @@
       type="warning"
     />
   </div>
-  <figure
-    v-else
-    id="openseadragon"
-    class="item"
-  >
+  <div v-else>
     <nav>
       <q-btn
         v-for="(btn, idx) in buttons"
@@ -33,6 +29,11 @@
         />
       </q-btn>
     </nav>
+  </div>
+  <figure
+    id="openseadragon"
+    class="item"
+  >
   </figure>
 </template>
 
@@ -55,6 +56,7 @@ export default {
   },
   data() {
     return {
+      viewer: null,
       buttons: [
         { id: 'zoom-in', svg: fasSearchPlus, tooltip: 'osdZoomin' },
         { id: 'zoom-out', svg: fasSearchMinus, tooltip: 'osdZoomout' },
@@ -66,6 +68,9 @@ export default {
   computed: {
     imageUrl() {
       return this.$store.getters['contents/imageUrl'];
+    },
+    itemUrl() {
+      return this.$store.getters['contents/itemUrl'];
     },
     errorImage() {
       return this.$store.getters['contents/errorImage'];
@@ -85,17 +90,32 @@ export default {
       };
     },
   },
-  mounted() {
-    this.init();
+  watch: {
+    itemUrl: {
+      handler: 'onItemUrlChange',
+      immediate: true,
+    },
   },
   methods: {
+    async onItemUrlChange(itemUrl) {
+      await this.getImageItemData(itemUrl);
+      this.init();
+    },
+    async getImageItemData(itemUrl) {
+      await this.$store.dispatch('contents/initImageData', itemUrl);
+    },
     init() {
       if (this.errorImage) {
         return;
       }
 
-      const viewer = new OpenSeadragon.Viewer(this.options);
-      viewer.controlsFadeDelay = 1000;
+      if (this.viewer) {
+        this.viewer.destroy();
+        this.viewer = null;
+      }
+
+      this.viewer = new OpenSeadragon.Viewer(this.options);
+      this.viewer.controlsFadeDelay = 1000;
 
       document.addEventListener('fullscreenchange', () => {
         Object.values(this.buttons).forEach((v) => {
