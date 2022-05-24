@@ -1,8 +1,10 @@
+import MainView from 'src/views/MainView';
+
 const routes = [
   {
     path: '/',
     name: 'MainView',
-    component: () => import('src/views/MainView.vue'),
+    component: MainView,
   },
 ];
 // Always leave this as last one

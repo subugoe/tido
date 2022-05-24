@@ -6,4 +6,3 @@
 bash .ci-scripts/set_entrypoint_ci.sh
 npm ci
 npm run build
-npm run tweak:build

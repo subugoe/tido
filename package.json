@@ -1,6 +1,6 @@
 {
   "name": "@subugoe/tido",
-  "version": "2.2.0",
+  "version": "2.2.2",
   "description": "Text Viewer for Digital Objects (TIDO)",
   "productName": "TIDO",
   "keywords": [
@@ -48,6 +48,7 @@
     "@quasar/app-webpack": "^3.0.0",
     "autoprefixer": "^10.4.7",
     "commitizen": "^4.2.4",
+    "cypress": "^9.6.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.14.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -93,6 +94,8 @@
   },
   "scripts": {
     "build": "quasar build --modern",
+    "cypress": "cypress run",
+    "cypress:headless": "cypress run --headless",
     "dev": "quasar dev --modern",
     "fix": "npm run fix:vue && npm run fix:js && npm run fix:scss",
     "fix:js": "eslint --fix --ext .js src",
@@ -103,10 +106,9 @@
     "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
     "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:vue": "eslint --ext .vue src",
-    "release": "npm run build && npm run tweak:build && npm publish",
+    "release": "npm run build && npm publish",
     "test": "npm run test:unit",
     "test:unit": "jest --updateSnapshot",
-    "tweak:build": "bash .build-scripts/tweak_build.sh",
     "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version"
   },
   "files": [

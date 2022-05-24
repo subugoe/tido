@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <q-tabs
-      v-model="activeTab"
+      v-model="activeContentUrl"
       dense
       class="text-grey q-mb-sm"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -11,21 +11,21 @@
       <q-tab
         v-for="(contenturl, i) in contentUrls"
         :key="`content${i}`"
-        :class="{ 'disabled-tab': contenturl === activeTab }"
+        :class="{ 'disabled-tab': contenturl === activeContentUrl }"
         :label="$t(contentTypes[i])"
         :name="contenturl"
-        @click="switchActiveTab(contenturl)"
+        @click="switchActiveContentUrl(contenturl)"
       />
     </q-tabs>
 
     <Loading v-if="isLoading" />
 
     <div
-      v-if="hasError"
+      v-if="hasError && notificationMessage"
       class="q-pa-sm"
     >
       <Notification
-        :message="notificationMessage"
+        :message="$t(notificationMessage)"
         :notification-colors="config.notificationColors"
         title-key="textErrorTitle"
         type="warning"
@@ -124,6 +124,9 @@ export default {
     isLoading: false,
   }),
   computed: {
+    itemUrl() {
+      return this.$store.getters['contents/itemUrl'];
+    },
     contentIndex() {
       return this.$store.getters['contents/contentIndex'];
     },
@@ -145,7 +148,7 @@ export default {
     fontsize() {
       return this.$store.getters['annotations/contentFontSize'];
     },
-    activeTab() {
+    activeContentUrl() {
       return this.contentUrls[this.contentIndex];
     },
     contentStyle() {
@@ -157,9 +160,9 @@ export default {
       return this.errorText || this.errorTextMessage;
     },
     notificationMessage() {
-      return this.$t(
-        this.errorTextMessage || this.errorText.textErrorMessageNotExists,
-      );
+      return this.errorTextMessage || this.errorText
+        ? this.errorText.textErrorMessageNotExists
+        : '';
     },
     sequenceIndex() {
       return this.$store.getters['contents/sequenceIndex'];
@@ -170,31 +173,43 @@ export default {
       return Object.keys(support).length && support.url !== '';
     },
   },
+  watch: {
+    itemUrl: {
+      handler: 'onItemUrlChange',
+      immediate: true,
+    },
+  },
   async created() {
     this.fasSearchPlus = fasSearchPlus;
     this.fasSearchMinus = fasSearchMinus;
-  },
-
-  mounted() {
-    if (this.errorText !== null) {
-      return;
-    }
-
-    this.handleActiveTab();
   },
   methods: {
     decrease() {
       this.$store.dispatch('annotations/decreaseContentFontSize');
     },
-    switchActiveTab(contentUrl) {
+    switchActiveContentUrl(contentUrl) {
       this.$store.dispatch(
         'contents/setContentIndex',
         this.contentUrls.findIndex((x) => x === contentUrl),
       );
-      this.handleActiveTab();
+      this.handleActiveContentUrl();
     },
-    async handleActiveTab() {
-      const url = this.activeTab;
+    async getContentsItemData(url) {
+      const { isManifestChanged } = await this.$store.dispatch(
+        'contents/initContentItem',
+        url,
+      );
+      if (isManifestChanged) {
+        this.$store.dispatch('contents/setContentIndex', 0);
+      }
+
+      await this.handleActiveContentUrl();
+    },
+    async onItemUrlChange(itemUrl) {
+      await this.getContentsItemData(itemUrl);
+    },
+    async handleActiveContentUrl() {
+      const url = this.activeContentUrl;
       try {
         if (!url) {
           return;
@@ -210,17 +225,14 @@ export default {
         }
 
         const dom = domParser(data);
-        this.$store.dispatch('annotations/addHighlightAttributesToText', dom);
         this.content = dom.documentElement.innerHTML;
-      } catch (err) {
-        this.errorTextMessage = err.message;
-      } finally {
         setTimeout(() => {
-          this.$store.dispatch('contents/updateContentDOM');
-          this.$store.dispatch('annotations/addHighlightClickListeners');
           this.isLoading = false;
           this.$store.dispatch('annotations/updateContentLoading', false);
+          this.$store.dispatch('contents/updateContentDOM');
         }, 100);
+      } catch (err) {
+        this.errorTextMessage = err.message;
       }
     },
     increase() {
