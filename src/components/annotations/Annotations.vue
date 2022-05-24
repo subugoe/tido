@@ -194,8 +194,6 @@ export default {
   methods: {
     async onItemChange(item) {
       const root = document.getElementById('text-content');
-      this.$store.dispatch('contents/updateContentDOM');
-
       if (item.annotationCollection) {
         await this.$store.dispatch('annotations/initAnnotations', item.annotationCollection, {
           root: true,
