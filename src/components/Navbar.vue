@@ -8,6 +8,7 @@
       padding="xs"
       class="q-px-sm q-mr-sm"
       @click="toggleSheet(itemindex - 1)"
+      data-testid="previous-item"
     >
       <q-icon
         :name="fasArrowLeft"
@@ -25,6 +26,7 @@
       padding="xs"
       class="q-px-sm"
       @click="toggleSheet(itemindex + 1)"
+      data-testid="next-item"
     >
       {{ captionnext }}
       <q-icon

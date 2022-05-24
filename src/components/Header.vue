@@ -55,6 +55,7 @@
             q-mb-xs-sm q-mb-sm-none
             order-xs-first order-sm-last
           "
+          data-testid="panel-toggle"
         />
 
         <div v-if="!config['header_section'].titles">
