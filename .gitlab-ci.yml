@@ -61,7 +61,9 @@ test:
   when: always
   script:
     # install dependencies
-    - bash .ci-scripts/build.sh &
+    - npm ci
+    # start the server in the background
+    - npm run dev:ci &
     # run Cypress tests
     - npm run cypress
   artifacts:
