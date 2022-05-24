@@ -37,6 +37,10 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
     css: ['style.scss'],
 
+    vendor: {
+      disable: true,
+    },
+
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
       // Possible values for 'all':
@@ -102,7 +106,7 @@ module.exports = configure(function (ctx) {
       // https://v2.quasar.dev/quasar-cli-webpack/handling-webpack
       // 'chain' is a webpack-chain object https://github.com/neutrinojs/webpack-chain
 
-      chainWebpack(chain, { isServer, isClient }) {
+      chainWebpack(chain) {
         chain
           .plugin('eslint-webpack-plugin')
           .use(ESLintPlugin, [{ extensions: ['js', 'vue'] }]);
@@ -120,8 +124,7 @@ module.exports = configure(function (ctx) {
           .type('javascript/auto')
           .use('i18n')
           .loader('@intlify/vue-i18n-loader');
-        chain.output.filename('[name].js');
-        // chain.resolve.alias.set('@': path.resolve(__dirname, './src/'));
+        chain.output.filename('tido.js');
         chain.resolve.alias.set('@', path.resolve(__dirname, './src/'));
       },
     },
@@ -179,9 +182,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `TIDO`,
-        short_name: `TIDO`,
-        description: `Text Viewer for Digital Objects (TIDO)`,
+        name: 'TIDO',
+        short_name: 'TIDO',
+        description: 'Text Viewer for Digital Objects (TIDO)',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

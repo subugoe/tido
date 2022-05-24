@@ -1,6 +1,6 @@
 {
   "name": "@subugoe/tido",
-  "version": "2.2.0",
+  "version": "2.2.2",
   "description": "Text Viewer for Digital Objects (TIDO)",
   "productName": "TIDO",
   "keywords": [
@@ -105,10 +105,9 @@
     "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
     "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:vue": "eslint --ext .vue src",
-    "release": "npm run build && npm run tweak:build && npm publish",
+    "release": "npm run build && npm publish",
     "test": "npm run test:unit",
     "test:unit": "jest --updateSnapshot",
-    "tweak:build": "bash .build-scripts/tweak_build.sh",
     "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version"
   },
   "files": [
