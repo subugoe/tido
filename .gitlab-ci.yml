@@ -21,6 +21,8 @@ build_test:
   stage: build
   script:
    - bash .ci-scripts/build.sh
+   - Xvfb :1 -screen 0 1280x800x24 & export DISPLAY=:1
+   - npx cypress verify
    - npm run cypress:headless
   artifacts:
     paths:
