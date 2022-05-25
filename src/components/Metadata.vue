@@ -151,7 +151,7 @@ export default {
       return this.$store.getters['contents/manifests'];
     },
     itemcount() {
-      return this.manifests[this.sequenceIndex].sequence.length;
+      return this.manifests[this.sequenceIndex]?.sequence.length ?? 0;
     },
     sequenceIndex() {
       return this.$store.getters['contents/selectedSequenceIndex'];
@@ -179,7 +179,7 @@ export default {
     metadataItem() {
       return [
         { id: 'Label', data: this.item.n },
-        { id: 'Language', data: this.item.lang.join(',') },
+        { id: 'Language', data: this.item.lang?.join(',') },
         { id: 'imageLicense', data: this.item.image?.license?.id },
         { id: 'imageNotes', data: this.item.image?.license?.notes },
       ].filter((item) => item.data);
