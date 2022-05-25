@@ -22,8 +22,8 @@
           class="row items-center"
         >
           <div>
-            {{ prop.node.labelSheet ? $t(labels.item) : "" }}
-            {{ prop.node["label-key"] }}
+            {{ prop.node.labelSheet ? $t(labels.item) : '' }}
+            {{ prop.node['label-key'] }}
           </div>
         </div>
       </template>
@@ -88,19 +88,24 @@ export default {
       },
       immediate: true,
     },
+    tree: {
+      handler(value) {
+        if (value.length > 0) {
+          this.$store.dispatch('contents/addToExpanded', value[0].label);
+        }
+      },
+      immediate: true,
+    },
   },
   created() {
     this.fasCaretRight = fasCaretRight;
   },
-  mounted() {
-    this.$store.dispatch('contents/addToExpanded', this.tree[0].label);
-  },
   methods: {
     onSequenceIndexUpdate(index) {
-      if (!this.expanded.includes(this.manifests[index].label)) {
+      if (index !== null && !this.expanded.includes(this.manifests[index]?.label)) {
         this.$store.dispatch(
           'contents/addToExpanded',
-          this.manifests[index].label,
+          this.manifests[index]?.label,
         );
       }
     },

@@ -272,12 +272,6 @@ export const initContentItem = async (
       });
       isManifestChanged = true;
     }
-
-    if (data.annotationCollection) {
-      dispatch('annotations/initAnnotations', data.annotationCollection, {
-        root: true,
-      });
-    }
   } catch (err) {
     errorText = {
       messageKey: 'textErrorMessageNotExists',

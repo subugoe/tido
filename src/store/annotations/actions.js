@@ -220,7 +220,7 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
 
   function getNearestParentAnnotation(element) {
     const parent = element.parentElement;
-    if (parent.dataset.annotation) {
+    if (parent.dataset?.annotation) {
       return parent;
     }
     const higherParent = getNearestParentAnnotation(parent);

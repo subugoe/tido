@@ -50,11 +50,11 @@ export const selectedManifest = (state) => state.manifests.find((manifest) => ma
 export const selectedSequenceIndex = (state, getters) => {
   const item = getters.selectedManifest;
   if (!item) {
-    return 0;
+    return null;
   }
 
   const { label } = item;
-  let index = 0;
+  let index = null;
   state.manifests.forEach((manifest, idx) => {
     if (manifest.label === label) {
       index = idx;
