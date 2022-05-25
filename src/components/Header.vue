@@ -49,13 +49,13 @@
         <PanelsToggle
           v-if="config['header_section'].toggle"
           class="
+            panel-toggle
             row
             justify-center justify-sm-end
             col-xs-12 col-sm-6
             q-mb-xs-sm q-mb-sm-none
             order-xs-first order-sm-last
           "
-          data-testid="panel-toggle"
         />
 
         <div v-if="!config['header_section'].titles">

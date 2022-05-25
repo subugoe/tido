@@ -6,14 +6,14 @@ describe('Tido', () => {
       cy.get('.q-toolbar h2').should('not.be.empty');
       cy.get('.q-toolbar button[title="Change language"]').should('be.visible');
       cy.get('.q-toolbar button[title="Project Info"]').should('be.visible');
-      cy.get('.q-toolbar div[data-testid="panel-toggle"] button').should(
+      cy.get('.q-toolbar .panel-toggle button').should(
         'be.visible'
       );
 
-      cy.get('.q-toolbar button[data-testid="previous-item"]').should(
+      cy.get('.q-toolbar button.previous-item').should(
         'be.disabled'
       );
-      cy.get('.q-toolbar button[data-testid="next-item"]').should('be.enabled');
+      cy.get('.q-toolbar button.next-item').should('be.enabled');
       cy.url().then((url) => {
         cy.get('.q-tree__node--selected')
           .get(`div[id="${url.split('?itemurl=')[1]}"]`)
@@ -53,7 +53,7 @@ describe('Tido', () => {
   it('Should toggle panels', () => {
     cy.visit('/').then(() => {
       cy.get('.root.panels-target').children('.item').should('have.length', 4);
-      cy.get('[data-testid="panel-toggle"] button').click();
+      cy.get('.panel-toggle button').click();
 
       cy.get('.q-menu').should('be.visible');
 

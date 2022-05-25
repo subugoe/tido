@@ -6,9 +6,8 @@
       :disabled="itemindex <= 0"
       size="xs"
       padding="xs"
-      class="q-px-sm q-mr-sm"
+      class="q-px-sm q-mr-sm previous-item"
       @click="toggleSheet(itemindex - 1)"
-      data-testid="previous-item"
     >
       <q-icon
         :name="fasArrowLeft"
@@ -24,9 +23,8 @@
       :disabled="itemindex >= itemUrls.length - 1"
       size="xs"
       padding="xs"
-      class="q-px-sm"
+      class="q-px-sm next-item"
       @click="toggleSheet(itemindex + 1)"
-      data-testid="next-item"
     >
       {{ captionnext }}
       <q-icon
