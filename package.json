@@ -94,7 +94,8 @@
   },
   "scripts": {
     "build": "quasar build --modern",
-    "cypress": "cypress open",
+    "cypress": "cypress run",
+    "cypress:headless": "cypress run --headless",
     "dev": "quasar dev --modern",
     "fix": "npm run fix:vue && npm run fix:js && npm run fix:scss",
     "fix:js": "eslint --fix --ext .js src",
