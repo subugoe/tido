@@ -14,7 +14,7 @@ stages:
 
 # builds TIDO on feature and bugfix branches.
 build_test:
-  image: cypress/browsers:node12.13.0-chrome80-ff73
+  image: cypress/browsers:node14.17.0-chrome91-ff89
   except:
    - main
    - develop
