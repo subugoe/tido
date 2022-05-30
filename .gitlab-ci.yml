@@ -10,7 +10,6 @@ cache:
 
 stages:
   - build
-  - test:e2e
   - deploy
 
 # builds TIDO on feature and bugfix branches.
