@@ -1,5 +1,5 @@
 describe('Tido', () => {
-  it('Should render', () => {
+  it('Should render panels and layout', () => {
     cy.visit('/').then(() => {
       cy.get('.root.panels-target').should('be.visible');
       cy.get('.q-toolbar h1').should('not.be.empty');

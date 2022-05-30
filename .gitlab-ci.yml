@@ -45,11 +45,7 @@ test:e2e:
    - main
    - develop
   stage: test:e2e
-  environment:
-    name: ${CI_COMMIT_REF_SLUG}
-    url: https://subugoe.pages.gwdg.de/emo/tido/${CI_COMMIT_REF_SLUG}/
   script:
-   - bash .ci-scripts/build.sh
    - bash .ci-scripts/set_entrypoint_ci.sh
    - npm run dev & npm run cypress:headless
   artifacts:
