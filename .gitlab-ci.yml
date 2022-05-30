@@ -50,8 +50,7 @@ test:e2e:
     url: https://subugoe.pages.gwdg.de/emo/tido/${CI_COMMIT_REF_SLUG}/
   script:
    - bash .ci-scripts/build.sh
-   - npm run dev
-   - npm run cypress:headless
+   - npm run dev & npm run cypress:headless
   artifacts:
     paths:
      - dist/
