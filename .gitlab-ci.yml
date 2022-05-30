@@ -10,20 +10,18 @@ cache:
 
 stages:
   - build
+  - test:e2e
   - deploy
 
 # builds TIDO on feature and bugfix branches.
 build_test:
-  image: cypress/browsers:node14.17.0-chrome91-ff89
+  image: node:14
   except:
    - main
    - develop
   stage: build
   script:
    - bash .ci-scripts/build.sh
-   - Xvfb :1 -screen 0 1280x800x24 & export DISPLAY=:1
-   - npx cypress verify
-   - npm run cypress:headless
   artifacts:
     paths:
      - dist/
@@ -40,6 +38,23 @@ build_main_and_develop:
     paths:
      - dist/
     expire_in: 1 mos
+
+test:e2e:
+  image: cypress/browsers:node14.17.0-chrome91-ff89
+  except:
+   - main
+   - develop
+  stage: test
+  environment:
+    name: ${CI_COMMIT_REF_SLUG}
+    url: https://subugoe.pages.gwdg.de/emo/tido/${CI_COMMIT_REF_SLUG}/
+  script:
+   - bash .ci-scripts/build.sh
+   - npm run dev
+   - npm run cypress:headless
+  artifacts:
+    paths:
+     - dist/
 
 pages:
   image: alpine:latest

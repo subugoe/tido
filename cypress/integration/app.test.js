@@ -4,7 +4,6 @@ describe('Tido', () => {
       cy.get('.root.panels-target').should('be.visible');
       cy.get('.q-toolbar h1').should('not.be.empty');
       cy.get('.q-toolbar h2').should('not.be.empty');
-      cy.get('.q-toolbar button[title="Change language"]').should('be.visible');
       cy.get('.q-toolbar button[title="Project Info"]').should('be.visible');
       cy.get('.q-toolbar .panel-toggle button').should(
         'be.visible'
@@ -37,19 +36,6 @@ describe('Tido', () => {
     });
   });
 
-  it('Should be able to switch languages', () => {
-    cy.visit('/').then(() => {
-      cy.get('button[title="Change language"]').click();
-      cy.get('.q-menu').should('be.visible');
-      cy.get('.q-menu .q-item').first().click();
-      cy.get('button[title="Sprache ändern"]').should('be.visible');
-
-      cy.get('button[title="Sprache ändern"]').click();
-      cy.get('.q-menu .q-item').last().click();
-      cy.get('button[title="Change language"]').should('be.visible');
-    });
-  });
-
   it('Should toggle panels', () => {
     cy.visit('/').then(() => {
       cy.get('.root.panels-target').children('.item').should('have.length', 4);
@@ -76,6 +62,68 @@ describe('Tido', () => {
     });
   });
 
+  it('Should able to select previous sheet', ()=> {
+    cy.visit('/').then(()=> {
+      cy.url().should('contain', '?itemurl');
+      cy.url().then((initialUrl)=> {
+        cy.get('button.next-item').click();
+        cy.url().should('not.equal', initialUrl);
+        cy.wait(2000);
+        cy.get('button.previous-item').click();
+        cy.url().should('equal', initialUrl);
+      });
+    });
+  });
+
+  it('Should increase and decrease font size', () => {
+    cy.visit('/').then(() => {
+      cy.get('#text-content div', { timeout: 10000 })
+        .first()
+        .should('have.attr', 'style', 'font-size: 16px;');
+
+      // Increasing font size
+      cy.get('button[title="Increase"]').click();
+      cy.get('#text-content div')
+        .first()
+        .should('have.attr', 'style', 'font-size: 18px;');
+
+      // Decreasing font size
+      cy.get('button[title="Decrease"]').click();
+      cy.get('#text-content div')
+        .first()
+        .should('have.attr', 'style', 'font-size: 16px;');
+    });
+  });
+
+  it('Should not increase font more than 28', () => {
+    cy.visit('/').then(() => {
+      // Increasing font size
+      cy.get('button[title="Increase"]').click(); // 18px
+      cy.get('button[title="Increase"]').click(); // 20px
+      cy.get('button[title="Increase"]').click(); // 22px
+      cy.get('button[title="Increase"]').click(); // 24px
+      cy.get('button[title="Increase"]').click(); // 26px
+      cy.get('button[title="Increase"]').click(); // 28px
+      cy.get('button[title="Increase"]').should('be.disabled');
+
+      cy.get('#text-content div')
+        .first()
+        .should('have.attr', 'style', 'font-size: 28px;');
+    });
+  });
+
+  it('Should not decrease font less than 14', () => {
+    cy.visit('/').then(() => {
+      // Increasing font size
+      cy.get('button[title="Decrease"]').click(); // 14px
+      cy.get('button[title="Decrease"]').should('be.disabled');
+
+      cy.get('#text-content div')
+        .first()
+        .should('have.attr', 'style', 'font-size: 14px;');
+    });
+  });
+
   it('Should highlight all annotations', () => {
     cy.visit('/').then(()=> {
       cy.get('.root.panels-target .item').last()
@@ -86,6 +134,43 @@ describe('Tido', () => {
 
       cy.get('.root.panels-target .item').last()
         .get('.item-content .q-list .q-item').should('have.class', 'bg-grey-4');
+    });
+  });
+
+  it('Should remove all highlights', ()=> {
+    cy.visit('/').then(()=> {
+      cy.get('.root.panels-target .item').last().get('.item-content .q-list .q-item')
+      .should('have.length.at.least', 1);
+
+      // Click on Highlight all
+      cy.get('.fab-container .q-fab').click();
+      cy.get('.q-fab .q-fab__actions .q-btn').first().click();
+
+      // Click on remove all highlight
+      cy.get('.fab-container .q-fab').click();
+      cy.get('.q-fab .q-fab__actions .q-btn').last().click();
+      cy.get('.root.panels-target .item').last().get('.item-content .q-list .q-item')
+      .should('not.have.class', 'bg-grey-9');
+    });
+  });
+
+  it('Should change the url upon clicking on next button', ()=> {
+    cy.visit('/').then(()=> {
+      cy.url().should('contain', '?itemurl');
+      cy.url().then((initialUrl)=> {
+        cy.get('button.next-item').click();
+        cy.url().should('not.equal', initialUrl);
+      });
+    });
+  });
+
+  it('Should change the url upon clicking on tab', ()=> {
+    cy.visit('/').then(()=> {
+      cy.url().should('contain', '?itemurl');
+      cy.url().then((initialUrl)=> {
+        cy.get('.q-tree__node--selected').parent().siblings().next().first().click();
+        cy.url().should('not.equal', initialUrl);
+      });
     });
   });
 });
