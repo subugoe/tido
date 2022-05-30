@@ -22,6 +22,11 @@ case $CI_COMMIT_REF_NAME in
     ENTRY_POINT=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json
     sed -ri 's|.*("entrypoint"\s*:).*$|\t\t\t\1 "'${ENTRY_POINT}'",|' src/index.template.html
     ;;
+  $CI_COMMIT_REF_NAME)
+    echo 'set entrypoint for $CI_COMMIT_REF_NAME ...'
+    ENTRY_POINT=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json
+    sed -ri 's|.*("entrypoint"\s*:).*$|\t\t\t\1 "'${ENTRY_POINT}'",|' src/index.template.html
+    ;;
 esac
 
 [ $? -eq 0 ] && exit 0
