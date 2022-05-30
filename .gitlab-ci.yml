@@ -53,8 +53,11 @@ test:e2e:
    - bash .ci-scripts/set_entrypoint_ci.sh
    - npm run dev & npm run cypress:headless
   artifacts:
+    when: always
     paths:
-     - dist/
+     - cypress/videos/**/*.mp4
+     - cypress/screenshots/**/*.png
+    expire_in: 1 day
 
 pages:
   image: alpine:latest
