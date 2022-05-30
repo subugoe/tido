@@ -46,6 +46,7 @@ test:e2e:
    - develop
   stage: test:e2e
   script:
+   - bash .ci-scripts/build.sh
    - bash .ci-scripts/set_entrypoint_ci.sh
    - npm run dev & npm run cypress:headless
   artifacts:
