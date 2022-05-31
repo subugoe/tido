@@ -49,6 +49,7 @@
         <PanelsToggle
           v-if="config['header_section'].toggle"
           class="
+            panel-toggle
             row
             justify-center justify-sm-end
             col-xs-12 col-sm-6

@@ -10,6 +10,7 @@ cache:
 
 stages:
   - build
+  - test:e2e
   - deploy
 
 # builds TIDO on feature and bugfix branches.
@@ -37,6 +38,23 @@ build_main_and_develop:
     paths:
      - dist/
     expire_in: 1 mos
+
+test:e2e:
+  image: cypress/browsers:node14.17.0-chrome91-ff89
+  except:
+   - main
+   - develop
+  stage: test:e2e
+  script:
+   - bash .ci-scripts/build.sh
+   - bash .ci-scripts/set_entrypoint_ci.sh
+   - npm run dev & npm run cypress:headless
+  artifacts:
+    when: always
+    paths:
+     - cypress/videos/**/*.mp4
+     - cypress/screenshots/**/*.png
+    expire_in: 1 day
 
 pages:
   image: alpine:latest
