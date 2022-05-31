@@ -21,11 +21,11 @@
     <Loading v-if="isLoading" />
 
     <div
-      v-if="hasError"
+      v-if="hasError && notificationMessage"
       class="q-pa-sm"
     >
       <Notification
-        :message="notificationMessage"
+        :message="$t(notificationMessage)"
         :notification-colors="config.notificationColors"
         title-key="textErrorTitle"
         type="warning"
@@ -160,9 +160,9 @@ export default {
       return this.errorText || this.errorTextMessage;
     },
     notificationMessage() {
-      return this.$t(
-        this.errorTextMessage || this.errorText.textErrorMessageNotExists,
-      );
+      return this.errorTextMessage || this.errorText
+        ? this.errorText.textErrorMessageNotExists
+        : '';
     },
     sequenceIndex() {
       return this.$store.getters['contents/sequenceIndex'];

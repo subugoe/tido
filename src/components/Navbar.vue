@@ -6,7 +6,7 @@
       :disabled="itemindex <= 0"
       size="xs"
       padding="xs"
-      class="q-px-sm q-mr-sm"
+      class="q-px-sm q-mr-sm previous-item"
       @click="toggleSheet(itemindex - 1)"
     >
       <q-icon
@@ -23,7 +23,7 @@
       :disabled="itemindex >= itemUrls.length - 1"
       size="xs"
       padding="xs"
-      class="q-px-sm"
+      class="q-px-sm next-item"
       @click="toggleSheet(itemindex + 1)"
     >
       {{ captionnext }}
