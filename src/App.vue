@@ -18,7 +18,6 @@
 import { colors } from 'quasar';
 import Header from '@/components/Header.vue';
 import Navigation from '@/mixins/navigation';
-import * as PanelUtils from '@/utils/panels';
 
 export default {
   name: 'TIDO',
@@ -128,27 +127,6 @@ export default {
     async loadConfig() {
       return this.$store.dispatch('config/loadConfig');
     },
-    /**
-     * fetch all data provided on 'item level'
-     * caller: *mounted-hook*, *getManifest()*
-     *
-     * @param string url
-     */
-
-    async getContentsItemData(url) {
-      const { isManifestChanged } = await this.$store.dispatch(
-        'contents/initContentItem',
-        url,
-      );
-      if (isManifestChanged) {
-        this.$store.dispatch('contents/setPanels', PanelUtils.getNewPanels(this.panels));
-        this.$store.dispatch('contents/setContentIndex', 0);
-      }
-    },
-
-    async getImageItemData(url) {
-      this.$store.dispatch('contents/initImageData', url);
-    },
     getManifest(url) {
       this.$store.dispatch('contents/initManifest', url);
     },
@@ -174,9 +152,6 @@ export default {
       if (treeDom) {
         treeDom.scrollIntoView({ block: 'center' });
       }
-
-      this.getContentsItemData(this.itemUrl);
-      this.getImageItemData(this.itemUrl);
     },
     onManifestsChange() {
       const { itemurl } = this.$route.query;

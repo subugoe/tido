@@ -1,6 +1,5 @@
 <template>
   <div
-    v-if="ready"
     class="root panels-target"
   >
     <div
@@ -36,25 +35,8 @@ export default {
     panels() {
       return this.$store.getters['contents/panels'];
     },
-    ready() {
-      return (
-        this.manifests.length && this.tree.length && this.contentUrls.length
-      );
-    },
-    manifests() {
-      return this.$store.getters['contents/manifests'];
-    },
     config() {
       return this.$store.getters['config/config'];
-    },
-    contentUrls() {
-      return this.$store.getters['contents/contentUrls'];
-    },
-    tree() {
-      return this.$store.getters['contents/tree'];
-    },
-    imageUrl() {
-      return this.$store.getters['contents/imageUrl'];
     },
   },
   methods: {

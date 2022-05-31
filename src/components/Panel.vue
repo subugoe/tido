@@ -46,7 +46,6 @@
   >
     <component
       :is="panel.connector[0].component"
-      v-if="imageInit"
       :key="panel.connector[0].id"
     />
   </div>
@@ -79,9 +78,6 @@ export default {
   computed: {
     contentUrls() {
       return this.$store.getters['contents/contentUrls'];
-    },
-    imageInit() {
-      return this.$store.getters['contents/imageInit'];
     },
     imageUrl() {
       return this.$store.getters['contents/imageUrl'];
