@@ -41,9 +41,6 @@ build_main_and_develop:
 
 test:e2e:
   image: cypress/browsers:node14.17.0-chrome91-ff89
-  except:
-   - main
-   - develop
   stage: test:e2e
   script:
    - bash .ci-scripts/build.sh

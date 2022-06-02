@@ -183,14 +183,6 @@ export default {
       },
     },
   },
-  mounted() {
-    this.$store.subscribeAction((action) => {
-      if (action.type === 'contents/updateContentDOM') {
-        this.$store.dispatch('annotations/setFilteredAnnotations');
-        this.handleTooltip();
-      }
-    });
-  },
   methods: {
     async onItemChange(item) {
       const root = document.getElementById('text-content');
@@ -198,6 +190,10 @@ export default {
         await this.$store.dispatch('annotations/initAnnotations', item.annotationCollection, {
           root: true,
         });
+
+        this.$store.dispatch('annotations/setFilteredAnnotations');
+        this.handleTooltip();
+
         await this.$store.dispatch('annotations/addHighlightAttributesToText', root);
         await this.$store.dispatch('annotations/addHighlightClickListeners');
       }

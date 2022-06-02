@@ -113,31 +113,31 @@ describe('Tido', () => {
       .should('have.attr', 'style', 'font-size: 14px;');
   });
 
-  // it('Should highlight all annotations', () => {
-  //   cy.get('.root.panels-target .item').last()
-  //     .get('.item-content .q-list .q-item').should('have.length.at.least', 1);
-  //   cy.get('.fab-container .q-fab').click();
-  //
-  //   cy.get('.q-fab .q-fab__actions .q-btn').first().click();
-  //
-  //   cy.get('.root.panels-target .item').last()
-  //     .get('.item-content .q-list .q-item').should('have.class', 'bg-grey-4');
-  // });
+  it('Should highlight all annotations', () => {
+    cy.get('.root.panels-target .item').last()
+      .get('.item-content .q-list .q-item').should('have.length.at.least', 1);
+    cy.get('.fab-container .q-fab').click();
 
-  // it('Should remove all highlights', ()=> {
-  //   cy.get('.root.panels-target .item').last().get('.item-content .q-list .q-item')
-  //   .should('have.length.at.least', 1);
-  //
-  //   // Click on Highlight all
-  //   cy.get('.fab-container .q-fab').click();
-  //   cy.get('.q-fab .q-fab__actions .q-btn').first().click();
-  //
-  //   // Click on remove all highlight
-  //   cy.get('.fab-container .q-fab').click();
-  //   cy.get('.q-fab .q-fab__actions .q-btn').last().click();
-  //   cy.get('.root.panels-target .item').last().get('.item-content .q-list .q-item')
-  //   .should('not.have.class', 'bg-grey-9');
-  // });
+    cy.get('.q-fab .q-fab__actions .q-btn').first().click();
+
+    cy.get('.root.panels-target .item').last()
+      .get('.item-content .q-list .q-item').should('have.class', 'active');
+  });
+
+  it('Should remove all highlights', ()=> {
+    cy.get('.root.panels-target .item').last().get('.item-content .q-list .q-item')
+    .should('have.length.at.least', 1);
+
+    // Click on Highlight all
+    cy.get('.fab-container .q-fab').click();
+    cy.get('.q-fab .q-fab__actions .q-btn').first().click();
+
+    // Click on remove all highlight
+    cy.get('.fab-container .q-fab').click();
+    cy.get('.q-fab .q-fab__actions .q-btn').last().click();
+    cy.get('.root.panels-target .item').last().get('.item-content .q-list .q-item')
+    .should('not.have.class', 'active');
+  });
 
   it('Should change the url upon clicking on next button', ()=> {
     cy.url().then((initialUrl)=> {
