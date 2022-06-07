@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { colors } from 'quasar';
+import { setCssVar } from 'quasar';
 import Header from '@/components/Header.vue';
 import Navigation from '@/mixins/navigation';
 
@@ -99,14 +99,16 @@ export default {
 
     this.$q.dark.set('auto');
 
-    if (
-      this.config.colors.primary
-      && this.config.colors.secondary
-      && this.config.colors.accent
-    ) {
-      colors.setBrand('primary', this.config.colors.primary);
-      colors.setBrand('secondary', this.config.colors.secondary);
-      colors.setBrand('accent', this.config.colors.accent);
+    if (this.config.colors.primary) {
+      setCssVar('primary', this.config.colors.primary);
+    }
+
+    if (this.config.colors.secondary) {
+      setCssVar('secondary', this.config.colors.secondary);
+    }
+
+    if (this.config.colors.accent) {
+      setCssVar('accent', this.config.colors.accent);
     }
   },
   mounted() {
