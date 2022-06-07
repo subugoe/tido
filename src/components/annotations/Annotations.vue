@@ -87,6 +87,7 @@ export default {
         none: 'noAnnotationMessage',
         empty: 'noCommentsMessage',
       },
+      contentQueue: [],
     };
   },
   computed: {
@@ -143,6 +144,8 @@ export default {
     },
   },
   watch: {
+    contentQueue: 'processContentQueue',
+    isLoading: 'processContentQueue',
     item: {
       handler: 'onItemChange',
       immediate: true,
@@ -183,19 +186,33 @@ export default {
       },
     },
   },
+  mounted() {
+    this.$store.subscribeAction(async (action) => {
+      if (action.type === 'contents/updateContentDOM') {
+        this.contentQueue = [...this.contentQueue, this.updateAnnotations];
+      }
+    });
+  },
   methods: {
-    async onItemChange(item) {
+    async processContentQueue() {
+      while (this.contentQueue.length && !this.isLoading) {
+        this.contentQueue.pop()();
+      }
+    },
+    async updateAnnotations() {
       const root = document.getElementById('text-content');
+
+      await this.$store.dispatch('annotations/addHighlightAttributesToText', root);
+      await this.$store.dispatch('annotations/addHighlightClickListeners');
+
+      this.$store.dispatch('annotations/setFilteredAnnotations');
+      this.handleTooltip();
+    },
+    async onItemChange(item) {
       if (item.annotationCollection) {
         await this.$store.dispatch('annotations/initAnnotations', item.annotationCollection, {
           root: true,
         });
-
-        this.$store.dispatch('annotations/setFilteredAnnotations');
-        this.handleTooltip();
-
-        await this.$store.dispatch('annotations/addHighlightAttributesToText', root);
-        await this.$store.dispatch('annotations/addHighlightClickListeners');
       }
     },
     switchActiveTab(key) {
