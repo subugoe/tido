@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.3](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.2.2...v2.2.3) (2022-06-07)
+
+
+### Bug Fixes
+
+* loading of annotations on a slow network. ([6457e94](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/6457e949c83d1ce14f3c2195e45bd8c85f95f229))
+* text highlight when switch tabs. ([dbcdde2](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dbcdde20fd2589b1b6537a6a6d6f493f9f23095d))
+
+
+### Refactoring
+
+* ensure autonomous loading of panel components ([0f4d443](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0f4d443f4d1195ca53b8a9f59c38160aee72f3cc))
+
+
+### Tests
+
+* Implementation of Cypress E2E with minor test cases. ([5b21a43](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5b21a43ab5107605fee80f3cdebb840f767a09a3))
+
+
+### Chore
+
+* remove entrypoint. ([fa97aa7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/fa97aa7ddf12fcd44c97931d1ff6e18b8952164d))
+
 ### [2.2.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.2.1...v2.2.2) (2022-05-17)
 
 
