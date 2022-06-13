@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { colors } from 'quasar';
+import { setCssVar } from 'quasar';
 import { fasPalette } from '@quasar/extras/fontawesome-v5';
 
 export default {
@@ -69,13 +69,21 @@ export default {
       this.selectedTheme = color;
 
       if (color === 'default') {
-        colors.setBrand('primary', this.$q.config.brand.primary);
-        colors.setBrand('secondary', this.$q.config.brand.secondary);
-        colors.setBrand('accent', this.$q.config.brand.accent);
-      } else if (color === 'tido' && this.projectcolors.primary && this.projectcolors.secondary && this.projectcolors.accent) {
-        colors.setBrand('primary', this.projectcolors.primary);
-        colors.setBrand('secondary', this.projectcolors.secondary);
-        colors.setBrand('accent', this.projectcolors.accent);
+        setCssVar('primary', this.$q.config.brand.primary);
+        setCssVar('secondary', this.$q.config.brand.secondary);
+        setCssVar('accent', this.$q.config.brand.accent);
+      } else if (color === 'tido') {
+        if (this.projectcolors.primary) {
+          setCssVar('primary', this.projectcolors.primary);
+        }
+
+        if (this.projectcolors.secondary) {
+          setCssVar('secondary', this.projectcolors.secondary);
+        }
+
+        if (this.projectcolors.accent) {
+          setCssVar('accent', this.projectcolors.accent);
+        }
       }
     },
   },
