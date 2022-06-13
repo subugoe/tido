@@ -30,7 +30,7 @@
                 :color="$q.dark.isActive ? 'bg-black' : 'accent'"
                 :name="renderCheckIcon(i)"
               />
-              {{ $t(p.panel_label).toUpperCase() }}
+              <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.panel_label).toUpperCase() }}</span>
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -52,7 +52,7 @@
                 :color="$q.dark.isActive ? 'white' : 'accent'"
                 :name="fasUndo"
               />
-              {{ $t('Reset').toUpperCase() }}
+              <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('Reset').toUpperCase() }}</span>
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -84,7 +84,7 @@
             :color="$q.dark.isActive ? 'bg-black' : 'accent'"
             :name="renderCheckIcon(i)"
           />
-          {{ $t(p.panel_label).toUpperCase() }}
+          <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.panel_label).toUpperCase() }}</span>
         </q-btn>
       </div>
 
@@ -105,7 +105,7 @@
           :color="$q.dark.isActive ? 'white' : 'accent'"
           :name="fasUndo"
         />
-        {{ $t('Reset').toUpperCase() }}
+        <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('Reset').toUpperCase() }}</span>
       </q-btn>
     </div>
   </div>

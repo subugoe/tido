@@ -7,7 +7,10 @@
       {{ collectionTitle }}
     </h1>
 
-    <h2 class="text-h6 text-bold text-uppercase q-mt-none q-mb-none">
+    <h2
+      class="text-h6 text-bold text-uppercase  q-mt-none q-mb-none"
+      :class="$q.dark.isActive ? 'text-light' : 'text-dark'"
+    >
       <span>{{ manifestTitle }}</span>
 
       <q-icon

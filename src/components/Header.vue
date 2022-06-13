@@ -1,5 +1,5 @@
 <template>
-  <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary text-primary'">
+  <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary'">
     <div
       v-if="
         !!$route.query.source &&
