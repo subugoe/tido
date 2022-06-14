@@ -3,6 +3,7 @@
     <h1
       v-if="collectionTitle"
       class="text-h5 text-bold text-uppercase q-mb-none q-mt-xs"
+      :class="$q.dark.isActive ? 'text-light' : 'text-dark'"
     >
       {{ collectionTitle }}
     </h1>
