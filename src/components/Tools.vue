@@ -6,7 +6,7 @@
     />
 
     <Color
-      v-if="config.themes && projectColorsSet"
+      v-if="config.themes"
       :projectcolors="projectcolors"
       :config="config"
     />
@@ -28,9 +28,6 @@ export default {
     SoftwareInfo,
   },
   computed: {
-    projectColorsSet() {
-      return !!Object.values(this.projectcolors).every((color) => color !== null && color !== '');
-    },
     config() {
       return this.$store.getters['config/config'];
     },
