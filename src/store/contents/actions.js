@@ -164,6 +164,7 @@ export const initImageData = async ({ commit }, url) => {
     imageUrl,
     hasError,
     errorImage,
+    loadingImage: true,
     init: false,
   });
 
@@ -203,6 +204,7 @@ export const initImageData = async ({ commit }, url) => {
   commit('setImageData', {
     imageUrl,
     hasError,
+    loadingImage: false,
     errorImage,
     init: true,
   });
