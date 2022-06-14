@@ -1,5 +1,7 @@
 <template>
   <div class="item">
+    <Loading v-if="!loaded" />
+
     <q-tree
       v-model:expanded="expanded"
       v-model:selected="selected"
@@ -33,10 +35,14 @@
 
 <script>
 import { fasCaretRight } from '@quasar/extras/fontawesome-v5';
+import Loading from '@/components/Loading.vue';
 import Navigation from '@/mixins/navigation';
 
 export default {
   name: 'Treeview',
+  components: {
+    Loading,
+  },
   mixins: [Navigation],
   data() {
     return {
@@ -65,6 +71,9 @@ export default {
     },
     manifests() {
       return this.$store.getters['contents/manifests'];
+    },
+    loaded() {
+      return this.$store.getters['contents/loaded'];
     },
   },
   watch: {
