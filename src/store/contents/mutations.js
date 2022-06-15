@@ -30,6 +30,10 @@ export const setImageData = (state, payload) => {
   state.image = { ...payload };
 };
 
+export const setImageLoaded = (state, payload) => {
+  state.image.loadingImage = payload;
+};
+
 export const setIsCollection = (state, payload) => {
   state.isCollection = payload.isCollection;
 };

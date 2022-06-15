@@ -154,6 +154,10 @@ export const setContentIndex = ({ commit }, index) => {
   commit('setContentIndex', index);
 };
 
+export const updateImageLoading = async ({ commit }, payload) => {
+  commit('setImageLoaded', payload);
+};
+
 export const initImageData = async ({ commit }, url) => {
   const data = await request(url);
   let imageUrl = '';
@@ -204,9 +208,9 @@ export const initImageData = async ({ commit }, url) => {
   commit('setImageData', {
     imageUrl,
     hasError,
-    loadingImage: false,
     errorImage,
     init: true,
+    loadingImage: true,
   });
 };
 

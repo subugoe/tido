@@ -125,6 +125,10 @@ export default {
       this.viewer = new OpenSeadragon.Viewer(this.options);
       this.viewer.controlsFadeDelay = 1000;
 
+      this.viewer.addHandler('tile-loaded', () => {
+        this.$store.dispatch('contents/updateImageLoading', true);
+      });
+
       document.addEventListener('fullscreenchange', () => {
         Object.values(this.buttons).forEach((v) => {
           if (v.id === 'fullscreen') {
