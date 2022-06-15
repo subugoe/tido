@@ -1,40 +1,43 @@
 <template>
-  <div
-    v-if="errorImage"
-    class="q-pa-sm"
-  >
-    <Notification
-      :message="$t(errorImage.messageKey)"
-      title-key="imageErrorTitle"
-      type="warning"
-    />
+  <div class="imageItem">
+    <Loading v-if="loadingImage" />
+    <div
+      v-if="errorImage"
+      class="q-pa-sm"
+    >
+      <Notification
+        :message="$t(errorImage.messageKey)"
+        title-key="imageErrorTitle"
+        type="warning"
+      />
+    </div>
+    <div v-else>
+      <nav>
+        <q-btn
+          v-for="(btn, idx) in buttons"
+          :id="$t(btn.tooltip)"
+          :key="idx"
+          flat
+          round
+          size="sm"
+          :color="$q.dark.isActive ? 'white' : 'accent'"
+          class="q-ml-xs q-mt-xs"
+          :title="$t(btn.tooltip)"
+        >
+          <q-icon
+            :id="btn.id"
+            size="xs"
+            :name="btn.svg"
+          />
+        </q-btn>
+      </nav>
+    </div>
+    <figure
+      id="openseadragon"
+      class="item"
+    >
+    </figure>
   </div>
-  <div v-else>
-    <nav>
-      <q-btn
-        v-for="(btn, idx) in buttons"
-        :id="$t(btn.tooltip)"
-        :key="idx"
-        flat
-        round
-        size="sm"
-        :color="$q.dark.isActive ? 'white' : 'accent'"
-        class="q-ml-xs q-mt-xs"
-        :title="$t(btn.tooltip)"
-      >
-        <q-icon
-          :id="btn.id"
-          size="xs"
-          :name="btn.svg"
-        />
-      </q-btn>
-    </nav>
-  </div>
-  <figure
-    id="openseadragon"
-    class="item"
-  >
-  </figure>
 </template>
 
 <script>
@@ -47,11 +50,13 @@ import {
   fasCompressArrowsAlt,
 } from '@quasar/extras/fontawesome-v5';
 
+import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
 
 export default {
   name: 'OpenSeadragon',
   components: {
+    Loading,
     Notification,
   },
   data() {
@@ -74,6 +79,9 @@ export default {
     },
     errorImage() {
       return this.$store.getters['contents/errorImage'];
+    },
+    loadingImage() {
+      return this.$store.getters['contents/loadingImage'];
     },
     options() {
       return {
@@ -117,6 +125,10 @@ export default {
       this.viewer = new OpenSeadragon.Viewer(this.options);
       this.viewer.controlsFadeDelay = 1000;
 
+      this.viewer.addHandler('tile-loaded', () => {
+        this.$store.dispatch('contents/updateImageLoading', true);
+      });
+
       document.addEventListener('fullscreenchange', () => {
         Object.values(this.buttons).forEach((v) => {
           if (v.id === 'fullscreen') {
@@ -137,5 +149,9 @@ figure {
   height: 75vh;
   margin: 0;
   width: 100%;
+}
+
+.imageItem{
+  position: relative;
 }
 </style>

@@ -16,6 +16,8 @@ export const expanded = (state) => state.expanded;
 
 export const isCollection = (state) => state.isCollection;
 
+export const loadingImage = (state) => state.image.loadingImage;
+
 export const imageHasError = (state) => state.image.hasError;
 
 export const imageInit = (state) => state.image.init;

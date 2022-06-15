@@ -98,7 +98,6 @@ export default {
 <style lang="scss" scoped>
 .tabs-container {
   display: flex;
-
   > * {
     flex: 1;
   }
@@ -113,6 +112,12 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  .q-tab-panels {
+    display: flex;
+    flex-direction:column;
+    flex:1;
+  }
 }
 
 .item {
