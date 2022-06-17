@@ -33,7 +33,7 @@ build_main_and_develop:
    - develop
   stage: build
   script:
-   - if [[ $CONTINUE_BUILD == "true" ]]; then echo "Continue build"; bash .ci-scripts/build.sh; else echo "Stop build"; fi
+   - bash .ci-scripts/build.sh
   artifacts:
     paths:
      - dist/
@@ -59,7 +59,6 @@ pages:
   when: always
   script:
     - sh .ci-scripts/install-deps.sh
-    - if [[ $CONTINUE_BUILD == "false" && ! -d dist ]]; then echo "Build not continued. Create 404 page."; bash .ci-scripts/set-404-page.sh; else echo "Proceed page build as usual."; fi
     - bash .ci-scripts/update-artifacts.sh
   environment:
     name: ${CI_COMMIT_REF_SLUG}
