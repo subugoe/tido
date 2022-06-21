@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.4](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.2.3...v2.2.4) (2022-06-21)
+
+
+### Bug Fixes
+
+* added a handler to display spinner until image loads. ([4a635a9](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4a635a9b0e746ea71ae2697123b6327060cf45a7))
+* collection title color ([7e46b44](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7e46b446bc4228dff682c47f748018cd7adc8f9e))
+* color switch tool ([f340ae3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f340ae3ef729f025e049fed16b860e2147bdf64d))
+* colors setting from config ([2ff77b7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2ff77b7d5f948fe36aad5c3c87d131b3c85f302c))
+* header colors ([27f28ab](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/27f28ab0e05df2a5332c53ef486488a17ced611b))
+
+
+### Refactoring
+
+* add loading spinner to tree and image. ([0e3a168](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0e3a168fe7d27af080bdf3ccbe7cbb3bdd295ab6))
+* add missing states for image loading. ([9783bd9](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/9783bd997cf3884b30792a750ee0534e35cf5e45))
+
+
+### Continuos Integration
+
+* deploy old develop and main artifacts only on other branches ([f98418a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f98418a531c941479f105cfd6f089a8a59032685))
+
 ### [2.2.3](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.2.2...v2.2.3) (2022-06-07)
 
 
