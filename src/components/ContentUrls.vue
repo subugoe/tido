@@ -3,7 +3,8 @@
     <div
       v-for="(url, idx) in contentUrls"
       :key="idx"
-      class="url-text text-grey-8"
+      class="url-text"
+      :class="$q.dark.isActive ? 'text-grey-5' : 'text-grey-8'"
     >
       <a
         v-if="url.isLink"

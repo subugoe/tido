@@ -26,7 +26,7 @@
         >
           <q-item-label
             overline
-            class="text-uppercase text-dark"
+            class="text-uppercase"
           >
             {{ $t(mCollection.id) }}
           </q-item-label>
@@ -56,7 +56,7 @@
         <q-item-section class="q-mb-sm">
           <q-item-label
             overline
-            class="text-uppercase text-dark"
+            class="text-uppercase"
           >
             {{ $t(mManifest.id) }}
           </q-item-label>
@@ -80,7 +80,7 @@
             <template v-else>
               <q-item-label
                 overline
-                class="text-uppercase text-dark"
+                class="text-uppercase"
               >
                 {{ $t(meta.key) }}
               </q-item-label>
@@ -114,7 +114,7 @@
         >
           <q-item-label
             overline
-            class="text-uppercase text-dark"
+            class="text-uppercase"
           >
             {{ $t(mItem.id) }}
           </q-item-label>
@@ -203,4 +203,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.q-list {
+  .q-item__label {
+    color: $dark;
+  }
+
+  &--dark {
+    .q-item__label {
+      color: $light;
+    }
+  }
+}
 </style>
