@@ -1,5 +1,5 @@
 <template>
-  <div class="item-content q-pa-md q-pt-md">
+  <div class="metadata-container q-pa-md q-pt-md">
     <!-- Collection-->
     <q-list
       v-if="config.meta.collection.all && Object.keys(collection).length"

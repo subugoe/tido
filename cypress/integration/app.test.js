@@ -35,7 +35,7 @@ describe('Tido', () => {
     cy.get('.item-content').first().get('.tabs-container .q-tab--inactive').click();
     cy.get('.item-content').first().get('.tabs-container').first()
       .get('.q-tab').should('have.class', 'q-tab--inactive');
-    cy.get('.item-content').first().get('.panel__meta').should('be.visible');
+    cy.get('.item-content').first().get('.metadata-container').should('be.visible');
   });
 
   it('Should toggle panels', () => {
