@@ -1,16 +1,16 @@
 <template>
-  <div class="item-content panel__meta">
+  <div class="item-content q-pa-md q-pt-md">
     <!-- Collection-->
     <q-list
       v-if="config.meta.collection.all && Object.keys(collection).length"
       dense
+      class="q-mb-lg"
     >
       <q-item class="no-padding">
         <q-item-section
           dense
-          class="text-h6 text--smallcaps"
         >
-          {{ $t('Collection') }}
+          <h3>{{ $t('Collection') }}</h3>
         </q-item-section>
       </q-item>
 
@@ -18,15 +18,15 @@
         v-for="(mCollection, index) in metadataCollection"
         :key="index"
         dense
-        class="q-mb-xs no-padding"
+        class="q-mb-sm no-padding"
       >
         <q-item-section
           v-if="Object.keys(mCollection).length"
-          class="q-mb-xs"
+          class="q-mb-sm"
         >
           <q-item-label
             overline
-            class="text-uppercase"
+            class="text-uppercase text-dark"
           >
             {{ $t(mCollection.id) }}
           </q-item-label>
@@ -40,22 +40,23 @@
     <q-list
       v-if="config.meta.manifest.all && itemcount"
       dense
+      class="q-mb-lg"
     >
       <q-item class="no-padding">
-        <q-item-section class="text-h6 text--smallcaps">
-          {{ $t(labels.manifest) }} {{ sequenceIndex + 1 }} / {{ manifests.length }}
+        <q-item-section>
+          <h3>{{ $t(labels.manifest) }} {{ sequenceIndex + 1 }} / {{ manifests.length }}</h3>
         </q-item-section>
       </q-item>
 
       <q-item
         v-for="(mManifest, index) in metadataManifest"
         :key="index"
-        class="q-mb-xs no-padding"
+        class="q-mb-sm no-padding"
       >
-        <q-item-section class="q-mb-xs">
+        <q-item-section class="q-mb-sm">
           <q-item-label
             overline
-            class="text-uppercase"
+            class="text-uppercase text-dark"
           >
             {{ $t(mManifest.id) }}
           </q-item-label>
@@ -68,9 +69,9 @@
         <q-item
           v-for="(meta, idx) in manifests[sequenceIndex].metadata"
           :key="idx"
-          class="q-mb-xs no-padding"
+          class="q-mb-sm no-padding"
         >
-          <q-item-section class="q-mb-xs no-padding">
+          <q-item-section class="q-mb-sm no-padding">
             <MetadataItem
               v-if="meta.metadata"
               :item="meta"
@@ -79,7 +80,7 @@
             <template v-else>
               <q-item-label
                 overline
-                class="text-uppercase"
+                class="text-uppercase text-dark"
               >
                 {{ $t(meta.key) }}
               </q-item-label>
@@ -94,10 +95,11 @@
     <q-list
       v-if="config.meta.item.all"
       dense
+      class="q-mb-lg"
     >
       <q-item class="no-padding">
-        <q-item-section class="text-h6 text--smallcaps">
-          {{ $t(labels.item) }} {{ itemIndex + 1 }} / {{ itemcount }}
+        <q-item-section>
+          <h3>{{ $t(labels.item) }} {{ itemIndex + 1 }} / {{ itemcount }}</h3>
         </q-item-section>
       </q-item>
 
@@ -108,11 +110,11 @@
       >
         <q-item-section
           v-if="Object.keys(mItem).length"
-          class="q-mb-xs"
+          class="q-mb-sm"
         >
           <q-item-label
             overline
-            class="text-uppercase"
+            class="text-uppercase text-dark"
           >
             {{ $t(mItem.id) }}
           </q-item-label>
@@ -125,8 +127,8 @@
 </template>
 
 <script>
-import ContentUrls from '@/components/ContentUrls.vue';
-import MetadataItem from '@/components/metadata/MetadataItem';
+import ContentUrls from 'components/ContentUrls.vue';
+import MetadataItem from 'components/metadata/MetadataItem';
 
 export default {
   name: 'Metadata',
@@ -201,11 +203,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.panel__meta {
-  padding: 8px;
-}
-
-.text--smallcaps {
-  font-variant: small-caps;
-}
 </style>
