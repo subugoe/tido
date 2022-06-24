@@ -210,7 +210,7 @@ export const initImageData = async ({ commit }, url) => {
     hasError,
     errorImage,
     init: true,
-    loadingImage: true,
+    loadingImage: !errorImage,
   });
 };
 

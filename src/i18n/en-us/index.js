@@ -50,6 +50,7 @@ export default {
   Manuscript: 'Manuscript',
   Metadata: 'Metadata',
   Motif: 'Motifs',
+  searchHitList: 'Search hit list',
   next: 'Next',
   noAnnotationMessage: 'The current view has no annotations to display.',
   noCommentsMessage:
