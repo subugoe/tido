@@ -48,7 +48,7 @@ export default {
   Manuscript: 'Manuskript',
   Metadata: 'Metadaten',
   Motif: 'Motive',
-  multiSearch: 'Trefferanzeige',
+  searchHitList: 'Trefferanzeige',
   next: 'Näch.',
   noAnnotationMessage: 'Die aktuelle Ansicht enthält keine Annotationen.',
   noCommentsMessage: 'Die aktuelle Ansicht enthält keine Kommentare',
