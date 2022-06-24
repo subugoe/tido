@@ -29,18 +29,18 @@
         </q-breadcrumbs-el>
 
         <q-breadcrumbs-el
-          v-if="!!searchTerm"
+          v-if="!!isMultipleSearchterm || searchTerm"
           :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
         >
           <a
             :class="$q.dark.isActive ? 'text-dark' : 'text-white'"
-            :href="`${redirectUrl}${searchPagePath}?${searchQueryParam}=${searchTerm}&page=${page}`"
+            :href="transformRedirectUrl"
             class="header-links"
           >
             <q-icon
               :name="fasSearch"
             />
-            {{ searchTerm }}
+            {{ isMultipleSearchterm ? this.$t(multiSearchTermKey) : searchTerm }}
           </a>
         </q-breadcrumbs-el>
 
@@ -83,11 +83,31 @@ export default {
     },
 
     searchTerm() {
-      return this.$route.query.searchTerm;
+      return this.$route.query[this.searchQueryParam];
+    },
+
+    isMultipleSearchterm() {
+      return !!this.multiSearchTerm.length;
+    },
+
+    multiSearchTermKey() {
+      return this.config.breadcrumbNavigation.multiSearch_key || '';
+    },
+
+    multiSearchTerm() {
+      const multiSearchRegex = new RegExp(`${this.searchQueryParam}\\[.*\\]\\[.*\\]`, 'g');
+      const { query } = this.$route;
+      const availableValues = Object.keys(query).filter((el) => el.match(multiSearchRegex));
+
+      return availableValues.map((key) => `${key}=${query[key]}`).join('&');
     },
 
     page() {
       return this.$route.query.page || 1;
+    },
+
+    transformRedirectUrl() {
+      return `${this.redirectUrl}${this.searchPagePath}?page=${this.page}${this.isMultipleSearchterm ? `&${this.multiSearchTerm}` : `&${this.searchQueryParam}=${this.searchTerm}`}`;
     },
   },
   created() {
