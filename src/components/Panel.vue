@@ -52,10 +52,10 @@
 </template>
 
 <script>
+import Metadata from 'components/metadata/Metadata.vue';
 import Tree from '@/components/Tree.vue';
 import Annotations from '@/components/annotations/Annotations.vue';
 import Content from '@/components/Content.vue';
-import Metadata from '@/components/Metadata.vue';
 import OpenSeadragon from '@/components/OpenSeadragon.vue';
 
 export default {
