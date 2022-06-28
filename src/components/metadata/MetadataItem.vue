@@ -1,18 +1,14 @@
 <template>
   <div>
-    <q-item-label
-      v-if="keyIsTitle"
-      overline
-      class="text-uppercase"
-    >
-      {{ $t(item.key) }}
+    <q-item-label v-if="!isLink()" overline class="text-uppercase">
+      {{ $t(label) }}
     </q-item-label>
     <MetadataLink
       v-if="isLink()"
       :url="item.key"
       :text="item.value"
     />
-    <span v-else>{{ item.value }}</span>
+    <ContentUrls v-else :content="item.value" />
     <MetadataItem
       v-for="(childItem, idx) in childItems"
       :key="idx"
@@ -23,21 +19,21 @@
 
 <script>
 import MetadataLink from 'components/metadata/MetadataLink';
+import ContentUrls from 'components/ContentUrls';
 
 export default {
   name: 'MetadataItem',
-  components: { MetadataLink },
+  components: { ContentUrls, MetadataLink },
   props: {
     item: {
       type: Object,
       default: () => {},
     },
-    keyIsTitle: {
-      type: Boolean,
-      default: () => false,
-    },
   },
   computed: {
+    label() {
+      return this.item.key;
+    },
     childItems() {
       return this.item.metadata || [];
     },
