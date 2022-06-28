@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.2.4...v2.3.0) (2022-06-28)
+
+
+### Features
+
+* Summary term when multiple parameters are passed through search. ([569bc0a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/569bc0a634c57584bd815ace50384fdf66e95ebc))
+* update metadata styles ([5f56563](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5f56563f8f1e5225f382dcc3d4b860be5653c316))
+
 ### [2.2.4](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.2.3...v2.2.4) (2022-06-21)
 
 
