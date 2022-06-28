@@ -54,10 +54,7 @@
         class="q-mb-sm no-padding"
       >
         <q-item-section class="q-mb-sm">
-          <q-item-label
-            overline
-            class="text-uppercase"
-          >
+          <q-item-label overline class="text-uppercase">
             {{ $t(mManifest.id) }}
           </q-item-label>
 
@@ -72,20 +69,7 @@
           class="q-mb-sm no-padding"
         >
           <q-item-section class="q-mb-sm no-padding">
-            <MetadataItem
-              v-if="meta.metadata"
-              :item="meta"
-              :key-is-title="true"
-            />
-            <template v-else>
-              <q-item-label
-                overline
-                class="text-uppercase"
-              >
-                {{ $t(meta.key) }}
-              </q-item-label>
-              <ContentUrls :content="meta.value" />
-            </template>
+            <MetadataItem :item="meta"/>
           </q-item-section>
         </q-item>
       </div>
