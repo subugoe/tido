@@ -9,8 +9,6 @@ describe('Config', () => {
 
       cy.get('.config-error-container').then(($span) => {
         const errorMessage = $span.text();
-
-        cy.log(errorMessage);
       });
 
       cy.get('.config-error-container').as('errorEntrypointMessage');
@@ -30,8 +28,6 @@ describe('Config', () => {
 
         cy.get('.config-error-container').then(($span) => {
           const errorMessage = $span.text();
-
-          cy.log(errorMessage);
         });
 
         cy.get('.config-error-container').as('errorEntrypointMessage');
