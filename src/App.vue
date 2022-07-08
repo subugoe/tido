@@ -5,11 +5,23 @@
   >
     <Header v-if="isConfigValid && config['header_section'].show" />
 
+    <Header v-else :config-error-title="configErrorTitle" />
+
     <q-page-container
       v-if="isConfigValid"
       class="root"
     >
       <router-view />
+    </q-page-container>
+
+    <q-page-container v-else class="config-error-container">
+      <Notification
+        :message="$t(configErrorMessage)"
+        :notification-colors="config.notificationColors"
+        :title-key="$t(configErrorTitle)"
+        class="q-ma-md-xl"
+        type="warning"
+      />
     </q-page-container>
   </q-layout>
 </template>
@@ -18,11 +30,14 @@
 import { setCssVar } from 'quasar';
 import Header from '@/components/Header.vue';
 import Navigation from '@/mixins/navigation';
+import Notification from '@/components/Notification.vue';
+
 
 export default {
   name: 'TIDO',
   components: {
     Header,
+    Notification,
   },
   mixins: [Navigation],
   computed: {
@@ -37,6 +52,9 @@ export default {
     },
     configErrorMessage() {
       return this.$store.getters['config/configErrorMessage'];
+    },
+    configErrorTitle() {
+      return this.$store.getters['config/configErrorTitle'];
     },
     contentTypes() {
       return this.$store.getters['contents/contentTypes'];
@@ -92,22 +110,24 @@ export default {
   async created() {
     const isValid = await this.loadConfig();
 
+    this.$q.dark.set('auto');
+
     if (!isValid) {
       return;
     }
-    this.init();
+    await this.init();
 
-    this.$q.dark.set('auto');
+    await this.loadConfig();
 
-    if (this.config.colors.primary) {
+    if (this.config?.colors?.primary) {
       setCssVar('primary', this.config.colors.primary);
     }
 
-    if (this.config.colors.secondary) {
+    if (this.config?.colors?.secondary) {
       setCssVar('secondary', this.config.colors.secondary);
     }
 
-    if (this.config.colors.accent) {
+    if (this.config?.colors?.accent) {
       setCssVar('accent', this.config.colors.accent);
     }
   },
@@ -124,13 +144,13 @@ export default {
      * @param string url
      */
     async getCollection(url) {
-      this.$store.dispatch('contents/initCollection', url);
+      await this.$store.dispatch('contents/initCollection', url);
     },
     async loadConfig() {
       return this.$store.dispatch('config/loadConfig');
     },
-    getManifest(url) {
-      this.$store.dispatch('contents/initManifest', url);
+    async getManifest(url) {
+      await this.$store.dispatch('contents/initManifest', url);
     },
     /**
      * decide whether to start with a collection or a single manifest
@@ -138,7 +158,7 @@ export default {
      *
      * @return function getCollection() | getManifest()
      */
-    init() {
+    async init() {
       this.$store.dispatch('contents/initPanels');
       return this.config.entrypoint.match(/collection.json\s?$/)
         ? this.getCollection(this.config.entrypoint)
@@ -195,5 +215,12 @@ export default {
     height: auto;
     overflow: scroll;
   }
+}
+.config-error-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  align-items: center;
 }
 </style>

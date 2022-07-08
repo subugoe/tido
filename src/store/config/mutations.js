@@ -1,6 +1,9 @@
-export const loadConfig = (state, { config, configErrorMessage, isValid }) => {
+export const loadConfig = (state, {
+  config, configErrorMessage, configErrorTitle, isValid,
+}) => {
   state.config = config;
   state.configErrorMessage = configErrorMessage;
+  state.configErrorTitle = configErrorTitle;
   state.isValid = isValid;
 };
 

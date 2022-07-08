@@ -9,6 +9,7 @@ export default {
   colorScheme: 'Change color',
   Comments: 'Comments',
   commentsInfoTitle: 'No Comments Available',
+  configJsonError: 'JSON Parsing error, please check the config and reload the application',
   Contents: 'Contents',
   'Contents & Metadata': 'Contents & Metadata',
   'Current location': 'Current location',
@@ -55,6 +56,9 @@ export default {
   noAnnotationMessage: 'The current view has no annotations to display.',
   noCommentsMessage:
     'The current view does not contain any comments to display',
+  noConfigEntrypoint: 'No Entrypoint is available in the config. Please add one to load viewer',
+  noConfigMessage: 'Tido Configuration is not available',
+  noConfigTitle: 'Configuration Error',
   Origin: 'Origin',
   osdFullPage: 'Toggle full page',
   osdHome: 'Go home',

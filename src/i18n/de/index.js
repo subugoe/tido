@@ -9,6 +9,8 @@ export default {
   Comments: 'Kommentare',
   Collector: 'Kollektor',
   colorScheme: 'Farbschema ändern',
+  configJsonError: 'Fehler beim JSON Parsing. Bitte überprüfen Sie die Konfiguration'
+  + 'und laden Sie die Anwendung neu.',
   Contents: 'Inhalt',
   'Contents & Metadata': 'Inhalt & Metadaten',
   'Current location': 'Aktueller Standort',
@@ -52,6 +54,10 @@ export default {
   next: 'Näch.',
   noAnnotationMessage: 'Die aktuelle Ansicht enthält keine Annotationen.',
   noCommentsMessage: 'Die aktuelle Ansicht enthält keine Kommentare',
+  noConfigEntrypoint: 'Der Wert "entrypoint" wurde in der Konfiguration nicht gefunden.'
+  + 'Bitte geben diesen an, um den Viewer zu laden.',
+  noConfigMessage: 'Keine TIDO Konfiguration vorhanden',
+  noConfigTitle: 'Konfigurationsfehler',
   Origin: 'Ursprung',
   osdFullPage: 'zu Vollbild wechseln',
   osdHome: 'Ansicht zurücksetzen',

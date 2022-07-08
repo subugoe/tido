@@ -12,7 +12,6 @@
 
     <div class="header__wrap">
       <q-toolbar
-        v-if="config['header_section'].titles"
         class="row toolbar"
       >
         <TitleBar
@@ -20,6 +19,15 @@
           class="col-xs-12 col-sm-9 q-mb-xs-xs q-mb-sm-none"
           :item="item"
         />
+
+        <div v-else class="col-xs-12 col-sm-9 q-ma-md-lg">
+          <h1
+            class="text-h3 text-bold text-uppercase q-mt-xs"
+            :class="$q.dark.isActive ? 'text-light' : 'text-dark'"
+          >
+            {{ $t(configErrorTitle) }}
+          </h1>
+        </div>
 
         <Tools
           class="
@@ -31,7 +39,7 @@
         />
       </q-toolbar>
 
-      <q-toolbar class="row toolbar">
+      <q-toolbar v-if="!configErrorTitle" class="row toolbar">
         <Navbar
           v-if="config['header_section'].navigation"
           :labels="config.labels"
@@ -82,7 +90,16 @@ export default {
     PanelsToggle,
     Tools,
   },
+  props: {
+    configErrorTitle: {
+      type: String,
+      default: () => '',
+    },
+  },
   computed: {
+    isConfigValid() {
+      return this.$store.getters['config/isConfigValid'];
+    },
     manifests() {
       return this.$store.getters['contents/manifests'];
     },

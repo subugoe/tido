@@ -94,7 +94,7 @@
   },
   "scripts": {
     "build": "quasar build --modern",
-    "cypress": "cypress run",
+    "cypress": "cypress open",
     "cypress:headless": "cypress run --headless",
     "dev": "quasar dev --modern",
     "fix": "npm run fix:vue && npm run fix:js && npm run fix:scss",

@@ -1,26 +1,38 @@
 export const loadConfig = ({ commit }) => {
   let config = {};
   let configErrorMessage = null;
+  let configErrorTitle = null;
   let isValid = false;
 
   const el = document.getElementById('tido-config');
 
   if (!el) {
-    configErrorMessage = 'Tido config not present';
+    configErrorMessage = 'noConfigMessage';
+    configErrorTitle = 'noConfigTitle';
   } else {
     try {
       config = JSON.parse(el.text);
-      isValid = true;
+
+      if (config.entrypoint) {
+        isValid = true;
+      } else {
+        configErrorMessage = 'noConfigEntrypoint';
+        configErrorTitle = 'noConfigTitle';
+      }
     } catch (err) {
-      configErrorMessage = 'JSON parse error';
+      configErrorMessage = 'configJsonError';
+      configErrorTitle = 'noConfigTitle';
     }
   }
 
-  commit('loadConfig', { configErrorMessage, config, isValid });
+  commit('loadConfig', {
+    configErrorMessage, configErrorTitle, config, isValid,
+  });
 
   return {
     config,
     configErrorMessage,
+    configErrorTitle,
     isValid,
   };
 };
