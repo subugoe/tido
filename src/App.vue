@@ -32,7 +32,6 @@ import Header from '@/components/Header.vue';
 import Navigation from '@/mixins/navigation';
 import Notification from '@/components/Notification.vue';
 
-
 export default {
   name: 'TIDO',
   components: {
