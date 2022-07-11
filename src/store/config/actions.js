@@ -6,22 +6,31 @@ export const loadConfig = ({ commit }) => {
 
   const el = document.getElementById('tido-config');
 
-  if (!el) {
-    configErrorMessage = 'noConfigMessage';
-    configErrorTitle = 'noConfigTitle';
-  } else {
-    try {
-      config = JSON.parse(el.text);
+  try {
+    if (!el) {
+      throw new Error('noConfigID');
+    }
 
-      if (config.entrypoint) {
-        isValid = true;
-      } else {
+    config = JSON.parse(el.text);
+
+    if (!config.entrypoint) {
+      throw new Error('noConfigEntrypoint');
+    }
+
+    isValid = true;
+  } catch (err) {
+    switch (err.message) {
+      case 'noConfigID':
+        configErrorMessage = 'noConfigMessage';
+        configErrorTitle = 'noConfigTitle';
+        break;
+      case 'noConfigEntrypoint':
         configErrorMessage = 'noConfigEntrypoint';
         configErrorTitle = 'noConfigTitle';
-      }
-    } catch (err) {
-      configErrorMessage = 'configJsonError';
-      configErrorTitle = 'noConfigTitle';
+        break;
+      default:
+        configErrorMessage = 'configJsonError';
+        configErrorTitle = 'noConfigTitle';
     }
   }
 
