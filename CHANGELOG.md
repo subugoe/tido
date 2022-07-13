@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.3.0...v2.4.0) (2022-07-13)
+
+
+### Features
+
+* Implement user notification when no entrypoint is set/ empty sate. ([91d6e0d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/91d6e0d8af21031dc30670bfa1aa7931bb4d71eb))
+
+
+### Bug Fixes
+
+* remove an empty blank line. ([4b7378d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4b7378d1ded2da8c9a702713b15cafb5a7d72ce1))
+* remove console statement from tests. ([d34c180](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d34c180bff177aab829b59747b9535d407be4906))
+
+
+### Refactoring
+
+* move error handling to catch block. ([4e57b51](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4e57b51dca21c427f22622edef5e38af77e6670c))
+* use only MetadataItem in manifest metadata ([2db85de](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2db85de20f16d63641bac5e61778b39919438395))
+
 ## [2.3.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.2.4...v2.3.0) (2022-06-28)
 
 
