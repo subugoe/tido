@@ -96,6 +96,7 @@ import {
   loadCss,
   domParser,
 } from '@/utils';
+import * as AnnotationUtils from '@/utils';
 
 export default {
   name: 'Content',
@@ -195,10 +196,27 @@ export default {
       this.handleActiveContentUrl();
     },
     async getContentsItemData(url) {
-      const { isManifestChanged } = await this.$store.dispatch(
+      const { isManifestChanged, previousManifest } = await this.$store.dispatch(
         'contents/initContentItem',
         url,
       );
+
+      const tabs = AnnotationUtils.getAnnotationTabs(this.config);
+
+      if (!previousManifest) {
+        const annotation = this.$route.query.annotation || 0;
+        this.$store.dispatch('annotations/updateActiveTab', tabs?.[annotation].key, {
+          root: true,
+        });
+      } else if (isManifestChanged) {
+        this.$store.dispatch('annotations/updateActiveTab', tabs?.[0].key, {
+          root: true,
+        });
+        const query = { ...this.$route.query };
+        delete query.annotation;
+        this.$router.push({ path: '/', query });
+      }
+
       if (isManifestChanged) {
         this.$store.dispatch('contents/setContentIndex', 0);
       }

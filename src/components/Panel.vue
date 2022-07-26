@@ -8,7 +8,8 @@
       <q-tabs
         v-for="(tab, i) in panel.connector"
         :key="`pt${i}`"
-        v-model="value"
+        :model-value="value"
+        @update:model-value="onTabChange"
         class="content-tabs"
         :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
         dense
@@ -71,6 +72,9 @@ export default {
       type: Object,
       default: () => {},
     },
+    index: {
+      type: Number,
+    },
   },
   data: () => ({
     value: '',
@@ -82,13 +86,65 @@ export default {
     imageUrl() {
       return this.$store.getters['contents/imageUrl'];
     },
+    connector() {
+      return this.$route.query.connector;
+    },
+  },
+  methods: {
+    onTabChange(value) {
+      const tabIndex = Number(value.replace('tab', ''));
+      if (Number.isNaN(tabIndex)) {
+        return;
+      }
+      const query = { ...this.$route.query };
+      const connectors = this.toConnectorObject(this.$route.query);
+      if (tabIndex === 0) {
+        delete connectors[tabIndex];
+      } else {
+        connectors[this.index] = tabIndex;
+      }
+
+      const connectorQuery = this.toConnectorString(connectors);
+      if (!connectorQuery) {
+        delete query.connector;
+      } else {
+        query.connector = connectorQuery;
+      }
+      this.$router.push({ path: '/', query });
+    },
+    toConnectorObject(query) {
+      const connector = (query.connector || '').split(',').filter((el) => el).reduce((prev, curr) => {
+        const [panelIndex, connectorIndex] = curr.split('_');
+        prev[panelIndex] = connectorIndex;
+        return prev;
+      }, {});
+
+      return connector;
+    },
+    toConnectorString(connector) {
+      return Object.entries(connector || {}).map(([key, value]) => `${key}_${value}`).join(',');
+    },
+    onConnectorsUpdate(value) {
+      const connectors = this.toConnectorObject({ connector: value });
+      if (connectors[this.index]) {
+        this.value = `tab${connectors[this.index]}`;
+      } else {
+        this.value = 'tab0';
+      }
+    },
   },
   watch: {
     panel: {
-      handler(newVal) {
-        this.value = newVal.tab_model;
+      handler(newVal, oldVal) {
+        if (newVal.tab_model !== (oldVal || {}).tab_model) {
+          this.value = newVal.tab_model;
+        }
       },
       deep: true,
+      immediate: true,
+    },
+    connector: {
+      handler: 'onConnectorsUpdate',
       immediate: true,
     },
   },
@@ -98,7 +154,8 @@ export default {
 <style lang="scss" scoped>
 .tabs-container {
   display: flex;
-  > * {
+
+  >* {
     flex: 1;
   }
 }
@@ -115,8 +172,8 @@ export default {
 
   .q-tab-panels {
     display: flex;
-    flex-direction:column;
-    flex:1;
+    flex-direction: column;
+    flex: 1;
   }
 }
 
@@ -125,6 +182,7 @@ export default {
   flex: 1;
   flex-direction: column;
   overflow: hidden;
+
   @media (max-width: $breakpoint-sm-custom-md) {
     min-height: 100vh;
   }

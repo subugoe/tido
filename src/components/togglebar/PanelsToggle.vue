@@ -129,6 +129,15 @@ export default {
     panels() {
       return this.$store.getters['contents/panels'];
     },
+    queryPanels() {
+      return this.$route.query.panels;
+    },
+  },
+  watch: {
+    queryPanels: {
+      handler: 'onQueryPanelUpdate',
+      immediate: true,
+    },
   },
   created() {
     this.fasCheckCircle = fasCheckCircle;
@@ -143,12 +152,12 @@ export default {
     },
     // Control status (show) panel / even you can reset all
     handleStatusPanel(i, reset = false) {
-      const updatedPanel = this.panels.map((obj, idx) => {
+      const updatedPanel = [...this.panels].map((obj, idx) => {
         if (reset) return { ...obj, show: true };
 
         return i === idx ? { ...obj, show: !obj.show } : obj;
       });
-      this.$store.dispatch('contents/setPanels', updatedPanel);
+      this.onPanelUpdate(updatedPanel);
     },
     // display toggle title when hovering
     handleToggleTitle(idx) {
@@ -158,6 +167,24 @@ export default {
       return this.panels[idx].show
         ? `${this.$t('hide')} ${titleUpper} Panel`
         : `${this.$t('show')} ${titleUpper} Panel`;
+    },
+    onPanelUpdate(panels) {
+      const displayedPanels = panels.filter((el) => el.show);
+      const query = { ...this.$route.query };
+      if (displayedPanels.length === panels.length || displayedPanels.length === 0) {
+        delete query.panels;
+      } else {
+        const indexes = displayedPanels.map((el) => panels.findIndex((panel) => panel.id === el.id));
+        query.panels = indexes.join(',');
+      }
+      this.$router.push({ path: '/', query });
+    },
+    onQueryPanelUpdate(values) {
+      if (!values) {
+        return this.$store.dispatch('contents/setPanels', [...this.panels].map((el) => ({ ...el, show: true })));
+      }
+      const indexes = values.split(',');
+      this.$store.dispatch('contents/setPanels', [...this.panels].map((el, index) => ({ ...el, show: indexes.includes(String(index)) })));
     },
   },
 };

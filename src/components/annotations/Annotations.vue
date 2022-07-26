@@ -9,12 +9,12 @@
       indicator-color="$q.dark.isActive ? 'white' : 'accent'"
     >
       <q-tab
-        v-for="annotationTab in annotationTabs"
+        v-for="annotationTab,index in annotationTabs"
         :key="annotationTab.key"
         :class="{'disabled-tab': annotationTab.key === currentTab}"
         :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
-        @click="switchActiveTab(annotationTab.key, annotationTab.type)"
+        @click="switchActiveTab(annotationTab.key, index)"
       />
     </q-tabs>
 
@@ -142,8 +142,15 @@ export default {
     tabConfig() {
       return this.config.annotations.tabs;
     },
+    // annotationQuery(){
+    //   return this.$route.query.annotation;
+    // }
   },
   watch: {
+    // annotationQuery: {
+    //   handler: 'onAnnotationQueryChange',
+    //   immediate: true,
+    // },
     contentQueue: 'processContentQueue',
     isLoading: 'processContentQueue',
     item: {
@@ -199,6 +206,9 @@ export default {
         this.contentQueue.pop()();
       }
     },
+    // onAnnotationQueryChange(value){
+    //   this.$store.dispatch('annotations/updateActiveTab', (this.annotationTabs[value||0] || {}).key || '');
+    // },
     async updateAnnotations() {
       const root = document.getElementById('text-content');
 
@@ -215,7 +225,7 @@ export default {
         });
       }
     },
-    switchActiveTab(key) {
+    switchActiveTab(key, index) {
       this.resetActiveAnnotations();
       this.filteredAnnotations.forEach((annotation) => {
         const selector = AnnotationUtils.generateTargetSelector(annotation);
@@ -224,6 +234,13 @@ export default {
         }
       });
       this.$store.dispatch('annotations/updateActiveTab', key);
+      const query = { ...this.$route.query };
+      if (index) {
+        query.annotation = index;
+      } else {
+        delete query.annotation;
+      }
+      this.$router.push({ path: '/', query });
     },
 
     addAnnotation(id) {

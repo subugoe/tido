@@ -1,5 +1,4 @@
 import { request } from '@/utils/http';
-import * as AnnotationUtils from '@/utils';
 import * as contentUtils from '@/utils/contents';
 import * as PanelsUtils from '@/utils/panels';
 
@@ -244,7 +243,7 @@ function getContentUrls(content, config) {
 
 export const initContentItem = async (
   {
-    commit, getters, dispatch, rootState,
+    commit, getters, rootState,
   },
   url,
 ) => {
@@ -254,15 +253,15 @@ export const initContentItem = async (
   let { contentUrls } = getters;
   let contentTypes = [];
   const { config } = rootState.config;
+  const previousManifest = (contentUrls[0] || '')
+    .split('/')
+    .pop()
+    .split('-')[0];
+
   try {
     const data = await request(url);
 
     item = data;
-
-    const previousManifest = (contentUrls[0] || '')
-      .split('/')
-      .pop()
-      .split('-')[0];
 
     [contentUrls, contentTypes] = getContentUrls(data.content, config);
 
@@ -272,10 +271,6 @@ export const initContentItem = async (
       .split('-')[0];
 
     if (previousManifest !== currentManifest) {
-      const tabs = AnnotationUtils.getAnnotationTabs(config);
-      dispatch('annotations/updateActiveTab', tabs?.[0].key, {
-        root: true,
-      });
       isManifestChanged = true;
     }
   } catch (err) {
@@ -291,7 +286,7 @@ export const initContentItem = async (
     contentTypes,
   });
 
-  return { isManifestChanged };
+  return { isManifestChanged, previousManifest };
 };
 
 export const addToExpanded = ({ commit, getters }, label) => {
