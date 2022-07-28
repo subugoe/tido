@@ -42,7 +42,7 @@
           clickable
           padding="xs"
           :title="$t('defaultView')"
-          @click="()=> handleStatusPanel(-1, true)"
+          @click="() => handleStatusPanel(-1, true)"
         >
           <q-item-section>
             <q-item-label>
@@ -97,7 +97,7 @@
         padding="xs"
         class="q-px-sm"
         :title="$t('defaultView')"
-        @click="()=> handleStatusPanel(-1, true)"
+        @click="() => handleStatusPanel(-1, true)"
       >
         <q-icon
           class="q-pr-xs"
@@ -118,9 +118,11 @@ import {
   fasCheckCircle,
   fasCaretDown,
 } from '@quasar/extras/fontawesome-v5';
+import BookmarkMixin from 'src/mixins/bookmark';
 
 export default {
   name: 'PanelsToggle',
+  mixins: [BookmarkMixin],
   computed: {
     toggleCounter() {
       const toggleCount = this.panels.filter((panel) => panel.toggle === true);
@@ -128,15 +130,6 @@ export default {
     },
     panels() {
       return this.$store.getters['contents/panels'];
-    },
-    queryPanels() {
-      return this.$route.query.panels;
-    },
-  },
-  watch: {
-    queryPanels: {
-      handler: 'onQueryPanelUpdate',
-      immediate: true,
     },
   },
   created() {
@@ -167,24 +160,6 @@ export default {
       return this.panels[idx].show
         ? `${this.$t('hide')} ${titleUpper} Panel`
         : `${this.$t('show')} ${titleUpper} Panel`;
-    },
-    onPanelUpdate(panels) {
-      const displayedPanels = panels.filter((el) => el.show);
-      const query = { ...this.$route.query };
-      if (displayedPanels.length === panels.length || displayedPanels.length === 0) {
-        delete query.panels;
-      } else {
-        const indexes = displayedPanels.map((el) => panels.findIndex((panel) => panel.id === el.id));
-        query.panels = indexes.join(',');
-      }
-      this.$router.push({ path: '/', query });
-    },
-    onQueryPanelUpdate(values) {
-      if (!values) {
-        return this.$store.dispatch('contents/setPanels', [...this.panels].map((el) => ({ ...el, show: true })));
-      }
-      const indexes = values.split(',');
-      this.$store.dispatch('contents/setPanels', [...this.panels].map((el, index) => ({ ...el, show: indexes.includes(String(index)) })));
     },
   },
 };

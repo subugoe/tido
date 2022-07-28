@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import PanelBoxes from '@/components/util/PanelBoxes.vue';
 import { fasSolarPanel } from '@quasar/extras/fontawesome-v5';
+import PanelBoxes from '@/components/util/PanelBoxes.vue';
 
 export default {
   components: {

@@ -8,7 +8,7 @@
       <q-tabs
         v-for="(tab, i) in panel.connector"
         :key="`pt${i}`"
-        :model-value="value"
+        :model-value="connectorValue"
         @update:model-value="onTabChange"
         class="content-tabs"
         :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
@@ -22,7 +22,7 @@
     </div>
 
     <q-tab-panels
-      v-model="value"
+      v-model="connectorValue"
       animated
       keep-alive
     >
@@ -58,6 +58,7 @@ import Tree from '@/components/Tree.vue';
 import Annotations from '@/components/annotations/Annotations.vue';
 import Content from '@/components/Content.vue';
 import OpenSeadragon from '@/components/OpenSeadragon.vue';
+import BookmarkMixin from '@/mixins/bookmark';
 
 export default {
   components: {
@@ -67,70 +68,22 @@ export default {
     Metadata,
     OpenSeadragon,
   },
+  mixins: [BookmarkMixin],
   props: {
     panel: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     index: {
       type: Number,
     },
   },
-  data: () => ({
-    value: '',
-  }),
   computed: {
     contentUrls() {
       return this.$store.getters['contents/contentUrls'];
     },
     imageUrl() {
       return this.$store.getters['contents/imageUrl'];
-    },
-    connector() {
-      return this.$route.query.connector;
-    },
-  },
-  methods: {
-    onTabChange(value) {
-      const tabIndex = Number(value.replace('tab', ''));
-      if (Number.isNaN(tabIndex)) {
-        return;
-      }
-      const query = { ...this.$route.query };
-      const connectors = this.toConnectorObject(this.$route.query);
-      if (tabIndex === 0) {
-        delete connectors[tabIndex];
-      } else {
-        connectors[this.index] = tabIndex;
-      }
-
-      const connectorQuery = this.toConnectorString(connectors);
-      if (!connectorQuery) {
-        delete query.connector;
-      } else {
-        query.connector = connectorQuery;
-      }
-      this.$router.push({ path: '/', query });
-    },
-    toConnectorObject(query) {
-      const connector = (query.connector || '').split(',').filter((el) => el).reduce((prev, curr) => {
-        const [panelIndex, connectorIndex] = curr.split('_');
-        prev[panelIndex] = connectorIndex;
-        return prev;
-      }, {});
-
-      return connector;
-    },
-    toConnectorString(connector) {
-      return Object.entries(connector || {}).map(([key, value]) => `${key}_${value}`).join(',');
-    },
-    onConnectorsUpdate(value) {
-      const connectors = this.toConnectorObject({ connector: value });
-      if (connectors[this.index]) {
-        this.value = `tab${connectors[this.index]}`;
-      } else {
-        this.value = 'tab0';
-      }
     },
   },
   watch: {
@@ -141,10 +94,6 @@ export default {
         }
       },
       deep: true,
-      immediate: true,
-    },
-    connector: {
-      handler: 'onConnectorsUpdate',
       immediate: true,
     },
   },

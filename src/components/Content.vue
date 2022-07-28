@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <q-tabs
-      v-model="activeContentUrl"
+      :model-value="activeContentUrl"
       dense
       class="text-grey q-mb-sm"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
@@ -86,6 +86,7 @@
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
+import BookmarkMixin from '@/mixins/bookmark';
 import DomMixin from '@/mixins/dom';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
@@ -96,7 +97,6 @@ import {
   loadCss,
   domParser,
 } from '@/utils';
-import * as AnnotationUtils from '@/utils';
 
 export default {
   name: 'Content',
@@ -104,7 +104,7 @@ export default {
     Loading,
     Notification,
   },
-  mixins: [DomMixin],
+  mixins: [DomMixin, BookmarkMixin],
   props: {
     transcription: {
       type: String,
@@ -128,9 +128,6 @@ export default {
     itemUrl() {
       return this.$store.getters['contents/itemUrl'];
     },
-    contentIndex() {
-      return this.$store.getters['contents/contentIndex'];
-    },
     contentUrls() {
       return this.$store.getters['contents/contentUrls'];
     },
@@ -148,9 +145,6 @@ export default {
     },
     fontsize() {
       return this.$store.getters['annotations/contentFontSize'];
-    },
-    activeContentUrl() {
-      return this.contentUrls[this.contentIndex];
     },
     contentStyle() {
       return {
@@ -189,10 +183,12 @@ export default {
       this.$store.dispatch('annotations/decreaseContentFontSize');
     },
     switchActiveContentUrl(contentUrl) {
+      const activeIndex = this.contentUrls.findIndex((x) => x === contentUrl);
       this.$store.dispatch(
         'contents/setContentIndex',
-        this.contentUrls.findIndex((x) => x === contentUrl),
+        activeIndex,
       );
+      this.onActiveContentChange(activeIndex);
       this.handleActiveContentUrl();
     },
     async getContentsItemData(url) {
@@ -201,25 +197,8 @@ export default {
         url,
       );
 
-      const tabs = AnnotationUtils.getAnnotationTabs(this.config);
-
-      if (!previousManifest) {
-        const annotation = this.$route.query.annotation || 0;
-        this.$store.dispatch('annotations/updateActiveTab', tabs?.[annotation].key, {
-          root: true,
-        });
-      } else if (isManifestChanged) {
-        this.$store.dispatch('annotations/updateActiveTab', tabs?.[0].key, {
-          root: true,
-        });
-        const query = { ...this.$route.query };
-        delete query.annotation;
-        this.$router.push({ path: '/', query });
-      }
-
-      if (isManifestChanged) {
-        this.$store.dispatch('contents/setContentIndex', 0);
-      }
+      const index = this.onContentItemDataChange(isManifestChanged, previousManifest);
+      this.$store.dispatch('contents/setContentIndex', index);
 
       await this.handleActiveContentUrl();
     },
