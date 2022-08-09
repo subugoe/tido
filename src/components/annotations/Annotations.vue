@@ -142,15 +142,8 @@ export default {
     tabConfig() {
       return this.config.annotations.tabs;
     },
-    // annotationQuery(){
-    //   return this.$route.query.annotation;
-    // }
   },
   watch: {
-    // annotationQuery: {
-    //   handler: 'onAnnotationQueryChange',
-    //   immediate: true,
-    // },
     contentQueue: 'processContentQueue',
     isLoading: 'processContentQueue',
     item: {
@@ -206,9 +199,6 @@ export default {
         this.contentQueue.pop()();
       }
     },
-    // onAnnotationQueryChange(value){
-    //   this.$store.dispatch('annotations/updateActiveTab', (this.annotationTabs[value||0] || {}).key || '');
-    // },
     async updateAnnotations() {
       const root = document.getElementById('text-content');
 
