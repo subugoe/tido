@@ -87,6 +87,8 @@
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
 import BookmarkMixin from '@/mixins/bookmark';
+
+import BookmarkService from '@/services/bookmark';
 import DomMixin from '@/mixins/dom';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
@@ -188,7 +190,7 @@ export default {
         'contents/setContentIndex',
         activeIndex,
       );
-      this.onActiveContentChange(activeIndex);
+      BookmarkService.handleActiveContentChange(activeIndex);
       this.handleActiveContentUrl();
     },
     async getContentsItemData(url) {

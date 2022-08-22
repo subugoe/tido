@@ -58,5 +58,8 @@ module.exports = {
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'max-len': 0,
+
+    //TODO - bookmark service file
+    'class-methods-use-this': 'off',
   },
 };

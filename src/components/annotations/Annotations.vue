@@ -64,6 +64,7 @@ import Notification from '@/components/Notification.vue';
 
 import * as AnnotationUtils from '@/utils/annotations';
 import DomMixin from '@/mixins/dom';
+import BookmarkService from '@/services/bookmark';
 
 export default {
   name: 'Annotations',
@@ -224,13 +225,7 @@ export default {
         }
       });
       this.$store.dispatch('annotations/updateActiveTab', key);
-      const query = { ...this.$route.query };
-      if (index) {
-        query.annotation = index;
-      } else {
-        delete query.annotation;
-      }
-      this.$router.push({ path: '/', query });
+      BookmarkService.handleAnnotationTabChange(key, index);
     },
 
     addAnnotation(id) {

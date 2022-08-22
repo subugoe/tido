@@ -58,7 +58,7 @@ import Tree from '@/components/Tree.vue';
 import Annotations from '@/components/annotations/Annotations.vue';
 import Content from '@/components/Content.vue';
 import OpenSeadragon from '@/components/OpenSeadragon.vue';
-import BookmarkMixin from '@/mixins/bookmark';
+import BookmarkService from '@/services/bookmark';
 
 export default {
   components: {
@@ -68,7 +68,6 @@ export default {
     Metadata,
     OpenSeadragon,
   },
-  mixins: [BookmarkMixin],
   props: {
     panel: {
       type: Object,
@@ -85,6 +84,12 @@ export default {
     imageUrl() {
       return this.$store.getters['contents/imageUrl'];
     },
+    connectorValue() {
+      return BookmarkService.getConnectorValue(this.index, this.$route.query);
+    },
+  },
+  methods: {
+    onTabChange(value) { return BookmarkService.handleContentMetadataTabChange(value, this.index); },
   },
   watch: {
     panel: {
