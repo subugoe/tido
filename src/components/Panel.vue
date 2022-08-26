@@ -58,7 +58,6 @@ import Tree from '@/components/Tree.vue';
 import Annotations from '@/components/annotations/Annotations.vue';
 import Content from '@/components/Content.vue';
 import OpenSeadragon from '@/components/OpenSeadragon.vue';
-import BookmarkService from '@/services/bookmark';
 
 export default {
   components: {
@@ -85,11 +84,11 @@ export default {
       return this.$store.getters['contents/imageUrl'];
     },
     connectorValue() {
-      return BookmarkService.getConnectorValue(this.index, this.$route.query);
+      return this.$store.getters['contents/connectorValues'][this.index] || `tab${this.index}`;
     },
   },
   methods: {
-    onTabChange(value) { return BookmarkService.handleContentMetadataTabChange(value, this.index); },
+    onTabChange(value) { return this.$store.dispatch('contents/setConnectorValues', { value, index: this.index, updateQuery: true }); },
   },
   watch: {
     panel: {

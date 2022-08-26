@@ -19,36 +19,35 @@ class BookmarkService {
 
   syncQuery(query) {
     this.query = query;
-    this.checkForPanelUpdate(query);
+
+    if (this.$store) {
+      this.handleConnectorUpdate(query);
+      this.checkForPanelUpdate(query);
+    }
   }
 
   checkForPanelUpdate = (query) => {
     if (this.panel !== query.panels) {
-      this.panel = query.panels;
-      this.handleQueryPanelUpdate();
+      this.setPanelsFromQuery(query.panels);
     }
   };
 
-  handleAnnotationTabChange = (key, index) => {
-    const query = { ...this.query };
-
-    if (index) {
-      query.annotation = index;
-    } else {
-      delete query.annotation;
-    }
-
-    this.$router.push({ path: '/', query });
+  getConnectorValue = (index) => {
+    const connectors = BookmarkService.getConnectorObject({
+      connector: this.query.connector,
+    });
+    return connectors[index] ? `tab${connectors[index]}` : 'tab0';
   };
 
-  handleActiveContentChange = (index) => {
-    const query = { ...this.query };
-    if (index) {
-      query.text = index;
-    } else {
-      delete query.text;
-    }
-    this.$router.push({ path: '/', query });
+  handleConnectorUpdate = (query) => {
+    const connectors = BookmarkService.getConnectorObject({
+      connector: query.connector,
+    });
+    const values = [];
+    Object.entries(connectors).forEach(([index, value]) => {
+      values[index] = `tab${value}`;
+    });
+    this.$store.dispatch('contents/setConnectors', values);
   };
 
   handleContentItemDataChange = (isManifestChanged, previousManifest) => {
@@ -80,49 +79,33 @@ class BookmarkService {
     return contentIndex;
   };
 
-  handleContentMetadataTabChange = (value, index) => {
-    const tabIndex = Number(value.replace('tab', ''));
-    if (Number.isNaN(tabIndex)) {
-      return;
-    }
+  static getConnectorObject = (query) => {
+    const connector = (query.connector || '')
+      .split(',')
+      .filter((el) => el)
+      .reduce((prev, curr) => {
+        const [panelIndex, connectorIndex] = curr.split('_');
+        prev[panelIndex] = connectorIndex;
+        return prev;
+      }, {});
 
-    const query = { ...this.query };
-    const connectors = this.getConnectorObject(this.query);
-
-    if (tabIndex === 0) {
-      delete connectors[tabIndex];
-    } else {
-      connectors[index] = tabIndex;
-    }
-
-    const connectorQuery = this.getConnectorString(connectors);
-    if (!connectorQuery) {
-      delete query.connector;
-    } else {
-      query.connector = connectorQuery;
-    }
-
-    this.$router.push({ path: '/', query });
+    return connector;
   };
 
-  handlePanelToggle = (panels) => {
-    const displayedPanels = panels.filter((el) => el.show);
-    const query = { ...this.query };
-    if (
-      displayedPanels.length === panels.length
-      || displayedPanels.length === 0
-    ) {
-      delete query.panels;
-    } else {
-      const indexes = displayedPanels.map((el) => panels.findIndex((panel) => panel.id === el.id));
-      query.panels = indexes.join(',');
-    }
-    this.$router.push({ path: '/', query });
-  };
+  static getConnectorString(connector) {
+    const connectorString = Object.entries(connector || {})
+      .map(([key, value]) => `${key}_${value}`)
+      .join(',');
 
-  handleQueryPanelUpdate = () => {
-    const values = this.panel;
+    return connectorString;
+  }
+
+  setPanelsFromQuery = (panels) => {
+    const values = panels;
     const storePanels = [...this.$store.getters['contents/panels']];
+
+    this.panel = panels;
+
     if (!values) {
       return this.$store.dispatch(
         'contents/setPanels',
@@ -140,32 +123,66 @@ class BookmarkService {
     );
   };
 
-  getConnectorObject = (query) => {
-    const connector = (query.connector || '')
-      .split(',')
-      .filter((el) => el)
-      .reduce((prev, curr) => {
-        const [panelIndex, connectorIndex] = curr.split('_');
-        prev[panelIndex] = connectorIndex;
-        return prev;
-      }, {});
+  updateAnnotationQuery = (key, index) => {
+    const query = { ...this.query };
 
-    return connector;
+    if (index) {
+      query.annotation = index;
+    } else {
+      delete query.annotation;
+    }
+
+    this.$router.push({ path: '/', query });
   };
 
-  getConnectorString(connector) {
-    const connectorString = Object.entries(connector || {})
-      .map(([key, value]) => `${key}_${value}`)
-      .join(',');
+  updateConnectorQuery = (value, index) => {
+    const tabIndex = Number(value.replace('tab', ''));
+    if (Number.isNaN(tabIndex)) {
+      return;
+    }
 
-    return connectorString;
-  }
+    const query = { ...this.query };
+    const connectors = BookmarkService.getConnectorObject(this.query);
 
-  getConnectorValue = (index) => {
-    const connectors = this.getConnectorObject({
-      connector: this.query.connector,
-    });
-    return connectors[index] ? `tab${connectors[index]}` : 'tab0';
+    if (tabIndex === 0) {
+      delete connectors[tabIndex];
+    } else {
+      connectors[index] = tabIndex;
+    }
+
+    const connectorQuery = BookmarkService.getConnectorString(connectors);
+    if (!connectorQuery) {
+      delete query.connector;
+    } else {
+      query.connector = connectorQuery;
+    }
+
+    this.$router.push({ path: '/', query });
+  };
+
+  updatePanelsQuery = (panels) => {
+    const displayedPanels = panels.filter((el) => el.show);
+    const query = { ...this.query };
+    if (
+      displayedPanels.length === panels.length
+      || displayedPanels.length === 0
+    ) {
+      delete query.panels;
+    } else {
+      const indexes = displayedPanels.map((el) => panels.findIndex((panel) => panel.id === el.id));
+      query.panels = indexes.join(',');
+    }
+    this.$router.push({ path: '/', query });
+  };
+
+  updateTextQuery = (index) => {
+    const query = { ...this.query };
+    if (index) {
+      query.text = index;
+    } else {
+      delete query.text;
+    }
+    this.$router.push({ path: '/', query });
   };
 }
 

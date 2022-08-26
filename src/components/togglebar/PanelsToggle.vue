@@ -118,7 +118,6 @@ import {
   fasCheckCircle,
   fasCaretDown,
 } from '@quasar/extras/fontawesome-v5';
-import BookmarkService from '@/services/bookmark';
 
 export default {
   name: 'PanelsToggle',
@@ -149,7 +148,7 @@ export default {
 
         return i === idx ? { ...obj, show: !obj.show } : obj;
       });
-      BookmarkService.handlePanelToggle(updatedPanel);
+      this.$store.dispatch('contents/setPanels', { panels: updatedPanel, queryUpdate: true });
     },
     // display toggle title when hovering
     handleToggleTitle(idx) {

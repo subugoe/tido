@@ -151,7 +151,7 @@ export const setItemUrl = ({ commit }, url) => {
 };
 
 export const setContentIndex = ({ commit }, index) => {
-  BookmarkService.handleActiveContentChange(index);
+  BookmarkService.updateTextQuery(index);
 
   commit('setContentIndex', index);
 };
@@ -328,8 +328,31 @@ export const addOrRemoveFromExpanded = ({ getters, dispatch }, label) => {
   }
 };
 
+export const setConnectors = ({ commit }, connectors) => {
+  commit('setConnectorValue', connectors);
+};
+
+export const setConnectorValues = ({ commit, getters }, { index, value, updateQuery }) => {
+  const connectorValues = [...getters.connectorValues];
+
+  BookmarkService.getConnectorValue(index);
+
+  if (updateQuery) {
+    BookmarkService.updateConnectorQuery(value, index);
+  }
+
+  connectorValues[index] = value;
+  commit('setConnectorValue', connectorValues);
+};
+
 export const setPanels = ({ commit }, payload) => {
-  commit('setPanels', payload);
+  const isPanelsArray = Array.isArray(payload);
+
+  if (isPanelsArray) {
+    commit('setPanels', payload);
+  } else {
+    BookmarkService.updatePanelsQuery(payload.panels);
+  }
 };
 
 export const updateContentDOM = () => null;
