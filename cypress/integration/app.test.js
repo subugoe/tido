@@ -49,7 +49,7 @@ describe('Tido', () => {
     cy.get('.root.panels-target').children('.item').first()
       .should('have.attr', 'style', 'display: none;');
 
-    // Reseting item - TODO
+    // Reseting item
     cy.get('.panel-toggle button').click();
     cy.get('.q-menu .q-list').last().click();
     cy.get('.root.panels-target').children('.item').first()
