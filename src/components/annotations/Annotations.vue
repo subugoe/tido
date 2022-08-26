@@ -64,7 +64,6 @@ import Notification from '@/components/Notification.vue';
 
 import * as AnnotationUtils from '@/utils/annotations';
 import DomMixin from '@/mixins/dom';
-import BookmarkService from '@/services/bookmark';
 
 export default {
   name: 'Annotations',
@@ -224,8 +223,7 @@ export default {
           AnnotationUtils.highlightTargets(selector, { level: -1 });
         }
       });
-      this.$store.dispatch('annotations/updateActiveTab', key);
-      BookmarkService.handleAnnotationTabChange(key, index);
+      this.$store.dispatch('annotations/updateActiveTab', { tab: key, index });
     },
 
     addAnnotation(id) {

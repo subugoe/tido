@@ -118,12 +118,10 @@ import {
   fasCheckCircle,
   fasCaretDown,
 } from '@quasar/extras/fontawesome-v5';
-import BookmarkMixin from 'src/mixins/bookmark';
 import BookmarkService from '@/services/bookmark';
 
 export default {
   name: 'PanelsToggle',
-  mixins: [BookmarkMixin],
   computed: {
     toggleCounter() {
       const toggleCount = this.panels.filter((panel) => panel.toggle === true);

@@ -109,6 +109,8 @@ export default {
   },
   async created() {
     BookmarkService.initRouter(this.$router, this.$route);
+    BookmarkService.initStore(this.$store);
+
     const isValid = await this.loadConfig();
 
     this.$q.dark.set('auto');
@@ -185,6 +187,7 @@ export default {
 
     onRouteQueryChange() {
       BookmarkService.syncQuery(this.$route.query);
+
       if (this.loaded) {
         return;
       }

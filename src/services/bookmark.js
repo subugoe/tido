@@ -3,15 +3,31 @@ import * as AnnotationUtils from '@/utils/annotations';
 class BookmarkService {
   $router;
 
+  $store;
+
   query;
+
+  panel;
 
   initRouter(router) {
     this.$router = router;
   }
 
+  initStore(store) {
+    this.$store = store;
+  }
+
   syncQuery(query) {
     this.query = query;
+    this.checkForPanelUpdate(query);
   }
+
+  checkForPanelUpdate = (query) => {
+    if (this.panel !== query.panels) {
+      this.panel = query.panels;
+      this.handleQueryPanelUpdate();
+    }
+  };
 
   handleAnnotationTabChange = (key, index) => {
     const query = { ...this.query };
@@ -36,7 +52,8 @@ class BookmarkService {
   };
 
   handleContentItemDataChange = (isManifestChanged, previousManifest) => {
-    const tabs = AnnotationUtils.getAnnotationTabs(this.config);
+    const config = this.$store.getters['config/config'];
+    const tabs = AnnotationUtils.getAnnotationTabs(config);
     let contentIndex = Number(this.query.text ?? '0');
 
     if (!previousManifest) {
@@ -44,13 +61,13 @@ class BookmarkService {
 
       this.$store.dispatch(
         'annotations/updateActiveTab',
-        tabs?.[annotation].key,
+        { tab: tabs?.[annotation].key, index: annotation },
         {
           root: true,
         },
       );
     } else if (isManifestChanged) {
-      this.$store.dispatch('annotations/updateActiveTab', tabs?.[0].key, {
+      this.$store.dispatch('annotations/updateActiveTab', { tab: tabs?.[0].key, index: 0 }, {
         root: true,
       });
       const query = { ...this.query };
@@ -101,6 +118,26 @@ class BookmarkService {
       query.panels = indexes.join(',');
     }
     this.$router.push({ path: '/', query });
+  };
+
+  handleQueryPanelUpdate = () => {
+    const values = this.panel;
+    const storePanels = [...this.$store.getters['contents/panels']];
+    if (!values) {
+      return this.$store.dispatch(
+        'contents/setPanels',
+        storePanels.map((el) => ({ ...el, show: true })),
+      );
+    }
+
+    const indexes = values.split(',');
+    return this.$store.dispatch(
+      'contents/setPanels',
+      storePanels.map((el, index) => ({
+        ...el,
+        show: indexes.includes(String(index)),
+      })),
+    );
   };
 
   getConnectorObject = (query) => {

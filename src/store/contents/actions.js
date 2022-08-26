@@ -1,6 +1,7 @@
 import { request } from '@/utils/http';
 import * as contentUtils from '@/utils/contents';
 import * as PanelsUtils from '@/utils/panels';
+import BookmarkService from '@/services/bookmark';
 
 /**
  * extract the 'label part' of the itemurl
@@ -150,6 +151,8 @@ export const setItemUrl = ({ commit }, url) => {
 };
 
 export const setContentIndex = ({ commit }, index) => {
+  BookmarkService.handleActiveContentChange(index);
+
   commit('setContentIndex', index);
 };
 
@@ -253,15 +256,16 @@ export const initContentItem = async (
   let { contentUrls } = getters;
   let contentTypes = [];
   const { config } = rootState.config;
-  const previousManifest = (contentUrls[0] || '')
-    .split('/')
-    .pop()
-    .split('-')[0];
 
   try {
     const data = await request(url);
 
     item = data;
+
+    const previousManifest = (contentUrls[0] || '')
+      .split('/')
+      .pop()
+      .split('-')[0];
 
     [contentUrls, contentTypes] = getContentUrls(data.content, config);
 
@@ -273,6 +277,10 @@ export const initContentItem = async (
     if (previousManifest !== currentManifest) {
       isManifestChanged = true;
     }
+
+    const index = BookmarkService.handleContentItemDataChange(isManifestChanged, previousManifest);
+
+    commit('setContentIndex', index);
   } catch (err) {
     errorText = {
       messageKey: 'textErrorMessageNotExists',
@@ -286,7 +294,7 @@ export const initContentItem = async (
     contentTypes,
   });
 
-  return { isManifestChanged, previousManifest };
+  return { isManifestChanged };
 };
 
 export const addToExpanded = ({ commit, getters }, label) => {

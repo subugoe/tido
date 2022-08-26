@@ -86,9 +86,7 @@
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
-import BookmarkMixin from '@/mixins/bookmark';
 
-import BookmarkService from '@/services/bookmark';
 import DomMixin from '@/mixins/dom';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
@@ -106,7 +104,7 @@ export default {
     Loading,
     Notification,
   },
-  mixins: [DomMixin, BookmarkMixin],
+  mixins: [DomMixin],
   props: {
     transcription: {
       type: String,
@@ -127,8 +125,14 @@ export default {
     isLoading: false,
   }),
   computed: {
+    activeContentUrl() {
+      return this.contentUrls[this.contentIndex];
+    },
     itemUrl() {
       return this.$store.getters['contents/itemUrl'];
+    },
+    contentIndex() {
+      return this.$store.getters['contents/contentIndex'];
     },
     contentUrls() {
       return this.$store.getters['contents/contentUrls'];
@@ -185,22 +189,17 @@ export default {
       this.$store.dispatch('annotations/decreaseContentFontSize');
     },
     switchActiveContentUrl(contentUrl) {
-      const activeIndex = this.contentUrls.findIndex((x) => x === contentUrl);
       this.$store.dispatch(
         'contents/setContentIndex',
-        activeIndex,
+        this.contentUrls.findIndex((x) => x === contentUrl),
       );
-      BookmarkService.handleActiveContentChange(activeIndex);
       this.handleActiveContentUrl();
     },
     async getContentsItemData(url) {
-      const { isManifestChanged, previousManifest } = await this.$store.dispatch(
+      await this.$store.dispatch(
         'contents/initContentItem',
         url,
       );
-
-      const index = this.onContentItemDataChange(isManifestChanged, previousManifest);
-      this.$store.dispatch('contents/setContentIndex', index);
 
       await this.handleActiveContentUrl();
     },
