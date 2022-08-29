@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <q-tabs
-      :model-value="activeContentUrl"
+      v-model="activeContentUrl"
       dense
       class="text-grey q-mb-sm"
       active-color="$q.dark.isActive ? 'white' : 'accent'"
