@@ -37,17 +37,15 @@ export const panels = (state) => state.panels;
 export const sequenceIndex = (state) => state.sequenceIndex;
 
 export const selectedItemIndex = (state) => {
-  const nodelabel = state.itemUrl;
-  let idx = 0;
-  state.itemUrls.forEach((item, index) => {
-    if (item === nodelabel) {
-      idx = index;
-    }
-  });
-  return idx;
+  const selectedItemUrl = encodeURI(decodeURI(state.itemUrl));
+  const index = state.itemUrls.findIndex((item) => encodeURI(decodeURI(item)) === selectedItemUrl);
+  return index > -1 ? index : 0;
 };
 
-export const selectedManifest = (state) => state.manifests.find((manifest) => manifest.sequence.find((manifestItem) => manifestItem.id === state.itemUrl));
+export const selectedManifest = (state) => state.manifests.find((manifest) => {
+  const selectedItemUrl = encodeURI(decodeURI(state.itemUrl));
+  return manifest.sequence.find((manifestItem) => encodeURI(decodeURI(manifestItem.id)) === selectedItemUrl);
+});
 
 export const selectedSequenceIndex = (state, getters) => {
   const item = getters.selectedManifest;
