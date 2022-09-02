@@ -6,6 +6,10 @@ export const setCollectionTitle = (state, title) => {
   state.collectionTitle = title;
 };
 
+export const setConnectorValue = (state, payload) => {
+  state.connectorValues = payload;
+};
+
 export const setContentIndex = (state, payload) => {
   state.contentIndex = payload;
 };

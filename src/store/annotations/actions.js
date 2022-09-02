@@ -1,6 +1,7 @@
 import * as AnnotationUtils from 'src/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
+import BookmarkService from '@/services/bookmark';
 
 export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
   const { activeAnnotations, annotations } = getters;
@@ -142,7 +143,9 @@ export const resetActiveAnnotations = ({ commit, getters }) => {
   commit('updateActiveAnnotations', {});
 };
 
-export const updateActiveTab = ({ commit }, tab) => {
+export const updateActiveTab = ({ commit }, { tab, index }) => {
+  BookmarkService.updateAnnotationQuery(tab, index);
+
   commit('updateActiveTab', tab);
 };
 

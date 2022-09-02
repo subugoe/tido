@@ -1,7 +1,7 @@
 import { request } from '@/utils/http';
-import * as AnnotationUtils from '@/utils';
 import * as contentUtils from '@/utils/contents';
 import * as PanelsUtils from '@/utils/panels';
+import BookmarkService from '@/services/bookmark';
 
 /**
  * extract the 'label part' of the itemurl
@@ -151,6 +151,8 @@ export const setItemUrl = ({ commit }, url) => {
 };
 
 export const setContentIndex = ({ commit }, index) => {
+  BookmarkService.updateTextQuery(index);
+
   commit('setContentIndex', index);
 };
 
@@ -244,7 +246,7 @@ function getContentUrls(content, config) {
 
 export const initContentItem = async (
   {
-    commit, getters, dispatch, rootState,
+    commit, getters, rootState,
   },
   url,
 ) => {
@@ -254,6 +256,7 @@ export const initContentItem = async (
   let { contentUrls } = getters;
   let contentTypes = [];
   const { config } = rootState.config;
+
   try {
     const data = await request(url);
 
@@ -272,12 +275,12 @@ export const initContentItem = async (
       .split('-')[0];
 
     if (previousManifest !== currentManifest) {
-      const tabs = AnnotationUtils.getAnnotationTabs(config);
-      dispatch('annotations/updateActiveTab', tabs?.[0].key, {
-        root: true,
-      });
       isManifestChanged = true;
     }
+
+    const index = BookmarkService.handleContentItemDataChange(isManifestChanged, previousManifest);
+
+    commit('setContentIndex', index);
   } catch (err) {
     errorText = {
       messageKey: 'textErrorMessageNotExists',
@@ -325,8 +328,29 @@ export const addOrRemoveFromExpanded = ({ getters, dispatch }, label) => {
   }
 };
 
+export const setConnectors = ({ commit }, connectors) => {
+  commit('setConnectorValue', connectors);
+};
+
+export const setConnectorValues = ({ commit, getters }, { index, value }) => {
+  const connectorValues = [...getters.connectorValues];
+
+  BookmarkService.getConnectorValue(index);
+
+  BookmarkService.updateConnectorQuery(value, index);
+
+  connectorValues[index] = value;
+  commit('setConnectorValue', connectorValues);
+};
+
 export const setPanels = ({ commit }, payload) => {
-  commit('setPanels', payload);
+  const isPanelsArray = Array.isArray(payload);
+
+  if (isPanelsArray) {
+    commit('setPanels', payload);
+  } else {
+    BookmarkService.updatePanelsQuery(payload.panels);
+  }
 };
 
 export const updateContentDOM = () => null;

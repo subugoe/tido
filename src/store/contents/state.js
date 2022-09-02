@@ -2,6 +2,7 @@ export default function ContentsState() {
   return {
     collection: {},
     collectionTitle: '',
+    connectorValues: [],
     contentIndex: 0,
     contentTypes: [],
     contentUrls: [],
