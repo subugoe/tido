@@ -332,14 +332,12 @@ export const setConnectors = ({ commit }, connectors) => {
   commit('setConnectorValue', connectors);
 };
 
-export const setConnectorValues = ({ commit, getters }, { index, value, updateQuery }) => {
+export const setConnectorValues = ({ commit, getters }, { index, value }) => {
   const connectorValues = [...getters.connectorValues];
 
   BookmarkService.getConnectorValue(index);
 
-  if (updateQuery) {
-    BookmarkService.updateConnectorQuery(value, index);
-  }
+  BookmarkService.updateConnectorQuery(value, index);
 
   connectorValues[index] = value;
   commit('setConnectorValue', connectorValues);

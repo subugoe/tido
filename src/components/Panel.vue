@@ -88,7 +88,7 @@ export default {
     },
   },
   methods: {
-    onTabChange(value) { return this.$store.dispatch('contents/setConnectorValues', { value, index: this.index, updateQuery: true }); },
+    onTabChange(value) { return this.$store.dispatch('contents/setConnectorValues', { value, index: this.index }); },
   },
   watch: {
     panel: {

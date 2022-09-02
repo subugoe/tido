@@ -143,12 +143,12 @@ export default {
     },
     // Control status (show) panel / even you can reset all
     handleStatusPanel(i, reset = false) {
-      const updatedPanel = [...this.panels].map((obj, idx) => {
+      const updatedPanels = [...this.panels].map((obj, idx) => {
         if (reset) return { ...obj, show: true };
 
         return i === idx ? { ...obj, show: !obj.show } : obj;
       });
-      this.$store.dispatch('contents/setPanels', { panels: updatedPanel, queryUpdate: true });
+      this.$store.dispatch('contents/setPanels', { panels: updatedPanels });
     },
     // display toggle title when hovering
     handleToggleTitle(idx) {
