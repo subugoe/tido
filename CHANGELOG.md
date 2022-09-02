@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.4.0...v2.4.1) (2022-08-30)
+
+
+### Bug Fixes
+
+* manifest URL comparison ([913a47c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/913a47c6aefad1b48868c7546420942e71c5b433))
+
 ## [2.4.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.3.0...v2.4.0) (2022-07-13)
 
 
