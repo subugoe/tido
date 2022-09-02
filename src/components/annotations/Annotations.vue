@@ -9,12 +9,12 @@
       indicator-color="$q.dark.isActive ? 'white' : 'accent'"
     >
       <q-tab
-        v-for="annotationTab in annotationTabs"
+        v-for="annotationTab,index in annotationTabs"
         :key="annotationTab.key"
         :class="{'disabled-tab': annotationTab.key === currentTab}"
         :label="$t(annotationTab.collectionTitle)"
         :name="annotationTab.key"
-        @click="switchActiveTab(annotationTab.key, annotationTab.type)"
+        @click="switchActiveTab(annotationTab.key, index)"
       />
     </q-tabs>
 
@@ -215,7 +215,7 @@ export default {
         });
       }
     },
-    switchActiveTab(key) {
+    switchActiveTab(key, index) {
       this.resetActiveAnnotations();
       this.filteredAnnotations.forEach((annotation) => {
         const selector = AnnotationUtils.generateTargetSelector(annotation);
@@ -223,7 +223,7 @@ export default {
           AnnotationUtils.highlightTargets(selector, { level: -1 });
         }
       });
-      this.$store.dispatch('annotations/updateActiveTab', key);
+      this.$store.dispatch('annotations/updateActiveTab', { tab: key, index });
     },
 
     addAnnotation(id) {

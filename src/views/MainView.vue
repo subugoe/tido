@@ -15,7 +15,7 @@
 
       <q-separator />
 
-      <Panel :panel="panel" />
+      <Panel :panel="panel" :index="index" />
     </div>
   </div>
 </template>
