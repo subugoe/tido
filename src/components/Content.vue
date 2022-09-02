@@ -86,6 +86,7 @@
 
 <script>
 import { fasSearchPlus, fasSearchMinus } from '@quasar/extras/fontawesome-v5';
+
 import DomMixin from '@/mixins/dom';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
@@ -124,6 +125,9 @@ export default {
     isLoading: false,
   }),
   computed: {
+    activeContentUrl() {
+      return this.contentUrls[this.contentIndex];
+    },
     itemUrl() {
       return this.$store.getters['contents/itemUrl'];
     },
@@ -147,9 +151,6 @@ export default {
     },
     fontsize() {
       return this.$store.getters['annotations/contentFontSize'];
-    },
-    activeContentUrl() {
-      return this.contentUrls[this.contentIndex];
     },
     contentStyle() {
       return {
@@ -195,13 +196,10 @@ export default {
       this.handleActiveContentUrl();
     },
     async getContentsItemData(url) {
-      const { isManifestChanged } = await this.$store.dispatch(
+      await this.$store.dispatch(
         'contents/initContentItem',
         url,
       );
-      if (isManifestChanged) {
-        this.$store.dispatch('contents/setContentIndex', 0);
-      }
 
       await this.handleActiveContentUrl();
     },

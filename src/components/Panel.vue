@@ -8,7 +8,8 @@
       <q-tabs
         v-for="(tab, i) in panel.connector"
         :key="`pt${i}`"
-        v-model="value"
+        :model-value="connectorValue"
+        @update:model-value="onTabChange"
         class="content-tabs"
         :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
         dense
@@ -21,7 +22,7 @@
     </div>
 
     <q-tab-panels
-      v-model="value"
+      v-model="connectorValue"
       animated
       keep-alive
     >
@@ -69,12 +70,12 @@ export default {
   props: {
     panel: {
       type: Object,
-      default: () => {},
+      default: () => { },
+    },
+    index: {
+      type: Number,
     },
   },
-  data: () => ({
-    value: '',
-  }),
   computed: {
     contentUrls() {
       return this.$store.getters['contents/contentUrls'];
@@ -82,11 +83,19 @@ export default {
     imageUrl() {
       return this.$store.getters['contents/imageUrl'];
     },
+    connectorValue() {
+      return this.$store.getters['contents/connectorValues'][this.index] || `tab${this.index}`;
+    },
+  },
+  methods: {
+    onTabChange(value) { return this.$store.dispatch('contents/setConnectorValues', { value, index: this.index }); },
   },
   watch: {
     panel: {
-      handler(newVal) {
-        this.value = newVal.tab_model;
+      handler(newVal, oldVal) {
+        if (newVal.tab_model !== (oldVal || {}).tab_model) {
+          this.value = newVal.tab_model;
+        }
       },
       deep: true,
       immediate: true,
@@ -98,7 +107,8 @@ export default {
 <style lang="scss" scoped>
 .tabs-container {
   display: flex;
-  > * {
+
+  >* {
     flex: 1;
   }
 }
@@ -115,8 +125,8 @@ export default {
 
   .q-tab-panels {
     display: flex;
-    flex-direction:column;
-    flex:1;
+    flex-direction: column;
+    flex: 1;
   }
 }
 
@@ -125,6 +135,7 @@ export default {
   flex: 1;
   flex-direction: column;
   overflow: hidden;
+
   @media (max-width: $breakpoint-sm-custom-md) {
     min-height: 100vh;
   }

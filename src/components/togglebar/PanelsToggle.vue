@@ -42,7 +42,7 @@
           clickable
           padding="xs"
           :title="$t('defaultView')"
-          @click="()=> handleStatusPanel(-1, true)"
+          @click="() => handleStatusPanel(-1, true)"
         >
           <q-item-section>
             <q-item-label>
@@ -97,7 +97,7 @@
         padding="xs"
         class="q-px-sm"
         :title="$t('defaultView')"
-        @click="()=> handleStatusPanel(-1, true)"
+        @click="() => handleStatusPanel(-1, true)"
       >
         <q-icon
           class="q-pr-xs"
@@ -143,12 +143,12 @@ export default {
     },
     // Control status (show) panel / even you can reset all
     handleStatusPanel(i, reset = false) {
-      const updatedPanel = this.panels.map((obj, idx) => {
+      const updatedPanels = [...this.panels].map((obj, idx) => {
         if (reset) return { ...obj, show: true };
 
         return i === idx ? { ...obj, show: !obj.show } : obj;
       });
-      this.$store.dispatch('contents/setPanels', updatedPanel);
+      this.$store.dispatch('contents/setPanels', { panels: updatedPanels });
     },
     // display toggle title when hovering
     handleToggleTitle(idx) {

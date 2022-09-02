@@ -40,17 +40,14 @@ describe('Tido', () => {
 
   it('Should toggle panels', () => {
     cy.get('.root.panels-target').children('.item').should('have.length', 4);
-    cy.get('.panel-toggle button').click();
-
-    cy.get('.q-menu').should('be.visible');
 
     // Clicking on first item
-    cy.get('.q-menu .q-list').first().click();
+    cy.get('.panel-toggle .row div:first-child button').click();
     cy.get('.root.panels-target').children('.item').first()
       .should('have.attr', 'style', 'display: none;');
 
     // Reseting item
-    cy.get('.q-menu .q-list').last().click();
+    cy.get('.panel-toggle .row div:first-child button').click();
     cy.get('.root.panels-target').children('.item').first()
       .should('not.have.attr', 'style', 'display: none;');
   });

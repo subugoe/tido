@@ -2,6 +2,8 @@ export const collection = (state) => state.collection;
 
 export const collectionTitle = (state) => state.collectionTitle;
 
+export const connectorValues = (state) => state.connectorValues;
+
 export const contentIndex = (state) => state.contentIndex;
 
 export const contentTypes = (state) => state.contentTypes;
