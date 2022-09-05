@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.4.1...v2.5.0) (2022-09-05)
+
+
+### Features
+
+* Bookmarking - Implement bookmark functionality for Panels and Tabs. ([866cb0d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/866cb0d88f8e32115bbb668c36fdad47ace8c48a))
+
+
+### Chore
+
+* **release:** 2.4.1 ([5e53d0a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5e53d0a617614304691f96fb913f2b52041db0cf))
+
 ### [2.4.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.4.0...v2.4.1) (2022-08-30)
 
 
