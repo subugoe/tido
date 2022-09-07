@@ -120,8 +120,6 @@ export default {
     }
     await this.init();
 
-    await this.loadConfig();
-
     if (this.config?.colors?.primary) {
       setCssVar('primary', this.config.colors.primary);
     }
