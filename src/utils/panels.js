@@ -45,13 +45,3 @@ export const setupPanels = (panels) => {
   });
   return panels.filter((p) => p.show);
 };
-
-export const getNewPanels = (panels) => {
-  const output = [];
-  panels.forEach((panel) => {
-    const el = JSON.parse(JSON.stringify(panel));
-    el.tab_model = 'tab0';
-    output.push(el);
-  });
-  return output.filter((p) => p.show);
-};

@@ -23,7 +23,6 @@
 <script>
 import ToolBar from '@/components/ToolBar.vue';
 import Panel from '@/components/Panel.vue';
-import * as PanelUtils from '@/utils/panels';
 
 export default {
   name: 'MainView',
@@ -37,18 +36,6 @@ export default {
     },
     config() {
       return this.$store.getters['config/config'];
-    },
-  },
-  methods: {
-    handlePanelChange(value, index) {
-      let panels = PanelUtils.getNewPanels(this.panels);
-
-      panels = panels.map((el, i) => ({
-        ...el,
-        tab_model: i === index ? value : el.tab_model,
-      }));
-
-      this.$store.dispatch('contents/setPanels', panels);
     },
   },
 };

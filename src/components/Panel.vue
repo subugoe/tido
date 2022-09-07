@@ -84,7 +84,7 @@ export default {
       return this.$store.getters['contents/imageUrl'];
     },
     connectorValue() {
-      return this.$store.getters['contents/connectorValues'][this.index] || `tab${this.index}`;
+      return this.$store.getters['contents/connectorValues'][this.index] || 'tab0';
     },
   },
   methods: {
