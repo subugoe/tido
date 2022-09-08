@@ -274,13 +274,15 @@ export const initContentItem = async (
       .pop()
       .split('-')[0];
 
+    if (!previousManifest) {
+      BookmarkService.setContentTabFromQuery();
+      BookmarkService.setAnnotationTabFromQuery();
+    }
     if (previousManifest !== currentManifest) {
       isManifestChanged = true;
+      BookmarkService.setDefaultContentAndAnnotationTabs();
+      BookmarkService.setDefaultContentAndAnnotationQuery();
     }
-
-    const index = BookmarkService.handleContentItemDataChange(isManifestChanged, previousManifest);
-
-    commit('setContentIndex', index);
   } catch (err) {
     errorText = {
       messageKey: 'textErrorMessageNotExists',
