@@ -277,8 +277,7 @@ export const initContentItem = async (
     if (!previousManifest) {
       BookmarkService.setContentTabFromQuery();
       BookmarkService.setAnnotationTabFromQuery();
-    }
-    if (previousManifest !== currentManifest) {
+    } else if (previousManifest !== currentManifest) {
       isManifestChanged = true;
       BookmarkService.setDefaultContentAndAnnotationTabs();
       BookmarkService.setDefaultContentAndAnnotationQuery();
