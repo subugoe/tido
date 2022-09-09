@@ -1,4 +1,4 @@
-describe('Bookmark', () => {
+describe('Bookmarking', () => {
   beforeEach(() => {
     cy.visit('/').then(() => {
       cy.url().should('contain', '?itemurl=').should('include', '.json');
@@ -82,6 +82,30 @@ describe('Bookmark', () => {
         cy.get('.q-tabs__content .q-tab')
           .first()
           .should('have.class', 'q-tab--active');
+      });
+  });
+});
+
+describe('Bookmarking - URL first', () => {
+  it('Should load tabs from URL', () => {
+    cy
+      .visit('/#/?itemurl=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/3r176-182b/latest/item.json&text=1&annotation=1')
+      .then(() => {
+        cy.wait(1000);
+        cy.get('.root.panels-target > .item:nth-child(3)')
+          .within(() => {
+            cy.get('.q-tabs__content .q-tab')
+              .last()
+              .should('have.class', 'q-tab--active');
+          });
+
+        cy.get('.item-content .item')
+          .last()
+          .within(() => {
+            cy.get('.q-tabs__content .q-tab')
+              .last()
+              .should('have.class', 'q-tab--active');
+          });
       });
   });
 });
