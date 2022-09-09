@@ -18,7 +18,7 @@ describe('Bookmark', () => {
   });
 
   it('Should change annotation value in query', () => {
-    cy.get('.root.panels-target > div:last-child > .item-content .q-tabs .q-tab').eq(1).click();
+    cy.wait(1000).get('.root.panels-target > div:last-child > .item-content .q-tabs .q-tab').eq(1).click();
 
     cy.url().should('include', 'annotation=1');
 
