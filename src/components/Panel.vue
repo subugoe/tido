@@ -88,7 +88,9 @@ export default {
     },
   },
   methods: {
-    onTabChange(value) { return this.$store.dispatch('contents/setConnectorValues', { value, index: this.index }); },
+    onTabChange(value) {
+      return this.$store.dispatch('contents/setConnectorValues', { value, panelIndex: this.index });
+    },
   },
   watch: {
     panel: {

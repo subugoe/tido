@@ -140,7 +140,7 @@ class BookmarkService {
     this.$router.push({ path: '/', query });
   };
 
-  updateConnectorQuery = (value, index) => {
+  updateConnectorQuery = (value, panelIndex) => {
     const tabIndex = Number(value.replace('tab', ''));
     if (Number.isNaN(tabIndex)) {
       return;
@@ -152,7 +152,7 @@ class BookmarkService {
     if (tabIndex === 0) {
       delete connectors[tabIndex];
     } else {
-      connectors[index] = tabIndex;
+      connectors[panelIndex] = tabIndex;
     }
 
     const connectorQuery = BookmarkService.getConnectorString(connectors);
