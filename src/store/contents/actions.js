@@ -274,13 +274,14 @@ export const initContentItem = async (
       .pop()
       .split('-')[0];
 
-    if (previousManifest !== currentManifest) {
+    if (!previousManifest) {
+      BookmarkService.setContentTabFromQuery();
+      BookmarkService.setAnnotationTabFromQuery();
+    } else if (previousManifest !== currentManifest) {
       isManifestChanged = true;
+      BookmarkService.setDefaultContentAndAnnotationTabs();
+      BookmarkService.setDefaultContentAndAnnotationQuery();
     }
-
-    const index = BookmarkService.handleContentItemDataChange(isManifestChanged, previousManifest);
-
-    commit('setContentIndex', index);
   } catch (err) {
     errorText = {
       messageKey: 'textErrorMessageNotExists',
@@ -329,18 +330,15 @@ export const addOrRemoveFromExpanded = ({ getters, dispatch }, label) => {
 };
 
 export const setConnectors = ({ commit }, connectors) => {
-  commit('setConnectorValue', connectors);
+  commit('setConnectorValues', connectors);
 };
 
-export const setConnectorValues = ({ commit, getters }, { index, value }) => {
+export const setConnectorValues = ({ commit, getters }, { panelIndex, value }) => {
   const connectorValues = [...getters.connectorValues];
+  BookmarkService.updateConnectorQuery(value, panelIndex);
 
-  BookmarkService.getConnectorValue(index);
-
-  BookmarkService.updateConnectorQuery(value, index);
-
-  connectorValues[index] = value;
-  commit('setConnectorValue', connectorValues);
+  connectorValues[panelIndex] = value;
+  commit('setConnectorValues', connectorValues);
 };
 
 export const setPanels = ({ commit }, payload) => {

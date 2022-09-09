@@ -144,8 +144,7 @@ export const resetActiveAnnotations = ({ commit, getters }) => {
 };
 
 export const updateActiveTab = ({ commit }, { tab, index }) => {
-  BookmarkService.updateAnnotationQuery(tab, index);
-
+  BookmarkService.updateAnnotationQuery(index);
   commit('updateActiveTab', tab);
 };
 

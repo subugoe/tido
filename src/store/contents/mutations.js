@@ -6,7 +6,7 @@ export const setCollectionTitle = (state, title) => {
   state.collectionTitle = title;
 };
 
-export const setConnectorValue = (state, payload) => {
+export const setConnectorValues = (state, payload) => {
   state.connectorValues = payload;
 };
 

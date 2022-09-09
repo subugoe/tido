@@ -50,34 +50,39 @@ class BookmarkService {
     this.$store.dispatch('contents/setConnectors', values);
   };
 
-  handleContentItemDataChange = (isManifestChanged, previousManifest) => {
+  setAnnotationTabFromQuery() {
     const config = this.$store.getters['config/config'];
     const tabs = AnnotationUtils.getAnnotationTabs(config);
-    let contentIndex = Number(this.query.text ?? '0');
+    const annotation = this.query.annotation || 0;
 
-    if (!previousManifest) {
-      const annotation = this.query.annotation || 0;
-
-      this.$store.dispatch(
-        'annotations/updateActiveTab',
-        { tab: tabs?.[annotation].key, index: annotation },
-        {
-          root: true,
-        },
-      );
-    } else if (isManifestChanged) {
-      this.$store.dispatch('annotations/updateActiveTab', { tab: tabs?.[0].key, index: 0 }, {
+    this.$store.dispatch(
+      'annotations/updateActiveTab',
+      { tab: tabs?.[annotation].key, index: annotation },
+      {
         root: true,
-      });
-      const query = { ...this.query };
-      delete query.annotation;
-      delete query.text;
-      contentIndex = 0;
-      this.$router.push({ path: '/', query });
-    }
+      },
+    );
+  }
 
-    return contentIndex;
-  };
+  setContentTabFromQuery() {
+    this.$store.dispatch('contents/setContentIndex', Number(this.query.text ?? '0'));
+  }
+
+  setDefaultContentAndAnnotationTabs() {
+    const config = this.$store.getters['config/config'];
+    const tabs = AnnotationUtils.getAnnotationTabs(config);
+    this.$store.dispatch('annotations/updateActiveTab', { tab: tabs?.[0].key, index: 0 }, {
+      root: true,
+    });
+    this.$store.dispatch('contents/setContentIndex', 0);
+  }
+
+  setDefaultContentAndAnnotationQuery() {
+    const query = { ...this.query };
+    delete query.annotation;
+    delete query.text;
+    this.$router.push({ path: '/', query });
+  }
 
   static getConnectorObject = (query) => {
     const connector = (query.connector || '')
@@ -123,7 +128,7 @@ class BookmarkService {
     );
   };
 
-  updateAnnotationQuery = (key, index) => {
+  updateAnnotationQuery = (index) => {
     const query = { ...this.query };
 
     if (index) {
@@ -135,7 +140,7 @@ class BookmarkService {
     this.$router.push({ path: '/', query });
   };
 
-  updateConnectorQuery = (value, index) => {
+  updateConnectorQuery = (value, panelIndex) => {
     const tabIndex = Number(value.replace('tab', ''));
     if (Number.isNaN(tabIndex)) {
       return;
@@ -147,7 +152,7 @@ class BookmarkService {
     if (tabIndex === 0) {
       delete connectors[tabIndex];
     } else {
-      connectors[index] = tabIndex;
+      connectors[panelIndex] = tabIndex;
     }
 
     const connectorQuery = BookmarkService.getConnectorString(connectors);
