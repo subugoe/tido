@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.5.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.5.0...v2.5.1) (2022-09-13)
+
+
+### Bug Fixes
+
+* default connector tab index ([db60cfc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/db60cfc84bd8390a894f3da158aa70ea6e30f491))
+* loading bookmarkable tabs from URL ([d8f0348](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d8f0348a99a74a22b2d32eb115e0f7af31e770ff))
+
+
+### Refactoring
+
+* remove unused code ([3645265](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/364526597ac8567b416a2c5fc7cf07fc88220b4e))
+* rename some variable names ([6d652ad](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/6d652ada14c80346850e9f607662d77da43b576c))
+* use dedicated methods to update content and annotations at bookmarking ([7893e51](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7893e512953c0980eabcbf3023f5f76883769e72))
+
+
+### Tests
+
+* add annotation tests ([7926aa8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7926aa863bf38a8a4841adc81f78023ed185d2e9))
+* add content tests ([8975328](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/89753289296bf1a9b6c208285e3a4c8f5c34a54b))
+* update bookmark test ([d801c37](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d801c3777e993260ebd1b51164352e5e04ccf740))
+
 ## [2.5.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.4.1...v2.5.0) (2022-09-05)
 
 
