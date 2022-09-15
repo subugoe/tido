@@ -10,12 +10,14 @@ export default {
       this.navigate(link);
     },
     navigate(url) {
-      const isSameQueryUrl = this.$route.query.itemurl === url;
+      const isSameQueryUrl = this.$route.query.item === url;
       if (isSameQueryUrl) {
         return;
       }
+      console.log('navigate', url);
+
       this.$store.dispatch('config/resetInitialized');
-      this.$router.push({ query: { ...this.$route.query, itemurl: url } });
+      this.$router.push({ query: { ...this.$route.query, item: url } });
     },
   },
   computed: {

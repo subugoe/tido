@@ -96,14 +96,6 @@ export const annotationLoaded = ({ commit }, annotations) => {
   commit('updateAnnotationLoading', false);
 };
 
-export const decreaseContentFontSize = ({ commit, state }) => {
-  commit('updateContentFontSize', state.contentFontSize - 2);
-};
-
-export const increaseContentFontSize = ({ commit, state }) => {
-  commit('updateContentFontSize', state.contentFontSize + 2);
-};
-
 export const loadAnnotations = ({ commit }) => {
   commit('updateAnnotationLoading', true);
   commit('updateAnnotations', []);

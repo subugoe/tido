@@ -15,7 +15,7 @@
         class="row toolbar"
       >
         <TitleBar
-          v-if="manifests.length"
+          v-if="itemLoaded && manifests.length"
           class="col-xs-12 col-sm-9 q-mb-xs-xs q-mb-sm-none"
           :item="item"
         />
@@ -97,6 +97,9 @@ export default {
     },
   },
   computed: {
+    itemLoaded() {
+      return this.$store.getters['contents/item'];
+    },
     isConfigValid() {
       return this.$store.getters['config/isConfigValid'];
     },

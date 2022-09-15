@@ -32,12 +32,18 @@ export default {
   },
   computed: {
     panels() {
-      return this.$store.getters['contents/panels'];
+      const panels = this.$store.getters['contents/panels'];
+      console.log(panels)
+      return panels.length > 0 ? [panels[2]] : [];
     },
     config() {
       return this.$store.getters['config/config'];
     },
   },
+  mounted() {
+    console.log('mounted')
+    this.$store.dispatch('contents/initPanels');
+  }
 };
 </script>
 

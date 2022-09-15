@@ -1,12 +1,12 @@
 <template>
   <!-- shows the nested tabs -->
   <div
-    v-if="panel.connector.length > 1"
+    v-if="tabs.length > 1"
     class="item-content"
   >
     <div class="tabs-container">
       <q-tabs
-        v-for="(tab, i) in panel.connector"
+        v-for="(tab, i) in tabs"
         :key="`pt${i}`"
         :model-value="connectorValue"
         @update:model-value="onTabChange"
@@ -20,14 +20,13 @@
         />
       </q-tabs>
     </div>
-
     <q-tab-panels
       v-model="connectorValue"
       animated
       keep-alive
     >
       <q-tab-panel
-        v-for="(tab, idx) in panel.connector"
+        v-for="(tab, idx) in tabs"
         :key="`co${idx}`"
         :name="`tab${idx}`"
         class="q-pa-none"
@@ -35,6 +34,7 @@
         <component
           :is="tab.component"
           :key="tab.id"
+          v-bind="tab.props"
         />
       </q-tab-panel>
     </q-tab-panels>
@@ -42,12 +42,13 @@
 
   <!-- shows the panels -->
   <div
-    v-else-if="panel.connector.length === 1"
+    v-else-if="tabs.length === 1"
     class="item-content"
   >
     <component
-      :is="panel.connector[0].component"
-      :key="panel.connector[0].id"
+      :is="tabs[0].component"
+      :key="tabs[0].id"
+      :props="tabs[0].props"
     />
   </div>
 </template>
@@ -76,6 +77,11 @@ export default {
       type: Number,
     },
   },
+  data() {
+    return {
+      tabs: [],
+    };
+  },
   computed: {
     contentUrls() {
       return this.$store.getters['contents/contentUrls'];
@@ -94,10 +100,23 @@ export default {
   },
   watch: {
     panel: {
-      handler(newVal, oldVal) {
-        if (newVal.tab_model !== (oldVal || {}).tab_model) {
-          this.value = newVal.tab_model;
-        }
+      handler(value) {
+        console.log(this.contentUrls);
+        const connectors = value.connector;
+        connectors.forEach((c, i) => {
+          if (c.component === 'Content') {
+            if (this.contentUrls[i]) {
+              this.tabs.push({
+                ...c,
+                label: this.contentUrls[i].type.split('type=')[1] ?? '',
+                props: { ...this.contentUrls[i] }
+              });
+            }
+          } else {
+            this.tabs.push(c);
+          }
+        });
+        console.log(this.tabs)
       },
       deep: true,
       immediate: true,

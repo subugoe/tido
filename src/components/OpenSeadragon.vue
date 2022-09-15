@@ -106,6 +106,8 @@ export default {
   },
   methods: {
     async onItemUrlChange(itemUrl) {
+      console.log('onItemUrlChange');
+
       await this.getImageItemData(itemUrl);
       this.init();
     },

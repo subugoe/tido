@@ -1,55 +1,70 @@
-export const loadConfig = ({ commit }) => {
-  let config = {};
-  let configErrorMessage = null;
-  let configErrorTitle = null;
+import BookmarkService from '@/services/bookmark';
+
+function isUrl(str) {
+  let url;
+  try {
+    url = new URL(str);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
+export const load = ({ commit, getters }) => {
+  const defaultConfig = getters.config;
+  let customConfig = {};
+  let configErrorMessage = 'configJsonError';
+  let configErrorTitle = 'noConfigTitle';
   let isValid = false;
 
   const el = document.getElementById('tido-config');
 
-  try {
-    if (!el) {
-      throw new Error('noConfigID');
-    }
-
-    config = JSON.parse(el.text);
-
-    if (!config.entrypoint) {
-      throw new Error('noConfigEntrypoint');
-    }
-
-    isValid = true;
-  } catch (err) {
-    switch (err.message) {
-      case 'noConfigID':
-        configErrorMessage = 'noConfigMessage';
-        configErrorTitle = 'noConfigTitle';
-        break;
-      case 'noConfigEntrypoint':
-        configErrorMessage = 'noConfigEntrypoint';
-        configErrorTitle = 'noConfigTitle';
-        break;
-      default:
-        configErrorMessage = 'configJsonError';
-        configErrorTitle = 'noConfigTitle';
-    }
+  if (!el) {
+    configErrorMessage = 'noConfigMessage';
+    configErrorTitle = 'noConfigTitle';
   }
 
-  commit('loadConfig', {
-    configErrorMessage, configErrorTitle, config, isValid,
-  });
+  customConfig = JSON.parse(el.text);
+
+  if (customConfig.manifest && !isUrl(customConfig.manifest)) {
+    customConfig.manifest = '';
+  }
+  if (!customConfig.entrypoint) {
+    configErrorMessage = 'noConfigEntrypoint';
+    configErrorTitle = 'noConfigTitle';
+  }
+  isValid = true;
+
+  const query = BookmarkService.getQuery();
+  const { item, manifest, collection, panels } = query;
+  console.log(isUrl(manifest), manifest)
+
+  const resultConfig = {
+    ...defaultConfig,
+    ...customConfig,
+    ...(isUrl(item) ? {item} : {}),
+    ...(isUrl(manifest) ? {manifest} : {}),
+    ...(isUrl(collection) ? {collection} : {}),
+  }
+
+  // commit('loadConfig', {
+  //   configErrorMessage, configErrorTitle, resultConfig, isValid,
+  // });
+
+  commit('setConfig', resultConfig);
 
   return {
-    config,
+    resultConfig,
     configErrorMessage,
     configErrorTitle,
     isValid,
   };
 };
 
+
+
 export const resetInitialized = ({ commit }) => {
   commit('resetInitialized');
 };
 
-export const setInitialized = ({ commit }, initialized) => {
-  commit('setInitialized', { initialized });
-};

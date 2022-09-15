@@ -35,6 +35,7 @@ export default {
       type: String,
       default: () => '',
     },
+    title: String,
     titleKey: {
       type: String,
       default: () => '',
