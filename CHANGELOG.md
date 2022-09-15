@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.5.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.5.1...v2.5.2) (2022-09-15)
+
+
+### Tests
+
+* fix annotation test ([1a88e36](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/1a88e36addf698f7e92bf9d56a48df31f6c93b59))
+
 ### [2.5.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.5.0...v2.5.1) (2022-09-13)
 
 
