@@ -1,5 +1,4 @@
 import { request } from '@/utils/http';
-import * as contentUtils from '@/utils/contents';
 import * as PanelsUtils from '@/utils/panels';
 import BookmarkService from '@/services/bookmark';
 
@@ -25,6 +24,7 @@ function getItemLabel(itemurl) {
  * @return array urls
  */
 function getItemUrls(sequence) {
+  console.log('getItemUrls');
   const urls = [];
 
   sequence.forEach((item) => {
@@ -46,6 +46,8 @@ function getItemUrls(sequence) {
  * @param string url
  */
 async function getManifest(url, isCollection, dispatch) {
+  console.log('getManifests');
+
   const itemUrls = [];
   const data = await request(url);
 
@@ -79,7 +81,13 @@ async function getManifest(url, isCollection, dispatch) {
   };
 }
 
+async function getItem(url) {
+  const data = await request(url);
+  return data;
+}
+
 export const initManifest = async ({ commit, dispatch }, url) => {
+  console.log('initManifest');
   commit('resetContents');
 
   const response = await getManifest(url, false, dispatch);
@@ -107,6 +115,8 @@ export const initPanels = ({ dispatch, rootGetters }) => {
 };
 
 export const initCollection = async ({ commit, dispatch }, url) => {
+  console.log('initCollection');
+
   const tree = [];
   const manifests = [];
   const itemUrls = [];
@@ -114,17 +124,17 @@ export const initCollection = async ({ commit, dispatch }, url) => {
   commit('resetContents');
 
   const data = await request(url);
-  const collectiontitle = contentUtils.getLabel(data);
-
-  tree.push({
-    children: [],
-    handler: (node) => {
-      dispatch('addOrRemoveFromExpanded', node.label);
-    },
-    label: collectiontitle,
-    'label-key': collectiontitle,
-    selectable: false,
-  });
+  // const collectiontitle = contentUtils.getLabel(data);
+  //
+  // tree.push({
+  //   children: [],
+  //   handler: (node) => {
+  //     dispatch('addOrRemoveFromExpanded', node.label);
+  //   },
+  //   label: collectiontitle,
+  //   'label-key': collectiontitle,
+  //   selectable: false,
+  // });
 
   if (Array.isArray(data.sequence)) {
     const promises = [];
@@ -141,13 +151,19 @@ export const initCollection = async ({ commit, dispatch }, url) => {
     commit('setItemUrls', { itemUrls });
     commit('setLoaded', { loaded: true });
     commit('setTree', { tree });
-    commit('setCollectionTitle', collectiontitle);
     commit('setCollection', data);
   }
 };
 
-export const setItemUrl = ({ commit }, url) => {
+export const initItem = async ({ commit }, url) => {
+  console.log('initItem');
+  const item = await getItem(url);
+  // commit('setItem', item);
+};
+
+export const setItemUrl = ({ commit, dispatch }, url) => {
   commit('setItemUrl', url);
+  //  dispatch('initItem', url);
 };
 
 export const setContentIndex = ({ commit }, index) => {
@@ -165,7 +181,7 @@ export const initImageData = async ({ commit }, url) => {
   let imageUrl = '';
   let hasError = false;
   let errorImage = null;
-
+  console.log('initImageData');
   commit('setImageData', {
     imageUrl,
     hasError,
@@ -225,6 +241,8 @@ export const initImageData = async ({ commit }, url) => {
  * @return array
  */
 function getContentUrls(content, config) {
+  console.log('getContentUrls');
+
   const contentTypes = [];
 
   if (Array.isArray(content) && content.length) {
@@ -244,18 +262,14 @@ function getContentUrls(content, config) {
   return [contentTypes.map((x) => x.url), contentTypes.map((x) => x.label)];
 }
 
-export const initContentItem = async (
-  {
-    commit, getters, rootState,
-  },
-  url,
-) => {
+export const initContentItem = async ({ commit, getters, rootState }, url) => {
   let isManifestChanged = false;
   let item = {};
   let errorText = null;
   let { contentUrls } = getters;
   let contentTypes = [];
   const { config } = rootState.config;
+  console.log('initContentItem');
 
   try {
     const data = await request(url);
@@ -300,6 +314,7 @@ export const initContentItem = async (
 
 export const addToExpanded = ({ commit, getters }, label) => {
   const expanded = [...getters.expanded];
+  console.log('addToExpanded');
 
   expanded.push(label);
   commit('updateExpanded', [...expanded]);
@@ -343,7 +358,7 @@ export const setConnectorValues = ({ commit, getters }, { panelIndex, value }) =
 
 export const setPanels = ({ commit }, payload) => {
   const isPanelsArray = Array.isArray(payload);
-
+  console.log('setPanels');
   if (isPanelsArray) {
     commit('setPanels', payload);
   } else {

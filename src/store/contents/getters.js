@@ -1,6 +1,17 @@
 export const collection = (state) => state.collection;
 
-export const collectionTitle = (state) => state.collectionTitle;
+export const collectionTitle = (state) => {
+  const collection = state.collection;
+  if (Object.keys(collection).length) {
+    return collection.title && collection.title[0].title
+      ? collection.title[0].title
+      : collection.label;
+  }
+
+  return collection.label
+    ? collection.label
+    : 'Manifest <small>(No label available)</small>';
+}
 
 export const connectorValues = (state) => state.connectorValues;
 
@@ -8,7 +19,7 @@ export const contentIndex = (state) => state.contentIndex;
 
 export const contentTypes = (state) => state.contentTypes;
 
-export const contentUrls = (state) => state.contentUrls;
+export const contentUrls = (state) => state.item?.content ?? [];
 
 export const errorImage = (state) => state.image.errorImage;
 

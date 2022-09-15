@@ -14,6 +14,8 @@ export default {
       if (isSameQueryUrl) {
         return;
       }
+      console.log('navigate', url);
+
       this.$store.dispatch('config/resetInitialized');
       this.$router.push({ query: { ...this.$route.query, itemurl: url } });
     },

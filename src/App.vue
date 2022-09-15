@@ -3,25 +3,26 @@
     class="root viewport"
     view="hHh Lpr fFf"
   >
-    <Header v-if="isConfigValid && config['header_section'].show" />
+    <Header v-if="itemLoaded && config['header_section'].show" />
 
     <Header v-else :config-error-title="configErrorTitle" />
 
     <q-page-container
-      v-if="isConfigValid"
+      v-if="itemLoaded"
       class="root"
     >
       <router-view />
     </q-page-container>
 
     <q-page-container v-else class="config-error-container">
-      <Notification
-        :message="$t(configErrorMessage)"
-        :notification-colors="config.notificationColors"
-        :title-key="$t(configErrorTitle)"
-        class="q-ma-md-xl"
-        type="warning"
-      />
+      yo
+<!--      <Notification-->
+<!--        :message="$t(configErrorMessage)"-->
+<!--        :notification-colors="config.notificationColors"-->
+<!--        :title-key="$t(configErrorTitle)"-->
+<!--        class="q-ma-md-xl"-->
+<!--        type="warning"-->
+<!--      />-->
     </q-page-container>
   </q-layout>
 </template>
@@ -41,6 +42,9 @@ export default {
   },
   mixins: [Navigation],
   computed: {
+    itemLoaded() {
+      return this.$store.getters['contents/item'];
+    },
     annotations() {
       return this.$store.getters['annotations/annotations'];
     },
@@ -104,7 +108,6 @@ export default {
     },
     manifests: {
       handler: 'onManifestsChange',
-      immediate: true,
     },
   },
   async created() {
@@ -150,7 +153,7 @@ export default {
       await this.$store.dispatch('contents/initCollection', url);
     },
     async loadConfig() {
-      return this.$store.dispatch('config/loadConfig');
+      return this.$store.dispatch('config/load');
     },
     async getManifest(url) {
       await this.$store.dispatch('contents/initManifest', url);
@@ -162,7 +165,6 @@ export default {
      * @return function getCollection() | getManifest()
      */
     async init() {
-      this.$store.dispatch('contents/initPanels');
       return this.config.entrypoint.match(/collection.json\s?$/)
         ? this.getCollection(this.config.entrypoint)
         : this.getManifest(this.config.entrypoint);
@@ -179,6 +181,7 @@ export default {
       }
     },
     onManifestsChange() {
+      console.log('onManifestsChange');
       const { itemurl } = this.$route.query;
       if (!itemurl && this.manifests?.[0]?.sequence?.[0]?.id) {
         this.navigate(this.manifests?.[0]?.sequence?.[0]?.id);

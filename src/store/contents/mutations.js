@@ -14,12 +14,7 @@ export const setContentIndex = (state, payload) => {
   state.contentIndex = payload;
 };
 
-export const setContentItem = (
-  state,
-  {
-    item, errorText, contentUrls, contentTypes,
-  },
-) => {
+export const setContentItem = (state, { item, errorText, contentUrls, contentTypes }) => {
   state.item = item;
   state.errorText = errorText;
   state.contentUrls = contentUrls;
@@ -32,6 +27,10 @@ export const updateExpanded = (state, payload) => {
 
 export const setImageData = (state, payload) => {
   state.image = { ...payload };
+};
+
+export const setItem = (state, payload) => {
+  state.item = payload;
 };
 
 export const setImageLoaded = (state, payload) => {
@@ -72,7 +71,6 @@ export const setTree = (state, payload) => {
 
 export const resetContents = (state) => {
   state.collection = {};
-  state.collectionTitle = '';
   state.contentIndex = 0;
   state.contentTypes = [];
   state.contentUrls = [];
@@ -80,7 +78,7 @@ export const resetContents = (state) => {
   state.expanded = [];
   state.image = {};
   state.isCollection = false;
-  state.item = {};
+  state.item = null;
   state.itemUrl = '';
   state.itemUrls = [];
   state.loaded = false;

@@ -1,4 +1,5 @@
 import * as AnnotationUtils from '@/utils/annotations';
+import { useRoute } from "vue-router";
 
 class BookmarkService {
   $router;
@@ -57,7 +58,7 @@ class BookmarkService {
 
     this.$store.dispatch(
       'annotations/updateActiveTab',
-      { tab: tabs?.[annotation].key, index: annotation },
+      {tab: tabs?.[annotation].key, index: annotation},
       {
         root: true,
       },
@@ -71,17 +72,17 @@ class BookmarkService {
   setDefaultContentAndAnnotationTabs() {
     const config = this.$store.getters['config/config'];
     const tabs = AnnotationUtils.getAnnotationTabs(config);
-    this.$store.dispatch('annotations/updateActiveTab', { tab: tabs?.[0].key, index: 0 }, {
+    this.$store.dispatch('annotations/updateActiveTab', {tab: tabs?.[0].key, index: 0}, {
       root: true,
     });
     this.$store.dispatch('contents/setContentIndex', 0);
   }
 
   setDefaultContentAndAnnotationQuery() {
-    const query = { ...this.query };
+    const query = {...this.query};
     delete query.annotation;
     delete query.text;
-    this.$router.push({ path: '/', query });
+    this.$router.push({path: '/', query});
   }
 
   static getConnectorObject = (query) => {
@@ -114,7 +115,7 @@ class BookmarkService {
     if (!values) {
       return this.$store.dispatch(
         'contents/setPanels',
-        storePanels.map((el) => ({ ...el, show: true })),
+        storePanels.map((el) => ({...el, show: true})),
       );
     }
 
@@ -129,7 +130,7 @@ class BookmarkService {
   };
 
   updateAnnotationQuery = (index) => {
-    const query = { ...this.query };
+    const query = {...this.query};
 
     if (index) {
       query.annotation = index;
@@ -137,7 +138,7 @@ class BookmarkService {
       delete query.annotation;
     }
 
-    this.$router.push({ path: '/', query });
+    this.$router.push({path: '/', query});
   };
 
   updateConnectorQuery = (value, panelIndex) => {
@@ -146,7 +147,7 @@ class BookmarkService {
       return;
     }
 
-    const query = { ...this.query };
+    const query = {...this.query};
     const connectors = BookmarkService.getConnectorObject(this.query);
 
     if (tabIndex === 0) {
@@ -162,12 +163,12 @@ class BookmarkService {
       query.connector = connectorQuery;
     }
 
-    this.$router.push({ path: '/', query });
+    this.$router.push({path: '/', query});
   };
 
   updatePanelsQuery = (panels) => {
     const displayedPanels = panels.filter((el) => el.show);
-    const query = { ...this.query };
+    const query = {...this.query};
     if (
       displayedPanels.length === panels.length
       || displayedPanels.length === 0
@@ -177,18 +178,23 @@ class BookmarkService {
       const indexes = displayedPanels.map((el) => panels.findIndex((panel) => panel.id === el.id));
       query.panels = indexes.join(',');
     }
-    this.$router.push({ path: '/', query });
+    this.$router.push({path: '/', query});
   };
 
   updateTextQuery = (index) => {
-    const query = { ...this.query };
+    const query = {...this.query};
     if (index) {
       query.text = index;
     } else {
       delete query.text;
     }
-    this.$router.push({ path: '/', query });
+    this.$router.push({path: '/', query});
   };
+
+  getQuery() {
+    const route = useRoute();
+
+  }
 }
 
 export default new BookmarkService();

@@ -1,7 +1,7 @@
-export const loadConfig = ({ commit }) => {
-  let config = {};
-  let configErrorMessage = null;
-  let configErrorTitle = null;
+export const load = ({ commit, getters }) => {
+  let config = getters.config;
+  let configErrorMessage = 'configJsonError';
+  let configErrorTitle = 'noConfigTitle';
   let isValid = false;
 
   const el = document.getElementById('tido-config');
@@ -28,11 +28,10 @@ export const loadConfig = ({ commit }) => {
         configErrorMessage = 'noConfigEntrypoint';
         configErrorTitle = 'noConfigTitle';
         break;
-      default:
-        configErrorMessage = 'configJsonError';
-        configErrorTitle = 'noConfigTitle';
     }
   }
+
+  console.log(configErrorMessage, configErrorTitle, config, isValid,)
 
   commit('loadConfig', {
     configErrorMessage, configErrorTitle, config, isValid,
@@ -45,6 +44,8 @@ export const loadConfig = ({ commit }) => {
     isValid,
   };
 };
+
+
 
 export const resetInitialized = ({ commit }) => {
   commit('resetInitialized');

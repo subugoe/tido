@@ -32,7 +32,9 @@ export default {
   },
   computed: {
     panels() {
-      return this.$store.getters['contents/panels'];
+      const panels = this.$store.getters['contents/panels'];
+
+      return [panels[1]];
     },
     config() {
       return this.$store.getters['config/config'];
