@@ -29,6 +29,7 @@ describe('Annotation - Multiple Tabs', () => {
 
   it('Should stay on first tab when switch item', () => {
     cy.get('button.next-item').click();
+    cy.wait(1000);
     cy
       .get('.root.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
       .first()
