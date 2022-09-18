@@ -8,7 +8,8 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <meta name="viewport"
-        content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>">
+        content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>"
+  >
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
@@ -35,49 +36,8 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
   {
     "entrypoint": "https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
     "collection": "",
-    "manifest": "ttps://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/3r177/manifest.json",
+    "manifest": "https://ahikar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/3r177/manifest.json",
     "item": "",
-    "annotations": {
-      "show": true,
-      "types": [
-        {
-          "contenttype": "Person",
-          "icon": "fasUser",
-          "label": "Names"
-        },
-        {
-          "contenttype": "Place",
-          "icon": "fasMapMarkerAlt",
-          "label": "Places"
-        },
-        {
-          "contenttype": "Editorial Comment",
-          "icon": "fasComment",
-          "label": "Comments"
-        },
-        {
-          "contenttype": "Reference",
-          "icon": "fasExternalLinkSquareAlt",
-          "label": "References"
-        },
-        {
-          "contenttype": "Motif",
-          "icon": "fasHighlighter",
-          "label": "Motifs"
-        }
-      ],
-      "tabs": {
-        "Editorial": [
-          "Person",
-          "Place",
-          "Editorial Comment",
-          "Reference"
-        ],
-        "Motif": [
-          "Motif"
-        ]
-      }
-    },
     "breadcrumbNavigation": {
       "source": "external",
       "search_page_path": "search.html",
@@ -98,62 +58,146 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
       "titles": true,
       "toggle": true
     },
-    "labels": {
-      "item": "Sheet",
-      "manifest": "Manuscript"
-    },
     "lang": "en-US",
     "language-switch": false,
-    "meta": {
-      "collection": {
-        "all": true
-      },
-      "manifest": {
-        "all": true
-      },
-      "item": {
-        "all": true
-      }
-    },
     "notificationColors": {
       "info": "blue-9",
       "warning": "red-9"
     },
     "panels": [
       {
-        "connector": [
-          1,
-          2
-        ],
-        "panel_label": "Contents & Metadata",
+        "label": "Contents & Metadata",
+        "show": true,
+        "toggle": true,
+        "views": [
+          {
+            "id": "tree",
+            "name": "Contents",
+            "default": true,
+            "connector": {
+              "id": 1,
+              "options": {
+                "labels": {
+                  "item": "Sheet",
+                  "manifest": "Manuscript"
+                }
+              }
+            }
+          },
+          {
+            "id": "metadata",
+            "name": "Metadata",
+            "connector": {
+              "id": 2,
+              "options": {
+                "collection": {
+                  "all": true
+                },
+                "manifest": {
+                  "all": true
+                },
+                "item": {
+                  "all": true
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "views": [
+          {
+          "id": "image",
+          "name": "Image",
+          "connector": {
+            "id": 3
+          }
+        }],
+        "label": "Image",
         "show": true,
         "toggle": true
       },
       {
-        "connector": [
-          3
-        ],
-        "panel_label": "Image",
+        "label": "Text",
         "show": true,
-        "toggle": true
+        "toggle": true,
+        "views": [
+          {
+            "id": "text1",
+            "name": "Transcription",
+            "default": true,
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transcription"
+              }
+            }
+          },
+          {
+            "id": "text2",
+            "name": "Transliteration",
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transliteration"
+              }
+            }
+          }
+        ]
       },
       {
-        "connector": [
-          4,
-          4
-        ],
-        "panel_label": "Text",
+        "label": "Annotations",
         "show": true,
-        "toggle": true
-      },
-      {
-        "connector": [
-          5,
-          5
-        ],
-        "panel_label": "Annotations",
-        "show": true,
-        "toggle": true
+        "toggle": true,
+        "views": [
+          {
+            "id": "annotations1",
+            "name": "Editorial",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "contenttype": "Person",
+                    "icon": "fasUser",
+                    "label": "Names"
+                  },
+                  {
+                    "contenttype": "Place",
+                    "icon": "fasMapMarkerAlt",
+                    "label": "Places"
+                  },
+                  {
+                    "contenttype": "Editorial Comment",
+                    "icon": "fasComment",
+                    "label": "Comments"
+                  },
+                  {
+                    "contenttype": "Reference",
+                    "icon": "fasExternalLinkSquareAlt",
+                    "label": "References"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "annotations2",
+            "name": "Motif",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "contenttype": "Motif",
+                    "icon": "fasHighlighter",
+                    "label": "Motifs"
+                  }
+                ]
+              }
+            }
+          }
+        ]
       }
     ],
     "rtl": false,
