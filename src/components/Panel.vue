@@ -1,55 +1,39 @@
 <template>
-  <!-- shows the nested tabs -->
-  <div
-    v-if="tabs.length > 1"
-    class="item-content"
-  >
-    <div class="tabs-container">
-      <q-tabs
-        v-for="(tab, i) in tabs"
-        :key="`pt${i}`"
-        :model-value="connectorValue"
-        @update:model-value="onTabChange"
-        class="content-tabs"
-        :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
-        dense
-      >
-        <q-tab
-          :name="`tab${i}`"
-          :label="$t(tab.label)"
-        />
-      </q-tabs>
+  <div class="item-content">
+    <div v-if="panel.label" class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
+      {{ panel.label }}
     </div>
-    <q-tab-panels
-      v-model="connectorValue"
-      animated
-      keep-alive
-    >
-      <q-tab-panel
-        v-for="(tab, idx) in tabs"
-        :key="`co${idx}`"
-        :name="`tab${idx}`"
-        class="q-pa-none"
-      >
-        <component
-          :is="tab.component"
-          :key="tab.id"
-          v-bind="tab.props"
-        />
-      </q-tab-panel>
-    </q-tab-panels>
-  </div>
-
-  <!-- shows the panels -->
-  <div
-    v-else-if="tabs.length === 1"
-    class="item-content"
-  >
-    <component
-      :is="tabs[0].component"
-      :key="tabs[0].id"
-      :props="tabs[0].props"
-    />
+    <q-separator />
+    <template v-if="tabs.length > 1">
+      <div class="tabs-container">
+        <q-tabs
+          v-model="activeTabIndex"
+          class="content-tabs"
+          :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
+          dense
+        >
+          <q-tab
+            v-for="(tab, i) in tabs"
+            :key="tab.id"
+            :name="i"
+            :label="tab.label"
+          />
+        </q-tabs>
+      </div>
+      <q-tab-panels v-model="activeTabIndex" animated keep-alive>
+        <q-tab-panel
+          v-for="(tab, idx) in tabs"
+          :key="`co${idx}`"
+          :name="`tab${idx}`"
+          class="q-pa-none"
+        >
+          <component :is="tab.component" :key="tab.id" v-bind="tab.props" />
+        </q-tab-panel>
+      </q-tab-panels>
+    </template>
+    <template v-else-if="tabs.length === 1">
+      <component :is="tabs[0].component" :key="tabs[0].id" :props="tabs[0].props" />
+    </template>
   </div>
 </template>
 
@@ -59,6 +43,7 @@ import Tree from '@/components/Tree.vue';
 import Annotations from '@/components/annotations/Annotations.vue';
 import Content from '@/components/Content.vue';
 import OpenSeadragon from '@/components/OpenSeadragon.vue';
+import { findComponent } from "src/utils/panels";
 
 export default {
   components: {
@@ -73,47 +58,51 @@ export default {
       type: Object,
       default: () => { },
     },
-    index: {
-      type: Number,
-    },
   },
   data() {
     return {
       tabs: [],
+      activeTabIndex: 0
     };
   },
   computed: {
-    contentUrls() {
-      return this.$store.getters['contents/contentUrls'];
+    item() {
+      return this.$store.getters['contents/item'];
     },
-    imageUrl() {
-      return this.$store.getters['contents/imageUrl'];
-    },
-    connectorValue() {
-      return this.$store.getters['contents/connectorValues'][this.index] || 'tab0';
-    },
+    content() {
+      return this.item?.content || [];
+    }
   },
-  methods: {
-    onTabChange(value) {
-      return this.$store.dispatch('contents/setConnectorValues', { value, panelIndex: this.index });
-    },
+  mounted() {
+    console.log('panel mounted');
   },
   watch: {
+    activeTabIndex: {
+      handler() {
+        this.$emit('active-view', this.activeTabIndex);
+      }
+    },
     panel: {
-      handler(value) {
-        console.log(this.contentUrls);
-        const connectors = value.connector;
-        connectors.forEach((c, i) => {
-          if (c.component === 'Content') {
-            if (this.contentUrls[i]) {
-              this.tabs.push({
-                ...c,
-                label: this.contentUrls[i].type.split('type=')[1] ?? '',
-                props: { ...this.contentUrls[i] }
-              });
-            }
+      handler({ views }) {
+        views.forEach((view, i) => {
+          const { connector, label } = view;
+          const { component } = findComponent(connector.id);
+
+          if (component === 'Content') {
+            const type = connector.options?.type;
+            const canShowContent = this.content.findIndex((contentItem) => {
+              return contentItem.type.split('type=')[1] === type;
+            }) > -1;
+
+            if (!canShowContent) return;
+
+            this.tabs.push({
+              component,
+              label,
+              props: { ...connector.options }
+            });
           } else {
-            this.tabs.push(c);
+            this.tabs.push(view);
           }
         });
         console.log(this.tabs)
@@ -121,7 +110,7 @@ export default {
       deep: true,
       immediate: true,
     },
-  },
+  }
 };
 </script>
 

@@ -1,55 +1,48 @@
 <template>
-  <q-layout
-    class="root viewport"
-    view="hHh Lpr fFf"
-  >
-    <Header v-if="itemLoaded && config['header_section'].show" />
-
-<!--    <Header v-else :config-error-title="configErrorTitle" />-->
-
-    <q-page-container
-      v-if="itemLoaded"
-      class="root"
-    >
+  <q-layout class="root viewport" view="hHh Lpr fFf">
+    <Header v-if="!isLoading && item && config['header_section'].show" />
+    <Header v-else />
+    <q-page-container v-if="item" class="root">
       <router-view />
     </q-page-container>
 
-    <q-page-container v-else class="config-error-container">
-      yo
-<!--      <Notification-->
-<!--        :message="$t(configErrorMessage)"-->
-<!--        :notification-colors="config.notificationColors"-->
-<!--        :title-key="$t(configErrorTitle)"-->
-<!--        class="q-ma-md-xl"-->
-<!--        type="warning"-->
-<!--      />-->
+    <q-page-container v-else class="error-container">
+      <Loading v-if="isLoading" />
+      <Notification
+        v-else
+        :message="errorMessage"
+        :title="errorTitle"
+        class="q-ma-md-xl"
+        type="warning"
+      />
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import { setCssVar } from 'quasar';
+import {setCssVar} from 'quasar';
 import Header from '@/components/Header.vue';
 import Navigation from '@/mixins/navigation';
 import Notification from '@/components/Notification.vue';
 import BookmarkService from './services/bookmark';
+import Loading from '@/components/Loading.vue';
 
 export default {
   name: 'TIDO',
   components: {
     Header,
     Notification,
+    Loading
   },
   mixins: [Navigation],
   data() {
     return {
-      loaded: false
+      errorTitle: '',
+      errorMessage: '',
+      isLoading: false
     }
   },
   computed: {
-    itemLoaded() {
-      return this.$store.getters['contents/item'];
-    },
     annotations() {
       return this.$store.getters['annotations/annotations'];
     },
@@ -58,12 +51,6 @@ export default {
     },
     config() {
       return this.$store.getters['config/config'];
-    },
-    configErrorMessage() {
-      return this.$store.getters['config/configErrorMessage'];
-    },
-    configErrorTitle() {
-      return this.$store.getters['config/configErrorTitle'];
     },
     contentTypes() {
       return this.$store.getters['contents/contentTypes'];
@@ -113,16 +100,18 @@ export default {
     },
   },
   async mounted() {
+    this.isLoading = true;
     await this.$router.isReady();
+
+    this.$q.dark.set('auto');
+    this.$i18n.locale = this.config.lang;
+
     BookmarkService.initRouter(this.$router, this.$route);
     BookmarkService.initStore(this.$store);
 
     await this.loadConfig();
     await this.init();
 
-
-    this.$q.dark.set('auto');
-    this.$i18n.locale = this.config.lang;
 
     if (this.config?.colors?.primary) {
       setCssVar('primary', this.config.colors.primary);
@@ -150,7 +139,12 @@ export default {
       await this.$store.dispatch('contents/initCollection', url);
     },
     async loadConfig() {
-      return this.$store.dispatch('config/load');
+      try {
+        this.$store.dispatch('config/load')
+      } catch ({ title, message }) {
+        this.errorTitle = title;
+        this.errorMessage = message;
+      }
     },
     async getManifest(url) {
       console.log('getManifest')
@@ -168,16 +162,24 @@ export default {
      */
     async init() {
       const { collection, manifest, item } = this.config;
-      if (collection) {
+
+      // Initialize priority:
+      // First check if an item URL is set
+      // If not prioritize collections over manifests
+      console.log(collection)
+      if (item) {
+        this.getItem(item);
+      } else if (collection) {
         this.getCollection(collection);
       } else if (manifest) {
         this.getManifest(manifest)
-      } else if (item) {
-        this.getItem(item);
       }
     },
 
     onItemUrlChange(val) {
+      if (val) {
+        this.isLoading = false;
+      }
       // if (!this.itemUrl) {
       //   return;
       // }
@@ -241,7 +243,7 @@ export default {
     overflow: scroll;
   }
 }
-.config-error-container{
+.error-container{
   display: flex;
   flex-direction: column;
   justify-content: center;

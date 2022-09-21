@@ -75,18 +75,6 @@ async function getItem(url) {
   return data;
 }
 
-export const initManifest = async ({ commit, dispatch }, url) => {
-  console.log('initManifest');
-  commit('resetContents');
-
-  const manifest = await getManifest(url);
-
-  commit('setManifest', manifest);
-  // commit('setItemUrls', { itemUrls: response.itemUrls });
-  // commit('setLoaded', { loaded: true });
-  // commit('setTree', { tree: response.tree });
-};
-
 export const initPanels = ({ dispatch, rootGetters }) => {
   console.log('initPanels');
   const config = rootGetters['config/config'];
@@ -107,7 +95,7 @@ export const initCollection = async ({ commit, dispatch }, url) => {
 
   commit('resetContents');
 
-  const data = await request(url);
+  const collection = await request(url);
   // const collectiontitle = contentUtils.getLabel(data);
   //
   // tree.push({
@@ -120,22 +108,42 @@ export const initCollection = async ({ commit, dispatch }, url) => {
   //   selectable: false,
   // });
 
-  if (Array.isArray(data.sequence)) {
-    const promises = [];
-    data.sequence.forEach((seq) => promises.push(getManifest(seq.id, true, dispatch)));
+  commit('setCollection', collection);
 
-    const results = await Promise.all(promises);
-    results.forEach((el) => {
-      tree[0].children.push(...el.tree);
-      manifests.push(el.manifest);
-      itemUrls.push(...el.itemUrls);
-    });
+  // We know here that no manifest was loaded. Neither from URL nor from user config.
+  // So we load the first collection item.
+  if (Array.isArray(collection.sequence) && collection.sequence.length > 0) {
+    dispatch('initManifest', collection.sequence[0].id);
 
-    commit('setManifests', { manifests });
-    commit('setItemUrls', { itemUrls });
-    commit('setLoaded', { loaded: true });
-    commit('setTree', { tree });
-    commit('setCollection', data);
+    // const promises = [];
+    // data.sequence.forEach((seq) => promises.push(getManifest(seq.id, true, dispatch)));
+    //
+    // const results = await Promise.all(promises);
+    // results.forEach((el) => {
+    //   tree[0].children.push(...el.tree);
+    //   manifests.push(el.manifest);
+    //   itemUrls.push(...el.itemUrls);
+    // });
+    //
+    // commit('setManifests', { manifests });
+    // commit('setItemUrls', { itemUrls });
+    // commit('setLoaded', { loaded: true });
+    // commit('setTree', { tree });
+  }
+};
+
+export const initManifest = async ({ commit, dispatch }, url) => {
+  console.log('initManifest');
+  commit('resetContents');
+
+  const manifest = await getManifest(url);
+
+  commit('setManifest', manifest);
+
+  // We know here that no item was loaded. Neither from URL nor from user config.
+  // So we load the first manifest item.
+  if (Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
+    dispatch('initItem', manifest.sequence[0].id);
   }
 };
 

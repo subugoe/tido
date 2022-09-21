@@ -4,7 +4,9 @@ export default function ConfigState() {
       collection: '',
       manifest: '',
       item: '',
-      panels: [],
+      panels: [
+
+      ],
       colors: {
         primary: '',
         secondary: '',

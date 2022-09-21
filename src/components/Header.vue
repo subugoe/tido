@@ -15,7 +15,7 @@
         class="row toolbar"
       >
         <TitleBar
-          v-if="itemLoaded && manifests.length"
+          v-if="item && manifests.length"
           class="col-xs-12 col-sm-9 q-mb-xs-xs q-mb-sm-none"
           :item="item"
         />
@@ -25,21 +25,14 @@
             class="text-h3 text-bold text-uppercase q-mt-xs"
             :class="$q.dark.isActive ? 'text-light' : 'text-dark'"
           >
-            {{ $t(configErrorTitle) }}
+            TIDO Viewer
           </h1>
         </div>
 
-        <Tools
-          class="
-            col-xs-12 col-sm-3
-            items-center
-            justify-sm-end justify-xs-center
-            order-xs-first order-sm-last
-          "
-        />
+        <SoftwareInfo />
       </q-toolbar>
 
-      <q-toolbar v-if="!configErrorTitle" class="row toolbar">
+      <q-toolbar v-if="item" class="row toolbar">
         <Navbar
           v-if="config['header_section'].navigation"
           :labels="config.labels"
@@ -80,6 +73,7 @@ import Navbar from '@/components/Navbar.vue';
 import TitleBar from '@/components/TitleBar.vue';
 import PanelsToggle from '@/components/togglebar/PanelsToggle.vue';
 import Tools from '@/components/Tools.vue';
+import SoftwareInfo from "components/SoftwareInfo.vue";
 
 export default {
   name: 'Header',
@@ -89,6 +83,7 @@ export default {
     TitleBar,
     PanelsToggle,
     Tools,
+    SoftwareInfo
   },
   props: {
     configErrorTitle: {
@@ -97,9 +92,6 @@ export default {
     },
   },
   computed: {
-    itemLoaded() {
-      return this.$store.getters['contents/item'];
-    },
     isConfigValid() {
       return this.$store.getters['config/isConfigValid'];
     },

@@ -53,7 +53,6 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
     "header_section": {
       "show": true,
       "navigation": true,
-      "panelheadings": true,
       "titles": true,
       "toggle": true
     },
@@ -66,12 +65,10 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
     "panels": [
       {
         "label": "Contents & Metadata",
-        "show": true,
-        "toggle": true,
         "views": [
           {
             "id": "tree",
-            "name": "Contents",
+            "label": "Contents",
             "default": true,
             "connector": {
               "id": 1,
@@ -85,7 +82,7 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
           },
           {
             "id": "metadata",
-            "name": "Metadata",
+            "label": "Metadata",
             "connector": {
               "id": 2,
               "options": {
@@ -105,12 +102,10 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
       },
       {
         "label": "Image",
-        "show": true,
-        "toggle": true,
         "views": [
           {
           "id": "image",
-          "name": "Image",
+          "label": "Image",
           "connector": {
             "id": 3
           }
@@ -118,12 +113,10 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
       },
       {
         "label": "Text",
-        "show": true,
-        "toggle": true,
         "views": [
           {
             "id": "text1",
-            "name": "Transcription",
+            "label": "Transcription",
             "default": true,
             "connector": {
               "id": 4,
@@ -134,7 +127,7 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
           },
           {
             "id": "text2",
-            "name": "Transliteration",
+            "label": "Transliteration",
             "connector": {
               "id": 4,
               "options": {
@@ -146,12 +139,10 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
       },
       {
         "label": "Annotations",
-        "show": true,
-        "toggle": true,
         "views": [
           {
             "id": "annotations1",
-            "name": "Editorial",
+            "label": "Editorial",
             "default": true,
             "connector": {
               "id": 5,
@@ -183,7 +174,7 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
           },
           {
             "id": "annotations2",
-            "name": "Motif",
+            "label": "Motif",
             "connector": {
               "id": 5,
               "options": {
