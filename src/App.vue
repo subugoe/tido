@@ -140,7 +140,7 @@ export default {
     },
     async loadConfig() {
       try {
-        this.$store.dispatch('config/load')
+        await this.$store.dispatch('config/load');
       } catch ({ title, message }) {
         this.errorTitle = title;
         this.errorMessage = message;
@@ -166,7 +166,6 @@ export default {
       // Initialize priority:
       // First check if an item URL is set
       // If not prioritize collections over manifests
-      console.log(collection)
       if (item) {
         this.getItem(item);
       } else if (collection) {
@@ -190,25 +189,25 @@ export default {
       // }
     },
     onManifestChange() {
-      console.log('onManifestsChange');
-      const { item } = this.config;
-
-      let sequenceIndex = 0;
-      if (item) {
-        const index = this.manifest.sequence.findIndex(sequenceItem => sequenceItem.id === item);
-        if (index > -1) {
-          sequenceIndex = index;
-        }
-      }
-
-      console.log('sequenceIndex', sequenceIndex);
-
-      this.getItem(this.manifest.sequence[sequenceIndex].id);
+      // console.log('onManifestsChange');
+      // const { item } = this.config;
+      //
+      // let sequenceIndex = 0;
+      // if (item) {
+      //   const index = this.manifest.sequence.findIndex(sequenceItem => sequenceItem.id === item);
+      //   if (index > -1) {
+      //     sequenceIndex = index;
+      //   }
+      // }
+      //
+      // console.log('sequenceIndex', sequenceIndex);
+      //
+      // this.getItem(this.manifest.sequence[sequenceIndex].id);
     },
 
     onRouteQueryChange() {
       console.log('onRouteQueryChange')
-      BookmarkService.syncQuery(this.$route.query);
+      // BookmarkService.syncQuery(this.$route.query);
 
       // if (this.loaded) {
       //   return;

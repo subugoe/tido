@@ -23,7 +23,6 @@ const defaultView = {
   id: "view",
   name: "View",
   default: false,
-  active: false,
   connector: {
     id: 1,
     options: {}
@@ -85,25 +84,30 @@ export const load = ({ commit, getters }) => {
       }
     });
 
+    const activeViews = customConfig.panels.filter(p => p.views && p.views.length > 0).map(panel => {
+      const defaultIndex = panel.views.findIndex(view => view.default === true);
+      return defaultIndex > -1 ? defaultIndex : 0;
+    });
+
     // Set active views
     // Get the panels config from URL query
     // If no correct panel or view to choose, set the first available
     const panelsQueryArr = panels ? panels.split(',') : [];
     panelsQueryArr.forEach(panelQuery => {
-      const [panelIndex, viewIndex] = panelQuery.split('_');
+      const [panelIndex, viewIndex] = panelQuery.split('_').map(i => parseInt(i));
 
-      if (panelIndex) {
-        let panel = customConfig.panels[parseInt(panelIndex)];
-        if (!panel) panel = customConfig.panels[0];
-        if (!panel) return;
+      if (!Number.isInteger(panelIndex)) return;
+      let panel = customConfig.panels[panelIndex];
+      if (!panel) return;
 
-        let view = panel.views[parseInt(viewIndex)];
-        if (!view) view = panel.views[0];
-        if (!view) return;
+      if (!Number.isInteger(viewIndex)) return;
+      let view = panel.views[viewIndex];
+      if (!view) return;
 
-        view.active = true;
-      }
+      activeViews[panelIndex] = viewIndex;
     });
+
+    commit('setActiveViews', activeViews);
   }
 
   const resultConfig = {
@@ -114,11 +118,15 @@ export const load = ({ commit, getters }) => {
   commit('setConfig', resultConfig);
 };
 
-export const setActivePanelView = ({ commit, getters }, {panelIndex, viewIndex}) => {
-  commit('setActivePanelView', { panelIndex, viewIndex } );
+export const setActivePanelView = ({ commit, getters, dispatch }, {panelIndex, viewIndex}) => {
+  commit('setActivePanelView', {panelIndex, viewIndex});
 };
 
 export const resetInitialized = ({ commit }) => {
   commit('resetInitialized');
+};
+
+export const setActiveViews = ({ commit }, payload) => {
+  commit('setActiveViews', payload);
 };
 

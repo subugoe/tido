@@ -23,3 +23,7 @@ export const annotationTypesMapping = (state) => state.config.annotations.types.
   };
   return acc;
 }, {});
+
+export const activeViews = (state) => state.activeViews;
+
+

@@ -1,7 +1,9 @@
 <template>
   <div class="item-content">
-    <div v-if="panel.label" class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
-      {{ panel.label }}
+    <div class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
+      <!-- We display the tab label as panel label when there is only one tab -->
+      <span v-if="panel.label && tabs.length > 1">{{ panel.label }}</span>
+      <span v-else-if="tabs.length === 1">{{tabs[0].label}}</span>
     </div>
     <q-separator />
     <template v-if="tabs.length > 1">
@@ -12,27 +14,17 @@
           :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
           dense
         >
-          <q-tab
-            v-for="(tab, i) in tabs"
-            :key="tab.id"
-            :name="i"
-            :label="tab.label"
-          />
+          <q-tab v-for="(tab, i) in tabs" :key="tab.id" :name="i" :label="tab.label" />
         </q-tabs>
       </div>
       <q-tab-panels v-model="activeTabIndex" animated keep-alive>
-        <q-tab-panel
-          v-for="(tab, idx) in tabs"
-          :key="`co${idx}`"
-          :name="`tab${idx}`"
-          class="q-pa-none"
-        >
+        <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pa-none">
           <component :is="tab.component" :key="tab.id" v-bind="tab.props" />
         </q-tab-panel>
       </q-tab-panels>
     </template>
     <template v-else-if="tabs.length === 1">
-      <component :is="tabs[0].component" :key="tabs[0].id" :props="tabs[0].props" />
+      <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" />
     </template>
   </div>
 </template>
@@ -68,9 +60,6 @@ export default {
   computed: {
     item() {
       return this.$store.getters['contents/item'];
-    },
-    content() {
-      return this.item?.content || [];
     }
   },
   mounted() {
@@ -87,22 +76,24 @@ export default {
         views.forEach((view, i) => {
           const { connector, label } = view;
           const { component } = findComponent(connector.id);
-
+          console.log(component)
           if (component === 'Content') {
             const type = connector.options?.type;
-            const canShowContent = this.content.findIndex((contentItem) => {
-              return contentItem.type.split('type=')[1] === type;
-            }) > -1;
+            const contentItem = this.$store.getters['contents/contentItem'](type);
 
-            if (!canShowContent) return;
+            if (!contentItem) return;
 
+            this.tabs.push({
+              component,
+              label,
+              props: { type, url: contentItem.url }
+            });
+          } else {
             this.tabs.push({
               component,
               label,
               props: { ...connector.options }
             });
-          } else {
-            this.tabs.push(view);
           }
         });
         console.log(this.tabs)

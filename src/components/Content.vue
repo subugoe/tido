@@ -2,10 +2,7 @@
   <div class="item">
     <Loading v-if="isLoading" />
 
-    <div
-      v-if="notificationMessage"
-      class="q-pa-sm"
-    >
+    <div v-if="notificationMessage" class="q-pa-sm">
       <Notification
         :message="$t(notificationMessage)"
         :notification-colors="config.notificationColors"
@@ -14,10 +11,7 @@
       />
     </div>
 
-    <div
-      v-if="!notificationMessage && !isLoading"
-      class="q-px-sm"
-    >
+    <div v-if="!notificationMessage && !isLoading" class="q-px-sm">
       <q-btn
         class="cursor-pointer"
         flat
@@ -52,16 +46,9 @@
       </q-btn>
     </div>
 
-    <div
-      id="text-content"
-      class="custom-font item-content"
-    >
+    <div id="text-content" class="custom-font item-content">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-      <div
-        :class="{ rtl: config.rtl }"
-        v-html="content"
-        :style="contentStyle"
-      />
+      <div :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle" />
     </div>
   </div>
 </template>

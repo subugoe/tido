@@ -1,5 +1,5 @@
 export const setCollection = (state, payload) => {
-  state.collection = payload;
+  state.collection = {...payload};
 };
 
 export const setCollectionTitle = (state, title) => {
@@ -70,7 +70,7 @@ export const setTree = (state, payload) => {
 };
 
 export const setManifest = (state, payload) => {
-  state.manifest = payload;
+  state.manifest = { ...payload };
 };
 
 export const resetContents = (state) => {

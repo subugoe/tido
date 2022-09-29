@@ -1,7 +1,6 @@
 <template>
-  <div class="item">
-    <Loading v-if="!loaded" />
-
+  <div class="item relative">
+    <Loading v-if="isLoading" />
     <q-tree
       v-model:expanded="expanded"
       v-model:selected="selected"
@@ -12,17 +11,11 @@
       :selected-color="$q.dark.isActive ? 'grey' : ''"
     >
       <template #default-body="{ node }">
-        <div
-          v-if="!node.children"
-          :id="`selectedItem-${node['label']}`"
-        />
+        <div v-if="!node.children" :id="`selectedItem-${node['label']}`" />
       </template>
 
       <template #default-header="prop">
-        <div
-          :id="prop.node['label']"
-          class="row items-center"
-        >
+        <div :id="prop.node['label']" class="row items-center">
           <div>
             {{ prop.node.labelSheet ? $t(labels.item) : '' }}
             {{ prop.node['label-key'] }}
@@ -39,15 +32,20 @@ import Loading from '@/components/Loading.vue';
 import Navigation from '@/mixins/navigation';
 
 export default {
-  name: 'Treeview',
+  name: 'Tree',
   components: {
     Loading,
+  },
+  props: {
+    labels: Object
   },
   mixins: [Navigation],
   data() {
     return {
+      isLoading: false,
       expanded: [],
       selected: null,
+      tree: []
     };
   },
   computed: {
@@ -57,14 +55,17 @@ export default {
     config() {
       return this.$store.getters['config/config'];
     },
+    collectionTitle() {
+      return this.$store.getters['contents/collectionTitle'];
+    },
+    collection() {
+      return this.$store.getters['contents/collection'];
+    },
     labels() {
       return this.config.labels || {};
     },
     itemUrl() {
       return this.$store.getters['contents/itemUrl'];
-    },
-    tree() {
-      return this.$store.getters['contents/tree'];
     },
     sequenceIndex() {
       return this.$store.getters['contents/selectedSequenceIndex'];
@@ -97,19 +98,57 @@ export default {
       },
       immediate: true,
     },
-    tree: {
-      handler(value) {
-        if (value.length > 0) {
-          this.$store.dispatch('contents/addToExpanded', value[0].label);
-        }
-      },
-      immediate: true,
-    },
+    // tree: {
+    //   handler(value) {
+    //     if (value.length > 0) {
+    //       this.$store.dispatch('contents/addToExpanded', value[0].label);
+    //     }
+    //   },
+    //   immediate: true,
+    // },
   },
   created() {
     this.fasCaretRight = fasCaretRight;
   },
+  async mounted() {
+    this.isLoading = true;
+    const { collection, manifest, item } = this.config;
+    console.log(this.collection)
+    if (collection) {
+      let collectionObj = this.collection;
+      if (!collectionObj) {
+        await this.$store.dispatch('contents/initCollection');
+        collectionObj = this.collection;
+      }
+
+      this.tree.push({
+        children: [],
+        handler: ({ label }) => {
+          // dispatch('addOrRemoveFromExpanded', node.label);
+          if (this.expanded.includes(label)) {
+            this.removeFromExpanded(label);
+          } else {
+            this.addToExpanded(label);
+          }
+        },
+        label: this.collectionTitle,
+        'label-key': this.collectionTitle,
+        selectable: false,
+      });
+    }
+    this.isLoading = false;
+  },
   methods: {
+    addToExpanded(label) {
+      this.expanded.push(label);
+    },
+    removeFromExpanded(label) {
+      const index = this.expanded.indexOf(label);
+
+      if (index > -1) {
+        this.expanded.splice(index, 1);
+      }
+    },
     onSequenceIndexUpdate(index) {
       if (index !== null && !this.expanded.includes(this.manifests[index]?.label)) {
         this.$store.dispatch(
@@ -119,7 +158,7 @@ export default {
       }
     },
     handleSelectedChange(value) {
-      this.navigate(value);
+      // this.navigate(value);
     },
   },
 };

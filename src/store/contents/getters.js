@@ -1,7 +1,7 @@
 export const collection = (state) => state.collection;
 
 export const collectionTitle = (state) => {
-  const collection = state.collection;
+  const { collection } = state;
   if (Object.keys(collection).length) {
     return collection.title && collection.title[0].title
       ? collection.title[0].title
@@ -81,3 +81,5 @@ export const item = (state) => state.item;
 export const tree = (state) => state.tree;
 
 export const manifest = (state) => state.manifest;
+
+export const contentItem = (state) => (type) => state.item.content.find(c => c.type.split('type=')[1] === type);

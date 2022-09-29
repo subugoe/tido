@@ -88,14 +88,14 @@ export const initPanels = ({ dispatch, rootGetters }) => {
 
 export const initCollection = async ({ commit, dispatch }, url) => {
   console.log('initCollection');
-
   const tree = [];
   const manifests = [];
   const itemUrls = [];
 
-  commit('resetContents');
+  // commit('resetContents');
 
   const collection = await request(url);
+
   // const collectiontitle = contentUtils.getLabel(data);
   //
   // tree.push({
@@ -107,6 +107,7 @@ export const initCollection = async ({ commit, dispatch }, url) => {
   //   'label-key': collectiontitle,
   //   selectable: false,
   // });
+
 
   commit('setCollection', collection);
 
@@ -134,7 +135,7 @@ export const initCollection = async ({ commit, dispatch }, url) => {
 
 export const initManifest = async ({ commit, dispatch }, url) => {
   console.log('initManifest');
-  commit('resetContents');
+  // commit('resetContents');
 
   const manifest = await getManifest(url);
 
@@ -152,7 +153,7 @@ export const initItem = async ({ commit }, url) => {
   const item = await getItem(url);
   commit('setItem', item);
 
-  BookmarkService.updateItemQuery(url);
+  await BookmarkService.updateItemQuery(url);
 };
 
 export const setItemUrl = ({ commit, dispatch }, url) => {

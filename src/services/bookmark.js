@@ -194,13 +194,13 @@ class BookmarkService {
     this.$router.push({path: '/', query});
   };
 
-  updateItemQuery(item) {
+  async updateItemQuery(item) {
     const query = {
       ...this.query,
       ...(item ? {item} : {})
     };
 
-    this.$router.push({path: '/', query});
+    await this.$router.push({path: '/', query});
   }
 
   getQuery() {

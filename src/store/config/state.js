@@ -46,6 +46,7 @@ export default function ConfigState() {
       "rtl": false,
       "themes": false
     },
+    activeViews: [],
     configErrorMessage: null,
     configErrorTitle: null,
     initialized: false,

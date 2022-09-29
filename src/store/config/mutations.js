@@ -3,11 +3,10 @@ export const setConfig = (state, payload) => {
 };
 
 export const setActivePanelView = (state, { panelIndex, viewIndex}) => {
-  const { panels } = state.config;
-  panels[panelIndex].views = panels[panelIndex].views.map((view, i) => {
-    view.active = i === viewIndex;
-    return view;
-  });
+  const { activeViews } = state;
+  if (activeViews[panelIndex] !== undefined) {
+    activeViews[panelIndex] = viewIndex;
+  }
 };
 
 export const setPanels = (state, panels) => {
@@ -27,4 +26,8 @@ export const resetInitialized = (state) => {
 
 export const setInitialized = (state, { initialized }) => {
   state.initialized = initialized;
+};
+
+export const setActiveViews = (state, payload) => {
+  state.activeViews = payload;
 };
