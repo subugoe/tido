@@ -54,7 +54,7 @@ export const setLoaded = (state, payload) => {
 };
 
 export const setManifests = (state, payload) => {
-  state.manifests = payload.manifests;
+  state.manifests = payload;
 };
 
 export const setPanels = (state, payload) => {

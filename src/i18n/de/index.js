@@ -1,4 +1,5 @@
 export default {
+
   Annotations: 'Annotationen',
   annotationsHighlightAll: 'Alle Anmerkungen im Textbereich hervorheben',
   annotationsHighlightNone: 'Alle Hervorhebungen im Textbereich entfernen',

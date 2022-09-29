@@ -56,7 +56,11 @@ export const selectedItemIndex = (state) => {
 };
 
 export const selectedManifest = (state) => state.manifests.find((manifest) => {
+  manifest = { ...manifest};
   const selectedItemUrl = encodeURI(decodeURI(state.itemUrl));
+  if (!Array.isArray(manifest.sequence)) {
+    manifest.sequence = [manifest.sequence];
+  }
   return manifest.sequence.find((manifestItem) => encodeURI(decodeURI(manifestItem.id)) === selectedItemUrl);
 });
 

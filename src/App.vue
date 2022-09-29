@@ -76,9 +76,6 @@ export default {
     manifest() {
       return this.$store.getters['contents/manifest'];
     },
-    selectedManifest() {
-      return this.$store.getters['contents/selectedManifest'];
-    },
     tree() {
       return this.$store.getters['contents/tree'];
     },
@@ -168,7 +165,9 @@ export default {
       // If not prioritize collections over manifests
       if (item) {
         this.getItem(item);
-      } else if (collection) {
+      }
+
+      if (collection) {
         this.getCollection(collection);
       } else if (manifest) {
         this.getManifest(manifest)

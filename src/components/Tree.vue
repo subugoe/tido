@@ -4,24 +4,24 @@
     <q-tree
       v-model:expanded="expanded"
       v-model:selected="selected"
-      class="item-content"
-      node-key="label"
       :icon="fasCaretRight"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
+      node-key="label"
+      @lazy-load="onLazyLoad"
     >
-      <template #default-body="{ node }">
-        <div v-if="!node.children" :id="`selectedItem-${node['label']}`" />
-      </template>
+<!--      <template #default-body="{ node }">-->
+<!--        <div v-if="!node.children" :id="`selectedItem-${node['label']}`" />-->
+<!--      </template>-->
 
-      <template #default-header="prop">
-        <div :id="prop.node['label']" class="row items-center">
-          <div>
-            {{ prop.node.labelSheet ? $t(labels.item) : '' }}
-            {{ prop.node['label-key'] }}
-          </div>
-        </div>
-      </template>
+<!--      <template #default-header="prop">-->
+<!--        <div :id="prop.node['label']" class="row items-center">-->
+<!--          <div>-->
+<!--            {{ prop.node.labelSheet ? $t(labels.item) : '' }}-->
+<!--            {{ prop.node['label-key'] }}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </template>-->
     </q-tree>
   </div>
 </template>
@@ -67,9 +67,6 @@ export default {
     itemUrl() {
       return this.$store.getters['contents/itemUrl'];
     },
-    sequenceIndex() {
-      return this.$store.getters['contents/selectedSequenceIndex'];
-    },
     manifests() {
       return this.$store.getters['contents/manifests'];
     },
@@ -92,9 +89,10 @@ export default {
       handler: 'handleSelectedChange',
       immediate: true,
     },
-    expandTreeNodes: {
+    expanded: {
       handler(value) {
-        this.expanded = [...value];
+        // this.expanded = [...value];
+        console.log(value)
       },
       immediate: true,
     },
@@ -112,29 +110,26 @@ export default {
   },
   async mounted() {
     this.isLoading = true;
-    const { collection, manifest, item } = this.config;
-    console.log(this.collection)
-    if (collection) {
-      let collectionObj = this.collection;
-      if (!collectionObj) {
-        await this.$store.dispatch('contents/initCollection');
-        collectionObj = this.collection;
-      }
-
-      this.tree.push({
-        children: [],
-        handler: ({ label }) => {
-          // dispatch('addOrRemoveFromExpanded', node.label);
-          if (this.expanded.includes(label)) {
-            this.removeFromExpanded(label);
-          } else {
-            this.addToExpanded(label);
-          }
-        },
+    if (this.collection) {
+      this.tree = [{
         label: this.collectionTitle,
-        'label-key': this.collectionTitle,
         selectable: false,
-      });
+        expanded: true,
+        children: this.manifests.map(({ sequence, label }) => ({
+            children: sequence.map(item => ({
+
+            })),
+            label,
+            // handler: ({ label }) => {
+            //   this.addOrRemoveFromExpanded(label);
+            // }
+          }
+        )),
+        // handler: ({ label }) => {
+        //   this.addOrRemoveFromExpanded(label);
+        // },
+      }];
+
     }
     this.isLoading = false;
   },
@@ -149,13 +144,20 @@ export default {
         this.expanded.splice(index, 1);
       }
     },
-    onSequenceIndexUpdate(index) {
-      if (index !== null && !this.expanded.includes(this.manifests[index]?.label)) {
-        this.$store.dispatch(
-          'contents/addToExpanded',
-          this.manifests[index]?.label,
-        );
+    addOrRemoveFromExpanded(label) {
+      if (this.expanded.includes(label)) {
+        this.removeFromExpanded(label);
+      } else {
+        this.addToExpanded(label);
       }
+    },
+    onSequenceIndexUpdate(index) {
+      // if (index !== null && !this.expanded.includes(this.manifests[index]?.label)) {
+      //   this.$store.dispatch(
+      //     'contents/addToExpanded',
+      //     this.manifests[index]?.label,
+      //   );
+      // }
     },
     handleSelectedChange(value) {
       // this.navigate(value);

@@ -39,6 +39,27 @@ function getItemUrls(sequence) {
   return urls;
 }
 
+function findActiveManifestIndex(manifests = [], itemUrl = null) {
+  if (manifests.length === 0) return -1;
+  if (!itemUrl) return 0;
+
+  return manifests.findIndex((manifest) => {
+    const selectedItemUrl = encodeURI(decodeURI(itemUrl));
+    return manifest.sequence.find((manifestItem) => encodeURI(decodeURI(manifestItem.id)) === selectedItemUrl);
+  });
+}
+
+// export const findSelectedManifestIndex = (manifest, getters) => {
+//   const { label } = manifest;
+//   let index = null;
+//   manifests.forEach((manifest, idx) => {
+//     if (manifest.label === label) {
+//       index = idx;
+//     }
+//   });
+//   return index;
+// };
+
 async function getManifest(url) {
   console.log('getManifest');
 
@@ -86,11 +107,13 @@ export const initPanels = ({ dispatch, rootGetters }) => {
   dispatch('setPanels', panels);
 };
 
-export const initCollection = async ({ commit, dispatch }, url) => {
+export const initCollection = async ({ commit, dispatch, rootGetters }, url) => {
   console.log('initCollection');
   const tree = [];
   const manifests = [];
   const itemUrls = [];
+
+  const { item: itemUrl } = rootGetters['config/config'];
 
   // commit('resetContents');
 
@@ -114,7 +137,23 @@ export const initCollection = async ({ commit, dispatch }, url) => {
   // We know here that no manifest was loaded. Neither from URL nor from user config.
   // So we load the first collection item.
   if (Array.isArray(collection.sequence) && collection.sequence.length > 0) {
-    dispatch('initManifest', collection.sequence[0].id);
+
+    const promises = [];
+    collection.sequence.forEach((seq) => promises.push(getManifest(seq.id)));
+
+    const manifests = await Promise.all(promises);
+    commit('setManifests', manifests);
+
+    const activeManifestIndex = findActiveManifestIndex(manifests, itemUrl);
+
+    if (activeManifestIndex > -1) {
+      commit('setManifest', manifests[activeManifestIndex]);
+
+      const sequenceIndex = 0;
+
+    }
+
+
 
     // const promises = [];
     // data.sequence.forEach((seq) => promises.push(getManifest(seq.id, true, dispatch)));
