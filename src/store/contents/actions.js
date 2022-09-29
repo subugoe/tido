@@ -43,9 +43,10 @@ function findActiveManifestIndex(manifests = [], itemUrl = null) {
   if (manifests.length === 0) return -1;
   if (!itemUrl) return 0;
 
+  itemUrl = encodeURI(decodeURI(itemUrl));
+
   return manifests.findIndex((manifest) => {
-    const selectedItemUrl = encodeURI(decodeURI(itemUrl));
-    return manifest.sequence.find((manifestItem) => encodeURI(decodeURI(manifestItem.id)) === selectedItemUrl);
+    return manifest.sequence.find((item) => encodeURI(decodeURI(item.id)) === itemUrl);
   });
 }
 
@@ -113,7 +114,7 @@ export const initCollection = async ({ commit, dispatch, rootGetters }, url) => 
   const manifests = [];
   const itemUrls = [];
 
-  const { item: itemUrl } = rootGetters['config/config'];
+  let { item: itemUrl } = rootGetters['config/config'];
 
   // commit('resetContents');
 
@@ -142,15 +143,21 @@ export const initCollection = async ({ commit, dispatch, rootGetters }, url) => 
     collection.sequence.forEach((seq) => promises.push(getManifest(seq.id)));
 
     const manifests = await Promise.all(promises);
-    commit('setManifests', manifests);
+   commit('setManifests', manifests);
 
     const activeManifestIndex = findActiveManifestIndex(manifests, itemUrl);
+    console.log(activeManifestIndex);
 
     if (activeManifestIndex > -1) {
-      commit('setManifest', manifests[activeManifestIndex]);
+      const activeManifest = manifests[activeManifestIndex];
 
-      const sequenceIndex = 0;
+      commit('setManifest', activeManifest);
 
+      if (!itemUrl && Array.isArray(activeManifest.sequence) && activeManifest.sequence.length > 0) {
+        itemUrl = activeManifest.sequence[0].id;
+      }
+
+      dispatch('initItem', itemUrl);
     }
 
 

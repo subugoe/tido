@@ -1,5 +1,4 @@
 export default {
-
   Annotations: 'Annotationen',
   annotationsHighlightAll: 'Alle Anmerkungen im Textbereich hervorheben',
   annotationsHighlightNone: 'Alle Hervorhebungen im Textbereich entfernen',
@@ -87,4 +86,5 @@ export default {
   transliteration: 'Transliteration',
   unknown_text_type: 'Unbekannter Text Typ',
   Year: 'Erstellungsjahr',
+  page: 'Seite'
 };

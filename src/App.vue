@@ -2,7 +2,7 @@
   <q-layout class="root viewport" view="hHh Lpr fFf">
     <Header v-if="!isLoading && item && config['header_section'].show" />
     <Header v-else />
-    <q-page-container v-if="item" class="root">
+    <q-page-container v-if="ready" class="root">
       <router-view />
     </q-page-container>
 
@@ -43,6 +43,21 @@ export default {
     }
   },
   computed: {
+    ready() {
+      const { collection: collectionUrl, manifest: manifestUrl } = this.config;
+
+      if (!this.item) {
+        return false;
+      }
+
+      if (collectionUrl) {
+        return this.manifests.length > 0 && !!(this.collection) && !!(this.manifest);
+      }
+
+      if (manifestUrl) {
+        return !!(this.manifest);
+      }
+    },
     annotations() {
       return this.$store.getters['annotations/annotations'];
     },
@@ -51,6 +66,9 @@ export default {
     },
     config() {
       return this.$store.getters['config/config'];
+    },
+    collection() {
+      return this.$store.getters['contents/collection'];
     },
     contentTypes() {
       return this.$store.getters['contents/contentTypes'];
@@ -75,6 +93,9 @@ export default {
     },
     manifest() {
       return this.$store.getters['contents/manifest'];
+    },
+    manifests() {
+      return this.$store.getters['contents/manifests'];
     },
     tree() {
       return this.$store.getters['contents/tree'];
@@ -164,14 +185,17 @@ export default {
       // First check if an item URL is set
       // If not prioritize collections over manifests
       if (item) {
-        this.getItem(item);
+        await this.getItem(item);
       }
 
       if (collection) {
-        this.getCollection(collection);
+        await this.getCollection(collection);
       } else if (manifest) {
-        this.getManifest(manifest)
+        await this.getManifest(manifest)
       }
+    },
+    isReady() {
+      return this.item && this.manifests;
     },
 
     onItemUrlChange(val) {

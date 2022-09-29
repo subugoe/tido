@@ -2,6 +2,7 @@
   <div class="item relative">
     <Loading v-if="isLoading" />
     <q-tree
+      ref="treeRef"
       v-model:expanded="expanded"
       v-model:selected="selected"
       :icon="fasCaretRight"
@@ -36,16 +37,13 @@ export default {
   components: {
     Loading,
   },
-  props: {
-    labels: Object
-  },
-  mixins: [Navigation],
   data() {
     return {
       isLoading: false,
       expanded: [],
       selected: null,
-      tree: []
+      tree: [],
+      treeRef: null
     };
   },
   computed: {
@@ -64,8 +62,14 @@ export default {
     labels() {
       return this.config.labels || {};
     },
+    item() {
+      return this.$store.getters['contents/item'];
+    },
     itemUrl() {
       return this.$store.getters['contents/itemUrl'];
+    },
+    manifest() {
+      return this.$store.getters['contents/manifest'];
     },
     manifests() {
       return this.$store.getters['contents/manifests'];
@@ -75,6 +79,10 @@ export default {
     },
   },
   watch: {
+    collection: {
+      handler: 'onCollectionChange',
+      immediate: true
+    },
     sequenceIndex: {
       handler: 'onSequenceIndexUpdate',
       immediate: true,
@@ -91,8 +99,8 @@ export default {
     },
     expanded: {
       handler(value) {
+        console.log(value);
         // this.expanded = [...value];
-        console.log(value)
       },
       immediate: true,
     },
@@ -109,29 +117,7 @@ export default {
     this.fasCaretRight = fasCaretRight;
   },
   async mounted() {
-    this.isLoading = true;
-    if (this.collection) {
-      this.tree = [{
-        label: this.collectionTitle,
-        selectable: false,
-        expanded: true,
-        children: this.manifests.map(({ sequence, label }) => ({
-            children: sequence.map(item => ({
 
-            })),
-            label,
-            // handler: ({ label }) => {
-            //   this.addOrRemoveFromExpanded(label);
-            // }
-          }
-        )),
-        // handler: ({ label }) => {
-        //   this.addOrRemoveFromExpanded(label);
-        // },
-      }];
-
-    }
-    this.isLoading = false;
   },
   methods: {
     addToExpanded(label) {
@@ -151,6 +137,46 @@ export default {
         this.addToExpanded(label);
       }
     },
+    onLazyLoad({ node, key, done, fail }) {
+      let { sequence } = node;
+      sequence = Array.isArray(sequence) ? sequence : [sequence];
+      done(sequence.map((seqItem, i) => ({label: seqItem.label ?? this.getDefaultLabel(i)})))
+    },
+    async onCollectionChange() {
+      this.isLoading = true;
+      console.log('onCollectionChange');
+
+      if (this.collection) {
+        this.tree = [{
+          label: this.collectionTitle,
+          selectable: false,
+          children: this.manifests.map(({ sequence, label }) => ({
+              label,
+              sequence,
+              selectable: false,
+              lazy: true
+              // handler: ({ label }) => {
+              //   this.addOrRemoveFromExpanded(label);
+              // }
+            }
+          )),
+          // handler: ({ label }) => {
+          //   this.addOrRemoveFromExpanded(label);
+          // },
+        }];
+
+        console.log(this.$ref, this.$refs);
+        this.treeRef.setExpanded(this.collectionTitle, true);
+        //this.expanded = [this.collectionTitle, this.manifest.label];
+        this.selected = [this.item.label]
+
+      }
+      this.isLoading = false;
+    },
+    getDefaultLabel(index) {
+      const prefix = this.labels.item ?? this.$t('page');
+      return prefix + ' ' + (index + 1);
+    },
     onSequenceIndexUpdate(index) {
       // if (index !== null && !this.expanded.includes(this.manifests[index]?.label)) {
       //   this.$store.dispatch(
@@ -160,6 +186,7 @@ export default {
       // }
     },
     handleSelectedChange(value) {
+      console.log(value);
       // this.navigate(value);
     },
   },
