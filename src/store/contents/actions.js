@@ -45,8 +45,9 @@ function findActiveManifestIndex(manifests = [], itemUrl = null) {
 
   itemUrl = encodeURI(decodeURI(itemUrl));
 
-  return manifests.findIndex((manifest) => {
-    return manifest.sequence.find((item) => encodeURI(decodeURI(item.id)) === itemUrl);
+  return manifests.findIndex(({ sequence }) => {
+    sequence = Array.isArray(sequence) ? sequence : [sequence];
+    return sequence.find(({ id }) => encodeURI(decodeURI(id)) === itemUrl);
   });
 }
 
@@ -179,6 +180,10 @@ export const initCollection = async ({ commit, dispatch, rootGetters }, url) => 
   }
 };
 
+export const setActiveManifest = ({ commit }, manifest) => {
+
+};
+
 export const initManifest = async ({ commit, dispatch }, url) => {
   console.log('initManifest');
   // commit('resetContents');
@@ -199,6 +204,11 @@ export const initItem = async ({ commit }, url) => {
   const item = await getItem(url);
   commit('setItem', item);
 
+  if (item.annotationCollection) {
+    const annotations = await request(item.annotationCollection);
+    console.log(annotations)
+  }
+
   await BookmarkService.updateItemQuery(url);
 };
 
@@ -215,6 +225,10 @@ export const setContentIndex = ({ commit }, index) => {
 
 export const updateImageLoading = async ({ commit }, payload) => {
   commit('setImageLoaded', payload);
+};
+
+export const initAnnotations({ commit }, payload) = async () => {
+
 };
 
 export const initImageData = async ({ commit }, url) => {

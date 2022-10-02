@@ -2,14 +2,14 @@
   <div class="item relative">
     <Loading v-if="isLoading" />
     <q-tree
+      class="item-content"
       ref="treeRef"
       v-model:expanded="expanded"
       v-model:selected="selected"
       :icon="fasCaretRight"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
-      node-key="label"
-      @lazy-load="onLazyLoad"
+      node-key="url"
     >
 <!--      <template #default-body="{ node }">-->
 <!--        <div v-if="!node.children" :id="`selectedItem-${node['label']}`" />-->
@@ -66,7 +66,7 @@ export default {
       return this.$store.getters['contents/item'];
     },
     itemUrl() {
-      return this.$store.getters['contents/itemUrl'];
+      return this.$store.getters['config/config'].item;
     },
     manifest() {
       return this.$store.getters['contents/manifest'];
@@ -89,12 +89,12 @@ export default {
     },
     itemUrl: {
       handler(value) {
-        this.selected = value;
+        // this.selected = value;
       },
       immediate: true,
     },
     selected: {
-      handler: 'handleSelectedChange',
+      handler: 'onSelectedChange',
       immediate: true,
     },
     expanded: {
@@ -104,20 +104,12 @@ export default {
       },
       immediate: true,
     },
-    // tree: {
-    //   handler(value) {
-    //     if (value.length > 0) {
-    //       this.$store.dispatch('contents/addToExpanded', value[0].label);
-    //     }
-    //   },
-    //   immediate: true,
-    // },
   },
   created() {
     this.fasCaretRight = fasCaretRight;
   },
   async mounted() {
-
+    console.log('tree mounted')
   },
   methods: {
     addToExpanded(label) {
@@ -130,46 +122,31 @@ export default {
         this.expanded.splice(index, 1);
       }
     },
-    addOrRemoveFromExpanded(label) {
-      if (this.expanded.includes(label)) {
-        this.removeFromExpanded(label);
-      } else {
-        this.addToExpanded(label);
-      }
-    },
-    onLazyLoad({ node, key, done, fail }) {
-      let { sequence } = node;
-      sequence = Array.isArray(sequence) ? sequence : [sequence];
-      done(sequence.map((seqItem, i) => ({label: seqItem.label ?? this.getDefaultLabel(i)})))
-    },
     async onCollectionChange() {
       this.isLoading = true;
-      console.log('onCollectionChange');
-
       if (this.collection) {
         this.tree = [{
           label: this.collectionTitle,
           selectable: false,
-          children: this.manifests.map(({ sequence, label }) => ({
+          url: this.collectionTitle,
+          children: this.manifests.map(({ sequence, label, id: manifestId }) => ({
               label,
               sequence,
+              url: manifestId,
               selectable: false,
-              lazy: true
-              // handler: ({ label }) => {
-              //   this.addOrRemoveFromExpanded(label);
-              // }
+              children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id, label }, i) => ({
+                label: label ?? this.getDefaultLabel(i),
+                url: id,
+                parent: manifestId
+              }))
             }
           )),
-          // handler: ({ label }) => {
-          //   this.addOrRemoveFromExpanded(label);
-          // },
         }];
 
-        console.log(this.$ref, this.$refs);
-        this.treeRef.setExpanded(this.collectionTitle, true);
-        //this.expanded = [this.collectionTitle, this.manifest.label];
-        this.selected = [this.item.label]
-
+        await this.$nextTick(() => {
+          this.expanded = [this.collectionTitle, this.manifest.id];
+          this.selected = this.itemUrl !== '' ? this.itemUrl : this.manifest.sequence[0]?.id;
+        });
       }
       this.isLoading = false;
     },
@@ -177,17 +154,25 @@ export default {
       const prefix = this.labels.item ?? this.$t('page');
       return prefix + ' ' + (index + 1);
     },
-    onSequenceIndexUpdate(index) {
-      // if (index !== null && !this.expanded.includes(this.manifests[index]?.label)) {
-      //   this.$store.dispatch(
-      //     'contents/addToExpanded',
-      //     this.manifests[index]?.label,
-      //   );
-      // }
-    },
-    handleSelectedChange(value) {
-      console.log(value);
-      // this.navigate(value);
+    onSelectedChange(value) {
+      const { treeRef } = this.$refs;
+
+      if (!treeRef) return;
+
+      const { url: itemUrl , parent: manifestUrl } = treeRef.getNodeByKey(value);
+
+      if (itemUrl === this.itemUrl) {
+        return;
+      }
+
+      if (manifestUrl !== this.manifest.id) {
+        if (this.manifests) {
+          this.$store.commit('contents/setManifest', this.manifests.find(({ id }) => id === manifestUrl));
+        } else {
+          this.$store.dispatch('contents/initManifest', manifestUrl);
+        }
+      }
+      this.$store.dispatch('contents/initItem', itemUrl);
     },
   },
 };

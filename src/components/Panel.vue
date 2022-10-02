@@ -17,7 +17,7 @@
           <q-tab v-for="(tab, i) in tabs" :key="tab.id" :name="i" :label="tab.label" />
         </q-tabs>
       </div>
-      <q-tab-panels v-model="activeTabIndex" animated keep-alive>
+      <q-tab-panels v-model="activeTabIndex" animated>
         <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pa-none">
           <component :is="tab.component" :key="tab.id" v-bind="tab.props" />
         </q-tab-panel>
@@ -65,6 +65,48 @@ export default {
   mounted() {
     console.log('panel mounted');
   },
+  methods: {
+    getContentUrl(type) {
+      const contentItem = this.item.content.find(c => c.type.split('type=')[1] === type);
+      return contentItem ? contentItem.url : null;
+    },
+    init(views) {
+      const tabs = [];
+      views.forEach((view, i) => {
+        const { connector, label } = view;
+        const { component } = findComponent(connector.id);
+        if (component === 'Content') {
+          const type = connector.options?.type;
+          const url = this.getContentUrl(type);
+
+          if (!url) return;
+
+          tabs.push({
+            component,
+            label,
+            props: { type, url}
+          });
+        } else if (component === 'Annotations') {
+          const url = this.item.annotationCollection;
+
+          if (!url) return;
+
+          tabs.push({
+            component,
+            label,
+            props: { url, ...connector.options }
+          });
+        } else {
+          tabs.push({
+            component,
+            label,
+            props: { ...connector.options }
+          });
+        }
+      });
+      this.tabs = tabs;
+    }
+  },
   watch: {
     activeTabIndex: {
       handler() {
@@ -73,34 +115,16 @@ export default {
     },
     panel: {
       handler({ views }) {
-        views.forEach((view, i) => {
-          const { connector, label } = view;
-          const { component } = findComponent(connector.id);
-          console.log(component)
-          if (component === 'Content') {
-            const type = connector.options?.type;
-            const contentItem = this.$store.getters['contents/contentItem'](type);
-
-            if (!contentItem) return;
-
-            this.tabs.push({
-              component,
-              label,
-              props: { type, url: contentItem.url }
-            });
-          } else {
-            this.tabs.push({
-              component,
-              label,
-              props: { ...connector.options }
-            });
-          }
-        });
-        console.log(this.tabs)
+        this.init(views);
       },
       deep: true,
       immediate: true,
     },
+    item: {
+      handler() {
+        this.init(this.panel.views);
+      }
+    }
   }
 };
 </script>

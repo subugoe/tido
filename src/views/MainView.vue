@@ -22,7 +22,7 @@ export default {
   computed: {
     panels() {
       const { panels } = this.config;
-      return [panels[0]];
+      return [panels[0], panels[2]];
     },
     config() {
       return this.$store.getters['config/config'];

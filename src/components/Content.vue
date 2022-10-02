@@ -11,7 +11,7 @@
       />
     </div>
 
-    <div v-if="!notificationMessage && !isLoading" class="q-px-sm">
+    <div v-if="!notificationMessage" class="q-px-sm">
       <q-btn
         class="cursor-pointer"
         flat
@@ -64,7 +64,7 @@ import {
   loadFont,
   onlyIf,
   loadCss,
-  domParser,
+  domParser, delay,
 } from '@/utils';
 
 export default {
@@ -129,12 +129,14 @@ export default {
       this.fontSize -= 2;
     },
     async loadContent(url) {
+      console.log('loadContent')
       try {
         if (!url) {
           return;
         }
         this.errorTextMessage = '';
         this.isLoading = true;
+        await delay(400);
         this.$store.dispatch('annotations/updateContentLoading', true);
         const data = await cachableRequest(url, 'text');
         this.isValidTextContent(data);

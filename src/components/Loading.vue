@@ -1,5 +1,6 @@
 <template>
   <q-inner-loading
+    class="bg-white"
     :showing="loading"
   >
     <q-spinner
