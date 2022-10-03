@@ -84,5 +84,7 @@ export default {
   toolTip_References: 'Referenzierte Annotationen',
   transcription: 'Transkription',
   transliteration: 'Transliteration',
+  unknown_text_type: 'Unbekannter Text Typ',
   Year: 'Erstellungsjahr',
+  page: 'Seite'
 };

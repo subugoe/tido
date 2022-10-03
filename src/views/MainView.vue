@@ -1,43 +1,42 @@
 <template>
-  <div
-    class="root panels-target"
-  >
+  <div class="root panels-target">
     <div
-      v-for="(panel, index) in panels"
-      v-show="panel.show && panel.connector.length"
-      :key="`pc${index}`"
+      v-for="(panel, i) in panels"
+      v-show="panel.show"
+      :key="`pc${i}`"
       class="item"
     >
-      <ToolBar
-        v-if="config['header_section'].panelheadings"
-        :heading="panel.panel_label"
-      />
-
-      <q-separator />
-
-      <Panel :panel="panel" :index="index" />
+      <Panel :panel="panel" @active-view="onActiveViewChange($event, i)" />
     </div>
   </div>
 </template>
 
 <script>
-import ToolBar from '@/components/ToolBar.vue';
 import Panel from '@/components/Panel.vue';
 
 export default {
   name: 'MainView',
   components: {
-    ToolBar,
     Panel,
   },
   computed: {
     panels() {
-      return this.$store.getters['contents/panels'];
+      const { panels } = this.config;
+      // return [panels[0], panels[2], panels[3]];
+      return panels;
     },
     config() {
       return this.$store.getters['config/config'];
     },
   },
+  mounted() {
+    console.log('main view mounted');
+  },
+  methods: {
+    onActiveViewChange(viewIndex, panelIndex) {
+      this.$store.dispatch('config/setActivePanelView', {viewIndex, panelIndex});
+    }
+  }
 };
 </script>
 

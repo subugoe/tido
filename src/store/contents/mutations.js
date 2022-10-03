@@ -1,5 +1,5 @@
 export const setCollection = (state, payload) => {
-  state.collection = payload;
+  state.collection = {...payload};
 };
 
 export const setCollectionTitle = (state, title) => {
@@ -14,12 +14,7 @@ export const setContentIndex = (state, payload) => {
   state.contentIndex = payload;
 };
 
-export const setContentItem = (
-  state,
-  {
-    item, errorText, contentUrls, contentTypes,
-  },
-) => {
+export const setContentItem = (state, { item, errorText, contentUrls, contentTypes }) => {
   state.item = item;
   state.errorText = errorText;
   state.contentUrls = contentUrls;
@@ -32,6 +27,10 @@ export const updateExpanded = (state, payload) => {
 
 export const setImageData = (state, payload) => {
   state.image = { ...payload };
+};
+
+export const setItem = (state, payload) => {
+  state.item = payload;
 };
 
 export const setImageLoaded = (state, payload) => {
@@ -55,7 +54,7 @@ export const setLoaded = (state, payload) => {
 };
 
 export const setManifests = (state, payload) => {
-  state.manifests = payload.manifests;
+  state.manifests = payload;
 };
 
 export const setPanels = (state, payload) => {
@@ -70,21 +69,25 @@ export const setTree = (state, payload) => {
   state.tree = payload.tree;
 };
 
+export const setManifest = (state, payload) => {
+  state.manifest = { ...payload };
+};
+
 export const resetContents = (state) => {
-  state.collection = {};
-  state.collectionTitle = '';
+  state.collection = null;
   state.contentIndex = 0;
   state.contentTypes = [];
   state.contentUrls = [];
   state.errorText = null;
   state.expanded = [];
-  state.image = {};
+  state.image = null;
   state.isCollection = false;
-  state.item = {};
+  state.item = null;
   state.itemUrl = '';
   state.itemUrls = [];
   state.loaded = false;
   state.manifests = [];
   state.sequenceIndex = 0;
   state.tree = [];
+  state.manifest = null;
 };

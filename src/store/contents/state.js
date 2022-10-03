@@ -1,7 +1,6 @@
 export default function ContentsState() {
   return {
-    collection: {},
-    collectionTitle: '',
+    collection: null,
     connectorValues: [],
     contentIndex: 0,
     contentTypes: [],
@@ -10,7 +9,7 @@ export default function ContentsState() {
     expanded: [],
     image: {},
     isCollection: true,
-    item: {},
+    item: null,
     itemUrl: '',
     itemUrls: [],
     loaded: false,
@@ -18,5 +17,6 @@ export default function ContentsState() {
     panels: [],
     sequenceIndex: 0,
     tree: [],
+    manifest: null
   };
 }

@@ -1,54 +1,31 @@
 <template>
-  <!-- shows the nested tabs -->
-  <div
-    v-if="panel.connector.length > 1"
-    class="item-content"
-  >
-    <div class="tabs-container">
-      <q-tabs
-        v-for="(tab, i) in panel.connector"
-        :key="`pt${i}`"
-        :model-value="connectorValue"
-        @update:model-value="onTabChange"
-        class="content-tabs"
-        :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
-        dense
-      >
-        <q-tab
-          :name="`tab${i}`"
-          :label="$t(tab.label)"
-        />
-      </q-tabs>
+  <div class="item-content">
+    <div class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
+      <!-- We display the tab label as panel label when there is only one tab -->
+      <span v-if="panel.label && tabs.length > 1">{{ panel.label }}</span>
+      <span v-else-if="tabs.length === 1">{{tabs[0].label}}</span>
     </div>
-
-    <q-tab-panels
-      v-model="connectorValue"
-      animated
-      keep-alive
-    >
-      <q-tab-panel
-        v-for="(tab, idx) in panel.connector"
-        :key="`co${idx}`"
-        :name="`tab${idx}`"
-        class="q-pa-none"
-      >
-        <component
-          :is="tab.component"
-          :key="tab.id"
-        />
-      </q-tab-panel>
-    </q-tab-panels>
-  </div>
-
-  <!-- shows the panels -->
-  <div
-    v-else-if="panel.connector.length === 1"
-    class="item-content"
-  >
-    <component
-      :is="panel.connector[0].component"
-      :key="panel.connector[0].id"
-    />
+    <q-separator />
+    <template v-if="tabs.length > 1">
+      <div class="tabs-container">
+        <q-tabs
+          v-model="activeTabIndex"
+          class="content-tabs"
+          :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
+          dense
+        >
+          <q-tab v-for="(tab, i) in tabs" :key="tab.id" :name="i" :label="tab.label" />
+        </q-tabs>
+      </div>
+      <q-tab-panels v-model="activeTabIndex" animated>
+        <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pa-none">
+          <component :is="tab.component" :key="tab.id" v-bind="tab.props" />
+        </q-tab-panel>
+      </q-tab-panels>
+    </template>
+    <template v-else-if="tabs.length === 1">
+      <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" />
+    </template>
   </div>
 </template>
 
@@ -58,6 +35,7 @@ import Tree from '@/components/Tree.vue';
 import Annotations from '@/components/annotations/Annotations.vue';
 import Content from '@/components/Content.vue';
 import OpenSeadragon from '@/components/OpenSeadragon.vue';
+import { findComponent } from "src/utils/panels";
 
 export default {
   components: {
@@ -72,37 +50,82 @@ export default {
       type: Object,
       default: () => { },
     },
-    index: {
-      type: Number,
-    },
+  },
+  data() {
+    return {
+      tabs: [],
+      activeTabIndex: 0
+    };
   },
   computed: {
-    contentUrls() {
-      return this.$store.getters['contents/contentUrls'];
-    },
-    imageUrl() {
-      return this.$store.getters['contents/imageUrl'];
-    },
-    connectorValue() {
-      return this.$store.getters['contents/connectorValues'][this.index] || 'tab0';
-    },
+    item() {
+      return this.$store.getters['contents/item'];
+    }
+  },
+  mounted() {
+    console.log('panel mounted');
   },
   methods: {
-    onTabChange(value) {
-      return this.$store.dispatch('contents/setConnectorValues', { value, panelIndex: this.index });
+    getContentUrl(type) {
+      const contentItem = this.item.content.find(c => c.type.split('type=')[1] === type);
+      return contentItem ? contentItem.url : null;
     },
+    init(views) {
+      const tabs = [];
+      views.forEach((view, i) => {
+        const { connector, label } = view;
+        const { component } = findComponent(connector.id);
+        if (component === 'Content') {
+          const type = connector.options?.type;
+          const url = this.getContentUrl(type);
+
+          if (!url) return;
+
+          tabs.push({
+            component,
+            label,
+            props: { type, url}
+          });
+        } else if (component === 'Annotations') {
+          const url = this.item.annotationCollection;
+
+          if (!url) return;
+
+          tabs.push({
+            component,
+            label,
+            props: { url, ...connector.options }
+          });
+        } else {
+          tabs.push({
+            component,
+            label,
+            props: { ...connector.options }
+          });
+        }
+      });
+      this.tabs = tabs;
+    }
   },
   watch: {
+    activeTabIndex: {
+      handler() {
+        this.$emit('active-view', this.activeTabIndex);
+      }
+    },
     panel: {
-      handler(newVal, oldVal) {
-        if (newVal.tab_model !== (oldVal || {}).tab_model) {
-          this.value = newVal.tab_model;
-        }
+      handler({ views }) {
+        this.init(views);
       },
       deep: true,
       immediate: true,
     },
-  },
+    item: {
+      handler() {
+        this.init(this.panel.views);
+      }
+    }
+  }
 };
 </script>
 

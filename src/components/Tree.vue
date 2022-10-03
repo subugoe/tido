@@ -1,34 +1,28 @@
 <template>
-  <div class="item">
-    <Loading v-if="!loaded" />
-
+  <div class="item relative">
+    <Loading v-if="isLoading" />
     <q-tree
+      class="item-content"
+      ref="treeRef"
       v-model:expanded="expanded"
       v-model:selected="selected"
-      class="item-content"
-      node-key="label"
       :icon="fasCaretRight"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
+      node-key="url"
     >
-      <template #default-body="{ node }">
-        <div
-          v-if="!node.children"
-          :id="`selectedItem-${node['label']}`"
-        />
-      </template>
+<!--      <template #default-body="{ node }">-->
+<!--        <div v-if="!node.children" :id="`selectedItem-${node['label']}`" />-->
+<!--      </template>-->
 
-      <template #default-header="prop">
-        <div
-          :id="prop.node['label']"
-          class="row items-center"
-        >
-          <div>
-            {{ prop.node.labelSheet ? $t(labels.item) : '' }}
-            {{ prop.node['label-key'] }}
-          </div>
-        </div>
-      </template>
+<!--      <template #default-header="prop">-->
+<!--        <div :id="prop.node['label']" class="row items-center">-->
+<!--          <div>-->
+<!--            {{ prop.node.labelSheet ? $t(labels.item) : '' }}-->
+<!--            {{ prop.node['label-key'] }}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </template>-->
     </q-tree>
   </div>
 </template>
@@ -39,15 +33,17 @@ import Loading from '@/components/Loading.vue';
 import Navigation from '@/mixins/navigation';
 
 export default {
-  name: 'Treeview',
+  name: 'Tree',
   components: {
     Loading,
   },
-  mixins: [Navigation],
   data() {
     return {
+      isLoading: false,
       expanded: [],
       selected: null,
+      tree: [],
+      treeRef: null
     };
   },
   computed: {
@@ -57,17 +53,23 @@ export default {
     config() {
       return this.$store.getters['config/config'];
     },
+    collectionTitle() {
+      return this.$store.getters['contents/collectionTitle'];
+    },
+    collection() {
+      return this.$store.getters['contents/collection'];
+    },
     labels() {
       return this.config.labels || {};
     },
+    item() {
+      return this.$store.getters['contents/item'];
+    },
     itemUrl() {
-      return this.$store.getters['contents/itemUrl'];
+      return this.$store.getters['config/config'].item;
     },
-    tree() {
-      return this.$store.getters['contents/tree'];
-    },
-    sequenceIndex() {
-      return this.$store.getters['contents/selectedSequenceIndex'];
+    manifest() {
+      return this.$store.getters['contents/manifest'];
     },
     manifests() {
       return this.$store.getters['contents/manifests'];
@@ -77,31 +79,28 @@ export default {
     },
   },
   watch: {
+    collection: {
+      handler: 'onCollectionChange',
+      immediate: true
+    },
     sequenceIndex: {
       handler: 'onSequenceIndexUpdate',
       immediate: true,
     },
     itemUrl: {
       handler(value) {
-        this.selected = value;
+        // this.selected = value;
       },
       immediate: true,
     },
     selected: {
-      handler: 'handleSelectedChange',
+      handler: 'onSelectedChange',
       immediate: true,
     },
-    expandTreeNodes: {
+    expanded: {
       handler(value) {
-        this.expanded = [...value];
-      },
-      immediate: true,
-    },
-    tree: {
-      handler(value) {
-        if (value.length > 0) {
-          this.$store.dispatch('contents/addToExpanded', value[0].label);
-        }
+        console.log(value);
+        // this.expanded = [...value];
       },
       immediate: true,
     },
@@ -109,17 +108,71 @@ export default {
   created() {
     this.fasCaretRight = fasCaretRight;
   },
+  async mounted() {
+    console.log('tree mounted')
+  },
   methods: {
-    onSequenceIndexUpdate(index) {
-      if (index !== null && !this.expanded.includes(this.manifests[index]?.label)) {
-        this.$store.dispatch(
-          'contents/addToExpanded',
-          this.manifests[index]?.label,
-        );
+    addToExpanded(label) {
+      this.expanded.push(label);
+    },
+    removeFromExpanded(label) {
+      const index = this.expanded.indexOf(label);
+
+      if (index > -1) {
+        this.expanded.splice(index, 1);
       }
     },
-    handleSelectedChange(value) {
-      this.navigate(value);
+    async onCollectionChange() {
+      this.isLoading = true;
+      if (this.collection) {
+        this.tree = [{
+          label: this.collectionTitle,
+          selectable: false,
+          url: this.collectionTitle,
+          children: this.manifests.map(({ sequence, label, id: manifestId }) => ({
+              label,
+              sequence,
+              url: manifestId,
+              selectable: false,
+              children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id, label }, i) => ({
+                label: label ?? this.getDefaultLabel(i),
+                url: id,
+                parent: manifestId
+              }))
+            }
+          )),
+        }];
+
+        await this.$nextTick(() => {
+          this.expanded = [this.collectionTitle, this.manifest.id];
+          this.selected = this.itemUrl !== '' ? this.itemUrl : this.manifest.sequence[0]?.id;
+        });
+      }
+      this.isLoading = false;
+    },
+    getDefaultLabel(index) {
+      const prefix = this.labels.item ?? this.$t('page');
+      return prefix + ' ' + (index + 1);
+    },
+    onSelectedChange(value) {
+      const { treeRef } = this.$refs;
+
+      if (!treeRef) return;
+
+      const { url: itemUrl , parent: manifestUrl } = treeRef.getNodeByKey(value);
+
+      if (itemUrl === this.itemUrl) {
+        return;
+      }
+
+      if (manifestUrl !== this.manifest.id) {
+        if (this.manifests) {
+          this.$store.commit('contents/setManifest', this.manifests.find(({ id }) => id === manifestUrl));
+        } else {
+          this.$store.dispatch('contents/initManifest', manifestUrl);
+        }
+      }
+      this.$store.dispatch('contents/initItem', itemUrl);
     },
   },
 };

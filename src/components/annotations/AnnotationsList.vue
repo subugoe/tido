@@ -14,7 +14,7 @@
         avatar
         class="q-mr-none"
       >
-        <AnnotationIcon :content-type="annotation.body['x-content-type']" />
+        <AnnotationIcon :name="getIconName(annotation.body['x-content-type'])" />
       </q-item-section>
 
       <q-item-section>
@@ -49,11 +49,15 @@ export default {
       type: Function,
       default: () => null,
     },
+    types: Array
   },
   computed: {
+    config() {
+      return this.$store.getters['config/config'];
+    },
     annotationTypesMapping() {
-      return this.config.annotations.types.reduce((prev, curr) => {
-        prev[curr.contenttype] = curr.annotationType || 'annotation';
+      return this.types.reduce((prev, curr) => {
+        prev[curr.name] = curr.annotationType || 'annotation';
         return prev;
       }, {});
     },
@@ -65,6 +69,9 @@ export default {
     isText(annotation) {
       return this.annotationTypesMapping[annotation.body['x-content-type']] === 'text';
     },
+    getIconName(typeName) {
+      return this.types.find(({ name }) => name === typeName)?.icon;
+    }
   },
 };
 </script>

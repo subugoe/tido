@@ -1,24 +1,17 @@
 <template>
-  <q-layout
-    class="root viewport"
-    view="hHh Lpr fFf"
-  >
-    <Header v-if="isConfigValid && config['header_section'].show" />
-
-    <Header v-else :config-error-title="configErrorTitle" />
-
-    <q-page-container
-      v-if="isConfigValid"
-      class="root"
-    >
+  <q-layout class="root viewport" view="hHh Lpr fFf">
+    <Header v-if="!isLoading && item && config['header_section'].show" />
+    <Header v-else />
+    <q-page-container v-if="ready" class="root">
       <router-view />
     </q-page-container>
 
-    <q-page-container v-else class="config-error-container">
+    <q-page-container v-else class="error-container">
+      <Loading v-if="isLoading" />
       <Notification
-        :message="$t(configErrorMessage)"
-        :notification-colors="config.notificationColors"
-        :title-key="$t(configErrorTitle)"
+        v-else
+        :message="errorMessage"
+        :title="errorTitle"
         class="q-ma-md-xl"
         type="warning"
       />
@@ -27,20 +20,44 @@
 </template>
 
 <script>
-import { setCssVar } from 'quasar';
+import {setCssVar} from 'quasar';
 import Header from '@/components/Header.vue';
 import Navigation from '@/mixins/navigation';
 import Notification from '@/components/Notification.vue';
 import BookmarkService from './services/bookmark';
+import Loading from '@/components/Loading.vue';
 
 export default {
   name: 'TIDO',
   components: {
     Header,
     Notification,
+    Loading
   },
   mixins: [Navigation],
+  data() {
+    return {
+      errorTitle: '',
+      errorMessage: '',
+      isLoading: false
+    }
+  },
   computed: {
+    ready() {
+      const { collection: collectionUrl, manifest: manifestUrl } = this.config;
+
+      if (!this.item) {
+        return false;
+      }
+
+      if (collectionUrl) {
+        return this.manifests.length > 0 && !!(this.collection) && !!(this.manifest);
+      }
+
+      if (manifestUrl) {
+        return !!(this.manifest);
+      }
+    },
     annotations() {
       return this.$store.getters['annotations/annotations'];
     },
@@ -50,11 +67,8 @@ export default {
     config() {
       return this.$store.getters['config/config'];
     },
-    configErrorMessage() {
-      return this.$store.getters['config/configErrorMessage'];
-    },
-    configErrorTitle() {
-      return this.$store.getters['config/configErrorTitle'];
+    collection() {
+      return this.$store.getters['contents/collection'];
     },
     contentTypes() {
       return this.$store.getters['contents/contentTypes'];
@@ -77,14 +91,11 @@ export default {
     isConfigValid() {
       return this.$store.getters['config/isConfigValid'];
     },
-    loaded() {
-      return this.$store.getters['config/initialized'];
+    manifest() {
+      return this.$store.getters['contents/manifest'];
     },
     manifests() {
       return this.$store.getters['contents/manifests'];
-    },
-    selectedManifest() {
-      return this.$store.getters['contents/selectedManifest'];
     },
     tree() {
       return this.$store.getters['contents/tree'];
@@ -102,25 +113,23 @@ export default {
       handler: 'onItemUrlChange',
       immediate: true,
     },
-    manifests: {
-      handler: 'onManifestsChange',
-      immediate: true,
+    manifest: {
+      handler: 'onManifestChange',
     },
   },
-  async created() {
+  async mounted() {
+    this.isLoading = true;
+    await this.$router.isReady();
+
+    this.$q.dark.set('auto');
+    this.$i18n.locale = this.config.lang;
+
     BookmarkService.initRouter(this.$router, this.$route);
     BookmarkService.initStore(this.$store);
 
-    const isValid = await this.loadConfig();
-
-    this.$q.dark.set('auto');
-
-    if (!isValid) {
-      return;
-    }
+    await this.loadConfig();
     await this.init();
 
-    await this.loadConfig();
 
     if (this.config?.colors?.primary) {
       setCssVar('primary', this.config.colors.primary);
@@ -134,9 +143,6 @@ export default {
       setCssVar('accent', this.config.colors.accent);
     }
   },
-  mounted() {
-    this.$i18n.locale = this.config.lang;
-  },
   methods: {
     /**
      * get collection data according to 'entrypoint'
@@ -147,13 +153,24 @@ export default {
      * @param string url
      */
     async getCollection(url) {
+      console.log('getCollection')
       await this.$store.dispatch('contents/initCollection', url);
     },
     async loadConfig() {
-      return this.$store.dispatch('config/loadConfig');
+      try {
+        await this.$store.dispatch('config/load');
+      } catch ({ title, message }) {
+        this.errorTitle = title;
+        this.errorMessage = message;
+      }
     },
     async getManifest(url) {
+      console.log('getManifest')
       await this.$store.dispatch('contents/initManifest', url);
+    },
+    async getItem(url) {
+      console.log('getItem')
+      await this.$store.dispatch('contents/initItem', url);
     },
     /**
      * decide whether to start with a collection or a single manifest
@@ -162,44 +179,71 @@ export default {
      * @return function getCollection() | getManifest()
      */
     async init() {
-      this.$store.dispatch('contents/initPanels');
-      return this.config.entrypoint.match(/collection.json\s?$/)
-        ? this.getCollection(this.config.entrypoint)
-        : this.getManifest(this.config.entrypoint);
+      const { collection, manifest, item } = this.config;
+
+      // Initialize priority:
+      // First check if an item URL is set
+      // If not prioritize collections over manifests
+      if (item) {
+        await this.getItem(item);
+      }
+
+      if (collection) {
+        await this.getCollection(collection);
+      } else if (manifest) {
+        await this.getManifest(manifest)
+      }
+    },
+    isReady() {
+      return this.item && this.manifests;
     },
 
     onItemUrlChange(val) {
-      if (!this.itemUrl) {
-        return;
+      if (val) {
+        this.isLoading = false;
       }
-      const treeDom = document.getElementById(val);
-
-      if (treeDom) {
-        treeDom.scrollIntoView({ block: 'center' });
-      }
+      // if (!this.itemUrl) {
+      //   return;
+      // }
+      // const treeDom = document.getElementById(val);
+      //
+      // if (treeDom) {
+      //   treeDom.scrollIntoView({ block: 'center' });
+      // }
     },
-    onManifestsChange() {
-      const { itemurl } = this.$route.query;
-      if (!itemurl && this.manifests?.[0]?.sequence?.[0]?.id) {
-        this.navigate(this.manifests?.[0]?.sequence?.[0]?.id);
-      }
+    onManifestChange() {
+      // console.log('onManifestsChange');
+      // const { item } = this.config;
+      //
+      // let sequenceIndex = 0;
+      // if (item) {
+      //   const index = this.manifest.sequence.findIndex(sequenceItem => sequenceItem.id === item);
+      //   if (index > -1) {
+      //     sequenceIndex = index;
+      //   }
+      // }
+      //
+      // console.log('sequenceIndex', sequenceIndex);
+      //
+      // this.getItem(this.manifest.sequence[sequenceIndex].id);
     },
 
     onRouteQueryChange() {
-      BookmarkService.syncQuery(this.$route.query);
+      console.log('onRouteQueryChange')
+      // BookmarkService.syncQuery(this.$route.query);
 
-      if (this.loaded) {
-        return;
-      }
-
-      const { itemurl } = this.$route.query;
-
-      if (!itemurl) {
-        return;
-      }
-
-      this.$store.dispatch('contents/setItemUrl', decodeURIComponent(itemurl));
-      this.$store.dispatch('config/setInitialized', { initialized: true });
+      // if (this.loaded) {
+      //   return;
+      // }
+      //
+      // const { itemurl } = this.$route.query;
+      //
+      // if (!itemurl) {
+      //   return;
+      // }
+      //
+      // this.$store.dispatch('contents/setItemUrl', decodeURIComponent(itemurl));
+      // this.loaded = true;
     },
   },
 };
@@ -221,7 +265,7 @@ export default {
     overflow: scroll;
   }
 }
-.config-error-container{
+.error-container{
   display: flex;
   flex-direction: column;
   justify-content: center;

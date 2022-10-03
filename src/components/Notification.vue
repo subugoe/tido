@@ -1,8 +1,5 @@
 <template>
-  <q-card
-    bordered
-    flat
-  >
+  <q-card bordered flat>
     <q-card-section class="text-center">
       <q-icon
         :color="color"
@@ -10,7 +7,7 @@
         class="q-pr-sm"
         size="sm"
       />
-      <span class="text-body1 text-uppercase vertical-middle">{{ $t(titleKey) }}</span>
+      <span class="text-body1 text-uppercase vertical-middle">{{ title }}</span>
     </q-card-section>
 
     <q-separator inset />
@@ -35,10 +32,7 @@ export default {
       type: String,
       default: () => '',
     },
-    titleKey: {
-      type: String,
-      default: () => '',
-    },
+    title: String,
     type: {
       type: String,
       default: () => '',

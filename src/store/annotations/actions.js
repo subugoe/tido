@@ -28,38 +28,25 @@ export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
   }
 };
 
-export const setFilteredAnnotations = ({ commit, getters, rootGetters }) => {
-  const { activeTab, annotations } = getters;
-  const config = rootGetters['config/config'];
-  const annotationTypesMapping = rootGetters['config/annotationTypesMapping'];
-  const contentTypes = rootGetters['contents/contentTypes'];
-  const contentIndex = rootGetters['contents/contentIndex'];
+export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
+  const { annotations } = getters;
+  const activeContentType = rootGetters['config/activeContentType'];
+  const filteredAnnotations = annotations.filter(
+      (annotation) => {
 
-  const tabConfig = config.annotations.tabs;
-  const activeEntities = tabConfig[activeTab] ?? [];
-
-  const filteredAnnotations = !activeTab
-    ? []
-    : annotations.filter(
-      (x) => {
-        const annotationContentType = annotationTypesMapping[x.body['x-content-type']];
-
-        // First we check if annotation fits to the current tab
-        if (!activeEntities.includes(x.body['x-content-type'])) {
-          return false;
-        }
+        const type = types.find(({ name }) => name === annotation.body['x-content-type']);
+        // First we check if annotation fits to the current view
+        if (!type) return false;
 
         let isVisible = false;
 
-        if (
-          annotationContentType?.displayWhen
-          && annotationContentType?.displayWhen === contentTypes[contentIndex]
-        ) {
+        if (type?.displayWhen && type?.displayWhen === activeContentType) {
           // Next we check if annotation should always be displayed on the current content tab
           isVisible = true;
         } else {
           // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
-          const selector = AnnotationUtils.generateTargetSelector(x);
+          const selector = AnnotationUtils.generateTargetSelector(annotation);
+          console.log(selector);
           if (selector) {
             const el = document.querySelector(selector);
             if (el) {
@@ -94,14 +81,6 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
 export const annotationLoaded = ({ commit }, annotations) => {
   commit('updateAnnotations', annotations);
   commit('updateAnnotationLoading', false);
-};
-
-export const decreaseContentFontSize = ({ commit, state }) => {
-  commit('updateContentFontSize', state.contentFontSize - 2);
-};
-
-export const increaseContentFontSize = ({ commit, state }) => {
-  commit('updateContentFontSize', state.contentFontSize + 2);
 };
 
 export const loadAnnotations = ({ commit }) => {
@@ -153,6 +132,7 @@ export const updateContentLoading = ({ commit }, isLoading) => {
 };
 
 export const initAnnotations = async ({ dispatch }, url) => {
+  console.log('initAnnotations');
   dispatch('loadAnnotations');
 
   try {

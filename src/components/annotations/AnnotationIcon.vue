@@ -1,6 +1,6 @@
 <template>
   <q-icon
-    v-if="show"
+    v-if="name"
     :color="isDarkMode ? 'grey-1 text-grey-1' : 'accent'"
     :name="name"
     size="16px"
@@ -13,25 +13,17 @@ import { Dark } from 'quasar';
 export default {
   name: 'AnnotationIcon',
   props: {
-    contentType: {
-      type: String,
-      default: () => '',
-    },
+    name: String
   },
   computed: {
     show() {
-      return !!(this.types.find((type) => type.contenttype === this.contentType)?.icon);
-    },
-    types() {
-      return this.$store.getters['config/config'].annotations.types;
+      return !!(this.types.find((type) => type.name === this.contentType)?.icon);
     },
     isDarkMode() {
       return Dark.isActive;
     },
     name() {
-      return Icons[this.types.filter(
-        (annotation) => annotation.contenttype === this.contentType,
-      )[0].icon];
+      return Icons[this.name];
     },
   },
 };

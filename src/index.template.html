@@ -7,14 +7,17 @@
   <meta name="description" content="<%= htmlWebpackPlugin.options.productDescription %>">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>">
+  <meta name="viewport"
+        content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>"
+  >
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 
 <body>
 <noscript>
-  <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+  <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to
+    continue.</strong>
 </noscript>
 
 <!--
@@ -29,11 +32,173 @@ The numbers below reflect each component's id. For detailed instructions please 
 
 Note: These IDs are supposed to be unique, so please make sure not to repeat these!
 -->
-
 <script id="tido-config" type="application/json">
   {
-    "entrypoint": "",
+    "collection": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
+    "manifest": "",
+    "item": "",
+    "breadcrumbNavigation": {
+      "source": "external",
+      "search_page_path": "search.html",
+      "search_query_param": "searchTerm",
+      "title_homepage_key": "title_homepage",
+      "title_viewer_key": "title_viewer",
+      "website": "https://ahiqar.uni-goettingen.de/website/"
+    },
+    "colors": {
+      "primary": "",
+      "secondary": "",
+      "accent": ""
+    },
+    "header_section": {
+      "show": true,
+      "navigation": true,
+      "titles": true,
+      "toggle": true
+    },
+    "lang": "en-US",
+    "language-switch": false,
+    "notificationColors": {
+      "info": "blue-9",
+      "warning": "red-9"
+    },
+    "panels": [
+      {
+        "label": "Contents & Metadata",
+        "views": [
+          {
+            "id": "tree",
+            "label": "Contents",
+            "default": true,
+            "connector": {
+              "id": 1,
+              "options": {
+                "labels": {
+                  "item": "Sheet",
+                  "manifest": "Manuscript"
+                }
+              }
+            }
+          },
+          {
+            "id": "metadata",
+            "label": "Metadata",
+            "connector": {
+              "id": 2,
+              "options": {
+                "collection": {
+                  "all": true
+                },
+                "manifest": {
+                  "all": true
+                },
+                "item": {
+                  "all": true
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "label": "Image",
+        "views": [
+          {
+          "id": "image",
+          "label": "Image",
+          "connector": {
+            "id": 3
+          }
+        }]
+      },
+      {
+        "label": "Text",
+        "views": [
+          {
+            "id": "text1",
+            "label": "Transcription",
+            "default": true,
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transcription"
+              }
+            }
+          },
+          {
+            "id": "text2",
+            "label": "Transliteration",
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transliteration"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "label": "Annotations",
+        "views": [
+          {
+            "id": "annotations1",
+            "label": "Editorial",
+            "default": true,
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Person",
+                    "icon": "fasUser",
+                    "label": "Names"
+                  },
+                  {
+                    "name": "Place",
+                    "icon": "fasMapMarkerAlt",
+                    "label": "Places"
+                  },
+                  {
+                    "name": "Editorial Comment",
+                    "icon": "fasComment",
+                    "label": "Comments"
+                  },
+                  {
+                    "name": "Reference",
+                    "icon": "fasExternalLinkSquareAlt",
+                    "label": "References"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "annotations2",
+            "label": "Motif",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Motif",
+                    "icon": "fasHighlighter",
+                    "label": "Motifs"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "rtl": false,
+    "themes": false
+  }</script>
+<!-- <script id="tido-config" type="application/json">
+  {
+    "entrypoint": "https://dev.gfl.sub.uni-goettingen.de/tido/gfl/Z_1823-08-31_z/manifest.json",
     "annotations": {
+      "show": true,
       "types": [
         {
           "contenttype": "Person",
@@ -51,36 +216,46 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
           "label": "Comments"
         },
         {
-          "contenttype": "Motif",
-          "icon": "fasHighlighter",
-          "label": "Motifs"
+          "contenttype": "Org",
+          "icon": "fasLandmark",
+          "label": "Organization"
+        },
+        {
+          "contenttype": "Object",
+          "icon": "fasThLarge",
+          "label": "Object"
+        },
+        {
+          "contenttype": "Date",
+          "icon": "fasCalendar",
+          "label": "Date"
         },
         {
           "contenttype": "Abstract",
           "annotationType": "text",
           "displayWhen": "Edierter Text",
-          "label": "Abstract"
+          "label": "Erläuterung"
+        },
+        {
+          "contenttype": "Work",
+          "icon": "fasThLarge",
+          "label": "Werk"
+        },
+        {
+          "contenttype": "Work",
+          "icon": "fasExternalLinkSquareAlt",
+          "label": "Werk"
         }
       ],
       "tabs":{
-        "Editorial": ["Person", "Place"],
-        "Motif": ["Motif"],
-        "Comments": ["Editorial Comment", "Abstract"]
+        "Kommentare": ["Abstract", "Editorial Comment"],
+        "Register": ["Person", "Place", "Org", "Object", "Date", "Work"]
       }
     },
-    "breadcrumbNavigation": {
-      "multiSearch_key": "searchHitList",
-      "source": "external",
-      "search_page_path": "search.html",
-      "search_query_param": "searchTerm",
-      "title_homepage_key": "title_homepage",
-      "title_viewer_key": "title_viewer",
-      "website": "https://ahikar.sub.uni-goettingen.de/website/"
-    },
     "colors": {
-      "primary": "",
+      "primary": "#4569cc",
       "secondary": "",
-      "accent": ""
+      "accent": "#4569cc"
     },
     "header_section": {
       "show": true,
@@ -90,11 +265,9 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
       "toggle": true
     },
     "labels": {
-      "item": "Sheet",
-      "manifest": "Manuscript"
+      "item": "Seite",
+      "manifest": "Dokument"
     },
-    "lang": "en-US",
-    "language-switch": true,
     "meta": {
       "collection": {
         "all": true
@@ -106,37 +279,32 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
         "all": true
       }
     },
-    "notificationColors": {
-      "info":"blue-9",
-      "warning":"red-9"
-    },
     "panels": [
       {
-        "connector": [1, 2],
-        "panel_label": "Contents & Metadata",
-        "show": true,
-        "toggle": true
-      },
-      {
         "connector": [3],
-        "panel_label": "Image",
+        "panel_label": "Manuskript",
         "show": true,
         "toggle": true
       },
       {
-        "connector": [4],
+        "connector": [4, 4],
         "panel_label": "Text",
         "show": true,
-        "toggle": true
+        "toggle": false
       },
       {
         "connector": [5],
-        "panel_label": "Annotations",
+        "panel_label": "Kommentar",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [2, 1],
+        "panel_label": "Dokumentdaten",
         "show": true,
         "toggle": true
       }
     ],
-    "rtl": false,
     "textContent": {
       "tabs": {
         "priority": {
@@ -144,10 +312,26 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
         }
       }
     },
-    "themes": false
-  }
-</script>
+    "notificationColors": {
+      "info":"blue-9",
+      "warning":"red-9"
+    },
+    "rtl": false,
+    "themes": false,
+    "standalone": false,
+    "lang": "de-de",
+    "language-switch": false,
+    "breadcrumbNavigation": {
+      "multiSearch_key": "searchHitList",
+      "source": "gfl",
+      "title_homepage_key": "GFL Website",
+      "search_query_param": "q",
+      "title_viewer_key": "TIDO Viewer",
 
+      "website": "https://dev.gfl.sub.uni-goettingen.de"
+    }
+  }
+</script> -->
 <div id="q-app"></div>
 </body>
 </html>

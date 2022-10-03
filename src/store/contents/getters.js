@@ -1,6 +1,17 @@
 export const collection = (state) => state.collection;
 
-export const collectionTitle = (state) => state.collectionTitle;
+export const collectionTitle = (state) => {
+  const { collection } = state;
+  if (Object.keys(collection).length) {
+    return collection.title && collection.title[0].title
+      ? collection.title[0].title
+      : collection.label;
+  }
+
+  return collection.label
+    ? collection.label
+    : 'Manifest <small>(No label available)</small>';
+}
 
 export const connectorValues = (state) => state.connectorValues;
 
@@ -8,7 +19,7 @@ export const contentIndex = (state) => state.contentIndex;
 
 export const contentTypes = (state) => state.contentTypes;
 
-export const contentUrls = (state) => state.contentUrls;
+export const contentUrls = (state) => state.item?.content ?? [];
 
 export const errorImage = (state) => state.image.errorImage;
 
@@ -45,7 +56,11 @@ export const selectedItemIndex = (state) => {
 };
 
 export const selectedManifest = (state) => state.manifests.find((manifest) => {
+  manifest = { ...manifest};
   const selectedItemUrl = encodeURI(decodeURI(state.itemUrl));
+  if (!Array.isArray(manifest.sequence)) {
+    manifest.sequence = [manifest.sequence];
+  }
   return manifest.sequence.find((manifestItem) => encodeURI(decodeURI(manifestItem.id)) === selectedItemUrl);
 });
 
@@ -68,3 +83,7 @@ export const selectedSequenceIndex = (state, getters) => {
 export const item = (state) => state.item;
 
 export const tree = (state) => state.tree;
+
+export const manifest = (state) => state.manifest;
+
+export const contentItem = (state) => (type) => state.item.content.find(c => c.type.split('type=')[1] === type);

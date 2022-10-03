@@ -14,10 +14,6 @@ export const updateAnnotationLoading = (state, isLoading) => {
   state.isLoading = isLoading;
 };
 
-export const updateContentFontSize = (state, size) => {
-  state.contentFontSize = size;
-};
-
 export const updateContentLoading = (state, isLoading) => {
   state.isContentLoading = isLoading;
 };

@@ -1,41 +1,17 @@
 <template>
   <div class="item">
-    <q-tabs
-      v-model="activeContentUrl"
-      dense
-      class="text-grey q-mb-sm"
-      active-color="$q.dark.isActive ? 'white' : 'accent'"
-      indicator-color="$q.dark.isActive ? 'white' : 'accent'"
-      align="justify"
-    >
-      <q-tab
-        v-for="(contenturl, i) in contentUrls"
-        :key="`content${i}`"
-        :class="{ 'disabled-tab': contenturl === activeContentUrl }"
-        :label="$t(contentTypes[i])"
-        :name="contenturl"
-        @click="switchActiveContentUrl(contenturl)"
-      />
-    </q-tabs>
-
     <Loading v-if="isLoading" />
 
-    <div
-      v-if="hasError && notificationMessage"
-      class="q-pa-sm"
-    >
+    <div v-if="notificationMessage" class="q-pa-sm">
       <Notification
         :message="$t(notificationMessage)"
         :notification-colors="config.notificationColors"
-        title-key="textErrorTitle"
+        :title="$t('textErrorTitle')"
         type="warning"
       />
     </div>
 
-    <div
-      v-if="!hasError && !isLoading"
-      class="q-px-sm"
-    >
+    <div v-if="!notificationMessage" class="q-px-sm">
       <q-btn
         class="cursor-pointer"
         flat
@@ -70,16 +46,9 @@
       </q-btn>
     </div>
 
-    <div
-      id="text-content"
-      class="custom-font item-content"
-    >
+    <div id="text-content" class="custom-font item-content">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-      <div
-        :class="{ rtl: config.rtl }"
-        v-html="content"
-        :style="contentStyle"
-      />
+      <div :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle" />
     </div>
   </div>
 </template>
@@ -95,7 +64,7 @@ import {
   loadFont,
   onlyIf,
   loadCss,
-  domParser,
+  domParser, delay,
 } from '@/utils';
 
 export default {
@@ -106,18 +75,13 @@ export default {
   },
   mixins: [DomMixin],
   props: {
-    transcription: {
-      type: String,
-      default: () => '',
-    },
-    panels: {
-      type: Array,
-      default: () => [],
-    },
+    url: String,
+    type: String
   },
   data: () => ({
     content: '',
     errorTextMessage: null,
+    fontSize: 16,
     fontSizeLimits: {
       min: 14,
       max: 28,
@@ -125,60 +89,37 @@ export default {
     isLoading: false,
   }),
   computed: {
-    activeContentUrl() {
-      return this.contentUrls[this.contentIndex];
-    },
-    itemUrl() {
-      return this.$store.getters['contents/itemUrl'];
-    },
-    contentIndex() {
-      return this.$store.getters['contents/contentIndex'];
-    },
-    contentUrls() {
-      return this.$store.getters['contents/contentUrls'];
-    },
-    contentTypes() {
-      return this.$store.getters['contents/contentTypes'];
-    },
     errorText() {
       return this.$store.getters['contents/errorText'];
     },
-    manifests() {
-      return this.$store.getters['contents/manifests'];
+    manifest() {
+      return this.$store.getters['contents/manifest'];
     },
     config() {
       return this.$store.getters['config/config'];
     },
-    fontsize() {
-      return this.$store.getters['annotations/contentFontSize'];
-    },
     contentStyle() {
       return {
-        fontSize: `${this.fontsize}px`,
+        fontSize: `${this.fontSize}px`,
       };
     },
-    hasError() {
-      return this.errorText || this.errorTextMessage;
-    },
     notificationMessage() {
-      return this.errorTextMessage || this.errorText
-        ? this.errorText.textErrorMessageNotExists
-        : '';
+      return this.errorTextMessage;
     },
-    sequenceIndex() {
-      return this.$store.getters['contents/sequenceIndex'];
-    },
-    supportType() {
-      const { support } = this.manifests[this.sequenceIndex];
-
-      return Object.keys(support).length && support.url !== '';
+    hasSupport() {
+      if (!this.manifest) {
+        return false;
+      }
+      const { support } = this.manifest;
+      // return support && Object.keys(support).length && support.url !== '';
+      return support && support.length > 0;
     },
   },
   watch: {
-    itemUrl: {
-      handler: 'onItemUrlChange',
-      immediate: true,
-    },
+    url: {
+      handler: 'loadContent',
+      immediate: true
+    }
   },
   async created() {
     this.fasSearchPlus = fasSearchPlus;
@@ -186,40 +127,23 @@ export default {
   },
   methods: {
     decrease() {
-      this.$store.dispatch('annotations/decreaseContentFontSize');
+      this.fontSize -= 2;
     },
-    switchActiveContentUrl(contentUrl) {
-      this.$store.dispatch(
-        'contents/setContentIndex',
-        this.contentUrls.findIndex((x) => x === contentUrl),
-      );
-      this.handleActiveContentUrl();
-    },
-    async getContentsItemData(url) {
-      await this.$store.dispatch(
-        'contents/initContentItem',
-        url,
-      );
-
-      await this.handleActiveContentUrl();
-    },
-    async onItemUrlChange(itemUrl) {
-      await this.getContentsItemData(itemUrl);
-    },
-    async handleActiveContentUrl() {
-      const url = this.activeContentUrl;
+    async loadContent(url) {
+      console.log('loadContent')
       try {
         if (!url) {
           return;
         }
         this.errorTextMessage = '';
         this.isLoading = true;
+        await delay(400);
         this.$store.dispatch('annotations/updateContentLoading', true);
         const data = await cachableRequest(url, 'text');
         this.isValidTextContent(data);
 
-        if (this.supportType) {
-          await this.getSupport(this.manifests[0].support);
+        if (this.hasSupport) {
+          await this.getSupport(this.manifest.support);
         }
 
         const dom = domParser(data);
@@ -234,9 +158,8 @@ export default {
       }
     },
     increase() {
-      this.$store.dispatch('annotations/increaseContentFontSize');
+      this.fontSize += 2;
     },
-
     isValidTextContent(text) {
       let parsed;
       try {
@@ -249,10 +172,9 @@ export default {
         throw new Error('textErrorMessageNotExists');
       }
     },
-
     async getSupport(support) {
       support.forEach((s) => {
-        const hasElement = this.findDomElementById(s.url);
+        const hasElement = document.getElementById(s.url);
         onlyIf(s.type === 'font' && !hasElement, () => loadFont(s.url));
         onlyIf(s.type !== 'font' && !hasElement, () => loadCss(s.url));
       });
