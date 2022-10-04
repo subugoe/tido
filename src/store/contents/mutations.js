@@ -30,6 +30,7 @@ export const setImageData = (state, payload) => {
 };
 
 export const setItem = (state, payload) => {
+  console.log('setItem----');
   state.item = payload;
 };
 

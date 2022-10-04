@@ -2,7 +2,7 @@
   <div class="imageItem">
     <Loading v-if="isLoading" />
     <div v-if="error" class="q-pa-sm">
-      <Notification :message="$t(error.messageKey)" title-key="imageErrorTitle" type="warning" />
+      <Notification :message="$t(error.message)" title-key="imageErrorTitle" type="warning" />
     </div>
     <div v-else>
       <nav>
@@ -82,18 +82,20 @@ export default {
   watch: {
     item: {
       async handler() {
+        console.log('item ------------', this.item);
         this.isLoading = true;
         try {
           const response = await fetch(this.item.image.id);
 
-          if (response.status === 500) throw { messageKey: 'imageErrorMessageNotExists'};
+          if (response.status === 500) throw { message: 'imageErrorMessageNotExists'};
 
-          if (response.status !== 200 || response.status !== 201) throw { messageKey: 'imageErrorMessageVPN'};
+          if (response.status !== 200 || response.status !== 201) throw { message: 'imageErrorMessageVPN'};
 
           this.error = null;
           this.initOpenSeagragon();
 
         } catch (error) {
+          console.log(error.message);
           this.error = error;
           this.isLoading = false;
         }

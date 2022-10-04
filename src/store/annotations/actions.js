@@ -32,32 +32,30 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
   const { annotations } = getters;
   const activeContentType = rootGetters['config/activeContentType'];
   const filteredAnnotations = annotations.filter(
-      (annotation) => {
+    (annotation) => {
+      const type = types.find(({ name }) => name === annotation.body['x-content-type']);
+      // First we check if annotation fits to the current view
+      if (!type) return false;
 
-        const type = types.find(({ name }) => name === annotation.body['x-content-type']);
-        // First we check if annotation fits to the current view
-        if (!type) return false;
+      let isVisible = false;
 
-        let isVisible = false;
-
-        if (type?.displayWhen && type?.displayWhen === activeContentType) {
-          // Next we check if annotation should always be displayed on the current content tab
-          isVisible = true;
-        } else {
-          // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
-          const selector = AnnotationUtils.generateTargetSelector(annotation);
-          console.log(selector);
-          if (selector) {
-            const el = document.querySelector(selector);
-            if (el) {
-              isVisible = true;
-            }
+      if (type?.displayWhen && type?.displayWhen === activeContentType) {
+        // Next we check if annotation should always be displayed on the current content tab
+        isVisible = true;
+      } else {
+        // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
+        const selector = AnnotationUtils.generateTargetSelector(annotation);
+        if (selector) {
+          const el = document.querySelector(selector);
+          if (el) {
+            isVisible = true;
           }
         }
+      }
 
-        return isVisible;
-      },
-    );
+      return isVisible;
+    },
+  );
 
   commit('setFilteredAnnotations', filteredAnnotations);
 };

@@ -114,13 +114,12 @@ export const initPanels = ({ dispatch, rootGetters }) => {
   dispatch('setPanels', panels);
 };
 
-export const initCollection = async ({ commit, dispatch, rootGetters }, url) => {
+export const initCollection = async ({ commit, dispatch, getters, rootGetters }, url) => {
   console.log('initCollection');
-  const tree = [];
-  const manifests = [];
-  const itemUrls = [];
 
+  const { item } = getters;
   let { item: itemUrl } = rootGetters['config/config'];
+  console.log(item);
 
   // commit('resetContents');
 
@@ -152,7 +151,6 @@ export const initCollection = async ({ commit, dispatch, rootGetters }, url) => 
    commit('setManifests', manifests);
 
     const activeManifestIndex = findActiveManifestIndex(manifests, itemUrl);
-    console.log(activeManifestIndex);
 
     if (activeManifestIndex > -1) {
       const activeManifest = manifests[activeManifestIndex];
@@ -163,7 +161,7 @@ export const initCollection = async ({ commit, dispatch, rootGetters }, url) => 
         itemUrl = activeManifest.sequence[0].id;
       }
 
-      dispatch('initItem', itemUrl);
+      if (!item) dispatch('initItem', itemUrl);
     }
 
 
@@ -189,9 +187,11 @@ export const setActiveManifest = ({ commit }, manifest) => {
 
 };
 
-export const initManifest = async ({ commit, dispatch }, url) => {
+export const initManifest = async ({ commit, dispatch, getters }, url) => {
   console.log('initManifest');
   // commit('resetContents');
+
+  const { item } = getters;
 
   const manifest = await getManifest(url);
 
@@ -199,7 +199,7 @@ export const initManifest = async ({ commit, dispatch }, url) => {
 
   // We know here that no item was loaded. Neither from URL nor from user config.
   // So we load the first manifest item.
-  if (Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
+  if (!item && Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
     dispatch('initItem', manifest.sequence[0].id);
   }
 };
