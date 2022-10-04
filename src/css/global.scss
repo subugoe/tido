@@ -27,3 +27,130 @@ h3 {
   outline: none;
   width: 100%;
 }
+
+
+/* not in scope to style the text */
+.annotation-disabled {
+  border-bottom: 0;
+  padding-bottom: inherit;
+}
+
+.annotation-disabled-overlap {
+  border-bottom: 1px;
+  border-bottom-style: dotted !important;
+  padding-bottom: inherit;
+}
+
+.annotation-disabled > svg {
+  display: none;
+}
+
+[data-annotation-level]:not([data-annotation-level ='-1']) {
+  cursor: pointer;
+}
+
+[data-annotation-level='0'] {
+  background-color: $grey-3;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $grey-9;
+  }
+}
+
+[data-annotation-level='1'],
+[data-annotation-level='1'] * {
+  background-color: $blue-1;
+  border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $blue-grey-7;
+    border-bottom: 1px solid #fff;
+    color: $light;
+  }
+}
+
+[data-annotation-level='2'],
+[data-annotation-level='2'] * {
+  background-color: $blue-2;
+  border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $blue-grey-8;
+    border-bottom: 1px solid #fff;
+    color: $light;
+  }
+}
+
+[data-annotation-level='3'],
+[data-annotation-level='3'] * {
+  background-color: $blue-3;
+  border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $blue-grey-9;
+    border-bottom: 1px solid #fff;
+    color: $light;
+  }
+}
+
+[data-annotation-level='4'],
+[data-annotation-level='4'] * {
+  background-color: $blue-4;
+  border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $blue-grey-10;
+    border-bottom: 1px solid #fff;
+    color: $light;
+  }
+}
+
+[data-annotation-level='5'],
+[data-annotation-level='5'] * {
+  background-color: $blue-5;
+  border-bottom: 1px solid #000;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #1f2937;
+    border-bottom: 1px solid #fff;
+    color: $light;
+  }
+}
+
+.annotation-tooltip {
+  background-color: $grey-2 !important;
+  box-shadow: $shadow-1;
+  color: #000 !important;
+  font-size: 14px;
+  left: 0;
+  opacity: 0;
+  padding: 8px;
+  position: absolute;
+  text-decoration: none !important;
+  top: 0;
+  transition: opacity 0.5s;
+  width: 240px;
+  z-index: 10000;
+}
+
+.annotation-tooltip {
+  -webkit-touch-callout: none;
+}
+
+.annotation-animated-tooltip {
+  opacity: 1;
+}
+
+.referenced-annotation {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.referenced-annotation:first-of-type {
+  padding-top: 4px;
+}
+
+.referenced-annotation:last-of-type {
+  margin-bottom: 0;
+}
+

@@ -2,7 +2,7 @@
   <div class="metadata-container q-pa-md q-pt-md">
     <!-- Collection-->
     <q-list
-      v-if="config.meta.collection.all && Object.keys(collection).length"
+      v-if="options.collection.all && Object.keys(collection).length"
       dense
       class="q-mb-lg"
     >
@@ -37,11 +37,7 @@
     </q-list>
 
     <!-- Manifest-->
-    <q-list
-      v-if="config.meta.manifest.all && itemcount"
-      dense
-      class="q-mb-lg"
-    >
+    <q-list v-if="options.manifest.all && itemcount" dense class="q-mb-lg">
       <q-item class="no-padding">
         <q-item-section>
           <h3>{{ $t(labels.manifest) }} {{ sequenceIndex + 1 }} / {{ manifests.length }}</h3>
@@ -77,7 +73,7 @@
 
     <!-- Item-->
     <q-list
-      v-if="config.meta.item.all"
+      v-if="options.item.all"
       dense
       class="q-mb-lg"
     >
@@ -116,6 +112,9 @@ import MetadataItem from 'components/metadata/MetadataItem';
 
 export default {
   name: 'Metadata',
+  props: {
+    options: Object
+  },
   components: {
     MetadataItem,
     ContentUrls,
@@ -135,6 +134,9 @@ export default {
     },
     manifests() {
       return this.$store.getters['contents/manifests'];
+    },
+    manifest() {
+      return this.$store.getters['contents/manifest'];
     },
     itemcount() {
       return this.manifests[this.sequenceIndex]?.sequence.length ?? 0;
@@ -171,18 +173,22 @@ export default {
       ].filter((item) => item.data);
     },
     metadataManifest() {
+      console.log(this.manifest)
       return [
-        { id: 'Label', data: this.manifests[this.sequenceIndex].label },
-        ...(this.manifests[this.sequenceIndex].license || []).map((manifest) => ({
+        { id: 'Label', data: this.manifest.label },
+        ...(this.manifest.license || []).map((manifest) => ({
           id: 'License',
           data: manifest.id,
         })),
       ];
     },
     manifestsMetadata() {
-      return this.manifests[this.sequenceIndex]?.metadata || [];
+      return this.manifest?.metadata || [];
     },
   },
+  mounted() {
+    console.log(this.options)
+  }
 };
 </script>
 

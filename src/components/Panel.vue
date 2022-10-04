@@ -96,6 +96,13 @@ export default {
             label,
             props: { url, ...connector.options }
           });
+        } else if (component === 'Metadata') {
+          const { options } = connector;
+          tabs.push({
+            component,
+            label,
+            props: { options }
+          });
         } else {
           tabs.push({
             component,

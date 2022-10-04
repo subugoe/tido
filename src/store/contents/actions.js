@@ -242,54 +242,56 @@ export const initImageData = async ({ commit }, url) => {
   let hasError = false;
   let errorImage = null;
   console.log('initImageData');
-  commit('setImageData', {
-    imageUrl,
-    hasError,
-    errorImage,
-    loadingImage: true,
-    init: false,
-  });
+  // commit('setImageData', {
+  //   imageUrl,
+  //   hasError,
+  //   errorImage,
+  //   loadingImage: true,
+  //   init: false,
+  // });
 
-  if (data.image) {
-    imageUrl = data.image.id;
-    try {
-      const response = await fetch(imageUrl);
-      if (response.status === 200 || response.status === 201) {
-        hasError = false;
-        errorImage = null;
-      } else if (response.status === 500) {
-        hasError = true;
-        errorImage = {
-          messageKey: 'imageErrorMessageNotExists',
-        };
-      } else {
-        // for vpn error.
-        hasError = true;
-        errorImage = {
-          messageKey: 'imageErrorMessageVPN',
-        };
-      }
-    } catch (err) {
-      // for CORS error.
+  try {
+    const response = await fetch(imageUrl);
+    if (response.status === 200 || response.status === 201) {
+      hasError = false;
+      errorImage = null;
+    } else if (response.status === 500) {
+      hasError = true;
+      errorImage = {
+        messageKey: 'imageErrorMessageNotExists',
+      };
+    } else {
+      // for vpn error.
       hasError = true;
       errorImage = {
         messageKey: 'imageErrorMessageVPN',
       };
     }
-  } else {
+  } catch (err) {
+    // for CORS error.
     hasError = true;
     errorImage = {
-      messageKey: 'imageErrorMessageNotExists',
+      messageKey: 'imageErrorMessageVPN',
     };
   }
 
-  commit('setImageData', {
-    imageUrl,
-    hasError,
-    errorImage,
-    init: true,
-    loadingImage: !errorImage,
-  });
+  // if (data.image) {
+  //   imageUrl = data.image.id;
+  //
+  // } else {
+  //   hasError = true;
+  //   errorImage = {
+  //     messageKey: 'imageErrorMessageNotExists',
+  //   };
+  // }
+  //
+  // commit('setImageData', {
+  //   imageUrl,
+  //   hasError,
+  //   errorImage,
+  //   init: true,
+  //   loadingImage: !errorImage,
+  // });
 };
 
 /**

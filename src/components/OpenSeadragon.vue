@@ -1,15 +1,8 @@
 <template>
   <div class="imageItem">
-    <Loading v-if="loadingImage" />
-    <div
-      v-if="errorImage"
-      class="q-pa-sm"
-    >
-      <Notification
-        :message="$t(errorImage.messageKey)"
-        title-key="imageErrorTitle"
-        type="warning"
-      />
+    <Loading v-if="isLoading" />
+    <div v-if="error" class="q-pa-sm">
+      <Notification :message="$t(error.messageKey)" title-key="imageErrorTitle" type="warning" />
     </div>
     <div v-else>
       <nav>
@@ -24,19 +17,11 @@
           class="q-ml-xs q-mt-xs"
           :title="$t(btn.tooltip)"
         >
-          <q-icon
-            :id="btn.id"
-            size="xs"
-            :name="btn.svg"
-          />
+          <q-icon :id="btn.id" size="xs" :name="btn.svg"/>
         </q-btn>
       </nav>
     </div>
-    <figure
-      id="openseadragon"
-      class="item"
-    >
-    </figure>
+    <figure id="openseadragon" class="item"></figure>
   </div>
 </template>
 
@@ -68,20 +53,16 @@ export default {
         { id: 'default', svg: fasExpand, tooltip: 'osdHome' },
         { id: 'fullscreen', svg: fasExpandArrowsAlt, tooltip: 'osdFullPage' },
       ],
+      error: null,
+      isLoading: false
     };
   },
   computed: {
+    item() {
+      return this.$store.getters['contents/item'];
+    },
     imageUrl() {
-      return this.$store.getters['contents/imageUrl'];
-    },
-    itemUrl() {
-      return this.$store.getters['contents/itemUrl'];
-    },
-    errorImage() {
-      return this.$store.getters['contents/errorImage'];
-    },
-    loadingImage() {
-      return this.$store.getters['contents/loadingImage'];
+      return this.item.image?.id;
     },
     options() {
       return {
@@ -99,26 +80,35 @@ export default {
     },
   },
   watch: {
-    itemUrl: {
-      handler: 'onItemUrlChange',
+    item: {
+      async handler() {
+        this.isLoading = true;
+        try {
+          const response = await fetch(this.item.image.id);
+
+          if (response.status === 500) throw { messageKey: 'imageErrorMessageNotExists'};
+
+          if (response.status !== 200 || response.status !== 201) throw { messageKey: 'imageErrorMessageVPN'};
+
+          this.error = null;
+          this.initOpenSeagragon();
+
+        } catch (error) {
+          this.error = error;
+          this.isLoading = false;
+        }
+      },
       immediate: true,
     },
   },
+  mounted() {
+    console.log('image mounted');
+  },
+  beforeUnmount() {
+    document.removeEventListener('fullscreenchange', this.onFullscreenChange);
+  },
   methods: {
-    async onItemUrlChange(itemUrl) {
-      console.log('onItemUrlChange');
-
-      await this.getImageItemData(itemUrl);
-      this.init();
-    },
-    async getImageItemData(itemUrl) {
-      await this.$store.dispatch('contents/initImageData', itemUrl);
-    },
-    init() {
-      if (this.errorImage) {
-        return;
-      }
-
+    initOpenSeagragon() {
       if (this.viewer) {
         this.viewer.destroy();
         this.viewer = null;
@@ -128,20 +118,21 @@ export default {
       this.viewer.controlsFadeDelay = 1000;
 
       this.viewer.addHandler('tile-loaded', () => {
-        this.$store.dispatch('contents/updateImageLoading', true);
+        this.isLoading = false;
       });
 
-      document.addEventListener('fullscreenchange', () => {
-        Object.values(this.buttons).forEach((v) => {
-          if (v.id === 'fullscreen') {
-            v.svg = document.fullscreenElement !== null
-              ? fasCompressArrowsAlt
-              : fasExpandArrowsAlt;
-          }
-        });
-      });
+      document.addEventListener('fullscreenchange', this.onFullscreenChange);
     },
-  },
+    onFullscreenChange() {
+      Object.values(this.buttons).forEach((v) => {
+        if (v.id === 'fullscreen') {
+          v.svg = document.fullscreenElement !== null
+            ? fasCompressArrowsAlt
+            : fasExpandArrowsAlt;
+        }
+      });
+    }
+  }
 };
 </script>
 
