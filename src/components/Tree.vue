@@ -30,7 +30,6 @@
 <script>
 import { fasCaretRight } from '@quasar/extras/fontawesome-v5';
 import Loading from '@/components/Loading.vue';
-import Navigation from '@/mixins/navigation';
 
 export default {
   name: 'Tree',

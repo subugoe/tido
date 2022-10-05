@@ -11,9 +11,7 @@
     </div>
 
     <div class="header__wrap">
-      <q-toolbar
-        class="row toolbar"
-      >
+      <q-toolbar class="row toolbar">
         <TitleBar
           v-if="item && manifests.length"
           class="col-xs-12 col-sm-9 q-mb-xs-xs q-mb-sm-none"

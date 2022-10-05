@@ -24,6 +24,9 @@ export default {
     manifests() {
       return this.$store.getters['contents/manifests'];
     },
+    item() {
+      return this.$store.getters['contents/item'];
+    },
     itemindex() {
       return this.$store.getters['contents/selectedItemIndex'];
     },
@@ -33,21 +36,7 @@ export default {
     sequenceindex() {
       return this.$store.getters['contents/selectedSequenceIndex'];
     },
-    captionnext() {
-      const lastindexes = this.lastiteminsequence;
 
-      return this.sequenceindex < this.sequencecount - 1
-        && lastindexes[this.sequenceindex] === this.itemindex
-        ? `${this.$t('next')} ${this.$t(this.labels.manifest)}`
-        : `${this.$t('next')} ${this.$t(this.labels.item)}`;
-    },
-
-    captionprev() {
-      return this.sequenceindex > 0
-        && this.firstiteminsequence === this.itemindex
-        ? `${this.$t('prev')} ${this.$t(this.labels.manifest)}`
-        : `${this.$t('prev')} ${this.$t(this.labels.item)}`;
-    },
 
     computedsequenceindex() {
       const itemcount = this.itemspersequence;
