@@ -2,7 +2,7 @@
   <div class="colors">
     <q-btn
       flat
-      :title="$t('colorScheme')"
+      :title="$t('change_color_scheme')"
     >
       <q-icon
         :name="fasPalette"

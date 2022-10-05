@@ -1,8 +1,8 @@
 <template>
   <div class="metadata-container q-pa-md q-pt-md">
-    <CollectionMetadata v-if="options.collection.all" />
-    <ManifestMetadata v-if="options.manifest.all" />
-    <ItemMetadata v-if="options.manifest.all" />
+    <CollectionMetadata v-if="options.collection?.all" />
+    <ManifestMetadata v-if="options.manifest?.all" />
+    <ItemMetadata v-if="options.manifest?.all" />
   </div>
 </template>
 

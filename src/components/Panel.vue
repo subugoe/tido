@@ -10,6 +10,7 @@
       <div class="tabs-container">
         <q-tabs
           v-model="activeTabIndex"
+          @update:model-value="onViewChange"
           class="content-tabs"
           :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
           dense
@@ -112,16 +113,20 @@ export default {
         }
       });
       this.tabs = tabs;
+    },
+    onViewChange(event) {
+      console.log('view', this.activeTabIndex);
+      this.$emit('active-view', this.activeTabIndex);
     }
   },
   watch: {
     activeTabIndex: {
       handler() {
-        this.$emit('active-view', this.activeTabIndex);
       }
     },
     panel: {
-      handler({ views }) {
+      handler({ views, active }) {
+        this.activeTabIndex = active;
         this.init(views);
       },
       deep: true,

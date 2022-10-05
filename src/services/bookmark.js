@@ -21,6 +21,13 @@ class BookmarkService {
     this.$store = store;
   }
 
+  async updatePanels(activeViews) {
+    const panels = activeViews.map((view, i) => `${i}_${view}`).join(',');
+    const query = {...this.$route.query, panels };
+
+    await this.$router.push({path: '/', query});
+  }
+
   syncQuery(query) {
     this.query = query;
 
@@ -196,7 +203,7 @@ class BookmarkService {
 
   async updateItemQuery(item) {
     const query = {
-      ...this.query,
+      ...this.$route.query,
       ...(item ? {item} : {})
     };
 

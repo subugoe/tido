@@ -119,14 +119,12 @@ export const load = ({ commit, getters }) => {
 };
 
 export const setActivePanelView = ({ commit, getters, dispatch }, {panelIndex, viewIndex}) => {
+  console.log('setActivePanelView')
   commit('setActivePanelView', {panelIndex, viewIndex});
+  BookmarkService.updatePanels(getters.activeViews);
 };
 
 export const resetInitialized = ({ commit }) => {
   commit('resetInitialized');
-};
-
-export const setActiveViews = ({ commit }, payload) => {
-  commit('setActiveViews', payload);
 };
 

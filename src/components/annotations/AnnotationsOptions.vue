@@ -9,7 +9,7 @@
     >
       <q-fab-action
         :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
-        :label="$t('annotationsHighlightAll')"
+        :label="$t('highlight_all_annotations')"
         label-position="left"
         :disable="selectedAll"
         :icon="fasEye"
@@ -17,7 +17,7 @@
       />
       <q-fab-action
         :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
-        :label="$t('annotationsHighlightNone')"
+        :label="$t('highlight_no_annotations')"
         label-position="left"
         :disable="selectedNone"
         :icon="fasEyeSlash"

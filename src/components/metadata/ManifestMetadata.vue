@@ -2,21 +2,21 @@
   <q-list v-if="manifestHasItems" dense class="q-mb-lg">
     <q-item class="no-padding">
       <q-item-section>
-        <h3>{{ $t(labels.manifest) }} {{ getNumber() }} / {{ manifests.length }}</h3>
+        <h3>{{ $t(labels.manifest) }} {{ number }} / {{ manifests.length }}</h3>
       </q-item-section>
     </q-item>
 
     <q-item
-      v-for="(mManifest, index) in metadata"
+      v-for="(metadataItem, index) in metadata"
       :key="index"
       class="q-mb-sm no-padding"
     >
       <q-item-section class="q-mb-sm">
         <q-item-label overline class="text-uppercase">
-          {{ $t(mManifest.id) }}
+          {{ $t(metadataItem.id) }}
         </q-item-label>
 
-        <ContentUrls :content="mManifest.data" />
+        <ContentUrls :content="metadataItem.data" />
       </q-item-section>
     </q-item>
 
@@ -35,8 +35,15 @@
 </template>
 
 <script>
+import ContentUrls from "components/ContentUrls.vue";
+import MetadataItem from "components/metadata/MetadataItem.vue";
+
 export default {
   name: 'ManifestMetadata',
+  components: {
+    ContentUrls,
+    MetadataItem
+  },
   computed: {
     manifest() {
       return this.$store.getters['contents/manifest'];
@@ -47,7 +54,7 @@ export default {
     manifestHasItems() {
       return this.manifest?.sequence.length > 0;
     },
-    getNumber() {
+    number() {
       return this.manifests.findIndex(({ id }) => id === this.manifest.id) + 1;
     },
     labels() {

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 const components = {
   1: {
     component: 'Tree',
-    label: 'Contents',
+    label: 'content',
   },
   2: {
     component: 'Metadata',
@@ -19,7 +19,7 @@ const components = {
   },
   5: {
     component: 'Annotations',
-    label: 'Annotations',
+    label: 'annotations',
   },
 };
 

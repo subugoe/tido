@@ -22,18 +22,21 @@ export default {
   computed: {
     panels() {
       const { panels } = this.config;
-      // return [panels[0], panels[2], panels[3]];
-      return panels;
+      return panels.map((panel, i) => ({ ...panel, active: this.activeViews[i]}));
     },
     config() {
       return this.$store.getters['config/config'];
     },
+    activeViews() {
+      return this.$store.getters['config/activeViews'];
+    }
   },
   mounted() {
     console.log('main view mounted');
   },
   methods: {
     onActiveViewChange(viewIndex, panelIndex) {
+      console.log('onActiveViewChange')
       this.$store.dispatch('config/setActivePanelView', {viewIndex, panelIndex});
     }
   }

@@ -38,7 +38,7 @@
       <Notification
         :message="$t(isAnnotationTypeText ? messages.empty : messages.none)"
         :notification-colors="config.notificationColors"
-        :title-key="isAnnotationTypeText ? 'commentsInfoTitle' : 'annotationInfoTitle'"
+        :title-key="isAnnotationTypeText ? 'no_comments_available' : 'no_annotations_available'"
         type="info"
       />
     </div>
@@ -164,10 +164,10 @@ export default {
     panels: {
       handler(curr, prev) {
         const currentState = curr.find(
-          (x) => x.panel_label === 'Annotations' && x.show,
+          (x) => x.panel_label === 'annotations' && x.show,
         );
         const previousState = prev.find(
-          (x) => x.panel_label === 'Annotations' && x.show,
+          (x) => x.panel_label === 'annotations' && x.show,
         );
 
         if (currentState !== previousState) {

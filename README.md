@@ -231,7 +231,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
           {
             "contenttype": "Editorial Comment",
             "icon": "fasComment",
-            "label": "Comments"
+            "label": "comments"
           },
           {
             "contenttype": "Motif",
@@ -248,7 +248,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
         "tabs":{
           "Editorial": ["Person", "Place"],
           "Motif": ["Motif"],
-          "Comments": ["Editorial Comment", "Abstract"]
+          "comments": ["Editorial Comment", "Abstract"]
         }
       },
       "breadcrumbNavigation": {
