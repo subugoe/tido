@@ -46,9 +46,6 @@ export default {
     };
   },
   computed: {
-    expandTreeNodes() {
-      return this.$store.getters['contents/expanded'];
-    },
     config() {
       return this.$store.getters['config/config'];
     },
@@ -73,24 +70,11 @@ export default {
     manifests() {
       return this.$store.getters['contents/manifests'];
     },
-    loaded() {
-      return this.$store.getters['contents/loaded'];
-    },
   },
   watch: {
     collection: {
       handler: 'onCollectionChange',
       immediate: true
-    },
-    sequenceIndex: {
-      handler: 'onSequenceIndexUpdate',
-      immediate: true,
-    },
-    itemUrl: {
-      handler(value) {
-        // this.selected = value;
-      },
-      immediate: true,
     },
     selected: {
       handler: 'onSelectedChange',
@@ -111,16 +95,6 @@ export default {
     console.log('tree mounted')
   },
   methods: {
-    addToExpanded(label) {
-      this.expanded.push(label);
-    },
-    removeFromExpanded(label) {
-      const index = this.expanded.indexOf(label);
-
-      if (index > -1) {
-        this.expanded.splice(index, 1);
-      }
-    },
     async onCollectionChange() {
       this.isLoading = true;
       if (this.collection) {

@@ -2,7 +2,7 @@
   <div class="item-content">
     <div class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
       <!-- We display the tab label as panel label when there is only one tab -->
-      <span v-if="panel.label && tabs.length > 1">{{ panel.label }}</span>
+      <span v-if="panel.label && tabs.length > 1">{{ $t(panel.label) }}</span>
       <span v-else-if="tabs.length === 1">{{tabs[0].label}}</span>
     </div>
     <q-separator />
@@ -115,17 +115,12 @@ export default {
       this.tabs = tabs;
     },
     onViewChange(event) {
-      console.log('view', this.activeTabIndex);
       this.$emit('active-view', this.activeTabIndex);
     }
   },
   watch: {
-    activeTabIndex: {
-      handler() {
-      }
-    },
     panel: {
-      handler({ views, active }) {
+      handler({ views, active, label }) {
         this.activeTabIndex = active;
         this.init(views);
       },

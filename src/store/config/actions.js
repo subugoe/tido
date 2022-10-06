@@ -1,5 +1,6 @@
 import BookmarkService from '@/services/bookmark';
 import { i18n } from '@/boot/i18n';
+import messages from 'src/i18n';
 
 function isUrl(str) {
   let url;
@@ -37,14 +38,23 @@ export const load = ({ commit, getters }) => {
 
   const el = document.getElementById('tido-config');
   if (!el) {
-    throw { message: i18n.global.t('noConfigMessage'), title: i18n.global.t('noConfigTitle')};
+    throw { message: i18n.global.t('no_config_available'), title: i18n.global.t('config_error')};
   }
 
   // Parse and validate config from HTML
   try {
     customConfig = JSON.parse(el.text);
   } catch (e) {
-    throw { message: e, title: i18n.global.t('noConfigTitle')};
+    throw { message: e, title: i18n.global.t('config_error')};
+  }
+
+  const { translations } = customConfig;
+  if (translations) {
+    const locales = Object.keys(translations);
+
+    locales.forEach(locale => {
+      i18n.global.setLocaleMessage(locale, { ...(messages[locale] ? messages[locale] : {}), ...translations[locale]});
+    });
   }
 
   if (customConfig.collection && !isUrl(customConfig.collection)) {
@@ -65,7 +75,7 @@ export const load = ({ commit, getters }) => {
   if (isUrl(collection)) customConfig.collection = collection;
 
   if (customConfig.collection === '' && customConfig.manifest === '' && customConfig.item === '') {
-    throw { message: i18n.global.t('noConfigEntrypoint'), title: i18n.global.t('noConfigTitle')};
+    throw { message: i18n.global.t('noConfigEntrypoint'), title: i18n.global.t('config_error')};
   }
 
   // Setup panels

@@ -9,7 +9,7 @@
       padding="xs"
       class="button__dropdown q-px-sm"
       :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
-      :label="$t('showHidePanels')"
+      :label="$t('show_hide_panels')"
     >
       <q-list
         v-for="(p, i) in panels"
@@ -41,7 +41,7 @@
           v-close-popup
           clickable
           padding="xs"
-          :title="$t('defaultView')"
+          :title="$t('reset_view')"
           @click="() => handleStatusPanel(-1, true)"
         >
           <q-item-section>
@@ -52,7 +52,7 @@
                 :color="$q.dark.isActive ? 'white' : 'accent'"
                 :name="fasUndo"
               />
-              <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('Reset').toUpperCase() }}</span>
+              <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('reset').toUpperCase() }}</span>
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -96,7 +96,7 @@
         size="12px"
         padding="xs"
         class="q-px-sm"
-        :title="$t('defaultView')"
+        :title="$t('reset_view')"
         @click="() => handleStatusPanel(-1, true)"
       >
         <q-icon
@@ -105,7 +105,7 @@
           :color="$q.dark.isActive ? 'white' : 'accent'"
           :name="fasUndo"
         />
-        <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('Reset').toUpperCase() }}</span>
+        <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('reset').toUpperCase() }}</span>
       </q-btn>
     </div>
   </div>

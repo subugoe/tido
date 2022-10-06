@@ -1,33 +1,27 @@
 <template>
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-secondary'">
     <div
-      v-if="
-        !!$route.query.source &&
-          $route.query.source === config.breadcrumbNavigation.source
-      "
+      v-if="!!$route.query.source &&$route.query.source === config.breadcrumbNavigation.source
+"
       :class="$q.dark.isActive ? 'bg-white' : 'bg-accent'"
     >
       <BreadCrumbNavigation :config="config" />
     </div>
 
-    <div class="header__wrap">
-      <q-toolbar class="row toolbar">
-        <TitleBar
-          v-if="item && manifests.length"
-          class="col-xs-12 col-sm-9 q-mb-xs-xs q-mb-sm-none"
-          :item="item"
-        />
-
+    <div class="header__wrap flex">
+      <q-toolbar>
+        <TitleBar v-if="item && manifests.length" class="col-xs-12 col-sm-9 q-mb-xs-xs q-mb-sm-none" :item="item"/>
         <div v-else class="col-xs-12 col-sm-9 q-ma-md-lg">
           <h1
-            class="text-h3 text-bold text-uppercase q-mt-xs"
+            class="text-h3 text-bold q-mt-xs"
             :class="$q.dark.isActive ? 'text-light' : 'text-dark'"
           >
             TIDO Viewer
           </h1>
         </div>
-
-        <SoftwareInfo />
+        <div class="col flex justify-end">
+          <SoftwareInfo />
+        </div>
       </q-toolbar>
 
       <q-toolbar v-if="item" class="row toolbar">
@@ -115,7 +109,7 @@ export default {
   max-width: 1200px;
 }
 
-.toolbar {
+.q-toolbar {
   @media (max-width: $breakpoint-xs-max) {
     flex-wrap: wrap !important;
   }

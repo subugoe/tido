@@ -7,15 +7,15 @@ const components = {
   },
   2: {
     component: 'Metadata',
-    label: 'Metadata',
+    label: 'metadata',
   },
   3: {
     component: 'OpenSeadragon',
-    label: 'Image',
+    label: 'image',
   },
   4: {
     component: 'Content',
-    label: 'Text',
+    label: 'text',
   },
   5: {
     component: 'Annotations',

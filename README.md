@@ -308,7 +308,7 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
         },
         {
           "connector": [3],
-          "panel_label": "Image",
+          "panel_label": "image",
           "show": true,
           "toggle": true
         },
@@ -550,13 +550,13 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   },
   {
     "connector": [3],
-    "panel_label": "Image",
+    "panel_label": "image",
     "show": true,
     "toggle": true
   },
   {
     "connector": [4],
-    "panel_label": "Text",
+    "panel_label": "text",
     "show": true,
     "toggle": true
   },

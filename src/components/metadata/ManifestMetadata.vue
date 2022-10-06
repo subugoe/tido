@@ -62,7 +62,7 @@ export default {
     },
     metadata() {
       return [
-        { id: 'Label', data: this.manifest.label },
+        { id: 'label', data: this.manifest.label },
         ...(this.manifest.license || []).map((manifest) => ({
           id: 'License',
           data: manifest.id,

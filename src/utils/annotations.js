@@ -131,8 +131,8 @@ export function createTooltip(element, data) {
     <span class="text-body1">
     ${
   !isMultiple
-    ? `${this.$t('toolTip_Reference')}`
-    : `${this.$t('toolTip_References')}`
+    ? `${this.$t('referenced_annotation')}`
+    : `${this.$t('referenced_annotations')}`
 }:
       </span>
       <br>

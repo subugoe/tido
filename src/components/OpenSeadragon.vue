@@ -2,7 +2,7 @@
   <div class="imageItem">
     <Loading v-if="isLoading" />
     <div v-if="error" class="q-pa-sm">
-      <Notification :message="$t(error.message)" title-key="imageErrorTitle" type="warning" />
+      <Notification :message="$t(error.message)" title-key="no_image_available" type="warning" />
     </div>
     <div v-else>
       <nav>
@@ -48,10 +48,10 @@ export default {
     return {
       viewer: null,
       buttons: [
-        { id: 'zoom-in', svg: fasSearchPlus, tooltip: 'osdZoomin' },
-        { id: 'zoom-out', svg: fasSearchMinus, tooltip: 'osdZoomout' },
-        { id: 'default', svg: fasExpand, tooltip: 'osdHome' },
-        { id: 'fullscreen', svg: fasExpandArrowsAlt, tooltip: 'osdFullPage' },
+        { id: 'zoom-in', svg: fasSearchPlus, tooltip: 'zoom_in' },
+        { id: 'zoom-out', svg: fasSearchMinus, tooltip: 'zoom_out' },
+        { id: 'default', svg: fasExpand, tooltip: 'reset_view' },
+        { id: 'fullscreen', svg: fasExpandArrowsAlt, tooltip: 'switch_to_fullscreen' },
       ],
       error: null,
       isLoading: false
@@ -87,9 +87,9 @@ export default {
         try {
           const response = await fetch(this.item.image.id);
 
-          if (response.status === 500) throw { message: 'imageErrorMessageNotExists'};
+          if (response.status === 500) throw { message: 'error_image_not_exists'};
 
-          if (response.status !== 200 || response.status !== 201) throw { message: 'imageErrorMessageVPN'};
+          if (response.status !== 200 || response.status !== 201) throw { message: 'error_vpn'};
 
           this.error = null;
           this.initOpenSeagragon();

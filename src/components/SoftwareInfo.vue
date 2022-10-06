@@ -1,9 +1,9 @@
 <template>
-  <div class="col-xs-auto">
+  <div>
     <q-btn
       flat
       label=""
-      :title="$t('projectInfo')"
+      :title="$t('project_info')"
       @click="infobox = true"
     >
       <q-icon
@@ -21,13 +21,13 @@
           </h1>
 
           <p class="text-weight-bold">
-            {{ $t('infoDescription') }}
+            {{ $t('tido_description') }}
           </p>
 
-          <p>Copyright (c) {{ actualYear }} {{ $t('infoCopyright') }}</p>
+          <p>Copyright (c) {{ actualYear }} {{ $t('sub_info') }}</p>
 
           <p class="q-mb-none">
-            Version {{ tidoVersion }}, {{ $t('infoLicense') }}
+            Version {{ tidoVersion }}, {{ $t('license') }}
           </p>
         </q-card-section>
 
@@ -43,7 +43,7 @@
               size="md"
               class="q-pr-md"
             />
-            {{ $t('infoDocs') }}
+            {{ $t('documentation') }}
           </q-btn>
 
           <q-btn
@@ -57,7 +57,7 @@
               size="md"
               class="q-pr-md"
             />
-            {{ $t('infoSourcecode') }}
+            {{ $t('source_code') }}
           </q-btn>
 
           <q-btn
@@ -70,7 +70,7 @@
               size="md"
               class="q-pr-md"
             />
-            {{ $t('infoBugs') }}
+            {{ $t('report_a_bug') }}
           </q-btn>
         </q-card-section>
 
@@ -79,7 +79,7 @@
             v-close-popup
             :class="$q.dark.isActive ? 'text-white' : 'text-black'"
             flat
-            :label="$t('infoClose')"
+            :label="$t('close')"
           />
         </q-card-actions>
       </q-card>

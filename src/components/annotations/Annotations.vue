@@ -47,13 +47,15 @@ export default {
     },
   },
   async mounted() {
+    console.log('annotations mounted');
     const root = document.getElementById('text-content');
 
-    await this.$store.dispatch('annotations/addHighlightAttributesToText', root);
-
     await this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
+
     this.unsubscribe = this.$store.subscribeAction(async (action) => {
       if (action.type === 'contents/updateContentDOM') {
+        console.log('updateDOM');
+        await this.$store.dispatch('annotations/addHighlightAttributesToText', root);
         await this.$store.dispatch('annotations/addHighlightClickListeners');
         await this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
       }

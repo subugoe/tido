@@ -49,7 +49,7 @@ export default {
             data: collectionTitle.title,
           })),
         { id: 'collector', data: this.collection?.collector?.name },
-        { id: 'Description', data: this.collection?.description },
+        { id: 'description', data: this.collection?.description },
       ].filter((collection) => collection.data);
     },
   }

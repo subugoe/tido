@@ -83,8 +83,8 @@ export default {
   data() {
     return {
       messages: {
-        none: 'noAnnotationMessage',
-        empty: 'noCommentsMessage',
+        none: 'no_annotations_in_view',
+        empty: 'no_comments_in_view',
       },
       contentQueue: [],
     };

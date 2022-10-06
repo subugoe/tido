@@ -258,20 +258,20 @@ export const initImageData = async ({ commit }, url) => {
     } else if (response.status === 500) {
       hasError = true;
       errorImage = {
-        messageKey: 'imageErrorMessageNotExists',
+        messageKey: 'error_image_not_exists',
       };
     } else {
       // for vpn error.
       hasError = true;
       errorImage = {
-        messageKey: 'imageErrorMessageVPN',
+        messageKey: 'error_vpn',
       };
     }
   } catch (err) {
     // for CORS error.
     hasError = true;
     errorImage = {
-      messageKey: 'imageErrorMessageVPN',
+      messageKey: 'error_vpn',
     };
   }
 
@@ -281,7 +281,7 @@ export const initImageData = async ({ commit }, url) => {
   // } else {
   //   hasError = true;
   //   errorImage = {
-  //     messageKey: 'imageErrorMessageNotExists',
+  //     messageKey: 'error_image_not_exists',
   //   };
   // }
   //
@@ -360,7 +360,7 @@ export const initContentItem = async ({ commit, getters, rootState }, url) => {
     }
   } catch (err) {
     errorText = {
-      messageKey: 'textErrorMessageNotExists',
+      messageKey: 'no_text_in_view',
     };
   }
 

@@ -6,7 +6,7 @@
       <Notification
         :message="$t(notificationMessage)"
         :notification-colors="config.notificationColors"
-        :title="$t('textErrorTitle')"
+        :title="$t('no_text_available')"
         type="warning"
       />
     </div>
@@ -18,7 +18,7 @@
         round
         size="sm"
         :disable="fontsize >= fontSizeLimits.max"
-        :title="$t('Increase')"
+        :title="$t('increase')"
         @click="increase()"
       >
         <q-icon
@@ -34,7 +34,7 @@
         round
         size="sm"
         :disable="fontsize <= fontSizeLimits.min"
-        :title="$t('Decrease')"
+        :title="$t('decrease')"
         :color="$q.dark.isActive ? 'white' : 'accent'"
         @click="decrease()"
       >
@@ -169,7 +169,7 @@ export default {
       }
 
       if (parsed && parsed.status === 500) {
-        throw new Error('textErrorMessageNotExists');
+        throw new Error('no_text_in_view');
       }
     },
     async getSupport(support) {

@@ -54,10 +54,10 @@ export default {
     },
     metadata() {
       return [
-        { id: 'Label', data: this.item.n },
-        { id: 'Language', data: this.item.lang?.join(',') },
-        { id: 'imageLicense', data: this.item.image?.license?.id },
-        { id: 'imageNotes', data: this.item.image?.license?.notes },
+        { id: 'label', data: this.item.n },
+        { id: 'language', data: this.item.lang?.join(',') },
+        { id: 'image_license', data: this.item.image?.license?.id },
+        { id: 'image_notes', data: this.item.image?.license?.notes },
       ].filter((item) => item.data);
     },
   }

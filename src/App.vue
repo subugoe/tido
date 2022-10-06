@@ -1,5 +1,6 @@
 <template>
   <q-layout class="root viewport" view="hHh Lpr fFf">
+    {{ $t('test') }}
     <Header v-if="!isLoading && item && config['header_section'].show" />
     <Header v-else />
     <q-page-container v-if="ready" class="root">
