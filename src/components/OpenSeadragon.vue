@@ -82,7 +82,6 @@ export default {
   watch: {
     item: {
       async handler() {
-        console.log('item ------------', this.item);
         this.isLoading = true;
         try {
           const response = await fetch(this.item.image.id);

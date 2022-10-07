@@ -30,7 +30,6 @@ export const setImageData = (state, payload) => {
 };
 
 export const setItem = (state, payload) => {
-  console.log('setItem----');
   state.item = payload;
 };
 
@@ -71,6 +70,7 @@ export const setTree = (state, payload) => {
 };
 
 export const setManifest = (state, payload) => {
+  if (!Array.isArray(payload.sequence)) payload.sequence = [payload.sequence];
   state.manifest = { ...payload };
 };
 

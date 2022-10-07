@@ -161,6 +161,7 @@ export const initCollection = async ({ commit, dispatch, getters, rootGetters },
         itemUrl = activeManifest.sequence[0].id;
       }
 
+      console.log('initItem at initCollection');
       if (!item) dispatch('initItem', itemUrl);
     }
 
@@ -200,6 +201,7 @@ export const initManifest = async ({ commit, dispatch, getters }, url) => {
   // We know here that no item was loaded. Neither from URL nor from user config.
   // So we load the first manifest item.
   if (!item && Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
+    console.log('initItem at initManifest');
     dispatch('initItem', manifest.sequence[0].id);
   }
 };
@@ -208,6 +210,7 @@ export const initItem = async ({ commit, dispatch }, url) => {
   console.log('initItem');
   const item = await getItem(url);
   commit('setItem', item);
+  commit('setItemUrl', url);
 
   if (item.annotationCollection) {
     dispatch('annotations/initAnnotations', item.annotationCollection, { root: true});
@@ -382,10 +385,6 @@ export const addToExpanded = ({ commit, getters }, label) => {
   commit('updateExpanded', [...expanded]);
 };
 
-export const updateExpanded = ({ commit }, payload) => {
-  commit('updateExpanded', [...payload]);
-};
-
 export const removeFromExpanded = ({ commit, getters }, label) => {
   const expanded = [...getters.expanded];
   const index = expanded.indexOf(label);
@@ -404,18 +403,6 @@ export const addOrRemoveFromExpanded = ({ getters, dispatch }, label) => {
   } else {
     dispatch('addToExpanded', label);
   }
-};
-
-export const setConnectors = ({ commit }, connectors) => {
-  commit('setConnectorValues', connectors);
-};
-
-export const setConnectorValues = ({ commit, getters }, { panelIndex, value }) => {
-  const connectorValues = [...getters.connectorValues];
-  BookmarkService.updateConnectorQuery(value, panelIndex);
-
-  connectorValues[panelIndex] = value;
-  commit('setConnectorValues', connectorValues);
 };
 
 export const setPanels = ({ commit }, payload) => {

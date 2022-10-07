@@ -27,14 +27,7 @@
       <q-toolbar v-if="item" class="row toolbar">
         <Navbar
           v-if="config['header_section'].navigation"
-          :labels="config.labels"
-          :manifests="manifests"
-          class="
-            row
-            justify-center justify-sm-start
-            col-xs-12 col-sm-6
-            q-mb-xs-md q-mb-sm-none
-          "
+          class="row justify-center justify-sm-start col-xs-12 col-sm-6 q-mb-xs-md q-mb-sm-none"
         />
 
         <q-space />

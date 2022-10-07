@@ -62,7 +62,7 @@ export default {
       return this.$store.getters['contents/item'];
     },
     itemUrl() {
-      return this.$store.getters['config/config'].item;
+      return this.$store.getters['contents/itemUrl'];
     },
     manifest() {
       return this.$store.getters['contents/manifest'];
@@ -72,6 +72,9 @@ export default {
     },
   },
   watch: {
+    itemUrl: {
+      handler: 'onItemUrlChange'
+    },
     collection: {
       handler: 'onCollectionChange',
       immediate: true
@@ -123,6 +126,9 @@ export default {
       }
       this.isLoading = false;
     },
+    async onItemUrlChange() {
+      this.selected = this.itemUrl;
+    },
     getDefaultLabel(index) {
       const prefix = this.labels.item ?? this.$t('page');
       return prefix + ' ' + (index + 1);
@@ -132,7 +138,11 @@ export default {
 
       if (!treeRef) return;
 
-      const { url: itemUrl , parent: manifestUrl } = treeRef.getNodeByKey(value);
+      const node = treeRef.getNodeByKey(value);
+
+      if (!node) return;
+      console.log(node);
+      const {url: itemUrl, parent: manifestUrl } = node;
 
       if (itemUrl === this.itemUrl) {
         return;
@@ -145,6 +155,7 @@ export default {
           this.$store.dispatch('contents/initManifest', manifestUrl);
         }
       }
+      console.log('onSelectedChange');
       this.$store.dispatch('contents/initItem', itemUrl);
     },
   },
