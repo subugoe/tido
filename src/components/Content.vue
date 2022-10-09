@@ -151,7 +151,9 @@ export default {
         setTimeout(() => {
           this.isLoading = false;
           this.$store.dispatch('annotations/updateContentLoading', false);
-          this.$store.dispatch('contents/updateContentDOM');
+          this.$store.commit('contents/setActiveContentUrl', this.url);
+          const root = document.getElementById('text-content');
+          this.$store.dispatch('annotations/addHighlightAttributesToText', root);
         }, 100);
       } catch (err) {
         this.errorTextMessage = err.message;

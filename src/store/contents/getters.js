@@ -87,3 +87,5 @@ export const tree = (state) => state.tree;
 export const manifest = (state) => state.manifest;
 
 export const contentItem = (state) => (type) => state.item.content.find(c => c.type.split('type=')[1] === type);
+
+export const activeContentUrl = (state) => state.activeContentUrl;

@@ -74,6 +74,10 @@ export const setManifest = (state, payload) => {
   state.manifest = { ...payload };
 };
 
+export const setActiveContentUrl = (state, payload) => {
+  state.activeContentUrl = payload;
+};
+
 export const resetContents = (state) => {
   state.collection = null;
   state.contentIndex = 0;

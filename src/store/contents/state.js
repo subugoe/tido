@@ -17,6 +17,7 @@ export default function ContentsState() {
     panels: [],
     sequenceIndex: 0,
     tree: [],
-    manifest: null
+    manifest: null,
+    activeContentUrl: null
   };
 }

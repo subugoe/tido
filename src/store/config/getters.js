@@ -31,7 +31,6 @@ export const activeContentType = ({ config, activeViews }) => {
   const panelIndex = config.panels.findIndex(({views }) => views.find(({ connector }) => contentConnectorId === connector.id));
 
   if (panelIndex === -1) return -1;
-  console.log(panelIndex);
 
   const viewIndex = activeViews[panelIndex];
   return config.panels[panelIndex].views[viewIndex].connector.options.type;

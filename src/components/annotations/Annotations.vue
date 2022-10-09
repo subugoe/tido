@@ -18,6 +18,7 @@ import AnnotationsList from "components/annotations/AnnotationsList";
 import AnnotationsOptions from "components/annotations/AnnotationsOptions";
 import Loading from "components/Loading";
 import Notification from "components/Notification";
+import * as AnnotationUtils from 'src/utils/annotations';
 
 export default {
   name: "Annotations",
@@ -39,27 +40,51 @@ export default {
     config() {
       return this.$store.getters ['config/config'];
     },
+    annotations() {
+      return this.$store.getters['annotations/annotations'];
+    },
     activeAnnotations() {
       return this.$store.getters['annotations/activeAnnotations'];
     },
     filteredAnnotations() {
       return this.$store.getters['annotations/filteredAnnotations'];
     },
+    activeContentUrl() {
+      return this.$store.getters['contents/activeContentUrl'];
+    },
+    update() {
+      return this.annotations !== null && this.activeContentUrl !== null && this.filteredAnnotations.length > 0;
+    }
+  },
+  watch: {
+    annotations: {
+     async handler(value) {
+        if (value)
+          // this.$store.dispatch('annotations/setFilteredAnnotations', this.types); {
+          console.log('fitleriiiiiing')
+          await this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
+      },
+      immediate: true
+    },
+    update: {
+      handler(value) {
+        if (value)
+        // this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
+        this.highlightTargetsLevel0();
+      }
+    }
   },
   async mounted() {
-    console.log('annotations mounted');
-    const root = document.getElementById('text-content');
-
-    await this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
-
-    this.unsubscribe = this.$store.subscribeAction(async (action) => {
-      if (action.type === 'contents/updateContentDOM') {
-        console.log('updateDOM');
-        await this.$store.dispatch('annotations/addHighlightAttributesToText', root);
-        await this.$store.dispatch('annotations/addHighlightClickListeners');
-        await this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
-      }
-    });
+    console.log(this.types);
+    // await this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
+    //
+    // this.unsubscribe = this.$store.subscribeAction(async (action) => {
+    //   if (action.type === 'contents/updateContentDOM') {
+    //     console.log('updateDOM');
+    //     await this.$store.dispatch('annotations/addHighlightClickListeners');
+    //
+    //   }
+    // });
   },
   beforeUnmount() {
     if (this.unsubscribe) {
@@ -79,6 +104,22 @@ export default {
         this.removeAnnotation(id);
       } else {
         this.addAnnotation(id);
+      }
+    },
+    highlightTargetsLevel0() {
+      console.log(this.filteredAnnotations);
+      const mergedSelector = this.filteredAnnotations
+        .reduce((acc, cur) => {
+          const selector = AnnotationUtils.generateTargetSelector(cur);
+          if (acc !== '') {
+            acc += ',';
+          }
+          acc += selector;
+          return acc;
+        }, '');
+
+      if (mergedSelector) {
+        AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
       }
     },
   }

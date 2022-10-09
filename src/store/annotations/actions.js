@@ -31,42 +31,50 @@ export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
 export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
   const { annotations } = getters;
   const activeContentType = rootGetters['config/activeContentType'];
+  console.log('setFilteredAnno', annotations);
   const filteredAnnotations = annotations.filter(
     (annotation) => {
       const type = types.find(({ name }) => name === annotation.body['x-content-type']);
       // First we check if annotation fits to the current view
       if (!type) return false;
 
-      let isVisible = false;
-
-      if (type?.displayWhen && type?.displayWhen === activeContentType) {
+      if (type?.displayWhen && type?.displayWhen !== activeContentType)
         // Next we check if annotation should always be displayed on the current content tab
-        isVisible = true;
-      } else {
-        // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
-        const selector = AnnotationUtils.generateTargetSelector(annotation);
-        if (selector) {
-          const el = document.querySelector(selector);
-          if (el) {
-            isVisible = true;
-          }
-        }
-      }
-
-      return isVisible;
+        return false;
+      // } else {
+      //   // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
+      //   const selector = AnnotationUtils.generateTargetSelector(annotation);
+      //   if (selector) {
+      //     const el = document.querySelector(selector);
+      //     if (el) {
+      //       isVisible = true;
+      //     }
+      //   }
+      // }
+      console.log(type);
+      return true;
     },
   );
+
+  console.log(filteredAnnotations);
 
   commit('setFilteredAnnotations', filteredAnnotations);
 };
 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
   const { annotations } = getters;
-  Utils.mapUniqueElements(
-    Utils.findDomElements('[data-target]:not([value=""])', dom),
-    (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
-  ).forEach((selector) => Utils.addRangeHighlightAttributes(selector, dom));
 
+  console.log(dom);
+  // Add range attributes
+  [...dom.querySelectorAll('[data-target]:not([value=""])')]
+    .map(el => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
+    .forEach(targetSelector => Utils.addRangeHighlightAttributes(targetSelector, dom));
+  // Utils.mapUniqueElements(
+  //   Utils.findDomElements('[data-target]:not([value=""])', dom),
+  //   (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
+  // ).forEach((selector) => Utils.addRangeHighlightAttributes(selector, dom));
+
+  // Add single attributes
   annotations.forEach((annotation) => {
     const { id } = annotation;
     const selector = Utils.generateTargetSelector(annotation);
@@ -77,6 +85,7 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
 };
 
 export const annotationLoaded = ({ commit }, annotations) => {
+  console.log('annotationLoaded', annotations);
   commit('updateAnnotations', annotations);
   commit('updateAnnotationLoading', false);
 };
@@ -131,7 +140,6 @@ export const updateContentLoading = ({ commit }, isLoading) => {
 
 export const initAnnotations = async ({ dispatch }, url) => {
   console.log('initAnnotations');
-  dispatch('loadAnnotations');
 
   try {
     const annotations = await request(url);
@@ -142,13 +150,14 @@ export const initAnnotations = async ({ dispatch }, url) => {
     }
 
     const current = await request(annotations.annotationCollection.first);
-
+    console.log(current.annotationPage.items.length);
     if (current.annotationPage.items.length) {
       dispatch('annotationLoaded', current.annotationPage.items);
     } else {
       dispatch('annotationLoaded', []);
     }
   } catch (err) {
+    console.log(err);
     dispatch('annotationLoaded', []);
   }
 };

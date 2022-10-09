@@ -58,6 +58,7 @@ export default {
       }
     },
     annotations() {
+      console.log(this.$store.getters['annotations/annotations']);
       return this.$store.getters['annotations/annotations'];
     },
     config() {
