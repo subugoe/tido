@@ -30,7 +30,6 @@ export default {
     Notification,
   },
   data: () => ({
-    unsubscribe: null
   }),
   props: {
     url: String,
@@ -43,6 +42,9 @@ export default {
     annotations() {
       return this.$store.getters['annotations/annotations'];
     },
+    item() {
+      return this.$store.getters['contents/item'];
+    },
     activeAnnotations() {
       return this.$store.getters['annotations/activeAnnotations'];
     },
@@ -52,44 +54,34 @@ export default {
     activeContentUrl() {
       return this.$store.getters['contents/activeContentUrl'];
     },
-    update() {
-      return this.annotations !== null && this.activeContentUrl !== null && this.filteredAnnotations.length > 0;
+    updateTextHighlighting() {
+      // We need to make sure that annotations are loaded (this.annotations),
+      // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
+      // and the annotation are filtered by type (this.filteredAnnotations).
+      return '' + (this.annotations !== null) + this.activeContentUrl + (this.filteredAnnotations.length > 0);
     }
   },
   watch: {
     annotations: {
      async handler(value) {
         if (value)
-          // this.$store.dispatch('annotations/setFilteredAnnotations', this.types); {
-          console.log('fitleriiiiiing')
           await this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
       },
       immediate: true
     },
-    update: {
+    updateTextHighlighting: {
       handler(value) {
-        if (value)
-        // this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
-        this.highlightTargetsLevel0();
-      }
+        console.log(value);
+        if (value) this.highlightTargetsLevel0();
+      },
+      immediate: true
     }
   },
   async mounted() {
-    console.log(this.types);
-    // await this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
-    //
-    // this.unsubscribe = this.$store.subscribeAction(async (action) => {
-    //   if (action.type === 'contents/updateContentDOM') {
-    //     console.log('updateDOM');
-    //     await this.$store.dispatch('annotations/addHighlightClickListeners');
-    //
-    //   }
-    // });
+    console.log('anno mounted');
   },
   beforeUnmount() {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    return this.$store.dispatch('annotations/resetAnnotations');
   },
   methods: {
     addAnnotation(id) {
@@ -107,7 +99,6 @@ export default {
       }
     },
     highlightTargetsLevel0() {
-      console.log(this.filteredAnnotations);
       const mergedSelector = this.filteredAnnotations
         .reduce((acc, cur) => {
           const selector = AnnotationUtils.generateTargetSelector(cur);

@@ -209,6 +209,7 @@ export const initManifest = async ({ commit, dispatch, getters }, url) => {
 export const initItem = async ({ commit, dispatch }, url) => {
   console.log('initItem');
   const item = await getItem(url);
+  console.log('jooooooooooooooooooooooooo');
   commit('setItem', item);
   commit('setItemUrl', url);
 

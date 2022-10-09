@@ -11,7 +11,7 @@ export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
     return;
   }
 
-  const iconName = rootGetters['config/getAnnotationIcon'](newActiveAnnotation.body['x-content-type']);
+  const iconName = rootGetters['config/getIconByType'](newActiveAnnotation.body['x-content-type']);
 
   const activeAnnotationsList = { ...activeAnnotations };
 
@@ -115,15 +115,14 @@ export const removeActiveAnnotation = ({ commit, getters }, id) => {
   }
 };
 
-export const resetActiveAnnotations = ({ commit, getters }) => {
-  const { activeAnnotations } = getters;
+export const resetAnnotations = ({ commit, getters }) => {
+  const { annotations } = getters;
 
-  Object.keys(activeAnnotations).forEach((key) => {
-    const activeAnnotation = activeAnnotations[key];
-    const selector = AnnotationUtils.generateTargetSelector(activeAnnotation);
+  annotations.forEach((annotation) => {
+    const selector = AnnotationUtils.generateTargetSelector(annotation);
     if (selector) {
       AnnotationUtils.highlightTargets(selector, { level: -1 });
-      AnnotationUtils.removeIcon(activeAnnotation);
+      AnnotationUtils.removeIcon(annotation);
     }
   });
   commit('updateActiveAnnotations', {});
@@ -209,11 +208,13 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
 
   function getNearestParentAnnotation(element) {
     const parent = element.parentElement;
+
+    if (!parent) return null;
+
     if (parent.dataset?.annotation) {
       return parent;
     }
-    const higherParent = getNearestParentAnnotation(parent);
-    return higherParent ?? null;
+    return getNearestParentAnnotation(parent);
   }
 
   function getValuesFromAttribute(element, attribute) {

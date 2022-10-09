@@ -130,6 +130,7 @@ export default {
       this.fontSize -= 2;
     },
     async loadContent(url) {
+      this.content = '';
       console.log('loadContent')
       try {
         if (!url) {
@@ -148,12 +149,13 @@ export default {
 
         const dom = domParser(data);
         this.content = dom.documentElement.innerHTML;
-        setTimeout(() => {
+        setTimeout(async () => {
           this.isLoading = false;
           this.$store.dispatch('annotations/updateContentLoading', false);
           this.$store.commit('contents/setActiveContentUrl', this.url);
           const root = document.getElementById('text-content');
           this.$store.dispatch('annotations/addHighlightAttributesToText', root);
+          await this.$store.dispatch('annotations/addHighlightClickListeners');
         }, 100);
       } catch (err) {
         this.errorTextMessage = err.message;

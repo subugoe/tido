@@ -1,6 +1,5 @@
 <template>
   <q-layout class="root viewport" view="hHh Lpr fFf">
-    {{ $t('test') }}
     <Header v-if="!isLoading && item && config['header_section'].show" />
     <Header v-else />
     <q-page-container v-if="ready" class="root">
@@ -127,22 +126,30 @@ export default {
     async init() {
       const { collection, manifest, item } = this.config;
 
-      // We want to preload all required data that the components need.
-      // Initialize priority:
-      // We always load the item first as here is the main data that we want to display.
-      if (item) {
-        await this.getItem(item);
+      try {
+        // We want to preload all required data that the components need.
+        // Initialize priority:
+        // We always load the item first as here is the main data that we want to display.
+        if (item) {
+          await this.getItem(item);
+        }
+
+        // After that we load additionally the parent objects.
+        // If a collection is given we ignore the manifest setting
+        // and try to figure out the correct manifest by searching for the above item.
+        // Otherwise no collection is given but a single manifest instead, so we load that manifest.
+        if (collection) {
+          await this.getCollection(collection);
+        } else if (manifest) {
+          await this.getManifest(manifest)
+        }
+      } catch (e) {
+        console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+        this.isLoading = false;
+        this.errorTitle = 'title';
+        this.errorMessage = 'message';
       }
 
-      // After that we load additionally the parent objects.
-      // If a collection is given we ignore the manifest setting
-      // and try to figure out the correct manifest by searching for the above item.
-      // Otherwise no collection is given but a single manifest instead, so we load that manifest.
-      if (collection) {
-        await this.getCollection(collection);
-      } else if (manifest) {
-        await this.getManifest(manifest)
-      }
     },
     isReady() {
       return this.item && this.manifests;

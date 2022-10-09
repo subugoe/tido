@@ -1,5 +1,9 @@
 export async function request(url, responsetype = 'json') {
   const response = await fetch(url);
+  console.log(response);
+  if (response.status !== 200) {
+    throw response;
+  }
   const data = await (responsetype === 'text'
     ? response.text()
     : response.json());

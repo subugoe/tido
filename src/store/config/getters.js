@@ -28,12 +28,24 @@ export const activeViews = (state) => state.activeViews;
 
 export const activeContentType = ({ config, activeViews }) => {
   const contentConnectorId = 4;
-  const panelIndex = config.panels.findIndex(({views }) => views.find(({ connector }) => contentConnectorId === connector.id));
+  const panelIndex = config.panels.findIndex(({ views }) => views.find(({ connector }) => contentConnectorId === connector.id));
 
   if (panelIndex === -1) return -1;
 
   const viewIndex = activeViews[panelIndex];
   return config.panels[panelIndex].views[viewIndex].connector.options.type;
 }
+
+export const getIconByType = ({ config, activeViews }) => (type) => {
+  const annotationsConnectorId = 5;
+  const panelIndex = config.panels.findIndex(({ views }) => views.find(({ connector }) => annotationsConnectorId === connector.id));
+
+  if (panelIndex === -1) return -1;
+
+  const viewIndex = activeViews[panelIndex];
+  const types = config.panels[panelIndex].views[viewIndex].connector.options?.types;
+  console.log(types);
+  return types.find(({name }) => name === type)?.icon;
+};
 
 
