@@ -153,11 +153,11 @@ export default {
       }
 
       if (manifestUrl !== this.manifest.id) {
-        if (this.manifests) {
-          this.$store.commit('contents/setManifest', this.manifests.find(({ id }) => id === manifestUrl));
-        } else {
-          this.$store.dispatch('contents/initManifest', manifestUrl);
-        }
+        this.$store.dispatch('contents/initManifest', manifestUrl);
+        // if (this.manifests) {
+        //   this.$store.commit('contents/setManifest', this.manifests.find(({ id }) => id === manifestUrl));
+        // } else {
+        // }
       }
 
       this.$store.dispatch('contents/initItem', itemUrl);

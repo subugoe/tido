@@ -1,6 +1,6 @@
 describe('Content - Multiple Tabs', () => {
   beforeEach(() => {
-    cy.visit('/#/?itemurl=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/3r176-182b/latest/item.json')
+    cy.visit('/#/?item=https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/3r176-182b/latest/item.json');
   });
   it('Should display first content tab', () => {
     cy
@@ -15,9 +15,12 @@ describe('Content - Multiple Tabs', () => {
       .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .click()
-      .should('have.class', 'q-tab--active');
-
-    cy.get('#text-content').contains('وايضا');
+      .should('have.class', 'q-tab--active')
+      .get('.root.panels-target > .item:nth-child(3) .q-spinner')
+      .should('be.visible')
+      .get('#text-content')
+      .should('be.visible')
+      .contains('وايضا');
   });
   it('Should highlight from text', () => {
     // Test content
@@ -75,9 +78,13 @@ describe('Content - Multiple Tabs', () => {
     cy
       .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
-      .click();
-
-    cy.get('#text-content').contains('وايضا');
+      .click()
+      .get('#text-content')
+      .get('.root.panels-target > .item:nth-child(3) .q-spinner')
+      .should('be.visible')
+      .get('#text-content')
+      .should('be.visible')
+      .contains('وايضا');
 
     cy.get('button.next-item').click();
 
@@ -92,23 +99,27 @@ describe('Content - Multiple Tabs', () => {
 
 describe('Content - Multiple Tabs with different manifest', () => {
   it('Should switch to first tab when switch manifest', () => {
-    cy.visit('/#/?itemurl=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/3r17b-82a/latest/item.json')
+    cy.visit('/#/?item=https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/3r17b-82a/latest/item.json');
 
     cy
       .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
-      .click();
-
-    cy.get('#text-content').contains('اسمه');
-
-    cy.get('button.previous-item').click();
+      .click()
+      .get('.root.panels-target > .item:nth-child(3) .q-spinner')
+      .should('be.visible')
+      .get('#text-content')
+      .should('be.visible')
+      .contains('اسمه');
 
     cy
+      .get('button.previous-item')
+      .click()
+      .wait(1000)
       .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(0)
-      .should('have.class', 'q-tab--active');
-
-    cy.get('#text-content').contains('ܘܚܩܕ');
+      .should('have.class', 'q-tab--active')
+      .get('#text-content')
+      .should('be.visible')
+      .contains('ܘܚܩܕ');
   });
-})
-
+});

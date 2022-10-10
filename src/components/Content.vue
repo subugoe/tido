@@ -46,7 +46,7 @@
       </q-btn>
     </div>
 
-    <div id="text-content" class="custom-font item-content">
+    <div id="text-content" v-show="!isLoading" class="custom-font item-content">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle" />
     </div>

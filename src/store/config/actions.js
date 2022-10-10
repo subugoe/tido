@@ -134,3 +134,18 @@ export const setActivePanelView = ({ commit, getters, dispatch }, {panelIndex, v
   BookmarkService.updatePanels(getters.activeViews);
 };
 
+export const setDefaultActiveViews = async ({ commit, getters }) => {
+  const { config } = getters;
+  const activeViews = [];
+
+  config.panels.forEach(({ views }, i) => {
+    let defaultViewIndex = views.findIndex(view => !!(view.default));
+    if (defaultViewIndex > -1) defaultViewIndex = 0;
+    activeViews.push(defaultViewIndex);
+  });
+
+  await BookmarkService.updatePanels(activeViews);
+
+  commit('config/setActiveViews', activeViews, { root: true});
+};
+

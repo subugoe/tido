@@ -172,13 +172,20 @@ export const setActiveManifest = ({ commit }, manifest) => {
 
 };
 
-export const initManifest = async ({ commit, dispatch, getters }, url) => {
+export const initManifest = async ({ commit, dispatch, getters, rootGetters }, url) => {
   console.log('initManifest');
   // commit('resetContents');
 
-  const { item } = getters;
+  const { item, manifests } = getters;
+  const config = rootGetters['config/config'];
+  // const activeViews = rootGetters['config/activeViews'];
 
-  const manifest = await getManifest(url);
+  let manifest;
+  if (manifests) {
+    manifest = manifests.find(({ id }) => id === url)
+  } else {
+    manifest = await getManifest(url);
+  }
 
   commit('setManifest', manifest);
 
@@ -193,20 +200,15 @@ export const initManifest = async ({ commit, dispatch, getters }, url) => {
 export const initItem = async ({ commit, dispatch }, url) => {
   console.log('initItem');
   const item = await getItem(url);
-  console.log('jooooooooooooooooooooooooo');
   commit('setItem', item);
   commit('setItemUrl', url);
+
 
   if (item.annotationCollection) {
     dispatch('annotations/initAnnotations', item.annotationCollection, { root: true});
   }
 
   await BookmarkService.updateItemQuery(url);
-};
-
-export const setItemUrl = ({ commit, dispatch }, url) => {
-  commit('setItemUrl', url);
-  //  dispatch('initItem', url);
 };
 
 export const updateImageLoading = async ({ commit }, payload) => {

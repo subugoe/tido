@@ -58,21 +58,24 @@ export default {
       // We need to make sure that annotations are loaded (this.annotations),
       // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
       // and the annotation are filtered by type (this.filteredAnnotations).
-      return '' + (this.annotations !== null) + this.activeContentUrl + (this.filteredAnnotations.length > 0);
+      return (this.annotations !== null) + '|' + this.activeContentUrl;
     }
   },
   watch: {
     annotations: {
      async handler(value) {
-        if (value)
-          await this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
       },
       immediate: true
     },
     updateTextHighlighting: {
       handler(value) {
-        console.log(value);
-        if (value) this.highlightTargetsLevel0();
+        if (value) {
+          const [hasAnnotations, activeContentUrl] = value.split('|');
+          console.log('activeContentUrl', activeContentUrl);
+          if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
+          this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
+          this.highlightTargetsLevel0();
+        }
       },
       immediate: true
     }

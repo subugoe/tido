@@ -112,6 +112,7 @@ export default {
 
         const prevManifest = this.manifests[prevManifestIndex];
         this.$store.commit('contents/setManifest', prevManifest);
+        this.$store.dispatch('config/setDefaultActiveViews');
         itemUrl = prevManifest.sequence[prevManifest.sequence.length -1].id;
 
       } else {
@@ -130,6 +131,7 @@ export default {
 
         const nextManifest = this.manifests[nextManifestIndex];
         this.$store.commit('contents/setManifest', nextManifest);
+        this.$store.dispatch('config/setDefaultActiveViews');
         itemUrl = nextManifest.sequence[0].id;
       } else {
         itemUrl = this.manifest.sequence[nextIndex].id;

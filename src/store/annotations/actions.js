@@ -38,21 +38,24 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
       // First we check if annotation fits to the current view
       if (!type) return false;
 
-      if (type?.displayWhen && type?.displayWhen !== activeContentType)
+      if (type?.displayWhen && type?.displayWhen === activeContentType)
         // Next we check if annotation should always be displayed on the current content tab
-        return false;
+        return true;
       // } else {
       //   // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
-      //   const selector = AnnotationUtils.generateTargetSelector(annotation);
-      //   if (selector) {
-      //     const el = document.querySelector(selector);
-      //     if (el) {
-      //       isVisible = true;
-      //     }
-      //   }
+         const selector = AnnotationUtils.generateTargetSelector(annotation);
+        if (selector) {
+          const el = document.querySelector(selector);
+          console.log(el);
+          if (el) {
+            return true;
+          }
+        }
+
+        return false;
       // }
       console.log(type);
-      return true;
+
     },
   );
 
@@ -157,7 +160,11 @@ export const initAnnotations = async ({ dispatch }, url) => {
 };
 
 export const addHighlightClickListeners = ({ dispatch, getters }) => {
-  document.querySelector('#text-content>div>*').addEventListener('click', ({ target }) => {
+  const textEl = document.querySelector('#text-content>div>*');
+
+  if (!textEl) return;
+
+  textEl.addEventListener('click', ({ target }) => {
     // The click event handler works like this:
     // When clicking on the text we pick the whole part of the text which belongs to the highest parent annotation.
     // Since the annotations can be nested we avoid handling each of them separately

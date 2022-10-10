@@ -18,10 +18,6 @@ export const loadConfig = (state, { config, isValid}) => {
   state.isValid = isValid;
 };
 
-export const resetInitialized = (state) => {
-  state.initialized = false;
-};
-
 export const setActiveViews = (state, payload) => {
   state.activeViews = payload;
 };
