@@ -47,9 +47,6 @@ export default function ConfigState() {
       "themes": false
     },
     activeViews: [],
-    configErrorMessage: null,
-    configErrorTitle: null,
-    initialized: false,
     isValid: false,
   };
 }

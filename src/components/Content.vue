@@ -89,9 +89,6 @@ export default {
     isLoading: false,
   }),
   computed: {
-    errorText() {
-      return this.$store.getters['contents/errorText'];
-    },
     manifest() {
       return this.$store.getters['contents/manifest'];
     },

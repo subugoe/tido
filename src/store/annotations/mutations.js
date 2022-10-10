@@ -2,10 +2,6 @@ export const updateActiveAnnotations = (state, annotations) => {
   state.activeAnnotations = annotations;
 };
 
-export const updateActiveTab = (state, tab) => {
-  (state.activeTab = tab);
-};
-
 export const updateAnnotations = (state, annotations) => {
   state.annotations = annotations;
 };

@@ -134,7 +134,3 @@ export const setActivePanelView = ({ commit, getters, dispatch }, {panelIndex, v
   BookmarkService.updatePanels(getters.activeViews);
 };
 
-export const resetInitialized = ({ commit }) => {
-  commit('resetInitialized');
-};
-

@@ -128,11 +128,6 @@ export const resetAnnotations = ({ commit, getters }) => {
   commit('updateActiveAnnotations', {});
 };
 
-export const updateActiveTab = ({ commit }, { tab, index }) => {
-  BookmarkService.updateAnnotationQuery(index);
-  commit('updateActiveTab', tab);
-};
-
 export const updateContentLoading = ({ commit }, isLoading) => {
   commit('updateContentLoading', isLoading);
 };

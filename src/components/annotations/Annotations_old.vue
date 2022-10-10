@@ -96,12 +96,6 @@ export default {
     filteredAnnotations() {
       return this.$store.getters['annotations/filteredAnnotations'];
     },
-    contentIndex() {
-      return this.$store.getters['contents/contentIndex'];
-    },
-    contentTypes() {
-      return this.$store.getters['contents/contentTypes'];
-    },
     config() {
       return this.$store.getters['config/config'];
     },

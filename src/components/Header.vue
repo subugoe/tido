@@ -77,9 +77,6 @@ export default {
     },
   },
   computed: {
-    isConfigValid() {
-      return this.$store.getters['config/isConfigValid'];
-    },
     manifests() {
       return this.$store.getters['contents/manifests'];
     },

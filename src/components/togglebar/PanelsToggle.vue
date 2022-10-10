@@ -30,7 +30,7 @@
                 :color="$q.dark.isActive ? 'bg-black' : 'accent'"
                 :name="renderCheckIcon(i)"
               />
-              <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.panel_label).toUpperCase() }}</span>
+              <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.label).toUpperCase() }}</span>
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -84,7 +84,7 @@
             :color="$q.dark.isActive ? 'bg-black' : 'accent'"
             :name="renderCheckIcon(i)"
           />
-          <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.panel_label).toUpperCase() }}</span>
+          <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.label).toUpperCase() }}</span>
         </q-btn>
       </div>
 
@@ -127,7 +127,7 @@ export default {
       return toggleCount.length > 0;
     },
     panels() {
-      return this.$store.getters['contents/panels'];
+      return this.$store.getters['config/config'].panels;
     },
   },
   created() {
@@ -145,14 +145,13 @@ export default {
     handleStatusPanel(i, reset = false) {
       const updatedPanels = [...this.panels].map((obj, idx) => {
         if (reset) return { ...obj, show: true };
-
         return i === idx ? { ...obj, show: !obj.show } : obj;
       });
-      this.$store.dispatch('contents/setPanels', { panels: updatedPanels });
+      this.$store.commit('config/setPanels', updatedPanels);
     },
     // display toggle title when hovering
     handleToggleTitle(idx) {
-      const titleName = this.$t(this.panels[idx].panel_label);
+      const titleName = this.$t(this.panels[idx].label);
       const titleUpper = `${titleName[0].toUpperCase()}${titleName.slice(1)}`;
 
       return this.panels[idx].show

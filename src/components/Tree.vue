@@ -2,6 +2,7 @@
   <div class="item relative">
     <Loading v-if="isLoading" />
     <q-tree
+      v-show="!isLoading"
       class="item-content"
       ref="treeRef"
       v-model:expanded="expanded"
@@ -12,17 +13,16 @@
       node-key="url"
     >
 <!--      <template #default-body="{ node }">-->
-<!--        <div v-if="!node.children" :id="`selectedItem-${node['label']}`" />-->
+<!--        <div v-if="!node.children" :id="`selectedItem-${node['label']}`">{{ node.label }}</div>-->
 <!--      </template>-->
 
-<!--      <template #default-header="prop">-->
-<!--        <div :id="prop.node['label']" class="row items-center">-->
-<!--          <div>-->
-<!--            {{ prop.node.labelSheet ? $t(labels.item) : '' }}-->
-<!--            {{ prop.node['label-key'] }}-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </template>-->
+      <template #default-header="{ node }">
+        <div :id="node.url" class="row items-center">
+          <div>
+            {{ node.label }}
+          </div>
+        </div>
+      </template>
     </q-tree>
   </div>
 </template>
@@ -124,7 +124,6 @@ export default {
           this.selected = this.itemUrl !== '' ? this.itemUrl : this.manifest.sequence[0]?.id;
         });
       }
-      this.isLoading = false;
     },
     async onItemUrlChange() {
       this.selected = this.itemUrl;
@@ -141,8 +140,13 @@ export default {
       const node = treeRef.getNodeByKey(value);
 
       if (!node) return;
-      console.log(node);
+
       const {url: itemUrl, parent: manifestUrl } = node;
+
+      this.$nextTick(() => {
+        document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
+        setTimeout(() => this.isLoading = false, 400)
+      });
 
       if (itemUrl === this.itemUrl) {
         return;
@@ -155,7 +159,7 @@ export default {
           this.$store.dispatch('contents/initManifest', manifestUrl);
         }
       }
-      console.log('onSelectedChange');
+
       this.$store.dispatch('contents/initItem', itemUrl);
     },
   },

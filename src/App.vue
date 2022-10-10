@@ -84,7 +84,6 @@ export default {
     this.$i18n.locale = this.config.lang;
 
     BookmarkService.initRouter(this.$router, this.$route);
-    BookmarkService.initStore(this.$store);
 
     await this.loadConfig();
     await this.init();
@@ -144,7 +143,6 @@ export default {
           await this.getManifest(manifest)
         }
       } catch (e) {
-        console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
         this.isLoading = false;
         this.errorTitle = 'title';
         this.errorMessage = 'message';
@@ -159,14 +157,6 @@ export default {
       if (val) {
         this.isLoading = false;
       }
-      // if (!this.itemUrl) {
-      //   return;
-      // }
-      // const treeDom = document.getElementById(val);
-      //
-      // if (treeDom) {
-      //   treeDom.scrollIntoView({ block: 'center' });
-      // }
     },
   },
 };

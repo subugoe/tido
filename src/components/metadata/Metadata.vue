@@ -28,36 +28,8 @@ export default {
   computed: {
     config() {
       return this.$store.getters['config/config'];
-    },
-    item() {
-      return this.$store.getters['contents/item'];
-    },
-
-    manifests() {
-      return this.$store.getters['contents/manifests'];
-    },
-    sequenceIndex() {
-      return this.$store.getters['contents/selectedSequenceIndex'];
-    },
-    itemIndex() {
-      return this.$store.getters['contents/selectedItemIndex'];
-    },
-
-    metadataItem() {
-      return [
-        { id: 'label', data: this.item.n },
-        { id: 'language', data: this.item.lang?.join(',') },
-        { id: 'image_license', data: this.item.image?.license?.id },
-        { id: 'image_notes', data: this.item.image?.license?.notes },
-      ].filter((item) => item.data);
-    },
-    getManifestNumber() {
-      return this.manifests.findIndex(({ id }) => id === this.manifest.id);
     }
   },
-  mounted() {
-    console.log(this.options)
-  }
 };
 </script>
 
