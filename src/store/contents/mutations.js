@@ -27,10 +27,6 @@ export const setPanels = (state, payload) => {
   state.panels = payload;
 };
 
-export const setSequenceIndex = (state, payload) => {
-  state.sequenceIndex = payload;
-};
-
 export const setManifest = (state, payload) => {
   if (!Array.isArray(payload.sequence)) payload.sequence = [payload.sequence];
   state.manifest = { ...payload };

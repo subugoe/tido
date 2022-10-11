@@ -11,6 +11,7 @@
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       node-key="url"
+      @after-show="onAfterShow"
     >
 <!--      <template #default-body="{ node }">-->
 <!--        <div v-if="!node.children" :id="`selectedItem-${node['label']}`">{{ node.label }}</div>-->
@@ -133,35 +134,39 @@ export default {
       return prefix + ' ' + (index + 1);
     },
     onSelectedChange(value) {
+      console.log('selectedsssss');
       const { treeRef } = this.$refs;
-
       if (!treeRef) return;
 
       const node = treeRef.getNodeByKey(value);
-
       if (!node) return;
 
       const {url: itemUrl, parent: manifestUrl } = node;
 
       this.$nextTick(() => {
         document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
-        setTimeout(() => this.isLoading = false, 400)
+        setTimeout(() => this.isLoading = false, 400);
       });
 
-      if (itemUrl === this.itemUrl) {
-        return;
-      }
+      // if (itemUrl === this.itemUrl) return;
 
+      console.log(manifestUrl, this.manifest.id);
       if (manifestUrl !== this.manifest.id) {
         this.$store.dispatch('contents/initManifest', manifestUrl);
-        // if (this.manifests) {
-        //   this.$store.commit('contents/setManifest', this.manifests.find(({ id }) => id === manifestUrl));
-        // } else {
-        // }
+        this.expanded.push(manifestUrl);
       }
+
+      if (!this.expanded.includes(manifestUrl)) this.expanded.push(manifestUrl);
+      this.$nextTick(() => {
+        document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' })
+      });
 
       this.$store.dispatch('contents/initItem', itemUrl);
     },
+    onAfterShow(event) {
+      console.log('after show', event);
+      document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
+    }
   },
 };
 </script>

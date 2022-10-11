@@ -41,25 +41,18 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
       if (type?.displayWhen && type?.displayWhen === activeContentType)
         // Next we check if annotation should always be displayed on the current content tab
         return true;
-      // } else {
-      //   // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
-         const selector = AnnotationUtils.generateTargetSelector(annotation);
+      // // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
+      const selector = AnnotationUtils.generateTargetSelector(annotation);
         if (selector) {
           const el = document.querySelector(selector);
-          console.log(el);
           if (el) {
             return true;
           }
         }
 
         return false;
-      // }
-      console.log(type);
-
     },
   );
-
-  console.log(filteredAnnotations);
 
   commit('setFilteredAnnotations', filteredAnnotations);
 };
@@ -67,7 +60,6 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
   const { annotations } = getters;
 
-  console.log(dom);
   // Add range attributes
   [...dom.querySelectorAll('[data-target]:not([value=""])')]
     .map(el => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
@@ -147,11 +139,8 @@ export const initAnnotations = async ({ dispatch }, url) => {
     }
 
     const current = await request(annotations.annotationCollection.first);
-    console.log(current.annotationPage.items.length);
     if (current.annotationPage.items.length) {
       dispatch('annotationLoaded', current.annotationPage.items);
-    } else {
-      dispatch('annotationLoaded', []);
     }
   } catch (err) {
     console.log(err);

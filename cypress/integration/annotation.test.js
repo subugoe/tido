@@ -1,7 +1,7 @@
 describe('Annotation - Multiple Tabs', () => {
   beforeEach(() => {
     cy
-      .visit('/#/?itemurl=https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/3r7vd-130/latest/item.json')
+      .visit('/#/?item=https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/3r7vd-130/latest/item.json')
       .get('.root.panels-target > .item:nth-child(4) .q-list')
       .should('be.visible');
   });
@@ -22,11 +22,9 @@ describe('Annotation - Multiple Tabs', () => {
       .get('.root.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
       .eq(1)
       .click()
-      .should('have.class', 'q-tab--active');
-
-    cy
-      .get('.root.panels-target > .item:nth-child(4) .q-list .q-item')
-      .first()
+      .should('have.class', 'q-tab--active')
+      .get('.root.panels-target > .item:nth-child(4) .q-panel:nth-child(2) .q-list .q-item')
+      .eq(0)
       .contains('Successful courtier');
   });
 
@@ -34,14 +32,12 @@ describe('Annotation - Multiple Tabs', () => {
     cy
       .get('button.next-item')
       .click()
-      .get('.root.panels-target > .item:nth-child(4) .q-spinner')
-      .should('be.visible')
-      .get('.root.panels-target > .item:nth-child(4) .q-list')
+      .get('.root.panels-target > .item:nth-child(4) .q-panel:nth-child(1) .q-list')
       .should('be.visible')
       .get('.root.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
       .first()
       .should('have.class', 'q-tab--active')
-      .get('.root.panels-target > .item:nth-child(4) .q-list .q-item')
+      .get('.root.panels-target > .item:nth-child(4) .q-panel:nth-child(1) .q-list .q-item')
       .first()
       .contains('نادان');
   });
@@ -51,13 +47,11 @@ describe('Annotation - Multiple Tabs', () => {
       .get('.root.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
       .eq(1)
       .click()
+      .get('.root.panels-target > .item:nth-child(4) .q-panel:nth-child(2) .q-list')
+      .should('be.visible')
       .get('button.next-item')
       .click()
-      .get('.root.panels-target > .item:nth-child(4) .q-spinner')
-      .should('be.visible')
-      .get('.root.panels-target > .item:nth-child(4) .q-list')
-      .should('be.visible')
-      .get('.root.panels-target > .item:nth-child(4) .q-list .q-item')
+      .get('.root.panels-target > .item:nth-child(4) .q-panel:nth-child(2) .q-list .q-item')
       .first()
       .contains('Successful courtier');
   });
@@ -69,14 +63,14 @@ describe('Annotation - Multiple Tabs', () => {
       .click()
       .get('button.previous-item')
       .click()
-      .get('.root.panels-target > .item:nth-child(4) .q-spinner')
+      .get('.root.panels-target > .item:nth-child(4) .q-panel:nth-child(2) .q-list')
       .should('be.visible')
-      .get('.root.panels-target > .item:nth-child(4) .q-list')
-      .should('be.visible')
+      .get('.root.panels-target > .item:nth-child(3) #text-content')
+      .contains('وورمت')
       .get('.root.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
       .first()
       .should('have.class', 'q-tab--active')
-      .get('.root.panels-target > .item:nth-child(4) .q-list .q-item')
+      .get('.root.panels-target > .item:nth-child(4) .q-panel:nth-child(1) .q-list .q-item')
       .first()
       .contains('حيقار');
   });

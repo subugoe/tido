@@ -114,7 +114,6 @@ export default {
         this.$store.commit('contents/setManifest', prevManifest);
         this.$store.dispatch('config/setDefaultActiveViews');
         itemUrl = prevManifest.sequence[prevManifest.sequence.length -1].id;
-
       } else {
         // We load the previous item
         itemUrl = this.manifest.sequence[prevIndex].id;

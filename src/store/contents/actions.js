@@ -203,7 +203,6 @@ export const initItem = async ({ commit, dispatch }, url) => {
   commit('setItem', item);
   commit('setItemUrl', url);
 
-
   if (item.annotationCollection) {
     dispatch('annotations/initAnnotations', item.annotationCollection, { root: true});
   }
