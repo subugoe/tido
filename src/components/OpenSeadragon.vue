@@ -94,7 +94,6 @@ export default {
           this.initOpenSeagragon();
 
         } catch (error) {
-          console.log(error.message);
           this.error = error;
           this.isLoading = false;
         }

@@ -103,7 +103,6 @@ export const initCollection = async ({ commit, dispatch, getters, rootGetters },
 
   const { item } = getters;
   let { item: itemUrl } = rootGetters['config/config'];
-  console.log(item);
 
   // commit('resetContents');
 

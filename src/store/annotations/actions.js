@@ -31,7 +31,6 @@ export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
 export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
   const { annotations } = getters;
   const activeContentType = rootGetters['config/activeContentType'];
-  console.log('setFilteredAnno', annotations);
   const filteredAnnotations = annotations.filter(
     (annotation) => {
       const type = types.find(({ name }) => name === annotation.body['x-content-type']);
@@ -80,7 +79,6 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
 };
 
 export const annotationLoaded = ({ commit }, annotations) => {
-  console.log('annotationLoaded', annotations);
   commit('updateAnnotations', annotations);
   commit('updateAnnotationLoading', false);
 };

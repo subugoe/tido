@@ -84,13 +84,6 @@ export default {
       handler: 'onSelectedChange',
       immediate: true,
     },
-    expanded: {
-      handler(value) {
-        console.log(value);
-        // this.expanded = [...value];
-      },
-      immediate: true,
-    },
   },
   created() {
     this.fasCaretRight = fasCaretRight;
@@ -150,7 +143,6 @@ export default {
 
       // if (itemUrl === this.itemUrl) return;
 
-      console.log(manifestUrl, this.manifest.id);
       if (manifestUrl !== this.manifest.id) {
         this.$store.dispatch('contents/initManifest', manifestUrl);
         this.expanded.push(manifestUrl);

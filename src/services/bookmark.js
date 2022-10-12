@@ -11,22 +11,10 @@ class BookmarkService {
     const panels = activeViews.map((view, i) => `${i}_${view}`).join(',');
     const query = {...this.$route.query, panels };
 
+    console.log(query)
+
     await this.$router.push({path: '/', query});
   }
-
-
-  static getConnectorObject = (query) => {
-    const connector = (query.connector || '')
-      .split(',')
-      .filter((el) => el)
-      .reduce((prev, curr) => {
-        const [panelIndex, connectorIndex] = curr.split('_');
-        prev[panelIndex] = connectorIndex;
-        return prev;
-      }, {});
-
-    return connector;
-  };
 
   async updateItemQuery(item) {
     const query = {
