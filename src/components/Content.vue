@@ -24,7 +24,7 @@
         <q-icon
           :name="fasSearchPlus"
           size="xs"
-          :color="$q.dark.isActive ? 'white' : 'accent'"
+          :color="$q.dark.isActive ? 'white' : 'primary'"
         />
       </q-btn>
 
@@ -35,13 +35,13 @@
         size="sm"
         :disable="fontsize <= fontSizeLimits.min"
         :title="$t('decrease')"
-        :color="$q.dark.isActive ? 'white' : 'accent'"
+        :color="$q.dark.isActive ? 'white' : 'primary'"
         @click="decrease()"
       >
         <q-icon
           :name="fasSearchMinus"
           size="xs"
-          :color="$q.dark.isActive ? 'white' : 'accent'"
+          :color="$q.dark.isActive ? 'white' : 'primary'"
         />
       </q-btn>
     </div>

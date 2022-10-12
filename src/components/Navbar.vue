@@ -4,7 +4,7 @@
       v-if="manifest"
       :disable="!hasPrev"
       unelevated
-      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
+      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'primary'"
       size="xs"
       padding="xs"
       class="q-px-sm q-mr-sm previous-item"
@@ -21,7 +21,7 @@
     <q-btn
       v-if="manifest"
       unelevated
-      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'accent'"
+      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'primary'"
       :disable="!hasNext"
       size="xs"
       padding="xs"

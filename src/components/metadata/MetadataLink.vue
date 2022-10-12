@@ -5,7 +5,7 @@
     rel="noopener noreferrer"
     target="_blank"
     class="content__link"
-    :class="$q.dark.isActive ? 'text-white' : 'text-accent'"
+    :class="$q.dark.isActive ? 'text-white' : 'text-primary'"
   >
     <span>{{ text }}</span>
 

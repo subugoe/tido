@@ -51,6 +51,7 @@ export default {
       return this.config.notificationColors;
     },
     color() {
+      console.log(this.type, this.notificationColors.warning);
       switch (this.type) {
         case 'info':
           return this.notificationColors?.info ? this.notificationColors.info : '';

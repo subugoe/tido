@@ -2,11 +2,11 @@
   <div class="item relative-position">
     <q-tabs
       :model-value="currentTab"
-      active-color="$q.dark.isActive ? 'white' : 'accent'"
+      active-color="$q.dark.isActive ? 'white' : 'primary'"
       align="justify"
       class="text-grey q-mb-sm"
       dense
-      indicator-color="$q.dark.isActive ? 'white' : 'accent'"
+      indicator-color="$q.dark.isActive ? 'white' : 'primary'"
     >
       <q-tab
         v-for="annotationTab,index in annotationTabs"

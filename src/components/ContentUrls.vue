@@ -13,7 +13,7 @@
         rel="noopener noreferrer"
         target="_blank"
         class="content__link"
-        :class="$q.dark.isActive ? 'text-white' : 'text-accent'"
+        :class="$q.dark.isActive ? 'text-white' : 'text-primary'"
       >
         <span>{{ url.linkTitle }}</span>
 
@@ -102,7 +102,7 @@ export default {
 }
 
 .content__link {
-  border-bottom: 1px var(--q-accent) dotted;
+  border-bottom: 1px var(--q-primary) dotted;
   text-decoration: none;
 
   @media (prefers-color-scheme: dark) {

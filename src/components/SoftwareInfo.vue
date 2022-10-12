@@ -9,7 +9,7 @@
       <q-icon
         size="xs"
         :name="fasInfo"
-        :color="$q.dark.isActive ? 'bg-black' : 'accent'"
+        :color="$q.dark.isActive ? 'bg-black' : 'primary'"
       />
     </q-btn>
 

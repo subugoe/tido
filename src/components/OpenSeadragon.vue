@@ -13,7 +13,7 @@
           flat
           round
           size="sm"
-          :color="$q.dark.isActive ? 'white' : 'accent'"
+          :color="$q.dark.isActive ? 'white' : 'primary'"
           class="q-ml-xs q-mt-xs"
           :title="$t(btn.tooltip)"
         >

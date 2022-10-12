@@ -9,6 +9,14 @@
       :toggle="toggle"
       :types="types"
     />
+    <div v-else class="q-pa-md">
+      <Notification
+        :message="$t(message)"
+        :notification-colors="config.notificationColors"
+        :title="$t('no_annotations_available')"
+        type="info"
+      />
+    </div>
   </div>
 </template>
 
@@ -30,6 +38,7 @@ export default {
     Notification,
   },
   data: () => ({
+    message: 'no_annotations_in_view'
   }),
   props: {
     url: String,
@@ -37,7 +46,7 @@ export default {
   },
   computed: {
     config() {
-      return this.$store.getters ['config/config'];
+      return this.$store.getters['config/config'];
     },
     annotations() {
       return this.$store.getters['annotations/annotations'];

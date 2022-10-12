@@ -1,9 +1,14 @@
 <template>
   <div class="item-content">
-    <div class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
-      <!-- We display the tab label as panel label when there is only one tab -->
-      <span v-if="panel.label && tabs.length > 1">{{ $t(panel.label) }}</span>
-      <span v-else-if="tabs.length === 1">{{tabs[0].label}}</span>
+    <div class="text-body1 text-weight-medium text-center q-py-xs q-pr-sm q-pl-md flex justify-between items-center">
+      <div class="caption text-bold">
+        <!-- We display the tab label as panel label when there is only one tab -->
+        <span v-if="panel.label && tabs.length > 1">{{ $t(panel.label) }}</span>
+        <span v-else-if="tabs.length === 1">{{tabs[0].label}}</span>
+      </div>
+      <div class="actions">
+        <q-btn color="primary" flat>Select all</q-btn>
+      </div>
     </div>
     <q-separator />
     <template v-if="tabs.length > 1">

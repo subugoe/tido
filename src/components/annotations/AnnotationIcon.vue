@@ -1,7 +1,7 @@
 <template>
   <q-icon
     v-if="name"
-    :color="isDarkMode ? 'grey-1 text-grey-1' : 'accent'"
+    :color="isDarkMode ? 'grey-1 text-grey-1' : 'primary'"
     :name="name"
     size="16px"
   />

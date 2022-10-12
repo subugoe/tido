@@ -48,7 +48,7 @@
 
               <div class="actions">
                 <q-btn
-                  class="only-bedrag panel-boxes__handle bg-accent text-white"
+                  class="only-bedrag panel-boxes__handle bg-primary text-white"
                   round
                   flat
                   size="xs"

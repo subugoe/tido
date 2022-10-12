@@ -27,7 +27,7 @@
               <q-icon
                 class="q-pr-xs"
                 size="xs"
-                :color="$q.dark.isActive ? 'bg-black' : 'accent'"
+                :color="$q.dark.isActive ? 'bg-black' : 'primary'"
                 :name="renderCheckIcon(i)"
               />
               <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.label).toUpperCase() }}</span>
@@ -49,7 +49,7 @@
               <q-icon
                 class="q-pr-xs"
                 size="xs"
-                :color="$q.dark.isActive ? 'white' : 'accent'"
+                :color="$q.dark.isActive ? 'white' : 'primary'"
                 :name="fasUndo"
               />
               <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('reset').toUpperCase() }}</span>
@@ -81,7 +81,7 @@
           <q-icon
             class="q-pr-xs"
             size="16px"
-            :color="$q.dark.isActive ? 'bg-black' : 'accent'"
+            :color="$q.dark.isActive ? 'bg-black' : 'primary'"
             :name="renderCheckIcon(i)"
           />
           <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.label).toUpperCase() }}</span>
@@ -102,7 +102,7 @@
         <q-icon
           class="q-pr-xs"
           size="16px"
-          :color="$q.dark.isActive ? 'white' : 'accent'"
+          :color="$q.dark.isActive ? 'white' : 'primary'"
           :name="fasUndo"
         />
         <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('reset').toUpperCase() }}</span>

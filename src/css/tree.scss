@@ -9,7 +9,7 @@
     > .q-tree__node--parent {
       > .q-tree__node-header {
         /* stylelint-ensable */
-        background-color: $grey-3;
+        background-color: $grey-2;
         left: 0;
         position: sticky;
         top: -8px;
@@ -23,7 +23,7 @@
   }
 
   .q-tree__node--selected {
-    background-color: var(--q-accent);
+    background-color: var(--q-primary);
     @media (prefers-color-scheme: dark) {
       background-color: $grey-3;
     }
@@ -73,7 +73,7 @@
 }
 
 .q-tab__indicator {
-  color: var(--q-accent);
+  color: var(--q-primary);
   @media (prefers-color-scheme: dark) {
     color: $light;
   }
