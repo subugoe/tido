@@ -6,17 +6,13 @@
       unelevated
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'primary'"
       size="xs"
-      padding="xs"
       class="q-px-sm q-mr-sm previous-item"
+      :icon="fasArrowLeft"
+      :label="prevButtonLabel"
       @click="prev"
-    >
-      <q-icon
-        :name="fasArrowLeft"
-        size="16px"
-        class="q-pr-xs"
-      />
-      {{ prevButtonLabel }}
-    </q-btn>
+      outline
+      no-caps
+    />
 
     <q-btn
       v-if="manifest"
