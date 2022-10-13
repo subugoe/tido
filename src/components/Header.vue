@@ -4,8 +4,10 @@
       <div class="flex items-start">
         <TitleBar v-if="item && manifests.length" class="" :item="item"/>
         <div class="col flex justify-end">
-          <q-btn color="grey-6" flat :icon="icon('fasCog')"></q-btn>
-<!--          <SoftwareInfo />-->
+          <q-btn :color="$q.dark.isActive ? 'yellow-4': 'grey-5'" flat :icon="icon('fasMoon')" @click="$q.dark.toggle()"></q-btn>
+          <q-btn color="grey-5" flat :icon="icon('fasCog')" ></q-btn>
+
+          <!--          <SoftwareInfo />-->
         </div>
       </div>
       <div v-if="item" class="flex">

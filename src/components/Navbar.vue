@@ -5,13 +5,12 @@
       :disable="!hasPrev"
       unelevated
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'primary'"
-      size="xs"
       class="q-px-sm q-mr-sm previous-item"
       :icon="fasArrowLeft"
       :label="prevButtonLabel"
       @click="prev"
-      outline
       no-caps
+      dense
     />
 
     <q-btn
@@ -19,18 +18,13 @@
       unelevated
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'primary'"
       :disable="!hasNext"
-      size="xs"
-      padding="xs"
       class="q-px-sm next-item"
+      :icon-right="fasArrowRight"
+      :label="nextButtonLabel"
       @click="next"
-    >
-      {{ nextButtonLabel }}
-      <q-icon
-        :name="fasArrowRight"
-        size="16px"
-        class="q-pl-xs"
-      />
-    </q-btn>
+      no-caps
+      dense
+    />
   </div>
 </template>
 

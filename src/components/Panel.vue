@@ -17,10 +17,11 @@
           v-model="activeTabIndex"
           @update:model-value="onViewChange"
           class="content-tabs"
-          :active-bg-color="$q.dark.isActive ? 'bg-black' : 'bg-grey-4'"
+          :active-color="'primary'"
+          :active-bg-color="$q.dark.isActive ? 'bg-dark' : 'bg-grey-4'"
           dense
         >
-          <q-tab v-for="(tab, i) in tabs" :key="tab.id" :name="i" :label="tab.label" />
+          <q-tab v-for="(tab, i) in tabs" :key="tab.id" :name="i" :label="tab.label" no-caps />
         </q-tabs>
       </div>
       <q-tab-panels v-model="activeTabIndex" animated>

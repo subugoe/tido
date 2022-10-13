@@ -30,7 +30,7 @@
                 :color="$q.dark.isActive ? 'bg-black' : 'primary'"
                 :name="renderCheckIcon(i)"
               />
-              <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.label).toUpperCase() }}</span>
+              <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.label) }}</span>
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -66,12 +66,14 @@
       <div
         v-for="(p, i) in panels"
         :key="`toggle${i}`"
+        class="q-px-xs"
       >
         <q-btn
           v-if="p.toggle"
           v-close-popup
           clickable
           flat
+          no-caps
           size="12px"
           padding="xs"
           class="q-px-sm"
@@ -81,10 +83,10 @@
           <q-icon
             class="q-pr-xs"
             size="16px"
-            :color="$q.dark.isActive ? 'bg-black' : 'primary'"
+            :color="$q.dark.isActive ? 'bg-dark' : 'primary'"
             :name="renderCheckIcon(i)"
           />
-          <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.label).toUpperCase() }}</span>
+          <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'" class="text-uppercase">{{ $t(p.label) }}</span>
         </q-btn>
       </div>
 
@@ -93,6 +95,7 @@
         v-close-popup
         clickable
         flat
+        no-caps
         size="12px"
         padding="xs"
         class="q-px-sm"

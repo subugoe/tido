@@ -61,8 +61,8 @@
 }
 
 .q-tab__label {
-  color: var(--q-primary);
-  letter-spacing: 2px;
+  //color: var(--q-primary);
+  //letter-spacing: 2px;
   @media (prefers-color-scheme: dark) {
     color: $light;
   }

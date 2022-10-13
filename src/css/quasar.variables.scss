@@ -12,7 +12,7 @@
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
-$primary: #1a3771;
+$primary: #4b87cc;
 $secondary: #eee;
 $light: #fff;
 $dark: #212121;
@@ -32,3 +32,5 @@ $body1:     (size: 1rem,     line-height: 1.5rem,   letter-spacing: .03125em,  w
 $body2:     (size: .875rem,  line-height: 1.25rem,  letter-spacing: .01786em,  weight: 400);
 $overline:  (size: .75rem,   line-height: 2rem,     letter-spacing: .16667em,  weight: 600);
 $caption:   (size: .75rem,   line-height: 1.25rem,  letter-spacing: .03333em,  weight: 400);
+
+$button-border-radius: 6px;
