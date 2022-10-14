@@ -1,5 +1,5 @@
 <template>
-  <div class="root panels-target">
+  <div class="root panels-target q-gutter-md q-px-md q-pb-md bg-grey-3">
     <div
       v-for="(panel, i) in panels"
       v-show="panel.show"

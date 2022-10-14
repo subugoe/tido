@@ -1,5 +1,5 @@
 <template>
-  <div class="item-content">
+  <div class="item-content bg-white">
     <div class="text-body1 text-weight-medium text-center q-py-xs q-pr-sm q-pl-md flex justify-between items-center">
       <div class="caption text-bold">
         <!-- We display the tab label as panel label when there is only one tab -->
@@ -160,6 +160,8 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid #ddd !important;
 
   .q-tab-panels {
     display: flex;

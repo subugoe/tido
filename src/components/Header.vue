@@ -1,5 +1,5 @@
 <template>
-  <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-2'">
+  <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
     <div class="q-px-md q-py-md">
       <div class="flex items-start">
         <TitleBar v-if="item && manifests.length" class="" :item="item"/>
