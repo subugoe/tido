@@ -284,14 +284,6 @@ export default {
       }
     },
 
-    onHighlightAll() {
-      this.filteredAnnotations.forEach(({ id }) => !this.activeAnnotation[id] && this.addAnnotation(id));
-    },
-
-    onHighlightNone() {
-      this.filteredAnnotations.forEach(({ id }) => this.activeAnnotation[id] && this.removeAnnotation(id));
-    },
-
     onMouseHover(el, data) {
       onlyIf(
         AnnotationUtils.isAnnotationSelected(el),

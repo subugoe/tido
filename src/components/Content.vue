@@ -12,38 +12,7 @@
     </div>
 
     <div v-if="!notificationMessage" class="q-px-sm">
-      <q-btn
-        class="cursor-pointer"
-        flat
-        round
-        size="sm"
-        :disable="fontsize >= fontSizeLimits.max"
-        :title="$t('increase')"
-        @click="increase()"
-      >
-        <q-icon
-          :name="fasSearchPlus"
-          size="xs"
-          :color="$q.dark.isActive ? 'white' : 'primary'"
-        />
-      </q-btn>
 
-      <q-btn
-        class="cursor-pointer"
-        flat
-        round
-        size="sm"
-        :disable="fontsize <= fontSizeLimits.min"
-        :title="$t('decrease')"
-        :color="$q.dark.isActive ? 'white' : 'primary'"
-        @click="decrease()"
-      >
-        <q-icon
-          :name="fasSearchMinus"
-          size="xs"
-          :color="$q.dark.isActive ? 'white' : 'primary'"
-        />
-      </q-btn>
     </div>
 
     <div id="text-content" v-show="!isLoading" class="custom-font item-content">
@@ -76,16 +45,12 @@ export default {
   mixins: [DomMixin],
   props: {
     url: String,
-    type: String
+    type: String,
+    fontSize: Number
   },
   data: () => ({
     content: '',
     errorTextMessage: null,
-    fontSize: 16,
-    fontSizeLimits: {
-      min: 14,
-      max: 28,
-    },
     isLoading: false,
   }),
   computed: {

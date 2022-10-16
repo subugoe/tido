@@ -1,11 +1,6 @@
 <template>
   <div class="root panels-target q-gutter-md q-px-md q-pb-md bg-grey-3">
-    <div
-      v-for="(panel, i) in panels"
-      v-show="panel.show"
-      :key="`pc${i}`"
-      class="item"
-    >
+    <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item">
       <Panel :panel="panel" @active-view="onActiveViewChange($event, i)" />
     </div>
   </div>
@@ -56,13 +51,6 @@ export default {
   @media (max-width: $breakpoint-sm-custom-md) {
     min-height: 100vh;
   }
-}
-
-.item-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
 }
 
 .root {

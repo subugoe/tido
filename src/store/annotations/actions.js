@@ -3,7 +3,7 @@ import { request } from '@/utils/http';
 import * as Utils from '@/utils';
 import BookmarkService from '@/services/bookmark';
 
-export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
+export const addActiveAnnotation = ({ commit, getters, rootGetters, dispatch }, id) => {
   const { activeAnnotations, annotations } = getters;
   const newActiveAnnotation = annotations.find((annotation) => annotation.id === id);
 
@@ -17,6 +17,7 @@ export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
 
   activeAnnotationsList[id] = newActiveAnnotation;
   commit('updateActiveAnnotations', activeAnnotationsList);
+  dispatch('updatePanelAction', 'maybe');
 
   const selector = Utils.generateTargetSelector(newActiveAnnotation);
   const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
@@ -231,4 +232,17 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
     });
     return annotationIds;
   }
+};
+
+export const selectAll = ({ getters, dispatch }) => {
+  const { filteredAnnotations, activeAnnotations } = getters;
+  filteredAnnotations.forEach(({ id }) => !activeAnnotations[id] && dispatch('addActiveAnnotation', id));
+};
+
+export const selectNone = ({ getters, dispatch }) => {
+  const { filteredAnnotations, activeAnnotations } = getters;
+  filteredAnnotations.forEach(({ id }) => activeAnnotations[id] && dispatch('removeActiveAnnotation', id));
+};
+
+export const updatePanelAction = ({ getters, dispatch }, selected) => {
 };

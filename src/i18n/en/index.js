@@ -59,6 +59,7 @@ export default {
   noConfigEntrypoint: 'No Entrypoint is available in the config. Please add one to load viewer',
   no_config_available: 'Tido Configuration is not available',
   config_error: 'Configuration Error',
+  no_views_configured: 'No views configured in this panel.',
   Origin: 'Origin',
   switch_to_fullscreen: 'Toggle full page',
   zoom_in: 'Zoom in',

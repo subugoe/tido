@@ -56,6 +56,7 @@ export default {
   no_comments_in_view: 'Die aktuelle Ansicht enthält keine Kommentare',
   no_config_available: 'Keine TIDO Konfiguration vorhanden',
   config_error: 'Konfigurationsfehler',
+  no_views_configured: 'Keine Ansichten in diesem Panel konfiguriert.',
   Origin: 'Ursprung',
   switch_to_fullscreen: 'zu Vollbild wechseln',
   zoom_in: 'Vergrössern',
