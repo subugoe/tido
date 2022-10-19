@@ -1,5 +1,5 @@
 <template>
-  <div class="item-content" :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'">
+  <div class="item-content" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'">
     <div class="panel-header q-py-xs q-pr-sm q-pl-md flex justify-between items-center">
       <div class="caption text-bold text-body1">
         <!-- We display the tab label as panel label when there is only one tab -->
@@ -8,14 +8,14 @@
       </div>
       <div class="actions">
         <template v-for="(tab, i) in tabs" :key="i">
-          <template v-for="({ component, props, events }, j) in tab.actions" :key="j">
+          <template v-for="({ component, props, events}, j) in tab.actions" :key="j">
             <component v-show="i === activeTabIndex" :is="component" v-bind="props" v-on="events" />
           </template>
         </template>
       </div>
     </div>
     <q-separator />
-    <div class="panel-body q-pa-sm">
+    <div class="panel-body q-py-sm bg-none">
       <template v-if="tabs.length > 1">
         <div class="tabs-container">
           <q-tabs
@@ -29,7 +29,7 @@
             <q-tab v-for="(tab, i) in tabs" :key="tab.id" :name="i" :label="tab.label" no-caps />
           </q-tabs>
         </div>
-        <q-tab-panels v-model="activeTabIndex" animated>
+        <q-tab-panels v-model="activeTabIndex" animated class="bg-transparent">
           <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pa-none">
             <component :is="tab.component" :key="tab.id" v-bind="tab.props" />
           </q-tab-panel>
@@ -76,12 +76,13 @@ export default {
       type: Object,
       default: () => { },
     },
+    activeView: Number
   },
   data() {
     return {
       tabs: [],
       activeTabIndex: 0,
-      internalFs: 16
+      unsubscribe: null
     };
   },
   computed: {
@@ -94,11 +95,6 @@ export default {
   },
   mounted() {
     console.log('panel mounted');
-    this.$store.subscribeAction(async ({ type, payload }) => {
-      if (this.tabs.length && this.tabs[0].actions?.length && type === 'annotations/updatePanelAction') {
-        this.tabs[0].actions[0].selected = payload;
-      }
-    });
   },
   methods: {
     getContentUrl(type) {
@@ -107,45 +103,16 @@ export default {
     },
     init(views) {
       this.tabs = [];
-      views.forEach((view, i) => {
-        const { connector, label } = view;
-        const { component } = findComponent(connector.id);
-        const methodName = 'render' + component;
+      if (this.unsubscribe !== null) this.unsubscribe();
 
+      views.forEach((view, i) => {
+        const { component } = findComponent(view.connector.id);
+        const methodName = 'create' + component + 'View';
         if (!this[methodName]) return;
         this[methodName](view, i);
-        return;
-
-        if (component === 'Content') {
-
-        } else if (component === 'Annotations') {
-          const url = this.item.annotationCollection;
-
-          if (!url) return;
-
-          tabs.push({
-            component,
-            label,
-            props: { url, ...connector.options }
-          });
-        } else if (component === 'Metadata') {
-          const { options } = connector;
-          tabs.push({
-            component,
-            label,
-            props: { options }
-          });
-        } else {
-          tabs.push({
-            component,
-            label,
-            props: { ...connector.options }
-          });
-        }
       });
-      // this.tabs = tabs;
     },
-    renderContent(view, i) {
+    createContentView(view, i) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
@@ -170,11 +137,11 @@ export default {
         component,
         label,
         props: { type, url, fontSize },
-        actions: [],
+        actions: {},
         events
       }];
     },
-    renderAnnotations(view) {
+    createAnnotationsView(view, i) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
@@ -185,13 +152,23 @@ export default {
       const selected = false;
       const events = {
         update: (value) => {
+          if (value === 'maybe') return;
           this.$store.dispatch(value ? 'annotations/selectAll' : 'annotations/selectNone');
         }
       };
 
+      this.unsubscribe = this.$store.subscribeAction(async ({ type, payload }) => {
+        if (this.tabs.length && this.tabs[0].actions?.length && type === 'annotations/updatePanelAction') {
+          if (this.tabs[i].actions[0].props.selected !== payload)
+            this.tabs[i].actions[0].props.selected = payload;
+        }
+      });
+
       let actions = [{
         component: 'PanelToggleAction',
-        props: { selected },
+        props: {
+          selected,
+        },
         events
       }];
 
@@ -199,9 +176,32 @@ export default {
         component,
         label,
         props: { url, ...connector.options },
-        actions
+        actions,
       }];
     },
+    createMetadataView(view) {
+      const { connector, label } = view;
+      const { component } = findComponent(connector.id);
+      const { options } = connector;
+      this.tabs = [...this.tabs, {
+        component,
+        label,
+        props: { options }
+      }];
+    },
+    createTreeView(view) {
+      this.createDefaultView(view);
+    },
+    createDefaultView(view, i) {
+      const { connector, label } = view;
+      const { component } = findComponent(connector.id);
+      this.tabs = [...this.tabs, {
+        component,
+        label,
+        props: { ...connector.options }
+      }];
+    },
+
 
     onViewChange(event) {
       this.$emit('active-view', this.activeTabIndex);
@@ -209,15 +209,23 @@ export default {
   },
   watch: {
     panel: {
-      handler({ views, active, label }) {
-        this.activeTabIndex = active;
+      handler({ views, label }) {
+        console.log('panel changed');
         this.init(views);
       },
       deep: true,
       immediate: true,
     },
+    activeView: {
+      handler(value) {
+        console.log('activeView changed');
+        this.activeTabIndex = value;
+      },
+      immediate: true
+    },
     item: {
       handler() {
+        console.log('item changed');
         this.init(this.panel.views);
       }
     }
@@ -233,6 +241,7 @@ export default {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 .tabs-container {
   display: flex;
@@ -253,6 +262,10 @@ export default {
   overflow: hidden;
   border-radius: 6px;
   border: 1px solid #ddd !important;
+
+  .body--dark & {
+    border: 1px solid #424242 !important;
+  }
 
   .q-tab-panels {
     display: flex;

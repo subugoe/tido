@@ -10,6 +10,10 @@
       > .q-tree__node-header {
         /* stylelint-ensable */
         background-color: $grey-2;
+        .body--dark & {
+          background-color: $grey-8;
+
+        }
         left: 0;
         position: sticky;
         top: -8px;

@@ -1,7 +1,7 @@
 <template>
-  <div class="root panels-target q-gutter-md q-px-md q-pb-md bg-grey-3">
+  <div class="root panels-target q-gutter-md q-px-md q-pb-md" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
     <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item">
-      <Panel :panel="panel" @active-view="onActiveViewChange($event, i)" />
+      <Panel :panel="panel" :active-view="getActiveView(i)" @active-view="onActiveViewChange($event, i)" />
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
   computed: {
     panels() {
       const { panels } = this.config;
-      return panels.map((panel, i) => ({ ...panel, active: this.activeViews[i]}));
+      return panels;
     },
     config() {
       return this.$store.getters['config/config'];
@@ -33,6 +33,9 @@ export default {
     onActiveViewChange(viewIndex, panelIndex) {
       console.log('onActiveViewChange')
       this.$store.dispatch('config/setActivePanelView', {viewIndex, panelIndex});
+    },
+    getActiveView(panelIndex) {
+      return this.activeViews[panelIndex];
     }
   }
 };
