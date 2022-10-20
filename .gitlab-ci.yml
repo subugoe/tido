@@ -61,7 +61,7 @@ pages:
     - sh .ci-scripts/install-deps.sh
     - bash .ci-scripts/update-artifacts.sh
   environment:
-    name: review/${CI_COMMIT_REF_SLUG}
+    name: review/$CI_COMMIT_REF_SLUG
     url: https://subugoe.pages.gwdg.de/emo/tido/${CI_COMMIT_REF_SLUG}/
     on_stop: stop_env
   artifacts:
