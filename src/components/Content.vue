@@ -22,7 +22,7 @@
 import DomMixin from '@/mixins/dom';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
-import { cachableRequest } from '@/utils/http';
+import { request } from '@/utils/http';
 import {
   loadFont,
   onlyIf,
@@ -87,7 +87,7 @@ export default {
         this.errorTextMessage = '';
         this.isLoading = true;
         await delay(400);
-        const data = await cachableRequest(url);
+        const data = await request(url);
         this.isValidTextContent(data);
 
         if (this.hasSupport) {

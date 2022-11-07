@@ -106,7 +106,7 @@ export default {
     },
     async loadConfig() {
       try {
-        await this.$store.dispatch('config/load');
+        await this.$store.dispatch('config/load', this.$root.config);
       } catch ({ title, message }) {
         this.errorTitle = title;
         this.errorMessage = message;
@@ -161,7 +161,6 @@ export default {
 .root {
   display: flex;
   flex: 1;
-  flex-direction: column;
   font-size: 16px;
   overflow: hidden;
 }

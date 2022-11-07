@@ -2,7 +2,7 @@ export const setConfig = (state, payload) => {
   state.config = payload;
 };
 
-export const setActivePanelView = (state, { panelIndex, viewIndex}) => {
+export const setActivePanelView = (state, { panelIndex, viewIndex }) => {
   const { activeViews } = state;
   if (activeViews[panelIndex] !== undefined) {
     activeViews[panelIndex] = viewIndex;
@@ -17,7 +17,7 @@ export const setShowPanel = (state, { index, show }) => {
   state.config.panels[index].show = show;
 };
 
-export const loadConfig = (state, { config, isValid}) => {
+export const loadConfig = (state, { config, isValid }) => {
   state.config = config;
   state.isValid = isValid;
 };

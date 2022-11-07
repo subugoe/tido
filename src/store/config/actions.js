@@ -30,23 +30,23 @@ const defaultView = {
   }
 };
 
-export const load = ({ commit, getters }) => {
+export const load = ({ commit, getters }, customConfig) => {
   const defaultConfig = getters.config;
-  let customConfig = {};
 
   const { item, manifest, collection, panels, show } = BookmarkService.getQuery();
 
-  const el = document.getElementById('tido-config');
-  if (!el) {
+  // const el = document.getElementById('tido-config');
+  if (!customConfig) {
     throw { message: i18n.global.t('no_config_available'), title: i18n.global.t('config_error')};
   }
 
   // Parse and validate config from HTML
-  try {
-    customConfig = JSON.parse(el.text);
-  } catch (e) {
-    throw { message: e, title: i18n.global.t('config_error')};
-  }
+  // try {
+  //   customConfig = JSON.parse(el.text);
+  // } catch (e) {
+  //   throw { message: e, title: i18n.global.t('config_error')};
+  // }
+  console.log('temp', customConfig);
 
   const { translations } = customConfig;
   if (translations) {
@@ -68,6 +68,8 @@ export const load = ({ commit, getters }) => {
   if (customConfig.item && !isUrl(customConfig.item)) {
     customConfig.item = '';
   }
+
+  console.log('temp2', customConfig);
 
   // Set entrypoints from URL
   if (isUrl(item)) customConfig.item = item;
@@ -142,6 +144,8 @@ export const load = ({ commit, getters }) => {
     ...customConfig
   };
 
+  console.log('temp',resultConfig);
+
   commit('setConfig', resultConfig);
 };
 
@@ -170,4 +174,3 @@ export const setDefaultActiveViews = async ({ commit, getters }) => {
 
   commit('config/setActiveViews', activeViews, { root: true});
 };
-

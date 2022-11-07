@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import AnnotationsList from 'components/annotations/AnnotationsList';
-import Notification from 'components/Notification';
+import AnnotationsList from 'components/annotations/AnnotationsList.vue';
+import Notification from 'components/Notification.vue';
 import * as AnnotationUtils from 'src/utils/annotations';
 
 export default {

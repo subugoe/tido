@@ -1,4 +1,4 @@
-import MainView from 'src/views/MainView';
+import MainView from 'src/views/MainView.vue';
 
 const routes = [
   {
@@ -7,13 +7,5 @@ const routes = [
     component: MainView,
   },
 ];
-// Always leave this as last one
-if (process.env.MODE !== 'ssr') {
-  // Always leave this as last one,
-  // but you can also remove it
-  routes.push({
-    path: '/:catchAll(.*)*',
-  });
-}
 
 export default routes;

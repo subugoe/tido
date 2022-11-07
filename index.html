@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+
+  <meta charset="utf-8">
+  <meta name="description" content="<%= htmlWebpackPlugin.options.productDescription %>">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>">
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+<noscript>
+  <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+</noscript>
+
+<!--
+Quick reference for the panel config (panels.connector)
+The numbers below reflect each component's id. For detailed instructions please refer to the README.md!
+
+- 1 = Treeview
+- 2 = Metadata
+- 3 = Image
+- 4 = Text / Content
+- 5 = Annotations
+
+Note: These IDs are supposed to be unique, so please make sure not to repeat these!
+-->
+
+<!-- <script id="tido-config" type="module" src="/src/main.js">
+  {
+    "entrypoint": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
+    "annotations": {
+      "types": [
+        {
+          "contenttype": "Person",
+          "icon": "fasUser",
+          "label": "Names"
+        },
+        {
+          "contenttype": "Place",
+          "icon": "fasMapMarkerAlt",
+          "label": "Places"
+        },
+        {
+          "contenttype": "Editorial Comment",
+          "icon": "fasComment",
+          "label": "Comments"
+        },
+        {
+          "contenttype": "Motif",
+          "icon": "fasHighlighter",
+          "label": "Motifs"
+        },
+        {
+          "contenttype": "Abstract",
+          "annotationType": "text",
+          "displayWhen": "Edierter Text",
+          "label": "Abstract"
+        }
+      ],
+      "tabs":{
+        "Editorial": ["Person", "Place", "Editorial Comment"],
+        "Motif": ["Motif"],
+        "Comments": ["Editorial Comment", "Abstract"]
+      }
+    },
+    "breadcrumbNavigation": {
+      "multiSearch_key": "searchHitList",
+      "source": "external",
+      "search_page_path": "search.html",
+      "search_query_param": "searchTerm",
+      "title_homepage_key": "title_homepage",
+      "title_viewer_key": "title_viewer",
+      "website": "https://ahikar.sub.uni-goettingen.de/website/"
+    },
+    "colors": {
+      "primary": "",
+      "secondary": "",
+      "accent": ""
+    },
+    "header_section": {
+      "show": true,
+      "navigation": true,
+      "panelheadings": true,
+      "titles": true,
+      "toggle": true
+    },
+    "labels": {
+      "item": "Sheet",
+      "manifest": "Manuscript"
+    },
+    "lang": "en-US",
+    "language-switch": true,
+    "meta": {
+      "collection": {
+        "all": true
+      },
+      "manifest": {
+        "all": true
+      },
+      "item": {
+        "all": true
+      }
+    },
+    "notificationColors": {
+      "info":"blue-9",
+      "warning":"red-9"
+    },
+    "panels": [
+      {
+        "connector": [1, 2],
+        "panel_label": "Contents & Metadata",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [3],
+        "panel_label": "Image",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [4],
+        "panel_label": "Text",
+        "show": true,
+        "toggle": true
+      },
+      {
+        "connector": [5],
+        "panel_label": "Annotations",
+        "show": true,
+        "toggle": true
+      }
+    ],
+    "rtl": false,
+    "textContent": {
+      "tabs": {
+        "priority": {
+          "Edierter Text": 1
+        }
+      }
+    },
+    "themes": false
+  }
+</script> -->
+<script type="module" src="/src/main.js">
+
+</script>
+<script >
+const tidoConfig = {
+  "collection": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
+  "manifest": "",
+  "item": "",
+  "breadcrumbNavigation": {
+    "source": "external",
+    "search_page_path": "search.html",
+    "search_query_param": "searchTerm",
+    "title_homepage_key": "title_homepage",
+    "title_viewer_key": "title_viewer",
+    "website": "https://ahiqar.uni-goettingen.de/website/"
+  },
+  "colors": {
+    "primary": "",
+    "secondary": "",
+    "accent": ""
+  },
+  "header_section": {
+    "show": true,
+    "navigation": true,
+    "titles": true,
+    "toggle": true
+  },
+  "lang": "en",
+  "language-switch": false,
+  "notificationColors": {
+    "info": "blue-9",
+    "warning": "red-9"
+  },
+  "panels": [
+    {
+      "label": "contents_and_metadata",
+      "views": [
+        {
+          "id": "tree",
+          "label": "contents",
+          "connector": {
+            "id": 1,
+            "options": {
+              "labels": {
+                "item": "Sheet",
+                "manifest": "Manuscript"
+              }
+            }
+          }
+        },
+        {
+          "id": "metadata",
+          "label": "metadata",
+          "connector": {
+            "id": 2,
+            "options": {
+              "collection": {
+                "all": true
+              },
+              "manifest": {
+                "all": true
+              },
+              "item": {
+                "all": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "image",
+      "views": [
+        {
+        "id": "image",
+        "label": "Image",
+        "connector": {
+          "id": 3
+        }
+      }]
+    },
+    {
+      "label": "text",
+      "views": [
+        {
+          "id": "text1",
+          "label": "Transcription",
+          "default": true,
+          "connector": {
+            "id": 4,
+            "options": {
+              "type": "transcription"
+            }
+          }
+        },
+        {
+          "id": "text2",
+          "label": "Transliteration",
+          "connector": {
+            "id": 4,
+            "options": {
+              "type": "transliteration"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "annotations",
+      "views": [
+        {
+          "id": "annotations1",
+          "label": "Editorial",
+          "default": true,
+          "connector": {
+            "id": 5,
+            "options": {
+              "types": [
+                {
+                  "name": "Person",
+                  "icon": "biPersonFill",
+                  "label": "Names"
+                },
+                {
+                  "name": "Place",
+                  "icon": "biGeoAltFill",
+                  "label": "Places"
+                },
+                {
+                  "name": "Editorial Comment",
+                  "icon": "biChatFill",
+                  "label": "comments"
+                },
+                {
+                  "name": "Reference",
+                  "icon": "biBoxArrowUpRight",
+                  "label": "References"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "annotations2",
+          "label": "Motif",
+          "connector": {
+            "id": 5,
+            "options": {
+              "types": [
+                {
+                  "name": "Motif",
+                  "icon": "biPenFill",
+                  "label": "Motifs"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "rtl": false,
+  "themes": false,
+  "translations": {
+    "en": {
+      "contents_and_metadata": "Contents & Metadata"
+    }
+  }
+}
+
+window.addEventListener('load', function () {
+  const query = new URLSearchParams(window.location.search)
+
+  const options = {
+    container: '#app',
+    config: tidoConfig,
+  };
+
+    window.tido = new window.Tido(options);
+
+});
+</script>
+
+<div id="app"></div>
+</body>
+</html>

@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import CollectionMetadata from 'components/metadata/CollectionMetadata';
-import ManifestMetadata from 'components/metadata/ManifestMetadata';
-import ItemMetadata from 'components/metadata/ItemMetadata';
+import CollectionMetadata from 'components/metadata/CollectionMetadata.vue';
+import ManifestMetadata from 'components/metadata/ManifestMetadata.vue';
+import ItemMetadata from 'components/metadata/ItemMetadata.vue';
 
 export default {
   name: 'Metadata',

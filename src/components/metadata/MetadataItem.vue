@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import MetadataLink from 'components/metadata/MetadataLink';
-import MetadataValue from 'components/metadata/MetadataValue';
+import MetadataLink from 'components/metadata/MetadataLink.vue';
+import MetadataValue from 'components/metadata/MetadataValue.vue';
 
 export default {
   name: 'MetadataItem',

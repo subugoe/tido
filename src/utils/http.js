@@ -1,17 +1,18 @@
-import axios from "axios";
+import axios from 'axios';
 import { i18n } from '@/boot/i18n';
 
 export async function request(url) {
   try {
-    const response = await axios.request(url);
+    const response = await axios.get(url);
     return response.data;
-  } catch ({ response }) {
-    if (!response) {
-      throw getError(null, i18n.global.t('failed_to_fetch_url') + ' ' + url)
+  } catch (err) {
+    const errorResponse = err.response;
+    if (!errorResponse) {
+      throw getError(null, i18n.global.t('failed_to_fetch_url') + ' ' + url);
     }
 
-    if (response.status !== 200) {
-      throw getError(response.status, response.message)
+    if (errorResponse.status !== 200) {
+      throw getError(errorResponse.status, errorResponse.message);
     }
   }
 }
@@ -31,9 +32,9 @@ export const cachableRequest = cacheRequest();
 
 function getError(code, message) {
   let title = 'server_error';
-  if (code === 404) title = 'not_found'
-  else if (code === 401) title = 'unauthorized'
+  if (code === 404) title = 'not_found';
+  else if (code === 401) title = 'unauthorized';
 
   title = i18n.global.t(title);
-  return { title, message};
+  return { title, message };
 }
