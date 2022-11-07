@@ -13,44 +13,31 @@ stages:
   - test:e2e
   - deploy
 
-# builds TIDO on feature and bugfix branches.
-build_test:
-  image: node:14
-  except:
-   - main
-   - develop
-  stage: build
-  script:
-   - bash .ci-scripts/build.sh
-  artifacts:
-    paths:
-     - dist/
-
-build_main_and_develop:
+build:
   image: node:14
   only:
-   - main
-   - develop
+    - main
+    - develop
   stage: build
   script:
-   - bash .ci-scripts/build.sh
+    - bash .ci-scripts/build.sh
   artifacts:
     paths:
-     - dist/
+      - dist/
     expire_in: 1 mos
 
 test:e2e:
   image: cypress/browsers:node14.17.0-chrome91-ff89
   stage: test:e2e
   script:
-   - bash .ci-scripts/build.sh
-   - bash .ci-scripts/set_entrypoint_ci.sh
-   - npm run dev & npm run cypress:headless
+    - bash .ci-scripts/build.sh
+    - bash .ci-scripts/set_entrypoint_ci.sh
+    - npm run dev & npm run cypress:headless
   artifacts:
     when: always
     paths:
-     - cypress/videos/**/*.mp4
-     - cypress/screenshots/**/*.png
+      - tests/cypress/videos/**/*.mp4
+      - tests/cypress/screenshots/**/*.png
     expire_in: 1 day
 
 pages:
@@ -61,9 +48,16 @@ pages:
     - sh .ci-scripts/install-deps.sh
     - bash .ci-scripts/update-artifacts.sh
   environment:
-    name: ${CI_COMMIT_REF_SLUG}
+    name: $CI_COMMIT_REF_SLUG
     url: https://subugoe.pages.gwdg.de/emo/tido/${CI_COMMIT_REF_SLUG}/
+    on_stop: stop_env
   artifacts:
     name: "$CI_COMMIT_SHORT_SHA"
     paths:
-     - public
+      - public
+
+stop_env:
+  stage: deploy
+  environment:
+    name: $CI_COMMIT_REF_SLUG
+    action: stop
