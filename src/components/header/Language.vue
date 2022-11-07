@@ -1,20 +1,7 @@
 <template>
   <div class="col-xs-auto">
-    <q-btn
-      flat
-      :title="$t('changeLanguage')"
-    >
-      <q-icon
-        :name="fasLanguage"
-        size="md"
-        :color="$q.dark.isActive ? 'bg-black' : 'accent'"
-      />
-
-      <q-menu
-        anchor="center middle"
-        fit
-        self="center middle"
-      >
+    <q-btn color="grey-5" flat :title="$t('change_language')" icon="bi-translate">
+      <q-menu anchor="center middle" fit self="center middle">
         <q-list>
           <q-item
             v-for="lang in langs"
@@ -24,9 +11,7 @@
             :class="{ language: selectedLang === lang.value }"
             @click="handleLanguageChange(lang)"
           >
-            <q-item-section>
-              {{ lang.label }}
-            </q-item-section>
+            <q-item-section>{{ lang.label }}</q-item-section>
           </q-item>
         </q-list>
       </q-menu>
@@ -35,16 +20,8 @@
 </template>
 
 <script>
-import { fasLanguage } from '@quasar/extras/fontawesome-v5';
-
 export default {
   name: 'Language',
-  props: {
-    config: {
-      type: Object,
-      default: () => {},
-    },
-  },
   data() {
     return {
       langs: [
@@ -60,10 +37,12 @@ export default {
     },
   },
   mounted() {
-    this.selectedLang = this.config.lang;
+    this.selectedLang = this.config.lang || 'en-US';
   },
-  created() {
-    this.fasLanguage = fasLanguage;
+  computed: {
+    config() {
+      return this.$store.getters['config/config'];
+    },
   },
   methods: {
     handleLanguageChange(lang) {

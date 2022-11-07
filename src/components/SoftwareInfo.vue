@@ -1,34 +1,22 @@
 <template>
-  <div class="col-xs-auto">
+  <div>
     <q-btn
       flat
-      label=""
-      :title="$t('projectInfo')"
+      round
+      :title="$t('project_info')"
       @click="infobox = true"
+      color="grey-5"
+      icon="bi-info-lg"
     >
-      <q-icon
-        size="xs"
-        :name="fasInfo"
-        :color="$q.dark.isActive ? 'bg-black' : 'accent'"
-      />
     </q-btn>
 
     <q-dialog v-model="infobox">
       <q-card>
         <q-card-section>
-          <h1 class="text-h5 q-pb-md">
-            TIDO
-          </h1>
-
-          <p class="text-weight-bold">
-            {{ $t('infoDescription') }}
-          </p>
-
-          <p>Copyright (c) {{ actualYear }} {{ $t('infoCopyright') }}</p>
-
-          <p class="q-mb-none">
-            Version {{ tidoVersion }}, {{ $t('infoLicense') }}
-          </p>
+          <h1 class="text-h5 q-pb-md">TIDO</h1>
+          <p class="text-weight-bold">{{ $t('tido_description') }}</p>
+          <p>Copyright (c) {{ actualYear }} {{ $t('sub_info') }}</p>
+          <p class="q-mb-none">Version {{ tidoVersion }}, {{ $t('license') }}</p>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
@@ -37,41 +25,26 @@
             href="https://gitlab.gwdg.de/subugoe/emo/tido/-/blob/main/README.md"
             target="_blank"
             type="a"
-          >
-            <q-icon
-              :name="fasBook"
-              size="md"
-              class="q-pr-md"
-            />
-            {{ $t('infoDocs') }}
-          </q-btn>
+            icon="bi-book"
+            :label="$t('documentation')"
+          />
 
           <q-btn
             flat
             href="https://gitlab.gwdg.de/subugoe/emo/tido/"
             target="_blank"
             type="a"
-          >
-            <q-icon
-              :name="fasCode"
-              size="md"
-              class="q-pr-md"
-            />
-            {{ $t('infoSourcecode') }}
-          </q-btn>
+            icon="bi-code-slash"
+            :label="$t('source_code')"
+          />
 
           <q-btn
             flat
             href="mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
             type="a"
-          >
-            <q-icon
-              :name="fasBug"
-              size="md"
-              class="q-pr-md"
-            />
-            {{ $t('infoBugs') }}
-          </q-btn>
+            icon="bi-bug-fill"
+            :label="$t('report_a_bug')"
+          />
         </q-card-section>
 
         <q-card-actions align="right">
@@ -79,7 +52,7 @@
             v-close-popup
             :class="$q.dark.isActive ? 'text-white' : 'text-black'"
             flat
-            :label="$t('infoClose')"
+            :label="$t('close')"
           />
         </q-card-actions>
       </q-card>
@@ -88,12 +61,6 @@
 </template>
 
 <script>
-import {
-  fasBook,
-  fasBug,
-  fasCode,
-  fasInfo,
-} from '@quasar/extras/fontawesome-v5';
 import packageInfo from '../../package.json';
 
 export default {
@@ -111,11 +78,6 @@ export default {
     },
   },
   created() {
-    this.fasBook = fasBook;
-    this.fasBug = fasBug;
-    this.fasCode = fasCode;
-    this.fasInfo = fasInfo;
-
     this.tidoVersion = packageInfo.version;
   },
 };

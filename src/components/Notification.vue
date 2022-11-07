@@ -1,33 +1,22 @@
 <template>
-  <q-card
-    bordered
-    flat
-  >
-    <q-card-section class="text-center">
+  <div>
+    <div class="text-center">
       <q-icon
         :color="color"
         :name="icon"
-        class="q-pr-sm"
-        size="sm"
+        class="q-pr-sm text-xs"
       />
-      <span class="text-body1 text-uppercase vertical-middle">{{ $t(titleKey) }}</span>
-    </q-card-section>
+      <span class="text-bold vertical-middle">{{ title || message }}</span>
+    </div>
 
-    <q-separator inset />
-
-    <q-card-section class="text-body2 text-center">
+    <div class="text-body2 text-center q-mt-sm" v-if="title">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <span v-html="message" />
-    </q-card-section>
-  </q-card>
+    </div>
+  </div>
 </template>
 
 <script>
-import {
-  fasInfoCircle,
-  fasExclamationTriangle,
-} from '@quasar/extras/fontawesome-v5';
-
 export default {
   name: 'Notification',
   props: {
@@ -35,10 +24,7 @@ export default {
       type: String,
       default: () => '',
     },
-    titleKey: {
-      type: String,
-      default: () => '',
-    },
+    title: String,
     type: {
       type: String,
       default: () => '',
@@ -69,9 +55,9 @@ export default {
     icon() {
       switch (this.type) {
         case 'info':
-          return fasInfoCircle;
+          return 'fa-solid fa-circle-info';
         case 'warning':
-          return fasExclamationTriangle;
+          return 'fa-solid fa-triangle-exclamation';
         default:
           return '';
       }
