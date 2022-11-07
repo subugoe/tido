@@ -1,43 +1,41 @@
 <template>
-  <div
-    class="root panels-target"
-  >
-    <div
-      v-for="(panel, index) in panels"
-      v-show="panel.show && panel.connector.length"
-      :key="`pc${index}`"
-      class="item"
-    >
-      <ToolBar
-        v-if="config['header_section'].panelheadings"
-        :heading="panel.panel_label"
-      />
-
-      <q-separator />
-
-      <Panel :panel="panel" :index="index" />
+  <div class="root panels-target q-gutter-md q-px-md q-pb-md" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
+    <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item">
+      <Panel :panel="panel" :active-view="getActiveView(i)" @active-view="onActiveViewChange($event, i)" />
     </div>
   </div>
 </template>
 
 <script>
-import ToolBar from '@/components/ToolBar.vue';
-import Panel from '@/components/Panel.vue';
+import Panel from 'components/panels/Panel.vue';
 
 export default {
   name: 'MainView',
   components: {
-    ToolBar,
     Panel,
   },
   computed: {
     panels() {
-      return this.$store.getters['contents/panels'];
+      const { panels } = this.config;
+      return panels;
     },
     config() {
       return this.$store.getters['config/config'];
     },
+    activeViews() {
+      return this.$store.getters['config/activeViews'];
+    }
   },
+  mounted() {
+  },
+  methods: {
+    onActiveViewChange(viewIndex, panelIndex) {
+      this.$store.dispatch('config/setActivePanelView', {viewIndex, panelIndex});
+    },
+    getActiveView(panelIndex) {
+      return this.activeViews[panelIndex];
+    }
+  }
 };
 </script>
 
@@ -54,13 +52,6 @@ export default {
   @media (max-width: $breakpoint-sm-custom-md) {
     min-height: 100vh;
   }
-}
-
-.item-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
 }
 
 .root {
