@@ -15,12 +15,12 @@
 </template>
 
 <script>
-import MetadataItem from "components/metadata/MetadataItem.vue";
+import MetadataItem from 'components/metadata/MetadataItem.vue';
 
 export default {
   name: 'ItemMetadata',
   components: {
-    MetadataItem
+    MetadataItem,
   },
   computed: {
     item() {
@@ -49,7 +49,7 @@ export default {
         { key: 'image_notes', value: this.item.image?.license?.notes },
       ].filter((item) => item.value);
     },
-  }
+  },
 };
 </script>
 

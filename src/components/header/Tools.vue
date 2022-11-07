@@ -34,7 +34,7 @@ export default {
     },
     showLanguageSwitch() {
       return this.config.header?.languageSwitch !== undefined ? this.config.header?.languageSwitch : true;
-    }
+    },
   },
 };
 </script>

@@ -55,11 +55,11 @@ import Tree from 'components/Tree.vue';
 import Annotations from 'components/annotations/Annotations.vue';
 import Content from 'components/Content.vue';
 import OpenSeadragon from 'components/OpenSeadragon.vue';
-import { findComponent } from "src/utils/panels";
+import { findComponent } from 'src/utils/panels';
 import PanelZoomAction from 'components/panels/actions/PanelZoomAction.vue';
 import Notification from 'components/Notification.vue';
 import PanelToggleAction from 'components/panels/actions/PanelToggleAction.vue';
-import PanelImageAction from "components/panels/actions/PanelImageAction.vue";
+import PanelImageAction from 'components/panels/actions/PanelImageAction.vue';
 
 export default {
   components: {
@@ -71,20 +71,20 @@ export default {
     PanelZoomAction,
     PanelToggleAction,
     PanelImageAction,
-    Notification
+    Notification,
   },
   props: {
     panel: {
       type: Object,
       default: () => { },
     },
-    activeView: Number
+    activeView: Number,
   },
   data() {
     return {
       tabs: [],
       activeTabIndex: 0,
-      unsubscribe: null
+      unsubscribe: null,
     };
   },
   computed: {
@@ -96,7 +96,7 @@ export default {
   },
   methods: {
     getContentUrl(type) {
-      const contentItem = this.item.content.find(c => c.type.split('type=')[1] === type);
+      const contentItem = this.item.content.find((c) => c.type.split('type=')[1] === type);
       return contentItem ? contentItem.url : null;
     },
     init(views) {
@@ -105,7 +105,7 @@ export default {
 
       views.forEach((view, i) => {
         const { component } = findComponent(view.connector.id);
-        let methodName = 'create' + component + 'View';
+        let methodName = `create${component}View`;
         if (!this[methodName]) methodName = 'createDefaultView';
         this[methodName](view, i);
       });
@@ -122,13 +122,15 @@ export default {
       const events = {
         update: (value) => {
           this.tabs[i].props.fontSize = value;
-        }
+        },
       };
 
       const actions = [{
         component: 'PanelZoomAction',
-        props: { min: 14, max: 28, step: 2, startValue: fontSize },
-        events
+        props: {
+          min: 14, max: 28, step: 2, startValue: fontSize,
+        },
+        events,
       }];
 
       this.tabs = [...this.tabs, {
@@ -136,7 +138,7 @@ export default {
         label,
         props: { type, url, fontSize },
         actions,
-        events
+        events,
       }];
     },
     createAnnotationsView(view, i) {
@@ -152,28 +154,27 @@ export default {
         update: (value) => {
           if (value === 'maybe') return;
           this.$store.dispatch(value ? 'annotations/selectAll' : 'annotations/selectNone');
-        }
+        },
       };
 
       this.unsubscribe = this.$store.subscribeAction(async ({ type, payload }) => {
         if (this.tabs.length && this.tabs[0].actions?.length && type === 'annotations/setActiveAnnotations') {
           const totalAnnotationsAmount = this.$store.getters['annotations/filteredAnnotations'].length;
-          let selected = Object.keys(payload).length === totalAnnotationsAmount;
+          let newSelected = Object.keys(payload).length === totalAnnotationsAmount;
 
-          if (!selected && Object.keys(payload).length > 0) selected = 'maybe';
+          if (!newSelected && Object.keys(payload).length > 0) newSelected = 'maybe';
 
-          if (this.tabs[i].actions[0].props.selected !== selected)
-            this.tabs[i].actions[0].props.selected = selected;
+          if (this.tabs[i].actions[0].props.selected !== newSelected) this.tabs[i].actions[0].props.selected = newSelected;
         }
       });
 
-      let actions = [{
+      const actions = [{
         component: 'PanelToggleAction',
         props: {
           selected,
-          label: this.$t('select_all')
+          label: this.$t('select_all'),
         },
-        events
+        events,
       }];
 
       this.tabs = [...this.tabs, {
@@ -190,7 +191,7 @@ export default {
       this.tabs = [...this.tabs, {
         component,
         label,
-        props: { options }
+        props: { options },
       }];
     },
     createTreeView(view) {
@@ -205,27 +206,26 @@ export default {
         props: { ...connector.options },
         actions: [{
           component: 'PanelImageAction',
-        }]
+        }],
       }];
     },
-    createDefaultView(view, i) {
+    createDefaultView(view) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
       this.tabs = [...this.tabs, {
         component,
         label,
-        props: { ...connector.options }
+        props: { ...connector.options },
       }];
     },
 
-
-    onViewChange(event) {
+    onViewChange() {
       this.$emit('active-view', this.activeTabIndex);
-    }
+    },
   },
   watch: {
     panel: {
-      handler({ views, label }) {
+      handler({ views }) {
         this.init(views);
       },
       deep: true,
@@ -235,14 +235,14 @@ export default {
       handler(value) {
         this.activeTabIndex = value;
       },
-      immediate: true
+      immediate: true,
     },
     item: {
       handler() {
         this.init(this.panel.views);
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
 

@@ -1,12 +1,12 @@
 <template>
   <q-layout class="root viewport" view="hHh Lpr fFf">
-    <Header />
+    <Header/>
     <q-page-container v-if="ready" class="root">
-      <router-view />
+      <router-view/>
     </q-page-container>
 
     <q-page-container v-else class="error-container">
-      <Loading v-if="isLoading" />
+      <Loading v-if="isLoading"/>
       <Notification
         v-else
         :message="errorMessage"
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {setCssVar} from 'quasar';
+import { setCssVar } from 'quasar';
 import Header from 'components/header/Header.vue';
 import Notification from '@/components/Notification.vue';
 import BookmarkService from './services/bookmark';
@@ -30,14 +30,14 @@ export default {
   components: {
     Header,
     Notification,
-    Loading
+    Loading,
   },
   data() {
     return {
       errorTitle: '',
       errorMessage: '',
-      isLoading: false
-    }
+      isLoading: false,
+    };
   },
   computed: {
     ready() {
@@ -54,6 +54,8 @@ export default {
       if (manifestUrl) {
         return !!(this.manifest);
       }
+
+      return true;
     },
     annotations() {
       return this.$store.getters['annotations/annotations'];
@@ -134,14 +136,13 @@ export default {
         if (collection) {
           await this.getCollection(collection);
         } else if (manifest) {
-          await this.getManifest(manifest)
+          await this.getManifest(manifest);
         }
       } catch (e) {
         this.isLoading = false;
         this.errorTitle = e.title || 'unknown_error';
         this.errorMessage = e.message || 'please_try_again_later';
       }
-
     },
     isReady() {
       return this.item && this.manifests;
@@ -172,7 +173,8 @@ export default {
     overflow: scroll;
   }
 }
-.error-container{
+
+.error-container {
   display: flex;
   flex-direction: column;
   justify-content: center;

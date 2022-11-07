@@ -15,12 +15,12 @@
 </template>
 
 <script>
-import MetadataItem from "components/metadata/MetadataItem.vue";
+import MetadataItem from 'components/metadata/MetadataItem.vue';
 
 export default {
   name: 'CollectionMetadata',
   components: {
-    MetadataItem
+    MetadataItem,
   },
   computed: {
     collection() {
@@ -44,10 +44,10 @@ export default {
           })),
         ...(collectorName ? [{ key: 'collector', value: collectorName }] : []),
         ...(description ? [{ key: 'description', value: description }] : []),
-        ...(this.collection.metadata || [])
+        ...(this.collection.metadata || []),
       ];
     },
-  }
+  },
 };
 </script>
 

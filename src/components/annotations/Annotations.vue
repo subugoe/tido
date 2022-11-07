@@ -21,24 +21,22 @@
 </template>
 
 <script>
-import AnnotationsList from "components/annotations/AnnotationsList";
-import Loading from "components/Loading";
-import Notification from "components/Notification";
+import AnnotationsList from 'components/annotations/AnnotationsList';
+import Notification from 'components/Notification';
 import * as AnnotationUtils from 'src/utils/annotations';
 
 export default {
-  name: "Annotations",
+  name: 'Annotations',
   components: {
     AnnotationsList,
-    Loading,
     Notification,
   },
   data: () => ({
-    message: 'no_annotations_in_view'
+    message: 'no_annotations_in_view',
   }),
   props: {
     url: String,
-    types: Array
+    types: Array,
   },
   computed: {
     config() {
@@ -63,15 +61,10 @@ export default {
       // We need to make sure that annotations are loaded (this.annotations),
       // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
       // and the annotation are filtered by type (this.filteredAnnotations).
-      return (this.annotations !== null) + '|' + this.activeContentUrl;
-    }
+      return `${this.annotations !== null}|${this.activeContentUrl}`;
+    },
   },
   watch: {
-    annotations: {
-     async handler(value) {
-      },
-      immediate: true
-    },
     updateTextHighlighting: {
       handler(value) {
         if (value) {
@@ -81,10 +74,8 @@ export default {
           this.highlightTargetsLevel0();
         }
       },
-      immediate: true
-    }
-  },
-  async mounted() {
+      immediate: true,
+    },
   },
   beforeUnmount() {
     return this.$store.dispatch('annotations/resetAnnotations');
@@ -119,8 +110,8 @@ export default {
         AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
       }
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

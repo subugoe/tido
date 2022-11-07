@@ -9,27 +9,26 @@ export default {
   name: 'PanelToggleAction',
   props: {
     selected: Boolean,
-    label: String
+    label: String,
   },
   data: () => ({
-    selectedModel: false
+    selectedModel: false,
   }),
   watch: {
     selected: {
-      handler(value, oldValue) {
+      handler(value) {
         this.selectedModel = value;
       },
-      immediate: true
+      immediate: true,
     },
     selectedModel(value, oldValue) {
-      if (value !== oldValue)
-        this.$emit('update', value);
-    }
+      if (value !== oldValue) this.$emit('update', value);
+    },
   },
   // mounted() {
   //   this.selectedModel = false;
   // }
-}
+};
 </script>
 
 <style scoped>

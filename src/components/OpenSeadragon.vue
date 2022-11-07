@@ -10,9 +10,9 @@
 
 <script>
 import OpenSeadragon from 'openseadragon';
+import { delay } from 'src/utils';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
-import { delay } from "src/utils";
 
 export default {
   name: 'OpenSeadragon',
@@ -24,7 +24,7 @@ export default {
     return {
       viewer: null,
       error: null,
-      isLoading: false
+      isLoading: false,
     };
   },
   computed: {
@@ -56,15 +56,13 @@ export default {
         try {
           const response = await fetch(this.item.image.id);
 
-          if (response.status === 500) throw { message: 'error_image_not_exists'};
+          if (response.status === 500) throw { message: 'error_image_not_exists' };
 
-          if (response.status !== 200 && response.status !== 201) throw { message: 'error_vpn'};
-
+          if (response.status !== 200 && response.status !== 201) throw { message: 'error_vpn' };
 
           this.error = null;
           await delay(1000);
           this.initOpenSeagragon();
-
         } catch (error) {
           this.error = error;
           this.isLoading = false;
@@ -87,7 +85,7 @@ export default {
         this.isLoading = false;
       });
     },
-  }
+  },
 };
 </script>
 

@@ -15,12 +15,12 @@
 </template>
 
 <script>
-import MetadataItem from "components/metadata/MetadataItem.vue";
+import MetadataItem from 'components/metadata/MetadataItem.vue';
 
 export default {
   name: 'ManifestMetadata',
   components: {
-    MetadataItem
+    MetadataItem,
   },
   computed: {
     manifest() {
@@ -45,10 +45,10 @@ export default {
           key: 'License',
           value: manifest.id,
         })),
-        ...(this.manifest.metadata || [])
+        ...(this.manifest.metadata || []),
       ];
     },
-  }
+  },
 };
 </script>
 

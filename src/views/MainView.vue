@@ -24,18 +24,18 @@ export default {
     },
     activeViews() {
       return this.$store.getters['config/activeViews'];
-    }
+    },
   },
   mounted() {
   },
   methods: {
     onActiveViewChange(viewIndex, panelIndex) {
-      this.$store.dispatch('config/setActivePanelView', {viewIndex, panelIndex});
+      this.$store.dispatch('config/setActivePanelView', { viewIndex, panelIndex });
     },
     getActiveView(panelIndex) {
       return this.activeViews[panelIndex];
-    }
-  }
+    },
+  },
 };
 </script>
 

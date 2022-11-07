@@ -16,22 +16,18 @@
 </template>
 
 <script>
-import BreadCrumbNavigation from 'components/BreadcrumbNavigation.vue';
 import Navbar from 'components/header/Navbar.vue';
 import TitleBar from 'components/header/TitleBar.vue';
 import PanelsToggle from 'components/header/PanelsToggle.vue';
 import Tools from 'components/header/Tools.vue';
-import SoftwareInfo from "components/SoftwareInfo.vue";
 
 export default {
   name: 'Header',
   components: {
-    BreadCrumbNavigation,
     Navbar,
     TitleBar,
     PanelsToggle,
     Tools,
-    SoftwareInfo
   },
   props: {
     configErrorTitle: {
@@ -57,7 +53,7 @@ export default {
     },
     showPanelsToggle() {
       return this.config.header?.panelsToggle !== undefined ? this.config.header?.panelsToggle : true;
-    }
+    },
   },
 };
 </script>

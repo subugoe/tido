@@ -35,13 +35,13 @@ export default {
   data: () => ({
     disableIncrease: false,
     disableDecrease: false,
-    value: 0
+    value: 0,
   }),
   props: {
     min: Number,
     max: Number,
     step: Number,
-    startValue: Number
+    startValue: Number,
   },
   mounted() {
     this.value = this.startValue;
@@ -51,7 +51,7 @@ export default {
       return icon(name);
     },
     increase() {
-      this.value = this.value + this.step;
+      this.value += this.step;
       this.$emit('update', this.value);
 
       if (this.value >= this.max) {
@@ -62,7 +62,7 @@ export default {
       }
     },
     decrease() {
-      this.value = this.value - this.step;
+      this.value -= this.step;
       this.$emit('update', this.value);
 
       if (this.value <= this.min) {
@@ -72,7 +72,7 @@ export default {
         this.disableDecrease = false;
       }
     },
-  }
+  },
 };
 </script>
 

@@ -40,7 +40,7 @@ export default {
   props: {
     url: String,
     type: String,
-    fontSize: Number
+    fontSize: Number,
   },
   data: () => ({
     content: '',
@@ -74,13 +74,10 @@ export default {
   watch: {
     url: {
       handler: 'loadContent',
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
-    decrease() {
-      this.fontSize -= 2;
-    },
     async loadContent(url) {
       this.content = '';
       try {
@@ -109,9 +106,6 @@ export default {
       } catch (err) {
         this.errorTextMessage = err.message;
       }
-    },
-    increase() {
-      this.fontSize += 2;
     },
     isValidTextContent(text) {
       let parsed;

@@ -42,7 +42,7 @@ export default {
       expanded: [],
       selected: null,
       tree: [],
-      treeRef: null
+      treeRef: null,
     };
   },
   computed: {
@@ -73,18 +73,16 @@ export default {
   },
   watch: {
     itemUrl: {
-      handler: 'onItemUrlChange'
+      handler: 'onItemUrlChange',
     },
     collection: {
       handler: 'onCollectionChange',
-      immediate: true
+      immediate: true,
     },
     selected: {
       handler: 'onSelectedChange',
       immediate: true,
     },
-  },
-  async mounted() {
   },
   methods: {
     async onCollectionChange() {
@@ -95,20 +93,20 @@ export default {
           selectable: false,
           url: this.collectionTitle,
           children: this.manifests.map(({ sequence, label, id: manifestId }) => ({
-              label,
-              sequence,
-              url: manifestId,
-              selectable: false,
-              children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id, label }, i) => ({
-                label: label ?? this.getDefaultLabel(i),
-                url: id,
-                parent: manifestId
-              }))
-            }
+            label,
+            sequence,
+            url: manifestId,
+            selectable: false,
+            children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id, label }, i) => ({
+              label: label ?? this.getDefaultLabel(i),
+              url: id,
+              parent: manifestId,
+            })),
+          }
           )),
         }];
 
-        await this.$nextTick(() => {
+        this.$nextTick(() => {
           this.expanded = [this.collectionTitle, this.manifest.id];
           this.selected = this.itemUrl !== '' ? this.itemUrl : this.manifest.sequence[0]?.id;
         });
@@ -119,7 +117,7 @@ export default {
     },
     getDefaultLabel(index) {
       const prefix = this.labels.item ?? this.$t('page');
-      return prefix + ' ' + (index + 1);
+      return `${prefix} ${index + 1}`;
     },
     onSelectedChange(value) {
       const { treeRef } = this.$refs;
@@ -128,7 +126,7 @@ export default {
       const node = treeRef.getNodeByKey(value);
       if (!node) return;
 
-      const {url: itemUrl, parent: manifestUrl } = node;
+      const { url: itemUrl, parent: manifestUrl } = node;
 
       this.$nextTick(() => {
         document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
@@ -144,14 +142,14 @@ export default {
 
       if (!this.expanded.includes(manifestUrl)) this.expanded.push(manifestUrl);
       this.$nextTick(() => {
-        document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' })
+        document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
       });
 
       this.$store.dispatch('contents/initItem', itemUrl);
     },
-    onAfterShow(event) {
+    onAfterShow() {
       document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
-    }
+    },
   },
 };
 </script>

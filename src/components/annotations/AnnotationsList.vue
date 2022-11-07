@@ -37,10 +37,6 @@ export default {
       type: Object,
       default: () => {},
     },
-    config: {
-      type: Object,
-      default: () => {},
-    },
     configuredAnnotations: {
       type: Array,
       default: () => [],
@@ -49,7 +45,7 @@ export default {
       type: Function,
       default: () => null,
     },
-    types: Array
+    types: Array,
   },
   computed: {
     config() {
@@ -71,7 +67,7 @@ export default {
     },
     getIconName(typeName) {
       return this.types.find(({ name }) => name === typeName)?.icon;
-    }
+    },
   },
 };
 </script>

@@ -41,7 +41,7 @@ export default {
   methods: {
     icon(name) {
       return icon(name);
-    }
-  }
+    },
+  },
 };
 </script>

@@ -2,18 +2,18 @@
   <q-icon
     v-if="name"
     :color="isDarkMode ? 'grey-1 text-grey-1' : 'primary'"
-    :name="name"
+    :name="iconName"
     size="16px"
   />
 </template>
 <script>
-import { icon } from '@/utils/icon';
 import { Dark } from 'quasar';
+import { icon } from '@/utils/icon';
 
 export default {
   name: 'AnnotationIcon',
   props: {
-    name: String
+    name: String,
   },
   computed: {
     show() {
@@ -22,7 +22,7 @@ export default {
     isDarkMode() {
       return Dark.isActive;
     },
-    name() {
+    iconName() {
       return icon(this.name);
     },
   },

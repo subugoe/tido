@@ -30,9 +30,6 @@ export default {
       default: () => '',
     },
   },
-  computed: {
-    fasExternalLinkAlt: () => fasExternalLinkAlt,
-  },
 };
 </script>
 

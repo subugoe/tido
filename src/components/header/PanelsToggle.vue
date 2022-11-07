@@ -97,7 +97,7 @@ import { icon } from 'src/utils/icon';
 export default {
   name: 'PanelsToggle',
   data: () => ({
-    toggles: []
+    toggles: [],
   }),
   computed: {
     panels() {
@@ -109,10 +109,10 @@ export default {
       handler(value) {
         this.toggles = value
           .filter(({ toggle }) => toggle === true)
-          .map(({ show, label }, index) => ({index, show, label}));
+          .map(({ show, label }, index) => ({ index, show, label }));
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     update(index, show) {
@@ -138,7 +138,7 @@ export default {
     },
     icon(name) {
       return icon(name);
-    }
+    },
   },
 };
 </script>

@@ -53,9 +53,6 @@ export default {
       this.selectedTheme = 'tido';
     }
   },
-  created() {
-    this.fasPalette = fasPalette;
-  },
   methods: {
     changeColorsTo(color) {
       this.selectedTheme = color;

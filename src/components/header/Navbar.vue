@@ -80,7 +80,7 @@ export default {
     },
   },
   methods: {
-    prev(event) {
+    prev() {
       const prevIndex = this.itemIndex - 1;
       let itemUrl = '';
 
@@ -92,7 +92,7 @@ export default {
         const prevManifest = this.manifests[prevManifestIndex];
         this.$store.commit('contents/setManifest', prevManifest);
         this.$store.dispatch('config/setDefaultActiveViews');
-        itemUrl = prevManifest.sequence[prevManifest.sequence.length -1].id;
+        itemUrl = prevManifest.sequence[prevManifest.sequence.length - 1].id;
       } else {
         // We load the previous item
         itemUrl = this.manifest.sequence[prevIndex].id;
@@ -115,8 +115,8 @@ export default {
         itemUrl = this.manifest.sequence[nextIndex].id;
       }
       this.$store.dispatch('contents/initItem', itemUrl);
-    }
-  }
+    },
+  },
 };
 </script>
 

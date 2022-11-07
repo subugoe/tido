@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: "PanelImageAction",
+  name: 'PanelImageAction',
   data() {
     return {
       buttons: [
@@ -28,7 +28,7 @@ export default {
       ],
     };
   },
-}
+};
 </script>
 
 <style scoped>

@@ -14,7 +14,7 @@ import ItemMetadata from 'components/metadata/ItemMetadata';
 export default {
   name: 'Metadata',
   props: {
-    options: Object
+    options: Object,
   },
   components: {
     ItemMetadata,
@@ -24,7 +24,7 @@ export default {
   computed: {
     config() {
       return this.$store.getters['config/config'];
-    }
+    },
   },
 };
 </script>
