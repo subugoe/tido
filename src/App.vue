@@ -1,24 +1,16 @@
 <template>
-  <q-layout
-    class="root viewport"
-    view="hHh Lpr fFf"
-  >
-    <Header v-if="isConfigValid && config['header_section'].show" />
-
-    <Header v-else :config-error-title="configErrorTitle" />
-
-    <q-page-container
-      v-if="isConfigValid"
-      class="root"
-    >
+  <q-layout class="root viewport" view="hHh Lpr fFf">
+    <Header />
+    <q-page-container v-if="ready" class="root">
       <router-view />
     </q-page-container>
 
-    <q-page-container v-else class="config-error-container">
+    <q-page-container v-else class="error-container">
+      <Loading v-if="isLoading" />
       <Notification
-        :message="$t(configErrorMessage)"
-        :notification-colors="config.notificationColors"
-        :title-key="$t(configErrorTitle)"
+        v-else
+        :message="errorMessage"
+        :title="errorTitle"
         class="q-ma-md-xl"
         type="warning"
       />
@@ -27,100 +19,72 @@
 </template>
 
 <script>
-import { setCssVar } from 'quasar';
-import Header from '@/components/Header.vue';
-import Navigation from '@/mixins/navigation';
+import {setCssVar} from 'quasar';
+import Header from 'components/header/Header.vue';
 import Notification from '@/components/Notification.vue';
 import BookmarkService from './services/bookmark';
+import Loading from '@/components/Loading.vue';
 
 export default {
   name: 'TIDO',
   components: {
     Header,
     Notification,
+    Loading
   },
-  mixins: [Navigation],
+  data() {
+    return {
+      errorTitle: '',
+      errorMessage: '',
+      isLoading: false
+    }
+  },
   computed: {
+    ready() {
+      const { collection: collectionUrl, manifest: manifestUrl } = this.config;
+
+      if (!this.item) {
+        return false;
+      }
+
+      if (collectionUrl) {
+        return this.manifests.length > 0 && !!(this.collection) && !!(this.manifest);
+      }
+
+      if (manifestUrl) {
+        return !!(this.manifest);
+      }
+    },
     annotations() {
       return this.$store.getters['annotations/annotations'];
-    },
-    collectionTitle() {
-      return this.$store.getters['contents/collectionTitle'];
     },
     config() {
       return this.$store.getters['config/config'];
     },
-    configErrorMessage() {
-      return this.$store.getters['config/configErrorMessage'];
-    },
-    configErrorTitle() {
-      return this.$store.getters['config/configErrorTitle'];
-    },
-    contentTypes() {
-      return this.$store.getters['contents/contentTypes'];
-    },
-    contentUrls() {
-      return this.$store.getters['contents/contentUrls'];
-    },
-    errorText() {
-      return this.$store.getters['contents/errorText'];
+    collection() {
+      return this.$store.getters['contents/collection'];
     },
     item() {
       return this.$store.getters['contents/item'];
     },
-    itemUrl() {
-      return this.$store.getters['contents/itemUrl'];
-    },
-    itemUrls() {
-      return this.$store.getters['contents/itemUrls'];
-    },
-    isConfigValid() {
-      return this.$store.getters['config/isConfigValid'];
-    },
-    loaded() {
-      return this.$store.getters['config/initialized'];
+    manifest() {
+      return this.$store.getters['contents/manifest'];
     },
     manifests() {
       return this.$store.getters['contents/manifests'];
     },
-    selectedManifest() {
-      return this.$store.getters['contents/selectedManifest'];
-    },
-    tree() {
-      return this.$store.getters['contents/tree'];
-    },
-    panels() {
-      return this.$store.getters['contents/panels'];
-    },
   },
-  watch: {
-    '$route.query': {
-      handler: 'onRouteQueryChange',
-      immediate: true,
-    },
-    itemUrl: {
-      handler: 'onItemUrlChange',
-      immediate: true,
-    },
-    manifests: {
-      handler: 'onManifestsChange',
-      immediate: true,
-    },
-  },
-  async created() {
-    BookmarkService.initRouter(this.$router, this.$route);
-    BookmarkService.initStore(this.$store);
-
-    const isValid = await this.loadConfig();
+  async mounted() {
+    this.isLoading = true;
+    await this.$router.isReady();
 
     this.$q.dark.set('auto');
+    this.$i18n.locale = this.config.lang;
 
-    if (!isValid) {
-      return;
-    }
-    await this.init();
+    BookmarkService.initRouter(this.$router);
 
     await this.loadConfig();
+    await this.init();
 
     if (this.config?.colors?.primary) {
       setCssVar('primary', this.config.colors.primary);
@@ -134,72 +98,59 @@ export default {
       setCssVar('accent', this.config.colors.accent);
     }
   },
-  mounted() {
-    this.$i18n.locale = this.config.lang;
-  },
   methods: {
-    /**
-     * get collection data according to 'entrypoint'
-     * (number of requests equal the number of manifests contained within a collection)
-     * initialize the tree's root node
-     * caller: *init()*
-     *
-     * @param string url
-     */
     async getCollection(url) {
       await this.$store.dispatch('contents/initCollection', url);
     },
     async loadConfig() {
-      return this.$store.dispatch('config/loadConfig');
+      try {
+        await this.$store.dispatch('config/load');
+      } catch ({ title, message }) {
+        this.errorTitle = title;
+        this.errorMessage = message;
+      }
     },
     async getManifest(url) {
       await this.$store.dispatch('contents/initManifest', url);
     },
-    /**
-     * decide whether to start with a collection or a single manifest
-     * caller: *created-hook*
-     *
-     * @return function getCollection() | getManifest()
-     */
+    async getItem(url) {
+      await this.$store.dispatch('contents/initItem', url);
+    },
     async init() {
-      this.$store.dispatch('contents/initPanels');
-      return this.config.entrypoint.match(/collection.json\s?$/)
-        ? this.getCollection(this.config.entrypoint)
-        : this.getManifest(this.config.entrypoint);
+      const { collection, manifest, item } = this.config;
+
+      try {
+        // We want to preload all required data that the components need.
+        // Initialize priority:
+        // We always load the item first as here is the main data that we want to display.
+        if (item) {
+          await this.getItem(item);
+        }
+
+        // After that we load additionally the parent objects.
+        // If a collection is given we ignore the manifest setting
+        // and try to figure out the correct manifest by searching for the above item.
+        // Otherwise, no collection is given but a single manifest instead, so we load that manifest.
+        if (collection) {
+          await this.getCollection(collection);
+        } else if (manifest) {
+          await this.getManifest(manifest)
+        }
+      } catch (e) {
+        this.isLoading = false;
+        this.errorTitle = e.title || 'unknown_error';
+        this.errorMessage = e.message || 'please_try_again_later';
+      }
+
+    },
+    isReady() {
+      return this.item && this.manifests;
     },
 
     onItemUrlChange(val) {
-      if (!this.itemUrl) {
-        return;
+      if (val) {
+        this.isLoading = false;
       }
-      const treeDom = document.getElementById(val);
-
-      if (treeDom) {
-        treeDom.scrollIntoView({ block: 'center' });
-      }
-    },
-    onManifestsChange() {
-      const { itemurl } = this.$route.query;
-      if (!itemurl && this.manifests?.[0]?.sequence?.[0]?.id) {
-        this.navigate(this.manifests?.[0]?.sequence?.[0]?.id);
-      }
-    },
-
-    onRouteQueryChange() {
-      BookmarkService.syncQuery(this.$route.query);
-
-      if (this.loaded) {
-        return;
-      }
-
-      const { itemurl } = this.$route.query;
-
-      if (!itemurl) {
-        return;
-      }
-
-      this.$store.dispatch('contents/setItemUrl', decodeURIComponent(itemurl));
-      this.$store.dispatch('config/setInitialized', { initialized: true });
     },
   },
 };
@@ -221,7 +172,7 @@ export default {
     overflow: scroll;
   }
 }
-.config-error-container{
+.error-container{
   display: flex;
   flex-direction: column;
   justify-content: center;
