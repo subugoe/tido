@@ -15,6 +15,7 @@ import routes from './routes';
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
+let router = null;
 
 export default route((/* { store, ssrContext } */) => {
   let createHistory;
@@ -27,7 +28,7 @@ export default route((/* { store, ssrContext } */) => {
       : createWebHashHistory;
   }
 
-  const Router = createRouter({
+  router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
     routes,
 
@@ -39,5 +40,5 @@ export default route((/* { store, ssrContext } */) => {
     ),
   });
 
-  return Router;
+  return router;
 });
