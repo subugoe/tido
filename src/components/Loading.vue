@@ -1,5 +1,8 @@
 <template>
   <q-inner-loading
+    class="position-absolute"
+    :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'"
+    style="z-index: 1000"
     :showing="loading"
   >
     <q-spinner

@@ -2,18 +2,11 @@
   <div class="colors">
     <q-btn
       flat
-      :title="$t('colorScheme')"
+      :title="$t('change_color_scheme')"
+      :color="$q.dark.isActive ? 'bg-black' : 'primary'"
+      name="bi-palette-fill"
     >
-      <q-icon
-        :name="fasPalette"
-        size="xs"
-        :color="$q.dark.isActive ? 'bg-black' : 'accent'"
-      />
-      <q-menu
-        anchor="center middle"
-        fit
-        self="center middle"
-      >
+      <q-menu anchor="center middle" fit self="center middle">
         <q-list>
           <q-item
             v-for="theme in themes"
@@ -35,7 +28,6 @@
 
 <script>
 import { setCssVar } from 'quasar';
-import { fasPalette } from '@quasar/extras/fontawesome-v5';
 
 export default {
   name: 'Color',
