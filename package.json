@@ -30,26 +30,13 @@
     "url": "https://gitlab.gwdg.de/subugoe/emo/tido.git"
   },
   "private": false,
-  "dependencies": {
-    "@quasar/extras": "^1.0.0",
-    "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.3",
-    "core-js": "^3.6.5",
-    "openseadragon": "^3.0.0",
-    "quasar": "^2.6.0",
-    "vue": "^3.0.0",
-    "vue-i18n": "^9.2.0-beta.35",
-    "vue-jest": "^3.0.7",
-    "vue-loader": "^16.0.0-rc.1",
-    "vue-router": "^4.0.0",
-    "vuex": "^4.0.1"
-  },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
     "@quasar/app-webpack": "^3.0.0",
     "autoprefixer": "^10.4.7",
     "axios": "^0.21.4",
     "commitizen": "^4.2.4",
-    "cypress": "^9.6.1",
+    "cypress": "^10.11.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.14.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -68,7 +55,18 @@
     "stylelint": "^14.8.2",
     "stylelint-8-point-grid": "^2.1.0",
     "stylelint-config-sass-guidelines": "^9.0.1",
-    "stylelint-no-unsupported-browser-features": "^5.0.3"
+    "stylelint-no-unsupported-browser-features": "^5.0.3",
+    "@quasar/extras": "^1.15.5",
+    "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.3",
+    "core-js": "^3.6.5",
+    "openseadragon": "^3.0.0",
+    "quasar": "^2.10.0",
+    "vue": "^3.0.0",
+    "vue-i18n": "^9.2.0-beta.35",
+    "vue-jest": "^3.0.7",
+    "vue-loader": "^16.0.0-rc.1",
+    "vue-router": "^4.1.6",
+    "vuex": "^4.0.1"
   },
   "browserslist": [
     "last 1 version",
@@ -117,11 +115,5 @@
   ],
   "publishConfig": {
     "@subugoe:registry": "https://gitlab.gwdg.de/api/v4/projects/10921/packages/npm/"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run fix && npm run lint",
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
-    }
   }
 }
