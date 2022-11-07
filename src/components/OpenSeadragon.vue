@@ -1,57 +1,18 @@
 <template>
   <div class="imageItem">
-    <Loading v-if="loadingImage" />
-    <div
-      v-if="errorImage"
-      class="q-pa-sm"
-    >
-      <Notification
-        :message="$t(errorImage.messageKey)"
-        title-key="imageErrorTitle"
-        type="warning"
-      />
+    <Loading v-if="isLoading" />
+    <div v-if="error" class="q-pa-sm">
+      <Notification :message="$t(error.message)" title-key="no_image_available" type="warning" />
     </div>
-    <div v-else>
-      <nav>
-        <q-btn
-          v-for="(btn, idx) in buttons"
-          :id="$t(btn.tooltip)"
-          :key="idx"
-          flat
-          round
-          size="sm"
-          :color="$q.dark.isActive ? 'white' : 'accent'"
-          class="q-ml-xs q-mt-xs"
-          :title="$t(btn.tooltip)"
-        >
-          <q-icon
-            :id="btn.id"
-            size="xs"
-            :name="btn.svg"
-          />
-        </q-btn>
-      </nav>
-    </div>
-    <figure
-      id="openseadragon"
-      class="item"
-    >
-    </figure>
+    <figure v-else id="openseadragon" class="item"></figure>
   </div>
 </template>
 
 <script>
 import OpenSeadragon from 'openseadragon';
-import {
-  fasSearchPlus,
-  fasSearchMinus,
-  fasExpand,
-  fasExpandArrowsAlt,
-  fasCompressArrowsAlt,
-} from '@quasar/extras/fontawesome-v5';
-
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
+import { delay } from "src/utils";
 
 export default {
   name: 'OpenSeadragon',
@@ -62,26 +23,16 @@ export default {
   data() {
     return {
       viewer: null,
-      buttons: [
-        { id: 'zoom-in', svg: fasSearchPlus, tooltip: 'osdZoomin' },
-        { id: 'zoom-out', svg: fasSearchMinus, tooltip: 'osdZoomout' },
-        { id: 'default', svg: fasExpand, tooltip: 'osdHome' },
-        { id: 'fullscreen', svg: fasExpandArrowsAlt, tooltip: 'osdFullPage' },
-      ],
+      error: null,
+      isLoading: false
     };
   },
   computed: {
+    item() {
+      return this.$store.getters['contents/item'];
+    },
     imageUrl() {
-      return this.$store.getters['contents/imageUrl'];
-    },
-    itemUrl() {
-      return this.$store.getters['contents/itemUrl'];
-    },
-    errorImage() {
-      return this.$store.getters['contents/errorImage'];
-    },
-    loadingImage() {
-      return this.$store.getters['contents/loadingImage'];
+      return this.item.image?.id;
     },
     options() {
       return {
@@ -99,24 +50,31 @@ export default {
     },
   },
   watch: {
-    itemUrl: {
-      handler: 'onItemUrlChange',
+    item: {
+      async handler() {
+        this.isLoading = true;
+        try {
+          const response = await fetch(this.item.image.id);
+
+          if (response.status === 500) throw { message: 'error_image_not_exists'};
+
+          if (response.status !== 200 && response.status !== 201) throw { message: 'error_vpn'};
+
+
+          this.error = null;
+          await delay(1000);
+          this.initOpenSeagragon();
+
+        } catch (error) {
+          this.error = error;
+          this.isLoading = false;
+        }
+      },
       immediate: true,
     },
   },
   methods: {
-    async onItemUrlChange(itemUrl) {
-      await this.getImageItemData(itemUrl);
-      this.init();
-    },
-    async getImageItemData(itemUrl) {
-      await this.$store.dispatch('contents/initImageData', itemUrl);
-    },
-    init() {
-      if (this.errorImage) {
-        return;
-      }
-
+    initOpenSeagragon() {
       if (this.viewer) {
         this.viewer.destroy();
         this.viewer = null;
@@ -126,20 +84,10 @@ export default {
       this.viewer.controlsFadeDelay = 1000;
 
       this.viewer.addHandler('tile-loaded', () => {
-        this.$store.dispatch('contents/updateImageLoading', true);
-      });
-
-      document.addEventListener('fullscreenchange', () => {
-        Object.values(this.buttons).forEach((v) => {
-          if (v.id === 'fullscreen') {
-            v.svg = document.fullscreenElement !== null
-              ? fasCompressArrowsAlt
-              : fasExpandArrowsAlt;
-          }
-        });
+        this.isLoading = false;
       });
     },
-  },
+  }
 };
 </script>
 
