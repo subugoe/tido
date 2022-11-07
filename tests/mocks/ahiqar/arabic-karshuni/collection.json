@@ -1,0 +1,139 @@
+{
+  "textapi": "1.0.0",
+  "x-app-version": {
+    "version": "7.8.1"
+  },
+  "title": [
+    {
+      "title": "Textual witnesses in Arabic and Karshuni",
+      "type": "main"
+    },
+    null
+  ],
+  "collector": [
+    {
+      "role": [
+        "collector",
+        null
+      ],
+      "name": "Prof. Dr. theol. Kratz, Reinhard Gregor",
+      "idref": {
+        "base": "http://d-nb.info/gnd/",
+        "id": "115412700",
+        "type": "GND"
+      }
+    },
+    {
+      "role": [
+        "collector",
+        null
+      ],
+      "name": "Dr. Elrefai, Aly",
+      "idref": {
+        "base": "http://d-nb.info/gnd/",
+        "id": "1081516585",
+        "type": "GND"
+      }
+    }
+  ],
+  "description": "Arabic/Karshuni collection for the Ahiqar project. Funded by DFG, 2018\u20132021, University of G\u00f6ttingen",
+  "annotationCollection": "https://ahiqar.uni-goettingen.de/api/annotations/ahikar/arabic-karshuni/annotationCollection.json",
+  "sequence": [
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r177/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r7vw/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r7p1/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r7p9/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r7sk/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r7tp/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r7vd/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r179/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r7n0/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r9vn/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r9wf/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3rb3z/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3rbm9/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3rbmc/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3rx14/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r17b/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r17c/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r17d/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r7nv/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r17g/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r17h/manifest.json",
+      "type": "manifest"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r7tt/manifest.json",
+      "type": "manifest"
+    }
+  ]
+}

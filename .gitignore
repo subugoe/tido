@@ -2,8 +2,9 @@
 .thumbs.db
 .npmrc
 node_modules
-cypress/screenshots
-cypress/videos
+tests/cypress/screenshots
+tests/cypress/videos
+tests/cypress/downloads
 
 # Quasar core related directories
 .quasar
