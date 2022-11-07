@@ -1,9 +1,9 @@
 import * as AnnotationUtils from 'src/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
-import BookmarkService from '@/services/bookmark';
+import { activeAnnotations } from 'src/store/annotations/getters';
 
-export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
+export const addActiveAnnotation = ({ commit, getters, rootGetters, dispatch }, id) => {
   const { activeAnnotations, annotations } = getters;
   const newActiveAnnotation = annotations.find((annotation) => annotation.id === id);
 
@@ -11,12 +11,13 @@ export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
     return;
   }
 
-  const iconName = rootGetters['config/getAnnotationIcon'](newActiveAnnotation.body['x-content-type']);
+  const iconName = rootGetters['config/getIconByType'](newActiveAnnotation.body['x-content-type']);
 
   const activeAnnotationsList = { ...activeAnnotations };
 
   activeAnnotationsList[id] = newActiveAnnotation;
-  commit('updateActiveAnnotations', activeAnnotationsList);
+
+  dispatch('setActiveAnnotations', activeAnnotationsList);
 
   const selector = Utils.generateTargetSelector(newActiveAnnotation);
   const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
@@ -28,61 +29,52 @@ export const addActiveAnnotation = ({ commit, getters, rootGetters }, id) => {
   }
 };
 
-export const setFilteredAnnotations = ({ commit, getters, rootGetters }) => {
-  const { activeTab, annotations } = getters;
-  const config = rootGetters['config/config'];
-  const annotationTypesMapping = rootGetters['config/annotationTypesMapping'];
-  const contentTypes = rootGetters['contents/contentTypes'];
-  const contentIndex = rootGetters['contents/contentIndex'];
+export const setActiveAnnotations = ({ commit }, activeAnnotations) => {
+  commit('setActiveAnnotations', activeAnnotations);
+}
 
-  const tabConfig = config.annotations.tabs;
-  const activeEntities = tabConfig[activeTab] ?? [];
+export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
+  const { annotations } = getters;
+  const activeContentType = rootGetters['config/activeContentType'];
+  const filteredAnnotations = annotations.filter(
+    (annotation) => {
+      const type = types.find(({ name }) => name === annotation.body['x-content-type']);
+      // First we check if annotation fits to the current view
+      if (!type) return false;
 
-  const filteredAnnotations = !activeTab
-    ? []
-    : annotations.filter(
-      (x) => {
-        const annotationContentType = annotationTypesMapping[x.body['x-content-type']];
-
-        // First we check if annotation fits to the current tab
-        if (!activeEntities.includes(x.body['x-content-type'])) {
-          return false;
-        }
-
-        let isVisible = false;
-
-        if (
-          annotationContentType?.displayWhen
-          && annotationContentType?.displayWhen === contentTypes[contentIndex]
-        ) {
-          // Next we check if annotation should always be displayed on the current content tab
-          isVisible = true;
-        } else {
-          // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
-          const selector = AnnotationUtils.generateTargetSelector(x);
-          if (selector) {
-            const el = document.querySelector(selector);
-            if (el) {
-              isVisible = true;
-            }
+      if (type?.displayWhen && type?.displayWhen === activeContentType)
+        // Next we check if annotation should always be displayed on the current content tab
+        return true;
+      // // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
+      const selector = AnnotationUtils.generateTargetSelector(annotation);
+        if (selector) {
+          const el = document.querySelector(selector);
+          if (el) {
+            return true;
           }
         }
 
-        return isVisible;
-      },
-    );
+        return false;
+    },
+  );
 
   commit('setFilteredAnnotations', filteredAnnotations);
 };
 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
   const { annotations } = getters;
-  Utils.mapUniqueElements(
-    Utils.findDomElements('[data-target]:not([value=""])', dom),
-    (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
-  ).forEach((selector) => Utils.addRangeHighlightAttributes(selector, dom));
 
-  annotations.forEach((annotation) => {
+  // Add range attributes
+  [...dom.querySelectorAll('[data-target]:not([value=""])')]
+    .map(el => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
+    .forEach(targetSelector => Utils.addRangeHighlightAttributes(targetSelector, dom));
+  // Utils.mapUniqueElements(
+  //   Utils.findDomElements('[data-target]:not([value=""])', dom),
+  //   (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
+  // ).forEach((selector) => Utils.addRangeHighlightAttributes(selector, dom));
+
+  // Add single attributes
+  annotations.forEach((annotation, i) => {
     const { id } = annotation;
     const selector = Utils.generateTargetSelector(annotation);
     if (selector) {
@@ -92,24 +84,16 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
 };
 
 export const annotationLoaded = ({ commit }, annotations) => {
-  commit('updateAnnotations', annotations);
+  commit('setAnnotations', annotations);
   commit('updateAnnotationLoading', false);
-};
-
-export const decreaseContentFontSize = ({ commit, state }) => {
-  commit('updateContentFontSize', state.contentFontSize - 2);
-};
-
-export const increaseContentFontSize = ({ commit, state }) => {
-  commit('updateContentFontSize', state.contentFontSize + 2);
 };
 
 export const loadAnnotations = ({ commit }) => {
   commit('updateAnnotationLoading', true);
-  commit('updateAnnotations', []);
+  commit('setAnnotations', []);
 };
 
-export const removeActiveAnnotation = ({ commit, getters }, id) => {
+export const removeActiveAnnotation = ({ commit, getters, dispatch }, id) => {
   const { activeAnnotations } = getters;
 
   const removeAnnotation = activeAnnotations[id];
@@ -120,7 +104,7 @@ export const removeActiveAnnotation = ({ commit, getters }, id) => {
   const activeAnnotationsList = { ...activeAnnotations };
 
   delete activeAnnotationsList[id];
-  commit('updateActiveAnnotations', activeAnnotationsList);
+  dispatch('setActiveAnnotations', activeAnnotationsList);
 
   const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
   if (selector) {
@@ -129,32 +113,20 @@ export const removeActiveAnnotation = ({ commit, getters }, id) => {
   }
 };
 
-export const resetActiveAnnotations = ({ commit, getters }) => {
-  const { activeAnnotations } = getters;
+export const resetAnnotations = ({ dispatch, getters }) => {
+  const { annotations } = getters;
 
-  Object.keys(activeAnnotations).forEach((key) => {
-    const activeAnnotation = activeAnnotations[key];
-    const selector = AnnotationUtils.generateTargetSelector(activeAnnotation);
+  annotations.forEach((annotation) => {
+    const selector = AnnotationUtils.generateTargetSelector(annotation);
     if (selector) {
       AnnotationUtils.highlightTargets(selector, { level: -1 });
-      AnnotationUtils.removeIcon(activeAnnotation);
+      AnnotationUtils.removeIcon(annotation);
     }
   });
-  commit('updateActiveAnnotations', {});
-};
-
-export const updateActiveTab = ({ commit }, { tab, index }) => {
-  BookmarkService.updateAnnotationQuery(index);
-  commit('updateActiveTab', tab);
-};
-
-export const updateContentLoading = ({ commit }, isLoading) => {
-  commit('updateContentLoading', isLoading);
+  dispatch('setActiveAnnotations', {});
 };
 
 export const initAnnotations = async ({ dispatch }, url) => {
-  dispatch('loadAnnotations');
-
   try {
     const annotations = await request(url);
 
@@ -164,11 +136,8 @@ export const initAnnotations = async ({ dispatch }, url) => {
     }
 
     const current = await request(annotations.annotationCollection.first);
-
     if (current.annotationPage.items.length) {
       dispatch('annotationLoaded', current.annotationPage.items);
-    } else {
-      dispatch('annotationLoaded', []);
     }
   } catch (err) {
     dispatch('annotationLoaded', []);
@@ -176,7 +145,11 @@ export const initAnnotations = async ({ dispatch }, url) => {
 };
 
 export const addHighlightClickListeners = ({ dispatch, getters }) => {
-  document.querySelector('#text-content>div>*').addEventListener('click', ({ target }) => {
+  const textEl = document.querySelector('#text-content>div>*');
+
+  if (!textEl) return;
+
+  textEl.addEventListener('click', ({ target }) => {
     // The click event handler works like this:
     // When clicking on the text we pick the whole part of the text which belongs to the highest parent annotation.
     // Since the annotations can be nested we avoid handling each of them separately
@@ -196,6 +169,7 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
 
     // Next we look up which annotations need to be selected
     let annotationIds = {};
+
     getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
     annotationIds = discoverParentAnnotationIds(target, annotationIds);
     annotationIds = discoverChildAnnotationIds(target, annotationIds);
@@ -222,11 +196,13 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
 
   function getNearestParentAnnotation(element) {
     const parent = element.parentElement;
+
+    if (!parent) return null;
+
     if (parent.dataset?.annotation) {
       return parent;
     }
-    const higherParent = getNearestParentAnnotation(parent);
-    return higherParent ?? null;
+    return getNearestParentAnnotation(parent);
   }
 
   function getValuesFromAttribute(element, attribute) {
@@ -254,4 +230,14 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
     });
     return annotationIds;
   }
+};
+
+export const selectAll = ({ getters, dispatch }) => {
+  const { filteredAnnotations, activeAnnotations } = getters;
+  filteredAnnotations.forEach(({ id }) => !activeAnnotations[id] && dispatch('addActiveAnnotation', id));
+};
+
+export const selectNone = ({ getters, dispatch }) => {
+  const { filteredAnnotations, activeAnnotations } = getters;
+  filteredAnnotations.forEach(({ id }) => activeAnnotations[id] && dispatch('removeActiveAnnotation', id));
 };

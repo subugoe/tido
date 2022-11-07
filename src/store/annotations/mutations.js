@@ -1,25 +1,13 @@
-export const updateActiveAnnotations = (state, annotations) => {
+export const setActiveAnnotations = (state, annotations) => {
   state.activeAnnotations = annotations;
 };
 
-export const updateActiveTab = (state, tab) => {
-  (state.activeTab = tab);
-};
-
-export const updateAnnotations = (state, annotations) => {
+export const setAnnotations = (state, annotations) => {
   state.annotations = annotations;
 };
 
 export const updateAnnotationLoading = (state, isLoading) => {
   state.isLoading = isLoading;
-};
-
-export const updateContentFontSize = (state, size) => {
-  state.contentFontSize = size;
-};
-
-export const updateContentLoading = (state, isLoading) => {
-  state.isContentLoading = isLoading;
 };
 
 export const setFilteredAnnotations = (state, payload) => {

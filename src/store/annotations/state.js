@@ -1,11 +1,9 @@
 export default function AnnotationState() {
   return {
-    contentFontSize: 16,
     activeTab: '',
     activeAnnotations: {},
-    annotations: [],
+    annotations: null,
     filteredAnnotations: [],
     isLoading: false,
-    isContentLoading: false,
   };
 }

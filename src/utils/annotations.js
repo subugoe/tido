@@ -1,10 +1,11 @@
-import * as Icons from '@quasar/extras/fontawesome-v5';
 import * as Utils from '@/utils/index';
+import { icon } from '@/utils/icon';
 
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
 export function addHighlightToElements(selector, root, annotationId) {
   const selectedElements = root.querySelectorAll(selector);
+
   if (selectedElements.length === 0) {
     return;
   }
@@ -88,7 +89,7 @@ export function getAnnotationTabs(config) {
 }
 
 export const createSvgIcon = (name) => {
-  const [path, viewBox] = Icons[name].split('|');
+  const [path, viewBox] = icon(name).split('|');
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
   svg.setAttribute('aria-hidden', 'true');
@@ -131,8 +132,8 @@ export function createTooltip(element, data) {
     <span class="text-body1">
     ${
   !isMultiple
-    ? `${this.$t('toolTip_Reference')}`
-    : `${this.$t('toolTip_References')}`
+    ? `${this.$t('referenced_annotation')}`
+    : `${this.$t('referenced_annotations')}`
 }:
       </span>
       <br>
