@@ -5,12 +5,12 @@
     rel="noopener noreferrer"
     target="_blank"
     class="content__link"
-    :class="$q.dark.isActive ? 'text-white' : 'text-accent'"
+    :class="$q.dark.isActive ? 'text-white' : 'text-primary'"
   >
     <span>{{ text }}</span>
 
     <q-icon
-      :name="fasExternalLinkAlt"
+      name="bi-box-arrow-up-right"
       size="12px"
       class="content__link-icon q-pl-xs"
     />
@@ -18,8 +18,6 @@
 </template>
 
 <script>
-import { fasExternalLinkAlt } from '@quasar/extras/fontawesome-v5';
-
 export default {
   name: 'MetadataLink',
   props: {

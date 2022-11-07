@@ -1,5 +1,5 @@
 <template>
-  <div class="content-urls">
+  <div class="metadata-value">
     <div
       v-for="(url, idx) in contentUrls"
       :key="idx"
@@ -13,14 +13,14 @@
         rel="noopener noreferrer"
         target="_blank"
         class="content__link"
-        :class="$q.dark.isActive ? 'text-white' : 'text-accent'"
+        :class="$q.dark.isActive ? 'text-white' : 'text-primary'"
       >
         <span>{{ url.linkTitle }}</span>
 
         <q-icon
-          :name="fasExternalLinkAlt"
-          size="12px"
-          class="content__link-icon q-pl-xs"
+          name="bi-box-arrow-up-right"
+          size="15px"
+          class="q-pl-xs q-pb-xs"
         />
       </a>
 
@@ -31,27 +31,25 @@
 </template>
 
 <script>
-import { fasExternalLinkAlt } from '@quasar/extras/fontawesome-v5';
-
 export default {
-  name: 'ContentUrls',
+  name: 'MetadataValue',
   props: {
-    content: {
+    value: {
       type: String,
       default: () => '',
     },
   },
   computed: {
     contentUrls() {
-      let { content } = this;
+      let { value } = this;
       const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
-      const urls = [...(content.match(regex) || [])];
+      const urls = [...(value.match(regex) || [])];
 
       urls.forEach((url) => {
-        content = content.replace(url, `_-_${url}_-_`);
+        value = value.replace(url, `_-_${url}_-_`);
       });
 
-      const urlContents = content.split('_-_').filter((url) => url);
+      const urlContents = value.split('_-_').filter((url) => url);
 
       const urlText = urlContents.map((urlContent) => ({
         text: urlContent,
@@ -88,9 +86,6 @@ export default {
       return urlText;
     },
   },
-  created() {
-    this.fasExternalLinkAlt = fasExternalLinkAlt;
-  },
 };
 </script>
 
@@ -102,7 +97,9 @@ export default {
 }
 
 .content__link {
-  border-bottom: 1px var(--q-accent) dotted;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px var(--q-primary) dotted;
   text-decoration: none;
 
   @media (prefers-color-scheme: dark) {
