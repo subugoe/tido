@@ -1,22 +1,10 @@
 export default function ContentsState() {
   return {
-    collection: {},
-    collectionTitle: '',
-    connectorValues: [],
-    contentIndex: 0,
-    contentTypes: [],
-    contentUrls: [],
-    errorText: null,
-    expanded: [],
-    image: {},
-    isCollection: true,
-    item: {},
-    itemUrl: '',
-    itemUrls: [],
-    loaded: false,
+    activeContentUrl: null,
+    collection: null,
+    item: null,
+    itemUrl: null,
     manifests: [],
-    panels: [],
-    sequenceIndex: 0,
-    tree: [],
+    manifest: null,
   };
 }
