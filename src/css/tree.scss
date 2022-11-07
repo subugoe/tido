@@ -9,7 +9,11 @@
     > .q-tree__node--parent {
       > .q-tree__node-header {
         /* stylelint-ensable */
-        background-color: $grey-3;
+        background-color: $grey-2;
+        .body--dark & {
+          background-color: $grey-8;
+
+        }
         left: 0;
         position: sticky;
         top: -8px;
@@ -23,7 +27,7 @@
   }
 
   .q-tree__node--selected {
-    background-color: var(--q-accent);
+    background-color: var(--q-primary);
     @media (prefers-color-scheme: dark) {
       background-color: $grey-3;
     }
@@ -61,8 +65,8 @@
 }
 
 .q-tab__label {
-  color: var(--q-primary);
-  letter-spacing: 2px;
+  //color: var(--q-primary);
+  //letter-spacing: 2px;
   @media (prefers-color-scheme: dark) {
     color: $light;
   }
@@ -73,7 +77,7 @@
 }
 
 .q-tab__indicator {
-  color: var(--q-accent);
+  color: var(--q-primary);
   @media (prefers-color-scheme: dark) {
     color: $light;
   }

@@ -1,31 +1,26 @@
 <template>
-  <div class="item">
-    <Loading v-if="!loaded" />
-
+  <div class="item relative">
+    <Loading v-if="isLoading" />
     <q-tree
+      v-show="!isLoading"
+      class="item-content"
+      ref="treeRef"
       v-model:expanded="expanded"
       v-model:selected="selected"
-      class="item-content"
-      node-key="label"
-      :icon="fasCaretRight"
+      icon="bi-caret-right"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
+      node-key="url"
+      @after-show="onAfterShow"
     >
-      <template #default-body="{ node }">
-        <div
-          v-if="!node.children"
-          :id="`selectedItem-${node['label']}`"
-        />
-      </template>
+<!--      <template #default-body="{ node }">-->
+<!--        <div v-if="!node.children" :id="`selectedItem-${node['label']}`">{{ node.label }}</div>-->
+<!--      </template>-->
 
-      <template #default-header="prop">
-        <div
-          :id="prop.node['label']"
-          class="row items-center"
-        >
+      <template #default-header="{ node }">
+        <div :id="node.url" class="row items-center">
           <div>
-            {{ prop.node.labelSheet ? $t(labels.item) : '' }}
-            {{ prop.node['label-key'] }}
+            {{ node.label }}
           </div>
         </div>
       </template>
@@ -34,93 +29,129 @@
 </template>
 
 <script>
-import { fasCaretRight } from '@quasar/extras/fontawesome-v5';
 import Loading from '@/components/Loading.vue';
-import Navigation from '@/mixins/navigation';
 
 export default {
-  name: 'Treeview',
+  name: 'Tree',
   components: {
     Loading,
   },
-  mixins: [Navigation],
   data() {
     return {
+      isLoading: false,
       expanded: [],
       selected: null,
+      tree: [],
+      treeRef: null
     };
   },
   computed: {
-    expandTreeNodes() {
-      return this.$store.getters['contents/expanded'];
-    },
     config() {
       return this.$store.getters['config/config'];
+    },
+    collectionTitle() {
+      return this.$store.getters['contents/collectionTitle'];
+    },
+    collection() {
+      return this.$store.getters['contents/collection'];
     },
     labels() {
       return this.config.labels || {};
     },
+    item() {
+      return this.$store.getters['contents/item'];
+    },
     itemUrl() {
       return this.$store.getters['contents/itemUrl'];
     },
-    tree() {
-      return this.$store.getters['contents/tree'];
-    },
-    sequenceIndex() {
-      return this.$store.getters['contents/selectedSequenceIndex'];
+    manifest() {
+      return this.$store.getters['contents/manifest'];
     },
     manifests() {
       return this.$store.getters['contents/manifests'];
     },
-    loaded() {
-      return this.$store.getters['contents/loaded'];
-    },
   },
   watch: {
-    sequenceIndex: {
-      handler: 'onSequenceIndexUpdate',
-      immediate: true,
-    },
     itemUrl: {
-      handler(value) {
-        this.selected = value;
-      },
-      immediate: true,
+      handler: 'onItemUrlChange'
+    },
+    collection: {
+      handler: 'onCollectionChange',
+      immediate: true
     },
     selected: {
-      handler: 'handleSelectedChange',
-      immediate: true,
-    },
-    expandTreeNodes: {
-      handler(value) {
-        this.expanded = [...value];
-      },
-      immediate: true,
-    },
-    tree: {
-      handler(value) {
-        if (value.length > 0) {
-          this.$store.dispatch('contents/addToExpanded', value[0].label);
-        }
-      },
+      handler: 'onSelectedChange',
       immediate: true,
     },
   },
-  created() {
-    this.fasCaretRight = fasCaretRight;
+  async mounted() {
   },
   methods: {
-    onSequenceIndexUpdate(index) {
-      if (index !== null && !this.expanded.includes(this.manifests[index]?.label)) {
-        this.$store.dispatch(
-          'contents/addToExpanded',
-          this.manifests[index]?.label,
-        );
+    async onCollectionChange() {
+      this.isLoading = true;
+      if (this.collection) {
+        this.tree = [{
+          label: this.collectionTitle,
+          selectable: false,
+          url: this.collectionTitle,
+          children: this.manifests.map(({ sequence, label, id: manifestId }) => ({
+              label,
+              sequence,
+              url: manifestId,
+              selectable: false,
+              children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id, label }, i) => ({
+                label: label ?? this.getDefaultLabel(i),
+                url: id,
+                parent: manifestId
+              }))
+            }
+          )),
+        }];
+
+        await this.$nextTick(() => {
+          this.expanded = [this.collectionTitle, this.manifest.id];
+          this.selected = this.itemUrl !== '' ? this.itemUrl : this.manifest.sequence[0]?.id;
+        });
       }
     },
-    handleSelectedChange(value) {
-      this.navigate(value);
+    async onItemUrlChange() {
+      this.selected = this.itemUrl;
     },
+    getDefaultLabel(index) {
+      const prefix = this.labels.item ?? this.$t('page');
+      return prefix + ' ' + (index + 1);
+    },
+    onSelectedChange(value) {
+      const { treeRef } = this.$refs;
+      if (!treeRef) return;
+
+      const node = treeRef.getNodeByKey(value);
+      if (!node) return;
+
+      const {url: itemUrl, parent: manifestUrl } = node;
+
+      this.$nextTick(() => {
+        document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
+        setTimeout(() => this.isLoading = false, 400);
+      });
+
+      // if (itemUrl === this.itemUrl) return;
+
+      if (manifestUrl !== this.manifest.id) {
+        this.$store.dispatch('contents/initManifest', manifestUrl);
+        this.expanded.push(manifestUrl);
+      }
+
+      if (!this.expanded.includes(manifestUrl)) this.expanded.push(manifestUrl);
+      this.$nextTick(() => {
+        document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' })
+      });
+
+      this.$store.dispatch('contents/initItem', itemUrl);
+    },
+    onAfterShow(event) {
+      document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
+    }
   },
 };
 </script>
