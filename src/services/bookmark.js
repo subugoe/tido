@@ -1,4 +1,4 @@
-import {delay} from "src/utils";
+import { delay } from 'src/utils';
 
 class BookmarkService {
   $router;
@@ -9,24 +9,24 @@ class BookmarkService {
 
   async updatePanels(activeViews) {
     const panels = activeViews.map((view, i) => `${i}_${view}`).join(',');
-    const query = {...this.getQuery(), panels };
+    const query = { ...this.getQuery(), panels };
 
-    await this.$router.push({path: '/', query});
+    await this.$router.push({ path: '/', query });
   }
 
   async updateShow(panelIndexes) {
     await delay(300); // TODO: $route doesn't update quick enough, we have to siwtch to Composition APIs useRoute()
-    const query = {...this.getQuery(), show: panelIndexes.join(',') };
-    await this.$router.push({path: '/', query});
+    const query = { ...this.getQuery(), show: panelIndexes.join(',') };
+    await this.$router.push({ path: '/', query });
   }
 
   async updateItemQuery(item) {
     const query = {
       ...this.getQuery(),
-      ...(item ? {item} : {})
+      ...(item ? { item } : {}),
     };
 
-    await this.$router.push({path: '/', query});
+    await this.$router.push({ path: '/', query });
   }
 
   getQuery() {

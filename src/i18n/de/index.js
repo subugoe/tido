@@ -91,5 +91,5 @@ export default {
   please_try_again_later: 'Bitte versuchen Sie es später nochmal',
   server_error: 'Server Fehler',
   other: 'Sonstiges',
-  subtitle: 'Untertitel'
+  subtitle: 'Untertitel',
 };

@@ -1,5 +1,5 @@
 export const setCollection = (state, payload) => {
-  state.collection = {...payload};
+  state.collection = { ...payload };
 };
 
 export const setCollectionTitle = (state, title) => {
@@ -13,7 +13,6 @@ export const setConnectorValues = (state, payload) => {
 export const setItem = (state, payload) => {
   state.item = payload;
 };
-
 
 export const setItemUrl = (state, url) => {
   state.itemUrl = url;

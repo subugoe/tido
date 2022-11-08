@@ -10,7 +10,7 @@ export default function ConfigState() {
       colors: {
         primary: '',
         secondary: '',
-        accent: ''
+        accent: '',
       },
       annotations: {
 
@@ -23,27 +23,27 @@ export default function ConfigState() {
       },
       labels: {
         item: 'Sheet',
-        manifest: 'Manuscript'
+        manifest: 'Manuscript',
       },
       lang: 'en-US',
       languageSwitch: false,
       meta: {
         collection: {
-          all: true
+          all: true,
         },
         manifest: {
-          all: true
+          all: true,
         },
         item: {
-          all: true
-        }
+          all: true,
+        },
       },
       notificationColors: {
         info: 'blue-9',
-        warning: 'red-9'
+        warning: 'red-9',
       },
       rtl: false,
-      themes: false
+      themes: false,
     },
     activeViews: [],
     isValid: false,

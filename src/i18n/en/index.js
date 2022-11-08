@@ -93,5 +93,5 @@ export default {
   please_try_again_later: 'Please try again later',
   server_error: 'Server error',
   other: 'Other',
-  subtitle: 'Subtitle'
+  subtitle: 'Subtitle',
 };

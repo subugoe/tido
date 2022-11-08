@@ -1,6 +1,7 @@
 export const collection = (state) => state.collection;
 
 export const collectionTitle = (state) => {
+  // eslint-disable-next-line no-shadow
   const { collection } = state;
   if (Object.keys(collection).length) {
     return collection.title && collection.title[0].title
@@ -11,7 +12,7 @@ export const collectionTitle = (state) => {
   return collection.label
     ? collection.label
     : 'Manifest <small>(No label available)</small>';
-}
+};
 
 export const itemUrl = (state) => state.itemUrl;
 
@@ -24,7 +25,7 @@ export const selectedItemIndex = (state) => {
 };
 
 export const selectedManifest = (state) => state.manifests.find((manifest) => {
-  manifest = { ...manifest};
+  manifest = { ...manifest };
   const selectedItemUrl = encodeURI(decodeURI(state.itemUrl));
   if (!Array.isArray(manifest.sequence)) {
     manifest.sequence = [manifest.sequence];
