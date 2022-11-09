@@ -2,13 +2,7 @@
 
 Text vIewer for Digital Objects.
 
-**Note:**
-Although TIDO is designed as a generic viewer for digital editions, it is currently developed within the scope of the [Ahiqar project](https://gitlab.gwdg.de/subugoe/ahiqar).
-
-This is the reason for "Ahiqar" being mentioned several times in the docs of this repo.
-
 Demo with test data : <https://subugoe.pages.gwdg.de/emo/tido/develop>
-Ahiqar reference implementation: <https://ahiqar.uni-goettingen.de/syriac/>
 
 (For newer branches the demo is deployed in a directory named with branch name lowercased, shortened to 63 bytes, and with everything except `0-9` and `a-z` replaced with `-` (CI_COMMIT_REF_SLUG).
 Also the commit short hash can be used to see a demo.
@@ -65,7 +59,7 @@ List of preview configurations:
 - [Ahiqar Arabic Karshuni](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/ahiqar-arabic-karshuni.html)
 - [GFL](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/gfl.html)
 
-## Latest Version and Integration
+## Getting Started
 
 TiDO is provided as **npm package**. Please follow the steps below to include it for production:
 
@@ -132,11 +126,6 @@ nvm install stable
 **Note**:
 After the nvm installation is done, please `restart` your shell session once. That's due to changes to your profile environment.
 
-#### Set up `global` project requirements via `npm`
-
-```bash
-npm install -g @vue/cli @vue/cli-service-global @quasar/cli
-```
 
 #### Clone the repository
 
@@ -165,6 +154,13 @@ npm run dev
 
 (usually located at: `localhost:8080` since this port isn't already occupied)
 
+#### `Mock API`
+You can start your own local API server which will serve Text API responses from `tests/mocks`.
+```bash
+npm run mock-api
+```
+The server will be available at `localhost:8181`.
+
 #### `Linting`
 
 ```bash
@@ -178,12 +174,10 @@ npm run lint:vue        # to lint vue files only
 #### `Testing`
 
 ```bash
-npm run test:unit
+npm run cypress           # to run standalone browser tests with graphics
+npm run cypress:headless  # to run e2e tests without graphics
+npm run test:e2e          # to start mock API server and run e2e tests
 ```
-
-The Viewer uses **jest**; a JavaScript test suite.
-
-Tests reside under **tests/unit/specs/** and are supposed to have a file ending of either `*.test.js` or `*.spec.js`.
 
 #### `Building` the app for production
 
@@ -213,132 +207,243 @@ There are options to
 As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate element.
 
 ```html
-  <script id="tido-config" type="application/json">
+<script id="tido-config" type="application/json">
   {
-    "entrypoint": "https://subugoe.pages.gwdg.de/emo/backend/sampledata/collection.json",
-      "annotations": {
-        "types": [
+    "collection": "http://localhost:8181/ahiqar/arabic-karshuni/collection.json",
+    "manifest": "",
+    "item": "",
+    "colors": {
+      "primary": "",
+      "secondary": "",
+      "accent": ""
+    },
+    "header": {
+      "show": true,
+      "navigation": true,
+      "panelsToggle": true,
+      "languageSwitch": true
+    },
+    "lang": "en",
+    "notificationColors": {
+      "info": "blue-9",
+      "warning": "red-9"
+    },
+    "panels": [
+      {
+        "label": "contents_and_metadata",
+        "views": [
           {
-            "contenttype": "Person",
-            "icon": "fasUser",
-            "label": "Names"
+            "id": "tree",
+            "label": "contents",
+            "connector": {
+              "id": 1,
+              "options": {
+                "labels": {
+                  "item": "Sheet",
+                  "manifest": "Manuscript"
+                }
+              }
+            }
           },
           {
-            "contenttype": "Place",
-            "icon": "fasMapMarkerAlt",
-            "label": "Places"
-          },
-          {
-            "contenttype": "Editorial Comment",
-            "icon": "fasComment",
-            "label": "Comments"
-          },
-          {
-            "contenttype": "Motif",
-            "icon": "fasHighlighter",
-            "label": "Motifs"
-          },
-          {
-            "contenttype": "Abstract",
-            "annotationType": "text",
-            "displayWhen": "Edierter Text",
-            "label": "Abstract"
+            "id": "metadata",
+            "label": "metadata",
+            "connector": {
+              "id": 2,
+              "options": {
+                "collection": {
+                  "all": true
+                },
+                "manifest": {
+                  "all": true
+                },
+                "item": {
+                  "all": true
+                }
+              }
+            }
           }
-        ],
-        "tabs":{
-          "Editorial": ["Person", "Place"],
-          "Motif": ["Motif"],
-          "Comments": ["Editorial Comment", "Abstract"]
-        }
+        ]
       },
-      "breadcrumbNavigation": {
-        "source": "external",
-        "search_page_path": "search.html",
-        "search_query_param": "searchTerm",
-        "title_homepage_key": "title_homepage",
-        "title_viewer_key": "title_viewer",
-        "website": "https://ahikar.sub.uni-goettingen.de/website/"
-      },
-      "colors": {
-        "primary": "",
-        "secondary": "",
-        "accent": ""
-      },
-      "textContent": {
-        "tabs": {
-          "priority": {
-            "Edierter Text": 1
+      {
+        "label": "image",
+        "views": [
+          {
+          "id": "image",
+          "label": "Image",
+          "connector": {
+            "id": 3
           }
-        }
+        }]
       },
-      "header_section": {
-        "show": true,
-        "navigation": true,
-        "panelheadings": true,
-        "titles": true,
-        "toggle": true
+      {
+        "label": "text",
+        "views": [
+          {
+            "id": "text1",
+            "label": "Transcription",
+            "default": true,
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transcription"
+              }
+            }
+          },
+          {
+            "id": "text2",
+            "label": "Transliteration",
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transliteration"
+              }
+            }
+          }
+        ]
       },
-      "labels": {
-        "item": "Sheet",
-        "manifest": "Manuscript"
-      },
-      "lang": "de-de",
-      "language-switch": true,
-      "meta": {
-        "collection": {
-          "all": true
-        },
-        "manifest": {
-          "all": true
-        },
-        "item": {
-          "all": true
-        }
-      },
-      "notificationColors": {
-        "info":"blue-9",
-        "warning":"red-9"
-      },
-      "panels": [
-        {
-          "connector": [1, 2],
-          "panel_label": "contentsMetadata",
-          "show": true,
-          "toggle": true
-        },
-        {
-          "connector": [3],
-          "panel_label": "Image",
-          "show": true,
-          "toggle": true
-        },
-        {
-          "connector": [4],
-          "panel_label": "Text",
-          "show": true,
-          "toggle": true
-        },
-        {
-          "connector": [5],
-          "panel_label": "Annotations",
-          "show": true,
-          "toggle": true
-        }
-      ],
-      "rtl": false
-  }  </script>
+      {
+        "label": "annotations",
+        "views": [
+          {
+            "id": "annotations1",
+            "label": "Editorial",
+            "default": true,
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Person",
+                    "icon": "biPersonFill",
+                    "label": "Names"
+                  },
+                  {
+                    "name": "Place",
+                    "icon": "biGeoAltFill",
+                    "label": "Places"
+                  },
+                  {
+                    "name": "Editorial Comment",
+                    "icon": "biChatFill",
+                    "label": "comments"
+                  },
+                  {
+                    "name": "Reference",
+                    "icon": "biBoxArrowUpRight",
+                    "label": "References"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "annotations2",
+            "label": "Motif",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Motif",
+                    "icon": "biPenFill",
+                    "label": "Motifs"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "rtl": false,
+    "themes": false,
+    "translations": {
+      "en": {
+        "contents_and_metadata": "Contents & Metadata"
+      }
+    }
+  }
+</script>
 ```
 
 **Note**: its a *JSON* object. So if you are going to make any changes and you have to quote these (e.g. see *labels* or *colors*), please use **double quotes** only.
 
 ### The Keys in Detail
 
-- **entrypoint**
+<span style="color:red">*</span> = Required
 
-  to link the viewer to a backend, the entry point should point to the collection you want to be displayed.
-  (Further details below: [Connecting the Viewer to a Backend](#connecting-the-viewer-to-a-backend))
+? = Optional
 
-  **Note**: You have to provide at least a valid entry point (see below). Otherwise the Viewer won't show anything at all!
+
+| Name                                    | Type          | Default   | Description                                                                                                                                                                                   |
+|-----------------------------------------|---------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| collection                              | String        | null      | Specifies a collection endpoint URL. Will be prioritized over `manifest` key.                                                                                                                 |
+| colors                                  | Object        | &darr;    | Sets custom theme colors. If any value is left blank (e.g. `"primary": "",`), a default color scheme will be used.                                                                            |
+| colors.primary                          | String        | `#477fbf` | Used as main color in buttons, active states, highlights                                                                                                                                      |
+| colors.secondary                        | String        | `#eeeeee` | Can be used as contrast or background color                                                                                                                                                   |
+| colors.accent                           | Srring        | `empty`   |                                                                                                                                                                                               |
+| header                                  | Object        | &darr;    | Controls the elements in the section above the content                                                                                                                                        |
+| header.show                             | Boolean       | `true`    | Toggle visibility of the whole header                                                                                                                                                         |
+| header.navigation                       | Boolean       | `true`    | Toggle visibility of prev/next buttons                                                                                                                                                        |
+| header.panelsToggle                     | Boolean       | `true`    | Toggle visibility of panel toggle buttons                                                                                                                                                     |
+| header.languageSwitch                   | Boolean       | `false`   | Toggle visibility of language switch for supported languages                                                                                                                                  |
+| item                                    | String        | null      | Specifies an item endpoint URL.                                                                                                                                                               |
+| lang                                    | String        | `en`      | Sets the default language. Possible supported values: `en` , `de`                                                                                                                             |
+| manifest                                | String        | null      | Specifies a manifest endpoint URL. Will be ignored when there is a `collection` key specified.                                                                                                |
+| notificationColors                      | Object        | &darr;    | Sets custom notification colors. Used in error messages.                                                                                                                                      |
+| notificationColors.info                 | String        | `blue-9`  | Sets the info level color.                                                                                                                                                                    |
+| notificationColors.warning              | String        | `red-9`   | Sets the warning level color.                                                                                                                                                                 |
+| panels                                  | PanelConfig[] | &darr;    | Defines an array of panel objects. The panels will appear in the same order.                                                                                                                  |
+| panels[i].label                         | String        | `Panel i` | Sets the label which appears in the panel header. If there is only one view in the panel then the view label will be displayed instead. Translatable.                                         |
+| panels[i].views                         | ViewConfig[]  | &darr;    | Defines an array of views inside of a panel. If there are multiple views, we display them in tabs. If there is only one view we omit the tabs and display the view directly inside the panel. |
+| panels[i].views[j].id                   | String        | `view-j`  | Unique identifier for the view across the app.                                                                                                                                                |
+| panels[i].views[j].label                | String        | `View j`  | Sets the label which appears in the tab header. If there is only one view then this label will be displayed as panel header label. Translatable.                                              |
+| panels[i].views[j].connector            | Object        | &darr;    | Defines which view component and its options. Each view can have its own arbitrary config options.                                                                                            |
+| panels[i].views[j].connector.id         | Number        | null      | Defines the component id which will be rendered dynamically for this view. See view connectors.                                                                                               |
+| panels[i].views[j].connector.options    | Object        | null      | Defines options for individual view components. Each view component has different options. See view connector options.                                                                        |
+| rtl                                     | Boolean       | false     | Enables/Disables right-to-left mode. All app related strings will switch. Note that this does not affect the text view component because it can consume styles from API.                      |
+| translations                            | Object        | null      | Specifies a custom translations object.                                                                                                                                                       |
+| translations.[langKey]                  | Object        | null      | Defines a translation object for supported languages with the respective `langKey` which can have following values: `en`, `de`.                                                               |
+| translations.[langKey].[translationKey] | String        | null      | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs.                                                    |
+
+
+### View Connectors
+
+TIDO can be configured to display dynamic panel with dynamic views inside. In order to tell TIDO how the panels and views should be rendered,
+you need to assign the right connectors in the config. This is done via component IDs which currently are plain integers.
+Below you can find a list of available components.
+
+| ID  | Name        | Description                                                                                                         |
+|-----|-------------|---------------------------------------------------------------------------------------------------------------------|
+| 1   | Tree        | Displays an expandable/collapsible tree view that renders TextAPi sequences.                                        |
+| 2   | Metadata    | Displays dynamic metadata from collection, manifest and item levels.                                                |
+| 3   | Image       | Displays the image resource from the item in an OpenSeadragon instance.                                             |
+| 4   | Text        | Displays one text type from the item. Loads a support CSS file it provided. Handles text highlighting and selecting |
+| 5   | Annotations | Displays a list of annotations. Handles selecting.                                                                  |
+
+
+
+Example given:
+
+Assuming you want to combine the **Metadata**, **Text** and **Annotations** panels, the configuration could look like this:
+
+
+- **collection** (REQUIRED)
+
+
+
+- **colors**
+
+
+- **item**
+
+  specifies an item endpoint URL. If you want to display only a single item or load a certain item from a given manifest.
+
+- **manifest**
+
+    specifies a manifest endpoint URL.
+
 
 - **annotations**
 
@@ -435,16 +540,6 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   - **website**
 
     Navigates to the Home Page page on website.
-
-- **colors**
-
-  set the colors used in the frontend.
-
-  `primary` and `accent` should be a darker tone, so that white text is visible if used as background. its the other way around with `secondary`.
-
-  Hex values (like `#a1a1a1`) or color names (like `hotpink`) are fine.
-
-  If any value is left blank (e.g. `"primary": "",`), a default color scheme will be used.
 
 - **header_section**
 
@@ -550,13 +645,13 @@ As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defau
   },
   {
     "connector": [3],
-    "panel_label": "Image",
+    "panel_label": "image",
     "show": true,
     "toggle": true
   },
   {
     "connector": [4],
-    "panel_label": "Text",
+    "panel_label": "text",
     "show": true,
     "toggle": true
   },
