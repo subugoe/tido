@@ -189,22 +189,28 @@ npm run build
 
 ## Configuration
 
-The Viewer is build with **Vue.js** and **Quasar**.
-If you want to change the Quasar configuration, please [refer to their respective docs](https://quasar.dev/quasar-cli/quasar-conf-js) (Configuring quasar.config.js).
+Minimal example:
+```html
+<script>
+  const tido = new Tido({
+    manifest: 'https://example.com/textapi/manifest.json'
+  });
+</script>
+```
+TIDO requires an entrypoint URL to be useful at all. You can provide either a `collection` or a `manifest` key
+and additionally provide an `item` key to start a certain item with a sequence. Technically you could also provide
+a single `item` key only, but it is recommended to use manifests as wrappers.
 
-You can fully customize the Viewer's behaviour:
+By default, TIDO will render three panels displaying sequence tree, text content and metadata views.
+Nevertheless, you can fully customize the viewer's behaviour.
 
 There are options to
 
+- add/remove multiple panels
+- freely combine view components in panels
+- show/hide header features
 - change the color scheme
-- show or hide individual bars (titles, navigation, toggles)
-- group multiple components inside a single panel
-- set the order of the panels
-- rename labels and / or panel headings
-- switch project header on or off and provide descriptive strings
 - and **more** ...
-
-As a rule of thumb, each key with a boolean value (e.g. *true* or *false*) defaults to `true` and denotes to show the appropriate element.
 
 ```html
 <script id="tido-config" type="application/json">
@@ -424,6 +430,7 @@ Below you can find a list of available components.
 
 
 
+
 Example given:
 
 Assuming you want to combine the **Metadata**, **Text** and **Annotations** panels, the configuration could look like this:
@@ -634,36 +641,6 @@ Assuming you want to combine the **Metadata**, **Text** and **Annotations** pane
     Defaults to `false`
 
 ### Configure the Panels
-
-```json
-"panels": [
-  {
-    "connector": [1],
-    "panel_label": "Contents",
-    "show": true,
-    "toggle": true
-  },
-  {
-    "connector": [3],
-    "panel_label": "image",
-    "show": true,
-    "toggle": true
-  },
-  {
-    "connector": [4],
-    "panel_label": "text",
-    "show": true,
-    "toggle": true
-  },
-  {
-    "connector": [2],
-    "panel_label": "Metadata",
-    "show": true,
-    "toggle": true
-  }
-],
-
-```
 
 The panel-array consists of four objects according to the maximum number of panels, that can be shown at once.
 
