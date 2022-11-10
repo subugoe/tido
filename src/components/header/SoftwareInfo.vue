@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import packageInfo from '../../package.json';
+import packageInfo from '../../../package.json';
 
 export default {
   name: 'SoftwareInfo',
