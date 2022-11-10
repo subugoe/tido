@@ -92,13 +92,13 @@ export default {
           label: this.collectionTitle,
           selectable: false,
           url: this.collectionTitle,
-          children: this.manifests.map(({ sequence, label: manifestLabel, id: manifestId }) => ({
-            label: manifestLabel,
+          children: this.manifests.map(({ sequence, label: manifestLabel, id: manifestId }, i) => ({
+            label: manifestLabel ?? this.getDefaultManifestLabel(i),
             sequence,
             url: manifestId,
             selectable: false,
-            children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id, label: itemLabel }, i) => ({
-              label: itemLabel ?? this.getDefaultItemLabel(i),
+            children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id, label: itemLabel }, j) => ({
+              label: itemLabel ?? this.getDefaultItemLabel(j),
               url: id,
               parent: manifestId,
             })),
@@ -114,6 +114,10 @@ export default {
     },
     async onItemUrlChange() {
       this.selected = this.itemUrl;
+    },
+    getDefaultManifestLabel(index) {
+      const prefix = this.labels.manifest ?? this.$t('manifest');
+      return `${prefix} ${index + 1}`;
     },
     getDefaultItemLabel(index) {
       const prefix = this.labels.item ?? this.$t('page');

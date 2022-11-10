@@ -94,4 +94,5 @@ export default {
   server_error: 'Server error',
   other: 'Other',
   subtitle: 'Subtitle',
+  manifest: 'Manifest',
 };

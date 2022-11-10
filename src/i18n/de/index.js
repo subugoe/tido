@@ -92,4 +92,5 @@ export default {
   server_error: 'Server Fehler',
   other: 'Sonstiges',
   subtitle: 'Untertitel',
+  manifest: 'Manifest',
 };
