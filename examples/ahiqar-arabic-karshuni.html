@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head><title>TIDO</title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="config-menu/config-menu.css">
+</head>
+<body>
+<noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
+  continue.</strong></noscript>
+<script id="tido-config" type="application/json">
+  {
+    "collection": "http://localhost:8181/ahiqar/arabic-karshuni/collection.json",
+    "manifest": "",
+    "item": "",
+    "colors": {
+      "primary": "",
+      "secondary": "",
+      "accent": ""
+    },
+    "header": {
+      "show": true,
+      "navigation": true,
+      "panelsToggle": true,
+      "languageSwitch": true
+    },
+    "lang": "en",
+    "notificationColors": {
+      "info": "blue-9",
+      "warning": "red-9"
+    },
+    "panels": [
+      {
+        "label": "contents_and_metadata",
+        "views": [
+          {
+            "id": "tree",
+            "label": "contents",
+            "connector": {
+              "id": 1,
+              "options": {
+                "labels": {
+                  "item": "Sheet",
+                  "manifest": "Manuscript"
+                }
+              }
+            }
+          },
+          {
+            "id": "metadata",
+            "label": "metadata",
+            "connector": {
+              "id": 2,
+              "options": {
+                "collection": {
+                  "all": true
+                },
+                "manifest": {
+                  "all": true
+                },
+                "item": {
+                  "all": true
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "label": "image",
+        "views": [
+          {
+            "id": "image",
+            "label": "Image",
+            "connector": {
+              "id": 3
+            }
+          }]
+      },
+      {
+        "label": "text",
+        "views": [
+          {
+            "id": "text1",
+            "label": "Transcription",
+            "default": true,
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transcription"
+              }
+            }
+          },
+          {
+            "id": "text2",
+            "label": "Transliteration",
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transliteration"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "label": "annotations",
+        "views": [
+          {
+            "id": "annotations1",
+            "label": "Editorial",
+            "default": true,
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Person",
+                    "icon": "biPersonFill",
+                    "label": "Names"
+                  },
+                  {
+                    "name": "Place",
+                    "icon": "biGeoAltFill",
+                    "label": "Places"
+                  },
+                  {
+                    "name": "Editorial Comment",
+                    "icon": "biChatFill",
+                    "label": "comments"
+                  },
+                  {
+                    "name": "Reference",
+                    "icon": "biBoxArrowUpRight",
+                    "label": "References"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "annotations2",
+            "label": "Motif",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Motif",
+                    "icon": "biPenFill",
+                    "label": "Motifs"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "translations": {
+      "en": {
+        "contents_and_metadata": "Contents & Metadata"
+      }
+    }
+  }</script>
+<div id="config-menu"></div>
+<div id="q-app"></div>
+<script src="../dist/tido.js"></script>
+<script src="config-menu/config-menu.js"></script>
+</body>
+</html>
