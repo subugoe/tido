@@ -48,7 +48,7 @@ describe('Header initial', () => {
 describe('Header - Item and Manifest changing', () => {
   beforeEach(() => {
     cy
-      .visit(`/#/?item=${apiBaseUrl}/3r7vd/3r7vd-130/latest/item.json`)
+      .visit(`/?item=${apiBaseUrl}/3r7vd/3r7vd-130/latest/item.json`)
       .get('.root.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');

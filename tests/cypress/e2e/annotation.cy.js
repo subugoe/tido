@@ -3,7 +3,9 @@ import { apiBaseUrl } from '../support/globals';
 describe('Annotation - Multiple Tabs', () => {
   beforeEach(() => {
     cy
-      .visit(`/#/?item=${apiBaseUrl}/3r7vd/3r7vd-130/latest/item.json`)
+      .visit(`/?item=${apiBaseUrl}/3r7vd/3r7vd-130/latest/item.json`)
+      .get('#text-content')
+      .should('be.visible')
       .get('.root.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
       .should('be.visible')
       .get('.root.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
@@ -39,6 +41,8 @@ describe('Annotation - Multiple Tabs', () => {
     cy
       .get('button.next-item')
       .click()
+      .get('#text-content')
+      .contains('ذلك')
       .get('.root.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
       .should('be.visible')
       .get('.root.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')

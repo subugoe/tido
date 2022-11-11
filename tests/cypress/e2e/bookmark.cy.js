@@ -2,7 +2,7 @@ import { apiBaseUrl } from '../support/globals';
 
 describe('Bookmarking', () => {
   beforeEach(() => {
-    cy.visit(`/#/?item=${apiBaseUrl}/3r176/3r176-182b/latest/item.json`)
+    cy.visit(`/?item=${apiBaseUrl}/3r176/3r176-182b/latest/item.json`)
       .get('#text-content')
       .should('be.visible');
   });
@@ -86,21 +86,13 @@ describe('Bookmarking', () => {
     ).click();
 
     cy.url().should('not.include', '3_1');
-
-    cy.get('.item-content .item')
-      .last()
-      .within(() => {
-        cy.get('.q-tabs__content .q-tab')
-          .first()
-          .should('have.class', 'q-tab--active');
-      });
   });
 });
 
 describe('Bookmarking - URL first', () => {
   it('Should load tabs from URL', () => {
     cy
-      .visit(`/#/?item=${apiBaseUrl}/3r176/3r176-182b/latest/item.json&panels=0_1,1_0,2_1,3_1`)
+      .visit(`/?item=${apiBaseUrl}/3r176/3r176-182b/latest/item.json&panels=0_1,1_0,2_1,3_1`)
       .then(() => {
         cy
           // Tree & Metadata panel

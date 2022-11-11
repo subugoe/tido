@@ -141,6 +141,7 @@ export default {
 
       if (manifestUrl !== this.manifest.id) {
         this.$store.dispatch('contents/initManifest', manifestUrl);
+        this.$store.dispatch('config/setDefaultActiveViews');
         this.expanded.push(manifestUrl);
       }
 

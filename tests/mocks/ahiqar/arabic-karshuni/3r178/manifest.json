@@ -1,1 +1,235 @@
-{"textapi": "1.0.0", "x-app-version": "7.8.1", "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/manifest.json", "label": "Cod. ARABE 3637", "metadata": [{"key": "Editor", "value": "Dr. Aly Elrefaei"}, {"key": "Date of creation", "value": "1772"}, {"key": "Place of origin", "value": ", "}, {"key": "Current location", "value": "Biblioth\u00e8que Nationale de France, France"}, {"key": "TEI document", "value": "via REST (https://ahiqar.uni-goettingen.de/rest/textgrid/data/3r1gh.xml)"}], "support": [{"type": "css", "mime": "text/css", "url": "https://ahiqar.uni-goettingen.de/api/content/ahikar.css"}, {"type": "font", "mime": "font/woff", "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomjerusalemitalic.woff"}, {"type": "font", "mime": "font/woff", "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomedessa.woff"}, {"type": "font", "mime": "font/woff", "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomjerusalem.woff"}, {"type": "font", "mime": "font/woff", "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomjerusalembold.woff"}], "license": [{"id": "CC-BY-SA-4.0 (https://creativecommons.org/licenses/by-sa/4.0/legalcode)"}], "annotationCollection": "https://ahiqar.uni-goettingen.de/api/annotations/ahikar/arabic-karshuni/3r178/annotationCollection.json", "sequence": [{"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-140/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-141/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-142/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-143/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-144/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-145/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-146/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-147/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-148/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-149/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-150/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-151/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-152/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-153/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-154/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-155/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-156/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-157/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-158/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-159/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-160/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-161/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-162/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-163/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-164/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-165/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-166/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-167/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-168/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-169/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-170/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-171/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-172/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-173/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-174/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-175/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-176/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-177/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-178/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-179/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-180/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-181/latest/item.json", "type": "item"}, {"id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178-182/latest/item.json", "type": "item"}]}
+{
+  "textapi": "1.0.0",
+  "x-app-version": "7.8.1",
+  "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178/manifest.json",
+  "label": "Cod. ARABE 3637",
+  "metadata": [
+    {
+      "key": "Editor",
+      "value": "Dr. Aly Elrefaei"
+    },
+    {
+      "key": "Date of creation",
+      "value": "1772"
+    },
+    {
+      "key": "Place of origin",
+      "value": ", "
+    },
+    {
+      "key": "Current location",
+      "value": "Biblioth\u00e8que Nationale de France, France"
+    },
+    {
+      "key": "TEI document",
+      "value": "via REST (https://ahiqar.uni-goettingen.de/rest/textgrid/data/3r1gh.xml)"
+    }
+  ],
+  "support": [
+    {
+      "type": "css",
+      "mime": "text/css",
+      "url": "https://ahiqar.uni-goettingen.de/api/content/ahikar.css"
+    },
+    {
+      "type": "font",
+      "mime": "font/woff",
+      "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomjerusalemitalic.woff"
+    },
+    {
+      "type": "font",
+      "mime": "font/woff",
+      "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomedessa.woff"
+    },
+    {
+      "type": "font",
+      "mime": "font/woff",
+      "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomjerusalem.woff"
+    },
+    {
+      "type": "font",
+      "mime": "font/woff",
+      "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomjerusalembold.woff"
+    }
+  ],
+  "license": [
+    {
+      "id": "CC-BY-SA-4.0 (https://creativecommons.org/licenses/by-sa/4.0/legalcode)"
+    }
+  ],
+  "annotationCollection": "https://ahiqar.uni-goettingen.de/api/annotations/ahikar/arabic-karshuni/3r178/annotationCollection.json",
+  "sequence": [
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-140/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-141/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-142/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-143/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-144/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-145/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-146/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-147/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-148/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-149/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-150/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-151/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-152/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-153/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-154/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-155/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-156/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-157/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-158/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-159/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-160/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-161/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-162/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-163/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-164/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-165/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-166/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-167/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-168/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-169/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-170/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-171/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-172/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-173/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-174/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-175/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-176/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-177/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-178/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-179/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-180/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-181/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r178/3r178-182/latest/item.json",
+      "type": "item"
+    }
+  ]
+}

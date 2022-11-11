@@ -153,7 +153,10 @@ export const setActivePanelView = async ({ commit, getters }, { panelIndex, view
 
 export const setShowPanel = ({ commit, getters }, { index, show }) => {
   commit('setShowPanel', { index, show });
-  const panelIndexes = getters.config.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
+
+  let panelIndexes = getters.config.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
+  if (panelIndexes.length === getters.config.panels.length) panelIndexes = [];
+
   BookmarkService.updateShow(panelIndexes);
 };
 
@@ -163,7 +166,7 @@ export const setDefaultActiveViews = async ({ commit, getters }) => {
 
   config.panels.forEach(({ views }) => {
     let defaultViewIndex = views.findIndex((view) => !!(view.default));
-    if (defaultViewIndex > -1) defaultViewIndex = 0;
+    if (defaultViewIndex === -1) defaultViewIndex = 0;
     activeViews.push(defaultViewIndex);
   });
 
