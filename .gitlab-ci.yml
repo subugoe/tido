@@ -14,10 +14,10 @@ stages:
   - deploy
 
 build:
-  image: node:14
-  only:
-    - main
-    - develop
+  image: node:16
+#  only:
+#    - main
+#    - develop
   stage: build
   script:
     - bash .ci-scripts/build.sh
@@ -29,6 +29,8 @@ build:
 test:e2e:
   image: cypress/browsers:node16.13.2-chrome100-ff98
   stage: test:e2e
+  except:
+    - next
   script:
     - bash .ci-scripts/build.sh
     - npm run dev & npm run test:e2e
