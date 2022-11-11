@@ -27,12 +27,11 @@ build:
     expire_in: 1 mos
 
 test:e2e:
-  image: cypress/browsers:node14.17.0-chrome91-ff89
+  image: cypress/browsers:node16.13.2-chrome100-ff98
   stage: test:e2e
   script:
     - bash .ci-scripts/build.sh
-    - bash .ci-scripts/set_entrypoint_ci.sh
-    - npm run dev & npm run cypress:headless
+    - npm run dev & npm run test:e2e
   artifacts:
     when: always
     paths:
@@ -58,6 +57,8 @@ pages:
 
 stop_env:
   stage: deploy
+  script:
+    - echo "Remove branch env"
   environment:
     name: $CI_COMMIT_REF_SLUG
     action: stop
