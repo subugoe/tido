@@ -11,7 +11,7 @@ class BookmarkService {
     const panels = activeViews.map((view, i) => `${i}_${view}`).join(',');
     const query = { ...this.getQuery(), panels };
 
-    await this.$router.push({ path: '/', query });
+    await this.$router.replace({ query });
   }
 
   async updateShow(panelIndexes = []) {
@@ -29,7 +29,7 @@ class BookmarkService {
       query = oldQuery;
     }
 
-    await this.$router.push({ path: '/', query });
+    await this.$router.replace({ query });
   }
 
   async updateItemQuery(item) {
@@ -38,7 +38,7 @@ class BookmarkService {
       ...(item ? { item } : {}),
     };
 
-    await this.$router.push({ path: '/', query });
+    await this.$router.replace({ query });
   }
 
   getQuery() {
