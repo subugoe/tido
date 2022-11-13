@@ -1,8 +1,6 @@
 <template>
-  <div class="item relative">
-    <Loading v-if="isLoading" />
+  <div class="tree-container">
     <q-tree
-      v-show="!isLoading"
       class="item-content"
       ref="treeRef"
       v-model:expanded="expanded"
@@ -86,7 +84,7 @@ export default {
   },
   methods: {
     async onCollectionChange() {
-      this.isLoading = true;
+      this.$emit('loading', true);
       if (this.collection) {
         this.tree = [{
           label: this.collectionTitle,
@@ -134,7 +132,7 @@ export default {
 
       this.$nextTick(() => {
         document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
-        setTimeout(() => this.isLoading = false, 400);
+        setTimeout(() => this.$emit('loading', false), 400);
       });
 
       // if (itemUrl === this.itemUrl) return;
@@ -160,11 +158,12 @@ export default {
 </script>
 
 <style scoped>
-.item {
+.tree-container {
   display: flex;
   flex: 1;
   flex-direction: column;
   height: 100%;
+  position: relative;
 }
 
 .item-content {

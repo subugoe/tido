@@ -1,8 +1,8 @@
 <template>
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'" v-if="show">
-    <div class="q-px-md q-py-md">
+    <div class="q-px-lg q-py-md">
       <div class="flex items-start">
-        <TitleBar v-if="item && manifests.length" class="" :item="item"/>
+        <TitleBar class="" :item="item"/>
         <div class="col flex justify-end">
           <Tools/>
         </div>

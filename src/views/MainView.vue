@@ -1,5 +1,5 @@
 <template>
-  <div class="root panels-target q-gutter-md q-px-md q-pb-md" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
+  <div class="root panels-target q-gutter-md q-px-lg q-pb-md">
     <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item">
       <Panel :panel="panel" :active-view="getActiveView(i)" @active-view="onActiveViewChange($event, i)" />
     </div>
@@ -17,6 +17,7 @@ export default {
   computed: {
     panels() {
       const { panels } = this.config;
+      console.log('main view panels');
       return panels;
     },
     config() {

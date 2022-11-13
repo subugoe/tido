@@ -1,4 +1,6 @@
 export const setConfig = (state, payload) => {
+  console.log('set config');
+
   state.config = payload;
 };
 

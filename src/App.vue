@@ -1,19 +1,21 @@
 <template>
-  <q-layout class="root viewport" view="hHh Lpr fFf">
+  <q-layout class="root viewport" view="hHh Lpr fFf" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
     <Header/>
     <q-page-container v-if="ready" class="root">
       <router-view/>
     </q-page-container>
 
-    <q-page-container v-else class="error-container">
-      <Loading v-if="isLoading"/>
-      <Notification
-        v-else
-        :message="errorMessage"
-        :title="errorTitle"
-        class="q-ma-md-xl"
-        type="warning"
-      />
+    <q-page-container v-else class="error-container q-pa-lg q-pt-xl">
+      <div class="full-height full-width flex items-center justify-center column" style="border: dashed 3px #ccc; border-radius: 6px">
+        <q-icon name="bi-book" size="64px" color="grey-5"></q-icon>
+        <span class="text-grey-6 text-bold q-mt-md">{{ $t('no_config_available') }}</span>
+        <Notification
+          :message="errorMessage"
+          :title="errorTitle"
+          class="q-ma-md-xl"
+          type="warning"
+        />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
@@ -24,6 +26,7 @@ import Header from 'components/header/Header.vue';
 import Notification from '@/components/Notification.vue';
 import BookmarkService from './services/bookmark';
 import Loading from '@/components/Loading.vue';
+import { delay } from 'src/utils';
 
 export default {
   name: 'TIDO',
@@ -36,12 +39,13 @@ export default {
     return {
       errorTitle: '',
       errorMessage: '',
-      isLoading: false,
+      isLoading: true,
     };
   },
   computed: {
     ready() {
       const { collection: collectionUrl, manifest: manifestUrl } = this.config;
+      console.log('check ready', !!(collectionUrl), !!(manifestUrl), !!(this.item), !!(this.collection), !!(this.manifest), this.manifests.length);
 
       if (!this.item) {
         return false;
@@ -139,6 +143,7 @@ export default {
           await this.getManifest(manifest);
         }
       } catch (e) {
+        await delay(1000);
         this.isLoading = false;
         this.errorTitle = e.title || 'unknown_error';
         this.errorMessage = e.message || 'please_try_again_later';
@@ -148,8 +153,10 @@ export default {
       return this.item && this.manifests;
     },
 
-    onItemUrlChange(val) {
+    async onItemUrlChange(val) {
       if (val) {
+        console.log('on item change');
+        await delay(5000);
         this.isLoading = false;
       }
     },

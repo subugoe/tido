@@ -76,7 +76,10 @@ export default {
         : `${this.$t('prev')} ${this.$t(this.labels.item)}`;
     },
     labels() {
-      return this.$store.getters['config/config'].labels || {};
+      return this.$store.getters['config/config'].labels || {
+        manifest: 'manifest',
+        item: 'item',
+      };
     },
   },
   methods: {
