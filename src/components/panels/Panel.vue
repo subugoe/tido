@@ -4,7 +4,7 @@
       <div class="caption text-bold text-body1">
         <!-- We display the tab label as panel label when there is only one tab -->
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
-        <span v-else-if="tabs.length === 1">{{tabs[0].label}}</span>
+        <span v-else-if="tabs.length === 1">{{$t(tabs[0].label)}}</span>
       </div>
       <div class="actions">
         <template v-for="(tab, i) in tabs" :key="i">
@@ -16,6 +16,7 @@
     </div>
     <q-separator />
     <div class="panel-body bg-none">
+      <Loading v-if="isLoading" />
       <template v-if="tabs.length > 1">
         <div class="tabs-container">
           <q-tabs
@@ -36,7 +37,7 @@
         </q-tab-panels>
       </template>
       <template v-else-if="tabs.length === 1">
-        <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" />
+        <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />
       </template>
       <Notification
         v-else
@@ -60,6 +61,7 @@ import PanelZoomAction from 'components/panels/actions/PanelZoomAction.vue';
 import Notification from 'components/Notification.vue';
 import PanelToggleAction from 'components/panels/actions/PanelToggleAction.vue';
 import PanelImageAction from 'components/panels/actions/PanelImageAction.vue';
+import Loading from 'components/Loading';
 
 export default {
   components: {
@@ -72,6 +74,7 @@ export default {
     PanelToggleAction,
     PanelImageAction,
     Notification,
+    Loading,
   },
   props: {
     panel: {
@@ -85,14 +88,13 @@ export default {
       tabs: [],
       activeTabIndex: 0,
       unsubscribe: null,
+      isLoading: false,
     };
   },
   computed: {
     item() {
       return this.$store.getters['contents/item'];
     },
-  },
-  mounted() {
   },
   methods: {
     getContentUrl(type) {
@@ -255,6 +257,7 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: auto;
+  position: relative;
 }
 .tabs-container {
   display: flex;
@@ -275,6 +278,7 @@ export default {
   overflow: hidden;
   border-radius: 8px;
   border: 1px solid #ddd !important;
+  position: relative;
 
   .body--dark & {
     border: 1px solid #424242 !important;

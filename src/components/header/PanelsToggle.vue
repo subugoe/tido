@@ -70,7 +70,6 @@
           checked-icon="bi-check-circle-fill"
           unchecked-icon="bi-circle"
         >
-<!--          <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'" class="text-uppercase">{{ $t(p.label) }}</span>-->
         </q-checkbox>
       </div>
 

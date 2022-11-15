@@ -3,7 +3,7 @@
     class="position-absolute"
     :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'"
     style="z-index: 1000"
-    :showing="loading"
+    :showing="true"
   >
     <q-spinner
       size="3em"

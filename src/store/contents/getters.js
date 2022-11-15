@@ -3,6 +3,9 @@ export const collection = (state) => state.collection;
 export const collectionTitle = (state) => {
   // eslint-disable-next-line no-shadow
   const { collection } = state;
+
+  if (!collection) return null;
+
   if (Object.keys(collection).length) {
     return collection.title && collection.title[0].title
       ? collection.title[0].title

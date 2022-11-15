@@ -1,5 +1,5 @@
 <template>
-  <q-list v-if="Object.keys(collection).length" dense class="q-mb-lg">
+  <q-list v-if="metadata.length > 0" dense class="q-mb-lg">
     <q-item class="no-padding">
       <q-item-section dense>
         <h3>{{ $t('collection') }}</h3>
@@ -27,6 +27,8 @@ export default {
       return this.$store.getters['contents/collection'];
     },
     metadata() {
+      if (!this.collection) return [];
+
       const mappings = {
         main: 'title',
         sub: 'subtitle',

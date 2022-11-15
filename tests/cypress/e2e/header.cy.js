@@ -3,7 +3,7 @@ import { apiBaseUrl } from '../support/globals';
 describe('Header initial', () => {
   beforeEach(() => {
     cy
-      .visit('/')
+      .visit('/ahiqar-arabic-karshuni-local.html')
       .get('.root.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');
@@ -48,7 +48,7 @@ describe('Header initial', () => {
 describe('Header - Item and Manifest changing', () => {
   beforeEach(() => {
     cy
-      .visit(`/?item=${apiBaseUrl}/3r7vd/3r7vd-130/latest/item.json`)
+      .visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r7vd/3r7vd-130/latest/item.json`)
       .get('.root.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');
@@ -63,7 +63,9 @@ describe('Header - Item and Manifest changing', () => {
     cy
       .get('button.previous-item')
       .click()
+      .wait(200)
       .url()
+      .then((value) => decodeURIComponent(value))
       .should('include', '/3r7tp/3r7tp-251/latest/item.json');
   });
 
@@ -76,7 +78,9 @@ describe('Header - Item and Manifest changing', () => {
     cy
       .get('button.next-item')
       .click()
+      .wait(200)
       .url()
+      .then((value) => decodeURIComponent(value))
       .should('include', '/3r7vd/3r7vd-131a/latest/item.json');
   });
 });
