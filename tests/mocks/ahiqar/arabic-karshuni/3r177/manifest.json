@@ -57,7 +57,7 @@
       "id": "CC-BY-SA-4.0 (https://creativecommons.org/licenses/by-sa/4.0/legalcode)"
     }
   ],
-  "annotationCollection": "http://localhost:8181/ahiqar/arabic-karshuni/3r177/3r177/3r177-annotationCollection.json",
+  "annotationCollection": "http://localhost:8181/ahiqar/arabic-karshuni/3r177/3r177-annotationCollection.json",
   "sequence": [
     {
       "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r177/3r177-2a/latest/item.json",

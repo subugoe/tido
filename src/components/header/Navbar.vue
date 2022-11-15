@@ -50,6 +50,7 @@ export default {
     hasPrev() {
       const prevIndex = this.itemIndex - 1;
       if (prevIndex < 0) {
+        if (this.manifests === null) return false;
         const prevManifestIndex = this.manifests.findIndex(({ id }) => id === this.manifest.id) - 1;
         if (prevManifestIndex < 0) return false;
       }
@@ -59,6 +60,7 @@ export default {
     hasNext() {
       const nextIndex = this.itemIndex + 1;
       if (nextIndex > this.manifest.sequence.length - 1) {
+        if (this.manifests === null) return false;
         const nextManifestIndex = this.manifests.findIndex(({ id }) => id === this.manifest.id) + 1;
         if (nextManifestIndex > this.manifests.length - 1) return false;
       }
@@ -76,7 +78,10 @@ export default {
         : `${this.$t('prev')} ${this.$t(this.labels.item)}`;
     },
     labels() {
-      return this.$store.getters['config/config'].labels || {};
+      return this.$store.getters['config/config'].labels || {
+        manifest: 'manifest',
+        item: 'item',
+      };
     },
   },
   methods: {

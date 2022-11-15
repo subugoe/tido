@@ -26,30 +26,6 @@ function findActiveManifestIndex(manifests = [], itemUrl = null) {
 
 async function getManifest(url) {
   const data = await request(url);
-
-  // if (!Array.isArray(data.sequence)) {
-  //   data.sequence = [data.sequence];
-  // }
-
-  // if (data.sequence[0] !== 'undefined') {
-  //   data.sequence.map((seq) => itemUrls.push(seq.id));
-  // }
-
-  // const tree = [];
-  // if (isCollection) {
-  //   tree.push({
-  //     children: getItemUrls(data.sequence, data.label),
-  //     label: data.label,
-  //     'label-key': data.label,
-  //     handler: (node) => {
-  //       dispatch('addOrRemoveFromExpanded', node.label);
-  //     },
-  //     selectable: false,
-  //   });
-  // } else {
-  //   tree.push(...getItemUrls(data.sequence, data.label));
-  // }
-
   return data;
 }
 

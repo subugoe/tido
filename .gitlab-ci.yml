@@ -30,7 +30,7 @@ test:e2e:
     - main
   script:
     - bash .ci-scripts/build.sh
-    - npm run dev & npm run test:e2e
+    - npm serve:prod & npm run test:e2e
   artifacts:
     when: always
     paths:

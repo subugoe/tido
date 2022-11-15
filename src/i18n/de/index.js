@@ -54,7 +54,7 @@ export default {
   next: 'Nächste',
   no_annotations_in_view: 'Die aktuelle Ansicht enthält keine Annotationen.',
   no_comments_in_view: 'Die aktuelle Ansicht enthält keine Kommentare',
-  no_config_available: 'Keine TIDO Konfiguration vorhanden',
+  no_entrypoint_available: 'Keine URL zum Einstieg gefunden. Bitte überprüfen Sie Ihre Konfiguration.',
   config_error: 'Konfigurationsfehler',
   no_views_configured: 'Keine Ansichten in diesem Panel konfiguriert.',
   Origin: 'Ursprung',

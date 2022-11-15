@@ -9,7 +9,7 @@ module.exports = defineConfig({
   fixturesFolder: 'tests/cypress/fixtures',
   videosFolder: 'tests/cypress/videos',
   e2e: {
-    baseUrl: 'http://localhost:8080',
+    baseUrl: 'http://localhost:2222',
     specPattern: 'tests/cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'tests/cypress/support/e2e.js',
   },

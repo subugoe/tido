@@ -33,162 +33,153 @@ The numbers below reflect each component's id. For detailed instructions please 
 Note: These IDs are supposed to be unique, so please make sure not to repeat these!
 -->
 <!--"collection": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",-->
+<!--<script id="tido-config" type="application/json">-->
+<!--  {-->
+<!--    "collection": "http://localhost:8181/ahiqar/arabic-karshuni/collection.json",-->
+<!--    "notificationColors": {-->
+<!--      "info": "blue-9",-->
+<!--      "warning": "red-9"-->
+<!--    },-->
+<!--    "panels": [-->
+<!--      {-->
+<!--        "label": "contents_and_metadata",-->
+<!--        "views": [-->
+<!--          {-->
+<!--            "id": "tree",-->
+<!--            "label": "contents",-->
+<!--            "connector": {-->
+<!--              "id": 1,-->
+<!--              "options": {-->
+<!--                "labels": {-->
+<!--                  "item": "Sheet",-->
+<!--                  "manifest": "Manuscript"-->
+<!--                }-->
+<!--              }-->
+<!--            }-->
+<!--          },-->
+<!--          {-->
+<!--            "id": "metadata",-->
+<!--            "label": "metadata",-->
+<!--            "connector": {-->
+<!--              "id": 2,-->
+<!--              "options": {-->
+<!--                "collection": {-->
+<!--                  "all": true-->
+<!--                },-->
+<!--                "manifest": {-->
+<!--                  "all": true-->
+<!--                },-->
+<!--                "item": {-->
+<!--                  "all": true-->
+<!--                }-->
+<!--              }-->
+<!--            }-->
+<!--          }-->
+<!--        ]-->
+<!--      },-->
+<!--      {-->
+<!--        "label": "image",-->
+<!--        "views": [-->
+<!--          {-->
+<!--            "id": "image",-->
+<!--            "label": "Image",-->
+<!--            "connector": {-->
+<!--              "id": 3-->
+<!--            }-->
+<!--          }]-->
+<!--      },-->
+<!--      {-->
+<!--        "label": "text",-->
+<!--        "views": [-->
+<!--          {-->
+<!--            "id": "text1",-->
+<!--            "label": "Transcription",-->
+<!--            "default": true,-->
+<!--            "connector": {-->
+<!--              "id": 4,-->
+<!--              "options": {-->
+<!--                "type": "transcription"-->
+<!--              }-->
+<!--            }-->
+<!--          },-->
+<!--          {-->
+<!--            "id": "text2",-->
+<!--            "label": "Transliteration",-->
+<!--            "connector": {-->
+<!--              "id": 4,-->
+<!--              "options": {-->
+<!--                "type": "transliteration"-->
+<!--              }-->
+<!--            }-->
+<!--          }-->
+<!--        ]-->
+<!--      },-->
+<!--      {-->
+<!--        "label": "annotations",-->
+<!--        "views": [-->
+<!--          {-->
+<!--            "id": "annotations1",-->
+<!--            "label": "Editorial",-->
+<!--            "default": true,-->
+<!--            "connector": {-->
+<!--              "id": 5,-->
+<!--              "options": {-->
+<!--                "types": [-->
+<!--                  {-->
+<!--                    "name": "Person",-->
+<!--                    "icon": "biPersonFill",-->
+<!--                    "label": "Names"-->
+<!--                  },-->
+<!--                  {-->
+<!--                    "name": "Place",-->
+<!--                    "icon": "biGeoAltFill",-->
+<!--                    "label": "Places"-->
+<!--                  },-->
+<!--                  {-->
+<!--                    "name": "Editorial Comment",-->
+<!--                    "icon": "biChatFill",-->
+<!--                    "label": "comments"-->
+<!--                  },-->
+<!--                  {-->
+<!--                    "name": "Reference",-->
+<!--                    "icon": "biBoxArrowUpRight",-->
+<!--                    "label": "References"-->
+<!--                  }-->
+<!--                ]-->
+<!--              }-->
+<!--            }-->
+<!--          },-->
+<!--          {-->
+<!--            "id": "annotations2",-->
+<!--            "label": "Motif",-->
+<!--            "connector": {-->
+<!--              "id": 5,-->
+<!--              "options": {-->
+<!--                "types": [-->
+<!--                  {-->
+<!--                    "name": "Motif",-->
+<!--                    "icon": "biPenFill",-->
+<!--                    "label": "Motifs"-->
+<!--                  }-->
+<!--                ]-->
+<!--              }-->
+<!--            }-->
+<!--          }-->
+<!--        ]-->
+<!--      }-->
+<!--    ],-->
+<!--    "translations": {-->
+<!--      "en": {-->
+<!--        "contents_and_metadata": "Contents & Metadata"-->
+<!--      }-->
+<!--    }-->
+<!--  }</script>-->
 
 <script id="tido-config" type="application/json">
   {
-    "collection": "http://localhost:8181/ahiqar/arabic-karshuni/collection.json",
-    "manifest": "",
-    "item": "",
-    "colors": {
-      "primary": "",
-      "secondary": "",
-      "accent": ""
-    },
-    "header": {
-      "show": true,
-      "navigation": true,
-      "panelsToggle": true,
-      "languageSwitch": true
-    },
-    "lang": "en",
-    "notificationColors": {
-      "info": "blue-9",
-      "warning": "red-9"
-    },
-    "panels": [
-      {
-        "label": "contents_and_metadata",
-        "views": [
-          {
-            "id": "tree",
-            "label": "contents",
-            "connector": {
-              "id": 1,
-              "options": {
-                "labels": {
-                  "item": "Sheet",
-                  "manifest": "Manuscript"
-                }
-              }
-            }
-          },
-          {
-            "id": "metadata",
-            "label": "metadata",
-            "connector": {
-              "id": 2,
-              "options": {
-                "collection": {
-                  "all": true
-                },
-                "manifest": {
-                  "all": true
-                },
-                "item": {
-                  "all": true
-                }
-              }
-            }
-          }
-        ]
-      },
-      {
-        "label": "image",
-        "views": [
-          {
-          "id": "image",
-          "label": "Image",
-          "connector": {
-            "id": 3
-          }
-        }]
-      },
-      {
-        "label": "text",
-        "views": [
-          {
-            "id": "text1",
-            "label": "Transcription",
-            "default": true,
-            "connector": {
-              "id": 4,
-              "options": {
-                "type": "transcription"
-              }
-            }
-          },
-          {
-            "id": "text2",
-            "label": "Transliteration",
-            "connector": {
-              "id": 4,
-              "options": {
-                "type": "transliteration"
-              }
-            }
-          }
-        ]
-      },
-      {
-        "label": "annotations",
-        "views": [
-          {
-            "id": "annotations1",
-            "label": "Editorial",
-            "default": true,
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
-                  {
-                    "name": "Person",
-                    "icon": "biPersonFill",
-                    "label": "Names"
-                  },
-                  {
-                    "name": "Place",
-                    "icon": "biGeoAltFill",
-                    "label": "Places"
-                  },
-                  {
-                    "name": "Editorial Comment",
-                    "icon": "biChatFill",
-                    "label": "comments"
-                  },
-                  {
-                    "name": "Reference",
-                    "icon": "biBoxArrowUpRight",
-                    "label": "References"
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "id": "annotations2",
-            "label": "Motif",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
-                  {
-                    "name": "Motif",
-                    "icon": "biPenFill",
-                    "label": "Motifs"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      }
-    ],
-    "translations": {
-      "en": {
-        "contents_and_metadata": "Contents & Metadata"
-      }
-    }
-  }</script>
+    "collection": "http://localhost:8181/ahiqar/arabic-karshuni/collection.json"
+  }
+</script>
 <div id="q-app"></div>
 </body>
 </html>

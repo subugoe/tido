@@ -2,7 +2,7 @@ import MainView from 'src/views/MainView';
 
 const routes = [
   {
-    path: '/',
+    path: '',
     name: 'MainView',
     component: MainView,
   },

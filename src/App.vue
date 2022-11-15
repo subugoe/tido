@@ -1,19 +1,21 @@
 <template>
-  <q-layout class="root viewport" view="hHh Lpr fFf">
+  <q-layout class="root viewport" view="hHh Lpr fFf" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
     <Header/>
     <q-page-container v-if="ready" class="root">
-      <router-view/>
+      <MainView/>
     </q-page-container>
 
-    <q-page-container v-else class="error-container">
-      <Loading v-if="isLoading"/>
-      <Notification
-        v-else
-        :message="errorMessage"
-        :title="errorTitle"
-        class="q-ma-md-xl"
-        type="warning"
-      />
+    <q-page-container v-else class="error-container q-pa-lg q-pt-xl">
+      <div class="full-height full-width flex items-center justify-center column" style="border: dashed 3px #ccc; border-radius: 6px">
+        <q-icon name="bi-book" size="64px" color="grey-5"></q-icon>
+        <span class="text-grey-6 text-bold q-mt-md">{{ $t('no_entrypoint_available') }}</span>
+        <Notification
+          :message="errorMessage"
+          :title="errorTitle"
+          class="q-ma-md-xl"
+          type="warning"
+        />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
@@ -21,22 +23,22 @@
 <script>
 import { setCssVar } from 'quasar';
 import Header from 'components/header/Header.vue';
+import { delay } from 'src/utils';
+import MainView from 'src/views/MainView';
 import Notification from '@/components/Notification.vue';
-import BookmarkService from './services/bookmark';
-import Loading from '@/components/Loading.vue';
 
 export default {
   name: 'TIDO',
   components: {
+    MainView,
     Header,
     Notification,
-    Loading,
   },
   data() {
     return {
       errorTitle: '',
       errorMessage: '',
-      isLoading: false,
+      isLoading: true,
     };
   },
   computed: {
@@ -48,7 +50,7 @@ export default {
       }
 
       if (collectionUrl) {
-        return this.manifests.length > 0 && !!(this.collection) && !!(this.manifest);
+        return this.manifests !== null && !!(this.collection) && !!(this.manifest);
       }
 
       if (manifestUrl) {
@@ -78,12 +80,8 @@ export default {
   },
   async mounted() {
     this.isLoading = true;
-    await this.$router.isReady();
-
     this.$q.dark.set('auto');
     this.$i18n.locale = this.config.lang;
-
-    BookmarkService.initRouter(this.$router);
 
     await this.loadConfig();
     await this.init();
@@ -139,6 +137,7 @@ export default {
           await this.getManifest(manifest);
         }
       } catch (e) {
+        await delay(1000);
         this.isLoading = false;
         this.errorTitle = e.title || 'unknown_error';
         this.errorMessage = e.message || 'please_try_again_later';
@@ -148,7 +147,7 @@ export default {
       return this.item && this.manifests;
     },
 
-    onItemUrlChange(val) {
+    async onItemUrlChange(val) {
       if (val) {
         this.isLoading = false;
       }
@@ -161,7 +160,6 @@ export default {
 .root {
   display: flex;
   flex: 1;
-  flex-direction: column;
   font-size: 16px;
   overflow: hidden;
 }
