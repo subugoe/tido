@@ -108,7 +108,7 @@
     "release": "npm run build && npm publish",
     "mock-api": "http-server tests/mocks -p 8181 -c-1 --silent --cors",
     "serve:dev": "quasar dev --modern",
-    "serve:prod": "ncp dist/ examples/dist/ && http-server . -p 2222 -c-1 --cors",
+    "serve:prod": "ncp dist/ examples/dist/ && http-server examples -p 2222 -c-1 --silent --cors",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "jest --updateSnapshot",
     "test:e2e": "start-server-and-test mock-api 8181 cypress:headless",
