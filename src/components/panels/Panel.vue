@@ -1,6 +1,6 @@
 <template>
   <div class="item-content" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'">
-    <div class="panel-header q-py-xs q-pr-sm q-pl-md flex justify-between items-center">
+    <div class="panel-header q-py-xs q-pt-md q-px-md flex justify-between items-center">
       <div class="caption text-bold text-body1">
         <!-- We display the tab label as panel label when there is only one tab -->
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
@@ -14,8 +14,8 @@
         </template>
       </div>
     </div>
-    <q-separator />
-    <div class="panel-body bg-none">
+    <q-separator class="q-mx-md" />
+    <div class="panel-body bg-none q-px-md">
       <Loading v-if="isLoading" />
       <template v-if="tabs.length > 1">
         <div class="tabs-container">
@@ -31,13 +31,15 @@
           </q-tabs>
         </div>
         <q-tab-panels v-model="activeTabIndex" class="bg-transparent" animated transition-next="fade" transition-prev="fade">
-          <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pa-none">
+          <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pa-none q-pt-md">
             <component :is="tab.component" :key="tab.id" v-bind="tab.props" />
           </q-tab-panel>
         </q-tab-panels>
       </template>
       <template v-else-if="tabs.length === 1">
-        <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />
+        <div class="q-pt-md">
+          <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />
+        </div>
       </template>
       <Notification
         v-else

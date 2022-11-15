@@ -1,5 +1,5 @@
 <template>
-  <div class="metadata-container q-pa-md q-pt-md">
+  <div class="metadata-container">
     <CollectionMetadata v-if="options.collection?.all" />
     <ManifestMetadata v-if="options.manifest?.all" />
     <ItemMetadata v-if="options.manifest?.all" />

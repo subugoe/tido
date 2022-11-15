@@ -85,7 +85,5 @@ export default {
 
 .item-content {
   overflow: auto;
-  padding: 8px;
-  padding-bottom: 72px; // fab icon size + one times the offset of q-page-sticky
 }
 </style>
