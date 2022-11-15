@@ -1,7 +1,7 @@
 describe('Tree', () => {
   beforeEach(() => {
     cy
-      .visit('/examples/ahiqar-arabic-karshuni-local.html')
+      .visit('/ahiqar-arabic-karshuni-local.html')
       .get('.root.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');

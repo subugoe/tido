@@ -1,6 +1,6 @@
 describe('Metadata', () => {
   beforeEach(() => {
-    cy.visit('/examples/ahiqar-arabic-karshuni-local.html')
+    cy.visit('/ahiqar-arabic-karshuni-local.html')
       .get('#text-content')
       .should('be.visible')
       .get('.root.panels-target > .item:nth-child(1) .q-tabs__content .q-tab')
