@@ -1,19 +1,37 @@
 <template>
-  <div>
-    <h1 v-if="collectionTitle" class="text-h3 text-bold q-mb-sm" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
-      {{ collectionTitle }}
-    </h1>
-    <h2 v-if="manifestTitle" class="text-h4 q-mt-none q-mb-md" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
-      <span>{{ manifestTitle }}</span>
-      <q-icon
-        class="q-px-sm"
-        size="xs"
-        :color="$q.dark.isActive ? 'white' : 'grey-7'"
-        name="bi-chevron-right"
-      />
-      <span>{{ $t('Sheet') }} {{ item.n }}</span>
-    </h2>
-    <h1 v-else class="text-h3 text-bold q-mt-xs" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+  <div class="flex column justify-center">
+    <template v-if="collectionTitle || manifestTitle">
+      <template v-if="collectionTitle">
+        <h1 v-if="collectionTitle" class="text-h3 q-mt-sm q-mb-none text-bold" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+          {{ collectionTitle }}
+        </h1>
+        <h2 v-if="manifestTitle" class="text-h4 q-mt-sm q-mb-md" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+          <span>{{ manifestTitle }}</span>
+          <q-icon
+            v-if="item"
+            class="q-px-sm"
+            size="xs"
+            :color="$q.dark.isActive ? 'white' : 'grey-7'"
+            name="bi-chevron-right"
+          />
+          <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
+        </h2>
+      </template>
+      <template v-else>
+        <h1 class="text-h3 text-bold q-mt-sm q-mb-xl" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+          <span>{{ manifestTitle }}</span>
+          <q-icon
+            v-if="item"
+            class="q-px-sm"
+            size="xs"
+            :color="$q.dark.isActive ? 'white' : 'grey-7'"
+            name="bi-chevron-right"
+          />
+          <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
+        </h1>
+      </template>
+    </template>
+    <h1 v-else class="text-h3 text-bold q-mb-xl q-mt-sm" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
       TIDO Viewer
     </h1>
   </div>

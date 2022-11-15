@@ -3,7 +3,7 @@ import { apiBaseUrl } from '../support/globals';
 describe('Annotation - Multiple Tabs', () => {
   beforeEach(() => {
     cy
-      .visit(`/?item=${apiBaseUrl}/3r7vd/3r7vd-130/latest/item.json`)
+      .visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r7vd/3r7vd-130/latest/item.json`)
       .get('#text-content')
       .should('be.visible')
       .get('.root.panels-target > .item:nth-child(4) .q-tab-panel .q-list')

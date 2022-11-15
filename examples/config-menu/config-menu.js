@@ -9,6 +9,7 @@ function createConfigTester() {
             <a class="${file === 'ahiqar-syriac.html' ? 'active' : ''}" href="../ahiqar-syriac.html">Ahiqar Syriac</a>
             <a class="${file === 'ahiqar-arabic-karshuni.html' ? 'active' : ''}" href="../ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</a>
             <a class="${file === 'gfl.html' ? 'active' : ''}" href="../gfl.html">GFL</a>
+            <a class="${file === 'zero-config.html' ? 'active' : ''}" href="../zero-config.html">Zero Config</a>
           </div>
           <div class="config-menu-collapse" onclick="this.parentElement.parentElement.classList.toggle('collapsed')">
             <span>Show/Hide</span>

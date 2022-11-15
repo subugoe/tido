@@ -2,7 +2,7 @@
   <q-list dense class="q-mb-lg">
     <q-item class="no-padding">
       <q-item-section>
-        <h3>{{ $t(labels.item) }} {{ number }} / {{ itemsCount }}</h3>
+        <h3>{{ $t(labels.item) }} {{ number }} / {{ total }}</h3>
       </q-item-section>
     </q-item>
 
@@ -39,7 +39,10 @@ export default {
       return this.$store.getters['config/config'].labels;
     },
     number() {
-      return this.manifest ? this.manifest.sequence.findIndex(({ id }) => id === this.itemUrl) + 1 : 0;
+      return this.manifest ? this.manifest.sequence.findIndex(({ id }) => id === this.itemUrl) + 1 : 1;
+    },
+    total() {
+      return this.itemsCount ?? 1;
     },
     metadata() {
       return [

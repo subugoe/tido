@@ -35,7 +35,7 @@ export const setActiveAnnotations = ({ commit }, activeAnnotations) => {
 export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
   const { annotations } = getters;
   const activeContentType = rootGetters['config/activeContentType'];
-  const filteredAnnotations = annotations.filter(
+  const filteredAnnotations = types.length === 0 ? annotations : annotations.filter(
     (annotation) => {
       const type = types.find(({ name }) => name === annotation.body['x-content-type']);
       // First we check if annotation fits to the current view

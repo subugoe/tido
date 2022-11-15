@@ -55,9 +55,9 @@ export default {
     icon() {
       switch (this.type) {
         case 'info':
-          return 'fa-solid fa-circle-info';
+          return 'bi-info-circle-fill';
         case 'warning':
-          return 'fa-solid fa-triangle-exclamation';
+          return 'bi-exclamation-triangle-fill';
         default:
           return '';
       }

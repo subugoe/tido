@@ -7,11 +7,19 @@ class BookmarkService {
     this.$router = router;
   }
 
+  async pushQuery(query) {
+    const url = new URL(window.location);
+    url.search = '';
+    const params = url.searchParams;
+    Object.keys(query).forEach((key) => params.set(key, query[key]));
+    window.history.pushState({}, '', url);
+  }
+
   async updatePanels(activeViews) {
     const panels = activeViews.map((view, i) => `${i}_${view}`).join(',');
     const query = { ...this.getQuery(), panels };
 
-    await this.$router.replace({ query });
+    await this.pushQuery(query);
   }
 
   async updateShow(panelIndexes = []) {
@@ -29,7 +37,7 @@ class BookmarkService {
       query = oldQuery;
     }
 
-    await this.$router.replace({ query });
+    await this.pushQuery(query);
   }
 
   async updateItemQuery(item) {
@@ -38,14 +46,14 @@ class BookmarkService {
       ...(item ? { item } : {}),
     };
 
-    await this.$router.replace({ query });
+    await this.pushQuery(query);
   }
 
   getQuery() {
     const queryString = window.location.search.substring(1);
     return queryString.split('&').reduce((acc, cur) => {
       const [key, value] = cur.split('=');
-      if (key && value) acc[key] = value;
+      if (key && value) acc[key] = decodeURIComponent(value);
       return acc;
     }, {});
   }

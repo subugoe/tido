@@ -1,8 +1,6 @@
 <template>
-  <div class="item relative">
-    <Loading v-if="isLoading" />
+  <div class="tree-container">
     <q-tree
-      v-show="!isLoading"
       class="item-content"
       ref="treeRef"
       v-model:expanded="expanded"
@@ -13,29 +11,18 @@
       node-key="url"
       @after-show="onAfterShow"
     >
-<!--      <template #default-body="{ node }">-->
-<!--        <div v-if="!node.children" :id="`selectedItem-${node['label']}`">{{ node.label }}</div>-->
-<!--      </template>-->
-
       <template #default-header="{ node }">
-        <div :id="node.url" class="row items-center">
-          <div>
-            {{ node.label }}
-          </div>
-        </div>
+        <div :id="node.url" class="row items-center">{{ node.label }}</div>
       </template>
     </q-tree>
   </div>
 </template>
 
 <script>
-import Loading from '@/components/Loading.vue';
+import { delay } from 'src/utils';
 
 export default {
   name: 'Tree',
-  components: {
-    Loading,
-  },
   data() {
     return {
       isLoading: false,
@@ -79,6 +66,10 @@ export default {
       handler: 'onCollectionChange',
       immediate: true,
     },
+    manifest: {
+      handler: 'onManifestChange',
+      immediate: true,
+    },
     selected: {
       handler: 'onSelectedChange',
       immediate: true,
@@ -86,8 +77,8 @@ export default {
   },
   methods: {
     async onCollectionChange() {
-      this.isLoading = true;
       if (this.collection) {
+        this.$emit('loading', true);
         this.tree = [{
           label: this.collectionTitle,
           selectable: false,
@@ -112,12 +103,35 @@ export default {
         });
       }
     },
+    async onManifestChange() {
+      if (this.manifest && !this.collection) {
+        this.$emit('loading', true);
+        await delay(300);
+        const { label, sequence, id: manifestId } = this.manifest;
+        this.tree = [{
+          label: label ?? this.getDefaultManifestLabel(),
+          sequence,
+          url: manifestId,
+          selectable: false,
+          children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id: itemId, label: itemLabel }, j) => ({
+            label: itemLabel ?? this.getDefaultItemLabel(j),
+            url: itemId,
+            parent: manifestId,
+          })),
+        }];
+
+        this.$nextTick(() => {
+          this.expanded = [manifestId];
+          this.selected = this.itemUrl !== '' ? this.itemUrl : sequence[0]?.id;
+        });
+      }
+    },
     async onItemUrlChange() {
       this.selected = this.itemUrl;
     },
     getDefaultManifestLabel(index) {
       const prefix = this.labels.manifest ?? this.$t('manifest');
-      return `${prefix} ${index + 1}`;
+      return `${prefix} ${index !== undefined ? index + 1 : ''}`;
     },
     getDefaultItemLabel(index) {
       const prefix = this.labels.item ?? this.$t('page');
@@ -134,7 +148,7 @@ export default {
 
       this.$nextTick(() => {
         document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
-        setTimeout(() => this.isLoading = false, 400);
+        setTimeout(() => this.$emit('loading', false), 400);
       });
 
       // if (itemUrl === this.itemUrl) return;
@@ -160,11 +174,12 @@ export default {
 </script>
 
 <style scoped>
-.item {
+.tree-container {
   display: flex;
   flex: 1;
   flex-direction: column;
   height: 100%;
+  position: relative;
 }
 
 .item-content {

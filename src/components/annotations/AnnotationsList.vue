@@ -10,10 +10,7 @@
       padding="xs"
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
-      <q-item-section
-        avatar
-        class="q-mr-none"
-      >
+      <q-item-section avatar class="q-mr-none">
         <AnnotationIcon :name="getIconName(annotation.body['x-content-type'])" />
       </q-item-section>
 
@@ -66,7 +63,7 @@ export default {
       return this.annotationTypesMapping[annotation.body['x-content-type']] === 'text';
     },
     getIconName(typeName) {
-      return this.types.find(({ name }) => name === typeName)?.icon;
+      return this.types.find(({ name }) => name === typeName)?.icon || 'biPencilSquare';
     },
   },
 };

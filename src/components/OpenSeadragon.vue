@@ -1,6 +1,5 @@
 <template>
   <div class="imageItem">
-    <Loading v-if="isLoading" />
     <div v-if="error" class="q-pa-sm">
       <Notification :message="$t(error.message)" title-key="no_image_available" type="warning" />
     </div>
@@ -11,20 +10,17 @@
 <script>
 import OpenSeadragon from 'openseadragon';
 import { delay } from 'src/utils';
-import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
 
 export default {
   name: 'OpenSeadragon',
   components: {
-    Loading,
     Notification,
   },
   data() {
     return {
       viewer: null,
       error: null,
-      isLoading: false,
     };
   },
   computed: {
@@ -52,7 +48,7 @@ export default {
   watch: {
     item: {
       async handler() {
-        this.isLoading = true;
+        this.$emit('loading', true);
         try {
           const response = await fetch(this.item.image.id);
 
@@ -65,7 +61,7 @@ export default {
           this.initOpenSeagragon();
         } catch (error) {
           this.error = error;
-          this.isLoading = false;
+          this.$emit('loading', false);
         }
       },
       immediate: true,
@@ -82,7 +78,7 @@ export default {
       this.viewer.controlsFadeDelay = 1000;
 
       this.viewer.addHandler('tile-loaded', () => {
-        this.isLoading = false;
+        this.$emit('loading', false);
       });
     },
   },
