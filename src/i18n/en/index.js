@@ -56,7 +56,7 @@ export default {
   no_comments_in_view:
     'The current view does not contain any comments to display',
   noConfigEntrypoint: 'No Entrypoint is available in the config. Please add one to load viewer',
-  no_config_available: 'Tido Configuration is not available',
+  no_entrypoint_available: 'No entrypoint URL found. Please check your configuration.',
   config_error: 'Configuration Error',
   no_views_configured: 'No views configured in this panel.',
   Origin: 'Origin',
@@ -93,5 +93,6 @@ export default {
   please_try_again_later: 'Please try again later',
   server_error: 'Server error',
   other: 'Other',
-  subtitle: 'Subtitle'
+  subtitle: 'Subtitle',
+  manifest: 'Manifest',
 };

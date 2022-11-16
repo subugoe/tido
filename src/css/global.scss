@@ -1,8 +1,13 @@
-body.body--dark {
+.body--dark {
   color: $light;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 0;
 }
 
@@ -161,12 +166,13 @@ h3 {
   font-size: 1rem;
 }
 
-.q-btn--outline:before {
+.q-btn--outline::before {
   border-width: 2px;
 }
 
 .q-layout__section--marginal {
   color: $dark;
+
   .body--dark & {
     color: $light;
   }

@@ -1,39 +1,33 @@
 describe('Config', () => {
   beforeEach(() => {
-    cy.visit('/');
   });
 
-  it('Should display notification when there is any parsing error', () => {
-    cy.get('#tido-config').invoke('prop', 'innerHTML', '').then(() => {
-      const errorMessage = 'JSON Parsing error, please check the config and reload the application';
-
-      cy.get('.config-error-container').then(($span) => {
-        const errorMessage = $span.text();
-      });
-
-      cy.get('.config-error-container').as('errorEntrypointMessage');
-
-      cy.get('@errorEntrypointMessage').should('contain', errorMessage);
-    });
+  it('Should show empty state', () => {
+    cy.visit('/zero-config.html')
+      .contains('No entrypoint URL found. Please check your configuration.');
   });
 
-  it('Should display notification when there is no entrypoint', () => {
-    cy.get('#tido-config').invoke('text').then((text) => {
-      const parsed = JSON.parse(text);
-      delete parsed.entrypoint;
+  it('Should load default Tido with collection bookmark', () => {
+    cy.visit('/zero-config.html?collection=http://localhost:8181/ahiqar/arabic-karshuni/collection.json')
+      .get('#text-content')
+      .should('be.visible')
+      .get('.panels-target > .item')
+      .should('have.length', 5);
+  });
 
-      cy.get('#tido-config').invoke('prop', 'innerHTML', JSON.stringify(parsed)).then(() => {
-        const errorMessage
-          = 'No Entrypoint is available in the config. Please add one to load viewer';
+  it('Should load default Tido with manifest bookmark', () => {
+    cy.visit('/zero-config.html?manifest=http://localhost:8181/ahiqar/arabic-karshuni/3r177/manifest.json')
+      .get('#text-content')
+      .should('be.visible')
+      .get('.panels-target > .item')
+      .should('have.length', 5);
+  });
 
-        cy.get('.config-error-container').then(($span) => {
-          const errorMessage = $span.text();
-        });
-
-        cy.get('.config-error-container').as('errorEntrypointMessage');
-
-        cy.get('@errorEntrypointMessage').should('contain', errorMessage);
-      });
-    });
+  it('Should load default Tido with item bookmark', () => {
+    cy.visit('/zero-config.html?item=http://localhost:8181/ahiqar/arabic-karshuni/3r177/3r177-2a/latest/item.json')
+      .get('#text-content')
+      .should('be.visible')
+      .get('.panels-target > .item')
+      .should('have.length', 5);
   });
 });

@@ -2,7 +2,7 @@ import { apiBaseUrl } from '../support/globals';
 
 describe('Content - Multiple Tabs', () => {
   beforeEach(() => {
-    cy.visit(`/#/?item=${apiBaseUrl}/3r176/3r176-182b/latest/item.json`)
+    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r176/3r176-182b/latest/item.json`)
       .get('#text-content')
       .should('be.visible');
   });
@@ -20,8 +20,6 @@ describe('Content - Multiple Tabs', () => {
       .eq(1)
       .click()
       .should('have.class', 'q-tab--active')
-      .get('.root.panels-target > .item:nth-child(3) .q-spinner')
-      .should('be.visible')
       .get('#text-content>div')
       .should('be.visible')
       .contains('وايضا');
@@ -31,6 +29,7 @@ describe('Content - Multiple Tabs', () => {
     cy
       .get('.root.panels-target > .item:nth-child(3) #text-content')
       .contains('ܚܝܩܪ')
+      .should('have.attr', 'data-annotation-level', '0')
       .click()
       .should('have.attr', 'data-annotation-level', '1')
       .and('have.css', 'background-color', 'rgb(227, 242, 253)')
@@ -81,8 +80,6 @@ describe('Content - Multiple Tabs', () => {
       .eq(1)
       .click()
       .get('#text-content')
-      .get('.root.panels-target > .item:nth-child(3) .q-spinner')
-      .should('be.visible')
       .get('#text-content>div')
       .should('be.visible')
       .contains('وايضا');
@@ -137,7 +134,9 @@ describe('Content - Multiple Tabs', () => {
       .click() // 14px
       .should('be.disabled');
 
-    cy.get('#text-content div')
+    cy.get('#text-content')
+      .contains('ܐܠܚܟܝܡ')
+      .get('#text-content div')
       .first()
       .should('have.attr', 'style', 'font-size: 14px;');
   });
@@ -145,12 +144,10 @@ describe('Content - Multiple Tabs', () => {
 
 describe('Content - Multiple Tabs with different manifest', () => {
   it('Should switch to first tab when switch manifest', () => {
-    cy.visit(`/#/?item=${apiBaseUrl}/3r17b/3r17b-82a/latest/item.json`)
+    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r17b/3r17b-82a/latest/item.json`)
       .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .click()
-      .get('.root.panels-target > .item:nth-child(3) .q-spinner')
-      .should('be.visible')
       .get('.root.panels-target > .item:nth-child(3) .q-panel:nth-child(2) #text-content')
       .contains('اسمه')
       .get('button.previous-item')

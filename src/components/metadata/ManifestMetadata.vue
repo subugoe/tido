@@ -2,7 +2,7 @@
   <q-list v-if="manifestHasItems" dense class="q-mb-lg">
     <q-item class="no-padding">
       <q-item-section>
-        <h3>{{ $t(labels.manifest) }} {{ number }} / {{ manifests.length }}</h3>
+        <h3>{{ $t(labels.manifest) }} {{ number }} / {{ total }}</h3>
       </q-item-section>
     </q-item>
 
@@ -33,12 +33,16 @@ export default {
       return this.manifest?.sequence.length > 0;
     },
     number() {
-      return this.manifests.findIndex(({ id }) => id === this.manifest.id) + 1;
+      return this.manifests !== null ? this.manifests.findIndex(({ id }) => id === this.manifest.id) + 1 : 1;
+    },
+    total() {
+      return this.manifests !== null ? this.manifests.length : 1;
     },
     labels() {
       return this.$store.getters['config/config'].labels;
     },
     metadata() {
+      if (!this.manifest) return [];
       return [
         { key: 'label', value: this.manifest.label },
         ...(this.manifest.license || []).map((manifest) => ({

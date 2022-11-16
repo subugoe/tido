@@ -4,7 +4,7 @@ export default function ContentsState() {
     collection: null,
     item: null,
     itemUrl: null,
-    manifests: [],
+    manifests: null,
     manifest: null,
   };
 }

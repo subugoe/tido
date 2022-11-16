@@ -1,42 +1,6 @@
 import { request } from '@/utils/http';
 import BookmarkService from '@/services/bookmark';
 
-/**
- * extract the 'label part' of the itemurl
- * caller: *getItemUrls()*
- *
- * @param string itemurl
- *
- * @return string 'label part'
- */
-function getItemLabel(itemurl) {
-  return itemurl.replace(/.*-(.*)\/latest.*$/, '$1');
-}
-
-/**
- * get all itemurls hosted by each manifest's sequence to populate the aprropriate tree node
- * caller: *getManifest()*
- *
- * @param array sequence
- * @param string label
- *
- * @return array urls
- */
-function getItemUrls(sequence) {
-  const urls = [];
-
-  sequence.forEach((item) => {
-    const itemLabel = getItemLabel(item.id);
-
-    urls.push({
-      label: item.id,
-      'label-key': `${itemLabel}`,
-      labelSheet: true,
-    });
-  });
-  return urls;
-}
-
 function findActiveManifestIndex(manifests = [], itemUrl = null) {
   if (manifests.length === 0) return -1;
   if (!itemUrl) return 0;
@@ -62,30 +26,6 @@ function findActiveManifestIndex(manifests = [], itemUrl = null) {
 
 async function getManifest(url) {
   const data = await request(url);
-
-  // if (!Array.isArray(data.sequence)) {
-  //   data.sequence = [data.sequence];
-  // }
-
-  // if (data.sequence[0] !== 'undefined') {
-  //   data.sequence.map((seq) => itemUrls.push(seq.id));
-  // }
-
-  // const tree = [];
-  // if (isCollection) {
-  //   tree.push({
-  //     children: getItemUrls(data.sequence, data.label),
-  //     label: data.label,
-  //     'label-key': data.label,
-  //     handler: (node) => {
-  //       dispatch('addOrRemoveFromExpanded', node.label);
-  //     },
-  //     selectable: false,
-  //   });
-  // } else {
-  //   tree.push(...getItemUrls(data.sequence, data.label));
-  // }
-
   return data;
 }
 
@@ -94,7 +34,9 @@ async function getItem(url) {
   return data;
 }
 
-export const initCollection = async ({ commit, dispatch, getters, rootGetters }, url) => {
+export const initCollection = async ({
+  commit, dispatch, getters, rootGetters,
+}, url) => {
   const { item } = getters;
   let { item: itemUrl } = rootGetters['config/config'];
 
@@ -105,12 +47,11 @@ export const initCollection = async ({ commit, dispatch, getters, rootGetters },
   // We know here that no manifest was loaded. Neither from URL nor from user config.
   // So we load the first collection item.
   if (Array.isArray(collection.sequence) && collection.sequence.length > 0) {
-
     const promises = [];
     collection.sequence.forEach((seq) => promises.push(getManifest(seq.id)));
 
     const manifests = await Promise.all(promises);
-   commit('setManifests', manifests);
+    commit('setManifests', manifests);
 
     const activeManifestIndex = findActiveManifestIndex(manifests, itemUrl);
 
@@ -128,16 +69,12 @@ export const initCollection = async ({ commit, dispatch, getters, rootGetters },
   }
 };
 
-export const initManifest = async ({ commit, dispatch, getters, rootGetters }, url) => {
-  // commit('resetContents');
-
+export const initManifest = async ({ commit, dispatch, getters }, url) => {
   const { item, manifests } = getters;
-  const config = rootGetters['config/config'];
-  // const activeViews = rootGetters['config/activeViews'];
 
   let manifest;
   if (manifests) {
-    manifest = manifests.find(({ id }) => id === url)
+    manifest = manifests.find(({ id }) => id === url);
   } else {
     manifest = await getManifest(url);
   }
@@ -157,7 +94,7 @@ export const initItem = async ({ commit, dispatch }, url) => {
   commit('setItemUrl', url);
 
   if (item.annotationCollection) {
-    dispatch('annotations/initAnnotations', item.annotationCollection, { root: true});
+    dispatch('annotations/initAnnotations', item.annotationCollection, { root: true });
   }
 
   await BookmarkService.updateItemQuery(url);
@@ -167,7 +104,7 @@ export const updateImageLoading = async ({ commit }, payload) => {
   commit('setImageLoaded', payload);
 };
 
-export const initAnnotations = async ({ commit, rootG }, url) => {
+export const initAnnotations = async ({ commit }, url) => {
   const annotations = await request(url);
   commit('setAnnotations', annotations);
 };

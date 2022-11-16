@@ -10,10 +10,7 @@
       padding="xs"
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
-      <q-item-section
-        avatar
-        class="q-mr-none"
-      >
+      <q-item-section avatar class="q-mr-none">
         <AnnotationIcon :name="getIconName(annotation.body['x-content-type'])" />
       </q-item-section>
 
@@ -66,7 +63,7 @@ export default {
       return this.annotationTypesMapping[annotation.body['x-content-type']] === 'text';
     },
     getIconName(typeName) {
-      return this.types.find(({ name }) => name === typeName)?.icon;
+      return this.types.find(({ name }) => name === typeName)?.icon || 'biPencilSquare';
     },
   },
 };
@@ -88,7 +85,5 @@ export default {
 
 .item-content {
   overflow: auto;
-  padding: 8px;
-  padding-bottom: 72px; // fab icon size + one times the offset of q-page-sticky
 }
 </style>

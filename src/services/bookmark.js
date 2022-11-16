@@ -1,4 +1,4 @@
-import {delay} from "src/utils";
+import { delay } from 'src/utils';
 
 class BookmarkService {
   $router;
@@ -7,33 +7,53 @@ class BookmarkService {
     this.$router = router;
   }
 
-  async updatePanels(activeViews) {
-    const panels = activeViews.map((view, i) => `${i}_${view}`).join(',');
-    const query = {...this.getQuery(), panels };
-
-    await this.$router.push({path: '/', query});
+  async pushQuery(query) {
+    const url = new URL(window.location);
+    url.search = '';
+    const params = url.searchParams;
+    Object.keys(query).forEach((key) => params.set(key, query[key]));
+    window.history.pushState({}, '', url);
   }
 
-  async updateShow(panelIndexes) {
-    await delay(300); // TODO: $route doesn't update quick enough, we have to siwtch to Composition APIs useRoute()
-    const query = {...this.getQuery(), show: panelIndexes.join(',') };
-    await this.$router.push({path: '/', query});
+  async updatePanels(activeViews) {
+    const panels = activeViews.map((view, i) => `${i}_${view}`).join(',');
+    const query = { ...this.getQuery(), panels };
+
+    await this.pushQuery(query);
+  }
+
+  async updateShow(panelIndexes = []) {
+    // TODO: $route doesn't update quick enough, in future we have to switch to Composition APIs useRoute()
+    await delay(300);
+
+    const oldQuery = this.getQuery();
+    let query = {};
+
+    // Does not append (= removes) the "show" param from URL if panelIndexes empty.
+    if (panelIndexes.length > 0) {
+      query = { ...this.getQuery(), show: panelIndexes.join(',') };
+    } else {
+      if (oldQuery.show) delete oldQuery.show;
+      query = oldQuery;
+    }
+
+    await this.pushQuery(query);
   }
 
   async updateItemQuery(item) {
     const query = {
       ...this.getQuery(),
-      ...(item ? {item} : {})
+      ...(item ? { item } : {}),
     };
 
-    await this.$router.push({path: '/', query});
+    await this.pushQuery(query);
   }
 
   getQuery() {
     const queryString = window.location.search.substring(1);
     return queryString.split('&').reduce((acc, cur) => {
       const [key, value] = cur.split('=');
-      if (key && value) acc[key] = value;
+      if (key && value) acc[key] = decodeURIComponent(value);
       return acc;
     }, {});
   }

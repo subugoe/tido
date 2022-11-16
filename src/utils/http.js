@@ -5,16 +5,16 @@ export async function request(url) {
   try {
     const response = await axios.get(url);
     return response.data;
-  } catch (err) {
-    const errorResponse = err.response;
-    if (!errorResponse) {
-      throw getError(null, i18n.global.t('failed_to_fetch_url') + ' ' + url);
+  } catch ({ response }) {
+    if (!response) {
+      throw getError(null, `${i18n.global.t('failed_to_fetch_url')} ${url}`);
     }
 
-    if (errorResponse.status !== 200) {
-      throw getError(errorResponse.status, errorResponse.message);
+    if (response.status !== 200) {
+      throw getError(response.status, response.message);
     }
   }
+  return null;
 }
 
 const cacheRequest = () => {

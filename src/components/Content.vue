@@ -1,7 +1,5 @@
 <template>
-  <div class="item">
-    <Loading v-if="isLoading" />
-
+  <div class="content-container">
     <div v-if="notificationMessage" class="q-pa-sm">
       <Notification
         :message="$t(notificationMessage)"
@@ -11,7 +9,7 @@
       />
     </div>
 
-    <div id="text-content" v-show="!isLoading" class="custom-font item-content">
+    <div id="text-content" class="custom-font item-content">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle" />
     </div>
@@ -20,7 +18,6 @@
 
 <script>
 import DomMixin from '@/mixins/dom';
-import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
 import { request } from '@/utils/http';
 import {
@@ -33,7 +30,6 @@ import {
 export default {
   name: 'Content',
   components: {
-    Loading,
     Notification,
   },
   mixins: [DomMixin],
@@ -45,7 +41,6 @@ export default {
   data: () => ({
     content: '',
     errorTextMessage: null,
-    isLoading: false,
   }),
   computed: {
     manifest() {
@@ -85,9 +80,9 @@ export default {
           return;
         }
         this.errorTextMessage = '';
-        this.isLoading = true;
-        await delay(400);
-        const data = await request(url);
+        this.$emit('loading', true);
+        await delay(300);
+        const data = await cachableRequest(url);
         this.isValidTextContent(data);
 
         if (this.hasSupport) {
@@ -97,7 +92,7 @@ export default {
         const dom = domParser(data);
         this.content = dom.documentElement.innerHTML;
         setTimeout(async () => {
-          this.isLoading = false;
+          this.$emit('loading', false);
           this.$store.commit('contents/setActiveContentUrl', this.url);
           const root = document.getElementById('text-content');
           this.$store.dispatch('annotations/addHighlightAttributesToText', root);
@@ -131,6 +126,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.content-container {
+  position: relative;
+}
 .default-cursor {
   cursor: default !important;
 }
@@ -139,16 +137,11 @@ export default {
   pointer-events: none;
 }
 
-.item {
-  position: relative;
-}
-
 .item-content {
   display: flex;
   flex: 1;
   flex-direction: column;
   overflow: auto;
-  padding: 8px;
 }
 
 .rtl {

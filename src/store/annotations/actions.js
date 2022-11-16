@@ -1,9 +1,8 @@
 import * as AnnotationUtils from 'src/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
-import { activeAnnotations } from 'src/store/annotations/getters';
 
-export const addActiveAnnotation = ({ commit, getters, rootGetters, dispatch }, id) => {
+export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
   const { activeAnnotations, annotations } = getters;
   const newActiveAnnotation = annotations.find((annotation) => annotation.id === id);
 
@@ -31,30 +30,30 @@ export const addActiveAnnotation = ({ commit, getters, rootGetters, dispatch }, 
 
 export const setActiveAnnotations = ({ commit }, activeAnnotations) => {
   commit('setActiveAnnotations', activeAnnotations);
-}
+};
 
 export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
   const { annotations } = getters;
   const activeContentType = rootGetters['config/activeContentType'];
-  const filteredAnnotations = annotations.filter(
+  const filteredAnnotations = types.length === 0 ? annotations : annotations.filter(
     (annotation) => {
       const type = types.find(({ name }) => name === annotation.body['x-content-type']);
       // First we check if annotation fits to the current view
       if (!type) return false;
 
-      if (type?.displayWhen && type?.displayWhen === activeContentType)
-        // Next we check if annotation should always be displayed on the current content tab
-        return true;
-      // // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
-      const selector = AnnotationUtils.generateTargetSelector(annotation);
-        if (selector) {
-          const el = document.querySelector(selector);
-          if (el) {
-            return true;
-          }
-        }
+      // Next we check if annotation should always be displayed on the current content tab
+      if (type?.displayWhen && type?.displayWhen === activeContentType) return true;
 
-        return false;
+      // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
+      const selector = AnnotationUtils.generateTargetSelector(annotation);
+      if (selector) {
+        const el = document.querySelector(selector);
+        if (el) {
+          return true;
+        }
+      }
+
+      return false;
     },
   );
 
@@ -66,15 +65,15 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
 
   // Add range attributes
   [...dom.querySelectorAll('[data-target]:not([value=""])')]
-    .map(el => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
-    .forEach(targetSelector => Utils.addRangeHighlightAttributes(targetSelector, dom));
+    .map((el) => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
+    .forEach((targetSelector) => Utils.addRangeHighlightAttributes(targetSelector, dom));
   // Utils.mapUniqueElements(
   //   Utils.findDomElements('[data-target]:not([value=""])', dom),
   //   (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
   // ).forEach((selector) => Utils.addRangeHighlightAttributes(selector, dom));
 
   // Add single attributes
-  annotations.forEach((annotation, i) => {
+  annotations.forEach((annotation) => {
     const { id } = annotation;
     const selector = Utils.generateTargetSelector(annotation);
     if (selector) {
@@ -93,7 +92,7 @@ export const loadAnnotations = ({ commit }) => {
   commit('setAnnotations', []);
 };
 
-export const removeActiveAnnotation = ({ commit, getters, dispatch }, id) => {
+export const removeActiveAnnotation = ({ getters, dispatch }, id) => {
   const { activeAnnotations } = getters;
 
   const removeAnnotation = activeAnnotations[id];

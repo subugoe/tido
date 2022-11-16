@@ -2,7 +2,7 @@ import MainView from 'src/views/MainView.vue';
 
 const routes = [
   {
-    path: '/',
+    path: '',
     name: 'MainView',
     component: MainView,
   },
