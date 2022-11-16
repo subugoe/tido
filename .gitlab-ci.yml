@@ -20,7 +20,7 @@ build:
     - bash .ci-scripts/build.sh
   artifacts:
     paths:
-      - dist/
+      - dist
     expire_in: 1 mos
 
 test:e2e:
@@ -29,7 +29,6 @@ test:e2e:
   except:
     - main
   script:
-    - bash .ci-scripts/build.sh
     - npm run serve:prod & npm run test:e2e
   artifacts:
     when: always
