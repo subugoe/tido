@@ -27,7 +27,7 @@
 import { setCssVar } from 'quasar';
 import Header from 'components/header/Header.vue';
 import { delay } from 'src/utils';
-import MainView from 'src/views/MainView';
+import MainView from 'src/views/MainView.vue';
 import Notification from '@/components/Notification.vue';
 
 export default {

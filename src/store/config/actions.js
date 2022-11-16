@@ -59,13 +59,7 @@ function createDefaultActiveViews(panelsConfig) {
   });
 }
 
-function discoverCustomConfig() {
-  let customConfig = {};
-
-  const el = document.getElementById('tido-config');
-
-  customConfig = el ? JSON.parse(el.text) : {};
-
+function discoverCustomConfig(customConfig) {
   const {
     translations, collection, manifest, item, panels,
   } = customConfig;
@@ -111,8 +105,8 @@ function discoverDefaultConfig(config) {
   };
 }
 
-export const load = ({ commit, getters }) => {
-  const customConfig = discoverCustomConfig();
+export const load = ({ commit, getters }, config) => {
+  const customConfig = discoverCustomConfig(config);
   const urlConfig = discoverUrlConfig();
   const defaultConfig = discoverDefaultConfig(getters.config);
 

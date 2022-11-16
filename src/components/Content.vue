@@ -82,7 +82,7 @@ export default {
         this.errorTextMessage = '';
         this.$emit('loading', true);
         await delay(300);
-        const data = await cachableRequest(url);
+        const data = await request(url);
         this.isValidTextContent(data);
 
         if (this.hasSupport) {

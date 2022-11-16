@@ -63,7 +63,7 @@ import PanelZoomAction from 'components/panels/actions/PanelZoomAction.vue';
 import Notification from 'components/Notification.vue';
 import PanelToggleAction from 'components/panels/actions/PanelToggleAction.vue';
 import PanelImageAction from 'components/panels/actions/PanelImageAction.vue';
-import Loading from 'components/Loading';
+import Loading from 'components/Loading.vue';
 
 export default {
   components: {
