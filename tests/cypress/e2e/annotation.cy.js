@@ -81,10 +81,7 @@ describe('Annotation - Multiple Tabs', () => {
       .contains('وورمت')
       .get('.root.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
       .first()
-      .should('have.class', 'q-tab--active')
-      .get('.root.panels-target > .item:nth-child(4) .q-panel:nth-child(1) .q-list .q-item')
-      .first()
-      .contains('حيقار');
+      .should('have.class', 'q-tab--active');
   });
 
   it('Should select all from panel action', () => {
