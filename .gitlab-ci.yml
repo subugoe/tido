@@ -1,8 +1,3 @@
-# this file defines the CI/CD stages for the TIDO viewer.
-# in some cases they invoke scripts provided at .ci-scripts/ in order to
-# keep this file slim and clear. please have a look at these scripts for
-# information that goes beyond the documentation of the single stages.
-
 cache:
   key: $CI_COMMIT_REF_SLUG
   paths:
@@ -61,3 +56,4 @@ stop_env:
   environment:
     name: $CI_COMMIT_REF_SLUG
     action: stop
+

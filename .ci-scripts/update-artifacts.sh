@@ -10,8 +10,8 @@ mkdir public
 
 # Create branch artifact
 mkdir -p public/${CI_COMMIT_REF_SLUG}/examples
-cp --recursive --remove-destination ${dist_dir}/ public/${CI_COMMIT_REF_SLUG}/
 cp --recursive examples/* public/${CI_COMMIT_REF_SLUG}/examples/
+cp --recursive --remove-destination ${dist_dir}/ public/${CI_COMMIT_REF_SLUG}/examples/dist
 
 # Create main artifact
 if [[ $CI_COMMIT_REF_SLUG != "main" ]]; then
