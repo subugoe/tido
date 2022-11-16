@@ -99,7 +99,8 @@
   },
   "scripts": {
     "serve": "vite",
-    "build": "vite build",
+    "post-build":"node scripts/post-build.js",
+    "build": "vite build && npm run post-build",
     "cypress": "cypress open",
     "cypress:headless": "cypress run --headless --spec tests/cypress/integration/annotation.test.js",
     "dev": "quasar dev --modern",

@@ -1,5 +1,5 @@
 <template>
-  <q-layout class="root viewport" view="hHh Lpr fFf">
+  <q-layout class="root viewport">
     <Header/>
     <q-page-container v-if="ready" class="root">
       <router-view/>

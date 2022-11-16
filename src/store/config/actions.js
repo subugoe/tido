@@ -46,7 +46,6 @@ export const load = ({ commit, getters }, customConfig) => {
   // } catch (e) {
   //   throw { message: e, title: i18n.global.t('config_error')};
   // }
-  console.log('temp', customConfig);
 
   const { translations } = customConfig;
   if (translations) {
@@ -68,8 +67,6 @@ export const load = ({ commit, getters }, customConfig) => {
   if (customConfig.item && !isUrl(customConfig.item)) {
     customConfig.item = '';
   }
-
-  console.log('temp2', customConfig);
 
   // Set entrypoints from URL
   if (isUrl(item)) customConfig.item = item;
@@ -143,8 +140,6 @@ export const load = ({ commit, getters }, customConfig) => {
     ...defaultConfig,
     ...customConfig
   };
-
-  console.log('temp',resultConfig);
 
   commit('setConfig', resultConfig);
 };

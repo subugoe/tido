@@ -1,15 +1,15 @@
 <template>
   <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'" v-if="show">
     <div class="q-px-md q-py-md">
-      <div class="flex items-start">
+      <div class="t-flex items-start">
         <TitleBar v-if="item && manifests.length" class="" :item="item"/>
-        <div class="col flex justify-end">
+        <div class="col t-flex justify-end">
           <Tools/>
         </div>
       </div>
-      <div v-if="item" class="flex">
+      <div v-if="item" class="t-flex">
         <Navbar v-if="showNavbar"/>
-        <PanelsToggle v-if="showPanelsToggle" class="flex justify-sm-end col" />
+        <PanelsToggle v-if="showPanelsToggle" class="t-flex justify-sm-end col" />
       </div>
     </div>
   </q-header>
