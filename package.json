@@ -98,7 +98,7 @@
   },
   "scripts": {
     "serve": "vite",
-    "post-build":"node scripts/post-build.js",
+    "post-build": "node scripts/post-build.js",
     "build": "vite build && npm run post-build",
     "cypress": "cypress open",
     "cypress:headless": "cypress run --headless",
