@@ -12,8 +12,14 @@
 <body>
 <noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
   continue.</strong></noscript>
-<script id="tido-config" type="application/json">
-  {
+
+<div id="config-menu"></div>
+<div id="app"></div>
+<script src="../dist/tido.js"></script>
+<script src="config-menu/config-menu.js"></script>
+
+<script>
+  const arabicKarshuni = {
     "collection": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
     "notificationColors": {
       "info": "blue-9",
@@ -152,10 +158,14 @@
         "contents_and_metadata": "Contents & Metadata"
       }
     }
-  }</script>
-<div id="config-menu"></div>
-<div id="q-app"></div>
-<script src="../dist/tido.js"></script>
-<script src="config-menu/config-menu.js"></script>
+  }
+
+  const options = {
+    container: '#app',
+    config: arabicKarshuni,
+  };
+
+  window.tido = new window.Tido(options);
+</script>
 </body>
 </html>

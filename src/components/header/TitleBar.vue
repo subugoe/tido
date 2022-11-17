@@ -2,10 +2,10 @@
   <div class="t-flex column justify-center">
     <template v-if="collectionTitle || manifestTitle">
       <template v-if="collectionTitle">
-        <h1 v-if="collectionTitle" class="t-h3 q-mt-sm q-mb-none text-bold" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+        <h1 v-if="collectionTitle" class="t-text-h3 q-mt-sm q-mb-none text-bold" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
           {{ collectionTitle }}
         </h1>
-        <h2 v-if="manifestTitle" class="t-h4 q-mt-sm q-mb-md" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+        <h2 v-if="manifestTitle" class="t-text-h4 q-mt-sm q-mb-md" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
           <span>{{ manifestTitle }}</span>
           <q-icon
             v-if="item"
@@ -18,7 +18,7 @@
         </h2>
       </template>
       <template v-else>
-        <h1 class="t-h3 text-bold q-mt-sm q-mb-xl" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+        <h1 class="t-text-h3 text-bold q-mt-sm q-mb-xl" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
           <span>{{ manifestTitle }}</span>
           <q-icon
             v-if="item"
@@ -31,7 +31,7 @@
         </h1>
       </template>
     </template>
-    <h1 v-else class="t-h3 text-bold q-mb-xl q-mt-sm" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+    <h1 v-else class="t-text-h3 text-bold q-mb-xl q-mt-sm" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
       TIDO Viewer
     </h1>
   </div>

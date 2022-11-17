@@ -13,8 +13,16 @@
 <noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
   continue.</strong></noscript>
 <div id="config-menu"></div>
-<div id="q-app"></div>
+<div id="zero-config"></div>
 <script src="dist/tido.js"></script>
 <script src="config-menu/config-menu.js"></script>
+
+<script>
+  const options = {
+    container: '#zero-config',
+  };
+
+  window.tido = new window.Tido(options);
+</script>
 </body>
 </html>
