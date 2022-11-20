@@ -6,7 +6,7 @@
       unelevated
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'primary'"
       class="q-px-sm q-mr-sm previous-item"
-      icon="bi-arrow-left"
+      :icon="prevIcon"
       :label="prevButtonLabel"
       @click="prev"
       no-caps
@@ -19,7 +19,7 @@
       :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'primary'"
       :disable="!hasNext"
       class="q-px-sm next-item"
-      icon-right="bi-arrow-right"
+      :icon-right="nextIcon"
       :label="nextButtonLabel"
       @click="next"
       no-caps
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { biArrowLeft, biArrowRight } from '@quasar/extras/bootstrap-icons';
+
 export default {
   name: 'Navbar',
   computed: {
@@ -83,6 +85,10 @@ export default {
         item: 'item',
       };
     },
+  },
+  created() {
+    this.prevIcon = biArrowLeft;
+    this.nextIcon = biArrowRight;
   },
   methods: {
     prev() {

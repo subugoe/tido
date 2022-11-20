@@ -53,3 +53,16 @@ export const domParser = (data) => {
 
   return dom;
 };
+
+export const isUrl = (str) => {
+  if (!str) return false;
+
+  let url;
+  try {
+    url = new URL(str);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === 'http:' || url.protocol === 'https:';
+};

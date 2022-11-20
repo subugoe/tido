@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { biInfoCircleFill, biExclamationTriangleFill } from '@quasar/extras/bootstrap-icons';
+
 export default {
   name: 'Notification',
   props: {
@@ -55,9 +57,9 @@ export default {
     icon() {
       switch (this.type) {
         case 'info':
-          return 'bi-info-circle-fill';
+          return biInfoCircleFill;
         case 'warning':
-          return 'bi-exclamation-triangle-fill';
+          return biExclamationTriangleFill;
         default:
           return '';
       }

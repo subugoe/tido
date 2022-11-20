@@ -8,7 +8,10 @@
 </template>
 <script>
 import { Dark } from 'quasar';
-import { icon } from '@/utils/icon';
+import { isUrl } from 'src/utils';
+import {
+  biPersonFill, biGeoAltFill, biChatFill, biBoxArrowUpRight, biPenFill, biPencilSquare,
+} from '@quasar/extras/bootstrap-icons';
 
 export default {
   name: 'AnnotationIcon',
@@ -23,7 +26,22 @@ export default {
       return Dark.isActive;
     },
     iconName() {
-      return icon(this.name);
+      return isUrl(this.name) ? `img:${this.name}` : this.getIcon(this.name);
+    },
+  },
+  created() {
+    this.icons = {
+      biPersonFill,
+      biGeoAltFill,
+      biChatFill,
+      biBoxArrowUpRight,
+      biPenFill,
+      biPencilSquare,
+    };
+  },
+  methods: {
+    getIcon(name) {
+      return this.icons[name];
     },
   },
 };

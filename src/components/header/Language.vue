@@ -1,6 +1,6 @@
 <template>
   <div class="col-xs-auto">
-    <q-btn color="grey-5" flat :title="$t('change_language')" icon="bi-translate">
+    <q-btn color="grey-5" flat :title="$t('change_language')" :icon="icon">
       <q-menu anchor="center middle" fit self="center middle">
         <q-list>
           <q-item
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { biTranslate } from '@quasar/extras/bootstrap-icons';
+
 export default {
   name: 'Language',
   data() {
@@ -35,6 +37,9 @@ export default {
     selectedLang(lang) {
       this.$i18n.locale = lang;
     },
+  },
+  created() {
+    this.icon = biTranslate;
   },
   mounted() {
     this.selectedLang = this.config.lang || 'en-US';

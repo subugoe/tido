@@ -15,7 +15,7 @@
           type="warning"
         />
         <template v-else>
-          <q-icon name="bi-book" size="64px" color="grey-5"></q-icon>
+          <q-icon :name="emptyIcon" size="64px" color="grey-5"></q-icon>
           <span  class="text-grey-6 text-bold q-mt-md">{{ $t('no_entrypoint_available') }}</span>
         </template>
       </div>
@@ -27,7 +27,8 @@
 import { setCssVar } from 'quasar';
 import Header from 'components/header/Header.vue';
 import { delay } from 'src/utils';
-import MainView from 'src/views/MainView';
+import MainView from 'src/views/MainView.vue';
+import { biBook } from '@quasar/extras/bootstrap-icons';
 import Notification from '@/components/Notification.vue';
 
 export default {
@@ -80,6 +81,9 @@ export default {
     manifests() {
       return this.$store.getters['contents/manifests'];
     },
+  },
+  created() {
+    this.emptyIcon = biBook;
   },
   async mounted() {
     this.isLoading = true;

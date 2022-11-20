@@ -5,7 +5,7 @@
       ref="treeRef"
       v-model:expanded="expanded"
       v-model:selected="selected"
-      icon="bi-caret-right"
+      :icon="expandIcon"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       node-key="url"
@@ -20,6 +20,7 @@
 
 <script>
 import { delay } from 'src/utils';
+import { biChevronRight } from '@quasar/extras/bootstrap-icons';
 
 export default {
   name: 'Tree',
@@ -74,6 +75,9 @@ export default {
       handler: 'onSelectedChange',
       immediate: true,
     },
+  },
+  created() {
+    this.expandIcon = biChevronRight;
   },
   methods: {
     async onCollectionChange() {
