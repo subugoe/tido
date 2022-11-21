@@ -10,7 +10,7 @@
     <span>{{ text }}</span>
 
     <q-icon
-      name="bi-box-arrow-up-right"
+      :name="icon"
       size="12px"
       class="content__link-icon q-pl-xs"
     />
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { biBoxArrowUpRight } from '@quasar/extras/bootstrap-icons';
+
 export default {
   name: 'MetadataLink',
   props: {
@@ -29,6 +31,9 @@ export default {
       type: String,
       default: () => '',
     },
+  },
+  created() {
+    this.icon = biBoxArrowUpRight;
   },
 };
 </script>

@@ -18,7 +18,7 @@
         <span>{{ url.linkTitle }}</span>
 
         <q-icon
-          name="bi-box-arrow-up-right"
+          :name="linkIcon"
           size="15px"
           class="q-pl-xs q-pb-xs"
         />
@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import { biBoxArrowUpRight } from '@quasar/extras/bootstrap-icons';
+
 export default {
   name: 'MetadataValue',
   props: {
@@ -85,6 +87,9 @@ export default {
 
       return urlText;
     },
+  },
+  created() {
+    this.linkIcon = biBoxArrowUpRight;
   },
 };
 </script>

@@ -6,7 +6,7 @@
       :title="$t('project_info')"
       @click="infobox = true"
       color="grey-5"
-      icon="bi-info-lg"
+      :icon="infoIcon"
     >
     </q-btn>
 
@@ -25,7 +25,7 @@
             href="https://gitlab.gwdg.de/subugoe/emo/tido/-/blob/main/README.md"
             target="_blank"
             type="a"
-            icon="bi-book"
+            :icon="docsIcon"
             :label="$t('documentation')"
           />
 
@@ -34,7 +34,7 @@
             href="https://gitlab.gwdg.de/subugoe/emo/tido/"
             target="_blank"
             type="a"
-            icon="bi-code-slash"
+            :icon="codeIcon"
             :label="$t('source_code')"
           />
 
@@ -42,7 +42,7 @@
             flat
             href="mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
             type="a"
-            icon="bi-bug-fill"
+            :icon="bugIcon"
             :label="$t('report_a_bug')"
           />
         </q-card-section>
@@ -61,6 +61,9 @@
 </template>
 
 <script>
+import {
+  biInfoLg, biBook, biCodeSlash, biBugFill,
+} from '@quasar/extras/bootstrap-icons';
 import packageInfo from '../../../package.json';
 
 export default {
@@ -79,6 +82,10 @@ export default {
   },
   created() {
     this.tidoVersion = packageInfo.version;
+    this.infoIcon = biInfoLg;
+    this.docsIcon = biBook;
+    this.codeIcon = biCodeSlash;
+    this.bugIcon = biBugFill;
   },
 };
 </script>

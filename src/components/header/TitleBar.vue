@@ -12,7 +12,7 @@
             class="q-px-sm"
             size="xs"
             :color="$q.dark.isActive ? 'white' : 'grey-7'"
-            name="bi-chevron-right"
+            :name="arrowIcon"
           />
           <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
         </h2>
@@ -25,7 +25,7 @@
             class="q-px-sm"
             size="xs"
             :color="$q.dark.isActive ? 'white' : 'grey-7'"
-            name="bi-chevron-right"
+            :name="arrowIcon"
           />
           <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
         </h1>
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { icon } from '@/utils/icon';
+import { biChevronRight } from '@quasar/extras/bootstrap-icons';
 
 export default {
   name: 'Titlebar',
@@ -56,10 +56,8 @@ export default {
       return this.$store.getters['contents/manifest']?.label;
     },
   },
-  methods: {
-    icon(name) {
-      return icon(name);
-    },
+  created() {
+    this.arrowIcon = biChevronRight;
   },
 };
 </script>

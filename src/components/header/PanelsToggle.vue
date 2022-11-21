@@ -1,8 +1,8 @@
 <template>
-  <div class="panels-toggle">
+  <div class="panels-toggle relative-position">
     <q-btn-dropdown
       v-if="$q.screen.width < 1200"
-      :dropdown-icon="fasCaretDown"
+      :dropdown-icon="dropdownIcon"
       outline
       flat
       size="12px"
@@ -11,50 +11,35 @@
       :class="$q.dark.isActive ? 'bg-black' : 'bg-secondary text-black'"
       :label="$t('show_hide_panels')"
     >
-      <q-list v-for="(p, i) in panels" :key="`toggle${i}`">
-        <q-item
-          v-if="p.toggle"
-          clickable
-          padding="xs"
+      <div class="q-pa-sm">
+        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="q-py-sm">
+          <q-checkbox
+          :model-value="show"
+          @update:model-value="update(i, $event)"
+          class="q-px-sm text-body2"
           :title="handleToggleTitle(i)"
-          @click="() => handleStatusPanel(i)"
-
+          :label="$t(label)"
+          dense
+          size="xs"
+          :checked-icon="checkedIcon"
+          :unchecked-icon="uncheckedIcon"
         >
-          <q-item-section>
-            <q-item-label>
-              <q-icon
-                class="q-pr-xs"
-                size="xs"
-                :color="$q.dark.isActive ? 'bg-black' : 'primary'"
-                :name="renderCheckIcon(i)"
-              />
-              <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t(p.label) }}</span>
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-      <q-list>
-        <q-item
-          v-if="toggleCounter"
-          v-close-popup
-          clickable
-          padding="xs"
+        </q-checkbox>
+        </div>
+        <q-btn
+          v-if="toggles.length > 0"
+          flat
+          no-caps
+          dense
+          class="q-px-sm q-py-none reset-btn"
           :title="$t('reset_view')"
-          @click="() => handleStatusPanel(-1, true)"
+          @click="reset"
+          :icon="resetIcon"
+          color="primary"
         >
-          <q-item-section>
-            <q-item-label>
-              <q-icon
-                class="q-pr-xs"
-                size="xs"
-                :color="$q.dark.isActive ? 'white' : 'primary'"
-                :name="fasUndo"
-              />
-              <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('reset').toUpperCase() }}</span>
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
+          <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('reset') }}</span>
+        </q-btn>
+      </div>
     </q-btn-dropdown>
 
     <div v-if="$q.screen.width > 1199" class="t-row t-align-center">
@@ -67,8 +52,8 @@
           :label="$t(label)"
           dense
           size="xs"
-          checked-icon="bi-check-circle-fill"
-          unchecked-icon="bi-circle"
+          :checked-icon="checkedIcon"
+          :unchecked-icon="uncheckedIcon"
         >
         </q-checkbox>
       </div>
@@ -81,7 +66,7 @@
         class="q-px-sm q-py-none reset-btn"
         :title="$t('reset_view')"
         @click="reset"
-        icon="bi-arrow-counterclockwise"
+        :icon="resetIcon"
         color="primary"
       >
         <span :class="$q.dark.isActive ? 'text-light' : 'text-dark'">{{ $t('reset') }}</span>
@@ -91,7 +76,9 @@
 </template>
 
 <script>
-import { icon } from 'src/utils/icon';
+import {
+  biCheckCircleFill, biCircle, biArrowCounterclockwise, biChevronDown,
+} from '@quasar/extras/bootstrap-icons';
 
 export default {
   name: 'PanelsToggle',
@@ -112,6 +99,12 @@ export default {
       },
       immediate: true,
     },
+  },
+  created() {
+    this.checkedIcon = biCheckCircleFill;
+    this.uncheckedIcon = biCircle;
+    this.resetIcon = biArrowCounterclockwise;
+    this.dropdownIcon = biChevronDown;
   },
   methods: {
     update(index, show) {
@@ -134,9 +127,6 @@ export default {
       return this.toggles[idx].show
         ? `${this.$t('hide')} ${titleUpper} Panel`
         : `${this.$t('show')} ${titleUpper} Panel`;
-    },
-    icon(name) {
-      return icon(name);
     },
   },
 };

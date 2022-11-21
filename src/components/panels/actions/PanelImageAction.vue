@@ -16,15 +16,19 @@
 </template>
 
 <script>
+import {
+  biZoomIn, biZoomOut, biFullscreen, biArrowsFullscreen,
+} from '@quasar/extras/bootstrap-icons';
+
 export default {
   name: 'PanelImageAction',
   data() {
     return {
       buttons: [
-        { id: 'zoom-in', icon: 'bi-zoom-in', tooltip: 'zoom_in' },
-        { id: 'zoom-out', icon: 'bi-zoom-out', tooltip: 'zoom_out' },
-        { id: 'fullscreen', icon: 'bi-fullscreen', tooltip: 'switch_to_fullscreen' },
-        { id: 'default', icon: 'bi-arrows-fullscreen', tooltip: 'reset_view' },
+        { id: 'zoom-in', icon: biZoomIn, tooltip: 'zoom_in' },
+        { id: 'zoom-out', icon: biZoomOut, tooltip: 'zoom_out' },
+        { id: 'fullscreen', icon: biFullscreen, tooltip: 'switch_to_fullscreen' },
+        { id: 'default', icon: biArrowsFullscreen, tooltip: 'reset_view' },
       ],
     };
   },

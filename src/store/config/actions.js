@@ -1,19 +1,7 @@
 import messages from 'src/i18n';
+import { isUrl } from 'src/utils';
 import BookmarkService from '@/services/bookmark';
 import { i18n } from '@/boot/i18n';
-
-function isUrl(str) {
-  if (!str) return false;
-
-  let url;
-  try {
-    url = new URL(str);
-  } catch (_) {
-    return false;
-  }
-
-  return url.protocol === 'http:' || url.protocol === 'https:';
-}
 
 const defaultPanel = {
   label: 'Panel',

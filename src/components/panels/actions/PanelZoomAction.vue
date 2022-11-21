@@ -3,7 +3,7 @@
     <q-btn
       flat
       round
-      icon="bi-zoom-in"
+      :icon="zoomInIcon"
       size="sm"
       :disable="disableIncrease"
       :title="$t('increase')"
@@ -15,20 +15,19 @@
     <q-btn
       flat
       round
-      icon="bi-zoom-out"
+      :icon="zoomOutIcon"
       size="sm"
       :disable="disableDecrease"
       :title="$t('decrease')"
       :color="$q.dark.isActive ? 'white' : 'primary'"
       @click="decrease()"
-
     >
     </q-btn>
   </div>
 </template>
 
 <script>
-import { icon } from '@/utils/icon';
+import { biZoomIn, biZoomOut } from '@quasar/extras/bootstrap-icons';
 
 export default {
   name: 'PanelZoomAction',
@@ -43,13 +42,14 @@ export default {
     step: Number,
     startValue: Number,
   },
+  created() {
+    this.zoomInIcon = biZoomIn;
+    this.zoomOutIcon = biZoomOut;
+  },
   mounted() {
     this.value = this.startValue;
   },
   methods: {
-    icon(name) {
-      return icon(name);
-    },
     increase() {
       this.value += this.step;
       this.$emit('update', this.value);
@@ -77,5 +77,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
