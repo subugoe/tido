@@ -32,10 +32,12 @@ With this project we provide a highly configurable viewer for projects that impl
     - [Get the dependencies](#get-the-dependencies)
   - [Usage](#usage)
     - [`development mode` (hot reloading, error reporting, etc.)](#development-mode-hot-reloading-error-reporting-etc)
-    - [`Mock API`](#mock-api)
-    - [`Linting`](#linting)
-    - [`Testing`](#testing)
-    - [`Building` the app for production](#building-the-app-for-production)
+    - [Mock API](#mock-api)
+    - [Building the app for production](#building-the-app-for-production)
+    - [Testing](#testing)
+      - [Local](#local)
+      - [CI](#ci)
+    - [Linting](#linting)
 - [Viewer Architecture](#viewer-architecture)
 - [Dockerfile](#dockerfile)
 - [Architecture](#architecture)
@@ -122,24 +124,6 @@ Real world example:
 <script id="tido-config" type="application/json">
   {
     "collection": "http://localhost:8181/ahiqar/arabic-karshuni/collection.json",
-    "manifest": "",
-    "item": "",
-    "colors": {
-      "primary": "",
-      "secondary": "",
-      "accent": ""
-    },
-    "header": {
-      "show": true,
-      "navigation": true,
-      "panelsToggle": true,
-      "languageSwitch": true
-    },
-    "lang": "en",
-    "notificationColors": {
-      "info": "blue-9",
-      "warning": "red-9"
-    },
     "panels": [
       {
         "label": "contents_and_metadata",
@@ -228,22 +212,18 @@ Real world example:
                   {
                     "name": "Person",
                     "icon": "biPersonFill",
-                    "label": "Names"
                   },
                   {
                     "name": "Place",
                     "icon": "biGeoAltFill",
-                    "label": "Places"
                   },
                   {
                     "name": "Editorial Comment",
                     "icon": "biChatFill",
-                    "label": "comments"
                   },
                   {
                     "name": "Reference",
                     "icon": "biBoxArrowUpRight",
-                    "label": "References"
                   }
                 ]
               }
@@ -259,7 +239,6 @@ Real world example:
                   {
                     "name": "Motif",
                     "icon": "biPenFill",
-                    "label": "Motifs"
                   }
                 ]
               }
@@ -288,6 +267,7 @@ Real world example:
 | colors.primary                          | String        | `#477fbf` | Used as main color in buttons, active states, highlights                                                                                                                                                           |
 | colors.secondary                        | String        | `#eeeeee` | Can be used as contrast or background color                                                                                                                                                                        |
 | colors.accent                           | Srring        | `empty`   |                                                                                                                                                                                                                    |
+| container                               | String        | `#app`    | Specifies the CSS selector where we should append the TIDO app to.                                                                                                                                                 |
 | header                                  | Object        | &darr;    | Controls the elements in the section above the content                                                                                                                                                             |
 | header.show                             | Boolean       | `true`    | Toggle visibility of the whole header                                                                                                                                                                              |
 | header.navigation                       | Boolean       | `true`    | Toggle visibility of prev/next buttons                                                                                                                                                                             |
@@ -364,12 +344,13 @@ no options
 
 ##### Annotations
 
-| Name                 | Type                   | Default | Description                                                                                                                                                                                                                  |
-|----------------------|------------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| types                | AnnotationTypeConfig[] | `[]`    | Defines annotation types that should be displayed in this view. The Annotation API response will then be filtered according to this config.                                                                                  |
-| types[i].name        | String                 | `null`  | Specifies the name which corresponds to the `x-content-type` property from annotations response.                                                                                                                             |
-| types[i].icon        | String                 | `null`  | Specifies the icon name that should be used in the annotation item. TIDO uses Bootstrap Icons, please lookup the allowed values [here](https://github.com/quasarframework/quasar/blob/dev/extras/bootstrap-icons/icons.json) |
-| types[i].displayWhen | String                 | `null`  | Text content type that was specified under [Text options](#text)                                                                                                                                                             |
+| Name                    | Type                   | Default      | Description                                                                                                                                                                                                                  |
+|-------------------------|------------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| types                   | AnnotationTypeConfig[] | `[]`         | Defines annotation types that should be displayed in this view. The Annotation API response will then be filtered according to this config.                                                                                  |
+| types[i].name           | String                 | `null`       | Specifies the name which corresponds to the `x-content-type` property from annotations response.                                                                                                                             |
+| types[i].icon           | String                 | `null`       | Specifies the icon name that should be used in the annotation item. TIDO uses Bootstrap Icons, please lookup the allowed values [here](https://github.com/quasarframework/quasar/blob/dev/extras/bootstrap-icons/icons.json) |
+| types[i].displayWhen    | String                 | `null`       | Text content type that was specified under [Text options](#text). Annotation will only be shown if that content type is currently active.                                                                                    |
+| types[i].annotationType | String                 | `annotation` | Controls the look of the annotation item. Allowed values: `annotation` or `text`. Currently the only difference is that there is no icon at type `text`.                                                                     |
 
 
 ## Getting Started (Developers)
@@ -378,7 +359,6 @@ no options
 
 To get TIDO up and running you should have the following software installed:
 
-- **curl**
 - **npm**
 - **nvm**
 
@@ -424,19 +404,69 @@ That's it. You should now be able to run the Viewer.
 #### `development mode` (hot reloading, error reporting, etc.)
 
 ```bash
-npm run dev
+npm run serve:dev
 ```
 
 (usually located at: `localhost:8080` since this port isn't already occupied)
 
-#### `Mock API`
+#### Mock API
 You can start your own local API server which will serve Text API responses from `tests/mocks`.
+The folder structure represents a portion of resources of the Ahiqar project.
+
 ```bash
 npm run mock-api
 ```
+
 The server will be available at `localhost:8181`.
 
-#### `Linting`
+
+#### Building the app for production
+
+```bash
+npm run build
+```
+
+You can also run `npm run serve:prod` which will copy the `dist` files into the `examples` directory
+and create a web server under `http://localhost:2222`. Now you are able to access the examples like this:
+
+- `http://localhost:2222/[example-name].html`
+
+
+#### Testing
+
+We run tests only on production code. So you need to make sure to create a Tido build before starting to run tests.
+TIDO follows the "Zero Config" policy but projects can provide a very detailed config that can drastically change the behaviour of the app.
+Therefor we provide some example configurations from previous implementation projects that cover the most important features.
+
+Following examples are available under (`examples/`):
+- `ahiqar-arabic-karshuni.html`
+- `ahiqar-arabic-karshuni-local.html`
+- `ahiqar-syriac.html`
+- `gfl.html`
+- `zero-config.html`
+
+##### Local
+
+Prepare the environment before running the tests.
+
+- `npm run build`
+- `npm run mock-api`
+- `npm run serve:prod`
+
+Now you can run the tests on your local machine with a proper Cypress UI and selective steps
+or run the tests only in headless more which will prompt the results on the console.
+
+- `npm run cypress` or `npm run cypress:headless`
+
+##### CI
+
+You can use a one-line command which will start the mock API server and run tests in headless mode
+after it has connected to that mock API server.
+
+- `npm run build`
+- `npm run test:e2e`
+
+#### Linting
 
 ```bash
 npm run lint            # to lint all the files at once
@@ -445,22 +475,6 @@ npm run lint:markdown   # to lint the markdown
 npm run lint:scss       # to lint the styles
 npm run lint:vue        # to lint vue files only
 ```
-
-#### `Testing`
-
-```bash
-npm run cypress           # to run standalone browser tests with graphics
-npm run cypress:headless  # to run e2e tests without graphics
-npm run test:e2e          # to start mock API server and run e2e tests
-```
-
-#### `Building` the app for production
-
-```bash
-npm run build
-```
-
-**Note**: The complete build is located at `/dist/`.
 
 
 ## Viewer Architecture
