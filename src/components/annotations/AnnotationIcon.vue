@@ -10,7 +10,15 @@
 import { Dark } from 'quasar';
 import { isUrl } from 'src/utils';
 import {
-  biPersonFill, biGeoAltFill, biChatFill, biBoxArrowUpRight, biPenFill, biPencilSquare,
+  biPersonFill,
+  biGeoAltFill,
+  biChatFill,
+  biBoxArrowUpRight,
+  biPenFill,
+  biPencilSquare,
+  biBank2,
+  biArchiveFill,
+  biCalendarWeek, biJournals,
 } from '@quasar/extras/bootstrap-icons';
 
 export default {
@@ -37,6 +45,10 @@ export default {
       biBoxArrowUpRight,
       biPenFill,
       biPencilSquare,
+      biBank2,
+      biArchiveFill,
+      biCalendarWeek,
+      biJournals,
     };
   },
   methods: {

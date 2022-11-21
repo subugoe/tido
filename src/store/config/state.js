@@ -118,14 +118,13 @@ export default function ConfigState() {
         show: true,
         navigation: true,
         panelsToggle: true,
-        languageSwitch: true,
+        languageSwitch: false,
       },
       labels: {
         item: 'Sheet',
         manifest: 'Manuscript',
       },
       lang: 'en-US',
-      languageSwitch: false,
       meta: {
         collection: {
           all: true,
