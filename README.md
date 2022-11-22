@@ -247,8 +247,6 @@ Real world example:
         ]
       }
     ],
-    "rtl": false,
-    "themes": false,
     "translations": {
       "en": {
         "contents_and_metadata": "Contents & Metadata"
