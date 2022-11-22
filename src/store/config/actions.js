@@ -1,7 +1,7 @@
 import messages from 'src/i18n';
 import { isUrl } from 'src/utils';
 import BookmarkService from '@/services/bookmark';
-import { i18n } from '@/boot/i18n';
+import { i18n } from '@/i18n';
 
 const defaultPanel = {
   label: 'Panel',

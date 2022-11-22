@@ -1,15 +1,8 @@
-// FILE: main.js
-
 import { createApp, h } from 'vue';
 import { Quasar } from 'quasar';
-import { createI18n } from 'vue-i18n';
-import createRouter from './router';
 import createStore from './store';
 
-import messages from './i18n';
-
-// Import icon libraries
-import '@quasar/extras/bootstrap-icons/bootstrap-icons.css';
+import {i18n} from './i18n';
 
 // Import Quasar css
 // We load Quasar stylesheet file
@@ -42,15 +35,6 @@ window.Tido = function Tido(options = {}) {
     },
   });
 
-  const i18n = createI18n({
-    locale: 'en-US',
-    fallbackLocale: 'en-us',
-    messages,
-    silentTranslationWarn: true,
-    warnHtmlInMessage: 'off',
-  });
-
-  this.app.use(createRouter());
   this.app.use(createStore());
   this.app.use(i18n);
 
@@ -81,9 +65,9 @@ window.Tido = function Tido(options = {}) {
     this.app.$destroy();
   };
 
-  if (this.options.container) {
-    this.mount(this.options.container);
-  }
+  const container = this.options?.config?.container || '#app' // default container
+
+  this.mount(container);
 };
 
 export default window.Tido;
