@@ -14,138 +14,137 @@
   continue.</strong></noscript>
 <script id="tido-config" type="application/json">
   {
-    "entrypoint": "https://dev.gfl.sub.uni-goettingen.de/tido/gfl/sample/manifest.json",
-    "annotations": {
-      "show": true,
-      "types": [
-        {
-          "contenttype": "Person",
-          "icon": "fasUser",
-          "label": "Names"
-        },
-        {
-          "contenttype": "Place",
-          "icon": "fasMapMarkerAlt",
-          "label": "Places"
-        },
-        {
-          "contenttype": "Editorial Comment",
-          "icon": "fasComment",
-          "label": "Comments"
-        },
-        {
-          "contenttype": "Org",
-          "icon": "fasLandmark",
-          "label": "Organization"
-        },
-        {
-          "contenttype": "Object",
-          "icon": "fasThLarge",
-          "label": "Object"
-        },
-        {
-          "contenttype": "Date",
-          "icon": "fasCalendar",
-          "label": "Date"
-        },
-        {
-          "contenttype": "Abstract",
-          "annotationType": "text",
-          "displayWhen": "Edierter Text",
-          "label": "Erläuterung"
-        },
-        {
-          "contenttype": "Work",
-          "icon": "fasThLarge",
-          "label": "Werk"
-        },
-        {
-          "contenttype": "Work",
-          "icon": "fasExternalLinkSquareAlt",
-          "label": "Werk"
-        }
-      ],
-      "tabs":{
-        "Kommentare": ["Abstract", "Editorial Comment"],
-        "Register": ["Person", "Place", "Org", "Object", "Date", "Work"]
-      }
-    },
-    "colors": {
-      "primary": "",
-      "secondary": "",
-      "accent": ""
-    },
-    "header_section": {
-      "show": true,
-      "navigation": true,
-      "panelheadings": true,
-      "titles": true,
-      "toggle": true
-    },
+    "manifest": "https://dev.gfl.sub.uni-goettingen.de/tido/gfl/sample/manifest.json",
     "labels": {
       "item": "Seite",
       "manifest": "Dokument"
     },
-    "meta": {
-      "collection": {
-        "all": true
-      },
-      "manifest": {
-        "all": true
-      },
-      "item": {
-        "all": true
-      }
-    },
     "panels": [
       {
-        "connector": [3],
-        "panel_label": "Manuskript",
-        "show": true,
-        "toggle": true
+        "views": [{
+          "id": "image",
+          "label": "Manuskript",
+          "connector": {
+            "id": 3
+          }
+        }]
       },
       {
-        "connector": [4],
-        "panel_label": "Text",
-        "show": true,
-        "toggle": false
+        "label": "Text",
+        "views": [
+          {
+            "id": "text1",
+            "label": "Edierter Text",
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "Edierter Text"
+              }
+            }
+          },
+          {
+            "id": "text2",
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "Transcription"
+              }
+            }
+          }
+        ]
       },
       {
-        "connector": [5],
-        "panel_label": "Kommentar",
-        "show": true,
-        "toggle": true
+        "label": "Kommentar",
+        "views": [
+          {
+            "id": "annotations1",
+            "label": "Kommentare",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Editorial Comment",
+                    "icon": "biChatFill"
+                  },
+                  {
+                    "name": "Abstract",
+                    "annotationType": "text",
+                    "displayWhen": "Edierter Text"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "annotations2",
+            "label": "Register",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Person",
+                    "icon": "biPersonFill"
+                  },
+                  {
+                    "name": "Place",
+                    "icon": "biGeoAltFill"
+                  },
+                  {
+                    "name": "Org",
+                    "icon": "biBank2"
+                  },
+                  {
+                    "name": "Object",
+                    "icon": "biArchiveFill"
+                  },
+                  {
+                    "name": "Date",
+                    "icon": "biCalendarWeek"
+                  },
+                  {
+                    "name": "Work",
+                    "icon": "biJournals"
+                  }
+                ]
+              }
+            }
+          }
+        ]
       },
       {
-        "connector": [2, 1],
-        "panel_label": "Dokumentdaten",
-        "show": true,
-        "toggle": true
+        "label": "Dokumentdaten",
+        "views": [
+          {
+            "id": "meta",
+            "label": "Metadaten",
+            "connector": {
+              "id": 2,
+              "options": {
+                "collection": {
+                  "all": true
+                },
+                "manifest": {
+                  "all": true
+                },
+                "item": {
+                  "all": true
+                }
+              }
+            }
+          },
+          {
+            "id": "tree",
+            "label": "Inhalt",
+            "connector": {
+              "id": 1
+            }
+          }
+        ]
       }
     ],
-    "textContent": {
-      "tabs": {
-        "priority": {
-          "Edierter Text": 1
-        }
-      }
-    },
-    "notificationColors": {
-      "info":"blue-9",
-      "warning":"red-9"
-    },
-    "rtl": false,
-    "themes": false,
-    "standalone": false,
-    "lang": "de-de",
-    "language-switch": false,
-    "breadcrumbNavigation": {
-      "source": "gfl",
-      "title_homepage_key": "GFL Website",
-      "search_query_param": "q",
-      "title_viewer_key": "title_viewer",
-      "website": "https://dev1.gfl.sub.uni-goettingen.de"
-    }
+    "lang": "de"
   }
 </script>
 <div id="config-menu"></div>

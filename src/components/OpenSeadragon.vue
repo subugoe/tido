@@ -48,6 +48,10 @@ export default {
   watch: {
     item: {
       async handler() {
+        if (!this.item.image) {
+          this.error = { message: 'no_image_available' };
+          return;
+        }
         this.$emit('loading', true);
         try {
           const response = await fetch(this.item.image.id);

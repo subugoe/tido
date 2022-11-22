@@ -12,137 +12,136 @@
 <body>
 <noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
   continue.</strong></noscript>
-<script id="tido-config" type="application/json">{
-  "entrypoint": "https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahikar/syriac/collection.json",
-  "annotations": {
-    "types": [
+<script id="tido-config" type="application/json">
+  {
+    "collection": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/syriac/collection.json",
+    "labels": {
+      "item": "Sheet",
+      "manifest": "Manuscript"
+    },
+    "panels": [
       {
-        "contenttype": "Person",
-        "icon": "fasUser",
-        "label": "Names"
+        "label": "contents_and_metadata",
+        "views": [
+          {
+            "id": "tree",
+            "label": "contents",
+            "connector": {
+              "id": 1
+            }
+          },
+          {
+            "id": "metadata",
+            "label": "metadata",
+            "connector": {
+              "id": 2,
+              "options": {
+                "collection": {
+                  "all": true
+                },
+                "manifest": {
+                  "all": true
+                },
+                "item": {
+                  "all": true
+                }
+              }
+            }
+          }
+        ]
       },
       {
-        "contenttype": "Place",
-        "icon": "fasMapMarkerAlt",
-        "label": "Places"
+        "label": "image",
+        "views": [
+          {
+            "id": "image",
+            "label": "Image",
+            "connector": {
+              "id": 3
+            }
+          }]
       },
       {
-        "contenttype": "Editorial Comment",
-        "icon": "fasComment",
-        "label": "Comments"
+        "label": "text",
+        "views": [
+          {
+            "id": "text1",
+            "label": "Transcription",
+            "default": true,
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transcription"
+              }
+            }
+          },
+          {
+            "id": "text2",
+            "label": "Transliteration",
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transliteration"
+              }
+            }
+          }
+        ]
       },
       {
-        "contenttype": "Motif",
-        "icon": "fasHighlighter",
-        "label": "Motifs"
-      },
-      {
-        "contenttype": "Abstract",
-        "annotationType": "text",
-        "displayWhen": "Edierter Text",
-        "label": "Abstract"
+        "label": "annotations",
+        "views": [
+          {
+            "id": "annotations1",
+            "label": "Editorial",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Person",
+                    "icon": "biPersonFill"
+                  },
+                  {
+                    "name": "Place",
+                    "icon": "biGeoAltFill"
+                  },
+                  {
+                    "name": "Editorial Comment",
+                    "icon": "biChatFill"
+                  },
+                  {
+                    "name": "Reference",
+                    "icon": "biBoxArrowUpRight"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "annotations2",
+            "label": "Motif",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Motif",
+                    "icon": "biPenFill"
+                  }
+                ]
+              }
+            }
+          }
+        ]
       }
     ],
-    "tabs": {
-      "Editorial": [
-        "Person",
-        "Place"
-      ],
-      "Motif": [
-        "Motif"
-      ],
-      "Comments": [
-        "Editorial Comment",
-        "Abstract"
-      ]
-    }
-  },
-  "breadcrumbNavigation": {
-    "source": "external",
-    "search_page_path": "search.html",
-    "search_query_param": "searchTerm",
-    "title_homepage_key": "title_homepage",
-    "title_viewer_key": "title_viewer",
-    "website": "https://ahikar.sub.uni-goettingen.de/website/"
-  },
-  "colors": {
-    "primary": "",
-    "secondary": "",
-    "accent": ""
-  },
-  "header_section": {
-    "show": true,
-    "navigation": true,
-    "panelheadings": true,
-    "titles": true,
-    "toggle": true
-  },
-  "labels": {
-    "item": "Sheet",
-    "manifest": "Manuscript"
-  },
-  "lang": "en-us",
-  "language-switch": true,
-  "meta": {
-    "collection": {
-      "all": true
-    },
-    "manifest": {
-      "all": true
-    },
-    "item": {
-      "all": true
-    }
-  },
-  "notificationColors": {
-    "info": "blue-9",
-    "warning": "red-9"
-  },
-  "panels": [
-    {
-      "connector": [
-        1,
-        2
-      ],
-      "panel_label": "Contents & Metadata",
-      "show": true,
-      "toggle": true
-    },
-    {
-      "connector": [
-        3
-      ],
-      "panel_label": "Image",
-      "show": true,
-      "toggle": true
-    },
-    {
-      "connector": [
-        4
-      ],
-      "panel_label": "Text",
-      "show": true,
-      "toggle": true
-    },
-    {
-      "connector": [
-        5
-      ],
-      "panel_label": "Annotations",
-      "show": true,
-      "toggle": true
-    }
-  ],
-  "rtl": false,
-  "textContent": {
-    "tabs": {
-      "priority": {
-        "Edierter Text": 1
+    "translations": {
+      "en": {
+        "contents_and_metadata": "Contents & Metadata"
       }
     }
-  },
-  "themes": false
-}</script>
+  }
+</script>
 <div id="config-menu"></div>
 <div id="app"></div>
 <script src="tido.js"></script>

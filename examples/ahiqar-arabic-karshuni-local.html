@@ -19,9 +19,9 @@
 <script>
   const araLocal = {
     "collection": "http://localhost:8181/ahiqar/arabic-karshuni/collection.json",
-    "notificationColors": {
-      "info": "blue-9",
-      "warning": "red-9"
+    "labels": {
+      "item": "Sheet",
+      "manifest": "Manuscript"
     },
     "container": "",
     "panels": [
@@ -32,13 +32,7 @@
             "id": "tree",
             "label": "contents",
             "connector": {
-              "id": 1,
-              "options": {
-                "labels": {
-                  "item": "Sheet",
-                  "manifest": "Manuscript"
-                }
-              }
+              "id": 1
             }
           },
           {
@@ -104,30 +98,25 @@
           {
             "id": "annotations1",
             "label": "Editorial",
-            "default": true,
             "connector": {
               "id": 5,
               "options": {
                 "types": [
                   {
                     "name": "Person",
-                    "icon": "biPersonFill",
-                    "label": "Names"
+                    "icon": "biPersonFill"
                   },
                   {
                     "name": "Place",
-                    "icon": "biGeoAltFill",
-                    "label": "Places"
+                    "icon": "biGeoAltFill"
                   },
                   {
                     "name": "Editorial Comment",
-                    "icon": "biChatFill",
-                    "label": "comments"
+                    "icon": "biChatFill"
                   },
                   {
                     "name": "Reference",
-                    "icon": "biBoxArrowUpRight",
-                    "label": "References"
+                    "icon": "biBoxArrowUpRight"
                   }
                 ]
               }
@@ -142,8 +131,7 @@
                 "types": [
                   {
                     "name": "Motif",
-                    "icon": "biPenFill",
-                    "label": "Motifs"
+                    "icon": "biPenFill"
                   }
                 ]
               }

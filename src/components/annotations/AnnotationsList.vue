@@ -11,7 +11,7 @@
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
       <q-item-section avatar class="q-mr-none">
-        <AnnotationIcon :name="getIconName(annotation.body['x-content-type'])" />
+        <AnnotationIcon v-if="!isText(annotation)" :name="getIconName(annotation.body['x-content-type'])" />
       </q-item-section>
 
       <q-item-section>

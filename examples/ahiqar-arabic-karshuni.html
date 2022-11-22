@@ -15,15 +15,15 @@
 
 <div id="config-menu"></div>
 <div id="app"></div>
-<script src="tido.js"></script>
+<script src="../dist/tido.js"></script>
 <script src="config-menu/config-menu.js"></script>
 
 <script>
   const arabicKarshuni = {
     "collection": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/arabic-karshuni/collection.json",
-    "notificationColors": {
-      "info": "blue-9",
-      "warning": "red-9"
+    "labels": {
+      "item": "Sheet",
+      "manifest": "Manuscript"
     },
     "container": "",
     "panels": [
@@ -34,13 +34,7 @@
             "id": "tree",
             "label": "contents",
             "connector": {
-              "id": 1,
-              "options": {
-                "labels": {
-                  "item": "Sheet",
-                  "manifest": "Manuscript"
-                }
-              }
+              "id": 1
             }
           },
           {
@@ -106,30 +100,25 @@
           {
             "id": "annotations1",
             "label": "Editorial",
-            "default": true,
             "connector": {
               "id": 5,
               "options": {
                 "types": [
                   {
                     "name": "Person",
-                    "icon": "biPersonFill",
-                    "label": "Names"
+                    "icon": "biPersonFill"
                   },
                   {
                     "name": "Place",
-                    "icon": "biGeoAltFill",
-                    "label": "Places"
+                    "icon": "biGeoAltFill"
                   },
                   {
                     "name": "Editorial Comment",
-                    "icon": "biChatFill",
-                    "label": "comments"
+                    "icon": "biChatFill"
                   },
                   {
                     "name": "Reference",
-                    "icon": "biBoxArrowUpRight",
-                    "label": "References"
+                    "icon": "biBoxArrowUpRight"
                   }
                 ]
               }
@@ -144,8 +133,7 @@
                 "types": [
                   {
                     "name": "Motif",
-                    "icon": "biPenFill",
-                    "label": "Motifs"
+                    "icon": "biPenFill"
                   }
                 ]
               }
