@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { i18n } from '@/boot/i18n';
+import { i18n } from '@/i18n';
 
 export async function request(url) {
   try {
-    const response = await axios.request(url);
+    const response = await axios.get(url);
     return response.data;
   } catch ({ response }) {
     if (!response) {

@@ -22,7 +22,7 @@ describe('Header initial', () => {
 
     // Clicking on first item
     cy
-      .get('.panels-toggle .row div:first-child .q-checkbox')
+      .get('.panels-toggle .t-row div:first-child .q-checkbox')
       .click()
       .get('.root.panels-target')
       .children('.item')
@@ -31,7 +31,7 @@ describe('Header initial', () => {
 
     // Reseting item
     cy
-      .get('.panels-toggle .row div:first-child .q-checkbox')
+      .get('.panels-toggle .t-row div:first-child .q-checkbox')
       .click()
       .get('.root.panels-target')
       .children('.item')

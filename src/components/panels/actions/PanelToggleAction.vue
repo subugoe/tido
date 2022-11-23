@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center">
+  <div class="t-flex items-center">
     <q-checkbox indeterminate-value="maybe" v-model="selectedModel" :label="label" dense size="xs" />
   </div>
 </template>

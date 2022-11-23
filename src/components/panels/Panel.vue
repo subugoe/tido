@@ -1,6 +1,6 @@
 <template>
   <div class="item-content" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'">
-    <div class="panel-header q-py-xs q-pt-md q-px-md flex justify-between items-center">
+    <div class="panel-header q-py-xs q-pr-sm q-pl-md t-flex justify-between items-center">
       <div class="caption text-bold text-body1">
         <!-- We display the tab label as panel label when there is only one tab -->
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
@@ -63,7 +63,7 @@ import PanelZoomAction from 'components/panels/actions/PanelZoomAction.vue';
 import Notification from 'components/Notification.vue';
 import PanelToggleAction from 'components/panels/actions/PanelToggleAction.vue';
 import PanelImageAction from 'components/panels/actions/PanelImageAction.vue';
-import Loading from 'components/Loading';
+import Loading from 'components/Loading.vue';
 
 export default {
   components: {
