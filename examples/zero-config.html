@@ -18,7 +18,11 @@
 <script src="config-menu/config-menu.js"></script>
 
 <script>
-window.tido = new window.Tido({});
+window.addEventListener('load', function () {
+  const query = new URLSearchParams(window.location.search);
+
+  window.tido = new window.Tido({});
+});
 </script>
 </body>
 </html>
