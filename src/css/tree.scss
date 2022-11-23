@@ -16,8 +16,8 @@
         }
         left: 0;
         position: sticky;
-        top: -8px;
-        z-index: 999;
+        top: 0;
+        z-index: 1;
 
         @media (prefers-color-scheme: dark) {
           background-color: $grey-9;
