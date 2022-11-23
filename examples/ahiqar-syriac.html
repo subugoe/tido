@@ -18,15 +18,12 @@
 <script src="config-menu/config-menu.js"></script>
 <script>
 window.addEventListener('load', function () {
-  const query = new URLSearchParams(window.location.search);
-
   window.tido = new window.Tido({
     "collection": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/syriac/collection.json",
     "labels": {
       "item": "Sheet",
       "manifest": "Manuscript"
     },
-    "container": "",
     "panels": [
       {
         "label": "contents_and_metadata",

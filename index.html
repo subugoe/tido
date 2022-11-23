@@ -17,26 +17,11 @@
   <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
 </noscript>
 
-<!--
-Quick reference for the panel config (panels.connector)
-The numbers below reflect each component's id. For detailed instructions please refer to the README.md!
-
-- 1 = Treeview
-- 2 = Metadata
-- 3 = Image
-- 4 = Text / Content
-- 5 = Annotations
-
-Note: These IDs are supposed to be unique, so please make sure not to repeat these!
--->
-
 <script type="module" src="/src/main.js">
 
 </script>
 <script>
 window.addEventListener('load', function () {
-  const query = new URLSearchParams(window.location.search);
-
   window.tido = new window.Tido({});
 });
 </script>
