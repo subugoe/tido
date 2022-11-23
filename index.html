@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+
+  <meta charset="utf-8">
+  <meta name="description" content="<%= htmlWebpackPlugin.options.productDescription %>">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>">
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+<noscript>
+  <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+</noscript>
+
+<script type="module" src="/src/main.js">
+
+</script>
+<script>
+window.addEventListener('load', function () {
+  window.tido = new window.Tido();
+});
+</script>
+
+<div id="app"></div>
+</body>
+</html>

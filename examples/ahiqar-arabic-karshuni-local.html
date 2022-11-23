@@ -12,8 +12,13 @@
 <body>
 <noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
   continue.</strong></noscript>
-<script id="tido-config" type="application/json">
-  {
+
+<div id="app"></div>
+<script src="dist/tido.js"></script>
+<script src="config-menu/config-menu.js"></script>
+<script>
+window.addEventListener('load', function () {
+  window.tido = new window.Tido({
     "collection": "http://localhost:8181/ahiqar/arabic-karshuni/collection.json",
     "labels": {
       "item": "Sheet",
@@ -140,9 +145,8 @@
         "contents_and_metadata": "Contents & Metadata"
       }
     }
-  }</script>
-<div id="q-app"></div>
-<script src="dist/tido.js"></script>
-<script src="config-menu/config-menu.js"></script>
+  });
+});
+</script>
 </body>
 </html>
