@@ -12,139 +12,140 @@
 <body>
 <noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
   continue.</strong></noscript>
-<script id="tido-config" type="application/json">
-  {
-    "collection": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/syriac/collection.json",
-    "labels": {
-      "item": "Sheet",
-      "manifest": "Manuscript"
+
+<div id="app"></div>
+<script src="dist/tido.js"></script>
+<script src="config-menu/config-menu.js"></script>
+<script>
+window.tido = new window.Tido({
+  "collection": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/syriac/collection.json",
+  "labels": {
+    "item": "Sheet",
+    "manifest": "Manuscript"
+  },
+  "container": "",
+  "panels": [
+    {
+      "label": "contents_and_metadata",
+      "views": [
+        {
+          "id": "tree",
+          "label": "contents",
+          "connector": {
+            "id": 1
+          }
+        },
+        {
+          "id": "metadata",
+          "label": "metadata",
+          "connector": {
+            "id": 2,
+            "options": {
+              "collection": {
+                "all": true
+              },
+              "manifest": {
+                "all": true
+              },
+              "item": {
+                "all": true
+              }
+            }
+          }
+        }
+      ]
     },
-    "panels": [
-      {
-        "label": "contents_and_metadata",
-        "views": [
-          {
-            "id": "tree",
-            "label": "contents",
-            "connector": {
-              "id": 1
+    {
+      "label": "image",
+      "views": [
+        {
+          "id": "image",
+          "label": "Image",
+          "connector": {
+            "id": 3
+          }
+        }]
+    },
+    {
+      "label": "text",
+      "views": [
+        {
+          "id": "text1",
+          "label": "Transcription",
+          "default": true,
+          "connector": {
+            "id": 4,
+            "options": {
+              "type": "transcription"
             }
-          },
-          {
-            "id": "metadata",
-            "label": "metadata",
-            "connector": {
-              "id": 2,
-              "options": {
-                "collection": {
-                  "all": true
+          }
+        },
+        {
+          "id": "text2",
+          "label": "Transliteration",
+          "connector": {
+            "id": 4,
+            "options": {
+              "type": "transliteration"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "annotations",
+      "views": [
+        {
+          "id": "annotations1",
+          "label": "Editorial",
+          "connector": {
+            "id": 5,
+            "options": {
+              "types": [
+                {
+                  "name": "Person",
+                  "icon": "biPersonFill"
                 },
-                "manifest": {
-                  "all": true
+                {
+                  "name": "Place",
+                  "icon": "biGeoAltFill"
                 },
-                "item": {
-                  "all": true
+                {
+                  "name": "Editorial Comment",
+                  "icon": "biChatFill"
+                },
+                {
+                  "name": "Reference",
+                  "icon": "biBoxArrowUpRight"
                 }
-              }
+              ]
             }
           }
-        ]
-      },
-      {
-        "label": "image",
-        "views": [
-          {
-            "id": "image",
-            "label": "Image",
-            "connector": {
-              "id": 3
-            }
-          }]
-      },
-      {
-        "label": "text",
-        "views": [
-          {
-            "id": "text1",
-            "label": "Transcription",
-            "default": true,
-            "connector": {
-              "id": 4,
-              "options": {
-                "type": "transcription"
-              }
-            }
-          },
-          {
-            "id": "text2",
-            "label": "Transliteration",
-            "connector": {
-              "id": 4,
-              "options": {
-                "type": "transliteration"
-              }
+        },
+        {
+          "id": "annotations2",
+          "label": "Motif",
+          "connector": {
+            "id": 5,
+            "options": {
+              "types": [
+                {
+                  "name": "Motif",
+                  "icon": "biPenFill"
+                }
+              ]
             }
           }
-        ]
-      },
-      {
-        "label": "annotations",
-        "views": [
-          {
-            "id": "annotations1",
-            "label": "Editorial",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
-                  {
-                    "name": "Person",
-                    "icon": "biPersonFill"
-                  },
-                  {
-                    "name": "Place",
-                    "icon": "biGeoAltFill"
-                  },
-                  {
-                    "name": "Editorial Comment",
-                    "icon": "biChatFill"
-                  },
-                  {
-                    "name": "Reference",
-                    "icon": "biBoxArrowUpRight"
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "id": "annotations2",
-            "label": "Motif",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
-                  {
-                    "name": "Motif",
-                    "icon": "biPenFill"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      }
-    ],
-    "translations": {
-      "en": {
-        "contents_and_metadata": "Contents & Metadata"
-      }
+        }
+      ]
+    }
+  ],
+  "translations": {
+    "en": {
+      "contents_and_metadata": "Contents & Metadata"
     }
   }
+});
 </script>
-<div id="config-menu"></div>
-<div id="app"></div>
-<script src="tido.js"></script>
-<script src="config-menu/config-menu.js"></script>
 </body>
 </html>

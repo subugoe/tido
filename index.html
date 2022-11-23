@@ -34,12 +34,11 @@ Note: These IDs are supposed to be unique, so please make sure not to repeat the
 
 </script>
 <script>
-const zeroConfig = {};
-const options = {
-  config: zeroConfig,
-};
+window.addEventListener('load', function () {
+  const query = new URLSearchParams(window.location.search);
 
-window.tido = new window.Tido(options);
+  window.tido = new window.Tido({});
+});
 </script>
 
 <div id="app"></div>

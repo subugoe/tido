@@ -12,10 +12,10 @@ import './css/style.scss';
 
 import App from './App.vue';
 
-window.Tido = function Tido(options = {}) {
+window.Tido = function Tido(config = {}) {
   const defaultOptions = {};
 
-  this.options = { ...defaultOptions, ...options };
+  this.config = { ...defaultOptions, ...config };
 
   let readyPromise = null;
   this.ready = new Promise((resolve, reject) => {
@@ -30,7 +30,7 @@ window.Tido = function Tido(options = {}) {
 
     data() {
       return {
-        config: instance.options.config,
+        config: instance.config,
       };
     },
   });
@@ -65,7 +65,7 @@ window.Tido = function Tido(options = {}) {
     this.app.$destroy();
   };
 
-  const container = this.options?.config?.container || '#app' // default container
+  const container = this.config?.container || '#app' // default container
 
   this.mount(container);
 };

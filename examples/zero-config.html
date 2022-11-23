@@ -14,16 +14,11 @@
   continue.</strong></noscript>
 <div id="config-menu"></div>
 <div id="app"></div>
-<script src="tido.js"></script>
+<script src="dist/tido.js"></script>
 <script src="config-menu/config-menu.js"></script>
 
 <script>
-  const zeroConfig = {};
-  const options = {
-    config: zeroConfig,
-  };
-
-  window.tido = new window.Tido(options);
+window.tido = new window.Tido({});
 </script>
 </body>
 </html>

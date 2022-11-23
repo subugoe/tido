@@ -12,144 +12,143 @@
 <body>
 <noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
   continue.</strong></noscript>
-<script id="tido-config" type="application/json">
-  {
-    "manifest": "https://dev.gfl.sub.uni-goettingen.de/tido/gfl/sample/manifest.json",
-    "labels": {
-      "item": "Seite",
-      "manifest": "Dokument"
-    },
-    "panels": [
-      {
-        "views": [{
-          "id": "image",
-          "label": "Manuskript",
-          "connector": {
-            "id": 3
-          }
-        }]
-      },
-      {
-        "label": "Text",
-        "views": [
-          {
-            "id": "text1",
-            "label": "Edierter Text",
-            "connector": {
-              "id": 4,
-              "options": {
-                "type": "Edierter Text"
-              }
-            }
-          },
-          {
-            "id": "text2",
-            "connector": {
-              "id": 4,
-              "options": {
-                "type": "Transcription"
-              }
-            }
-          }
-        ]
-      },
-      {
-        "label": "Kommentar",
-        "views": [
-          {
-            "id": "annotations1",
-            "label": "Kommentare",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
-                  {
-                    "name": "Editorial Comment",
-                    "icon": "biChatFill"
-                  },
-                  {
-                    "name": "Abstract",
-                    "annotationType": "text",
-                    "displayWhen": "Edierter Text"
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "id": "annotations2",
-            "label": "Register",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
-                  {
-                    "name": "Person",
-                    "icon": "biPersonFill"
-                  },
-                  {
-                    "name": "Place",
-                    "icon": "biGeoAltFill"
-                  },
-                  {
-                    "name": "Org",
-                    "icon": "biBank2"
-                  },
-                  {
-                    "name": "Object",
-                    "icon": "biArchiveFill"
-                  },
-                  {
-                    "name": "Date",
-                    "icon": "biCalendarWeek"
-                  },
-                  {
-                    "name": "Work",
-                    "icon": "biJournals"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "label": "Dokumentdaten",
-        "views": [
-          {
-            "id": "meta",
-            "label": "Metadaten",
-            "connector": {
-              "id": 2,
-              "options": {
-                "collection": {
-                  "all": true
-                },
-                "manifest": {
-                  "all": true
-                },
-                "item": {
-                  "all": true
-                }
-              }
-            }
-          },
-          {
-            "id": "tree",
-            "label": "Inhalt",
-            "connector": {
-              "id": 1
-            }
-          }
-        ]
-      }
-    ],
-    "lang": "de"
-  }
-</script>
-<div id="config-menu"></div>
-<div id="gfl-app"></div>
-<script src="tido.js"></script>
+<div id="app"></div>
+<script src="dist/tido.js"></script>
 <script src="config-menu/config-menu.js"></script>
+<script>
+window.tido = new window.Tido({
+"manifest": "https://dev.gfl.sub.uni-goettingen.de/tido/gfl/sample/manifest.json",
+  "labels": {
+    "item": "Seite",
+    "manifest": "Dokument"
+  },
+  "panels": [
+    {
+      "views": [{
+        "id": "image",
+        "label": "Manuskript",
+        "connector": {
+          "id": 3
+        }
+      }]
+    },
+    {
+      "label": "Text",
+      "views": [
+        {
+          "id": "text1",
+          "label": "Edierter Text",
+          "connector": {
+            "id": 4,
+            "options": {
+              "type": "Edierter Text"
+            }
+          }
+        },
+        {
+          "id": "text2",
+          "connector": {
+            "id": 4,
+            "options": {
+              "type": "Transcription"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "Kommentar",
+      "views": [
+        {
+          "id": "annotations1",
+          "label": "Kommentare",
+          "connector": {
+            "id": 5,
+            "options": {
+              "types": [
+                {
+                  "name": "Editorial Comment",
+                  "icon": "biChatFill"
+                },
+                {
+                  "name": "Abstract",
+                  "annotationType": "text",
+                  "displayWhen": "Edierter Text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "annotations2",
+          "label": "Register",
+          "connector": {
+            "id": 5,
+            "options": {
+              "types": [
+                {
+                  "name": "Person",
+                  "icon": "biPersonFill"
+                },
+                {
+                  "name": "Place",
+                  "icon": "biGeoAltFill"
+                },
+                {
+                  "name": "Org",
+                  "icon": "biBank2"
+                },
+                {
+                  "name": "Object",
+                  "icon": "biArchiveFill"
+                },
+                {
+                  "name": "Date",
+                  "icon": "biCalendarWeek"
+                },
+                {
+                  "name": "Work",
+                  "icon": "biJournals"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "Dokumentdaten",
+      "views": [
+        {
+          "id": "meta",
+          "label": "Metadaten",
+          "connector": {
+            "id": 2,
+            "options": {
+              "collection": {
+                "all": true
+              },
+              "manifest": {
+                "all": true
+              },
+              "item": {
+                "all": true
+              }
+            }
+          }
+        },
+        {
+          "id": "tree",
+          "label": "Inhalt",
+          "connector": {
+            "id": 1
+          }
+        }
+      ]
+    }
+  ],
+  "lang": "de"
+});
+</script>
 </body>
 </html>
