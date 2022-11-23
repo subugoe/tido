@@ -1,5 +1,5 @@
 <template>
-  <q-layout class="root viewport" view="hHh Lpr fFf" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
+  <q-layout class="root viewport" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
     <Header/>
     <q-page-container v-if="ready" class="root">
       <MainView/>
@@ -111,7 +111,7 @@ export default {
     },
     async loadConfig() {
       try {
-        await this.$store.dispatch('config/load');
+        await this.$store.dispatch('config/load', this.$root.config);
       } catch ({ title, message }) {
         this.errorTitle = this.$t('config_error');
         this.errorMessage = message;

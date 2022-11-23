@@ -1,7 +1,7 @@
 import messages from 'src/i18n';
 import { isUrl } from 'src/utils';
 import BookmarkService from '@/services/bookmark';
-import { i18n } from '@/boot/i18n';
+import { i18n } from '@/i18n';
 
 const defaultPanel = {
   label: 'Panel',
@@ -47,13 +47,7 @@ function createDefaultActiveViews(panelsConfig) {
   });
 }
 
-function discoverCustomConfig() {
-  let customConfig = {};
-
-  const el = document.getElementById('tido-config');
-
-  customConfig = el ? JSON.parse(el.text) : {};
-
+function discoverCustomConfig(customConfig) {
   const {
     translations, collection, manifest, item, panels,
   } = customConfig;
@@ -86,6 +80,7 @@ function discoverUrlConfig() {
       return acc;
     }, {});
   }
+
   if (show) urlConfig.show = show ? show.split(',').map((i) => parseInt(i, 10)) : [];
 
   return urlConfig;
@@ -98,8 +93,8 @@ function discoverDefaultConfig(config) {
   };
 }
 
-export const load = ({ commit, getters }) => {
-  const customConfig = discoverCustomConfig();
+export const load = ({ commit, getters }, config) => {
+  const customConfig = discoverCustomConfig(config);
   const urlConfig = discoverUrlConfig();
   const defaultConfig = discoverDefaultConfig(getters.config);
 
