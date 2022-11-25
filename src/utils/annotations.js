@@ -1,5 +1,6 @@
 import * as Utils from '@/utils/index';
 import { icon } from '@/utils/icon';
+import { i18n } from '@/i18n';
 
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
@@ -98,13 +99,18 @@ export const createSvgIcon = (name) => {
   svg.setAttribute('role', 'presentation');
   svg.setAttribute('viewBox', viewBox);
 
-  const newPath = document.createElementNS(
-    'http://www.w3.org/2000/svg',
-    'path',
-  );
+  path.split('&&').forEach((pathPart) => {
+    const [d, style] = pathPart.split('@@');
 
-  newPath.setAttribute('d', path);
-  svg.appendChild(newPath);
+    const newPath = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'path',
+    );
+
+    newPath.setAttribute('d', d);
+    newPath.setAttribute('style', style);
+    svg.appendChild(newPath);
+  });
 
   return svg;
 };
@@ -132,8 +138,8 @@ export function createTooltip(element, data) {
     <span class="text-body1">
     ${
   !isMultiple
-    ? `${this.$t('referenced_annotation')}`
-    : `${this.$t('referenced_annotations')}`
+    ? `${i18n.global.t('referenced_annotation')}`
+    : `${i18n.global.t('referenced_annotations')}`
 }:
       </span>
       <br>

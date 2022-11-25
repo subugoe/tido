@@ -1,13 +1,5 @@
 export const config = (state) => state.config;
 
-export const getAnnotationIcon = (state) => (type) => {
-  const { icon } = state.config.annotations.types.filter(
-    (annotation) => annotation.contenttype === type,
-  )[0];
-
-  return icon;
-};
-
 export const activeViews = (state) => state.activeViews;
 
 // eslint-disable-next-line no-shadow

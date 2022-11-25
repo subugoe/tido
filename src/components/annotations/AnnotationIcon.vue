@@ -9,17 +9,7 @@
 <script>
 import { Dark } from 'quasar';
 import { isUrl } from 'src/utils';
-import {
-  biPersonFill,
-  biGeoAltFill,
-  biChatFill,
-  biBoxArrowUpRight,
-  biPenFill,
-  biPencilSquare,
-  biBank2,
-  biArchiveFill,
-  biCalendarWeek, biJournals,
-} from '@quasar/extras/bootstrap-icons';
+import { icon } from 'src/utils/icon';
 
 export default {
   name: 'AnnotationIcon',
@@ -37,23 +27,9 @@ export default {
       return isUrl(this.name) ? `img:${this.name}` : this.getIcon(this.name);
     },
   },
-  created() {
-    this.icons = {
-      biPersonFill,
-      biGeoAltFill,
-      biChatFill,
-      biBoxArrowUpRight,
-      biPenFill,
-      biPencilSquare,
-      biBank2,
-      biArchiveFill,
-      biCalendarWeek,
-      biJournals,
-    };
-  },
   methods: {
     getIcon(name) {
-      return this.icons[name];
+      return icon(name);
     },
   },
 };

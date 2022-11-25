@@ -97,6 +97,7 @@ export default {
           const root = document.getElementById('text-content');
           this.$store.dispatch('annotations/addHighlightAttributesToText', root);
           await this.$store.dispatch('annotations/addHighlightClickListeners');
+          await this.$store.dispatch('annotations/addHighlightHoverListeners');
         }, 100);
       } catch (err) {
         this.errorTextMessage = err.message;

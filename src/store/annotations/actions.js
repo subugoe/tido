@@ -67,10 +67,6 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
   [...dom.querySelectorAll('[data-target]:not([value=""])')]
     .map((el) => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
     .forEach((targetSelector) => Utils.addRangeHighlightAttributes(targetSelector, dom));
-  // Utils.mapUniqueElements(
-  //   Utils.findDomElements('[data-target]:not([value=""])', dom),
-  //   (x) => x.getAttribute('data-target').replace('_start', '').replace('_end', ''),
-  // ).forEach((selector) => Utils.addRangeHighlightAttributes(selector, dom));
 
   // Add single attributes
   annotations.forEach((annotation) => {
@@ -141,6 +137,62 @@ export const initAnnotations = async ({ dispatch }, url) => {
   } catch (err) {
     dispatch('annotationLoaded', []);
   }
+};
+
+export const addHighlightHoverListeners = ({ dispatch, getters, rootGetters }) => {
+  const { filteredAnnotations } = getters;
+  const annotationIds = filteredAnnotations.reduce((acc, curr) => {
+    const { id } = curr;
+    const name = rootGetters['config/getIconByType'](curr.body['x-content-type']);
+
+    acc[AnnotationUtils.stripAnnotationId(id)] = {
+      value: curr.body.value,
+      name,
+    };
+    return acc;
+  }, {});
+
+  document.querySelectorAll('[data-annotation]')
+    .forEach((el) => {
+      const childOtherNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length;
+
+      if (!childOtherNodes) {
+        const classNames = [];
+        el = AnnotationUtils.backTrackNestedAnnotations(el, classNames);
+        const annotationClasses = [];
+
+        // checks for duplicate class names.
+        classNames
+          .join(' ')
+          .split(' ')
+          .map((x) => annotationIds[x])
+          .filter((x) => x)
+          .reduce((acc, curr) => {
+            if (!acc[curr.value]) {
+              acc[curr.value] = true;
+              annotationClasses.push(curr);
+            }
+            return acc;
+          }, {});
+
+        if (annotationClasses.length) {
+          el.addEventListener(
+            'mouseenter',
+            () => {
+              if (AnnotationUtils.isAnnotationSelected(el)) {
+                AnnotationUtils.createTooltip.bind(this, el, annotationClasses)();
+              }
+            },
+            false,
+          );
+          el.addEventListener(
+            'mouseout',
+            () => document.querySelectorAll('.annotation-tooltip').forEach((el) => el.remove()),
+            false,
+          );
+        }
+      }
+    });
 };
 
 export const addHighlightClickListeners = ({ dispatch, getters }) => {
