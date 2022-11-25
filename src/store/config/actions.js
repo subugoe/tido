@@ -1,5 +1,5 @@
 import messages from 'src/i18n';
-import { isUrl } from 'src/utils';
+import { delay, isUrl } from 'src/utils';
 import BookmarkService from '@/services/bookmark';
 import { i18n } from '@/i18n';
 
@@ -41,10 +41,16 @@ function validatePanels(value) {
 }
 
 function createDefaultActiveViews(panelsConfig) {
-  return panelsConfig.filter((p) => p.views && p.views.length > 0).map((panel) => {
-    const defaultIndex = panel.views.findIndex((view) => view.default === true);
-    return defaultIndex > -1 ? defaultIndex : 0;
-  });
+  return panelsConfig
+    .filter((p) => p.views && p.views.length > 0)
+    .map((panel) => {
+      const defaultIndex = panel.views.findIndex((view) => view.default === true);
+      return defaultIndex > -1 ? defaultIndex : 0;
+    })
+    .reduce((acc, cur, i) => {
+      acc[i] = cur;
+      return acc;
+    }, {});
 }
 
 function discoverCustomConfig(customConfig) {
@@ -171,10 +177,10 @@ export const setDefaultActiveViews = async ({ commit, getters }) => {
   const { config } = getters;
   const activeViews = [];
 
-  config.panels.forEach(({ views }) => {
+  config.panels.forEach(({ views }, panelIndex) => {
     let defaultViewIndex = views.findIndex((view) => !!(view.default));
     if (defaultViewIndex === -1) defaultViewIndex = 0;
-    activeViews.push(defaultViewIndex);
+    activeViews[panelIndex] = defaultViewIndex;
   });
 
   await BookmarkService.updatePanels(activeViews);

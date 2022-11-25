@@ -88,10 +88,11 @@ export default {
   async mounted() {
     this.isLoading = true;
     this.$q.dark.set('auto');
-    this.$i18n.locale = this.config.lang;
 
     await this.loadConfig();
     await this.init();
+
+    this.$i18n.locale = this.config.lang;
 
     if (this.config?.colors?.primary) {
       setCssVar('primary', this.config.colors.primary);

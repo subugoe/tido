@@ -16,7 +16,7 @@ class BookmarkService {
   }
 
   async updatePanels(activeViews) {
-    const panels = activeViews.map((view, i) => `${i}_${view}`).join(',');
+    const panels = Object.keys(activeViews).map((panelIndex) => `${panelIndex}_${activeViews[panelIndex]}`).join(',');
     const query = { ...this.getQuery(), panels };
 
     await this.pushQuery(query);
