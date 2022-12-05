@@ -1,5 +1,5 @@
 import messages from 'src/i18n';
-import { delay, isUrl } from 'src/utils';
+import { delay, isUrl } from '@/utils';
 import BookmarkService from '@/services/bookmark';
 import { i18n } from '@/i18n';
 

@@ -8,8 +8,8 @@
 </template>
 <script>
 import { Dark } from 'quasar';
-import { isUrl } from 'src/utils';
-import { icon } from 'src/utils/icon';
+import { isUrl } from '@/utils';
+import { icon } from '@/utils/icon';
 
 export default {
   name: 'AnnotationIcon',

@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { delay } from 'src/utils';
+import { delay } from '@/utils';
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
 
 export default {

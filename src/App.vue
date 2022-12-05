@@ -25,9 +25,9 @@
 
 <script>
 import { setCssVar } from 'quasar';
-import Header from 'components/header/Header.vue';
-import { delay } from 'src/utils';
-import MainView from 'src/views/MainView.vue';
+import Header from '@/components/header/Header.vue';
+import { delay } from '@/utils';
+import MainView from '@/views/MainView.vue';
 import { biBook } from '@quasar/extras/bootstrap-icons';
 import Notification from '@/components/Notification.vue';
 

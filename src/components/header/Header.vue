@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import Navbar from 'components/header/Navbar.vue';
-import TitleBar from 'components/header/TitleBar.vue';
-import PanelsToggle from 'components/header/PanelsToggle.vue';
-import Tools from 'components/header/Tools.vue';
+import Navbar from '@/components/header/Navbar.vue';
+import TitleBar from '@/components/header/TitleBar.vue';
+import PanelsToggle from '@/components/header/PanelsToggle.vue';
+import Tools from '@/components/header/Tools.vue';
 
 export default {
   name: 'Header',

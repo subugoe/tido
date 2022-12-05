@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Panel from 'components/panels/Panel.vue';
+import Panel from '@/components/panels/Panel.vue';
 
 export default {
   name: 'MainView',

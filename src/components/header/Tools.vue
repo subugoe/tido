@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import Language from 'components/header/Language.vue';
-import SoftwareInfo from 'components/header/SoftwareInfo.vue';
+import Language from '@/components/header/Language.vue';
+import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
 import { biMoonFill, biSunFill } from '@quasar/extras/bootstrap-icons';
 
 export default {

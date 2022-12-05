@@ -53,17 +53,17 @@
 </template>
 
 <script>
-import Metadata from 'components/metadata/Metadata.vue';
-import Tree from 'components/Tree.vue';
-import Annotations from 'components/annotations/Annotations.vue';
-import Content from 'components/Content.vue';
-import OpenSeadragon from 'components/OpenSeadragon.vue';
-import { findComponent } from 'src/utils/panels';
-import PanelZoomAction from 'components/panels/actions/PanelZoomAction.vue';
-import Notification from 'components/Notification.vue';
-import PanelToggleAction from 'components/panels/actions/PanelToggleAction.vue';
-import PanelImageAction from 'components/panels/actions/PanelImageAction.vue';
-import Loading from 'components/Loading.vue';
+import Metadata from '@/components/metadata/Metadata.vue';
+import Tree from '@/components/Tree.vue';
+import Annotations from '@/components/annotations/Annotations.vue';
+import Content from '@/components/Content.vue';
+import OpenSeadragon from '@/components/OpenSeadragon.vue';
+import { findComponent } from '@/utils/panels';
+import PanelZoomAction from '@/components/panels/actions/PanelZoomAction.vue';
+import Notification from '@/components/Notification.vue';
+import PanelToggleAction from '@/components/panels/actions/PanelToggleAction.vue';
+import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
+import Loading from '@/components/Loading.vue';
 
 export default {
   components: {

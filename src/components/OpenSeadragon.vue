@@ -9,7 +9,7 @@
 
 <script>
 import OpenSeadragon from 'openseadragon';
-import { delay } from 'src/utils';
+import { delay } from '@/utils';
 import Notification from '@/components/Notification.vue';
 
 export default {

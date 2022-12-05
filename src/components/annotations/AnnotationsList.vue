@@ -24,7 +24,7 @@
 
 <script>
 
-import AnnotationIcon from 'components/annotations/AnnotationIcon.vue';
+import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 
 export default {
   name: 'AnnotationsList',

@@ -1,4 +1,4 @@
-import * as AnnotationUtils from 'src/utils/annotations';
+import * as AnnotationUtils from '@/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
 

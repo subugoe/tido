@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import MetadataItem from 'components/metadata/MetadataItem.vue';
+import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 export default {
   name: 'CollectionMetadata',
