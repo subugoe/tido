@@ -7,16 +7,21 @@
 
     <q-page-container v-else class="error-container q-pa-lg q-pt-xl">
       <div class="full-height full-width flex items-center justify-center column" style="border: dashed 3px #ccc; border-radius: 6px">
-        <Notification
-          v-if="errorMessage"
-          :message="errorMessage"
-          :title="errorTitle"
-          class="q-ma-md-xl"
-          type="warning"
-        />
+        <template v-if="isLoading">
+          <Loading background="none"></Loading>
+        </template>
         <template v-else>
-          <q-icon :name="emptyIcon" size="64px" color="grey-5"></q-icon>
-          <span  class="text-grey-6 text-bold q-mt-md">{{ $t('no_entrypoint_available') }}</span>
+          <Notification
+            v-if="errorMessage"
+            :message="errorMessage"
+            :title="errorTitle"
+            class="q-ma-md-xl"
+            type="warning"
+          />
+          <template v-else>
+            <q-icon :name="emptyIcon" size="64px" color="grey-5"></q-icon>
+            <span  class="text-grey-6 text-bold q-mt-md">{{ $t('no_entrypoint_available') }}</span>
+          </template>
         </template>
       </div>
     </q-page-container>
@@ -25,15 +30,17 @@
 
 <script>
 import { setCssVar } from 'quasar';
+import { biBook } from '@quasar/extras/bootstrap-icons';
 import Header from '@/components/header/Header.vue';
 import { delay } from '@/utils';
 import MainView from '@/views/MainView.vue';
-import { biBook } from '@quasar/extras/bootstrap-icons';
 import Notification from '@/components/Notification.vue';
+import Loading from '@/components/Loading.vue';
 
 export default {
   name: 'TIDO',
   components: {
+    Loading,
     MainView,
     Header,
     Notification,
