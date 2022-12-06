@@ -31,7 +31,7 @@
           </q-tabs>
         </div>
         <q-tab-panels v-model="activeTabIndex" class="bg-transparent" animated transition-next="fade" transition-prev="fade">
-          <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pa-none q-pt-md">
+          <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pt-md">
             <component :is="tab.component" :key="tab.id" v-bind="tab.props" />
           </q-tab-panel>
         </q-tab-panels>
@@ -267,6 +267,11 @@ export default {
   >* {
     flex: 1;
   }
+}
+
+.q-tab-panels {
+  margin-left: -16px;
+  margin-right: -16px;
 }
 
 .content-tabs {
