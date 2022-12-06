@@ -153,9 +153,10 @@ export default {
         }
       } catch (e) {
         await delay(1000);
-        this.isLoading = false;
         this.errorTitle = e.title || 'unknown_error';
         this.errorMessage = e.message || 'please_try_again_later';
+      } finally {
+        this.isLoading = false;
       }
     },
     isReady() {
