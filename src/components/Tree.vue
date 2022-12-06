@@ -2,6 +2,7 @@
   <div class="tree-container">
     <q-tree
       class="item-content"
+      :class="$q.dark.isActive ? 'is-dark' : ''"
       ref="treeRef"
       v-model:expanded="expanded"
       v-model:selected="selected"
@@ -19,8 +20,8 @@
 </template>
 
 <script>
-import { delay } from '@/utils';
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
+import { delay } from '@/utils';
 
 export default {
   name: 'Tree',
@@ -177,7 +178,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .tree-container {
   display: flex;
   flex: 1;
@@ -193,7 +194,74 @@ export default {
   overflow: auto;
 }
 
-.q-tree {
-  height: 100%;
+:deep(.item-content) {
+
+  .q-tree {
+    height: 100%;
+    > .q-tree__node--child {
+      > .q-tree__node-header {
+        padding-left: 8px;
+      }
+    }
+  }
+
+  .q-tree__node {
+    &:first-child {
+      margin-top: 4px;
+    }
+    margin-bottom: 4px;
+    padding-bottom: 0;
+  }
+
+  .q-tree__node-body.relative-position {
+    padding: 0;
+  }
+
+  .q-tree__node-collapsible .q-tree__children {
+    > .q-tree__node--parent {
+      > .q-tree__node-header {
+        background-color: $grey-2;
+        left: 0;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+    }
+  }
+
+  &.q-tree--dark .q-tree__node-collapsible .q-tree__children {
+    > .q-tree__node--parent {
+      > .q-tree__node-header {
+        background-color: $grey-8 !important;
+      }
+    }
+  }
+
+  .q-tree__node--selected {
+    background-color: var(--q-primary);
+    @media (prefers-color-scheme: dark) {
+      background-color: $grey-3;
+    }
+
+    .q-tree__node-header-content {
+      color: $light !important;
+      @media (prefers-color-scheme: dark) {
+        color: $dark !important;
+      }
+    }
+  }
+
+  .q-tree__node-header {
+    border-radius: 3px;
+  }
+
+  .q-tree__children {
+    cursor: pointer;
+  }
+
+  .q-tree__node-header-content {
+    word-break: break-all;
+    user-select: none;
+  }
 }
 </style>

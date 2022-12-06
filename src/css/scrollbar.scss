@@ -1,0 +1,36 @@
+$foreground: #ddd;
+$background: $grey-3;
+
+$foreground-dark: #555;
+$background-dark: #333;
+
+* {
+  /* Foreground, Background */
+
+  .body--dark & {
+    scrollbar-color: $foreground-dark $background-dark;
+  }
+
+  scrollbar-color: $foreground $background;
+}
+::-webkit-scrollbar {
+  width: 6px; /* Mostly for vertical scrollbars */
+  height: 10px; /* Mostly for horizontal scrollbars */
+}
+::-webkit-scrollbar-thumb { /* Foreground */
+  .body--dark & {
+    background: $foreground-dark;
+  }
+  background: $foreground;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track { /* Background */
+  background: $background;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  .body--dark & {
+    background: $background-dark;
+    border: 0;
+  }
+}
