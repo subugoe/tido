@@ -45,6 +45,9 @@
     "http-server": "^14.1.1",
     "ncp": "^2.0.0",
     "openseadragon": "^3.1.0",
+    "postcss-exclude-files": "^1.0.15",
+    "postcss-remove-selectors": "^2.0.1",
+    "prepend-selector-postcss": "^0.4.7",
     "prettier": "^2.5.1",
     "quasar": "^2.10.2",
     "sass": "~1.32.12",
@@ -54,6 +57,7 @@
     "stylelint-8-point-grid": "^2.1.0",
     "stylelint-no-unsupported-browser-features": "^5.0.3",
     "vite": "^3.2.5",
+    "vite-plugin-classname": "^0.0.3",
     "vue": "^3.2.41",
     "vue-i18n": "^9.2.0-beta.35",
     "vuex": "^4.0.1"
@@ -82,7 +86,6 @@
     ]
   },
   "scripts": {
-    "serve": "vite",
     "build": "vite build",
     "cypress": "cypress open",
     "cypress:headless": "cypress run --headless",

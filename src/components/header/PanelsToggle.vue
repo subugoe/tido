@@ -42,7 +42,7 @@
       </div>
     </q-btn-dropdown>
 
-    <div v-if="$q.screen.width > 1199" class="t-row t-items-center">
+    <div v-if="$q.screen.width > 1199" class="row items-center">
       <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="q-px-xs">
         <q-checkbox
           :model-value="show"
@@ -141,5 +141,11 @@ export default {
 .panels-toggle.col {
   width: unset !important;
   padding: unset !important;
+}
+
+:deep(.q-checkbox) {
+  flex-shrink: unset !important;
+  width: unset !important;
+  max-width: unset !important;
 }
 </style>

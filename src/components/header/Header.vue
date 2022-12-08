@@ -1,18 +1,20 @@
 <template>
-  <q-header :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'" v-if="show">
-    <div class="q-px-lg q-py-md">
-      <div class="t-flex items-start">
-        <TitleBar class="" :item="item"/>
-        <div class="col t-flex justify-end">
-          <Tools/>
-        </div>
-      </div>
-      <div v-if="item" class="t-flex">
-        <Navbar v-if="showNavbar"/>
-        <PanelsToggle v-if="showPanelsToggle" class="t-flex justify-sm-end col" />
+  <div
+    class="q-px-lg q-py-md"
+    :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'"
+    v-if="show"
+  >
+    <div class="flex items-start">
+      <TitleBar class="" :item="item"/>
+      <div class="col flex justify-end">
+        <Tools/>
       </div>
     </div>
-  </q-header>
+    <div v-if="item" class="flex">
+      <Navbar v-if="showNavbar"/>
+      <PanelsToggle v-if="showPanelsToggle" class="flex justify-sm-end col" />
+    </div>
+  </div>
 </template>
 
 <script>

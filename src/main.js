@@ -1,26 +1,14 @@
 import { createApp, h } from 'vue';
 import { Quasar } from 'quasar';
 import createStore from './store';
-
-import {i18n} from './i18n';
-
-// Import Quasar css
-// We load Quasar stylesheet file
-import 'quasar/dist/quasar.sass';
-import 'quasar/src/css/flex-addon.sass';
-import './css/style.scss';
-
+import { i18n } from './i18n';
 import App from './App.vue';
 
+import 'quasar/dist/quasar.sass';
+import './css/style.scss';
+
 window.Tido = function Tido(config = {}) {
-  const defaultOptions = {};
-
-  this.config = { ...defaultOptions, ...config };
-
-  let readyPromise = null;
-  this.ready = new Promise((resolve, reject) => {
-    readyPromise = { resolve, reject };
-  });
+  this.config = { ...config };
 
   const instance = this;
   this.app = createApp({
@@ -39,7 +27,7 @@ window.Tido = function Tido(config = {}) {
   this.app.use(i18n);
 
   this.app.use(Quasar, {
-    plugins: {}, // import Quasar plugins and add here
+    plugins: {},
   });
 
   let mounted = false;
@@ -56,6 +44,8 @@ window.Tido = function Tido(config = {}) {
       throw new Error('Container element not found');
     }
 
+    containerEl.classList.add('tido-container');
+
     this.app.mount(containerEl);
 
     mounted = true;
@@ -65,7 +55,7 @@ window.Tido = function Tido(config = {}) {
     this.app.$destroy();
   };
 
-  const container = this.config?.container || '#app' // default container
+  const container = this.config?.container || '#app';
 
   this.mount(container);
 };

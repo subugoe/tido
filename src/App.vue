@@ -1,31 +1,32 @@
 <template>
-  <q-layout class="root viewport" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
-    <Header/>
-    <q-page-container v-if="ready" class="root">
-      <MainView/>
-    </q-page-container>
-
-    <q-page-container v-else class="error-container q-pa-lg q-pt-xl">
-      <div class="full-height full-width flex items-center justify-center column" style="border: dashed 3px #ccc; border-radius: 6px">
-        <template v-if="isLoading">
-          <Loading background="none"></Loading>
-        </template>
-        <template v-else>
-          <Notification
-            v-if="errorMessage"
-            :message="errorMessage"
-            :title="errorTitle"
-            class="q-ma-md-xl"
-            type="warning"
-          />
-          <template v-else>
-            <q-icon :name="emptyIcon" size="64px" color="grey-5"></q-icon>
-            <span  class="text-grey-6 text-bold q-mt-md">{{ $t('no_entrypoint_available') }}</span>
-          </template>
-        </template>
+  <div id="tido">
+    <div class="root viewport column" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
+      <Header/>
+      <div v-if="ready" class="root">
+        <MainView/>
       </div>
-    </q-page-container>
-  </q-layout>
+      <div v-else class="error-container q-pa-lg q-pt-xl">
+        <div class="full-height full-width flex items-center justify-center column" style="border: dashed 3px #ccc; border-radius: 6px">
+          <template v-if="isLoading">
+            <Loading background="none"></Loading>
+          </template>
+          <template v-else>
+            <Notification
+              v-if="errorMessage"
+              :message="errorMessage"
+              :title="errorTitle"
+              class="q-ma-md-xl"
+              type="warning"
+            />
+            <template v-else>
+              <q-icon :name="emptyIcon" size="64px" color="grey-5"></q-icon>
+              <span  class="text-grey-6 text-bold q-mt-md">{{ $t('no_entrypoint_available') }}</span>
+            </template>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -173,6 +174,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+#tido {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 800px;
+  min-width: 400px;
+}
 .root {
   display: flex;
   flex: 1;
@@ -181,7 +189,7 @@ export default {
 }
 
 .viewport {
-  height: 100vh;
+  flex: 1;
   @media (max-width: $breakpoint-sm-custom-md) {
     height: auto;
     overflow: scroll;
@@ -190,9 +198,11 @@ export default {
 
 .error-container {
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: center;
   flex: 1;
   align-items: center;
+  height: 100%;
 }
 </style>

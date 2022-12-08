@@ -11,7 +11,7 @@
     </q-btn>
 
     <q-dialog v-model="infobox">
-      <q-card>
+      <q-card id="tido">
         <q-card-section>
           <h1 class="text-h5 q-pb-md">TIDO</h1>
           <p class="text-weight-bold">{{ $t('tido_description') }}</p>
@@ -21,6 +21,7 @@
 
         <q-card-section class="q-pt-none">
           <q-btn
+            dense
             flat
             href="https://gitlab.gwdg.de/subugoe/emo/tido/-/blob/main/README.md"
             target="_blank"
@@ -30,15 +31,18 @@
           />
 
           <q-btn
+            dense
             flat
             href="https://gitlab.gwdg.de/subugoe/emo/tido/"
             target="_blank"
             type="a"
             :icon="codeIcon"
             :label="$t('source_code')"
+            class="q-mx-md"
           />
 
           <q-btn
+            dense
             flat
             href="mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
             type="a"

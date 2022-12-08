@@ -1,5 +1,5 @@
 <template>
-  <div class="t-flex items-center">
+  <div class="flex items-center">
     <q-btn
       v-for="(btn, idx) in buttons"
       :id="btn.id"

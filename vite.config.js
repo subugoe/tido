@@ -7,7 +7,6 @@ import { resolve } from 'path';
 export default defineConfig({
   plugins: [
     vue(),
-
     quasar({
       sassVariables: 'src/css/quasar.variables.scss',
     }),
@@ -27,5 +26,5 @@ export default defineConfig({
         assetFileNames: 'tido.[ext]',
       },
     },
-  }
+  },
 });

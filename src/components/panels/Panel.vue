@@ -1,6 +1,6 @@
 <template>
   <div class="item-content" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'">
-    <div class="panel-header q-py-xs q-pr-sm q-pl-md t-flex justify-between items-center">
+    <div class="panel-header q-py-xs q-pr-sm q-pl-md flex justify-between items-center">
       <div class="caption text-bold text-body1">
         <!-- We display the tab label as panel label when there is only one tab -->
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
@@ -22,7 +22,6 @@
           <q-tabs
             v-model="activeTabIndex"
             @update:model-value="onViewChange"
-            class="content-tabs"
             :active-color="'primary'"
             :active-bg-color="$q.dark.isActive ? 'bg-dark' : 'bg-grey-4'"
             dense
@@ -260,22 +259,18 @@ export default {
   flex-direction: column;
   overflow: auto;
   position: relative;
-}
-.tabs-container {
-  display: flex;
 
-  >* {
+  :deep(.q-tabs__content .q-tab) {
     flex: 1;
   }
-}
 
-.q-tab-panels {
-  margin-left: -16px;
-  margin-right: -16px;
-}
+  .tabs-container {
+    display: flex;
 
-.content-tabs {
-  display: inline-block;
+    >* {
+      flex: 1;
+    }
+  }
 }
 
 .item-content {
@@ -284,7 +279,7 @@ export default {
   flex-direction: column;
   overflow: hidden;
   border-radius: 8px;
-  border: 1px solid #ddd !important;
+  border: 1px solid #ddd;
   position: relative;
 
   .body--dark & {
@@ -295,6 +290,8 @@ export default {
     display: flex;
     flex-direction: column;
     flex: 1;
+    margin-left: -16px;
+    margin-right: -16px;
   }
 }
 
@@ -305,7 +302,7 @@ export default {
   overflow: hidden;
 
   @media (max-width: $breakpoint-sm-custom-md) {
-    min-height: 100vh;
+    min-height: 100%;
   }
 }
 </style>
