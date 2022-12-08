@@ -4,7 +4,7 @@
       v-for="annotation in configuredAnnotations"
       :id="'list' + annotation.strippedId"
       :key="annotation.strippedId"
-      :class="$q.dark.isActive ? { 'bg-grey-9 active': isActive(annotation) } : { 'bg-grey-4 active': isActive(annotation) }"
+      :class="$q.dark.isActive ? { 'bg-grey-7 active': isActive(annotation) } : { 'bg-grey-4 active': isActive(annotation) }"
       class="q-pa-sm q-pl-xs q-mb-xs"
       :clickable="!isText(annotation)"
       padding="xs"
