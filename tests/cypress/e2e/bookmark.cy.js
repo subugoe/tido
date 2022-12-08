@@ -45,29 +45,29 @@ describe('Bookmarking', () => {
   });
 
   it('Should change panel value in query', () => {
-    cy.get('.panels-toggle .t-row div:first-child .q-checkbox').click().wait(400)
+    cy.get('.panels-toggle .row div:first-child .q-checkbox').click().wait(400)
       .url()
       .then((value) => decodeURIComponent(value))
       .should('include', 'show=1,2,3');
-    cy.get('.panels-toggle .t-row div:nth-child(4) .q-checkbox').click().wait(400)
+    cy.get('.panels-toggle .row div:nth-child(4) .q-checkbox').click().wait(400)
       .url()
       .then((value) => decodeURIComponent(value))
       .should('include', 'show=1,2');
   });
 
   it('Should change panel value in query after reset', () => {
-    cy.get('.panels-toggle .t-row div:first-child .q-checkbox').click().wait(400)
+    cy.get('.panels-toggle .row div:first-child .q-checkbox').click().wait(400)
       .url()
       .then((value) => decodeURIComponent(value))
       .should('include', 'show=1,2,3');
-    cy.get('.panels-toggle .t-row div:nth-child(4) .q-checkbox').click().wait(400)
+    cy.get('.panels-toggle .row div:nth-child(4) .q-checkbox').click().wait(400)
       .url()
       .then((value) => decodeURIComponent(value))
       .should('include', 'show=1,2');
 
     // Reset
-    cy.get('.panels-toggle .t-row div:first-child .q-checkbox').click();
-    cy.get('.panels-toggle .t-row div:nth-child(4) .q-checkbox').click();
+    cy.get('.panels-toggle .row div:first-child .q-checkbox').click();
+    cy.get('.panels-toggle .row div:nth-child(4) .q-checkbox').click();
     cy.wait(400).url().should('not.include', 'show');
   });
 

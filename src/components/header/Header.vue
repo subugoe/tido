@@ -1,11 +1,11 @@
 <template>
   <div
-    class="q-px-lg q-py-md"
+    class="header q-px-lg q-py-md"
     :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'"
     v-if="show"
   >
     <div class="flex items-start">
-      <TitleBar class="" :item="item"/>
+      <TitleBar :item="item"/>
       <div class="col flex justify-end">
         <Tools/>
       </div>

@@ -10,9 +10,9 @@ describe('Tido', () => {
   });
 
   it('Should render titles', () => {
-    cy.get('.q-header h1').contains('Textual witnesses in Arabic and Karshuni');
-    cy.get('.q-header h2').contains('Cod. Arab. 236 Copenhagen');
-    cy.get('.q-header h2').contains('Sheet 2a');
+    cy.get('.header h1').contains('Textual witnesses in Arabic and Karshuni');
+    cy.get('.header h2').contains('Cod. Arab. 236 Copenhagen');
+    cy.get('.header h2').contains('Sheet 2a');
   });
 
   it('Should render panels', () => {
