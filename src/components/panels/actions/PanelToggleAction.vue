@@ -25,9 +25,6 @@ export default {
       if (value !== oldValue) this.$emit('update', value);
     },
   },
-  // mounted() {
-  //   this.selectedModel = false;
-  // }
 };
 </script>
 

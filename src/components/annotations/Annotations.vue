@@ -66,9 +66,9 @@ export default {
   },
   watch: {
     updateTextHighlighting: {
-      handler(value) {
-        if (value) {
-          const [hasAnnotations, activeContentUrl] = value.split('|');
+      handler(contentData) {
+        if (contentData) {
+          const [hasAnnotations, activeContentUrl] = contentData.split('|');
           if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
           this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
           this.highlightTargetsLevel0();

@@ -118,6 +118,7 @@ export const resetAnnotations = ({ dispatch, getters }) => {
       AnnotationUtils.removeIcon(annotation);
     }
   });
+
   dispatch('setActiveAnnotations', {});
 };
 

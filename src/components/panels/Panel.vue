@@ -162,11 +162,11 @@ export default {
 
       this.unsubscribe = this.$store.subscribeAction(async ({ type, payload }) => {
         if (this.tabs.length && this.tabs[0].actions?.length && type === 'annotations/setActiveAnnotations') {
-          const totalAnnotationsAmount = this.$store.getters['annotations/filteredAnnotations'].length;
-          let newSelected = Object.keys(payload).length === totalAnnotationsAmount;
+          const activeAmount = Object.keys(payload).length;
+          const filteredAmount = this.$store.getters['annotations/filteredAnnotations'].length;
 
+          let newSelected = activeAmount > 0 && activeAmount === filteredAmount;
           if (!newSelected && Object.keys(payload).length > 0) newSelected = 'maybe';
-
           if (this.tabs[i].actions[0].props.selected !== newSelected) this.tabs[i].actions[0].props.selected = newSelected;
         }
       });
