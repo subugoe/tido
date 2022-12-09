@@ -1,6 +1,6 @@
 <template>
   <div class="item-content" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'">
-    <div class="panel-header q-py-xs q-pr-sm q-pl-md flex justify-between items-center">
+    <div class="panel-header q-py-xs q-pr-md q-pl-md flex justify-between items-center">
       <div class="caption text-bold text-body1">
         <!-- We display the tab label as panel label when there is only one tab -->
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
