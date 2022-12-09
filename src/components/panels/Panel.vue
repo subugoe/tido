@@ -286,6 +286,14 @@ export default {
     border: 1px solid #424242 !important;
   }
 
+  .q-tab {
+    transition: none !important;
+    .q-tab__label {
+      font-size: $body-font-size;
+      font-weight: 300;
+    }
+  }
+
   .q-tab-panels {
     display: flex;
     flex-direction: column;
