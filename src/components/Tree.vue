@@ -156,7 +156,7 @@ export default {
         setTimeout(() => this.$emit('loading', false), 400);
       });
 
-      // if (itemUrl === this.itemUrl) return;
+      if (itemUrl === this.itemUrl) return;
 
       if (manifestUrl !== this.manifest.id) {
         this.$store.dispatch('contents/initManifest', manifestUrl);
