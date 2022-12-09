@@ -3,13 +3,14 @@
 }
 
 #tido {
+  color: $dark;
   .q-icon {
     box-sizing: content-box;
   }
-}
 
-body.body--dark {
-  color: $light;
+  .body--dark & {
+    color: $light;
+  }
 }
 
 h1,
@@ -272,4 +273,8 @@ h3 {
       background: rgba(0, 0, 0, 0.6);
     }
   }
+}
+
+.q-separator {
+  transition: none;
 }

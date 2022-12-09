@@ -248,6 +248,9 @@ export default {
 
     .q-tree__node-header {
       border-radius: 3px;
+      .q-tree__node-header-content {
+        transition: none;
+      }
     }
 
     .q-tree__children {

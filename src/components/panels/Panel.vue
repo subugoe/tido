@@ -23,7 +23,7 @@
             v-model="activeTabIndex"
             @update:model-value="onViewChange"
             :active-color="'primary'"
-            :active-bg-color="$q.dark.isActive ? 'bg-dark' : 'bg-grey-4'"
+            active-bg-color="none"
             dense
           >
             <q-tab v-for="(tab, i) in tabs" :key="tab.id" :name="i" :label="$t(tab.label)" no-caps />
@@ -284,6 +284,10 @@ export default {
 
   .body--dark & {
     border: 1px solid #424242 !important;
+  }
+
+  .q-tabs {
+    transition: none !important;
   }
 
   .q-tab {
