@@ -81,6 +81,7 @@ export default {
 .q-item {
   min-height: unset;
   user-select: none;
+  transition-property: background-color;
 }
 
 .item-content {
