@@ -417,7 +417,7 @@ Builds the app in `development mode` (hot reloading, error reporting, etc.).
 npm run serve:dev
 ```
 
-It will be available under `localhost:8080`.
+It will be available under `localhost:5173`.
 
 #### Serve examples (production build)
 You can serve some examples with `npm run serve:prod` which will copy the built files into `/examples` directory.
