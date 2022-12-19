@@ -26,9 +26,17 @@
 </noscript>
 <div id="app"></div>
 <script type="module" src="/src/main.js"></script>
+<style>
+  body #app {
+    height: 100vh;
+    overflow: hidden;
+  }
+</style>
 <script>
   window.addEventListener('load', function () {
-    window.tido = new window.Tido();
+    window.tido = new window.Tido({
+      collection: 'http://localhost:8181/ahiqar/arabic-karshuni/collection.json'
+    });
   });
 </script>
 </body>

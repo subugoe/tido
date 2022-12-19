@@ -7,6 +7,24 @@ import App from './App.vue';
 import 'quasar/dist/quasar.sass';
 import './css/style.scss';
 
+const clickOutside = {
+  beforeMount: (el, binding) => {
+    console.log(el);
+    el.clickOutsideEvent = (event) => {
+      console.log(event.target);
+      // here I check that click was outside the el and his children
+      if (!(el === event.target || el.contains(event.target))) {
+        // and if it did, call method provided in attribute value
+        binding.value();
+      }
+    };
+    document.addEventListener('click', el.clickOutsideEvent);
+  },
+  unmounted: (el) => {
+    document.removeEventListener('click', el.clickOutsideEvent);
+  },
+};
+
 window.Tido = function Tido(config = {}) {
   this.config = { ...config };
 
@@ -23,6 +41,7 @@ window.Tido = function Tido(config = {}) {
     },
   });
 
+  this.app.directive('click-outside', clickOutside);
   this.app.use(createStore());
   this.app.use(i18n);
 
