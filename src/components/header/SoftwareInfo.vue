@@ -5,7 +5,7 @@
       round
       :title="$t('project_info')"
       @click="infobox = true"
-      color="grey-5"
+      color="grey-6"
       :icon="infoIcon"
     >
     </q-btn>

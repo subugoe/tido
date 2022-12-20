@@ -90,7 +90,7 @@ export default {
       return this.$store.getters['config/config'].panels;
     },
     resetColor() {
-      return this.toggles.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-6';
+      return this.toggles.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7';
     },
   },
   watch: {

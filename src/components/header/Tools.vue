@@ -4,7 +4,7 @@
     <q-btn
       flat
       round
-      :color="$q.dark.isActive ? 'yellow-4': 'grey-5'"
+      :color="$q.dark.isActive ? 'yellow-4': 'grey-6'"
       :icon="$q.dark.isActive ? darkIcon: lightIcon"
       @click="$q.dark.toggle()"
     ></q-btn>
@@ -13,9 +13,9 @@
 </template>
 
 <script>
+import { biMoonFill, biSunFill } from '@quasar/extras/bootstrap-icons';
 import Language from '@/components/header/Language.vue';
 import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
-import { biMoonFill, biSunFill } from '@quasar/extras/bootstrap-icons';
 
 export default {
   name: 'Tools',
