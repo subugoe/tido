@@ -1,5 +1,5 @@
 <template>
-  <div class="tree-container">
+  <div ref="containerRef" class="tree-container">
     <q-tree
       class="item-content"
       :class="$q.dark.isActive ? 'is-dark' : ''"
@@ -21,7 +21,7 @@
 
 <script>
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
-import { delay } from '@/utils';
+import { delay, isElementVisible } from '@/utils';
 
 export default {
   name: 'Tree',
@@ -109,10 +109,12 @@ export default {
       }
     },
     async onManifestChange() {
-      if (this.manifest && !this.collection) {
+      const { label, sequence, id: manifestId } = this.manifest;
+      let expanded = [this.collectionTitle, manifestId];
+      if (!this.collection) {
         this.$emit('loading', true);
         await delay(300);
-        const { label, sequence, id: manifestId } = this.manifest;
+
         this.tree = [{
           label: label ?? this.getDefaultManifestLabel(),
           sequence,
@@ -125,13 +127,16 @@ export default {
           })),
         }];
 
-        this.$nextTick(() => {
-          this.expanded = [manifestId];
-          this.selected = this.itemUrl !== '' ? this.itemUrl : sequence[0]?.id;
-        });
+        expanded = [manifestId];
       }
+
+      this.$nextTick(() => {
+        this.expanded = expanded;
+        this.selected = this.itemUrl !== '' ? this.itemUrl : sequence[0]?.id;
+      });
     },
     async onItemUrlChange() {
+      console.log('item url');
       this.selected = this.itemUrl;
     },
     getDefaultManifestLabel(index) {
@@ -143,6 +148,7 @@ export default {
       return `${prefix} ${index + 1}`;
     },
     onSelectedChange(value) {
+      console.log('selected')
       const { treeRef } = this.$refs;
       if (!treeRef) return;
 
@@ -152,7 +158,11 @@ export default {
       const { url: itemUrl, parent: manifestUrl } = node;
 
       this.$nextTick(() => {
-        document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
+        const el = document.getElementById(this.itemUrl);
+        if (!isElementVisible(el, this.$refs.containerRef)) {
+          console.log('slidiiin')
+          el.scrollIntoView({ block: 'center' });
+        }
         setTimeout(() => this.$emit('loading', false), 400);
       });
 
@@ -166,13 +176,14 @@ export default {
 
       if (!this.expanded.includes(manifestUrl)) this.expanded.push(manifestUrl);
       this.$nextTick(() => {
-        document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
+        // document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
       });
 
       this.$store.dispatch('contents/initItem', itemUrl);
     },
     onAfterShow() {
-      document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
+      console.log('after show');
+      // document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
     },
   },
 };
