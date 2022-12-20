@@ -272,6 +272,10 @@ export default {
       word-break: break-all;
       user-select: none;
     }
+
+    .q-tree__arrow {
+      margin-right: 4px;
+    }
   }
 }
 
