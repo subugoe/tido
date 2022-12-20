@@ -15,10 +15,10 @@
       </div>
     </div>
     <q-separator class="q-mx-md" />
-    <div class="panel-body bg-none q-px-md">
+    <div class="panel-body overflow-hidden bg-none">
       <Loading v-if="isLoading" />
       <template v-if="tabs.length > 1">
-        <div class="tabs-container">
+        <div class="tabs-container q-px-md">
           <q-tabs
             v-model="activeTabIndex"
             @update:model-value="onViewChange"
@@ -36,9 +36,7 @@
         </q-tab-panels>
       </template>
       <template v-else-if="tabs.length === 1">
-        <div class="q-pt-md">
-          <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />
-        </div>
+        <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />
       </template>
       <Notification
         v-else

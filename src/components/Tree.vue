@@ -1,5 +1,5 @@
 <template>
-  <div class="tree-container">
+  <div ref="containerRef" class="tree-container q-px-md q-pt-md">
     <q-tree
       class="item-content"
       :class="$q.dark.isActive ? 'is-dark' : ''"
@@ -21,7 +21,7 @@
 
 <script>
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
-import { delay } from '@/utils';
+import { delay, isElementVisible } from '@/utils';
 
 export default {
   name: 'Tree',
@@ -109,10 +109,11 @@ export default {
       }
     },
     async onManifestChange() {
-      if (this.manifest && !this.collection) {
+      const { label, sequence, id: manifestId } = this.manifest;
+      if (!this.collection) {
         this.$emit('loading', true);
         await delay(300);
-        const { label, sequence, id: manifestId } = this.manifest;
+
         this.tree = [{
           label: label ?? this.getDefaultManifestLabel(),
           sequence,
@@ -124,23 +125,22 @@ export default {
             parent: manifestId,
           })),
         }];
-
-        this.$nextTick(() => {
-          this.expanded = [manifestId];
-          this.selected = this.itemUrl !== '' ? this.itemUrl : sequence[0]?.id;
-        });
       }
+
+      this.$nextTick(() => {
+        this.expanded.push(manifestId);
+        this.selected = this.itemUrl !== '' ? this.itemUrl : sequence[0]?.id;
+      });
     },
     async onItemUrlChange() {
       this.selected = this.itemUrl;
     },
-    getDefaultManifestLabel(index) {
-      const prefix = this.labels.manifest ?? this.$t('manifest');
-      return `${prefix} ${index !== undefined ? index + 1 : ''}`;
-    },
-    getDefaultItemLabel(index) {
-      const prefix = this.labels.item ?? this.$t('page');
-      return `${prefix} ${index + 1}`;
+    async onAfterShow() {
+      await delay(100);
+      const el = document.getElementById(this.itemUrl);
+      if (!isElementVisible(el, this.$refs.containerRef)) {
+        this.scrollIntoView(el);
+      }
     },
     onSelectedChange(value) {
       const { treeRef } = this.$refs;
@@ -151,9 +151,14 @@ export default {
 
       const { url: itemUrl, parent: manifestUrl } = node;
 
-      this.$nextTick(() => {
-        document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
-        setTimeout(() => this.$emit('loading', false), 400);
+      this.$nextTick(async () => {
+        await delay(300);
+        const el = document.getElementById(this.itemUrl);
+        if (!isElementVisible(el, this.$refs.containerRef)) {
+          this.scrollIntoView(el);
+        }
+        await delay(100);
+        this.$emit('loading', false);
       });
 
       if (itemUrl === this.itemUrl) return;
@@ -165,14 +170,19 @@ export default {
       }
 
       if (!this.expanded.includes(manifestUrl)) this.expanded.push(manifestUrl);
-      this.$nextTick(() => {
-        document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
-      });
 
       this.$store.dispatch('contents/initItem', itemUrl);
     },
-    onAfterShow() {
-      document.getElementById(this.itemUrl).scrollIntoView({ block: 'center' });
+    getDefaultManifestLabel(index) {
+      const prefix = this.labels.manifest ?? this.$t('manifest');
+      return `${prefix} ${index !== undefined ? index + 1 : ''}`;
+    },
+    getDefaultItemLabel(index) {
+      const prefix = this.labels.item ?? this.$t('page');
+      return `${prefix} ${index + 1}`;
+    },
+    scrollIntoView(el) {
+      el.scrollIntoView({ block: 'center', behavior: 'smooth' });
     },
   },
 };
@@ -185,6 +195,7 @@ export default {
   flex-direction: column;
   height: 100%;
   position: relative;
+  overflow: auto;
 
   :deep(.item-content) {
     display: flex;

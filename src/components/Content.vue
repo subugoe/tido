@@ -1,5 +1,5 @@
 <template>
-  <div class="content-container">
+  <div class="content-container q-px-md q-pt-md">
     <div v-if="notificationMessage" class="q-pa-sm">
       <Notification
         :message="$t(notificationMessage)"
