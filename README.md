@@ -420,11 +420,11 @@ npm run serve:dev
 It will be available under `localhost:5173`.
 
 #### Serve examples (production build)
-You can serve some examples with `npm run serve:prod` which will copy the built files into `/examples` directory.
-If you didn't run a build before then this will be the full command:
+You can serve a production build by viewing example configurations that we provide under `/examples`.
+Run this command which will create a TIDO production build and copy the result files into `/examples`:
 
 ```bash
-npm run build && npm run serve:prod
+npm run serve:prod
 ```
 
 This examples are available under `localhost:2222`. Each example has its own HTML file:
