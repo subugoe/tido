@@ -97,7 +97,7 @@ export const createSvgIcon = (name) => {
   svg.setAttribute('class', 'q-icon q-mx-xs');
   svg.setAttribute('focusable', 'false');
   svg.setAttribute('role', 'presentation');
-  svg.setAttribute('style', 'border:0;');
+  svg.setAttribute('style', 'border:0 !important;');
   svg.setAttribute('viewBox', viewBox);
 
   path.split('&&').forEach((pathPart) => {

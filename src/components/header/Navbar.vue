@@ -4,7 +4,7 @@
       v-if="manifest"
       :disable="!hasPrev"
       unelevated
-      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'primary'"
+      color="primary"
       class="q-px-sm q-mr-sm previous-item"
       :icon="prevIcon"
       :label="prevButtonLabel"
@@ -16,7 +16,7 @@
     <q-btn
       v-if="manifest"
       unelevated
-      :color="$q.dark.isActive ? 'grey-1 text-grey-10' : 'primary'"
+      color="primary"
       :disable="!hasNext"
       class="q-px-sm next-item"
       :icon-right="nextIcon"
