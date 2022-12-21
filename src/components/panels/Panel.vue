@@ -97,13 +97,16 @@ export default {
   },
   methods: {
     getContentUrl(type) {
-      let contentItem = this.item.content.find((c) => c.type.split('type=')[1] === type);
-      if (!contentItem && this.item.content.length > 0) {
+      let contentItem = null;
+      if (!type) {
         [contentItem] = this.item.content;
         // TODO: this should be moved to loading time in order dynamically recognize all content types
         //  instead of only the first one
         this.$store.dispatch('config/setContentType', contentItem.type.split('type=')[1]);
       }
+
+      contentItem = this.item.content.find((c) => c.type.split('type=')[1] === type);
+
       return contentItem ? contentItem.url : null;
     },
     init(views) {
