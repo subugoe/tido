@@ -1,6 +1,6 @@
 <template>
-  <div class="root panels-target q-gutter-md q-px-lg q-pb-md">
-    <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item">
+  <div class="root panels-target q-gutter-md-md q-px-md q-px-lg-lg q-pb-lg-md">
+    <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item q-pb-md q-pb-md-none">
       <Panel :panel="panel" :active-view="getActiveView(i)" @active-view="onActiveViewChange($event, i)" />
     </div>
   </div>
@@ -47,8 +47,8 @@ export default {
   flex: 1;
   flex-direction: column;
   overflow: hidden;
-  @media (max-width: $breakpoint-sm-custom-md) {
-    min-height: 100vh;
+  @media (max-width: $breakpoint-sm-max) {
+    max-height: 66vh;
   }
 }
 
@@ -57,10 +57,10 @@ export default {
   flex: 1;
   flex-direction: row;
   overflow: hidden;
-  @media (max-width: $breakpoint-sm-custom-md) {
+  @media (max-width: $breakpoint-sm-max) {
     flex-direction: column;
     height: auto;
-    overflow: scroll;
+    overflow: auto;
   }
 }
 

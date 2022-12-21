@@ -1,18 +1,18 @@
 <template>
   <div
-    class="header q-px-lg q-py-md"
+    class="header q-pa-md q-px-lg-lg"
     :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'"
     v-if="show"
   >
-    <div class="flex items-start">
+    <div class="flex items-start title-container">
       <TitleBar :item="item"/>
-      <div class="col flex justify-end">
+      <div class="q-ml-auto">
         <Tools/>
       </div>
     </div>
-    <div v-if="item" class="flex">
+    <div v-if="item" class="flex column-xs row-md">
       <Navbar v-if="showNavbar"/>
-      <PanelsToggle v-if="showPanelsToggle" class="flex justify-sm-end col" />
+      <PanelsToggle v-if="showPanelsToggle" class="flex justify-sm-end col q-mt-md q-mt-md-none" />
     </div>
   </div>
 </template>
@@ -61,4 +61,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.title-container {
+  @media (max-width: $breakpoint-sm-max) {
+    flex-direction: column-reverse;
+  }
+}
 </style>

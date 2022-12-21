@@ -320,7 +320,7 @@ export default {
   flex-direction: column;
   overflow: hidden;
 
-  @media (max-width: $breakpoint-sm-custom-md) {
+  @media (max-width: $breakpoint-sm-max) {
     min-height: 100%;
   }
 }

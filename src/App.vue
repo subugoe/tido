@@ -5,7 +5,7 @@
       <div v-if="ready" class="root">
         <MainView/>
       </div>
-      <div v-else class="error-container q-pa-lg q-pt-xl">
+      <div v-else class="error-container q-pa-md q-pa-lg-lg q-pt-xl">
         <div class="full-height full-width flex items-center justify-center column" style="border: dashed 3px #ccc; border-radius: 6px">
           <template v-if="isLoading">
             <Loading background="none"></Loading>
@@ -174,13 +174,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#tido {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  min-height: 800px;
-  min-width: 400px;
-}
 .root {
   display: flex;
   flex: 1;
@@ -190,9 +183,9 @@ export default {
 
 .viewport {
   flex: 1;
-  @media (max-width: $breakpoint-sm-custom-md) {
+  @media (max-width: $breakpoint-sm-max) {
     height: auto;
-    overflow: scroll;
+    overflow: auto;
   }
 }
 
