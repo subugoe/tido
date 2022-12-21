@@ -22,5 +22,5 @@ export const getIconByType = ({ config, activeViews }) => (type) => {
 
   const viewIndex = activeViews[panelIndex];
   const types = config.panels[panelIndex].views[viewIndex].connector.options?.types;
-  return types.find(({ name }) => name === type)?.icon;
+  return types.find(({ name }) => name === type)?.icon || 'biPencilSquare';
 };

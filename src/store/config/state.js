@@ -74,19 +74,6 @@ export default function ConfigState() {
               default: true,
               connector: {
                 id: 4,
-                options: {
-                  type: 'transcription',
-                },
-              },
-            },
-            {
-              id: 'text2',
-              label: 'Transliteration',
-              connector: {
-                id: 4,
-                options: {
-                  type: 'transliteration',
-                },
               },
             },
           ],

@@ -1,5 +1,5 @@
 import messages from 'src/i18n';
-import { delay, isUrl } from '@/utils';
+import { isUrl } from '@/utils';
 import BookmarkService from '@/services/bookmark';
 import { i18n } from '@/i18n';
 
@@ -171,6 +171,14 @@ export const setShowPanel = ({ commit, getters }, { index, show }) => {
   if (panelIndexes.length === getters.config.panels.length) panelIndexes = [];
 
   BookmarkService.updateShow(panelIndexes);
+};
+
+export const setContentType = ({ commit, getters }, type) => {
+  const { config } = getters;
+  const newConfig = { ...config };
+
+  newConfig.panels[3].views[0].connector.options = { type };
+  commit('setConfig', newConfig);
 };
 
 export const setDefaultActiveViews = async ({ commit, getters }) => {

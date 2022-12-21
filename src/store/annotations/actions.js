@@ -140,7 +140,7 @@ export const initAnnotations = async ({ dispatch }, url) => {
   }
 };
 
-export const addHighlightHoverListeners = ({ dispatch, getters, rootGetters }) => {
+export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
   const { filteredAnnotations } = getters;
   const annotationIds = filteredAnnotations.reduce((acc, curr) => {
     const { id } = curr;
