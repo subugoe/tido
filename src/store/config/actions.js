@@ -40,6 +40,10 @@ function validatePanels(value) {
   return !!(value) && Array.isArray(value);
 }
 
+function validateLang(value) {
+  return !!(value);
+}
+
 function createDefaultActiveViews(panelsConfig) {
   return panelsConfig
     .filter((p) => p.views && p.views.length > 0)
@@ -55,7 +59,7 @@ function createDefaultActiveViews(panelsConfig) {
 
 function discoverCustomConfig(customConfig) {
   const {
-    translations, collection, manifest, item, panels,
+    translations, collection, manifest, item, panels, lang
   } = customConfig;
 
   return {
@@ -64,6 +68,7 @@ function discoverCustomConfig(customConfig) {
     ...(validateItem(item) && { item }),
     ...(validateTranslations(translations) && { translations }),
     ...(validatePanels(panels) && { panels }),
+    ...(validateLang(lang) && { lang }),
   };
 }
 

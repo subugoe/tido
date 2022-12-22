@@ -111,7 +111,7 @@ export default function ConfigState() {
         item: 'Sheet',
         manifest: 'Manuscript',
       },
-      lang: 'en-US',
+      lang: 'en',
       meta: {
         collection: {
           all: true,
