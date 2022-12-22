@@ -1,5 +1,5 @@
 <template>
-  <div class="root panels-target q-gutter-md-md q-px-md q-px-lg-lg q-pb-lg-md">
+  <div class="root panels-target q-gutter-md-md q-px-md q-px-lg-lg q-pb-md-md">
     <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item q-pb-md q-pb-md-none">
       <Panel :panel="panel" :active-view="getActiveView(i)" @active-view="onActiveViewChange($event, i)" />
     </div>

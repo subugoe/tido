@@ -264,7 +264,6 @@ export default {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  overflow: auto;
   position: relative;
 
   :deep(.q-tabs__content .q-tab) {
@@ -309,8 +308,10 @@ export default {
     display: flex;
     flex-direction: column;
     flex: 1;
-    margin-left: -16px;
-    margin-right: -16px;
+  }
+
+  .q-tab-panel {
+    padding: 0;
   }
 }
 

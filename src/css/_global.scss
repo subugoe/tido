@@ -225,7 +225,7 @@ h3 {
 }
 
 .q-btn__content {
-  padding: 0px !important;
+  padding: 0 !important;
 }
 
 .q-dialog {
@@ -296,6 +296,11 @@ h3 {
 
 .q-menu {
   position: absolute !important;
+}
+
+.q-btn__content > *, .q-checkbox > *, .q-item > *, .q-tabs > *  {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 #tido-backdrop {

@@ -1,5 +1,5 @@
 <template>
-  <div class="row no-wrap justify-end">
+  <div class="flex no-wrap justify-end">
     <Language v-if="showLanguageSwitch" />
     <q-btn
       flat
