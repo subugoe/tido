@@ -1,6 +1,6 @@
 <template>
   <div id="tido">
-    <div class="root viewport column" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
+    <div class="viewport column" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
       <Header/>
       <div v-if="ready" class="root">
         <MainView/>
@@ -179,6 +179,12 @@ export default {
   flex: 1;
   font-size: 16px;
   overflow: hidden;
+
+  @media (max-width: $breakpoint-sm-max) {
+    flex-direction: column;
+    height: auto;
+    overflow: auto;
+  }
 }
 
 .viewport {
