@@ -44,6 +44,7 @@ export default {
 
 .panels-target {
   display: flex;
+  flex: 1;
   @media (max-width: $breakpoint-sm-max) {
     flex-direction: column;
   }
