@@ -8,7 +8,7 @@ describe('Content - Multiple Tabs', () => {
   });
   it('Should display first content tab', () => {
     cy
-      .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .first()
       .should('have.class', 'q-tab--active');
 
@@ -16,7 +16,7 @@ describe('Content - Multiple Tabs', () => {
   });
   it('Should switch to second tab', () => {
     cy
-      .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .click()
       .should('have.class', 'q-tab--active')
@@ -27,7 +27,7 @@ describe('Content - Multiple Tabs', () => {
   it('Should highlight from text', () => {
     // Test content
     cy
-      .get('.root.panels-target > .item:nth-child(3) #text-content')
+      .get('.panels-target > .item:nth-child(3) #text-content')
       .contains('ܚܝܩܪ')
       .should('have.attr', 'data-annotation-level', '0')
       .click()
@@ -38,7 +38,7 @@ describe('Content - Multiple Tabs', () => {
 
     // Test annotation
     cy
-      .get('.root.panels-target > .item:nth-child(4) .item-content .q-item')
+      .get('.panels-target > .item:nth-child(4) .item-content .q-item')
       .first()
       .should('have.class', 'active');
   });
@@ -46,14 +46,14 @@ describe('Content - Multiple Tabs', () => {
   it('Should highlight from annotation', () => {
     // Test annotation
     cy
-      .get('.root.panels-target > .item:nth-child(4) .item-content .q-item')
+      .get('.panels-target > .item:nth-child(4) .item-content .q-item')
       .first()
       .click()
       .should('have.class', 'active');
 
     // Test content
     cy
-      .get('.root.panels-target > .item:nth-child(3) #text-content')
+      .get('.panels-target > .item:nth-child(3) #text-content')
       .contains('ܚܝܩܪ')
       .should('have.attr', 'data-annotation-level', '1')
       .and('have.css', 'background-color', 'rgb(227, 242, 253)')
@@ -66,17 +66,17 @@ describe('Content - Multiple Tabs', () => {
 
     // Test content
     cy
-      .get('.root.panels-target > .item:nth-child(3)')
+      .get('.panels-target > .item:nth-child(3)')
       .get('#text-content')
       .contains('ܚܝܩܪ')
-      .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .first()
       .should('have.class', 'q-tab--active');
   });
 
   it('Should stay on second tab when switch item', () => {
     cy
-      .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .click()
       .get('#text-content')
@@ -87,7 +87,7 @@ describe('Content - Multiple Tabs', () => {
     cy.get('button.next-item').click();
 
     cy
-      .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .should('have.class', 'q-tab--active');
 
@@ -100,13 +100,13 @@ describe('Content - Multiple Tabs', () => {
       .should('have.attr', 'style', 'font-size: 16px;');
 
     // Increasing font size
-    cy.get('.root.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Increase"]').click();
+    cy.get('.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Increase"]').click();
     cy.get('#text-content>div')
       .first()
       .should('have.attr', 'style', 'font-size: 18px;');
 
     // Decreasing font size
-    cy.get('.root.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Decrease"]').click();
+    cy.get('.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Decrease"]').click();
     cy.get('#text-content div')
       .first()
       .should('have.attr', 'style', 'font-size: 16px;');
@@ -114,7 +114,7 @@ describe('Content - Multiple Tabs', () => {
 
   it('Should not increase font more than 28', () => {
     // Increasing font size
-    cy.get('.root.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Increase"]')
+    cy.get('.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Increase"]')
       .click() // 18px
       .click() // 20px
       .click() // 22px
@@ -130,7 +130,7 @@ describe('Content - Multiple Tabs', () => {
 
   it('Should not decrease font less than 14', () => {
     // Increasing font size
-    cy.get('.root.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Decrease"]')
+    cy.get('.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Decrease"]')
       .click() // 14px
       .should('be.disabled');
 
@@ -145,15 +145,15 @@ describe('Content - Multiple Tabs', () => {
 describe('Content - Multiple Tabs with different manifest', () => {
   it('Should switch to first tab when switch manifest', () => {
     cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r17b/3r17b-82a/latest/item.json`)
-      .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .click()
-      .get('.root.panels-target > .item:nth-child(3) .q-panel:nth-child(2) #text-content')
+      .get('.panels-target > .item:nth-child(3) .q-panel:nth-child(2) #text-content')
       .contains('اسمه')
       .get('button.previous-item')
       .click()
       .wait(1000)
-      .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(0)
       .should('have.class', 'q-tab--active')
       .get('#text-content')

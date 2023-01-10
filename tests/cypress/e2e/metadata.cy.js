@@ -3,7 +3,7 @@ describe('Metadata', () => {
     cy.visit('/ahiqar-arabic-karshuni-local.html')
       .get('#text-content')
       .should('be.visible')
-      .get('.root.panels-target > .item:nth-child(1) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(1) .q-tabs__content .q-tab')
       .eq(1)
       .click()
       .get('.metadata-container')

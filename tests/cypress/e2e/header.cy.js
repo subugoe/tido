@@ -4,7 +4,7 @@ describe('Header initial', () => {
   beforeEach(() => {
     cy
       .visit('/ahiqar-arabic-karshuni-local.html')
-      .get('.root.panels-target > .item:nth-child(3)').find('.panel-body')
+      .get('.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');
   });
@@ -18,13 +18,13 @@ describe('Header initial', () => {
   });
 
   it('Should toggle panels', () => {
-    cy.get('.root.panels-target').children('.item').should('have.length', 4);
+    cy.get('.panels-target').children('.item').should('have.length', 4);
 
     // Clicking on first item
     cy
       .get('.panels-toggle .row div:first-child .q-checkbox')
       .click()
-      .get('.root.panels-target')
+      .get('.panels-target')
       .children('.item')
       .first()
       .should('not.be.visible');
@@ -33,7 +33,7 @@ describe('Header initial', () => {
     cy
       .get('.panels-toggle .row div:first-child .q-checkbox')
       .click()
-      .get('.root.panels-target')
+      .get('.panels-target')
       .children('.item')
       .first()
       .should('be.visible');
@@ -49,7 +49,7 @@ describe('Header - Item and Manifest changing', () => {
   beforeEach(() => {
     cy
       .visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r7vd/3r7vd-130/latest/item.json`)
-      .get('.root.panels-target > .item:nth-child(3)').find('.panel-body')
+      .get('.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');
   });

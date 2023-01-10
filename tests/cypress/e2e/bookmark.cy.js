@@ -12,7 +12,7 @@ describe('Bookmarking', () => {
   });
 
   it('Should bookmark tree/metadata panel', () => {
-    cy.get('.root.panels-target > .item:nth-child(1) .q-tabs__content .q-tab')
+    cy.get('.panels-target > .item:nth-child(1) .q-tabs__content .q-tab')
       .eq(1)
       .click();
 
@@ -21,7 +21,7 @@ describe('Bookmarking', () => {
 
   it('Should change text panel value in query', () => {
     cy
-      .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .click()
       .should('have.class', 'q-tab--active')
@@ -34,10 +34,10 @@ describe('Bookmarking', () => {
 
   it('Should change annotation panel value in query', () => {
     cy
-      .get('.root.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
       .eq(1)
       .click()
-      .get('.root.panels-target > .item:nth-child(4) .q-panel:nth-child(2)')
+      .get('.panels-target > .item:nth-child(4) .q-panel:nth-child(2)')
       .should('be.visible')
       .url()
       .then((value) => decodeURIComponent(value))
@@ -73,9 +73,9 @@ describe('Bookmarking', () => {
 
   it('Should bookmark first tab active when manifest changed', () => {
     cy
-      .get('.root.panels-target > .item:nth-child(4) .q-list')
+      .get('.panels-target > .item:nth-child(4) .q-list')
       .should('be.visible')
-      .get('.root.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+      .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
       .eq(1)
       .click()
       .wait(400)// wait for tab switch transition
@@ -86,11 +86,11 @@ describe('Bookmarking', () => {
     ).click();
 
     cy.get(
-      '.root.panels-target .q-tree--standard.item-content > .q-tree__node > .q-tree__node-collapsible > .q-tree__children > .q-tree__node:nth-child(2) > .q-tree__node-header',
+      '.panels-target .q-tree--standard.item-content > .q-tree__node > .q-tree__node-collapsible > .q-tree__children > .q-tree__node:nth-child(2) > .q-tree__node-header',
     ).click();
 
     cy.get(
-      '.root.panels-target .q-tree--standard.item-content > .q-tree__node > .q-tree__node-collapsible > .q-tree__children > .q-tree__node:nth-child(2) > .q-tree__node-collapsible > .q-tree__children .q-tree__node:first-child .q-tree__node-header',
+      '.panels-target .q-tree--standard.item-content > .q-tree__node > .q-tree__node-collapsible > .q-tree__children > .q-tree__node:nth-child(2) > .q-tree__node-collapsible > .q-tree__children .q-tree__node:first-child .q-tree__node-header',
     ).click();
 
     cy.url().then((value) => decodeURIComponent(value)).should('not.include', '3_1');
@@ -104,17 +104,17 @@ describe('Bookmarking - URL first', () => {
       .then(() => {
         cy
           // Tree & Metadata panel
-          .get('.root.panels-target > .item:nth-child(1) .q-tabs__content .q-tab')
+          .get('.panels-target > .item:nth-child(1) .q-tabs__content .q-tab')
           .eq(1)
           .should('have.class', 'q-tab--active')
 
           // Text panel
-          .get('.root.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+          .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
           .eq(1)
           .should('have.class', 'q-tab--active')
 
           // Annotation panel
-          .get('.root.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+          .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
           .eq(1)
           .should('have.class', 'q-tab--active');
       });

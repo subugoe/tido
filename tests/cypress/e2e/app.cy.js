@@ -4,7 +4,7 @@ describe('Tido', () => {
   beforeEach(() => {
     cy
       .visit('/ahiqar-arabic-karshuni-local.html')
-      .get('.root.panels-target > .item:nth-child(3)').find('.panel-body')
+      .get('.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');
   });
@@ -17,51 +17,51 @@ describe('Tido', () => {
 
   it('Should render panels', () => {
     cy
-      .get('.root.panels-target')
+      .get('.panels-target')
       .should('be.visible')
       .children('.item')
       .should('have.length', 4);
 
     // Panel 1
     cy
-      .get('.root.panels-target > .item:nth-child(1)')
+      .get('.panels-target > .item:nth-child(1)')
       .find('.panel-header')
       .contains('Contents & Metadata');
 
     cy
-      .get('.root.panels-target > .item:nth-child(1)').find('.panel-body').find('.q-tabs .q-tab')
+      .get('.panels-target > .item:nth-child(1)').find('.panel-body').find('.q-tabs .q-tab')
       .should('have.length', 2)
       .eq(0)
       .should('have.class', 'q-tab--active');
 
     // Panel 2
     cy
-      .get('.root.panels-target > .item:nth-child(2)')
+      .get('.panels-target > .item:nth-child(2)')
       .find('.panel-header')
       .contains('Image');
 
     cy
-      .get('.root.panels-target > .item:nth-child(2)').find('.panel-body').find('#openseadragon')
+      .get('.panels-target > .item:nth-child(2)').find('.panel-body').find('#openseadragon')
       .should('be.visible');
 
     // Panel 3
     cy
-      .get('.root.panels-target > .item:nth-child(3)')
+      .get('.panels-target > .item:nth-child(3)')
       .find('.panel-header')
       .contains('Transcription');
 
     cy
-      .get('.root.panels-target > .item:nth-child(3)').find('.panel-body').find('#text-content')
+      .get('.panels-target > .item:nth-child(3)').find('.panel-body').find('#text-content')
       .should('be.visible');
 
     // Panel 4
     cy
-      .get('.root.panels-target > .item:nth-child(4)')
+      .get('.panels-target > .item:nth-child(4)')
       .find('.panel-header')
       .contains('Annotations');
 
     cy
-      .get('.root.panels-target > .item:nth-child(4)').find('.panel-body').find('.q-tabs .q-tab')
+      .get('.panels-target > .item:nth-child(4)').find('.panel-body').find('.q-tabs .q-tab')
       .should('have.length', 2)
       .eq(0)
       .should('have.class', 'q-tab--active');
@@ -99,18 +99,18 @@ describe('Tido', () => {
   //
   //
   // it('Should highlight all annotations', () => {
-  //   cy.get('.root.panels-target .item').last()
+  //   cy.get('.panels-target .item').last()
   //     .get('.item-content .q-list .q-item').should('have.length.at.least', 1);
   //   cy.get('.fab-container .q-fab').click();
   //
   //   cy.get('.q-fab .q-fab__actions .q-btn').first().click();
   //
-  //   cy.get('.root.panels-target .item').last()
+  //   cy.get('.panels-target .item').last()
   //     .get('.item-content .q-list .q-item').should('have.class', 'active');
   // });
   //
   // it('Should remove all highlights', () => {
-  //   cy.get('.root.panels-target .item').last().get('.item-content .q-list .q-item')
+  //   cy.get('.panels-target .item').last().get('.item-content .q-list .q-item')
   //     .should('have.length.at.least', 1);
   //
   //   // Click on Highlight all
@@ -120,7 +120,7 @@ describe('Tido', () => {
   //   // Click on remove all highlight
   //   cy.get('.fab-container .q-fab').click();
   //   cy.get('.q-fab .q-fab__actions .q-btn').last().click();
-  //   cy.get('.root.panels-target .item').last().get('.item-content .q-list .q-item')
+  //   cy.get('.panels-target .item').last().get('.item-content .q-list .q-item')
   //     .should('not.have.class', 'active');
   // });
   //
