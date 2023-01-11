@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-image-action flex items-center">
+  <div class="panel-image-action flex items-center justify-end">
     <q-btn
       v-for="(btn, idx) in buttons"
       :id="btn.id"

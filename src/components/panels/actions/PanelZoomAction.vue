@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-zoom-action">
+  <div class="panel-zoom-action items-center flex justify-end">
     <q-btn
       flat
       round
@@ -77,6 +77,10 @@ export default {
 </script>
 
 <style scoped>
+.q-btn {
+  flex-basis: 0%;
+}
+
 .panel-zoom-action {
   margin-right: -6px;
 }

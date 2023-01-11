@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center">
+  <div class="flex items-center justify-end">
     <q-checkbox indeterminate-value="maybe" v-model="selectedModel" :label="label" dense size="xs" />
   </div>
 </template>
@@ -29,4 +29,7 @@ export default {
 </script>
 
 <style scoped>
+.q-btn {
+  flex-basis: 0%;
+}
 </style>
