@@ -210,6 +210,12 @@ h3 {
 
 .q-btn--dense .q-icon {
   font-size: 1rem;
+
+  svg {
+    // Safari fix
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .q-btn--outline::before {

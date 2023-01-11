@@ -263,6 +263,11 @@ export default {
         transition: none;
         flex-wrap: unset;
       }
+      .q-icon {
+        // Safari fix
+        width: 16px;
+        height: 16px;
+      }
     }
 
     .q-tree__children {
