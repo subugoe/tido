@@ -2,6 +2,115 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.5.2...v3.0.0) (2023-01-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* rework the config so panels hold their views and the required settings inside
+* implement embedding
+
+### Features
+
+* add "zero config" behaviour, add default config with initial panels setup, load collection, manifest or item from url ([44a433e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/44a433ec88e77b299fc7dc7f4f8f87381ec9ea25))
+* add Axios for http service, remove unused utils and mixins, ([113a90e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/113a90ec079a9e43390e616d81c4189729c8f301))
+* add default manifest label at tree ([069b035](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/069b03565ce4407fc5fec678d9b3887756e94355))
+* add icon util ([67c657b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/67c657b7b8c63391e8dbe56a5ea8de7cc24b8d60))
+* add new panels rendering that renders views as tabs and dynamic panel actions ([2dbecd5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2dbecd5cdf358ad7b32d4731d4b9c297123df9cc))
+* add scrollbar styles, minor design updates ([af15324](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/af15324f76afa5f454e9907a94bfb7f02fab5117))
+* design update ([4af7c85](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4af7c859eeae3d07a4890d27a01a994ed303b180))
+* import only used icons to reduce bundle size and provide config option to define annotation icons as url ([7f68a79](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7f68a7993d3b9ef721d5e53f445b97ca9ebb2a7f))
+* implement TIDO instance for embedding into other projects and code refactors. ([ce613aa](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ce613aaed826ea43b5b4ec3dc0d0baeeefd52023))
+* refactor bookmark service to work only with URL updates ([ee57456](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ee57456065277c62496e3663357d08f8ad7b8126))
+* remove tabs from annotations view component and display only the list, update interactions with the content view ([bd9244e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/bd9244e5792abe476d510808fb95542bb0a9f026))
+* remove tabs from content view component and display only the text ([dc62cbf](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dc62cbff0a2aa618233ce5de5340c6acfe3c2fa2))
+* remove themes feature ([cbad4a4](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/cbad4a40dc7e678269e03e767d4b10447c5889e4))
+* rework the config so panels hold their views and the required settings inside ([a599ec3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/a599ec31ea674d9ad6507ad6e2041b721a7daed1))
+* move hover listeners to content ([c987eca](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c987ecae9d47c4615c2931d0dcb90aa057cd9815))
+* update header design, add dark mode button, refactor panel toggles to use Quasar checkboxes ([57e95d4](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/57e95d489c31ff0a1b3341f96747742285e4d3b1))
+* update metadata view, use only MetadataItem to display the values ([798c630](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/798c63077b02d5c08da9f5ad2e946ed17f61d25f))
+* update panel spacings ([89de13f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/89de13fe448faa0f33832d5b3c46f3c4845c0ad9))
+* update primary color ([f0941af](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f0941afd09eeb536b6d53f9b6f14549487b1f132))
+* update translations, use only this_format for TIDO strings and provide custom translations from the config ([f9e7c67](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f9e7c6730724c1b0c10c1e54abd3c4adc2997fb8))
+* update tree view to work more with internal comp state ([6c4503c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/6c4503c724976fe56d2127907871c31dd11ff34f))
+
+
+### Bug Fixes
+
+* dark mode nav buttons primary, svg icon underline ([5aedfb8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5aedfb8a525ea2b29e2a79ec9858e584367fbe5d))
+* discover first content type if no config is present ([f1bb8a7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f1bb8a77df3fdd4a3325232d2c914b97d49c64b5))
+* highlighting all annotation when switching tab ([f86e4fc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f86e4fc3fc4267b643755925b8640e6667b4daab))
+* main loading spinner ([bfbfe13](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/bfbfe1316d9fc9d5fb465039d81c9dbb902e3185))
+* main view layout ([6806fbc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/6806fbc3e375a484e97e8a29ea2d32bf78269924))
+* mobile panel styles ([cb334ea](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/cb334eaf299b11c76e05038a42b596eea4ff5440))
+* omit tree selection when the item url is equal active item url in state ([0af84c7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0af84c7f3512eeb64f255ab88dd64a076952e41d))
+* remove border from annotation icons in text ([b88572a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b88572a3290b935ad9ec15630d6647e861a9e57b))
+* remove color transition in annotation items ([58dbd57](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/58dbd57d0418c1b7d8c671fe6c3bc7362962498d))
+* remove color transition in labels ([c032090](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c032090f8e477b9bbc0e9c717aac5b1e81f46f16))
+* safari display ([da26acc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/da26accc99321d0f606075b5dc83d60e291b2d26))
+* set body font to 16px ([f52217e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f52217ef3be09b12e48712b3912312b805183e21))
+* set content type ([d7e04c6](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d7e04c62e9049a5575e9bda8f9c0f0d36d75eaa5))
+* tests ([2ed2cc4](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2ed2cc47604137477b45176d7be4dce50e5d2ee5))
+* tree scroll into view ([f4cde78](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f4cde7891f17f262e514995cfdcc5de7eb3a6c61))
+* update dark mode annotation highlighting ([843a1ba](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/843a1ba67be93d16dbfe9e340203b48abc9966ef))
+* update tabs label typography ([7b14a0c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7b14a0c8177c363b06f18ce31707b6769d87baf4))
+
+
+### Improvements
+
+* export router instance ([73b7109](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/73b710953fb68a33f288f568c6fdcd1a7310f6fc))
+
+
+### Refactoring
+
+* clean up ([f54afa9](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f54afa95e8bd6f0d966a9a8e191586079583ef15))
+* minor design updates to Loading and Color ([2e33fd6](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2e33fd690f9e7d4788d47fea45a45d6859dd2f82))
+* update code style ([dc7cd23](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dc7cd23b5789355f785bacc82a1867ae16af1395))
+* update examples ([97c2dc5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/97c2dc58fc8ff583e7b30680aa6960a1884c11c3))
+* update index page with new config ([44f3748](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/44f3748086b5ac36215a7647eef8dea4d1fd9e4b))
+* update quasar config ([2878fee](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2878fee6577c9c1d73da5f1e239326da3924df80))
+
+
+### Chore
+
+* add config menu to examples ([9d9784b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/9d9784b37d8628500a059abf8a07c93b807fc40e))
+* add tido.css to examples ([7d40268](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7d40268a6b5f1215da73d23b248bfe854de60922))
+* remove unused CI scripts ([262b8b3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/262b8b3f337d85dabdde5a83909633eb56c80429))
+* remove unused index template. ([343a35a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/343a35a58c713baa365a4b4b06fe22316e5254de))
+* remove unused packages ([2dab9df](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2dab9df4a4395937228b68b2c5555df69fbd0fa1))
+* set nvm version to 16 ([bf7e49b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/bf7e49b80887a0ae64454daa917b417eb66d4262))
+* update config menu ([0e764fc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0e764fca21d92e6c3e2843a4ec4d770e7c09dd48))
+* update dependencies ([b35e97f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b35e97fa90a5cbd87117a593ff6579b451705cf4))
+
+
+### Tests
+
+* use mock API server for e2e tests; add tree, metadata, panel, header tests and update existing to new features; execute all with "start-server-and-test" command ([40e417e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/40e417e8ded8f4f2dfa38104af91f5181a7e2385))
+
+
+### Continuos Integration
+
+* moved config-tester to examples folder, deploys to {branch_name}/examples/{example_name}.html ([2be3a40](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2be3a4044e48f8817325b153ceb618533b0beabd))
+* run build on every branch, run e2e tests on all except main ([9e82093](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/9e82093c1d358d43cc8d628da3f99ade4a960b8a))
+* update pipeline with new e2e tests ([1714797](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/17147975a51512960c48fd115bcfb201f8421c26))
+* use the same build for every stage, add stop_env stage ([32d5154](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/32d515419b8533f2629e81399121757d3f9bbb45))
+
+
+### Build System
+
+* run build at serve prod ([be24c5b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/be24c5bd8e43ad19bedc6384942ee8c16840403d))
+
+
+### Styling
+
+* update responsive design ([674a20b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/674a20b9eaa3efd8d55e9cda92da44ec112df29f))
+
+
+### Docs
+
+* update README ([d7773c3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d7773c36f51c6e21735811495bf67966bddf3c29))
+
+
 ### [2.5.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.5.1...v2.5.2) (2022-09-15)
 
 
@@ -244,7 +353,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ⚠ BREAKING CHANGES
 
-* We expect now an annotation target object from the AnnotationAPI that can result in a valid CSS selector. If the target does not provide either a CssSelector or RangeSelector objects, we fallback to target.id build a CSS selector from that. 
+* We expect now an annotation target object from the AnnotationAPI that can result in a valid CSS selector. If the target does not provide either a CssSelector or RangeSelector objects, we fallback to target.id build a CSS selector from that.
 
 ### Features
 
