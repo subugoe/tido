@@ -325,4 +325,8 @@ export default {
     min-height: 100%;
   }
 }
+
+:deep(.actions .q-btn) {
+  flex-basis: 0%;
+}
 </style>

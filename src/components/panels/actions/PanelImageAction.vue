@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-zoom-action flex items-center">
+  <div class="panel-image-action flex items-center">
     <q-btn
       v-for="(btn, idx) in buttons"
       :id="btn.id"
@@ -39,7 +39,8 @@ export default {
 .q-btn {
   display: inherit !important;
 }
-.panel-zoom-action {
+.panel-image-action {
   margin-right: -6px;
+  flex-wrap: unset;
 }
 </style>
