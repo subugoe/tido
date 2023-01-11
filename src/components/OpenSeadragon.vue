@@ -1,7 +1,7 @@
 <template>
   <div class="imageItem">
     <div v-if="error" class="q-pa-sm" style="margin-top: 5rem">
-      <Notification :message="$t(error.message)" title-key="no_image_available" type="warning" />
+      <Notification :message="$t(error.message)" :title="$t('no_image_available')" type="warning" />
     </div>
     <figure v-else id="openseadragon" class="item"></figure>
   </div>
