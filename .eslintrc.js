@@ -1,13 +1,8 @@
 module.exports = {
   root: true,
 
-  parserOptions: {
-    parser: '@babel/eslint-parser',
-    sourceType: 'module'
-  },
-
   env: {
-    browser: true
+    browser: true,
   },
 
   extends: [
@@ -23,16 +18,16 @@ module.exports = {
 
   // required to lint *.vue files
   plugins: [
-    'vue'
+    'vue',
   ],
 
   globals: {
-    'ga': true, // Google Analytics
-    'cordova': true,
-    '__statics': true,
-    'process': true,
-    'Capacitor': true,
-    'chrome': true
+    ga: true, // Google Analytics
+    cordova: true,
+    __statics: true,
+    process: true,
+    Capacitor: true,
+    chrome: true,
   },
 
   // add your custom rules here
@@ -48,12 +43,15 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/no-extraneous-dependencies': 'off',
     'import/prefer-default-export': 'off',
+    'import/no-mutable-exports': 'off',
     'prefer-promise-reject-errors': 'off',
     'no-use-before-define': 'off',
     'no-return-assign': 'off',
     'vue/multi-word-component-names': 'off',
     'no-promise-executor-return': 'off',
     'vue/no-deprecated-slot-attribute': 'off',
+    'no-throw-literal': 'off',
+    'class-methods-use-this': 'off',
 
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',

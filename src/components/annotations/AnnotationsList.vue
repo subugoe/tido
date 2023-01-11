@@ -4,17 +4,14 @@
       v-for="annotation in configuredAnnotations"
       :id="'list' + annotation.strippedId"
       :key="annotation.strippedId"
-      :class="$q.dark.isActive ? { 'bg-grey-9 active': isActive(annotation) } : { 'bg-grey-4 active': isActive(annotation) }"
+      :class="$q.dark.isActive ? { 'bg-grey-7 active': isActive(annotation) } : { 'bg-grey-4 active': isActive(annotation) }"
       class="q-pa-sm q-pl-xs q-mb-xs"
       :clickable="!isText(annotation)"
       padding="xs"
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
-      <q-item-section
-        avatar
-        class="q-mr-none"
-      >
-        <AnnotationIcon :content-type="annotation.body['x-content-type']" />
+      <q-item-section avatar class="q-mr-none">
+        <AnnotationIcon v-if="!isText(annotation)" :name="getIconName(annotation.body['x-content-type'])" />
       </q-item-section>
 
       <q-item-section>
@@ -27,17 +24,13 @@
 
 <script>
 
-import AnnotationIcon from 'components/annotations/AnnotationIcon';
+import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 
 export default {
   name: 'AnnotationsList',
   components: { AnnotationIcon },
   props: {
     activeAnnotation: {
-      type: Object,
-      default: () => {},
-    },
-    config: {
       type: Object,
       default: () => {},
     },
@@ -49,11 +42,15 @@ export default {
       type: Function,
       default: () => null,
     },
+    types: Array,
   },
   computed: {
+    config() {
+      return this.$store.getters['config/config'];
+    },
     annotationTypesMapping() {
-      return this.config.annotations.types.reduce((prev, curr) => {
-        prev[curr.contenttype] = curr.annotationType || 'annotation';
+      return this.types.reduce((prev, curr) => {
+        prev[curr.name] = curr.annotationType || 'annotation';
         return prev;
       }, {});
     },
@@ -64,6 +61,9 @@ export default {
     },
     isText(annotation) {
       return this.annotationTypesMapping[annotation.body['x-content-type']] === 'text';
+    },
+    getIconName(typeName) {
+      return this.types.find(({ name }) => name === typeName)?.icon || 'biPencilSquare';
     },
   },
 };
@@ -81,11 +81,10 @@ export default {
 .q-item {
   min-height: unset;
   user-select: none;
+  transition-property: background-color;
 }
 
 .item-content {
   overflow: auto;
-  padding: 8px;
-  padding-bottom: 72px; // fab icon size + one times the offset of q-page-sticky
 }
 </style>

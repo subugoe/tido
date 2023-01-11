@@ -53,3 +53,31 @@ export const domParser = (data) => {
 
   return dom;
 };
+
+export const isUrl = (str) => {
+  if (!str) return false;
+
+  let url;
+  try {
+    url = new URL(str);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === 'http:' || url.protocol === 'https:';
+};
+
+export const isElementVisible = (element, root) => {
+  // Get the position of the element relative to the root element
+  const elementRect = element.getBoundingClientRect();
+  const rootRect = root.getBoundingClientRect();
+
+  // Calculate the amount of the element that is visible within the root element
+  const visibleHeight = Math.min(elementRect.bottom, rootRect.bottom) - Math.max(elementRect.top, rootRect.top);
+
+  // Calculate the percentage of the element that is visible within the root element
+  const percentageVisible = visibleHeight / elementRect.height;
+
+  // Return true if the element is at least 70% visible within the root element, false otherwise
+  return percentageVisible >= 0.7;
+};

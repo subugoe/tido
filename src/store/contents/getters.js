@@ -1,42 +1,25 @@
 export const collection = (state) => state.collection;
 
-export const collectionTitle = (state) => state.collectionTitle;
+export const collectionTitle = (state) => {
+  // eslint-disable-next-line no-shadow
+  const { collection } = state;
 
-export const connectorValues = (state) => state.connectorValues;
+  if (!collection) return null;
 
-export const contentIndex = (state) => state.contentIndex;
+  if (Object.keys(collection).length) {
+    return collection.title && collection.title[0].title
+      ? collection.title[0].title
+      : collection.label;
+  }
 
-export const contentTypes = (state) => state.contentTypes;
-
-export const contentUrls = (state) => state.contentUrls;
-
-export const errorImage = (state) => state.image.errorImage;
-
-export const errorText = (state) => state.errorText;
-
-export const expanded = (state) => state.expanded;
-
-export const isCollection = (state) => state.isCollection;
-
-export const loadingImage = (state) => state.image.loadingImage;
-
-export const imageHasError = (state) => state.image.hasError;
-
-export const imageInit = (state) => state.image.init;
-
-export const imageUrl = (state) => state.image.imageUrl;
+  return collection.label
+    ? collection.label
+    : 'Manifest <small>(No label available)</small>';
+};
 
 export const itemUrl = (state) => state.itemUrl;
 
-export const itemUrls = (state) => state.itemUrls;
-
-export const loaded = (state) => state.loaded;
-
 export const manifests = (state) => state.manifests;
-
-export const panels = (state) => state.panels;
-
-export const sequenceIndex = (state) => state.sequenceIndex;
 
 export const selectedItemIndex = (state) => {
   const selectedItemUrl = encodeURI(decodeURI(state.itemUrl));
@@ -45,7 +28,11 @@ export const selectedItemIndex = (state) => {
 };
 
 export const selectedManifest = (state) => state.manifests.find((manifest) => {
+  manifest = { ...manifest };
   const selectedItemUrl = encodeURI(decodeURI(state.itemUrl));
+  if (!Array.isArray(manifest.sequence)) {
+    manifest.sequence = [manifest.sequence];
+  }
   return manifest.sequence.find((manifestItem) => encodeURI(decodeURI(manifestItem.id)) === selectedItemUrl);
 });
 
@@ -67,4 +54,6 @@ export const selectedSequenceIndex = (state, getters) => {
 
 export const item = (state) => state.item;
 
-export const tree = (state) => state.tree;
+export const manifest = (state) => state.manifest;
+
+export const activeContentUrl = (state) => state.activeContentUrl;

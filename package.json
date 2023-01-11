@@ -11,8 +11,6 @@
     "viewer",
     "vue"
   ],
-  "cordovaId": "de.uni-goettingen.sub.emo",
-  "capacitorId": "",
   "bugs": {
     "email": "gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
   },
@@ -21,6 +19,7 @@
   "contributors": [
     "Manikanth Dindigala <dindigala@sub.uni-goettingen.de>",
     "Mathias Göbel <goebel@sub.uni-goettingen.de>",
+    "Paul Pestov <pestov@sub.uni-goettingen.de>",
     "Frank Schneider <frank.schneider@sub.uni-goettingen.de>",
     "Michelle Weidling <weidling@sub.uni-goettingen.de>",
     "Nils Windisch <windisch@sub.uni-goettingen.de>"
@@ -30,50 +29,44 @@
     "url": "https://gitlab.gwdg.de/subugoe/emo/tido.git"
   },
   "private": false,
-  "dependencies": {
-    "@quasar/extras": "^1.0.0",
-    "@quasar/quasar-app-extension-testing-unit-jest": "^2.2.3",
-    "core-js": "^3.6.5",
-    "openseadragon": "^3.0.0",
-    "quasar": "^2.6.0",
-    "vue": "^3.0.0",
-    "vue-i18n": "^9.2.0-beta.35",
-    "vue-jest": "^3.0.7",
-    "vue-loader": "^16.0.0-rc.1",
-    "vue-router": "^4.0.0",
-    "vuex": "^4.0.1"
-  },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.13.14",
-    "@quasar/app-webpack": "^3.0.0",
+    "@quasar/extras": "^1.15.7",
+    "@quasar/vite-plugin": "^1.2.3",
+    "@vitejs/plugin-vue": "^3.2.0",
     "autoprefixer": "^10.4.7",
-    "commitizen": "^4.2.4",
-    "cypress": "^9.6.1",
-    "cz-conventional-changelog": "^3.3.0",
+    "axios": "^0.21.4",
+    "cypress": "^10.11.0",
     "eslint": "^8.14.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-vue": "^8.5.0",
     "eslint-webpack-plugin": "^3.1.1",
-    "husky": "^7.0.4",
-    "markdownlint-cli": "^0.31.1",
-    "node-sass": "^7.0.1",
+    "http-server": "^14.1.1",
+    "ncp": "^2.0.0",
+    "openseadragon": "^3.1.0",
+    "postcss-exclude-files": "^1.0.15",
+    "postcss-remove-selectors": "^2.0.1",
+    "prepend-selector-postcss": "^0.4.7",
     "prettier": "^2.5.1",
-    "sass": "^1.51.0",
-    "sass-loader": "^12.6.0",
+    "quasar": "^2.10.2",
+    "sass": "~1.32.12",
     "standard-version": "^9.3.2",
+    "start-server-and-test": "^1.14.0",
     "stylelint": "^14.8.2",
     "stylelint-8-point-grid": "^2.1.0",
-    "stylelint-config-sass-guidelines": "^9.0.1",
-    "stylelint-no-unsupported-browser-features": "^5.0.3"
+    "stylelint-no-unsupported-browser-features": "^5.0.3",
+    "vite": "^3.2.5",
+    "vite-plugin-classname": "^0.0.3",
+    "vue": "^3.2.41",
+    "vue-i18n": "^9.2.0-beta.35",
+    "vuex": "^4.0.1"
   },
   "browserslist": [
     "last 1 version",
     "not dead",
     "not IE 11",
-    "> 3%"
+    "> 5%"
   ],
   "engines": {
     "node": ">= 14.19.1",
@@ -93,34 +86,28 @@
     ]
   },
   "scripts": {
-    "build": "quasar build --modern",
+    "build": "vite build",
     "cypress": "cypress open",
     "cypress:headless": "cypress run --headless",
-    "dev": "quasar dev --modern",
     "fix": "npm run fix:vue && npm run fix:js && npm run fix:scss",
     "fix:js": "eslint --fix --ext .js src",
     "fix:scss": "node_modules/.bin/stylelint --fix 'src/**/*.scss'",
     "fix:vue": "eslint --fix --ext .vue src",
-    "lint": "npm run lint:vue && npm run lint:js && npm run lint:scss && npm run lint:markdown",
+    "lint": "npm run lint:vue && npm run lint:js && npm run lint:scss",
     "lint:js": "eslint --ext .js src",
-    "lint:markdown": "node_modules/.bin/markdownlint '**/*.{md,markdown}'",
     "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:vue": "eslint --ext .vue src",
     "release": "npm run build && npm publish",
-    "test": "npm run test:unit",
-    "test:unit": "jest --updateSnapshot",
-    "write-changelog": "HUSKY_SKIP_HOOKS=1 standard-version"
+    "serve:dev": "vite",
+    "serve:prod": "npm run build && ncp dist/ examples/dist/ && http-server examples -p 2222 -c-1 --silent --cors",
+    "serve:mock-api": "http-server tests/mocks -p 8181 -c-1 --silent --cors",
+    "test:e2e": "start-server-and-test serve:mock-api 8181 cypress:headless",
+    "write-changelog": "standard-version"
   },
   "files": [
     "dist"
   ],
   "publishConfig": {
     "@subugoe:registry": "https://gitlab.gwdg.de/api/v4/projects/10921/packages/npm/"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run fix && npm run lint",
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
-    }
   }
 }

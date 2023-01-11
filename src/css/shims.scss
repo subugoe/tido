@@ -1,0 +1,14 @@
+.row {
+  margin-top: unset;
+  margin-left: unset;
+  margin-right: unset;
+}
+
+.row > * {
+  flex-shrink: unset;
+  width: auto;
+  max-width: unset;
+  margin-top: unset;
+  margin-left: unset;
+  margin-right: unset;
+}

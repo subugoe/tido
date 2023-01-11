@@ -1,4 +1,4 @@
-@import '~quasar/src/css/variables';
-@import './quasar.variables';
-@import './global';
-@import './tree';
+@import 'quasar.scss';
+@import 'shims.scss';
+@import 'global.scss';
+@import 'scrollbar.scss';

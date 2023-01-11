@@ -1,0 +1,10 @@
+{
+  "annotationCollection": {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "http://ahikar.sub.uni-goettingen.de/ns/annotations/annotationCollection/3r7vd/130",
+    "type": "AnnotationCollection",
+    "label": "Ahikar annotations for textgrid:3r7vd: Mingana Arabic Christian 93, page 130",
+    "x-creator": "Dr. Aly Elrefaei",
+    "first": "http://localhost:8181/ahiqar/arabic-karshuni/3r7vd/3r7vd-130/annotationPage.json"
+  }
+}

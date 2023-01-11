@@ -1,10 +1,12 @@
-import * as Icons from '@quasar/extras/fontawesome-v5';
 import * as Utils from '@/utils/index';
+import { icon } from '@/utils/icon';
+import { i18n } from '@/i18n';
 
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
 export function addHighlightToElements(selector, root, annotationId) {
   const selectedElements = root.querySelectorAll(selector);
+
   if (selectedElements.length === 0) {
     return;
   }
@@ -88,22 +90,28 @@ export function getAnnotationTabs(config) {
 }
 
 export const createSvgIcon = (name) => {
-  const [path, viewBox] = Icons[name].split('|');
+  const [path, viewBox] = icon(name).split('|');
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
   svg.setAttribute('aria-hidden', 'true');
   svg.setAttribute('class', 'q-icon q-mx-xs');
   svg.setAttribute('focusable', 'false');
   svg.setAttribute('role', 'presentation');
+  svg.setAttribute('style', 'border:0 !important;');
   svg.setAttribute('viewBox', viewBox);
 
-  const newPath = document.createElementNS(
-    'http://www.w3.org/2000/svg',
-    'path',
-  );
+  path.split('&&').forEach((pathPart) => {
+    const [d, style] = pathPart.split('@@');
 
-  newPath.setAttribute('d', path);
-  svg.appendChild(newPath);
+    const newPath = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'path',
+    );
+
+    newPath.setAttribute('d', d);
+    newPath.setAttribute('style', style);
+    svg.appendChild(newPath);
+  });
 
   return svg;
 };
@@ -131,8 +139,8 @@ export function createTooltip(element, data) {
     <span class="text-body1">
     ${
   !isMultiple
-    ? `${this.$t('toolTip_Reference')}`
-    : `${this.$t('toolTip_References')}`
+    ? `${i18n.global.t('referenced_annotation')}`
+    : `${i18n.global.t('referenced_annotations')}`
 }:
       </span>
       <br>

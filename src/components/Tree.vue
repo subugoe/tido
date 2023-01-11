@@ -1,146 +1,288 @@
 <template>
-  <div class="item">
-    <Loading v-if="!loaded" />
-
+  <div ref="containerRef" class="tree-container q-px-md q-pt-md">
     <q-tree
+      class="item-content"
+      :class="$q.dark.isActive ? 'is-dark' : ''"
+      ref="treeRef"
       v-model:expanded="expanded"
       v-model:selected="selected"
-      class="item-content"
-      node-key="label"
-      :icon="fasCaretRight"
+      :icon="expandIcon"
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
+      node-key="url"
+      @after-show="onAfterShow"
     >
-      <template #default-body="{ node }">
-        <div
-          v-if="!node.children"
-          :id="`selectedItem-${node['label']}`"
-        />
-      </template>
-
-      <template #default-header="prop">
-        <div
-          :id="prop.node['label']"
-          class="row items-center"
-        >
-          <div>
-            {{ prop.node.labelSheet ? $t(labels.item) : '' }}
-            {{ prop.node['label-key'] }}
-          </div>
-        </div>
+      <template #default-header="{ node }">
+        <div :id="node.url" class="row items-center">{{ node.label }}</div>
       </template>
     </q-tree>
   </div>
 </template>
 
 <script>
-import { fasCaretRight } from '@quasar/extras/fontawesome-v5';
-import Loading from '@/components/Loading.vue';
-import Navigation from '@/mixins/navigation';
+import { biChevronRight } from '@quasar/extras/bootstrap-icons';
+import { delay, isElementVisible } from '@/utils';
 
 export default {
-  name: 'Treeview',
-  components: {
-    Loading,
-  },
-  mixins: [Navigation],
+  name: 'Tree',
   data() {
     return {
+      isLoading: false,
       expanded: [],
       selected: null,
+      tree: [],
+      treeRef: null,
     };
   },
   computed: {
-    expandTreeNodes() {
-      return this.$store.getters['contents/expanded'];
-    },
     config() {
       return this.$store.getters['config/config'];
+    },
+    collectionTitle() {
+      return this.$store.getters['contents/collectionTitle'];
+    },
+    collection() {
+      return this.$store.getters['contents/collection'];
     },
     labels() {
       return this.config.labels || {};
     },
+    item() {
+      return this.$store.getters['contents/item'];
+    },
     itemUrl() {
       return this.$store.getters['contents/itemUrl'];
     },
-    tree() {
-      return this.$store.getters['contents/tree'];
-    },
-    sequenceIndex() {
-      return this.$store.getters['contents/selectedSequenceIndex'];
+    manifest() {
+      return this.$store.getters['contents/manifest'];
     },
     manifests() {
       return this.$store.getters['contents/manifests'];
     },
-    loaded() {
-      return this.$store.getters['contents/loaded'];
-    },
   },
   watch: {
-    sequenceIndex: {
-      handler: 'onSequenceIndexUpdate',
+    itemUrl: {
+      handler: 'onItemUrlChange',
+    },
+    collection: {
+      handler: 'onCollectionChange',
       immediate: true,
     },
-    itemUrl: {
-      handler(value) {
-        this.selected = value;
-      },
+    manifest: {
+      handler: 'onManifestChange',
       immediate: true,
     },
     selected: {
-      handler: 'handleSelectedChange',
-      immediate: true,
-    },
-    expandTreeNodes: {
-      handler(value) {
-        this.expanded = [...value];
-      },
-      immediate: true,
-    },
-    tree: {
-      handler(value) {
-        if (value.length > 0) {
-          this.$store.dispatch('contents/addToExpanded', value[0].label);
-        }
-      },
+      handler: 'onSelectedChange',
       immediate: true,
     },
   },
   created() {
-    this.fasCaretRight = fasCaretRight;
+    this.expandIcon = biChevronRight;
   },
   methods: {
-    onSequenceIndexUpdate(index) {
-      if (index !== null && !this.expanded.includes(this.manifests[index]?.label)) {
-        this.$store.dispatch(
-          'contents/addToExpanded',
-          this.manifests[index]?.label,
-        );
+    async onCollectionChange() {
+      if (this.collection) {
+        this.$emit('loading', true);
+        this.tree = [{
+          label: this.collectionTitle,
+          selectable: false,
+          url: this.collectionTitle,
+          children: this.manifests.map(({ sequence, label: manifestLabel, id: manifestId }, i) => ({
+            label: manifestLabel ?? this.getDefaultManifestLabel(i),
+            sequence,
+            url: manifestId,
+            selectable: false,
+            children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id, label: itemLabel }, j) => ({
+              label: itemLabel ?? this.getDefaultItemLabel(j),
+              url: id,
+              parent: manifestId,
+            })),
+          }
+          )),
+        }];
+
+        this.$nextTick(() => {
+          this.expanded = [this.collectionTitle, this.manifest.id];
+          this.selected = this.itemUrl !== '' ? this.itemUrl : this.manifest.sequence[0]?.id;
+        });
       }
     },
-    handleSelectedChange(value) {
-      this.navigate(value);
+    async onManifestChange() {
+      const { label, sequence, id: manifestId } = this.manifest;
+      if (!this.collection) {
+        this.$emit('loading', true);
+        await delay(300);
+
+        this.tree = [{
+          label: label ?? this.getDefaultManifestLabel(),
+          sequence,
+          url: manifestId,
+          selectable: false,
+          children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id: itemId, label: itemLabel }, j) => ({
+            label: itemLabel ?? this.getDefaultItemLabel(j),
+            url: itemId,
+            parent: manifestId,
+          })),
+        }];
+      }
+
+      this.$nextTick(() => {
+        this.expanded.push(manifestId);
+        this.selected = this.itemUrl !== '' ? this.itemUrl : sequence[0]?.id;
+      });
+    },
+    async onItemUrlChange() {
+      this.selected = this.itemUrl;
+    },
+    async onAfterShow() {
+      await delay(100);
+      const el = document.getElementById(this.itemUrl);
+      if (!isElementVisible(el, this.$refs.containerRef)) {
+        this.scrollIntoView(el);
+      }
+    },
+    onSelectedChange(value) {
+      const { treeRef } = this.$refs;
+      if (!treeRef) return;
+
+      const node = treeRef.getNodeByKey(value);
+      if (!node) return;
+
+      const { url: itemUrl, parent: manifestUrl } = node;
+
+      this.$nextTick(async () => {
+        await delay(300);
+        const el = document.getElementById(this.itemUrl);
+        if (!isElementVisible(el, this.$refs.containerRef)) {
+          this.scrollIntoView(el);
+        }
+        await delay(100);
+        this.$emit('loading', false);
+      });
+
+      if (itemUrl === this.itemUrl) return;
+
+      if (manifestUrl !== this.manifest.id) {
+        this.$store.dispatch('contents/initManifest', manifestUrl);
+        this.$store.dispatch('config/setDefaultActiveViews');
+        this.expanded.push(manifestUrl);
+      }
+
+      if (!this.expanded.includes(manifestUrl)) this.expanded.push(manifestUrl);
+
+      this.$store.dispatch('contents/initItem', itemUrl);
+    },
+    getDefaultManifestLabel(index) {
+      const prefix = this.labels.manifest ?? this.$t('manifest');
+      return `${prefix} ${index !== undefined ? index + 1 : ''}`;
+    },
+    getDefaultItemLabel(index) {
+      const prefix = this.labels.item ?? this.$t('page');
+      return `${prefix} ${index + 1}`;
+    },
+    scrollIntoView(el) {
+      el.scrollIntoView({ block: 'center', behavior: 'smooth' });
     },
   },
 };
 </script>
 
-<style scoped>
-.item {
+<style scoped lang="scss">
+.tree-container {
   display: flex;
   flex: 1;
   flex-direction: column;
   height: 100%;
-}
-
-.item-content {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
+  position: relative;
   overflow: auto;
+
+  :deep(.item-content) {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    overflow: auto;
+    .q-tree {
+      height: 100%;
+      > .q-tree__node--child {
+        > .q-tree__node-header {
+          padding-left: 8px;
+        }
+      }
+    }
+
+    .q-tree__node {
+      &:first-child {
+        margin-top: 4px;
+      }
+      margin-bottom: 4px;
+      padding-bottom: 0;
+    }
+
+    .q-tree__node-body.relative-position {
+      padding: 0;
+    }
+
+    .q-tree__node-collapsible .q-tree__children {
+      > .q-tree__node--parent {
+        > .q-tree__node-header {
+          background-color: $grey-2;
+          left: 0;
+          position: sticky;
+          top: 0;
+          z-index: 1;
+        }
+      }
+    }
+
+    &.q-tree--dark .q-tree__node-collapsible .q-tree__children {
+      > .q-tree__node--parent {
+        > .q-tree__node-header {
+          background-color: $grey-8 !important;
+        }
+      }
+    }
+
+    .q-tree__node--selected {
+      background-color: var(--q-primary);
+      @media (prefers-color-scheme: dark) {
+        background-color: $grey-3;
+      }
+
+      .q-tree__node-header-content {
+        color: $light !important;
+        @media (prefers-color-scheme: dark) {
+          color: $dark !important;
+        }
+      }
+    }
+
+    .q-tree__node-header {
+      border-radius: 3px;
+      .q-tree__node-header-content {
+        transition: none;
+        flex-wrap: unset;
+      }
+      .q-icon {
+        // Safari fix
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .q-tree__children {
+      cursor: pointer;
+    }
+
+    .q-tree__node-header-content {
+      word-break: break-all;
+      user-select: none;
+    }
+
+    .q-tree__arrow {
+      margin-right: 4px;
+    }
+  }
 }
 
-.q-tree {
-  height: 100%;
-}
 </style>

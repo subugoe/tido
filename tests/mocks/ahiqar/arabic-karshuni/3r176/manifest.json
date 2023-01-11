@@ -1,0 +1,311 @@
+{
+  "textapi": "1.0.0",
+  "x-app-version": "7.8.1",
+  "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/manifest.json",
+  "label": "Brit.Mus. cod. Add. 7209",
+  "metadata": [
+    {
+      "key": "Editor",
+      "value": "Dr. Aly Elrefaei"
+    },
+    {
+      "key": "Date of creation",
+      "value": "1560"
+    },
+    {
+      "key": "Place of origin",
+      "value": "unknown, unknown"
+    },
+    {
+      "key": "Current location",
+      "value": "British Library, Great Britain"
+    },
+    {
+      "key": "TEI document",
+      "value": "via REST (https://ahiqar.uni-goettingen.de/rest/textgrid/data/3r14z.xml)"
+    }
+  ],
+  "support": [
+    {
+      "type": "css",
+      "mime": "text/css",
+      "url": "https://ahiqar.uni-goettingen.de/api/content/ahikar.css"
+    },
+    {
+      "type": "font",
+      "mime": "font/woff",
+      "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomjerusalemitalic.woff"
+    },
+    {
+      "type": "font",
+      "mime": "font/woff",
+      "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomedessa.woff"
+    },
+    {
+      "type": "font",
+      "mime": "font/woff",
+      "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomjerusalem.woff"
+    },
+    {
+      "type": "font",
+      "mime": "font/woff",
+      "url": "https://ahiqar.uni-goettingen.de/api/content/syrcomjerusalembold.woff"
+    }
+  ],
+  "license": [
+    {
+      "id": "CC-BY-SA-4.0 (https://creativecommons.org/licenses/by-sa/4.0/legalcode)"
+    }
+  ],
+  "annotationCollection": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/annotationCollection.json",
+  "sequence": [
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-182b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-183a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-183b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-184a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-184b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-185a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-185b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-186a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-186b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-187a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-187b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-188a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-188b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-189a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-189b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-190a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-190b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-191a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-191b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-192a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-192b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-193a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-193b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-194a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-194b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-195a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-195b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-196a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-196b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-197a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-197b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-198a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-198b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-199a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-199b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-200a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-200b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-201a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-201b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-202a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-202b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-203a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-203b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-204a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-204b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-205a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-205b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-206a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-206b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-207a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-207b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-208a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-208b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-209a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-209b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-210a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-210b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-211a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-211b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-212a/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-212b/latest/item.json",
+      "type": "item"
+    },
+    {
+      "id": "http://localhost:8181/ahiqar/arabic-karshuni/3r176/3r176-213a/latest/item.json",
+      "type": "item"
+    }
+  ]
+}

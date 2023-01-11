@@ -1,41 +1,37 @@
 <template>
-  <div
-    class="root panels-target"
-  >
-    <div
-      v-for="(panel, index) in panels"
-      v-show="panel.show && panel.connector.length"
-      :key="`pc${index}`"
-      class="item"
-    >
-      <ToolBar
-        v-if="config['header_section'].panelheadings"
-        :heading="panel.panel_label"
-      />
-
-      <q-separator />
-
-      <Panel :panel="panel" :index="index" />
+  <div class="panels-target q-gutter-md-md q-px-md q-px-lg-lg q-pb-md-md">
+    <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item q-pb-md q-pb-md-none">
+      <Panel :panel="panel" :active-view="getActiveView(i)" @active-view="onActiveViewChange($event, i)" />
     </div>
   </div>
 </template>
 
 <script>
-import ToolBar from '@/components/ToolBar.vue';
-import Panel from '@/components/Panel.vue';
+import Panel from '@/components/panels/Panel.vue';
 
 export default {
   name: 'MainView',
   components: {
-    ToolBar,
     Panel,
   },
   computed: {
     panels() {
-      return this.$store.getters['contents/panels'];
+      const { panels } = this.config;
+      return panels;
     },
     config() {
       return this.$store.getters['config/config'];
+    },
+    activeViews() {
+      return this.$store.getters['config/activeViews'];
+    },
+  },
+  methods: {
+    onActiveViewChange(viewIndex, panelIndex) {
+      this.$store.dispatch('config/setActivePanelView', { viewIndex, panelIndex });
+    },
+    getActiveView(panelIndex) {
+      return this.activeViews[panelIndex];
     },
   },
 };
@@ -46,32 +42,21 @@ export default {
   display: inline-block;
 }
 
+.panels-target {
+  display: flex;
+  flex: 1;
+  @media (max-width: $breakpoint-sm-max) {
+    flex-direction: column;
+  }
+}
+
 .item {
   display: flex;
   flex: 1;
   flex-direction: column;
   overflow: hidden;
-  @media (max-width: $breakpoint-sm-custom-md) {
-    min-height: 100vh;
-  }
-}
-
-.item-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.root {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  overflow: hidden;
-  @media (max-width: $breakpoint-sm-custom-md) {
-    flex-direction: column;
-    height: auto;
-    overflow: scroll;
+  @media (max-width: $breakpoint-sm-max) {
+    max-height: 66vh;
   }
 }
 
