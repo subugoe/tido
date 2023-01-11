@@ -208,6 +208,14 @@ h3 {
   margin-bottom: 0;
 }
 
+.q-btn--dense .q-icon, .q-btn--round .q-icon {
+  svg {
+    // Safari fix
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .q-btn--dense .q-icon {
   font-size: 1rem;
 }

@@ -261,6 +261,12 @@ export default {
       border-radius: 3px;
       .q-tree__node-header-content {
         transition: none;
+        flex-wrap: unset;
+      }
+      .q-icon {
+        // Safari fix
+        width: 16px;
+        height: 16px;
       }
     }
 

@@ -259,6 +259,7 @@ export default {
 <style lang="scss" scoped>
 .panel-header {
   min-height: 48px;
+  flex-wrap: unset;
 }
 .panel-body {
   flex-grow: 1;
