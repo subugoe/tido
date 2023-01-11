@@ -261,6 +261,7 @@ export default {
       border-radius: 3px;
       .q-tree__node-header-content {
         transition: none;
+        flex-wrap: unset;
       }
     }
 
