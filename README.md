@@ -9,7 +9,7 @@ With this project we provide a highly configurable viewer for projects that impl
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Preview](#preview)
+- [Demo](#demo)
 - [Getting Started](#getting-started)
   - [Get the Viewer](#get-the-viewer)
     - [Registry setup](#registry-setup)
@@ -48,7 +48,7 @@ With this project we provide a highly configurable viewer for projects that impl
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Preview
+## Demo
 
 You can preview TIDO at Gitlab Pages with different configurations to compare with.
 Generally the deployment to Pages runs at every branch.
@@ -87,17 +87,38 @@ npm i @subugoe/tido
 
 ### Integration
 
-Add this line to your **main.js** file:
+1. Add these two files to your application: `tido.js` and `tido.css`.
 
-```js
-import '@subugoe/tido/dist/tido'
+
+HTML:
+```html
+<link href="/node_modules/@subugoe/tido/dist/tido.css" rel="stylesheet">
+<script src="/node_modules/@subugoe/tido/dist/tido.js"></script>
 ```
 
-TODO: a sentence about embedded TIDO.
+JS:
+```js
+import '@subugoe/tido/dist/tido.js'
+import '@subugoe/tido/dist/tido.css'
+```
 
-## Configuration
+2. Add a container element to your application where TIDO can hook into.
+Please make sure that this element has your desired dimensions and position.
 
-Minimal example:
+
+```html
+<style>
+  #app {
+    height: 100vh;
+    width: 100%;
+  }
+</style>
+
+<div id="app"></div>
+```
+
+3. Create a new TIDO instance and provide optionally your TIDO configuration:
+
 ```html
 <script>
   const tido = new Tido({
@@ -105,6 +126,13 @@ Minimal example:
   });
 </script>
 ```
+
+Below you can find a detailed explanation of the configuration object.
+
+
+
+## Configuration
+
 TIDO requires an entrypoint URL to be useful at all. You can provide either a `collection` or a `manifest` key
 and additionally provide an `item` key to start a certain item with a sequence. Technically you could also provide
 a single `item` key only, but it is recommended to use manifests as wrappers.
