@@ -38,9 +38,9 @@ export default {
 <style scoped>
 .q-btn {
   display: inherit !important;
+  flex-basis: 0%;
 }
 .panel-image-action {
   margin-right: -6px;
-  flex-wrap: unset;
 }
 </style>

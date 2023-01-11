@@ -259,6 +259,7 @@ export default {
 <style lang="scss" scoped>
 .panel-header {
   min-height: 48px;
+  flex-wrap: unset;
 }
 .panel-body {
   flex-grow: 1;
@@ -324,9 +325,5 @@ export default {
   @media (max-width: $breakpoint-sm-max) {
     min-height: 100%;
   }
-}
-
-:deep(.actions .q-btn) {
-  flex-basis: 0%;
 }
 </style>
