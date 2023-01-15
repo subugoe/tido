@@ -129,6 +129,7 @@ export default {
 <style lang="scss" scoped>
 .content-container {
   position: relative;
+  overflow: auto;
 }
 .default-cursor {
   cursor: default !important;
