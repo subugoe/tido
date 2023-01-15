@@ -259,9 +259,16 @@ export default {
 
     .q-tree__node-header {
       border-radius: 3px;
+      > * {
+        padding: 0;
+      }
       .q-tree__node-header-content {
         transition: none;
         flex-wrap: unset;
+
+        > * {
+          padding: 0;
+        }
       }
       .q-icon {
         // Safari fix
