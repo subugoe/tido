@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.0.0...v3.0.1) (2023-01-16)
+
+
+### Bug Fixes
+
+* content overflow ([c797569](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c7975697480b6f60e050ce5291dcfe68f5e88481))
+* paddings in tree ([508e1cc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/508e1cc07fc36dfe3960a65bd002c9dd73f21c1c))
+
 ## [3.0.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v2.5.2...v3.0.0) (2023-01-11)
 
 
