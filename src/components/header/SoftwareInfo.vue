@@ -52,15 +52,16 @@
             />
           </q-card-section>
 
-        <q-card-actions align="right">
-          <q-btn
-            v-close-popup
-            :class="$q.dark.isActive ? 'text-white' : 'text-black'"
-            flat
-            :label="$t('close')"
-          />
-        </q-card-actions>
-      </q-card>
+          <q-card-actions align="right">
+            <q-btn
+              v-close-popup
+              :class="$q.dark.isActive ? 'text-white' : 'text-black'"
+              flat
+              :label="$t('close')"
+            />
+          </q-card-actions>
+        </q-card>
+      </div>
     </q-dialog>
   </div>
 </template>
@@ -94,3 +95,10 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.q-dialog {
+  .tido {
+    height: auto;
+  }
+}
+</style>
