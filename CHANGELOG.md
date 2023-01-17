@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.0.1...v3.0.2) (2023-01-17)
+
+
+### Bug Fixes
+
+* info dialog display ([368c658](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/368c658132f8779dcd6899ad43d2e4a7e2c73cfe))
+* remove URL validation from entrypoints (able to pass paths again) ([3b3537d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/3b3537d980da2615718b611c826959611c04e693))
+* use .tido instead of #tido ([c42a637](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c42a637f634252749da51f2ff87d54240a76a7f1))
+
 ### [3.0.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.0.0...v3.0.1) (2023-01-16)
 
 
