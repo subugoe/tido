@@ -21,15 +21,15 @@ const defaultView = {
 };
 
 function validateCollection(value) {
-  return isUrl(value);
+  return !!(value);
 }
 
 function validateManifest(value) {
-  return isUrl(value);
+  return !!(value);
 }
 
 function validateItem(value) {
-  return isUrl(value);
+  return !!(value);
 }
 
 function validateTranslations(value) {
