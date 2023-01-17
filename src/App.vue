@@ -1,5 +1,5 @@
 <template>
-  <div id="tido">
+  <div class="tido">
     <div class="viewport column" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
       <Header/>
       <div v-if="ready" class="root">

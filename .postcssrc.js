@@ -3,7 +3,7 @@ module.exports = {
   plugins: [
     require('postcss-remove-selectors')({ selectors: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }),
     require('prepend-selector-postcss')({
-      selector: '#tido ',
+      selector: '.tido ',
       excludePart: ['body', '.body--dark', ':root', '.tido-container', '.q-dialog', '.q-card', '.q-icon' ],
       appendTo: ['html'],
     }),
