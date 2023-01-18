@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.0.2...v3.1.0) (2023-01-18)
+
+
+### Features
+
+* add colors forceMode config option ([dfb0d8b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dfb0d8b7a53846e05e65d723e1d6a8967862f2da))
+
+
+### Bug Fixes
+
+* tree margins ([b270eb7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b270eb719bdc8432b9d9847778252a08542d954f))
+
+
+### Docs
+
+* update README ([87a70ee](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/87a70eed1a68a3d9e60c82f19c3b6a6f53e76a72))
+
 ### [3.0.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.0.1...v3.0.2) (2023-01-17)
 
 
