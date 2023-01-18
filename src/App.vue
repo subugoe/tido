@@ -102,6 +102,12 @@ export default {
 
     this.$i18n.locale = this.config.lang;
 
+    const colorsForceMode = this.config.colors.forceMode;
+
+    if (colorsForceMode !== 'none') {
+      this.$q.dark.set(colorsForceMode === 'dark');
+    }
+
     if (this.config?.colors?.primary) {
       setCssVar('primary', this.config.colors.primary);
     }

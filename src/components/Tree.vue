@@ -213,9 +213,9 @@ export default {
 
     .q-tree__node {
       &:first-child {
-        margin-top: 4px;
+        margin-top: 3px;
       }
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       padding-bottom: 0;
     }
 

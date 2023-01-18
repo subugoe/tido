@@ -97,6 +97,7 @@ export default function ConfigState() {
         },
       ],
       colors: {
+        forceMode: 'none',
         primary: '',
         secondary: '',
         accent: '',
