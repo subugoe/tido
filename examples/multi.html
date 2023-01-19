@@ -81,10 +81,10 @@
     <button id="right2">GFL</button>
   </div>
   <div id="app1">
-    <iframe src="gfl.html" title="GFL"></iframe>
+    <iframe src="gfl.html?show=1" title="GFL"></iframe>
   </div>
   <div id="app2">
-    <iframe src="ahiqar-arabic-karshuni.html" title="Ahiqar"></iframe>
+    <iframe src="ahiqar-arabic-karshuni.html?show=2" title="Ahiqar"></iframe>
   </div>
 </div>
 
@@ -102,19 +102,19 @@
     const rightButton2 = document.getElementById('right2');
 
     leftButton1.addEventListener('click', () => {
-      app1.src = 'ahiqar-arabic-karshuni.html';
+      app1.src = 'ahiqar-arabic-karshuni.html?show=2';
     });
 
     leftButton2.addEventListener('click', () => {
-      app1.src = 'gfl.html';
+      app1.src = 'gfl.html?show=1';
     });
 
     rightButton1.addEventListener('click', () => {
-      app2.src = 'ahiqar-arabic-karshuni.html';
+      app2.src = 'ahiqar-arabic-karshuni.html?show=2';
     });
 
     rightButton2.addEventListener('click', () => {
-      app2.src = 'gfl.html';
+      app2.src = 'gfl.html?show=1';
     });
 
   }
