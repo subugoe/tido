@@ -65,7 +65,7 @@ You can access the preview with the following URL syntax:
 - [Ahiqar Textual Witnesses In Arabic And Karshuni](https://subugoe.pages.gwdg.de/emo/tido/main/examples/ahiqar-arabic-karshuni.html)
 - [Goethes Farbenlehre in Berlin](https://subugoe.pages.gwdg.de/emo/tido/main/examples/gfl.html)
 - [Zero Config](https://subugoe.pages.gwdg.de/emo/tido/main/examples/zero-config.html?collection=https%3A%2F%2Fahiqar.uni-goettingen.de%2Fapi%2Ftextapi%2Fahikar%2Fsyriac%2Fcollection.json)
-  (here you can append an entrypoint URL parameter like `?collection=https://example.com`. For more details, please check the [Bookmarking](#Bookmarking) section.)
+  (here you can append an entrypoint URL parameter like `?collection=https://example.com`. For more details, please check the [Bookmarking](#bookmarking) section.)
 
 ## Getting Started
 
