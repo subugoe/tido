@@ -24,6 +24,7 @@ With this project we provide a highly configurable viewer for projects that impl
       - [Image](#image)
       - [Text](#text)
       - [Annotations](#annotations)
+- [Bookmarking](#bookmarking)
 - [Getting Started (Developers)](#getting-started-developers)
   - [Prerequisites](#prerequisites)
   - [Install](#install)
@@ -57,11 +58,14 @@ You can access the preview with the following URL syntax:
 
 `[Gitlab Pages base URL]/[branch-name]/config-tester/[project].html`
 
-List of preview configurations:
 
-- [Ahiqar Syriac](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/ahiqar-syriac.html)
-- [Ahiqar Arabic Karshuni](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/ahiqar-arabic-karshuni.html)
-- [GFL](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/gfl.html)
+**List of preview configurations:**
+
+- [Ahiqar Textual Witnesses In Syriac](https://subugoe.pages.gwdg.de/emo/tido/main/examples/ahiqar-syriac.html)
+- [Ahiqar Textual Witnesses In Arabic And Karshuni](https://subugoe.pages.gwdg.de/emo/tido/main/examples/ahiqar-arabic-karshuni.html)
+- [Goethes Farbenlehre in Berlin](https://subugoe.pages.gwdg.de/emo/tido/main/examples/gfl.html)
+- [Zero Config](https://subugoe.pages.gwdg.de/emo/tido/main/examples/zero-config.html?collection=https%3A%2F%2Fahiqar.uni-goettingen.de%2Fapi%2Ftextapi%2Fahikar%2Fsyriac%2Fcollection.json)
+  (here you can append an entrypoint URL parameter like `?collection=https://example.com`. For more details, please check the [Bookmarking](##Bookmarking) section.)
 
 ## Getting Started
 
@@ -137,7 +141,7 @@ TIDO requires an entrypoint URL to be useful at all. You can provide either a `c
 and additionally provide an `item` key to start a certain item with a sequence. Technically you could also provide
 a single `item` key only, but it is recommended to use manifests as wrappers.
 
-By default, TIDO will render three panels displaying sequence tree, text content and metadata views.
+By default, TIDO will render five panels displaying sequence tree, metadata, image, text content and annotation views.
 Nevertheless, you can fully customize the viewer's behaviour.
 
 There are options to
@@ -380,6 +384,21 @@ no options
 | types[i].displayWhen    | String                 | `null`       | Text content type that was specified under [Text options](#text). Annotation will only be shown if that content type is currently active.                                                                                    |
 | types[i].annotationType | String                 | `annotation` | Controls the look of the annotation item. Allowed values: `annotation` or `text`. Currently the only difference is that there is no icon at type `text`.                                                                     |
 
+## Bookmarking
+
+TIDO will reflect certain state changes to the URL so you can save and share your current view.
+Currently we provide the following bookmarking keys:
+
+| Key          | Value           | Description                                                                                                                                    |
+|--------------|-----------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `collection` | URL             | Specifies a collection entrypoint. Will be preferred before `manifest`.                                                                        |
+| `manifest`   | URL             | Specifies a manifest entrypoint.                                                                                                               |
+| `item`       | URL             | Specifies an item entrypoint. If not set the first possible item will be appended and displayed.                                               |
+| `show`       | `0,1,2`         | Controls the visibility of panels. It's a list of comma-separated panel indexes. All other panels will be hidden. Not set = all visible.       |
+| `panels`     | `0_1, 1_1, 2_0` | Specifies the active view (tab) in a respective panel. Syntax: `[panel index]_[view_index]`. Each user interaction will change this parameter. |
+
+**Hint:** With this setup you are able to load your entrypoint dynamically by appending it at the URL instead of rendering
+it  via the configuration object inside your wrapper application.
 
 ## Getting Started (Developers)
 
