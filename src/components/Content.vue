@@ -11,7 +11,7 @@
 
     <div id="text-content" class="custom-font item-content">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-      <div :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle" />
+      <div id="text-content-el" :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle" />
     </div>
   </div>
 </template>
@@ -91,13 +91,25 @@ export default {
 
         const dom = domParser(data);
         this.content = dom.documentElement.innerHTML;
+
+        const targetNode = document.getElementById('text-content-el');
+        const observer = new MutationObserver(async (list) => {
+          console.log(list)
+        });
+
+        // targetNode.addEventListener("DOMSubtreeModified", async (event) => {
+        //   console.log(event)
+        // }, false);
+
+
+        observer.observe(targetNode, {
+          childList: true,
+        });
+
         setTimeout(async () => {
-          this.$emit('loading', false);
-          this.$store.commit('contents/setActiveContentUrl', this.url);
-          const root = document.getElementById('text-content');
-          this.$store.dispatch('annotations/addHighlightAttributesToText', root);
-          await this.$store.dispatch('annotations/addHighlightClickListeners');
-          await this.$store.dispatch('annotations/addHighlightHoverListeners');
+            this.$emit('loading', false);
+            this.$store.commit('contents/setActiveContentUrl', this.url);
+            this.$emit('update-text');
         }, 100);
       } catch (err) {
         this.errorTextMessage = err.message;

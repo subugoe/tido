@@ -28,7 +28,147 @@
 <script type="module" src="/src/main.js"></script>
 <script>
   window.addEventListener('load', function () {
-    window.tido = new window.Tido();
+    window.tido = new window.Tido({
+      manifest: "http://localhost:1745/textapi/sample/manifest.json",
+      labels: {
+        item: "Seite",
+        manifest: "Dokument"
+      },
+      colors: {
+        forceMode: "light",
+        primary: "#4569cc"
+      },
+      lang: "de",
+      panels: [
+        {
+          views: [{
+            id: "image",
+            label: "Manuskript",
+            connector: {
+              id: 3
+            }
+          }]
+        },
+        {
+          label: "Text",
+          views: [
+            {
+              id: "text1",
+              label: "Edierter Text",
+              connector: {
+                id: 4,
+                options: {
+                  type: "edited"
+                }
+              }
+            },
+            {
+              id: "text2",
+              label: "Transkription",
+              connector: {
+                id: 4,
+                options: {
+                  type: "transcription"
+                }
+              }
+            }
+          ]
+        },
+        {
+          label: "Kommentar",
+          views: [
+            {
+              id: "annotations1",
+              label: "Kommentare",
+              connector: {
+                id: 5,
+                options: {
+                  types: [
+                    {
+                      name: "Editorial Comment",
+                      icon: "biChatFill"
+                    },
+                    {
+                      name: "Abstract",
+                      annotationType: "text",
+                      displayWhen: "edited"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              id: "annotations2",
+              label: "Register",
+              connector: {
+                id: 5,
+                options: {
+                  types: [
+                    {
+                      name: "Person",
+                      icon: "biPersonFill"
+                    },
+                    {
+                      name: "Place",
+                      icon: "biGeoAltFill"
+                    },
+                    {
+                      name: "Org",
+                      icon: "biBank2"
+                    },
+                    {
+                      name: "Object",
+                      icon: "biArchiveFill"
+                    },
+                    {
+                      name: "Date",
+                      icon: "biCalendarWeek"
+                    },
+                    {
+                      name: "Work",
+                      icon: "biJournals"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          label: "Dokumentdaten",
+          views: [
+            {
+              id: "meta",
+              label: "Metadaten",
+              connector: {
+                id: 2,
+                options: {
+                  collection: {
+                    all: true
+                  },
+                  manifest: {
+                    all: true
+                  },
+                  item: {
+                    all: true
+                  }
+                }
+              }
+            },
+            {
+              id: "tree",
+              label: "Inhalt",
+              connector: {
+                id: 1
+              }
+            }
+          ]
+        }
+      ],
+      translations: {
+        Edition_license: 'Editionslizenz'
+      }
+    });
   });
 </script>
 </body>

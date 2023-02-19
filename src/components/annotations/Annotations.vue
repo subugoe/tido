@@ -69,7 +69,8 @@ export default {
       handler(contentData) {
         if (contentData) {
           const [hasAnnotations, activeContentUrl] = contentData.split('|');
-          if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
+          console.log(hasAnnotations, activeContentUrl)
+          if (hasAnnotations === 'false' || activeContentUrl === 'null') return;
           this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
           this.highlightTargetsLevel0();
         }

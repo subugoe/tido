@@ -33,6 +33,7 @@ export const setActiveAnnotations = ({ commit }, activeAnnotations) => {
 };
 
 export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
+  console.log('set filtered')
   const { annotations } = getters;
   const activeContentType = rootGetters['config/activeContentType'];
   const filteredAnnotations = types.length === 0 ? annotations : annotations.filter(
@@ -68,6 +69,7 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
     .map((el) => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
     .forEach((targetSelector) => Utils.addRangeHighlightAttributes(targetSelector, dom));
 
+  console.log(annotations)
   // Add single attributes
   annotations.forEach((annotation) => {
     const { id } = annotation;
