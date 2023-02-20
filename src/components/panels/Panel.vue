@@ -137,16 +137,12 @@ export default {
 
       const tabEvents = {
         updateText: async () => {
-          if (this.item.annotationCollection) {
-            await this.$store.dispatch('annotations/initAnnotations', this.item.annotationCollection, { root: true });
-            setTimeout(() => {
-              const root = document.getElementById('text-content');
-              this.$store.dispatch('annotations/addHighlightAttributesToText', root);
-              this.$store.dispatch('annotations/addHighlightClickListeners');
-              this.$store.dispatch('annotations/addHighlightHoverListeners');
-            }, 5000)
-
-          }
+          console.log('updateText')
+          const root = document.getElementById('text-content');
+          this.$store.dispatch('annotations/addHighlightAttributesToText', root);
+          this.$store.dispatch('annotations/addHighlightClickListeners');
+          this.$store.dispatch('annotations/addHighlightHoverListeners');
+          this.$store.dispatch('annotations/addInitialHighlighting');
         },
       };
 
@@ -166,7 +162,7 @@ export default {
         events: tabEvents,
       }];
     },
-    createAnnotationsView(view, i) {
+    async createAnnotationsView(view, i) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
@@ -202,10 +198,12 @@ export default {
         events,
       }];
 
+      const filteredAnnotations = await this.$store.dispatch('annotations/getFilteredAnnotations', connector.options.types);
+
       this.tabs = [...this.tabs, {
         component,
         label,
-        props: { url, ...connector.options },
+        props: { url, items: filteredAnnotations, types: connector.options.types },
         actions,
       }];
     },

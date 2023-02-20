@@ -1,6 +1,7 @@
 import * as AnnotationUtils from '@/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
+import {delay} from "../../utils";
 
 export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
   const { activeAnnotations, annotations } = getters;
@@ -32,8 +33,12 @@ export const setActiveAnnotations = ({ commit }, activeAnnotations) => {
   commit('setActiveAnnotations', activeAnnotations);
 };
 
-export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
-  console.log('set filtered')
+export const setFilteredAnnotations = ({ commit }, filteredAnnotations) => {
+  commit('setFilteredAnnotations', filteredAnnotations);
+};
+
+export const getFilteredAnnotations = async ({ getters, rootGetters }, types) => {
+  console.log('get filtered', types)
   const { annotations } = getters;
   const activeContentType = rootGetters['config/activeContentType'];
   const filteredAnnotations = types.length === 0 ? annotations : annotations.filter(
@@ -43,12 +48,15 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
       if (!type) return false;
 
       // Next we check if annotation should always be displayed on the current content tab
-      if (type?.displayWhen && type?.displayWhen === activeContentType) return true;
+      if (type?.displayWhen && type?.displayWhen !== activeContentType) return false;
+
+      return true;
 
       // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
       const selector = AnnotationUtils.generateTargetSelector(annotation);
       if (selector) {
         const el = document.querySelector(selector);
+        console.log(el)
         if (el) {
           return true;
         }
@@ -58,7 +66,29 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
     },
   );
 
-  commit('setFilteredAnnotations', filteredAnnotations);
+  console.log(filteredAnnotations)
+  return filteredAnnotations;
+};
+
+export const addInitialHighlighting = async ({ getters }) => {
+
+  await delay(100);
+
+  const { filteredAnnotations } = getters;
+
+  const mergedSelector = filteredAnnotations
+    .reduce((acc, cur) => {
+      const selector = AnnotationUtils.generateTargetSelector(cur);
+      if (acc !== '') {
+        acc += ',';
+      }
+      acc += selector;
+      return acc;
+    }, '');
+
+  if (mergedSelector) {
+    AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
+  }
 };
 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
@@ -69,7 +99,6 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
     .map((el) => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
     .forEach((targetSelector) => Utils.addRangeHighlightAttributes(targetSelector, dom));
 
-  console.log(annotations)
   // Add single attributes
   annotations.forEach((annotation) => {
     const { id } = annotation;
@@ -83,11 +112,6 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
 export const annotationLoaded = ({ commit }, annotations) => {
   commit('setAnnotations', annotations);
   commit('updateAnnotationLoading', false);
-};
-
-export const loadAnnotations = ({ commit }) => {
-  commit('updateAnnotationLoading', true);
-  commit('setAnnotations', []);
 };
 
 export const removeActiveAnnotation = ({ getters, dispatch }, id) => {
@@ -204,6 +228,7 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
   if (!textEl) return;
 
   textEl.addEventListener('click', ({ target }) => {
+    console.log('click')
     // The click event handler works like this:
     // When clicking on the text we pick the whole part of the text which belongs to the highest parent annotation.
     // Since the annotations can be nested we avoid handling each of them separately

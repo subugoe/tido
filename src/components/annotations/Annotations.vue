@@ -1,11 +1,11 @@
 <template>
   <div class="q-px-md q-pt-md">
     <AnnotationsList
-      v-if="filteredAnnotations.length"
+      v-if="items.length"
       class="custom-font"
       :active-annotation="activeAnnotations"
       :config="config"
-      :configured-annotations="filteredAnnotations"
+      :configured-annotations="items"
       :toggle="toggle"
       :types="types"
     />
@@ -23,7 +23,6 @@
 <script>
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import Notification from '@/components/Notification.vue';
-import * as AnnotationUtils from '@/utils/annotations';
 
 export default {
   name: 'Annotations',
@@ -36,6 +35,7 @@ export default {
   }),
   props: {
     url: String,
+    items: Array,
     types: Array,
   },
   computed: {
@@ -51,32 +51,37 @@ export default {
     activeAnnotations() {
       return this.$store.getters['annotations/activeAnnotations'];
     },
-    filteredAnnotations() {
-      return this.$store.getters['annotations/filteredAnnotations'];
-    },
+    // filteredAnnotations() {
+    //   return this.$store.getters['annotations/filteredAnnotations'];
+    // },
     activeContentUrl() {
       return this.$store.getters['contents/activeContentUrl'];
     },
-    updateTextHighlighting() {
-      // We need to make sure that annotations are loaded (this.annotations),
-      // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
-      // and the annotation are filtered by type (this.filteredAnnotations).
-      return `${this.annotations !== null}|${this.activeContentUrl}`;
-    },
+    // updateTextHighlighting() {
+    //   // We need to make sure that annotations are loaded (this.annotations),
+    //   // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
+    //   // and the annotation are filtered by type (this.filteredAnnotations).
+    //   return `${this.annotations !== null}|${this.activeContentUrl}`;
+    // },
   },
-  watch: {
-    updateTextHighlighting: {
-      handler(contentData) {
-        if (contentData) {
-          const [hasAnnotations, activeContentUrl] = contentData.split('|');
-          console.log(hasAnnotations, activeContentUrl)
-          if (hasAnnotations === 'false' || activeContentUrl === 'null') return;
-          this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
-          this.highlightTargetsLevel0();
-        }
-      },
-      immediate: true,
-    },
+  // watch: {
+  //   updateTextHighlighting: {
+  //     handler(contentData) {
+  //       if (contentData) {
+  //         // const [hasAnnotations, activeContentUrl] = contentData.split('|');
+  //         // console.log(hasAnnotations, activeContentUrl)
+  //         // if (hasAnnotations === 'false' || activeContentUrl === 'null') return;
+  //         // this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
+  //         // this.highlightTargetsLevel0();
+  //       }
+  //     },
+  //     immediate: true,
+  //   },
+  // },
+  mounted() {
+    console.log(this.items)
+    this.$store.dispatch('annotations/setFilteredAnnotations', this.items);
+    this.$store.dispatch('annotations/addInitialHighlighting');
   },
   beforeUnmount() {
     return this.$store.dispatch('annotations/resetAnnotations');
@@ -94,21 +99,6 @@ export default {
         this.removeAnnotation(id);
       } else {
         this.addAnnotation(id);
-      }
-    },
-    highlightTargetsLevel0() {
-      const mergedSelector = this.filteredAnnotations
-        .reduce((acc, cur) => {
-          const selector = AnnotationUtils.generateTargetSelector(cur);
-          if (acc !== '') {
-            acc += ',';
-          }
-          acc += selector;
-          return acc;
-        }, '');
-
-      if (mergedSelector) {
-        AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
       }
     },
   },
