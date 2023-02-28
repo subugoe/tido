@@ -137,12 +137,13 @@ export default {
 
       const tabEvents = {
         updateText: async () => {
-          console.log('updateText')
-          const root = document.getElementById('text-content');
-          this.$store.dispatch('annotations/addHighlightAttributesToText', root);
-          this.$store.dispatch('annotations/addHighlightClickListeners');
-          this.$store.dispatch('annotations/addHighlightHoverListeners');
-          this.$store.dispatch('annotations/addInitialHighlighting');
+          // console.log('updateText')
+          // const root = document.getElementById('text-content');
+          // this.$store.dispatch('annotations/addHighlightAttributesToText', root);
+          // this.$store.dispatch('annotations/addInitialHighlighting');
+          // this.$store.dispatch('annotations/addHighlightClickListeners');
+          // this.$store.dispatch('annotations/addHighlightHoverListeners');
+
         },
       };
 

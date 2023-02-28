@@ -79,8 +79,9 @@ export default {
   //   },
   // },
   mounted() {
-    console.log(this.items)
+    console.log('mounted', this.items)
     this.$store.dispatch('annotations/setFilteredAnnotations', this.items);
+    // this.$store.dispatch('annotations/addHighlightAttributesToText');
     this.$store.dispatch('annotations/addInitialHighlighting');
   },
   beforeUnmount() {

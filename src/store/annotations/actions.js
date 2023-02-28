@@ -1,7 +1,6 @@
 import * as AnnotationUtils from '@/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
-import {delay} from "../../utils";
 
 export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
   const { activeAnnotations, annotations } = getters;
@@ -21,6 +20,7 @@ export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
 
   const selector = Utils.generateTargetSelector(newActiveAnnotation);
   const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
+
   Utils.highlightTargets(selector, { operation: 'INC' });
 
   if (elements.length > 0) {
@@ -72,23 +72,55 @@ export const getFilteredAnnotations = async ({ getters, rootGetters }, types) =>
 
 export const addInitialHighlighting = async ({ getters }) => {
 
-  await delay(100);
-
   const { filteredAnnotations } = getters;
+  const textContainer = document.getElementById('text-content');
 
-  const mergedSelector = filteredAnnotations
-    .reduce((acc, cur) => {
-      const selector = AnnotationUtils.generateTargetSelector(cur);
-      if (acc !== '') {
-        acc += ',';
-      }
-      acc += selector;
-      return acc;
-    }, '');
+  const styleContainerId = 'highlighting-style';
 
-  if (mergedSelector) {
-    AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
-  }
+  let styleContainer = document.getElementById(styleContainerId);
+  if (styleContainer) styleContainer.remove();
+
+  styleContainer = document.createElement('div');
+  styleContainer.id = styleContainerId;
+  textContainer.appendChild(styleContainer);
+
+  filteredAnnotations.forEach((annotation) => {
+    const selector = Utils.generateTargetSelector(annotation);
+    if (selector) {
+      const styleEl = document.createElement('style');
+      styleEl.innerHTML = `
+      ${selector} { background: red }
+      ${selector}[data-annotation-level="1"] { background: blue }
+      `;
+
+      console.log(selector)
+      styleContainer.appendChild(styleEl);
+      // Utils.addHighlightToElements(selector, dom, id);
+    }
+  });
+
+  // const { filteredAnnotations } = getters;
+
+  // const mergedSelector = filteredAnnotations
+  //   .reduce((acc, cur) => {
+  //     const selector = AnnotationUtils.generateTargetSelector(cur);
+  //     if (acc !== '') {
+  //       acc += ',';
+  //     }
+  //     acc += selector;
+  //     return acc;
+  //   }, '');
+  //
+  // if (mergedSelector) {
+  //   const styleEl = document.createElement('style');
+  //   styleEl.innerHTML = `
+  //   ${mergedSelector} { background: red }
+  //   `;
+  //
+  //   console.log(mergedSelector)
+  //   textContainer.appendChild(styleEl);
+  //   // AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
+  // }
 };
 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
