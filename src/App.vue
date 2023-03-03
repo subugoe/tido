@@ -98,13 +98,12 @@ export default {
     this.$q.dark.set('auto');
 
     await this.loadConfig();
-    await this.init();
 
     this.$i18n.locale = this.config.lang;
 
     const colorsForceMode = this.config.colors.forceMode;
 
-    if (colorsForceMode !== 'none') {
+    if (colorsForceMode && colorsForceMode !== 'none') {
       this.$q.dark.set(colorsForceMode === 'dark');
     }
 
@@ -119,6 +118,8 @@ export default {
     if (this.config?.colors?.accent) {
       setCssVar('accent', this.config.colors.accent);
     }
+
+    await this.init();
   },
   methods: {
     async getCollection(url) {
