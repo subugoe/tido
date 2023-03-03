@@ -1,0 +1,81 @@
+.annotation-disabled {
+  border-bottom: 0;
+  padding-bottom: inherit;
+}
+
+.annotation-disabled-overlap {
+  border-bottom: 1px;
+  border-bottom-style: dotted !important;
+  padding-bottom: inherit;
+}
+
+.annotation-disabled > svg {
+  display: none;
+}
+
+[data-annotation-level]:not([data-annotation-level ='-1']) {
+  cursor: pointer;
+}
+
+[data-annotation-level='0'] {
+  background-color: $grey-3;
+
+  .body--dark & {
+    background-color: #575757 !important;
+  }
+}
+
+[data-annotation-level='1'],
+[data-annotation-level='1'] * {
+  background-color: $blue-1;
+  border-bottom: 1px solid $dark;
+
+  .body--dark & {
+    background-color: #6790bf !important;
+    border-bottom: 1px solid $light !important;
+  }
+}
+
+[data-annotation-level='2'],
+[data-annotation-level='2'] * {
+  background-color: $blue-2;
+  border-bottom: 1px solid $dark;
+
+  .body--dark & {
+    background-color: #5687bf !important;
+    border-bottom: 1px solid $light !important;
+  }
+}
+
+[data-annotation-level='3'],
+[data-annotation-level='3'] * {
+  background-color: $blue-6;
+  border-bottom: 1px solid $dark;
+
+  .body--dark & {
+    background-color: #4b81bf !important;
+    border-bottom: 1px solid $light !important;
+  }
+}
+
+[data-annotation-level='4'],
+[data-annotation-level='4'] * {
+  background-color: $blue-9;
+  border-bottom: 1px solid #000;
+
+  .body--dark & {
+    background-color: #3073bf !important;
+    border-bottom: 1px solid $light !important;
+  }
+}
+
+[data-annotation-level='5'],
+[data-annotation-level='5'] * {
+  background-color: $blue-5;
+  border-bottom: 1px solid $dark;
+
+  .body--dark & {
+    background-color: #1a5fad !important;
+    border-bottom: 1px solid $light;
+  }
+}
