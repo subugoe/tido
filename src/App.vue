@@ -61,6 +61,10 @@ export default {
         return false;
       }
 
+      // if (this.item.annotationCollection && this.annotations === null) {
+      //   return false;
+      // }
+
       if (collectionUrl) {
         return this.manifests !== null && !!(this.collection) && !!(this.manifest);
       }

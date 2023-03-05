@@ -61,16 +61,29 @@ export default {
       // We need to make sure that annotations are loaded (this.annotations),
       // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
       // and the annotation are filtered by type (this.filteredAnnotations).
-      return `${this.annotations !== null}|${this.activeContentUrl}`;
+      return `${this.annotations !== null}|${this.annotations !== null ? this.annotations.length : 0}|${this.activeContentUrl}`;
     },
   },
   watch: {
     updateTextHighlighting: {
-      handler(contentData) {
+      async handler(contentData, oldContentData = '') {
         if (contentData) {
-          const [hasAnnotations, activeContentUrl] = contentData.split('|');
-          if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
+          const [hasAnnotations, amount, activeContentUrl] = contentData.split('|');
+          const [oldHasAnnotations, oldAmount, oldActiveContentUrl] = oldContentData.split('|');
+
+          const root = document.getElementById('text-content');
+
+          if (hasAnnotations !== 'true' && amount === 0 && activeContentUrl === 'null') return;
           this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
+
+          if (!root) return;
+          this.$store.dispatch('annotations/addHighlightAttributesToText', root);
+
+          if (oldActiveContentUrl !== activeContentUrl) {
+            await this.$store.dispatch('annotations/addHighlightClickListeners');
+            await this.$store.dispatch('annotations/addHighlightHoverListeners');
+          }
+
           this.highlightTargetsLevel0();
         }
       },
@@ -78,6 +91,7 @@ export default {
     },
   },
   beforeUnmount() {
+    console.log('before unmount anno')
     return this.$store.dispatch('annotations/resetAnnotations');
   },
   methods: {
@@ -96,6 +110,7 @@ export default {
       }
     },
     highlightTargetsLevel0() {
+      console.log(this.filteredAnnotations)
       const mergedSelector = this.filteredAnnotations
         .reduce((acc, cur) => {
           const selector = AnnotationUtils.generateTargetSelector(cur);

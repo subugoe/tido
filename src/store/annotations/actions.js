@@ -35,32 +35,38 @@ export const setActiveAnnotations = ({ commit }, activeAnnotations) => {
 export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
   const { annotations } = getters;
   const activeContentType = rootGetters['config/activeContentType'];
-  const filteredAnnotations = types.length === 0 ? annotations : annotations.filter(
-    (annotation) => {
-      const type = types.find(({ name }) => name === annotation.body['x-content-type']);
-      // First we check if annotation fits to the current view
-      if (!type) return false;
+  let filteredAnnotations = [];
 
-      // Next we check if annotation should always be displayed on the current content tab
-      if (type?.displayWhen && type?.displayWhen === activeContentType) return true;
+  if (annotations !== null) {
+    filteredAnnotations = types.length === 0 ? annotations : annotations.filter(
+      (annotation) => {
+        const type = types.find(({ name }) => name === annotation.body['x-content-type']);
+        // First we check if annotation fits to the current view
+        if (!type) return false;
 
-      // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
-      const selector = AnnotationUtils.generateTargetSelector(annotation);
-      if (selector) {
-        const el = document.querySelector(selector);
-        if (el) {
-          return true;
+        // Next we check if annotation should always be displayed on the current content tab
+        if (type?.displayWhen && type?.displayWhen === activeContentType) return true;
+
+        // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
+        const selector = AnnotationUtils.generateTargetSelector(annotation);
+        if (selector) {
+          const el = document.querySelector(selector);
+          console.log(el)
+          if (el) {
+            return true;
+          }
         }
-      }
 
-      return false;
-    },
-  );
+        return false;
+      },
+    );
+  }
 
   commit('setFilteredAnnotations', filteredAnnotations);
 };
 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
+  console.log('add hightlight attr')
   const { annotations } = getters;
 
   // Add range attributes
@@ -82,7 +88,6 @@ export const annotationLoaded = ({ commit }, annotations) => {
   commit('setAnnotations', annotations);
   commit('updateAnnotationLoading', false);
 };
-
 
 export const removeActiveAnnotation = ({ getters, dispatch }, id) => {
   const { activeAnnotations } = getters;
@@ -107,20 +112,23 @@ export const removeActiveAnnotation = ({ getters, dispatch }, id) => {
 export const resetAnnotations = ({ dispatch, getters }) => {
   const { annotations } = getters;
 
-  annotations.forEach((annotation) => {
-    const selector = AnnotationUtils.generateTargetSelector(annotation);
-    if (selector) {
-      AnnotationUtils.highlightTargets(selector, { level: -1 });
-      AnnotationUtils.removeIcon(annotation);
-    }
-  });
+  if (annotations !== null) {
+    annotations.forEach((annotation) => {
+      const selector = AnnotationUtils.generateTargetSelector(annotation);
+      if (selector) {
+        AnnotationUtils.highlightTargets(selector, { level: -1 });
+        AnnotationUtils.removeIcon(annotation);
+      }
+    });
+  }
 
   dispatch('setActiveAnnotations', {});
 };
 
 export const initAnnotations = async ({ dispatch }, url) => {
+  let annotations = null;
   try {
-    const annotations = await request(url);
+    annotations = await request(url);
 
     if (!annotations.annotationCollection.first) {
       dispatch('annotationLoaded', []);
@@ -134,6 +142,8 @@ export const initAnnotations = async ({ dispatch }, url) => {
   } catch (err) {
     dispatch('annotationLoaded', []);
   }
+
+  return annotations;
 };
 
 export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
@@ -203,7 +213,7 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
     // Since the annotations can be nested we avoid handling each of them separately
     // and select/deselect the whole cluster at once.
     // The actual click target decides whether it should be a selection or a deselection.
-
+    console.log('click')
     // First we make sure to have a valid target.
     // Although we receive a target from the event it can be a regular HTML element within the annotation.
     // So we try to find it's nearest parent element that is marked as annotation element.
@@ -289,3 +299,4 @@ export const selectNone = ({ getters, dispatch }) => {
   const { filteredAnnotations, activeAnnotations } = getters;
   filteredAnnotations.forEach(({ id }) => activeAnnotations[id] && dispatch('removeActiveAnnotation', id));
 };
+
