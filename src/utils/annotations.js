@@ -69,26 +69,6 @@ export function addRangeHighlightAttributes(id, root) {
   return root;
 }
 
-export function getAnnotationTabs(config) {
-  const tabConfig = config?.annotations?.tabs || {};
-  return Object.entries(tabConfig).map(([key, data]) => {
-    if (Array.isArray(data)) {
-      return {
-        key,
-        collectionTitle: key,
-        contentType: 'annotation',
-        type: data,
-      };
-    }
-    return {
-      key,
-      collectionTitle: key,
-      contentType: data.contentType || 'annotation',
-      type: data?.type,
-    };
-  });
-}
-
 export const createSvgIcon = (name) => {
   const [path, viewBox] = icon(name).split('|');
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -167,10 +147,10 @@ export function createTooltip(element, data) {
 }
 
 export function getNewLevel(element, operation) {
-  const currentLevel = parseInt(
-    element.getAttribute('data-annotation-level'),
-    10,
-  );
+  const currentLevel = element.hasAttribute('data-annotation-level')
+    ? parseInt(element.getAttribute('data-annotation-level'), 10)
+    : 0;
+
   if (operation === 'INC') {
     return currentLevel + 1;
   }

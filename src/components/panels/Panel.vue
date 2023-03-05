@@ -31,7 +31,7 @@
         </div>
         <q-tab-panels v-model="activeTabIndex" class="bg-transparent" animated transition-next="fade" transition-prev="fade">
           <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pt-md">
-            <component :is="tab.component" :key="tab.id" v-bind="tab.props" />
+            <component :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
           </q-tab-panel>
         </q-tab-panels>
       </template>
@@ -129,9 +129,15 @@ export default {
       if (!url) return;
 
       const fontSize = 16;
-      const events = {
+      const actionEvents = {
         update: (value) => {
           this.tabs[i].props.fontSize = value;
+        },
+      };
+
+      const tabEvents = {
+        updateText: async () => {
+
         },
       };
 
@@ -140,7 +146,7 @@ export default {
         props: {
           min: 14, max: 28, step: 2, startValue: fontSize,
         },
-        events,
+        events: actionEvents,
       }];
 
       this.tabs = [...this.tabs, {
@@ -148,7 +154,7 @@ export default {
         label,
         props: { type, url, fontSize },
         actions,
-        events,
+        events: tabEvents,
       }];
     },
     createAnnotationsView(view, i) {

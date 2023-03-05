@@ -94,7 +94,7 @@ export const initItem = async ({ commit, dispatch }, url) => {
   commit('setItemUrl', url);
 
   if (item.annotationCollection) {
-    dispatch('annotations/initAnnotations', item.annotationCollection, { root: true });
+    await dispatch('annotations/initAnnotations', item.annotationCollection, { root: true });
   }
 
   await BookmarkService.updateItemQuery(url);

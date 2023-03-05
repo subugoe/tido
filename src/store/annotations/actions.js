@@ -83,10 +83,6 @@ export const annotationLoaded = ({ commit }, annotations) => {
   commit('updateAnnotationLoading', false);
 };
 
-export const loadAnnotations = ({ commit }) => {
-  commit('updateAnnotationLoading', true);
-  commit('setAnnotations', []);
-};
 
 export const removeActiveAnnotation = ({ getters, dispatch }, id) => {
   const { activeAnnotations } = getters;
