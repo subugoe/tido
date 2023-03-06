@@ -24,6 +24,7 @@ describe('Content - Multiple Tabs', () => {
       .should('be.visible')
       .contains('وايضا');
   });
+
   it('Should highlight from text', () => {
     // Test content
     cy
