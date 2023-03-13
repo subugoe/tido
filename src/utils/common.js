@@ -1,31 +1,33 @@
-export const loadFont = async (url) => {
-  let style = 'normal';
-  let weight = 'normal';
-  let fontFamily;
+export const loadFont = (url, containerSelector) => {
+  const fontStyle = 'normal';
+  let fontWeight = 'normal';
 
-  if (url.endsWith('italic.woff')) {
-    fontFamily = 'SertoJerusalemItalic';
-    style = 'italic';
-  }
+  const root = document.querySelector(`${containerSelector} .tido`);
 
-  if (url.endsWith('bold.woff')) {
-    fontFamily = 'SertoJerusalemBold';
-    weight = 700; // https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-weight
-  }
+  if (!root) return false;
 
-  if (url.endsWith('syrcomedessa.woff')) {
-    fontFamily = 'Estrangelo Edessa';
-  }
+  const urlParts = url.split('/');
+  if (urlParts.length === 0) return false;
 
-  if (url.endsWith('syrcomjerusalem.woff')) {
-    fontFamily = 'Serto Jerusalem';
-  }
+  const fontFile = urlParts[urlParts.length - 1];
+  const [fileName, fileFormat] = fontFile.split('.');
+  if (fileName.toLowerCase().includes('bold')) fontWeight = 700;
 
-  const fontFace = new FontFace(fontFamily, `url(${url})`, { style, weight });
+  if (!fileName || !fileFormat) return false;
 
-  const loadedFont = await fontFace.load();
+  const styleEl = document.createElement('style');
 
-  document.fonts.add(loadedFont);
+  styleEl.id = url;
+
+  styleEl.innerHTML = '@font-face {\n'
+    + `  font-family: "${fileName}";\n`
+    + `  font-weight: ${fontWeight};\n`
+    + `  font-style: ${fontStyle};\n`
+    + `  src: url(${url}) format("${fileFormat}");\n`
+    + '}';
+
+  root.appendChild(styleEl);
+  return true;
 };
 
 export const onlyIf = (condition, fn) => {

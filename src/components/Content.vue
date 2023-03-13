@@ -57,14 +57,6 @@ export default {
     notificationMessage() {
       return this.errorTextMessage;
     },
-    hasSupport() {
-      if (!this.manifest) {
-        return false;
-      }
-      const { support } = this.manifest;
-      // return support && Object.keys(support).length && support.url !== '';
-      return support && support.length > 0;
-    },
   },
   watch: {
     url: {
@@ -84,10 +76,6 @@ export default {
         await delay(300);
         const data = await request(url);
         this.isValidTextContent(data);
-
-        if (this.hasSupport) {
-          await this.getSupport(this.manifest.support);
-        }
 
         const dom = domParser(data);
         this.content = dom.documentElement.innerHTML;
@@ -110,13 +98,6 @@ export default {
       if (parsed && parsed.status === 500) {
         throw new Error('no_text_in_view');
       }
-    },
-    async getSupport(support) {
-      support.forEach((s) => {
-        const hasElement = document.getElementById(s.url);
-        onlyIf(s.type === 'font' && !hasElement, () => loadFont(s.url));
-        onlyIf(s.type !== 'font' && !hasElement, () => loadCss(s.url));
-      });
     },
   },
 };

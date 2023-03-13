@@ -48,7 +48,7 @@ describe('Header initial', () => {
 describe('Header - Item and Manifest changing', () => {
   beforeEach(() => {
     cy
-      .visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r7vd/3r7vd-130/latest/item.json`)
+      .visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahikar/arabic-karshuni/3r7vd/130/latest/item.json`)
       .get('.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');
@@ -66,7 +66,7 @@ describe('Header - Item and Manifest changing', () => {
       .wait(200)
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', '/3r7tp/3r7tp-251/latest/item.json');
+      .should('include', '/3r7tp/251/latest/item.json');
   });
 
   it('Should switch to next sheet', () => {
@@ -81,6 +81,6 @@ describe('Header - Item and Manifest changing', () => {
       .wait(200)
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', '/3r7vd/3r7vd-131a/latest/item.json');
+      .should('include', '/3r7vd/131a/latest/item.json');
   });
 });

@@ -1,5 +1,6 @@
 import { request } from '@/utils/http';
 import BookmarkService from '@/services/bookmark';
+import {loadCss, loadFont} from "../../utils";
 
 function findActiveManifestIndex(manifests = [], itemUrl = null) {
   if (manifests.length === 0) return -1;
@@ -60,6 +61,12 @@ export const initCollection = async ({
 
       commit('setManifest', activeManifest);
 
+      const { support } = activeManifest;
+
+      if (support && support.length > 0) {
+        await dispatch('getSupport', support);
+      }
+
       if (!itemUrl && Array.isArray(activeManifest.sequence) && activeManifest.sequence.length > 0) {
         itemUrl = activeManifest.sequence[0].id;
       }
@@ -80,6 +87,12 @@ export const initManifest = async ({ commit, dispatch, getters }, url) => {
   }
 
   commit('setManifest', manifest);
+
+  const { support } = manifest;
+
+  if (support && support.length > 0) {
+    await dispatch('getSupport', support);
+  }
 
   // We know here that no item was loaded. Neither from URL nor from user config.
   // So we load the first manifest item.
@@ -107,4 +120,14 @@ export const updateImageLoading = async ({ commit }, payload) => {
 export const initAnnotations = async ({ commit }, url) => {
   const annotations = await request(url);
   commit('setAnnotations', annotations);
+};
+
+export const getSupport = ({ rootGetters }, support) => {
+  const { container } = rootGetters['config/config'];
+
+  support.forEach((s) => {
+    const hasElement = document.getElementById(s.url);
+    if (s.type === 'font' && !hasElement) loadFont(s.url, container);
+    if (s.type !== 'font' && !hasElement) loadCss(s.url);
+  });
 };
