@@ -49,8 +49,11 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
 
         // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
         const selector = AnnotationUtils.generateTargetSelector(annotation);
+        console.log(selector)
         if (selector) {
+          console.log(document.querySelector('#text-content')?.innerHTML.toString())
           const el = document.querySelector(selector);
+          console.log(el)
           if (el) {
             return true;
           }
