@@ -88,7 +88,7 @@
   "scripts": {
     "build": "vite build",
     "cypress": "cypress open",
-    "cypress:headless": "cypress:run --headless",
+    "cypress:headless": "cypress run --headless",
     "fix": "npm run fix:vue && npm run fix:js && npm run fix:scss",
     "fix:js": "eslint --fix --ext .js src",
     "fix:scss": "node_modules/.bin/stylelint --fix 'src/**/*.scss'",
