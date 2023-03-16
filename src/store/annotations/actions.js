@@ -128,14 +128,14 @@ export const initAnnotations = async ({ dispatch }, url) => {
   try {
     annotations = await request(url);
 
-    if (!annotations.annotationCollection.first) {
+    if (!annotations.first) {
       dispatch('annotationLoaded', []);
       return;
     }
 
-    const current = await request(annotations.annotationCollection.first);
-    if (current.annotationPage.items.length) {
-      dispatch('annotationLoaded', current.annotationPage.items);
+    const current = await request(annotations.first);
+    if (current.items.length) {
+      dispatch('annotationLoaded', current.items);
     }
   } catch (err) {
     dispatch('annotationLoaded', []);

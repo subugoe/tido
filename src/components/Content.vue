@@ -93,6 +93,10 @@ export default {
         this.content = dom.documentElement.innerHTML;
         setTimeout(async () => {
           this.$emit('loading', false);
+          const root = document.getElementById('text-content');
+          this.$store.dispatch('annotations/addHighlightAttributesToText', root);
+          await this.$store.dispatch('annotations/addHighlightClickListeners');
+          await this.$store.dispatch('annotations/addHighlightHoverListeners');
           this.$store.commit('contents/setActiveContentUrl', this.url);
         }, 100);
       } catch (err) {

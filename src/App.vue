@@ -171,10 +171,6 @@ export default {
         this.isLoading = false;
       }
     },
-    isReady() {
-      return this.item && this.manifests;
-    },
-
     async onItemUrlChange(val) {
       if (val) {
         this.isLoading = false;
