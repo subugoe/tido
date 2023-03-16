@@ -35,7 +35,7 @@
     "@vitejs/plugin-vue": "^3.2.0",
     "autoprefixer": "^10.4.7",
     "axios": "^0.21.4",
-    "cypress": "^10.11.0",
+    "cypress": "^12.8.1",
     "eslint": "^8.14.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.1.0",
@@ -88,7 +88,7 @@
   "scripts": {
     "build": "vite build",
     "cypress": "cypress open",
-    "cypress:headless": "cypress run --headless",
+    "cypress:headless": "cypress:run --headless",
     "fix": "npm run fix:vue && npm run fix:js && npm run fix:scss",
     "fix:js": "eslint --fix --ext .js src",
     "fix:scss": "node_modules/.bin/stylelint --fix 'src/**/*.scss'",
