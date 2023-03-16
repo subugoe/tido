@@ -2,7 +2,7 @@ import { apiBaseUrl } from '../support/globals';
 
 describe('Content - Multiple Tabs', () => {
   beforeEach(() => {
-    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r176/3r176-182b/latest/item.json`)
+    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahikar/arabic-karshuni/3r176/182b/latest/item.json`)
       .get('#text-content')
       .should('be.visible');
   });
@@ -81,9 +81,13 @@ describe('Content - Multiple Tabs', () => {
       .eq(1)
       .click()
       .get('#text-content')
-      .get('#text-content>div')
-      .should('be.visible')
-      .contains('وايضا');
+      .get('#text-content>div>div')
+      .as('content')
+      .should('be.visible');
+
+      cy
+        .get('@content')
+        .contains('وايضا');
 
     cy.get('button.next-item').click();
 
@@ -145,20 +149,34 @@ describe('Content - Multiple Tabs', () => {
 
 describe('Content - Multiple Tabs with different manifest', () => {
   it('Should switch to first tab when switch manifest', () => {
-    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r17b/3r17b-82a/latest/item.json`)
+    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahikar/arabic-karshuni/3r17b/82a/latest/item.json`)
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
-      .click()
+      .click();
+
+    cy
       .get('.panels-target > .item:nth-child(3) .q-panel:nth-child(2) #text-content')
-      .contains('اسمه')
+      .as('second');
+
+    cy
+      .get('@second')
+      .contains('اسمه');
+
+    cy
       .get('button.previous-item')
       .click()
       .wait(1000)
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(0)
-      .should('have.class', 'q-tab--active')
+      .should('have.class', 'q-tab--active');
+
+    cy
       .get('#text-content')
-      .should('be.visible')
+      .as('first')
+      .should('be.visible');
+
+    cy
+      .get('@first')
       .contains('ܘܚܩܕ');
   });
 });

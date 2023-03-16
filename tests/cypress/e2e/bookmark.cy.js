@@ -2,7 +2,7 @@ import { apiBaseUrl } from '../support/globals';
 
 describe('Bookmarking', () => {
   beforeEach(() => {
-    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r176/3r176-182b/latest/item.json`)
+    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahikar/arabic-karshuni/3r176/182b/latest/item.json`)
       .get('#text-content')
       .contains('ܐܠܚܟܝܡ');
   });
@@ -83,6 +83,7 @@ describe('Bookmarking', () => {
 
     cy.get(
       '.q-tree--standard.item-content > .q-tree__node > .q-tree__node-collapsible > .q-tree__children > .q-tree__node:nth-child(1) > .q-tree__node-header',
+      { timeout: 10000 }
     ).click();
 
     cy.get(
@@ -100,7 +101,7 @@ describe('Bookmarking', () => {
 describe('Bookmarking - URL first', () => {
   it('Should load tabs from URL', () => {
     cy
-      .visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r176/3r176-182b/latest/item.json&panels=0_1,1_0,2_1,3_1`)
+      .visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahikar/arabic-karshuni/3r176/182b/latest/item.json&panels=0_1,1_0,2_1,3_1`)
       .then(() => {
         cy
           // Tree & Metadata panel
