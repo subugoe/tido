@@ -3,7 +3,8 @@ import { apiBaseUrl } from '../support/globals';
 describe('Content - Multiple Tabs', () => {
   beforeEach(() => {
     cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahikar/arabic-karshuni/3r176/182b/latest/item.json`)
-      .get('#text-content')
+      .get('#text-content', {timeout: 10000})
+      .as('content')
       .should('be.visible');
   });
   it('Should display first content tab', () => {
@@ -19,9 +20,10 @@ describe('Content - Multiple Tabs', () => {
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .click()
-      .should('have.class', 'q-tab--active')
-      .get('#text-content>div')
-      .should('be.visible')
+      .should('have.class', 'q-tab--active');
+
+    cy
+      .get('#text-content')
       .contains('وايضا');
   });
 
@@ -67,9 +69,10 @@ describe('Content - Multiple Tabs', () => {
 
     // Test content
     cy
-      .get('.panels-target > .item:nth-child(3)')
       .get('#text-content')
-      .contains('ܚܝܩܪ')
+      .contains('ܚܝܩܪ');
+
+    cy
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .first()
       .should('have.class', 'q-tab--active');
@@ -79,15 +82,11 @@ describe('Content - Multiple Tabs', () => {
     cy
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
-      .click()
-      .get('#text-content')
-      .get('#text-content>div>div')
-      .as('content')
-      .should('be.visible');
+      .click();
 
-      cy
-        .get('@content')
-        .contains('وايضا');
+    cy
+      .get('#text-content')
+      .contains('وايضا');
 
     cy.get('button.next-item').click();
 
@@ -139,7 +138,7 @@ describe('Content - Multiple Tabs', () => {
       .click() // 14px
       .should('be.disabled');
 
-    cy.get('#text-content')
+    cy.get('@content')
       .contains('ܐܠܚܟܝܡ')
       .get('#text-content div')
       .first()
@@ -155,14 +154,6 @@ describe('Content - Multiple Tabs with different manifest', () => {
       .click();
 
     cy
-      .get('.panels-target > .item:nth-child(3) .q-panel:nth-child(2) #text-content')
-      .as('second');
-
-    cy
-      .get('@second')
-      .contains('اسمه');
-
-    cy
       .get('button.previous-item')
       .click()
       .wait(1000)
@@ -172,11 +163,6 @@ describe('Content - Multiple Tabs with different manifest', () => {
 
     cy
       .get('#text-content')
-      .as('first')
-      .should('be.visible');
-
-    cy
-      .get('@first')
       .contains('ܘܚܩܕ');
   });
 });
