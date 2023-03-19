@@ -12,17 +12,14 @@ import MetadataValue from '@/components/metadata/MetadataValue.vue';
 
 export default {
   name: 'Actor',
-  components: {MetadataValue},
+  components: { MetadataValue },
   props: {
     data: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
-  mounted() {
-    console.log(this)
-  }
-}
+};
 </script>
 
 <style scoped>

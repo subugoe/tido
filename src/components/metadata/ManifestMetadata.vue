@@ -26,7 +26,7 @@ export default {
   name: 'ManifestMetadata',
   components: {
     MetadataItem,
-    Actor
+    Actor,
   },
   computed: {
     manifest() {
@@ -60,7 +60,7 @@ export default {
     },
     actor() {
       return this.manifest?.actor;
-    }
+    },
   },
 };
 </script>
