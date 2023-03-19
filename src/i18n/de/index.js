@@ -19,7 +19,7 @@ export default {
   default: 'Standard',
   reset_view: 'Ansicht zurücksetzen',
   description: 'Beschreibung',
-  Editor: 'Herausgeber',
+  editor: 'Herausgeber',
   editorial: 'Kommentar',
   Editors: 'Herausgeber',
   error_default: 'Es ist ein Fehler aufgetreten. Bitte laden sie die App/Seite erneut und/oder versuchen Sie es später zu einem späteren Zeitpunkt noch mal.',

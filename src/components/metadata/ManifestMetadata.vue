@@ -5,10 +5,14 @@
         <h3>{{ $t(labels.manifest) }} {{ number }} / {{ total }}</h3>
       </q-item-section>
     </q-item>
-
     <q-item v-for="(meta, idx) in metadata" :key="idx" class="q-mb-sm no-padding">
       <q-item-section class="q-mb-sm no-padding">
         <MetadataItem :item="meta"/>
+      </q-item-section>
+    </q-item>
+    <q-item class="no-padding">
+      <q-item-section class="q-mb-sm">
+        <Actor :data="actor"></Actor>
       </q-item-section>
     </q-item>
   </q-list>
@@ -16,11 +20,13 @@
 
 <script>
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
+import Actor from '@/components/metadata/Actor.vue';
 
 export default {
   name: 'ManifestMetadata',
   components: {
     MetadataItem,
+    Actor
   },
   computed: {
     manifest() {
@@ -52,6 +58,9 @@ export default {
         ...(this.manifest.metadata || []),
       ];
     },
+    actor() {
+      return this.manifest?.actor;
+    }
   },
 };
 </script>

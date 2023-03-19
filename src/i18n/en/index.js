@@ -19,7 +19,7 @@ export default {
   error_default:
     'Something went wrong. Please relaod the page/application and/or try again later.',
   description: 'Description',
-  Editor: 'Editor',
+  editor: 'Editor',
   editorial: 'Editorial',
   Editors: 'Editors',
   hide: 'Hide',

@@ -50,12 +50,6 @@ describe('Metadata', () => {
       .find('a[href="https://creativecommons.org/licenses/by-sa/4.0/legalcode"]')
       .contains('CC-BY-SA-4.0');
 
-    // cy
-    //   .get('.metadata-container')
-    //   .find('.q-list:nth-child(2) .q-item:nth-child(4)')
-    //   .should('contain', 'Editor')
-    //   .and('contain', 'Dr. Aly Elrefaei');
-
     cy
       .get('.metadata-container')
       .find('.q-list:nth-child(2) .q-item:nth-child(4)')
@@ -84,6 +78,12 @@ describe('Metadata', () => {
       .find('.q-list:nth-child(2) .q-item:nth-child(7)')
       // .find('a[href="https://ahiqar.uni-goettingen.de/rest/textgrid/data/3r1bv.xml"]')
       .contains('via REST');
+
+    cy
+      .get('.metadata-container')
+      .find('.q-list:nth-child(2) .q-item:nth-child(8)')
+      .should('contain', 'Editor')
+      .and('contain', 'Dr. Aly Elrefaei');
   });
 
   it('Should display item info', () => {
