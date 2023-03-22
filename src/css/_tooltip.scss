@@ -1,0 +1,43 @@
+.annotation-tooltip {
+  background-color: $light;
+  box-shadow: $shadow-1;
+  font-size: 14px;
+  left: 0;
+  opacity: 1;
+  padding: 8px;
+  position: absolute;
+  text-decoration: none;
+  top: 0;
+  transition: opacity 0.5s;
+  width: 240px;
+  z-index: 10000;
+  transform: translateY(-100%);
+  border-radius: $generic-border-radius;
+  border: 1px solid #ddd;
+
+  .body--dark & {
+    background-color: $dark;
+    border: 1px solid #424242;
+  }
+}
+
+.annotation-tooltip {
+  -webkit-touch-callout: none;
+}
+
+.annotation-animated-tooltip {
+  opacity: 1;
+}
+
+.referenced-annotation {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.referenced-annotation:first-of-type {
+  padding-top: 4px;
+}
+
+.referenced-annotation:last-of-type {
+  margin-bottom: 0;
+}

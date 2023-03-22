@@ -10,7 +10,6 @@ export function addHighlightToElements(selector, root, annotationId) {
     .map(selectorPart => [...root.querySelectorAll(selectorPart.replace(':', '--'))])
     .flat();
 
-  console.log(selectedElements)
   if (selectedElements.length === 0) {
     return;
   }
@@ -89,7 +88,7 @@ export const createSvgIcon = (name) => {
   return svg;
 };
 
-export function createTooltip(element, data) {
+export function createTooltip(element, data, root) {
   const tooltipEl = document.createElement('span');
   tooltipEl.setAttribute('data-annotation-classes', `${element.className}`);
   tooltipEl.setAttribute('class', 'annotation-tooltip');
@@ -127,14 +126,16 @@ export function createTooltip(element, data) {
     .split(' ')
     .join('')}annotation-tooltip`;
   tooltipEl.setAttribute('id', tooltipId);
-  window.top.el = element;
+  //window.top.el = element;
 
+  element.style.position = 'relative';
   const r = element.getBoundingClientRect();
 
-  tooltipEl.style.top = `${r.y + r.height}px`;
-  tooltipEl.style.left = `${r.x}px`;
+  console.log(element.scrollTop)
+  // tooltipEl.style.top = `${r.y + r.height}px`;
+  // tooltipEl.style.left = `${r.x}px`;
 
-  document.querySelector('body').append(tooltipEl);
+  element.append(tooltipEl);
 
   setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
 }
@@ -282,7 +283,7 @@ export function generateTargetSelector(annotation) {
 
     if (targetId) {
       targetId = targetId.split('/').pop();
-      result = `#${targetId}`;
+      result = `#annotation-${targetId}`;
     }
   } else if (selector.type === 'CssSelector') {
     result = handleCssSelector(selector);
