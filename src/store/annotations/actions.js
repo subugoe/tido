@@ -1,6 +1,7 @@
 import * as AnnotationUtils from '@/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
+import { hasParentAnnotation } from "@/utils/annotations";
 
 export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
   const { activeAnnotations, annotations } = getters;
@@ -65,15 +66,8 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
 };
 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
-  console.log('addhigh')
   const { annotations } = getters;
 
-  // Add range attributes
-  // [...dom.querySelectorAll('[data-target]:not([value=""])')]
-  //   .map((el) => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
-  //   .forEach((targetSelector) => Utils.addRangeHighlightAttributes(targetSelector, dom));
-
-  // Add single attributes
   annotations.forEach((annotation) => {
     const { id } = annotation;
     const selector = Utils.generateTargetSelector(annotation);
@@ -147,24 +141,24 @@ export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
 
   const annotationElements = Array.from(document.querySelectorAll('[data-annotation]'));
 
-  annotationElements
-    // Annotations can be nested, so we filter out all outer elements from this selection and
-    // iterate over the deepest elements
-    .filter(el => [...el.childNodes].filter(childNode => childNode.nodeName === '#text').length > 0)
-    .forEach(deepestEl => {
-      console.log(deepestEl)
-      deepestEl.addEventListener(
+  // Annotations can be nested, so we filter out all outer elements from this selection and
+  // iterate over the deepest elements
+  annotationElements.forEach(el => {
+      el.addEventListener(
         'mouseenter',
-        () => {
-          console.log('hover')
-          // Hovering is only supported for selected annotations
-          if (!AnnotationUtils.isAnnotationSelected(deepestEl)) return;
+        ({clientX: x, clientY: y}) => {
+          let elementFromPoint = document.elementFromPoint(x, y);
+
+          if (!elementFromPoint.hasAttribute('data-annotation')) {
+            elementFromPoint = null;
+          }
+
+          const currentElement = elementFromPoint ?? el;
 
           const { filteredAnnotations } = getters;
           const annotationTooltipModels = filteredAnnotations.reduce((acc, curr) => {
             const { id } = curr;
             const name = rootGetters['config/getIconByType'](curr.body['x-content-type']);
-
             acc[id] = {
               value: curr.body.value,
               name,
@@ -172,96 +166,30 @@ export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
             return acc;
           }, {});
 
-          let current = deepestEl;
+          const currentAnnotations = Utils.getValuesFromAttribute(currentElement, 'data-annotation-ids');
+          const closestAnnotationId = currentAnnotations[currentAnnotations.length - 1];
+          const closestAnnotationTooltipModel = annotationTooltipModels[closestAnnotationId]
+          let annotationIds = discoverParentAnnotationIds(currentElement);
+          annotationIds = discoverChildAnnotationIds(currentElement, annotationIds);
 
-          const annotationIds = [current.getAttribute('data-annotation-ids')];
-
-          while (current.parentElement.getAttribute('data-annotation')) {
-            annotationIds.push(current.getAttribute('data-annotation-ids'));
-            current = current.parentElement;
-          }
-
-          // checks for duplicate class names.
-          const currentAnnotationTooltipModels = annotationIds
-            // Flatten
-            .join(' ').split(' ')
-            .map(id => {
-              return annotationTooltipModels[id]
-            })
+          const otherAnnotationTooltipModels = Object.keys(annotationIds)
+            .map(id => annotationTooltipModels[id])
             .filter(m => m);
 
-          AnnotationUtils.createTooltip.bind(
+          AnnotationUtils.createOrUpdateTooltip.bind(
             this,
-            current,
-            currentAnnotationTooltipModels,
-            document.getElementById('text-content')
+            currentElement,
+            { closest: closestAnnotationTooltipModel, other: otherAnnotationTooltipModels },
+            document.getElementById('text-content'),
           )();
         },
         false,
       );
-      deepestEl.addEventListener(
+      el.addEventListener(
         'mouseout',
-        () => document.querySelectorAll('.annotation-tooltip2').forEach((el) => el.remove()),
+        () => document.querySelectorAll('#annotation-tooltip').forEach((el) => el.remove()),
         false,
       );
-    });
-
-  return;
-
-
-  const { filteredAnnotations } = getters;
-  const annotationIds = filteredAnnotations.reduce((acc, curr) => {
-    const { id } = curr;
-    const name = rootGetters['config/getIconByType'](curr.body['x-content-type']);
-
-    acc[AnnotationUtils.stripAnnotationId(id)] = {
-      value: curr.body.value,
-      name,
-    };
-    return acc;
-  }, {});
-
-  document.querySelectorAll('[data-annotation]')
-    .forEach((el) => {
-      const hasChildNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length > 0;
-
-      if (!hasChildNodes) {
-        const classNames = [];
-        el = AnnotationUtils.getHighestParentAnnotationElement(el);
-        const annotationClasses = [];
-
-        // checks for duplicate class names.
-        classNames
-          .join(' ')
-          .split(' ')
-          .map((x) => annotationIds[x])
-          .filter((x) => x)
-          .reduce((acc, curr) => {
-            if (!acc[curr.value]) {
-              acc[curr.value] = true;
-              annotationClasses.push(curr);
-            }
-            return acc;
-          }, {});
-
-        if (annotationClasses.length) {
-          el.addEventListener(
-            'mouseenter',
-            () => {
-              if (AnnotationUtils.isAnnotationSelected(el)) {
-                console.log('sel')
-                AnnotationUtils.createTooltip.bind(this, el, annotationClasses)();
-              }
-            },
-            false,
-          );
-          el.addEventListener(
-            'mouseout',
-            () => document.querySelectorAll('.annotation-tooltip').forEach((el) => el.remove()),
-            false,
-          );
-        }
-      }
     });
 };
 
@@ -291,7 +219,7 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
     // Next we look up which annotations need to be selected
     let annotationIds = {};
 
-    getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+    Utils.getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
     annotationIds = discoverParentAnnotationIds(target, annotationIds);
     annotationIds = discoverChildAnnotationIds(target, annotationIds);
 
@@ -325,32 +253,6 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
     }
     return getNearestParentAnnotation(parent);
   }
-
-  function getValuesFromAttribute(element, attribute) {
-    const value = element.getAttribute(attribute);
-    return value ? value.split(' ') : [];
-  }
-
-  function discoverParentAnnotationIds(el, annotationIds = {}) {
-    const parent = el.parentElement;
-    if (parent && parent.id !== 'text-content') {
-      getValuesFromAttribute(parent, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-      return discoverParentAnnotationIds(parent, annotationIds);
-    }
-    return annotationIds;
-  }
-
-  function discoverChildAnnotationIds(el, annotationIds = {}) {
-    const { children } = el;
-
-    [...children].forEach((child) => {
-      if (child.dataset.annotation) {
-        getValuesFromAttribute(child, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-        annotationIds = discoverChildAnnotationIds(child, annotationIds);
-      }
-    });
-    return annotationIds;
-  }
 };
 
 export const selectAll = ({ getters, dispatch }) => {
@@ -362,3 +264,24 @@ export const selectNone = ({ getters, dispatch }) => {
   const { filteredAnnotations, activeAnnotations } = getters;
   filteredAnnotations.forEach(({ id }) => activeAnnotations[id] && dispatch('removeActiveAnnotation', id));
 };
+
+function discoverParentAnnotationIds(el, annotationIds = {}) {
+  const parent = el.parentElement;
+  if (parent && parent.id !== 'text-content') {
+    Utils.getValuesFromAttribute(parent, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+    return discoverParentAnnotationIds(parent, annotationIds);
+  }
+  return annotationIds;
+}
+
+function discoverChildAnnotationIds(el, annotationIds = {}) {
+  const { children } = el;
+
+  [...children].forEach((child) => {
+    if (child.dataset.annotation) {
+      Utils.getValuesFromAttribute(child, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+      annotationIds = discoverChildAnnotationIds(child, annotationIds);
+    }
+  });
+  return annotationIds;
+}

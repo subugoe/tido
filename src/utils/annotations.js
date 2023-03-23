@@ -88,54 +88,54 @@ export const createSvgIcon = (name) => {
   return svg;
 };
 
-export function createTooltip(element, data, root) {
-  const tooltipEl = document.createElement('span');
-  tooltipEl.setAttribute('data-annotation-classes', `${element.className}`);
-  tooltipEl.setAttribute('class', 'annotation-tooltip');
+export async function createOrUpdateTooltip(element, { closest: closestAnnotation, other: otherAnnotations }, root) {
+  const tooltipId = 'annotation-tooltip';
+  let tooltipEl = root.querySelector(tooltipId);
 
-  const isMultiple = data.length > 1;
+  if (!tooltipEl) {
+    tooltipEl = document.createElement('div');
+    root.onmousemove = null;
 
-  let annotationLists = '';
-  data.forEach((item) => {
-    annotationLists += `
+    root.addEventListener('mousemove', event => {
+      const {clientX: x , clientY: y } = event;
+      tooltipEl.style.top = `${y}px`;
+      tooltipEl.style.left = `${x}px`;
+    });
+    root.append(tooltipEl);
+  }
+
+  tooltipEl.id = tooltipId;
+
+  // Display the current annotation that the user has hovered on
+  const closestAnnotationTemplate = `
+    <div class="referenced-annotation">
+      ${createSvgIcon(closestAnnotation.name)?.outerHTML}<span>${closestAnnotation.value}</span>
+    </div>
+  `;
+
+  const isMultiple = otherAnnotations.length > 1;
+
+  let otherAnnotationsTemplate = '';
+
+  otherAnnotations.forEach((item) => {
+    otherAnnotationsTemplate += `
       <div class="referenced-annotation">
-        ${createSvgIcon(item.name).outerHTML}
-          <span>
-            ${item.value}
-          </span>
+        ${createSvgIcon(item.name)?.outerHTML}<span>${item.value}</span>
       </div>
       `;
   });
 
-  const text = `
-    <span class="text-body1">
-    ${
-  !isMultiple
-    ? `${i18n.global.t('referenced_annotation')}`
-    : `${i18n.global.t('referenced_annotations')}`
-}:
-      </span>
-      <br>
-      <div class="text-body2">
-      ${annotationLists}
+  let template = `
+    <div class="tooltip-header">${closestAnnotationTemplate}</div>`;
+
+  if (otherAnnotations.length > 0)
+    template += `<div class="tooltip-body q-mt-sm">
+        <h4 class="q-my-sm">${i18n.global.t('more_annotations')}:</h4>
+        <div class="text-body2">${otherAnnotationsTemplate}</div>
       </div>
-  `;
+    `;
 
-  tooltipEl.innerHTML = text;
-  const tooltipId = `${element.className
-    .split(' ')
-    .join('')}annotation-tooltip`;
-  tooltipEl.setAttribute('id', tooltipId);
-  //window.top.el = element;
-
-  element.style.position = 'relative';
-  const r = element.getBoundingClientRect();
-
-  console.log(element.scrollTop)
-  // tooltipEl.style.top = `${r.y + r.height}px`;
-  // tooltipEl.style.left = `${r.x}px`;
-
-  element.append(tooltipEl);
+  tooltipEl.innerHTML = template;
 
   setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
 }
@@ -182,13 +182,6 @@ export function stripSelector(value) {
     .replace('_end]', '')}`;
 }
 
-export function stripAnnotationId(url) {
-  if (!url) {
-    return '';
-  }
-  return url.split('/').pop();
-}
-
 export function updateTextContentClass(element, task = 'add', ...className) {
   if (!element) {
     return;
@@ -213,59 +206,78 @@ export function getAllElementsFromSelector(selector) {
   return [...document.querySelectorAll(selector)];
 }
 
-export const getHighestParentAnnotationElement = (el) => {
+export const isHighestAnnotationElement = (el) => {
   let current = el;
 
-  while (
-    current.parentElement.getAttribute('data-annotation')
-    && current.parentElement.childNodes.length === 1
-  ) {
-    classNames.push(current.className);
+  while (current.parentElement.getAttribute('data-annotation')) {
     current = current.parentElement;
   }
 
-  return el;
+  return current && current !== el;
 };
 
-export const isAnnotationSelected = (el) => {
-  const key = el.getAttribute('class');
-  if (el[key] !== undefined) {
-    return el[key];
-  }
-  const innerQueue = [];
+export const hasParentAnnotation = (el) => {
+  const maxLevelEl = document.getElementById('text-content');
 
-  // this logic checks the child spans and their classes.
-  innerQueue.push(el);
-  let matched = false;
-
-  while (innerQueue.length) {
-    const popped = innerQueue.pop();
-    if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
-      matched = true;
-    } else {
-      [...popped.children].forEach((child) => {
-        innerQueue.push(child);
-      });
+  let current = el;
+  let hasParent = false;
+  while (current !== maxLevelEl) {
+    current = current.parentElement;
+    if (current.hasAttribute('data-annotation')) {
+      hasParent = true;
+      break;
     }
   }
 
-  // this logic checks the outer spans and their classes.
-  if (!matched) {
-    const outerQueue = [];
-    outerQueue.push(el);
-
-    while (outerQueue.length) {
-      const popped = outerQueue.pop();
-      if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
-        matched = true;
-      } else if (popped.parentElement.getAttribute('data-annotation')) {
-        outerQueue.push(popped.parentElement);
-      }
-    }
-  }
-
-  return matched;
+  return hasParent;
 };
+
+
+export function isAnnotationSelected(el) {
+  if (!el.hasAttribute('data-annotation-level')) return false;
+  return parseInt(el.getAttribute('data-annotation-level'), 10) > 0;
+}
+
+
+// export const isAnnotationSelected = (el) => {
+//   const key = el.getAttribute('data-annotation-level');
+//   if (el[key] !== undefined) {
+//     return el[key];
+//   }
+//   const innerQueue = [];
+//
+//   // this logic checks the child spans and their classes.
+//   innerQueue.push(el);
+//   let matched = false;
+//
+//   while (innerQueue.length) {
+//     const popped = innerQueue.pop();
+//     if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
+//       matched = true;
+//     } else {
+//       [...popped.children].forEach((child) => {
+//         innerQueue.push(child);
+//       });
+//     }
+//   }
+//
+//   // this logic checks the outer spans and their classes.
+//   if (!matched) {
+//     const outerQueue = [];
+//     outerQueue.push(el);
+//
+//     while (outerQueue.length) {
+//       const popped = outerQueue.pop();
+//       if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
+//         matched = true;
+//       } else if (popped.parentElement.getAttribute('data-annotation')) {
+//         outerQueue.push(popped.parentElement);
+//       }
+//     }
+//   }
+//
+//   return matched;
+// };
 
 export function generateTargetSelector(annotation) {
   // This function generates a CSS selector from
@@ -290,10 +302,6 @@ export function generateTargetSelector(annotation) {
   } else if (selector.type === 'RangeSelector') {
     result = handleRangeSelector(selector);
   }
-
-  return result;
-  console.log(result)
-
 
   const isValid = Utils.isSelectorValid(result);
 

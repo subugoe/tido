@@ -73,3 +73,8 @@ export function elemToSelector(el) {
 
   return elemToSelector(el.parentNode) + ' > ' + str;
 }
+
+export function getValuesFromAttribute(element, attribute) {
+  const value = element.getAttribute(attribute);
+  return value ? value.split(' ') : [];
+}
