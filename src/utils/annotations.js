@@ -5,29 +5,21 @@ import { i18n } from '@/i18n';
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
 export function addHighlightToElements(selector, root, annotationId) {
-  const selectedElements = root.querySelectorAll(selector);
+  const selectedElements = selector
+    .split(',')
+    .map(selectorPart => [...root.querySelectorAll(selectorPart.replace(':', '--'))])
+    .flat();
 
   if (selectedElements.length === 0) {
     return;
   }
 
-  const strippedAnnotationId = stripAnnotationId(annotationId);
-
-  function addToAttribute(element, attribute, newValue) {
-    const oldValue = element.getAttribute(attribute);
-    if (oldValue) {
-      if (!oldValue.match(newValue)) {
-        element.setAttribute(attribute, `${oldValue} ${newValue}`);
-      }
-    } else {
-      element.setAttribute(attribute, newValue);
-    }
-  }
+  // const strippedAnnotationId = stripAnnotationId(annotationId);
 
   selectedElements.forEach((element) => {
     element.setAttribute('data-annotation', true);
-    addToAttribute(element, 'data-annotation-ids', annotationId);
-    element.classList.add(strippedAnnotationId);
+    Utils.addToAttribute(element, 'data-annotation-ids', annotationId);
+    // element.classList.add(strippedAnnotationId);
     element.setAttribute('data-annotation-level', -1);
   });
 }
@@ -49,7 +41,7 @@ export function addRangeHighlightAttributes(id, root) {
       if (ended) return;
 
       if (childNode.nodeName === 'SPAN' && childNode.getAttribute('data-annotation') && started) {
-        childNode.classList.add(id);
+        Utils(id);
       }
 
       if (childNode.nodeName === '#text') {
@@ -96,7 +88,7 @@ export const createSvgIcon = (name) => {
   return svg;
 };
 
-export function createTooltip(element, data) {
+export function createTooltip(element, data, root) {
   const tooltipEl = document.createElement('span');
   tooltipEl.setAttribute('data-annotation-classes', `${element.className}`);
   tooltipEl.setAttribute('class', 'annotation-tooltip');
@@ -134,14 +126,16 @@ export function createTooltip(element, data) {
     .split(' ')
     .join('')}annotation-tooltip`;
   tooltipEl.setAttribute('id', tooltipId);
-  window.top.el = element;
+  //window.top.el = element;
 
+  element.style.position = 'relative';
   const r = element.getBoundingClientRect();
 
-  tooltipEl.style.top = `${r.y + r.height}px`;
-  tooltipEl.style.left = `${r.x}px`;
+  console.log(element.scrollTop)
+  // tooltipEl.style.top = `${r.y + r.height}px`;
+  // tooltipEl.style.left = `${r.x}px`;
 
-  document.querySelector('body').append(tooltipEl);
+  element.append(tooltipEl);
 
   setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
 }
@@ -219,10 +213,8 @@ export function getAllElementsFromSelector(selector) {
   return [...document.querySelectorAll(selector)];
 }
 
-export const backTrackNestedAnnotations = (el, classNames = []) => {
+export const getHighestParentAnnotationElement = (el) => {
   let current = el;
-
-  classNames.push(current.className);
 
   while (
     current.parentElement.getAttribute('data-annotation')
@@ -234,8 +226,6 @@ export const backTrackNestedAnnotations = (el, classNames = []) => {
 
   return el;
 };
-
-const annotationCache = {};
 
 export const isAnnotationSelected = (el) => {
   const key = el.getAttribute('class');
@@ -274,8 +264,6 @@ export const isAnnotationSelected = (el) => {
     }
   }
 
-  annotationCache[key] = matched;
-
   return matched;
 };
 
@@ -295,13 +283,17 @@ export function generateTargetSelector(annotation) {
 
     if (targetId) {
       targetId = targetId.split('/').pop();
-      result = `#${targetId}`;
+      result = `#annotation-${targetId}`;
     }
   } else if (selector.type === 'CssSelector') {
     result = handleCssSelector(selector);
   } else if (selector.type === 'RangeSelector') {
     result = handleRangeSelector(selector);
   }
+
+  return result;
+  console.log(result)
+
 
   const isValid = Utils.isSelectorValid(result);
 
@@ -316,7 +308,37 @@ export function handleRangeSelector(selector) {
   const { startSelector, endSelector } = selector;
   if (startSelector && endSelector) {
     if (startSelector.type === 'CssSelector') {
-      return stripSelector(handleCssSelector(startSelector));
+      const start = document.querySelector(handleCssSelector(startSelector).replaceAll('\'', ''));
+      const end = document.querySelector(handleCssSelector(endSelector).replaceAll('\'', ''));
+
+      const elementsInRange = [];
+
+      let started = false;
+      let ended = false;
+
+      function findElementsInRangeRecursive(element) {
+        if (element === start) started = true;
+        if (element === end) {
+          ended = true;
+          return;
+        }
+
+        if (started && element.nodeValue !== ' ' && element.nodeName === '#text') {
+          elementsInRange.push(element.parentElement);
+          return;
+        }
+
+        [...element.childNodes]
+          .filter(childNode => childNode.nodeName !== 'STYLE' && childNode.nodeName !== 'SCRIPT' && childNode.nodeName !== 'svg')
+          .forEach(childNode => {
+            if (!ended) {
+              findElementsInRangeRecursive(childNode);
+            }
+          });
+      }
+      findElementsInRangeRecursive(document.getElementById('text-content'));
+
+      return elementsInRange.map(el => Utils.elemToSelector(el)).join(',')
     }
   }
   return null;

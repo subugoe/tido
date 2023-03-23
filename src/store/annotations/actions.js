@@ -65,12 +65,13 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
 };
 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
+  console.log('addhigh')
   const { annotations } = getters;
 
   // Add range attributes
-  [...dom.querySelectorAll('[data-target]:not([value=""])')]
-    .map((el) => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
-    .forEach((targetSelector) => Utils.addRangeHighlightAttributes(targetSelector, dom));
+  // [...dom.querySelectorAll('[data-target]:not([value=""])')]
+  //   .map((el) => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
+  //   .forEach((targetSelector) => Utils.addRangeHighlightAttributes(targetSelector, dom));
 
   // Add single attributes
   annotations.forEach((annotation) => {
@@ -143,6 +144,71 @@ export const initAnnotations = async ({ dispatch }, url) => {
 };
 
 export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
+
+  const annotationElements = Array.from(document.querySelectorAll('[data-annotation]'));
+
+  annotationElements
+    // Annotations can be nested, so we filter out all outer elements from this selection and
+    // iterate over the deepest elements
+    .filter(el => [...el.childNodes].filter(childNode => childNode.nodeName === '#text').length > 0)
+    .forEach(deepestEl => {
+      console.log(deepestEl)
+      deepestEl.addEventListener(
+        'mouseenter',
+        () => {
+          console.log('hover')
+          // Hovering is only supported for selected annotations
+          if (!AnnotationUtils.isAnnotationSelected(deepestEl)) return;
+
+          const { filteredAnnotations } = getters;
+          const annotationTooltipModels = filteredAnnotations.reduce((acc, curr) => {
+            const { id } = curr;
+            const name = rootGetters['config/getIconByType'](curr.body['x-content-type']);
+
+            acc[id] = {
+              value: curr.body.value,
+              name,
+            };
+            return acc;
+          }, {});
+
+          let current = deepestEl;
+
+          const annotationIds = [current.getAttribute('data-annotation-ids')];
+
+          while (current.parentElement.getAttribute('data-annotation')) {
+            annotationIds.push(current.getAttribute('data-annotation-ids'));
+            current = current.parentElement;
+          }
+
+          // checks for duplicate class names.
+          const currentAnnotationTooltipModels = annotationIds
+            // Flatten
+            .join(' ').split(' ')
+            .map(id => {
+              return annotationTooltipModels[id]
+            })
+            .filter(m => m);
+
+          AnnotationUtils.createTooltip.bind(
+            this,
+            current,
+            currentAnnotationTooltipModels,
+            document.getElementById('text-content')
+          )();
+        },
+        false,
+      );
+      deepestEl.addEventListener(
+        'mouseout',
+        () => document.querySelectorAll('.annotation-tooltip2').forEach((el) => el.remove()),
+        false,
+      );
+    });
+
+  return;
+
+
   const { filteredAnnotations } = getters;
   const annotationIds = filteredAnnotations.reduce((acc, curr) => {
     const { id } = curr;
@@ -157,11 +223,11 @@ export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
 
   document.querySelectorAll('[data-annotation]')
     .forEach((el) => {
-      const childOtherNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length;
+      const hasChildNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length > 0;
 
-      if (!childOtherNodes) {
+      if (!hasChildNodes) {
         const classNames = [];
-        el = AnnotationUtils.backTrackNestedAnnotations(el, classNames);
+        el = AnnotationUtils.getHighestParentAnnotationElement(el);
         const annotationClasses = [];
 
         // checks for duplicate class names.
@@ -183,6 +249,7 @@ export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
             'mouseenter',
             () => {
               if (AnnotationUtils.isAnnotationSelected(el)) {
+                console.log('sel')
                 AnnotationUtils.createTooltip.bind(this, el, annotationClasses)();
               }
             },
