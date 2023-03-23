@@ -95,6 +95,7 @@ export async function createOrUpdateTooltip(element, { closest: closestAnnotatio
   if (!tooltipEl) {
     tooltipEl = document.createElement('div');
     root.onmousemove = null;
+
     root.addEventListener('mousemove', event => {
       const {clientX: x , clientY: y } = event;
       tooltipEl.style.top = `${y}px`;
@@ -125,12 +126,11 @@ export async function createOrUpdateTooltip(element, { closest: closestAnnotatio
   });
 
   const template = `
-    <span class="text-body1">${closestAnnotationTemplate}</span>
-    <span class="text-body1">
-      ${ !isMultiple ? `${i18n.global.t('referenced_annotation')}` : `${i18n.global.t('referenced_annotations')}`}:
-      </span>
-      <br>
+    <div class="tooltip-header q-mb-sm">${closestAnnotationTemplate}</div>
+    <div class="tooltip-body">
+      <h4 class="q-my-sm">${i18n.global.t('also_selected')}:</h4>
       <div class="text-body2">${otherAnnotationsTemplate}</div>
+    </div>
   `;
 
   tooltipEl.innerHTML = template;

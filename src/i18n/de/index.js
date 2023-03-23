@@ -93,4 +93,5 @@ export default {
   other: 'Sonstiges',
   subtitle: 'Untertitel',
   manifest: 'Manifest',
+  also_selected: 'Ebenfalls ausgewählt'
 };

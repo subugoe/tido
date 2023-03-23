@@ -9,7 +9,7 @@
   text-decoration: none;
   top: 0;
   transition: opacity 0.4s;
-  width: 240px;
+  max-width: 480px;
   z-index: 10000;
   transform: translateY(-100%);
   border-radius: $generic-border-radius;
@@ -30,11 +30,11 @@
     margin-bottom: 4px;
   }
 
-  .referenced-annotation:first-of-type {
-    padding-top: 4px;
-  }
-
   .referenced-annotation:last-of-type {
     margin-bottom: 0;
+  }
+
+  .tooltip-body {
+    border-top: 1px solid #ddd;
   }
 }
