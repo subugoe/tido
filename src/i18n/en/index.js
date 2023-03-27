@@ -95,4 +95,5 @@ export default {
   other: 'Other',
   subtitle: 'Subtitle',
   manifest: 'Manifest',
+  also_selected: 'Also selected'
 };

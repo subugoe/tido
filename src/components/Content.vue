@@ -79,7 +79,10 @@ export default {
           const root = document.getElementById('text-content');
           this.$store.dispatch('annotations/addHighlightAttributesToText', root);
           await this.$store.dispatch('annotations/addHighlightClickListeners');
-          await this.$store.dispatch('annotations/addHighlightHoverListeners');
+
+          // TODO: Enable Hover + Tooltip feature when reqs are clarified
+          // await this.$store.dispatch('annotations/addHighlightHoverListeners');
+
           this.$store.commit('contents/setActiveContentUrl', this.url);
         }, 100);
       } catch (err) {

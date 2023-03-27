@@ -30,8 +30,9 @@ describe('Content - Multiple Tabs', () => {
   it('Should highlight from text', () => {
     // Test content
     cy
-      .get('.panels-target > .item:nth-child(3) #text-content')
+      .get('@content')
       .contains('ܚܝܩܪ')
+      .parent()
       .should('have.attr', 'data-annotation-level', '0')
       .click()
       .should('have.attr', 'data-annotation-level', '1')
@@ -56,8 +57,9 @@ describe('Content - Multiple Tabs', () => {
 
     // Test content
     cy
-      .get('.panels-target > .item:nth-child(3) #text-content')
+      .get('@content')
       .contains('ܚܝܩܪ')
+      .parent()
       .should('have.attr', 'data-annotation-level', '1')
       .and('have.css', 'background-color', 'rgb(227, 242, 253)')
       .get('svg')
@@ -144,6 +146,20 @@ describe('Content - Multiple Tabs', () => {
       .first()
       .should('have.attr', 'style', 'font-size: 14px;');
   });
+
+  // it('Should display a tooltip on hover', () => {
+  //   cy
+  //     .get('@content')
+  //     .contains('ܚܝܩܪ')
+  //     .parent()
+  //     .should('have.attr', 'data-annotation-level', '0')
+  //     .trigger('mouseenter');
+  //
+  //   cy
+  //     .get('#annotation-tooltip')
+  //     .wait(100)
+  //     .should('be.visible')
+  // })
 });
 
 describe('Content - Multiple Tabs with different manifest', () => {
