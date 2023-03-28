@@ -56,6 +56,6 @@ module.exports = {
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'max-len': 0,
-    'allow-parens': 'as-needed',
+    'allow-parens': 'off',
   },
 };

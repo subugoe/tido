@@ -13,7 +13,7 @@ import { delay } from '@/utils';
 import Notification from '@/components/Notification.vue';
 
 export default {
-  name: 'OpenSeadragon',
+  name: 'ImageView',
   components: {
     Notification,
   },

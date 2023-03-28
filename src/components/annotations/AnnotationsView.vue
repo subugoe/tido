@@ -26,7 +26,7 @@ import Notification from '@/components/Notification.vue';
 import * as AnnotationUtils from '@/utils/annotations';
 
 export default {
-  name: 'Annotations',
+  name: 'AnnotationsView',
   components: {
     AnnotationsList,
     Notification,

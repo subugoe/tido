@@ -23,7 +23,7 @@ import { request } from '@/utils/http';
 import { domParser, delay } from '@/utils';
 
 export default {
-  name: 'Content',
+  name: 'ContentView',
   components: {
     Notification,
   },

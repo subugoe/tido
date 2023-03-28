@@ -1,9 +1,9 @@
 <template>
   <div class="tido">
     <div class="viewport column" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
-      <Header/>
+      <GlobalHeader/>
       <div v-if="ready" class="root">
-        <MainView/>
+        <PanelsWrapper/>
       </div>
       <div v-else class="error-container q-pa-md q-pa-lg-lg q-pt-xl">
         <div class="full-height full-width flex items-center justify-center column" style="border: dashed 3px #ccc; border-radius: 6px">
@@ -32,9 +32,9 @@
 <script>
 import { setCssVar } from 'quasar';
 import { biBook } from '@quasar/extras/bootstrap-icons';
-import Header from '@/components/header/Header.vue';
+import GlobalHeader from '@/components/header/GlobalHeader.vue';
 import { delay } from '@/utils';
-import MainView from '@/views/MainView.vue';
+import PanelsWrapper from '@/components/panels/PanelsWrapper.vue';
 import Notification from '@/components/Notification.vue';
 import Loading from '@/components/Loading.vue';
 
@@ -42,8 +42,8 @@ export default {
   name: 'TIDO',
   components: {
     Loading,
-    MainView,
-    Header,
+    PanelsWrapper,
+    GlobalHeader,
     Notification,
   },
   data() {

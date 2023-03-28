@@ -26,12 +26,11 @@ import { delay, isElementVisible } from '@/utils';
 import { request } from '@/utils/http';
 
 async function getManifest(url) {
-  const data = await request(url);
-  return data;
+  return request(url);
 }
 
 export default {
-  name: 'Tree',
+  name: 'TreeView',
   data() {
     return {
       isLoading: false,

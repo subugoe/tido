@@ -12,7 +12,7 @@ import ManifestMetadata from '@/components/metadata/ManifestMetadata.vue';
 import ItemMetadata from '@/components/metadata/ItemMetadata.vue';
 
 export default {
-  name: 'Metadata',
+  name: 'MetadataView',
   props: {
     options: Object,
   },

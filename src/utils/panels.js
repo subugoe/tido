@@ -1,22 +1,22 @@
 const components = {
   1: {
-    component: 'Tree',
+    component: 'TreeView',
     label: 'content',
   },
   2: {
-    component: 'Metadata',
+    component: 'MetadataView',
     label: 'metadata',
   },
   3: {
-    component: 'OpenSeadragon',
+    component: 'ImageView',
     label: 'image',
   },
   4: {
-    component: 'Content',
+    component: 'ContentView',
     label: 'text',
   },
   5: {
-    component: 'Annotations',
+    component: 'AnnotationsView',
     label: 'annotations',
   },
 };

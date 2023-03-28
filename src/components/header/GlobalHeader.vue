@@ -24,7 +24,7 @@ import PanelsToggle from '@/components/header/PanelsToggle.vue';
 import Tools from '@/components/header/Tools.vue';
 
 export default {
-  name: 'Header',
+  name: 'GlobalHeader',
   components: {
     Navbar,
     TitleBar,

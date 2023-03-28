@@ -10,7 +10,7 @@
 import Panel from '@/components/panels/Panel.vue';
 
 export default {
-  name: 'MainView',
+  name: 'PanelsWrapper',
   components: {
     Panel,
   },

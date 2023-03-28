@@ -50,25 +50,25 @@
 </template>
 
 <script>
-import Metadata from '@/components/metadata/Metadata.vue';
-import Tree from '@/components/Tree.vue';
-import Annotations from '@/components/annotations/Annotations.vue';
-import Content from '@/components/Content.vue';
-import OpenSeadragon from '@/components/OpenSeadragon.vue';
-import { findComponent } from '@/utils/panels';
+import MetadataView from '@/components/metadata/MetadataView.vue';
+import TreeView from '@/components/TreeView.vue';
+import AnnotationsView from '@/components/annotations/AnnotationsView.vue';
+import ContentView from '@/components/ContentView.vue';
+import ImageView from '@/components/ImageView.vue';
 import PanelZoomAction from '@/components/panels/actions/PanelZoomAction.vue';
-import Notification from '@/components/Notification.vue';
 import PanelToggleAction from '@/components/panels/actions/PanelToggleAction.vue';
 import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import Loading from '@/components/Loading.vue';
+import Notification from '@/components/Notification.vue';
+import { findComponent } from '@/utils/panels';
 
 export default {
   components: {
-    Tree,
-    Annotations,
-    Content,
-    Metadata,
-    OpenSeadragon,
+    TreeView,
+    AnnotationsView,
+    ContentView,
+    MetadataView,
+    ImageView,
     PanelZoomAction,
     PanelToggleAction,
     PanelImageAction,
@@ -115,7 +115,7 @@ export default {
 
       views.forEach((view, i) => {
         const { component } = findComponent(view.connector.id);
-        let methodName = `create${component}View`;
+        let methodName = `create${component}`;
         if (!this[methodName]) methodName = 'createDefaultView';
         this[methodName](view, i);
       });
@@ -206,7 +206,7 @@ export default {
     createTreeView(view) {
       this.createDefaultView(view);
     },
-    createOpenSeadragonView(view) {
+    createImageView(view) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
       this.tabs = [...this.tabs, {
