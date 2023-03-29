@@ -27,7 +27,7 @@ export default {
   error_vpn:
     'Some images are not available outside of the VPN (Virtual Private Network)'
     + ' of the Georg-August-University Goettingen. If you like to get access please refer to the '
-    + 'guide at <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start"'
+    + 'guide at <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start" '
     + 'target="_blank"> Network Services VPN</a>.',
   error_image_not_exists: 'An image for this page does not exist yet.',
   no_image_available: 'No Image Available',
@@ -95,5 +95,5 @@ export default {
   other: 'Other',
   subtitle: 'Subtitle',
   manifest: 'Manifest',
-  also_selected: 'Also selected'
+  also_selected: 'Also selected',
 };

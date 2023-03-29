@@ -7,7 +7,7 @@ import { i18n } from '@/i18n';
 export function addHighlightToElements(selector, root, annotationId) {
   const selectedElements = selector
     .split(',')
-    .map(selectorPart => [...root.querySelectorAll(selectorPart.replace(':', '--'))])
+    .map((selectorPart) => [...root.querySelectorAll(selectorPart.replace(':', '--'))])
     .flat();
 
   if (selectedElements.length === 0) {
@@ -96,8 +96,8 @@ export async function createOrUpdateTooltip(element, { closest: closestAnnotatio
     tooltipEl = document.createElement('div');
     root.onmousemove = null;
 
-    root.addEventListener('mousemove', event => {
-      const {clientX: x , clientY: y } = event;
+    root.addEventListener('mousemove', (event) => {
+      const { clientX: x, clientY: y } = event;
       tooltipEl.style.top = `${y}px`;
       tooltipEl.style.left = `${x}px`;
     });
@@ -113,8 +113,6 @@ export async function createOrUpdateTooltip(element, { closest: closestAnnotatio
     </div>
   `;
 
-  const isMultiple = otherAnnotations.length > 1;
-
   let otherAnnotationsTemplate = '';
 
   otherAnnotations.forEach((item) => {
@@ -128,16 +126,19 @@ export async function createOrUpdateTooltip(element, { closest: closestAnnotatio
   let template = `
     <div class="tooltip-header">${closestAnnotationTemplate}</div>`;
 
-  if (otherAnnotations.length > 0)
+  if (otherAnnotations.length > 0) {
     template += `<div class="tooltip-body q-mt-sm">
         <h4 class="q-my-sm">${i18n.global.t('more_annotations')}:</h4>
         <div class="text-body2">${otherAnnotationsTemplate}</div>
       </div>
     `;
+  }
 
   tooltipEl.innerHTML = template;
 
   setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
+
+  return tooltipEl;
 }
 
 export function getNewLevel(element, operation) {
@@ -232,12 +233,10 @@ export const hasParentAnnotation = (el) => {
   return hasParent;
 };
 
-
 export function isAnnotationSelected(el) {
   if (!el.hasAttribute('data-annotation-level')) return false;
   return parseInt(el.getAttribute('data-annotation-level'), 10) > 0;
 }
-
 
 // export const isAnnotationSelected = (el) => {
 //   const key = el.getAttribute('data-annotation-level');
@@ -337,8 +336,8 @@ export function handleRangeSelector(selector) {
         }
 
         [...element.childNodes]
-          .filter(childNode => childNode.nodeName !== 'STYLE' && childNode.nodeName !== 'SCRIPT' && childNode.nodeName !== 'svg')
-          .forEach(childNode => {
+          .filter((childNode) => childNode.nodeName !== 'STYLE' && childNode.nodeName !== 'SCRIPT' && childNode.nodeName !== 'svg')
+          .forEach((childNode) => {
             if (!ended) {
               findElementsInRangeRecursive(childNode);
             }
@@ -346,7 +345,7 @@ export function handleRangeSelector(selector) {
       }
       findElementsInRangeRecursive(document.getElementById('text-content'));
 
-      return elementsInRange.map(el => Utils.elemToSelector(el)).join(',')
+      return elementsInRange.map((el) => Utils.elemToSelector(el)).join(',');
     }
   }
   return null;

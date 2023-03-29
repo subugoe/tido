@@ -28,7 +28,7 @@ export default {
   error_vpn: 'Einige Bilder stehen Ihnen außerhalb des Netzwerks der'
   + ' Georg-August-Universität Göttingen ohne VPN-Zugang nicht zur Verfügung. '
   + 'Wenn Sie Zugang erhalten möchten, nutzen Sie bitte die Anleitung der GWDG zum'
-  + ' <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start"'
+  + ' <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start" '
   + 'target="_blank"> Netzwerk-Service VPN</a>.',
   error_image_not_exists: 'Für diese Seite existiert noch kein Bild.',
   no_image_available: 'Kein Bild verfügbar',
@@ -93,5 +93,5 @@ export default {
   other: 'Sonstiges',
   subtitle: 'Untertitel',
   manifest: 'Manifest',
-  more_annotations: 'Weitere'
+  more_annotations: 'Weitere',
 };

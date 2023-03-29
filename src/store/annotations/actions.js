@@ -1,7 +1,6 @@
 import * as AnnotationUtils from '@/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
-import { hasParentAnnotation } from "@/utils/annotations";
 
 export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
   const { activeAnnotations, annotations } = getters;
@@ -138,59 +137,56 @@ export const initAnnotations = async ({ dispatch }, url) => {
 };
 
 export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
-
   const annotationElements = Array.from(document.querySelectorAll('[data-annotation]'));
+
+  const tooltipEl = null;
 
   // Annotations can be nested, so we filter out all outer elements from this selection and
   // iterate over the deepest elements
-  annotationElements.forEach(el => {
-      el.addEventListener(
-        'mouseenter',
-        ({clientX: x, clientY: y}) => {
-          let elementFromPoint = document.elementFromPoint(x, y);
+  annotationElements.forEach((el) => {
+    el.addEventListener(
+      'mouseenter',
+      ({ clientX: x, clientY: y }) => {
+        let elementFromPoint = document.elementFromPoint(x, y);
 
-          if (!elementFromPoint.hasAttribute('data-annotation')) {
-            elementFromPoint = null;
-          }
+        if (!elementFromPoint.hasAttribute('data-annotation')) {
+          elementFromPoint = null;
+        }
 
-          const currentElement = elementFromPoint ?? el;
+        const currentElement = elementFromPoint ?? el;
 
-          const { filteredAnnotations } = getters;
-          const annotationTooltipModels = filteredAnnotations.reduce((acc, curr) => {
-            const { id } = curr;
-            const name = rootGetters['config/getIconByType'](curr.body['x-content-type']);
-            acc[id] = {
-              value: curr.body.value,
-              name,
-            };
-            return acc;
-          }, {});
+        const { filteredAnnotations } = getters;
+        const annotationTooltipModels = filteredAnnotations.reduce((acc, curr) => {
+          const { id } = curr;
+          const name = rootGetters['config/getIconByType'](curr.body['x-content-type']);
+          acc[id] = {
+            value: curr.body.value,
+            name,
+          };
+          return acc;
+        }, {});
 
-          const currentAnnotations = Utils.getValuesFromAttribute(currentElement, 'data-annotation-ids');
-          const closestAnnotationId = currentAnnotations[currentAnnotations.length - 1];
-          const closestAnnotationTooltipModel = annotationTooltipModels[closestAnnotationId]
-          let annotationIds = discoverParentAnnotationIds(currentElement);
-          annotationIds = discoverChildAnnotationIds(currentElement, annotationIds);
+        const currentAnnotations = Utils.getValuesFromAttribute(currentElement, 'data-annotation-ids');
+        const closestAnnotationId = currentAnnotations[currentAnnotations.length - 1];
+        const closestAnnotationTooltipModel = annotationTooltipModels[closestAnnotationId];
+        let annotationIds = discoverParentAnnotationIds(currentElement);
+        annotationIds = discoverChildAnnotationIds(currentElement, annotationIds);
 
-          const otherAnnotationTooltipModels = Object.keys(annotationIds)
-            .map(id => annotationTooltipModels[id])
-            .filter(m => m);
+        const otherAnnotationTooltipModels = Object.keys(annotationIds)
+          .map((id) => annotationTooltipModels[id])
+          .filter((m) => m);
 
-          AnnotationUtils.createOrUpdateTooltip.bind(
-            this,
-            currentElement,
-            { closest: closestAnnotationTooltipModel, other: otherAnnotationTooltipModels },
-            document.getElementById('text-content'),
-          )();
-        },
-        false,
-      );
-      el.addEventListener(
-        'mouseout',
-        () => document.querySelectorAll('#annotation-tooltip').forEach((el) => el.remove()),
-        false,
-      );
-    });
+        AnnotationUtils.createOrUpdateTooltip.bind(
+          this,
+          currentElement,
+          { closest: closestAnnotationTooltipModel, other: otherAnnotationTooltipModels },
+          document.getElementById('text-content'),
+        )();
+      },
+      false,
+    );
+    el.addEventListener('mouseout', () => tooltipEl.remove(), false);
+  });
 };
 
 export const addHighlightClickListeners = ({ dispatch, getters }) => {
