@@ -128,7 +128,7 @@ export const initAnnotations = async ({ dispatch }, url) => {
     }
 
     const current = await request(annotations.first);
-    if (current.items.length) {
+    if (Array.isArray(current.items)) {
       dispatch('annotationLoaded', current.items);
     }
   } catch (err) {
