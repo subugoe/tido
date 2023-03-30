@@ -84,6 +84,11 @@ export default {
       this.viewer.addHandler('tile-loaded', () => {
         this.$emit('loading', false);
       });
+
+      this.viewer.addHandler('open-failed', () => {
+        this.error = { message: 'error_open_image' };
+        this.$emit('loading', false);
+      });
     },
   },
 };

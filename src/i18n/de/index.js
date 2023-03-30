@@ -31,6 +31,7 @@ export default {
   + ' <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start" '
   + 'target="_blank"> Netzwerk-Service VPN</a>.',
   error_image_not_exists: 'Für diese Seite existiert noch kein Bild.',
+  error_open_image: 'Fehler beim Öffnen der Bilddatei.',
   no_image_available: 'Kein Bild verfügbar',
   image_license: 'Bildlizenz',
   image_notes: 'Bildnotizen',
