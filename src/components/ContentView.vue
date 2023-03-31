@@ -1,5 +1,5 @@
 <template>
-  <div class="content-container q-px-md q-pt-md">
+  <div class="content-view q-px-md q-pt-md">
     <div v-if="notificationMessage" class="q-pa-sm">
       <Notification
         :message="$t(notificationMessage)"
@@ -106,7 +106,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content-container {
+.content-view {
   position: relative;
   overflow: auto;
 }

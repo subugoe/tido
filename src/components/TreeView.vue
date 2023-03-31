@@ -1,5 +1,5 @@
 <template>
-  <div ref="containerRef" class="tree-container q-px-md q-pt-md">
+  <div ref="containerRef" class="tree-view q-px-md q-pt-md">
     <q-tree
       class="item-content"
       :class="$q.dark.isActive ? 'is-dark' : ''"
@@ -227,7 +227,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.tree-container {
+.tree-view {
   display: flex;
   flex: 1;
   flex-direction: column;

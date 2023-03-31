@@ -1,5 +1,5 @@
 <template>
-  <div class="q-px-md q-pt-md">
+  <div class="annotations-view q-px-md q-pt-md">
     <AnnotationsList
       v-if="filteredAnnotations.length"
       class="custom-font"

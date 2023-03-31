@@ -2,8 +2,8 @@
   <q-list class="item-content">
     <q-item
       v-for="annotation in configuredAnnotations"
-      :id="'list' + annotation.strippedId"
-      :key="annotation.strippedId"
+      :data-annotation-id="annotation.id"
+      :key="annotation.id"
       :class="$q.dark.isActive ? { 'bg-grey-7 active': isActive(annotation) } : { 'bg-grey-4 active': isActive(annotation) }"
       class="q-pa-sm q-pl-xs q-mb-xs"
       :clickable="!isText(annotation)"
