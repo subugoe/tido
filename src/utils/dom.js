@@ -76,3 +76,12 @@ export function getValuesFromAttribute(element, attribute) {
   const value = element.getAttribute(attribute);
   return value ? value.split(' ') : [];
 }
+
+export function scrollIntoViewIfNeeded(target, container) {
+  const { bottom: targetBottom, top: targetTop } = target.getBoundingClientRect();
+  const { top: containerTop, height: containerHeight } = container.getBoundingClientRect();
+
+  if (targetBottom > containerHeight || targetTop < containerTop) {
+    target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+}

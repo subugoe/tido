@@ -384,3 +384,10 @@ export function removeIcon(annotation) {
     el.remove();
   }
 }
+
+export function getAnnotationListElement(id, container) {
+  return [...container.querySelectorAll('.q-item')].find((annotationItem) => {
+    if (!annotationItem.hasAttribute('data-annotation-id')) return false;
+    return annotationItem.getAttribute('data-annotation-id') === id;
+  });
+}

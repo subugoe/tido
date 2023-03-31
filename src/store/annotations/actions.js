@@ -1,6 +1,8 @@
 import * as AnnotationUtils from '@/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
+import { scrollIntoViewIfNeeded } from '@/utils';
+import { getAnnotationListElement } from '@/utils/annotations';
 
 export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
   const { activeAnnotations, annotations } = getters;
@@ -24,7 +26,13 @@ export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
 
   if (elements.length > 0) {
     Utils.addIcon(elements[0], newActiveAnnotation, iconName);
-    elements[0].scrollIntoView({ behavior: 'smooth' });
+    scrollIntoViewIfNeeded(elements[0], document.getElementById('text-content'));
+
+    // Get the scroll container of Quasar tab panel
+    const annotationsView = document.querySelector('.annotations-view').parentElement.parentElement;
+
+    const annotationEl = getAnnotationListElement(id, annotationsView);
+    scrollIntoViewIfNeeded(annotationEl, annotationsView);
   }
 };
 
