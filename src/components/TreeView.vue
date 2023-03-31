@@ -10,7 +10,6 @@
       :nodes="tree"
       :selected-color="$q.dark.isActive ? 'grey' : ''"
       node-key="url"
-      @after-show="onAfterShow"
       @lazy-load="onLazyLoad"
     >
       <template #default-header="{ node }">
@@ -158,13 +157,6 @@ export default {
     async onItemUrlChange() {
       this.selected = this.itemUrl;
     },
-    async onAfterShow() {
-      await delay(100);
-      const el = document.getElementById(this.itemUrl);
-      if (el && !isElementVisible(el, this.$refs.containerRef)) {
-        this.scrollIntoView(el);
-      }
-    },
     async onLazyLoad({ node, fail, done }) {
       const { url, children } = node;
       if (!url) {
@@ -198,7 +190,7 @@ export default {
       const { url: itemUrl, parent: manifestUrl } = node;
 
       this.$nextTick(async () => {
-        await delay(300);
+        await delay(600);
         const el = document.getElementById(this.itemUrl);
         if (el && !isElementVisible(el, this.$refs.containerRef)) {
           this.scrollIntoView(el);
