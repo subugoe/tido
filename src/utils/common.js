@@ -70,6 +70,8 @@ export const isUrl = (str) => {
 };
 
 export const isElementVisible = (element, root) => {
+  if (!element || !root) return false;
+
   // Get the position of the element relative to the root element
   const elementRect = element.getBoundingClientRect();
   const rootRect = root.getBoundingClientRect();
