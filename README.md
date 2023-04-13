@@ -50,12 +50,12 @@ With this project we provide a highly configurable viewer for projects that impl
 
 ## Demo
 
-You can preview TIDO at Gitlab Pages with different configurations to compare with.
+You can preview TIDO at GitLab Pages with different configurations to compare with.
 Generally the deployment to Pages runs at every branch.
 
 You can access the preview with the following URL syntax:
 
-`[Gitlab Pages base URL]/[branch-name]/config-tester/[project].html`
+`[GitLab Pages base URL]/[branch-name]/config-tester/[project].html`
 
 **List of preview configurations:**
 
@@ -67,11 +67,11 @@ You can access the preview with the following URL syntax:
 
 ## Getting Started
 
-TiDO is provided as **npm package**. Please follow the steps below to include it for production:
+TIDO is provided as **npm package**. Please follow the steps below to include it for production:
 
 ### Get the Viewer
 
-#### Registry setup
+#### Registry Setup
 
 Since npm communicates with the package API, it is necessary to setup a valid endpoint.
 
@@ -79,7 +79,7 @@ Since npm communicates with the package API, it is necessary to setup a valid en
 echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
 ```
 
-**Note**: fire this command inside the **root** of your **project directory**.
+**Note**: Fire this command inside the **root** of your **project directory**.
 
 #### Installation
 
@@ -420,13 +420,13 @@ nvm install stable
 **Note**:
 After the nvm installation is done, please `restart` your shell session once. That's due to changes to your profile environment.
 
-#### Clone the repository
+#### Clone the Repository
 
 ```bash
 git clone git@gitlab.gwdg.de:subugoe/emo/tido.git
 ```
 
-#### Get the dependencies
+#### Get the Dependencies
 
 Head over to your project directory, where you just cloned the repository to as described above and get all the dependencies needed by typing:
 
@@ -447,9 +447,9 @@ npm run build
 
 The output files are located at `/dist`.
 
-### Serve locally
+### Serve Locally
 
-#### Serve development build
+#### Serve Development Build
 
 Builds the app in `development mode` (hot reloading, error reporting, etc.).
 
@@ -459,7 +459,7 @@ npm run serve:dev
 
 It will be available under `localhost:5173`.
 
-#### Serve examples (production build)
+#### Serve Examples (Production Build)
 
 You can serve a production build by viewing example configurations that we provide under `/examples`.
 Run this command which will create a TIDO production build and copy the result files into `/examples`:
@@ -474,7 +474,7 @@ This examples are available under `localhost:2222`. Each example has its own HTM
 
 #### Serve Mock API
 
-You can start your own local API server which will serve Text API responses from `tests/mocks`.
+You can start your own local API server which will serve TextAPI responses from `tests/mocks`.
 The folder structure represents a portion of resources of the Ahiqar project.
 
 ```bash
@@ -485,7 +485,7 @@ The server will be available at `localhost:8181`.
 
 ### Testing
 
-We run tests only on production code. So you need to make sure to create a Tido build before starting to run tests.
+We run tests only on production code. So you need to make sure to create a TIDO build before starting to run tests.
 TIDO follows the "Zero Config" policy but projects can provide a very detailed config that can drastically change the behaviour of the app.
 Therefor we provide some example configurations from previous implementation projects that cover the most important features.
 
@@ -534,7 +534,7 @@ npm run lint:vue        # to lint vue files only
 
 ## Dockerfile
 
-The dockerfile is used for GitLab CI.
+The Dockerfile is used for GitLab CI.
 
 ```bash
 docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/tido/node .
