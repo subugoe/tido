@@ -3,7 +3,6 @@
 Text vIewer for Digital Objects.
 With this project we provide a highly configurable viewer for projects that implement the [TextAPI](https://subugoe.pages.gwdg.de/emo/text-api/).
 
-
 ## Overview
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -58,7 +57,6 @@ You can access the preview with the following URL syntax:
 
 `[Gitlab Pages base URL]/[branch-name]/config-tester/[project].html`
 
-
 **List of preview configurations:**
 
 - [Ahiqar Textual Witnesses In Syriac](https://subugoe.pages.gwdg.de/emo/tido/main/examples/ahiqar-syriac.html)
@@ -93,14 +91,15 @@ npm i @subugoe/tido
 
 1. Add these two files to your application: `tido.js` and `tido.css`.
 
-
 HTML:
+
 ```html
 <link href="/node_modules/@subugoe/tido/dist/tido.css" rel="stylesheet">
 <script src="/node_modules/@subugoe/tido/dist/tido.js"></script>
 ```
 
 JS:
+
 ```js
 import '@subugoe/tido/dist/tido.js'
 import '@subugoe/tido/dist/tido.css'
@@ -108,7 +107,6 @@ import '@subugoe/tido/dist/tido.css'
 
 2. Add a container element to your application where TIDO can hook into.
 Please make sure that this element has your desired dimensions and position.
-
 
 ```html
 <style>
@@ -133,8 +131,6 @@ Please make sure that this element has your desired dimensions and position.
 
 Below you can find a detailed explanation of the configuration object.
 
-
-
 ## Configuration
 
 TIDO requires an entrypoint URL to be useful at all. You can provide either a `collection` or a `manifest` key
@@ -153,6 +149,7 @@ There are options to
 - and **more** ...
 
 Real world example:
+
 ```html
 <script id="tido-config" type="application/json">
   {
@@ -324,7 +321,6 @@ Real world example:
 | translations.[langKey]                  | Object        | null      | Defines a translation object for supported languages with the respective `langKey` which can have following values: `en`, `de`.                                                                                    |
 | translations.[langKey].[translationKey] | String        | null      | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs.                                                                         |
 
-
 ### View Connectors
 
 TIDO can be configured to display dynamic panel with dynamic views inside. In order to tell TIDO how the panels and views should be rendered,
@@ -352,7 +348,6 @@ Here is an overview of available options:
 | labels["item"]     | String | `"page"`     | Label prefix for an item tree node. The item number in the sequence will be appended. It will be displayed when no other label is given by the item itself. The output could look like this: `"Page 3"`             |
 | labels["manifest"] | String | `"manifest"` | Label prefix for an manifest tree node. The manifest number in the sequence will be appended. It will be displayed when no other label is given by the item itself. The output could look like this: `"Manifest 3"` |
 
-
 ##### Metadata
 
 | Name       | Type    | Default | Description                           |
@@ -361,18 +356,15 @@ Here is an overview of available options:
 | manifest   | Boolean | `true`  | Toggle on/off the manifest section.   |
 | item       | Boolean | `true`  | Toggle on/off the item section.       |
 
-
 ##### Image
 
 no options
-
 
 ##### Text
 
 | Name     | Type    | Default | Description                                                                |
 |----------|---------|---------|----------------------------------------------------------------------------|
 | type     | String  | null    | Specify the content type slug that is served from `item.content` response. |
-
 
 ##### Annotations
 
@@ -428,7 +420,6 @@ nvm install stable
 **Note**:
 After the nvm installation is done, please `restart` your shell session once. That's due to changes to your profile environment.
 
-
 #### Clone the repository
 
 ```bash
@@ -447,6 +438,7 @@ npm install
 That's it. You should now be able to run the Viewer.
 
 ### Build
+
 Please run this command to create a production build.
 
 ```bash
@@ -455,10 +447,10 @@ npm run build
 
 The output files are located at `/dist`.
 
-
 ### Serve locally
 
 #### Serve development build
+
 Builds the app in `development mode` (hot reloading, error reporting, etc.).
 
 ```bash
@@ -468,6 +460,7 @@ npm run serve:dev
 It will be available under `localhost:5173`.
 
 #### Serve examples (production build)
+
 You can serve a production build by viewing example configurations that we provide under `/examples`.
 Run this command which will create a TIDO production build and copy the result files into `/examples`:
 
@@ -476,9 +469,11 @@ npm run serve:prod
 ```
 
 This examples are available under `localhost:2222`. Each example has its own HTML file:
+
 - `http://localhost:2222/[example-name].html`
 
 #### Serve Mock API
+
 You can start your own local API server which will serve Text API responses from `tests/mocks`.
 The folder structure represents a portion of resources of the Ahiqar project.
 
@@ -488,7 +483,6 @@ npm run serve:mock-api
 
 The server will be available at `localhost:8181`.
 
-
 ### Testing
 
 We run tests only on production code. So you need to make sure to create a Tido build before starting to run tests.
@@ -496,6 +490,7 @@ TIDO follows the "Zero Config" policy but projects can provide a very detailed c
 Therefor we provide some example configurations from previous implementation projects that cover the most important features.
 
 Following examples are available under (`examples/`):
+
 - `ahiqar-arabic-karshuni.html`
 - `ahiqar-arabic-karshuni-local.html`
 - `ahiqar-syriac.html`
@@ -532,7 +527,6 @@ npm run lint:markdown   # to lint the markdown
 npm run lint:scss       # to lint the styles
 npm run lint:vue        # to lint vue files only
 ```
-
 
 ## Viewer Architecture
 
