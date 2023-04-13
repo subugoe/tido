@@ -507,7 +507,7 @@ Following examples are available under (`examples/`):
 Prepare the environment before running the tests.
 
 - `npm run build`
-- `npm run mock-api`
+- `npm run serve:mock-api`
 - `npm run serve:prod`
 
 Now you can run the tests on your local machine with a proper Cypress UI and selective steps
