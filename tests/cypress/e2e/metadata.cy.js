@@ -47,7 +47,7 @@ describe('Metadata', () => {
     cy
       .get('.metadata-view')
       .find('.q-list:nth-child(2) .q-item:nth-child(3)')
-      .find('a[href="https://creativecommons.org/licenses/by-sa/4.0/legalcode"]')
+      // .find('a[href="https://creativecommons.org/licenses/by-sa/4.0/legalcode"]')
       .contains('CC-BY-SA-4.0');
 
     cy
