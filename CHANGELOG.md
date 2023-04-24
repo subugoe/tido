@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.0.2...v3.2.0) (2023-04-24)
+
+
+### Features
+
+* add Actor display in metadata ([e7c29ba](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e7c29baaeb3a8b5d68696ab1d3f1c7257b2995dc))
+* add colors forceMode config option ([dfb0d8b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dfb0d8b7a53846e05e65d723e1d6a8967862f2da))
+* add lazy loading for items in tree ([9abd7c5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/9abd7c502e7cadd665adf9df6a6bf59bee33fd2d))
+* disabled tooltip on annotation hover in text (unclear reqs) ([c64acd1](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c64acd1fee9b28ca0a10c95852169f765f0ff081))
+* scroll annotation into view when selecting in text ([5f2342a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5f2342a6ac10e9798fe6fc53e8d5c6767b7d0b1c))
+* remove annotationCollection and annotationPage keys at API responses, minor refactorings ([798920d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/798920d73ee634dd44c4706f9de3d8c17d822ff0))
+* load support fonts as injected style tag instead FontFace API ([a222c22](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/a222c226c6c5e95270cec7299360ad36b02f31c9))
+
+
+### Bug Fixes
+
+* get support files manifest init ([2d89d69](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2d89d6935aa28b8db8fcd1f5a75a766c346b6bcc))
+* add #app to postcss exclude config ([bb9d67a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/bb9d67a97f46b2fc3c5ae2835c4a4685b5990139))
+* add null check to isElementVisible ([110b453](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/110b45338628e71628e0b62919516915984e7277))
+* avoid aborting loading process when annotation items are empty ([5bd8005](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5bd8005e32c2d06ad2e6fee394929e6a46fb75fe))
+* jumping back to selected item in tree when expanding other manifests ([bf9835a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/bf9835a006492e1a49eaa7cf72316e0b2fdaea89))
+* README anchor ([8032855](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8032855edb3229fc2d1c128e89acf72589a305a4))
+* remove infinite loading spinner when Openseadragon fails to open an image and display error message instead ([29fa6a2](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/29fa6a20f08f41326af411b71fd928a4e0e7741b))
+* remove URL parsing in metadata value ([b6833ae](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b6833ae91c72edf3076db7bf7180e06107751164))
+* set default container in config ([075d9e9](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/075d9e9d747cad28a80422270a56f3df7de459dd))
+* text highlighting in dark mode ([c7d93ea](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c7d93ea1b59e7cbc5d0255c1067af742ddef7e83))
+* tree margins ([b270eb7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b270eb719bdc8432b9d9847778252a08542d954f))
+* update set highlighting and loading order ([75e11a4](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/75e11a47e4fbe4c4bebc8dc04325777f20f689ea))
+
+
+### Chore
+
+* update Cypress ([204ef3d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/204ef3d24b3eee0f0051d4132100885e25a369f8))
+
+
+### Refactoring
+
+* add view class to each view component ([27d93dc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/27d93dc497a4f9351b950e1ab3728d73a701199b))
+* rename components according to recommendations ([80491b5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/80491b59eeaa638f797d9f2e865933103daf1460))
+* update code style ([b6773c9](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b6773c9cbdb282ce56094f77e45d2000d0dc71fd))
+
+
+### Docs
+
+* fix error in README ([e4968a1](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e4968a19a3585c92e860ab53cf645ee21340ea28))
+* update README ([96d34e8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/96d34e8efb17b8f06531bb43b6b6d6b20cf6472a))
+
+### Tests
+
+* restructure mock API with latest Ahiqar data and fix e2e tests ([e8c574c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e8c574c7ac8e02fcff14125d53b11f9bf66ba5be))
+
 ## [3.1.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.0.2...v3.1.0) (2023-01-18)
 
 
