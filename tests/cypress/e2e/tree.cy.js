@@ -19,7 +19,7 @@ describe('Tree', () => {
       .get('.panels-target > .item:nth-child(1)')
       .find('.q-tree > .q-tree__node > .q-tree__node-collapsible > .q-tree__children')
       .children()
-      .should('have.length', 24);
+      .should('have.length', 29);
   });
 
   it('Should display items in first manifest', () => {
@@ -48,7 +48,7 @@ describe('Tree', () => {
       .first()
       .find('.q-tree__node-header')
       .should('have.class', 'q-tree__node--selected')
-      .should('contain', 'Sheet 1');
+      .should('contain', '2a');
   });
 
   it('Should switch to other item', () => {
@@ -61,12 +61,12 @@ describe('Tree', () => {
       .should('contain', 'Cod. Arab. 236 Copenhagen')
       .find('> .q-tree__node-collapsible > .q-tree__children')
       .children()
-      .eq(2)
+      .eq(1)
       .click()
       .find('.q-tree__node-header')
       .should('have.class', 'q-tree__node--selected')
       .url()
-      .should('contain', '3r177-3a');
+      .should('contain', '3r177%2F2b');
   });
 
   it('Should switch to other manifest', () => {
@@ -75,7 +75,7 @@ describe('Tree', () => {
       .get('.panels-target > .item:nth-child(1)')
       .find('.q-tree > .q-tree__node > .q-tree__node-collapsible > .q-tree__children')
       .children()
-      .eq(16)
+      .eq(20)
       .click()
       .find('> .q-tree__node-collapsible > .q-tree__children')
       .children()
@@ -84,6 +84,6 @@ describe('Tree', () => {
       .find('.q-tree__node-header')
       .should('have.class', 'q-tree__node--selected')
       .url()
-      .should('contain', '3r176-182b');
+      .should('contain', '3r176%2F182b');
   });
 });

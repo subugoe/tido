@@ -33,7 +33,6 @@ module.exports = {
   // add your custom rules here
   rules: {
     'no-param-reassign': 'off',
-
     'import/first': 'off',
     'import/named': 'error',
     'import/namespace': 'error',
@@ -56,5 +55,7 @@ module.exports = {
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'max-len': 0,
+    'allow-parens': 'off',
+    'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
   },
 };

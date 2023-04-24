@@ -19,7 +19,7 @@ export default {
   default: 'Standard',
   reset_view: 'Ansicht zurücksetzen',
   description: 'Beschreibung',
-  Editor: 'Herausgeber',
+  editor: 'Herausgeber',
   editorial: 'Kommentar',
   Editors: 'Herausgeber',
   error_default: 'Es ist ein Fehler aufgetreten. Bitte laden sie die App/Seite erneut und/oder versuchen Sie es später zu einem späteren Zeitpunkt noch mal.',
@@ -28,9 +28,10 @@ export default {
   error_vpn: 'Einige Bilder stehen Ihnen außerhalb des Netzwerks der'
   + ' Georg-August-Universität Göttingen ohne VPN-Zugang nicht zur Verfügung. '
   + 'Wenn Sie Zugang erhalten möchten, nutzen Sie bitte die Anleitung der GWDG zum'
-  + ' <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start"'
+  + ' <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start" '
   + 'target="_blank"> Netzwerk-Service VPN</a>.',
   error_image_not_exists: 'Für diese Seite existiert noch kein Bild.',
+  error_open_image: 'Fehler beim Öffnen der Bilddatei.',
   no_image_available: 'Kein Bild verfügbar',
   image_license: 'Bildlizenz',
   image_notes: 'Bildnotizen',
@@ -93,4 +94,5 @@ export default {
   other: 'Sonstiges',
   subtitle: 'Untertitel',
   manifest: 'Manifest',
+  more_annotations: 'Weitere',
 };

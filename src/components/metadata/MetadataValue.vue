@@ -1,32 +1,6 @@
 <template>
   <div class="metadata-value">
-    <div
-      v-for="(url, idx) in contentUrls"
-      :key="idx"
-      class="url-text"
-      :class="$q.dark.isActive ? 'text-grey-5' : 'text-grey-8'"
-    >
-      <a
-        v-if="url.isLink"
-        :href="url.text"
-        :title="url.linkTitle + '- open in a new tab or window'"
-        rel="noopener noreferrer"
-        target="_blank"
-        class="content__link"
-        :class="$q.dark.isActive ? 'text-white' : 'text-primary'"
-      >
-        <span>{{ url.linkTitle }}</span>
-
-        <q-icon
-          :name="linkIcon"
-          size="15px"
-          class="q-pl-xs q-pb-xs"
-        />
-      </a>
-
-      <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-      <span v-else v-html="url.text" />
-    </div>
+    <span v-html="value" />
   </div>
 </template>
 
@@ -44,7 +18,7 @@ export default {
   computed: {
     contentUrls() {
       let { value } = this;
-      const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
+      const regex = /\(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]\)/ig;
       const urls = [...(value.match(regex) || [])];
 
       urls.forEach((url) => {

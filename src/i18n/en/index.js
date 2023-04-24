@@ -19,7 +19,7 @@ export default {
   error_default:
     'Something went wrong. Please relaod the page/application and/or try again later.',
   description: 'Description',
-  Editor: 'Editor',
+  editor: 'Editor',
   editorial: 'Editorial',
   Editors: 'Editors',
   hide: 'Hide',
@@ -27,9 +27,10 @@ export default {
   error_vpn:
     'Some images are not available outside of the VPN (Virtual Private Network)'
     + ' of the Georg-August-University Goettingen. If you like to get access please refer to the '
-    + 'guide at <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start"'
+    + 'guide at <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start" '
     + 'target="_blank"> Network Services VPN</a>.',
   error_image_not_exists: 'An image for this page does not exist yet.',
+  error_open_image: 'Could not open the image file.',
   no_image_available: 'No Image Available',
   image_license: 'Image License',
   image_notes: 'Image Notes',
@@ -95,4 +96,5 @@ export default {
   other: 'Other',
   subtitle: 'Subtitle',
   manifest: 'Manifest',
+  also_selected: 'Also selected',
 };

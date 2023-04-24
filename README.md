@@ -3,7 +3,6 @@
 Text vIewer for Digital Objects.
 With this project we provide a highly configurable viewer for projects that implement the [TextAPI](https://subugoe.pages.gwdg.de/emo/text-api/).
 
-
 ## Overview
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -24,6 +23,7 @@ With this project we provide a highly configurable viewer for projects that impl
       - [Image](#image)
       - [Text](#text)
       - [Annotations](#annotations)
+- [Bookmarking](#bookmarking)
 - [Getting Started (Developers)](#getting-started-developers)
   - [Prerequisites](#prerequisites)
   - [Install](#install)
@@ -50,26 +50,28 @@ With this project we provide a highly configurable viewer for projects that impl
 
 ## Demo
 
-You can preview TIDO at Gitlab Pages with different configurations to compare with.
+You can preview TIDO at GitLab Pages with different configurations to compare with.
 Generally the deployment to Pages runs at every branch.
 
 You can access the preview with the following URL syntax:
 
-`[Gitlab Pages base URL]/[branch-name]/config-tester/[project].html`
+`[GitLab Pages base URL]/[branch-name]/config-tester/[project].html`
 
-List of preview configurations:
+**List of preview configurations:**
 
-- [Ahiqar Syriac](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/ahiqar-syriac.html)
-- [Ahiqar Arabic Karshuni](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/ahiqar-arabic-karshuni.html)
-- [GFL](https://subugoe.pages.gwdg.de/emo/tido/main/config-tester/gfl.html)
+- [Ahiqar Textual Witnesses In Syriac](https://subugoe.pages.gwdg.de/emo/tido/main/examples/ahiqar-syriac.html)
+- [Ahiqar Textual Witnesses In Arabic And Karshuni](https://subugoe.pages.gwdg.de/emo/tido/main/examples/ahiqar-arabic-karshuni.html)
+- [Goethes Farbenlehre in Berlin](https://subugoe.pages.gwdg.de/emo/tido/main/examples/gfl.html)
+- [Zero Config](https://subugoe.pages.gwdg.de/emo/tido/main/examples/zero-config.html?collection=https%3A%2F%2Fahiqar.uni-goettingen.de%2Fapi%2Ftextapi%2Fahikar%2Fsyriac%2Fcollection.json)
+  (here you can append an entrypoint URL parameter like `?collection=https://example.com`. For more details, please check the [Bookmarking](#bookmarking) section.)
 
 ## Getting Started
 
-TiDO is provided as **npm package**. Please follow the steps below to include it for production:
+TIDO is provided as **npm package**. Please follow the steps below to include it for production:
 
 ### Get the Viewer
 
-#### Registry setup
+#### Registry Setup
 
 Since npm communicates with the package API, it is necessary to setup a valid endpoint.
 
@@ -77,7 +79,7 @@ Since npm communicates with the package API, it is necessary to setup a valid en
 echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
 ```
 
-**Note**: fire this command inside the **root** of your **project directory**.
+**Note**: Fire this command inside the **root** of your **project directory**.
 
 #### Installation
 
@@ -89,14 +91,15 @@ npm i @subugoe/tido
 
 1. Add these two files to your application: `tido.js` and `tido.css`.
 
-
 HTML:
+
 ```html
 <link href="/node_modules/@subugoe/tido/dist/tido.css" rel="stylesheet">
 <script src="/node_modules/@subugoe/tido/dist/tido.js"></script>
 ```
 
 JS:
+
 ```js
 import '@subugoe/tido/dist/tido.js'
 import '@subugoe/tido/dist/tido.css'
@@ -104,7 +107,6 @@ import '@subugoe/tido/dist/tido.css'
 
 2. Add a container element to your application where TIDO can hook into.
 Please make sure that this element has your desired dimensions and position.
-
 
 ```html
 <style>
@@ -129,15 +131,13 @@ Please make sure that this element has your desired dimensions and position.
 
 Below you can find a detailed explanation of the configuration object.
 
-
-
 ## Configuration
 
 TIDO requires an entrypoint URL to be useful at all. You can provide either a `collection` or a `manifest` key
 and additionally provide an `item` key to start a certain item with a sequence. Technically you could also provide
 a single `item` key only, but it is recommended to use manifests as wrappers.
 
-By default, TIDO will render three panels displaying sequence tree, text content and metadata views.
+By default, TIDO will render five panels displaying sequence tree, metadata, image, text content and annotation views.
 Nevertheless, you can fully customize the viewer's behaviour.
 
 There are options to
@@ -149,6 +149,7 @@ There are options to
 - and **more** ...
 
 Real world example:
+
 ```html
 <script id="tido-config" type="application/json">
   {
@@ -320,7 +321,6 @@ Real world example:
 | translations.[langKey]                  | Object        | null      | Defines a translation object for supported languages with the respective `langKey` which can have following values: `en`, `de`.                                                                                    |
 | translations.[langKey].[translationKey] | String        | null      | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs.                                                                         |
 
-
 ### View Connectors
 
 TIDO can be configured to display dynamic panel with dynamic views inside. In order to tell TIDO how the panels and views should be rendered,
@@ -348,7 +348,6 @@ Here is an overview of available options:
 | labels["item"]     | String | `"page"`     | Label prefix for an item tree node. The item number in the sequence will be appended. It will be displayed when no other label is given by the item itself. The output could look like this: `"Page 3"`             |
 | labels["manifest"] | String | `"manifest"` | Label prefix for an manifest tree node. The manifest number in the sequence will be appended. It will be displayed when no other label is given by the item itself. The output could look like this: `"Manifest 3"` |
 
-
 ##### Metadata
 
 | Name       | Type    | Default | Description                           |
@@ -357,18 +356,15 @@ Here is an overview of available options:
 | manifest   | Boolean | `true`  | Toggle on/off the manifest section.   |
 | item       | Boolean | `true`  | Toggle on/off the item section.       |
 
-
 ##### Image
 
 no options
-
 
 ##### Text
 
 | Name     | Type    | Default | Description                                                                |
 |----------|---------|---------|----------------------------------------------------------------------------|
 | type     | String  | null    | Specify the content type slug that is served from `item.content` response. |
-
 
 ##### Annotations
 
@@ -380,6 +376,21 @@ no options
 | types[i].displayWhen    | String                 | `null`       | Text content type that was specified under [Text options](#text). Annotation will only be shown if that content type is currently active.                                                                                    |
 | types[i].annotationType | String                 | `annotation` | Controls the look of the annotation item. Allowed values: `annotation` or `text`. Currently the only difference is that there is no icon at type `text`.                                                                     |
 
+## Bookmarking
+
+TIDO will reflect certain state changes to the URL so you can save and share your current view.
+Currently we provide the following bookmarking keys:
+
+| Key          | Value         | Description                                                                                                                                    |
+|--------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `collection` | URL           | Specifies a collection entrypoint. Will be preferred before `manifest`.                                                                        |
+| `manifest`   | URL           | Specifies a manifest entrypoint.                                                                                                               |
+| `item`       | URL           | Specifies an item entrypoint. If not set the first possible item will be appended and displayed.                                               |
+| `show`       | `0,1,2`       | Controls the visibility of panels. It's a list of comma-separated panel indexes. All other panels will be hidden. Not set = all visible.       |
+| `panels`     | `0_1,1_1,2_0` | Specifies the active view (tab) in a respective panel. Syntax: `[panel index]_[view_index]`. Each user interaction will change this parameter. |
+
+**Hint:** With this setup you are able to load your entrypoint dynamically by appending it at the URL instead of rendering
+it  via the configuration object inside your wrapper application.
 
 ## Getting Started (Developers)
 
@@ -409,14 +420,13 @@ nvm install stable
 **Note**:
 After the nvm installation is done, please `restart` your shell session once. That's due to changes to your profile environment.
 
-
-#### Clone the repository
+#### Clone the Repository
 
 ```bash
 git clone git@gitlab.gwdg.de:subugoe/emo/tido.git
 ```
 
-#### Get the dependencies
+#### Get the Dependencies
 
 Head over to your project directory, where you just cloned the repository to as described above and get all the dependencies needed by typing:
 
@@ -428,6 +438,7 @@ npm install
 That's it. You should now be able to run the Viewer.
 
 ### Build
+
 Please run this command to create a production build.
 
 ```bash
@@ -436,10 +447,10 @@ npm run build
 
 The output files are located at `/dist`.
 
+### Serve Locally
 
-### Serve locally
+#### Serve Development Build
 
-#### Serve development build
 Builds the app in `development mode` (hot reloading, error reporting, etc.).
 
 ```bash
@@ -448,7 +459,8 @@ npm run serve:dev
 
 It will be available under `localhost:5173`.
 
-#### Serve examples (production build)
+#### Serve Examples (Production Build)
+
 You can serve a production build by viewing example configurations that we provide under `/examples`.
 Run this command which will create a TIDO production build and copy the result files into `/examples`:
 
@@ -457,10 +469,12 @@ npm run serve:prod
 ```
 
 This examples are available under `localhost:2222`. Each example has its own HTML file:
+
 - `http://localhost:2222/[example-name].html`
 
 #### Serve Mock API
-You can start your own local API server which will serve Text API responses from `tests/mocks`.
+
+You can start your own local API server which will serve TextAPI responses from `tests/mocks`.
 The folder structure represents a portion of resources of the Ahiqar project.
 
 ```bash
@@ -469,14 +483,14 @@ npm run serve:mock-api
 
 The server will be available at `localhost:8181`.
 
-
 ### Testing
 
-We run tests only on production code. So you need to make sure to create a Tido build before starting to run tests.
+We run tests only on production code. So you need to make sure to create a TIDO build before starting to run tests.
 TIDO follows the "Zero Config" policy but projects can provide a very detailed config that can drastically change the behaviour of the app.
 Therefor we provide some example configurations from previous implementation projects that cover the most important features.
 
 Following examples are available under (`examples/`):
+
 - `ahiqar-arabic-karshuni.html`
 - `ahiqar-arabic-karshuni-local.html`
 - `ahiqar-syriac.html`
@@ -488,7 +502,7 @@ Following examples are available under (`examples/`):
 Prepare the environment before running the tests.
 
 - `npm run build`
-- `npm run mock-api`
+- `npm run serve:mock-api`
 - `npm run serve:prod`
 
 Now you can run the tests on your local machine with a proper Cypress UI and selective steps
@@ -514,14 +528,13 @@ npm run lint:scss       # to lint the styles
 npm run lint:vue        # to lint vue files only
 ```
 
-
 ## Viewer Architecture
 
 ![Viewer components](img/Viewer.png)
 
 ## Dockerfile
 
-The dockerfile is used for GitLab CI.
+The Dockerfile is used for GitLab CI.
 
 ```bash
 docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/tido/node .

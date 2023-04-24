@@ -1,6 +1,8 @@
 import * as AnnotationUtils from '@/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
+import { scrollIntoViewIfNeeded } from '@/utils';
+import { getAnnotationListElement } from '@/utils/annotations';
 
 export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
   const { activeAnnotations, annotations } = getters;
@@ -24,7 +26,13 @@ export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
 
   if (elements.length > 0) {
     Utils.addIcon(elements[0], newActiveAnnotation, iconName);
-    elements[0].scrollIntoView({ behavior: 'smooth' });
+    scrollIntoViewIfNeeded(elements[0], document.getElementById('text-content'));
+
+    // Get the scroll container of Quasar tab panel
+    const annotationsView = document.querySelector('.annotations-view').parentElement.parentElement;
+
+    const annotationEl = getAnnotationListElement(id, annotationsView);
+    scrollIntoViewIfNeeded(annotationEl, annotationsView);
   }
 };
 
@@ -35,27 +43,31 @@ export const setActiveAnnotations = ({ commit }, activeAnnotations) => {
 export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
   const { annotations } = getters;
   const activeContentType = rootGetters['config/activeContentType'];
-  const filteredAnnotations = types.length === 0 ? annotations : annotations.filter(
-    (annotation) => {
-      const type = types.find(({ name }) => name === annotation.body['x-content-type']);
-      // First we check if annotation fits to the current view
-      if (!type) return false;
+  let filteredAnnotations = [];
 
-      // Next we check if annotation should always be displayed on the current content tab
-      if (type?.displayWhen && type?.displayWhen === activeContentType) return true;
+  if (annotations !== null) {
+    filteredAnnotations = types.length === 0 ? annotations : annotations.filter(
+      (annotation) => {
+        const type = types.find(({ name }) => name === annotation.body['x-content-type']);
+        // First we check if annotation fits to the current view
+        if (!type) return false;
 
-      // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
-      const selector = AnnotationUtils.generateTargetSelector(annotation);
-      if (selector) {
-        const el = document.querySelector(selector);
-        if (el) {
-          return true;
+        // Next we check if annotation should always be displayed on the current content tab
+        if (type?.displayWhen && type?.displayWhen === activeContentType) return true;
+
+        // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
+        const selector = AnnotationUtils.generateTargetSelector(annotation);
+        if (selector) {
+          const el = document.querySelector(selector);
+          if (el) {
+            return true;
+          }
         }
-      }
 
-      return false;
-    },
-  );
+        return false;
+      },
+    );
+  }
 
   commit('setFilteredAnnotations', filteredAnnotations);
 };
@@ -63,12 +75,6 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
 export const addHighlightAttributesToText = ({ getters }, dom) => {
   const { annotations } = getters;
 
-  // Add range attributes
-  [...dom.querySelectorAll('[data-target]:not([value=""])')]
-    .map((el) => el.getAttribute('data-target').replace('_start', '').replace('_end', ''))
-    .forEach((targetSelector) => Utils.addRangeHighlightAttributes(targetSelector, dom));
-
-  // Add single attributes
   annotations.forEach((annotation) => {
     const { id } = annotation;
     const selector = Utils.generateTargetSelector(annotation);
@@ -81,11 +87,6 @@ export const addHighlightAttributesToText = ({ getters }, dom) => {
 export const annotationLoaded = ({ commit }, annotations) => {
   commit('setAnnotations', annotations);
   commit('updateAnnotationLoading', false);
-};
-
-export const loadAnnotations = ({ commit }) => {
-  commit('updateAnnotationLoading', true);
-  commit('setAnnotations', []);
 };
 
 export const removeActiveAnnotation = ({ getters, dispatch }, id) => {
@@ -111,29 +112,32 @@ export const removeActiveAnnotation = ({ getters, dispatch }, id) => {
 export const resetAnnotations = ({ dispatch, getters }) => {
   const { annotations } = getters;
 
-  annotations.forEach((annotation) => {
-    const selector = AnnotationUtils.generateTargetSelector(annotation);
-    if (selector) {
-      AnnotationUtils.highlightTargets(selector, { level: -1 });
-      AnnotationUtils.removeIcon(annotation);
-    }
-  });
+  if (annotations !== null) {
+    annotations.forEach((annotation) => {
+      const selector = AnnotationUtils.generateTargetSelector(annotation);
+      if (selector) {
+        AnnotationUtils.highlightTargets(selector, { level: -1 });
+        AnnotationUtils.removeIcon(annotation);
+      }
+    });
+  }
 
   dispatch('setActiveAnnotations', {});
 };
 
 export const initAnnotations = async ({ dispatch }, url) => {
+  let annotations = null;
   try {
-    const annotations = await request(url);
+    annotations = await request(url);
 
-    if (!annotations.annotationCollection.first) {
+    if (!annotations.first) {
       dispatch('annotationLoaded', []);
       return;
     }
 
-    const current = await request(annotations.annotationCollection.first);
-    if (current.annotationPage.items.length) {
-      dispatch('annotationLoaded', current.annotationPage.items);
+    const current = await request(annotations.first);
+    if (Array.isArray(current.items)) {
+      dispatch('annotationLoaded', current.items);
     }
   } catch (err) {
     dispatch('annotationLoaded', []);
@@ -141,59 +145,56 @@ export const initAnnotations = async ({ dispatch }, url) => {
 };
 
 export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
-  const { filteredAnnotations } = getters;
-  const annotationIds = filteredAnnotations.reduce((acc, curr) => {
-    const { id } = curr;
-    const name = rootGetters['config/getIconByType'](curr.body['x-content-type']);
+  const annotationElements = Array.from(document.querySelectorAll('[data-annotation]'));
 
-    acc[AnnotationUtils.stripAnnotationId(id)] = {
-      value: curr.body.value,
-      name,
-    };
-    return acc;
-  }, {});
+  const tooltipEl = null;
 
-  document.querySelectorAll('[data-annotation]')
-    .forEach((el) => {
-      const childOtherNodes = [...el.childNodes].filter((x) => x.nodeName !== '#text').length;
+  // Annotations can be nested, so we filter out all outer elements from this selection and
+  // iterate over the deepest elements
+  annotationElements.forEach((el) => {
+    el.addEventListener(
+      'mouseenter',
+      ({ clientX: x, clientY: y }) => {
+        let elementFromPoint = document.elementFromPoint(x, y);
 
-      if (!childOtherNodes) {
-        const classNames = [];
-        el = AnnotationUtils.backTrackNestedAnnotations(el, classNames);
-        const annotationClasses = [];
-
-        // checks for duplicate class names.
-        classNames
-          .join(' ')
-          .split(' ')
-          .map((x) => annotationIds[x])
-          .filter((x) => x)
-          .reduce((acc, curr) => {
-            if (!acc[curr.value]) {
-              acc[curr.value] = true;
-              annotationClasses.push(curr);
-            }
-            return acc;
-          }, {});
-
-        if (annotationClasses.length) {
-          el.addEventListener(
-            'mouseenter',
-            () => {
-              if (AnnotationUtils.isAnnotationSelected(el)) {
-                AnnotationUtils.createTooltip.bind(this, el, annotationClasses)();
-              }
-            },
-            false,
-          );
-          el.addEventListener(
-            'mouseout',
-            () => document.querySelectorAll('.annotation-tooltip').forEach((el) => el.remove()),
-            false,
-          );
+        if (!elementFromPoint.hasAttribute('data-annotation')) {
+          elementFromPoint = null;
         }
-      }
-    });
+
+        const currentElement = elementFromPoint ?? el;
+
+        const { filteredAnnotations } = getters;
+        const annotationTooltipModels = filteredAnnotations.reduce((acc, curr) => {
+          const { id } = curr;
+          const name = rootGetters['config/getIconByType'](curr.body['x-content-type']);
+          acc[id] = {
+            value: curr.body.value,
+            name,
+          };
+          return acc;
+        }, {});
+
+        const currentAnnotations = Utils.getValuesFromAttribute(currentElement, 'data-annotation-ids');
+        const closestAnnotationId = currentAnnotations[currentAnnotations.length - 1];
+        const closestAnnotationTooltipModel = annotationTooltipModels[closestAnnotationId];
+        let annotationIds = discoverParentAnnotationIds(currentElement);
+        annotationIds = discoverChildAnnotationIds(currentElement, annotationIds);
+
+        const otherAnnotationTooltipModels = Object.keys(annotationIds)
+          .map((id) => annotationTooltipModels[id])
+          .filter((m) => m);
+
+        AnnotationUtils.createOrUpdateTooltip.bind(
+          this,
+          currentElement,
+          { closest: closestAnnotationTooltipModel, other: otherAnnotationTooltipModels },
+          document.getElementById('text-content'),
+        )();
+      },
+      false,
+    );
+    el.addEventListener('mouseout', () => tooltipEl.remove(), false);
+  });
 };
 
 export const addHighlightClickListeners = ({ dispatch, getters }) => {
@@ -222,7 +223,7 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
     // Next we look up which annotations need to be selected
     let annotationIds = {};
 
-    getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+    Utils.getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
     annotationIds = discoverParentAnnotationIds(target, annotationIds);
     annotationIds = discoverChildAnnotationIds(target, annotationIds);
 
@@ -256,32 +257,6 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
     }
     return getNearestParentAnnotation(parent);
   }
-
-  function getValuesFromAttribute(element, attribute) {
-    const value = element.getAttribute(attribute);
-    return value ? value.split(' ') : [];
-  }
-
-  function discoverParentAnnotationIds(el, annotationIds = {}) {
-    const parent = el.parentElement;
-    if (parent && parent.id !== 'text-content') {
-      getValuesFromAttribute(parent, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-      return discoverParentAnnotationIds(parent, annotationIds);
-    }
-    return annotationIds;
-  }
-
-  function discoverChildAnnotationIds(el, annotationIds = {}) {
-    const { children } = el;
-
-    [...children].forEach((child) => {
-      if (child.dataset.annotation) {
-        getValuesFromAttribute(child, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-        annotationIds = discoverChildAnnotationIds(child, annotationIds);
-      }
-    });
-    return annotationIds;
-  }
 };
 
 export const selectAll = ({ getters, dispatch }) => {
@@ -293,3 +268,24 @@ export const selectNone = ({ getters, dispatch }) => {
   const { filteredAnnotations, activeAnnotations } = getters;
   filteredAnnotations.forEach(({ id }) => activeAnnotations[id] && dispatch('removeActiveAnnotation', id));
 };
+
+function discoverParentAnnotationIds(el, annotationIds = {}) {
+  const parent = el.parentElement;
+  if (parent && parent.id !== 'text-content') {
+    Utils.getValuesFromAttribute(parent, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+    return discoverParentAnnotationIds(parent, annotationIds);
+  }
+  return annotationIds;
+}
+
+function discoverChildAnnotationIds(el, annotationIds = {}) {
+  const { children } = el;
+
+  [...children].forEach((child) => {
+    if (child.dataset.annotation) {
+      Utils.getValuesFromAttribute(child, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+      annotationIds = discoverChildAnnotationIds(child, annotationIds);
+    }
+  });
+  return annotationIds;
+}

@@ -1,6 +1,7 @@
 export default function ConfigState() {
   return {
     config: {
+      container: '#app',
       collection: '',
       manifest: '',
       item: '',

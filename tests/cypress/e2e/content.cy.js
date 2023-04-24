@@ -2,8 +2,9 @@ import { apiBaseUrl } from '../support/globals';
 
 describe('Content - Multiple Tabs', () => {
   beforeEach(() => {
-    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r176/3r176-182b/latest/item.json`)
-      .get('#text-content')
+    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahikar/arabic-karshuni/3r176/182b/latest/item.json`)
+      .get('#text-content', {timeout: 10000})
+      .as('content')
       .should('be.visible');
   });
   it('Should display first content tab', () => {
@@ -19,16 +20,19 @@ describe('Content - Multiple Tabs', () => {
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .click()
-      .should('have.class', 'q-tab--active')
-      .get('#text-content>div')
-      .should('be.visible')
+      .should('have.class', 'q-tab--active');
+
+    cy
+      .get('#text-content')
       .contains('وايضا');
   });
+
   it('Should highlight from text', () => {
     // Test content
     cy
-      .get('.panels-target > .item:nth-child(3) #text-content')
+      .get('@content')
       .contains('ܚܝܩܪ')
+      .parent()
       .should('have.attr', 'data-annotation-level', '0')
       .click()
       .should('have.attr', 'data-annotation-level', '1')
@@ -53,8 +57,9 @@ describe('Content - Multiple Tabs', () => {
 
     // Test content
     cy
-      .get('.panels-target > .item:nth-child(3) #text-content')
+      .get('@content')
       .contains('ܚܝܩܪ')
+      .parent()
       .should('have.attr', 'data-annotation-level', '1')
       .and('have.css', 'background-color', 'rgb(227, 242, 253)')
       .get('svg')
@@ -66,9 +71,10 @@ describe('Content - Multiple Tabs', () => {
 
     // Test content
     cy
-      .get('.panels-target > .item:nth-child(3)')
       .get('#text-content')
-      .contains('ܚܝܩܪ')
+      .contains('ܚܝܩܪ');
+
+    cy
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .first()
       .should('have.class', 'q-tab--active');
@@ -78,10 +84,10 @@ describe('Content - Multiple Tabs', () => {
     cy
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
-      .click()
+      .click();
+
+    cy
       .get('#text-content')
-      .get('#text-content>div')
-      .should('be.visible')
       .contains('وايضا');
 
     cy.get('button.next-item').click();
@@ -134,30 +140,45 @@ describe('Content - Multiple Tabs', () => {
       .click() // 14px
       .should('be.disabled');
 
-    cy.get('#text-content')
+    cy.get('@content')
       .contains('ܐܠܚܟܝܡ')
       .get('#text-content div')
       .first()
       .should('have.attr', 'style', 'font-size: 14px;');
   });
+
+  // it('Should display a tooltip on hover', () => {
+  //   cy
+  //     .get('@content')
+  //     .contains('ܚܝܩܪ')
+  //     .parent()
+  //     .should('have.attr', 'data-annotation-level', '0')
+  //     .trigger('mouseenter');
+  //
+  //   cy
+  //     .get('#annotation-tooltip')
+  //     .wait(100)
+  //     .should('be.visible')
+  // })
 });
 
 describe('Content - Multiple Tabs with different manifest', () => {
   it('Should switch to first tab when switch manifest', () => {
-    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/3r17b/3r17b-82a/latest/item.json`)
+    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahikar/arabic-karshuni/3r17b/82a/latest/item.json`)
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
-      .click()
-      .get('.panels-target > .item:nth-child(3) .q-panel:nth-child(2) #text-content')
-      .contains('اسمه')
+      .click();
+
+    cy
       .get('button.previous-item')
       .click()
       .wait(1000)
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(0)
-      .should('have.class', 'q-tab--active')
+      .should('have.class', 'q-tab--active');
+
+    cy
       .get('#text-content')
-      .should('be.visible')
       .contains('ܘܚܩܕ');
   });
 });
