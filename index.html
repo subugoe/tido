@@ -26,7 +26,9 @@
 <script type="module" src="/src/main.js"></script>
 <script>
   window.addEventListener('load', function () {
-    window.tido = new window.Tido();
+    window.tido = new window.Tido({
+      collection: 'https://ahikar-dev.sub.uni-goettingen.de/api/textapi/ahiqar/syriac/collection.json'
+    });
   });
 </script>
 </body>
