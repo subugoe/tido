@@ -46,7 +46,7 @@ import Loading from '@/components/Loading.vue';
 
 const instance = getCurrentInstance();
 const root = instance.root.ctx;
-console.log(root);
+
 const store = useStore();
 const $q = useQuasar();
 const { t, locale } = useI18n();
