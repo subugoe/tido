@@ -2,7 +2,7 @@ import { apiBaseUrl } from '../support/globals';
 
 describe('Content - Multiple Tabs', () => {
   beforeEach(() => {
-    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahikar/arabic-karshuni/3r176/182b/latest/item.json`)
+    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r176/182b/latest/item.json`)
       .get('#text-content', {timeout: 10000})
       .as('content')
       .should('be.visible');
@@ -164,7 +164,7 @@ describe('Content - Multiple Tabs', () => {
 
 describe('Content - Multiple Tabs with different manifest', () => {
   it('Should switch to first tab when switch manifest', () => {
-    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahikar/arabic-karshuni/3r17b/82a/latest/item.json`)
+    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r17b/82a/latest/item.json`)
       .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .click();

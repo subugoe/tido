@@ -1,0 +1,168 @@
+/* AHIKAR PROJECT SPECIFIC STYLESHEET
+    made for *viewer.
+
+    This file is the replacement for
+    `src/statics/support.css` in the *viewer repo.
+*/
+body {
+  background-color: transparent; }
+
+h1 {
+  line-height: initial;
+  letter-spacing: initial;
+}
+
+.ab {
+  display: block; }
+
+.ab .margin-top {
+  margin-top: 16px; }
+
+.ab .header {
+  font-size: 133%;
+  text-align: center; }
+
+.ara {
+  font-family: 'Serto Jerusalem';
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Serto Jerusalem";
+  font-weight: normal;
+  font-style: normal;
+  src:  local("Serto Jerusalem"),
+        url("syrcomjerusalem.woff") format("woff");
+}
+@font-face {
+  font-family: "Serto Jerusalem";
+  font-weight: bold;
+  font-style: normal;
+  src:  local("Serto Jerusalem"),
+        url("syrcomjerusalembold.woff") format("woff");
+}
+@font-face {
+  font-family: "Serto Jerusalem";
+  font-weight: normal;
+  font-style: italic;
+  src:  local("Serto Jerusalem"),
+        url("syrcomjerusalemitalic.woff") format("woff");
+}
+
+
+.body {
+  text-align: right;
+  width: 100%; }
+
+.catchwords::before {
+  content: '{ '; }
+
+.catchwords::after {
+  content: ' }'; }
+
+.cb {
+  column-span: all; }
+
+.del {
+  text-decoration: line-through;
+}
+
+.g {
+  color: #400000; }
+
+.gap {
+  color: #714C13; }
+
+.head {
+  font-size: 133%; }
+
+.hi.red {
+  color: #B30000; }
+
+.l {
+  padding-left: 8px; }
+
+.label {
+  margin-right: 8px; }
+
+.no-break,
+.no_break {
+  text-align: center; }
+
+.no-break::before {
+  content: '( '; }
+
+.no_break::after {
+  content: ' )'; }
+
+.lg {
+  padding-left: 8px; }
+
+.note {
+  background: none;
+  color: #0645ad;
+  text-decoration: none; }
+
+.ref {
+  color: #0645ad; }
+
+.surplus {
+  text-align: center; }
+
+.surplus::before {
+  content: '{ '; }
+
+.surplus::after {
+  content: ' }'; }
+
+.seg {
+  color: #071C40; }
+
+  .sic {
+    font-weight: bold; }
+  
+.supplied::before {
+  content: '[ '; }
+
+.supplied::after {
+  content: ' ]'; }
+
+.syc {
+  font-family: 'Estrangelo Edessa';
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Estrangelo Edessa";
+  font-weight: normal;
+  font-style: normal;
+  src:  local("Estrangelo Edessa"),
+        url("syrcomedessa.woff") format("woff");
+}
+
+.quote.colophon {
+  color: #700000; }
+
+.lg.colophon {
+  color: #005194; }
+
+.vacant-page {
+  font-style: italic; }
+
+@media (prefers-color-scheme: dark) {
+  .gap {
+    color: #D5F72B; }
+  .hi.red {
+    color: #F23A3A; }
+  .note {
+    background: none;
+    color: #619EFF;
+    text-decoration: none; }
+  .ref {
+    color: #5895F9; }
+  .seg {
+    color: #FFFFFF; }
+  .quote.colophon {
+    color: #FF6161; }
+  .lg.colophon {
+    color: #1F9AFF; } }

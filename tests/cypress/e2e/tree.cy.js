@@ -19,7 +19,7 @@ describe('Tree', () => {
       .get('.panels-target > .item:nth-child(1)')
       .find('.q-tree > .q-tree__node > .q-tree__node-collapsible > .q-tree__children')
       .children()
-      .should('have.length', 29);
+      .should('have.length', 30);
   });
 
   it('Should display items in first manifest', () => {
