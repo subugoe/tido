@@ -97,4 +97,5 @@ export default {
   subtitle: 'Subtitle',
   manifest: 'Manifest',
   also_selected: 'Also selected',
+  undefined_role: 'Undefined role',
 };

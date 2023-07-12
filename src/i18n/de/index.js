@@ -95,4 +95,5 @@ export default {
   subtitle: 'Untertitel',
   manifest: 'Manifest',
   more_annotations: 'Weitere',
+  undefined_role: 'Undefinierte Rolle',
 };

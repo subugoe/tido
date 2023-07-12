@@ -32,7 +32,7 @@ describe('Metadata', () => {
     cy
       .get('.metadata-view')
       .find('.q-list:nth-child(2) .q-item:nth-child(1)')
-      .contains('Manuscript 1 / 29');
+      .contains('Manuscript 1 / 30');
     cy
       .get('.metadata-view')
       .find('.q-list:nth-child(2) .q-item:nth-child(2)')

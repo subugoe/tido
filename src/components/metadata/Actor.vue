@@ -1,9 +1,9 @@
 <template>
-  <div v-for="{ role, name } in data" :key="name" class="q-mb-md">
+  <div v-for="actorItem in data" :key="name" class="q-mb-md">
     <q-item-label overline class="text-uppercase">
-      {{ $t(role) }}
+      {{ $t(getRole(actorItem)) }}
     </q-item-label>
-    <MetadataValue :value="name"></MetadataValue>
+    <MetadataValue :value="actorItem.name"></MetadataValue>
   </div>
 </template>
 
@@ -17,6 +17,15 @@ export default {
     data: {
       type: Array,
       default: () => [],
+    },
+  },
+  methods: {
+    getRole(actorItem) {
+      const { role } = actorItem;
+      if (!role) return 'undefined_role';
+      if (!Array.isArray(role)) return role;
+      if (role.length > 0) return role[0];
+      return 'undefined_role';
     },
   },
 };
