@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.2.0...v3.2.1) (2023-07-12)
+
+
+### Bug Fixes
+
+* adapt to role array instead of string and show first element ([af9ed9c](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/af9ed9cee371f6fefdcf8068bf1809a21bbd3e19))
+
 ## [3.2.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.0.2...v3.2.0) (2023-04-24)
 
 
