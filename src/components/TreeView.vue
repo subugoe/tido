@@ -19,8 +19,12 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
+import {
+  computed, nextTick, onBeforeMount, ref, watch,
+} from 'vue';
+import { useStore } from 'vuex';
 import { delay, isElementVisible } from '@/utils';
 import { request } from '@/utils/http';
 
@@ -28,203 +32,169 @@ async function getManifest(url) {
   return request(url);
 }
 
-export default {
-  name: 'TreeView',
-  data() {
-    return {
-      isLoading: false,
-      expanded: [],
-      selected: null,
-      tree: [],
-      treeRef: null,
-    };
-  },
-  computed: {
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    collectionTitle() {
-      return this.$store.getters['contents/collectionTitle'];
-    },
-    collection() {
-      return this.$store.getters['contents/collection'];
-    },
-    labels() {
-      return this.config.labels || {};
-    },
-    item() {
-      return this.$store.getters['contents/item'];
-    },
-    itemUrl() {
-      return this.$store.getters['contents/itemUrl'];
-    },
-    manifest() {
-      return this.$store.getters['contents/manifest'];
-    },
-    manifests() {
-      return this.$store.getters['contents/manifests'];
-    },
-  },
-  watch: {
-    itemUrl: {
-      handler: 'onItemUrlChange',
-    },
-    collection: {
-      handler: 'onCollectionChange',
-      immediate: true,
-    },
-    manifest: {
-      handler: 'onManifestChange',
-      immediate: true,
-    },
-    selected: {
-      handler: 'onSelectedChange',
-      immediate: true,
-    },
-  },
-  created() {
-    this.expandIcon = biChevronRight;
-  },
-  methods: {
-    async onCollectionChange() {
-      console.log(1);
-      if (this.collection) {
-        this.$emit('loading', true);
-        this.tree = [{
-          label: this.collectionTitle,
-          selectable: false,
-          url: this.collectionTitle,
-          children: this.collection.sequence.map(({ label: manifestLabel, id: manifestId }, i) => ({
-            label: manifestLabel ?? this.getDefaultManifestLabel(i),
-            lazy: this.manifest.id !== manifestId,
-            url: manifestId,
-            selectable: false,
-            // Prerender item tree elements for the manifest that should be open at initial load
-            // and don't render children on every other manifest. They will be lazy loaded on expand.
-            ...((this.manifest.id === manifestId)
-              ? {
-                children: this.manifest.sequence.map(({ id, label: itemLabel }, j) => ({
-                  label: itemLabel ?? this.getDefaultItemLabel(j),
-                  url: id,
-                  parent: manifestId,
-                })),
-              }
-              : {}),
+const emit = defineEmits(['loading']);
+
+const store = useStore();
+
+const expanded = ref([]);
+const selected = ref(null);
+const tree = ref([]);
+const treeRef = ref(null);
+const containerRef = ref(null);
+let expandIcon = null;
+
+const config = computed(() => store.getters['config/config']);
+const collectionTitle = computed(() => store.getters['contents/collectionTitle']);
+const collection = computed(() => store.getters['contents/collection']);
+const labels = computed(() => config.value.labels || {});
+const itemUrl = computed(() => store.getters['contents/itemUrl']);
+const manifest = computed(() => store.getters['contents/manifest']);
+
+watch(() => itemUrl.value, onItemUrlChange);
+watch(() => collection.value, onCollectionChange, { immediate: true });
+watch(() => manifest.value, onManifestChange, { immediate: true });
+watch(() => selected.value, onSelectedChange, { immediate: true });
+
+onBeforeMount(() => {
+  expandIcon = biChevronRight;
+});
+
+async function onCollectionChange() {
+  if (collection.value) {
+    emit('loading', true);
+    tree.value = [{
+      label: collectionTitle.value,
+      selectable: false,
+      url: collectionTitle.value,
+      children: collection.value.sequence.map(({ label: manifestLabel, id: manifestId }, i) => ({
+        label: manifestLabel ?? this.getDefaultManifestLabel(i),
+        lazy: manifest.value.id !== manifestId,
+        url: manifestId,
+        selectable: false,
+        // Prerender item tree elements for the manifest that should be open at initial load
+        // and don't render children on every other manifest. They will be lazy loaded on expand.
+        ...((manifest.value.id === manifestId)
+          ? {
+            children: manifest.value.sequence.map(({ id, label: itemLabel }, j) => ({
+              label: itemLabel ?? this.getDefaultItemLabel(j),
+              url: id,
+              parent: manifestId,
+            })),
           }
-          )),
-        }];
-
-        this.$nextTick(() => {
-          this.expanded = [this.collectionTitle, this.manifest.id];
-          this.selected = this.itemUrl !== '' ? this.itemUrl : this.manifest.sequence[0]?.id;
-        });
+          : {}),
       }
-    },
-    async onManifestChange() {
-      const { label, sequence, id: manifestId } = this.manifest;
-      if (!this.collection) {
-        this.$emit('loading', true);
-        await delay(300);
+      )),
+    }];
 
-        this.tree = [{
-          label: label ?? this.getDefaultManifestLabel(),
-          sequence,
-          url: manifestId,
-          selectable: false,
-          children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id: itemId, label: itemLabel }, j) => ({
-            label: itemLabel ?? this.getDefaultItemLabel(j),
-            url: itemId,
-            parent: manifestId,
-          })),
-        }];
-      }
+    await nextTick(() => {
+      expanded.value = [collectionTitle.value, manifest.value.id];
+      selected.value = itemUrl.value !== '' ? itemUrl.value : manifest.value.sequence[0]?.id;
+    });
+  }
+}
+async function onManifestChange() {
+  const { label, sequence, id: manifestId } = manifest.value;
+  if (!collection.value) {
+    emit('loading', true);
+    await delay(300);
 
-      this.$nextTick(() => {
-        const node = this.$refs.treeRef.getNodeByKey(manifestId);
-
-        // We need to remove the lazy loading off of this manifest node and insert children manually,
-        // because Quasar does not trigger lazy loading on this.expanded change.
-        node.lazy = false;
-        node.children = this.manifest.sequence.map(({ id, label: itemLabel }, j) => ({
-          label: itemLabel ?? this.getDefaultItemLabel(j),
-          url: id,
-          parent: manifestId,
-        }));
-        this.expanded.push(manifestId);
-
-        this.selected = this.itemUrl !== '' ? this.itemUrl : sequence[0]?.id;
-      });
-    },
-    async onItemUrlChange() {
-      this.selected = this.itemUrl;
-    },
-    async onLazyLoad({ node, fail, done }) {
-      const { url, children } = node;
-      if (!url) {
-        done(children);
-        return;
-      }
-
-      const manifest = await getManifest(url);
-
-      if (!manifest) {
-        fail();
-        return;
-      }
-
-      const itemNodes = manifest.sequence.map(({ id, label: itemLabel }, j) => ({
+    tree.value = [{
+      label: label ?? this.getDefaultManifestLabel(),
+      sequence,
+      url: manifestId,
+      selectable: false,
+      children: (Array.isArray(sequence) ? sequence : [sequence]).map(({ id: itemId, label: itemLabel }, j) => ({
         label: itemLabel ?? this.getDefaultItemLabel(j),
-        url: id,
-        parent: manifest.id,
-      }));
+        url: itemId,
+        parent: manifestId,
+      })),
+    }];
+  }
 
-      if (itemNodes) done(itemNodes);
-      else fail();
-    },
-    onSelectedChange(value) {
-      const { treeRef } = this.$refs;
-      if (!treeRef) return;
+  await nextTick(() => {
+    const node = treeRef.value.getNodeByKey(manifestId);
 
-      const node = treeRef.getNodeByKey(value);
-      if (!node) return;
+    // We need to remove the lazy loading off of this manifest node and insert children manually,
+    // because Quasar does not trigger lazy loading on expanded.value change.
+    node.lazy = false;
+    node.children = manifest.value.sequence.map(({ id, label: itemLabel }, j) => ({
+      label: itemLabel ?? this.getDefaultItemLabel(j),
+      url: id,
+      parent: manifestId,
+    }));
+    expanded.value.push(manifestId);
 
-      const { url: itemUrl, parent: manifestUrl } = node;
+    selected.value = itemUrl.value !== '' ? itemUrl.value : sequence[0]?.id;
+  });
+}
+async function onItemUrlChange() {
+  selected.value = itemUrl.value;
+}
+async function onLazyLoad({ node, fail, done }) {
+  const { url, children } = node;
+  if (!url) {
+    done(children);
+    return;
+  }
 
-      this.$nextTick(async () => {
-        await delay(600);
-        const el = document.getElementById(this.itemUrl);
-        if (el && !isElementVisible(el, this.$refs.containerRef)) {
-          this.scrollIntoView(el);
-        }
-        await delay(100);
-        this.$emit('loading', false);
-      });
+  const manifest = await getManifest(url);
 
-      if (itemUrl === this.itemUrl) return;
+  if (!manifest) {
+    fail();
+    return;
+  }
 
-      if (manifestUrl !== this.manifest.id) {
-        this.$store.dispatch('contents/initManifest', manifestUrl);
-        this.$store.dispatch('config/setDefaultActiveViews');
-        this.expanded.push(manifestUrl);
-      }
+  const itemNodes = manifest.sequence.map(({ id, label: itemLabel }, j) => ({
+    label: itemLabel ?? getDefaultItemLabel(j),
+    url: id,
+    parent: manifest.id,
+  }));
 
-      if (!this.expanded.includes(manifestUrl)) this.expanded.push(manifestUrl);
+  if (itemNodes) done(itemNodes);
+  else fail();
+}
+async function onSelectedChange(value) {
+  if (!treeRef.value) return;
 
-      this.$store.dispatch('contents/initItem', itemUrl);
-    },
-    getDefaultManifestLabel(index) {
-      const prefix = this.labels.manifest ?? this.$t('manifest');
-      return `${prefix} ${index !== undefined ? index + 1 : ''}`;
-    },
-    getDefaultItemLabel(index) {
-      const prefix = this.labels.item ?? this.$t('page');
-      return `${prefix} ${index + 1}`;
-    },
-    scrollIntoView(el) {
-      el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    },
-  },
-};
+  const node = treeRef.value.getNodeByKey(value);
+  if (!node) return;
+
+  const { url: itemUrlFromNode, parent: manifestUrl } = node;
+
+  await nextTick(async () => {
+    await delay(600);
+    const el = document.getElementById(itemUrlFromNode);
+    if (el && !isElementVisible(el, containerRef.value)) {
+      this.scrollIntoView(el);
+    }
+    await delay(100);
+    emit('loading', false);
+  });
+
+  if (itemUrlFromNode === itemUrl.value) return;
+
+  if (manifestUrl !== manifest.value.id) {
+    store.dispatch('contents/initManifest', manifestUrl);
+    store.dispatch('config/setDefaultActiveViews');
+    expanded.value.push(manifestUrl);
+  }
+
+  if (!expanded.value.includes(manifestUrl)) expanded.value.push(manifestUrl);
+
+  store.dispatch('contents/initItem', itemUrlFromNode);
+}
+function getDefaultManifestLabel(index) {
+  const prefix = labels.value.manifest ?? this.$t('manifest');
+  return `${prefix} ${index !== undefined ? index + 1 : ''}`;
+}
+function getDefaultItemLabel(index) {
+  const prefix = labels.value.item ?? this.$t('page');
+  return `${prefix} ${index + 1}`;
+}
+function scrollIntoView(el) {
+  el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -241,8 +211,10 @@ export default {
     flex: 0 0 auto;
     flex-direction: column;
     overflow: auto;
+
     .q-tree {
       height: 100%;
+
       > .q-tree__node--child {
         > .q-tree__node-header {
           padding-left: 8px;
@@ -254,6 +226,7 @@ export default {
       &:first-child {
         margin-top: 3px;
       }
+
       margin-bottom: 3px;
       padding-bottom: 0;
     }
@@ -298,9 +271,11 @@ export default {
 
     .q-tree__node-header {
       border-radius: 3px;
+
       > * {
         padding: 0;
       }
+
       .q-tree__node-header-content {
         transition: none;
         flex-wrap: unset;
@@ -309,6 +284,7 @@ export default {
           padding: 0;
         }
       }
+
       .q-icon {
         // Safari fix
         width: 16px;
