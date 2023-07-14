@@ -14,6 +14,8 @@ export const i18n = createI18n({
   messages,
   silentTranslationWarn: true,
   warnHtmlInMessage: 'off',
+  legacy: false,
+  globalInjection: true,
 });
 
 export default messages;

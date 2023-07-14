@@ -87,6 +87,7 @@ export default {
   },
   methods: {
     async onCollectionChange() {
+      console.log(1);
       if (this.collection) {
         this.$emit('loading', true);
         this.tree = [{

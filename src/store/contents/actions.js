@@ -47,7 +47,6 @@ export const initCollection = async ({
 
     if (activeManifestIndex > -1) {
       const activeManifest = manifests[activeManifestIndex];
-
       commit('setManifest', activeManifest);
 
       const { support } = activeManifest;

@@ -20,98 +20,77 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {
+  computed, onBeforeUnmount, ref, watch,
+} from 'vue';
+import { useStore } from 'vuex';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import Notification from '@/components/Notification.vue';
 import * as AnnotationUtils from '@/utils/annotations';
 
-export default {
-  name: 'AnnotationsView',
-  components: {
-    AnnotationsList,
-    Notification,
-  },
-  data: () => ({
-    message: 'no_annotations_in_view',
-  }),
-  props: {
-    url: String,
-    types: Array,
-  },
-  computed: {
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    annotations() {
-      return this.$store.getters['annotations/annotations'];
-    },
-    item() {
-      return this.$store.getters['contents/item'];
-    },
-    activeAnnotations() {
-      return this.$store.getters['annotations/activeAnnotations'];
-    },
-    filteredAnnotations() {
-      return this.$store.getters['annotations/filteredAnnotations'];
-    },
-    activeContentUrl() {
-      return this.$store.getters['contents/activeContentUrl'];
-    },
-    updateTextHighlighting() {
-      // We need to make sure that annotations are loaded (this.annotations),
-      // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
-      // and the annotation are filtered by type (this.filteredAnnotations).
-      return `${this.annotations !== null}|${this.activeContentUrl}`;
-    },
-  },
-  watch: {
-    updateTextHighlighting: {
-      handler(contentData) {
-        if (contentData) {
-          const [hasAnnotations, activeContentUrl] = contentData.split('|');
-          if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
-          this.$store.dispatch('annotations/setFilteredAnnotations', this.types);
-          this.highlightTargetsLevel0();
-        }
-      },
-      immediate: true,
-    },
-  },
-  beforeUnmount() {
-    return this.$store.dispatch('annotations/resetAnnotations');
-  },
-  methods: {
-    addAnnotation(id) {
-      this.$store.dispatch('annotations/addActiveAnnotation', id);
-    },
-    removeAnnotation(id) {
-      this.$store.dispatch('annotations/removeActiveAnnotation', id);
-    },
-    toggle({ id }) {
-      const exists = !!this.activeAnnotations[id];
-      if (exists) {
-        this.removeAnnotation(id);
-      } else {
-        this.addAnnotation(id);
-      }
-    },
-    highlightTargetsLevel0() {
-      const mergedSelector = this.filteredAnnotations
-        .reduce((acc, cur) => {
-          const selector = AnnotationUtils.generateTargetSelector(cur);
-          if (acc !== '') {
-            acc += ',';
-          }
-          acc += selector;
-          return acc;
-        }, '');
+const store = useStore();
 
-      if (mergedSelector) {
-        AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
+const props = defineProps({
+  url: String,
+  types: Array,
+});
+
+const message = ref('no_annotations_in_view');
+
+const config = computed(() => store.getters['config/config']);
+const annotations = computed(() => store.getters['annotations/annotations']);
+const item = computed(() => store.getters['contents/item']);
+const activeAnnotations = computed(() => store.getters['annotations/activeAnnotations']);
+const filteredAnnotations = computed(() => store.getters['annotations/filteredAnnotations']);
+const activeContentUrl = computed(() => store.getters['contents/activeContentUrl']);
+const updateTextHighlighting = computed(() =>
+  // We need to make sure that annotations are loaded (annotations.value),
+  // the text HTML is present in DOM (activeContentUrl.value is set after DOM update)
+  // and the annotation are filtered by type (this.filteredAnnotations).
+  `${annotations.value !== null}|${activeContentUrl.value}`);
+
+watch(updateTextHighlighting, (contentData) => {
+  if (contentData) {
+    const [hasAnnotations, activeContentUrlValue] = contentData.split('|');
+    if (hasAnnotations !== 'true' && activeContentUrlValue === 'null') return;
+    store.dispatch('annotations/setFilteredAnnotations', props.types);
+    highlightTargetsLevel0();
+  }
+}, { immediate: true });
+
+onBeforeUnmount(() => store.dispatch('annotations/resetAnnotations'));
+
+function addAnnotation(id) {
+  store.dispatch('annotations/addActiveAnnotation', id);
+}
+function removeAnnotation(id) {
+  store.dispatch('annotations/removeActiveAnnotation', id);
+}
+function toggle({ id }) {
+  const exists = !!activeAnnotations.value[id];
+  if (exists) {
+    removeAnnotation(id);
+  } else {
+    addAnnotation(id);
+  }
+}
+function highlightTargetsLevel0() {
+  const mergedSelector = filteredAnnotations.value
+    .reduce((acc, cur) => {
+      const selector = AnnotationUtils.generateTargetSelector(cur);
+      if (acc !== '') {
+        acc += ',';
       }
-    },
-  },
-};
+      acc += selector;
+      return acc;
+    }, '');
+
+  if (mergedSelector) {
+    AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
+  }
+}
+
 </script>
 
 <style scoped>

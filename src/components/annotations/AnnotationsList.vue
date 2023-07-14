@@ -22,51 +22,42 @@
   </q-list>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
 import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 
-export default {
-  name: 'AnnotationsList',
-  components: { AnnotationIcon },
-  props: {
-    activeAnnotation: {
-      type: Object,
-      default: () => {},
-    },
-    configuredAnnotations: {
-      type: Array,
-      default: () => [],
-    },
-    toggle: {
-      type: Function,
-      default: () => null,
-    },
-    types: Array,
+const store = useStore();
+
+const props = defineProps({
+  activeAnnotation: {
+    type: Object,
+    default: () => {},
   },
-  computed: {
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    annotationTypesMapping() {
-      return this.types.reduce((prev, curr) => {
-        prev[curr.name] = curr.annotationType || 'annotation';
-        return prev;
-      }, {});
-    },
+  configuredAnnotations: {
+    type: Array,
+    default: () => [],
   },
-  methods: {
-    isActive(annotation) {
-      return !!this.activeAnnotation[annotation.id];
-    },
-    isText(annotation) {
-      return this.annotationTypesMapping[annotation.body['x-content-type']] === 'text';
-    },
-    getIconName(typeName) {
-      return this.types.find(({ name }) => name === typeName)?.icon || 'biPencilSquare';
-    },
+  toggle: {
+    type: Function,
+    default: () => null,
   },
-};
+  types: Array,
+});
+
+const config = computed(() => store.getters['config/config']);
+
+const annotationTypesMapping = computed(() => props.types.reduce((prev, curr) => {
+  prev[curr.name] = curr.annotationType || 'annotation';
+  return prev;
+}, {}));
+
+const isActive = (annotation) => !!props.activeAnnotation[annotation.id];
+
+const isText = (annotation) => annotationTypesMapping[annotation.body['x-content-type']] === 'text';
+
+const getIconName = (typeName) => props.types.find(({ name }) => name === typeName)?.icon || 'biPencilSquare';
 </script>
 
 <style lang="scss" scoped>
