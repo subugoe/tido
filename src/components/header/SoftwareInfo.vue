@@ -3,7 +3,7 @@
     <q-btn
       flat
       round
-      :title="$t('project_info')"
+      :title="t('project_info')"
       @click="infobox = true"
       color="grey-6"
       :icon="infoIcon"
@@ -15,9 +15,9 @@
         <q-card>
           <q-card-section>
             <h2 class="text-h5 q-pb-md q-ma-none">TIDO</h2>
-            <p class="text-weight-bold">{{ $t('tido_description') }}</p>
-            <p>Copyright (c) {{ actualYear }} {{ $t('sub_info') }}</p>
-            <p class="q-mb-none">Version {{ tidoVersion }}, {{ $t('license') }}</p>
+            <p class="text-weight-bold">{{ t('tido_description') }}</p>
+            <p>Copyright (c) {{ actualYear }} {{ t('sub_info') }}</p>
+            <p class="q-mb-none">Version {{ tidoVersion }}, {{ t('license') }}</p>
           </q-card-section>
 
           <q-card-section class="q-pt-none">
@@ -28,7 +28,7 @@
               target="_blank"
               type="a"
               :icon="docsIcon"
-              :label="$t('documentation')"
+              :label="t('documentation')"
             />
 
             <q-btn
@@ -38,7 +38,7 @@
               target="_blank"
               type="a"
               :icon="codeIcon"
-              :label="$t('source_code')"
+              :label="t('source_code')"
               class="q-mx-md"
             />
 
@@ -48,7 +48,7 @@
               href="mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
               type="a"
               :icon="bugIcon"
-              :label="$t('report_a_bug')"
+              :label="t('report_a_bug')"
             />
           </q-card-section>
 
@@ -57,7 +57,7 @@
               v-close-popup
               :class="$q.dark.isActive ? 'text-white' : 'text-black'"
               flat
-              :label="$t('close')"
+              :label="t('close')"
             />
           </q-card-actions>
         </q-card>
@@ -66,34 +66,36 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {
   biInfoLg, biBook, biCodeSlash, biBugFill,
 } from '@quasar/extras/bootstrap-icons';
+import { computed, onBeforeMount, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import packageInfo from '../../../package.json';
 
-export default {
-  name: 'SoftwareInfo',
-  data() {
-    return {
-      infobox: false,
-      tidoVersion: '',
-    };
-  },
-  computed: {
-    actualYear() {
-      const d = new Date();
-      return d.getFullYear();
-    },
-  },
-  created() {
-    this.tidoVersion = packageInfo.version;
-    this.infoIcon = biInfoLg;
-    this.docsIcon = biBook;
-    this.codeIcon = biCodeSlash;
-    this.bugIcon = biBugFill;
-  },
-};
+const { t } = useI18n();
+
+const infobox = ref(false);
+const tidoVersion = ref('');
+const infoIcon = ref(null);
+const docsIcon = ref(null);
+const codeIcon = ref(null);
+const bugIcon = ref(null);
+
+const actualYear = computed(() => {
+  const d = new Date();
+  return d.getFullYear();
+});
+
+onBeforeMount(() => {
+  tidoVersion.value = packageInfo.version;
+  infoIcon.value = biInfoLg;
+  docsIcon.value = biBook;
+  codeIcon.value = biCodeSlash;
+  bugIcon.value = biBugFill;
+});
+
 </script>
 <style lang="scss">
 .q-dialog {

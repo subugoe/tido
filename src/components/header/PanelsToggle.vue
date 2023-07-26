@@ -3,7 +3,7 @@
     <q-btn
       v-if="$q.screen.width < 1200"
       :icon-right="dropdownIcon"
-      :label="$t('show_hide_panels')"
+      :label="t('show_hide_panels')"
       outline
       flat
       size="12px"
@@ -26,7 +26,7 @@
             />
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{ $t(label) }}</q-item-label>
+            <q-item-label>{{ t(label) }}</q-item-label>
           </q-item-section>
         </q-item>
         <q-item tag="label" v-ripple @click="reset">
@@ -34,7 +34,7 @@
             <q-icon :name="resetIcon" :color="resetColor"></q-icon>
           </q-item-section>
           <q-item-section>
-            <q-item-label :class="'text-' + resetColor">{{ $t('reset') }}</q-item-label>
+            <q-item-label :class="'text-' + resetColor">{{ t('reset') }}</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
@@ -47,7 +47,7 @@
           @update:model-value="update(i, $event)"
           class="q-px-sm text-body2"
           :title="handleToggleTitle(i)"
-          :label="$t(label)"
+          :label="t(label)"
           dense
           size="xs"
           :checked-icon="checkedIcon"
@@ -63,94 +63,93 @@
         dense
         class="q-px-sm q-py-none reset-btn"
         :class="'text-' + resetColor"
-        :title="$t('reset_view')"
+        :title="t('reset_view')"
         @click="reset"
         :icon="resetIcon"
         :color="resetColor"
       >
-        <span>{{ $t('reset') }}</span>
+        <span>{{ t('reset') }}</span>
       </q-btn>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import {
   biCheckCircleFill, biCircle, biArrowCounterclockwise, biChevronDown,
 } from '@quasar/extras/bootstrap-icons';
+import {
+  computed, onBeforeUnmount, ref, watch,
+} from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 
-export default {
-  name: 'PanelsToggle',
-  data: () => ({
-    toggles: [],
-    showDropdown: false,
-  }),
-  computed: {
-    panels() {
-      return this.$store.getters['config/config'].panels;
-    },
-    resetColor() {
-      return this.toggles.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7';
-    },
-  },
-  watch: {
-    panels: {
-      handler(value) {
-        this.toggles = value
-          .filter(({ toggle }) => toggle === true)
-          .map(({ show, label }, index) => ({ index, show, label }));
-      },
-      immediate: true,
-    },
-    showDropdown: {
-      handler(value) {
-        const tido = document.getElementById('tido');
-        let backdrop = tido.querySelector('#tido-backdrop');
-        if (value) {
-          if (!backdrop) {
-            const el = document.createElement('div');
-            el.id = 'tido-backdrop';
-            tido.appendChild(el);
-            backdrop = tido.querySelector('#tido-backdrop');
-            backdrop.clickOutsideEvent = () => {
-              this.showDropdown = false;
-            };
-            backdrop.addEventListener('click', backdrop.clickOutsideEvent);
-          }
-        } else if (backdrop) backdrop.remove();
-      },
-    },
-  },
-  created() {
-    this.checkedIcon = biCheckCircleFill;
-    this.uncheckedIcon = biCircle;
-    this.resetIcon = biArrowCounterclockwise;
-    this.dropdownIcon = biChevronDown;
-  },
-  methods: {
-    update(index, show) {
-      this.toggles[index].show = show;
-      this.$store.dispatch('config/setShowPanel', { index, show });
-    },
+const { t } = useI18n();
+const store = useStore();
 
-    reset() {
-      this.toggles.forEach((toggle, index) => {
-        this.toggles[index].show = true;
-        this.$store.dispatch('config/setShowPanel', { index, show: true });
-      });
-    },
+const checkedIcon = ref(null);
+const uncheckedIcon = ref(null);
+const resetIcon = ref(null);
+const dropdownIcon = ref(null);
 
-    // display toggle title when hovering
-    handleToggleTitle(idx) {
-      const titleName = this.$t(this.toggles[idx].label);
-      const titleUpper = `${titleName[0].toUpperCase()}${titleName.slice(1)}`;
+const toggles = ref([]);
+const showDropdown = ref(false);
 
-      return this.toggles[idx].show
-        ? `${this.$t('hide')} ${titleUpper} Panel`
-        : `${this.$t('show')} ${titleUpper} Panel`;
-    },
-  },
-};
+const panels = computed(() => store.getters['config/config'].panels);
+
+const resetColor = computed(() => (toggles.value.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7'));
+
+watch(() => panels.value, (value) => {
+  toggles.value = value
+    .filter(({ toggle }) => toggle === true)
+    .map(({ show, label }, index) => ({ index, show, label }));
+}, { immediate: true });
+
+watch(() => showDropdown.value, (value) => {
+  const tido = document.getElementById('tido');
+  let backdrop = tido.querySelector('#tido-backdrop');
+  if (value) {
+    if (!backdrop) {
+      const el = document.createElement('div');
+      el.id = 'tido-backdrop';
+      tido.appendChild(el);
+      backdrop = tido.querySelector('#tido-backdrop');
+      backdrop.clickOutsideEvent = () => {
+        showDropdown.value = false;
+      };
+      backdrop.addEventListener('click', backdrop.clickOutsideEvent);
+    }
+  } else if (backdrop) backdrop.remove();
+});
+
+onBeforeUnmount(() => {
+  checkedIcon.value = biCheckCircleFill;
+  uncheckedIcon.value = biCircle;
+  resetIcon.value = biArrowCounterclockwise;
+  dropdownIcon.value = biChevronDown;
+});
+
+function update(index, show) {
+  toggles.value[index].show = show;
+  store.dispatch('config/setShowPanel', { index, show });
+}
+
+function reset() {
+  toggles.value.forEach((toggle, index) => {
+    toggles.value[index].show = true;
+    store.dispatch('config/setShowPanel', { index, show: true });
+  });
+}
+
+// display toggle title when hovering
+function handleToggleTitle(idx) {
+  const titleName = t(toggles.value[idx].label);
+  const titleUpper = `${titleName[0].toUpperCase()}${titleName.slice(1)}`;
+
+  return toggles.value[idx].show
+    ? `${t('hide')} ${titleUpper} Panel`
+    : `${t('show')} ${titleUpper} Panel`;
+}
 </script>
 <style lang="scss">
 .dropdown-list {

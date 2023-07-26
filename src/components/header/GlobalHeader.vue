@@ -12,52 +12,28 @@
     </div>
     <div v-if="item" class="flex column-xs row-md">
       <Navbar v-if="showNavbar"/>
-      <PanelsToggle v-if="showPanelsToggle" class="flex justify-sm-end col q-mt-md q-mt-md-none" />
+      <PanelsToggle v-if="showPanelsToggle" class="flex justify-sm-end col q-mt-md q-mt-md-none"/>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
+
+import { useStore } from 'vuex';
 import Navbar from '@/components/header/Navbar.vue';
 import TitleBar from '@/components/header/TitleBar.vue';
 import PanelsToggle from '@/components/header/PanelsToggle.vue';
 import Tools from '@/components/header/Tools.vue';
 
-export default {
-  name: 'GlobalHeader',
-  components: {
-    Navbar,
-    TitleBar,
-    PanelsToggle,
-    Tools,
-  },
-  props: {
-    configErrorTitle: {
-      type: String,
-      default: () => '',
-    },
-  },
-  computed: {
-    show() {
-      return this.config.header?.show;
-    },
-    manifests() {
-      return this.$store.getters['contents/manifests'];
-    },
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    item() {
-      return this.$store.getters['contents/item'];
-    },
-    showNavbar() {
-      return this.config.header?.navigation || true;
-    },
-    showPanelsToggle() {
-      return this.config.header?.panelsToggle !== undefined ? this.config.header?.panelsToggle : true;
-    },
-  },
-};
+const store = useStore();
+
+const show = computed(() => config.value.header?.show);
+const config = computed(() => store.getters['config/config']);
+const item = computed(() => store.getters['contents/item']);
+const showNavbar = computed(() => config.value.header?.navigation || true);
+const showPanelsToggle = computed(() => (config.value.header?.panelsToggle !== undefined ? config.value.header?.panelsToggle : true));
+
 </script>
 
 <style lang="scss" scoped>

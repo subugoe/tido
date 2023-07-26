@@ -14,7 +14,7 @@
             :color="$q.dark.isActive ? 'white' : 'grey-7'"
             :name="arrowIcon"
           />
-          <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
+          <span v-if="item">{{ t('Sheet') }} {{ item.n }}</span>
         </h2>
       </template>
       <template v-else>
@@ -27,7 +27,7 @@
             :color="$q.dark.isActive ? 'white' : 'grey-7'"
             :name="arrowIcon"
           />
-          <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
+          <span v-if="item">{{ t('Sheet') }} {{ item.n }}</span>
         </h1>
       </template>
     </template>
@@ -37,27 +37,27 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
+import { computed, onBeforeMount, ref } from 'vue';
+import { useStore } from 'vuex';
 
-export default {
-  name: 'Titlebar',
-  props: {
-    item: {
-      type: Object,
-      default: () => {},
-    },
+const store = useStore();
+
+const props = defineProps({
+  item: {
+    type: Object,
+    default: () => {},
   },
-  computed: {
-    collectionTitle() {
-      return this.$store.getters['contents/collectionTitle'];
-    },
-    manifestTitle() {
-      return this.$store.getters['contents/manifest']?.label;
-    },
-  },
-  created() {
-    this.arrowIcon = biChevronRight;
-  },
-};
+});
+
+const arrowIcon = ref(null);
+
+const collectionTitle = computed(() => store.getters['contents/collectionTitle']);
+const manifestTitle = computed(() => store.getters['contents/manifest']?.label);
+
+onBeforeMount(() => {
+  arrowIcon.value = biChevronRight;
+});
+
 </script>

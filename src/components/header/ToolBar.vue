@@ -1,29 +1,24 @@
 <template>
   <div class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
-    {{ capitalizeHeading }}
+    {{ capitalizedHeading }}
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ToolBar',
-  filters: {
-    capitalize(s) {
-      return s.toUpperCase();
-    },
+<script setup>
+
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
+const props = defineProps({
+  heading: {
+    type: String,
+    required: true,
   },
-  props: {
-    heading: {
-      type: String,
-      required: true,
-    },
-  },
-  computed: {
-    capitalizeHeading() {
-      return this.$t(this.heading).toUpperCase();
-    },
-  },
-};
+});
+
+const capitalizedHeading = computed(() => t(props.heading).toUpperCase());
 </script>
 
 <style lang="scss" scoped>
