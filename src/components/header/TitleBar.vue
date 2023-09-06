@@ -14,7 +14,7 @@
             :color="$q.dark.isActive ? 'white' : 'grey-7'"
             :name="arrowIcon"
           />
-          <span v-if="item">{{ t('Sheet') }} {{ item.n }}</span>
+          <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
         </h2>
       </template>
       <template v-else>
@@ -27,7 +27,7 @@
             :color="$q.dark.isActive ? 'white' : 'grey-7'"
             :name="arrowIcon"
           />
-          <span v-if="item">{{ t('Sheet') }} {{ item.n }}</span>
+          <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
         </h1>
       </template>
     </template>
