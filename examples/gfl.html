@@ -27,139 +27,147 @@
 <script src="config-menu/config-menu.js"></script>
 <script>
   window.addEventListener('load', function () {
-  window.tido = new window.Tido({
-  "manifest": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/tido/gfl/Z_1822-02-20_k/manifest.json",
-    "labels": {
-      "item": "Seite",
-      "manifest": "Dokument"
-    },
-    "lang": "de",
-    "panels": [
-      {
-        "views": [{
-          "id": "image",
-          "label": "Manuskript",
-          "connector": {
-            "id": 3
-          }
-        }]
+    window.tido = new window.Tido({
+      manifest: "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/tido/gfl/Z_1822-02-20_k/manifest.json",
+      labels: {
+        item: "Seite",
+        manifest: "Dokument"
       },
-      {
-        "label": "Text",
-        "views": [
-          {
-            "id": "text1",
-            "label": "Edierter Text",
-            "connector": {
-              "id": 4,
-              "options": {
-                "type": "Edierter Text"
-              }
-            }
-          },
-          {
-            "id": "text2",
-            "connector": {
-              "id": 4,
-              "options": {
-                "type": "Transcription"
-              }
-            }
-          }
-        ]
+      colors: {
+        forceMode: "light",
+        primary: "#4569cc"
       },
-      {
-        "label": "Kommentar",
-        "views": [
-          {
-            "id": "annotations1",
-            "label": "Kommentare",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
-                  {
-                    "name": "Editorial Comment",
-                    "icon": "biChatFill"
-                  },
-                  {
-                    "name": "Abstract",
-                    "annotationType": "text",
-                    "displayWhen": "Edierter Text"
-                  }
-                ]
-              }
+      lang: "de",
+      panels: [
+        {
+          views: [{
+            id: "image",
+            label: "Manuskript",
+            connector: {
+              id: 3
             }
-          },
-          {
-            "id": "annotations2",
-            "label": "Register",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
-                  {
-                    "name": "Person",
-                    "icon": "biPersonFill"
-                  },
-                  {
-                    "name": "Place",
-                    "icon": "biGeoAltFill"
-                  },
-                  {
-                    "name": "Org",
-                    "icon": "biBank2"
-                  },
-                  {
-                    "name": "Object",
-                    "icon": "biArchiveFill"
-                  },
-                  {
-                    "name": "Date",
-                    "icon": "biCalendarWeek"
-                  },
-                  {
-                    "name": "Work",
-                    "icon": "biJournals"
-                  }
-                ]
+          }]
+        },
+        {
+          label: "Text",
+          views: [
+            {
+              id: "text1",
+              label: "Edierter Text",
+              connector: {
+                id: 4,
+                options: {
+                  type: "edited"
+                }
               }
-            }
-          }
-        ]
-      },
-      {
-        "label": "Dokumentdaten",
-        "views": [
-          {
-            "id": "meta",
-            "label": "Metadaten",
-            "connector": {
-              "id": 2,
-              "options": {
-                "collection": {
-                  "all": true
-                },
-                "manifest": {
-                  "all": true
-                },
-                "item": {
-                  "all": true
+            },
+            {
+              id: "text2",
+              label: "Transkription",
+              connector: {
+                id: 4,
+                options: {
+                  type: "transcription"
                 }
               }
             }
-          },
-          {
-            "id": "tree",
-            "label": "Inhalt",
-            "connector": {
-              "id": 1
+          ]
+        },
+        {
+          label: "Kommentar",
+          views: [
+            {
+              id: "annotations1",
+              label: "Kommentare",
+              connector: {
+                id: 5,
+                options: {
+                  types: [
+                    {
+                      name: "Editorial Comment",
+                      icon: "biChatFill"
+                    },
+                    {
+                      name: "Abstract",
+                      annotationType: "text",
+                      displayWhen: "edited"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              id: "annotations2",
+              label: "Register",
+              connector: {
+                id: 5,
+                options: {
+                  types: [
+                    {
+                      name: "Person",
+                      icon: "biPersonFill"
+                    },
+                    {
+                      name: "Place",
+                      icon: "biGeoAltFill"
+                    },
+                    {
+                      name: "Org",
+                      icon: "biBank2"
+                    },
+                    {
+                      name: "Object",
+                      icon: "biArchiveFill"
+                    },
+                    {
+                      name: "Date",
+                      icon: "biCalendarWeek"
+                    },
+                    {
+                      name: "Work",
+                      icon: "biJournals"
+                    }
+                  ]
+                }
+              }
             }
-          }
-        ]
+          ]
+        },
+        {
+          label: "Dokumentdaten",
+          views: [
+            {
+              id: "meta",
+              label: "Metadaten",
+              connector: {
+                id: 2,
+                options: {
+                  collection: {
+                    all: true
+                  },
+                  manifest: {
+                    all: true
+                  },
+                  item: {
+                    all: true
+                  }
+                }
+              }
+            },
+            {
+              id: "tree",
+              label: "Inhalt",
+              connector: {
+                id: 1
+              }
+            }
+          ]
+        }
+      ],
+      translations: {
+        Edition_license: 'Editionslizenz'
       }
-    ]
-  });
+    });
 });
 </script>
 </body>
