@@ -25,8 +25,9 @@ export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
   Utils.highlightTargets(selector, { operation: 'INC' });
 
   if (elements.length > 0) {
-    Utils.addIcon(elements[0], newActiveAnnotation, iconName);
-    scrollIntoViewIfNeeded(elements[0], document.getElementById('text-content'));
+    const target = elements[0];
+    Utils.addIcon(target, newActiveAnnotation, iconName);
+    scrollIntoViewIfNeeded(target, target.closest('.panel-body'));
 
     // Get the scroll container of Quasar tab panel
     const annotationsView = document.querySelector('.annotations-view').parentElement.parentElement;
