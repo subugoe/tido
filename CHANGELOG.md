@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.2.1...v3.2.2) (2023-09-21)
+
+
+### Bug Fixes
+
+* scroll to highlighted annotation in text when selected ([265b6f8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/265b6f87bd1dcd9956faadb1899737a9623fdd04))
+* update e2e test ([f30f282](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f30f28272dda04c68b611fe6c862910422899ed8))
+
+
+### Chore
+
+* update GFL example config ([e0ea920](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e0ea9200dcdaa9a04376817fa6e16999e7957163))
+
 ### [3.2.1](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.2.0...v3.2.1) (2023-07-12)
 
 
