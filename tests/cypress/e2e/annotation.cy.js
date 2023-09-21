@@ -11,6 +11,7 @@ describe('Annotation - Multiple Tabs', () => {
       .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
       .should('be.visible');
   });
+
   it('Should display first annotation tab', () => {
     cy
       .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
@@ -30,7 +31,7 @@ describe('Annotation - Multiple Tabs', () => {
       .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
       .eq(1)
       .click()
-      .wait(400)// wait for tab switch transition
+      .wait(400) // wait for tab switch transition
       .should('have.class', 'q-tab--active')
       .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
       .eq(0)
@@ -155,5 +156,21 @@ describe('Annotation - Multiple Tabs', () => {
       .get('.panels-target > .item:nth-child(3)')
       .find('#text-content [data-annotation-ids][data-annotation-level="1"]')
       .should('have.length', 0);
+  });
+
+  it('Should scroll in text to highlighted annotation', { scrollBehavior: false }, () => {
+
+    // We scroll down the text panel first and select the first annotation
+    // because there is a problem with initial scrolling of text panel.
+    // Somehow it works when scroll programmatically like described above.
+    cy
+      .get('.panels-target > .item:nth-child(3) .content-view')
+      .scrollTo('bottom')
+      .get('.panels-target > .item:nth-child(4)')
+      .find('.q-tab-panel .q-list .q-item')
+      .first()
+      .click()
+      .get('#t_Mingana_ar_christ_93_84_MD1816225N1l5l3l5l5l47l3l2_1')
+      .should('be.visible');
   });
 });
