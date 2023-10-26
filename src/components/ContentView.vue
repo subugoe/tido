@@ -17,92 +17,85 @@
 </template>
 
 <script>
-import DomMixin from '@/mixins/dom';
+export default {
+  name: 'ContentView',
+};
+</script>
+
+<script setup>
 import Notification from '@/components/Notification.vue';
+
+import { computed, readonly, ref, watch } from 'vue';
+import { useStore } from 'vuex';
 import { request } from '@/utils/http';
 import { domParser, delay } from '@/utils';
 
-export default {
-  name: 'ContentView',
-  components: {
-    Notification,
-  },
-  mixins: [DomMixin],
-  props: {
-    url: String,
-    type: String,
-    fontSize: Number,
-  },
-  data: () => ({
-    content: '',
-    errorTextMessage: null,
-  }),
-  computed: {
-    manifest() {
-      return this.$store.getters['contents/manifest'];
-    },
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    contentStyle() {
-      return {
-        fontSize: `${this.fontSize}px`,
-      };
-    },
-    notificationMessage() {
-      return this.errorTextMessage;
-    },
-  },
-  watch: {
-    url: {
-      handler: 'loadContent',
-      immediate: true,
-    },
-  },
-  methods: {
-    async loadContent(url) {
-      this.content = '';
-      try {
-        if (!url) {
-          return;
-        }
-        this.errorTextMessage = '';
-        this.$emit('loading', true);
-        await delay(300);
-        const data = await request(url);
-        this.isValidTextContent(data);
+const props = defineProps({
+  url: String,
+  type: String,
+  fontSize: Number,
+});
+const emit = defineEmits(['loading']);
 
-        const dom = domParser(data);
-        this.content = dom.documentElement.innerHTML;
-        setTimeout(async () => {
-          this.$emit('loading', false);
-          const root = document.getElementById('text-content');
-          this.$store.dispatch('annotations/addHighlightAttributesToText', root);
-          await this.$store.dispatch('annotations/addHighlightClickListeners');
+const store = useStore();
 
-          // TODO: Enable Hover + Tooltip feature when reqs are clarified
-          // await this.$store.dispatch('annotations/addHighlightHoverListeners');
+const content = ref('');
+const errorTextMessage = ref(null);
+const notificationMessage = readonly(errorTextMessage);
 
-          this.$store.commit('contents/setActiveContentUrl', this.url);
-        }, 100);
-      } catch (err) {
-        this.errorTextMessage = err.message;
-      }
-    },
-    isValidTextContent(text) {
-      let parsed;
-      try {
-        parsed = JSON.parse(text);
-      } catch (err) {
-        // TODO : Handle json parsing more gracefully
-      }
+const manifest = computed(() => store.getters['contents/manifest']);
+const config = computed(() => store.getters['config/config']);
+const contentStyle = computed(() => ({
+  fontSize: `${props.fontSize}px`,
+}));
 
-      if (parsed && parsed.status === 500) {
-        throw new Error('no_text_in_view');
-      }
-    },
-  },
-};
+watch(
+  () => props.url,
+  loadContent,
+  { immediate: true },
+);
+async function loadContent(url) {
+  content.value = '';
+  try {
+    if (!url) {
+      return;
+    }
+    errorTextMessage.value = '';
+    emit('loading', true);
+    await delay(300);
+    const data = await request(url);
+    isValidTextContent(data);
+
+    const dom = domParser(data);
+    content.value = dom.documentElement.innerHTML;
+    setTimeout(async () => {
+      emit('loading', false);
+      const root = document.getElementById('text-content');
+      store.dispatch('annotations/addHighlightAttributesToText', root);
+      await store.dispatch('annotations/addHighlightClickListeners');
+
+      // TODO: Enable Hover + Tooltip feature when reqs are clarified
+      // await store.dispatch('annotations/addHighlightHoverListeners');
+
+      store.commit('contents/setActiveContentUrl', props.url);
+    }, 100);
+  } catch (err) {
+    errorTextMessage.value = err.message;
+  }
+}
+
+function isValidTextContent(text) {
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch (err) {
+    // TODO : Handle json parsing more gracefully
+  }
+
+  if (parsed && parsed.status === 500) {
+    throw new Error('no_text_in_view');
+  }
+}
 </script>
 
 <style lang="scss" scoped>

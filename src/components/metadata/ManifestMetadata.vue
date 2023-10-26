@@ -19,50 +19,38 @@
 </template>
 
 <script>
+export default {
+  name: 'ManifestMetadata',
+}
+</script>
+
+<script setup>
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 import Actor from '@/components/metadata/Actor.vue';
 
-export default {
-  name: 'ManifestMetadata',
-  components: {
-    MetadataItem,
-    Actor,
-  },
-  computed: {
-    manifest() {
-      return this.$store.getters['contents/manifest'];
-    },
-    manifests() {
-      return this.$store.getters['contents/manifests'];
-    },
-    manifestHasItems() {
-      return this.manifest?.sequence.length > 0;
-    },
-    number() {
-      return this.manifests !== null ? this.manifests.findIndex(({ id }) => id === this.manifest.id) + 1 : 1;
-    },
-    total() {
-      return this.manifests !== null ? this.manifests.length : 1;
-    },
-    labels() {
-      return this.$store.getters['config/config'].labels;
-    },
-    metadata() {
-      if (!this.manifest) return [];
-      return [
-        { key: 'label', value: this.manifest.label },
-        ...(this.manifest.license || []).map((manifest) => ({
-          key: 'License',
-          value: manifest.id,
-        })),
-        ...(this.manifest.metadata || []),
-      ];
-    },
-    actor() {
-      return this.manifest?.actor;
-    },
-  },
-};
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const manifest = computed(() => store.getters['contents/manifest'] );
+const manifests = computed(() => store.getters['contents/manifests']);
+const manifestHasItems = computed(() => manifest.value?.sequence.length > 0);
+const number = computed(() => manifests.value !== null ? manifests.value.findIndex(({ id }) => id === manifest.value.id) + 1 : 1);
+const total = computed(() => manifests.value !== null ? manifests.value.length : 1);
+const labels = computed(() => store.getters['config/config'].labels);
+const metadata = computed(() => {
+  if (!manifest.value) return [];
+  return [
+    { key: 'label', value: manifest.value.label },
+    ...(manifest.value.license || []).map((manifest) => ({
+      key: 'License',
+      value: manifest.id,
+    })),
+    ...(manifest.value.metadata || []),
+  ];
+});
+const actor = computed(() => manifest.value?.actor );
 </script>
 
 <style scoped>

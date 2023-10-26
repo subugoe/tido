@@ -6,33 +6,31 @@
     size="16px"
   />
 </template>
+
 <script>
+export default {
+  name: 'AnnotationIcon',
+};
+</script>
+
+<script setup>
+import { computed } from 'vue';
 import { Dark } from 'quasar';
 import { isUrl } from '@/utils';
 import { icon } from '@/utils/icon';
 
-export default {
-  name: 'AnnotationIcon',
-  props: {
-    name: String,
-  },
-  computed: {
-    show() {
-      return !!(this.types.find((type) => type.name === this.contentType)?.icon);
-    },
-    isDarkMode() {
-      return Dark.isActive;
-    },
-    iconName() {
-      return isUrl(this.name) ? `img:${this.name}` : this.getIcon(this.name);
-    },
-  },
-  methods: {
-    getIcon(name) {
-      return icon(name);
-    },
-  },
-};
+const props = defineProps({
+  name: String,
+});
+
+const isDarkMode = computed(() => Dark.isActive);
+const iconName = computed(() => (
+  isUrl(props.name) ? `img:${props.name}` : getIcon(props.name)
+));
+
+function getIcon() {
+  return icon(props.name);
+}
 </script>
 
 <style scoped>

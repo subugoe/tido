@@ -15,42 +15,43 @@
 </template>
 
 <script>
-import MetadataItem from '@/components/metadata/MetadataItem.vue';
-
 export default {
   name: 'CollectionMetadata',
-  components: {
-    MetadataItem,
-  },
-  computed: {
-    collection() {
-      return this.$store.getters['contents/collection'];
-    },
-    metadata() {
-      if (!this.collection) return [];
+}
+</script>
 
-      const mappings = {
-        main: 'title',
-        sub: 'subtitle',
-      };
+<script setup>
+import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
-      const collectorName = this.collection?.collector?.name;
-      const description = this.collection?.description;
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
-      return [
-        ...this.collection.title
-          .filter((collection) => collection)
-          .map((collectionTitle) => ({
-            key: mappings[collectionTitle.type] || 'title',
-            value: collectionTitle.title,
-          })),
-        ...(collectorName ? [{ key: 'collector', value: collectorName }] : []),
-        ...(description ? [{ key: 'description', value: description }] : []),
-        ...(this.collection.metadata || []),
-      ];
-    },
-  },
-};
+const store = useStore();
+
+const collection = computed(() => store.getters['contents/collection']);
+const metadata = computed(() => {
+  if (!collection.value) return [];
+
+  const mappings = {
+    main: 'title',
+    sub: 'subtitle',
+  };
+
+  const collectorName = collection.value.collector?.name;
+  const description = collection.value.description;
+
+  return [
+    ...collection.value.title
+      .filter((collection) => collection)
+      .map((collectionTitle) => ({
+        key: mappings[collectionTitle.type] || 'title',
+        value: collectionTitle.title,
+      })),
+    ...(collectorName ? [{ key: 'collector', value: collectorName }] : []),
+    ...(description ? [{ key: 'description', value: description }] : []),
+    ...(collection.value.metadata || []),
+  ];
+});
 </script>
 
 <style scoped>

@@ -23,50 +23,52 @@
 </template>
 
 <script>
-
-import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
-
 export default {
   name: 'AnnotationsList',
-  components: { AnnotationIcon },
-  props: {
-    activeAnnotation: {
-      type: Object,
-      default: () => {},
-    },
-    configuredAnnotations: {
-      type: Array,
-      default: () => [],
-    },
-    toggle: {
-      type: Function,
-      default: () => null,
-    },
-    types: Array,
-  },
-  computed: {
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    annotationTypesMapping() {
-      return this.types.reduce((prev, curr) => {
-        prev[curr.name] = curr.annotationType || 'annotation';
-        return prev;
-      }, {});
-    },
-  },
-  methods: {
-    isActive(annotation) {
-      return !!this.activeAnnotation[annotation.id];
-    },
-    isText(annotation) {
-      return this.annotationTypesMapping[annotation.body['x-content-type']] === 'text';
-    },
-    getIconName(typeName) {
-      return this.types.find(({ name }) => name === typeName)?.icon || 'biPencilSquare';
-    },
-  },
 };
+</script>
+
+<script setup>
+import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
+
+import { computed } from 'vue';
+// import { useStore } from 'vuex';
+
+const props = defineProps({
+  activeAnnotation: {
+    type: Object,
+    default: () => {},
+  },
+  configuredAnnotations: {
+    type: Array,
+    default: () => [],
+  },
+  toggle: {
+    type: Function,
+    default: () => null,
+  },
+  types: Array,
+});
+
+// const store = useStore();
+
+// const config = computed(() => store.getters['config/config']);
+const annotationTypesMapping = computed(() => (
+  props.types.reduce((prev, curr) => {
+    prev[curr.name] = curr.annotationType || 'annotation';
+    return prev;
+  }, {})
+));
+
+function isActive(annotation) {
+  return !!props.activeAnnotation[annotation.id];
+}
+function isText(annotation) {
+  return annotationTypesMapping[annotation.body['x-content-type']] === 'text';
+}
+function getIconName(typeName) {
+  return props.types.find(({ name }) => name === typeName)?.icon || 'biPencilSquare';
+}
 </script>
 
 <style lang="scss" scoped>

@@ -9,6 +9,7 @@ const messages = {
 
 // Create I18n instance
 export const i18n = createI18n({
+  legacy: false,
   locale: 'en',
   fallbackLocale: 'en',
   messages,

@@ -7,26 +7,26 @@
 </template>
 
 <script>
+export default {
+  name: 'MetadataView',
+}
+</script>
+
+<script setup>
 import CollectionMetadata from '@/components/metadata/CollectionMetadata.vue';
 import ManifestMetadata from '@/components/metadata/ManifestMetadata.vue';
 import ItemMetadata from '@/components/metadata/ItemMetadata.vue';
 
-export default {
-  name: 'MetadataView',
-  props: {
-    options: Object,
-  },
-  components: {
-    ItemMetadata,
-    ManifestMetadata,
-    CollectionMetadata,
-  },
-  computed: {
-    config() {
-      return this.$store.getters['config/config'];
-    },
-  },
-};
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const props = defineProps({
+  options: Object,
+});
+
+const store = useStore();
+
+const config = computed(() => store.getters['config/config'] );
 </script>
 
 <style lang="scss" scoped>

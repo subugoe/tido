@@ -16,23 +16,26 @@
 </template>
 
 <script>
-import {
-  biZoomIn, biZoomOut, biFullscreen, biArrowsFullscreen,
-} from '@quasar/extras/bootstrap-icons';
-
 export default {
   name: 'PanelImageAction',
-  data() {
-    return {
-      buttons: [
-        { id: 'zoom-in', icon: biZoomIn, tooltip: 'zoom_in' },
-        { id: 'zoom-out', icon: biZoomOut, tooltip: 'zoom_out' },
-        { id: 'fullscreen', icon: biFullscreen, tooltip: 'switch_to_fullscreen' },
-        { id: 'default', icon: biArrowsFullscreen, tooltip: 'reset_view' },
-      ],
-    };
-  },
-};
+}
+</script>
+
+<script setup>
+import { computed } from 'vue';
+import {
+  biZoomIn,
+  biZoomOut,
+  biFullscreen,
+  biArrowsFullscreen,
+} from '@quasar/extras/bootstrap-icons';
+
+const buttons = computed(() => ([
+  { id: 'zoom-in', icon: biZoomIn, tooltip: 'zoom_in' },
+  { id: 'zoom-out', icon: biZoomOut, tooltip: 'zoom_out' },
+  { id: 'fullscreen', icon: biFullscreen, tooltip: 'switch_to_fullscreen' },
+  { id: 'default', icon: biArrowsFullscreen, tooltip: 'reset_view' },
+]));
 </script>
 
 <style scoped>

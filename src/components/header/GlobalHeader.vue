@@ -18,46 +18,35 @@
 </template>
 
 <script>
+export default {
+  name: 'GlobalHeader',
+}
+</script>
+
+<script setup>
 import Navbar from '@/components/header/Navbar.vue';
 import TitleBar from '@/components/header/TitleBar.vue';
 import PanelsToggle from '@/components/header/PanelsToggle.vue';
 import Tools from '@/components/header/Tools.vue';
 
-export default {
-  name: 'GlobalHeader',
-  components: {
-    Navbar,
-    TitleBar,
-    PanelsToggle,
-    Tools,
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const props = defineProps({
+  configErrorTitle: {
+    type: String,
+    default: () => '',
   },
-  props: {
-    configErrorTitle: {
-      type: String,
-      default: () => '',
-    },
-  },
-  computed: {
-    show() {
-      return this.config.header?.show;
-    },
-    manifests() {
-      return this.$store.getters['contents/manifests'];
-    },
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    item() {
-      return this.$store.getters['contents/item'];
-    },
-    showNavbar() {
-      return this.config.header?.navigation || true;
-    },
-    showPanelsToggle() {
-      return this.config.header?.panelsToggle !== undefined ? this.config.header?.panelsToggle : true;
-    },
-  },
-};
+});
+
+const store = useStore();
+
+const show = computed(() => config.value?.header?.show);
+const manifests = computed(() => store.getters['contents/manifests']);
+const config = computed(() => store.getters['config/config']);
+const item = computed(() => store.getters['contents/item']);
+const showNavbar = computed(() => config.value?.header?.navigation || true);
+const showPanelsToggle = computed(() => config.value?.header?.panelsToggle !== undefined ? config.value?.header?.panelsToggle : true);
 </script>
 
 <style lang="scss" scoped>

@@ -9,7 +9,6 @@ import './css/style.scss';
 
 window.Tido = function Tido(config = {}) {
   this.config = { ...config };
-
   const instance = this;
   this.app = createApp({
     render() {
@@ -20,6 +19,12 @@ window.Tido = function Tido(config = {}) {
       return {
         config: instance.config,
       };
+    },
+
+    provide() {
+      return {
+        config: this.config,
+      }
     },
   });
 

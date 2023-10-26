@@ -29,106 +29,101 @@
 </template>
 
 <script>
-import { biArrowLeft, biArrowRight } from '@quasar/extras/bootstrap-icons';
-
 export default {
   name: 'Navbar',
-  computed: {
-    manifest() {
-      return this.$store.getters['contents/manifest'];
-    },
-    manifests() {
-      return this.$store.getters['contents/manifests'];
-    },
-    item() {
-      return this.$store.getters['contents/item'];
-    },
-    itemUrl() {
-      return this.$store.getters['contents/itemUrl'];
-    },
-    itemIndex() {
-      return this.manifest ? this.manifest.sequence.findIndex(({ id }) => id === this.itemUrl) : -1;
-    },
-    hasPrev() {
-      const prevIndex = this.itemIndex - 1;
-      if (prevIndex < 0) {
-        if (this.manifests === null) return false;
-        const prevManifestIndex = this.manifests.findIndex(({ id }) => id === this.manifest.id) - 1;
-        if (prevManifestIndex < 0) return false;
-      }
+}
+</script>
 
-      return true;
-    },
-    hasNext() {
-      const nextIndex = this.itemIndex + 1;
-      if (nextIndex > this.manifest.sequence.length - 1) {
-        if (this.manifests === null) return false;
-        const nextManifestIndex = this.manifests.findIndex(({ id }) => id === this.manifest.id) + 1;
-        if (nextManifestIndex > this.manifests.length - 1) return false;
-      }
-      return true;
-    },
-    nextButtonLabel() {
-      return this.itemIndex === this.manifest.sequence.length - 1
-        ? `${this.$t('next')} ${this.$t(this.labels.manifest)}`
-        : `${this.$t('next')} ${this.$t(this.labels.item)}`;
-    },
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
+import { biArrowLeft, biArrowRight } from '@quasar/extras/bootstrap-icons';
 
-    prevButtonLabel() {
-      return this.itemIndex === 0
-        ? `${this.$t('prev')} ${this.$t(this.labels.manifest)}`
-        : `${this.$t('prev')} ${this.$t(this.labels.item)}`;
-    },
-    labels() {
-      return this.$store.getters['config/config'].labels || {
-        manifest: 'manifest',
-        item: 'item',
-      };
-    },
-  },
-  created() {
-    this.prevIcon = biArrowLeft;
-    this.nextIcon = biArrowRight;
-  },
-  methods: {
-    prev() {
-      const prevIndex = this.itemIndex - 1;
-      let itemUrl = '';
+const store = useStore();
+const { t } = useI18n();
 
-      if (prevIndex < 0) {
-        // If the index is lower than 0, we will load the prev manifest's last item
-        const prevManifestIndex = this.manifests.findIndex(({ id }) => id === this.manifest.id) - 1;
-        if (prevManifestIndex < 0) return;
+const prevIcon = biArrowLeft;
+const nextIcon = biArrowRight;
 
-        const prevManifest = this.manifests[prevManifestIndex];
-        this.$store.commit('contents/setManifest', prevManifest);
-        this.$store.dispatch('config/setDefaultActiveViews');
-        itemUrl = prevManifest.sequence[prevManifest.sequence.length - 1].id;
-      } else {
-        // We load the previous item
-        itemUrl = this.manifest.sequence[prevIndex].id;
-      }
-      this.$store.dispatch('contents/initItem', itemUrl);
-    },
-    next() {
-      const nextIndex = this.itemIndex + 1;
-      let itemUrl = '';
+const manifest = computed(() => store.getters['contents/manifest']);
+const manifests = computed(() => store.getters['contents/manifests']);
+const item = computed(() => store.getters['contents/item']);
+const itemUrl = computed(() => store.getters['contents/itemUrl']);
+const itemIndex = computed(() => manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) : -1);
+const hasPrev = computed(() => {
+  const prevIndex = itemIndex.value - 1;
+  if (prevIndex < 0) {
+    if (manifests.value === null) return false;
+    const prevManifestIndex = manifests.value.findIndex(({ id }) => id === manifest.value.id) - 1;
+    if (prevManifestIndex < 0) return false;
+  }
 
-      if (nextIndex > this.manifest.sequence.length - 1) {
-        const nextManifestIndex = this.manifests.findIndex(({ id }) => id === this.manifest.id) + 1;
-        if (nextManifestIndex > this.manifests.length - 1) return;
+  return true;
+});
+const hasNext = computed(() => {
+  const nextIndex = itemIndex.value + 1;
+  if (nextIndex > manifest.value.sequence.length - 1) {
+    if (manifests.value === null) return false;
+    const nextManifestIndex = manifests.value.findIndex(({ id }) => id === manifest.value.id) + 1;
+    if (nextManifestIndex > manifests.value.length - 1) return false;
+  }
+  return true;
+});
+const nextButtonLabel = computed(() => {
+  return itemIndex.value === manifest.value.sequence.length - 1
+    ? `${t('next')} ${t(labels.value.manifest)}`
+    : `${t('next')} ${t(labels.value.item)}`;
+});
+const prevButtonLabel = computed(() => {
+  return itemIndex.value === 0
+    ? `${t('prev')} ${t(labels.value.manifest)}`
+    : `${t('prev')} ${t(labels.value.item)}`;
+});
+const labels = computed(() => {
+  return store.getters['config/config'].labels || {
+    manifest: 'manifest',
+    item: 'item',
+  };
+});
 
-        const nextManifest = this.manifests[nextManifestIndex];
-        this.$store.commit('contents/setManifest', nextManifest);
-        this.$store.dispatch('config/setDefaultActiveViews');
-        itemUrl = nextManifest.sequence[0].id;
-      } else {
-        itemUrl = this.manifest.sequence[nextIndex].id;
-      }
-      this.$store.dispatch('contents/initItem', itemUrl);
-    },
-  },
-};
+function prev() {
+  const prevIndex = itemIndex.value - 1;
+  let itemUrl = '';
+
+  if (prevIndex < 0) {
+    // If the index is lower than 0, we will load the prev manifest's last item
+    const prevManifestIndex = manifests.value.findIndex(({ id }) => id === manifest.value.id) - 1;
+    if (prevManifestIndex < 0) return;
+
+    const prevManifest = manifests.value[prevManifestIndex];
+    store.commit('contents/setManifest', prevManifest);
+    store.dispatch('config/setDefaultActiveViews');
+    itemUrl = prevManifest.sequence[prevManifest.sequence.length - 1].id;
+  } else {
+    // We load the previous item
+    itemUrl = manifest.value.sequence[prevIndex].id;
+  }
+  store.dispatch('contents/initItem', itemUrl);
+}
+
+function next() {
+  const nextIndex = itemIndex.value + 1;
+  let itemUrl = '';
+
+  if (nextIndex > manifest.value.sequence.length - 1) {
+    const nextManifestIndex = manifests.value.findIndex(({ id }) => id === manifest.value.id) + 1;
+    if (nextManifestIndex > manifests.value.length - 1) return;
+
+    const nextManifest = manifests.value[nextManifestIndex];
+    store.commit('contents/setManifest', nextManifest);
+    store.dispatch('config/setDefaultActiveViews');
+    itemUrl = nextManifest.sequence[0].id;
+  } else {
+    itemUrl = manifest.value.sequence[nextIndex].id;
+  }
+  store.dispatch('contents/initItem', itemUrl);
+}
 </script>
 
 <style lang="scss" scoped>

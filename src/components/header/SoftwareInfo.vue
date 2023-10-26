@@ -67,34 +67,32 @@
 </template>
 
 <script>
+export default {
+  name: 'SoftwareInfo',
+};
+</script>
+
+<script setup>
+import { computed, ref } from 'vue';
 import {
   biInfoLg, biBook, biCodeSlash, biBugFill,
 } from '@quasar/extras/bootstrap-icons';
 import packageInfo from '../../../package.json';
 
-export default {
-  name: 'SoftwareInfo',
-  data() {
-    return {
-      infobox: false,
-      tidoVersion: '',
-    };
-  },
-  computed: {
-    actualYear() {
-      const d = new Date();
-      return d.getFullYear();
-    },
-  },
-  created() {
-    this.tidoVersion = packageInfo.version;
-    this.infoIcon = biInfoLg;
-    this.docsIcon = biBook;
-    this.codeIcon = biCodeSlash;
-    this.bugIcon = biBugFill;
-  },
-};
+const infobox = ref(false);
+
+const tidoVersion = packageInfo.version;
+const infoIcon = biInfoLg;
+const docsIcon = biBook;
+const codeIcon = biCodeSlash;
+const bugIcon = biBugFill;
+
+const actualYear = computed(() => {
+  const d = new Date();
+  return d.getFullYear();
+})
 </script>
+
 <style lang="scss">
 .q-dialog {
   .tido {

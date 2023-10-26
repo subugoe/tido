@@ -16,18 +16,21 @@
 
 export default {
   name: 'Loading',
-  props: {
-    background: String,
-  },
-  data: () => ({
-    loading: true,
-  }),
-  methods: {
-    getBackground() {
-      if (!this.background) return this.$q.dark.isActive ? 'bg-grey-9' : 'bg-white';
-      if (this.background === 'none') return 'bg-transparent';
-      return this.background;
-    },
-  },
 };
+</script>
+
+<script setup>
+import { useQuasar } from 'quasar';
+
+const props = defineProps({
+  background: String,
+});
+
+const $q = useQuasar();
+
+function getBackground() {
+  if (!props.background) return $q.dark.isActive ? 'bg-grey-9' : 'bg-white';
+  if (props.background === 'none') return 'bg-transparent';
+  return props.background;
+}
 </script>

@@ -7,34 +7,33 @@
 </template>
 
 <script>
-import Panel from '@/components/panels/Panel.vue';
-
 export default {
   name: 'PanelsWrapper',
-  components: {
-    Panel,
-  },
-  computed: {
-    panels() {
-      const { panels } = this.config;
-      return panels;
-    },
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    activeViews() {
-      return this.$store.getters['config/activeViews'];
-    },
-  },
-  methods: {
-    onActiveViewChange(viewIndex, panelIndex) {
-      this.$store.dispatch('config/setActivePanelView', { viewIndex, panelIndex });
-    },
-    getActiveView(panelIndex) {
-      return this.activeViews[panelIndex];
-    },
-  },
-};
+}
+</script>
+
+<script setup>
+import Panel from '@/components/panels/Panel.vue';
+
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const panels = computed(() => {
+  const { panels } = config.value;
+  return panels;
+});
+const config = computed(() => store.getters['config/config']);
+const activeViews = computed(() => store.getters['config/activeViews']);
+
+function onActiveViewChange(viewIndex, panelIndex) {
+  store.dispatch('config/setActivePanelView', { viewIndex, panelIndex });
+}
+
+function getActiveView(panelIndex) {
+  return activeViews.value[panelIndex];
+}
 </script>
 
 <style lang="scss" scoped>
