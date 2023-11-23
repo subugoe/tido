@@ -32,7 +32,6 @@ export default {
 import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 
 import { computed } from 'vue';
-// import { useStore } from 'vuex';
 
 const props = defineProps({
   activeAnnotation: {
@@ -50,9 +49,6 @@ const props = defineProps({
   types: Array,
 });
 
-// const store = useStore();
-
-// const config = computed(() => store.getters['config/config']);
 const annotationTypesMapping = computed(() => (
   props.types.reduce((prev, curr) => {
     prev[curr.name] = curr.annotationType || 'annotation';
@@ -64,7 +60,7 @@ function isActive(annotation) {
   return !!props.activeAnnotation[annotation.id];
 }
 function isText(annotation) {
-  return annotationTypesMapping[annotation.body['x-content-type']] === 'text';
+  return annotationTypesMapping.value[annotation.body['x-content-type']] === 'text';
 }
 function getIconName(typeName) {
   return props.types.find(({ name }) => name === typeName)?.icon || 'biPencilSquare';

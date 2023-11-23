@@ -44,7 +44,6 @@ const message = ref('no_annotations_in_view');
 
 const config = computed(() => store.getters['config/config']);
 const annotations = computed(() => store.getters['annotations/annotations']);
-// const item = computed(() => store.getters['contents/item']);
 const activeAnnotations = computed(() => store.getters['annotations/activeAnnotations']);
 const filteredAnnotations = computed(() => store.getters['annotations/filteredAnnotations']);
 const activeContentUrl = computed(() => store.getters['contents/activeContentUrl']);

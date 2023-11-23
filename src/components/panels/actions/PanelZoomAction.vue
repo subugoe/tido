@@ -27,52 +27,8 @@
 </template>
 
 <script>
-// import { biZoomIn, biZoomOut } from '@quasar/extras/bootstrap-icons';
-
 export default {
   name: 'PanelZoomAction',
-  // data: () => ({
-  //   disableIncrease: false,
-  //   disableDecrease: false,
-  //   value: 0,
-  // }),
-  // props: {
-  //   min: Number,
-  //   max: Number,
-  //   step: Number,
-  //   startValue: Number,
-  // },
-  // created() {
-  //   this.zoomInIcon = biZoomIn;
-  //   this.zoomOutIcon = biZoomOut;
-  // },
-  // mounted() {
-  //   this.value = this.startValue;
-  // },
-  // methods: {
-  //   increase() {
-  //     this.value += this.step;
-  //     this.$emit('update', this.value);
-
-  //     if (this.value >= this.max) {
-  //       this.disableIncrease = true;
-  //     } else {
-  //       this.disableIncrease = false;
-  //       this.disableDecrease = false;
-  //     }
-  //   },
-  //   decrease() {
-  //     this.value -= this.step;
-  //     this.$emit('update', this.value);
-
-  //     if (this.value <= this.min) {
-  //       this.disableDecrease = true;
-  //     } else {
-  //       this.disableIncrease = false;
-  //       this.disableDecrease = false;
-  //     }
-  //   },
-  // },
 };
 </script>
 
