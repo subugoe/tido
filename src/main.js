@@ -9,24 +9,13 @@ import './css/style.scss';
 
 window.Tido = function Tido(config = {}) {
   this.config = { ...config };
-  const instance = this;
+
   this.app = createApp({
-    render() {
-      return h(App);
-    },
-
-    data() {
-      return {
-        config: instance.config,
-      };
-    },
-
-    provide() {
-      return {
-        config: this.config,
-      }
+    setup() {
+      return () => h(App);
     },
   });
+  this.app.provide('config', this.config);
 
   this.app.use(createStore());
   this.app.use(i18n);
