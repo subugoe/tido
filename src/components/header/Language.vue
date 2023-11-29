@@ -19,12 +19,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Language',
-}
-</script>
-
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { useStore } from 'vuex';

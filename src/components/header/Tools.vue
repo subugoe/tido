@@ -12,12 +12,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Tools',
-}
-</script>
-
 <script setup>
 import Language from '@/components/header/Language.vue';
 import SoftwareInfo from '@/components/header/SoftwareInfo.vue';

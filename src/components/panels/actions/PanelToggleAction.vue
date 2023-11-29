@@ -4,12 +4,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'PanelToggleAction',
-}
-</script>
-
 <script setup>
 import { ref, watch } from 'vue';
 

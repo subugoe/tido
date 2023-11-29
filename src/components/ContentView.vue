@@ -16,12 +16,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ContentView',
-};
-</script>
-
 <script setup>
 import Notification from '@/components/Notification.vue';
 

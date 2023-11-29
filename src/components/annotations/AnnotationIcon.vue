@@ -7,12 +7,6 @@
   />
 </template>
 
-<script>
-export default {
-  name: 'AnnotationIcon',
-};
-</script>
-
 <script setup>
 import { computed } from 'vue';
 import { Dark } from 'quasar';

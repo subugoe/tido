@@ -6,12 +6,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'PanelsWrapper',
-}
-</script>
-
 <script setup>
 import Panel from '@/components/panels/Panel.vue';
 

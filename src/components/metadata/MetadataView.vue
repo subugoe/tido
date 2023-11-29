@@ -6,12 +6,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MetadataView',
-}
-</script>
-
 <script setup>
 import CollectionMetadata from '@/components/metadata/CollectionMetadata.vue';
 import ManifestMetadata from '@/components/metadata/ManifestMetadata.vue';

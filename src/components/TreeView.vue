@@ -19,12 +19,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TreeView',
-}
-</script>
-
 <script setup>
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
 import { delay, isElementVisible } from '@/utils';

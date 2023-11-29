@@ -14,12 +14,6 @@
   </q-list>
 </template>
 
-<script>
-export default {
-  name: 'CollectionMetadata',
-}
-</script>
-
 <script setup>
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 

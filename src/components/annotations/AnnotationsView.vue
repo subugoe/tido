@@ -20,12 +20,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AnnotationsView',
-};
-</script>
-
 <script setup>
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import Notification from '@/components/Notification.vue';

@@ -12,13 +12,6 @@
   </q-inner-loading>
 </template>
 
-<script>
-
-export default {
-  name: 'Loading',
-};
-</script>
-
 <script setup>
 import { useQuasar } from 'quasar';
 

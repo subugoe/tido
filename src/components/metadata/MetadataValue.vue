@@ -4,12 +4,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MetadataValue',
-}
-</script>
-
 <script setup>
 const props = defineProps({
   value: {

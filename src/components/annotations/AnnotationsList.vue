@@ -22,12 +22,6 @@
   </q-list>
 </template>
 
-<script>
-export default {
-  name: 'AnnotationsList',
-};
-</script>
-
 <script setup>
 import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 

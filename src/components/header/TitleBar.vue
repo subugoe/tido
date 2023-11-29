@@ -37,13 +37,6 @@
   </div>
 </template>
 
-<script>
-
-export default {
-  name: 'Titlebar',
-}
-</script>
-
 <script setup>
 import { computed } from 'vue';
 import { useStore } from 'vuex';

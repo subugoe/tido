@@ -17,12 +17,6 @@
   </a>
 </template>
 
-<script>
-export default {
-  name: 'MetadataLink',
-}
-</script>
-
 <script setup>
 import { biBoxArrowUpRight } from '@quasar/extras/bootstrap-icons';
 

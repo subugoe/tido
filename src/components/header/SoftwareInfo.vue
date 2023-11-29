@@ -66,12 +66,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'SoftwareInfo',
-};
-</script>
-
 <script setup>
 import { computed, ref } from 'vue';
 import {

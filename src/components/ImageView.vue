@@ -7,12 +7,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ImageView',
-}
-</script>
-
 <script setup>
 import OpenSeadragon from 'openseadragon';
 import Notification from '@/components/Notification.vue';

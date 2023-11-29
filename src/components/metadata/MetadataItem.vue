@@ -9,12 +9,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MetadataItem',
-}
-</script>
-
 <script setup>
 import MetadataLink from '@/components/metadata/MetadataLink.vue';
 import MetadataValue from '@/components/metadata/MetadataValue.vue';

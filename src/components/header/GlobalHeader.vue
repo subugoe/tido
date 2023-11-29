@@ -17,12 +17,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'GlobalHeader',
-}
-</script>
-
 <script setup>
 import Navbar from '@/components/header/Navbar.vue';
 import TitleBar from '@/components/header/TitleBar.vue';

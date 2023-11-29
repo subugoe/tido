@@ -16,13 +16,6 @@
   </div>
 </template>
 
-<script>
-
-export default {
-  name: 'Notification',
-};
-</script>
-
 <script setup>
 import { biInfoCircleFill, biExclamationTriangleFill } from '@quasar/extras/bootstrap-icons';
 import { computed } from 'vue';

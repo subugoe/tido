@@ -26,12 +26,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'PanelZoomAction',
-};
-</script>
-
 <script setup>
 import { onMounted, ref } from 'vue';
 import { biZoomIn, biZoomOut } from '@quasar/extras/bootstrap-icons';

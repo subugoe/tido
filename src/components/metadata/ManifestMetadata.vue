@@ -18,12 +18,6 @@
   </q-list>
 </template>
 
-<script>
-export default {
-  name: 'ManifestMetadata',
-}
-</script>
-
 <script setup>
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 import Actor from '@/components/metadata/Actor.vue';

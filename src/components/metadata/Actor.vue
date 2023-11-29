@@ -7,12 +7,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Actor',
-}
-</script>
-
 <script setup>
 import MetadataValue from '@/components/metadata/MetadataValue.vue';
 
