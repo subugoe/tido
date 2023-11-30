@@ -19,42 +19,39 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, onMounted, ref, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
 import { biTranslate } from '@quasar/extras/bootstrap-icons';
 
-export default {
-  name: 'Language',
-  data() {
-    return {
-      langs: [
-        { label: 'DE', value: 'de-de' },
-        { label: 'EN', value: 'en-US' },
-      ],
-      selectedLang: 'en-US',
-    };
+const store = useStore();
+const { locale: i18nLocale } = useI18n();
+
+const langs = ref([
+  { label: 'DE', value: 'de-de' },
+  { label: 'EN', value: 'en-US' },
+]);
+const selectedLang = ref('en-US');
+
+const icon = biTranslate;
+
+const config = computed(() => store.getters['config/config']);
+
+watch(
+  selectedLang,
+  (lang) => {
+    i18nLocale.value = lang;
   },
-  watch: {
-    selectedLang(lang) {
-      this.$i18n.locale = lang;
-    },
-  },
-  created() {
-    this.icon = biTranslate;
-  },
-  mounted() {
-    this.selectedLang = this.config.lang || 'en-US';
-  },
-  computed: {
-    config() {
-      return this.$store.getters['config/config'];
-    },
-  },
-  methods: {
-    handleLanguageChange(lang) {
-      this.selectedLang = lang.value;
-    },
-  },
-};
+);
+
+onMounted(() => {
+  selectedLang.value = config.value.lang || 'en-US';
+});
+
+function handleLanguageChange(lang) {
+  selectedLang.value = lang.value;
+}
 </script>
 
 <style lang="scss">

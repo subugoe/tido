@@ -60,20 +60,26 @@ import PanelToggleAction from '@/components/panels/actions/PanelToggleAction.vue
 import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
-import { findComponent } from '@/utils/panels';
 
+import { computed, nextTick, ref, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
+import { findComponent } from '@/utils/panels'
+
+// NOTE: Using `setup()` rather than the recommended `<script setup>`
+// to avoid issues with asset loading.
 export default {
   components: {
-    TreeView,
     AnnotationsView,
     ContentView,
-    MetadataView,
     ImageView,
-    PanelZoomAction,
-    PanelToggleAction,
-    PanelImageAction,
-    Notification,
     Loading,
+    MetadataView,
+    Notification,
+    PanelImageAction,
+    PanelToggleAction,
+    PanelZoomAction,
+    TreeView,
   },
   props: {
     panel: {
@@ -82,56 +88,77 @@ export default {
     },
     activeView: Number,
   },
-  data() {
-    return {
-      tabs: [],
-      activeTabIndex: 0,
-      unsubscribe: null,
-      isLoading: false,
-    };
-  },
-  computed: {
-    item() {
-      return this.$store.getters['contents/item'];
-    },
-  },
-  methods: {
-    getContentUrl(type) {
-      let contentItem = null;
-      if (!type) {
-        [contentItem] = this.item.content;
-        // TODO: this should be moved to loading time in order dynamically recognize all content types
-        //  instead of only the first one
-        this.$store.dispatch('config/setContentType', contentItem.type.split('type=')[1]);
+  setup(props, { emit }) {
+    const store = useStore();
+    const { t } = useI18n();
+
+    const tabs = ref([]);
+    const activeTabIndex = ref(0);
+    const unsubscribe = ref(null);
+    const isLoading = ref(false);
+
+    const item = computed(() => store.getters['contents/item']);
+
+    watch(
+      () => props.activeView,
+      (value) => {
+        activeTabIndex.value = value;
+      },
+      { immediate: true },
+    );
+
+    watch(
+      () => props.panel,
+      ({ views }) => {
+        nextTick(() => {
+          init(views);
+        })
+      },
+      { deep: true, immediate: true },
+    );
+    watch(
+      item,
+      () => {
+        init(props.panel.views);
       }
+    )
 
-      contentItem = this.item.content.find((c) => c.type.split('type=')[1] === type);
-
-      return contentItem ? contentItem.url : null;
-    },
-    init(views) {
-      this.tabs = [];
-      if (this.unsubscribe !== null) this.unsubscribe();
+    function init(views) {
+      tabs.value = [];
+      if (unsubscribe.value !== null) unsubscribe.value();
 
       views.forEach((view, i) => {
         const { component } = findComponent(view.connector.id);
-        let methodName = `create${component}`;
-        if (!this[methodName]) methodName = 'createDefaultView';
-        this[methodName](view, i);
+
+        switch (component) {
+          case 'ContentView':
+            return createContentView(view, i);
+          case 'TreeView':
+            return createTreeView(view, i);
+          case 'MetadataView':
+            return createMetadataView(view, i);
+          case 'ImageView':
+            return createImageView(view, i);
+          case 'AnnotationsView':
+            return createAnnotationsView(view, i);
+          default:
+            return createDefaultView(view, i);
+        }
       });
-    },
-    createContentView(view, i) {
+    }
+
+    function createContentView(view, i) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
       const type = connector.options?.type;
-      const url = this.getContentUrl(type);
+      const url = getContentUrl(type);
       if (!url) return;
 
       const fontSize = 16;
       const actionEvents = {
         update: (value) => {
-          this.tabs[i].props.fontSize = value;
+          tabs.value[i].props.fontSize = value;
         },
       };
 
@@ -143,18 +170,19 @@ export default {
         events: actionEvents,
       }];
 
-      this.tabs = [...this.tabs, {
+      tabs.value = [...tabs.value, {
         component,
         label,
         props: { type, url, fontSize },
         actions,
       }];
-    },
-    createAnnotationsView(view, i) {
+    }
+
+    function createAnnotationsView(view, i) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
-      const url = this.item.annotationCollection;
+      const url = item.value?.annotationCollection;
 
       if (!url) return;
 
@@ -162,18 +190,23 @@ export default {
       const events = {
         update: (value) => {
           if (value === 'maybe') return;
-          this.$store.dispatch(value ? 'annotations/selectAll' : 'annotations/selectNone');
+          store.dispatch(value ? 'annotations/selectAll' : 'annotations/selectNone');
         },
       };
 
-      this.unsubscribe = this.$store.subscribeAction(async ({ type, payload }) => {
-        if (this.tabs.length && this.tabs[0].actions?.length && type === 'annotations/setActiveAnnotations') {
+      unsubscribe.value = store.subscribeAction(async ({ type, payload }) => {
+        if (tabs.value.length
+          && tabs.value[0]?.actions?.length
+          && type === 'annotations/setActiveAnnotations'
+        ) {
           const activeAmount = Object.keys(payload).length;
-          const filteredAmount = this.$store.getters['annotations/filteredAnnotations'].length;
+          const filteredAmount = store.getters['annotations/filteredAnnotations'].length;
 
           let newSelected = activeAmount > 0 && activeAmount === filteredAmount;
           if (!newSelected && Object.keys(payload).length > 0) newSelected = 'maybe';
-          if (this.tabs[i].actions[0].props.selected !== newSelected) this.tabs[i].actions[0].props.selected = newSelected;
+          if (tabs.value[i].actions[0].props.selected !== newSelected) {
+            tabs.value[i].actions[0].props.selected = newSelected;
+          }
         }
       });
 
@@ -181,35 +214,38 @@ export default {
         component: 'PanelToggleAction',
         props: {
           selected,
-          label: this.$t('select_all'),
+          label: t('select_all'),
         },
         events,
       }];
 
-      this.tabs = [...this.tabs, {
+      tabs.value = [...tabs.value, {
         component,
         label,
         props: { url, ...connector.options },
         actions,
       }];
-    },
-    createMetadataView(view) {
+    }
+
+    function createMetadataView(view) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
       const { options } = connector;
-      this.tabs = [...this.tabs, {
+      tabs.value = [...tabs.value, {
         component,
         label,
         props: { options },
       }];
-    },
-    createTreeView(view) {
-      this.createDefaultView(view);
-    },
-    createImageView(view) {
+    }
+
+    function createTreeView(view) {
+      createDefaultView(view);
+    }
+
+    function createImageView(view) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
-      this.tabs = [...this.tabs, {
+      tabs.value = [...tabs.value, {
         component,
         label,
         props: { ...connector.options },
@@ -217,42 +253,45 @@ export default {
           component: 'PanelImageAction',
         }],
       }];
-    },
-    createDefaultView(view) {
+    }
+
+    function createDefaultView(view) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
-      this.tabs = [...this.tabs, {
+      tabs.value = [...tabs.value, {
         component,
         label,
         props: { ...connector.options },
       }];
-    },
+    }
 
-    onViewChange() {
-      this.$emit('active-view', this.activeTabIndex);
-    },
+    function getContentUrl(type) {
+      let contentItem = null;
+      if (!type) {
+        [contentItem] = item.value.content;
+        // TODO: this should be moved to loading time in order dynamically recognize all content types
+        //  instead of only the first one
+        store.dispatch('config/setContentType', contentItem.type.split('type=')[1]);
+      }
+
+      contentItem = item.value.content.find((c) => c.type.split('type=')[1] === type);
+
+      return contentItem ? contentItem.url : null;
+    }
+
+    function onViewChange() {
+      emit('active-view', activeTabIndex.value);
+    }
+
+    return {
+      activeTabIndex,
+      isLoading,
+      panel: props.panel,
+      tabs,
+      onViewChange,
+    }
   },
-  watch: {
-    panel: {
-      handler({ views }) {
-        this.init(views);
-      },
-      deep: true,
-      immediate: true,
-    },
-    activeView: {
-      handler(value) {
-        this.activeTabIndex = value;
-      },
-      immediate: true,
-    },
-    item: {
-      handler() {
-        this.init(this.panel.views);
-      },
-    },
-  },
-};
+}
 </script>
 
 <style lang="scss" scoped>

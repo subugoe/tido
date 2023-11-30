@@ -9,33 +9,25 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import MetadataLink from '@/components/metadata/MetadataLink.vue';
 import MetadataValue from '@/components/metadata/MetadataValue.vue';
 
-export default {
-  name: 'MetadataItem',
-  components: { MetadataValue, MetadataLink },
-  props: {
-    item: Object,
-  },
-  computed: {
-    label() {
-      return this.item?.key || 'other';
-    },
-    childItems() {
-      return this.item?.metadata || [];
-    },
-  },
-  methods: {
-    isLink() {
-      const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
-      const matches = this.item?.key?.match(regex) || null;
+import { computed } from 'vue';
 
-      return matches !== null;
-    },
-  },
-};
+const props = defineProps({
+  item: Object,
+});
+
+const label = computed(() => props.item?.key || 'other');
+const childItems = computed(() => props.item?.metadata || []);
+
+function isLink() {
+  const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
+  const matches = props.item?.key?.match(regex) || null;
+
+  return matches !== null;
+}
 </script>
 
 <style scoped>

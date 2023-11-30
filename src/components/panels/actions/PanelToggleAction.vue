@@ -4,28 +4,33 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'PanelToggleAction',
-  props: {
-    selected: Boolean,
-    label: String,
+<script setup>
+import { ref, watch } from 'vue';
+
+const props = defineProps({
+  selected: Boolean,
+  label: String,
+})
+const emit = defineEmits(['update']);
+
+const selectedModel = ref(false);
+
+watch(
+  () => props.selected,
+  (value) => {
+    selectedModel.value = value;
   },
-  data: () => ({
-    selectedModel: false,
-  }),
-  watch: {
-    selected: {
-      handler(value) {
-        this.selectedModel = value;
-      },
-      immediate: true,
-    },
-    selectedModel(value, oldValue) {
-      if (value !== oldValue) this.$emit('update', value);
-    },
+  { immediate: true },
+);
+
+watch(
+  selectedModel,
+  (value, oldValue) => {
+    if (value !== oldValue) {
+      emit('update', value);
+    }
   },
-};
+);
 </script>
 
 <style scoped>

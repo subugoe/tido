@@ -74,84 +74,84 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, ref, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
 import {
-  biCheckCircleFill, biCircle, biArrowCounterclockwise, biChevronDown,
+  biCheckCircleFill,
+  biCircle,
+  biArrowCounterclockwise,
+  biChevronDown,
 } from '@quasar/extras/bootstrap-icons';
 
-export default {
-  name: 'PanelsToggle',
-  data: () => ({
-    toggles: [],
-    showDropdown: false,
-  }),
-  computed: {
-    panels() {
-      return this.$store.getters['config/config'].panels;
-    },
-    resetColor() {
-      return this.toggles.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7';
-    },
-  },
-  watch: {
-    panels: {
-      handler(value) {
-        this.toggles = value
-          .filter(({ toggle }) => toggle === true)
-          .map(({ show, label }, index) => ({ index, show, label }));
-      },
-      immediate: true,
-    },
-    showDropdown: {
-      handler(value) {
-        const tido = document.getElementById('tido');
-        let backdrop = tido.querySelector('#tido-backdrop');
-        if (value) {
-          if (!backdrop) {
-            const el = document.createElement('div');
-            el.id = 'tido-backdrop';
-            tido.appendChild(el);
-            backdrop = tido.querySelector('#tido-backdrop');
-            backdrop.clickOutsideEvent = () => {
-              this.showDropdown = false;
-            };
-            backdrop.addEventListener('click', backdrop.clickOutsideEvent);
-          }
-        } else if (backdrop) backdrop.remove();
-      },
-    },
-  },
-  created() {
-    this.checkedIcon = biCheckCircleFill;
-    this.uncheckedIcon = biCircle;
-    this.resetIcon = biArrowCounterclockwise;
-    this.dropdownIcon = biChevronDown;
-  },
-  methods: {
-    update(index, show) {
-      this.toggles[index].show = show;
-      this.$store.dispatch('config/setShowPanel', { index, show });
-    },
+const store = useStore();
+const { t } = useI18n();
 
-    reset() {
-      this.toggles.forEach((toggle, index) => {
-        this.toggles[index].show = true;
-        this.$store.dispatch('config/setShowPanel', { index, show: true });
-      });
-    },
+const toggles = ref([]);
+const showDropdown = ref(false);
 
-    // display toggle title when hovering
-    handleToggleTitle(idx) {
-      const titleName = this.$t(this.toggles[idx].label);
-      const titleUpper = `${titleName[0].toUpperCase()}${titleName.slice(1)}`;
+const checkedIcon = biCheckCircleFill;
+const uncheckedIcon = biCircle;
+const resetIcon = biArrowCounterclockwise;
+const dropdownIcon = biChevronDown;
 
-      return this.toggles[idx].show
-        ? `${this.$t('hide')} ${titleUpper} Panel`
-        : `${this.$t('show')} ${titleUpper} Panel`;
-    },
+const panels = computed(() => store.getters['config/config'].panels);
+const resetColor = computed(() => toggles.value.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7');
+
+watch(
+  panels,
+  (value) => {
+    toggles.value = value
+      .filter(({ toggle }) => toggle === true)
+      .map(({ show, label }, index) => ({ index, show, label }));
   },
-};
+  { immediate: true },
+)
+
+watch(
+  showDropdown,
+  (value) => {
+    const tido = document.getElementById('tido');
+    let backdrop = tido.querySelector('#tido-backdrop');
+    if (value) {
+      if (!backdrop) {
+        const el = document.createElement('div');
+        el.id = 'tido-backdrop';
+        tido.appendChild(el);
+        backdrop = tido.querySelector('#tido-backdrop');
+        backdrop.clickOutsideEvent = () => {
+          showDropdown.value = false;
+        };
+        backdrop.addEventListener('click', backdrop.clickOutsideEvent);
+      }
+    } else if (backdrop) backdrop.remove();
+  },
+)
+
+function update(index, show) {
+  toggles.value[index].show = show;
+  store.dispatch('config/setShowPanel', { index, show });
+}
+
+function reset() {
+  toggles.value.forEach((toggle, index) => {
+    toggles.value[index].show = true;
+    store.dispatch('config/setShowPanel', { index, show: true });
+  });
+}
+
+// display toggle title when hovering
+function handleToggleTitle(idx) {
+  const titleName = t(toggles.value[idx].label);
+  const titleUpper = `${titleName[0].toUpperCase()}${titleName.slice(1)}`;
+
+  return toggles.value[idx].show
+    ? `${t('hide')} ${titleUpper} Panel`
+    : `${t('show')} ${titleUpper} Panel`;
+}
 </script>
+
 <style lang="scss">
 .dropdown-list {
   position: absolute;

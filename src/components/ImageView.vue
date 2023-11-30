@@ -7,91 +7,80 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import OpenSeadragon from 'openseadragon';
-import { delay } from '@/utils';
 import Notification from '@/components/Notification.vue';
 
-export default {
-  name: 'ImageView',
-  components: {
-    Notification,
+import { computed, ref, watch } from 'vue';
+import { useStore } from 'vuex';
+import { delay } from '@/utils';
+
+const emit = defineEmits('loading');
+
+const store = useStore();
+
+const viewer = ref(null);
+const error = ref(null);
+
+const item = computed(() => store.getters['contents/item']);
+const imageUrl = computed(() => item.value?.image?.id);
+const options = computed(() => ({
+  id: 'openseadragon',
+  tileSources: {
+    type: 'image',
+    url: imageUrl.value,
   },
-  data() {
-    return {
-      viewer: null,
-      error: null,
-    };
+  maxZoomLevel: 10,
+  zoomInButton: 'zoom-in',
+  zoomOutButton: 'zoom-out',
+  homeButton: 'default',
+  fullPageButton: 'fullscreen',
+}));
+
+watch(
+  item,
+  async () => {
+    if (!item.value?.image) {
+      error.value = { message: 'no_image_available' };
+      return;
+    }
+    emit('loading', true);
+    try {
+      const response = await fetch(item.value.image.id);
+
+      if (response.status === 500) throw { message: 'error_image_not_exists' };
+
+      if (response.status !== 200 && response.status !== 201) throw { message: 'error_vpn' };
+
+      error.value = null;
+      await delay(1000);
+      initOpenSeagragon();
+    } catch (error) {
+      error.value = error;
+      emit('loading', false);
+    }
   },
-  computed: {
-    item() {
-      return this.$store.getters['contents/item'];
-    },
-    imageUrl() {
-      return this.item.image?.id;
-    },
-    options() {
-      return {
-        id: 'openseadragon',
-        tileSources: {
-          type: 'image',
-          url: this.imageUrl,
-        },
-        maxZoomLevel: 10,
-        zoomInButton: 'zoom-in',
-        zoomOutButton: 'zoom-out',
-        homeButton: 'default',
-        fullPageButton: 'fullscreen',
-      };
-    },
-  },
-  watch: {
-    item: {
-      async handler() {
-        if (!this.item.image) {
-          this.error = { message: 'no_image_available' };
-          return;
-        }
-        this.$emit('loading', true);
-        try {
-          const response = await fetch(this.item.image.id);
+  { immediate: true },
+)
 
-          if (response.status === 500) throw { message: 'error_image_not_exists' };
+function initOpenSeagragon() {
+  if (viewer.value) {
+    viewer.value.destroy();
+    viewer.value = null;
+  }
 
-          if (response.status !== 200 && response.status !== 201) throw { message: 'error_vpn' };
+  viewer.value = new OpenSeadragon.Viewer(options.value);
+  viewer.value.controlsFadeDelay = 1000;
 
-          this.error = null;
-          await delay(1000);
-          this.initOpenSeagragon();
-        } catch (error) {
-          this.error = error;
-          this.$emit('loading', false);
-        }
-      },
-      immediate: true,
-    },
-  },
-  methods: {
-    initOpenSeagragon() {
-      if (this.viewer) {
-        this.viewer.destroy();
-        this.viewer = null;
-      }
+  viewer.value.addHandler('tile-loaded', () => {
+    emit('loading', false);
+  });
 
-      this.viewer = new OpenSeadragon.Viewer(this.options);
-      this.viewer.controlsFadeDelay = 1000;
-
-      this.viewer.addHandler('tile-loaded', () => {
-        this.$emit('loading', false);
-      });
-
-      this.viewer.addHandler('open-failed', () => {
-        this.error = { message: 'error_open_image' };
-        this.$emit('loading', false);
-      });
-    },
-  },
-};
+  viewer.value.addHandler('open-failed', () => {
+    error.value = { message: 'error_open_image' };
+    emit('loading', false);
+  });
+}
 </script>
 
 <style lang="scss" scoped>

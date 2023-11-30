@@ -17,25 +17,21 @@
   </a>
 </template>
 
-<script>
+<script setup>
 import { biBoxArrowUpRight } from '@quasar/extras/bootstrap-icons';
 
-export default {
-  name: 'MetadataLink',
-  props: {
-    url: {
-      type: String,
-      default: () => '',
-    },
-    text: {
-      type: String,
-      default: () => '',
-    },
+const props = defineProps({
+  url: {
+    type: String,
+    default: () => '',
   },
-  created() {
-    this.icon = biBoxArrowUpRight;
+  text: {
+    type: String,
+    default: () => '',
   },
-};
+});
+
+const icon = biBoxArrowUpRight;
 </script>
 
 <style scoped>

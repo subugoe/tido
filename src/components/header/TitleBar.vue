@@ -37,27 +37,21 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
 
-export default {
-  name: 'Titlebar',
-  props: {
-    item: {
-      type: Object,
-      default: () => {},
-    },
+const props = defineProps({
+  item: {
+    type: Object,
+    default: () => {},
   },
-  computed: {
-    collectionTitle() {
-      return this.$store.getters['contents/collectionTitle'];
-    },
-    manifestTitle() {
-      return this.$store.getters['contents/manifest']?.label;
-    },
-  },
-  created() {
-    this.arrowIcon = biChevronRight;
-  },
-};
+});
+
+const store = useStore();
+const arrowIcon = biChevronRight;
+
+const collectionTitle = computed(() => store.getters['contents/collectionTitle']);
+const manifestTitle = computed(() => store.getters['contents/manifest']?.label);
 </script>

@@ -14,43 +14,38 @@
   </q-list>
 </template>
 
-<script>
+<script setup>
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
-export default {
-  name: 'CollectionMetadata',
-  components: {
-    MetadataItem,
-  },
-  computed: {
-    collection() {
-      return this.$store.getters['contents/collection'];
-    },
-    metadata() {
-      if (!this.collection) return [];
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
-      const mappings = {
-        main: 'title',
-        sub: 'subtitle',
-      };
+const store = useStore();
 
-      const collectorName = this.collection?.collector?.name;
-      const description = this.collection?.description;
+const collection = computed(() => store.getters['contents/collection']);
+const metadata = computed(() => {
+  if (!collection.value) return [];
 
-      return [
-        ...this.collection.title
-          .filter((collection) => collection)
-          .map((collectionTitle) => ({
-            key: mappings[collectionTitle.type] || 'title',
-            value: collectionTitle.title,
-          })),
-        ...(collectorName ? [{ key: 'collector', value: collectorName }] : []),
-        ...(description ? [{ key: 'description', value: description }] : []),
-        ...(this.collection.metadata || []),
-      ];
-    },
-  },
-};
+  const mappings = {
+    main: 'title',
+    sub: 'subtitle',
+  };
+
+  const collectorName = collection.value.collector?.name;
+  const description = collection.value.description;
+
+  return [
+    ...collection.value.title
+      .filter((collection) => collection)
+      .map((collectionTitle) => ({
+        key: mappings[collectionTitle.type] || 'title',
+        value: collectionTitle.title,
+      })),
+    ...(collectorName ? [{ key: 'collector', value: collectorName }] : []),
+    ...(description ? [{ key: 'description', value: description }] : []),
+    ...(collection.value.metadata || []),
+  ];
+});
 </script>
 
 <style scoped>
