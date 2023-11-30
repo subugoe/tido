@@ -12,28 +12,22 @@
   </div>
 </template>
 
-<script>
-import { biMoonFill, biSunFill } from '@quasar/extras/bootstrap-icons';
+<script setup>
 import Language from '@/components/header/Language.vue';
 import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
 
-export default {
-  name: 'Tools',
-  components: {
-    Language,
-    SoftwareInfo,
-  },
-  computed: {
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    showLanguageSwitch() {
-      return this.config.header?.languageSwitch !== undefined ? this.config.header?.languageSwitch : true;
-    },
-  },
-  created() {
-    this.darkIcon = biMoonFill;
-    this.lightIcon = biSunFill;
-  },
-};
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import { biMoonFill, biSunFill } from '@quasar/extras/bootstrap-icons';
+
+const store = useStore();
+const darkIcon = biMoonFill;
+const lightIcon = biSunFill;
+
+const config = computed(() => store.getters['config/config']);
+const showLanguageSwitch = computed(() => (
+  config.value?.header?.languageSwitch !== undefined
+    ? config.value.header.languageSwitch
+    : true
+));
 </script>

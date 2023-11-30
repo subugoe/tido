@@ -30,6 +30,12 @@
 </template>
 
 <script>
+export default {
+  name: 'TIDO',
+}
+</script>
+
+<script setup>
 import { setCssVar } from 'quasar';
 import { biBook } from '@quasar/extras/bootstrap-icons';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
@@ -38,146 +44,124 @@ import PanelsWrapper from '@/components/panels/PanelsWrapper.vue';
 import Notification from '@/components/Notification.vue';
 import Loading from '@/components/Loading.vue';
 
-export default {
-  name: 'TIDO',
-  components: {
-    Loading,
-    PanelsWrapper,
-    GlobalHeader,
-    Notification,
-  },
-  data() {
-    return {
-      errorTitle: '',
-      errorMessage: '',
-      isLoading: true,
-    };
-  },
-  computed: {
-    ready() {
-      const { collection: collectionUrl, manifest: manifestUrl } = this.config;
+import { computed, inject, onMounted, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
-      if (!this.item) {
-        return false;
-      }
+const store = useStore();
+const $q = useQuasar();
+const { t, locale: i18nLocale } = useI18n();
 
-      if (this.item.annotationCollection && this.annotations === null) {
-        return false;
-      }
+const errorTitle = ref('');
+const errorMessage = ref('');
+const isLoading = ref(true);
 
-      if (collectionUrl) {
-        return this.manifests !== null && !!(this.collection) && !!(this.manifest);
-      }
+const emptyIcon = biBook;
 
-      if (manifestUrl) {
-        return !!(this.manifest);
-      }
+const ready = computed(() => {
+  const { collection: collectionUrl, manifest: manifestUrl } = config.value;
 
-      return true;
-    },
-    annotations() {
-      return this.$store.getters['annotations/annotations'];
-    },
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    collection() {
-      return this.$store.getters['contents/collection'];
-    },
-    item() {
-      return this.$store.getters['contents/item'];
-    },
-    manifest() {
-      return this.$store.getters['contents/manifest'];
-    },
-    manifests() {
-      return this.$store.getters['contents/manifests'];
-    },
-  },
-  created() {
-    this.emptyIcon = biBook;
-  },
-  async mounted() {
-    this.isLoading = true;
-    this.$q.dark.set('auto');
+  if (!item.value) {
+    return false;
+  }
 
-    await this.loadConfig();
+  if (item.value.annotationCollection && annotations.value === null) {
+    return false;
+  }
 
-    this.$i18n.locale = this.config.lang;
+  if (collectionUrl) {
+    return manifests.value !== null && !!(collection.value) && !!(manifest.value);
+  }
 
-    const colorsForceMode = this.config.colors.forceMode;
+  if (manifestUrl) {
+    return !!(manifest.value);
+  }
 
-    if (colorsForceMode && colorsForceMode !== 'none') {
-      this.$q.dark.set(colorsForceMode === 'dark');
+  return true;
+});
+const annotations = computed(() => store.getters['annotations/annotations']);
+const config = computed(() => store.getters['config/config']);
+const collection = computed(() => store.getters['contents/collection']);
+const item = computed(() => store.getters['contents/item']);
+const manifest = computed(() => store.getters['contents/manifest']);
+const manifests = computed(() => store.getters['contents/manifests']);
+
+onMounted(async () => {
+  isLoading.value = true;
+  $q.dark.set('auto');
+
+  await loadConfig();
+
+  i18nLocale.value = config.value.lang;
+
+  const colorsForceMode = config.value.colors.forceMode;
+
+  if (colorsForceMode && colorsForceMode !== 'none') {
+    $q.dark.set(colorsForceMode === 'dark');
+  }
+
+  if (config.value?.colors?.primary) {
+    setCssVar('primary', config.value.colors.primary);
+  }
+
+  if (config.value?.colors?.secondary) {
+    setCssVar('secondary', config.value.colors.secondary);
+  }
+
+  if (config.value?.colors?.accent) {
+    setCssVar('accent', config.value.colors.accent);
+  }
+
+  await init();
+})
+
+async function getCollection(url) {
+  await store.dispatch('contents/initCollection', url);
+}
+async function loadConfig() {
+  try {
+    const config = inject('config');
+    await store.dispatch('config/load', config);
+  } catch ({ title, message }) {
+    errorTitle.value = t('config_error');
+    errorMessage.value = message;
+  }
+}
+async function getManifest(url) {
+  await store.dispatch('contents/initManifest', url);
+}
+async function getItem(url) {
+  await store.dispatch('contents/initItem', url);
+}
+async function init() {
+  const { collection, manifest, item } = config.value;
+
+  try {
+    // We want to preload all required data that the components need.
+    // Initialize priority:
+    // We always load the item first as here is the main data that we want to display.
+    if (item) {
+      await getItem(item);
     }
 
-    if (this.config?.colors?.primary) {
-      setCssVar('primary', this.config.colors.primary);
+    // After that we load additionally the parent objects.
+    // If a collection is given we ignore the manifest setting
+    // and try to figure out the correct manifest by searching for the above item.
+    // Otherwise, no collection is given but a single manifest instead, so we load that manifest.
+    if (collection) {
+      await getCollection(collection);
+    } else if (manifest) {
+      await getManifest(manifest);
     }
-
-    if (this.config?.colors?.secondary) {
-      setCssVar('secondary', this.config.colors.secondary);
-    }
-
-    if (this.config?.colors?.accent) {
-      setCssVar('accent', this.config.colors.accent);
-    }
-
-    await this.init();
-  },
-  methods: {
-    async getCollection(url) {
-      await this.$store.dispatch('contents/initCollection', url);
-    },
-    async loadConfig() {
-      try {
-        await this.$store.dispatch('config/load', this.$root.config);
-      } catch ({ title, message }) {
-        this.errorTitle = this.$t('config_error');
-        this.errorMessage = message;
-      }
-    },
-    async getManifest(url) {
-      await this.$store.dispatch('contents/initManifest', url);
-    },
-    async getItem(url) {
-      await this.$store.dispatch('contents/initItem', url);
-    },
-    async init() {
-      const { collection, manifest, item } = this.config;
-
-      try {
-        // We want to preload all required data that the components need.
-        // Initialize priority:
-        // We always load the item first as here is the main data that we want to display.
-        if (item) {
-          await this.getItem(item);
-        }
-
-        // After that we load additionally the parent objects.
-        // If a collection is given we ignore the manifest setting
-        // and try to figure out the correct manifest by searching for the above item.
-        // Otherwise, no collection is given but a single manifest instead, so we load that manifest.
-        if (collection) {
-          await this.getCollection(collection);
-        } else if (manifest) {
-          await this.getManifest(manifest);
-        }
-      } catch (e) {
-        await delay(1000);
-        this.errorTitle = e.title || 'unknown_error';
-        this.errorMessage = e.message || 'please_try_again_later';
-      } finally {
-        this.isLoading = false;
-      }
-    },
-    async onItemUrlChange(val) {
-      if (val) {
-        this.isLoading = false;
-      }
-    },
-  },
-};
+  } catch (e) {
+    await delay(1000);
+    errorTitle.value = e.title || 'unknown_error';
+    errorMessage.value = e.message || 'please_try_again_later';
+  } finally {
+    isLoading.value = false;
+  }
+}
 </script>
 
 <style scoped lang="scss">

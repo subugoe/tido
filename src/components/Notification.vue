@@ -16,54 +16,45 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { biInfoCircleFill, biExclamationTriangleFill } from '@quasar/extras/bootstrap-icons';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
-export default {
-  name: 'Notification',
-  props: {
-    message: {
-      type: String,
-      default: () => '',
-    },
-    title: String,
-    type: {
-      type: String,
-      default: () => '',
-    },
+const props = defineProps({
+  message: {
+    type: String,
+    default: () => '',
   },
-  data() {
-    return {
+  title: String,
+  type: {
+    type: String,
+    default: () => '',
+  },
+});
 
-    };
-  },
-  computed: {
-    config() {
-      return this.$store.getters['config/config'];
-    },
-    notificationColors() {
-      return this.config.notificationColors;
-    },
-    color() {
-      switch (this.type) {
-        case 'info':
-          return this.notificationColors?.info ? this.notificationColors.info : '';
-        case 'warning':
-          return this.notificationColors?.warning ? this.notificationColors.warning : '';
-        default:
-          return '';
-      }
-    },
-    icon() {
-      switch (this.type) {
-        case 'info':
-          return biInfoCircleFill;
-        case 'warning':
-          return biExclamationTriangleFill;
-        default:
-          return '';
-      }
-    },
-  },
-};
+const store = useStore();
+
+const config = computed(() => store.getters['config/config']);
+const notificationColors = computed(() => config.value.notificationColors);
+const color = computed(() => {
+  switch (props.type) {
+    case 'info':
+      return notificationColors.value?.info ? notificationColors.value.info : '';
+    case 'warning':
+      return notificationColors.value?.warning ? notificationColors.value.warning : '';
+    default:
+      return '';
+  }
+});
+const icon = computed(() => {
+  switch (props.type) {
+    case 'info':
+      return biInfoCircleFill;
+    case 'warning':
+      return biExclamationTriangleFill;
+    default:
+      return '';
+  }
+});
 </script>

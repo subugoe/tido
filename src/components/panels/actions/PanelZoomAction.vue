@@ -26,54 +26,52 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { onMounted, ref } from 'vue';
 import { biZoomIn, biZoomOut } from '@quasar/extras/bootstrap-icons';
 
-export default {
-  name: 'PanelZoomAction',
-  data: () => ({
-    disableIncrease: false,
-    disableDecrease: false,
-    value: 0,
-  }),
-  props: {
-    min: Number,
-    max: Number,
-    step: Number,
-    startValue: Number,
-  },
-  created() {
-    this.zoomInIcon = biZoomIn;
-    this.zoomOutIcon = biZoomOut;
-  },
-  mounted() {
-    this.value = this.startValue;
-  },
-  methods: {
-    increase() {
-      this.value += this.step;
-      this.$emit('update', this.value);
+const props = defineProps({
+  min: Number,
+  max: Number,
+  step: Number,
+  startValue: Number,
+});
+const emit = defineEmits(['update']);
 
-      if (this.value >= this.max) {
-        this.disableIncrease = true;
-      } else {
-        this.disableIncrease = false;
-        this.disableDecrease = false;
-      }
-    },
-    decrease() {
-      this.value -= this.step;
-      this.$emit('update', this.value);
+const zoomInIcon = biZoomIn;
+const zoomOutIcon = biZoomOut;
 
-      if (this.value <= this.min) {
-        this.disableDecrease = true;
-      } else {
-        this.disableIncrease = false;
-        this.disableDecrease = false;
-      }
-    },
-  },
-};
+const disableIncrease = ref(false);
+const disableDecrease = ref(false);
+const value = ref(0);
+
+onMounted(() => {
+  value.value = props.startValue;  
+});
+
+function increase() {
+  value.value += props.step;
+  emit('update', value.value);
+
+  if (value.value >= props.max) {
+    disableIncrease.value = true;
+  } else {
+    disableIncrease.value = false;
+    disableDecrease.value = false;
+  }
+}
+
+function decrease() {
+  value.value -= props.step;
+  emit('update', value.value);
+
+  if (value.value <= props.min) {
+    disableDecrease.value = true;
+  } else {
+    disableIncrease.value = false;
+    disableDecrease.value = false;
+  }
+}
 </script>
 
 <style scoped>

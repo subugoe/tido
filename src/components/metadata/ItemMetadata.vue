@@ -14,46 +14,29 @@
   </q-list>
 </template>
 
-<script>
+<script setup>
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
-export default {
-  name: 'ItemMetadata',
-  components: {
-    MetadataItem,
-  },
-  computed: {
-    item() {
-      return this.$store.getters['contents/item'];
-    },
-    itemUrl() {
-      return this.$store.getters['contents/itemUrl'];
-    },
-    manifest() {
-      return this.$store.getters['contents/manifest'];
-    },
-    itemsCount() {
-      return this.manifest?.sequence.length;
-    },
-    labels() {
-      return this.$store.getters['config/config'].labels;
-    },
-    number() {
-      return this.manifest ? this.manifest.sequence.findIndex(({ id }) => id === this.itemUrl) + 1 : 1;
-    },
-    total() {
-      return this.itemsCount ?? 1;
-    },
-    metadata() {
-      return [
-        { key: 'label', value: this.item.n },
-        { key: 'language', value: this.item.lang?.join(',') },
-        { key: 'image_license', value: this.item.image?.license?.id },
-        { key: 'image_notes', value: this.item.image?.license?.notes },
-      ].filter((item) => item.value);
-    },
-  },
-};
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const item = computed(() => store.getters['contents/item']);
+const itemUrl = computed(() => store.getters['contents/itemUrl']);
+const manifest = computed(() => store.getters['contents/manifest']);
+const itemsCount = computed(() => manifest.value?.sequence.length);
+const labels = computed(() => store.getters['config/config'].labels);
+const number = computed(() => manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) + 1 : 1);
+const total = computed(() => itemsCount.value ?? 1);
+const metadata = computed(() => (
+  [
+    { key: 'label', value: item.value.n },
+    { key: 'language', value: item.value?.lang?.join(',') },
+    { key: 'image_license', value: item.value?.image?.license?.id },
+    { key: 'image_notes', value: item.value?.image?.license?.notes },
+  ].filter((item) => item.value)
+));
 </script>
 
 <style scoped>
