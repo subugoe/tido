@@ -1,4 +1,4 @@
-import { apiBaseUrl } from '../support/globals';
+import { ahiqarApiBaseUrl } from '../support/globals';
 
 describe('Config', () => {
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('Config', () => {
   });
 
   it('Should load default Tido with collection bookmark', () => {
-    cy.visit(`/zero-config.html?collection=${apiBaseUrl}/textapi/ahiqar/arabic-karshuni/collection.json`)
+    cy.visit(`/zero-config.html?collection=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/collection.json`)
       .get('#text-content')
       .should('be.visible')
       .get('.panels-target > .item')
@@ -18,7 +18,7 @@ describe('Config', () => {
   });
 
   it('Should load default Tido with manifest bookmark', () => {
-    cy.visit(`/zero-config.html?manifest=${apiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r177/manifest.json`)
+    cy.visit(`/zero-config.html?manifest=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r177/manifest.json`)
       .get('#text-content')
       .should('be.visible')
       .get('.panels-target > .item')
@@ -26,7 +26,7 @@ describe('Config', () => {
   });
 
   it('Should load default Tido with item bookmark', () => {
-    cy.visit(`/zero-config.html?item=${apiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r177/2a/latest/item.json`)
+    cy.visit(`/zero-config.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r177/2a/latest/item.json`)
       .get('#text-content')
       .should('be.visible')
       .get('.panels-target > .item')

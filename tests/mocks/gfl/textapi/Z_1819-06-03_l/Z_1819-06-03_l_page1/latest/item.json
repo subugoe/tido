@@ -1,0 +1,29 @@
+{
+    "context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/item.jsonld",
+    "annotationCollection": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page1/latest/annotationCollection.json",
+    "content": [
+        {
+            "type": "text/html;type=transcription",
+            "url": "http://localhost:8181/gfl/textapi/content/transcription/Z_1819-06-03_l_page1.html"
+        },
+        {
+            "type": "text/html;type=edited",
+            "url": "http://localhost:8181/gfl/textapi/content/edited/Z_1819-06-03_l_page1.html"
+        }
+    ],
+    "image": {
+        "context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/item.jsonld",
+        "id": "http://localhost:8181/gfl/Graph/GStA/GStA_I_HA_Rep76_Ve_Sekt1_AbtXV_Nr_39/GStA_I_HA_Rep76_Ve_Sekt1_AbtXV_Nr_39_007r.jpg",
+        "manifest": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/manifest.json",
+        "license": {
+            "id": "Public Domain Mark 1.0 (https://creativecommons.org/publicdomain/mark/1.0/deed.de)"
+        }
+    },
+    "n": "1 : 7r",
+    "textapi": "3.1.1",
+    "title": {
+        "title": "Seite 1 : 7r",
+        "type": "main"
+    },
+    "type": "page"
+}
