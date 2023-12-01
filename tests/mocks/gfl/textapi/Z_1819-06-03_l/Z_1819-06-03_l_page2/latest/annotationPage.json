@@ -1,0 +1,144 @@
+{
+    "context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page2/latest/annotationPage.json",
+    "items": [
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "<span>\n\t\t\t\t<p>Paraphiert von Altenstein auf Bl. 8r unter\n\t\t\t\t\tdem zugeh&ouml;rigen <a href=\"Z_1819-06-03_l.xml\" target=\"_blank\">Z\n\t\t\t\t\t\t3. Juni 1819. Kultusministerium an Raabe\n\t\t\t\t\t\t(Konzept)</a>.</p>\n\t\t\t</span>\n",
+                "x-content-type": "Abstract"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/6d10ac44-a604-4d0f-87e7-7c4a287f81a2",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/6d10ac44-a604-4d0f-87e7-7c4a287f81a2",
+                "language": "ger"
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Preu\u00dfen. Ministerium der Geistlichen, Unterrichts- und Medizinalangelegenheiten (<a target='_blank' href=\"/register/35254-8\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/35254-8\">GND</a>)",
+                "x-content-type": "Org"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-66f9b3af-d3c9-4bf0-8c90-db6ab632b85b",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-66f9b3af-d3c9-4bf0-8c90-db6ab632b85b",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-66f9b3af-d3c9-4bf0-8c90-db6ab632b85b"
+                }
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Preu\u00dfen. Ministerium der Geistlichen, Unterrichts- und Medizinalangelegenheiten (<a target='_blank' href=\"/register/35254-8\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/35254-8\">GND</a>)",
+                "x-content-type": "Org"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-7232eaa0-5537-4561-8cc6-338a5c8d64b2",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-7232eaa0-5537-4561-8cc6-338a5c8d64b2",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-7232eaa0-5537-4561-8cc6-338a5c8d64b2"
+                }
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Schinkel, Karl Friedrich (<a target='_blank' href=\"/register/118607782\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/118607782\">GND</a>)",
+                "x-content-type": "Person"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-bc158bcf-151e-4dcc-a6cc-7e78593adc82",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-bc158bcf-151e-4dcc-a6cc-7e78593adc82",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-bc158bcf-151e-4dcc-a6cc-7e78593adc82"
+                }
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Rheinische Friedrich-Wilhelms-Universit\u00e4t Bonn (<a target='_blank' href=\"/register/36150-1\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/36150-1\">GND</a>)",
+                "x-content-type": "Org"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-da288fab-9ea3-4665-965e-ee00f9e5626f",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-da288fab-9ea3-4665-965e-ee00f9e5626f",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-da288fab-9ea3-4665-965e-ee00f9e5626f"
+                }
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Berlin (<a target='_blank' href=\"/register/4005728-8\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/4005728-8\">GND</a>)",
+                "x-content-type": "Place"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-a5e5cacb-5f0c-4d2b-8d98-4990050db374",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-a5e5cacb-5f0c-4d2b-8d98-4990050db374",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-a5e5cacb-5f0c-4d2b-8d98-4990050db374"
+                }
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Preu\u00dfen. Ministerium der Geistlichen, Unterrichts- und Medizinalangelegenheiten (<a target='_blank' href=\"/register/35254-8\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/35254-8\">GND</a>)",
+                "x-content-type": "Org"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-ffdec211-3e58-47d9-9bf7-961b37893d9f",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page2/annotation-ffdec211-3e58-47d9-9bf7-961b37893d9f",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-ffdec211-3e58-47d9-9bf7-961b37893d9f"
+                }
+            },
+            "type": "Annotation"
+        }
+    ],
+    "next": null,
+    "partOf": {
+        "id": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page2/latest/annotationCollection.json",
+        "label": "Annotations for Goethes Farbenlehre in Berlin - Dokument: Z_1819-06-03_l Seite: Z_1819-06-03_l_page2",
+        "total": 0
+    },
+    "prev": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page2/latest/annotationPage.json",
+    "startIndex": 7,
+    "type": "AnnotationPage"
+}

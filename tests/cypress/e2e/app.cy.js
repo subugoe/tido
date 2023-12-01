@@ -1,4 +1,4 @@
-import { apiBaseUrl } from '../support/globals';
+import { ahiqarApiBaseUrl } from '../support/globals';
 
 describe('Tido', () => {
   beforeEach(() => {

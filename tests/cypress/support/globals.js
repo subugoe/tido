@@ -1,3 +1,4 @@
 export default {
-  apiBaseUrl: 'http://localhost:8181/ahiqar',
+  ahiqarApiBaseUrl: 'http://localhost:8181/ahiqar',
+  gflApiBaseUrl: 'http://localhost:8181/gfl',
 };
