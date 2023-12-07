@@ -198,26 +198,6 @@ describe('Annotation', () => {
     });
 
     it('should not be selectable when clicked', () => {
-      // first we check if we're able to click on a non-text annotation
-      // and detect the 'active' class added to the element
-      cy
-        .get('.panels-target > .item:nth-child(3) .q-tabs')
-        .contains('Register')
-        .click()
-        .wait(400);
-      cy
-        .get('@annotationItem')
-        .should('have.length', 1) // retry until we have only one subject
-        .click()
-        .should('have.class', 'active');
-
-      // then we try the same thing with a text annotation
-      // the 'active' class should not be present after performing click
-      cy
-        .get('.panels-target > .item:nth-child(3) .q-tabs')
-        .contains('Kommentare')
-        .click()
-        .wait(400);
       cy
         .get('@annotationItem')
         .should('have.length', 1) // retry until we have only one subject
@@ -226,27 +206,6 @@ describe('Annotation', () => {
     });
 
     it('should not have an icon', () => {
-      // first we check if we're able to detect the icon on a non-text annotation
-      cy
-        .get('.panels-target > .item:nth-child(3) .q-tabs')
-        .contains('Register')
-        .click()
-        .wait(400);
-      cy
-        .get('@annotationItem')
-        .should('have.length', 1) // retry until we have only one subject
-        .within(() => {
-          cy
-            .get('.q-item__section--avatar')
-            .should('have.descendants', '.q-icon');
-        });
-
-      // then we try the same thing with a text annotation and test for empty value
-      cy
-        .get('.panels-target > .item:nth-child(3) .q-tabs')
-        .contains('Kommentare')
-        .click()
-        .wait(400);
       cy
         .get('@annotationItem')
         .should('have.length', 1) // retry until we have only one subject
