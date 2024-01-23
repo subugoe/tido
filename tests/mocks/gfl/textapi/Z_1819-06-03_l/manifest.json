@@ -1,0 +1,84 @@
+{
+    "id": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/manifest.json",
+    "label": "3. Juni 1819. Kultusministerium an Raabe (Konzept)",
+    "metadata": [
+        {
+            "key": "Entstehungsort",
+            "value": "Berlin"
+        },
+        {
+            "key": "Adressat",
+            "value": "Raabe, Josef"
+        },
+        {
+            "key": "Bestimmungsort",
+            "value": "Berlin"
+        },
+        {
+            "key": "Einrichtung",
+            "value": "Geheimes Staatsarchiv, Stiftung Preu\u00dfischer Kulturbesitz, Berlin (DE)"
+        },
+        {
+            "key": "Signatur",
+            "value": "GStA PK, I. HA Rep. 76, Ve Sekt. 1 Abt. XV Nr. 39, Bl. 7r-7v"
+        },
+        {
+            "key": "Schrifttr\u00e4ger",
+            "value": "1 Doppelblatt 32 x 20,4 cm. Geheftet, im Fasz. GStA I. HA Rep. 76, Ve Sekt. 1 Abt. XV Nr. 39"
+        },
+        {
+            "key": "Schreiber",
+            "value": "Schultz, Christoph Ludwig Friedrich; Tinte; deutsche Kurrentschrift, vereinzelt lateinische Schrift"
+        },
+        {
+            "key": "Zugeh\u00f6riges",
+            "value": "",
+            "metadata": [
+                {
+                    "key": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/repositorium/Z_1819-05-27_k",
+                    "value": "27. Mai 1819. Kultusministerium an Raabe (Konzept, Abschrift)"
+                },
+                {
+                    "key": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/repositorium/Z_1819-06-03_m",
+                    "value": "3. Juni 1819. Kultusministerium an Generalkasse (Konzept)"
+                }
+            ]
+        },
+        {
+            "key": "Schlagw\u00f6rter GND",
+            "value": "Brief; Raabe, Josef; Schultz, Christoph Ludwig Friedrich; Schinkel, Karl Friedrich; Vom Stein Zum Altenstein, Karl"
+        },
+        {
+            "key": "Schlagw\u00f6rter frei",
+            "value": "Handschrift"
+        },
+        {
+            "key": "Editionslizenz",
+            "value": "CC-BY-SA-4.0"
+        },
+        {
+            "key": "TEI Dokument",
+            "value": "via REST (https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/download/tei/Z_1819-06-03_l)"
+        }
+    ],
+    "sequence": [
+        {
+            "id": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page1/latest/item.json",
+            "type": "item",
+            "label": "Seite 1 : 7r"
+        },
+        {
+            "id": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page2/latest/item.json",
+            "type": "item",
+            "label": "Seite 2 : 7v"
+        }
+    ],
+    "support": [
+        {
+            "mime": "text/css",
+            "type": "css",
+            "url": "http://localhost:8181/gfl/build/support.e6949ffc.css"
+        }
+    ],
+    "textapi": "3.1.1"
+}

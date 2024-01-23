@@ -1,8 +1,8 @@
-import { apiBaseUrl } from '../support/globals';
+import { ahiqarApiBaseUrl } from '../support/globals';
 
 describe('Bookmarking', () => {
   beforeEach(() => {
-    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r176/182b/latest/item.json`)
+    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r176/182b/latest/item.json`)
       .get('#text-content')
       .contains('ܐܠܚܟܝܡ');
   });
@@ -101,7 +101,7 @@ describe('Bookmarking', () => {
 describe('Bookmarking - URL first', () => {
   it('Should load tabs from URL', () => {
     cy
-      .visit(`/ahiqar-arabic-karshuni-local.html?item=${apiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r176/182b/latest/item.json&panels=0_1,1_0,2_1,3_1`)
+      .visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r176/182b/latest/item.json&panels=0_1,1_0,2_1,3_1`)
       .then(() => {
         cy
           // Tree & Metadata panel
