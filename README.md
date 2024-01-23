@@ -11,7 +11,7 @@ With this project we provide a highly configurable viewer for projects that impl
 - [Demo](#demo)
 - [Getting Started](#getting-started)
   - [Get the Viewer](#get-the-viewer)
-    - [Registry setup](#registry-setup)
+    - [Registry Setup](#registry-setup)
     - [Installation](#installation)
   - [Integration](#integration)
 - [Configuration](#configuration)
@@ -28,17 +28,19 @@ With this project we provide a highly configurable viewer for projects that impl
   - [Prerequisites](#prerequisites)
   - [Install](#install)
     - [Set up `nvm` and the recent stable version of `node.js`](#set-up-nvm-and-the-recent-stable-version-of-nodejs)
-    - [Clone the repository](#clone-the-repository)
-    - [Get the dependencies](#get-the-dependencies)
+    - [Clone the Repository](#clone-the-repository)
+    - [Get the Dependencies](#get-the-dependencies)
   - [Build](#build)
-  - [Serve locally](#serve-locally)
-    - [Serve development build](#serve-development-build)
-    - [Serve examples (production build)](#serve-examples-production-build)
+  - [Serve Locally](#serve-locally)
+    - [Serve Development Build](#serve-development-build)
+    - [Serve Examples (Production Build)](#serve-examples-production-build)
     - [Serve Mock API](#serve-mock-api)
   - [Testing](#testing)
     - [Local](#local)
     - [CI](#ci)
   - [Linting](#linting)
+  - [Generate TextAPI support table](#generate-textapi-support-table)
+- [TextAPI Support](#textapi-support)
 - [Viewer Architecture](#viewer-architecture)
 - [Dockerfile](#dockerfile)
 - [Architecture](#architecture)
@@ -528,6 +530,22 @@ npm run lint:scss       # to lint the styles
 npm run lint:vue        # to lint vue files only
 ```
 
+### Generate TextAPI support table
+
+We maintain a JSON file (`/.validation/support-matrix.json`) that keeps track of supported TextAPI features.
+If you need to recreate that file and rerender `/SUPPORT.md`, here is an explanation:
+
+- Make sure you run NodeJS version >= 20
+- Set `GITLAB_ACCESS_TOKEN` in `/.env` file
+- Run `node ./.validation/create-support-matrix.js`
+- Inspect `/.validation/support-matrix.json`, all status values are set to 0 (= not supported) by default
+- Edit the statuses manually: 0 = not supported, 1 = supported, 2 = partially supported, 3 = unused
+- Run `node ./.validation/create-support-matrix.js` again to generate new `/SUPPORT.md`
+
+## TextAPI Support
+Please view this document to see an overview of supported TextAPI features: [State of TextAPI support](SUPPORT.md)
+
+
 ## Viewer Architecture
 
 ![Viewer components](img/Viewer.png)
@@ -556,3 +574,4 @@ We use [SemVer](https://semver.org/) for versioning. For the versions available,
 ## Authors
 
 See the list of [contributors](https://gitlab.gwdg.de/subugoe/emo/tido/-/graphs/develop) who participated in this project.
+First line added!
