@@ -1,13 +1,13 @@
 <template>
-  <q-list v-if="metadata.length > 0" dense class="q-mb-lg">
+  <q-list v-if="metadata.length > 0" dense class="t-mb-6">
     <q-item class="no-padding">
       <q-item-section dense>
         <h3>{{ $t('collection') }}</h3>
       </q-item-section>
     </q-item>
 
-    <q-item v-for="(meta, idx) in metadata" :key="idx" class="q-mb-sm no-padding">
-      <q-item-section class="q-mb-sm no-padding">
+    <q-item v-for="(meta, idx) in metadata" :key="idx" class="t-mb-2 no-padding">
+      <q-item-section class="t-mb-2 no-padding">
         <MetadataItem :item="meta"/>
       </q-item-section>
     </q-item>
@@ -15,10 +15,10 @@
 </template>
 
 <script setup>
-import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 const store = useStore();
 
@@ -32,7 +32,7 @@ const metadata = computed(() => {
   };
 
   const collectorName = collection.value.collector?.name;
-  const description = collection.value.description;
+  const { description } = collection.value;
 
   return [
     ...collection.value.title

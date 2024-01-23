@@ -4,8 +4,13 @@ import createStore from './store';
 import { i18n } from './i18n';
 import App from './App.vue';
 
-import 'quasar/dist/quasar.sass';
-import './css/style.scss';
+// import 'quasar/dist/quasar.sass';
+import './css/style.css';
+import { getRGBColor } from '@/utils/color';
+
+function generateId() {
+  return Math.random().toString(36).slice(2, 16);
+}
 
 window.Tido = function Tido(config = {}) {
   this.config = { ...config };
@@ -41,6 +46,17 @@ window.Tido = function Tido(config = {}) {
     containerEl.classList.add('tido-container');
 
     this.app.mount(containerEl);
+
+    const instanceId = generateId();
+    this.app.provide('instanceId', instanceId);
+
+    const style = document.createElement('style');
+
+    style.id = instanceId;
+    style.innerHTML = `
+      ${this.config.container} { ${getRGBColor(this.config.colors.primary, 'primary')} }
+    `;
+    containerEl.appendChild(style);
 
     mounted = true;
   };

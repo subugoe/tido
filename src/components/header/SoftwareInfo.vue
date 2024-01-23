@@ -14,13 +14,13 @@
       <div class="tido">
         <q-card>
           <q-card-section>
-            <h2 class="text-h5 q-pb-md q-ma-none">TIDO</h2>
+            <h2 class="text-h5 t-pb-4 t-ma-none">TIDO</h2>
             <p class="text-weight-bold">{{ $t('tido_description') }}</p>
             <p>Copyright (c) {{ actualYear }} {{ $t('sub_info') }}</p>
-            <p class="q-mb-none">Version {{ tidoVersion }}, {{ $t('license') }}</p>
+            <p class="t-mb-none">Version {{ tidoVersion }}, {{ $t('license') }}</p>
           </q-card-section>
 
-          <q-card-section class="q-pt-none">
+          <q-card-section class="t-pt-none">
             <q-btn
               dense
               flat
@@ -39,7 +39,7 @@
               type="a"
               :icon="codeIcon"
               :label="$t('source_code')"
-              class="q-mx-md"
+              class="t-mx-4"
             />
 
             <q-btn
@@ -84,7 +84,7 @@ const bugIcon = biBugFill;
 const actualYear = computed(() => {
   const d = new Date();
   return d.getFullYear();
-})
+});
 </script>
 
 <style lang="scss">

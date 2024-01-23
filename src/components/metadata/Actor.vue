@@ -1,5 +1,5 @@
 <template>
-  <div v-for="actorItem in data" :key="name" class="q-mb-md">
+  <div v-for="actorItem in data" :key="name" class="t-mb-4">
     <q-item-label overline class="text-uppercase">
       {{ $t(getRole(actorItem)) }}
     </q-item-label>

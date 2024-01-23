@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="text-center">
-      <q-icon
+      <t-icon
         :color="color"
         :name="icon"
-        class="q-pr-sm text-xs"
+        class="t-pr-2 text-xs"
       />
       <span class="text-bold vertical-middle">{{ title || message }}</span>
     </div>
 
-    <div class="text-body2 text-center q-mt-sm" v-if="title">
+    <div class="text-body2 text-center t-mt-2" v-if="title">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <span v-html="message" />
     </div>
@@ -47,7 +47,7 @@ const color = computed(() => {
       return '';
   }
 });
-const icon = computed(() => {
+const index = computed(() => {
   switch (props.type) {
     case 'info':
       return biInfoCircleFill;

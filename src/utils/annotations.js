@@ -1,5 +1,5 @@
 import * as Utils from '@/utils/index';
-import { icon } from '@/utils/icon';
+import { getIcon } from '@/utils/icons';
 import { i18n } from '@/i18n';
 
 // utility functions that we can use as generic way for perform tranformation on annotations.
@@ -62,11 +62,11 @@ export function addRangeHighlightAttributes(id, root) {
 }
 
 export const createSvgIcon = (name) => {
-  const [path, viewBox] = icon(name).split('|');
+  const [path, viewBox] = getIcon(name).split('|');
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
   svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'q-icon q-mx-xs');
+  svg.setAttribute('class', 'q-icon q-mx-1');
   svg.setAttribute('focusable', 'false');
   svg.setAttribute('role', 'presentation');
   svg.setAttribute('style', 'border:0 !important;');
@@ -127,8 +127,8 @@ export async function createOrUpdateTooltip(element, { closest: closestAnnotatio
     <div class="tooltip-header">${closestAnnotationTemplate}</div>`;
 
   if (otherAnnotations.length > 0) {
-    template += `<div class="tooltip-body q-mt-sm">
-        <h4 class="q-my-sm">${i18n.global.t('more_annotations')}:</h4>
+    template += `<div class="tooltip-body q-mt-2">
+        <h4 class="q-my-2">${i18n.global.t('more_annotations')}:</h4>
         <div class="text-body2">${otherAnnotationsTemplate}</div>
       </div>
     `;

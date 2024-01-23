@@ -1,5 +1,5 @@
 <template>
-  <div class="text-body1 text-weight-medium text-center q-pb-xs q-pt-xs">
+  <div class="text-body1 text-weight-medium text-center t-pb-1 t-pt-1">
     {{ capitalizeHeading }}
   </div>
 </template>

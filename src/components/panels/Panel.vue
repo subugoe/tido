@@ -1,6 +1,6 @@
 <template>
   <div class="item-content" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'">
-    <div class="panel-header q-py-xs q-pr-md q-pl-md flex justify-between items-center">
+    <div class="panel-header t-py-1 t-pr-4 t-pl-4 flex justify-between items-center">
       <div class="caption text-bold text-body1">
         <!-- We display the tab label as panel label when there is only one tab -->
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
@@ -14,11 +14,11 @@
         </template>
       </div>
     </div>
-    <q-separator class="q-mx-md" />
+    <q-separator class="t-mx-4" />
     <div class="panel-body overflow-hidden bg-none">
       <Loading v-if="isLoading" />
       <template v-if="tabs.length > 1">
-        <div class="tabs-container q-px-md">
+        <div class="tabs-container t-px-4">
           <q-tabs
             v-model="activeTabIndex"
             @update:model-value="onViewChange"
@@ -30,7 +30,7 @@
           </q-tabs>
         </div>
         <q-tab-panels v-model="activeTabIndex" class="bg-transparent" animated transition-next="fade" transition-prev="fade">
-          <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pt-md">
+          <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pt-4">
             <component :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
           </q-tab-panel>
         </q-tab-panels>
@@ -50,6 +50,11 @@
 </template>
 
 <script>
+import {
+  computed, nextTick, ref, watch,
+} from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
 import MetadataView from '@/components/metadata/MetadataView.vue';
 import TreeView from '@/components/TreeView.vue';
 import AnnotationsView from '@/components/annotations/AnnotationsView.vue';
@@ -61,10 +66,7 @@ import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
 
-import { computed, nextTick, ref, watch } from 'vue';
-import { useStore } from 'vuex';
-import { useI18n } from 'vue-i18n';
-import { findComponent } from '@/utils/panels'
+import { findComponent } from '@/utils/panels';
 
 // NOTE: Using `setup()` rather than the recommended `<script setup>`
 // to avoid issues with asset loading.
@@ -112,7 +114,7 @@ export default {
       ({ views }) => {
         nextTick(() => {
           init(views);
-        })
+        });
       },
       { deep: true, immediate: true },
     );
@@ -120,8 +122,8 @@ export default {
       item,
       () => {
         init(props.panel.views);
-      }
-    )
+      },
+    );
 
     function init(views) {
       tabs.value = [];
@@ -289,9 +291,9 @@ export default {
       panel: props.panel,
       tabs,
       onViewChange,
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

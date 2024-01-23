@@ -1,6 +1,6 @@
 <template>
   <div
-    class="q-py-xs"
+    class="t-py-1"
   >
     <div class="content">
       <q-breadcrumbs

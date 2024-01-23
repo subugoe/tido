@@ -1,6 +1,6 @@
 <template>
-  <div class="content-view q-px-md q-pt-md">
-    <div v-if="notificationMessage" class="q-pa-sm">
+  <div class="content-view t-px-4 t-pt-4">
+    <div v-if="notificationMessage" class="t-pa-2">
       <Notification
         :message="$t(notificationMessage)"
         :notification-colors="config.notificationColors"
@@ -17,10 +17,12 @@
 </template>
 
 <script setup>
-import Notification from '@/components/Notification.vue';
 
-import { computed, readonly, ref, watch } from 'vue';
+import {
+  computed, readonly, ref, watch,
+} from 'vue';
 import { useStore } from 'vuex';
+import Notification from '@/components/Notification.vue';
 import { request } from '@/utils/http';
 import { domParser, delay } from '@/utils';
 

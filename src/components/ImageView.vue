@@ -1,6 +1,6 @@
 <template>
   <div class="image-view">
-    <div v-if="error" class="q-pa-sm" style="margin-top: 5rem">
+    <div v-if="error" class="t-pa-2" style="margin-top: 5rem">
       <Notification :message="$t(error.message)" :title="$t('no_image_available')" type="warning" />
     </div>
     <figure v-else id="openseadragon" class="item"></figure>
@@ -9,10 +9,10 @@
 
 <script setup>
 import OpenSeadragon from 'openseadragon';
-import Notification from '@/components/Notification.vue';
 
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
+import Notification from '@/components/Notification.vue';
 import { delay } from '@/utils';
 
 const emit = defineEmits('loading');
@@ -61,7 +61,7 @@ watch(
     }
   },
   { immediate: true },
-)
+);
 
 function initOpenSeagragon() {
   if (viewer.value) {

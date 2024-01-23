@@ -1,16 +1,16 @@
 <template>
-  <div class="panels-target q-gutter-md-md q-px-md q-px-lg-lg q-pb-md-md">
-    <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item q-pb-md q-pb-md-none">
+  <div class="panels-target q-gutter-4-4 q-px-4 q-px-lg-6 q-pb-md-4">
+    <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item q-pb-4 q-pb-md-none">
       <Panel :panel="panel" :active-view="getActiveView(i)" @active-view="onActiveViewChange($event, i)" />
     </div>
   </div>
 </template>
 
 <script setup>
-import Panel from '@/components/panels/Panel.vue';
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import Panel from '@/components/panels/Panel.vue';
 
 const store = useStore();
 

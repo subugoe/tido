@@ -1,11 +1,11 @@
 <template>
-  <div class="tido">
-    <div class="viewport column" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
+  <div class="tido ">
+      <div class="viewport column flex text-primary dark:text-gray-600" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
       <GlobalHeader/>
       <div v-if="ready" class="root">
         <PanelsWrapper/>
       </div>
-      <div v-else class="error-container q-pa-md q-pa-lg-lg q-pt-xl">
+      <div v-else class="error-container pa-4 t-pa-lg-6 t-pt-12">
         <div class="full-height full-width flex items-center justify-center column" style="border: dashed 3px #ccc; border-radius: 6px">
           <template v-if="isLoading">
             <Loading background="none"></Loading>
@@ -15,12 +15,12 @@
               v-if="errorMessage"
               :message="errorMessage"
               :title="errorTitle"
-              class="q-ma-md-xl"
+              class="q-ma-md-12"
               type="warning"
             />
             <template v-else>
-              <q-icon :name="emptyIcon" size="64px" color="grey-5"></q-icon>
-              <span  class="text-grey-6 text-bold q-mt-md">{{ $t('no_entrypoint_available') }}</span>
+              <BaseIcon name="book" />
+              <span  class="text-grey-6 text-bold q-mt-4">{{ $t('no_entrypoint_available') }}</span>
             </template>
           </template>
         </div>
@@ -32,22 +32,23 @@
 <script>
 export default {
   name: 'TIDO',
-}
+};
 </script>
 
 <script setup>
-import { setCssVar } from 'quasar';
+import { setCssVar, useQuasar } from 'quasar';
 import { biBook } from '@quasar/extras/bootstrap-icons';
+import {
+  computed, inject, onMounted, ref,
+} from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
 import { delay } from '@/utils';
 import PanelsWrapper from '@/components/panels/PanelsWrapper.vue';
 import Notification from '@/components/Notification.vue';
 import Loading from '@/components/Loading.vue';
-
-import { computed, inject, onMounted, ref } from 'vue';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
-import { useI18n } from 'vue-i18n';
+import BaseIcon from '@/components/base/BaseIcon.vue';
 
 const store = useStore();
 const $q = useQuasar();
@@ -89,9 +90,26 @@ const manifests = computed(() => store.getters['contents/manifests']);
 
 onMounted(async () => {
   isLoading.value = true;
-  $q.dark.set('auto');
+  // $q.dark.set('auto');
+
+  // Whenever the user explicitly chooses light mode
+  // localStorage.theme = 'light';
+  //
+  // // Whenever the user explicitly chooses dark mode
+  // localStorage.theme = 'dark';
+  //
+  // // Whenever the user explicitly chooses to respect the OS preference
+  // localStorage.removeItem('theme');
 
   await loadConfig();
+
+  console.log(config.value.container);
+  // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+  // if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  //   document.querySelector(config.value.container).classList.add('dark');
+  // } else {
+  //   document.querySelector(config.value.container).classList.remove('dark');
+  // }
 
   i18nLocale.value = config.value.lang;
 
@@ -99,22 +117,23 @@ onMounted(async () => {
 
   if (colorsForceMode && colorsForceMode !== 'none') {
     $q.dark.set(colorsForceMode === 'dark');
+    document.querySelector(config.value.container).classList.add('dark');
   }
 
-  if (config.value?.colors?.primary) {
-    setCssVar('primary', config.value.colors.primary);
-  }
-
-  if (config.value?.colors?.secondary) {
-    setCssVar('secondary', config.value.colors.secondary);
-  }
-
-  if (config.value?.colors?.accent) {
-    setCssVar('accent', config.value.colors.accent);
-  }
+  // if (config.value?.colors?.primary) {
+  //   setCssVar('primary', config.value.colors.primary);
+  // }
+  //
+  // if (config.value?.colors?.secondary) {
+  //   setCssVar('secondary', config.value.colors.secondary);
+  // }
+  //
+  // if (config.value?.colors?.accent) {
+  //   setCssVar('accent', config.value.colors.accent);
+  // }
 
   await init();
-})
+});
 
 async function getCollection(url) {
   await store.dispatch('contents/initCollection', url);

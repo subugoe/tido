@@ -12,7 +12,7 @@
     <q-icon
       :name="icon"
       size="12px"
-      class="content__link-icon q-pl-xs"
+      class="content__link-icon q-pl-1"
     />
   </a>
 </template>
@@ -31,7 +31,7 @@ const props = defineProps({
   },
 });
 
-const icon = biBoxArrowUpRight;
+const index = biBoxArrowUpRight;
 </script>
 
 <style scoped>

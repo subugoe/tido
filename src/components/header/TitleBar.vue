@@ -2,14 +2,14 @@
   <div class="flex column justify-center">
     <template v-if="collectionTitle || manifestTitle">
       <template v-if="collectionTitle">
-        <h1 v-if="collectionTitle" class="text-h1 q-mt-sm q-mb-none text-bold" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+        <h1 v-if="collectionTitle" class="text-h1 q-mt-2 q-mb-none text-bold" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
           {{ collectionTitle }}
         </h1>
-        <h2 v-if="manifestTitle" class="text-h2 q-mt-sm q-mb-lg" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+        <h2 v-if="manifestTitle" class="text-h2 q-mt-2 q-mb-6" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
           <span>{{ manifestTitle }}</span>
           <q-icon
             v-if="item"
-            class="q-px-sm"
+            class="q-px-2"
             size="xs"
             :color="$q.dark.isActive ? 'white' : 'grey-7'"
             :name="arrowIcon"
@@ -18,11 +18,11 @@
         </h2>
       </template>
       <template v-else>
-        <h1 class="text-h1 text-bold q-mt-sm q-mb-md" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+        <h1 class="text-h1 text-bold q-mt-2 q-mb-4" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
           <span>{{ manifestTitle }}</span>
           <q-icon
             v-if="item"
-            class="q-px-sm"
+            class="q-px-2"
             size="xs"
             :color="$q.dark.isActive ? 'white' : 'grey-7'"
             :name="arrowIcon"
@@ -31,7 +31,7 @@
         </h1>
       </template>
     </template>
-    <h1 v-else class="text-h1 text-bold q-mb-md q-mt-sm" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+    <h1 v-else class="text-h1 text-bold q-mb-4 q-mt-2" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
       TIDO Viewer
     </h1>
   </div>

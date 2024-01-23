@@ -22,11 +22,27 @@
 <noscript>
   <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
 </noscript>
-<div id="app"></div>
+<div class="flex h-full w-full">
+  <div><div id="app"></div></div>
+  <div><div id="app2"></div></div>
+</div>
+
 <script type="module" src="/src/main.js"></script>
 <script>
   window.addEventListener('load', function () {
-    window.tido = new window.Tido();
+    window.tido = new window.Tido({
+      container: '#app',
+      colors: {
+        primary: '#ff00dd',
+        forceMode: 'dark'
+      }
+    });
+    window.tido = new window.Tido({
+      container: '#app2',
+      colors: {
+        primary: '#2200ff'
+      }
+    });
   });
 </script>
 </body>

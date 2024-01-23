@@ -5,12 +5,12 @@
       :data-annotation-id="annotation.id"
       :key="annotation.id"
       :class="$q.dark.isActive ? { 'bg-grey-7 active': isActive(annotation) } : { 'bg-grey-4 active': isActive(annotation) }"
-      class="q-pa-sm q-pl-xs q-mb-xs"
+      class="t-pa-2 t-pl-1 t-mb-1"
       :clickable="!isText(annotation)"
       padding="xs"
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
-      <q-item-section avatar class="q-mr-none">
+      <q-item-section avatar class="t-mr-none">
         <AnnotationIcon v-if="!isText(annotation)" :name="getIconName(annotation.body['x-content-type'])" />
       </q-item-section>
 
@@ -23,9 +23,8 @@
 </template>
 
 <script setup>
-import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
-
 import { computed } from 'vue';
+import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 
 const props = defineProps({
   activeAnnotation: {

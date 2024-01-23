@@ -1,5 +1,5 @@
 <template>
-  <div class="annotations-view q-px-md q-pt-md">
+  <div class="annotations-view t-px-4 t-pt-4">
     <AnnotationsList
       v-if="filteredAnnotations.length"
       class="custom-font"
@@ -9,7 +9,7 @@
       :toggle="toggle"
       :types="types"
     />
-    <div v-else class="q-pa-md">
+    <div v-else class="t-pa-4">
       <Notification
         :message="$t(message)"
         :notification-colors="config.notificationColors"
@@ -21,12 +21,13 @@
 </template>
 
 <script setup>
+import {
+  computed, onBeforeUnmount, ref, watch,
+} from 'vue';
+import { useStore } from 'vuex';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import Notification from '@/components/Notification.vue';
 import * as AnnotationUtils from '@/utils/annotations';
-
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
-import { useStore } from 'vuex';
 
 const props = defineProps({
   url: String,
@@ -41,20 +42,19 @@ const annotations = computed(() => store.getters['annotations/annotations']);
 const activeAnnotations = computed(() => store.getters['annotations/activeAnnotations']);
 const filteredAnnotations = computed(() => store.getters['annotations/filteredAnnotations']);
 const activeContentUrl = computed(() => store.getters['contents/activeContentUrl']);
-const updateTextHighlighting = computed(() => {
+const updateTextHighlighting = computed(() =>
   // We need to make sure that annotations are loaded (this.annotations),
   // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
   // and the annotation are filtered by type (this.filteredAnnotations).
-  return `${annotations.value !== null}|${activeContentUrl.value}`;
-});
+  `${annotations.value !== null}|${activeContentUrl.value}`);
 
 watch(
   updateTextHighlighting,
   (contentData) => {
-   const [hasAnnotations, activeContentUrl] = contentData.split('|');
-   if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
-   store.dispatch('annotations/setFilteredAnnotations', props.types);
-   highlightTargetsLevel0();
+    const [hasAnnotations, activeContentUrl] = contentData.split('|');
+    if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
+    store.dispatch('annotations/setFilteredAnnotations', props.types);
+    highlightTargetsLevel0();
   },
   { immediate: true },
 );

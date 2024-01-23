@@ -16,7 +16,7 @@
       :class="$q.dark.isActive ? 'bg-dark' : 'bg-white text-dark'"
     >
       <q-list>
-        <q-item v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="q-pl-xs q-py-none" tag="label" v-ripple>
+        <q-item v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-pl-1 t-py-none" tag="label" v-ripple>
           <q-item-section side>
             <q-checkbox
               :model-value="show"
@@ -41,11 +41,11 @@
     </div>
 
     <div v-if="$q.screen.width > 1199" class="row items-center">
-      <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="q-px-xs">
+      <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="q-px-1">
         <q-checkbox
           :model-value="show"
           @update:model-value="update(i, $event)"
-          class="q-px-sm text-body2"
+          class="q-px-2 text-body2"
           :title="handleToggleTitle(i)"
           :label="$t(label)"
           dense
@@ -61,7 +61,7 @@
         flat
         no-caps
         dense
-        class="q-px-sm q-py-none reset-btn"
+        class="q-px-2 q-py-none reset-btn"
         :class="'text-' + resetColor"
         :title="$t('reset_view')"
         @click="reset"
@@ -97,7 +97,7 @@ const resetIcon = biArrowCounterclockwise;
 const dropdownIcon = biChevronDown;
 
 const panels = computed(() => store.getters['config/config'].panels);
-const resetColor = computed(() => toggles.value.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7');
+const resetColor = computed(() => (toggles.value.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7'));
 
 watch(
   panels,
@@ -107,7 +107,7 @@ watch(
       .map(({ show, label }, index) => ({ index, show, label }));
   },
   { immediate: true },
-)
+);
 
 watch(
   showDropdown,
@@ -127,7 +127,7 @@ watch(
       }
     } else if (backdrop) backdrop.remove();
   },
-)
+);
 
 function update(index, show) {
   toggles.value[index].show = show;

@@ -48,6 +48,10 @@ function validateColors(value) {
   return !!(value);
 }
 
+function validateContainer(value) {
+  return !!(value);
+}
+
 function createDefaultActiveViews(panelsConfig) {
   return panelsConfig
     .filter((p) => p.views && p.views.length > 0)
@@ -63,10 +67,11 @@ function createDefaultActiveViews(panelsConfig) {
 
 function discoverCustomConfig(customConfig) {
   const {
-    translations, collection, manifest, item, panels, lang, colors,
+    container, translations, collection, manifest, item, panels, lang, colors,
   } = customConfig;
 
   return {
+    ...(validateContainer(container) && { container }),
     ...(validateCollection(collection) && { collection }),
     ...(validateManifest(manifest) && { manifest }),
     ...(validateItem(item) && { item }),
@@ -140,6 +145,8 @@ export const load = ({ commit, getters }, config) => {
     ...urlConfig,
   };
 
+  console.log(resultConfig);
+
   const activeViews = urlConfig.activeViews || defaultConfig.activeViews;
   commit('setActiveViews', activeViews);
 
@@ -204,4 +211,8 @@ export const setDefaultActiveViews = async ({ commit, getters }) => {
   await BookmarkService.updatePanels(activeViews);
 
   commit('config/setActiveViews', activeViews, { root: true });
+};
+
+export const setInstanceId = ({ commit }, id) => {
+  commit('config/setInstanceId', id);
 };

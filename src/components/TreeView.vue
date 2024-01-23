@@ -1,5 +1,5 @@
 <template>
-  <div ref="containerRef" class="tree-view q-px-md q-pt-md">
+  <div ref="containerRef" class="tree-view t-px-4 t-pt-4">
     <q-tree
       class="item-content"
       :class="$q.dark.isActive ? 'is-dark' : ''"
@@ -21,14 +21,16 @@
 
 <script setup>
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
-import { delay, isElementVisible } from '@/utils';
-import { request } from '@/utils/http';
 
-import { computed, nextTick, ref, watch } from 'vue';
+import {
+  computed, nextTick, ref, watch,
+} from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
+import { request } from '@/utils/http';
+import { delay, isElementVisible } from '@/utils';
 
-const emit = defineEmits(['loading'])
+const emit = defineEmits(['loading']);
 
 const expandIcon = biChevronRight;
 const store = useStore();
@@ -53,7 +55,7 @@ const manifests = computed(() => store.getters['contents/manifests']);
 watch(
   itemUrl,
   onItemUrlChange,
-)
+);
 async function onItemUrlChange() {
   selected.value = itemUrl.value;
 }
@@ -62,7 +64,7 @@ watch(
   collection,
   onCollectionChange,
   { immediate: true },
-)
+);
 async function onCollectionChange() {
   if (collection.value) {
     emit('loading', true);
@@ -101,7 +103,7 @@ watch(
   manifest,
   onManifestChange,
   { immediate: true },
-)
+);
 async function onManifestChange() {
   const { label, sequence, id: manifestId } = manifest.value;
   if (!collection.value) {
@@ -142,7 +144,7 @@ watch(
   selected,
   onSelectedChange,
   { immediate: true },
-)
+);
 function onSelectedChange(value) {
   if (!treeRef.value) return;
 

@@ -20,7 +20,9 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import {
+  computed, onMounted, ref, watch,
+} from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { biTranslate } from '@quasar/extras/bootstrap-icons';
@@ -34,7 +36,7 @@ const langs = ref([
 ]);
 const selectedLang = ref('en-US');
 
-const icon = biTranslate;
+const index = biTranslate;
 
 const config = computed(() => store.getters['config/config']);
 

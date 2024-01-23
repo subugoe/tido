@@ -1,5 +1,6 @@
 export default function ConfigState() {
   return {
+    instanceId: null,
     config: {
       container: '#app',
       collection: '',
