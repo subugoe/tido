@@ -7,3 +7,11 @@ const props = defineProps(['name']);
 <template>
   <i v-html="getIcon(name)"></i>
 </template>
+
+<style lang="scss">
+i {
+  svg {
+    display: inherit;
+  }
+}
+</style>

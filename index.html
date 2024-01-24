@@ -22,25 +22,150 @@
 <noscript>
   <strong>We're sorry but <%= title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
 </noscript>
-<div class="flex h-full w-full">
-  <div><div id="app"></div></div>
-  <div><div id="app2"></div></div>
-</div>
+<div id="app"></div>
 
 <script type="module" src="/src/main.js"></script>
 <script>
   window.addEventListener('load', function () {
     window.tido = new window.Tido({
-      container: '#app',
+      manifest: "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/repositorium/textapi/Z_1822-02-20_k/manifest.json",
+      labels: {
+        item: "Seite",
+        manifest: "Dokument"
+      },
       colors: {
-        primary: '#ff00dd',
-        forceMode: 'dark'
-      }
-    });
-    window.tido = new window.Tido({
-      container: '#app2',
-      colors: {
-        primary: '#2200ff'
+        forceMode: "light",
+        primary: "#4569cc"
+      },
+      lang: "de",
+      panels: [
+        {
+          views: [{
+            id: "image",
+            label: "Manuskript",
+            connector: {
+              id: 3
+            }
+          }]
+        },
+        {
+          label: "Text",
+          views: [
+            {
+              id: "text1",
+              label: "Edierter Text",
+              connector: {
+                id: 4,
+                options: {
+                  type: "edited"
+                }
+              }
+            },
+            {
+              id: "text2",
+              label: "Transkription",
+              connector: {
+                id: 4,
+                options: {
+                  type: "transcription"
+                }
+              }
+            }
+          ]
+        },
+        {
+          label: "Kommentar",
+          views: [
+            {
+              id: "annotations1",
+              label: "Kommentare",
+              connector: {
+                id: 5,
+                options: {
+                  types: [
+                    {
+                      name: "Editorial Comment",
+                      icon: "biChatFill"
+                    },
+                    {
+                      name: "Abstract",
+                      annotationType: "text",
+                      displayWhen: "edited"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              id: "annotations2",
+              label: "Register",
+              connector: {
+                id: 5,
+                options: {
+                  types: [
+                    {
+                      name: "Person",
+                      icon: "biPersonFill"
+                    },
+                    {
+                      name: "Place",
+                      icon: "biGeoAltFill"
+                    },
+                    {
+                      name: "Org",
+                      icon: "biBank2"
+                    },
+                    {
+                      name: "Object",
+                      icon: "biArchiveFill"
+                    },
+                    {
+                      name: "Date",
+                      icon: "biCalendarWeek"
+                    },
+                    {
+                      name: "Work",
+                      icon: "biJournals"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          label: "Dokumentdaten",
+          views: [
+            {
+              id: "meta",
+              label: "Metadaten",
+              connector: {
+                id: 2,
+                options: {
+                  collection: {
+                    all: true
+                  },
+                  manifest: {
+                    all: true
+                  },
+                  item: {
+                    all: true
+                  }
+                }
+              }
+            },
+            {
+              id: "tree",
+              label: "Inhalt",
+              connector: {
+                id: 1
+              }
+            }
+          ]
+        }
+      ],
+      translations: {
+        Edition_license: 'Editionslizenz'
       }
     });
   });

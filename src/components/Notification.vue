@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="text-center">
-      <t-icon
+    <div class="t-text-center">
+      <BaseIcon
         :color="color"
-        :name="icon"
-        class="t-pr-2 text-xs"
+        :name="type"
+        class="t-pr-2"
       />
       <span class="text-bold vertical-middle">{{ title || message }}</span>
     </div>
@@ -17,9 +17,9 @@
 </template>
 
 <script setup>
-import { biInfoCircleFill, biExclamationTriangleFill } from '@quasar/extras/bootstrap-icons';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import BaseIcon from '@/components/base/BaseIcon.vue';
 
 const props = defineProps({
   message: {
@@ -32,7 +32,6 @@ const props = defineProps({
     default: () => '',
   },
 });
-
 const store = useStore();
 
 const config = computed(() => store.getters['config/config']);
@@ -43,16 +42,6 @@ const color = computed(() => {
       return notificationColors.value?.info ? notificationColors.value.info : '';
     case 'warning':
       return notificationColors.value?.warning ? notificationColors.value.warning : '';
-    default:
-      return '';
-  }
-});
-const index = computed(() => {
-  switch (props.type) {
-    case 'info':
-      return biInfoCircleFill;
-    case 'warning':
-      return biExclamationTriangleFill;
     default:
       return '';
   }

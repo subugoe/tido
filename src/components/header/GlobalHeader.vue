@@ -1,10 +1,9 @@
 <template>
   <div
-    class="header t-pa-4 t-px-lg-6"
-    :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'"
     v-if="show"
+    class="header t-pa-4 lg:t-px-6"
   >
-    <div class="flex items-start title-container">
+    <div class="t-flex t-items-start sm:t-flex-col-reverse">
       <TitleBar :item="item"/>
       <div class="t-ml-auto">
         <Tools/>

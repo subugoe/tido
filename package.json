@@ -33,6 +33,7 @@
     "@quasar/extras": "^1.15.7",
     "@quasar/vite-plugin": "^1.2.3",
     "@vitejs/plugin-vue": "^3.2.0",
+    "@vueuse/core": "^10.7.2",
     "autoprefixer": "^10.4.7",
     "axios": "^0.21.4",
     "cypress": "^12.8.1",

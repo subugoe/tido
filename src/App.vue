@@ -1,12 +1,11 @@
 <template>
-  <div class="tido ">
-      <div class="viewport column flex text-primary dark:text-gray-600" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
+  <div class="tido t-h-full t-flex t-flex-col t-bg-gray-100 dark:t-bg-gray-800 t-text-gray-600 dark:t-text-gray-200">
       <GlobalHeader/>
       <div v-if="ready" class="root">
         <PanelsWrapper/>
       </div>
-      <div v-else class="error-container pa-4 t-pa-lg-6 t-pt-12">
-        <div class="full-height full-width flex items-center justify-center column" style="border: dashed 3px #ccc; border-radius: 6px">
+      <div v-else class="t-flex t-relative t-flex-1 t-justify-center t-items-center t-p-4 lg:t-p-6">
+        <div class="t-h-full t-w-full t-flex t-items-center t-justify-center t-border-dashed t-border-[3px] dark:t-border-dashed dark:t-border-gray-600 t-rounded-md">
           <template v-if="isLoading">
             <Loading background="none"></Loading>
           </template>
@@ -19,13 +18,14 @@
               type="warning"
             />
             <template v-else>
-              <BaseIcon name="book" />
-              <span  class="text-grey-6 text-bold q-mt-4">{{ $t('no_entrypoint_available') }}</span>
+              <div class="t-flex t-flex-col t-items-center">
+                <BaseIcon name="book" class="t-w-16 t-h-16" />
+                <span  class="t-font-bold t-mt-4 dark:t-text-gray-400">{{ $t('no_entrypoint_available') }}</span>
+              </div>
             </template>
           </template>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -36,13 +36,13 @@ export default {
 </script>
 
 <script setup>
-import { setCssVar, useQuasar } from 'quasar';
-import { biBook } from '@quasar/extras/bootstrap-icons';
+import { useQuasar } from 'quasar';
 import {
   computed, inject, onMounted, ref,
 } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
+import { useDark } from '@vueuse/core';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
 import { delay } from '@/utils';
 import PanelsWrapper from '@/components/panels/PanelsWrapper.vue';
@@ -57,8 +57,6 @@ const { t, locale: i18nLocale } = useI18n();
 const errorTitle = ref('');
 const errorMessage = ref('');
 const isLoading = ref(true);
-
-const emptyIcon = biBook;
 
 const ready = computed(() => {
   const { collection: collectionUrl, manifest: manifestUrl } = config.value;
@@ -87,6 +85,13 @@ const collection = computed(() => store.getters['contents/collection']);
 const item = computed(() => store.getters['contents/item']);
 const manifest = computed(() => store.getters['contents/manifest']);
 const manifests = computed(() => store.getters['contents/manifests']);
+
+const isDark = useDark({
+  selector: config.value.container,
+  attribute: 'color-scheme',
+  valueDark: 'dark',
+  valueLight: 'light',
+});
 
 onMounted(async () => {
   isLoading.value = true;
@@ -117,7 +122,7 @@ onMounted(async () => {
 
   if (colorsForceMode && colorsForceMode !== 'none') {
     $q.dark.set(colorsForceMode === 'dark');
-    document.querySelector(config.value.container).classList.add('dark');
+    document.querySelector(config.value.container).classList.add('t-dark');
   }
 
   // if (config.value?.colors?.primary) {
@@ -144,7 +149,7 @@ async function loadConfig() {
     await store.dispatch('config/load', config);
   } catch ({ title, message }) {
     errorTitle.value = t('config_error');
-    errorMessage.value = message;
+    errorMessage.value = t(message);
   }
 }
 async function getManifest(url) {
@@ -203,15 +208,5 @@ async function init() {
     height: auto;
     overflow: auto;
   }
-}
-
-.error-container {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  align-items: center;
-  height: 100%;
 }
 </style>

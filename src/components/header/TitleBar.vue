@@ -1,5 +1,5 @@
 <template>
-  <div class="flex column justify-center">
+  <div class="t-flex t-justify-center">
     <template v-if="collectionTitle || manifestTitle">
       <template v-if="collectionTitle">
         <h1 v-if="collectionTitle" class="text-h1 q-mt-2 q-mb-none text-bold" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
@@ -31,7 +31,7 @@
         </h1>
       </template>
     </template>
-    <h1 v-else class="text-h1 text-bold q-mb-4 q-mt-2" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+    <h1 v-else class="t-text-2xl t-font-bold t-mb-4 t-mt-2">
       TIDO Viewer
     </h1>
   </div>
