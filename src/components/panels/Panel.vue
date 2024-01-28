@@ -1,5 +1,5 @@
 <template>
-  <div class="item-content" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'">
+  <div class="item-content dark:t-bg-gray-800 t-border dark:t-border-gray-600">
     <div class="panel-header t-py-1 t-pr-4 t-pl-4 flex justify-between items-center">
       <div class="caption text-bold text-body1">
         <!-- We display the tab label as panel label when there is only one tab -->
@@ -55,6 +55,7 @@ import {
 } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
+import { useDark } from '@vueuse/core';
 import MetadataView from '@/components/metadata/MetadataView.vue';
 import TreeView from '@/components/TreeView.vue';
 import AnnotationsView from '@/components/annotations/AnnotationsView.vue';
@@ -93,6 +94,7 @@ export default {
   setup(props, { emit }) {
     const store = useStore();
     const { t } = useI18n();
+    const isDark = useDark();
 
     const tabs = ref([]);
     const activeTabIndex = ref(0);

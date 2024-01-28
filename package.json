@@ -49,6 +49,7 @@
     "postcss-remove-selectors": "^2.0.1",
     "prepend-selector-postcss": "^0.4.7",
     "prettier": "^2.5.1",
+    "primevue": "^3.47.2",
     "quasar": "^2.10.2",
     "sass": "~1.32.12",
     "standard-version": "^9.3.2",

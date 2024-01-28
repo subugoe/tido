@@ -1,6 +1,6 @@
 <template>
   <div class="content-view t-px-4 t-pt-4">
-    <div v-if="notificationMessage" class="t-pa-2">
+    <div v-if="notificationMessage" class="t-p-2">
       <Notification
         :message="$t(notificationMessage)"
         :notification-colors="config.notificationColors"
@@ -9,7 +9,7 @@
       />
     </div>
 
-    <div id="text-content" class="custom-font item-content">
+    <div id="text-content" class="custom-font item-content t-flex t-flex-col t-flex-1 t-overflow-auto t-text-gray-300">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle" />
     </div>

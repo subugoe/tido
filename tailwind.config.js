@@ -1,4 +1,4 @@
-const colors = require('tailwindcss/colors');
+import colors from 'tailwindcss/colors';
 
 function withOpacity(variableName) {
   return ({ opacityValue }) => {
@@ -11,12 +11,15 @@ function withOpacity(variableName) {
 
 /** @type {import('tailwindcss').Config} */
 
-module.exports = {
-  darkMode: 'class',
+export default {
+  darkMode: ['class', '[color-scheme="dark"]'],
   prefix: 't-',
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
+  ],
+  safelist: [
+    { pattern: /(text|bg)-(red|blue|primary)+/ },
   ],
   theme: {
     extend: {

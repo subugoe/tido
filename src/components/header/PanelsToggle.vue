@@ -1,76 +1,68 @@
 <template>
   <div class="panels-toggle relative-position">
-    <q-btn
-      v-if="$q.screen.width < 1200"
-      :icon-right="dropdownIcon"
-      :label="$t('show_hide_panels')"
-      outline
-      flat
-      size="12px"
-      @click="showDropdown = !showDropdown"
-    >
-    </q-btn>
-    <div
-      v-if="showDropdown"
-      class="dropdown-list shadow-2 rounded-borders"
-      :class="$q.dark.isActive ? 'bg-dark' : 'bg-white text-dark'"
-    >
-      <q-list>
-        <q-item v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-pl-1 t-py-none" tag="label" v-ripple>
-          <q-item-section side>
-            <q-checkbox
-              :model-value="show"
-              @update:model-value="update(i, $event)"
-              :checked-icon="checkedIcon"
-              :unchecked-icon="uncheckedIcon"
-            />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>{{ $t(label) }}</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item tag="label" v-ripple @click="reset">
-          <q-item-section side>
-            <q-icon :name="resetIcon" :color="resetColor"></q-icon>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label :class="'text-' + resetColor">{{ $t('reset') }}</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </div>
-
-    <div v-if="$q.screen.width > 1199" class="row items-center">
-      <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="q-px-1">
-        <q-checkbox
-          :model-value="show"
-          @update:model-value="update(i, $event)"
-          class="q-px-2 text-body2"
-          :title="handleToggleTitle(i)"
-          :label="$t(label)"
-          dense
-          size="xs"
-          :checked-icon="checkedIcon"
-          :unchecked-icon="uncheckedIcon"
-        >
-        </q-checkbox>
-      </div>
-
+    <template v-if="isMobile">
       <q-btn
-        v-if="toggles.length > 0"
+        v-if="isMobile"
+        :icon-right="dropdownIcon"
+        :label="$t('show_hide_panels')"
+        outline
         flat
-        no-caps
-        dense
-        class="q-px-2 q-py-none reset-btn"
-        :class="'text-' + resetColor"
-        :title="$t('reset_view')"
-        @click="reset"
-        :icon="resetIcon"
-        :color="resetColor"
+        size="12px"
+        @click="showDropdown = !showDropdown"
       >
-        <span>{{ $t('reset') }}</span>
       </q-btn>
-    </div>
+      <div
+        v-if="showDropdown"
+        class="dropdown-list shadow-2 rounded-borders"
+        :class="$q.dark.isActive ? 'bg-dark' : 'bg-white text-dark'"
+      >
+        <q-list>
+          <q-item v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-pl-1 t-py-none" tag="label" v-ripple>
+            <q-item-section side>
+              <q-checkbox
+                :model-value="show"
+                @update:model-value="update(i, $event)"
+                :checked-icon="checkedIcon"
+                :unchecked-icon="uncheckedIcon"
+              />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>{{ $t(label) }}</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item tag="label" v-ripple @click="reset">
+            <q-item-section side>
+              <q-icon :name="resetIcon" :color="resetColor"></q-icon>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label :class="'text-' + resetColor">{{ $t('reset') }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
+    </template>
+    <template v-else>
+      <div class="t-flex t-items-center t-space-x-2">
+        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`">
+          <BaseCheckbox
+            :model-value="show"
+            @update:model-value="update(i, $event)"
+            :title="handleToggleTitle(i)"
+            :label="$t(label)"
+          />
+        </div>
+
+        <BaseButton
+          v-if="toggles.length > 0"
+          :class="'text-' + resetColor"
+          :title="$t('reset_view')"
+          :text="$t('reset')"
+          display="flat"
+          icon="reset"
+          @click="reset"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -84,6 +76,9 @@ import {
   biArrowCounterclockwise,
   biChevronDown,
 } from '@quasar/extras/bootstrap-icons';
+import { isMobile } from '@/utils/is-mobile';
+import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
+import BaseButton from '@/components/base/BaseButton.vue';
 
 const store = useStore();
 const { t } = useI18n();

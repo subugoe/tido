@@ -127,8 +127,8 @@ export default function ConfigState() {
         },
       },
       notificationColors: {
-        info: 'blue-9',
-        warning: 'red-9',
+        info: 'blue-400',
+        warning: 'red-400',
       },
     },
     activeViews: [],

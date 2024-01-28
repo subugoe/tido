@@ -1,26 +1,70 @@
 <template>
   <div ref="containerRef" class="tree-view t-px-4 t-pt-4">
-    <q-tree
-      class="item-content"
-      :class="$q.dark.isActive ? 'is-dark' : ''"
-      ref="treeRef"
-      v-model:expanded="expanded"
-      v-model:selected="selected"
-      :icon="expandIcon"
-      :nodes="tree"
-      :selected-color="$q.dark.isActive ? 'grey' : ''"
-      node-key="url"
-      @lazy-load="onLazyLoad"
-    >
-      <template #default-header="{ node }">
-        <div :id="node.url" class="row items-center">{{ node.label }}</div>
-      </template>
-    </q-tree>
+<!--    <q-tree-->
+<!--      class="item-content"-->
+<!--      :class="$q.dark.isActive ? 'is-dark' : ''"-->
+<!--      ref="treeRef"-->
+<!--      v-model:expanded="expanded"-->
+<!--      v-model:selected="selected"-->
+<!--      :icon="expandIcon"-->
+<!--      :nodes="tree"-->
+<!--      :selected-color="$q.dark.isActive ? 'grey' : ''"-->
+<!--      node-key="url"-->
+<!--      @lazy-load="onLazyLoad"-->
+<!--    >-->
+<!--      <template #default-header="{ node }">-->
+<!--        <div :id="node.url" class="row items-center">{{ node.label }}</div>-->
+<!--      </template>-->
+<!--    </q-tree>-->
+    <Tree
+      v-model:expandedKeys="expanded"
+      :selection-keys="selected"
+      @update:selection-keys="selectNode"
+      :value="tree"
+      class="t-w-full"
+      unstyled
+      selectionMode="single"
+      @nodeSelect="onNodeSelect"
+      :pt="{
+      root: 't-relative',
+      wrapper: 't-relative t-overflow-auto',
+      filterContainer: 't-w-full t-relative t-mb-4',
+      // filterInput: 'w-full p-2 dark:bg-zinc-700 border dark:border-zinc-500 rounded-lg transition colors ' +
+      //  'hover:border-primary dark:hover:border-primary ' +
+      //  'outline-none focus:ring-2 focus:border-primary focus:ring-primary-100 dark:focus:ring-primary',
+      // searchIcon: 'w-4 h-4 absolute right-3 top-1/2 -mt-2',
+      // checkboxContainer: 'me-2',
+      // checkbox: options => { return {
+      //   class: [
+      //     'border-2 rounded-md w-[22px] h-[22px] transition-colors flex items-center justify-center',
+      //     {
+      //       'bg-zinc-50 dark:bg-zinc-700 dark:border-zinc-600 hover:border-primary dark:hover:border-primary': !options.context.checked,
+      //       'bg-primary border-primary dark:border-primary text-white hover:bg-primary-700': options.context.checked,
+      //     }
+      //   ]
+      // }},
+      container: 't-me-4',
+      // node: options => { log(options); return { class: ['', {'t-bg-red-400': options.context.selected === options.instance.key }]} },
+      content: options => ({
+        class: [
+          't-flex t-py-2 t-px-3 t-rounded-md t-cursor-pointer',
+          {'hover:t-bg-zinc-200 dark:hover:t-bg-zinc-700': !options.context.selected },
+          {'t-bg-red-400': options.context.selected }
+        ]
+      }),
+
+      // content: 't-flex t-py-2 t-px-3 t-rounded-md hover:t-bg-zinc-200 dark:hover:t-bg-zinc-700 t-cursor-pointer',
+      toggler: options => { return { class: ['t-border-0 t-me-2', { 't-hidden': options.context.leaf }] } },
+      label: 't-cursor-pointer t-select-none',
+      subgroup: 't-ps-4',
+      loadingOverlay: 't-absolute t-z-10 t-w-full t-h-full t-flex t-items-center t-justify-center t-bg-white dark:t-bg-zinc-800 t-bg-opacity-75 dark:t-bg-opacity-75'
+    }"
+    ></Tree>
   </div>
 </template>
 
 <script setup>
-import { biChevronRight } from '@quasar/extras/bootstrap-icons';
+import Tree from 'primevue/tree';
 
 import {
   computed, nextTick, ref, watch,
@@ -32,12 +76,11 @@ import { delay, isElementVisible } from '@/utils';
 
 const emit = defineEmits(['loading']);
 
-const expandIcon = biChevronRight;
 const store = useStore();
 const { t } = useI18n();
 
 const isLoading = ref(false);
-const expanded = ref([]);
+const expanded = ref({});
 const selected = ref(null);
 const tree = ref([]);
 const treeRef = ref(null);
@@ -52,6 +95,10 @@ const itemUrl = computed(() => store.getters['contents/itemUrl']);
 const manifest = computed(() => store.getters['contents/manifest']);
 const manifests = computed(() => store.getters['contents/manifests']);
 
+function log(any) {
+  console.log(any);
+}
+
 watch(
   itemUrl,
   onItemUrlChange,
@@ -65,26 +112,37 @@ watch(
   onCollectionChange,
   { immediate: true },
 );
+
+function selectNode(value) {
+  if (!Object.keys(value).length) return;
+  selected.value = value;
+}
+
 async function onCollectionChange() {
   if (collection.value) {
     emit('loading', true);
     tree.value = [{
+      key: collectionTitle.value,
       label: collectionTitle.value,
       selectable: false,
       url: collectionTitle.value,
       children: collection.value.sequence.map(({ label: manifestLabel, id: manifestId }, i) => ({
+        key: manifestId,
         label: manifestLabel ?? getDefaultManifestLabel(i),
         lazy: manifest.value.id !== manifestId,
         url: manifestId,
         selectable: false,
         // Prerender item tree elements for the manifest that should be open at initial load
-        // and don't render children on every other manifest. They will be lazy loaded on expand.
         ...((manifest.value.id === manifestId)
           ? {
             children: manifest.value.sequence.map(({ id, label: itemLabel }, j) => ({
+              key: id,
               label: itemLabel ?? getDefaultItemLabel(j),
               url: id,
               parent: manifestId,
+              leaf: true,
+              children: [],
+              selectable: true,
             })),
           }
           : {}),
@@ -93,8 +151,8 @@ async function onCollectionChange() {
     }];
 
     nextTick(() => {
-      expanded.value = [collectionTitle.value, manifest.value.id];
-      selected.value = itemUrl.value !== '' ? itemUrl.value : manifest.value.sequence[0]?.id;
+      expanded.value = { [collectionTitle.value]: true, [manifest.value.id]: true };
+      selected.value = { [itemUrl.value !== '' ? itemUrl.value : manifest.value.sequence[0]?.id]: true };
     });
   }
 }
@@ -105,6 +163,7 @@ watch(
   { immediate: true },
 );
 async function onManifestChange() {
+  return;
   const { label, sequence, id: manifestId } = manifest.value;
   if (!collection.value) {
     emit('loading', true);

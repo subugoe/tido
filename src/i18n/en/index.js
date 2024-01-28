@@ -98,4 +98,7 @@ export default {
   manifest: 'Manifest',
   also_selected: 'Also selected',
   undefined_role: 'Undefined role',
+  not_found: 'Not found',
+  unauthorized: 'Unauthorized',
+  unknown_error: 'Unknown Error',
 };

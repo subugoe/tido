@@ -2,30 +2,26 @@
   <div class="t-flex t-justify-center">
     <template v-if="collectionTitle || manifestTitle">
       <template v-if="collectionTitle">
-        <h1 v-if="collectionTitle" class="text-h1 q-mt-2 q-mb-none text-bold" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+        <h1 v-if="collectionTitle" class="t-text-2xl t-mt-2 t-text-bold">
           {{ collectionTitle }}
         </h1>
-        <h2 v-if="manifestTitle" class="text-h2 q-mt-2 q-mb-6" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+        <h2 v-if="manifestTitle" class="t-text-xl t-mt-2 t-mb-6">
           <span>{{ manifestTitle }}</span>
-          <q-icon
+          <BaseIcon
             v-if="item"
-            class="q-px-2"
-            size="xs"
-            :color="$q.dark.isActive ? 'white' : 'grey-7'"
-            :name="arrowIcon"
+            class="q-px-2 text-gray-500 dark:text-gray-300"
+            name="chevronRight"
           />
           <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
         </h2>
       </template>
       <template v-else>
-        <h1 class="text-h1 text-bold q-mt-2 q-mb-4" :class="$q.dark.isActive ? 'text-light' : 'text-dark'">
+        <h1 class="t-text-2xl t-font-bold t-mt-2 t-mb-4">
           <span>{{ manifestTitle }}</span>
-          <q-icon
+          <BaseIcon
             v-if="item"
-            class="q-px-2"
-            size="xs"
-            :color="$q.dark.isActive ? 'white' : 'grey-7'"
-            :name="arrowIcon"
+            class="t-px-2 text-gray-500 dark:text-gray-300"
+            name="chevronRight"
           />
           <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
         </h1>
@@ -41,6 +37,7 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
+import BaseIcon from '@/components/base/BaseIcon.vue';
 
 const props = defineProps({
   item: {

@@ -2,11 +2,11 @@
   <div>
     <div class="t-text-center">
       <BaseIcon
-        :color="color"
+        :class="`t-text-${color}`"
         :name="type"
         class="t-pr-2"
       />
-      <span class="text-bold vertical-middle">{{ title || message }}</span>
+      <span class="t-font-bold t-align-middle">{{ title || message }}</span>
     </div>
 
     <div class="text-body2 text-center t-mt-2" v-if="title">

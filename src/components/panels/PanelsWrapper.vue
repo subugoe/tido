@@ -1,6 +1,6 @@
 <template>
-  <div class="panels-target q-gutter-4-4 q-px-4 q-px-lg-6 q-pb-md-4">
-    <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item q-pb-4 q-pb-md-none">
+  <div class="panels-target t-flex t-flex-col sm:t-flex-row t-space-x-4 t-px-4 lg:t-px-6 md:t-pb-4">
+    <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item t-flex t-flex-col t-flex-1 t-max-h-[66vh] sm:t-max-h-max t-pb-4 md:t-pb-none">
       <Panel :panel="panel" :active-view="getActiveView(i)" @active-view="onActiveViewChange($event, i)" />
     </div>
   </div>
@@ -29,35 +29,3 @@ function getActiveView(panelIndex) {
   return activeViews.value[panelIndex];
 }
 </script>
-
-<style lang="scss" scoped>
-.content-tabs {
-  display: inline-block;
-}
-
-.panels-target {
-  display: flex;
-  flex: 1;
-  @media (max-width: $breakpoint-sm-max) {
-    flex-direction: column;
-  }
-}
-
-.item {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
-  @media (max-width: $breakpoint-sm-max) {
-    max-height: 66vh;
-  }
-}
-
-.tabs-container {
-  display: flex;
-
-  > * {
-    flex: 1;
-  }
-}
-</style>

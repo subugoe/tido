@@ -54,7 +54,7 @@ window.Tido = function Tido(config = {}) {
 
     style.id = instanceId;
     style.innerHTML = `
-      ${this.config.container} { ${getRGBColor(this.config.colors.primary, 'primary')} }
+      ${this.config.container || '#app'} { ${getRGBColor(this.config.colors?.primary ?? '#3456aa', 'primary')} }
     `;
     containerEl.appendChild(style);
 

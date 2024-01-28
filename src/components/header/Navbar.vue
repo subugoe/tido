@@ -1,29 +1,23 @@
 <template>
-  <div>
-    <q-btn
+  <div class="t-flex">
+    <BaseButton
       v-if="manifest"
       :disable="!hasPrev"
-      unelevated
-      color="primary"
-      class="t-px-2 t-mr-2 previous-item"
-      :icon="prevIcon"
-      :label="prevButtonLabel"
+      :text="prevButtonLabel"
+      size="small"
+      icon="arrowLeft"
       @click="prev"
-      no-caps
-      dense
+      class="t-mr-2"
     />
 
-    <q-btn
+    <BaseButton
       v-if="manifest"
-      unelevated
-      color="primary"
       :disable="!hasNext"
-      class="t-px-2 next-item"
-      :icon-right="nextIcon"
-      :label="nextButtonLabel"
+      :text="nextButtonLabel"
+      size="small"
+      icon="arrowRight"
+      icon-position="right"
       @click="next"
-      no-caps
-      dense
     />
   </div>
 </template>
@@ -33,12 +27,10 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { biArrowLeft, biArrowRight } from '@quasar/extras/bootstrap-icons';
+import BaseButton from '@/components/base/BaseButton.vue';
 
 const store = useStore();
 const { t } = useI18n();
-
-const prevIcon = biArrowLeft;
-const nextIcon = biArrowRight;
 
 const manifest = computed(() => store.getters['contents/manifest']);
 const manifests = computed(() => store.getters['contents/manifests']);
@@ -115,15 +107,15 @@ function next() {
 </script>
 
 <style lang="scss" scoped>
-button {
-  font-size: 12px !important;
-}
-
-.q-input {
-  width: 100%;
-  @media (min-width: 600px) {
-    margin-right: 8px;
-    width: 160px;
-  }
-}
+//button {
+//  font-size: 12px !important;
+//}
+//
+//.q-input {
+//  width: 100%;
+//  @media (min-width: 600px) {
+//    margin-right: 8px;
+//    width: 160px;
+//  }
+//}
 </style>

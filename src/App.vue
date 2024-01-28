@@ -1,9 +1,7 @@
 <template>
-  <div class="tido t-h-full t-flex t-flex-col t-bg-gray-100 dark:t-bg-gray-800 t-text-gray-600 dark:t-text-gray-200">
+  <div class="tido t-h-full t-flex t-flex-col t-bg-gray-100 dark:t-bg-gray-900 t-text-gray-600 dark:t-text-gray-200">
       <GlobalHeader/>
-      <div v-if="ready" class="root">
-        <PanelsWrapper/>
-      </div>
+      <PanelsWrapper v-if="ready"/>
       <div v-else class="t-flex t-relative t-flex-1 t-justify-center t-items-center t-p-4 lg:t-p-6">
         <div class="t-h-full t-w-full t-flex t-items-center t-justify-center t-border-dashed t-border-[3px] dark:t-border-dashed dark:t-border-gray-600 t-rounded-md">
           <template v-if="isLoading">
@@ -108,7 +106,6 @@ onMounted(async () => {
 
   await loadConfig();
 
-  console.log(config.value.container);
   // On page load or when changing themes, best to add inline in `head` to avoid FOUC
   // if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
   //   document.querySelector(config.value.container).classList.add('dark');
@@ -180,8 +177,8 @@ async function init() {
     }
   } catch (e) {
     await delay(1000);
-    errorTitle.value = e.title || 'unknown_error';
-    errorMessage.value = e.message || 'please_try_again_later';
+    errorTitle.value = e.title || t('unknown_error');
+    errorMessage.value = e.message || t('please_try_again_later');
   } finally {
     isLoading.value = false;
   }

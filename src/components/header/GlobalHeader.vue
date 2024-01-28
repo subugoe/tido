@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="show"
-    class="header t-pa-4 lg:t-px-6"
+    class="t-flex t-flex-col t-pa-4 lg:t-px-6"
   >
     <div class="t-flex t-items-start sm:t-flex-col-reverse">
       <TitleBar :item="item"/>
@@ -9,9 +9,9 @@
         <Tools/>
       </div>
     </div>
-    <div v-if="item" class="flex column-xs row-md">
+    <div v-if="item" class="t-flex t-flex-col">
       <Navbar v-if="showNavbar"/>
-      <PanelsToggle v-if="showPanelsToggle" class="flex justify-sm-end col t-mt-4 t-mt-md-none" />
+      <PanelsToggle v-if="showPanelsToggle" class="sm:t-self-end t-mt-4 md:t-mt-none" />
     </div>
   </div>
 </template>

@@ -31,9 +31,9 @@ const cacheRequest = () => {
 export const cachableRequest = cacheRequest();
 
 function getError(code, message) {
-  let title = 'server_error';
-  if (code === 404) title = 'not_found';
-  else if (code === 401) title = 'unauthorized';
+  let title = i18n.global.t('server_error');
+  if (code === 404) title = i18n.global.t('not_found');
+  else if (code === 401) title = i18n.global.t('unauthorized');
 
   title = i18n.global.t(title);
   return { title, message };

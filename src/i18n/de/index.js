@@ -96,4 +96,7 @@ export default {
   manifest: 'Manifest',
   more_annotations: 'Weitere',
   undefined_role: 'Undefinierte Rolle',
+  not_found: 'Nicht gefunden',
+  unauthorized: 'Nicht autorisiert',
+  unknown_error: 'Unbekannter Fehler',
 };
