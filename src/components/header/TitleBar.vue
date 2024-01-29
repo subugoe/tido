@@ -36,7 +36,6 @@
 <script setup>
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { biChevronRight } from '@quasar/extras/bootstrap-icons';
 import BaseIcon from '@/components/base/BaseIcon.vue';
 
 const props = defineProps({
@@ -47,7 +46,6 @@ const props = defineProps({
 });
 
 const store = useStore();
-const arrowIcon = biChevronRight;
 
 const collectionTitle = computed(() => store.getters['contents/collectionTitle']);
 const manifestTitle = computed(() => store.getters['contents/manifest']?.label);

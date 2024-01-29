@@ -1,5 +1,5 @@
 <template>
-  <div class="metadata-view overflow-auto q-px-4 q-pt-4">
+  <div class="metadata-view t-overflow-auto t-px-4 t-pt-4">
     <CollectionMetadata v-if="options.collection?.all" />
     <ManifestMetadata v-if="options.manifest?.all" />
     <ItemMetadata v-if="options.manifest?.all" />
@@ -21,17 +21,3 @@ const store = useStore();
 
 const config = computed(() => store.getters['config/config']);
 </script>
-
-<style lang="scss" scoped>
-.q-list {
-  .q-item__label {
-    color: $dark;
-  }
-
-  &--dark {
-    .q-item__label {
-      color: $light;
-    }
-  }
-}
-</style>

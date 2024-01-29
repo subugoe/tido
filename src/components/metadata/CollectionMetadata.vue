@@ -1,17 +1,13 @@
 <template>
-  <q-list v-if="metadata.length > 0" dense class="t-mb-6">
-    <q-item class="no-padding">
-      <q-item-section dense>
-        <h3>{{ $t('collection') }}</h3>
-      </q-item-section>
-    </q-item>
+  <div v-if="metadata.length > 0" dense class="t-mb-6">
+    <div class="">
+      <h3>{{ $t('collection') }}</h3>
+    </div>
 
-    <q-item v-for="(meta, idx) in metadata" :key="idx" class="t-mb-2 no-padding">
-      <q-item-section class="t-mb-2 no-padding">
-        <MetadataItem :item="meta"/>
-      </q-item-section>
-    </q-item>
-  </q-list>
+    <div v-for="(meta, idx) in metadata" :key="idx" class="t-mb-2 no-padding">
+      <MetadataItem :item="meta"/>
+    </div>
+  </div>
 </template>
 
 <script setup>

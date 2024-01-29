@@ -86,11 +86,6 @@ const { t } = useI18n();
 const toggles = ref([]);
 const showDropdown = ref(false);
 
-const checkedIcon = biCheckCircleFill;
-const uncheckedIcon = biCircle;
-const resetIcon = biArrowCounterclockwise;
-const dropdownIcon = biChevronDown;
-
 const panels = computed(() => store.getters['config/config'].panels);
 const resetColor = computed(() => (toggles.value.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7'));
 

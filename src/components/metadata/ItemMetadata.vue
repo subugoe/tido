@@ -1,17 +1,10 @@
 <template>
-  <q-list dense class="q-mb-6">
-    <q-item class="no-padding">
-      <q-item-section>
-        <h3>{{ $t(labels.item) }} {{ number }} / {{ total }}</h3>
-      </q-item-section>
-    </q-item>
-
-    <q-item v-for="(meta, idx) in metadata" :key="idx" class="q-mb-2 no-padding">
-      <q-item-section class="q-mb-2 no-padding">
-        <MetadataItem :item="meta"/>
-      </q-item-section>
-    </q-item>
-  </q-list>
+  <div class="t-mb-6">
+    <h3>{{ $t(labels.item) }} {{ number }} / {{ total }}</h3>
+    <div v-for="(meta, idx) in metadata" :key="idx" class="q-mb-2 no-padding">
+      <MetadataItem :item="meta"/>
+    </div>
+  </div>
 </template>
 
 <script setup>

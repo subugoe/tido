@@ -26,7 +26,6 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
-import { biArrowLeft, biArrowRight } from '@quasar/extras/bootstrap-icons';
 import BaseButton from '@/components/base/BaseButton.vue';
 
 const store = useStore();

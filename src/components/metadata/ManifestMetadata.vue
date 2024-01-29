@@ -1,21 +1,11 @@
 <template>
-  <q-list v-if="manifestHasItems" dense class="t-mb-6">
-    <q-item class="no-padding">
-      <q-item-section>
-        <h3>{{ $t(labels.manifest) }} {{ number }} / {{ total }}</h3>
-      </q-item-section>
-    </q-item>
-    <q-item v-for="(meta, idx) in metadata" :key="idx" class="t-mb-2 no-padding">
-      <q-item-section class="t-mb-2 no-padding">
-        <MetadataItem :item="meta"/>
-      </q-item-section>
-    </q-item>
-    <q-item class="no-padding">
-      <q-item-section class="q-mb-2">
-        <Actor :data="actor"></Actor>
-      </q-item-section>
-    </q-item>
-  </q-list>
+  <div v-if="manifestHasItems" dense class="t-mb-6">
+    <h3>{{ $t(labels.manifest) }} {{ number }} / {{ total }}</h3>
+    <div v-for="(meta, idx) in metadata" :key="idx" class="t-mb-2 no-padding">
+      <MetadataItem :item="meta"/>
+    </div>
+    <Actor :data="actor"></Actor>
+  </div>
 </template>
 
 <script setup>
