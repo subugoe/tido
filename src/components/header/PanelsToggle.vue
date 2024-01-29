@@ -52,6 +52,7 @@
           size="xs"
           :checked-icon="checkedIcon"
           :unchecked-icon="uncheckedIcon"
+          
         >
         </q-checkbox>
       </div>
@@ -129,7 +130,30 @@ watch(
   },
 )
 
-function update(index, show) {
+
+  
+
+function update(index, show) { 
+
+  if (show == false){
+    
+    let numberClosedPanels = 0;
+    // count the number of closed panels, except the current action
+    for(let i = 0; i< toggles.value.length; i+=1){
+          if (i != index){
+              if (toggles.value[i].show == false){
+                  numberClosedPanels +=1; 
+              }
+          }     
+      }
+    
+  // Keep showing the last panel after closing it - So that we can show at least one panel always
+  // When n_panels - 1 are closed and the current action is "close", then keep open this panel
+    if (numberClosedPanels == toggles.value.length - 1){
+      show = true;
+    }
+  }
+
   toggles.value[index].show = show;
   store.dispatch('config/setShowPanel', { index, show });
 }
