@@ -1,7 +1,7 @@
 <template>
   <div class="item-content dark:t-bg-gray-800 t-border dark:t-border-gray-600">
-    <div class="panel-header t-py-1 t-pr-4 t-pl-4 flex justify-between items-center">
-      <div class="caption text-bold text-body1">
+    <div class="panel-header t-py-1 t-pr-4 t-pl-4 t-flex t-justify-between t-items-center">
+      <div class="caption t-font-bold text-body1">
         <!-- We display the tab label as panel label when there is only one tab -->
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
         <span v-else-if="tabs.length === 1">{{$t(tabs[0].label)}}</span>
@@ -14,26 +14,61 @@
         </template>
       </div>
     </div>
-    <q-separator class="t-mx-4" />
+    <div class="t-border t-mx-4" />
     <div class="panel-body overflow-hidden bg-none">
       <Loading v-if="isLoading" />
       <template v-if="tabs.length > 1">
         <div class="tabs-container t-px-4">
-          <q-tabs
-            v-model="activeTabIndex"
-            @update:model-value="onViewChange"
-            :active-color="'primary'"
-            active-bg-color="none"
-            dense
+          <TabView
+            v-model:active-index="activeTabIndex"
+            @update:active-index="onViewChange"
+            unstyled
+            :pt="{
+              navContainer: ({ props }) => ({class:[ 't-relative', { 't-overflow-hidden': props.scrollable}] }),
+              navContent: {
+                class: ['t-overflow-y-hidden t-overscroll-contain', 't-overscroll-auto', 't-scroll-smooth', '[&::-webkit-scrollbar]:hidden']
+              },
+              previousButton: {
+                class: ['t-flex t-items-center t-justify-center', '!t-absolute', 't-top-0 t-left-0', 't-z-20', 't-h-full t-w-12', 't-rounded-none', 't-bg-surface-0 dark:t-bg-surface-800', 't-text-primary dark:t-text-primary-400', 't-shadow-md']
+              },
+              nextButton: {
+                class: ['t-flex t-items-center t-justify-center', '!t-absolute', 't-top-0 t-right-0', 't-z-20', 't-h-full t-w-12', 't-rounded-none', 't-bg-surface-0 dark:t-bg-surface-800', 't-text-primary dark:t-text-primary-400', 't-shadow-md']
+              },
+              nav: {
+                class: ['t-flex t-flex-1', 't-list-none', 't-p-0 t-m-0', 't-bg-surface-0 dark:t-bg-surface-800', 't-border-b-2 t-border-surface-200 dark:t-border-surface-700', 't-text-surface-900 dark:t-text-surface-0/80']
+              },
+              tabpanel: {
+                header: ({props:e})=>({class:['t-mr-0',{'t-opacity-60 t-cursor-default t-user-select-none t-select-none t-pointer-events-none':e==null?void 0:e.disabled}]}),
+                headerAction: ({parent:e,context:r})=>({class:['t-relative','t-font-bold','t-flex t-items-center','t-p-5','-t-mb-[2px]','t-border-b-2','t-rounded-t-md',{'t-border-surface-200 dark:t-border-surface-700':e.state.d_activeIndex!==r.index,'t-bg-surface-0 dark:t-bg-surface-800':e.state.d_activeIndex!==r.index,'t-text-surface-700 dark:t-text-surface-0/80':e.state.d_activeIndex!==r.index,'t-bg-surface-0 dark:t-bg-surface-800':e.state.d_activeIndex===r.index,'t-border-primary dark:t-border-primary-400':e.state.d_activeIndex===r.index,'t-text-primary dark:t-text-primary-400':e.state.d_activeIndex===r.index},'focus-visible:t-outline-none focus-visible:t-outline-offset-0 focus-visible:t-ring focus-visible:t-ring-inset','focus-visible:t-ring-primary-400/50 dark:focus-visible:t-ring-primary-300/50',{'hover:t-bg-surface-0 dark:hover:t-bg-surface-800/80':e.state.d_activeIndex!==r.index,'hover:t-border-surface-400 dark:hover:t-border-primary-400':e.state.d_activeIndex!==r.index,'hover:t-text-surface-900 dark:hover:t-text-surface-0':e.state.d_activeIndex!==r.index},'t-transition-all t-duration-200','t-cursor-pointer t-select-none t-text-decoration-none','t-overflow-hidden','t-user-select-none']}),
+                headerTitle: {
+                  class: ['t-leading-none', 't-whitespace-nowrap']
+                },
+                content: {
+                  class: ['t-p-5', 't-rounded-b-md', 't-bg-surface-0 dark:t-bg-surface-800', 't-text-surface-700 dark:t-text-surface-0/80', 't-border-0']
+                }
+              }
+            }"
           >
-            <q-tab v-for="(tab, i) in tabs" :key="tab.id" :name="i" :label="$t(tab.label)" no-caps />
-          </q-tabs>
+            <TabPanel v-for="(tab, i) in tabs" :key="tab.id" :header="$t(tab.label)" unstyled>
+              <component :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
+            </TabPanel>
+          </TabView>
+
+<!--          <q-tabs-->
+<!--            v-model="activeTabIndex"-->
+<!--            @update:model-value="onViewChange"-->
+<!--            :active-color="'primary'"-->
+<!--            active-bg-color="none"-->
+<!--            dense-->
+<!--          >-->
+<!--            <q-tab v-for="(tab, i) in tabs" :key="tab.id" :name="i" :label="$t(tab.label)" no-caps />-->
+<!--          </q-tabs>-->
         </div>
-        <q-tab-panels v-model="activeTabIndex" class="bg-transparent" animated transition-next="fade" transition-prev="fade">
-          <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pt-4">
-            <component :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
-          </q-tab-panel>
-        </q-tab-panels>
+<!--        <q-tab-panels v-model="activeTabIndex" class="bg-transparent" animated transition-next="fade" transition-prev="fade">-->
+<!--          <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pt-4">-->
+<!--            <component :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />-->
+<!--          </q-tab-panel>-->
+<!--        </q-tab-panels>-->
       </template>
       <template v-else-if="tabs.length === 1">
         <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />
@@ -56,6 +91,8 @@ import {
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { useDark } from '@vueuse/core';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 import MetadataView from '@/components/metadata/MetadataView.vue';
 import TreeView from '@/components/TreeView.vue';
 import AnnotationsView from '@/components/annotations/AnnotationsView.vue';
@@ -83,6 +120,8 @@ export default {
     PanelToggleAction,
     PanelZoomAction,
     TreeView,
+    TabView,
+    TabPanel,
   },
   props: {
     panel: {

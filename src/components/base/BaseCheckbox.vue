@@ -4,7 +4,8 @@ import Checkbox from 'primevue/checkbox'
 const props = withDefaults(defineProps<{
   id: string,
   label?: string,
-  modelValue?: boolean
+  modelValue?: boolean,
+  triState: boolean
 }>(), {
   id: 'default-id',
 })
@@ -16,11 +17,11 @@ const emit = defineEmits<{
 <template>
   <div class="t-flex t-items-center">
     <Checkbox
+      v-if="!triState"
       :model-value="modelValue"
       @update:modelValue="emit('update:modelValue', $event)"
       :binary="true"
       :inputId="id"
-      unstyled
       :pt="{
         root: ({ context }) => ({
           class: [
@@ -37,12 +38,13 @@ const emit = defineEmits<{
         }
       }">
       <template v-slot:icon="{ checked }">
-          <Icon name="ic:round-check" :class="[
+          <BaseIcon name="ic:round-check" :class="[
             { '!t-hidden': !checked },
             { 't-text-white dark:t-text-zinc-300': checked }
           ]"/>
       </template>
     </Checkbox>
+    <TriStateCheckbox v-else unstyled />
     <label
       v-if="label"
       :for="id"

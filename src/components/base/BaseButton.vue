@@ -121,7 +121,7 @@ function addTailwindPrefix(prefix, classesObj) {
       <BaseIcon :name="_icon" class="t-text-base t-me-1"/>
     </template>
     <template v-if="isIconOnly">
-      <Icon :name="_icon" class="mt-[1px]"/>
+      <BaseIcon :name="_icon" class="mt-[1px]"/>
     </template>
     <template v-else>{{ text }}</template>
     <template v-if="_icon && _iconPosition === 'right'">

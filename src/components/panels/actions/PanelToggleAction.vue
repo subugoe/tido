@@ -1,16 +1,17 @@
 <template>
   <div class="flex items-center justify-end">
-    <q-checkbox indeterminate-value="maybe" v-model="selectedModel" :label="label" dense size="xs" />
+    <BaseCheckbox tri-state v-model="selectedModel" :label="label" dense size="xs" />
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue';
+import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
 
 const props = defineProps({
   selected: Boolean,
   label: String,
-})
+});
 const emit = defineEmits(['update']);
 
 const selectedModel = ref(false);
