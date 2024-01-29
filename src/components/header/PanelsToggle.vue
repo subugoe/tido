@@ -13,32 +13,19 @@
       </q-btn>
       <div
         v-if="showDropdown"
-        class="dropdown-list shadow-2 rounded-borders"
-        :class="$q.dark.isActive ? 'bg-dark' : 'bg-white text-dark'"
+        class="dropdown-list t-shadow-md t-rounded-md dark:t-bg-gray-800 t-bg-gray-50"
       >
-        <q-list>
-          <q-item v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-pl-1 t-py-none" tag="label" v-ripple>
-            <q-item-section side>
-              <q-checkbox
-                :model-value="show"
-                @update:model-value="update(i, $event)"
-                :checked-icon="checkedIcon"
-                :unchecked-icon="uncheckedIcon"
-              />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{ $t(label) }}</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item tag="label" v-ripple @click="reset">
-            <q-item-section side>
-              <q-icon :name="resetIcon" :color="resetColor"></q-icon>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label :class="'text-' + resetColor">{{ $t('reset') }}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
+        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-pl-1 t-py-none t-flex">
+          <BaseCheckbox
+            :model-value="show"
+            @update:model-value="update(i, $event)"
+          />
+          <span>{{ $t(label) }}</span>
+        </div>
+        <div @click="reset" class="t-flex">
+          <BaseIcon name="reset" :color="resetColor"></BaseIcon>
+          <span :class="'text-' + resetColor">{{ $t('reset') }}</span>
+        </div>
       </div>
     </template>
     <template v-else>
@@ -70,15 +57,10 @@
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
-import {
-  biCheckCircleFill,
-  biCircle,
-  biArrowCounterclockwise,
-  biChevronDown,
-} from '@quasar/extras/bootstrap-icons';
 import { isMobile } from '@/utils/is-mobile';
 import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
+import BaseIcon from '@/components/base/BaseIcon.vue';
 
 const store = useStore();
 const { t } = useI18n();

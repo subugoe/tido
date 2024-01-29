@@ -5,7 +5,7 @@ const props = withDefaults(defineProps<{
   id: string,
   label?: string,
   modelValue?: boolean,
-  triState: boolean
+  triState?: boolean
 }>(), {
   id: 'default-id',
 })
