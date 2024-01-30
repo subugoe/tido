@@ -1,0 +1,9 @@
+{
+    "context": "http://www.w3.org/ns/anno.jsonld",
+    "first": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page2/latest/annotationPage.json",
+    "id": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page2/latest/annotationCollection.json",
+    "label": "Berlin. Donnerstag, 3. Juni 1819. Schreiben an Raabe, Josef, in Berlin. (Konzept, Abschrift)",
+    "last": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page2/latest/annotationPage.json",
+    "total": 0,
+    "type": "AnnotationCollection"
+}

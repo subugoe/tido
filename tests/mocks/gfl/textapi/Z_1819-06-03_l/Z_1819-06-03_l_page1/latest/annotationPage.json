@@ -1,0 +1,125 @@
+{
+    "context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page1/latest/annotationPage.json",
+    "items": [
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "<span>\n\t\t\t\t<p>Paraphiert von Altenstein auf Bl. 8r unter\n\t\t\t\t\tdem zugeh&ouml;rigen <a href=\"Z_1819-06-03_l.xml\" target=\"_blank\">Z\n\t\t\t\t\t\t3. Juni 1819. Kultusministerium an Raabe\n\t\t\t\t\t\t(Konzept)</a>.</p>\n\t\t\t</span>\n",
+                "x-content-type": "Abstract"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/e315b39c-f628-4b13-b2d9-7d9da8dc8499",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/e315b39c-f628-4b13-b2d9-7d9da8dc8499",
+                "language": "ger"
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Berlin (<a target='_blank' href=\"/register/4005728-8\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/4005728-8\">GND</a>)",
+                "x-content-type": "Place"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/annotation-7242e315-f61c-4f50-a31b-3e57b908c465",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/annotation-7242e315-f61c-4f50-a31b-3e57b908c465",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-7242e315-f61c-4f50-a31b-3e57b908c465"
+                }
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Raabe, Josef (<a target='_blank' href=\"/register/123748488\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/123748488\">GND</a>)",
+                "x-content-type": "Person"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/annotation-209dfdb0-a564-4b96-b3c4-bc5169da147c",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/annotation-209dfdb0-a564-4b96-b3c4-bc5169da147c",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-209dfdb0-a564-4b96-b3c4-bc5169da147c"
+                }
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Italien (<a target='_blank' href=\"/register/4027833-5\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/4027833-5\">GND</a>)",
+                "x-content-type": "Place"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/annotation-f47e97bb-6fd5-4540-835e-961172c6874c",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/annotation-f47e97bb-6fd5-4540-835e-961172c6874c",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-f47e97bb-6fd5-4540-835e-961172c6874c"
+                }
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Farbe (<a target='_blank' href=\"/register/4016443-3\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/4016443-3\">GND</a>)",
+                "x-content-type": "Object"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/annotation-9e48eff1-a5f0-4cce-8c1d-dfce196e1d9f",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/annotation-9e48eff1-a5f0-4cce-8c1d-dfce196e1d9f",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-9e48eff1-a5f0-4cce-8c1d-dfce196e1d9f"
+                }
+            },
+            "type": "Annotation"
+        },
+        {
+            "body": {
+                "format": "text/plain",
+                "type": "TextualBody",
+                "value": "Preu\u00dfen. Ministerium der Geistlichen, Unterrichts- und Medizinalangelegenheiten (<a target='_blank' href=\"/register/35254-8\">Register</a>, <a target='_blank' href=\"https://d-nb.info/gnd/35254-8\">GND</a>)",
+                "x-content-type": "Org"
+            },
+            "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/annotation-898c5fd4-dd43-4ff4-a90f-5fca17f451b2",
+            "target": {
+                "format": "text/xml",
+                "id": "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/Z_1819-06-03_l_page1/annotation-898c5fd4-dd43-4ff4-a90f-5fca17f451b2",
+                "language": "ger",
+                "selector": {
+                    "type": "CssSelector",
+                    "value": "#annotation-898c5fd4-dd43-4ff4-a90f-5fca17f451b2"
+                }
+            },
+            "type": "Annotation"
+        }
+    ],
+    "next": null,
+    "partOf": {
+        "id": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page1/latest/annotationCollection.json",
+        "label": "Annotations for Goethes Farbenlehre in Berlin - Dokument: Z_1819-06-03_l Seite: Z_1819-06-03_l_page1",
+        "total": 0
+    },
+    "prev": null,
+    "startIndex": 0,
+    "type": "AnnotationPage"
+}

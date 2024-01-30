@@ -1,0 +1,115 @@
+{
+  "actor": {
+    "@context": 3,
+    "role": 2,
+    "name": 1,
+    "id": 3,
+    "idref": 0
+  },
+  "collection": {
+    "@context": 3,
+    "textapi": 3,
+    "id": 1,
+    "title": 1,
+    "collector": 2,
+    "sequence": 2,
+    "total": 0,
+    "description": 1,
+    "annotationCollection": 0,
+    "modules": 0
+  },
+  "/content": {
+    "@context": 3,
+    "url": 1,
+    "type": 1,
+    "integrity": 0
+  },
+  "idref": {
+    "@context": 0,
+    "base": 0,
+    "type": 0,
+    "id": 0
+  },
+  "image": {
+    "@context": 3,
+    "id": 1,
+    "manifest": 0,
+    "license": 1
+  },
+  "integrity": {
+    "@context": 0,
+    "type": 0,
+    "value": 0
+  },
+  "item": {
+    "@context": 3,
+    "textapi": 3,
+    "id": 1,
+    "title": 0,
+    "type": 0,
+    "n": 1,
+    "lang": 0,
+    "langAlt": 0,
+    "content": 1,
+    "description": 0,
+    "image": 1,
+    "annotationCollection": 1,
+    "modules": 0
+  },
+  "license": {
+    "@context": 3,
+    "id": 1,
+    "notes": 1
+  },
+  "manifest": {
+    "@context": 3,
+    "textapi": 3,
+    "id": 1,
+    "label": 1,
+    "sequence": 1,
+    "total": 0,
+    "actor": 2,
+    "repository": 0,
+    "image": 0,
+    "metadata": 1,
+    "support": 1,
+    "license": 1,
+    "description": 0,
+    "annotationCollection": 0,
+    "modules": 0
+  },
+  "metadata": {
+    "@context": 3,
+    "key": 1,
+    "value": 1
+  },
+  "module": {
+    "edition-manuscripts": 0,
+    "edition-prints": 0
+  },
+  "repository": {
+    "@context": 3,
+    "label": 0,
+    "url": 0,
+    "baseUrl": 0,
+    "id": 0
+  },
+  "sequence": {
+    "@context": 3,
+    "id": 1,
+    "type": 0,
+    "label": 1
+  },
+  "support": {
+    "@context": 0,
+    "type": 2,
+    "mime": 0,
+    "url": 1,
+    "integrity": 0
+  },
+  "title": {
+    "@context": 3,
+    "title": 1,
+    "type": 1
+  }
+}
