@@ -40,11 +40,3 @@ const item = computed(() => store.getters['contents/item']);
 const showNavbar = computed(() => config.value?.header?.navigation || true);
 const showPanelsToggle = computed(() => (config.value?.header?.panelsToggle !== undefined ? config.value?.header?.panelsToggle : true));
 </script>
-
-<style lang="scss" scoped>
-.title-container {
-  @media (max-width: $breakpoint-sm-max) {
-    flex-direction: column-reverse;
-  }
-}
-</style>

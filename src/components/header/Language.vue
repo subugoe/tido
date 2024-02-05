@@ -52,9 +52,3 @@ function handleLanguageChange(lang) {
   selectedLang.value = lang.value;
 }
 </script>
-
-<style lang="scss">
-.language {
-  background-color: $grey-5;
-}
-</style>

@@ -1,10 +1,8 @@
 import { createApp, h } from 'vue';
-import { Quasar } from 'quasar';
 import createStore from './store';
 import { i18n } from './i18n';
 import App from './App.vue';
 
-// import 'quasar/dist/quasar.sass';
 import './css/style.css';
 import { getRGBColor } from '@/utils/color';
 
@@ -24,10 +22,6 @@ window.Tido = function Tido(config = {}) {
 
   this.app.use(createStore());
   this.app.use(i18n);
-
-  this.app.use(Quasar, {
-    plugins: {},
-  });
 
   let mounted = false;
   this.mount = (container) => {
@@ -61,9 +55,9 @@ window.Tido = function Tido(config = {}) {
     mounted = true;
   };
 
-  this.destroy = () => {
-    this.app.$destroy();
-  };
+  // this.destroy = () => {
+  //   this.app.$destroy();
+  // };
 
   const container = this.config?.container || '#app';
 

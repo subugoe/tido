@@ -1,7 +1,3 @@
-.tido-container {
-  position: relative;
-}
-
 .tido {
   display: flex;
   width: 100%;
@@ -10,155 +6,12 @@
     min-height: 400px;
     min-width: 400px;
   }
-
-  color: $dark;
-
-  .q-icon {
-    box-sizing: content-box;
-  }
-
-  .body--dark & {
-    color: $light;
-  }
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-top: 0;
-}
-
-h3 {
-  margin-bottom: map-get($space-md, 'y');
-}
-
-@media (max-width: $breakpoint-xs-max) {
-  .text-h1 {
-    font-size: 1.4rem;
-  }
 }
 
 .openseadragon-canvas {
   &:focus {
     outline: none;
   }
-}
-
-.toggle-list .q-item {
-  align-items: center;
-}
-
-.panel-textinput {
-  background: transparent;
-  border: 0;
-  outline: none;
-  width: 100%;
-}
-
-.q-btn--dense .q-icon, .q-btn--round .q-icon {
-  svg {
-    // Safari fix
-    width: 16px;
-    height: 16px;
-  }
-}
-
-.q-btn--dense .q-icon {
-  font-size: 1rem;
-}
-
-.q-btn--outline::before {
-  border-width: 2px;
-}
-
-.q-layout__section--marginal {
-  color: $dark;
-
-  .body--dark & {
-    color: $light;
-  }
-}
-
-.q-btn__content {
-  padding: 0 !important;
-}
-
-.q-dialog {
-  &.fullscreen {
-    position: fixed;
-    z-index: 6000;
-    border-radius: 0!important;
-    max-width: 100vw;
-    max-height: 100vh;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-  .fixed-full {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-  .no-pointer-events {
-    pointer-events: none !important;
-  }
-  .flex-center {
-    align-items: center;
-    justify-content: center;
-  }
-  .flex {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .on-left {
-    margin-right: 6px !important;
-  }
-
-  .items-center {
-    align-items: center;
-  }
-
-  .justify-end {
-    justify-content: flex-end;
-  }
-
-  .row {
-    display: flex;
-  }
-
-  .col {
-    flex: 1 1 0;
-  }
-
-  .q-card--dark {
-    background: $dark;
-  }
-
-  .q-dialog__backdrop {
-    .body--dark & {
-      background: rgba(0, 0, 0, 0.6);
-    }
-  }
-}
-
-.q-separator {
-  transition: none;
-}
-
-.q-menu {
-  position: absolute !important;
-}
-
-.q-btn__content > *, .q-checkbox > *, .q-item > *, .q-tabs > *  {
-  padding-left: 0;
-  padding-right: 0;
 }
 
 #tido-backdrop {

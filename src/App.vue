@@ -34,7 +34,6 @@ export default {
 </script>
 
 <script setup>
-import { useQuasar } from 'quasar';
 import {
   computed, inject, onMounted, ref,
 } from 'vue';
@@ -49,7 +48,6 @@ import Loading from '@/components/Loading.vue';
 import BaseIcon from '@/components/base/BaseIcon.vue';
 
 const store = useStore();
-const $q = useQuasar();
 const { t, locale: i18nLocale } = useI18n();
 
 const errorTitle = ref('');
@@ -118,7 +116,6 @@ onMounted(async () => {
   const colorsForceMode = config.value.colors.forceMode;
 
   if (colorsForceMode && colorsForceMode !== 'none') {
-    $q.dark.set(colorsForceMode === 'dark');
     document.querySelector(config.value.container).classList.add('t-dark');
   }
 
@@ -184,26 +181,3 @@ async function init() {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.root {
-  display: flex;
-  flex: 1;
-  font-size: 16px;
-  overflow: hidden;
-
-  @media (max-width: $breakpoint-sm-max) {
-    flex-direction: column;
-    height: auto;
-    overflow: auto;
-  }
-}
-
-.viewport {
-  flex: 1;
-  @media (max-width: $breakpoint-sm-max) {
-    height: auto;
-    overflow: auto;
-  }
-}
-</style>
