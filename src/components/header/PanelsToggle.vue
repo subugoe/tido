@@ -97,7 +97,7 @@ const resetIcon = biArrowCounterclockwise;
 const dropdownIcon = biChevronDown;
 
 const panels = computed(() => store.getters['config/config'].panels);
-const resetColor = computed(() => toggles.value.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7');
+const resetColor = computed(() => (toggles.value.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7'));
 
 watch(
   panels,
@@ -107,7 +107,7 @@ watch(
       .map(({ show, label }, index) => ({ index, show, label }));
   },
   { immediate: true },
-)
+);
 
 watch(
   showDropdown,
@@ -127,9 +127,27 @@ watch(
       }
     } else if (backdrop) backdrop.remove();
   },
-)
+);
 
 function update(index, show) {
+  if (show === false) {
+    let numberClosedPanels = 0;
+    // count the number of closed panels, except the current action
+    for (let i = 0; i < toggles.value.length; i += 1) {
+      if (i !== index) {
+        if (toggles.value[i].show === false) {
+          numberClosedPanels += 1;
+        }
+      }
+    }
+
+    // Keep showing the last panel after closing it - So that we can show at least one panel always
+    // When n_panels - 1 are closed and the current action is "close", then keep open this panel
+    if (numberClosedPanels === toggles.value.length - 1) {
+      show = true;
+    }
+  }
+
   toggles.value[index].show = show;
   store.dispatch('config/setShowPanel', { index, show });
 }
