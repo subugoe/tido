@@ -1,5 +1,5 @@
 <template>
-  <div class="t-flex t-justify-center">
+  <div class="t-flex t-flex-col t-justify-center">
     <template v-if="collectionTitle || manifestTitle">
       <template v-if="collectionTitle">
         <h1 v-if="collectionTitle" class="t-text-2xl t-mt-2 t-text-bold">

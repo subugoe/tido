@@ -3,7 +3,7 @@
     v-if="show"
     class="t-flex t-flex-col t-pa-4 lg:t-px-6"
   >
-    <div class="t-flex t-items-start sm:t-flex-col-reverse">
+    <div class="t-flex t-items-start sm:t-flex-row t-flex-col-reverse">
       <TitleBar :item="item"/>
       <div class="t-ml-auto">
         <Tools/>
