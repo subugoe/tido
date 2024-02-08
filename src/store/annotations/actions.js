@@ -43,6 +43,7 @@ export const setActiveAnnotations = ({ commit }, activeAnnotations) => {
 
 export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
   const { annotations } = getters;
+  console.log(annotations, types);
   const activeContentType = rootGetters['config/activeContentType'];
   let filteredAnnotations = [];
 
@@ -127,9 +128,9 @@ export const resetAnnotations = ({ dispatch, getters }) => {
 };
 
 export const initAnnotations = async ({ dispatch }, url) => {
-  let annotations = null;
+  // let annotations = null;
   try {
-    annotations = await request(url);
+    const { annotationCollection: annotations } = await request(url);
 
     if (!annotations.first) {
       dispatch('annotationLoaded', []);
@@ -137,8 +138,10 @@ export const initAnnotations = async ({ dispatch }, url) => {
     }
 
     const current = await request(annotations.first);
-    if (Array.isArray(current.items)) {
-      dispatch('annotationLoaded', current.items);
+    console.log(url, current);
+
+    if (Array.isArray(current.annotationPage.items)) {
+      dispatch('annotationLoaded', current.annotationPage.items);
     }
   } catch (err) {
     dispatch('annotationLoaded', []);

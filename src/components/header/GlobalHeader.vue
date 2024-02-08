@@ -1,17 +1,17 @@
 <template>
   <div
     v-if="show"
-    class="t-flex t-flex-col t-pa-4 lg:t-px-6"
+    class="t-flex t-flex-col t-pa-4 lg:t-px-6 t-mb-4"
   >
-    <div class="t-flex t-items-start sm:t-flex-row t-flex-col-reverse">
+    <div class="t-flex t-items-start sm:t-flex-row t-flex-col-reverse t-mt-2">
       <TitleBar :item="item"/>
       <div class="t-ml-auto">
         <Tools/>
       </div>
     </div>
-    <div v-if="item" class="t-flex t-flex-col">
+    <div v-if="item" class="t-flex t-items-center">
       <Navbar v-if="showNavbar"/>
-      <PanelsToggle v-if="showPanelsToggle" class="sm:t-self-end t-mt-4 md:t-mt-none" />
+      <PanelsToggle v-if="showPanelsToggle" class="sm:t-ml-auto t-mt-4 md:t-mt-0" />
     </div>
   </div>
 </template>

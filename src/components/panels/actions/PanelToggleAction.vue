@@ -1,6 +1,7 @@
 <template>
   <div class="flex items-center justify-end">
-    <BaseCheckbox tri-state v-model="selectedModel" :label="label" dense size="xs" />
+    <BaseCheckbox id="panel-toggle-action" tri-state v-model="selectedModel" />
+    <label for="panel-toggle-action" class="t-ml-2 t-text-sm">{{ label }}</label>
   </div>
 </template>
 
@@ -33,9 +34,3 @@ watch(
   },
 );
 </script>
-
-<style scoped>
-.q-btn {
-  flex-basis: 0%;
-}
-</style>

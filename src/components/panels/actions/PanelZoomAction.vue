@@ -1,5 +1,5 @@
 <template>
-  <div class="panel-zoom-action items-center flex justify-end">
+  <div class="panel-zoom-action t-items-center t-flex t-space-x-2">
     <BaseButton
       display="flat"
       rounded

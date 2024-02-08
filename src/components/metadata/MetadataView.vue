@@ -1,5 +1,5 @@
 <template>
-  <div class="metadata-view t-overflow-auto t-px-4 t-pt-4">
+  <div class="metadata-view t-overflow-auto t-break-all t-px-4 t-pt-4">
     <CollectionMetadata v-if="options.collection?.all" />
     <ManifestMetadata v-if="options.manifest?.all" />
     <ItemMetadata v-if="options.manifest?.all" />

@@ -29,14 +29,21 @@
       </div>
     </template>
     <template v-else>
-      <div class="t-flex t-items-center t-space-x-2">
+      <div class="t-flex t-items-center t-space-x-4">
         <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`">
           <BaseCheckbox
             :model-value="show"
             @update:model-value="update(i, $event)"
-            :title="handleToggleTitle(i)"
-            :label="$t(label)"
+            :id="`panel-toggle-${i}`"
+            :round="true"
           />
+          <label
+            :title="handleToggleTitle(i)"
+            :for="`panel-toggle-${i}`"
+            class="t-ml-2"
+          >
+            {{ $t(label) }}
+          </label>
         </div>
 
         <BaseButton

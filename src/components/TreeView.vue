@@ -24,6 +24,7 @@
       class="t-w-full"
       unstyled
       selectionMode="single"
+      @node-expand="onLazyLoad"
       @nodeSelect="onNodeSelect"
       :pt="{
       root: 't-relative',
@@ -44,7 +45,7 @@
       //   ]
       // }},
       container: 't-me-4',
-      // node: options => { log(options); return { class: ['', {'t-bg-red-400': options.context.selected === options.instance.key }]} },
+      node: options => { log(options); return { class: ['', {'t-bg-red-400': options.context.selected === options.instance.key }]} },
       content: options => ({
         class: [
           't-flex t-py-2 t-px-3 t-rounded-md t-cursor-pointer',
@@ -54,7 +55,7 @@
       }),
 
       // content: 't-flex t-py-2 t-px-3 t-rounded-md hover:t-bg-zinc-200 dark:hover:t-bg-zinc-700 t-cursor-pointer',
-      toggler: options => { return { class: ['t-border-0 t-me-2', { 't-hidden': options.context.leaf }] } },
+      toggler: options => { return { class: ['t-border-0 t-me-2', { 't-hidden': options.context.leaf && !options.props.node.lazy }] } },
       label: 't-cursor-pointer t-select-none',
       subgroup: 't-ps-4',
       loadingOverlay: 't-absolute t-z-10 t-w-full t-h-full t-flex t-items-center t-justify-center t-bg-white dark:t-bg-zinc-800 t-bg-opacity-75 dark:t-bg-opacity-75'

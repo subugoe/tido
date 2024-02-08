@@ -5,6 +5,7 @@ import App from './App.vue';
 
 import './css/style.css';
 import { getRGBColor } from '@/utils/color';
+import PrimeVue from 'primevue/config';
 
 function generateId() {
   return Math.random().toString(36).slice(2, 16);
@@ -20,6 +21,7 @@ window.Tido = function Tido(config = {}) {
   });
   this.app.provide('config', this.config);
 
+  this.app.use(PrimeVue);
   this.app.use(createStore());
   this.app.use(i18n);
 

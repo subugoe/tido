@@ -1,12 +1,13 @@
 <template>
-  <div class="flex no-wrap justify-end">
+  <div class="t-flex no-wrap t-space-x-2 t-justify-end">
     <Language v-if="showLanguageSwitch" />
     <BaseButton
       display="flat"
       rounded
-      class="dark:t-text-yellow-400 t-text-gray-600"
+      size="normal"
+      class="dark:t-text-yellow-400 t-text-gray-400"
       :icon="isDark ? 'moon' : 'sun'"
-      @click="toggleDark"
+      @click="toggleDark()"
     ></BaseButton>
     <SoftwareInfo />
   </div>
@@ -14,16 +15,16 @@
 
 <script setup>
 
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
-import { useDark, useToggle } from '@vueuse/core';
+import { useToggle } from '@vueuse/core';
+import { isDark } from '@/utils/is-dark';
 import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
 import Language from '@/components/header/Language.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 
 const store = useStore();
 
-const isDark = useDark();
 const toggleDark = useToggle(isDark);
 
 const config = computed(() => store.getters['config/config']);

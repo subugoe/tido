@@ -1,5 +1,5 @@
 <template>
-  <div class="tido t-h-full t-flex t-flex-col t-bg-gray-100 dark:t-bg-gray-900 t-text-gray-600 dark:t-text-gray-200">
+  <div class="tido t-h-full t-flex t-flex-col t-bg-gray-200 dark:t-bg-gray-900 t-text-gray-800 dark:t-text-gray-200">
       <GlobalHeader/>
       <PanelsWrapper v-if="ready"/>
       <div v-else class="t-flex t-relative t-flex-1 t-justify-center t-items-center t-p-4 lg:t-p-6">
@@ -39,13 +39,13 @@ import {
 } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
-import { useDark } from '@vueuse/core';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
 import { delay } from '@/utils';
 import PanelsWrapper from '@/components/panels/PanelsWrapper.vue';
 import Notification from '@/components/Notification.vue';
 import Loading from '@/components/Loading.vue';
 import BaseIcon from '@/components/base/BaseIcon.vue';
+import { initUseDark } from '@/utils/is-dark';
 
 const store = useStore();
 const { t, locale: i18nLocale } = useI18n();
@@ -81,16 +81,11 @@ const collection = computed(() => store.getters['contents/collection']);
 const item = computed(() => store.getters['contents/item']);
 const manifest = computed(() => store.getters['contents/manifest']);
 const manifests = computed(() => store.getters['contents/manifests']);
-
-const isDark = useDark({
-  selector: config.value.container,
-  attribute: 'color-scheme',
-  valueDark: 'dark',
-  valueLight: 'light',
-});
+initUseDark(config.value.container);
 
 onMounted(async () => {
   isLoading.value = true;
+
   // $q.dark.set('auto');
 
   // Whenever the user explicitly chooses light mode

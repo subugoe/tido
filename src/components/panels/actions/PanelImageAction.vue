@@ -9,7 +9,7 @@
       size="small"
       :title="$t(btn.tooltip)"
       :icon="btn.icon"
-      class="t-py-[0.3rem] t-px-2"
+      class="t-py-[0.3rem] t-px-2 t-text-primary"
     >
     </BaseButton>
   </div>

@@ -2,14 +2,14 @@
   <div class="t-flex t-flex-col t-justify-center">
     <template v-if="collectionTitle || manifestTitle">
       <template v-if="collectionTitle">
-        <h1 v-if="collectionTitle" class="t-text-2xl t-mt-2 t-text-bold">
+        <h1 v-if="collectionTitle" class="t-text-2xl t-font-bold">
           {{ collectionTitle }}
         </h1>
         <h2 v-if="manifestTitle" class="t-text-xl t-mt-2 t-mb-6">
           <span>{{ manifestTitle }}</span>
           <BaseIcon
             v-if="item"
-            class="q-px-2 text-gray-500 dark:text-gray-300"
+            class="t-px-2 text-gray-500 dark:text-gray-300"
             name="chevronRight"
           />
           <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
