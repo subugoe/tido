@@ -39,12 +39,19 @@
                     {
                       't-opacity-60 t-cursor-default t-user-select-none t-select-none t-pointer-events-none': props == null ? void 0 : props.disabled
                     },
-                    'after:t-content-[\'\'] ',
 
                   ]
                 }),
               tabpanel: {
-                header: { class: ['t-flex-1'] },
+                // header: options => { log(options); return {} },
+                header: ({ parent, context }) => ({
+                  class: [
+                    't-flex-1 t-relative',
+                    'after:t-content-[\'\'] after:t-absolute after:t-flex after:t-bottom-0 after:t-h-[2px] after:t-w-full after:t-bg-primary',
+                    { 'after:t-opacity-0': parent.state.d_activeIndex !== context.index },
+                    { 'after:t-opacity-1': parent.state.d_activeIndex === context.index }
+                  ]
+                }),
                 headerAction: { class: [
                     't-relative t-cursor-pointer t-border-b t-border-gray-200',
                     't-flex t-items-center t-justify-center','t-px-3 t-pb-3 t-pt-4',
@@ -60,7 +67,7 @@
               },
               inkbar: ({ props, parent, context })=>({
                 class: [
-                  't-flex t-absolute t-bottom-0 t-h-[2px] t-w-1/2 t-bg-primary t-transition-all t-ease-in-out',
+                  't-opacity-0 t-hidden t-absolute t-bottom-0 t-h-[2px] t-w-1/2 t-bg-primary t-transition-all t-ease-in-out',
                 ]
               }),
               root: {
@@ -337,6 +344,7 @@ export default {
       panel: props.panel,
       tabs,
       onViewChange,
+      log: (e) => console.log(e),
     };
   },
 };

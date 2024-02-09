@@ -53,11 +53,14 @@ watch(
   (contentData) => {
     const [hasAnnotations, activeContentUrl] = contentData.split('|');
     if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
+    console.log('types', props.types);
     store.dispatch('annotations/setFilteredAnnotations', props.types);
     highlightTargetsLevel0();
   },
   { immediate: true },
 );
+
+watch(filteredAnnotations, (value) => console.log('types + filtered', props.types, value));
 
 onBeforeUnmount(() => store.dispatch('annotations/resetAnnotations'));
 

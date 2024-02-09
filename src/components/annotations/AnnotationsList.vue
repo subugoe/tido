@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 
 const props = defineProps({
@@ -38,6 +38,8 @@ const props = defineProps({
   },
   types: Array,
 });
+
+watch(() => props.configuredAnnotations, (value) => console.log(value));
 
 const annotationTypesMapping = computed(() => (
   props.types.reduce((prev, curr) => {
