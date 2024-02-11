@@ -52,23 +52,24 @@ watch(
   updateTextHighlighting,
   (contentData) => {
     const [hasAnnotations, activeContentUrl] = contentData.split('|');
-    if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
-    console.log('types', props.types);
+    if (hasAnnotations !== 'true' || activeContentUrl === 'null') return;
+    store.dispatch('annotations/resetAnnotations');
     store.dispatch('annotations/setFilteredAnnotations', props.types);
     highlightTargetsLevel0();
   },
   { immediate: true },
 );
 
-watch(filteredAnnotations, (value) => console.log('types + filtered', props.types, value));
+// watch(filteredAnnotations, (value) => console.log('types + filtered', props.types, value));
 
-onBeforeUnmount(() => store.dispatch('annotations/resetAnnotations'));
+// onBeforeUnmount(() => store.dispatch('annotations/resetAnnotations'));
 
 function addAnnotation(id) {
   store.dispatch('annotations/addActiveAnnotation', id);
 }
 
 function removeAnnotation(id) {
+  console.log('removeAnnotation');
   store.dispatch('annotations/removeActiveAnnotation', id);
 }
 

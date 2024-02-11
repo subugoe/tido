@@ -1,5 +1,5 @@
 <template>
-  <div ref="containerRef" class="tree-view t-px-4 t-pt-4">
+  <div ref="containerRef" class="tree-view t-px-4 t-pt-4 t-h-full t-overflow-auto">
 <!--    <q-tree-->
 <!--      class="item-content"-->
 <!--      :class="$q.dark.isActive ? 'is-dark' : ''"-->
@@ -25,7 +25,7 @@
       unstyled
       selectionMode="single"
       @node-expand="onLazyLoad"
-      @nodeSelect="onNodeSelect"
+      @node-select="onSelectedChange"
       :pt="{
       root: 't-relative',
       wrapper: 't-relative t-overflow-auto',
@@ -45,12 +45,12 @@
       //   ]
       // }},
       container: 't-me-4',
-      node: options => { log(options); return { class: ['', {'t-bg-red-400': options.context.selected === options.instance.key }]} },
+      // node: options => { log(options); return { },
       content: options => ({
         class: [
           't-flex t-py-2 t-px-3 t-rounded-md t-cursor-pointer',
           {'hover:t-bg-zinc-200 dark:hover:t-bg-zinc-700': !options.context.selected },
-          {'t-bg-red-400': options.context.selected }
+          {'t-bg-primary t-text-gray-100': options.context.selected }
         ]
       }),
 
@@ -60,7 +60,9 @@
       subgroup: 't-ps-4',
       loadingOverlay: 't-absolute t-z-10 t-w-full t-h-full t-flex t-items-center t-justify-center t-bg-white dark:t-bg-zinc-800 t-bg-opacity-75 dark:t-bg-opacity-75'
     }"
-    ></Tree>
+    >
+      <template #default="{ node }"><span :id="node.key">{{ node.label }}</span></template>
+    </Tree>
   </div>
 </template>
 
@@ -68,7 +70,7 @@
 import Tree from 'primevue/tree';
 
 import {
-  computed, nextTick, ref, watch,
+  computed, nextTick, onMounted, ref, watch,
 } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
@@ -100,19 +102,14 @@ function log(any) {
   console.log(any);
 }
 
-watch(
-  itemUrl,
-  onItemUrlChange,
-);
-async function onItemUrlChange() {
-  selected.value = itemUrl.value;
-}
+watch(collection, onCollectionChange, { immediate: true });
+watch(manifest, onManifestChange, { immediate: true });
+watch(itemUrl, onItemUrlChange);
+watch(selected, scrollSelectedIntoView, { immediate: true });
 
-watch(
-  collection,
-  onCollectionChange,
-  { immediate: true },
-);
+async function onItemUrlChange() {
+  selected.value = { [itemUrl.value]: true };
+}
 
 function selectNode(value) {
   if (!Object.keys(value).length) return;
@@ -120,53 +117,50 @@ function selectNode(value) {
 }
 
 async function onCollectionChange() {
-  if (collection.value) {
-    emit('loading', true);
-    tree.value = [{
-      key: collectionTitle.value,
-      label: collectionTitle.value,
+  console.log('onCollectionChange');
+  if (!collection.value) return;
+  emit('loading', true);
+  tree.value = [{
+    key: collectionTitle.value,
+    label: collectionTitle.value,
+    selectable: false,
+    url: collectionTitle.value,
+    children: collection.value.sequence.map(({ label: manifestLabel, id: manifestId }, i) => ({
+      key: manifestId,
+      label: manifestLabel ?? getDefaultManifestLabel(i),
+      lazy: true,
+      url: manifestId,
       selectable: false,
-      url: collectionTitle.value,
-      children: collection.value.sequence.map(({ label: manifestLabel, id: manifestId }, i) => ({
-        key: manifestId,
-        label: manifestLabel ?? getDefaultManifestLabel(i),
-        lazy: manifest.value.id !== manifestId,
-        url: manifestId,
-        selectable: false,
-        // Prerender item tree elements for the manifest that should be open at initial load
-        ...((manifest.value.id === manifestId)
-          ? {
-            children: manifest.value.sequence.map(({ id, label: itemLabel }, j) => ({
-              key: id,
-              label: itemLabel ?? getDefaultItemLabel(j),
-              url: id,
-              parent: manifestId,
-              leaf: true,
-              children: [],
-              selectable: true,
-            })),
-          }
-          : {}),
-      }
-      )),
-    }];
+      // Prerender item tree elements for the manifest that should be open at initial load
+      // ...((manifest.value.id === manifestId)
+      //   ? {
+      //     children: manifest.value.sequence.map(({ id, label: itemLabel }, j) => ({
+      //       key: id,
+      //       label: itemLabel ?? getDefaultItemLabel(j),
+      //       url: id,
+      //       parent: manifestId,
+      //       leaf: true,
+      //       children: [],
+      //       selectable: true,
+      //     })),
+      //   }
+      //   : {}),
+    }
+    )),
+  }];
 
-    nextTick(() => {
-      expanded.value = { [collectionTitle.value]: true, [manifest.value.id]: true };
-      selected.value = { [itemUrl.value !== '' ? itemUrl.value : manifest.value.sequence[0]?.id]: true };
-    });
-  }
+  nextTick(() => {
+    expanded.value = { ...expanded.value, [collectionTitle.value]: true };
+    // selected.value = { [itemUrl.value !== '' ? itemUrl.value : manifest.value.sequence[0]?.id]: true };
+    console.log(selected.value);
+  });
 }
 
-watch(
-  manifest,
-  onManifestChange,
-  { immediate: true },
-);
 async function onManifestChange() {
-  return;
+  console.log('onManifestChange');
   const { label, sequence, id: manifestId } = manifest.value;
   if (!collection.value) {
+    // If no collection is present it means that the manifest is our root node
     emit('loading', true);
     await delay(300);
 
@@ -183,85 +177,80 @@ async function onManifestChange() {
     }];
   }
 
-  nextTick(() => {
-    const node = treeRef.value.getNodeByKey(manifestId);
-
-    // We need to remove the lazy loading off of this manifest node and insert children manually,
-    // because Quasar does not trigger lazy loading on this.expanded change.
-    node.lazy = false;
-    node.children = manifest.value.sequence.map(({ id, label: itemLabel }, j) => ({
-      label: itemLabel ?? getDefaultItemLabel(j),
-      url: id,
-      parent: manifestId,
-    }));
-    expanded.value.push(manifestId);
-
-    selected.value = itemUrl.value !== '' ? itemUrl.value : sequence[0]?.id;
-  });
+  const node = getNodeByKey(manifestId, tree.value[0]);
+  console.log(node);
+  node.children = manifest.value.sequence.map(({ id, label: itemLabel }, j) => ({
+    key: id,
+    label: itemLabel ?? getDefaultItemLabel(j),
+    url: id,
+    parent: manifestId,
+    leaf: true,
+    selectable: true,
+  }));
+  expanded.value = { ...expanded.value, [manifestId]: true };
+  selected.value = { [itemUrl.value !== '' ? itemUrl.value : sequence[0]?.id]: true };
 }
 
-watch(
-  selected,
-  onSelectedChange,
-  { immediate: true },
-);
-function onSelectedChange(value) {
-  if (!treeRef.value) return;
+function onSelectedChange(node) {
+  console.log('onSelectedChange', node);
+  // return;
+  // if (!treeRef.value) return;
 
-  const node = treeRef.value.getNodeByKey(value);
-  if (!node) return;
+  // if (!node) return;
+  // console.log(node);
+
+  // const node = treeRef.value.getNodeByKey(value);
+  // if (!node) return;
 
   const { url: _itemUrl, parent: _manifestUrl } = node;
 
-  nextTick(async () => {
-    await delay(600);
-    const el = document.getElementById(itemUrl.value);
-    if (el && !isElementVisible(el, containerRef.value)) {
-      scrollIntoView(el);
-    }
-    await delay(100);
-    emit('loading', false);
-  });
+  // nextTick(async () => {
+  //   await delay(600);
+  //   const el = document.getElementById(itemUrl.value);
+  //   if (el && !isElementVisible(el, containerRef.value)) {
+  //     scrollIntoView(el);
+  //   }
+  //   await delay(100);
+  //   emit('loading', false);
+  // });
 
-  if (_itemUrl === itemUrl.value) return;
+  // if (_itemUrl === itemUrl.value) return;
 
   if (_manifestUrl !== manifest.value.id) {
     store.dispatch('contents/initManifest', _manifestUrl);
     store.dispatch('config/setDefaultActiveViews');
-    expanded.value.push(_manifestUrl);
+    expanded.value = { ...expanded.value, [_manifestUrl]: true };
   }
 
-  if (!expanded.value.includes(_manifestUrl)) expanded.value.push(_manifestUrl);
+  // if (!expanded.value.includes(_manifestUrl)) expanded.value.push(_manifestUrl);
 
   store.dispatch('contents/initItem', _itemUrl);
+}
+
+function scrollSelectedIntoView() {
+  nextTick(() => {
+    const el = document.getElementById(itemUrl.value);
+    console.log(el);
+    if (el && !isElementVisible(el, containerRef.value)) {
+      scrollIntoView(el);
+    }
+  });
 }
 
 async function getManifest(url) {
   return request(url);
 }
 
-async function onLazyLoad({ node, fail, done }) {
-  const { url, children } = node;
-  if (!url) {
-    done(children);
-    return;
-  }
-
+async function onLazyLoad(node) {
+  console.log('onLazyLoad');
+  const { url } = node;
   const manifest = await getManifest(url);
 
-  if (!manifest) {
-    fail();
-    return;
-  }
-
-  const itemNodes = manifest.sequence.map(({ id, label: itemLabel }, j) => ({
+  node.children = manifest.sequence.map(({ id, label: itemLabel }, j) => ({
     label: itemLabel ?? getDefaultItemLabel(j),
     url: id,
     parent: manifest.id,
   }));
-
-  if (itemNodes) done(itemNodes);
-  else fail();
 }
 
 function getDefaultManifestLabel(index) {
@@ -276,5 +265,13 @@ function getDefaultItemLabel(index) {
 
 function scrollIntoView(el) {
   el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+function getNodeByKey(key, root) {
+  console.log(root.url, key);
+  if (root.url === key) return root;
+  if (!root.children) return null;
+
+  return root.children.find((child) => !!(getNodeByKey(key, child)));
 }
 </script>

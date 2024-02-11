@@ -79,9 +79,12 @@
             }"
         >
           <TabPanel v-for="(tab, i) in tabs" :key="tab.id" :header="$t(tab.label)" unstyled>
-            <component :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
+<!--            <component :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />-->
           </TabPanel>
         </TabView>
+        <div v-for="(tab, i) in tabs" :key="tab.id" :header="$t(tab.label)" class="t-overflow-hidden">
+          <component v-if="activeTabIndex === i" :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
+        </div>
       </template>
       <template v-else-if="tabs.length === 1">
         <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />
@@ -244,7 +247,7 @@ export default {
       const selected = false;
       const events = {
         update: (value) => {
-          if (value === 'maybe') return;
+          if (value === null) return;
           store.dispatch(value ? 'annotations/selectAll' : 'annotations/selectNone');
         },
       };
@@ -334,7 +337,8 @@ export default {
       return contentItem ? contentItem.url : null;
     }
 
-    function onViewChange() {
+    function onViewChange(index) {
+      activeTabIndex.value = index;
       emit('active-view', activeTabIndex.value);
     }
 
