@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Checkbox from 'primevue/checkbox'
 import TriStateCheckbox from 'primevue/tristatecheckbox'
+import { getIcon } from '@/utils/icons';
 
 const props = withDefaults(defineProps<{
   id: string,
@@ -47,16 +48,16 @@ const pdt = {
 
 const pt = {
   root: {
-    class: ["t-relative", "t-inline-flex", "t-align-bottom", "t-w-5", "t-h-5", "t-cursor-pointer", "t-select-none"]
+    class: ["t-relative", "t-inline-flex", "t-align-bottom", "t-w-[18px]", "t-h-[18px]", "t-cursor-pointer", "t-select-none"]
   },
   box: ({ props: e, context: r }) => ({
     class:[
-      "t-flex","t-items-center","t-justify-center","t-w-5","t-h-5","t-border",
+      "t-flex","t-items-center","t-justify-center","t-w-[18px]","t-h-[18px]","t-border",
       { 't-rounded-md': !props.round },
       { 't-rounded-full': props.round },
       {
         "t-border-gray-300": !r.checked,
-        "t-border-primary t-bg-primary dark:t-border-primary dark:t-bg-primary": r.checked
+        "t-border-primary t-bg-primary dark:t-border-primary dark:t-bg-primary": r.checked || props.modelValue === null
       },
       {
         "t-bg-gray-50 dark:t-bg-gray-800 t-border-gray-300 dark:t-border-gray-600 peer-hover:t-border-gray-400 dark:peer-hover:t-border-gray-500": !e.disabled && !r.checked,
@@ -74,25 +75,29 @@ const pt = {
     class: ["t-leading-none", "t-w-4", "t-h-2.5", "t-text-white", "t-transition-all", "t-duration-200"]
   }
 }
-
-
 </script>
 <template>
   <Checkbox
-    v-if="!triState"
+
     :model-value="modelValue"
     @update:modelValue="emit('update:modelValue', $event)"
     :binary="true"
     :inputId="id"
     :pt="pt"
     unstyled
-  />
-  <TriStateCheckbox
-    v-else
-    unstyled
-    :model-value="modelValue"
-    @update:modelValue="emit('update:modelValue', $event)"
-    :pt="pt"
-    aria-label="Remember Me"
-  />
+  >
+    <template #icon="slotProps">
+      <i v-if="modelValue === null" v-html="getIcon('minus')" class="t-leading-none t-w-[18px] t-h-[18px] t-text-lg t-text-white t-transition-all t-flex t-items-center t-justify-center"></i>
+      <i v-else-if="modelValue === true" v-html="getIcon('check')" class="t-leading-none t-w-[18px] t-h-[18px] t-scale-[1.45] t-text-white t-transition-all t-flex t-items-center t-justify-center"></i>
+    </template>
+  </Checkbox>
+<!--  <TriStateCheckbox-->
+<!--    v-if="!triState"-->
+<!--    unstyled-->
+<!--    :model-value="modelValue"-->
+<!--    @update:modelValue="emit('update:modelValue', $event)"-->
+<!--    :pt="pt"-->
+<!--  >-->
+<!--    <template #uncheckicon><i></i></template>-->
+<!--  </TriStateCheckbox>-->
 </template>

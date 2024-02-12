@@ -66,7 +66,7 @@ if (props.display === 'link') {
   _icon = 'heroicons:arrow-right-20-solid';
 }
 
-classes['focus:t-outline-none focus:t-ring-4 t-font-medium t-flex t-items-center t-justify-center'] = true;
+classes['focus-visible:t-outline-none focus-visible:t-ring-4 t-font-medium t-flex t-items-center t-justify-center'] = true;
 
 classes['t-rounded-md'] = !_rounded;
 classes['t-rounded-full'] = _rounded;
@@ -99,18 +99,17 @@ classes['t-text-sm t-leading-2'] = props.size === 'small';
 // Font Size Tiny
 classes['t-text-xs t-leading-3'] = props.size === 'tiny';
 
-classes['focus:t-ring-primary focus:t-ring-opacity-25 dark:focus:t-ring-primary-300 dark:focus:t-ring-opacity-50 t-bg-primary t-text-white hover:t-bg-primary-700 '
-  + 'dark:t-bg-primary dark:hover:t-bg-primary dark:focus:t-ring-green-800'] = props.display === 'filled';
+classes['focus-visible:t-ring-primary focus-visible:t-ring-opacity-25 dark:focus-visible:t-ring-primary dark:focus-visible:t-ring-opacity-50 t-bg-primary t-text-white hover:t-bg-primary-700 '
+  + 'dark:t-bg-primary dark:hover:t-bg-primary dark:focus:t-ring-green-800 hover:t-bg-primary-accent'] = props.display === 'filled';
 
-classes['focus:t-ring-primary focus:t-ring-opacity-25 dark:focus:t-ring-primary-300 dark:focus:t-ring-opacity-50 t-bg-none t-text-primary hover:t-underline '
-  + 'dark:focus:t-ring-green-800'] = props.display === 'link';
+classes['focus-visible:t-ring-primary focus-visible:t-ring-opacity-25 dark:focus-visible:t-ring-primary dark:focus-visible:t-ring-opacity-50 t-bg-none t-text-primary hover:t-underline'] = props.display === 'link';
 
 classes['t-bg-white t-text-dark t-border t-border-zinc-400 focus:t-ring-zinc-300 focus:t-ring-opacity-50 hover:t-bg-zinc-100 dark:t-bg-zinc-800'] = props.display === 'mono';
 
 classes['t-bg-none t-text-primary t-border t-border-primary focus:t-ring-zinc-300 focus:t-ring-opacity-50 hover:t-bg-primary-50 dark:hover:t-bg-zinc-800'] = props.display === 'outline';
 
 classes['t-bg-transparent hover:t-bg-zinc-100 dark:hover:t-bg-zinc-600 '
-  + 'focus:t-ring-primary dark:focus:t-ring-primary-300 dark:focus:t-ring-opacity-50 focus:t-ring-opacity-25'] = props.display === 'flat';
+  + 'focus-visible:t-ring-primary dark:focus-visible:t-ring-primary-300 dark:focus-visible:t-ring-opacity-50 focus-visible:t-ring-opacity-25'] = props.display === 'flat';
 
 </script>
 <template>

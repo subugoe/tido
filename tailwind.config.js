@@ -25,6 +25,7 @@ export default {
     extend: {
       colors: {
         primary: withOpacity('--color-primary'),
+        'primary-accent': withOpacity('--color-primary-accent'),
         gray: colors.neutral,
       },
     },
