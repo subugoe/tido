@@ -1,9 +1,8 @@
 <template>
   <BaseIcon
     v-if="name"
-    class="dark:text-gray-300 text-primary"
+    class="dark:text-gray-300 t-text-primary"
     :name="name"
-    size="16px"
   />
 </template>
 

@@ -46,10 +46,10 @@
                 // header: options => { log(options); return {} },
                 header: ({ parent, context }) => ({
                   class: [
-                    't-flex-1 t-relative',
+                    't-flex-1 t-relative t-text-sm',
                     'after:t-content-[\'\'] after:t-absolute after:t-flex after:t-bottom-0 after:t-h-[2px] after:t-w-full after:t-bg-primary',
                     { 'after:t-opacity-0': parent.state.d_activeIndex !== context.index },
-                    { 'after:t-opacity-1': parent.state.d_activeIndex === context.index }
+                    { 't-text-primary after:t-opacity-1': parent.state.d_activeIndex === context.index }
                   ]
                 }),
                 headerAction: { class: [
@@ -82,7 +82,7 @@
 <!--            <component :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />-->
           </TabPanel>
         </TabView>
-        <div v-for="(tab, i) in tabs" :key="tab.id" :header="$t(tab.label)" class="t-overflow-hidden">
+        <div v-for="(tab, i) in tabs" :key="tab.id" class="t-overflow-hidden">
           <component v-if="activeTabIndex === i" :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
         </div>
       </template>

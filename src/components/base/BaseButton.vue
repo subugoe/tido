@@ -66,7 +66,7 @@ if (props.display === 'link') {
   _icon = 'heroicons:arrow-right-20-solid';
 }
 
-classes['focus-visible:t-outline-none focus-visible:t-ring-4 t-font-medium t-flex t-items-center t-justify-center'] = true;
+classes['focus-visible:t-outline-none focus-visible:t-ring-4 t-flex t-items-center t-justify-center'] = true;
 
 classes['t-rounded-md'] = !_rounded;
 classes['t-rounded-full'] = _rounded;

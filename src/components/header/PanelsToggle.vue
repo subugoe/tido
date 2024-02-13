@@ -40,7 +40,7 @@
           <label
             :title="handleToggleTitle(i)"
             :for="`panel-toggle-${i}`"
-            class="t-ml-2"
+            class="t-ml-2 t-text-sm"
           >
             {{ $t(label) }}
           </label>

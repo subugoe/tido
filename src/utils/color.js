@@ -5,5 +5,5 @@ export const getRGBColor = (hex, type) => {
   const g = parseInt(color.substr(2, 2), 16);
   const b = parseInt(color.substr(4, 2), 16);
 
-  return `--color-${type}: ${r}, ${g}, ${b}; --color-${type}-accent: ${r - 10}, ${g - 10}, ${b - 10};`;
+  return `--color-${type}: ${r}, ${g}, ${b}; --color-${type}-accent: ${r - 15}, ${g - 15}, ${b - 15};`;
 };

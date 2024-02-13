@@ -53,11 +53,11 @@ const pt = {
   box: ({ props: e, context: r }) => ({
     class:[
       "t-flex","t-items-center","t-justify-center","t-w-[18px]","t-h-[18px]","t-border",
-      { 't-rounded-md': !props.round },
+      { 't-rounded': !props.round },
       { 't-rounded-full': props.round },
       {
         "t-border-gray-300": !r.checked,
-        "t-border-primary t-bg-primary dark:t-border-primary dark:t-bg-primary": r.checked || props.modelValue === null
+        "t-border-primary t-bg-primary hover:t-bg-primary-accent dark:t-border-primary dark:t-bg-primary": r.checked || props.modelValue === null
       },
       {
         "t-bg-gray-50 dark:t-bg-gray-800 t-border-gray-300 dark:t-border-gray-600 peer-hover:t-border-gray-400 dark:peer-hover:t-border-gray-500": !e.disabled && !r.checked,
@@ -69,7 +69,7 @@ const pt = {
     ]
   }),
     input: {
-    class: ["t-peer", "t-w-full ", "t-h-full", "t-absolute", "t-top-0 t-left-0", "t-z-10", "t-p-0", "t-m-0", "t-opacity-0", "t-rounded-md", "t-outline-none", "t-border", "t-appareance-none", "t-cursor-pointer"]
+    class: ["t-peer", "t-w-full ", "t-h-full", "t-absolute", "t-top-0 t-left-0", "t-z-10", "t-p-0", "t-m-0", "t-opacity-0", "t-rounded-md", "t-outline-none", "t-border", "t-appearance-none", "t-cursor-pointer"]
   },
   icon: {
     class: ["t-leading-none", "t-w-4", "t-h-2.5", "t-text-white", "t-transition-all", "t-duration-200"]
@@ -78,7 +78,6 @@ const pt = {
 </script>
 <template>
   <Checkbox
-
     :model-value="modelValue"
     @update:modelValue="emit('update:modelValue', $event)"
     :binary="true"

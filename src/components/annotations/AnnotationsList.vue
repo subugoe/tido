@@ -5,12 +5,13 @@
       :data-annotation-id="annotation.id"
       :key="annotation.id"
       :class="[
-        't-pa-2 t-pl-1 t-mb-1',
-        { 't-bg-gray-400 dark:t-bg-gray-600 active': isActive(annotation) }
+        't-py-2 t-px-3 t-mb-1 t-rounded-md t-cursor-pointer',
+        { 'hover:t-bg-gray-200': !isActive(annotation) },
+        { 't-bg-gray-300 dark:t-bg-gray-600 active': isActive(annotation) }
       ]"
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
-      <div class="t-flex t-items-center">
+      <div class="t-flex t-items-center t-space-x-2">
         <AnnotationIcon v-if="!isText(annotation)" :name="getIconName(annotation.body['x-content-type'])" />
         <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
         <span v-html="annotation.body.value" />
