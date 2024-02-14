@@ -1,6 +1,6 @@
 <template>
-  <div class="item-content t-flex-1 t-flex t-flex-col t-overflow-hidden t-rounded-md t-bg-gray-50 dark:t-bg-gray-800 t-border dark:t-border-gray-600">
-    <div class="panel-header t-pt-3 t-pb-3 t-pr-4 t-pl-4 t-flex t-justify-between t-items-center">
+  <div class="panel t-flex-1 t-flex t-flex-col t-overflow-hidden t-rounded-md t-bg-gray-50 dark:t-bg-gray-800 t-border dark:t-border-gray-600">
+    <div class="panel-header t-py-3 t-px-4 t-flex t-justify-between t-items-center">
       <div class="caption t-font-bold">
         <!-- We display the tab label as panel label when there is only one tab -->
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
@@ -79,12 +79,12 @@
             }"
         >
           <TabPanel v-for="(tab, i) in tabs" :key="tab.id" :header="$t(tab.label)" unstyled>
-<!--            <component :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />-->
+            <component v-if="activeTabIndex === i" :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
           </TabPanel>
         </TabView>
-        <div v-for="(tab, i) in tabs" :key="tab.id" class="t-overflow-hidden">
-          <component v-if="activeTabIndex === i" :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
-        </div>
+<!--        <div v-for="(tab, i) in tabs" :key="tab.id" class="t-overflow-hidden">-->
+<!--          <component v-if="activeTabIndex === i" :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />-->
+<!--        </div>-->
       </template>
       <template v-else-if="tabs.length === 1">
         <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />

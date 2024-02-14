@@ -1,9 +1,10 @@
 <template>
-  <div class="item-content t-overflow-auto">
+  <div class="annotations-list t-overflow-auto">
     <div
       v-for="annotation in configuredAnnotations"
       :data-annotation-id="annotation.id"
       :key="annotation.id"
+      class="item"
       :class="[
         't-py-2 t-px-3 t-mb-1 t-rounded-md t-cursor-pointer',
         { 'hover:t-bg-gray-200': !isActive(annotation) },

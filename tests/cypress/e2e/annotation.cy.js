@@ -1,5 +1,12 @@
 import { ahiqarApiBaseUrl, gflApiBaseUrl } from '../support/globals';
 
+const selectors = {
+  list: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list',
+  listItem: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list .item',
+  listOfSecondTab: '.panels-wrapper > .panel:nth-child(4) [role="tabpanel"]:nth-child(2) .annotations-list',
+  tab: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] [data-pc-section="nav"] [data-pc-name="tabpanel"]'
+}
+
 describe('Annotation', () => {
   describe('Multiple Tabs', () => {
     beforeEach(() => {
@@ -7,34 +14,34 @@ describe('Annotation', () => {
         .visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r7vd/130/latest/item.json`)
         .get('#text-content')
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
+        .get(selectors.list)
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .should('be.visible');
     });
 
     it('Should display first annotation tab', () => {
       cy
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .first()
-        .should('have.class', 'q-tab--active');
+        .should('have.attr', 'data-p-active', 'true');
 
       cy
-        .get('.panels-target > .item:nth-child(4) .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .contains('حيقار');
     });
 
     it('Should switch to second annotation tab', () => {
       cy
-        .get('.panels-target > .item:nth-child(4) .q-list')
+        .get(selectors.list)
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .eq(1)
         .click()
         .wait(400) // wait for tab switch transition
-        .should('have.class', 'q-tab--active')
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .should('have.attr', 'data-p-active', 'true')
+        .get(selectors.listItem)
         .eq(0)
         .contains('Successful courtier');
     });
@@ -45,55 +52,55 @@ describe('Annotation', () => {
         .click()
         .get('#text-content')
         .contains('ذلك')
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
+        .get(selectors.list)
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .first()
-        .should('have.class', 'q-tab--active')
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .should('have.attr', 'data-p-active', 'true')
+    .get(selectors.listItem)
         .first()
         .contains('نادان');
     });
 
     it('Should stay on second tab when switch item', () => {
       cy
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .eq(1)
         .click()
         .wait(400) // wait for tab switch transition
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
+        .get(selectors.list)
         .should('be.visible')
         .get('button.next-item')
         .click()
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .contains('Successful courtier');
     });
 
     it('Should switch to first tab when switch manifest', () => {
       cy
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .eq(1)
         .click()
         .get('button.previous-item')
         .click()
-        .get('.panels-target > .item:nth-child(4) .q-panel:nth-child(2) .q-list')
+        .get(selectors.listOfSecondTab)
         .should('be.visible')
         .get('.panels-target > .item:nth-child(3) #text-content')
         .contains('وورمت')
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .first()
-        .should('have.class', 'q-tab--active');
+        .should('have.attr', 'data-p-active', 'true');
     });
 
     it('Should select all from panel action', () => {
       cy
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.panel-header .actions > div:first-child .q-checkbox')
         .click()
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .should('have.class', 'active')
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.panel-header .actions > div:first-child .q-checkbox')
         .should('have.attr', 'aria-checked', 'true')
         .get('.panels-target > .item:nth-child(3)')
@@ -103,18 +110,18 @@ describe('Annotation', () => {
 
     it('Should unselect all from panel action', () => {
       cy
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.panel-header .actions > div:first-child .q-checkbox')
         .click()
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .should('have.class', 'active')
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.panel-header .actions > div:first-child .q-checkbox')
         .should('have.attr', 'aria-checked', 'true')
         .click()
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .should('not.have.class', 'active')
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.panel-header .actions > div:first-child .q-checkbox')
         .should('have.attr', 'aria-checked', 'false')
         .get('.panels-target > .item:nth-child(3)')
@@ -124,12 +131,12 @@ describe('Annotation', () => {
 
     it('Should select one annotation', () => {
       cy
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.q-tab-panel .q-list .q-item')
         .first()
         .click()
         .should('have.class', 'active')
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.panel-header .actions > div:first-child .q-checkbox')
         .should('have.attr', 'aria-checked', 'mixed')
         .get('.panels-target > .item:nth-child(3)')
@@ -139,19 +146,19 @@ describe('Annotation', () => {
 
     it('Should unselect one annotation', () => {
       cy
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.q-tab-panel .q-list .q-item')
         .first()
         .click()
         .should('have.class', 'active')
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.panel-header .actions > div:first-child .q-checkbox')
         .should('have.attr', 'aria-checked', 'mixed')
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.q-tab-panel .q-list .q-item')
         .first()
         .click()
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.panel-header .actions > div:first-child .q-checkbox')
         .should('have.attr', 'aria-checked', 'false')
         .get('.panels-target > .item:nth-child(3)')
@@ -167,7 +174,7 @@ describe('Annotation', () => {
       cy
         .get('.panels-target > .item:nth-child(3) .content-view')
         .scrollTo('bottom')
-        .get('.panels-target > .item:nth-child(4)')
+        .get('.panels-wrapper > .panel:nth-child(4)')
         .find('.q-tab-panel .q-list .q-item')
         .first()
         .click()
