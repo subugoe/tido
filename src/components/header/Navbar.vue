@@ -1,5 +1,5 @@
 <template>
-  <div class="t-flex">
+  <div class="t-flex t-space-x-2">
     <BaseButton
       v-if="manifest"
       :disable="!hasPrev"
@@ -7,7 +7,7 @@
       size="small"
       icon="arrowLeft"
       @click="prev"
-      class="t-mr-2"
+      class="prev-button"
     />
 
     <BaseButton
@@ -18,6 +18,7 @@
       icon="arrowRight"
       icon-position="right"
       @click="next"
+      class="next-button"
     />
   </div>
 </template>

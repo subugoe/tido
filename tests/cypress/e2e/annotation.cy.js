@@ -4,7 +4,18 @@ const selectors = {
   list: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list',
   listItem: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list .item',
   listOfSecondTab: '.panels-wrapper > .panel:nth-child(4) [role="tabpanel"]:nth-child(2) .annotations-list',
-  tab: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] [data-pc-section="nav"] [data-pc-name="tabpanel"]'
+  tab: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] [data-pc-section="nav"] [data-pc-name="tabpanel"]',
+  nextButton: '.next-button',
+  prevButton: '.prev-button',
+  text: '.panels-wrapper > .panel:nth-child(3) #text-content',
+  annotationPanelActionCheckbox: '.panel-header .actions > div:first-child #panel-toggle-action',
+  panel2: '.panels-wrapper > .panel:nth-child(2)',
+  panel3: '.panels-wrapper > .panel:nth-child(3)',
+  panel4: '.panels-wrapper > .panel:nth-child(4)',
+}
+
+const gflSelectors = {
+  listItem: '.panels-wrapper > .panel:nth-child(3) [role="tablist"] .annotations-list .item',
 }
 
 describe('Annotation', () => {
@@ -12,7 +23,7 @@ describe('Annotation', () => {
     beforeEach(() => {
       cy
         .visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r7vd/130/latest/item.json`)
-        .get('#text-content')
+        .get(selectors.text)
         .should('be.visible')
         .get(selectors.list)
         .should('be.visible')
@@ -48,9 +59,9 @@ describe('Annotation', () => {
 
     it('Should stay on first tab when switch item', () => {
       cy
-        .get('button.next-item')
+        .get(selectors.nextButton)
         .click()
-        .get('#text-content')
+        .get(selectors.text)
         .contains('ذلك')
         .get(selectors.list)
         .should('be.visible')
@@ -70,7 +81,7 @@ describe('Annotation', () => {
         .wait(400) // wait for tab switch transition
         .get(selectors.list)
         .should('be.visible')
-        .get('button.next-item')
+        .get(selectors.nextButton)
         .click()
         .get(selectors.listItem)
         .first()
@@ -82,11 +93,11 @@ describe('Annotation', () => {
         .get(selectors.tab)
         .eq(1)
         .click()
-        .get('button.previous-item')
-        .click()
         .get(selectors.listOfSecondTab)
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(3) #text-content')
+        .get(selectors.prevButton)
+        .click()
+        .get(selectors.text)
         .contains('وورمت')
         .get(selectors.tab)
         .first()
@@ -95,73 +106,76 @@ describe('Annotation', () => {
 
     it('Should select all from panel action', () => {
       cy
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
         .click()
         .get(selectors.listItem)
         .should('have.class', 'active')
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'true')
-        .get('.panels-target > .item:nth-child(3)')
+        .get(selectors.panel3)
         .find('#text-content [data-annotation-ids][data-annotation-level="1"]')
         .should('have.length', 16);
     });
 
     it('Should unselect all from panel action', () => {
       cy
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
         .click()
         .get(selectors.listItem)
         .should('have.class', 'active')
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'true')
         .click()
         .get(selectors.listItem)
         .should('not.have.class', 'active')
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'false')
-        .get('.panels-target > .item:nth-child(3)')
+        .get(selectors.panel3)
         .find('#text-content [data-annotation-ids][data-annotation-level="1"]')
         .should('have.length', 0);
     });
 
     it('Should select one annotation', () => {
       cy
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .click()
         .should('have.class', 'active')
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'mixed')
-        .get('.panels-target > .item:nth-child(3)')
+        .get(selectors.panel3)
         .find('#text-content [data-annotation-ids][data-annotation-level="1"]')
         .should('have.length', 1);
     });
 
     it('Should unselect one annotation', () => {
       cy
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .click()
         .should('have.class', 'active')
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'mixed')
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .click()
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'false')
-        .get('.panels-target > .item:nth-child(3)')
+        .get(selectors.panel3)
         .find('#text-content [data-annotation-ids][data-annotation-level="1"]')
         .should('have.length', 0);
     });
@@ -172,10 +186,9 @@ describe('Annotation', () => {
       // because there is a problem with initial scrolling of text panel.
       // Somehow it works when scroll programmatically like described above.
       cy
-        .get('.panels-target > .item:nth-child(3) .content-view')
+        .get('.panels-wrapper > .panel:nth-child(3) .content-view')
         .scrollTo('bottom')
-        .get('.panels-wrapper > .panel:nth-child(4)')
-        .find('.q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .click()
         .get('#t_Mingana_ar_christ_93_84_MD1816225N1l5l3l5l5l47l3l2_1')
@@ -188,20 +201,18 @@ describe('Annotation', () => {
       cy.visit(`/gfl-local.html?item=${gflApiBaseUrl}/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page1/latest/item.json`)
 
       cy
-        .get('.panels-target > .item:nth-child(2)')
+        .get(selectors.panel2)
         .should('be.visible')
         .contains('Edierter Text')
         .click();
 
       cy
-        .get('.panels-target > .item:nth-child(3)')
+        .get(selectors.panel3)
         .should('be.visible')
-        .within(() => {
-          cy
-            .get('.q-tab-panel .q-list .q-item:first-child')
-            .as('annotationItem')
-            .should('be.visible');
-        });
+        .get(gflSelectors.listItem)
+        .first()
+        .as('annotationItem')
+        .should('be.visible');
     });
 
     it('should not be selectable when clicked', () => {
@@ -218,8 +229,8 @@ describe('Annotation', () => {
         .should('have.length', 1) // retry until we have only one subject
         .within(() => {
           cy
-            .get('.q-item__section--avatar')
-            .should('be.empty');
+            .get('i')
+            .should('not.exist');
         });
     });
   });

@@ -18,34 +18,6 @@ const emit = defineEmits<{
   (event: 'update:modelValue', payload: boolean): void;
 }>()
 
-const pdt = {
-  root: ({ context }) => ({
-    class: [
-      't-relative t-inline-flex t-w-[20px] t-h-[20px] t-overflow-hidden',
-      't-border t-border-gray-300 dark:t-border-gray-600 hover:dark:t-border-primary t-transition-colors t-cursor-pointer',
-      { 't-rounded-md': !props.round },
-      { 't-rounded-full': props.round },
-      'focus:t-ring focus:t-ring-opacity-25 focus:t-ring-primary',
-      {
-        't-bg-gray-50 dark:t-bg-gray-700 hover:t-border-gray-400': !context.checked,
-        't-bg-primary text-white hover:t-bg-primary t-border-primary dark:t-border-primary': context.checked,
-      }
-    ]
-  }),
-  input: {
-    class: 't-absolute t-top-0 t-left-0 t-w-full t-h-full t-m-0 t-p-0 t-opacity-0 t-outline-none t-appearance-none t-z-1'
-  },
-  box: ({ context }) => ({
-    class: [
-      't-w-full t-h-full t-flex t-justify-center t-items-center',
-      {
-        't-bg-gray-50 dark:t-bg-gray-700': !context.checked,
-        't-bg-primary t-text-white hover:t-bg-primary': context.checked,
-      }
-    ]
-  })
-};
-
 const pt = {
   root: {
     class: ["t-relative", "t-inline-flex", "t-align-bottom", "t-w-[18px]", "t-h-[18px]", "t-cursor-pointer", "t-select-none"]
@@ -75,6 +47,12 @@ const pt = {
     class: ["t-leading-none", "t-w-4", "t-h-2.5", "t-text-white", "t-transition-all", "t-duration-200"]
   }
 }
+
+function getAriaChecked() {
+  if (props.modelValue === null) return 'mixed'
+  if (props.modelValue === true) return 'true'
+  else return 'false'
+}
 </script>
 <template>
   <Checkbox
@@ -83,6 +61,7 @@ const pt = {
     :binary="true"
     :inputId="id"
     :pt="pt"
+    :aria-checked="getAriaChecked()"
     unstyled
   >
     <template #icon="slotProps">
@@ -90,13 +69,4 @@ const pt = {
       <i v-else-if="modelValue === true" v-html="getIcon('check')" class="t-leading-none t-w-[18px] t-h-[18px] t-scale-[1.45] t-text-white t-transition-all t-flex t-items-center t-justify-center"></i>
     </template>
   </Checkbox>
-<!--  <TriStateCheckbox-->
-<!--    v-if="!triState"-->
-<!--    unstyled-->
-<!--    :model-value="modelValue"-->
-<!--    @update:modelValue="emit('update:modelValue', $event)"-->
-<!--    :pt="pt"-->
-<!--  >-->
-<!--    <template #uncheckicon><i></i></template>-->
-<!--  </TriStateCheckbox>-->
 </template>
