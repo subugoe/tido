@@ -122,6 +122,7 @@ async function getCollection(url) {
 async function loadConfig() {
   try {
     const config = inject('config');
+    console.log('Config in load Config function:', config);
     await store.dispatch('config/load', config);
   } catch ({ title, message }) {
     errorTitle.value = t('config_error');
@@ -135,24 +136,40 @@ async function getItem(url) {
   await store.dispatch('contents/initItem', url);
 }
 async function init() {
+  console.log("config after load()", config);
   const { collection, manifest, item } = config.value;
+
+  console.log("Collection in init()", collection);
+  console.log("Manifest in init ()", manifest);
+  console.log('Item in init()', item);
 
   try {
     // We want to preload all required data that the components need.
+
+    /*
     // Initialize priority:
     // We always load the item first as here is the main data that we want to display.
+    console.log("item in init()", item);
     if (item) {
+      console.log("getting item in init()");
       await getItem(item);
     }
+
+    */
 
     // After that we load additionally the parent objects.
     // If a collection is given we ignore the manifest setting
     // and try to figure out the correct manifest by searching for the above item.
     // Otherwise, no collection is given but a single manifest instead, so we load that manifest.
+    console.log("collection", collection);
     if (collection) {
       await getCollection(collection);
     } else if (manifest) {
+      console.log('getting manifest');
       await getManifest(manifest);
+    } else {
+      alert('There should exist a collection or a manifest in config');
+      throw 'There should exist a collection or a manifest';
     }
   } catch (e) {
     await delay(1000);
