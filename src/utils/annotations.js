@@ -287,11 +287,14 @@ export function generateTargetSelector(annotation) {
 
   let result = null;
 
-  const { selector } = annotation.target;
+  console.log('Type of target',typeof annotation.target);
+  console.log('Annotation target', annotation.target);
+  console.log('Is target Array', annotation.target instanceof Array);
+  const { selector } = (annotation.target.length > 0) ? annotation.target[0] : null;
+  //const selector = (annotation.target.length > 0) ? annotation.target[0] : null;
 
   if (!selector) {
-    let targetId = annotation.target.id;
-
+    let targetId = annotation.id;
     if (targetId) {
       targetId = targetId.split('/').pop();
       result = `#annotation-${targetId}`;

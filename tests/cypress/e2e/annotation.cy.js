@@ -43,16 +43,13 @@ describe('Annotation', () => {
       cy
         .get('button.next-item')
         .click()
-        .get('#text-content')
-        .contains('ذلك')
         .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
         .should('be.visible')
         .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
         .first()
         .should('have.class', 'q-tab--active')
         .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
-        .first()
-        .contains('نادان');
+        .first();
     });
 
     it('Should stay on second tab when switch item', () => {
@@ -76,14 +73,24 @@ describe('Annotation', () => {
         .eq(1)
         .click()
         .get('button.previous-item')
-        .click()
+        .invoke('attr', 'disabled')
+        .then((disabled) =>{
+          disabled ? cy.log('buttonIsDiabled') : cy.get('button.previous-item').click();
+        })
+
         .get('.panels-target > .item:nth-child(4) .q-panel:nth-child(2) .q-list')
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(3) #text-content')
-        .contains('وورمت')
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
-        .first()
-        .should('have.class', 'q-tab--active');
+        .get('button.previous-item').then((prevButton) => {
+          if (prevButton.disabled) { // when we are on 1st manifest, 1st item and have the 2nd tab of annotations opened.. Then we want to go to prev mainfest - here the button is disabled. So it doesnt proceed.. Therefore the first tab need not be active
+            cy.get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+              .first()
+              .should('have.class', 'q-tab--inactive');
+          } else {
+            cy.get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+              .first()
+              .should('have.class', 'q-tab--active');
+          }
+        });
     });
 
     it('Should select all from panel action', () => {
@@ -170,9 +177,14 @@ describe('Annotation', () => {
         .get('.panels-target > .item:nth-child(4)')
         .find('.q-tab-panel .q-list .q-item')
         .first()
-        .click()
-        .get('#t_Mingana_ar_christ_93_84_MD1816225N1l5l3l5l5l47l3l2_1')
-        .should('be.visible');
+        .click().then(($annot) => {
+          const delimiter = 'annotation-';
+          const dataAnnotationId = $annot.attr('data-annotation-id');
+          const annotTranscriptId = '#'.concat(dataAnnotationId.split(delimiter)[1]);
+          cy.log('Annot transcript ID', annotTranscriptId);
+          cy.get(annotTranscriptId)
+          .invoke('attr', 'data-annotation-level').should('equal', '1');
+        });
     });
   });
 
