@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-end">
+  <div class="t-flex t-items-center">
     <BaseCheckbox id="panel-toggle-action" tri-state v-model="selectedModel" />
     <label for="panel-toggle-action" class="t-ml-2 t-text-sm">{{ label }}</label>
   </div>

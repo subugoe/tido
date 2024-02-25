@@ -2,7 +2,7 @@
   <div class="t-flex t-space-x-2">
     <BaseButton
       v-if="manifest"
-      :disable="!hasPrev"
+      :disabled="!hasPrev"
       :text="prevButtonLabel"
       size="small"
       icon="arrowLeft"
@@ -12,7 +12,7 @@
 
     <BaseButton
       v-if="manifest"
-      :disable="!hasNext"
+      :disabled="!hasNext"
       :text="nextButtonLabel"
       size="small"
       icon="arrowRight"

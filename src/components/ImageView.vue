@@ -1,9 +1,9 @@
 <template>
-  <div class="image-view">
-    <div v-if="error" class="t-pa-2" style="margin-top: 5rem">
+  <div class="image-view t-relative t-flex t-h-full">
+    <div v-if="error" class="t-p-2">
       <Notification :message="$t(error.message)" :title="$t('no_image_available')" type="warning" />
     </div>
-    <figure v-else id="openseadragon" class="item"></figure>
+    <figure v-else id="openseadragon" class="t-flex-1 t-margin-0"></figure>
   </div>
 </template>
 
@@ -84,14 +84,10 @@ function initOpenSeagragon() {
 </script>
 
 <style lang="scss" scoped>
-figure {
-  display: inline-block;
-  height: 75vh;
-  margin: 0;
-  width: 100%;
-}
-
-.image-view {
-  position: relative;
-}
+//figure {
+//  display: inline-block;
+//  height: 75vh;
+//  margin: 0;
+//  width: 100%;
+//}
 </style>

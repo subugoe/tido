@@ -1,5 +1,5 @@
 <template>
-  <div class="panel t-flex-1 t-flex t-flex-col t-overflow-hidden t-rounded-md t-bg-gray-50 dark:t-bg-gray-800 t-border dark:t-border-gray-600">
+  <div class="panel t-flex-1 t-flex t-flex-col t-overflow-hidden t-rounded-lg t-bg-gray-50 dark:t-bg-gray-800 t-border dark:t-border-gray-700">
     <div class="panel-header t-py-3 t-px-4 t-flex t-justify-between t-items-center">
       <div class="caption t-font-bold">
         <!-- We display the tab label as panel label when there is only one tab -->
@@ -15,41 +15,34 @@
       </div>
     </div>
     <div class="t-h-[1px] dark:t-bg-gray-600 t-bg-gray-200 t-mx-4" />
-    <div class="panel-body t-overflow-hidden t-flex t-flex-col t-bg-none">
-      <Loading v-if="isLoading" />
+    <div class="panel-body t-relative t-overflow-hidden t-flex t-flex-1 t-flex-col t-bg-none">
+      <div v-if="isLoading" class="t-absolute t-z-50 t-flex t-bg-gray-50 dark:t-bg-gray-800 t-w-full t-h-full t-justify-center t-items-center">
+        <Loading  class="t-text-5xl" />
+      </div>
       <template v-if="tabs.length > 1">
         <TabView
           v-model:active-index="activeTabIndex"
           @update:active-index="onViewChange"
           unstyled
           :pt="{
-              navContainer: ({ props }) => ({class:[ 't-relative', { 't-overflow-hidden': props.scrollable}] }),
               navContent: {
-                class: ['t-overflow-y-hidden t-overscroll-contain t-mx-4', 't-overscroll-auto', 't-scroll-smooth', '[&::-webkit-scrollbar]:hidden']
-              },
-              previousButton: {
-                class: ['t-flex t-items-center t-justify-center', '!t-absolute', 't-top-0 t-left-0', 't-z-20', 't-h-full t-w-12', 't-rounded-none', 't-bg-surface-0 dark:t-bg-surface-800', 't-text-primary dark:t-text-primary-400', 't-shadow-md']
-              },
-              nextButton: {
-                class: ['t-flex t-items-center t-justify-center', '!t-absolute', 't-top-0 t-right-0', 't-z-20', 't-h-full t-w-12', 't-rounded-none', 't-bg-surface-0 dark:t-bg-surface-800', 't-text-primary dark:t-text-primary-400', 't-shadow-md']
+                class: ['t-mx-4']
               },
               nav: ({ props, parent, context })=>({
                   class:[
-                    't-relative t-mr-0 t-flex t-list-none',
+                    't-relative t-mr-0 t-flex t-list-none t-overflow-hidden',
                     {
                       't-opacity-60 t-cursor-default t-user-select-none t-select-none t-pointer-events-none': props == null ? void 0 : props.disabled
                     },
-
                   ]
                 }),
               tabpanel: {
-                // header: options => { log(options); return {} },
                 header: ({ parent, context }) => ({
                   class: [
                     't-flex-1 t-relative t-text-sm',
                     'after:t-content-[\'\'] after:t-absolute after:t-flex after:t-bottom-0 after:t-h-[2px] after:t-w-full after:t-bg-primary',
                     { 'after:t-opacity-0': parent.state.d_activeIndex !== context.index },
-                    { 't-text-primary after:t-opacity-1': parent.state.d_activeIndex === context.index }
+                    { 't-bg-primary/5 t-text-primary after:t-opacity-1': parent.state.d_activeIndex === context.index }
                   ]
                 }),
                 headerAction: { class: [
@@ -65,9 +58,9 @@
                   class: ['t-overflow-auto']
                 }
               },
-              inkbar: ({ props, parent, context })=>({
+              inkbar: () => ({
                 class: [
-                  't-opacity-0 t-hidden t-absolute t-bottom-0 t-h-[2px] t-w-1/2 t-bg-primary t-transition-all t-ease-in-out',
+                  't-hidden'
                 ]
               }),
               root: {
@@ -79,12 +72,9 @@
             }"
         >
           <TabPanel v-for="(tab, i) in tabs" :key="tab.id" :header="$t(tab.label)" unstyled>
-            <component v-if="activeTabIndex === i" :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
+            <component v-if="activeTabIndex === i" :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" @loading="isLoading = $event" />
           </TabPanel>
         </TabView>
-<!--        <div v-for="(tab, i) in tabs" :key="tab.id" class="t-overflow-hidden">-->
-<!--          <component v-if="activeTabIndex === i" :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />-->
-<!--        </div>-->
       </template>
       <template v-else-if="tabs.length === 1">
         <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />
@@ -148,7 +138,6 @@ export default {
   setup(props, { emit }) {
     const store = useStore();
     const { t } = useI18n();
-    // const isDark = useDark();
 
     const tabs = ref([]);
     const activeTabIndex = ref(0);
@@ -348,7 +337,6 @@ export default {
       panel: props.panel,
       tabs,
       onViewChange,
-      log: (e) => console.log(e),
     };
   },
 };

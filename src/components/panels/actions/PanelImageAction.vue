@@ -1,15 +1,14 @@
 <template>
-  <div class="panel-image-action t-flex t-items-center t-justify-end t-space-x-1">
+  <div class="panel-image-action t-flex">
     <BaseButton
       v-for="(btn, idx) in buttons"
       display="flat"
       :id="btn.id"
       :key="idx"
-      :rounded="true"
       size="small"
       :title="$t(btn.tooltip)"
       :icon="btn.icon"
-      class="t-py-[0.3rem] t-px-2 t-text-primary"
+      class="t-text-primary t-basis-0"
     >
     </BaseButton>
   </div>

@@ -1,21 +1,21 @@
-import { ahiqarApiBaseUrl, gflApiBaseUrl } from '../support/globals';
+import { ahiqarApiBaseUrl, gflApiBaseUrl, commonSelectors } from '../support/globals';
 
-const selectors = {
+const ahiqarSelectors = {
   list: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list',
   listItem: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list .item',
   listOfSecondTab: '.panels-wrapper > .panel:nth-child(4) [role="tabpanel"]:nth-child(2) .annotations-list',
   tab: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] [data-pc-section="nav"] [data-pc-name="tabpanel"]',
-  nextButton: '.next-button',
-  prevButton: '.prev-button',
   text: '.panels-wrapper > .panel:nth-child(3) #text-content',
   annotationPanelActionCheckbox: '.panel-header .actions > div:first-child #panel-toggle-action',
-  panel2: '.panels-wrapper > .panel:nth-child(2)',
-  panel3: '.panels-wrapper > .panel:nth-child(3)',
-  panel4: '.panels-wrapper > .panel:nth-child(4)',
 }
 
 const gflSelectors = {
   listItem: '.panels-wrapper > .panel:nth-child(3) [role="tablist"] .annotations-list .item',
+}
+
+const selectors = {
+  ...commonSelectors,
+  ...ahiqarSelectors,
 }
 
 describe('Annotation', () => {

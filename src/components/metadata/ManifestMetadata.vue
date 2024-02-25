@@ -1,6 +1,6 @@
 <template>
-  <div v-if="manifestHasItems" dense class="t-mb-6">
-    <h3>{{ $t(labels.manifest) }} {{ number }} / {{ total }}</h3>
+  <div v-if="manifestHasItems" class="manifest-metadata t-mb-7">
+    <h3 class="t-text-xl t-font-semibold t-mb-2">{{ $t(labels.manifest) }} {{ number }} / {{ total }}</h3>
     <div v-for="(meta, idx) in metadata" :key="idx" class="t-mb-2 no-padding">
       <MetadataItem :item="meta"/>
     </div>

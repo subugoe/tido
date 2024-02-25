@@ -1,47 +1,62 @@
-import { ahiqarApiBaseUrl } from '../support/globals';
+import { ahiqarApiBaseUrl, commonSelectors } from '../support/globals';
+
+const selectors = {
+  ...commonSelectors,
+  dialog: '[role="dialog"]'
+}
 
 describe('Header initial', () => {
   beforeEach(() => {
     cy
       .visit('/ahiqar-arabic-karshuni-local.html')
-      .get('.panels-target > .item:nth-child(3)').find('.panel-body')
+      .get(selectors.panel3)
+      .find('.panel-body')
       .find('#text-content')
       .should('be.visible');
   });
 
   it('Should have disabled prev manifest button', () => {
     cy
-      .get('button.previous-item')
+      .get(selectors.prevButton)
       .should('be.visible')
       .should('be.disabled')
       .contains('Previous Manuscript');
   });
 
   it('Should toggle panels', () => {
-    cy.get('.panels-target').children('.item').should('have.length', 4);
+    cy
+      .get(selectors.panelsWrapper)
+      .children()
+      .should('have.length', 4);
 
     // Clicking on first item
     cy
-      .get('.panels-toggle .row div:first-child .q-checkbox')
+      .get(selectors.panelsToggleCheckboxes)
+      .first()
       .click()
-      .get('.panels-target')
-      .children('.item')
+      .get(selectors.panelsWrapper)
+      .children()
       .first()
       .should('not.be.visible');
 
     // Reseting item
     cy
-      .get('.panels-toggle .row div:first-child .q-checkbox')
+      .get(selectors.panelsToggleCheckboxes)
+      .first()
       .click()
-      .get('.panels-target')
-      .children('.item')
+      .get(selectors.panelsWrapper)
+      .children()
       .first()
       .should('be.visible');
   });
 
   it('Should open Info dialog box', () => {
-    cy.get('button[title="Project Info"]').click();
-    cy.get('.q-dialog').should('be.visible');
+    cy
+      .get('button[title="Project Info"]')
+      .click();
+    cy
+      .get(selectors.dialog)
+      .should('be.visible');
   });
 });
 
@@ -49,19 +64,20 @@ describe('Header - Item and Manifest changing', () => {
   beforeEach(() => {
     cy
       .visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r7vd/130/latest/item.json`)
-      .get('.panels-target > .item:nth-child(3)').find('.panel-body')
+      .get(selectors.panel3)
+      .find('.panel-body')
       .find('#text-content')
       .should('be.visible');
   });
 
   it('Should switch to previous manifest', () => {
     cy
-      .get('button.previous-item')
+      .get(selectors.prevButton)
       .should('not.be.disabled')
       .contains('Previous Manuscript');
 
     cy
-      .get('button.previous-item')
+      .get(selectors.prevButton)
       .click()
       .wait(200)
       .url()
@@ -71,12 +87,12 @@ describe('Header - Item and Manifest changing', () => {
 
   it('Should switch to next sheet', () => {
     cy
-      .get('button.next-item')
+      .get(selectors.nextButton)
       .should('not.be.disabled')
       .contains('Next Sheet');
 
     cy
-      .get('button.next-item')
+      .get(selectors.nextButton)
       .click()
       .wait(200)
       .url()

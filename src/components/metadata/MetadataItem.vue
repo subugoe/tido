@@ -1,8 +1,8 @@
 <template>
   <div>
-    <p v-if="!isLink()" class="t-uppercase">
+    <h4 v-if="!isLink()" class="t-font-semibold t-text-sm t-text-gray-400">
       {{ $t(label) }}
-    </p>
+    </h4>
     <MetadataLink v-if="isLink()" :url="item.key" :text="item.value"/>
     <MetadataValue v-else :value="item.value" />
     <MetadataItem v-for="(childItem, idx) in childItems" :key="idx" :item="childItem"/>

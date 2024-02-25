@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="show"
-    class="t-flex t-flex-col t-pa-4 lg:t-px-6 t-mb-4"
+    class="header t-flex t-flex-col t-p-4 lg:t-px-6 t-mb-4"
   >
     <div class="t-flex t-items-start sm:t-flex-row t-flex-col-reverse t-mt-2">
       <TitleBar :item="item"/>

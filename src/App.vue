@@ -3,16 +3,15 @@
       <GlobalHeader/>
       <PanelsWrapper v-if="ready"/>
       <div v-else class="t-flex t-relative t-flex-1 t-justify-center t-items-center t-p-4 lg:t-p-6">
-        <div class="t-h-full t-w-full t-flex t-items-center t-justify-center t-border-dashed t-border-[3px] dark:t-border-dashed dark:t-border-gray-600 t-rounded-md">
+        <div class="t-h-full t-w-full t-flex t-items-center t-justify-center t-border-dashed t-border-[3px] t-border-gray-400 dark:t-border-dashed dark:t-border-gray-600 t-rounded-md">
           <template v-if="isLoading">
-            <Loading background="none"></Loading>
+            <Loading class="t-text-6xl"></Loading>
           </template>
           <template v-else>
             <Notification
               v-if="errorMessage"
               :message="errorMessage"
               :title="errorTitle"
-              class="q-ma-md-12"
               type="warning"
             />
             <template v-else>
@@ -113,18 +112,6 @@ onMounted(async () => {
   if (colorsForceMode && colorsForceMode !== 'none') {
     document.querySelector(config.value.container).classList.add('t-dark');
   }
-
-  // if (config.value?.colors?.primary) {
-  //   setCssVar('primary', config.value.colors.primary);
-  // }
-  //
-  // if (config.value?.colors?.secondary) {
-  //   setCssVar('secondary', config.value.colors.secondary);
-  // }
-  //
-  // if (config.value?.colors?.accent) {
-  //   setCssVar('accent', config.value.colors.accent);
-  // }
 
   await init();
 });

@@ -114,7 +114,7 @@ function discoverDefaultConfig(config) {
   };
 }
 
-export const load = ({ commit, getters }, config) => {
+export const load = ({ commit, getters, dispatch }, config) => {
   const customConfig = discoverCustomConfig(config);
   const urlConfig = discoverUrlConfig();
   const defaultConfig = discoverDefaultConfig(getters.config);
@@ -145,9 +145,8 @@ export const load = ({ commit, getters }, config) => {
     ...urlConfig,
   };
 
-  console.log(resultConfig);
-
   const activeViews = urlConfig.activeViews || defaultConfig.activeViews;
+  console.log(urlConfig.activeViews, defaultConfig.activeViews);
   commit('setActiveViews', activeViews);
 
   if (resultConfig.show && resultConfig.show.length > 0) {
@@ -172,12 +171,17 @@ export const load = ({ commit, getters }, config) => {
       i18n.global.setLocaleMessage(locale, { ...(messages[locale] ? messages[locale] : {}), ...resultConfig.translations[locale] });
     });
   }
-
   commit('setConfig', resultConfig);
+
+  if (urlConfig.activeViews) commit('setActiveViews', activeViews);
+  else dispatch('setDefaultActiveViews', false);
 };
 
 export const setActivePanelView = async ({ commit, getters }, { panelIndex, viewIndex }) => {
+  console.log(getters.activeViews);
   commit('setActivePanelView', { panelIndex, viewIndex });
+  console.log({ panelIndex, viewIndex });
+  console.log(getters.activeViews);
   await BookmarkService.updatePanels(getters.activeViews);
 };
 
@@ -198,17 +202,18 @@ export const setContentType = ({ commit, getters }, type) => {
   commit('setConfig', newConfig);
 };
 
-export const setDefaultActiveViews = async ({ commit, getters }) => {
+export const setDefaultActiveViews = async ({ commit, getters }, bookmark = true) => {
   const { config } = getters;
   const activeViews = [];
 
+  console.log(config.panels);
   config.panels.forEach(({ views }, panelIndex) => {
     let defaultViewIndex = views.findIndex((view) => !!(view.default));
     if (defaultViewIndex === -1) defaultViewIndex = 0;
     activeViews[panelIndex] = defaultViewIndex;
   });
 
-  await BookmarkService.updatePanels(activeViews);
+  if (bookmark) await BookmarkService.updatePanels(activeViews);
 
   commit('config/setActiveViews', activeViews, { root: true });
 };

@@ -1,13 +1,5 @@
 <script setup>
-// interface Props {
-//   text?: string,
-//   display?: 'filled' | 'link' | 'mono' | 'flat' | 'outline',
-//   size?: 'tiny' | 'small' | 'normal',
-//   icon?: string | null,
-//   iconPosition?: 'left' | 'right' | null,
-//   rounded?: boolean | null
-// }
-//
+
 import resolveConfig from 'tailwindcss/resolveConfig';
 import tailwindConfig from '@/../tailwind.config.js';
 
@@ -41,6 +33,10 @@ const props = defineProps({
     type: Boolean,
     default: null,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 let _icon;
@@ -66,7 +62,7 @@ if (props.display === 'link') {
   _icon = 'heroicons:arrow-right-20-solid';
 }
 
-classes['focus-visible:t-outline-none focus-visible:t-ring-4 t-flex t-items-center t-justify-center'] = true;
+classes['focus-visible:t-outline-none focus-visible:t-ring-4 !t-flex t-items-center t-justify-center disabled:t-opacity-50'] = true;
 
 classes['t-rounded-md'] = !_rounded;
 classes['t-rounded-full'] = _rounded;
@@ -74,13 +70,13 @@ classes['t-rounded-full'] = _rounded;
 // Paddings Size Normal
 classes['t-py-2.5 t-ps-3 t-pe-5'] = props.size === 'normal' && !!(_icon) && _iconPosition === 'left';
 classes['t-py-2.5 t-ps-5 t-pe-3'] = props.size === 'normal' && !!(_icon) && _iconPosition === 'right';
-classes['t-p-2'] = props.size === 'normal' && isIconOnly;
+classes['t-p-[0.6rem]'] = props.size === 'normal' && isIconOnly;
 classes['t-py-2.5 t-px-5'] = props.size === 'normal' && !_icon;
 
 // Paddings Size Small
 classes['t-py-1.5 t-ps-2 t-pe-3'] = props.size === 'small' && !!(_icon) && _iconPosition === 'left';
 classes['t-py-1.5 t-ps-3 t-pe-2'] = props.size === 'small' && !!(_icon) && _iconPosition === 'right';
-classes['t-p-1'] = props.size === 'small' && isIconOnly;
+classes['t-p-2'] = props.size === 'small' && isIconOnly;
 classes['t-py-1.5 px-3'] = props.size === 'small' && !_icon;
 
 // Paddings Size Tiny
@@ -108,12 +104,12 @@ classes['t-bg-white t-text-dark t-border t-border-zinc-400 focus:t-ring-zinc-300
 
 classes['t-bg-none t-text-primary t-border t-border-primary focus:t-ring-zinc-300 focus:t-ring-opacity-50 hover:t-bg-primary-50 dark:hover:t-bg-zinc-800'] = props.display === 'outline';
 
-classes['t-bg-transparent hover:t-bg-zinc-100 dark:hover:t-bg-zinc-600 '
+classes['t-bg-transparent hover:t-bg-gray-300/30 dark:hover:t-bg-gray-600 '
   + 'focus-visible:t-ring-primary dark:focus-visible:t-ring-primary-300 dark:focus-visible:t-ring-opacity-50 focus-visible:t-ring-opacity-25'] = props.display === 'flat';
 
 </script>
 <template>
-  <button type="button" :class="classes">
+  <button type="button" :class="classes" :disabled="disabled">
     <template v-if="_icon && _iconPosition === 'left'">
       <BaseIcon :name="_icon" class="t-text-base t-me-1"/>
     </template>

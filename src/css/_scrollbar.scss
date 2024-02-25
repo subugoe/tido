@@ -4,31 +4,30 @@ $background: #666;
 $foreground-dark: #555;
 $background-dark: #333;
 
-* {
-  /* Foreground, Background */
-
-  .body--dark & {
+.tido {
+  &.t-dark & {
     scrollbar-color: $foreground-dark $background-dark;
   }
 
   scrollbar-color: $foreground $background;
-}
-::-webkit-scrollbar {
-  width: 6px; /* Mostly for vertical scrollbars */
-  height: 10px; /* Mostly for horizontal scrollbars */
-}
-::-webkit-scrollbar-thumb { /* Foreground */
-  .body--dark & {
-    background: $foreground-dark;
-  }
-  background: $foreground;
-  border-radius: 8px;
-}
-::-webkit-scrollbar-track { /* Background */
-  background: $background;
-  border-radius: 8px;
 
-  .body--dark & {
-    background: $background-dark;
+  &::-webkit-scrollbar {
+    width: 6px; /* Mostly for vertical scrollbars */
+    height: 10px; /* Mostly for horizontal scrollbars */
+  }
+  &::-webkit-scrollbar-thumb { /* Foreground */
+    .t-dark & {
+      background: $foreground-dark;
+    }
+    background: $foreground;
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-track { /* Background */
+    background: $background;
+    border-radius: 8px;
+
+    .t-dark & {
+      background: $background-dark;
+    }
   }
 }

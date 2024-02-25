@@ -1,11 +1,11 @@
 <template>
-  <div class="panel-zoom-action t-items-center t-flex t-space-x-2">
+  <div class="panel-zoom-action t-items-center t-flex">
     <BaseButton
       display="flat"
       rounded
       icon="zoomIn"
       size="small"
-      :disable="disableIncrease"
+      :disabled="disableIncrease"
       :title="$t('increase')"
       class="t-text-primary dark:t-text-gray-400"
       @click="increase()"
@@ -17,7 +17,7 @@
       rounded
       icon="zoomOut"
       size="small"
-      :disable="disableDecrease"
+      :disabled="disableDecrease"
       :title="$t('decrease')"
       class="t-text-primary dark:t-text-gray-400"
       @click="decrease()"

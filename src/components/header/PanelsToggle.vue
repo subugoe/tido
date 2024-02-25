@@ -1,32 +1,29 @@
 <template>
-  <div class="panels-toggle relative-position">
+  <div class="panels-toggle t-relative">
     <template v-if="isMobile">
-      <q-btn
-        v-if="isMobile"
-        :icon-right="dropdownIcon"
-        :label="$t('show_hide_panels')"
-        outline
-        flat
-        size="12px"
-        @click="showDropdown = !showDropdown"
+      <BaseDropdown
+        v-model="showDropdown"
+        :button-text="$t('show_hide_panels')"
       >
-      </q-btn>
-      <div
-        v-if="showDropdown"
-        class="dropdown-list t-shadow-md t-rounded-md dark:t-bg-gray-800 t-bg-gray-50"
-      >
-        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-pl-1 t-py-none t-flex">
+        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-space-x-2 t-flex t-items-center t-mb-2">
           <BaseCheckbox
             :model-value="show"
+            :id="`panel-toggle-${i}`"
             @update:model-value="update(i, $event)"
           />
-          <span>{{ $t(label) }}</span>
+          <label class="t-text-nowrap" :for="`panel-toggle-${i}`">{{ $t(label) }}</label>
         </div>
-        <div @click="reset" class="t-flex">
-          <BaseIcon name="reset" :color="resetColor"></BaseIcon>
-          <span :class="'text-' + resetColor">{{ $t('reset') }}</span>
-        </div>
-      </div>
+        <BaseButton
+          v-if="toggles.length > 0"
+          :class="'text-' + resetColor"
+          :title="$t('reset_view')"
+          :text="$t('reset')"
+          display="flat"
+          icon="reset"
+          @click="reset"
+        />
+
+      </BaseDropdown>
     </template>
     <template v-else>
       <div class="t-flex t-items-center t-space-x-4">
@@ -67,7 +64,7 @@ import { useI18n } from 'vue-i18n';
 import { isMobile } from '@/utils/is-mobile';
 import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
-import BaseIcon from '@/components/base/BaseIcon.vue';
+import BaseDropdown from '@/components/base/BaseDropdown.vue';
 
 const store = useStore();
 const { t } = useI18n();
@@ -86,26 +83,6 @@ watch(
       .map(({ show, label }, index) => ({ index, show, label }));
   },
   { immediate: true },
-);
-
-watch(
-  showDropdown,
-  (value) => {
-    const tido = document.getElementById('tido');
-    let backdrop = tido.querySelector('#tido-backdrop');
-    if (value) {
-      if (!backdrop) {
-        const el = document.createElement('div');
-        el.id = 'tido-backdrop';
-        tido.appendChild(el);
-        backdrop = tido.querySelector('#tido-backdrop');
-        backdrop.clickOutsideEvent = () => {
-          showDropdown.value = false;
-        };
-        backdrop.addEventListener('click', backdrop.clickOutsideEvent);
-      }
-    } else if (backdrop) backdrop.remove();
-  },
 );
 
 function update(index, show) {
@@ -132,12 +109,6 @@ function handleToggleTitle(idx) {
 </script>
 
 <style lang="scss">
-.dropdown-list {
-  position: absolute;
-  z-index: 1000;
-  top: calc(100% + 0.5rem);
-  right: 0;
-}
 .reset-btn .q-icon {
   font-size: 1.2rem;
   padding-right: 0.5rem;
