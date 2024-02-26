@@ -1,6 +1,6 @@
 <template>
   <div class="image-view t-relative t-flex t-h-full">
-    <div v-if="error" class="t-p-2">
+    <div v-if="error" class="t-p-2 t-flex t-justify-center t-pt-12">
       <Notification :message="$t(error.message)" :title="$t('no_image_available')" type="warning" />
     </div>
     <figure v-else id="openseadragon" class="t-flex-1 t-margin-0"></figure>
@@ -55,8 +55,8 @@ watch(
       error.value = null;
       await delay(1000);
       initOpenSeagragon();
-    } catch (error) {
-      error.value = error;
+    } catch (e) {
+      error.value = e;
       emit('loading', false);
     }
   },

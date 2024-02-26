@@ -133,7 +133,6 @@ export async function createOrUpdateTooltip(element, { closest: closestAnnotatio
 }
 
 export function getNewLevel(element, operation) {
-  console.log(element, operation);
   const currentLevel = element.hasAttribute('data-annotation-level')
     ? parseInt(element.getAttribute('data-annotation-level'), 10)
     : 0;
@@ -149,7 +148,6 @@ export function getNewLevel(element, operation) {
 
 export function highlightTargets(selector, { operation, level }) {
   // If level is given we set it directly ignoring operation.
-  console.log('highlightTargets', selector, level);
   const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
   elements.forEach((element) => {
     setLevelRecursively(element, { operation, level });
@@ -238,7 +236,6 @@ export function handleRangeSelector(selector) {
 }
 
 export function addIcon(element, annotation, iconName) {
-  console.log('addIcon', element, annotation, iconName);
   let foundSvg = false;
 
   [...element.children].forEach((el) => {
@@ -252,7 +249,6 @@ export function addIcon(element, annotation, iconName) {
   }
   try {
     const svg = createSvgIcon(iconName);
-    console.log(svg);
     svg.setAttribute(
       'data-annotation-icon',
       annotation.id,

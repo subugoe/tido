@@ -7,7 +7,7 @@
       class="item"
       :class="[
         't-py-2 t-px-3 t-mb-1 t-rounded-md t-cursor-pointer',
-        { 'hover:t-bg-gray-200': !isActive(annotation) },
+        { 'hover:t-bg-gray-200 dark:hover:t-bg-gray-600': !isActive(annotation) },
         { 't-bg-gray-300 dark:t-bg-gray-600 active': isActive(annotation) }
       ]"
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
@@ -40,8 +40,6 @@ const props = defineProps({
   },
   types: Array,
 });
-
-watch(() => props.configuredAnnotations, (value) => console.log(value));
 
 const annotationTypesMapping = computed(() => (
   props.types.reduce((prev, curr) => {

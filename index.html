@@ -27,6 +27,150 @@
 <script type="module" src="/src/main.js"></script>
 <script>
   window.addEventListener('load', function () {
+    window.tido = new window.Tido({
+      manifest: "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/textapi/Z_1822-02-20_k/manifest.json",
+      labels: {
+        item: "Seite",
+        manifest: "Dokument"
+      },
+      colors: {
+        forceMode: "light",
+        primary: "#4569cc"
+      },
+      lang: "de",
+      panels: [
+        {
+          views: [{
+            id: "image",
+            label: "Manuskript",
+            connector: {
+              id: 3
+            }
+          }]
+        },
+        {
+          label: "Text",
+          views: [
+            {
+              id: "text1",
+              label: "Edierter Text",
+              connector: {
+                id: 4,
+                options: {
+                  type: "edited"
+                }
+              }
+            },
+            {
+              id: "text2",
+              label: "Transkription",
+              connector: {
+                id: 4,
+                options: {
+                  type: "transcription"
+                }
+              }
+            }
+          ]
+        },
+        {
+          label: "Kommentar",
+          views: [
+            {
+              id: "annotations1",
+              label: "Kommentare",
+              connector: {
+                id: 5,
+                options: {
+                  types: [
+                    {
+                      name: "Editorial Comment",
+                      icon: "biChatFill"
+                    },
+                    {
+                      name: "Abstract",
+                      annotationType: "text",
+                      displayWhen: "edited"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              id: "annotations2",
+              label: "Register",
+              connector: {
+                id: 5,
+                options: {
+                  types: [
+                    {
+                      name: "Person",
+                      icon: "biPersonFill"
+                    },
+                    {
+                      name: "Place",
+                      icon: "biGeoAltFill"
+                    },
+                    {
+                      name: "Org",
+                      icon: "biBank2"
+                    },
+                    {
+                      name: "Object",
+                      icon: "biArchiveFill"
+                    },
+                    {
+                      name: "Date",
+                      icon: "biCalendarWeek"
+                    },
+                    {
+                      name: "Work",
+                      icon: "biJournals"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          label: "Dokumentdaten",
+          views: [
+            {
+              id: "meta",
+              label: "Metadaten",
+              connector: {
+                id: 2,
+                options: {
+                  collection: {
+                    all: true
+                  },
+                  manifest: {
+                    all: true
+                  },
+                  item: {
+                    all: true
+                  }
+                }
+              }
+            },
+            {
+              id: "tree",
+              label: "Inhalt",
+              connector: {
+                id: 1
+              }
+            }
+          ]
+        }
+      ],
+      translations: {
+        Edition_license: 'Editionslizenz'
+      }
+    });
+
+
+
     // window.tido = new window.Tido({
     //   "collection": "https://ahiqar.uni-goettingen.de/api/textapi/ahikar/syriac/collection.json",
     //   "labels": {
@@ -156,138 +300,138 @@
     //   }
     // });
 
-    window.tido = new window.Tido({
-      "collection": "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json",
-      "labels": {
-        "item": "Sheet",
-        "manifest": "Manuscript"
-      },
-      "colors": {
-        "primary": "#ff0000",
-        "forceMode": "light"
-      },
-      "panels": [
-        {
-          "label": "contents_and_metadata",
-          "views": [
-            {
-              "id": "tree",
-              "label": "contents",
-              "connector": {
-                "id": 1
-              }
-            },
-            {
-              "id": "metadata",
-              "label": "metadata",
-              "connector": {
-                "id": 2,
-                "options": {
-                  "collection": {
-                    "all": true
-                  },
-                  "manifest": {
-                    "all": true
-                  },
-                  "item": {
-                    "all": true
-                  }
-                }
-              }
-            }
-          ]
-        },
-        {
-          "label": "image",
-          "views": [
-            {
-              "id": "image",
-              "label": "Image",
-              "connector": {
-                "id": 3
-              }
-            }]
-        },
-        {
-          "label": "text",
-          "views": [
-            {
-              "id": "text1",
-              "label": "Transcription",
-              "default": true,
-              "connector": {
-                "id": 4,
-                "options": {
-                  "type": "transcription"
-                }
-              }
-            },
-            {
-              "id": "text2",
-              "label": "Transliteration",
-              "connector": {
-                "id": 4,
-                "options": {
-                  "type": "transliteration"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "label": "annotations",
-          "views": [
-            {
-              "id": "annotations1",
-              "label": "Editorial",
-              "connector": {
-                "id": 5,
-                "options": {
-                  "types": [
-                    {
-                      "name": "Person",
-                      "icon": "person"
-                    },
-                    {
-                      "name": "Place",
-                      "icon": "marker"
-                    },
-                    {
-                      "name": "Editorial Comment",
-                      "icon": "chat"
-                    },
-                    {
-                      "name": "Reference",
-                      "icon": "externalLink"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "id": "annotations2",
-              "label": "Motif",
-              "connector": {
-                "id": 5,
-                "options": {
-                  "types": [
-                    {
-                      "name": "Motif",
-                      "icon": "pen"
-                    }
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "translations": {
-        "en": {
-          "contents_and_metadata": "Contents & Metadata"
-        }
-      }
-    });
+    // window.tido = new window.Tido({
+    //   "collection": "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json",
+    //   "labels": {
+    //     "item": "Sheet",
+    //     "manifest": "Manuscript"
+    //   },
+    //   "colors": {
+    //     "primary": "#ff0000",
+    //     "forceMode": "light"
+    //   },
+    //   "panels": [
+    //     {
+    //       "label": "contents_and_metadata",
+    //       "views": [
+    //         {
+    //           "id": "tree",
+    //           "label": "contents",
+    //           "connector": {
+    //             "id": 1
+    //           }
+    //         },
+    //         {
+    //           "id": "metadata",
+    //           "label": "metadata",
+    //           "connector": {
+    //             "id": 2,
+    //             "options": {
+    //               "collection": {
+    //                 "all": true
+    //               },
+    //               "manifest": {
+    //                 "all": true
+    //               },
+    //               "item": {
+    //                 "all": true
+    //               }
+    //             }
+    //           }
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       "label": "image",
+    //       "views": [
+    //         {
+    //           "id": "image",
+    //           "label": "Image",
+    //           "connector": {
+    //             "id": 3
+    //           }
+    //         }]
+    //     },
+    //     {
+    //       "label": "text",
+    //       "views": [
+    //         {
+    //           "id": "text1",
+    //           "label": "Transcription",
+    //           "default": true,
+    //           "connector": {
+    //             "id": 4,
+    //             "options": {
+    //               "type": "transcription"
+    //             }
+    //           }
+    //         },
+    //         {
+    //           "id": "text2",
+    //           "label": "Transliteration",
+    //           "connector": {
+    //             "id": 4,
+    //             "options": {
+    //               "type": "transliteration"
+    //             }
+    //           }
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       "label": "annotations",
+    //       "views": [
+    //         {
+    //           "id": "annotations1",
+    //           "label": "Editorial",
+    //           "connector": {
+    //             "id": 5,
+    //             "options": {
+    //               "types": [
+    //                 {
+    //                   "name": "Person",
+    //                   "icon": "person"
+    //                 },
+    //                 {
+    //                   "name": "Place",
+    //                   "icon": "marker"
+    //                 },
+    //                 {
+    //                   "name": "Editorial Comment",
+    //                   "icon": "chat"
+    //                 },
+    //                 {
+    //                   "name": "Reference",
+    //                   "icon": "externalLink"
+    //                 }
+    //               ]
+    //             }
+    //           }
+    //         },
+    //         {
+    //           "id": "annotations2",
+    //           "label": "Motif",
+    //           "connector": {
+    //             "id": 5,
+    //             "options": {
+    //               "types": [
+    //                 {
+    //                   "name": "Motif",
+    //                   "icon": "pen"
+    //                 }
+    //               ]
+    //             }
+    //           }
+    //         }
+    //       ]
+    //     }
+    //   ],
+    //   "translations": {
+    //     "en": {
+    //       "contents_and_metadata": "Contents & Metadata"
+    //     }
+    //   }
+    // });
   });
 </script>
 </body>

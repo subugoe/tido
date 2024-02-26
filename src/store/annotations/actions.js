@@ -5,7 +5,6 @@ import { scrollIntoViewIfNeeded } from '@/utils';
 import { getAnnotationListElement } from '@/utils/annotations';
 
 export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
-  console.log('addActiveAnnotation');
   const { activeAnnotations, annotations } = getters;
   const newActiveAnnotation = annotations.find((annotation) => annotation.id === id);
 
@@ -71,7 +70,6 @@ export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) 
     );
   }
 
-  console.log(filteredAnnotations);
   commit('setFilteredAnnotations', filteredAnnotations);
 };
 
@@ -93,7 +91,6 @@ export const annotationLoaded = ({ commit }, annotations) => {
 };
 
 export const removeActiveAnnotation = ({ getters, dispatch }, id) => {
-  console.log('removeActiveAnnotation');
   const { activeAnnotations } = getters;
 
   const removeAnnotation = activeAnnotations[id];
@@ -114,7 +111,6 @@ export const removeActiveAnnotation = ({ getters, dispatch }, id) => {
 };
 
 export const resetAnnotations = ({ dispatch, getters }) => {
-  console.log('resetAnnotations');
   const { annotations } = getters;
 
   if (annotations !== null) {
@@ -141,7 +137,6 @@ export const initAnnotations = async ({ dispatch }, url) => {
     }
 
     const current = await request(annotations.first);
-    console.log(url, current);
 
     if (Array.isArray(current.items)) {
       dispatch('annotationLoaded', current.items);
@@ -210,7 +205,6 @@ export const addHighlightClickListeners = ({ dispatch, getters }) => {
   if (!textEl) return;
 
   textEl.addEventListener('click', ({ target }) => {
-    console.log('click');
     // The click event handler works like this:
     // When clicking on the text we pick the whole part of the text which belongs to the highest parent annotation.
     // Since the annotations can be nested we avoid handling each of them separately
@@ -273,7 +267,6 @@ export const selectAll = ({ getters, dispatch }) => {
 };
 
 export const selectNone = ({ getters, dispatch }) => {
-  console.log('selectNone');
   const { filteredAnnotations, activeAnnotations } = getters;
   filteredAnnotations.forEach(({ id }) => activeAnnotations[id] && dispatch('removeActiveAnnotation', id));
 };

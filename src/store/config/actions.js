@@ -146,7 +146,6 @@ export const load = ({ commit, getters, dispatch }, config) => {
   };
 
   const activeViews = urlConfig.activeViews || defaultConfig.activeViews;
-  console.log(urlConfig.activeViews, defaultConfig.activeViews);
   commit('setActiveViews', activeViews);
 
   if (resultConfig.show && resultConfig.show.length > 0) {
@@ -178,10 +177,7 @@ export const load = ({ commit, getters, dispatch }, config) => {
 };
 
 export const setActivePanelView = async ({ commit, getters }, { panelIndex, viewIndex }) => {
-  console.log(getters.activeViews);
   commit('setActivePanelView', { panelIndex, viewIndex });
-  console.log({ panelIndex, viewIndex });
-  console.log(getters.activeViews);
   await BookmarkService.updatePanels(getters.activeViews);
 };
 
@@ -206,7 +202,6 @@ export const setDefaultActiveViews = async ({ commit, getters }, bookmark = true
   const { config } = getters;
   const activeViews = [];
 
-  console.log(config.panels);
   config.panels.forEach(({ views }, panelIndex) => {
     let defaultViewIndex = views.findIndex((view) => !!(view.default));
     if (defaultViewIndex === -1) defaultViewIndex = 0;

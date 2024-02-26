@@ -81,7 +81,6 @@ export const isElementVisible = (element, root) => {
 
   // Calculate the percentage of the element that is visible within the root element
   const percentageVisible = visibleHeight / elementRect.height;
-  console.log(visibleHeight, elementRect.height);
 
   // Return true if the element is at least 70% visible within the root element, false otherwise
   return percentageVisible >= 0.7;

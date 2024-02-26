@@ -60,16 +60,11 @@ watch(
   { immediate: true },
 );
 
-// watch(filteredAnnotations, (value) => console.log('types + filtered', props.types, value));
-
-// onBeforeUnmount(() => store.dispatch('annotations/resetAnnotations'));
-
 function addAnnotation(id) {
   store.dispatch('annotations/addActiveAnnotation', id);
 }
 
 function removeAnnotation(id) {
-  console.log('removeAnnotation');
   store.dispatch('annotations/removeActiveAnnotation', id);
 }
 
