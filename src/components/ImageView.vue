@@ -1,5 +1,5 @@
 <template>
-  <div class="image-view t-relative t-flex t-h-full">
+  <div class="image-view t-relative t-h-full">
     <div v-if="error" class="t-p-2 t-flex t-justify-center t-pt-12">
       <Notification :message="$t(error.message)" :title="$t('no_image_available')" type="warning" />
     </div>
