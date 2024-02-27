@@ -1,10 +1,9 @@
-import axios from 'axios';
 import { i18n } from '@/i18n';
 
 export async function request(url) {
   try {
-    const response = await axios.get(url);
-    return response.data;
+    const response = await fetch(url);
+    return await response.json();
   } catch ({ response }) {
     if (!response) {
       throw getError(null, `${i18n.global.t('failed_to_fetch_url')} ${url}`);

@@ -6,8 +6,8 @@
       :key="annotation.id"
       class="item"
       :class="[
-        't-py-2 t-px-3 t-mb-1 t-rounded-md t-cursor-pointer',
-        { 'hover:t-bg-gray-200 dark:hover:t-bg-gray-600': !isActive(annotation) },
+        't-py-2 t-px-3 t-mb-1 t-rounded-md',
+        { 'hover:t-bg-gray-200 dark:hover:t-bg-gray-600 t-cursor-pointer': !isText(annotation) && !isActive(annotation) },
         { 't-bg-gray-300 dark:t-bg-gray-600 active': isActive(annotation) }
       ]"
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
