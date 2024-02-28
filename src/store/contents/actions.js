@@ -2,7 +2,7 @@ import { request } from '@/utils/http';
 import BookmarkService from '@/services/bookmark';
 import { loadCss, loadFont } from '../../utils';
 
-export const getItemIndex = async( { getters, rootGetters}, itemUrl) => {
+export const getItemIndex = async ({ getters }, itemUrl) => {
   const { manifest } = getters;
   const items = manifest.sequence;
   const itemIndex = items.findIndex((item) => item.id === itemUrl);
@@ -77,15 +77,19 @@ export const initCollection = async ({
   }
 };
 
-export const initManifest = async ({ commit, dispatch, getters, rootGetters }, url) => {
+export const initManifest = async ({
+  commit, dispatch, getters, rootGetters,
+}, url) => {
   const { item } = getters;
 
   const resultConfig = rootGetters['config/config'];
   let itemIndex;
 
+  console.log('result config', resultConfig);
+
   // Check if manifestIndex or item Index are part of the result config
-  if ('itemIndex' in resultConfig) {
-    const itemIndexInConfig = resultConfig.itemIndex;
+  if ('i' in resultConfig) {
+    const itemIndexInConfig = resultConfig.i;
     itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
   } else {
     itemIndex = 0;
