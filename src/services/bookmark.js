@@ -9,16 +9,13 @@ class BookmarkService {
   }
 
   async pushQuery(query) {
-    // Orlin: In this solution I treat query as the (key, value) pair of the current action
     const url = new URL(window.location);
     url.search = '';
     const params = url.searchParams;
 
     Object.keys(query).forEach((key) => {
       params.set(key, JSON.stringify(query[key]));
-      console.log("Url", url);
     });
-    //Object.keys(query).forEach((key) => params.set(key, query[key]));
     window.history.pushState({}, '', url);
   }
 
