@@ -1,14 +1,18 @@
 import { ahiqarApiBaseUrl } from '../support/globals';
 
 describe('Bookmarking', () => {
-  beforeEach(() => {
-    cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r176/182b/latest/item.json`)
-      .get('#text-content')
-      .contains('ܐܠܚܟܝܡ');
-  });
 
+  
+  beforeEach(() => {
+    cy.visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido={"m":20,"i":0,"p":"0_0,1_0,2_0,3_0"}`)
+        .get('#text-content')
+        .contains('ܐܠܚܟܝܡ');
+      
+  });
+  
+  
   it('Should not have panels bookmark initially', () => {
-    cy.url().should('not.include', 'panels=');
+    cy.url().should('not.include', '"p:"');
   });
 
   it('Should bookmark tree/metadata panel', () => {
@@ -16,7 +20,7 @@ describe('Bookmarking', () => {
       .eq(1)
       .click();
 
-    cy.url().then((value) => decodeURIComponent(value)).should('include', 'panels=0_1,1_0,2_0,3_0');
+    cy.url().then((value) => decodeURIComponent(value)).should('include', '"p":"0_1,1_0,2_0,3_0"');
   });
 
   it('Should change text panel value in query', () => {
@@ -29,7 +33,7 @@ describe('Bookmarking', () => {
       .should('be.visible')
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', 'panels=0_0,1_0,2_1,3_0');
+      .should('include', '"p":"0_0,1_0,2_1,3_0"');
   });
 
   it('Should change annotation panel value in query', () => {
@@ -41,34 +45,38 @@ describe('Bookmarking', () => {
       .should('be.visible')
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', 'panels=0_0,1_0,2_0,3_1');
+      .should('include', '"p":"0_0,1_0,2_0,3_1"');
   });
 
   it('Should change panel value in query', () => {
     cy.get('.panels-toggle .row div:first-child .q-checkbox').click().wait(400)
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', 'show=1,2,3');
+      .should('include', '"s":"1,2,3"');
     cy.get('.panels-toggle .row div:nth-child(4) .q-checkbox').click().wait(400)
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', 'show=1,2');
+      .should('include', '"s":"1,2"');
   });
 
   it('Should change panel value in query after reset', () => {
     cy.get('.panels-toggle .row div:first-child .q-checkbox').click().wait(400)
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', 'show=1,2,3');
+      .should('include', '"s":"1,2,3"');
     cy.get('.panels-toggle .row div:nth-child(4) .q-checkbox').click().wait(400)
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', 'show=1,2');
+      .should('include', '"s":"1,2"');
 
     // Reset
     cy.get('.panels-toggle .row div:first-child .q-checkbox').click();
     cy.get('.panels-toggle .row div:nth-child(4) .q-checkbox').click();
-    cy.wait(400).url().should('not.include', 'show');
+    cy.log('Url', cy.url())
+    cy.wait(400).url().then((url) => {
+      const splitUrl = url.split('tido')[1];
+      expect(splitUrl).to.not.include('s')
+    })  //. .should('not.include', 's');
   });
 
   it('Should bookmark first tab active when manifest changed', () => {
@@ -101,7 +109,9 @@ describe('Bookmarking', () => {
 describe('Bookmarking - URL first', () => {
   it('Should load tabs from URL', () => {
     cy
-      .visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r176/182b/latest/item.json&panels=0_1,1_0,2_1,3_1`)
+      //.visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r176/182b/latest/item.json&panels=0_1,1_0,2_1,3_1`)
+      //.visit(`/ahiqar-arabic-karshuni-local.html%3Ftido%3D%7B%22manifestIndex%22%3A20%2C%22itemIndex%22%3A0%2C%22panels%22%3A%220_1%2C1_0%2C2_1%2C3_1%22%7D`)
+      .visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido={"m":20,"i":0,"p":"0_1,1_0,2_1,3_1", "s":"0,1,2,3"}`)
       .then(() => {
         cy
           // Tree & Metadata panel

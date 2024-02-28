@@ -89,29 +89,18 @@ function discoverUrlConfig() {
   const urlConfig = {};
   let show;
   let panels;
-  // 
-  //const {
-  //  item, manifest, collection, panels, show,
-  //} = BookmarkService.getQuery();
-  console.log('Url query', BookmarkService.getQuery());
+
   const urlQuery = BookmarkService.getQuery();
   if ('tido' in urlQuery) {
     const tidoUrlQuery = urlQuery.tido;
-    const { manifestIndex, itemIndex} = tidoUrlQuery;
-    urlConfig['manifestIndex'] = manifestIndex;
-    urlConfig['itemIndex'] = itemIndex;
-    show = tidoUrlQuery['show'];
-    panels = tidoUrlQuery['panels'];
-    
+    const { m, i} = tidoUrlQuery;
+    urlConfig['m'] = m;
+    urlConfig['i'] = i;
+    show = tidoUrlQuery['s'];
+    panels = tidoUrlQuery['p'];
   }
-  
   const panelsQueryArr = panels ? panels.split(',') : [];
 
-  // Diese 3 wahrscheinlich sind jetzt obsolete
-  //if (isUrl(item)) urlConfig.item = item;
-  //if (isUrl(manifest)) urlConfig.manifest = manifest;
-  //if (isUrl(collection)) urlConfig.collection = collection;
-  
   if (panels) {
     urlConfig.activeViews = panelsQueryArr.reduce((acc, cur) => {
       const [panelIndex, viewIndex] = cur.split('_').map((i) => parseInt(i, 10));
@@ -121,8 +110,8 @@ function discoverUrlConfig() {
     }, {});
   }
 
-  if (show) urlConfig.show = show ? show.split(',').map((i) => parseInt(i, 10)) : [];
-  console.log("Url Config", urlConfig);
+  if (show) urlConfig.s = show ? show.split(',').map((i) => parseInt(i, 10)) : [];
+
   return urlConfig;
 }
 
@@ -134,13 +123,9 @@ function discoverDefaultConfig(config) {
 }
 
 export const load = ({ commit, getters }, config) => {
-  console.log("Loading the configs");
   const customConfig = discoverCustomConfig(config);
-  console.log("CustomConfig", customConfig);
   const urlConfig = discoverUrlConfig();
-  console.log("Url config", urlConfig);
   const defaultConfig = discoverDefaultConfig(getters.config);
-  console.log("Default config", defaultConfig);
 
   if (customConfig.panels) {
     // If the custom config provide panels config, we still need to check if it's valid.
@@ -194,32 +179,25 @@ export const load = ({ commit, getters }, config) => {
     });
   }
 
-  console.log("result Config", resultConfig);
   commit('setConfig', resultConfig);
 };
 
 export const setActivePanelView = async ({ commit, getters, dispatch }, { panelIndex, viewIndex }) => {
-  console.log("set Active Panel View");
   let activeViews = getters.activeViews;
-  console.log("Active views", activeViews);
   commit('setActivePanelView', { panelIndex, viewIndex });
-  dispatch('contents/updateActiveView', activeViews, { root: true });
   await BookmarkService.updatePanels(activeViews);
 };
 
 export const setShowPanel = ({ commit, getters, dispatch }, { index, show }) => {
-  console.log("Set show Panel");
   commit('setShowPanel', { index, show });
 
   let panelIndexes = getters.config.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
   if (panelIndexes.length === getters.config.panels.length) panelIndexes = [];
 
-  dispatch('contents/updatePanelIndexes', panelIndexes, { root: true });
   BookmarkService.updateShow(panelIndexes);
 };
 
 export const setContentType = ({ commit, getters }, type) => {
-  console.log("Set Content Type");
   const { config } = getters;
   const newConfig = { ...config };
 
@@ -228,10 +206,8 @@ export const setContentType = ({ commit, getters }, type) => {
 };
 
 export const setDefaultActiveViews = async ({ commit, getters }) => {
-  console.log("set Default Active Views");
   const { config } = getters;
   const activeViews = [];
-  console.log("default panels", config.panels);
   config.panels.forEach(({ views }, panelIndex) => {
     let defaultViewIndex = views.findIndex((view) => !!(view.default));
     if (defaultViewIndex === -1) defaultViewIndex = 0;
@@ -239,6 +215,5 @@ export const setDefaultActiveViews = async ({ commit, getters }) => {
   });
 
   await BookmarkService.updatePanels(activeViews);
-  
   commit('config/setActiveViews', activeViews, { root: true });
 };

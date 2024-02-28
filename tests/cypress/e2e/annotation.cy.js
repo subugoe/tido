@@ -4,7 +4,8 @@ describe('Annotation', () => {
   describe('Multiple Tabs', () => {
     beforeEach(() => {
       cy
-        .visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r7vd/130/latest/item.json`)
+        //.visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r7vd/130/latest/item.json`)
+        .visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido={"m":7,"i":0,"p":"0_0,1_0,2_0,3_0"}`)
         .get('#text-content')
         .should('be.visible')
         .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
@@ -171,15 +172,17 @@ describe('Annotation', () => {
         .find('.q-tab-panel .q-list .q-item')
         .first()
         .click()
-        .get('#t_Mingana_ar_christ_93_84_MD1816225N1l5l3l5l5l47l3l2_1')
+        .get('#t_Mingana_ar_christ_93_84_MD1816225N1l5l3l5l5l47l3l2_1') //Orlin: it was:
+        //.get('#t_Mingana_ar_christ_93_84_MD1789222N1l5l3l5l5l7l3l2_1') // Orlin: it became
+
         .should('be.visible');
     });
   });
 
   describe('Text Annotation', () => {
     beforeEach(() => {
-      cy.visit(`/gfl-local.html?item=${gflApiBaseUrl}/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page1/latest/item.json`)
-
+      //cy.visit(`/gfl-local.html?item=${gflApiBaseUrl}/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page1/latest/item.json`)
+      cy.visit(`/gfl-local.html?tido={"i":0}`)
       cy
         .get('.panels-target > .item:nth-child(2)')
         .should('be.visible')

@@ -66,7 +66,8 @@ describe('Tree', () => {
       .find('.q-tree__node-header')
       .should('have.class', 'q-tree__node--selected')
       .url()
-      .should('contain', '3r177%2F2b');
+      //.should('contain', '3r177%2F2b');
+      .should('contain', '%7B%22m%22%3A0%2C%22i%22%3A1%7D');
   });
 
   it('Should switch to other manifest', () => {
@@ -84,6 +85,7 @@ describe('Tree', () => {
       .find('.q-tree__node-header')
       .should('have.class', 'q-tree__node--selected')
       .url()
-      .should('contain', '3r176%2F182b');
+      //.should('contain', '3r176%2F182b');
+      .should('contain', '%7B%22m%22%3A20%2C%22i%22%3A0%2C%22');
   });
 });

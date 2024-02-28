@@ -2,14 +2,6 @@ import { request } from '@/utils/http';
 import BookmarkService from '@/services/bookmark';
 import { loadCss, loadFont } from '../../utils';
 
-// If the url points to a collection.json, then returns an array of manifests
-// If it points to a manifests.json, then returns an array of items
-async function getJson(url) {
-  let Data = await fetch(url);
-  Data = await Data.json();
-  return Data.sequence;
-};
-
 export const getItemIndex = async( { getters, rootGetters}, itemUrl) => {
   const { manifest } = getters;
   const items = manifest.sequence;
@@ -29,12 +21,6 @@ function findActiveManifestIndex(manifests = [], itemUrl = null) {
   });
 }
 
-async function getCollection(url) {
-  const data = await request(url);
-  return data;
-}
-
-
 async function getManifest(url) {
   const data = await request(url);
   return data;
@@ -52,13 +38,11 @@ export const initCollection = async ({
   const resultConfig = rootGetters['config/config'];
   let { item: itemUrl } = rootGetters['config/config'];
   let collection = '';
-  console.log('reading collection');
   try {
     collection = await request(url);
   } catch (err) {
     console.log(err.message);
   }
-  console.log('Read collection', collection);
   commit('setCollection', collection);
   let activeManifest = '';
   let manifestIndex;
@@ -71,9 +55,9 @@ export const initCollection = async ({
     commit('setManifests', manifests);
 
     // Check if manifestIndex or item Index are part of the result config
-    if ('manifestIndex' in resultConfig && 'itemIndex' in resultConfig) {
-      const manifestIndexInConfig = resultConfig.manifestIndex;
-      const itemIndexInConfig = resultConfig.itemIndex;
+    if ('m' in resultConfig && 'i' in resultConfig) {
+      const manifestIndexInConfig = resultConfig.m;
+      const itemIndexInConfig = resultConfig.i;
       manifestIndex = (Number.isInteger(manifestIndexInConfig) && manifestIndexInConfig > 0) ? manifestIndexInConfig : 0;
       itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
     } else {
@@ -95,10 +79,6 @@ export const initCollection = async ({
 
 export const initManifest = async ({ commit, dispatch, getters, rootGetters }, url) => {
   const { item } = getters;
-
-  // TODO ORlin: Check itemIndex and manifestIndex set item according to that !!!
-
-  // If there is no collection, then consider this manifest as part of a 1-Manifest collection -> manifestIndex = 0 
 
   const resultConfig = rootGetters['config/config'];
   let itemIndex;
@@ -136,22 +116,13 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
   }
   const manifests = getters.manifests ? getters.manifests : [];
   // here we have item query -> we should extract the manifest index and the item index from the query and then give it as a parameter to updateItemQuery()
-  const itemIndex = await dispatch('getItemIndex', url);
-  const manifestIndex = findActiveManifestIndex(manifests, url);
+  const i = await dispatch('getItemIndex', url);
+  const m = findActiveManifestIndex(manifests, url);
   const itemQuery = manifests.length > 0 ? {
-    manifestIndex,
-    itemIndex,
-  } : { itemIndex };
-  console.log('Item query', itemQuery);
+    m,
+    i,
+  } : { i };
   await BookmarkService.updateItemQuery(itemQuery);
-};
-
-export const updatePanelIndexes = async({ commit}, payload) => {
-  commit('setPanelIndexes', payload);
-};
-
-export const updateActiveView = async({ commit}, payload) => {
-  commit('setActiveView', payload);
 };
 
 export const updateImageLoading = async ({ commit }, payload) => {

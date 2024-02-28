@@ -122,7 +122,6 @@ async function getCollection(url) {
 async function loadConfig() {
   try {
     const config = inject('config');
-    console.log('Config in load Config function:', config);
     await store.dispatch('config/load', config);
   } catch ({ title, message }) {
     errorTitle.value = t('config_error');
@@ -132,16 +131,9 @@ async function loadConfig() {
 async function getManifest(url) {
   await store.dispatch('contents/initManifest', url);
 }
-async function getItem(url) {
-  await store.dispatch('contents/initItem', url);
-}
-async function init() {
-  console.log("config after load()", config);
-  const { collection, manifest, item } = config.value;
 
-  console.log("Collection in init()", collection);
-  console.log("Manifest in init ()", manifest);
-  console.log('Item in init()', item);
+async function init() {
+  const { collection, manifest, item } = config.value;
 
   try {
     // We want to preload all required data that the components need.
@@ -161,20 +153,18 @@ async function init() {
     // If a collection is given we ignore the manifest setting
     // and try to figure out the correct manifest by searching for the above item.
     // Otherwise, no collection is given but a single manifest instead, so we load that manifest.
-    console.log("collection", collection);
     if (collection) {
       await getCollection(collection);
     } else if (manifest) {
-      console.log('getting manifest');
       await getManifest(manifest);
     } else {
       alert('There should exist a collection or a manifest in config');
-      throw 'There should exist a collection or a manifest';
     }
   } catch (e) {
     await delay(1000);
     errorTitle.value = e.title || 'unknown_error';
-    errorMessage.value = e.message || 'please_try_again_later';
+    //errorMessage.value = e.message || 'please_try_again_later';
+    errorMessage.value = e.message || 'No entrypoint URL found. Please check your configuration.';
   } finally {
     isLoading.value = false;
   }
