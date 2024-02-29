@@ -172,9 +172,7 @@ describe('Annotation', () => {
         .find('.q-tab-panel .q-list .q-item')
         .first()
         .click()
-        .get('#t_Mingana_ar_christ_93_84_MD1816225N1l5l3l5l5l47l3l2_1') //Orlin: it was:
-        //.get('#t_Mingana_ar_christ_93_84_MD1789222N1l5l3l5l5l7l3l2_1') // Orlin: it became
-
+        .get('#t_Mingana_ar_christ_93_84_MD1789222N1l5l3l5l5l7l3l2_1')
         .should('be.visible');
     });
   });
