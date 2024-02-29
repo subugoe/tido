@@ -287,8 +287,7 @@ export function generateTargetSelector(annotation) {
 
   let result = null;
 
-  const { selector } = (annotation.target.length > 0) ? annotation.target[0] : null;
-  console.log('Annotation target', annotation.target);
+  const { selector } = annotation.target;
 
   if (!selector) {
     let targetId = annotation.target.id;
