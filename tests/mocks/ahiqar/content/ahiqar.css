@@ -85,18 +85,11 @@ h1 {
 .label {
   margin-right: 8px; }
 
-.no-break,
-.no_break {
-  text-align: center; }
+.no-break::after {
+  content: '<->'; }
 
-.no-break::before {
-  content: '( '; }
-
-.no_break::after {
-  content: ' )'; }
-
-.lg {
-  padding-left: 8px; }
+.tei-lg {
+  padding: 20px 50px;}
 
 .note {
   background: none;
@@ -143,7 +136,7 @@ h1 {
 .quote.colophon {
   color: #700000; }
 
-.lg.colophon {
+.tei-lg.colophon {
   color: #005194; }
 
 .vacant-page {
@@ -164,5 +157,17 @@ h1 {
     color: #FFFFFF; }
   .quote.colophon {
     color: #FF6161; }
-  .lg.colophon {
+  .tei-lg.colophon {
     color: #1F9AFF; } }
+
+.column-marker {
+  color: #d3d3d3;
+}
+
+.former-column:nth-of-type(2) .column-marker {
+  margin-top: 10%;
+}
+
+.verse {
+  font-style: italic;
+}

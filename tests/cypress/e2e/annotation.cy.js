@@ -170,9 +170,14 @@ describe('Annotation', () => {
         .get('.panels-target > .item:nth-child(4)')
         .find('.q-tab-panel .q-list .q-item')
         .first()
-        .click()
-        .get('#t_Mingana_ar_christ_93_84_MD1816225N1l5l3l5l5l47l3l2_1')
-        .should('be.visible');
+        .click().then(($annot) => {
+          const delimiter = 'annotation-';
+          const dataAnnotationId = $annot.attr('data-annotation-id');
+          const annotTranscriptId = '#'.concat(dataAnnotationId.split(delimiter)[1]);
+          cy.log('Annot transcript ID', annotTranscriptId);
+          cy.get(annotTranscriptId)
+          .invoke('attr', 'data-annotation-level').should('equal', '1');
+        });
     });
   });
 
