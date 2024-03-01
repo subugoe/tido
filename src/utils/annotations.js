@@ -286,12 +286,8 @@ export function generateTargetSelector(annotation) {
   // If no selector object is present we try to generate a CSS selector from target id.
 
   let result = null;
-
-  console.log('Type of target',typeof annotation.target);
-  console.log('Annotation target', annotation.target);
-  console.log('Is target Array', annotation.target instanceof Array);
-  const { selector } = (annotation.target.length > 0) ? annotation.target[0] : null;
-  //const selector = (annotation.target.length > 0) ? annotation.target[0] : null;
+  console.log('annotation', annotation.target);
+  const { selector } = annotation.target[0];
 
   if (!selector) {
     let targetId = annotation.id;
