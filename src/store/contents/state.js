@@ -6,5 +6,7 @@ export default function ContentsState() {
     itemUrl: null,
     manifests: null,
     manifest: null,
+    panels: null,
+    show: null,
   };
 }
