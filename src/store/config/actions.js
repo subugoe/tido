@@ -110,8 +110,8 @@ function discoverUrlConfig() {
     }, {});
   }
 
-  if (show) urlConfig.s = show ? show.split(',').map((i) => parseInt(i, 10)) : [];
-
+  urlConfig.s = show ? show.split(',').map((i) => parseInt(i, 10)) : [];
+  urlConfig.p = panels;
   return urlConfig;
 }
 
@@ -193,9 +193,10 @@ export const setShowPanel = ({ commit, getters, dispatch }, { index, show }) => 
 
   let panelIndexes = getters.config.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
   if (panelIndexes.length === getters.config.panels.length) panelIndexes = [];
-
   BookmarkService.updateShow(panelIndexes);
 };
+
+
 
 export const setContentType = ({ commit, getters }, type) => {
   const { config } = getters;

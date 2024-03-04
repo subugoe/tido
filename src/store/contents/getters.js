@@ -57,3 +57,7 @@ export const item = (state) => state.item;
 export const manifest = (state) => state.manifest;
 
 export const activeContentUrl = (state) => state.activeContentUrl;
+
+export const panels = (state) => state.panels;
+
+export const show = (state) => state.show;
