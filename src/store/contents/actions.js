@@ -2,12 +2,18 @@ import { request } from '@/utils/http';
 import BookmarkService from '@/services/bookmark';
 import { loadCss, loadFont } from '../../utils';
 
+import toggles from '/Users/omalkja/SUB-DB-ENT/projects/TIDO/tido/src/components/header/PanelsToggle.vue'
+
 export const getItemIndex = async ({ getters }, itemUrl) => {
   const { manifest } = getters;
   const items = manifest.sequence;
   const itemIndex = items.findIndex((item) => item.id === itemUrl);
   return itemIndex;
 };
+
+export const getPanels = async ({ getters }) => getters.panels;
+
+export const getShow = async ({ getters }) => getters.show;
 
 function findActiveManifestIndex(manifests = [], itemUrl = null) {
   if (manifests.length === 0) return -1;
@@ -65,6 +71,8 @@ export const initCollection = async ({
     }
     activeManifest = manifests[manifestIndex];
     itemUrl = activeManifest.sequence[itemIndex].id;
+    if ('p' in resultConfig) commit('setPanels', resultConfig.p);
+    if ('s' in resultConfig) commit('setShow', resultConfig.s);
 
     const { support } = activeManifest;
 
@@ -84,8 +92,6 @@ export const initManifest = async ({
 
   const resultConfig = rootGetters['config/config'];
   let itemIndex;
-
-  console.log('result config', resultConfig);
 
   // Check if manifestIndex or item Index are part of the result config
   if ('i' in resultConfig) {
@@ -122,11 +128,29 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
   // here we have item query -> we should extract the manifest index and the item index from the query and then give it as a parameter to updateItemQuery()
   const i = await dispatch('getItemIndex', url);
   const m = findActiveManifestIndex(manifests, url);
-  const itemQuery = manifests.length > 0 ? {
+  const p = await dispatch('getPanels');
+  const s = await dispatch('getShow');
+
+  // If in the URL it is given which panels to show initially, then show only those
+  if (s.length > 0) {
+    const totalShowPanels = Array.from({ length: 4 }, (value, index) => index);
+
+    const closedPanels = totalShowPanels.filter((element) => !s.includes(element));
+    const show = false;
+    if (closedPanels.length > 0) {
+      closedPanels.forEach((index) => {
+        const input = { index, show };
+        //toggles.value[index].show = show;
+        dispatch('config/setShowPanel', input, { root: true });
+      });
+    }
+  }
+
+  const query = manifests.length > 0 ? {
     m,
     i,
   } : { i };
-  await BookmarkService.updateItemQuery(itemQuery);
+  await BookmarkService.updateQuery(query);
 };
 
 export const updateImageLoading = async ({ commit }, payload) => {
