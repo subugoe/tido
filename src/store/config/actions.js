@@ -87,18 +87,16 @@ function discoverCustomConfig(customConfig) {
 
 function discoverUrlConfig() {
   const urlConfig = {};
-  let show;
-  let panels;
 
   const urlQuery = BookmarkService.getQuery();
-  if ('tido' in urlQuery) {
-    const tidoUrlQuery = urlQuery.tido;
-    const { m, i} = tidoUrlQuery;
-    urlConfig['m'] = m;
-    urlConfig['i'] = i;
-    show = tidoUrlQuery['s'];
-    panels = tidoUrlQuery['p'];
-  }
+
+  const { m, i, s, p } = urlQuery;
+  urlConfig.m = m;
+  urlConfig.i = i;
+  urlConfig.s = s ? s.split(',').map((i) => parseInt(i, 10)) : [];
+  urlConfig.p = p;
+  const panels = p;
+
   const panelsQueryArr = panels ? panels.split(',') : [];
 
   if (panels) {
@@ -110,8 +108,6 @@ function discoverUrlConfig() {
     }, {});
   }
 
-  urlConfig.s = show ? show.split(',').map((i) => parseInt(i, 10)) : [];
-  urlConfig.p = panels;
   return urlConfig;
 }
 
@@ -152,7 +148,6 @@ export const load = ({ commit, getters }, config) => {
     ...customConfig,
     ...urlConfig,
   };
-
   const activeViews = urlConfig.activeViews || defaultConfig.activeViews;
   commit('setActiveViews', activeViews);
 
@@ -195,8 +190,6 @@ export const setShowPanel = ({ commit, getters, dispatch }, { index, show }) => 
   if (panelIndexes.length === getters.config.panels.length) panelIndexes = [];
   BookmarkService.updateShow(panelIndexes);
 };
-
-
 
 export const setContentType = ({ commit, getters }, type) => {
   const { config } = getters;

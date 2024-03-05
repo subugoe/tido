@@ -12,9 +12,10 @@ class BookmarkService {
     const url = new URL(window.location);
     url.search = '';
     const params = url.searchParams;
-
-    Object.keys(query).forEach((key) => {
-      params.set(key, JSON.stringify(query[key]));
+    let newQuery = {};
+    newQuery.tido = {...query};
+    Object.keys(newQuery).forEach((key) => {
+      params.set(key, JSON.stringify(newQuery[key]));
     });
     window.history.pushState({}, '', url);
   }
@@ -23,7 +24,8 @@ class BookmarkService {
   async updatePanels(activeViews) {
     let oldQuery = this.getQuery();
     const panels = Object.keys(activeViews).map((panelIndex) => `${panelIndex}_${activeViews[panelIndex]}`).join(',');
-    const newQuery = this.updateQuery(oldQuery, panels, 'p');
+    let newQuery = {...oldQuery};
+    newQuery.p = panels;
     await this.pushQuery(newQuery);
   }
 
@@ -32,61 +34,59 @@ class BookmarkService {
     await delay(300);
 
     const oldQuery = this.getQuery();
-    let oldQueryValue = oldQuery.tido;
-    let newQuery = {}
+    let newQuery = {...oldQuery};
 
     // Does not append (= removes) the "show" param from URL if panelIndexes empty.
     if (panelIndexes.length > 0) {
-      newQuery = this.updateQuery(oldQuery, panelIndexes.join(','), 's');
+      newQuery.s = panelIndexes.join(',');
+
     } else {
-      if (oldQuery.tido.s) delete oldQuery.tido.s;  // when we open all panels, then we remove show from the Query GET Params
+      if (oldQuery.s) delete oldQuery.s;
       newQuery = oldQuery;
     }
     
     await this.pushQuery(newQuery);
   }
 
-  async updateItemQuery(item) {
+  async updateItem(itemIndex, oldQuery) {
+    let newQuery = this.getQuery();
+    newQuery.i = itemIndex;
+    await this.pushQuery(newQuery);
 
-    const oldQuery = {...this.getQuery()};
-    let query = {
-      ...oldQuery,
-      ...(item ? { 'tido':item } : {}),
-    };
-
-    if (item && 'tido' in oldQuery){
-      for(const key of Object.keys(oldQuery['tido'])){
-        if(key in query.tido === false){
-          query.tido[key] = oldQuery['tido'][key];
-        }
-      }
-    }
-
-    await this.pushQuery(query);
   }
 
-  updateQuery (oldQuery, updatedAttribute, nameUpdatedAttribute){
-    oldQuery.tido[nameUpdatedAttribute] = updatedAttribute;
-    const newQuery = {...oldQuery};
-    return newQuery;
-  } 
+  async updateManifest (manifestIndex, oldQuery) {
+    let newQuery = this.getQuery();
+    newQuery.m = manifestIndex;
+    await this.pushQuery(newQuery);
+
+  }
+
+  async updateQuery(query) {
+
+    const oldQuery = {...this.getQuery()};
+    for(const key of Object.keys(query)) {
+      if (key === 'i') this.updateItem(query[key], oldQuery);
+      if (key === 'm') this.updateManifest(query[key], oldQuery);
+    }
+  }
 
   getQuery() {
     
     let queryString = window.location.search.substring(1);
 
-    queryString = queryString.split('&').reduce((acc, cur) => {
+    let queryObject = queryString.split('&').reduce((acc, cur) => {
       const [key, value] = cur.split('=');
       if (key && value) acc[key] = decodeURIComponent(value);
       return acc;
     }, {});
-    // at first load the URL params is {} -> no key
-    if ('tido' in queryString){
-      let getParamsValueJson = JSON.parse(queryString.tido);
-      queryString.tido = getParamsValueJson;
-    }
-    
-    return queryString;
+   
+   let newQueryObject = {} 
+   if ('tido' in queryObject) newQueryObject = JSON.parse(queryObject.tido);
+   else {
+    newQueryObject = Object.keys(queryObject).length > 0 ? JSON.parse(queryObject) : {};   
+   }
+   return newQueryObject;
     
   }
 }
