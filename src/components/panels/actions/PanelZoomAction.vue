@@ -46,7 +46,7 @@ const disableDecrease = ref(false);
 const value = ref(0);
 
 onMounted(() => {
-  value.value = props.startValue;  
+  value.value = props.startValue;
 });
 
 function increase() {

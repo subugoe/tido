@@ -15,10 +15,10 @@
 </template>
 
 <script setup>
-import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 const store = useStore();
 
@@ -32,10 +32,11 @@ const metadata = computed(() => {
   };
 
   const collectorName = collection.value.collector?.name;
-  const description = collection.value.description;
+  const { description } = collection.value;
 
   return [
     ...collection.value.title
+      // eslint-disable-next-line no-shadow
       .filter((collection) => collection)
       .map((collectionTitle) => ({
         key: mappings[collectionTitle.type] || 'title',

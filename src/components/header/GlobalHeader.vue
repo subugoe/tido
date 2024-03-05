@@ -18,14 +18,14 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import Navbar from '@/components/header/Navbar.vue';
 import TitleBar from '@/components/header/TitleBar.vue';
 import PanelsToggle from '@/components/header/PanelsToggle.vue';
 import Tools from '@/components/header/Tools.vue';
 
-import { computed } from 'vue';
-import { useStore } from 'vuex';
-
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   configErrorTitle: {
     type: String,
@@ -36,11 +36,10 @@ const props = defineProps({
 const store = useStore();
 
 const show = computed(() => config.value?.header?.show);
-const manifests = computed(() => store.getters['contents/manifests']);
 const config = computed(() => store.getters['config/config']);
 const item = computed(() => store.getters['contents/item']);
 const showNavbar = computed(() => config.value?.header?.navigation || true);
-const showPanelsToggle = computed(() => config.value?.header?.panelsToggle !== undefined ? config.value?.header?.panelsToggle : true);
+const showPanelsToggle = computed(() => (config.value?.header?.panelsToggle !== undefined ? config.value?.header?.panelsToggle : true));
 </script>
 
 <style lang="scss" scoped>

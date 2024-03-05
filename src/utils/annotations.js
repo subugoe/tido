@@ -323,6 +323,7 @@ export function handleRangeSelector(selector) {
       let started = false;
       let ended = false;
 
+      // eslint-disable-next-line no-inner-declarations
       function findElementsInRangeRecursive(element) {
         if (element === start) started = true;
         if (element === end) {

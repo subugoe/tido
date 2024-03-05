@@ -84,7 +84,7 @@ const bugIcon = biBugFill;
 const actualYear = computed(() => {
   const d = new Date();
   return d.getFullYear();
-})
+});
 </script>
 
 <style lang="scss">

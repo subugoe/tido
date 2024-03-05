@@ -1,5 +1,4 @@
 import messages from 'src/i18n';
-import { isUrl } from '@/utils';
 import BookmarkService from '@/services/bookmark';
 import { i18n } from '@/i18n';
 
@@ -29,14 +28,6 @@ function validateManifest(value) {
 }
 
 function validateItem(value) {
-  return !!(value);
-}
-
-function validateManifestIndex(value) {
-  return !!(value);
-}
-
-function validateItemIndex(value) {
   return !!(value);
 }
 
@@ -90,9 +81,12 @@ function discoverUrlConfig() {
 
   const urlQuery = BookmarkService.getQuery();
 
-  const { m, i, s, p } = urlQuery;
+  const {
+    m, i, s, p,
+  } = urlQuery;
   urlConfig.m = m;
   urlConfig.i = i;
+  // eslint-disable-next-line no-shadow
   urlConfig.s = s ? s.split(',').map((i) => parseInt(i, 10)) : [];
   urlConfig.p = p;
   const panels = p;
@@ -101,6 +95,7 @@ function discoverUrlConfig() {
 
   if (panels) {
     urlConfig.activeViews = panelsQueryArr.reduce((acc, cur) => {
+      // eslint-disable-next-line no-shadow
       const [panelIndex, viewIndex] = cur.split('_').map((i) => parseInt(i, 10));
 
       acc[panelIndex] = viewIndex;
@@ -177,13 +172,13 @@ export const load = ({ commit, getters }, config) => {
   commit('setConfig', resultConfig);
 };
 
-export const setActivePanelView = async ({ commit, getters, dispatch }, { panelIndex, viewIndex }) => {
-  let activeViews = getters.activeViews;
+export const setActivePanelView = async ({ commit, getters }, { panelIndex, viewIndex }) => {
+  const { activeViews } = getters;
   commit('setActivePanelView', { panelIndex, viewIndex });
   await BookmarkService.updatePanels(activeViews);
 };
 
-export const setShowPanel = ({ commit, getters, dispatch }, { index, show }) => {
+export const setShowPanel = ({ commit, getters }, { index, show }) => {
   commit('setShowPanel', { index, show });
 
   let panelIndexes = getters.config.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);

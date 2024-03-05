@@ -15,10 +15,10 @@
 </template>
 
 <script setup>
-import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 const store = useStore();
 
@@ -27,7 +27,7 @@ const itemUrl = computed(() => store.getters['contents/itemUrl']);
 const manifest = computed(() => store.getters['contents/manifest']);
 const itemsCount = computed(() => manifest.value?.sequence.length);
 const labels = computed(() => store.getters['config/config'].labels);
-const number = computed(() => manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) + 1 : 1);
+const number = computed(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) + 1 : 1));
 const total = computed(() => itemsCount.value ?? 1);
 const metadata = computed(() => (
   [
@@ -35,6 +35,7 @@ const metadata = computed(() => (
     { key: 'language', value: item.value?.lang?.join(',') },
     { key: 'image_license', value: item.value?.image?.license?.id },
     { key: 'image_notes', value: item.value?.image?.license?.notes },
+  // eslint-disable-next-line no-shadow
   ].filter((item) => item.value)
 ));
 </script>

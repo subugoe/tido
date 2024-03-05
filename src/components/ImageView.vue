@@ -9,10 +9,10 @@
 
 <script setup>
 import OpenSeadragon from 'openseadragon';
-import Notification from '@/components/Notification.vue';
 
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
+import Notification from '@/components/Notification.vue';
 import { delay } from '@/utils';
 
 const emit = defineEmits('loading');
@@ -55,13 +55,14 @@ watch(
       error.value = null;
       await delay(1000);
       initOpenSeagragon();
+    // eslint-disable-next-line no-shadow
     } catch (error) {
       error.value = error;
       emit('loading', false);
     }
   },
   { immediate: true },
-)
+);
 
 function initOpenSeagragon() {
   if (viewer.value) {

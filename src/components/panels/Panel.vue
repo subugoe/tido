@@ -50,6 +50,11 @@
 </template>
 
 <script>
+import {
+  computed, nextTick, ref, watch,
+} from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
 import MetadataView from '@/components/metadata/MetadataView.vue';
 import TreeView from '@/components/TreeView.vue';
 import AnnotationsView from '@/components/annotations/AnnotationsView.vue';
@@ -61,10 +66,7 @@ import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
 
-import { computed, nextTick, ref, watch } from 'vue';
-import { useStore } from 'vuex';
-import { useI18n } from 'vue-i18n';
-import { findComponent } from '@/utils/panels'
+import { findComponent } from '@/utils/panels';
 
 // NOTE: Using `setup()` rather than the recommended `<script setup>`
 // to avoid issues with asset loading.
@@ -112,7 +114,7 @@ export default {
       ({ views }) => {
         nextTick(() => {
           init(views);
-        })
+        });
       },
       { deep: true, immediate: true },
     );
@@ -120,8 +122,8 @@ export default {
       item,
       () => {
         init(props.panel.views);
-      }
-    )
+      },
+    );
 
     function init(views) {
       tabs.value = [];
@@ -286,12 +288,13 @@ export default {
     return {
       activeTabIndex,
       isLoading,
+      // eslint-disable-next-line vue/no-dupe-keys
       panel: props.panel,
       tabs,
       onViewChange,
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

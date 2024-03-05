@@ -21,20 +21,21 @@
 
 <script setup>
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
-import { delay, isElementVisible } from '@/utils';
-import { request } from '@/utils/http';
 
-import { computed, nextTick, ref, watch } from 'vue';
+import {
+  computed, nextTick, ref, watch,
+} from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
+import { request } from '@/utils/http';
+import { delay, isElementVisible } from '@/utils';
 
-const emit = defineEmits(['loading'])
+const emit = defineEmits(['loading']);
 
 const expandIcon = biChevronRight;
 const store = useStore();
 const { t } = useI18n();
 
-const isLoading = ref(false);
 const expanded = ref([]);
 const selected = ref(null);
 const tree = ref([]);
@@ -45,15 +46,13 @@ const config = computed(() => store.getters['config/config']);
 const collectionTitle = computed(() => store.getters['contents/collectionTitle']);
 const collection = computed(() => store.getters['contents/collection']);
 const labels = computed(() => (config.value && config.value.labels) || {});
-const item = computed(() => store.getters['contents/item']);
 const itemUrl = computed(() => store.getters['contents/itemUrl']);
 const manifest = computed(() => store.getters['contents/manifest']);
-const manifests = computed(() => store.getters['contents/manifests']);
 
 watch(
   itemUrl,
   onItemUrlChange,
-)
+);
 async function onItemUrlChange() {
   selected.value = itemUrl.value;
 }
@@ -62,7 +61,7 @@ watch(
   collection,
   onCollectionChange,
   { immediate: true },
-)
+);
 async function onCollectionChange() {
   if (collection.value) {
     emit('loading', true);
@@ -101,7 +100,7 @@ watch(
   manifest,
   onManifestChange,
   { immediate: true },
-)
+);
 async function onManifestChange() {
   const { label, sequence, id: manifestId } = manifest.value;
   if (!collection.value) {
@@ -142,7 +141,7 @@ watch(
   selected,
   onSelectedChange,
   { immediate: true },
-)
+);
 function onSelectedChange(value) {
   if (!treeRef.value) return;
 
@@ -185,6 +184,7 @@ async function onLazyLoad({ node, fail, done }) {
     return;
   }
 
+  // eslint-disable-next-line no-shadow
   const manifest = await getManifest(url);
 
   if (!manifest) {

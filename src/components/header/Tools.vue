@@ -13,12 +13,12 @@
 </template>
 
 <script setup>
-import Language from '@/components/header/Language.vue';
-import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { biMoonFill, biSunFill } from '@quasar/extras/bootstrap-icons';
+import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
+import Language from '@/components/header/Language.vue';
 
 const store = useStore();
 const darkIcon = biMoonFill;

@@ -17,10 +17,12 @@
 </template>
 
 <script setup>
-import Notification from '@/components/Notification.vue';
 
-import { computed, readonly, ref, watch } from 'vue';
+import {
+  computed, readonly, ref, watch,
+} from 'vue';
 import { useStore } from 'vuex';
+import Notification from '@/components/Notification.vue';
 import { request } from '@/utils/http';
 import { domParser, delay } from '@/utils';
 
@@ -37,7 +39,6 @@ const content = ref('');
 const errorTextMessage = ref(null);
 const notificationMessage = readonly(errorTextMessage);
 
-const manifest = computed(() => store.getters['contents/manifest']);
 const config = computed(() => store.getters['config/config']);
 const contentStyle = computed(() => ({
   fontSize: `${props.fontSize}px`,

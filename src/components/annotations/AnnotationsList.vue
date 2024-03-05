@@ -23,9 +23,8 @@
 </template>
 
 <script setup>
-import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
-
 import { computed } from 'vue';
+import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 
 const props = defineProps({
   activeAnnotation: {

@@ -32,22 +32,22 @@
 <script>
 export default {
   name: 'TIDO',
-}
+};
 </script>
 
 <script setup>
-import { setCssVar } from 'quasar';
+import { setCssVar, useQuasar } from 'quasar';
 import { biBook } from '@quasar/extras/bootstrap-icons';
+import {
+  computed, inject, onMounted, ref,
+} from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
 import { delay } from '@/utils';
 import PanelsWrapper from '@/components/panels/PanelsWrapper.vue';
 import Notification from '@/components/Notification.vue';
 import Loading from '@/components/Loading.vue';
-
-import { computed, inject, onMounted, ref } from 'vue';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
-import { useI18n } from 'vue-i18n';
 
 const store = useStore();
 const $q = useQuasar();
@@ -114,13 +114,14 @@ onMounted(async () => {
   }
 
   await init();
-})
+});
 
 async function getCollection(url) {
   await store.dispatch('contents/initCollection', url);
 }
 async function loadConfig() {
   try {
+    // eslint-disable-next-line no-shadow
     const config = inject('config');
     await store.dispatch('config/load', config);
   } catch ({ title, message }) {
@@ -133,38 +134,26 @@ async function getManifest(url) {
 }
 
 async function init() {
-  const { collection, manifest, item } = config.value;
-
+  // eslint-disable-next-line no-shadow
+  const { collection, manifest } = config.value;
   try {
     // We want to preload all required data that the components need.
-
-    /*
-    // Initialize priority:
-    // We always load the item first as here is the main data that we want to display.
-    console.log("item in init()", item);
-    if (item) {
-      console.log("getting item in init()");
-      await getItem(item);
-    }
-
-    */
-
-    // After that we load additionally the parent objects.
     // If a collection is given we ignore the manifest setting
     // and try to figure out the correct manifest by searching for the above item.
     // Otherwise, no collection is given but a single manifest instead, so we load that manifest.
+
     if (collection) {
       await getCollection(collection);
     } else if (manifest) {
       await getManifest(manifest);
     } else {
-      alert('There should exist a collection or a manifest in config');
+      // eslint-disable-next-line no-console
+      console.error('There should exist a collection or a manifest in config');
     }
   } catch (e) {
     await delay(1000);
     errorTitle.value = e.title || 'unknown_error';
-    //errorMessage.value = e.message || 'please_try_again_later';
-    errorMessage.value = e.message || 'No entrypoint URL found. Please check your configuration.';
+    errorMessage.value = e.message || ' no_entrypoint_available';
   } finally {
     isLoading.value = false;
   }

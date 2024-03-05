@@ -21,12 +21,13 @@
 </template>
 
 <script setup>
+import {
+  computed, onBeforeUnmount, ref, watch,
+} from 'vue';
+import { useStore } from 'vuex';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import Notification from '@/components/Notification.vue';
 import * as AnnotationUtils from '@/utils/annotations';
-
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
-import { useStore } from 'vuex';
 
 const props = defineProps({
   url: String,
@@ -41,20 +42,19 @@ const annotations = computed(() => store.getters['annotations/annotations']);
 const activeAnnotations = computed(() => store.getters['annotations/activeAnnotations']);
 const filteredAnnotations = computed(() => store.getters['annotations/filteredAnnotations']);
 const activeContentUrl = computed(() => store.getters['contents/activeContentUrl']);
-const updateTextHighlighting = computed(() => {
-  // We need to make sure that annotations are loaded (this.annotations),
-  // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
-  // and the annotation are filtered by type (this.filteredAnnotations).
-  return `${annotations.value !== null}|${activeContentUrl.value}`;
-});
+const updateTextHighlighting = computed(() => `${annotations.value !== null}|${activeContentUrl.value}`);
+// We need to make sure that annotations are loaded (this.annotations),
+// the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
+// and the annotation are filtered by type (this.filteredAnnotations).
 
 watch(
   updateTextHighlighting,
   (contentData) => {
-   const [hasAnnotations, activeContentUrl] = contentData.split('|');
-   if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
-   store.dispatch('annotations/setFilteredAnnotations', props.types);
-   highlightTargetsLevel0();
+    // eslint-disable-next-line no-shadow
+    const [hasAnnotations, activeContentUrl] = contentData.split('|');
+    if (hasAnnotations !== 'true' && activeContentUrl === 'null') return;
+    store.dispatch('annotations/setFilteredAnnotations', props.types);
+    highlightTargetsLevel0();
   },
   { immediate: true },
 );

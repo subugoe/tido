@@ -10,10 +10,9 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import MetadataLink from '@/components/metadata/MetadataLink.vue';
 import MetadataValue from '@/components/metadata/MetadataValue.vue';
-
-import { computed } from 'vue';
 
 const props = defineProps({
   item: Object,

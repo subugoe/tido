@@ -10,7 +10,7 @@ import { ref, watch } from 'vue';
 const props = defineProps({
   selected: Boolean,
   label: String,
-})
+});
 const emit = defineEmits(['update']);
 
 const selectedModel = ref(false);

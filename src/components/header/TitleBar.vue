@@ -42,6 +42,7 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { biChevronRight } from '@quasar/extras/bootstrap-icons';
 
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   item: {
     type: Object,

@@ -126,7 +126,7 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
   // here we have item query -> we should extract the manifest index and the item index from the query and then give it as a parameter to updateItemQuery()
   const i = await dispatch('getItemIndex', url);
   const m = findActiveManifestIndex(manifests, url);
-  const p = await dispatch('getPanels');
+  // const p = await dispatch('getPanels');
   const s = await dispatch('getShow');
 
   // If in the URL it is given which panels to show initially, then show only those
@@ -139,7 +139,6 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
       if (closedPanels.length > 0) {
         closedPanels.forEach((index) => {
           const input = { index, show };
-          //toggles.value[index].show = show;
           dispatch('config/setShowPanel', input, { root: true });
         });
       }

@@ -20,6 +20,7 @@
 <script setup>
 import { biBoxArrowUpRight } from '@quasar/extras/bootstrap-icons';
 
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   url: {
     type: String,

@@ -7,14 +7,15 @@
 </template>
 
 <script setup>
-import Panel from '@/components/panels/Panel.vue';
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import Panel from '@/components/panels/Panel.vue';
 
 const store = useStore();
 
 const panels = computed(() => {
+  // eslint-disable-next-line no-shadow
   const { panels } = config.value;
   return panels;
 });
