@@ -48,14 +48,14 @@ class BookmarkService {
     await this.pushQuery(newQuery);
   }
 
-  async updateItem(itemIndex, oldQuery) {
-    let newQuery = this.getQuery();
+  async updateItem(itemIndex) {
+    let newQuery = this.getQuery(); 
     newQuery.i = itemIndex;
     await this.pushQuery(newQuery);
 
   }
 
-  async updateManifest (manifestIndex, oldQuery) {
+  async updateManifest (manifestIndex) {
     let newQuery = this.getQuery();
     newQuery.m = manifestIndex;
     await this.pushQuery(newQuery);
@@ -64,10 +64,9 @@ class BookmarkService {
 
   async updateQuery(query) {
 
-    const oldQuery = {...this.getQuery()};
     for(const key of Object.keys(query)) {
-      if (key === 'i') this.updateItem(query[key], oldQuery);
-      if (key === 'm') this.updateManifest(query[key], oldQuery);
+      if (key === 'i') this.updateItem(query[key]);
+      if (key === 'm') this.updateManifest(query[key]);
     }
   }
 
