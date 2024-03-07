@@ -1,6 +1,5 @@
 <!-- eslint-disable vue/valid-v-for -->
 <template>
-  // eslint-disable-next-line vue/valid-v-for
   <div v-for="actorItem in data" :key="name" class="q-mb-md">
     <q-item-label overline class="text-uppercase">
       {{ $t(getRole(actorItem)) }}
