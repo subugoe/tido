@@ -52,6 +52,8 @@ export const initCollection = async ({
   let manifestIndex;
   let itemIndex;
 
+  console.log('Result config', resultConfig);
+
   if (Array.isArray(collection.sequence) && collection.sequence.length > 0) {
     const promises = [];
     collection.sequence.forEach((seq) => promises.push(getManifest(seq.id)));
@@ -62,8 +64,8 @@ export const initCollection = async ({
     if ('m' in resultConfig && 'i' in resultConfig) {
       const manifestIndexInConfig = resultConfig.m;
       const itemIndexInConfig = resultConfig.i;
-      manifestIndex = (Number.isInteger(manifestIndexInConfig) && manifestIndexInConfig > 0) ? manifestIndexInConfig : 0;
-      itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
+      manifestIndex = Number(manifestIndexInConfig) > 0 ? Number(manifestIndexInConfig) : 0;
+      itemIndex = Number(itemIndexInConfig) > 0 ? Number(itemIndexInConfig) : 0;
     } else {
       [manifestIndex, itemIndex] = [0, 0];
     }
@@ -78,7 +80,6 @@ export const initCollection = async ({
       await dispatch('getSupport', support);
     }
     commit('setManifest', activeManifest);
-
     if (!item) dispatch('initItem', itemUrl);
   }
 };
@@ -144,11 +145,12 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
       }
     }
   }
-
+ 
   const query = manifests.length > 0 ? {
     m,
     i,
   } : { i };
+  console.log('query', query);
   await BookmarkService.updateQuery(query);
 };
 

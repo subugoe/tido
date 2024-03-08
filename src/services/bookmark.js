@@ -11,15 +11,33 @@ class BookmarkService {
   async pushQuery(query) {
     const url = new URL(window.location);
     url.search = '';
-    const params = url.searchParams;
+    let params = url.searchParams;
     let newQuery = {};
     newQuery.tido = {...query};
+    /*
     Object.keys(newQuery).forEach((key) => {
       params.set(key, JSON.stringify(newQuery[key]));
     });
-    window.history.pushState({}, '', url);
-  }
+    */
+    //const paramAsString = JSON.stringify(newQuery.tido);
+    
+    // Orlin: ToDO: Parse the query object to string and attach to the tido object 
 
+    let i = 0;
+    let paramAsString = '{';
+    Object.keys(newQuery.tido).forEach((key) => {
+      if (i > 0) paramAsString += ',';
+      paramAsString =  paramAsString.concat('',`"${key}":"${newQuery.tido[key]}"`);
+      i += 1;
+
+    });
+    paramAsString += '}';
+    params.set('tido', paramAsString);
+    const stringUntilTido = url.href.split('=')[0];
+    url.href = `${stringUntilTido}=${paramAsString}`;
+    window.history.pushState({}, '', url);
+
+  }
 
   async updatePanels(activeViews) {
     let oldQuery = this.getQuery();
@@ -73,19 +91,27 @@ class BookmarkService {
   getQuery() {
     
     let queryString = window.location.search.substring(1);
-
+    
+    /*
     let queryObject = queryString.split('&').reduce((acc, cur) => {
       const [key, value] = cur.split('=');
       if (key && value) acc[key] = decodeURIComponent(value);
       return acc;
     }, {});
+
    
    let newQueryObject = {} 
    if ('tido' in queryObject) newQueryObject = JSON.parse(queryObject.tido);
    else {
     newQueryObject = Object.keys(queryObject).length > 0 ? JSON.parse(queryObject) : {};   
    }
-   return newQueryObject;
+
+   */
+
+   queryString = decodeURIComponent(queryString);
+   const queryObject = queryString !=='' ? JSON.parse(queryString.split('=')[1]) : {} ;
+
+   return queryObject;
     
   }
 }
