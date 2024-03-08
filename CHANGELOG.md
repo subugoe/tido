@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.2.1...v3.3.0) (2024-03-01)
+
+
+### Features
+
+* Annotations target as Array ([57a55f8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/57a55f889900c74f57d7e88106b2fb85d3370736))
+
+
+### Bug Fixes
+
+* disable option to switch off all panels ([e067420](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e0674205b6713686a584d53307ac96038b84aee4))
+* scroll to highlighted annotation in text when selected ([265b6f8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/265b6f87bd1dcd9956faadb1899737a9623fdd04))
+* update e2e test ([f30f282](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f30f28272dda04c68b611fe6c862910422899ed8))
+
+
+### Chore
+
+* **release:** 3.2.2 ([2d1dcaa](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2d1dcaaec9b36516bef2bde2eca6c088bce815ec))
+* update GFL example config ([e0ea920](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e0ea9200dcdaa9a04376817fa6e16999e7957163))
+
+
+### Refactoring
+
+* convert all components to composition API ([923a185](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/923a1857d2b2e1df6cb6795a62b52a48b7e2a797))
+
+
+### Tests
+
+* add tests for text annotations ([2cfab97](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2cfab977dfcbfd9f07d63af22bb051fd4dd7e601))
+* remove sanity checks for text annotation tests ([f062aa4](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f062aa447f3d2fd3de7e9fbe8b920f23e68fd6f6))
+
+
+### Docs
+
+* add TextAPI support table ([a843a61](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/a843a61293ce8be0cbf2e3fea01e79effd16207f))
+
 ### [3.2.2](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.2.1...v3.2.2) (2023-09-21)
 
 
