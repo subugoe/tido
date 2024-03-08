@@ -23,7 +23,7 @@ const childItems = computed(() => props.item?.metadata || []);
 
 function isLink() {
   const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
-  const matches = (typeof props.item?.key === 'string') ? props.item?.key?.match(regex) : null;
+  const matches = typeof props.item?.key === 'string' ? props.item?.key?.match(regex) : null;
   return matches !== null;
 }
 </script>
