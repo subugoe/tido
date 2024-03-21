@@ -1,28 +1,20 @@
 <template>
-  <div class="flex no-wrap justify-end">
+  <div class="t-flex no-wrap t-space-x-2 t-justify-end">
     <Language v-if="showLanguageSwitch" />
-    <q-btn
-      flat
-      round
-      :color="$q.dark.isActive ? 'yellow-4': 'grey-6'"
-      :icon="$q.dark.isActive ? darkIcon: lightIcon"
-      @click="$q.dark.toggle()"
-    ></q-btn>
+    <DarkModeToggle/>
     <SoftwareInfo />
   </div>
 </template>
 
 <script setup>
-import Language from '@/components/header/Language.vue';
-import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { biMoonFill, biSunFill } from '@quasar/extras/bootstrap-icons';
+import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
+import Language from '@/components/header/Language.vue';
+import DarkModeToggle from '@/components/header/DarkModeToggle.vue';
 
 const store = useStore();
-const darkIcon = biMoonFill;
-const lightIcon = biSunFill;
 
 const config = computed(() => store.getters['config/config']);
 const showLanguageSwitch = computed(() => (

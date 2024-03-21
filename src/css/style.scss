@@ -1,6 +1,13 @@
-@import 'quasar.scss';
-@import 'shims';
-@import 'global.scss';
-@import 'scrollbar.scss';
+//@import 'quasar.scss';
+//@import 'shims';
+//@import 'global.scss';
+@import 'scrollbar';
 @import 'highlighting';
-@import 'tooltip';
+//@import 'tooltip';
+
+.openseadragon-canvas {
+  &:focus {
+    outline: none;
+  }
+}
+

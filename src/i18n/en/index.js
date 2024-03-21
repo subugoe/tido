@@ -41,7 +41,7 @@ export default {
   tido_description:
     'Slim, easy to use and mobile-friendly text and image viewer',
   documentation: 'Documentation',
-  license: 'licensed under GNU Affero General Public License v3.0',
+  license: 'Licensed under GNU Affero General Public License v3.0',
   source_code: 'Source Code',
   label: 'Label',
   language: 'Language',
@@ -98,4 +98,7 @@ export default {
   manifest: 'Manifest',
   also_selected: 'Also selected',
   undefined_role: 'Undefined role',
+  not_found: 'Not found',
+  unauthorized: 'Unauthorized',
+  unknown_error: 'Unknown Error',
 };

@@ -20,7 +20,6 @@ module.exports = {
   plugins: [
     'vue',
   ],
-
   globals: {
     ga: true, // Google Analytics
     cordova: true,

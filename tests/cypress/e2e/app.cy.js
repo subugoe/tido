@@ -1,10 +1,16 @@
-import { ahiqarApiBaseUrl } from '../support/globals';
+import { ahiqarApiBaseUrl, commonSelectors } from '../support/globals';
+
+const selectors = {
+  ...commonSelectors,
+  tab: '[role="tablist"] [data-pc-section="nav"] [data-pc-name="tabpanel"]'
+}
 
 describe('Tido', () => {
   beforeEach(() => {
     cy
       .visit('/ahiqar-arabic-karshuni-local.html')
-      .get('.panels-target > .item:nth-child(3)').find('.panel-body')
+      .get(selectors.panel3)
+      .find('.panel-body')
       .find('#text-content')
       .should('be.visible');
   });
@@ -17,72 +23,75 @@ describe('Tido', () => {
 
   it('Should render panels', () => {
     cy
-      .get('.panels-target')
+      .get(selectors.panelsWrapper)
       .should('be.visible')
-      .children('.item')
+      .children('.panel')
       .should('have.length', 4);
 
     // Panel 1
     cy
-      .get('.panels-target > .item:nth-child(1)')
+      .get(selectors.panel1)
       .find('.panel-header')
       .contains('Contents & Metadata');
 
     cy
-      .get('.panels-target > .item:nth-child(1)').find('.panel-body').find('.q-tabs .q-tab')
+      .get(selectors.panel1)
+      .find('.panel-body')
+      .find(selectors.tab)
       .should('have.length', 2)
       .eq(0)
-      .should('have.class', 'q-tab--active');
+      .should('have.attr', 'data-p-active', 'true');
 
     // Panel 2
     cy
-      .get('.panels-target > .item:nth-child(2)')
+      .get(selectors.panel2)
       .find('.panel-header')
       .contains('Image');
 
     cy
-      .get('.panels-target > .item:nth-child(2)').find('.panel-body').find('#openseadragon')
+      .get(selectors.panel2)
+      .find('.panel-body')
+      .find('#openseadragon')
       .should('be.visible');
 
     // Panel 3
     cy
-      .get('.panels-target > .item:nth-child(3)')
+      .get(selectors.panel3)
       .find('.panel-header')
       .contains('Transcription');
 
     cy
-      .get('.panels-target > .item:nth-child(3)').find('.panel-body').find('#text-content')
+      .get(selectors.panel3)
+      .find('.panel-body')
+      .find('#text-content')
       .should('be.visible');
 
     // Panel 4
     cy
-      .get('.panels-target > .item:nth-child(4)')
+      .get(selectors.panel4)
       .find('.panel-header')
       .contains('Annotations');
 
     cy
-      .get('.panels-target > .item:nth-child(4)').find('.panel-body').find('.q-tabs .q-tab')
+      .get(selectors.panel4)
+      .find('.panel-body')
+      .find(selectors.tab)
       .should('have.length', 2)
       .eq(0)
-      .should('have.class', 'q-tab--active');
-
-    // cy.get('.q-toolbar button.previous-item').should('be.disabled');
-    // cy.get('.q-toolbar button.next-item').should('be.enabled');
-    // cy.url().then((url) => {
-    //   cy.get('.q-tree__node--selected')
-    //     .get(`div[id="${url.split('?itemurl=')[1]}"]`)
-    //     .should('be.visible');
-    // });
+      .should('have.attr', 'data-p-active', 'true');
   });
 
   it('Should render nav buttons', () => {
     cy
-      .get('button.previous-item')
+      .get(selectors.prevButton)
       .should('be.visible')
       .should('be.disabled')
       .contains('Previous Manuscript');
 
-    cy.get('button.next-item').should('be.visible').contains('Next Sheet');
+    cy
+      .get(selectors.nextButton)
+      .should('be.visible')
+      .contains('Next Sheet');
   });
 
   //

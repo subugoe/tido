@@ -1,96 +1,72 @@
 <template>
   <div>
-    <q-btn
-      flat
-      round
+    <BaseButton
+      display="flat"
+      rounded
       :title="$t('project_info')"
       @click="infobox = true"
-      color="grey-6"
-      :icon="infoIcon"
+      icon="info"
+      class="t-text-gray-400 hover:t-text-gray-500"
     >
-    </q-btn>
+    </BaseButton>
 
-    <q-dialog v-model="infobox">
-      <div class="tido">
-        <q-card>
-          <q-card-section>
-            <h2 class="text-h5 q-pb-md q-ma-none">TIDO</h2>
-            <p class="text-weight-bold">{{ $t('tido_description') }}</p>
-            <p>Copyright (c) {{ actualYear }} {{ $t('sub_info') }}</p>
-            <p class="q-mb-none">Version {{ tidoVersion }}, {{ $t('license') }}</p>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <q-btn
-              dense
-              flat
-              href="https://gitlab.gwdg.de/subugoe/emo/tido/-/blob/main/README.md"
-              target="_blank"
-              type="a"
-              :icon="docsIcon"
-              :label="$t('documentation')"
-            />
-
-            <q-btn
-              dense
-              flat
-              href="https://gitlab.gwdg.de/subugoe/emo/tido/"
-              target="_blank"
-              type="a"
-              :icon="codeIcon"
-              :label="$t('source_code')"
-              class="q-mx-md"
-            />
-
-            <q-btn
-              dense
-              flat
-              href="mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
-              type="a"
-              :icon="bugIcon"
-              :label="$t('report_a_bug')"
-            />
-          </q-card-section>
-
-          <q-card-actions align="right">
-            <q-btn
-              v-close-popup
-              :class="$q.dark.isActive ? 'text-white' : 'text-black'"
-              flat
-              :label="$t('close')"
-            />
-          </q-card-actions>
-        </q-card>
+    <BaseDialog v-model="infobox" closable>
+      <div class="t-flex t-space-x-2 t-items-baseline t-mb-2">
+        <h2 class="t-text-xl t-font-bold">TIDO</h2>
+        <p class="t-text-gray-600">v{{ tidoVersion }}</p>
       </div>
-    </q-dialog>
+      <p class="t-mb-4">{{ $t('tido_description') }}</p>
+      <p>{{ $t('license') }}</p>
+      <p class="t-mb-4">Copyright (c) {{ actualYear }} {{ $t('sub_info') }}</p>
+
+      <div class="t-flex t-space-x-2">
+        <a href="https://gitlab.gwdg.de/subugoe/emo/tido/-/blob/main/README.md" target="_blank">
+          <BaseButton
+            display="flat"
+            icon="book"
+            :text="$t('documentation')"
+            size="small"
+          />
+        </a>
+
+        <a href="https://gitlab.gwdg.de/subugoe/emo/tido/" target="_blank">
+          <BaseButton
+            display="flat"
+            icon="code"
+            :text="$t('source_code')"
+            size="small"
+          />
+        </a>
+
+        <a href="mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de" target="_blank">
+          <BaseButton
+            display="flat"
+            size="small"
+            href="mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
+            icon="bug"
+            :text="$t('report_a_bug')"
+          />
+        </a>
+      </div>
+    </BaseDialog>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue';
-import {
-  biInfoLg, biBook, biCodeSlash, biBugFill,
-} from '@quasar/extras/bootstrap-icons';
 import packageInfo from '../../../package.json';
+import BaseButton from '@/components/base/BaseButton.vue';
+import BaseDialog from '@/components/base/BaseDialog.vue';
 
 const infobox = ref(false);
 
 const tidoVersion = packageInfo.version;
-const infoIcon = biInfoLg;
-const docsIcon = biBook;
-const codeIcon = biCodeSlash;
-const bugIcon = biBugFill;
 
 const actualYear = computed(() => {
   const d = new Date();
   return d.getFullYear();
-})
+});
 </script>
 
 <style lang="scss">
-.q-dialog {
-  .tido {
-    height: auto;
-  }
-}
 </style>

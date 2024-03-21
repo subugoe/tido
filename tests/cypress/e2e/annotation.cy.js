@@ -1,160 +1,181 @@
-import { ahiqarApiBaseUrl, gflApiBaseUrl } from '../support/globals';
+import { ahiqarApiBaseUrl, gflApiBaseUrl, commonSelectors } from '../support/globals';
+
+const ahiqarSelectors = {
+  list: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list',
+  listItem: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list .item',
+  listOfSecondTab: '.panels-wrapper > .panel:nth-child(4) [role="tabpanel"]:nth-child(2) .annotations-list',
+  tab: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] [data-pc-section="nav"] [data-pc-name="tabpanel"]',
+  text: '.panels-wrapper > .panel:nth-child(3) #text-content',
+  annotationPanelActionCheckbox: '.panel-header .actions > div:first-child #panel-toggle-action',
+}
+
+const gflSelectors = {
+  listItem: '.panels-wrapper > .panel:nth-child(3) [role="tablist"] .annotations-list .item',
+}
+
+const selectors = {
+  ...commonSelectors,
+  ...ahiqarSelectors,
+}
 
 describe('Annotation', () => {
   describe('Multiple Tabs', () => {
     beforeEach(() => {
       cy
         .visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r7vd/130/latest/item.json`)
-        .get('#text-content')
+        .get(selectors.text)
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
+        .get(selectors.list)
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .should('be.visible');
     });
 
     it('Should display first annotation tab', () => {
       cy
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .first()
-        .should('have.class', 'q-tab--active');
+        .should('have.attr', 'data-p-active', 'true');
 
       cy
-        .get('.panels-target > .item:nth-child(4) .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .contains('حيقار');
     });
 
     it('Should switch to second annotation tab', () => {
       cy
-        .get('.panels-target > .item:nth-child(4) .q-list')
+        .get(selectors.list)
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .eq(1)
         .click()
         .wait(400) // wait for tab switch transition
-        .should('have.class', 'q-tab--active')
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .should('have.attr', 'data-p-active', 'true')
+        .get(selectors.listItem)
         .eq(0)
         .contains('Successful courtier');
     });
 
     it('Should stay on first tab when switch item', () => {
       cy
-        .get('button.next-item')
+        .get(selectors.nextButton)
         .click()
-        .get('#text-content')
+        .get(selectors.text)
         .contains('ذلك')
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
+        .get(selectors.list)
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .first()
-        .should('have.class', 'q-tab--active')
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .should('have.attr', 'data-p-active', 'true')
+    .get(selectors.listItem)
         .first()
         .contains('نادان');
     });
 
     it('Should stay on second tab when switch item', () => {
       cy
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .eq(1)
         .click()
         .wait(400) // wait for tab switch transition
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
+        .get(selectors.list)
         .should('be.visible')
-        .get('button.next-item')
+        .get(selectors.nextButton)
         .click()
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .contains('Successful courtier');
     });
 
     it('Should switch to first tab when switch manifest', () => {
       cy
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .eq(1)
         .click()
-        .get('button.previous-item')
-        .click()
-        .get('.panels-target > .item:nth-child(4) .q-panel:nth-child(2) .q-list')
+        .get(selectors.listOfSecondTab)
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(3) #text-content')
+        .get(selectors.prevButton)
+        .click()
+        .get(selectors.text)
         .contains('وورمت')
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .first()
-        .should('have.class', 'q-tab--active');
+        .should('have.attr', 'data-p-active', 'true');
     });
 
     it('Should select all from panel action', () => {
       cy
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
         .click()
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .should('have.class', 'active')
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'true')
-        .get('.panels-target > .item:nth-child(3)')
+        .get(selectors.panel3)
         .find('#text-content [data-annotation-ids][data-annotation-level="1"]')
         .should('have.length', 16);
     });
 
     it('Should unselect all from panel action', () => {
       cy
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
         .click()
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .should('have.class', 'active')
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'true')
         .click()
-        .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .should('not.have.class', 'active')
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'false')
-        .get('.panels-target > .item:nth-child(3)')
+        .get(selectors.panel3)
         .find('#text-content [data-annotation-ids][data-annotation-level="1"]')
         .should('have.length', 0);
     });
 
     it('Should select one annotation', () => {
       cy
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .click()
         .should('have.class', 'active')
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'mixed')
-        .get('.panels-target > .item:nth-child(3)')
+        .get(selectors.panel3)
         .find('#text-content [data-annotation-ids][data-annotation-level="1"]')
         .should('have.length', 1);
     });
 
     it('Should unselect one annotation', () => {
       cy
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .click()
         .should('have.class', 'active')
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'mixed')
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .click()
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.panel-header .actions > div:first-child .q-checkbox')
+        .get(selectors.panel4)
+        .find(selectors.annotationPanelActionCheckbox)
+        .parent()
         .should('have.attr', 'aria-checked', 'false')
-        .get('.panels-target > .item:nth-child(3)')
+        .get(selectors.panel3)
         .find('#text-content [data-annotation-ids][data-annotation-level="1"]')
         .should('have.length', 0);
     });
@@ -165,10 +186,9 @@ describe('Annotation', () => {
       // because there is a problem with initial scrolling of text panel.
       // Somehow it works when scroll programmatically like described above.
       cy
-        .get('.panels-target > .item:nth-child(3) .content-view')
+        .get('.panels-wrapper > .panel:nth-child(3) .content-view')
         .scrollTo('bottom')
-        .get('.panels-target > .item:nth-child(4)')
-        .find('.q-tab-panel .q-list .q-item')
+        .get(selectors.listItem)
         .first()
         .click().then(($annot) => {
           const delimiter = 'annotation-';
@@ -186,20 +206,18 @@ describe('Annotation', () => {
       cy.visit(`/gfl-local.html?item=${gflApiBaseUrl}/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page1/latest/item.json`)
 
       cy
-        .get('.panels-target > .item:nth-child(2)')
+        .get(selectors.panel2)
         .should('be.visible')
         .contains('Edierter Text')
         .click();
 
       cy
-        .get('.panels-target > .item:nth-child(3)')
+        .get(selectors.panel3)
         .should('be.visible')
-        .within(() => {
-          cy
-            .get('.q-tab-panel .q-list .q-item:first-child')
-            .as('annotationItem')
-            .should('be.visible');
-        });
+        .get(gflSelectors.listItem)
+        .first()
+        .as('annotationItem')
+        .should('be.visible');
     });
 
     it('should not be selectable when clicked', () => {
@@ -216,8 +234,8 @@ describe('Annotation', () => {
         .should('have.length', 1) // retry until we have only one subject
         .within(() => {
           cy
-            .get('.q-item__section--avatar')
-            .should('be.empty');
+            .get('i')
+            .should('not.exist');
         });
     });
   });

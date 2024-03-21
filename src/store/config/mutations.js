@@ -25,3 +25,7 @@ export const loadConfig = (state, { config, isValid }) => {
 export const setActiveViews = (state, payload) => {
   state.activeViews = payload;
 };
+
+export const setInstanceId = (state, payload) => {
+  state.instanceId = payload;
+};

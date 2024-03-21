@@ -33,7 +33,7 @@ export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
     const annotationsView = document.querySelector('.annotations-view').parentElement.parentElement;
 
     const annotationEl = getAnnotationListElement(id, annotationsView);
-    scrollIntoViewIfNeeded(annotationEl, annotationsView);
+    // scrollIntoViewIfNeeded(annotationEl, annotationsView);
   }
 };
 
@@ -127,9 +127,9 @@ export const resetAnnotations = ({ dispatch, getters }) => {
 };
 
 export const initAnnotations = async ({ dispatch }, url) => {
-  let annotations = null;
+  // let annotations = null;
   try {
-    annotations = await request(url);
+    const annotations = await request(url);
 
     if (!annotations.first) {
       dispatch('annotationLoaded', []);
@@ -137,6 +137,7 @@ export const initAnnotations = async ({ dispatch }, url) => {
     }
 
     const current = await request(annotations.first);
+
     if (Array.isArray(current.items)) {
       dispatch('annotationLoaded', current.items);
     }

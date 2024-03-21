@@ -1,5 +1,9 @@
 import { ahiqarApiBaseUrl } from '../support/globals';
 
+const selectors = {
+  panels: '.panels-wrapper > .panel'
+}
+
 describe('Config', () => {
   beforeEach(() => {
   });
@@ -13,7 +17,7 @@ describe('Config', () => {
     cy.visit(`/zero-config.html?collection=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/collection.json`)
       .get('#text-content')
       .should('be.visible')
-      .get('.panels-target > .item')
+      .get(selectors.panels)
       .should('have.length', 5);
   });
 
@@ -21,7 +25,7 @@ describe('Config', () => {
     cy.visit(`/zero-config.html?manifest=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r177/manifest.json`)
       .get('#text-content')
       .should('be.visible')
-      .get('.panels-target > .item')
+      .get(selectors.panels)
       .should('have.length', 5);
   });
 
@@ -29,7 +33,7 @@ describe('Config', () => {
     cy.visit(`/zero-config.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r177/2a/latest/item.json`)
       .get('#text-content')
       .should('be.visible')
-      .get('.panels-target > .item')
+      .get(selectors.panels)
       .should('have.length', 5);
   });
 });
