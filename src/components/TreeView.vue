@@ -32,7 +32,7 @@
         ]
       }),
       label: 't-cursor-pointer t-select-none',
-      subgroup: 't-ps-4',
+      subgroup: 't-pl-2',
       loadingOverlay: 't-absolute t-z-10 t-w-full t-h-full t-flex t-items-center t-justify-center t-bg-white dark:t-bg-zinc-800 t-bg-opacity-75 dark:t-bg-opacity-75'
     }"
     >

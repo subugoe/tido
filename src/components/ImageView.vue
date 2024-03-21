@@ -3,7 +3,7 @@
     <div v-if="error" class="t-p-2 t-flex t-justify-center t-pt-12">
       <Notification :message="$t(error.message)" :title="$t('no_image_available')" type="warning" />
     </div>
-    <figure v-else id="openseadragon" class="t-flex-1 t-margin-0"></figure>
+    <figure v-else id="openseadragon" class="t-w-full t-h-full t-margin-0"></figure>
   </div>
 </template>
 

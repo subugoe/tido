@@ -26,7 +26,7 @@
 }
 
 [data-annotation-level='1'],
-[data-annotation-level='1'] * {
+[data-annotation-level='1'] *:not(figure) {
   background-color: #E3F2FD;
   border-bottom: 1px solid #333;
 

@@ -51,6 +51,7 @@ watch(
   { immediate: true },
 );
 async function loadContent(url) {
+  console.log(url)
   content.value = '';
   try {
     if (!url) {
@@ -64,8 +65,10 @@ async function loadContent(url) {
 
     const dom = domParser(data);
     content.value = dom.documentElement.innerHTML;
+
     setTimeout(async () => {
       emit('loading', false);
+
       const root = document.getElementById('text-content');
       store.dispatch('annotations/addHighlightAttributesToText', root);
       await store.dispatch('annotations/addHighlightClickListeners');
