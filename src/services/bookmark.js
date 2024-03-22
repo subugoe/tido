@@ -32,9 +32,17 @@ class BookmarkService {
 
     if (oldQueryValue.includes('p') === false) newQueryValue = oldQueryValue.concat('_'+'p'+panels);
     else {
-      const pIndex = oldQueryValue.indexOf("p")
-      const stringBeforePanels = oldQueryValue.substring(0, pIndex-1);
-      newQueryValue = stringBeforePanels.concat('_'+'p'+panels);
+      
+        const arrayAttributes = oldQueryValue.split('_');
+        const indexPanelsPart = arrayAttributes.findIndex((element) => element.includes('p') );
+        const updatedPanelsPart = 'p'+ panels;
+        
+        newQueryValue = arrayAttributes.slice(0,indexPanelsPart).join('_').concat('_'+updatedPanelsPart);
+
+        const partAfterPanels = arrayAttributes.slice(indexPanelsPart+1).join('_');
+        if (partAfterPanels !== '') {
+          newQueryValue = newQueryValue.concat('_'+arrayAttributes.slice(indexPanelsPart+1).join('_'));
+        }  
     }
     
     await this.pushQuery(newQueryValue);
@@ -65,6 +73,7 @@ class BookmarkService {
       }
 
     } else {
+      console.log('Number of panels indexes', panelIndexes.length);
       if (oldQueryValue.includes('s') === true) {
         const arrayAttributes = oldQueryValue.split('_');
         const indexShowPart = arrayAttributes.findIndex((element) => element.includes('s') );
@@ -140,6 +149,7 @@ class BookmarkService {
   getQuery() {
     
     let queryString = window.location.search.substring(1);
+    console.log('query String in getQuery', queryString);
     if (queryString !== '') queryString = queryString.split('=')[1];
     
    return queryString;
