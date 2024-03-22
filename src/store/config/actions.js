@@ -78,25 +78,55 @@ function discoverCustomConfig(customConfig) {
 
 function discoverUrlConfig() {
   const urlConfig = {};
-
   const urlQuery = BookmarkService.getQuery();
 
-  const {
-    m, i, s, p,
-  } = urlQuery;
-  urlConfig.m = m;
-  urlConfig.i = i;
-  // eslint-disable-next-line no-shadow
-  urlConfig.s = s ? s.split(',').map((i) => parseInt(i, 10)) : [];
-  urlConfig.p = p;
-  const panels = p;
+  console.log('url Query in discoverUrlConfig', urlQuery);
 
-  const panelsQueryArr = panels ? panels.split(',') : [];
+  // split the url based on '_'
+  // get the part of attribute: get the attribute name and the value based on the type of attribute
+  // add each attribute to UrlConfig as key value
+
+  let m;
+  let i;
+  let p;
+  let s;
+
+  const arrayAttributes = urlQuery.split('_');
+  const manifestPart = arrayAttributes.find((element) => element.includes('m')); // index of manifest part in the splitted array
+  const itemPart = arrayAttributes.find((element) => element.includes('i'));
+  const panelsPart = arrayAttributes.find((element) => element.includes('p'));
+  const showPart = arrayAttributes.find((element) => element.includes('s'));
+
+  // reg expression for 'manifest index part':  /\m\\d{+}
+  const reManifest = /\m\d+/;
+  const reItem = /i\d+/;
+  const rePanels = /p(\d{1}\.\d{1}\-){3,4}\d{1}\.\d{1}/;
+  const reShow = /s(\d\-){0,2}\d{1}/;
+
+  if (manifestPart !== undefined) m = reManifest.exec(manifestPart) !== null ? parseInt(manifestPart.slice(1), 10) : undefined;
+  if (itemPart !== undefined) i = reItem.exec(itemPart) !== null ? parseInt(itemPart.slice(1), 10) : undefined;
+  if (panelsPart !== undefined) p = rePanels.exec(panelsPart) !== null ? panelsPart.slice(1) : undefined;
+  if (showPart !== undefined) s = reShow.exec(showPart) !== null ? showPart.slice(1).split('-') : undefined;
+  console.log('s', s);
+  if (s !== undefined) s = s.map(Number);
+
+  if (m !== undefined) urlConfig.m = m;
+  if (i !== undefined) urlConfig.i = i;
+  if (p !== undefined) urlConfig.p = p;
+  if (s === undefined) urlConfig.s = [0, 1, 2, 3];
+  else {
+    urlConfig.s = s;
+  }
+  console.log('url Config in discoverUrlConfig()', urlConfig);
+  // eslint-disable-next-line no-shadow
+  //urlConfig.s = s;    //? s.split(',').map((i) => parseInt(i, 10)) : [];
+  const panels = p;
+  const panelsQueryArr = panels ? panels.split('-') : [];
 
   if (panels) {
     urlConfig.activeViews = panelsQueryArr.reduce((acc, cur) => {
       // eslint-disable-next-line no-shadow
-      const [panelIndex, viewIndex] = cur.split('_').map((i) => parseInt(i, 10));
+      const [panelIndex, viewIndex] = cur.split('.').map((i) => parseInt(i, 10));
 
       acc[panelIndex] = viewIndex;
       return acc;
@@ -180,9 +210,10 @@ export const setActivePanelView = async ({ commit, getters }, { panelIndex, view
 
 export const setShowPanel = ({ commit, getters }, { index, show }) => {
   commit('setShowPanel', { index, show });
-
+  
   let panelIndexes = getters.config.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
   if (panelIndexes.length === getters.config.panels.length) panelIndexes = [];
+  console.log('Panel indexes in setShowPanel', panelIndexes);
   BookmarkService.updateShow(panelIndexes);
 };
 
