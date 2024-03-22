@@ -14,28 +14,22 @@ class BookmarkService {
     url.search = '';
     const params = url.searchParams;
     
-    console.log('query in pushQuery()', query);
     let newQuery = {};
     newQuery.tido = query;
     
     Object.keys(newQuery).forEach((key) => {
       params.set(key, newQuery[key]);
     });
-    
-
-    console.log('new Query in pushQuery()', newQuery);
 
     window.history.pushState({}, '', url);
   }
 
 
   async updatePanels(activeViews) {
-    console.log('update panels', activeViews);
     let oldQueryValue = this.getQuery();
     let newQueryValue = '';
     const panels = Object.keys(activeViews).map((panelIndex) => `${panelIndex}.${activeViews[panelIndex]}`).join('-');
-    
-    console.log('panels value', panels);
+
     if (oldQueryValue.includes('p') === false) newQueryValue = oldQueryValue.concat('_'+'p'+panels);
     else {
       const pIndex = oldQueryValue.indexOf("p")
@@ -50,38 +44,49 @@ class BookmarkService {
     // TODO: $route doesn't update quick enough, in future we have to switch to Composition APIs useRoute()
     await delay(300);
 
-    const oldQuery = this.getQuery();
-    let newQuery = {...oldQuery};
+    let oldQueryValue = this.getQuery();
+    let newQueryValue = '';
 
     // Does not append (= removes) the "show" param from URL if panelIndexes empty.
     if (panelIndexes.length > 0) {
-      newQuery.s = panelIndexes.join(',');
+      panelIndexes = panelIndexes.join('-');
+      if (oldQueryValue.includes('s') === false) newQueryValue = oldQueryValue.concat('_'+'s'+panelIndexes);
+      else {
+        const arrayAttributes = oldQueryValue.split('_');
+        const indexShowPart = arrayAttributes.findIndex((element) => element.includes('s') );
+        const updatedShowPart = 's'+ panelIndexes;
+        
+        newQueryValue = arrayAttributes.slice(0,indexShowPart).join('_').concat('_'+updatedShowPart);
+  
+        const partAfterItem = arrayAttributes.slice(indexShowPart+1).join('_');
+        if (partAfterItem !== '') {
+          newQueryValue = newQueryValue.concat('_'+arrayAttributes.slice(indexShowPart+1).join('_'));
+        }  
+      }
 
     } else {
-      if (oldQuery.s) delete oldQuery.s;
-      newQuery = oldQuery;
+      if (oldQueryValue.includes('s') === true) {
+        const arrayAttributes = oldQueryValue.split('_');
+        const indexShowPart = arrayAttributes.findIndex((element) => element.includes('s') );
+        arrayAttributes.splice(indexShowPart, 1);
+        newQueryValue = arrayAttributes.join('_');
+      } 
     }
     
-    await this.pushQuery(newQuery);
+    await this.pushQuery(newQueryValue);
   }
 
   async updateItem(itemIndex) {
     const oldQueryValue = this.getQuery();
     let newQueryValue = '';
-    console.log('old Query in updateItem()', oldQueryValue);
     if (oldQueryValue === '') {
       newQueryValue = oldQueryValue.concat('i'+itemIndex.toString());
     }
-
 
     else if (oldQueryValue.includes('i') === true) {
       const arrayAttributes = oldQueryValue.split('_');
       const indexItemPart = arrayAttributes.findIndex((element) => element.includes('i') );
       const updatedItemPart = 'i'+ itemIndex.toString();
-
-      console.log('Array attributes', arrayAttributes);
-      console.log('index item Part', indexItemPart);
-      console.log('Updated item Part', updatedItemPart);
       
       newQueryValue = arrayAttributes.slice(0,indexItemPart).join('_').concat('_'+updatedItemPart);
 
@@ -89,7 +94,6 @@ class BookmarkService {
       if (partAfterItem !== '') {
         newQueryValue = newQueryValue.concat('_'+arrayAttributes.slice(indexItemPart+1).join('_'));
       }  
-      console.log('new Query Value in updateItem', newQueryValue);
     }
 
     else if (oldQueryValue.includes('i') === false) {
@@ -103,7 +107,6 @@ class BookmarkService {
   async updateManifest (manifestIndex) {
     const oldQueryValue = this.getQuery();
     let newQueryValue = '';
-    console.log('old Query in updateManifest()', oldQueryValue);
     if (oldQueryValue === '') {
       newQueryValue = oldQueryValue.concat('m'+manifestIndex.toString());
     }
@@ -115,7 +118,6 @@ class BookmarkService {
       //const splitManifest = oldQueryValue.split('_')[0];
       const newSplitManifest = 'm'+ manifestIndex.toString(); 
       newQueryValue = newSplitManifest.concat('_'+oldQueryValue.split('_').slice(1).join('_'));
-      
       
     }
 
@@ -138,31 +140,8 @@ class BookmarkService {
   getQuery() {
     
     let queryString = window.location.search.substring(1);
-    console.log('queryString', queryString);
     if (queryString !== '') queryString = queryString.split('=')[1];
     
-    console.log('query String in getQuery()', queryString);
-    /*
-    let queryObject = queryString.split('&').reduce((acc, cur) => {
-      const [key, value] = cur.split('=');
-      if (key && value) acc[key] = decodeURIComponent(value);
-      return acc;
-    }, {});
-    */
-   
-   //let newQueryValue = '';
-   //console.log('query string', queryString);
-
-   /*
-   if ('tido' in queryObject) newQueryValue = queryObject.tido;
-   else {
-    newQueryValue = Object.keys(queryObject).length > 0 ? queryString : '';   
-   }
-   console.log('newQueryValue')
-   //console.log('New query object', newQueryObject);
-
-   */
-
    return queryString;
     
   }
