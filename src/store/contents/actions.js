@@ -52,8 +52,6 @@ export const initCollection = async ({
   let manifestIndex;
   let itemIndex;
 
-  console.log('Result config', resultConfig);
-
   if (Array.isArray(collection.sequence) && collection.sequence.length > 0) {
     const promises = [];
     collection.sequence.forEach((seq) => promises.push(getManifest(seq.id)));
@@ -64,8 +62,33 @@ export const initCollection = async ({
     if ('m' in resultConfig && 'i' in resultConfig) {
       const manifestIndexInConfig = resultConfig.m;
       const itemIndexInConfig = resultConfig.i;
-      manifestIndex = Number(manifestIndexInConfig) > 0 ? Number(manifestIndexInConfig) : 0;
-      itemIndex = Number(itemIndexInConfig) > 0 ? Number(itemIndexInConfig) : 0;
+      manifestIndex = (Number.isInteger(manifestIndexInConfig) && manifestIndexInConfig > 0) ? manifestIndexInConfig : 0;
+      itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
+    } else if ('m' in resultConfig) {
+      const manifestIndexInConfig = resultConfig.m;
+      manifestIndex = (Number.isInteger(manifestIndexInConfig) && manifestIndexInConfig > 0) ? manifestIndexInConfig : 0;
+      itemIndex = 0;
+    } else if ('i' in resultConfig) {
+      const itemIndexInConfig = resultConfig.i;
+      itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
+      if ('manifest' in resultConfig) {
+        // Find the manifest Index of this manifest in this collection
+        if (resultConfig['manifest'] !=='') {
+          const manifestUrl = resultConfig['manifest'];
+          manifestIndex = manifests.findIndex((element) => element.id === manifestUrl);
+        }
+        else {
+          manifestIndex = 0;
+        }
+      } else {
+        manifestIndex = 0;
+      }
+    } else if ('manifest' in resultConfig) {
+      if (resultConfig['manifest'] !== '') {
+        const manifestUrl = resultConfig['manifest'];
+        manifestIndex = manifests.findIndex((element) => element.id === manifestUrl);
+        itemIndex = 0;
+      }
     } else {
       [manifestIndex, itemIndex] = [0, 0];
     }
@@ -80,6 +103,7 @@ export const initCollection = async ({
       await dispatch('getSupport', support);
     }
     commit('setManifest', activeManifest);
+
     if (!item) dispatch('initItem', itemUrl);
   }
 };
@@ -87,36 +111,57 @@ export const initCollection = async ({
 export const initManifest = async ({
   commit, dispatch, getters, rootGetters,
 }, url) => {
-  const { item } = getters;
-
-  const resultConfig = rootGetters['config/config'];
-  let itemIndex;
-
-  // Check if manifestIndex or item Index are part of the result config
-  if ('i' in resultConfig) {
-    const itemIndexInConfig = resultConfig.i;
-    itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
-  } else {
-    itemIndex = 0;
-  }
   const manifest = await getManifest(url);
   commit('setManifest', manifest);
+
+  console.log('init manifest', url);
+  const resultConfig = rootGetters['config/config'];
+  const { item } = resultConfig;
+  console.log('Item in initManifest', item);
+  let itemIndex;
+  let errorBoolean = false;
+
+  // Check if manifestIndex or item Index are part of the result config
+  if ('m' in resultConfig && 'i' in resultConfig) {
+    console.log("Error cannot accept 'm' in the URL, since no callection is given");
+    itemIndex = undefined;
+    errorBoolean = true;
+  }
+  if (errorBoolean === false) {
+    if ('i' in resultConfig) {
+      const itemIndexInConfig = resultConfig.i;
+      itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
+    } else if ('m' in resultConfig) {
+      console.log("Error: Since there is no collection, we cannot find this manifest, please enter the index of item 'i'");
+    } else if (item !== '') {
+      // find the item index in this manifest, if the item is not found, then show errors
+      if (Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
+        itemIndex = manifest.sequence.findIndex((element) => element.id === item);
+      }
+    }
+    else {
+      itemIndex = 0;
+    }
+  }
 
   const { support } = manifest;
   if (support && support.length > 0) {
     await dispatch('getSupport', support);
   }
 
+  console.log('item Index', itemIndex);
   // We know here that no item was loaded. Neither from URL nor from user config.
   // So we load the first manifest item.
-  if (!item && Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
+  if (itemIndex !== undefined && Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
     const itemUrl = manifest.sequence[itemIndex].id;
     dispatch('initItem', itemUrl);
   }
 };
 
-export const initItem = async ({ commit, dispatch, getters }, url) => {
+export const initItem = async ({ commit, dispatch, getters, rootGetters }, url) => {
   const item = await getItem(url); // To fix: what about if this load fails, e.g content not anymore in this url -> maybe try and catch ?
+  console.log(getters.panels);
+  const resultConfig = rootGetters['config/config'];
   commit('setItem', item);
   commit('setItemUrl', url);
 
@@ -128,9 +173,12 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
   const i = await dispatch('getItemIndex', url);
   const m = findActiveManifestIndex(manifests, url);
   // const p = await dispatch('getPanels');
-  const s = await dispatch('getShow');
+  const numberPanels = resultConfig.panels.length;
 
+  const s = 's' in resultConfig ? resultConfig.s : Array.from( {length: numberPanels }, (value, index) => index);
+  console.log('resultConfig in initItem', resultConfig);
   // If in the URL it is given which panels to show initially, then show only those
+  console.log('show', s);
   if (s !== null) {
     if (s.length > 0) {
       const totalShowPanels = Array.from({ length: 4 }, (value, index) => index);
@@ -145,12 +193,12 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
       }
     }
   }
- 
+
   const query = manifests.length > 0 ? {
     m,
     i,
   } : { i };
-  console.log('query', query);
+  console.log('query in init Item', query);
   await BookmarkService.updateQuery(query);
 };
 
