@@ -2,6 +2,8 @@ import { request } from '@/utils/http';
 import BookmarkService from '@/services/bookmark';
 import { loadCss, loadFont } from '../../utils';
 
+import { throwErrorObject } from '../../utils/error';
+
 export const getItemIndex = async ({ getters }, itemUrl) => {
   const { manifest } = getters;
   const items = manifest.sequence;
@@ -51,6 +53,20 @@ export const initCollection = async ({
   let activeManifest = '';
   let manifestIndex;
   let itemIndex;
+  const numberManifests = collection.sequence.length;
+  if ('m' in resultConfig) {
+    const m = resultConfig.m;
+    // m doesn't fuilfill these conditions not part is integer and greater >= 0 and smaller than number of manifests
+    if (m !== '') {
+      if (numberManifests > 0) {
+        if (Number.isInteger(m) && m >= 0 && m >= numberManifests) {
+          const errorTitle = 'Range error';
+          const errorMessage = `Please enter 'm' as integer in this range [0,${numberManifests})`;
+          throwErrorObject(errorTitle, errorMessage);
+        }
+      }
+    }
+  }
 
   if (Array.isArray(collection.sequence) && collection.sequence.length > 0) {
     const promises = [];
@@ -70,10 +86,10 @@ export const initCollection = async ({
       itemIndex = 0;
     } else if ('i' in resultConfig) {
       const itemIndexInConfig = resultConfig.i;
-      itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
+      itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig >= 0) ? itemIndexInConfig : undefined;
       if ('manifest' in resultConfig) {
         // Find the manifest Index of this manifest in this collection
-        if (resultConfig['manifest'] !=='') {
+        if (resultConfig['manifest'] !== '') {
           const manifestUrl = resultConfig['manifest'];
           manifestIndex = manifests.findIndex((element) => element.id === manifestUrl);
         }
@@ -92,6 +108,14 @@ export const initCollection = async ({
     } else {
       [manifestIndex, itemIndex] = [0, 0];
     }
+
+    const numberItems = manifests[manifestIndex].sequence.length;
+    if (itemIndex === undefined || itemIndex >= numberItems) {
+      const errorTitle = "Range error";
+      const errorMessage = `Please enter 'i' as integer in this range [0,${numberItems})`;
+      throwErrorObject(errorTitle, errorMessage);
+    }
+
     activeManifest = manifests[manifestIndex];
     itemUrl = activeManifest.sequence[itemIndex].id;
     if ('p' in resultConfig) commit('setPanels', resultConfig.p);
@@ -123,9 +147,11 @@ export const initManifest = async ({
 
   // Check if manifestIndex or item Index are part of the result config
   if ('m' in resultConfig && 'i' in resultConfig) {
-    console.log("Error cannot accept 'm' in the URL, since no callection is given");
     itemIndex = undefined;
     errorBoolean = true;
+    const errorTitle = "Input error in URL";
+    const errorMessage = `cannot accept 'm' in the URL, since no collection is given`;
+    throwErrorObject(errorTitle, errorMessage);
   }
   if (errorBoolean === false) {
     if ('i' in resultConfig) {
@@ -175,7 +201,7 @@ export const initItem = async ({ commit, dispatch, getters, rootGetters }, url) 
   // const p = await dispatch('getPanels');
   const numberPanels = resultConfig.panels.length;
 
-  const s = 's' in resultConfig ? resultConfig.s : Array.from( {length: numberPanels }, (value, index) => index);
+  const s = 's' in resultConfig ? resultConfig.s : Array.from({ length: numberPanels }, (value, index) => index);
   console.log('resultConfig in initItem', resultConfig);
   // If in the URL it is given which panels to show initially, then show only those
   console.log('show', s);

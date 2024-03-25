@@ -79,7 +79,6 @@ function discoverCustomConfig(customConfig) {
 function discoverUrlConfig() {
   const urlConfig = {};
   const urlQuery = BookmarkService.getQuery();
-
   console.log('url Query in discoverUrlConfig', urlQuery);
 
   // split the url based on '_'
@@ -98,10 +97,10 @@ function discoverUrlConfig() {
   const showPart = arrayAttributes.find((element) => element.includes('s'));
 
   // reg expression for 'manifest index part':  /\m\\d{+}
-  const reManifest = /\m\d+/;
+  const reManifest = /m\d/;
   const reItem = /i\d+/;
-  const rePanels = /p(\d{1}\.\d{1}\-){3,4}\d{1}\.\d{1}/;
-  const reShow = /s(\d\-){0,2}\d{1}/;
+  const rePanels = /p(\d{1}\.\d{1}\-){3,4}\d{1}\.\d{1}/;  //Todo: Musste dynamisch seinlength: config.panels
+  const reShow = /s(\d\-){0,2}\d{1}/;  // config.panels
 
   if (manifestPart !== undefined) m = reManifest.exec(manifestPart) !== null ? parseInt(manifestPart.slice(1), 10) : undefined;
   if (itemPart !== undefined) i = reItem.exec(itemPart) !== null ? parseInt(itemPart.slice(1), 10) : undefined;
@@ -113,8 +112,9 @@ function discoverUrlConfig() {
   if (m !== undefined) urlConfig.m = m;
   if (i !== undefined) urlConfig.i = i;
   if (p !== undefined) urlConfig.p = p;
-  if (s === undefined) urlConfig.s = [0, 1, 2, 3];
-  else {
+  if (s === undefined) {
+    urlConfig.s = [0, 1, 2, 3];  // Orlin: Fix this part, since its hard coded: musste dynmamisch
+  } else {
     urlConfig.s = s;
   }
   console.log('url Config in discoverUrlConfig()', urlConfig);
@@ -173,6 +173,7 @@ export const load = ({ commit, getters }, config) => {
     ...customConfig,
     ...urlConfig,
   };
+
   const activeViews = urlConfig.activeViews || defaultConfig.activeViews;
   commit('setActiveViews', activeViews);
 
@@ -198,7 +199,7 @@ export const load = ({ commit, getters }, config) => {
       i18n.global.setLocaleMessage(locale, { ...(messages[locale] ? messages[locale] : {}), ...resultConfig.translations[locale] });
     });
   }
-
+  console.log('result Config', resultConfig);
   commit('setConfig', resultConfig);
 };
 
