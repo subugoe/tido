@@ -2,6 +2,8 @@ import messages from 'src/i18n';
 import BookmarkService from '@/services/bookmark';
 import { i18n } from '@/i18n';
 
+import { throwErrorObject } from '../../utils/error';
+
 const defaultPanel = {
   label: 'Panel',
   show: true,
@@ -47,6 +49,70 @@ function validateColors(value) {
   return !!(value);
 }
 
+// URL Config
+function splitUrlParts(urlQuery, attributes) {
+  const arrayAttributes = urlQuery.split('_');
+  const manifestPart = arrayAttributes.find((element) => element.includes(attributes[0])); // index of manifest part in the splitted array
+  const itemPart = arrayAttributes.find((element) => element.includes(attributes[1]));
+  const panelsPart = arrayAttributes.find((element) => element.includes(attributes[2]));
+  const showPart = arrayAttributes.find((element) => element.includes(attributes[3]));
+
+  return [manifestPart, itemPart, panelsPart, showPart];
+}
+
+function regexManifestValidationUrl(urlConfig, manifestPart) {
+  const regexManifest = /m\d/;
+  const m = regexManifest.exec(manifestPart) !== null ? parseInt(manifestPart.slice(1), 10) : -1;
+  if (m !== -1) {
+    urlConfig.m = m;
+  } else {
+    const errorTitle = 'error in providing value of manifestIndex m';
+    const errorMessage = `Please provide the value of manifest Index 'm' like i.e m2 or m3 (values are 2 and 3 respectively)`;
+    console.error(errorMessage);
+  }
+  return [urlConfig, m];
+}
+
+function regexItemValidationUrl(urlConfig, itemPart) {
+  const regexItem = /i\d+/;
+  const i = regexItem.exec(itemPart) !== null ? parseInt(itemPart.slice(1), 10) : -1;
+  if (i !== -1) urlConfig.i = i;
+  else {
+    const errorTitle = 'error in providing value of itemIndex i';
+    const errorMessage = `Please provide the value of item Index 'i' like i.e i2 or i3 (values are 2 and 3 respectively)`;
+    console.error(errorMessage);
+  }
+  return [urlConfig, i];
+}
+
+function regexPanelsValidationUrl(urlConfig, panelsPart) {
+  const regexPanels = /p(\d{1}\.\d{1}\-){3,4}\d{1}\.\d{1}/;  //Todo: Musste dynamisch seinlength: config.panels
+  const p = regexPanels.exec(panelsPart) !== null ? panelsPart.slice(1) : -1;
+  if (p !== -1) urlConfig.p = p;
+  else {
+    const errorTitle = 'error in providing value of panelIndex.TabIndexOpened  p';
+    const errorMessage = `Please provide the value of 'p' panelIndex.TabIndexOpened for each panel index,`+
+                  `i.e p0.0-1.0-2.0-3.1 (0.0 means in panel index 0, the first tab is visible., 3.1 means in panel with index 3 (4th panel), the second tab is visible)`;
+    console.error(errorMessage);
+  }
+  return [urlConfig, p];
+}
+
+function regexShowValidationUrl(urlConfig, showPart) {
+  const regexShow = /s(\d\-){0,2}\d{1}/;  // config.panels
+  let s = regexShow.exec(showPart) !== null ? showPart.slice(1).split('-') : -1;
+  if (s !== -1) s = s.map(Number);
+  else {
+    const errorTitle = 'error in providing value of opened panels';
+    const errorMessage = `Please provide the value of 's' opened for each panel index,`+
+                    `i.e p0.0-1.0-2.0-3.1 (0.0 means in panel index 0, the first tab is visible., 3.1 means in panel with index 3 (4th panel), the second tab is visible)`;
+    console.error(errorMessage);
+  }
+  return [urlConfig, s];
+}
+
+///////
+
 function createDefaultActiveViews(panelsConfig) {
   return panelsConfig
     .filter((p) => p.views && p.views.length > 0)
@@ -76,62 +142,51 @@ function discoverCustomConfig(customConfig) {
   };
 }
 
+// split the url based on '_'
+// get the part of attribute: get the attribute name and the value based on the type of attribute
+// add each attribute to UrlConfig as key value
 function discoverUrlConfig() {
-  const urlConfig = {};
+  let urlConfig = {};
   const urlQuery = BookmarkService.getQuery();
-  console.log('url Query in discoverUrlConfig', urlQuery);
+  const attributes = ['m', 'i', 'p', 's'];
+  let [m, i, p, s] = [undefined, undefined, undefined, undefined];
+  let errorTitle = '';
+  let errorMessage = '';
 
-  // split the url based on '_'
-  // get the part of attribute: get the attribute name and the value based on the type of attribute
-  // add each attribute to UrlConfig as key value
+  const [manifestPart, itemPart, panelsPart, showPart] = splitUrlParts(urlQuery, attributes);
+  // reg expression for each part  /\m\\d{+}
+  // here we will validate for the structure of each component:, not their value range
 
-  let m;
-  let i;
-  let p;
-  let s;
+  if (manifestPart !== undefined) { // if manifestPart is given in URL, then we use regex to check whether it is given correctly
+    [urlConfig, m] = regexManifestValidationUrl(urlConfig, manifestPart);
+  }
+  if (itemPart !== undefined) {
+    [urlConfig, i] = regexItemValidationUrl(urlConfig, itemPart);
+  }
+  if (panelsPart !== undefined) {
+    [urlConfig, p] = regexPanelsValidationUrl(urlConfig, panelsPart);
+  }
+  else {
+    //get the number of panels and then create as many couples of (panel_index.0) until n_panels-1
+    p = '0.0-1.0-2.0-3.0';  // need not be hard codec
+  } 
+  if (showPart !== undefined) {
+    [urlConfig, s] = regexShowValidationUrl(urlConfig, showPart);
+  }
 
-  const arrayAttributes = urlQuery.split('_');
-  const manifestPart = arrayAttributes.find((element) => element.includes('m')); // index of manifest part in the splitted array
-  const itemPart = arrayAttributes.find((element) => element.includes('i'));
-  const panelsPart = arrayAttributes.find((element) => element.includes('p'));
-  const showPart = arrayAttributes.find((element) => element.includes('s'));
-
-  // reg expression for 'manifest index part':  /\m\\d{+}
-  const reManifest = /m\d/;
-  const reItem = /i\d+/;
-  const rePanels = /p(\d{1}\.\d{1}\-){3,4}\d{1}\.\d{1}/;  //Todo: Musste dynamisch seinlength: config.panels
-  const reShow = /s(\d\-){0,2}\d{1}/;  // config.panels
-
-  if (manifestPart !== undefined) m = reManifest.exec(manifestPart) !== null ? parseInt(manifestPart.slice(1), 10) : undefined;
-  if (itemPart !== undefined) i = reItem.exec(itemPart) !== null ? parseInt(itemPart.slice(1), 10) : undefined;
-  if (panelsPart !== undefined) p = rePanels.exec(panelsPart) !== null ? panelsPart.slice(1) : undefined;
-  if (showPart !== undefined) s = reShow.exec(showPart) !== null ? showPart.slice(1).split('-') : undefined;
-  console.log('s', s);
-  if (s !== undefined) s = s.map(Number);
-
-  if (m !== undefined) urlConfig.m = m;
-  if (i !== undefined) urlConfig.i = i;
-  if (p !== undefined) urlConfig.p = p;
   if (s === undefined) {
     urlConfig.s = [0, 1, 2, 3];  // Orlin: Fix this part, since its hard coded: musste dynmamisch
   } else {
     urlConfig.s = s;
   }
-  console.log('url Config in discoverUrlConfig()', urlConfig);
-  // eslint-disable-next-line no-shadow
-  //urlConfig.s = s;    //? s.split(',').map((i) => parseInt(i, 10)) : [];
-  const panels = p;
-  const panelsQueryArr = panels ? panels.split('-') : [];
 
-  if (panels) {
-    urlConfig.activeViews = panelsQueryArr.reduce((acc, cur) => {
-      // eslint-disable-next-line no-shadow
-      const [panelIndex, viewIndex] = cur.split('.').map((i) => parseInt(i, 10));
-
-      acc[panelIndex] = viewIndex;
-      return acc;
-    }, {});
-  }
+  const panelsQueryArr = p !== -1 ? p.split('-') : [];  //converts 'p' to an object with key, value: 'panel index: visible tab index'
+  urlConfig.activeViews = panelsQueryArr.reduce((acc, cur) => {
+    // eslint-disable-next-line no-shadow
+    const [panelIndex, viewIndex] = cur.split('.').map((i) => parseInt(i, 10));
+    acc[panelIndex] = viewIndex;
+    return acc;
+  }, {});
 
   return urlConfig;
 }
@@ -211,7 +266,6 @@ export const setActivePanelView = async ({ commit, getters }, { panelIndex, view
 
 export const setShowPanel = ({ commit, getters }, { index, show }) => {
   commit('setShowPanel', { index, show });
-  
   let panelIndexes = getters.config.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
   if (panelIndexes.length === getters.config.panels.length) panelIndexes = [];
   console.log('Panel indexes in setShowPanel', panelIndexes);
