@@ -1,8 +1,9 @@
 import messages from 'src/i18n';
-import BookmarkService from '@/services/bookmark';
-import { i18n } from '@/i18n';
 
-import { throwErrorObject } from '../../utils/error';
+import { i18n } from '@/i18n';
+import BookmarkService from '@/services/bookmark';
+
+import { TidoError } from '../../utils/TidoError';
 
 const defaultPanel = {
   label: 'Panel',
@@ -52,62 +53,43 @@ function validateColors(value) {
 // URL Config
 function splitUrlParts(urlQuery, attributes) {
   const arrayAttributes = urlQuery.split('_');
-  const manifestPart = arrayAttributes.find((element) => element.includes(attributes[0])); // index of manifest part in the splitted array
-  const itemPart = arrayAttributes.find((element) => element.includes(attributes[1]));
-  const panelsPart = arrayAttributes.find((element) => element.includes(attributes[2]));
-  const showPart = arrayAttributes.find((element) => element.includes(attributes[3]));
-
+  const manifestPart = arrayAttributes.find((element) => element[0].includes(attributes[0])); // index of manifest part in the splitted array: element[0] is 'm' the first letter of the part ?
+  const itemPart = arrayAttributes.find((element) => element[0].includes(attributes[1]));
+  const panelsPart = arrayAttributes.find((element) => element[0].includes(attributes[2]));
+  const showPart = arrayAttributes.find((element) => element[0].includes(attributes[3]));
   return [manifestPart, itemPart, panelsPart, showPart];
 }
 
 function regexManifestValidationUrl(urlConfig, manifestPart) {
   const regexManifest = /m\d/;
   const m = regexManifest.exec(manifestPart) !== null ? parseInt(manifestPart.slice(1), 10) : -1;
-  if (m !== -1) {
-    urlConfig.m = m;
-  } else {
-    const errorTitle = 'error in providing value of manifestIndex m';
-    const errorMessage = `Please provide the value of manifest Index 'm' like i.e m2 or m3 (values are 2 and 3 respectively)`;
-    console.error(errorMessage);
-  }
+  urlConfig.m = m;
+
   return [urlConfig, m];
 }
 
 function regexItemValidationUrl(urlConfig, itemPart) {
   const regexItem = /i\d+/;
   const i = regexItem.exec(itemPart) !== null ? parseInt(itemPart.slice(1), 10) : -1;
-  if (i !== -1) urlConfig.i = i;
-  else {
-    const errorTitle = 'error in providing value of itemIndex i';
-    const errorMessage = `Please provide the value of item Index 'i' like i.e i2 or i3 (values are 2 and 3 respectively)`;
-    console.error(errorMessage);
-  }
+  urlConfig.i = i;
+
   return [urlConfig, i];
 }
 
 function regexPanelsValidationUrl(urlConfig, panelsPart) {
-  const regexPanels = /p(\d{1}\.\d{1}\-){3,4}\d{1}\.\d{1}/;  //Todo: Musste dynamisch seinlength: config.panels
+  const regexPanels = /p(\d{1}\.\d{1}\-){3,4}\d{1}\.\d{1}$/;  //Todo: Musste dynamisch sei length: config.panels
   const p = regexPanels.exec(panelsPart) !== null ? panelsPart.slice(1) : -1;
-  if (p !== -1) urlConfig.p = p;
-  else {
-    const errorTitle = 'error in providing value of panelIndex.TabIndexOpened  p';
-    const errorMessage = `Please provide the value of 'p' panelIndex.TabIndexOpened for each panel index,`+
-                  `i.e p0.0-1.0-2.0-3.1 (0.0 means in panel index 0, the first tab is visible., 3.1 means in panel with index 3 (4th panel), the second tab is visible)`;
-    console.error(errorMessage);
-  }
+  urlConfig.p = p;
+
   return [urlConfig, p];
 }
 
 function regexShowValidationUrl(urlConfig, showPart) {
-  const regexShow = /s(\d\-){0,2}\d{1}/;  // config.panels
+  // get number of panels
+  const regexShow = /s(\d-){0,3}\d{1}$/;  // config.panels
   let s = regexShow.exec(showPart) !== null ? showPart.slice(1).split('-') : -1;
   if (s !== -1) s = s.map(Number);
-  else {
-    const errorTitle = 'error in providing value of opened panels';
-    const errorMessage = `Please provide the value of 's' opened for each panel index,`+
-                    `i.e p0.0-1.0-2.0-3.1 (0.0 means in panel index 0, the first tab is visible., 3.1 means in panel with index 3 (4th panel), the second tab is visible)`;
-    console.error(errorMessage);
-  }
+
   return [urlConfig, s];
 }
 
@@ -150,8 +132,6 @@ function discoverUrlConfig() {
   const urlQuery = BookmarkService.getQuery();
   const attributes = ['m', 'i', 'p', 's'];
   let [m, i, p, s] = [undefined, undefined, undefined, undefined];
-  let errorTitle = '';
-  let errorMessage = '';
 
   const [manifestPart, itemPart, panelsPart, showPart] = splitUrlParts(urlQuery, attributes);
   // reg expression for each part  /\m\\d{+}
@@ -254,7 +234,7 @@ export const load = ({ commit, getters }, config) => {
       i18n.global.setLocaleMessage(locale, { ...(messages[locale] ? messages[locale] : {}), ...resultConfig.translations[locale] });
     });
   }
-  console.log('result Config', resultConfig);
+  console.log('result Config in load()', resultConfig);
   commit('setConfig', resultConfig);
 };
 
