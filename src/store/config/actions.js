@@ -52,6 +52,8 @@ function validateColors(value) {
 
 // URL Config
 function splitUrlParts(urlQuery, attributes) {
+  if (urlQuery === '') return [undefined, undefined, undefined, undefined];
+
   const arrayAttributes = urlQuery.split('_');
   const manifestPart = arrayAttributes.find((element) => element[0].includes(attributes[0])); // index of manifest part in the splitted array: element[0] is 'm' the first letter of the part ?
   const itemPart = arrayAttributes.find((element) => element[0].includes(attributes[1]));
@@ -84,9 +86,10 @@ function regexPanelsValidationUrl(urlConfig, panelsPart) {
   return [urlConfig, p];
 }
 
-function regexShowValidationUrl(urlConfig, showPart) {
+function regexShowValidationUrl(urlConfig, showPart, numberPanels) {
   // get number of panels
   const regexShow = /s(\d-){0,3}\d{1}$/;  // config.panels
+  //const regexShow = new RegExp("s(\d-){0," + numberPanels + "}\d{1}$");
   let s = regexShow.exec(showPart) !== null ? showPart.slice(1).split('-') : -1;
   if (s !== -1) s = s.map(Number);
 
@@ -127,13 +130,15 @@ function discoverCustomConfig(customConfig) {
 // split the url based on '_'
 // get the part of attribute: get the attribute name and the value based on the type of attribute
 // add each attribute to UrlConfig as key value
-function discoverUrlConfig() {
+function discoverUrlConfig(config) {
   let urlConfig = {};
   const urlQuery = BookmarkService.getQuery();
   const attributes = ['m', 'i', 'p', 's'];
-  let [m, i, p, s] = [undefined, undefined, undefined, undefined];
+  let [m, i, p, s] = [undefined, undefined, undefined, undefined]; // values of manifest, item Indices ...
+  const numberPanels = config.panels.length;
 
   const [manifestPart, itemPart, panelsPart, showPart] = splitUrlParts(urlQuery, attributes);
+
   // reg expression for each part  /\m\\d{+}
   // here we will validate for the structure of each component:, not their value range
 
@@ -147,19 +152,24 @@ function discoverUrlConfig() {
     [urlConfig, p] = regexPanelsValidationUrl(urlConfig, panelsPart);
   }
   else {
-    //get the number of panels and then create as many couples of (panel_index.0) until n_panels-1
-    p = '0.0-1.0-2.0-3.0';  // need not be hard codec
-  } 
+    //get the number of panels and then create as many couples of (panel_index.0) until n_panels-1, the last couple need not have the '-' symbol
+    p = '';
+    for (let j = 0; j < numberPanels; j++) {
+      if (j !== numberPanels - 1) p += `${j}.0-`;
+      else {
+        p += `${j}.0`;
+      }
+    }
+  }
   if (showPart !== undefined) {
-    [urlConfig, s] = regexShowValidationUrl(urlConfig, showPart);
+    [urlConfig, s] = regexShowValidationUrl(urlConfig, showPart, numberPanels);
   }
 
   if (s === undefined) {
-    urlConfig.s = [0, 1, 2, 3];  // Orlin: Fix this part, since its hard coded: musste dynmamisch
+    urlConfig.s = Array.from({ length: numberPanels }, (value, index) => index);  // Orlin: Fix this part, since its hard coded: musste dynmamisch
   } else {
     urlConfig.s = s;
   }
-
   const panelsQueryArr = p !== -1 ? p.split('-') : [];  //converts 'p' to an object with key, value: 'panel index: visible tab index'
   urlConfig.activeViews = panelsQueryArr.reduce((acc, cur) => {
     // eslint-disable-next-line no-shadow
@@ -180,8 +190,11 @@ function discoverDefaultConfig(config) {
 
 export const load = ({ commit, getters }, config) => {
   const customConfig = discoverCustomConfig(config);
-  const urlConfig = discoverUrlConfig();
+  console.log('custom Config ', customConfig);
+  const urlConfig = discoverUrlConfig(config);
+  console.log('urlConfig ', urlConfig);
   const defaultConfig = discoverDefaultConfig(getters.config);
+  console.log('defaultConfig ', defaultConfig);
 
   if (customConfig.panels) {
     // If the custom config provide panels config, we still need to check if it's valid.
@@ -209,6 +222,7 @@ export const load = ({ commit, getters }, config) => {
     ...urlConfig,
   };
 
+
   const activeViews = urlConfig.activeViews || defaultConfig.activeViews;
   commit('setActiveViews', activeViews);
 
@@ -234,7 +248,6 @@ export const load = ({ commit, getters }, config) => {
       i18n.global.setLocaleMessage(locale, { ...(messages[locale] ? messages[locale] : {}), ...resultConfig.translations[locale] });
     });
   }
-  console.log('result Config in load()', resultConfig);
   commit('setConfig', resultConfig);
 };
 

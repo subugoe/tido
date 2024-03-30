@@ -20,7 +20,6 @@ class BookmarkService {
     Object.keys(newQuery).forEach((key) => {
       params.set(key, newQuery[key]);
     });
-
     window.history.pushState({}, '', url);
   }
 
@@ -33,16 +32,16 @@ class BookmarkService {
     if (oldQueryValue.includes('p') === false) newQueryValue = oldQueryValue.concat('_'+'p'+panels);
     else {
       
-        const arrayAttributes = oldQueryValue.split('_');
-        const indexPanelsPart = arrayAttributes.findIndex((element) => element.includes('p') );
-        const updatedPanelsPart = 'p'+ panels;
-        
-        newQueryValue = arrayAttributes.slice(0,indexPanelsPart).join('_').concat('_'+updatedPanelsPart);
+      const arrayAttributes = oldQueryValue.split('_');
+      const indexPanelsPart = arrayAttributes.findIndex((element) => element.includes('p') );
+      const updatedPanelsPart = 'p'+ panels;
+      
+      newQueryValue = arrayAttributes.slice(0,indexPanelsPart).join('_').concat('_'+updatedPanelsPart);
 
-        const partAfterPanels = arrayAttributes.slice(indexPanelsPart+1).join('_');
-        if (partAfterPanels !== '') {
-          newQueryValue = newQueryValue.concat('_'+arrayAttributes.slice(indexPanelsPart+1).join('_'));
-        }  
+      const partAfterPanels = arrayAttributes.slice(indexPanelsPart+1).join('_');
+      if (partAfterPanels !== '') {
+        newQueryValue = newQueryValue.concat('_'+arrayAttributes.slice(indexPanelsPart+1).join('_'));
+      }  
     }
     
     await this.pushQuery(newQueryValue);
@@ -73,7 +72,6 @@ class BookmarkService {
       }
 
     } else {
-      console.log('Number of panels indexes', panelIndexes.length);
       if (oldQueryValue.includes('s') === true) {
         const arrayAttributes = oldQueryValue.split('_');
         const indexShowPart = arrayAttributes.findIndex((element) => element.includes('s') );
@@ -85,7 +83,7 @@ class BookmarkService {
     await this.pushQuery(newQueryValue);
   }
 
-  async updateItem(itemIndex) {
+  async updateItem(itemIndex, resultConfig) {
     const oldQueryValue = this.getQuery();
     let newQueryValue = '';
     if (oldQueryValue === '') {
@@ -113,15 +111,16 @@ class BookmarkService {
     else if (oldQueryValue.includes('i') === false) {
       newQueryValue = oldQueryValue.concat('_'+'i'+itemIndex.toString());
     }
-   
     await this.pushQuery(newQueryValue);
 
   }
 
-  async updateManifest (manifestIndex) {
+  async updateManifest (manifestIndex, resultConfig) {
     const oldQueryValue = this.getQuery();
+    const arrayAttributes = oldQueryValue.split('_');
     const updatedManifestPart = 'm'+ manifestIndex.toString();
     let newQueryValue = '';
+
     if (oldQueryValue === '') {
       newQueryValue = oldQueryValue.concat('m'+manifestIndex.toString());
     }
@@ -129,36 +128,36 @@ class BookmarkService {
       // split the query based on '_'
       // change the value of manifest on the respective split 
       // Join again the splits
-      const arrayAttributes = oldQueryValue.split('_');
-      const indexManifestPart = arrayAttributes.findIndex((element) => element.includes('m') );
-      newQueryValue = updatedManifestPart.concat('_'+oldQueryValue.split('_').slice(1).join('_'));
       
+      if (arrayAttributes.length > 1)  newQueryValue = updatedManifestPart.concat('_'+oldQueryValue.split('_').slice(1).join('_'));
+      else {
+        newQueryValue = updatedManifestPart;   //  if the next part of the oldQuery is empty - then don't add a _
+      }
     }
 
     else if (oldQueryValue.includes('m') === false) {
-      newQueryValue = updatedManifestPart.concat(oldQueryValue.split('_').slice(1));
+      if ('collection' in resultConfig && resultConfig.collection !== '') {
+          newQueryValue = updatedManifestPart.concat('_',oldQueryValue);  // if there is a collection in config and there is no 'm' in URL, then add 'm' in URL 
+      }
+      else {
+        newQueryValue = oldQueryValue;  // if there is a manifest in config
+      }
     }
-
     await this.pushQuery(newQueryValue);
 
   }
 
-  async updateQuery(query) {
-
+  async updateQuery(query, resultConfig) {
     for(const key of Object.keys(query)) {
-      if (key === 'i') this.updateItem(query[key]);
-      if (key === 'm') this.updateManifest(query[key]);
+      if (key === 'i') this.updateItem(query[key], resultConfig);
+      if (key === 'm') this.updateManifest(query[key], resultConfig);
     }
   }
 
   getQuery() {
-    
     let queryString = window.location.search.substring(1);
-    console.log('query String in getQuery', queryString);
     if (queryString !== '') queryString = queryString.split('=')[1];
-    
-   return queryString;
-    
+    return queryString;
   }
 }
 
