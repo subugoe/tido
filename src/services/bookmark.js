@@ -85,16 +85,17 @@ class BookmarkService {
 
   async updateItem(itemIndex, resultConfig) {
     const oldQueryValue = this.getQuery();
+    const arrayAttributes = oldQueryValue.split('_');
+    const updatedItemPart = 'i'+ itemIndex.toString();
     let newQueryValue = '';
     if (oldQueryValue === '') {
       newQueryValue = oldQueryValue.concat('i'+itemIndex.toString());
     }
 
     else if (oldQueryValue.includes('i') === true) {
-      const arrayAttributes = oldQueryValue.split('_');
+     
       const indexItemPart = arrayAttributes.findIndex((element) => element.includes('i') );
-      const updatedItemPart = 'i'+ itemIndex.toString();
-      
+     
       if (oldQueryValue.includes('m') === true) {
           newQueryValue = arrayAttributes.slice(0,indexItemPart).join('_').concat('_'+updatedItemPart);
         }
@@ -103,13 +104,20 @@ class BookmarkService {
       }
 
       const partAfterItem = arrayAttributes.slice(indexItemPart+1).join('_');
-      if (partAfterItem !== '') {
+      if (partAfterItem !== '') {  
         newQueryValue = newQueryValue.concat('_'+arrayAttributes.slice(indexItemPart+1).join('_'));
       }  
     }
 
     else if (oldQueryValue.includes('i') === false) {
-      newQueryValue = oldQueryValue.concat('_'+'i'+itemIndex.toString());
+      if (oldQueryValue.includes('m') === true) {
+        if (arrayAttributes.length > 1) { // we have 's' and/or 'p' as attributes beside 'm' in oldQuery 
+        newQueryValue = arrayAttributes[0].concat('_'+updatedItemPart+ '_'+arrayAttributes.slice(1).join('_'));
+      }
+      else if (arrayAttributes.length === 1) {  // we have only 'm' in oldQuery
+        newQueryValue = arrayAttributes[0].concat('_'+updatedItemPart);
+      }
+      }
     }
     await this.pushQuery(newQueryValue);
 
@@ -143,6 +151,7 @@ class BookmarkService {
         newQueryValue = oldQueryValue;  // if there is a manifest in config
       }
     }
+    
     await this.pushQuery(newQueryValue);
 
   }

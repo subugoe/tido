@@ -29,8 +29,10 @@ export default {
     + ' of the Georg-August-University Goettingen. If you like to get access please refer to the '
     + 'guide at <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start" '
     + 'target="_blank"> Network Services VPN</a>.',
-  error_image_not_exists: 'An image for this page does not exist yet.',
+  error_image_not_exists:`An image for this page does not exist yet.`,
   error_collection_url: 'Please provide the correct collection URL in the config',
+  error_m_in_url_no_collection: `Please do not enter 'm' in the URL since there is no collection`,
+  error_item_not_in_manifest: 'The item initialized in the custom config is not part of the manifest initialized in config',
   error_open_image: 'Could not open the image file.',
   error_manifestPart_tido_url: `Please provide the value of manifest Index 'm' like i.e m2 or m3 (values are 2 and 3 in this case)`,
   error_itemPart_tido_url: `Please provide the value of item Index 'i' like i.e i2 or i3 (values are 2 and 3 in this case)`,
