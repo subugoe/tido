@@ -23,24 +23,20 @@ class BookmarkService {
     window.history.pushState({}, '', url);
   }
 
-
   async updatePanels(activeViews) {
     let oldQueryValue = this.getQuery();
     let newQueryValue = '';
     const panels = Object.keys(activeViews).map((panelIndex) => `${panelIndex}.${activeViews[panelIndex]}`).join('-');
+    const updatedPanelsPart = 'p'+ panels;
 
     if (oldQueryValue.includes('p') === false) newQueryValue = oldQueryValue.concat('_'+'p'+panels);
     else {
-      
       const arrayAttributes = oldQueryValue.split('_');
       const indexPanelsPart = arrayAttributes.findIndex((element) => element.includes('p') );
-      const updatedPanelsPart = 'p'+ panels;
-      
-      newQueryValue = arrayAttributes.slice(0,indexPanelsPart).join('_').concat('_'+updatedPanelsPart);
-
-      const partAfterPanels = arrayAttributes.slice(indexPanelsPart+1).join('_');
-      if (partAfterPanels !== '') {
-        newQueryValue = newQueryValue.concat('_'+arrayAttributes.slice(indexPanelsPart+1).join('_'));
+      newQueryValue = arrayAttributes.slice(0,indexPanelsPart).join('_').concat('_'+updatedPanelsPart); // joining part before panels with the updatedPanels part
+      const showPart = arrayAttributes.slice(indexPanelsPart+1);
+      if (showPart.length > 0) {  // if have 's' containing [1: n_panels-1], then concatenate the show part
+        newQueryValue = newQueryValue.concat('_'+showPart);
       }  
     }
     
@@ -106,6 +102,7 @@ class BookmarkService {
       const partAfterItem = arrayAttributes.slice(indexItemPart+1).join('_');
       if (partAfterItem !== '') {  
         newQueryValue = newQueryValue.concat('_'+arrayAttributes.slice(indexItemPart+1).join('_'));
+        console.log('newQueryValue in updateItem', newQueryValue);
       }  
     }
 
@@ -113,6 +110,8 @@ class BookmarkService {
       if (oldQueryValue.includes('m') === true) {
         if (arrayAttributes.length > 1) { // we have 's' and/or 'p' as attributes beside 'm' in oldQuery 
         newQueryValue = arrayAttributes[0].concat('_'+updatedItemPart+ '_'+arrayAttributes.slice(1).join('_'));
+        console.log('newQueryValue in updateItem', newQueryValue);
+
       }
       else if (arrayAttributes.length === 1) {  // we have only 'm' in oldQuery
         newQueryValue = arrayAttributes[0].concat('_'+updatedItemPart);
@@ -136,8 +135,11 @@ class BookmarkService {
       // split the query based on '_'
       // change the value of manifest on the respective split 
       // Join again the splits
-      
-      if (arrayAttributes.length > 1)  newQueryValue = updatedManifestPart.concat('_'+oldQueryValue.split('_').slice(1).join('_'));
+      console.log('old Query in updateManifest', oldQueryValue);
+      if (arrayAttributes.length > 1)  {
+        newQueryValue = updatedManifestPart.concat('_'+oldQueryValue.split('_').slice(1).join('_'));
+        console.log('updated queryValue in updateManifest', newQueryValue);
+      }
       else {
         newQueryValue = updatedManifestPart;   //  if the next part of the oldQuery is empty - then don't add a _
       }
