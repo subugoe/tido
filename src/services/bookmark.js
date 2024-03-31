@@ -49,31 +49,23 @@ class BookmarkService {
 
     let oldQueryValue = this.getQuery();
     let newQueryValue = '';
-
-    // Does not append (= removes) the "show" param from URL if panelIndexes empty.
-    if (panelIndexes.length > 0) {
+    const arrayAttributes = oldQueryValue.split('_');
+    const indexShowPart = arrayAttributes.findIndex((element) => element.includes('s') );
+    if (panelIndexes.length > 0) { 
       panelIndexes = panelIndexes.join('-');
       if (oldQueryValue.includes('s') === false) newQueryValue = oldQueryValue.concat('_'+'s'+panelIndexes);
-      else {
-        const arrayAttributes = oldQueryValue.split('_');
-        const indexShowPart = arrayAttributes.findIndex((element) => element.includes('s') );
-        const updatedShowPart = 's'+ panelIndexes;
-        
-        newQueryValue = arrayAttributes.slice(0,indexShowPart).join('_').concat('_'+updatedShowPart);
-  
-        const partAfterItem = arrayAttributes.slice(indexShowPart+1).join('_');
-        if (partAfterItem !== '') {
-          newQueryValue = newQueryValue.concat('_'+arrayAttributes.slice(indexShowPart+1).join('_'));
+      else { 
+        const updatedShowPart = 's'+ panelIndexes; 
+        newQueryValue = arrayAttributes.slice(0,indexShowPart).join('_').concat('_'+updatedShowPart);  // concatenate the part before 's' and the updatedShow part
+        const panelsPart = arrayAttributes.slice(indexShowPart+1).join('_');
+        if (panelsPart !== '') {      // if we open have opened show and then panels sequentially, in the oldQuery we have panels at the end. when we update show, then we don't forget to include panels as well
+          newQueryValue = newQueryValue.concat('_'+panelsPart);
         }  
       }
 
-    } else {
-      if (oldQueryValue.includes('s') === true) {
-        const arrayAttributes = oldQueryValue.split('_');
-        const indexShowPart = arrayAttributes.findIndex((element) => element.includes('s') );
+    } else { // when we have all panels opened, then panel_Indexes becomes 0, in this case we remove 's' attribute from the URL
         arrayAttributes.splice(indexShowPart, 1);
         newQueryValue = arrayAttributes.join('_');
-      } 
     }
     
     await this.pushQuery(newQueryValue);
