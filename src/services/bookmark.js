@@ -71,28 +71,39 @@ class BookmarkService {
     await this.pushQuery(newQueryValue);
   }
 
+
   async updateItem(itemIndex, resultConfig) {
     const oldQueryValue = this.getQuery();
     const arrayAttributes = oldQueryValue.split('_');
     const updatedItemPart = 'i'+ itemIndex.toString();
     let newQueryValue = '';
     let partAfterItem = '';
+    const indexItemPart = arrayAttributes.findIndex((element) => element.includes('i') );
 
     if (oldQueryValue === '' || (oldQueryValue.includes('i') === true && arrayAttributes.length === 1)) newQueryValue = updatedItemPart;
-    else if (oldQueryValue.includes('m') === true) {
-      if (arrayAttributes.length === 1) newQueryValue = oldQueryValue.concat('_',updatedItemPart);  
-      else {
-        if (oldQueryValue.includes('i') === true) {
-          partAfterItem = arrayAttributes.slice(2).join('_');
-          if (partAfterItem === '') newQueryValue = arrayAttributes[0].concat('_', updatedItemPart);
-          else if (partAfterItem !== '')  newQueryValue = arrayAttributes[0].concat('_', updatedItemPart,'_',partAfterItem); 
-        } 
-        else if (oldQueryValue.includes('i') === false) {
-          partAfterItem = arrayAttributes.slice(1).join('_');
-          newQueryValue = oldQueryValue.concat('_', partAfterItem);
+    else if (arrayAttributes.length === 1 && oldQueryValue.includes('m') === true) newQueryValue = arrayAttributes[0].concat('_', updatedItemPart);
+    else {
+      if (indexItemPart !== -1) {
+        // Option 1: manifest, item part, rest part
+        // Option 2: item part, rest part
+        // Option 3: manifest, item part
+        partAfterItem = oldQueryValue.split('_').slice(indexItemPart + 1).join('_');
+        if (partAfterItem !== '') {
+          if (oldQueryValue.includes('m') === true) newQueryValue = arrayAttributes[0].concat('_', updatedItemPart, '_', partAfterItem);
+          else {
+          newQueryValue = updatedItemPart.concat('_', partAfterItem);
+         }
+        }
+        else {
+          newQueryValue = arrayAttributes[0].concat('_', updatedItemPart);
         }
       }
-    } 
+      else {
+        // Only option: Manifest part, rest part 
+        partAfterItem = oldQueryValue.split('_').slice(1).join('_');
+        newQueryValue = arrayAttributes[0].concat('_', partAfterItem);
+      }
+    }   
     await this.pushQuery(newQueryValue);
   }
 
@@ -103,35 +114,21 @@ class BookmarkService {
     const updatedManifestPart = 'm'+ manifestIndex.toString();
     let newQueryValue = '';
 
-    if (oldQueryValue === '') {
-      newQueryValue = oldQueryValue.concat('m'+manifestIndex.toString());
-    }
+    if (oldQueryValue === '' || (oldQueryValue.includes('m') === true && arrayAttributes.length === 1)) newQueryValue = updatedManifestPart;
     else if (oldQueryValue.includes('m') === true) {
-      // split the query based on '_'
-      // change the value of manifest on the respective split 
-      // Join again the splits
-      console.log('old Query in updateManifest', oldQueryValue);
       if (arrayAttributes.length > 1)  {
-        newQueryValue = updatedManifestPart.concat('_'+oldQueryValue.split('_').slice(1).join('_'));
-        console.log('updated queryValue in updateManifest', newQueryValue);
-      }
-      else {
-        newQueryValue = updatedManifestPart;   //  if the next part of the oldQuery is empty - then don't add a _
+        newQueryValue = updatedManifestPart.concat('_'+oldQueryValue.split('_').slice(1).join('_'));  // concatenate partAfterManifest to the new manifestPart
       }
     }
-
-    else if (oldQueryValue.includes('m') === false) {
+    else if (oldQueryValue.includes('m') === false) {  // if there is a collection in config and there is no 'm' in URL, then add 'm' in URL 
       if ('collection' in resultConfig && resultConfig.collection !== '') {
-          newQueryValue = updatedManifestPart.concat('_',oldQueryValue);  // if there is a collection in config and there is no 'm' in URL, then add 'm' in URL 
-          console.log('new Query Value in updateManifest', newQueryValue);
+          newQueryValue = updatedManifestPart.concat('_',oldQueryValue);  
         }
       else {
-        newQueryValue = oldQueryValue;  // if there is a manifest in config
+        newQueryValue = oldQueryValue;  // if there is a manifest in config, we don't add the manifestPart
       }
-    }
-    
+    }  
     await this.pushQuery(newQueryValue);
-
   }
 
   async updateQuery(query, resultConfig) {
