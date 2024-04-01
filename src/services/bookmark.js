@@ -76,44 +76,27 @@ class BookmarkService {
     const arrayAttributes = oldQueryValue.split('_');
     const updatedItemPart = 'i'+ itemIndex.toString();
     let newQueryValue = '';
-    if (oldQueryValue === '') {
-      newQueryValue = oldQueryValue.concat('i'+itemIndex.toString());
-    }
+    let partAfterItem = '';
 
-    else if (oldQueryValue.includes('i') === true) {
-     
-      const indexItemPart = arrayAttributes.findIndex((element) => element.includes('i') );
-     
-      if (oldQueryValue.includes('m') === true) {
-          newQueryValue = arrayAttributes.slice(0,indexItemPart).join('_').concat('_'+updatedItemPart);
-        }
+    if (oldQueryValue === '' || (oldQueryValue.includes('i') === true && arrayAttributes.length === 1)) newQueryValue = updatedItemPart;
+    else if (oldQueryValue.includes('m') === true) {
+      if (arrayAttributes.length === 1) newQueryValue = oldQueryValue.concat('_',updatedItemPart);  
       else {
-        newQueryValue = updatedItemPart;
+        if (oldQueryValue.includes('i') === true) {
+          partAfterItem = arrayAttributes.slice(2).join('_');
+          if (partAfterItem === '') newQueryValue = arrayAttributes[0].concat('_', updatedItemPart);
+          else if (partAfterItem !== '')  newQueryValue = arrayAttributes[0].concat('_', updatedItemPart,'_',partAfterItem); 
+        } 
+        else if (oldQueryValue.includes('i') === false) {
+          partAfterItem = arrayAttributes.slice(1).join('_');
+          newQueryValue = oldQueryValue.concat('_', partAfterItem);
+        }
       }
-
-      const partAfterItem = arrayAttributes.slice(indexItemPart+1).join('_');
-      if (partAfterItem !== '') {  
-        newQueryValue = newQueryValue.concat('_'+arrayAttributes.slice(indexItemPart+1).join('_'));
-        console.log('newQueryValue in updateItem', newQueryValue);
-      }  
-    }
-
-    else if (oldQueryValue.includes('i') === false) {
-      if (oldQueryValue.includes('m') === true) {
-        if (arrayAttributes.length > 1) { // we have 's' and/or 'p' as attributes beside 'm' in oldQuery 
-        newQueryValue = arrayAttributes[0].concat('_'+updatedItemPart+ '_'+arrayAttributes.slice(1).join('_'));
-        console.log('newQueryValue in updateItem', newQueryValue);
-
-      }
-      else if (arrayAttributes.length === 1) {  // we have only 'm' in oldQuery
-        newQueryValue = arrayAttributes[0].concat('_'+updatedItemPart);
-      }
-      }
-    }
+    } 
     await this.pushQuery(newQueryValue);
-
   }
 
+  
   async updateManifest (manifestIndex, resultConfig) {
     const oldQueryValue = this.getQuery();
     const arrayAttributes = oldQueryValue.split('_');
@@ -140,7 +123,8 @@ class BookmarkService {
     else if (oldQueryValue.includes('m') === false) {
       if ('collection' in resultConfig && resultConfig.collection !== '') {
           newQueryValue = updatedManifestPart.concat('_',oldQueryValue);  // if there is a collection in config and there is no 'm' in URL, then add 'm' in URL 
-      }
+          console.log('new Query Value in updateManifest', newQueryValue);
+        }
       else {
         newQueryValue = oldQueryValue;  // if there is a manifest in config
       }
