@@ -50,7 +50,7 @@ describe('Header - Item and Manifest changing', () => {
   beforeEach(() => {
     cy
       // Orlin: commented this temporarily . .visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r7vd/130/latest/item.json`)
-      .visit('http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido={"m":7,"i":0,"p":"0_0,1_0,2_0,3_0"}')
+      .visit('http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m7_i0')
       .get('.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');
@@ -68,7 +68,7 @@ describe('Header - Item and Manifest changing', () => {
       .wait(200)
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', 'tido={"m":6,"i":57,"p":"0_0,1_0,2_0,3_0"}');
+      .should('include', 'tido=m6_i57');
   });
 
   it('Should switch to next sheet', () => {
@@ -83,6 +83,6 @@ describe('Header - Item and Manifest changing', () => {
       .wait(200)
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', 'tido={"m":7,"i":1,"p":"0_0,1_0,2_0,3_0"}');
+      .should('include', 'tido=m7_i1');
   });
 });

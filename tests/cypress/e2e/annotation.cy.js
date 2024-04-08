@@ -5,7 +5,7 @@ describe('Annotation', () => {
     beforeEach(() => {
       cy
         //.visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r7vd/130/latest/item.json`)
-        .visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido={"m":7,"i":0,"p":"0_0,1_0,2_0,3_0"}`)
+        .visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m7_i0_p0.0-1.0-2.0-3.0`)
         .get('#text-content')
         .should('be.visible')
         .get('.panels-target > .item:nth-child(4) .q-tab-panel .q-list')
@@ -180,7 +180,7 @@ describe('Annotation', () => {
   describe('Text Annotation', () => {
     beforeEach(() => {
       //cy.visit(`/gfl-local.html?item=${gflApiBaseUrl}/textapi/Z_1819-06-03_l/Z_1819-06-03_l_page1/latest/item.json`)
-      cy.visit(`/gfl-local.html?tido={"i":0}`)
+      cy.visit(`/gfl-local.html?tido=i0`)
       cy
         .get('.panels-target > .item:nth-child(2)')
         .should('be.visible')

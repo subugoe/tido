@@ -3,7 +3,7 @@ import { ahiqarApiBaseUrl } from '../support/globals';
 describe('Content - Multiple Tabs', () => {
   beforeEach(() => {
     //cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r176/182b/latest/item.json`)
-  cy.visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido={"m":20,"i":0,"p":"0_0,1_0,2_0,3_0"}`)
+  cy.visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m20_i0`)
     .get('#text-content', {timeout: 10000})
       .as('content')
       .should('be.visible');
@@ -166,7 +166,7 @@ describe('Content - Multiple Tabs', () => {
 describe('Content - Multiple Tabs with different manifest', () => {
   it('Should switch to first tab when switch manifest', () => {
     //cy.visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r17b/82a/latest/item.json`)
-   cy.visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido={"m":21,"i":0,"p":"0_0,1_0,2_0,3_0"}`)
+   cy.visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m21_i0_p0.0-1.0-2.0-3.0`)
     .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
       .eq(1)
       .click();
