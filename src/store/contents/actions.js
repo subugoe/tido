@@ -3,8 +3,6 @@ import { i18n } from '@/i18n';
 import BookmarkService from '@/services/bookmark';
 import { loadCss, loadFont } from '../../utils';
 
-import { TidoError } from '../../utils/TidoError';
-
 export const getItemIndex = async ({ getters }, itemUrl) => {
   const { manifest } = getters;
   const items = manifest.sequence;
@@ -62,8 +60,6 @@ export const initCollection = async ({
   let activeManifest = '';
   let manifestIndex;
   let itemIndex;
-
-  console.log('resultConfig in initCollection', resultConfig);
 
   try {
     collection = await request(url);
@@ -152,10 +148,13 @@ export const initManifest = async ({
   const { item } = resultConfig;
   let itemIndex;
 
-  // Check if manifestIndex or item Index are part of the result config
-  if (('m' in resultConfig && 'i' in resultConfig) || 'm' in resultConfig) {
-    throw new Error(i18n.global.t('error_m_in_url_no_collection'));
+  // Check if manifestIndex or item Index are part of the result config:
+  if ('collection' in resultConfig && resultConfig.collection === '') { // we make sure that this error doesn't occur when switching manifest
+    if (('m' in resultConfig && 'i' in resultConfig) || 'm' in resultConfig) {
+      throw new Error(i18n.global.t('error_m_in_url_no_collection'));
+    }
   }
+
   if ('i' in resultConfig) {
     const itemIndexInConfig = resultConfig.i;
     itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
