@@ -40,7 +40,7 @@ export default {
                       + `i.e p0.0-1.0-2.0-3.1 (0.0 means in panel index 0, the first tab is visible., 3.1 means in panel with index 3 (4th panel),`
                       + `the second tab is visible). Please don't forget to give symbol '-' between the couple values).`,
   error_showPart_tido_url: `Please provide the value of 's' opened for each panel index,`
-                      + `i.e s0-3 means that the panels at indices 0 and 3 are opened. Please don't forget to give symbol '-' between the values)`,
+                      + `i.e s0-2-3 means that the panels at indices 0, 2 and 3 are opened. Please don't forget to give symbol '-' only between the values). There is no space between 's' and the first value`,
   no_image_available: 'No Image Available',
   image_license: 'Image License',
   image_notes: 'Image Notes',

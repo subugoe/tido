@@ -85,12 +85,29 @@ function regexPanelsValidationUrl(urlConfig, panelsPart) {
 }
 
 function regexShowValidationUrl(urlConfig, showPart, numberPanels) {
-  // get number of panels
-  const regexShow = /s(\d-){0,3}\d{1}$/;  // config.panels
-  //const regexShow = new RegExp("s(\d-){0," + numberPanels + "}\d{1}$");
-  let s = regexShow.exec(showPart) !== null ? showPart.slice(1).split('-') : -1;
-  if (s !== -1) s = s.map(Number);
+  const numbersPart = showPart.slice(1);
+  const regexNumbersPart = /\d\-/;
+  let s = showPart.slice(1).split('-'); // get the array of panel numbers
 
+  if (s.length > numberPanels) {
+    s = -1;
+  } 
+  else {
+    let matchNumbersPart = true;
+    for (let i = 0; i < s.length - 1; i++) { //if s0-2 is given and there are in total 4 panels, then it is still fine, since we can show less number of panels than the total one
+      const groupMatch = numbersPart.slice(i * 2, i * 2 + 2).match(regexNumbersPart); // match the couples of (d-) -> a digit followed by a "-" character. In total there are (s.length - 1) - so number of panels we want to open - 1
+      if (groupMatch === null) {
+        matchNumbersPart = false;
+        break;
+      }
+    }
+    const lastNumberString = s.slice(-1)[0];
+    const lastNumberInt = parseInt(lastNumberString, 10);
+    if (/^\d+$/.test(lastNumberString) === false || (lastNumberInt >= numberPanels || lastNumberInt < 0)) matchNumbersPart = false; // last character must have only digits and not be greater than number of max panels
+    if (matchNumbersPart === false) s = -1;
+    if (s !== -1) s = s.map(Number);
+  }
+  urlConfig.s = s;
   return [urlConfig, s];
 }
 
