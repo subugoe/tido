@@ -3,8 +3,6 @@ import messages from 'src/i18n';
 import { i18n } from '@/i18n';
 import BookmarkService from '@/services/bookmark';
 
-import { TidoError } from '../../utils/TidoError';
-
 const defaultPanel = {
   label: 'Panel',
   show: true,
@@ -96,7 +94,7 @@ function regexShowValidationUrl(urlConfig, showPart, numberPanels) {
   return [urlConfig, s];
 }
 
-///////
+//
 
 function createDefaultActiveViews(panelsConfig) {
   return panelsConfig
@@ -166,7 +164,7 @@ function discoverUrlConfig(config) {
   }
 
   if (s === undefined) {
-    urlConfig.s = Array.from({ length: numberPanels }, (value, index) => index);  // Orlin: Fix this part, since its hard coded: musste dynmamisch
+    urlConfig.s = Array.from({ length: numberPanels }, (value, index) => index);
   } else {
     urlConfig.s = s;
   }
@@ -190,11 +188,8 @@ function discoverDefaultConfig(config) {
 
 export const load = ({ commit, getters }, config) => {
   const customConfig = discoverCustomConfig(config);
-  console.log('custom Config ', customConfig);
   const urlConfig = discoverUrlConfig(config);
-  console.log('urlConfig ', urlConfig);
   const defaultConfig = discoverDefaultConfig(getters.config);
-  console.log('defaultConfig ', defaultConfig);
 
   if (customConfig.panels) {
     // If the custom config provide panels config, we still need to check if it's valid.
@@ -221,7 +216,6 @@ export const load = ({ commit, getters }, config) => {
     ...customConfig,
     ...urlConfig,
   };
-
 
   const activeViews = urlConfig.activeViews || defaultConfig.activeViews;
   commit('setActiveViews', activeViews);
@@ -261,7 +255,6 @@ export const setShowPanel = ({ commit, getters }, { index, show }) => {
   commit('setShowPanel', { index, show });
   let panelIndexes = getters.config.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
   if (panelIndexes.length === getters.config.panels.length) panelIndexes = [];
-  console.log('Panel indexes in setShowPanel', panelIndexes);
   BookmarkService.updateShow(panelIndexes);
 };
 
