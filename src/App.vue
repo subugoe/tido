@@ -43,6 +43,7 @@ import {
 } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
+import { i18n } from '@/i18n';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
 import { delay } from '@/utils';
 import PanelsWrapper from '@/components/panels/PanelsWrapper.vue';
@@ -61,7 +62,6 @@ const emptyIcon = biBook;
 
 const ready = computed(() => {
   const { collection: collectionUrl, manifest: manifestUrl } = config.value;
-
   if (!item.value) {
     return false;
   }
@@ -119,13 +119,15 @@ onMounted(async () => {
 async function getCollection(url) {
   await store.dispatch('contents/initCollection', url);
 }
+
 async function loadConfig() {
   try {
     // eslint-disable-next-line no-shadow
     const config = inject('config');
     await store.dispatch('config/load', config);
   } catch ({ title, message }) {
-    errorTitle.value = t('config_error');
+    await delay(1000);
+    errorTitle.value = title || t('config_error');    //t('config_error');
     errorMessage.value = message;
   }
 }
@@ -148,7 +150,7 @@ async function init() {
       await getManifest(manifest);
     } else {
       // eslint-disable-next-line no-console
-      console.error('There should exist a collection or a manifest in config');
+      throw new Error(i18n.global.t('no_entrypoint_available'));
     }
   } catch (e) {
     await delay(1000);
