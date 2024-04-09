@@ -38,7 +38,7 @@ export default {
   error_itemPart_tido_url: `Please provide the value of item Index 'i' like i.e i2 or i3 (values are 2 and 3 in this case)`,
   error_panelsPart_tido_url: `Please provide the value of 'p' panelIndex.TabIndexOpened for each panel index,`
                       + `i.e p0.0-1.0-2.0-3.1 (0.0 means in panel index 0, the first tab is visible., 3.1 means in panel with index 3 (4th panel),`
-                      + `the second tab is visible). Please don't forget to give symbol '-' between the couple values).`,
+                      + `the second tab is visible). Please don't forget to give symbol '-' between the couple values and '.' symbol within each pair). Please note that the there is no space between the 'p' and the first value. There should be 'total number of Panels' pairs of (panelIndex.TabIndex)`,
   error_showPart_tido_url: `Please provide the value of 's' opened for each panel index,`
                       + `i.e s0-2-3 means that the panels at indices 0, 2 and 3 are opened. Please don't forget to give symbol '-' only between the values). There is no space between 's' and the first value`,
   no_image_available: 'No Image Available',

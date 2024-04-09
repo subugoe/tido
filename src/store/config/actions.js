@@ -76,11 +76,28 @@ function regexItemValidationUrl(urlConfig, itemPart) {
   return [urlConfig, i];
 }
 
-function regexPanelsValidationUrl(urlConfig, panelsPart) {
-  const regexPanels = /p(\d{1}\.\d{1}\-){3,4}\d{1}\.\d{1}$/;  //Todo: Musste dynamisch sei length: config.panels
-  const p = regexPanels.exec(panelsPart) !== null ? panelsPart.slice(1) : -1;
-  urlConfig.p = p;
+function regexPanelsValidationUrl(urlConfig, panelsPart, numberPanels) {
+  let p = -1;
+  const numbersPartArray = panelsPart.slice(1).split('-');
+  const regexNumber = /^\d+$/;
+  let isPanelsMatch = true;
+  if (panelsPart[0] !== 'p' || numbersPartArray.length !== numberPanels) isPanelsMatch = false;
+  else {
+    for (let i = 0; i < numbersPartArray.length; i++) {
+      const panelTabPair = numbersPartArray[i];
+      if (panelTabPair.length !== 3
+        || regexNumber.test(panelTabPair[0]) === false
+        || regexNumber.test(panelTabPair[2]) === false
+        || panelTabPair[1] !== '.') {
+        isPanelsMatch = false;
+        p = -1;
+        break;
+      }
+    }
+  }
+  if (isPanelsMatch === true) p = panelsPart.slice(1);
 
+  urlConfig.p = p;
   return [urlConfig, p];
 }
 
@@ -164,7 +181,7 @@ function discoverUrlConfig(config) {
     [urlConfig, i] = regexItemValidationUrl(urlConfig, itemPart);
   }
   if (panelsPart !== undefined) {
-    [urlConfig, p] = regexPanelsValidationUrl(urlConfig, panelsPart);
+    [urlConfig, p] = regexPanelsValidationUrl(urlConfig, panelsPart, numberPanels);
   }
   else {
     //get the number of panels and then create as many couples of (panel_index.0) until n_panels-1, the last couple need not have the '-' symbol
