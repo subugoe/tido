@@ -91,7 +91,7 @@ describe('Bookmarking', () => {
       .wait(400)// wait for tab switch transition
       .should('have.class', 'q-tab--active');
 
-    cy.get(
+    cy.wait(5000).get(
       '.q-tree--standard.item-content > .q-tree__node > .q-tree__node-collapsible > .q-tree__children > .q-tree__node:nth-child(1) > .q-tree__node-header',
       { timeout: 10000 }
     ).click();
@@ -131,4 +131,20 @@ describe('Bookmarking - URL first', () => {
           .should('have.class', 'q-tab--active');
       });
   });
+});
+
+
+describe('Bookmarking - default opening without tido key' , () => {
+  it('Should load the first item of first manifest in Ahiqar', () => {
+    cy
+     .visit('http://localhost:2222/ahiqar-arabic-karshuni-local.html')
+     .then(() => {
+     cy.wait(200)
+     .url()
+      .then((value) => decodeURIComponent(value))
+      .should('include', 'tido=m0_i0');
+     });
+    
+
+  })
 });
