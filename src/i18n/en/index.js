@@ -30,6 +30,19 @@ export default {
     + 'guide at <a href="https://docs.gwdg.de/doku.php?id=en:services:network_services:vpn:start" '
     + 'target="_blank"> Network Services VPN</a>.',
   error_image_not_exists: 'An image for this page does not exist yet.',
+  error_collection_url: 'Please provide the correct collection URL in the config',
+  error_m_in_url_no_collection: `Please do not enter 'm' in the URL since there is no collection`,
+  error_item_not_in_manifest: 'The item initialized in the custom config is not part of the manifest initialized in config',
+  error_open_image: 'Could not open the image file.',
+  error_manifestPart_tido_url: `Please provide the value of manifest Index 'm' like i.e m2 or m3 (values are 2 and 3 in this case)`,
+  error_itemPart_tido_url: `Please provide the value of item Index 'i' like i.e i2 or i3 (values are 2 and 3 in this case)`,
+  error_panelsPart_tido_url: `Please provide the value of 'p' panelIndex.TabIndexOpened for each panel index,`
+                      + `i.e p0.0-1.0-2.0-3.1 (0.0 means in panel index 0, the first tab is visible., 3.1 means in panel with index 3 (4th panel),`
+                      + `the second tab is visible). Please don't forget to give symbol '-' between the couple values and '.' symbol within each pair).`
+                    + `Please note that the there is no space between the 'p' and the first value. There should be 'total number of Panels' pairs of (panelIndex.TabIndex)`,
+  error_showPart_tido_url: `Please provide the value of 's' opened for each panel index,`
+                    + `i.e s0-2-3 means that the panels at indices 0, 2 and 3 are opened. `
+                   + `Please don't forget to give symbol '-' only between the values). There is no space between 's' and the first value`,
   error_open_image: 'Could not open the image file.',
   no_image_available: 'No Image Available',
   image_license: 'Image License',

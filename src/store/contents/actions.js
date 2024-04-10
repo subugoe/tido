@@ -1,6 +1,18 @@
 import { request } from '@/utils/http';
+import { i18n } from '@/i18n';
 import BookmarkService from '@/services/bookmark';
 import { loadCss, loadFont } from '../../utils';
+
+export const getItemIndex = async ({ getters }, itemUrl) => {
+  const { manifest } = getters;
+  const items = manifest.sequence;
+  const itemIndex = items.findIndex((item) => item.id === itemUrl);
+  return itemIndex;
+};
+
+export const getPanels = async ({ getters }) => getters.panels;
+
+export const getShow = async ({ getters }) => getters.show;
 
 function findActiveManifestIndex(manifests = [], itemUrl = null) {
   if (manifests.length === 0) return -1;
@@ -14,13 +26,6 @@ function findActiveManifestIndex(manifests = [], itemUrl = null) {
   });
 }
 
-export const getItemIndex = async ({ getters }, itemUrl) => {
-  const { manifest } = getters;
-  const items = manifest.sequence;
-  const itemIndex = items.findIndex((item) => item.id === itemUrl);
-  return itemIndex;
-};
-
 async function getManifest(url) {
   const data = await request(url);
   return data;
@@ -31,25 +36,60 @@ async function getItem(url) {
   return data;
 }
 
+function handleErrorManifestPartUrl(resultConfig, numberManifests) {
+  if ('m' in resultConfig) {
+    const { m } = resultConfig;
+    // m doesn't fuilfill these conditions not part is integer and greater >= 0 and smaller than number of manifests
+    if (numberManifests > 0) {
+      if (Number.isInteger(m) && m >= 0 && m >= numberManifests) {
+        throw new Error(`Please enter 'm' as integer in this range [0,${numberManifests})`);
+      } else if (m === -1) {
+        throw new Error(i18n.global.t('error_manifestPart_tido_url'));
+      }
+    }
+  }
+}
+
 export const initCollection = async ({
   commit, dispatch, getters, rootGetters,
 }, url) => {
   const { item } = getters;
-  let { item: itemUrl } = rootGetters['config/config'];
   const resultConfig = rootGetters['config/config'];
+  let { item: itemUrl } = rootGetters['config/config'];
+  let collection = '';
   let activeManifest = '';
   let manifestIndex;
   let itemIndex;
 
-  const collection = await request(url);
+  try {
+    collection = await request(url);
+  } catch (err) {
+    throw new Error(i18n.global.t('error_collection_url'));
+  }
   commit('setCollection', collection);
 
-  // We know here that no manifest was loaded. Neither from URL nor from user config.
-  // So we load the first collection item.
+  const numberManifests = Object.keys(collection).length > 0 ? collection.sequence.length : 0;
+
+  handleErrorManifestPartUrl(resultConfig, numberManifests); // we throw errors regarding manifest part if there are any
+
+  if ('i' in resultConfig) {
+    if (resultConfig.i === -1) throw new Error(i18n.global.t('error_itemPart_tido_url'));
+  }
+
+  if ('p' in resultConfig) {
+    if (resultConfig.p === -1) throw new Error(i18n.global.t('error_panelsPart_tido_url'));
+  }
+
+  if ('s' in resultConfig) {
+    //if (resultConfig.s.length > resultConfig.panels) throw new Error('Error range in s ');
+    if (resultConfig.s === -1) throw new Error(i18n.global.t('error_showPart_tido_url'));
+  }
+
+  console.log('resultConfig in initCollection()', resultConfig);
+
   if (Array.isArray(collection.sequence) && collection.sequence.length > 0) {
     const promises = [];
     collection.sequence.forEach((seq) => promises.push(getManifest(seq.id)));
-
     const manifests = await Promise.all(promises);
     commit('setManifests', manifests);
 
@@ -81,8 +121,15 @@ export const initCollection = async ({
       [manifestIndex, itemIndex] = [0, 0];
     }
 
+    const numberItems = manifests[manifestIndex].sequence.length;
+    if (itemIndex >= numberItems) {
+      throw new Error(`Please enter 'i' as integer in this range [0,${numberItems})`);
+    }
+
     activeManifest = manifests[manifestIndex];
     itemUrl = activeManifest.sequence[itemIndex].id;
+    if ('p' in resultConfig) commit('setPanels', resultConfig.p);
+    if ('s' in resultConfig) commit('setShow', resultConfig.s);
     const { support } = activeManifest;
 
     if (support && support.length > 0) {
@@ -94,19 +141,24 @@ export const initCollection = async ({
   }
 };
 
-export const initManifest = async ({ commit, dispatch, getters, rootGetters }, url) => {
-  const { item, manifests } = getters;
-  const resultConfig = rootGetters['config/config'];
-  let manifest;
-  let itemIndex;
-  if (manifests) {
-    manifest = manifests.find(({ id }) => id === url);
-  } else {
-    manifest = await getManifest(url);
-  }
-
+export const initManifest = async ({
+  commit, dispatch, getters, rootGetters,
+}, url) => {
+  const manifest = await getManifest(url);
   commit('setManifest', manifest);
+  const resultConfig = rootGetters['config/config'];
+  const { item } = resultConfig;
+  let itemIndex;
 
+  // Check if manifestIndex or item Index are part of the result config:
+  if ('collection' in resultConfig && resultConfig.collection === '') { // we make sure that this error doesn't occur when switching manifest
+    if (('m' in resultConfig && 'i' in resultConfig) || 'm' in resultConfig) {
+      throw new Error(i18n.global.t('error_m_in_url_no_collection'));
+    }
+  }
+  console.log('resultConfig in initManifest', resultConfig);
+
+  //
   if ('i' in resultConfig && 'm' in resultConfig === false) { //when the we switch to an item in a new manifest
     const itemIndexInConfig = resultConfig.i;
     itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
@@ -114,17 +166,21 @@ export const initManifest = async ({ commit, dispatch, getters, rootGetters }, u
     // find the item index in this manifest, if the item is not found, then show errors
     if (Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
       itemIndex = manifest.sequence.findIndex((element) => element.id === item);
+      if (itemIndex === -1) throw new Error(i18n.global.t('error_item_not_in_manifest'));
     }
   } else if (resultConfig.manifest !== '') {
     itemIndex = 0;
   }
 
   const { support } = manifest;
-
   if (support && support.length > 0) {
     await dispatch('getSupport', support);
   }
 
+  console.log('item Index', itemIndex);
+
+  // We know here that no item was loaded. Neither from URL nor from user config.
+  // So we load the first manifest item.
   if (itemIndex !== undefined && Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
     const itemUrl = manifest.sequence[itemIndex].id;
     dispatch('initItem', itemUrl);
@@ -132,7 +188,7 @@ export const initManifest = async ({ commit, dispatch, getters, rootGetters }, u
 };
 
 export const initItem = async ({ commit, dispatch, getters, rootGetters }, url) => {
-  const item = await getItem(url);
+  const item = await getItem(url); // To fix: what about if this load fails, e.g content not anymore in this url -> maybe try and catch ?
   const resultConfig = rootGetters['config/config'];
   commit('setItem', item);
   commit('setItemUrl', url);
@@ -140,11 +196,13 @@ export const initItem = async ({ commit, dispatch, getters, rootGetters }, url) 
   if (item.annotationCollection) {
     await dispatch('annotations/initAnnotations', item.annotationCollection, { root: true });
   }
-
   const manifests = getters.manifests ? getters.manifests : [];
   // here we have item query -> we should extract the manifest index and the item index from the query and then give it as a parameter to updateItemQuery()
   const i = await dispatch('getItemIndex', url);
   const m = findActiveManifestIndex(manifests, url);
+  // const p = await dispatch('getPanels');
+
+  console.log('item URL in initItem()', item);
 
   const numberPanels = resultConfig.panels.length;
 
@@ -169,8 +227,7 @@ export const initItem = async ({ commit, dispatch, getters, rootGetters }, url) 
     m,
     i,
   } : { i };
-
-  await BookmarkService.updateItemQuery(query);
+  await BookmarkService.updateQuery(query, resultConfig);
 };
 
 export const updateImageLoading = async ({ commit }, payload) => {

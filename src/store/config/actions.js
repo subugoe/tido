@@ -73,6 +73,74 @@ function splitUrlParts(urlQuery, attributes) {
   return [manifestPart, itemPart, panelsPart, showPart];
 }
 
+function regexManifestValidationUrl(urlConfig, manifestPart) {
+  const regexManifest = /m\d/;
+  const m = regexManifest.exec(manifestPart) !== null ? parseInt(manifestPart.slice(1), 10) : -1;
+  urlConfig.m = m;
+
+  return [urlConfig, m];
+}
+
+function regexItemValidationUrl(urlConfig, itemPart) {
+  const regexItem = /i\d+/;
+  const i = regexItem.exec(itemPart) !== null ? parseInt(itemPart.slice(1), 10) : -1;
+  urlConfig.i = i;
+
+  return [urlConfig, i];
+}
+
+function regexPanelsValidationUrl(urlConfig, panelsPart, numberPanels) {
+  let p = -1;
+  const numbersPartArray = panelsPart.slice(1).split('-');
+  const regexNumber = /^\d+$/;
+  let isPanelsMatch = true;
+  if (panelsPart[0] !== 'p' || numbersPartArray.length !== numberPanels) isPanelsMatch = false;
+  else {
+    for (let i = 0; i < numbersPartArray.length; i++) {
+      const panelTabPair = numbersPartArray[i];
+      if (panelTabPair.length !== 3
+        || regexNumber.test(panelTabPair[0]) === false
+        || regexNumber.test(panelTabPair[2]) === false
+        || panelTabPair[1] !== '.') {
+        isPanelsMatch = false;
+        p = -1;
+        break;
+      }
+    }
+  }
+  if (isPanelsMatch === true) p = panelsPart.slice(1);
+
+  urlConfig.p = p;
+  return [urlConfig, p];
+}
+
+function regexShowValidationUrl(urlConfig, showPart, numberPanels) {
+  const numbersPart = showPart.slice(1);
+  const regexNumbersPart = /\d\-/;
+  let s = showPart.slice(1).split('-'); // get the array of panel numbers
+
+  if (s.length > numberPanels) {
+    s = -1;
+  } 
+  else {
+    let matchNumbersPart = true;
+    for (let i = 0; i < s.length - 1; i++) { //if s0-2 is given and there are in total 4 panels, then it is still fine, since we can show less number of panels than the total one
+      const groupMatch = numbersPart.slice(i * 2, i * 2 + 2).match(regexNumbersPart); // match the couples of (d-) -> a digit followed by a "-" character. In total there are (s.length - 1) - so number of panels we want to open - 1
+      if (groupMatch === null) {
+        matchNumbersPart = false;
+        break;
+      }
+    }
+    const lastNumberString = s.slice(-1)[0];
+    const lastNumberInt = parseInt(lastNumberString, 10);
+    if (/^\d+$/.test(lastNumberString) === false || (lastNumberInt >= numberPanels || lastNumberInt < 0)) matchNumbersPart = false; // last character must have only digits and not be greater than number of max panels
+    if (matchNumbersPart === false) s = -1;
+    if (s !== -1) s = s.map(Number);
+  }
+  urlConfig.s = s;
+  return [urlConfig, s];
+}
+
 function discoverCustomConfig(customConfig) {
   const {
     translations, collection, manifest, item, panels, lang, colors,
@@ -100,23 +168,43 @@ function discoverUrlConfig(config) {
   const numberPanels = config.panels.length;
 
   const [manifestPart, itemPart, panelsPart, showPart] = splitUrlParts(urlQuery, attributes);
-
   /*
   if (isUrl(item)) urlConfig.item = item;
   if (isUrl(manifest)) urlConfig.manifest = manifest;
   if (isUrl(collection)) urlConfig.collection = collection;
   */
 
-  m = parseInt(manifestPart.slice(1), 10);
-  i = parseInt(itemPart.slice(1), 10);
-  s = showPart.slice(1).split('-');
-  p = panelsPart.slice(1).split('-');
+  // reg expression for each part  /\m\\d{+}
+  // here we will validate for the structure of each component:, not their value range
 
-  urlConfig.m = m;
-  urlConfig.i = i;
-  urlConfig.s = s;
-  urlConfig.p = p;
+  if (manifestPart !== undefined) { // if manifestPart is given in URL, then we use regex to check whether it is given correctly
+    [urlConfig, m] = regexManifestValidationUrl(urlConfig, manifestPart);
+  }
+  if (itemPart !== undefined) {
+    [urlConfig, i] = regexItemValidationUrl(urlConfig, itemPart);
+  }
+  if (panelsPart !== undefined) {
+    [urlConfig, p] = regexPanelsValidationUrl(urlConfig, panelsPart, numberPanels);
+  }
+  else {
+    //get the number of panels and then create as many couples of (panel_index.0) until n_panels-1, the last couple need not have the '-' symbol
+    p = '';
+    for (let j = 0; j < numberPanels; j++) {
+      if (j !== numberPanels - 1) p += `${j}.0-`;
+      else {
+        p += `${j}.0`;
+      }
+    }
+  }
+  if (showPart !== undefined) {
+    [urlConfig, s] = regexShowValidationUrl(urlConfig, showPart, numberPanels);
+  }
 
+  if (s === undefined) {
+    urlConfig.s = Array.from({ length: numberPanels }, (value, index) => index);
+  } else {
+    urlConfig.s = s;
+  }
   const panelsQueryArr = p !== -1 ? p.split('-') : [];  //converts 'p' to an object with key, value: 'panel index: visible tab index'
   urlConfig.activeViews = panelsQueryArr.reduce((acc, cur) => {
     // eslint-disable-next-line no-shadow
@@ -137,7 +225,7 @@ function discoverDefaultConfig(config) {
 
 export const load = ({ commit, getters }, config) => {
   const customConfig = discoverCustomConfig(config);
-  const urlConfig = discoverUrlConfig();
+  const urlConfig = discoverUrlConfig(config);
   const defaultConfig = discoverDefaultConfig(getters.config);
 
   if (customConfig.panels) {
@@ -191,7 +279,6 @@ export const load = ({ commit, getters }, config) => {
       i18n.global.setLocaleMessage(locale, { ...(messages[locale] ? messages[locale] : {}), ...resultConfig.translations[locale] });
     });
   }
-
   commit('setConfig', resultConfig);
 };
 

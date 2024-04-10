@@ -48,6 +48,7 @@ import { computed, inject, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
+import { i18n } from '@/i18n';
 
 const store = useStore();
 const $q = useQuasar();
@@ -146,6 +147,9 @@ async function init() {
       await getCollection(collection);
     } else if (manifest) {
       await getManifest(manifest);
+    } else {
+      // eslint-disable-next-line no-console
+      throw new Error(i18n.global.t('no_entrypoint_available'));
     }
   } catch (e) {
     await delay(1000);
