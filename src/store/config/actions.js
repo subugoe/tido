@@ -61,6 +61,18 @@ function createDefaultActiveViews(panelsConfig) {
     }, {});
 }
 
+// URL Config
+function splitUrlParts(urlQuery, attributes) {
+  if (urlQuery === '') return [undefined, undefined, undefined, undefined];
+
+  const arrayAttributes = urlQuery.split('_');
+  const manifestPart = arrayAttributes.find((element) => element[0].includes(attributes[0])); // index of manifest part in the splitted array: element[0] is 'm' the first letter of the part ?
+  const itemPart = arrayAttributes.find((element) => element[0].includes(attributes[1]));
+  const panelsPart = arrayAttributes.find((element) => element[0].includes(attributes[2]));
+  const showPart = arrayAttributes.find((element) => element[0].includes(attributes[3]));
+  return [manifestPart, itemPart, panelsPart, showPart];
+}
+
 function discoverCustomConfig(customConfig) {
   const {
     translations, collection, manifest, item, panels, lang, colors,
@@ -77,27 +89,41 @@ function discoverCustomConfig(customConfig) {
   };
 }
 
-function discoverUrlConfig() {
-  const urlConfig = {};
-  const {
-    item, manifest, collection, panels, show,
-  } = BookmarkService.getQuery();
+// split the url based on '_'
+// get the part of attribute: get the attribute name and the value based on the type of attribute
+// add each attribute to UrlConfig as key value
+function discoverUrlConfig(config) {
+  let urlConfig = {};
+  const urlQuery = BookmarkService.getQuery();
+  const attributes = ['m', 'i', 'p', 's'];
+  let [m, i, p, s] = [undefined, undefined, undefined, undefined]; // values of manifest, item Indices ...
+  const numberPanels = config.panels.length;
 
-  const panelsQueryArr = panels ? panels.split(',') : [];
+  const [manifestPart, itemPart, panelsPart, showPart] = splitUrlParts(urlQuery, attributes);
 
+  /*
   if (isUrl(item)) urlConfig.item = item;
   if (isUrl(manifest)) urlConfig.manifest = manifest;
   if (isUrl(collection)) urlConfig.collection = collection;
-  if (panels) {
-    urlConfig.activeViews = panelsQueryArr.reduce((acc, cur) => {
-      const [panelIndex, viewIndex] = cur.split('_').map((i) => parseInt(i, 10));
+  */
 
-      acc[panelIndex] = viewIndex;
-      return acc;
-    }, {});
-  }
+  m = parseInt(manifestPart.slice(1), 10);
+  i = parseInt(itemPart.slice(1), 10);
+  s = showPart.slice(1).split('-');
+  p = panelsPart.slice(1).split('-');
 
-  if (show) urlConfig.show = show ? show.split(',').map((i) => parseInt(i, 10)) : [];
+  urlConfig.m = m;
+  urlConfig.i = i;
+  urlConfig.s = s;
+  urlConfig.p = p;
+
+  const panelsQueryArr = p !== -1 ? p.split('-') : [];  //converts 'p' to an object with key, value: 'panel index: visible tab index'
+  urlConfig.activeViews = panelsQueryArr.reduce((acc, cur) => {
+    // eslint-disable-next-line no-shadow
+    const [panelIndex, viewIndex] = cur.split('.').map((i) => parseInt(i, 10));
+    acc[panelIndex] = viewIndex;
+    return acc;
+  }, {});
 
   return urlConfig;
 }
