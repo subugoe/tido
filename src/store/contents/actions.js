@@ -14,6 +14,13 @@ function findActiveManifestIndex(manifests = [], itemUrl = null) {
   });
 }
 
+export const getItemIndex = async ({ getters }, itemUrl) => {
+  const { manifest } = getters;
+  const items = manifest.sequence;
+  const itemIndex = items.findIndex((item) => item.id === itemUrl);
+  return itemIndex;
+};
+
 async function getManifest(url) {
   const data = await request(url);
   return data;
@@ -29,9 +36,12 @@ export const initCollection = async ({
 }, url) => {
   const { item } = getters;
   let { item: itemUrl } = rootGetters['config/config'];
+  const resultConfig = rootGetters['config/config'];
+  let activeManifest = '';
+  let manifestIndex;
+  let itemIndex;
 
   const collection = await request(url);
-
   commit('setCollection', collection);
 
   // We know here that no manifest was loaded. Neither from URL nor from user config.
@@ -43,32 +53,52 @@ export const initCollection = async ({
     const manifests = await Promise.all(promises);
     commit('setManifests', manifests);
 
-    const activeManifestIndex = findActiveManifestIndex(manifests, itemUrl);
-
-    if (activeManifestIndex > -1) {
-      const activeManifest = manifests[activeManifestIndex];
-
-      commit('setManifest', activeManifest);
-
-      const { support } = activeManifest;
-
-      if (support && support.length > 0) {
-        await dispatch('getSupport', support);
+    // Check if manifestIndex or item Index are part of the result config
+    if ('m' in resultConfig && 'i' in resultConfig) {
+      const manifestIndexInConfig = resultConfig.m;
+      const itemIndexInConfig = resultConfig.i;
+      manifestIndex = (Number.isInteger(manifestIndexInConfig) && manifestIndexInConfig > 0) ? manifestIndexInConfig : 0;
+      itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
+    } else if ('m' in resultConfig) {
+      const manifestIndexInConfig = resultConfig.m;
+      manifestIndex = (Number.isInteger(manifestIndexInConfig) && manifestIndexInConfig > 0) ? manifestIndexInConfig : 0;
+      itemIndex = 0;
+    } else if ('i' in resultConfig) {
+      const itemIndexInConfig = resultConfig.i;
+      itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig >= 0) ? itemIndexInConfig : undefined;
+      if ('manifest' in resultConfig && resultConfig.manifest !== '') {
+        // Find the manifest Index of this manifest in this collection
+        const manifestUrl = resultConfig.manifest;
+        manifestIndex = manifests.findIndex((element) => element.id === manifestUrl);
+      } else {
+        manifestIndex = 0;
       }
-
-      if (!itemUrl && Array.isArray(activeManifest.sequence) && activeManifest.sequence.length > 0) {
-        itemUrl = activeManifest.sequence[0].id;
-      }
-
-      if (!item) dispatch('initItem', itemUrl);
+    } else if ('manifest' in resultConfig && resultConfig.manifest !== '') {
+      const manifestUrl = resultConfig.manifest;
+      manifestIndex = manifests.findIndex((element) => element.id === manifestUrl);
+      itemIndex = 0;
+    } else {
+      [manifestIndex, itemIndex] = [0, 0];
     }
+
+    activeManifest = manifests[manifestIndex];
+    itemUrl = activeManifest.sequence[itemIndex].id;
+    const { support } = activeManifest;
+
+    if (support && support.length > 0) {
+      await dispatch('getSupport', support);
+    }
+    commit('setManifest', activeManifest);
+
+    if (!item) dispatch('initItem', itemUrl);
   }
 };
 
-export const initManifest = async ({ commit, dispatch, getters }, url) => {
+export const initManifest = async ({ commit, dispatch, getters, rootGetters }, url) => {
   const { item, manifests } = getters;
-
+  const resultConfig = rootGetters['config/config'];
   let manifest;
+  let itemIndex;
   if (manifests) {
     manifest = manifests.find(({ id }) => id === url);
   } else {
@@ -77,21 +107,33 @@ export const initManifest = async ({ commit, dispatch, getters }, url) => {
 
   commit('setManifest', manifest);
 
+  if ('i' in resultConfig && 'm' in resultConfig === false) { //when the we switch to an item in a new manifest
+    const itemIndexInConfig = resultConfig.i;
+    itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
+  } else if (item !== '') {
+    // find the item index in this manifest, if the item is not found, then show errors
+    if (Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
+      itemIndex = manifest.sequence.findIndex((element) => element.id === item);
+    }
+  } else if (resultConfig.manifest !== '') {
+    itemIndex = 0;
+  }
+
   const { support } = manifest;
 
   if (support && support.length > 0) {
     await dispatch('getSupport', support);
   }
 
-  // We know here that no item was loaded. Neither from URL nor from user config.
-  // So we load the first manifest item.
-  if (!item && Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
-    dispatch('initItem', manifest.sequence[0].id);
+  if (itemIndex !== undefined && Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
+    const itemUrl = manifest.sequence[itemIndex].id;
+    dispatch('initItem', itemUrl);
   }
 };
 
-export const initItem = async ({ commit, dispatch }, url) => {
+export const initItem = async ({ commit, dispatch, getters, rootGetters }, url) => {
   const item = await getItem(url);
+  const resultConfig = rootGetters['config/config'];
   commit('setItem', item);
   commit('setItemUrl', url);
 
@@ -99,7 +141,36 @@ export const initItem = async ({ commit, dispatch }, url) => {
     await dispatch('annotations/initAnnotations', item.annotationCollection, { root: true });
   }
 
-  await BookmarkService.updateItemQuery(url);
+  const manifests = getters.manifests ? getters.manifests : [];
+  // here we have item query -> we should extract the manifest index and the item index from the query and then give it as a parameter to updateItemQuery()
+  const i = await dispatch('getItemIndex', url);
+  const m = findActiveManifestIndex(manifests, url);
+
+  const numberPanels = resultConfig.panels.length;
+
+  const s = 's' in resultConfig ? resultConfig.s : Array.from({ length: numberPanels }, (value, index) => index);
+  // If in the URL it is given which panels to show initially, then show only those
+  if (s !== null) {
+    if (s.length > 0) {
+      const totalShowPanels = Array.from({ length: 4 }, (value, index) => index);
+
+      const closedPanels = totalShowPanels.filter((element) => !s.includes(element));
+      const show = false;
+      if (closedPanels.length > 0) {
+        closedPanels.forEach((index) => {
+          const input = { index, show };
+          dispatch('config/setShowPanel', input, { root: true });
+        });
+      }
+    }
+  }
+
+  const query = manifests.length > 0 ? {
+    m,
+    i,
+  } : { i };
+
+  await BookmarkService.updateItemQuery(query);
 };
 
 export const updateImageLoading = async ({ commit }, payload) => {
