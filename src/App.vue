@@ -114,7 +114,7 @@ onMounted(async () => {
   }
 
   await init();
-})
+});
 
 async function getCollection(url) {
   await store.dispatch('contents/initCollection', url);
@@ -136,19 +136,12 @@ async function getItem(url) {
 }
 async function init() {
   const { collection, manifest, item } = config.value;
-
   try {
     // We want to preload all required data that the components need.
-    // Initialize priority:
-    // We always load the item first as here is the main data that we want to display.
-    if (item) {
-      await getItem(item);
-    }
-
-    // After that we load additionally the parent objects.
     // If a collection is given we ignore the manifest setting
     // and try to figure out the correct manifest by searching for the above item.
     // Otherwise, no collection is given but a single manifest instead, so we load that manifest.
+
     if (collection) {
       await getCollection(collection);
     } else if (manifest) {
