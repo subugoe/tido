@@ -85,8 +85,6 @@ export const initCollection = async ({
     if (resultConfig.s === -1) throw new Error(i18n.global.t('error_showPart_tido_url'));
   }
 
-  console.log('resultConfig in initCollection()', resultConfig);
-
   if (Array.isArray(collection.sequence) && collection.sequence.length > 0) {
     const promises = [];
     collection.sequence.forEach((seq) => promises.push(getManifest(seq.id)));
@@ -156,7 +154,6 @@ export const initManifest = async ({
       throw new Error(i18n.global.t('error_m_in_url_no_collection'));
     }
   }
-  console.log('resultConfig in initManifest', resultConfig);
 
   //
   if ('i' in resultConfig && 'm' in resultConfig === false) { //when the we switch to an item in a new manifest
@@ -166,7 +163,9 @@ export const initManifest = async ({
     // find the item index in this manifest, if the item is not found, then show errors
     if (Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
       itemIndex = manifest.sequence.findIndex((element) => element.id === item);
-      if (itemIndex === -1) throw new Error(i18n.global.t('error_item_not_in_manifest'));
+      if (itemIndex === -1) {
+        throw new Error(i18n.global.t('error_item_not_in_manifest'));
+      }
     }
   } else if (resultConfig.manifest !== '') {
     itemIndex = 0;
@@ -176,8 +175,6 @@ export const initManifest = async ({
   if (support && support.length > 0) {
     await dispatch('getSupport', support);
   }
-
-  console.log('item Index', itemIndex);
 
   // We know here that no item was loaded. Neither from URL nor from user config.
   // So we load the first manifest item.
@@ -200,9 +197,6 @@ export const initItem = async ({ commit, dispatch, getters, rootGetters }, url) 
   // here we have item query -> we should extract the manifest index and the item index from the query and then give it as a parameter to updateItemQuery()
   const i = await dispatch('getItemIndex', url);
   const m = findActiveManifestIndex(manifests, url);
-  // const p = await dispatch('getPanels');
-
-  console.log('item URL in initItem()', item);
 
   const numberPanels = resultConfig.panels.length;
 

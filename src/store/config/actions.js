@@ -63,7 +63,9 @@ function createDefaultActiveViews(panelsConfig) {
 
 // URL Config
 function splitUrlParts(urlQuery, attributes) {
-  if (urlQuery === '') return [undefined, undefined, undefined, undefined];
+  if (urlQuery === '') {
+    return [undefined, undefined, undefined, undefined];
+  }
 
   const arrayAttributes = urlQuery.split('_');
   const manifestPart = arrayAttributes.find((element) => element[0].includes(attributes[0])); // index of manifest part in the splitted array: element[0] is 'm' the first letter of the part ?
@@ -94,7 +96,9 @@ function regexPanelsValidationUrl(urlConfig, panelsPart, numberPanels) {
   const numbersPartArray = panelsPart.slice(1).split('-');
   const regexNumber = /^\d+$/;
   let isPanelsMatch = true;
-  if (panelsPart[0] !== 'p' || numbersPartArray.length !== numberPanels) isPanelsMatch = false;
+  if (panelsPart[0] !== 'p' || numbersPartArray.length !== numberPanels) {
+    isPanelsMatch = false;
+  }
   else {
     for (let i = 0; i < numbersPartArray.length; i++) {
       const panelTabPair = numbersPartArray[i];
@@ -108,7 +112,9 @@ function regexPanelsValidationUrl(urlConfig, panelsPart, numberPanels) {
       }
     }
   }
-  if (isPanelsMatch === true) p = panelsPart.slice(1);
+  if (isPanelsMatch === true) {
+    p = panelsPart.slice(1);
+  }
 
   urlConfig.p = p;
   return [urlConfig, p];
@@ -133,9 +139,15 @@ function regexShowValidationUrl(urlConfig, showPart, numberPanels) {
     }
     const lastNumberString = s.slice(-1)[0];
     const lastNumberInt = parseInt(lastNumberString, 10);
-    if (/^\d+$/.test(lastNumberString) === false || (lastNumberInt >= numberPanels || lastNumberInt < 0)) matchNumbersPart = false; // last character must have only digits and not be greater than number of max panels
-    if (matchNumbersPart === false) s = -1;
-    if (s !== -1) s = s.map(Number);
+    if (/^\d+$/.test(lastNumberString) === false || (lastNumberInt >= numberPanels || lastNumberInt < 0)) {
+      matchNumbersPart = false; // last character must have only digits and not be greater than number of max panels
+    }
+    if (matchNumbersPart === false) {
+      s = -1;
+    }
+    if (s !== -1) {
+      s = s.map(Number);
+    }
   }
   urlConfig.s = s;
   return [urlConfig, s];
@@ -190,7 +202,9 @@ function discoverUrlConfig(config) {
     //get the number of panels and then create as many couples of (panel_index.0) until n_panels-1, the last couple need not have the '-' symbol
     p = '';
     for (let j = 0; j < numberPanels; j++) {
-      if (j !== numberPanels - 1) p += `${j}.0-`;
+      if (j !== numberPanels - 1) {
+        p += `${j}.0-`;
+      }
       else {
         p += `${j}.0`;
       }

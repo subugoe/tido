@@ -28,7 +28,9 @@ class BookmarkService {
     const panels = Object.keys(activeViews).map((panelIndex) => `${panelIndex}.${activeViews[panelIndex]}`).join('-');
     const updatedPanelsPart = 'p'+ panels;
 
-    if (oldQueryValue.includes('p') === false) newQueryValue = oldQueryValue.concat('_'+'p'+panels);
+    if (oldQueryValue.includes('p') === false) { 
+      newQueryValue = oldQueryValue.concat('_'+'p'+panels);
+    }
     else {
       const arrayAttributes = oldQueryValue.split('_');
       const indexPanelsPart = arrayAttributes.findIndex((element) => element.includes('p') );
@@ -79,8 +81,12 @@ class BookmarkService {
     let partAfterItem = '';
     const indexItemPart = arrayAttributes.findIndex((element) => element.includes('i') );
 
-    if (oldQueryValue === '' || (oldQueryValue.includes('i') === true && arrayAttributes.length === 1)) newQueryValue = updatedItemPart;
-    else if (arrayAttributes.length === 1 && oldQueryValue.includes('m') === true) newQueryValue = arrayAttributes[0].concat('_', updatedItemPart);
+    if (oldQueryValue === '' || (oldQueryValue.includes('i') === true && arrayAttributes.length === 1)) {
+      newQueryValue = updatedItemPart;
+    }
+    else if (arrayAttributes.length === 1 && oldQueryValue.includes('m') === true) { 
+      newQueryValue = arrayAttributes[0].concat('_', updatedItemPart);
+    }
     else {
       if (indexItemPart !== -1) {
         // Option 1: manifest, item part, rest part
@@ -113,7 +119,9 @@ class BookmarkService {
     const updatedManifestPart = 'm'+ manifestIndex.toString();
     let newQueryValue = '';
 
-    if (oldQueryValue === '' || (oldQueryValue.includes('m') === true && arrayAttributes.length === 1)) newQueryValue = updatedManifestPart;
+    if (oldQueryValue === '' || (oldQueryValue.includes('m') === true && arrayAttributes.length === 1)) {
+      newQueryValue = updatedManifestPart;
+    }
     else if (oldQueryValue.includes('m') === true) {
       if (arrayAttributes.length > 1)  {
         newQueryValue = updatedManifestPart.concat('_'+oldQueryValue.split('_').slice(1).join('_'));  // concatenate partAfterManifest to the new manifestPart
@@ -132,14 +140,20 @@ class BookmarkService {
 
   async updateQuery(query, resultConfig) {
     for(const key of Object.keys(query)) {
-      if (key === 'i') this.updateItem(query[key], resultConfig);
-      if (key === 'm') this.updateManifest(query[key], resultConfig);
+      if (key === 'i') {
+        this.updateItem(query[key], resultConfig);
+      }
+      if (key === 'm') {
+        this.updateManifest(query[key], resultConfig);
+      }
     }
   }
 
   getQuery() {
     let queryString = window.location.search.substring(1);
-    if (queryString !== '') queryString = queryString.split('=')[1];
+    if (queryString !== '') {
+      queryString = queryString.split('=')[1];
+    }
     return queryString;
   }
 }
