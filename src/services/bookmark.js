@@ -24,6 +24,7 @@ class BookmarkService {
 
   async updatePanels(activeViews) {
     let oldQueryValue = this.getQuery();
+    const [ arrayAttributes, indexPanelsPart] = this.getSettingFromQuery(oldQueryValue, 'p');
     let newQueryValue = '';
     const panels = Object.keys(activeViews).map((panelIndex) => `${panelIndex}.${activeViews[panelIndex]}`).join('-');
     const updatedPanelsPart = 'p'+ panels;
@@ -32,8 +33,6 @@ class BookmarkService {
       newQueryValue = oldQueryValue.concat('_'+'p'+panels);
     }
     else {
-      const arrayAttributes = oldQueryValue.split('_');
-      const indexPanelsPart = arrayAttributes.findIndex((element) => element.includes('p') );
       newQueryValue = arrayAttributes.slice(0,indexPanelsPart).join('_').concat('_'+updatedPanelsPart); // joining part before panels with the updatedPanels part
       const showPart = arrayAttributes.slice(indexPanelsPart+1);
       if (showPart.length > 0) {  // if have 's' containing [1: n_panels-1], then concatenate the show part
@@ -50,11 +49,12 @@ class BookmarkService {
 
     let oldQueryValue = this.getQuery();
     let newQueryValue = '';
-    const arrayAttributes = oldQueryValue.split('_');
-    const indexShowPart = arrayAttributes.findIndex((element) => element.includes('s') );
+    const [arrayAttributes, indexShowPart] = this.getSettingFromQuery(oldQueryValue, 's');
     if (panelIndexes.length > 0) { 
       panelIndexes = panelIndexes.join('-');
-      if (oldQueryValue.includes('s') === false) newQueryValue = oldQueryValue.concat('_'+'s'+panelIndexes);
+      if (oldQueryValue.includes('s') === false) {
+        newQueryValue = oldQueryValue.concat('_'+'s'+panelIndexes);
+      }
       else { 
         const updatedShowPart = 's'+ panelIndexes; 
         newQueryValue = arrayAttributes.slice(0,indexShowPart).join('_').concat('_'+updatedShowPart);  // concatenate the part before 's' and the updatedShow part
@@ -75,11 +75,10 @@ class BookmarkService {
 
   async updateItem(itemIndex, resultConfig) {
     const oldQueryValue = this.getQuery();
-    const arrayAttributes = oldQueryValue.split('_');
+    const [arrayAttributes, indexItemPart] = this.getSettingFromQuery(oldQueryValue, 'i');
     const updatedItemPart = 'i'+ itemIndex.toString();
     let newQueryValue = '';
     let partAfterItem = '';
-    const indexItemPart = arrayAttributes.findIndex((element) => element.includes('i') );
 
     if (oldQueryValue === '' || (oldQueryValue.includes('i') === true && arrayAttributes.length === 1)) {
       newQueryValue = updatedItemPart;
@@ -156,6 +155,14 @@ class BookmarkService {
     }
     return queryString;
   }
+
+   getSettingFromQuery (oldQueryValue, attributeName) {
+    const arrayAttributes = oldQueryValue.split('_');
+    const attributePart = arrayAttributes.findIndex((element) => element.includes(attributeName) );
+    return [arrayAttributes, attributePart];
+  }
 }
+
+ 
 
 export default new BookmarkService();
