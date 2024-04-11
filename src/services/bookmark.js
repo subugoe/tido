@@ -22,12 +22,61 @@ class BookmarkService {
     window.history.pushState({}, '', url);
   }
 
+  async updateQueryFinal(updatedPart) {
+    let oldQueryValue = this.getQuery();
+    const attributeName = updatedPart[0];
+    const [arrayAttributes, indexAttributePart] = this.getSettingFromQuery(oldQueryValue, attributeName);
+    const numberAttributesInOldQuery = arrayAttributes.length;
+    let newQueryAttributes = arrayAttributes.length > 0 ? arrayAttributes.slice() : [];
+    let newQueryValue = '';
+    if (indexAttributePart === -1) {
+      // attribute is not in oldQuery, then we need to add it
+      // check whether the oldQuery has no elements, 1 element
+      if (numberAttributesInOldQuery === 0) {
+        newQueryValue = updatedPart;
+      }
+      else if (numberAttributesInOldQuery > 0) {
+        if (attributeName === 'm') {
+          newQueryAttributes.splice(0, 0, updatedPart);
+        }
+        else if (attributeName === 'i') {
+            newQueryAttributes.splice(1, 0, updatedPart);
+            console.log('newQueryAttributes when i is given', newQueryAttributes);
+        }
+        else {
+          newQueryAttributes.push(updatedPart)
+        }
+      }
+
+    }
+
+    else {
+        // attributePart is in oldQuery
+        // then find its index and update it
+        if (updatedPart === 's') {
+          newQueryAttributes.splice(indexAttributePart, 1)
+        }
+        //const attributeIndex = arrayAttributes.findIndex((element) => element.includes(attributeName) );
+        else {
+          newQueryAttributes[indexAttributePart] = updatedPart;
+        }
+        
+    }
+    if (newQueryValue === '') newQueryValue = newQueryAttributes.join('_');
+    await this.pushQuery(newQueryValue);
+
+  }
+
   async updatePanels(activeViews) {
     let oldQueryValue = this.getQuery();
     const [ arrayAttributes, indexPanelsPart] = this.getSettingFromQuery(oldQueryValue, 'p');
     let newQueryValue = '';
     const panels = Object.keys(activeViews).map((panelIndex) => `${panelIndex}.${activeViews[panelIndex]}`).join('-');
     const updatedPanelsPart = 'p'+ panels;
+
+    this.updateQueryFinal(updatedPanelsPart);
+
+    /*
 
     if (oldQueryValue.includes('p') === false) { 
       newQueryValue = oldQueryValue.concat('_'+'p'+panels);
@@ -41,6 +90,8 @@ class BookmarkService {
     }
     
     await this.pushQuery(newQueryValue);
+
+    */
   }
 
   async updateShow(panelIndexes = []) {
@@ -50,6 +101,11 @@ class BookmarkService {
     let oldQueryValue = this.getQuery();
     let newQueryValue = '';
     const [arrayAttributes, indexShowPart] = this.getSettingFromQuery(oldQueryValue, 's');
+    console.log('Panel indexes in updateShow()', panelIndexes);
+    const updatedShowPart = 's'+ panelIndexes.join('-'); 
+    this.updateQueryFinal(updatedShowPart);
+
+    /*
     if (panelIndexes.length > 0) { 
       panelIndexes = panelIndexes.join('-');
       if (oldQueryValue.includes('s') === false) {
@@ -70,6 +126,8 @@ class BookmarkService {
     }
     
     await this.pushQuery(newQueryValue);
+
+    */
   }
 
 
@@ -77,6 +135,9 @@ class BookmarkService {
     const oldQueryValue = this.getQuery();
     const [arrayAttributes, indexItemPart] = this.getSettingFromQuery(oldQueryValue, 'i');
     const updatedItemPart = 'i'+ itemIndex.toString();
+
+    this.updateQueryFinal(updatedItemPart);
+    /*
     let newQueryValue = '';
     let partAfterItem = '';
 
@@ -109,6 +170,8 @@ class BookmarkService {
       }
     }   
     await this.pushQuery(newQueryValue);
+
+    */
   }
 
   
@@ -117,6 +180,9 @@ class BookmarkService {
     const arrayAttributes = oldQueryValue.split('_');
     const updatedManifestPart = 'm'+ manifestIndex.toString();
     let newQueryValue = '';
+    this.updateQueryFinal(updatedManifestPart);
+
+    /*
 
     if (oldQueryValue === '' || (oldQueryValue.includes('m') === true && arrayAttributes.length === 1)) {
       newQueryValue = updatedManifestPart;
@@ -135,6 +201,8 @@ class BookmarkService {
       }
     }  
     await this.pushQuery(newQueryValue);
+
+    */
   }
 
   async updateQuery(query, resultConfig) {
@@ -157,7 +225,7 @@ class BookmarkService {
   }
 
    getSettingFromQuery (oldQueryValue, attributeName) {
-    const arrayAttributes = oldQueryValue.split('_');
+    const arrayAttributes = oldQueryValue !== '' ? oldQueryValue.split('_') : [];
     const attributePart = arrayAttributes.findIndex((element) => element.includes(attributeName) );
     return [arrayAttributes, attributePart];
   }
