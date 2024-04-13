@@ -22,115 +22,72 @@ class BookmarkService {
     window.history.pushState({}, '', url);
   }
 
-  async updateQueryFinal(updatedPart) {
+  getValueInOldQuery(oldQueryValue, key) {
+    const oldQueryArray = oldQueryValue.split('_');
+    let numbersPart = '';
+    oldQueryArray.forEach((part, index) => {
+      if (part.includes(key)) {
+        numbersPart = part.slice(1);
+      } 
+   }); 
+   return numbersPart;
+}
+
+  async updateQueryFinal(updatedPartValue, key) {
     let oldQueryValue = this.getQuery();
-    const attributeName = updatedPart[0];
-    const [arrayAttributes, indexAttributePart] = this.getSettingFromQuery(oldQueryValue, attributeName);
-    const numberAttributesInOldQuery = arrayAttributes.length;
-    let newQueryAttributes = arrayAttributes.length > 0 ? arrayAttributes.slice() : [];
-    let newQueryValue = '';
-    if (indexAttributePart === -1) {
-      if (numberAttributesInOldQuery === 0) {
-        // attribute is not in oldQuery, then we need to add it
-        newQueryValue = updatedPart;
-      }
+    // Vorschlag Paul:
+    const attributes = ['m', 'i', 's', 'p'];
+    let resultQuery = [undefined, undefined, undefined, undefined];
+    if (oldQueryValue !== '') {
+      // First: updateResult query based on the values of the previous oldQuery
+      attributes.forEach((key, index) => {
+        if (oldQueryValue.includes(key)) {
+          // get the value of this key in the oldQuery
+          // update this part in resultQuery
+          const value = this.getValueInOldQuery(oldQueryValue, key);
+          resultQuery[index] = value;
+        }
+      });
     }
-    else {
-      newQueryAttributes[indexAttributePart] = updatedPart;
-    }
-    if (newQueryValue === '') newQueryValue = newQueryAttributes.join('_');
-    await this.pushQuery(newQueryValue);
+    //update the current key in resultQuery
+    const indexKeyInQuery = attributes.findIndex((x) => x === key);
+    resultQuery[indexKeyInQuery] = updatedPartValue;
+    // join the query parts by filtering out 'undefined' part
+    const newQuery = resultQuery
+                    .map((item, index) => ({ item, index }))
+                    .filter(({item}) => item !== undefined)
+                    .map(({item, index}) => attributes[index] + item)
+                    .join('_');
+    
+    await this.pushQuery(newQuery);
   }
 
   async updatePanels(activeViews) {
-    const oldQueryValue = this.getQuery();
     const panels = Object.keys(activeViews).map((panelIndex) => `${panelIndex}.${activeViews[panelIndex]}`).join('-');
     const attributeName = 'p';
-    const updatedPanelsPart = 'p'+ panels;
-    const [arrayAttributes, indexAttributePart] = this.getSettingFromQuery(oldQueryValue, attributeName);
-    let newQueryAttributes = arrayAttributes.length > 0 ? arrayAttributes.slice() : [];
-    const numberAttributesInOldQuery = arrayAttributes.length;
-    let newQueryValue = '';
-    if (indexAttributePart === -1) {
-      if (numberAttributesInOldQuery > 0) {
-        // when the updatedPart name is 's' or 'p', then for sure we have 'm' or 'i' before that. Therefore we just append it.
-        newQueryAttributes.push(updatedPanelsPart);
-        newQueryValue = newQueryAttributes.join('_');
-        this.pushQuery(newQueryValue);
-      }
-    }
-    this.updateQueryFinal(updatedPanelsPart);
+    this.updateQueryFinal(panels, attributeName);
   }
 
   async updateShow(panelIndexes = []) {
     // TODO: $route doesn't update quick enough, in future we have to switch to Composition APIs useRoute()
     await delay(300);
-    const oldQueryValue = this.getQuery();
     const attributeName = 's';
-    const updatedShowPart = 's'+ panelIndexes.join('-'); 
-    const [arrayAttributes, indexAttributePart] = this.getSettingFromQuery(oldQueryValue, attributeName);
-    let newQueryAttributes = arrayAttributes.length > 0 ? arrayAttributes.slice() : [];
-    const numberAttributesInOldQuery = arrayAttributes.length;
-    let newQueryValue = '';
-
-    if (updatedShowPart === '') {
+    let updatedValue = panelIndexes.join('-'); 
+    if (updatedValue === '') {
       // if all the panels are opened, then we remove the 's' part from URL
-      newQueryAttributes.splice(indexAttributePart, 1);
-
-    }
-    else {
-      if (indexAttributePart === -1) {
-        if (numberAttributesInOldQuery > 0) {
-          // when the updatedPart name is 's' or 'p', then for sure we have 'm' or 'i' before that. Therefore we just append it.
-          newQueryAttributes.push(updatedShowPart);
-        }
-      }
-    }
-    if (newQueryAttributes !== arrayAttributes) {
-      // we updated the newQueryAttributes
-      newQueryValue = newQueryAttributes.join('_');
-      this.pushQuery(newQueryValue);
-    }
-    
-    this.updateQueryFinal(updatedShowPart);
+      updatedValue = undefined
+    } 
+    this.updateQueryFinal(updatedValue, attributeName);
   }
 
   async updateItem(itemIndex) {
-    const oldQueryValue = this.getQuery();
     const attributeName = 'i';
-    const updatedItemPart = 'i'+ itemIndex.toString();
-    const [arrayAttributes, indexAttributePart] = this.getSettingFromQuery(oldQueryValue, attributeName);
-    let newQueryAttributes = arrayAttributes.length > 0 ? arrayAttributes.slice() : [];
-    const numberAttributesInOldQuery = arrayAttributes.length;
-    let newQueryValue = '';
-    if (indexAttributePart === -1) {
-      if (numberAttributesInOldQuery > 0) {
-        newQueryAttributes.splice(1, 0, updatedItemPart);
-        newQueryValue = newQueryAttributes.join('_');
-        this.pushQuery(newQueryValue);
-      }
-    }
-    this.updateQueryFinal(updatedItemPart);
+    this.updateQueryFinal(itemIndex, attributeName);
   }
 
   async updateManifest (manifestIndex) {
-    const oldQueryValue = this.getQuery();
     const attributeName = 'm';
-    const updatedManifestPart = 'm'+ manifestIndex.toString();
-    const [arrayAttributes, indexAttributePart] = this.getSettingFromQuery(oldQueryValue, attributeName);
-    let newQueryAttributes = arrayAttributes.length > 0 ? arrayAttributes.slice() : [];
-    const numberAttributesInOldQuery = arrayAttributes.length;
-    let newQueryValue = '';
-    if (indexAttributePart === -1) {
-      if (numberAttributesInOldQuery > 0) {
-        // if 'm' is not in oldQuery, then we add it in the beginning of oldQuery
-        newQueryAttributes.splice(0, 0, updatedManifestPart);
-        newQueryValue = newQueryAttributes.join('_');
-        this.pushQuery(newQueryValue);
-      }
-    }
-
-    this.updateQueryFinal(updatedManifestPart);
+    this.updateQueryFinal(manifestIndex, attributeName);
   }
 
   async updateQuery(query, resultConfig) {
@@ -152,11 +109,6 @@ class BookmarkService {
     return queryString;
   }
 
-   getSettingFromQuery (oldQueryValue, attributeName) {
-    const arrayAttributes = oldQueryValue !== '' ? oldQueryValue.split('_') : [];
-    const attributePart = arrayAttributes.findIndex((element) => element.includes(attributeName) );
-    return [arrayAttributes, attributePart];
-  }
 }
 
 export default new BookmarkService();
