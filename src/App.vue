@@ -94,6 +94,11 @@ onMounted(async () => {
 
   await loadConfig();
 
+  if (errorMessage.value) {
+    isLoading.value = false;
+    return;
+  }
+
   i18nLocale.value = config.value.lang;
 
   const colorsForceMode = config.value.colors.forceMode;
