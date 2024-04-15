@@ -35,9 +35,8 @@ class BookmarkService {
 
   async updateQueryFinal(updatedPartValue, key) {
     let oldQueryValue = this.getQuery();
-    // Vorschlag Paul:
     const attributes = ['m', 'i', 's', 'p'];
-    let resultQuery = [undefined, undefined, undefined, undefined];
+    let resultQuery = [null, null, null, null];
     if (oldQueryValue !== '') {
       // First: updateResult query based on the values of the previous oldQuery
       attributes.forEach((key, index) => {
@@ -55,7 +54,7 @@ class BookmarkService {
     // join the query parts by filtering out 'undefined' part
     const newQuery = resultQuery
                     .map((item, index) => ({ item, index }))
-                    .filter(({item}) => item !== undefined)
+                    .filter(({item}) => item !== null)                    
                     .map(({item, index}) => attributes[index] + item)
                     .join('_');
     
@@ -64,33 +63,29 @@ class BookmarkService {
 
   async updatePanels(activeViews) {
     const panels = Object.keys(activeViews).map((panelIndex) => `${panelIndex}.${activeViews[panelIndex]}`).join('-');
-    const attributeName = 'p';
-    this.updateQueryFinal(panels, attributeName);
+    this.updateQueryFinal(panels, 'p');
   }
 
   async updateShow(panelIndexes = []) {
     // TODO: $route doesn't update quick enough, in future we have to switch to Composition APIs useRoute()
     await delay(300);
-    const attributeName = 's';
     let updatedValue = panelIndexes.join('-'); 
     if (updatedValue === '') {
       // if all the panels are opened, then we remove the 's' part from URL
-      updatedValue = undefined;
+      updatedValue = null;
     } 
-    this.updateQueryFinal(updatedValue, attributeName);
+    this.updateQueryFinal(updatedValue, 's');
   }
 
   async updateItem(itemIndex) {
-    const attributeName = 'i';
-    this.updateQueryFinal(itemIndex, attributeName);
+    this.updateQueryFinal(itemIndex, 'i');
   }
 
   async updateManifest (manifestIndex) {
-    const attributeName = 'm';
-    this.updateQueryFinal(manifestIndex, attributeName);
+    this.updateQueryFinal(manifestIndex, 'm');
   }
 
-  async updateQuery(query, resultConfig) {
+  async updateQuery(query) {
     for(const key of Object.keys(query)) {
       if (key === 'i') {
         this.updateItem(query[key]);
