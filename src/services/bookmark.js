@@ -75,7 +75,7 @@ class BookmarkService {
     let updatedValue = panelIndexes.join('-'); 
     if (updatedValue === '') {
       // if all the panels are opened, then we remove the 's' part from URL
-      updatedValue = undefined
+      updatedValue = undefined;
     } 
     this.updateQueryFinal(updatedValue, attributeName);
   }

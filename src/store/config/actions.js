@@ -185,7 +185,7 @@ function discoverUrlConfig(config) {
 
   if (manifestPart !== undefined) { // if manifestPart is given in URL, then we use regex to check whether it is given correctly
     const isManifestInUrlCorrect = validateManifestInUrl(manifestPart);
-    if (isManifestInUrlCorrect === false) {
+    if (!isManifestInUrlCorrect) {
       throw new Error(i18n.global.t('error_manifestPart_tido_url'));
     } else {
       m = parseInt(manifestPart.slice(1), 10);
@@ -194,7 +194,7 @@ function discoverUrlConfig(config) {
   }
   if (itemPart !== undefined) {
     const isItemInUrlCorrect = validateItemInUrl(itemPart);
-    if (isItemInUrlCorrect === false) {
+    if (!isItemInUrlCorrect) {
       throw new Error(i18n.global.t('error_itemPart_tido_url'));
     } else {
       i = parseInt(itemPart.slice(1), 10);
@@ -204,7 +204,7 @@ function discoverUrlConfig(config) {
   if (panelsPart !== undefined) {
     const panelsValue = panelsPart.slice(1);
     const isPanelsInUrlCorrect = validatePanelsInUrl(panelsPart, panelsValue, numberPanels);
-    if (isPanelsInUrlCorrect === false) {
+    if (!isPanelsInUrlCorrect) {
       throw new Error(i18n.global.t('error_panelsPart_tido_url'));
     } else {
       p = panelsValue;
@@ -221,7 +221,7 @@ function discoverUrlConfig(config) {
   if (showPart !== undefined) {
     const showValue = showPart.slice(1);
     const isShowInUrlCorrect = validateShowInUrl(showValue, numberPanels);
-    if (isShowInUrlCorrect === false) {
+    if (!isShowInUrlCorrect) {
       throw new Error(i18n.global.t('error_showPart_tido_url'));
     } else {
       // showValue needs to be an array of opened panel indices (Integers)
