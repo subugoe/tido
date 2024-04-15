@@ -74,17 +74,17 @@ function splitUrlParts(urlQuery, attributes) {
   return [manifestPart, itemPart, panelsPart, showPart];
 }
 
-function validateManifestInUrl(manifestPart) {
+function isManifestPartValid(manifestPart) {
   const regexManifest = /m\d/;
   return regexManifest.exec(manifestPart) !== null;
 }
 
-function validateItemInUrl(itemPart) {
+function isItemPartValid(itemPart) {
   const regexItem = /i\d+/;
   return regexItem.exec(itemPart) !== null;
 }
 
-function validatePanelsInUrl(panelsPart, panelsValue, numberPanels) {
+function isPanelsPartValid(panelsPart, panelsValue, numberPanels) {
   const numbersPartArray = panelsValue.split('-');
   const regexNumber = /^\d+$/;
   if (panelsPart[0] !== 'p' || numbersPartArray.length !== numberPanels) {
@@ -103,7 +103,7 @@ function validatePanelsInUrl(panelsPart, panelsValue, numberPanels) {
   return true;
 }
 
-function validateShowInUrl(showValue, numberPanels) {
+function isShowPartValid(showValue, numberPanels) {
   const showValueAsArray = showValue.split('-');
   const regexNumbersPart = /\d\-/;
   if (showValueAsArray.length > numberPanels) {
@@ -172,7 +172,7 @@ function discoverUrlConfig(config) {
   const attributes = ['m', 'i', 'p', 's'];
   // values of manifest, item Indices ...
   let [m, i, p, s] = [undefined, undefined, undefined, undefined];
-  const numberPanels = config.panels.length;
+  const numberPanels = config.panels ? config.panels.length : 0;
   const [manifestPart, itemPart, panelsPart, showPart] = splitUrlParts(urlQuery, attributes);
   /*
   if (isUrl(item)) urlConfig.item = item;
@@ -182,8 +182,8 @@ function discoverUrlConfig(config) {
   // here we will validate for the structure of each component:, not their value range
   if (manifestPart !== undefined) {
     // if manifestPart is given in URL, then we use regex to check whether it is given correctly
-    const isManifestInUrlCorrect = validateManifestInUrl(manifestPart);
-    if (!isManifestInUrlCorrect) {
+    const isManifestValid = isManifestPartValid(manifestPart);
+    if (!isManifestValid) {
       throw new Error(i18n.global.t('error_manifestPart_tido_url'));
     } else {
       m = parseInt(manifestPart.slice(1), 10);
@@ -191,8 +191,8 @@ function discoverUrlConfig(config) {
     }
   }
   if (itemPart !== undefined) {
-    const isItemInUrlCorrect = validateItemInUrl(itemPart);
-    if (!isItemInUrlCorrect) {
+    const isItemValid = isItemPartValid(itemPart);
+    if (!isItemValid) {
       throw new Error(i18n.global.t('error_itemPart_tido_url'));
     } else {
       i = parseInt(itemPart.slice(1), 10);
@@ -201,8 +201,8 @@ function discoverUrlConfig(config) {
   }
   if (panelsPart !== undefined) {
     const panelsValue = panelsPart.slice(1);
-    const isPanelsInUrlCorrect = validatePanelsInUrl(panelsPart, panelsValue, numberPanels);
-    if (!isPanelsInUrlCorrect) {
+    const isPanelsValid = isPanelsPartValid(panelsPart, panelsValue, numberPanels);
+    if (!isPanelsValid) {
       throw new Error(i18n.global.t('error_panelsPart_tido_url'));
     } else {
       p = panelsValue;
@@ -218,8 +218,8 @@ function discoverUrlConfig(config) {
 
   if (showPart !== undefined) {
     const showValue = showPart.slice(1);
-    const isShowInUrlCorrect = validateShowInUrl(showValue, numberPanels);
-    if (!isShowInUrlCorrect) {
+    const isShowValid = isShowPartValid(showValue, numberPanels);
+    if (!isShowValid) {
       throw new Error(i18n.global.t('error_showPart_tido_url'));
     } else {
       // showValue needs to be an array of opened panel indices (Integers)
