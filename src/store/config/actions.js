@@ -109,7 +109,7 @@ function validateShowInUrl(showValue, numberPanels) {
   if (showValueAsArray.length > numberPanels) {
     return false;
   }
-  for (let i = 0; i < showValueAsArray.length - 1; i++) { 
+  for (let i = 0; i < showValueAsArray.length - 1; i++) {
     // if s0-2 is given and there are in total 4 panels, then it is still fine, since we can show less number of panels than the total one
     // match the couples of (d-) -> a digit followed by a "-" character. In total there are (s.length - 1) - so number of panels we want to open - 1
     const groupMatch = showValue.slice(i * 2, i * 2 + 2).match(regexNumbersPart);
@@ -163,10 +163,10 @@ function discoverCustomConfig(customConfig) {
   };
 }
 
-// split the url based on '_'
-// get the part of attribute: get the attribute name and the value based on the type of attribute
-// add each attribute to UrlConfig as key value
 function discoverUrlConfig(config) {
+  // split the url based on '_'
+  // get the part of attribute: get the attribute name and the value based on the type of attribute
+  // add each attribute to UrlConfig as key value
   let urlConfig = {};
   const urlQuery = BookmarkService.getQuery();
   const attributes = ['m', 'i', 'p', 's'];
@@ -179,10 +179,7 @@ function discoverUrlConfig(config) {
   if (isUrl(manifest)) urlConfig.manifest = manifest;
   if (isUrl(collection)) urlConfig.collection = collection;
   */
-
-  // reg expression for each part  /\m\\d{+}
   // here we will validate for the structure of each component:, not their value range
-
   if (manifestPart !== undefined) { // if manifestPart is given in URL, then we use regex to check whether it is given correctly
     const isManifestInUrlCorrect = validateManifestInUrl(manifestPart);
     if (!isManifestInUrlCorrect) {
@@ -214,8 +211,8 @@ function discoverUrlConfig(config) {
     // get the number of panels and then create as many couples of (panel_index.0) until n_panels-1, the last couple need not have the '-' symbol
     p = createDefaultPanelValue(numberPanels);
   }
-  // converts 'p' to an object with key, value: 'panel index: visible tab index'
   const panelsArray = p !== '' ? p.split('-') : [];
+  // converts 'panelsArray' to an object with key, value: 'panel index: visible tab index'
   urlConfig.activeViews = createActiveViewsFromPanelsArray(panelsArray);
 
   if (showPart !== undefined) {

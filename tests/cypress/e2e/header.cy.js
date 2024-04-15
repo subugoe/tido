@@ -2,9 +2,7 @@ import { ahiqarApiBaseUrl } from '../support/globals';
 
 describe('Header initial', () => {
   beforeEach(() => {
-    
-      // Orlin: commented this temporarily .visit('/ahiqar-arabic-karshuni-local.html')
-      cy.visit('http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido={"m":0,"i":0}')
+      cy.visit('http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m0_i0')
       .get('.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');
@@ -49,7 +47,6 @@ describe('Header initial', () => {
 describe('Header - Item and Manifest changing', () => {
   beforeEach(() => {
     cy
-      // Orlin: commented this temporarily . .visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r7vd/130/latest/item.json`)
       .visit('http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m7_i0')
       .get('.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')

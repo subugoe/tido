@@ -14,8 +14,7 @@ describe('Bookmarking', () => {
     cy.wait(400).url().then((url) => {
       const splitUrl = url.split('tido')[1];
       expect(splitUrl).to.not.include('p')
-    })  //. .should('not.include', 's');
-    //cy.url().should('not.include', 'p');
+    })  
   });
 
   it('Should bookmark tree/metadata panel', () => {
@@ -78,7 +77,7 @@ describe('Bookmarking', () => {
     cy.wait(400).url().then((url) => {
       const splitUrl = url.split('tido')[1];
       expect(splitUrl).to.not.include('s')
-    })  //. .should('not.include', 's');
+    }) 
   });
 
   it('Should bookmark first tab active when manifest changed', () => {
@@ -91,7 +90,7 @@ describe('Bookmarking', () => {
       .wait(400)// wait for tab switch transition
       .should('have.class', 'q-tab--active');
 
-    cy.wait(5000).get(
+    cy.wait(1000).get(
       '.q-tree--standard.item-content > .q-tree__node > .q-tree__node-collapsible > .q-tree__children > .q-tree__node:nth-child(1) > .q-tree__node-header',
       { timeout: 10000 }
     ).click();
@@ -111,7 +110,6 @@ describe('Bookmarking', () => {
 describe('Bookmarking - URL first', () => {
   it('Should load tabs from URL', () => {
     cy
-      //.visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r176/182b/latest/item.json&panels=0_1,1_0,2_1,3_1`)
       .visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m20_i0_p0.1-1.0-2.1-3.1_s0-1-2-3`)
       .then(() => {
         cy
