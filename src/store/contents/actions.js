@@ -42,12 +42,13 @@ async function getItem(url) {
   return data;
 }
 
-// Orlin: Die Name der Funktion sollte besser sein
-function validateManifestPartRangeValue(resultConfig, numberManifests) {
-  const { m } = resultConfig;
-  if (m >= numberManifests || m < 0) {
-    throw new Error(`Please enter 'm' as integer in this range [0,${numberManifests})`);
-  }
+function isManifestPartInsideRangeValue(m, numberManifests) {
+  return (m >= 0 && m < numberManifests);
+}
+
+function isItemPartInsideRangeValue(i, numberItems) {
+  const itemAsInt = parseInt(i, 10);
+  return (itemAsInt >= 0 && itemAsInt < numberItems);
 }
 
 export const initCollection = async ({
@@ -73,9 +74,10 @@ export const initCollection = async ({
   if (numberManifests === 0) {
     throw new Error(i18n.global.t('error_no_manifests_in_initCollection'));
   }
-
   if ('m' in resultConfig) {
-    validateManifestPartRangeValue(resultConfig, numberManifests);
+    if (!isManifestPartInsideRangeValue(resultConfig.m, numberManifests)) {
+      throw new Error(`Please enter 'm' as integer in this range [0,${numberManifests})`);
+    }
   }
 
   if (Array.isArray(collection.sequence) && collection.sequence.length > 0) {
@@ -107,7 +109,7 @@ export const initCollection = async ({
     }
 
     const numberItems = manifests[manifestIndex].sequence.length;
-    if (itemIndex >= numberItems || itemIndex < 0) {
+    if (!isItemPartInsideRangeValue(itemIndex, numberItems)) {
       throw new Error(`Please enter 'i' as integer in this range [0,${numberItems})`);
     }
 
@@ -130,29 +132,31 @@ export const initManifest = async ({
   commit, dispatch, getters, rootGetters,
 }, url) => {
   const manifest = await getManifest(url);
+  const numberItems = manifest.sequence.length;
   commit('setManifest', manifest);
   const resultConfig = rootGetters['config/config'];
   const { item } = resultConfig;
   let itemIndex;
 
+  if (Array.isArray(manifest.sequence) && manifest.sequence.length <= 0) {
+    throw new Error(i18n.global.t('error_no_items_in_manifest'));
+  }
+
   if ('collection' in resultConfig && resultConfig.collection === '') {
-    // we make sure that this error doesn't occur when switching manifest
+    // we make sure that this error doesn't occur when switching manifest (the condition 'm' & 'i' in resultConfig)
     if (('m' in resultConfig && 'i' in resultConfig) || 'm' in resultConfig) {
       throw new Error(i18n.global.t('error_m_in_url_no_collection'));
     }
   }
-
   if ('i' in resultConfig && 'm' in resultConfig === false) {
     // when the we switch to an item in a new manifest
-    const itemIndexInConfig = resultConfig.i;
-    itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
+    itemIndex = resultConfig.i;
   } else if (item !== '') {
-    // find the item index in this manifest, if the item is not found, then show errors
-    if (Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
-      itemIndex = manifest.sequence.findIndex((element) => element.id === item);
-      if (itemIndex === -1) {
-        throw new Error(i18n.global.t('error_item_not_in_manifest'));
-      }
+    // find the item index in this manifest
+    itemIndex = manifest.sequence.findIndex((element) => element.id === item);
+    if (itemIndex === -1) {
+      // if the item is not found, then show errors
+      throw new Error(i18n.global.t('error_item_not_in_manifest'));
     }
   } else if (resultConfig.manifest !== '') {
     itemIndex = 0;
@@ -163,9 +167,10 @@ export const initManifest = async ({
     await dispatch('getSupport', support);
   }
 
-  if (itemIndex !== undefined && Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
-    // We know here that no item was loaded. Neither from URL nor from user config.
-    // So we load the first manifest item.
+  if (itemIndex !== undefined) {
+    if (!isItemPartInsideRangeValue(itemIndex, numberItems)) {
+      throw new Error(`Please enter 'i' as integer in this range [0,${numberItems})`);
+    }
     const itemUrl = manifest.sequence[itemIndex].id;
     dispatch('initItem', itemUrl);
   }
