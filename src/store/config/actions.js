@@ -180,7 +180,8 @@ function discoverUrlConfig(config) {
   if (isUrl(collection)) urlConfig.collection = collection;
   */
   // here we will validate for the structure of each component:, not their value range
-  if (manifestPart !== undefined) { // if manifestPart is given in URL, then we use regex to check whether it is given correctly
+  if (manifestPart !== undefined) {
+    // if manifestPart is given in URL, then we use regex to check whether it is given correctly
     const isManifestInUrlCorrect = validateManifestInUrl(manifestPart);
     if (!isManifestInUrlCorrect) {
       throw new Error(i18n.global.t('error_manifestPart_tido_url'));

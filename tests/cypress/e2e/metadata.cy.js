@@ -1,6 +1,5 @@
 describe('Metadata', () => {
   beforeEach(() => {
-    //cy.visit('/ahiqar-arabic-karshuni-local.html')
     cy.visit('http://localhost:2222/ahiqar-arabic-karshuni-local.html')
       .get('#text-content')
       .should('be.visible')
