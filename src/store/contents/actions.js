@@ -26,6 +26,12 @@ function findActiveManifestIndex(manifests = [], itemUrl = null) {
   });
 }
 
+function findManifestIndexOfManifestInConfig(manifests, resultConfig) {
+  // Url of manifest is given in resultConfig as 'manifest'
+  const manifestUrl = resultConfig.manifest;
+  return manifests.findIndex((element) => element.id === manifestUrl);
+}
+
 async function getManifest(url) {
   const data = await request(url);
   return data;
@@ -36,17 +42,11 @@ async function getItem(url) {
   return data;
 }
 
-function handleErrorManifestPartUrl(resultConfig, numberManifests) {
-  if ('m' in resultConfig) {
-    const { m } = resultConfig;
-    // m doesn't fuilfill these conditions not part is integer and greater >= 0 and smaller than number of manifests
-    if (numberManifests > 0) {
-      if (Number.isInteger(m) && m >= 0 && m >= numberManifests) {
-        throw new Error(`Please enter 'm' as integer in this range [0,${numberManifests})`);
-      } else if (m === -1) {
-        throw new Error(i18n.global.t('error_manifestPart_tido_url'));
-      }
-    }
+// Orlin: Die Name der Funktion sollte besser sein
+function validateManifestPartRangeValue(resultConfig, numberManifests) {
+  const { m } = resultConfig;
+  if (m >= numberManifests || m < 0) {
+    throw new Error(`Please enter 'm' as integer in this range [0,${numberManifests})`);
   }
 }
 
@@ -70,19 +70,12 @@ export const initCollection = async ({
 
   const numberManifests = Object.keys(collection).length > 0 ? collection.sequence.length : 0;
 
-  handleErrorManifestPartUrl(resultConfig, numberManifests); // we throw errors regarding manifest part if there are any
-
-  if ('i' in resultConfig) {
-    if (resultConfig.i === -1) throw new Error(i18n.global.t('error_itemPart_tido_url'));
+  if (numberManifests === 0) {
+    throw new Error(i18n.global.t('error_no_manifests_in_initCollection'));
   }
 
-  if ('p' in resultConfig) {
-    if (resultConfig.p === -1) throw new Error(i18n.global.t('error_panelsPart_tido_url'));
-  }
-
-  if ('s' in resultConfig) {
-    //if (resultConfig.s.length > resultConfig.panels) throw new Error('Error range in s ');
-    if (resultConfig.s === -1) throw new Error(i18n.global.t('error_showPart_tido_url'));
+  if ('m' in resultConfig) {
+    validateManifestPartRangeValue(resultConfig, numberManifests);
   }
 
   if (Array.isArray(collection.sequence) && collection.sequence.length > 0) {
@@ -91,36 +84,30 @@ export const initCollection = async ({
     const manifests = await Promise.all(promises);
     commit('setManifests', manifests);
 
-    // Check if manifestIndex or item Index are part of the result config
     if ('m' in resultConfig && 'i' in resultConfig) {
-      const manifestIndexInConfig = resultConfig.m;
-      const itemIndexInConfig = resultConfig.i;
-      manifestIndex = (Number.isInteger(manifestIndexInConfig) && manifestIndexInConfig > 0) ? manifestIndexInConfig : 0;
-      itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
+      // Check if manifestIndex or item Index are part of the result config
+      manifestIndex = resultConfig.m;
+      itemIndex = resultConfig.i;
     } else if ('m' in resultConfig) {
-      const manifestIndexInConfig = resultConfig.m;
-      manifestIndex = (Number.isInteger(manifestIndexInConfig) && manifestIndexInConfig > 0) ? manifestIndexInConfig : 0;
+      manifestIndex = resultConfig.m;
       itemIndex = 0;
     } else if ('i' in resultConfig) {
-      const itemIndexInConfig = resultConfig.i;
-      itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig >= 0) ? itemIndexInConfig : undefined;
+      itemIndex = resultConfig.i;
       if ('manifest' in resultConfig && resultConfig.manifest !== '') {
         // Find the manifest Index of this manifest in this collection
-        const manifestUrl = resultConfig.manifest;
-        manifestIndex = manifests.findIndex((element) => element.id === manifestUrl);
+        manifestIndex = findManifestIndexOfManifestInConfig(manifests, resultConfig);
       } else {
         manifestIndex = 0;
       }
     } else if ('manifest' in resultConfig && resultConfig.manifest !== '') {
-      const manifestUrl = resultConfig.manifest;
-      manifestIndex = manifests.findIndex((element) => element.id === manifestUrl);
+      manifestIndex = findManifestIndexOfManifestInConfig(manifests, resultConfig);
       itemIndex = 0;
     } else {
       [manifestIndex, itemIndex] = [0, 0];
     }
 
     const numberItems = manifests[manifestIndex].sequence.length;
-    if (itemIndex >= numberItems) {
+    if (itemIndex >= numberItems || itemIndex < 0) {
       throw new Error(`Please enter 'i' as integer in this range [0,${numberItems})`);
     }
 
@@ -148,15 +135,15 @@ export const initManifest = async ({
   const { item } = resultConfig;
   let itemIndex;
 
-  // Check if manifestIndex or item Index are part of the result config:
-  if ('collection' in resultConfig && resultConfig.collection === '') { // we make sure that this error doesn't occur when switching manifest
+  if ('collection' in resultConfig && resultConfig.collection === '') {
+    // we make sure that this error doesn't occur when switching manifest
     if (('m' in resultConfig && 'i' in resultConfig) || 'm' in resultConfig) {
       throw new Error(i18n.global.t('error_m_in_url_no_collection'));
     }
   }
 
-  //
-  if ('i' in resultConfig && 'm' in resultConfig === false) { //when the we switch to an item in a new manifest
+  if ('i' in resultConfig && 'm' in resultConfig === false) {
+    // when the we switch to an item in a new manifest
     const itemIndexInConfig = resultConfig.i;
     itemIndex = (Number.isInteger(itemIndexInConfig) && itemIndexInConfig > 0) ? itemIndexInConfig : 0;
   } else if (item !== '') {
@@ -176,9 +163,9 @@ export const initManifest = async ({
     await dispatch('getSupport', support);
   }
 
-  // We know here that no item was loaded. Neither from URL nor from user config.
-  // So we load the first manifest item.
   if (itemIndex !== undefined && Array.isArray(manifest.sequence) && manifest.sequence.length > 0) {
+    // We know here that no item was loaded. Neither from URL nor from user config.
+    // So we load the first manifest item.
     const itemUrl = manifest.sequence[itemIndex].id;
     dispatch('initItem', itemUrl);
   }
