@@ -31,6 +31,8 @@ export default {
     + 'target="_blank"> Network Services VPN</a>.',
   error_image_not_exists: 'An image for this page does not exist yet.',
   error_collection_url: 'Please provide the correct collection URL in the config',
+  error_no_manifests_in_initCollection: 'The collection should have at least one manifest, since we are trying to initialize collection',
+  error_no_items_in_manifest: 'The manifest should have at least one item',
   error_m_in_url_no_collection: `Please do not enter 'm' in the URL since there is no collection`,
   error_item_not_in_manifest: 'The item initialized in the custom config is not part of the manifest initialized in config',
   error_open_image: 'Could not open the image file.',
