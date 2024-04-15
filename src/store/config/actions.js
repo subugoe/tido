@@ -75,12 +75,12 @@ function splitUrlParts(urlQuery, attributes) {
 }
 
 function isManifestPartValid(manifestPart) {
-  const regexManifest = /m\d/;
+  const regexManifest = /m\d+$/;
   return regexManifest.exec(manifestPart) !== null;
 }
 
 function isItemPartValid(itemPart) {
-  const regexItem = /i\d+/;
+  const regexItem = /i\d+$/;
   return regexItem.exec(itemPart) !== null;
 }
 
