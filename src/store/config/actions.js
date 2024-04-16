@@ -206,7 +206,6 @@ function discoverUrlConfig(config) {
       throw new Error(i18n.global.t('error_panelsPart_tido_url'));
     } else {
       p = panelsValue;
-      urlConfig.p = p;
     }
   } else {
     // get the number of panels and then create as many couples of (panel_index.0) until n_panels-1, the last couple need not have the '-' symbol
@@ -228,9 +227,9 @@ function discoverUrlConfig(config) {
   }
   if (s === undefined) {
     // If 's' is not given in URL, then we open all the panels which are given in config
-    urlConfig.s = Array.from({ length: numberPanels }, (value, index) => index);
+    urlConfig.show = Array.from({ length: numberPanels }, (value, index) => index);
   } else {
-    urlConfig.s = s;
+    urlConfig.show = s;
   }
   return urlConfig;
 }

@@ -10,10 +10,6 @@ export const getItemIndex = async ({ getters }, itemUrl) => {
   return itemIndex;
 };
 
-export const getPanels = async ({ getters }) => getters.panels;
-
-export const getShow = async ({ getters }) => getters.show;
-
 function findActiveManifestIndex(manifests = [], itemUrl = null) {
   if (manifests.length === 0) return -1;
   if (!itemUrl) return 0;
@@ -33,11 +29,6 @@ function findManifestIndexOfManifestInConfig(manifests, resultConfig) {
 }
 
 async function getManifest(url) {
-  const data = await request(url);
-  return data;
-}
-
-async function getItem(url) {
   const data = await request(url);
   return data;
 }
@@ -129,18 +120,23 @@ export const initCollection = async ({
 };
 
 export const initManifest = async ({
-  commit, dispatch, getters, rootGetters,
+  commit, dispatch, rootGetters,
 }, url) => {
-  const manifest = await getManifest(url);
+  let manifest = '';
+  try {
+    manifest = await request(url);
+  } catch (err) {
+    throw new Error(i18n.global.t('error_manifest_url'));
+  }
+  if (Array.isArray(manifest.sequence) && manifest.sequence.length <= 0) {
+    throw new Error(i18n.global.t('error_no_items_in_manifest'));
+  }
+
   const numberItems = manifest.sequence.length;
   commit('setManifest', manifest);
   const resultConfig = rootGetters['config/config'];
   const { item } = resultConfig;
   let itemIndex;
-
-  if (Array.isArray(manifest.sequence) && manifest.sequence.length <= 0) {
-    throw new Error(i18n.global.t('error_no_items_in_manifest'));
-  }
 
   if ('collection' in resultConfig && resultConfig.collection === '') {
     // we make sure that this error doesn't occur when switching manifest (the condition 'm' & 'i' in resultConfig)
@@ -176,9 +172,13 @@ export const initManifest = async ({
   }
 };
 
-export const initItem = async ({ commit, dispatch, getters, rootGetters }, url) => {
-  const item = await getItem(url); // To fix: what about if this load fails, e.g content not anymore in this url -> maybe try and catch ?
-  const resultConfig = rootGetters['config/config'];
+export const initItem = async ({ commit, dispatch, getters }, url) => {
+  let item = '';
+  try {
+    item = await request(url);
+  } catch (err) {
+    throw new Error(i18n.global.t('error_item_url'));
+  }
   commit('setItem', item);
   commit('setItemUrl', url);
 
@@ -190,30 +190,11 @@ export const initItem = async ({ commit, dispatch, getters, rootGetters }, url) 
   const i = await dispatch('getItemIndex', url);
   const m = findActiveManifestIndex(manifests, url);
 
-  const numberPanels = resultConfig.panels.length;
-
-  const s = 's' in resultConfig ? resultConfig.s : Array.from({ length: numberPanels }, (value, index) => index);
-  // If in the URL it is given which panels to show initially, then show only those
-  if (s !== null) {
-    if (s.length > 0) {
-      const totalShowPanels = Array.from({ length: 4 }, (value, index) => index);
-
-      const closedPanels = totalShowPanels.filter((element) => !s.includes(element));
-      const show = false;
-      if (closedPanels.length > 0) {
-        closedPanels.forEach((index) => {
-          const input = { index, show };
-          dispatch('config/setShowPanel', input, { root: true });
-        });
-      }
-    }
-  }
-
   const query = manifests.length > 0 ? {
     m,
     i,
   } : { i };
-  await BookmarkService.updateQuery(query, resultConfig);
+  await BookmarkService.updateQuery(query);
 };
 
 export const updateImageLoading = async ({ commit }, payload) => {
