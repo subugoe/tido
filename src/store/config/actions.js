@@ -127,6 +127,7 @@ function isShowPartValid(showValue, numberPanels) {
 }
 
 function createDefaultPanelValue(numberPanels) {
+  // get the number of panels and then create as many couples of (panel_index.0) until n_panels-1, the last couple need not have the '-' symbol
   let p = '';
   for (let j = 0; j < numberPanels; j++) {
     if (j !== numberPanels - 1) {
@@ -139,6 +140,7 @@ function createDefaultPanelValue(numberPanels) {
 }
 
 function createActiveViewsFromPanelsArray(panelsArray) {
+  // converts 'panelsArray' to an object with key, value: 'panel index: visible tab index'
   return panelsArray.reduce((acc, cur) => {
     // eslint-disable-next-line no-shadow
     const [panelIndex, viewIndex] = cur.split('.').map((i) => parseInt(i, 10));
@@ -181,45 +183,36 @@ function discoverUrlConfig(config) {
   */
   // here we will validate for the structure of each component:, not their value range
   if (manifestPart !== undefined) {
-    // if manifestPart is given in URL, then we use regex to check whether it is given correctly
-    const isManifestValid = isManifestPartValid(manifestPart);
-    if (!isManifestValid) {
-      throw new Error(i18n.global.t('error_manifestPart_tido_url'));
+    if (!isManifestPartValid(manifestPart)) {
+      throw new Error(i18n.global.t('error_manifestpart_tido_url'));
     } else {
-      m = parseInt(manifestPart.slice(1), 10);
-      urlConfig.m = m;
+      urlConfig.m = parseInt(manifestPart.slice(1), 10);
     }
   }
   if (itemPart !== undefined) {
-    const isItemValid = isItemPartValid(itemPart);
-    if (!isItemValid) {
-      throw new Error(i18n.global.t('error_itemPart_tido_url'));
+    if (!isItemPartValid(itemPart)) {
+      throw new Error(i18n.global.t('error_itempart_tido_url'));
     } else {
-      i = parseInt(itemPart.slice(1), 10);
-      urlConfig.i = i;
+      urlConfig.i = parseInt(itemPart.slice(1), 10);
     }
   }
   if (panelsPart !== undefined) {
     const panelsValue = panelsPart.slice(1);
-    const isPanelsValid = isPanelsPartValid(panelsPart, panelsValue, numberPanels);
-    if (!isPanelsValid) {
-      throw new Error(i18n.global.t('error_panelsPart_tido_url'));
+    if (!isPanelsPartValid(panelsPart, panelsValue, numberPanels)) {
+      throw new Error(i18n.global.t('error_panelspart_tido_url'));
     } else {
       p = panelsValue;
     }
   } else {
-    // get the number of panels and then create as many couples of (panel_index.0) until n_panels-1, the last couple need not have the '-' symbol
     p = createDefaultPanelValue(numberPanels);
   }
   const panelsArray = p !== '' ? p.split('-') : [];
-  // converts 'panelsArray' to an object with key, value: 'panel index: visible tab index'
   urlConfig.activeViews = createActiveViewsFromPanelsArray(panelsArray);
 
   if (showPart !== undefined) {
     const showValue = showPart.slice(1);
-    const isShowValid = isShowPartValid(showValue, numberPanels);
-    if (!isShowValid) {
-      throw new Error(i18n.global.t('error_showPart_tido_url'));
+    if (!isShowPartValid(showValue, numberPanels)) {
+      throw new Error(i18n.global.t('error_showpart_tido_url'));
     } else {
       // showValue needs to be an array of opened panel indices (Integers)
       s = showValue.split('-').map(Number);
