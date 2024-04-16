@@ -17,7 +17,7 @@ export default {
   default: 'Default',
   reset_view: 'Reset panels to default view',
   error_default:
-    'Something went wrong. Please relaod the page/application and/or try again later.',
+    'Something went wrong. Please reload the page/application and/or try again later.',
   description: 'Description',
   editor: 'Editor',
   editorial: 'Editorial',
@@ -33,20 +33,14 @@ export default {
   error_collection_url: 'Please provide the correct collection URL in the config',
   error_manifest_url: 'Please provide the correct manifest URL in the config',
   error_item_url: 'Please provide the correct item URL in the config',
-  error_no_manifests_in_initCollection: 'The collection should have at least one manifest, since we are trying to initialize collection',
+  error_no_manifests_in_initcollection: 'The collection should have at least one manifest, since we are trying to initialize collection',
   error_no_items_in_manifest: 'The manifest should have at least one item',
-  error_m_in_url_no_collection: `Please do not enter 'm' in the URL since there is no collection`,
+  error_m_in_url_no_collection: 'Please do not enter \'m\' in the URL since there is no collection',
   error_item_not_in_manifest: 'The item initialized in the custom config is not part of the manifest initialized in config',
-  error_open_image: 'Could not open the image file.',
-  error_manifestPart_tido_url: `Please provide the value of manifest Index 'm' like i.e m2 or m3 (values are 2 and 3 in this case)`,
-  error_itemPart_tido_url: `Please provide the value of item Index 'i' like i.e i2 or i3 (values are 2 and 3 in this case)`,
-  error_panelsPart_tido_url: `Please provide the value of 'p' panelIndex.TabIndexOpened for each panel index,`
-                      + `i.e p0.0-1.0-2.0-3.1 (0.0 means in panel index 0, the first tab is visible., 3.1 means in panel with index 3 (4th panel),`
-                      + `the second tab is visible). Please don't forget to give symbol '-' between the couple values and '.' symbol within each pair).`
-                    + `Please note that the there is no space between the 'p' and the first value. There should be 'total number of Panels' pairs of (panelIndex.TabIndex)`,
-  error_showPart_tido_url: `Please provide the value of 's' opened for each panel index,`
-                    + `i.e s0-2-3 means that the panels at indices 0, 2 and 3 are opened. `
-                   + `Please don't forget to give symbol '-' only between the values). There is no space between 's' and the first value`,
+  error_manifestpart_tido_url: 'Please provide the value of manifest Index \'m\' like i.e m2 or m3 (values are 2 and 3 in this case)',
+  error_itempart_tido_url: 'Please provide the value of item Index \'i\' like i.e i2 or i3 (values are 2 and 3 in this case)',
+  error_panelspart_tido_url: 'Please provide the value of Panels \'p\' panelIndex.TabIndexOpened for each panel index in the right form',
+  error_showpart_tido_url: 'Please provide the value of panels shown \'s\' in the right form',
   error_open_image: 'Could not open the image file.',
   no_image_available: 'No Image Available',
   image_license: 'Image License',
