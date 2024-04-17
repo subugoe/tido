@@ -61,6 +61,94 @@ function createDefaultActiveViews(panelsConfig) {
     }, {});
 }
 
+// URL Config
+function splitUrlParts(urlQuery, attributes) {
+  if (urlQuery === '') {
+    return [undefined, undefined, undefined, undefined];
+  }
+  const arrayAttributes = urlQuery.split('_');
+  const manifestPart = arrayAttributes.find((element) => element[0].includes(attributes[0])); // index of manifest part in the splitted array: element[0] is 'm' the first letter of the part ?
+  const itemPart = arrayAttributes.find((element) => element[0].includes(attributes[1]));
+  const panelsPart = arrayAttributes.find((element) => element[0].includes(attributes[2]));
+  const showPart = arrayAttributes.find((element) => element[0].includes(attributes[3]));
+  return [manifestPart, itemPart, panelsPart, showPart];
+}
+
+function isManifestPartValid(manifestPart) {
+  const regexManifest = /m\d+$/;
+  return regexManifest.exec(manifestPart) !== null;
+}
+
+function isItemPartValid(itemPart) {
+  const regexItem = /i\d+$/;
+  return regexItem.exec(itemPart) !== null;
+}
+
+function isPanelsPartValid(panelsPart, panelsValue, numberPanels) {
+  const numbersPartArray = panelsValue.split('-');
+  const regexNumber = /^\d+$/;
+  if (panelsPart[0] !== 'p' || numbersPartArray.length !== numberPanels) {
+    return false;
+  }
+
+  for (let i = 0; i < numbersPartArray.length; i++) {
+    const panelTabPair = numbersPartArray[i];
+    if (panelTabPair.length !== 3
+      || regexNumber.test(panelTabPair[0]) === false
+      || regexNumber.test(panelTabPair[2]) === false
+      || panelTabPair[1] !== '.') {
+      return false;
+    }
+  }
+  return true;
+}
+
+function isShowPartValid(showValue, numberPanels) {
+  const showValueAsArray = showValue.split('-');
+  const regexNumbersPart = /\d\-/;
+  if (showValueAsArray.length > numberPanels) {
+    return false;
+  }
+  for (let i = 0; i < showValueAsArray.length - 1; i++) {
+    // if s0-2 is given and there are in total 4 panels, then it is still fine, since we can show less number of panels than the total one
+    // match the couples of (d-) -> a digit followed by a "-" character. In total there are (s.length - 1) - so number of panels we want to open - 1
+    const groupMatch = showValue.slice(i * 2, i * 2 + 2).match(regexNumbersPart);
+    if (groupMatch === null) {
+      return false;
+    }
+  }
+  const lastNumberString = showValue.slice(-1)[0];
+  const lastNumberInt = parseInt(lastNumberString, 10);
+  // last character must have only digits and not be greater than number of max panels
+  if (/^\d+$/.test(lastNumberString) === false || (lastNumberInt >= numberPanels || lastNumberInt < 0)) {
+    return false;
+  }
+  return true;
+}
+
+function createDefaultPanelValue(numberPanels) {
+  // get the number of panels and then create as many couples of (panel_index.0) until n_panels-1, the last couple need not have the '-' symbol
+  let p = '';
+  for (let j = 0; j < numberPanels; j++) {
+    if (j !== numberPanels - 1) {
+      p += `${j}.0-`;
+    } else {
+      p += `${j}.0`;
+    }
+  }
+  return p;
+}
+
+function createActiveViewsFromPanelsArray(panelsArray) {
+  // converts 'panelsArray' to an object with key, value: 'panel index: visible tab index'
+  return panelsArray.reduce((acc, cur) => {
+    // eslint-disable-next-line no-shadow
+    const [panelIndex, viewIndex] = cur.split('.').map((i) => parseInt(i, 10));
+    acc[panelIndex] = viewIndex;
+    return acc;
+  }, {});
+}
+
 function discoverCustomConfig(customConfig) {
   const {
     translations, collection, manifest, item, panels, lang, colors,
@@ -77,28 +165,65 @@ function discoverCustomConfig(customConfig) {
   };
 }
 
-function discoverUrlConfig() {
-  const urlConfig = {};
-  const {
-    item, manifest, collection, panels, show,
-  } = BookmarkService.getQuery();
-
-  const panelsQueryArr = panels ? panels.split(',') : [];
-
+function discoverUrlConfig(config) {
+  // split the url based on '_'
+  // get the part of attribute: get the attribute name and the value based on the type of attribute
+  // add each attribute to UrlConfig as key value
+  let urlConfig = {};
+  const urlQuery = BookmarkService.getQuery();
+  const attributes = ['m', 'i', 'p', 's'];
+  // values of manifest, item Indices ...
+  let [m, i, p, s] = [undefined, undefined, undefined, undefined];
+  const numberPanels = config.panels ? config.panels.length : 0;
+  const [manifestPart, itemPart, panelsPart, showPart] = splitUrlParts(urlQuery, attributes);
+  /*
   if (isUrl(item)) urlConfig.item = item;
   if (isUrl(manifest)) urlConfig.manifest = manifest;
   if (isUrl(collection)) urlConfig.collection = collection;
-  if (panels) {
-    urlConfig.activeViews = panelsQueryArr.reduce((acc, cur) => {
-      const [panelIndex, viewIndex] = cur.split('_').map((i) => parseInt(i, 10));
-
-      acc[panelIndex] = viewIndex;
-      return acc;
-    }, {});
+  */
+  // here we will validate for the structure of each component:, not their value range
+  if (manifestPart !== undefined) {
+    if (!isManifestPartValid(manifestPart)) {
+      throw new Error(i18n.global.t('error_manifestpart_tido_url'));
+    } else {
+      urlConfig.m = parseInt(manifestPart.slice(1), 10);
+    }
   }
+  if (itemPart !== undefined) {
+    if (!isItemPartValid(itemPart)) {
+      throw new Error(i18n.global.t('error_itempart_tido_url'));
+    } else {
+      urlConfig.i = parseInt(itemPart.slice(1), 10);
+    }
+  }
+  if (panelsPart !== undefined) {
+    const panelsValue = panelsPart.slice(1);
+    if (!isPanelsPartValid(panelsPart, panelsValue, numberPanels)) {
+      throw new Error(i18n.global.t('error_panelspart_tido_url'));
+    } else {
+      p = panelsValue;
+    }
+  } else {
+    p = createDefaultPanelValue(numberPanels);
+  }
+  const panelsArray = p !== '' ? p.split('-') : [];
+  urlConfig.activeViews = createActiveViewsFromPanelsArray(panelsArray);
 
-  if (show) urlConfig.show = show ? show.split(',').map((i) => parseInt(i, 10)) : [];
-
+  if (showPart !== undefined) {
+    const showValue = showPart.slice(1);
+    if (!isShowPartValid(showValue, numberPanels)) {
+      throw new Error(i18n.global.t('error_showpart_tido_url'));
+    } else {
+      // showValue needs to be an array of opened panel indices (Integers)
+      s = showValue.split('-').map(Number);
+    }
+  }
+  if (s === undefined) {
+    // If 's' is not given in URL, then we open all the panels which are given in config
+    urlConfig.show = Array.from({ length: numberPanels }, (value, index) => index);
+  } else {
+    urlConfig.show = s;
+  }
   return urlConfig;
 }
 
@@ -111,7 +236,7 @@ function discoverDefaultConfig(config) {
 
 export const load = ({ commit, getters }, config) => {
   const customConfig = discoverCustomConfig(config);
-  const urlConfig = discoverUrlConfig();
+  const urlConfig = discoverUrlConfig(config);
   const defaultConfig = discoverDefaultConfig(getters.config);
 
   if (customConfig.panels) {
@@ -165,7 +290,6 @@ export const load = ({ commit, getters }, config) => {
       i18n.global.setLocaleMessage(locale, { ...(messages[locale] ? messages[locale] : {}), ...resultConfig.translations[locale] });
     });
   }
-
   commit('setConfig', resultConfig);
 };
 

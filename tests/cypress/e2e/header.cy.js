@@ -2,8 +2,7 @@ import { ahiqarApiBaseUrl } from '../support/globals';
 
 describe('Header initial', () => {
   beforeEach(() => {
-    cy
-      .visit('/ahiqar-arabic-karshuni-local.html')
+      cy.visit('http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m0_i0')
       .get('.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');
@@ -48,7 +47,7 @@ describe('Header initial', () => {
 describe('Header - Item and Manifest changing', () => {
   beforeEach(() => {
     cy
-      .visit(`/ahiqar-arabic-karshuni-local.html?item=${ahiqarApiBaseUrl}/textapi/ahiqar/arabic-karshuni/3r7vd/130/latest/item.json`)
+      .visit('http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m7_i0')
       .get('.panels-target > .item:nth-child(3)').find('.panel-body')
       .find('#text-content')
       .should('be.visible');
@@ -66,7 +65,7 @@ describe('Header - Item and Manifest changing', () => {
       .wait(200)
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', '/3r7tp/251/latest/item.json');
+      .should('include', 'tido=m6_i57');
   });
 
   it('Should switch to next sheet', () => {
@@ -81,6 +80,6 @@ describe('Header - Item and Manifest changing', () => {
       .wait(200)
       .url()
       .then((value) => decodeURIComponent(value))
-      .should('include', '/3r7vd/131a/latest/item.json');
+      .should('include', 'tido=m7_i1');
   });
 });

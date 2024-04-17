@@ -48,6 +48,7 @@ import { computed, inject, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useQuasar } from 'quasar';
 import { useI18n } from 'vue-i18n';
+import { i18n } from '@/i18n';
 
 const store = useStore();
 const $q = useQuasar();
@@ -93,6 +94,11 @@ onMounted(async () => {
 
   await loadConfig();
 
+  if (errorMessage.value) {
+    isLoading.value = false;
+    return;
+  }
+
   i18nLocale.value = config.value.lang;
 
   const colorsForceMode = config.value.colors.forceMode;
@@ -114,7 +120,7 @@ onMounted(async () => {
   }
 
   await init();
-})
+});
 
 async function getCollection(url) {
   await store.dispatch('contents/initCollection', url);
@@ -136,23 +142,19 @@ async function getItem(url) {
 }
 async function init() {
   const { collection, manifest, item } = config.value;
-
   try {
     // We want to preload all required data that the components need.
-    // Initialize priority:
-    // We always load the item first as here is the main data that we want to display.
-    if (item) {
-      await getItem(item);
-    }
-
-    // After that we load additionally the parent objects.
     // If a collection is given we ignore the manifest setting
     // and try to figure out the correct manifest by searching for the above item.
     // Otherwise, no collection is given but a single manifest instead, so we load that manifest.
+
     if (collection) {
       await getCollection(collection);
     } else if (manifest) {
       await getManifest(manifest);
+    } else {
+      // eslint-disable-next-line no-console
+      throw new Error(i18n.global.t('no_entrypoint_available'));
     }
   } catch (e) {
     await delay(1000);
