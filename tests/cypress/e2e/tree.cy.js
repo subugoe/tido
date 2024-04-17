@@ -66,7 +66,7 @@ describe('Tree', () => {
       .find('.q-tree__node-header')
       .should('have.class', 'q-tree__node--selected')
       .url()
-      .should('contain', '3r177%2F2b');
+      .should('contain', 'tido=m0_i1');
   });
 
   it('Should switch to other manifest', () => {
@@ -84,6 +84,6 @@ describe('Tree', () => {
       .find('.q-tree__node-header')
       .should('have.class', 'q-tree__node--selected')
       .url()
-      .should('contain', '3r176%2F182b');
+      .should('contain', 'tido=m20_i0');
   });
 });
