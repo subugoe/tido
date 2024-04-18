@@ -1,6 +1,6 @@
 <template>
   <div class="metadata-value">
-    <span v-html="value" />
+    <span> {{ value }} </span>
   </div>
 </template>
 
@@ -42,5 +42,9 @@ const props = defineProps({
 .url-text {
   display: flex;
   padding-right: 4px;
+}
+
+.metadata-value {
+  margin-left:10px;
 }
 </style>
