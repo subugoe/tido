@@ -1,6 +1,6 @@
 <template>
   <div class="metadata-value">
-    <span> {{ value }} </span>
+    <span v-html="value" />
   </div>
 </template>
 

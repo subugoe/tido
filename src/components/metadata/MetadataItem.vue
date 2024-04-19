@@ -5,7 +5,7 @@
     </q-item-label>
     <MetadataLink v-if="isLink()" :url="item.key" :text="item.value"/>
     <MetadataValue v-else :value="item.value" />
-    <MetadataItem v-for="(childItem, idx) in childItems" :key="idx" :item="childItem" class="nested_metadata"/>
+    <MetadataItem v-for="(childItem, idx) in childItems" :key="idx" :item="childItem" class="nested-metadata"/>
   </div>
 </template>
 
@@ -32,7 +32,7 @@ function isLink() {
 
 <style scoped>
 
-.nested_metadata {
+.nested-metadata {
   margin-left: 8px;
   margin-top: 2.5px;
 }
