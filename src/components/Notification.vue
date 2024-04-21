@@ -1,15 +1,14 @@
 <template>
   <div>
-    <div class="text-center">
-      <q-icon
-        :color="color"
-        :name="icon"
-        class="q-pr-sm text-xs"
+    <div class="t-text-center">
+      <BaseIcon
+        :class="`t-text-${color}`"
+        :name="type"
+        class="t-pr-2"
       />
-      <span class="text-bold vertical-middle">{{ title || message }}</span>
+      <span class="t-font-bold t-align-middle">{{ title || message }}</span>
     </div>
-
-    <div class="text-body2 text-center q-mt-sm" v-if="title">
+    <div class="t-text-center t-mt-2 t-text-sm dark:t-text-gray-400" v-if="title">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <span v-html="message" />
     </div>
@@ -17,9 +16,9 @@
 </template>
 
 <script setup>
-import { biInfoCircleFill, biExclamationTriangleFill } from '@quasar/extras/bootstrap-icons';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import BaseIcon from '@/components/base/BaseIcon.vue';
 
 const props = defineProps({
   message: {
@@ -32,7 +31,6 @@ const props = defineProps({
     default: () => '',
   },
 });
-
 const store = useStore();
 
 const config = computed(() => store.getters['config/config']);
@@ -43,16 +41,6 @@ const color = computed(() => {
       return notificationColors.value?.info ? notificationColors.value.info : '';
     case 'warning':
       return notificationColors.value?.warning ? notificationColors.value.warning : '';
-    default:
-      return '';
-  }
-});
-const icon = computed(() => {
-  switch (props.type) {
-    case 'info':
-      return biInfoCircleFill;
-    case 'warning':
-      return biExclamationTriangleFill;
     default:
       return '';
   }

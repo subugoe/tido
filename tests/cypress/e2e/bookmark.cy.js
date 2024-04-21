@@ -1,24 +1,30 @@
-import { ahiqarApiBaseUrl } from '../support/globals';
+import { ahiqarApiBaseUrl, commonSelectors } from '../support/globals';
+
+const selectors = {
+  ...commonSelectors,
+};
 
 describe('Bookmarking', () => {
 
-  
-  beforeEach(() => { 
+
+  beforeEach(() => {
     cy.visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m20_i0`)
         .get('#text-content')
         .contains('ܐܠܚܟܝܡ');
-      
+
   });
-  
+
   it('Should not have panels bookmark initially', () => {
     cy.wait(400).url().then((url) => {
       const splitUrl = url.split('tido')[1];
       expect(splitUrl).to.not.include('p')
-    })  
+    })
   });
 
   it('Should bookmark tree/metadata panel', () => {
-    cy.get('.panels-target > .item:nth-child(1) .q-tabs__content .q-tab')
+    cy
+      .get(selectors.panel1)
+      .find(selectors.tabs)
       .eq(1)
       .click();
     cy.url().then((value) => decodeURIComponent(value)).should('include', 'p0.1-1.0-2.0-3.0');
@@ -26,42 +32,57 @@ describe('Bookmarking', () => {
 
   it('Should change text panel value in query', () => {
     cy
-      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get(selectors.panel3)
+      .find(selectors.tabs)
       .eq(1)
       .click()
-      .should('have.class', 'q-tab--active')
+      .should('have.attr', 'data-p-active', 'true')
       .get('#text-content')
       .should('be.visible')
       .url()
-      .then((value) => decodeURIComponent(value)) 
+      .then((value) => decodeURIComponent(value))
       .should('include', 'p0.0-1.0-2.1-3.0');
   });
 
   it('Should change annotation panel value in query', () => {
     cy
-      .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+      .get(selectors.panel4)
+      .find(selectors.tabs)
       .eq(1)
       .click()
-      .get('.panels-target > .item:nth-child(4) .q-panel:nth-child(2)')
+      .get(selectors.panel4)
+      .find('[role="tabpanel"]')
       .should('be.visible')
       .url()
-      .then((value) => decodeURIComponent(value)) 
+      .then((value) => decodeURIComponent(value))
       .should('include', 'p0.0-1.0-2.0-3.1');
   });
 
   it('Should change panel value in query', () => {
-    cy.get('.panels-toggle .row div:first-child .q-checkbox').click().wait(400)
+    cy
+      .get(selectors.panelsToggleCheckboxes)
+      .first()
+      .click()
+      .wait(400)
       .url()
       .then((value) => decodeURIComponent(value))
       .should('include', 's1-2-3');
-    cy.get('.panels-toggle .row div:nth-child(4) .q-checkbox').click().wait(400)
+
+    cy
+      .get(selectors.panelsToggleCheckboxes)
+      .eq(3)
+      .click()
+      .wait(400)
       .url()
-      .then((value) => decodeURIComponent(value))  
+      .then((value) => decodeURIComponent(value))
       .should('include', 's1-2');
   });
 
   it('Should change panel value in query after reset', () => {
-    cy.get('.panels-toggle .row div:first-child .q-checkbox').click().wait(400)
+    cy.get(selectors.panelsToggleCheckboxes)
+      .first()
+      .click()
+      .wait(400)
       .url()
       .then((value) => decodeURIComponent(value))
       .should('include', 's1-2-3');
@@ -71,39 +92,63 @@ describe('Bookmarking', () => {
       .should('include', 's1-2');
 
     // Reset
-    cy.get('.panels-toggle .row div:first-child .q-checkbox').click();
-    cy.get('.panels-toggle .row div:nth-child(4) .q-checkbox').click();
-    cy.log('Url', cy.url())
+    cy
+      .get(selectors.panelsToggleCheckboxes)
+      .eq(0)
+      .click();
+
+    cy
+      .get(selectors.panelsToggleCheckboxes)
+      .eq(3)
+      .click();
+
     cy.wait(400).url().then((url) => {
       const splitUrl = url.split('tido')[1];
       expect(splitUrl).to.not.include('s')
-    }) 
+    })
   });
 
   it('Should bookmark first tab active when manifest changed', () => {
+
+    // Click on second tab in annotation panel
     cy
-      .get('.panels-target > .item:nth-child(4) .q-list')
+      .get(selectors.panel4)
+      .find(selectors.annotationsList)
       .should('be.visible')
-      .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+      .get(selectors.panel4)
+      .find(selectors.tabs)
       .eq(1)
       .click()
       .wait(400)// wait for tab switch transition
-      .should('have.class', 'q-tab--active');
+      .should('have.attr', 'data-p-active', 'true');
 
-    cy.wait(1000).get(
-      '.q-tree--standard.item-content > .q-tree__node > .q-tree__node-collapsible > .q-tree__children > .q-tree__node:nth-child(1) > .q-tree__node-header',
+    // Expand the 7th manifest in tree
+    cy
+      .get(selectors.tree)
+      .children(selectors.treeNodes)
+      .first()
+      .children('[role="group"]')
+      .children(selectors.treeNodes)
+      .eq(6)
+      .find('button:not(.t-hidden)',
       { timeout: 10000 }
     ).click();
 
-    cy.get(
-      '.panels-target .q-tree--standard.item-content > .q-tree__node > .q-tree__node-collapsible > .q-tree__children > .q-tree__node:nth-child(2) > .q-tree__node-header',
-    ).click();
-
-    cy.get(
-      '.panels-target .q-tree--standard.item-content > .q-tree__node > .q-tree__node-collapsible > .q-tree__children > .q-tree__node:nth-child(2) > .q-tree__node-collapsible > .q-tree__children .q-tree__node:first-child .q-tree__node-header',
-    ).click();
-
-    cy.url().then((value) => decodeURIComponent(value)).should('not.include', '3.1');
+    // Select first item of that manifest
+    cy
+      .get(selectors.tree)
+      .children(selectors.treeNodes)
+      .first()
+      .children('[role="group"]')
+      .children(selectors.treeNodes)
+      .eq(6)
+      .children('[role="group"]')
+      .children(selectors.treeNodes)
+      .first()
+      .click()
+      .wait(400)
+      .url()
+      .then((value) => decodeURIComponent(value)).should('not.include', '3.1');
   });
 });
 
@@ -114,19 +159,22 @@ describe('Bookmarking - URL first', () => {
       .then(() => {
         cy
           // Tree & Metadata panel
-          .get('.panels-target > .item:nth-child(1) .q-tabs__content .q-tab')
+          .get(selectors.panel1)
+          .find(selectors.tabs)
           .eq(1)
-          .should('have.class', 'q-tab--active')
+          .should('have.attr', 'data-p-active', 'true')
 
           // Text panel
-          .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+          .get(selectors.panel3)
+          .find(selectors.tabs)
           .eq(1)
-          .should('have.class', 'q-tab--active')
+          .should('have.attr', 'data-p-active', 'true')
 
           // Annotation panel
-          .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+          .get(selectors.panel4)
+          .find(selectors.tabs)
           .eq(1)
-          .should('have.class', 'q-tab--active');
+          .should('have.attr', 'data-p-active', 'true')
       });
   });
 });
@@ -141,7 +189,7 @@ describe('Bookmarking - default opening without tido key' , () => {
      .url()
      .should('include', 'tido=m0_i0');
      });
-    
+
   })
 
   it('Should load the first item in gfl', () => {
@@ -174,12 +222,12 @@ describe('Bookmarking - change manifest and/or item indices when switching to a 
       .should('have.class', 'q-tree__node--selected')
       .url()
       .should('contain', 'tido=m20_i1');
-    
+
   })
 
   it('Should change the item index when switching to a new item inside GLF manifest', () => {
     cy.visit('http://localhost:2222/gfl-local.html')
-    cy 
+    cy
       .wait(1000)
       .get('.panels-target > .item:nth-child(4)')
       .find('.item-content > .panel-body') //.q-tree__node > .q-tree__node-collapsible > .q-tree__children')

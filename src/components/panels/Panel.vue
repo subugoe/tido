@@ -1,7 +1,7 @@
 <template>
-  <div class="item-content" :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-white'">
-    <div class="panel-header q-py-xs q-pr-md q-pl-md flex justify-between items-center">
-      <div class="caption text-bold text-body1">
+  <div class="panel t-flex-1 t-flex t-flex-col t-overflow-hidden t-rounded-lg t-bg-gray-50 dark:t-bg-gray-800 t-border dark:t-border-gray-700">
+    <div class="panel-header t-py-3 t-px-4 t-flex t-justify-between t-items-center">
+      <div class="caption t-font-bold">
         <!-- We display the tab label as panel label when there is only one tab -->
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
         <span v-else-if="tabs.length === 1">{{$t(tabs[0].label)}}</span>
@@ -14,26 +14,67 @@
         </template>
       </div>
     </div>
-    <q-separator class="q-mx-md" />
-    <div class="panel-body overflow-hidden bg-none">
-      <Loading v-if="isLoading" />
+    <div class="t-h-[1px] dark:t-bg-gray-600 t-bg-gray-200 t-mx-4" />
+    <div class="panel-body t-relative t-overflow-hidden t-flex t-flex-1 t-flex-col t-bg-none">
+      <div v-if="isLoading" class="t-absolute t-z-50 t-flex t-bg-gray-50 dark:t-bg-gray-800 t-w-full t-h-full t-justify-center t-items-center">
+        <Loading  class="t-text-5xl" />
+      </div>
       <template v-if="tabs.length > 1">
-        <div class="tabs-container q-px-md">
-          <q-tabs
-            v-model="activeTabIndex"
-            @update:model-value="onViewChange"
-            :active-color="'primary'"
-            active-bg-color="none"
-            dense
-          >
-            <q-tab v-for="(tab, i) in tabs" :key="tab.id" :name="i" :label="$t(tab.label)" no-caps />
-          </q-tabs>
-        </div>
-        <q-tab-panels v-model="activeTabIndex" class="bg-transparent" animated transition-next="fade" transition-prev="fade">
-          <q-tab-panel v-for="(tab, i) in tabs" :key="i" :name="i" class="q-pt-md">
-            <component :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" />
-          </q-tab-panel>
-        </q-tab-panels>
+        <TabView
+          v-model:active-index="activeTabIndex"
+          @update:active-index="onViewChange"
+          unstyled
+          :pt="{
+              navContent: {
+                class: ['t-mx-4']
+              },
+              nav: ({ props, parent, context })=>({
+                  class:[
+                    't-relative t-mr-0 t-flex t-list-none t-overflow-hidden',
+                    {
+                      't-opacity-60 t-cursor-default t-user-select-none t-select-none t-pointer-events-none': props == null ? void 0 : props.disabled
+                    },
+                  ]
+                }),
+              tabpanel: {
+                header: ({ parent, context }) => ({
+                  class: [
+                    't-flex-1 t-relative t-text-sm',
+                    'after:t-content-[\'\'] after:t-absolute after:t-flex after:t-bottom-0 after:t-h-[2px] after:t-w-full after:t-bg-primary',
+                    { 'after:t-opacity-0': parent.state.d_activeIndex !== context.index },
+                    { 't-bg-primary/5 t-text-primary after:t-opacity-1': parent.state.d_activeIndex === context.index }
+                  ]
+                }),
+                headerAction: { class: [
+                    't-relative t-cursor-pointer t-border-b t-border-gray-200',
+                    't-flex t-items-center t-justify-center','t-px-3 t-pb-3 t-pt-4',
+                    't-transition-all hover:dark:t-bg-gray-600/50 hover:t-bg-gray-300/30'
+                  ]
+                },
+                headerTitle: {
+                  class: ['t-leading-none', 't-whitespace-nowrap']
+                },
+                content: {
+                  class: ['t-overflow-auto']
+                }
+              },
+              inkbar: () => ({
+                class: [
+                  't-hidden'
+                ]
+              }),
+              root: {
+                class: ['t-flex t-flex-col t-flex-1 t-overflow-hidden t-h-full t-flex-1']
+              },
+              panelContainer: {
+                class: ['t-flex t-flex-col t-flex-1 t-overflow-hidden']
+              }
+            }"
+        >
+          <TabPanel v-for="(tab, i) in tabs" :key="tab.id" :header="$t(tab.label)" unstyled>
+            <component v-if="activeTabIndex === i" :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" @loading="isLoading = $event" />
+          </TabPanel>
+        </TabView>
       </template>
       <template v-else-if="tabs.length === 1">
         <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />
@@ -50,6 +91,13 @@
 </template>
 
 <script>
+import {
+  computed, nextTick, ref, watch,
+} from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 import MetadataView from '@/components/metadata/MetadataView.vue';
 import TreeView from '@/components/TreeView.vue';
 import AnnotationsView from '@/components/annotations/AnnotationsView.vue';
@@ -61,10 +109,7 @@ import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
 
-import { computed, nextTick, ref, watch } from 'vue';
-import { useStore } from 'vuex';
-import { useI18n } from 'vue-i18n';
-import { findComponent } from '@/utils/panels'
+import { findComponent } from '@/utils/panels';
 
 // NOTE: Using `setup()` rather than the recommended `<script setup>`
 // to avoid issues with asset loading.
@@ -80,6 +125,8 @@ export default {
     PanelToggleAction,
     PanelZoomAction,
     TreeView,
+    TabView,
+    TabPanel,
   },
   props: {
     panel: {
@@ -112,7 +159,7 @@ export default {
       ({ views }) => {
         nextTick(() => {
           init(views);
-        })
+        });
       },
       { deep: true, immediate: true },
     );
@@ -120,8 +167,8 @@ export default {
       item,
       () => {
         init(props.panel.views);
-      }
-    )
+      },
+    );
 
     function init(views) {
       tabs.value = [];
@@ -189,7 +236,7 @@ export default {
       const selected = false;
       const events = {
         update: (value) => {
-          if (value === 'maybe') return;
+          if (value === null) return;
           store.dispatch(value ? 'annotations/selectAll' : 'annotations/selectNone');
         },
       };
@@ -203,7 +250,7 @@ export default {
           const filteredAmount = store.getters['annotations/filteredAnnotations'].length;
 
           let newSelected = activeAmount > 0 && activeAmount === filteredAmount;
-          if (!newSelected && Object.keys(payload).length > 0) newSelected = 'maybe';
+          if (!newSelected && Object.keys(payload).length > 0) newSelected = null;
           if (tabs.value[i].actions[0].props.selected !== newSelected) {
             tabs.value[i].actions[0].props.selected = newSelected;
           }
@@ -279,7 +326,8 @@ export default {
       return contentItem ? contentItem.url : null;
     }
 
-    function onViewChange() {
+    function onViewChange(index) {
+      activeTabIndex.value = index;
       emit('active-view', activeTabIndex.value);
     }
 
@@ -289,79 +337,7 @@ export default {
       panel: props.panel,
       tabs,
       onViewChange,
-    }
+    };
   },
-}
+};
 </script>
-
-<style lang="scss" scoped>
-.panel-header {
-  min-height: 48px;
-  flex-wrap: unset;
-}
-.panel-body {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-
-  :deep(.q-tabs__content .q-tab) {
-    flex: 1;
-  }
-
-  .tabs-container {
-    display: flex;
-
-    >* {
-      flex: 1;
-    }
-  }
-}
-
-.item-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  position: relative;
-
-  .body--dark & {
-    border: 1px solid #424242 !important;
-  }
-
-  .q-tabs {
-    transition: none !important;
-  }
-
-  .q-tab {
-    transition: none !important;
-    .q-tab__label {
-      font-size: $body-font-size;
-      font-weight: 300;
-    }
-  }
-
-  .q-tab-panels {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-
-  .q-tab-panel {
-    padding: 0;
-  }
-}
-
-.item {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
-
-  @media (max-width: $breakpoint-sm-max) {
-    min-height: 100%;
-  }
-}
-</style>
