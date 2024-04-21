@@ -1,76 +1,59 @@
 <template>
-  <div class="panels-toggle relative-position">
-    <q-btn
-      v-if="$q.screen.width < 1200"
-      :icon-right="dropdownIcon"
-      :label="$t('show_hide_panels')"
-      outline
-      flat
-      size="12px"
-      @click="showDropdown = !showDropdown"
-    >
-    </q-btn>
-    <div
-      v-if="showDropdown"
-      class="dropdown-list shadow-2 rounded-borders"
-      :class="$q.dark.isActive ? 'bg-dark' : 'bg-white text-dark'"
-    >
-      <q-list>
-        <q-item v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="q-pl-xs q-py-none" tag="label" v-ripple>
-          <q-item-section side>
-            <q-checkbox
-              :model-value="show"
-              @update:model-value="update(i, $event)"
-              :checked-icon="checkedIcon"
-              :unchecked-icon="uncheckedIcon"
-            />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>{{ $t(label) }}</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item tag="label" v-ripple @click="reset">
-          <q-item-section side>
-            <q-icon :name="resetIcon" :color="resetColor"></q-icon>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label :class="'text-' + resetColor">{{ $t('reset') }}</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </div>
-
-    <div v-if="$q.screen.width > 1199" class="row items-center">
-      <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="q-px-xs">
-        <q-checkbox
-          :model-value="show"
-          @update:model-value="update(i, $event)"
-          class="q-px-sm text-body2"
-          :title="handleToggleTitle(i)"
-          :label="$t(label)"
-          dense
-          size="xs"
-          :checked-icon="checkedIcon"
-          :unchecked-icon="uncheckedIcon"
-        >
-        </q-checkbox>
-      </div>
-
-      <q-btn
-        v-if="toggles.length > 0"
-        flat
-        no-caps
-        dense
-        class="q-px-sm q-py-none reset-btn"
-        :class="'text-' + resetColor"
-        :title="$t('reset_view')"
-        @click="reset"
-        :icon="resetIcon"
-        :color="resetColor"
+  <div class="panels-toggle t-relative">
+    <template v-if="isMobile">
+      <BaseDropdown
+        v-model="showDropdown"
+        :button-text="$t('show_hide_panels')"
       >
-        <span>{{ $t('reset') }}</span>
-      </q-btn>
-    </div>
+        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-space-x-2 t-flex t-items-center t-mb-2">
+          <BaseCheckbox
+            :model-value="show"
+            :id="`panel-toggle-${i}`"
+            @update:model-value="update(i, $event)"
+          />
+          <label class="t-text-nowrap" :for="`panel-toggle-${i}`">{{ $t(label) }}</label>
+        </div>
+        <BaseButton
+          v-if="toggles.length > 0"
+          :class="'text-' + resetColor"
+          :title="$t('reset_view')"
+          :text="$t('reset')"
+          display="flat"
+          icon="reset"
+          @click="reset"
+        />
+
+      </BaseDropdown>
+    </template>
+    <template v-else>
+      <div class="t-flex t-items-center t-space-x-4">
+        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`">
+          <BaseCheckbox
+            :model-value="show"
+            @update:model-value="update(i, $event)"
+            :id="`panel-toggle-${i}`"
+            :round="true"
+          />
+          <label
+            :title="handleToggleTitle(i)"
+            :for="`panel-toggle-${i}`"
+            class="t-ml-2 t-text-sm"
+          >
+            {{ $t(label) }}
+          </label>
+        </div>
+
+        <BaseButton
+          v-if="toggles.length > 0"
+          :class="'text-' + resetColor"
+          :title="$t('reset_view')"
+          :text="$t('reset')"
+          display="flat"
+          icon="reset"
+          @click="reset"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -78,23 +61,16 @@
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
-import {
-  biCheckCircleFill,
-  biCircle,
-  biArrowCounterclockwise,
-  biChevronDown,
-} from '@quasar/extras/bootstrap-icons';
+import { isMobile } from '@/utils/is-mobile';
+import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
+import BaseButton from '@/components/base/BaseButton.vue';
+import BaseDropdown from '@/components/base/BaseDropdown.vue';
 
 const store = useStore();
 const { t } = useI18n();
 
 const toggles = ref([]);
 const showDropdown = ref(false);
-
-const checkedIcon = biCheckCircleFill;
-const uncheckedIcon = biCircle;
-const resetIcon = biArrowCounterclockwise;
-const dropdownIcon = biChevronDown;
 
 const panels = computed(() => store.getters['config/config'].panels);
 const resetColor = computed(() => (toggles.value.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7'));
@@ -107,26 +83,6 @@ watch(
       .map(({ show, label }, index) => ({ index, show, label }));
   },
   { immediate: true },
-);
-
-watch(
-  showDropdown,
-  (value) => {
-    const tido = document.getElementById('tido');
-    let backdrop = tido.querySelector('#tido-backdrop');
-    if (value) {
-      if (!backdrop) {
-        const el = document.createElement('div');
-        el.id = 'tido-backdrop';
-        tido.appendChild(el);
-        backdrop = tido.querySelector('#tido-backdrop');
-        backdrop.clickOutsideEvent = () => {
-          showDropdown.value = false;
-        };
-        backdrop.addEventListener('click', backdrop.clickOutsideEvent);
-      }
-    } else if (backdrop) backdrop.remove();
-  },
 );
 
 function update(index, show) {
@@ -171,12 +127,6 @@ function handleToggleTitle(idx) {
 </script>
 
 <style lang="scss">
-.dropdown-list {
-  position: absolute;
-  z-index: 1000;
-  top: calc(100% + 0.5rem);
-  right: 0;
-}
 .reset-btn .q-icon {
   font-size: 1.2rem;
   padding-right: 0.5rem;

@@ -1,4 +1,6 @@
-import { ahiqarApiBaseUrl } from '../support/globals';
+import { ahiqarApiBaseUrl, commonSelectors } from '../support/globals';
+
+const selectors = { ...commonSelectors }
 
 describe('Content - Multiple Tabs', () => {
   beforeEach(() => {
@@ -9,18 +11,20 @@ describe('Content - Multiple Tabs', () => {
   });
   it('Should display first content tab', () => {
     cy
-      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get(selectors.panel3)
+      .find(selectors.tabs)
       .first()
-      .should('have.class', 'q-tab--active');
+      .should('have.attr', 'data-p-active', 'true');
 
     cy.get('#text-content').contains('ܚܝܩܪ');
   });
   it('Should switch to second tab', () => {
     cy
-      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get(selectors.panel3)
+      .find(selectors.tabs)
       .eq(1)
       .click()
-      .should('have.class', 'q-tab--active');
+      .should('have.attr', 'data-p-active', 'true');
 
     cy
       .get('#text-content')
@@ -42,7 +46,9 @@ describe('Content - Multiple Tabs', () => {
 
     // Test annotation
     cy
-      .get('.panels-target > .item:nth-child(4) .item-content .q-item')
+      .get(selectors.panel4)
+      .find(selectors.annotationsList)
+      .find('.item')
       .first()
       .should('have.class', 'active');
   });
@@ -50,7 +56,9 @@ describe('Content - Multiple Tabs', () => {
   it('Should highlight from annotation', () => {
     // Test annotation
     cy
-      .get('.panels-target > .item:nth-child(4) .item-content .q-item')
+      .get(selectors.panel4)
+      .find(selectors.annotationsList)
+      .find('.item')
       .first()
       .click()
       .should('have.class', 'active');
@@ -67,7 +75,7 @@ describe('Content - Multiple Tabs', () => {
   });
 
   it('Should stay on first tab when switch item', () => {
-    cy.get('button.next-item').click();
+    cy.get(selectors.nextButton).click();
 
     // Test content
     cy
@@ -75,14 +83,16 @@ describe('Content - Multiple Tabs', () => {
       .contains('ܚܝܩܪ');
 
     cy
-      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get(selectors.panel3)
+      .find(selectors.tabs)
       .first()
-      .should('have.class', 'q-tab--active');
+      .should('have.attr', 'data-p-active', 'true');
   });
 
   it('Should stay on second tab when switch item', () => {
     cy
-      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get(selectors.panel3)
+      .find(selectors.tabs)
       .eq(1)
       .click();
 
@@ -90,12 +100,13 @@ describe('Content - Multiple Tabs', () => {
       .get('#text-content')
       .contains('وايضا');
 
-    cy.get('button.next-item').click();
+    cy.get(selectors.nextButton).click();
 
     cy
-      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get(selectors.panel3)
+      .find(selectors.tabs)
       .eq(1)
-      .should('have.class', 'q-tab--active');
+      .should('have.attr', 'data-p-active', 'true');
 
     cy.get('#text-content').contains('فتركهم');
   });
@@ -106,13 +117,22 @@ describe('Content - Multiple Tabs', () => {
       .should('have.attr', 'style', 'font-size: 16px;');
 
     // Increasing font size
-    cy.get('.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Increase"]').click();
-    cy.get('#text-content>div')
+    cy
+      .get(selectors.panel3)
+      .find('.actions>div:first-child button[title="Increase"]')
+      .click();
+
+    cy
+      .get('#text-content>div')
       .first()
       .should('have.attr', 'style', 'font-size: 18px;');
 
     // Decreasing font size
-    cy.get('.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Decrease"]').click();
+    cy
+      .get(selectors.panel3)
+      .get('.actions>div:first-child button[title="Decrease"]')
+      .click();
+
     cy.get('#text-content div')
       .first()
       .should('have.attr', 'style', 'font-size: 16px;');
@@ -120,7 +140,9 @@ describe('Content - Multiple Tabs', () => {
 
   it('Should not increase font more than 28', () => {
     // Increasing font size
-    cy.get('.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Increase"]')
+    cy
+      .get(selectors.panel3)
+      .get('.actions>div:first-child button[title="Increase"]')
       .click() // 18px
       .click() // 20px
       .click() // 22px
@@ -136,7 +158,9 @@ describe('Content - Multiple Tabs', () => {
 
   it('Should not decrease font less than 14', () => {
     // Increasing font size
-    cy.get('.panels-target > .item:nth-child(3) .actions>div:first-child button[title="Decrease"]')
+    cy
+      .get(selectors.panel3)
+      .get('.actions>div:first-child button[title="Decrease"]')
       .click() // 14px
       .should('be.disabled');
 
@@ -165,17 +189,18 @@ describe('Content - Multiple Tabs', () => {
 describe('Content - Multiple Tabs with different manifest', () => {
   it('Should switch to first tab when switch manifest', () => {
    cy.visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m21_i0_p0.0-1.0-2.0-3.0`)
-    .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
-      .eq(1)
+     .get(selectors.panel3)
+     .find(selectors.tabs)
       .click();
 
     cy
-      .get('button.previous-item')
+      .get(selectors.prevButton)
       .click()
       .wait(1000)
-      .get('.panels-target > .item:nth-child(3) .q-tabs__content .q-tab')
+      .get(selectors.panel3)
+      .find(selectors.tabs)
       .eq(0)
-      .should('have.class', 'q-tab--active');
+      .should('have.attr', 'data-p-active', 'true');
 
     cy
       .get('#text-content')

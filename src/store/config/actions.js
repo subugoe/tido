@@ -48,6 +48,10 @@ function validateColors(value) {
   return !!(value);
 }
 
+function validateContainer(value) {
+  return !!(value);
+}
+
 function createDefaultActiveViews(panelsConfig) {
   return panelsConfig
     .filter((p) => p.views && p.views.length > 0)
@@ -151,10 +155,11 @@ function createActiveViewsFromPanelsArray(panelsArray) {
 
 function discoverCustomConfig(customConfig) {
   const {
-    translations, collection, manifest, item, panels, lang, colors,
+    container, translations, collection, manifest, item, panels, lang, colors,
   } = customConfig;
 
   return {
+    ...(validateContainer(container) && { container }),
     ...(validateCollection(collection) && { collection }),
     ...(validateManifest(manifest) && { manifest }),
     ...(validateItem(item) && { item }),
@@ -234,7 +239,7 @@ function discoverDefaultConfig(config) {
   };
 }
 
-export const load = ({ commit, getters }, config) => {
+export const load = ({ commit, getters, dispatch }, config) => {
   const customConfig = discoverCustomConfig(config);
   const urlConfig = discoverUrlConfig(config);
   const defaultConfig = discoverDefaultConfig(getters.config);
@@ -291,6 +296,9 @@ export const load = ({ commit, getters }, config) => {
     });
   }
   commit('setConfig', resultConfig);
+
+  if (urlConfig.activeViews) commit('setActiveViews', activeViews);
+  else dispatch('setDefaultActiveViews', false);
 };
 
 export const setActivePanelView = async ({ commit, getters }, { panelIndex, viewIndex }) => {
@@ -315,7 +323,7 @@ export const setContentType = ({ commit, getters }, type) => {
   commit('setConfig', newConfig);
 };
 
-export const setDefaultActiveViews = async ({ commit, getters }) => {
+export const setDefaultActiveViews = async ({ commit, getters }, bookmark = true) => {
   const { config } = getters;
   const activeViews = [];
 
@@ -325,7 +333,11 @@ export const setDefaultActiveViews = async ({ commit, getters }) => {
     activeViews[panelIndex] = defaultViewIndex;
   });
 
-  await BookmarkService.updatePanels(activeViews);
+  if (bookmark) await BookmarkService.updatePanels(activeViews);
 
   commit('config/setActiveViews', activeViews, { root: true });
+};
+
+export const setInstanceId = ({ commit }, id) => {
+  commit('config/setInstanceId', id);
 };

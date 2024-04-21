@@ -1,31 +1,29 @@
 <template>
-  <q-list class="item-content">
-    <q-item
+  <div class="annotations-list t-overflow-auto">
+    <div
       v-for="annotation in configuredAnnotations"
       :data-annotation-id="annotation.id"
       :key="annotation.id"
-      :class="$q.dark.isActive ? { 'bg-grey-7 active': isActive(annotation) } : { 'bg-grey-4 active': isActive(annotation) }"
-      class="q-pa-sm q-pl-xs q-mb-xs"
-      :clickable="!isText(annotation)"
-      padding="xs"
+      class="item"
+      :class="[
+        't-py-2 t-px-3 t-mb-1 t-rounded-md',
+        { 'hover:t-bg-gray-200 dark:hover:t-bg-gray-600 t-cursor-pointer': !isText(annotation) && !isActive(annotation) },
+        { 't-bg-gray-300 dark:t-bg-gray-600 active': isActive(annotation) }
+      ]"
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
-      <q-item-section avatar class="q-mr-none">
+      <div class="t-flex t-items-center t-space-x-2">
         <AnnotationIcon v-if="!isText(annotation)" :name="getIconName(annotation.body['x-content-type'])" />
-      </q-item-section>
-
-      <q-item-section>
         <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
         <span v-html="annotation.body.value" />
-      </q-item-section>
-    </q-item>
-  </q-list>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
+import { computed, watch } from 'vue';
 import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
-
-import { computed } from 'vue';
 
 const props = defineProps({
   activeAnnotation: {
@@ -60,23 +58,3 @@ function getIconName(typeName) {
   return props.types.find(({ name }) => name === typeName)?.icon || 'biPencilSquare';
 }
 </script>
-
-<style lang="scss" scoped>
-.q-item__section--avatar {
-  min-width: 24px;
-}
-
-.q-item__section--side {
-  padding-right: unset;
-}
-
-.q-item {
-  min-height: unset;
-  user-select: none;
-  transition-property: background-color;
-}
-
-.item-content {
-  overflow: auto;
-}
-</style>

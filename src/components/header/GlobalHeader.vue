@@ -1,30 +1,28 @@
 <template>
   <div
-    class="header q-pa-md q-px-lg-lg"
-    :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'"
     v-if="show"
+    class="header t-flex t-flex-col t-p-4 lg:t-px-6 t-mb-4"
   >
-    <div class="flex items-start title-container">
+    <div class="t-flex t-items-start sm:t-flex-row t-flex-col-reverse t-mt-2">
       <TitleBar :item="item"/>
-      <div class="q-ml-auto">
+      <div class="t-ml-auto">
         <Tools/>
       </div>
     </div>
-    <div v-if="item" class="flex column-xs row-md">
+    <div v-if="item" class="t-flex t-items-center">
       <Navbar v-if="showNavbar"/>
-      <PanelsToggle v-if="showPanelsToggle" class="flex justify-sm-end col q-mt-md q-mt-md-none" />
+      <PanelsToggle v-if="showPanelsToggle" class="sm:t-ml-auto t-mt-4 md:t-mt-0" />
     </div>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import Navbar from '@/components/header/Navbar.vue';
 import TitleBar from '@/components/header/TitleBar.vue';
 import PanelsToggle from '@/components/header/PanelsToggle.vue';
 import Tools from '@/components/header/Tools.vue';
-
-import { computed } from 'vue';
-import { useStore } from 'vuex';
 
 const props = defineProps({
   configErrorTitle: {
@@ -40,13 +38,5 @@ const manifests = computed(() => store.getters['contents/manifests']);
 const config = computed(() => store.getters['config/config']);
 const item = computed(() => store.getters['contents/item']);
 const showNavbar = computed(() => config.value?.header?.navigation || true);
-const showPanelsToggle = computed(() => config.value?.header?.panelsToggle !== undefined ? config.value?.header?.panelsToggle : true);
+const showPanelsToggle = computed(() => (config.value?.header?.panelsToggle !== undefined ? config.value?.header?.panelsToggle : true));
 </script>
-
-<style lang="scss" scoped>
-.title-container {
-  @media (max-width: $breakpoint-sm-max) {
-    flex-direction: column-reverse;
-  }
-}
-</style>
