@@ -1,24 +1,17 @@
 <template>
-  <q-list dense class="q-mb-lg">
-    <q-item class="no-padding">
-      <q-item-section>
-        <h3>{{ $t(labels.item) }} {{ number }} / {{ total }}</h3>
-      </q-item-section>
-    </q-item>
-
-    <q-item v-for="(meta, idx) in metadata" :key="idx" class="q-mb-sm no-padding">
-      <q-item-section class="q-mb-sm no-padding">
-        <MetadataItem :item="meta"/>
-      </q-item-section>
-    </q-item>
-  </q-list>
+  <div class="item-metadata t-mb-7">
+    <h3 class="t-text-xl t-font-semibold t-mb-2">{{ $t(labels.item) }} {{ number }} / {{ total }}</h3>
+    <div v-for="(meta, idx) in metadata" :key="idx" class="t-mb-4">
+      <MetadataItem :item="meta"/>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 const store = useStore();
 
@@ -27,7 +20,7 @@ const itemUrl = computed(() => store.getters['contents/itemUrl']);
 const manifest = computed(() => store.getters['contents/manifest']);
 const itemsCount = computed(() => manifest.value?.sequence.length);
 const labels = computed(() => store.getters['config/config'].labels);
-const number = computed(() => manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) + 1 : 1);
+const number = computed(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) + 1 : 1));
 const total = computed(() => itemsCount.value ?? 1);
 const metadata = computed(() => (
   [

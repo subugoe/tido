@@ -1,64 +1,57 @@
 <template>
-  <div class="tido">
-    <div class="viewport column" :class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-3'">
+  <div class="tido t-h-full t-flex t-flex-col t-bg-gray-200 dark:t-bg-gray-900 t-text-gray-800 dark:t-text-gray-200">
       <GlobalHeader/>
-      <div v-if="ready" class="root">
-        <PanelsWrapper/>
-      </div>
-      <div v-else class="error-container q-pa-md q-pa-lg-lg q-pt-xl">
-        <div class="full-height full-width flex items-center justify-center column" style="border: dashed 3px #ccc; border-radius: 6px">
+      <PanelsWrapper v-if="ready"/>
+      <div v-else class="t-flex t-relative t-flex-1 t-justify-center t-items-center t-p-4 lg:t-p-6">
+        <div class="t-h-full t-w-full t-flex t-items-center t-justify-center t-border-dashed t-border-[3px] t-border-gray-400 dark:t-border-dashed dark:t-border-gray-600 t-rounded-md">
           <template v-if="isLoading">
-            <Loading background="none"></Loading>
+            <Loading class="t-text-6xl"></Loading>
           </template>
           <template v-else>
             <Notification
               v-if="errorMessage"
               :message="errorMessage"
               :title="errorTitle"
-              class="q-ma-md-xl"
               type="warning"
             />
             <template v-else>
-              <q-icon :name="emptyIcon" size="64px" color="grey-5"></q-icon>
-              <span  class="text-grey-6 text-bold q-mt-md">{{ $t('no_entrypoint_available') }}</span>
+              <div class="t-flex t-flex-col t-items-center">
+                <BaseIcon name="book" class="t-w-16 t-h-16" />
+                <span  class="t-font-bold t-mt-4 dark:t-text-gray-400">{{ $t('no_entrypoint_available') }}</span>
+              </div>
             </template>
           </template>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'TIDO',
-}
+};
 </script>
 
 <script setup>
-import { setCssVar } from 'quasar';
-import { biBook } from '@quasar/extras/bootstrap-icons';
+import {
+  computed, inject, onMounted, ref,
+} from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
 import { delay } from '@/utils';
 import PanelsWrapper from '@/components/panels/PanelsWrapper.vue';
 import Notification from '@/components/Notification.vue';
 import Loading from '@/components/Loading.vue';
-
-import { computed, inject, onMounted, ref } from 'vue';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
-import { useI18n } from 'vue-i18n';
-import { i18n } from '@/i18n';
+import BaseIcon from '@/components/base/BaseIcon.vue';
+import { initUseDark } from '@/utils/is-dark';
 
 const store = useStore();
-const $q = useQuasar();
 const { t, locale: i18nLocale } = useI18n();
 
 const errorTitle = ref('');
 const errorMessage = ref('');
 const isLoading = ref(true);
-
-const emptyIcon = biBook;
 
 const ready = computed(() => {
   const { collection: collectionUrl, manifest: manifestUrl } = config.value;
@@ -87,10 +80,21 @@ const collection = computed(() => store.getters['contents/collection']);
 const item = computed(() => store.getters['contents/item']);
 const manifest = computed(() => store.getters['contents/manifest']);
 const manifests = computed(() => store.getters['contents/manifests']);
+initUseDark(config.value.container);
 
 onMounted(async () => {
   isLoading.value = true;
-  $q.dark.set('auto');
+
+  // $q.dark.set('auto');
+
+  // Whenever the user explicitly chooses light mode
+  // localStorage.theme = 'light';
+  //
+  // // Whenever the user explicitly chooses dark mode
+  // localStorage.theme = 'dark';
+  //
+  // // Whenever the user explicitly chooses to respect the OS preference
+  // localStorage.removeItem('theme');
 
   await loadConfig();
 
@@ -99,24 +103,19 @@ onMounted(async () => {
     return;
   }
 
+  // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+  // if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  //   document.querySelector(config.value.container).classList.add('dark');
+  // } else {
+  //   document.querySelector(config.value.container).classList.remove('dark');
+  // }
+
   i18nLocale.value = config.value.lang;
 
   const colorsForceMode = config.value.colors.forceMode;
 
   if (colorsForceMode && colorsForceMode !== 'none') {
-    $q.dark.set(colorsForceMode === 'dark');
-  }
-
-  if (config.value?.colors?.primary) {
-    setCssVar('primary', config.value.colors.primary);
-  }
-
-  if (config.value?.colors?.secondary) {
-    setCssVar('secondary', config.value.colors.secondary);
-  }
-
-  if (config.value?.colors?.accent) {
-    setCssVar('accent', config.value.colors.accent);
+    document.querySelector(config.value.container).classList.add('t-dark');
   }
 
   await init();
@@ -131,7 +130,7 @@ async function loadConfig() {
     await store.dispatch('config/load', config);
   } catch ({ title, message }) {
     errorTitle.value = t('config_error');
-    errorMessage.value = message;
+    errorMessage.value = t(message);
   }
 }
 async function getManifest(url) {
@@ -142,6 +141,7 @@ async function getItem(url) {
 }
 async function init() {
   const { collection, manifest, item } = config.value;
+
   try {
     // We want to preload all required data that the components need.
     // If a collection is given we ignore the manifest setting
@@ -154,47 +154,14 @@ async function init() {
       await getManifest(manifest);
     } else {
       // eslint-disable-next-line no-console
-      throw new Error(i18n.global.t('no_entrypoint_available'));
+      throw new Error(t('no_entrypoint_available'));
     }
   } catch (e) {
     await delay(1000);
-    errorTitle.value = e.title || 'unknown_error';
-    errorMessage.value = e.message || 'please_try_again_later';
+    errorTitle.value = e.title || t('unknown_error');
+    errorMessage.value = e.message || t('please_try_again_later');
   } finally {
     isLoading.value = false;
   }
 }
 </script>
-
-<style scoped lang="scss">
-.root {
-  display: flex;
-  flex: 1;
-  font-size: 16px;
-  overflow: hidden;
-
-  @media (max-width: $breakpoint-sm-max) {
-    flex-direction: column;
-    height: auto;
-    overflow: auto;
-  }
-}
-
-.viewport {
-  flex: 1;
-  @media (max-width: $breakpoint-sm-max) {
-    height: auto;
-    overflow: auto;
-  }
-}
-
-.error-container {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  align-items: center;
-  height: 100%;
-}
-</style>

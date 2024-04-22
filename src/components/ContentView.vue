@@ -1,6 +1,6 @@
 <template>
-  <div class="content-view q-px-md q-pt-md">
-    <div v-if="notificationMessage" class="q-pa-sm">
+  <div class="content-view t-px-4 t-pt-4">
+    <div v-if="notificationMessage" class="t-p-2">
       <Notification
         :message="$t(notificationMessage)"
         :notification-colors="config.notificationColors"
@@ -9,7 +9,7 @@
       />
     </div>
 
-    <div id="text-content" class="custom-font item-content">
+    <div id="text-content" class="custom-font item-content t-flex t-flex-col t-flex-1 t-overflow-auto">
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle" />
     </div>
@@ -17,10 +17,12 @@
 </template>
 
 <script setup>
-import Notification from '@/components/Notification.vue';
 
-import { computed, readonly, ref, watch } from 'vue';
+import {
+  computed, readonly, ref, watch,
+} from 'vue';
 import { useStore } from 'vuex';
+import Notification from '@/components/Notification.vue';
 import { request } from '@/utils/http';
 import { domParser, delay } from '@/utils';
 
@@ -49,6 +51,7 @@ watch(
   { immediate: true },
 );
 async function loadContent(url) {
+  console.log(url)
   content.value = '';
   try {
     if (!url) {
@@ -62,8 +65,10 @@ async function loadContent(url) {
 
     const dom = domParser(data);
     content.value = dom.documentElement.innerHTML;
+
     setTimeout(async () => {
       emit('loading', false);
+
       const root = document.getElementById('text-content');
       store.dispatch('annotations/addHighlightAttributesToText', root);
       await store.dispatch('annotations/addHighlightClickListeners');

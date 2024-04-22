@@ -1,119 +1,165 @@
+import { commonSelectors } from "../support/globals";
+
+
+const selectors = {
+  ...commonSelectors,
+  sectionTitle: 'h3',
+  title: 'h4',
+  collection: '.collection-metadata',
+  manifest: '.manifest-metadata',
+  item: '.item-metadata'
+}
 describe('Metadata', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:2222/ahiqar-arabic-karshuni-local.html')
+    cy.visit('/ahiqar-arabic-karshuni-local.html')
       .get('#text-content')
       .should('be.visible')
-      .get('.panels-target > .item:nth-child(1) .q-tabs__content .q-tab')
+      .get(selectors.panel1)
+      .find(selectors.tabs)
       .eq(1)
       .click()
-      .get('.metadata-view')
+      .get(selectors.metadataView)
       .should('be.visible');
   });
 
   it('Should display collection info', () => {
     cy
-      .get('.metadata-view')
-      .find('.q-list:first-child .q-item:nth-child(1)')
+      .get(selectors.metadataView)
+      .find(selectors.collection)
+      .find(selectors.sectionTitle)
+      .first()
       .contains('Collection');
     cy
-      .get('.metadata-view')
-      .find('.q-list:first-child .q-item:nth-child(2)')
+      .get(selectors.metadataView)
+      .find(selectors.collection)
+      .find(selectors.title)
+      .first()
       .should('contain', 'Title')
-      .and('contain', 'Textual witnesses in Arabic and Karshuni');
+      .next()
+      .should('contain', 'Textual witnesses in Arabic and Karshuni');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:first-child .q-item:nth-child(3)')
+      .get(selectors.metadataView)
+      .find(selectors.collection)
+      .find(selectors.title)
+      .eq(1)
       .should('contain', 'Description')
-      .and('contain', 'Arabic/Karshuni collection for the Ahiqar project. Funded by DFG, 2018–2021, University of Göttingen');
+      .next()
+      .should('contain', 'Arabic/Karshuni collection for the Ahiqar project. Funded by DFG, 2018–2021, University of Göttingen');
   });
 
   it('Should display manifest info', () => {
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(2) .q-item:nth-child(1)')
+      .get(selectors.metadataView)
+      .find(selectors.manifest)
+      .find(selectors.sectionTitle)
       .contains('Manuscript 1 / 30');
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(2) .q-item:nth-child(2)')
+      .get(selectors.metadataView)
+      .find(selectors.manifest)
+      .find(selectors.title)
+      .eq(0)
       .should('contain', 'Label')
+      .next()
       .and('contain', 'Cod. Arab. 236 Copenhagen');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(2) .q-item:nth-child(3)')
-      .contains('License');
-
-    cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(2) .q-item:nth-child(3)')
+      .get(selectors.metadataView)
+      .find(selectors.manifest)
+      .find(selectors.title)
+      .eq(1)
+      .contains('License')
+      .next()
       // .find('a[href="https://creativecommons.org/licenses/by-sa/4.0/legalcode"]')
       .contains('CC-BY-SA-4.0');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(2) .q-item:nth-child(4)')
+      .get(selectors.metadataView)
+      .find(selectors.manifest)
+      .find(selectors.title)
+      .eq(2)
       .should('contain', 'Date of creation')
-      .and('contain', '1670');
+      .next()
+      .should('contain', '1670');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(2) .q-item:nth-child(5)')
+      .get(selectors.metadataView)
+      .find(selectors.manifest)
+      .find(selectors.title)
+      .eq(3)
       .should('contain', 'Place of origin')
+      .next()
       .and('contain', 'Aleppo, Syria');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(2) .q-item:nth-child(6)')
+      .get(selectors.metadataView)
+      .find(selectors.manifest)
+      .find(selectors.title)
+      .eq(4)
       .should('contain', 'Current location')
-      .and('contain', 'Royal Danish Library, Denemark');
+      .next()
+      .should('contain', 'Royal Danish Library, Denemark');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(2) .q-item:nth-child(7)')
-      .contains('TEI document');
+      .get(selectors.metadataView)
+      .find(selectors.manifest)
+      .find(selectors.title)
+      .eq(5)
+      .should('contain', 'TEI document')
+      .next()
+      .should('contain', 'via REST');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(2) .q-item:nth-child(7)')
-      // .find('a[href="https://ahiqar.uni-goettingen.de/rest/textgrid/data/3r1bv.xml"]')
-      .contains('via REST');
-
-    cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(2) .q-item:nth-child(8)')
+      .get(selectors.metadataView)
+      .find(selectors.manifest)
+      .find(selectors.title)
+      .eq(6)
       .should('contain', 'Editor')
-      .and('contain', 'Dr. Aly Elrefaei');
+      .next()
+      .should('contain', 'Dr. Aly Elrefaei');
   });
 
   it('Should display item info', () => {
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(3) .q-item:nth-child(1)')
+      .get(selectors.metadataView)
+      .find(selectors.item)
+      .find(selectors.sectionTitle)
       .contains('Sheet 1 / 81');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(3) .q-item:nth-child(2)')
+      .get(selectors.metadataView)
+      .find(selectors.item)
+      .find(selectors.title)
+      .eq(0)
       .should('contain', 'Label')
-      .and('contain', '2a');
+      .next()
+      .should('contain', '2a');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(3) .q-item:nth-child(3)')
+      .get(selectors.metadataView)
+      .find(selectors.item)
+      .find(selectors.title)
+      .eq(1)
       .should('contain', 'Language')
-      .and('contain', 'ara,eng');
+      .next()
+      .should('contain', 'ara,eng');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(3) .q-item:nth-child(4)')
+      .get(selectors.metadataView)
+      .find(selectors.item)
+      .find(selectors.title)
+      .eq(2)
       .should('contain', 'Image License')
-      .and('contain', 'Copyright');
+      .next()
+      .should('contain', 'Copyright');
 
     cy
-      .get('.metadata-view')
-      .find('.q-list:nth-child(3) .q-item:nth-child(5)')
+      .get(selectors.metadataView)
+      .find(selectors.item)
+      .find(selectors.title)
+      .eq(3)
       .should('contain', 'Image Notes')
-      .and('contain', 'Copyright Royal Danish Library. No reuse allowed.');
+      .next()
+      .should('contain', 'Copyright Royal Danish Library. No reuse allowed.');
   });
 });

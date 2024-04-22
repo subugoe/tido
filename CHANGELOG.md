@@ -151,7 +151,7 @@ All notable changes to this project will be documented in this file. See [standa
 * add "zero config" behaviour, add default config with initial panels setup, load collection, manifest or item from url ([44a433e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/44a433ec88e77b299fc7dc7f4f8f87381ec9ea25))
 * add Axios for http service, remove unused utils and mixins, ([113a90e](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/113a90ec079a9e43390e616d81c4189729c8f301))
 * add default manifest label at tree ([069b035](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/069b03565ce4407fc5fec678d9b3887756e94355))
-* add icon util ([67c657b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/67c657b7b8c63391e8dbe56a5ea8de7cc24b8d60))
+* add index util ([67c657b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/67c657b7b8c63391e8dbe56a5ea8de7cc24b8d60))
 * add new panels rendering that renders views as tabs and dynamic panel actions ([2dbecd5](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/2dbecd5cdf358ad7b32d4731d4b9c297123df9cc))
 * add scrollbar styles, minor design updates ([af15324](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/af15324f76afa5f454e9907a94bfb7f02fab5117))
 * design update ([4af7c85](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/4af7c859eeae3d07a4890d27a01a994ed303b180))
@@ -173,7 +173,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* dark mode nav buttons primary, svg icon underline ([5aedfb8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5aedfb8a525ea2b29e2a79ec9858e584367fbe5d))
+* dark mode nav buttons primary, svg index underline ([5aedfb8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/5aedfb8a525ea2b29e2a79ec9858e584367fbe5d))
 * discover first content type if no config is present ([f1bb8a7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f1bb8a77df3fdd4a3325232d2c914b97d49c64b5))
 * highlighting all annotation when switching tab ([f86e4fc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f86e4fc3fc4267b643755925b8640e6667b4daab))
 * main loading spinner ([bfbfe13](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/bfbfe1316d9fc9d5fb465039d81c9dbb902e3185))
@@ -593,7 +593,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Chore
 
-* change app info icon ([dfbcad0](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dfbcad082cf1df2055cf97bd566309fc7e0b26d2)), closes [#351](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/351)
+* change app info index ([dfbcad0](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dfbcad082cf1df2055cf97bd566309fc7e0b26d2)), closes [#351](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/351)
 
 
 ### Continuos Integration
@@ -633,7 +633,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Refactoring
 
 * add missing colon ([ed28000](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/ed28000b31d3163c22362fffb6a9e13f610313d3))
-* remove indentation if there is no icon for annotations and update readme ([15bf470](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/15bf470af2206aee0ee5d784256da97ae8fb5e80))
+* remove indentation if there is no index for annotations and update readme ([15bf470](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/15bf470af2206aee0ee5d784256da97ae8fb5e80))
 * update index.html and readME files ([c20a9f8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/c20a9f8bb36bc17a4ccb69104bf6a0967c4b528d))
 * update logic to display erlauterung for text ([9481aea](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/9481aead3f3bf2b9395b1667ad30d9329aab96ac))
 * update logic to display notes and notification message ([dc2e175](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/dc2e175cb5086b7dfa5a2ea8aee892e4308bab7a))
@@ -692,7 +692,7 @@ All notable changes to this project will be documented in this file. See [standa
 * dark mode contrast issues with text highlighting ([0a29094](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/0a290942a56b44de44a347c05387e84acfa8a34a))
 * header responsiveness ([8c9c7a6](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8c9c7a659cc80393986e2775f0faa4cd18c71064))
 * header responsivness ([17424e3](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/17424e3871e87d428766ef7fbc344fa2ecbeb389))
-* options icon displayed in it's respectie annotation panel when changed position ([05506a8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/05506a81bd53b1ba1aa93e9c47310c2499a5c390))
+* options index displayed in it's respectie annotation panel when changed position ([05506a8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/05506a81bd53b1ba1aa93e9c47310c2499a5c390))
 * panels responsivness ([024a060](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/024a060fe4b8121c54bfc7b5ea02c613bc505ad3))
 
 
@@ -1075,7 +1075,7 @@ All notable changes to this project will be documented in this file. See [standa
 * adopt the styling from the text panel (content.vue) ([e16bed7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/e16bed7a91984af7b77ea02de315208bad214f81))
 * basic "style" (fix typo) ([afaa1fc](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/afaa1fca2b8f4150aef22a7a28923fa38b636dbc))
 * changed color style to use quasar variable ([24b230d](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/24b230de819a9c2a2629fa5e3096e36a12f0a022))
-* improve icon spacing of annotations in text panel ([d4ffdb8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d4ffdb8b44c1b9a5f8bd4384a250416fae64c66b))
+* improve index spacing of annotations in text panel ([d4ffdb8](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d4ffdb8b44c1b9a5f8bd4384a250416fae64c66b))
 * improve var name ([7bea027](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/7bea0276573e7ccfaf923b03d1d48e4541536a75))
 * introduce new folder for several annotation components ([8cf0e2f](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8cf0e2f4c55f4f6b044eadd75df030e19dd7e6b8))
 
@@ -1147,7 +1147,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Styling
 
-* adjust icon size of annotations in text panel ([fe55b46](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/fe55b46c44c4c818afc3b6dfaa0dab2827e30671))
+* adjust index size of annotations in text panel ([fe55b46](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/fe55b46c44c4c818afc3b6dfaa0dab2827e30671))
 * adjust padding in tree view ([9ce0393](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/9ce0393cd6d3c0945b24c4faaf1efca1e1bca913)), closes [#255](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/255)
 * clean up panel toggles style ([df3fec1](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/df3fec110586857f3eaf2e98ad668a3d515fe83f)), closes [#258](https://gitlab.gwdg.de/subugoe/emo/tido/-/issues/258)
 * mark annotations in text panel ([b2bc222](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/b2bc222e8034419ea4ac77da33a67908073029c0))
@@ -1267,7 +1267,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 * add no-padding ([8dcb61a](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/8dcb61a244f82691d6aa45195744cf581a8d443a))
 * added a style class in metadata panel ([a55825b](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/a55825b19d279c378813617da33fd0a96b190f0e))
-* adjust icon colors in header ([323d5f9](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/323d5f9906264d60fd6ff4189e0efea9bd3f6484))
+* adjust index colors in header ([323d5f9](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/323d5f9906264d60fd6ff4189e0efea9bd3f6484))
 * don't use CSS style ([6035fb7](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/6035fb73c7e162a0bf43b4e0ddc44c55be833028))
 * reposition icons in header ([a195f90](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/a195f90a9d269e8f3822262741c860238625ed0f))
 * save space in metadata panel ([45581fd](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/45581fda3b04ec9562399abfb916dd414626abb8))
@@ -1470,7 +1470,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 * add stmt to CHANGELOG ([d679512](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/d679512f008b1e681810dd7ac56b76302f4295e9))
 * remove unnecessary passages from GitLab templates, add passage concerning README ([f75c118](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/f75c118aedf02000ae6a09988e9f0f1ae3f58476))
-* revert icon state and adjust quasar.conf according to new product name ([71145a0](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/71145a07741ff6a5b6aa777dd7892cce168854c5))
+* revert index state and adjust quasar.conf according to new product name ([71145a0](https://gitlab.gwdg.de/subugoe/emo/tido/-/commit/71145a07741ff6a5b6aa777dd7892cce168854c5))
 
 ## [1.4.5] - 2020-11-02
 
@@ -1768,7 +1768,7 @@ this should improve the development workflow for all stakeholders.
 ### Added
 
 - add a contribution guideline
-- added titles in the footer for Language- and Info-icon
+- added titles in the footer for Language- and Info-index
 
 ### Changed
 
@@ -1801,7 +1801,7 @@ If used in the latter case, the language toggle shows up in the footer and vice 
 
 ### Changed
 
-- toggle fs icon on fullscreen change
+- toggle fs index on fullscreen change
 
 ## [0.0.1] - 2020-05-14
 
