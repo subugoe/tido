@@ -43,4 +43,8 @@ const props = defineProps({
   display: flex;
   padding-right: 4px;
 }
+
+.metadata-value {
+  margin-left:10px;
+}
 </style>
