@@ -174,6 +174,8 @@ export const initManifest = async ({
 
 export const initItem = async ({ commit, dispatch, getters }, url) => {
   let item = '';
+  console.log('yo')
+
   try {
     item = await request(url);
   } catch (err) {
@@ -187,7 +189,9 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
   }
   const manifests = getters.manifests ? getters.manifests : [];
   // here we have item query -> we should extract the manifest index and the item index from the query and then give it as a parameter to updateItemQuery()
+
   const i = await dispatch('getItemIndex', url);
+  console.log(i)
   const m = findActiveManifestIndex(manifests, url);
 
   const query = manifests.length > 0 ? {

@@ -47,7 +47,7 @@ describe('Annotation', () => {
       cy
         .get(selectors.list)
         .should('be.visible')
-        .get('.panels-target > .item:nth-child(4) .q-tabs__content .q-tab')
+        .get(selectors.tab)
         .eq(1)
         .click()
         .wait(400) // wait for tab switch transition

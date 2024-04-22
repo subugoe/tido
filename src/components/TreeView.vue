@@ -162,8 +162,8 @@ async function onNodeExpand(node) {
 }
 
 async function onNodeSelect(node) {
+  console.log(node.key)
   await store.dispatch('contents/initItem', node.key);
-
   if (currentManifest.value.id === node.parent) return;
 
   await store.dispatch('contents/initManifest', node.parent);
