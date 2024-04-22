@@ -188,10 +188,11 @@ describe('Content - Multiple Tabs', () => {
 
 describe('Content - Multiple Tabs with different manifest', () => {
   it('Should switch to first tab when switch manifest', () => {
-   cy.visit(`http://localhost:2222/ahiqar-arabic-karshuni-local.html?tido=m21_i0_p0.0-1.0-2.0-3.0`)
+   cy.visit(`/ahiqar-arabic-karshuni-local.html?tido=m21_i0`)
      .get(selectors.panel3)
      .find(selectors.tabs)
-      .click();
+     .eq(1)
+     .click();
 
     cy
       .get(selectors.prevButton)

@@ -5,9 +5,8 @@ import { loadCss, loadFont } from '../../utils';
 
 export const getItemIndex = async ({ getters }, itemUrl) => {
   const { manifest } = getters;
-  const items = manifest.sequence;
-  const itemIndex = items.findIndex((item) => item.id === itemUrl);
-  return itemIndex;
+  if (!manifest) return -1;
+  return manifest.sequence.findIndex((item) => item.id === itemUrl);
 };
 
 function findActiveManifestIndex(manifests = [], itemUrl = null) {
@@ -174,7 +173,6 @@ export const initManifest = async ({
 
 export const initItem = async ({ commit, dispatch, getters }, url) => {
   let item = '';
-  console.log('yo')
 
   try {
     item = await request(url);
@@ -191,7 +189,6 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
   // here we have item query -> we should extract the manifest index and the item index from the query and then give it as a parameter to updateItemQuery()
 
   const i = await dispatch('getItemIndex', url);
-  console.log(i)
   const m = findActiveManifestIndex(manifests, url);
 
   const query = manifests.length > 0 ? {

@@ -154,7 +154,7 @@ async function init() {
       await getManifest(manifest);
     } else {
       // eslint-disable-next-line no-console
-      throw new Error(i18n.global.t('no_entrypoint_available'));
+      throw new Error(t('no_entrypoint_available'));
     }
   } catch (e) {
     await delay(1000);

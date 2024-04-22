@@ -162,12 +162,14 @@ async function onNodeExpand(node) {
 }
 
 async function onNodeSelect(node) {
-  console.log(node.key)
-  await store.dispatch('contents/initItem', node.key);
-  if (currentManifest.value.id === node.parent) return;
 
-  await store.dispatch('contents/initManifest', node.parent);
-  await store.dispatch('config/setDefaultActiveViews');
+  if (currentManifest.value.id !== node.parent) {
+    // If we selected an item from a different manifest
+    await store.dispatch('contents/initManifest', node.parent);
+    await store.dispatch('config/setDefaultActiveViews');
+  }
+
+  await store.dispatch('contents/initItem', node.key);
 }
 
 function scrollSelectedIntoView() {
