@@ -9,14 +9,13 @@
       :toggle="toggle"
       :types="types"
     />
-    <div v-else class="t-pa-4">
-      <Notification
-        :message="$t(message)"
-        :notification-colors="config.notificationColors"
-        :title="$t('no_annotations_available')"
-        type="info"
-      />
-    </div>
+    <Notification
+      v-else
+      :message="$t(message)"
+      :notification-colors="config.notificationColors"
+      :title="$t('no_annotations_available')"
+      type="info"
+    />
   </div>
 </template>
 

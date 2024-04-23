@@ -12,10 +12,6 @@ import BaseIcon from '@/components/base/BaseIcon.vue';
 const props = defineProps({
   name: String,
 });
-
-// const iconName = computed(() => (
-//   isUrl(props.name) ? `img:${props.name}` : getIcon(props.name)
-// ));
 </script>
 
 <style scoped>
