@@ -9,7 +9,7 @@ stages:
   - deploy
 
 build:
-  image: node:16
+  image: node:18
   stage: build
   script:
     - bash .ci-scripts/build.sh
@@ -19,7 +19,7 @@ build:
     expire_in: 1 mos
 
 test:e2e:
-  image: cypress/browsers:node16.13.2-chrome100-ff98
+  image: cypress/browsers:node-20.12.2-chrome-124.0.6367.60-1-ff-125.0.2-edge-124.0.2478.51-1
   stage: test:e2e
   except:
     - main
