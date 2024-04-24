@@ -14,51 +14,11 @@ export function addHighlightToElements(selector, root, annotationId) {
     return;
   }
 
-  // const strippedAnnotationId = stripAnnotationId(annotationId);
-
   selectedElements.forEach((element) => {
     element.setAttribute('data-annotation', true);
     Utils.addToAttribute(element, 'data-annotation-ids', annotationId);
-    // element.classList.add(strippedAnnotationId);
     element.setAttribute('data-annotation-level', -1);
   });
-}
-
-export function addRangeHighlightAttributes(id, root) {
-  const start = root.querySelector(`[data-target="${id}_start"]`);
-  const end = root.querySelector(`[data-target="${id}_end"]`);
-
-  let started = false;
-  let ended = false;
-
-  function replaceRecursive(element) {
-    if (!element.childNodes) return;
-
-    [...element.childNodes].forEach((childNode) => {
-      if (childNode === start) started = true;
-      if (childNode === end) ended = true;
-
-      if (ended) return;
-
-      if (childNode.nodeName === 'SPAN' && childNode.getAttribute('data-annotation') && started) {
-        Utils(id);
-      }
-
-      if (childNode.nodeName === '#text') {
-        if (started) {
-          if (childNode.textContent && childNode.textContent.trim()) {
-            element.classList.add(id);
-            element.setAttribute('data-annotation', true);
-          }
-        }
-      } else {
-        replaceRecursive(childNode);
-      }
-    });
-  }
-
-  replaceRecursive(root);
-  return root;
 }
 
 export const createSvgIcon = (name) => {

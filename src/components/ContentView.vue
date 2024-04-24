@@ -39,7 +39,6 @@ const content = ref('');
 const errorTextMessage = ref(null);
 const notificationMessage = readonly(errorTextMessage);
 
-const manifest = computed(() => store.getters['contents/manifest']);
 const config = computed(() => store.getters['config/config']);
 const contentStyle = computed(() => ({
   fontSize: `${props.fontSize}px`,
@@ -51,7 +50,6 @@ watch(
   { immediate: true },
 );
 async function loadContent(url) {
-  console.log(url)
   content.value = '';
   try {
     if (!url) {

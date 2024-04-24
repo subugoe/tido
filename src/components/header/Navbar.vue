@@ -34,7 +34,6 @@ const { t } = useI18n();
 
 const manifest = computed(() => store.getters['contents/manifest']);
 const manifests = computed(() => store.getters['contents/manifests']);
-const item = computed(() => store.getters['contents/item']);
 const itemUrl = computed(() => store.getters['contents/itemUrl']);
 const itemIndex = computed(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) : -1));
 const hasPrev = computed(() => {
@@ -105,17 +104,3 @@ function next() {
   store.dispatch('contents/initItem', itemUrl);
 }
 </script>
-
-<style lang="scss" scoped>
-//button {
-//  font-size: 12px !important;
-//}
-//
-//.q-input {
-//  width: 100%;
-//  @media (min-width: 600px) {
-//    margin-right: 8px;
-//    width: 160px;
-//  }
-//}
-</style>

@@ -162,7 +162,6 @@ async function onNodeExpand(node) {
 }
 
 async function onNodeSelect(node) {
-
   if (currentManifest.value.id !== node.parent) {
     // If we selected an item from a different manifest
     await store.dispatch('contents/initManifest', node.parent);

@@ -22,7 +22,6 @@
           icon="reset"
           @click="reset"
         />
-
       </BaseDropdown>
     </template>
     <template v-else>
@@ -42,7 +41,6 @@
             {{ $t(label) }}
           </label>
         </div>
-
         <BaseButton
           v-if="toggles.length > 0"
           :class="'text-' + resetColor"
@@ -125,25 +123,3 @@ function handleToggleTitle(idx) {
     : `${t('show')} ${titleUpper} Panel`;
 }
 </script>
-
-<style lang="scss">
-.reset-btn .q-icon {
-  font-size: 1.2rem;
-  padding-right: 0.5rem;
-}
-
-.panels-toggle.col {
-  width: unset !important;
-  padding: unset !important;
-}
-
-:deep(.q-checkbox) {
-  flex-shrink: unset !important;
-  width: unset !important;
-  max-width: unset !important;
-}
-
-.q-btn .q-icon.on-right {
-  margin-left: 12px;
-}
-</style>

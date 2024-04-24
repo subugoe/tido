@@ -1,6 +1,5 @@
 import { commonSelectors } from "../support/globals";
 
-
 const selectors = {
   ...commonSelectors,
   sectionTitle: 'h3',
@@ -9,6 +8,7 @@ const selectors = {
   manifest: '.manifest-metadata',
   item: '.item-metadata'
 }
+
 describe('Metadata', () => {
   beforeEach(() => {
     cy.visit('/ahiqar-arabic-karshuni-local.html')
@@ -70,7 +70,6 @@ describe('Metadata', () => {
       .eq(1)
       .contains('License')
       .next()
-      // .find('a[href="https://creativecommons.org/licenses/by-sa/4.0/legalcode"]')
       .contains('CC-BY-SA-4.0');
 
     cy

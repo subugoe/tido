@@ -49,9 +49,9 @@ const pt = {
 }
 
 function getAriaChecked() {
-  if (props.modelValue === null) return 'mixed'
-  if (props.modelValue === true) return 'true'
-  else return 'false'
+  if (props.modelValue === null) return 'mixed';
+  if (props.modelValue === true) return 'true';
+  else return 'false';
 }
 </script>
 <template>

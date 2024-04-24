@@ -14,5 +14,4 @@ import { isDark } from '@/utils/is-dark';
 import BaseButton from '@/components/base/BaseButton.vue';
 
 const toggleDark = useToggle(isDark);
-
 </script>

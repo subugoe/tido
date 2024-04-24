@@ -127,7 +127,6 @@ export const resetAnnotations = ({ dispatch, getters }) => {
 };
 
 export const initAnnotations = async ({ dispatch }, url) => {
-  // let annotations = null;
   try {
     const annotations = await request(url);
 

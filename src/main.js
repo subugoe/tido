@@ -1,4 +1,5 @@
 import { createApp, h } from 'vue';
+import PrimeVue from 'primevue/config';
 import store from './store';
 import { i18n } from './i18n';
 import App from './App.vue';
@@ -6,7 +7,6 @@ import App from './App.vue';
 import './css/style.css';
 import './css/style.scss';
 import { getRGBColor } from '@/utils/color';
-import PrimeVue from 'primevue/config';
 
 function generateId() {
   return Math.random().toString(36).slice(2, 16);
@@ -57,10 +57,6 @@ window.Tido = function Tido(config = {}) {
 
     mounted = true;
   };
-
-  // this.destroy = () => {
-  //   this.app.$destroy();
-  // };
 
   const container = this.config?.container || '#app';
 

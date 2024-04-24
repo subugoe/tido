@@ -85,30 +85,12 @@ initUseDark(config.value.container);
 onMounted(async () => {
   isLoading.value = true;
 
-  // $q.dark.set('auto');
-
-  // Whenever the user explicitly chooses light mode
-  // localStorage.theme = 'light';
-  //
-  // // Whenever the user explicitly chooses dark mode
-  // localStorage.theme = 'dark';
-  //
-  // // Whenever the user explicitly chooses to respect the OS preference
-  // localStorage.removeItem('theme');
-
   await loadConfig();
 
   if (errorMessage.value) {
     isLoading.value = false;
     return;
   }
-
-  // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-  // if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-  //   document.querySelector(config.value.container).classList.add('dark');
-  // } else {
-  //   document.querySelector(config.value.container).classList.remove('dark');
-  // }
 
   i18nLocale.value = config.value.lang;
 

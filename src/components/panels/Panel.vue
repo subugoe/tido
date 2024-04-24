@@ -108,7 +108,6 @@ import PanelToggleAction from '@/components/panels/actions/PanelToggleAction.vue
 import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import Loading from '@/components/Loading.vue';
 import Notification from '@/components/Notification.vue';
-
 import { findComponent } from '@/utils/panels';
 
 // NOTE: Using `setup()` rather than the recommended `<script setup>`

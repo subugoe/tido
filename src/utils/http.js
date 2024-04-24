@@ -7,10 +7,9 @@ export async function request(url) {
 
     if (contentType.includes('application/json')) {
       return await response.json();
-    } else if (contentType.includes('text')) {
+    } if (contentType.includes('text')) {
       return response.text();
     }
-
   } catch ({ response }) {
     if (!response) {
       throw getError(null, `${i18n.global.t('failed_to_fetch_url')} ${url}`);

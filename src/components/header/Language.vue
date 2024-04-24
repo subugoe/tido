@@ -34,7 +34,6 @@ const langs = ref([
 ]);
 const selectedLang = ref(langs.value[0]);
 const showDropdown = ref(false);
-
 const config = computed(() => store.getters['config/config']);
 
 watch(

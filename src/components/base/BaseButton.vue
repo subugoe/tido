@@ -1,12 +1,7 @@
 <script setup>
-
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '@/../tailwind.config.js';
-
-const fullConfig = resolveConfig(tailwindConfig);
+import { watch } from 'vue';
 
 import BaseIcon from '@/components/base/BaseIcon.vue';
-import { watch } from 'vue';
 
 const props = defineProps({
   text: {

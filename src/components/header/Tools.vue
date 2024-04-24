@@ -7,7 +7,6 @@
 </template>
 
 <script setup>
-
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
@@ -21,6 +20,6 @@ const showLanguageSwitch = computed(() => {
   console.log(config.value);
   return config.value?.header?.languageSwitch !== undefined
     ? config.value.header.languageSwitch
-    : true
+    : true;
 });
 </script>

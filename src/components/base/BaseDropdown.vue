@@ -14,6 +14,7 @@
     <slot/>
   </div>
 </template>
+
 <script setup>
 import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
@@ -46,5 +47,4 @@ watch(
     } else if (backdrop) backdrop.remove();
   },
 );
-
 </script>

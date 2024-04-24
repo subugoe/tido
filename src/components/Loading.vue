@@ -8,13 +8,7 @@
 </template>
 
 <script setup>
-
 const props = defineProps({
   background: String,
 });
-
-function getBackground() {
-  if (props.background === 'none') return 'bg-transparent';
-  return props.background;
-}
 </script>

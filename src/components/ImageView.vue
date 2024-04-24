@@ -9,7 +9,6 @@
 
 <script setup>
 import OpenSeadragon from 'openseadragon';
-
 import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import Notification from '@/components/Notification.vue';
