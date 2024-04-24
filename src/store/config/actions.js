@@ -52,6 +52,15 @@ function validateContainer(value) {
   return !!(value);
 }
 
+function validateHeader(value, defaultValue) {
+  if (!value) return false;
+
+  const defaultKeys = Object.keys(defaultValue);
+  const invalidKeys = Object.keys(value)
+    .filter((key) => defaultKeys.findIndex((defaultKey) => defaultKey === key) === -1);
+  return invalidKeys.length === 0;
+}
+
 function createDefaultActiveViews(panelsConfig) {
   return panelsConfig
     .filter((p) => p.views && p.views.length > 0)
@@ -153,9 +162,9 @@ function createActiveViewsFromPanelsArray(panelsArray) {
   }, {});
 }
 
-function discoverCustomConfig(customConfig) {
+function discoverCustomConfig(customConfig, defaultConfig) {
   const {
-    container, translations, collection, manifest, item, panels, lang, colors,
+    container, translations, collection, manifest, item, panels, lang, colors, header,
   } = customConfig;
 
   return {
@@ -167,6 +176,7 @@ function discoverCustomConfig(customConfig) {
     ...(validatePanels(panels) && { panels }),
     ...(validateLang(lang) && { lang }),
     ...(validateColors(colors) && { colors }),
+    ...(validateHeader(header, defaultConfig.header) && { header }),
   };
 }
 
@@ -240,9 +250,14 @@ function discoverDefaultConfig(config) {
 }
 
 export const load = ({ commit, getters, dispatch }, config) => {
-  const customConfig = discoverCustomConfig(config);
+  const customConfig = discoverCustomConfig(config, getters.config);
   const urlConfig = discoverUrlConfig(config);
   const defaultConfig = discoverDefaultConfig(getters.config);
+
+  const header = {
+    ...defaultConfig.header,
+    ...customConfig.header,
+  };
 
   if (customConfig.panels) {
     // If the custom config provide panels config, we still need to check if it's valid.
@@ -268,6 +283,7 @@ export const load = ({ commit, getters, dispatch }, config) => {
     ...defaultConfig,
     ...customConfig,
     ...urlConfig,
+    header,
   };
 
   const activeViews = urlConfig.activeViews || defaultConfig.activeViews;

@@ -9,7 +9,7 @@
   </BaseButton>
   <div
     v-if="modelValue"
-    class="t-absolute t-top-[110%] t-right-0 t-z-[1000] t-shadow-md t-rounded-md t-p-4 dark:t-bg-gray-800 t-bg-gray-50"
+    class="t-absolute t-top-[110%] t-right-0 t-z-[1000] t-shadow-md t-rounded-md t-p-2 dark:t-bg-gray-800 t-bg-gray-50"
   >
     <slot/>
   </div>
@@ -34,7 +34,7 @@ watch(
       if (!backdrop) {
         const el = document.createElement('div');
         el.id = 'tido-backdrop';
-        el.classList.add('t-fixed', 't-top-0', 't-left-0', 't-z-[999]', 't-w-screen', 't-h-screen', 't-bg-gray-500/30');
+        el.classList.add('t-fixed', 't-top-0', 't-left-0', 't-z-[999]', 't-w-screen', 't-h-screen', 't-bg-gray-400/30');
 
         tido.appendChild(el);
         backdrop = tido.querySelector('#tido-backdrop');

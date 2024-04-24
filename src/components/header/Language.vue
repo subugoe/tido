@@ -1,5 +1,5 @@
 <template>
-  <div class="col-xs-auto">
+  <div class="t-relative">
     <BaseDropdown
       v-model="showDropdown"
       :button-text="$t('change_language')"
@@ -8,6 +8,7 @@
         v-for="lang in langs"
         :key="lang.value"
         :class="{ language: selectedLang === lang.value }"
+        class="t-py-2 t-px-4 hover:t-bg-gray-200 dark:hover:t-bg-gray-600 t-rounded-md"
         @click="handleLanguageChange(lang)"
       >
         {{ lang.label }}

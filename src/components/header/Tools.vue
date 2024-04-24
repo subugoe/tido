@@ -1,5 +1,5 @@
 <template>
-  <div class="t-flex no-wrap t-space-x-2 t-justify-end">
+  <div class="t-flex t-items-center no-wrap t-space-x-2 t-justify-end">
     <Language v-if="showLanguageSwitch" />
     <DarkModeToggle/>
     <SoftwareInfo />
@@ -17,9 +17,10 @@ import DarkModeToggle from '@/components/header/DarkModeToggle.vue';
 const store = useStore();
 
 const config = computed(() => store.getters['config/config']);
-const showLanguageSwitch = computed(() => (
-  config.value?.header?.languageSwitch !== undefined
+const showLanguageSwitch = computed(() => {
+  console.log(config.value);
+  return config.value?.header?.languageSwitch !== undefined
     ? config.value.header.languageSwitch
     : true
-));
+});
 </script>
