@@ -1,6 +1,5 @@
 <script setup>
 import { watch } from 'vue';
-
 import BaseIcon from '@/components/base/BaseIcon.vue';
 
 const props = defineProps({

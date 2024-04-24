@@ -16,10 +16,7 @@ import DarkModeToggle from '@/components/header/DarkModeToggle.vue';
 const store = useStore();
 
 const config = computed(() => store.getters['config/config']);
-const showLanguageSwitch = computed(() => {
-  console.log(config.value);
-  return config.value?.header?.languageSwitch !== undefined
-    ? config.value.header.languageSwitch
-    : true;
-});
+const showLanguageSwitch = computed(() => (config.value?.header?.languageSwitch !== undefined
+  ? config.value.header.languageSwitch
+  : true));
 </script>
