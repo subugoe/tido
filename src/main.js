@@ -1,11 +1,16 @@
 import { createApp, h } from 'vue';
-import { Quasar } from 'quasar';
-import createStore from './store';
+import PrimeVue from 'primevue/config';
+import store from './store';
 import { i18n } from './i18n';
 import App from './App.vue';
 
-import 'quasar/dist/quasar.sass';
+import './css/style.css';
 import './css/style.scss';
+import { getRGBColor } from '@/utils/color';
+
+function generateId() {
+  return Math.random().toString(36).slice(2, 16);
+}
 
 window.Tido = function Tido(config = {}) {
   this.config = { ...config };
@@ -17,12 +22,9 @@ window.Tido = function Tido(config = {}) {
   });
   this.app.provide('config', this.config);
 
-  this.app.use(createStore());
+  this.app.use(PrimeVue);
+  this.app.use(store);
   this.app.use(i18n);
-
-  this.app.use(Quasar, {
-    plugins: {},
-  });
 
   let mounted = false;
   this.mount = (container) => {
@@ -42,11 +44,18 @@ window.Tido = function Tido(config = {}) {
 
     this.app.mount(containerEl);
 
-    mounted = true;
-  };
+    const instanceId = generateId();
+    this.app.provide('instanceId', instanceId);
 
-  this.destroy = () => {
-    this.app.$destroy();
+    const style = document.createElement('style');
+
+    style.id = instanceId;
+    style.innerHTML = `
+      ${this.config.container || '#app'} { ${getRGBColor(this.config.colors?.primary ?? '#3456aa', 'primary')} }
+    `;
+    containerEl.appendChild(style);
+
+    mounted = true;
   };
 
   const container = this.config?.container || '#app';

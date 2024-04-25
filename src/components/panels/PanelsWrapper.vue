@@ -1,16 +1,22 @@
 <template>
-  <div class="panels-target q-gutter-md-md q-px-md q-px-lg-lg q-pb-md-md">
-    <div v-for="(panel, i) in panels" v-show="panel.show" :key="`pc${i}`" class="item q-pb-md q-pb-md-none">
-      <Panel :panel="panel" :active-view="getActiveView(i)" @active-view="onActiveViewChange($event, i)" />
-    </div>
+  <div class="panels-wrapper t-flex t-flex-col t-flex-1 t-overflow-auto sm:t-flex-row t-space-x-4 t-px-4 lg:t-px-6 md:t-pb-4">
+    <Panel
+      v-for="(panel, i) in panels"
+      v-show="panel.show"
+      :key="`pc${i}`"
+      :panel="panel"
+      :active-view="getActiveView(i)"
+      @active-view="onActiveViewChange($event, i)"
+      class="t-flex-1"
+    />
   </div>
 </template>
 
 <script setup>
-import Panel from '@/components/panels/Panel.vue';
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import Panel from '@/components/panels/Panel.vue';
 
 const store = useStore();
 
@@ -29,35 +35,3 @@ function getActiveView(panelIndex) {
   return activeViews.value[panelIndex];
 }
 </script>
-
-<style lang="scss" scoped>
-.content-tabs {
-  display: inline-block;
-}
-
-.panels-target {
-  display: flex;
-  flex: 1;
-  @media (max-width: $breakpoint-sm-max) {
-    flex-direction: column;
-  }
-}
-
-.item {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  overflow: hidden;
-  @media (max-width: $breakpoint-sm-max) {
-    max-height: 66vh;
-  }
-}
-
-.tabs-container {
-  display: flex;
-
-  > * {
-    flex: 1;
-  }
-}
-</style>

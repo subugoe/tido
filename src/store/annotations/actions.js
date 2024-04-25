@@ -28,12 +28,6 @@ export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
     const target = elements[0];
     Utils.addIcon(target, newActiveAnnotation, iconName);
     scrollIntoViewIfNeeded(target, target.closest('.panel-body'));
-
-    // Get the scroll container of Quasar tab panel
-    const annotationsView = document.querySelector('.annotations-view').parentElement.parentElement;
-
-    const annotationEl = getAnnotationListElement(id, annotationsView);
-    scrollIntoViewIfNeeded(annotationEl, annotationsView);
   }
 };
 
@@ -127,9 +121,8 @@ export const resetAnnotations = ({ dispatch, getters }) => {
 };
 
 export const initAnnotations = async ({ dispatch }, url) => {
-  let annotations = null;
   try {
-    annotations = await request(url);
+    const annotations = await request(url);
 
     if (!annotations.first) {
       dispatch('annotationLoaded', []);
@@ -137,6 +130,7 @@ export const initAnnotations = async ({ dispatch }, url) => {
     }
 
     const current = await request(annotations.first);
+
     if (Array.isArray(current.items)) {
       dispatch('annotationLoaded', current.items);
     }

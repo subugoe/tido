@@ -1,8 +1,8 @@
 <template>
-  <div v-for="actorItem in data" :key="name" class="q-mb-md">
-    <q-item-label overline class="text-uppercase">
+  <div v-for="actorItem in data" :key="actorItem.name" class="t-mb-4">
+    <h4 class="t-font-semibold t-text-sm t-text-gray-400">
       {{ $t(getRole(actorItem)) }}
-    </q-item-label>
+    </h4>
     <MetadataValue :value="actorItem.name"></MetadataValue>
   </div>
 </template>

@@ -1,29 +1,24 @@
 <template>
-  <div>
-    <q-btn
+  <div class="t-flex t-space-x-2">
+    <BaseButton
       v-if="manifest"
-      :disable="!hasPrev"
-      unelevated
-      color="primary"
-      class="q-px-sm q-mr-sm previous-item"
-      :icon="prevIcon"
-      :label="prevButtonLabel"
+      :disabled="!hasPrev"
+      :text="prevButtonLabel"
+      size="small"
+      icon="arrowLeft"
       @click="prev"
-      no-caps
-      dense
+      class="prev-button"
     />
 
-    <q-btn
+    <BaseButton
       v-if="manifest"
-      unelevated
-      color="primary"
-      :disable="!hasNext"
-      class="q-px-sm next-item"
-      :icon-right="nextIcon"
-      :label="nextButtonLabel"
+      :disabled="!hasNext"
+      :text="nextButtonLabel"
+      size="small"
+      icon="arrowRight"
+      icon-position="right"
       @click="next"
-      no-caps
-      dense
+      class="next-button"
     />
   </div>
 </template>
@@ -32,19 +27,15 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
-import { biArrowLeft, biArrowRight } from '@quasar/extras/bootstrap-icons';
+import BaseButton from '@/components/base/BaseButton.vue';
 
 const store = useStore();
 const { t } = useI18n();
 
-const prevIcon = biArrowLeft;
-const nextIcon = biArrowRight;
-
 const manifest = computed(() => store.getters['contents/manifest']);
 const manifests = computed(() => store.getters['contents/manifests']);
-const item = computed(() => store.getters['contents/item']);
 const itemUrl = computed(() => store.getters['contents/itemUrl']);
-const itemIndex = computed(() => manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) : -1);
+const itemIndex = computed(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) : -1));
 const hasPrev = computed(() => {
   const prevIndex = itemIndex.value - 1;
   if (prevIndex < 0) {
@@ -64,21 +55,15 @@ const hasNext = computed(() => {
   }
   return true;
 });
-const nextButtonLabel = computed(() => {
-  return itemIndex.value === manifest.value.sequence.length - 1
-    ? `${t('next')} ${t(labels.value.manifest)}`
-    : `${t('next')} ${t(labels.value.item)}`;
-});
-const prevButtonLabel = computed(() => {
-  return itemIndex.value === 0
-    ? `${t('prev')} ${t(labels.value.manifest)}`
-    : `${t('prev')} ${t(labels.value.item)}`;
-});
-const labels = computed(() => {
-  return store.getters['config/config'].labels || {
-    manifest: 'manifest',
-    item: 'item',
-  };
+const nextButtonLabel = computed(() => (itemIndex.value === manifest.value.sequence.length - 1
+  ? `${t('next')} ${t(labels.value.manifest)}`
+  : `${t('next')} ${t(labels.value.item)}`));
+const prevButtonLabel = computed(() => (itemIndex.value === 0
+  ? `${t('prev')} ${t(labels.value.manifest)}`
+  : `${t('prev')} ${t(labels.value.item)}`));
+const labels = computed(() => store.getters['config/config'].labels || {
+  manifest: 'manifest',
+  item: 'item',
 });
 
 function prev() {
@@ -119,17 +104,3 @@ function next() {
   store.dispatch('contents/initItem', itemUrl);
 }
 </script>
-
-<style lang="scss" scoped>
-button {
-  font-size: 12px !important;
-}
-
-.q-input {
-  width: 100%;
-  @media (min-width: 600px) {
-    margin-right: 8px;
-    width: 160px;
-  }
-}
-</style>
