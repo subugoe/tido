@@ -1,5 +1,5 @@
 import * as Utils from '@/utils/index';
-import { icon } from '@/utils/icon';
+import { getIcon } from '@/utils/icons';
 import { i18n } from '@/i18n';
 
 // utility functions that we can use as generic way for perform tranformation on annotations.
@@ -14,78 +14,29 @@ export function addHighlightToElements(selector, root, annotationId) {
     return;
   }
 
-  // const strippedAnnotationId = stripAnnotationId(annotationId);
-
   selectedElements.forEach((element) => {
     element.setAttribute('data-annotation', true);
     Utils.addToAttribute(element, 'data-annotation-ids', annotationId);
-    // element.classList.add(strippedAnnotationId);
     element.setAttribute('data-annotation-level', -1);
   });
 }
 
-export function addRangeHighlightAttributes(id, root) {
-  const start = root.querySelector(`[data-target="${id}_start"]`);
-  const end = root.querySelector(`[data-target="${id}_end"]`);
-
-  let started = false;
-  let ended = false;
-
-  function replaceRecursive(element) {
-    if (!element.childNodes) return;
-
-    [...element.childNodes].forEach((childNode) => {
-      if (childNode === start) started = true;
-      if (childNode === end) ended = true;
-
-      if (ended) return;
-
-      if (childNode.nodeName === 'SPAN' && childNode.getAttribute('data-annotation') && started) {
-        Utils(id);
-      }
-
-      if (childNode.nodeName === '#text') {
-        if (started) {
-          if (childNode.textContent && childNode.textContent.trim()) {
-            element.classList.add(id);
-            element.setAttribute('data-annotation', true);
-          }
-        }
-      } else {
-        replaceRecursive(childNode);
-      }
-    });
-  }
-
-  replaceRecursive(root);
-  return root;
-}
-
 export const createSvgIcon = (name) => {
-  const [path, viewBox] = icon(name).split('|');
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  const iconString = getIcon(name);
 
-  svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', 'q-icon q-mx-xs');
-  svg.setAttribute('focusable', 'false');
-  svg.setAttribute('role', 'presentation');
-  svg.setAttribute('style', 'border:0 !important;');
-  svg.setAttribute('viewBox', viewBox);
+  if (!iconString) return null;
 
-  path.split('&&').forEach((pathPart) => {
-    const [d, style] = pathPart.split('@@');
-
-    const newPath = document.createElementNS(
-      'http://www.w3.org/2000/svg',
-      'path',
-    );
-
-    newPath.setAttribute('d', d);
-    newPath.setAttribute('style', style);
-    svg.appendChild(newPath);
-  });
-
-  return svg;
+  const figure = document.createElement('figure');
+  const style = document.createElement('style');
+  figure.classList.add(...['t-relative', 't-inline-flex', 't-w-4', 't-h-4', 'after:t-absolute', 'after:t-left-0', 'after:t-top-0', 'after:t-w-full', 'after:t-h-full']);
+  figure.classList.add(`icon-${name}`);
+  style.innerHTML = `
+    .icon-${name}::after {
+      content: url('data:image/svg+xml; utf8, ${iconString}');
+    }
+  `;
+  figure.appendChild(style);
+  return figure;
 };
 
 export async function createOrUpdateTooltip(element, { closest: closestAnnotation, other: otherAnnotations }, root) {
@@ -127,8 +78,8 @@ export async function createOrUpdateTooltip(element, { closest: closestAnnotatio
     <div class="tooltip-header">${closestAnnotationTemplate}</div>`;
 
   if (otherAnnotations.length > 0) {
-    template += `<div class="tooltip-body q-mt-sm">
-        <h4 class="q-my-sm">${i18n.global.t('more_annotations')}:</h4>
+    template += `<div class="tooltip-body q-mt-2">
+        <h4 class="q-my-2">${i18n.global.t('more_annotations')}:</h4>
         <div class="text-body2">${otherAnnotationsTemplate}</div>
       </div>
     `;
@@ -157,7 +108,6 @@ export function getNewLevel(element, operation) {
 
 export function highlightTargets(selector, { operation, level }) {
   // If level is given we set it directly ignoring operation.
-
   const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
   elements.forEach((element) => {
     setLevelRecursively(element, { operation, level });
@@ -171,112 +121,6 @@ export function setLevelRecursively(element, { operation, level }) {
   }
   [...element.children].forEach((child) => setLevelRecursively(child, { operation, level }));
 }
-
-export function stripSelector(value) {
-  if (!value) {
-    return null;
-  }
-  return `.${value
-    .replace("span[data-target='", '')
-    .replace("'", '')
-    .replace('_start]', '')
-    .replace('_end]', '')}`;
-}
-
-export function updateTextContentClass(element, task = 'add', ...className) {
-  if (!element) {
-    return;
-  }
-  element.classList[task](...className);
-}
-
-export function toggleAnnotationSelector(annotation, text = 'toggle') {
-  const id = annotation.target.selector.startSelector.value
-    .replace("span[data-target='", '')
-    .replace("_start']", '');
-
-  const isOverlap = id.includes('Overlap');
-  [...document.querySelectorAll(`.${id}`)].forEach((el) => updateTextContentClass(
-    el,
-    text,
-    isOverlap ? 'annotation-disabled-overlap' : 'annotation-disabled',
-  ));
-}
-
-export function getAllElementsFromSelector(selector) {
-  return [...document.querySelectorAll(selector)];
-}
-
-export const isHighestAnnotationElement = (el) => {
-  let current = el;
-
-  while (current.parentElement.getAttribute('data-annotation')) {
-    current = current.parentElement;
-  }
-
-  return current && current !== el;
-};
-
-export const hasParentAnnotation = (el) => {
-  const maxLevelEl = document.getElementById('text-content');
-
-  let current = el;
-  let hasParent = false;
-  while (current !== maxLevelEl) {
-    current = current.parentElement;
-    if (current.hasAttribute('data-annotation')) {
-      hasParent = true;
-      break;
-    }
-  }
-
-  return hasParent;
-};
-
-export function isAnnotationSelected(el) {
-  if (!el.hasAttribute('data-annotation-level')) return false;
-  return parseInt(el.getAttribute('data-annotation-level'), 10) > 0;
-}
-
-// export const isAnnotationSelected = (el) => {
-//   const key = el.getAttribute('data-annotation-level');
-//   if (el[key] !== undefined) {
-//     return el[key];
-//   }
-//   const innerQueue = [];
-//
-//   // this logic checks the child spans and their classes.
-//   innerQueue.push(el);
-//   let matched = false;
-//
-//   while (innerQueue.length) {
-//     const popped = innerQueue.pop();
-//     if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
-//       matched = true;
-//     } else {
-//       [...popped.children].forEach((child) => {
-//         innerQueue.push(child);
-//       });
-//     }
-//   }
-//
-//   // this logic checks the outer spans and their classes.
-//   if (!matched) {
-//     const outerQueue = [];
-//     outerQueue.push(el);
-//
-//     while (outerQueue.length) {
-//       const popped = outerQueue.pop();
-//       if (parseInt(popped.getAttribute('data-annotation-level'), 10) > 0) {
-//         matched = true;
-//       } else if (popped.parentElement.getAttribute('data-annotation')) {
-//         outerQueue.push(popped.parentElement);
-//       }
-//     }
-//   }
-//
-//   return matched;
-// };
 
 export function generateTargetSelector(annotation) {
   // This function generates a CSS selector from
@@ -369,16 +213,18 @@ export function addIcon(element, annotation, iconName) {
       'data-annotation-icon',
       annotation.id,
     );
+
     element.prepend(svg);
   } catch (err) {
     // error message
+    console.log(err);
   }
 }
 
 export function removeIcon(annotation) {
   const stripeId = annotation.id;
   const el = document
-    .querySelector(`svg[data-annotation-icon='${stripeId}']`);
+    .querySelector(`figure[data-annotation-icon='${stripeId}']`);
 
   if (el) {
     el.remove();

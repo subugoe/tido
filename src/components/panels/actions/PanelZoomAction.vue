@@ -1,34 +1,34 @@
 <template>
-  <div class="panel-zoom-action items-center flex justify-end">
-    <q-btn
-      flat
-      round
-      :icon="zoomInIcon"
-      size="sm"
-      :disable="disableIncrease"
+  <div class="panel-zoom-action t-items-center t-flex">
+    <BaseButton
+      display="flat"
+      rounded
+      icon="zoomIn"
+      size="small"
+      :disabled="disableIncrease"
       :title="$t('increase')"
-      :color="$q.dark.isActive ? 'white' : 'primary'"
+      class="t-text-primary dark:t-text-gray-400"
       @click="increase()"
     >
-    </q-btn>
+    </BaseButton>
 
-    <q-btn
-      flat
-      round
-      :icon="zoomOutIcon"
-      size="sm"
-      :disable="disableDecrease"
+    <BaseButton
+      display="flat"
+      rounded
+      icon="zoomOut"
+      size="small"
+      :disabled="disableDecrease"
       :title="$t('decrease')"
-      :color="$q.dark.isActive ? 'white' : 'primary'"
+      class="t-text-primary dark:t-text-gray-400"
       @click="decrease()"
     >
-    </q-btn>
+    </BaseButton>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { biZoomIn, biZoomOut } from '@quasar/extras/bootstrap-icons';
+import BaseButton from '@/components/base/BaseButton.vue';
 
 const props = defineProps({
   min: Number,
@@ -38,15 +38,12 @@ const props = defineProps({
 });
 const emit = defineEmits(['update']);
 
-const zoomInIcon = biZoomIn;
-const zoomOutIcon = biZoomOut;
-
 const disableIncrease = ref(false);
 const disableDecrease = ref(false);
 const value = ref(0);
 
 onMounted(() => {
-  value.value = props.startValue;  
+  value.value = props.startValue;
 });
 
 function increase() {
@@ -75,10 +72,6 @@ function decrease() {
 </script>
 
 <style scoped>
-.q-btn {
-  flex-basis: 0%;
-}
-
 .panel-zoom-action {
   margin-right: -6px;
 }

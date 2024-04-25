@@ -48,6 +48,19 @@ function validateColors(value) {
   return !!(value);
 }
 
+function validateContainer(value) {
+  return !!(value);
+}
+
+function validateHeader(value, defaultValue) {
+  if (!value) return false;
+
+  const defaultKeys = Object.keys(defaultValue);
+  const invalidKeys = Object.keys(value)
+    .filter((key) => defaultKeys.findIndex((defaultKey) => defaultKey === key) === -1);
+  return invalidKeys.length === 0;
+}
+
 function createDefaultActiveViews(panelsConfig) {
   return panelsConfig
     .filter((p) => p.views && p.views.length > 0)
@@ -149,12 +162,13 @@ function createActiveViewsFromPanelsArray(panelsArray) {
   }, {});
 }
 
-function discoverCustomConfig(customConfig) {
+function discoverCustomConfig(customConfig, defaultConfig) {
   const {
-    translations, collection, manifest, item, panels, lang, colors,
+    container, translations, collection, manifest, item, panels, lang, colors, header,
   } = customConfig;
 
   return {
+    ...(validateContainer(container) && { container }),
     ...(validateCollection(collection) && { collection }),
     ...(validateManifest(manifest) && { manifest }),
     ...(validateItem(item) && { item }),
@@ -162,6 +176,7 @@ function discoverCustomConfig(customConfig) {
     ...(validatePanels(panels) && { panels }),
     ...(validateLang(lang) && { lang }),
     ...(validateColors(colors) && { colors }),
+    ...(validateHeader(header, defaultConfig.header) && { header }),
   };
 }
 
@@ -234,10 +249,15 @@ function discoverDefaultConfig(config) {
   };
 }
 
-export const load = ({ commit, getters }, config) => {
-  const customConfig = discoverCustomConfig(config);
+export const load = ({ commit, getters, dispatch }, config) => {
+  const customConfig = discoverCustomConfig(config, getters.config);
   const urlConfig = discoverUrlConfig(config);
   const defaultConfig = discoverDefaultConfig(getters.config);
+
+  const header = {
+    ...defaultConfig.header,
+    ...customConfig.header,
+  };
 
   if (customConfig.panels) {
     // If the custom config provide panels config, we still need to check if it's valid.
@@ -263,6 +283,7 @@ export const load = ({ commit, getters }, config) => {
     ...defaultConfig,
     ...customConfig,
     ...urlConfig,
+    header,
   };
 
   const activeViews = urlConfig.activeViews || defaultConfig.activeViews;
@@ -291,6 +312,9 @@ export const load = ({ commit, getters }, config) => {
     });
   }
   commit('setConfig', resultConfig);
+
+  if (urlConfig.activeViews) commit('setActiveViews', activeViews);
+  else dispatch('setDefaultActiveViews', false);
 };
 
 export const setActivePanelView = async ({ commit, getters }, { panelIndex, viewIndex }) => {
@@ -315,7 +339,7 @@ export const setContentType = ({ commit, getters }, type) => {
   commit('setConfig', newConfig);
 };
 
-export const setDefaultActiveViews = async ({ commit, getters }) => {
+export const setDefaultActiveViews = async ({ commit, getters }, bookmark = true) => {
   const { config } = getters;
   const activeViews = [];
 
@@ -325,7 +349,11 @@ export const setDefaultActiveViews = async ({ commit, getters }) => {
     activeViews[panelIndex] = defaultViewIndex;
   });
 
-  await BookmarkService.updatePanels(activeViews);
+  if (bookmark) await BookmarkService.updatePanels(activeViews);
 
   commit('config/setActiveViews', activeViews, { root: true });
+};
+
+export const setInstanceId = ({ commit }, id) => {
+  commit('config/setInstanceId', id);
 };

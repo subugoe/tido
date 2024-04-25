@@ -1,4 +1,4 @@
-module.exports = {
+module.exports =  {
   root: true,
 
   env: {
@@ -20,7 +20,6 @@ module.exports = {
   plugins: [
     'vue',
   ],
-
   globals: {
     ga: true, // Google Analytics
     cordova: true,
