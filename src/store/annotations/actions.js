@@ -33,7 +33,7 @@ export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
     const annotationsView = document.querySelector('.annotations-view').parentElement.parentElement;
 
     const annotationEl = getAnnotationListElement(id, annotationsView);
-    // scrollIntoViewIfNeeded(annotationEl, annotationsView);
+    scrollIntoViewIfNeeded(annotationEl, annotationsView);
   }
 };
 
