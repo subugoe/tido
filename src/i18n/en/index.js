@@ -41,6 +41,7 @@ export default {
   error_itempart_tido_url: 'Please provide the value of item Index \'i\' like i.e i2 or i3 (values are 2 and 3 in this case)',
   error_panelspart_tido_url: 'Please provide the value of Panels \'p\' panelIndex.TabIndexOpened for each panel index in the right form',
   error_showpart_tido_url: 'Please provide the value of panels shown \'s\' in the right form',
+  error_labels_custom_config: 'Please provide correct values for the keys of \'labels\' in custom config. If you provide a certain key, then please provide its value',
   error_open_image: 'Could not open the image file.',
   no_image_available: 'No Image Available',
   image_license: 'Image License',

@@ -61,6 +61,16 @@ function validateHeader(value, defaultValue) {
   return invalidKeys.length === 0;
 }
 
+function isLabelsValid(labels) {
+  let isValid = true;
+  Object.keys(labels).forEach((key) => {
+    if (labels[key] === '') {
+      isValid = false;
+    }
+  });
+  return isValid;
+}
+
 function createDefaultActiveViews(panelsConfig) {
   return panelsConfig
     .filter((p) => p.views && p.views.length > 0)
@@ -164,8 +174,14 @@ function createActiveViewsFromPanelsArray(panelsArray) {
 
 function discoverCustomConfig(customConfig, defaultConfig) {
   const {
-    container, translations, collection, manifest, item, panels, lang, colors, header,
+    container, translations, collection, manifest, item, panels, lang, colors, header, labels
   } = customConfig;
+
+  if (labels !== undefined) {
+    if (!isLabelsValid(labels)) {
+      throw new Error(i18n.global.t('error_labels_custom_config'));
+    }
+  }
 
   return {
     ...(validateContainer(container) && { container }),
@@ -177,6 +193,7 @@ function discoverCustomConfig(customConfig, defaultConfig) {
     ...(validateLang(lang) && { lang }),
     ...(validateColors(colors) && { colors }),
     ...(validateHeader(header, defaultConfig.header) && { header }),
+    labels,
   };
 }
 
