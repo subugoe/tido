@@ -61,13 +61,19 @@ function validateHeader(value, defaultValue) {
   return invalidKeys.length === 0;
 }
 
-function isLabelsValid(labels) {
+function validateLabels(labels, validLabels) {
+  // valid labels are the labels from the default config
+  // we consider the custom labels, in the case when all the keys have a value, otherwise we would have the button with empty text i.e for the following scenario 
+  // when the item is ''
+  if (!labels || !validLabels) return false;
+
   let isValid = true;
   Object.keys(labels).forEach((key) => {
-    if (labels[key] === '') {
+    if (!(key in validLabels) || labels[key] === '') {
       isValid = false;
     }
   });
+
   return isValid;
 }
 
@@ -177,12 +183,6 @@ function discoverCustomConfig(customConfig, defaultConfig) {
     container, translations, collection, manifest, item, panels, lang, colors, header, labels
   } = customConfig;
 
-  if (labels !== undefined) {
-    if (!isLabelsValid(labels)) {
-      throw new Error(i18n.global.t('error_labels_custom_config'));
-    }
-  }
-
   return {
     ...(validateContainer(container) && { container }),
     ...(validateCollection(collection) && { collection }),
@@ -193,7 +193,7 @@ function discoverCustomConfig(customConfig, defaultConfig) {
     ...(validateLang(lang) && { lang }),
     ...(validateColors(colors) && { colors }),
     ...(validateHeader(header, defaultConfig.header) && { header }),
-    labels,
+    ...(validateLabels(labels, defaultConfig.labels) && { labels }),
   };
 }
 
