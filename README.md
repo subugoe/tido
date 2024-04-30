@@ -381,6 +381,27 @@ no options
 ## Bookmarking
 
 TIDO will reflect certain state changes to the URL so you can save and share your current view.
+
+The new bookmarking concept has only one 'key':'value' pair. The 'key' is 'tido' and the 'value' are the settings of the currently opened view.
+Full example of new bookmarking concept: http://localhost:5173/?tido=m0_i1_s0-2-3_p0.0-1.0-2.0-3.1.
+
+The value consists of 4 parts: 
+1. Manifest part: m0
+2. Item part: i1
+3. Opened panels:  s0-2-3
+4. Visible tab for each panel:  p0.0-1.0-2.0-3.1
+
+Features
+  - URL Logic Tree (having a few config sets, the URL should be updated accordingly)
+  - When opening a new item in the same or a new manifest, the item index and/or the manifest index in the URL changes accordingly
+  - When opening/closing a panel, the "opened panels" part is updated
+  - When making a certain tab visible, this change is reflected in the 4th part 'Visible tab for each panel'
+  - If a researcher has been given the URL settings of a certain item, he can open it, by providing it in the URL part of the browser 
+  - Error handling for each URL part
+Structure of each part should be given as input as specified in this page
+Manifest index and/or item index should be given inside the appropriate value range
+  - Other
+
 Currently we provide the following bookmarking keys:
 
 | Key          | Value         | Description                                                                                                                                    |
@@ -388,8 +409,11 @@ Currently we provide the following bookmarking keys:
 | `collection` | URL           | Specifies a collection entrypoint. Will be preferred before `manifest`.                                                                        |
 | `manifest`   | URL           | Specifies a manifest entrypoint.                                                                                                               |
 | `item`       | URL           | Specifies an item entrypoint. If not set the first possible item will be appended and displayed.                                               |
-| `show`       | `0,1,2`       | Controls the visibility of panels. It's a list of comma-separated panel indexes. All other panels will be hidden. Not set = all visible.       |
-| `panels`     | `0_1,1_1,2_0` | Specifies the active view (tab) in a respective panel. Syntax: `[panel index]_[view_index]`. Each user interaction will change this parameter. |
+|  `m`          |  Int: i.e 0             | Specifies the manifest index inside a certain collection. Syntax: `m[manifest index], example: m0`                       |
+|  `i`          |  Int: i.e 1            | Specifies the item index of a certain manifest. Syntax: `i[item index], example: i1`     |
+| `s`       | `0-1-2`       | Controls the visibility of panels. It's a list of dash-separated panel indexes. All other panels will be hidden. Not set = all visible.  Syntax: `s[index1]-[index2]..., example: s0-1-2`     |
+| `p`     | `0.1-1.1-2.1-3.1` | Specifies the active view (tab) in a respective panel. Syntax: `p[panel index1].[view_index1]-[panel index2].[view_index2].. , example p0.1-1.1-2.1-3.1`. Each user interaction will change this parameter. |
+
 
 **Hint:** With this setup you are able to load your entrypoint dynamically by appending it at the URL instead of rendering
 it  via the configuration object inside your wrapper application.
