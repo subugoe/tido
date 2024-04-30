@@ -382,14 +382,14 @@ no options
 
 TIDO will reflect certain state changes to the URL so you can save and share your current view.
 
-The new bookmarking concept has only one 'key':'value' pair. The 'key' is 'tido' and the 'value' are the settings of the currently opened view.
-Full example of new bookmarking concept: http://localhost:5173/?tido=m0_i1_s0-2-3_p0.0-1.0-2.0-3.1.
+It appends only one GET parameter. The `key` is `tido` and the `value` are the settings of the current app state.
+Full example of the bookmarking concept: `http://localhost:5173/?tido=m0_i1_s0-2-3_p0.0-1.0-2.0-3.1`.
 
-The value consists of 4 parts: 
+The 'value' consists of 4 parts: 
 1. Manifest part: m0
 2. Item part: i1
-3. Opened panels:  s0-2-3
-4. Visible tab for each panel:  p0.0-1.0-2.0-3.1
+3. Visible panels:  s0-2-3
+4. Active tab for each panel:  p0.0-1.0-2.0-3.1
 
 Features
   - URL Logic Tree (having a few config sets, the URL should be updated accordingly)
