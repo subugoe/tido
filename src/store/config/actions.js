@@ -61,6 +61,22 @@ function validateHeader(value, defaultValue) {
   return invalidKeys.length === 0;
 }
 
+function validateLabels(labels, validLabels) {
+  // valid labels are the labels from the default config
+  // we consider the custom labels, in the case when all the keys have a value, otherwise we would have the button with empty text i.e for the following scenario
+  // when the item is ''
+  if (!labels || !validLabels) return false;
+
+  let isValid = true;
+  Object.keys(labels).forEach((key) => {
+    if (!(key in validLabels) || labels[key] === '') {
+      isValid = false;
+    }
+  });
+
+  return isValid;
+}
+
 function createDefaultActiveViews(panelsConfig) {
   return panelsConfig
     .filter((p) => p.views && p.views.length > 0)
@@ -164,7 +180,7 @@ function createActiveViewsFromPanelsArray(panelsArray) {
 
 function discoverCustomConfig(customConfig, defaultConfig) {
   const {
-    container, translations, collection, manifest, item, panels, lang, colors, header,
+    container, translations, collection, manifest, item, panels, lang, colors, header, labels
   } = customConfig;
 
   return {
@@ -177,6 +193,7 @@ function discoverCustomConfig(customConfig, defaultConfig) {
     ...(validateLang(lang) && { lang }),
     ...(validateColors(colors) && { colors }),
     ...(validateHeader(header, defaultConfig.header) && { header }),
+    ...(validateLabels(labels, defaultConfig.labels) && { labels }),
   };
 }
 
