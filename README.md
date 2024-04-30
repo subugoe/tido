@@ -398,9 +398,9 @@ Features
   - When making a certain tab visible, this change is reflected in the 4th part 'Visible tab for each panel'
   - If a researcher has been given the URL settings of a certain item, he can open it, by providing it in the URL part of the browser 
   - Error handling for each URL part
-Structure of each part should be given as input as specified in this page
-Manifest index and/or item index should be given inside the appropriate value range
-  - Other
+    - Structure of each part should be given as input as specified in this page
+    - Manifest index and/or item index should be given inside the appropriate value range
+    - Other
 
 Currently we provide the following bookmarking keys:
 
