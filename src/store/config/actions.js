@@ -63,7 +63,7 @@ function validateHeader(value, defaultValue) {
 
 function validateLabels(labels, validLabels) {
   // valid labels are the labels from the default config
-  // we consider the custom labels, in the case when all the keys have a value, otherwise we would have the button with empty text i.e for the following scenario 
+  // we consider the custom labels, in the case when all the keys have a value, otherwise we would have the button with empty text i.e for the following scenario
   // when the item is ''
   if (!labels || !validLabels) return false;
 
