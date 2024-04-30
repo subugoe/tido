@@ -12,7 +12,7 @@
             class="t-px-2 text-gray-500 dark:text-gray-300"
             name="chevronRight"
           />
-          <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
+          <span v-if="item">{{ labels.item }} {{ item.n }}</span>
         </h2>
       </template>
       <template v-else>
@@ -23,7 +23,7 @@
             class="t-px-2 text-gray-500 dark:text-gray-300"
             name="chevronRight"
           />
-          <span v-if="item">{{ $t('Sheet') }} {{ item.n }}</span>
+          <span v-if="item">{{ labels.item }} {{ item.n }}</span>
         </h1>
       </template>
     </template>
@@ -49,4 +49,8 @@ const store = useStore();
 
 const collectionTitle = computed(() => store.getters['contents/collectionTitle']);
 const manifestTitle = computed(() => store.getters['contents/manifest']?.label);
+const labels = computed(() => store.getters['config/config'].labels || {
+  manifest: 'manifest',
+  item: 'item',
+});
 </script>
