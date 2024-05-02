@@ -381,6 +381,16 @@ no options
 ## Bookmarking
 
 TIDO will reflect certain state changes to the URL so you can save and share your current view.
+
+It appends only one GET parameter. The `key` is `tido` and the `value` are the settings of the current app state.
+Full example of the bookmarking concept: `http://localhost:5173/?tido=m0_i1_s0-2-3_p0.0-1.0-2.0-3.1`.
+
+The 'value' consists of 4 parts: 
+1. Manifest part: m0
+2. Item part: i1
+3. Visible panels:  s0-2-3
+4. Active tab for each panel:  p0.0-1.0-2.0-3.1
+
 Currently we provide the following bookmarking keys:
 
 | Key          | Value         | Description                                                                                                                                    |
@@ -388,8 +398,11 @@ Currently we provide the following bookmarking keys:
 | `collection` | URL           | Specifies a collection entrypoint. Will be preferred before `manifest`.                                                                        |
 | `manifest`   | URL           | Specifies a manifest entrypoint.                                                                                                               |
 | `item`       | URL           | Specifies an item entrypoint. If not set the first possible item will be appended and displayed.                                               |
-| `show`       | `0,1,2`       | Controls the visibility of panels. It's a list of comma-separated panel indexes. All other panels will be hidden. Not set = all visible.       |
-| `panels`     | `0_1,1_1,2_0` | Specifies the active view (tab) in a respective panel. Syntax: `[panel index]_[view_index]`. Each user interaction will change this parameter. |
+|  `m`          |  Int: i.e 0             | Specifies the manifest index inside a certain collection. Syntax: `m[manifest index], example: m0`                       |
+|  `i`          |  Int: i.e 1            | Specifies the item index of a certain manifest. Syntax: `i[item index], example: i1`     |
+| `s`       | `0-1-2`       | Controls the visibility of panels. It's a list of dash-separated panel indexes. All other panels will be hidden. Not set = all visible.  Syntax: `s[index1]-[index2]..., example: s0-1-2`     |
+| `p`     | `0.1-1.1-2.1-3.1` | Specifies the active view (tab) in a respective panel. Syntax: `p[panel index1].[view_index1]-[panel index2].[view_index2].. , example p0.1-1.1-2.1-3.1`. Each user interaction will change this parameter. |
+
 
 **Hint:** With this setup you are able to load your entrypoint dynamically by appending it at the URL instead of rendering
 it  via the configuration object inside your wrapper application.
