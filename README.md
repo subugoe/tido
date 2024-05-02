@@ -391,17 +391,6 @@ The 'value' consists of 4 parts:
 3. Visible panels:  s0-2-3
 4. Active tab for each panel:  p0.0-1.0-2.0-3.1
 
-Features
-  - URL Logic Tree (having a few config sets, the URL should be updated accordingly)
-  - When opening a new item in the same or a new manifest, the item index and/or the manifest index in the URL changes accordingly
-  - When opening/closing a panel, the "opened panels" part is updated
-  - When making a certain tab visible, this change is reflected in the 4th part 'Visible tab for each panel'
-  - If a researcher has been given the URL settings of a certain item, he can open it, by providing it in the URL part of the browser 
-  - Error handling for each URL part
-    - Structure of each part should be given as input as specified in this page
-    - Manifest index and/or item index should be given inside the appropriate value range
-    - Other
-
 Currently we provide the following bookmarking keys:
 
 | Key          | Value         | Description                                                                                                                                    |
