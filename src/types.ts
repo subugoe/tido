@@ -4,7 +4,12 @@ interface collection {
     textapi: string,
     id: string,
     title: Title []
-    collector: Actor,
+    collector: Actor [],
+    description ? : string,
+    sequence: SequenceObject [],
+    total ? : number,
+    annotationCollection ? : string,
+    modules ? : Module []
 
 }
 type ContextCollection = 'https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/collection.jsonld'
@@ -20,19 +25,30 @@ type TitleType = 'main' | 'sub';
 
 interface Actor {
     context: ContextActor,
-    role:  string []// needs to be 'collector' in case of collections,
+    role:  string []
     name: string,
     id ? : string,
     idref ? : Idref []
-    //id?: string
-
-    // should be a method to set the role by checking 
 
 }
 
 type ContextActor = 'https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/actor.jsonld'
-type RoleActorInCollection = ['collector']
 
+interface SequenceObject {
+    context: ContextSequence
+    id: string,
+    type: TypeSequenceObject,
+    label: string
+}
+
+interface Module {
+    editionManuscripts ? : boolean,
+    editionPrints ? : boolean
+}
+
+type TypeSequenceObject = 'collection' | 'manifest' | 'item'
+
+type ContextSequence = 'https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld'
 interface Idref {
     context: ContextIdref,
     base ? : string,
@@ -48,8 +64,11 @@ function isCollection(object: any): object is collection {
 }
 
 function setRoleInActorOfTextObject(object: any) {
+    // this function is to be applied on each newly created collection
     if(isCollection(object)) {
-        object.collector.role = ['collector'];
+        object.collector.forEach((item) => {
+            item.role = ['collector'];
+          });
     }
     return object;
 }
