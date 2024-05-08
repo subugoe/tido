@@ -14,11 +14,13 @@ module.exports =  {
     // 'plugin:vue/strongly-recommended' // Priority B: Strongly Recommended (Improving Readability)
     // 'plugin:vue/recommended', // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
     'plugin:vue/vue3-essential',
+    'plugin:@typescript-eslint/recommended'
   ],
 
   // required to lint *.vue files
   plugins: [
     'vue',
+    "@typescript-eslint"
   ],
   globals: {
     ga: true, // Google Analytics

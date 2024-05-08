@@ -7,22 +7,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MetadataValue from '@/components/metadata/MetadataValue.vue';
+import { useI18n } from 'vue-i18n';
 
-const props = defineProps({
-  data: {
-    type: Array,
-    default: () => [],
-  },
-});
+const { t } = useI18n();
 
-function getRole(actorItem) {
+export interface Props {
+  data: Actor[]
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  data: () => []
+})
+
+function getRole(actorItem: Actor) : string {
   const { role } = actorItem;
-  if (!role) return 'undefined_role';
-  if (!Array.isArray(role)) return role;
-  if (role.length > 0) return role[0];
-  return 'undefined_role';
+  if (!role) throw new Error(t('error_undefined_role'));
+  if (role.length === 0) return 'undefined_role';
+  return role[0];
 }
 </script>
 
