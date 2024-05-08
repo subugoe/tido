@@ -4,8 +4,8 @@ declare global {
         '@context': string,
         role:  string[]
         name: string,
-        id? : string,
-        idref? : Idref[]
+        id?: string,
+        idref?: Idref[]
 
     }
 
@@ -15,11 +15,11 @@ declare global {
         id: string,
         title: Title[]
         collector: Actor[],
-        description? : string,
+        description?: string,
         sequence: Sequence[],
-        total? : number,
-        annotationCollection? : string,
-        modules? : Module[]
+        total?: number,
+        annotationCollection?: string,
+        modules?: Module[]
     
     }
 
@@ -30,8 +30,8 @@ declare global {
 
     interface Idref {
         '@context': string,
-        base? : string,
-        type : string,
+        base?: string,
+        type: string,
         id: string
     }
 
@@ -56,9 +56,9 @@ declare global {
         total?: number,
         actor?: Actor[],
         repository?: Repository[],
-        image? : Image,
-        metadata? : Metadata[],
-        support? : Support[],
+        image?: Image,
+        metadata?: Metadata[],
+        support?: Support[],
         license: License[],
         description?: string,
         annotationCollection?: string,
@@ -73,8 +73,8 @@ declare global {
     }
 
     interface Module {
-        editionManuscripts? : boolean,
-        editionPrints? : boolean
+        editionManuscripts?: boolean,
+        editionPrints?: boolean
     }
 
     interface Repository {
@@ -88,20 +88,20 @@ declare global {
     interface Sequence {
         '@context': string
         id: string,
-        type: TypeSequence,
+        type: SequenceType,
         label?: string
     }
 
     interface Support {
         '@context': string,
-        type: TypeSupport,
+        type: SupportType,
         mime: string,
         url: string,
         integrity?: DataIntegrity
     }
 
-    type TypeSequence = 'collection' | 'manifest' | 'item'
-    type TypeSupport = 'font' | 'css' 
+    type SequenceType = 'collection' | 'manifest' | 'item'
+    type SupportType = 'font' | 'css' 
 
     interface Title {
         '@context': string,
@@ -109,7 +109,6 @@ declare global {
         type: TitleType
     }
     type TitleType = 'main' | 'sub';
-
 }
 
 export {}
