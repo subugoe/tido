@@ -16,11 +16,16 @@ declare global {
         title: Title[]
         collector: Actor[],
         description? : string,
-        sequence: SequenceObject[],
+        sequence: Sequence[],
         total? : number,
         annotationCollection? : string,
         modules? : Module[]
     
+    }
+
+    interface DataIntegrity {
+        type: string,
+        value: string
     }
 
     interface Idref {
@@ -30,18 +35,73 @@ declare global {
         id: string
     }
 
+    interface Image {
+        '@context': string,
+        id: string,
+        manifest?: string,
+        license: License
+    }
+
+    interface License {
+        id: string,
+        notes?: string
+    }
+
+    interface Manifest {
+        '@context': string,
+        textapi: string,
+        id: string,
+        label: string,
+        sequence: Sequence[],
+        total?: number,
+        actor?: Actor[],
+        repository?: Repository[],
+        image? : Image,
+        metadata? : Metadata[],
+        support? : Support[],
+        license: License[],
+        description?: string,
+        annotationCollection?: string,
+        modules?: Module[]
+
+    }
+
+    interface Metadata {
+        key: string,
+        value?: string,
+        metadata?: Metadata[]
+    }
+
     interface Module {
         editionManuscripts? : boolean,
         editionPrints? : boolean
     }
 
-    interface SequenceObject {
+    interface Repository {
+        '@context': string,
+        label?: string,
+        url: string,
+        baseUrl: string,
+        id: string
+    }
+
+    interface Sequence {
         '@context': string
         id: string,
-        type: TypeSequenceObject,
-        label: string
+        type: TypeSequence,
+        label?: string
     }
-    type TypeSequenceObject = 'collection' | 'manifest' | 'item'
+
+    interface Support {
+        '@context': string,
+        type: TypeSupport,
+        mime: string,
+        url: string,
+        integrity?: DataIntegrity
+    }
+
+    type TypeSequence = 'collection' | 'manifest' | 'item'
+    type TypeSupport = 'font' | 'css' 
 
     interface Title {
         '@context': string,
