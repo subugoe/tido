@@ -11,7 +11,7 @@
 import MetadataValue from '@/components/metadata/MetadataValue.vue';
 import { useI18n } from 'vue-i18n';
 
-const { t, locale: i18nLocale } = useI18n();
+const { t } = useI18n();
 
 export interface Props {
   data: Actor[]
