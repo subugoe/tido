@@ -1,12 +1,11 @@
-
 declare global {
     
     interface Actor {
         '@context': string,
-        role:  string []
+        role:  string[]
         name: string,
         id? : string,
-        idref? : Idref []
+        idref? : Idref[]
 
     }
 
@@ -14,13 +13,13 @@ declare global {
         '@context': string,
         textapi: string,
         id: string,
-        title: Title []
-        collector: Actor [],
+        title: Title[]
+        collector: Actor[],
         description? : string,
-        sequence: SequenceObject [],
+        sequence: SequenceObject[],
         total? : number,
         annotationCollection? : string,
-        modules? : Module []
+        modules? : Module[]
     
     }
 
@@ -54,5 +53,3 @@ declare global {
 }
 
 export {}
-
-export { Actor }

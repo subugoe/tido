@@ -9,21 +9,22 @@
 
 <script setup lang="ts">
 import MetadataValue from '@/components/metadata/MetadataValue.vue';
-import { type Actor } from '../../types'
-import { i18n } from '@/i18n';
+import { useI18n } from 'vue-i18n';
 
+const { t, locale: i18nLocale } = useI18n();
 
 export interface Props {
-  data: Actor []
+  data: Actor[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  data : () => [],
+  data: () => []
 })
 
 function getRole(actorItem: Actor) : string {
   const { role } = actorItem;
-  if (!role) throw new Error(i18n.global.t('error_undefined_role'));
+  if (!role) throw new Error(t('error_undefined_role'));
+  if (role.length === 0) return 'undefined_role';
   return role[0];
 }
 </script>
