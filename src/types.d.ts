@@ -109,6 +109,13 @@ declare global {
         type: TitleType
     }
     type TitleType = 'main' | 'sub';
+
 }
 
 export {}
+
+export function getCollectorName (collection: Collection) : string {
+    if (!collection) return 'collection does not exist';
+    if(collection.collector.length === 0) return 'undefined collector'
+    return collection.collector[0].name;
+  }
