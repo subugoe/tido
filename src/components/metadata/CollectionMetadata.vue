@@ -18,7 +18,7 @@ const store = useStore();
 
 const collection = computed<Collection>(() => store.getters['contents/collection']);
 
-const metadata = computed<Metadata>(() => {
+const metadata = computed(() => {
   if (!collection.value) return [];
 
   const mappings = {
