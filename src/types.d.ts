@@ -4,8 +4,8 @@ declare global {
         '@context': string,
         role:  string[]
         name: string,
-        id? : string,
-        idref? : Idref[]
+        id?: string,
+        idref?: Idref[]
 
     }
 
@@ -15,33 +15,93 @@ declare global {
         id: string,
         title: Title[]
         collector: Actor[],
-        description? : string,
-        sequence: SequenceObject[],
-        total? : number,
-        annotationCollection? : string,
-        modules? : Module[]
+        description?: string,
+        sequence: Sequence[],
+        total?: number,
+        annotationCollection?: string,
+        modules?: Module[]
     
+    }
+
+    interface DataIntegrity {
+        type: string,
+        value: string
     }
 
     interface Idref {
         '@context': string,
-        base? : string,
-        type : string,
+        base?: string,
+        type: string,
         id: string
     }
 
-    interface Module {
-        editionManuscripts? : boolean,
-        editionPrints? : boolean
+    interface Image {
+        '@context': string,
+        id: string,
+        manifest?: string,
+        license: License
     }
 
-    interface SequenceObject {
+    interface License {
+        id: string,
+        notes?: string
+    }
+
+    interface Manifest {
+        '@context': string,
+        textapi: string,
+        id: string,
+        label: string,
+        sequence: Sequence[],
+        total?: number,
+        actor?: Actor[],
+        repository?: Repository[],
+        image?: Image,
+        metadata?: Metadata[],
+        support?: Support[],
+        license: License[],
+        description?: string,
+        annotationCollection?: string,
+        modules?: Module[]
+
+    }
+
+    interface Metadata {
+        key: string,
+        value?: string,
+        metadata?: Metadata[]
+    }
+
+    interface Module {
+        editionManuscripts?: boolean,
+        editionPrints?: boolean
+    }
+
+    interface Repository {
+        '@context': string,
+        label?: string,
+        url: string,
+        baseUrl: string,
+        id: string
+    }
+
+    interface Sequence {
         '@context': string
         id: string,
-        type: TypeSequenceObject,
-        label: string
+        type: SequenceType,
+        label?: string
     }
-    type TypeSequenceObject = 'collection' | 'manifest' | 'item'
+
+    interface Support {
+        '@context': string,
+        type: SupportType,
+        mime: string,
+        url: string,
+        integrity?: DataIntegrity
+    }
+
+    type SequenceType = 'collection' | 'manifest' | 'item'
+    type SupportType = 'font' | 'css' 
 
     interface Title {
         '@context': string,
@@ -49,7 +109,6 @@ declare global {
         type: TitleType
     }
     type TitleType = 'main' | 'sub';
-
 }
 
 export {}
