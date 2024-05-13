@@ -42,7 +42,7 @@ describe('Metadata', () => {
       .get(selectors.metadataView)
       .find(selectors.collection)
       .find(selectors.title)
-      .eq(1)
+      .eq(2)
       .should('contain', 'Description')
       .next()
       .should('contain', 'Arabic/Karshuni collection for the Ahiqar project. Funded by DFG, 2018–2021, University of Göttingen');

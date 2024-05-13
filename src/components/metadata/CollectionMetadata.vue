@@ -7,15 +7,23 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
+
+function getCollectorName (collection: Collection) : string | null {
+    if (!collection) return null;
+    if(collection.collector.length === 0) return null;
+    return collection.collector[0].name;
+}
+
 const store = useStore();
 
-const collection = computed(() => store.getters['contents/collection']);
+const collection = computed<Collection>(() => store.getters['contents/collection']);
+
 const metadata = computed(() => {
   if (!collection.value) return [];
 
@@ -24,11 +32,12 @@ const metadata = computed(() => {
     sub: 'subtitle',
   };
 
-  const collectorName = collection.value.collector?.name;
-  const { description } = collection.value;
+  const collectorName: string | null = getCollectorName(collection.value);
+  const description: string | undefined = collection.value.description;
+  const collectionTitle: Title[] = collection.value.title;
 
   return [
-    ...collection.value.title
+    ...collectionTitle
       .filter((collection) => collection)
       .map((collectionTitle) => ({
         key: mappings[collectionTitle.type] || 'title',
@@ -36,7 +45,6 @@ const metadata = computed(() => {
       })),
     ...(collectorName ? [{ key: 'collector', value: collectorName }] : []),
     ...(description ? [{ key: 'description', value: description }] : []),
-    ...(collection.value.metadata || []),
   ];
 });
 </script>
