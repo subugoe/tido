@@ -22,7 +22,7 @@ declare global {
         modules?: Module[]
     
     }
-
+    
     interface DataIntegrity {
         type: string,
         value: string
@@ -113,9 +113,3 @@ declare global {
 }
 
 export {}
-
-export function getCollectorName (collection: Collection) : string {
-    if (!collection) return 'collection does not exist';
-    if(collection.collector.length === 0) return 'undefined collector'
-    return collection.collector[0].name;
-  }

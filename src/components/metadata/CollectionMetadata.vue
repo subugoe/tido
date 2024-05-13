@@ -12,7 +12,13 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
-import { getCollectorName } from '../../types.d.ts' 
+
+
+function getCollectorName (collection: Collection) : string | null {
+    if (!collection) return null;
+    if(collection.collector.length === 0) return null;
+    return collection.collector[0].name;
+}
 
 const store = useStore();
 
@@ -26,9 +32,9 @@ const metadata = computed(() => {
     sub: 'subtitle',
   };
 
-  const collectorName : string = getCollectorName(collection.value);
-  const description : string | undefined = collection.value.description;
-  const collectionTitle : Title[] = collection.value.title;
+  const collectorName: string | null = getCollectorName(collection.value);
+  const description: string | undefined = collection.value.description;
+  const collectionTitle: Title[] = collection.value.title;
 
   return [
     ...collectionTitle
