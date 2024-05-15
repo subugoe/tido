@@ -16,12 +16,12 @@ import Actor from '@/components/metadata/Actor.vue';
 
 const store = useStore();
 
-const manifest = computed<Manifest> (() => store.getters['contents/manifest']);
+const manifest = computed<Manifest>(() => store.getters['contents/manifest']);
 const manifests = computed<Manifest[]>(() => store.getters['contents/manifests']);
-const manifestHasItems = computed<boolean> (() => manifest.value?.sequence.length > 0);
-const number = computed<number> (() => (manifests.value !== null ? manifests.value.findIndex(({ id }) => id === manifest.value.id) + 1 : 1));
-const total = computed<number> (() => (manifests.value !== null ? manifests.value.length : 1));
-const labels = computed<Labels> (() => store.getters['config/config'].labels);
+const manifestHasItems = computed<boolean>(() => manifest.value?.sequence.length > 0);
+const number = computed<number>(() => (manifests.value !== null ? manifests.value.findIndex(({ id }) => id === manifest.value.id) + 1 : 1));
+const total = computed<number>(() => (manifests.value !== null ? manifests.value.length : 1));
+const labels = computed<Labels>(() => store.getters['config/config'].labels);
 const metadata = computed(() => {
   if (!manifest.value) return [];
   return [

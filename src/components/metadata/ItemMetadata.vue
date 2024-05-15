@@ -15,13 +15,13 @@ import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 const store = useStore();
 
-const item = computed<Item> (() => store.getters['contents/item']);
-const itemUrl = computed<string> (() => store.getters['contents/itemUrl']);
-const manifest = computed<Manifest> (() => store.getters['contents/manifest']);
-const itemsCount = computed<number> (() => manifest.value?.sequence.length);
-const labels = computed<Labels> (() => store.getters['config/config'].labels);
-const number = computed<number> (() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) + 1 : 1));
-const total = computed<number> (() => itemsCount.value ?? 1);
+const item = computed<Item>(() => store.getters['contents/item']);
+const itemUrl = computed<string>(() => store.getters['contents/itemUrl']);
+const manifest = computed<Manifest>(() => store.getters['contents/manifest']);
+const itemsCount = computed<number>(() => manifest.value?.sequence.length);
+const labels = computed<Labels>(() => store.getters['config/config'].labels);
+const number = computed<number>(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) + 1 : 1));
+const total = computed<number>(() => itemsCount.value ?? 1);
 const metadata = computed(() => (
   [
     { key: 'label', value: item.value.n },
