@@ -9,19 +9,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import MetadataLink from '@/components/metadata/MetadataLink.vue';
 import MetadataValue from '@/components/metadata/MetadataValue.vue';
 
-const props = defineProps({
-  item: Object,
-});
+const props = defineProps<{
+  item: Metadata,
+}>();
 
-const label = computed(() => props.item?.key || 'other');
-const childItems = computed(() => props.item?.metadata || []);
+const label = computed<string>(() => props.item?.key || 'other');
+const childItems = computed(<Metadata>() => props.item?.metadata || []);
 
-function isLink() {
+function isLink(): boolean {
   const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
   const matches = (typeof props.item?.key === 'string') ? props.item?.key?.match(regex) : null;
 

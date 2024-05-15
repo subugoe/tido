@@ -22,7 +22,14 @@ declare global {
         modules?: Module[]
     
     }
-    
+
+    interface Content {
+        '@context': string,
+        url: string,
+        type: string,
+        integrity?: DataIntegrity
+    }
+
     interface DataIntegrity {
         type: string,
         value: string
@@ -42,6 +49,29 @@ declare global {
         license: License
     }
 
+    interface Item {
+        '@context': string,
+        textapi: string,
+        id: string,
+        title?: Title[],
+        type: ItemType,
+        n?: string,
+        lang: ItemLangCode[],
+        langAlt?: string[],
+        content: Content[],
+        description?: string,
+        image?: Image,
+        annotationCollection?: string,
+        modules?: Module[]
+    }
+
+    type ItemType = 'section' | 'page' | 'full'
+    type ItemLangCode = 'eng' | 'fra' | 'deu' | 'ara' | 'arb' | 'arz' | 'apc' | 'acm' | 'zho' | 'cmn' | 'yue' | 'nan' | 'tha' | 'sou' | 'nod' | 'khb' | 'lao/tts' | 'pht'
+
+    interface Labels {
+        item: string,
+        manifest?: string
+    }
     interface License {
         id: string,
         notes?: string
