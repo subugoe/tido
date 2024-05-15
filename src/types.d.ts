@@ -22,7 +22,7 @@ declare global {
         modules?: Module[]
     
     }
-
+    
     interface DataIntegrity {
         type: string,
         value: string
@@ -109,6 +109,7 @@ declare global {
         type: TitleType
     }
     type TitleType = 'main' | 'sub';
+
 }
 
 export {}
