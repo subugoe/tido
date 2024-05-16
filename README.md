@@ -31,13 +31,14 @@ With this project we provide a highly configurable viewer for projects that impl
     - [Clone the Repository](#clone-the-repository)
     - [Get the Dependencies](#get-the-dependencies)
   - [Build](#build)
-  - [Serve Locally](#serve-locally)
+  - [Local Development](#local-development)
     - [Serve Development Build](#serve-development-build)
-    - [Serve Examples (Production Build)](#serve-examples-production-build)
-    - [Serve Mock API](#serve-mock-api)
+    - [Preview Production Build](#preview-production-build)
+    - [Preview Production Build with examples](#preview-production-build-with-examples)
+    - [Start Mock API](#start-mock-api)
   - [Testing](#testing)
-    - [Local](#local)
-    - [CI](#ci)
+    - [Quick Test Run](#quick-test-run)
+    - [Testing In Detail](#testing-in-detail)
   - [Linting](#linting)
   - [Generate TextAPI support table](#generate-textapi-support-table)
 - [TextAPI Support](#textapi-support)
@@ -385,7 +386,7 @@ TIDO will reflect certain state changes to the URL so you can save and share you
 It appends only one GET parameter. The `key` is `tido` and the `value` are the settings of the current app state.
 Full example of the bookmarking concept: `http://localhost:5173/?tido=m0_i1_s0-2-3_p0.0-1.0-2.0-3.1`.
 
-The 'value' consists of 4 parts: 
+The 'value' consists of 4 parts:
 1. Manifest part: m0
 2. Item part: i1
 3. Visible panels:  s0-2-3
@@ -462,76 +463,83 @@ npm run build
 
 The output files are located at `/dist`.
 
-### Serve Locally
+### Local Development
 
 #### Serve Development Build
 
 Builds the app in `development mode` (hot reloading, error reporting, etc.).
 
 ```bash
-npm run serve:dev
+npm run dev
 ```
 
-It will be available under `localhost:5173`.
+You can modify `/index.html` to load your required TIDO configuration. It will be available under `localhost:5173`.
 
-#### Serve Examples (Production Build)
+#### Preview Production Build
 
-You can serve a production build by viewing example configurations that we provide under `/examples`.
-Run this command which will create a TIDO production build and copy the result files into `/examples`:
+You can start up a production build with
+You can modify `/index.html` to load your required TIDO configuration. It will be available under `localhost:4173`.
+
+#### Preview Production Build with examples
+
+You can also inspect some example TIDO configurations that we provide under `/examples`.
+Run this command which will create a TIDO production build, copy the result files into `/examples`
+and start up a local web server:
 
 ```bash
-npm run serve:prod
+npm run preview:examples
 ```
+
 
 This examples are available under `localhost:2222`. Each example has its own HTML file:
 
 - `http://localhost:2222/[example-name].html`
 
-#### Serve Mock API
+#### Start Mock API
 
-You can start your own local API server which will serve TextAPI responses from `tests/mocks`.
-The folder structure represents a portion of resources of the Ahiqar project.
+We provide several mock JSON files in order to create API endpoints for testing purposes.
+You can start your own local API server with this command:
 
 ```bash
-npm run serve:mock-api
+npm run start:mock-api
 ```
 
-The server will be available at `localhost:8181`.
+The server will be available at `localhost:8181`. Check out `/tests/mocks` inspect the files.
 
 ### Testing
 
 We run tests only on production code. So you need to make sure to create a TIDO build before starting to run tests.
 TIDO follows the "Zero Config" policy but projects can provide a very detailed config that can drastically change the behaviour of the app.
-Therefor we provide some example configurations from previous implementation projects that cover the most important features.
+Therefore, we provide some example configurations from previous implementation projects that cover the most important features.
 
-Following examples are available under (`examples/`):
+Following examples are available under (`/examples`):
 
 - `ahiqar-arabic-karshuni.html`
 - `ahiqar-arabic-karshuni-local.html`
 - `ahiqar-syriac.html`
 - `gfl.html`
+- `gfl-local.html`
 - `zero-config.html`
 
-#### Local
 
-Prepare the environment before running the tests.
+#### Quick Test Run
 
-- `npm run build`
-- `npm run serve:mock-api`
-- `npm run serve:prod`
+This is a minimal command to run tests once on your local machine.
+
+- `npm run start:mock-api & npm run test`
+
+#### Testing In Detail
+
+If you want to gain more control during development you can do the following.
+Prepare the environment before running the tests:
+
+- `npm run start:mock-api`
+- `npm run preview:examples`
 
 Now you can run the tests on your local machine with a proper Cypress UI and selective steps
-or run the tests only in headless more which will prompt the results on the console.
+or run the tests only in headless mode which will prompt the results on the console.
 
 - `npm run cypress` or `npm run cypress:headless`
-
-#### CI
-
-You can use a one-line command which will start the mock API server and run tests in headless mode
-after it has connected to that mock API server.
-
-- `npm run build`
-- `npm run test:e2e`
 
 ### Linting
 

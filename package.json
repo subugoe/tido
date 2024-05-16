@@ -68,7 +68,8 @@
   "scripts": {
     "build": "vite build",
     "cypress": "cypress open",
-    "cypress:headless": "node_modules/.bin/cypress run --headless",
+    "cypress:headless": "cypress run --headless",
+    "dev": "vite",
     "fix": "npm run fix:vue && npm run fix:js && npm run fix:scss",
     "fix:js": "eslint --fix --ext .js src",
     "fix:scss": "node_modules/.bin/stylelint --fix 'src/**/*.scss'",
@@ -78,10 +79,10 @@
     "lint:scss": "node_modules/.bin/stylelint 'src/**/*.{scss,vue}'",
     "lint:vue": "eslint --ext .vue src",
     "release": "npm run build && npm publish",
-    "serve:dev": "vite",
-    "serve:prod": "npm run build && ncp dist/ examples/dist/ && http-server examples -p 2222 -c-1 --silent --cors",
-    "serve:mock-api": "http-server tests/mocks -p 8181 -c-1 --silent --cors",
-    "test:e2e": "start-server-and-test serve:mock-api 8181 cypress:headless",
+    "start:mock-api": "http-server tests/mocks -p 8181 -c-1 --silent --cors",
+    "preview": "npm run build && vite preview",
+    "preview:examples": "npm run build && ncp dist/ examples/dist/ && http-server examples -p 2222 -c-1 --silent --cors",
+    "test": "start-server-and-test preview:examples 2222 cypress:headless",
     "write-changelog": "standard-version"
   },
   "files": [
