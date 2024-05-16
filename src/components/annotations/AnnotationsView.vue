@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   computed, onBeforeUnmount, ref, watch,
 } from 'vue';
@@ -37,10 +37,10 @@ const store = useStore();
 const message = ref('no_annotations_in_view');
 
 const config = computed(() => store.getters['config/config']);
-const annotations = computed(() => store.getters['annotations/annotations']);
-const activeAnnotations = computed(() => store.getters['annotations/activeAnnotations']);
-const filteredAnnotations = computed(() => store.getters['annotations/filteredAnnotations']);
-const activeContentUrl = computed(() => store.getters['contents/activeContentUrl']);
+const annotations = computed<Annotation[]>(() => store.getters['annotations/annotations']);
+const activeAnnotations = computed<ActiveAnnotation>(() => store.getters['annotations/activeAnnotations']);
+const filteredAnnotations = computed<Annotation[]>(() => store.getters['annotations/filteredAnnotations']);
+const activeContentUrl = computed<string>(() => store.getters['contents/activeContentUrl']);
 const updateTextHighlighting = computed(() =>
   // We need to make sure that annotations are loaded (this.annotations),
   // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
@@ -59,11 +59,11 @@ watch(
   { immediate: true },
 );
 
-function addAnnotation(id) {
+function addAnnotation(id: string) {
   store.dispatch('annotations/addActiveAnnotation', id);
 }
 
-function removeAnnotation(id) {
+function removeAnnotation(id: string) {
   store.dispatch('annotations/removeActiveAnnotation', id);
 }
 

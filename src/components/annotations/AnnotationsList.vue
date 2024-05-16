@@ -21,40 +21,40 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, watch } from 'vue';
 import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 
-const props = defineProps({
-  activeAnnotation: {
-    type: Object,
-    default: () => {},
-  },
-  configuredAnnotations: {
-    type: Array,
-    default: () => [],
-  },
-  toggle: {
-    type: Function,
-    default: () => null,
-  },
-  types: Array,
-});
 
-const annotationTypesMapping = computed(() => (
+export interface Props {
+  activeAnnotation: ActiveAnnotation
+  configuredAnnotations: Annotation[],
+  toggle: Function,
+  types: any[]
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  activeAnnotation: () => <ActiveAnnotation>{},
+  configuredAnnotations: () => <Annotation[]> [],
+  toggle: () => null,
+})
+
+const annotationTypesMapping = computed<Object>(() => (
+  // it returns an object with a varying number of 'key', 'value' pairs
   props.types.reduce((prev, curr) => {
     prev[curr.name] = curr.annotationType || 'annotation';
     return prev;
   }, {})
 ));
 
-function isActive(annotation) {
+function isActive(annotation: Annotation): boolean {
   return !!props.activeAnnotation[annotation.id];
 }
-function isText(annotation) {
+function isText(annotation: Annotation) : boolean {
   return annotationTypesMapping.value[annotation.body['x-content-type']] === 'text';
 }
-function getIconName(typeName) {
+function getIconName(typeName: string): string {
+  // Question: is there any range of values for the typeName ? I set it to 'string' by considering examples when just printing it
   return props.types.find(({ name }) => name === typeName)?.icon || 'biPencilSquare';
 }
 </script>

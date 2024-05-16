@@ -4,13 +4,15 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  value: {
-    type: String,
-    default: () => '',
-  },
-});
+<script setup lang="ts">
+
+export interface Props {
+  value?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  value: ''
+})
 </script>
 
 <style lang="scss" scoped>
