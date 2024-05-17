@@ -1,12 +1,40 @@
 declare global {
     
+    interface Annotation {
+        body: AnnotationContent[],
+        target: AnnotationTarget[],
+        type: string,
+        id: string
+    }
+
+    interface ActiveAnnotation {
+        [key: string]: Annotation
+    }
+
     interface Actor {
         '@context': string,
-        role:  string[]
+        role:  string[],
         name: string,
         id?: string,
         idref?: Idref[]
 
+    }
+
+    interface AnnotationContent {
+      type: 'TextualBody',
+      value: string,
+      format: AnnotationContentFormat,
+      'x-content-type': AnnotationContentType
+    }
+
+    type AnnotationContentFormat = 'text/plain' | 'text/html'
+    type AnnotationContentType = 'Person' | 'Place'
+
+    interface AnnotationTarget {
+        selector: CssSelector | RangeSelector,
+        format: string,
+        language: string,
+        source: string
     }
 
     interface Collection {
@@ -28,6 +56,12 @@ declare global {
         url: string,
         type: string,
         integrity?: DataIntegrity
+    }
+
+
+    type CssSelector = {
+        type: 'CssSelector',
+        value: string
     }
 
     interface DataIntegrity {
@@ -107,6 +141,11 @@ declare global {
         editionPrints?: boolean
     }
 
+    type RangeSelector = {
+        type: 'RangeSelector',
+        startSelector: CssSelector,
+        endSelector: CssSelector
+    }
     interface Repository {
         '@context': string,
         label?: string,

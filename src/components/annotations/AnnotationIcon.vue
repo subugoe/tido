@@ -6,12 +6,14 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import BaseIcon from '@/components/base/BaseIcon.vue';
 
-const props = defineProps({
-  name: String,
-});
+interface Props {
+  name: string
+}
+const props = defineProps<Props>()
+
 </script>
 
 <style scoped>

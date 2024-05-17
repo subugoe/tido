@@ -15,18 +15,17 @@
   </a>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import BaseIcon from '@/components/base/BaseIcon.vue';
 
-const props = defineProps({
-  url: {
-    type: String,
-    default: () => '',
-  },
-  text: {
-    type: String,
-    default: () => '',
-  },
-});
+export interface Props {
+  url: string,
+  text: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  url: '',
+  text: ''
+})
 
 </script>
