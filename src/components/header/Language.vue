@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   computed, onMounted, ref, watch,
 } from 'vue';
@@ -25,21 +25,26 @@ import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
 
+interface Language {
+  label: string,
+  value: string
+}
+
 const store = useStore();
 const { locale: i18nLocale } = useI18n();
 
-const langs = ref([
+const langs = ref<Language[]>([
   { label: 'DE', value: 'de-de' },
   { label: 'EN', value: 'en-US' },
 ]);
-const selectedLang = ref(langs.value[0]);
-const showDropdown = ref(false);
+const selectedLang = ref<Language>(langs.value[0]);
+const showDropdown = ref<boolean>(false);
 const config = computed(() => store.getters['config/config']);
 
 watch(
   selectedLang,
   (lang) => {
-    i18nLocale.value = lang;
+    i18nLocale.value = lang.value;
   },
 );
 
@@ -47,7 +52,7 @@ onMounted(() => {
   selectedLang.value = config.value.lang || 'en-US';
 });
 
-function handleLanguageChange(lang) {
-  selectedLang.value = lang.value;
+function handleLanguageChange(lang: Language) {
+  selectedLang.value = lang;
 }
 </script>

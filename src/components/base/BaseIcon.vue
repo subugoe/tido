@@ -1,7 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import { getIcon } from '@/utils/icons';
 
-const props = defineProps(['name']);
+//const props = defineProps(['name']);
+export interface Props {
+  name: string
+}
+
+const props = defineProps<Props>()
 </script>
 
 <template>

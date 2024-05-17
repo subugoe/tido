@@ -48,7 +48,9 @@ const pt = {
   }
 }
 
-function getAriaChecked() {
+type AriaChecked = 'mixed' | 'true' | 'false'
+
+function getAriaChecked(): AriaChecked {
   if (props.modelValue === null) return 'mixed';
   if (props.modelValue === true) return 'true';
   else return 'false';
