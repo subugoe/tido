@@ -90,7 +90,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {
   computed, nextTick, ref, watch,
 } from 'vue';
@@ -143,7 +143,7 @@ export default {
     const unsubscribe = ref(null);
     const isLoading = ref(false);
 
-    const item = computed(() => store.getters['contents/item']);
+    const item = computed<Item>(() => store.getters['contents/item']);
 
     watch(
       () => props.activeView,
@@ -198,7 +198,7 @@ export default {
       const { component } = findComponent(connector.id);
 
       const type = connector.options?.type;
-      const url = getContentUrl(type);
+      const url: string | null = getContentUrl(type);
       if (!url) return;
 
       const fontSize = 16;
@@ -228,7 +228,7 @@ export default {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
-      const url = item.value?.annotationCollection;
+      const url: string | undefined = item.value?.annotationCollection;
 
       if (!url) return;
 
@@ -311,8 +311,8 @@ export default {
       }];
     }
 
-    function getContentUrl(type) {
-      let contentItem = null;
+    function getContentUrl(type: string): string | null {
+      let contentItem: Content | null = null;
       if (!type) {
         [contentItem] = item.value.content;
         // TODO: this should be moved to loading time in order dynamically recognize all content types

@@ -14,11 +14,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 
-const buttons = computed(() => ([
+interface Button {
+  id: string,
+  icon: string,
+  tooltip: string
+}
+
+const buttons = computed<Button[]>(() => ([
   { id: 'zoom-in', icon: 'zoomIn', tooltip: 'zoom_in' },
   { id: 'zoom-out', icon: 'zoomOut', tooltip: 'zoom_out' },
   { id: 'fullscreen', icon: 'fullscreen', tooltip: 'switch_to_fullscreen' },

@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
@@ -32,11 +32,11 @@ import BaseButton from '@/components/base/BaseButton.vue';
 const store = useStore();
 const { t } = useI18n();
 
-const manifest = computed(() => store.getters['contents/manifest']);
-const manifests = computed(() => store.getters['contents/manifests']);
-const itemUrl = computed(() => store.getters['contents/itemUrl']);
-const itemIndex = computed(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) : -1));
-const hasPrev = computed(() => {
+const manifest = computed<Manifest>(() => store.getters['contents/manifest']);
+const manifests = computed<Manifest[]>(() => store.getters['contents/manifests']);
+const itemUrl = computed<string>(() => store.getters['contents/itemUrl']);
+const itemIndex = computed<number>(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) : -1));
+const hasPrev = computed<boolean>(() => {
   const prevIndex = itemIndex.value - 1;
   if (prevIndex < 0) {
     if (manifests.value === null) return false;
@@ -46,7 +46,7 @@ const hasPrev = computed(() => {
 
   return true;
 });
-const hasNext = computed(() => {
+const hasNext = computed<boolean>(() => {
   const nextIndex = itemIndex.value + 1;
   if (nextIndex > manifest.value.sequence.length - 1) {
     if (manifests.value === null) return false;
@@ -55,16 +55,17 @@ const hasNext = computed(() => {
   }
   return true;
 });
-const nextButtonLabel = computed(() => (itemIndex.value === manifest.value.sequence.length - 1
-  ? `${t('next')} ${t(labels.value.manifest)}`
-  : `${t('next')} ${t(labels.value.item)}`));
-const prevButtonLabel = computed(() => (itemIndex.value === 0
-  ? `${t('prev')} ${t(labels.value.manifest)}`
-  : `${t('prev')} ${t(labels.value.item)}`));
-const labels = computed(() => store.getters['config/config'].labels || {
+const labels = computed<Labels>(() => store.getters['config/config'].labels || {
   manifest: 'manifest',
   item: 'item',
 });
+const nextButtonLabel = computed<string>(() => (itemIndex.value === manifest.value.sequence.length - 1
+  ? `${t('next')} ${t(labels.value.manifest ? labels.value.manifest: 'Manuscript')}`
+  : `${t('next')} ${t(labels.value.item)}`));
+const prevButtonLabel = computed<string>(() => (itemIndex.value === 0
+  ? `${t('prev')} ${t(labels.value.manifest ? labels.value.manifest: 'Manuscript')}`
+  : `${t('prev')} ${t(labels.value.item)}`));
+
 
 function prev() {
   const prevIndex = itemIndex.value - 1;

@@ -33,23 +33,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import BaseIcon from '@/components/base/BaseIcon.vue';
 
-const props = defineProps({
-  item: {
-    type: Object,
-    default: () => {},
-  },
-});
+
+export interface Props {
+  item: Item
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  item: () => <Item>{}
+})
 
 const store = useStore();
 
-const collectionTitle = computed(() => store.getters['contents/collectionTitle']);
-const manifestTitle = computed(() => store.getters['contents/manifest']?.label);
-const labels = computed(() => store.getters['config/config'].labels || {
+const collectionTitle = computed<string | null>(() => store.getters['contents/collectionTitle']);
+const manifestTitle = computed<string | undefined>(() => store.getters['contents/manifest']?.label);
+const labels = computed<Labels>(() => store.getters['config/config'].labels || {
   manifest: 'manifest',
   item: 'item',
 });
