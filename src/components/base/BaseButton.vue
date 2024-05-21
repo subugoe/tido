@@ -1,37 +1,27 @@
-<script setup>
+<script setup lang="ts">
 import { watch } from 'vue';
 import BaseIcon from '@/components/base/BaseIcon.vue';
 
-const props = defineProps({
-  text: {
-    type: String,
-    default: '',
-  },
-  display: {
-    type: String,
-    default: 'filled',
-  },
-  size: {
-    type: String,
-    default: 'normal',
-  },
-  icon: {
-    type: String,
-    default: null,
-  },
-  iconPosition: {
-    type: String,
-    default: 'left',
-  },
-  rounded: {
-    type: Boolean,
-    default: null,
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-});
+export interface Props {
+  text: string,
+  display: string,
+  size: string,
+  icon: string | null,
+  iconPosition: string | null,
+  rounded: boolean | null,
+  disabled: boolean,
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  text: '',
+  display: 'filled',
+  size: 'normal',
+  icon: null,
+  iconPosition: 'left',
+  rounded: null,
+  disabled: false
+})
+
 
 let _icon;
 watch(() => props.icon, (value) => _icon = value, { immediate: true });
