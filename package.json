@@ -90,5 +90,8 @@
   ],
   "publishConfig": {
     "@subugoe:registry": "https://gitlab.gwdg.de/api/v4/projects/10921/packages/npm/"
+  },
+  "dependencies": {
+    "pinia": "^2.1.7"
   }
 }

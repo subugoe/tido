@@ -105,8 +105,6 @@ export const initCollection = async ({
 
     activeManifest = manifests[manifestIndex];
     itemUrl = activeManifest.sequence[itemIndex].id;
-    if ('p' in resultConfig) commit('setPanels', resultConfig.p);
-    if ('s' in resultConfig) commit('setShow', resultConfig.s);
     const { support } = activeManifest;
 
     if (support && support.length > 0) {
