@@ -48,7 +48,52 @@ declare global {
         total?: number,
         annotationCollection?: string,
         modules?: Module[]
-    
+    }
+
+    interface Colors {
+        forceMode: string,
+        primary: string,
+        secondary: string,
+        accent: string
+    }
+
+    interface ConnectorViewPanel {
+        id: number,
+        options?: Option_1_ConnectorViewPanel | Option_2_ConnectorViewPanel | Option_3_ConnectorViewPanel
+    }
+
+    type Option_1_ConnectorViewPanel = { 
+        collection: {
+            all: boolean,
+        },
+        manifest: {
+            all: boolean,
+        },
+        item: {
+            all: boolean,
+        },      
+    }
+
+    type Option_2_ConnectorViewPanel = {
+        labels: Labels
+    }
+
+    type Option_3_ConnectorViewPanel = {
+        types: Array
+    }
+
+    interface Config {
+        container: string,
+        collection: string,
+        manifest: string,
+        item: string,
+        panels: Panel[],
+        colors: Colors,
+        header: Header,
+        labels: Labels,
+        lang: string,
+        meta: MetaConfig,
+        notificationColors: NotificationColors
     }
 
     interface Content {
@@ -67,6 +112,13 @@ declare global {
     interface DataIntegrity {
         type: string,
         value: string
+    }
+
+    interface Header {
+        show: boolean,
+        navigation: boolean,
+        panelsToggle: boolean,
+        languageSwitch: boolean
     }
 
     interface Idref {
@@ -136,9 +188,33 @@ declare global {
         metadata?: Metadata[]
     }
 
+    interface MetaConfig {
+        collection: {
+            all: boolean
+        },
+        manifest: {
+            all: boolean
+        },
+        item: {
+            all: boolean
+        }
+    }
+
     interface Module {
         editionManuscripts?: boolean,
         editionPrints?: boolean
+    }
+
+    interface NotificationColors {
+        info: string,
+        warning: string
+    }
+
+    interface Panel {
+        label: string,
+        toggle: boolean,
+        show: boolean,
+        views: ViewPanel[]
     }
 
     type RangeSelector = {
@@ -178,6 +254,13 @@ declare global {
         type: TitleType
     }
     type TitleType = 'main' | 'sub';
+
+    interface ViewPanel {
+        id: string,
+        label: string,
+        connector: ConnectorViewPanel,
+        default?: boolean
+    }
 
 }
 
