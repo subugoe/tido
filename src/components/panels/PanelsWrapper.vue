@@ -16,19 +16,23 @@
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import { useConfigStore } from '../../stores/config';
+
 import Panel from '@/components/panels/Panel.vue';
 
 const store = useStore();
+const configStore = useConfigStore()
+
 
 const panels = computed(() => {
   const { panels } = config.value;
   return panels;
 });
-const config = computed(() => store.getters['config/config']);
-const activeViews = computed(() => store.getters['config/activeViews']);
+const config = computed(() => configStore.config);  
+const activeViews = computed(() => configStore.activeViews); 
 
 function onActiveViewChange(viewIndex, panelIndex) {
-  store.dispatch('config/setActivePanelView', { viewIndex, panelIndex });
+    configStore.setActivePanelView(viewIndex, panelIndex) 
 }
 
 function getActiveView(panelIndex) {

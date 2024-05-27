@@ -22,6 +22,7 @@ import {
   computed, onMounted, ref, watch,
 } from 'vue';
 import { useStore } from 'vuex';
+import { useConfigStore } from '../../stores/config';
 import { useI18n } from 'vue-i18n';
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
 
@@ -31,6 +32,7 @@ interface Language {
 }
 
 const store = useStore();
+const configStore = useConfigStore()
 const { locale: i18nLocale } = useI18n();
 
 const langs = ref<Language[]>([
@@ -39,7 +41,7 @@ const langs = ref<Language[]>([
 ]);
 const selectedLang = ref<Language>(langs.value[0]);
 const showDropdown = ref<boolean>(false);
-const config = computed(() => store.getters['config/config']);
+const config = computed(() => configStore.config);  
 
 watch(
   selectedLang,

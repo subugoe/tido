@@ -18,6 +18,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import { useConfigStore } from '../../src/stores/config';
 import BaseIcon from '@/components/base/BaseIcon.vue';
 
 const props = defineProps({
@@ -32,8 +33,9 @@ const props = defineProps({
   },
 });
 const store = useStore();
+const configStore = useConfigStore()
 
-const config = computed(() => store.getters['config/config']);
+const config = computed(() => configStore.config);     
 const notificationColors = computed(() => config.value.notificationColors);
 const color = computed(() => {
   switch (props.type) {

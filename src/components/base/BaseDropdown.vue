@@ -18,12 +18,15 @@
 <script setup>
 import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
+import { useConfigStore } from '../../stores/config';
+
 import BaseButton from '@/components/base/BaseButton.vue';
 
 const props = defineProps(['modelValue', 'buttonText']);
 const emit = defineEmits(['update:modelValue']);
 const store = useStore();
-const container = computed(() => store.getters['config/config'].container);
+const configStore = useConfigStore()
+const container = computed(() => configStore.config.container);
 
 watch(
   () => props.modelValue,

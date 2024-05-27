@@ -28,6 +28,10 @@ import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import Notification from '@/components/Notification.vue';
 import * as AnnotationUtils from '@/utils/annotations';
 
+import { useConfigStore } from '../../stores/config';
+
+const configStore = useConfigStore()
+
 const props = defineProps({
   url: String,
   types: Array,
@@ -36,7 +40,7 @@ const props = defineProps({
 const store = useStore();
 const message = ref('no_annotations_in_view');
 
-const config = computed(() => store.getters['config/config']);
+const config = computed(() => configStore.config);
 const annotations = computed<Annotation[]>(() => store.getters['annotations/annotations']);
 const activeAnnotations = computed<ActiveAnnotation>(() => store.getters['annotations/activeAnnotations']);
 const filteredAnnotations = computed<Annotation[]>(() => store.getters['annotations/filteredAnnotations']);
