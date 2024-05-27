@@ -26,17 +26,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'TIDO',
 };
 </script>
 
-<script setup>
+<script setup lang="ts">
 import {
   computed, inject, onMounted, ref,
 } from 'vue';
 import { useStore } from 'vuex';
+import { useConfigStore } from './stores/config';
+
 import { useI18n } from 'vue-i18n';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
 import { delay } from '@/utils';
@@ -47,6 +49,7 @@ import BaseIcon from '@/components/base/BaseIcon.vue';
 import { initUseDark } from '@/utils/is-dark';
 
 const store = useStore();
+const configStore = useConfigStore()
 const { t, locale: i18nLocale } = useI18n();
 
 const errorTitle = ref('');
@@ -55,7 +58,6 @@ const isLoading = ref(true);
 
 const ready = computed(() => {
   const { collection: collectionUrl, manifest: manifestUrl } = config.value;
-
   if (!item.value) {
     return false;
   }
@@ -74,12 +76,12 @@ const ready = computed(() => {
 
   return true;
 });
-const annotations = computed(() => store.getters['annotations/annotations']);
-const config = computed(() => store.getters['config/config']);
-const collection = computed(() => store.getters['contents/collection']);
-const item = computed(() => store.getters['contents/item']);
-const manifest = computed(() => store.getters['contents/manifest']);
-const manifests = computed(() => store.getters['contents/manifests']);
+const annotations = computed<Annotation[]>(() => store.getters['annotations/annotations']);
+const config = computed(() => configStore.config);
+const collection = computed<Collection>(() => store.getters['contents/collection']);
+const item = computed<Item>(() => store.getters['contents/item']);
+const manifest = computed<Manifest>(() => store.getters['contents/manifest']);
+const manifests = computed<Manifest[]>(() => store.getters['contents/manifests']);
 initUseDark(config.value.container);
 
 onMounted(async () => {
@@ -103,22 +105,22 @@ onMounted(async () => {
   await init();
 });
 
-async function getCollection(url) {
+async function getCollection(url: string) {
   await store.dispatch('contents/initCollection', url);
 }
 async function loadConfig() {
   try {
     const config = inject('config');
-    await store.dispatch('config/load', config);
+    await configStore.load(config)
   } catch ({ title, message }) {
     errorTitle.value = t('config_error');
     errorMessage.value = t(message);
   }
 }
-async function getManifest(url) {
+async function getManifest(url: string) {
   await store.dispatch('contents/initManifest', url);
 }
-async function getItem(url) {
+async function getItem(url: string) {
   await store.dispatch('contents/initItem', url);
 }
 async function init() {
@@ -129,7 +131,6 @@ async function init() {
     // If a collection is given we ignore the manifest setting
     // and try to figure out the correct manifest by searching for the above item.
     // Otherwise, no collection is given but a single manifest instead, so we load that manifest.
-
     if (collection) {
       await getCollection(collection);
     } else if (manifest) {

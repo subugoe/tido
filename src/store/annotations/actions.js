@@ -4,7 +4,10 @@ import * as Utils from '@/utils';
 import { scrollIntoViewIfNeeded } from '@/utils';
 import { getAnnotationListElement } from '@/utils/annotations';
 
+import { useConfigStore } from '../../stores/config';
+
 export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
+  const configStore = useConfigStore()
   const { activeAnnotations, annotations } = getters;
   const newActiveAnnotation = annotations.find((annotation) => annotation.id === id);
 
@@ -12,7 +15,7 @@ export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
     return;
   }
 
-  const iconName = rootGetters['config/getIconByType'](newActiveAnnotation.body['x-content-type']);
+  const iconName = configStore.getIconByType(newActiveAnnotation.body['x-content-type']);
 
   const activeAnnotationsList = { ...activeAnnotations };
 
@@ -37,7 +40,8 @@ export const setActiveAnnotations = ({ commit }, activeAnnotations) => {
 
 export const setFilteredAnnotations = ({ commit, getters, rootGetters }, types) => {
   const { annotations } = getters;
-  const activeContentType = rootGetters['config/activeContentType'];
+  const configStore = useConfigStore()
+  const activeContentType =  configStore.activeContentType  
   let filteredAnnotations = [];
 
   if (annotations !== null) {
@@ -143,6 +147,7 @@ export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
   const annotationElements = Array.from(document.querySelectorAll('[data-annotation]'));
 
   const tooltipEl = null;
+  const configStore = useConfigStore()
 
   // Annotations can be nested, so we filter out all outer elements from this selection and
   // iterate over the deepest elements
@@ -161,7 +166,7 @@ export const addHighlightHoverListeners = ({ getters, rootGetters }) => {
         const { filteredAnnotations } = getters;
         const annotationTooltipModels = filteredAnnotations.reduce((acc, curr) => {
           const { id } = curr;
-          const name = rootGetters['config/getIconByType'](curr.body['x-content-type']);
+          const name = configStore.getIconByType(curr.body['x-content-type'])  
           acc[id] = {
             value: curr.body.value,
             name,
