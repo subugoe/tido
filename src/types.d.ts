@@ -7,7 +7,7 @@ declare global {
         id: string
     }
 
-    interface AnnotationViewMotifs extends View {
+    interface AnnotationView extends View {
         connector: {
             id: number,
             options: AnnotationViewOptions
@@ -15,19 +15,13 @@ declare global {
    }
 
    interface AnnotationViewOptions {
-        types: AnnotationsOptionsTypes[]
+        types: AnnotationOptionsTypes[]
    }
 
-   interface AnnotationsOptionsTypes {
+   interface AnnotationOptionsTypes {
       name: string,
       index: string
    }
-
-   interface AnnotationViewEditorial extends AnnotationViewMotifs {
-        default: true
-   } 
-
-   type AnnotationViews = [AnnotationViewEditorial, AnnotationViewMotifs]
 
     interface ActiveAnnotation {
         [key: string]: Annotation
@@ -104,7 +98,7 @@ declare global {
         connector: {
             id: number,
             options: {
-              "labels": Labels
+              labels: Labels
             }
           }
     }
@@ -268,33 +262,19 @@ declare global {
 
 
     interface TextView extends View {
-        connector: TextViewConfigConnector
-    }
-
-    interface TextViewConfigConnector {
-        id: number,
-        options: {
-            type: string
+        connector: {
+            id: number
         }
     }
 
-    type TidoPanels = [ {
-        label: string,
-        views: ContentsAndMetadataViews
-    },
-    {
-        label: string,
-        views: ImageView[]
-    },
-    {
-        label: string,
-        views: TextView[]
-    },
-    {
-        label: string,
-        views: AnnotationsViews
-    }
-]
+
+    type TidoPanels = [ 
+        ContentPanel,
+        MetadataPanel,
+        ImagePanel,
+        TextPanel,
+        AnnotationPanel
+    ]
     
     interface Title {
         '@context': string,
@@ -307,6 +287,32 @@ declare global {
         id: string,
         label: string,
         default?: boolean
+    }
+
+    interface Panel {
+        label: string,
+        show: boolean,
+        toggle: boolean
+    }
+
+    interface ContentPanel extends Panel {
+        views: ContentView[] 
+    }
+
+    interface MetadataPanel extends Panel {
+        views: MetadataView[]
+    }
+
+    interface ImagePanel extends Panel {
+        views: ImageView[]
+    }
+
+    interface TextPanel extends Panel {
+        views: TextView[]
+    }
+
+    interface AnnotationPanel extends Panel {
+        views: AnnotationView[]
     }
 }
 
