@@ -71,7 +71,7 @@ const { t } = useI18n();
 
 const toggles = ref([]);
 const showDropdown = ref(false);
-const panels = computed(() => configStore.config.panels  );  //store.getters['config/config'].panels);
+const panels = computed(() => configStore.config.panels  );
 const resetColor = computed(() => (toggles.value.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7'));
 
 watch(
