@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { useConfigStore } from '../../stores/config';
+import { useConfigStore } from '@/stores/config';
 import { useI18n } from 'vue-i18n';
 import BaseButton from '@/components/base/BaseButton.vue';
 

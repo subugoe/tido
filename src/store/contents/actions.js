@@ -3,7 +3,7 @@ import { i18n } from '@/i18n';
 import BookmarkService from '@/services/bookmark';
 import { loadCss, loadFont } from '../../utils';
 
-import { useConfigStore } from '../../stores/config';
+import { useConfigStore } from '@/stores/config';
 
 
 export const getItemIndex = async ({ getters }, itemUrl) => {

@@ -4,7 +4,7 @@ import * as Utils from '@/utils';
 import { scrollIntoViewIfNeeded } from '@/utils';
 import { getAnnotationListElement } from '@/utils/annotations';
 
-import { useConfigStore } from '../../stores/config';
+import { useConfigStore } from '@/stores/config';
 
 export const addActiveAnnotation = ({ getters, rootGetters, dispatch }, id) => {
   const configStore = useConfigStore()

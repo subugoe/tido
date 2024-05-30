@@ -18,7 +18,7 @@
 <script setup>
 import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
-import { useConfigStore } from '../../stores/config';
+import { useConfigStore } from '@/stores/config';
 
 import BaseButton from '@/components/base/BaseButton.vue';
 

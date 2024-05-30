@@ -16,7 +16,7 @@
 
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { useConfigStore } from '../../stores/config';
+import { useConfigStore } from '@/stores/config';
 
 import Panel from '@/components/panels/Panel.vue';
 

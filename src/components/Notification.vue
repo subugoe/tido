@@ -18,7 +18,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { useConfigStore } from '../../src/stores/config';
+import { useConfigStore } from '@/stores/config';
 import BaseIcon from '@/components/base/BaseIcon.vue';
 
 const props = defineProps({

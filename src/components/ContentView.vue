@@ -22,7 +22,7 @@ import {
   computed, readonly, ref, watch,
 } from 'vue';
 import { useStore } from 'vuex';
-import { useConfigStore } from '../../src/stores/config';
+import { useConfigStore } from '@/stores/config';
 import Notification from '@/components/Notification.vue';
 import { request } from '@/utils/http';
 import { domParser, delay } from '@/utils';

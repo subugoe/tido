@@ -63,7 +63,7 @@ import { isMobile } from '@/utils/is-mobile';
 import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
-import { useConfigStore } from '../../stores/config';
+import { useConfigStore } from '@/stores/config';
 
 const store = useStore();
 const configStore = useConfigStore()

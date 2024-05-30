@@ -28,7 +28,7 @@ import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import Notification from '@/components/Notification.vue';
 import * as AnnotationUtils from '@/utils/annotations';
 
-import { useConfigStore } from '../../stores/config';
+import { useConfigStore } from '@/stores/config';
 
 const configStore = useConfigStore()
 
