@@ -4,14 +4,13 @@ import {
   } from 'vue';
 
 import messages from 'src/i18n';
-import { isUrl } from '@/utils';
 import BookmarkService from '@/services/bookmark';
 import { i18n } from '@/i18n';
 
   export const useConfigStore = defineStore('config', () => {
      // States ('Setup Pinia': refs)
-     const instanceId = ref<number>(null)
-     const config = ref<Config>({
+     const instanceId = ref(null)
+     const config = ref({
         container: '#app',
         collection: '',
         manifest: '',
@@ -193,7 +192,7 @@ import { i18n } from '@/i18n';
         config.value = payload;
      }
 
-    async function setActivePanelView(viewIndex: number, panelIndex: number) {
+    async function setActivePanelView(viewIndex, panelIndex) {
         if(activeViews.value[panelIndex] !== undefined) {
             activeViews.value[panelIndex] = viewIndex;
         }
@@ -204,7 +203,7 @@ import { i18n } from '@/i18n';
         config.value.panels = panels;
     }  
       
-    function setShowPanelSetter(index: number, show: boolean) {
+    function setShowPanelSetter(index, show) {
         config.value.panels[index].show = show;
     } 
       
@@ -217,69 +216,69 @@ import { i18n } from '@/i18n';
         activeViews.value = payload;
     }
       
-     function setInstanceId(payload) {
+    function setInstanceId(payload) {
         instanceId.value = payload;
-     }
+    }
       
      // Actions to functions
 
 
-     function validateCollection(value) {
+    function validateCollection(value) {
         return !!(value);
       }
       
-      function validateManifest(value) {
-        return !!(value);
-      }
+    function validateManifest(value) {
+      return !!(value);
+    }
       
-      function validateItem(value) {
-        return !!(value);
-      }
+    function validateItem(value) {
+      return !!(value);
+    }
       
-      function validateTranslations(value) {
-        return !!(value) && Object.keys(value).every((key) => key === 'en' || key === 'de');
-      }
+    function validateTranslations(value) {
+      return !!(value) && Object.keys(value).every((key) => key === 'en' || key === 'de');
+    }
       
-      function validatePanels(value) {
-        return !!(value) && Array.isArray(value);
-      }
+    function validatePanels(value) {
+      return !!(value) && Array.isArray(value);
+    }
+    
+    function validateLang(value) {
+      return !!(value);
+    }
+    
+    function validateColors(value) {
+      return !!(value);
+    }
       
-      function validateLang(value) {
-        return !!(value);
-      }
+    function validateContainer(value) {
+      return !!(value);
+    }
+    
+    function validateHeader(value, defaultValue) {
+      if (!value) return false;
+    
+      const defaultKeys = Object.keys(defaultValue);
+      const invalidKeys = Object.keys(value)
+        .filter((key) => defaultKeys.findIndex((defaultKey) => defaultKey === key) === -1);
+      return invalidKeys.length === 0;
+    }
       
-      function validateColors(value) {
-        return !!(value);
-      }
-      
-      function validateContainer(value) {
-        return !!(value);
-      }
-      
-      function validateHeader(value, defaultValue) {
-        if (!value) return false;
-      
-        const defaultKeys = Object.keys(defaultValue);
-        const invalidKeys = Object.keys(value)
-          .filter((key) => defaultKeys.findIndex((defaultKey) => defaultKey === key) === -1);
-        return invalidKeys.length === 0;
-      }
-      
-      function validateLabels(labels, validLabels: Labels) {
-        // valid labels are the labels from the default config
-        // we consider the custom labels, in the case when all the keys have a value, otherwise we would have the button with empty text i.e for the following scenario
-        // when the item is ''
-        if (!labels || !validLabels) return false;
-      
-        let isValid = true;
-        Object.keys(labels).forEach((key) => {
-          if (!(key in validLabels) || labels[key] === '') {
-            isValid = false;
-          }
-        });
-      
-        return isValid;
-      }
+    function validateLabels(labels, validLabels: Labels) {
+      // valid labels are the labels from the default config
+      // we consider the custom labels, in the case when all the keys have a value, otherwise we would have the button with empty text i.e for the following scenario
+      // when the item is ''
+      if (!labels || !validLabels) return false;
+    
+      let isValid = true;
+      Object.keys(labels).forEach((key) => {
+        if (!(key in validLabels) || labels[key] === '') {
+          isValid = false;
+        }
+      });
+    
+      return isValid;
+    }
       
       function createDefaultActiveViews(panelsConfig) {
         return panelsConfig
@@ -297,7 +296,7 @@ import { i18n } from '@/i18n';
 
     // URL Config
 
-    function splitUrlParts(urlQuery: string, attributes: Array<string>): Array<string| undefined> {
+    function splitUrlParts(urlQuery, attributes) {
         if (urlQuery === '') {
         return [undefined, undefined, undefined, undefined];
         }
@@ -309,12 +308,12 @@ import { i18n } from '@/i18n';
         return [manifestPart, itemPart, panelsPart, showPart];
     }
     
-    function isManifestPartValid(manifestPart: string): boolean {
+    function isManifestPartValid(manifestPart) {
         const regexManifest = /m\d+$/;
         return regexManifest.exec(manifestPart) !== null;
     }
 
-    function isItemPartValid(itemPart: string): boolean {
+    function isItemPartValid(itemPart) {
         const regexItem = /i\d+$/;
         return regexItem.exec(itemPart) !== null;
     }
@@ -373,7 +372,7 @@ import { i18n } from '@/i18n';
           }
         }
         return p;
-      }
+    }
 
     function createActiveViewsFromPanelsArray(panelsArray) {
         // converts 'panelsArray' to an object with key, value: 'panel index: visible tab index'
@@ -385,7 +384,7 @@ import { i18n } from '@/i18n';
         }, {});
     }
 
-    function discoverCustomConfig(customConfig, defaultConfig) {
+    function discoverCustomConfig(customConfig, defaultConfig)  {
         const {
           container, translations, collection, manifest, item, panels, lang, colors, header, labels
         } = customConfig;
@@ -478,7 +477,7 @@ import { i18n } from '@/i18n';
         const urlConfig = discoverUrlConfig(custConfig);
         const defaultConfig = discoverDefaultConfig(config.value);
       
-        const header = {
+        const header: Header = {
           ...defaultConfig.header,
           ...customConfig.header,
         };

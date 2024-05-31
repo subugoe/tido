@@ -95,6 +95,7 @@ import {
   computed, nextTick, ref, watch,
 } from 'vue';
 import { useStore } from 'vuex';
+import { useConfigStore } from '@/stores/config';
 import { useI18n } from 'vue-i18n';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
@@ -136,6 +137,7 @@ export default {
   },
   setup(props, { emit }) {
     const store = useStore();
+    const configStore = useConfigStore()
     const { t } = useI18n();
 
     const tabs = ref([]);
@@ -317,7 +319,7 @@ export default {
         [contentItem] = item.value.content;
         // TODO: this should be moved to loading time in order dynamically recognize all content types
         //  instead of only the first one
-        store.dispatch('config/setContentType', contentItem.type.split('type=')[1]);
+        configStore.setContentType(contentItem.type.split('type=')[1]);
       }
 
       contentItem = item.value.content.find((c) => c.type.split('type=')[1] === type);

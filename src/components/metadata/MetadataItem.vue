@@ -19,7 +19,7 @@ const props = defineProps<{
 }>();
 
 const label = computed<string>(() => props.item?.key || 'other');
-const childItems = computed(<Metadata>() => props.item?.metadata || []);
+const childItems = computed<Metadata>(() => props.item?.metadata || []);
 
 function isLink(): boolean {
   const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;

@@ -7,21 +7,6 @@ declare global {
         id: string
     }
 
-    interface AnnotationView extends View {
-        connector: {
-            id: number,
-            options: AnnotationViewOptions
-       }
-   }
-
-   interface AnnotationViewOptions {
-        types: AnnotationOptionsTypes[]
-   }
-
-   interface AnnotationOptionsTypes {
-      name: string,
-      index: string
-   }
 
     interface ActiveAnnotation {
         [key: string]: Annotation
@@ -73,19 +58,6 @@ declare global {
         accent: string
     }
 
-    interface Config {
-        container: string,
-        collection: string,
-        manifest: string,
-        item: string,
-        panels: TidoPanels,
-        colors: Colors,
-        header: Header,
-        labels: Labels,
-        lang: string,
-        meta: MetaConfig,
-        notificationColors: NotificationColors
-    }
 
     interface Content {
         '@context': string,
@@ -93,20 +65,6 @@ declare global {
         type: string,
         integrity?: DataIntegrity
     }
-
-    interface ContentView extends View {
-        connector: {
-            id: number,
-            options: {
-              labels: Labels
-            }
-          }
-    }
-
-    type ContentsAndMetadataViews = [
-        ContentView,
-        MetadataView
-    ]
 
 
     type CssSelector = {
@@ -139,12 +97,6 @@ declare global {
         manifest?: string,
         license: License
     }
-
-    interface ImageView extends View {
-        connector: {
-          id: number
-        }
-     }
     
 
     interface Item {
@@ -200,23 +152,6 @@ declare global {
         metadata?: Metadata[]
     }
 
-    interface MetadataView extends View {
-        connector: {
-            id: number,
-            options: MetadataViewConfigOptions
-        }
-    }
-    interface MetadataViewConfigOptions {
-        collection: {
-            all: boolean
-        },
-        manifest: {
-            all: boolean
-        },
-        item: {
-            all: boolean
-        }
-    }
 
     interface Module {
         editionManuscripts?: boolean,
@@ -260,60 +195,12 @@ declare global {
     type SequenceType = 'collection' | 'manifest' | 'item'
     type SupportType = 'font' | 'css' 
 
-
-    interface TextView extends View {
-        connector: {
-            id: number
-        }
-    }
-
-
-    type TidoPanels = [ 
-        ContentPanel,
-        MetadataPanel,
-        ImagePanel,
-        TextPanel,
-        AnnotationPanel
-    ]
-    
     interface Title {
         '@context': string,
         title: string
         type: TitleType
     }
     type TitleType = 'main' | 'sub';
-
-    interface View {
-        id: string,
-        label: string,
-        default?: boolean
-    }
-
-    interface Panel {
-        label: string,
-        show: boolean,
-        toggle: boolean
-    }
-
-    interface ContentPanel extends Panel {
-        views: ContentView[] 
-    }
-
-    interface MetadataPanel extends Panel {
-        views: MetadataView[]
-    }
-
-    interface ImagePanel extends Panel {
-        views: ImageView[]
-    }
-
-    interface TextPanel extends Panel {
-        views: TextView[]
-    }
-
-    interface AnnotationPanel extends Panel {
-        views: AnnotationView[]
-    }
 }
 
 export {}

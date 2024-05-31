@@ -21,7 +21,6 @@
 import {
   computed, onMounted, ref, watch,
 } from 'vue';
-import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
 import { useI18n } from 'vue-i18n';
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
@@ -31,7 +30,6 @@ interface Language {
   value: string
 }
 
-const store = useStore();
 const configStore = useConfigStore()
 const { locale: i18nLocale } = useI18n();
 

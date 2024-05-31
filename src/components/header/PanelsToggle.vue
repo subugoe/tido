@@ -57,7 +57,6 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue';
-import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { isMobile } from '@/utils/is-mobile';
 import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
@@ -65,7 +64,6 @@ import BaseButton from '@/components/base/BaseButton.vue';
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
 import { useConfigStore } from '@/stores/config';
 
-const store = useStore();
 const configStore = useConfigStore()
 const { t } = useI18n();
 

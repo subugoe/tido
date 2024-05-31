@@ -12,6 +12,7 @@ import BaseIcon from '@/components/base/BaseIcon.vue';
 interface Props {
   name: string
 }
+
 const props = defineProps<Props>()
 
 </script>
