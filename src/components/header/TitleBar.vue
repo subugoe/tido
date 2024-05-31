@@ -36,6 +36,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import { useConfigStore } from '@/stores/config';
 import BaseIcon from '@/components/base/BaseIcon.vue';
 
 
@@ -48,10 +49,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const store = useStore();
+const configStore = useConfigStore()
 
 const collectionTitle = computed<string | null>(() => store.getters['contents/collectionTitle']);
 const manifestTitle = computed<string | undefined>(() => store.getters['contents/manifest']?.label);
-const labels = computed<Labels>(() => store.getters['config/config'].labels || {
+const labels = computed<Labels>(() => configStore.config.labels || {
   manifest: 'manifest',
   item: 'item',
 });

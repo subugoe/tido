@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Checkbox from 'primevue/checkbox'
-import TriStateCheckbox from 'primevue/tristatecheckbox'
 import { getIcon } from '@/utils/icons';
 
 const props = withDefaults(defineProps<{

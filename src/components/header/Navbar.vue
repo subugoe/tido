@@ -26,10 +26,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import { useConfigStore } from '@/stores/config';
 import { useI18n } from 'vue-i18n';
 import BaseButton from '@/components/base/BaseButton.vue';
 
 const store = useStore();
+const configStore = useConfigStore()
 const { t } = useI18n();
 
 const manifest = computed<Manifest>(() => store.getters['contents/manifest']);
@@ -55,7 +57,7 @@ const hasNext = computed<boolean>(() => {
   }
   return true;
 });
-const labels = computed<Labels>(() => store.getters['config/config'].labels || {
+const labels = computed<Labels>(() => configStore.config.labels || {
   manifest: 'manifest',
   item: 'item',
 });
@@ -78,7 +80,7 @@ function prev() {
 
     const prevManifest = manifests.value[prevManifestIndex];
     store.commit('contents/setManifest', prevManifest);
-    store.dispatch('config/setDefaultActiveViews');
+    configStore.setDefaultActiveViews()
     itemUrl = prevManifest.sequence[prevManifest.sequence.length - 1].id;
   } else {
     // We load the previous item
@@ -97,7 +99,7 @@ function next() {
 
     const nextManifest = manifests.value[nextManifestIndex];
     store.commit('contents/setManifest', nextManifest);
-    store.dispatch('config/setDefaultActiveViews');
+    configStore.setDefaultActiveViews()
     itemUrl = nextManifest.sequence[0].id;
   } else {
     itemUrl = manifest.value.sequence[nextIndex].id;

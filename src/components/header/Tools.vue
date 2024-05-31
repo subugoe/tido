@@ -8,14 +8,14 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useConfigStore } from '@/stores/config';
 import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
 import Language from '@/components/header/Language.vue';
 import DarkModeToggle from '@/components/header/DarkModeToggle.vue';
 
-const store = useStore();
+const configStore = useConfigStore()
 
-const config = computed(() => store.getters['config/config']);
+const config = computed(() => configStore.config);
 const showLanguageSwitch = computed(() => (config.value?.header?.languageSwitch !== undefined
   ? config.value.header.languageSwitch
   : true));

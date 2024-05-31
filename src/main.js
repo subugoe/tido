@@ -1,5 +1,6 @@
 import { createApp, h } from 'vue';
 import PrimeVue from 'primevue/config';
+import { createPinia } from 'pinia'
 import store from './store';
 import { i18n } from './i18n';
 import App from './App.vue';
@@ -7,6 +8,8 @@ import App from './App.vue';
 import './css/style.css';
 import './css/style.scss';
 import { getRGBColor } from '@/utils/color';
+
+const pinia = createPinia()
 
 function generateId() {
   return Math.random().toString(36).slice(2, 16);
@@ -23,6 +26,7 @@ window.Tido = function Tido(config = {}) {
   this.app.provide('config', this.config);
 
   this.app.use(PrimeVue);
+  this.app.use(pinia);
   this.app.use(store);
   this.app.use(i18n);
 

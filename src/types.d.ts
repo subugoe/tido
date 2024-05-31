@@ -7,6 +7,7 @@ declare global {
         id: string
     }
 
+
     interface ActiveAnnotation {
         [key: string]: Annotation
     }
@@ -48,8 +49,15 @@ declare global {
         total?: number,
         annotationCollection?: string,
         modules?: Module[]
-    
     }
+
+    interface Colors {
+        forceMode: string,
+        primary: string,
+        secondary: string,
+        accent: string
+    }
+
 
     interface Content {
         '@context': string,
@@ -69,6 +77,13 @@ declare global {
         value: string
     }
 
+    interface Header {
+        show: boolean,
+        navigation: boolean,
+        panelsToggle: boolean,
+        languageSwitch: boolean
+    }
+
     interface Idref {
         '@context': string,
         base?: string,
@@ -82,6 +97,7 @@ declare global {
         manifest?: string,
         license: License
     }
+    
 
     interface Item {
         '@context': string,
@@ -136,10 +152,17 @@ declare global {
         metadata?: Metadata[]
     }
 
+
     interface Module {
         editionManuscripts?: boolean,
         editionPrints?: boolean
     }
+
+    interface NotificationColors {
+        info: string,
+        warning: string
+    }
+
 
     type RangeSelector = {
         type: 'RangeSelector',
@@ -178,7 +201,6 @@ declare global {
         type: TitleType
     }
     type TitleType = 'main' | 'sub';
-
 }
 
 export {}

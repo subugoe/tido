@@ -3,6 +3,9 @@ import { i18n } from '@/i18n';
 import BookmarkService from '@/services/bookmark';
 import { loadCss, loadFont } from '../../utils';
 
+import { useConfigStore } from '@/stores/config';
+
+
 export const getItemIndex = async ({ getters }, itemUrl) => {
   const { manifest } = getters;
   if (!manifest) return -1;
@@ -44,9 +47,10 @@ function isItemPartInsideRangeValue(i, numberItems) {
 export const initCollection = async ({
   commit, dispatch, getters, rootGetters,
 }, url) => {
-  const { item } = getters;
-  const resultConfig = rootGetters['config/config'];
-  let { item: itemUrl } = rootGetters['config/config'];
+  const configStore = useConfigStore()
+  const resultConfig = configStore.config;
+  let item = resultConfig.item;
+  let itemUrl;
   let collection = '';
   let activeManifest = '';
   let manifestIndex;
@@ -105,22 +109,20 @@ export const initCollection = async ({
 
     activeManifest = manifests[manifestIndex];
     itemUrl = activeManifest.sequence[itemIndex].id;
-    if ('p' in resultConfig) commit('setPanels', resultConfig.p);
-    if ('s' in resultConfig) commit('setShow', resultConfig.s);
     const { support } = activeManifest;
 
     if (support && support.length > 0) {
       await dispatch('getSupport', support);
     }
     commit('setManifest', activeManifest);
-
-    if (!item) dispatch('initItem', itemUrl);
+    dispatch('initItem', itemUrl);
   }
 };
 
 export const initManifest = async ({
   commit, dispatch, rootGetters,
 }, url) => {
+  const configStore = useConfigStore()
   let manifest = '';
   try {
     manifest = await request(url);
@@ -133,7 +135,7 @@ export const initManifest = async ({
 
   const numberItems = manifest.sequence.length;
   commit('setManifest', manifest);
-  const resultConfig = rootGetters['config/config'];
+  const resultConfig = configStore.config;     
   const { item } = resultConfig;
   let itemIndex;
 
@@ -195,6 +197,7 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
     m,
     i,
   } : { i };
+
   await BookmarkService.updateQuery(query);
 };
 
@@ -208,7 +211,8 @@ export const initAnnotations = async ({ commit }, url) => {
 };
 
 export const getSupport = ({ rootGetters }, support) => {
-  const { container } = rootGetters['config/config'];
+  const configStore = useConfigStore()
+  const { container } =  configStore.config;  
 
   support.forEach((s) => {
     const hasElement = document.getElementById(s.url);

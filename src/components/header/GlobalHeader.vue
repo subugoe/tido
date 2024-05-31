@@ -19,6 +19,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import { useConfigStore } from '@/stores/config';
 import Navbar from '@/components/header/Navbar.vue';
 import TitleBar from '@/components/header/TitleBar.vue';
 import PanelsToggle from '@/components/header/PanelsToggle.vue';
@@ -34,7 +35,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const store = useStore();
-const config = computed(() => store.getters['config/config']);
+const configStore = useConfigStore()
+const config = computed(() => configStore.config); 
 const show = computed<boolean | undefined>(() => config.value?.header?.show);
 const manifests = computed<Manifest[]>(() => store.getters['contents/manifests']);
 const item = computed<Item>(() => store.getters['contents/item']);

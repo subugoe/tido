@@ -48,6 +48,7 @@ import {
   computed, nextTick, onMounted, ref, watch,
 } from 'vue';
 import { useStore } from 'vuex';
+import { useConfigStore } from '@/stores/config';
 import { useI18n } from 'vue-i18n';
 import { request } from '@/utils/http';
 import { isElementVisible } from '@/utils';
@@ -55,6 +56,7 @@ import { isElementVisible } from '@/utils';
 const emit = defineEmits(['loading']);
 
 const store = useStore();
+const configStore = useConfigStore()
 const { t } = useI18n();
 
 const expanded = ref({});
@@ -62,7 +64,7 @@ const selected = ref(null);
 const tree = ref([]);
 const containerRef = ref(null);
 
-const config = computed(() => store.getters['config/config']);
+const config = computed(() => configStore.config);
 const collectionTitle = computed(() => store.getters['contents/collectionTitle']);
 const collection = computed(() => store.getters['contents/collection']);
 const labels = computed(() => (config.value && config.value.labels) || {});
@@ -162,10 +164,11 @@ async function onNodeExpand(node) {
 }
 
 async function onNodeSelect(node) {
+  const configStore = useConfigStore()
   if (currentManifest.value.id !== node.parent) {
     // If we selected an item from a different manifest
     await store.dispatch('contents/initManifest', node.parent);
-    await store.dispatch('config/setDefaultActiveViews');
+    await configStore.setDefaultActiveViews()
   }
 
   await store.dispatch('contents/initItem', node.key);
