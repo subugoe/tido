@@ -96,11 +96,7 @@ onMounted(async () => {
 
   i18nLocale.value = config.value.lang;
 
-  const colorsForceMode = config.value.colors.forceMode;
-
-  if (colorsForceMode && colorsForceMode !== 'none') {
-    document.querySelector(config.value.container).classList.add('t-dark');
-  }
+  setColorMode(config.value.colors.forceMode);
 
   await init();
 });
@@ -145,6 +141,13 @@ async function init() {
     errorMessage.value = e.message || t('please_try_again_later');
   } finally {
     isLoading.value = false;
+  }
+}
+
+function setColorMode(configValue: string) {
+  if (configValue) {
+    if (!configValue.match(/^[0-9a-zA-Z]{1,16}$/)) return;
+    document.querySelector(config.value.container).setAttribute('color-scheme', configValue);
   }
 }
 </script>
