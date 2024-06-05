@@ -29,8 +29,10 @@ import Notification from '@/components/Notification.vue';
 import * as AnnotationUtils from '@/utils/annotations';
 
 import { useConfigStore } from '@/stores/config';
+import { useAnnotationsStore } from '@/stores/annotations';
 
 const configStore = useConfigStore()
+const annotationStore = useAnnotationsStore()
 
 const props = defineProps({
   url: String,
@@ -41,9 +43,9 @@ const store = useStore();
 const message = ref('no_annotations_in_view');
 
 const config = computed(() => configStore.config);
-const annotations = computed<Annotation[]>(() => store.getters['annotations/annotations']);
-const activeAnnotations = computed<ActiveAnnotation>(() => store.getters['annotations/activeAnnotations']);
-const filteredAnnotations = computed<Annotation[]>(() => store.getters['annotations/filteredAnnotations']);
+const annotations = computed<Annotation[]>(() => annotationStore.annotations);
+const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
+const filteredAnnotations = computed<Annotation[]>(() =>  annotationStore.filteredAnnotations);
 const activeContentUrl = computed<string>(() => store.getters['contents/activeContentUrl']);
 const updateTextHighlighting = computed(() =>
   // We need to make sure that annotations are loaded (this.annotations),
@@ -56,19 +58,19 @@ watch(
   (contentData) => {
     const [hasAnnotations, activeContentUrl] = contentData.split('|');
     if (hasAnnotations !== 'true' || activeContentUrl === 'null') return;
-    store.dispatch('annotations/resetAnnotations');
-    store.dispatch('annotations/setFilteredAnnotations', props.types);
+    annotationStore.resetAnnotations()
+    annotationStore.selectFilteredAnnotations(props.types)
     highlightTargetsLevel0();
   },
   { immediate: true },
 );
 
 function addAnnotation(id: string) {
-  store.dispatch('annotations/addActiveAnnotation', id);
+  annotationStore.addActiveAnnotation(id);
 }
 
 function removeAnnotation(id: string) {
-  store.dispatch('annotations/removeActiveAnnotation', id);
+  annotationStore.removeActiveAnnotation(id);
 }
 
 function toggle({ id }) {
