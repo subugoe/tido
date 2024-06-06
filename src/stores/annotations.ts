@@ -44,28 +44,28 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         filteredAnnotations.value = payload
     }
 
-    const addActiveAnnotation = (id) => {
+    const addActiveAnnotation = (id: string) => {
         const annotationStore = useAnnotationsStore()
         const configStore = useConfigStore()
-        const newActiveAnnotation = annotations.value.find((annotation) => annotation.id === id);
+        const newActiveAnnotation: Annotation = annotations.value.find((annotation) => annotation.id === id);
         if (!newActiveAnnotation || activeAnnotations.value[id]) {
           return;
         }
       
-        const iconName = configStore.getIconByType(newActiveAnnotation.body['x-content-type']);
-      
-        const activeAnnotationsList = { ...activeAnnotations.value };
+        const iconName: string = configStore.getIconByType(newActiveAnnotation.body['x-content-type']);
+
+        const activeAnnotationsList: ActiveAnnotation = { ...activeAnnotations.value };
       
         activeAnnotationsList[id] = newActiveAnnotation;
         
         annotationStore.setActiveAnnotations(activeAnnotationsList)
       
-        const selector = Utils.generateTargetSelector(newActiveAnnotation);
-        const elements = (selector) ? [...document.querySelectorAll(selector)] : [];
+        const selector: string = Utils.generateTargetSelector(newActiveAnnotation);
+        const elements: Array<HTMLElement> = (selector) ? [...document.querySelectorAll(selector)] : [];
         Utils.highlightTargets(selector, { operation: 'INC' });
       
         if (elements.length > 0) {
-          const target = elements[0];
+          const target: HTMLElement = elements[0];
           Utils.addIcon(target, newActiveAnnotation, iconName);
           scrollIntoViewIfNeeded(target, target.closest('.panel-body'));
         }
