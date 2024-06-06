@@ -48,7 +48,7 @@ import {
   computed, nextTick, onMounted, ref, watch,
 } from 'vue';
 import { useConfigStore } from '@/stores/config';
-import { useContentsStore} from '@/stores/contents';
+import { useContentsStore } from '@/stores/contents';
 import { useI18n } from 'vue-i18n';
 import { request } from '@/utils/http';
 import { isElementVisible } from '@/utils';

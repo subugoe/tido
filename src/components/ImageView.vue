@@ -10,7 +10,7 @@
 <script setup>
 import OpenSeadragon from 'openseadragon';
 import { computed, ref, watch } from 'vue';
-import { useContentsStore} from '@/stores/contents';
+import { useContentsStore } from '@/stores/contents';
 import Notification from '@/components/Notification.vue';
 import { delay } from '@/utils';
 
