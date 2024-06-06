@@ -94,9 +94,9 @@
 import {
   computed, nextTick, ref, watch,
 } from 'vue';
-import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
 import { useAnnotationsStore } from '@/stores/annotations';
+import { useContentsStore } from '@/stores/contents'
 import { useI18n } from 'vue-i18n';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
@@ -137,8 +137,8 @@ export default {
     activeView: Number,
   },
   setup(props, { emit }) {
-    const store = useStore();
     const configStore = useConfigStore()
+    const contentStore = useContentsStore()
     const { t } = useI18n();
 
     const tabs = ref([]);
@@ -146,7 +146,7 @@ export default {
     const unsubscribe = ref(null);
     const isLoading = ref(false);
 
-    const item = computed<Item>(() => store.getters['contents/item']);
+    const item = computed<Item>(() => contentStore.item);
 
     watch(
       () => props.activeView,

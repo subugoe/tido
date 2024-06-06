@@ -10,17 +10,17 @@
 <script setup lang="ts">
 
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
+import { useContentsStore } from '@/stores/contents'
 
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
-const store = useStore();
 const configStore = useConfigStore()
+const contentStore = useContentsStore()
 
-const item = computed<Item>(() => store.getters['contents/item']);
-const itemUrl = computed<string>(() => store.getters['contents/itemUrl']);
-const manifest = computed<Manifest>(() => store.getters['contents/manifest']);
+const item = computed<Item>(() => contentStore.item);    
+const itemUrl = computed<string>(() => contentStore.itemUrl);     
+const manifest = computed<Manifest>(() => contentStore.manifest);
 const itemsCount = computed<number>(() => manifest.value?.sequence.length);
 const labels = computed<Labels>(() => configStore.config.labels);
 const number = computed<number>(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) + 1 : 1));

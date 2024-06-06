@@ -21,9 +21,9 @@
 import {
   computed, readonly, ref, watch,
 } from 'vue';
-import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
 import { useAnnotationsStore } from '@/stores/annotations';
+import { useContentsStore } from '@/stores/contents'
 import Notification from '@/components/Notification.vue';
 import { request } from '@/utils/http';
 import { domParser, delay } from '@/utils';
@@ -35,8 +35,8 @@ const props = defineProps({
 });
 const emit = defineEmits(['loading']);
 
-const store = useStore();
 const configStore = useConfigStore()
+const contentStore = useContentsStore()
 
 const content = ref('');
 const errorTextMessage = ref(null);
@@ -78,7 +78,7 @@ async function loadContent(url) {
       // TODO: Enable Hover + Tooltip feature when reqs are clarified
       // await store.dispatch('annotations/addHighlightHoverListeners');
 
-      store.commit('contents/setActiveContentUrl', props.url);
+      contentStore.setActiveContentUrl(props.url)
     }, 100);
   } catch (err) {
     errorTextMessage.value = err.message;

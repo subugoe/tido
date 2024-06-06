@@ -10,9 +10,11 @@
 <script setup lang="ts">
 
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useContentsStore } from '@/stores/contents';
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
+
+const contentStore = useContentsStore()
 
 function getCollectorName (collection: Collection) : string | null {
     if (!collection) return null;
@@ -20,9 +22,7 @@ function getCollectorName (collection: Collection) : string | null {
     return collection.collector[0].name;
 }
 
-const store = useStore();
-
-const collection = computed<Collection>(() => store.getters['contents/collection']);
+const collection = computed<Collection>(() => contentStore.collection);
 
 const metadata = computed(() => {
   if (!collection.value) return [];

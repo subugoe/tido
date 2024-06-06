@@ -36,9 +36,9 @@ export default {
 import {
   computed, inject, onMounted, ref,
 } from 'vue';
-import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
-import { useAnnotationsStore } from './stores/annotations';
+import { useAnnotationsStore } from '@/stores/annotations';
+import { useContentsStore } from '@/stores/contents';
 
 import { useI18n } from 'vue-i18n';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
@@ -49,9 +49,9 @@ import Loading from '@/components/Loading.vue';
 import BaseIcon from '@/components/base/BaseIcon.vue';
 import { initUseDark } from '@/utils/is-dark';
 
-const store = useStore();
 const configStore = useConfigStore()
 const annotationStore = useAnnotationsStore()
+const contentStore = useContentsStore()
 const { t, locale: i18nLocale } = useI18n();
 
 const errorTitle = ref('');
@@ -80,10 +80,10 @@ const ready = computed(() => {
 });
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const config = computed(() => configStore.config);
-const collection = computed<Collection>(() => store.getters['contents/collection']);
-const item = computed<Item>(() => store.getters['contents/item']);
-const manifest = computed<Manifest>(() => store.getters['contents/manifest']);
-const manifests = computed<Manifest[]>(() => store.getters['contents/manifests']);
+const collection = computed<Collection>(() => contentStore.collection);
+const item = computed<Item>(() => contentStore.item); 
+const manifest = computed<Manifest>(() => contentStore.manifest);  
+const manifests = computed<Manifest[]>(() => contentStore.manifests); 
 initUseDark(config.value.container);
 
 onMounted(async () => {
@@ -104,7 +104,8 @@ onMounted(async () => {
 });
 
 async function getCollection(url: string) {
-  await store.dispatch('contents/initCollection', url);
+  const contentStore = useContentsStore()
+  await contentStore.initCollection(url)    
 }
 async function loadConfig() {
   try {
@@ -116,10 +117,12 @@ async function loadConfig() {
   }
 }
 async function getManifest(url: string) {
-  await store.dispatch('contents/initManifest', url);
+  const contentStore = useContentsStore()
+  await contentStore.initManifest(url)     
 }
 async function getItem(url: string) {
-  await store.dispatch('contents/initItem', url);
+  const contentStore = useContentsStore()
+  await contentStore.initItem(url)      
 }
 async function init() {
   const { collection, manifest, item } = config.value;

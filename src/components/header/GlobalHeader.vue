@@ -18,8 +18,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
+import { useContentsStore } from '@/stores/contents';
 import Navbar from '@/components/header/Navbar.vue';
 import TitleBar from '@/components/header/TitleBar.vue';
 import PanelsToggle from '@/components/header/PanelsToggle.vue';
@@ -34,12 +34,12 @@ const props = withDefaults(defineProps<Props>(), {
   configErrorTitle: ''
 })
 
-const store = useStore();
 const configStore = useConfigStore()
+const conntentStore = useContentsStore()
+
 const config = computed(() => configStore.config); 
 const show = computed<boolean | undefined>(() => config.value?.header?.show);
-const manifests = computed<Manifest[]>(() => store.getters['contents/manifests']);
-const item = computed<Item>(() => store.getters['contents/item']);
+const item = computed<Item>(() => conntentStore.item);       
 const showNavbar = computed<boolean>(() => config.value?.header?.navigation || true);
 const showPanelsToggle = computed<boolean | undefined>(() => (config.value?.header?.panelsToggle !== undefined ? config.value?.header?.panelsToggle : true));
 </script>
