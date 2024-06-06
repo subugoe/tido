@@ -25,18 +25,18 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
+import { useContentsStore } from '@/stores/contents'
 import { useI18n } from 'vue-i18n';
 import BaseButton from '@/components/base/BaseButton.vue';
 
-const store = useStore();
 const configStore = useConfigStore()
+const contentStore = useContentsStore()
 const { t } = useI18n();
 
-const manifest = computed<Manifest>(() => store.getters['contents/manifest']);
-const manifests = computed<Manifest[]>(() => store.getters['contents/manifests']);
-const itemUrl = computed<string>(() => store.getters['contents/itemUrl']);
+const manifest = computed<Manifest>(() => contentStore.manifest);
+const manifests = computed<Manifest[]>(() => contentStore.manifests); 
+const itemUrl = computed<string>(() => contentStore.itemUrl); 
 const itemIndex = computed<number>(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) : -1));
 const hasPrev = computed<boolean>(() => {
   const prevIndex = itemIndex.value - 1;
@@ -70,6 +70,7 @@ const prevButtonLabel = computed<string>(() => (itemIndex.value === 0
 
 
 function prev() {
+  const contentStore = useContentsStore()
   const prevIndex = itemIndex.value - 1;
   let itemUrl = '';
 
@@ -79,17 +80,18 @@ function prev() {
     if (prevManifestIndex < 0) return;
 
     const prevManifest = manifests.value[prevManifestIndex];
-    store.commit('contents/setManifest', prevManifest);
+    contentStore.setManifest(prevManifest)
     configStore.setDefaultActiveViews()
     itemUrl = prevManifest.sequence[prevManifest.sequence.length - 1].id;
   } else {
     // We load the previous item
     itemUrl = manifest.value.sequence[prevIndex].id;
   }
-  store.dispatch('contents/initItem', itemUrl);
+  contentStore.initItem(itemUrl)
 }
 
 function next() {
+  const contentStore = useContentsStore()
   const nextIndex = itemIndex.value + 1;
   let itemUrl = '';
 
@@ -98,12 +100,12 @@ function next() {
     if (nextManifestIndex > manifests.value.length - 1) return;
 
     const nextManifest = manifests.value[nextManifestIndex];
-    store.commit('contents/setManifest', nextManifest);
+    contentStore.setManifest(nextManifest)
     configStore.setDefaultActiveViews()
     itemUrl = nextManifest.sequence[0].id;
   } else {
     itemUrl = manifest.value.sequence[nextIndex].id;
   }
-  store.dispatch('contents/initItem', itemUrl);
+  contentStore.initItem(itemUrl)
 }
 </script>

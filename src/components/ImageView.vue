@@ -10,18 +10,18 @@
 <script setup>
 import OpenSeadragon from 'openseadragon';
 import { computed, ref, watch } from 'vue';
-import { useStore } from 'vuex';
+import { useContentsStore } from '@/stores/contents';
 import Notification from '@/components/Notification.vue';
 import { delay } from '@/utils';
 
 const emit = defineEmits('loading');
 
-const store = useStore();
+const contentStore = useContentsStore()
 
 const viewer = ref(null);
 const error = ref(null);
 
-const item = computed(() => store.getters['contents/item']);
+const item = computed(() => contentStore.item);
 const imageUrl = computed(() => item.value?.image?.id);
 const options = computed(() => ({
   id: 'openseadragon',

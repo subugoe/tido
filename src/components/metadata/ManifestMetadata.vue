@@ -10,17 +10,18 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
+import { useContentsStore } from '@/stores/contents';
 
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 import Actor from '@/components/metadata/Actor.vue';
 
-const store = useStore();
-const configStore = useConfigStore()
 
-const manifest = computed<Manifest>(() => store.getters['contents/manifest']);
-const manifests = computed<Manifest[]>(() => store.getters['contents/manifests']);
+const configStore = useConfigStore()
+const contentStore = useContentsStore()
+
+const manifest = computed<Manifest>(() => contentStore.manifest);
+const manifests = computed<Manifest[]>(() => contentStore.manifests);
 const manifestHasItems = computed<boolean>(() => manifest.value?.sequence.length > 0);
 const number = computed<number>(() => (manifests.value !== null ? manifests.value.findIndex(({ id }) => id === manifest.value.id) + 1 : 1));
 const total = computed<number>(() => (manifests.value !== null ? manifests.value.length : 1));

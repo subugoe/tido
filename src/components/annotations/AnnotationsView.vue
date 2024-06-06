@@ -21,32 +21,32 @@
 
 <script setup lang="ts">
 import {
-  computed, onBeforeUnmount, ref, watch,
+  computed, ref, watch,
 } from 'vue';
-import { useStore } from 'vuex';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import Notification from '@/components/Notification.vue';
 import * as AnnotationUtils from '@/utils/annotations';
 
 import { useConfigStore } from '@/stores/config';
 import { useAnnotationsStore } from '@/stores/annotations';
+import { useContentsStore} from '@/stores/contents';
 
 const configStore = useConfigStore()
 const annotationStore = useAnnotationsStore()
+const contentStore = useContentsStore()
 
 const props = defineProps({
   url: String,
   types: Array,
 });
 
-const store = useStore();
 const message = ref('no_annotations_in_view');
 
 const config = computed(() => configStore.config);
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
 const filteredAnnotations = computed<Annotation[]>(() =>  annotationStore.filteredAnnotations);
-const activeContentUrl = computed<string>(() => store.getters['contents/activeContentUrl']);
+const activeContentUrl = computed<string>(() => contentStore.activeContentUrl); 
 const updateTextHighlighting = computed(() =>
   // We need to make sure that annotations are loaded (this.annotations),
   // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
