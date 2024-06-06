@@ -38,6 +38,7 @@ import {
 } from 'vue';
 import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
+import { useAnnotationsStore } from './stores/annotations';
 
 import { useI18n } from 'vue-i18n';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
@@ -50,6 +51,7 @@ import { initUseDark } from '@/utils/is-dark';
 
 const store = useStore();
 const configStore = useConfigStore()
+const annotationStore = useAnnotationsStore()
 const { t, locale: i18nLocale } = useI18n();
 
 const errorTitle = ref('');
@@ -76,7 +78,7 @@ const ready = computed(() => {
 
   return true;
 });
-const annotations = computed<Annotation[]>(() => store.getters['annotations/annotations']);
+const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const config = computed(() => configStore.config);
 const collection = computed<Collection>(() => store.getters['contents/collection']);
 const item = computed<Item>(() => store.getters['contents/item']);
@@ -150,4 +152,5 @@ function setColorMode(configValue: string) {
     document.querySelector(config.value.container).setAttribute('color-scheme', configValue);
   }
 }
+
 </script>

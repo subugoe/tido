@@ -23,6 +23,7 @@ import {
 } from 'vue';
 import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
+import { useAnnotationsStore } from '@/stores/annotations';
 import Notification from '@/components/Notification.vue';
 import { request } from '@/utils/http';
 import { domParser, delay } from '@/utils';
@@ -52,6 +53,7 @@ watch(
   { immediate: true },
 );
 async function loadContent(url) {
+  const annotationStore = useAnnotationsStore()
   content.value = '';
   try {
     if (!url) {
@@ -70,8 +72,8 @@ async function loadContent(url) {
       emit('loading', false);
 
       const root = document.getElementById('text-content');
-      store.dispatch('annotations/addHighlightAttributesToText', root);
-      await store.dispatch('annotations/addHighlightClickListeners');
+      annotationStore.addHighlightAttributesToText(root)
+      await annotationStore.addHighlightClickListeners()
 
       // TODO: Enable Hover + Tooltip feature when reqs are clarified
       // await store.dispatch('annotations/addHighlightHoverListeners');

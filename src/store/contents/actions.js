@@ -4,6 +4,7 @@ import BookmarkService from '@/services/bookmark';
 import { loadCss, loadFont } from '../../utils';
 
 import { useConfigStore } from '@/stores/config';
+import { useAnnotationsStore } from '@/stores/annotations';
 
 
 export const getItemIndex = async ({ getters }, itemUrl) => {
@@ -45,7 +46,7 @@ function isItemPartInsideRangeValue(i, numberItems) {
 }
 
 export const initCollection = async ({
-  commit, dispatch, getters, rootGetters,
+  commit, dispatch
 }, url) => {
   const configStore = useConfigStore()
   const resultConfig = configStore.config;
@@ -174,6 +175,7 @@ export const initManifest = async ({
 };
 
 export const initItem = async ({ commit, dispatch, getters }, url) => {
+  const annotationStore = useAnnotationsStore()
   let item = '';
 
   try {
@@ -185,7 +187,7 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
   commit('setItemUrl', url);
 
   if (item.annotationCollection) {
-    await dispatch('annotations/initAnnotations', item.annotationCollection, { root: true });
+    annotationStore.initAnnotations(item.annotationCollection);
   }
   const manifests = getters.manifests ? getters.manifests : [];
   // here we have item query -> we should extract the manifest index and the item index from the query and then give it as a parameter to updateItemQuery()
@@ -203,11 +205,6 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
 
 export const updateImageLoading = async ({ commit }, payload) => {
   commit('setImageLoaded', payload);
-};
-
-export const initAnnotations = async ({ commit }, url) => {
-  const annotations = await request(url);
-  commit('setAnnotations', annotations);
 };
 
 export const getSupport = ({ rootGetters }, support) => {

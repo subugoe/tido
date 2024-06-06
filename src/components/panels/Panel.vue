@@ -96,6 +96,7 @@ import {
 } from 'vue';
 import { useStore } from 'vuex';
 import { useConfigStore } from '@/stores/config';
+import { useAnnotationsStore } from '@/stores/annotations';
 import { useI18n } from 'vue-i18n';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
@@ -227,6 +228,7 @@ export default {
     }
 
     function createAnnotationsView(view, i) {
+      const annotationStore = useAnnotationsStore()
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
@@ -238,25 +240,31 @@ export default {
       const events = {
         update: (value) => {
           if (value === null) return;
-          store.dispatch(value ? 'annotations/selectAll' : 'annotations/selectNone');
+          if (value) annotationStore.selectAll()
+          else annotationStore.selectNone()
         },
       };
 
-      unsubscribe.value = store.subscribeAction(async ({ type, payload }) => {
+      unsubscribe.value = annotationStore.$onAction(({name, store, args, after, onError }) => { 
+        
         if (tabs.value.length
-          && tabs.value[0]?.actions?.length
-          && type === 'annotations/setActiveAnnotations'
-        ) {
-          const activeAmount = Object.keys(payload).length;
-          const filteredAmount = store.getters['annotations/filteredAnnotations'].length;
-
+          && tabs.value[0]?.actions?.length &&
+          (name === 'setActiveAnnotations'))
+          {
+          const activeAnnotations = args[0];  
+          const activeAmount = Object.keys(activeAnnotations).length;
+          const filteredAmount = annotationStore.filteredAnnotations.length;
           let newSelected = activeAmount > 0 && activeAmount === filteredAmount;
-          if (!newSelected && Object.keys(payload).length > 0) newSelected = null;
+
+          if (!newSelected && activeAmount > 0) newSelected = null;
+          
+
           if (tabs.value[i].actions[0].props.selected !== newSelected) {
             tabs.value[i].actions[0].props.selected = newSelected;
-          }
-        }
+            }
+        }  
       });
+
 
       const actions = [{
         component: 'PanelToggleAction',
