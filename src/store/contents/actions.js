@@ -188,7 +188,6 @@ export const initItem = async ({ commit, dispatch, getters }, url) => {
 
   if (item.annotationCollection) {
     annotationStore.initAnnotations(item.annotationCollection);
-    //await dispatch('annotations/initAnnotations', item.annotationCollection, { root: true });
   }
   const manifests = getters.manifests ? getters.manifests : [];
   // here we have item query -> we should extract the manifest index and the item index from the query and then give it as a parameter to updateItemQuery()

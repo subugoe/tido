@@ -12,7 +12,6 @@ import { useConfigStore} from '@/stores/config';
 
 export const useAnnotationsStore = defineStore('annotations', () => {
 
-    // States ('Setup Pinia': refs)
     const activeTab = ref<string>('')
     const activeAnnotations = ref<ActiveAnnotation>({} as ActiveAnnotation) 
     const annotations = ref<Annotation[]>(null)
@@ -20,12 +19,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     const isLoading = ref<boolean>(false);
 
 
-    // Getters ('Setup Pinia' computed())
     const isAllAnnotationSelected = computed<boolean>((total) => Object.keys(activeAnnotations.value).length === total)
     const isNoAnnotationSelected = computed<boolean>(() => !Object.keys(activeAnnotations.value).length)
-
-    // Actions ('Setup Pinia' functions)
-    // Mutations and 'actions' to 'Pinia'functions
 
     
     const setActiveAnnotations = (annotations: ActiveAnnotation) => {
@@ -72,15 +67,15 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     };
 
 
-    const selectFilteredAnnotations = (types) => {
+    const selectFilteredAnnotations = (types: AnnotationType[]): boolean | void => {
         const configStore = useConfigStore()
-        const activeContentType =  configStore.activeContentType  
-        let filteredAnnotations = [];
+        const activeContentType: string =  configStore.activeContentType  
+        let filteredAnnotations: Annotation[] = [];
       
         if (annotations !== null) {
           filteredAnnotations = types.length === 0 ? annotations.value : annotations.value.filter(
             (annotation) => {
-              const type = types.find(({ name }) => name === annotation.body['x-content-type']);
+              const type: AnnotationType = types.find(({ name }) => name === annotation.body['x-content-type']);
               // First we check if annotation fits to the current view
               if (!type) return false;
       
@@ -88,9 +83,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
               if (type?.displayWhen && type?.displayWhen === activeContentType) return true;
       
               // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
-              const selector = AnnotationUtils.generateTargetSelector(annotation);
+              const selector: string = AnnotationUtils.generateTargetSelector(annotation);
               if (selector) {
-                const el = document.querySelector(selector);
+                const el: HTMLElement = document.querySelector(selector);
                 if (el) {
                   return true;
                 }

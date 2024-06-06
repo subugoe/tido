@@ -1,13 +1,5 @@
 declare global {
     
-    interface Annotation {
-        body: AnnotationContent[],
-        target: AnnotationTarget[],
-        type: string,
-        id: string
-    }
-
-
     interface ActiveAnnotation {
         [key: string]: Annotation
     }
@@ -21,6 +13,12 @@ declare global {
 
     }
 
+    interface Annotation {
+        body: AnnotationContent[],
+        target: AnnotationTarget[],
+        type: string,
+        id: string
+    }
     interface AnnotationContent {
       type: 'TextualBody',
       value: string,
@@ -37,6 +35,14 @@ declare global {
         language: string,
         source: string
     }
+
+    interface AnnotationType {
+        name: string,
+        icon?: string,
+        annotationType?: string,
+        displayWhen?: string
+    }
+
 
     interface Collection {
         '@context': string,
