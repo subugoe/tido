@@ -1,5 +1,6 @@
 <template>
-  <div class="tido t-h-full t-flex t-flex-col t-bg-gray-200 dark:t-bg-gray-900 t-text-gray-800 dark:t-text-gray-200">
+  <div class="tido">
+    <div class="t-h-full t-flex t-flex-col t-bg-gray-200 dark:t-bg-gray-900 t-text-gray-800 dark:t-text-gray-200">
       <GlobalHeader/>
       <PanelsWrapper v-if="ready"/>
       <div v-else class="t-flex t-relative t-flex-1 t-justify-center t-items-center t-p-4 lg:t-p-6">
@@ -23,6 +24,7 @@
           </template>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -81,9 +83,9 @@ const ready = computed(() => {
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const config = computed(() => configStore.config);
 const collection = computed<Collection>(() => contentStore.collection);
-const item = computed<Item>(() => contentStore.item); 
-const manifest = computed<Manifest>(() => contentStore.manifest);  
-const manifests = computed<Manifest[]>(() => contentStore.manifests); 
+const item = computed<Item>(() => contentStore.item);
+const manifest = computed<Manifest>(() => contentStore.manifest);
+const manifests = computed<Manifest[]>(() => contentStore.manifests);
 initUseDark(config.value.container);
 
 onMounted(async () => {
@@ -105,7 +107,7 @@ onMounted(async () => {
 
 async function getCollection(url: string) {
   const contentStore = useContentsStore()
-  await contentStore.initCollection(url)    
+  await contentStore.initCollection(url)
 }
 async function loadConfig() {
   try {
@@ -118,11 +120,11 @@ async function loadConfig() {
 }
 async function getManifest(url: string) {
   const contentStore = useContentsStore()
-  await contentStore.initManifest(url)     
+  await contentStore.initManifest(url)
 }
 async function getItem(url: string) {
   const contentStore = useContentsStore()
-  await contentStore.initItem(url)      
+  await contentStore.initItem(url)
 }
 async function init() {
   const { collection, manifest, item } = config.value;
@@ -157,3 +159,9 @@ function setColorMode(configValue: string) {
 }
 
 </script>
+<style>
+.tido {
+  width: 100%;
+  height: 100%;
+}
+</style>

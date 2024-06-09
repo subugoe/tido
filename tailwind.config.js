@@ -13,6 +13,7 @@ function withOpacity(variableName) {
 
 export default {
   darkMode: ['class', '[color-scheme="dark"]'],
+  important: '.tido',
   prefix: 't-',
   content: [
     './index.html',
@@ -31,4 +32,7 @@ export default {
     },
   },
   plugins: [],
+  corePlugins: {
+    preflight: false,
+  }
 };
