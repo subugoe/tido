@@ -1,24 +1,10 @@
 import { delay } from '@/utils';
 
 class BookmarkService {
-  $router;
-
-  initRouter(router) {
-    this.$router = router;
-  }
 
   async pushQuery(query) {
-    
     const url = new URL(window.location);
-    url.search = '';
-    const params = url.searchParams;
-    
-    let newQuery = {};
-    newQuery.tido = query;
-    
-    Object.keys(newQuery).forEach((key) => {
-      params.set(key, newQuery[key]);
-    });
+    url.searchParams.set('tido', query);
     window.history.pushState({}, '', url);
   }
 
@@ -28,8 +14,8 @@ class BookmarkService {
     oldQueryArray.forEach((part, index) => {
       if (part.includes(key)) {
         numbersPart = part.slice(1);
-      } 
-   }); 
+      }
+   });
    return numbersPart;
 }
 
@@ -37,27 +23,29 @@ class BookmarkService {
     let oldQueryValue = this.getQuery();
     const attributes = ['m', 'i', 's', 'p'];
     let resultQuery = [null, null, null, null];
+
     if (oldQueryValue !== '') {
       // First: updateResult query based on the values of the previous oldQuery
       attributes.forEach((key, index) => {
         if (oldQueryValue.includes(key)) {
           // get the value of this key in the oldQuery
           // update this part in resultQuery
-          const value = this.getValueInOldQuery(oldQueryValue, key);
-          resultQuery[index] = value;
+          resultQuery[index] = this.getValueInOldQuery(oldQueryValue, key);
         }
       });
     }
-    //update the current key in resultQuery
+
+    // update the current key in resultQuery
     const indexKeyInQuery = attributes.findIndex((x) => x === key);
     resultQuery[indexKeyInQuery] = updatedPartValue;
+
     // join the query parts by filtering out 'undefined' part
     const newQuery = resultQuery
-                    .map((item, index) => ({ item, index }))
-                    .filter(({item}) => item !== null)                    
-                    .map(({item, index}) => attributes[index] + item)
-                    .join('_');
-    
+      .map((item, index) => ({ item, index }))
+      .filter(({item}) => item !== null)
+      .map(({item, index}) => attributes[index] + item)
+      .join('_');
+
     await this.pushQuery(newQuery);
   }
 
@@ -69,11 +57,11 @@ class BookmarkService {
   async updateShow(panelIndexes = []) {
     // TODO: $route doesn't update quick enough, in future we have to switch to Composition APIs useRoute()
     await delay(300);
-    let updatedValue = panelIndexes.join('-'); 
+    let updatedValue = panelIndexes.join('-');
     if (updatedValue === '') {
       // if all the panels are opened, then we remove the 's' part from URL
       updatedValue = null;
-    } 
+    }
     this.updateQueryFinal(updatedValue, 's');
   }
 
@@ -86,7 +74,7 @@ class BookmarkService {
   }
 
   async updateQuery(query) {
-    for(const key of Object.keys(query)) {
+    for (const key of Object.keys(query)) {
       if (key === 'i') {
         this.updateItem(query[key]);
       }
@@ -97,13 +85,8 @@ class BookmarkService {
   }
 
   getQuery() {
-    let queryString = window.location.search.substring(1);
-    if (queryString !== '') {
-      queryString = queryString.split('=')[1];
-    }
-    return queryString;
+    return new URLSearchParams(window.location.search).get('tido') ?? '';
   }
-
 }
 
 export default new BookmarkService();
