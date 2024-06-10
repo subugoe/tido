@@ -26,7 +26,7 @@
     </template>
     <template v-else>
       <div class="t-flex t-items-center t-space-x-4">
-        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`">
+        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-flex t-items-center">
           <BaseCheckbox
             :model-value="show"
             @update:model-value="update(i, $event)"

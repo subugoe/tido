@@ -46,7 +46,7 @@
                   ]
                 }),
                 headerAction: { class: [
-                    't-relative t-cursor-pointer t-border-b t-border-gray-200',
+                    't-relative t-cursor-pointer t-border-b t-border-gray-200 dark:t-border-gray-600',
                     't-flex t-items-center t-justify-center','t-px-3 t-pb-3 t-pt-4',
                     't-transition-all hover:dark:t-bg-gray-600/50 hover:t-bg-gray-300/30'
                   ]
@@ -245,24 +245,24 @@ export default {
         },
       };
 
-      unsubscribe.value = annotationStore.$onAction(({name, store, args, after, onError }) => { 
-        
+      unsubscribe.value = annotationStore.$onAction(({name, store, args, after, onError }) => {
+
         if (tabs.value.length
           && tabs.value[0]?.actions?.length &&
           (name === 'setActiveAnnotations'))
           {
-          const activeAnnotations = args[0];  
+          const activeAnnotations = args[0];
           const activeAmount = Object.keys(activeAnnotations).length;
           const filteredAmount = annotationStore.filteredAnnotations.length;
           let newSelected = activeAmount > 0 && activeAmount === filteredAmount;
 
           if (!newSelected && activeAmount > 0) newSelected = null;
-          
+
 
           if (tabs.value[i].actions[0].props.selected !== newSelected) {
             tabs.value[i].actions[0].props.selected = newSelected;
             }
-        }  
+        }
       });
 
 

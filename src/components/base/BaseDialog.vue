@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Dialog from 'primevue/dialog'
+import { useConfigStore } from "@/stores/config";
 
 const props = withDefaults(defineProps<{
   modelValue: boolean,
@@ -8,6 +9,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   closable: true
 })
+const configStore = useConfigStore();
 
 const emit = defineEmits<{
   (event: 'update:modelValue', payload: boolean): void;
@@ -27,9 +29,10 @@ function open() {
     unstyled
     :closable="closable"
     :dismissableMask="closable"
+    :appendTo="configStore.config.container + ' .tido > *'"
     :pt="{
       root: {
-        class: 't-relative t-bg-white dark:t-bg-gray-800 t-p-4 t-rounded-lg lg:t-min-w-[33%] t-shadow-lg'
+        class: 't-relative t-bg-white dark:t-bg-gray-800 t-p-4 t-rounded-lg lg:t-min-w-[33%] t-shadow-lg dark:t-border dark:t-border-gray-700'
       },
       header: {
         class: 't-flex'
@@ -41,7 +44,7 @@ function open() {
         class: 't-absolute t-right-4 hover:t-bg-gray-100 dark:hover:t-bg-gray-700 t-w-8 t-h-8 t-rounded-full t-flex t-items-center t-justify-center'
       },
       mask: {
-        class: 't-bg-gray-900 t-bg-opacity-50'
+        class: 't-bg-gray-900 t-bg-opacity-50 dark:t-bg-opacity-75',
       }
     }"
     @update:visible="emit('update:modelValue', $event)"

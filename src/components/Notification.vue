@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="t-text-center">
+    <div class="t-flex t-items-center t-justify-center">
       <BaseIcon
         :class="`t-text-${color}`"
         :name="type"
@@ -33,7 +33,7 @@ const props = defineProps({
 });
 const configStore = useConfigStore()
 
-const config = computed(() => configStore.config);     
+const config = computed(() => configStore.config);
 const notificationColors = computed(() => config.value.notificationColors);
 const color = computed(() => {
   switch (props.type) {

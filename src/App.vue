@@ -15,12 +15,6 @@
               :title="errorTitle"
               type="warning"
             />
-            <template v-else>
-              <div class="t-flex t-flex-col t-items-center">
-                <BaseIcon name="book" class="t-w-16 t-h-16" />
-                <span  class="t-font-bold t-mt-4 dark:t-text-gray-400">{{ $t('no_entrypoint_available') }}</span>
-              </div>
-            </template>
           </template>
         </div>
       </div>
@@ -61,6 +55,7 @@ const errorMessage = ref('');
 const isLoading = ref(true);
 
 const ready = computed(() => {
+
   const { collection: collectionUrl, manifest: manifestUrl } = config.value;
   if (!item.value) {
     return false;

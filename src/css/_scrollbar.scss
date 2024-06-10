@@ -1,33 +1,14 @@
-$foreground: #ddd;
-$background: #666;
+$foreground: #cacaca;
+$background: #eee;
 
 $foreground-dark: #555;
-$background-dark: #333;
+$background-dark: #1c1c1c;
 
-.tido {
-  &.t-dark & {
+.tido * {
+  [color-scheme="dark"] & {
     scrollbar-color: $foreground-dark $background-dark;
   }
 
   scrollbar-color: $foreground $background;
-
-  &::-webkit-scrollbar {
-    width: 6px; /* Mostly for vertical scrollbars */
-    height: 10px; /* Mostly for horizontal scrollbars */
-  }
-  &::-webkit-scrollbar-thumb { /* Foreground */
-    .t-dark & {
-      background: $foreground-dark;
-    }
-    background: $foreground;
-    border-radius: 8px;
-  }
-  &::-webkit-scrollbar-track { /* Background */
-    background: $background;
-    border-radius: 8px;
-
-    .t-dark & {
-      background: $background-dark;
-    }
-  }
+  scrollbar-width: thin;
 }

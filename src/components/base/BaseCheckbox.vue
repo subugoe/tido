@@ -67,7 +67,7 @@ function getAriaChecked(): AriaChecked {
   >
     <template #icon="slotProps">
       <i v-if="modelValue === null" v-html="getIcon('minus')" class="t-leading-none t-w-[18px] t-h-[18px] t-text-lg t-text-white t-transition-all t-flex t-items-center t-justify-center"></i>
-      <i v-else-if="modelValue === true" v-html="getIcon('check')" class="t-leading-none t-w-[18px] t-h-[18px] t-scale-[1.45] t-text-white t-transition-all t-flex t-items-center t-justify-center"></i>
+      <i v-else-if="modelValue === true" v-html="getIcon('check')" class="t-leading-none t-w-[18px] t-h-[18px] t-scale-[0.8] t-text-white t-transition-all t-flex t-items-center t-justify-center"></i>
     </template>
   </Checkbox>
 </template>

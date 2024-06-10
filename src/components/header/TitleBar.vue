@@ -5,7 +5,7 @@
         <h1 v-if="collectionTitle" class="t-text-2xl t-font-bold">
           {{ collectionTitle }}
         </h1>
-        <h2 v-if="manifestTitle" class="t-text-xl t-mt-2 t-mb-6">
+        <h2 v-if="manifestTitle" class="t-flex t-items-center t-text-xl t-mt-2 t-mb-6">
           <span>{{ manifestTitle }}</span>
           <BaseIcon
             v-if="item"
@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
 const configStore = useConfigStore()
 const contentStore = useContentsStore()
 
-const collectionTitle = computed<string | null>(() => contentStore.collectionTitle); 
+const collectionTitle = computed<string | null>(() => contentStore.collectionTitle);
 const manifestTitle = computed<string | undefined>(() => contentStore.manifest?.label  );
 const labels = computed<Labels>(() => configStore.config.labels || {
   manifest: 'manifest',

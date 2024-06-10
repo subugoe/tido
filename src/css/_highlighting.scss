@@ -20,7 +20,7 @@
 [data-annotation-level='0'] {
   background-color: #e5e5e5;
 
-  .body--dark & {
+  [color-scheme="dark"] & {
     background-color: #575757 !important;
   }
 }
@@ -30,7 +30,7 @@
   background-color: #E3F2FD;
   border-bottom: 1px solid #333;
 
-  .body--dark & {
+  [color-scheme="dark"] & {
     background-color: #6790bf !important;
     border-bottom: 1px solid #fafafa !important;
   }
@@ -41,7 +41,7 @@
   background-color: #BBDEFB;
   border-bottom: 1px solid #333;
 
-  .body--dark & {
+  [color-scheme="dark"] & {
     background-color: #5687bf !important;
     border-bottom: 1px solid #fafafa !important;
   }
@@ -52,7 +52,7 @@
   background-color: #2196F3;
   border-bottom: 1px solid #333;
 
-  .body--dark & {
+  [color-scheme="dark"] & {
     background-color: #4b81bf !important;
     border-bottom: 1px solid #fafafa !important;
   }
@@ -63,7 +63,7 @@
   background-color: #1565C0;
   border-bottom: 1px solid #333;
 
-  .body--dark & {
+  [color-scheme="dark"] & {
     background-color: #3073bf !important;
     border-bottom: 1px solid #fafafa !important;
   }
@@ -74,7 +74,7 @@
   background-color: #42A5F5;
   border-bottom: 1px solid #333;
 
-  .body--dark & {
+  [color-scheme="dark"] & {
     background-color: #1a5fad !important;
     border-bottom: 1px solid #fafafa;
   }

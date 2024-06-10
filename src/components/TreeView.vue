@@ -27,7 +27,7 @@
       }),
       toggler: options => ({
         class: [
-          't-border-0 t-absolute t-left-0 t-w-full t-pl-3 t-text-left',
+          't-border-0 t-absolute t-left-0 t-top-[14px] t-w-full t-pl-3 t-text-left',
           { 't-hidden': options.context.leaf && !options.props.node.lazy }
         ]
       }),
@@ -65,10 +65,10 @@ const tree = ref([]);
 const containerRef = ref(null);
 
 const config = computed(() => configStore.config);
-const collectionTitle = computed(() => contentStore.collectionTitle); 
-const collection = computed(() => contentStore.collection);  
+const collectionTitle = computed(() => contentStore.collectionTitle);
+const collection = computed(() => contentStore.collection);
 const labels = computed(() => (config.value && config.value.labels) || {});
-const itemUrl = computed(() => contentStore.itemUrl);  
+const itemUrl = computed(() => contentStore.itemUrl);
 const currentManifest = computed(() => contentStore.manifest);
 
 onMounted(() => {
@@ -172,7 +172,7 @@ async function onNodeSelect(node) {
     await configStore.setDefaultActiveViews()
   }
 
-  await contentStore.initItem(node.key)     
+  await contentStore.initItem(node.key)
 }
 
 function scrollSelectedIntoView() {
