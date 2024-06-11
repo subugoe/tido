@@ -17,8 +17,10 @@
 <header>
   <a class="home" href="./">TIDO</a>
   <div class="input-container">
-    <input id="url-input" type="text" placeholder="Enter your manifest or collection URL here...">
-    <button onclick="load()">Load</button>
+    <form onsubmit="load(event)">
+    <input id="url-input" type="text" autocomplete="on" placeholder="Enter your manifest or collection URL here...">
+    <button type="submit">Load</button>
+    </form>
   </div>
   <span>Other examples:</span>
   <nav>
@@ -26,7 +28,7 @@
       <option disabled selected hidden>Please select...</option>
       <option value="./ahiqar-syriac.html">Ahiqar Syriac</option>
       <option value="./ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</option>
-      <option value="./gfl.html">GFL</option>
+      <option value="./gfl.html">Goethes Farbenlehre in Berlin</option>
     </select>
   </nav>
 </header>
@@ -39,6 +41,7 @@
 </div>
 <script src="dist/tido.js"></script>
 <script>
+  let tido;
   const manifest = new URLSearchParams(window.location.search).get('manifest')
   const collection = new URLSearchParams(window.location.search).get('collection')
 
@@ -48,7 +51,7 @@
       ...(collection ? { collection } : {}),
     }
 
-    window.tido = new window.Tido(config)
+    tido = new Tido(config)
   }
 
   const select = document.getElementById('nav-select');
@@ -57,7 +60,8 @@
   }
 
 
-  function load() {
+  function load(event) {
+    event.preventDefault()
     const input = document.getElementById('url-input')
 
     const isManifest = input.value.includes('manifest.json')
@@ -65,16 +69,21 @@
 
     if (!isManifest && !isCollection) return
 
-    window.tido = new window.Tido({
-      manifest: input.value
-    })
+    const url = new URL(window.location)
 
-    const params = new URLSearchParams(window.location.search)
+    if (isManifest) url.searchParams.set('manifest', input.value)
+    if (isCollection) url.searchParams.set('collection', input.value)
 
-    if (isManifest) params.set('manifest', input.value)
-    if (isCollection) params.set('collection', input.value)
+    window.history.pushState(null, null, url)
 
-    window.history.pushState(null, null, params)
+    document.getElementById('app').innerHTML = ''
+    tido = null
+
+    setTimeout(() => {
+      tido = new Tido({
+        manifest: input.value
+      })
+    }, 200)
   }
 </script>
 </body>

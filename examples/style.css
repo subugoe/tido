@@ -31,17 +31,23 @@ header nav {
   display: flex;
 }
 
-header .input-container {
-  position: relative;
-  margin-right: 48px;
+header form {
   flex: 1;
+  display: flex;
+}
+
+header .input-container {
+  flex: 1;
+  display: flex;
+  margin-right: 48px;
+  position: relative;
   display: flex;
   overflow: hidden;
   border: 1px solid #ccc;
   border-radius: 6px;
 }
 
-header .input-container:has(> #url-input:focus-visible),
+header .input-container:has(#url-input:focus-visible),
 header select:focus-visible,
 header .input-container button:focus-visible,
 .home:focus-visible {
@@ -61,6 +67,8 @@ header #url-input::placeholder {
   font-weight: 300;
 }
 
+
+
 header .input-container button {
   all: unset;
   position: absolute;
@@ -73,7 +81,7 @@ header .input-container button {
 }
 
 header .input-container button:hover {
-  background: #dedede;
+  background: #eee;
 }
 
 header select {
@@ -83,6 +91,7 @@ header select {
   border-radius: 6px;
   color: #666;
   font-size: 16px;
+  cursor: pointer;
 }
 
 header > span {

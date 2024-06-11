@@ -161,7 +161,7 @@ import { i18n } from '@/i18n';
         },
       };
 
-     // Getters ('Setup Pinia' computed())
+      // Getters ('Setup Pinia' computed())
       const activeContentType = computed(() => {
        const contentConnectorId = 4;
        const panelIndex = config.value.panels.findIndex(({ views }) => views.find(({ connector }) => contentConnectorId === connector.id));
