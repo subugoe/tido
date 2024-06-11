@@ -54,36 +54,15 @@ With this project we provide a highly configurable viewer for projects that impl
 
 ## Demo
 
-You can preview TIDO at GitLab Pages with different configurations to compare with.
-Generally the deployment to Pages runs at every branch.
+Please visit our [demo page](https://subugoe.github.io/tido/) where you can run TIDO with your own TextAPI endpoint
+and also view our production examples.
 
-You can access the preview with the following URL syntax:
-
-`[GitLab Pages base URL]/[branch-name]/config-tester/[project].html`
-
-**List of preview configurations:**
-
-- [Ahiqar Textual Witnesses In Syriac](https://subugoe.pages.gwdg.de/emo/tido/main/examples/ahiqar-syriac.html)
-- [Ahiqar Textual Witnesses In Arabic And Karshuni](https://subugoe.pages.gwdg.de/emo/tido/main/examples/ahiqar-arabic-karshuni.html)
-- [Goethes Farbenlehre in Berlin](https://subugoe.pages.gwdg.de/emo/tido/main/examples/gfl.html)
-- [Zero Config](https://subugoe.pages.gwdg.de/emo/tido/main/examples/zero-config.html?collection=https%3A%2F%2Fahiqar.uni-goettingen.de%2Fapi%2Ftextapi%2Fahikar%2Fsyriac%2Fcollection.json)
-  (here you can append an entrypoint URL parameter like `?collection=https://example.com`. For more details, please check the [Bookmarking](#bookmarking) section.)
 
 ## Getting Started
 
 TIDO is provided as **npm package**. Please follow the steps below to include it for production:
 
 ### Get the Viewer
-
-#### Registry Setup
-
-Since npm communicates with the package API, it is necessary to setup a valid endpoint.
-
-```bash
-echo @subugoe:registry=https://gitlab.gwdg.de/api/v4/packages/npm/ >>.npmrc
-```
-
-**Note**: Fire this command inside the **root** of your **project directory**.
 
 #### Installation
 
@@ -458,7 +437,7 @@ After the nvm installation is done, please `restart` your shell session once. Th
 #### Clone the Repository
 
 ```bash
-git clone git@gitlab.gwdg.de:subugoe/emo/tido.git
+git clone git@github.com:subugoe/tido.git
 ```
 
 #### Get the Dependencies
