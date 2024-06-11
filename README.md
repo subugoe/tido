@@ -23,6 +23,7 @@ With this project we provide a highly configurable viewer for projects that impl
       - [Image](#image)
       - [Text](#text)
       - [Annotations](#annotations)
+- [Methods](#methods)
 - [Bookmarking](#bookmarking)
 - [Getting Started (Developers)](#getting-started-developers)
   - [Prerequisites](#prerequisites)
@@ -378,6 +379,24 @@ no options
 | types[i].index           | String                 | `null`       | Specifies the index name that should be used in the annotation item. TIDO uses Bootstrap Icons, please lookup the allowed values [here](https://github.com/quasarframework/quasar/blob/dev/extras/bootstrap-icons/icons.json) |
 | types[i].displayWhen    | String                 | `null`       | Text content type that was specified under [Text options](#text). Annotation will only be shown if that content type is currently active.                                                                                    |
 | types[i].annotationType | String                 | `annotation` | Controls the look of the annotation item. Allowed values: `annotation` or `text`. Currently the only difference is that there is no index at type `text`.                                                                     |
+
+## Methods
+
+The instantiated TIDO Object exposes methods to control TIDO's behaviour programmatically.
+Just call them in your outer JavaScript application like this:
+
+```javascript
+const tido = new Tido()
+tido.someMethod()
+```
+
+**Available Methods:**
+
+| Name     | Arguments | Type            | Description                                                                                |
+|----------|-----------|-----------------|--------------------------------------------------------------------------------------------|
+| setTheme | name      | `dark`, `light` | Sets color theme. The attribute `colo-scheme` at the container element will be overridden. |
+
+
 
 ## Bookmarking
 
