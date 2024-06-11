@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head><title>TIDO</title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="dist/tido.css">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+<noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
+  continue.</strong></noscript>
+<header>
+  <a class="home" href="/">TIDO</a>
+  <div class="input-container">
+    <input id="url-input" type="text" placeholder="Enter your manifest or collection URL here...">
+    <button onclick="load()">Load</button>
+  </div>
+  <span>Other examples:</span>
+  <nav>
+    <select id="nav-select">
+      <option disabled selected hidden>Please select...</option>
+      <option value="./ahiqar-syriac.html">Ahiqar Syriac</option>
+      <option value="./ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</option>
+      <option value="./gfl.html">GFL</option>
+    </select>
+  </nav>
+</header>
+
+<div id="app">
+  <div class="empty-container">
+    <h1>Welcome to the preview website for the TIDO Viewer.</h1>
+    <p>Please enter your TextAPI entrypoint URL above or inspect some of our production examples.</p>
+  </div>
+</div>
+<script src="dist/tido.js"></script>
+<script>
+  const manifest = new URLSearchParams(window.location.search).get('manifest')
+  const collection = new URLSearchParams(window.location.search).get('collection')
+
+  if (manifest || collection) {
+    const config = {
+      ...(manifest ? { manifest } : {}),
+      ...(collection ? { collection } : {}),
+    }
+
+    window.tido = new window.Tido(config)
+  }
+
+  const select = document.getElementById('nav-select');
+  select.onchange = function (event) {
+    window.location = event.target.value
+  }
+
+
+  function load() {
+    const input = document.getElementById('url-input')
+
+    const isManifest = input.value.includes('manifest.json')
+    const isCollection = input.value.includes('collection.json')
+
+    if (!isManifest && !isCollection) return
+
+    window.tido = new window.Tido({
+      manifest: input.value
+    })
+
+    const params = new URLSearchParams(window.location.search)
+
+    if (isManifest) params.set('manifest', input.value)
+    if (isCollection) params.set('collection', input.value)
+
+    window.history.pushState(null, null, params)
+  }
+</script>
+</body>
+</html>
