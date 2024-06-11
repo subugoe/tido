@@ -5,7 +5,7 @@
         <h1 v-if="collectionTitle" class="t-text-2xl t-font-bold">
           {{ collectionTitle }}
         </h1>
-        <h2 v-if="manifestTitle" class="t-flex t-items-center t-text-xl t-mt-2 t-mb-6">
+        <h2 v-if="manifestTitle" class="t-flex t-items-center t-flex-wrap t-text-xl t-mt-2 t-mb-6">
           <span>{{ manifestTitle }}</span>
           <BaseIcon
             v-if="item"
@@ -16,7 +16,7 @@
         </h2>
       </template>
       <template v-else>
-        <h1 class="t-text-2xl t-font-bold t-mt-2 t-mb-4">
+        <h1 class="t-flex t-items-center t-flex-wrap t-text-2xl t-font-bold t-mt-2 t-mb-4">
           <span>{{ manifestTitle }}</span>
           <BaseIcon
             v-if="item"
