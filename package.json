@@ -25,9 +25,13 @@
     "Nils Windisch"
   ],
   "type": "module",
+  "bugs": {
+    "url": "https://github.com/subugoe/tido/issues"
+  },
+  "homepage": "https://subugoe.github.io/tido/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/subugoe/tido.git"
+    "url": "git+https://github.com/subugoe/tido.git"
   },
   "private": false,
   "devDependencies": {
