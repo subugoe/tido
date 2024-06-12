@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/subugoe/tido/compare/v3.3.0...v4.0.0) (2024-06-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop Quasar framework and introduce TailwindCSS + Primevue components
+* introduce new bookmarking format to create human readable URLs
+
+### Features
+
+* add setTheme TIDO method ([c425099](https://github.com/subugoe/tido/commit/c42509952f88a448dc25e90a03317b96df14a3e2))
+* drop Quasar framework and introduce TailwindCSS + Primevue components ([526db87](https://github.com/subugoe/tido/commit/526db87d0af31ea9ef8bee2a2e0086de62b13631))
+* introduce new bookmarking format to create human readable URLs ([8ded62b](https://github.com/subugoe/tido/commit/8ded62b8f8d5e5fa5a3f97b854a6fb9731eaef96))
+* stop leaking Tailwind's preflight styles to global HTML ([4ecc839](https://github.com/subugoe/tido/commit/4ecc8394d07f9a4dd242073f98634e5cc8289e41))
+
+
+### Bug Fixes
+
+* Display configurable labels again ([2a22dc1](https://github.com/subugoe/tido/commit/2a22dc1ae484e7e06ba1f0fbfd94fb29e7ed2ca7))
+* fix second title bar line break ([2bb5617](https://github.com/subugoe/tido/commit/2bb56170b5374fe37bcfae7f43e97a9b22130fd6))
+* keep tabs visible in panel at loading ([96774b2](https://github.com/subugoe/tido/commit/96774b21b3000eb3c9723020cfbd8895dcec642c))
+* set correct attribute at force switching a theme from config ([f7b692b](https://github.com/subugoe/tido/commit/f7b692b519bb9b1af1f1f7f6616a90210b83e1d7))
+* show nested metadata & improve its styling ([7e7dc63](https://github.com/subugoe/tido/commit/7e7dc63f2933d5ba66fc6352fc14c93ba072465a))
+* update only the "tido" during bookmarking and leave other GET params ([adc032a](https://github.com/subugoe/tido/commit/adc032a152ca9d4d5635fe4fd592572e0dffd0d8))
+* update styles for better embedding ([d4c38e1](https://github.com/subugoe/tido/commit/d4c38e1d17cc3627605b233c81c7b9c38e5f9369))
+
+
+### Refactoring
+
+* a few 'metadata' and the 'annotation' components to Typescript ([#1](https://github.com/subugoe/tido/issues/1)) ([75e04b2](https://github.com/subugoe/tido/commit/75e04b27d45b8bbd0b0c4bab19585e7f682b4a73))
+* convert CollectionMetadata component to Typescript ([9ee9d11](https://github.com/subugoe/tido/commit/9ee9d1199eaed931d78c2185839801b29440754d))
+* ItemMetadata.vue, ManifestMetadata.vue, MetadataItem.vue to Typescript ([ad648d2](https://github.com/subugoe/tido/commit/ad648d20e5f783bbd8ad6cacc2cea8620f7ef465))
+* now use 'annotations Pinia store' and remove the 'Vuex anno… ([#10](https://github.com/subugoe/tido/issues/10)) ([5db0053](https://github.com/subugoe/tido/commit/5db00539b750d16ffac981c22d5230b5dbb3d168))
+* the 'base' and a few 'header' components ([#6](https://github.com/subugoe/tido/issues/6)) ([49274d2](https://github.com/subugoe/tido/commit/49274d2d13860b52573d2e758b7c7835a67de4ba))
+* the remaining 'header' and the a few 'panels' components ([0753947](https://github.com/subugoe/tido/commit/075394720c3a1a6fee587183d12d4f143a6dd78d))
+* update .versionrc ([23058b5](https://github.com/subugoe/tido/commit/23058b56f23367dcbaf0f66d5c2344563bc1b19b))
+* use 'config' Pinia store - drop the usage of 'config' Vuex module ([#4](https://github.com/subugoe/tido/issues/4)) ([44f535f](https://github.com/subugoe/tido/commit/44f535f8bfc1204d8d9afa1d118617a53adc6917))
+* use 'contents' Pinia store ([#10](https://github.com/subugoe/tido/issues/10)) ([3bdd435](https://github.com/subugoe/tido/commit/3bdd4358d197a6f3dfeb94bef170d0ac80b2552a))
+
+
+### Docs
+
+* Add new bookmarking info in README ([9769f6a](https://github.com/subugoe/tido/commit/9769f6a45e89a7f6c95d7ffd1e6826a5fe387586))
+* update README ([0c40b55](https://github.com/subugoe/tido/commit/0c40b55048e94b7cff396041f537d3f8b1f07586))
+
 ## [3.3.0](https://gitlab.gwdg.de/subugoe/emo/tido/compare/v3.2.1...v3.3.0) (2024-03-01)
 
 
