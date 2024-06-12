@@ -12,9 +12,6 @@
     "tailwindcss",
     "primevue"
   ],
-  "bugs": {
-    "email": "gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
-  },
   "license": "AGPL-3.0-or-later",
   "author": "Göttingen State and University Library - SUB",
   "contributors": [
@@ -30,7 +27,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.gwdg.de/subugoe/emo/tido.git"
+    "url": "https://github.com/subugoe/tido.git"
   },
   "private": false,
   "devDependencies": {
@@ -88,8 +85,5 @@
   },
   "files": [
     "dist"
-  ],
-  "publishConfig": {
-    "@subugoe:registry": "https://gitlab.gwdg.de/api/v4/projects/10921/packages/npm/"
-  }
+  ]
 }
