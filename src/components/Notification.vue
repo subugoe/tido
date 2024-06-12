@@ -31,7 +31,7 @@ const props = defineProps({
     default: () => '',
   },
 });
-const configStore = useConfigStore()
+const configStore = useConfigStore();
 
 const config = computed(() => configStore.config);
 const notificationColors = computed(() => config.value.notificationColors);

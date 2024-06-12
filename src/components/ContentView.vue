@@ -23,7 +23,7 @@ import {
 } from 'vue';
 import { useConfigStore } from '@/stores/config';
 import { useAnnotationsStore } from '@/stores/annotations';
-import { useContentsStore } from '@/stores/contents'
+import { useContentsStore } from '@/stores/contents';
 import Notification from '@/components/Notification.vue';
 import { request } from '@/utils/http';
 import { domParser, delay } from '@/utils';
@@ -35,14 +35,14 @@ const props = defineProps({
 });
 const emit = defineEmits(['loading']);
 
-const configStore = useConfigStore()
-const contentStore = useContentsStore()
+const configStore = useConfigStore();
+const contentStore = useContentsStore();
 
 const content = ref('');
 const errorTextMessage = ref(null);
 const notificationMessage = readonly(errorTextMessage);
 
-const config = computed(() => configStore.config);   
+const config = computed(() => configStore.config);
 const contentStyle = computed(() => ({
   fontSize: `${props.fontSize}px`,
 }));
@@ -53,7 +53,7 @@ watch(
   { immediate: true },
 );
 async function loadContent(url) {
-  const annotationStore = useAnnotationsStore()
+  const annotationStore = useAnnotationsStore();
   content.value = '';
   try {
     if (!url) {
@@ -72,13 +72,13 @@ async function loadContent(url) {
       emit('loading', false);
 
       const root = document.getElementById('text-content');
-      annotationStore.addHighlightAttributesToText(root)
-      await annotationStore.addHighlightClickListeners()
+      annotationStore.addHighlightAttributesToText(root);
+      await annotationStore.addHighlightClickListeners();
 
       // TODO: Enable Hover + Tooltip feature when reqs are clarified
       // await store.dispatch('annotations/addHighlightHoverListeners');
 
-      contentStore.setActiveContentUrl(props.url)
+      contentStore.setActiveContentUrl(props.url);
     }, 100);
   } catch (err) {
     errorTextMessage.value = err.message;

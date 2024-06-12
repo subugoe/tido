@@ -94,12 +94,12 @@
 import {
   computed, nextTick, ref, watch,
 } from 'vue';
-import { useConfigStore } from '@/stores/config';
-import { useAnnotationsStore } from '@/stores/annotations';
-import { useContentsStore } from '@/stores/contents'
 import { useI18n } from 'vue-i18n';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import { useConfigStore } from '@/stores/config';
+import { useAnnotationsStore } from '@/stores/annotations';
+import { useContentsStore } from '@/stores/contents';
 import MetadataView from '@/components/metadata/MetadataView.vue';
 import TreeView from '@/components/TreeView.vue';
 import AnnotationsView from '@/components/annotations/AnnotationsView.vue';
@@ -137,8 +137,8 @@ export default {
     activeView: Number,
   },
   setup(props, { emit }) {
-    const configStore = useConfigStore()
-    const contentStore = useContentsStore()
+    const configStore = useConfigStore();
+    const contentStore = useContentsStore();
     const { t } = useI18n();
 
     const tabs = ref([]);
@@ -201,7 +201,7 @@ export default {
       const { component } = findComponent(connector.id);
 
       const type = connector.options?.type;
-      const url: string | null = getContentUrl(type);
+      const url: string | null = getContentUrl(type);
       if (!url) return;
 
       const fontSize = 16;
@@ -228,7 +228,7 @@ export default {
     }
 
     function createAnnotationsView(view, i) {
-      const annotationStore = useAnnotationsStore()
+      const annotationStore = useAnnotationsStore();
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
@@ -240,17 +240,17 @@ export default {
       const events = {
         update: (value) => {
           if (value === null) return;
-          if (value) annotationStore.selectAll()
-          else annotationStore.selectNone()
+          if (value) annotationStore.selectAll();
+          else annotationStore.selectNone();
         },
       };
 
-      unsubscribe.value = annotationStore.$onAction(({name, store, args, after, onError }) => {
-
+      unsubscribe.value = annotationStore.$onAction(({
+        name, args,
+      }) => {
         if (tabs.value.length
-          && tabs.value[0]?.actions?.length &&
-          (name === 'setActiveAnnotations'))
-          {
+          && tabs.value[0]?.actions?.length
+          && (name === 'setActiveAnnotations')) {
           const activeAnnotations = args[0];
           const activeAmount = Object.keys(activeAnnotations).length;
           const filteredAmount = annotationStore.filteredAnnotations.length;
@@ -258,13 +258,11 @@ export default {
 
           if (!newSelected && activeAmount > 0) newSelected = null;
 
-
           if (tabs.value[i].actions[0].props.selected !== newSelected) {
             tabs.value[i].actions[0].props.selected = newSelected;
-            }
+          }
         }
       });
-
 
       const actions = [{
         component: 'PanelToggleAction',
@@ -343,7 +341,6 @@ export default {
     return {
       activeTabIndex,
       isLoading,
-      panel: props.panel,
       tabs,
       onViewChange,
     };

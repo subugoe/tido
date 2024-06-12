@@ -25,18 +25,18 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useConfigStore } from '@/stores/config';
-import { useContentsStore } from '@/stores/contents'
 import { useI18n } from 'vue-i18n';
+import { useConfigStore } from '@/stores/config';
+import { useContentsStore } from '@/stores/contents';
 import BaseButton from '@/components/base/BaseButton.vue';
 
-const configStore = useConfigStore()
-const contentStore = useContentsStore()
+const configStore = useConfigStore();
+const contentStore = useContentsStore();
 const { t } = useI18n();
 
 const manifest = computed<Manifest>(() => contentStore.manifest);
-const manifests = computed<Manifest[]>(() => contentStore.manifests); 
-const itemUrl = computed<string>(() => contentStore.itemUrl); 
+const manifests = computed<Manifest[]>(() => contentStore.manifests);
+const itemUrl = computed<string>(() => contentStore.itemUrl);
 const itemIndex = computed<number>(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) : -1));
 const hasPrev = computed<boolean>(() => {
   const prevIndex = itemIndex.value - 1;
@@ -62,17 +62,15 @@ const labels = computed<Labels>(() => configStore.config.labels || {
   item: 'item',
 });
 const nextButtonLabel = computed<string>(() => (itemIndex.value === manifest.value.sequence.length - 1
-  ? `${t('next')} ${t(labels.value.manifest ? labels.value.manifest: 'Manuscript')}`
+  ? `${t('next')} ${t(labels.value.manifest ? labels.value.manifest : 'Manuscript')}`
   : `${t('next')} ${t(labels.value.item)}`));
 const prevButtonLabel = computed<string>(() => (itemIndex.value === 0
-  ? `${t('prev')} ${t(labels.value.manifest ? labels.value.manifest: 'Manuscript')}`
+  ? `${t('prev')} ${t(labels.value.manifest ? labels.value.manifest : 'Manuscript')}`
   : `${t('prev')} ${t(labels.value.item)}`));
 
-
 function prev() {
-  const contentStore = useContentsStore()
   const prevIndex = itemIndex.value - 1;
-  let itemUrl = '';
+  let newItemUrl = '';
 
   if (prevIndex < 0) {
     // If the index is lower than 0, we will load the prev manifest's last item
@@ -80,32 +78,31 @@ function prev() {
     if (prevManifestIndex < 0) return;
 
     const prevManifest = manifests.value[prevManifestIndex];
-    contentStore.setManifest(prevManifest)
-    configStore.setDefaultActiveViews()
-    itemUrl = prevManifest.sequence[prevManifest.sequence.length - 1].id;
+    contentStore.setManifest(prevManifest);
+    configStore.setDefaultActiveViews();
+    newItemUrl = prevManifest.sequence[prevManifest.sequence.length - 1].id;
   } else {
     // We load the previous item
-    itemUrl = manifest.value.sequence[prevIndex].id;
+    newItemUrl = manifest.value.sequence[prevIndex].id;
   }
-  contentStore.initItem(itemUrl)
+  contentStore.initItem(newItemUrl);
 }
 
 function next() {
-  const contentStore = useContentsStore()
   const nextIndex = itemIndex.value + 1;
-  let itemUrl = '';
+  let newItemUrl = '';
 
   if (nextIndex > manifest.value.sequence.length - 1) {
     const nextManifestIndex = manifests.value.findIndex(({ id }) => id === manifest.value.id) + 1;
     if (nextManifestIndex > manifests.value.length - 1) return;
 
     const nextManifest = manifests.value[nextManifestIndex];
-    contentStore.setManifest(nextManifest)
-    configStore.setDefaultActiveViews()
-    itemUrl = nextManifest.sequence[0].id;
+    contentStore.setManifest(nextManifest);
+    configStore.setDefaultActiveViews();
+    newItemUrl = nextManifest.sequence[0].id;
   } else {
-    itemUrl = manifest.value.sequence[nextIndex].id;
+    newItemUrl = manifest.value.sequence[nextIndex].id;
   }
-  contentStore.initItem(itemUrl)
+  contentStore.initItem(newItemUrl);
 }
 </script>

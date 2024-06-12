@@ -1,25 +1,24 @@
 <script setup lang="ts">
-import Dialog from 'primevue/dialog'
-import { useConfigStore } from "@/stores/config";
+import Dialog from 'primevue/dialog';
+import { useConfigStore } from '@/stores/config';
 
 const props = withDefaults(defineProps<{
   modelValue: boolean,
   title?: string,
   closable?: boolean
 }>(), {
-  closable: true
-})
+  closable: true,
+});
 const configStore = useConfigStore();
 
-const emit = defineEmits<{
-  (event: 'update:modelValue', payload: boolean): void;
-}>()
+const emit = defineEmits<{(event: 'update:modelValue', payload: boolean): void;
+}>();
 
 function close() {
-  emit('update:modelValue', false)
+  emit('update:modelValue', false);
 }
 function open() {
-  emit('update:modelValue', true)
+  emit('update:modelValue', true);
 }
 </script>
 <template>

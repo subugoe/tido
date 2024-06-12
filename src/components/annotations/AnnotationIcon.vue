@@ -13,7 +13,7 @@ interface Props {
   name: string
 }
 
-const props = defineProps<Props>()
+defineProps<Props>();
 
 </script>
 

@@ -23,7 +23,7 @@ import BaseButton from '@/components/base/BaseButton.vue';
 
 const props = defineProps(['modelValue', 'buttonText']);
 const emit = defineEmits(['update:modelValue']);
-const configStore = useConfigStore()
+const configStore = useConfigStore();
 const container = computed(() => configStore.config.container);
 
 watch(

@@ -19,9 +19,8 @@ const props = withDefaults(defineProps<Props>(), {
   icon: null,
   iconPosition: 'left',
   rounded: null,
-  disabled: false
-})
-
+  disabled: false,
+});
 
 let _icon;
 watch(() => props.icon, (value) => _icon = value, { immediate: true });

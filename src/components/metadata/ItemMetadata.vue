@@ -11,15 +11,15 @@
 
 import { computed } from 'vue';
 import { useConfigStore } from '@/stores/config';
-import { useContentsStore } from '@/stores/contents'
+import { useContentsStore } from '@/stores/contents';
 
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
-const configStore = useConfigStore()
-const contentStore = useContentsStore()
+const configStore = useConfigStore();
+const contentStore = useContentsStore();
 
-const item = computed<Item>(() => contentStore.item);    
-const itemUrl = computed<string>(() => contentStore.itemUrl);     
+const item = computed<Item>(() => contentStore.item);
+const itemUrl = computed<string>(() => contentStore.itemUrl);
 const manifest = computed<Manifest>(() => contentStore.manifest);
 const itemsCount = computed<number>(() => manifest.value?.sequence.length);
 const labels = computed<Labels>(() => configStore.config.labels);

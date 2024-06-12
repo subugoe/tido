@@ -12,7 +12,7 @@ import CollectionMetadata from '@/components/metadata/CollectionMetadata.vue';
 import ManifestMetadata from '@/components/metadata/ManifestMetadata.vue';
 import ItemMetadata from '@/components/metadata/ItemMetadata.vue';
 
-const props = defineProps({
+defineProps({
   options: Object,
 });
 

@@ -13,7 +13,7 @@ import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
 import Language from '@/components/header/Language.vue';
 import DarkModeToggle from '@/components/header/DarkModeToggle.vue';
 
-const configStore = useConfigStore()
+const configStore = useConfigStore();
 
 const config = computed(() => configStore.config);
 const showLanguageSwitch = computed(() => (config.value?.header?.languageSwitch !== undefined

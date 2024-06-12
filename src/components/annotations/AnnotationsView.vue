@@ -29,11 +29,11 @@ import * as AnnotationUtils from '@/utils/annotations';
 
 import { useConfigStore } from '@/stores/config';
 import { useAnnotationsStore } from '@/stores/annotations';
-import { useContentsStore} from '@/stores/contents';
+import { useContentsStore } from '@/stores/contents';
 
-const configStore = useConfigStore()
-const annotationStore = useAnnotationsStore()
-const contentStore = useContentsStore()
+const configStore = useConfigStore();
+const annotationStore = useAnnotationsStore();
+const contentStore = useContentsStore();
 
 const props = defineProps({
   url: String,
@@ -45,8 +45,8 @@ const message = ref('no_annotations_in_view');
 const config = computed(() => configStore.config);
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
-const filteredAnnotations = computed<Annotation[]>(() =>  annotationStore.filteredAnnotations);
-const activeContentUrl = computed<string>(() => contentStore.activeContentUrl); 
+const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
+const activeContentUrl = computed<string>(() => contentStore.activeContentUrl);
 const updateTextHighlighting = computed(() =>
   // We need to make sure that annotations are loaded (this.annotations),
   // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
@@ -58,8 +58,8 @@ watch(
   (contentData) => {
     const [hasAnnotations, activeContentUrl] = contentData.split('|');
     if (hasAnnotations !== 'true' || activeContentUrl === 'null') return;
-    annotationStore.resetAnnotations()
-    annotationStore.selectFilteredAnnotations(props.types)
+    annotationStore.resetAnnotations();
+    annotationStore.selectFilteredAnnotations(props.types);
     highlightTargetsLevel0();
   },
   { immediate: true },

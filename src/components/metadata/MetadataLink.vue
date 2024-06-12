@@ -23,9 +23,9 @@ export interface Props {
   text: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   url: '',
-  text: ''
-})
+  text: '',
+});
 
 </script>

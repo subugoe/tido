@@ -25,21 +25,20 @@ import TitleBar from '@/components/header/TitleBar.vue';
 import PanelsToggle from '@/components/header/PanelsToggle.vue';
 import Tools from '@/components/header/Tools.vue';
 
-
 export interface Props {
   configErrorTitle: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  configErrorTitle: ''
-})
+withDefaults(defineProps<Props>(), {
+  configErrorTitle: '',
+});
 
-const configStore = useConfigStore()
-const conntentStore = useContentsStore()
+const configStore = useConfigStore();
+const conntentStore = useContentsStore();
 
-const config = computed(() => configStore.config); 
+const config = computed(() => configStore.config);
 const show = computed<boolean | undefined>(() => config.value?.header?.show);
-const item = computed<Item>(() => conntentStore.item);       
+const item = computed<Item>(() => conntentStore.item);
 const showNavbar = computed<boolean>(() => config.value?.header?.navigation || true);
 const showPanelsToggle = computed<boolean | undefined>(() => (config.value?.header?.panelsToggle !== undefined ? config.value?.header?.panelsToggle : true));
 </script>

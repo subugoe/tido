@@ -64,12 +64,12 @@ import BaseButton from '@/components/base/BaseButton.vue';
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
 import { useConfigStore } from '@/stores/config';
 
-const configStore = useConfigStore()
+const configStore = useConfigStore();
 const { t } = useI18n();
 
 const toggles = ref([]);
 const showDropdown = ref(false);
-const panels = computed(() => configStore.config.panels  );
+const panels = computed(() => configStore.config.panels);
 const resetColor = computed(() => (toggles.value.filter(({ show }) => !show).length > 0 ? 'primary' : 'grey-7'));
 
 watch(
@@ -83,7 +83,6 @@ watch(
 );
 
 function update(index, show) {
-  const configStore = useConfigStore()
   if (show === false) {
     let numberClosedPanels = 0;
     // count the number of closed panels, except the current action
@@ -103,14 +102,13 @@ function update(index, show) {
   }
 
   toggles.value[index].show = show;
-  configStore.setShowPanel({ index, show })
+  configStore.setShowPanel({ index, show });
 }
 
 function reset() {
-  const configStore = useConfigStore()
   toggles.value.forEach((toggle, index) => {
     toggles.value[index].show = true;
-    configStore.setShowPanel({ index, show: true })
+    configStore.setShowPanel({ index, show: true });
   });
 }
 

@@ -16,7 +16,7 @@ import { delay } from '@/utils';
 
 const emit = defineEmits('loading');
 
-const contentStore = useContentsStore()
+const contentStore = useContentsStore();
 
 const viewer = ref(null);
 const error = ref(null);

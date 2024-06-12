@@ -47,16 +47,16 @@ import Tree from 'primevue/tree';
 import {
   computed, nextTick, onMounted, ref, watch,
 } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents';
-import { useI18n } from 'vue-i18n';
 import { request } from '@/utils/http';
 import { isElementVisible } from '@/utils';
 
 const emit = defineEmits(['loading']);
 
-const configStore = useConfigStore()
-const contentStore = useContentsStore()
+const configStore = useConfigStore();
+const contentStore = useContentsStore();
 const { t } = useI18n();
 
 const expanded = ref({});
@@ -164,15 +164,13 @@ async function onNodeExpand(node) {
 }
 
 async function onNodeSelect(node) {
-  const configStore = useConfigStore()
-  const contentStore = useContentsStore()
   if (currentManifest.value.id !== node.parent) {
     // If we selected an item from a different manifest
-    await contentStore.initManifest(node.parent)
-    await configStore.setDefaultActiveViews()
+    await contentStore.initManifest(node.parent);
+    await configStore.setDefaultActiveViews();
   }
 
-  await contentStore.initItem(node.key)
+  await contentStore.initItem(node.key);
 }
 
 function scrollSelectedIntoView() {

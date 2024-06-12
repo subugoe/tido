@@ -10,9 +10,9 @@ export interface Props {
   value?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  value: ''
-})
+withDefaults(defineProps<Props>(), {
+  value: '',
+});
 </script>
 
 <style lang="scss" scoped>

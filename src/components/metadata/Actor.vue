@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import MetadataValue from '@/components/metadata/MetadataValue.vue';
 import { useI18n } from 'vue-i18n';
+import MetadataValue from '@/components/metadata/MetadataValue.vue';
 
 const { t } = useI18n();
 
@@ -18,8 +18,8 @@ export interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  data: () => []
-})
+  data: () => [],
+});
 
 function getRole(actorItem: Actor) : string {
   const { role } = actorItem;

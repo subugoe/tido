@@ -13,13 +13,12 @@ import { computed } from 'vue';
 import { useContentsStore } from '@/stores/contents';
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
+const contentStore = useContentsStore();
 
-const contentStore = useContentsStore()
-
-function getCollectorName (collection: Collection) : string | null {
-    if (!collection) return null;
-    if(collection.collector.length === 0) return null;
-    return collection.collector[0].name;
+function getCollectorName(collection: Collection) : string | null {
+  if (!collection) return null;
+  if (collection.collector.length === 0) return null;
+  return collection.collector[0].name;
 }
 
 const collection = computed<Collection>(() => contentStore.collection);
@@ -33,7 +32,7 @@ const metadata = computed(() => {
   };
 
   const collectorName: string | null = getCollectorName(collection.value);
-  const description: string | undefined = collection.value.description;
+  const { description } = collection.value;
   const collectionTitle: Title[] = collection.value.title;
 
   return [

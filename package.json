@@ -36,6 +36,7 @@
   "private": false,
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/eslint-config-typescript": "^13.0.0",
     "@vueuse/core": "^10.9.0",
     "autoprefixer": "^10.4.17",
     "cypress": "^13.6.6",

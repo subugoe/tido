@@ -16,9 +16,8 @@ import { useContentsStore } from '@/stores/contents';
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 import Actor from '@/components/metadata/Actor.vue';
 
-
-const configStore = useConfigStore()
-const contentStore = useContentsStore()
+const configStore = useConfigStore();
+const contentStore = useContentsStore();
 
 const manifest = computed<Manifest>(() => contentStore.manifest);
 const manifests = computed<Manifest[]>(() => contentStore.manifests);
@@ -30,9 +29,9 @@ const metadata = computed(() => {
   if (!manifest.value) return [];
   return [
     { key: 'label', value: manifest.value.label },
-    ...(manifest.value.license || []).map((manifest) => ({
+    ...(manifest.value.license || []).map((license) => ({
       key: 'License',
-      value: manifest.id,
+      value: license.id,
     })),
     ...(manifest.value.metadata || []),
   ];
