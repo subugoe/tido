@@ -67,7 +67,7 @@ TIDO is provided as **npm package**. Please follow the steps below to include it
 #### Installation
 
 ```bash
-npm i @subugoe/tido
+npm i tido
 ```
 
 ### Integration
@@ -77,15 +77,15 @@ npm i @subugoe/tido
 HTML:
 
 ```html
-<link href="/node_modules/@subugoe/tido/dist/tido.css" rel="stylesheet">
-<script src="/node_modules/@subugoe/tido/dist/tido.js"></script>
+<link href="/node_modules/tido/dist/tido.css" rel="stylesheet">
+<script src="/node_modules/tido/dist/tido.js"></script>
 ```
 
 JS:
 
 ```js
-import '@subugoe/tido/dist/tido.js'
-import '@subugoe/tido/dist/tido.css'
+import 'tido/dist/tido.js'
+import 'tido/dist/tido.css'
 ```
 
 2. Add a container element to your application where TIDO can hook into.
