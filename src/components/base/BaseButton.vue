@@ -51,10 +51,10 @@ classes['t-rounded-md'] = !_rounded;
 classes['t-rounded-full'] = _rounded;
 
 // Paddings Size Normal
-classes['t-py-2.5 t-ps-3 t-pe-5'] = props.size === 'normal' && !!(_icon) && _iconPosition === 'left';
-classes['t-py-2.5 t-ps-5 t-pe-3'] = props.size === 'normal' && !!(_icon) && _iconPosition === 'right';
+classes['t-py-2 t-ps-3 t-pe-5'] = props.size === 'normal' && !!(_icon) && _iconPosition === 'left';
+classes['t-py-2 t-ps-5 t-pe-3'] = props.size === 'normal' && !!(_icon) && _iconPosition === 'right';
 classes['t-p-[0.6rem]'] = props.size === 'normal' && isIconOnly;
-classes['t-py-2.5 t-px-5'] = props.size === 'normal' && !_icon;
+classes['t-py-2 t-px-5'] = props.size === 'normal' && !_icon;
 
 // Paddings Size Small
 classes['t-py-1.5 t-ps-2 t-pe-3'] = props.size === 'small' && !!(_icon) && _iconPosition === 'left';
@@ -83,7 +83,7 @@ classes['focus-visible:t-ring-primary focus-visible:t-ring-opacity-25 dark:focus
 
 classes['focus-visible:t-ring-primary focus-visible:t-ring-opacity-25 dark:focus-visible:t-ring-primary dark:focus-visible:t-ring-opacity-50 t-bg-none t-text-primary hover:t-underline'] = props.display === 'link';
 
-classes['t-bg-white t-text-dark t-border t-border-zinc-400 focus:t-ring-zinc-300 focus:t-ring-opacity-50 hover:t-bg-zinc-100 dark:t-bg-zinc-800'] = props.display === 'mono';
+classes['t-bg-gray-300/75 t-text-gray-600 dark:t-text-gray-300 focus:t-ring-zinc-300 focus:t-ring-opacity-50 hover:t-bg-gray-300 hover:dark:t-bg-gray-700 dark:t-bg-gray-800'] = props.display === 'mono';
 
 classes['t-bg-none t-text-primary t-border t-border-primary focus:t-ring-zinc-300 focus:t-ring-opacity-50 hover:t-bg-primary-50 dark:hover:t-bg-zinc-800'] = props.display === 'outline';
 

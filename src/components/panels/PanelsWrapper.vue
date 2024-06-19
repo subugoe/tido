@@ -1,5 +1,5 @@
 <template>
-  <div class="panels-wrapper t-flex t-flex-col t-flex-1 t-overflow-auto sm:t-flex-row t-space-x-4 t-px-4 lg:t-px-6 md:t-pb-4">
+  <div class="panels-wrapper t-flex t-flex-col md:t-overflow-auto t-flex-1 md:t-flex-row md:t-space-x-4 t-space-y-4 md:t-space-y-0 t-px-4 lg:t-px-6 md:t-pb-4">
     <Panel
       v-for="(panel, i) in panels"
       v-show="panel.show"
@@ -7,7 +7,7 @@
       :panel="panel"
       :active-view="getActiveView(i)"
       @active-view="onActiveViewChange($event, i)"
-      class="t-flex-1"
+      class="t-flex-1 t-h-screen md:t-h-auto"
     />
   </div>
 </template>

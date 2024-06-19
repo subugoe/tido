@@ -1,5 +1,5 @@
 <template>
-  <div class="panel t-flex-1 t-flex t-flex-col t-overflow-hidden t-rounded-lg t-bg-gray-50 dark:t-bg-gray-800 t-border dark:t-border-gray-700">
+  <div class="panel t-flex t-flex-col t-overflow-hidden t-rounded-lg t-bg-gray-50 dark:t-bg-gray-800 t-border dark:t-border-gray-700">
     <div class="panel-header t-py-3 t-px-4 t-flex t-justify-between t-items-center">
       <div class="caption t-font-bold">
         <!-- We display the tab label as panel label when there is only one tab -->
@@ -16,7 +16,7 @@
     </div>
     <div class="t-h-[1px] dark:t-bg-gray-600 t-bg-gray-200 t-mx-4" />
     <div class="panel-body t-relative t-overflow-hidden t-flex t-flex-1 t-flex-col t-bg-none">
-      <div v-if="isLoading" class="t-absolute t-bottom-0 t-z-50 t-flex t-bg-gray-50 dark:t-bg-gray-800 t-w-full t-h-[94%] t-justify-center t-items-center">
+      <div v-if="isLoading" class="t-absolute t-bottom-0 t-z-50 t-flex t-bg-gray-50 dark:t-bg-gray-800 t-w-full t-h-[93%] t-justify-center t-items-center">
         <Loading  class="t-text-5xl" />
       </div>
       <template v-if="tabs.length > 1">

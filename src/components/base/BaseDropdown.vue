@@ -1,6 +1,6 @@
 <template>
   <BaseButton
-    display="flat"
+    display="mono"
     icon="dropdown"
     icon-position="right"
     :text="buttonText"

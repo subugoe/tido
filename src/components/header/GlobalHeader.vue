@@ -9,9 +9,9 @@
         <Tools/>
       </div>
     </div>
-    <div v-if="item" class="t-flex t-items-center">
+    <div v-if="item" class="t-flex md:t-items-center t-flex-col md:t-flex-row">
       <Navbar v-if="showNavbar"/>
-      <PanelsToggle v-if="showPanelsToggle" class="sm:t-ml-auto t-mt-4 md:t-mt-0" />
+      <PanelsToggle v-if="showPanelsToggle" class="md:t-ml-auto t-mt-4 md:t-mt-0" />
     </div>
   </div>
 </template>
