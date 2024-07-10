@@ -24,10 +24,16 @@
     </select>
   </nav>
 </header>
-<div id="app"></div>
+
+<div id="app">
+  <div class="empty-container">
+    <h1>Coming soon.</h1>
+  </div>
+</div>
 <script src="dist/tido.js"></script>
 <script>
 window.addEventListener('load', function () {
+ 
   const select = document.getElementById('nav-select');
   const pathArr = window.location.pathname.split('/')
 
@@ -36,6 +42,8 @@ window.addEventListener('load', function () {
   select.onchange = function (event) {
     window.location = event.target.value
   }
+
+  return;
 
   const tido = new Tido({
     "collection": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json",
