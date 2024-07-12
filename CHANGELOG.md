@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.3](https://github.com/subugoe/tido/compare/v4.0.2...v4.0.3) (2024-07-12)
+
+
+### Bug Fixes
+
+* show coming soon message for Ahiqar editions ([#449](https://github.com/subugoe/tido/issues/449)) ([a23ca62](https://github.com/subugoe/tido/commit/a23ca622e53ef596f3a850258977992d42a21d81))
+
 ### [4.0.2](https://github.com/subugoe/tido/compare/v4.0.1...v4.0.2) (2024-06-19)
 
 
