@@ -327,8 +327,9 @@ export default {
         //  instead of only the first one
         configStore.setContentType(contentItem.type.split('type=')[1]);
       }
-
       contentItem = item.value.content.find((c) => c.type.split('type=')[1] === type);
+      if (!contentItem) contentItem = item.value.content.find((c) => c.type.includes('text/html'));
+      // just to make this suitable with a different content object in 4 Wachen
 
       return contentItem ? contentItem.url : null;
     }
