@@ -38,7 +38,7 @@
   }
 
   window.addEventListener('load', function () {
-    const tido = new Tido({
+    new Tido({
       manifest: "https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/textapi/Z_1822-02-20_k/manifest.json",
       labels: {
         item: "Seite",
@@ -96,7 +96,7 @@
                   types: [
                     {
                       name: "Editorial Comment",
-                      icon: "biChatFill"
+                      icon: "chat"
                     },
                     {
                       name: "Abstract",
@@ -116,27 +116,27 @@
                   types: [
                     {
                       name: "Person",
-                      icon: "biPersonFill"
+                      icon: "person"
                     },
                     {
                       name: "Place",
-                      icon: "biGeoAltFill"
+                      icon: "marker"
                     },
                     {
                       name: "Org",
-                      icon: "biBank2"
+                      icon: "bank"
                     },
                     {
                       name: "Object",
-                      icon: "biArchiveFill"
+                      icon: "archive"
                     },
                     {
                       name: "Date",
-                      icon: "biCalendarWeek"
+                      icon: "calendar"
                     },
                     {
                       name: "Work",
-                      icon: "biJournals"
+                      icon: "journals"
                     }
                   ]
                 }
