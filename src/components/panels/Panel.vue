@@ -202,6 +202,7 @@ export default {
 
       const type = connector.options?.type;
       const url: string | null = getContentUrl(type);
+      
       if (!url) return;
 
       const fontSize = 16;
@@ -320,18 +321,30 @@ export default {
     }
 
     function getContentUrl(type: string): string | null {
+      // this function is called for any view of 'ContentView' component
+      console.log('type', type)
       let contentItem: Content | null = null;
+      if (item.value.content.length === 0) return null;
       if (!type) {
         [contentItem] = item.value.content;
         // TODO: this should be moved to loading time in order dynamically recognize all content types
         //  instead of only the first one
-        configStore.setContentType(contentItem.type.split('type=')[1]);
+        try {
+          configStore.setContentType(contentItem.type.split('type=')[1]);
+        } catch(e) {
+          console.error(e)
+        }
+        
       }
-      contentItem = item.value.content.find((c) => c.type.split('type=')[1] === type);
-      if (!contentItem) contentItem = item.value.content.find((c) => c.type.includes('text/html'));
-      // just to make this suitable with a different content object in 4 Wachen
+      
+      contentItem = item.value.content.find((c) => {
+        if(c.type.includes('type='))  {
+          return c.type.split('type=')[1] === type 
+        }
+        return false;
+      });
 
-      return contentItem ? contentItem.url : null;
+      return contentItem?.url ?? null;
     }
 
     function onViewChange(index) {
