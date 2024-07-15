@@ -201,7 +201,19 @@ export default {
       const { component } = findComponent(connector.id);
 
       const type = connector.options?.type;
-      const url: string | null = getContentUrl(type);
+      let url: string | null;
+
+      const itemContentArr: Content[] = item.value.content;
+
+      // check if the first item content's type includes 'type=', if not, then don't enter the getContentUrl)=
+      if (itemContentArr.length > 0) {
+        if (itemContentArr[0].type.includes('type=') === false) { 
+          url = itemContentArr[0].url
+        }
+        else {
+          url = getContentUrl(type);
+        }
+      }
       
       if (!url) return;
 
