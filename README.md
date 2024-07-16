@@ -351,13 +351,44 @@ no options
 
 ##### Annotations
 
-| Name                    | Type                   | Default      | Description                                                                                                                                                                                                                  |
-|-------------------------|------------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| types                   | AnnotationTypeConfig[] | `[]`         | Defines annotation types that should be displayed in this view. The Annotation API response will then be filtered according to this config.                                                                                  |
-| types[i].name           | String                 | `null`       | Specifies the name which corresponds to the `x-content-type` property from annotations response.                                                                                                                             |
-| types[i].index           | String                 | `null`       | Specifies the index name that should be used in the annotation item. TIDO uses Bootstrap Icons, please lookup the allowed values [here](https://github.com/quasarframework/quasar/blob/dev/extras/bootstrap-icons/icons.json) |
-| types[i].displayWhen    | String                 | `null`       | Text content type that was specified under [Text options](#text). Annotation will only be shown if that content type is currently active.                                                                                    |
+| Name                    | Type                   | Default      | Description                                                                                                                                                                                                                   |
+|-------------------------|------------------------|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| types                   | AnnotationTypeConfig[] | `[]`         | Defines annotation types that should be displayed in this view. The Annotation API response will then be filtered according to this config.                                                                                   |
+| types[i].name           | String                 | `null`       | Specifies the name which corresponds to the `x-content-type` property from annotations response.                                                                                                                              |
+| types[i].icon           | String                 | `null`       | Specifies an icon that is displayed on the left of the annotation item. Currently we provide only a fixed list of possible icons. [here](#icons)                                                                              |
+| types[i].index          | String                 | `null`       | Specifies the index name that should be used in the annotation item. TIDO uses Bootstrap Icons, please lookup the allowed values [here](https://github.com/quasarframework/quasar/blob/dev/extras/bootstrap-icons/icons.json) |
+| types[i].displayWhen    | String                 | `null`       | Text content type that was specified under [Text options](#text). Annotation will only be shown if that content type is currently active.                                                                                     |
 | types[i].annotationType | String                 | `annotation` | Controls the look of the annotation item. Allowed values: `annotation` or `text`. Currently the only difference is that there is no index at type `text`.                                                                     |
+
+###### Icons
+
+Below you can find a list of icons that can be used for annotation items. Please use these as values for the `icon`
+configuration option at annotations.
+- archive
+- arrowLeft
+- arrowRight
+- bank
+- book
+- chat
+- check
+- code
+- dropdown
+- externalLink
+- fullscreen
+- info
+- journals
+- marker
+- minus
+- moon
+- pen
+- pencil
+- person
+- reset
+- sun
+- translate
+- warning
+- zoomIn
+- zoomOut
 
 ## Methods
 
