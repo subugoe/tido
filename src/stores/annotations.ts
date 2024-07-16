@@ -99,7 +99,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     };
 
 
-    const addHighlightAttributesToText = (dom) => {      
+    const addHighlightAttributesToText = (dom) => {  
+      if (annotations.value !== null) {
         annotations.value.forEach((annotation) => {
           const { id } = annotation;
           const selector = Utils.generateTargetSelector(annotation);
@@ -107,6 +108,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
             Utils.addHighlightToElements(selector, dom, id);
           }
         });
+      } 
     };
 
     const annotationLoaded = (annotations) => {
