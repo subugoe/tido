@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.4](https://github.com/subugoe/tido/compare/v4.0.3...v4.0.4) (2024-07-17)
+
+
+### Bug Fixes
+
+* add list of icons in README ([8c10358](https://github.com/subugoe/tido/commit/8c1035802ba3efc69ffd6eb9ed0fe33892dcc3e2))
+* remove error when annotations are null ([#454](https://github.com/subugoe/tido/issues/454)) ([0d3c566](https://github.com/subugoe/tido/commit/0d3c566b02c6e9122fcaf601d9224d7f487a05c3))
+* show inline annotation icons in text again ([a0a5ca4](https://github.com/subugoe/tido/commit/a0a5ca4f8c24d67cd482d3daf777e45be0add038))
+* update icons config in GFL example ([6761eed](https://github.com/subugoe/tido/commit/6761eedf2d6a607309eb242ebf4aa813bc96b8e7))
+
 ### [4.0.3](https://github.com/subugoe/tido/compare/v4.0.2...v4.0.3) (2024-07-12)
 
 
