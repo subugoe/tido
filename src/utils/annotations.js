@@ -32,7 +32,7 @@ export const createSvgIcon = (name) => {
   figure.classList.add(`icon-${name}`);
   style.innerHTML = `
     .icon-${name}::after {
-      content: url('data:image/svg+xml; utf8, ${iconString}');
+      content: url('data:image/svg+xml; utf8, ${iconString}') !important;
     }
   `;
   figure.appendChild(style);
