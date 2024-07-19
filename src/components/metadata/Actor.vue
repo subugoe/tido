@@ -1,9 +1,13 @@
 <template>
-  <div v-for="actorItem in data" :key="actorItem.name" class="t-mb-4">
+  <div
+    v-for="actorItem in data"
+    :key="actorItem.name"
+    class="t-mb-4"
+  >
     <h4 class="t-font-semibold t-text-sm t-text-gray-400">
       {{ $t(getRole(actorItem)) }}
     </h4>
-    <MetadataValue :value="actorItem.name"></MetadataValue>
+    <MetadataValue :value="actorItem.name" />
   </div>
 </template>
 
@@ -17,7 +21,7 @@ export interface Props {
   data: Actor[]
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   data: () => [],
 });
 
@@ -28,7 +32,3 @@ function getRole(actorItem: Actor) : string {
   return role[0];
 }
 </script>
-
-<style scoped>
-
-</style>

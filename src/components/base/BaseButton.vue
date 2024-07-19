@@ -92,16 +92,31 @@ classes['t-bg-transparent hover:t-bg-gray-300/30 dark:hover:t-bg-gray-600 '
 
 </script>
 <template>
-  <button type="button" :class="classes" :disabled="disabled">
+  <button
+    type="button"
+    :class="classes"
+    :disabled="disabled"
+  >
     <template v-if="_icon && _iconPosition === 'left'">
-      <BaseIcon :name="_icon" class="t-text-base t-me-1"/>
+      <BaseIcon
+        :name="_icon"
+        class="t-text-base t-me-1"
+      />
     </template>
     <template v-if="isIconOnly">
-      <BaseIcon :name="_icon" class="mt-[1px]"/>
+      <BaseIcon
+        :name="_icon"
+        class="mt-[1px]"
+      />
     </template>
-    <template v-else>{{ text }}</template>
+    <template v-else>
+      {{ text }}
+    </template>
     <template v-if="_icon && _iconPosition === 'right'">
-      <BaseIcon :name="_icon" class="t-text-base t-ms-1"/>
+      <BaseIcon
+        :name="_icon"
+        class="t-text-base t-ms-1"
+      />
     </template>
   </button>
 </template>

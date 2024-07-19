@@ -1,10 +1,19 @@
 <template>
-  <div v-if="manifestHasItems" class="manifest-metadata t-mb-7">
-    <h3 class="t-text-xl t-font-semibold t-mb-2">{{ $t(labels.manifest) }} {{ number }} / {{ total }}</h3>
-    <div v-for="(meta, idx) in metadata" :key="idx" class="t-mb-4">
-      <MetadataItem :item="meta"/>
+  <div
+    v-if="manifestHasItems"
+    class="manifest-metadata t-mb-7"
+  >
+    <h3 class="t-text-xl t-font-semibold t-mb-2">
+      {{ $t(labels.manifest) }} {{ number }} / {{ total }}
+    </h3>
+    <div
+      v-for="(meta, idx) in metadata"
+      :key="idx"
+      class="t-mb-4"
+    >
+      <MetadataItem :item="meta" />
     </div>
-    <Actor :data="actor"></Actor>
+    <Actor :data="actor" />
   </div>
 </template>
 
@@ -36,9 +45,5 @@ const metadata = computed(() => {
     ...(manifest.value.metadata || []),
   ];
 });
-const actor = computed<Actor[] | undefined>(() => manifest.value?.actor);
+const actor = computed<Actor[] | undefined>(() => manifest.value?.actor);
 </script>
-
-<style scoped>
-
-</style>

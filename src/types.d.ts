@@ -1,5 +1,5 @@
 declare global {
-    
+
     interface ActiveAnnotation {
         [key: string]: Annotation
     }
@@ -103,7 +103,7 @@ declare global {
         manifest?: string,
         license: License
     }
-    
+
 
     interface Item {
         '@context': string,
@@ -164,7 +164,7 @@ declare global {
         editionPrints?: boolean
     }
 
-    interface NotificationColors {
+    interface MessageBoxColors {
         info: string,
         warning: string
     }
@@ -199,7 +199,7 @@ declare global {
     }
 
     type SequenceType = 'collection' | 'manifest' | 'item'
-    type SupportType = 'font' | 'css' 
+    type SupportType = 'font' | 'css'
 
     interface Title {
         '@context': string,

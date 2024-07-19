@@ -10,6 +10,7 @@ html * {
 #app {
   height: calc(100vh - 61px);
 }
+
 header {
   height: 60px;
   display: flex;
@@ -38,7 +39,6 @@ header form {
 
 header .input-container {
   flex: 1;
-  display: flex;
   margin-right: 48px;
   position: relative;
   display: flex;
@@ -51,7 +51,7 @@ header .input-container:has(#url-input:focus-visible),
 header select:focus-visible,
 header .input-container button:focus-visible,
 .home:focus-visible {
-  outline: 2px solid rgb(56, 189, 248, 0.5);
+  outline: 2px solid rgb(56 189 248 / 50%);
 }
 
 header #url-input {
@@ -110,6 +110,7 @@ header > span {
   background: #eee;
   padding: 24px;
 }
+
 .empty-container h1 {
   font-size: 32px;
   font-weight: bold;
