@@ -2,10 +2,16 @@
   <div class="t-flex t-flex-col t-justify-center">
     <template v-if="collectionTitle || manifestTitle">
       <template v-if="collectionTitle">
-        <h1 v-if="collectionTitle" class="sm:t-text-xl md:t-text-2xl t-font-bold">
+        <h1
+          v-if="collectionTitle"
+          class="sm:t-text-xl md:t-text-2xl t-font-bold"
+        >
           {{ collectionTitle }}
         </h1>
-        <h2 v-if="manifestTitle" class="t-flex t-items-center t-flex-wrap t-text-xl t-mt-2 t-mb-6">
+        <h2
+          v-if="manifestTitle"
+          class="t-flex t-items-center t-flex-wrap t-text-xl t-mt-2 t-mb-6"
+        >
           <span>{{ manifestTitle }}</span>
           <BaseIcon
             v-if="item"
@@ -23,11 +29,17 @@
             class="t-inline-flex t-align-middle t-px-2 text-gray-500 dark:text-gray-300"
             name="chevronRight"
           />
-          <span v-if="item" class="t-align-middle">{{ labels.item }} {{ item.n }}</span>
+          <span
+            v-if="item"
+            class="t-align-middle"
+          >{{ labels.item }} {{ item.n }}</span>
         </h1>
       </template>
     </template>
-    <h1 v-else class="sm:t-text-xl md:t-text-2xl t-font-bold t-mb-4 t-mt-2">
+    <h1
+      v-else
+      class="sm:t-text-xl md:t-text-2xl t-font-bold t-mb-4 t-mt-2"
+    >
       TIDO Viewer
     </h1>
   </div>
@@ -44,7 +56,7 @@ export interface Props {
   item: Item
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   item: () => <Item>{}
 })
 

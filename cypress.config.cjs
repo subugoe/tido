@@ -4,6 +4,7 @@ module.exports = defineConfig({
   viewportWidth: 1400,
   viewportHeight: 800,
   experimentalSourceRewriting: true,
+  chromeWebSecurity: false,
   screenshotsFolder: 'tests/cypress/screenshots',
   downloadsFolder: 'tests/cypress/downloads',
   fixturesFolder: 'tests/cypress/fixtures',

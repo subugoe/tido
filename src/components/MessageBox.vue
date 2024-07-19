@@ -8,7 +8,10 @@
       />
       <span class="t-font-bold t-align-middle">{{ title || message }}</span>
     </div>
-    <div class="t-text-center t-mt-2 t-text-sm dark:t-text-gray-400" v-if="title">
+    <div
+      v-if="title"
+      class="t-text-center t-mt-2 t-text-sm dark:t-text-gray-400"
+    >
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <span v-html="message" />
     </div>

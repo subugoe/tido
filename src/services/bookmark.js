@@ -11,7 +11,7 @@ class BookmarkService {
   getValueInOldQuery(oldQueryValue, key) {
     const oldQueryArray = oldQueryValue.split('_');
     let numbersPart = '';
-    oldQueryArray.forEach((part, index) => {
+    oldQueryArray.forEach((part) => {
       if (part.includes(key)) {
         numbersPart = part.slice(1);
       }

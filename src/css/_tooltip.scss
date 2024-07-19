@@ -16,7 +16,7 @@
   border: 1px solid #ddd;
   -webkit-touch-callout: none;
 
-  .body--dark & {
+  [color-scheme="dark"] & {
     background-color: $dark;
     border: 1px solid #424242;
   }

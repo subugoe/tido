@@ -5,13 +5,20 @@
         v-model="showDropdown"
         :button-text="$t('show_hide_panels')"
       >
-        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-space-x-2 t-flex t-items-center t-mb-2">
+        <div
+          v-for="({ show, label }, i) in toggles"
+          :key="`toggle${i}`"
+          class="t-space-x-2 t-flex t-items-center t-mb-2"
+        >
           <BaseCheckbox
-            :model-value="show"
             :id="`panel-toggle-${i}`"
+            :model-value="show"
             @update:model-value="update(i, $event)"
           />
-          <label class="t-text-nowrap" :for="`panel-toggle-${i}`">{{ $t(label) }}</label>
+          <label
+            class="t-text-nowrap"
+            :for="`panel-toggle-${i}`"
+          >{{ $t(label) }}</label>
         </div>
         <BaseButton
           v-if="toggles.length > 0"
@@ -26,12 +33,16 @@
     </template>
     <template v-else>
       <div class="t-flex t-items-center t-space-x-4">
-        <div v-for="({ show, label }, i) in toggles" :key="`toggle${i}`" class="t-flex t-items-center">
+        <div
+          v-for="({ show, label }, i) in toggles"
+          :key="`toggle${i}`"
+          class="t-flex t-items-center"
+        >
           <BaseCheckbox
-            :model-value="show"
-            @update:model-value="update(i, $event)"
             :id="`panel-toggle-${i}`"
+            :model-value="show"
             :round="true"
+            @update:model-value="update(i, $event)"
           />
           <label
             :title="handleToggleTitle(i)"

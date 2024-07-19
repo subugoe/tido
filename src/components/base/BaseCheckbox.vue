@@ -57,16 +57,24 @@ function getAriaChecked(): AriaChecked {
 <template>
   <Checkbox
     :model-value="modelValue"
-    @update:modelValue="emit('update:modelValue', $event)"
     :binary="true"
-    :inputId="id"
+    :input-id="id"
     :pt="pt"
     :aria-checked="getAriaChecked()"
     unstyled
+    @update:model-value="emit('update:modelValue', $event)"
   >
-    <template #icon="slotProps">
-      <i v-if="modelValue === null" v-html="getIcon('minus')" class="t-leading-none t-w-[18px] t-h-[18px] t-text-lg t-text-white t-transition-all t-flex t-items-center t-justify-center"></i>
-      <i v-else-if="modelValue === true" v-html="getIcon('check')" class="t-leading-none t-w-[18px] t-h-[18px] t-scale-[0.8] t-text-white t-transition-all t-flex t-items-center t-justify-center"></i>
+    <template #icon>
+      <i
+        v-if="modelValue === null"
+        class="t-leading-none t-w-[18px] t-h-[18px] t-text-lg t-text-white t-transition-all t-flex t-items-center t-justify-center"
+        v-html="getIcon('minus')"
+      />
+      <i
+        v-else-if="modelValue === true"
+        class="t-leading-none t-w-[18px] t-h-[18px] t-scale-[0.8] t-text-white t-transition-all t-flex t-items-center t-justify-center"
+        v-html="getIcon('check')"
+      />
     </template>
   </Checkbox>
 </template>

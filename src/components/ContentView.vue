@@ -1,7 +1,10 @@
 <template>
   <div class="content-view t-px-4 t-pt-4">
-    <div v-if="notificationMessage" class="t-p-2">
-      <Notification
+    <div
+      v-if="notificationMessage"
+      class="t-p-2"
+    >
+      <MessageBox
         :message="$t(notificationMessage)"
         :notification-colors="config.notificationColors"
         :title="$t('no_text_available')"
@@ -9,7 +12,10 @@
       />
     </div>
 
-    <div id="text-content" class="custom-font item-content t-flex t-flex-col t-flex-1 t-overflow-auto">
+    <div
+      id="text-content"
+      class="custom-font item-content t-flex t-flex-col t-flex-1 t-overflow-auto"
+    >
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
       <div :class="{ rtl: config.rtl }" v-html="content" :style="contentStyle" />
     </div>
@@ -24,7 +30,7 @@ import {
 import { useConfigStore } from '@/stores/config';
 import { useAnnotationsStore } from '@/stores/annotations';
 import { useContentsStore } from '@/stores/contents';
-import Notification from '@/components/Notification.vue';
+import MessageBox from '@/components/MessageBox.vue';
 import { request } from '@/utils/http';
 import { domParser, delay } from '@/utils';
 
@@ -104,6 +110,7 @@ function isValidTextContent(text) {
   position: relative;
   overflow: auto;
 }
+
 .default-cursor {
   cursor: default !important;
 }

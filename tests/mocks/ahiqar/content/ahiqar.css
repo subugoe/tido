@@ -27,6 +27,7 @@ h1 {
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "Serto Jerusalem";
   font-weight: normal;
@@ -34,6 +35,7 @@ h1 {
   src:  local("Serto Jerusalem"),
         url("syrcomjerusalem.woff") format("woff");
 }
+
 @font-face {
   font-family: "Serto Jerusalem";
   font-weight: bold;
@@ -41,6 +43,7 @@ h1 {
   src:  local("Serto Jerusalem"),
         url("syrcomjerusalembold.woff") format("woff");
 }
+
 @font-face {
   font-family: "Serto Jerusalem";
   font-weight: normal;
@@ -125,6 +128,7 @@ h1 {
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "Estrangelo Edessa";
   font-weight: normal;
@@ -145,18 +149,24 @@ h1 {
 @media (prefers-color-scheme: dark) {
   .gap {
     color: #D5F72B; }
+
   .hi.red {
     color: #F23A3A; }
+
   .note {
     background: none;
     color: #619EFF;
     text-decoration: none; }
+
   .ref {
     color: #5895F9; }
+
   .seg {
-    color: #FFFFFF; }
+    color: #FFF; }
+
   .quote.colophon {
     color: #FF6161; }
+
   .tei-lg.colophon {
     color: #1F9AFF; } }
 

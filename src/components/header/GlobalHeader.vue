@@ -4,14 +4,18 @@
     class="header t-flex t-flex-col t-p-4 lg:t-px-6 t-mb-4"
   >
     <div class="t-flex t-items-start sm:t-flex-row t-flex-col-reverse t-mt-2">
-      <TitleBar :item="item"/>
-      <div class="t-ml-auto">
-        <Tools/>
-      </div>
+      <TitleBar :item="item" />
+      <ToolBar class="t-ml-auto" />
     </div>
-    <div v-if="item" class="t-flex md:t-items-center t-flex-col md:t-flex-row">
-      <Navbar v-if="showNavbar"/>
-      <PanelsToggle v-if="showPanelsToggle" class="md:t-ml-auto t-mt-4 md:t-mt-0" />
+    <div
+      v-if="item"
+      class="t-flex md:t-items-center t-flex-col md:t-flex-row"
+    >
+      <NavBar v-if="showNavbar" />
+      <PanelsToggle
+        v-if="showPanelsToggle"
+        class="md:t-ml-auto t-mt-4 md:t-mt-0"
+      />
     </div>
   </div>
 </template>
@@ -20,10 +24,10 @@
 import { computed } from 'vue';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents';
-import Navbar from '@/components/header/Navbar.vue';
+import NavBar from '@/components/header/NavBar.vue';
 import TitleBar from '@/components/header/TitleBar.vue';
 import PanelsToggle from '@/components/header/PanelsToggle.vue';
-import Tools from '@/components/header/Tools.vue';
+import ToolBar from '@/components/header/ToolBar.vue';
 
 export interface Props {
   configErrorTitle: string

@@ -9,7 +9,7 @@ defineProps<Props>();
 </script>
 
 <template>
-  <i v-html="getIcon(name)"></i>
+  <i v-html="getIcon(name)" />
 </template>
 
 <style lang="scss">

@@ -6,8 +6,8 @@
       :key="`pc${i}`"
       :panel="panel"
       :active-view="getActiveView(i)"
-      @active-view="onActiveViewChange($event, i)"
       class="t-flex-1 t-h-screen md:t-h-auto"
+      @active-view="onActiveViewChange($event, i)"
     />
   </div>
 </template>

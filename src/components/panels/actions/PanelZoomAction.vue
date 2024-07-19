@@ -9,8 +9,7 @@
       :title="$t('increase')"
       class="t-text-primary dark:t-text-gray-400"
       @click="increase()"
-    >
-    </BaseButton>
+    />
 
     <BaseButton
       display="flat"
@@ -21,8 +20,7 @@
       :title="$t('decrease')"
       class="t-text-primary dark:t-text-gray-400"
       @click="decrease()"
-    >
-    </BaseButton>
+    />
   </div>
 </template>
 

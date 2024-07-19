@@ -167,6 +167,7 @@ export function handleRangeSelector(selector) {
       let started = false;
       let ended = false;
 
+      // eslint-disable-next-line no-inner-declarations
       function findElementsInRangeRecursive(element) {
         if (element === start) started = true;
         if (element === end) {
@@ -187,6 +188,7 @@ export function handleRangeSelector(selector) {
             }
           });
       }
+
       findElementsInRangeRecursive(document.getElementById('text-content'));
 
       return elementsInRange.map((el) => Utils.elemToSelector(el)).join(',');

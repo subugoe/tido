@@ -2,15 +2,14 @@
   <div class="panel-image-action t-flex">
     <BaseButton
       v-for="(btn, idx) in buttons"
-      display="flat"
       :id="btn.id"
       :key="idx"
+      display="flat"
       size="small"
       :title="$t(btn.tooltip)"
       :icon="btn.icon"
       class="t-text-primary t-basis-0"
-    >
-    </BaseButton>
+    />
   </div>
 </template>
 

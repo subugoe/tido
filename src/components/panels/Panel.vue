@@ -4,82 +4,113 @@
       <div class="caption t-font-bold">
         <!-- We display the tab label as panel label when there is only one tab -->
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
-        <span v-else-if="tabs.length === 1">{{$t(tabs[0].label)}}</span>
+        <span v-else-if="tabs.length === 1">{{ $t(tabs[0].label) }}</span>
       </div>
       <div class="actions">
-        <template v-for="(tab, i) in tabs" :key="i">
-          <template v-for="({ component, props, events}, j) in tab.actions" :key="j">
-            <component v-show="i === activeTabIndex" :is="component" v-bind="props" v-on="events" />
+        <template
+          v-for="(tab, i) in tabs"
+          :key="i"
+        >
+          <template
+            v-for="({ component, props, events}, j) in tab.actions"
+            :key="j"
+          >
+            <component
+              :is="component"
+              v-show="i === activeTabIndex"
+              v-bind="props"
+              v-on="events"
+            />
           </template>
         </template>
       </div>
     </div>
     <div class="t-h-[1px] dark:t-bg-gray-600 t-bg-gray-200 t-mx-4" />
     <div class="panel-body t-relative t-overflow-hidden t-flex t-flex-1 t-flex-col t-bg-none">
-      <div v-if="isLoading" class="t-absolute t-bottom-0 t-z-50 t-flex t-bg-gray-50 dark:t-bg-gray-800 t-w-full t-h-[93%] t-justify-center t-items-center">
-        <Loading  class="t-text-5xl" />
+      <div
+        v-if="isLoading"
+        class="t-absolute t-bottom-0 t-z-50 t-flex t-bg-gray-50 dark:t-bg-gray-800 t-w-full t-h-[93%] t-justify-center t-items-center"
+      >
+        <LoadingSpinner class="t-text-5xl" />
       </div>
       <template v-if="tabs.length > 1">
         <TabView
           v-model:active-index="activeTabIndex"
-          @update:active-index="onViewChange"
           unstyled
           :pt="{
-              navContent: {
-                class: ['t-mx-4']
-              },
-              nav: ({ props, parent, context })=>({
-                  class:[
-                    't-relative t-mr-0 t-flex t-list-none t-overflow-hidden',
-                    {
-                      't-opacity-60 t-cursor-default t-user-select-none t-select-none t-pointer-events-none': props == null ? void 0 : props.disabled
-                    },
-                  ]
-                }),
-              tabpanel: {
-                header: ({ parent, context }) => ({
-                  class: [
-                    't-flex-1 t-relative t-text-sm',
-                    'after:t-content-[\'\'] after:t-absolute after:t-flex after:t-bottom-0 after:t-h-[2px] after:t-w-full after:t-bg-primary',
-                    { 'after:t-opacity-0': parent.state.d_activeIndex !== context.index },
-                    { 't-bg-primary/5 t-text-primary after:t-opacity-1': parent.state.d_activeIndex === context.index }
-                  ]
-                }),
-                headerAction: { class: [
-                    't-relative t-cursor-pointer t-border-b t-border-gray-200 dark:t-border-gray-600',
-                    't-flex t-items-center t-justify-center','t-px-3 t-pb-3 t-pt-4',
-                    't-transition-all hover:dark:t-bg-gray-600/50 hover:t-bg-gray-300/30'
-                  ]
+            navContent: {
+              class: ['t-mx-4']
+            },
+            nav: ({ props })=>({
+              class:[
+                't-relative t-mr-0 t-flex t-list-none t-overflow-hidden',
+                {
+                  't-opacity-60 t-cursor-default t-user-select-none t-select-none t-pointer-events-none': props == null ? void 0 : props.disabled
                 },
-                headerTitle: {
-                  class: ['t-leading-none', 't-whitespace-nowrap']
-                },
-                content: {
-                  class: ['t-overflow-auto']
-                }
-              },
-              inkbar: () => ({
+              ]
+            }),
+            tabpanel: {
+              header: ({ parent, context }) => ({
                 class: [
-                  't-hidden'
+                  't-flex-1 t-relative t-text-sm',
+                  'after:t-content-[\'\'] after:t-absolute after:t-flex after:t-bottom-0 after:t-h-[2px] after:t-w-full after:t-bg-primary',
+                  { 'after:t-opacity-0': parent.state.d_activeIndex !== context.index },
+                  { 't-bg-primary/5 t-text-primary after:t-opacity-1': parent.state.d_activeIndex === context.index }
                 ]
               }),
-              root: {
-                class: ['t-flex t-flex-col t-flex-1 t-overflow-hidden t-h-full t-flex-1']
+              headerAction: { class: [
+                't-relative t-cursor-pointer t-border-b t-border-gray-200 dark:t-border-gray-600',
+                't-flex t-items-center t-justify-center','t-px-3 t-pb-3 t-pt-4',
+                't-transition-all hover:dark:t-bg-gray-600/50 hover:t-bg-gray-300/30'
+              ]
               },
-              panelContainer: {
-                class: ['t-flex t-flex-col t-flex-1 t-overflow-hidden']
+              headerTitle: {
+                class: ['t-leading-none', 't-whitespace-nowrap']
+              },
+              content: {
+                class: ['t-overflow-auto']
               }
-            }"
+            },
+            inkbar: () => ({
+              class: [
+                't-hidden'
+              ]
+            }),
+            root: {
+              class: ['t-flex t-flex-col t-flex-1 t-overflow-hidden t-h-full t-flex-1']
+            },
+            panelContainer: {
+              class: ['t-flex t-flex-col t-flex-1 t-overflow-hidden']
+            }
+          }"
+          @update:active-index="onViewChange"
         >
-          <TabPanel v-for="(tab, i) in tabs" :key="tab.id" :header="$t(tab.label)" unstyled>
-            <component v-if="activeTabIndex === i" :is="tab.component" :key="tab.id" v-bind="tab.props" v-on="tab.events" @loading="isLoading = $event" />
+          <TabPanel
+            v-for="(tab, i) in tabs"
+            :key="tab.id"
+            :header="$t(tab.label)"
+            unstyled
+          >
+            <component
+              :is="tab.component"
+              v-if="activeTabIndex === i"
+              :key="tab.id"
+              v-bind="tab.props"
+              v-on="tab.events"
+              @loading="isLoading = $event"
+            />
           </TabPanel>
         </TabView>
       </template>
       <template v-else-if="tabs.length === 1">
-        <component :is="tabs[0].component" :key="tabs[0].id" v-bind="tabs[0].props" @loading="isLoading = $event" />
+        <component
+          :is="tabs[0].component"
+          :key="tabs[0].id"
+          v-bind="tabs[0].props"
+          @loading="isLoading = $event"
+        />
       </template>
-      <Notification
+      <MessageBox
         v-else
         :title="$t('config_error')"
         :message="$t('no_views_configured')"
@@ -108,8 +139,8 @@ import ImageView from '@/components/ImageView.vue';
 import PanelZoomAction from '@/components/panels/actions/PanelZoomAction.vue';
 import PanelToggleAction from '@/components/panels/actions/PanelToggleAction.vue';
 import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
-import Loading from '@/components/Loading.vue';
-import Notification from '@/components/Notification.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import MessageBox from '@/components/MessageBox.vue';
 import { findComponent } from '@/utils/panels';
 
 // NOTE: Using `setup()` rather than the recommended `<script setup>`
@@ -119,9 +150,9 @@ export default {
     AnnotationsView,
     ContentView,
     ImageView,
-    Loading,
+    LoadingSpinner,
     MetadataView,
-    Notification,
+    MessageBox,
     PanelImageAction,
     PanelToggleAction,
     PanelZoomAction,
