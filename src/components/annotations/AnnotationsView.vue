@@ -9,7 +9,7 @@
       :toggle="toggle"
       :types="types"
     />
-    <Notification
+    <MessageBox
       v-else
       :message="$t(message)"
       :notification-colors="config.notificationColors"
@@ -24,7 +24,7 @@ import {
   computed, ref, watch,
 } from 'vue';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
-import Notification from '@/components/Notification.vue';
+import MessageBox from '@/components/MessageBox.vue';
 import * as AnnotationUtils from '@/utils/annotations';
 
 import { useConfigStore } from '@/stores/config';
@@ -98,7 +98,3 @@ function highlightTargetsLevel0() {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

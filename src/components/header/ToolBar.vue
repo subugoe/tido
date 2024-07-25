@@ -1,7 +1,7 @@
 <template>
   <div class="t-flex t-items-center no-wrap t-space-x-2 t-justify-end">
-    <Language v-if="showLanguageSwitch" />
-    <DarkModeToggle/>
+    <LanguageSwitch v-if="showLanguageSwitch" />
+    <DarkModeToggle />
     <SoftwareInfo />
   </div>
 </template>
@@ -10,7 +10,7 @@
 import { computed } from 'vue';
 import { useConfigStore } from '@/stores/config';
 import SoftwareInfo from '@/components/header/SoftwareInfo.vue';
-import Language from '@/components/header/Language.vue';
+import LanguageSwitch from '@/components/header/LanguageSwitch.vue';
 import DarkModeToggle from '@/components/header/DarkModeToggle.vue';
 
 const configStore = useConfigStore();

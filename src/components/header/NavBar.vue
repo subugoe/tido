@@ -6,8 +6,8 @@
       :text="prevButtonLabel"
       size="small"
       icon="arrowLeft"
-      @click="prev"
       class="prev-button"
+      @click="prev"
     />
 
     <BaseButton
@@ -17,8 +17,8 @@
       size="small"
       icon="arrowRight"
       icon-position="right"
-      @click="next"
       class="next-button"
+      @click="next"
     />
   </div>
 </template>
