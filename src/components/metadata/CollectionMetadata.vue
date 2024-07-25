@@ -1,8 +1,17 @@
 <template>
-  <div v-if="metadata.length > 0" class="collection-metadata t-mb-7">
-    <h3 class="t-text-xl t-font-semibold t-mb-2">{{ $t('collection') }}</h3>
-    <div v-for="(meta, idx) in metadata" :key="idx" class="t-mb-4">
-      <MetadataItem :item="meta"/>
+  <div
+    v-if="metadata.length > 0"
+    class="collection-metadata t-mb-7"
+  >
+    <h3 class="t-text-xl t-font-semibold t-mb-2">
+      {{ $t('collection') }}
+    </h3>
+    <div
+      v-for="(meta, idx) in metadata"
+      :key="idx"
+      class="t-mb-4"
+    >
+      <MetadataItem :item="meta" />
     </div>
   </div>
 </template>
@@ -37,17 +46,13 @@ const metadata = computed(() => {
 
   return [
     ...collectionTitle
-      .filter((collection) => collection)
-      .map((collectionTitle) => ({
-        key: mappings[collectionTitle.type] || 'title',
-        value: collectionTitle.title,
+      .filter((c) => c)
+      .map((title) => ({
+        key: mappings[title.type] || 'title',
+        value: title.title,
       })),
     ...(collectorName ? [{ key: 'collector', value: collectorName }] : []),
     ...(description ? [{ key: 'description', value: description }] : []),
   ];
 });
 </script>
-
-<style scoped>
-
-</style>

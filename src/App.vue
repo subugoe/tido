@@ -1,15 +1,18 @@
 <template>
   <div class="tido">
     <div class="t-h-full t-flex t-flex-col t-bg-gray-200 dark:t-bg-gray-900 t-text-gray-800 dark:t-text-gray-200">
-      <GlobalHeader/>
-      <PanelsWrapper v-if="ready"/>
-      <div v-else class="t-flex t-relative t-flex-1 t-justify-center t-items-center t-p-4 lg:t-p-6">
+      <GlobalHeader />
+      <PanelsWrapper v-if="ready" />
+      <div
+        v-else
+        class="t-flex t-relative t-flex-1 t-justify-center t-items-center t-p-4 lg:t-p-6"
+      >
         <div class="t-h-full t-w-full t-flex t-items-center t-justify-center t-border-dashed t-border-[3px] t-border-gray-400 dark:t-border-dashed dark:t-border-gray-600 t-rounded-md">
           <template v-if="isLoading">
-            <Loading class="t-text-6xl"></Loading>
+            <LoadingSpinner class="t-text-6xl" />
           </template>
           <template v-else>
-            <Notification
+            <MessageBox
               v-if="errorMessage"
               :message="errorMessage"
               :title="errorTitle"
@@ -40,8 +43,8 @@ import { useContentsStore } from '@/stores/contents';
 import GlobalHeader from '@/components/header/GlobalHeader.vue';
 import { delay } from '@/utils';
 import PanelsWrapper from '@/components/panels/PanelsWrapper.vue';
-import Notification from '@/components/Notification.vue';
-import Loading from '@/components/Loading.vue';
+import MessageBox from '@/components/MessageBox.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { initUseDark } from '@/utils/is-dark';
 
 const configStore = useConfigStore();

@@ -4,23 +4,36 @@
       display="flat"
       rounded
       :title="$t('project_info')"
-      @click="infobox = true"
       icon="info"
       class="t-text-gray-400 hover:t-text-gray-500"
-    >
-    </BaseButton>
+      @click="infobox = true"
+    />
 
-    <BaseDialog v-model="infobox" closable>
+    <BaseDialog
+      v-model="infobox"
+      closable
+    >
       <div class="t-flex t-space-x-2 t-items-baseline t-mb-2">
-        <h2 class="t-text-xl t-font-bold">TIDO</h2>
-        <p class="t-text-gray-600">v{{ tidoVersion }}</p>
+        <h2 class="t-text-xl t-font-bold">
+          TIDO
+        </h2>
+        <p class="t-text-gray-600">
+          v{{ tidoVersion }}
+        </p>
       </div>
-      <p class="t-mb-4">{{ $t('tido_description') }}</p>
+      <p class="t-mb-4">
+        {{ $t('tido_description') }}
+      </p>
       <p>{{ $t('license') }}</p>
-      <p class="t-mb-4">Copyright (c) {{ actualYear }} {{ $t('sub_info') }}</p>
+      <p class="t-mb-4">
+        Copyright (c) {{ actualYear }} {{ $t('sub_info') }}
+      </p>
 
       <div class="t-flex t-space-x-2">
-        <a href="https://gitlab.gwdg.de/subugoe/emo/tido/-/blob/main/README.md" target="_blank">
+        <a
+          href="https://gitlab.gwdg.de/subugoe/emo/tido/-/blob/main/README.md"
+          target="_blank"
+        >
           <BaseButton
             display="flat"
             icon="book"
@@ -29,7 +42,10 @@
           />
         </a>
 
-        <a href="https://gitlab.gwdg.de/subugoe/emo/tido/" target="_blank">
+        <a
+          href="https://gitlab.gwdg.de/subugoe/emo/tido/"
+          target="_blank"
+        >
           <BaseButton
             display="flat"
             icon="code"
@@ -38,7 +54,10 @@
           />
         </a>
 
-        <a href="mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de" target="_blank">
+        <a
+          href="mailto:gitlab+subugoe-emo-tido-10921-issue-@gwdg.de"
+          target="_blank"
+        >
           <BaseButton
             display="flat"
             size="small"
@@ -67,6 +86,3 @@ const actualYear = computed(() => {
   return d.getFullYear();
 });
 </script>
-
-<style lang="scss">
-</style>

@@ -1,42 +1,47 @@
 <template>
-  <div ref="containerRef" class="tree-view t-px-4 t-pt-4 t-h-full t-overflow-auto">
+  <div
+    ref="containerRef"
+    class="tree-view t-px-4 t-pt-4 t-h-full t-overflow-auto"
+  >
     <Tree
       v-model:expandedKeys="expanded"
       :selection-keys="selected"
-      @update:selection-keys="onUpdateSelectionKeys"
       :value="tree"
       class="t-w-full"
       unstyled
-      selectionMode="single"
+      selection-mode="single"
+      :pt="{
+        root: 't-relative',
+        wrapper: 't-relative t-overflow-auto',
+        filterContainer: 't-w-full t-relative t-mb-4',
+        container: 't-me-4',
+        content: options => ({
+          class: [
+            't-flex t-py-2 t-pr-3 t-rounded-md t-cursor-pointer',
+            't-relative',
+            {'t-pl-8': !options.context.leaf || options.props.node.lazy },
+            {'t-pl-3': options.context.leaf && !options.props.node.lazy },
+            {'hover:t-bg-zinc-200 dark:hover:t-bg-zinc-700': !options.context.selected },
+            {'t-bg-primary t-text-gray-100': options.context.selected }
+          ]
+        }),
+        toggler: options => ({
+          class: [
+            't-border-0 t-absolute t-left-0 t-top-[14px] t-w-full t-pl-3 t-text-left',
+            { 't-hidden': options.context.leaf && !options.props.node.lazy }
+          ]
+        }),
+        label: 't-cursor-pointer t-select-none',
+        subgroup: 't-pl-2',
+        loadingOverlay: 't-absolute t-z-10 t-w-full t-h-full t-flex t-items-center t-justify-center t-bg-white dark:t-bg-zinc-800 t-bg-opacity-75 dark:t-bg-opacity-75'
+      }"
+      @update:selection-keys="onUpdateSelectionKeys"
       @node-expand="onNodeExpand"
       @node-select="onNodeSelect"
-      :pt="{
-      root: 't-relative',
-      wrapper: 't-relative t-overflow-auto',
-      filterContainer: 't-w-full t-relative t-mb-4',
-      container: 't-me-4',
-      content: options => ({
-        class: [
-          't-flex t-py-2 t-pr-3 t-rounded-md t-cursor-pointer',
-          't-relative',
-          {'t-pl-8': !options.context.leaf || options.props.node.lazy },
-          {'t-pl-3': options.context.leaf && !options.props.node.lazy },
-          {'hover:t-bg-zinc-200 dark:hover:t-bg-zinc-700': !options.context.selected },
-          {'t-bg-primary t-text-gray-100': options.context.selected }
-        ]
-      }),
-      toggler: options => ({
-        class: [
-          't-border-0 t-absolute t-left-0 t-top-[14px] t-w-full t-pl-3 t-text-left',
-          { 't-hidden': options.context.leaf && !options.props.node.lazy }
-        ]
-      }),
-      label: 't-cursor-pointer t-select-none',
-      subgroup: 't-pl-2',
-      loadingOverlay: 't-absolute t-z-10 t-w-full t-h-full t-flex t-items-center t-justify-center t-bg-white dark:t-bg-zinc-800 t-bg-opacity-75 dark:t-bg-opacity-75'
-    }"
     >
-      <template #default="{ node }"><span :id="node.key">{{ node.label }}</span></template>
+      <template #default="{ node }">
+        <span :id="node.key">{{ node.label }}</span>
+      </template>
     </Tree>
   </div>
 </template>

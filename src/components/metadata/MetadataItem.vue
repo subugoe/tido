@@ -1,11 +1,26 @@
 <template>
   <div>
-    <h4 v-if="!isLink()" class="t-font-semibold t-text-sm t-text-gray-400">
+    <h4
+      v-if="!isLink()"
+      class="t-font-semibold t-text-sm t-text-gray-400"
+    >
       {{ $t(label) }}
     </h4>
-    <MetadataLink v-if="isLink()" :url="item.key" :text="item.value"/>
-    <MetadataValue v-else :value="item.value" />
-    <MetadataItem v-for="(childItem, idx) in childItems" :key="idx" :item="childItem" class="nested-metadata"/>
+    <MetadataLink
+      v-if="isLink()"
+      :url="item.key"
+      :text="item.value"
+    />
+    <MetadataValue
+      v-else
+      :value="item.value"
+    />
+    <MetadataItem
+      v-for="(childItem, idx) in childItems"
+      :key="idx"
+      :item="childItem"
+      class="nested-metadata"
+    />
   </div>
 </template>
 
