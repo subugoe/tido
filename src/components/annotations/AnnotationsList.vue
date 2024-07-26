@@ -1,5 +1,9 @@
 <template>
   <div class="annotations-list t-overflow-auto">
+    <div class="t-items-center t-flex t-justify-around"> 
+      <span class="t-font-bold">Witness</span>
+      <span class="t-font-bold">Entry</span>
+   </div>
     <div
       v-for="annotation in configuredAnnotations"
       :key="annotation.id"

@@ -1,8 +1,8 @@
 <template>
-    <div v-for="(variant, i) in annotation.body.value" :key="i"  class="t-items-center t-flex">
-          <span v-if="variant.witness" v-html="variant.witness" class="t-mr-7"/>
-          <span v-else  class="t-mr-7"> - </span>
-          <span v-html="variant.entry"/>
+    <div v-for="(variant, i) in annotation.body.value" :key="i"  class="t-items-center t-flex t-justify-around">
+          <span v-if="variant.witness" v-html="variant.witness" class=""/>
+          <span v-else class="" > - </span>
+          <span v-html="variant.entry" class=""/>
     </div>
 </template>
 
