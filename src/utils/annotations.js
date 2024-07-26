@@ -233,6 +233,33 @@ export function removeIcon(annotation) {
   }
 }
 
+export function addWitness(element, annotation) {
+
+  const witnessesList = annotation.body.value;
+  let witnessesString = ""
+  
+  witnessesList.forEach((variantItem) => {
+    witnessesString += " " + variantItem.witness;
+  });
+
+  const witnessesHtmlEl = document.createElement("SPAN");
+  //witnessesHtmlEl.classList.add("t-rounded","t-box-border", "t-w-150", "t-h-8", "t-border-2", "t-p-1");
+  witnessesHtmlEl.innerHTML = witnessesString;
+  witnessesHtmlEl.classList.add('witnesses')
+
+  element.prepend(witnessesHtmlEl);
+}
+
+export function removeWitness(selector) {
+  // selector: the selector of the annotated text
+
+  const annotatedHtmlEl = document.getElementById(selector.split('#')[1])
+  const witnessHtmlEl = annotatedHtmlEl.getElementsByClassName('witnesses')[0]
+  if (witnessHtmlEl) {
+    witnessHtmlEl.remove();
+  }
+}
+
 export function getAnnotationListElement(id, container) {
   return [...container.querySelectorAll('.q-item')].find((annotationItem) => {
     if (!annotationItem.hasAttribute('data-annotation-id')) return false;

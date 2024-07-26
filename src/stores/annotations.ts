@@ -62,6 +62,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         if (elements.length > 0) {
           const target: HTMLElement = elements[0];
           Utils.addIcon(target, newActiveAnnotation, iconName);
+          if (newActiveAnnotation.body['x-content-type'] === 'Variant') {
+            Utils.addWitness(target, newActiveAnnotation);
+          }
           scrollIntoViewIfNeeded(target, target.closest('.panel-body'));
         }
     };
@@ -131,8 +134,10 @@ export const useAnnotationsStore = defineStore('annotations', () => {
       
         const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
         if (selector) {
+          console.log('selector', selector)
           AnnotationUtils.highlightTargets(selector, { operation: 'DEC' });
           AnnotationUtils.removeIcon(removeAnnotation);
+          AnnotationUtils.removeWitness(selector)
         }
       };
 
@@ -146,6 +151,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
             if (selector) {
               AnnotationUtils.highlightTargets(selector, { level: -1 });
               AnnotationUtils.removeIcon(annotation);
+              //AnnotationUtils.removeWitness(selector)
             }
           });
         }
