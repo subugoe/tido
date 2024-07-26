@@ -1,6 +1,6 @@
 <template>
   <div class="annotations-list t-overflow-auto">
-    <div class="t-items-center t-flex t-justify-around"> 
+    <div v-if="isVariantsTabOpened()" class="t-items-center t-flex t-justify-around"> 
       <span class="t-font-bold">Witness</span>
       <span class="t-font-bold">Entry</span>
    </div>
@@ -78,6 +78,10 @@ function getIconName(typeName: string): string {
 
 function isVariant(annotation) {
   return annotation.body['x-content-type'] === 'Variant';
+}
+
+function isVariantsTabOpened() {
+  return props.configuredAnnotations[0].body['x-content-type'] === 'Variant';
 }
 
 </script>
