@@ -18,7 +18,7 @@ const components = {
   5: {
     component: 'AnnotationsView',
     label: 'annotations',
-  },
+  }
 };
 
 export const findComponent = (id) => ({

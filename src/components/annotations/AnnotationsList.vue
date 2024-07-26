@@ -12,14 +12,22 @@
       ]"
       @click="isText(annotation) ? ()=>{} : toggle(annotation)"
     >
-      <div class="t-flex t-items-center t-space-x-2">
-        <AnnotationIcon
+      
+        <div v-if="!isVariant(annotation)" class="t-flex t-items-center t-space-x-2"> 
+          <AnnotationIcon
           v-if="!isText(annotation)"
           :name="getIconName(annotation.body['x-content-type'])"
-        />
+          />
+          <span  v-html="annotation.body.value"/>
+        </div>
+
+        <div v-else>
+          <AnnotationVariantItem :annotation="annotation" />
+        </div>
+       
         <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-        <span v-html="annotation.body.value" />
-      </div>
+    
+        
     </div>
   </div>
 </template>
@@ -27,6 +35,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
+import AnnotationVariantItem from '@/components/annotations/AnnotationVariantItem.vue'
 
 interface AnnotationTypesMapping {
   [key: string]: string | 'annotation'
@@ -62,4 +71,15 @@ function isText(annotation: Annotation): boolean {
 function getIconName(typeName: string): string {
   return props.types.find(({ name }) => name === typeName)?.icon || 'pencil';
 }
+
+function isVariant(annotation) {
+  return annotation.body['x-content-type'] === 'Variant';
+}
+
 </script>
+
+
+<style lang="scss" scoped>
+
+
+</style>
