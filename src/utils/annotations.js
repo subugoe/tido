@@ -1,6 +1,7 @@
 import * as Utils from '@/utils/index';
 import { getIcon } from '@/utils/icons';
 import { i18n } from '@/i18n';
+import  colors from '@/utils/color'
 
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
@@ -235,29 +236,58 @@ export function removeIcon(annotation) {
 
 export function addWitness(element, annotation) {
 
-  const witnessesList = annotation.body.value;
-  let witnessesString = ""
-  
-  witnessesList.forEach((variantItem) => {
-    witnessesString += " " + variantItem.witness;
+  const variantItemsList = annotation.body.value;
+  const parentOfElement = element.parentElement;
+  const indexOfElement = [].slice.call(parentOfElement.children).indexOf(element)
+
+  // get the number of variant items for this annotation and create a list of colors for the border color
+  const numberVariantItems = Object.keys(variantItemsList).length
+  const hexaDecimalColors = colors().slice(0, numberVariantItems)
+
+
+  //let prevElement = element;
+  let i = 0;
+  variantItemsList.forEach((variantItem) => {
+    const witHtmlElement = document.createElement("SPAN");
+    witHtmlElement.innerHTML = variantItem.witness;
+    witHtmlElement.classList.add('t-rounded-3xl', 't-box-border', 't-w-75', 't-h-8', 't-border-2', 't-p-[2px]', 't-text-sm', 't-ml-[3px]')
+    witHtmlElement.style.borderColor = hexaDecimalColors[i] //'t-border-'.concat(tailwindClassColors[i],'-600'))
+    i += 1;
+    // get the parent of the element, find its position in the parent div and then append it after it in order to show it after it - the style of the chip should be different from the element
+    //prevElement.after(witnessHtmlElement)
+    //prevElement = witnessHtmlElement
+    parentOfElement.insertBefore(witHtmlElement, parentOfElement.children[indexOfElement]);
   });
-
-  const witnessesHtmlEl = document.createElement("SPAN");
-  //witnessesHtmlEl.classList.add("t-rounded","t-box-border", "t-w-150", "t-h-8", "t-border-2", "t-p-1");
-  witnessesHtmlEl.innerHTML = witnessesString;
-  witnessesHtmlEl.classList.add('witnesses')
-
-  element.prepend(witnessesHtmlEl);
+  //element.after(witnessesHtml)
+ 
 }
 
-export function removeWitness(selector) {
+export function removeWitness(selector, removeAnnotation) {
   // selector: the selector of the annotated text
 
   const annotatedHtmlEl = document.getElementById(selector.split('#')[1])
-  const witnessHtmlEl = annotatedHtmlEl.getElementsByClassName('witnesses')[0]
-  if (witnessHtmlEl) {
-    witnessHtmlEl.remove();
-  }
+  const parentOfAnnotatedEl = annotatedHtmlEl.parentElement;
+  const variantItemsList = removeAnnotation.body.value;
+
+  const witnessesStringArray = getWitnesses(variantItemsList)
+  
+  parentOfAnnotatedEl.querySelectorAll('span').forEach( (element) => {
+    if (witnessesStringArray.includes(element.innerHTML)) {
+      element.remove()
+    }
+  })
+
+}
+
+function getWitnesses(variantItemsList) {
+  const witnessesStringArray = []
+
+  variantItemsList.forEach((variantItem) =>  {
+    const witnessString = variantItem.witness;
+    witnessesStringArray.push(witnessString)
+  });
+
+  return witnessesStringArray
 }
 
 export function getAnnotationListElement(id, container) {

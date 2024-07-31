@@ -137,7 +137,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
           console.log('selector', selector)
           AnnotationUtils.highlightTargets(selector, { operation: 'DEC' });
           AnnotationUtils.removeIcon(removeAnnotation);
-          AnnotationUtils.removeWitness(selector)
+          AnnotationUtils.removeWitness(selector, removeAnnotation)
         }
       };
 
@@ -151,7 +151,6 @@ export const useAnnotationsStore = defineStore('annotations', () => {
             if (selector) {
               AnnotationUtils.highlightTargets(selector, { level: -1 });
               AnnotationUtils.removeIcon(annotation);
-              //AnnotationUtils.removeWitness(selector)
             }
           });
         }
