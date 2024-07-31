@@ -7,7 +7,7 @@ import * as AnnotationUtils from '@/utils/annotations';
 import { request } from '@/utils/http';
 import * as Utils from '@/utils';
 import { scrollIntoViewIfNeeded } from '@/utils';
-import { useConfigStore} from '@/stores/config';
+import { useConfigStore } from '@/stores/config';
 
 
 export const useAnnotationsStore = defineStore('annotations', () => {
@@ -134,14 +134,14 @@ export const useAnnotationsStore = defineStore('annotations', () => {
       
         const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
         if (selector) {
-          console.log('selector', selector)
           AnnotationUtils.highlightTargets(selector, { operation: 'DEC' });
           AnnotationUtils.removeIcon(removeAnnotation);
-          AnnotationUtils.removeWitness(selector, removeAnnotation)
+          if(removeAnnotation.body['x-content-type'] === 'Variant') {
+            AnnotationUtils.removeWitness(selector, removeAnnotation)
+          }
         }
       };
 
-    
     
     const resetAnnotations = () => {      
 
