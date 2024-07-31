@@ -1,6 +1,6 @@
 <template>
     <div v-for="(variant, i) in annotation.body.value" :key="i"  class="t-items-center t-flex t-mb-1">
-          <div class="t-relative  t-rounded t-box-border t-w-150 t-h-8 t-border-2 t-p-1 t-bg-zinc-200">
+          <div class="t-relative  t-rounded-3xl t-box-border t-w-75 t-h-8 t-border-2 t-p-[2px]">
             <span v-if="variant.witness" v-html="variant.witness" class="t-text-sm"/>
             <span v-else class="t-text-sm"> - </span>
           </div>
