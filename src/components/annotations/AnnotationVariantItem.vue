@@ -9,7 +9,11 @@
             <span v-if="variant.witness" v-html="variant.witness" class="t-text-sm"/>
             <span v-else class="t-text-sm"> - </span>
           </div>
-          <span v-html="variant.entry" class="t-absolute t-right-[50%]"/>
+          <span v-html="variant.entry" class="t-absolute t-ml-[150px]"/>
+          <button class="t-bg-blue-500 t-hover:bg-blue-700 t-text-white t-text-sm t-font-bold t-py-1 t-px-2 t-rounded-full t-absolute t-ml-[250px]"
+                @click="openVariantsModel()">
+            Open detail
+          </button>
     </div>
 </template>
 
@@ -22,6 +26,10 @@ import AnnotationIcon from './AnnotationIcon.vue';
 
 function getCurrentVariantItemColor(index){
   return colors()[index]
+}
+
+function openVariantsModel(){
+  console.log('open the variants modal')
 }
 
 

@@ -244,7 +244,6 @@ export function addWitness(element, annotation) {
   const numberVariantItems = Object.keys(variantItemsList).length
   const hexaDecimalColors = colors().slice(0, numberVariantItems)
 
-
   //let prevElement = element;
   let i = 0;
   variantItemsList.forEach((variantItem) => {
@@ -259,7 +258,6 @@ export function addWitness(element, annotation) {
     parentOfElement.insertBefore(witHtmlElement, parentOfElement.children[indexOfElement]);
   });
   //element.after(witnessesHtml)
- 
 }
 
 export function removeWitness(selector, removeAnnotation) {
