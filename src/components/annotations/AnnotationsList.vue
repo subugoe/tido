@@ -1,5 +1,6 @@
 <template>
   <div class="annotations-list t-overflow-auto">
+    <TopBar v-if="isVariantsTabOpened()" :variant-annotations="getVariantAnnotations()" />
     <div
       v-for="annotation in configuredAnnotations"
       :key="annotation.id"
@@ -32,6 +33,7 @@
 import { computed } from 'vue';
 import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 import AnnotationVariantItem from '@/components/annotations/AnnotationVariantItem.vue'
+import TopBar from '@/components/annotations/TopBar.vue'
 
 interface AnnotationTypesMapping {
   [key: string]: string | 'annotation'
@@ -75,6 +77,15 @@ function isVariant(annotation) {
 
 function isVariantsTabOpened() {
   return props.configuredAnnotations[0].body['x-content-type'] === 'Variant';
+}
+
+function getVariantAnnotations(): Annotation[]{
+  let variantAnnotations: Annotation[] = []
+  props.configuredAnnotations.forEach((annotation) => {
+    if (isVariant(annotation)) variantAnnotations.push(annotation)
+  })
+
+  return variantAnnotations
 }
 
 </script>

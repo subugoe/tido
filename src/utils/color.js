@@ -14,3 +14,7 @@ export default function colors() {
   const hexaDecimalColors = ['#FEF08A', '#BEF264', '#A8A29E', '#D8B4FE', '#A8A29E']
   return hexaDecimalColors;
 }
+
+export function getItemColorBasedOnIndex(index){
+  return colors()[index]
+}
