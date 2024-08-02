@@ -25,12 +25,9 @@ let checked = ref(true);
 function handleClick() {
     const witChipButtonEl = document.getElementById("wit-chip-in-top-bar-"+props.index.toString())
     checked.value = !checked.value
-    
     toggleButtonColor(checked.value, witChipButtonEl)
     toggleVariantItems(checked.value)
-   //toggleHighlitedText(checked.value)
-
-    // TODO: add a function to: highlight/dehighlight the text passage which is witnessed from this manuscript
+    toggleHighlightedText(checked.value)
 }
 
 function toggleButtonColor(checked: boolean, witChipButtonEl) {
@@ -60,6 +57,45 @@ function toggleVariantItems(checked: boolean) {
    })
 }
 
+
+function toggleHighlightedText(checked: boolean) {
+
+    
+    // get the selectors on the text for which there is a variant in our witness
+    const selectorsAnnotated: string [] =  getSelectorsAnnotated()
+
+    if (selectorsAnnotated.length > 0) {
+        selectorsAnnotated.forEach((selector) => {
+            const spanElement = document.querySelector(selector)
+            if (checked === true) {
+                spanElement.classList.replace('t-hidden', 't-inline')
+             }
+            else {
+                spanElement.classList.add('t-hidden')
+            }
+            })
+        
+    } 
+}
+
+function getSelectorsAnnotated(): string[] {
+    let selectorsAnnotated: string[] = []
+    props.variantAnnotations.forEach((variantAnnotation) => {
+        if (isWitnessOnThisAnnotation(variantAnnotation) === true) {
+            selectorsAnnotated.push(variantAnnotation.target[0].selector.value)
+        }
+    })
+
+    return selectorsAnnotated
+}
+
+function isWitnessOnThisAnnotation(variantAnnotation): boolean {
+    let isWitnessOnAnnotation = false
+    variantAnnotation.body.value.forEach((variantItem) => {
+        if (variantItem.witness.includes(props.witness)) isWitnessOnAnnotation = true
+    })
+    return isWitnessOnAnnotation
+}
 
 
 </script>
