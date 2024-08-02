@@ -1,6 +1,6 @@
 <template>
     <div class="t-items-center t-flex t-mb-[30px]">
-        <WitnessChipInTopBar v-for="(witness, i) in getWitnesses()" :key="i" :witness="witness" :index="i"/>
+        <WitnessChipInTopBar v-for="(witness, i) in getWitnesses()" :key="i" :witness="witness" :variantAnnotations="variantAnnotations" :index="i"/>
         <div class="t-ml-[70px]">
           <button class="t-border-[2px] t-rounded-[5px] t-border-sky-400 t-w-[100px] t-bg-sky-200 t-hover:bg-sky-700 t-mr-[2px] t-text-[15px] t-font-bold t-text-sky-500" 
               @click="handleVariantsClick()"> Variants </button>

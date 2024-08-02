@@ -17,7 +17,7 @@
           <span  v-html="annotation.body.value"/>
         </div>
 
-        <div v-else>
+        <div v-else class="variants-annotation">
           <AnnotationVariantItem :annotation="annotation" :isText="isText" :isActive="isActive" :toggle="toggle"/>
         </div>
        

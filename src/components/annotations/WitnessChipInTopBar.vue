@@ -9,11 +9,13 @@ import { getItemColorBasedOnIndex } from '@/utils/color';
 
 export interface Props {
   witness: string,
+  variantAnnotations: Annotation[],
   index: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   witness: () => <string>'',
+  variantAnnotations: () => <Annotation[]>[],
   index: () => <number>0,
 })
 
@@ -23,18 +25,42 @@ let checked = ref(true);
 function handleClick() {
     const witChipButtonEl = document.getElementById("wit-chip-in-top-bar-"+props.index.toString())
     checked.value = !checked.value
-    // TODO: create another function - toggleButton color(add as argument the 'checked.value')
-    if (checked.value === false) {
+    
+    toggleButtonColor(checked.value, witChipButtonEl)
+    toggleVariantItems(checked.value)
+   //toggleHighlitedText(checked.value)
+
+    // TODO: add a function to: highlight/dehighlight the text passage which is witnessed from this manuscript
+}
+
+function toggleButtonColor(checked: boolean, witChipButtonEl) {
+    if (checked === false) {
         // change the background color value in the button to white
         witChipButtonEl.classList.replace("t-bg-neutral-300", "t-bg-white")
     }
     else {
-        document.getElementById("wit-chip-in-top-bar-"+props.index.toString()).classList.replace("t-bg-white", "t-bg-neutral-300");
+        witChipButtonEl.classList.replace("t-bg-white", "t-bg-neutral-300");
     }
-
-    // TODO: add a function to: show or hide the variant items which are witnessed from this manuscript
-    // TODO: add a function to: highlight/dehighlight the text passage which is witnessed from this manuscript
 }
+
+function toggleVariantItems(checked: boolean) {
+    const variantsAnnotationsinTab = document.getElementsByClassName('variants-annotation')
+    Array.from(variantsAnnotationsinTab).forEach((variantsAnnotation) => {
+        Array.from(variantsAnnotation.children).forEach((variantItem) => {
+            let spanElement = variantItem.getElementsByTagName("span")[0]
+            if(spanElement.innerHTML.includes(props.witness)) {
+                if (checked) {
+                    variantItem.classList.replace('t-hidden', 't-block')
+                }
+                else {
+                    variantItem.classList.add('t-hidden')
+                }
+            }
+       })
+   })
+}
+
+
 
 </script>
 
