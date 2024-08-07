@@ -1,15 +1,33 @@
 <template>
-  <div v-for="(variant, i) in annotation.body.value" :key="i"  class="t-items-center t-flex t-mb-1 t-relative"
+  <div
+    v-for="(variant, i) in annotation.body.value"
+    :key="i"
+    class="t-items-center t-flex t-mb-1 t-relative"
     :class="[
-              't-py-2 t-px-3 t-mb-1 t-rounded-md',
-              { 'hover:t-bg-gray-200 dark:hover:t-bg-gray-600 t-cursor-pointer': !isText(annotation) && !isActive(annotation) },
-              { 't-bg-gray-300 dark:t-bg-gray-600 active': isVariantItemActive(variant.witness)}]"
-                @click="isText(annotation) ? ()=>{} : handleClick(variant.witness, i)" :data-annotation-id="annotation.id">
-        <div class="t-relative  t-rounded-3xl t-box-border t-w-75 t-h-8 t-border-2 t-p-[2px]" :style="{'border-color': getItemColorBasedOnIndex(i)}">
-          <span v-if="variant.witness" v-html="variant.witness" class="t-text-sm"/>
-          <span v-else class="t-text-sm"> - </span>
-        </div>
-        <span v-html="variant.entry" class="t-absolute t-right-[50%]"/>
+      't-py-2 t-px-3 t-mb-1 t-rounded-md',
+      { 'hover:t-bg-gray-200 dark:hover:t-bg-gray-600 t-cursor-pointer': !isText(annotation) && !isActive(annotation) },
+      { 't-bg-gray-300 dark:t-bg-gray-600 active': isVariantItemActive(variant.witness)}]"
+    :data-annotation-id="annotation.id"
+    @click="isText(annotation) ? ()=>{} : handleClick(variant.witness, i)"
+  >
+    <div
+      class="t-relative  t-rounded-3xl t-box-border t-w-75 t-h-8 t-border-2 t-p-[2px]"
+      :style="{'border-color': getItemColorBasedOnIndex(i)}"
+    >
+      <span
+        v-if="variant.witness"
+        class="t-text-sm"
+        v-html="variant.witness"
+      />
+      <span
+        v-else
+        class="t-text-sm"
+      > - </span>
+    </div>
+    <span
+      class="t-absolute t-right-[50%]"
+      v-html="variant.entry"
+    />
   </div>
 </template>
 
@@ -17,8 +35,7 @@
 
 <script setup lang="ts">
 import { getItemColorBasedOnIndex } from '@/utils/color';
-import { isReactive } from 'vue';
-import { computed, reactive } from 'vue';
+import { reactive } from 'vue';
 import * as AnnotationUtils from '@/utils/annotations';
 
 
