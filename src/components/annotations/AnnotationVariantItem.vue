@@ -75,21 +75,14 @@ function handleClick(witness: string, i: number) {
   // update the state of 'false' or 'true' whether this variant item is selected or not
   variantItemsSelection[witness] = !variantItemsSelection[witness] 
 
-  let selectorWithHash = props.annotation.target[0].selector.value
-  const selector = selectorWithHash.slice(1,selectorWithHash.length)
+  const selector = props.annotation.target[0].selector.value
   const variantItemsSelected: string[] = getVariantItemsSelected()
   if (variantItemsSelection[witness] === true) {
     AnnotationUtils.addWitness(selector, witness, witnessColor, variantItemsSelected, variantItemsColors)
   }
   else {
-     console.log('remove the witness')
+    AnnotationUtils.removeWitness(selector, witness)
   }
-  
-    
-  // if the variant item is selected: then we add the witness 'chip' to the annotated text
-  // if not, then we remove the witness chip to the annotated text
-
-  // need to find the html element of the selector
 }
 
 function isAtLeastOneVariantItemClicked() {

@@ -234,7 +234,7 @@ export function removeIcon(annotation) {
 }
 
 export function addWitness(selector, witness, witnessColor, variantItemsSelected, variantItemsColors) {
-  const targetHtmlEl = document.getElementById(selector)
+  const targetHtmlEl = document.querySelector(selector)
   const parentEl = targetHtmlEl.parentElement
   const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
   
@@ -276,7 +276,26 @@ export function removeChipsFromOtherViews() {
   }
 }
 
+export function removeWitness(selector, witness) {
+  // find the witnesses span which contains each 'witness' span child element
+  // find this witness inside the 'witnesses' html span and remove it
 
+  const witnessesHtmlEl = getWitnessesHtmlEl(selector)
+  const witHtml = Array.from(witnessesHtmlEl.children).filter(item => item.innerHTML === witness.slice(0,3))  
+  witHtml[0].remove()  
+}
+
+function getWitnessesHtmlEl(selector) {
+  // selector represents the target text of a certain variant item
+  // we aim to get the html element which contains the 'witnesses chips' related to the target. 
+  // this html element which contains the 'witnesses chips' is located before the target element
+  const targetHtmlEl = document.querySelector(selector)
+  const parentEl = targetHtmlEl.parentElement
+  const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
+  const witnessesHtmlEl = parentEl.children[indexOfTarget-1]
+
+  return witnessesHtmlEl
+}
 
 
 export function getAnnotationListElement(id, container) {
