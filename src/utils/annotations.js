@@ -233,6 +233,42 @@ export function removeIcon(annotation) {
   }
 }
 
+export function addWitness(selector, witness, witnessColor, variantItemsSelected, variantItemsColors) {
+  const targetHtmlEl = document.getElementById(selector)
+  const parentEl = targetHtmlEl.parentElement
+  const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
+  
+  const witHtml = createCurrWitHtml(witness, variantItemsColors[witness])
+  
+  if(!parentEl.children[indexOfTarget-1].classList.contains("witnesses")) { 
+    // if the previous element in DOM does not contains 'witnesses chips' then create the 'parent' span of the 'witnesses chips'
+    // Create another function - like create 'witnesses' Html element
+    const witnessesHtmlEl = document.createElement("span");
+    witnessesHtmlEl.classList.add('witnesses')
+    
+    witnessesHtmlEl.prepend(witHtml)
+    parentEl.insertBefore(witnessesHtmlEl, targetHtmlEl)
+  }
+  else {
+    // get the target element and get the previous element - which we know is the 'witnesses' span list
+    // get the witnessesHtml element and append the witHtml element
+    let witnessesHtmlEl = parentEl.children[indexOfTarget-1]   
+    witnessesHtmlEl.appendChild(witHtml)
+  } 
+}
+
+function createCurrWitHtml(witness, borderColor) {
+  // create an html element of the selected witness
+  const witHtml = document.createElement("span");
+  witHtml.innerHTML = witness.slice(0,3);
+  witHtml.classList.add('t-rounded-3xl', 't-box-border', 't-w-75', 't-h-8', 't-border-2', 't-p-[2px]', 't-text-sm', 't-ml-[3px]')
+  witHtml.style.borderColor = borderColor
+  
+  return witHtml
+}
+
+
+
 export function getAnnotationListElement(id, container) {
   return [...container.querySelectorAll('.q-item')].find((annotationItem) => {
     if (!annotationItem.hasAttribute('data-annotation-id')) return false;
