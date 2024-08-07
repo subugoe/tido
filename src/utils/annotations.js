@@ -267,6 +267,16 @@ function createCurrWitHtml(witness, borderColor) {
   return witHtml
 }
 
+export function removeChipsFromOtherViews() {
+  const witnessesHtmlElements = document.getElementsByClassName('witnesses')
+  if( witnessesHtmlElements ) {
+    Array.from(witnessesHtmlElements).forEach((witnesses) => {
+      witnesses.remove()
+    })
+  }
+}
+
+
 
 
 export function getAnnotationListElement(id, container) {
