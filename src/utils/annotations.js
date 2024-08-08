@@ -269,7 +269,8 @@ function createCurrWitHtml(witness, borderColor) {
 }
 
 export function removeChipsFromOtherViews() {
-  const witnessesHtmlElements = document.getElementsByClassName('witnesses')
+  const textPanelEl = document.querySelector('#text-content')
+  const witnessesHtmlElements = textPanelEl.getElementsByClassName('witnesses')
   if( witnessesHtmlElements ) {
     Array.from(witnessesHtmlElements).forEach((witnesses) => {
       witnesses.remove()
