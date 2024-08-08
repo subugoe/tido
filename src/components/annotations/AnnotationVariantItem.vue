@@ -5,10 +5,10 @@
     class="t-items-center t-flex t-mb-1 t-relative"
     :class="[
       't-py-2 t-px-3 t-mb-1 t-rounded-md',
-      { 'hover:t-bg-gray-200 dark:hover:t-bg-gray-600 t-cursor-pointer': !isText(annotation) && !isActive(annotation) },
+      { 'hover:t-bg-gray-200 dark:hover:t-bg-gray-600 t-cursor-pointer': !isActive(annotation) },
       { 't-bg-gray-300 dark:t-bg-gray-600 active': isVariantItemActive(variant.witness)}]"
     :data-annotation-id="annotation.id"
-    @click="isText(annotation) ? ()=>{} : handleClick(variant.witness, i)"
+    @click="handleClick(variant.witness, i)"
   >
     <div
       class="t-relative  t-rounded-3xl t-box-border t-w-75 t-h-8 t-border-2 t-p-[2px]"
@@ -41,14 +41,12 @@ import * as AnnotationUtils from '@/utils/annotations';
 
 export interface Props {
   annotation: Annotation,
-  isText: (annotation: Annotation) => boolean,
   isActive: (annotation: Annotation) => boolean,
   toggle: (annotation: Annotation) => void,
 }
 
 const props = withDefaults(defineProps<Props>(), {
   annotation: () => <Annotation>{},
-  isText: () => true,
   isActive: () => true,
   toggle: () => null,
 })

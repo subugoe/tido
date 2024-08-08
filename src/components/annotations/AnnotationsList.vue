@@ -24,7 +24,6 @@
       <div v-else>
         <AnnotationVariantItem
           :annotation="annotation"
-          :is-text="isText"
           :is-active="isActive"
           :toggle="toggle"
         />
