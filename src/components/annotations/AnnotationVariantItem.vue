@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { getItemColorBasedOnIndex } from '@/utils/color';
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 import * as AnnotationUtils from '@/utils/annotations';
 
 
@@ -51,24 +51,16 @@ const props = withDefaults(defineProps<Props>(), {
   toggle: () => null,
 })
 
-let variantItemsSelection = initializeSelectionOfVariantItem()
+let variantItemsSelection = reactive({})
 let variantItemsColors = {}
 
 
-// select only the variant item when it is clicked and highlighted only 
-// the highlighted text should stay 'more highlighted', when we have at least one variant item selected
-
-function initializeSelectionOfVariantItem() {
-  let variantItemsDict = {}
+watch(() => props.annotation, (value) => { 
   props.annotation.body.value.forEach((variantItem) => {
     const witness = variantItem.witness
-    variantItemsDict[witness] = false
+    variantItemsSelection[witness] = false
   })
-
-  const variantItemsDictReactive = reactive(variantItemsDict)
-
-  return variantItemsDictReactive
-}
+ })
 
 
 
