@@ -234,7 +234,8 @@ export function removeIcon(annotation) {
 }
 
 export function addWitness(selector, witness, witnessColor, variantItemsSelected, variantItemsColors) {
-  const targetHtmlEl = document.querySelector(selector)
+  const textPanelEl = document.querySelector('#text-content')
+  const targetHtmlEl = textPanelEl.querySelector(selector)
   const parentEl = targetHtmlEl.parentElement
   const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
   
