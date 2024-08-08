@@ -233,7 +233,7 @@ export function removeIcon(annotation) {
   }
 }
 
-export function addWitness(selector, witness, witnessColor, variantItemsSelected, variantItemsColors) {
+export function addWitness(selector, witness, variantItemsColors) {
   const textPanelEl = document.querySelector('#text-content')
   const targetHtmlEl = textPanelEl.querySelector(selector)
   const parentEl = targetHtmlEl.parentElement
@@ -261,7 +261,7 @@ export function addWitness(selector, witness, witnessColor, variantItemsSelected
 function createCurrWitHtml(witness, borderColor) {
   // create an html element of the selected witness
   const witHtml = document.createElement("span");
-  witHtml.innerHTML = witness.slice(0,3);
+  witHtml.innerHTML = witness
   witHtml.classList.add('t-rounded-3xl', 't-box-border', 't-w-75', 't-h-8', 't-border-2', 't-p-[2px]', 't-text-sm', 't-ml-[3px]')
   witHtml.style.borderColor = borderColor
   
@@ -282,7 +282,7 @@ export function removeWitness(selector, witness) {
   // find this witness inside the 'witnesses' html span and remove it
 
   const witnessesHtmlEl = getWitnessesHtmlEl(selector)
-  const witHtml = Array.from(witnessesHtmlEl.children).filter(item => item.innerHTML === witness.slice(0,3))  
+  const witHtml = Array.from(witnessesHtmlEl.children).filter(item => item.innerHTML === witness)  
   witHtml[0].remove()  
 }
 

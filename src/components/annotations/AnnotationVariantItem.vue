@@ -85,7 +85,7 @@ function handleClick(witness: string, i: number) {
   const selector = props.annotation.target[0].selector.value
   const variantItemsSelected: string[] = getVariantItemsSelected()
   if (variantItemsSelection[witness] === true) {
-    AnnotationUtils.addWitness(selector, witness, witnessColor, variantItemsSelected, variantItemsColors)
+    AnnotationUtils.addWitness(selector, witness, variantItemsColors)
   }
   else {
     AnnotationUtils.removeWitness(selector, witness)
