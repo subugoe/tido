@@ -55,7 +55,7 @@ let variantItemsSelection = reactive({})
 let variantItemsColors = {}
 
 
-watch(() => props.annotation, (value) => { 
+watch(() => props.annotation, () => { 
   props.annotation.body.value.forEach((variantItem) => {
     const witness = variantItem.witness
     variantItemsSelection[witness] = false
@@ -83,7 +83,6 @@ function handleClick(witness: string, i: number) {
   variantItemsSelection[witness] = !variantItemsSelection[witness] 
 
   const selector = props.annotation.target[0].selector.value
-  const variantItemsSelected: string[] = getVariantItemsSelected()
   if (variantItemsSelection[witness] === true) {
     AnnotationUtils.addWitness(selector, witness, variantItemsColors)
   }
