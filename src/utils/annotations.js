@@ -233,6 +233,73 @@ export function removeIcon(annotation) {
   }
 }
 
+export function addWitness(selector, witness, variantItemsColors) {
+  const textPanelEl = document.querySelector('#text-content')
+  const targetHtmlEl = textPanelEl.querySelector(selector)
+  const parentEl = targetHtmlEl.parentElement
+  const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
+  
+  const witHtml = createCurrWitHtml(witness, variantItemsColors[witness])
+  
+  if(!parentEl.children[indexOfTarget-1].classList.contains("witnesses")) { 
+    // if the previous element in DOM does not contains 'witnesses chips' then create the 'parent' span of the 'witnesses chips'
+    // Create another function - like create 'witnesses' Html element
+    const witnessesHtmlEl = document.createElement("span");
+    witnessesHtmlEl.classList.add('witnesses')
+    
+    witnessesHtmlEl.prepend(witHtml)
+    parentEl.insertBefore(witnessesHtmlEl, targetHtmlEl)
+  }
+  else {
+    // get the target element and get the previous element - which we know is the 'witnesses' span list
+    // get the witnessesHtml element and append the witHtml element
+    let witnessesHtmlEl = parentEl.children[indexOfTarget-1]   
+    witnessesHtmlEl.appendChild(witHtml)
+  } 
+}
+
+function createCurrWitHtml(witness, borderColor) {
+  // create an html element of the selected witness
+  const witHtml = document.createElement("span");
+  witHtml.innerHTML = witness
+  witHtml.classList.add('t-rounded-3xl', 't-box-border', 't-w-75', 't-h-8', 't-border-2', 't-p-[2px]', 't-text-sm', 't-ml-[3px]')
+  witHtml.style.borderColor = borderColor
+  
+  return witHtml
+}
+
+export function removeChipsFromOtherViews() {
+  const textPanelEl = document.querySelector('#text-content')
+  const witnessesHtmlElements = textPanelEl.getElementsByClassName('witnesses')
+  if( witnessesHtmlElements ) {
+    Array.from(witnessesHtmlElements).forEach((witnesses) => {
+      witnesses.remove()
+    })
+  }
+}
+
+export function removeWitness(selector, witness) {
+  // find the witnesses span which contains each 'witness' span child element
+  // find this witness inside the 'witnesses' html span and remove it
+
+  const witnessesHtmlEl = getWitnessesHtmlEl(selector)
+  const witHtml = Array.from(witnessesHtmlEl.children).filter(item => item.innerHTML === witness)  
+  witHtml[0].remove()  
+}
+
+function getWitnessesHtmlEl(selector) {
+  // selector represents the target text of a certain variant item
+  // we aim to get the html element which contains the 'witnesses chips' related to the target. 
+  // this html element which contains the 'witnesses chips' is located before the target element
+  const targetHtmlEl = document.querySelector(selector)
+  const parentEl = targetHtmlEl.parentElement
+  const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
+  const witnessesHtmlEl = parentEl.children[indexOfTarget-1]
+
+  return witnessesHtmlEl
+}
+
+
 export function getAnnotationListElement(id, container) {
   return [...container.querySelectorAll('.q-item')].find((annotationItem) => {
     if (!annotationItem.hasAttribute('data-annotation-id')) return false;

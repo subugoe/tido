@@ -142,6 +142,8 @@ import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import MessageBox from '@/components/MessageBox.vue';
 import { findComponent } from '@/utils/panels';
+import * as AnnotationUtils from '@/utils/annotations'
+
 
 // NOTE: Using `setup()` rather than the recommended `<script setup>`
 // to avoid issues with asset loading.
@@ -366,6 +368,10 @@ export default {
 
     function onViewChange(index) {
       activeTabIndex.value = index;
+      if (index !==2) {
+        AnnotationUtils.removeChipsFromOtherViews()
+      }
+      
       emit('active-view', activeTabIndex.value);
     }
 
