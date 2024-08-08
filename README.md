@@ -404,7 +404,7 @@ tido.someMethod()
 
 | Name     | Arguments | Type            | Description                                                                                |
 |----------|-----------|-----------------|--------------------------------------------------------------------------------------------|
-| setTheme | name      | `dark`, `light` | Sets color theme. The attribute `colo-scheme` at the container element will be overridden. |
+| setTheme | name      | `dark`, `light` | Sets color theme. The attribute `color-scheme` at the container element will be overridden. |
 
 
 
