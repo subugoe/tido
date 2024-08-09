@@ -73,17 +73,11 @@ initializeSelectionOfVariantItem()
 watch(() => props.annotation, () => { 
   
   props.annotation.body.value.forEach((variantItem) => {
-    console.log('initializing the variant items selection')
     const witness = variantItem.witness
     initVariantItemsSelection[witness] = false
   })
-  
-
-  console.log('id of annotation')
  })
  
-
-
 
 function handleClick(witness: string, i: number) {
   // if at least one variant item is selected, then we don't toggle this annotation
@@ -93,25 +87,20 @@ function handleClick(witness: string, i: number) {
   if (witness in variantItemsColors === false) variantItemsColors[witness] = witnessColor
 
   const variantItemsSelection = pickVariantItemsSelection()
-  //console.log('init variant items selection', variantItemsSelection)
 
   if (!isAtLeastOneVariantItemClicked()) {
     // for the first variant item of each variant object
-    console.log('toggle() - 1')
     props.toggle(props.annotation)
   }
 
   if ((isOnlyThisVariantActive(witness)) && (isVariantItemActive(witness))) {
     // when we have only one variant item of a certain variant object selected and then we deselect it -> remove the blue highlight from the text 
-    console.log('toggle() - 2')
     props.toggle(props.annotation)
   }
-  // update the state of 'false' or 'true' whether this variant item is selected or not
-  //variantItemsSelection[witness] = !variantItemsSelection[witness] 
 
+  // update the state of 'false' or 'true' whether this variant item is selected or not
   variantItemsSelection[witness] = !variantItemsSelection[witness]
   activeAnnotSelectVariantItems.value[props.annotation.id] = [props.annotation, variantItemsSelection]
-  //activeAnnotSelectVariantItems.value[props.annotation.id][1][witness] = !activeAnnotSelectVariantItems.value[props.annotation.id][1][witness]
 
   const selector = props.annotation.target[0].selector.value
   if (variantItemsSelection[witness] === true) { // to change
@@ -120,10 +109,6 @@ function handleClick(witness: string, i: number) {
   else {
     AnnotationUtils.removeWitness(selector, witness)
   }
-
-  // update this entry in active annotation to incorporate its 'variantItemsSelection' dict 
-  //activeAnnotSelectVariantItems.value[props.annotation.id] = [props.annotation, variantItemsSelection]
-  console.log('activeAnnotati Select Variant items', activeAnnotSelectVariantItems.value[props.annotation.id][1] )
 }
 
 function isAtLeastOneVariantItemClicked() {
@@ -137,7 +122,6 @@ function isAtLeastOneVariantItemClicked() {
 }
 
 
-
 function isOnlyThisVariantActive(witness) {
   const variantItemsSelection = pickVariantItemsSelection()
 
@@ -149,21 +133,20 @@ function isOnlyThisVariantActive(witness) {
 }
 
 function pickVariantItemsSelection() {
+  // we pick the variant items selection, based on whether we have an active annotation or not
+  // if we have active annotation - we use the value of 'activeAnnotSelectVariantItems' property in the annotation store
+  // else: we use the initial variant items selection - all false values
   let variantItemsSelection;
-  console.log('init Variant Selection', initVariantItemsSelection)
 
   if (Object.keys(activeAnnotSelectVariantItems.value).length > 0) {
     if((props.annotation.id in activeAnnotSelectVariantItems.value) === false) {
-      console.log('1-')
-      variantItemsSelection = initVariantItemsSelection;
+      variantItemsSelection = { ...initVariantItemsSelection };
     }
     else {
-      console.log('2-')
       variantItemsSelection = activeAnnotSelectVariantItems.value[props.annotation.id][1]
     }
   }
   else {
-    //initializeSelectionOfVariantItem()
     variantItemsSelection = { ...initVariantItemsSelection };
   }
 
@@ -171,7 +154,6 @@ function pickVariantItemsSelection() {
 }
 
 function isVariantItemActive(witness): boolean{
-  // Case 1: there is no active annotation: 'each variant item no highlighting'
 
   if(Object.keys(activeAnnotSelectVariantItems.value).length > 0) {
       if( (props.annotation.id in activeAnnotSelectVariantItems.value) === false) {
@@ -181,23 +163,16 @@ function isVariantItemActive(witness): boolean{
         return activeAnnotSelectVariantItems.value[props.annotation.id][1][witness]
       }
   }
-  //if(Object.keys(activeAnnotSelectVariantItems.value).length === 0)
-  // Case 2: we select variant item -> we should update the activeAnnotSelectVariantItems[witness] (as selectedValue we get it from this store prop)
 
-
-
-  /*
-    if(Object.keys(activeAnnotSelectVariantItems.value).length > 0 ) {
-      if( props.annotation.id in activeAnnotSelectVariantItems.value) {
-        return activeAnnotSelectVariantItems.value[props.annotation.id][1][witness]
-      }
-    }
-    else {
-      variantItemsSelection = AnnotationUtils.initVariantItemsSelection(props.annotation, false)
-    }
-    */
-    return false
+  return false
 }
+
+
+
+
+/*
+
+// Another approach for the feature 'select text'
 
 function getSelectorOfAnnotatedText() {
   return props.annotation.target[0].selector.value
@@ -210,6 +185,7 @@ function areAllVariantItemsSelected() {
   })
   return numberSelected === Object.keys(variantItemsSelection).length
 }
+
 
 function isTargetSelected() {
   const selector = props.annotation.target[0].selector.value
@@ -230,6 +206,7 @@ function selectVariantItemsSelected() {
   })
 }
 
+
 function canVariantItemBeHighlighted(witness) {
   
   return (
@@ -246,8 +223,6 @@ function isTargetUnclicked() {
   return areAllVariantItemsSelected() && !isTargetSelected()
 }
 
-
-
 function getVariantItemsSelected(): string[] {
   let variantItemsSelected: string[] = []
   Object.keys(variantItemsSelection).forEach((wit) => {
@@ -257,6 +232,12 @@ function getVariantItemsSelected(): string[] {
   return variantItemsSelected
 
 }
+
+*/
+
+
+
+
 
 </script>
 
