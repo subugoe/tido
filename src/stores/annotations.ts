@@ -13,7 +13,8 @@ import { useConfigStore} from '@/stores/config';
 export const useAnnotationsStore = defineStore('annotations', () => {
 
     const activeTab = ref<string>('')
-    const activeAnnotations = ref<ActiveAnnotation>({} as ActiveAnnotation) 
+    const activeAnnotations = ref({}) 
+    const activeAnnotSelectVariantItems = ref({})
     const annotations = ref<Annotation[]>(null)
     const filteredAnnotations = ref<Annotation[]>([])
     const isLoading = ref<boolean>(false);
@@ -120,9 +121,13 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     const removeActiveAnnotation = (id) => {
         const annotationStore = useAnnotationsStore()
         const removeAnnotation = activeAnnotations.value[id];
+
         if (!removeAnnotation) {
           return;
         }
+
+        // If removed active annotation is variant - then set all the variant items selection to false for this annotation
+
       
         const activeAnnotationsList = { ...activeAnnotations.value };
       
@@ -271,8 +276,16 @@ export const useAnnotationsStore = defineStore('annotations', () => {
             if (annotation) {
               if (targetIsSelected) {
                 removeActiveAnnotation(id)
+                if (AnnotationUtils.isVariant(annotation)) {
+                  delete activeAnnotSelectVariantItems.value[annotation.id]
+                }
               } else {
                 addActiveAnnotation(id)
+                if(AnnotationUtils.isVariant(annotation)) {
+                  const variantItemsSelect = AnnotationUtils.initVariantItemsSelection(annotation, true)
+                  activeAnnotSelectVariantItems.value[annotation.id] = [activeAnnotations.value[annotation.id], variantItemsSelect]
+                }
+                // if annotation is variant - additionally set the variant items selection to true
               }
             }
           });
@@ -321,7 +334,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     }
 
     return {
-        activeTab, activeAnnotations, annotations, filteredAnnotations, isLoading,   // states
+        activeTab, activeAnnotations, activeAnnotSelectVariantItems, annotations, filteredAnnotations, isLoading,   // states
         isAllAnnotationSelected, isNoAnnotationSelected,                              // computed
         setActiveAnnotations, setAnnotations, updateAnnotationLoading, setFilteredAnnotations,  // functions
         addActiveAnnotation, selectFilteredAnnotations, addHighlightAttributesToText, 

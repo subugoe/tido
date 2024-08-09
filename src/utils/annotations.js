@@ -284,6 +284,7 @@ export function removeWitness(selector, witness) {
 
   const witnessesHtmlEl = getWitnessesHtmlEl(selector)
   const witHtml = Array.from(witnessesHtmlEl.children).filter(item => item.innerHTML === witness)  
+  console.log('witHtml', witHtml)
   witHtml[0].remove()  
 }
 
@@ -299,6 +300,26 @@ function getWitnessesHtmlEl(selector) {
   return witnessesHtmlEl
 }
 
+export function unselectVariantItems(variantItemsSelection) {
+  let newVariantItemsSelection = {}
+  Object.keys(variantItemsSelection).forEach((wit) => {
+    newVariantItemsSelection[wit] = false
+  })
+  return newVariantItemsSelection
+}
+
+export function isVariant(annotation) {
+  return annotation.body['x-content-type'] === 'Variant';
+}
+
+export function initVariantItemsSelection(annotation, value) {
+  // initialize with the boolean of 'value' variable
+  let variantItemsSelection = {}
+  annotation.body.value.forEach((variantItem) => {
+    variantItemsSelection[variantItem.witness] = value
+  } )
+  return variantItemsSelection
+}
 
 export function getAnnotationListElement(id, container) {
   return [...container.querySelectorAll('.q-item')].find((annotationItem) => {
