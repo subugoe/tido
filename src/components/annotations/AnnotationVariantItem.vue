@@ -94,7 +94,7 @@ function handleClick(witness: string, i: number) {
 
   // update the state of 'false' or 'true' whether this variant item is selected or not
   variantItemsSelection[witness] = !variantItemsSelection[witness]
-  activeAnnotSelectVariantItems.value[props.annotation.id] = [props.annotation, variantItemsSelection]
+  annotationStore.updateActiveAnnotSelectVariantItems(props.annotation.id, [props.annotation, variantItemsSelection])
 
   const selector = props.annotation.target[0].selector.value
   if (variantItemsSelection[witness] === true) { // to change
