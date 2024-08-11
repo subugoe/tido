@@ -2,6 +2,7 @@ import * as Utils from '@/utils/index';
 import { getIcon } from '@/utils/icons';
 import { i18n } from '@/i18n';
 
+
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
 export function addHighlightToElements(selector, root, annotationId) {
@@ -306,6 +307,18 @@ export function unselectVariantItems(variantItemsSelection) {
     newVariantItemsSelection[wit] = false
   })
   return newVariantItemsSelection
+}
+
+export function addWitnessesChipsWhenSelectText(variantItemsSelection, selector) {
+  // variantItemsSelection: JSON object of 'witness name': 'true' 
+  // this function aims to add all witnesses on the highlighted text when we click on the text 
+
+  // get the text content html element: 
+  const textPanelEl = document.querySelector('#text-content')
+  // iterate through each witness
+  Object.keys(variantItemsSelection).forEach((variantItem) => {
+    addWitness(selector, witness, variantItemsColors)
+  })
 }
 
 export function isVariant(annotation) {

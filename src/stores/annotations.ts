@@ -15,6 +15,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     const activeTab = ref<string>('')
     const activeAnnotations = ref({}) 
     const activeAnnotSelectVariantItems = ref({})
+    const variantItemsColors = ref({})
     const annotations = ref<Annotation[]>(null)
     const filteredAnnotations = ref<Annotation[]>([])
     const isLoading = ref<boolean>(false);
@@ -38,6 +39,10 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
     function setFilteredAnnotations(payload: Annotation[]) {
         filteredAnnotations.value = payload
+    }
+
+    function setVariantItemsColors(payload) {
+      variantItemsColors.value = payload
     }
 
     const addActiveAnnotation = (id: string) => {
@@ -273,19 +278,24 @@ export const useAnnotationsStore = defineStore('annotations', () => {
             // We need to check here if the right annotations panel tab is active
             // a.k.a. it exists in the current filteredAnnotations
             const annotation = filteredAnnotations.value.find((filtered) => filtered.id === id);
+            const selector = annotation.target[0].selector.value
+            console.log('annotation', annotation)
             if (annotation) {
               if (targetIsSelected) {
                 removeActiveAnnotation(id)
                 if (AnnotationUtils.isVariant(annotation)) {
+                  // call a method in utils/annotations.js which will remove all the 'witnesses chips' on the current annotation variant
                   delete activeAnnotSelectVariantItems.value[annotation.id]
                 }
               } else {
                 addActiveAnnotation(id)
                 if(AnnotationUtils.isVariant(annotation)) {
+                  // if annotation is variant - additionally set the variant items selection to true
                   const variantItemsSelect = AnnotationUtils.initVariantItemsSelection(annotation, true)
                   activeAnnotSelectVariantItems.value[annotation.id] = [activeAnnotations.value[annotation.id], variantItemsSelect]
+                  AnnotationUtils.addWitnessesChipsWhenSelectText(variantItemsSelect, selector)
+                  // call a method in utils/annotations.js which will add all the 'witnesses chips' for this annotation variant
                 }
-                // if annotation is variant - additionally set the variant items selection to true
               }
             }
           });
@@ -334,9 +344,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     }
 
     return {
-        activeTab, activeAnnotations, activeAnnotSelectVariantItems, annotations, filteredAnnotations, isLoading,   // states
+        activeTab, activeAnnotations, activeAnnotSelectVariantItems, annotations, filteredAnnotations, isLoading, variantItemsColors,  // states
         isAllAnnotationSelected, isNoAnnotationSelected,                              // computed
-        setActiveAnnotations, setAnnotations, updateAnnotationLoading, setFilteredAnnotations,  // functions
+        setActiveAnnotations, setAnnotations, updateAnnotationLoading, setFilteredAnnotations, setVariantItemsColors,  // functions
         addActiveAnnotation, selectFilteredAnnotations, addHighlightAttributesToText, 
         annotationLoaded, removeActiveAnnotation, resetAnnotations, initAnnotations,
         addHighlightHoverListeners, addHighlightClickListeners, getNearestParentAnnotation,

@@ -12,7 +12,7 @@
   >
     <div
       class="t-relative  t-rounded-3xl t-box-border t-w-75 t-h-8 t-border-2 t-p-[2px]"
-      :style="{'border-color': getItemColorBasedOnIndex(i)}"
+      :style="{'border-color': allocateWitnessColorInVariantItem(variant.witness)}"
     >
       <span
         v-if="variant.witness"
@@ -42,6 +42,7 @@ import * as AnnotationUtils from '@/utils/annotations';
 
 const annotationStore = useAnnotationsStore();
 const activeAnnotSelectVariantItems = computed(() => annotationStore.activeAnnotSelectVariantItems);
+const variantItemsColors = computed(() => annotationStore.variantItemsColors)
 
 export interface Props {
   annotation: Annotation,
@@ -56,7 +57,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 let initVariantItemsSelection = {}
-let variantItemsColors = {}
 
   
 watch(() => props.annotation, () => { 
@@ -72,8 +72,13 @@ function handleClick(witness: string, i: number) {
   // if at least one variant item is selected, then we don't toggle this annotation
   // for each variant item: we should save a state of selected or not, so that to show the icon or not...
   
-  const witnessColor = getItemColorBasedOnIndex(i)
-  if (witness in variantItemsColors === false) variantItemsColors[witness] = witnessColor
+  // get the number of keys in the variantItemsColors - if the witness is not in the variantItemsColors then we request the next color - which has index the same as this count
+  
+ 
+  const witnessColor = getWitnessColor(witness)
+  if (witness in variantItemsColors.value === false) {
+    updateVariantItemsColors(witness, witnessColor)
+  }
 
   const variantItemsSelection = pickVariantItemsSelection()
 
@@ -93,12 +98,46 @@ function handleClick(witness: string, i: number) {
 
   const selector = props.annotation.target[0].selector.value
   if (variantItemsSelection[witness] === true) { // to change
-    AnnotationUtils.addWitness(selector, witness, variantItemsColors)
+    AnnotationUtils.addWitness(selector, witness, variantItemsColors.value)
   }
   else {
     AnnotationUtils.removeWitness(selector, witness)
   }
 }
+
+
+function updateVariantItemsColors(witness: string, witnessColor: string) {
+  variantItemsColors.value[witness] = witnessColor
+  annotationStore.setVariantItemsColors(variantItemsColors.value)
+}
+
+
+function allocateWitnessColorInVariantItem(witness: string): string {
+  const witnessColor = getWitnessColor(witness)
+  if (witness in variantItemsColors.value === false) {
+    updateVariantItemsColors(witness, witnessColor)
+  }
+  return witnessColor
+}
+
+function getWitnessColor(witness): string {
+   // getWitnessColor
+  
+  let indexColor;
+  if (Object.keys(variantItemsColors.value).length === 0){
+    // the first variant item to be selected
+    return getItemColorBasedOnIndex(0)
+  }
+  else if ((witness in variantItemsColors.value) === false) {
+    // this variant item was not yet selected, but there are already at least one selected
+    indexColor = Object.keys(variantItemsColors.value).length
+    return getItemColorBasedOnIndex(indexColor)
+  }
+
+  // if the variant item with this witness was already selected somewhere in the annotation
+  return variantItemsColors.value[witness]
+}
+
 
 function isAtLeastOneVariantItemClicked() {
   const variantItemsSelection = pickVariantItemsSelection()
