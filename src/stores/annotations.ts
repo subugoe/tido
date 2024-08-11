@@ -291,7 +291,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
               if (targetIsSelected) {
                 removeActiveAnnotation(id)
                 if (AnnotationUtils.isVariant(annotation)) {
-                  // we need to know which witnesses belong to this annotation - so that we can remove the witnesses chips from the text
+                  // we need to know which witnesses belong to this annotation AND are selected - so that we can remove the witnesses chips from the text
                   const witnessesHtml = AnnotationUtils.getWitnessesHtmlEl(selector)
                   const witnessesList = AnnotationUtils.getWitnessesList(witnessesHtml)
                   // remove the 'witnesses chips' which are selected
