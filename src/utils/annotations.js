@@ -240,7 +240,7 @@ export function addWitness(selector, witness, variantItemsColors) {
   const parentEl = targetHtmlEl.parentElement
   const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
   
-  
+
   const witHtml = createCurrWitHtml(witness, variantItemsColors[witness])
   
   if(!parentEl.children[indexOfTarget-1].classList.contains("witnesses")) { 
@@ -289,7 +289,7 @@ export function removeWitness(selector, witness) {
   witHtml[0].remove()  
 }
 
-function getWitnessesHtmlEl(selector) {
+export function getWitnessesHtmlEl(selector) {
   // selector represents the target text of a certain variant item
   // we aim to get the html element which contains the 'witnesses chips' related to the target. 
   // this html element which contains the 'witnesses chips' is located before the target element
@@ -299,6 +299,15 @@ function getWitnessesHtmlEl(selector) {
   const witnessesHtmlEl = parentEl.children[indexOfTarget-1]
 
   return witnessesHtmlEl
+}
+
+export function getWitnessesList(witnessesHtml) {
+  // returns the list of witnesses(<string>) which are already selected
+  let witnessesList= []
+  Array.from(witnessesHtml.children).forEach((witnessHtml) => {
+    witnessesList.push(witnessHtml.innerHTML)
+  })
+  return witnessesList
 }
 
 export function unselectVariantItems(variantItemsSelection) {
@@ -313,11 +322,14 @@ export function addWitnessesChipsWhenSelectText(variantItemsSelection, selector,
   // variantItemsSelection: JSON object of 'witness name': 'true' 
   // this function aims to add all witnesses on the highlighted text when we click on the text 
 
-  // get the text content html element: 
-  const textPanelEl = document.querySelector('#text-content')
-  // iterate through each witness
   Object.keys(variantItemsSelection).forEach((witness) => {
     addWitness(selector, witness, variantItemsColors)
+  })
+}
+
+export function removeWitnessesChipsWhenDeselectText(witnessesList, selector) {
+  witnessesList.forEach((witness) => {
+    removeWitness(selector, witness)
   })
 }
 
