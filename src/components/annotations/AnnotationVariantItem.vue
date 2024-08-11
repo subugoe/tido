@@ -121,8 +121,7 @@ function allocateWitnessColorInVariantItem(witness: string): string {
 }
 
 function getWitnessColor(witness): string {
-   // getWitnessColor
-  
+     
   let indexColor;
   if (Object.keys(variantItemsColors.value).length === 0){
     // the first variant item to be selected

@@ -240,6 +240,7 @@ export function addWitness(selector, witness, variantItemsColors) {
   const parentEl = targetHtmlEl.parentElement
   const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
   
+  
   const witHtml = createCurrWitHtml(witness, variantItemsColors[witness])
   
   if(!parentEl.children[indexOfTarget-1].classList.contains("witnesses")) { 
@@ -285,7 +286,6 @@ export function removeWitness(selector, witness) {
 
   const witnessesHtmlEl = getWitnessesHtmlEl(selector)
   const witHtml = Array.from(witnessesHtmlEl.children).filter(item => item.innerHTML === witness)  
-  console.log('witHtml', witHtml)
   witHtml[0].remove()  
 }
 
@@ -309,14 +309,14 @@ export function unselectVariantItems(variantItemsSelection) {
   return newVariantItemsSelection
 }
 
-export function addWitnessesChipsWhenSelectText(variantItemsSelection, selector) {
+export function addWitnessesChipsWhenSelectText(variantItemsSelection, selector, variantItemsColors) {
   // variantItemsSelection: JSON object of 'witness name': 'true' 
   // this function aims to add all witnesses on the highlighted text when we click on the text 
 
   // get the text content html element: 
   const textPanelEl = document.querySelector('#text-content')
   // iterate through each witness
-  Object.keys(variantItemsSelection).forEach((variantItem) => {
+  Object.keys(variantItemsSelection).forEach((witness) => {
     addWitness(selector, witness, variantItemsColors)
   })
 }

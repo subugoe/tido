@@ -293,7 +293,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
                   // if annotation is variant - additionally set the variant items selection to true
                   const variantItemsSelect = AnnotationUtils.initVariantItemsSelection(annotation, true)
                   activeAnnotSelectVariantItems.value[annotation.id] = [activeAnnotations.value[annotation.id], variantItemsSelect]
-                  AnnotationUtils.addWitnessesChipsWhenSelectText(variantItemsSelect, selector)
+                  AnnotationUtils.addWitnessesChipsWhenSelectText(variantItemsSelect, selector, variantItemsColors.value)
                   // call a method in utils/annotations.js which will add all the 'witnesses chips' for this annotation variant
                 }
               }
