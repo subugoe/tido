@@ -58,17 +58,6 @@ const props = withDefaults(defineProps<Props>(), {
 let initVariantItemsSelection = {}
 let variantItemsColors = {}
 
-
-function initializeSelectionOfVariantItem() {
-  props.annotation.body.value.forEach((variantItem) => {
-    const witness = variantItem.witness
-    initVariantItemsSelection[witness] = false
-  })
-
-}
-
-initializeSelectionOfVariantItem()
-
   
 watch(() => props.annotation, () => { 
   
@@ -166,76 +155,6 @@ function isVariantItemActive(witness): boolean{
 
   return false
 }
-
-
-
-
-/*
-
-// Another approach for the feature 'select text'
-
-function getSelectorOfAnnotatedText() {
-  return props.annotation.target[0].selector.value
-}
-
-function areAllVariantItemsSelected() {
-  let numberSelected = 0
-  Object.keys(variantItemsSelection).forEach((wit) => {
-    if (variantItemsSelection[wit] === true) numberSelected += 1
-  })
-  return numberSelected === Object.keys(variantItemsSelection).length
-}
-
-
-function isTargetSelected() {
-  const selector = props.annotation.target[0].selector.value
-  const target = document.querySelector('#text-content').querySelector(selector)
-  const isTargetSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0
-  if(isTargetSelected && !isAtLeastOneVariantItemClicked()) {
-    // selected all variant items selection to True
-    selectVariantItemsSelected()
-  }
-  return isTargetSelected
-  
-}
-
-function selectVariantItemsSelected() {
-  props.annotation.body.value.forEach((variantItem) => {
-    const witness = variantItem.witness
-    variantItemsSelection[witness] = true
-  })
-}
-
-
-function canVariantItemBeHighlighted(witness) {
-  
-  return (
-       (// if the target was not unclicked)
-       !isTargetUnclicked() && 
-       isVariantItemActive(witness)) // variantItem is newly clicked for that variant object 
-            || 
-            (!isAtLeastOneVariantItemClicked() && isTargetSelected()) // when we first highlight the target and previously no variant item is selected
-                         // we 
-        )
-}
-
-function isTargetUnclicked() {
-  return areAllVariantItemsSelected() && !isTargetSelected()
-}
-
-function getVariantItemsSelected(): string[] {
-  let variantItemsSelected: string[] = []
-  Object.keys(variantItemsSelection).forEach((wit) => {
-    if (variantItemsSelection[wit] === true) variantItemsSelected.push(wit)
-  })
-
-  return variantItemsSelected
-
-}
-
-*/
-
-
 
 
 
