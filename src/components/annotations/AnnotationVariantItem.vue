@@ -160,7 +160,9 @@ function isOnlyThisVariantActive(witness) {
 }
 
 function pickVariantItemsSelection() {
-  // we pick the variant items selection, based on whether we have an active annotation or not
+  // we use this function in order to distinguish the state of variant items selection, before clicking on a certain variant item: either
+  //   a) no variant item is selected - initial state, variantItemsSelection copies the value of initVariantItemsSelection (every variant item has false value)
+  //   b) the variant item belongs to an active annotation - use the store computed property : 'activeAnnotSelectVariantItems'
   // if we have active annotation - we use the value of 'activeAnnotSelectVariantItems' property in the annotation store
   // else: we use the initial variant items selection - all false values
   let variantItemsSelection;
