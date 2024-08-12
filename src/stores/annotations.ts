@@ -13,7 +13,9 @@ import { useConfigStore} from '@/stores/config';
 export const useAnnotationsStore = defineStore('annotations', () => {
 
     const activeTab = ref<string>('')
-    const activeAnnotations = ref<ActiveAnnotation>({} as ActiveAnnotation) 
+    const activeAnnotations = ref({}) 
+    const activeAnnotSelectVariantItems = ref({})
+    const variantItemsColors = ref({})
     const annotations = ref<Annotation[]>(null)
     const filteredAnnotations = ref<Annotation[]>([])
     const isLoading = ref<boolean>(false);
@@ -37,6 +39,18 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
     function setFilteredAnnotations(payload: Annotation[]) {
         filteredAnnotations.value = payload
+    }
+
+    function setVariantItemsColors(payload) {
+      variantItemsColors.value = payload
+    }
+
+    function setActiveAnnotSelectVariantItems(payload) {
+      activeAnnotSelectVariantItems.value = payload
+    }
+
+    function updateActiveAnnotSelectVariantItems(id, payload) {
+      activeAnnotSelectVariantItems.value[id] = payload
     }
 
     const addActiveAnnotation = (id: string) => {
@@ -120,9 +134,13 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     const removeActiveAnnotation = (id) => {
         const annotationStore = useAnnotationsStore()
         const removeAnnotation = activeAnnotations.value[id];
+
         if (!removeAnnotation) {
           return;
         }
+
+        // If removed active annotation is variant - then set all the variant items selection to false for this annotation
+
       
         const activeAnnotationsList = { ...activeAnnotations.value };
       
@@ -268,11 +286,28 @@ export const useAnnotationsStore = defineStore('annotations', () => {
             // We need to check here if the right annotations panel tab is active
             // a.k.a. it exists in the current filteredAnnotations
             const annotation = filteredAnnotations.value.find((filtered) => filtered.id === id);
+            const selector = annotation.target[0].selector.value
             if (annotation) {
               if (targetIsSelected) {
                 removeActiveAnnotation(id)
+                if (AnnotationUtils.isVariant(annotation)) {
+                  // we need to know which witnesses belong to this annotation AND are selected - so that we can remove the witnesses chips from the text
+                  const witnessesHtml = AnnotationUtils.getWitnessesHtmlEl(selector)
+                  const witnessesList = AnnotationUtils.getWitnessesList(witnessesHtml)
+                  // remove the 'witnesses chips' which are selected
+                  AnnotationUtils.removeWitnessesChipsWhenDeselectText(witnessesList, selector)
+                  delete activeAnnotSelectVariantItems.value[annotation.id]
+                }
               } else {
                 addActiveAnnotation(id)
+                if(AnnotationUtils.isVariant(annotation)) {
+                  // if annotation is variant - additionally set the variant items selection to true
+                  const variantItemsSelect = AnnotationUtils.initVariantItemsSelection(annotation, true)
+
+                  activeAnnotSelectVariantItems.value[annotation.id] = [activeAnnotations.value[annotation.id], variantItemsSelect]
+                  // add all the 'witnesses chips' for this annotation variant
+                  AnnotationUtils.addWitnessesChipsWhenSelectText(variantItemsSelect, selector, variantItemsColors.value)
+                }
               }
             }
           });
@@ -321,10 +356,10 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     }
 
     return {
-        activeTab, activeAnnotations, annotations, filteredAnnotations, isLoading,   // states
+        activeTab, activeAnnotations, activeAnnotSelectVariantItems, annotations, filteredAnnotations, isLoading, variantItemsColors,  // states
         isAllAnnotationSelected, isNoAnnotationSelected,                              // computed
-        setActiveAnnotations, setAnnotations, updateAnnotationLoading, setFilteredAnnotations,  // functions
-        addActiveAnnotation, selectFilteredAnnotations, addHighlightAttributesToText, 
+        setActiveAnnotations, setAnnotations, updateAnnotationLoading, setFilteredAnnotations, setActiveAnnotSelectVariantItems, setVariantItemsColors,  // functions
+        addActiveAnnotation, selectFilteredAnnotations, addHighlightAttributesToText, updateActiveAnnotSelectVariantItems,
         annotationLoaded, removeActiveAnnotation, resetAnnotations, initAnnotations,
         addHighlightHoverListeners, addHighlightClickListeners, getNearestParentAnnotation,
         selectAll, selectNone, discoverParentAnnotationIds, discoverChildAnnotationIds

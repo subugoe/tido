@@ -2,6 +2,7 @@ import * as Utils from '@/utils/index';
 import { getIcon } from '@/utils/icons';
 import { i18n } from '@/i18n';
 
+
 // utility functions that we can use as generic way for perform tranformation on annotations.
 
 export function addHighlightToElements(selector, root, annotationId) {
@@ -239,6 +240,7 @@ export function addWitness(selector, witness, variantItemsColors) {
   const parentEl = targetHtmlEl.parentElement
   const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
   
+
   const witHtml = createCurrWitHtml(witness, variantItemsColors[witness])
   
   if(!parentEl.children[indexOfTarget-1].classList.contains("witnesses")) { 
@@ -287,7 +289,7 @@ export function removeWitness(selector, witness) {
   witHtml[0].remove()  
 }
 
-function getWitnessesHtmlEl(selector) {
+export function getWitnessesHtmlEl(selector) {
   // selector represents the target text of a certain variant item
   // we aim to get the html element which contains the 'witnesses chips' related to the target. 
   // this html element which contains the 'witnesses chips' is located before the target element
@@ -299,6 +301,50 @@ function getWitnessesHtmlEl(selector) {
   return witnessesHtmlEl
 }
 
+export function getWitnessesList(witnessesHtml) {
+  // returns the list of witnesses(<string>) which are already selected
+  let witnessesList= []
+  Array.from(witnessesHtml.children).forEach((witnessHtml) => {
+    witnessesList.push(witnessHtml.innerHTML)
+  })
+  return witnessesList
+}
+
+export function unselectVariantItems(variantItemsSelection) {
+  let newVariantItemsSelection = {}
+  Object.keys(variantItemsSelection).forEach((wit) => {
+    newVariantItemsSelection[wit] = false
+  })
+  return newVariantItemsSelection
+}
+
+export function addWitnessesChipsWhenSelectText(variantItemsSelection, selector, variantItemsColors) {
+  // variantItemsSelection: JSON object of 'witness name': 'true' 
+  // this function aims to add all witnesses on the highlighted text when we click on the text 
+
+  Object.keys(variantItemsSelection).forEach((witness) => {
+    addWitness(selector, witness, variantItemsColors)
+  })
+}
+
+export function removeWitnessesChipsWhenDeselectText(witnessesList, selector) {
+  witnessesList.forEach((witness) => {
+    removeWitness(selector, witness)
+  })
+}
+
+export function isVariant(annotation) {
+  return annotation.body['x-content-type'] === 'Variant';
+}
+
+export function initVariantItemsSelection(annotation, value) {
+  // initialize with the boolean of 'value' variable
+  let variantItemsSelection = {}
+  annotation.body.value.forEach((variantItem) => {
+    variantItemsSelection[variantItem.witness] = value
+  } )
+  return variantItemsSelection
+}
 
 export function getAnnotationListElement(id, container) {
   return [...container.querySelectorAll('.q-item')].find((annotationItem) => {
