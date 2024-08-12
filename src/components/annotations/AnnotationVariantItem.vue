@@ -56,14 +56,14 @@ const props = withDefaults(defineProps<Props>(), {
   toggle: () => null,
 })
 
-let initVariantItemsSelection = {}
+let initialVariantItemsSelection = {}
 
   
 watch(() => props.annotation, () => { 
   
   props.annotation.body.value.forEach((variantItem) => {
     const witness = variantItem.witness
-    initVariantItemsSelection[witness] = false
+    initialVariantItemsSelection[witness] = false
   })
  })
  
@@ -161,7 +161,7 @@ function isOnlyThisVariantActive(witness) {
 
 function pickVariantItemsSelection() {
   // we use this function in order to distinguish the state of variant items selection, before clicking on a certain variant item: either
-  //   a) no variant item is selected - initial state, variantItemsSelection copies the value of initVariantItemsSelection (every variant item has false value)
+  //   a) no variant item is selected - initial state, variantItemsSelection copies the value of initialVariantItemsSelection (every variant item has false value)
   //   b) the variant item belongs to an active annotation - use the store computed property : 'activeAnnotSelectVariantItems'
   // if we have active annotation - we use the value of 'activeAnnotSelectVariantItems' property in the annotation store
   // else: we use the initial variant items selection - all false values
@@ -169,14 +169,14 @@ function pickVariantItemsSelection() {
 
   if (Object.keys(activeAnnotSelectVariantItems.value).length > 0) {
     if((props.annotation.id in activeAnnotSelectVariantItems.value) === false) {
-      variantItemsSelection = { ...initVariantItemsSelection };
+      variantItemsSelection = { ...initialVariantItemsSelection };
     }
     else {
       variantItemsSelection = activeAnnotSelectVariantItems.value[props.annotation.id][1]
     }
   }
   else {
-    variantItemsSelection = { ...initVariantItemsSelection };
+    variantItemsSelection = { ...initialVariantItemsSelection };
   }
 
   return variantItemsSelection
