@@ -346,6 +346,25 @@ export function initVariantItemsSelection(annotation, value) {
   return variantItemsSelection
 }
 
+export function getSelectAllHtmlEl() {
+  const panelsWrapperHtml = document.querySelector('.panels-wrapper')
+  const annotationsPanelHtml = getAnnotationsPanelHtml(panelsWrapperHtml)
+  const actionsHtml = annotationsPanelHtml.querySelector('.panel-header').querySelector('.actions')
+  const selectAllHtmlEl = Array.from(actionsHtml.children)[2].querySelector('div[aria-checked]')
+  return selectAllHtmlEl;
+}
+
+export function getAnnotationsPanelHtml(panelsWrapperHtml) {
+  const panelsArray = Array.from(panelsWrapperHtml.children)
+  for (let i = 0; i < panelsArray.length; i++) {
+    const caption = panelsArray[i].querySelector('.caption')
+    if (caption.querySelector('span').innerHTML === 'Annotations') {
+      return panelsArray[i];
+    }
+  }
+}
+
+
 export function getAnnotationListElement(id, container) {
   return [...container.querySelectorAll('.q-item')].find((annotationItem) => {
     if (!annotationItem.hasAttribute('data-annotation-id')) return false;

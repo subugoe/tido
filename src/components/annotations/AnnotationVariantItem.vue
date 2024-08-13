@@ -184,6 +184,11 @@ function pickVariantItemsSelection() {
 
 function isVariantItemActive(witness): boolean{
 
+  const selectAllHtmlEl = AnnotationUtils.getSelectAllHtmlEl()
+  if (selectAllHtmlEl.getAttribute('aria-checked') === "true"){
+    return true;
+  }
+
   if(Object.keys(activeAnnotSelectVariantItems.value).length > 0) {
       if( (props.annotation.id in activeAnnotSelectVariantItems.value) === false) {
         return false
