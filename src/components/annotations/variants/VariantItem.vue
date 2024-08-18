@@ -58,23 +58,23 @@ const props = withDefaults(defineProps<Props>(), {
 
 let initialVariantItemsSelection = {}
 
-  
-watch(() => props.annotation, () => { 
-  
+
+watch(() => props.annotation, () => {
+
   props.annotation.body.value.forEach((variantItem) => {
     const witness = variantItem.witness
     initialVariantItemsSelection[witness] = false
   })
  })
- 
+
 
 function handleClick(witness: string, i: number) {
   // if at least one variant item is selected, then we don't toggle this annotation
   // for each variant item: we should save a state of selected or not, so that to show the icon or not...
-  
+
   // get the number of keys in the variantItemsColors - if the witness is not in the variantItemsColors then we request the next color - which has index the same as this count
-  
- 
+
+
   const witnessColor = getWitnessColor(witness)
   if (witness in variantItemsColors.value === false) {
     updateVariantItemsColors(witness, witnessColor)
@@ -88,7 +88,7 @@ function handleClick(witness: string, i: number) {
   }
 
   if ((isOnlyThisVariantActive(witness)) && (isVariantItemActive(witness))) {
-    // when we have only one variant item of a certain variant object selected and then we deselect it -> remove the blue highlight from the text 
+    // when we have only one variant item of a certain variant object selected and then we deselect it -> remove the blue highlight from the text
     props.toggle(props.annotation)
   }
 
@@ -121,7 +121,7 @@ function allocateWitnessColorInVariantItem(witness: string): string {
 }
 
 function getWitnessColor(witness): string {
-     
+
   let indexColor;
   if (Object.keys(variantItemsColors.value).length === 0){
     // the first variant item to be selected
@@ -195,6 +195,8 @@ function isVariantItemActive(witness): boolean{
 
   return false
 }
+
+
 
 
 

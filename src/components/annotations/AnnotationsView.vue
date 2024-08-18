@@ -1,14 +1,19 @@
 <template>
   <div class="annotations-view t-px-4 t-pt-4">
-    <AnnotationsList
-      v-if="filteredAnnotations.length"
-      class="custom-font"
-      :active-annotation="activeAnnotations"
-      :config="config"
-      :configured-annotations="filteredAnnotations"
-      :toggle="toggle"
-      :types="types"
-    />
+    <template v-if="filteredAnnotations.length">
+      <VariantsList
+        v-if="hasVariants()"
+        class="custom-font"
+        :annotations="filteredAnnotations"
+        :types="types"
+      />
+      <AnnotationsList
+        v-else
+        class="custom-font"
+        :annotations="filteredAnnotations"
+        :types="types"
+      />
+    </template>
     <MessageBox
       v-else
       :message="$t(message)"
@@ -30,6 +35,7 @@ import * as AnnotationUtils from '@/utils/annotations';
 import { useConfigStore } from '@/stores/config';
 import { useAnnotationsStore } from '@/stores/annotations';
 import { useContentsStore } from '@/stores/contents';
+import VariantsList from "@/components/annotations/variants/VariantsList.vue";
 
 const configStore = useConfigStore();
 const annotationStore = useAnnotationsStore();
@@ -44,7 +50,6 @@ const message = ref('no_annotations_in_view');
 
 const config = computed(() => configStore.config);
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
-const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
 const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
 const activeContentUrl = computed<string>(() => contentStore.activeContentUrl);
 const updateTextHighlighting = computed(() =>
@@ -65,23 +70,6 @@ watch(
   { immediate: true },
 );
 
-function addAnnotation(id: string) {
-  annotationStore.addActiveAnnotation(id);
-}
-
-function removeAnnotation(id: string) {
-  annotationStore.removeActiveAnnotation(id);
-}
-
-function toggle({ id }) {
-  const exists = !!activeAnnotations.value[id];
-  if (exists) {
-    removeAnnotation(id);
-  } else {
-    addAnnotation(id);
-  }
-}
-
 function highlightTargetsLevel0() {
   const mergedSelector = filteredAnnotations.value
     .reduce((acc, cur) => {
@@ -97,4 +85,9 @@ function highlightTargetsLevel0() {
     AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
   }
 }
+
+function hasVariants() {
+  return props.types.findIndex(type => type.name === 'Variant') > -1;
+}
+
 </script>

@@ -1,11 +1,10 @@
 <template>
   <div class="annotations-list t-overflow-auto">
     <div
-      v-for="annotation in configuredAnnotations"
+      v-for="annotation in annotations"
       :key="annotation.id"
     >
       <div
-        v-if="!isVariant(annotation)"
         class="t-flex t-items-center t-space-x-2 item"
         :class="[
           't-py-2 t-px-3 t-mb-1 t-rounded-md',
@@ -13,25 +12,13 @@
           { 't-bg-gray-300 dark:t-bg-gray-600 active': isActive(annotation) }]"
         :data-annotation-id="annotation.id"
         @click="isText(annotation) ? ()=>{} : toggle(annotation)"
-      > 
+      >
         <AnnotationIcon
           v-if="!isText(annotation)"
           :name="getIconName(annotation.body['x-content-type'])"
         />
         <span v-html="annotation.body.value" />
       </div>
-
-      <div v-else>
-        <AnnotationVariantItem
-          :annotation="annotation"
-          :is-active="isActive"
-          :toggle="toggle"
-        />
-      </div>
-       
-      <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
-    
-        
     </div>
   </div>
 </template>
@@ -40,24 +27,24 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
-import AnnotationVariantItem from '@/components/annotations/AnnotationVariantItem.vue'
+import {useAnnotationsStore} from "@/stores/annotations";
 
 interface AnnotationTypesMapping {
   [key: string]: string | 'annotation'
  }
 
 export interface Props {
-  activeAnnotation: ActiveAnnotation
-  configuredAnnotations: Annotation[],
-  toggle: (annotation: Annotation) => void,
+  annotations: Annotation[],
   types: {name: string, icon: string, annotationType: string}[]
 }
 
+const annotationStore = useAnnotationsStore();
+
 const props = withDefaults(defineProps<Props>(), {
-  activeAnnotation: () => <ActiveAnnotation>{},
-  configuredAnnotations: () => <Annotation[]> [],
-  toggle: () => null,
-})
+  annotations: () => <Annotation[]> [],
+});
+
+const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
 
 const annotationTypesMapping = computed<AnnotationTypesMapping>(() => (
   // it returns an object with a varying number of 'key', 'value' pairs
@@ -68,7 +55,7 @@ const annotationTypesMapping = computed<AnnotationTypesMapping>(() => (
 ));
 
 function isActive(annotation: Annotation): boolean {
-  return !!props.activeAnnotation[annotation.id];
+  return !!activeAnnotations.value[annotation.id];
 }
 function isText(annotation: Annotation): boolean {
   return annotationTypesMapping.value[annotation.body['x-content-type']] === 'text';
@@ -78,20 +65,20 @@ function getIconName(typeName: string): string {
   return props.types.find(({ name }) => name === typeName)?.icon || 'pencil';
 }
 
-function isVariant(annotation) {
-  return annotation.body['x-content-type'] === 'Variant';
+function addAnnotation(id: string) {
+  annotationStore.addActiveAnnotation(id);
 }
 
-function isVariantsTabOpened() {
-  return props.configuredAnnotations[0].body['x-content-type'] === 'Variant';
+function removeAnnotation(id: string) {
+  annotationStore.removeActiveAnnotation(id);
+}
+function toggle({ id }) {
+  const exists = !!activeAnnotations.value[id];
+  if (exists) {
+    removeAnnotation(id);
+  } else {
+    addAnnotation(id);
+  }
 }
 
 </script>
-
-
-
-<style lang="scss" scoped>
-
-
-
-</style>
