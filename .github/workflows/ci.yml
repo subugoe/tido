@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "develop", "main-variants" ]
   pull_request:
     branches: [ "develop", "main", "main-variants" ]
 jobs:
@@ -37,13 +37,16 @@ jobs:
         restore-keys: |
           cypress-${{ runner.os }}-cypress-node${{ matrix.node-version }}-
 
-    - name: Install dependencies
+    - name: Setup node
       uses: actions/setup-node@v4
       with:
        node-version: ${{ matrix.node-version }}
+    - name: Install dependencies
+      run: npm ci
+    - name: Run Linting
+      run: npm run lint
     - name: Run tests
       run: |
-        npm ci
         npm run start:mock-api &
         npm run test
       # - name: Save test video folder
