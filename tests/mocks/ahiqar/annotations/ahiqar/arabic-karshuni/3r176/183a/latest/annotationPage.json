@@ -285,24 +285,10 @@
         "x-content-type": "Variant",
         "type": "TextualBody",
         "format": "text/plain",
-        "value": [
-          {
-            "witness": "Cod. Arab. 236",
-            "entry": "omisit"
-          },
-          {
-            "witness": "DFM 614",
-            "entry": "omisit"
-          },
-          {
-            "witness": "Ming. syr. 258",
-            "entry": "اللبان"
-          },
-          {
-            "witness": "Sach. 339",
-            "entry": "البان"
-          }
-        ]
+        "value": {
+          "witness": "Cod. Arab. 236",
+          "entry": "omisit"
+        }
       },
       "target": [
         {
@@ -314,31 +300,83 @@
         }
       ],
       "type": "Annotation",
-      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_1"
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_1_0"
     },
     {
       "body": {
         "x-content-type": "Variant",
         "type": "TextualBody",
         "format": "text/plain",
-        "value": [
-          {
-            "witness": "Cod. Arab. 236",
-            "entry": "omisit"
+        "value": {
+          "witness": "DFM 614",
+          "entry": "omisit"
+        }
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l41l2_3"
           },
-          {
-            "witness": "DFM 614",
-            "entry": "omisit"
+          "source": "PLACEHOLDER \u2192 TARGET CONTENT HTML IRI"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_1_1"
+    },
+    {
+      "body": {
+        "x-content-type": "Variant",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": {
+          "witness": "Ming. syr. 258",
+          "entry": "اللبان"
+        }
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l41l2_3"
           },
-          {
-            "witness": "Ming. syr. 258",
-            "entry": "والقرفه"
+          "source": "PLACEHOLDER \u2192 TARGET CONTENT HTML IRI"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_1_2"
+    },
+    {
+      "body": {
+        "x-content-type": "Variant",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": {
+          "witness": "Sach. 339",
+          "entry": "البان"
+        }
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l41l2_3"
           },
-          {
-            "witness": "Sach. 339",
-            "entry": "omisit"
-          }
-        ]
+          "source": "PLACEHOLDER \u2192 TARGET CONTENT HTML IRI"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_1_3"
+    },
+    {
+      "body": {
+        "x-content-type": "Variant",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": {
+          "witness": "Cod. Arab. 236",
+          "entry": "omisit"
+        }
       },
       "target": [
         {
@@ -350,31 +388,83 @@
         }
       ],
       "type": "Annotation",
-      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2"
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_0"
     },
     {
       "body": {
         "x-content-type": "Variant",
         "type": "TextualBody",
         "format": "text/plain",
-        "value": [
-          {
-            "witness": "Cod. Arab. 236",
-            "entry": "omisit"
+        "value": {
+          "witness": "DFM 614",
+          "entry": "omisit"
+        }
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_2"
           },
-          {
-            "witness": "DFM 614",
-            "entry": "omisit"
+          "source": "PLACEHOLDER \u2192 TARGET CONTENT HTML IRI"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_1"
+    },
+    {
+      "body": {
+        "x-content-type": "Variant",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": {
+          "witness": "Ming. syr. 258",
+          "entry": "والقرفه"
+        }
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_2"
           },
-          {
-            "witness": "Ming. syr. 258",
-            "entry": "والكمكام"
+          "source": "PLACEHOLDER \u2192 TARGET CONTENT HTML IRI"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_2"
+    },
+    {
+      "body": {
+        "x-content-type": "Variant",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": {
+          "witness": "Sach. 339",
+          "entry": "omisit"
+        }
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_2"
           },
-          {
-            "witness": "Sach. 339",
-            "entry": "والكمكام"
-          }
-        ]
+          "source": "PLACEHOLDER \u2192 TARGET CONTENT HTML IRI"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_3"
+    },
+    {
+      "body": {
+        "x-content-type": "Variant",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": {
+          "witness": "Cod. Arab. 236",
+          "entry": "omisit"
+        }
       },
       "target": [
         {
@@ -386,7 +476,73 @@
         }
       ],
       "type": "Annotation",
-      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3"
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0"
+    },
+    {
+      "body": {
+        "x-content-type": "Variant",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": {
+          "witness": "DFM 614",
+          "entry": "omisit"
+        }
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_3"
+          },
+          "source": "PLACEHOLDER \u2192 TARGET CONTENT HTML IRI"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_1"
+    },
+    {
+      "body": {
+        "x-content-type": "Variant",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": {
+          "witness": "Ming. syr. 258",
+          "entry": "والكمكام"
+        }
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_3"
+          },
+          "source": "PLACEHOLDER \u2192 TARGET CONTENT HTML IRI"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_2"
+    },
+    {
+      "body": {
+        "x-content-type": "Variant",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": {
+          "witness": "Sach. 339",
+          "entry": "والكمكام"
+        }
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_3"
+          },
+          "source": "PLACEHOLDER \u2192 TARGET CONTENT HTML IRI"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_3"
     }
   ],
   "refs": [
