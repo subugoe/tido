@@ -110,4 +110,6 @@ export default {
   not_found: 'Nicht gefunden',
   unauthorized: 'Nicht autorisiert',
   unknown_error: 'Unbekannter Fehler',
+  details: 'Details'
+
 };

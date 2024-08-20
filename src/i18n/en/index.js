@@ -114,4 +114,5 @@ export default {
   not_found: 'Not found',
   unauthorized: 'Unauthorized',
   unknown_error: 'Unknown Error',
+  details: 'Details'
 };

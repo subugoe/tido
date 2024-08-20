@@ -6,18 +6,27 @@
     >
       <VariantItem
         :annotation="annotation"
-        :is-active="isActive"
+        :is-active="isActive(annotation)"
         :toggle="toggle"
+        @select="addAnnotation(annotation.id)"
+        @unselect="removeAnnotation(annotation.id)"
+        @show-details="openDetailsDialog"
       />
     </div>
   </div>
+  <BaseDialog v-model="variantsDetailsDialogOpen">
+    <ActiveVariantsDetails />
+  </BaseDialog>
 </template>
 
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import VariantItem from "@/components/annotations/variants/VariantItem.vue";
 import {useAnnotationsStore} from "@/stores/annotations";
+import BaseDialog from "@/components/base/BaseDialog.vue";
+import ActiveVariantsDetails from "@/components/annotations/variants/ActiveVariantsDetails.vue";
+import { getItemColorBasedOnIndex } from '@/utils/color';
 
 
 export interface Props {
@@ -26,13 +35,28 @@ export interface Props {
 }
 
 const annotationStore = useAnnotationsStore();
+const variantsDetailsDialogOpen = ref(false);
 
-
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   annotations: () => <Annotation[]> [],
 })
 
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
+
+onMounted(() => {
+  allocateWitnessColorInVariantItem()
+})
+
+function allocateWitnessColorInVariantItem() {
+  const colors = props.annotations.reduce((acc, cur: Annotation, i) => {
+    const witness = cur.body.value.witness
+    if (!acc[witness]) {
+      acc[witness] = getItemColorBasedOnIndex(i)
+    }
+    return acc
+  }, {})
+  annotationStore.setVariantItemsColors(colors)
+}
 
 function isActive(annotation: Annotation): boolean {
   return !!activeAnnotations.value[annotation.id];
@@ -52,6 +76,10 @@ function toggle({ id }) {
   } else {
     addAnnotation(id);
   }
+}
+
+function openDetailsDialog() {
+  variantsDetailsDialogOpen.value = true;
 }
 
 </script>
