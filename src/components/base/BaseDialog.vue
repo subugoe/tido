@@ -24,10 +24,10 @@ const emit = defineEmits<{(event: 'update:modelValue', payload: boolean): void;
     :append-to="configStore.config.container + ' .tido > *'"
     :pt="{
       root: {
-        class: 't-relative t-bg-white dark:t-bg-gray-800 t-p-4 t-rounded-lg lg:t-min-w-[33%] t-shadow-lg dark:t-border dark:t-border-gray-700'
+        class: 't-relative t-bg-white dark:t-bg-gray-800 t-p-4 t-rounded-lg lg:t-min-w-[33%] t-max-h-[80%] t-shadow-lg dark:t-border dark:t-border-gray-700'
       },
       header: {
-        class: 't-flex'
+        class: 't-flex t-mb-4'
       },
       headerIcons: {
         class: 't-ml-auto'

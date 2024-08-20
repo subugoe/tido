@@ -114,5 +114,7 @@ export default {
   not_found: 'Not found',
   unauthorized: 'Unauthorized',
   unknown_error: 'Unknown Error',
-  details: 'Details'
+  details: 'Details',
+  selected_variants: 'Selected Variants',
+  original: 'Original'
 };

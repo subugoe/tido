@@ -110,6 +110,8 @@ export default {
   not_found: 'Nicht gefunden',
   unauthorized: 'Nicht autorisiert',
   unknown_error: 'Unbekannter Fehler',
-  details: 'Details'
+  details: 'Details',
+  selected_variants: 'Ausgewählte Varianten',
+  original: 'Original'
 
 };

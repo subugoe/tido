@@ -14,7 +14,10 @@
       />
     </div>
   </div>
-  <BaseDialog v-model="variantsDetailsDialogOpen">
+  <BaseDialog
+    v-model="variantsDetailsDialogOpen"
+    :title="$t('selected_variants')"
+  >
     <ActiveVariantsDetails />
   </BaseDialog>
 </template>
