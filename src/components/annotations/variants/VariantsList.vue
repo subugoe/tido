@@ -8,6 +8,7 @@
         :annotation="annotation"
         :is-active="isActive(annotation)"
         :toggle="toggle"
+        :witness-color="getWitnessColor(annotation.body.value.witness)"
         @select="addAnnotation(annotation.id)"
         @unselect="removeAnnotation(annotation.id)"
         @show-details="openDetailsDialog"
@@ -24,7 +25,7 @@
 
 
 <script setup lang="ts">
-import {computed, onMounted, ref} from 'vue';
+import {computed, ref} from 'vue';
 import VariantItem from "@/components/annotations/variants/VariantItem.vue";
 import {useAnnotationsStore} from "@/stores/annotations";
 import BaseDialog from "@/components/base/BaseDialog.vue";
@@ -46,9 +47,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
 
-onMounted(() => {
-  allocateWitnessColorInVariantItem()
-})
+allocateWitnessColorInVariantItem()
+
 
 function allocateWitnessColorInVariantItem() {
   const colors = props.annotations.reduce((acc, cur: Annotation, i) => {
@@ -83,6 +83,10 @@ function toggle({ id }) {
 
 function openDetailsDialog() {
   variantsDetailsDialogOpen.value = true;
+}
+
+function getWitnessColor(witness: string) {
+  return annotationStore.variantItemsColors[witness];
 }
 
 </script>

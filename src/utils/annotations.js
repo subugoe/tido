@@ -1,6 +1,7 @@
 import * as Utils from '@/utils/index';
 import { getIcon } from '@/utils/icons';
 import { i18n } from '@/i18n';
+import colors from "tailwindcss/colors";
 
 
 // utility functions that we can use as generic way for perform tranformation on annotations.
@@ -262,12 +263,14 @@ export function addWitness(targetHtmlEl, witness, color) {
   }
 }
 
-function createCurrWitHtml(witness, borderColor) {
+function createCurrWitHtml(witness, witnessColor) {
   // create an html element of the selected witness
   const witHtml = document.createElement("span");
   witHtml.innerHTML = witness
-  witHtml.classList.add('t-rounded-3xl', 't-box-border', 't-w-75', 't-h-8', 't-border-2', 't-p-[2px]', 't-text-sm', 't-ml-[3px]')
-  witHtml.style.borderColor = borderColor
+  witHtml.classList.add('t-rounded-3xl', 't-box-border', 't-h-8', 't-py-0.5', 't-px-1.5', 't-text-xs', 't-font-semibold', 't-ml-[3px]')
+  witHtml.style.background = colors[witnessColor]['100']
+  witHtml.style.color = colors[witnessColor]['600']
+
 
   return witHtml
 }
