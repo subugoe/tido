@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.5](https://github.com/subugoe/tido/compare/v4.0.4...v4.0.5) (2024-08-21)
+
+
+### Bug Fixes
+
+* move the pinia instance to Tido function for local usage ([8861fa2](https://github.com/subugoe/tido/commit/8861fa2978ffcb247d22c14a8c9295013b34fe83))
+
 ### [4.0.4](https://github.com/subugoe/tido/compare/v4.0.3...v4.0.4) (2024-07-17)
 
 

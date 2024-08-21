@@ -1,6 +1,6 @@
 {
   "name": "tido",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "description": "Text Viewer for Digital Objects (TIDO)",
   "productName": "TIDO",
   "keywords": [
@@ -25,6 +25,7 @@
     "Nils Windisch"
   ],
   "type": "module",
+  "main": "dist/tido.js",
   "bugs": {
     "url": "https://github.com/subugoe/tido/issues"
   },
