@@ -1,6 +1,6 @@
 import { createApp, h } from 'vue';
 import PrimeVue from 'primevue/config';
-import { createPinia } from 'pinia'
+import { createPinia } from 'pinia';
 import { i18n } from './i18n';
 import App from './App.vue';
 
@@ -12,13 +12,14 @@ import { getRGBColor } from '@/utils/color';
 import { useToggle } from '@vueuse/core/index';
 import { isDark } from '@/utils/is-dark';
 
-const pinia = createPinia()
 
 function generateId() {
   return Math.random().toString(36).slice(2, 16);
 }
 
 window.Tido = function Tido(config = {}) {
+  const pinia = createPinia();
+
   this.config = { ...config };
 
   this.app = createApp({
