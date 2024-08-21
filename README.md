@@ -3,6 +3,12 @@
 Text vIewer for Digital Objects.
 With this project we provide a highly configurable viewer for projects that implement the [TextAPI](https://subugoe.pages.gwdg.de/emo/text-api/).
 
+## Demo
+
+Please visit our [demo page](https://subugoe.github.io/tido/) where you can run TIDO with your own TextAPI endpoint
+and also view our production examples.
+
+
 ## Overview
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -51,11 +57,6 @@ With this project we provide a highly configurable viewer for projects that impl
 - [Authors](#authors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-## Demo
-
-Please visit our [demo page](https://subugoe.github.io/tido/) where you can run TIDO with your own TextAPI endpoint
-and also view our production examples.
 
 
 ## Getting Started
@@ -404,7 +405,7 @@ tido.someMethod()
 
 | Name     | Arguments | Type            | Description                                                                                |
 |----------|-----------|-----------------|--------------------------------------------------------------------------------------------|
-| setTheme | name      | `dark`, `light` | Sets color theme. The attribute `colo-scheme` at the container element will be overridden. |
+| setTheme | name      | `dark`, `light` | Sets color theme. The attribute `color-scheme` at the container element will be overridden. |
 
 
 
