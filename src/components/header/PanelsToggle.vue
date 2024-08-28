@@ -4,6 +4,7 @@
       <BaseDropdown
         v-model="showDropdown"
         :button-text="$t('show_hide_panels')"
+        open-right
       >
         <div
           v-for="({ show, label }, i) in toggles"

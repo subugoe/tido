@@ -1,65 +1,41 @@
 <template>
-  <div class="annotations-list t-overflow-auto">
-    <div
-      v-for="annotation in annotations"
-      :key="annotation.id"
-    >
-      <VariantItem
-        :annotation="annotation"
-        :is-active="isActive(annotation)"
-        :toggle="toggle"
-        :witness-color="getWitnessColor(annotation.body.value.witness)"
-        @select="addAnnotation(annotation.id)"
-        @unselect="removeAnnotation(annotation.id)"
-        @show-details="openDetailsDialog"
-      />
-    </div>
-  </div>
-  <BaseDialog
-    v-model="variantsDetailsDialogOpen"
-    :title="$t('selected_variants')"
+  <div
+    v-if="filteredAnnotations.length > 0"
+    class="annotations-list t-overflow-visible"
   >
-    <ActiveVariantsDetails />
-  </BaseDialog>
+    <VariantItem
+      v-for="annotation in filteredAnnotations"
+      :key="annotation.id"
+      :annotation="annotation"
+      :is-active="isActive(annotation)"
+      :toggle="toggle"
+      :witness-color="getWitnessColor(annotation.body.value.witness)"
+      @select="addAnnotation(annotation.id)"
+      @unselect="removeAnnotation(annotation.id)"
+      @show-details="openDetailsDialog"
+    />
+  </div>
+  <MessageBox
+    v-else
+    :message="$t('no_annotations_in_view')"
+    :title="$t('no_annotations_available')"
+    type="info"
+  />
 </template>
 
 
 <script setup lang="ts">
-import {computed, ref} from 'vue';
+import { computed } from 'vue';
 import VariantItem from "@/components/annotations/variants/VariantItem.vue";
 import {useAnnotationsStore} from "@/stores/annotations";
-import BaseDialog from "@/components/base/BaseDialog.vue";
-import ActiveVariantsDetails from "@/components/annotations/variants/ActiveVariantsDetails.vue";
-import { getItemColorBasedOnIndex } from '@/utils/color';
-
-
-export interface Props {
-  annotations: Annotation[],
-  types: {name: string, icon: string, annotationType: string}[]
-}
+import MessageBox from "@/components/MessageBox.vue";
 
 const annotationStore = useAnnotationsStore();
-const variantsDetailsDialogOpen = ref(false);
 
-const props = withDefaults(defineProps<Props>(), {
-  annotations: () => <Annotation[]> [],
-})
 
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
+const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
 
-allocateWitnessColorInVariantItem()
-
-
-function allocateWitnessColorInVariantItem() {
-  const colors = props.annotations.reduce((acc, cur: Annotation, i) => {
-    const witness = cur.body.value.witness
-    if (!acc[witness]) {
-      acc[witness] = getItemColorBasedOnIndex(i)
-    }
-    return acc
-  }, {})
-  annotationStore.setVariantItemsColors(colors)
-}
 
 function isActive(annotation: Annotation): boolean {
   return !!activeAnnotations.value[annotation.id];
@@ -79,10 +55,6 @@ function toggle({ id }) {
   } else {
     addAnnotation(id);
   }
-}
-
-function openDetailsDialog() {
-  variantsDetailsDialogOpen.value = true;
 }
 
 function getWitnessColor(witness: string) {

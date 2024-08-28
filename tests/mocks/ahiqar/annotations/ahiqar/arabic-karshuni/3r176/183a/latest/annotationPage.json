@@ -286,28 +286,6 @@
         "type": "TextualBody",
         "format": "text/plain",
         "value": {
-          "witness": "Cod. Arab. 236",
-          "entry": "omisit"
-        }
-      },
-      "target": [
-        {
-          "selector": {
-            "type": "CssSelector",
-            "value": "#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l41l2_3"
-          },
-          "source": "PLACEHOLDER \u2192 TARGET CONTENT HTML IRI"
-        }
-      ],
-      "type": "Annotation",
-      "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_1_0"
-    },
-    {
-      "body": {
-        "x-content-type": "Variant",
-        "type": "TextualBody",
-        "format": "text/plain",
-        "value": {
           "witness": "DFM 614",
           "entry": "omisit"
         }

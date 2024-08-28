@@ -18,6 +18,10 @@ const components = {
   5: {
     component: 'AnnotationsView',
     label: 'annotations',
+  },
+  6: {
+    component: 'VariantsView',
+    label: 'variants',
   }
 };
 

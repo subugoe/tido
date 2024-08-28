@@ -134,6 +134,7 @@ import { useContentsStore } from '@/stores/contents';
 import MetadataView from '@/components/metadata/MetadataView.vue';
 import TreeView from '@/components/TreeView.vue';
 import AnnotationsView from '@/components/annotations/AnnotationsView.vue';
+import VariantsView from '@/components/annotations/variants/VariantsView.vue';
 import ContentView from '@/components/ContentView.vue';
 import ImageView from '@/components/ImageView.vue';
 import PanelZoomAction from '@/components/panels/actions/PanelZoomAction.vue';
@@ -150,6 +151,7 @@ import * as AnnotationUtils from '@/utils/annotations'
 export default {
   components: {
     AnnotationsView,
+    VariantsView,
     ContentView,
     ImageView,
     LoadingSpinner,
@@ -216,15 +218,17 @@ export default {
           case 'ContentView':
             return createContentView(view, i);
           case 'TreeView':
-            return createTreeView(view, i);
+            return createTreeView(view);
           case 'MetadataView':
-            return createMetadataView(view, i);
+            return createMetadataView(view);
           case 'ImageView':
-            return createImageView(view, i);
+            return createImageView(view);
           case 'AnnotationsView':
             return createAnnotationsView(view, i);
+          case 'VariantsView':
+            return createVariantsView(view, i);
           default:
-            return createDefaultView(view, i);
+            return createDefaultView(view);
         }
       });
     }
@@ -309,7 +313,55 @@ export default {
       tabs.value = [...tabs.value, {
         component,
         label,
-        props: { url, ...connector.options },
+        props: { ...connector.options },
+        actions,
+      }];
+    }
+
+    function createVariantsView(view, i) {
+      const annotationStore = useAnnotationsStore();
+      const { connector, label } = view;
+      const { component } = findComponent(connector.id);
+
+      const selected = false;
+      const events = {
+        update: (value) => {
+          if (value === null) return;
+          if (value) annotationStore.selectAll();
+          else annotationStore.selectNone();
+        },
+      };
+
+      unsubscribe.value = annotationStore.$onAction(({ name, args }) => {
+        if (tabs.value.length
+          && tabs.value[0]?.actions?.length
+          && (name === 'setActiveAnnotations')) {
+          const activeAnnotations = args[0];
+          const activeAmount = Object.keys(activeAnnotations).length;
+          const filteredAmount = annotationStore.filteredAnnotations.length;
+          let newSelected = activeAmount > 0 && activeAmount === filteredAmount;
+
+          if (!newSelected && activeAmount > 0) newSelected = null;
+
+          if (tabs.value[i].actions[0].props.selected !== newSelected) {
+            tabs.value[i].actions[0].props.selected = newSelected;
+          }
+        }
+      });
+
+      const actions = [{
+        component: 'PanelToggleAction',
+        props: {
+          selected,
+          label: t('select_all'),
+        },
+        events,
+      }];
+
+      tabs.value = [...tabs.value, {
+        component,
+        label,
+        props: { ...connector.options },
         actions,
       }];
     }
@@ -371,7 +423,7 @@ export default {
       if (index !==2) {
         AnnotationUtils.removeChipsFromOtherViews()
       }
-      
+
       emit('active-view', activeTabIndex.value);
     }
 

@@ -39,6 +39,7 @@ if (props.rounded === null && props.text !== '') _rounded = false;
 if (props.rounded !== null) _rounded = props.rounded;
 
 const classes = {};
+const styles = '';
 
 if (props.display === 'link') {
   _iconPosition = 'right';
@@ -100,7 +101,7 @@ classes['t-bg-transparent hover:t-bg-gray-300/30 dark:hover:t-bg-gray-600 '
     <template v-if="_icon && _iconPosition === 'left'">
       <BaseIcon
         :name="_icon"
-        class="t-text-base t-me-1"
+        class="t-text-base t-me-1.5"
       />
     </template>
     <template v-if="isIconOnly">
@@ -115,7 +116,7 @@ classes['t-bg-transparent hover:t-bg-gray-300/30 dark:hover:t-bg-gray-600 '
     <template v-if="_icon && _iconPosition === 'right'">
       <BaseIcon
         :name="_icon"
-        class="t-text-base t-ms-1"
+        class="t-text-base t-ms-1.5"
       />
     </template>
   </button>

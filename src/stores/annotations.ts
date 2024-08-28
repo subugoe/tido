@@ -14,6 +14,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const activeAnnotations = ref({})
   const variantItemsColors = ref({})
   const annotations = ref<Annotation[]>(null)
+  const witnesses = ref<Witness[]>(null)
   const filteredAnnotations = ref<Annotation[]>([])
   const isLoading = ref<boolean>(false);
 
@@ -21,16 +22,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     activeAnnotations.value = annotations
   }
 
-  function setAnnotations(payload: Annotation[]) {
-    annotations.value = payload
-  }
-
   function updateAnnotationLoading(payload: boolean) {
     isLoading.value = payload;
-  }
-
-  function setFilteredAnnotations(payload: Annotation[]) {
-    filteredAnnotations.value = payload
   }
 
   function setVariantItemsColors(payload) {
@@ -59,6 +52,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
       if (AnnotationUtils.isVariant(newActiveAnnotation)) {
         if (AnnotationUtils.getCurrentLevel(target) <= 0) {
+          // Since variants can have multiple targets, we raise the level only once
           Utils.highlightTargets(selector, {operation: 'INC'});
         }
         addVariantAnnotation(target, newActiveAnnotation);
@@ -83,13 +77,12 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     Utils.addWitness(targetElement, witness, variantItemsColors.value[witness])
   }
 
-  const selectFilteredAnnotations = (types: AnnotationType[]): boolean | void => {
+  const selectFilteredAnnotations = (types: AnnotationType[]): void => {
     const configStore = useConfigStore()
     const activeContentType: string = configStore.activeContentType
-    let filteredAnnotations: Annotation[] = [];
 
     if (annotations.value !== null) {
-      filteredAnnotations = types.length === 0 ? annotations.value : annotations.value.filter(
+      filteredAnnotations.value = types.length === 0 ? annotations.value : annotations.value.filter(
         (annotation) => {
           const type: AnnotationType = types.find(({name}) => name === annotation.body['x-content-type']);
           // First we check if annotation fits to the current view
@@ -111,8 +104,50 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         },
       );
     }
-    setFilteredAnnotations(filteredAnnotations)
   };
+
+  const filterAnnotationsByWitnesses = (witnesses: string[]) => {
+
+    // Deactivate annotations that are not included in the witnesses list
+    Object
+      .keys(activeAnnotations.value)
+      .filter(key => !witnesses.includes(activeAnnotations.value[key].body.value.witness))
+      .forEach(key => removeActiveAnnotation(key))
+
+    const activeIds = Object.keys(activeAnnotations.value)
+
+    // Remove highlighting on all other annotations completely (reset all)
+    filteredAnnotations.value
+      .filter(annotation => !activeIds.includes(annotation.id))
+      .forEach(annotation => {
+        const selector = AnnotationUtils.generateTargetSelector(annotation);
+        if (!selector) return;
+        const selectorIsActive = activeIds.filter(id => selector === AnnotationUtils.generateTargetSelector(activeAnnotations.value[id])).length > 0;
+        if (!selectorIsActive) {
+          AnnotationUtils.highlightTargets(selector, {level: -1});
+        }
+      })
+
+    // Set filtered annotations
+    filteredAnnotations.value = annotations.value.filter((annotation) => {
+      return AnnotationUtils.isVariant(annotation) && witnesses.includes(annotation.body.value.witness)
+    })
+
+    // When filtering by witness it can happen that a target is used for some other active annotation item,
+    // In that case, we want to keep the level of highlighting it had and
+
+    filteredAnnotations.value
+      .filter(annotation => !activeIds.includes(annotation.id))
+      .forEach(annotation => {
+        const selector = AnnotationUtils.generateTargetSelector(annotation);
+        if (!selector) return;
+        const selectorIsActive = activeIds.filter(id => selector === AnnotationUtils.generateTargetSelector(activeAnnotations.value[id])).length > 0;
+
+        if (!selectorIsActive && AnnotationUtils.getCurrentLevel(document.querySelector(selector)) < 0) {
+          AnnotationUtils.highlightTargets(selector, {level: 0});
+        }
+      })
+  }
 
   const addHighlightAttributesToText = (dom) => {
     if (annotations.value !== null) {
@@ -126,8 +161,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     }
   };
 
-  const annotationLoaded = (annotations) => {
-    setAnnotations(annotations)
+  const annotationLoaded = ({ items, refs }) => {
+    annotations.value = items
+    witnesses.value = refs
     updateAnnotationLoading(false)
   };
 
@@ -149,7 +185,11 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
     if (selector) {
       if (AnnotationUtils.isVariant(removeAnnotation)) {
-        if (AnnotationUtils.getCurrentLevel(document.querySelector(selector)) > 0) {
+        if (AnnotationUtils.getCurrentLevel(document.querySelector(selector)) > 0
+          && Object.keys(activeAnnotations.value).findIndex(key => {
+            const sel = AnnotationUtils.generateTargetSelector(activeAnnotations.value[key])
+            return sel === selector
+          }) === -1) {
           AnnotationUtils.highlightTargets(selector, {operation: 'DEC'});
         }
         removeVariantAnnotation(selector, removeAnnotation);
@@ -186,17 +226,17 @@ export const useAnnotationsStore = defineStore('annotations', () => {
       const annotations = await request(url);
 
       if (!annotations.first) {
-        annotationLoaded([])
+        annotationLoaded({ items: [], refs: [] })
         return;
       }
 
       const current = await request(annotations.first);
 
       if (Array.isArray(current.items)) {
-        annotationLoaded(current.items)
+        annotationLoaded(current)
       }
     } catch (err) {
-      annotationLoaded([])
+      annotationLoaded({ items: [], refs: [] })
     }
   };
 
@@ -342,10 +382,27 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     return annotationIds;
   }
 
+  const highlightTargetsLevel0 = () => {
+    const mergedSelector = filteredAnnotations.value
+      .reduce((acc, cur) => {
+        const selector = AnnotationUtils.generateTargetSelector(cur);
+        if (acc !== '') {
+          acc += ',';
+        }
+        acc += selector;
+        return acc;
+      }, '');
+
+    if (mergedSelector) {
+      AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
+    }
+  }
+
   return {
     activeTab,
     activeAnnotations,
     annotations,
+    witnesses,
     filteredAnnotations,
     isLoading,
     variantItemsColors,  // states
@@ -362,6 +419,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     addHighlightClickListeners,
     selectAll,
     selectNone,
+    filterAnnotationsByWitnesses,
+    highlightTargetsLevel0
   }
 
 })

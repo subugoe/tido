@@ -112,6 +112,9 @@ export default {
   unknown_error: 'Unbekannter Fehler',
   details: 'Details',
   selected_variants: 'Ausgewählte Varianten',
-  original: 'Original'
-
+  original: 'Original',
+  witnesses: 'Textzeugen',
+  witnesses_details: 'Infos zu Textzeugen',
+  variants_details: 'Infos zu Varianten',
+  witnesses_selected: 'Textzeugen ausgewählt'
 };

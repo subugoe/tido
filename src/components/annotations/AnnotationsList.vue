@@ -1,5 +1,8 @@
 <template>
-  <div class="annotations-list t-overflow-auto">
+  <div
+    v-if="filteredAnnotations.length"
+    class="annotations-list t-overflow-auto"
+  >
     <div
       v-for="annotation in annotations"
       :key="annotation.id"
@@ -35,7 +38,7 @@ interface AnnotationTypesMapping {
 
 export interface Props {
   annotations: Annotation[],
-  types: {name: string, icon: string, annotationType: string}[]
+  types: AnnotationType[]
 }
 
 const annotationStore = useAnnotationsStore();
@@ -45,6 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
+const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
 
 const annotationTypesMapping = computed<AnnotationTypesMapping>(() => (
   // it returns an object with a varying number of 'key', 'value' pairs
