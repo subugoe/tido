@@ -6,7 +6,9 @@ import { getItemColorBasedOnIndex } from '@/utils/color';
 import {useAnnotationsStore} from "@/stores/annotations";
 import {computed, watch} from "vue";
 import {useContentsStore} from "@/stores/contents";
-
+import TextEventBus from "@/utils/TextEventBus";
+import * as TextUtils from '@/utils/text'
+import * as DomUtils from '@/utils/dom'
 const annotationStore = useAnnotationsStore();
 const contentsStore = useContentsStore();
 
@@ -31,6 +33,30 @@ watch(
   },
   { immediate: true },
 );
+
+TextEventBus.on('click', ({ target }) => {
+  let annotationIds = {};
+  DomUtils.getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+  annotationIds = TextUtils.discoverParentAnnotationIds(target, annotationIds);
+  annotationIds = TextUtils.discoverChildAnnotationIds(target, annotationIds);
+
+  // We check the highlighting level to determine whether to select or deselect.
+  // TODO: it might be better to check the activeAnnotations instead
+  const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
+
+  Object.keys(annotationIds).forEach((id) => {
+    // We need to check here if the right annotations panel tab is active
+    // a.k.a. it exists in the current filteredAnnotations
+    const annotation = annotationStore.annotations.find((a) => a.id === id);
+    if (annotation) {
+      if (targetIsSelected) {
+
+      } else {
+        annotationStore.filteredAnnotations.push(annotation)
+      }
+    }
+  });
+})
 
 function allocateWitnessColorInVariantItem() {
   const colors = {}

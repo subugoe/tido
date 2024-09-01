@@ -116,5 +116,6 @@ export default {
   witnesses: 'Textzeugen',
   witnesses_details: 'Infos zu Textzeugen',
   variants_details: 'Infos zu Varianten',
-  witnesses_selected: 'Textzeugen ausgewählt'
+  witnesses_selected: 'Textzeugen ausgewählt',
+  single_select_mode: 'Single Select Mode'
 };

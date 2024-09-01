@@ -6,6 +6,7 @@ import {request} from '@/utils/http';
 import * as Utils from '@/utils';
 import {scrollIntoViewIfNeeded} from '@/utils';
 import {useConfigStore} from '@/stores/config';
+import TextEventBus from '@/utils/TextEventBus';
 
 
 export const useAnnotationsStore = defineStore('annotations', () => {
@@ -167,7 +168,6 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     updateAnnotationLoading(false)
   };
 
-
   const removeActiveAnnotation = (id) => {
     const annotationStore = useAnnotationsStore()
     const removeAnnotation = activeAnnotations.value[id];
@@ -316,6 +316,10 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         return;
       }
 
+      TextEventBus.emit('click', { target })
+
+      return;
+
       // Next we look up which annotations need to be selected
       let annotationIds = {};
 
@@ -361,26 +365,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     filteredAnnotations.value.forEach(({id}) => activeAnnotations.value[id] && removeActiveAnnotation(id));
   };
 
-  function discoverParentAnnotationIds(el, annotationIds = {}) {
-    const parent = el.parentElement;
-    if (parent && parent.id !== 'text-content') {
-      Utils.getValuesFromAttribute(parent, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-      return discoverParentAnnotationIds(parent, annotationIds);
-    }
-    return annotationIds;
-  }
 
-  function discoverChildAnnotationIds(el, annotationIds = {}) {
-    const {children} = el;
 
-    [...children].forEach((child) => {
-      if (child.dataset.annotation) {
-        Utils.getValuesFromAttribute(child, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-        annotationIds = discoverChildAnnotationIds(child, annotationIds);
-      }
-    });
-    return annotationIds;
-  }
 
   const highlightTargetsLevel0 = () => {
     const mergedSelector = filteredAnnotations.value
@@ -396,6 +382,15 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     if (mergedSelector) {
       AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
     }
+  }
+
+  const enableSingleSelectMode = () => {
+    resetAnnotations()
+    filteredAnnotations.value = []
+  }
+
+  const disableSingleSelectMode = () => {
+    resetAnnotations()
   }
 
   return {
@@ -420,7 +415,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     selectAll,
     selectNone,
     filterAnnotationsByWitnesses,
-    highlightTargetsLevel0
+    highlightTargetsLevel0,
+    enableSingleSelectMode,
+    disableSingleSelectMode
   }
 
 })
