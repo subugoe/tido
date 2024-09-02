@@ -62,7 +62,6 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         addSimpleAnnotation(target, newActiveAnnotation);
       }
 
-
       scrollIntoViewIfNeeded(target, target.closest('.panel-body'));
     }
   };
@@ -386,6 +385,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
   const enableSingleSelectMode = () => {
     resetAnnotations()
+    highlightTargetsLevel0()
     filteredAnnotations.value = []
   }
 

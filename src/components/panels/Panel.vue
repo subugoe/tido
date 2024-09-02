@@ -325,8 +325,17 @@ export default {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
-      const selected = false;
-      const events = {
+      const selectedAll = false;
+      const eventsSelectAll = {
+        update: (value) => {
+          if (value === null) return;
+          if (value) annotationStore.selectAll();
+          else annotationStore.selectNone();
+        },
+      };
+
+      const selectedSingleMode = false
+      const eventsSingleSelectMode = {
         update: (value) => {
           if (value) annotationStore.enableSingleSelectMode();
           else annotationStore.disableSingleSelectMode();
@@ -353,17 +362,17 @@ export default {
       const actions = [{
         component: 'PanelCheckAction',
         props: {
-          selected,
+          selected: selectedAll,
           label: t('select_all'),
         },
-        events,
+        events: eventsSelectAll,
       }, {
         component: 'PanelToggleAction',
         props: {
-          selected,
+          selected: selectedSingleMode,
           label: t('single_select_mode'),
         },
-        events,
+        events: eventsSingleSelectMode,
       }];
 
       tabs.value = [...tabs.value, {

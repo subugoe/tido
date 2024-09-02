@@ -50,9 +50,15 @@ TextEventBus.on('click', ({ target }) => {
     const annotation = annotationStore.annotations.find((a) => a.id === id);
     if (annotation) {
       if (targetIsSelected) {
-
+        const index = annotationStore.filteredAnnotations
+          .findIndex(filteredAnnotation => filteredAnnotation.id === annotation.id)
+        if (index > -1) {
+          annotationStore.filteredAnnotations.splice(index, 1)
+          annotationStore.removeActiveAnnotation(annotation.id)
+        }
       } else {
         annotationStore.filteredAnnotations.push(annotation)
+        annotationStore.addActiveAnnotation(annotation.id)
       }
     }
   });

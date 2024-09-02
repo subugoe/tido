@@ -123,6 +123,7 @@ export function getCurrentLevel(element) {
 }
 
 export function setLevelRecursively(element, { operation, level }) {
+  console.log(element, operation, level)
   if (element.hasAttribute('data-annotation')) {
     const newLevel = level !== undefined ? level : getNewLevel(element, operation);
     element.setAttribute('data-annotation-level', newLevel);
