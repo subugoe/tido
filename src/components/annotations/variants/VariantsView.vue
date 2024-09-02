@@ -4,11 +4,10 @@ import VariantsTopBar from "@/components/annotations/variants/VariantsTopBar.vue
 import VariantsList from "@/components/annotations/variants/VariantsList.vue";
 import { getItemColorBasedOnIndex } from '@/utils/color';
 import {useAnnotationsStore} from "@/stores/annotations";
-import {computed, watch} from "vue";
+import {computed, onBeforeUnmount, watch} from "vue";
 import {useContentsStore} from "@/stores/contents";
 import TextEventBus from "@/utils/TextEventBus";
-import * as TextUtils from '@/utils/text'
-import * as DomUtils from '@/utils/dom'
+import {getAnnotationIdsFromTarget} from "@/utils/text";
 const annotationStore = useAnnotationsStore();
 const contentsStore = useContentsStore();
 
@@ -34,35 +33,31 @@ watch(
   { immediate: true },
 );
 
-TextEventBus.on('click', ({ target }) => {
-  let annotationIds = {};
-  DomUtils.getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-  annotationIds = TextUtils.discoverParentAnnotationIds(target, annotationIds);
-  annotationIds = TextUtils.discoverChildAnnotationIds(target, annotationIds);
-
-  // We check the highlighting level to determine whether to select or deselect.
-  // TODO: it might be better to check the activeAnnotations instead
+const unsubscribe = TextEventBus.on('click', ({ target }) => {
   const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
 
-  Object.keys(annotationIds).forEach((id) => {
-    // We need to check here if the right annotations panel tab is active
-    // a.k.a. it exists in the current filteredAnnotations
-    const annotation = annotationStore.annotations.find((a) => a.id === id);
-    if (annotation) {
-      if (targetIsSelected) {
-        const index = annotationStore.filteredAnnotations
-          .findIndex(filteredAnnotation => filteredAnnotation.id === annotation.id)
-        if (index > -1) {
-          annotationStore.filteredAnnotations.splice(index, 1)
-          annotationStore.removeActiveAnnotation(annotation.id)
-        }
-      } else {
-        annotationStore.filteredAnnotations.push(annotation)
-        annotationStore.addActiveAnnotation(annotation.id)
-      }
+  const ids = getAnnotationIdsFromTarget(target)
+
+  if (annotationStore.isSingleSelectMode) {
+    if (targetIsSelected) {
+      annotationStore.removeFilteredAnnotations(ids)
+      annotationStore.deactivateAnnotationsByIds(ids)
     }
-  });
+    else {
+      annotationStore.addFilteredAnnotations(ids)
+      annotationStore.activateAnnotationsByIds(ids)
+    }
+  } else {
+    if (targetIsSelected) {
+      annotationStore.deactivateAnnotationsByIds(ids)
+    }
+    else {
+      annotationStore.activateAnnotationsByIds(ids)
+    }
+  }
 })
+
+onBeforeUnmount(() => unsubscribe())
 
 function allocateWitnessColorInVariantItem() {
   const colors = {}

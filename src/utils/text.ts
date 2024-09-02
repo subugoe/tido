@@ -1,4 +1,16 @@
 import * as DomUtils from './dom.js'
+
+function getAnnotationIdsFromTarget(target: EventTarget) {
+  let annotationIds = {};
+  DomUtils.getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+  annotationIds = discoverParentAnnotationIds(target, annotationIds);
+  annotationIds = discoverChildAnnotationIds(target, annotationIds);
+
+  // We check the highlighting level to determine whether to select or deselect.
+  // TODO: it might be better to check the activeAnnotations instead
+
+  return Object.keys(annotationIds)
+}
 function discoverParentAnnotationIds(el, annotationIds = {}) {
   const parent = el.parentElement;
   if (parent && parent.id !== 'text-content') {
@@ -22,6 +34,7 @@ function discoverChildAnnotationIds(el, annotationIds = {}) {
 
 
 export {
+  getAnnotationIdsFromTarget,
   discoverParentAnnotationIds,
   discoverChildAnnotationIds
 }
