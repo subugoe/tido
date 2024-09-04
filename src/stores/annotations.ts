@@ -215,6 +215,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         if (selector) {
           AnnotationUtils.highlightTargets(selector, {level: -1});
           AnnotationUtils.removeIcon(annotation);
+          if (AnnotationUtils.isVariant(annotation)) {
+            AnnotationUtils.removeWitness(selector, annotation.body.value.witness)
+          }
         }
       });
     }
@@ -437,6 +440,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
   const disableSingleSelectMode = () => {
     resetAnnotations()
+    selectFilteredAnnotations([{ name: 'Variant' }]);
+    highlightTargetsLevel0();
     isSingleSelectMode.value = false
   }
 

@@ -123,7 +123,6 @@ export function getCurrentLevel(element) {
 }
 
 export function setLevelRecursively(element, { operation, level }) {
-  console.log(element, operation, level)
   if (element.hasAttribute('data-annotation')) {
     const newLevel = level !== undefined ? level : getNewLevel(element, operation);
     element.setAttribute('data-annotation-level', newLevel);
@@ -289,10 +288,9 @@ export function removeChipsFromOtherViews() {
 export function removeWitness(selector, witness) {
   // find the witnesses span which contains each 'witness' span child element
   // find this witness inside the 'witnesses' html span and remove it
-
   const witnessesHtmlEl = getWitnessesHtmlEl(selector)
   const witHtml = Array.from(witnessesHtmlEl.children).filter(item => item.innerHTML === witness)
-  witHtml[0].remove()
+  if (witHtml.length > 0) witHtml[0].remove()
 }
 
 export function getWitnessesHtmlEl(selector) {
