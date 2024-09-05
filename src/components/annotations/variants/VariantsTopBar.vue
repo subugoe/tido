@@ -77,7 +77,7 @@ function toggleWitness(witness: Witness, isActive: boolean) {
         @click="witnessesDetailsDialogOpen = true"
       />
     </div>
-    <div class="t-mt-4 t-flex t-items-center">
+    <div class="t-mt-4 t-flex t-items-center" v-show="Object.keys(annotationsStore.activeAnnotations).length > 0">
       <span class="t-text-sm t-font-bold">{{ Object.keys(annotationsStore.activeAnnotations).length }} Variants selected</span>
       <BaseButton
         class="t-ml-auto"
