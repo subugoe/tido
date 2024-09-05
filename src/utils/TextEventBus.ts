@@ -6,6 +6,7 @@ type EventCallback<T = any> = (payload: T) => void;
 
 type TextEvents = {
   'click': { target: EventTarget };
+  'click-for-variants': { target: EventTarget }
 };
 
 class TextEventBus<Events extends TextEvents> {

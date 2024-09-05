@@ -33,7 +33,7 @@ watch(
   { immediate: true },
 );
 
-const unsubscribe = TextEventBus.on('click', ({ target }) => {
+const unsubscribe = TextEventBus.on('click-for-variants', ({ target }) => {
   const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
 
   const ids = getAnnotationIdsFromTarget(target)

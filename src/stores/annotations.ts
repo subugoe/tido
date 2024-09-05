@@ -298,7 +298,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
   const addHighlightClickListeners = () => {
     const textEl = document.querySelector('#text-content>div>*');
-
+    
     if (!textEl) return;
 
     textEl.addEventListener('click', ({target}) => {
@@ -319,33 +319,13 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         return;
       }
 
-      TextEventBus.emit('click', { target })
-
-      return;
-
-      // Next we look up which annotations need to be selected
-      let annotationIds = {};
-
-      Utils.getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-      annotationIds = discoverParentAnnotationIds(target, annotationIds);
-      annotationIds = discoverChildAnnotationIds(target, annotationIds);
-
-      // We check the highlighting level to determine whether to select or deselect.
-      // TODO: it might be better to check the activeAnnotations instead
-      const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
-
-      Object.keys(annotationIds).forEach((id) => {
-        // We need to check here if the right annotations panel tab is active
-        // a.k.a. it exists in the current filteredAnnotations
-        const annotation = filteredAnnotations.value.find((filtered) => filtered.id === id);
-        if (annotation) {
-          if (targetIsSelected) {
-            removeActiveAnnotation(id)
-          } else {
-            addActiveAnnotation(id)
-          }
+      if (filteredAnnotations.value.length > 0) {
+        if (Utils.isVariant(filteredAnnotations.value[0])) {
+          TextEventBus.emit('click-for-variants', { target })
+        } else {
+          TextEventBus.emit('click', { target })
         }
-      });
+      }
     });
   };
 

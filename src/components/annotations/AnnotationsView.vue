@@ -21,6 +21,10 @@ import {
 } from 'vue';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import MessageBox from '@/components/MessageBox.vue';
+import TextEventBus from "@/utils/TextEventBus";
+import * as Utils from '@/utils';
+import * as TextUtils from '@/utils/text'
+
 
 import { useAnnotationsStore } from '@/stores/annotations';
 import { useContentsStore } from '@/stores/contents';
@@ -52,4 +56,33 @@ watch(
   },
   { immediate: true },
 );
+
+
+const subscribe = TextEventBus.on('click', ({ target }) => { 
+
+    // Next we look up which annotations need to be selected
+  let annotationIds = {};
+
+  Utils.getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+  annotationIds = TextUtils.discoverParentAnnotationIds(target, annotationIds);
+  annotationIds = TextUtils.discoverChildAnnotationIds(target, annotationIds);
+
+  // We check the highlighting level to determine whether to select or deselect.
+  // TODO: it might be better to check the activeAnnotations instead
+  const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
+
+  Object.keys(annotationIds).forEach((id) => {
+    // We need to check here if the right annotations panel tab is active
+    // a.k.a. it exists in the current filteredAnnotations
+    const annotation = filteredAnnotations.value.find((filtered) => filtered.id === id);
+    if (annotation) {
+      if (targetIsSelected) {
+        annotationStore.removeActiveAnnotation(id)
+      } else {
+        annotationStore.addActiveAnnotation(id)
+      }
+    }
+  });
+})
+
 </script>
