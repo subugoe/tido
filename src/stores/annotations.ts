@@ -318,14 +318,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
       if (!target) {
         return;
       }
-
-      if (filteredAnnotations.value.length > 0) {
-        if (Utils.isVariant(filteredAnnotations.value[0])) {
-          TextEventBus.emit('click-for-variants', { target })
-        } else {
-          TextEventBus.emit('click', { target })
-        }
-      }
+      
+      TextEventBus.emit('click', { target })
     });
   };
 

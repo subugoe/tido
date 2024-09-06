@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import {
-  computed, watch,
+  computed, watch, onBeforeUnmount
 } from 'vue';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import MessageBox from '@/components/MessageBox.vue';
@@ -58,7 +58,7 @@ watch(
 );
 
 
-const subscribe = TextEventBus.on('click', ({ target }) => { 
+const unsubscribe = TextEventBus.on('click', ({ target }) => { 
 
     // Next we look up which annotations need to be selected
   let annotationIds = {};
@@ -84,5 +84,7 @@ const subscribe = TextEventBus.on('click', ({ target }) => {
     }
   });
 })
+
+onBeforeUnmount(() => unsubscribe())
 
 </script>
