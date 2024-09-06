@@ -39,7 +39,6 @@ if (props.rounded === null && props.text !== '') _rounded = false;
 if (props.rounded !== null) _rounded = props.rounded;
 
 const classes = {};
-const styles = '';
 
 if (props.display === 'link') {
   _iconPosition = 'right';
