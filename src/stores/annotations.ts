@@ -6,6 +6,7 @@ import {request} from '@/utils/http';
 import * as Utils from '@/utils';
 import {scrollIntoViewIfNeeded} from '@/utils';
 import {useConfigStore} from '@/stores/config';
+import TextEventBus from '@/utils/TextEventBus';
 
 
 export const useAnnotationsStore = defineStore('annotations', () => {
@@ -17,6 +18,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const witnesses = ref<Witness[]>(null)
   const filteredAnnotations = ref<Annotation[]>([])
   const isLoading = ref<boolean>(false);
+  const isSingleSelectMode = ref<boolean>(false)
 
   const setActiveAnnotations = (annotations: ActiveAnnotation) => {
     activeAnnotations.value = annotations
@@ -60,7 +62,6 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         Utils.highlightTargets(selector, {operation: 'INC'});
         addSimpleAnnotation(target, newActiveAnnotation);
       }
-
 
       scrollIntoViewIfNeeded(target, target.closest('.panel-body'));
     }
@@ -167,7 +168,6 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     updateAnnotationLoading(false)
   };
 
-
   const removeActiveAnnotation = (id) => {
     const annotationStore = useAnnotationsStore()
     const removeAnnotation = activeAnnotations.value[id];
@@ -215,6 +215,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         if (selector) {
           AnnotationUtils.highlightTargets(selector, {level: -1});
           AnnotationUtils.removeIcon(annotation);
+          if (AnnotationUtils.isVariant(annotation)) {
+            AnnotationUtils.removeWitness(selector, annotation.body.value.witness)
+          }
         }
       });
     }
@@ -295,7 +298,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
   const addHighlightClickListeners = () => {
     const textEl = document.querySelector('#text-content>div>*');
-
+    
     if (!textEl) return;
 
     textEl.addEventListener('click', ({target}) => {
@@ -315,30 +318,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
       if (!target) {
         return;
       }
-
-      // Next we look up which annotations need to be selected
-      let annotationIds = {};
-
-      Utils.getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-      annotationIds = discoverParentAnnotationIds(target, annotationIds);
-      annotationIds = discoverChildAnnotationIds(target, annotationIds);
-
-      // We check the highlighting level to determine whether to select or deselect.
-      // TODO: it might be better to check the activeAnnotations instead
-      const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
-
-      Object.keys(annotationIds).forEach((id) => {
-        // We need to check here if the right annotations panel tab is active
-        // a.k.a. it exists in the current filteredAnnotations
-        const annotation = filteredAnnotations.value.find((filtered) => filtered.id === id);
-        if (annotation) {
-          if (targetIsSelected) {
-            removeActiveAnnotation(id)
-          } else {
-            addActiveAnnotation(id)
-          }
-        }
-      });
+      
+      TextEventBus.emit('click', { target })
     });
   };
 
@@ -361,26 +342,52 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     filteredAnnotations.value.forEach(({id}) => activeAnnotations.value[id] && removeActiveAnnotation(id));
   };
 
-  function discoverParentAnnotationIds(el, annotationIds = {}) {
-    const parent = el.parentElement;
-    if (parent && parent.id !== 'text-content') {
-      Utils.getValuesFromAttribute(parent, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-      return discoverParentAnnotationIds(parent, annotationIds);
-    }
-    return annotationIds;
+  const addFilteredAnnotations = (annotationIds: string[]) => {
+    annotationIds.forEach((id) => {
+      const annotation = annotations.value.find((a) => a.id === id);
+      if (annotation) filteredAnnotations.value.push(annotation)
+    })
   }
 
-  function discoverChildAnnotationIds(el, annotationIds = {}) {
-    const {children} = el;
+  const removeFilteredAnnotations = (annotationIds: string[]) => {
+    annotationIds.forEach((id) => {
+      const annotation = annotations.value.find((a) => a.id === id);
+      if (annotation) {
+        const index = filteredAnnotations.value
+          .findIndex(filteredAnnotation => filteredAnnotation.id === annotation.id)
 
-    [...children].forEach((child) => {
-      if (child.dataset.annotation) {
-        Utils.getValuesFromAttribute(child, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
-        annotationIds = discoverChildAnnotationIds(child, annotationIds);
+        if (index > -1) {
+          filteredAnnotations.value.splice(index, 1)
+        }
       }
-    });
-    return annotationIds;
+    })
   }
+
+
+  const activateAnnotationsByIds = (annotationIds: string[]) => {
+    annotationIds.forEach((id) => {
+      // We need to check here if the right annotations panel tab is active
+      // a.k.a. it exists in the current filteredAnnotations
+      const annotation = annotations.value.find((a) => a.id === id);
+      if (annotation) {
+        addActiveAnnotation(annotation.id)
+      }
+    })
+  }
+
+
+
+  const deactivateAnnotationsByIds = (annotationIds: string[]) => {
+    annotationIds.forEach((id) => {
+      // We need to check here if the right annotations panel tab is active
+      // a.k.a. it exists in the current filteredAnnotations
+      const annotation = annotations.value.find((a) => a.id === id);
+      if (annotation) {
+        removeActiveAnnotation(annotation.id)
+      }
+    })
+  }
+
 
   const highlightTargetsLevel0 = () => {
     const mergedSelector = filteredAnnotations.value
@@ -398,6 +405,20 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     }
   }
 
+  const enableSingleSelectMode = () => {
+    resetAnnotations()
+    highlightTargetsLevel0()
+    filteredAnnotations.value = []
+    isSingleSelectMode.value = true
+  }
+
+  const disableSingleSelectMode = () => {
+    resetAnnotations()
+    selectFilteredAnnotations([{ name: 'Variant' }]);
+    highlightTargetsLevel0();
+    isSingleSelectMode.value = false
+  }
+
   return {
     activeTab,
     activeAnnotations,
@@ -405,6 +426,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     witnesses,
     filteredAnnotations,
     isLoading,
+    isSingleSelectMode,
     variantItemsColors,  // states
     setActiveAnnotations,
     setVariantItemsColors,  // functions
@@ -420,7 +442,13 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     selectAll,
     selectNone,
     filterAnnotationsByWitnesses,
-    highlightTargetsLevel0
+    highlightTargetsLevel0,
+    enableSingleSelectMode,
+    disableSingleSelectMode,
+    activateAnnotationsByIds,
+    deactivateAnnotationsByIds,
+    addFilteredAnnotations,
+    removeFilteredAnnotations
   }
 
 })

@@ -4,9 +4,10 @@ import VariantsTopBar from "@/components/annotations/variants/VariantsTopBar.vue
 import VariantsList from "@/components/annotations/variants/VariantsList.vue";
 import { getItemColorBasedOnIndex } from '@/utils/color';
 import {useAnnotationsStore} from "@/stores/annotations";
-import {computed, watch} from "vue";
+import {computed, onBeforeUnmount, watch} from "vue";
 import {useContentsStore} from "@/stores/contents";
-
+import TextEventBus from "@/utils/TextEventBus";
+import {getAnnotationIdsFromTarget} from "@/utils/text";
 const annotationStore = useAnnotationsStore();
 const contentsStore = useContentsStore();
 
@@ -31,6 +32,32 @@ watch(
   },
   { immediate: true },
 );
+
+const unsubscribe = TextEventBus.on('click', ({ target }) => {
+  const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
+
+  const ids = getAnnotationIdsFromTarget(target)
+
+  if (annotationStore.isSingleSelectMode) {
+    if (targetIsSelected) {
+      annotationStore.removeFilteredAnnotations(ids)
+      annotationStore.deactivateAnnotationsByIds(ids)
+    }
+    else {
+      annotationStore.addFilteredAnnotations(ids)
+      annotationStore.activateAnnotationsByIds(ids)
+    }
+  } else {
+    if (targetIsSelected) {
+      annotationStore.deactivateAnnotationsByIds(ids)
+    }
+    else {
+      annotationStore.activateAnnotationsByIds(ids)
+    }
+  }
+})
+
+onBeforeUnmount(() => unsubscribe())
 
 function allocateWitnessColorInVariantItem() {
   const colors = {}

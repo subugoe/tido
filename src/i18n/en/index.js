@@ -120,5 +120,6 @@ export default {
   witnesses: 'Witnesses',
   witnesses_details: 'Witnesses Details',
   variants_details: 'Variants Details',
-  witnesses_selected: 'Witnesses selected'
+  witnesses_selected: 'Witnesses selected',
+  single_select_mode: 'Single Select Mode'
 };

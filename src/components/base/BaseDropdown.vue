@@ -51,7 +51,6 @@ watch(
     const tido = document.querySelector(container.value + ' .tido');
     let backdrop = tido.querySelector('#tido-backdrop');
 
-    console.log(backdrop)
     if (value) {
       if (!backdrop) {
         const el = document.createElement('div');

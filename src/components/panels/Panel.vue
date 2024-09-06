@@ -6,7 +6,7 @@
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
         <span v-else-if="tabs.length === 1">{{ $t(tabs[0].label) }}</span>
       </div>
-      <div class="actions">
+      <div class="actions t-flex t-space-x-2">
         <template
           v-for="(tab, i) in tabs"
           :key="i"
@@ -138,6 +138,7 @@ import VariantsView from '@/components/annotations/variants/VariantsView.vue';
 import ContentView from '@/components/ContentView.vue';
 import ImageView from '@/components/ImageView.vue';
 import PanelZoomAction from '@/components/panels/actions/PanelZoomAction.vue';
+import PanelCheckAction from '@/components/panels/actions/PanelCheckAction.vue';
 import PanelToggleAction from '@/components/panels/actions/PanelToggleAction.vue';
 import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
@@ -158,8 +159,9 @@ export default {
     MetadataView,
     MessageBox,
     PanelImageAction,
-    PanelToggleAction,
+    PanelCheckAction,
     PanelZoomAction,
+    PanelToggleAction,
     TreeView,
     TabView,
     TabPanel,
@@ -302,7 +304,7 @@ export default {
       });
 
       const actions = [{
-        component: 'PanelToggleAction',
+        component: 'PanelCheckAction',
         props: {
           selected,
           label: t('select_all'),
@@ -323,12 +325,20 @@ export default {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
-      const selected = false;
-      const events = {
+      const selectedAll = false;
+      const eventsSelectAll = {
         update: (value) => {
           if (value === null) return;
           if (value) annotationStore.selectAll();
           else annotationStore.selectNone();
+        },
+      };
+
+      const selectedSingleMode = false
+      const eventsSingleSelectMode = {
+        update: (value) => {
+          if (value) annotationStore.enableSingleSelectMode();
+          else annotationStore.disableSingleSelectMode();
         },
       };
 
@@ -350,12 +360,19 @@ export default {
       });
 
       const actions = [{
-        component: 'PanelToggleAction',
+        component: 'PanelCheckAction',
         props: {
-          selected,
+          selected: selectedAll,
           label: t('select_all'),
         },
-        events,
+        events: eventsSelectAll,
+      }, {
+        component: 'PanelToggleAction',
+        props: {
+          selected: selectedSingleMode,
+          label: t('single_select_mode'),
+        },
+        events: eventsSingleSelectMode,
       }];
 
       tabs.value = [...tabs.value, {
