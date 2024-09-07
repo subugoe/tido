@@ -6,12 +6,13 @@ const selectors = {
   }
 
 describe('VariantsAnnotation', () => {
-    describe('VariantsList', () => {
 
-        beforeEach(() => {
-            cy
-            .visit(`/ahiqar-arabic-karshuni-with-variants-local.html?tido=m20_i1_p0.0-1.0-2.0-3.2`)
-        })
+    beforeEach(() => {
+      cy
+      .visit(`/ahiqar-arabic-karshuni-with-variants-local.html?tido=m20_i1_p0.0-1.0-2.0-3.2`)
+    })
+
+    describe('VariantsList', () => {
 
         it('Should display third annotation tab', () => {
             cy  
@@ -42,7 +43,7 @@ describe('VariantsAnnotation', () => {
             .eq(2)
             .find('#panel-check-action')
             .click() // text should be 11 
-            .wait(3000)
+            .wait(100)
             .get('span').contains('11 Variants selected')
             /*
             .get(selectors.list)
@@ -56,14 +57,21 @@ describe('VariantsAnnotation', () => {
             })
             */
         })
-
-
       });
 
-    
-    describe('Witnesses', () => {
 
-    })
+      describe('Witnesses', () => {
+        it('Should show the correct number of initially selected witnesses in drop down', () => {
+          cy 
+            .get('.panels-wrapper')
+            .children()
+            .eq(3)
+            .find('div#pv_id_6_2_content')
+            .find('.t-relative')
+            .find('button').contains('4 Witnesses selected')
+        });
+      })
+    
 
     describe('Single select mode', () => {
         
