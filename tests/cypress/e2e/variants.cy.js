@@ -30,6 +30,34 @@ describe('VariantsAnnotation', () => {
             .children()
             .should("have.length", 11)
         });
+
+        it('Show select all variant items', () => {
+          cy
+            .get('.panels-wrapper')
+            .children()
+            .eq(3)
+            .find('.panel-header')
+            .find('.actions')
+            .children()
+            .eq(2)
+            .find('#panel-check-action')
+            .click() // text should be 11 
+            .wait(3000)
+            .get('span').contains('11 Variants selected')
+            /*
+            .get(selectors.list)
+            .should('be.visible')
+            .get(selectors.list)
+            .children().each(($li, index, $lis) => {
+              cy.log('annotation index', index)
+              if (index === 0) cy.log('html element', $lis[index])
+              const isActive = $lis[index].classList.contains('active')
+              //expect(isActive).to.equal(true);
+            })
+            */
+        })
+
+
       });
 
     
