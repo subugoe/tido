@@ -31,7 +31,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import colors from "tailwindcss/colors";
-import { showLineSeparator } from '@/utils';
 
 const entry = computed(() => props.annotation.body.value.entry)
 const witness = computed(() => props.annotation.body.value.witness)
