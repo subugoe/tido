@@ -10,7 +10,7 @@
       :is-active="isActive(annotation)"
       :toggle="toggle"
       :witness-color="getWitnessColor(annotation.body.value.witness)"
-      :is-last-variant-item-of-annot="isLastVariantItemOfAnnot(i)"
+      :is-last-variant-item-of-annot="Utils.isLastVariantItemOfAnnot(filteredAnnotations, i)"
       @select="addAnnotation(annotation.id)"
       @unselect="removeAnnotation(annotation.id)"
       @show-details="openDetailsDialog"
@@ -30,6 +30,7 @@ import { computed } from 'vue';
 import VariantItem from "@/components/annotations/variants/VariantItem.vue";
 import {useAnnotationsStore} from "@/stores/annotations";
 import MessageBox from "@/components/MessageBox.vue";
+import * as Utils from '@/utils/annotations'
 
 const annotationStore = useAnnotationsStore();
 
@@ -60,17 +61,6 @@ function toggle({ id }) {
 
 function getWitnessColor(witness: string) {
   return annotationStore.variantItemsColors[witness];
-}
-
-function getTarget(i: number): AnnotationTarget {
-    if (filteredAnnotations.value[i]) {
-      return filteredAnnotations.value[i].target 
-    }
-  }
-  
-function isLastVariantItemOfAnnot(i: number ) {
-  // check if the variant item of this index is the last variant item of tannotation
-   return JSON.stringify(getTarget(i)) !== JSON.stringify(getTarget(i+1))
 }
 
 </script>

@@ -356,3 +356,14 @@ export function getAnnotationListElement(id, container) {
     return annotationItem.getAttribute('data-annotation-id') === id;
   });
 }
+
+export function getTarget(filteredAnnotations, i) {
+  if (filteredAnnotations[i]) {
+    return filteredAnnotations[i].target 
+  }
+}
+
+export function isLastVariantItemOfAnnot(filteredAnnotations, i) {
+  // check if the variant item of this index is the last variant item of the annotation
+  return JSON.stringify(Utils.getTarget(filteredAnnotations, i)) !== JSON.stringify(Utils.getTarget(filteredAnnotations, i+1))
+}
