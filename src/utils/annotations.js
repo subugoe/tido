@@ -138,7 +138,6 @@ export function generateTargetSelector(annotation) {
   // If no selector object is present we try to generate a CSS selector from target id.
 
   let result = null;
-
   const selector = annotation.target.length > 0 ? annotation.target[0].selector : undefined;
 
   if (!selector) {
@@ -356,3 +355,4 @@ export function getAnnotationListElement(id, container) {
     return annotationItem.getAttribute('data-annotation-id') === id;
   });
 }
+

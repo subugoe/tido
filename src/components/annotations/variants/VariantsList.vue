@@ -4,12 +4,13 @@
     class="annotations-list t-overflow-visible"
   >
     <VariantItem
-      v-for="annotation in filteredAnnotations"
+      v-for="(annotation, i) in filteredAnnotations"
       :key="annotation.id"
       :annotation="annotation"
       :is-active="isActive(annotation)"
       :toggle="toggle"
       :witness-color="getWitnessColor(annotation.body.value.witness)"
+      :show-separator="showLineSeparator(filteredAnnotations, i)"
       @select="addAnnotation(annotation.id)"
       @unselect="removeAnnotation(annotation.id)"
       @show-details="openDetailsDialog"
@@ -29,6 +30,7 @@ import { computed } from 'vue';
 import VariantItem from "@/components/annotations/variants/VariantItem.vue";
 import {useAnnotationsStore} from "@/stores/annotations";
 import MessageBox from "@/components/MessageBox.vue";
+import * as Utils from '@/utils/annotations'
 
 const annotationStore = useAnnotationsStore();
 
@@ -59,6 +61,13 @@ function toggle({ id }) {
 
 function getWitnessColor(witness: string) {
   return annotationStore.variantItemsColors[witness];
+}
+
+
+function showLineSeparator(filteredAnnotations, i) {
+  if (filteredAnnotations[i+1]) {
+   return Utils.generateTargetSelector(filteredAnnotations[i]) !== Utils.generateTargetSelector(filteredAnnotations[i+1])
+  }
 }
 
 </script>
