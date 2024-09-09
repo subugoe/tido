@@ -4,7 +4,8 @@
     :class="[
       't-py-2 t-px-2 -t-mx-2 t-mb-1 t-space-x-2 t-rounded-md',
       { 'hover:t-bg-gray-200 dark:hover:t-bg-gray-600 t-cursor-pointer': !isActive },
-      { 't-bg-gray-300 dark:t-bg-gray-600 active': isActive}]"
+      { 't-bg-gray-300 dark:t-bg-gray-600 active': isActive},
+      { 't-border-b t-border-slate-200 t-rounded-none': isLastVariantItemOfAnnot}]"
     :data-annotation-id="annotation.id"
     @click="handleClick"
   >
@@ -39,12 +40,14 @@ export interface Props {
   isActive: boolean,
   toggle: (annotation: Annotation) => void,
   witnessColor: string
+  isLastVariantItemOfAnnot: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   annotation: () => <Annotation>{},
   isActive: () => true,
   toggle: () => null,
+  isLastVariantItemOfAnnot: () => false,
 })
 
 const emit = defineEmits(['select', 'unselect', 'show-details'])

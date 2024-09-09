@@ -4,12 +4,13 @@
     class="annotations-list t-overflow-visible"
   >
     <VariantItem
-      v-for="annotation in filteredAnnotations"
+      v-for="(annotation, i) in filteredAnnotations"
       :key="annotation.id"
       :annotation="annotation"
       :is-active="isActive(annotation)"
       :toggle="toggle"
       :witness-color="getWitnessColor(annotation.body.value.witness)"
+      :is-last-variant-item-of-annot="isLastVariantItemOfAnnot(i)"
       @select="addAnnotation(annotation.id)"
       @unselect="removeAnnotation(annotation.id)"
       @show-details="openDetailsDialog"
@@ -59,6 +60,17 @@ function toggle({ id }) {
 
 function getWitnessColor(witness: string) {
   return annotationStore.variantItemsColors[witness];
+}
+
+function getTarget(i: number): AnnotationTarget {
+    if (filteredAnnotations.value[i]) {
+      return filteredAnnotations.value[i].target 
+    }
+  }
+  
+function isLastVariantItemOfAnnot(i: number ) {
+  // check if the variant item of this index is the last variant item of tannotation
+   return JSON.stringify(getTarget(i)) !== JSON.stringify(getTarget(i+1))
 }
 
 </script>
