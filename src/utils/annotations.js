@@ -138,7 +138,7 @@ export function generateTargetSelector(annotation) {
   // If no selector object is present we try to generate a CSS selector from target id.
 
   let result = null;
-
+  console.log('annotation', annotation)
   const selector = annotation.target.length > 0 ? annotation.target[0].selector : undefined;
 
   if (!selector) {
@@ -363,7 +363,8 @@ export function getTarget(filteredAnnotations, i) {
   }
 }
 
-export function isLastVariantItemOfAnnot(filteredAnnotations, i) {
-  // check if the variant item of this index is the last variant item of the annotation
-  return JSON.stringify(Utils.getTarget(filteredAnnotations, i)) !== JSON.stringify(Utils.getTarget(filteredAnnotations, i+1))
+export function showLineSeparator(filteredAnnotations, i) {
+  if (filteredAnnotations[i+1]) {
+   return generateTargetSelector(filteredAnnotations[i]) !== generateTargetSelector(filteredAnnotations[i+1])
+  }
 }

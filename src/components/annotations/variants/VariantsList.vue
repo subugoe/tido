@@ -10,7 +10,7 @@
       :is-active="isActive(annotation)"
       :toggle="toggle"
       :witness-color="getWitnessColor(annotation.body.value.witness)"
-      :is-last-variant-item-of-annot="Utils.isLastVariantItemOfAnnot(filteredAnnotations, i)"
+      :show-separator="Utils.showLineSeparator(filteredAnnotations, i)"
       @select="addAnnotation(annotation.id)"
       @unselect="removeAnnotation(annotation.id)"
       @show-details="openDetailsDialog"
