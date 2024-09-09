@@ -138,7 +138,6 @@ export function generateTargetSelector(annotation) {
   // If no selector object is present we try to generate a CSS selector from target id.
 
   let result = null;
-  console.log('annotation', annotation)
   const selector = annotation.target.length > 0 ? annotation.target[0].selector : undefined;
 
   if (!selector) {
@@ -357,14 +356,3 @@ export function getAnnotationListElement(id, container) {
   });
 }
 
-export function getTarget(filteredAnnotations, i) {
-  if (filteredAnnotations[i]) {
-    return filteredAnnotations[i].target 
-  }
-}
-
-export function showLineSeparator(filteredAnnotations, i) {
-  if (filteredAnnotations[i+1]) {
-   return generateTargetSelector(filteredAnnotations[i]) !== generateTargetSelector(filteredAnnotations[i+1])
-  }
-}

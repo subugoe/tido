@@ -10,7 +10,7 @@
       :is-active="isActive(annotation)"
       :toggle="toggle"
       :witness-color="getWitnessColor(annotation.body.value.witness)"
-      :show-separator="Utils.showLineSeparator(filteredAnnotations, i)"
+      :show-separator="showLineSeparator(filteredAnnotations, i)"
       @select="addAnnotation(annotation.id)"
       @unselect="removeAnnotation(annotation.id)"
       @show-details="openDetailsDialog"
@@ -61,6 +61,13 @@ function toggle({ id }) {
 
 function getWitnessColor(witness: string) {
   return annotationStore.variantItemsColors[witness];
+}
+
+
+function showLineSeparator(filteredAnnotations, i) {
+  if (filteredAnnotations[i+1]) {
+   return Utils.generateTargetSelector(filteredAnnotations[i]) !== Utils.generateTargetSelector(filteredAnnotations[i+1])
+  }
 }
 
 </script>
