@@ -74,4 +74,27 @@ const selectors = {
 
       })
     })
+
+    describe('VariantsList', () => {
+
+      it('Should display third annotation tab', () => {
+          cy  
+              .get(selectors.tab)
+              .children()
+              .eq(2)
+              .parent()
+              .should('have.attr', 'data-p-active', 'true');
+      
+          });
+  
+      it('Should show a list of variant items', () => {
+        cy 
+          .get(selectors.list)
+          .should('be.visible')
+          .children()
+          .should("have.length", 11)
+      });
+
+    });
+    
   });
