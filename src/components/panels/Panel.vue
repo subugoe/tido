@@ -325,6 +325,7 @@ export default {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
+      const selectedAll = false;
 
       const selectedSingleMode = false
       const eventsSingleSelectMode = {
