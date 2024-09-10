@@ -32,32 +32,26 @@ describe('VariantsAnnotation', () => {
             .should("have.length", 11)
         });
 
-        it('Show select all variant items', () => {
-          cy
-            .get('.panels-wrapper')
-            .children()
-            .eq(3)
-            .find('.panel-header')
-            .find('.actions')
-            .children()
-            .eq(2)
-            .find('#panel-check-action')
-            .click() // text should be 11 
-            .wait(100)
-            .get('span').contains('11 Variants selected')
-            /*
-            .get(selectors.list)
-            .should('be.visible')
-            .get(selectors.list)
-            .children().each(($li, index, $lis) => {
-              cy.log('annotation index', index)
-              if (index === 0) cy.log('html element', $lis[index])
-              const isActive = $lis[index].classList.contains('active')
-              //expect(isActive).to.equal(true);
-            })
-            */
-        })
       });
+    
+    describe('Variants items selection', () => {
+      it('select a variant item', () => {
+        // should select a variant item and add its witness after the highlighted text + the highlighted text should become light blue
+        cy
+          .get(selectors.list)
+          .children()
+          .eq(0)
+          .click()
+          .should('have.class', 'active') // the variant item is selected 
+          .get('div#MD12675N1l4l2l6l4l40')
+          .find('span.witnesses')
+          .find('span').contains('DFM 614') // the witness is added
+          .parent()
+          .next()
+          .invoke('attr', 'data-annotation-level')
+          .should('eq', '1')    // highlighted text should become light blue 
+      })
+    })
 
 
       describe('Witnesses', () => {
