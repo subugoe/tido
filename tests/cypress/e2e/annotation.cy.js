@@ -1,17 +1,5 @@
-import { commonSelectors } from '../support/globals';
+import { commonSelectors, ahiqarSelectors, gflSelectors } from '../support/globals';
 
-const ahiqarSelectors = {
-  list: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list',
-  listItem: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list .item',
-  listOfSecondTab: '.panels-wrapper > .panel:nth-child(4) [role="tabpanel"]:nth-child(2) .annotations-list',
-  tab: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] [data-pc-section="nav"] [data-pc-name="tabpanel"]',
-  text: '.panels-wrapper > .panel:nth-child(3) #text-content',
-  annotationPanelActionCheckbox: '.panel-header .actions > div:first-child #panel-check-action',
-}
-
-const gflSelectors = {
-  listItem: '.panels-wrapper > .panel:nth-child(3) [role="tablist"] .annotations-list .item',
-}
 
 const selectors = {
   ...commonSelectors,
