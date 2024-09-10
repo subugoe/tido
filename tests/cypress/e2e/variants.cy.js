@@ -96,5 +96,48 @@ const selectors = {
       });
 
     });
-    
+
+    describe('Witnesses', () => {
+      it('Should show the correct number of initially selected witnesses in drop down', () => {
+        cy 
+          .get('.panels-wrapper')
+          .children()
+          .eq(3)
+          .find('div#pv_id_6_2_content')
+          .find('.t-relative')
+          .find('button').contains('4 Witnesses selected')
+      });
+
+      it('Deselecting the witness remove the variant items of that witness and the witnesses in the transcription', () => {
+        cy 
+        .get(selectors.list)
+        .children()
+        .eq(0)
+        .click()
+        .get(selectors.list)
+        .children()
+        .eq(1)
+        .click()
+        .get('.panels-wrapper .panel:nth-child(4) .panel-body div#pv_id_6_2_content')
+        .find('button').contains('4 Witnesses selected')
+        .click()
+        .next()
+        .children()
+        .find('label').contains('Cod. Arab. 236')
+        .prev()
+        .click()
+
+        // after this part we check the effects of this click
+
+        .get(selectors.list)
+        .children()
+        .each(($el, index, $list) => {
+          expect($el).not.to.contain('Myng.syr.258')
+        })
+
+      })
+       
+
+    })
+
   });
