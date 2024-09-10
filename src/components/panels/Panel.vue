@@ -360,12 +360,10 @@ export default {
       });
 
       const actions = [{
-        component: 'PanelCheckAction',
         props: {
           selected: selectedAll,
           label: t('select_all'),
-        },
-        events: eventsSelectAll,
+        }
       }, {
         component: 'PanelToggleAction',
         props: {
