@@ -320,7 +320,7 @@ export default {
       }];
     }
 
-    function createVariantsView(view, i) {
+    function createVariantsView(view) {
       const annotationStore = useAnnotationsStore();
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
