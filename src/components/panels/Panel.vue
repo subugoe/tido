@@ -325,7 +325,6 @@ export default {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
-      const selectedAll = false;
 
       const selectedSingleMode = false
       const eventsSingleSelectMode = {
@@ -335,29 +334,7 @@ export default {
         },
       };
 
-      unsubscribe.value = annotationStore.$onAction(({ name, args }) => {
-        if (tabs.value.length
-          && tabs.value[0]?.actions?.length
-          && (name === 'setActiveAnnotations')) {
-          const activeAnnotations = args[0];
-          const activeAmount = Object.keys(activeAnnotations).length;
-          const filteredAmount = annotationStore.filteredAnnotations.length;
-          let newSelected = activeAmount > 0 && activeAmount === filteredAmount;
-
-          if (!newSelected && activeAmount > 0) newSelected = null;
-
-          if (tabs.value[i].actions[0].props.selected !== newSelected) {
-            tabs.value[i].actions[0].props.selected = newSelected;
-          }
-        }
-      });
-
       const actions = [{
-        props: {
-          selected: selectedAll,
-          label: t('select_all'),
-        }
-      }, {
         component: 'PanelToggleAction',
         props: {
           selected: selectedSingleMode,
@@ -365,7 +342,7 @@ export default {
         },
         events: eventsSingleSelectMode,
       }];
-
+ 
       tabs.value = [...tabs.value, {
         component,
         label,
