@@ -113,10 +113,10 @@ const selectors = {
         .children()
         .eq(3)
         .invoke('attr', 'data-annotation-id')
-        .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_1')  // means that first annotation item of this group is DFM 614, instead of Cod Arab
+        .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_1')  // means that first annotation item of this target is DFM 614, instead of Cod Arab
         .get(selectors.list)
         .children()
-        .eq(6)         // expecting that two variant items with Cod Arab 236 were removed, then we aim to access the variant item with witness DFM 614 of the third target with index 6 instead of 8
+        .eq(6)         // expecting that two variant items with Cod Arab 236 were removed, the first variant item of the third target is now 'DFM 614'
         .invoke('attr', 'data-annotation-id')
         .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_1')
 
