@@ -17,6 +17,15 @@ const selectors = {
       .click()
   })
 
+  Cypress.Commands.add('clickTarget', () => {
+    // click witness of the drop down having button named 'buttonName'
+    cy
+      .get('div#text-content div#MD12675N1l4l2l6l4l42')
+      .children()
+      .eq(1)
+      .click()
+  })
+
   describe('VariantsAnnotation', () => {
 
     beforeEach(() => {
@@ -143,4 +152,64 @@ const selectors = {
           .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0')
       })
     })
+
+    describe('Highlighted Text selection', () => {
+      it('should click at a highlighted text, show its witnesses and select all related variant items in variants tab', () => {
+        cy
+        // click at one target
+        .clickTarget()
+
+        // its witnesses should be shown
+        .get('div#text-content div#MD12675N1l4l2l6l4l42')
+        .find('span.witnesses')
+        .children()
+        .should('have.length', 4)
+        .should('contain', 'Cod. Arab. 236')
+        .should('contain', 'DFM 614')
+        .should('contain', 'Ming. syr. 258')
+        .should('contain', 'Sach. 339')
+
+        // the corresponding variant items should be selected
+        .get(selectors.list)
+        .children()
+        .eq(2)
+        .should('not.have.class', 't-bg-gray-300')
+        .next()
+        .should('have.class', 't-bg-gray-300')
+        .next()
+        .should('have.class', 't-bg-gray-300')
+        .next()
+        .should('have.class', 't-bg-gray-300')
+        .next()
+        .should('have.class', 't-bg-gray-300')
+        .next()
+        .should('not.have.class', 't-bg-gray-300')
+      })
+
+      // 
+      it('should deselect the highlighted text, remove its witnesses and deselect all related variant items in variants tab', () => {
+        // unclick at one target
+      cy
+        .clickTarget() // select the target
+        .click()  // deselect the target
+
+        // remove its witnesses
+         .get('div#text-content div#MD12675N1l4l2l6l4l42')
+         .find('span.witnesses')
+         .should('be.empty')
+
+        // deselect the corresponding variant items
+        .get(selectors.list)
+        .children()
+        .eq(3)
+        .should('not.have.class', 't-bg-gray-300')
+        .next()
+        .should('not.have.class', 't-bg-gray-300')
+        .next()
+        .should('not.have.class', 't-bg-gray-300')
+        .next()
+        .should('not.have.class', 't-bg-gray-300')
+      })
+    })
+
   });
