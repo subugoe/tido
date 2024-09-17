@@ -34,6 +34,26 @@ const selectors = {
     })
 
     describe('Variants items selection', () => {
+
+      it('Should display third annotation tab', () => {
+        cy  
+            .get(selectors.tab)
+            .children()
+            .eq(2)
+            .parent()
+            .should('have.attr', 'data-p-active', 'true')
+            .should('contain','Variants')
+        });
+
+      it('Should show a list of variant items', () => {
+        cy 
+          .get(selectors.list)
+          .should('be.visible')
+          .children()
+          .should("have.length", 11)
+      });
+
+
       it('select (unselect) a variant item', () => {
         // should select a variant item and add its witness after the highlighted text + the highlighted text should become light blue
         cy
@@ -150,6 +170,13 @@ const selectors = {
           .eq(7)         // expecting that two variant items with Cod Arab 236 were removed, then we aim to access the variant item with witness DFM 614 of the third target with index 6 instead of 8
           .invoke('attr', 'data-annotation-id')
           .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0')
+      })
+
+      it('Should show a list of witnesses', () => {
+        // when clicking at witness details button, it should show a list of witnesses, which are part of the variant items
+
+
+
       })
     })
 
