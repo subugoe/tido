@@ -26,6 +26,15 @@ const selectors = {
       .click()
   })
 
+  Cypress.Commands.add('checkTextInWitnessItemDescription', (witness, description) => {
+    cy
+      .contains('h3', witness)
+      .next()
+      .contains('p',description).parent()
+  })
+
+  
+
   describe('VariantsAnnotation', () => {
 
     beforeEach(() => {
@@ -172,11 +181,25 @@ const selectors = {
           .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0')
       })
 
-      it('Should show a list of witnesses', () => {
-        // when clicking at witness details button, it should show a list of witnesses, which are part of the variant items
-
-
-
+      it('Should show a dialog box containing a list of a witnesses and a description of them', () => {
+        // the witnesses are the unique set of the ones which appear in the variants list
+        cy
+          .get('.panels-wrapper .panel:nth-child(4) .panel-body div#pv_id_6_2_content')
+          .find('button')
+          .contains('Witnesses Details')
+          .click()
+          .get('div[role="dialog"]')
+          .find('div[data-pc-section="content"]')
+          .children()
+          .eq(0)
+          .children()
+          .should('have.length',4)
+          .eq(0)
+          .checkTextInWitnessItemDescription('Cod. Arab. 236', 'test')  
+            // witness description will update once description is there
+          .checkTextInWitnessItemDescription('DFM 614', 'test')
+          .checkTextInWitnessItemDescription('Ming. syr. 258', 'test')
+          .checkTextInWitnessItemDescription('Sach. 339', 'test')
       })
     })
 
