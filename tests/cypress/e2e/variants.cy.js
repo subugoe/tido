@@ -17,6 +17,24 @@ const selectors = {
       .click()
   })
 
+  Cypress.Commands.add('clickTarget', () => {
+    // click witness of the drop down having button named 'buttonName'
+    cy
+      .get('div#text-content div#MD12675N1l4l2l6l4l42')
+      .children()
+      .eq(1)
+      .click()
+  })
+
+  Cypress.Commands.add('checkTextInWitnessItemDescription', (witness, description) => {
+    cy
+      .contains('h3', witness)
+      .next()
+      .contains('p',description).parent()
+  })
+
+  
+
   describe('VariantsAnnotation', () => {
 
     beforeEach(() => {
@@ -25,6 +43,26 @@ const selectors = {
     })
 
     describe('Variants items selection', () => {
+
+      it('Should display third annotation tab', () => {
+        cy  
+            .get(selectors.tab)
+            .children()
+            .eq(2)
+            .parent()
+            .should('have.attr', 'data-p-active', 'true')
+            .should('contain','Variants')
+        });
+
+      it('Should show a list of variant items', () => {
+        cy 
+          .get(selectors.list)
+          .should('be.visible')
+          .children()
+          .should("have.length", 11)
+      });
+
+
       it('select (unselect) a variant item', () => {
         // should select a variant item and add its witness after the highlighted text + the highlighted text should become light blue
         cy
@@ -142,5 +180,86 @@ const selectors = {
           .invoke('attr', 'data-annotation-id')
           .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0')
       })
+
+      it('Should show a dialog box containing a list of a witnesses and a description of them', () => {
+        // the witnesses are the unique set of the ones which appear in the variants list
+        cy
+          .get('.panels-wrapper .panel:nth-child(4) .panel-body div#pv_id_6_2_content')
+          .find('button')
+          .contains('Witnesses Details')
+          .click()
+          .get('div[role="dialog"]')
+          .find('div[data-pc-section="content"]')
+          .children()
+          .eq(0)
+          .children()
+          .should('have.length',4)
+          .eq(0)
+          .checkTextInWitnessItemDescription('Cod. Arab. 236', 'test')  
+            // witness description will update once description is there
+          .checkTextInWitnessItemDescription('DFM 614', 'test')
+          .checkTextInWitnessItemDescription('Ming. syr. 258', 'test')
+          .checkTextInWitnessItemDescription('Sach. 339', 'test')
+      })
     })
+
+    describe('Highlighted Text selection', () => {
+      it('should click at a highlighted text, show its witnesses and select all related variant items in variants tab', () => {
+        cy
+        // click at one target
+        .clickTarget()
+
+        // its witnesses should be shown
+        .get('div#text-content div#MD12675N1l4l2l6l4l42')
+        .find('span.witnesses')
+        .children()
+        .should('have.length', 4)
+        .should('contain', 'Cod. Arab. 236')
+        .should('contain', 'DFM 614')
+        .should('contain', 'Ming. syr. 258')
+        .should('contain', 'Sach. 339')
+
+        // the corresponding variant items should be selected
+        .get(selectors.list)
+        .children()
+        .eq(2)
+        .should('not.have.class', 't-bg-gray-300')
+        .next()
+        .should('have.class', 't-bg-gray-300')
+        .next()
+        .should('have.class', 't-bg-gray-300')
+        .next()
+        .should('have.class', 't-bg-gray-300')
+        .next()
+        .should('have.class', 't-bg-gray-300')
+        .next()
+        .should('not.have.class', 't-bg-gray-300')
+      })
+
+      // 
+      it('should deselect the highlighted text, remove its witnesses and deselect all related variant items in variants tab', () => {
+        // unclick at one target
+      cy
+        .clickTarget() // select the target
+        .click()  // deselect the target
+
+        // remove its witnesses
+         .get('div#text-content div#MD12675N1l4l2l6l4l42')
+         .find('span.witnesses')
+         .should('be.empty')
+
+        // deselect the corresponding variant items
+        .get(selectors.list)
+        .children()
+        .eq(3)
+        .should('not.have.class', 't-bg-gray-300')
+        .next()
+        .should('not.have.class', 't-bg-gray-300')
+        .next()
+        .should('not.have.class', 't-bg-gray-300')
+        .next()
+        .should('not.have.class', 't-bg-gray-300')
+      })
+    })
+
   });
