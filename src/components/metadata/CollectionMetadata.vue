@@ -24,16 +24,12 @@ import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
 const contentStore = useContentsStore();
 
-function getCollectorName(collection: Collection) : string[] | null {
+function getCollectorsName(collection: Collection) : string | null {
   if (!collection) return null;
   if (collection.collector.length === 0) return null;
-  if (collection.collector.length === 1) return [collection.collector[0].name];
+  if (collection.collector.length === 1) return collection.collector[0].name;
 
-  let collectors: string[] = []
-  collection.collector.forEach((collector) => {
-    collectors.push(collector.name)
-  })
-  return collectors;
+  return collection.collector.map((collector) => collector.name).join(', ')
 }
 
 const collection = computed<Collection>(() => contentStore.collection);
@@ -46,7 +42,7 @@ const metadata = computed(() => {
     sub: 'subtitle',
   };
 
-  const collectorsName: string[] | null = getCollectorName(collection.value);
+  const collectorsName: string | null = getCollectorsName(collection.value);
   const { description } = collection.value;
   const collectionTitle: Title[] = collection.value.title;
 

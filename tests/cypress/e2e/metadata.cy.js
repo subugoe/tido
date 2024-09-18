@@ -45,7 +45,7 @@ describe('Metadata', () => {
       .eq(2)
       .find('h4', 'Collector')
       .next()
-      .should('contain', 'Prof. Dr. theol. Kratz, Reinhard Gregor,Dr. Elrefai, Aly')
+      .should('contain', 'Prof. Dr. theol. Kratz, Reinhard Gregor, Dr. Elrefai, Aly')
 
     cy
       .get(selectors.metadataView)
