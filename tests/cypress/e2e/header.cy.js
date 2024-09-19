@@ -88,7 +88,7 @@ describe('Header - Item and Manifest changing', () => {
     cy
       .get(selectors.nextButton)
       .should('not.be.disabled')
-      .contains('Next Sheet');
+      .contains('Next Item');
 
     cy
       .get(selectors.nextButton)
@@ -99,3 +99,4 @@ describe('Header - Item and Manifest changing', () => {
       .should('include', 'tido=m7_i1');
   });
 });
+

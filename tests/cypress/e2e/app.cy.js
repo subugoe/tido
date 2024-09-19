@@ -18,7 +18,7 @@ describe('Tido', () => {
   it('Should render titles', () => {
     cy.get('.header h1').contains('Textual witnesses in Arabic and Karshuni');
     cy.get('.header h2').contains('Cod. Arab. 236 Copenhagen');
-    cy.get('.header h2').contains('Seite 2a');
+    cy.get('.header h2').contains('Item 2a');
   });
 
   it('Should render panels', () => {
@@ -70,7 +70,7 @@ describe('Tido', () => {
     cy
       .get(selectors.panel4)
       .find('.panel-header')
-      .contains('Annotationen');
+      .contains('Annotations');
 
     cy
       .get(selectors.panel4)
@@ -86,12 +86,12 @@ describe('Tido', () => {
       .get(selectors.prevButton)
       .should('be.visible')
       .should('be.disabled')
-      .contains('Vorherige Manuskript');
+      .contains('Previous Manuscript');
 
     cy
       .get(selectors.nextButton)
       .should('be.visible')
-      .contains('Nächste Seite');
+      .contains('Next Item');
   });
 
   //

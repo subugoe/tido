@@ -119,7 +119,7 @@ describe('Content - Multiple Tabs', () => {
     // Increasing font size
     cy
       .get(selectors.panel3)
-      .find('.actions>div:first-child button[title="Vergrössern"]')
+      .find('.actions>div:first-child button[title="Increase"]')
       .click();
 
     cy
@@ -130,7 +130,7 @@ describe('Content - Multiple Tabs', () => {
     // Decreasing font size
     cy
       .get(selectors.panel3)
-      .find('.actions>div:first-child button[title="Verkleinern"]')
+      .find('.actions>div:first-child button[title="Decrease"]')
       .click();
 
     cy.get('#text-content div')
@@ -142,7 +142,7 @@ describe('Content - Multiple Tabs', () => {
     // Increasing font size
     cy
       .get(selectors.panel3)
-      .find('.actions>div:first-child button[title="Vergrössern"]')
+      .find('.actions>div:first-child button[title="Increase"]')
       .click() // 18px
       .click() // 20px
       .click() // 22px
@@ -160,7 +160,7 @@ describe('Content - Multiple Tabs', () => {
     // Increasing font size
     cy
       .get(selectors.panel3)
-      .find('.actions>div:first-child button[title="Verkleinern"]')
+      .find('.actions>div:first-child button[title="Decrease"]')
       .click() // 14px
       .should('be.disabled');
 
