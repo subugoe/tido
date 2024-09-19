@@ -78,7 +78,7 @@ export default {
   project_info: 'Projekt Informationen',
   reset: 'Zurücksetzen',
   search: 'Suche',
-  Sheet: 'Seite',
+  item: 'Seite',
   show: 'Zeige',
   show_hide_panels: 'Panels ein-/ausblenden',
   tabs: 'Reiter',

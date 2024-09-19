@@ -82,7 +82,7 @@ export default {
   project_info: 'Project Info',
   reset: 'Reset',
   search: 'Search',
-  Sheet: 'Sheet',
+  item: 'Item',
   show: 'Show',
   show_hide_panels: 'Show/Hide Panels',
   tabs: 'Tabs',

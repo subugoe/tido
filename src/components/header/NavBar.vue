@@ -57,16 +57,13 @@ const hasNext = computed<boolean>(() => {
   }
   return true;
 });
-const labels = computed<Labels>(() => configStore.config.labels || {
-  manifest: 'manifest',
-  item: 'item',
-});
+
 const nextButtonLabel = computed<string>(() => (itemIndex.value === manifest.value.sequence.length - 1
-  ? `${t('next')} ${t(labels.value.manifest ? labels.value.manifest : 'Manuscript')}`
-  : `${t('next')} ${t(labels.value.item)}`));
+  ? `${t('next')} ${t('Manuscript')}`
+  : `${t('next')} ${t('item')}`));
 const prevButtonLabel = computed<string>(() => (itemIndex.value === 0
-  ? `${t('prev')} ${t(labels.value.manifest ? labels.value.manifest : 'Manuscript')}`
-  : `${t('prev')} ${t(labels.value.item)}`));
+  ? `${t('prev')} ${t('Manuscript')}`
+  : `${t('prev')} ${t('item')}`));
 
 function prev() {
   const prevIndex = itemIndex.value - 1;
