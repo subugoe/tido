@@ -29,7 +29,7 @@ import { useI18n } from 'vue-i18n';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents';
 import BaseButton from '@/components/base/BaseButton.vue';
-import { isAhiqarWebsite } from '@/utils/translations'
+import { areNavButtonsLabelsInConfig } from '@/utils/translations'
 
 const configStore = useConfigStore();
 const contentStore = useContentsStore();
@@ -50,9 +50,13 @@ const hasPrev = computed<boolean>(() => {
   return true;
 });
 
+
+
 function getNavButtonsLabels(config): string[] {
-    if (isAhiqarWebsite(config)) {
-      return [t('next_sheet'), t('previous_sheet'), t('next_manuscript'), t('previous_manuscript')] 
+    const lang = config['lang']
+    if (areNavButtonsLabelsInConfig(config)) {
+      const translations = config.translations[lang]
+      return [translations['next_page'], translations['previous_page'], translations['next_document'], translations['previous_document']]
     }
     else {
       return [t('next_item'), t('previous_item'), t('next_manifest'), t('previous_manifest')]
