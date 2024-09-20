@@ -69,6 +69,10 @@ export default {
   previous_item: 'Previous Item',
   next_manifest: 'Next Manifest',
   previous_manifest: 'Previous Manifest',
+  next_sheet: 'Next Sheet',
+  previous_sheet: 'Previous Sheet',
+  next_manuscript: 'Next Manuscript',
+  previous_manuscript: 'Previous Manuscript',
   no_annotations_in_view: 'The current view has no annotations to display.',
   no_comments_in_view:
     'The current view does not contain any comments to display',
@@ -85,6 +89,7 @@ export default {
   reset: 'Reset',
   search: 'Search',
   item: 'Item',
+  sheet: 'Sheet',
   show: 'Show',
   show_hide_panels: 'Show/Hide Panels',
   tabs: 'Tabs',

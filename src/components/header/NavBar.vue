@@ -29,6 +29,7 @@ import { useI18n } from 'vue-i18n';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents';
 import BaseButton from '@/components/base/BaseButton.vue';
+import { isAhiqarWebsite } from '@/utils/translations'
 
 const configStore = useConfigStore();
 const contentStore = useContentsStore();
@@ -48,6 +49,16 @@ const hasPrev = computed<boolean>(() => {
 
   return true;
 });
+
+function getNavButtonsLabels(config): string[] {
+    if (isAhiqarWebsite(config)) {
+      return [t('next_sheet'), t('previous_sheet'), t('next_manuscript'), t('previous_manuscript')] 
+    }
+    else {
+      return [t('next_item'), t('previous_item'), t('next_manifest'), t('previous_manifest')]
+    }
+}
+
 const hasNext = computed<boolean>(() => {
   const nextIndex = itemIndex.value + 1;
   if (nextIndex > manifest.value.sequence.length - 1) {
@@ -58,12 +69,18 @@ const hasNext = computed<boolean>(() => {
   return true;
 });
 
-const nextButtonLabel = computed<string>(() => (itemIndex.value === manifest.value.sequence.length - 1
-  ? `${t('next_manifest')}`
-  : `${t('next_item')}`));
+// variables are named according to the general concept of ie (page = sheet, item);  (document = manuscript)
+const [nextPageLabel, previousPageLabel, nextDocumentLabel, previousDocumentLabel]: string[] = getNavButtonsLabels(configStore.config)
+
+const nextButtonLabel = computed<string>(() => ( 
+itemIndex.value === manifest.value.sequence.length - 1
+  ? `${nextDocumentLabel}`
+  : `${nextPageLabel}`));
+
+
 const prevButtonLabel = computed<string>(() => (itemIndex.value === 0
-  ? `${t('previous_manifest')}`
-  : `${t('previous_item')}`));
+  ? `${previousDocumentLabel}`
+  : `${previousPageLabel}`));
 
 function prev() {
   const prevIndex = itemIndex.value - 1;

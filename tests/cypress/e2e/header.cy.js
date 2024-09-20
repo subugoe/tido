@@ -19,7 +19,7 @@ describe('Header initial', () => {
       .get(selectors.prevButton)
       .should('be.visible')
       .should('be.disabled')
-      .contains('Previous Manifest');
+      .contains('Previous Manuscript');
   });
 
   it('Should toggle panels', () => {
@@ -73,7 +73,7 @@ describe('Header - Item and Manifest changing', () => {
     cy
       .get(selectors.prevButton)
       .should('not.be.disabled')
-      .contains('Previous Manifest');
+      .contains('Previous Manuscript');
 
     cy
       .get(selectors.prevButton)
@@ -88,7 +88,7 @@ describe('Header - Item and Manifest changing', () => {
     cy
       .get(selectors.nextButton)
       .should('not.be.disabled')
-      .contains('Next Item');
+      .contains('Next Sheet');
 
     cy
       .get(selectors.nextButton)
