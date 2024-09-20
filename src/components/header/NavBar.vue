@@ -59,11 +59,11 @@ const hasNext = computed<boolean>(() => {
 });
 
 const nextButtonLabel = computed<string>(() => (itemIndex.value === manifest.value.sequence.length - 1
-  ? `${t('next')} ${t('Manuscript')}`
-  : `${t('next')} ${t('item')}`));
+  ? `${t('next_manifest')}`
+  : `${t('next_item')}`));
 const prevButtonLabel = computed<string>(() => (itemIndex.value === 0
-  ? `${t('prev')} ${t('Manuscript')}`
-  : `${t('prev')} ${t('item')}`));
+  ? `${t('previous_manifest')}`
+  : `${t('previous_item')}`));
 
 function prev() {
   const prevIndex = itemIndex.value - 1;
