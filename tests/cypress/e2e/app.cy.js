@@ -86,7 +86,7 @@ describe('Tido', () => {
       .get(selectors.prevButton)
       .should('be.visible')
       .should('be.disabled')
-      .contains('Previous Manuscript');
+      .contains('Previous Manifest');
 
     cy
       .get(selectors.nextButton)

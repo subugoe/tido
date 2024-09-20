@@ -17,7 +17,7 @@ describe('Translations', () => {
             .contains('Nächste Seite')
       
             .get(selectors.prevButton)
-            .contains('Vorherige Manuskript')
+            .contains('Vorheriges Dokument')
             
           cy.visit('/ahiqar-arabic-karshuni-local-de.html?tido=m0_i1')
             .get(selectors.nextButton)
@@ -28,7 +28,7 @@ describe('Translations', () => {
 
           cy.visit('/ahiqar-arabic-karshuni-local-de.html?tido=tido=m0_i80')
             .get(selectors.nextButton)
-            .contains('Nächste Manuskript')
+            .contains('Nächstes Dokument')
         
             .get(selectors.prevButton)
             .contains('Vorherige Seite')
@@ -39,7 +39,7 @@ describe('Translations', () => {
              .get(selectors.nextButton)
              .contains('Next Item')
             .get(selectors.prevButton)
-            .contains('Previous Manuscript')
+            .contains('Previous Manifest')
         })
       })
 })
