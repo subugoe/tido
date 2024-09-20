@@ -26,7 +26,10 @@
   window.addEventListener('load', function () {
     window.tido = new window.Tido({
       manifest: "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/manifest.json",
-      lang:"de",
+      labels: {
+        item: "Seite",
+        manifest: "Dokument"
+      },
       colors: {
         forceMode: "light",
         primary: "#4569cc"
