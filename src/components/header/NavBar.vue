@@ -29,11 +29,11 @@ import { useI18n } from 'vue-i18n';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents';
 import BaseButton from '@/components/base/BaseButton.vue';
-import { areNavButtonsLabelsInConfig } from '@/utils/translations'
+import { getNavButtonsLabels } from '@/utils/translations'
 
 const configStore = useConfigStore();
 const contentStore = useContentsStore();
-const { t } = useI18n();
+
 
 const manifest = computed<Manifest>(() => contentStore.manifest);
 const manifests = computed<Manifest[]>(() => contentStore.manifests);
@@ -51,18 +51,6 @@ const hasPrev = computed<boolean>(() => {
 });
 
 
-
-function getNavButtonsLabels(config, navButtonsDefaultTextArray: string[]): string[] {
-    const lang = config['lang']
-    if (areNavButtonsLabelsInConfig(config, navButtonsDefaultTextArray)) {
-      const translations = config.translations[lang]
-      return [translations['next_item'], translations['previous_item'], translations['next_manifest'], translations['previous_manifest']]
-    }
-    else {
-      return [t('next_item'), t('previous_item'), t('next_manifest'), t('previous_manifest')]
-    }
-}
-
 const hasNext = computed<boolean>(() => {
   const nextIndex = itemIndex.value + 1;
   if (nextIndex > manifest.value.sequence.length - 1) {
@@ -73,9 +61,8 @@ const hasNext = computed<boolean>(() => {
   return true;
 });
 
-// variables are named according to the general concept of ie (item = sheet, item);  (manifest = document, manuscript)
-const navButtonsDefaultTextArray = ['next_item', 'previous_item', 'next_manifest', 'previous_manifest']
-const [nextPageLabel, previousPageLabel, nextDocumentLabel, previousDocumentLabel]: string[] = getNavButtonsLabels(configStore.config, navButtonsDefaultTextArray)
+
+const [nextPageLabel, previousPageLabel, nextDocumentLabel, previousDocumentLabel]: string[] = getNavButtonsLabels(configStore.config)
 
 const nextButtonLabel = computed<string>(() => ( 
 itemIndex.value === manifest.value.sequence.length - 1
