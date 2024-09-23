@@ -52,11 +52,11 @@ const hasPrev = computed<boolean>(() => {
 
 
 
-function getNavButtonsLabels(config): string[] {
+function getNavButtonsLabels(config, navButtonsDefaultTextArray: string[]): string[] {
     const lang = config['lang']
-    if (areNavButtonsLabelsInConfig(config)) {
+    if (areNavButtonsLabelsInConfig(config, navButtonsDefaultTextArray)) {
       const translations = config.translations[lang]
-      return [translations['next_page'], translations['previous_page'], translations['next_document'], translations['previous_document']]
+      return [translations['next_item'], translations['previous_item'], translations['next_manifest'], translations['previous_manifest']]
     }
     else {
       return [t('next_item'), t('previous_item'), t('next_manifest'), t('previous_manifest')]
@@ -73,8 +73,9 @@ const hasNext = computed<boolean>(() => {
   return true;
 });
 
-// variables are named according to the general concept of ie (page = sheet, item);  (document = manuscript)
-const [nextPageLabel, previousPageLabel, nextDocumentLabel, previousDocumentLabel]: string[] = getNavButtonsLabels(configStore.config)
+// variables are named according to the general concept of ie (item = sheet, item);  (manifest = document, manuscript)
+const navButtonsDefaultTextArray = ['next_item', 'previous_item', 'next_manifest', 'previous_manifest']
+const [nextPageLabel, previousPageLabel, nextDocumentLabel, previousDocumentLabel]: string[] = getNavButtonsLabels(configStore.config, navButtonsDefaultTextArray)
 
 const nextButtonLabel = computed<string>(() => ( 
 itemIndex.value === manifest.value.sequence.length - 1
