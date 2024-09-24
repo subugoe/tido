@@ -18,7 +18,7 @@
             class="t-px-2 text-gray-500 dark:text-gray-300"
             name="chevronRight"
           />
-          <span v-if="item">{{ labels.item }} {{ item.n }}</span>
+          <span v-if="item">{{ getItemLabel() }} {{ item.n }}</span>
         </h2>
       </template>
       <template v-else>
@@ -32,7 +32,7 @@
           <span
             v-if="item"
             class="t-align-middle"
-          >{{ labels.item }} {{ item.n }}</span>
+          >{{ getItemLabel() }} {{ item.n }}</span>
         </h1>
       </template>
     </template>
@@ -50,7 +50,7 @@ import { computed } from 'vue';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents'
 import BaseIcon from '@/components/base/BaseIcon.vue';
-
+import { getNavButtonsLabels } from '@/utils/translations';
 
 export interface Props {
   item: Item
@@ -63,10 +63,13 @@ withDefaults(defineProps<Props>(), {
 const configStore = useConfigStore()
 const contentStore = useContentsStore()
 
+
 const collectionTitle = computed<string | null>(() => contentStore.collectionTitle);
 const manifestTitle = computed<string | undefined>(() => contentStore.manifest?.label  );
-const labels = computed<Labels>(() => configStore.config.labels || {
-  manifest: 'manifest',
-  item: 'item',
-});
+
+
+function getItemLabel() {
+  const navButtonsLabels = getNavButtonsLabels(configStore.config)
+  return navButtonsLabels[0].split(' ')[1] 
+}
 </script>

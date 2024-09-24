@@ -29,10 +29,11 @@ import { useI18n } from 'vue-i18n';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents';
 import BaseButton from '@/components/base/BaseButton.vue';
+import { getNavButtonsLabels } from '@/utils/translations'
 
 const configStore = useConfigStore();
 const contentStore = useContentsStore();
-const { t } = useI18n();
+
 
 const manifest = computed<Manifest>(() => contentStore.manifest);
 const manifests = computed<Manifest[]>(() => contentStore.manifests);
@@ -48,6 +49,8 @@ const hasPrev = computed<boolean>(() => {
 
   return true;
 });
+
+
 const hasNext = computed<boolean>(() => {
   const nextIndex = itemIndex.value + 1;
   if (nextIndex > manifest.value.sequence.length - 1) {
@@ -57,16 +60,19 @@ const hasNext = computed<boolean>(() => {
   }
   return true;
 });
-const labels = computed<Labels>(() => configStore.config.labels || {
-  manifest: 'manifest',
-  item: 'item',
-});
-const nextButtonLabel = computed<string>(() => (itemIndex.value === manifest.value.sequence.length - 1
-  ? `${t('next')} ${t(labels.value.manifest ? labels.value.manifest : 'Manuscript')}`
-  : `${t('next')} ${t(labels.value.item)}`));
+
+
+const [nextPageLabel, previousPageLabel, nextDocumentLabel, previousDocumentLabel]: string[] = getNavButtonsLabels(configStore.config)
+
+const nextButtonLabel = computed<string>(() => ( 
+itemIndex.value === manifest.value.sequence.length - 1
+  ? `${nextDocumentLabel}`
+  : `${nextPageLabel}`));
+
+
 const prevButtonLabel = computed<string>(() => (itemIndex.value === 0
-  ? `${t('prev')} ${t(labels.value.manifest ? labels.value.manifest : 'Manuscript')}`
-  : `${t('prev')} ${t(labels.value.item)}`));
+  ? `${previousDocumentLabel}`
+  : `${previousPageLabel}`));
 
 function prev() {
   const prevIndex = itemIndex.value - 1;
