@@ -15,6 +15,10 @@
       v-else
       :value="item.value"
     />
+    <Citation 
+      v-if="isCitation(item.key)" 
+      :value="item.value"
+      />
     <MetadataItem
       v-for="(childItem, idx) in childItems"
       :key="idx"
@@ -28,6 +32,8 @@
 import { computed } from 'vue';
 import MetadataLink from '@/components/metadata/MetadataLink.vue';
 import MetadataValue from '@/components/metadata/MetadataValue.vue';
+import Citation from '@/components/metadata/Citation.vue'
+
 
 const props = defineProps<{
   item: Metadata,
@@ -41,6 +47,10 @@ function isLink(): boolean {
   const matches = (typeof props.item?.key === 'string') ? props.item?.key?.match(regex) : null;
 
   return matches !== null;
+}
+
+function isCitation(key: string): boolean {
+  return key.toLowerCase() === 'citation' || key.toLowerCase() === 'zitation';
 }
 
 </script>
