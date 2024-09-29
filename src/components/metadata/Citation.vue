@@ -1,7 +1,7 @@
 <template>
     <BaseButton
         display="mono"
-        icon="biCopy"
+        icon="copy"
         icon-position="right"
         text="Copy citation"
         @click="copyContentToClipboard()"
