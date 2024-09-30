@@ -26,15 +26,12 @@ export const findComponent = (id) => ({
   ...components[id],
 });
 
-const defaultFonts = {
-  default_size: 16,
-  min_size: 14,
-  max_size: 28
-}
 
-export function getFontSizes(view) {
-  
-  if(!view.connector.options?.fonts) return defaultFonts
-  const fonts = view.connector.options.fonts
-  return {...defaultFonts, ...fonts}
+export function getFontSizes(view, defaultFonts) {
+  const options = view.connector.options
+  const default_size = options.default_font_size? options.default_font_size: null
+  const min_size = options.min_font_size? options.min_font_size: null
+  const max_size = options.max_font_size? options.max_font_size: null
+
+  return {...defaultFonts, ...default_size && {default_size}, ...min_size && {min_size}, ...max_size && {max_size}}
 }

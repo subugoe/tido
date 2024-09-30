@@ -228,8 +228,12 @@ export default {
     }
 
     function createContentView(view, i) {
-      
-      const { default_size: fontSize, min_size: minFontSize, max_size: maxFontSize } = getFontSizes(view)
+      const defaultFonts = {
+        default_size: 16,
+        min_size: 14,
+        max_size: 28
+      }
+      const { default_size: fontSize, min_size: minFontSize, max_size: maxFontSize } = getFontSizes(view, defaultFonts)
       
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
