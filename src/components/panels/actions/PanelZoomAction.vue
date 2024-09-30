@@ -42,11 +42,15 @@ const value = ref(0);
 
 onMounted(() => {
   value.value = props.startValue;
+  if(value.value === props.min)  disableDecrease.value = true;
+  if(value.value === props.max)  disableIncrease.value = true; 
 });
 
 function increase() {
-  value.value += props.step;
-  emit('update', value.value);
+  if(value.value + props.step <= props.max) {
+    value.value += props.step;
+    emit('update', value.value);
+  }
 
   if (value.value >= props.max) {
     disableIncrease.value = true;
@@ -57,8 +61,10 @@ function increase() {
 }
 
 function decrease() {
-  value.value -= props.step;
-  emit('update', value.value);
+  if(value.value - props.step >= props.min) {
+    value.value -= props.step;
+    emit('update', value.value);
+  }
 
   if (value.value <= props.min) {
     disableDecrease.value = true;

@@ -86,7 +86,10 @@ window.addEventListener('load', function () {
             "connector": {
               "id": 4,
               "options": {
-                "type": "transcription"
+                "type": "transcription",
+                "default_font_size": 16,
+                "min_font_size": 14,
+                "max_font_size": 28 
               }
             }
           },
@@ -97,8 +100,8 @@ window.addEventListener('load', function () {
               "id": 4,
               "options": {
                 "type": "transliteration"
-              }
             }
+           }
           }
         ]
       },
@@ -158,7 +161,6 @@ window.addEventListener('load', function () {
         "next_manifest": "Next Manuscript",
         "previous_manifest": "Previous Manuscript"
       },
-     
     }
   });
 });

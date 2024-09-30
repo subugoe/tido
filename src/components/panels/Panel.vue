@@ -141,7 +141,7 @@ import PanelToggleAction from '@/components/panels/actions/PanelToggleAction.vue
 import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import MessageBox from '@/components/MessageBox.vue';
-import { findComponent } from '@/utils/panels';
+import { findComponent, getFontSizes } from '@/utils/panels';
 
 // NOTE: Using `setup()` rather than the recommended `<script setup>`
 // to avoid issues with asset loading.
@@ -228,6 +228,13 @@ export default {
     }
 
     function createContentView(view, i) {
+      const defaultFonts = {
+        fontSize: 16,
+        minSize: 14,
+        maxSize: 28
+      }
+      const { fontSize, minSize, maxSize } = getFontSizes(view, defaultFonts)
+      
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
@@ -235,7 +242,6 @@ export default {
       const url: string | null = getContentUrl(type);
       if (!url) return;
 
-      const fontSize = 16;
       const actionEvents = {
         update: (value) => {
           tabs.value[i].props.fontSize = value;
@@ -245,7 +251,7 @@ export default {
       const actions = [{
         component: 'PanelZoomAction',
         props: {
-          min: 14, max: 28, step: 2, startValue: fontSize,
+          min: minSize, max: maxSize, step: 2, startValue: fontSize,
         },
         events: actionEvents,
       }];
