@@ -229,11 +229,11 @@ export default {
 
     function createContentView(view, i) {
       const defaultFonts = {
-        default_size: 16,
-        min_size: 14,
-        max_size: 28
+        fontSize: 16,
+        minSize: 14,
+        maxSize: 28
       }
-      const { default_size: fontSize, min_size: minFontSize, max_size: maxFontSize } = getFontSizes(view, defaultFonts)
+      const { fontSize, minSize, maxSize } = getFontSizes(view, defaultFonts)
       
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
@@ -251,7 +251,7 @@ export default {
       const actions = [{
         component: 'PanelZoomAction',
         props: {
-          min: minFontSize, max: maxFontSize, step: 2, startValue: fontSize,
+          min: minSize, max: maxSize, step: 2, startValue: fontSize,
         },
         events: actionEvents,
       }];
