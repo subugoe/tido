@@ -18,7 +18,6 @@ const selectors = {
   })
 
   Cypress.Commands.add('clickTarget', () => {
-    // click witness of the drop down having button named 'buttonName'
     cy
       .get('div#text-content div#MD12675N1l4l2l6l4l42')
       .children()
@@ -33,7 +32,29 @@ const selectors = {
       .contains('p',description).parent()
   })
 
-  
+  Cypress.Commands.add('clickSingleSelectButton', () => {
+    
+    cy
+      .get('.panels-wrapper .panel:nth-child(4)')
+      .find('.panel-header')
+      .find('.actions')
+      .children().eq(2)
+      .find('input[type="checkbox"]')
+      .click() 
+  })
+
+  Cypress.Commands.add('checkNoAnnotationsAvailable', () => {
+    cy
+      .get('.panels-wrapper .panel:nth-child(4) .panel-body')
+      .find('div[id="pv_id_6_2_content"]')
+      .children().eq(0)
+      .children().eq(1)   // annotation content
+      .children().eq(0).should('not.have.class', 'annotations-list')
+      .find('span').contains('No Annotations available')
+  })
+
+ 
+           
 
   describe('VariantsAnnotation', () => {
 
@@ -205,7 +226,7 @@ const selectors = {
 
     describe('Highlighted Text selection', () => {
       it('should click at a highlighted text, show its witnesses and select all related variant items in variants tab', () => {
-        cy
+      cy
         // click at one target
         .clickTarget()
 
@@ -262,4 +283,49 @@ const selectors = {
       })
     })
 
+
+    describe('Single select mode', () => {
+
+      it('when in single select mode, after clicking at one target then its variant items should be shown as selected, \
+            after unclicking the target then the variant items should not be shown', () => {
+          
+          // in NOT single select mode we have 11 variant items shown
+          cy 
+          .get(selectors.list)
+          .should('be.visible')
+          .children()
+          .should("have.length", 11)  
+
+          .clickSingleSelectButton()
+          .should('have.attr', 'value', 'true')   // we are in single select mode
+          .then(() => {
+            cy.checkNoAnnotationsAvailable()       // check that the variant items are removed the list
+
+            cy.clickTarget()
+            // The variant items of this target should be shown in the annotations tab as selected
+            cy.get('.panels-wrapper .panel:nth-child(4) .panel-body div#pv_id_6_2_content')  
+              .find('.annotations-list')
+              .children().should('have.length', 4)
+              .each(($li) => {
+                expect($li).to.have.class('active')
+              })
+            // unclick the target
+            cy
+              .get('div#text-content div#MD12675N1l4l2l6l4l42')
+              .children()
+              .eq(2)                        // target becomes the third child element, since 'witnesses' span was added in the text
+              .click()
+            // we expect the selected annotations to be hidden from the tab
+            cy.checkNoAnnotationsAvailable()
+           }
+          )
+
+          .clickSingleSelectButton()       // turn off the single select mode
+          cy 
+            .get(selectors.list)
+            .should('be.visible')
+            .children()
+            .should("have.length", 11)      // we have 11 variant items as in the normal mode - no single select mode    
+        })
+      })           
   });
