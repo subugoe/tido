@@ -202,6 +202,8 @@ const selectors = {
           .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0')
       })
 
+      /*
+      Commented out this test, since we hide the witnesses details dialog box
       it('Should show a dialog box containing a list of a witnesses and a description of them', () => {
         // the witnesses are the unique set of the ones which appear in the variants list
         cy
@@ -222,6 +224,7 @@ const selectors = {
           .checkTextInWitnessItemDescription('Ming. syr. 258', 'test')
           .checkTextInWitnessItemDescription('Sach. 339', 'test')
       })
+      */
     })
 
     describe('Highlighted Text selection', () => {
@@ -286,30 +289,36 @@ const selectors = {
 
     describe('Single select mode', () => {
 
-      it('when in single select mode, after clicking at one target then its variant items should be shown as selected, \
-            after unclicking the target then the variant items should not be shown', () => {
-          
-          // in NOT single select mode we have 11 variant items shown
-          cy 
-          .get(selectors.list)
-          .should('be.visible')
-          .children()
-          .should("have.length", 11)  
+        it('should hide the variant items when single select mode is on', () => {
+          cy.wait(500).then(() => {    
+            // we wait till the text panel and annotations panel are fully loaded
+            cy
+            .clickSingleSelectButton().then(() => {
+              cy.checkNoAnnotationsAvailable()
+            })
+          })
+        })
 
-          .clickSingleSelectButton()
-          .should('have.attr', 'value', 'true')   // we are in single select mode
-          .then(() => {
-            cy.checkNoAnnotationsAvailable()       // check that the variant items are removed the list
+        it('should show variant items of the target as selected when clicking the target in single select mode', () => {
+          cy.wait(500).then(() => {    
+            cy
+            .clickSingleSelectButton().then(() => {
+              cy.clickTarget()
+              cy.get('.panels-wrapper .panel:nth-child(4) .panel-body div#pv_id_6_2_content')  
+                .find('.annotations-list')
+                .children().should('have.length', 4)
+                .each(($li) => {
+                  expect($li).to.have.class('active')
+               })
+             })
+           }) 
+         })
 
+         it('should hide the selected variant items after unclicking the target in single select mode', () => {
+          cy.wait(500).then(() => {
+            cy.clickSingleSelectButton()
             cy.clickTarget()
-            // The variant items of this target should be shown in the annotations tab as selected
-            cy.get('.panels-wrapper .panel:nth-child(4) .panel-body div#pv_id_6_2_content')  
-              .find('.annotations-list')
-              .children().should('have.length', 4)
-              .each(($li) => {
-                expect($li).to.have.class('active')
-              })
-            // unclick the target
+            // below we unclick the target
             cy
               .get('div#text-content div#MD12675N1l4l2l6l4l42')
               .children()
@@ -317,15 +326,21 @@ const selectors = {
               .click()
             // we expect the selected annotations to be hidden from the tab
             cy.checkNoAnnotationsAvailable()
-           }
-          )
+          }) 
+          })
 
-          .clickSingleSelectButton()       // turn off the single select mode
-          cy 
-            .get(selectors.list)
-            .should('be.visible')
-            .children()
-            .should("have.length", 11)      // we have 11 variant items as in the normal mode - no single select mode    
-        })
+          it('should show again all the variant item when we switch off the single select mode', () => {
+            cy.wait(500).then(() => {
+              cy
+              .clickSingleSelectButton()     // set the single select mode
+              cy
+              .clickSingleSelectButton()     // switch off the single select mode
+              cy 
+              .get(selectors.list)
+              .should('be.visible')
+              .children()
+              .should("have.length", 11)      // we have 11 variant items as in the normal mode - no single select mode 
+            })
+          })
       })           
   });
