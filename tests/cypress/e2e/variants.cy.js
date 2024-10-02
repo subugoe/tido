@@ -61,6 +61,10 @@ const selectors = {
     beforeEach(() => {
       cy
       .visit(`/ahiqar-arabic-karshuni-with-variants-local.html?tido=m20_i1_p0.0-1.0-2.0-3.2`)
+      .get('#text-content')
+      .should('be.visible')
+      .get(selectors.list)
+      .should('be.visible')
     })
 
     describe('Variants items selection', () => {
@@ -300,7 +304,7 @@ const selectors = {
         })
 
         it('should show variant items of the target as selected when clicking the target in single select mode', () => {
-          
+
           cy.wait(500).then(() => {    
             cy
             .clickSingleSelectButton().then(() => {
