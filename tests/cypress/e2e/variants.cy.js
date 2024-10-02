@@ -247,17 +247,17 @@ const selectors = {
         .get(selectors.list)
         .children()
         .eq(2)
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
         .next()
-        .should('have.class', 't-bg-gray-300')
+        .should('have.class', 'active')
         .next()
-        .should('have.class', 't-bg-gray-300')
+        .should('have.class', 'active')
         .next()
-        .should('have.class', 't-bg-gray-300')
+        .should('have.class', 'active')
         .next()
-        .should('have.class', 't-bg-gray-300')
+        .should('have.class', 'active')
         .next()
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
       })
 
       // 
@@ -276,13 +276,13 @@ const selectors = {
         .get(selectors.list)
         .children()
         .eq(3)
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
         .next()
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
         .next()
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
         .next()
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
       })
     })
 
@@ -300,6 +300,7 @@ const selectors = {
         })
 
         it('should show variant items of the target as selected when clicking the target in single select mode', () => {
+          
           cy.wait(500).then(() => {    
             cy
             .clickSingleSelectButton().then(() => {

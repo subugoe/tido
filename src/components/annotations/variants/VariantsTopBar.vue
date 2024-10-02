@@ -4,7 +4,6 @@ import {computed, reactive, ref, watch} from "vue";
 import colors from "tailwindcss/colors";
 import BaseDialog from "@/components/base/BaseDialog.vue";
 import ActiveVariantsDetails from "@/components/annotations/variants/ActiveVariantsDetails.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
 import WitnessesDetails from "@/components/annotations/variants/WitnessesDetails.vue";
 import BaseDropdown from "@/components/base/BaseDropdown.vue";
 import BaseCheckbox from "@/components/base/BaseCheckbox.vue";
