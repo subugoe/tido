@@ -4,7 +4,6 @@ import {computed, reactive, ref, watch} from "vue";
 import colors from "tailwindcss/colors";
 import BaseDialog from "@/components/base/BaseDialog.vue";
 import ActiveVariantsDetails from "@/components/annotations/variants/ActiveVariantsDetails.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
 import WitnessesDetails from "@/components/annotations/variants/WitnessesDetails.vue";
 import BaseDropdown from "@/components/base/BaseDropdown.vue";
 import BaseCheckbox from "@/components/base/BaseCheckbox.vue";
@@ -67,27 +66,9 @@ function toggleWitness(witness: Witness, isActive: boolean) {
           </div>
         </div>
       </BaseDropdown>
-      <BaseButton
-        class="t-ml-auto"
-        :text="$t('witnesses_details')"
-        display="outline"
-        icon="popup"
-        icon-position="right"
-        size="small"
-        @click="witnessesDetailsDialogOpen = true"
-      />
     </div>
     <div class="t-mt-4 t-flex t-items-center" v-show="Object.keys(annotationsStore.activeAnnotations).length > 0">
       <span class="t-text-sm t-font-bold">{{ Object.keys(annotationsStore.activeAnnotations).length }} Variants selected</span>
-      <BaseButton
-        class="t-ml-auto"
-        :text="$t('variants_details')"
-        display="outline"
-        size="small"
-        icon="popup"
-        icon-position="right"
-        @click="variantsDetailsDialogOpen = true"
-      />
     </div>
   </div>
   <BaseDialog

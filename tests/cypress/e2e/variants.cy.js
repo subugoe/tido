@@ -18,7 +18,6 @@ const selectors = {
   })
 
   Cypress.Commands.add('clickTarget', () => {
-    // click witness of the drop down having button named 'buttonName'
     cy
       .get('div#text-content div#MD12675N1l4l2l6l4l42')
       .children()
@@ -33,13 +32,39 @@ const selectors = {
       .contains('p',description).parent()
   })
 
-  
+  Cypress.Commands.add('clickSingleSelectButton', () => {
+    
+    cy
+      .get('.panels-wrapper .panel:nth-child(4)')
+      .find('.panel-header')
+      .find('.actions')
+      .children().eq(2)
+      .find('input[type="checkbox"]')
+      .click() 
+  })
+
+  Cypress.Commands.add('checkNoAnnotationsAvailable', () => {
+    cy
+      .get('.panels-wrapper .panel:nth-child(4) .panel-body')
+      .find('div[id="pv_id_6_2_content"]')
+      .children().eq(0)
+      .children().eq(1)   // annotation content
+      .children().eq(0).should('not.have.class', 'annotations-list')
+      .find('span').contains('No Annotations available')
+  })
+
+ 
+           
 
   describe('VariantsAnnotation', () => {
 
     beforeEach(() => {
       cy
       .visit(`/ahiqar-arabic-karshuni-with-variants-local.html?tido=m20_i1_p0.0-1.0-2.0-3.2`)
+      .get('#text-content')
+      .should('be.visible')
+      .get(selectors.list)
+      .should('be.visible')
     })
 
     describe('Variants items selection', () => {
@@ -181,6 +206,8 @@ const selectors = {
           .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0')
       })
 
+      /*
+      Commented out this test, since we hide the witnesses details dialog box
       it('Should show a dialog box containing a list of a witnesses and a description of them', () => {
         // the witnesses are the unique set of the ones which appear in the variants list
         cy
@@ -201,11 +228,12 @@ const selectors = {
           .checkTextInWitnessItemDescription('Ming. syr. 258', 'test')
           .checkTextInWitnessItemDescription('Sach. 339', 'test')
       })
+      */
     })
 
     describe('Highlighted Text selection', () => {
       it('should click at a highlighted text, show its witnesses and select all related variant items in variants tab', () => {
-        cy
+      cy
         // click at one target
         .clickTarget()
 
@@ -223,17 +251,17 @@ const selectors = {
         .get(selectors.list)
         .children()
         .eq(2)
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
         .next()
-        .should('have.class', 't-bg-gray-300')
+        .should('have.class', 'active')
         .next()
-        .should('have.class', 't-bg-gray-300')
+        .should('have.class', 'active')
         .next()
-        .should('have.class', 't-bg-gray-300')
+        .should('have.class', 'active')
         .next()
-        .should('have.class', 't-bg-gray-300')
+        .should('have.class', 'active')
         .next()
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
       })
 
       // 
@@ -252,14 +280,72 @@ const selectors = {
         .get(selectors.list)
         .children()
         .eq(3)
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
         .next()
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
         .next()
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
         .next()
-        .should('not.have.class', 't-bg-gray-300')
+        .should('not.have.class', 'active')
       })
     })
 
+
+    describe('Single select mode', () => {
+
+        it('should hide the variant items when single select mode is on', () => {
+          cy.wait(500).then(() => {    
+            // we wait till the text panel and annotations panel are fully loaded
+            cy
+            .clickSingleSelectButton().then(() => {
+              cy.checkNoAnnotationsAvailable()
+            })
+          })
+        })
+
+        it('should show variant items of the target as selected when clicking the target in single select mode', () => {
+
+          cy.wait(500).then(() => {    
+            cy
+            .clickSingleSelectButton().then(() => {
+              cy.clickTarget()
+              cy.get('.panels-wrapper .panel:nth-child(4) .panel-body div#pv_id_6_2_content')  
+                .find('.annotations-list')
+                .children().should('have.length', 4)
+                .each(($li) => {
+                  expect($li).to.have.class('active')
+               })
+             })
+           }) 
+         })
+
+         it('should hide the selected variant items after unclicking the target in single select mode', () => {
+          cy.wait(500).then(() => {
+            cy.clickSingleSelectButton()
+            cy.clickTarget()
+            // below we unclick the target
+            cy
+              .get('div#text-content div#MD12675N1l4l2l6l4l42')
+              .children()
+              .eq(2)                        // target becomes the third child element, since 'witnesses' span was added in the text
+              .click()
+            // we expect the selected annotations to be hidden from the tab
+            cy.checkNoAnnotationsAvailable()
+          }) 
+          })
+
+          it('should show again all the variant item when we switch off the single select mode', () => {
+            cy.wait(500).then(() => {
+              cy
+              .clickSingleSelectButton()     // set the single select mode
+              cy
+              .clickSingleSelectButton()     // switch off the single select mode
+              cy 
+              .get(selectors.list)
+              .should('be.visible')
+              .children()
+              .should("have.length", 11)      // we have 11 variant items as in the normal mode - no single select mode 
+            })
+          })
+      })           
   });
