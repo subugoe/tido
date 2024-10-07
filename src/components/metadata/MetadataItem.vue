@@ -15,8 +15,8 @@
       v-else
       :value="item.value"
     />
-    <Citation 
-      v-if="isCitationRow(item.key) " 
+    <CopyCitation 
+      v-if="showCopyCitation(item.key, configStore.config) " 
       :value="item.value"
     />
     <MetadataItem
@@ -32,7 +32,7 @@
 import { computed } from 'vue';
 import MetadataLink from '@/components/metadata/MetadataLink.vue';
 import MetadataValue from '@/components/metadata/MetadataValue.vue';
-import Citation from '@/components/metadata/Citation.vue'
+import CopyCitation from '@/components/metadata/CopyCitation.vue'
 import { useConfigStore } from '@/stores/config';
 
 const props = defineProps<{
@@ -61,23 +61,20 @@ function getMetadataView(panels) {
   }
   else {
     // when there is one panel containing content and metadata views
-    panelMetadata = panels.filter(panel => panel.label.toLowerCase() === 'contents_and_metadata')[0]
-    metadataView = panelMetadata.views.filter(view => view.label.toLowerCase() === 'metadata')[0]
+    const panelContainingMetadata = panels.filter(panel => panel.label.toLowerCase().includes('metadata'))[0]
+    metadataView = panelContainingMetadata.views.filter(view => view.label.toLowerCase() === 'metadata')[0]
   }
   return metadataView
 }
 
-function isCitationInConfig(config): boolean {
+
+function showCopyCitation(key, config) {
   const metadataView = getMetadataView(config.panels)
-  if(metadataView.connector.options?.citation) {
-    return metadataView.connector.options.citation
+  // when we retrieve each MetadataItem, we want to know whether we are in the row of the citation
+  if (metadataView.connector.options.citationKey) {
+    return metadataView.connector.options.citationKey === key
   }
   return false
-}
-
-function isCitationRow(key) {
-  // when we retrieve each MetadataItem, we want to know whether we are in the row of the citation
-  return key.toLowerCase().includes('cit') || key.toLowerCase().includes('zit')
 }
 
 </script>
