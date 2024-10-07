@@ -8,7 +8,7 @@
   />
   <div
     v-if="modelValue"
-    class="t-absolute t-top-[110%] t-right-0 t-z-[1000] t-shadow-md t-rounded-md t-p-2 dark:t-bg-gray-800 t-bg-gray-50"
+    class="t-absolute t-top-[110%] t-left-0 md:t-right-0 t-z-[1000] t-shadow-md t-rounded-md t-p-2 dark:t-bg-gray-800 t-bg-gray-50"
   >
     <slot />
   </div>
