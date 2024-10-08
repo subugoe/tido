@@ -16,7 +16,7 @@ export function areNavButtonsLabelsInConfig(config) {
 }
 
 
-export function getNavButtonsLabels(config, navButtonsDefaultTextArray) {
+export function getNavButtonsLabels(config) {
     const lang = config['lang']
     
     if (areNavButtonsLabelsInConfig(config)) {
