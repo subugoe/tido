@@ -21,6 +21,7 @@
 import { computed } from 'vue';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents';
+import { orderMetadataItems } from '@/utils/metadata'
 
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 import Actor from '@/components/metadata/Actor.vue';
@@ -36,14 +37,25 @@ const total = computed<number>(() => (manifests.value !== null ? manifests.value
 const labels = computed<Labels>(() => configStore.config.labels);
 const metadata = computed(() => {
   if (!manifest.value) return [];
-  return [
-    { key: 'label', value: manifest.value.label },
+
+  let manifestOrderMetadata = useConfigStore().config.panels[0].views[1].connector.options.orderManifestMetadata
+
+  let defaultMetadata = [
+    { key: 'Label', value: manifest.value.label },
     ...(manifest.value.license || []).map((license) => ({
       key: 'License',
       value: license.id,
     })),
-    ...(manifest.value.metadata || []),
+    ...(manifest.value.metadata || []).map((metaItem) => ({key: metaItem.key, value: metaItem.value})),
   ];
+
+  let orderedMetadata = []
+  if(manifestOrderMetadata?.length > 0) {
+      orderedMetadata = orderMetadataItems(manifestOrderMetadata, defaultMetadata)
+      return orderedMetadata
+  } 
+
+  return defaultMetadata
 });
 const actor = computed<Actor[] | undefined>(() => manifest.value?.actor);
 </script>
