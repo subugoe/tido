@@ -59,7 +59,10 @@ window.addEventListener('load', function () {
                 },
                 "item": {
                   "all": true
-                }
+                },
+                "orderCollectionMetadata": ['title','collector', 'description'],
+                // the Label and License need to be included here in order to be shown in the list
+                "orderManifestMetadata": ['Label', 'License', 'Date of creation', 'Place of origin', 'Current location', 'TEI document']
               }
             }
           }
