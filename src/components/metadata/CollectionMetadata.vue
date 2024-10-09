@@ -20,7 +20,9 @@
 
 import { computed } from 'vue';
 import { useContentsStore } from '@/stores/contents';
+import { useConfigStore } from '@/stores/config';
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
+import { orderMetadataItems } from '@/utils/metadata'
 
 const contentStore = useContentsStore();
 
@@ -35,6 +37,14 @@ function getCollectorsName(collection: Collection) : string | null {
 const collection = computed<Collection>(() => contentStore.collection);
 
 const metadata = computed(() => {
+
+  let collectionOrderMetadata = useConfigStore().config.panels[0].views[1].connector.options.orderCollectionMetadata
+  
+  let collectionOrderMetadataLower;
+  if(collectionOrderMetadata?.length > 0) {
+    collectionOrderMetadataLower = collectionOrderMetadata.map(word => word.toLowerCase());
+   }
+  
   if (!collection.value) return [];
 
   const mappings = {
@@ -46,7 +56,7 @@ const metadata = computed(() => {
   const { description } = collection.value;
   const collectionTitle: Title[] = collection.value.title;
 
-  return [
+  const defaultMetadata = [
     ...collectionTitle
       .filter((c) => c)
       .map((title) => ({
@@ -56,5 +66,14 @@ const metadata = computed(() => {
     ...(collectorsName ? [{ key: 'collector', value: collectorsName }] : []),
     ...(description ? [{ key: 'description', value: description }] : []),
   ];
+
+  let orderedMetadata = []
+  if(collectionOrderMetadataLower?.length > 0) {
+      orderedMetadata = orderMetadataItems(collectionOrderMetadataLower, defaultMetadata)
+      return orderedMetadata
+   } 
+
+  return defaultMetadata
 });
+
 </script>
