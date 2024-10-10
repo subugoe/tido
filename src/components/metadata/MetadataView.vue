@@ -1,19 +1,21 @@
 <template>
   <div class="metadata-view t-overflow-auto t-break-all t-px-4 t-pt-4">
-    <CollectionMetadata v-if="options.collection?.all" />
-    <ManifestMetadata v-if="options.manifest?.all" />
-    <ItemMetadata v-if="options.manifest?.all" />
+    <component v-for="(documentType,i) in orderDocumentsMetadata" :is="resolveComponent(documentType)" :key="i"> </component>
   </div>
 </template>
 
 <script setup>
 
-import CollectionMetadata from '@/components/metadata/CollectionMetadata.vue';
-import ManifestMetadata from '@/components/metadata/ManifestMetadata.vue';
-import ItemMetadata from '@/components/metadata/ItemMetadata.vue';
+
+import { useConfigStore } from '@/stores/config';
+import { resolveComponent } from 'vue';
 
 defineProps({
   options: Object,
 });
 
+const orderDocumentsMetadata = useConfigStore().config.panels[0].views[1].connector.options.orderDocumentsMetadata
+
+
 </script>
+
