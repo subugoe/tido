@@ -8,7 +8,7 @@ export function orderMetadataItems(orderConfig, defaultMetadata) {
     let orderedMetadata = []
     if(orderConfig?.length) {
         orderConfig.forEach((key) => {
-            const metadataItem = defaultMetadata.find((metadata) => metadata.key === key)
+            const metadataItem = defaultMetadata.find((metadata) => metadata.key.toLowerCase() === key.toLowerCase())
             if(metadataItem) orderedMetadata.push({'key': key, 'value': metadataItem.value})
         })
     }
