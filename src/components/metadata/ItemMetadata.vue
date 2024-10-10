@@ -18,6 +18,7 @@
 import { computed } from 'vue';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents';
+import { orderMetadataItems } from '@/utils/metadata'
 
 import MetadataItem from '@/components/metadata/MetadataItem.vue';
 
@@ -31,12 +32,22 @@ const itemsCount = computed<number>(() => manifest.value?.sequence.length);
 const labels = computed<Labels>(() => configStore.config.labels);
 const number = computed<number>(() => (manifest.value ? manifest.value.sequence.findIndex(({ id }) => id === itemUrl.value) + 1 : 1));
 const total = computed<number>(() => itemsCount.value ?? 1);
-const metadata = computed(() => (
-  [
-    { key: 'label', value: item.value.n },
-    { key: 'language', value: item.value?.lang?.join(',') },
-    { key: 'image_license', value: item.value?.image?.license?.id },
-    { key: 'image_notes', value: item.value?.image?.license?.notes },
-  ].filter((i) => i.value)
-));
+const metadata = computed(() => {
+ 
+  let itemOrderMetadata = useConfigStore().config.panels[0].views[1].connector.options.orderItemMetadata
+  let defaultMetadata = [
+      { key: 'label', value: item.value.n },
+      { key: 'language', value: item.value?.lang?.join(',') },
+      { key: 'image_license', value: item.value?.image?.license?.id },
+      { key: 'image_notes', value: item.value?.image?.license?.notes },
+    ].filter((i) => i.value)
+  
+
+  let orderedMetadata = []
+  if(itemOrderMetadata?.length > 0) {
+      orderedMetadata = orderMetadataItems(itemOrderMetadata, defaultMetadata)
+      return orderedMetadata
+  } 
+  return defaultMetadata
+});
 </script>
