@@ -209,13 +209,14 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   }
 
   const resetAnnotations = () => {
+    const textPanelHtml = document.querySelector('#text-content')
     if (annotations.value !== null) {
       annotations.value.forEach((annotation) => {
         const selector = AnnotationUtils.generateTargetSelector(annotation);
         if (selector) {
           AnnotationUtils.highlightTargets(selector, {level: -1});
           AnnotationUtils.removeIcon(annotation);
-          if (AnnotationUtils.isVariant(annotation)) {
+          if (AnnotationUtils.isVariant(annotation) && textPanelHtml.querySelector('.witnesses')) {
             AnnotationUtils.removeWitness(selector, annotation.body.value.witness)
           }
         }
