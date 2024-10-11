@@ -61,10 +61,12 @@ onBeforeUnmount(() => unsubscribe())
 
 function allocateWitnessColorInVariantItem() {
   const colors = {}
-  annotationStore.witnesses.forEach((witness, i) => {
+  if(annotationStore.witnesses?.length > 0) {
+    annotationStore.witnesses.forEach((witness, i) => {
     colors[witness.idno] = getItemColorBasedOnIndex(i)
-  })
-  annotationStore.setVariantItemsColors(colors)
+    annotationStore.setVariantItemsColors(colors)
+    })
+   }
 }
 </script>
 

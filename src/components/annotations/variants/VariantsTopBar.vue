@@ -18,7 +18,9 @@ const showWitnessesDropdown = ref(false);
 const variantsDetailsDialogOpen = ref(false);
 
 watch(witnesses, (value) => {
-  value.forEach(witness => activeWitnessesIds[witness.idno] = true);
+  if(value?.length > 0) {
+   value.forEach(witness => activeWitnessesIds[witness.idno] = true);
+  }
 },
   { immediate: true }
 )
