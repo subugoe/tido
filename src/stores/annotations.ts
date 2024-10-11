@@ -81,7 +81,6 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const selectFilteredAnnotations = (types: AnnotationType[]): void => {
     const configStore = useConfigStore()
     const activeContentType: string = configStore.activeContentType
-
     if (annotations.value !== null) {
       filteredAnnotations.value = types.length === 0 ? annotations.value : annotations.value.filter(
         (annotation) => {
@@ -94,6 +93,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
           // If the display is not dependent on displayWhen then we check if annotation's target exists in the content
           const selector: string = AnnotationUtils.generateTargetSelector(annotation);
+
           if (selector) {
             const el: HTMLElement = document.querySelector(selector);
             if (el) {
@@ -136,17 +136,20 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
     // When filtering by witness it can happen that a target is used for some other active annotation item,
     // In that case, we want to keep the level of highlighting it had and
-
+  
     filteredAnnotations.value
       .filter(annotation => !activeIds.includes(annotation.id))
       .forEach(annotation => {
         const selector = AnnotationUtils.generateTargetSelector(annotation);
         if (!selector) return;
         const selectorIsActive = activeIds.filter(id => selector === AnnotationUtils.generateTargetSelector(activeAnnotations.value[id])).length > 0;
-
-        if (!selectorIsActive && AnnotationUtils.getCurrentLevel(document.querySelector(selector)) < 0) {
+        const target = document.querySelector(selector)
+        if(!target) return;
+        
+        if (!selectorIsActive && AnnotationUtils.getCurrentLevel(target) < 0) {
           AnnotationUtils.highlightTargets(selector, {level: 0});
         }
+        
       })
   }
 
