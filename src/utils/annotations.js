@@ -241,25 +241,29 @@ export function removeIcon(annotation) {
 }
 
 export function addWitness(targetHtmlEl, witness, color) {
-  const parentEl = targetHtmlEl.parentElement
+  let parentEl = targetHtmlEl.parentElement
   const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
   const witHtml = createCurrWitHtml(witness, color)
 
-  if(!parentEl.children[indexOfTarget-1].classList.contains("witnesses")) {
-    // if the previous element in DOM does not contains 'witnesses chips' then create the 'parent' span of the 'witnesses chips'
-    // Create another function - like create 'witnesses' Html element
-    const witnessesHtmlEl = document.createElement("span");
-    witnessesHtmlEl.classList.add('witnesses')
-
-    witnessesHtmlEl.prepend(witHtml)
-    parentEl.insertBefore(witnessesHtmlEl, targetHtmlEl)
+  if(indexOfTarget === 0) {
+    parentEl = createWitnessesHtml(witHtml, parentEl, targetHtmlEl)
   }
-  else {
-    // get the target element and get the previous element - which we know is the 'witnesses' span list
-    // get the witnessesHtml element and append the witHtml element
+  else if(!parentEl.children[indexOfTarget-1].classList.contains("witnesses")) {
+    parentEl = createWitnessesHtml(witHtml, parentEl, targetHtmlEl)
+  }
+  else if(parentEl.children[indexOfTarget-1].classList.contains("witnesses")) {
     let witnessesHtmlEl = parentEl.children[indexOfTarget-1]
     witnessesHtmlEl.appendChild(witHtml)
   }
+}
+
+function createWitnessesHtml(witHtml, parentEl, targetHtmlEl) {
+  const witnessesHtmlEl = document.createElement("span");
+  witnessesHtmlEl.classList.add('witnesses')
+  
+  witnessesHtmlEl.prepend(witHtml)
+  parentEl.insertBefore(witnessesHtmlEl, targetHtmlEl)
+  return parentEl
 }
 
 function createCurrWitHtml(witness, witnessColor) {
