@@ -318,8 +318,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
       if (!target.dataset.annotation) {
         target = getNearestParentAnnotation(target);
       }
-
-      if (!target) {
+      
+      if (!target ||  target.getAttribute('data-annotation-level') < 0) {
         return;
       }
       
