@@ -34,7 +34,7 @@ function toggleWitness(witness: Witness, isActive: boolean) {
 </script>
 
 <template>
-  <div class="t-flex t-flex-col">
+  <div class="t-flex t-flex-col" v-if="annotationsStore.filteredAnnotations.length > 0">
     <h3 class="t-text-sm t-font-bold t-mb-2">
       {{ $t('witnesses') }}:
     </h3>
