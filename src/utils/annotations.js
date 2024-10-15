@@ -240,30 +240,26 @@ export function removeIcon(annotation) {
   }
 }
 
-export function addWitness(targetHtmlEl, witness, color) {
-  let parentEl = targetHtmlEl.parentElement
-  const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
-  const witHtml = createCurrWitHtml(witness, color)
+export function addWitness(target, witness, color) {
+  let parentEl = target.parentElement
+  const targetIndex = [].slice.call(parentEl.children).indexOf(target)
+  const witHtml = createWitHtml(witness, color)
 
-  if(indexOfTarget === 0) {
-    parentEl = updateParentHtmlElOfTarget(witHtml, parentEl, targetHtmlEl)
+  if(targetIndex === 0
+       || !parentEl.children[targetIndex-1].classList.contains("witnesses")) {
+        // witnesses element which holds the witnesses 'chips' is not yet created -> we add the first witness 
+        // create witnesses Html 
+        const witnessesEl = createWitnessesHtml()
+        witnessesEl.appendChild(witHtml)
+        parentEl.insertBefore(witnessesEl, target)
   }
-  else if(!parentEl.children[indexOfTarget-1].classList.contains("witnesses")) {
-    parentEl = updateParentHtmlElOfTarget(witHtml, parentEl, targetHtmlEl)
-  }
-  else if(parentEl.children[indexOfTarget-1].classList.contains("witnesses")) {
-    let witnessesHtmlEl = parentEl.children[indexOfTarget-1]
-    witnessesHtmlEl.appendChild(witHtml)
+  else if(parentEl.children[targetIndex-1].classList.contains("witnesses")) {
+    // we append the second or higher witness
+    let witnessesEl = parentEl.children[targetIndex-1]
+    witnessesEl.appendChild(witHtml)
   }
 }
 
-function updateParentHtmlElOfTarget(witHtml, parentEl, targetHtmlEl) {
-  const witnessesEl = createWitnessesHtml()
-  witnessesEl.prepend(witHtml)
-  
-  parentEl.insertBefore(witnessesEl, targetHtmlEl)
-  return parentEl
-}
 
 function createWitnessesHtml() {
   const witnessesEl = document.createElement("span");
@@ -272,14 +268,13 @@ function createWitnessesHtml() {
   return witnessesEl
 }
 
-function createCurrWitHtml(witness, witnessColor) {
-  // create an html element of the selected witness
+function createWitHtml(witness, witnessColor) {
+  // create an html element of one witness
   const witHtml = document.createElement("span");
   witHtml.innerHTML = witness
   witHtml.classList.add('t-rounded-3xl', 't-box-border', 't-h-8', 't-py-0.5', 't-px-1.5', 't-text-xs', 't-font-semibold', 't-ml-[3px]')
   witHtml.style.background = colors[witnessColor]['100']
   witHtml.style.color = colors[witnessColor]['600']
-
 
   return witHtml
 }
