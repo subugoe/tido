@@ -243,12 +243,12 @@ export function removeIcon(annotation) {
 export function addWitness(target, witness, color) {
   let parentEl = target.parentElement
   const targetIndex = [].slice.call(parentEl.children).indexOf(target)
-  if(targetIndex < 0) return;
+  if (targetIndex < 0) return;
 
   const witEl = createWitHtml(witness, color)
   const isWitnessesEl = parentEl.children[targetIndex-1].classList.contains("witnesses")
 
-  if(isWitnessesEl) {
+  if (isWitnessesEl) {
     let witnessesEl = parentEl.children[targetIndex-1]
     witnessesEl.appendChild(witEl)
   } else {
@@ -282,21 +282,25 @@ function createWitHtml(witness, witnessColor) {
 export function removeChipsFromOtherViews() {
   const textPanelEl = document.querySelector('#text-content')
   const witnessesElements = textPanelEl.getElementsByClassName('witnesses')
+  if (!witnessesElements) return;
+  if(Array.from(witnessesElements).length === 0) return;
+
   // each target has its witnesses wrapper; for every target we remove its witnesses wrapper
-  if( witnessesElements ) {
-    Array.from(witnessesElements).forEach((witnesses) => {
-      witnesses.remove()
-    })
-  }
+  Array.from(witnessesElements).forEach((witnesses) => {
+    witnesses.remove()
+  })
 }
 
 export function removeWitness(selector, witness) {
   // find the witnesses span which contains each 'witness' span child element
   // find this witness inside the 'witnesses' html span and remove it
   const textPanel = document.querySelector('#text-content')
-  if(!textPanel.querySelector('.witnesses')) return;
+  if (!textPanel.querySelector('.witnesses')) return;
 
   const witnessesEl = getWitnessesHtmlEl(selector)
+  if (!witnessesEl) return;
+  if (Array.from(witnessesEl.children).length === 0) return;
+
   const witEl = Array.from(witnessesEl.children).filter(item => item.innerHTML === witness)  
   // witEl: refers to the current Witness chip that we will remove
   if (witEl.length > 0) witEl[0].remove()
@@ -307,19 +311,21 @@ export function getWitnessesHtmlEl(selector) {
   // we aim to get the html element which contains the 'witnesses chips' related to the target.
   // this html element which contains the 'witnesses chips' is located before the target element
   const targetEl = document.querySelector(selector)
-  if(!targetEl) return null
+  if (!targetEl) return null
 
   const parentEl = targetEl.parentElement
   const targetIndex = [].slice.call(parentEl.children).indexOf(targetEl)
   if(targetIndex < 1) return null
 
-  return parentEl.children[targetIndex-1]
+  // witnesses el is placed before the target
+  return parentEl.children[targetIndex-1] 
 }
 
 export function getWitnessesList(witnessesEl) {
   // returns the list of witnesses(<string>) which are already selected
   let witnessesList= []
-  if(Array.from(witnessesEl.children).length === 0) return witnessesList;
+  if (!witnessesEl) return [];
+  if(Array.from(witnessesEl.children).length === 0) return [];
 
   Array.from(witnessesEl.children).forEach((witness) => {
     witnessesList.push(witness.innerHTML)
@@ -327,41 +333,11 @@ export function getWitnessesList(witnessesEl) {
   return witnessesList
 }
 
-export function unselectVariantItems(variantItemsSelection) {
-  let newVariantItemsSelection = {}
-  Object.keys(variantItemsSelection).forEach((wit) => {
-    newVariantItemsSelection[wit] = false
-  })
-  return newVariantItemsSelection
-}
-
-export function addWitnessesChipsWhenSelectText(variantItemsSelection, selector, variantItemsColors) {
-  // variantItemsSelection: JSON object of 'witness name': 'true'
-  // this function aims to add all witnesses on the highlighted text when we click on the text
-
-  Object.keys(variantItemsSelection).forEach((witness) => {
-    addWitness(selector, witness, variantItemsColors)
-  })
-}
-
-export function removeWitnessesChipsWhenDeselectText(witnessesList, selector) {
-  witnessesList.forEach((witness) => {
-    removeWitness(selector, witness)
-  })
-}
 
 export function isVariant(annotation) {
   return annotation.body['x-content-type'] === 'Variant';
 }
 
-export function initVariantItemsSelection(annotation, value) {
-  // initialize with the boolean of 'value' variable
-  let variantItemsSelection = {}
-  annotation.body.value.forEach((variantItem) => {
-    variantItemsSelection[variantItem.witness] = value
-  } )
-  return variantItemsSelection
-}
 
 export function getAnnotationListElement(id, container) {
   return [...container.querySelectorAll('.q-item')].find((annotationItem) => {
