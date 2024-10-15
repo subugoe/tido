@@ -292,6 +292,9 @@ export function removeChipsFromOtherViews() {
 export function removeWitness(selector, witness) {
   // find the witnesses span which contains each 'witness' span child element
   // find this witness inside the 'witnesses' html span and remove it
+  const textPanelHtml = document.querySelector('#text-content')
+  if(!textPanelHtml.querySelector('.witnesses')) return;
+
   const witnessesHtmlEl = getWitnessesHtmlEl(selector)
   const witHtml = Array.from(witnessesHtmlEl.children).filter(item => item.innerHTML === witness)
   if (witHtml.length > 0) witHtml[0].remove()
