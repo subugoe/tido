@@ -15,7 +15,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const activeAnnotations = ref({})
   const variantItemsColors = ref({})
   const annotations = ref<Annotation[]>(null)
-  const witnesses = ref<Witness[]>(null)
+  const witnesses = ref<Witness[]>([])
   const filteredAnnotations = ref<Annotation[]>([])
   const isLoading = ref<boolean>(false);
   const isSingleSelectMode = ref<boolean>(false)
@@ -319,10 +319,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         target = getNearestParentAnnotation(target);
       }
       
-      if (!target ||  target.getAttribute('data-annotation-level') < 0) {
+      if (!target) {
         return;
       }
-      
       TextEventBus.emit('click', { target })
     });
   };
