@@ -15,6 +15,8 @@ allocateWitnessColorInVariantItem()
 
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const activeContentUrl = computed<string>(() => contentsStore.activeContentUrl);
+const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
+
 const updateTextHighlighting = computed(() =>
   // We need to make sure that annotations are loaded (this.annotations),
   // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
@@ -34,9 +36,15 @@ watch(
 );
 
 const unsubscribe = TextEventBus.on('click', ({ target }) => {
-  const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
 
   const ids = getAnnotationIdsFromTarget(target)
+
+  // We check if the found annotation ids are currently displayed in the active tab, if not we skip the handling
+  const annotations = filteredAnnotations.value.filter((filtered) => ids.find(id => filtered.id === id))
+
+  if (annotations.length === 0) return
+
+  const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0
 
   if (annotationStore.isSingleSelectMode) {
     if (targetIsSelected) {

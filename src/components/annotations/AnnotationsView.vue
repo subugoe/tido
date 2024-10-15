@@ -58,7 +58,7 @@ watch(
 );
 
 
-const unsubscribe = TextEventBus.on('click', ({ target }) => { 
+const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
     // Next we look up which annotations need to be selected
   let annotationIds = {};
