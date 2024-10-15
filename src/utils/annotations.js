@@ -245,8 +245,8 @@ export function addWitness(target, witness, color) {
   const targetIndex = [].slice.call(parentEl.children).indexOf(target)
   const witHtml = createWitHtml(witness, color)
 
-  if(targetIndex === 0
-       || !parentEl.children[targetIndex-1].classList.contains("witnesses")) {
+  if(targetIndex === 0 || 
+        !parentEl.children[targetIndex-1].classList.contains("witnesses")) {
         // witnesses element which holds the witnesses 'chips' is not yet created -> we add the first witness 
         // create witnesses Html 
         const witnessesEl = createWitnessesHtml()
@@ -305,8 +305,11 @@ export function getWitnessesHtmlEl(selector) {
   // we aim to get the html element which contains the 'witnesses chips' related to the target.
   // this html element which contains the 'witnesses chips' is located before the target element
   const targetHtmlEl = document.querySelector(selector)
+  if(!targetHtmlEl) return null
+
   const parentEl = targetHtmlEl.parentElement
   const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
+  if(indexOfTarget < 1) return null
   const witnessesHtmlEl = parentEl.children[indexOfTarget-1]
 
   return witnessesHtmlEl
@@ -315,6 +318,8 @@ export function getWitnessesHtmlEl(selector) {
 export function getWitnessesList(witnessesHtml) {
   // returns the list of witnesses(<string>) which are already selected
   let witnessesList= []
+  if(Array.from(witnessesHtml.children).length === 0) return witnessesList;
+
   Array.from(witnessesHtml.children).forEach((witnessHtml) => {
     witnessesList.push(witnessHtml.innerHTML)
   })
