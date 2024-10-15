@@ -246,10 +246,10 @@ export function addWitness(targetHtmlEl, witness, color) {
   const witHtml = createCurrWitHtml(witness, color)
 
   if(indexOfTarget === 0) {
-    parentEl = createWitnessesHtml(witHtml, parentEl, targetHtmlEl)
+    parentEl = updateParentHtmlElOfTarget(witHtml, parentEl, targetHtmlEl)
   }
   else if(!parentEl.children[indexOfTarget-1].classList.contains("witnesses")) {
-    parentEl = createWitnessesHtml(witHtml, parentEl, targetHtmlEl)
+    parentEl = updateParentHtmlElOfTarget(witHtml, parentEl, targetHtmlEl)
   }
   else if(parentEl.children[indexOfTarget-1].classList.contains("witnesses")) {
     let witnessesHtmlEl = parentEl.children[indexOfTarget-1]
@@ -257,13 +257,19 @@ export function addWitness(targetHtmlEl, witness, color) {
   }
 }
 
-function createWitnessesHtml(witHtml, parentEl, targetHtmlEl) {
-  const witnessesHtmlEl = document.createElement("span");
-  witnessesHtmlEl.classList.add('witnesses')
+function updateParentHtmlElOfTarget(witHtml, parentEl, targetHtmlEl) {
+  const witnessesEl = createWitnessesHtml()
+  witnessesEl.prepend(witHtml)
   
-  witnessesHtmlEl.prepend(witHtml)
-  parentEl.insertBefore(witnessesHtmlEl, targetHtmlEl)
+  parentEl.insertBefore(witnessesEl, targetHtmlEl)
   return parentEl
+}
+
+function createWitnessesHtml() {
+  const witnessesEl = document.createElement("span");
+  witnessesEl.classList.add('witnesses')
+
+  return witnessesEl
 }
 
 function createCurrWitHtml(witness, witnessColor) {
