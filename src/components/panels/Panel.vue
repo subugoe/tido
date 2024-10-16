@@ -406,7 +406,7 @@ export default {
     function onViewChange(index) {
       activeTabIndex.value = index;
       if (index !==2) {
-        AnnotationUtils.removeChipsFromOtherViews()
+        AnnotationUtils.removeWitnessesWrappers()
       }
 
       emit('active-view', activeTabIndex.value);
