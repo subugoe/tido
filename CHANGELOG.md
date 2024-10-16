@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.1.1](https://github.com/subugoe/tido/compare/v4.1.0...v4.1.1) (2024-10-16)
+
+
+### Bug Fixes
+
+* update panel height on mobile screen ([67323ae](https://github.com/subugoe/tido/commit/67323ae25754906c4650dd8ba1703d13ac6a7826))
+
 ## [4.1.0](https://github.com/subugoe/tido/compare/v4.0.6...v4.1.0) (2024-10-16)
 
 
