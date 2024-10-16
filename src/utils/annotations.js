@@ -240,114 +240,108 @@ export function removeIcon(annotation) {
   }
 }
 
-export function addWitness(targetHtmlEl, witness, color) {
-  const parentEl = targetHtmlEl.parentElement
-  const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
-  const witHtml = createCurrWitHtml(witness, color)
+export function addWitness(target, witness, color) {
+  // we create a witnesses wrapper on the same child level as the target due to styling reasons (i.e the witnesses chips should not be underlined and get the highlight color of the target)
+  // therefore we need target index in order to find the witnesses wrapper element
+  let parentEl = target.parentElement
+  const targetIndex = [].slice.call(parentEl.children).indexOf(target)
+  if (targetIndex < 0) return;
 
-  if(!parentEl.children[indexOfTarget-1].classList.contains("witnesses")) {
-    // if the previous element in DOM does not contains 'witnesses chips' then create the 'parent' span of the 'witnesses chips'
-    // Create another function - like create 'witnesses' Html element
-    const witnessesHtmlEl = document.createElement("span");
-    witnessesHtmlEl.classList.add('witnesses')
+  const witnessEl = createWitnessEl(witness, color)
+  const isWrapper = parentEl.children[targetIndex-1].classList.contains("witnesses")
 
-    witnessesHtmlEl.prepend(witHtml)
-    parentEl.insertBefore(witnessesHtmlEl, targetHtmlEl)
-  }
-  else {
-    // get the target element and get the previous element - which we know is the 'witnesses' span list
-    // get the witnessesHtml element and append the witHtml element
-    let witnessesHtmlEl = parentEl.children[indexOfTarget-1]
-    witnessesHtmlEl.appendChild(witHtml)
+  if (isWrapper) {
+    let wrapper = parentEl.children[targetIndex-1]
+    wrapper.appendChild(witnessEl)
+  } else {
+      // witnesses wrapper which holds the witnesses 'chips' is not yet created -> we add the first witness 
+      // create witnesses Html 
+      const wrapper = createWitnessesWrapper()
+      wrapper.appendChild(witnessEl)
+      parentEl.insertBefore(wrapper, target)
   }
 }
 
-function createCurrWitHtml(witness, witnessColor) {
-  // create an html element of the selected witness
-  const witHtml = document.createElement("span");
-  witHtml.innerHTML = witness
-  witHtml.classList.add('t-rounded-3xl', 't-box-border', 't-h-8', 't-py-0.5', 't-px-1.5', 't-text-xs', 't-font-semibold', 't-ml-[3px]')
-  witHtml.style.background = colors[witnessColor]['100']
-  witHtml.style.color = colors[witnessColor]['600']
 
+function createWitnessesWrapper() {
+  const el = document.createElement("span");
+  el.classList.add('witnesses')
 
-  return witHtml
+  return el
 }
 
-export function removeChipsFromOtherViews() {
+function createWitnessEl(witness, witnessColor) {
+  // create an html element of one witness
+  const el = document.createElement("span");
+  el.innerHTML = witness
+  el.classList.add('t-rounded-3xl', 't-box-border', 't-h-8', 't-py-0.5', 't-px-1.5', 't-text-xs', 't-font-semibold', 't-ml-[3px]')
+  el.style.background = colors[witnessColor]['100']
+  el.style.color = colors[witnessColor]['600']
+
+  return el
+}
+
+export function removeWitnessesWrappers() {
+  // remove witnesses in text Panel - it is used when switch off the variants tab
   const textPanelEl = document.querySelector('#text-content')
-  const witnessesHtmlElements = textPanelEl.getElementsByClassName('witnesses')
-  if( witnessesHtmlElements ) {
-    Array.from(witnessesHtmlElements).forEach((witnesses) => {
-      witnesses.remove()
-    })
-  }
+  const wrappers = textPanelEl.getElementsByClassName('witnesses')
+  if (!wrappers) return;
+  if(Array.from(wrappers).length === 0) return;
+
+  // each target has its witnesses wrapper; for every target we remove its witnesses wrapper
+  Array.from(wrappers).forEach((wrapper) => {
+    wrapper.remove()
+  })
 }
 
 export function removeWitness(selector, witness) {
   // find the witnesses span which contains each 'witness' span child element
   // find this witness inside the 'witnesses' html span and remove it
-  const witnessesHtmlEl = getWitnessesHtmlEl(selector)
-  const witHtml = Array.from(witnessesHtmlEl.children).filter(item => item.innerHTML === witness)
-  if (witHtml.length > 0) witHtml[0].remove()
+  const textPanel = document.querySelector('#text-content')
+  if (!textPanel.querySelector('.witnesses')) return;
+
+  const wrapper = getWitnessesWrapper(selector)
+  if (!wrapper) return;
+  if (Array.from(wrapper.children).length === 0) return;
+
+  const witnessEl = Array.from(wrapper.children).filter(item => item.innerHTML === witness)  
+  // witEl: refers to the current Witness chip that we will remove
+  if (witnessEl.length > 0) witnessEl[0].remove()
 }
 
-export function getWitnessesHtmlEl(selector) {
+export function getWitnessesWrapper(selector) {
   // selector represents the target text of a certain variant item
   // we aim to get the html element which contains the 'witnesses chips' related to the target.
   // this html element which contains the 'witnesses chips' is located before the target element
-  const targetHtmlEl = document.querySelector(selector)
-  const parentEl = targetHtmlEl.parentElement
-  const indexOfTarget = [].slice.call(parentEl.children).indexOf(targetHtmlEl)
-  const witnessesHtmlEl = parentEl.children[indexOfTarget-1]
+  const targetEl = document.querySelector(selector)
+  if (!targetEl) return null
 
-  return witnessesHtmlEl
+  const parentEl = targetEl.parentElement
+  const targetIndex = [].slice.call(parentEl.children).indexOf(targetEl)
+  if(targetIndex < 1) return null
+
+  // witnesses el is placed before the target
+  return parentEl.children[targetIndex-1] 
 }
 
-export function getWitnessesList(witnessesHtml) {
-  // returns the list of witnesses(<string>) which are already selected
-  let witnessesList= []
-  Array.from(witnessesHtml.children).forEach((witnessHtml) => {
-    witnessesList.push(witnessHtml.innerHTML)
+export function getWitnessesList(wrapper) {
+  // wrapper: witnesses html wrapper which belongs to a target
+  // returns the list of witnesses(<string>) which belong to a witnesses wrapper
+  let list = []
+  if (!wrapper) return [];
+  if(Array.from(wrapper.children).length === 0) return [];
+
+  Array.from(wrapper.children).forEach((witness) => {
+    list.push(witness.innerHTML)
   })
-  return witnessesList
+  return list
 }
 
-export function unselectVariantItems(variantItemsSelection) {
-  let newVariantItemsSelection = {}
-  Object.keys(variantItemsSelection).forEach((wit) => {
-    newVariantItemsSelection[wit] = false
-  })
-  return newVariantItemsSelection
-}
-
-export function addWitnessesChipsWhenSelectText(variantItemsSelection, selector, variantItemsColors) {
-  // variantItemsSelection: JSON object of 'witness name': 'true'
-  // this function aims to add all witnesses on the highlighted text when we click on the text
-
-  Object.keys(variantItemsSelection).forEach((witness) => {
-    addWitness(selector, witness, variantItemsColors)
-  })
-}
-
-export function removeWitnessesChipsWhenDeselectText(witnessesList, selector) {
-  witnessesList.forEach((witness) => {
-    removeWitness(selector, witness)
-  })
-}
 
 export function isVariant(annotation) {
-  return annotation.body['x-content-type'] === 'Variant';
+  return annotation?.body['x-content-type'] === 'Variant';
 }
 
-export function initVariantItemsSelection(annotation, value) {
-  // initialize with the boolean of 'value' variable
-  let variantItemsSelection = {}
-  annotation.body.value.forEach((variantItem) => {
-    variantItemsSelection[variantItem.witness] = value
-  } )
-  return variantItemsSelection
-}
 
 export function getAnnotationListElement(id, container) {
   return [...container.querySelectorAll('.q-item')].find((annotationItem) => {
