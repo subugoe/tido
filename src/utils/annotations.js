@@ -247,7 +247,7 @@ export function addWitness(target, witness, color) {
   const targetIndex = [].slice.call(parentEl.children).indexOf(target)
   if (targetIndex < 0) return;
 
-  const witEl = createWitHtml(witness, color)
+  const witEl = createWitnessEl(witness, color)
   const isWitnessesEl = parentEl.children[targetIndex-1].classList.contains("witnesses")
 
   if (isWitnessesEl) {
@@ -270,15 +270,15 @@ function createWitnessesWrapper() {
   return witnessesEl
 }
 
-function createWitHtml(witness, witnessColor) {
+function createWitnessEl(witness, witnessColor) {
   // create an html element of one witness
-  const witnessEl = document.createElement("span");
-  witnessEl.innerHTML = witness
-  witnessEl.classList.add('t-rounded-3xl', 't-box-border', 't-h-8', 't-py-0.5', 't-px-1.5', 't-text-xs', 't-font-semibold', 't-ml-[3px]')
-  witnessEl.style.background = colors[witnessColor]['100']
-  witnessEl.style.color = colors[witnessColor]['600']
+  const el = document.createElement("span");
+  el.innerHTML = witness
+  el.classList.add('t-rounded-3xl', 't-box-border', 't-h-8', 't-py-0.5', 't-px-1.5', 't-text-xs', 't-font-semibold', 't-ml-[3px]')
+  el.style.background = colors[witnessColor]['100']
+  el.style.color = colors[witnessColor]['600']
 
-  return witnessEl
+  return el
 }
 
 export function removeChipsFromOtherViews() {
