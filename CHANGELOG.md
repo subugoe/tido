@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/subugoe/tido/compare/v4.0.6...v4.1.0) (2024-10-16)
+
+
+### Features
+
+* add font sizes (default, min and max) as configurable ([#478](https://github.com/subugoe/tido/issues/478)) ([6983d7e](https://github.com/subugoe/tido/commit/6983d7eabca6109793134233f6a086a4fe1a0447))
+* make 'item' label in Header configurable ([65e204d](https://github.com/subugoe/tido/commit/65e204d5cc1848b8f986caa86aaff8528c125376))
+* make the header nav buttons text configurable  ([#476](https://github.com/subugoe/tido/issues/476)) ([5987dbe](https://github.com/subugoe/tido/commit/5987dbe53fa17bbe7173c6c7f1274cbf60a4e5e4))
+
+
+### Bug Fixes
+
+* display all collectors' names and add a test for this ([#472](https://github.com/subugoe/tido/issues/472)) ([c6b1ebe](https://github.com/subugoe/tido/commit/c6b1ebec0ee4146399c37e706618f184e5282da7))
+* restrict the maximum height of panel to 500px ([292dfde](https://github.com/subugoe/tido/commit/292dfde3c0840b58eb35c85f9ab9ed37cab41e60))
+* show panels toggle 'Reset' button text color as primary color ([e2d9517](https://github.com/subugoe/tido/commit/e2d9517eae78b24464827f05521ff5a48b83b40e))
+* show the panels toggle menu aligned vertically with the toggle button on small screen ([61a465c](https://github.com/subugoe/tido/commit/61a465c09fabb0a183047e9cc12bc45c15a8e327))
+* support is optional ([d54b6f7](https://github.com/subugoe/tido/commit/d54b6f7bb60cf964e412a27bf253ecebcb25636c))
+
+
+### Refactoring
+
+* add linting fixes ([6bfa91f](https://github.com/subugoe/tido/commit/6bfa91f7adf0e65e6d210c040d347b13ace9389d))
+
 ### [4.0.6](https://github.com/subugoe/tido/compare/v4.0.5...v4.0.6) (2024-08-21)
 
 ### [4.0.5](https://github.com/subugoe/tido/compare/v4.0.4...v4.0.5) (2024-08-21)
