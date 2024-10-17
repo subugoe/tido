@@ -40,7 +40,9 @@ watch(
 
 const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
-  const ids = getAnnotationIdsFromTarget(target)
+  let ids = getAnnotationIdsFromTarget(target)
+  const variantAnnotations = getVariantAnnotations(annotationStore.annotations, 'Variant')
+  const variantAnnotationIds = variantAnnotations.map((annotation) => annotation.id)
 
   const annotations = filteredAnnotations.value.filter((filtered) => ids.find(id => filtered.id === id))
   if (!annotationStore.isSingleSelectMode) {
@@ -50,14 +52,18 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
   } else {
     // if we are in single select mode, we still have variant annotations, but there are not shown
     // if we click at a part of text whose related annotations are not in the variant annotations, then we do not proceed further
-    const variantAnnotations = getVariantAnnotations(annotationStore.annotations, 'Variant')
-    if (!variantAnnotations.find((annotation) => annotation.id === ids[0])) {
-      return
-    }
+    let isAtLeastOneAnnotationTargetInVariants = false
+    ids.forEach((id) => {
+      if(variantAnnotationIds.includes(id))  isAtLeastOneAnnotationTargetInVariants = true
+    })
+    if(!isAtLeastOneAnnotationTargetInVariants) return
   }
 
   const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0
 
+  // ids are all the annotation ids of the target, which can be in different tabs. 
+  // we need to filter only the variant ides before proceeding with adding active annotation or removing active annotation
+  ids = ids.filter((id) => variantAnnotationIds.includes(id))
   if (annotationStore.isSingleSelectMode) {
     if (targetIsSelected) {
       annotationStore.removeFilteredAnnotations(ids)
@@ -71,6 +77,7 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
       annotationStore.deactivateAnnotationsByIds(ids)
     }
     else {
+      console.log('activate annotations')
       annotationStore.activateAnnotationsByIds(ids)
     }
   }
@@ -79,11 +86,14 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
 onBeforeUnmount(() => unsubscribe())
 
 function getVariantAnnotations(annotations, type) {
-  let variantAnnotations = []
-    annotations.forEach((annotation) => {
-      if(annotation.body['x-content-type'] === type) variantAnnotations.push(annotation)
+  let list = []
+  if (!annotations) return []
+  if (annotations.length === 0) return []
+
+  annotations.forEach((annotation) => {
+      if(annotation.body['x-content-type'] === type) list.push(annotation)
     })
-  return variantAnnotations
+  return list
 }
 
 function allocateWitnessColorInVariantItem() {
