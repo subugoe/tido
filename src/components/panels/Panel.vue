@@ -139,7 +139,7 @@ import ContentView from '@/components/ContentView.vue';
 import ImageView from '@/components/ImageView.vue';
 import PanelZoomAction from '@/components/panels/actions/PanelZoomAction.vue';
 import PanelCheckAction from '@/components/panels/actions/PanelCheckAction.vue';
-import PanelToggleAction from '@/components/panels/actions/PanelToggleAction.vue';
+import VariantsToggleModeAction from '@/components/panels/actions/VariantsToggleModeAction.vue';
 import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import MessageBox from '@/components/MessageBox.vue';
@@ -161,7 +161,7 @@ export default {
     PanelImageAction,
     PanelCheckAction,
     PanelZoomAction,
-    PanelToggleAction,
+    VariantsToggleModeAction,
     TreeView,
     TabView,
     TabPanel,
@@ -327,31 +327,16 @@ export default {
       }];
     }
 
-    function createVariantsView(view, i) {
-      const annotationStore = useAnnotationsStore();
+    function createVariantsView(view) {
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
-      const eventsSingleSelectMode = {
-        update: (value) => {
-          if (value) annotationStore.enableSingleSelectMode();
-          else annotationStore.disableSingleSelectMode();
-        },
-      };
-
-      const viewEvents = {
-        init: () => {
-          tabs.value[i].actions[0].props.selected = false
-        }
-      }
-
       const actions = [{
-        component: 'PanelToggleAction',
+        component: 'VariantsToggleModeAction',
         props: {
           selected: false,
           label: t('single_select_mode'),
         },
-        events: eventsSingleSelectMode,
       }];
 
       tabs.value = [...tabs.value, {
@@ -359,7 +344,6 @@ export default {
         label,
         props: { ...connector.options },
         actions,
-        events: viewEvents
       }];
     }
 

@@ -13,8 +13,6 @@ const contentsStore = useContentsStore();
 
 allocateWitnessColorInVariantItem()
 
-const emit = defineEmits(['init'])
-
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const activeContentUrl = computed<string>(() => contentsStore.activeContentUrl);
 const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
@@ -33,7 +31,7 @@ watch(
     annotationStore.resetAnnotations();
     annotationStore.selectFilteredAnnotations([{ name: 'Variant' }]);
     annotationStore.highlightTargetsLevel0();
-    emit('init')
+    annotationStore.isSingleSelectMode = false
   },
   { immediate: true },
 );
