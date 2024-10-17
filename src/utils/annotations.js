@@ -243,15 +243,23 @@ export function removeIcon(annotation) {
 export function addWitness(target, witness, color) {
   // we create a witnesses wrapper on the same child level as the target due to styling reasons (i.e the witnesses chips should not be underlined and get the highlight color of the target)
   // therefore we need target index in order to find the witnesses wrapper element
+  
   let parentEl = target.parentElement
   const targetIndex = [].slice.call(parentEl.children).indexOf(target)
   if (targetIndex < 0) return;
 
   const witnessEl = createWitnessEl(witness, color)
-  const isWrapper = parentEl.children[targetIndex-1].classList.contains("witnesses")
+  let isWrapper = false
+  if (parentEl.children.length === 1) {
+    // target is the only child element
+    isWrapper = false
+  }
+  else {
+    isWrapper = parentEl.children[targetIndex-1].classList.contains("witnesses")
+  }
 
   if (isWrapper) {
-    let wrapper = parentEl.children[targetIndex-1]
+    const wrapper = parentEl.children[targetIndex-1]
     wrapper.appendChild(witnessEl)
   } else {
       // witnesses wrapper which holds the witnesses 'chips' is not yet created -> we add the first witness 
