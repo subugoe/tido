@@ -39,14 +39,19 @@
 <script setup>
 import { ref, watch } from 'vue';
 import ToggleButton from 'primevue/togglebutton';
+import {useAnnotationsStore} from "@/stores/annotations";
+
+
+// Unlike other panel action components, this one is not generic and is being used only in combination with VariantsView.
+// Updating the selected value from outside was not working, so we use the annotationStore directly here.
 
 const props = defineProps({
   selected: Boolean,
   label: String,
 });
-const emit = defineEmits(['update']);
 
 const selectedModel = ref(false);
+const annotationStore = useAnnotationsStore();
 
 watch(
   () => props.selected,
@@ -58,10 +63,9 @@ watch(
 
 watch(
   selectedModel,
-  (value, oldValue) => {
-    if (value !== oldValue) {
-      emit('update', value);
-    }
+  (value) => {
+    if (value) annotationStore.enableSingleSelectMode();
+    else annotationStore.disableSingleSelectMode();
   },
 );
 </script>

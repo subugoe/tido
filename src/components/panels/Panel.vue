@@ -139,7 +139,7 @@ import ContentView from '@/components/ContentView.vue';
 import ImageView from '@/components/ImageView.vue';
 import PanelZoomAction from '@/components/panels/actions/PanelZoomAction.vue';
 import PanelCheckAction from '@/components/panels/actions/PanelCheckAction.vue';
-import PanelToggleAction from '@/components/panels/actions/PanelToggleAction.vue';
+import VariantsToggleModeAction from '@/components/panels/actions/VariantsToggleModeAction.vue';
 import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import MessageBox from '@/components/MessageBox.vue';
@@ -161,7 +161,7 @@ export default {
     PanelImageAction,
     PanelCheckAction,
     PanelZoomAction,
-    PanelToggleAction,
+    VariantsToggleModeAction,
     TreeView,
     TabView,
     TabPanel,
@@ -276,7 +276,7 @@ export default {
       if (!url) return;
 
       const selected = false;
-      const events = {
+      const actionEvents = {
         update: (value) => {
           if (value === null) return;
           if (value) annotationStore.selectAll();
@@ -284,11 +284,17 @@ export default {
         },
       };
 
+      const viewEvents = {
+        init: () => {
+          tabs.value[i].actions[0].props.selected = false
+        }
+      }
+
       unsubscribe.value = annotationStore.$onAction(({
         name, args,
       }) => {
         if (tabs.value.length
-          && tabs.value[0]?.actions?.length
+          && tabs.value[i]?.actions?.length
           && (name === 'setActiveAnnotations')) {
           const activeAnnotations = args[0];
           const activeAmount = Object.keys(activeAnnotations).length;
@@ -309,7 +315,7 @@ export default {
           selected,
           label: t('select_all'),
         },
-        events,
+        events: actionEvents,
       }];
 
       tabs.value = [...tabs.value, {
@@ -317,32 +323,22 @@ export default {
         label,
         props: { ...connector.options },
         actions,
+        events: viewEvents
       }];
     }
 
     function createVariantsView(view) {
-      const annotationStore = useAnnotationsStore();
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
-
-      const selectedSingleMode = false
-      const eventsSingleSelectMode = {
-        update: (value) => {
-          if (value) annotationStore.enableSingleSelectMode();
-          else annotationStore.disableSingleSelectMode();
-        },
-      };
-
       const actions = [{
-        component: 'PanelToggleAction',
+        component: 'VariantsToggleModeAction',
         props: {
-          selected: selectedSingleMode,
+          selected: false,
           label: t('single_select_mode'),
         },
-        events: eventsSingleSelectMode,
       }];
- 
+
       tabs.value = [...tabs.value, {
         component,
         label,
