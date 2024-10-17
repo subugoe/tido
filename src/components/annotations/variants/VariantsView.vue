@@ -13,6 +13,8 @@ const contentsStore = useContentsStore();
 
 allocateWitnessColorInVariantItem()
 
+const emit = defineEmits(['init'])
+
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const activeContentUrl = computed<string>(() => contentsStore.activeContentUrl);
 const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
@@ -31,6 +33,7 @@ watch(
     annotationStore.resetAnnotations();
     annotationStore.selectFilteredAnnotations([{ name: 'Variant' }]);
     annotationStore.highlightTargetsLevel0();
+    emit('init')
   },
   { immediate: true },
 );
@@ -39,17 +42,16 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
   const ids = getAnnotationIdsFromTarget(target)
 
-  const annotations = filteredAnnotations.value.filter((filtered) => ids.find(id => filtered.id === id)) 
-  if(!annotationStore.isSingleSelectMode) {
+  const annotations = filteredAnnotations.value.filter((filtered) => ids.find(id => filtered.id === id))
+  if (!annotationStore.isSingleSelectMode) {
     // We check if the found annotation ids are currently displayed in the active tab, if not we skip the handling
     // the annotations referring to the target are not displayed - we do not proceed further
     if (annotations.length === 0) return
-  }
-  else {
+  } else {
     // if we are in single select mode, we still have variant annotations, but there are not shown
     // if we click at a part of text whose related annotations are not in the variant annotations, then we do not proceed further
     const variantAnnotations = getVariantAnnotations(annotationStore.annotations, 'Variant')
-    if(!variantAnnotations.find((annotation) => annotation.id === ids[0])){
+    if (!variantAnnotations.find((annotation) => annotation.id === ids[0])) {
       return
     }
   }
@@ -60,8 +62,7 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
     if (targetIsSelected) {
       annotationStore.removeFilteredAnnotations(ids)
       annotationStore.deactivateAnnotationsByIds(ids)
-    }
-    else {
+    } else {
       annotationStore.addFilteredAnnotations(ids)
       annotationStore.activateAnnotationsByIds(ids)
     }

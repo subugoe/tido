@@ -276,7 +276,7 @@ export default {
       if (!url) return;
 
       const selected = false;
-      const events = {
+      const actionEvents = {
         update: (value) => {
           if (value === null) return;
           if (value) annotationStore.selectAll();
@@ -284,11 +284,17 @@ export default {
         },
       };
 
+      const viewEvents = {
+        init: () => {
+          tabs.value[i].actions[0].props.selected = false
+        }
+      }
+
       unsubscribe.value = annotationStore.$onAction(({
         name, args,
       }) => {
         if (tabs.value.length
-          && tabs.value[0]?.actions?.length
+          && tabs.value[i]?.actions?.length
           && (name === 'setActiveAnnotations')) {
           const activeAnnotations = args[0];
           const activeAmount = Object.keys(activeAnnotations).length;
@@ -309,7 +315,7 @@ export default {
           selected,
           label: t('select_all'),
         },
-        events,
+        events: actionEvents,
       }];
 
       tabs.value = [...tabs.value, {
@@ -317,16 +323,15 @@ export default {
         label,
         props: { ...connector.options },
         actions,
+        events: viewEvents
       }];
     }
 
-    function createVariantsView(view) {
+    function createVariantsView(view, i) {
       const annotationStore = useAnnotationsStore();
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
-
-      const selectedSingleMode = false
       const eventsSingleSelectMode = {
         update: (value) => {
           if (value) annotationStore.enableSingleSelectMode();
@@ -334,20 +339,27 @@ export default {
         },
       };
 
+      const viewEvents = {
+        init: () => {
+          tabs.value[i].actions[0].props.selected = false
+        }
+      }
+
       const actions = [{
         component: 'PanelToggleAction',
         props: {
-          selected: selectedSingleMode,
+          selected: false,
           label: t('single_select_mode'),
         },
         events: eventsSingleSelectMode,
       }];
- 
+
       tabs.value = [...tabs.value, {
         component,
         label,
         props: { ...connector.options },
         actions,
+        events: viewEvents
       }];
     }
 
