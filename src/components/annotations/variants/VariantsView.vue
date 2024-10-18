@@ -15,6 +15,8 @@ allocateWitnessColorInVariantItem()
 
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const activeContentUrl = computed<string>(() => contentsStore.activeContentUrl);
+const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
+
 const updateTextHighlighting = computed(() =>
   // We need to make sure that annotations are loaded (this.annotations),
   // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
@@ -29,21 +31,36 @@ watch(
     annotationStore.resetAnnotations();
     annotationStore.selectFilteredAnnotations([{ name: 'Variant' }]);
     annotationStore.highlightTargetsLevel0();
+    annotationStore.isSingleSelectMode = false
   },
   { immediate: true },
 );
 
 const unsubscribe = TextEventBus.on('click', ({ target }) => {
-  const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
 
   const ids = getAnnotationIdsFromTarget(target)
+
+  const annotations = filteredAnnotations.value.filter((filtered) => ids.find(id => filtered.id === id))
+  if (!annotationStore.isSingleSelectMode) {
+    // We check if the found annotation ids are currently displayed in the active tab, if not we skip the handling
+    // the annotations referring to the target are not displayed - we do not proceed further
+    if (annotations.length === 0) return
+  } else {
+    // if we are in single select mode, we still have variant annotations, but there are not shown
+    // if we click at a part of text whose related annotations are not in the variant annotations, then we do not proceed further
+    const variantAnnotations = getVariantAnnotations(annotationStore.annotations, 'Variant')
+    if (!variantAnnotations.find((annotation) => annotation.id === ids[0])) {
+      return
+    }
+  }
+
+  const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0
 
   if (annotationStore.isSingleSelectMode) {
     if (targetIsSelected) {
       annotationStore.removeFilteredAnnotations(ids)
       annotationStore.deactivateAnnotationsByIds(ids)
-    }
-    else {
+    } else {
       annotationStore.addFilteredAnnotations(ids)
       annotationStore.activateAnnotationsByIds(ids)
     }
@@ -58,6 +75,14 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
 })
 
 onBeforeUnmount(() => unsubscribe())
+
+function getVariantAnnotations(annotations, type) {
+  let variantAnnotations = []
+    annotations.forEach((annotation) => {
+      if(annotation.body['x-content-type'] === type) variantAnnotations.push(annotation)
+    })
+  return variantAnnotations
+}
 
 function allocateWitnessColorInVariantItem() {
   const colors = {}

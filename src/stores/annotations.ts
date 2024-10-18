@@ -136,7 +136,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
     // When filtering by witness it can happen that a target is used for some other active annotation item,
     // In that case, we want to keep the level of highlighting it had and
-  
+
     filteredAnnotations.value
       .filter(annotation => !activeIds.includes(annotation.id))
       .forEach(annotation => {
@@ -145,11 +145,10 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         const selectorIsActive = activeIds.filter(id => selector === AnnotationUtils.generateTargetSelector(activeAnnotations.value[id])).length > 0;
         const target = document.querySelector(selector)
         if(!target) return;
-        
+
         if (!selectorIsActive && AnnotationUtils.getCurrentLevel(target) < 0) {
           AnnotationUtils.highlightTargets(selector, {level: 0});
         }
-        
       })
   }
 
@@ -301,7 +300,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
   const addHighlightClickListeners = () => {
     const textEl = document.querySelector('#text-content>div>*');
-    
+
     if (!textEl) return;
 
     textEl.addEventListener('click', ({target}) => {
@@ -317,7 +316,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
       if (!target.dataset.annotation) {
         target = getNearestParentAnnotation(target);
       }
-      
+
       if (!target) {
         return;
       }

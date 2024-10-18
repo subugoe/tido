@@ -35,6 +35,7 @@ interface Props {
   types: AnnotationType[]
 }
 const props = defineProps<Props>();
+const emit = defineEmits(['init'])
 
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
@@ -53,14 +54,15 @@ watch(
     annotationStore.resetAnnotations();
     annotationStore.selectFilteredAnnotations(props.types);
     annotationStore.highlightTargetsLevel0();
+    emit('init')
   },
   { immediate: true },
 );
 
 
-const unsubscribe = TextEventBus.on('click', ({ target }) => { 
+const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
-    // Next we look up which annotations need to be selected
+  // Next we look up which annotations need to be selected
   let annotationIds = {};
 
   Utils.getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
