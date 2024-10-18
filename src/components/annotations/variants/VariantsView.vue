@@ -54,9 +54,9 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
     // if we click at a part of text whose related annotations are not in the variant annotations, then we do not proceed further
     let isAtLeastOneAnnotationTargetInVariants = false
     ids.forEach((id) => {
-      if(variantAnnotationIds.includes(id))  isAtLeastOneAnnotationTargetInVariants = true
+      if (variantAnnotationIds.includes(id))  isAtLeastOneAnnotationTargetInVariants = true
     })
-    if(!isAtLeastOneAnnotationTargetInVariants) return
+    if (!isAtLeastOneAnnotationTargetInVariants) return
   }
 
   const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0
@@ -87,11 +87,10 @@ onBeforeUnmount(() => unsubscribe())
 
 function getVariantAnnotations(annotations, type) {
   let list = []
-  if (!annotations) return []
-  if (annotations.length === 0) return []
+  if (!annotations || annotations.length === 0) return []
 
   annotations.forEach((annotation) => {
-      if(annotation.body['x-content-type'] === type) list.push(annotation)
+      if (annotation.body['x-content-type'] === type) list.push(annotation)
     })
   return list
 }

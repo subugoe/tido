@@ -253,8 +253,7 @@ export function addWitness(target, witness, color) {
   if (parentEl.children.length === 1) {
     // target is the only child element
     isWrapper = false
-  }
-  else {
+  } else {
     isWrapper = parentEl.children[targetIndex-1].classList.contains("witnesses")
   }
 
