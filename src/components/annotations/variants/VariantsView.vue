@@ -33,7 +33,7 @@ watch(
     annotationStore.resetAnnotations();
     annotationStore.selectFilteredAnnotations([{ name: 'Variant' }]);
     annotationStore.highlightTargetsLevel0();
-    emit('init')
+    annotationStore.isSingleSelectMode = false
   },
   { immediate: true },
 );
