@@ -55,10 +55,13 @@ const annotationStore = useAnnotationsStore();
 
 watch(
   () => props.selected,
-  (value) => {
-    selectedModel.value = value;
-  },
+  (value) => { selectedModel.value = value },
   { immediate: true },
+);
+
+watch(
+  () => annotationStore.isSingleSelectMode,
+  (value) => { selectedModel.value = value },
 );
 
 watch(
