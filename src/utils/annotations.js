@@ -248,10 +248,17 @@ export function addWitness(target, witness, color) {
   if (targetIndex < 0) return;
 
   const witnessEl = createWitnessEl(witness, color)
-  const isWrapper = parentEl.children[targetIndex-1].classList.contains("witnesses")
+  
+  let isWrapper = false
+  if (parentEl.children.length === 1) {
+    // target is the only child element
+    isWrapper = false
+  } else {
+    isWrapper = parentEl.children[targetIndex-1].classList.contains("witnesses")
+  }
 
   if (isWrapper) {
-    let wrapper = parentEl.children[targetIndex-1]
+    const wrapper = parentEl.children[targetIndex-1]
     wrapper.appendChild(witnessEl)
   } else {
       // witnesses wrapper which holds the witnesses 'chips' is not yet created -> we add the first witness 
