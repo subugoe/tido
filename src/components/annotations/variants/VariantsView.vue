@@ -41,8 +41,13 @@ watch(
 const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
   let ids = getAnnotationIdsFromTarget(target)
+  // ids are all the annotation ids of the target, which can be in different tabs. 
+  // we need to filter only the variant ides before proceeding with adding active annotation or removing active annotation
+
   const variantAnnotations = getVariantAnnotations(annotationStore.annotations, 'Variant')
   const variantAnnotationIds = variantAnnotations.map((annotation) => annotation.id)
+
+  ids = ids.filter((id) => variantAnnotationIds.includes(id))
 
   const annotations = filteredAnnotations.value.filter((filtered) => ids.find(id => filtered.id === id))
   if (!annotationStore.isSingleSelectMode) {
@@ -52,18 +57,11 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
   } else {
     // if we are in single select mode, we still have variant annotations, but there are not shown
     // if we click at a part of text whose related annotations are not in the variant annotations, then we do not proceed further
-    let isAtLeastOneAnnotationTargetInVariants = false
-    ids.forEach((id) => {
-      if (variantAnnotationIds.includes(id))  isAtLeastOneAnnotationTargetInVariants = true
-    })
-    if (!isAtLeastOneAnnotationTargetInVariants) return
+    if (ids.length < 1) return
   }
 
   const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0
-
-  // ids are all the annotation ids of the target, which can be in different tabs. 
-  // we need to filter only the variant ides before proceeding with adding active annotation or removing active annotation
-  ids = ids.filter((id) => variantAnnotationIds.includes(id))
+  
   if (annotationStore.isSingleSelectMode) {
     if (targetIsSelected) {
       annotationStore.removeFilteredAnnotations(ids)
