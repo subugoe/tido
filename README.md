@@ -14,10 +14,8 @@ and also view our production examples.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Demo](#demo)
 - [Getting Started](#getting-started)
   - [Get the Viewer](#get-the-viewer)
-    - [Registry Setup](#registry-setup)
     - [Installation](#installation)
   - [Integration](#integration)
 - [Configuration](#configuration)
@@ -29,6 +27,8 @@ and also view our production examples.
       - [Image](#image)
       - [Text](#text)
       - [Annotations](#annotations)
+        - [Icons](#icons)
+  - [Translations](#translations)
 - [Methods](#methods)
 - [Bookmarking](#bookmarking)
 - [Getting Started (Developers)](#getting-started-developers)
@@ -49,9 +49,6 @@ and also view our production examples.
   - [Linting](#linting)
   - [Generate TextAPI support table](#generate-textapi-support-table)
 - [TextAPI Support](#textapi-support)
-- [Viewer Architecture](#viewer-architecture)
-- [Dockerfile](#dockerfile)
-- [Architecture](#architecture)
 - [Contributing](#contributing)
 - [Versioning](#versioning)
 - [Authors](#authors)
@@ -117,12 +114,10 @@ Below you can find a detailed explanation of the configuration object.
 
 ## Configuration
 
-TIDO requires an entrypoint URL to be useful at all. You can provide either a `collection` or a `manifest` key
-and additionally provide an `item` key to start a certain item with a sequence. Technically you could also provide
-a single `item` key only, but it is recommended to use manifests as wrappers.
+You can fully customize the viewer's behaviour by providing a configuration object to the TIDO instance.
+First of all, there should be set either a `collection` or a `manifest` value.
 
-By default, TIDO will render five panels displaying sequence tree, metadata, image, text content and annotation views.
-Nevertheless, you can fully customize the viewer's behaviour.
+By default, TIDO will render 5 panels displaying sequence tree, metadata, image, text content and annotation views.
 
 There are options to
 
@@ -130,9 +125,12 @@ There are options to
 - freely combine view components in panels
 - show/hide header features
 - change the color scheme
-- and **more** ...
+- and more ...
 
-Real world example:
+**Example configuration:**
+
+<details>
+<summary>Click to open</summary>
 
 ```html
 <script id="tido-config" type="application/json">
@@ -225,19 +223,19 @@ Real world example:
                 "types": [
                   {
                     "name": "Person",
-                    "index": "biPersonFill",
+                    "index": "person",
                   },
                   {
                     "name": "Place",
-                    "index": "biGeoAltFill",
+                    "index": "marker",
                   },
                   {
                     "name": "Editorial Comment",
-                    "index": "biChatFill",
+                    "index": "chat",
                   },
                   {
                     "name": "Reference",
-                    "index": "biBoxArrowUpRight",
+                    "index": "externalLink",
                   }
                 ]
               }
@@ -252,7 +250,7 @@ Real world example:
                 "types": [
                   {
                     "name": "Motif",
-                    "index": "biPenFill",
+                    "index": "pen",
                   }
                 ]
               }
@@ -263,47 +261,49 @@ Real world example:
     ],
     "translations": {
       "en": {
-        "contents_and_metadata": "Contents & Metadata"
+        "contents_and_metadata": "Contents & Metadata",
+        "next_item": "Next Sheet",
+        "previous_item": "Previous Sheet",
+        "next_manifest": "Next Manuscript",
+        "previous_manifest": "Previous Manuscript",
+        "item": "Sheet"
       }
     }
   }
 </script>
 ```
 
+</details>
+
 ### The Keys in Detail
 
-| Name                                    | Type          | Default   | Description                                                                                                                                                                                                        |
-|-----------------------------------------|---------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| collection                              | String        | null      | Specifies a collection endpoint URL. Will be prioritized over `manifest` key.                                                                                                                                      |
-| colors                                  | Object        | &darr;    | Sets custom theme colors. If any value is left blank (e.g. `"primary": "",`), a default color scheme will be used.                                                                                                 |
-| colors.forceMode                        | String        | `light`   | Enforces the initial color mod despite the browser settings. Supported values: `light`, `dark`, `none`.                                                                                                            |
-| colors.primary                          | String        | `#477fbf` | Used as main color in buttons, active states, highlights                                                                                                                                                           |
-| colors.secondary                        | String        | `#eeeeee` | Can be used as contrast or background color                                                                                                                                                                        |
-| colors.accent                           | Srring        | `empty`   |                                                                                                                                                                                                                    |
-| container                               | String        | `#app`    | Specifies the CSS selector where we should append the TIDO app to.                                                                                                                                                 |
-| header                                  | Object        | &darr;    | Controls the elements in the section above the content                                                                                                                                                             |
-| header.show                             | Boolean       | `true`    | Toggle visibility of the whole header                                                                                                                                                                              |
-| header.navigation                       | Boolean       | `true`    | Toggle visibility of prev/next buttons                                                                                                                                                                             |
-| header.panelsToggle                     | Boolean       | `true`    | Toggle visibility of panel toggle buttons                                                                                                                                                                          |
-| header.languageSwitch                   | Boolean       | `false`   | Toggle visibility of language switch for supported languages                                                                                                                                                       |
-| item                                    | String        | null      | Specifies an item endpoint URL.                                                                                                                                                                                    |
-| lang                                    | String        | `en`      | Sets the default language. Possible supported values: `en` , `de`                                                                                                                                                  |
-| manifest                                | String        | null      | Specifies a manifest endpoint URL. Will be ignored when there is a `collection` key specified.                                                                                                                     |
-| notificationColors                      | Object        | &darr;    | Sets custom notification colors. Used in error messages.                                                                                                                                                           |
-| notificationColors.info                 | String        | `blue-9`  | Sets the info level color.                                                                                                                                                                                         |
-| notificationColors.warning              | String        | `red-9`   | Sets the warning level color.                                                                                                                                                                                      |
-| panels                                  | PanelConfig[] | &darr;    | Defines an array of panel objects. The panels will appear in the same order.                                                                                                                                       |
-| panels[i].label                         | String        | `Panel i` | Sets the label which appears in the panel header. If there is only one view in the panel then the view label will be displayed instead. Translatable.                                                              |
-| panels[i].views                         | ViewConfig[]  | &darr;    | Defines an array of views inside of a panel. If there are multiple views, we display them in tabs. If there is only one view we omit the tabs and display the view directly inside the panel.                      |
-| panels[i].views[j].id                   | String        | `view-j`  | Unique identifier for the view across the app.                                                                                                                                                                     |
-| panels[i].views[j].label                | String        | `View j`  | Sets the label which appears in the tab header. If there is only one view then this label will be displayed as panel header label. Translatable.                                                                   |
-| panels[i].views[j].default              | Boolean       | `false`   | Specifies whether this view should be visible at the initial start of the app. If no `default` keys provided on views or all `default` keys are set to `false`, then the first view will be considered as default. |
-| panels[i].views[j].connector            | Object        | &darr;    | Defines which view component and its options. Each view can have its own arbitrary config options.                                                                                                                 |
-| panels[i].views[j].connector.id         | Number        | null      | Defines the component id which will be rendered dynamically for this view. See view connectors.                                                                                                                    |
-| panels[i].views[j].connector.options    | Object        | null      | Defines options for individual view components. Each view component has different options. See view connector options.                                                                                             |
-| translations                            | Object        | null      | Specifies a custom translations object.                                                                                                                                                                            |
-| translations.[langKey]                  | Object        | null      | Defines a translation object for supported languages with the respective `langKey` which can have following values: `en`, `de`.                                                                                    |
-| translations.[langKey].[translationKey] | String        | null      | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs.                                                                         |
+| Name                                    | Type          | Default   | Description                                                                                                                                                                                                                     |
+|-----------------------------------------|---------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| collection                              | String        | null      | Specifies a collection endpoint URL. Will be prioritized over `manifest` key.                                                                                                                                                   |
+| colors                                  | Object        | &darr;    | Sets custom theme colors. If any value is left blank (e.g. `"primary": "",`), a default color scheme will be used.                                                                                                              |
+| colors.forceMode                        | String        | `light`   | Enforces the initial color mod despite the browser settings. Supported values: `light`, `dark`, `none`.                                                                                                                         |
+| colors.primary                          | String        | `#477fbf` | Used as main color in buttons, active states, highlights                                                                                                                                                                        |
+| colors.secondary                        | String        | `#eeeeee` | Can be used as contrast or background color                                                                                                                                                                                     |
+| container                               | String        | `#app`    | Specifies the CSS selector where we should append the TIDO app to.                                                                                                                                                              |
+| header                                  | Object        | &darr;    | Controls the elements in the section above the content                                                                                                                                                                          |
+| header.show                             | Boolean       | `true`    | Toggle visibility of the whole header                                                                                                                                                                                           |
+| header.navigation                       | Boolean       | `true`    | Toggle visibility of prev/next buttons                                                                                                                                                                                          |
+| header.panelsToggle                     | Boolean       | `true`    | Toggle visibility of panel toggle buttons                                                                                                                                                                                       |
+| header.languageSwitch                   | Boolean       | `false`   | Toggle visibility of language switch for supported languages                                                                                                                                                                    |
+| lang                                    | String        | `en`      | Sets the default language. Possible supported values: `en` , `de`                                                                                                                                                               |
+| manifest                                | String        | null      | Specifies a manifest endpoint URL. Will be ignored when there is a `collection` key specified.                                                                                                                                  |
+| panels                                  | PanelConfig[] | &darr;    | Defines an array of panel objects. The panels will appear in the same order.                                                                                                                                                    |
+| panels[i].label                         | String        | `Panel i` | Sets the label which appears in the panel header. If there is only one view in the panel then the view label will be displayed instead. Translatable.                                                                           |
+| panels[i].views                         | ViewConfig[]  | &darr;    | Defines an array of views inside of a panel. If there are multiple views, we display them in tabs. If there is only one view we omit the tabs and display the view directly inside the panel.                                   |
+| panels[i].views[j].id                   | String        | `view-j`  | Unique identifier for the view across the app.                                                                                                                                                                                  |
+| panels[i].views[j].label                | String        | `View j`  | Sets the label which appears in the tab header. If there is only one view then this label will be displayed as panel header label. Translatable.                                                                                |
+| panels[i].views[j].default              | Boolean       | `false`   | Specifies whether this view should be visible at the initial start of the app. If no `default` keys provided on views or all `default` keys are set to `false`, then the first view will be considered as default.              |
+| panels[i].views[j].connector            | Object        | &darr;    | Defines which view component and its options. Each view can have its own arbitrary config options.                                                                                                                              |
+| panels[i].views[j].connector.id         | Number        | null      | Defines the component id which will be rendered dynamically for this view. See view connectors.                                                                                                                                 |
+| panels[i].views[j].connector.options    | Object        | null      | Defines options for individual view components. Each view component has different options. See view connector options.                                                                                                          |
+| translations                            | Object        | null      | Specifies a custom translations object.                                                                                                                                                                                         |
+| translations.[langKey]                  | Object        | null      | Defines a translation object for supported languages with the respective `langKey` which can have following values: `en`, `de`.                                                                                                 |
+| translations.[langKey].[translationKey] | String        | null      | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration. |
 
 ### View Connectors
 
@@ -311,13 +311,14 @@ TIDO can be configured to display dynamic panel with dynamic views inside. In or
 you need to assign the right connectors in the config. This is done via component IDs which currently are plain integers.
 Below you can find a list of available components.
 
-| ID  | Name        | Description                                                                                                         |
-|-----|-------------|---------------------------------------------------------------------------------------------------------------------|
-| 1   | Tree        | Displays an expandable/collapsible tree view that renders TextAPi sequences.                                        |
-| 2   | Metadata    | Displays dynamic metadata from collection, manifest and item levels.                                                |
-| 3   | Image       | Displays the image resource from the item in an OpenSeadragon instance.                                             |
-| 4   | Text        | Displays one text type from the item. Loads a support CSS file it provided. Handles text highlighting and selecting |
-| 5   | Annotations | Displays a list of annotations. Handles selecting.                                                                  |
+| ID  | Name        | Description                                                                                                                                                               |
+|-----|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1   | Tree        | Displays an expandable/collapsible tree view that renders TextAPi sequences.                                                                                              |
+| 2   | Metadata    | Displays dynamic metadata from collection, manifest and item levels.                                                                                                      |
+| 3   | Image       | Displays the image resource from the item in an OpenSeadragon instance.                                                                                                   |
+| 4   | Text        | Displays one text type from the item. Loads a support CSS file it provided. Handles text highlighting and selecting                                                       |
+| 5   | Annotations | Displays a list of annotations. Handles selecting.                                                                                                                        |
+ | 6 | Variants | Displays a list variants with their corresponding witnesses. Enables to filter variants by witness. Provides a "single select mode" to pick variants from the text panel. |
 
 #### Options
 
@@ -365,31 +366,42 @@ no options
 
 Below you can find a list of icons that can be used for annotation items. Please use these as values for the `icon`
 configuration option at annotations.
-- archive
-- arrowLeft
-- arrowRight
-- bank
-- book
-- chat
-- check
-- code
-- dropdown
-- externalLink
-- fullscreen
-- info
-- journals
-- marker
-- minus
-- moon
-- pen
-- pencil
-- person
-- reset
-- sun
-- translate
-- warning
-- zoomIn
-- zoomOut
+- `archive`
+- `arrowLeft`
+- `arrowRight`
+- `bank`
+- `book`
+- `chat`
+- `check`
+- `code`
+- `dropdown`
+- `externalLink`
+- `fullscreen`
+- `info`
+- `journals`
+- `marker`
+- `minus`
+- `moon`
+- `pen`
+- `pencil`
+- `person`
+- `reset`
+- `sun`
+- `translate`
+- `warning`
+- `zoomIn`
+- `zoomOut`
+
+### Translations
+In the configuration object you are able to set certain translation keys to display your desired texts in the application.
+Here is a list of keys that you can override:
+- `item`
+- `manifest`
+- `previous_manifest`
+- `next_manifest`
+- `next_item`
+- `previous_item`
+
 
 ## Methods
 
@@ -596,23 +608,6 @@ If you need to recreate that file and rerender `/SUPPORT.md`, here is an explana
 ## TextAPI Support
 Please view this document to see an overview of supported TextAPI features: [State of TextAPI support](SUPPORT.md)
 
-
-## Viewer Architecture
-
-![Viewer components](img/Viewer.png)
-
-## Dockerfile
-
-The Dockerfile is used for GitLab CI.
-
-```bash
-docker build --pull -t docker.gitlab.gwdg.de/subugoe/emo/tido/node .
-docker push docker.gitlab.gwdg.de/subugoe/emo/tido/node
-```
-
-## Architecture
-
-![Architecture diagram of TIDO](img/emo_architecture.png)
 
 ## Contributing
 
