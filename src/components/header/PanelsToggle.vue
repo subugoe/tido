@@ -23,7 +23,7 @@
         </div>
         <BaseButton
           v-if="toggles.length > 0"
-          :class="'text-' + resetColor"
+          :class="'t-text-' + resetColor"
           :title="$t('reset_view')"
           :text="$t('reset')"
           display="flat"
@@ -55,7 +55,7 @@
         </div>
         <BaseButton
           v-if="toggles.length > 0"
-          :class="'text-' + resetColor"
+          :class="'t-text-' + resetColor"
           :title="$t('reset_view')"
           :text="$t('reset')"
           display="flat"

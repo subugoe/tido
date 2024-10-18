@@ -18,7 +18,7 @@
             class="t-px-2 text-gray-500 dark:text-gray-300"
             name="chevronRight"
           />
-          <span v-if="item">{{ labels.item }} {{ item.n }}</span>
+          <span v-if="item">{{ getItemLabel(configStore.config) }} {{ item.n }}</span>
         </h2>
       </template>
       <template v-else>
@@ -32,7 +32,7 @@
           <span
             v-if="item"
             class="t-align-middle"
-          >{{ labels.item }} {{ item.n }}</span>
+          >{{ getItemLabel(configStore.config) }} {{ item.n }}</span>
         </h1>
       </template>
     </template>
@@ -50,7 +50,9 @@ import { computed } from 'vue';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents'
 import BaseIcon from '@/components/base/BaseIcon.vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n()
 
 export interface Props {
   item: Item
@@ -63,10 +65,33 @@ withDefaults(defineProps<Props>(), {
 const configStore = useConfigStore()
 const contentStore = useContentsStore()
 
+const itemLabelKey = 'item'
+
+
 const collectionTitle = computed<string | null>(() => contentStore.collectionTitle);
-const manifestTitle = computed<string | undefined>(() => contentStore.manifest?.label  );
-const labels = computed<Labels>(() => configStore.config.labels || {
-  manifest: 'manifest',
-  item: 'item',
-});
+const manifestTitle = computed<string | undefined>(() => contentStore.manifest?.label);
+
+
+
+function isItemLabelInConfig(config) {
+  const lang = config['lang']
+  const translations = config.translations[lang]
+  const numberKeys = Object.keys(translations).length
+
+  if(numberKeys > 0) {
+    for (const key in translations) {
+      if(key === itemLabelKey) return true
+    }
+  }
+  return false
+}
+
+function getItemLabel(config) {
+  const lang = config['lang']
+  if(isItemLabelInConfig(config)) {
+    return config['translations'][lang][itemLabelKey]
+  }
+  return t('item')
+}
+
 </script>

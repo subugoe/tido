@@ -249,11 +249,11 @@ export const useContentsStore = defineStore('contents', () => {
     await BookmarkService.updateQuery(query);
   };
 
-  const getSupport = (support) => {
+  const getSupport = (support: Support[] | undefined) => {
     const configStore = useConfigStore();
     const { container } = configStore.config;
 
-    support.forEach((s) => {
+    support?.forEach((s) => {
       const hasElement = document.getElementById(s.url);
       if (s.type === 'font' && !hasElement) loadFont(s.url, container);
       if (s.type !== 'font' && !hasElement) loadCss(s.url);

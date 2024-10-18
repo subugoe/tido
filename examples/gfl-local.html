@@ -54,7 +54,10 @@
               connector: {
                 id: 4,
                 options: {
-                  type: "edited"
+                  type: "edited",
+                  default_font_size: 16,
+                  min_font_size: 14,
+                  max_font_size: 28 
                 }
               }
             },
@@ -162,7 +165,13 @@
         }
       ],
       translations: {
-        Edition_license: 'Editionslizenz'
+        de: {
+          Edition_license: 'Editionslizenz',
+          next_item : "Nächste Seite",
+          previous_item: "Vorherige Seite",
+          next_manifest: "Nächstes Dokument",
+          previous_manifest: "Vorheriges Dokument"
+        }
       }
     });
 });

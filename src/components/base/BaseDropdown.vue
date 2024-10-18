@@ -10,7 +10,7 @@
     />
     <div
       v-if="modelValue"
-      class="t-absolute t-top-[110%] t-z-[1000] t-min-w-full t-shadow-md t-rounded-md t-p-3 t-border dark:t-border-gray-600 dark:t-bg-gray-800 t-bg-gray-50"
+      class="t-absolute t-top-[110%] t-z-[1000] t-min-w-full t-shadow-md t-rounded-md t-p-2 t-border dark:t-border-gray-600 dark:t-bg-gray-800 t-bg-gray-50"
       :class="{
         't-right-0': props.openRight,
         't-left-0': props.openLeft
