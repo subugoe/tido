@@ -102,7 +102,7 @@ function allocateWitnessColorInVariantItem() {
 </script>
 
 <template>
-  <div class="t-flex t-flex-col t-p-4">
+  <div class="t-flex t-flex-col t-p-4 t-h-screen">
     <div class="t-mb-2">
       <VariantsTopBar />
     </div>
