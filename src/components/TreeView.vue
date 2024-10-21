@@ -27,7 +27,7 @@
         }),
         toggler: options => ({
           class: [
-            't-border-0 t-absolute t-left-0 t-top-[14px] t-w-full t-pl-3 t-text-left',
+            't-border-0 t-absolute t-left-0 t-top-[10px] t-w-full t-pl-3 t-text-left',
             { 't-hidden': options.context.leaf && !options.props.node.lazy }
           ]
         }),
