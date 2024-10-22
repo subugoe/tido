@@ -68,7 +68,7 @@
                 class: ['t-leading-none', 't-whitespace-nowrap']
               },
               content: {
-                class: ['t-overflow-auto']
+                class: ['t-overflow-auto', 't-grow']
               }
             },
             inkbar: () => ({
