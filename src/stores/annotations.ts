@@ -358,7 +358,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
   const removeVisibleAnnotations = (annotationIds: string[]) => {
     annotationIds.forEach((id) => {
-      const annotation = annotations.value.find((a) => a.id === id);
+      const annotation = visibleAnnotations.value.find((a) => a.id === id);
       if (annotation) {
         const index = visibleAnnotations.value
           .findIndex(filteredAnnotation => filteredAnnotation.id === annotation.id)
@@ -375,7 +375,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     annotationIds.forEach((id) => {
       // We need to check here if the right annotations panel tab is active
       // a.k.a. it exists in the current filteredAnnotations
-      const annotation = annotations.value.find((a) => a.id === id);
+      const annotation = visibleAnnotations.value.find((a) => a.id === id);
       if (annotation) {
         addActiveAnnotation(annotation.id)
       }
