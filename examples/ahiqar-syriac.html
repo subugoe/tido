@@ -33,7 +33,7 @@
 <script src="dist/tido.js"></script>
 <script>
 window.addEventListener('load', function () {
-  
+
   const select = document.getElementById('nav-select');
   const pathArr = window.location.pathname.split('/')
 
@@ -50,6 +50,10 @@ window.addEventListener('load', function () {
     "labels": {
       "item": "Sheet",
       "manifest": "Manuscript"
+    },
+    "colors": {
+      "forceMode": "light",
+      "primary": "#1a3771"
     },
     "panels": [
       {
@@ -131,19 +135,19 @@ window.addEventListener('load', function () {
                 "types": [
                   {
                     "name": "Person",
-                    "icon": "biPersonFill"
+                    "icon": "person"
                   },
                   {
                     "name": "Place",
-                    "icon": "biGeoAltFill"
+                    "icon": "marker"
                   },
                   {
                     "name": "Editorial Comment",
-                    "icon": "biChatFill"
+                    "icon": "chat"
                   },
                   {
                     "name": "Reference",
-                    "icon": "biBoxArrowUpRight"
+                    "icon": "externalLink"
                   }
                 ]
               }
@@ -158,10 +162,17 @@ window.addEventListener('load', function () {
                 "types": [
                   {
                     "name": "Motif",
-                    "icon": "biPenFill"
+                    "icon": "pen"
                   }
                 ]
               }
+            }
+          },
+          {
+            "id": "annotations3",
+            "label": "Variants",
+            "connector": {
+              "id": 6
             }
           }
         ]
@@ -169,7 +180,12 @@ window.addEventListener('load', function () {
     ],
     "translations": {
       "en": {
-        "contents_and_metadata": "Contents & Metadata"
+        "contents_and_metadata": "Contents & Metadata",
+        "next_item": "Next Sheet",
+        "previous_item": "Previous Sheet",
+        "next_manifest": "Next Manuscript",
+        "previous_manifest": "Previous Manuscript",
+        "item": "Sheet"
       }
     }
   });

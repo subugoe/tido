@@ -76,7 +76,7 @@ describe('Tido', () => {
       .get(selectors.panel4)
       .find('.panel-body')
       .find(selectors.tab)
-      .should('have.length', 2)
+      .should('have.length', 3)
       .eq(0)
       .should('have.attr', 'data-p-active', 'true');
   });

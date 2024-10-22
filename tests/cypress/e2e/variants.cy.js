@@ -57,7 +57,7 @@ const selectors = {
 
     beforeEach(() => {
       cy
-      .visit(`/ahiqar-arabic-karshuni-with-variants-local.html?tido=m20_i1_p0.0-1.0-2.0-3.2`)
+      .visit(`/ahiqar-arabic-karshuni-local.html?tido=m20_i1_p0.0-1.0-2.0-3.2`)
       .get('#text-content')
       .should('be.visible')
       .get(selectors.list)

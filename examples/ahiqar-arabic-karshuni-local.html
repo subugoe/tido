@@ -32,7 +32,8 @@ window.addEventListener('load', function () {
       "manifest": "Manuscript"
     },
     "colors": {
-      "forceMode": "light"
+      "forceMode": "light",
+      "primary": "#1a3771"
     },
     "panels": [
       {
@@ -86,10 +87,7 @@ window.addEventListener('load', function () {
             "connector": {
               "id": 4,
               "options": {
-                "type": "transcription",
-                "default_font_size": 16,
-                "min_font_size": 14,
-                "max_font_size": 28 
+                "type": "transcription"
               }
             }
           },
@@ -100,8 +98,8 @@ window.addEventListener('load', function () {
               "id": 4,
               "options": {
                 "type": "transliteration"
+              }
             }
-           }
           }
         ]
       },
@@ -117,19 +115,19 @@ window.addEventListener('load', function () {
                 "types": [
                   {
                     "name": "Person",
-                    "icon": "biPersonFill"
+                    "icon": "person"
                   },
                   {
                     "name": "Place",
-                    "icon": "biGeoAltFill"
+                    "icon": "marker"
                   },
                   {
                     "name": "Editorial Comment",
-                    "icon": "biChatFill"
+                    "icon": "chat"
                   },
                   {
                     "name": "Reference",
-                    "icon": "biBoxArrowUpRight"
+                    "icon": "externalLink"
                   }
                 ]
               }
@@ -144,10 +142,17 @@ window.addEventListener('load', function () {
                 "types": [
                   {
                     "name": "Motif",
-                    "icon": "biPenFill"
+                    "icon": "pen"
                   }
                 ]
               }
+            }
+          },
+          {
+            "id": "annotations3",
+            "label": "Variants",
+            "connector": {
+              "id": 6
             }
           }
         ]
@@ -161,7 +166,7 @@ window.addEventListener('load', function () {
         "next_manifest": "Next Manuscript",
         "previous_manifest": "Previous Manuscript",
         "item": "Sheet"
-      },
+      }
     }
   });
 });
