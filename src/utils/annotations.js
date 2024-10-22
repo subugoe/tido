@@ -250,7 +250,7 @@ export function addWitness(target, witness, color) {
   const witnessEl = createWitnessEl(witness, color)
   
   let isWrapper = false
-  if (parentEl.children.length === 1) {
+  if (targetIndex === 0) {
     // target is the only child element
     isWrapper = false
   } else {
