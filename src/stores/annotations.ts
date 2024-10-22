@@ -349,22 +349,22 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     filteredAnnotations.value.forEach(({id}) => activeAnnotations.value[id] && removeActiveAnnotation(id));
   };
 
-  const addFilteredAnnotations = (annotationIds: string[]) => {
+  const addVisibleAnnotations = (annotationIds: string[]) => {
     annotationIds.forEach((id) => {
       const annotation = annotations.value.find((a) => a.id === id);
-      if (annotation) filteredAnnotations.value.push(annotation)
+      if (annotation) visibleAnnotations.value.push(annotation)
     })
   }
 
-  const removeFilteredAnnotations = (annotationIds: string[]) => {
+  const removeVisibleAnnotations = (annotationIds: string[]) => {
     annotationIds.forEach((id) => {
       const annotation = annotations.value.find((a) => a.id === id);
       if (annotation) {
-        const index = filteredAnnotations.value
+        const index = visibleAnnotations.value
           .findIndex(filteredAnnotation => filteredAnnotation.id === annotation.id)
 
         if (index > -1) {
-          filteredAnnotations.value.splice(index, 1)
+          visibleAnnotations.value.splice(index, 1)
         }
       }
     })
@@ -456,8 +456,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     disableSingleSelectMode,
     activateAnnotationsByIds,
     deactivateAnnotationsByIds,
-    addFilteredAnnotations,
-    removeFilteredAnnotations
+    addVisibleAnnotations,
+    removeVisibleAnnotations
   }
 
 })
