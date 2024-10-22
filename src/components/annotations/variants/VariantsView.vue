@@ -45,7 +45,7 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
   const variantAnnotationIds = variantAnnotations.map((annotation) => annotation.id)
   ids = ids.filter((id) => variantAnnotationIds.includes(id))
 
-  const annotations = filteredAnnotations.value.filter((filtered) => ids.find(id => filtered.id === id))
+  const annotations = annotationStore.visibleAnnotations.filter((filtered) => ids.find(id => filtered.id === id))
   if (!annotationStore.isSingleSelectMode) {
     // We check if the found annotation ids are currently displayed in the active tab, if not we skip the handling
     // the annotations referring to the target are not displayed - we do not proceed further
