@@ -17,11 +17,16 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const annotations = ref<Annotation[]>(null)
   const witnesses = ref<Witness[]>([])
   const filteredAnnotations = ref<Annotation[]>([])
+  const visibleAnnotations = ref<Annotation[]>([])
   const isLoading = ref<boolean>(false);
   const isSingleSelectMode = ref<boolean>(false)
 
   const setActiveAnnotations = (annotations: ActiveAnnotation) => {
     activeAnnotations.value = annotations
+  }
+
+  function setVisibleAnnotations(payload: Annotation[]) {
+    visibleAnnotations.value = payload
   }
 
   function updateAnnotationLoading(payload: boolean) {
@@ -105,6 +110,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         },
       );
     }
+    setVisibleAnnotations(filteredAnnotations.value)
   };
 
   const filterAnnotationsByWitnesses = (witnesses: string[]) => {
@@ -118,7 +124,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     const activeIds = Object.keys(activeAnnotations.value)
 
     // Remove highlighting on all other annotations completely (reset all)
-    filteredAnnotations.value
+    visibleAnnotations.value
       .filter(annotation => !activeIds.includes(annotation.id))
       .forEach(annotation => {
         const selector = AnnotationUtils.generateTargetSelector(annotation);
@@ -130,14 +136,14 @@ export const useAnnotationsStore = defineStore('annotations', () => {
       })
 
     // Set filtered annotations
-    filteredAnnotations.value = annotations.value.filter((annotation) => {
+    visibleAnnotations.value = annotations.value.filter((annotation) => {
       return AnnotationUtils.isVariant(annotation) && witnesses.includes(annotation.body.value.witness)
     })
 
     // When filtering by witness it can happen that a target is used for some other active annotation item,
     // In that case, we want to keep the level of highlighting it had and
 
-    filteredAnnotations.value
+    visibleAnnotations.value
       .filter(annotation => !activeIds.includes(annotation.id))
       .forEach(annotation => {
         const selector = AnnotationUtils.generateTargetSelector(annotation);
@@ -409,13 +415,13 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const enableSingleSelectMode = () => {
     resetAnnotations()
     highlightTargetsLevel0()
-    filteredAnnotations.value = []
+    visibleAnnotations.value = []
     isSingleSelectMode.value = true
   }
 
   const disableSingleSelectMode = () => {
     resetAnnotations()
-    selectFilteredAnnotations([{ name: 'Variant' }]);
+    visibleAnnotations.value = filteredAnnotations.value
     highlightTargetsLevel0();
     isSingleSelectMode.value = false
   }
@@ -426,10 +432,12 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     annotations,
     witnesses,
     filteredAnnotations,
+    visibleAnnotations,
     isLoading,
     isSingleSelectMode,
     variantItemsColors,  // states
     setActiveAnnotations,
+    setVisibleAnnotations,
     setVariantItemsColors,  // functions
     addActiveAnnotation,
     selectFilteredAnnotations,
