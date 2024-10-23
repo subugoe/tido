@@ -199,6 +199,35 @@ const selectors = {
          .should('not.have.class', 'active')
       })
 
+      it('should show(hide) the witnesses filter depending on the existence of annotations for the current opened tab', () => {
+        // filteredAnnotations = []
+
+        // switch to the Transliteration tab in Text Panel which has no targets highlighted
+        cy.get(selectors.textPanelTabs)
+         .children()
+         .eq(1)
+         .click()
+
+         .get(selectors.panel4)
+         .find('div[data-pc-section="panelcontainer"]')
+         .find('#pv_id_6_2_content')
+         .find('#variants-top-bar')
+         .should('have.attr','style', 'display: none;')
+
+         // switch back to Transcription
+         cy.get(selectors.textPanelTabs)
+         .children()
+         .eq(0)
+         .click()
+
+         .get(selectors.panel4)
+         .find('div[data-pc-section="panelcontainer"]')
+         .find('#pv_id_6_2_content')
+         .find('#variants-top-bar')
+         .should('not.have.attr','style', 'display: none;')
+         .should('contain', '4 Witnesses selected')
+      })
+
     })
 
     describe('Witnesses', () => {
