@@ -174,6 +174,31 @@ const selectors = {
           .next().should('contain', 'اللبان').and('not.have.class', 'active')
       })
 
+      it('should show correct annotations when switching the tabs in Text Panel', () => {
+        cy.get(selectors.list)
+          .children()
+          .eq(0)
+          .click()
+         
+          // click the second tab in Text Panel
+         .get(selectors.textPanelTabs)
+         .children()
+         .eq(1)
+         .click()      
+         .checkNoAnnotationsAvailable()
+         
+         // click the first tab in Text Panel
+         .get(selectors.textPanelTabs)
+         .children()
+         .eq(0)
+         .click()  
+         .get(selectors.list)
+         .children()
+         .should('have.length', 11)
+         .eq(0)
+         .should('not.have.class', 'active')
+      })
+
     })
 
     describe('Witnesses', () => {
