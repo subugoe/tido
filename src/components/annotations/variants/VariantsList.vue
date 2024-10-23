@@ -1,10 +1,10 @@
 <template>
   <div
-    v-if="filteredAnnotations.length > 0"
+    v-if="visibleAnnotations.length > 0"
     class="annotations-list t-overflow-visible"
   >
     <VariantItem
-      v-for="(annotation, i) in filteredAnnotations"
+      v-for="(annotation, i) in visibleAnnotations"
       :key="annotation.id"
       :annotation="annotation"
       :is-active="isActive(annotation)"
@@ -37,6 +37,7 @@ const annotationStore = useAnnotationsStore();
 
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
 const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
+const visibleAnnotations = computed<Annotation[]>(() => annotationStore.visibleAnnotations);
 
 
 function isActive(annotation: Annotation): boolean {

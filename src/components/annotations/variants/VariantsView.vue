@@ -15,7 +15,6 @@ allocateWitnessColorInVariantItem()
 
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const activeContentUrl = computed<string>(() => contentsStore.activeContentUrl);
-const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
 
 const updateTextHighlighting = computed(() =>
   // We need to make sure that annotations are loaded (this.annotations),
@@ -45,7 +44,7 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
   const variantAnnotationIds = variantAnnotations.map((annotation) => annotation.id)
   ids = ids.filter((id) => variantAnnotationIds.includes(id))
 
-  const annotations = filteredAnnotations.value.filter((filtered) => ids.find(id => filtered.id === id))
+  const annotations = annotationStore.visibleAnnotations.filter((filtered) => ids.find(id => filtered.id === id))
   if (!annotationStore.isSingleSelectMode) {
     // We check if the found annotation ids are currently displayed in the active tab, if not we skip the handling
     // the annotations referring to the target are not displayed - we do not proceed further
@@ -60,10 +59,10 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
   if (annotationStore.isSingleSelectMode) {
     if (targetIsSelected) {
-      annotationStore.removeFilteredAnnotations(ids)
+      annotationStore.removeVisibleAnnotations(ids)
       annotationStore.deactivateAnnotationsByIds(ids)
     } else {
-      annotationStore.addFilteredAnnotations(ids)
+      annotationStore.addVisibleAnnotations(ids)
       annotationStore.activateAnnotationsByIds(ids)
     }
   } else {

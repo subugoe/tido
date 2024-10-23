@@ -144,6 +144,90 @@ const selectors = {
           .should('eq', '0')   // highlighted text becomes grey
 
       })
+
+      it('should show the correct annotations and their (selected) state when switching annotations tabs', () => {
+        // select the first two variant items
+        cy
+          .get(selectors.list)
+          .children()
+          .eq(0)
+          .click()
+          .next()
+          .click()
+
+          // switch to Editorial tab: check whether the annotations in Editorial tab are shown correctly
+          .visit(`/ahiqar-arabic-karshuni-local.html?tido=m20_i1_p0.0-1.0-2.0-3.0`)
+          .wait(500)
+          .get(selectors.list)
+          .children()
+          .should('have.length', 6)
+          .eq(0).should('not.contain', 'omisit').and('not.have.class','active')
+          .should('contain', 'ܢܐܕܢ')  
+          
+          // switch back to Variants tab: check whether the tab's belonging list of annotations are shown as unselected
+          .visit(`/ahiqar-arabic-karshuni-local.html?tido=m20_i1_p0.0-1.0-2.0-3.2`)
+          .wait(500)
+          .get(selectors.list)
+          .children()
+          .should('have.length', 11)
+          .eq(0).should('contain', 'omisit').and('not.have.class', 'active')
+          .next().should('contain', 'اللبان').and('not.have.class', 'active')
+      })
+
+      it('should show correct annotations when switching the tabs in Text Panel', () => {
+        cy.get(selectors.list)
+          .children()
+          .eq(0)
+          .click()
+         
+          // click the second tab in Text Panel
+         .get(selectors.textPanelTabs)
+         .children()
+         .eq(1)
+         .click()      
+         .checkNoAnnotationsAvailable()
+         
+         // click the first tab in Text Panel
+         .get(selectors.textPanelTabs)
+         .children()
+         .eq(0)
+         .click()  
+         .get(selectors.list)
+         .children()
+         .should('have.length', 11)
+         .eq(0)
+         .should('not.have.class', 'active')
+      })
+
+      it('should show(hide) the witnesses filter depending on the existence of annotations for the current opened tab', () => {
+        // filteredAnnotations = []
+
+        // switch to the Transliteration tab in Text Panel which has no targets highlighted
+        cy.get(selectors.textPanelTabs)
+         .children()
+         .eq(1)
+         .click()
+
+         .get(selectors.panel4)
+         .find('div[data-pc-section="panelcontainer"]')
+         .find('#pv_id_6_2_content')
+         .find('#variants-top-bar')
+         .should('have.attr','style', 'display: none;')
+
+         // switch back to Transcription
+         cy.get(selectors.textPanelTabs)
+         .children()
+         .eq(0)
+         .click()
+
+         .get(selectors.panel4)
+         .find('div[data-pc-section="panelcontainer"]')
+         .find('#pv_id_6_2_content')
+         .find('#variants-top-bar')
+         .should('not.have.attr','style', 'display: none;')
+         .should('contain', '4 Witnesses selected')
+      })
+
     })
 
     describe('Witnesses', () => {

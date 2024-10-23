@@ -22,6 +22,7 @@ export default {
     listItem: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] .annotations-list .item',
     listOfSecondTab: '.panels-wrapper > .panel:nth-child(4) [role="tabpanel"]:nth-child(2) .annotations-list',
     tab: '.panels-wrapper > .panel:nth-child(4) [role="tablist"] [data-pc-section="nav"] [data-pc-name="tabpanel"]',
+    textPanelTabs: '.panels-wrapper .panel:nth-child(3) .panel-body ul[data-pc-section="nav"]',
     text: '.panels-wrapper > .panel:nth-child(3) #text-content',
     annotationPanelActionCheckbox: '.panel-header .actions > div:first-child #panel-check-action',
   },
