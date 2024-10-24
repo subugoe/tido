@@ -8,6 +8,8 @@ import {scrollIntoViewIfNeeded} from '@/utils';
 import {useConfigStore} from '@/stores/config';
 import TextEventBus from '@/utils/TextEventBus';
 
+import { getVariantAnnotations } from '@/utils/annotations'
+
 
 export const useAnnotationsStore = defineStore('annotations', () => {
 
@@ -173,8 +175,35 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const annotationLoaded = ({ items, refs }) => {
     annotations.value = items
     witnesses.value = refs
+
+    if (existsAnnotationWithWitnessNull() === true) {
+      replaceWitnessValue()
+      // if there is at least one annotation with witness null - then witness 'missing' should be shown in witnesses drop down
+      witnesses.value.push({'idno': 'missing', 'manifest': ''})
+    }
     updateAnnotationLoading(false)
   };
+
+  function existsAnnotationWithWitnessNull(): boolean {
+    const variantAnnotations: Annotation[] = getVariantAnnotations(annotations.value, 'Variant')
+    if (variantAnnotations.length === 0) return false
+    
+    for (let i = 0; i < variantAnnotations.length ; i++) {
+      if(variantAnnotations[i].body.value.witness === null) return true
+    }
+    return false
+  }
+
+  function replaceWitnessValue() {
+    if (annotations.value.length === 0) return
+
+    for (let i = 0; i < annotations.value.length ; i++) {
+      const annotation = annotations.value[i]
+      if(annotation.body.value.witness === null) {
+        annotation.body.value.witness = 'missing'
+      }
+    }
+  }
 
   const removeActiveAnnotation = (id) => {
     const annotationStore = useAnnotationsStore()
