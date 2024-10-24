@@ -8,6 +8,8 @@ import {computed, onBeforeUnmount, watch} from "vue";
 import {useContentsStore} from "@/stores/contents";
 import TextEventBus from "@/utils/TextEventBus";
 import {getAnnotationIdsFromTarget} from "@/utils/text";
+import { getVariantAnnotations } from '@/utils/annotations'
+
 const annotationStore = useAnnotationsStore();
 const contentsStore = useContentsStore();
 
@@ -77,15 +79,6 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
 onBeforeUnmount(() => unsubscribe())
 
-function getVariantAnnotations(annotations, type) {
-  let list = []
-  if (!annotations || annotations.length === 0) return []
-  annotations.forEach((annotation) => {
-      if (annotation.body['x-content-type'] === type) list.push(annotation)
-    })
-  
-  return list
-}
 
 function allocateWitnessColorInVariantItem() {
   const colors = {}
@@ -94,8 +87,8 @@ function allocateWitnessColorInVariantItem() {
 
   annotationStore.witnesses.forEach((witness, i) => {
     colors[witness.idno] = getItemColorBasedOnIndex(i)
-    annotationStore.setVariantItemsColors(colors)
   })
+  annotationStore.setVariantItemsColors(colors)
   }
 
 </script>

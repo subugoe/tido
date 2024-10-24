@@ -349,6 +349,16 @@ export function isVariant(annotation) {
   return annotation?.body['x-content-type'] === 'Variant';
 }
 
+export function getVariantAnnotations(annotations, type) {
+  let list = []
+  if (!annotations || annotations.length === 0) return []
+  annotations.forEach((annotation) => {
+      if (annotation.body['x-content-type'] === type) list.push(annotation)
+    })
+  
+  return list
+}
+
 
 export function getAnnotationListElement(id, container) {
   return [...container.querySelectorAll('.q-item')].find((annotationItem) => {
