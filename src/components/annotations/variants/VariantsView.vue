@@ -8,6 +8,8 @@ import {computed, onBeforeUnmount, watch} from "vue";
 import {useContentsStore} from "@/stores/contents";
 import TextEventBus from "@/utils/TextEventBus";
 import {getAnnotationIdsFromTarget} from "@/utils/text";
+import { getVariantAnnotations } from '@/utils/annotations'
+
 const annotationStore = useAnnotationsStore();
 const contentsStore = useContentsStore();
 
@@ -39,9 +41,10 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
   let ids = getAnnotationIdsFromTarget(target)
   // ids are all the annotation ids of the target, which can be in different tabs. 
-  // we need to filter only the variant ides before proceeding with adding active annotation or removing active annotation
+  // we need to filter only the variant ids before proceeding with adding active annotation or removing active annotation
   const variantAnnotations = getVariantAnnotations(annotationStore.annotations, 'Variant')
   const variantAnnotationIds = variantAnnotations.map((annotation) => annotation.id)
+  // ids now contains the ids of the target's variants independent from the witnesses drop down selection 
   ids = ids.filter((id) => variantAnnotationIds.includes(id))
 
   const annotations = annotationStore.visibleAnnotations.filter((filtered) => ids.find(id => filtered.id === id))
@@ -57,35 +60,34 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
   const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0
 
+  // ids of the selected annotations
+  const idsSelected = annotations.map((annotation) => annotation.id)
+
+
   if (annotationStore.isSingleSelectMode) {
     if (targetIsSelected) {
-      annotationStore.removeVisibleAnnotations(ids)
-      annotationStore.deactivateAnnotationsByIds(ids)
+      annotationStore.removeVisibleAnnotations(idsSelected)
+      annotationStore.deactivateAnnotationsByIds(idsSelected)
     } else {
+      // we select the target in single select mode -> we should show all the target's variant items - ids
       annotationStore.addVisibleAnnotations(ids)
       annotationStore.activateAnnotationsByIds(ids)
     }
   } else {
+    // not in single select mode
+    // we should select/deselect the variant items which align with the witnesses drop down selection
+    // i.e in case where out of 4 witnesses drop down only 2 are chosen. When one clicks the target then one should select only the variant items for which their witness is selected
     if (targetIsSelected) {
-      annotationStore.deactivateAnnotationsByIds(ids)
+      annotationStore.deactivateAnnotationsByIds(idsSelected)
     }
     else {
-      annotationStore.activateAnnotationsByIds(ids)
+      annotationStore.activateAnnotationsByIds(idsSelected)
     }
   }
 })
 
 onBeforeUnmount(() => unsubscribe())
 
-function getVariantAnnotations(annotations, type) {
-  let list = []
-  if (!annotations || annotations.length === 0) return []
-  annotations.forEach((annotation) => {
-      if (annotation.body['x-content-type'] === type) list.push(annotation)
-    })
-  
-  return list
-}
 
 function allocateWitnessColorInVariantItem() {
   const colors = {}
@@ -94,8 +96,8 @@ function allocateWitnessColorInVariantItem() {
 
   annotationStore.witnesses.forEach((witness, i) => {
     colors[witness.idno] = getItemColorBasedOnIndex(i)
-    annotationStore.setVariantItemsColors(colors)
   })
+  annotationStore.setVariantItemsColors(colors)
   }
 
 </script>
