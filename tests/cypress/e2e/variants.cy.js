@@ -111,6 +111,22 @@ const selectors = {
          
       })
 
+      it('Should show the new list of annotations when first selecting a few annotations and then switching the item', () => {
+        cy
+          .get(selectors.list)
+          .children()
+          .eq(0)
+          .click()
+          .next()
+          .click()
+          .get(selectors.panel1)
+          .find('ul[role="tree"]')
+          .find('ul[role="group"]')
+          .find('div').contains('182b')
+          .click()
+          .checkNoAnnotationsAvailable()
+      })
+
       it('select (unselect) a variant item', () => {
         // should select a variant item and add its witness after the highlighted text + the highlighted text should become light blue
         cy
