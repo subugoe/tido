@@ -8,6 +8,8 @@ import {scrollIntoViewIfNeeded} from '@/utils';
 import {useConfigStore} from '@/stores/config';
 import TextEventBus from '@/utils/TextEventBus';
 
+import { getVariantAnnotations } from '@/utils/annotations'
+
 
 export const useAnnotationsStore = defineStore('annotations', () => {
 
@@ -20,6 +22,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const visibleAnnotations = ref<Annotation[]>([])
   const isLoading = ref<boolean>(false);
   const isSingleSelectMode = ref<boolean>(false)
+
 
   const setActiveAnnotations = (annotations: ActiveAnnotation) => {
     activeAnnotations.value = annotations
@@ -173,8 +176,29 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const annotationLoaded = ({ items, refs }) => {
     annotations.value = items
     witnesses.value = refs
+    preprocessVariants()
+
     updateAnnotationLoading(false)
   };
+
+  function preprocessVariants () {
+    if (annotations.value.length === 0) return
+
+    let existsAnnotationWithWitnessNull = false   
+
+    for (let i = 0; i < annotations.value.length; i++) {
+      const annotation = annotations.value[i]
+      if (!AnnotationUtils.isVariant(annotation)) continue
+
+      if (typeof annotation.body.value.witness !== "string") {
+        annotation.body.value.witness = 'missing'
+        existsAnnotationWithWitnessNull = true
+      }
+    }
+    if (existsAnnotationWithWitnessNull) {
+      witnesses.value.push({'idno': 'missing', 'manifest': ''})
+    }
+  }
 
   const removeActiveAnnotation = (id) => {
     const annotationStore = useAnnotationsStore()

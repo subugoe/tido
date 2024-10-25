@@ -10,7 +10,7 @@ export const getRGBColor = (hex, type) => {
 
 
 export default function colors() {
-  return ['rose', 'amber', 'violet' , 'lime', 'blue', 'teal',];
+  return ['rose', 'amber', 'violet' , 'lime', 'blue', 'teal', 'pink', 'orange', 'gray'];
 }
 
 export function getItemColorBasedOnIndex(index){
