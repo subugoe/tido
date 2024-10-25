@@ -218,10 +218,14 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     annotationStore.setActiveAnnotations(activeAnnotationsList)
 
     const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
+    const textEl = document.querySelector('#text-content')
+    const target = textEl.querySelector(selector)
 
-    if (selector) {
+
+    // when target is null -> we switched to another item - we don't continue and change the level of highlight of the text
+    if (target) {
       if (AnnotationUtils.isVariant(removeAnnotation)) {
-        if (AnnotationUtils.getCurrentLevel(document.querySelector(selector)) > 0
+        if (AnnotationUtils.getCurrentLevel(target) > 0
           && Object.keys(activeAnnotations.value).findIndex(key => {
             const sel = AnnotationUtils.generateTargetSelector(activeAnnotations.value[key])
             return sel === selector
