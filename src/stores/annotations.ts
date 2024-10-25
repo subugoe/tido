@@ -23,6 +23,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const isLoading = ref<boolean>(false);
   const isSingleSelectMode = ref<boolean>(false)
 
+
   const setActiveAnnotations = (annotations: ActiveAnnotation) => {
     activeAnnotations.value = annotations
   }
@@ -175,33 +176,27 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const annotationLoaded = ({ items, refs }) => {
     annotations.value = items
     witnesses.value = refs
+    preprocessVariants()
 
-    if (existsAnnotationWithWitnessNull() === true) {
-      replaceWitnessValue()
-      // if there is at least one annotation with witness null - then witness 'missing' should be shown in witnesses drop down
-      witnesses.value.push({'idno': 'missing', 'manifest': ''})
-    }
     updateAnnotationLoading(false)
   };
 
-  function existsAnnotationWithWitnessNull(): boolean {
-    const variantAnnotations: Annotation[] = getVariantAnnotations(annotations.value, 'Variant')
-    if (variantAnnotations.length === 0) return false
-    
-    for (let i = 0; i < variantAnnotations.length ; i++) {
-      if(variantAnnotations[i].body.value.witness === null) return true
-    }
-    return false
-  }
-
-  function replaceWitnessValue() {
+  function preprocessVariants () {
     if (annotations.value.length === 0) return
 
-    for (let i = 0; i < annotations.value.length ; i++) {
+    let existsAnnotationWithWitnessNull = false   
+
+    for (let i = 0; i < annotations.value.length; i++) {
       const annotation = annotations.value[i]
-      if(annotation.body.value.witness === null) {
+      if (!AnnotationUtils.isVariant(annotation)) continue
+
+      if (typeof annotation.body.value.witness === "string") {
         annotation.body.value.witness = 'missing'
+        existsAnnotationWithWitnessNull = true
       }
+    }
+    if (existsAnnotationWithWitnessNull) {
+      witnesses.value.push({'idno': 'missing', 'manifest': ''})
     }
   }
 
