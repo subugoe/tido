@@ -9,6 +9,7 @@ import {useConfigStore} from '@/stores/config';
 import TextEventBus from '@/utils/TextEventBus';
 
 import { getVariantAnnotations } from '@/utils/annotations'
+import { allocateWitnessColorInVariantItem } from '@/utils/variants';
 
 
 export const useAnnotationsStore = defineStore('annotations', () => {
@@ -176,7 +177,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const annotationLoaded = ({ items, refs }) => {
     annotations.value = items
     witnesses.value = refs
+
     preprocessVariants()
+    allocateWitnessColorInVariantItem()
 
     updateAnnotationLoading(false)
   };
@@ -215,6 +218,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     annotationStore.setActiveAnnotations(activeAnnotationsList)
 
     const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
+
     if (selector) {
       if (AnnotationUtils.isVariant(removeAnnotation)) {
         if (AnnotationUtils.getCurrentLevel(document.querySelector(selector)) > 0

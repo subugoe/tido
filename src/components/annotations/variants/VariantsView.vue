@@ -13,8 +13,6 @@ import { getVariantAnnotations } from '@/utils/annotations'
 const annotationStore = useAnnotationsStore();
 const contentsStore = useContentsStore();
 
-allocateWitnessColorInVariantItem()
-
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const activeContentUrl = computed<string>(() => contentsStore.activeContentUrl);
 
@@ -87,18 +85,6 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
 })
 
 onBeforeUnmount(() => unsubscribe())
-
-
-function allocateWitnessColorInVariantItem() {
-  const colors = {}
-  if (!annotationStore.witnesses) return
-  if (annotationStore.witnesses.length === 0) return;
-
-  annotationStore.witnesses.forEach((witness, i) => {
-    colors[witness.idno] = getItemColorBasedOnIndex(i)
-  })
-  annotationStore.setVariantItemsColors(colors)
-  }
 
 </script>
 
