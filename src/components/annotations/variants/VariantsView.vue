@@ -2,7 +2,6 @@
 
 import VariantsTopBar from "@/components/annotations/variants/VariantsTopBar.vue";
 import VariantsList from "@/components/annotations/variants/VariantsList.vue";
-import { getItemColorBasedOnIndex } from '@/utils/color';
 import {useAnnotationsStore} from "@/stores/annotations";
 import {computed, onBeforeUnmount, watch} from "vue";
 import {useContentsStore} from "@/stores/contents";
