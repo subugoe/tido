@@ -376,6 +376,53 @@ const selectors = {
         .next()
         .should('not.have.class', 'active')
       })
+
+      it('should consider the witnesses drop down selection when clicking the target', () => {
+        // when clicking the target should show correct witnesses chips in text Panel and select the variant items according to witnesses drop down selection 
+        cy.get(selectors.list)
+          .clickWitnessItem('4 Witnesses selected', 'Cod. Arab. 236')
+          .parent().parent()
+          .contains('DFM 614').click()
+
+        // we need to unclick the witnesses drop down, to be able to click the target
+        cy.get(selectors.panel4)
+          .contains('2 Witnesses selected')
+          .click({force: true})
+        
+        // we click at a target
+        cy.clickTarget()
+
+        // in the witnesses there should be only 2 chips
+        cy.get(selectors.panel3)
+          .find('#text-content')
+          .find('.witnesses')
+          .children()
+          .should('have.length', 2)
+          .eq(0)
+          .should('contain', 'Ming. syr. 258')
+          .next()
+          .should('contain', 'Sach. 339')
+
+        // should show 'correct number of variants selected'
+
+        cy.get(selectors.panel4)
+          .find('#variants-top-bar')
+          .find('span')
+          .contains('2 Variants selected')
+
+        // only the variant items controled by the witnesses filter and referring to the target should be selected - 3rd and 4th variant item
+        cy.get(selectors.list)
+        .children()
+        .should('have.length', 6)
+        .eq(0).should('contain','Ming. syr. 258').and('not.have.class','active')
+        .next().should('contain','Sach. 339').and('not.have.class','active')    // eq(1)
+        .next().should('contain','Ming. syr. 258').and('have.class','active')    // eq(2)
+        .next().should('contain','Sach. 339').and('have.class','active')
+        .next().should('contain','Ming. syr. 258').and('not.have.class','active')
+        .next().should('contain','Sach. 339').and('not.have.class','active')
+      })
+
+
     })
 
     describe('Single select mode', () => {
