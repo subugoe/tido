@@ -190,7 +190,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
       const annotation = annotations.value[i]
       if (!AnnotationUtils.isVariant(annotation)) continue
 
-      if (typeof annotation.body.value.witness === "string") {
+      if (typeof annotation.body.value.witness !== "string") {
         annotation.body.value.witness = 'missing'
         existsAnnotationWithWitnessNull = true
       }
