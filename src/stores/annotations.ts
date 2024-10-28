@@ -8,8 +8,8 @@ import {scrollIntoViewIfNeeded} from '@/utils';
 import {useConfigStore} from '@/stores/config';
 import TextEventBus from '@/utils/TextEventBus';
 
-import { getVariantAnnotations } from '@/utils/annotations'
-import { allocateWitnessColorInVariantItem } from '@/utils/variants';
+import { getItemColorBasedOnIndex } from '@/utils/color';
+
 
 
 export const useAnnotationsStore = defineStore('annotations', () => {
@@ -202,6 +202,17 @@ export const useAnnotationsStore = defineStore('annotations', () => {
       witnesses.value.push({'idno': 'missing', 'manifest': ''})
     }
   }
+
+ function allocateWitnessColorInVariantItem() {
+    const colors = {}
+    if (!witnesses.value) return
+    if (witnesses.value.length === 0) return;
+  
+    witnesses.value.forEach((witness, i) => {
+      colors[witness.idno] = getItemColorBasedOnIndex(i)
+    })
+    setVariantItemsColors(colors)
+}
 
   const removeActiveAnnotation = (id) => {
     const annotationStore = useAnnotationsStore()
@@ -471,6 +482,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     selectFilteredAnnotations,
     addHighlightAttributesToText,
     annotationLoaded,
+    preprocessVariants,
+    allocateWitnessColorInVariantItem,
     removeActiveAnnotation,
     resetAnnotations,
     initAnnotations,
