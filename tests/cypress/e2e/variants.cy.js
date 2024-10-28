@@ -97,6 +97,32 @@ const selectors = {
           .should('have.length', 11)    
       })
 
+      it('Should switch normally to the new item when first selecting a few annotations and then switching the item', () => {
+        // show the annotation content of the new item
+        cy
+          .get(selectors.list)
+          .children()
+          .eq(0)
+          .click()
+          .next()
+          .click()
+          .get(selectors.panel1)
+          .find('ul[role="tree"]')
+          .find('ul[role="group"]')
+          .find('div').contains('182b')
+          .click()
+          .checkNoAnnotationsAvailable()
+
+        // show the text content of the new item
+          .get('#text-content')
+          .find('div')
+          .should('have.class', 'body karshuni')
+          .find('div[id="MD12675N1l4l2l6l4l4"]')
+          .children()
+          .eq(0)
+          .should('have.class', 'hi red')
+      })
+
       it('select (unselect) a variant item', () => {
         // should select a variant item and add its witness after the highlighted text + the highlighted text should become light blue
         cy
