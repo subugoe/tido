@@ -8,7 +8,8 @@ import {scrollIntoViewIfNeeded} from '@/utils';
 import {useConfigStore} from '@/stores/config';
 import TextEventBus from '@/utils/TextEventBus';
 
-import { getVariantAnnotations } from '@/utils/annotations'
+import { getItemColorBasedOnIndex } from '@/utils/color';
+
 
 
 export const useAnnotationsStore = defineStore('annotations', () => {
@@ -176,7 +177,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const annotationLoaded = ({ items, refs }) => {
     annotations.value = items
     witnesses.value = refs
+
     preprocessVariants()
+    allocateWitnessColorInVariantItem()
 
     updateAnnotationLoading(false)
   };
@@ -200,6 +203,17 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     }
   }
 
+ function allocateWitnessColorInVariantItem() {
+    const colors = {}
+    if (!witnesses.value) return
+    if (witnesses.value.length === 0) return;
+  
+    witnesses.value.forEach((witness, i) => {
+      colors[witness.idno] = getItemColorBasedOnIndex(i)
+    })
+    setVariantItemsColors(colors)
+}
+
   const removeActiveAnnotation = (id) => {
     const annotationStore = useAnnotationsStore()
     const removeAnnotation = activeAnnotations.value[id];
@@ -215,6 +229,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     annotationStore.setActiveAnnotations(activeAnnotationsList)
 
     const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
+
     if (selector) {
       if (AnnotationUtils.isVariant(removeAnnotation)) {
         if (AnnotationUtils.getCurrentLevel(document.querySelector(selector)) > 0
@@ -467,6 +482,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     selectFilteredAnnotations,
     addHighlightAttributesToText,
     annotationLoaded,
+    preprocessVariants,
+    allocateWitnessColorInVariantItem,
     removeActiveAnnotation,
     resetAnnotations,
     initAnnotations,
