@@ -114,9 +114,8 @@ const selectors = {
           .checkNoAnnotationsAvailable()
 
         // show the text content of the new item
-          .get('#text-content')
-          .find('div')
-          .should('have.class', 'body karshuni')
+          .get(selectors.panel3)
+          .find('div[class="body karshuni"]')
           .find('div[id="MD12675N1l4l2l6l4l4"]')
           .children()
           .eq(0)
