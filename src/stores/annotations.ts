@@ -229,21 +229,23 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     annotationStore.setActiveAnnotations(activeAnnotationsList)
 
     const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
+    const textEl = document.querySelector('#text-content')
+    const target = textEl.querySelector(selector)
 
-    if (selector) {
-      if (AnnotationUtils.isVariant(removeAnnotation)) {
-        if (AnnotationUtils.getCurrentLevel(document.querySelector(selector)) > 0
-          && Object.keys(activeAnnotations.value).findIndex(key => {
-            const sel = AnnotationUtils.generateTargetSelector(activeAnnotations.value[key])
-            return sel === selector
-          }) === -1) {
-          AnnotationUtils.highlightTargets(selector, {operation: 'DEC'});
-        }
-        removeVariantAnnotation(selector, removeAnnotation);
-      } else {
+    if (!target) return
+
+    if (AnnotationUtils.isVariant(removeAnnotation)) {
+      if (AnnotationUtils.getCurrentLevel(document.querySelector(selector)) > 0
+        && Object.keys(activeAnnotations.value).findIndex(key => {
+          const sel = AnnotationUtils.generateTargetSelector(activeAnnotations.value[key])
+          return sel === selector
+        }) === -1) {
         AnnotationUtils.highlightTargets(selector, {operation: 'DEC'});
-        removeSimpleAnnotation(removeAnnotation);
       }
+      removeVariantAnnotation(selector, removeAnnotation);
+    } else {
+      AnnotationUtils.highlightTargets(selector, {operation: 'DEC'});
+      removeSimpleAnnotation(removeAnnotation);
     }
   };
 
