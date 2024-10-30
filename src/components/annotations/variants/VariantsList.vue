@@ -36,7 +36,6 @@ const annotationStore = useAnnotationsStore();
 
 
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
-const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
 const visibleAnnotations = computed<Annotation[]>(() => annotationStore.visibleAnnotations);
 
 
