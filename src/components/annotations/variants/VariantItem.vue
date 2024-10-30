@@ -25,7 +25,7 @@
       v-html="entry"
     />
   </div> 
-  <hr class="t-slate-200 t-my-[6px] t-rounded-none" v-if="showSeparator" />
+  <hr class="t-slate-200 t-my-[6px] t-rounded-none" v-if="showSeparator" data-cy="variant-sep-line"/>
 </template>
 
 <script setup lang="ts">

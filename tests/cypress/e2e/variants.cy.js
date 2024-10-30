@@ -81,7 +81,7 @@ const selectors = {
           .get(selectors.list)
           .should('be.visible')
           .children()
-          .should("have.length", 11)
+          .should("have.length", 13)
       });
 
       it('Should switch from an item with no variants to another one with variants and show the list correctly', () => {
@@ -94,7 +94,7 @@ const selectors = {
           .wait(500)
           .get(selectors.list)
           .children()
-          .should('have.length', 11)    
+          .should('have.length', 13)    
       })
 
       it('Should switch normally to the new item when first selecting a few annotations and then switching the item', () => {
@@ -207,7 +207,7 @@ const selectors = {
           .wait(500)
           .get(selectors.list)
           .children()
-          .should('have.length', 11)
+          .should('have.length', 13)
           .eq(0).should('contain', 'omisit').and('not.have.class', 'active')
           .next().should('contain', 'اللبان').and('not.have.class', 'active')
       })
@@ -232,7 +232,7 @@ const selectors = {
          .click()  
          .get(selectors.list)
          .children()
-         .should('have.length', 11)
+         .should('have.length', 13)
          .eq(0)
          .should('not.have.class', 'active')
       })
@@ -294,12 +294,12 @@ const selectors = {
         // 2. remove the variant items of this witness from the variants list
         .get(selectors.list)
         .children()
-        .eq(3)
+        .eq(4)
         .invoke('attr', 'data-annotation-id')
         .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_1')  // means that first annotation item of this target is DFM 614, instead of Cod Arab
         .get(selectors.list)
         .children()
-        .eq(6)         // expecting that two variant items with Cod Arab 236 were removed, the first variant item of the third target is now 'DFM 614'
+        .eq(8)         // expecting that two variant items with Cod Arab 236 were removed, the first variant item of the third target is now 'DFM 614'
         .invoke('attr', 'data-annotation-id')
         .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_1')
       })
@@ -314,14 +314,32 @@ const selectors = {
           // effect: add the variant items of this witness in the variants list
           .get(selectors.list)
           .children()
-          .eq(3)
+          .eq(4)
           .invoke('attr', 'data-annotation-id')
           .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_0')  // means that first annotation item of this group is DFM 614, instead of Cod Arab
           .get(selectors.list)
           .children()
-          .eq(7)         // expecting that two variant items with Cod Arab 236 were removed, then we aim to access the variant item with witness DFM 614 of the third target with index 6 instead of 8
+          .eq(9)         // expecting that two variant items with Cod Arab 236 were removed, then we aim to access the variant item with witness DFM 614 of the third target with index 6 instead of 8
           .invoke('attr', 'data-annotation-id')
           .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0')
+      })
+
+      it('Should show separation line correctly between annotation groups when deselecting witnesses from the witnesses drop down', () => {
+        cy
+          .clickWitnessItem('4 Witnesses selected', 'Ming. syr. 258')
+          .get(selectors.list)
+          .find('hr[data-cy="variant-sep-line"]')
+          .should('have.length', 2)
+          .get(selectors.list)
+          .children()
+          .eq(2)
+          .invoke('attr', 'data-cy')
+          .should('eq', 'variant-sep-line')
+        cy.get(selectors.list) 
+          .children()
+          .eq(6)
+          .invoke('attr', 'data-cy')
+          .should('eq', 'variant-sep-line')
       })
 
       /*
@@ -368,7 +386,7 @@ const selectors = {
         // the corresponding variant items should be selected
         .get(selectors.list)
         .children()
-        .eq(2)
+        .eq(3)
         .should('not.have.class', 'active')
         .next()
         .should('have.class', 'active')
@@ -451,16 +469,16 @@ const selectors = {
         // only the variant items controled by the witnesses filter and referring to the target should be selected - 3rd and 4th variant item
         cy.get(selectors.list)
         .children()
-        .should('have.length', 6)
+        .should('have.length', 8)
         .eq(0).should('contain','Ming. syr. 258').and('not.have.class','active')
         .next().should('contain','Sach. 339').and('not.have.class','active')    // eq(1)
+        .next()                                                                 // separation line
         .next().should('contain','Ming. syr. 258').and('have.class','active')    // eq(2)
         .next().should('contain','Sach. 339').and('have.class','active')
+        .next()                                                                 // separation line
         .next().should('contain','Ming. syr. 258').and('not.have.class','active')
         .next().should('contain','Sach. 339').and('not.have.class','active')
       })
-
-
     })
 
     describe('Single select mode', () => {
@@ -516,7 +534,7 @@ const selectors = {
               .get(selectors.list)
               .should('be.visible')
               .children()
-              .should("have.length", 11)      // we have 11 variant items as in the normal mode - no single select mode
+              .should("have.length", 13)      // we have 11 variant items as in the normal mode - no single select mode
             })
           })
       })
