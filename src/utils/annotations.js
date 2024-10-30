@@ -281,7 +281,7 @@ function createWitnessEl(witness, witnessColor) {
   // create an html element of one witness
   const el = document.createElement("span");
   el.innerHTML = witness
-  el.classList.add('t-rounded-3xl', 't-box-border', 't-h-8', 't-py-0.5', 't-px-1.5', 't-text-xs', 't-font-semibold', 't-ml-[3px]')
+  el.classList.add('t-rounded-3xl', 't-box-border', 't-h-8', 't-py-0.5', 't-px-1.5', 't-text-xs', 't-font-semibold', 't-font-sans', 't-ml-[3px]')
   el.style.background = colors[witnessColor]['100']
   el.style.color = colors[witnessColor]['600']
 
