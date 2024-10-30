@@ -10,7 +10,7 @@
       :is-active="isActive(annotation)"
       :toggle="toggle"
       :witness-color="getWitnessColor(annotation.body.value.witness)"
-      :show-separator="showLineSeparator(filteredAnnotations, i)"
+      :show-separator="showLineSeparator(visibleAnnotations, i)"
       @select="addAnnotation(annotation.id)"
       @unselect="removeAnnotation(annotation.id)"
       @show-details="openDetailsDialog"
@@ -36,7 +36,6 @@ const annotationStore = useAnnotationsStore();
 
 
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
-const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
 const visibleAnnotations = computed<Annotation[]>(() => annotationStore.visibleAnnotations);
 
 
@@ -65,9 +64,9 @@ function getWitnessColor(witness: string) {
 }
 
 
-function showLineSeparator(filteredAnnotations, i) {
-  if (filteredAnnotations[i+1]) {
-   return Utils.generateTargetSelector(filteredAnnotations[i]) !== Utils.generateTargetSelector(filteredAnnotations[i+1])
+function showLineSeparator(visibleAnnotations, i) {
+  if (visibleAnnotations[i+1]) {
+   return Utils.generateTargetSelector(visibleAnnotations[i]) !== Utils.generateTargetSelector(visibleAnnotations[i+1])
   }
 }
 

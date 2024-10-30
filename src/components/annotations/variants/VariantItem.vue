@@ -4,8 +4,7 @@
     :class="[
       't-py-2 t-px-2 -t-mx-2 t-mb-1 t-space-x-2 t-rounded-md',
       { 'hover:t-bg-gray-200 dark:hover:t-bg-gray-600 t-cursor-pointer': !isActive },
-      { 't-bg-gray-300 dark:t-bg-gray-600 active': isActive},
-      { 't-border-b t-border-slate-200 t-rounded-none': showSeparator}]"
+      { 't-bg-gray-300 dark:t-bg-gray-600 active': isActive}]"
     :data-annotation-id="annotation.id"
     @click="handleClick"
   >
@@ -25,7 +24,8 @@
       class="t-w-7/12"
       v-html="entry"
     />
-  </div>
+  </div> 
+  <hr class="t-slate-200 t-my-[6px] t-rounded-none" v-if="showSeparator" data-cy="variant-sep-line"/>
 </template>
 
 <script setup lang="ts">
