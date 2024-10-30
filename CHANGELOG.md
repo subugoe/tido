@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/subugoe/tido/compare/v4.1.1...v4.2.0) (2024-10-30)
+
+
+### Features
+
+* add active variants details popup ([c4b9087](https://github.com/subugoe/tido/commit/c4b9087e8b1cf7958d983aae52c6dcb475dbd475))
+* add single select mode ([f337847](https://github.com/subugoe/tido/commit/f337847cf24460dc4c98802484786709c333105f))
+* add variant item selection/deselection  ([#459](https://github.com/subugoe/tido/issues/459)) ([031d827](https://github.com/subugoe/tido/commit/031d827e8b811cd060945eeb12f15e6d042429f0))
+* add variants top bar to filter by witnesses, refactor all into VariantsView ([a9e99a1](https://github.com/subugoe/tido/commit/a9e99a1c0ddc308e68a5eadded1279af4c5a8d1d))
+* display a list of variants objects in a new Variant view  ([671ae74](https://github.com/subugoe/tido/commit/671ae74b46c5b65a70e8bd005013c9495cbdeab5))
+* display all targets with their respective variants in variants details popup ([a6b44c6](https://github.com/subugoe/tido/commit/a6b44c614cb6d85f90a38916faa06e00f621e042))
+* implement selecting/deselecting an annotated text ([#460](https://github.com/subugoe/tido/issues/460)) ([9c203e3](https://github.com/subugoe/tido/commit/9c203e3936d451732b819133ee0d6bce3856963a))
+
+
+### Bug Fixes
+
+* add font family for witness chip ([0c59e1e](https://github.com/subugoe/tido/commit/0c59e1e2c7e8ff1dfdf0b709a0facc10c6580902))
+* allocate witness colours after annotations are loaded for each item + add a test ([#509](https://github.com/subugoe/tido/issues/509)) ([0b663b6](https://github.com/subugoe/tido/commit/0b663b661d677df903dc4acb7928ee1f53d39551))
+* change the highlight of the target only if target is not null and add a test  ([#512](https://github.com/subugoe/tido/issues/512)) ([2531500](https://github.com/subugoe/tido/commit/2531500272ed55e0925cbb0429121eebabf7cf8a))
+* grow the panel content height to its parent height size ([#497](https://github.com/subugoe/tido/issues/497)) ([2bd4ed0](https://github.com/subugoe/tido/commit/2bd4ed011e2bf4c5a90b0f333b9c0ff22a9f0947))
+* hide variants details button when no v.item is selected ([21645d6](https://github.com/subugoe/tido/commit/21645d6de0f0e4c7d6d41ccb0b60308aac95e4e5))
+* remove bug in addWitness() when target is the only child element, add checks for null/array length, make cleaner the functions in annotations.js related to variants ([14263e5](https://github.com/subugoe/tido/commit/14263e50cd103963f0e581b91b459f15e524023a))
+* remove bug in addWitnesses() when target is the only child element ([e194ffc](https://github.com/subugoe/tido/commit/e194ffc842ebba0814902d51c8ccdc3b07d7c572))
+* remove bug in allocateWitnessColorInVariantItem() when witnesses is undefined ([d48a87a](https://github.com/subugoe/tido/commit/d48a87a51da5707997ccb8b1be887789cc016b88))
+* remove bug when clicking at a target and adding a new active annotation even if it is a not variant annotation ([1943dc4](https://github.com/subugoe/tido/commit/1943dc4f44e22bef70eade35d51056bd3492e6ff))
+* remove selectAll from VariantsView ([ae9eb0d](https://github.com/subugoe/tido/commit/ae9eb0d8c4650d32c22f14a3b506fedebbfe275c))
+* resolve issues with highlighting and panel actions when switching annotation tabs ([#486](https://github.com/subugoe/tido/issues/486)) ([fc99523](https://github.com/subugoe/tido/commit/fc99523b1c06d2210f6ae9075d4ddeefde277719))
+* select/deselect the variant items which align with witnesses drop down selection and add tests ([#506](https://github.com/subugoe/tido/issues/506)) ([6d018db](https://github.com/subugoe/tido/commit/6d018db1168f78f61669aa1d831a4059a0df3748))
+* show separation line correctly + add a test ([#513](https://github.com/subugoe/tido/issues/513)) ([9d4b9e3](https://github.com/subugoe/tido/commit/9d4b9e3555ff7a2f1a679b5175168740ca90601b))
+* update caret position in tree ([229cb4a](https://github.com/subugoe/tido/commit/229cb4adf0426d201257d3444ee439914d099bc7))
+* update witness design ([d2e7699](https://github.com/subugoe/tido/commit/d2e7699cd4480e7f22c6ebba16815591e654fde2))
+
+
+### Refactoring
+
+* add VariantList component to manage variants ([825c92b](https://github.com/subugoe/tido/commit/825c92b203183c983913e0c82d9b9782ac348d86))
+* remove an unused variable ([6ff1bb7](https://github.com/subugoe/tido/commit/6ff1bb70be7239b2223e4775f6d6215a2f5c3f3c))
+* remove temporarily the 'witness details' and 'variants details' buttons ([623c812](https://github.com/subugoe/tido/commit/623c81207f6dd4223a515375ff9adea04a8b102d))
+* remove unused ([b452f91](https://github.com/subugoe/tido/commit/b452f91f2f49118b94a09ab3f57ff9a24dd74eb5))
+* rewrite the class name of 'selected' state ([8ab9189](https://github.com/subugoe/tido/commit/8ab9189f9ecb6e48faa922c75c18e0a40ee93ed2))
+* separate the single select mode test into multiple small tests ([39f8b71](https://github.com/subugoe/tido/commit/39f8b711c63da2c4b4187b766caf1b06d181d5ef))
+* use each variant item as separate annotation item ([ff9ae20](https://github.com/subugoe/tido/commit/ff9ae20eda9306c1c2e8c1573fb4782ae22063bc))
+
+
+### Docs
+
+* update README.md ([03b5f14](https://github.com/subugoe/tido/commit/03b5f14fdb1edadb1a24d19f72d61a5c7b63d8ae))
+
 ### [4.1.1](https://github.com/subugoe/tido/compare/v4.1.0...v4.1.1) (2024-10-16)
 
 
