@@ -1,18 +1,14 @@
 <template>
-  <div class="annotations-view t-px-4 t-pt-4">
+  <div class="t-p-4">
     <AnnotationsList
-      v-if="filteredAnnotations.length"
+      v-if="filteredAnnotations.length > 0"
       class="custom-font"
-      :active-annotation="activeAnnotations"
-      :config="config"
-      :configured-annotations="filteredAnnotations"
-      :toggle="toggle"
+      :annotations="filteredAnnotations"
       :types="types"
     />
     <MessageBox
       v-else
-      :message="$t(message)"
-      :notification-colors="config.notificationColors"
+      :message="$t('no_annotations_in_view')"
       :title="$t('no_annotations_available')"
       type="info"
     />
@@ -21,30 +17,27 @@
 
 <script setup lang="ts">
 import {
-  computed, ref, watch,
+  computed, watch, onBeforeUnmount
 } from 'vue';
 import AnnotationsList from '@/components/annotations/AnnotationsList.vue';
 import MessageBox from '@/components/MessageBox.vue';
-import * as AnnotationUtils from '@/utils/annotations';
+import TextEventBus from "@/utils/TextEventBus";
+import * as Utils from '@/utils';
+import * as TextUtils from '@/utils/text'
 
-import { useConfigStore } from '@/stores/config';
+
 import { useAnnotationsStore } from '@/stores/annotations';
 import { useContentsStore } from '@/stores/contents';
 
-const configStore = useConfigStore();
 const annotationStore = useAnnotationsStore();
 const contentStore = useContentsStore();
+interface Props {
+  types: AnnotationType[]
+}
+const props = defineProps<Props>();
+const emit = defineEmits(['init'])
 
-const props = defineProps({
-  url: String,
-  types: Array,
-});
-
-const message = ref('no_annotations_in_view');
-
-const config = computed(() => configStore.config);
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
-const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
 const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
 const activeContentUrl = computed<string>(() => contentStore.activeContentUrl);
 const updateTextHighlighting = computed(() =>
@@ -60,41 +53,40 @@ watch(
     if (hasAnnotations !== 'true' || activeContentUrl === 'null') return;
     annotationStore.resetAnnotations();
     annotationStore.selectFilteredAnnotations(props.types);
-    highlightTargetsLevel0();
+    annotationStore.highlightTargetsLevel0();
+    emit('init')
   },
   { immediate: true },
 );
 
-function addAnnotation(id: string) {
-  annotationStore.addActiveAnnotation(id);
-}
 
-function removeAnnotation(id: string) {
-  annotationStore.removeActiveAnnotation(id);
-}
+const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
-function toggle({ id }) {
-  const exists = !!activeAnnotations.value[id];
-  if (exists) {
-    removeAnnotation(id);
-  } else {
-    addAnnotation(id);
-  }
-}
+  // Next we look up which annotations need to be selected
+  let annotationIds = {};
 
-function highlightTargetsLevel0() {
-  const mergedSelector = filteredAnnotations.value
-    .reduce((acc, cur) => {
-      const selector = AnnotationUtils.generateTargetSelector(cur);
-      if (acc !== '') {
-        acc += ',';
+  Utils.getValuesFromAttribute(target, 'data-annotation-ids').forEach((value) => annotationIds[value] = true);
+  annotationIds = TextUtils.discoverParentAnnotationIds(target, annotationIds);
+  annotationIds = TextUtils.discoverChildAnnotationIds(target, annotationIds);
+
+  // We check the highlighting level to determine whether to select or deselect.
+  // TODO: it might be better to check the activeAnnotations instead
+  const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
+
+  Object.keys(annotationIds).forEach((id) => {
+    // We need to check here if the right annotations panel tab is active
+    // a.k.a. it exists in the current filteredAnnotations
+    const annotation = filteredAnnotations.value.find((filtered) => filtered.id === id);
+    if (annotation) {
+      if (targetIsSelected) {
+        annotationStore.removeActiveAnnotation(id)
+      } else {
+        annotationStore.addActiveAnnotation(id)
       }
-      acc += selector;
-      return acc;
-    }, '');
+    }
+  });
+})
 
-  if (mergedSelector) {
-    AnnotationUtils.highlightTargets(mergedSelector, { level: 0 });
-  }
-}
+onBeforeUnmount(() => unsubscribe())
+
 </script>

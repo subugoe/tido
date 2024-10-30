@@ -8,52 +8,31 @@
   <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="dist/tido.css">
-  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      margin: 0;
+    }
+    #app {
+      height: 100vh;
+    }
+  </style>
 </head>
 <body>
 <noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
   continue.</strong></noscript>
-<header>
-  <a class="home" href="./">TIDO</a>
-  <span>Examples:</span>
-  <nav>
-    <select id="nav-select">
-      <option disabled selected hidden>Please select...</option>
-      <option value="./ahiqar-syriac.html">Ahiqar Syriac</option>
-      <option value="./ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</option>
-      <option value="./gfl.html">Goethes Farbenlehre in Berlin</option>
-    </select>
-  </nav>
-</header>
-<div id="app">
-  <div class="empty-container">
-    <h1>Coming soon.</h1>
-  </div>
-</div>
+
+<div id="app"></div>
 <script src="dist/tido.js"></script>
 <script>
 window.addEventListener('load', function () {
-
-  const select = document.getElementById('nav-select');
-  const pathArr = window.location.pathname.split('/')
-
-  select.value = './' + pathArr[pathArr.length - 1]
-
-  select.onchange = function (event) {
-    window.location = event.target.value
-  }
-
-  return;
-
-  const tido = new Tido({
-    "collection": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
+  window.tido = new window.Tido({
+    "collection": "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json",
     "labels": {
       "item": "Sheet",
       "manifest": "Manuscript"
     },
     "colors": {
-      "forceMode": "light",
-      "primary": "#1a3771"
+      "forceMode": "light"
     },
     "panels": [
       {
@@ -124,59 +103,59 @@ window.addEventListener('load', function () {
         ]
       },
       {
-        "label": "annotations",
-        "views": [
-          {
-            "id": "annotations1",
-            "label": "Editorial",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
-                  {
-                    "name": "Person",
-                    "icon": "person"
-                  },
-                  {
-                    "name": "Place",
-                    "icon": "marker"
-                  },
-                  {
-                    "name": "Editorial Comment",
-                    "icon": "chat"
-                  },
-                  {
-                    "name": "Reference",
-                    "icon": "externalLink"
-                  }
-                ]
+          "label": "annotations",
+          "views": [
+            {
+              "id": "annotations1",
+              "label": "Editorial",
+              "connector": {
+                "id": 5,
+                "options": {
+                  "types": [
+                    {
+                      "name": "Person",
+                      "icon": "person"
+                    },
+                    {
+                      "name": "Place",
+                      "icon": "marker"
+                    },
+                    {
+                      "name": "Editorial Comment",
+                      "icon": "chat"
+                    },
+                    {
+                      "name": "Reference",
+                      "icon": "externalLink"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "annotations2",
+              "label": "Motif",
+              "connector": {
+                "id": 5,
+                "options": {
+                  "types": [
+                    {
+                      "name": "Motif",
+                      "icon": "pen"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "annotations3",
+              "label": "Variants",
+              "connector": {
+                "id": 6
               }
             }
-          },
-          {
-            "id": "annotations2",
-            "label": "Motif",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
-                  {
-                    "name": "Motif",
-                    "icon": "pen"
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "id": "annotations3",
-            "label": "Variants",
-            "connector": {
-              "id": 6
-            }
-          }
-        ]
-      }
+          ]
+        }
     ],
     "translations": {
       "en": {

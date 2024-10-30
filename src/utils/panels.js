@@ -19,6 +19,10 @@ const components = {
     component: 'AnnotationsView',
     label: 'annotations',
   },
+  6: {
+    component: 'VariantsView',
+    label: 'variants',
+  }
 };
 
 export const findComponent = (id) => ({

@@ -1,7 +1,7 @@
 <template>
   <div class="t-flex t-items-center">
     <BaseCheckbox
-      id="panel-toggle-action"
+      id="panel-check-action"
       v-model="selectedModel"
       tri-state
     />

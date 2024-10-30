@@ -116,4 +116,12 @@ export default {
   not_found: 'Not found',
   unauthorized: 'Unauthorized',
   unknown_error: 'Unknown Error',
+  details: 'Details',
+  selected_variants: 'Selected Variants',
+  original: 'Original',
+  witnesses: 'Witnesses',
+  witnesses_details: 'Witnesses Details',
+  variants_details: 'Variants Details',
+  witnesses_selected: 'Witnesses selected',
+  single_select_mode: 'Single Select Mode'
 };

@@ -25,7 +25,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useConfigStore } from '@/stores/config';
 import { useContentsStore } from '@/stores/contents';
 import BaseButton from '@/components/base/BaseButton.vue';
@@ -64,7 +63,7 @@ const hasNext = computed<boolean>(() => {
 
 const [nextPageLabel, previousPageLabel, nextDocumentLabel, previousDocumentLabel]: string[] = getNavButtonsLabels(configStore.config)
 
-const nextButtonLabel = computed<string>(() => ( 
+const nextButtonLabel = computed<string>(() => (
 itemIndex.value === manifest.value.sequence.length - 1
   ? `${nextDocumentLabel}`
   : `${nextPageLabel}`));

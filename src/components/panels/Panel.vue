@@ -6,7 +6,7 @@
         <span v-if="panel.label && tabs.length > 1 || tabs.length === 0">{{ $t(panel.label) }}</span>
         <span v-else-if="tabs.length === 1">{{ $t(tabs[0].label) }}</span>
       </div>
-      <div class="actions">
+      <div class="actions t-flex t-space-x-2">
         <template
           v-for="(tab, i) in tabs"
           :key="i"
@@ -68,7 +68,7 @@
                 class: ['t-leading-none', 't-whitespace-nowrap']
               },
               content: {
-                class: ['t-overflow-auto']
+                class: ['t-overflow-auto', 't-grow']
               }
             },
             inkbar: () => ({
@@ -134,28 +134,33 @@ import { useContentsStore } from '@/stores/contents';
 import MetadataView from '@/components/metadata/MetadataView.vue';
 import TreeView from '@/components/TreeView.vue';
 import AnnotationsView from '@/components/annotations/AnnotationsView.vue';
+import VariantsView from '@/components/annotations/variants/VariantsView.vue';
 import ContentView from '@/components/ContentView.vue';
 import ImageView from '@/components/ImageView.vue';
 import PanelZoomAction from '@/components/panels/actions/PanelZoomAction.vue';
-import PanelToggleAction from '@/components/panels/actions/PanelToggleAction.vue';
+import PanelCheckAction from '@/components/panels/actions/PanelCheckAction.vue';
+import VariantsToggleModeAction from '@/components/panels/actions/VariantsToggleModeAction.vue';
 import PanelImageAction from '@/components/panels/actions/PanelImageAction.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import MessageBox from '@/components/MessageBox.vue';
 import { findComponent, getFontSizes } from '@/utils/panels';
+import * as AnnotationUtils from '@/utils/annotations'
 
 // NOTE: Using `setup()` rather than the recommended `<script setup>`
 // to avoid issues with asset loading.
 export default {
   components: {
     AnnotationsView,
+    VariantsView,
     ContentView,
     ImageView,
     LoadingSpinner,
     MetadataView,
     MessageBox,
     PanelImageAction,
-    PanelToggleAction,
+    PanelCheckAction,
     PanelZoomAction,
+    VariantsToggleModeAction,
     TreeView,
     TabView,
     TabPanel,
@@ -214,15 +219,17 @@ export default {
           case 'ContentView':
             return createContentView(view, i);
           case 'TreeView':
-            return createTreeView(view, i);
+            return createTreeView(view);
           case 'MetadataView':
-            return createMetadataView(view, i);
+            return createMetadataView(view);
           case 'ImageView':
-            return createImageView(view, i);
+            return createImageView(view);
           case 'AnnotationsView':
             return createAnnotationsView(view, i);
+          case 'VariantsView':
+            return createVariantsView(view, i);
           default:
-            return createDefaultView(view, i);
+            return createDefaultView(view);
         }
       });
     }
@@ -234,7 +241,7 @@ export default {
         maxSize: 28
       }
       const { fontSize, minSize, maxSize } = getFontSizes(view, defaultFonts)
-      
+
       const { connector, label } = view;
       const { component } = findComponent(connector.id);
 
@@ -274,7 +281,7 @@ export default {
       if (!url) return;
 
       const selected = false;
-      const events = {
+      const actionEvents = {
         update: (value) => {
           if (value === null) return;
           if (value) annotationStore.selectAll();
@@ -282,11 +289,17 @@ export default {
         },
       };
 
+      const viewEvents = {
+        init: () => {
+          tabs.value[i].actions[0].props.selected = false
+        }
+      }
+
       unsubscribe.value = annotationStore.$onAction(({
         name, args,
       }) => {
         if (tabs.value.length
-          && tabs.value[0]?.actions?.length
+          && tabs.value[i]?.actions?.length
           && (name === 'setActiveAnnotations')) {
           const activeAnnotations = args[0];
           const activeAmount = Object.keys(activeAnnotations).length;
@@ -302,18 +315,39 @@ export default {
       });
 
       const actions = [{
-        component: 'PanelToggleAction',
+        component: 'PanelCheckAction',
         props: {
           selected,
           label: t('select_all'),
         },
-        events,
+        events: actionEvents,
       }];
 
       tabs.value = [...tabs.value, {
         component,
         label,
-        props: { url, ...connector.options },
+        props: { ...connector.options },
+        actions,
+        events: viewEvents
+      }];
+    }
+
+    function createVariantsView(view) {
+      const { connector, label } = view;
+      const { component } = findComponent(connector.id);
+
+      const actions = [{
+        component: 'VariantsToggleModeAction',
+        props: {
+          selected: false,
+          label: t('single_select_mode'),
+        },
+      }];
+
+      tabs.value = [...tabs.value, {
+        component,
+        label,
+        props: { ...connector.options },
         actions,
       }];
     }
@@ -372,6 +406,10 @@ export default {
 
     function onViewChange(index) {
       activeTabIndex.value = index;
+      if (index !==2) {
+        AnnotationUtils.removeWitnessesWrappers()
+      }
+
       emit('active-view', activeTabIndex.value);
     }
 

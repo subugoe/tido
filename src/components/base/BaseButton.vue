@@ -60,13 +60,13 @@ classes['t-py-2 t-px-5'] = props.size === 'normal' && !_icon;
 classes['t-py-1.5 t-ps-2 t-pe-3'] = props.size === 'small' && !!(_icon) && _iconPosition === 'left';
 classes['t-py-1.5 t-ps-3 t-pe-2'] = props.size === 'small' && !!(_icon) && _iconPosition === 'right';
 classes['t-p-2'] = props.size === 'small' && isIconOnly;
-classes['t-py-1.5 px-3'] = props.size === 'small' && !_icon;
+classes['t-py-1.5 t-px-3'] = props.size === 'small' && !_icon;
 
 // Paddings Size Tiny
 classes['t-py-1 t-ps-1 t-pe-1.5'] = props.size === 'tiny' && !!(_icon) && _iconPosition === 'left';
 classes['t-py-1 t-ps-1.5 t-pe-1'] = props.size === 'tiny' && !!(_icon) && _iconPosition === 'right';
 classes['t-p-0.5'] = props.size === 'tiny' && isIconOnly;
-classes['t-py-1.5 px-2'] = props.size === 'tiny' && !_icon;
+classes['t-py-1.5 t-px-2'] = props.size === 'tiny' && !_icon;
 
 // Font Size Normal
 classes['t-text-sm t-leading-2'] = props.size === 'normal' && !isIconOnly;
@@ -100,7 +100,7 @@ classes['t-bg-transparent hover:t-bg-gray-300/30 dark:hover:t-bg-gray-600 '
     <template v-if="_icon && _iconPosition === 'left'">
       <BaseIcon
         :name="_icon"
-        class="t-text-base t-me-1"
+        class="t-text-base t-me-1.5"
       />
     </template>
     <template v-if="isIconOnly">
@@ -115,7 +115,7 @@ classes['t-bg-transparent hover:t-bg-gray-300/30 dark:hover:t-bg-gray-600 '
     <template v-if="_icon && _iconPosition === 'right'">
       <BaseIcon
         :name="_icon"
-        class="t-text-base t-ms-1"
+        class="t-text-base t-ms-1.5"
       />
     </template>
   </button>

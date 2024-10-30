@@ -13,6 +13,16 @@ declare global {
 
     }
 
+  interface AnnotationPage {
+    items: Annotation[],
+    refs: Witness[]
+  }
+
+  interface Witness {
+    idno: string,
+    manifest: string
+  }
+
     interface Annotation {
         body: AnnotationContent[],
         target: AnnotationTarget[],

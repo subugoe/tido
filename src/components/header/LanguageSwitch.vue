@@ -3,6 +3,7 @@
     <BaseDropdown
       v-model="showDropdown"
       :button-text="$t('change_language')"
+      open-right
     >
       <div
         v-for="lang in langs"
