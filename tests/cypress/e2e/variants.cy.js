@@ -25,6 +25,16 @@ const selectors = {
       .click()
   })
 
+  Cypress.Commands.add('checkTargetAnnotationLevel', (targetSelector, annotationLevel) => {
+    cy.get(selectors.panel3)
+      .find('#text-content')
+      .find(targetSelector)
+      .invoke('attr', 'data-annotation-level')
+      .should('eq', annotationLevel)
+  })
+
+
+
   Cypress.Commands.add('checkTextInWitnessItemDescription', (witness, description) => {
     cy
       .contains('h3', witness)
@@ -68,12 +78,12 @@ const selectors = {
 
       it('Should display third annotation tab', () => {
         cy
-            .get(selectors.tab)
-            .children()
-            .eq(2)
-            .parent()
-            .should('have.attr', 'data-p-active', 'true')
-            .should('contain','Variants')
+          .get(selectors.tab)
+          .children()
+          .eq(2)
+          .parent()
+          .should('have.attr', 'data-p-active', 'true')
+          .should('contain','Variants')
         });
 
       it('Should show a list of variant items', () => {
@@ -322,6 +332,20 @@ const selectors = {
           .eq(9)         // expecting that two variant items with Cod Arab 236 were removed, then we aim to access the variant item with witness DFM 614 of the third target with index 6 instead of 8
           .invoke('attr', 'data-annotation-id')
           .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0')
+      })
+
+      it('Should change the highlighting level of the target when all its witnesses are deselected from the drop down', () => {
+        cy
+          .clickWitnessItem('4 Witnesses selected', 'DFM 614')
+          .parent().parent()
+          .contains('Ming. syr. 258').click()
+          .parent().parent()
+          .contains('Sach. 339').click()
+
+            // function: check annotation level of target
+          .checkTargetAnnotationLevel('#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l41l2_3', '-1')
+          .checkTargetAnnotationLevel('#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_2', '0')
+          .checkTargetAnnotationLevel('#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_3', '0')
       })
 
       it('Should show separation line correctly between annotation groups when deselecting witnesses from the witnesses drop down', () => {
