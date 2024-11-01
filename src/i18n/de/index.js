@@ -117,5 +117,6 @@ export default {
   witnesses_details: 'Infos zu Textzeugen',
   variants_details: 'Infos zu Varianten',
   witnesses_selected: 'Textzeugen ausgewählt',
-  single_select_mode: 'Single Select Mode'
+  single_select_mode: 'Single Select Mode',
+  single_select_mode_info_message: 'Bitte wählen Sie die Varianten aus dem grau unterlegten Text im Text Panel'
 };

@@ -18,8 +18,8 @@
   </div>
   <MessageBox
     v-else
-    :message="$t('no_annotations_in_view')"
-    :title="$t('no_annotations_available')"
+    :message="getVariantsListInfoMessage()"
+    :title="getVariantsListInfoTitle()"
     type="info"
   />
 </template>
@@ -28,13 +28,16 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import VariantItem from "@/components/annotations/variants/VariantItem.vue";
-import {useAnnotationsStore} from "@/stores/annotations";
+import { useAnnotationsStore } from "@/stores/annotations";
 import MessageBox from "@/components/MessageBox.vue";
 import * as Utils from '@/utils/annotations'
+import i18n from '@/i18n'
+import { useConfigStore } from '@/stores/config';
 
 const annotationStore = useAnnotationsStore();
+const configStore = useConfigStore()
 
-
+const lang = computed<string>(() => configStore.config.lang)
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
 const visibleAnnotations = computed<Annotation[]>(() => annotationStore.visibleAnnotations);
 
@@ -61,6 +64,24 @@ function toggle({ id }) {
 
 function getWitnessColor(witness: string) {
   return annotationStore.variantItemsColors[witness];
+}
+
+function getVariantsListInfoMessage(): string {
+  if (annotationStore.filteredAnnotations.length === 0) {
+    return i18n[lang.value]['no_annotations_in_view']
+  }
+  if (annotationStore.isSingleSelectMode) {
+    return i18n[lang.value]['single_select_mode_info_message']
+  }
+}
+
+function getVariantsListInfoTitle(): string {
+  if (annotationStore.filteredAnnotations.length === 0) {
+    return i18n[lang.value]['no_annotations_available']
+  }
+  if (annotationStore.isSingleSelectMode) {
+    return i18n[lang.value]['single_select_mode']
+  }
 }
 
 
