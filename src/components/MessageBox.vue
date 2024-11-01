@@ -1,5 +1,5 @@
 <template>
-  <div data-cy="message-no-annotations-list">
+  <div data-cy="message-box">
     <div class="t-flex t-items-center t-justify-center">
       <BaseIcon
         :class="`t-text-${color}`"

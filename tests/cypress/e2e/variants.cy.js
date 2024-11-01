@@ -57,7 +57,7 @@ const selectors = {
     cy
       .get('.panels-wrapper .panel:nth-child(4) .panel-body')
       .find('div[id="pv_id_6_2_content"]')
-      .find('div[data-cy="message-no-annotations-list"]')
+      .find('div[data-cy="message-box"]')
   })
 
   describe('VariantsAnnotation', () => {
