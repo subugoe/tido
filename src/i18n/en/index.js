@@ -124,5 +124,5 @@ export default {
   variants_details: 'Variants Details',
   witnesses_selected: 'Witnesses selected',
   single_select_mode: 'Single Select Mode',
-  single_select_mode_info_message: 'Please select variant items from the grey highlighted text in Text Panel'
+  single_select_mode_info_message: 'Please select variant items from the text.'
 };
