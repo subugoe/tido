@@ -57,10 +57,7 @@ const selectors = {
     cy
       .get('.panels-wrapper .panel:nth-child(4) .panel-body')
       .find('div[id="pv_id_6_2_content"]')
-      .children().eq(0)
-      .children().eq(1)   // annotation content
-      .children().eq(0).should('not.have.class', 'annotations-list')
-      .find('span').contains('No Annotations available')
+      .find('div[data-cy="message-no-annotations-list"]')
   })
 
   describe('VariantsAnnotation', () => {
@@ -512,7 +509,13 @@ const selectors = {
             // we wait till the text panel and annotations panel are fully loaded
             cy
             .clickSingleSelectButton().then(() => {
-              cy.checkNoAnnotationsAvailable()
+              cy.get(selectors.panel4)
+                .find('#pv_id_6_2_content')
+                .contains('Single Select Mode')
+                .parent()
+                .next()
+                .contains('Please select variant items from the grey highlighted text in Text Panel')
+              //cy.checkNoAnnotationsAvailable()
             })
           })
         })
