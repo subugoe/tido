@@ -509,13 +509,7 @@ const selectors = {
             // we wait till the text panel and annotations panel are fully loaded
             cy
             .clickSingleSelectButton().then(() => {
-              cy.get(selectors.panel4)
-                .find('#pv_id_6_2_content')
-                .contains('Single Select Mode')
-                .parent()
-                .next()
-                .contains('Please select variant items from the grey highlighted text in Text Panel')
-              //cy.checkNoAnnotationsAvailable()
+              cy.checkNoAnnotationsAvailable()
             })
           })
         })
