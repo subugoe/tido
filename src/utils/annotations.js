@@ -272,7 +272,7 @@ export function addWitness(target, witness, color) {
 
 function createWitnessesWrapper() {
   const el = document.createElement("span");
-  el.classList.add('witnesses', 't-flex', 't-flex-wrap')
+  el.classList.add('witnesses', 't-inline-flex', 't-flex-wrap')
 
   return el
 }
