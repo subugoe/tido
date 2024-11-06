@@ -67,23 +67,21 @@ function getWitnessColor(witness: string) {
 }
 
 function getVariantsListInfoMessage(): string {
-  if (annotationStore.filteredAnnotations.length === 0) {
-    return i18n[lang.value]['no_annotations_in_view']
-  }
-  if (annotationStore.isSingleSelectMode) {
+  if (annotationStore.isSingleSelectMode 
+        && annotationStore.filteredAnnotations.length > 0) {
     return i18n[lang.value]['single_select_mode_info_message']
   }
+  return i18n[lang.value]['no_annotations_in_view']
 }
 
 function getVariantsListInfoTitle(): string {
-  if (annotationStore.filteredAnnotations.length === 0) {
-    return i18n[lang.value]['no_annotations_available']
-  }
-  if (annotationStore.isSingleSelectMode) {
+  if (annotationStore.isSingleSelectMode 
+        && annotationStore.filteredAnnotations.length > 0) {
     return i18n[lang.value]['single_select_mode']
   }
+  return i18n[lang.value]['no_annotations_available']
 }
-
+ 
 
 function showLineSeparator(visibleAnnotations, i) {
   if (visibleAnnotations[i+1]) {
