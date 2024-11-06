@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.3.0](https://github.com/subugoe/tido/compare/v4.2.0...v4.3.0) (2024-11-06)
+
+
+### Features
+
+* add info message in Single Select Mode ([#515](https://github.com/subugoe/tido/issues/515)) ([56853bd](https://github.com/subugoe/tido/commit/56853bd0fa5f5a5f35577785e0e5ab37efdf6ed8))
+
+
+### Bug Fixes
+
+* change the logic of showing the message box in annotations list ([936c1e8](https://github.com/subugoe/tido/commit/936c1e8fe3805cbbda4b332937d0749e2147d18f))
+* make the witnesses wrapper with flex-wrap css prop ([26f9ec2](https://github.com/subugoe/tido/commit/26f9ec2d0961ff267cd3eea37906ac6201065423))
+* use inline-flex for witnesses wrapper to be in text flow ([272bfa7](https://github.com/subugoe/tido/commit/272bfa73be678e804188cdc1867b17ec2268f1a3))
+
 ## [4.2.0](https://github.com/subugoe/tido/compare/v4.1.1...v4.2.0) (2024-10-30)
 
 
