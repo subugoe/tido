@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useAnnotationsStore} from "@/stores/annotations";
-import {computed, reactive, ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import colors from "tailwindcss/colors";
 import BaseDialog from "@/components/base/BaseDialog.vue";
 import ActiveVariantsDetails from "@/components/annotations/variants/ActiveVariantsDetails.vue";
