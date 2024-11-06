@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 
 import * as AnnotationUtils from '@/utils/annotations';
 import {request} from '@/utils/http';
@@ -23,6 +23,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const visibleAnnotations = ref<Annotation[]>([])
   const isLoading = ref<boolean>(false);
   const isSingleSelectMode = ref<boolean>(false)
+  let activeWitnessesIds = reactive({})
+
 
 
   const setActiveAnnotations = (annotations: ActiveAnnotation) => {
@@ -33,12 +35,30 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     visibleAnnotations.value = payload
   }
 
+  function setActiveWitnessesIds(payload) {
+    activeWitnessesIds = payload
+  }
+
   function updateAnnotationLoading(payload: boolean) {
     isLoading.value = payload;
   }
 
   function setVariantItemsColors(payload) {
     variantItemsColors.value = payload
+  }
+
+  function getVariantsOfSelectedWitnesses(): Annotation[] {
+    let list = []
+    if (filteredAnnotations.value.length === 0) return []
+    if (Object.keys(activeWitnessesIds).length === 0) return []
+
+    filteredAnnotations.value.forEach((annotation) => {
+      const witness = annotation.body.value.witness
+      if (activeWitnessesIds[witness] === true) {
+        list.push(annotation)
+      }
+    })
+    return list
   }
 
   const addActiveAnnotation = (id: string) => {
@@ -462,7 +482,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
   const disableSingleSelectMode = () => {
     resetAnnotations()
-    visibleAnnotations.value = filteredAnnotations.value
+    visibleAnnotations.value = getVariantsOfSelectedWitnesses()
     highlightTargetsLevel0();
     isSingleSelectMode.value = false
   }
@@ -476,10 +496,12 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     visibleAnnotations,
     isLoading,
     isSingleSelectMode,
-    variantItemsColors,  // states
+    variantItemsColors,  
+    activeWitnessesIds, // states
     setActiveAnnotations,
     setVisibleAnnotations,
-    setVariantItemsColors,  // functions
+    setVariantItemsColors,
+    setActiveWitnessesIds,  // functions
     addActiveAnnotation,
     selectFilteredAnnotations,
     addHighlightAttributesToText,

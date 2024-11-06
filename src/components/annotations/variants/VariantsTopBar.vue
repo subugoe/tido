@@ -11,15 +11,16 @@ import BaseCheckbox from "@/components/base/BaseCheckbox.vue";
 const annotationsStore = useAnnotationsStore()
 
 const witnesses = computed(() => annotationsStore.witnesses)
-const amountActiveWitnesses = computed(() => Object.keys(activeWitnessesIds).filter(key => !!(activeWitnessesIds[key])).length)
-const activeWitnessesIds = reactive({})
+const amountActiveWitnesses = computed(() => Object.keys(annotationsStore.activeWitnessesIds).filter(key => !!(annotationsStore.activeWitnessesIds[key])).length)
 const witnessesDetailsDialogOpen = ref(false);
 const showWitnessesDropdown = ref(false);
 const variantsDetailsDialogOpen = ref(false);
 
 watch(witnesses, (value) => {
+  let activeWitnessesIds = annotationsStore.activeWitnessesIds
   if(value?.length > 0) {
    value.forEach(witness => activeWitnessesIds[witness.idno] = true);
+   annotationsStore.setActiveWitnessesIds(activeWitnessesIds)
   }
 },
   { immediate: true }
@@ -28,8 +29,10 @@ function getWitnessColor(witness: string) {
   return annotationsStore.variantItemsColors[witness];
 }
 function toggleWitness(witness: Witness, isActive: boolean) {
+  let activeWitnessesIds = annotationsStore.activeWitnessesIds
   activeWitnessesIds[witness.idno] = isActive
   annotationsStore.filterAnnotationsByWitnesses(Object.keys(activeWitnessesIds).filter(key => !!(activeWitnessesIds[key])))
+  annotationsStore.setActiveWitnessesIds(activeWitnessesIds)
 }
 </script>
 
@@ -53,7 +56,7 @@ function toggleWitness(witness: Witness, isActive: boolean) {
           >
             <BaseCheckbox
               :id="`witness-toggle-${i}`"
-              :model-value="activeWitnessesIds[witness.idno]"
+              :model-value="annotationsStore.activeWitnessesIds[witness.idno]"
               @update:model-value="toggleWitness(witness, $event)"
             />
             <label
