@@ -554,9 +554,31 @@ const selectors = {
               cy
               .get(selectors.list)
               .should('be.visible')
-              .children()
-              .should("have.length", 13)      // we have 11 variant items as in the normal mode - no single select mode
+              .find('div[data-annotation-id]')
+              .should("have.length", 11)      // we have 11 variant items as in the normal mode - no single select mode
             })
+          })
+
+          it('should show only the variants items according to witnesses drop down selection after disabling single select mode', () => {
+            cy.get(selectors.list)
+              .clickWitnessItem('4 Witnesses selected', 'Cod. Arab. 236')
+              .parent().parent()
+              .contains('DFM 614').click()
+
+            cy.get(selectors.panel4)
+              .contains('2 Witnesses selected')
+              .click({force: true})
+
+            cy
+              .clickSingleSelectButton()  
+            cy
+              .clickSingleSelectButton()
+            cy
+              .get(selectors.list)
+              .should('be.visible')
+              .find('div[data-annotation-id]')
+              .should("have.length", 6)   
+            
           })
       })
   });
