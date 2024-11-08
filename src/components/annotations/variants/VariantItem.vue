@@ -15,6 +15,7 @@
           'background': colors[witnessColor]['100'],
           'color': colors[witnessColor]['600']
         }"
+        :title = witness
       >
         {{ witness ?? '-' }}
       </div>
@@ -33,7 +34,7 @@ import { computed } from 'vue';
 import colors from "tailwindcss/colors";
 
 const entry = computed(() => props.annotation.body.value.entry)
-const witness = computed(() => props.annotation.body.value.witness)
+const witness= computed(() => props.annotation.body.value.witness)
 
 export interface Props {
   annotation: Annotation,
