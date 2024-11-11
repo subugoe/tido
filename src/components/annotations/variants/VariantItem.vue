@@ -8,13 +8,14 @@
     :data-annotation-id="annotation.id"
     @click="handleClick"
   >
-    <div class="t-w-4/12 t-flex">
+    <div class="t-w-1/3 t-flex">
       <div
-        class="t-relative t-rounded-3xl t-box-border t-px-2 t-py-1 t-text-xs t-flex-grow-0 t-flex t-items-center t-font-semibold t-whitespace-nowrap"
+        class="t-relative t-truncate t-w-7/8 t-rounded-3xl t-box-border t-px-2 t-py-1 t-text-xs t-flex-grow-0 t-font-semibold"
         :style="{
           'background': colors[witnessColor]['100'],
           'color': colors[witnessColor]['600']
         }"
+        :title = witness
       >
         {{ witness ?? '-' }}
       </div>
@@ -33,7 +34,7 @@ import { computed } from 'vue';
 import colors from "tailwindcss/colors";
 
 const entry = computed(() => props.annotation.body.value.entry)
-const witness = computed(() => props.annotation.body.value.witness)
+const witness= computed(() => props.annotation.body.value.witness)
 
 export interface Props {
   annotation: Annotation,
