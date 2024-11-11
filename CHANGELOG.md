@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.3.1](https://github.com/subugoe/tido/compare/v4.3.0...v4.3.1) (2024-11-11)
+
+
+### Bug Fixes
+
+* truncate and add ellipses for long witnesses ([#520](https://github.com/subugoe/tido/issues/520)) ([55a840c](https://github.com/subugoe/tido/commit/55a840cdebb1ca70656ba343ab946686a39f6cd0))
+* update the variants list according to witnesses selection when disabling single select mode ([b9bd8eb](https://github.com/subugoe/tido/commit/b9bd8eb0a93c0138bf064f1cde0a84f37d332861))
+
 ## [4.3.0](https://github.com/subugoe/tido/compare/v4.2.0...v4.3.0) (2024-11-06)
 
 
