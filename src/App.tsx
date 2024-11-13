@@ -15,7 +15,6 @@ function App() {
         }}
       >
         <TopBar />
-        <h1 className="t-text-red-500">Hi!</h1>
       </ConfigContext.Provider>
     </div>
   );
