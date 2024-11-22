@@ -4,11 +4,10 @@ import { getUrls } from "@/utils/config";
 import { Tree } from "primereact/tree";
 const TreeView: FC = ({}) => {
   const [nodes, setNodes] = useState([]);
-  const [key, setKeys] = useState(-1);
+  const [key, setKey] = useState(-1);
   const { config, setConfig } = useContext(ConfigContext);
   const panels = config.panels;
 
-  async function getManifestNode(url) {}
   useEffect(() => {
     async function getCollectionNode(url) {
       console.log("getting collection node");
@@ -16,12 +15,25 @@ const TreeView: FC = ({}) => {
       const apiData = await fetch(url);
       const data = await apiData.json();
       const thisKey = key + 1;
+      setKey((key) => thisKey);
       node["key"] = thisKey.toString();
       node["label"] = data.title[0].title;
       node["children"] = await getChildrenNodes(node["key"], data.sequence);
       console.log("collection node", node);
-      setNodes([node]);
-      return [node];
+      return node;
+    }
+
+    async function getManifestNode(url) {
+      console.log("getting manifest node");
+      let node = {};
+      const apiData = await fetch(url);
+      const data = await apiData.json();
+      const thisKey = key + 1;
+      setKey((key) => thisKey);
+      node["key"] = thisKey.toString();
+      node["label"] = data.label;
+      node["children"] = await getChildrenNodes(node["key"], data.sequence);
+      return node;
     }
 
     async function getChildrenNodes(parentKey, items) {
@@ -33,7 +45,7 @@ const TreeView: FC = ({}) => {
         node["label"] = items[i].label;
         const apiData = await fetch(items[i].id);
         const data = await apiData.json();
-        //node["children"] = await getChildrenNodes(node["key"], data.sequence);
+        node["children"] = await getChildrenNodes(node["key"], data.sequence);
         nodes.push(node);
       }
       // each node should have children - which will be items
@@ -42,18 +54,27 @@ const TreeView: FC = ({}) => {
 
     console.log("panels", panels);
     if (!panels || panels.length === 0) return;
-    const node = getCollectionNode(panels[0].collection);
 
-    /*
-    panels.forEach((panel) => {
+    //const node = getCollectionNode(panels[0].collection);
+
+    panels.forEach(async (panel) => {
       // one node has 'key', 'label' and 'children' attributes
+      console.log("panel", panel);
       if ("collection" in panel) {
+        const collectionNode = await getCollectionNode(panel.collection);
+        setNodes((nodes) => [...nodes, collectionNode]);
         // create collection node and append it to nodes -> setNodes
       } else if ("manifest" in panel) {
-        // create a manifest node and append it to nodes -> setNodes
+        const manifestNode = await getManifestNode(panel.manifest);
+        console.log("nodes", nodes);
+        setTimeout(() => {
+          setNodes((nodes) => [...nodes, manifestNode]);
+        }, 1000);
       }
+
+      // create a manifest node and append it to nodes -> setNodes
     });
-    */
+
     //NodeService.getTreeNodes().then((data) => setNodes(data));
   }, []);
 
@@ -62,7 +83,11 @@ const TreeView: FC = ({}) => {
   // if panel has manifest, show manifest, item
   return (
     <div>
-      <Tree value={nodes} className="w-full md:w-30rem" />
+      <Tree
+        pt={{ subgroup: { className: "t-ml-[10px]" } }}
+        value={nodes}
+        className="w-full md:w-30rem"
+      />
     </div>
   );
 };
