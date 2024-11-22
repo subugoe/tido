@@ -5,7 +5,7 @@ import { getUrls } from "@/utils/config";
 const TopBar: FC = () => {
   //const [collectionsData, setCollectionsData] = useState([''])
   const { config, setConfig } = useContext(ConfigContext);
-  const [urls, setUrls] = useState(getUrls(config.documents));
+  const [urls, setUrls] = useState(getUrls(config.panels));
   const [labels, setLabels] = useState([]);
 
   const manifestLabels =
