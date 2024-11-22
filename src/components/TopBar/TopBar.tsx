@@ -1,9 +1,8 @@
 import { FC, useState, useEffect, useContext, useRef } from "react";
-import { OverlayPanel } from "primereact/overlaypanel";
 import { ConfigContext } from "@/contexts/ConfigContext";
 import { getUrls } from "@/utils/config";
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
+import NewPanelModal from "./NewPanelModal";
 
 const TopBar: FC = () => {
   //const [collectionsData, setCollectionsData] = useState([''])
@@ -12,7 +11,6 @@ const TopBar: FC = () => {
   const [labels, setLabels] = useState([]);
   const [visible, setVisible] = useState(false);
   const newButton = useRef(null);
-  const [value, setValue] = useState("");
 
   const manifestLabels =
     labels.length > 0 &&
@@ -73,34 +71,7 @@ const TopBar: FC = () => {
             console.log("new Button", newButton);
           }}
         />
-        <OverlayPanel
-          ref={newButton}
-          pt={{
-            root: {
-              className: "t-border-[2px] t-border-slate-500 t-border-solid",
-            },
-            content: { className: "" },
-          }}
-          style={{
-            position: "absolute",
-            borderWidth: "2px",
-            borderColor: "#f3f4f6",
-            borderStyle: "solid",
-            backgroundColor: "white",
-            padding: "5px 10px",
-            borderRadius: 3,
-          }}
-        >
-          <div className="t-flex t-flex-col t-bg-blue-300">
-            <span>Enter a collection/manifest Url</span>
-            <div style={{ marginTop: "10px" }}>
-              <InputText
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-              />
-            </div>
-          </div>
-        </OverlayPanel>
+        <NewPanelModal newButton={newButton} />
       </span>
     </div>
   );
