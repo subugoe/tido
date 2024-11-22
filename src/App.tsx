@@ -1,6 +1,7 @@
-import TopBar from "./components/TopBar/TopBar";
 import { FC, useState } from "react";
 import defaultConfig from "./config";
+import "primeicons/primeicons.css";
+import TopBar from "./components/TopBar/TopBar";
 import { ConfigContext } from "./contexts/ConfigContext";
 
 function App() {
