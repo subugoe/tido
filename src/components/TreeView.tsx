@@ -9,31 +9,23 @@ const TreeView: FC = ({}) => {
   const panels = config.panels;
 
   useEffect(() => {
-    async function getCollectionNode(url) {
-      console.log("getting collection node");
+    async function getDocumentNode(url, documentType) {
       let node = {};
       const apiData = await fetch(url);
       const data = await apiData.json();
       const thisKey = key + 1;
       setKey((key) => thisKey);
+      console.log("key", key);
       node["key"] = thisKey.toString();
-      node["label"] = data.title[0].title;
       node["children"] = await getChildrenNodes(node["key"], data.sequence);
-      console.log("collection node", node);
+      node["label"] = getTitle(data, documentType);
+
       return node;
     }
 
-    async function getManifestNode(url) {
-      console.log("getting manifest node");
-      let node = {};
-      const apiData = await fetch(url);
-      const data = await apiData.json();
-      const thisKey = key + 1;
-      setKey((key) => thisKey);
-      node["key"] = thisKey.toString();
-      node["label"] = data.label;
-      node["children"] = await getChildrenNodes(node["key"], data.sequence);
-      return node;
+    function getTitle(data, documentType: string): string {
+      if (documentType === "collection") return data.title[0].title;
+      else if (documentType === "manifest") return data.label;
     }
 
     async function getChildrenNodes(parentKey, items) {
@@ -55,17 +47,18 @@ const TreeView: FC = ({}) => {
     console.log("panels", panels);
     if (!panels || panels.length === 0) return;
 
-    //const node = getCollectionNode(panels[0].collection);
-
     panels.forEach(async (panel) => {
       // one node has 'key', 'label' and 'children' attributes
       console.log("panel", panel);
       if ("collection" in panel) {
-        const collectionNode = await getCollectionNode(panel.collection);
+        const collectionNode = await getDocumentNode(
+          panel.collection,
+          "collection"
+        );
         setNodes((nodes) => [...nodes, collectionNode]);
         // create collection node and append it to nodes -> setNodes
       } else if ("manifest" in panel) {
-        const manifestNode = await getManifestNode(panel.manifest);
+        const manifestNode = await getDocumentNode(panel.manifest, "manifest");
         console.log("nodes", nodes);
         setTimeout(() => {
           setNodes((nodes) => [...nodes, manifestNode]);
@@ -74,6 +67,9 @@ const TreeView: FC = ({}) => {
 
       // create a manifest node and append it to nodes -> setNodes
     });
+
+    console.log("---");
+    console.log("key", key);
 
     //NodeService.getTreeNodes().then((data) => setNodes(data));
   }, []);
