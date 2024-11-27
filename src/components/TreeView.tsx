@@ -2,12 +2,12 @@ import { FC, useState, useEffect, useContext } from "react";
 import { ConfigContext } from "@/contexts/ConfigContext";
 import { getUrls } from "@/utils/config";
 import { Tree } from "primereact/tree";
-
 import { getDocumentNode } from "../utils/tree";
+
 const TreeView: FC = ({}) => {
-  const [nodes, setNodes] = useState([]);
+  const { config, setConfig, treeNodes } = useContext(ConfigContext);
+  const [nodes, setNodes] = useState(treeNodes);
   const [key, setKey] = useState(-1);
-  const { config, setConfig } = useContext(ConfigContext);
   const panels = config.panels;
 
   async function createDocumentNode(panel) {
@@ -34,7 +34,7 @@ const TreeView: FC = ({}) => {
 
   useEffect(() => {
     // create a manifest node and append it to nodes -> setNodes
-    createTree();
+    //createTree();
   }, []);
 
   //NodeService.getTreeNodes().then((data) => setNodes(data));
