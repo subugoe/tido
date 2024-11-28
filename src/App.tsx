@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import defaultConfig from "./config";
 import "primeicons/primeicons.css";
 import TopBar from "./components/TopBar/TopBar";
+import LoadingPage from "./components/LoadingPage";
 import { ConfigContext } from "./contexts/ConfigContext";
 
 import { getDocumentNode } from "./utils/tree";
@@ -9,7 +10,7 @@ import { getDocumentNode } from "./utils/tree";
 function App() {
   const [config, setConfig] = useState(defaultConfig);
   const [treeNodes, setTreeNodes] = useState([]);
-  const [key, setKey] = useState(-1);
+  const [loading, setLoading] = useState(true);
 
   const createTree = async () => {
     const panels = config.panels;
@@ -21,6 +22,7 @@ function App() {
       key += 1;
       await createDocumentNode(panel, key);
     });
+    if (key === treeNodes.length - 1) setLoading((prevValue) => false);
   };
 
   async function createDocumentNode(panel, key) {
@@ -40,6 +42,10 @@ function App() {
     createTree();
   }, []);
 
+  if (loading) {
+    return <LoadingPage />;
+  }
+
   return (
     <div className="tido">
       <ConfigContext.Provider
@@ -50,8 +56,6 @@ function App() {
           setTreeNodes,
         }}
       >
-        {" "}
-        <span>Number of nodes {treeNodes.length}</span>
         <TopBar />
       </ConfigContext.Provider>
     </div>
