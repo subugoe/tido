@@ -6,8 +6,4 @@ import "./css/preflight.scss";
 import "./css/style.css";
 import "./css/style.scss";
 
-createRoot(document.getElementById("app")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+createRoot(document.getElementById("app")!).render(<App />);
