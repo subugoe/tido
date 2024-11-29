@@ -88,7 +88,6 @@ const Panel: FC = ({ url }) => {
           activeText={activeText}
           setActiveText={setActiveText}
         />
-        <span>active text {activeText}</span>
       </div>
       {text}
     </div>
