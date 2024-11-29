@@ -3,6 +3,7 @@ import { Button } from "primereact/button";
 
 import { ConfigContext } from "@/contexts/ConfigContext";
 import CustomHTML from "@/components/CustomHTML";
+import TextTypes from "@/components/panel/TextTypes";
 
 import { readApi } from "@/utils/http";
 
@@ -15,7 +16,6 @@ const Panel: FC = ({ url }) => {
   const [text, setText] = useState<React.ReactNode | undefined>();
   const [textTypes, setTextTypes] = useState([]);
   const [activeText, setActiveText] = useState("");
-  const [numberTexts, setNumberTexts] = useState(0);
 
   async function getItemUrl(documentData): string {
     // if collection - then we should read the api data from the manifest and get its first sequence item id
@@ -53,12 +53,10 @@ const Panel: FC = ({ url }) => {
     const itemUrl = await getItemUrl(documentData);
     const itemData = await readApi(itemUrl);
     assignTextTypes(itemData);
-    const itemHtmlUrl = getUrlActiveText(itemData["content"]); //[0]["url"];
+    const itemHtmlUrl = getUrlActiveText(itemData["content"]);
 
     const textInHtml = await readHtml(itemHtmlUrl);
     setText(<CustomHTML textHtml={textInHtml} />);
-    //setText(textInHtml);
-    // if ("content" in jsonData) setNumberTexts(jsonData["content"].length);
     //setData(documentData);
   }
 
@@ -70,29 +68,12 @@ const Panel: FC = ({ url }) => {
     return text;
   }
 
-  function handleTextTabClick(e) {
-    e.preventDefault();
-    setActiveText(() => e.target.innerHTML);
-  }
-
   function getUrlActiveText(content) {
     const activeItemUrl = content.find((item) =>
       item.type.includes(activeText)
     ).url;
     return activeItemUrl;
   }
-
-  const textTypesButtons =
-    textTypes.length > 0 &&
-    textTypes.map((type, i) => (
-      <Button
-        className="t-p-[5px] t-rounded-[6px]"
-        style={{ backgroundColor: activeText === type ? "#FFFFFF" : "" }}
-        key={i}
-        label={type}
-        onClick={(e) => handleTextTabClick(e)}
-      />
-    ));
 
   useEffect(() => {
     // read Api data from url
@@ -102,9 +83,12 @@ const Panel: FC = ({ url }) => {
   return (
     <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-[15px] t-px-[10px] t-pt-[150px] t-pb-[25px]">
       <div className="t-flex t-flex-col t-items-center t-mb-[25px]">
-        <div className="buttons-text-views t-bg-gray-400 t-p-[3px] t-rounded-[6px] t-h-[35px]">
-          {textTypesButtons}
-        </div>
+        <TextTypes
+          textTypes={textTypes}
+          activeText={activeText}
+          setActiveText={setActiveText}
+        />
+        <span>active text {activeText}</span>
       </div>
       {text}
     </div>
