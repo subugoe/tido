@@ -1,8 +1,8 @@
-import { FC, useState, useEffect, useContext } from "react";
-import { ConfigContext } from "@/contexts/ConfigContext";
-import Panel from "@/components/panel/Panel";
+import { FC, useState, useEffect, useContext } from 'react';
+import { ConfigContext } from '@/contexts/ConfigContext';
+import Panel from '@/components/panel/Panel';
 
-import { getPanelUrl } from "@/utils/panel";
+import { getPanelUrl } from '@/utils/panel';
 
 const PanelsWrapper: FC = ({}) => {
   const { openedPanels } = useContext(ConfigContext);
