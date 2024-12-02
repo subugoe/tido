@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import defaultConfig from "./config";
-import "primeicons/primeicons.css";
 import { ConfigContext } from "./contexts/ConfigContext";
 import Panel from "@/components/panel/Panel";
 
