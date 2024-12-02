@@ -5,7 +5,7 @@ import Panel from "@/components/panel/Panel";
 import { getPanelUrl } from "@/utils/panel";
 
 const PanelsWrapper: FC = ({}) => {
-  const { config, setConfig, openedPanels } = useContext(ConfigContext);
+  const { openedPanels } = useContext(ConfigContext);
 
   const panels =
     openedPanels.length > 0 &&
@@ -14,7 +14,6 @@ const PanelsWrapper: FC = ({}) => {
         <Panel url={getPanelUrl(panel)} />
       </div>
     ));
-  useEffect(() => {}, []);
 
   return <div className="t-flex t-flex-row">{panels}</div>;
 };

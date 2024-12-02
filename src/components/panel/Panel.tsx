@@ -1,42 +1,40 @@
-import { FC, useState, useEffect, useContext } from "react";
-import { Button } from "primereact/button";
+import { FC, useState, useEffect, useContext } from 'react';
+import { Button } from 'primereact/button';
 
-import { ConfigContext } from "@/contexts/ConfigContext";
-import CustomHTML from "@/components/CustomHTML";
-import TextTypes from "@/components/panel/TextTypes";
+import { ConfigContext } from '@/contexts/ConfigContext';
+import CustomHTML from '@/components/CustomHTML';
+import TextTypes from '@/components/panel/TextTypes';
 
-import { readApi } from "@/utils/http";
+import { readApi } from '@/utils/http';
 
 // TODO: add a Typescript interface for the props types
 // prop: url - should be the url of collection or manifest
 const Panel: FC = ({ url }) => {
   const { config, setConfig } = useContext(ConfigContext);
-  const [data, setData] = useState();
-  const [itemUrl, setItemUrl] = useState("");
   const [text, setText] = useState<React.ReactNode | undefined>();
   const [textTypes, setTextTypes] = useState([]);
-  const [activeText, setActiveText] = useState("");
+  const [activeText, setActiveText] = useState('');
 
   async function getItemUrl(documentData): string {
     // if collection - then we should read the api data from the manifest and get its first sequence item id
     // if manifest - we retrieve the first sequence item id
-    if ("title" in documentData) {
+    if ('title' in documentData) {
       // 'title' in document -> document is collection
       const manifestData = await readApi(documentData.sequence[0].id);
       return manifestData.sequence[0].id;
     }
 
-    if ("label" in documentData) {
+    if ('label' in documentData) {
       return documentData.sequence[0].id;
     }
   }
 
   function assignTextTypes(itemData: Item) {
-    let types: string[] = [];
-    if (!itemData.hasOwnProperty("content")) return;
-    if (itemData["content"].length === 0) return;
+    const types: string[] = [];
+    if (!itemData.hasOwnProperty('content')) return;
+    if (itemData['content'].length === 0) return;
 
-    const content = itemData["content"];
+    const content = itemData['content'];
     for (let i = 0; i < content.length; i++) {
       types.push(getContentType(content[i].type));
     }
@@ -44,8 +42,8 @@ const Panel: FC = ({ url }) => {
   }
 
   function getContentType(value): string {
-    if (!value) return "";
-    return value.split("type=")[1];
+    if (!value) return '';
+    return value.split('type=')[1];
   }
 
   async function readData(url: string) {
@@ -53,7 +51,7 @@ const Panel: FC = ({ url }) => {
     const itemUrl = await getItemUrl(documentData);
     const itemData = await readApi(itemUrl);
     assignTextTypes(itemData);
-    const itemHtmlUrl = getUrlActiveText(itemData["content"]);
+    const itemHtmlUrl = getUrlActiveText(itemData['content']);
 
     const textInHtml = await readHtml(itemHtmlUrl);
     setText(<CustomHTML textHtml={textInHtml} />);

@@ -1,6 +1,6 @@
-import { FC, useState, useEffect, useContext } from "react";
-import { ConfigContext } from "@/contexts/ConfigContext";
-import { Button } from "primereact/button";
+import { FC, useState, useEffect, useContext } from 'react';
+import { ConfigContext } from '@/contexts/ConfigContext';
+import { Button } from 'primereact/button';
 
 const TextTypes: FC = ({ textTypes, activeText, setActiveText }) => {
   const { config, setConfig, openedPanels } = useContext(ConfigContext);
@@ -15,7 +15,7 @@ const TextTypes: FC = ({ textTypes, activeText, setActiveText }) => {
     textTypes.map((type, i) => (
       <Button
         className="t-p-[5px] t-rounded-[6px]"
-        style={{ backgroundColor: activeText === type ? "#FFFFFF" : "" }}
+        style={{ backgroundColor: activeText === type ? '#FFFFFF' : '' }}
         key={i}
         label={type}
         onClick={(e) => handleTextTabClick(e)}
