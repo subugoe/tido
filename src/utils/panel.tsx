@@ -5,3 +5,11 @@ export function getPanelUrl(panel) {
   if ('collection' in panel) return panel.collection;
   if ('manifest' in panel) return panel.manifest;
 }
+
+export function getPanel(url: string, config): string {
+  if ( !config) throw new Error('Config is not defined')
+  return config.panels.find((panel) => {
+    if ('collection' in panel) return panel.collection === url
+    if ('manifest' in panel) return panel.manifest === url
+  })
+}

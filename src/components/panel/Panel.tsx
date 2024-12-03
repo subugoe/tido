@@ -1,28 +1,38 @@
 import { FC, useState, useEffect } from 'react';
-import { useConfig } from '@/contexts/ConfigContext';
 import CustomHTML from '@/components/CustomHTML';
 import TextTypes from '@/components/panel/TextTypes';
+import {useConfig} from '@/contexts/ConfigContext'
+
 
 import { readApi } from '@/utils/http';
+import { getPanel } from '@/utils/panel';
+
+interface PanelProps {
+  url: string
+}
 
 // TODO: add a Typescript interface for the props types
 // prop: url - should be the url of collection or manifest
-const Panel: FC = ({ url }) => {
-  const { config, setConfig } = useConfig();
+const Panel: FC <PanelProps> = ({ url }) => {
+  const { config } = useConfig()
   const [text, setText] = useState<React.ReactNode | undefined>();
   const [textTypes, setTextTypes] = useState([]);
   const [activeText, setActiveText] = useState('');
 
-  async function getItemUrl(documentData: Manifest | Collection): string {
+
+  async function getItemUrl(documentData: Manifest | Collection): Promise<string> {
     // if collection - then we should read the api data from the manifest and get its first sequence item id
     // if manifest - we retrieve the first sequence item id
-    if ('title' in documentData) {
+
+    // panel in the config having a document with the prop url
+    const panel = getPanel(url, config)
+    if ('collection' in panel) {
       // 'title' in document -> document is collection
       const manifestData = await readApi(documentData.sequence[0].id);
       return manifestData.sequence[0].id;
     }
 
-    if ('label' in documentData) {
+    if ('manifest' in panel) {
       return documentData.sequence[0].id;
     }
   }
@@ -36,7 +46,7 @@ const Panel: FC = ({ url }) => {
     for (let i = 0; i < content.length; i++) {
       types.push(getContentType(content[i].type));
     }
-    setTextTypes(() => types);
+    setTextTypes((types));
   }
 
   function getContentType(value): string {
@@ -45,6 +55,7 @@ const Panel: FC = ({ url }) => {
   }
 
   async function readData(url: string) {
+    if (!url || url === '') return 
     const documentData = await readApi(url);
     const itemUrl = await getItemUrl(documentData);
     const itemData = await readApi(itemUrl);
