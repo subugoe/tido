@@ -179,6 +179,10 @@ declare global {
         warning: string
     }
 
+    interface Panel {
+        [key: string]: 'collection' | 'manifest'
+    }
+
 
     type RangeSelector = {
         type: 'RangeSelector',
