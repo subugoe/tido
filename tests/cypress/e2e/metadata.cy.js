@@ -148,7 +148,7 @@ describe('Metadata', () => {
       .find(selectors.item)
       .find(selectors.title)
       .eq(1)
-      .should('contain', 'Language')
+      .should('contain', 'Language (ISO 639-3)')
       .next()
       .should('contain', 'ara,eng');
 
