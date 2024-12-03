@@ -1,10 +1,7 @@
-import { FC, useState, useEffect, useContext } from 'react';
-import { ConfigContext } from '@/contexts/ConfigContext';
+import { FC, useEffect, useContext } from 'react';
 import { Button } from 'primereact/button';
 
 const TextTypes: FC = ({ textTypes, activeText, setActiveText }) => {
-  const { config, setConfig, openedPanels } = useContext(ConfigContext);
-
   function handleTextTabClick(e) {
     e.preventDefault();
     setActiveText(() => e.target.innerHTML);

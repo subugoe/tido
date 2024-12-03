@@ -1,11 +1,18 @@
 import { FC, useState, useEffect, useContext } from 'react';
-import { ConfigContext } from '@/contexts/ConfigContext';
 import Panel from '@/components/panel/Panel';
-
+import { useConfig } from '@/contexts/ConfigContext';
 import { getPanelUrl } from '@/utils/panel';
 
 const PanelsWrapper: FC = ({}) => {
-  const { openedPanels } = useContext(ConfigContext);
+  const { config, updateConfig, openedPanels, setOpenedPanels } = useConfig();
+
+  function initOpenedPanels(panels) {
+    setOpenedPanels(panels);
+  }
+
+  useEffect(() => {
+    initOpenedPanels(config.panels);
+  }, []);
 
   const panels =
     openedPanels.length > 0 &&

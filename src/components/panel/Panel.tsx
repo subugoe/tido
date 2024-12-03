@@ -1,7 +1,5 @@
-import { FC, useState, useEffect, useContext } from 'react';
-import { Button } from 'primereact/button';
-
-import { ConfigContext } from '@/contexts/ConfigContext';
+import { FC, useState, useEffect } from 'react';
+import { useConfig } from '@/contexts/ConfigContext';
 import CustomHTML from '@/components/CustomHTML';
 import TextTypes from '@/components/panel/TextTypes';
 
@@ -10,12 +8,12 @@ import { readApi } from '@/utils/http';
 // TODO: add a Typescript interface for the props types
 // prop: url - should be the url of collection or manifest
 const Panel: FC = ({ url }) => {
-  const { config, setConfig } = useContext(ConfigContext);
+  const { config, setConfig } = useConfig();
   const [text, setText] = useState<React.ReactNode | undefined>();
   const [textTypes, setTextTypes] = useState([]);
   const [activeText, setActiveText] = useState('');
 
-  async function getItemUrl(documentData): string {
+  async function getItemUrl(documentData: Manifest | Collection): string {
     // if collection - then we should read the api data from the manifest and get its first sequence item id
     // if manifest - we retrieve the first sequence item id
     if ('title' in documentData) {
