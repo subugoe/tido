@@ -1,9 +1,16 @@
-import React, { useEffect } from 'react';
-const CustomHTML = ({ textHtml }) => {
-  const ref = React.useRef();
+import { useEffect, useRef, FC } from 'react';
+
+interface CustomHTMLProps {
+  textHtml: string
+}
+
+const CustomHTML: FC<CustomHTMLProps> = ({ textHtml }) => {
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    ref.current.innerHTML = textHtml;
+    if (ref?.current) {
+    (ref.current as HTMLElement).innerHTML = textHtml;
+    }
   }, [textHtml]);
 
   return <div ref={ref} />;
