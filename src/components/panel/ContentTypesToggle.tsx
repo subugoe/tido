@@ -1,10 +1,17 @@
-import { FC, useEffect, useContext } from 'react';
+import { FC, useEffect, MouseEvent } from 'react';
 import { Button } from 'primereact/button';
 
-const TextTypes: FC = ({ textTypes, activeText, setActiveText }) => {
-  function handleTextTabClick(e) {
+interface ContentTypesToggleProps {
+  textTypes: string[],
+  activeText: string,
+  setActiveText: (text: string) => void
+}
+
+
+const ContentTypesToggle: FC <ContentTypesToggleProps>= ({ textTypes, activeText, setActiveText }) => {
+  function handleTextTabClick(e:MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setActiveText(() => e.target.innerHTML);
+    setActiveText((e.target as HTMLButtonElement).innerHTML);
   }
 
   const buttons =
@@ -27,4 +34,4 @@ const TextTypes: FC = ({ textTypes, activeText, setActiveText }) => {
   );
 };
 
-export default TextTypes;
+export default ContentTypesToggle;

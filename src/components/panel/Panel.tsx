@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 import CustomHTML from '@/components/CustomHTML';
-import TextTypesToggle from '@/components/panel/TextTypes';
+import ContentTypesToggle from '@/components/panel/ContentTypesToggle';
 import {useConfig} from '@/contexts/ConfigContext'
 
 
@@ -98,7 +98,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
   return (
     <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-[15px] t-px-[10px] t-pt-[150px] t-pb-[25px]">
       <div className="t-flex t-flex-col t-items-center t-mb-[25px]">
-        <TextTypesToggle
+        <ContentTypesToggle
           textTypes={textTypes}
           activeText={activeText}
           setActiveText={setActiveText}
