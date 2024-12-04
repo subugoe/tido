@@ -183,10 +183,9 @@ declare global {
         info: string,
         warning: string
     }
-
-    type documentType = 'collection' | 'manifest'
     interface Panel {
-        [key: documentType]: string
+        collection?: string
+        manifest?: string
     }
 
 

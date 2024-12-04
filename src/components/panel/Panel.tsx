@@ -8,7 +8,7 @@ import { readApi } from '@/utils/http';
 import { getPanel } from '@/utils/panel';
 
 interface PanelProps {
-  url: string
+  url: string | null
 }
 
 // TODO: add a Typescript interface for the props types
@@ -59,19 +59,18 @@ const Panel: FC <PanelProps> = ({ url }) => {
     return value.split('type=')[1];
   }
 
-  async function readData(url: string) {
+  async function readData(url: string | undefined | null) {
     if (!url || url === '') return 
     const documentData = await readApi(url);
     const itemUrl: string | null = await getItemUrl(documentData);
     if (!itemUrl) return
-    
+
     const itemData = await readApi(itemUrl);
     assignTextTypes(itemData);
     const itemHtmlUrl = getUrlActiveText(itemData['content']);
 
     const textInHtml = await readHtml(itemHtmlUrl);
     setText(<CustomHTML textHtml={textInHtml} />);
-    //setData(documentData);
   }
 
   async function readHtml(url: string | undefined): Promise<string> {

@@ -12,9 +12,6 @@ const defaultConfig: Config = {
     {
       manifest:
         'https://goethes-farbenlehre-berlin.sub.uni-goettingen.de/textapi/ Z_1829-06-28_k/manifest.json',
-    },
-    {
-      document: ''
     }
   ],
 };
