@@ -1,12 +1,23 @@
-import { createContext, useContext, useState } from 'react';
+import { ReactNode, createContext, useContext, useState, FC } from 'react';
 import defaultConfig from '@/config';
 const ConfigContext = createContext({});
 
-const ConfigProvider = ({ children }) => {
-  const [config, setConfig] = useState(defaultConfig);
+interface ConfigProvider {
+  config?: Config,
+  setConfig?: () => void,
+  openedPanels?: Panel[],
+  setOpenedPanels?: (panels: Panel[]) => void
+}
+
+interface ConfigProviderProps {
+  children?: ReactNode
+}
+
+const ConfigProvider: FC<ConfigProviderProps> = ({ children }) => {
+  const [config, setConfig]  = useState <Config>(defaultConfig);
   const [openedPanels, setOpenedPanels] = useState(defaultConfig.panels);
 
-  function updateConfig(newConfig) {
+  function updateConfig(newConfig: Config) {
     setConfig(newConfig);
   }
 
@@ -19,8 +30,10 @@ const ConfigProvider = ({ children }) => {
   );
 };
 
-const useConfig = () => {
-  return useContext(ConfigContext);
-};
+function useConfig(): ConfigProvider {
+  return useContext(ConfigContext)
+}
+
+
 
 export { ConfigProvider, useConfig };

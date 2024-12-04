@@ -1,5 +1,3 @@
-import { FC, useEffect, useState } from 'react';
-
 import { ConfigProvider } from '@/contexts/ConfigContext';
 import PanelsWrapper from './components/PanelsWrapper';
 

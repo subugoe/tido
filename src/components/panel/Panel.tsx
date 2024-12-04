@@ -25,7 +25,11 @@ const Panel: FC <PanelProps> = ({ url }) => {
     // if manifest - we retrieve the first sequence item id
 
     // panel in the config having a document with the prop url
-    const panel: Panel = getPanel(url, config)
+    const panel: Panel | undefined = getPanel(url, config)
+    if (!panel) return null
+
+    if (!('collection' in panel) && !('manifest' in panel)) return null
+
     if ('collection' in panel) {
       // 'title' in document -> document is collection
       const manifestData = await readApi(documentData.sequence[0].id);
@@ -58,7 +62,9 @@ const Panel: FC <PanelProps> = ({ url }) => {
   async function readData(url: string) {
     if (!url || url === '') return 
     const documentData = await readApi(url);
-    const itemUrl = await getItemUrl(documentData);
+    const itemUrl: string | null = await getItemUrl(documentData);
+    if (!itemUrl) return
+    
     const itemData = await readApi(itemUrl);
     assignTextTypes(itemData);
     const itemHtmlUrl = getUrlActiveText(itemData['content']);
