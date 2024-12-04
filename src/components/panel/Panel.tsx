@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 import CustomHTML from '@/components/CustomHTML';
-import TextTypes from '@/components/panel/TextTypes';
+import TextTypesToggle from '@/components/panel/TextTypes';
 import {useConfig} from '@/contexts/ConfigContext'
 
 
@@ -16,16 +16,16 @@ interface PanelProps {
 const Panel: FC <PanelProps> = ({ url }) => {
   const { config } = useConfig()
   const [text, setText] = useState<React.ReactNode | undefined>();
-  const [textTypes, setTextTypes] = useState([]);
+  const [textTypes, setTextTypes] = useState<string[]>([]);
   const [activeText, setActiveText] = useState('');
 
 
-  async function getItemUrl(documentData: Manifest | Collection): Promise<string> {
+  async function getItemUrl(documentData: Manifest | Collection): Promise<string | null> {
     // if collection - then we should read the api data from the manifest and get its first sequence item id
     // if manifest - we retrieve the first sequence item id
 
     // panel in the config having a document with the prop url
-    const panel = getPanel(url, config)
+    const panel: Panel = getPanel(url, config)
     if ('collection' in panel) {
       // 'title' in document -> document is collection
       const manifestData = await readApi(documentData.sequence[0].id);
@@ -35,6 +35,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
     if ('manifest' in panel) {
       return documentData.sequence[0].id;
     }
+    return null
   }
 
   function assignTextTypes(itemData: Item) {
@@ -46,10 +47,10 @@ const Panel: FC <PanelProps> = ({ url }) => {
     for (let i = 0; i < content.length; i++) {
       types.push(getContentType(content[i].type));
     }
-    setTextTypes((types));
+    setTextTypes(types);
   }
 
-  function getContentType(value): string {
+  function getContentType(value: string): string {
     if (!value) return '';
     return value.split('type=')[1];
   }
@@ -67,19 +68,26 @@ const Panel: FC <PanelProps> = ({ url }) => {
     //setData(documentData);
   }
 
-  async function readHtml(url: string): Promise<string> {
+  async function readHtml(url: string | undefined): Promise<string> {
     // url: the url of html file of the item
+    if (!url) {
+      console.error('url of the html content text file is undefined!!')
+      return ''
+    }
     const data = await fetch(url);
     const text = await data.text();
 
     return text;
   }
 
-  function getUrlActiveText(content) {
-    const activeItemUrl = content.find((item) =>
-      item.type.includes(activeText)
-    ).url;
-    return activeItemUrl;
+  function getUrlActiveText(content: Content[]): string | undefined {
+    
+    const activeContent: Content | undefined = content.find((item) => item.type.includes(activeText))
+    if (!activeContent) {
+      console.error('the current text content was not found')
+      return undefined
+    }
+    return activeContent.url ? activeContent.url : undefined
   }
 
   useEffect(() => {
@@ -90,7 +98,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
   return (
     <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-[15px] t-px-[10px] t-pt-[150px] t-pb-[25px]">
       <div className="t-flex t-flex-col t-items-center t-mb-[25px]">
-        <TextTypes
+        <TextTypesToggle
           textTypes={textTypes}
           activeText={activeText}
           setActiveText={setActiveText}

@@ -74,6 +74,11 @@ declare global {
         accent: string
     }
 
+    interface Config {
+        globalTree: boolean,
+        panels: Panel[]
+    }
+
 
     interface Content {
         '@context': string,
@@ -179,8 +184,9 @@ declare global {
         warning: string
     }
 
+    type documentType = 'collection' | 'manifest'
     interface Panel {
-        [key: string]: 'collection' | 'manifest'
+        [key: documentType]: string
     }
 
 
