@@ -24,13 +24,12 @@ const PanelsWrapper: FC = ({}) => {
   const panels = openedPanels ?
     openedPanels.length > 0 &&
     openedPanels.map((panel: Panel, i: number) => (
-      <div key={i} className="t-mr-[25px]">
+      <div key={i} className="t-mr-6">
         <Panel url={ panel.collection ? getCollectionUrl(panel): getManifestUrl(panel)} />
       </div>
     )): <div> Error with loading panels </div>;
 
   
-
   return <div className="t-flex t-flex-row">{panels}</div>;
 };
 

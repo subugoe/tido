@@ -45,7 +45,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
     if (!itemData.hasOwnProperty('content')) return;
     if (itemData.content.length === 0) return;
 
-    const content = itemData.content;
+    const content: Content[] = itemData.content;
     const types: string[] = content.map((item) => getContentType(item.type));
     setTextTypes(types);
   }
@@ -110,14 +110,14 @@ const Panel: FC <PanelProps> = ({ url }) => {
   }, [url, activeText]);
 
   return (
-    <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-[15px] t-px-[10px] t-pt-[150px] t-pb-[25px]">
-      <div className="t-flex t-flex-col t-items-center t-mb-[25px]">
+    <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">
+      <div className="t-flex t-flex-col t-items-center t-mb-6">
         <ContentTypesToggle
-          textTypes={textTypes}
-          activeText={activeText}
-          setActiveText={setActiveText}
-        />
-      </div>
+            textTypes={textTypes}
+            activeText={activeText}
+            setActiveText={setActiveText}
+          />
+        </div>
       {text}
     </div>
   );
