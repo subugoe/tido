@@ -2,24 +2,24 @@ import { FC, MouseEvent } from 'react';
 import { Button } from 'primereact/button';
 
 interface ContentTypesToggleProps {
-  textTypes: string[],
-  activeText: string,
-  setActiveText: (text: string) => void
+  contentTypes: string[],
+  activeContentType: string,
+  setActiveContentType: (text: string) => void
 }
 
 
-const ContentTypesToggle: FC <ContentTypesToggleProps>= ({ textTypes, activeText, setActiveText }) => {
+const ContentTypesToggle: FC <ContentTypesToggleProps>= ({ contentTypes, activeContentType, setActiveContentType }) => {
   function handleTextTabClick(e:MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setActiveText((e.target as HTMLButtonElement).innerHTML);
+    setActiveContentType((e.target as HTMLButtonElement).innerHTML);
   }
 
   const buttons =
-    textTypes.length > 0 &&
-    textTypes.map((type, i) => (
+  contentTypes.length > 0 &&
+  contentTypes.map((type, i) => (
       <Button
         className="t-p-1 t-rounded"
-        style={{ backgroundColor: activeText === type ? '#FFFFFF' : '' }}
+        style={{ backgroundColor: activeContentType === type ? '#FFFFFF' : '' }}
         key={i}
         label={type}
         onClick={(e) => handleTextTabClick(e)}

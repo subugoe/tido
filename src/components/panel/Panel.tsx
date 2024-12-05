@@ -15,8 +15,8 @@ interface PanelProps {
 const Panel: FC <PanelProps> = ({ url }) => {
   const { config } = useConfig()
   const [text, setText] = useState<React.ReactNode | undefined>();
-  const [textTypes, setTextTypes] = useState<string[]>([]);
-  const [activeText, setActiveText] = useState('');
+  const [contentTypes, setContentTypes] = useState<string[]>([]);
+  const [activeContentType, setActiveContentType] = useState('');
 
 
   async function getItemUrl(documentData: Manifest | Collection): Promise<string | null> {
@@ -47,7 +47,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
 
     const content: Content[] = itemData.content;
     const types: string[] = content.map((item) => getContentType(item.type));
-    setTextTypes(types);
+    setContentTypes(types);
   }
 
   function getContentType(value: string): string {
@@ -96,7 +96,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
 
   function getUrlActiveText(content: Content[]): string | undefined {
     
-    const activeContent: Content | undefined = content.find((item) => item.type.includes(activeText))
+    const activeContent: Content | undefined = content.find((item) => item.type.includes(activeContentType))
     if (!activeContent) {
       console.error('the current text content was not found')
       return undefined
@@ -107,15 +107,15 @@ const Panel: FC <PanelProps> = ({ url }) => {
   useEffect(() => {
     // read Api data from url
     readData(url);
-  }, [url, activeText]);
+  }, [url, activeContentType]);
 
   return (
     <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">
       <div className="t-flex t-flex-col t-items-center t-mb-6">
         <ContentTypesToggle
-            textTypes={textTypes}
-            activeText={activeText}
-            setActiveText={setActiveText}
+            contentTypes={contentTypes}
+            activeContentType={activeContentType}
+            setActiveContentType={setActiveContentType}
           />
         </div>
       {text}
