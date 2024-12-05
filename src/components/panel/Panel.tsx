@@ -1,11 +1,13 @@
 import { FC, useState, useEffect } from 'react';
-import CustomHTML from '@/components/CustomHTML';
-import ContentTypesToggle from '@/components/panel/ContentTypesToggle';
 import {useConfig} from '@/contexts/ConfigContext'
-
 
 import { readApi } from '@/utils/http';
 import { getPanel } from '@/utils/panel';
+
+
+import CustomHTML from '@/components/CustomHTML';
+import ContentTypesToggle from '@/components/panel/ContentTypesToggle';
+import Error from '@/components/Error'
 
 interface PanelProps {
   url: string | null
@@ -17,6 +19,8 @@ const Panel: FC <PanelProps> = ({ url }) => {
   const [text, setText] = useState<string>('');
   const [contentTypes, setContentTypes] = useState<string[]>([]);
   const [activeContentType, setActiveContentType] = useState('');
+
+  const [error, setError] = useState<boolean | string>(false)
 
 
   async function getItemUrl(documentData: Manifest | Collection): Promise<string | null> {
@@ -61,20 +65,32 @@ const Panel: FC <PanelProps> = ({ url }) => {
     try {
       const apiData = await fetch(url);
       if (!apiData.ok) {
-        console.log('response is not ok----')
-        throw Error('Response is not ok while loading document data')
+        throw new Error('Error while loading document data')
       }
       documentData = await apiData.json();
 
     } catch (e: any) {
-      console.error('Error:', e.message, 'from given Panel url')
+      setError('Error while loading document data')
+      return
     }
     
     //const documentData = await readApi(url);
-    const itemUrl: string | null = await getItemUrl(documentData);
+    let itemUrl: string | null = await getItemUrl(documentData);
     if (!itemUrl) return
 
-    const itemData = await readApi(itemUrl);
+    let itemData: Item;
+    itemUrl = 'fdf'
+    try {
+      const apiData = await fetch(itemUrl)
+      if (!apiData.ok) {
+        throw new Error('Error while fetching item data')
+      }
+      itemData = apiData.json()
+    } catch (e: any) {
+      setError('Error while loading item data')
+      return
+    }
+
     assignContentTypes(itemData);
     const itemHtmlUrl = getUrlActiveText(itemData['content']);
 
@@ -108,6 +124,11 @@ const Panel: FC <PanelProps> = ({ url }) => {
     // read Api data from url
     readData(url);
   }, [url, activeContentType]);
+
+
+  if (error) {
+    return <Error message={error} />
+  }
 
   return (
     <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">

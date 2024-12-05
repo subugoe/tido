@@ -7,7 +7,6 @@ import { useConfig} from '@/contexts/ConfigContext'
 function App({customConfig}) {
 
   const [loading, setLoading] = useState(true)
-  const [resultConfig, setResultConfig] = useState()
   const { config, updateConfig} = useConfig()
 
   useEffect(() => {
@@ -27,7 +26,6 @@ function App({customConfig}) {
 
   return (
     <div className="tido">
-        <span> Welcome to TIDO</span>
         <PanelsWrapper />
     </div>
   );
