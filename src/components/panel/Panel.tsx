@@ -14,7 +14,7 @@ interface PanelProps {
 // prop: url - should be the url of collection or manifest
 const Panel: FC <PanelProps> = ({ url }) => {
   const { config } = useConfig()
-  const [text, setText] = useState<React.ReactNode | undefined>();
+  const [text, setText] = useState<string>('');
   const [contentTypes, setContentTypes] = useState<string[]>([]);
   const [activeContentType, setActiveContentType] = useState('');
 
@@ -79,7 +79,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
     const itemHtmlUrl = getUrlActiveText(itemData['content']);
 
     const textInHtml = await readHtml(itemHtmlUrl);
-    setText(<CustomHTML textHtml={textInHtml} />);
+    setText(textInHtml);
   }
 
   async function readHtml(url: string | undefined): Promise<string> {
@@ -117,8 +117,8 @@ const Panel: FC <PanelProps> = ({ url }) => {
             activeContentType={activeContentType}
             setActiveContentType={setActiveContentType}
           />
-        </div>
-      {text}
+      </div>
+      <CustomHTML textHtml={text}/>
     </div>
   );
 };
