@@ -11,7 +11,6 @@ interface PanelProps {
   url: string | null
 }
 
-// TODO: add a Typescript interface for the props types
 // prop: url - should be the url of collection or manifest
 const Panel: FC <PanelProps> = ({ url }) => {
   const { config } = useConfig()
@@ -42,15 +41,12 @@ const Panel: FC <PanelProps> = ({ url }) => {
     return null
   }
 
-  function assignTextTypes(itemData: Item) {
-    const types: string[] = [];
+  function assignContentTypes(itemData: Item) {
     if (!itemData.hasOwnProperty('content')) return;
-    if (itemData['content'].length === 0) return;
+    if (itemData.content.length === 0) return;
 
-    const content = itemData['content'];
-    for (let i = 0; i < content.length; i++) {
-      types.push(getContentType(content[i].type));
-    }
+    const content = itemData.content;
+    const types: string[] = content.map((item) => getContentType(item.type));
     setTextTypes(types);
   }
 
@@ -61,12 +57,25 @@ const Panel: FC <PanelProps> = ({ url }) => {
 
   async function readData(url: string | undefined | null) {
     if (!url || url === '') return 
-    const documentData = await readApi(url);
+    let documentData;
+    try {
+      const apiData = await fetch(url);
+      if (!apiData.ok) {
+        console.log('response is not ok----')
+        throw Error('Response is not ok while loading document data')
+      }
+      documentData = await apiData.json();
+
+    } catch (e: any) {
+      console.error('Error:', e.message, 'from given Panel url')
+    }
+    
+    //const documentData = await readApi(url);
     const itemUrl: string | null = await getItemUrl(documentData);
     if (!itemUrl) return
 
     const itemData = await readApi(itemUrl);
-    assignTextTypes(itemData);
+    assignContentTypes(itemData);
     const itemHtmlUrl = getUrlActiveText(itemData['content']);
 
     const textInHtml = await readHtml(itemHtmlUrl);
