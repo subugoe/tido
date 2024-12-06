@@ -1,5 +1,9 @@
 <template>
-  <div class="panel t-flex t-flex-col t-overflow-hidden t-rounded-lg t-bg-gray-50 dark:t-bg-gray-800 t-border dark:t-border-gray-700">
+  <div
+    class="panel t-flex-shrink-0 t-flex t-flex-col t-overflow-hidden t-rounded-lg t-bg-gray-50 dark:t-bg-gray-800
+    t-border dark:t-border-gray-700 t-max-h-screen md:t-h-auto"
+    :style="{width: `${width}px`}"
+  >
     <div class="panel-header t-py-3 t-px-4 t-flex t-justify-between t-items-center">
       <div class="caption t-font-bold">
         <!-- We display the tab label as panel label when there is only one tab -->
@@ -145,6 +149,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import MessageBox from '@/components/MessageBox.vue';
 import { findComponent, getFontSizes } from '@/utils/panels';
 import * as AnnotationUtils from '@/utils/annotations'
+import { useResize } from "@/utils/resize.js";
 
 // NOTE: Using `setup()` rather than the recommended `<script setup>`
 // to avoid issues with asset loading.
@@ -171,8 +176,10 @@ export default {
       default: () => { },
     },
     activeView: Number,
+    defaultWidth: Number,
   },
   setup(props, { emit }) {
+    const { isMobile } = useResize();
     const configStore = useConfigStore();
     const contentStore = useContentsStore();
     const { t } = useI18n();
@@ -181,6 +188,8 @@ export default {
     const activeTabIndex = ref(0);
     const unsubscribe = ref(null);
     const isLoading = ref(false);
+
+    const width = computed( () => props.defaultWidth * getWidth(props.panel.width));
 
     const item = computed<Item>(() => contentStore.item);
 
@@ -193,20 +202,20 @@ export default {
     );
 
     watch(
-      () => props.panel,
-      ({ views }) => {
-        nextTick(() => {
-          init(views);
-        });
+      () => props.panel, ({ views }) => {
+        nextTick(() => init(views))
       },
       { deep: true, immediate: true },
     );
-    watch(
-      item,
-      () => {
-        init(props.panel.views);
-      },
-    );
+
+    watch(item,() => init(props.panel.views));
+
+    function getWidth(configValue) {
+      if (!configValue || typeof configValue !== 'number') return 1;
+      if (isMobile.value || configValue < 1) return 1;
+      if (configValue > 10) return 10;
+      return configValue;
+    }
 
     function init(views) {
       tabs.value = [];
@@ -418,6 +427,7 @@ export default {
       isLoading,
       tabs,
       onViewChange,
+      width
     };
   },
 };

@@ -174,7 +174,7 @@ describe('Annotation', () => {
       // because there is a problem with initial scrolling of text panel.
       // Somehow it works when scroll programmatically like described above.
       cy
-        .get('.panels-wrapper > .panel:nth-child(3) .content-view')
+        .get('.panels-wrapper .panel:nth-child(3) .content-view')
         .scrollTo('bottom')
         .get(selectors.listItem)
         .first()

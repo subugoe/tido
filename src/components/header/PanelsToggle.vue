@@ -70,12 +70,13 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { isMobile } from '@/utils/is-mobile';
+import { useResize } from '@/utils/resize.js';
 import BaseCheckbox from '@/components/base/BaseCheckbox.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 import BaseDropdown from '@/components/base/BaseDropdown.vue';
 import { useConfigStore } from '@/stores/config';
 
+const { isMobile } = useResize();
 const configStore = useConfigStore();
 const { t } = useI18n();
 
