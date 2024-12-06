@@ -115,29 +115,6 @@ const Panel: FC <PanelProps> = ({ url }) => {
   }
 
 
-async function readHtml(url: string | undefined): Promise<string> {
-  // url: the url of html file of the item
-  if (!url) {
-    console.error('url of the html content text file is undefined!!')
-    return ''
-  }
-  const data = await fetch(url);
-  const text = await data.text();
-
-  return text;
-}
-
-
-function getUrlActiveText(content: Content[], activeContentType: string): string | undefined {
-  const activeContent: Content | undefined = content.find((item) => item.type.includes(activeContentType))
-  if (!activeContent) {
-    console.error('the current text content was not found')
-    return undefined
-  }
-  return activeContent.url ? activeContent.url : undefined
-}
-
-
   useEffect(() => {
     // read Api data from url
     readData(url);
