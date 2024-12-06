@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 import {useConfig} from '@/contexts/ConfigContext'
 
 import { readApi } from '@/utils/http';
-import { getPanel, readHtml, getUrlActiveText } from '@/utils/panel';
+import { getPanel, readHtml, getUrlActiveContentText } from '@/utils/panel';
 
 
 import CustomHTML from '@/components/CustomHTML';
@@ -18,7 +18,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
   const { config } = useConfig()
   const [text, setText] = useState<string>('');
   const [contentTypes, setContentTypes] = useState<string[]>([]);
-  const [activeContentType, setActiveContentType] = useState('');
+  const [activeContentTypeIndex, setActiveContentTypeIndex] = useState(0);
 
   const [error, setError] = useState<boolean | string>(false)
   const [loading, setLoading] = useState<boolean>(true)
@@ -106,19 +106,20 @@ const Panel: FC <PanelProps> = ({ url }) => {
       return
     }
     await assignContentTypes(itemData);
-    //setActiveContentType(contentTypes[0])
-    const itemHtmlUrl = getUrlActiveText(itemData.content, activeContentType);
+    const itemHtmlUrl = getUrlActiveContentText(itemData.content, activeContentTypeIndex);
 
     const textInHtml = await readHtml(itemHtmlUrl);
     setText(textInHtml);
     setLoading(false)
   }
 
+  
+
 
   useEffect(() => {
     // read Api data from url
     readData(url);
-  }, [url, activeContentType]);
+  }, [url, activeContentTypeIndex]);
 
 
   if (error) {
@@ -134,8 +135,8 @@ const Panel: FC <PanelProps> = ({ url }) => {
       <div className="t-flex t-flex-col t-items-center t-mb-6">
         <ContentTypesToggle
             contentTypes={contentTypes}
-            activeContentType={activeContentType}
-            setActiveContentType={setActiveContentType}
+            activeContentTypeIndex={activeContentTypeIndex}
+            setActiveContentTypeIndex={setActiveContentTypeIndex}
           />
       </div>
       <CustomHTML textHtml={text}/>

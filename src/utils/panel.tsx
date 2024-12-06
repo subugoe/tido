@@ -32,8 +32,9 @@ export async function readHtml(url: string | undefined): Promise<string> {
 }
 
 
-export function getUrlActiveText(content: Content[], activeContentType: string): string | undefined {
-  const activeContent: Content | undefined = content.find((item) => item.type.includes(activeContentType))
+export function getUrlActiveContentText(content: Content[], activeContentTypeIndex: number): string | undefined {
+  if (activeContentTypeIndex < 0 || activeContentTypeIndex >= content.length) return undefined
+  const activeContent: Content | undefined = content[activeContentTypeIndex]
   if (!activeContent) {
     console.error('the current text content was not found')
     return undefined

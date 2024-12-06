@@ -3,15 +3,18 @@ import { Button } from 'primereact/button';
 
 interface ContentTypesToggleProps {
   contentTypes: string[],
-  activeContentType: string,
-  setActiveContentType: (text: string) => void
+  activeContentTypeIndex: number,
+  setActiveContentTypeIndex: (index: number) => void
 }
 
 
-const ContentTypesToggle: FC <ContentTypesToggleProps>= ({ contentTypes, activeContentType, setActiveContentType }) => {
+const ContentTypesToggle: FC <ContentTypesToggleProps>= ({ contentTypes, activeContentTypeIndex, setActiveContentTypeIndex }) => {
   function handleTextTabClick(e:MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setActiveContentType((e.target as HTMLButtonElement).innerHTML);
+    const activeContentType: string = (e.target as HTMLButtonElement).innerHTML
+    const index: number = contentTypes.findIndex((type) => type === activeContentType)
+    if (index === -1) return
+    setActiveContentTypeIndex(index);
   }
 
   const buttons =
@@ -19,7 +22,7 @@ const ContentTypesToggle: FC <ContentTypesToggleProps>= ({ contentTypes, activeC
   contentTypes.map((type, i) => (
       <Button
         className="t-p-1 t-rounded"
-        style={{ backgroundColor: activeContentType === type ? '#FFFFFF' : '' }}
+        style={{ backgroundColor: activeContentTypeIndex === i ? '#FFFFFF' : '' }}
         key={i}
         label={type}
         onClick={(e) => handleTextTabClick(e)}
