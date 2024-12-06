@@ -76,7 +76,13 @@ declare global {
 
     interface Config {
         globalTree: boolean,
-        panels: Panel[]
+        panels: Panel[],
+        urlConfig: UrlConfig,
+        itemImageUrl: string
+    }
+
+    interface UrlConfig {
+        v: number
     }
 
 

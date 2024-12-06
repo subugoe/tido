@@ -3,16 +3,24 @@ import { icons } from '@/utils/icons'
 
 import CustomHTML from '@/components/CustomHTML';
 
+import { useConfig } from '@/contexts/ConfigContext';
+
 interface TextViewsToggleProps {
 }
 
 
 const TextViewsToggle: FC <TextViewsToggleProps>= ({}) => {
+
+    const { config, updateConfig} = useConfig()
+
     const ref = useRef(null)
   
-    function handleTextViewClick(e:MouseEvent<HTMLButtonElement>) {
+    function handleTextViewClick(e:MouseEvent<HTMLButtonElement>, index: number) {
         e.preventDefault()
-        console.log('clicked text view')
+        let newConfig = {...config}
+
+        newConfig.urlConfig.v = index
+        updateConfig(newConfig)
     }
   const textViewsTitles = Object.keys(icons)
   
@@ -28,8 +36,8 @@ const TextViewsToggle: FC <TextViewsToggleProps>= ({}) => {
         <button
             className="t-p-1 t-rounded t-mr-3 t-w-8"
             key={i}
-            onClick={(e) => handleTextViewClick(e)}>
-                 
+            onClick={(e) => handleTextViewClick(e, i)}>
+
             <CustomHTML textHtml={icons[title]} />
 
         </button>

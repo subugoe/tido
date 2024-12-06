@@ -5,6 +5,9 @@ import { readApi } from '@/utils/http';
 import { getPanel, readHtml, getUrlActiveContentText } from '@/utils/panel';
 
 
+
+import PanelTopBar from '@/components/panel/PanelTopBar'
+import PanelCentralContent from '@/components/panel/panel-central-content/PanelCentralContent';
 import CustomHTML from '@/components/CustomHTML';
 import ContentTypesToggle from '@/components/panel/ContentTypesToggle';
 import Error from '@/components/Error'
@@ -15,7 +18,7 @@ interface PanelProps {
 
 // prop: url - should be the url of collection or manifest
 const Panel: FC <PanelProps> = ({ url }) => {
-  const { config } = useConfig()
+  const { config, updateConfig } = useConfig()
   const [text, setText] = useState<string>('');
   const [contentTypes, setContentTypes] = useState<string[]>([]);
   const [activeContentTypeIndex, setActiveContentTypeIndex] = useState(0);
@@ -46,6 +49,12 @@ const Panel: FC <PanelProps> = ({ url }) => {
     return null
   }
 
+  function setImageUrlInConfig(itemData: Item) {
+    let newConfig = {...config}
+    newConfig.itemImageUrl = itemData.image.id
+    updateConfig(newConfig)
+  }
+
   async function assignContentTypes(itemData: Item) {
     if (!itemData.hasOwnProperty('content')) return;
     if (itemData.content.length === 0) return;
@@ -68,7 +77,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
     try {
       const apiData = await fetch(url);
       if (!apiData.ok) {
-        throw Error('Error while loading document data of this url ', url)
+        throw Error('Error while loading document data of this url ',url)
       }
       if (!apiData.headers.get('content-type')?.includes('application/json')) {
         throw Error('Response from reading this document (collection/manifest) is not a json object')
@@ -107,15 +116,13 @@ const Panel: FC <PanelProps> = ({ url }) => {
     }
     await assignContentTypes(itemData);
     const itemHtmlUrl = getUrlActiveContentText(itemData.content, activeContentTypeIndex);
-
+    setImageUrlInConfig(itemData)
     const textInHtml = await readHtml(itemHtmlUrl);
     setText(textInHtml);
     setLoading(false)
   }
 
   
-
-
   useEffect(() => {
     // read Api data from url
     readData(url);
@@ -132,6 +139,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
 
   return (
     <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">
+      <PanelTopBar />
       <div className="t-flex t-flex-col t-items-center t-mb-6">
         <ContentTypesToggle
             contentTypes={contentTypes}
@@ -139,7 +147,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
             setActiveContentTypeIndex={setActiveContentTypeIndex}
           />
       </div>
-      <CustomHTML textHtml={text}/>
+      <PanelCentralContent textHtml={text} />
     </div>
   );
 };
