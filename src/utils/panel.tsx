@@ -1,5 +1,3 @@
-import { readApi } from '@/utils/http'
-
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(panel: Panel): string | null {
   return panel.manifest ?? null
