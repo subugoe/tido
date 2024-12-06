@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 import {useConfig} from '@/contexts/ConfigContext'
 
 import { readApi } from '@/utils/http';
-import { getPanel } from '@/utils/panel';
+import { getPanel, readHtml, getUrlActiveText } from '@/utils/panel';
 
 
 import CustomHTML from '@/components/CustomHTML';
@@ -21,6 +21,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
   const [activeContentType, setActiveContentType] = useState('');
 
   const [error, setError] = useState<boolean | string>(false)
+  const [loading, setLoading] = useState<boolean>(true)
 
 
   async function getItemUrl(documentData: Manifest | Collection): Promise<string | null> {
@@ -45,7 +46,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
     return null
   }
 
-  function assignContentTypes(itemData: Item) {
+  async function assignContentTypes(itemData: Item) {
     if (!itemData.hasOwnProperty('content')) return;
     if (itemData.content.length === 0) return;
 
@@ -61,64 +62,81 @@ const Panel: FC <PanelProps> = ({ url }) => {
 
   async function readData(url: string | undefined | null) {
     if (!url || url === '') return 
-    let documentData;
+    let documentData: Manifest | Collection;
+
+    // read document (collection/manifest) data
     try {
       const apiData = await fetch(url);
       if (!apiData.ok) {
-        throw new Error('Error while loading document data')
+        throw Error('Error while loading document data of this url ', url)
       }
-      documentData = await apiData.json();
+      if (!apiData.headers.get('content-type')?.includes('application/json')) {
+        throw Error('Response from reading this document (collection/manifest) is not a json object')
+      }
+      await apiData.json().then((value) => {
+        documentData = value
+       }
+      )
 
     } catch (e: any) {
-      setError('Error while loading document data')
+      setError('Error while loading document data of this url '+ url)
       return
     }
+
+    // read item data
     
-    //const documentData = await readApi(url);
     let itemUrl: string | null = await getItemUrl(documentData);
     if (!itemUrl) return
 
-    let itemData: Item;
-    itemUrl = 'fdf'
+    let itemData: Item
     try {
-      const apiData = await fetch(itemUrl)
-      if (!apiData.ok) {
-        throw new Error('Error while fetching item data')
+      const response = await fetch(itemUrl)
+      if (!response.ok) {
+        throw Error('failed to fetch from item URL')
       }
-      itemData = apiData.json()
+      if (!response.headers.get('content-type')?.includes('application/json')) {
+        throw Error('Response from reading item is not a json object')
+      }
+      await response.json().then((value) => {
+        itemData = value
+       }
+      )
     } catch (e: any) {
-      setError('Error while loading item data')
+      setError(e.message)
       return
     }
-
-    assignContentTypes(itemData);
-    const itemHtmlUrl = getUrlActiveText(itemData['content']);
+    await assignContentTypes(itemData);
+    //setActiveContentType(contentTypes[0])
+    const itemHtmlUrl = getUrlActiveText(itemData.content, activeContentType);
 
     const textInHtml = await readHtml(itemHtmlUrl);
     setText(textInHtml);
+    setLoading(false)
   }
 
-  async function readHtml(url: string | undefined): Promise<string> {
-    // url: the url of html file of the item
-    if (!url) {
-      console.error('url of the html content text file is undefined!!')
-      return ''
-    }
-    const data = await fetch(url);
-    const text = await data.text();
 
-    return text;
+async function readHtml(url: string | undefined): Promise<string> {
+  // url: the url of html file of the item
+  if (!url) {
+    console.error('url of the html content text file is undefined!!')
+    return ''
   }
+  const data = await fetch(url);
+  const text = await data.text();
 
-  function getUrlActiveText(content: Content[]): string | undefined {
-    
-    const activeContent: Content | undefined = content.find((item) => item.type.includes(activeContentType))
-    if (!activeContent) {
-      console.error('the current text content was not found')
-      return undefined
-    }
-    return activeContent.url ? activeContent.url : undefined
+  return text;
+}
+
+
+function getUrlActiveText(content: Content[], activeContentType: string): string | undefined {
+  const activeContent: Content | undefined = content.find((item) => item.type.includes(activeContentType))
+  if (!activeContent) {
+    console.error('the current text content was not found')
+    return undefined
   }
+  return activeContent.url ? activeContent.url : undefined
+}
+
 
   useEffect(() => {
     // read Api data from url
@@ -128,6 +146,10 @@ const Panel: FC <PanelProps> = ({ url }) => {
 
   if (error) {
     return <Error message={error} />
+  }
+
+  if (loading) {
+    return <div> Loading the data of this panel...</div>
   }
 
   return (
