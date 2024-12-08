@@ -1,10 +1,12 @@
 import PanelsWrapper from './components/PanelsWrapper';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useConfig} from '@/contexts/ConfigContext'
 
+interface AppProps {
+  customConfig: Config
+}
 
-
-function App({customConfig}) {
+const App: FC <AppProps> = ({ customConfig }) => {
 
   const [loading, setLoading] = useState(true)
   const { config, updateConfig} = useConfig()
