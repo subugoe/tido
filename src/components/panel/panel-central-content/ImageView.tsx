@@ -2,11 +2,8 @@ import { FC } from 'react';
 import { useConfig } from '@/contexts/ConfigContext'
 
 
-interface SplitViewProps {
-    textHtml: string
-}
 
-const ImageView: FC<SplitViewProps> = () => {
+const ImageView: FC = () => {
     const {config} = useConfig()
 
 
