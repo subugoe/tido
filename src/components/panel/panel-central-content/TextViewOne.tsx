@@ -23,7 +23,6 @@ function handleBottomElementClick(e:MouseEvent<HTMLButtonElement>) {
 let bottomElement;
 useEffect(() => {
     function toggleContent() {
-        console.log('show', showText)
         if (showText) {
             return <img src={config?.itemImageUrl} />
         }
@@ -36,7 +35,7 @@ useEffect(() => {
   return (
     <div className="">
         <div style={{display: showText? 'inline': 'none'}}>
-            <CustomHTML textHtml={textHtml} />
+            <CustomHTML textHtml={textHtml} widthText='100%'/>
         </div>
         <div style={{display: !showText? 'inline': 'none'}} >
             <img src={config?.itemImageUrl} className="t-h-96"/>
