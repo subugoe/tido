@@ -5,8 +5,8 @@ const ConfigContext = createContext({});
 interface ConfigProvider {
   config?: Config,
   setConfig?: () => void,
-  openedPanels?: Panel[],
-  setOpenedPanels?: (panels: Panel[]) => void
+  openedPanels?: PanelConfig[],
+  setOpenedPanels?: (panels: PanelConfig[]) => void
 }
 
 interface ConfigProviderProps {

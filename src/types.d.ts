@@ -183,7 +183,7 @@ declare global {
         info: string,
         warning: string
     }
-    interface Panel {
+    interface PanelConfig {
         collection?: string
         manifest?: string
     }

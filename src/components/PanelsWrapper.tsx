@@ -6,7 +6,7 @@ import { getManifestUrl, getCollectionUrl } from '@/utils/panel';
 const PanelsWrapper: FC = ({}) => {
   const { config, openedPanels, setOpenedPanels } = useConfig();
 
-  function initOpenedPanels(panels: Panel[]) {
+  function initOpenedPanels(panels: PanelConfig[]) {
     if (setOpenedPanels) {
       setOpenedPanels(panels);
     }
@@ -23,7 +23,7 @@ const PanelsWrapper: FC = ({}) => {
   
   const panels = openedPanels ?
     openedPanels.length > 0 &&
-    openedPanels.map((panel: Panel, i: number) => (
+    openedPanels.map((panel: PanelConfig, i: number) => (
       <div key={i} className="t-mr-6">
         <Panel url={ panel.collection ? getCollectionUrl(panel): getManifestUrl(panel)} />
       </div>

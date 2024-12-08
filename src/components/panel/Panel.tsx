@@ -29,7 +29,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
     // if manifest - we retrieve the first sequence item id
 
     // panel in the config having a document with the prop url
-    const panel: Panel | undefined = getPanel(url, config)
+    const panel: PanelConfig | undefined = getPanel(url, config)
     if (!panel) return null
 
     if (!('collection' in panel) && !('manifest' in panel)) return null
