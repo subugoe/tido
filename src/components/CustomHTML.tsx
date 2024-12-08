@@ -1,11 +1,13 @@
 import { useEffect, useRef, FC } from 'react';
 
 interface CustomHTMLProps {
-  textHtml: string
+  textHtml: string,
+  widthText: string
 }
 
-const CustomHTML: FC<CustomHTMLProps> = ({ textHtml }) => {
+const CustomHTML: FC<CustomHTMLProps> = ({ textHtml, widthText }) => {
   const ref = useRef<HTMLInputElement>(null);
+
 
   useEffect(() => {
     if (ref?.current) {
@@ -13,6 +15,6 @@ const CustomHTML: FC<CustomHTMLProps> = ({ textHtml }) => {
     }
   }, [textHtml]);
 
-  return <div ref={ref} />;
+  return <div style={{width: widthText+'%'}} ref={ref} />;
 };
 export default CustomHTML;
