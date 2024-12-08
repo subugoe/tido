@@ -34,9 +34,10 @@ const TextViewsToggle: FC <TextViewsToggleProps>= ({}) => {
   textViewsTitles.length > 0 &&
   textViewsTitles.map((title, i) => (
         <button
-            className="t-p-1 t-rounded t-mr-3 t-w-8"
+            className="t-p-1 t-rounded t-mr-3 t-w-8 t-h-8"
             key={i}
-            onClick={(e) => handleTextViewClick(e, i)}>
+            onClick={(e) => handleTextViewClick(e, i)}
+            style={{'backgroundColor':(config?.urlConfig.v === i) ? '#E5E7EB': 'transparent'}}>
 
             <CustomHTML textHtml={icons[title]} />
 
