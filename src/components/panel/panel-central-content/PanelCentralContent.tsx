@@ -4,7 +4,8 @@ import { useConfig } from '@/contexts/ConfigContext'
 
 import TextViewOne from '@/components/panel/panel-central-content/TextViewOne';
 import TextView from '@/components/panel/panel-central-content/TextView'
-import SplitView from '@/components/panel/panel-central-content/./SplitView';
+import SplitView from '@/components/panel/panel-central-content/SplitView';
+import ImageView from '@/components/panel/panel-central-content/ImageView'
 
 interface PanelCentralContentProps {
   textHtml: string,
@@ -31,6 +32,9 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ textHtml }) => {
   }
   else if (textViewIndex === 2) {
     return <SplitView textHtml = {textHtml} />
+  }
+  else if (textViewIndex === 3) {
+    return <ImageView />
   }
 
 
