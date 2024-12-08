@@ -9,14 +9,14 @@ interface AppProps {
 const App: FC <AppProps> = ({ customConfig }) => {
 
   const [loading, setLoading] = useState(true)
-  const { config, updateConfig} = useConfig()
+  const { config, setConfig } = useConfig()
 
   useEffect(() => {
     // load Config
     // TODO: url config will need to get read
     function loadConfig() {
       const totalConfig = {...config, ...customConfig}
-      updateConfig(totalConfig)
+      setConfig(totalConfig)
       setLoading(false)
     }
     loadConfig()
