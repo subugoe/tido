@@ -1,9 +1,14 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
+import { createRoot } from 'react-dom/client';
+import { ConfigProvider} from '@/contexts/ConfigContext';
 
-createRoot(document.getElementById('app')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+import './css/preflight.css';
+import './css/style.css';
+
+import App from './App.tsx';
+
+window.Tido = function Tido(config = {}) {
+    createRoot(document.getElementById('app')!).render(<ConfigProvider><App customConfig={config} /></ConfigProvider>);
+};
+
+
+export default window.Tido;

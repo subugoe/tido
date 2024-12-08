@@ -74,6 +74,11 @@ declare global {
         accent: string
     }
 
+    interface Config {
+        globalTree: boolean,
+        panels: Panel[]
+    }
+
 
     interface Content {
         '@context': string,
@@ -177,6 +182,10 @@ declare global {
     interface MessageBoxColors {
         info: string,
         warning: string
+    }
+    interface PanelConfig {
+        collection?: string
+        manifest?: string
     }
 
 
