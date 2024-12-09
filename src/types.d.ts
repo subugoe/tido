@@ -74,7 +74,7 @@ declare global {
         accent: string
     }
 
-    interface Config {
+    interface Config{
         globalTree: boolean,
         panels: Panel[]
     }
@@ -97,6 +97,7 @@ declare global {
         type: string,
         value: string
     }
+
 
     interface Header {
         show: boolean,

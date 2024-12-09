@@ -10,7 +10,7 @@ import ContentTypesToggle from '@/components/panel/ContentTypesToggle';
 import Error from '@/components/Error'
 
 interface PanelProps {
-  url: string | null
+  url: string |null
 }
 
 // prop: url - should be the url of collection or manifest
@@ -47,7 +47,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
   }
 
   async function assignContentTypes(itemData: Item) {
-    if (!itemData.hasOwnProperty('content')) return;
+    if (!('content' in itemData)) return;
     if (itemData.content.length === 0) return;
 
     const content: Content[] = itemData.content;
@@ -78,14 +78,14 @@ const Panel: FC <PanelProps> = ({ url }) => {
        }
       )
 
-    } catch (e: any) {
-      setError('Error while loading document data of this url '+ url)
-      return
+    } catch (e) {
+        setError(e.message)
+        return
     }
 
     // read item data
     
-    let itemUrl: string | null = await getItemUrl(documentData);
+    const itemUrl: string | null = await getItemUrl(documentData);
     if (!itemUrl) return
 
     let itemData: Item
@@ -101,7 +101,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
         itemData = value
        }
       )
-    } catch (e: any) {
+    } catch (e) {
       setError(e.message)
       return
     }
@@ -114,7 +114,6 @@ const Panel: FC <PanelProps> = ({ url }) => {
   }
 
   
-
 
   useEffect(() => {
     // read Api data from url
@@ -139,7 +138,7 @@ const Panel: FC <PanelProps> = ({ url }) => {
             setActiveContentTypeIndex={setActiveContentTypeIndex}
           />
       </div>
-      <CustomHTML textHtml={text}/>
+      <CustomHTML textHtml={text} widthText='100%'/>
     </div>
   );
 };

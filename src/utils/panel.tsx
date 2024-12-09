@@ -7,7 +7,7 @@ export function getCollectionUrl(panel: Panel): string | null {
   return panel.collection ?? null
 }
 
-export function getPanel(url: string | undefined | null, config: Config | undefined): Panel | undefined {
+export function getPanel(url: string |undefined | null, config: Config | undefined): PanelConfig | undefined {
   if (!config) throw new Error('Config is not defined')
   if (!url) throw new Error('url is undefined or null')
   return config.panels.find((panel) => {

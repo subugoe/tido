@@ -9,7 +9,7 @@ interface ConfigProvider {
   setOpenedPanels?: (panels: PanelConfig[]) => void
 }
 
-interface ConfigProviderProps {
+interface ConfigProviderProps{
   children?: ReactNode
 }
 

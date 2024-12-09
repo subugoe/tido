@@ -3,11 +3,11 @@ import Panel from '@/components/panel/Panel';
 import { useConfig } from '@/contexts/ConfigContext';
 import { getManifestUrl, getCollectionUrl } from '@/utils/panel';
 
-const PanelsWrapper: FC = ({}) => {
+const PanelsWrapper: FC = () => {
   const { config, openedPanels, setOpenedPanels } = useConfig();
 
   useEffect(() => {
-    if (!config || !config.panels) {
+    if (!config ||!config.panels) {
       console.error('Please provide the config object or the panels array in config')
       return
     }
