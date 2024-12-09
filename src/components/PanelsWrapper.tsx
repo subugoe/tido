@@ -6,19 +6,15 @@ import { getManifestUrl, getCollectionUrl } from '@/utils/panel';
 const PanelsWrapper: FC = ({}) => {
   const { config, openedPanels, setOpenedPanels } = useConfig();
 
-  function initOpenedPanels(panels: PanelConfig[]) {
-    if (setOpenedPanels) {
-      setOpenedPanels(panels);
-    }
-  }
-
   useEffect(() => {
     if (!config || !config.panels) {
       console.error('Please provide the config object or the panels array in config')
       return
     }
-    initOpenedPanels(config.panels);
-  }, []);
+    if (setOpenedPanels) {
+      setOpenedPanels(config.panels)
+    }
+  }, [openedPanels]);
 
   
   const panels = openedPanels ?

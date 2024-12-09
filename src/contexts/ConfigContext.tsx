@@ -4,7 +4,7 @@ const ConfigContext = createContext({});
 
 interface ConfigProvider {
   config?: Config,
-  setConfig: (newConfig: Config) => void,
+  setConfig?: (newConfig: Config) => void,
   openedPanels?: PanelConfig[],
   setOpenedPanels?: (panels: PanelConfig[]) => void
 }
@@ -16,7 +16,6 @@ interface ConfigProviderProps {
 const ConfigProvider: FC<ConfigProviderProps> = ({ children }) => {
   const [config, setConfig]  = useState <Config>(defaultConfig);
   const [openedPanels, setOpenedPanels] = useState(defaultConfig.panels);
-
 
   return (
     <ConfigContext.Provider

@@ -16,7 +16,9 @@ const App: FC <AppProps> = ({ customConfig }) => {
     // TODO: url config will need to get read
     function loadConfig() {
       const totalConfig = {...config, ...customConfig}
-      setConfig(totalConfig)
+      if (setConfig) {
+        setConfig(totalConfig)
+      }
       setLoading(false)
     }
     loadConfig()
