@@ -1,8 +1,8 @@
 import { FC, useState, useEffect } from 'react';
 import {useConfig} from '@/contexts/ConfigContext'
 
-import { readApi } from '@/utils/http';
-import { getPanel, readHtml, getUrlActiveContentText } from '@/utils/panel';
+import { get } from '@/utils/http';
+import {  readHtml, getUrlActiveContentText } from '@/utils/panel';
 
 
 import CustomHTML from '@/components/CustomHTML';
@@ -10,40 +10,25 @@ import ContentTypesToggle from '@/components/panel/ContentTypesToggle';
 import Error from '@/components/Error'
 
 interface PanelProps {
-  url: string |null
+  panelConfig: PanelConfig
 }
 
 // prop: url - should be the url of collection or manifest
-const Panel: FC <PanelProps> = ({ url }) => {
+const Panel: FC <PanelProps> = ({ panelConfig }) => {
   const { config } = useConfig()
   const [text, setText] = useState<string>('');
+
   const [contentTypes, setContentTypes] = useState<string[]>([]);
   const [activeContentTypeIndex, setActiveContentTypeIndex] = useState(0);
 
   const [error, setError] = useState<boolean | string>(false)
   const [loading, setLoading] = useState<boolean>(true)
 
+  let documentType: string;
 
-  async function getItemUrl(documentData: Manifest | Collection): Promise<string | null> {
-    // if collection - then we should read the api data from the manifest and get its first sequence item id
-    // if manifest - we retrieve the first sequence item id
 
-    // panel in the config having a document with the prop url
-    const panel: PanelConfig | undefined = getPanel(url, config)
-    if (!panel) return null
-
-    if (!('collection' in panel) && !('manifest' in panel)) return null
-
-    if ('collection' in panel) {
-      // 'title' in document -> document is collection
-      const manifestData = await readApi(documentData.sequence[0].id);
-      return manifestData.sequence[0].id;
-    }
-
-    if ('manifest' in panel) {
-      return documentData.sequence[0].id;
-    }
-    return null
+   function getItemUrl(manifestData: Manifest, itemIndex: number): string | null {
+    return manifestData.sequence[itemIndex].id
   }
 
   async function assignContentTypes(itemData: Item) {
@@ -60,32 +45,51 @@ const Panel: FC <PanelProps> = ({ url }) => {
     return value.split('type=')[1];
   }
 
-  async function readData(url: string | undefined | null) {
-    if (!url || url === '') return 
-    let documentData: Manifest | Collection;
-
-    // read document (collection/manifest) data
+  function setDocumentType(panelConfig: PanelConfig) {
     try {
-      const apiData = await fetch(url);
-      if (!apiData.ok) {
-        throw Error('Error while loading document data of this url ', url)
+      if (!('entrypoint' in panelConfig)) {
+        throw Error('Config of this panel needs to have "entrypoint"')
       }
-      if (!apiData.headers.get('content-type')?.includes('application/json')) {
-        throw Error('Response from reading this document (collection/manifest) is not a json object')
+      if (!(panelConfig.entrypoint.includes('manifest')) && !(panelConfig.entrypoint.includes('collection'))) {
+        throw Error('Entrypoint in the panel config is provided wrong. It should belong to a collection or manifest JSON')
       }
-      await apiData.json().then((value) => {
-        documentData = value
-       }
-      )
-
-    } catch (e) {
-        setError(e.message)
-        return
+      if (panelConfig.entrypoint.includes('collection')) {
+        documentType = 'collection'
+      }
+      if (panelConfig.entrypoint.includes('manifest')) {
+        documentType = 'manifest'
+      }
+    } catch(e) {
+      setError(e.message)
+      return
     }
+  }
 
-    // read item data
-    
-    const itemUrl: string | null = await getItemUrl(documentData);
+  async function readData(panelConfig: PanelConfig) {
+    if (!panelConfig || Object.keys(panelConfig).length === 0) return 
+
+    if (error) return
+    // read document (collection/manifest) data
+    const response: Manifest | Collection | null = await get(panelConfig.entrypoint)
+    if (!response) {
+      //TODO: setError
+      //setError(response.error)
+    }
+    setLoading(false)
+    let itemUrl, manifestData: Manifest, manifestUrl
+
+    if (documentType === 'collection') {
+      const manifestIndex = panelConfig.m
+      manifestUrl =  response?.sequence[manifestIndex].id
+    }
+    else if (documentType === 'manifest') {
+      manifestUrl = panelConfig.entrypoint
+    }
+    manifestData = await get(manifestUrl)
+    if (manifestData) {
+      itemUrl = getItemUrl(manifestData, panelConfig.i)
+    }
+    console.log('item url', itemUrl)
     if (!itemUrl) return
 
     let itemData: Item
@@ -116,9 +120,10 @@ const Panel: FC <PanelProps> = ({ url }) => {
   
 
   useEffect(() => {
+    setDocumentType(panelConfig)
     // read Api data from url
-    readData(url);
-  }, [url, activeContentTypeIndex]);
+    readData(panelConfig);
+  }, [panelConfig, activeContentTypeIndex]);
 
 
   if (error) {

@@ -1,9 +1,6 @@
-interface ErrorInterface {
-  error: string
-}
 
-export async function get(url: string): Promise<ErrorInterface | Manifest | Collection> {
-  let response = {}
+export async function get(url: string): Promise<Manifest | Collection | null> {
+  let response: Manifest | Collection | null = null
   try {
     const apiData = await fetch(url);
     if (!apiData.ok) {
@@ -18,9 +15,7 @@ export async function get(url: string): Promise<ErrorInterface | Manifest | Coll
     )
 
   } catch (e) {
-      response['error'] = e.message
+      return null
   }
-  console.log('response', response)
   return response
-
 }

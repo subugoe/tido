@@ -76,7 +76,7 @@ declare global {
 
     interface Config{
         globalTree: boolean,
-        panels: Panel[]
+        panels: PanelConfig[]
     }
 
 
@@ -185,8 +185,9 @@ declare global {
         warning: string
     }
     interface PanelConfig {
-        collection?: string
-        manifest?: string
+        entrypoint: string,
+        m?: number,
+        i: number
     }
 
 

@@ -1,9 +1,9 @@
 // get the url of the document (collection or manifest) which will be shown in the panel
-export function getManifestUrl(panel: Panel): string | null {
+export function getManifestUrl(panel: PanelConfig): string | null {
   return panel.manifest ?? null
 }
 
-export function getCollectionUrl(panel: Panel): string | null {
+export function getCollectionUrl(panel: PanelConfig): string | null {
   return panel.collection ?? null
 }
 

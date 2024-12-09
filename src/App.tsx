@@ -16,6 +16,7 @@ const App: FC <AppProps> = ({ customConfig }) => {
     // TODO: url config will need to get read
     function loadConfig() {
       const totalConfig = {...config, ...customConfig}
+      console.log('total Config', totalConfig)
       if (setConfig) {
         setConfig(totalConfig)
       }
@@ -30,6 +31,7 @@ const App: FC <AppProps> = ({ customConfig }) => {
 
   return (
     <div className="tido">
+        <span>number of panels {config?.panels.length}</span>
         <PanelsWrapper />
     </div>
   );
