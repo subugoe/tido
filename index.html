@@ -27,8 +27,19 @@
 <script type="module" src="/src/main.tsx"></script>
 <script>
   window.addEventListener('load', function () {
-    window.tido = new window.Tido();
-  });
+    window.tido = new window.Tido({
+      globalTree: true,
+      panels: [
+        {
+          entrypoint:
+            'https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json',
+          m: 3,
+          i: 14
+        }
+      ],
+      }
+    )
+  })
   </script>
 </body>
 </html>
