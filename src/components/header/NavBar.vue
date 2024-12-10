@@ -63,15 +63,19 @@ const hasNext = computed<boolean>(() => {
 
 const [nextPageLabel, previousPageLabel, nextDocumentLabel, previousDocumentLabel]: string[] = getNavButtonsLabels(configStore.config)
 
-const nextButtonLabel = computed<string>(() => (
-itemIndex.value === manifest.value.sequence.length - 1
-  ? `${nextDocumentLabel}`
-  : `${nextPageLabel}`));
+const nextButtonLabel = computed<string>((lastValue: string) => {
+  if (itemIndex.value === -1) return lastValue;
+
+ return itemIndex.value === manifest.value.sequence.length - 1
+    ? `${nextDocumentLabel}`
+    : `${nextPageLabel}`;
+});
 
 
-const prevButtonLabel = computed<string>(() => (itemIndex.value === 0
-  ? `${previousDocumentLabel}`
-  : `${previousPageLabel}`));
+const prevButtonLabel = computed<string>((lastValue: string) => {
+  if (itemIndex.value === -1) return lastValue;
+  return itemIndex.value === 0 ? `${previousDocumentLabel}` : `${previousPageLabel}`;
+});
 
 function prev() {
   const prevIndex = itemIndex.value - 1;
