@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react';
 import {useConfig} from '@/contexts/ConfigContext'
 
-import { get } from '@/utils/http';
+import { get, isError } from '@/utils/http';
 import {  readHtml, getUrlActiveContentText } from '@/utils/panel';
 
 
@@ -16,6 +16,7 @@ interface PanelProps {
 // prop: url - should be the url of collection or manifest
 const Panel: FC <PanelProps> = ({ panelConfig }) => {
   const { config } = useConfig()
+  //const { globalError, setGlobalError } = useError()
   const [text, setText] = useState<string>('');
 
   const [contentTypes, setContentTypes] = useState<string[]>([]);
@@ -27,7 +28,7 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
   let documentType: string;
 
 
-   function getItemUrl(manifestData: Manifest, itemIndex: number): string | null {
+  function getItemUrl(manifestData: Manifest, itemIndex: number): string | null {
     return manifestData.sequence[itemIndex].id
   }
 
@@ -65,50 +66,54 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
     }
   }
 
+  function isDataFetchedCorrectly(response, url: string) {
+    if (isError(response)) {
+      setError(response.message)
+      return false
+    }
+    if (!response) {
+      setError('The data was not parsed correctly from url: '+url+'since its data format is not defined')
+      return false
+    }
+    return true
+  }
+
   async function readData(panelConfig: PanelConfig) {
+    let documentData: Collection | Manifest
     if (!panelConfig || Object.keys(panelConfig).length === 0) return 
 
     if (error) return
+    let response
     // read document (collection/manifest) data
-    const response: Manifest | Collection | null = await get(panelConfig.entrypoint)
-    if (!response) {
-      //TODO: setError
-      //setError(response.error)
-    }
+    response = await get(panelConfig.entrypoint)
+    if (!isDataFetchedCorrectly(response, panelConfig.entrypoint)) return
+    documentData = response
+    
     setLoading(false)
-    let itemUrl, manifestData: Manifest, manifestUrl
+    let itemUrl, manifestData: Manifest, itemData: Item,manifestUrl
 
+
+    // determine manifest url
     if (documentType === 'collection') {
       const manifestIndex = panelConfig.m
-      manifestUrl =  response?.sequence[manifestIndex].id
+      manifestUrl =  documentData?.sequence[manifestIndex].id
     }
     else if (documentType === 'manifest') {
       manifestUrl = panelConfig.entrypoint
     }
-    manifestData = await get(manifestUrl)
-    if (manifestData) {
-      itemUrl = getItemUrl(manifestData, panelConfig.i)
-    }
-    console.log('item url', itemUrl)
+
+    // read manifest data
+    response = await get(manifestUrl)
+    if (!isDataFetchedCorrectly(response, manifestUrl)) return
+    manifestData = response
+    itemUrl = getItemUrl(manifestData, panelConfig.i)
     if (!itemUrl) return
 
-    let itemData: Item
-    try {
-      const response = await fetch(itemUrl)
-      if (!response.ok) {
-        throw Error('failed to fetch from item URL')
-      }
-      if (!response.headers.get('content-type')?.includes('application/json')) {
-        throw Error('Response from reading item is not a json object')
-      }
-      await response.json().then((value) => {
-        itemData = value
-       }
-      )
-    } catch (e) {
-      setError(e.message)
-      return
-    }
+    // read Item data
+    response = await get(itemUrl)
+    if (!isDataFetchedCorrectly(response, itemUrl)) return
+    itemData = response
+
     await assignContentTypes(itemData);
     const itemHtmlUrl = getUrlActiveContentText(itemData.content, activeContentTypeIndex);
 

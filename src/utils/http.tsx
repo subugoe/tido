@@ -1,21 +1,32 @@
 
-export async function get(url: string): Promise<Manifest | Collection | null> {
-  let response: Manifest | Collection | null = null
+export async function get(url: string) {
+  // generic function to fetch data from a certain url and parse it according to its content type
+  let response = null
+  let parsedData = null
+  const contentTypesParsedWithBlob = ['application/pdf', 'image/png', 'image/jpeg', 'audio/mpeg', 'video/mp4']
+  const textContentTypes = ['text/plain', 'text/html', 'text/css']
   try {
-    const apiData = await fetch(url);
-    if (!apiData.ok) {
-      throw Error('Error while loading document data of this url '+ url)
+    response = await fetch(url);
+    if (!response.ok) {
+      throw Error('Error while loading data from this url '+ url)
     }
-    if (!apiData.headers.get('content-type')?.includes('application/json')) {
-      throw Error('Response from reading this document (collection/manifest) is not a json object')
+    const responseContentType = response.headers.get('content-type')
+    if (responseContentType?.includes('application/json')) {
+      parsedData = await response.json()
     }
-    await apiData.json().then((value) => {
-      response = { ...value }
-     }
-    )
-
+    else if (textContentTypes.some(el => responseContentType?.includes(el))) {
+      parsedData = await response.text()
+    }
+    else if (contentTypesParsedWithBlob.some(el => responseContentType?.includes(el))) {
+      parsedData = await response.blob()
+    }
   } catch (e) {
-      return null
-  }
-  return response
+      return e
+   }
+  if (parsedData) return parsedData
+  return '' // the data could not be parsed according to the defined content formats
+}
+
+export function isError(obj){
+  return Object.prototype.toString.call(obj) === "[object Error]";
 }
