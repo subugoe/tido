@@ -16,7 +16,6 @@ interface PanelProps {
 // prop: url - should be the url of collection or manifest
 const Panel: FC <PanelProps> = ({ panelConfig }) => {
   const { config } = useConfig()
-  //const { globalError, setGlobalError } = useError()
   const [text, setText] = useState<string>('');
 
   const [contentTypes, setContentTypes] = useState<string[]>([]);
@@ -66,7 +65,7 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
     }
   }
 
-  function isDataFetchedCorrectly(response, url: string) {
+  function isDataFetchedCorrectly(response, url: string): boolean {
     if (isError(response)) {
       setError(response.message)
       return false

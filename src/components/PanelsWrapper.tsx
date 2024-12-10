@@ -1,20 +1,9 @@
 import { FC, useEffect } from 'react';
 import Panel from '@/components/panel/Panel';
 import { useConfig } from '@/contexts/ConfigContext';
-import { getManifestUrl, getCollectionUrl } from '@/utils/panel';
 
 const PanelsWrapper: FC = () => {
-  const { config, setOpenedPanels } = useConfig();
-
-  useEffect(() => {
-    if (!config ||!config.panels) {
-      console.error('Please provide the config object or the panels array in config')
-      return
-    }
-    if (setOpenedPanels) {
-      setOpenedPanels(config.panels)
-    }
-  }, [config]);
+  const { config } = useConfig();
 
   const openedPanels = config?.panels
   const panels = openedPanels ?
