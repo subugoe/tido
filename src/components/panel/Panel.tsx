@@ -2,12 +2,12 @@ import { FC, useState, useEffect } from 'react'
 import {useConfig} from '@/contexts/ConfigContext'
 
 import { get, isError } from '@/utils/http'
-import {  readHtml, getUrlActiveContentText } from '@/utils/panel'
+import {  readHtml, getUrlActiveContentText, getManifestUrl } from '@/utils/panel'
 
 
 import CustomHTML from '@/components/CustomHTML'
 import ContentTypesToggle from '@/components/panel/ContentTypesToggle'
-import Error from '@/components/Error'
+import ErrorComponent from '@/components/ErrorComponent'
 
 interface PanelProps {
   panelConfig: PanelConfig
@@ -50,13 +50,16 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
       if (!('entrypoint' in panelConfig)) {
         throw Error('Config of this panel needs to have "entrypoint"')
       }
-      if (!(panelConfig.entrypoint.includes('manifest')) && !(panelConfig.entrypoint.includes('collection'))) {
-        throw Error('Entrypoint in the panel config is provided wrong. It should belong to a collection or manifest JSON')
+      const entrypointType = panelConfig.entrypoint.type.toLowerCase()
+
+      if (!(entrypointType === 'manifest') 
+            && !(entrypointType === 'collection')) {
+        throw Error('Entrypoint in the panel config is provided wrong. It should have either a `collection` or `manifest` type')
       }
-      if (panelConfig.entrypoint.includes('collection')) {
+      if (entrypointType === 'collection') {
         documentType = 'collection'
       }
-      if (panelConfig.entrypoint.includes('manifest')) {
+      if (entrypointType === 'manifest') {
         documentType = 'manifest'
       }
     } catch(e) {
@@ -72,37 +75,33 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
 
     if (error) return
     let response
+    let itemUrl, manifestData: Manifest, itemData: Item,manifestUrl
     // read document (collection/manifest) data
     try {
-      response = await get(panelConfig.entrypoint)
-    } catch(err) {
+      const documentType = panelConfig.entrypoint.type?.toLowerCase()
+      console.log('document type', documentType)
+      if (!documentType) throw Error('Error: please define the type of document for the entrypoint')
+      if (!(documentType === 'collection') && !(documentType === 'manifest')) throw Error('Error: please define document type (`collection` or`manifest`) for the entrypoint')
+      console.log('just before getting response')
+      response = await get(panelConfig.entrypoint.url)
+      documentData = documentType === 'collection' ? response as Collection : response as Manifest
+      const manifestUrl = getManifestUrl(documentData, documentType)
+      
+      // read manifest data
+      response = await get(manifestUrl)
+      manifestData = response as Manifest
+
+    } catch (err) {
+        console.log('catching error message', err.message)
         setError(err.message)
         return
     }
-    documentData = response
     
-    setLoading(false)
-    let itemUrl, manifestData: Manifest, itemData: Item,manifestUrl
-
-
-    // determine manifest url
-    if (documentType === 'collection') {
-      const manifestIndex = panelConfig.m
-      manifestUrl =  documentData?.sequence[manifestIndex].id
-    }
-    else if (documentType === 'manifest') {
-      manifestUrl = panelConfig.entrypoint
-    }
-
-    // read manifest data
-    try {
-      response = await get(manifestUrl)
-    } catch (err) {
-        setError(err.message) 
-        return
-     }
     
-    manifestData = response
+
+    /*
+    
+
     itemUrl = getItemUrl(manifestData, panelConfig.i)
     if (!itemUrl) return
 
@@ -121,6 +120,7 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
 
     const textInHtml = await readHtml(itemHtmlUrl)
     setText(textInHtml)
+    */
     setLoading(false)
   }
 
@@ -134,7 +134,7 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
 
 
   if (error) {
-    return <Error message={error} />
+    return <ErrorComponent message={error} />
   }
 
   if (loading) {

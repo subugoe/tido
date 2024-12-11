@@ -1,9 +1,9 @@
-import { FC, useEffect } from 'react';
-import Panel from '@/components/panel/Panel';
-import { useConfig } from '@/contexts/ConfigContext';
+import { FC } from 'react'
+import Panel from '@/components/panel/Panel'
+import { useConfig } from '@/contexts/ConfigContext'
 
 const PanelsWrapper: FC = () => {
-  const { config } = useConfig();
+  const { config } = useConfig()
 
   const openedPanels = config?.panels
   const panels = openedPanels ?
@@ -12,10 +12,10 @@ const PanelsWrapper: FC = () => {
       <div key={i} className="t-mr-6">
         <Panel panelConfig = {panel} />
       </div>
-    )): <div> Error with loading panels </div>;
+    )): <div> Error with loading panels </div>
 
   
-  return <div className="t-flex t-flex-row">{panels}</div>;
-};
+  return <div className="t-flex t-flex-row">{panels}</div>
+}
 
-export default PanelsWrapper;
+export default PanelsWrapper

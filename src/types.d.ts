@@ -98,6 +98,11 @@ declare global {
         value: string
     }
 
+    interface Entrypoint {
+        url: string,
+        type: string
+    }
+
 
     interface Header {
         show: boolean,
@@ -185,9 +190,7 @@ declare global {
         warning: string
     }
     interface PanelConfig {
-        entrypoint: string,
-        m?: number,
-        i: number
+        entrypoint: Entrypoint
     }
 
 
