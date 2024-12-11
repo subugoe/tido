@@ -23,10 +23,10 @@ export async function readHtml(url: string | undefined): Promise<string> {
     console.error('url of the html content text file is undefined!!')
     return ''
   }
-  const data = await fetch(url);
-  const text = await data.text();
+  const data = await fetch(url)
+  const text = await data.text()
 
-  return text;
+  return text
 }
 
 

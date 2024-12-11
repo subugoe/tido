@@ -1,12 +1,12 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react'
 import {useConfig} from '@/contexts/ConfigContext'
 
-import { get, isError } from '@/utils/http';
-import {  readHtml, getUrlActiveContentText } from '@/utils/panel';
+import { get, isError } from '@/utils/http'
+import {  readHtml, getUrlActiveContentText } from '@/utils/panel'
 
 
-import CustomHTML from '@/components/CustomHTML';
-import ContentTypesToggle from '@/components/panel/ContentTypesToggle';
+import CustomHTML from '@/components/CustomHTML'
+import ContentTypesToggle from '@/components/panel/ContentTypesToggle'
 import Error from '@/components/Error'
 
 interface PanelProps {
@@ -16,15 +16,15 @@ interface PanelProps {
 // prop: url - should be the url of collection or manifest
 const Panel: FC <PanelProps> = ({ panelConfig }) => {
   const { config } = useConfig()
-  const [text, setText] = useState<string>('');
+  const [text, setText] = useState<string>('')
 
-  const [contentTypes, setContentTypes] = useState<string[]>([]);
-  const [activeContentTypeIndex, setActiveContentTypeIndex] = useState(0);
+  const [contentTypes, setContentTypes] = useState<string[]>([])
+  const [activeContentTypeIndex, setActiveContentTypeIndex] = useState(0)
 
   const [error, setError] = useState<boolean | string>(false)
   const [loading, setLoading] = useState<boolean>(true)
 
-  let documentType: string;
+  let documentType: string
 
 
   function getItemUrl(manifestData: Manifest, itemIndex: number): string | null {
@@ -32,17 +32,17 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
   }
 
   async function assignContentTypes(itemData: Item) {
-    if (!('content' in itemData)) return;
-    if (itemData.content.length === 0) return;
+    if (!('content' in itemData)) return
+    if (itemData.content.length === 0) return
 
-    const content: Content[] = itemData.content;
-    const types: string[] = content.map((item) => getContentType(item.type));
-    setContentTypes(types);
+    const content: Content[] = itemData.content
+    const types: string[] = content.map((item) => getContentType(item.type))
+    setContentTypes(types)
   }
 
   function getContentType(value: string): string {
-    if (!value) return '';
-    return value.split('type=')[1];
+    if (!value) return ''
+    return value.split('type=')[1]
   }
 
   function setDocumentType(panelConfig: PanelConfig) {
@@ -113,11 +113,11 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
     if (!isDataFetchedCorrectly(response, itemUrl)) return
     itemData = response
 
-    await assignContentTypes(itemData);
-    const itemHtmlUrl = getUrlActiveContentText(itemData.content, activeContentTypeIndex);
+    await assignContentTypes(itemData)
+    const itemHtmlUrl = getUrlActiveContentText(itemData.content, activeContentTypeIndex)
 
-    const textInHtml = await readHtml(itemHtmlUrl);
-    setText(textInHtml);
+    const textInHtml = await readHtml(itemHtmlUrl)
+    setText(textInHtml)
     setLoading(false)
   }
 
@@ -126,8 +126,8 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
   useEffect(() => {
     setDocumentType(panelConfig)
     // read Api data from url
-    readData(panelConfig);
-  }, [panelConfig, activeContentTypeIndex]);
+    readData(panelConfig)
+  }, [panelConfig, activeContentTypeIndex])
 
 
   if (error) {
@@ -149,7 +149,7 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
       </div>
       <CustomHTML textHtml={text} widthText='100%'/>
     </div>
-  );
-};
+  )
+}
 
-export default Panel;
+export default Panel

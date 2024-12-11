@@ -6,7 +6,7 @@ export async function get(url: string) {
   const contentTypesParsedWithBlob = ['application/pdf', 'image/png', 'image/jpeg', 'audio/mpeg', 'video/mp4']
   const textContentTypes = ['text/plain', 'text/html', 'text/css']
   try {
-    response = await fetch(url);
+    response = await fetch(url)
     if (!response.ok) {
       throw Error('Error while loading data from this url '+ url)
     }
@@ -28,5 +28,5 @@ export async function get(url: string) {
 }
 
 export function isError(obj){
-  return Object.prototype.toString.call(obj) === "[object Error]";
+  return Object.prototype.toString.call(obj) === '[object Error]'
 }

@@ -32,6 +32,7 @@ export default tseslint.config(
           allowTemplateLiterals: true,
         },
       ],
+      semi: ["error", "never"]
     },
   }
 );
