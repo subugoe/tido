@@ -1,11 +1,12 @@
 
-export async function get(url: string): Promise <any> {
+export async function get(url: string | null): Promise <any> {
   // generic function to fetch data from a certain url and parse it according to its content type
   let response = null
   let parsedData = null
   const contentTypesParsedWithBlob = ['application/pdf', 'image/png', 'image/jpeg', 'audio/mpeg', 'video/mp4']
-  const textContentTypes = ['text/plain', 'text/html', 'text/css']
+  const textContentTypes = ['text/xhtml+xml', 'text/plain', 'text/html', 'text/css']
   try {
+    if (!url) throw Error('You are trying to fetch from a url which is not found!')
     response = await fetch(url)
     if (!response.ok) {
       throw Error('Error while loading data from this url '+ url)

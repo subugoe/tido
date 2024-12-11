@@ -1,3 +1,5 @@
+import { get } from "@/utils/http"
+
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string): string {
   let manifestUrl: string = ''
@@ -11,39 +13,44 @@ export function getManifestUrl(documentData: Manifest | Collection, documentType
   return manifestUrl
 }
 
+export async function getManifestData(documentData: Collection | Manifest, documentType: string): Promise<Manifest> {
+  
+  const manifestUrl = getManifestUrl(documentData, documentType)
+  try {
+    const data = await get(manifestUrl)
+    return data
+  } 
+  catch(err) { 
+      throw err
+  }
+}
+
+
+export async function getItemData(manifestData: Manifest): Promise<Item> {
+  try {
+    if (!manifestData.sequence || manifestData.sequence.length === 0) {
+      throw Error ('The items of manifest '+ manifestData.label??+ 'are not defined or are empty!!')
+    }
+     const itemUrl = manifestData?.sequence[0].id
+     const response = await get(itemUrl)
+     return response
+  } catch (err) {
+    throw err
+  }
+}
+
 export function getCollectionUrl(panel: PanelConfig): string | null {
   return panel.collection ?? null
 }
 
-export function getPanel(url: string |undefined | null, config: Config | undefined): PanelConfig | undefined {
-  if (!config) throw new Error('Config is not defined')
-  if (!url) throw new Error('url is undefined or null')
-  return config.panels.find((panel) => {
-    if ('collection' in panel) return panel.collection === url
-    if ('manifest' in panel) return panel.manifest === url
-  })
-}
 
 
-export async function readHtml(url: string | undefined): Promise<string> {
-  // url: the url of html file of the item
-  if (!url) {
-    console.error('url of the html content text file is undefined!!')
-    return ''
-  }
-  const data = await fetch(url)
-  const text = await data.text()
-
-  return text
-}
-
-
-export function getUrlActiveContentText(content: Content[], activeContentTypeIndex: number): string | undefined {
-  if (activeContentTypeIndex < 0 || activeContentTypeIndex >= content.length) return undefined
+export function getUrlActiveContentText(content: Content[], activeContentTypeIndex: number): string | null {
+  if (activeContentTypeIndex < 0 || activeContentTypeIndex >= content.length) return null
   const activeContent: Content | undefined = content[activeContentTypeIndex]
   if (!activeContent) {
     console.error('the current text content was not found')
-    return undefined
+    return null
   }
-  return activeContent.url ? activeContent.url : undefined
+  return activeContent.url ? activeContent.url : null
 }

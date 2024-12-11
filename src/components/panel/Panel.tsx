@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react'
 import {useConfig} from '@/contexts/ConfigContext'
 
 import { get, isError } from '@/utils/http'
-import {  readHtml, getUrlActiveContentText, getManifestUrl } from '@/utils/panel'
+import { getUrlActiveContentText, getManifestData, getItemData } from '@/utils/panel'
 
 
 import CustomHTML from '@/components/CustomHTML'
@@ -27,9 +27,6 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
   let documentType: string
 
 
-  function getItemUrl(manifestData: Manifest, itemIndex: number): string | null {
-    return manifestData.sequence[itemIndex].id
-  }
 
   async function assignContentTypes(itemData: Item) {
     if (!('content' in itemData)) return
@@ -75,53 +72,37 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
 
     if (error) return
     let response
-    let itemUrl, manifestData: Manifest, itemData: Item,manifestUrl
+    let manifestData: Manifest, itemData: Item
     // read document (collection/manifest) data
     try {
       const documentType = panelConfig.entrypoint.type?.toLowerCase()
-      console.log('document type', documentType)
       if (!documentType) throw Error('Error: please define the type of document for the entrypoint')
       if (!(documentType === 'collection') && !(documentType === 'manifest')) throw Error('Error: please define document type (`collection` or`manifest`) for the entrypoint')
-      console.log('just before getting response')
+
+      // read Document data
       response = await get(panelConfig.entrypoint.url)
       documentData = documentType === 'collection' ? response as Collection : response as Manifest
-      const manifestUrl = getManifestUrl(documentData, documentType)
-      
-      // read manifest data
-      response = await get(manifestUrl)
+
+      // read Manifest data
+      response = await getManifestData(documentData, documentType)
       manifestData = response as Manifest
 
+      // read item data
+      response = await getItemData(manifestData)
+      itemData = response as Item
+
+      await assignContentTypes(itemData)
+      const itemHtmlUrl = getUrlActiveContentText(itemData.content, activeContentTypeIndex)
+
+      const textInHtml = await get(itemHtmlUrl)
+      setText(textInHtml)
+      
+      setLoading(false)
+
     } catch (err) {
-        console.log('catching error message', err.message)
         setError(err.message)
         return
     }
-    
-    
-
-    /*
-    
-
-    itemUrl = getItemUrl(manifestData, panelConfig.i)
-    if (!itemUrl) return
-
-    // read Item data
-    try {
-      response = await get(itemUrl)
-    } catch(err) {
-        setError(err.message)
-        return
-     }
-
-    itemData = response
-
-    await assignContentTypes(itemData)
-    const itemHtmlUrl = getUrlActiveContentText(itemData.content, activeContentTypeIndex)
-
-    const textInHtml = await readHtml(itemHtmlUrl)
-    setText(textInHtml)
-    */
-    setLoading(false)
   }
 
   
