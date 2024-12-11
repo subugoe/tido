@@ -1,6 +1,14 @@
 // get the url of the document (collection or manifest) which will be shown in the panel
-export function getManifestUrl(panel: PanelConfig): string | null {
-  return panel.manifest ?? null
+export function getManifestUrl(documentData: Manifest | Collection, documentType: string): string {
+  let manifestUrl: string = ''
+  if (documentType === 'collection') {
+    manifestUrl =  documentData?.sequence[0].id
+  }
+  else if (documentType === 'manifest') {
+    manifestUrl = documentData?.id
+  }
+
+  return manifestUrl
 }
 
 export function getCollectionUrl(panel: PanelConfig): string | null {
