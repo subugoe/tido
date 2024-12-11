@@ -65,15 +65,8 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
     }
   }
 
-  function isDataFetchedCorrectly(response, url: string): boolean {
-    if (isError(response)) {
-      setError(response.message)
-      return false
-    }
-    if (!response) {
-      setError('The data was not parsed correctly from url: '+url+'since its data format is not defined')
-      return false
-    }
+  function isDataFetchedCorrectly(response): boolean {
+    if (isError(response) || !response) return false
     return true
   }
 
@@ -85,7 +78,10 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
     let response
     // read document (collection/manifest) data
     response = await get(panelConfig.entrypoint)
-    if (!isDataFetchedCorrectly(response, panelConfig.entrypoint)) return
+    if (!isDataFetchedCorrectly(response)) {
+      setError('The data could not be fetched correctly from '+ panelConfig.entrypoint)
+      return
+    }
     documentData = response
     
     setLoading(false)
@@ -103,14 +99,20 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
 
     // read manifest data
     response = await get(manifestUrl)
-    if (!isDataFetchedCorrectly(response, manifestUrl)) return
+    if (!isDataFetchedCorrectly(response)) {
+      setError('The data could not be fetched correctly from '+ manifestUrl)
+      return
+    }
     manifestData = response
     itemUrl = getItemUrl(manifestData, panelConfig.i)
     if (!itemUrl) return
 
     // read Item data
     response = await get(itemUrl)
-    if (!isDataFetchedCorrectly(response, itemUrl)) return
+    if (!isDataFetchedCorrectly(response)) {
+      setError('The data could not be fetched correctly from '+ itemUrl)
+      return
+    } 
     itemData = response
 
     await assignContentTypes(itemData)

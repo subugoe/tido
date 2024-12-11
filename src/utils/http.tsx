@@ -1,5 +1,5 @@
 
-export async function get(url: string) {
+export async function get<T>(url: string): Promise <T> {
   // generic function to fetch data from a certain url and parse it according to its content type
   let response = null
   let parsedData = null
