@@ -65,10 +65,6 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
     }
   }
 
-  function isDataFetchedCorrectly(response): boolean {
-    if (isError(response) || !response) return false
-    return true
-  }
 
   async function readData(panelConfig: PanelConfig) {
     let documentData: Collection | Manifest
@@ -77,10 +73,11 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
     if (error) return
     let response
     // read document (collection/manifest) data
-    response = await get(panelConfig.entrypoint)
-    if (!isDataFetchedCorrectly(response)) {
-      setError('The data could not be fetched correctly from '+ panelConfig.entrypoint)
-      return
+    try {
+      response = await get(panelConfig.entrypoint)
+    } catch(err) {
+        setError(err.message)
+        return
     }
     documentData = response
     
@@ -98,21 +95,25 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
     }
 
     // read manifest data
-    response = await get(manifestUrl)
-    if (!isDataFetchedCorrectly(response)) {
-      setError('The data could not be fetched correctly from '+ manifestUrl)
-      return
-    }
+    try {
+      response = await get(manifestUrl)
+    } catch (err) {
+        setError(err.message) 
+        return
+     }
+    
     manifestData = response
     itemUrl = getItemUrl(manifestData, panelConfig.i)
     if (!itemUrl) return
 
     // read Item data
-    response = await get(itemUrl)
-    if (!isDataFetchedCorrectly(response)) {
-      setError('The data could not be fetched correctly from '+ itemUrl)
-      return
-    } 
+    try {
+      response = await get(itemUrl)
+    } catch(err) {
+        setError(err.message)
+        return
+     }
+
     itemData = response
 
     await assignContentTypes(itemData)

@@ -1,5 +1,5 @@
 
-export async function get<T>(url: string): Promise <T> {
+export async function get(url: string): Promise <any> {
   // generic function to fetch data from a certain url and parse it according to its content type
   let response = null
   let parsedData = null
@@ -21,10 +21,10 @@ export async function get<T>(url: string): Promise <T> {
       parsedData = await response.blob()
     }
   } catch (e) {
-      return e
+      throw e
    }
   if (parsedData) return parsedData
-  return '' // the data could not be parsed according to the defined content formats
+  return ''
 }
 
 export function isError(obj){
