@@ -231,6 +231,19 @@ declare global {
         type: TitleType
     }
     type TitleType = 'main' | 'sub';
+
+  type SuccessResponse<T> = {
+    success: true;
+    data: T;
+  };
+
+  type ErrorResponse = {
+    success: false;
+    message: string;
+    code: number;
+  };
+
+  type HttpResponse<T> = SuccessResponse<T> | ErrorResponse;
 }
 
 export {}

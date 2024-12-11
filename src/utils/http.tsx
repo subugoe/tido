@@ -1,33 +1,41 @@
+const BLOB_CONTENT_TYPES = ['application/pdf', 'image/png', 'image/jpeg', 'audio/mpeg', 'video/mp4']
+const TEXT_CONTENT_TYPES = ['text/xhtml+xml', 'text/plain', 'text/html', 'text/css']
 
-export async function get(url: string | null): Promise <any> {
-  // generic function to fetch data from a certain url and parse it according to its content type
-  let response = null
-  let parsedData = null
-  const contentTypesParsedWithBlob = ['application/pdf', 'image/png', 'image/jpeg', 'audio/mpeg', 'video/mp4']
-  const textContentTypes = ['text/xhtml+xml', 'text/plain', 'text/html', 'text/css']
+export async function request<T>(url: string): Promise<HttpResponse<T>> {
   try {
-    if (!url) throw Error('You are trying to fetch from a url which is not found!')
-    response = await fetch(url)
+    const response = await fetch(url)
     if (!response.ok) {
-      throw Error('Error while loading data from this url '+ url)
+      return createErrorResponse(
+        'Error while loading data from this url ' + url,
+        response.status
+      )
     }
-    const responseContentType = response.headers.get('content-type')
-    if (responseContentType?.includes('application/json')) {
-      parsedData = await response.json()
+
+    const contentType = response.headers.get('Content-Type')
+    let data
+    if (!contentType || TEXT_CONTENT_TYPES.some(type => contentType.includes(type))) {
+      data = await response.text()
+    } else if (contentType.includes('application/json')) {
+      data = await response.json()
+    } else if (BLOB_CONTENT_TYPES.includes(contentType)) {
+      data = await response.blob()
     }
-    else if (textContentTypes.some(el => responseContentType?.includes(el))) {
-      parsedData = await response.text()
+
+    return {
+      success: true,
+      data
     }
-    else if (contentTypesParsedWithBlob.some(el => responseContentType?.includes(el))) {
-      parsedData = await response.blob()
-    }
-  } catch (e) {
-      throw e
-   }
-  if (parsedData) return parsedData
-  return ''
+  } catch (error) {
+    return createErrorResponse(
+      (error instanceof Error) ? error.message : 'An unexpected error occurred',
+      500,
+    )
+  }
 }
 
-export function isError(obj){
-  return Object.prototype.toString.call(obj) === '[object Error]'
+function createErrorResponse(message: string = '', code: number = 500): ErrorResponse {
+  return { success: false,
+    message,
+    code,
+  }
 }
