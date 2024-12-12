@@ -23,15 +23,6 @@ export async function getItemData(manifestData: Manifest): Promise<HttpResponse<
   return await request<Item>(itemUrl)
 }
 
-export function getActiveContentUrl(content: Content[], activeContentTypeIndex: number): string | null {
-  if (activeContentTypeIndex < 0 || activeContentTypeIndex >= content.length) return null
-  const activeContent: Content | undefined = content[activeContentTypeIndex]
-  if (!activeContent) {
-    console.error('the current text content was not found')
-    return null
-  }
-  return activeContent.url ?? null
-}
 
 export function isItemContentValid(itemData: Item): boolean {
   if (!('content' in itemData)) return false

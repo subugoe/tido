@@ -100,8 +100,7 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
 
     const itemData = response.data as Item
 
-    const areContentTypesValid: boolean = isItemContentValid(itemData)
-    if (!areContentTypesValid) {
+    if (!isItemContentValid(itemData)) {
       setError('Content objects are not defined for this item')
       return
     }
