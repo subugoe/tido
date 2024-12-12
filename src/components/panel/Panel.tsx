@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react'
 
 import { request } from '@/utils/http'
-import { getManifestData, getItemData } from '@/utils/panel'
+import { getManifestData, getItemData, isItemContentValid } from '@/utils/panel'
 
 
 import CustomHTML from '@/components/CustomHTML'
@@ -22,19 +22,21 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
   const [error, setError] = useState<boolean | string>(false)
   const [loading, setLoading] = useState<boolean>(true)
 
-  async function assignContentTypes(itemData: Item) {
-    if (!('content' in itemData)) return
-    if (itemData.content.length === 0) return
+  async function assignContentTypes(content: Content[]) {
+    const types: string[] = content.map((item) => {
+      if ('type' in item) return getContentType(item.type)
+      return 'missing'
+    })
 
-    const content: Content[] = itemData.content
-    const types: string[] = content.map((item) => getContentType(item.type))
     setContentTypes(types)
   }
 
   function getContentType(value: string): string {
-    if (!value) return ''
-    return value.split('type=')[1]
+    const type = value.split('type=')[1]
+    return type ?? 'missing' 
+    // when no string stays after type=, then the value is missing
   }
+
 
   function getDocumentType(panelConfig: PanelConfig): string | null {
     if (!('entrypoint' in panelConfig)) {
@@ -98,7 +100,13 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
 
     const itemData = response.data as Item
 
-    await assignContentTypes(itemData)
+    const areContentTypesValid: boolean = isItemContentValid(itemData)
+    if (!areContentTypesValid) {
+      setError('Content objects are not defined for this item')
+      return
+    }
+
+    await assignContentTypes(itemData.content)
     const contentUrl = itemData.content[activeContentTypeIndex]?.url ?? null
 
     if (!contentUrl) {

@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client'
-import { ConfigProvider} from '@/contexts/ConfigContext'
 
 import './css/preflight.css'
 import './css/style.css'

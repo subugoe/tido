@@ -1,4 +1,4 @@
-import { request } from "@/utils/http"
+import { request } from '@/utils/http'
 
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string): string {
@@ -31,4 +31,10 @@ export function getActiveContentUrl(content: Content[], activeContentTypeIndex: 
     return null
   }
   return activeContent.url ?? null
+}
+
+export function isItemContentValid(itemData: Item): boolean {
+  if (!('content' in itemData)) return false
+  if (itemData.content.length === 0) return false
+  return true
 }
