@@ -9,12 +9,9 @@ interface ContentTypesToggleProps {
 
 
 const ContentTypesToggle: FC <ContentTypesToggleProps>= ({ contentTypes, activeContentTypeIndex, setActiveContentTypeIndex }) => {
-  function handleTextTabClick(e:MouseEvent<HTMLButtonElement>) {
+  function handleTextTabClick(e:MouseEvent<HTMLButtonElement>, i: number) {
     e.preventDefault()
-    const activeContentType: string = (e.target as HTMLButtonElement).innerHTML
-    const index: number = contentTypes.findIndex((type) => type === activeContentType)
-    if (index === -1) return
-    setActiveContentTypeIndex(index)
+    setActiveContentTypeIndex(i)
   }
 
   const buttons =
@@ -25,7 +22,7 @@ const ContentTypesToggle: FC <ContentTypesToggleProps>= ({ contentTypes, activeC
         style={{ backgroundColor: activeContentTypeIndex === i ? '#FFFFFF' : '' }}
         key={i}
         label={type}
-        onClick={(e) => handleTextTabClick(e)}
+        onClick={(e) => handleTextTabClick(e, i)}
       />
     ))
 
