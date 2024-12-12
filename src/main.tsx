@@ -5,8 +5,14 @@ import './css/style.css'
 
 import App from './App.tsx'
 
-window.Tido = function Tido(config = {}) {
-    createRoot(document.getElementById('app')!).render(<App customConfig={config} />)
+declare global {
+  interface Window {
+    Tido: (config: Config) => void
+  }
+}
+
+window.Tido = function Tido(config = {} as Config) {
+  createRoot(document.getElementById('app')!).render(<App customConfig={config}/>)
 }
 
 

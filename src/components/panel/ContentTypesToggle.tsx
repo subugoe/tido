@@ -8,7 +8,7 @@ interface ContentTypesToggleProps {
 }
 
 
-const ContentTypesToggle: FC <ContentTypesToggleProps>= ({ contentTypes, activeContentTypeIndex, setActiveContentTypeIndex }) => {
+const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ contentTypes, activeContentTypeIndex, setActiveContentTypeIndex }) => {
   function handleTextTabClick(e:MouseEvent<HTMLButtonElement>, i: number) {
     e.preventDefault()
     setActiveContentTypeIndex(i)

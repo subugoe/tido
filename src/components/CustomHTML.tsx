@@ -1,11 +1,10 @@
 import { useEffect, useRef, FC } from 'react'
 
 interface CustomHTMLProps {
-  textHtml: string,
-  widthText: string
+  textHtml: string
 }
 
-const CustomHTML: FC<CustomHTMLProps> = ({ textHtml, widthText }) => {
+const CustomHTML: FC<CustomHTMLProps> = ({ textHtml }) => {
   const ref = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -14,6 +13,6 @@ const CustomHTML: FC<CustomHTMLProps> = ({ textHtml, widthText }) => {
     }
   }, [textHtml])
 
-  return <div style={{width: widthText+'%'}} ref={ref} />
+  return <div ref={ref} />
 }
 export default CustomHTML

@@ -13,7 +13,7 @@ interface PanelProps {
 }
 
 // prop: url - should be the url of collection or manifest
-const Panel: FC <PanelProps> = ({ panelConfig }) => {
+const Panel: FC<PanelProps> = ({ panelConfig }) => {
   const [text, setText] = useState<string>('')
 
   const [contentTypes, setContentTypes] = useState<string[]>([])
@@ -33,7 +33,7 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
 
   function getContentType(value: string): string {
     const type = value.split('type=')[1]
-    return type ?? 'missing' 
+    return type ?? 'missing'
     // when no string stays after type=, then the value is missing
   }
 
@@ -149,7 +149,7 @@ const Panel: FC <PanelProps> = ({ panelConfig }) => {
           setActiveContentTypeIndex={setActiveContentTypeIndex}
         />
       </div>
-      <CustomHTML textHtml={text} widthText='100%'/>
+      <CustomHTML textHtml={text} />
     </div>
   )
 }

@@ -10,11 +10,11 @@ const PanelsWrapper: FC = () => {
     openedPanels.length > 0 &&
     openedPanels.map((panel: PanelConfig, i: number) => (
       <div key={i} className="t-mr-6">
-        <Panel panelConfig = {panel} />
+        <Panel panelConfig={panel} />
       </div>
     )): <div> Error with loading panels </div>
 
-  
+
   return <div className="t-flex t-flex-row">{panels}</div>
 }
 

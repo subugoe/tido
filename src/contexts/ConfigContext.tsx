@@ -18,9 +18,7 @@ const ConfigProvider: FC<ConfigProviderProps> = ({ children, customConfig }) => 
   const [openedPanels, setOpenedPanels] = useState(customConfig.panels)
 
   return (
-    <ConfigContext.Provider
-      value={{ config, setConfig, openedPanels, setOpenedPanels }}
-    >
+    <ConfigContext.Provider value={{ config, setConfig, openedPanels, setOpenedPanels }}>
       {children}
     </ConfigContext.Provider>
   )
@@ -29,7 +27,5 @@ const ConfigProvider: FC<ConfigProviderProps> = ({ children, customConfig }) => 
 function useConfig(): ConfigProvider {
   return useContext(ConfigContext)
 }
-
-
 
 export { ConfigProvider, useConfig }

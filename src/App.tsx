@@ -6,12 +6,12 @@ interface AppProps {
   customConfig: Config
 }
 
-const App: FC <AppProps> = ({ customConfig }) => {
+const App: FC<AppProps> = ({ customConfig }) => {
 
   return (
     <ConfigProvider customConfig={customConfig}>
       <div className="tido">
-        <PanelsWrapper /> 
+        <PanelsWrapper />
       </div>
     </ConfigProvider>
   )
