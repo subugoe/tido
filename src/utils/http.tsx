@@ -17,7 +17,7 @@ export async function request<T>(url: string): Promise<HttpResponse<T>> {
       data = await response.text()
     } else if (contentType.includes('application/json')) {
       data = await response.json()
-    } else if (BLOB_CONTENT_TYPES.includes(contentType)) {
+    } else if (BLOB_CONTENT_TYPES.some(type => contentType.includes(type))) {
       data = await response.blob()
     }
 

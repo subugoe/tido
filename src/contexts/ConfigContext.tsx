@@ -1,5 +1,4 @@
 import { ReactNode, createContext, useContext, useState, FC } from 'react'
-import defaultConfig from '@/config'
 const ConfigContext = createContext({})
 
 interface ConfigProvider {
@@ -10,12 +9,13 @@ interface ConfigProvider {
 }
 
 interface ConfigProviderProps{
-  children?: ReactNode
+  children?: ReactNode,
+  customConfig: Config
 }
 
-const ConfigProvider: FC<ConfigProviderProps> = ({ children }) => {
-  const [config, setConfig]  = useState <Config>(defaultConfig)
-  const [openedPanels, setOpenedPanels] = useState(defaultConfig.panels)
+const ConfigProvider: FC<ConfigProviderProps> = ({ children, customConfig }) => {
+  const [config, setConfig]  = useState <Config>(customConfig)
+  const [openedPanels, setOpenedPanels] = useState(customConfig.panels)
 
   return (
     <ConfigContext.Provider

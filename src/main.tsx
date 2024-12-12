@@ -7,7 +7,7 @@ import './css/style.css'
 import App from './App.tsx'
 
 window.Tido = function Tido(config = {}) {
-    createRoot(document.getElementById('app')!).render(<ConfigProvider><App customConfig={config} /></ConfigProvider>)
+    createRoot(document.getElementById('app')!).render(<App customConfig={config} />)
 }
 
 
