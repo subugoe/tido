@@ -74,6 +74,11 @@ declare global {
         accent: string
     }
 
+    interface Config{
+        globalTree: boolean,
+        panels: PanelConfig[]
+    }
+
 
     interface Content {
         '@context': string,
@@ -92,6 +97,12 @@ declare global {
         type: string,
         value: string
     }
+
+    interface Entrypoint {
+        url: string,
+        type: string
+    }
+
 
     interface Header {
         show: boolean,
@@ -178,6 +189,9 @@ declare global {
         info: string,
         warning: string
     }
+    interface PanelConfig {
+        entrypoint: Entrypoint
+    }
 
 
     type RangeSelector = {
@@ -217,6 +231,19 @@ declare global {
         type: TitleType
     }
     type TitleType = 'main' | 'sub';
+
+  type SuccessResponse<T> = {
+    success: true;
+    data: T;
+  };
+
+  type ErrorResponse = {
+    success: false;
+    message: string;
+    code: number;
+  };
+
+  type HttpResponse<T> = SuccessResponse<T> | ErrorResponse;
 }
 
 export {}

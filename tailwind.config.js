@@ -17,7 +17,7 @@ export default {
   prefix: 't-',
   content: [
     './index.html',
-    './src/**/*.{vue,js,ts,jsx,tsx}',
+    './src/**/*.{js,ts,jsx,tsx}',
   ],
   safelist: [
     { pattern: /(text|bg)-(red|blue|primary)+/ },
