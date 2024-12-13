@@ -1,7 +1,5 @@
 <template>
-  <div class="metadata-value">
-    <span v-html="value" />
-  </div>
+  <span class="metadata-value" v-html="value" />
 </template>
 
 <script setup lang="ts">

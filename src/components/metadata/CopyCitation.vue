@@ -1,9 +1,10 @@
 <template>
-  <Button
-    class="t-mt-[10px] t-ml-[20px]"
+  <span class="t-ml-1 t-mb-2 t-relative">
+    <Button
+    class="t-h-7"
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
-  >
+   >
     <BaseIcon
       :name="getIconName()"
       :style="
@@ -17,10 +18,10 @@
   <Message
     v-show="copiedCitation || isHovered"
     :pt="{
-      root: 't-bg-zinc-700 t-text-white t-w-[150px] t-h-[25px] t-ml-[20px] t-rounded',
-      wrapper: 't-flex t-flex-row t-relative',
+      root: 't-bg-zinc-700 t-text-white t-text-sm t-absolute t-rounded',
+      wrapper: 't-flex t-flex-row t-w-fit t-pr-1',
       icon: 't-hidden',
-      text: 't-pl-[5px]',
+      text: 't-pl-1',
       closebutton: {
         class: 't-hidden',
       },
@@ -28,6 +29,8 @@
   >
     {{ messageText }}
   </Message>
+  </span>
+  
 </template>
 
 <script setup lang="ts">
