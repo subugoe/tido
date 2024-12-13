@@ -1,0 +1,59 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "develop", "next" ]
+  pull_request:
+    branches: [ "develop", "main", "next" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+     matrix:
+       node-version: [18, 20]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Get npm cache directory
+      id: npm-cache-dir
+      run: |
+        echo "dir=$(npm config get cache)" >> "$GITHUB_OUTPUT"
+    - name: Cache node modules
+      id: npm-cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node${{ matrix.node-version }}-
+
+    - name: Cache Cypress binary
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/Cypress
+        key: cypress-${{ runner.os }}-cypress-node${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+        restore-keys: |
+          cypress-${{ runner.os }}-cypress-node${{ matrix.node-version }}-
+
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+       node-version: ${{ matrix.node-version }}
+    - name: Install dependencies
+      run: npm ci
+    - name: Run Linting
+      run: npm run lint
+#    - name: Run tests
+#      run: |
+#        npm run start:mock-api &
+#        npm run test
+      # - name: Save test video folder
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: video-${{ runner.os }}
+      #     if-no-files-found: error
+      #     path: tests/e2e
+
