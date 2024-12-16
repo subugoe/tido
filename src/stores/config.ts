@@ -20,6 +20,7 @@ import { i18n } from '@/i18n';
             label: 'contents',
             toggle: true,
             show: true,
+            width: 1,
             views: [
               {
                 id: 'tree',
@@ -40,6 +41,7 @@ import { i18n } from '@/i18n';
             label: 'metadata',
             show: true,
             toggle: true,
+            width: 1,
             views: [
               {
                 id: 'metadata',
@@ -65,6 +67,7 @@ import { i18n } from '@/i18n';
             label: 'image',
             show: true,
             toggle: true,
+            width: 1,
             views: [
               {
                 id: 'image',
@@ -78,6 +81,7 @@ import { i18n } from '@/i18n';
             label: 'text',
             show: true,
             toggle: true,
+            width: 1,
             views: [
               {
                 id: 'text1',
@@ -93,6 +97,7 @@ import { i18n } from '@/i18n';
             label: 'annotations',
             show: true,
             toggle: true,
+            width: 1,
             views: [
               {
                 id: 'annotations1',
@@ -161,7 +166,6 @@ import { i18n } from '@/i18n';
         },
       };
 
-      // Getters ('Setup Pinia' computed())
       const activeContentType = computed(() => {
        const contentConnectorId = 4;
        const panelIndex = config.value.panels.findIndex(({ views }) => views.find(({ connector }) => contentConnectorId === connector.id));
@@ -183,8 +187,6 @@ import { i18n } from '@/i18n';
        const types = config.value.panels[panelIndex].views[viewIndex].connector.options?.types;
        return types.find(({ name }) => name === type)?.icon || 'biPencilSquare';
       }
-
-     // Functions (mutators and actions in Vuex are now converted to functions in Pinia)
 
      function setConfig(payload) {
         config.value = payload;
@@ -403,7 +405,7 @@ import { i18n } from '@/i18n';
         // split the url based on '_'
         // get the part of attribute: get the attribute name and the value based on the type of attribute
         // add each attribute to UrlConfig as key value
-        let urlConfig = {};
+        const urlConfig = {};
         const urlQuery = BookmarkService.getQuery();
         const attributes = ['m', 'i', 'p', 's'];
         // values of manifest, item Indices ...

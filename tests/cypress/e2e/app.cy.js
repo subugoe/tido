@@ -25,7 +25,7 @@ describe('Tido', () => {
     cy
       .get(selectors.panelsWrapper)
       .should('be.visible')
-      .children('.panel')
+      .find('.panel')
       .should('have.length', 4);
 
     // Panel 1
