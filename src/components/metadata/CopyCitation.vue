@@ -7,11 +7,8 @@
    >
     <BaseIcon
       :name="getIconName()"
-      :style="
-        copiedCitation
-          ? { color: 'green', fontSize: '20px' }
-          : { color: 'grey' }
-      "
+      :class="{ 't-text-green-500': copiedCitation, 't-text-gray-400': !copiedCitation}"
+      class="t-text-xl t-align-middle"
       @click="copyContentToClipboard()"
     />
   </Button>
