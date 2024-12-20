@@ -142,6 +142,15 @@ declare global {
         modules?: Module[]
     }
 
+    interface ItemStore {
+        item: Item,
+        texts?: string[],
+        contentTypes?: string[],
+        t?: number,
+        v?: number,
+        imageUrl?: string
+    }
+
     type ItemType = 'section' | 'page' | 'full'
     type ItemLangCode = 'eng' | 'fra' | 'deu' | 'ara' | 'arb' | 'arz' | 'apc' | 'acm' | 'zho' | 'cmn' | 'yue' | 'nan' | 'tha' | 'sou' | 'nod' | 'khb' | 'lao/tts' | 'pht'
 
