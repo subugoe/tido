@@ -15,8 +15,8 @@
   <Message
     v-show="copiedCitation || isHovered"
     :pt="{
-      root: 't-bg-zinc-700 t-text-white t-text-sm t-absolute t-rounded',
-      wrapper: 't-flex t-flex-row t-w-fit t-pr-1',
+      root: 't-bg-zinc-700 t-text-white t-text-sm t-absolute -t-left-4 t-w-fit t-whitespace-nowrap t-rounded',
+      wrapper: 't-flex t-flex-row t-pr-1',
       icon: 't-hidden',
       text: 't-pl-1',
       closebutton: {
