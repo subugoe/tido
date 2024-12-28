@@ -31,7 +31,6 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ textHtml, panelInde
   const [error, setError] = useState<boolean | string>(false)
 
   
-
   useEffect(() => {
     setTextViewIndex(textViewIndex)
     
@@ -50,16 +49,20 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ textHtml, panelInde
         setText(response.data)
     }
     
-    const contentUrl = content[activeContentTypeIndex].url ?? null
+    let contentUrl = content[activeContentTypeIndex].url ?? null
 
     if (!contentUrl) {
-      setError('No content URL found.')
+      setError('Error: No content URL found.')
       return
     }
 
     updateText(contentUrl)
 
   }, [activeContentTypeIndex])
+
+  if (error) {
+    return <ErrorComponent message={error} />
+  }
 
   if (textViewIndex === 0) {
     return <TextViewOne textHtml = {text}/>
