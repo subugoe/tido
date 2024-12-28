@@ -5,22 +5,19 @@ import { contentStore } from '@/store/ContentStore'
 
 interface ContentTypesToggleProps {
   panelIndex: number
-  contentTypes: string[],
-  activeContentTypeIndex: number,
-  setActiveContentTypeIndex: (index: number) => void
+  contentTypes: string[]
 }
 
 
-const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ panelIndex, contentTypes, activeContentTypeIndex, setActiveContentTypeIndex }) => {
+const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ panelIndex, contentTypes}) => {
 
 
   const updateContentToggleIndex = contentStore(state => state.updateContentToggleIndex)
+  const activeContentTypeIndex = contentStore(state => state.items[panelIndex].t)
 
   function handleTextTabClick(e:MouseEvent<HTMLButtonElement>, i: number) {
     e.preventDefault()
-    // TODO: update the contentText View Index state for the current panel here !!
     updateContentToggleIndex(panelIndex, i)
-    //setActiveContentTypeIndex(i)
   }
 
   const buttons =

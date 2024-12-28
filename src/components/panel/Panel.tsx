@@ -121,7 +121,6 @@ const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
       return
     }
     response = await request<string>(contentUrl)
-    console.log('response in panel', response)
 
     if (!response.success) {
       setError(response.message)
@@ -155,8 +154,6 @@ const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
         <ContentTypesToggle
           panelIndex = {index}
           contentTypes={contentTypes}
-          activeContentTypeIndex={activeContentTypeIndex}
-          setActiveContentTypeIndex={setActiveContentTypeIndex}
         />
       </div>
       <PanelCentralContent textHtml={text}  panelIndex = {index} />
