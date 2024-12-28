@@ -11,7 +11,7 @@ interface ContentTypesToggleProps {
 const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ panelIndex, contentTypes}) => {
 
   const updateContentToggleIndex = contentStore(state => state.updateContentToggleIndex)
-  const activeContentTypeIndex = contentStore(state => state.items[panelIndex].t)
+  const activeContentTypeIndex = contentStore(state => state.openedPanels[panelIndex].t)
 
   function handleTextTabClick(e:MouseEvent<HTMLButtonElement>, i: number) {
     e.preventDefault()

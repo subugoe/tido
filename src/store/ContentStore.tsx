@@ -2,27 +2,37 @@ import { create } from 'zustand'
 import { request } from '@/utils/http'
 
 interface ContentStoreTypes {
-    items: ItemStore[] // or panels: each panel has one opened item 
+    openedPanels: ItemStore[] // or panels: each panel has one opened item 
     initItemData: (newItemData: Item) => void,
-    updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => void
+    updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => void,
+    updateTextViewIndex: (panelIndex: number, newTextViewIndex: number) => void
 }
 
 export const contentStore = create<ContentStoreTypes>((set, get) => ({
-  items: [], 
+  openedPanels: [], 
 
   initItemData: (newItemData: Item) => {
-    let newItems = [...get().items]
+    let newItems = [...get().openedPanels]
     newItems.push({item: newItemData, t:0, v:0})
-    set({items: newItems})
+    set({openedPanels: newItems})
   },
 
   updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => {
-    let item = [...get().items][panelIndex] // or panel
+    let item = [...get().openedPanels][panelIndex] // or panel
     item.t = newContentIndex
 
-    let newItems = [...get().items]
+    let newItems = [...get().openedPanels]
     newItems[panelIndex] = item
-    set({items: newItems})
+    set({openedPanels: newItems})
+  },
+
+  updateTextViewIndex: (panelIndex: number, newTextViewIndex: number) => {
+    let item = [...get().openedPanels][panelIndex] // or panel
+    item.v = newTextViewIndex
+
+    let newItems = [...get().openedPanels]
+    newItems[panelIndex] = item
+    set({openedPanels: newItems})
   }
 
 }))

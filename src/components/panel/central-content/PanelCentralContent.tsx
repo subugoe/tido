@@ -20,21 +20,15 @@ interface PanelCentralContentProps {
 
 
 const PanelCentralContent: FC<PanelCentralContentProps> = ({ textHtml, panelIndex }) => {
-
-  const {config} = useConfig()
   
-  const [textViewIndex, setTextViewIndex] = useState(contentStore(state => state.items[panelIndex].v))
-  const activeContentTypeIndex = contentStore(state => state.items[panelIndex].t)
+  const textViewIndex = contentStore(state => state.openedPanels[panelIndex].v)
+  const activeContentTypeIndex = contentStore(state => state.openedPanels[panelIndex].t)
   const [text, setText] = useState<string>(textHtml)
-  const [content, setContent] = useState(contentStore(state => state.items[panelIndex].item.content))
+  const content = contentStore(state => state.openedPanels[panelIndex].item.content)
+  const imageUrl = contentStore(state => state.openedPanels[panelIndex].item.image?.id)
 
   const [error, setError] = useState<boolean | string>(false)
 
-  
-  useEffect(() => {
-    setTextViewIndex(textViewIndex)
-    
-  }, [config])
 
   useEffect(() => {
     
@@ -71,7 +65,7 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ textHtml, panelInde
     return <TextView textHtml = {text} />
   }
   else if (textViewIndex === 2) {
-    return <SplitView textHtml = {text} />
+    return <SplitView textHtml = {text} imageUrl={imageUrl} />
   }
   else if (textViewIndex === 3) {
     return <ImageView />

@@ -4,27 +4,23 @@ import { useConfig } from '@/contexts/ConfigContext'
 import CustomHTML from '@/components/CustomHTML';
 
 interface SplitViewProps {
-    textHtml: string
+    textHtml: string,
+    imageUrl: string | undefined
 }
 
-const SplitView: FC<SplitViewProps> = ({ textHtml }) => {
-    const {config} = useConfig()
-
-
-useEffect(() => {
+const SplitView: FC<SplitViewProps> = ({ textHtml, imageUrl }) => {
     
-}, [])
-
   const widthText = '50' // in percentage
-
+  //const image = 
+  console.log('split view')
 
   return (
     <div className="">
         <div className="t-flex">
              <div className="t-w-1/2 t-mr-3">
-                 <img className="" />
+                 <img className="" src={imageUrl} />
              </div>
-            <CustomHTML textHtml={textHtml} />
+            <CustomHTML textHtml={textHtml} widthText={widthText} />
            
 
         </div>

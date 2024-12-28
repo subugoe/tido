@@ -7,6 +7,7 @@ import { contentStore } from '@/store/ContentStore'
 import ContentTypesToggle from '@/components/panel/ContentTypesToggle'
 import ErrorComponent from '@/components/ErrorComponent'
 import PanelCentralContent from '@/components/panel/central-content/PanelCentralContent'
+import PanelTopBar from '@/components/panel/PanelTopBar'
 
 interface PanelProps {
   panelConfig: PanelConfig,
@@ -16,7 +17,7 @@ interface PanelProps {
 // prop: url - should be the url of collection or manifest
 const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
   
-  const items = contentStore(state => state.items)
+  const openedPanels = contentStore(state => state.openedPanels)
   const initItemData = contentStore(state => state.initItemData)
 
   const [text, setText] = useState<string>('')
@@ -107,6 +108,7 @@ const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
 
     initItemData(itemData)
 
+
     if (!isItemContentValid(itemData)) {
       setError('Content objects are not defined for this item')
       return
@@ -150,6 +152,7 @@ const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
 
   return (
     <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">
+      <PanelTopBar panelIndex = {index} />
       <div className="t-flex t-flex-col t-items-center t-mb-6">
         <ContentTypesToggle
           panelIndex = {index}
