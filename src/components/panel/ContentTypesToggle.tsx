@@ -8,9 +8,7 @@ interface ContentTypesToggleProps {
   contentTypes: string[]
 }
 
-
 const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ panelIndex, contentTypes}) => {
-
 
   const updateContentToggleIndex = contentStore(state => state.updateContentToggleIndex)
   const activeContentTypeIndex = contentStore(state => state.items[panelIndex].t)

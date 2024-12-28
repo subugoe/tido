@@ -39,25 +39,26 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ textHtml, panelInde
 
   useEffect(() => {
     
-    async function readText(contentUrl: string) {
-      const response = await request<string>(contentUrl)
+    async function updateText(contentUrl: string) {
+        const response = await request<string>(contentUrl)
 
-      if (!response.success) {
-        setError(response.message)
-        return
-      }
-      setText(response.data)
+        if (!response.success) {
+          setError(response.message)
+          return
+        }
 
+        setText(response.data)
     }
     
     const contentUrl = content[activeContentTypeIndex].url ?? null
+
     if (!contentUrl) {
       setError('No content URL found.')
       return
     }
 
-    readText(contentUrl)
-    
+    updateText(contentUrl)
+
   }, [activeContentTypeIndex])
 
   if (textViewIndex === 0) {
@@ -76,7 +77,6 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ textHtml, panelInde
 
   return (
     <div className="">
-      <span> Value of v {textViewIndex} </span>
     </div>
   );
 };
