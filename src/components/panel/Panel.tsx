@@ -2,18 +2,23 @@ import { FC, useState, useEffect } from 'react'
 
 import { request } from '@/utils/http'
 import { getManifestData, getItemData, isItemContentValid } from '@/utils/panel'
+import { contentStore } from '@/store/ContentStore'
 
-
-import CustomHTML from '@/components/CustomHTML'
 import ContentTypesToggle from '@/components/panel/ContentTypesToggle'
 import ErrorComponent from '@/components/ErrorComponent'
+import PanelCentralContent from '@/components/panel/central-content/PanelCentralContent'
 
 interface PanelProps {
-  panelConfig: PanelConfig
+  panelConfig: PanelConfig,
+  index: number
 }
 
 // prop: url - should be the url of collection or manifest
-const Panel: FC<PanelProps> = ({ panelConfig }) => {
+const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
+  
+  const items = contentStore(state => state.items)
+  const initItemData = contentStore(state => state.initItemData)
+
   const [text, setText] = useState<string>('')
 
   const [contentTypes, setContentTypes] = useState<string[]>([])
@@ -100,12 +105,15 @@ const Panel: FC<PanelProps> = ({ panelConfig }) => {
 
     const itemData = response.data as Item
 
+    initItemData(itemData)
+
     if (!isItemContentValid(itemData)) {
       setError('Content objects are not defined for this item')
       return
     }
 
     await assignContentTypes(itemData.content)
+
     const contentUrl = itemData.content[activeContentTypeIndex]?.url ?? null
 
     if (!contentUrl) {
@@ -113,6 +121,7 @@ const Panel: FC<PanelProps> = ({ panelConfig }) => {
       return
     }
     response = await request<string>(contentUrl)
+    console.log('response in panel', response)
 
     if (!response.success) {
       setError(response.message)
@@ -129,7 +138,7 @@ const Panel: FC<PanelProps> = ({ panelConfig }) => {
     if (!documentType) return
 
     readData(panelConfig, documentType)
-  }, [panelConfig, activeContentTypeIndex])
+  }, [panelConfig])
 
 
   if (error) {
@@ -144,12 +153,13 @@ const Panel: FC<PanelProps> = ({ panelConfig }) => {
     <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">
       <div className="t-flex t-flex-col t-items-center t-mb-6">
         <ContentTypesToggle
+          panelIndex = {index}
           contentTypes={contentTypes}
           activeContentTypeIndex={activeContentTypeIndex}
           setActiveContentTypeIndex={setActiveContentTypeIndex}
         />
       </div>
-      <CustomHTML textHtml={text} />
+      <PanelCentralContent textHtml={text}  panelIndex = {index} />
     </div>
   )
 }

@@ -146,8 +146,8 @@ declare global {
         item: Item,
         texts?: string[],
         contentTypes?: string[],
-        t?: number,
-        v?: number,
+        t: number,
+        v: number,
         imageUrl?: string
     }
 

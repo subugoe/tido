@@ -2,37 +2,27 @@ import { create } from 'zustand'
 import { request } from '@/utils/http'
 
 interface ContentStoreTypes {
-    items: ItemStore[]
-    addItemData: (newItemData: Item) => void
-    getItemTexts: (index: number) => string[],
-    addItemTexts: (index: number) => void
+    items: ItemStore[] // or panels: each panel has one opened item 
+    initItemData: (newItemData: Item) => void,
+    updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => void
 }
 
 export const contentStore = create<ContentStoreTypes>((set, get) => ({
-  items: [],
+  items: [], 
 
-  addItemData: (newItemData: Item) => {
+  initItemData: (newItemData: Item) => {
     let newItems = [...get().items]
-    newItems.push({item: newItemData})
+    newItems.push({item: newItemData, t:0, v:0})
     set({items: newItems})
   },
 
-  getItemTexts: (index: number) => {
-    const content = get().items[index].item.content
-    let texts: string[] = []
-    content.forEach(async (contentItem) => {
-        const response = await request<string>(contentItem.url)
-        if (response.success) {
-            texts.push(response.data) 
-        }
-    })
+  updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => {
+    let item = [...get().items][panelIndex] // or panel
+    item.t = newContentIndex
 
-    return texts
-  },
-
-  addItemTexts: (index: number) => {
-    const texts = get().getItemTexts(index)
-    get().items[index].texts = texts
-  },
+    let newItems = [...get().items]
+    newItems[panelIndex] = item
+    set({items: newItems})
+  }
 
 }))

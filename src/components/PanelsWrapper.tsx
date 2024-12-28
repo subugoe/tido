@@ -10,7 +10,7 @@ const PanelsWrapper: FC = () => {
     openedPanels.length > 0 &&
     openedPanels.map((panel: PanelConfig, i: number) => (
       <div key={i} className="t-mr-6">
-        <Panel panelConfig={panel} />
+        <Panel panelConfig={panel} index={i}/>
       </div>
     )): <div> Error with loading panels </div>
 
