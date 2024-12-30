@@ -106,7 +106,7 @@ const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
 
     const itemData = response.data as Item
 
-    initItemData(itemData)
+    initItemData(itemData, panelConfig.colors.primary)
 
 
     if (!isItemContentValid(itemData)) {

@@ -148,7 +148,8 @@ declare global {
         contentTypes?: string[],
         t: number,
         v: number,
-        imageUrl?: string
+        imageUrl?: string,
+        primaryColor: string
     }
 
     type ItemType = 'section' | 'page' | 'full'
@@ -199,7 +200,8 @@ declare global {
         warning: string
     }
     interface PanelConfig {
-        entrypoint: Entrypoint
+        entrypoint: Entrypoint,
+        colors: Colors
     }
 
 
