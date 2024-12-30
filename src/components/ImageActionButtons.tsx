@@ -5,31 +5,32 @@ import CustomHTML from '@/components/CustomHTML'
 
 
 interface ImageActionButtons {
-    primaryColor:  string
+    primaryColor:  string,
+    panelIndex: number
 }
 
-const ImageActionButtons: FC<ImageActionButtons> = ({primaryColor}) => {
+const ImageActionButtons: FC<ImageActionButtons> = ({primaryColor, panelIndex}) => {
     
 const actions = [
     {
         icon: zoomIn,
-        id: 'zoom-in',
+        id: 'zoom-in-' + panelIndex,
         tooltip: 'Zoom In'
     },
 
     {
         icon: zoomOut,
-        id: 'zoom-out',
+        id: 'zoom-out-' + panelIndex,
         tooltip: 'Zoom Out'
     },
     {
         icon: fullscreen,
-        id: 'full-screen',
+        id: 'full-screen-' + panelIndex,
         tooltip: 'Toggle full page'
     },
     {
         icon: exitFullscreen,
-        id: 'exit-full-screen',
+        id: 'exit-full-screen-' + panelIndex,
         tooltip: 'Show base position of image'
     }
 ]

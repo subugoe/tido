@@ -5,10 +5,11 @@ import ImageActionButtons from '@/components/ImageActionButtons'
 
 interface OpenSeaDragonViewerProps {
   imageUrl: string | undefined,
-  primaryColor: string
+  primaryColor: string,
+  panelIndex: number
 }
 
-const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryColor}) => {
+const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryColor, panelIndex}) => {
   const viewerRef = useRef(null);
   useEffect(() => {
     const viewer = OpenSeadragon({
@@ -18,10 +19,10 @@ const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryCol
         type: 'image',
         url: imageUrl
       },
-      zoomInButton: 'zoom-in',
-      zoomOutButton: 'zoom-out',
-      fullPageButton: 'full-screen',
-      homeButton: 'exit-full-screen'
+      zoomInButton: 'zoom-in-' + panelIndex,
+      zoomOutButton: 'zoom-out-' + panelIndex,
+      fullPageButton: 'full-screen-' + panelIndex,
+      homeButton: 'exit-full-screen-' + panelIndex
     });
 
     viewerRef.current = viewer;
@@ -31,7 +32,7 @@ const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryCol
   }, []);
   return (
       <div>
-          <ImageActionButtons primaryColor={primaryColor}/>
+          <ImageActionButtons primaryColor={primaryColor} panelIndex={panelIndex}/>
           <div id="viewer" style={{ width: '100%', height: '500px' }} />
       </div>
     )

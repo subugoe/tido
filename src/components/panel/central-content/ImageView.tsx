@@ -19,7 +19,7 @@ const ImageView: FC<ImageViewProps> = ({imageUrl, panelIndex}) => {
   return (
     <div className="">
         <div className="t-flex t-flex-col">
-            <OpenSeaDragonViewer imageUrl= {imageUrl} primaryColor={primaryColor} />
+            <OpenSeaDragonViewer imageUrl= {imageUrl} primaryColor={primaryColor} panelIndex={panelIndex} />
         </div>
       
     </div>
