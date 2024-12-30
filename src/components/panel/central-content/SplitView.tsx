@@ -11,8 +11,6 @@ interface SplitViewProps {
 const SplitView: FC<SplitViewProps> = ({ textHtml, imageUrl }) => {
     
   const widthText = '50' // in percentage
-  //const image = 
-  console.log('split view')
 
   return (
     <div className="">

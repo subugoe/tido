@@ -1,10 +1,9 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 import CustomHTML from '@/components/CustomHTML';
 
 interface TextViewOneProps {
-    textHtml: string,
-    widthText: string
+    textHtml: string
 }
 
 const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {

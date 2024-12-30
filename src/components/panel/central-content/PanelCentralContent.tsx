@@ -68,7 +68,7 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ textHtml, panelInde
     return <SplitView textHtml = {text} imageUrl={imageUrl} />
   }
   else if (textViewIndex === 3) {
-    return <ImageView />
+    return <ImageView imageUrl={imageUrl}/>
   }
 
 

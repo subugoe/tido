@@ -1,18 +1,18 @@
 import { FC } from 'react';
-import { useConfig } from '@/contexts/ConfigContext'
 
+interface ImageViewProps {
+  imageUrl: string | undefined
+}
 
-
-const ImageView: FC = () => {
-    const {config} = useConfig()
+const ImageView: FC<ImageViewProps> = ({imageUrl}) => {
 
 
   return (
     <div className="">
         <div className="t-flex">
-             <div>
-                 <img className=""q />
-             </div>
+            <div className="t-mr-3">
+                    <img className="" src={imageUrl} />
+            </div>
         </div>
       
     </div>
