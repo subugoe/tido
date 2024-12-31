@@ -14,9 +14,7 @@ interface PanelProps {
   index: number
 }
 
-// prop: url - should be the url of collection or manifest
 const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
-  
   const openedPanels = contentStore(state => state.openedPanels)
   const initItemData = contentStore(state => state.initItemData)
 
@@ -135,6 +133,7 @@ const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
   }
 
   useEffect(() => {
+
     const documentType = getDocumentType(panelConfig)
     if (!documentType) return
 
@@ -151,7 +150,7 @@ const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
   }
 
   return (
-    <div className="panel t-flex t-flex-col t-w-[600px] t-ml-[6%] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">
+    <div className="panel t-flex t-flex-col t-w-[600px] t-mr-6 t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">
       <PanelTopBar panelIndex = {index} />
       <div className="t-flex t-flex-col t-items-center t-mb-6">
         <ContentTypesToggle
@@ -159,7 +158,7 @@ const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
           contentTypes={contentTypes}
         />
       </div>
-      <PanelCentralContent textHtml={text}  panelIndex = {index} />
+      <PanelCentralContent textHtml={text}  panelIndex = {index}  />
     </div>
   )
 }

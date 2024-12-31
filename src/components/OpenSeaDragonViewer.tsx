@@ -11,9 +11,10 @@ interface OpenSeaDragonViewerProps {
 
 const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryColor, panelIndex}) => {
   const viewerRef = useRef(null);
+  const viewerId = 'viewer-' + panelIndex
   useEffect(() => {
     const viewer = OpenSeadragon({
-      id: 'viewer',
+      id: viewerId,
       prefixUrl: 'https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/',
       tileSources: {
         type: 'image',
@@ -33,7 +34,7 @@ const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryCol
   return (
       <div>
           <ImageActionButtons primaryColor={primaryColor} panelIndex={panelIndex}/>
-          <div id="viewer" style={{ width: '100%', height: '500px' }} />
+          <div id={viewerId} style={{ width: '100%', height: '500px' }} />
       </div>
     )
 };
