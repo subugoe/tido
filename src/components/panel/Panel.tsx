@@ -15,10 +15,9 @@ interface PanelProps {
 }
 
 const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
+  console.log('panel config', panelConfig)
   const openedPanels = contentStore(state => state.openedPanels)
   const initItemData = contentStore(state => state.initItemData)
-
-  const [text, setText] = useState<string>('')
 
   const [contentTypes, setContentTypes] = useState<string[]>([])
   const [activeContentTypeIndex, setActiveContentTypeIndex] = useState(0)
@@ -127,8 +126,6 @@ const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
       return
     }
 
-    setText(response.data)
-
     setLoading(false)
   }
 
@@ -158,7 +155,7 @@ const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
           contentTypes={contentTypes}
         />
       </div>
-      <PanelCentralContent textHtml={text}  panelIndex = {index}  />
+      <PanelCentralContent panelIndex = {index}  />
     </div>
   )
 }

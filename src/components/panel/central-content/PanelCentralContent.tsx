@@ -14,16 +14,15 @@ import { request } from '@/utils/http'
 
 
 interface PanelCentralContentProps {
-  textHtml: string,
   panelIndex: number
 }
 
 
-const PanelCentralContent: FC<PanelCentralContentProps> = ({ textHtml, panelIndex }) => {
+const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelIndex }) => {
   
   const textViewIndex = contentStore(state => state.openedPanels[panelIndex].v)
   const activeContentTypeIndex = contentStore(state => state.openedPanels[panelIndex].t)
-  const [text, setText] = useState<string>(textHtml)
+  const [text, setText] = useState<string>('')
   const content = contentStore(state => state.openedPanels[panelIndex].item.content)
   const imageUrl = contentStore(state => state.openedPanels[panelIndex].item.image?.id)
 
