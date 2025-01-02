@@ -3,9 +3,7 @@ const ConfigContext = createContext({})
 
 interface ConfigProvider {
   config?: Config,
-  setConfig?: (newConfig: Config) => void,
-  openedPanels?: PanelConfig[],
-  setOpenedPanels?: (panels: PanelConfig[]) => void
+  setConfig?: (newConfig: Config) => void
 }
 
 interface ConfigProviderProps{
@@ -15,10 +13,9 @@ interface ConfigProviderProps{
 
 const ConfigProvider: FC<ConfigProviderProps> = ({ children, customConfig }) => {
   const [config, setConfig]  = useState <Config>(customConfig)
-  const [openedPanels, setOpenedPanels] = useState(customConfig.panels)
 
   return (
-    <ConfigContext.Provider value={{ config, setConfig, openedPanels, setOpenedPanels }}>
+    <ConfigContext.Provider value={{ config, setConfig }}>
       {children}
     </ConfigContext.Provider>
   )

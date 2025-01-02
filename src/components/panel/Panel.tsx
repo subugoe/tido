@@ -15,7 +15,6 @@ interface PanelProps {
 }
 
 const Panel: FC<PanelProps> = ({ panelConfig, index }) => {
-  console.log('panel config', panelConfig)
   const openedPanels = contentStore(state => state.openedPanels)
   const initItemData = contentStore(state => state.initItemData)
 
