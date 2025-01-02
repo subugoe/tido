@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { request } from '@/utils/http'
 
 interface ContentStoreTypes {
     openedPanels: ItemStore[] // or panels: each panel has one opened item 
