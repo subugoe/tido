@@ -63,7 +63,6 @@ const PanelsWrapper: FC = () => {
     }
 
     const manifestData = response.data as Manifest
-    console.log('manifest Data', manifestData)
 
     // read item data
     if (!manifestData.sequence || manifestData.sequence.length === 0) {
@@ -78,22 +77,58 @@ const PanelsWrapper: FC = () => {
     }
 
     const itemData = response.data as Item
+
+    if (!isItemContentValid(itemData)) {
+      setError('Content objects are not defined for this item')
+      return
+    }
+
     return itemData    
   }
 
+  function getContentType(value: string): string {
+    const type = value.split('type=')[1]
+    return type ?? 'missing'
+    // when no string stays after type=, then the value is missing
+  }
+
+  
+  function getContentTypes(content: Content[]): string[] {
+    const types: string[] = content.map((item) => {
+      if ('type' in item) return getContentType(item.type)
+      return 'missing'
+    })
+
+    return types
+  }
+
   useEffect(() => {
+
+   
+
     async function initData(panels: PanelConfig[] | undefined) {
       if (!panels || panels.length === 0) return
       
-        for (let i = 0; i < panels.length; i++) { 
-          console.log('start to read data', panels[i].entrypoint.url)
-          const documentType = getDocumentType(panels[i])
-          const itemData = await readData(panels[i], documentType); 
-          if (itemData) initItemData(itemData, panels[i].colors.primary)
-        }
+      for (let i = 0; i < panels.length; i++) { 
+        const documentType = getDocumentType(panels[i])
+
+        const itemData = await readData(panels[i], documentType) 
+
+        if (!itemData) continue
+
+        const contentTypes: string[] = getContentTypes(itemData.content)
         
-        setLoading(false)
+        initItemData({
+          item: itemData,
+          t:0, 
+          v:0,
+          contentTypes: contentTypes,
+          primaryColor: panels[i].colors.primary
+        })
       }
+      
+      setLoading(false)
+    }
 
     initData(panels)
   }, [])
