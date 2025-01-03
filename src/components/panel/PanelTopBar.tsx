@@ -6,14 +6,10 @@ interface PanelTopBarProps {
     panelIndex: number
 }
 
-
 const PanelTopBar: FC <PanelTopBarProps>= ({panelIndex}) => {
   
-
-  const textViewsTitles = ['text-v-1', 'text-v-2', 'text-v-3', 'text-v-4']
-
   return (
-    <div className="">
+    <div className="panel-top-bar">
       <TextViewsToggle panelIndex = {panelIndex} />
     </div>
   );
