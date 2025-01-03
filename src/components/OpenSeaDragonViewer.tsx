@@ -1,4 +1,4 @@
-import React,{useEffect, useState, useRef, FC} from 'react';
+import React,{ useEffect, useRef, FC } from 'react';
 import OpenSeadragon from 'openseadragon';
 
 import ImageActionButtons from '@/components/ImageActionButtons'
@@ -10,8 +10,9 @@ interface OpenSeaDragonViewerProps {
 }
 
 const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryColor, panelIndex}) => {
-  const viewerRef = useRef(null);
+  const viewerRef = useRef<OpenSeadragon.Viewer>();
   const viewerId = 'viewer-' + panelIndex
+
   useEffect(() => {
     const viewer = OpenSeadragon({
       id: viewerId,
@@ -27,8 +28,9 @@ const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryCol
     });
 
     viewerRef.current = viewer;
+
     return () => {
-      viewerRef.current.destroy();
+      viewerRef.current?.destroy();
     };
   }, []);
   return (
