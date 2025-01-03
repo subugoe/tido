@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 
 import { contentStore } from '@/store/ContentStore'
-import { useConfig } from '@/contexts/ConfigContext'
 
 import TextViewOne from '@/components/panel/central-content/TextViewOne';
 import TextView from '@/components/panel/central-content/TextView'
@@ -16,7 +15,6 @@ import { request } from '@/utils/http'
 interface PanelCentralContentProps {
   panelIndex: number
 }
-
 
 const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelIndex }) => {
   
@@ -69,12 +67,6 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelIndex }) => {
   else if (textViewIndex === 3) {
     return <ImageView imageUrl={imageUrl} panelIndex={panelIndex}/>
   }
-
-
-  return (
-    <div className="">
-    </div>
-  );
 };
 
 export default PanelCentralContent;
