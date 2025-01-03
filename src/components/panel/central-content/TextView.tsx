@@ -10,7 +10,7 @@ const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
 
   return (
         <div>
-            <CustomHTML textHtml={textHtml} widthText='100%' />
+            <CustomHTML textHtml={textHtml} width='100%' />
         </div>
    );
 };

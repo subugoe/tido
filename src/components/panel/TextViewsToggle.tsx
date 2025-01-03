@@ -41,7 +41,7 @@ const TextViewsToggle: FC <TextViewsToggleProps>= ({panelIndex}) => {
             onClick={(e) => handleTextViewClick(e, i)}
             style={{'backgroundColor':(textViewIndex === i) ? '#E5E7EB': 'transparent'}}
         >
-            <CustomHTML textHtml={textViewsIcons[title as keyof IconKeys]} widthText='100%' />
+            <CustomHTML textHtml={textViewsIcons[title as keyof IconKeys]} width='100%' />
         </button>
     ));
 

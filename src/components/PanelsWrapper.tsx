@@ -87,7 +87,8 @@ const PanelsWrapper: FC = () => {
   }
 
   function getContentType(value: string): string {
-    const type = value.split('type=')[1]
+    let type = value.split('type=')[1]
+    type = type.charAt(0).toUpperCase() + type.slice(1); // convert the first letter to upper case
     return type ?? 'missing'
     // when no string stays after type=, then the value is missing
   }
@@ -104,8 +105,6 @@ const PanelsWrapper: FC = () => {
 
   useEffect(() => {
 
-   
-
     async function initData(panels: PanelConfig[] | undefined) {
       if (!panels || panels.length === 0) return
       
@@ -117,7 +116,7 @@ const PanelsWrapper: FC = () => {
         if (!itemData) continue
 
         const contentTypes: string[] = getContentTypes(itemData.content)
-        
+
         initItemData({
           item: itemData,
           t:0, 

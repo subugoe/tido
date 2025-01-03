@@ -45,7 +45,7 @@ actions.map((action, i) => (
               title={action.tooltip}
               >
               <div className="t-flex t-items-center t-justify-center" style={{color: primaryColor}}>
-                <CustomHTML textHtml={action.icon} widthText='100%' />
+                <CustomHTML textHtml={action.icon} width='100%' />
               </div>
   
           </button>
