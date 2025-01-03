@@ -1,5 +1,4 @@
 import { FC, MouseEvent } from 'react'
-import { Button } from 'primereact/button'
 
 import { contentStore } from '@/store/ContentStore'
 
@@ -9,8 +8,8 @@ interface ContentTypesToggleProps {
 
 const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ panelIndex }) => {
 
-  const contentTypes: string[] | undefined = contentStore(state => state.openedPanels[panelIndex].contentTypes)
-  const activeContentTypeIndex: number = contentStore(state => state.openedPanels[panelIndex].t)
+  const contentTypes = contentStore(state => state.openedPanels[panelIndex].contentTypes)
+  const activeContentTypeIndex = contentStore(state => state.openedPanels[panelIndex].t)
   const updateContentToggleIndex = contentStore(state => state.updateContentToggleIndex)
 
   function handleTextTabClick(e:MouseEvent<HTMLButtonElement>, i: number) {
@@ -19,17 +18,16 @@ const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ panelIndex }) => {
   }
 
   let buttons
-  if (contentTypes) {
+  if (contentTypes && contentTypes.length > 0) {
     buttons =
-      contentTypes.length > 0 &&
       contentTypes.map((type, i) => (
-          <Button
-            className="t-p-1 t-rounded"
-            style={{ backgroundColor: activeContentTypeIndex === i ? '#FFFFFF' : '' }}
-            key={i}
-            label={type}
-            onClick={(e) => handleTextTabClick(e, i)}
-          />
+          <button  className="t-h-6 t-rounded t-mr-2 t-px-1"
+              style={{ backgroundColor: activeContentTypeIndex === i ? '#FFFFFF' : '' }}
+              key={i}
+              onClick={(e) => handleTextTabClick(e, i)}
+          >
+            {type}
+          </button>
         ))
   }
    
