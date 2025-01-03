@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 interface ContentStoreTypes {
     openedPanels: ItemStore[] // or panels: each panel has one opened item 
-    initItemData: (newItemData: Item, primaryColor: string) => void,
+    initItemData: (newPanel: ItemStore) => void,
     updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => void,
     updateTextViewIndex: (panelIndex: number, newTextViewIndex: number) => void
 }
@@ -10,10 +10,10 @@ interface ContentStoreTypes {
 export const contentStore = create<ContentStoreTypes>((set, get) => ({
   openedPanels: [], 
 
-  initItemData: (newItemData: Item, primaryColor: string) => {
-    let newItems = [...get().openedPanels]
-    newItems.push({item: newItemData, t:0, v:0, primaryColor: primaryColor})
-    set({openedPanels: newItems})
+  initItemData: (newPanel: ItemStore) => {
+    let newPanels = [...get().openedPanels]
+    newPanels.push(newPanel)
+    set({openedPanels: newPanels})
   },
 
   updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => {
