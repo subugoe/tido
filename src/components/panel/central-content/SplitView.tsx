@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { contentStore } from '@/store/ContentStore'
 import OpenSeaDragonViewer from '@/components/OpenSeaDragonViewer';
 
@@ -16,18 +16,13 @@ const SplitView: FC<SplitViewProps> = ({ textHtml, imageUrl, panelIndex }) => {
   const widthText = '50' // in percentage
 
   return (
-    <div className="">
         <div className="t-flex">
              <div className="t-w-1/2 t-mr-3">
                 <OpenSeaDragonViewer imageUrl= {imageUrl} primaryColor={primaryColor} panelIndex={panelIndex} />
              </div>
             <CustomHTML textHtml={textHtml} widthText={widthText} />
-           
-
         </div>
-      
-    </div>
-  );
+     );
 };
 
 export default SplitView;
