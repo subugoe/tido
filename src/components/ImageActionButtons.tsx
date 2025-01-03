@@ -3,15 +3,20 @@ import { zoomIn, zoomOut, fullscreen, exitFullscreen } from '@/utils/icons'
 import CustomHTML from '@/components/CustomHTML'
 
 
-
-interface ImageActionButtons {
+interface ImageActionButtonsProps {
     primaryColor:  string,
     panelIndex: number
 }
 
-const ImageActionButtons: FC<ImageActionButtons> = ({primaryColor, panelIndex}) => {
+interface ImageActions {
+    icon: string,
+    id: string,
+    tooltip: string
+}
+
+const ImageActionButtons: FC<ImageActionButtonsProps> = ({primaryColor, panelIndex}) => {
     
-const actions = [
+const actions: ImageActions[] = [
     {
         icon: zoomIn,
         id: 'zoom-in-' + panelIndex,
@@ -36,19 +41,19 @@ const actions = [
 ]
 
 const actionButtons =
-actions.length > 0 &&
-actions.map((action, i) => (
-          <button
-              className="t-p-2 t-rounded hover:t-rounded-full hover:t-bg-gray-100 t-mr-1 t-w-8 t-h-8"
-              key={i}
-              id = {action.id}
-              title={action.tooltip}
-              >
-              <div className="t-flex t-items-center t-justify-center" style={{color: primaryColor}}>
-                <CustomHTML textHtml={action.icon} width='100%' />
-              </div>
-  
-          </button>
+    actions.length > 0 &&
+    actions.map((action, i) => (
+        <button
+            className="t-p-2 t-rounded hover:t-rounded-full hover:t-bg-gray-100 t-mr-1 t-w-8 t-h-8"
+            key={i}
+            id = {action.id}
+            title={action.tooltip}
+            >
+                <div className="t-flex t-items-center t-justify-center" style={{color: primaryColor}}>
+                    <CustomHTML textHtml={action.icon} width='100%' />
+                </div>
+
+        </button>
       ));
 
   return (
