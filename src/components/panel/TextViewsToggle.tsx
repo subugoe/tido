@@ -1,5 +1,5 @@
-import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
-import { icons } from '@/utils/icons'
+import { FC, MouseEvent } from 'react';
+import { textViewOne, textView, splitView, imageView } from '@/utils/icons'
 import CustomHTML from '@/components/CustomHTML';
 
 import { contentStore } from '@/store/ContentStore'
@@ -8,33 +8,40 @@ interface TextViewsToggleProps {
     panelIndex: number
 }
 
+interface IconKeys {
+  viewOne: string,
+  text: string,
+  split: string,
+  image: string
+}  
+
 const TextViewsToggle: FC <TextViewsToggleProps>= ({panelIndex}) => {
 
     const textViewIndex = contentStore(state => state.openedPanels[panelIndex].v)
     const updateTextViewIndex = contentStore(state => state.updateTextViewIndex)
 
-
-    const ref = useRef(null)
   
-    function handleTextViewClick(e:MouseEvent<HTMLButtonElement>, index: number) {
+    function handleTextViewClick(e:MouseEvent<HTMLButtonElement>, newIndex: number) {
         e.preventDefault()
-        updateTextViewIndex(panelIndex, index)
+        updateTextViewIndex(panelIndex, newIndex)
     }
 
-  const textViewsTitles = Object.keys(icons)
-  
+    const textViewsIcons = {
+        'viewOne': textViewOne,
+        'text': textView,
+        'split': splitView,
+        'image': imageView
+    }
 
   const buttons =
-  textViewsTitles.length > 0 &&
-  textViewsTitles.map((title, i) => (
+  Object.keys(textViewsIcons).map((title, i) => (
         <button
             className="t-p-1 t-rounded t-mr-3 t-w-8 t-h-8"
             key={i}
             onClick={(e) => handleTextViewClick(e, i)}
-            style={{'backgroundColor':(textViewIndex === i) ? '#E5E7EB': 'transparent'}}>
-
-            <CustomHTML textHtml={icons[title]} widthText='100%' />
-
+            style={{'backgroundColor':(textViewIndex === i) ? '#E5E7EB': 'transparent'}}
+        >
+            <CustomHTML textHtml={textViewsIcons[title as keyof IconKeys]} widthText='100%' />
         </button>
     ));
 
