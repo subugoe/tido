@@ -1,22 +1,25 @@
 import { FC, useEffect } from 'react';
-import { useConfig } from '@/contexts/ConfigContext'
+import { contentStore } from '@/store/ContentStore'
+import OpenSeaDragonViewer from '@/components/OpenSeaDragonViewer';
 
 import CustomHTML from '@/components/CustomHTML';
 
 interface SplitViewProps {
     textHtml: string,
-    imageUrl: string | undefined
+    imageUrl: string | undefined,
+    panelIndex: number
 }
 
-const SplitView: FC<SplitViewProps> = ({ textHtml, imageUrl }) => {
-    
+const SplitView: FC<SplitViewProps> = ({ textHtml, imageUrl, panelIndex }) => {
+  
+  const primaryColor = contentStore(state => state.openedPanels[panelIndex].primaryColor)
   const widthText = '50' // in percentage
 
   return (
     <div className="">
         <div className="t-flex">
              <div className="t-w-1/2 t-mr-3">
-                 <img className="" src={imageUrl} />
+                <OpenSeaDragonViewer imageUrl= {imageUrl} primaryColor={primaryColor} panelIndex={panelIndex} />
              </div>
             <CustomHTML textHtml={textHtml} widthText={widthText} />
            
