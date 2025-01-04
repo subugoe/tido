@@ -1,10 +1,12 @@
 import { FC, useEffect, useState } from 'react'
-import Panel from '@/components/panel/Panel'
-import { useConfig } from '@/contexts/ConfigContext'
-import { request } from '@/utils/http'
-import { getItemData, getManifestData, isItemContentValid } from '@/utils/panel'
 
 import { contentStore } from '@/store/ContentStore'
+import { useConfig } from '@/contexts/ConfigContext'
+
+import Panel from '@/components/panel/Panel'
+
+import { request } from '@/utils/http'
+import { getItemData, getManifestData, isItemContentValid, getContentTypes } from '@/utils/panel'
 
 
 const PanelsWrapper: FC = () => {
@@ -13,7 +15,6 @@ const PanelsWrapper: FC = () => {
   const [error, setError] = useState<boolean | string>(false)
 
   const initItemData = contentStore(state => state.initItemData)
-  const contentOpenedPanels = contentStore(state => state.openedPanels)
 
   const panels = config?.panels
 
@@ -39,10 +40,9 @@ const PanelsWrapper: FC = () => {
     return null
   }
 
-  async function readData(panelConfig: PanelConfig, documentType: string | null) {
+  async function readData(panelConfig: PanelConfig, documentType: string) {
     if (!panelConfig || Object.keys(panelConfig).length === 0) return
 
-    if (error) return
     let response
 
     // read Document data
@@ -50,7 +50,7 @@ const PanelsWrapper: FC = () => {
 
     if (!response.success) {
       setError(response.message)
-      return
+      return 
     }
 
     const documentData = documentType === 'collection' ? response.data as Collection : response.data as Manifest
@@ -86,33 +86,18 @@ const PanelsWrapper: FC = () => {
     return itemData    
   }
 
-  function getContentType(value: string): string {
-    let type = value.split('type=')[1]
-    type = type.charAt(0).toUpperCase() + type.slice(1); // convert the first letter to upper case
-    return type ?? 'missing'
-    // when no string stays after type=, then the value is missing
-  }
-
-  
-  function getContentTypes(content: Content[]): string[] {
-    const types: string[] = content.map((item) => {
-      if ('type' in item) return getContentType(item.type)
-      return 'missing'
-    })
-
-    return types
-  }
 
   useEffect(() => {
 
-    async function initData(panels: PanelConfig[] | undefined) {
-      if (!panels || panels.length === 0) return
-      
+    async function initData(panels: PanelConfig[]) {
       for (let i = 0; i < panels.length; i++) { 
         const documentType = getDocumentType(panels[i])
+        if (!documentType) {
+          setError('The document type for this entrypoint url is not valid')
+          continue
+        }
 
         const itemData = await readData(panels[i], documentType) 
-
         if (!itemData) continue
 
         const contentTypes: string[] = getContentTypes(itemData.content)
@@ -129,21 +114,23 @@ const PanelsWrapper: FC = () => {
       setLoading(false)
     }
 
+    if (!panels || panels.length === 0) return
+
     initData(panels)
   }, [])
   
-  let openedPanels = <div> Loading data ... Please wait a sec</div>
+  let loadingEl = <div> Loading data ... Please wait a sec</div>
+  let openedPanels = null
 
-  
-  if (!loading) {
-    openedPanels = panels ?
-    panels.length > 0 &&
-    panels.map((_, i: number) => (
-        <Panel  index={i} key={i}/>
-    )): <div> loading data...</div>
+  if (!loading && panels && panels.length > 0) {
+    openedPanels = panels.map((_, i: number) => (
+        <Panel index={i} key={i}/>
+     ))
   }
-  
-  return <div className="t-flex t-flex-row t-ml-[6%]">{openedPanels}</div>
+
+  if (loading) return loadingEl
+
+  return <div className="t-flex t-flex-row t-ml-[6%]"> { openedPanels }</div>
 }
 
 export default PanelsWrapper
