@@ -94,6 +94,7 @@
   ],
   "dependencies": {
     "@eslint/js": "^9.16.0",
+    "@radix-ui/react-popover": "^1.1.4",
     "@radix-ui/react-slot": "^1.1.1"
   }
 }
