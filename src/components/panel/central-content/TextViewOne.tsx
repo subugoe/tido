@@ -9,7 +9,7 @@ interface TextViewOneProps {
 const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
   return (
         <div>
-            <CustomHTML textHtml={textHtml} width='100' />
+            <CustomHTML textHtml={textHtml} width='100' elementType='text'/>
         </div>
   );
 };

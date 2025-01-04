@@ -20,7 +20,7 @@ const SplitView: FC<SplitViewProps> = ({ textHtml, imageUrl, panelIndex }) => {
              <div className="t-w-1/2 t-mr-3">
                 <OpenSeaDragonViewer imageUrl= {imageUrl} primaryColor={primaryColor} panelIndex={panelIndex} />
              </div>
-            <CustomHTML textHtml={textHtml} width={widthText} />
+            <CustomHTML textHtml={textHtml} width={widthText} elementType='text' />
         </div>
      );
 };
