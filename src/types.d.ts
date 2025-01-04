@@ -142,7 +142,7 @@ declare global {
         modules?: Module[]
     }
 
-    interface ItemStore {
+    interface PanelContentStore {
         item: Item,
         texts?: string[],
         contentTypes?: string[],

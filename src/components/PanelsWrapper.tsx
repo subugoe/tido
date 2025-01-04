@@ -14,7 +14,7 @@ const PanelsWrapper: FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<boolean | string>(false)
 
-  const initItemData = contentStore(state => state.initItemData)
+  const addPanelContent = contentStore(state => state.addPanelContent)
 
   const panels = config?.panels
 
@@ -102,7 +102,7 @@ const PanelsWrapper: FC = () => {
 
         const contentTypes: string[] = getContentTypes(itemData.content)
 
-        initItemData({
+        addPanelContent({
           item: itemData,
           t:0, 
           v:0,

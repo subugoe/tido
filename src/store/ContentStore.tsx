@@ -1,37 +1,49 @@
 import { create } from 'zustand'
 
 interface ContentStoreTypes {
-    openedPanels: ItemStore[] // or panels: each panel has one opened item 
-    initItemData: (newPanel: ItemStore) => void,
+    openedPanels: PanelContentStore[] // or panels: each panel has one opened item 
+    addPanelContent: (newPanel: PanelContentStore) => void,
+    updatePanels: (panelIndex: number, updatedItem: PanelContentStore) => void,
     updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => void,
-    updateTextViewIndex: (panelIndex: number, newTextViewIndex: number) => void
+    updateTextViewIndex: (panelIndex: number, newTextViewIndex: number) => void,
+    getPanel: (panelIndex: number) => PanelContentStore | null,
 }
 
 export const contentStore = create<ContentStoreTypes>((set, get) => ({
   openedPanels: [], 
 
-  initItemData: (newPanel: ItemStore) => {
+  addPanelContent: (newPanel: PanelContentStore) => {
     let newPanels = [...get().openedPanels]
     newPanels.push(newPanel)
     set({openedPanels: newPanels})
   },
 
   updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => {
-    let item = [...get().openedPanels][panelIndex] // or panel
-    item.t = newContentIndex
+    let panel = get().getPanel(panelIndex)
+    if (!panel) return // TODO: add error handling
 
-    let newItems = [...get().openedPanels]
-    newItems[panelIndex] = item
-    set({openedPanels: newItems})
+    panel.t = newContentIndex
+    get().updatePanels(panelIndex, panel)
   },
 
   updateTextViewIndex: (panelIndex: number, newTextViewIndex: number) => {
-    let item = [...get().openedPanels][panelIndex] // or panel
-    item.v = newTextViewIndex
+    let panel = get().getPanel(panelIndex)
+    if (!panel) return // TODO: add error handling
 
-    let newItems = [...get().openedPanels]
-    newItems[panelIndex] = item
-    set({openedPanels: newItems})
+    panel.v = newTextViewIndex
+    get().updatePanels(panelIndex, panel)
+  },
+
+  updatePanels: (panelIndex: number, updatedPanel: PanelContentStore) => {
+    let newPanels = [...get().openedPanels]
+    newPanels[panelIndex] = updatedPanel
+    set({openedPanels: newPanels})
+  },
+
+  getPanel: (panelIndex: number) => {
+    if (panelIndex < 0) return null
+    if (panelIndex > get().openedPanels.length - 1) return null
+
+    return get().openedPanels[panelIndex]
   }
-
 }))
