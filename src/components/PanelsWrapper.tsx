@@ -126,7 +126,7 @@ const PanelsWrapper: FC = () => {
     initData(panels)
   }, [])
   
-  let loadingEl = <div> Loading data ... Please wait a sec</div>
+  const loadingEl = <div> Loading data ... Please wait a sec</div>
   let openedPanels = null
 
   if (!loading && panels) {

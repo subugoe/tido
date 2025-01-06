@@ -14,7 +14,7 @@ interface ImageActions {
     tooltip: string
 }
 
-const ImageActionButtons: FC<ImageActionButtonsProps> = ({primaryColor, panelId}) => {
+const ImageActionButtons: FC<ImageActionButtonsProps> = ({ primaryColor, panelId }) => {
     
 const actions: ImageActions[] = [
     {
@@ -46,15 +46,15 @@ const actionButtons =
         <button
             className="t-p-2 t-rounded hover:t-rounded-full hover:t-bg-gray-100 t-mr-1 t-w-8 t-h-8"
             key={i}
-            id = {action.id}
+            id={action.id}
             title={action.tooltip}
             >
-                <div className="t-flex t-items-center t-justify-center" style={{color: primaryColor}}>
-                    <CustomHTML textHtml={action.icon} width='100%' icon={{type:'icon', width:4, height:3}} />
+                <div className="t-flex t-items-center t-justify-center" style={{ color: primaryColor }}>
+                    <CustomHTML textHtml={action.icon} width='100%' icon={{ type:'icon', width:4, height:3 }} />
                 </div>
 
         </button>
-      ));
+      ))
 
   return (
     <div className="t-flex t-items-center t-justify-center image-action-buttons t-mb-1">

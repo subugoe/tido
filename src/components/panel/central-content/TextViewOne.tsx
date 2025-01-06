@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { FC } from 'react'
 
-import CustomHTML from '@/components/CustomHTML';
+import CustomHTML from '@/components/CustomHTML'
 
 interface TextViewOneProps {
     textHtml: string
@@ -11,7 +11,7 @@ const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
         <div>
             <CustomHTML textHtml={textHtml} width='100'/>
         </div>
-  );
-};
+  )
+}
 
-export default TextViewOne;
+export default TextViewOne

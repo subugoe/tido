@@ -1,10 +1,10 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react'
 
 import { contentStore } from '@/store/ContentStore'
 
-import TextViewOne from '@/components/panel/central-content/TextViewOne';
+import TextViewOne from '@/components/panel/central-content/TextViewOne'
 import TextView from '@/components/panel/central-content/TextView'
-import SplitView from '@/components/panel/central-content/SplitView';
+import SplitView from '@/components/panel/central-content/SplitView'
 import ImageView from '@/components/panel/central-content/ImageView'
 
 import ErrorComponent from '@/components/ErrorComponent'
@@ -40,7 +40,7 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelId }) => {
         setText(response.data)
     }
     
-    let contentUrl = content[activeContentTypeIndex].url ?? null
+    const contentUrl = content[activeContentTypeIndex].url ?? null
 
     if (!contentUrl) {
       setError('Error: No content URL found.')
@@ -56,17 +56,17 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelId }) => {
   }
 
   if (textViewIndex === 0) {
-    return <TextViewOne textHtml = {text}/>
+    return <TextViewOne textHtml={text}/>
   }
   else if (textViewIndex === 1) {
-    return <TextView textHtml = {text} />
+    return <TextView textHtml={text} />
   }
   else if (textViewIndex === 2) {
-    return <SplitView textHtml = {text} imageUrl={imageUrl} panelId = {panelId} />
+    return <SplitView textHtml={text} imageUrl={imageUrl} panelId={panelId} />
   }
   else if (textViewIndex === 3) {
     return <ImageView imageUrl={imageUrl} panelId={panelId}/>
   }
-};
+}
 
-export default PanelCentralContent;
+export default PanelCentralContent

@@ -17,13 +17,13 @@ export const contentStore = create<ContentStoreTypes>((set, get) => ({
   openedPanels: {}, 
 
   addPanelContent: (id: string, newPanel: PanelContentStore) => {
-    let newPanels = {...get().openedPanels}
+    const newPanels = { ...get().openedPanels }
     newPanels[id] = newPanel
-    set({openedPanels: newPanels})
+    set({ openedPanels: newPanels })
   },
 
   updateContentToggleIndex: (panelId: string, newContentIndex: number) => {
-    let panel = get().getPanel(panelId)
+    const panel = get().getPanel(panelId)
     if (!panel) return // TODO: add error handling
 
     panel.contentIndex = newContentIndex
@@ -31,7 +31,7 @@ export const contentStore = create<ContentStoreTypes>((set, get) => ({
   },
 
   updateTextViewIndex: (panelId: string, newTextViewIndex: number) => {
-    let panel = get().getPanel(panelId)
+    const panel = get().getPanel(panelId)
     if (!panel) return // TODO: add error handling
 
     panel.textViewIndex = newTextViewIndex
@@ -39,9 +39,9 @@ export const contentStore = create<ContentStoreTypes>((set, get) => ({
   },
 
   updatePanels: (panelId: string, updatedPanel: PanelContentStore) => {
-    let newPanels = {...get().openedPanels}
+    const newPanels = { ...get().openedPanels }
     newPanels[panelId] = updatedPanel
-    set({openedPanels: newPanels})
+    set({ openedPanels: newPanels })
   },
 
   getPanel: (panelId: string) => {

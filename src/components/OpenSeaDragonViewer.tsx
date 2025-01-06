@@ -1,5 +1,5 @@
-import React,{ useEffect, useRef, FC } from 'react';
-import OpenSeadragon from 'openseadragon';
+import React,{ useEffect, useRef, FC } from 'react'
+import OpenSeadragon from 'openseadragon'
 
 import ImageActionButtons from '@/components/ImageActionButtons'
 
@@ -9,8 +9,8 @@ interface OpenSeaDragonViewerProps {
   panelId: string
 }
 
-const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryColor, panelId}) => {
-  const viewerRef = useRef<OpenSeadragon.Viewer>();
+const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({ imageUrl, primaryColor, panelId }) => {
+  const viewerRef = useRef<OpenSeadragon.Viewer>()
   const viewerId = 'viewer-' + panelId
 
   useEffect(() => {
@@ -25,19 +25,19 @@ const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryCol
       zoomOutButton: 'zoom-out-' + panelId,
       fullPageButton: 'full-screen-' + panelId,
       homeButton: 'exit-full-screen-' + panelId
-    });
+    })
 
-    viewerRef.current = viewer;
+    viewerRef.current = viewer
 
     return () => {
-      viewerRef.current?.destroy();
-    };
-  }, []);
+      viewerRef.current?.destroy()
+    }
+  }, [])
   return (
       <div>
           <ImageActionButtons primaryColor={primaryColor} panelId={panelId}/>
           <div id={viewerId} style={{ width: '100%', height: '500px' }} />
       </div>
     )
-};
-export default OpenSeaDragonViewer;
+}
+export default OpenSeaDragonViewer

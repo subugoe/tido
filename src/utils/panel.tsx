@@ -32,7 +32,7 @@ export function isItemContentValid(itemData: Item): boolean {
 
 export function getContentType(value: string): string {
   let type = value.split('type=')[1]
-  type = type.charAt(0).toUpperCase() + type.slice(1); // convert the first letter to upper case
+  type = type.charAt(0).toUpperCase() + type.slice(1) // convert the first letter to upper case
   return type ?? 'missing'
   // when no string stays after type=, then the value is missing
 }
