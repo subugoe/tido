@@ -5,17 +5,17 @@ import { contentStore } from '@/store/ContentStore'
 
 interface ImageViewProps {
   imageUrl: string | undefined,
-  panelIndex: number
+  panelId: string
 }
 
-const ImageView: FC<ImageViewProps> = ({imageUrl, panelIndex}) => {
+const ImageView: FC<ImageViewProps> = ({imageUrl, panelId}) => {
 
-  const primaryColor = contentStore(state => state.openedPanels[panelIndex].primaryColor)
+  const primaryColor = contentStore(state => state.openedPanels[panelId].primaryColor)
 
   return (
     <div className="">
         <div className="t-flex t-flex-col">
-            <OpenSeaDragonViewer imageUrl= {imageUrl} primaryColor={primaryColor} panelIndex={panelIndex} />
+            <OpenSeaDragonViewer imageUrl= {imageUrl} primaryColor={primaryColor} panelId={panelId} />
         </div>
     </div>
   );

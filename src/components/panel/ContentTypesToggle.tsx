@@ -3,18 +3,18 @@ import { FC, MouseEvent } from 'react'
 import { contentStore } from '@/store/ContentStore'
 
 interface ContentTypesToggleProps {
-  panelIndex: number
+  panelId: string
 }
 
-const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ panelIndex }) => {
+const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ panelId }) => {
 
-  const contentTypes = contentStore(state => state.openedPanels[panelIndex].contentTypes)
-  const activeContentTypeIndex = contentStore(state => state.openedPanels[panelIndex].t)
+  const contentTypes = contentStore(state => state.openedPanels[panelId].contentTypes)
+  const activeContentTypeIndex = contentStore(state => state.openedPanels[panelId].contentIndex)
   const updateContentToggleIndex = contentStore(state => state.updateContentToggleIndex)
 
   function handleTextTabClick(e:MouseEvent<HTMLButtonElement>, i: number) {
     e.preventDefault()
-    updateContentToggleIndex(panelIndex, i)
+    updateContentToggleIndex(panelId, i)
   }
 
   let buttons

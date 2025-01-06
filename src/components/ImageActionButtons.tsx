@@ -5,7 +5,7 @@ import CustomHTML from '@/components/CustomHTML'
 
 interface ImageActionButtonsProps {
     primaryColor:  string,
-    panelIndex: number
+    panelId: string
 }
 
 interface ImageActions {
@@ -14,28 +14,28 @@ interface ImageActions {
     tooltip: string
 }
 
-const ImageActionButtons: FC<ImageActionButtonsProps> = ({primaryColor, panelIndex}) => {
+const ImageActionButtons: FC<ImageActionButtonsProps> = ({primaryColor, panelId}) => {
     
 const actions: ImageActions[] = [
     {
         icon: zoomIn,
-        id: 'zoom-in-' + panelIndex,
+        id: 'zoom-in-' + panelId,
         tooltip: 'Zoom In'
     },
 
     {
         icon: zoomOut,
-        id: 'zoom-out-' + panelIndex,
+        id: 'zoom-out-' + panelId,
         tooltip: 'Zoom Out'
     },
     {
         icon: fullscreen,
-        id: 'full-screen-' + panelIndex,
+        id: 'full-screen-' + panelId,
         tooltip: 'Toggle full page'
     },
     {
         icon: exitFullscreen,
-        id: 'exit-full-screen-' + panelIndex,
+        id: 'exit-full-screen-' + panelId,
         tooltip: 'Show base position of image'
     }
 ]
@@ -50,7 +50,7 @@ const actionButtons =
             title={action.tooltip}
             >
                 <div className="t-flex t-items-center t-justify-center" style={{color: primaryColor}}>
-                    <CustomHTML textHtml={action.icon} width='100%' />
+                    <CustomHTML textHtml={action.icon} width='100%' icon={{type:'icon', width:4, height:3}} />
                 </div>
 
         </button>

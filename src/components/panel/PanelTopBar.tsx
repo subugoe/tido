@@ -1,4 +1,4 @@
-import { FC, useRef, } from 'react';
+import { FC } from 'react';
 
 import TextViewsToggle from '@/components/panel/TextViewsToggle';
 import CustomHTML from '@/components/CustomHTML';
@@ -10,16 +10,16 @@ import {
 } from "@/components/ui/popover"
 
 interface PanelTopBarProps {
-    panelIndex: number
+    panelId: string
 }
 
-const PanelTopBar: FC <PanelTopBarProps>= ({panelIndex}) => {
+const PanelTopBar: FC <PanelTopBarProps>= ({panelId}) => {
 
   return (
     <div className="panel-top-bar t-mb-6 t-flex">
       <Popover>
         <PopoverTrigger className="open-tree-button t-h-8 t-w-10 t-relative">
-            <CustomHTML textHtml={tree} width="100" elementType='icon' />
+            <CustomHTML textHtml={tree} width="100" icon={{type: 'icon', width:5, height: 5}} />
         </PopoverTrigger>
           <PopoverContent className="t-bg-white t-absolute">
               <div className="t-flex t-flex-col t-pt-4 t-pl-3 t-w-80 t-shadow-md t-border-[1px] t-border-solid t-border-gray-300 t-rounded-md">
@@ -34,7 +34,7 @@ const PanelTopBar: FC <PanelTopBarProps>= ({panelIndex}) => {
           </PopoverContent>
       </Popover>
       
-      <TextViewsToggle panelIndex = {panelIndex} />
+      <TextViewsToggle panelId = {panelId} />
     </div>
   );
 };

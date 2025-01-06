@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { contentStore } from '@/store/ContentStore'
 import { useConfig } from '@/contexts/ConfigContext'
@@ -13,6 +13,7 @@ const PanelsWrapper: FC = () => {
   const { config } = useConfig()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<boolean | string>(false)
+  const panelIds = useRef<string[]>([])
 
   const addPanelContent = contentStore(state => state.addPanelContent)
 
@@ -101,14 +102,20 @@ const PanelsWrapper: FC = () => {
         if (!itemData) continue
 
         const contentTypes: string[] = getContentTypes(itemData.content)
+        // id of PanelContent object
+        const panelId = 'panel-' + i
+        panelIds.current.push(panelId)
 
-        addPanelContent({
-          item: itemData,
-          t:0, 
-          v:0,
-          contentTypes: contentTypes,
-          primaryColor: panels[i].colors.primary
-        })
+        addPanelContent(
+          panelId, 
+          {
+            item: itemData,
+            contentIndex:0, 
+            textViewIndex:0,
+            contentTypes: contentTypes,
+            primaryColor: panels[i].colors.primary
+          }
+        )
       }
       
       setLoading(false)
@@ -122,9 +129,9 @@ const PanelsWrapper: FC = () => {
   let loadingEl = <div> Loading data ... Please wait a sec</div>
   let openedPanels = null
 
-  if (!loading && panels && panels.length > 0) {
-    openedPanels = panels.map((_, i: number) => (
-        <Panel index={i} key={i}/>
+  if (!loading && panels) {
+    openedPanels = panelIds.current.map((id, i: number) => (
+        <Panel panelId={id} key={i}/>
      ))
   }
 

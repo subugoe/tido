@@ -13,16 +13,16 @@ import { request } from '@/utils/http'
 
 
 interface PanelCentralContentProps {
-  panelIndex: number
+  panelId: string
 }
 
-const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelIndex }) => {
+const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelId }) => {
   
-  const textViewIndex = contentStore(state => state.openedPanels[panelIndex].v)
-  const activeContentTypeIndex = contentStore(state => state.openedPanels[panelIndex].t)
+  const textViewIndex = contentStore(state => state.openedPanels[panelId].textViewIndex)
+  const activeContentTypeIndex = contentStore(state => state.openedPanels[panelId].contentIndex)
   const [text, setText] = useState<string>('')
-  const content = contentStore(state => state.openedPanels[panelIndex].item.content)
-  const imageUrl = contentStore(state => state.openedPanels[panelIndex].item.image?.id)
+  const content = contentStore(state => state.openedPanels[panelId].item.content)
+  const imageUrl = contentStore(state => state.openedPanels[panelId].item.image?.id)
 
   const [error, setError] = useState<boolean | string>(false)
 
@@ -62,10 +62,10 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelIndex }) => {
     return <TextView textHtml = {text} />
   }
   else if (textViewIndex === 2) {
-    return <SplitView textHtml = {text} imageUrl={imageUrl} panelIndex = {panelIndex} />
+    return <SplitView textHtml = {text} imageUrl={imageUrl} panelId = {panelId} />
   }
   else if (textViewIndex === 3) {
-    return <ImageView imageUrl={imageUrl} panelIndex={panelIndex}/>
+    return <ImageView imageUrl={imageUrl} panelId={panelId}/>
   }
 };
 

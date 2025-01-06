@@ -5,7 +5,7 @@ import CustomHTML from '@/components/CustomHTML';
 import { contentStore } from '@/store/ContentStore'
 
 interface TextViewsToggleProps {
-    panelIndex: number
+    panelId: string
 }
 
 interface IconKeys {
@@ -15,15 +15,14 @@ interface IconKeys {
   image: string
 }  
 
-const TextViewsToggle: FC <TextViewsToggleProps>= ({panelIndex}) => {
-
-    const textViewIndex = contentStore(state => state.openedPanels[panelIndex].v)
+const TextViewsToggle: FC <TextViewsToggleProps>= ({panelId}) => {
+    const textViewIndex = contentStore(state => state.openedPanels[panelId].textViewIndex)
     const updateTextViewIndex = contentStore(state => state.updateTextViewIndex)
 
   
     function handleTextViewClick(e:MouseEvent<HTMLButtonElement>, newIndex: number) {
         e.preventDefault()
-        updateTextViewIndex(panelIndex, newIndex)
+        updateTextViewIndex(panelId, newIndex)
     }
 
     const textViewsIcons = {
@@ -41,7 +40,7 @@ const TextViewsToggle: FC <TextViewsToggleProps>= ({panelIndex}) => {
             onClick={(e) => handleTextViewClick(e, i)}
             style={{'backgroundColor':(textViewIndex === i) ? '#E5E7EB': 'transparent'}}
         >
-            <CustomHTML textHtml={textViewsIcons[title as keyof IconKeys]} elementType='icon' />
+            <CustomHTML textHtml={textViewsIcons[title as keyof IconKeys]} icon={{type:'icon', width: 6, height:5}} />
         </button>
     ));
 

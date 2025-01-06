@@ -146,8 +146,8 @@ declare global {
         item: Item,
         texts?: string[],
         contentTypes?: string[],
-        t: number,
-        v: number,
+        contentIndex: number,
+        textViewIndex: number,
         imageUrl?: string,
         primaryColor: string
     }

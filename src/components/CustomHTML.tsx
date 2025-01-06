@@ -1,12 +1,18 @@
-import { useEffect, useRef, FC, useState } from 'react'
+import { useEffect, useRef, FC } from 'react'
 
 interface CustomHTMLProps {
   textHtml: string,
   width?: string | number,
-  elementType: string
+  icon?: Icon
 }
 
-const CustomHTML: FC<CustomHTMLProps> = ({ textHtml, width, elementType }) => {
+interface Icon {
+  type: string,
+  width: number, 
+  height: number
+}
+
+const CustomHTML: FC<CustomHTMLProps> = ({ textHtml, width, icon }) => {
   const ref = useRef<HTMLInputElement>(null)
 
   let iconEl = null
@@ -14,17 +20,17 @@ const CustomHTML: FC<CustomHTMLProps> = ({ textHtml, width, elementType }) => {
   useEffect(() => {
     if (ref?.current) {
     (ref.current as HTMLElement).innerHTML = textHtml
-    if (elementType === 'icon') {
+    if (icon?.type === 'icon') {
       const iconEls = ref.current.children
       if (iconEls && iconEls.length > 0) {
         iconEl = iconEls[0]
-        iconEl.classList.add('t-w-6','t-h-5') // TODO: these should be given as props
+        iconEl.classList.add('t-w-'+icon.width, 't-h-'+icon.height) 
       }
     }
     }
   }, [textHtml])
 
-  if (elementType === 'icon' && iconEl) return iconEl
+  if (iconEl) return iconEl
 
   return <div style={{ width: width+'%' }} ref={ref} />
 }

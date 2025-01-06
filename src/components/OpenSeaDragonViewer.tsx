@@ -6,12 +6,12 @@ import ImageActionButtons from '@/components/ImageActionButtons'
 interface OpenSeaDragonViewerProps {
   imageUrl: string | undefined,
   primaryColor: string,
-  panelIndex: number
+  panelId: string
 }
 
-const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryColor, panelIndex}) => {
+const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryColor, panelId}) => {
   const viewerRef = useRef<OpenSeadragon.Viewer>();
-  const viewerId = 'viewer-' + panelIndex
+  const viewerId = 'viewer-' + panelId
 
   useEffect(() => {
     const viewer = OpenSeadragon({
@@ -21,10 +21,10 @@ const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryCol
         type: 'image',
         url: imageUrl
       },
-      zoomInButton: 'zoom-in-' + panelIndex,
-      zoomOutButton: 'zoom-out-' + panelIndex,
-      fullPageButton: 'full-screen-' + panelIndex,
-      homeButton: 'exit-full-screen-' + panelIndex
+      zoomInButton: 'zoom-in-' + panelId,
+      zoomOutButton: 'zoom-out-' + panelId,
+      fullPageButton: 'full-screen-' + panelId,
+      homeButton: 'exit-full-screen-' + panelId
     });
 
     viewerRef.current = viewer;
@@ -35,7 +35,7 @@ const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({imageUrl, primaryCol
   }, []);
   return (
       <div>
-          <ImageActionButtons primaryColor={primaryColor} panelIndex={panelIndex}/>
+          <ImageActionButtons primaryColor={primaryColor} panelId={panelId}/>
           <div id={viewerId} style={{ width: '100%', height: '500px' }} />
       </div>
     )

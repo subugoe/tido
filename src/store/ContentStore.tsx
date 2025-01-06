@@ -1,49 +1,51 @@
 import { create } from 'zustand'
 
+interface VisiblePanels {
+  [id: string]: PanelContentStore
+}
+
 interface ContentStoreTypes {
-    openedPanels: PanelContentStore[] // or panels: each panel has one opened item 
-    addPanelContent: (newPanel: PanelContentStore) => void,
-    updatePanels: (panelIndex: number, updatedItem: PanelContentStore) => void,
-    updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => void,
-    updateTextViewIndex: (panelIndex: number, newTextViewIndex: number) => void,
-    getPanel: (panelIndex: number) => PanelContentStore | null,
+    openedPanels: VisiblePanels // or panels: each panel has one opened item 
+    addPanelContent: (id: string, newPanel: PanelContentStore) => void,
+    updatePanels: (panelId: string, updatedItem: PanelContentStore) => void,
+    updateContentToggleIndex: (panelIndex: string, newContentIndex: number) => void,
+    updateTextViewIndex: (panelId: string, newTextIndex: number) => void,
+    getPanel: (panelId: string) => PanelContentStore | null,
 }
 
 export const contentStore = create<ContentStoreTypes>((set, get) => ({
-  openedPanels: [], 
+  openedPanels: {}, 
 
-  addPanelContent: (newPanel: PanelContentStore) => {
-    let newPanels = [...get().openedPanels]
-    newPanels.push(newPanel)
+  addPanelContent: (id: string, newPanel: PanelContentStore) => {
+    let newPanels = {...get().openedPanels}
+    newPanels[id] = newPanel
     set({openedPanels: newPanels})
   },
 
-  updateContentToggleIndex: (panelIndex: number, newContentIndex: number) => {
-    let panel = get().getPanel(panelIndex)
+  updateContentToggleIndex: (panelId: string, newContentIndex: number) => {
+    let panel = get().getPanel(panelId)
     if (!panel) return // TODO: add error handling
 
-    panel.t = newContentIndex
-    get().updatePanels(panelIndex, panel)
+    panel.contentIndex = newContentIndex
+    get().updatePanels(panelId, panel)
   },
 
-  updateTextViewIndex: (panelIndex: number, newTextViewIndex: number) => {
-    let panel = get().getPanel(panelIndex)
+  updateTextViewIndex: (panelId: string, newTextViewIndex: number) => {
+    let panel = get().getPanel(panelId)
     if (!panel) return // TODO: add error handling
 
-    panel.v = newTextViewIndex
-    get().updatePanels(panelIndex, panel)
+    panel.textViewIndex = newTextViewIndex
+    get().updatePanels(panelId, panel)
   },
 
-  updatePanels: (panelIndex: number, updatedPanel: PanelContentStore) => {
-    let newPanels = [...get().openedPanels]
-    newPanels[panelIndex] = updatedPanel
+  updatePanels: (panelId: string, updatedPanel: PanelContentStore) => {
+    let newPanels = {...get().openedPanels}
+    newPanels[panelId] = updatedPanel
     set({openedPanels: newPanels})
   },
 
-  getPanel: (panelIndex: number) => {
-    if (panelIndex < 0) return null
-    if (panelIndex > get().openedPanels.length - 1) return null
-
-    return get().openedPanels[panelIndex]
+  getPanel: (panelId: string) => {
+    if (!(panelId in get().openedPanels)) return null
+    return get().openedPanels[panelId]
   }
 }))
