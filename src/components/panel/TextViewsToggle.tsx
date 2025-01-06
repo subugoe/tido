@@ -35,12 +35,12 @@ const TextViewsToggle: FC <TextViewsToggleProps>= ({panelId}) => {
   const buttons =
   Object.keys(textViewsIcons).map((title, i) => (
         <button
-            className="t-px-0.5 t-py-1 t-w-7 t-h-7  t-rounded t-mr-3"
+            className="t-px-1 t-py-1 t-w-7 t-h-7  t-rounded t-mr-3"
             key={i}
             onClick={(e) => handleTextViewClick(e, i)}
             style={{'backgroundColor':(textViewIndex === i) ? '#E5E7EB': 'transparent'}}
         >
-            <CustomHTML textHtml={textViewsIcons[title as keyof IconKeys]} icon={{type:'icon', width: 6, height:5}} />
+            <CustomHTML textHtml={textViewsIcons[title as keyof IconKeys]} icon={{type:'icon', width: 3, height:2}} />
         </button>
     ));
 

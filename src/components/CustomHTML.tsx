@@ -24,7 +24,7 @@ const CustomHTML: FC<CustomHTMLProps> = ({ textHtml, width, icon }) => {
       const iconEls = ref.current.children
       if (iconEls && iconEls.length > 0) {
         iconEl = iconEls[0]
-        iconEl.classList.add('t-w-'+icon.width, 't-h-'+icon.height) 
+        iconEl.classList.add('t-w-' + icon.width, 't-h-' + icon.height) 
       }
     }
     }
