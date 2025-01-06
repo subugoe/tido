@@ -6,7 +6,7 @@ import CustomHTML from '@/components/CustomHTML'
 
 interface SplitViewProps {
     textHtml: string,
-    imageUrl: string | undefined,
+    imageUrl: string |undefined,
     panelId: string
 }
 

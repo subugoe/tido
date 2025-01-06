@@ -4,7 +4,7 @@ import OpenSeadragon from 'openseadragon'
 import ImageActionButtons from '@/components/ImageActionButtons'
 
 interface OpenSeaDragonViewerProps {
-  imageUrl: string | undefined,
+  imageUrl: string |undefined,
   primaryColor: string,
   panelId: string
 }

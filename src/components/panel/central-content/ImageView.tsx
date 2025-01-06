@@ -4,7 +4,7 @@ import OpenSeaDragonViewer from '@/components/OpenSeaDragonViewer'
 import { contentStore } from '@/store/ContentStore'
 
 interface ImageViewProps {
-  imageUrl: string | undefined,
+  imageUrl: string |undefined,
   panelId: string
 }
 

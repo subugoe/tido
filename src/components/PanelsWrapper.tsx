@@ -7,6 +7,7 @@ import Panel from '@/components/panel/Panel'
 
 import { request } from '@/utils/http'
 import { getItemData, getManifestData, isItemContentValid, getContentTypes } from '@/utils/panel'
+import ErrorComponent from '@/components/ErrorComponent'
 
 
 const PanelsWrapper: FC = () => {
@@ -128,6 +129,8 @@ const PanelsWrapper: FC = () => {
   
   const loadingEl = <div> Loading data ... Please wait a sec</div>
   let openedPanels = null
+
+  if (error) return <ErrorComponent message={error}/>
 
   if (!loading && panels) {
     openedPanels = panelIds.current.map((id, i: number) => (
