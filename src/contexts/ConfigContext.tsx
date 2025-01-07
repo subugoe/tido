@@ -2,7 +2,7 @@ import { ReactNode, createContext, useContext, useState, FC } from 'react'
 const ConfigContext = createContext({})
 
 interface ConfigProvider {
-  config?: Config
+  config: Config
   setConfig?: (newConfig: Config) => void
 }
 

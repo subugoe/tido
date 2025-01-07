@@ -1,57 +1,63 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>TIDO</title>
+  <head>
+    <title>TIDO</title>
 
-  <meta charset="utf-8">
-  <meta name="description" content="<%= htmlWebpackPlugin.options.productDescription %>">
-  <meta name="format-detection" content="telephone=no">
-  <meta name="msapplication-tap-highlight" content="no">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>">
-  <style>
-    html, body {
-      margin: 0;
-    }
-    #app {
-      height: 100vh;
-    }
-  </style>
-</head>
-
-<body>
-<noscript>
-  <strong>We're sorry but this app doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-</noscript>
-<div id="app"></div>
-
-<script type="module" src="/src/main.tsx"></script>
-<script>
-  window.addEventListener('load', function () {
-    window.tido = new window.Tido({
-      globalTree: true,
-      panels: [
-        { 
-          entrypoint: {
-            url: 'https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json',
-            type: 'collection'
-          },
-          colors: {
-            primary: '#1E40AF'
-          }
-        },
-        { 
-          entrypoint: {
-            url: 'https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json',
-            type: 'collection'
-          },
-          colors: {
-            primary: 'green'
-          }
-        }
-      ],
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="<%= htmlWebpackPlugin.options.productDescription %>"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (ctx.mode.cordova || ctx.mode.capacitor) { %>, viewport-fit=cover<% } %>"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
       }
-    )
-  })
-  </script>
-</body>
+      #app {
+        height: 100vh;
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but this app doesn't work properly without JavaScript
+        enabled. Please enable it to continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      window.addEventListener("load", function () {
+        window.tido = new window.Tido({
+          globalTree: true,
+          colors: {
+            primary: "#1E40AF",
+          },
+          panels: [
+            {
+              entrypoint: {
+                url: "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
+                type: "collection",
+              },
+            },
+            {
+              entrypoint: {
+                url: "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json",
+                type: "collection",
+              },
+            },
+          ],
+        });
+      });
+    </script>
+  </body>
 </html>

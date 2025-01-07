@@ -126,7 +126,7 @@ const PanelsWrapper: FC = () => {
           contentIndex: 0,
           textViewIndex: 0,
           contentTypes: contentTypes,
-          primaryColor: panels[i].colors.primary,
+          primaryColor: config.colors.primary,
         })
       }
 
