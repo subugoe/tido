@@ -3,10 +3,10 @@ import { FC, useEffect, useState } from 'react'
 import { contentStore } from '@/store/ContentStore'
 import { usePanel } from '@/contexts/PanelContext'
 
-import TextViewOne from '@/components/panel/central-content/TextViewOne'
-import TextView from '@/components/panel/central-content/TextView'
-import SplitView from '@/components/panel/central-content/SplitView'
-import ImageView from '@/components/panel/central-content/ImageView'
+import TextViewOne from '@/components/panel/views/TextViewOne'
+import TextView from '@/components/panel/views/TextView'
+import SplitView from '@/components/panel/views/SplitView'
+import ImageView from '@/components/panel/views/ImageView'
 
 import ErrorComponent from '@/components/ErrorComponent'
 

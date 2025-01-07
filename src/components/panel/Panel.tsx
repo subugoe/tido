@@ -3,7 +3,7 @@ import { FC, useState } from 'react'
 import { PanelProvider } from '@/contexts/PanelContext'
 
 import ContentTypesToggle from '@/components/panel/ContentTypesToggle'
-import PanelCentralContent from '@/components/panel/central-content/PanelCentralContent'
+import PanelCentralContent from '@/components/panel/views/PanelCentralContent'
 import PanelTopBar from '@/components/panel/PanelTopBar'
 
 import ErrorComponent from '@/components/ErrorComponent'
