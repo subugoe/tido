@@ -5,16 +5,19 @@ interface VisiblePanels {
 }
 
 interface ContentStoreTypes {
-    openedPanels: VisiblePanels // or panels: each panel has one opened item 
-    addPanelContent: (id: string, newPanel: PanelContentStore) => void,
-    updatePanels: (panelId: string, updatedItem: PanelContentStore) => void,
-    updateContentToggleIndex: (panelIndex: string, newContentIndex: number) => void,
-    updateTextViewIndex: (panelId: string, newTextIndex: number) => void,
-    getPanel: (panelId: string) => PanelContentStore | null,
+  openedPanels: VisiblePanels // or panels: each panel has one opened item
+  addPanelContent: (id: string, newPanel: PanelContentStore) => void
+  updatePanels: (panelId: string, updatedItem: PanelContentStore) => void
+  updateContentToggleIndex: (
+    panelIndex: string,
+    newContentIndex: number
+  ) => void
+  updateTextViewIndex: (panelId: string, newTextIndex: number) => void
+  getPanel: (panelId: string) => PanelContentStore | null
 }
 
 export const contentStore = create<ContentStoreTypes>((set, get) => ({
-  openedPanels: {}, 
+  openedPanels: {},
 
   addPanelContent: (id: string, newPanel: PanelContentStore) => {
     const newPanels = { ...get().openedPanels }
@@ -47,5 +50,5 @@ export const contentStore = create<ContentStoreTypes>((set, get) => ({
   getPanel: (panelId: string) => {
     if (!(panelId in get().openedPanels)) return null
     return get().openedPanels[panelId]
-  }
+  },
 }))

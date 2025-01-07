@@ -6,9 +6,13 @@ import { useConfig } from '@/contexts/ConfigContext'
 import Panel from '@/components/panel/Panel'
 
 import { request } from '@/utils/http'
-import { getItemData, getManifestData, isItemContentValid, getContentTypes } from '@/utils/panel'
+import {
+  getItemData,
+  getManifestData,
+  isItemContentValid,
+  getContentTypes,
+} from '@/utils/panel'
 import ErrorComponent from '@/components/ErrorComponent'
-
 
 const PanelsWrapper: FC = () => {
   const { config } = useConfig()
@@ -16,7 +20,7 @@ const PanelsWrapper: FC = () => {
   const [error, setError] = useState<boolean | string>(false)
   const panelIds = useRef<string[]>([])
 
-  const addPanelContent = contentStore(state => state.addPanelContent)
+  const addPanelContent = contentStore((state) => state.addPanelContent)
 
   const panels = config?.panels
 
@@ -27,8 +31,13 @@ const PanelsWrapper: FC = () => {
     }
     const entrypointType = panelConfig.entrypoint.type.toLowerCase()
 
-    if (!(entrypointType === 'manifest') && !(entrypointType === 'collection')) {
-      setError('Entrypoint in the panel config is provided wrong. It should have either a `collection` or `manifest` type')
+    if (
+      !(entrypointType === 'manifest') &&
+      !(entrypointType === 'collection')
+    ) {
+      setError(
+        'Entrypoint in the panel config is provided wrong. It should have either a `collection` or `manifest` type'
+      )
       return null
     }
 
@@ -52,10 +61,13 @@ const PanelsWrapper: FC = () => {
 
     if (!response.success) {
       setError(response.message)
-      return 
+      return
     }
 
-    const documentData = documentType === 'collection' ? response.data as Collection : response.data as Manifest
+    const documentData =
+      documentType === 'collection'
+        ? (response.data as Collection)
+        : (response.data as Manifest)
 
     // read Manifest data
     response = await getManifestData(documentData, documentType)
@@ -68,7 +80,11 @@ const PanelsWrapper: FC = () => {
 
     // read item data
     if (!manifestData.sequence || manifestData.sequence.length === 0) {
-      setError ('The items of manifest ' + (manifestData.label ?? 'unknown') + ' are not defined or are empty!!')
+      setError(
+        'The items of manifest ' +
+          (manifestData.label ?? 'unknown') +
+          ' are not defined or are empty!!'
+      )
       return
     }
 
@@ -85,21 +101,19 @@ const PanelsWrapper: FC = () => {
       return
     }
 
-    return itemData    
+    return itemData
   }
 
-
   useEffect(() => {
-
     async function initData(panels: PanelConfig[]) {
-      for (let i = 0; i < panels.length; i++) { 
+      for (let i = 0; i < panels.length; i++) {
         const documentType = getDocumentType(panels[i])
         if (!documentType) {
           setError('The document type for this entrypoint url is not valid')
           continue
         }
 
-        const itemData = await readData(panels[i], documentType) 
+        const itemData = await readData(panels[i], documentType)
         if (!itemData) continue
 
         const contentTypes: string[] = getContentTypes(itemData.content)
@@ -107,18 +121,15 @@ const PanelsWrapper: FC = () => {
         const panelId = 'panel-' + i
         panelIds.current.push(panelId)
 
-        addPanelContent(
-          panelId, 
-          {
-            item: itemData,
-            contentIndex:0, 
-            textViewIndex:0,
-            contentTypes: contentTypes,
-            primaryColor: panels[i].colors.primary
-          }
-        )
+        addPanelContent(panelId, {
+          item: itemData,
+          contentIndex: 0,
+          textViewIndex: 0,
+          contentTypes: contentTypes,
+          primaryColor: panels[i].colors.primary,
+        })
       }
-      
+
       setLoading(false)
     }
 
@@ -126,21 +137,21 @@ const PanelsWrapper: FC = () => {
 
     initData(panels)
   }, [])
-  
+
   const loadingEl = <div> Loading data ... Please wait a sec</div>
   let openedPanels = null
 
-  if (error) return <ErrorComponent message={error}/>
+  if (error) return <ErrorComponent message={error} />
 
   if (!loading && panels) {
     openedPanels = panelIds.current.map((id, i: number) => (
-        <Panel panelId={id} key={i}/>
-     ))
+      <Panel panelId={id} key={i} />
+    ))
   }
 
   if (loading) return loadingEl
 
-  return <div className="t-flex t-flex-row t-ml-[6%]"> { openedPanels }</div>
+  return <div className="t-flex t-flex-row t-ml-[6%]"> {openedPanels}</div>
 }
 
 export default PanelsWrapper
