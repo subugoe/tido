@@ -136,12 +136,12 @@ declare global {
     modules?: Module[]
   }
 
-  interface PanelContentStore {
+  interface PanelState {
     item: Item
     texts?: string[]
     contentTypes?: string[]
     contentIndex: number
-    textViewIndex: number
+    viewIndex: number
     imageUrl?: string
     primaryColor: string
   }

@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react'
 
 import { contentStore } from '@/store/ContentStore'
 import { useConfig } from '@/contexts/ConfigContext'
+import { PanelProvider } from '@/contexts/PanelContext'
 
 import Panel from '@/components/panel/Panel'
 
@@ -117,14 +118,14 @@ const PanelsWrapper: FC = () => {
         if (!itemData) continue
 
         const contentTypes: string[] = getContentTypes(itemData.content)
-        // id of PanelContent object
-        const panelId = 'panel-' + i
+        // unique id of PanelContent object
+        const panelId = crypto.randomUUID()
         panelIds.current.push(panelId)
 
         addPanelContent(panelId, {
           item: itemData,
           contentIndex: 0,
-          textViewIndex: 0,
+          viewIndex: 0,
           contentTypes: contentTypes,
           primaryColor: config.colors.primary,
         })
@@ -144,8 +145,10 @@ const PanelsWrapper: FC = () => {
   if (error) return <ErrorComponent message={error} />
 
   if (!loading && panels) {
-    openedPanels = panelIds.current.map((id, i: number) => (
-      <Panel panelId={id} key={i} />
+    openedPanels = panelIds.current.map((panelId, i: number) => (
+      <PanelProvider id={panelId} key={i}>
+        <Panel />
+      </PanelProvider>
     ))
   }
 

@@ -15,17 +15,15 @@ interface IconKeys {
 const TextViewsToggle: FC = () => {
   const { panelId } = usePanel()
 
-  const textViewIndex = contentStore(
-    (state) => state.openedPanels[panelId].textViewIndex
-  )
-  const updateTextViewIndex = contentStore((state) => state.updateTextViewIndex)
+  const viewIndex = contentStore((state) => state.panels[panelId].viewIndex)
+  const updateViewIndex = contentStore((state) => state.updateViewIndex)
 
   function handleTextViewClick(
     e: MouseEvent<HTMLButtonElement>,
     newIndex: number
   ) {
     e.preventDefault()
-    updateTextViewIndex(panelId, newIndex)
+    updateViewIndex(panelId, newIndex)
   }
 
   const textViewsIcons = {
@@ -41,7 +39,7 @@ const TextViewsToggle: FC = () => {
       key={i}
       onClick={(e) => handleTextViewClick(e, i)}
       style={{
-        backgroundColor: textViewIndex === i ? '#E5E7EB' : 'transparent',
+        backgroundColor: viewIndex === i ? '#E5E7EB' : 'transparent',
       }}
     >
       <CustomHTML

@@ -10,9 +10,7 @@ import ImageActionButtons from '@/components/ImageActionButtons'
 const OpenSeaDragonViewer: FC = () => {
   const { panelId } = usePanel()
 
-  const imageUrl = contentStore(
-    (state) => state.openedPanels[panelId].item.image?.id
-  )
+  const imageUrl = contentStore((state) => state.panels[panelId].item.image?.id)
 
   const viewerRef = useRef<OpenSeadragon.Viewer>()
   const viewerId = 'viewer-' + panelId

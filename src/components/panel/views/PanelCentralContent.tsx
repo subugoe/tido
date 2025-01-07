@@ -15,16 +15,12 @@ import { request } from '@/utils/http'
 const PanelCentralContent: FC = () => {
   const { panelId } = usePanel()
 
-  const textViewIndex = contentStore(
-    (state) => state.openedPanels[panelId].textViewIndex
-  )
+  const viewIndex = contentStore((state) => state.panels[panelId].viewIndex)
   const activeContentTypeIndex = contentStore(
-    (state) => state.openedPanels[panelId].contentIndex
+    (state) => state.panels[panelId].contentIndex
   )
   const [text, setText] = useState<string>('')
-  const content = contentStore(
-    (state) => state.openedPanels[panelId].item.content
-  )
+  const content = contentStore((state) => state.panels[panelId].item.content)
 
   const [error, setError] = useState<boolean | string>(false)
 
@@ -54,13 +50,13 @@ const PanelCentralContent: FC = () => {
     return <ErrorComponent message={error} />
   }
 
-  if (textViewIndex === 0) {
+  if (viewIndex === 0) {
     return <TextViewOne textHtml={text} />
-  } else if (textViewIndex === 1) {
+  } else if (viewIndex === 1) {
     return <TextView textHtml={text} />
-  } else if (textViewIndex === 2) {
+  } else if (viewIndex === 2) {
     return <SplitView textHtml={text} />
-  } else if (textViewIndex === 3) {
+  } else if (viewIndex === 3) {
     return <ImageView />
   }
 }

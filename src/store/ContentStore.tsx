@@ -1,28 +1,28 @@
 import { create } from 'zustand'
 
-interface VisiblePanels {
-  [id: string]: PanelContentStore
+interface PanelStates {
+  [id: string]: PanelState
 }
 
 interface ContentStoreTypes {
-  openedPanels: VisiblePanels // or panels: each panel has one opened item
-  addPanelContent: (id: string, newPanel: PanelContentStore) => void
-  updatePanels: (panelId: string, updatedItem: PanelContentStore) => void
+  panels: PanelStates // or panels: each panel has one opened item
+  addPanelContent: (id: string, newPanel: PanelState) => void
+  updatePanels: (panelId: string, updatedItem: PanelState) => void
   updateContentToggleIndex: (
     panelIndex: string,
     newContentIndex: number
   ) => void
-  updateTextViewIndex: (panelId: string, newTextIndex: number) => void
-  getPanel: (panelId: string) => PanelContentStore | null
+  updateViewIndex: (panelId: string, newViewIndex: number) => void
+  getPanel: (panelId: string) => PanelState | null
 }
 
 export const contentStore = create<ContentStoreTypes>((set, get) => ({
-  openedPanels: {},
+  panels: {},
 
-  addPanelContent: (id: string, newPanel: PanelContentStore) => {
-    const newPanels = { ...get().openedPanels }
+  addPanelContent: (id: string, newPanel: PanelState) => {
+    const newPanels = { ...get().panels }
     newPanels[id] = newPanel
-    set({ openedPanels: newPanels })
+    set({ panels: newPanels })
   },
 
   updateContentToggleIndex: (panelId: string, newContentIndex: number) => {
@@ -33,22 +33,22 @@ export const contentStore = create<ContentStoreTypes>((set, get) => ({
     get().updatePanels(panelId, panel)
   },
 
-  updateTextViewIndex: (panelId: string, newTextViewIndex: number) => {
+  updateViewIndex: (panelId: string, newViewIndex: number) => {
     const panel = get().getPanel(panelId)
     if (!panel) return // TODO: add error handling
 
-    panel.textViewIndex = newTextViewIndex
+    panel.viewIndex = newViewIndex
     get().updatePanels(panelId, panel)
   },
 
-  updatePanels: (panelId: string, updatedPanel: PanelContentStore) => {
-    const newPanels = { ...get().openedPanels }
+  updatePanels: (panelId: string, updatedPanel: PanelState) => {
+    const newPanels = { ...get().panels }
     newPanels[panelId] = updatedPanel
-    set({ openedPanels: newPanels })
+    set({ panels: newPanels })
   },
 
   getPanel: (panelId: string) => {
-    if (!(panelId in get().openedPanels)) return null
-    return get().openedPanels[panelId]
+    if (!(panelId in get().panels)) return null
+    return get().panels[panelId]
   },
 }))

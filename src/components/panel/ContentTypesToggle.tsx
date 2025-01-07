@@ -7,10 +7,10 @@ const ContentTypesToggle: FC = () => {
   const { panelId } = usePanel()
 
   const contentTypes = contentStore(
-    (state) => state.openedPanels[panelId].contentTypes
+    (state) => state.panels[panelId].contentTypes
   )
   const activeContentTypeIndex = contentStore(
-    (state) => state.openedPanels[panelId].contentIndex
+    (state) => state.panels[panelId].contentIndex
   )
   const updateContentToggleIndex = contentStore(
     (state) => state.updateContentToggleIndex
