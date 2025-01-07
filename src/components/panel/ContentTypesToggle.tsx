@@ -1,12 +1,11 @@
 import { FC, MouseEvent } from 'react'
 
 import { contentStore } from '@/store/ContentStore'
+import { usePanel } from '@/contexts/PanelContext'
 
-interface ContentTypesToggleProps {
-  panelId: string
-}
+const ContentTypesToggle: FC = () => {
+  const { panelId } = usePanel()
 
-const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ panelId }) => {
   const contentTypes = contentStore(
     (state) => state.openedPanels[panelId].contentTypes
   )
@@ -17,9 +16,12 @@ const ContentTypesToggle: FC<ContentTypesToggleProps> = ({ panelId }) => {
     (state) => state.updateContentToggleIndex
   )
 
-  function handleTextTabClick(e: MouseEvent<HTMLButtonElement>, i: number) {
+  function handleTextTabClick(
+    e: MouseEvent<HTMLButtonElement>,
+    newContentIndex: number
+  ) {
     e.preventDefault()
-    updateContentToggleIndex(panelId, i)
+    updateContentToggleIndex(panelId, newContentIndex)
   }
 
   let buttons

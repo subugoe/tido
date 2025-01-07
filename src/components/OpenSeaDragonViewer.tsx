@@ -1,19 +1,19 @@
-import React, { useEffect, useRef, FC } from 'react'
+import { useEffect, useRef, FC } from 'react'
 import OpenSeadragon from 'openseadragon'
+
+import { usePanel } from '@/contexts/PanelContext'
+
+import { contentStore } from '@/store/ContentStore'
 
 import ImageActionButtons from '@/components/ImageActionButtons'
 
-interface OpenSeaDragonViewerProps {
-  imageUrl: string | undefined
-  primaryColor: string
-  panelId: string
-}
+const OpenSeaDragonViewer: FC = () => {
+  const { panelId } = usePanel()
 
-const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({
-  imageUrl,
-  primaryColor,
-  panelId,
-}) => {
+  const imageUrl = contentStore(
+    (state) => state.openedPanels[panelId].item.image?.id
+  )
+
   const viewerRef = useRef<OpenSeadragon.Viewer>()
   const viewerId = 'viewer-' + panelId
 
@@ -40,7 +40,7 @@ const OpenSeaDragonViewer: FC<OpenSeaDragonViewerProps> = ({
   }, [])
   return (
     <div>
-      <ImageActionButtons primaryColor={primaryColor} panelId={panelId} />
+      <ImageActionButtons />
       <div id={viewerId} style={{ width: '100%', height: '500px' }} />
     </div>
   )

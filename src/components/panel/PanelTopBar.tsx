@@ -9,11 +9,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-interface PanelTopBarProps {
-  panelId: string
-}
-
-const PanelTopBar: FC<PanelTopBarProps> = ({ panelId }) => {
+const PanelTopBar: FC = () => {
   return (
     <div className="panel-top-bar t-mb-6 t-flex">
       <Popover>
@@ -32,7 +28,7 @@ const PanelTopBar: FC<PanelTopBarProps> = ({ panelId }) => {
         </PopoverContent>
       </Popover>
 
-      <TextViewsToggle panelId={panelId} />
+      <TextViewsToggle />
     </div>
   )
 }

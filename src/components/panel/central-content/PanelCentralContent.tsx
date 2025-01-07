@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 
 import { contentStore } from '@/store/ContentStore'
+import { usePanel } from '@/contexts/PanelContext'
 
 import TextViewOne from '@/components/panel/central-content/TextViewOne'
 import TextView from '@/components/panel/central-content/TextView'
@@ -11,11 +12,9 @@ import ErrorComponent from '@/components/ErrorComponent'
 
 import { request } from '@/utils/http'
 
-interface PanelCentralContentProps {
-  panelId: string
-}
+const PanelCentralContent: FC = () => {
+  const { panelId } = usePanel()
 
-const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelId }) => {
   const textViewIndex = contentStore(
     (state) => state.openedPanels[panelId].textViewIndex
   )
@@ -25,9 +24,6 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelId }) => {
   const [text, setText] = useState<string>('')
   const content = contentStore(
     (state) => state.openedPanels[panelId].item.content
-  )
-  const imageUrl = contentStore(
-    (state) => state.openedPanels[panelId].item.image?.id
   )
 
   const [error, setError] = useState<boolean | string>(false)
@@ -63,9 +59,9 @@ const PanelCentralContent: FC<PanelCentralContentProps> = ({ panelId }) => {
   } else if (textViewIndex === 1) {
     return <TextView textHtml={text} />
   } else if (textViewIndex === 2) {
-    return <SplitView textHtml={text} imageUrl={imageUrl} panelId={panelId} />
+    return <SplitView textHtml={text} />
   } else if (textViewIndex === 3) {
-    return <ImageView imageUrl={imageUrl} panelId={panelId} />
+    return <ImageView />
   }
 }
 

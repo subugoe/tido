@@ -1,11 +1,10 @@
 import { FC } from 'react'
 import { zoomIn, zoomOut, fullscreen, exitFullscreen } from '@/utils/icons'
-import CustomHTML from '@/components/CustomHTML'
 
-interface ImageActionButtonsProps {
-  primaryColor: string
-  panelId: string
-}
+import { useConfig } from '@/contexts/ConfigContext'
+import { usePanel } from '@/contexts/PanelContext'
+
+import CustomHTML from '@/components/CustomHTML'
 
 interface ImageActions {
   icon: string
@@ -13,10 +12,10 @@ interface ImageActions {
   tooltip: string
 }
 
-const ImageActionButtons: FC<ImageActionButtonsProps> = ({
-  primaryColor,
-  panelId,
-}) => {
+const ImageActionButtons: FC = () => {
+  const primaryColor = useConfig().config.colors.primary
+  const { panelId } = usePanel()
+
   const actions: ImageActions[] = [
     {
       icon: zoomIn,

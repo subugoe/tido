@@ -3,10 +3,7 @@ import { textViewOne, textView, splitView, imageView } from '@/utils/icons'
 import CustomHTML from '@/components/CustomHTML'
 
 import { contentStore } from '@/store/ContentStore'
-
-interface TextViewsToggleProps {
-  panelId: string
-}
+import { usePanel } from '@/contexts/PanelContext'
 
 interface IconKeys {
   viewOne: string
@@ -15,7 +12,9 @@ interface IconKeys {
   image: string
 }
 
-const TextViewsToggle: FC<TextViewsToggleProps> = ({ panelId }) => {
+const TextViewsToggle: FC = () => {
+  const { panelId } = usePanel()
+
   const textViewIndex = contentStore(
     (state) => state.openedPanels[panelId].textViewIndex
   )
