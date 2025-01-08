@@ -12,8 +12,9 @@ declare global {
 }
 
 window.Tido = function Tido(config = {} as Config) {
-  createRoot(document.getElementById('app')!).render(<App customConfig={config}/>)
+  createRoot(document.getElementById('app')!).render(
+    <App customConfig={config} />
+  )
 }
-
 
 export default window.Tido

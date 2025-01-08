@@ -7,7 +7,6 @@ interface AppProps {
 }
 
 const App: FC<AppProps> = ({ customConfig }) => {
-
   return (
     <ConfigProvider customConfig={customConfig}>
       <div className="tido">
