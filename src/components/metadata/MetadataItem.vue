@@ -53,26 +53,23 @@ function isLink(): boolean {
 }
 
 function getMetadataView(panels) {
-  let panelMetadata = panels.filter(
-    (panel) => panel.label.toLowerCase() === "metadata"
-  );
-  let metadataView;
-  if (panelMetadata.length > 0) {
-    // when metadata is one separate panel
-    metadataView = panelMetadata[0].views[0];
-  } else {
-    // when there is one panel containing content and metadata views
-    const panelContainingMetadata = panels.filter((panel) =>
-      panel.label.toLowerCase().includes("metadata")
-    )[0];
-    metadataView = panelContainingMetadata.views.filter(
-      (view) => view.label.toLowerCase() === "metadata"
-    )[0];
+  let metadataView
+  for (let i = 0; i < panels.length; i++) {
+    const panel = panels[i]
+    const viewsPanel = panel.views
+
+    if (!viewsPanel || viewsPanel.length === 0) continue
+
+    metadataView = viewsPanel.filter((view) => view.connector.id === 2)
+
+    if (metadataView.length > 0) return metadataView[0]
   }
-  return metadataView;
+
+  return null
 }
 
 function showCopyCitation(key, config) {
+  if (!config.panels || config.panels.length === false) return false
   const metadataView = getMetadataView(config.panels);
   // when we retrieve each MetadataItem, we want to know whether we are in the row of the citation
   if (metadataView.connector.options.citationKey) {
