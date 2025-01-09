@@ -57,7 +57,7 @@ export default {
   license: 'Licensed under GNU Affero General Public License v3.0',
   source_code: 'Source Code',
   label: 'Label',
-  language: 'Language',
+  language: 'Language (ISO 639-3)',
   Letter: 'Letter',
   License: 'License',
   Location: 'Current location',

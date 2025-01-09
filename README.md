@@ -186,6 +186,7 @@ There are options to
       },
       {
         "label": "text",
+        "width": 1.5,
         "views": [
           {
             "id": "text1",
@@ -297,6 +298,7 @@ There are options to
 | panels[i].views                         | ViewConfig[]  | &darr;    | Defines an array of views inside of a panel. If there are multiple views, we display them in tabs. If there is only one view we omit the tabs and display the view directly inside the panel.                                   |
 | panels[i].views[j].id                   | String        | `view-j`  | Unique identifier for the view across the app.                                                                                                                                                                                  |
 | panels[i].views[j].label                | String        | `View j`  | Sets the label which appears in the tab header. If there is only one view then this label will be displayed as panel header label. Translatable.                                                                                |
+| panels[i].views[j].width                | Number        | 1         | Defines a width multiplier to a panel default width. Values between 1 and 10 are allowed. Float values allowed. Causes horizontal overflow. Ignored on mobile screens since the default width takes the whole screen width.     |
 | panels[i].views[j].default              | Boolean       | `false`   | Specifies whether this view should be visible at the initial start of the app. If no `default` keys provided on views or all `default` keys are set to `false`, then the first view will be considered as default.              |
 | panels[i].views[j].connector            | Object        | &darr;    | Defines which view component and its options. Each view can have its own arbitrary config options.                                                                                                                              |
 | panels[i].views[j].connector.id         | Number        | null      | Defines the component id which will be rendered dynamically for this view. See view connectors.                                                                                                                                 |

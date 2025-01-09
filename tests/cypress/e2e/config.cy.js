@@ -1,5 +1,5 @@
 const selectors = {
-  panels: '.panels-wrapper > .panel'
+  panels: '.panels-wrapper .panel'
 }
 
 describe('Config', () => {

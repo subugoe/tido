@@ -25,7 +25,7 @@ describe('Header initial', () => {
   it('Should toggle panels', () => {
     cy
       .get(selectors.panelsWrapper)
-      .children()
+      .find('.panel')
       .should('have.length', 4);
 
     // Clicking on first item
@@ -34,7 +34,7 @@ describe('Header initial', () => {
       .first()
       .click()
       .get(selectors.panelsWrapper)
-      .children()
+      .find('.panel')
       .first()
       .should('not.be.visible');
 
@@ -44,7 +44,7 @@ describe('Header initial', () => {
       .first()
       .click()
       .get(selectors.panelsWrapper)
-      .children()
+      .find('.panel')
       .first()
       .should('be.visible');
   });
