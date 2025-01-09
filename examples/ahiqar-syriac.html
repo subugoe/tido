@@ -25,11 +25,7 @@
     </select>
   </nav>
 </header>
-<div id="app">
-  <div class="empty-container">
-    <h1>Coming soon.</h1>
-  </div>
-</div>
+<div id="app"></div>
 <script src="dist/tido.js"></script>
 <script>
 window.addEventListener('load', function () {
@@ -43,10 +39,8 @@ window.addEventListener('load', function () {
     window.location = event.target.value
   }
 
-  return;
-
-  const tido = new Tido({
-    "collection": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
+  new Tido({
+    "collection": "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
     "labels": {
       "item": "Sheet",
       "manifest": "Manuscript"
