@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.4.0](https://github.com/subugoe/tido/compare/v4.3.1...v4.4.0) (2025-01-09)
+
+
+### Features
+
+* add "width" as config option, panels have now a default width and overflow horizontally, update mobile panel design to be full width ([df4aa17](https://github.com/subugoe/tido/commit/df4aa173aeea1d57ac392b68928e7dfb583e4bc8))
+* add a share copy button which copies citation value to clipboard ([#530](https://github.com/subugoe/tido/issues/530)) ([b697eba](https://github.com/subugoe/tido/commit/b697eba327cb0411aae6bbf7f352657dd6ee846c))
+* change language display label ([606d148](https://github.com/subugoe/tido/commit/606d148f48317bdc164466e68870ecd9a0c8dc06))
+
+
+### Bug Fixes
+
+* don't change value of nav button labels when new item has not loaded yet ([34d9e07](https://github.com/subugoe/tido/commit/34d9e074fa7afa2c227c7ee428a01ac9dbfb3e3c))
+
 ### [4.3.1](https://github.com/subugoe/tido/compare/v4.3.0...v4.3.1) (2024-11-11)
 
 
