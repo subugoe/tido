@@ -10,47 +10,37 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useContentsStore } from '@/stores/contents'
-import { useConfigStore } from '@/stores/config'
-import MetadataItem from '@/components/metadata/MetadataItem.vue'
-import { orderMetadataItems } from '@/utils/metadata'
+import { computed } from 'vue';
+import { useContentsStore } from '@/stores/contents';
+import { useConfigStore } from '@/stores/config';
+import MetadataItem from '@/components/metadata/MetadataItem.vue';
+import { orderMetadataItems } from '@/utils/metadata';
 
-import { getMetadataView } from '@/utils/metadata'
+import { getMetadataView } from '@/utils/metadata';
 
-const contentStore = useContentsStore()
+const contentStore = useContentsStore();
 
 function getCollectorsName(collection: Collection): string | null {
-  if (!collection) return null
-  if (collection.collector.length === 0) return null
-  if (collection.collector.length === 1) return collection.collector[0].name
+  if (!collection) return null;
+  if (collection.collector.length === 0) return null;
+  if (collection.collector.length === 1) return collection.collector[0].name;
 
   return collection.collector.map((collector) => collector.name).join(', ')
 }
 
-const collection = computed<Collection>(() => contentStore.collection)
+const collection = computed<Collection>(() => contentStore.collection);
 
 const metadata = computed(() => {
-  let collectionOrder = getMetadataView(useConfigStore().config.panels)
-    .connector.options.collectionOrder
-
-  let collectionOrderLower
-  if (collectionOrder?.length > 0) {
-    collectionOrderLower = collectionOrder.map((word) =>
-      word.toLowerCase()
-    )
-  }
-
-  if (!collection.value) return []
+  if (!collection.value) return [];
 
   const mappings = {
     main: 'title',
     sub: 'subtitle',
-  }
+  };
 
-  const collectorsName: string | null = getCollectorsName(collection.value)
-  const { description } = collection.value
-  const collectionTitle: Title[] = collection.value.title
+  const collectorsName: string | null = getCollectorsName(collection.value);
+  const { description } = collection.value;
+  const collectionTitle: Title[] = collection.value.title;
 
   const defaultMetadata = [
     ...collectionTitle
@@ -60,8 +50,18 @@ const metadata = computed(() => {
         value: title.title,
       })),
     ...(collectorsName ? [{ key: 'collector', value: collectorsName }] : []),
-    ...(description ? [{ key: 'description', value: description }] : []),
-  ]
+    ...(description ? [{ key: 'description', value: description }] : []), 
+  ];
+
+  let collectionOrder = getMetadataView(useConfigStore().config.panels)
+    .connector.options.collectionOrder
+
+  let collectionOrderLower
+  if (collectionOrder?.length > 0) {
+    collectionOrderLower = collectionOrder.map((word) =>
+      word.toLowerCase()
+    )
+  }
 
   let orderedMetadata = []
   if (collectionOrderLower?.length > 0) {
