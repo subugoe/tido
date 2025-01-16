@@ -31,12 +31,12 @@ function getCollectorsName(collection: Collection): string | null {
 const collection = computed<Collection>(() => contentStore.collection)
 
 const metadata = computed(() => {
-  let collectionOrderMetadata = getMetadataView(useConfigStore().config.panels)
-    .connector.options.orderCollectionMetadata
+  let collectionOrder = getMetadataView(useConfigStore().config.panels)
+    .connector.options.collectionOrder
 
-  let collectionOrderMetadataLower
-  if (collectionOrderMetadata?.length > 0) {
-    collectionOrderMetadataLower = collectionOrderMetadata.map((word) =>
+  let collectionOrderLower
+  if (collectionOrder?.length > 0) {
+    collectionOrderLower = collectionOrder.map((word) =>
       word.toLowerCase()
     )
   }
@@ -64,9 +64,9 @@ const metadata = computed(() => {
   ]
 
   let orderedMetadata = []
-  if (collectionOrderMetadataLower?.length > 0) {
+  if (collectionOrderLower?.length > 0) {
     orderedMetadata = orderMetadataItems(
-      collectionOrderMetadataLower,
+      collectionOrderLower,
       defaultMetadata
     )
     return orderedMetadata

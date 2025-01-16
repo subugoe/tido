@@ -41,8 +41,8 @@ const labels = computed<Labels>(() => configStore.config.labels)
 const metadata = computed(() => {
   if (!manifest.value) return []
 
-  let manifestOrderMetadata = getMetadataView(useConfigStore().config.panels)
-    .connector.options.orderManifestMetadata
+  let manifestOrder = getMetadataView(useConfigStore().config.panels)
+    .connector.options.manifestOrder
 
   let defaultMetadata = [
     { key: 'Label', value: manifest.value.label },
@@ -57,8 +57,8 @@ const metadata = computed(() => {
   ]
 
   let orderedMetadata = []
-  if (manifestOrderMetadata?.length > 0) {
-    orderedMetadata = orderMetadataItems(manifestOrderMetadata, defaultMetadata)
+  if (manifestOrder?.length > 0) {
+    orderedMetadata = orderMetadataItems(manifestOrder, defaultMetadata)
     return orderedMetadata
   }
 

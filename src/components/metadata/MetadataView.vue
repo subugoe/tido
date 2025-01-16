@@ -26,12 +26,12 @@ const config = computed(() => configStore.config)
 
 const metadataView = computed(() => getMetadataView(config.value.panels))
 
-const userOrderDocuments = computed(
-  () => metadataView.value.connector.options.orderDocuments
+const userDocumentsOrder = computed(
+  () => metadataView.value.connector.options.documentsOrder
 )
 
 let orderDocumentsMetadata = computed(() =>
-  getOrderDocuments(userOrderDocuments.value)
+  getOrderDocuments(userDocumentsOrder.value)
 )
 
 function getOrderDocuments(userOrderDocuments) {

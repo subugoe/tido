@@ -34,8 +34,8 @@ const number = computed<number>(() =>
 const total = computed<number>(() => itemsCount.value ?? 1)
 
 const metadata = computed(() => {
-  let itemOrderMetadata = getMetadataView(useConfigStore().config.panels)
-    .connector.options.orderItemMetadata
+  let itemOrder = getMetadataView(useConfigStore().config.panels)
+    .connector.options.itemOrder
 
   let defaultMetadata = [
     { key: 'label', value: item.value.n },
@@ -45,8 +45,8 @@ const metadata = computed(() => {
   ].filter((i) => i.value)
 
   let orderedMetadata = []
-  if (itemOrderMetadata?.length > 0) {
-    orderedMetadata = orderMetadataItems(itemOrderMetadata, defaultMetadata)
+  if (itemOrder?.length > 0) {
+    orderedMetadata = orderMetadataItems(itemOrder, defaultMetadata)
     return orderedMetadata
   }
   return defaultMetadata
