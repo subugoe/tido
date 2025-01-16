@@ -26,18 +26,11 @@ const contentStore = useContentsStore();
 
 const manifest = computed<Manifest>(() => contentStore.manifest);
 const manifests = computed<Manifest[]>(() => contentStore.manifests);
-const manifestHasItems = computed<boolean>(
-  () => manifest.value?.sequence.length > 0
-);
-const number = computed<number>(() =>
-  manifests.value !== null
-    ? manifests.value.findIndex(({ id }) => id === manifest.value.id) + 1
-    : 1
-);
-const total = computed<number>(() =>
-  manifests.value !== null ? manifests.value.length : 1
-);
-const labels = computed<Labels>(() => configStore.config.labels)
+const manifestHasItems = computed<boolean>(() => manifest.value?.sequence.length > 0);
+const number = computed<number>(() => (manifests.value !== null ? manifests.value.findIndex(({ id }) => id === manifest.value.id) + 1 : 1));
+const total = computed<number>(() => (manifests.value !== null ? manifests.value.length : 1));
+const labels = computed<Labels>(() => configStore.config.labels);
+
 const metadata = computed(() => {
   if (!manifest.value) return [];
 

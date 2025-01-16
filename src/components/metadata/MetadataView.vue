@@ -10,15 +10,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useConfigStore } from '@/stores/config'
-import { resolveComponent } from 'vue'
+import { computed } from 'vue';
+import { useConfigStore } from '@/stores/config';
+import { resolveComponent } from 'vue';
 
-import { getMetadataView } from '@/utils/metadata'
+import { getMetadataView } from '@/utils/metadata';
 
 defineProps({
   options: Object,
-})
+});
 
 const configStore = useConfigStore()
 
