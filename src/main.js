@@ -3,9 +3,6 @@ import PrimeVue from 'primevue/config';
 import { createPinia } from 'pinia';
 import { i18n } from './i18n';
 import App from './App.vue';
-import CollectionMetadata from '@/components/metadata/CollectionMetadata.vue';
-import ManifestMetadata from '@/components/metadata/ManifestMetadata.vue';
-import ItemMetadata from '@/components/metadata/ItemMetadata.vue';
 
 import './css/preflight.scss';
 import './css/style.css';
@@ -34,9 +31,6 @@ window.Tido = function Tido(config = {}) {
   this.app.use(PrimeVue);
   this.app.use(pinia);
   this.app.use(i18n);
-  this.app.component('CollectionMetadata', CollectionMetadata);
-  this.app.component('ManifestMetadata', ManifestMetadata);
-  this.app.component('ItemMetadata', ItemMetadata);
 
   let mounted = false;
   this.mount = (container) => {
