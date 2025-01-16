@@ -4,7 +4,7 @@
       v-if="!isLink()"
       class="t-font-semibold t-text-sm t-text-gray-400"
     >
-      {{ $t(label) }}
+     {{ $t(label) }}
     </h4>
     <MetadataLink
       v-if="isLink()"
@@ -29,15 +29,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import MetadataLink from "@/components/metadata/MetadataLink.vue";
-import MetadataValue from "@/components/metadata/MetadataValue.vue";
-import CopyCitation from "@/components/metadata/CopyCitation.vue";
-import { useConfigStore } from "@/stores/config";
+import { computed } from 'vue';
+import MetadataLink from '@/components/metadata/MetadataLink.vue';
+import MetadataValue from '@/components/metadata/MetadataValue.vue';
+import CopyCitation from '@/components/metadata/CopyCitation.vue';
+import { useConfigStore } from '@/stores/config';
 
+import { getMetadataView } from '@/utils/metadata';
 const props = defineProps<{
   item: Metadata;
-}>();
+}>()
 
 const label = computed<string>(() => props.item?.key || "other");
 const childItems = computed<Metadata>(() => props.item?.metadata || []);
@@ -47,25 +48,9 @@ function isLink(): boolean {
   const regex =
     /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
   const matches =
-    typeof props.item?.key === "string" ? props.item?.key?.match(regex) : null;
+    typeof props.item?.key === 'string' ? props.item?.key?.match(regex) : null;
 
   return matches !== null;
-}
-
-function getMetadataView(panels) {
-  let metadataView
-  for (let i = 0; i < panels.length; i++) {
-    const panel = panels[i]
-    const viewsPanel = panel.views
-
-    if (!viewsPanel || viewsPanel.length === 0) continue
-
-    metadataView = viewsPanel.filter((view) => view.connector.id === 2)
-
-    if (metadataView.length > 0) return metadataView[0]
-  }
-
-  return null
 }
 
 function showCopyCitation(key, config) {

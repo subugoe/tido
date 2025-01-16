@@ -12,7 +12,6 @@ import { getRGBColor } from '@/utils/color';
 import { useToggle } from '@vueuse/core/index';
 import { isDark } from '@/utils/is-dark';
 
-
 function generateId() {
   return Math.random().toString(36).slice(2, 16);
 }
@@ -26,7 +25,7 @@ window.Tido = function Tido(config = {}) {
     setup() {
       return () => h(App);
     },
-  });
+  })
 
   this.app.provide('config', this.config);
   this.app.use(PrimeVue);
