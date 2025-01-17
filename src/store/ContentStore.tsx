@@ -6,18 +6,19 @@ interface PanelStates {
 
 interface ContentStoreTypes {
   panels: PanelStates // or panels: each panel has one opened item
+  activeManifestsLabels: string[]
   addPanelContent: (id: string, newPanel: PanelState) => void
   updatePanels: (panelId: string, updatedItem: PanelState) => void
-  updateContentToggleIndex: (
-    panelIndex: string,
-    newContentIndex: number
-  ) => void
-  updateViewIndex: (panelId: string, newViewIndex: number) => void
-  getPanel: (panelId: string) => PanelState | null
+  updateContentToggleIndex: (panelIndex: string,newContentIndex: number) => void
+  updateViewIndex: (panelId: string, newViewIndex: number) => void,
+  addManifestLabel: (newLabel: string) => void
+  getPanel: (panelId: string) => PanelState | null,
 }
 
 export const contentStore = create<ContentStoreTypes>((set, get) => ({
   panels: {},
+  activeManifestsLabels: [],
+  loading: true,
 
   addPanelContent: (id: string, newPanel: PanelState) => {
     const newPanels = { ...get().panels }
@@ -41,6 +42,10 @@ export const contentStore = create<ContentStoreTypes>((set, get) => ({
     get().updatePanels(panelId, panel)
   },
 
+  addManifestLabel: (newLabel) => {
+    set({activeManifestsLabels: [...get().activeManifestsLabels, newLabel]})
+  },
+
   updatePanels: (panelId: string, updatedPanel: PanelState) => {
     const newPanels = { ...get().panels }
     newPanels[panelId] = updatedPanel
@@ -50,5 +55,6 @@ export const contentStore = create<ContentStoreTypes>((set, get) => ({
   getPanel: (panelId: string) => {
     if (!(panelId in get().panels)) return null
     return get().panels[panelId]
-  },
+  }
+
 }))

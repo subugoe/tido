@@ -142,8 +142,8 @@ declare global {
     contentTypes?: string[]
     contentIndex: number
     viewIndex: number
-    imageUrl?: string
-    primaryColor: string
+    imageUrl?: string,
+    manifestLabel: string 
   }
 
   type ItemType = 'section' | 'page' | 'full'
