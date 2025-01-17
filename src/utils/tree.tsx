@@ -1,17 +1,21 @@
 
 import { request } from '@/utils/http'
 
-export function createTree(panels: PanelConfig[]) {
+export async function createTree(panels: PanelConfig[]) {
     if (!panels || panels.length === 0) return [] 
 
     let nodes = []
     
     for (let i = 0; i< panels.length; i++) {
-        nodes.push(createCollectionNode(panels[i].entrypoint.url, i))
+        const collectionNode = await createCollectionNode(panels[i].entrypoint.url, i).then((node) => {
+            nodes.push(node)
+        })
     }
 
     return nodes
 }
+
+
 
 async function createCollectionNode(url: string, key: number) {
   let node = {};
