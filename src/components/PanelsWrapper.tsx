@@ -1,7 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react'
 
 import { contentStore } from '@/store/ContentStore'
-import { useConfig } from '@/contexts/ConfigContext'
 import { PanelProvider } from '@/contexts/PanelContext'
 
 import Panel from '@/components/panel/Panel'
@@ -14,9 +13,10 @@ import {
   getContentTypes,
 } from '@/utils/panel'
 import ErrorComponent from '@/components/ErrorComponent'
+import { configStore } from '@/store/ConfigStore.tsx'
 
 const PanelsWrapper: FC = () => {
-  const { config } = useConfig()
+  const config = configStore(state => state.config)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<boolean | string>(false)
   const panelIds = useRef<string[]>([])
@@ -127,7 +127,7 @@ const PanelsWrapper: FC = () => {
           contentIndex: 0,
           viewIndex: 0,
           contentTypes: contentTypes,
-          primaryColor: config.colors.primary,
+          primaryColor: config.colors?.primary ?? 'blue',
         })
       }
 

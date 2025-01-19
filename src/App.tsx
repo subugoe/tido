@@ -1,18 +1,19 @@
 import PanelsWrapper from './components/PanelsWrapper'
 import { FC } from 'react'
-import { ConfigProvider } from '@/contexts/ConfigContext'
+import { configStore } from '@/store/ConfigStore.tsx'
 
 interface AppProps {
   customConfig: Config
 }
 
 const App: FC<AppProps> = ({ customConfig }) => {
+  const addCustomConfig = configStore((state) => state.addCustomConfig)
+  addCustomConfig(customConfig)
+
   return (
-    <ConfigProvider customConfig={customConfig}>
-      <div className="tido">
-        <PanelsWrapper />
-      </div>
-    </ConfigProvider>
+    <div className="tido t-flex t-flex-col">
+      <PanelsWrapper />
+    </div>
   )
 }
 

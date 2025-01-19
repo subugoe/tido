@@ -72,9 +72,9 @@ declare global {
   }
 
   interface Config {
-    globalTree: boolean
-    panels: PanelConfig[]
-    colors: Colors
+    globalTree?: boolean
+    panels?: PanelConfig[]
+    colors?: Colors
   }
 
   interface Content {
