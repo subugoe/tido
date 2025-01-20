@@ -20,7 +20,7 @@ const Panel: FC<Props> = ({ config }) => {
   const addPanelContent = contentStore((state) => state.addPanelContent)
 
   const [error, setError] = useState<boolean | string>(false)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [panelId, setPanelId] = useState<string | undefined>(undefined)
 
   useEffect(() => {
@@ -39,7 +39,6 @@ const Panel: FC<Props> = ({ config }) => {
           contentIndex: 0,
           viewIndex: 0,
           contentTypes,
-          primaryColor: 'blue',
         })
         setPanelId(panelId)
       } catch (e) {
