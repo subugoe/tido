@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useState, FC } from 'react'
-const PanelContext = createContext({ panelId: 'missing' })
+const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
-interface PanelProvider {
+interface PanelContentType {
   panelId: string
 }
 
@@ -20,8 +20,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, id }) => {
   )
 }
 
-function usePanel(): PanelProvider {
-  return useContext(PanelContext)
+function usePanel(): PanelContentType {
+  const context =  useContext(PanelContext)
+  if (!context) {
+    throw new Error('usePanel must be used inside the PanelProvider')
+  }
+
+  return context
 }
 
 export { PanelProvider, usePanel }

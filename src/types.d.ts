@@ -212,6 +212,8 @@ declare global {
   interface PanelConfig {
     entrypoint: Entrypoint
     colors: Colors
+    manifestIndex: number
+    itemIndex: number
   }
 
   type RangeSelector = {
