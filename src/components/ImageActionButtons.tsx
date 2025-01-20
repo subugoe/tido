@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { zoomIn, zoomOut, fullscreen, exitFullscreen } from '@/utils/icons'
 
-import { useConfig } from '@/contexts/ConfigContext'
+import { configStore } from '@/store/ConfigStore.tsx'
 import { usePanel } from '@/contexts/PanelContext'
 
 import CustomHTML from '@/components/CustomHTML'
@@ -13,7 +13,8 @@ interface ImageActions {
 }
 
 const ImageActionButtons: FC = () => {
-  const primaryColor = useConfig().config.colors.primary
+  const config = configStore(state => state.config)
+  const primaryColor = config.colors?.primary ?? 'blue'
   const { panelId } = usePanel()
 
   const actions: ImageActions[] = [

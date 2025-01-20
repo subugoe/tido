@@ -22,6 +22,7 @@ const PanelsWrapper: FC = () => {
   const panelIds = useRef<string[]>([])
 
   const addPanelContent = contentStore((state) => state.addPanelContent)
+  const addManifestLabel = contentStore((state) => state.addManifestLabel)
 
   const panels = config?.panels
 
@@ -78,6 +79,7 @@ const PanelsWrapper: FC = () => {
     }
 
     const manifestData = response.data as Manifest
+    const manifestLabel = manifestData.label
 
     // read item data
     if (!manifestData.sequence || manifestData.sequence.length === 0) {
@@ -102,7 +104,7 @@ const PanelsWrapper: FC = () => {
       return
     }
 
-    return itemData
+    return {item: itemData, manifestLabel: manifestLabel}
   }
 
   useEffect(() => {
@@ -114,21 +116,25 @@ const PanelsWrapper: FC = () => {
           continue
         }
 
-        const itemData = await readData(panels[i], documentType)
-        if (!itemData) continue
+        const data = await readData(panels[i], documentType)
+        if (!data) continue
 
-        const contentTypes: string[] = getContentTypes(itemData.content)
+        const { item, manifestLabel } = data
+
+        const contentTypes: string[] = getContentTypes(item.content)
         // unique id of PanelContent object
         const panelId = crypto.randomUUID()
         panelIds.current.push(panelId)
 
         addPanelContent(panelId, {
-          item: itemData,
+          item: item,
           contentIndex: 0,
           viewIndex: 0,
           contentTypes: contentTypes,
-          primaryColor: config.colors?.primary ?? 'blue',
+          manifestLabel: manifestLabel
         })
+
+        addManifestLabel(manifestLabel)
       }
 
       setLoading(false)
