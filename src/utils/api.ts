@@ -1,4 +1,4 @@
-import {request} from "@/utils/http.ts";
+import { request } from '@/utils/http.ts'
 
 export async function apiRequest<T>(url: string): Promise<T> {
   const response = await request(url)
