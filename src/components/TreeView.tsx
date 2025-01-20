@@ -3,12 +3,14 @@ import { configStore } from '@/store/ConfigStore.tsx'
 
 
 import { createTree } from '@/utils/tree' 
+import CollectionSubtree from '@/components/tree/CollectionSubtree'
 
 const Tree: FC  = () => {
     
     const config = configStore(state => state.config)
 
     const [treeNodes, setTreeNodes] = useState([])
+
     const [loadingTree, setLoadingTreee] = useState(true)
 
     useEffect(() => {
@@ -32,13 +34,13 @@ const Tree: FC  = () => {
         key={i}
         className=""
       >
-        {collection.title}
+        <CollectionSubtree collectionData = {collection} />
       </div>
     ));
 
 
 
-    return <div className="tree"> 
+    return <div className="tree t-h-96 t-overflow-hidden t-overflow-y-auto"> 
                 {tree}
            </div>
 }
