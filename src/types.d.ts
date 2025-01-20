@@ -143,7 +143,6 @@ declare global {
     contentIndex: number
     viewIndex: number
     imageUrl?: string
-    primaryColor: string
   }
 
   type ItemType = 'section' | 'page' | 'full'
