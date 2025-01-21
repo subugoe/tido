@@ -18,7 +18,6 @@ interface ContentStoreTypes {
 
 export const contentStore = create<ContentStoreTypes>((set, get) => ({
   panels: {},
-
   addPanelContent: (id: string, newPanel: PanelState) => {
     const newPanels = { ...get().panels }
     newPanels[id] = newPanel

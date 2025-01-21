@@ -143,7 +143,6 @@ declare global {
     contentIndex: number
     viewIndex: number
     imageUrl?: string
-    primaryColor: string
   }
 
   type ItemType = 'section' | 'page' | 'full'
@@ -212,6 +211,8 @@ declare global {
   interface PanelConfig {
     entrypoint: Entrypoint
     colors: Colors
+    manifestIndex: number
+    itemIndex: number
   }
 
   type RangeSelector = {

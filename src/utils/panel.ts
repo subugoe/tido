@@ -1,10 +1,10 @@
 import { request } from '@/utils/http'
 
 // get the url of the document (collection or manifest) which will be shown in the panel
-export function getManifestUrl(documentData: Manifest | Collection, documentType: string): string {
+export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
   let manifestUrl: string = ''
   if (documentType === 'collection') {
-    manifestUrl =  documentData?.sequence[0].id
+    manifestUrl =  documentData?.sequence[index].id
   }
   else if (documentType === 'manifest') {
     manifestUrl = documentData?.id
@@ -13,8 +13,8 @@ export function getManifestUrl(documentData: Manifest | Collection, documentType
   return manifestUrl
 }
 
-export async function getManifestData(documentData: Collection | Manifest, documentType: string): Promise<HttpResponse<Manifest>> {
-  const manifestUrl = getManifestUrl(documentData, documentType)
+export async function getManifestData(documentData: Collection | Manifest, documentType: string, index: number): Promise<HttpResponse<Manifest>> {
+  const manifestUrl = getManifestUrl(documentData, documentType, index)
   return await request<Manifest>(manifestUrl)
 }
 
