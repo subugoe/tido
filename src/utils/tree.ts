@@ -4,7 +4,7 @@ import { request } from '@/utils/http'
 export async function createTree(panels: PanelConfig[]) {
     if (!panels || panels.length === 0) return [] 
 
-    const nodes = []
+    const nodes: CollectionNode[] = []
     
     for (let i = 0; i< panels.length; i++) {
         const collectionNode = await createCollectionNode(panels[i].entrypoint.url, i).then((node) => {
@@ -18,7 +18,7 @@ export async function createTree(panels: PanelConfig[]) {
 
 
 async function createCollectionNode(url: string, key: number) {
-  const node = {}
+  const node: CollectionNode = {}
   const response = await request<Collection>(url)
   if (!response.success) return node
   const collectionTitle = response.data.title[0].title
@@ -40,7 +40,7 @@ async function getManifestNodes(parentNode, manifests) {
 
     for (let i = 0; i < manifests.length; i++) {
       // here node refers to manifestNode
-      const node = {}
+      const node: ManifestNode = {}
       node['key'] = collectionNode.key + '-' + i.toString()
       node['label'] = manifests[i].label 
       
