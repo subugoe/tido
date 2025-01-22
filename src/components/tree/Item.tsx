@@ -4,17 +4,20 @@ import { FC, useState } from 'react'
 
 
 interface ItemProps {
-    label: string
+    label: string,
+    url: string
 }
 
-const ItemTree: FC<ItemProps>  = ({ label }) => {
+const ItemTree: FC<ItemProps>  = ({ label, url }) => {
 
     const [active, setActive] = useState(false)
+    const [itemUrl] = useState(url)
 
     function handleClick(
         e) {
         e.preventDefault()
         setActive(prevState => !prevState)
+        // find the collectionUrl based on itemUrl
     }
 
     return <div>

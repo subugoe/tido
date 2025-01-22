@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import Tree from '@/components/TreeView'
@@ -11,8 +11,17 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
     
     // TODO: add a [loading, setLoading] => which shows the pop over when the tree has been loaded -> TreeView Component updates the loading of its parent
 
+    const [selectClicked, setSelectClicked] = useState(false)
+
+    function handleSelectClick(e) {
+        // TODO: check whether input text is provided or an item is clicked
+
+
+    }
+
     const selectButton =  
-          <button className="t-bg-blue-500 t-text-white t-rounded t-flex t-text-center t-pl-2 t-ml-[80%] t-mt-10 t-items-center t-justify-items-center t-w-16 t-h-10">
+          <button className="t-bg-blue-500 t-text-white t-rounded t-flex t-text-center t-pl-2 t-ml-[80%] t-mt-10 t-items-center t-justify-items-center t-w-16 t-h-10"
+                onClick={(e) => handleSelectClick(e)}>
             Select
         </button>
 

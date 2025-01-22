@@ -23,6 +23,7 @@ async function createCollectionNode(url: string, key: number) {
   if (!response.success) return node
   const collectionTitle = response.data.title[0].title
 
+  node['url'] = url
   node['key'] = key
   node['title'] = collectionTitle
   node['children'] = await getManifestNodes(node, response.data.sequence)
@@ -58,7 +59,7 @@ async function getManifestNodes(parentNode, manifests) {
 function getItemsNodes(parentKey: string, items: Sequence[]) {
     const nodes = []
     for (let i = 0; i < items.length ; i++) {
-        nodes.push({ label: items[i].label, key: parentKey + '-' + i })
+        nodes.push({ label: items[i].label, key: parentKey + '-' + i, url: items[i].id })
     }
     return nodes
 }

@@ -12,7 +12,7 @@ const ManifestSubtree: FC<ManifestSubtreeProps>  = ({ manifestData }) => {
     const itemsLabels = manifestData.children.length > 0 
                 &&  
                 manifestData.children.map((item: Sequence, i) => (
-                    <ItemTree label={item.label} key={i}/>
+                    <ItemTree label={item.label} url = {item.id} key={i}/>
                   ))
 
     return <div className="manifest-subtree"> 
