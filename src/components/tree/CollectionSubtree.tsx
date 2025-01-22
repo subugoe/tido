@@ -8,13 +8,13 @@ interface CollectionSubtreeProps {
     collectionData: any
 }
 
-const CollectionSubtree: FC<CollectionSubtreeProps>  = ({collectionData}) => {
+const CollectionSubtree: FC<CollectionSubtreeProps>  = ({ collectionData }) => {
 
     const manifestSubTree = collectionData.children.length > 0 
                 &&  
                 collectionData.children.map((manifest, i) => (
-                    <ManifestSubtree key = {i} manifestData={ manifest } />
-                  ));
+                    <ManifestSubtree key={i} manifestData={manifest} />
+                  ))
 
     return <div className="collection-subtree"> 
     

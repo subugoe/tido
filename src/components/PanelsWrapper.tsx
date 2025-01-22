@@ -104,7 +104,7 @@ const PanelsWrapper: FC = () => {
       return
     }
 
-    return {item: itemData, manifestLabel: manifestLabel}
+    return { item: itemData, manifestLabel: manifestLabel }
   }
 
   useEffect(() => {

@@ -22,7 +22,7 @@ const TopBar: FC = () => {
       >
         {label}
       </div>
-    ));
+    ))
 
   const addButton =  
           <span className="t-bg-blue-500 t-text-white t-rounded t-flex t-pl-4 t-items-center t-justify-items-center t-w-16 t-h-10">
@@ -32,7 +32,7 @@ const TopBar: FC = () => {
 
 return <div className="t-flex t-flex-row t-ml-[6%] t-mt-10"> 
           {manifestLabels}
-          <LocalTreeModal TriggerButton = {addButton} />
+          <LocalTreeModal TriggerButton={addButton} />
         </div>
   
 }

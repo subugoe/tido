@@ -34,9 +34,9 @@ const Tree: FC  = () => {
         key={i}
         className=""
       >
-        <CollectionSubtree collectionData = {collection} />
+        <CollectionSubtree collectionData={collection} />
       </div>
-    ));
+    ))
 
 
 

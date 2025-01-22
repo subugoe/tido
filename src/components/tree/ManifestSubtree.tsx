@@ -1,25 +1,19 @@
 
 
 import { FC } from 'react'
-import { configStore } from '@/store/ConfigStore.tsx'
-
+import ItemTree from '@/components/tree/Item'
 
 interface ManifestSubtreeProps {
     manifestData: any
 }
 
-const ManifestSubtree: FC<ManifestSubtreeProps>  = ({manifestData}) => {
+const ManifestSubtree: FC<ManifestSubtreeProps>  = ({ manifestData }) => {
 
     const itemsLabels = manifestData.children.length > 0 
                 &&  
-                manifestData.children.map((item, i) => (
-                    <button
-                      key={i}
-                      className="t-text-left t-bg-white hover:t-bg-gray-200 t-cursor-pointer"
-                    >
-                      { item.label }
-                    </button>
-                  ));
+                manifestData.children.map((item: Sequence, i) => (
+                    <ItemTree label={item.label} key={i}/>
+                  ))
 
     return <div className="manifest-subtree"> 
     

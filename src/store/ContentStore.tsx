@@ -43,7 +43,7 @@ export const contentStore = create<ContentStoreTypes>((set, get) => ({
   },
 
   addManifestLabel: (newLabel) => {
-    set({activeManifestsLabels: [...get().activeManifestsLabels, newLabel]})
+    set({ activeManifestsLabels: [...get().activeManifestsLabels, newLabel] })
   },
 
   updatePanels: (panelId: string, updatedPanel: PanelState) => {
