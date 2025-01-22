@@ -38,7 +38,6 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
         let manifestIndex: number | undefined, itemIndex: number | undefined, collectionUrl: string | undefined
 
         if (clickedItemUrl) {
-            console.log('clickedItem Url', clickedItemUrl)
             const data = getClickedItemIndices(clickedItemUrl, treeNodes)
             if (!data) {
                 console.error('Indices of clicked item could not be found')
@@ -55,7 +54,8 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
                   },
                 manifestIndex: manifestIndex,
                 itemIndex: itemIndex
-            })
+            }
+            )
         }
 
         if (inputCollectionRef.current.value !== '') {
