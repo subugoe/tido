@@ -74,6 +74,7 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
             )
         }
 
+        // lines below serve mainly for showing the error message. Error message appears when a user does not provide input for opening a new a collection/panel
         setClickedItemUrl('')
         setInputGiven(false)
         setClickedButton(false)
