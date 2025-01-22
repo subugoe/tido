@@ -10,7 +10,7 @@ interface CollectionSubtreeProps {
 
 const CollectionSubtree: FC<CollectionSubtreeProps>  = ({ collectionData }) => {
 
-    const manifestSubTree = collectionData.children.length > 0 
+    const collectionSubTree = collectionData.children.length > 0 
                 &&  
                 collectionData.children.map((manifest: ManifestNode, i: number) => (
                     <ManifestSubtree key={i} manifestData={manifest} />
@@ -20,7 +20,7 @@ const CollectionSubtree: FC<CollectionSubtreeProps>  = ({ collectionData }) => {
     
           {collectionData.title}
            <div className="t-ml-[5px]">
-                { manifestSubTree}
+                { collectionSubTree}
             </div>         
       </div>
 }
