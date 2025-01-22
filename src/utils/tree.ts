@@ -7,7 +7,7 @@ export async function createTree(panels: PanelConfig[]) {
     const nodes: CollectionNode[] = []
     
     for (let i = 0; i< panels.length; i++) {
-        const collectionNode = await createCollectionNode(panels[i].entrypoint.url, i).then((node) => {
+         await createCollectionNode(panels[i].entrypoint.url, i).then((node) => {
             nodes.push(node)
         })
     }
@@ -98,6 +98,6 @@ export function getItemIndices(itemUrl: string, treeNodes: CollectionNode[]): It
   }
 
 
-  function getItemIndex(manifest, itemUrl: string): number {
+  function getItemIndex(manifest: ManifestNode, itemUrl: string): number {
     return manifest.children.findIndex((item: ItemNode) => item.url === itemUrl)
   }
