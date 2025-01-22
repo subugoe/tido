@@ -84,7 +84,7 @@ export function getItemIndices(itemUrl: string, treeNodes: CollectionNode[]): It
         if (!manifest.children || manifest.children.length === 0) continue
 
         const itemIndex = getItemIndex(manifest, itemUrl)
-        if (itemIndex !== null) {
+        if (itemIndex !== -1) {
             return {
                 collectionUrl: collectionNode.url,
                 manifestIndex: j,
