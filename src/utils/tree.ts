@@ -64,14 +64,13 @@ function getItemsNodes(parentKey: string, items: Sequence[]) {
     return nodes
 }
 
-interface ClickedItemIndices {
+interface ItemIndices {
     collectionUrl: string,
     manifestIndex: number,
     itemIndex: number
 }
 
-export function getClickedItemIndices(itemUrl: string, treeNodes: CollectionNode[]): ClickedItemIndices | null{
-    // find the collection url when clicking an item in local tree
+export function getItemIndices(itemUrl: string, treeNodes: CollectionNode[]): ItemIndices | null{
     
     for (let i = 0; i < treeNodes.length ; i++) {
       const collectionNode = treeNodes[i]
@@ -92,8 +91,6 @@ export function getClickedItemIndices(itemUrl: string, treeNodes: CollectionNode
         }
       }
     }
-
-    console.log('----')
 
     return null
   }

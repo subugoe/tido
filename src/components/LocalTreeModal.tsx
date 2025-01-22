@@ -6,7 +6,7 @@ import { configStore } from '@/store/ConfigStore'
 import { Popover, PopoverContent, PopoverTrigger, ClosePopover } from '@/components/ui/popover'
 import TreeView from '@/components/TreeView'
 
-import { getClickedItemIndices } from '@/utils/tree'
+import { getItemIndices } from '@/utils/tree'
 
 
 interface LocalTreeProps {
@@ -41,7 +41,7 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
         setInputGiven(true)
 
         if (clickedItemUrl) {
-            const data = getClickedItemIndices(clickedItemUrl, treeNodes)
+            const data = getItemIndices(clickedItemUrl, treeNodes)
             if (!data) {
                 console.error('Indices of clicked item could not be found')
                 return 
@@ -77,7 +77,7 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
         setClickedItemUrl('')
         setInputGiven(false)
         setClickedButton(false)
-        
+
         return
 
     }
