@@ -81,6 +81,8 @@ export function getItemIndices(itemUrl: string, treeNodes: CollectionNode[]): It
 
         const manifest = collectionNode.children[j]
 
+        if (!manifest.children || manifest.children.length === 0) continue
+
         const itemIndex = getItemIndex(manifest, itemUrl)
         if (itemIndex !== null) {
             return {
@@ -96,11 +98,6 @@ export function getItemIndices(itemUrl: string, treeNodes: CollectionNode[]): It
   }
 
 
-  function getItemIndex(manifest, itemUrl: string): number | null {
-    const items = manifest.children
-    for (let i = 0; i < items.length ; i++) {
-      if (items[i].url === itemUrl) return i
-    }
-
-    return null
+  function getItemIndex(manifest, itemUrl: string): number {
+    return manifest.children.findIndex((item: ItemNode) => item.url === itemUrl)
   }
