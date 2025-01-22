@@ -1,6 +1,6 @@
 
 
-import { FC, useState } from 'react'
+import { FC, MouseEvent, useState } from 'react'
 
 
 interface ItemProps {
@@ -13,10 +13,11 @@ const ItemTree: FC<ItemProps>  = ({ label, url }) => {
     const [active, setActive] = useState(false)
     const [itemUrl] = useState(url)
 
-    function handleClick(
-        e) {
+    function handleClick(e: MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault()
         setActive(prevState => !prevState)
+
+        // 
         // find the collectionUrl based on itemUrl
     }
 

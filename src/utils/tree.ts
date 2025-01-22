@@ -63,3 +63,33 @@ function getItemsNodes(parentKey: string, items: Sequence[]) {
     }
     return nodes
 }
+
+
+export function getCollectionUrl(itemUrl: string, treeNodes): string | null {
+    // find the collection url when clicking an item in local tree
+    
+    for (let i = 0; i < treeNodes.length ; i++) {
+      const collectionNode = treeNodes[i]
+
+      for (let j = 0; j < collectionNode.children.length; j++) {
+
+        const manifest = collectionNode.children[j]
+
+        if (isItemInManifest(manifest, itemUrl)) {
+          return collectionNode.url
+        }
+      }
+    }
+
+    return null
+  }
+
+
+  function isItemInManifest(manifest, itemUrl: string) {
+    const items = manifest.children
+    for (let i = 0; i < items.length ; i++) {
+      if (items[i].url === itemUrl) return true
+    }
+
+    return false
+  }

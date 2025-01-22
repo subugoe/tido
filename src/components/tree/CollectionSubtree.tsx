@@ -12,7 +12,7 @@ const CollectionSubtree: FC<CollectionSubtreeProps>  = ({ collectionData }) => {
 
     const manifestSubTree = collectionData.children.length > 0 
                 &&  
-                collectionData.children.map((manifest, i) => (
+                collectionData.children.map((manifest: ManifestNode, i: number) => (
                     <ManifestSubtree key={i} manifestData={manifest} />
                   ))
 

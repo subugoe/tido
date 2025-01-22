@@ -1,7 +1,8 @@
 import { FC, ReactNode, useState } from 'react'
 
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger, ClosePopover } from '@/components/ui/popover'
 import TreeView from '@/components/TreeView'
+
 
 interface LocalTreeProps {
     TriggerButton: ReactNode
@@ -15,15 +16,9 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
 
     function handleSelectClick(e) {
         // TODO: check whether input text is provided or an item is clicked
-
-
+        // add a class hidden to ref div PopoverContent, in order to close the pop up
+        console.log('click select button')
     }
-
-    const selectButton =  
-          <button className="t-bg-blue-500 t-text-white t-rounded t-flex t-text-center t-pl-2 t-ml-[80%] t-mt-10 t-items-center t-justify-items-center t-w-16 t-h-10"
-                onClick={(e) => handleSelectClick(e)}>
-            Select
-        </button>
 
     return <div className="local-tree-modal"> 
             <Popover>
@@ -35,10 +30,16 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
                         <span className="t-font-bold">Enter a collection/manifest Url</span>
                         <input className="t-border-solid t-border-[1.5px] t-w-[200px] t-h-[30px] t-mb-[10px]" />
                         <span>Or choose:</span>
+
                         <TreeView />
+
                         <div className="t-pb-4">
-                           {selectButton}
+                            <ClosePopover className='t-bg-blue-500 t-text-white t-rounded t-flex t-text-center t-pl-2 t-ml-[80%] t-mt-10 t-items-center t-justify-items-center t-w-16 t-h-10'
+                                onClick = {(e) => handleSelectClick(e)}>
+                                    Select
+                            </ClosePopover>
                         </div>
+                       
                     </div>
                 </PopoverContent>
             </Popover>

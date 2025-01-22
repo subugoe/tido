@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { configStore } from '@/store/ConfigStore.tsx'
 
-
 import { createTree } from '@/utils/tree' 
 import CollectionSubtree from '@/components/tree/CollectionSubtree'
 
@@ -31,42 +30,6 @@ const Tree: FC  = () => {
 
     if (loadingTree) return <></>
 
-    function getCollectionUrl(itemLabel, treeNodes): string | null {
-
-      for (let i = 0; i < treeNodes.length ; i++) {
-        const collectionNode = treeNodes[i]
-        for (let j = 0; j < collectionNode.children.length; j++) {
-          const manifest = collectionNode.children[j]
-          if (isItemInManifest(manifest, itemLabel)) {
-            console.log('manifest found', manifest)
-            return collectionNode.url
-          }
-        }
-        //if (isItemInManifests(collectionNode.children, itemLabel)) return collectionNode.url
-      }
-
-      return null
-    }
-
-    function isItemInManifests(manifests, itemLabel) {
-      for (let i = 0; i < manifests.length ; i++) {
-        if (isItemInManifest(manifests[i], itemLabel)) return true
-      }
-
-      return false
-    }
-
-    function isItemInManifest(manifest, itemLabel) {
-      const items = manifest.children
-      for (let i = 0; i < items.length ; i++) {
-        if (items[i].url === itemLabel) return true
-      }
-
-      return false
-    }
-
-    const collectionUrl = getCollectionUrl('https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/3r177/16a/latest/item.json', treeNodes) 
-    console.log('collection Url', collectionUrl)
     const tree =
     treeNodes.length > 0 &&
     treeNodes.map((collection, i) => (
