@@ -8,7 +8,7 @@ import ErrorComponent from '@/components/ErrorComponent'
 import { PanelProvider } from '@/contexts/PanelContext.tsx'
 import { dataStore } from '@/store/DataStore.tsx'
 import { apiRequest } from '@/utils/api.ts'
-import { contentStore } from '@/store/ContentStore.tsx'
+import { panelStore } from '@/store/PanelStore.tsx'
 import { getContentTypes } from '@/utils/panel.ts'
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 
 const Panel: FC<Props> = ({ config }) => {
   const initCollection = dataStore(state => state.initCollection)
-  const addPanelContent = contentStore((state) => state.addPanelContent)
+  const addPanelContent = panelStore((state) => state.addPanelContent)
 
   const [error, setError] = useState<boolean | string>(false)
   const [loading, setLoading] = useState(false)
@@ -35,6 +35,8 @@ const Panel: FC<Props> = ({ config }) => {
         const contentTypes: string[] = getContentTypes(item.content)
 
         addPanelContent(panelId, {
+          collectionId: collection.id,
+          manifest,
           item,
           contentIndex: 0,
           viewIndex: 0,
@@ -57,7 +59,7 @@ const Panel: FC<Props> = ({ config }) => {
 
   return (
     <div
-      className="panel t-flex t-flex-col t-w-[600px] t-mr-6 t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">
+      className="panel t-flex t-flex-col t-w-[600px] t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-px-2.5 t-pt-8 t-pb-6">
       { loading && <div> Loading data ... Please wait a sec</div> }
       { !loading && error && <ErrorComponent message={error} /> }
       { !loading && !error && panelId &&

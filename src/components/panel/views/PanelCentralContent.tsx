@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 
-import { contentStore } from '@/store/ContentStore'
+import { panelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext'
 
 import TextViewOne from '@/components/panel/views/TextViewOne'
@@ -15,12 +15,12 @@ import { request } from '@/utils/http'
 const PanelCentralContent: FC = () => {
   const { panelId } = usePanel()
 
-  const viewIndex = contentStore((state) => state.panels[panelId].viewIndex)
-  const activeContentTypeIndex = contentStore(
+  const viewIndex = panelStore((state) => state.panels[panelId].viewIndex)
+  const activeContentTypeIndex = panelStore(
     (state) => state.panels[panelId].contentIndex
   )
   const [text, setText] = useState<string>('')
-  const content = contentStore((state) => state.panels[panelId].item.content)
+  const content = panelStore((state) => state.panels[panelId].item.content)
 
   const [error, setError] = useState<boolean | string>(false)
 

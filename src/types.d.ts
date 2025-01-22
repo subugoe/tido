@@ -11,6 +11,13 @@ declare global {
     idref?: Idref[]
   }
 
+  interface AnnotationCollection {
+    id: string
+    first: string
+    label: string
+    type: string
+  }
+
   interface AnnotationPage {
     items: Annotation[]
     refs: Witness[]
@@ -137,6 +144,8 @@ declare global {
   }
 
   interface PanelState {
+    collectionId: string
+    manifest: Manifest
     item: Item
     texts?: string[]
     contentTypes?: string[]

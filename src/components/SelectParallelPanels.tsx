@@ -1,25 +1,29 @@
 import { FC } from 'react'
 import { Button } from '@/components/ui/button.tsx'
 import { dataStore } from '@/store/DataStore.tsx'
+import { panelStore } from '@/store/PanelStore.tsx'
 
 const SelectParallelPanels: FC<any> = () => {
   const collections = dataStore(state => state.collections)
   const initAnnotations = dataStore(state => state.initAnnotations)
+  const panels = panelStore(state => state.panels)
 
-  const selected = {}
+  const selected: { [key: string]: boolean } = {}
 
-  function select(index: number) {
-    selected['p' + index] = true
+
+  function select(panelId: string) {
+    selected[panelId] = true
   }
 
   function confirm() {
-    if (!collections[0].annotationCollection) return
-    initAnnotations(collections[0].id, collections[0].annotationCollection)
+    const collection = collections[Object.keys(collections)[0]]
+
+    if (!collection.annotationCollection) return
+    initAnnotations(collection.id, collection.annotationCollection)
   }
 
   return <>
-    <span className="t-font-bold t-p-2" onClick={() => select(0)}>Panel 1</span>
-    <span className="t-font-bold t-p-2" onClick={() => select(1)}>Panel 2</span>
+  { Object.keys(panels).map((panelId, i) => <span key={i} className="t-font-bold t-p-2" onClick={() => select(panelId)}>Panel {i}</span>) }
     <Button onClick={confirm}>Confirm</Button>
   </>
 

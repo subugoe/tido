@@ -1,17 +1,16 @@
 import { FC } from 'react'
-
-import CustomHTML from '@/components/CustomHTML'
+import TextRenderer from '@/components/panel/TextRenderer.tsx'
 
 interface TextViewOneProps {
   textHtml: string
 }
 
-const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
+const TextView: FC<TextViewOneProps> = ({ textHtml }) => {
   return (
     <div>
-      <CustomHTML textHtml={textHtml} width="100%" />
+      <TextRenderer htmlString={textHtml} />
     </div>
   )
 }
 
-export default TextViewOne
+export default TextView
