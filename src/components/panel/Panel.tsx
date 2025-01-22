@@ -17,6 +17,7 @@ interface Props {
 
 const Panel: FC<Props> = ({ config }) => {
   const initCollection = dataStore(state => state.initCollection)
+  const getCollection = dataStore(state => state.getCollection)
   const addPanelContent = contentStore((state) => state.addPanelContent)
 
   const [error, setError] = useState<boolean | string>(false)
@@ -28,8 +29,10 @@ const Panel: FC<Props> = ({ config }) => {
     const collectionUrl = config.entrypoint.url
     const init = async () => {
       try {
+
         setLoading(true)
-        const collection = await initCollection(collectionUrl)
+        const collection = await getCollection(collectionUrl)
+
         const manifest = await apiRequest<Manifest>(collection.sequence[config.manifestIndex ?? 0].id)
         const item = await apiRequest<Item>(manifest.sequence[config.itemIndex ?? 0].id)
         const contentTypes: string[] = getContentTypes(item.content)
