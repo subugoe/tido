@@ -28,6 +28,7 @@ const Panel: FC<Props> = ({ config }) => {
     const collectionUrl = config.entrypoint.url
     const init = async () => {
       try {
+
         setLoading(true)
         const collection = await initCollection(collectionUrl)
         const manifest = await apiRequest<Manifest>(collection.sequence[config.manifestIndex ?? 0].id)

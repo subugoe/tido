@@ -1,5 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { configStore } from '@/store/ConfigStore.tsx'
+import { dataStore } from '@/store/DataStore.tsx'
+
 
 import { createTree } from '@/utils/tree' 
 import CollectionSubtree from '@/components/tree/CollectionSubtree'
@@ -7,21 +9,23 @@ import CollectionSubtree from '@/components/tree/CollectionSubtree'
 const Tree: FC  = () => {
     
     const config = configStore(state => state.config)
+    const initTreeNodes = dataStore(state => state.initTreeNodes)
 
-    const [treeNodes, setTreeNodes] = useState([])
+
+    const [treeNodes, setTreeNodes] = useState<CollectionNode[]>([])
 
     const [loadingTree, setLoadingTreee] = useState(true)
 
     useEffect(() => {
         async function initTree(panels?: PanelConfig[]) {
           if (!panels) return  
-          const nodes = await createTree(panels)
+            const nodes = await createTree(panels)
             
             setTreeNodes(nodes)
             setLoadingTreee(false)
+            initTreeNodes(nodes)
         }
         initTree(config.panels)
-    
     }, [])
 
     console.log('tree', treeNodes)

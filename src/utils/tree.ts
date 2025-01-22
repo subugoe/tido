@@ -64,32 +64,46 @@ function getItemsNodes(parentKey: string, items: Sequence[]) {
     return nodes
 }
 
+interface ClickedItemIndices {
+    collectionUrl: string,
+    manifestIndex: number,
+    itemIndex: number
+}
 
-export function getCollectionUrl(itemUrl: string, treeNodes): string | null {
+export function getClickedItemIndices(itemUrl: string, treeNodes: CollectionNode[]): ClickedItemIndices | null{
     // find the collection url when clicking an item in local tree
     
     for (let i = 0; i < treeNodes.length ; i++) {
       const collectionNode = treeNodes[i]
 
+      if (!collectionNode.children || collectionNode.children.length === 0) return null
+
       for (let j = 0; j < collectionNode.children.length; j++) {
 
         const manifest = collectionNode.children[j]
 
-        if (isItemInManifest(manifest, itemUrl)) {
-          return collectionNode.url
+        const itemIndex = getItemIndex(manifest, itemUrl)
+        if (itemIndex !== null) {
+            return {
+                collectionUrl: collectionNode.url,
+                manifestIndex: j,
+                itemIndex: itemIndex
+            }
         }
       }
     }
+
+    console.log('----')
 
     return null
   }
 
 
-  function isItemInManifest(manifest, itemUrl: string) {
+  function getItemIndex(manifest, itemUrl: string): number | null {
     const items = manifest.children
     for (let i = 0; i < items.length ; i++) {
-      if (items[i].url === itemUrl) return true
+      if (items[i].url === itemUrl) return i
     }
 
-    return false
+    return null
   }

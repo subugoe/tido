@@ -2,6 +2,7 @@
 
 import { FC, MouseEvent, useState } from 'react'
 
+import { dataStore } from '@/store/DataStore.tsx'
 
 interface ItemProps {
     label: string,
@@ -13,8 +14,13 @@ const ItemTree: FC<ItemProps>  = ({ label, url }) => {
     const [active, setActive] = useState(false)
     const [itemUrl] = useState(url)
 
+    const setClickedItemUrl = dataStore(state => state.setClickedItemUrl)
+
     function handleClick(e: MouseEvent<HTMLButtonElement, MouseEvent>) {
+        console.log('clicked item url in ITemTree', itemUrl)
         e.preventDefault()
+        if (!active) setClickedItemUrl(itemUrl)
+
         setActive(prevState => !prevState)
 
         // 
