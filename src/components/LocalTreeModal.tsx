@@ -7,9 +7,6 @@ import { Popover, PopoverContent, PopoverTrigger, ClosePopover } from '@/compone
 import TreeView from '@/components/TreeView'
 
 import { getClickedItemIndices } from '@/utils/tree'
-import { tree } from '@/utils/icons'
-
-
 
 
 interface LocalTreeProps {
@@ -21,24 +18,27 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
     // TODO: add a [loading, setLoading] => which shows the pop over when the tree has been loaded -> TreeView Component updates the loading of its parent
 
     const clickedItemUrl = dataStore((state) => state.clickedItemUrl)
+    const setClickedItemUrl = dataStore(state => state.setClickedItemUrl)
     const treeNodes = dataStore((state) => state.treeNodes)
     const addNewPanel = configStore((state) => state.addNewPanel)
+    const [inputGiven, setInputGiven] = useState(false)
+
+    const [clickedButton, setClickedButton] = useState(false)
 
     const inputCollectionRef = useRef(null);
-    const selectButtonRef = useRef(null)
-    
+
 
     function handleSelectClick(e) {
-        // TODO: check whether a value is provided for newCollectionUrl in the data store
-                 // if not, then ask the user to provide a value
-                 // if yes, then add the new panel in config store with this new entrypoint AND set the newCollectionUrl as empty value
         
         let manifestIndex: number | undefined, itemIndex: number | undefined, collectionUrl: string | undefined
 
         if (!clickedItemUrl && inputCollectionRef.current.value === '') {
-            selectButtonRef.current.disabled = true
+            setClickedButton(true)
+            e.preventDefault();
             return
         }
+
+        setInputGiven(true)
 
         if (clickedItemUrl) {
             const data = getClickedItemIndices(clickedItemUrl, treeNodes)
@@ -50,6 +50,7 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
             collectionUrl = data?.collectionUrl
             manifestIndex = data?.manifestIndex
             itemIndex = data?.itemIndex
+
             addNewPanel({
                 entrypoint: {
                     url: collectionUrl,
@@ -59,13 +60,11 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
                 itemIndex: itemIndex
              }
             )
-            return
         }
 
         if (inputCollectionRef.current.value !== '') {
-            console.log('entering the input collectionRef if statement')
-            console.log('inputCollectionRef.current', inputCollectionRef.current)
             collectionUrl =  inputCollectionRef.current?.value
+
             addNewPanel({
                 entrypoint: {
                     url: collectionUrl,
@@ -73,8 +72,13 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
                   }
               }
             )
-            return
         }
+
+        setClickedItemUrl('')
+        setInputGiven(false)
+        setClickedButton(false)
+        
+        return
 
     }
 
@@ -85,6 +89,7 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
                 </PopoverTrigger>
                 <PopoverContent className="t-bg-white t-absolute t-z-10">
                     <div className="t-flex t-flex-col t-pt-4 t-pl-3 t-w-[500px] t-shadow-md t-border-[1px] t-border-solid t-border-gray-300 t-rounded-md">
+                        <div className="t-text-red-400" style={{display: !inputGiven && clickedButton && !clickedItemUrl  ? 'block': 'none'}}> Please do provide a way to open a new collection</div>
                         <span className="t-font-bold">Enter a collection/manifest Url</span>
                         <input ref={inputCollectionRef}  className="t-border-solid t-border-[1.5px] t-w-[200px] t-h-[30px] t-mb-[10px]" />
                         <span>Or choose:</span>
