@@ -11,7 +11,9 @@ interface DataStoreType {
   clickedItemUrl: string,
   initCollection: (url: string) => Promise<Collection>
   initTreeNodes: (newTreeNodes: CollectionNode[]) => void,
-  setClickedItemUrl: (newUrl: string) => void
+  setClickedItemUrl: (newUrl: string) => void,
+  getCollection: (collectionUrl: string) => Promise<Collection>
+
 }
 
 export const dataStore = create<DataStoreType>((set, get) => ({
@@ -31,6 +33,12 @@ export const dataStore = create<DataStoreType>((set, get) => ({
 
   setClickedItemUrl: (newUrl: string) => {
     set({clickedItemUrl: newUrl})
-  }
+  },
 
+  async getCollection(collectionUrl: string): Promise<Collection> {
+    if (collectionUrl in get().collections) return get().collections[collectionUrl]
+    
+    const collection = await get().initCollection(collectionUrl)
+    return collection
+  }
 }))

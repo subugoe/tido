@@ -25,10 +25,8 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
     const addNewPanel = configStore((state) => state.addNewPanel)
 
     const inputCollectionRef = useRef(null);
-
-    const [selectClicked, setSelectClicked] = useState(false)
-
-    // check for the state temp variable of newCollection - if we have a new collection there -> if so then we retrieve that value and add a new panel in Configstore
+    const selectButtonRef = useRef(null)
+    
 
     function handleSelectClick(e) {
         // TODO: check whether a value is provided for newCollectionUrl in the data store
@@ -36,6 +34,11 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
                  // if yes, then add the new panel in config store with this new entrypoint AND set the newCollectionUrl as empty value
         
         let manifestIndex: number | undefined, itemIndex: number | undefined, collectionUrl: string | undefined
+
+        if (!clickedItemUrl && inputCollectionRef.current.value === '') {
+            selectButtonRef.current.disabled = true
+            return
+        }
 
         if (clickedItemUrl) {
             const data = getClickedItemIndices(clickedItemUrl, treeNodes)
@@ -54,8 +57,9 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
                   },
                 manifestIndex: manifestIndex,
                 itemIndex: itemIndex
-            }
+             }
             )
+            return
         }
 
         if (inputCollectionRef.current.value !== '') {
@@ -67,9 +71,11 @@ const LocalTreeModal: FC <LocalTreeProps> = ({ TriggerButton }) => {
                     url: collectionUrl,
                     type: "collection",
                   }
-            }
+              }
             )
+            return
         }
+
     }
 
     return <div className="local-tree-modal"> 

@@ -28,10 +28,6 @@ const Tree: FC  = () => {
         initTree(config.panels)
     }, [])
 
-    console.log('tree', treeNodes)
-
-    
-
     if (loadingTree) return <></>
 
     const tree =

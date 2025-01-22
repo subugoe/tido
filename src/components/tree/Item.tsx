@@ -15,20 +15,17 @@ const ItemTree: FC<ItemProps>  = ({ label, url }) => {
     const [itemUrl] = useState(url)
 
     const setClickedItemUrl = dataStore(state => state.setClickedItemUrl)
+    const clickedItemUrl = dataStore(state => state.clickedItemUrl)
 
     function handleClick(e: MouseEvent<HTMLButtonElement, MouseEvent>) {
-        console.log('clicked item url in ITemTree', itemUrl)
         e.preventDefault()
         if (!active) setClickedItemUrl(itemUrl)
 
         setActive(prevState => !prevState)
-
-        // 
-        // find the collectionUrl based on itemUrl
     }
 
     return <div>
-            <button className="t-w-full t-text-left hover:t-bg-gray-200 t-cursor-pointer" style={{backgroundColor: !active ? 'white': '#0284c7'}}
+            <button className="t-w-full t-text-left hover:t-bg-gray-200 t-cursor-pointer" style={{backgroundColor: url === clickedItemUrl ? '#0284c7': 'white'}}
                     onClick={(e) => handleClick(e)}>
                   { label }
             </button>
