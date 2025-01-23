@@ -4,7 +4,7 @@ import { request } from '@/utils/http'
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
   let manifestUrl: string = ''
   if (documentType === 'collection') {
-    manifestUrl =  documentData?.sequence[index].id
+    manifestUrl = documentData?.sequence[index].id
   }
   else if (documentType === 'manifest') {
     manifestUrl = documentData?.id

@@ -3,49 +3,51 @@ import { configStore } from '@/store/ConfigStore.tsx'
 import { dataStore } from '@/store/DataStore.tsx'
 
 
-import { createTree } from '@/utils/tree' 
-import CollectionSubtree from '@/components/tree/CollectionSubtree'
+import { createTree } from '@/utils/tree'
+import TreeNode from '@/components/tree/TreeNode'
 
-const Tree: FC  = () => {
-    
-    const config = configStore(state => state.config)
-    const initTreeNodes = dataStore(state => state.initTreeNodes)
+const Tree: FC = () => {
+
+  const config = configStore(state => state.config)
+  const initTreeNodes = dataStore(state => state.initTreeNodes)
 
 
-    const [treeNodes, setTreeNodes] = useState<CollectionNode[]>([])
+  const [treeNodes, setTreeNodes] = useState<CollectionNode[]>([])
 
-    const [loadingTree, setLoadingTreee] = useState(true)
+  const [loadingTree, setLoadingTreee] = useState(true)
 
-    useEffect(() => {
-        async function initTree(panels?: PanelConfig[]) {
-          if (!panels) return  
-            const nodes = await createTree(panels)
-            
-            setTreeNodes(nodes)
-            setLoadingTreee(false)
-            initTreeNodes(nodes)
-        }
-        initTree(config.panels)
-    }, [])
+  useEffect(() => {
+    async function initTree(panels?: PanelConfig[]) {
+      if (!panels) return
+      const nodes = await createTree(panels)
 
-    if (loadingTree) return <></>
+      setTreeNodes(nodes)
+      setLoadingTreee(false)
+      initTreeNodes(nodes)
+    }
+    initTree(config.panels)
+  }, [])
 
-    const tree =
+  if (loadingTree) return <></>
+
+  console.log('nodes', treeNodes)
+
+  const tree =
     treeNodes.length > 0 &&
     treeNodes.map((collection, i) => (
       <div
         key={i}
         className=""
       >
-        <CollectionSubtree collectionData={collection} />
+        <TreeNode data={collection} />
       </div>
     ))
 
 
 
-    return <div className="tree t-h-96 t-overflow-hidden t-overflow-y-auto"> 
-                {tree}
-           </div>
+  return <div className="tree t-h-96 t-overflow-hidden t-overflow-y-auto">
+    {tree}
+  </div>
 }
 
 export default Tree
