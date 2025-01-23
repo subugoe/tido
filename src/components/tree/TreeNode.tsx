@@ -12,14 +12,14 @@ interface TreeNodeProps {
 const TreeNode: FC<TreeNodeProps> = ({ data }) => {
 
     const url = data.id
-    const treeNodes = dataStore(state => state.treeNodes)
+    const nodes = dataStore(state => state.treeNodes)
     const addManifestChildrenNodes = dataStore(state => state.addManifestChildrenNode)
 
     function handleClick(e) {
         e.preventDefault()
 
         // find the position of the clicked manifest in the tree node 
-        const manifestIndices = clickedManifestIndices(url, treeNodes)
+        const manifestIndices = clickedManifestIndices(url, nodes)
         if (!manifestIndices) return
         const { collectionIndex, manifestIndex } = manifestIndices
         addManifestChildrenNodes(url, collectionIndex, manifestIndex)

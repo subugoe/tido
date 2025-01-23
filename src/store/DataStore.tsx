@@ -8,7 +8,7 @@ interface CollectionMap {
 
 interface DataStoreType {
   collections: CollectionMap,
-  treeNodes: CollectionNode[],
+  treeNodes: any,
   clickedItemUrl: string,
   initCollection: (url: string) => Promise<Collection>
   initTreeNodes: (newTreeNodes: CollectionNode[]) => void,
@@ -45,14 +45,18 @@ export const dataStore = create<DataStoreType>((set, get) => ({
   },
 
   async addManifestChildrenNode(manifestUrl, collectionIndex, manifestIndex) {
-    let updatedTree = { ...get().treeNodes }
+    let updatedTree = [...get().treeNodes]
     const response = await request<Manifest>(manifestUrl)
     const manifestItems = response.data.sequence.map((item: { id: any; label: any }) => ({
       'url': item.id,
       'label': item.label,
     }))
-    updatedTree[collectionIndex].children[manifestIndex]["children"] = manifestItems
-    console.log('updatedTree', updatedTree)
+
+    const manifestNode = updatedTree[collectionIndex].children[manifestIndex]
+    if (!('children' in manifestNode)) {
+      updatedTree[collectionIndex].children[manifestIndex]["children"] = manifestItems
+      set({ treeNodes: updatedTree })
+    }
   },
 
 }))

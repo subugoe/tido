@@ -30,8 +30,6 @@ const Tree: FC = () => {
 
   if (loadingTree) return <></>
 
-  console.log('nodes', treeNodes)
-
   const tree =
     treeNodes.length > 0 &&
     treeNodes.map((collection, i) => (
