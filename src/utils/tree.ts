@@ -58,6 +58,45 @@ export function clickedManifestIndices(manifestUrl: string, treeNodes) {
   return -1
 }
 
+export function getNodeIndices(url: string, treeNodes) {
+  for (let i = 0; i < treeNodes.length; i++) {
+    if (url === treeNodes[i].id) return {
+      collectionIndex: i,
+      nodeType: 'collection'
+    }
+    const manifestIndex = treeNodes[i].children.findIndex((item) => item.id === url)
+    if (manifestIndex !== -1) {
+      return {
+        collectionIndex: i,
+        manifestIndex: manifestIndex,
+        nodeType: 'manifest'
+      }
+    }
+
+    const itemIndices = findItemIndex(i, treeNodes[i].children, url)
+
+    if (itemIndices) return itemIndices
+  }
+
+  return null
+}
+
+function findItemIndex(collectionIndex: number, manifestsNodes, itemUrl: string) {
+  for (let i = 0; i < manifestsNodes.length; i++) {
+    const itemIndex = getItemIndex(manifestsNodes[i], itemUrl)
+    if (itemIndex !== -1) {
+      return {
+        collectionIndex: collectionIndex,
+        manifestIndex: i,
+        itemIndex: itemIndex,
+        nodeType: 'item'
+      }
+    }
+  }
+
+  return null
+}
+
 interface ItemIndices {
   collectionUrl: string,
   manifestIndex: number,
@@ -93,5 +132,6 @@ export function getItemIndices(itemUrl: string, treeNodes: CollectionNode[]): It
 
 
 function getItemIndex(manifest: ManifestNode, itemUrl: string): number {
-  return manifest.children.findIndex((item: ItemNode) => item.url === itemUrl)
+  if ('children' in manifest) return manifest.children.findIndex((item: ItemNode) => item.id === itemUrl)
+  return -1
 }

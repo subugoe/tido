@@ -29,7 +29,6 @@ const Panel: FC<Props> = ({ config }) => {
     const collectionUrl = config.entrypoint.url
     const init = async () => {
       try {
-
         setLoading(true)
         const collection = await getCollection(collectionUrl)
 
@@ -61,15 +60,15 @@ const Panel: FC<Props> = ({ config }) => {
   return (
     <div
       className="panel t-flex t-flex-col t-w-[600px] t-mr-6 t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">
-      { loading && <div> Loading data ... Please wait a sec</div> }
-      { !loading && error && <ErrorComponent message={error} /> }
-      { !loading && !error && panelId &&
+      {loading && <div> Loading data ... Please wait a sec</div>}
+      {!loading && error && <ErrorComponent message={error} />}
+      {!loading && !error && panelId &&
         <PanelProvider id={panelId}>
-          <PanelTopBar/>
+          <PanelTopBar />
           <div className="t-flex t-flex-col t-items-center t-mb-6">
-            <ContentTypesToggle/>
+            <ContentTypesToggle />
           </div>
-          <PanelCentralContent/>
+          <PanelCentralContent />
         </PanelProvider>
       }
     </div>

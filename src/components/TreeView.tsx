@@ -6,7 +6,12 @@ import { dataStore } from '@/store/DataStore.tsx'
 import { createTree } from '@/utils/tree'
 import TreeNode from '@/components/tree/TreeNode'
 
-const Tree: FC = () => {
+interface TreeProps {
+  updateClickedItemUrl: (newUrl: string) => void,
+  updateClickedItemIndices: (newIndices) => void
+}
+
+const Tree: FC<TreeProps> = ({ updateClickedItemUrl, updateClickedItemIndices }) => {
 
   const config = configStore(state => state.config)
   const initTreeNodes = dataStore(state => state.initTreeNodes)
@@ -37,7 +42,7 @@ const Tree: FC = () => {
         key={i}
         className=""
       >
-        <TreeNode data={collection} />
+        <TreeNode data={collection} updateClickedItemUrl={updateClickedItemUrl} updateClickedItemIndices={updateClickedItemIndices} />
       </div>
     ))
 
