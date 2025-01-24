@@ -12,9 +12,10 @@ import { createTree, getNodeIndices } from '@/utils/tree'
 
 
 
-const ContentModal: FC = ({ createNewPanel }) => {
+const ContentModal: FC = () => {
 
     const panels = configStore(state => state.config.panels)
+    const addNewPanel = configStore(state => state.addNewPanel)
     const initTreeNodes = dataStore(state => state.initTreeNodes)
     const addManifestChildrenNodes = dataStore(state => state.addManifestChildrenNodes)
     const removeManifestChildrenNode = dataStore(state => state.removeManifestChildrenNode)
@@ -65,12 +66,12 @@ const ContentModal: FC = ({ createNewPanel }) => {
 
         if (clickedItemUrl.current) {
             // transfer the clicked item indices
-            createNewPanel(clickedItemUrl.current, 'item')
+            addNewPanel(clickedItemUrl.current, 'item', nodes)
         }
 
         if (inputValue.current !== '') {
             collectionUrl = inputValue.current
-            createNewPanel(collectionUrl, 'collection')
+            addNewPanel(collectionUrl, 'collection', nodes)
         }
 
         // lines below serve mainly for showing the error message. Error message appears when a user does not provide input for opening a new a collection/panel
@@ -78,9 +79,6 @@ const ContentModal: FC = ({ createNewPanel }) => {
         clickedItemUrl.current = ''
         inputGiven.current = false
         setClickedButton(false)
-
-        return
-
     }
 
 
