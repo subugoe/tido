@@ -17,10 +17,6 @@ const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand }) => {
   // TODO: function to process a select event: (click on item, manifest or collcetion) - we get it from TreeNode
 
 
-  useEffect(() => {
-
-  }, [nodes])
-
   const tree =
     nodes.length > 0 &&
     nodes.map((collection, i) => (

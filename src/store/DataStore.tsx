@@ -30,7 +30,6 @@ export const dataStore = create<DataStoreType>((set, get) => ({
   },
   initTreeNodes: (newTreeNodes: TreeNode[]) => {
     set({ treeNodes: newTreeNodes })
-    console.log('treeNodes', get().treeNodes)
   },
 
   async getCollection(collectionUrl: string): Promise<Collection> {

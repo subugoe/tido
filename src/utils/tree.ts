@@ -12,6 +12,7 @@ export async function createTree(panels: PanelConfig[]) {
     })
   }
 
+  console.log('created nodes', nodes)
   return nodes
 }
 
@@ -39,7 +40,7 @@ async function getChildrenNodes(data) {
   const nodes = items.map((item) => ({
     'id': item.id,
     'label': item.label,
-    'type': 'manifest'
+    'type': 'manifest',
   }
   ))
   return nodes

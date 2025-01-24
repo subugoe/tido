@@ -269,7 +269,8 @@ declare global {
   interface TreeNode {
     id: string,
     label: string,
-    type: string
+    type: string,
+    expanded: boolean
     children?: TreeNode[]
   }
 }

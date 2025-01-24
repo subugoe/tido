@@ -15,6 +15,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
     const extended = useRef(false)
 
     function handleClick(e) {
+        console.log('node clicked', node)
         onSelect(node)
         // add class t-bg-primary
     }

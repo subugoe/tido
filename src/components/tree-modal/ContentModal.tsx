@@ -17,9 +17,12 @@ const ContentModal: FC = () => {
     const panels = configStore(state => state.config.panels)
     const initTreeNodes = dataStore(state => state.initTreeNodes)
     const addManifestChildrenNodes = dataStore(state => state.addManifestChildrenNodes)
+    const removeManifestChildrenNode = dataStore(state => state.removeManifestChildrenNode)
 
 
-    const [nodes, setTreeNodes] = useState([])
+    const nodes = dataStore(state => state.treeNodes)
+    const [loadingTree, setLoadingTree] = useState(true)
+
 
     const inputGiven = useRef(false)
     const inputValue = useRef('')
@@ -40,7 +43,7 @@ const ContentModal: FC = () => {
             if (!panels) return
             const nodes = await createTree(panels)
             initTreeNodes(nodes)
-            setTreeNodes(nodes)
+            setLoadingTree(false)
         }
         initTree(panels)
     }, [panels])
@@ -107,21 +110,22 @@ const ContentModal: FC = () => {
 
 
     function onSelect(node: TreeNode) {
+        console.log('on select node', node)
         const { id, type } = node
-        if (type === 'manifest') onExpand(node)
+        if (type === 'manifest' && !('children' in node)) onExpand(node)
+        if (type === 'manifest' && 'children' in node) onCollapse(node)
         // handle item url
     }
 
     async function onExpand(node: TreeNode) {
         const { collectionIndex, manifestIndex } = getNodeIndices(node.id, nodes)
-        await addManifestChildrenNodes(node.id, collectionIndex, manifestIndex)
-        console.log('treeNodes', nodes)
+        addManifestChildrenNodes(node.id, collectionIndex, manifestIndex)
 
+    }
 
-        // get childNodes
-        //node.children = 
-
-        // return node
+    async function onCollapse(node: TreeNode) {
+        const { collectionIndex, manifestIndex } = getNodeIndices(node.id, nodes)
+        removeManifestChildrenNode(collectionIndex, manifestIndex)
     }
 
     return <div className="t-flex t-flex-col t-pt-4 t-pl-3 t-w-[500px] t-shadow-md t-border-[1px] t-border-solid t-border-gray-300 t-rounded-md">
