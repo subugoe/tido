@@ -45,6 +45,7 @@ export const dataStore = create<DataStoreType>((set, get) => ({
     const manifestItems = response.data.sequence.map((item: { id: any; label: any }) => ({
       'id': item.id,
       'label': item.label,
+      'type': 'item'
     }))
 
     const manifestNode = updatedTree[collectionIndex].children[manifestIndex]

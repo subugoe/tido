@@ -12,9 +12,10 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
     set({ config: customConfig })
   },
   addNewPanel: (newPanel: PanelConfig) => {
-    let newConfig = {...get().config} 
+
+    let newConfig = { ...get().config }
     newConfig.panels?.push(newPanel)
 
-    set({config: newConfig})
+    set({ config: newConfig })
   }
 }))

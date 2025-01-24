@@ -2,17 +2,17 @@
 import { FC, useEffect, useRef, useState } from 'react'
 
 import { configStore } from '@/store/ConfigStore'
+import { dataStore } from '@/store/DataStore'
 
 
 import TreeView from '@/components/TreeView'
 import InputField from '@/components/tree-modal/InputField'
 import { ClosePopover } from '@/components/ui/popover'
 import { createTree, getNodeIndices } from '@/utils/tree'
-import { dataStore } from '@/store/DataStore'
 
 
 
-const ContentModal: FC = () => {
+const ContentModal: FC = ({ createNewPanel }) => {
 
     const panels = configStore(state => state.config.panels)
     const initTreeNodes = dataStore(state => state.initTreeNodes)
@@ -21,7 +21,6 @@ const ContentModal: FC = () => {
 
 
     const nodes = dataStore(state => state.treeNodes)
-    const [loadingTree, setLoadingTree] = useState(true)
 
 
     const inputGiven = useRef(false)
@@ -43,7 +42,6 @@ const ContentModal: FC = () => {
             if (!panels) return
             const nodes = await createTree(panels)
             initTreeNodes(nodes)
-            setLoadingTree(false)
         }
         initTree(panels)
     }, [panels])
@@ -60,42 +58,19 @@ const ContentModal: FC = () => {
         if (!clickedItemUrl.current && inputValue.current === '') {
             setClickedButton(true)
             e.preventDefault();
-            return
+            return null
         }
 
         inputGiven.current = true
 
         if (clickedItemUrl.current) {
             // transfer the clicked item indices
-            const indices = { ...clickedItemIndices.current }
-            const { collectionIndex, manifestIndex, itemIndex } = indices
-            collectionUrl = nodes[collectionIndex].id
-
-            /*
-            addNewPanel({
-                entrypoint: {
-                    url: collectionUrl,
-                    type: "collection",
-                },
-                manifestIndex: manifestIndex,
-                itemIndex: itemIndex
-            }
-            )
-            */
+            createNewPanel(clickedItemUrl.current, 'item')
         }
 
         if (inputValue.current !== '') {
             collectionUrl = inputValue.current
-
-            /*
-            addNewPanel({
-                entrypoint: {
-                    url: collectionUrl,
-                    type: "collection",
-                }
-            }
-            )
-            */
+            createNewPanel(collectionUrl, 'collection')
         }
 
         // lines below serve mainly for showing the error message. Error message appears when a user does not provide input for opening a new a collection/panel
@@ -110,10 +85,10 @@ const ContentModal: FC = () => {
 
 
     function onSelect(node: TreeNode) {
-        const { id, type } = node
+        const { type } = node
         if (type === 'manifest' && !('children' in node)) onExpand(node)
         if (type === 'manifest' && 'children' in node) onCollapse(node)
-        // handle item url
+        if (type === 'item') handleItemClick(node)
     }
 
     async function onExpand(node: TreeNode) {
@@ -125,6 +100,12 @@ const ContentModal: FC = () => {
     async function onCollapse(node: TreeNode) {
         const { collectionIndex, manifestIndex } = getNodeIndices(node.id, nodes)
         removeManifestChildrenNode(collectionIndex, manifestIndex)
+    }
+
+    function handleItemClick(node) {
+        const { id } = node
+        clickedItemUrl.current = id
+        clickedItemIndices.current = getNodeIndices(id, nodes)
     }
 
     return <div className="t-flex t-flex-col t-pt-4 t-pl-3 t-w-[500px] t-shadow-md t-border-[1px] t-border-solid t-border-gray-300 t-rounded-md">
