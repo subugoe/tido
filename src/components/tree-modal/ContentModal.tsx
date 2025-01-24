@@ -110,7 +110,6 @@ const ContentModal: FC = () => {
 
 
     function onSelect(node: TreeNode) {
-        console.log('on select node', node)
         const { id, type } = node
         if (type === 'manifest' && !('children' in node)) onExpand(node)
         if (type === 'manifest' && 'children' in node) onCollapse(node)

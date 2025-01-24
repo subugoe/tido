@@ -12,7 +12,6 @@ export async function createTree(panels: PanelConfig[]) {
     })
   }
 
-  console.log('created nodes', nodes)
   return nodes
 }
 
