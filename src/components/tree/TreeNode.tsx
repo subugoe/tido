@@ -1,27 +1,44 @@
 
-
-import { dataStore } from '@/store/DataStore'
 import { FC, Fragment, useRef } from 'react'
 
-import { clickedManifestIndices } from '@/utils/tree'
-import { getNodeIndices } from '@/utils/tree'
+import { useTree } from '@/contexts/TreeContext'
+
 
 interface TreeNodeProps {
-    data: any,
-    updateClickedItemUrl: (newUrl: string) => void,
-    updateClickedItemIndices: (newIndices) => void
+    node: TreeNode
 }
 
-const TreeNode: FC<TreeNodeProps> = ({ data, updateClickedItemUrl, updateClickedItemIndices }) => {
+const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
-    const url = data.id
-    const nodes = dataStore(state => state.treeNodes)
-    const addManifestChildrenNodes = dataStore(state => state.addManifestChildrenNode)
-    const removeManifestChildrenNode = dataStore(state => state.removeManifestChildrenNode)
+    const { onSelect, onExtend } = useTree()
 
     const extended = useRef(false)
 
     function handleClick(e) {
+        onSelect(node)
+        // add class t-bg-primary
+    }
+
+
+    if ('children' in node)
+        return <Fragment>
+            <span className="hover:t-text-blue-600" onClick={(e) => handleClick(e)}> {node.label}</span>
+            {node.children?.map((item: TreeNode, i) => (
+                <ul className="t-ml-2" key={i}>
+                    <TreeNode node={item} />
+                </ul>
+            ))}
+        </Fragment>
+
+    return <span className="hover:t-text-blue-600" onClick={(e) => handleClick(e)}>{node.label}</span>
+}
+
+export default TreeNode
+
+/*
+ function handleClick(e) {
+        onSelect(data)
+
         e.preventDefault()
 
         // we need to distinguish between different treeNodes: 
@@ -65,16 +82,4 @@ const TreeNode: FC<TreeNodeProps> = ({ data, updateClickedItemUrl, updateClicked
     }
 
 
-    if (!('children' in data)) return <li className="hover:t-text-blue-600" onClick={(e) => handleClick(e)}>{data.label}</li>
-
-    return <Fragment>
-        <span className="hover:t-text-blue-600" onClick={(e) => handleClick(e)}> {data.label}</span>
-        {data.children.map((item, i) => (
-            <ul className="t-ml-2" key={i}>
-                <TreeNode data={item} updateClickedItemUrl={updateClickedItemUrl} updateClickedItemIndices={updateClickedItemIndices} />
-            </ul>
-        ))}
-    </Fragment>
-}
-
-export default TreeNode
+*/

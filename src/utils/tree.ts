@@ -4,7 +4,7 @@ import { request } from '@/utils/http'
 export async function createTree(panels: PanelConfig[]) {
   if (!panels || panels.length === 0) return []
 
-  const nodes: CollectionNode[] = []
+  const nodes: TreeNode[] = []
 
   for (let i = 0; i < panels.length; i++) {
     await createNode(panels[i].entrypoint.url, i).then((node) => {
@@ -22,6 +22,7 @@ async function createNode(url: string, key) {
 
   node['id'] = url
   node['label'] = response.data.title[0].title
+  node['type'] = 'collection'
 
   if (response.data.sequence?.length > 0) {
     node['children'] = await getChildrenNodes(response.data)
@@ -38,6 +39,7 @@ async function getChildrenNodes(data) {
   const nodes = items.map((item) => ({
     'id': item.id,
     'label': item.label,
+    'type': 'manifest'
   }
   ))
   return nodes
@@ -61,15 +63,13 @@ export function clickedManifestIndices(manifestUrl: string, treeNodes) {
 export function getNodeIndices(url: string, treeNodes) {
   for (let i = 0; i < treeNodes.length; i++) {
     if (url === treeNodes[i].id) return {
-      collectionIndex: i,
-      nodeType: 'collection'
+      collectionIndex: i
     }
     const manifestIndex = treeNodes[i].children.findIndex((item) => item.id === url)
     if (manifestIndex !== -1) {
       return {
         collectionIndex: i,
         manifestIndex: manifestIndex,
-        nodeType: 'manifest'
       }
     }
 

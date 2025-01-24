@@ -1,55 +1,43 @@
-import { FC, useEffect, useState } from 'react'
-import { configStore } from '@/store/ConfigStore.tsx'
-import { dataStore } from '@/store/DataStore.tsx'
+import { FC, useEffect } from 'react'
 
 
-import { createTree } from '@/utils/tree'
+import { TreeProvider } from '@/contexts/TreeContext.tsx'
+
 import TreeNode from '@/components/tree/TreeNode'
 
 interface TreeProps {
-  updateClickedItemUrl: (newUrl: string) => void,
-  updateClickedItemIndices: (newIndices) => void
+  nodes: TreeNode[]
+  onSelect(node: TreeNode): void,
+  onExpand(node: TreeNode): void
 }
-
-const Tree: FC<TreeProps> = ({ updateClickedItemUrl, updateClickedItemIndices }) => {
-
-  const config = configStore(state => state.config)
-  const initTreeNodes = dataStore(state => state.initTreeNodes)
+// ({ nodes, onSelect, onExpand })
+const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand }) => {
 
 
-  const [treeNodes, setTreeNodes] = useState<CollectionNode[]>([])
+  // TODO: function to process a select event: (click on item, manifest or collcetion) - we get it from TreeNode
 
-  const [loadingTree, setLoadingTreee] = useState(true)
 
   useEffect(() => {
-    async function initTree(panels?: PanelConfig[]) {
-      if (!panels) return
-      const nodes = await createTree(panels)
 
-      setTreeNodes(nodes)
-      setLoadingTreee(false)
-      initTreeNodes(nodes)
-    }
-    initTree(config.panels)
-  }, [])
-
-  if (loadingTree) return <></>
+  }, [nodes])
 
   const tree =
-    treeNodes.length > 0 &&
-    treeNodes.map((collection, i) => (
+    nodes.length > 0 &&
+    nodes.map((collection, i) => (
       <div
         key={i}
         className=""
       >
-        <TreeNode data={collection} updateClickedItemUrl={updateClickedItemUrl} updateClickedItemIndices={updateClickedItemIndices} />
+        <TreeNode node={collection} />
       </div>
     ))
 
 
 
   return <div className="tree t-h-96 t-overflow-hidden t-overflow-y-auto">
-    {tree}
+    <TreeProvider onSelect={onSelect} onExpand={onExpand}>
+      {tree}
+    </TreeProvider>
   </div>
 }
 

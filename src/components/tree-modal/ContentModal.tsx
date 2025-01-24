@@ -1,20 +1,25 @@
 
-import { FC, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
-import { dataStore } from '@/store/DataStore'
 import { configStore } from '@/store/ConfigStore'
 
 
 import TreeView from '@/components/TreeView'
 import InputField from '@/components/tree-modal/InputField'
 import { ClosePopover } from '@/components/ui/popover'
+import { createTree, getNodeIndices } from '@/utils/tree'
+import { dataStore } from '@/store/DataStore'
 
 
 
 const ContentModal: FC = () => {
 
-    const treeNodes = dataStore((state) => state.treeNodes)
-    const addNewPanel = configStore((state) => state.addNewPanel)
+    const panels = configStore(state => state.config.panels)
+    const initTreeNodes = dataStore(state => state.initTreeNodes)
+    const addManifestChildrenNodes = dataStore(state => state.addManifestChildrenNodes)
+
+
+    const [nodes, setTreeNodes] = useState([])
 
     const inputGiven = useRef(false)
     const inputValue = useRef('')
@@ -30,17 +35,19 @@ const ContentModal: FC = () => {
 
     const [clickedButton, setClickedButton] = useState(false)
 
+    useEffect(() => {
+        async function initTree(panels?: PanelConfig[]) {
+            if (!panels) return
+            const nodes = await createTree(panels)
+            initTreeNodes(nodes)
+            setTreeNodes(nodes)
+        }
+        initTree(panels)
+    }, [panels])
+
 
     function updateInputValue(newValue: string) {
         inputValue.current = newValue
-    }
-
-    function updateClickedItemUrl(newUrl: string) {
-        clickedItemUrl.current = newUrl
-    }
-
-    function updateClickedItemIndices(newIndices) {
-        clickedItemIndices.current = newIndices
     }
 
     function handleSelectClick(e) {
@@ -56,10 +63,12 @@ const ContentModal: FC = () => {
         inputGiven.current = true
 
         if (clickedItemUrl.current) {
+            // transfer the clicked item indices
             const indices = { ...clickedItemIndices.current }
             const { collectionIndex, manifestIndex, itemIndex } = indices
-            collectionUrl = treeNodes[collectionIndex].id
+            collectionUrl = nodes[collectionIndex].id
 
+            /*
             addNewPanel({
                 entrypoint: {
                     url: collectionUrl,
@@ -69,11 +78,13 @@ const ContentModal: FC = () => {
                 itemIndex: itemIndex
             }
             )
+            */
         }
 
         if (inputValue.current !== '') {
             collectionUrl = inputValue.current
 
+            /*
             addNewPanel({
                 entrypoint: {
                     url: collectionUrl,
@@ -81,6 +92,7 @@ const ContentModal: FC = () => {
                 }
             }
             )
+            */
         }
 
         // lines below serve mainly for showing the error message. Error message appears when a user does not provide input for opening a new a collection/panel
@@ -93,6 +105,25 @@ const ContentModal: FC = () => {
 
     }
 
+
+    function onSelect(node: TreeNode) {
+        const { id, type } = node
+        if (type === 'manifest') onExpand(node)
+        // handle item url
+    }
+
+    async function onExpand(node: TreeNode) {
+        const { collectionIndex, manifestIndex } = getNodeIndices(node.id, nodes)
+        await addManifestChildrenNodes(node.id, collectionIndex, manifestIndex)
+        console.log('treeNodes', nodes)
+
+
+        // get childNodes
+        //node.children = 
+
+        // return node
+    }
+
     return <div className="t-flex t-flex-col t-pt-4 t-pl-3 t-w-[500px] t-shadow-md t-border-[1px] t-border-solid t-border-gray-300 t-rounded-md">
 
         <div className="t-text-red-400" style={{ display: !inputGiven.current && clickedButton && !clickedItemUrl.current ? 'block' : 'none' }}> Please do provide a way to open a new collection</div>
@@ -100,7 +131,8 @@ const ContentModal: FC = () => {
         <InputField updateInputValue={updateInputValue} />
         <span>Or choose:</span>
 
-        <TreeView updateClickedItemUrl={updateClickedItemUrl} updateClickedItemIndices={updateClickedItemIndices} />
+        <TreeView nodes={nodes} onSelect={onSelect} onExpand={onExpand} />
+
 
         <div className="t-pb-4">
             <ClosePopover className='t-bg-blue-500 t-text-white t-rounded t-flex t-text-center t-pl-2 t-ml-[80%] t-mt-10 t-items-center t-justify-items-center t-w-16 t-h-10'

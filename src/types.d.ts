@@ -266,30 +266,11 @@ declare global {
 
   type HttpResponse<T> = SuccessResponse<T> | ErrorResponse
 
-
-// tree types
-
-interface ItemNode {
-  key: string,
-  label: string,
-  url: string
+  interface TreeNode {
+    id: string,
+    label: string,
+    type: string
+    children?: TreeNode[]
+  }
 }
-
-interface ManifestNode {
-  key: string,
-  label: string,
-  children: ItemNode[]
-}
-
-interface CollectionNode {
-  key: number,
-  title: string,
-  url: string,
-  children: ManifestNode
-}
-
-}
-
-
-
-export {}
+export { }
