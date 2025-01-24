@@ -16,6 +16,7 @@ const ContentModal: FC = () => {
     const treeNodes = dataStore((state) => state.treeNodes)
     const addNewPanel = configStore((state) => state.addNewPanel)
 
+    const inputGiven = useRef(false)
     const inputValue = useRef('')
     const clickedItemUrl = useRef('')
 
@@ -28,7 +29,6 @@ const ContentModal: FC = () => {
 
 
     const [clickedButton, setClickedButton] = useState(false)
-
 
 
     function updateInputValue(newValue: string) {
@@ -45,17 +45,17 @@ const ContentModal: FC = () => {
 
     function handleSelectClick(e) {
 
-        let manifestIndex: number | undefined, itemIndex: number | undefined, collectionUrl: string | undefined
+        let collectionUrl: string | undefined
 
-        if (!clickedItemUrl && inputValue.current === '') {
+        if (!clickedItemUrl.current && inputValue.current === '') {
             setClickedButton(true)
             e.preventDefault();
             return
         }
 
-        //setInputGiven(true)
+        inputGiven.current = true
 
-        if (clickedItemUrl) {
+        if (clickedItemUrl.current) {
             const indices = { ...clickedItemIndices.current }
             const { collectionIndex, manifestIndex, itemIndex } = indices
             collectionUrl = treeNodes[collectionIndex].id
@@ -84,11 +84,10 @@ const ContentModal: FC = () => {
         }
 
         // lines below serve mainly for showing the error message. Error message appears when a user does not provide input for opening a new a collection/panel
-        /*
-        setClickedItemUrl('')
-        setInputGiven(false)
+
+        clickedItemUrl.current = ''
+        inputGiven.current = false
         setClickedButton(false)
-        */
 
         return
 
@@ -96,6 +95,7 @@ const ContentModal: FC = () => {
 
     return <div className="t-flex t-flex-col t-pt-4 t-pl-3 t-w-[500px] t-shadow-md t-border-[1px] t-border-solid t-border-gray-300 t-rounded-md">
 
+        <div className="t-text-red-400" style={{ display: !inputGiven.current && clickedButton && !clickedItemUrl.current ? 'block' : 'none' }}> Please do provide a way to open a new collection</div>
         <span className="t-font-bold">Enter a collection/manifest Url</span>
         <InputField updateInputValue={updateInputValue} />
         <span>Or choose:</span>
@@ -111,6 +111,6 @@ const ContentModal: FC = () => {
     </div>
 }
 
-//         <div className="t-text-red-400" style={{ display: !inputGiven && clickedButton && !clickedItemUrl ? 'block' : 'none' }}> Please do provide a way to open a new collection</div>
+//        
 
 export default ContentModal
