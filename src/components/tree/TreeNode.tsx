@@ -1,7 +1,7 @@
 
 
 import { dataStore } from '@/store/DataStore'
-import { FC, Fragment } from 'react'
+import { FC, Fragment, useRef } from 'react'
 
 import { clickedManifestIndices } from '@/utils/tree'
 import { getNodeIndices } from '@/utils/tree'
@@ -17,6 +17,9 @@ const TreeNode: FC<TreeNodeProps> = ({ data, updateClickedItemUrl, updateClicked
     const url = data.id
     const nodes = dataStore(state => state.treeNodes)
     const addManifestChildrenNodes = dataStore(state => state.addManifestChildrenNode)
+    const removeManifestChildrenNode = dataStore(state => state.removeManifestChildrenNode)
+
+    const extended = useRef(false)
 
     function handleClick(e) {
         e.preventDefault()
@@ -31,7 +34,6 @@ const TreeNode: FC<TreeNodeProps> = ({ data, updateClickedItemUrl, updateClicked
 
         if (!indicesClickedNode) return
 
-
         if (indicesClickedNode['nodeType'] === 'collection') handleCollectionClick(e, indicesClickedNode)
         if (indicesClickedNode['nodeType'] === 'manifest') handleManifestClick(e, indicesClickedNode)
         if (indicesClickedNode['nodeType'] === 'item') handleItemClick(e, indicesClickedNode)
@@ -43,11 +45,18 @@ const TreeNode: FC<TreeNodeProps> = ({ data, updateClickedItemUrl, updateClicked
     }
 
     function handleManifestClick(e, indicesClickedNode) {
+
         const { collectionIndex, manifestIndex } = indicesClickedNode
-        // TODO: 
-        //    if the node is not extended then extend it
-        //    if extended, then collapse it 
-        addManifestChildrenNodes(url, collectionIndex, manifestIndex)
+
+        if (!extended.current) {
+            addManifestChildrenNodes(url, collectionIndex, manifestIndex)
+            extended.current = true
+            return
+        }
+
+        removeManifestChildrenNode(collectionIndex, manifestIndex)
+        extended.current = false
+
     }
 
     function handleItemClick(e, indicesClickedNode) {
@@ -59,7 +68,7 @@ const TreeNode: FC<TreeNodeProps> = ({ data, updateClickedItemUrl, updateClicked
     if (!('children' in data)) return <li className="hover:t-text-blue-600" onClick={(e) => handleClick(e)}>{data.label}</li>
 
     return <Fragment>
-        {data.label}
+        <span className="hover:t-text-blue-600" onClick={(e) => handleClick(e)}> {data.label}</span>
         {data.children.map((item, i) => (
             <ul className="t-ml-2" key={i}>
                 <TreeNode data={item} updateClickedItemUrl={updateClickedItemUrl} updateClickedItemIndices={updateClickedItemIndices} />

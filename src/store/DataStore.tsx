@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { apiRequest } from '@/utils/api.ts'
 import { request } from '@/utils/http'
+import { tree } from '@/utils/icons'
 
 interface CollectionMap {
   [key: string]: Collection
@@ -13,6 +14,7 @@ interface DataStoreType {
   initTreeNodes: (newTreeNodes: CollectionNode[]) => void,
   getCollection: (collectionUrl: string) => Promise<Collection>,
   addManifestChildrenNode: (manifestUrl: string, collectionIndex: number, manifestIndex: number) => void,
+  removeManifestChildrenNode: (collectionIndex: number, manifestIndex: number) => void
 }
 
 export const dataStore = create<DataStoreType>((set, get) => ({
@@ -31,8 +33,6 @@ export const dataStore = create<DataStoreType>((set, get) => ({
   },
 
   async getCollection(collectionUrl: string): Promise<Collection> {
-    console.log('collections', get().collections)
-    console.log('current collection url', collectionUrl)
     if (collectionUrl in get().collections) return get().collections[collectionUrl]
 
     const collection = await get().initCollection(collectionUrl)
@@ -53,5 +53,12 @@ export const dataStore = create<DataStoreType>((set, get) => ({
       set({ treeNodes: updatedTree })
     }
   },
+
+  removeManifestChildrenNode(collectionIndex: number, manifestIndex: number) {
+    let updatedTree = [...get().treeNodes]
+
+    delete updatedTree[collectionIndex].children[manifestIndex].children
+    set({ treeNodes: updatedTree })
+  }
 
 }))
