@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef } from 'react'
 import { dataStore } from '@/store/DataStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { scrollStore } from '@/store/ScrollStore.tsx'
 
 interface Props {
   htmlString: string
@@ -8,12 +9,27 @@ interface Props {
 
 const TextRenderer: FC<Props> = ({ htmlString }) => {
   const ref = useRef<HTMLInputElement>(null)
-  const { panelState } = usePanel()
+  const { panelState, panelId } = usePanel()
   const collectionId = panelState.collectionId
   const collectionAnnotations = dataStore(state => state.annotations[collectionId])
+  const scrollPanels = scrollStore(state => state.panels)
+
 
   useEffect(() => {
+    if (!scrollPanels[panelId]) return
+    const otherScrollPanelIds = Object.keys(scrollPanels).filter(scrollPanelId => scrollPanelId !== panelId)
+
+    ref.current?.addEventListener('scroll', () => {
+      otherScrollPanelIds.forEach(otherScrollPanelId => {
+        const parallelScrollContainer = document.querySelector(`[data-panel="${otherScrollPanelId}"]`)
+        if (!parallelScrollContainer) return
+        parallelScrollContainer.scrollTop = ref.current?.scrollTop ?? 0
+      })
+    })
+
+
     if (!collectionAnnotations) return
+
     collectionAnnotations.forEach(annotation => {
       const { target } = annotation
 
@@ -39,44 +55,9 @@ const TextRenderer: FC<Props> = ({ htmlString }) => {
     if (!parent) return
 
     scrollContainer.innerHTML = htmlString
-    // const scrollTargets = scrollContainer?.querySelectorAll('[data-scroll-target]')
-    // scrollTargets.forEach(el => {
-    //   el.classList.add('t-bg-gray-100')
-    // })
-
-    // scrollContainer.addEventListener('scroll', () => {
-    //   const inViewHeight = 300
-    //
-    //   scrollTargets.forEach(el => {
-    //     const { top, left, bottom, right } = el.getBoundingClientRect()
-    //     const parentRect = parent.getBoundingClientRect()
-    //     const isInView =
-    //       top >= parentRect.top &&
-    //       left >= parentRect.left &&
-    //       bottom <= parentRect.bottom &&
-    //       right <= parentRect.right
-    //
-    //     if (isInView && top <= inViewHeight) {
-    //       console.log('hi')
-    //       const parallelTarget = document.getElementById('manifest-2-item-1-scroll-1')
-    //       console.log(parallelTarget)
-    //       if (!parallelTarget) return
-    //       const parallelScrollContainer = parallelTarget.parentElement
-    //       if (!parallelScrollContainer) return
-    //
-    //
-    //       parallelScrollContainer.scrollTo({
-    //         top: parallelTarget.getBoundingClientRect().top,
-    //         behavior: 'smooth'
-    //       })
-    //
-    //     }
-    //   })
-    // })
-
   }, [htmlString])
 
-  return <div ref={ref} className="t-h-full t-overflow-auto" />
+  return <div data-panel={panelId} ref={ref} className="t-h-full t-overflow-auto" />
 
 }
 

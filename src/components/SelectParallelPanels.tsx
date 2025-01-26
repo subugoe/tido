@@ -2,17 +2,20 @@ import { FC } from 'react'
 import { Button } from '@/components/ui/button.tsx'
 import { dataStore } from '@/store/DataStore.tsx'
 import { panelStore } from '@/store/PanelStore.tsx'
+import { scrollStore } from '@/store/ScrollStore.tsx'
 
 const SelectParallelPanels: FC<any> = () => {
   const collections = dataStore(state => state.collections)
   const initAnnotations = dataStore(state => state.initAnnotations)
   const panels = panelStore(state => state.panels)
+  const addScrollPanel = scrollStore(state => state.addScrollPanel)
 
   const selected: { [key: string]: boolean } = {}
 
 
   function select(panelId: string) {
     selected[panelId] = true
+    addScrollPanel(panelId)
   }
 
   function confirm() {
