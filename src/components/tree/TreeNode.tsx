@@ -12,6 +12,8 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
     const { onClick, selectedKey } = useTree()
 
+    const itemRef = useRef(null)
+
     const extended = useRef(false)
 
     function handleClick(e) {
@@ -22,7 +24,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
     if ('children' in node)
         return <Fragment>
-            <div className="hover:t-bg-gray-100 hover:t-cursor-pointer hover:t-round-md t-mb-1 t-py-[2px] t-px-2" onClick={(e) => handleClick(e)}> {node.label}</div>
+            <div className="t-mb-1 t-py-[2px] t-px-2 hover:t-bg-gray-100 hover:t-cursor-pointer hover:t-round-md" onClick={(e) => handleClick(e)}> {node.label}</div>
             {node.children?.map((item: TreeNode, i) => (
                 <ul className="t-ml-2" key={i}>
                     <TreeNode node={item} />
@@ -30,7 +32,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
             ))}
         </Fragment>
 
-    return <div className="hover:t-bg-gray-100 hover:t-cursor-pointer hover:t-rounded-md t-mb-1 t-py-[2px] t-px-2" onClick={(e) => handleClick(e)}>{node.label}</div>
+    return <div ref={itemRef} className="t-mb-1 t-py-[2px] t-px-2 hover:t-bg-gray-100 hover:t-cursor-pointer hover:t-rounded-md" onClick={(e) => handleClick(e)}>{node.label}</div>
 }
 
 export default TreeNode
