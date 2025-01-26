@@ -2,11 +2,11 @@ import { ReactNode, createContext, useContext, FC } from 'react'
 const TreeContext = createContext<TreeType | undefined>(undefined)
 
 interface TreeType {
-    selectedKey: string,
     onClick(node: TreeNode): void
     onSelect(node: TreeNode): void
     onExtend(node: TreeNode): void,
-    onCollapse(node: TreeNode): void
+    onCollapse(node: TreeNode): void,
+    selectedKey: string
 }
 
 interface TreeProviderProps {
@@ -14,13 +14,14 @@ interface TreeProviderProps {
     onClick(node: TreeNode): void
     onSelect(node: TreeNode): void,
     onExtend(node: TreeNode): void,
-    onCollapse(node: TreeNode): void
+    onCollapse(node: TreeNode): void,
+    selectedKey: string
 }
 
-const TreeProvider: FC<TreeProviderProps> = ({ children, onClick, onSelect, onExtend, onCollapse }) => {
+const TreeProvider: FC<TreeProviderProps> = ({ children, onClick, onSelect, onExtend, onCollapse, selectedKey }) => {
 
     return (
-        <TreeContext.Provider value={{ onClick, onSelect, onExtend, onCollapse }}>
+        <TreeContext.Provider value={{ onClick, onSelect, onExtend, onCollapse, selectedKey }}>
             {children}
         </TreeContext.Provider>
     )

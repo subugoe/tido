@@ -1,3 +1,4 @@
+import { getItemIndices } from '@/utils/tree'
 import { create } from 'zustand'
 
 
@@ -17,8 +18,6 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
   },
   addNewPanel: (newEntrypoint: string, type: string, nodes: TreeNode[]) => {
 
-    /*
-    const nodeIndices = getNodeIndices(newEntrypoint, nodes)
     let newPanelConfig
 
     if (type === 'collection') newPanelConfig = {
@@ -29,8 +28,9 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
     }
 
 
-    if (type === 'item') {
-      const { collectionIndex, manifestIndex, itemIndex } = nodeIndices
+    else if (type === 'item') {
+
+      const { collectionIndex, manifestIndex, itemIndex } = getItemIndices()
       const collectionUrl = nodes[collectionIndex].id
       newPanelConfig =
       {
@@ -48,6 +48,6 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
     if (newPanelConfig) newConfig.panels?.push(newPanelConfig)
 
     set({ config: newConfig })
-    */
+
   }
 }))

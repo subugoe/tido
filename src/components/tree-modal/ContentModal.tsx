@@ -19,7 +19,6 @@ const ContentModal: FC = () => {
     const addNewPanel = configStore(state => state.addNewPanel)
     const initTreeNodes = dataStore(state => state.initTreeNodes)
     const updateTreeNodes = dataStore(state => state.updateTreeNodes)
-    const removeManifestChildrenNode = dataStore(state => state.removeManifestChildrenNode)
 
 
     const nodes = dataStore(state => state.treeNodes)
@@ -36,6 +35,7 @@ const ContentModal: FC = () => {
         nodeType: 'item'
     })
 
+    const selectedKey = useRef('')
 
     const [clickedButton, setClickedButton] = useState(false)
 
@@ -124,10 +124,11 @@ const ContentModal: FC = () => {
         updateTreeNodes(updatedTree)
     }
 
-    function onSelect(node) {
+    function onSelect(node: TreeNode) {
         const { id } = node
         clickedItemUrl.current = id
         clickedItemIndices.current = getItemIndices(node, nodes)
+        selectedKey.current = node.key
     }
 
     async function getChildren(id, parentKey: string): Promise<TreeNode[] | null> {
@@ -162,7 +163,7 @@ const ContentModal: FC = () => {
         <InputField updateInputValue={updateInputValue} />
         <span>Or choose:</span>
 
-        <TreeView nodes={nodes} onClick={onClick} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse} />
+        <TreeView nodes={nodes} onClick={onClick} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse} selectedKey={selectedKey} />
 
 
         <div className="t-pb-4">
