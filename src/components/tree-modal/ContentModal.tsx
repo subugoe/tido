@@ -8,7 +8,7 @@ import { dataStore } from '@/store/DataStore'
 import TreeView from '@/components/TreeView'
 import InputField from '@/components/tree-modal/InputField'
 import { ClosePopover } from '@/components/ui/popover'
-import { createTree, getManifestIndices } from '@/utils/tree'
+import { createTree, getItemIndices, getManifestIndices } from '@/utils/tree'
 import { request } from '@/utils/http'
 
 
@@ -127,10 +127,10 @@ const ContentModal: FC = () => {
     function onSelect(node) {
         const { id } = node
         clickedItemUrl.current = id
-        clickedItemIndices.current = getNodeIndices(id, nodes)
+        clickedItemIndices.current = getItemIndices(node, nodes)
     }
 
-    async function getChildren(id, parentKey: string): TreeNode[] | null {
+    async function getChildren(id, parentKey: string): Promise<TreeNode[] | null> {
         let childrenNodes: TreeNode[] = []
         const response = await request(id)
 

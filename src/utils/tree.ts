@@ -54,12 +54,16 @@ export function getItemIndices(node: TreeNode, treeNodes: TreeNode[]) {
   const itemUrl = node.id
 
   for (let i = 0; i < treeNodes.length; i++) {
+
+    // we search itemIndices in the current extended collection - which has manifests as children
+    if (!('children' in treeNodes[i])) continue
+
     const manifestsNodes = treeNodes[i].children
 
     if (!manifestsNodes) return null
 
-    for (let j = 0; j < manifestsNodes.length; i++) {
-      const itemIndex = findItemIndexInManifest(manifestsNodes[i], itemUrl)
+    for (let j = 0; j < manifestsNodes.length; j++) {
+      const itemIndex = findItemIndexInManifest(manifestsNodes[j], itemUrl)
 
       if (itemIndex !== -1) {
         return {
