@@ -2,20 +2,25 @@ import { ReactNode, createContext, useContext, FC } from 'react'
 const TreeContext = createContext<TreeType | undefined>(undefined)
 
 interface TreeType {
-    onSelect(): void
-    onExtend(): void
+    selectedKey: string,
+    onClick(node: TreeNode): void
+    onSelect(node: TreeNode): void
+    onExtend(node: TreeNode): void,
+    onCollapse(node: TreeNode): void
 }
 
 interface TreeProviderProps {
-    children?: ReactNode
-    onSelect(): void,
-    onExtend(): void
+    children?: ReactNode,
+    onClick(node: TreeNode): void
+    onSelect(node: TreeNode): void,
+    onExtend(node: TreeNode): void,
+    onCollapse(node: TreeNode): void
 }
 
-const TreeProvider: FC<TreeProviderProps> = ({ children, onSelect, onExtend }) => {
+const TreeProvider: FC<TreeProviderProps> = ({ children, onClick, onSelect, onExtend, onCollapse }) => {
 
     return (
-        <TreeContext.Provider value={{ onSelect, onExtend }}>
+        <TreeContext.Provider value={{ onClick, onSelect, onExtend, onCollapse }}>
             {children}
         </TreeContext.Provider>
     )

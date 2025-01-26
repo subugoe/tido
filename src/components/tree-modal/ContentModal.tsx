@@ -8,7 +8,8 @@ import { dataStore } from '@/store/DataStore'
 import TreeView from '@/components/TreeView'
 import InputField from '@/components/tree-modal/InputField'
 import { ClosePopover } from '@/components/ui/popover'
-import { createTree, getNodeIndices } from '@/utils/tree'
+import { createTree, getManifestIndices } from '@/utils/tree'
+import { request } from '@/utils/http'
 
 
 
@@ -17,7 +18,7 @@ const ContentModal: FC = () => {
     const panels = configStore(state => state.config.panels)
     const addNewPanel = configStore(state => state.addNewPanel)
     const initTreeNodes = dataStore(state => state.initTreeNodes)
-    const addManifestChildrenNodes = dataStore(state => state.addManifestChildrenNodes)
+    const updateTreeNodes = dataStore(state => state.updateTreeNodes)
     const removeManifestChildrenNode = dataStore(state => state.removeManifestChildrenNode)
 
 
@@ -82,28 +83,76 @@ const ContentModal: FC = () => {
     }
 
 
-    function onSelect(node: TreeNode) {
+    function onClick(node: TreeNode) {
         const { type } = node
-        if (type === 'manifest' && !('children' in node)) onExpand(node)
-        if (type === 'manifest' && 'children' in node) onCollapse(node)
-        if (type === 'item') handleItemClick(node)
+        if (type !== 'item' && !('children' in node)) onExpand(node)
+        else if (type !== 'item' && 'children' in node) onCollapse(node)
+        else if (type === 'item') onSelect(node)
     }
 
     async function onExpand(node: TreeNode) {
-        const { collectionIndex, manifestIndex } = getNodeIndices(node.id, nodes)
-        addManifestChildrenNodes(node.id, collectionIndex, manifestIndex)
+        const { type } = node
+        let updatedTree = [...nodes]
 
+        if (type === 'collection') {
+            const collectionIndex = nodes.findIndex((n) => (n.id === node.id))
+            updatedTree[collectionIndex]['children'] = await getChildren(node.id, node.key)
+        }
+
+        else if (type === 'manifest') {
+            const { collectionIndex, manifestIndex } = getManifestIndices(node, nodes)
+            updatedTree[collectionIndex].children[manifestIndex]['children'] = await getChildren(node.id, node.key)
+        }
+
+        updateTreeNodes(updatedTree)
     }
 
     async function onCollapse(node: TreeNode) {
-        const { collectionIndex, manifestIndex } = getNodeIndices(node.id, nodes)
-        removeManifestChildrenNode(collectionIndex, manifestIndex)
+        const { type } = node
+        let updatedTree = [...nodes]
+
+        if (type === 'collection') {
+            const collectionIndex = nodes.findIndex((n) => (n.id === node.id))
+            delete updatedTree[collectionIndex].children
+        }
+
+        else if (type === 'manifest') {
+            const { collectionIndex, manifestIndex } = getManifestIndices(node, nodes)
+            delete updatedTree[collectionIndex].children[manifestIndex].children
+        }
+
+        updateTreeNodes(updatedTree)
     }
 
-    function handleItemClick(node) {
+    function onSelect(node) {
         const { id } = node
         clickedItemUrl.current = id
         clickedItemIndices.current = getNodeIndices(id, nodes)
+    }
+
+    async function getChildren(id, parentKey: string): TreeNode[] | null {
+        let childrenNodes: TreeNode[] = []
+        const response = await request(id)
+
+        if (!response.success) return null
+        const data = response.data
+
+        if (!data.sequence) return null
+        if (data.sequence.length === 0) return null
+
+        const items: Sequence[] = data.sequence
+
+        for (let i = 0; i < items.length; i++) {
+            childrenNodes.push({
+                'key': parentKey + '-' + i,
+                'id': items[i].id,
+                'expanded': false,
+                'label': items[i].label ?? 'label not found',
+                'type': items[i].type,
+            })
+        }
+
+        return childrenNodes
     }
 
     return <div className="t-flex t-flex-col t-pt-4 t-pl-3 t-w-[500px] t-shadow-md t-border-[1px] t-border-solid t-border-gray-300 t-rounded-md">
@@ -113,7 +162,7 @@ const ContentModal: FC = () => {
         <InputField updateInputValue={updateInputValue} />
         <span>Or choose:</span>
 
-        <TreeView nodes={nodes} onSelect={onSelect} onExpand={onExpand} />
+        <TreeView nodes={nodes} onClick={onClick} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse} />
 
 
         <div className="t-pb-4">

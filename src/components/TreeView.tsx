@@ -6,12 +6,14 @@ import { TreeProvider } from '@/contexts/TreeContext.tsx'
 import TreeNode from '@/components/tree/TreeNode'
 
 interface TreeProps {
-  nodes: TreeNode[]
+  nodes: TreeNode[],
+  onClick(node: TreeNode): void,
   onSelect(node: TreeNode): void,
-  onExpand(node: TreeNode): void
+  onExpand(node: TreeNode): void,
+  onCollapse(node: TreeNode): void
 }
 // ({ nodes, onSelect, onExpand })
-const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand }) => {
+const Tree: FC<TreeProps> = ({ nodes, onClick, onSelect, onExpand, onCollapse }) => {
 
 
   // TODO: function to process a select event: (click on item, manifest or collcetion) - we get it from TreeNode
@@ -31,7 +33,7 @@ const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand }) => {
 
 
   return <div className="tree t-h-96 t-overflow-hidden t-overflow-y-auto">
-    <TreeProvider onSelect={onSelect} onExpand={onExpand}>
+    <TreeProvider onClick={onClick} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}>
       {tree}
     </TreeProvider>
   </div>

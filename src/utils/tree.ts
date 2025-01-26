@@ -15,7 +15,7 @@ export async function createTree(panels: PanelConfig[]) {
   return nodes
 }
 
-async function createNode(url: string, key) {
+async function createNode(url: string, key: number) {
   const node = {}
   const response = await request<Collection>(url)
   if (!response.success) return node
@@ -23,73 +23,51 @@ async function createNode(url: string, key) {
   node['id'] = url
   node['label'] = response.data.title[0].title
   node['type'] = 'collection'
-
-  if (response.data.sequence?.length > 0) {
-    node['children'] = await getChildrenNodes(response.data)
-  }
+  node['key'] = key.toString()
 
   return node
 }
 
-async function getChildrenNodes(data) {
 
-  if (!('sequence' in data) || data.sequence.length === 0) return []
 
-  const items: Sequence[] = data.sequence
-  const nodes = items.map((item) => ({
-    'id': item.id,
-    'label': item.label,
-    'type': 'manifest',
-  }
-  ))
-  return nodes
-}
 
-export function clickedManifestIndices(manifestUrl: string, treeNodes) {
+export function getManifestIndices(node: TreeNode, treeNodes: TreeNode[]) {
+  const { id } = node
 
   for (let i = 0; i < treeNodes.length; i++) {
-    const manifestIndex = treeNodes[i].children.findIndex((item) => item.id === manifestUrl)
-    if (manifestIndex !== -1) {
-      return {
-        collectionIndex: i,
-        manifestIndex: manifestIndex
-      }
-    }
-  }
 
-  return -1
-}
+    if (!('children' in treeNodes[i])) continue
 
-export function getNodeIndices(url: string, treeNodes) {
-  for (let i = 0; i < treeNodes.length; i++) {
-    if (url === treeNodes[i].id) return {
-      collectionIndex: i
-    }
-    const manifestIndex = treeNodes[i].children.findIndex((item) => item.id === url)
+    const manifestIndex = treeNodes[i].children?.findIndex((item) => item.id === id)
+
     if (manifestIndex !== -1) {
       return {
         collectionIndex: i,
         manifestIndex: manifestIndex,
       }
     }
-
-    const itemIndices = findItemIndex(i, treeNodes[i].children, url)
-
-    if (itemIndices) return itemIndices
   }
-
-  return null
 }
 
-function findItemIndex(collectionIndex: number, manifestsNodes, itemUrl: string) {
-  for (let i = 0; i < manifestsNodes.length; i++) {
-    const itemIndex = getItemIndex(manifestsNodes[i], itemUrl)
-    if (itemIndex !== -1) {
-      return {
-        collectionIndex: collectionIndex,
-        manifestIndex: i,
-        itemIndex: itemIndex,
-        nodeType: 'item'
+export function getItemIndices(node: TreeNode, treeNodes: TreeNode[]) {
+
+  const itemUrl = node.id
+
+  for (let i = 0; i < treeNodes.length; i++) {
+    const manifestsNodes = treeNodes[i].children
+
+    if (!manifestsNodes) return null
+
+    for (let j = 0; j < manifestsNodes.length; i++) {
+      const itemIndex = findItemIndexInManifest(manifestsNodes[i], itemUrl)
+
+      if (itemIndex !== -1) {
+        return {
+          collectionIndex: i,
+          manifestIndex: j,
+          itemIndex: itemIndex,
+          nodeType: 'item'
+        }
       }
     }
   }
@@ -103,35 +81,9 @@ interface ItemIndices {
   itemIndex: number
 }
 
-export function getItemIndices(itemUrl: string, treeNodes: CollectionNode[]): ItemIndices | null {
-
-  for (let i = 0; i < treeNodes.length; i++) {
-    const collectionNode = treeNodes[i]
-
-    if (!collectionNode.children || collectionNode.children.length === 0) return null
-
-    for (let j = 0; j < collectionNode.children.length; j++) {
-
-      const manifest = collectionNode.children[j]
-
-      if (!manifest.children || manifest.children.length === 0) continue
-
-      const itemIndex = getItemIndex(manifest, itemUrl)
-      if (itemIndex !== -1) {
-        return {
-          collectionUrl: collectionNode.url,
-          manifestIndex: j,
-          itemIndex: itemIndex
-        }
-      }
-    }
-  }
-
-  return null
-}
 
 
-function getItemIndex(manifest: ManifestNode, itemUrl: string): number {
+function findItemIndexInManifest(manifest: ManifestNode, itemUrl: string): number {
   if ('children' in manifest) return manifest.children.findIndex((item: ItemNode) => item.id === itemUrl)
   return -1
 }

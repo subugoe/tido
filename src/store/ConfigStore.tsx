@@ -1,4 +1,3 @@
-import { getNodeIndices } from '@/utils/tree'
 import { create } from 'zustand'
 
 
@@ -18,6 +17,7 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
   },
   addNewPanel: (newEntrypoint: string, type: string, nodes: TreeNode[]) => {
 
+    /*
     const nodeIndices = getNodeIndices(newEntrypoint, nodes)
     let newPanelConfig
 
@@ -48,5 +48,6 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
     if (newPanelConfig) newConfig.panels?.push(newPanelConfig)
 
     set({ config: newConfig })
+    */
   }
 }))

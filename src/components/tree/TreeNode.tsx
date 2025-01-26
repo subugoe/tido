@@ -5,17 +5,17 @@ import { useTree } from '@/contexts/TreeContext'
 
 
 interface TreeNodeProps {
-    node: TreeNode
+    node: TreeNode,
 }
 
 const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
-    const { onSelect, onExtend } = useTree()
+    const { onClick } = useTree()
 
     const extended = useRef(false)
 
     function handleClick(e) {
-        onSelect(node)
+        onClick(node)
         // add class t-bg-primary
     }
 

@@ -12,6 +12,7 @@ interface DataStoreType {
   treeNodes: TreeNode[],
   initCollection: (url: string) => Promise<Collection>
   initTreeNodes: (newTreeNodes: TreeNode[]) => void,
+  updateTreeNodes: (newNodes: TreeNode[]) => void,
   getCollection: (collectionUrl: string) => Promise<Collection>,
   addManifestChildrenNodes: (manifestUrl: string, collectionIndex: number, manifestIndex: number) => void,
   removeManifestChildrenNode: (collectionIndex: number, manifestIndex: number) => void
@@ -37,6 +38,10 @@ export const dataStore = create<DataStoreType>((set, get) => ({
 
     const collection = await get().initCollection(collectionUrl)
     return collection
+  },
+
+  updateTreeNodes: (newNodes: TreeNode[]) => {
+    set({ treeNodes: newNodes })
   },
 
   async addManifestChildrenNodes(manifestUrl, collectionIndex, manifestIndex) {
