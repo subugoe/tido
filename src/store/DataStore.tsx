@@ -1,7 +1,5 @@
 import { create } from 'zustand'
 import { apiRequest } from '@/utils/api.ts'
-import { request } from '@/utils/http'
-import { tree } from '@/utils/icons'
 
 interface CollectionMap {
   [key: string]: Collection
@@ -14,8 +12,6 @@ interface DataStoreType {
   initTreeNodes: (newTreeNodes: TreeNode[]) => void,
   updateTreeNodes: (newNodes: TreeNode[]) => void,
   getCollection: (collectionUrl: string) => Promise<Collection>,
-  addManifestChildrenNodes: (manifestUrl: string, collectionIndex: number, manifestIndex: number) => void,
-  removeManifestChildrenNode: (collectionIndex: number, manifestIndex: number) => void
 }
 
 export const dataStore = create<DataStoreType>((set, get) => ({
@@ -43,28 +39,5 @@ export const dataStore = create<DataStoreType>((set, get) => ({
   updateTreeNodes: (newNodes: TreeNode[]) => {
     set({ treeNodes: newNodes })
   },
-
-  async addManifestChildrenNodes(manifestUrl, collectionIndex, manifestIndex) {
-    let updatedTree = [...get().treeNodes]
-    const response = await request<Manifest>(manifestUrl)
-    const manifestItems = response.data.sequence.map((item: { id: any; label: any }) => ({
-      'id': item.id,
-      'label': item.label,
-      'type': 'item'
-    }))
-
-    const manifestNode = updatedTree[collectionIndex].children[manifestIndex]
-    if (!('children' in manifestNode)) {
-      updatedTree[collectionIndex].children[manifestIndex]["children"] = manifestItems
-      set({ treeNodes: updatedTree })
-    }
-  },
-
-  removeManifestChildrenNode(collectionIndex: number, manifestIndex: number) {
-    let updatedTree = [...get().treeNodes]
-
-    delete updatedTree[collectionIndex].children[manifestIndex].children
-    set({ treeNodes: updatedTree })
-  }
 
 }))
