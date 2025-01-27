@@ -99,11 +99,13 @@ const ContentModal: FC = () => {
         if (type === 'collection') {
             const collectionIndex = nodes.findIndex((n) => (n.id === node.id))
             updatedTree[collectionIndex]['children'] = await getChildren(node)
+            updatedTree[collectionIndex].expanded = true
         }
 
         else if (type === 'manifest') {
             const { collectionIndex, manifestIndex } = getManifestIndices(node, nodes)
             updatedTree[collectionIndex].children[manifestIndex]['children'] = await getChildren(node)
+            updatedTree[collectionIndex].children[manifestIndex].expanded = true
         }
 
         updateTreeNodes(updatedTree)
@@ -115,11 +117,13 @@ const ContentModal: FC = () => {
 
         if (type === 'collection') {
             const collectionIndex = nodes.findIndex((n) => (n.id === node.id))
+            updatedTree[collectionIndex].expanded = false
             delete updatedTree[collectionIndex].children
         }
 
         else if (type === 'manifest') {
             const { collectionIndex, manifestIndex } = getManifestIndices(node, nodes)
+            updatedTree[collectionIndex].children[manifestIndex].expanded = false
             delete updatedTree[collectionIndex].children[manifestIndex].children
         }
 

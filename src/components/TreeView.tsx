@@ -19,8 +19,9 @@ const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand, onCollapse, selectedKe
   // TODO: function to process a select event: (click on item, manifest or collcetion) - we get it from TreeNode
 
   function onClick(node: TreeNode) {
-    if (!('children' in node)) onExpand(node)
-    else if ('children' in node) onCollapse(node)
+    if ('selectable' in node) onSelect(node)
+    else if (!node.expanded) onExpand(node)
+    else onCollapse(node)
   }
 
   const tree =
