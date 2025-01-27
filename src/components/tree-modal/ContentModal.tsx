@@ -21,7 +21,7 @@ const ContentModal: FC = () => {
 
 
     const nodes = dataStore(state => state.treeNodes)
-    const node = useRef('')
+    const clickedNode = useRef('')
 
 
     const inputGiven = useRef(false)
@@ -32,7 +32,6 @@ const ContentModal: FC = () => {
         collectionIndex: -1,
         manifestIndex: -1,
         itemIndex: -1,
-        nodeType: 'item'
     })
 
     const selectedKey = useRef('')
@@ -128,7 +127,7 @@ const ContentModal: FC = () => {
         clickedItemUrl.current = id
         clickedItemIndices.current = getItemIndices(node, nodes)
         selectedKey.current = node.key
-        node.current = node
+        clickedNode.current = node
     }
 
 
