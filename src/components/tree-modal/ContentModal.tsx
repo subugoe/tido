@@ -9,6 +9,7 @@ import TreeView from '@/components/TreeView'
 import InputField from '@/components/tree-modal/InputField'
 import { ClosePopover } from '@/components/ui/popover'
 import { createTree, getItemIndices, getManifestIndices, getChildren } from '@/utils/tree'
+import { request } from '@/utils/http'
 
 
 
@@ -52,6 +53,13 @@ const ContentModal: FC = () => {
         inputValue.current = newValue
     }
 
+    async function validateCollection(url: string) {
+        const response = await request<Promise<Collection>>(url)
+        if (!response.success) return false
+
+        return true
+    }
+
     function handleSelectClick(e) {
 
         let collectionUrl: string | undefined
@@ -79,6 +87,9 @@ const ContentModal: FC = () => {
 
         if (inputValue.current !== '') {
             collectionUrl = inputValue.current
+            // should display an error 
+            if (!validateCollection(collectionUrl)) return
+
             addNewPanel(
                 {
                     entrypoint: {
