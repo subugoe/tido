@@ -12,7 +12,6 @@ const SelectParallelPanels: FC<any> = () => {
 
   const selected: { [key: string]: boolean } = {}
 
-
   function select(panelId: string) {
     selected[panelId] = true
     addScrollPanel(panelId)
