@@ -19,15 +19,16 @@ const TextRenderer: FC<Props> = ({ htmlString }) => {
   useEffect(() => {
     if (!scrollPanels[panelId]) return
     const otherScrollPanelIds = Object.keys(scrollPanels).filter(scrollPanelId => scrollPanelId !== panelId)
-    let scrollOnSelectTime = 0
-
     ref.current?.addEventListener('scroll', () => {
-      const now = Date.now()
-      console.log(now - scrollOnSelectTime)
-      if (now - scrollOnSelectTime < 50) return
+      const isScrollingSelf = ref.current?.hasAttribute('data-is-scrolling')
+
+      if (isScrollingSelf) return
+
       otherScrollPanelIds.forEach(otherScrollPanelId => {
         const parallelScrollContainer = document.querySelector(`[data-panel="${otherScrollPanelId}"]`)
-        if (!parallelScrollContainer) return
+        const isScrolling = parallelScrollContainer.hasAttribute('data-is-scrolling')
+        console.log('event from ' + panelId, otherScrollPanelId + ' is scrolling ' + isScrolling)
+        if (!parallelScrollContainer || isScrolling) return
         parallelScrollContainer.scrollTop = ref.current?.scrollTop ?? 0
       })
     })
@@ -57,19 +58,17 @@ const TextRenderer: FC<Props> = ({ htmlString }) => {
         document.querySelector(value)?.addEventListener('click', () => {
           console.log('click', panels)
           Object.keys(panels).filter(key => key !== panelId).forEach(key => {
-            console.log(key)
-
             const parallelScrollContainer = document.querySelector(`[data-panel="${key}"]`)
-
+            if (!parallelScrollContainer) return
             otherFilteredTargets.forEach(target => {
               const value = target.selector.value
               const el = parallelScrollContainer.querySelector(value)
               console.log(el)
 
               if (!el) return
-              scrollOnSelectTime = Date.now()
+              parallelScrollContainer.setAttribute('data-is-scrolling', '')
               parallelScrollContainer.scrollTo({
-                top: el.getBoundingClientRect().top,
+                top: el.offsetTop - parallelScrollContainer.offsetTop,
                 behavior: 'smooth'
               })
             })
