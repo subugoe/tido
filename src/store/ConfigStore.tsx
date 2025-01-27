@@ -19,7 +19,7 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
   addNewPanel: (newPanelConfig: PanelConfig) => {
 
     let newConfig = { ...get().config }
-    if (newPanelConfig) newConfig.panels?.push(newPanelConfig)
+    newConfig.panels?.push(newPanelConfig)
 
     set({ config: newConfig })
   }
