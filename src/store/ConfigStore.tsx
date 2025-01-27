@@ -19,5 +19,5 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
     newConfig.panels?.push(newPanelConfig)
 
     set({ config: newConfig })
-  }
+  },
 }))

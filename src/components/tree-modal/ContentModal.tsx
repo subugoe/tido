@@ -9,6 +9,7 @@ import TreeView from '@/components/TreeView'
 import InputField from '@/components/tree-modal/InputField'
 import { ClosePopover } from '@/components/ui/popover'
 import { createTree, getItemIndices, getManifestIndices, getChildren } from '@/utils/tree'
+import { getUniquePanels } from '@/utils/panel'
 import { request } from '@/utils/http'
 
 
@@ -17,11 +18,12 @@ const ContentModal: FC = () => {
 
     const panels = configStore(state => state.config.panels)
     const addNewPanel = configStore(state => state.addNewPanel)
+
     const initTreeNodes = dataStore(state => state.initTreeNodes)
     const updateTreeNodes = dataStore(state => state.updateTreeNodes)
-
-
     const nodes = dataStore(state => state.treeNodes)
+
+    const [uniquePanels] = useState(getUniquePanels(panels))
     const clickedNode = useRef('')
 
 
@@ -42,11 +44,14 @@ const ContentModal: FC = () => {
     useEffect(() => {
         async function initTree(panels?: PanelConfig[]) {
             if (!panels) return
+
             const nodes = await createTree(panels)
             initTreeNodes(nodes)
         }
-        initTree(panels)
-    }, [panels])
+
+        initTree(uniquePanels)
+    }, [uniquePanels])
+
 
 
     function updateInputValue(newValue: string) {

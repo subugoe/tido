@@ -46,3 +46,12 @@ export function getContentTypes(content: Content[]): string[] {
 
   return types
 }
+
+export function getUniquePanels(panels: PanelConfig[] | undefined) {
+  if (!panels) return []
+
+  const uniquePanels = panels.filter((p, index, self) =>
+    index === self.findIndex((panel) => panel.entrypoint.url === p.entrypoint.url));
+
+  return uniquePanels
+}
