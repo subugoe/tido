@@ -29,7 +29,7 @@ const ContentModal: FC = () => {
     const clickedItemUrl = useRef('')
 
     const clickedItemIndices = useRef({
-        collectionIndex: -1,
+        collectionUrl: '',
         manifestIndex: -1,
         itemIndex: -1,
     })
@@ -66,12 +66,29 @@ const ContentModal: FC = () => {
 
         if (clickedItemUrl.current) {
             // transfer the clicked item indices
-            addNewPanel(node.current, nodes)
+            const { collectionUrl, manifestIndex, itemIndex } = clickedItemIndices.current
+            addNewPanel({
+                entrypoint: {
+                    url: collectionUrl,
+                    type: "collection",
+                },
+                manifestIndex: manifestIndex,
+                itemIndex: itemIndex
+            })
         }
 
         if (inputValue.current !== '') {
             collectionUrl = inputValue.current
-            addNewPanel(collectionUrl, 'collection', nodes)
+            addNewPanel(
+                {
+                    entrypoint: {
+                        url: collectionUrl,
+                        type: "collection",
+                    },
+                    manifestIndex: 0,
+                    itemIndex: 0
+                }
+            )
         }
 
         // lines below serve mainly for showing the error message. Error message appears when a user does not provide input for opening a new a collection/panel
@@ -126,8 +143,8 @@ const ContentModal: FC = () => {
         const { id } = node
         clickedItemUrl.current = id
         clickedItemIndices.current = getItemIndices(node, nodes)
-        selectedKey.current = node.key
-        clickedNode.current = node
+        //selectedKey.current = node.key
+        //clickedNode.current = node
     }
 
 

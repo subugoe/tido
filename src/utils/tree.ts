@@ -7,6 +7,12 @@ interface ManifestIndices {
   manifestIndex: number
 }
 
+interface ItemIndices {
+  collectionUrl: string,
+  manifestIndex: number,
+  itemIndex: number
+}
+
 export async function createTree(panels: PanelConfig[]) {
   if (!panels || panels.length === 0) return []
 
@@ -97,7 +103,7 @@ export function getManifestIndices(node: TreeNode, treeNodes: TreeNode[]): Manif
   }
 }
 
-export function getItemIndices(node: TreeNode, treeNodes: TreeNode[]) {
+export function getItemIndices(node: TreeNode, treeNodes: TreeNode[]): ItemIndices | null {
 
   const itemUrl = node.id
 
@@ -115,7 +121,7 @@ export function getItemIndices(node: TreeNode, treeNodes: TreeNode[]) {
 
       if (itemIndex !== -1) {
         return {
-          collectionIndex: i,
+          collectionUrl: treeNodes[i].id,
           manifestIndex: j,
           itemIndex: itemIndex
         }
