@@ -1,13 +1,10 @@
-import { getItemIndices } from '@/utils/tree'
 import { create } from 'zustand'
-
 
 
 interface ConfigStoreType {
   config: Config,
   addCustomConfig: (customConfig: Config) => void,
   addNewPanel: (newPanelConfig: PanelConfig) => void,
-
 }
 
 export const configStore = create<ConfigStoreType>((set, get) => ({
