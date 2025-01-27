@@ -6,7 +6,7 @@ import { create } from 'zustand'
 interface ConfigStoreType {
   config: Config,
   addCustomConfig: (customConfig: Config) => void,
-  addNewPanel: (newEntrypoint: string, type: string, nodes: TreeNode[]) => void,
+  addNewPanel: (node: TreeNode, nodes: TreeNode[]) => void,
 
 }
 
@@ -16,13 +16,17 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
   addCustomConfig: (customConfig: Config) => {
     set({ config: customConfig })
   },
-  addNewPanel: (newEntrypoint: string, type: string, nodes: TreeNode[]) => {
+  addNewPanel: (node: TreeNode, nodes: TreeNode[]) => {
+
+    const { id, type } = node
+
+    console.log('node', node)
 
     let newPanelConfig
 
     if (type === 'collection') newPanelConfig = {
       entrypoint: {
-        url: newEntrypoint,
+        url: id,
         type: "collection",
       }
     }
@@ -30,7 +34,7 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
 
     else if (type === 'item') {
 
-      const { collectionIndex, manifestIndex, itemIndex } = getItemIndices()
+      const { collectionIndex, manifestIndex, itemIndex } = getItemIndices(node, treeNodes)
       const collectionUrl = nodes[collectionIndex].id
       newPanelConfig =
       {

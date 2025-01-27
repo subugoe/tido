@@ -7,18 +7,21 @@ import TreeNode from '@/components/tree/TreeNode'
 
 interface TreeProps {
   nodes: TreeNode[],
-  onClick(node: TreeNode): void,
   onSelect(node: TreeNode): void,
   onExpand(node: TreeNode): void,
   onCollapse(node: TreeNode): void,
   selectedKey: string
 }
 // ({ nodes, onSelect, onExpand })
-const Tree: FC<TreeProps> = ({ nodes, onClick, onSelect, onExpand, onCollapse, selectedKey }) => {
+const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand, onCollapse, selectedKey }) => {
 
 
   // TODO: function to process a select event: (click on item, manifest or collcetion) - we get it from TreeNode
 
+  function onClick(node: TreeNode) {
+    if (!('children' in node)) onExpand(node)
+    else if ('children' in node) onCollapse(node)
+  }
 
   const tree =
     nodes.length > 0 &&

@@ -8,8 +8,7 @@ import { dataStore } from '@/store/DataStore'
 import TreeView from '@/components/TreeView'
 import InputField from '@/components/tree-modal/InputField'
 import { ClosePopover } from '@/components/ui/popover'
-import { createTree, getItemIndices, getManifestIndices } from '@/utils/tree'
-import { request } from '@/utils/http'
+import { createTree, getItemIndices, getManifestIndices, getChildren } from '@/utils/tree'
 
 
 
@@ -22,6 +21,7 @@ const ContentModal: FC = () => {
 
 
     const nodes = dataStore(state => state.treeNodes)
+    const node = useRef('')
 
 
     const inputGiven = useRef(false)
@@ -67,7 +67,7 @@ const ContentModal: FC = () => {
 
         if (clickedItemUrl.current) {
             // transfer the clicked item indices
-            addNewPanel(clickedItemUrl.current, 'item', nodes)
+            addNewPanel(node.current, nodes)
         }
 
         if (inputValue.current !== '') {
@@ -82,13 +82,15 @@ const ContentModal: FC = () => {
         setClickedButton(false)
     }
 
-
+    /*
     function onClick(node: TreeNode) {
         const { type } = node
         if (type !== 'item' && !('children' in node)) onExpand(node)
         else if (type !== 'item' && 'children' in node) onCollapse(node)
         else if (type === 'item') onSelect(node)
     }
+*/
+
 
     async function onExpand(node: TreeNode) {
         const { type } = node
@@ -96,12 +98,12 @@ const ContentModal: FC = () => {
 
         if (type === 'collection') {
             const collectionIndex = nodes.findIndex((n) => (n.id === node.id))
-            updatedTree[collectionIndex]['children'] = await getChildren(node.id, node.key)
+            updatedTree[collectionIndex]['children'] = await getChildren(node)
         }
 
         else if (type === 'manifest') {
             const { collectionIndex, manifestIndex } = getManifestIndices(node, nodes)
-            updatedTree[collectionIndex].children[manifestIndex]['children'] = await getChildren(node.id, node.key)
+            updatedTree[collectionIndex].children[manifestIndex]['children'] = await getChildren(node)
         }
 
         updateTreeNodes(updatedTree)
@@ -129,32 +131,9 @@ const ContentModal: FC = () => {
         clickedItemUrl.current = id
         clickedItemIndices.current = getItemIndices(node, nodes)
         selectedKey.current = node.key
+        node.current = node
     }
 
-    async function getChildren(id, parentKey: string): Promise<TreeNode[] | null> {
-        let childrenNodes: TreeNode[] = []
-        const response = await request(id)
-
-        if (!response.success) return null
-        const data = response.data
-
-        if (!data.sequence) return null
-        if (data.sequence.length === 0) return null
-
-        const items: Sequence[] = data.sequence
-
-        for (let i = 0; i < items.length; i++) {
-            childrenNodes.push({
-                'key': parentKey + '-' + i,
-                'id': items[i].id,
-                'expanded': false,
-                'label': items[i].label ?? 'label not found',
-                'type': items[i].type,
-            })
-        }
-
-        return childrenNodes
-    }
 
     return <div className="t-flex t-flex-col t-pt-4 t-pl-3 t-w-[500px] t-shadow-md t-border-[1px] t-border-solid t-border-gray-300 t-rounded-md">
 
@@ -163,7 +142,7 @@ const ContentModal: FC = () => {
         <InputField updateInputValue={updateInputValue} />
         <span>Or choose:</span>
 
-        <TreeView nodes={nodes} onClick={onClick} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse} selectedKey={selectedKey} />
+        <TreeView nodes={nodes} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse} selectedKey={selectedKey} />
 
 
         <div className="t-pb-4">

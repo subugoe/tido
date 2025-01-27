@@ -271,7 +271,8 @@ declare global {
     key: string
     label: string,
     type: string,
-    expanded: boolean
+    expanded?: boolean,
+    selectable?: boolean,
     children?: TreeNode[]
   }
 }
