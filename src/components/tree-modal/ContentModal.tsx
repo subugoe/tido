@@ -82,15 +82,6 @@ const ContentModal: FC = () => {
         setClickedButton(false)
     }
 
-    /*
-    function onClick(node: TreeNode) {
-        const { type } = node
-        if (type !== 'item' && !('children' in node)) onExpand(node)
-        else if (type !== 'item' && 'children' in node) onCollapse(node)
-        else if (type === 'item') onSelect(node)
-    }
-*/
-
 
     async function onExpand(node: TreeNode) {
         const { type } = node
@@ -123,6 +114,8 @@ const ContentModal: FC = () => {
 
         else if (type === 'manifest') {
             const { collectionIndex, manifestIndex } = getManifestIndices(node, nodes)
+            if (collectionIndex === -1 && manifestIndex === -1) return
+
             updatedTree[collectionIndex].children[manifestIndex].expanded = false
             delete updatedTree[collectionIndex].children[manifestIndex].children
         }

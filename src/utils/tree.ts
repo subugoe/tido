@@ -1,6 +1,12 @@
 
 import { request } from '@/utils/http'
 
+
+interface ManifestIndices {
+  collectionIndex: number,
+  manifestIndex: number
+}
+
 export async function createTree(panels: PanelConfig[]) {
   if (!panels || panels.length === 0) return []
 
@@ -68,14 +74,14 @@ export async function getChildren(node: TreeNode): Promise<TreeNode[] | null> {
 }
 
 
-export function getManifestIndices(node: TreeNode, treeNodes: TreeNode[]) {
+export function getManifestIndices(node: TreeNode, treeNodes: TreeNode[]): ManifestIndices {
   const { id } = node
 
   for (let i = 0; i < treeNodes.length; i++) {
 
     if (!('children' in treeNodes[i])) continue
 
-    const manifestIndex = treeNodes[i].children?.findIndex((item) => item.id === id)
+    const manifestIndex: number = treeNodes[i].children.findIndex((item) => item.id === id)
 
     if (manifestIndex !== -1) {
       return {
@@ -83,6 +89,11 @@ export function getManifestIndices(node: TreeNode, treeNodes: TreeNode[]) {
         manifestIndex: manifestIndex,
       }
     }
+  }
+
+  return {
+    collectionIndex: -1,
+    manifestIndex: -1
   }
 }
 
@@ -106,8 +117,7 @@ export function getItemIndices(node: TreeNode, treeNodes: TreeNode[]) {
         return {
           collectionIndex: i,
           manifestIndex: j,
-          itemIndex: itemIndex,
-          nodeType: 'item'
+          itemIndex: itemIndex
         }
       }
     }
@@ -115,13 +125,6 @@ export function getItemIndices(node: TreeNode, treeNodes: TreeNode[]) {
 
   return null
 }
-
-interface ItemIndices {
-  collectionUrl: string,
-  manifestIndex: number,
-  itemIndex: number
-}
-
 
 
 function findItemIndexInManifest(manifest: ManifestNode, itemUrl: string): number {
