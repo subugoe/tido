@@ -8,6 +8,7 @@ import {useContentsStore} from "@/stores/contents";
 import TextEventBus from "@/utils/TextEventBus";
 import {getAnnotationIdsFromTarget} from "@/utils/text";
 import { getVariantAnnotations } from '@/utils/annotations'
+import { scrollIntoViewIfNeeded } from '@/utils/dom'
 
 const annotationStore = useAnnotationsStore();
 const contentsStore = useContentsStore();
@@ -37,11 +38,11 @@ watch(
 const unsubscribe = TextEventBus.on('click', ({ target }) => {
 
   let ids = getAnnotationIdsFromTarget(target)
-  // ids are all the annotation ids of the target, which can be in different tabs. 
+  // ids are all the annotation ids of the target, which can be in different tabs.
   // we need to filter only the variant ids before proceeding with adding active annotation or removing active annotation
   const variantAnnotations = getVariantAnnotations(annotationStore.annotations, 'Variant')
   const variantAnnotationIds = variantAnnotations.map((annotation) => annotation.id)
-  // ids now contains the ids of the target's variants independent from the witnesses drop down selection 
+  // ids now contains the ids of the target's variants independent from the witnesses drop down selection
   ids = ids.filter((id) => variantAnnotationIds.includes(id))
 
   const annotations = annotationStore.visibleAnnotations.filter((filtered) => ids.find(id => filtered.id === id))
@@ -60,6 +61,10 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
   // ids of the selected annotations
   const idsSelected = annotations.map((annotation) => annotation.id)
 
+  const el = document.querySelector(`[data-annotation-id="${idsSelected[0]}"]`);
+  if (el) {
+    scrollIntoViewIfNeeded(el, el.closest('.panel-body'));
+  }
 
   if (annotationStore.isSingleSelectMode) {
     if (targetIsSelected) {

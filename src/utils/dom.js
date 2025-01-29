@@ -67,8 +67,6 @@ export function elemToSelector(el) {
     str += `[data-target=${el.getAttribute('data-target')}]`;
   }
 
-  // if(document.querySelectorAll(str).length === 1) return str;
-
   return `${elemToSelector(el.parentNode)} > ${str}`;
 }
 

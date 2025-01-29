@@ -9,7 +9,6 @@
       :annotation="annotation"
       :is-active="isActive(annotation)"
       :toggle="toggle"
-      :witness-color="getWitnessColor(annotation.body.value.witness)"
       :show-separator="showLineSeparator(visibleAnnotations, i)"
       @select="addAnnotation(annotation.id)"
       @unselect="removeAnnotation(annotation.id)"
@@ -62,12 +61,8 @@ function toggle({ id }) {
   }
 }
 
-function getWitnessColor(witness: string) {
-  return annotationStore.variantItemsColors[witness];
-}
-
 function getVariantsListInfoMessage(): string {
-  if (annotationStore.isSingleSelectMode 
+  if (annotationStore.isSingleSelectMode
         && annotationStore.filteredAnnotations.length > 0) {
     return i18n[lang.value]['single_select_mode_info_message']
   }
@@ -75,13 +70,12 @@ function getVariantsListInfoMessage(): string {
 }
 
 function getVariantsListInfoTitle(): string {
-  if (annotationStore.isSingleSelectMode 
+  if (annotationStore.isSingleSelectMode
         && annotationStore.filteredAnnotations.length > 0) {
     return i18n[lang.value]['single_select_mode']
   }
   return i18n[lang.value]['no_annotations_available']
 }
- 
 
 function showLineSeparator(visibleAnnotations, i) {
   if (visibleAnnotations[i+1]) {

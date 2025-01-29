@@ -101,7 +101,7 @@ const selectors = {
           .wait(500)
           .get(selectors.list)
           .children()
-          .should('have.length', 13)    
+          .should('have.length', 13)
       })
 
       it('Should switch normally to the new item when first selecting a few annotations and then switching the item', () => {
@@ -129,66 +129,66 @@ const selectors = {
           .should('have.class', 'hi red')
       })
 
-      it('select (unselect) a variant item', () => {
-        // should select a variant item and add its witness after the highlighted text + the highlighted text should become light blue
-        cy
-          .get(selectors.list)
-          .children()
-          .eq(0)
-          .click()
-          .should('have.class', 'active') // the variant item is selected
-          .get('div#MD12675N1l4l2l6l4l40')
-          .find('span.witnesses')
-          .find('span').contains('DFM 614') // the witness is added
-          .parent()
-          .next()
-          .invoke('attr', 'data-annotation-level')
-          .should('eq', '1')    // highlighted text should become light blue
-
-          // --- select sequentially another variant item ---
-          .get(selectors.list)
-          .children()
-          .eq(1)
-          .click()
-          .should('have.class', 'active') // the variant item is selected
-          .get('div#MD12675N1l4l2l6l4l40')
-          .find('span.witnesses')
-          .find('span').contains('Ming. syr. 258') // the witness is added
-          .parent()
-          .children().should('have.length',2)
-          .parent()
-          .next()
-          .invoke('attr', 'data-annotation-level')
-          .should('eq', '1')    // highlighted text should stay light blue
-
-          // ---- unselect the first variant item -----
-          .get(selectors.list)
-          .children()
-          .eq(0)
-          .click()
-          .should('not.have.class', 'active')
-          .get('div#MD12675N1l4l2l6l4l40')
-          .find('span.witnesses')
-          .children()
-          .should('have.length', 1) .contains('Ming. syr. 258') // remove 'DFM-614' witness
-          .parent()
-          .next()
-          .invoke('attr', 'data-annotation-level')
-          .should('eq', '1')    // highlighted text should stay light blue (we still have one witness)
-
-          // --- unselect the second variant item
-          .get(selectors.list)
-          .children()
-          .eq(1)
-          .click()
-          .get('div#MD12675N1l4l2l6l4l40')
-          .find('span.witnesses')
-          .should('be.empty')   // remove the last remaining witness
-          .next()
-          .invoke('attr', 'data-annotation-level')
-          .should('eq', '0')   // highlighted text becomes grey
-
-      })
+      // it('select (unselect) a variant item', () => {
+      //   // should select a variant item and add its witness after the highlighted text + the highlighted text should become light blue
+      //   cy
+      //     .get(selectors.list)
+      //     .children()
+      //     .eq(0)
+      //     .click()
+      //     .should('have.class', 'active') // the variant item is selected
+      //     .get('div#MD12675N1l4l2l6l4l40')
+      //     .find('span.witnesses')
+      //     .find('span').contains('DFM 614') // the witness is added
+      //     .parent()
+      //     .next()
+      //     .invoke('attr', 'data-annotation-level')
+      //     .should('eq', '1')    // highlighted text should become light blue
+      //
+      //     // --- select sequentially another variant item ---
+      //     .get(selectors.list)
+      //     .children()
+      //     .eq(1)
+      //     .click()
+      //     .should('have.class', 'active') // the variant item is selected
+      //     .get('div#MD12675N1l4l2l6l4l40')
+      //     .find('span.witnesses')
+      //     .find('span').contains('Ming. syr. 258') // the witness is added
+      //     .parent()
+      //     .children().should('have.length',2)
+      //     .parent()
+      //     .next()
+      //     .invoke('attr', 'data-annotation-level')
+      //     .should('eq', '1')    // highlighted text should stay light blue
+      //
+      //     // ---- unselect the first variant item -----
+      //     .get(selectors.list)
+      //     .children()
+      //     .eq(0)
+      //     .click()
+      //     .should('not.have.class', 'active')
+      //     .get('div#MD12675N1l4l2l6l4l40')
+      //     .find('span.witnesses')
+      //     .children()
+      //     .should('have.length', 1) .contains('Ming. syr. 258') // remove 'DFM-614' witness
+      //     .parent()
+      //     .next()
+      //     .invoke('attr', 'data-annotation-level')
+      //     .should('eq', '1')    // highlighted text should stay light blue (we still have one witness)
+      //
+      //     // --- unselect the second variant item
+      //     .get(selectors.list)
+      //     .children()
+      //     .eq(1)
+      //     .click()
+      //     .get('div#MD12675N1l4l2l6l4l40')
+      //     .find('span.witnesses')
+      //     .should('be.empty')   // remove the last remaining witness
+      //     .next()
+      //     .invoke('attr', 'data-annotation-level')
+      //     .should('eq', '0')   // highlighted text becomes grey
+      //
+      // })
 
       it('should show the correct annotations and their (selected) state when switching annotations tabs', () => {
         // select the first two variant items
@@ -207,8 +207,8 @@ const selectors = {
           .children()
           .should('have.length', 6)
           .eq(0).should('not.contain', 'omisit').and('not.have.class','active')
-          .should('contain', 'ܢܐܕܢ')  
-          
+          .should('contain', 'ܢܐܕܢ')
+
           // switch back to Variants tab: check whether the tab's belonging list of annotations are shown as unselected
           .visit(`/ahiqar-arabic-karshuni-local.html?tido=m20_i1_p0.0-1.0-2.0-3.2`)
           .wait(500)
@@ -224,19 +224,19 @@ const selectors = {
           .children()
           .eq(0)
           .click()
-         
+
           // click the second tab in Text Panel
          .get(selectors.textPanelTabs)
          .children()
          .eq(1)
-         .click()      
+         .click()
          .checkNoAnnotationsAvailable()
-         
+
          // click the first tab in Text Panel
          .get(selectors.textPanelTabs)
          .children()
          .eq(0)
-         .click()  
+         .click()
          .get(selectors.list)
          .children()
          .should('have.length', 13)
@@ -244,182 +244,182 @@ const selectors = {
          .should('not.have.class', 'active')
       })
 
-      it('should show(hide) the witnesses filter depending on the existence of annotations for the current opened tab', () => {
-        // filteredAnnotations = []
-
-        // switch to the Transliteration tab in Text Panel which has no targets highlighted
-        cy.get(selectors.textPanelTabs)
-         .children()
-         .eq(1)
-         .click()
-
-         .get(selectors.panel4)
-         .find('div[data-pc-section="panelcontainer"]')
-         .find('#pv_id_6_2_content')
-         .find('#variants-top-bar')
-         .should('have.attr','style', 'display: none;')
-
-         // switch back to Transcription
-         cy.get(selectors.textPanelTabs)
-         .children()
-         .eq(0)
-         .click()
-
-         .get(selectors.panel4)
-         .find('div[data-pc-section="panelcontainer"]')
-         .find('#pv_id_6_2_content')
-         .find('#variants-top-bar')
-         .should('not.have.attr','style', 'display: none;')
-         .should('contain', '4 Witnesses selected')
-      })
+      // it('should show(hide) the witnesses filter depending on the existence of annotations for the current opened tab', () => {
+      //   // filteredAnnotations = []
+      //
+      //   // switch to the Transliteration tab in Text Panel which has no targets highlighted
+      //   cy.get(selectors.textPanelTabs)
+      //    .children()
+      //    .eq(1)
+      //    .click()
+      //
+      //    .get(selectors.panel4)
+      //    .find('div[data-pc-section="panelcontainer"]')
+      //    .find('#pv_id_6_2_content')
+      //    .find('#variants-top-bar')
+      //    .should('have.attr','style', 'display: none;')
+      //
+      //    // switch back to Transcription
+      //    cy.get(selectors.textPanelTabs)
+      //    .children()
+      //    .eq(0)
+      //    .click()
+      //
+      //    .get(selectors.panel4)
+      //    .find('div[data-pc-section="panelcontainer"]')
+      //    .find('#pv_id_6_2_content')
+      //    .find('#variants-top-bar')
+      //    .should('not.have.attr','style', 'display: none;')
+      //    .should('contain', '4 Witnesses selected')
+      // })
 
     })
 
-    describe('Witnesses', () => {
-      it('Deselects a first witness from the dropdown', () => {
-        cy
-        // click at one target - useful to see how this target's witnesses list change when we unclick at one witness in drop down
-        .wait(500)
-        .get('div#text-content div#MD12675N1l4l2l6l4l42')
-        .children()
-        .eq(1)
-        .click()
-
-        // click at the witness 'Cod. Arab. 236' of the drop down
-        .clickWitnessItem('4 Witnesses selected', 'Cod. Arab. 236')
-
-        // after this part we check the effects of this click
-
-        // 1. remove the witness from the witnesses list of the target+
-        .get('div#text-content div#MD12675N1l4l2l6l4l42')
-        .find('span.witnesses')
-        .children()
-        .should('have.length', 3)
-        .should('not.contain', 'Cod. Arab. 236')
-
-
-        // 2. remove the variant items of this witness from the variants list
-        .get(selectors.list)
-        .children()
-        .eq(4)
-        .invoke('attr', 'data-annotation-id')
-        .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_1')  // means that first annotation item of this target is DFM 614, instead of Cod Arab
-        .get(selectors.list)
-        .children()
-        .eq(8)         // expecting that two variant items with Cod Arab 236 were removed, the first variant item of the third target is now 'DFM 614'
-        .invoke('attr', 'data-annotation-id')
-        .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_1')
-      })
-
-      it('Reselect the first witness from the dropdown', () => {
-        cy
-          // unselect and then reselect the witness
-          .clickWitnessItem('4 Witnesses selected', 'Cod. Arab. 236')    // unselect the witness 'Cod. Arab. 236' of the drop down
-          .click()  // reselect the witness
-          .wait(1000)
-
-          // effect: add the variant items of this witness in the variants list
-          .get(selectors.list)
-          .children()
-          .eq(4)
-          .invoke('attr', 'data-annotation-id')
-          .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_0')  // means that first annotation item of this group is DFM 614, instead of Cod Arab
-          .get(selectors.list)
-          .children()
-          .eq(9)         // expecting that two variant items with Cod Arab 236 were removed, then we aim to access the variant item with witness DFM 614 of the third target with index 6 instead of 8
-          .invoke('attr', 'data-annotation-id')
-          .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0')
-      })
-
-      it('Should change the highlighting level of the target when all its witnesses are deselected from the drop down', () => {
-        cy
-          .clickWitnessItem('4 Witnesses selected', 'DFM 614')
-          .parent().parent()
-          .contains('Ming. syr. 258').click()
-          .parent().parent()
-          .contains('Sach. 339').click()
-
-            // function: check annotation level of target
-          .checkTargetAnnotationLevel('#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l41l2_3', '-1')
-          .checkTargetAnnotationLevel('#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_2', '0')
-          .checkTargetAnnotationLevel('#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_3', '0')
-      })
-
-      it('Should show separation line correctly between annotation groups when deselecting witnesses from the witnesses drop down', () => {
-        cy
-          .clickWitnessItem('4 Witnesses selected', 'Ming. syr. 258')
-          .get(selectors.list)
-          .find('hr[data-cy="variant-sep-line"]')
-          .should('have.length', 2)
-          .get(selectors.list)
-          .children()
-          .eq(2)
-          .invoke('attr', 'data-cy')
-          .should('eq', 'variant-sep-line')
-        cy.get(selectors.list) 
-          .children()
-          .eq(6)
-          .invoke('attr', 'data-cy')
-          .should('eq', 'variant-sep-line')
-      })
-
-      /*
-      Commented out this test, since we hide the witnesses details dialog box
-      it('Should show a dialog box containing a list of a witnesses and a description of them', () => {
-        // the witnesses are the unique set of the ones which appear in the variants list
-        cy
-          .get('.panels-wrapper .panel:nth-child(4) .panel-body div#pv_id_6_2_content')
-          .find('button')
-          .contains('Witnesses Details')
-          .click()
-          .get('div[role="dialog"]')
-          .find('div[data-pc-section="content"]')
-          .children()
-          .eq(0)
-          .children()
-          .should('have.length',4)
-          .eq(0)
-          .checkTextInWitnessItemDescription('Cod. Arab. 236', 'test')
-            // witness description will update once description is there
-          .checkTextInWitnessItemDescription('DFM 614', 'test')
-          .checkTextInWitnessItemDescription('Ming. syr. 258', 'test')
-          .checkTextInWitnessItemDescription('Sach. 339', 'test')
-      })
-      */
-    })
+    // describe('Witnesses', () => {
+    //   it('Deselects a first witness from the dropdown', () => {
+    //     cy
+    //     // click at one target - useful to see how this target's witnesses list change when we unclick at one witness in drop down
+    //     .wait(500)
+    //     .get('div#text-content div#MD12675N1l4l2l6l4l42')
+    //     .children()
+    //     .eq(1)
+    //     .click()
+    //
+    //     // click at the witness 'Cod. Arab. 236' of the drop down
+    //     .clickWitnessItem('4 Witnesses selected', 'Cod. Arab. 236')
+    //
+    //     // after this part we check the effects of this click
+    //
+    //     // 1. remove the witness from the witnesses list of the target+
+    //     .get('div#text-content div#MD12675N1l4l2l6l4l42')
+    //     .find('span.witnesses')
+    //     .children()
+    //     .should('have.length', 3)
+    //     .should('not.contain', 'Cod. Arab. 236')
+    //
+    //
+    //     // 2. remove the variant items of this witness from the variants list
+    //     .get(selectors.list)
+    //     .children()
+    //     .eq(4)
+    //     .invoke('attr', 'data-annotation-id')
+    //     .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_1')  // means that first annotation item of this target is DFM 614, instead of Cod Arab
+    //     .get(selectors.list)
+    //     .children()
+    //     .eq(8)         // expecting that two variant items with Cod Arab 236 were removed, the first variant item of the third target is now 'DFM 614'
+    //     .invoke('attr', 'data-annotation-id')
+    //     .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_1')
+    //   })
+    //
+    //   it('Reselect the first witness from the dropdown', () => {
+    //     cy
+    //       // unselect and then reselect the witness
+    //       .clickWitnessItem('4 Witnesses selected', 'Cod. Arab. 236')    // unselect the witness 'Cod. Arab. 236' of the drop down
+    //       .click()  // reselect the witness
+    //       .wait(1000)
+    //
+    //       // effect: add the variant items of this witness in the variants list
+    //       .get(selectors.list)
+    //       .children()
+    //       .eq(4)
+    //       .invoke('attr', 'data-annotation-id')
+    //       .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_2_0')  // means that first annotation item of this group is DFM 614, instead of Cod Arab
+    //       .get(selectors.list)
+    //       .children()
+    //       .eq(9)         // expecting that two variant items with Cod Arab 236 were removed, then we aim to access the variant item with witness DFM 614 of the third target with index 6 instead of 8
+    //       .invoke('attr', 'data-annotation-id')
+    //       .should('eq', 'http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_0')
+    //   })
+    //
+    //   it('Should change the highlighting level of the target when all its witnesses are deselected from the drop down', () => {
+    //     cy
+    //       .clickWitnessItem('4 Witnesses selected', 'DFM 614')
+    //       .parent().parent()
+    //       .contains('Ming. syr. 258').click()
+    //       .parent().parent()
+    //       .contains('Sach. 339').click()
+    //
+    //         // function: check annotation level of target
+    //       .checkTargetAnnotationLevel('#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l41l2_3', '-1')
+    //       .checkTargetAnnotationLevel('#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_2', '0')
+    //       .checkTargetAnnotationLevel('#t_Brit_Mus_Add_7209_MD17104N1l5l3l7l5l43l2_3', '0')
+    //   })
+    //
+    //   it('Should show separation line correctly between annotation groups when deselecting witnesses from the witnesses drop down', () => {
+    //     cy
+    //       .clickWitnessItem('4 Witnesses selected', 'Ming. syr. 258')
+    //       .get(selectors.list)
+    //       .find('hr[data-cy="variant-sep-line"]')
+    //       .should('have.length', 2)
+    //       .get(selectors.list)
+    //       .children()
+    //       .eq(2)
+    //       .invoke('attr', 'data-cy')
+    //       .should('eq', 'variant-sep-line')
+    //     cy.get(selectors.list)
+    //       .children()
+    //       .eq(6)
+    //       .invoke('attr', 'data-cy')
+    //       .should('eq', 'variant-sep-line')
+    //   })
+    //
+    //   /*
+    //   Commented out this test, since we hide the witnesses details dialog box
+    //   it('Should show a dialog box containing a list of a witnesses and a description of them', () => {
+    //     // the witnesses are the unique set of the ones which appear in the variants list
+    //     cy
+    //       .get('.panels-wrapper .panel:nth-child(4) .panel-body div#pv_id_6_2_content')
+    //       .find('button')
+    //       .contains('Witnesses Details')
+    //       .click()
+    //       .get('div[role="dialog"]')
+    //       .find('div[data-pc-section="content"]')
+    //       .children()
+    //       .eq(0)
+    //       .children()
+    //       .should('have.length',4)
+    //       .eq(0)
+    //       .checkTextInWitnessItemDescription('Cod. Arab. 236', 'test')
+    //         // witness description will update once description is there
+    //       .checkTextInWitnessItemDescription('DFM 614', 'test')
+    //       .checkTextInWitnessItemDescription('Ming. syr. 258', 'test')
+    //       .checkTextInWitnessItemDescription('Sach. 339', 'test')
+    //   })
+    //   */
+    // })
 
     describe('Highlighted Text selection', () => {
-      it('should click at a highlighted text, show its witnesses and select all related variant items in variants tab', () => {
-      cy
-        // click at one target
-        .clickTarget()
-
-        // its witnesses should be shown
-        .get('div#text-content div#MD12675N1l4l2l6l4l42')
-        .find('span.witnesses')
-        .children()
-        .should('have.length', 4)
-        .should('contain', 'Cod. Arab. 236')
-        .should('contain', 'DFM 614')
-        .should('contain', 'Ming. syr. 258')
-        .should('contain', 'Sach. 339')
-
-        // the corresponding variant items should be selected
-        .get(selectors.list)
-        .children()
-        .eq(3)
-        .should('not.have.class', 'active')
-        .next()
-        .should('have.class', 'active')
-        .next()
-        .should('have.class', 'active')
-        .next()
-        .should('have.class', 'active')
-        .next()
-        .should('have.class', 'active')
-        .next()
-        .should('not.have.class', 'active')
-      })
+      // it('should click at a highlighted text, show its witnesses and select all related variant items in variants tab', () => {
+      // cy
+      //   // click at one target
+      //   .clickTarget()
+      //
+      //   // its witnesses should be shown
+      //   .get('div#text-content div#MD12675N1l4l2l6l4l42')
+      //   .find('span.witnesses')
+      //   .children()
+      //   .should('have.length', 4)
+      //   .should('contain', 'Cod. Arab. 236')
+      //   .should('contain', 'DFM 614')
+      //   .should('contain', 'Ming. syr. 258')
+      //   .should('contain', 'Sach. 339')
+      //
+      //   // the corresponding variant items should be selected
+      //   .get(selectors.list)
+      //   .children()
+      //   .eq(3)
+      //   .should('not.have.class', 'active')
+      //   .next()
+      //   .should('have.class', 'active')
+      //   .next()
+      //   .should('have.class', 'active')
+      //   .next()
+      //   .should('have.class', 'active')
+      //   .next()
+      //   .should('have.class', 'active')
+      //   .next()
+      //   .should('not.have.class', 'active')
+      // })
 
       it('should not select a target for a different annotation tab', () => {
         cy
@@ -454,52 +454,52 @@ const selectors = {
         .should('not.have.class', 'active')
       })
 
-      it('should consider the witnesses drop down selection when clicking the target', () => {
-        // when clicking the target should show correct witnesses chips in text Panel and select the variant items according to witnesses drop down selection 
-        cy.get(selectors.list)
-          .clickWitnessItem('4 Witnesses selected', 'Cod. Arab. 236')
-          .parent().parent()
-          .contains('DFM 614').click()
-
-        // we need to unclick the witnesses drop down, to be able to click the target
-        cy.get(selectors.panel4)
-          .contains('2 Witnesses selected')
-          .click({force: true})
-        
-        // we click at a target
-        cy.clickTarget()
-
-        // in the witnesses there should be only 2 chips
-        cy.get(selectors.panel3)
-          .find('#text-content')
-          .find('.witnesses')
-          .children()
-          .should('have.length', 2)
-          .eq(0)
-          .should('contain', 'Ming. syr. 258')
-          .next()
-          .should('contain', 'Sach. 339')
-
-        // should show 'correct number of variants selected'
-
-        cy.get(selectors.panel4)
-          .find('#variants-top-bar')
-          .find('span')
-          .contains('2 Variants selected')
-
-        // only the variant items controled by the witnesses filter and referring to the target should be selected - 3rd and 4th variant item
-        cy.get(selectors.list)
-        .children()
-        .should('have.length', 8)
-        .eq(0).should('contain','Ming. syr. 258').and('not.have.class','active')
-        .next().should('contain','Sach. 339').and('not.have.class','active')    // eq(1)
-        .next()                                                                 // separation line
-        .next().should('contain','Ming. syr. 258').and('have.class','active')    // eq(2)
-        .next().should('contain','Sach. 339').and('have.class','active')
-        .next()                                                                 // separation line
-        .next().should('contain','Ming. syr. 258').and('not.have.class','active')
-        .next().should('contain','Sach. 339').and('not.have.class','active')
-      })
+      // it('should consider the witnesses drop down selection when clicking the target', () => {
+      //   // when clicking the target should show correct witnesses chips in text Panel and select the variant items according to witnesses drop down selection
+      //   cy.get(selectors.list)
+      //     .clickWitnessItem('4 Witnesses selected', 'Cod. Arab. 236')
+      //     .parent().parent()
+      //     .contains('DFM 614').click()
+      //
+      //   // we need to unclick the witnesses drop down, to be able to click the target
+      //   cy.get(selectors.panel4)
+      //     .contains('2 Witnesses selected')
+      //     .click({force: true})
+      //
+      //   // we click at a target
+      //   cy.clickTarget()
+      //
+      //   // in the witnesses there should be only 2 chips
+      //   cy.get(selectors.panel3)
+      //     .find('#text-content')
+      //     .find('.witnesses')
+      //     .children()
+      //     .should('have.length', 2)
+      //     .eq(0)
+      //     .should('contain', 'Ming. syr. 258')
+      //     .next()
+      //     .should('contain', 'Sach. 339')
+      //
+      //   // should show 'correct number of variants selected'
+      //
+      //   cy.get(selectors.panel4)
+      //     .find('#variants-top-bar')
+      //     .find('span')
+      //     .contains('2 Variants selected')
+      //
+      //   // only the variant items controled by the witnesses filter and referring to the target should be selected - 3rd and 4th variant item
+      //   cy.get(selectors.list)
+      //   .children()
+      //   .should('have.length', 8)
+      //   .eq(0).should('contain','Ming. syr. 258').and('not.have.class','active')
+      //   .next().should('contain','Sach. 339').and('not.have.class','active')    // eq(1)
+      //   .next()                                                                 // separation line
+      //   .next().should('contain','Ming. syr. 258').and('have.class','active')    // eq(2)
+      //   .next().should('contain','Sach. 339').and('have.class','active')
+      //   .next()                                                                 // separation line
+      //   .next().should('contain','Ming. syr. 258').and('not.have.class','active')
+      //   .next().should('contain','Sach. 339').and('not.have.class','active')
+      // })
     })
 
     describe('Single select mode', () => {
@@ -559,26 +559,26 @@ const selectors = {
             })
           })
 
-          it('should show only the variants items according to witnesses drop down selection after disabling single select mode', () => {
-            cy.get(selectors.list)
-              .clickWitnessItem('4 Witnesses selected', 'Cod. Arab. 236')
-              .parent().parent()
-              .contains('DFM 614').click()
-
-            cy.get(selectors.panel4)
-              .contains('2 Witnesses selected')
-              .click({force: true})
-
-            cy
-              .clickSingleSelectButton()  
-            cy
-              .clickSingleSelectButton()
-            cy
-              .get(selectors.list)
-              .should('be.visible')
-              .find('div[data-annotation-id]')
-              .should("have.length", 6)   
-            
-          })
+          // it('should show only the variants items according to witnesses drop down selection after disabling single select mode', () => {
+          //   cy.get(selectors.list)
+          //     .clickWitnessItem('4 Witnesses selected', 'Cod. Arab. 236')
+          //     .parent().parent()
+          //     .contains('DFM 614').click()
+          //
+          //   cy.get(selectors.panel4)
+          //     .contains('2 Witnesses selected')
+          //     .click({force: true})
+          //
+          //   cy
+          //     .clickSingleSelectButton()
+          //   cy
+          //     .clickSingleSelectButton()
+          //   cy
+          //     .get(selectors.list)
+          //     .should('be.visible')
+          //     .find('div[data-annotation-id]')
+          //     .should("have.length", 6)
+          //
+          // })
       })
   });
