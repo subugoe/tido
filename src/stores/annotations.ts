@@ -48,13 +48,14 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   }
 
   function getVariantsOfSelectedWitnesses(): Annotation[] {
-    let list = []
+    const list = []
     if (filteredAnnotations.value.length === 0) return []
     if (Object.keys(activeWitnessesIds).length === 0) return []
 
     filteredAnnotations.value.forEach((annotation) => {
-      const witness = annotation.body.value.witness
-      if (activeWitnessesIds[witness] === true) {
+      const witnesses = annotation.body.value.witnesses
+      const isActive = witnesses.find(witness => activeWitnessesIds[witness] === true)
+      if (isActive) {
         list.push(annotation)
       }
     })
@@ -103,8 +104,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   }
 
   const addVariantAnnotation = (targetElement: HTMLElement, annotation: Annotation) => {
-    const witness = annotation.body.value.witness
-    Utils.addWitness(targetElement, witness, variantItemsColors.value[witness])
+    annotation.body.value.witnesses.forEach(witness => {
+      Utils.addWitness(targetElement, witness, variantItemsColors.value[witness])
+    })
   }
 
   const selectFilteredAnnotations = (types: AnnotationType[]): void => {
@@ -142,8 +144,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     // Deactivate annotations that are not included in the witnesses list
     Object
       .keys(activeAnnotations.value)
-      .filter(key => !witnesses.includes(activeAnnotations.value[key].body.value.witness))
-      .forEach(key => removeActiveAnnotation(key))
+      .filter(key => !witnesses.find(witness => activeAnnotations.value[key].body.value.witnesses.includes(witness)))
+      .forEach(key => removeActiveAnnotation(key));
 
     const activeIds = Object.keys(activeAnnotations.value)
 
@@ -161,7 +163,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
     // Set filtered annotations
     visibleAnnotations.value = annotations.value.filter((annotation) => {
-      return AnnotationUtils.isVariant(annotation) && witnesses.includes(annotation.body.value.witness)
+      return AnnotationUtils.isVariant(annotation) && witnesses.find(witness => annotation.body.value.witnesses.includes(witness))
     })
 
     // When filtering by witness it can happen that a target is used for some other active annotation item,
@@ -207,14 +209,14 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   function preprocessVariants () {
     if (annotations.value.length === 0) return
 
-    let existsAnnotationWithWitnessNull = false   
+    let existsAnnotationWithWitnessNull = false
 
     for (let i = 0; i < annotations.value.length; i++) {
       const annotation = annotations.value[i]
       if (!AnnotationUtils.isVariant(annotation)) continue
 
-      if (typeof annotation.body.value.witness !== "string") {
-        annotation.body.value.witness = 'missing'
+      if (!Array.isArray(annotation.body.value.witnesses) || annotation.body.value.witnesses.length === 0) {
+        annotation.body.value.witnesses = ['missing']
         existsAnnotationWithWitnessNull = true
       }
     }
@@ -227,7 +229,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     const colors = {}
     if (!witnesses.value) return
     if (witnesses.value.length === 0) return;
-  
+
     witnesses.value.forEach((witness, i) => {
       colors[witness.idno] = getItemColorBasedOnIndex(i)
     })
@@ -274,7 +276,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   }
 
   const removeVariantAnnotation = (selector: string, annotation: Annotation) => {
-    AnnotationUtils.removeWitness(selector, annotation.body.value.witness);
+    annotation.body.value.witnesses.forEach(witness => {
+      AnnotationUtils.removeWitness(selector, witness);
+    })
   }
 
   const resetAnnotations = () => {
@@ -285,7 +289,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
           AnnotationUtils.highlightTargets(selector, {level: -1});
           AnnotationUtils.removeIcon(annotation);
           if (AnnotationUtils.isVariant(annotation)) {
-            AnnotationUtils.removeWitness(selector, annotation.body.value.witness)
+            annotation.body.value.witnesses.forEach(witness => {
+              AnnotationUtils.removeWitness(selector, witness);
+            })
           }
         }
       });
@@ -496,7 +502,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     visibleAnnotations,
     isLoading,
     isSingleSelectMode,
-    variantItemsColors,  
+    variantItemsColors,
     activeWitnessesIds, // states
     setActiveAnnotations,
     setVisibleAnnotations,
