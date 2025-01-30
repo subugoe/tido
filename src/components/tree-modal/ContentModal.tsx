@@ -9,7 +9,6 @@ import InputField from '@/components/base/InputField.tsx'
 import { ClosePopover } from '@/components/ui/popover'
 import { createTree, getItemIndices, getManifestIndices, getChildren } from '@/utils/tree'
 import { getUniquePanels } from '@/utils/panel'
-import { validateUrlInput } from '@/utils/treeModal.ts'
 
 
 const ContentModal: FC = () => {
@@ -69,13 +68,6 @@ const ContentModal: FC = () => {
 
     if (inputValue.current !== '') {
       collectionUrl = inputValue.current
-      // should display an error
-      const isValid = await validateUrlInput(collectionUrl)
-
-      if (!isValid) {
-        console.error('Please provide a valid URL value for the new collection')
-        return
-      }
 
       addNewPanel(
         {
