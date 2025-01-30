@@ -4,7 +4,7 @@ import { request } from '@/utils/http'
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
   let manifestUrl: string = ''
   if (documentType === 'collection') {
-    manifestUrl =  documentData?.sequence[index].id
+    manifestUrl = documentData?.sequence[index].id
   }
   else if (documentType === 'manifest') {
     manifestUrl = documentData?.id
@@ -45,4 +45,13 @@ export function getContentTypes(content: Content[]): string[] {
   })
 
   return types
+}
+
+export function getUniquePanels(panels: PanelConfig[] | undefined) {
+  if (!panels) return []
+
+  const uniquePanels = panels.filter((p, index, self) =>
+    index === self.findIndex((panel) => panel.entrypoint.url === p.entrypoint.url))
+
+  return uniquePanels
 }

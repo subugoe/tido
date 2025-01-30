@@ -27,6 +27,7 @@ declare global {
     type: string
     id: string
   }
+
   interface AnnotationContent {
     type: 'TextualBody'
     value: string
@@ -170,6 +171,7 @@ declare global {
     item: string
     manifest?: string
   }
+
   interface License {
     id: string
     notes?: string
@@ -208,11 +210,12 @@ declare global {
     info: string
     warning: string
   }
+
   interface PanelConfig {
     entrypoint: Entrypoint
-    colors: Colors
-    manifestIndex: number
-    itemIndex: number
+    color?: Colors
+    manifestIndex?: number
+    itemIndex?: number
   }
 
   type RangeSelector = {
@@ -220,6 +223,7 @@ declare global {
     startSelector: CssSelector
     endSelector: CssSelector
   }
+
   interface Repository {
     '@context': string
     label?: string
@@ -251,6 +255,7 @@ declare global {
     title: string
     type: TitleType
   }
+
   type TitleType = 'main' | 'sub'
 
   type SuccessResponse<T> = {
@@ -265,6 +270,15 @@ declare global {
   }
 
   type HttpResponse<T> = SuccessResponse<T> | ErrorResponse
-}
 
+  interface TreeNode {
+    id: string,
+    key: string
+    label: string,
+    type: string,
+    leaf?: boolean,
+    expanded?: boolean,
+    children?: TreeNode[]
+  }
+}
 export {}
