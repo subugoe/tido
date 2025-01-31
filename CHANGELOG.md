@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.5.0](https://github.com/subugoe/tido/compare/v4.4.0...v4.5.0) (2025-01-31)
+
+
+### Features
+
+* add flexible order of entries in metadata panel ([#551](https://github.com/subugoe/tido/issues/551)) ([527c8d5](https://github.com/subugoe/tido/commit/527c8d51c830edf240f693d3ed99ff3ef55d68ee))
+* handle and display multiple witnesses per variant annotation item ([02d2dfe](https://github.com/subugoe/tido/commit/02d2dfe8ec07e7566f99c0a333dee1490507601e))
+
 ## [4.4.0](https://github.com/subugoe/tido/compare/v4.3.1...v4.4.0) (2025-01-09)
 
 
