@@ -7,7 +7,7 @@ interface LocalTreeProps {
   TriggerButton: ReactNode
 }
 
-const LocalTreeModal: FC<LocalTreeProps> = ({ TriggerButton }) => {
+const TreeSelectionModal: FC<LocalTreeProps> = ({ TriggerButton }) => {
 
 
   return <div className="local-tree-modal">
@@ -22,4 +22,4 @@ const LocalTreeModal: FC<LocalTreeProps> = ({ TriggerButton }) => {
   </div>
 }
 
-export default LocalTreeModal
+export default TreeSelectionModal
