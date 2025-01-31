@@ -9,17 +9,13 @@ interface LocalTreeProps {
 
 const LocalTreeModal: FC<LocalTreeProps> = ({ TriggerButton }) => {
 
-  // TODO: add a [loading, setLoading] => which shows the pop over when the tree has been loaded -> TreeView Component updates the loading of its parent
-
-  // function of this component: create a new Panel
-
 
   return <div className="local-tree-modal">
     <Popover>
-      <PopoverTrigger className="open-tree-button t-h-8 t-w-10 t-relative">
+      <PopoverTrigger>
         {TriggerButton}
       </PopoverTrigger>
-      <PopoverContent className="t-bg-white t-absolute t-z-10">
+      <PopoverContent>
         <ContentModal/>
       </PopoverContent>
     </Popover>
