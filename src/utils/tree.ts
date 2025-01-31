@@ -13,9 +13,11 @@ export async function createTree(collectionsUrls: string[]) {
 }
 
 async function createNode(url: string, key: number) {
-  const node: TreeNode = {}
+  const node: TreeNode = { key: '', id: '', type: '', label: '' }
+  
   const response = await request<Collection>(url)
   if (!response.success) return node
+
   node.key = key.toString()
   node.id = url
   node.type = 'collection'
@@ -24,18 +26,18 @@ async function createNode(url: string, key: number) {
   return node
 }
 
-export async function getChildren(node: TreeNode): Promise<TreeNode[] | null> {
+export async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   const { id } = node
   const parentKey = node.key
 
   const childrenNodes: TreeNode[] = []
-  const response = await request(id)
+  const response = await request<Collection | Manifest>(id)
 
-  if (!response.success) return null
+  if (!response.success) return childrenNodes
   const data = response.data
 
-  if (!data.sequence) return null
-  if (data.sequence.length === 0) return null
+  if (!data.sequence) return childrenNodes
+  if (data.sequence.length === 0) return childrenNodes
 
   const items: Sequence[] = data.sequence
 
