@@ -21,10 +21,7 @@ const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand, onCollapse }) => {
   const tree =
     nodes.length > 0 &&
     nodes.map((collection, i) => (
-      <div
-        key={i}
-        className=""
-      >
+      <div key={i}>
         <TreeNode node={collection}/>
       </div>
     ))
