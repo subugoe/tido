@@ -90,18 +90,27 @@ const TreeSelectionModalContent: FC = () => {
 
     if (type === 'collection') {
       const [collectionIndex] = getNodeIndices(node.key)
-      if (!('children' in updatedTree[collectionIndex])) updatedTree[collectionIndex].children = await getChildren(node)
+      if (!('children' in updatedTree[collectionIndex])) {
+        const childrenNodes = await getChildren(node)
+        if (childrenNodes.length === 0) return
+
+        updatedTree[collectionIndex].children = childrenNodes
+      }
 
       updatedTree[collectionIndex].expanded = true
 
     } else if (type === 'manifest') {
       const [collectionIndex, manifestIndex] = getNodeIndices(node.key)
-      const manifestNode = { ...updatedTree[collectionIndex].children[manifestIndex] }
+      const manifests = updatedTree[collectionIndex].children
+      if (!manifests) return
+      if (manifests.length === 0) return
 
-      if (!('children' in manifestNode)) manifestNode['children'] = await getChildren(node)
+      const manifestChildren = await getChildren(node)
+      if (manifestChildren.length === 0) return
+      manifests[manifestIndex].children = manifestChildren
+      manifests[manifestIndex].expanded = true
 
-      updatedTree[collectionIndex].children[manifestIndex] = { ...manifestNode }
-      updatedTree[collectionIndex].children[manifestIndex].expanded = true
+      updatedTree[collectionIndex].children = [...manifests]
     }
 
     setTreeNodes(updatedTree)
@@ -117,7 +126,11 @@ const TreeSelectionModalContent: FC = () => {
     } else if (type === 'manifest') {
       const [collectionIndex, manifestIndex] = getNodeIndices(node.key)
 
-      updatedTree[collectionIndex].children[manifestIndex].expanded = false
+      const manifests = updatedTree[collectionIndex].children
+      if (!manifests) return
+      manifests[manifestIndex].expanded = false
+
+      updatedTree[collectionIndex].children = [...manifests]
     }
 
     setTreeNodes(updatedTree)
