@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 
-
 interface ConfigStoreType {
   config: Config,
   addCustomConfig: (customConfig: Config) => void,

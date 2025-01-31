@@ -4,10 +4,10 @@ import { configStore } from '@/store/ConfigStore'
 import { dataStore } from '@/store/DataStore'
 
 
-import TreeView from '@/components/Tree.tsx'
+import Tree from '@/components/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
 import { ClosePopover } from '@/components/ui/popover'
-import { createTree, getItemIndices, getManifestIndices, getChildren } from '@/utils/tree'
+import { createTree, getChildren, getNodeIndices } from '@/utils/tree'
 
 
 const ContentModal: FC = () => {
@@ -89,13 +89,13 @@ const ContentModal: FC = () => {
     const updatedTree = [...nodes]
 
     if (type === 'collection') {
-      const collectionIndex = nodes.findIndex((n) => (n.id === node.id))
-      if (!('children' in updatedTree[collectionIndex])) updatedTree[collectionIndex]['children'] = await getChildren(node)
+      const [collectionIndex] = getNodeIndices(node.key)
+      if (!('children' in updatedTree[collectionIndex])) updatedTree[collectionIndex].children = await getChildren(node)
 
       updatedTree[collectionIndex].expanded = true
 
     } else if (type === 'manifest') {
-      const { collectionIndex, manifestIndex } = getManifestIndices(node.key)
+      const [collectionIndex, manifestIndex] = getNodeIndices(node.key)
       const manifestNode = { ...updatedTree[collectionIndex].children[manifestIndex] }
 
       if (!('children' in manifestNode)) manifestNode['children'] = await getChildren(node)
@@ -112,10 +112,10 @@ const ContentModal: FC = () => {
     const updatedTree = [...nodes]
 
     if (type === 'collection') {
-      const collectionIndex = nodes.findIndex((n) => (n.id === node.id))
+      const [collectionIndex] = getNodeIndices(node.key)
       updatedTree[collectionIndex].expanded = false
     } else if (type === 'manifest') {
-      const { collectionIndex, manifestIndex } = getManifestIndices(node.key)
+      const [collectionIndex, manifestIndex] = getNodeIndices(node.key)
 
       updatedTree[collectionIndex].children[manifestIndex].expanded = false
     }
@@ -126,7 +126,9 @@ const ContentModal: FC = () => {
   function onSelect(node: TreeNode) {
     const { id } = node
     clickedItemUrl.current = id
-    selectedItemIndices.current = getItemIndices(node.key, nodes)
+    const [collectionIndex, manifestIndex, itemIndex] = getNodeIndices(node.key)
+    const collectionUrl = nodes[collectionIndex].id
+    selectedItemIndices.current = { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
   }
 
 
@@ -137,7 +139,7 @@ const ContentModal: FC = () => {
     <InputField updateInputValue={updateInputValue}/>
     <span>Or choose:</span>
 
-    <TreeView nodes={nodes} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}/>
+    <Tree nodes={nodes} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}/>
 
     <div className="t-pb-4">
       <ClosePopover

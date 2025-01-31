@@ -13,7 +13,6 @@ interface DataStoreType {
 export const dataStore = create<DataStoreType>((set, get) => ({
   collections: {},
   treeNodes: [],
-  clickedItemUrl: '',
   initCollection: async (url: string) => {
     const collection = await apiRequest<Collection>(url)
     const collections: CollectionMap = { ...get().collections }

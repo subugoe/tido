@@ -1,17 +1,5 @@
 import { request } from '@/utils/http'
 
-
-interface ManifestIndices {
-  collectionIndex: number,
-  manifestIndex: number
-}
-
-interface ItemIndices {
-  collectionUrl: string,
-  manifestIndex: number,
-  itemIndex: number
-}
-
 export async function createTree(collectionsUrls: string[]) {
   const nodes: TreeNode[] = []
 
@@ -72,19 +60,6 @@ export async function getChildren(node: TreeNode): Promise<TreeNode[] | null> {
 }
 
 
-export function getManifestIndices(nodeKey: string): ManifestIndices {
-  const collectionIndex = parseInt(nodeKey.split('-')[0])
-  const manifestIndex = parseInt(nodeKey.split('-')[1])
-
-  return { collectionIndex: collectionIndex, manifestIndex: manifestIndex }
-}
-
-export function getItemIndices(nodeKey: string, treeNodes: TreeNode[]): ItemIndices {
-  const collectionIndex = parseInt(nodeKey.split('-')[0])
-
-  const collectionUrl = treeNodes[collectionIndex].id
-  const manifestIndex = parseInt(nodeKey.split('-')[1])
-  const itemIndex = parseInt(nodeKey.split('-')[2])
-
-  return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
+export function getNodeIndices(nodeKey: string) {
+  return nodeKey.split('-').map((index) => parseInt(index, 10))
 }

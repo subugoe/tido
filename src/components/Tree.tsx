@@ -15,7 +15,6 @@ interface TreeProps {
   onCollapse(node: TreeNode): void,
 }
 
-// ({ nodes, onSelect, onExpand })
 const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand, onCollapse }) => {
 
 
@@ -32,8 +31,7 @@ const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand, onCollapse }) => {
 
 
   return <div className="tree t-h-96 t-overflow-hidden t-overflow-y-auto">
-    <TreeProvider onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}
-    >
+    <TreeProvider onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}>
       {tree}
     </TreeProvider>
   </div>
