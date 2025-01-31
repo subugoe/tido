@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef } from 'react'
 
 import { configStore } from '@/store/ConfigStore'
 import { dataStore } from '@/store/DataStore'
@@ -10,7 +10,7 @@ import { ClosePopover } from '@/components/ui/popover'
 import { createTree, getChildren, getNodeIndices } from '@/utils/tree'
 
 
-const ContentModal: FC = () => {
+const TreeSelectionModalContent: FC = () => {
 
   const addNewPanel = configStore(state => state.addNewPanel)
 
@@ -152,4 +152,4 @@ const ContentModal: FC = () => {
 }
 
 
-export default ContentModal
+export default TreeSelectionModalContent
