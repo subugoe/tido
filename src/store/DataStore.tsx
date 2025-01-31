@@ -1,16 +1,12 @@
 import { create } from 'zustand'
 import { apiRequest } from '@/utils/api.ts'
 
-interface CollectionMap {
-  [key: string]: Collection
-}
 
 interface DataStoreType {
   collections: CollectionMap,
   treeNodes: TreeNode[],
   initCollection: (url: string) => Promise<Collection>
-  initTreeNodes: (newTreeNodes: TreeNode[]) => void,
-  updateTreeNodes: (newNodes: TreeNode[]) => void,
+  setTreeNodes: (newTreeNodes: TreeNode[]) => void,
   getCollection: (collectionUrl: string) => Promise<Collection>,
 }
 
@@ -25,7 +21,7 @@ export const dataStore = create<DataStoreType>((set, get) => ({
     set({ collections })
     return collection
   },
-  initTreeNodes: (newTreeNodes: TreeNode[]) => {
+  setTreeNodes: (newTreeNodes: TreeNode[]) => {
     set({ treeNodes: newTreeNodes })
   },
 
@@ -34,10 +30,6 @@ export const dataStore = create<DataStoreType>((set, get) => ({
 
     const collection = await get().initCollection(collectionUrl)
     return collection
-  },
-
-  updateTreeNodes: (newNodes: TreeNode[]) => {
-    set({ treeNodes: newNodes })
   },
 
 }))

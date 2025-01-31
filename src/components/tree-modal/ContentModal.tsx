@@ -8,19 +8,16 @@ import TreeView from '@/components/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
 import { ClosePopover } from '@/components/ui/popover'
 import { createTree, getItemIndices, getManifestIndices, getChildren } from '@/utils/tree'
-import { getUniquePanels } from '@/utils/panel'
 
 
 const ContentModal: FC = () => {
 
-  const panels = configStore(state => state.config.panels)
   const addNewPanel = configStore(state => state.addNewPanel)
 
-  const initTreeNodes = dataStore(state => state.initTreeNodes)
-  const updateTreeNodes = dataStore(state => state.updateTreeNodes)
+  const setTreeNodes = dataStore(state => state.setTreeNodes)
+  const initCollection = dataStore(state => state.initCollection)
+  const collections = dataStore(state => state.collections)
   const nodes = dataStore(state => state.treeNodes)
-
-  const [uniquePanels] = useState(getUniquePanels(panels))
 
 
   const inputValue = useRef('')
@@ -34,15 +31,17 @@ const ContentModal: FC = () => {
 
 
   useEffect(() => {
-    async function initTree(panels?: PanelConfig[]) {
-      if (!panels) return
+    async function initTree(collections: CollectionMap) {
 
-      const nodes = await createTree(panels)
-      initTreeNodes(nodes)
+      const collectionsUrls = Object.keys(collections)
+      if (collectionsUrls.length === 0) return
+
+      const nodes = await createTree(collectionsUrls)
+      setTreeNodes(nodes)
     }
 
-    initTree(uniquePanels)
-  }, [uniquePanels])
+    initTree(collections)
+  }, [collections])
 
 
   function updateInputValue(newValue: string) {
@@ -79,6 +78,8 @@ const ContentModal: FC = () => {
           itemIndex: 0
         }
       )
+
+      await initCollection(collectionUrl)
     }
   }
 
@@ -103,7 +104,7 @@ const ContentModal: FC = () => {
       updatedTree[collectionIndex].children[manifestIndex].expanded = true
     }
 
-    updateTreeNodes(updatedTree)
+    setTreeNodes(updatedTree)
   }
 
   async function onCollapse(node: TreeNode) {
@@ -119,7 +120,7 @@ const ContentModal: FC = () => {
       updatedTree[collectionIndex].children[manifestIndex].expanded = false
     }
 
-    updateTreeNodes(updatedTree)
+    setTreeNodes(updatedTree)
   }
 
   function onSelect(node: TreeNode) {
@@ -148,6 +149,5 @@ const ContentModal: FC = () => {
   </div>
 }
 
-//
 
 export default ContentModal

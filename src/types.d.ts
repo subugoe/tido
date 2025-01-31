@@ -280,5 +280,9 @@ declare global {
     expanded?: boolean,
     children?: TreeNode[]
   }
+
+  interface CollectionMap {
+    [key: string]: Collection
+  }
 }
 export {}
