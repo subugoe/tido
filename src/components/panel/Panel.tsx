@@ -16,7 +16,7 @@ interface Props {
 }
 
 const Panel: FC<Props> = ({ config }) => {
-  const initCollection = dataStore(state => state.initCollection)
+  const getCollection = dataStore(state => state.getCollection)
   const addPanelContent = contentStore((state) => state.addPanelContent)
 
   const [error, setError] = useState<boolean | string>(false)
@@ -29,7 +29,8 @@ const Panel: FC<Props> = ({ config }) => {
     const init = async () => {
       try {
         setLoading(true)
-        const collection = await initCollection(collectionUrl)
+        const collection = await getCollection(collectionUrl)
+
         const manifest = await apiRequest<Manifest>(collection.sequence[config.manifestIndex ?? 0].id)
         const item = await apiRequest<Item>(manifest.sequence[config.itemIndex ?? 0].id)
         const contentTypes: string[] = getContentTypes(item.content)
@@ -52,15 +53,15 @@ const Panel: FC<Props> = ({ config }) => {
   }, [config])
 
   if (error) {
-    return <ErrorComponent message={error} />
+    return <ErrorComponent message={error}/>
   }
 
   return (
     <div
       className="panel t-flex t-flex-col t-w-[600px] t-mr-6 t-border-solid t-border-2 t-border-slate-200 t-rounded-lg t-mt-4 t-px-2.5 t-pt-8 t-pb-6">
-      { loading && <div> Loading data ... Please wait a sec</div> }
-      { !loading && error && <ErrorComponent message={error} /> }
-      { !loading && !error && panelId &&
+      {loading && <div> Loading data ... Please wait a sec</div>}
+      {!loading && error && <ErrorComponent message={error}/>}
+      {!loading && !error && panelId &&
         <PanelProvider id={panelId}>
           <PanelTopBar/>
           <div className="t-flex t-flex-col t-items-center t-mb-6">
