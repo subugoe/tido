@@ -2,7 +2,7 @@
   "textapi": "1.3.0",
   "x-app-version": "11.4.3",
   "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/collection.jsonld",
-  "id": "example/collection.json",
+  "id": "http://localhost:8181/example/textapi/collection.json",
   "title": [
     {
       "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/title.jsonld",

@@ -14,10 +14,11 @@ export async function createTree(collectionsUrls: string[]) {
 
 async function createNode(url: string, key: number) {
   const node: TreeNode = { key: '', id: '', type: '', label: '' }
-  
+
   const response = await request<Collection>(url)
   if (!response.success) return node
 
+  console.log(url)
   node.key = key.toString()
   node.id = url
   node.type = 'collection'

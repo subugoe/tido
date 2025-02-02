@@ -33,6 +33,7 @@ const TreeSelectionModalContent: FC = () => {
   useEffect(() => {
     async function initTree(collections: CollectionMap) {
 
+      console.log(collections)
       const collectionsUrls = Object.keys(collections)
       if (collectionsUrls.length === 0) return
 
