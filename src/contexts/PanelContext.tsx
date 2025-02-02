@@ -1,8 +1,14 @@
-import { ReactNode, createContext, useContext, useState, FC } from 'react'
+import { ReactNode, createContext, useContext, useState, FC, useEffect } from 'react'
+import { panelStore } from '@/store/PanelStore.tsx'
+import { dataStore } from '@/store/DataStore.tsx'
+import { useShallow } from 'zustand/react/shallow'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {
   panelId: string
+  panelState: PanelState
+  activeTargetIndex: number
+  setActiveTargetIndex: (index: number) => void
 }
 
 interface PanelProviderProps {
@@ -12,9 +18,11 @@ interface PanelProviderProps {
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, id }) => {
   const [panelId] = useState<string>(id)
+  const [activeTargetIndex, setActiveTargetIndex] = useState<number>(-1)
+  const panelState = panelStore(state => state.panels[panelId])
 
   return (
-    <PanelContext.Provider value={{ panelId }}>
+    <PanelContext.Provider value={{ panelId, panelState, activeTargetIndex, setActiveTargetIndex }}>
       {children}
     </PanelContext.Provider>
   )

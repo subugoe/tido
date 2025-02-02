@@ -2,7 +2,7 @@ import { FC, MouseEvent } from 'react'
 import { textViewOne, textView, splitView, imageView } from '@/utils/icons'
 import CustomHTML from '@/components/CustomHTML'
 
-import { contentStore } from '@/store/ContentStore'
+import { panelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext'
 
 interface IconKeys {
@@ -14,9 +14,8 @@ interface IconKeys {
 
 const TextViewsToggle: FC = () => {
   const { panelId } = usePanel()
-
-  const viewIndex = contentStore((state) => state.panels[panelId].viewIndex)
-  const updateViewIndex = contentStore((state) => state.updateViewIndex)
+  const viewIndex = panelStore((state) => state.panels[panelId].viewIndex)
+  const updateViewIndex = panelStore((state) => state.updateViewIndex)
 
   function handleTextViewClick(
     e: MouseEvent<HTMLButtonElement>,
@@ -35,7 +34,7 @@ const TextViewsToggle: FC = () => {
 
   const buttons = Object.keys(textViewsIcons).map((title, i) => (
     <button
-      className="t-px-1 t-py-1 t-w-7 t-h-7  t-rounded t-mr-3"
+      className="t-px-1 t-py-1 t-w-7 t-h-7 t-rounded t-mr-3"
       key={i}
       onClick={(e) => handleTextViewClick(e, i)}
       style={{
@@ -50,7 +49,7 @@ const TextViewsToggle: FC = () => {
   ))
 
   return (
-    <div className="text-views-toggle t-flex t-row t-ml-[40%] t-p-1 t-rounded-md t-h-8">
+    <div className="text-views-toggle t-flex t-row t-ml-auto t-p-1 t-rounded-md t-h-8">
       {buttons}
     </div>
   )

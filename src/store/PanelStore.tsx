@@ -16,7 +16,7 @@ interface ContentStoreTypes {
   getPanel: (panelId: string) => PanelState | null
 }
 
-export const contentStore = create<ContentStoreTypes>((set, get) => ({
+export const panelStore = create<ContentStoreTypes>((set, get) => ({
   panels: {},
   addPanelContent: (id: string, newPanel: PanelState) => {
     const newPanels = { ...get().panels }

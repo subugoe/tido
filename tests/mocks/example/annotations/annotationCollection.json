@@ -1,0 +1,7 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "example/annotationCollection",
+  "type": "AnnotationCollection",
+  "label": "Synopsis connections",
+  "first": "http://localhost:8181/example/annotations/annotationPage.json"
+}

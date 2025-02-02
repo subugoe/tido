@@ -1,5 +1,7 @@
 import PanelsWrapper from './components/PanelsWrapper'
 import { FC } from 'react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
+import SelectParallelPanels from '@/components/SelectParallelPanels.tsx'
 import { configStore } from '@/store/ConfigStore.tsx'
 
 import TopBar from '@/components/TopBar'
@@ -13,10 +15,24 @@ const App: FC<AppProps> = ({ customConfig }) => {
   addCustomConfig(customConfig)
 
   return (
-    <div className="tido t-flex t-flex-col">
-      <TopBar />
-      <PanelsWrapper />
-    </div>
+    <>
+      <div className="tido">
+        <div className="t-flex">
+          <Popover>
+            <PopoverTrigger className="open-tree-button t-h-8 t-w-10 t-relative">
+              <span>Test</span>
+            </PopoverTrigger>
+            <PopoverContent>
+              <SelectParallelPanels />
+            </PopoverContent>
+          </Popover>
+          <TopBar />
+        </div>
+        <div className="t-flex-1 t-overflow-hidden">
+          <PanelsWrapper />
+        </div>
+      </div>
+    </>
   )
 }
 
