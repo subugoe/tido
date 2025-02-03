@@ -1,9 +1,14 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
+
+import IconRenderer from '@/components/base/IconRenderer.tsx'
+import { tree } from '@/utils/icons'
 
 
 import TreeSelectionModal from '@/components/TreeSelectionModal'
 
 const TopBar: FC = () => {
+
+  const [iconHtmlString, setIconHtmlString] = useState(tree)
 
   const addButton =
     <span
@@ -13,6 +18,7 @@ const TopBar: FC = () => {
 
 
   return <div className="t-flex t-flex-row t-ml-[6%] t-mt-10">
+    <button className="t-mr-2"><IconRenderer htmlString={tree} width={8} height={8}/></button>
     <TreeSelectionModal TriggerButton={addButton}/>
   </div>
 
