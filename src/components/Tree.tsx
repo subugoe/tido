@@ -8,14 +8,14 @@ import TreeNode from '@/components/tree/TreeNode'
 interface TreeProps {
     nodes: TreeNode[],
 
-    onSelect?(node: TreeNode): void,
+    onSelect(node: TreeNode, e): void,
 
     onExpand(node: TreeNode, nodes: TreeNode[]): void,
 
     onCollapse(node: TreeNode, nodes: TreeNode[]): void,
 }
 
-const Tree: FC<TreeProps> = ({ nodes, onExpand, onCollapse }) => {
+const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand, onCollapse }) => {
 
 
   const tree =
@@ -28,7 +28,7 @@ const Tree: FC<TreeProps> = ({ nodes, onExpand, onCollapse }) => {
 
 
   return <div className="tree t-h-96 t-overflow-hidden t-overflow-y-auto">
-    <TreeProvider onExpand={onExpand} onCollapse={onCollapse}>
+    <TreeProvider onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}>
       {tree}
     </TreeProvider>
   </div>

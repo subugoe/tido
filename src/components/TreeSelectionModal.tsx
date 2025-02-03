@@ -1,22 +1,31 @@
 import { FC, ReactNode } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import TreeSelectionModalContent from '@/components/tree-modal/TreeSelectionModalContent.tsx'
 
-interface LocalTreeProps {
-  TriggerButton: ReactNode
+interface Position {
+    x: number,
+    y: number
 }
 
-const TreeSelectionModal: FC<LocalTreeProps> = ({ TriggerButton }) => {
+interface LocalTreeProps {
+    TriggerButton?: ReactNode,
+    Content?: any,
+    position?: Position
+}
 
+const TreeSelectionModal: FC<LocalTreeProps> = ({ TriggerButton, Content, position }) => {
+
+  console.log('content', Content)
 
   return <div className="local-tree-modal">
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger style={{
+        left: `${position?.x}px`,
+        top: `${position?.y}px`,
+      }}>
         {TriggerButton}
       </PopoverTrigger>
       <PopoverContent>
-        <TreeSelectionModalContent/>
       </PopoverContent>
     </Popover>
   </div>

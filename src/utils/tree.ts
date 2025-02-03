@@ -103,7 +103,6 @@ export async function onExpand(node: TreeNode, nodes: TreeNode[]) {
 
   if (type === 'collection') {
     const [collectionIndex] = getNodeIndices(node.key)
-    console.log('updated tree', updatedTree)
     if (!('children' in updatedTree[collectionIndex])) {
       const childrenNodes = await getChildren(node)
       if (childrenNodes.length === 0) return

@@ -6,7 +6,7 @@ const TreeContext = createContext<TreeType | undefined>(undefined)
 interface TreeType {
     onClick(node: TreeNode): void
 
-    onSelect?(node: TreeNode): void
+    onSelect(node: TreeNode, e): void
 
     onExpand(node: TreeNode, nodes: TreeNode[]): void
 
@@ -16,7 +16,7 @@ interface TreeType {
 interface TreeProviderProps {
     children?: ReactNode
 
-    onSelect?(node: TreeNode): void
+    onSelect(node: TreeNode, e): void
 
     onExpand(node: TreeNode, nodes: TreeNode[]): void
 
@@ -27,8 +27,8 @@ const TreeProvider: FC<TreeProviderProps> = ({ children, onSelect, onExpand, onC
 
   const treeNodes = dataStore(state => state.treeNodes)
 
-  function onClick(node: TreeNode) {
-    if ('leaf' in node) onSelect(node)
+  function onClick(node: TreeNode, e) {
+    if ('leaf' in node) onSelect(node, e)
     else if (!node.expanded) onExpand(node, treeNodes)
     else if (node.expanded) onCollapse(node, treeNodes)
   }
