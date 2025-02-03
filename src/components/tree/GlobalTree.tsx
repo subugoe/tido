@@ -1,30 +1,49 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { dataStore } from '@/store/DataStore.tsx'
 
-
-import { TreeProvider } from '@/contexts/TreeContext.tsx'
-
-import TreeNode from '@/components/tree/TreeNode.tsx'
+import { getTreeNodes, onExpand, onCollapse } from '@/utils/tree.ts'
+import Tree from '@/components/Tree.tsx'
 
 
 const GlobalTree: FC = () => {
 
-  const nodes = dataStore(state => state.treeNodes)
+  const collections = dataStore(state => state.collections)
+
+  const treeNodes = dataStore(state => state.treeNodes)
+  const setTreeNodes = dataStore(state => state.setTreeNodes)
 
 
-  const tree =
-    nodes.length > 0 &&
-    nodes.map((collection, i) => (
-      <div key={i}>
-        <TreeNode node={collection}/>
-      </div>
-    ))
+  async function onExpandNode(node: TreeNode, nodes: TreeNode[]) {
+    const updatedTree = await onExpand(node, nodes)
+    if (!updatedTree) return
+
+    setTreeNodes(updatedTree)
+  }
+
+  async function onCollapseNode(node: TreeNode, nodes: TreeNode[]) {
+    const updatedTree = await onCollapse(node, nodes)
+    if (!updatedTree) return
+
+    setTreeNodes(updatedTree)
+  }
+
+  useEffect(() => {
+
+    async function initTree() {
+      const nodes = await getTreeNodes(collections)
+      if (!nodes) return
+
+      setTreeNodes(nodes)
+    }
+
+    initTree()
+  }, [collections])
 
 
-  return <div className="tree t-h-96 t-overflow-hidden t-overflow-y-auto">
-    <TreeProvider onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}>
-      {tree}
-    </TreeProvider>
+  return <div className="t-ml-4 t-mt-40">
+
+    <Tree nodes={treeNodes} onExpand={onExpandNode} onCollapse={onCollapseNode}/>
+
   </div>
 }
 

@@ -6,29 +6,29 @@ import { TreeProvider } from '@/contexts/TreeContext.tsx'
 import TreeNode from '@/components/tree/TreeNode'
 
 interface TreeProps {
-  nodes: TreeNode[],
+    nodes: TreeNode[],
 
-  onSelect(node: TreeNode): void,
+    onSelect?(node: TreeNode): void,
 
-  onExpand(node: TreeNode): void,
+    onExpand(node: TreeNode, nodes: TreeNode[]): void,
 
-  onCollapse(node: TreeNode): void,
+    onCollapse(node: TreeNode, nodes: TreeNode[]): void,
 }
 
-const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand, onCollapse }) => {
+const Tree: FC<TreeProps> = ({ nodes, onExpand, onCollapse }) => {
 
 
   const tree =
-    nodes.length > 0 &&
-    nodes.map((collection, i) => (
-      <div key={i}>
-        <TreeNode node={collection}/>
-      </div>
-    ))
+        nodes.length > 0 &&
+        nodes.map((collection, i) => (
+          <div key={i}>
+            <TreeNode node={collection}/>
+          </div>
+        ))
 
 
   return <div className="tree t-h-96 t-overflow-hidden t-overflow-y-auto">
-    <TreeProvider onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}>
+    <TreeProvider onExpand={onExpand} onCollapse={onCollapse}>
       {tree}
     </TreeProvider>
   </div>
