@@ -4,31 +4,31 @@ import { dataStore } from '@/store/DataStore.tsx'
 const TreeContext = createContext<TreeType | undefined>(undefined)
 
 interface TreeType {
-    onClick(node: TreeNode): void
+  onClick(node: TreeNode, itemRef): void
 
-    onSelect(node: TreeNode, e): void
+  onSelect(node: TreeNode, itemRef): void
 
-    onExpand(node: TreeNode, nodes: TreeNode[]): void
+  onExpand(node: TreeNode, nodes: TreeNode[]): void
 
-    onCollapse(node: TreeNode, nodes: TreeNode[]): void
+  onCollapse(node: TreeNode, nodes: TreeNode[]): void
 }
 
 interface TreeProviderProps {
-    children?: ReactNode
+  children?: ReactNode
 
-    onSelect(node: TreeNode, e): void
+  onSelect(node: TreeNode, target): void
 
-    onExpand(node: TreeNode, nodes: TreeNode[]): void
+  onExpand(node: TreeNode, nodes: TreeNode[]): void
 
-    onCollapse(node: TreeNode, nodes: TreeNode[]): void
+  onCollapse(node: TreeNode, nodes: TreeNode[]): void
 }
 
 const TreeProvider: FC<TreeProviderProps> = ({ children, onSelect, onExpand, onCollapse }) => {
 
   const treeNodes = dataStore(state => state.treeNodes)
 
-  function onClick(node: TreeNode, e) {
-    if ('leaf' in node) onSelect(node, e)
+  function onClick(node: TreeNode, target) {
+    if ('leaf' in node) onSelect(node, target)
     else if (!node.expanded) onExpand(node, treeNodes)
     else if (node.expanded) onCollapse(node, treeNodes)
   }

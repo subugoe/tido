@@ -7,10 +7,10 @@ const GlobalTreeSelectionModalContent: FC = () => {
   const panels = configStore(state => state.config.panels)
 
 
-  return <div className="t-ml-4 t-mt-40 t-z-50 t-bg-blue">
+  return (<div className="t-bg-blue">
     Pop over shown
 
-  </div>
+  </div>)
 }
 
 export default GlobalTreeSelectionModalContent

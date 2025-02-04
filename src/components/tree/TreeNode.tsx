@@ -4,7 +4,7 @@ import { useTree } from '@/contexts/TreeContext'
 
 
 interface TreeNodeProps {
-    node: TreeNode,
+  node: TreeNode,
 }
 
 const TreeNode: FC<TreeNodeProps> = ({ node }) => {
@@ -14,11 +14,10 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   const itemRef = useRef(null)
 
   function handleNodeClick(e) {
-    console.log('coordinates of clicked element', e.target.getBoundingClientRect())
-    onClick(node, e)
+    e.preventDefault()
+    onClick(node, e.target)
   }
 
-  console.log('node', node)
 
   if ('children' in node && node.expanded)
     return <div>

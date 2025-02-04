@@ -9,6 +9,11 @@ import GlobalTreeSelectionModalContent from '@/components/tree-modal/GlobalTreeS
 
 const GlobalTree: FC = () => {
 
+  console.log('global tree selection modal content', GlobalTreeSelectionModalContent)
+
+  // as trigger button I need the html element of the item clicked
+
+
   const collections = dataStore(state => state.collections)
 
   const treeNodes = dataStore(state => state.treeNodes)
@@ -33,12 +38,14 @@ const GlobalTree: FC = () => {
     setTreeNodes(updatedTree)
   }
 
-  function onSelectNode(node: TreeNode, e) {
-    const { x, y } = e.target.getBoundingClientRect()
-    console.log('clicked x', x)
-    console.log('clicked y', y)
-    setPositionSelectedItem({ x: x, y: y })
+  function onSelectNode(node: TreeNode, target) {
+    const { x, y } = target.getBoundingClientRect()
     setShowSelectionModal(true)
+    setPositionSelectedItem({ x: x, y: y })
+
+    /*
+    setSelectedElement(element)
+    */
   }
 
   useEffect(() => {
@@ -57,7 +64,9 @@ const GlobalTree: FC = () => {
   return <div className="t-ml-16 t-mt-24">
 
     <Tree nodes={treeNodes} onSelect={onSelectNode} onExpand={onExpandNode} onCollapse={onCollapseNode}/>
-    <TreeSelectionModal Content={GlobalTreeSelectionModalContent} position={positionSelectedItem}/>
+    <TreeSelectionModal showPopover={showSelectionModal} setShowSelectionModal={setShowSelectionModal}
+      Content={<GlobalTreeSelectionModalContent/>}
+      position={positionSelectedItem}/>
 
   </div>
 }

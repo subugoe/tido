@@ -37,7 +37,7 @@ const TopBar: FC<TopBarProps> = ({ setShowGlobalTree }) => {
     <button className="t-mr-2" onClick={() => toggleIcon()}><IconRenderer htmlString={iconHtmlString} width={8}
       height={8}/>
     </button>
-    <TreeSelectionModal TriggerButton={addButton} Content={TreeSelectionModalContent}/>
+    <TreeSelectionModal TriggerButton={addButton} Content={<TreeSelectionModalContent/>}/>
   </div>
 
 }
