@@ -54,7 +54,7 @@ const GlobalTree: FC = () => {
   }, [collections])
 
 
-  return <div className="t-ml-4 t-mt-40">
+  return <div className="t-ml-16 t-mt-24">
 
     <Tree nodes={treeNodes} onSelect={onSelectNode} onExpand={onExpandNode} onCollapse={onCollapseNode}/>
     <TreeSelectionModal Content={GlobalTreeSelectionModalContent} position={positionSelectedItem}/>
