@@ -11,7 +11,7 @@ export async function createCollectionNodes(collections: CollectionMap): Promise
       nodes.push(node)
     })
   }
-  
+
   return nodes
 }
 
@@ -68,7 +68,6 @@ export async function getChildren(node: TreeNode): Promise<TreeNode[]> {
 export function getNodeIndices(nodeKey: string) {
   return nodeKey.split('-').map((index) => parseInt(index, 10))
 }
-
 
 export async function onCollapse(node: TreeNode, nodes: TreeNode[]) {
   const { type } = node

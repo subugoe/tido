@@ -18,19 +18,25 @@ interface TreeProviderProps {
 
   onSelect(node: TreeNode, target): void
 
-  onExpand(node: TreeNode, nodes: TreeNode[]): void
+  onExpand(node: TreeNode, nodes: TreeNode[]): TreeNode[] | undefined
 
-  onCollapse(node: TreeNode, nodes: TreeNode[]): void
+  onCollapse(node: TreeNode, nodes: TreeNode[]): TreeNode[] | undefined
 }
 
 const TreeProvider: FC<TreeProviderProps> = ({ children, onSelect, onExpand, onCollapse }) => {
 
   const treeNodes = dataStore(state => state.treeNodes)
+  const setTreeNodes = dataStore(state => state.setTreeNodes)
 
-  function onClick(node: TreeNode, target) {
+  async function onClick(node: TreeNode, target) {
     if ('leaf' in node) onSelect(node, target)
-    else if (!node.expanded) onExpand(node, treeNodes)
-    else if (node.expanded) onCollapse(node, treeNodes)
+    else if (!node.expanded) {
+      const updatedTree = await onExpand(node, treeNodes)
+      if (updatedTree) setTreeNodes(updatedTree)
+    } else if (node.expanded) {
+      const updatedTree = await onCollapse(node, treeNodes)
+      if (updatedTree) setTreeNodes(updatedTree)
+    }
   }
 
   return (

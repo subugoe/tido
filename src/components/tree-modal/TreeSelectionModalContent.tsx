@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useRef } from 'react'
 
 import { configStore } from '@/store/ConfigStore'
 import { dataStore } from '@/store/DataStore'
@@ -17,7 +17,6 @@ const TreeSelectionModalContent: FC = () => {
   const initCollection = dataStore(state => state.initCollection)
 
   const treeNodes = dataStore(state => state.treeNodes)
-  const setTreeNodes = dataStore(state => state.setTreeNodes)
 
   const inputValue = useRef('')
   const clickedItemUrl = useRef('')
@@ -68,20 +67,6 @@ const TreeSelectionModalContent: FC = () => {
     }
   }
 
-  async function onExpandNode(node: TreeNode, nodes: TreeNode[]) {
-    const updatedTree = await onExpand(node, nodes)
-    if (!updatedTree) return
-
-    setTreeNodes(updatedTree)
-  }
-
-  async function onCollapseNode(node: TreeNode, nodes: TreeNode[]) {
-    const updatedTree = await onCollapse(node, nodes)
-    if (!updatedTree) return
-
-    setTreeNodes(updatedTree)
-  }
-
 
   function onSelect(node: TreeNode) {
     const { id } = node
@@ -99,7 +84,7 @@ const TreeSelectionModalContent: FC = () => {
     <InputField updateInputValue={updateInputValue}/>
     <span>Or choose:</span>
 
-    <Tree nodes={treeNodes} onSelect={onSelect} onExpand={onExpandNode} onCollapse={onCollapseNode}/>
+    <Tree nodes={treeNodes} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}/>
 
     <div className="t-pb-4">
       <ClosePopover

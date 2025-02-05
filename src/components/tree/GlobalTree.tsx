@@ -17,25 +17,10 @@ const GlobalTree: FC = () => {
   })
 
   const treeNodes = dataStore(state => state.treeNodes)
-  const setTreeNodes = dataStore(state => state.setTreeNodes)
 
   const [showSelectionModal, setShowSelectionModal] = useState(false)
   const [positionSelectedItem, setPositionSelectedItem] = useState({ x: 0, y: 0 })
 
-
-  async function onExpandNode(node: TreeNode, nodes: TreeNode[]) {
-    const updatedTree = await onExpand(node, nodes)
-    if (!updatedTree) return
-
-    setTreeNodes(updatedTree)
-  }
-
-  async function onCollapseNode(node: TreeNode, nodes: TreeNode[]) {
-    const updatedTree = await onCollapse(node, nodes)
-    if (!updatedTree) return
-
-    setTreeNodes(updatedTree)
-  }
 
   function onSelectNode(node: TreeNode, target) {
     const [collectionIndex, manifestIndex, itemIndex] = getNodeIndices(node.key)
@@ -47,9 +32,8 @@ const GlobalTree: FC = () => {
     setPositionSelectedItem({ x: x, y: y })
   }
 
-
   return <div className="t-ml-16 t-mt-24">
-    <Tree nodes={treeNodes} onSelect={onSelectNode} onExpand={onExpandNode} onCollapse={onCollapseNode}/>
+    <Tree nodes={treeNodes} onSelect={onSelectNode} onExpand={onExpand} onCollapse={onCollapse}/>
     <TreeSelectionModal showPopover={showSelectionModal} setShowSelectionModal={setShowSelectionModal}
       Content={<GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current}/>}
       position={positionSelectedItem}/>
