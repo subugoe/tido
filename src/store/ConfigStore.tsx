@@ -4,6 +4,7 @@ interface ConfigStoreType {
   config: Config,
   addCustomConfig: (customConfig: Config) => void,
   addNewPanel: (newPanelConfig: PanelConfig) => void,
+  updatePanel: (newPanelConfig: PanelConfig, newIndex: number) => void,
 }
 
 export const configStore = create<ConfigStoreType>((set, get) => ({
@@ -19,4 +20,11 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
 
     set({ config: newConfig })
   },
+
+  updatePanel: (newPanelConfig: PanelConfig, newIndex: number) => {
+    const newConfig = { ...get().config }
+
+    if (newConfig.panels) newConfig.panels[newIndex] = newPanelConfig
+    set({ config: newConfig })
+  }
 }))

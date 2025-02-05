@@ -2,14 +2,38 @@ import { FC } from 'react'
 import { configStore } from '@/store/ConfigStore.tsx'
 
 
-const GlobalTreeSelectionModalContent: FC = () => {
+interface SelectedItemIndicesType {
+  collectionUrl: string,
+  manifestIndex: number,
+  itemIndex: number,
+}
+
+interface GlobalTreeSelectionModalContentProps {
+  selectedItemIndices: SelectedItemIndicesType,
+}
+
+const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> = ({ selectedItemIndices }) => {
 
   const panels = configStore(state => state.config.panels)
+  const addNewPanel = configStore(state => state.addNewPanel)
+  const updatePanel = configStore(state => state.updatePanel)
+
+  const newPanelConfig = {
+    entrypoint: {
+      url: selectedItemIndices.collectionUrl,
+      type: 'collection',
+    },
+    manifestIndex: selectedItemIndices.manifestIndex,
+    itemIndex: selectedItemIndices.itemIndex
+  }
 
   let buttonsUpdatePanel
   if (panels && panels?.length > 0) {
     buttonsUpdatePanel = panels?.map((_, i) => <button
-      className="t-bg-slate-200 t-w-20 t-h-8 t-mr-1 t-rounded-md hover:t-bg-slate-300">Panel {i + 1}</button>)
+      className="t-bg-slate-200 t-w-20 t-h-8 t-mr-1 t-rounded-md hover:t-bg-slate-300" key={i}
+      onClick={(e) => updatePanel(
+        newPanelConfig
+        , i)}>Panel {i + 1}</button>)
   }
 
 
@@ -18,7 +42,8 @@ const GlobalTreeSelectionModalContent: FC = () => {
       <div className="buttons-update-panel t-flex">
         {buttonsUpdatePanel}
       </div>
-      <button className="button-new-panel t-bg-slate-200 t-w-24 t-h-8 t-mr-1 t-rounded-md hover:t-bg-slate-300"> New
+      <button className="button-new-panel t-bg-slate-200 t-w-24 t-h-8 t-mr-1 t-rounded-md hover:t-bg-slate-300"
+        onClick={() => addNewPanel(newPanelConfig)}> New
         Panel
       </button>
 

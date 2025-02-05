@@ -1,7 +1,7 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { dataStore } from '@/store/DataStore.tsx'
 
-import { getTreeNodes, onExpand, onCollapse } from '@/utils/tree.ts'
+import { getTreeNodes, onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
 import Tree from '@/components/Tree.tsx'
 import TreeSelectionModal from '@/components/TreeSelectionModal.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree-modal/GlobalTreeSelectionModalContent.tsx'
@@ -9,10 +9,13 @@ import GlobalTreeSelectionModalContent from '@/components/tree-modal/GlobalTreeS
 
 const GlobalTree: FC = () => {
 
-  console.log('global tree selection modal content', GlobalTreeSelectionModalContent)
-
   // as trigger button I need the html element of the item clicked
 
+  const selectedItemIndices = useRef({
+    collectionUrl: '',
+    manifestIndex: -1,
+    itemIndex: -1
+  })
 
   const collections = dataStore(state => state.collections)
 
@@ -39,13 +42,13 @@ const GlobalTree: FC = () => {
   }
 
   function onSelectNode(node: TreeNode, target) {
+    const [collectionIndex, manifestIndex, itemIndex] = getNodeIndices(node.key)
+    const collectionUrl = treeNodes[collectionIndex].id
+    selectedItemIndices.current = { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
+
     const { x, y } = target.getBoundingClientRect()
     setShowSelectionModal(true)
     setPositionSelectedItem({ x: x, y: y })
-
-    /*
-    setSelectedElement(element)
-    */
   }
 
   useEffect(() => {
@@ -65,7 +68,7 @@ const GlobalTree: FC = () => {
 
     <Tree nodes={treeNodes} onSelect={onSelectNode} onExpand={onExpandNode} onCollapse={onCollapseNode}/>
     <TreeSelectionModal showPopover={showSelectionModal} setShowSelectionModal={setShowSelectionModal}
-      Content={<GlobalTreeSelectionModalContent/>}
+      Content={<GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current}/>}
       position={positionSelectedItem}/>
 
   </div>
