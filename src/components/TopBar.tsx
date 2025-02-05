@@ -2,13 +2,12 @@ import { Dispatch, FC, SetStateAction, useState } from 'react'
 
 import { configStore } from '@/store/ConfigStore.tsx'
 
-import IconRenderer from '@/components/base/IconRenderer.tsx'
-import { tree } from '@/utils/icons'
-import { cross } from '@/utils/icons'
-
 import TreeSelectionModal from '@/components/TreeSelectionModal.tsx'
 import TreeSelectionModalContent from '@/components/tree-modal/TreeSelectionModalContent.tsx'
+import IconRenderer from '@/components/base/IconRenderer.tsx'
 
+import { tree } from '@/utils/icons'
+import { cross } from '@/utils/icons'
 
 interface TopBarProps {
   setShowGlobalTree: Dispatch<SetStateAction<boolean>>
@@ -22,11 +21,11 @@ const TopBar: FC<TopBarProps> = ({ setShowGlobalTree }) => {
   function toggleIcon() {
     if (iconHtmlString === tree) {
       // we click the tree icon - now we show the global tree (set the value to true)
-      setIconHtmlString(cross)
       setShowGlobalTree(true)
+      setIconHtmlString(cross)
     } else if (iconHtmlString === cross) {
-      setIconHtmlString(tree)
       setShowGlobalTree(false)
+      setIconHtmlString(tree)
     }
   }
 
@@ -46,7 +45,6 @@ const TopBar: FC<TopBarProps> = ({ setShowGlobalTree }) => {
     </button>
     <TreeSelectionModal TriggerButton={addButton} Content={<TreeSelectionModalContent/>}/>
   </div>
-
 }
 
 export default TopBar

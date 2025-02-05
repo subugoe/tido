@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, FC, useState } from 'react'
+import { ReactNode, createContext, useContext, FC } from 'react'
 import { dataStore } from '@/store/DataStore.tsx'
 
 const TreeContext = createContext<TreeType | undefined>(undefined)

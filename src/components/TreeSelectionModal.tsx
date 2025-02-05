@@ -2,8 +2,6 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-import GlobalTreeSelectionModalContent from '@/components/tree-modal/GlobalTreeSelectionModalContent.tsx'
-
 interface Position {
   x: number,
   y: number
@@ -13,7 +11,7 @@ interface LocalTreeProps {
   TriggerButton?: ReactNode,
   showPopover?: boolean,
   setShowSelectionModal?: (showPopover: boolean) => void,
-  Content?: any,
+  Content?: ReactNode,
   position?: Position
 }
 

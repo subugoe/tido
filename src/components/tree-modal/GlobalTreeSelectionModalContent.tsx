@@ -31,7 +31,7 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
   if (panels && panels?.length > 0) {
     buttonsUpdatePanel = panels?.map((_, i) => <button
       className="t-bg-slate-200 t-w-20 t-h-8 t-mr-1 t-rounded-md hover:t-bg-slate-300" key={i}
-      onClick={(e) => updatePanel(
+      onClick={() => updatePanel(
         newPanelConfig
         , i)}>Panel {i + 1}</button>)
   }
