@@ -10,9 +10,9 @@ interface TreeProps {
 
   onSelect(node: TreeNode, target): void,
 
-  onExpand(node: TreeNode, nodes: TreeNode[]): TreeNode[],
+  onExpand(node: TreeNode, nodes: TreeNode[]): Promise<TreeNode[] | undefined>,
 
-  onCollapse(node: TreeNode, nodes: TreeNode[]): TreeNode[],
+  onCollapse(node: TreeNode, nodes: TreeNode[]): Promise<TreeNode[] | undefined>,
 }
 
 const Tree: FC<TreeProps> = ({ nodes, onSelect, onExpand, onCollapse }) => {

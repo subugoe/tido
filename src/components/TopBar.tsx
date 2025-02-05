@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction, useState } from 'react'
 
 import { configStore } from '@/store/ConfigStore.tsx'
 
-import TreeSelectionModal from '@/components/TreeSelectionModal.tsx'
+import Modal from '@/components/Modal.tsx'
 import TreeSelectionModalContent from '@/components/tree-modal/TreeSelectionModalContent.tsx'
 import IconRenderer from '@/components/base/IconRenderer.tsx'
 
@@ -43,7 +43,7 @@ const TopBar: FC<TopBarProps> = ({ setShowGlobalTree }) => {
         width={8}
         height={8}/>
     </button>
-    <TreeSelectionModal TriggerButton={addButton} Content={<TreeSelectionModalContent/>}/>
+    <Modal TriggerButton={addButton} Content={<TreeSelectionModalContent/>}/>
   </div>
 }
 

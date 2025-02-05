@@ -7,18 +7,16 @@ interface Position {
   y: number
 }
 
-interface LocalTreeProps {
+interface ModalProps {
   TriggerButton?: ReactNode,
   showPopover?: boolean,
-  setShowSelectionModal?: (showPopover: boolean) => void,
   Content?: ReactNode,
   position?: Position
 }
 
-const TreeSelectionModal: FC<LocalTreeProps> = ({
+const Modal: FC<ModalProps> = ({
   TriggerButton,
   showPopover,
-  setShowSelectionModal,
   Content,
   position
 }) => {
@@ -28,15 +26,11 @@ const TreeSelectionModal: FC<LocalTreeProps> = ({
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open)
-    if (setShowSelectionModal) setShowSelectionModal(open)
   }
 
   useEffect(() => {
-
-    if (showPopover) {
-      setIsOpen(true)
-    }
-  }, [showPopover])
+    if (showPopover) setIsOpen(true)
+  }, [position])
 
 
   return <div className="local-tree-modal">
@@ -55,4 +49,4 @@ const TreeSelectionModal: FC<LocalTreeProps> = ({
   </div>
 }
 
-export default TreeSelectionModal
+export default Modal

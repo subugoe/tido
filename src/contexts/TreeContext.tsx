@@ -4,13 +4,13 @@ import { dataStore } from '@/store/DataStore.tsx'
 const TreeContext = createContext<TreeType | undefined>(undefined)
 
 interface TreeType {
-  onClick(node: TreeNode, itemRef): void
+  onClick(node: TreeNode, target): void
 
-  onSelect(node: TreeNode, itemRef): void
+  onSelect(node: TreeNode, target): void
 
-  onExpand(node: TreeNode, nodes: TreeNode[]): void
+  onExpand(node: TreeNode, nodes: TreeNode[]): Promise<TreeNode[] | undefined>
 
-  onCollapse(node: TreeNode, nodes: TreeNode[]): void
+  onCollapse(node: TreeNode, nodes: TreeNode[]): Promise<TreeNode[] | undefined>
 }
 
 interface TreeProviderProps {
@@ -18,9 +18,9 @@ interface TreeProviderProps {
 
   onSelect(node: TreeNode, target): void
 
-  onExpand(node: TreeNode, nodes: TreeNode[]): TreeNode[] | undefined
+  onExpand(node: TreeNode, nodes: TreeNode[]): Promise<TreeNode[] | undefined>
 
-  onCollapse(node: TreeNode, nodes: TreeNode[]): TreeNode[] | undefined
+  onCollapse(node: TreeNode, nodes: TreeNode[]): Promise<TreeNode[] | undefined>
 }
 
 const TreeProvider: FC<TreeProviderProps> = ({ children, onSelect, onExpand, onCollapse }) => {

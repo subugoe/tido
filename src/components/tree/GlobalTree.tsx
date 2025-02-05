@@ -3,7 +3,7 @@ import { FC, useRef, useState } from 'react'
 import { dataStore } from '@/store/DataStore.tsx'
 
 import Tree from '@/components/Tree.tsx'
-import TreeSelectionModal from '@/components/TreeSelectionModal.tsx'
+import Modal from '@/components/Modal.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree-modal/GlobalTreeSelectionModalContent.tsx'
 
 import { onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
@@ -27,14 +27,15 @@ const GlobalTree: FC = () => {
     const collectionUrl = treeNodes[collectionIndex].id
     selectedItemIndices.current = { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
 
-    const { x, y } = target.getBoundingClientRect()
+    // when we click at another item, show the modal
     setShowSelectionModal(true)
+    const { x, y } = target.getBoundingClientRect()
     setPositionSelectedItem({ x: x, y: y })
   }
 
   return <div className="t-ml-16 t-mt-24">
     <Tree nodes={treeNodes} onSelect={onSelectNode} onExpand={onExpand} onCollapse={onCollapse}/>
-    <TreeSelectionModal showPopover={showSelectionModal} setShowSelectionModal={setShowSelectionModal}
+    <Modal showPopover={showSelectionModal}
       Content={<GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current}/>}
       position={positionSelectedItem}/>
   </div>
