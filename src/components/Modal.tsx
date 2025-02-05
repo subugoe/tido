@@ -2,11 +2,6 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-interface Position {
-  x: number,
-  y: number
-}
-
 interface ModalProps {
   TriggerButton?: ReactNode,
   showPopover?: boolean,
@@ -21,7 +16,6 @@ const Modal: FC<ModalProps> = ({
   position
 }) => {
 
-
   const [isOpen, setIsOpen] = useState(false)
 
   const handleOpenChange = (open: boolean) => {
@@ -31,8 +25,7 @@ const Modal: FC<ModalProps> = ({
   useEffect(() => {
     if (showPopover) setIsOpen(true)
   }, [position])
-
-
+  
   return <div className="local-tree-modal">
     <Popover open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>

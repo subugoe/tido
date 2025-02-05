@@ -82,7 +82,6 @@ export async function onCollapse(node: TreeNode, nodes: TreeNode[]) {
     const manifests = updatedTree[collectionIndex].children
     if (!manifests) return
     manifests[manifestIndex].expanded = false
-
     updatedTree[collectionIndex].children = [...manifests]
   }
 

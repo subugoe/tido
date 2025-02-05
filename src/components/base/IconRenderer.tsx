@@ -6,7 +6,6 @@ interface IconRendererProps {
   height?: number
 }
 
-
 const IconRenderer: FC<IconRendererProps> = ({ htmlString, width, height }) => {
   const ref = useRef<HTMLInputElement>(null)
 

@@ -14,7 +14,6 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
     set({ config: customConfig })
   },
   addNewPanel: (newPanelConfig: PanelConfig) => {
-
     const newConfig = { ...get().config }
     newConfig.panels?.push(newPanelConfig)
 
@@ -23,8 +22,8 @@ export const configStore = create<ConfigStoreType>((set, get) => ({
 
   updatePanel: (newPanelConfig: PanelConfig, newIndex: number) => {
     const newConfig = { ...get().config }
-
     if (newConfig.panels) newConfig.panels[newIndex] = newPanelConfig
+    
     set({ config: newConfig })
   }
 }))

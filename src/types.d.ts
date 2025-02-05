@@ -284,5 +284,11 @@ declare global {
   interface CollectionMap {
     [key: string]: Collection
   }
+
+  interface Position {
+    x: number,
+    y: number
+  }
+
 }
 export {}
