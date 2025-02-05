@@ -13,7 +13,7 @@ const App: FC<AppProps> = ({ customConfig }) => {
   const addCustomConfig = configStore((state) => state.addCustomConfig)
   addCustomConfig(customConfig)
 
-  const [showGlobalTree, setShowGlobalTree] = useState(customConfig.globalTree)
+  const [showGlobalTree, setShowGlobalTree] = useState(false)
 
   return (
     <div className="tido t-flex t-flex-col">
