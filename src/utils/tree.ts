@@ -1,26 +1,21 @@
 import { request } from '@/utils/http'
 
-export async function getCollectionTreeNodes(collections: CollectionMap) {
-
+export async function createCollectionNodes(collections: CollectionMap): Promise<TreeNode[]> {
   const collectionsUrls = Object.keys(collections)
-  if (collectionsUrls.length === 0) return
+  if (collectionsUrls.length === 0) return []
 
-  return await createTree(collectionsUrls)
-}
-
-export async function createTree(collectionsUrls: string[]) {
   const nodes: TreeNode[] = []
 
   for (let i = 0; i < collectionsUrls.length; i++) {
-    await createNode(collectionsUrls[i], i).then((node) => {
+    await createCollectionNode(collectionsUrls[i], i).then((node) => {
       nodes.push(node)
     })
   }
-
+  
   return nodes
 }
 
-async function createNode(url: string, key: number) {
+async function createCollectionNode(url: string, key: number) {
   const node: TreeNode = { key: '', id: '', type: '', label: '' }
 
   const response = await request<Collection>(url)

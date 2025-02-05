@@ -7,7 +7,7 @@ import PanelsWrapper from '@/components/PanelsWrapper'
 import TopBar from '@/components/TopBar'
 import GlobalTree from '@/components/tree/GlobalTree.tsx'
 
-import { getCollectionTreeNodes } from '@/utils/tree.ts'
+import { createCollectionNodes } from '@/utils/tree.ts'
 
 interface AppProps {
   customConfig: Config
@@ -24,7 +24,7 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
   useEffect(() => {
     async function initTree(collections: CollectionMap) {
-      const nodes = await getCollectionTreeNodes(collections)
+      const nodes = await createCollectionNodes(collections)
       if (!nodes) return
 
       setTreeNodes(nodes)
