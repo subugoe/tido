@@ -80,8 +80,8 @@ const TreeSelectionModalContent: FC = () => {
   return <div
     className="t-flex t-flex-col t-pt-4 t-pl-3 t-w-[500px] t-shadow-md t-border-[1px] t-border-solid t-border-gray-300 t-rounded-md">
 
-    <span className="t-font-bold">Enter a Collection Url</span>
-    <InputField updateInputValue={updateInputValue}/>
+    <span className="t-font-bold t-mb-2">Enter a collection URL</span>
+    <InputField width={80} updateInputValue={updateInputValue}/>
     <span>Or choose:</span>
 
     <Tree nodes={treeNodes} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}/>

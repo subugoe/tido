@@ -29,8 +29,7 @@ const GlobalTree: FC = () => {
 
     // when we click at another item, show the modal
     setShowSelectionModal(true)
-    const { x, y } = target.getBoundingClientRect()
-    setPositionSelectedItem({ x: x, y: y })
+    setPositionSelectedItem(target.getBoundingClientRect())
   }
 
   return <div className="t-ml-16 t-mt-24">
