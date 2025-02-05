@@ -1,4 +1,4 @@
-import { FC, useRef } from 'react'
+import { FC, useRef, MouseEvent } from 'react'
 
 import { useTree } from '@/contexts/TreeContext'
 
@@ -13,7 +13,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
   const itemRef = useRef(null)
 
-  function handleNodeClick(e) {
+  function handleNodeClick(e: MouseEvent<HTMLElement>) {
     e.preventDefault()
     onClick(node, e.target)
   }

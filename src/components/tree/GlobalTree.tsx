@@ -1,15 +1,15 @@
 import { FC, useEffect, useRef, useState } from 'react'
+
 import { dataStore } from '@/store/DataStore.tsx'
 
-import { getTreeNodes, onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
 import Tree from '@/components/Tree.tsx'
 import TreeSelectionModal from '@/components/TreeSelectionModal.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree-modal/GlobalTreeSelectionModalContent.tsx'
 
+import { getTreeNodes, onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
+
 
 const GlobalTree: FC = () => {
-
-  // as trigger button I need the html element of the item clicked
 
   const selectedItemIndices = useRef({
     collectionUrl: '',
@@ -18,12 +18,10 @@ const GlobalTree: FC = () => {
   })
 
   const collections = dataStore(state => state.collections)
-
   const treeNodes = dataStore(state => state.treeNodes)
   const setTreeNodes = dataStore(state => state.setTreeNodes)
 
   const [showSelectionModal, setShowSelectionModal] = useState(false)
-
   const [positionSelectedItem, setPositionSelectedItem] = useState({ x: 0, y: 0 })
 
 
@@ -52,15 +50,14 @@ const GlobalTree: FC = () => {
   }
 
   useEffect(() => {
-
-    async function initTree() {
+    async function initTree(collections: CollectionMap) {
       const nodes = await getTreeNodes(collections)
       if (!nodes) return
 
       setTreeNodes(nodes)
     }
 
-    initTree()
+    initTree(collections)
   }, [collections])
 
 
