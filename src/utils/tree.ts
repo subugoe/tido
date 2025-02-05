@@ -1,12 +1,11 @@
 import { request } from '@/utils/http'
 
-export async function getTreeNodes(collections: CollectionMap) {
+export async function getCollectionTreeNodes(collections: CollectionMap) {
 
   const collectionsUrls = Object.keys(collections)
   if (collectionsUrls.length === 0) return
 
-  const nodes = await createTree(collectionsUrls)
-  return nodes
+  return await createTree(collectionsUrls)
 }
 
 export async function createTree(collectionsUrls: string[]) {

@@ -1,11 +1,13 @@
-import PanelsWrapper from './components/PanelsWrapper'
 import { FC, useEffect, useState } from 'react'
-import { configStore } from '@/store/ConfigStore.tsx'
 
+import { configStore } from '@/store/ConfigStore.tsx'
+import { dataStore } from '@/store/DataStore.tsx'
+
+import PanelsWrapper from '@/components/PanelsWrapper'
 import TopBar from '@/components/TopBar'
 import GlobalTree from '@/components/tree/GlobalTree.tsx'
-import { dataStore } from '@/store/DataStore.tsx'
-import { getTreeNodes } from '@/utils/tree.ts'
+
+import { getCollectionTreeNodes } from '@/utils/tree.ts'
 
 interface AppProps {
   customConfig: Config
@@ -22,9 +24,9 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
   useEffect(() => {
     async function initTree(collections: CollectionMap) {
-      const nodes = await getTreeNodes(collections)
+      const nodes = await getCollectionTreeNodes(collections)
       if (!nodes) return
-      
+
       setTreeNodes(nodes)
     }
 
