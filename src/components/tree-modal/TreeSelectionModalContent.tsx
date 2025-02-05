@@ -7,17 +7,18 @@ import { dataStore } from '@/store/DataStore'
 import Tree from '@/components/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
 import { ClosePopover } from '@/components/ui/popover'
-import { createTree, getChildren, getNodeIndices } from '@/utils/tree'
+import { getTreeNodes, onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
 
 
 const TreeSelectionModalContent: FC = () => {
 
   const addNewPanel = configStore(state => state.addNewPanel)
 
-  const setTreeNodes = dataStore(state => state.setTreeNodes)
   const initCollection = dataStore(state => state.initCollection)
   const collections = dataStore(state => state.collections)
-  const nodes = dataStore(state => state.treeNodes)
+
+  const treeNodes = dataStore(state => state.treeNodes)
+  const setTreeNodes = dataStore(state => state.setTreeNodes)
 
 
   const inputValue = useRef('')
@@ -31,16 +32,15 @@ const TreeSelectionModalContent: FC = () => {
 
 
   useEffect(() => {
-    async function initTree(collections: CollectionMap) {
 
-      const collectionsUrls = Object.keys(collections)
-      if (collectionsUrls.length === 0) return
+    async function initTree() {
+      const nodes = await getTreeNodes(collections)
+      if (!nodes) return
 
-      const nodes = await createTree(collectionsUrls)
       setTreeNodes(nodes)
     }
 
-    initTree(collections)
+    initTree()
   }, [collections])
 
 
@@ -83,64 +83,26 @@ const TreeSelectionModalContent: FC = () => {
     }
   }
 
-
-  async function onExpand(node: TreeNode) {
-    const { type } = node
-    const updatedTree = [...nodes]
-
-    if (type === 'collection') {
-      const [collectionIndex] = getNodeIndices(node.key)
-      if (!('children' in updatedTree[collectionIndex])) {
-        const childrenNodes = await getChildren(node)
-        if (childrenNodes.length === 0) return
-
-        updatedTree[collectionIndex].children = childrenNodes
-      }
-
-      updatedTree[collectionIndex].expanded = true
-
-    } else if (type === 'manifest') {
-      const [collectionIndex, manifestIndex] = getNodeIndices(node.key)
-      const manifests = updatedTree[collectionIndex].children
-      if (!manifests) return
-      if (manifests.length === 0) return
-
-      const manifestChildren = await getChildren(node)
-      if (manifestChildren.length === 0) return
-      manifests[manifestIndex].children = manifestChildren
-      manifests[manifestIndex].expanded = true
-
-      updatedTree[collectionIndex].children = [...manifests]
-    }
+  async function onExpandNode(node: TreeNode, nodes: TreeNode[]) {
+    const updatedTree = await onExpand(node, nodes)
+    if (!updatedTree) return
 
     setTreeNodes(updatedTree)
   }
 
-  async function onCollapse(node: TreeNode) {
-    const { type } = node
-    const updatedTree = [...nodes]
-
-    if (type === 'collection') {
-      const [collectionIndex] = getNodeIndices(node.key)
-      updatedTree[collectionIndex].expanded = false
-    } else if (type === 'manifest') {
-      const [collectionIndex, manifestIndex] = getNodeIndices(node.key)
-
-      const manifests = updatedTree[collectionIndex].children
-      if (!manifests) return
-      manifests[manifestIndex].expanded = false
-
-      updatedTree[collectionIndex].children = [...manifests]
-    }
+  async function onCollapseNode(node: TreeNode, nodes: TreeNode[]) {
+    const updatedTree = await onCollapse(node, nodes)
+    if (!updatedTree) return
 
     setTreeNodes(updatedTree)
   }
+
 
   function onSelect(node: TreeNode) {
     const { id } = node
     clickedItemUrl.current = id
     const [collectionIndex, manifestIndex, itemIndex] = getNodeIndices(node.key)
-    const collectionUrl = nodes[collectionIndex].id
+    const collectionUrl = treeNodes[collectionIndex].id
     selectedItemIndices.current = { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
   }
 
@@ -152,7 +114,7 @@ const TreeSelectionModalContent: FC = () => {
     <InputField updateInputValue={updateInputValue}/>
     <span>Or choose:</span>
 
-    <Tree nodes={nodes} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}/>
+    <Tree nodes={treeNodes} onSelect={onSelect} onExpand={onExpandNode} onCollapse={onCollapseNode}/>
 
     <div className="t-pb-4">
       <ClosePopover
