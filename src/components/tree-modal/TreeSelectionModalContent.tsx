@@ -7,7 +7,7 @@ import { dataStore } from '@/store/DataStore'
 import Tree from '@/components/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
 import { ClosePopover } from '@/components/ui/popover'
-import { getTreeNodes, onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
+import { onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
 
 
 const TreeSelectionModalContent: FC = () => {
@@ -15,11 +15,9 @@ const TreeSelectionModalContent: FC = () => {
   const addNewPanel = configStore(state => state.addNewPanel)
 
   const initCollection = dataStore(state => state.initCollection)
-  const collections = dataStore(state => state.collections)
 
   const treeNodes = dataStore(state => state.treeNodes)
   const setTreeNodes = dataStore(state => state.setTreeNodes)
-
 
   const inputValue = useRef('')
   const clickedItemUrl = useRef('')
@@ -29,19 +27,6 @@ const TreeSelectionModalContent: FC = () => {
     manifestIndex: -1,
     itemIndex: -1,
   })
-
-
-  useEffect(() => {
-
-    async function initTree() {
-      const nodes = await getTreeNodes(collections)
-      if (!nodes) return
-
-      setTreeNodes(nodes)
-    }
-
-    initTree()
-  }, [collections])
 
 
   function updateInputValue(newValue: string) {

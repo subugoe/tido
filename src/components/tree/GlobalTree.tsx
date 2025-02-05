@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 
 import { dataStore } from '@/store/DataStore.tsx'
 
@@ -6,8 +6,7 @@ import Tree from '@/components/Tree.tsx'
 import TreeSelectionModal from '@/components/TreeSelectionModal.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree-modal/GlobalTreeSelectionModalContent.tsx'
 
-import { getTreeNodes, onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
-
+import { onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
 
 const GlobalTree: FC = () => {
 
@@ -17,7 +16,6 @@ const GlobalTree: FC = () => {
     itemIndex: -1
   })
 
-  const collections = dataStore(state => state.collections)
   const treeNodes = dataStore(state => state.treeNodes)
   const setTreeNodes = dataStore(state => state.setTreeNodes)
 
@@ -49,25 +47,12 @@ const GlobalTree: FC = () => {
     setPositionSelectedItem({ x: x, y: y })
   }
 
-  useEffect(() => {
-    async function initTree(collections: CollectionMap) {
-      const nodes = await getTreeNodes(collections)
-      if (!nodes) return
-
-      setTreeNodes(nodes)
-    }
-
-    initTree(collections)
-  }, [collections])
-
 
   return <div className="t-ml-16 t-mt-24">
-
     <Tree nodes={treeNodes} onSelect={onSelectNode} onExpand={onExpandNode} onCollapse={onCollapseNode}/>
     <TreeSelectionModal showPopover={showSelectionModal} setShowSelectionModal={setShowSelectionModal}
       Content={<GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current}/>}
       position={positionSelectedItem}/>
-
   </div>
 }
 
