@@ -20,7 +20,10 @@
           v-if="!isText(annotation)"
           :name="getIconName(annotation.body['x-content-type'])"
         />
-        <span v-html="annotation.body.value" />
+        <span
+          class="t-break-all"
+          v-html="annotation.body.value"
+        />
       </div>
     </div>
   </div>
