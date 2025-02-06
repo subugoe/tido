@@ -278,7 +278,7 @@ declare global {
     type: string,
     leaf?: boolean,
     expanded?: boolean,
-    children?: TreeNode[]
+    children: TreeNode[]
   }
 
   interface CollectionMap {

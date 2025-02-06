@@ -4,43 +4,33 @@ import { dataStore } from '@/store/DataStore.tsx'
 const TreeContext = createContext<TreeType | undefined>(undefined)
 
 interface TreeType {
-  onClick(node: TreeNode, target): void
+    onClick(node: TreeNode, target): void
 
-  onSelect(node: TreeNode, target): void
+    onSelect(node: TreeNode, target): void
 
-  onExpand(node: TreeNode, nodes: TreeNode[]): Promise<TreeNode[] | undefined>
-
-  onCollapse(node: TreeNode, nodes: TreeNode[]): Promise<TreeNode[] | undefined>
+    getChildren(node: TreeNode): Promise<TreeNode[]>
 }
 
 interface TreeProviderProps {
-  children?: ReactNode
+    children?: ReactNode
 
-  onSelect(node: TreeNode, target): void
+    onSelect(node: TreeNode, target): void
 
-  onExpand(node: TreeNode, nodes: TreeNode[]): Promise<TreeNode[] | undefined>
-
-  onCollapse(node: TreeNode, nodes: TreeNode[]): Promise<TreeNode[] | undefined>
+    getChildren(node: TreeNode): Promise<TreeNode[]>
 }
 
-const TreeProvider: FC<TreeProviderProps> = ({ children, onSelect, onExpand, onCollapse }) => {
+const TreeProvider: FC<TreeProviderProps> = ({ children, onSelect, getChildren }) => {
 
-  const treeNodes = dataStore(state => state.treeNodes)
-  const setTreeNodes = dataStore(state => state.setTreeNodes)
 
   async function onClick(node: TreeNode, target) {
-    if ('leaf' in node) onSelect(node, target)
-    else if (!node.expanded) {
-      const updatedTree = await onExpand(node, treeNodes)
-      if (updatedTree) setTreeNodes(updatedTree)
-    } else if (node.expanded) {
-      const updatedTree = await onCollapse(node, treeNodes)
-      if (updatedTree) setTreeNodes(updatedTree)
-    }
+    // can we get Children from this node ? -> we are dealing with a 'manifest' node or a 'collection' node
+    // if the node is not expanded and we get can get children - add the children to the node
+
+
   }
 
   return (
-    <TreeContext.Provider value={{ onClick, onSelect, onExpand, onCollapse }}>
+    <TreeContext.Provider value={{ onClick, onSelect, getChildren }}>
       {children}
     </TreeContext.Provider>
   )

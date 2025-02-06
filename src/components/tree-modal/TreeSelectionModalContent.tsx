@@ -8,7 +8,7 @@ import Tree from '@/components/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
 import { ClosePopover } from '@/components/ui/popover'
 
-import { onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
+import { getNodeIndices } from '@/utils/tree.ts'
 
 
 const TreeSelectionModalContent: FC = () => {
@@ -85,13 +85,13 @@ const TreeSelectionModalContent: FC = () => {
     <InputField width={80} updateInputValue={updateInputValue}/>
     <span>Or choose:</span>
 
-    <Tree nodes={treeNodes} onSelect={onSelect} onExpand={onExpand} onCollapse={onCollapse}/>
+    <Tree nodes={treeNodes} onSelect={onSelect}/>
 
     <div className="t-pb-4">
       <ClosePopover
         className='t-bg-blue-500 t-text-white t-rounded t-flex t-text-center t-pl-2 t-ml-[80%] t-mt-10 t-items-center t-justify-items-center t-w-16 t-h-10'
         onClick={() => handleSelectClick()}>
-        Select
+                Select
       </ClosePopover>
     </div>
   </div>

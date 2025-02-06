@@ -6,7 +6,7 @@ import Tree from '@/components/Tree.tsx'
 import Modal from '@/components/Modal.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree-modal/GlobalTreeSelectionModalContent.tsx'
 
-import { onExpand, onCollapse, getNodeIndices } from '@/utils/tree.ts'
+import { getChildren, getNodeIndices } from '@/utils/tree.ts'
 
 const GlobalTree: FC = () => {
 
@@ -32,8 +32,9 @@ const GlobalTree: FC = () => {
     setPositionSelectedItem(target.getBoundingClientRect())
   }
 
+
   return <div className="t-ml-16 t-mt-24">
-    <Tree nodes={treeNodes} onSelect={onSelectNode} onExpand={onExpand} onCollapse={onCollapse}/>
+    <Tree nodes={treeNodes} onSelect={onSelectNode} getChildren={getChildren}/>
     <Modal showPopover={showSelectionModal}
       Content={<GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current}/>}
       position={positionSelectedItem}/>
