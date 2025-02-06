@@ -1,5 +1,5 @@
 <template>
-  <div class="t-p-4">
+  <div class="t-p-4 t-overflow-auto">
     <AnnotationsList
       v-if="filteredAnnotations.length > 0"
       class="custom-font"
