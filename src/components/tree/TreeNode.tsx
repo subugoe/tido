@@ -11,7 +11,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
   const [hasChildren, setHasChildren] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const { onClick, getChildren } = useTree()
+  const { onSelect, getChildren } = useTree()
 
   const itemRef = useRef(null)
 
@@ -27,7 +27,8 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       toggleExpand()
       return
     }
-    onClick(node, e.target)
+    
+    onSelect(node, e.target)
   }
 
   const toggleExpand = () => {

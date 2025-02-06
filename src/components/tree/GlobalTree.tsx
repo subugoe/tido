@@ -33,7 +33,7 @@ const GlobalTree: FC = () => {
   }
 
 
-  return <div className="t-ml-16 t-mt-24">
+  return <div className="t-mt-24 t-ml-10 t-w-96">
     <Tree nodes={treeNodes} onSelect={onSelectNode} getChildren={getChildren}/>
     <Modal showPopover={showSelectionModal}
       Content={<GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current}/>}

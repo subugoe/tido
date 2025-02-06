@@ -10,7 +10,7 @@ interface TreeProps {
 
     onSelect(node: TreeNode, target): void,
 
-    getChildren(nodes: TreeNode): TreeNode[]
+    getChildren(node: TreeNode): Promise<TreeNode[]>
 }
 
 const Tree: FC<TreeProps> = ({ nodes, onSelect, getChildren }) => {
@@ -25,7 +25,7 @@ const Tree: FC<TreeProps> = ({ nodes, onSelect, getChildren }) => {
         ))
 
 
-  return <div className="tree t-h-96 t-overflow-hidden t-overflow-y-auto">
+  return <div className="tree t-h-fit t-w-96 t-overflow-hidden t-overflow-y-auto">
     <TreeProvider onSelect={onSelect} getChildren={getChildren}>
       {tree}
     </TreeProvider>
