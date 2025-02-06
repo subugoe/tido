@@ -1,9 +1,33 @@
-import { FC } from 'react'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
 
+import { configStore } from '@/store/ConfigStore.tsx'
 
-import TreeSelectionModal from '@/components/TreeSelectionModal'
+import Modal from '@/components/Modal.tsx'
+import TreeSelectionModalContent from '@/components/tree-modal/TreeSelectionModalContent.tsx'
+import IconRenderer from '@/components/base/IconRenderer.tsx'
 
-const TopBar: FC = () => {
+import { tree } from '@/utils/icons'
+import { cross } from '@/utils/icons'
+
+interface TopBarProps {
+  setShowGlobalTree: Dispatch<SetStateAction<boolean>>
+}
+
+const TopBar: FC<TopBarProps> = ({ setShowGlobalTree }) => {
+
+  const [iconHtmlString, setIconHtmlString] = useState(tree)
+  const showGlobalTree = configStore(state => state.config.globalTree)
+
+  function toggleIcon() {
+    if (iconHtmlString === tree) {
+      // we click the tree icon - now we show the global tree (set the value to true)
+      setShowGlobalTree(true)
+      setIconHtmlString(cross)
+    } else if (iconHtmlString === cross) {
+      setShowGlobalTree(false)
+      setIconHtmlString(tree)
+    }
+  }
 
   const addButton =
     <span
@@ -13,9 +37,14 @@ const TopBar: FC = () => {
 
 
   return <div className="t-flex t-flex-row t-ml-[6%] t-mt-10">
-    <TreeSelectionModal TriggerButton={addButton}/>
+    <button className={`t-mr-2 toggle-global-tree ${!showGlobalTree ? 't-hidden' : ''}`} onClick={() => toggleIcon()}>
+      <IconRenderer
+        htmlString={iconHtmlString}
+        width={8}
+        height={8}/>
+    </button>
+    <Modal TriggerButton={addButton} Content={<TreeSelectionModalContent/>}/>
   </div>
-
 }
 
 export default TopBar
