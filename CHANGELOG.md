@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.5.1](https://github.com/subugoe/tido/compare/v4.5.0...v4.5.1) (2025-02-06)
+
+
+### Bug Fixes
+
+* add breaking for annotation items ([1939fdc](https://github.com/subugoe/tido/commit/1939fdc5f501f8dbda7789078c748acf532d48c3))
+* add scroll to annotation views without tabs ([3a21d66](https://github.com/subugoe/tido/commit/3a21d66042f0ece3d7b54b54284c65f874d549b6))
+
 ## [4.5.0](https://github.com/subugoe/tido/compare/v4.4.0...v4.5.0) (2025-01-31)
 
 
