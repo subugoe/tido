@@ -155,17 +155,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     { value: "6", label: "6 - Variants" }
                   ],
                   conditional: {
-                    "1": [
-                      {
-                        name: "options",
-                        type: "group",
-                        label: "Tree Options",
-                        fields: [
-                          { name: "item", type: "text", label: "Item" },
-                          { name: "manifest", type: "text", label: "Manifest" }
-                        ]
-                      }
-                    ],
                     "2": [
                       {
                         name: "options",
