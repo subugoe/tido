@@ -1,0 +1,187 @@
+:root {
+  --pico-form-element-spacing-vertical: 0.5rem;
+}
+
+
+@media (min-width: 1280px) {
+  :root {
+    --pico-font-size: 118%;
+  }
+}
+input {
+  margin-bottom: 0 !important;
+}
+
+input[type="color"] {
+  display: block;
+  width: 120px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  padding-block: 0;
+  height: 100vh;
+}
+
+.header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.split-view {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.form-container {
+  flex: 1;
+  overflow: auto;
+  padding: 0 0.5rem;
+}
+
+.json-container {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  padding: 0 0.5rem;
+  position: relative;
+}
+
+pre {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+#copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+}
+
+.language {
+ margin-bottom: 1.5rem;
+}
+
+.key-value {
+  display: flex;
+}
+
+.key-value label + label {
+  margin-left: 1rem;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.field > label {
+  font-weight: 600;
+}
+
+.field .field > label {
+  font-weight: 400;
+  font-size: calc(var(--pico-font-size) * 0.8)
+}
+
+.field .field {
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+
+
+button {
+  padding: calc(var(--pico-form-element-spacing-vertical) * 0.6) var(--pico-form-element-spacing-horizontal);
+  font-size: calc(var(--pico-font-size) * 0.7)
+}
+
+button + button {
+  margin-left: 0.5rem;
+}
+
+.list-item {
+  display: flex;
+}
+
+.list-item button {
+  margin-left: 0.5rem;
+}
+
+
+.icon-select {
+  display: flex;
+  align-items: center;
+}
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 3rem);
+  gap: 5px;
+  justify-content: center;
+}
+
+.grid-item, .selected-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+}
+
+.selected-icon {
+  margin-right: 1rem;
+}
+
+.grid-item:hover {
+  background: var(--pico-code-background-color);
+}
+
+.grid-item.selected {
+  outline: 2px var(--pico-primary);
+}
+
+.buttons {
+  border-top: 1px solid var(--pico-form-element-border-color);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  opacity: 0.8;
+  animation: explode 1.5s ease-out forwards;
+}
+
+/* Random colors */
+.confetti:nth-child(3n) { background-color: yellow; }
+.confetti:nth-child(4n) { background-color: blue; }
+.confetti:nth-child(5n) { background-color: green; }
+.confetti:nth-child(6n) { background-color: pink; }
+
+/* Different sizes */
+.confetti:nth-child(odd) {
+  width: 8px;
+  height: 8px;
+}
+
+.confetti:nth-child(even) {
+  width: 12px;
+  height: 12px;
+}
+
+/* Confetti explosion animation */
+@keyframes explode {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) rotate(720deg);
+    opacity: 0;
+  }
+}
