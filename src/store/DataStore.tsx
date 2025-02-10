@@ -8,11 +8,14 @@ interface DataStoreType {
   initCollection: (url: string) => Promise<Collection>
   setTreeNodes: (newTreeNodes: TreeNode[]) => void,
   getCollection: (collectionUrl: string) => Promise<Collection>,
+  showGlobalTree: boolean,
+  setShowGlobalTree: (newValue: boolean) => void,
 }
 
 export const dataStore = create<DataStoreType>((set, get) => ({
   collections: {},
   treeNodes: [],
+  showGlobalTree: false,
   initCollection: async (url: string) => {
     const collection = await apiRequest<Collection>(url)
     const collections: CollectionMap = { ...get().collections }
@@ -30,5 +33,7 @@ export const dataStore = create<DataStoreType>((set, get) => ({
     const collection = await get().initCollection(collectionUrl)
     return collection
   },
-
+  setShowGlobalTree: (newValue: boolean) => {
+    set({ showGlobalTree: newValue })
+  }
 }))

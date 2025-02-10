@@ -1,10 +1,13 @@
 import { request } from '@/utils/http'
 
-export async function createTree(collectionsUrls: string[]) {
+export async function createCollectionNodes(collections: CollectionMap): Promise<TreeNode[]> {
+  const collectionsUrls = Object.keys(collections)
+  if (collectionsUrls.length === 0) return []
+
   const nodes: TreeNode[] = []
 
   for (let i = 0; i < collectionsUrls.length; i++) {
-    await createNode(collectionsUrls[i], i).then((node) => {
+    await createCollectionNode(collectionsUrls[i], i).then((node) => {
       nodes.push(node)
     })
   }
@@ -12,9 +15,9 @@ export async function createTree(collectionsUrls: string[]) {
   return nodes
 }
 
-async function createNode(url: string, key: number) {
-  const node: TreeNode = { key: '', id: '', type: '', label: '' }
-  
+async function createCollectionNode(url: string, key: number) {
+  const node: TreeNode = { key: '', id: '', type: '', label: '', children: [] }
+
   const response = await request<Collection>(url)
   if (!response.success) return node
 
@@ -50,10 +53,8 @@ export async function getChildren(node: TreeNode): Promise<TreeNode[]> {
       id: items[i].id,
       label: items[i].label ?? 'label not found',
       type: items[i].type,
-      expanded: false
+      children: []
     }
-
-    if (childNode.type === 'item') childNode.leaf = true
 
     childrenNodes.push(childNode)
   }
