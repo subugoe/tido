@@ -314,8 +314,12 @@ function createSelectInput(field, fullName, parentObj) {
   })
   input.addEventListener("change", function () {
 
+
     if (this.value === '') delete parentObj[field.name]
-    else parentObj[field.name] = this.value
+    else {
+      const isNumber = !isNaN(parseInt(this.value))
+      parentObj[field.name] = isNumber ? parseInt(this.value) : this.value
+    }
 
     updateJsonOutput()
     handleConditionalRendering(field, this.value, input.parentNode.parentNode, fullName, parentObj)
@@ -475,7 +479,6 @@ function createIconsGrid(callback) {
 }
 
 function updateJsonOutput() {
-  console.log(formData)
   document.getElementById("jsonOutput").textContent = JSON.stringify(formData, null, 2)
 }
 
