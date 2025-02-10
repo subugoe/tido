@@ -314,7 +314,6 @@ function createSelectInput(field, fullName, parentObj) {
   })
   input.addEventListener("change", function () {
 
-
     if (this.value === '') delete parentObj[field.name]
     else {
       const isNumber = !isNaN(parseInt(this.value))
@@ -437,6 +436,8 @@ function createIconSelectInput(field, fullName, parentObj) {
       selected.innerHTML = icons[icon]
       updateJsonOutput()
     })
+    const oldIconsGrid = content.querySelector('.icon-grid')
+    if (oldIconsGrid) oldIconsGrid.remove()
     content.insertBefore(iconsGrid, footer)
     dialog.setAttribute('open', '')
   }, 'Change'))
