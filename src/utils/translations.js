@@ -6,7 +6,7 @@ const navButtonsDefaultTextArray = ['next_item', 'previous_item', 'next_manifest
 
 export function areNavButtonsLabelsInConfig(config) {
     const lang = config['lang']
-    const translations = config.translations[lang]
+    const translations = config.translations?[lang]: {}
 
     for (let i = 0; i < navButtonsDefaultTextArray.length; i++) {
       if(!(navButtonsDefaultTextArray[i] in translations)) return false
@@ -18,7 +18,7 @@ export function areNavButtonsLabelsInConfig(config) {
 
 export function getNavButtonsLabels(config) {
     const lang = config['lang']
-    
+
     if (areNavButtonsLabelsInConfig(config)) {
       const translations = config.translations[lang]
       return [translations['next_item'], translations['previous_item'], translations['next_manifest'], translations['previous_manifest']]
