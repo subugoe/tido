@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.5.2](https://github.com/subugoe/tido/compare/v4.5.1...v4.5.2) (2025-02-10)
+
+
+### Bug Fixes
+
+* check whether 'translations' object and 'lang' are defined in custom config ([a77b600](https://github.com/subugoe/tido/commit/a77b60018fac93cd4129dbc2ad94f3affd01f2db))
+
+
+### Docs
+
+* add config builder page to demo ([#564](https://github.com/subugoe/tido/issues/564)) ([5aa9b03](https://github.com/subugoe/tido/commit/5aa9b031961c062a922b850d27c3758de6b2a3fa))
+* fix icons grid ([bb42952](https://github.com/subugoe/tido/commit/bb429525c11f36c81073e0cbf8538a325260fb0f))
+
 ### [4.5.1](https://github.com/subugoe/tido/compare/v4.5.0...v4.5.1) (2025-02-06)
 
 
