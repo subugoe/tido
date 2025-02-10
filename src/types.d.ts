@@ -278,11 +278,16 @@ declare global {
     type: string,
     leaf?: boolean,
     expanded?: boolean,
-    children?: TreeNode[]
+    children: TreeNode[]
   }
 
   interface CollectionMap {
     [key: string]: Collection
+  }
+
+  interface Position {
+    x: number,
+    y: number
   }
 }
 export {}
