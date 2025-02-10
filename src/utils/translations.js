@@ -5,7 +5,7 @@ import i18n from '@/i18n'
 const navButtonsDefaultTextArray = ['next_item', 'previous_item', 'next_manifest', 'previous_manifest']
 
 export function areNavButtonsLabelsInConfig(config) {
-    const lang = config['lang']
+    const lang = config['lang'] ?? 'en'
     const translations = config.translations?[lang]: {}
 
     for (let i = 0; i < navButtonsDefaultTextArray.length; i++) {
@@ -17,7 +17,7 @@ export function areNavButtonsLabelsInConfig(config) {
 
 
 export function getNavButtonsLabels(config) {
-    const lang = config['lang']
+    const lang = config['lang'] ?? 'en'
 
     if (areNavButtonsLabelsInConfig(config)) {
       const translations = config.translations[lang]
