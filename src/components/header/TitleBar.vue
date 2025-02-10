@@ -75,7 +75,7 @@ const manifestTitle = computed<string | undefined>(() => contentStore.manifest?.
 
 function isItemLabelInConfig(config) {
   const lang = config['lang']
-  const translations = config.translations[lang]
+  const translations = config.translations?[lang] : {}
   const numberKeys = Object.keys(translations).length
 
   if(numberKeys > 0) {
