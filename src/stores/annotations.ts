@@ -1,11 +1,12 @@
 import {defineStore} from 'pinia'
 import { ref, reactive } from 'vue';
 
+import {useConfigStore} from '@/stores/config';
+
 import * as AnnotationUtils from '@/utils/annotations';
 import {request} from '@/utils/http';
 import * as Utils from '@/utils';
 import {scrollIntoViewIfNeeded} from '@/utils';
-import {useConfigStore} from '@/stores/config';
 import TextEventBus from '@/utils/TextEventBus';
 
 import { getItemColorBasedOnIndex } from '@/utils/color';
@@ -99,8 +100,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
   const addSimpleAnnotation = (targetElement: HTMLElement, annotation: Annotation) => {
     const configStore = useConfigStore()
+
     const iconName: string = configStore.getIconByType(annotation.body['x-content-type']);
-    Utils.addIcon(targetElement, annotation, iconName);
+    if (configStore.config.showAnnotationIcons) Utils.addIcon(targetElement, annotation, iconName);
   }
 
   const addVariantAnnotation = (targetElement: HTMLElement, annotation: Annotation) => {
@@ -272,7 +274,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   };
 
   const removeSimpleAnnotation = (annotation: Annotation) => {
-    AnnotationUtils.removeIcon(annotation);
+    const configStore = useConfigStore()
+    if (configStore.config.showAnnotationIcons) AnnotationUtils.removeIcon(annotation);
   }
 
   const removeVariantAnnotation = (selector: string, annotation: Annotation) => {
@@ -282,12 +285,13 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   }
 
   const resetAnnotations = () => {
+    const configStore = useConfigStore()
     if (annotations.value !== null) {
       annotations.value.forEach((annotation) => {
         const selector = AnnotationUtils.generateTargetSelector(annotation);
         if (selector) {
           AnnotationUtils.highlightTargets(selector, {level: -1});
-          AnnotationUtils.removeIcon(annotation);
+          if (configStore.config.showAnnotationIcons) AnnotationUtils.removeIcon(annotation);
           if (AnnotationUtils.isVariant(annotation)) {
             annotation.body.value.witnesses.forEach(witness => {
               AnnotationUtils.removeWitness(selector, witness);

@@ -17,7 +17,7 @@
         @click="isText(annotation) ? ()=>{} : toggle(annotation)"
       >
         <AnnotationIcon
-          v-if="!isText(annotation)"
+          v-if="!isText(annotation) && showAnnotationUtils"
           :name="getIconName(annotation.body['x-content-type'])"
         />
         <span
@@ -34,6 +34,7 @@
 import { computed } from 'vue';
 import AnnotationIcon from '@/components/annotations/AnnotationIcon.vue';
 import {useAnnotationsStore} from "@/stores/annotations";
+import {useConfigStore} from "@/stores/config";
 
 interface AnnotationTypesMapping {
   [key: string]: string | 'annotation'
@@ -45,6 +46,7 @@ export interface Props {
 }
 
 const annotationStore = useAnnotationsStore();
+const configStore = useConfigStore()
 
 const props = withDefaults(defineProps<Props>(), {
   annotations: () => <Annotation[]> [],
@@ -52,6 +54,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const activeAnnotations = computed<ActiveAnnotation>(() => annotationStore.activeAnnotations);
 const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
+const showAnnotationUtils = computed<boolean>(() => configStore.config.showAnnotationIcons);
 
 const annotationTypesMapping = computed<AnnotationTypesMapping>(() => (
   // it returns an object with a varying number of 'key', 'value' pairs

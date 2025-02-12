@@ -15,6 +15,7 @@ import { i18n } from '@/i18n';
         collection: '',
         manifest: '',
         item: '',
+        showAnnotationIcons: false,
         panels: [
           {
             label: 'contents',
@@ -254,6 +255,11 @@ import { i18n } from '@/i18n';
       return !!(value);
     }
 
+    function validateAnnotationIcons(value: boolean) {
+        if (typeof value === 'boolean') return value
+        return false;
+    }
+
     function validateHeader(value, defaultValue) {
       if (!value) return false;
 
@@ -384,11 +390,12 @@ import { i18n } from '@/i18n';
 
     function discoverCustomConfig(customConfig, defaultConfig)  {
         const {
-          container, translations, collection, manifest, item, panels, lang, colors, header, labels
+          container, translations, collection, manifest, item, panels, lang, colors, header, labels, showAnnotationIcons
         } = customConfig;
 
         return {
           ...(validateContainer(container) && { container }),
+          ...(validateAnnotationIcons(showAnnotationIcons) && { showAnnotationIcons }),
           ...(validateCollection(collection) && { collection }),
           ...(validateManifest(manifest) && { manifest }),
           ...(validateItem(item) && { item }),
