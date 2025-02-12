@@ -1,0 +1,101 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "example/annotationPage",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "example/annotationCollection",
+    "label": "Synopsis connections"
+  },
+  "next": null,
+  "prev": null,
+  "items": [
+    {
+      "body": {
+        "x-content-type": "Edit",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": "Vivamus ut purus quis arcu faucibus fermentum."
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manifest-1-item-1-scroll-1"
+          },
+          "source": "example/manifest-1_example/manifest-1/item-1",
+          "format": "text/xml"
+        },
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manifest-2-item-1-scroll-1"
+          },
+          "source": "example/manifest-2_example/manifest-2/item-1",
+          "format": "text/xml"
+        },
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manifest-3-item-1-scroll-1"
+          },
+          "source": "example/manifest-3_example/manifest-3/item-1",
+          "format": "text/xml"
+        },
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manifest-4-item-1-scroll-1"
+          },
+          "source": "example/manifest-4_example/manifest-4/item-1",
+          "format": "text/xml"
+        }
+      ],
+      "type": "Annotation",
+      "id": "example/manifest-1/item-1/annotation-1"
+    },
+    {
+      "body": {
+        "x-content-type": "Edit",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": "Vivamus ut purus quis arcu faucibus fermentum."
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manifest-1-item-1-scroll-2"
+          },
+          "source": "example/manifest-1_example/manifest-1/item-1",
+          "format": "text/xml"
+        },
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manifest-2-item-1-scroll-2"
+          },
+          "source": "example/manifest-2_example/manifest-2/item-1",
+          "format": "text/xml"
+        },
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manifest-3-item-1-scroll-2"
+          },
+          "source": "example/manifest-3_example/manifest-3/item-1",
+          "format": "text/xml"
+        },
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manifest-4-item-1-scroll-2"
+          },
+          "source": "example/manifest-4_example/manifest-4/item-1",
+          "format": "text/xml"
+        }
+      ],
+      "type": "Annotation",
+      "id": "example/manifest-1/item-1/annotation-2"
+    }
+  ]
+}

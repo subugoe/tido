@@ -1,8 +1,11 @@
-import { ReactNode, createContext, useContext, useState, FC } from 'react'
+import { ReactNode, createContext, useContext, useState, FC, useEffect } from 'react'
+import { panelStore } from '@/store/PanelStore.tsx'
+import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {
   panelId: string
+  panelState: PanelState
 }
 
 interface PanelProviderProps {
@@ -12,9 +15,15 @@ interface PanelProviderProps {
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, id }) => {
   const [panelId] = useState<string>(id)
+  const panelState = panelStore(state => state.panels[panelId])
+  const activeTargetIndex = panelStore(state => state.panels[panelId].activeTargetIndex)
+
+  useEffect(() => {
+    selectSyncTargetByIndex(panelId, activeTargetIndex)
+  }, [activeTargetIndex])
 
   return (
-    <PanelContext.Provider value={{ panelId }}>
+    <PanelContext.Provider value={{ panelId, panelState }}>
       {children}
     </PanelContext.Provider>
   )

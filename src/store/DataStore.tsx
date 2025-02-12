@@ -2,11 +2,17 @@ import { create } from 'zustand'
 import { apiRequest } from '@/utils/api.ts'
 
 
+interface AnnotationMap {
+  [key: string]: Annotation[]
+}
+
 interface DataStoreType {
-  collections: CollectionMap,
-  treeNodes: TreeNode[],
+  collections: CollectionMap
+  annotations: AnnotationMap
+  treeNodes: TreeNode[]
   initCollection: (url: string) => Promise<Collection>
-  setTreeNodes: (newTreeNodes: TreeNode[]) => void,
+  initAnnotations: (collectionId: string, url: string) => Promise<void>
+  setTreeNodes: (newTreeNodes: TreeNode[]) => void
   getCollection: (collectionUrl: string) => Promise<Collection>,
   showGlobalTree: boolean,
   setShowGlobalTree: (newValue: boolean) => void,
@@ -14,6 +20,7 @@ interface DataStoreType {
 
 export const dataStore = create<DataStoreType>((set, get) => ({
   collections: {},
+  annotations: {},
   treeNodes: [],
   showGlobalTree: false,
   initCollection: async (url: string) => {
@@ -21,12 +28,21 @@ export const dataStore = create<DataStoreType>((set, get) => ({
     const collections: CollectionMap = { ...get().collections }
     collections[collection.id] = collection
     set({ collections })
+
+    if (collection.annotationCollection) {
+      await get().initAnnotations(collection.id, collection.annotationCollection)
+    }
+
     return collection
+  },
+  initAnnotations: async (collectionId: string, url: string) => {
+    const annotationsCollection = await apiRequest<AnnotationCollection>(url)
+    const annotationPage = await apiRequest<AnnotationPage>(annotationsCollection.first)
+    set({ annotations: { ...get().annotations, [collectionId]: annotationPage.items } })
   },
   setTreeNodes: (newTreeNodes: TreeNode[]) => {
     set({ treeNodes: newTreeNodes })
   },
-
   async getCollection(collectionUrl: string): Promise<Collection> {
     if (collectionUrl in get().collections) return get().collections[collectionUrl]
 

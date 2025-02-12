@@ -45,15 +45,31 @@
           panels: [
             {
               entrypoint: {
-                url: "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
+                url: "http://localhost:8181/example/textapi/collection.json",
                 type: "collection",
               },
+              manifestIndex: 0,
             },
             {
               entrypoint: {
-                url: "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json",
+                url: "http://localhost:8181/example/textapi/collection.json",
                 type: "collection",
               },
+              manifestIndex: 1,
+            },
+            {
+              entrypoint: {
+                url: "http://localhost:8181/example/textapi/collection.json",
+                type: "collection",
+              },
+              manifestIndex: 2,
+            },
+            {
+              entrypoint: {
+                url: "http://localhost:8181/example/textapi/collection.json",
+                type: "collection",
+              },
+              manifestIndex: 3,
             },
           ],
         });
