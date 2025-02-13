@@ -25,8 +25,13 @@
   }
 }
 
-[data-annotation-level='1'],
-[data-annotation-level='1'] *:not(figure) {
+[data-annotation-level] {
+  figure, svg {
+    border: 0 !important;
+  }
+}
+
+[data-annotation-level='1'] {
   background-color: #E3F2FD;
   border-bottom: 1px solid #333;
 
