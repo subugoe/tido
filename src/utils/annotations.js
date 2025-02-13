@@ -29,70 +29,11 @@ export const createSvgIcon = (name) => {
   if (!iconString) return null;
 
   const figure = document.createElement('figure');
-  const style = document.createElement('style');
-  figure.classList.add(...['t-relative', 't-inline-flex', 't-w-4', 't-h-4', 'after:t-absolute', 'after:t-left-0', 'after:t-top-0', 'after:t-w-full', 'after:t-h-full']);
+  figure.classList.add(...['t-relative', 't-inline-flex', 't-w-4', 't-h-4', 't-mb-[2px]', 't-ml-0.5', 't-text-primary', 't-align-middle']);
   figure.classList.add(`icon-${name}`);
-  style.innerHTML = `
-    .icon-${name}::after {
-      content: url('data:image/svg+xml; utf8, ${iconString}') !important;
-    }
-  `;
-  figure.appendChild(style);
+  figure.innerHTML = iconString;
   return figure;
 };
-
-export async function createOrUpdateTooltip(element, { closest: closestAnnotation, other: otherAnnotations }, root) {
-  const tooltipId = 'annotation-tooltip';
-  let tooltipEl = root.querySelector(tooltipId);
-
-  if (!tooltipEl) {
-    tooltipEl = document.createElement('div');
-    root.onmousemove = null;
-
-    root.addEventListener('mousemove', (event) => {
-      const { clientX: x, clientY: y } = event;
-      tooltipEl.style.top = `${y}px`;
-      tooltipEl.style.left = `${x}px`;
-    });
-    root.append(tooltipEl);
-  }
-
-  tooltipEl.id = tooltipId;
-
-  // Display the current annotation that the user has hovered on
-  const closestAnnotationTemplate = `
-    <div class="referenced-annotation">
-      ${createSvgIcon(closestAnnotation.name)?.outerHTML}<span>${closestAnnotation.value}</span>
-    </div>
-  `;
-
-  let otherAnnotationsTemplate = '';
-
-  otherAnnotations.forEach((item) => {
-    otherAnnotationsTemplate += `
-      <div class="referenced-annotation">
-        ${createSvgIcon(item.name)?.outerHTML}<span>${item.value}</span>
-      </div>
-      `;
-  });
-
-  let template = `
-    <div class="tooltip-header">${closestAnnotationTemplate}</div>`;
-
-  if (otherAnnotations.length > 0) {
-    template += `<div class="tooltip-body q-mt-2">
-        <h4 class="q-my-2">${i18n.global.t('more_annotations')}:</h4>
-        <div class="text-body2">${otherAnnotationsTemplate}</div>
-      </div>
-    `;
-  }
-
-  tooltipEl.innerHTML = template;
-
-  setTimeout(() => tooltipEl.classList.add('annotation-animated-tooltip'), 10);
-
-  return tooltipEl;
-}
 
 export function getNewLevel(element, operation) {
   const currentLevel = element.hasAttribute('data-annotation-level')
@@ -205,6 +146,7 @@ export function handleRangeSelector(selector) {
 }
 
 export function addIcon(element, annotation, iconName) {
+  console.log('add')
   let foundSvg = false;
 
   [...element.children].forEach((el) => {
@@ -248,7 +190,7 @@ export function addWitness(target, witness, color) {
   if (targetIndex < 0) return;
 
   const witnessEl = createWitnessEl(witness, color)
-  
+
   let isWrapper = false
   if (targetIndex === 0) {
     // target is the only child element
@@ -261,8 +203,8 @@ export function addWitness(target, witness, color) {
     const wrapper = parentEl.children[targetIndex-1]
     wrapper.appendChild(witnessEl)
   } else {
-      // witnesses wrapper which holds the witnesses 'chips' is not yet created -> we add the first witness 
-      // create witnesses Html 
+      // witnesses wrapper which holds the witnesses 'chips' is not yet created -> we add the first witness
+      // create witnesses Html
       const wrapper = createWitnessesWrapper()
       wrapper.appendChild(witnessEl)
       parentEl.insertBefore(wrapper, target)
@@ -311,7 +253,7 @@ export function removeWitness(selector, witness) {
   if (!wrapper) return;
   if (Array.from(wrapper.children).length === 0) return;
 
-  const witnessEl = Array.from(wrapper.children).filter(item => item.innerHTML === witness)  
+  const witnessEl = Array.from(wrapper.children).filter(item => item.innerHTML === witness)
   // witEl: refers to the current Witness chip that we will remove
   if (witnessEl.length > 0) witnessEl[0].remove()
 }
@@ -328,7 +270,7 @@ export function getWitnessesWrapper(selector) {
   if(targetIndex < 1) return null
 
   // witnesses el is placed before the target
-  return parentEl.children[targetIndex-1] 
+  return parentEl.children[targetIndex-1]
 }
 
 export function getWitnessesList(wrapper) {
@@ -355,7 +297,7 @@ export function getVariantAnnotations(annotations, type) {
   annotations.forEach((annotation) => {
       if (annotation.body['x-content-type'] === type) list.push(annotation)
     })
-  
+
   return list
 }
 
