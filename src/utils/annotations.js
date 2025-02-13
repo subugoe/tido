@@ -1,6 +1,5 @@
 import * as Utils from '@/utils/index';
 import { getIcon } from '@/utils/icons';
-import { i18n } from '@/i18n';
 import colors from "tailwindcss/colors";
 
 
@@ -146,7 +145,6 @@ export function handleRangeSelector(selector) {
 }
 
 export function addIcon(element, annotation, iconName) {
-  console.log('add')
   let foundSvg = false;
 
   [...element.children].forEach((el) => {
