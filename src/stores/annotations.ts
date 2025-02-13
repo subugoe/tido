@@ -318,59 +318,6 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     }
   };
 
-  const addHighlightHoverListeners = () => {
-    const annotationElements = Array.from(document.querySelectorAll('[data-annotation]'));
-
-    const tooltipEl = null;
-    const configStore = useConfigStore()
-
-    // Annotations can be nested, so we filter out all outer elements from this selection and
-    // iterate over the deepest elements
-    annotationElements.forEach((el) => {
-      el.addEventListener(
-        'mouseenter',
-        ({clientX: x, clientY: y}) => {
-          let elementFromPoint = document.elementFromPoint(x, y);
-
-          if (!elementFromPoint.hasAttribute('data-annotation')) {
-            elementFromPoint = null;
-          }
-
-          const currentElement = elementFromPoint ?? el;
-
-          const annotationTooltipModels = filteredAnnotations.value.reduce((acc, curr) => {
-            const {id} = curr;
-            const name = configStore.getIconByType(curr.body['x-content-type'])
-            acc[id] = {
-              value: curr.body.value,
-              name,
-            };
-            return acc;
-          }, {});
-
-          const currentAnnotations = Utils.getValuesFromAttribute(currentElement, 'data-annotation-ids');
-          const closestAnnotationId = currentAnnotations[currentAnnotations.length - 1];
-          const closestAnnotationTooltipModel = annotationTooltipModels[closestAnnotationId];
-          let annotationIds = discoverParentAnnotationIds(currentElement);
-          annotationIds = discoverChildAnnotationIds(currentElement, annotationIds);
-
-          const otherAnnotationTooltipModels = Object.keys(annotationIds)
-            .map((id) => annotationTooltipModels[id])
-            .filter((m) => m);
-
-          AnnotationUtils.createOrUpdateTooltip.bind(
-            this,
-            currentElement,
-            {closest: closestAnnotationTooltipModel, other: otherAnnotationTooltipModels},
-            document.getElementById('text-content'),
-          )();
-        },
-        false,
-      );
-      el.addEventListener('mouseout', () => tooltipEl.remove(), false);
-    });
-  };
-
   const addHighlightClickListeners = () => {
     const textEl = document.querySelector('#text-content>div>*');
 
@@ -517,7 +464,6 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     removeActiveAnnotation,
     resetAnnotations,
     initAnnotations,
-    addHighlightHoverListeners,
     addHighlightClickListeners,
     selectAll,
     selectNone,

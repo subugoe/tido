@@ -81,9 +81,6 @@ async function loadContent(url) {
       annotationStore.addHighlightAttributesToText(root);
       await annotationStore.addHighlightClickListeners();
 
-      // TODO: Enable Hover + Tooltip feature when reqs are clarified
-      // await store.dispatch('annotations/addHighlightHoverListeners');
-
       contentStore.setActiveContentUrl(props.url);
     }, 100);
   } catch (err) {
