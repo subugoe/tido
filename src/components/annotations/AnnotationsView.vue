@@ -73,7 +73,11 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
   // TODO: it might be better to check the activeAnnotations instead
   const targetIsSelected = parseInt(target.getAttribute('data-annotation-level'), 10) > 0;
 
+  const listItems = []
   Object.keys(annotationIds).forEach((id) => {
+    const el = document.querySelector(`[data-annotation-id="${id}"]`);
+    if (el) listItems.push(el)
+
     // We need to check here if the right annotations panel tab is active
     // a.k.a. it exists in the current filteredAnnotations
     const annotation = filteredAnnotations.value.find((filtered) => filtered.id === id);
@@ -85,6 +89,11 @@ const unsubscribe = TextEventBus.on('click', ({ target }) => {
       }
     }
   });
+
+  if (listItems.length > 0) {
+    // Scroll to the first list item in annotation list
+    Utils.scrollIntoViewIfNeeded(listItems[0], listItems[0].closest('.panel-body'));
+  }
 })
 
 onBeforeUnmount(() => unsubscribe())
