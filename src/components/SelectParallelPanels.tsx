@@ -39,8 +39,9 @@ const SelectParallelPanels: FC = () => {
   }
 
   function unsync() {
-    setSelected({})
-    update(Object.keys(selected))
+    const newSelected = {}
+    setSelected(newSelected)
+    update(Object.keys(newSelected))
   }
 
   return <>
@@ -51,7 +52,7 @@ const SelectParallelPanels: FC = () => {
     </div>
 
     <Button onClick={confirm}>Confirm</Button>
-    <Button onClick={unsync}>Unsync</Button>
+    <Button onClick={unsync} className="t-ml-2">Unsync</Button>
   </>
 
 }
