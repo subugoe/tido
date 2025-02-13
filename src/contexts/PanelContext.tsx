@@ -19,7 +19,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, id }) => {
   const activeTargetIndex = panelStore(state => state.panels[panelId].activeTargetIndex)
 
   useEffect(() => {
-    selectSyncTargetByIndex(panelId, activeTargetIndex)
+    if (activeTargetIndex > -1) selectSyncTargetByIndex(panelId, activeTargetIndex)
   }, [activeTargetIndex])
 
   return (
