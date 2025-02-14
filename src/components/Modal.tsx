@@ -6,11 +6,10 @@ interface ModalProps {
     children: ReactNode,
     TriggerButton?: ReactNode,
     showPopover?: boolean,
-    position?: Position
 }
 
 const Modal: FC<ModalProps> = ({
-  children, TriggerButton, showPopover, position
+  children, TriggerButton, showPopover
 }) => {
 
   const [isOpen, setIsOpen] = useState(false)
@@ -21,22 +20,16 @@ const Modal: FC<ModalProps> = ({
 
   useEffect(() => {
     if (showPopover) setIsOpen(true)
-  }, [position])
+  }, [showPopover])
 
-  return <div className="local-tree-modal">
-    <Popover open={isOpen} onOpenChange={handleOpenChange}>
-      <PopoverTrigger asChild>
-        {TriggerButton}
-      </PopoverTrigger>
-      <PopoverContent
-        style={{
-          top: `${position?.y + 40}px`,
-          left: `${position?.x}px`,
-        }}>
-        {children}
-      </PopoverContent>
-    </Popover>
-  </div>
+  return <Popover open={isOpen} onOpenChange={handleOpenChange}>
+    <PopoverTrigger asChild>
+      {TriggerButton}
+    </PopoverTrigger>
+    <PopoverContent>
+      {children}
+    </PopoverContent>
+  </Popover>
 }
 
 export default Modal

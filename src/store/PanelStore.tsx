@@ -4,9 +4,10 @@ interface PanelStates {
   [id: string]: PanelState
 }
 
-interface ContentStoreTypes {
+interface PanelStoreTypes {
   panels: PanelStates // or panels: each panel has one opened item
-  addPanelContent: (id: string, newPanel: PanelState) => void
+  activeTargetIndex: number
+  addPanelContent: (newPanel: PanelState) => void
   updatePanels: (panelId: string, updatedItem: PanelState) => void
   updateContentToggleIndex: (
     panelIndex: string,
@@ -14,13 +15,15 @@ interface ContentStoreTypes {
   ) => void
   updateViewIndex: (panelId: string, newViewIndex: number) => void
   getPanel: (panelId: string) => PanelState | null
+  setActiveTargetIndex: (panelId: string, index: number) => void
 }
 
-export const contentStore = create<ContentStoreTypes>((set, get) => ({
+export const panelStore = create<PanelStoreTypes>((set, get) => ({
   panels: {},
-  addPanelContent: (id: string, newPanel: PanelState) => {
+  activeTargetIndex: -1,
+  addPanelContent: (newPanel: PanelState) => {
     const newPanels = { ...get().panels }
-    newPanels[id] = newPanel
+    newPanels[newPanel.id] = newPanel
     set({ panels: newPanels })
   },
 
@@ -50,4 +53,9 @@ export const contentStore = create<ContentStoreTypes>((set, get) => ({
     if (!(panelId in get().panels)) return null
     return get().panels[panelId]
   },
+  setActiveTargetIndex: (panelId: string, index: number) => {
+    const panelState = get().panels[panelId]
+    panelState.activeTargetIndex = index
+    get().updatePanels(panelId, panelState)
+  }
 }))

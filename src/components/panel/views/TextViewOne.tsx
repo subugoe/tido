@@ -1,6 +1,5 @@
 import { FC } from 'react'
-
-import CustomHTML from '@/components/CustomHTML'
+import TextRenderer from '@/components/panel/TextRenderer.tsx'
 
 interface TextViewOneProps {
   textHtml: string
@@ -8,8 +7,8 @@ interface TextViewOneProps {
 
 const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
   return (
-    <div>
-      <CustomHTML textHtml={textHtml} width="100" />
+    <div className="t-flex-1 t-overflow-hidden">
+      <TextRenderer htmlString={textHtml} />
     </div>
   )
 }
