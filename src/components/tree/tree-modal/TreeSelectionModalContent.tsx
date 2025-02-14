@@ -4,7 +4,7 @@ import { configStore } from '@/store/ConfigStore'
 import { dataStore } from '@/store/DataStore'
 
 
-import Tree from '@/components/Tree.tsx'
+import Tree from '@/components/tree/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
 import { ClosePopover } from '@/components/ui/popover'
 
@@ -12,13 +12,9 @@ import { getChildren, getNodeIndices } from '@/utils/tree.ts'
 
 
 const TreeSelectionModalContent: FC = () => {
-
   const addNewPanel = configStore(state => state.addNewPanel)
-
   const initCollection = dataStore(state => state.initCollection)
-
   const treeNodes = dataStore(state => state.treeNodes)
-
   const inputValue = useRef('')
   const clickedItemUrl = useRef('')
 
@@ -27,7 +23,6 @@ const TreeSelectionModalContent: FC = () => {
     manifestIndex: -1,
     itemIndex: -1,
   })
-
 
   function updateInputValue(newValue: string) {
     inputValue.current = newValue
@@ -78,9 +73,7 @@ const TreeSelectionModalContent: FC = () => {
   }
 
 
-  return <div
-    className="t-flex t-flex-col t-pt-4 t-pl-3 t-w-[500px] t-shadow-md t-border-[1px] t-border-solid t-border-gray-300 t-rounded-md">
-
+  return <div className="t-flex t-flex-col">
     <span className="t-font-bold t-mb-2">Enter a collection URL</span>
     <InputField width={80} updateInputValue={updateInputValue}/>
     <span>Or choose:</span>
