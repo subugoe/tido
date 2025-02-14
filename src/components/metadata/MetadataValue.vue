@@ -1,5 +1,8 @@
 <template>
-  <span class="metadata-value" v-html="value" />
+  <span
+    class="metadata-value"
+    v-html="value"
+  />
 </template>
 
 <script setup lang="ts">
@@ -23,9 +26,5 @@ withDefaults(defineProps<Props>(), {
 .url-text {
   display: flex;
   padding-right: 4px;
-}
-
-.metadata-value {
-  margin-left:10px;
 }
 </style>

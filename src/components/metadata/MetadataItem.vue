@@ -4,7 +4,7 @@
       v-if="!isLink()"
       class="t-font-semibold t-text-sm t-text-gray-400"
     >
-     {{ $t(label) }}
+      {{ $t(label) }}
     </h4>
     <MetadataLink
       v-if="isLink()"
@@ -12,7 +12,7 @@
       :text="item.value"
     />
     <MetadataValue
-      v-else
+      v-else-if="item.value"
       :value="item.value"
     />
     <CopyCitation
@@ -67,6 +67,10 @@ function showCopyCitation(key, config) {
 <style scoped>
 .nested-metadata {
   margin-left: 8px;
-  margin-top: 2.5px;
+  margin-top: 2px;
+}
+
+.nested-metadata + .nested-metadata {
+  margin-top: 0.5rem;
 }
 </style>
