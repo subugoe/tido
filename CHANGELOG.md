@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.6.0](https://github.com/subugoe/tido/compare/v4.5.2...v4.6.0) (2025-02-14)
+
+
+### Features
+
+* scroll to annotation item when clicked in text ([e563a3d](https://github.com/subugoe/tido/commit/e563a3d294e3924323c2ec10f73ce1b05702e675))
+
+
+### Bug Fixes
+
+* display primary color on annotation icons in text ([5f0cca5](https://github.com/subugoe/tido/commit/5f0cca5d8740bcf8cc52a4997700bb73628e2ee0))
+* nested metadata display ([#570](https://github.com/subugoe/tido/issues/570)) ([7610196](https://github.com/subugoe/tido/commit/761019635a23d39f31faa715f645a1d0516c19f1))
+
+
+### Refactoring
+
+* remove unused ([28851c8](https://github.com/subugoe/tido/commit/28851c84ee62c5e79837e03f494be6922c527d02))
+
 ### [4.5.2](https://github.com/subugoe/tido/compare/v4.5.1...v4.5.2) (2025-02-10)
 
 
