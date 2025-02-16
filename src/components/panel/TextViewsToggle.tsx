@@ -34,7 +34,7 @@ const TextViewsToggle: FC = () => {
 
   const buttons = Object.keys(textViewsIcons).map((title, i) => (
     <button
-      className="t-px-1 t-py-1 t-w-7 t-h-7 t-rounded t-mr-3"
+      className="t-px-1 t-py-1 t-w-7 t-h-7 t-rounded t-mr-1"
       key={i}
       onClick={(e) => handleTextViewClick(e, i)}
       style={{
