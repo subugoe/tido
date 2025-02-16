@@ -79,11 +79,8 @@ const Panel: FC<Props> = ({ config }) => {
       { !loading && !error && panelId &&
         <PanelProvider id={panelId}>
           {isScrollPanel && <ScrollPanelMenu className="t-absolute t-top-0 t-left-1/2 -t-translate-x-1/2" /> }
-          <PanelTopBar/>
-          <div className="t-flex t-flex-col t-items-center t-mb-6">
-            <ContentTypesToggle/>
-          </div>
-          <PanelCentralContent/>
+          <PanelHeader />
+          <PanelCentralContent />
         </PanelProvider>
       }
     </div>
