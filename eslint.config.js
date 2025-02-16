@@ -23,6 +23,9 @@ export default tseslint.config(
       "react/jsx-curly-spacing": ["error", {"when": "never"}],
       "react/jsx-equals-spacing": ["error", "never"],
       "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }],
+      "react/jsx-tag-spacing": ["error", {
+        "beforeSelfClosing": "always",
+      }],
       "@/quotes": [
         "error",
         "single",

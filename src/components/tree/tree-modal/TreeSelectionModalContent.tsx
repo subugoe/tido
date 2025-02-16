@@ -75,10 +75,10 @@ const TreeSelectionModalContent: FC = () => {
 
   return <div className="t-flex t-flex-col">
     <span className="t-font-bold t-mb-2">Enter a collection URL</span>
-    <InputField width={80} updateInputValue={updateInputValue}/>
+    <InputField width={80} updateInputValue={updateInputValue} />
     <span>Or choose:</span>
 
-    <Tree nodes={treeNodes} onSelect={onSelect} getChildren={getChildren}/>
+    <Tree nodes={treeNodes} onSelect={onSelect} getChildren={getChildren} />
 
     <div className="t-pb-4">
       <ClosePopover

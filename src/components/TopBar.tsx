@@ -39,7 +39,7 @@ const TopBar: FC = () => {
         height={8} />
     </button>
     <Modal TriggerButton={<Button>New</Button>}>
-      <TreeSelectionModalContent/>
+      <TreeSelectionModalContent />
     </Modal>
     <Modal TriggerButton={<Button>Sync Panels</Button>}>
       <SelectParallelPanels />
