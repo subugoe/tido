@@ -40,7 +40,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
         onClick={(e) => handleNodeClick(e)}> {node.label}</div>
       {node.children?.map((item: TreeNode, i) => (
         <ul className="t-ml-2" key={i}>
-          <TreeNode node={item}/>
+          <TreeNode node={item} />
         </ul>
       ))}
     </div>

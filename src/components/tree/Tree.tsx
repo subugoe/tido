@@ -16,7 +16,7 @@ const Tree: FC<TreeProps> = ({ nodes, onSelect, getChildren }) => {
     nodes?.length > 0 &&
     nodes.map((collection, i) => (
       <div key={i}>
-        <TreeNode node={collection}/>
+        <TreeNode node={collection} />
       </div>
     ))
 

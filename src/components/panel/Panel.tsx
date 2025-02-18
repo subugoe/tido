@@ -1,8 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 
-import ContentTypesToggle from '@/components/panel/ContentTypesToggle'
 import PanelCentralContent from '@/components/panel/views/PanelCentralContent'
-import PanelTopBar from '@/components/panel/PanelTopBar'
+import PanelHeader from '@/components/panel/PanelHeader.tsx'
 
 import ErrorComponent from '@/components/ErrorComponent'
 import { PanelProvider } from '@/contexts/PanelContext.tsx'
@@ -70,7 +69,7 @@ const Panel: FC<Props> = ({ config }) => {
   return (
     <div
       className={
-        `panel t-relative t-flex t-flex-col t-w-[600px] t-border-solid t-border-2 t-rounded-lg t-px-2.5 t-pt-8 t-pb-6
+        `panel t-relative t-flex t-flex-col t-w-[600px] t-border-solid t-border-2 t-rounded-lg t-p-2
         ${isScrollPanel ? 't-border-amber-300 t-ring-4 t-ring-amber-50' : 't-border-slate-200' }
       `}
     >
@@ -79,11 +78,8 @@ const Panel: FC<Props> = ({ config }) => {
       { !loading && !error && panelId &&
         <PanelProvider id={panelId}>
           {isScrollPanel && <ScrollPanelMenu className="t-absolute t-top-0 t-left-1/2 -t-translate-x-1/2" /> }
-          <PanelTopBar/>
-          <div className="t-flex t-flex-col t-items-center t-mb-6">
-            <ContentTypesToggle/>
-          </div>
-          <PanelCentralContent/>
+          <PanelHeader />
+          <PanelCentralContent />
         </PanelProvider>
       }
     </div>
