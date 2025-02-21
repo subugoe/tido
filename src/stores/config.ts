@@ -281,7 +281,7 @@ import { i18n } from '@/i18n';
     }
 
     function validateFitPanels(value) {
-      return !!(value);
+      return typeof value === 'boolean';
     }
 
       function createDefaultActiveViews(panelsConfig) {
