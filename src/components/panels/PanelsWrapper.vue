@@ -13,7 +13,11 @@
         :key="`pc${i}`"
         :panel="panel"
         :active-view="getActiveView(i)"
-        :class="{ 't-ml-4': i > 0 && !isMobile, 't-ml-2': i > 0 && isMobile, 't-mr-4': i === panels.length - 1 && isMobile }"
+        :class="{
+          't-ml-4': i > 0 && panels[i-1].show && !isMobile,
+          't-ml-2': i > 0 && panels[i-1].show && isMobile,
+          't-mr-4': i === panels.length - 1 && isMobile
+        }"
         @active-view="onActiveViewChange($event, i)"
       />
     </div>
