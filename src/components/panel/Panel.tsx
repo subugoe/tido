@@ -8,9 +8,11 @@ import { PanelProvider } from '@/contexts/PanelContext.tsx'
 import { dataStore } from '@/store/DataStore.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { panelStore } from '@/store/PanelStore.tsx'
-import { getContentTypes } from '@/utils/panel.ts'
+import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { scrollStore } from '@/store/ScrollStore.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
+
+import { getSupport } from '@/utils/support-styling.ts'
 
 interface Props {
   config: PanelConfig
@@ -36,6 +38,13 @@ const Panel: FC<Props> = ({ config }) => {
         const manifest = await apiRequest<Manifest>(collection.sequence[config.manifestIndex ?? 0].id)
         const item = await apiRequest<Item>(manifest.sequence[config.itemIndex ?? 0].id)
         const contentTypes: string[] = getContentTypes(item.content)
+
+        const { support } = manifest
+
+        if (support && support.length > 0 && isNewManifest(manifest)) {
+          // Support can be loaded for a new manifest
+          await getSupport(support)
+        }
 
         addPanelContent({
           id: panelId,
