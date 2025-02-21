@@ -253,6 +253,7 @@ export default {
     function updateFlexValues(fitPanels: boolean, widthMultiplier: number, isMobile: boolean) {
       if (fitPanels) {
         flexBasis.value = '0%';
+        flexShrink.value = 1;
         flexGrow.value = getValidatedWidthConfig(widthMultiplier);
       } else {
         flexBasis.value = isMobile
