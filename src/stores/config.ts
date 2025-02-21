@@ -15,6 +15,7 @@ import { i18n } from '@/i18n';
         collection: '',
         manifest: '',
         item: '',
+        fitPanels: true,
         panels: [
           {
             label: 'contents',
@@ -279,6 +280,10 @@ import { i18n } from '@/i18n';
       return isValid;
     }
 
+    function validateFitPanels(value) {
+      return !!(value);
+    }
+
       function createDefaultActiveViews(panelsConfig) {
         return panelsConfig
           .filter((p) => p.views && p.views.length > 0)
@@ -384,7 +389,7 @@ import { i18n } from '@/i18n';
 
     function discoverCustomConfig(customConfig, defaultConfig)  {
         const {
-          container, translations, collection, manifest, item, panels, lang, colors, header, labels
+          container, translations, collection, manifest, item, panels, lang, colors, header, labels, fitPanels
         } = customConfig;
 
         return {
@@ -398,6 +403,7 @@ import { i18n } from '@/i18n';
           ...(validateColors(colors) && { colors }),
           ...(validateHeader(header, defaultConfig.header) && { header }),
           ...(validateLabels(labels, defaultConfig.labels) && { labels }),
+          ...(validateFitPanels(fitPanels) && { fitPanels }),
         };
       }
 
