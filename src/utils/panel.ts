@@ -1,4 +1,5 @@
 import { request } from '@/utils/http'
+import { panelStore } from '@/store/PanelStore.tsx'
 
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
@@ -54,4 +55,14 @@ export function getUniquePanels(panels: PanelConfig[] | undefined) {
     index === self.findIndex((panel) => panel.entrypoint.url === p.entrypoint.url))
 
   return uniquePanels
+}
+
+export function isNewManifest(manifest: Manifest): boolean {
+  const panels = panelStore.getState().panels
+
+  for (const key in panels) {
+    if (manifest.id === panels[key].manifest.id) return false
+  }
+
+  return true
 }
