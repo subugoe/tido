@@ -1,9 +1,10 @@
 import { FC, MouseEvent } from 'react'
 import { textViewOne, textView, splitView, imageView } from '@/utils/icons'
-import CustomHTML from '@/components/CustomHTML'
 
 import { panelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext'
+import { Button } from '@/components/ui/button.tsx'
+import CustomHTML from '@/components/CustomHTML.tsx'
 
 interface IconKeys {
   viewOne: string
@@ -32,25 +33,18 @@ const TextViewsToggle: FC = () => {
     image: imageView,
   }
 
-  const buttons = Object.keys(textViewsIcons).map((title, i) => (
-    <button
-      className="t-px-1 t-py-1 t-w-7 t-h-7 t-rounded t-mr-1"
-      key={i}
-      onClick={(e) => handleTextViewClick(e, i)}
-      style={{
-        backgroundColor: viewIndex === i ? '#E5E7EB' : 'transparent',
-      }}
-    >
-      <CustomHTML
-        textHtml={textViewsIcons[title as keyof IconKeys]}
-        icon={{ type: 'icon', width: 3, height: 2 }}
-      />
-    </button>
-  ))
-
   return (
-    <div className="text-views-toggle t-flex t-row t-ml-auto t-p-1 t-rounded-md t-h-8">
-      {buttons}
+    <div className="text-views-toggle t-flex t-row t-ml-auto t-rounded-md t-h-8 t-space-x-1 -t-mr-1">
+      {Object.keys(textViewsIcons).map((title, i) => (
+        <Button
+          key={i}
+          onClick={(e) => handleTextViewClick(e, i)}
+          variant={viewIndex === i ? 'secondary' : 'ghost'}
+          size="icon"
+        >
+          <CustomHTML textHtml={textViewsIcons[title as keyof IconKeys]}></CustomHTML>
+        </Button>
+      ))}
     </div>
   )
 }
