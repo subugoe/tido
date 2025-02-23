@@ -2,6 +2,8 @@ import { FC, MouseEvent, useState } from 'react'
 
 import { useTree } from '@/contexts/TreeContext'
 
+import { configStore } from '@/store/ConfigStore'
+
 
 interface TreeNodeProps {
   node: TreeNode,
@@ -11,7 +13,10 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
   const [hasChildren, setHasChildren] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const { onSelect, getChildren } = useTree()
+  const { onSelect, getChildren, selectedNodeId, setSelectedNodeId } = useTree()
+
+  const { colors } = configStore().config
+
 
   async function handleNodeClick(e: MouseEvent<HTMLElement>) {
     e.preventDefault()
@@ -27,6 +32,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
     }
 
     onSelect(node, e.target)
+    setSelectedNodeId(node.id)
   }
 
   const toggleExpand = () => {
@@ -45,7 +51,8 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       ))}
     </div>
 
-  return <div className="t-mb-1 t-py-[2px] t-px-2 hover:t-bg-gray-100 hover:t-cursor-pointer hover:t-rounded-md"
+  return <div className="t-mb-1 t-py-[2px] t-px-2 hover:t-bg-gray-100 hover:t-cursor-pointer t-rounded-md"
+    style={{ backgroundColor: selectedNodeId === node.id ? colors?.primary: '' }}
     onClick={(e) => handleNodeClick(e)}>{node.label}</div>
 }
 
