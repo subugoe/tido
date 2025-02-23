@@ -78,7 +78,7 @@ const Panel: FC<Props> = ({ config }) => {
   return (
     <div
       className={
-        `panel t-relative t-flex t-flex-col t-w-[600px] t-border-solid t-border-2 t-rounded-lg t-p-2
+        `panel t-relative t-flex t-flex-col t-w-[600px] t-border-solid t-border-2 t-rounded-lg t-p-3 t-px-4
         ${isScrollPanel ? 't-border-amber-300 t-ring-4 t-ring-amber-50' : 't-border-slate-200' }
       `}
     >
