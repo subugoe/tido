@@ -1,4 +1,4 @@
-import { useEffect, useRef, FC } from 'react'
+import { useEffect, FC } from 'react'
 import OpenSeadragon from 'openseadragon'
 
 import { usePanel } from '@/contexts/PanelContext'
@@ -12,11 +12,11 @@ const OpenSeaDragonViewer: FC = () => {
 
   const imageUrl = panelStore((state) => state.panels[panelId].item.image?.id)
 
-  const viewerRef = useRef<OpenSeadragon.Viewer>()
+  let viewer: OpenSeadragon.Viewer | null = null
   const viewerId = 'viewer-' + panelId
 
   useEffect(() => {
-    const viewer = OpenSeadragon({
+    viewer = OpenSeadragon({
       id: viewerId,
       prefixUrl:
         'https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/',
@@ -30,10 +30,8 @@ const OpenSeaDragonViewer: FC = () => {
       homeButton: 'exit-full-screen-' + panelId,
     })
 
-    viewerRef.current = viewer
-
     return () => {
-      viewerRef.current?.destroy()
+      if (viewer) viewer.destroy()
     }
   }, [])
   return (

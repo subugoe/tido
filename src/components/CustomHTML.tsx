@@ -32,6 +32,6 @@ const CustomHTML: FC<CustomHTMLProps> = ({ textHtml, width, icon }) => {
 
   if (iconEl) return iconEl
 
-  return <div style={{ width: width + '%' }} ref={ref} />
+  return <div className="t-flex" style={{ width: width + '%' }} ref={ref} />
 }
 export default CustomHTML
