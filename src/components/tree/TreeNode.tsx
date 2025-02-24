@@ -1,6 +1,8 @@
 import { FC, MouseEvent, useState } from 'react'
 
 import { useTree } from '@/contexts/TreeContext'
+import CustomHTML from '@/components/CustomHTML.tsx'
+import { chevronRight } from '@/utils/icons.ts'
 
 import { configStore } from '@/store/ConfigStore'
 
@@ -16,7 +18,6 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   const { onSelect, getChildren, selectedNodeId, setSelectedNodeId } = useTree()
 
   const { colors } = configStore().config
-
 
   async function handleNodeClick(e: MouseEvent<HTMLElement>) {
     e.preventDefault()
@@ -39,21 +40,21 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
     setIsExpanded(!isExpanded)
   }
 
-
-  if (hasChildren && isExpanded)
-    return <div>
-      <div className="t-mb-1 t-py-[2px] t-px-2 hover:t-bg-gray-100 hover:t-cursor-pointer hover:t-round-md"
-        onClick={(e) => handleNodeClick(e)}> {node.label}</div>
-      {node.children?.map((item: TreeNode, i) => (
-        <ul className="t-ml-2" key={i}>
-          <TreeNode node={item} />
-        </ul>
-      ))}
+  return <div className="t-mb-1">
+    <div
+      className="t-flex t-items-center hover:t-bg-gray-100 t-px-2 t-py-1 t-rounded-md hover:t-cursor-pointer"
+      style={{ backgroundColor: selectedNodeId === node.id ? colors?.primary: '' }}
+      onClick={(e) => handleNodeClick(e)}
+    >
+      {!node.leaf && <span className={`t-mt-[2px] t-mr-1 t-transition-all ${isExpanded && 't-rotate-90'}`}><CustomHTML textHtml={chevronRight}></CustomHTML></span>}
+      <span>{node.label}</span>
     </div>
-
-  return <div className="t-mb-1 t-py-[2px] t-px-2 hover:t-bg-gray-100 hover:t-cursor-pointer t-rounded-md"
-    style={{ backgroundColor: selectedNodeId === node.id ? colors?.primary: '' }}
-    onClick={(e) => handleNodeClick(e)}>{node.label}</div>
+    {hasChildren && isExpanded && node.children?.map((item: TreeNode, i) => (
+      <ul className="t-ml-3" key={i}>
+        <TreeNode node={item} />
+      </ul>
+    ))}
+  </div>
 }
 
 export default TreeNode

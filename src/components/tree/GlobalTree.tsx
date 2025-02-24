@@ -27,7 +27,7 @@ const GlobalTree: FC = () => {
     setSelectedPosition(target.getBoundingClientRect())
   }
 
-  return showGlobalTree && <div className="t-ml-10 t-w-92 t-mt-4 t-mr-4 t-pt-4 t-border-r-2 t-border-gray-200">
+  return showGlobalTree && <div className="t-flex-shrink-0 t-w-[380px] t-mt-4 t-mr-4 t-pr-4 t-border-r-2 t-border-gray-200 t-overflow-auto">
     <Tree nodes={treeNodes} onSelect={onSelectNode} getChildren={getChildren} />
     { showSelectionModal && <div
       className="t-fixed t-z-50 t-p-2 t-bg-white t-border t-border-gray-200 t-shadow-md t-rounded"
