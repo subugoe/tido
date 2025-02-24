@@ -66,10 +66,16 @@ pre {
 
 .key-value {
   display: flex;
+  align-items: end;
+  margin-bottom: 0.5rem;
 }
 
-.key-value label + label {
-  margin-left: 1rem;
+.key-value label {
+  margin-bottom: 0;
+}
+
+.key-value label {
+  margin-right: 0.5rem;
 }
 
 .field {
@@ -89,7 +95,6 @@ pre {
   margin-top: 1rem;
   margin-left: 1rem;
 }
-
 
 button {
   padding: calc(var(--pico-form-element-spacing-vertical) * 0.6) var(--pico-form-element-spacing-horizontal);
