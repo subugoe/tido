@@ -78,7 +78,9 @@ const TreeSelectionModalContent: FC = () => {
     <InputField width={80} updateInputValue={updateInputValue} />
     <span>Or choose:</span>
 
-    <Tree nodes={treeNodes} onSelect={onSelect} getChildren={getChildren} />
+    <div className="t-max-h-80 t-overflow-y-auto">
+      <Tree nodes={treeNodes} onSelect={onSelect} getChildren={getChildren} />
+    </div>
 
     <div className="t-pb-4">
       <ClosePopover
