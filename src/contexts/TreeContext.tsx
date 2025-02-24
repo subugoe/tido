@@ -1,10 +1,12 @@
-import { ReactNode, createContext, useContext, FC } from 'react'
+import { ReactNode, createContext, useContext, FC, useState } from 'react'
 
 const TreeContext = createContext<TreeType | undefined>(undefined)
 
 interface TreeType {
   onSelect(node: TreeNode, target: HTMLElement): void
   getChildren(node: TreeNode): Promise<TreeNode[]>
+  selectedNodeId: string
+  setSelectedNodeId: (val: string) => void
 }
 
 interface TreeProviderProps {
@@ -14,8 +16,10 @@ interface TreeProviderProps {
 }
 
 const TreeProvider: FC<TreeProviderProps> = ({ children, onSelect, getChildren }) => {
+  const [selectedNodeId, setSelectedNodeId] = useState('')
+
   return (
-    <TreeContext.Provider value={{ onSelect, getChildren }}>
+    <TreeContext.Provider value={{ onSelect, getChildren, selectedNodeId, setSelectedNodeId }}>
       {children}
     </TreeContext.Provider>
   )
