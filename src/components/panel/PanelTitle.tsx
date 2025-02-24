@@ -1,6 +1,8 @@
 import { FC } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
+import ItemSelection from '@/components/tree/ItemSelection.tsx'
+
 const PanelHeader: FC = () => {
   const { panelState } = usePanel()
 
@@ -14,7 +16,8 @@ const PanelHeader: FC = () => {
 
   return (
     <>
-      <span className="t-font-semibold">{ getManifestLabel() }</span> <span className="t-text-gray-600">&nbsp;/&nbsp;{ getItemLabel() }</span>
+      <span className="t-font-semibold">{ getManifestLabel() } &nbsp;/&nbsp;</span>
+      <ItemSelection title={getItemLabel()} />
     </>
   )
 }
