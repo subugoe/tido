@@ -46,13 +46,12 @@ export async function getChildren(node: TreeNode): Promise<TreeNode[]> {
 
   for (let i = 0; i < items.length; i++) {
 
-    if (!response.success) continue
-
     const childNode: TreeNode = {
       key: parentKey + '-' + i,
       id: items[i].id,
       label: items[i].label ?? 'label not found',
       type: items[i].type,
+      leaf: items[i].type === 'item',
       children: []
     }
 

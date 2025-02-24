@@ -73,7 +73,7 @@ const TreeSelectionModalContent: FC = () => {
   }
 
 
-  return <div className="t-flex t-flex-col">
+  return <div className="t-flex t-flex-col t-w-[380px]">
     <span className="t-font-bold t-mb-2">Enter a collection URL</span>
     <InputField width={80} updateInputValue={updateInputValue} />
     <span>Or choose:</span>
