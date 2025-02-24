@@ -20,7 +20,7 @@ const Tree: FC<TreeProps> = ({ nodes, onSelect, getChildren }) => {
       </div>
     ))
 
-  return <div className="tree t-w-96 t-h-96 t-overflow-hidden t-overflow-y-auto">
+  return <div className="tree t-w-96">
     <TreeProvider onSelect={onSelect} getChildren={getChildren}>
       {tree}
     </TreeProvider>
