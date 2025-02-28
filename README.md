@@ -159,15 +159,26 @@ There are options to
             "connector": {
               "id": 2,
               "options": {
-                "collection": {
-                  "all": true
-                },
-                "manifest": {
-                  "all": true
-                },
-                "item": {
-                  "all": true
-                }
+                documentsOrder: ["manifest", "collection", "item"],
+                collectionOrder: [
+                  "title",
+                  "collector",
+                  "description",
+                ],
+                manifestOrder: [
+                  "Label",
+                  "License",
+                  "Date of creation",
+                  "Place of origin",
+                  "Current location",
+                  "TEI document",
+                ],
+                itemOrder: [
+                  "label",
+                  "language",
+                  "image_license",
+                  "image_notes",
+                ],
               }
             }
           }
@@ -337,11 +348,16 @@ Here is an overview of available options:
 
 ##### Metadata
 
-| Name       | Type    | Default | Description                           |
-|------------|---------|---------|---------------------------------------|
-| collection | Boolean | `true`  | Toggle on/off the collection section. |
-| manifest   | Boolean | `true`  | Toggle on/off the manifest section.   |
-| item       | Boolean | `true`  | Toggle on/off the item section.       |
+We provide flexible ordering of metadata items in two levels:
+- Documents level: `documentsOrder` which is the order of the metadata among `collection`, `manifest` and `item`.
+- Within document level: The ordering of metadata within one document type: i.e `manifestOrder`: order of metadata items corresponding to a certain opened manifest.
+
+| Name            | Type   | Default                                               | Description                                                                                                                                                                                                                                                                                                                                                                                                       |
+|-----------------|--------|-------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| documentsOrder  | Object | `["collection", "manifest", "item"]`                  | Defines the order of document(s) metadata. Metadata is displayed in 3 levels: collection, manifest and item. It is shown in the same order specified from the user. If no order is specified, then by default the metadata is given in the following order: `collection`, `manifest` and `item`.                                                                                                                  |
+| collectionOrder | Object | `["description", "collector", "title"]`               | Defines the order of the metadata items which belong to the collection. One can order the items by specifying the order among the keys: `["description", "collector", "title"]`. When left empty the metadata is displayed in the aforementioned order.                                                                                                                                                           |
+| manifestOrder   | Object | `["Label", "License"]`                                | Defines the order of the metadata items which belong to the current opened manifest. When the user specifies his own order, then he needs to additionally provide the keys `"Label", "License"` to show the metadata for these two keys. A personal entity related to the document (e.g author or editor) can be appended automatically at the end, if it is specified as `actor` in the TextAPI Manifest Object.
+| itemOrder       | Object | `["label", "language", "image_license", "image_notes"]` | Defines the order of the metadata items among the following keys: `["label", "language", "image_license", "image_notes"]`
 
 ##### Image
 
