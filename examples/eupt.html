@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head><title>TIDO</title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="dist/tido.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
+  continue.</strong></noscript>
+<header>
+  <a class="home" href="./">TIDO</a>
+  <span>Examples:</span>
+  <nav>
+    <select id="nav-select">
+      <option disabled selected hidden>Please select...</option>
+      <option value="./ahiqar-syriac.html">Ahiqar Syriac</option>
+      <option value="./ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</option>
+      <option value="./gfl.html">Goethes Farbenlehre in Berlin</option>
+    </select>
+  </nav>
+</header>
+<div id="app"></div>
+<script src="dist/tido.js"></script>
+<script>
+  const select = document.getElementById('nav-select');
+  const pathArr = window.location.pathname.split('/')
+
+  select.value = './' + pathArr[pathArr.length - 1]
+
+  select.onchange = function (event) {
+    window.location = event.target.value
+  }
+
+  window.addEventListener('load', function () {
+
+    new Tido({
+        collection: "https://eupt.uni-goettingen.de/api/eupt/collection.json",
+        container: "#viewer",
+        colors: {
+          primary: "#3aa675"
+        },
+        labels: {
+          item: "Kolumne",
+          manifest: "Tafel"
+        },
+        lang: "de",
+        panels: [
+          {
+            label: "Inhalt & Metadaten",
+            views: [
+              {
+                id: "tree",
+                label: "Inhalt",
+                connector: {
+                  id: 1
+                }
+              },
+              {
+                id: "metadata",
+                label: "Metadaten",
+                connector: {
+                  id: 2
+                }
+              }
+            ]
+          },
+          {
+            label: "Autographie",
+            views: [
+              {
+                id: "image",
+                label: "Autographie",
+                connector: {
+                  id: 3
+                }
+              }
+            ]
+          },
+          {
+            label: "Transliteration",
+            views: [
+              {
+                id: "text1",
+                label: "Transliteration",
+                connector: {
+                  id: 4,
+                  options: {
+                    type: "facsimile"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            label: "Vokalisation & Übersetzung",
+            views: [
+              {
+                id: "text2",
+                label: "Vokalisation & Übersetzung",
+                connector: {
+                  id: 4,
+                  options: {
+                    type: "philology"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        translations: {
+          de: {
+            contents_and_metadata: "Inhalt & Metadaten",
+            next_item: "Nächste Kolumne",
+            previous_item: "Vorige Kolumne",
+            next_manifest: "Nächste Tafel",
+            previous_manifest: "Vorige Tafel",
+          },
+          en: {
+            contents_and_metadata: "Inhalt & Metadaten",
+            next_item: "Nächste Kolumne",
+            previous_item: "Vorige Kolumne",
+            next_manifest: "Nächste Tafel",
+            previous_manifest: "Vorige Tafel",
+          }
+        }
+      });
+});
+</script>
+</body>
+</html>
