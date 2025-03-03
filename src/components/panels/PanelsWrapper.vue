@@ -5,7 +5,7 @@
   >
     <div
       ref="container"
-      class="t-flex t-h-full t-overflow-x-auto t-pb-2 lg:t-pb-0 -t-mr-4 lg:t-mr-0"
+      class="t-flex t-h-full t-overflow-x-auto t-pb-2 lg:t-pb-0 -t-mr-4 lg:t-mr-0 t-gap-4"
     >
       <Panel
         v-for="(panel, i) in panels"
@@ -49,8 +49,3 @@ function getActiveView(panelIndex) {
   return activeViews.value[panelIndex];
 }
 </script>
-<style>
-.panel +.panel {
-  @apply t-ml-2 lg:t-ml-4;
-}
-</style>

@@ -251,14 +251,20 @@ export default {
     }
 
     function updateFlexValues(fitPanels: boolean, widthMultiplier: number, isMobile: boolean) {
+
+      if (isMobile) {
+        flexBasis.value = `${90 * getValidatedWidthConfig(widthMultiplier)}vw`;
+        flexShrink.value = 0;
+        flexGrow.value = 1;
+        return;
+      }
+
       if (fitPanels) {
         flexBasis.value = '0%';
         flexShrink.value = 1;
         flexGrow.value = getValidatedWidthConfig(widthMultiplier);
       } else {
-        flexBasis.value = isMobile
-          ? `${90 * getValidatedWidthConfig(widthMultiplier)}vw`
-          : `${defaultWidth * getValidatedWidthConfig(widthMultiplier)}px`;
+        flexBasis.value = `${defaultWidth * getValidatedWidthConfig(widthMultiplier)}px`;
         flexShrink.value = 0;
         flexGrow.value = 1;
       }
