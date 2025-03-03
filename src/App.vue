@@ -5,7 +5,7 @@
       <PanelsWrapper v-if="ready" />
       <div
         v-else
-        class="t-flex t-relative t-flex-1 t-justify-center t-items-center t-p-4 lg:t-p-6"
+        class="t-flex t-relative t-flex-1 t-justify-center t-items-center"
       >
         <div class="t-h-full t-w-full t-flex t-items-center t-justify-center t-border-dashed t-border-[3px] t-border-gray-400 dark:t-border-dashed dark:t-border-gray-600 t-rounded-md">
           <template v-if="isLoading">
@@ -120,7 +120,7 @@ async function getManifest(url: string) {
 }
 
 async function init() {
-  const { collection, manifest, item } = config.value;
+  const { collection, manifest } = config.value;
 
   try {
     // We want to preload all required data that the components need.

@@ -1,9 +1,9 @@
 <template>
   <div
     v-if="show"
-    class="header t-flex t-flex-col t-p-4 lg:t-px-6 t-mb-4"
+    class="header t-flex t-flex-col t-mb-4"
   >
-    <div class="t-flex t-items-start sm:t-flex-row t-flex-col-reverse t-mt-2">
+    <div class="t-flex t-items-start sm:t-flex-row t-flex-col-reverse">
       <TitleBar :item="item" />
       <ToolBar class="t-ml-auto" />
     </div>

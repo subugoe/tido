@@ -1,11 +1,11 @@
 <template>
   <div
     class="panels-wrapper t-flex-1 t-space-y-4
-    md:t-space-y-0 t-px-4 lg:t-px-6 t-pb-2 lg:t-pb-4 t-overflow-y-hidden lg:t-overflow-hidden"
+    md:t-space-y-0 t-overflow-hidden"
   >
     <div
       ref="container"
-      class="t-flex t-h-full t-overflow-x-auto t-pb-2 lg:t-pb-0 -t-mr-4 lg:t-mr-0 t-gap-4"
+      class="t-flex t-h-full t-overflow-x-auto t-pb-2 -t-mr-4 lg:t-mr-0 t-gap-4"
     >
       <Panel
         v-for="(panel, i) in panels"
