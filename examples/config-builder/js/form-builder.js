@@ -89,13 +89,14 @@ function createTranslationsInput(field, fullName, parentObj) {
       const keyValue = createKeyValue(languageContainer, index)
       languageContainer.insertBefore(keyValue, addButton)
     }, 'Add Key/Value Pair')
-    languageContainer.appendChild(addButton)
 
     const removeButton = createRemoveButton(() => {
       languageContainer.remove()
       data.splice(index, 1)
       update()
     })
+
+    languageContainer.appendChild(addButton)
     languageContainer.appendChild(removeButton)
 
     return languageContainer
@@ -188,13 +189,15 @@ function createGroup(field, fullName, parentObj) {
         parentObj[field.name].splice(instanceIndex, 1)
         updateJsonOutput()
       }, field.removeLabel)
-      buttonContainer.appendChild(removeButton)
 
       const addButton = createAddButton(
         () => addGroupInstance(instanceContainer.nextSibling, index + 1),
         field.addLabel
       )
+
       buttonContainer.appendChild(addButton)
+      buttonContainer.appendChild(removeButton)
+
       instanceContainer.appendChild(buttonContainer)
     } else {
       parentObj[field.name] = instance

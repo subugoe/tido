@@ -1,8 +1,8 @@
 <template>
   <div
-    class="panel t-flex-shrink-0 t-flex t-flex-col t-overflow-hidden t-rounded-lg t-bg-gray-50 dark:t-bg-gray-800
+    class="panel t-flex t-flex-col t-overflow-hidden t-rounded-lg t-bg-gray-50 dark:t-bg-gray-800
     t-border dark:t-border-gray-700 t-max-h-screen md:t-h-auto"
-    :style="{width: `${width}px`}"
+    :style="{ flexBasis, flexGrow, flexShrink }"
   >
     <div class="panel-header t-py-3 t-px-4 t-flex t-justify-between t-items-center">
       <div class="caption t-font-bold">
@@ -127,7 +127,7 @@
 
 <script lang="ts">
 import {
-  computed, nextTick, ref, watch,
+  computed, nextTick, onMounted, onUnmounted, ref, watch,
 } from 'vue';
 import { useI18n } from 'vue-i18n';
 import TabView from 'primevue/tabview';
@@ -176,22 +176,34 @@ export default {
       default: () => { },
     },
     activeView: Number,
-    defaultWidth: Number,
   },
   setup(props, { emit }) {
-    const { isMobile } = useResize();
     const configStore = useConfigStore();
     const contentStore = useContentsStore();
     const { t } = useI18n();
+    const { isMobile, onResize } = useResize();
 
+    const defaultWidth = 300;
     const tabs = ref([]);
     const activeTabIndex = ref(0);
     const unsubscribe = ref(null);
     const isLoading = ref(false);
-
-    const width = computed( () => props.defaultWidth * getWidth(props.panel.width));
+    const flexGrow = ref(1);
+    const flexShrink = ref(1);
+    const flexBasis = ref('0%');
 
     const item = computed<Item>(() => contentStore.item);
+    const config = computed(() => configStore.config);
+
+    let unsubscribeResize;
+
+    onMounted(() => {
+      unsubscribeResize = onResize(() => updateFlexValues(config.value.fitPanels, props.panel.width, isMobile.value));
+    });
+
+    onUnmounted(() => {
+      if (unsubscribeResize) unsubscribeResize();
+    });
 
     watch(
       () => props.activeView,
@@ -210,14 +222,9 @@ export default {
 
     watch(item,() => init(props.panel.views));
 
-    function getWidth(configValue) {
-      if (!configValue || typeof configValue !== 'number') return 1;
-      if (isMobile.value || configValue < 1) return 1;
-      if (configValue > 10) return 10;
-      return configValue;
-    }
-
     function init(views) {
+      updateFlexValues(config.value.fitPanels, props.panel.width, isMobile.value)
+
       tabs.value = [];
       if (unsubscribe.value !== null) unsubscribe.value();
 
@@ -241,6 +248,32 @@ export default {
             return createDefaultView(view);
         }
       });
+    }
+
+    function updateFlexValues(fitPanels: boolean, widthMultiplier: number, isMobile: boolean) {
+
+      if (isMobile) {
+        flexBasis.value = `${90 * getValidatedWidthConfig(widthMultiplier)}vw`;
+        flexShrink.value = 0;
+        flexGrow.value = 1;
+        return;
+      }
+
+      if (fitPanels) {
+        flexBasis.value = '0%';
+        flexShrink.value = 1;
+        flexGrow.value = getValidatedWidthConfig(widthMultiplier);
+      } else {
+        flexBasis.value = `${defaultWidth * getValidatedWidthConfig(widthMultiplier)}px`;
+        flexShrink.value = 0;
+        flexGrow.value = 1;
+      }
+    }
+
+    function getValidatedWidthConfig(configValue) {
+      if (!configValue || typeof configValue !== 'number') return 1;
+      if (configValue > 10) return 10;
+      return configValue;
     }
 
     function createContentView(view, i) {
@@ -427,7 +460,9 @@ export default {
       isLoading,
       tabs,
       onViewChange,
-      width
+      flexBasis,
+      flexGrow,
+      flexShrink
     };
   },
 };
