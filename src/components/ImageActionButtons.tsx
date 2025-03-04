@@ -1,13 +1,12 @@
-import { FC } from 'react'
-import { zoomIn, zoomOut, fullscreen, exitFullscreen } from '@/utils/icons'
+import { FC, ReactElement } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext'
 
-import CustomHTML from '@/components/CustomHTML'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react'
 
 interface ImageActions {
-  icon: string
+  icon: ReactElement
   id: string
   tooltip: string
 }
@@ -18,23 +17,23 @@ const ImageActionButtons: FC = () => {
 
   const actions: ImageActions[] = [
     {
-      icon: zoomIn,
+      icon: <ZoomIn />,
       id: 'zoom-in-' + panelId,
       tooltip: 'Zoom In',
     },
 
     {
-      icon: zoomOut,
+      icon: <ZoomOut />,
       id: 'zoom-out-' + panelId,
       tooltip: 'Zoom Out',
     },
     {
-      icon: fullscreen,
+      icon: <Maximize />,
       id: 'full-screen-' + panelId,
       tooltip: 'Toggle full page',
     },
     {
-      icon: exitFullscreen,
+      icon: <Minimize />,
       id: 'exit-full-screen-' + panelId,
       tooltip: 'Show base position of image',
     },
@@ -53,11 +52,7 @@ const ImageActionButtons: FC = () => {
           className="t-flex t-items-center t-justify-center"
           style={{ color: primaryColor }}
         >
-          <CustomHTML
-            textHtml={action.icon}
-            width="100%"
-            icon={{ type: 'icon', width: 4, height: 3 }}
-          />
+          {action.icon}
         </div>
       </button>
     ))
