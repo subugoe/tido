@@ -1,10 +1,8 @@
 import { FC, MouseEvent, useState } from 'react'
 
 import { useTree } from '@/contexts/TreeContext'
-import CustomHTML from '@/components/CustomHTML.tsx'
-import { chevronRight } from '@/utils/icons.ts'
-
 import { useConfigStore } from '@/store/ConfigStore'
+import { ChevronRight } from 'lucide-react'
 
 
 interface TreeNodeProps {
@@ -46,7 +44,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       style={{ backgroundColor: selectedNodeId === node.id ? colors?.primary: '' }}
       onClick={(e) => handleNodeClick(e)}
     >
-      {!node.leaf && <span className={`t-mt-[2px] t-mr-1 t-transition-all ${isExpanded && 't-rotate-90'}`}><CustomHTML textHtml={chevronRight}></CustomHTML></span>}
+      {!node.leaf && <span className={`t-mt-[2px] t-mr-1 t-transition-all ${isExpanded && 't-rotate-90'}`}><ChevronRight /></span>}
       <span>{node.label}</span>
     </div>
     {hasChildren && isExpanded && node.children?.map((item: TreeNode, i) => (
