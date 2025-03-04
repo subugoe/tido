@@ -1,4 +1,4 @@
-import { configStore } from '@/store/ConfigStore.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 function loadFont(url: string, containerSelector: string) {
   // to use a certain font on a text, then we only need to load the font file.
@@ -28,7 +28,7 @@ function loadCss (url: string){
 }
 
 export const getSupport = (support: Support[] | undefined) => {
-  const { container } = configStore.getState().config
+  const { container } = useConfigStore.getState().config
 
   support?.forEach((s) => {
     const hasElement = document.getElementById(s.url)

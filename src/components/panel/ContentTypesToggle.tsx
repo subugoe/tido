@@ -1,18 +1,18 @@
 import { FC, MouseEvent } from 'react'
 
-import { panelStore } from '@/store/PanelStore.tsx'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext'
 
 const ContentTypesToggle: FC = () => {
   const { panelId } = usePanel()
 
-  const contentTypes = panelStore(
+  const contentTypes = usePanelStore(
     (state) => state.panels[panelId].contentTypes
   )
-  const activeContentTypeIndex = panelStore(
+  const activeContentTypeIndex = usePanelStore(
     (state) => state.panels[panelId].contentIndex
   )
-  const updateContentToggleIndex = panelStore(
+  const updateContentToggleIndex = usePanelStore(
     (state) => state.updateContentToggleIndex
   )
 

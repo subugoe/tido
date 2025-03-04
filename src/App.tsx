@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react'
 
-import { configStore } from '@/store/ConfigStore.tsx'
-import { dataStore } from '@/store/DataStore.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
 
 import TopBar from '@/components/TopBar'
 import GlobalTree from '@/components/tree/GlobalTree.tsx'
@@ -14,11 +14,11 @@ interface AppProps {
 }
 
 const App: FC<AppProps> = ({ customConfig }) => {
-  const addCustomConfig = configStore((state) => state.addCustomConfig)
+  const addCustomConfig = useConfigStore((state) => state.addCustomConfig)
   addCustomConfig(customConfig)
 
-  const collections = dataStore(state => state.collections)
-  const setTreeNodes = dataStore(state => state.setTreeNodes)
+  const collections = useDataStore(state => state.collections)
+  const setTreeNodes = useDataStore(state => state.setTreeNodes)
 
 
   useEffect(() => {

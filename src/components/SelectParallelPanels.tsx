@@ -1,12 +1,12 @@
 import { FC, useState } from 'react'
 import { Button } from '@/components/ui/button.tsx'
-import { panelStore } from '@/store/PanelStore.tsx'
-import { scrollStore } from '@/store/ScrollStore.tsx'
+import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useScrollStore } from '@/store/ScrollStore.tsx'
 
 const SelectParallelPanels: FC = () => {
-  const panelStates = panelStore(state => state.panels)
-  const update = scrollStore(state => state.update)
-  const scrollPanelIds = scrollStore(state => state.panelIds)
+  const panelStates = usePanelStore(state => state.panels)
+  const update = useScrollStore(state => state.update)
+  const scrollPanelIds = useScrollStore(state => state.panelIds)
 
   const [selected, setSelected] = useState<{ [key: string]: boolean }>(scrollPanelIds.reduce((acc, cur) => {
     acc[cur] = true

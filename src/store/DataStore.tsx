@@ -18,7 +18,7 @@ interface DataStoreType {
   setShowGlobalTree: (newValue: boolean) => void,
 }
 
-export const dataStore = create<DataStoreType>((set, get) => ({
+export const useDataStore = create<DataStoreType>((set, get) => ({
   collections: {},
   annotations: {},
   treeNodes: [],

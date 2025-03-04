@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { configStore } from '@/store/ConfigStore.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 
 interface SelectedItemIndicesType {
@@ -15,9 +15,9 @@ interface GlobalTreeSelectionModalContentProps {
 
 const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> = ({ selectedItemIndices, onSelect }) => {
 
-  const panels = configStore(state => state.config.panels)
-  const addNewPanel = configStore(state => state.addNewPanel)
-  const updatePanel = configStore(state => state.updatePanel)
+  const panels = useConfigStore(state => state.config.panels)
+  const addNewPanel = useConfigStore(state => state.addNewPanel)
+  const updatePanel = useConfigStore(state => state.updatePanel)
 
   const newPanelConfig = {
     entrypoint: {

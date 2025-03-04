@@ -16,7 +16,7 @@ interface ScrollStoreType {
   registerListener: (panelId: string, item: ListenerItem) => void
 }
 
-export const scrollStore = create<ScrollStoreType>((set, get) => ({
+export const useScrollStore = create<ScrollStoreType>((set, get) => ({
   panelIds: [],
   listenersMap: {},
   update: (panelIds: string[]) => {

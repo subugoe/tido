@@ -1,7 +1,7 @@
 import { FC, MouseEvent } from 'react'
 import { textViewOne, textView, splitView, imageView } from '@/utils/icons'
 
-import { panelStore } from '@/store/PanelStore.tsx'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext'
 import { Button } from '@/components/ui/button.tsx'
 import CustomHTML from '@/components/CustomHTML.tsx'
@@ -15,8 +15,8 @@ interface IconKeys {
 
 const TextViewsToggle: FC = () => {
   const { panelId } = usePanel()
-  const viewIndex = panelStore((state) => state.panels[panelId].viewIndex)
-  const updateViewIndex = panelStore((state) => state.updateViewIndex)
+  const viewIndex = usePanelStore((state) => state.panels[panelId].viewIndex)
+  const updateViewIndex = usePanelStore((state) => state.updateViewIndex)
 
   function handleTextViewClick(
     e: MouseEvent<HTMLButtonElement>,

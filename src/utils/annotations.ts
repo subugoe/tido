@@ -5,9 +5,9 @@ import {
   syncScrollPosition,
   removeAutoScrolling
 } from '@/utils/scroll.ts'
-import { panelStore } from '@/store/PanelStore.tsx'
-import { dataStore } from '@/store/DataStore.tsx'
-import { scrollStore } from '@/store/ScrollStore.tsx'
+import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
+import { useScrollStore } from '@/store/ScrollStore.tsx'
 
 
 function getTargetSelectorsInPanel(panelState: PanelState, annotations: Annotation[]) {
@@ -55,16 +55,16 @@ function resetHighlighting(container: HTMLElement, targetSelectors: string[]) {
 }
 
 function selectSyncTargetByIndex(panelId: string, index: number) {
-  const panelStates = panelStore.getState().panels
+  const panelStates = usePanelStore.getState().panels
   const panelState = panelStates[panelId]
   if (!panelState) return
 
-  const annotations = dataStore.getState().annotations[panelState.collectionId]
+  const annotations = useDataStore.getState().annotations[panelState.collectionId]
   if (!annotations) return
 
   const scrollContainer = document.querySelector(`[data-panel="${panelState.id}"]`) as HTMLElement
 
-  const otherPanelStates = scrollStore.getState().panelIds
+  const otherPanelStates = useScrollStore.getState().panelIds
     .filter(p => p !== panelId)
     .map(id => panelStates[id])
 
@@ -86,7 +86,7 @@ function getSyncClickListener(el: HTMLElement, panelState: PanelState, otherPane
 function selectSyncTarget(el: HTMLElement, panelState: PanelState, otherPanelStates: PanelState[]) {
 
   const annotationId = el.getAttribute('data-annotation-id')
-  const annotations = dataStore.getState().annotations[panelState.collectionId]
+  const annotations = useDataStore.getState().annotations[panelState.collectionId]
   if (!annotations) return
 
   const annotation = annotations.find(a => a.id === annotationId)
@@ -96,7 +96,7 @@ function selectSyncTarget(el: HTMLElement, panelState: PanelState, otherPanelSta
   const scrollContainer = document.querySelector(`[data-panel="${panelState.id}"]`) as HTMLElement
   resetHighlighting(scrollContainer, targetSelectors)
   setSelectedHighlightingOnTarget(el)
-  panelStore.getState().setActiveTargetIndex(panelState.id, getIndexOnTarget(el))
+  usePanelStore.getState().setActiveTargetIndex(panelState.id, getIndexOnTarget(el))
 
   otherPanelStates.forEach(otherPanelState => {
     const otherScrollContainer = document.querySelector(`[data-panel="${otherPanelState.id}"]`) as HTMLElement
@@ -141,15 +141,15 @@ function getIndexOnTarget(el: HTMLElement) {
 
 function setClickListeners(panelState: PanelState, annotations: Annotation[]) {
   const targets = getTargetSelectorsInPanel(panelState, annotations)
-  const otherPanelStates = scrollStore.getState().panelIds
-    .map(panelId => panelStore.getState().panels[panelId])
+  const otherPanelStates = useScrollStore.getState().panelIds
+    .map(panelId => usePanelStore.getState().panels[panelId])
 
   targets.forEach(target => {
     const el = document.querySelector(target) as HTMLElement
     if (!el) return
 
     const listener = getSyncClickListener(el, panelState, otherPanelStates)
-    scrollStore.getState().registerListener(panelState.id, {
+    useScrollStore.getState().registerListener(panelState.id, {
       element: el,
       eventName: 'click',
       listener
@@ -158,7 +158,7 @@ function setClickListeners(panelState: PanelState, annotations: Annotation[]) {
 }
 
 function setupScrollPanel(panelState: PanelState) {
-  const annotations = dataStore.getState().annotations[panelState.collectionId]
+  const annotations = useDataStore.getState().annotations[panelState.collectionId]
   if (!annotations) return
 
   setHighlighting(panelState, annotations)
@@ -171,7 +171,7 @@ function setupSyncScrolling(panelStates: PanelState[]) {
     if (!scrollContainer) return
 
     const wheelListener = getSyncWheelListener(scrollContainer)
-    scrollStore.getState().registerListener(panelState.id, {
+    useScrollStore.getState().registerListener(panelState.id, {
       element: scrollContainer,
       eventName: 'wheel',
       listener: wheelListener
@@ -180,7 +180,7 @@ function setupSyncScrolling(panelStates: PanelState[]) {
     const otherPanelStates = panelStates.filter(p => p.id !== panelState.id)
 
     const scrollListener = getSyncScrollListener(scrollContainer, otherPanelStates)
-    scrollStore.getState().registerListener(panelState.id, {
+    useScrollStore.getState().registerListener(panelState.id, {
       element: scrollContainer,
       eventName: 'scroll',
       listener: scrollListener
@@ -206,9 +206,9 @@ function getSyncWheelListener(container: HTMLElement) {
 }
 
 function setupScrollPanels(panelIds: string[]) {
-  const panelStates = Object.keys(panelStore.getState().panels)
+  const panelStates = Object.keys(usePanelStore.getState().panels)
     .filter(key => panelIds.includes(key))
-    .map(key => panelStore.getState().panels[key])
+    .map(key => usePanelStore.getState().panels[key])
 
   panelStates.forEach(panelState => setupScrollPanel(panelState))
   setupSyncScrolling(panelStates)
