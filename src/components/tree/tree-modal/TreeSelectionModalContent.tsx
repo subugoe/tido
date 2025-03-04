@@ -1,7 +1,7 @@
 import { FC, useRef } from 'react'
 
-import { configStore } from '@/store/ConfigStore'
-import { dataStore } from '@/store/DataStore'
+import { useConfigStore } from '@/store/ConfigStore'
+import { useDataStore } from '@/store/DataStore'
 
 
 import Tree from '@/components/tree/Tree.tsx'
@@ -12,9 +12,9 @@ import { getChildren, getNodeIndices } from '@/utils/tree.ts'
 
 
 const TreeSelectionModalContent: FC = () => {
-  const addNewPanel = configStore(state => state.addNewPanel)
-  const initCollection = dataStore(state => state.initCollection)
-  const treeNodes = dataStore(state => state.treeNodes)
+  const addNewPanel = useConfigStore(state => state.addNewPanel)
+  const initCollection = useDataStore(state => state.initCollection)
+  const treeNodes = useDataStore(state => state.treeNodes)
   const inputValue = useRef('')
   const clickedItemUrl = useRef('')
 

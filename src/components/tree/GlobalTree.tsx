@@ -1,19 +1,19 @@
 import { FC, useRef, useState } from 'react'
-import { dataStore } from '@/store/DataStore.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
 import Tree from '@/components/tree/Tree.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree/tree-modal/GlobalTreeSelectionModalContent.tsx'
 import { getChildren, getNodeIndices } from '@/utils/tree.ts'
 
 const GlobalTree: FC = () => {
 
-  const showGlobalTree = dataStore(state => state.showGlobalTree)
+  const showGlobalTree = useDataStore(state => state.showGlobalTree)
   const selectedItemIndices = useRef({
     collectionUrl: '',
     manifestIndex: -1,
     itemIndex: -1
   })
 
-  const treeNodes = dataStore(state => state.treeNodes)
+  const treeNodes = useDataStore(state => state.treeNodes)
   const [showSelectionModal, setShowSelectionModal] = useState(false)
   const [selectedPosition, setSelectedPosition] = useState({ x: 0, y: 0 })
 

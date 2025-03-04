@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useContext, useState, FC, useEffect } from 'react'
-import { panelStore } from '@/store/PanelStore.tsx'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -15,8 +15,8 @@ interface PanelProviderProps {
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, id }) => {
   const [panelId] = useState<string>(id)
-  const panelState = panelStore(state => state.panels[panelId])
-  const activeTargetIndex = panelStore(state => state.panels[panelId].activeTargetIndex)
+  const panelState = usePanelStore(state => state.panels[panelId])
+  const activeTargetIndex = usePanelStore(state => state.panels[panelId].activeTargetIndex)
 
   useEffect(() => {
     if (activeTargetIndex > -1) selectSyncTargetByIndex(panelId, activeTargetIndex)

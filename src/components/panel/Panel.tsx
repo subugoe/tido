@@ -1,15 +1,15 @@
-import { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import PanelCentralContent from '@/components/panel/views/PanelCentralContent'
 import PanelHeader from '@/components/panel/PanelHeader.tsx'
 
 import ErrorComponent from '@/components/ErrorComponent'
 import { PanelProvider } from '@/contexts/PanelContext.tsx'
-import { dataStore } from '@/store/DataStore.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
 import { apiRequest } from '@/utils/api.ts'
-import { panelStore } from '@/store/PanelStore.tsx'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
-import { scrollStore } from '@/store/ScrollStore.tsx'
+import { useScrollStore } from '@/store/ScrollStore.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 
 import { getSupport } from '@/utils/support-styling.ts'
@@ -18,19 +18,21 @@ interface Props {
   config: PanelConfig
 }
 
-const Panel: FC<Props> = ({ config }) => {
-  const getCollection = dataStore(state => state.getCollection)
-  const addPanelContent = panelStore((state) => state.addPanelContent)
-  const scrollPanelIds = scrollStore(state => state.panelIds)
+const Panel: FC<Props> = React.memo(({ config }) => {
+  const getCollection = useDataStore(state => state.getCollection)
+  const addPanelContent = usePanelStore((state) => state.addPanelContent)
+  const scrollPanelIds = useScrollStore(state => state.panelIds)
 
   const [error, setError] = useState<boolean | string>(false)
   const [loading, setLoading] = useState(false)
   const [panelId, setPanelId] = useState<string | undefined>(undefined)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
+
   useEffect(() => {
     const panelId = crypto.randomUUID()
     const collectionUrl = config.entrypoint.url
     const init = async () => {
+
       try {
         setLoading(true)
         const collection = await getCollection(collectionUrl)
@@ -93,6 +95,6 @@ const Panel: FC<Props> = ({ config }) => {
       }
     </div>
   )
-}
+})
 
 export default Panel

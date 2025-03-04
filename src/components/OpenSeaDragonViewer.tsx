@@ -3,14 +3,14 @@ import OpenSeadragon from 'openseadragon'
 
 import { usePanel } from '@/contexts/PanelContext'
 
-import { panelStore } from '@/store/PanelStore.tsx'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 
 import ImageActionButtons from '@/components/ImageActionButtons'
 
 const OpenSeaDragonViewer: FC = () => {
   const { panelId } = usePanel()
 
-  const imageUrl = panelStore((state) => state.panels[panelId].item.image?.id)
+  const imageUrl = usePanelStore((state) => state.panels[panelId].item.image?.id)
 
   let viewer: OpenSeadragon.Viewer | null = null
   const viewerId = 'viewer-' + panelId

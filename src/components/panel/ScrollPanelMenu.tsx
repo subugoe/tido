@@ -1,14 +1,14 @@
 import { FC } from 'react'
 import { Button } from '@/components/ui/button.tsx'
-import { panelStore } from '@/store/PanelStore.tsx'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 interface Props {
   className: string
 }
 const PanelTopBar: FC<Props> = ({ className }) => {
   const { panelId } = usePanel()
-  const setActiveTargetIndex = panelStore(state => state.setActiveTargetIndex)
-  const activeTargetIndex = panelStore(state => state.panels[panelId].activeTargetIndex)
+  const setActiveTargetIndex = usePanelStore(state => state.setActiveTargetIndex)
+  const activeTargetIndex = usePanelStore(state => state.panels[panelId].activeTargetIndex)
 
   function onDown() {
     setActiveTargetIndex(panelId, activeTargetIndex + 1)

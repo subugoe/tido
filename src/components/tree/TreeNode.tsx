@@ -4,7 +4,7 @@ import { useTree } from '@/contexts/TreeContext'
 import CustomHTML from '@/components/CustomHTML.tsx'
 import { chevronRight } from '@/utils/icons.ts'
 
-import { configStore } from '@/store/ConfigStore'
+import { useConfigStore } from '@/store/ConfigStore'
 
 
 interface TreeNodeProps {
@@ -17,7 +17,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const { onSelect, getChildren, selectedNodeId, setSelectedNodeId } = useTree()
 
-  const { colors } = configStore().config
+  const { colors } = useConfigStore().config
 
   async function handleNodeClick(e: MouseEvent<HTMLElement>) {
     e.preventDefault()

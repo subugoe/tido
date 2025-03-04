@@ -7,7 +7,7 @@ interface ConfigStoreType {
   updatePanel: (newPanelConfig: PanelConfig, newIndex: number) => void,
 }
 
-export const configStore = create<ConfigStoreType>((set, get) => ({
+export const useConfigStore = create<ConfigStoreType>((set, get) => ({
 
   config: {},
   addCustomConfig: (customConfig: Config) => {

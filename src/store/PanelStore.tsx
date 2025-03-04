@@ -18,7 +18,7 @@ interface PanelStoreTypes {
   setActiveTargetIndex: (panelId: string, index: number) => void
 }
 
-export const panelStore = create<PanelStoreTypes>((set, get) => ({
+export const usePanelStore = create<PanelStoreTypes>((set, get) => ({
   panels: {},
   activeTargetIndex: -1,
   addPanelContent: (newPanel: PanelState) => {

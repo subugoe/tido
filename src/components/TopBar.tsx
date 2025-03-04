@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 
-import { configStore } from '@/store/ConfigStore.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 import Modal from '@/components/Modal.tsx'
 import TreeSelectionModalContent from '@/components/tree/tree-modal/TreeSelectionModalContent.tsx'
@@ -8,7 +8,7 @@ import IconRenderer from '@/components/base/IconRenderer.tsx'
 
 import { tree } from '@/utils/icons'
 import { cross } from '@/utils/icons'
-import { dataStore } from '@/store/DataStore.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import SelectParallelPanels from '@/components/SelectParallelPanels.tsx'
 
@@ -16,9 +16,9 @@ import SelectParallelPanels from '@/components/SelectParallelPanels.tsx'
 const TopBar: FC = () => {
 
   const [iconHtmlString, setIconHtmlString] = useState(tree)
-  const globalTree = configStore(state => state.config.globalTree)
+  const globalTree = useConfigStore(state => state.config.globalTree)
 
-  const setShowGlobalTree = dataStore(state => state.setShowGlobalTree)
+  const setShowGlobalTree = useDataStore(state => state.setShowGlobalTree)
 
   function toggleIcon() {
     if (iconHtmlString === tree) {
