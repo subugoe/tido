@@ -147,10 +147,10 @@ declare global {
 
   interface PanelState {
     id: string
-    collectionId: string
-    manifest: Manifest
-    item: Item
-    texts?: string[]
+    index: number
+    collectionId: string | null
+    manifest: Manifest | null
+    item: Item | null
     contentTypes?: string[]
     contentIndex: number
     viewIndex: number

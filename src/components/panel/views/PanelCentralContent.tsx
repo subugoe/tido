@@ -10,53 +10,46 @@ import ImageView from '@/components/panel/views/ImageView'
 
 import ErrorComponent from '@/components/ErrorComponent'
 
-import { request } from '@/utils/http'
+import { Skeleton } from '@/components/ui/skeleton.tsx'
+import EmptyMessage from '@/components/panel/EmptyMessage.tsx'
+import { apiRequest } from '@/utils/api.ts'
 
 const PanelCentralContent: FC = () => {
-  const { panelId } = usePanel()
+  const { panelId, panelState, loading } = usePanel()
 
-  const viewIndex = usePanelStore((state) => state.panels[panelId].viewIndex)
   const activeContentTypeIndex = usePanelStore(
-    (state) => state.panels[panelId].contentIndex
+    (state) => panelId && state.panels[panelId] ? state.panels[panelId].contentIndex : 0
   )
   const [text, setText] = useState<string>('')
-  const content = usePanelStore((state) => state.panels[panelId].item.content)
 
-  const [error, setError] = useState<boolean | string>(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function updateText(contentUrl: string) {
-      const response = await request<string>(contentUrl)
-
-      if (!response.success) {
-        setError(response.message)
-        return
+      try {
+        const response = await apiRequest<string>(contentUrl)
+        setText(response)
+      } catch (e) {
+        setError((e as ErrorResponse).message)
+        console.error(e)
       }
-
-      setText(response.data)
     }
 
-    const contentUrl = content[activeContentTypeIndex].url ?? null
+    const contentUrl = panelState?.item?.content[0].url ?? null
+    if (contentUrl) updateText(contentUrl)
+  }, [panelState, activeContentTypeIndex])
 
-    if (!contentUrl) {
-      setError('Error: No content URL found.')
-      return
-    }
+  if (error) return <ErrorComponent message={error} />
+  if (loading) return <Skeleton className="t-w-full t-h-full" />
+  if (!panelState || !panelState.item) return <EmptyMessage />
 
-    updateText(contentUrl)
-  }, [activeContentTypeIndex])
-
-  if (error) {
-    return <ErrorComponent message={error} />
-  }
-
-  if (viewIndex === 0) {
+  if (panelState.viewIndex === 0) {
     return <TextViewOne textHtml={text} />
-  } else if (viewIndex === 1) {
+  } else if (panelState.viewIndex === 1) {
     return <TextView textHtml={text} />
-  } else if (viewIndex === 2) {
+  } else if (panelState.viewIndex === 2) {
     return <SplitView textHtml={text} />
-  } else if (viewIndex === 3) {
+  } else if (panelState.viewIndex === 3) {
     return <ImageView />
   }
 }

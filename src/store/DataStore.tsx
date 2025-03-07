@@ -13,7 +13,6 @@ interface DataStoreType {
   initCollection: (url: string) => Promise<Collection>
   initAnnotations: (collectionId: string, url: string) => Promise<void>
   setTreeNodes: (newTreeNodes: TreeNode[]) => void
-  getCollection: (collectionUrl: string) => Promise<Collection>,
   showGlobalTree: boolean,
   setShowGlobalTree: (newValue: boolean) => void,
 }
@@ -24,6 +23,8 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   treeNodes: [],
   showGlobalTree: false,
   initCollection: async (url: string) => {
+    if (url in get().collections) return get().collections[url]
+
     const collection = await apiRequest<Collection>(url)
     const collections: CollectionMap = { ...get().collections }
     collections[collection.id] = collection
@@ -42,12 +43,6 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   },
   setTreeNodes: (newTreeNodes: TreeNode[]) => {
     set({ treeNodes: newTreeNodes })
-  },
-  async getCollection(collectionUrl: string): Promise<Collection> {
-    if (collectionUrl in get().collections) return get().collections[collectionUrl]
-
-    const collection = await get().initCollection(collectionUrl)
-    return collection
   },
   setShowGlobalTree: (newValue: boolean) => {
     set({ showGlobalTree: newValue })

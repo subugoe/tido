@@ -2,12 +2,20 @@ import { FC } from 'react'
 
 import Panel from '@/components/panel/Panel'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { PanelProvider } from '@/contexts/PanelContext.tsx'
 
 const PanelsWrapper: FC = () => {
   const config = useConfigStore(state => state.config)
-  const panels = config?.panels
+
   return <div className="t-flex t-h-full t-flex-row t-py-4 t-space-x-4 t-overflow-x-auto">
-    { panels?.map((panelConfig, i: number) => (<Panel config={panelConfig} key={i} />)) }
+    {
+      (config.panels ?? [])
+        .map((panelConfig, i: number) => (
+          <PanelProvider panelConfig={panelConfig} index={i} key={i}>
+            <Panel />
+          </PanelProvider>
+        ))
+    }
   </div>
 }
 

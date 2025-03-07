@@ -4,6 +4,7 @@ import TextViewsToggle from '@/components/panel/TextViewsToggle'
 import PanelTitle from '@/components/panel/PanelTitle.tsx'
 import ContentTypesToggle from '@/components/panel/ContentTypesToggle.tsx'
 import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
+import NavigationButton from '@/components/panel/NavigationButton.tsx'
 
 const PanelHeader: FC = () => {
   return (
@@ -13,10 +14,12 @@ const PanelHeader: FC = () => {
         <TextViewsToggle />
       </div>
       <div className="t-flex t-justify-center t-mb-4">
-        <PanelTitle />
+        <NavigationButton isPrev={true} />
+        {<PanelTitle />}
+        <NavigationButton />
       </div>
       <div className="t-flex t-justify-center">
-        <ContentTypesToggle />
+        {<ContentTypesToggle />}
       </div>
     </div>
   )

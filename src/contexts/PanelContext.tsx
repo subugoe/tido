@@ -1,29 +1,94 @@
 import { ReactNode, createContext, useContext, useState, FC, useEffect } from 'react'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
+import { apiRequest } from '@/utils/api.ts'
+import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
+import { getSupport } from '@/utils/support-styling.ts'
+import { useDataStore } from '@/store/DataStore.tsx'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {
-  panelId: string
-  panelState: PanelState
+  panelId: string | null
+  panelState: PanelState | null
+  loading: boolean
+  error: string | null
+  updatePanelState: (data: Partial<PanelState>) => void
 }
 
 interface PanelProviderProps {
   children?: ReactNode
-  id: string
+  panelConfig: PanelConfig
+  index: number
 }
 
-const PanelProvider: FC<PanelProviderProps> = ({ children, id }) => {
-  const [panelId] = useState<string>(id)
-  const panelState = usePanelStore(state => state.panels[panelId])
-  const activeTargetIndex = usePanelStore(state => state.panels[panelId].activeTargetIndex)
+const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index }) => {
+  const [panelId, setPanelId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const getCollection = useDataStore(state => state.initCollection)
+  const initPanelState = usePanelStore((state) => state.initPanelState)
+  const updateStorePanelState = usePanelStore((state) => state.updatePanelState)
+
+  const panelState = usePanelStore(state => state.getPanelState(panelId))
 
   useEffect(() => {
-    if (activeTargetIndex > -1) selectSyncTargetByIndex(panelId, activeTargetIndex)
-  }, [activeTargetIndex])
+
+    // On first render, create a new panel ID and initiate the panel in an empty state
+    const id = crypto.randomUUID()
+    setPanelId(id)
+    initPanelState(id, index)
+  }, [initPanelState])
+
+  useEffect(() => {
+    init()
+  }, [panelConfig, panelId])
+
+  const init = async () => {
+    if (!panelId) return
+    try {
+      setLoading(true)
+      const collection = await getCollection(panelConfig.entrypoint.url)
+      const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
+      const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)
+      const contentTypes: string[] = getContentTypes(item.content)
+
+      const { support } = manifest
+
+      if (support && support.length > 0 && isNewManifest(manifest)) {
+        // Support can be loaded for a new manifest
+        await getSupport(support)
+      }
+
+      updateStorePanelState(panelId, {
+        collectionId: collection.id,
+        manifest,
+        item,
+        contentIndex: 0,
+        viewIndex: 0,
+        contentTypes,
+        activeTargetIndex: -1
+      })
+    } catch (e) {
+      setError((e as ErrorResponse).message)
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (!panelId || !panelState) return
+    if (panelState.activeTargetIndex > -1) selectSyncTargetByIndex(panelId, panelState.activeTargetIndex)
+  }, [panelState?.activeTargetIndex])
+
+  function updatePanelState(data: Partial<PanelState>) {
+    if (!panelId) return
+    updateStorePanelState(panelId, data)
+  }
 
   return (
-    <PanelContext.Provider value={{ panelId, panelState }}>
+    <PanelContext.Provider value={{ panelId, panelState, updatePanelState, loading, error }}>
       {children}
     </PanelContext.Provider>
   )
