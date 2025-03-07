@@ -4,6 +4,7 @@ import { PictureInPicture2, Image, AlignCenter, Columns2 } from 'lucide-react'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext'
 import { Button } from '@/components/ui/button.tsx'
+import { Skeleton } from '@/components/ui/skeleton.tsx'
 
 interface IconKeys {
   viewOne: ReactElement
@@ -20,8 +21,7 @@ const icons = {
 }
 
 const TextViewsToggle: FC = () => {
-  const { panelId } = usePanel()
-  const viewIndex = usePanelStore((state) => state.panels[panelId].viewIndex)
+  const { panelState } = usePanel()
   const updateViewIndex = usePanelStore((state) => state.updateViewIndex)
 
   function handleTextViewClick(
@@ -29,22 +29,28 @@ const TextViewsToggle: FC = () => {
     newIndex: number
   ) {
     e.preventDefault()
-    updateViewIndex(panelId, newIndex)
+    if (!panelState) return
+    updateViewIndex(panelState.id, newIndex)
   }
 
   return (
-    <div className="text-views-toggle t-flex t-row t-ml-auto t-rounded-md t-h-8 t-space-x-1 -t-mr-1">
-      {Object.keys(icons).map((key, i) => (
-        <Button
-          key={i}
-          onClick={(e) => handleTextViewClick(e, i)}
-          variant={viewIndex === i ? 'secondary' : 'ghost'}
-          size="icon"
-        >
-          { icons[key as keyof IconKeys] }
-        </Button>
-      ))}
-    </div>
+    <>
+      { !panelState && <Skeleton /> }
+      { panelState &&
+        <div className="text-views-toggle t-flex t-row t-ml-auto t-rounded-md t-h-8 t-space-x-1 -t-mr-1">
+          {Object.keys(icons).map((key, i) => (
+            <Button
+              key={i}
+              onClick={(e) => handleTextViewClick(e, i)}
+              variant={panelState.viewIndex === i ? 'secondary' : 'ghost'}
+              size="icon"
+            >
+              { icons[key as keyof IconKeys] }
+            </Button>
+          ))}
+        </div>
+      }
+    </>
   )
 }
 
