@@ -7,7 +7,7 @@ interface TextViewOneProps {
 
 const TextView: FC<TextViewOneProps> = ({ textHtml }) => {
   return (
-    <div>
+    <div className="t-flex-1 t-overflow-hidden">
       <TextRenderer htmlString={textHtml} />
     </div>
   )
