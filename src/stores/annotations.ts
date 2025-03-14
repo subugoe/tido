@@ -98,9 +98,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   };
 
   const addSimpleAnnotation = (targetElement: HTMLElement, annotation: Annotation) => {
-    const configStore = useConfigStore()
-    const iconName: string = configStore.getIconByType(annotation.body['x-content-type']);
-    Utils.addIcon(targetElement, annotation, iconName);
+    const configStore = useConfigStore();
+    const iconName = configStore.getIconByType(annotation.body['x-content-type']);
+    if (iconName)  Utils.addIcon(targetElement, annotation, iconName);
   }
 
   const addVariantAnnotation = (targetElement: HTMLElement, annotation: Annotation) => {
@@ -272,7 +272,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   };
 
   const removeSimpleAnnotation = (annotation: Annotation) => {
-    AnnotationUtils.removeIcon(annotation);
+    const configStore = useConfigStore();
+    const iconName = configStore.getIconByType(annotation.body['x-content-type']);
+    if (iconName) AnnotationUtils.removeIcon(annotation);
   }
 
   const removeVariantAnnotation = (selector: string, annotation: Annotation) => {
