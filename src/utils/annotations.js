@@ -218,9 +218,9 @@ function createWitnessesWrapper() {
 }
 
 function createWitnessEl(witness, witnessColor) {
-  // create an html element of one witness
+  // create a html element of one witness
   const el = document.createElement("span");
-  el.innerHTML = witness
+  el.innerHTML = witness && witness.idnoAlt ? witness.idnoAlt : '-';
   el.classList.add('t-rounded-3xl', 't-box-border', 't-py-0.5', 't-px-1.5', 't-text-xs', 't-font-semibold', 't-font-sans', 't-ml-[3px]')
   el.style.background = colors[witnessColor]['100']
   el.style.color = colors[witnessColor]['600']

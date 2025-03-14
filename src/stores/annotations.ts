@@ -105,8 +105,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   }
 
   const addVariantAnnotation = (targetElement: HTMLElement, annotation: Annotation) => {
-    annotation.body.value.witnesses.forEach(witness => {
-      Utils.addWitness(targetElement, witness, variantItemsColors.value[witness])
+    annotation.body.value.witnesses.forEach(idno => {
+      Utils.addWitness(targetElement, witnessesMap.value[idno], variantItemsColors.value[idno])
     })
   }
 

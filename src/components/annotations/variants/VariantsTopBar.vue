@@ -37,7 +37,11 @@ function toggleWitness(witness: Witness, isActive: boolean) {
 </script>
 
 <template>
-  <div class="t-flex t-flex-col" id="variants-top-bar" v-show="annotationsStore.filteredAnnotations.length > 0">
+  <div
+    v-show="annotationsStore.filteredAnnotations.length > 0"
+    id="variants-top-bar"
+    class="t-flex t-flex-col"
+  >
     <h3 class="t-text-sm t-font-bold t-mb-2">
       {{ $t('witnesses') }}:
     </h3>
@@ -60,19 +64,23 @@ function toggleWitness(witness: Witness, isActive: boolean) {
               @update:model-value="toggleWitness(witness, $event)"
             />
             <label
-              class="t-relative t-rounded-3xl t-box-border t-px-2 t-py-1 t-text-xs t-flex-grow-0 t-flex t-items-center
-            t-font-semibold t-whitespace-nowrap t-cursor-pointer"
+              class="t-relative t-rounded-3xl t-box-border t-px-2 t-py-1 t-text-xs t-flex-grow-0
+            t-font-semibold t-cursor-pointer t-truncate t-max-w-[300px]"
               :for="`witness-toggle-${i}`"
+              :title="witness.title ?? '-'"
               :style="{
                 'background': colors[getWitnessColor(witness.idno)]['100'],
                 'color': colors[getWitnessColor(witness.idno)]['600']
               }"
-            >{{ witness.idno ?? '-' }}</label>
+            >{{ witness.idnoAlt ? `(${witness.idnoAlt}) ` : '' }}{{ witness.title ?? '-' }}</label>
           </div>
         </div>
       </BaseDropdown>
     </div>
-    <div class="t-mt-4 t-flex t-items-center" v-show="Object.keys(annotationsStore.activeAnnotations).length > 0">
+    <div
+      v-show="Object.keys(annotationsStore.activeAnnotations).length > 0"
+      class="t-mt-4 t-flex t-items-center"
+    >
       <span class="t-text-sm t-font-bold">{{ Object.keys(annotationsStore.activeAnnotations).length }} Variants selected</span>
     </div>
   </div>
