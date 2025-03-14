@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.7.0](https://github.com/subugoe/tido/compare/v4.6.0...v4.7.0) (2025-03-03)
+
+
+### Features
+
+* add "fitPanels" config option, control panel widths with flex values ([#572](https://github.com/subugoe/tido/issues/572)) ([6ac19f5](https://github.com/subugoe/tido/commit/6ac19f56a330837e1b629531b845428bc0cfff48))
+* remove all surrounding paddings for better embedding ([039b556](https://github.com/subugoe/tido/commit/039b5569e08c6da2d7a5d99b9a7c8094344c65d9))
+
+
+### Bug Fixes
+
+* fitPanels behaviour on mobile screens ([26a5d79](https://github.com/subugoe/tido/commit/26a5d79bf4d3227ac7532971ff99995043d3a4ec))
+
+
+### Docs
+
+* add documentation for the feature`flexible ordering of metadata` ([9adc955](https://github.com/subugoe/tido/commit/9adc955a6590ff0c0f6086c4618b4434c02ddcd7))
+* add EUPT example ([f711cec](https://github.com/subugoe/tido/commit/f711cecfdf82ef3aefced38328fc0dded5d99e44))
+* update config builder ([49ca3a0](https://github.com/subugoe/tido/commit/49ca3a0b670c476264eb2a38b6408abe5720e60c))
+
+## [4.6.0](https://github.com/subugoe/tido/compare/v4.5.2...v4.6.0) (2025-02-14)
+
+
+### Features
+
+* scroll to annotation item when clicked in text ([e563a3d](https://github.com/subugoe/tido/commit/e563a3d294e3924323c2ec10f73ce1b05702e675))
+
+
+### Bug Fixes
+
+* display primary color on annotation icons in text ([5f0cca5](https://github.com/subugoe/tido/commit/5f0cca5d8740bcf8cc52a4997700bb73628e2ee0))
+* nested metadata display ([#570](https://github.com/subugoe/tido/issues/570)) ([7610196](https://github.com/subugoe/tido/commit/761019635a23d39f31faa715f645a1d0516c19f1))
+
+
+### Refactoring
+
+* remove unused ([28851c8](https://github.com/subugoe/tido/commit/28851c84ee62c5e79837e03f494be6922c527d02))
+
 ### [4.5.2](https://github.com/subugoe/tido/compare/v4.5.1...v4.5.2) (2025-02-10)
 
 
