@@ -19,7 +19,8 @@ declare global {
 
   interface Witness {
     idno: string,
-    manifest: string
+    idnoAlt: string,
+    title: string
   }
 
   interface Annotation {

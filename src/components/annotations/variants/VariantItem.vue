@@ -12,29 +12,19 @@
       class="t-w-2/3"
       v-html="entry"
     />
-    <div class="t-w-1/3 t-flex t-flex-wrap t-space-x-0.5">
-      <template v-if="witnesses.length > 1">
-        <div
-          v-for="witness in witnesses"
-          :key="witness"
-          class="t-relative t-rounded-full t-p-2 t-font-semibold"
-          :style="{
-            'background': colors[getWitnessColor(witness)]['500'],
-          }"
-          :title="witness"
-          @mouseover="showWitnessTooltip($event, witness)"
-          @mouseout="hideWitnessTooltip($event)"
-        />
-      </template>
+    <div class="t-w-1/3 t-flex t-flex-wrap t-gap-0.5">
       <div
-        v-else-if="witnesses.length === 1"
-        class="t-relative t-truncate t-rounded-3xl t-box-border t-px-2 t-py-1 t-text-xs t-flex-grow-0 t-font-semibold"
+        v-for="witnessIdno in witnessesIdnos"
+        :key="witnessIdno"
+        class="t-relative t-rounded-3xl t-box-border t-px-2 t-py-1 t-text-xs t-flex-grow-0 t-font-semibold"
         :style="{
-          'background': colors[getWitnessColor(witnesses[0])]['100'],
-          'color': colors[getWitnessColor(witnesses[0])]['600']
+          'background': colors[getWitnessColor(witnessIdno)]['100'],
+          'color': colors[getWitnessColor(witnessIdno)]['600']
         }"
+        @mouseover="showWitnessTooltip($event, witnessIdno)"
+        @mouseout="hideWitnessTooltip($event)"
       >
-        {{ witnesses[0] ?? '-' }}
+        <span class="t-pointer-events-none">{{ getWitnessIdnoAlt(witnessIdno) }}</span>
       </div>
     </div>
   </div>
@@ -53,7 +43,7 @@ import {useAnnotationsStore} from "@/stores/annotations";
 const annotationStore = useAnnotationsStore();
 
 const entry = computed(() => props.annotation.body.value.entry)
-const witnesses = computed(() => props.annotation.body.value.witnesses)
+const witnessesIdnos = computed(() => props.annotation.body.value.witnesses)
 
 export interface Props {
   annotation: Annotation,
@@ -83,20 +73,30 @@ function getWitnessColor(witness: string) {
   return annotationStore.variantItemsColors[witness];
 }
 
-function showWitnessTooltip(event: MouseEvent, witness: string) {
+function showWitnessTooltip(event: MouseEvent, idno: string) {
   const { target } = event;
   const tooltipEl = document.createElement('div');
-  tooltipEl.classList.add('t-absolute' ,'t-z-50', 't-rounded-3xl', 't-box-border', 't-px-2', 't-py-1', 't-text-xs', 't-font-semibold', '-t-top-[28px]', 't-left-1/2', '-t-translate-x-1/2', 't-border');
-  tooltipEl.style.background = colors[getWitnessColor(witness)]['100'];
-  tooltipEl.style.color = colors[getWitnessColor(witness)]['600'];
-  tooltipEl.style.borderColor = colors[getWitnessColor(witness)]['600'];
-  tooltipEl.innerHTML = witness;
+  tooltipEl.classList.add('witness-tooltip', 't-absolute' ,'t-z-50', 't-rounded-3xl', 't-box-border', 't-px-2', 't-py-1',
+    't-text-xs', 't-font-semibold', 't-max-w-[300px]', 't-truncate', '-t-top-[28px]', 't-left-1/2', '-t-translate-x-1/2', 't-border', 't-text-nowrap');
+  tooltipEl.style.background = colors[getWitnessColor(idno)]['100'];
+  tooltipEl.style.color = colors[getWitnessColor(idno)]['600'];
+  tooltipEl.style.borderColor = colors[getWitnessColor(idno)]['600'];
+  tooltipEl.innerHTML = getWitnessTitle(idno);
 
   target.appendChild(tooltipEl);
 }
 
 function hideWitnessTooltip(event: MouseEvent) {
   const { target } = event;
-  target.innerHTML = '';
+  target.querySelector('.witness-tooltip').remove();
 }
+
+function getWitnessIdnoAlt(idno: string) {
+  return annotationStore.witnessesMap[idno].idnoAlt ?? '-';
+}
+
+function getWitnessTitle(idno: string) {
+  return annotationStore.witnessesMap[idno].title ?? '-';
+}
+
 </script>
