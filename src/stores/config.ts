@@ -178,15 +178,15 @@ import { i18n } from '@/i18n';
       })
 
       // I think it doesn't matter whether getIconByType is a function or a computed property, since its only being called by actions in config
-      function getIconByType(type) {
+      function getIconByType(type: string): string | undefined {
        const annotationsConnectorId = 5;
        const panelIndex = config.value.panels.findIndex(({ views }) => views.find(({ connector }) => annotationsConnectorId === connector.id));
 
-       if (panelIndex === -1) return -1;
+       if (panelIndex === -1) return undefined;
 
        const viewIndex = activeViews.value[panelIndex];
        const types = config.value.panels[panelIndex].views[viewIndex].connector.options?.types;
-       return types.find(({ name }) => name === type)?.icon || 'biPencilSquare';
+       return types.find(({ name }) => name === type)?.icon;
       }
 
      function setConfig(payload) {
