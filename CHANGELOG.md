@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.8.0](https://github.com/subugoe/tido/compare/v4.7.0...v4.8.0) (2025-03-20)
+
+
+### Features
+
+* add an option in config to have no icons for annotations ([af10dc3](https://github.com/subugoe/tido/commit/af10dc312190aab5bfd30b28ad16812a2e0c0503))
+* display siglums in variant items and show witness titles on hover ([71f460a](https://github.com/subugoe/tido/commit/71f460a4010fdcfd9b122513f4ec4f6a230c5f7f))
+* use witness idnoAlt in variant items, witnesses filter and text, show witness titles on hover in varaint items ([0278e8b](https://github.com/subugoe/tido/commit/0278e8b55f537c61bdc507a34701861d8279efb4))
+
+
+### Bug Fixes
+
+* deselecting varaint items in text ([8dfcd6e](https://github.com/subugoe/tido/commit/8dfcd6ef689fb80595aee0dd85ddef6a09c4290a))
+
+
+### Docs
+
+* update README.md ([0c3aa93](https://github.com/subugoe/tido/commit/0c3aa938ba825f88079f56a222f1f64f35e61968))
+
 ## [4.7.0](https://github.com/subugoe/tido/compare/v4.6.0...v4.7.0) (2025-03-03)
 
 
