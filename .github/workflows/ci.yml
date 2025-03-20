@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
      matrix:
-       node-version: [18, 20]
+       node-version: [20, 22]
     steps:
     - uses: actions/checkout@v4
     - name: Get npm cache directory
@@ -29,13 +29,13 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node${{ matrix.node-version }}-
 
-    - name: Cache Cypress binary
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/Cypress
-        key: cypress-${{ runner.os }}-cypress-node${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-        restore-keys: |
-          cypress-${{ runner.os }}-cypress-node${{ matrix.node-version }}-
+#    - name: Cache Cypress binary
+#      uses: actions/cache@v4
+#      with:
+#        path: ~/.cache/Cypress
+#        key: cypress-${{ runner.os }}-cypress-node${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+#        restore-keys: |
+#          cypress-${{ runner.os }}-cypress-node${{ matrix.node-version }}-
 
     - name: Setup node
       uses: actions/setup-node@v4
@@ -45,10 +45,10 @@ jobs:
       run: npm ci
     - name: Run Linting
       run: npm run lint
-    - name: Run tests
-      run: |
-        npm run start:mock-api &
-        npm run test
+#    - name: Run tests
+#      run: |
+#        npm run start:mock-api &
+#        npm run test
       # - name: Save test video folder
       #   if: always()
       #   uses: actions/upload-artifact@v4

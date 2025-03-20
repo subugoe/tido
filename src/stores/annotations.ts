@@ -19,6 +19,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const variantItemsColors = ref({})
   const annotations = ref<Annotation[]>(null)
   const witnesses = ref<Witness[]>([])
+  const witnessesMap = ref<{[key: string]: Witness}>( {})
   const filteredAnnotations = ref<Annotation[]>([])
   const visibleAnnotations = ref<Annotation[]>([])
   const isLoading = ref<boolean>(false);
@@ -104,8 +105,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   }
 
   const addVariantAnnotation = (targetElement: HTMLElement, annotation: Annotation) => {
-    annotation.body.value.witnesses.forEach(witness => {
-      Utils.addWitness(targetElement, witness, variantItemsColors.value[witness])
+    annotation.body.value.witnesses.forEach(idno => {
+      Utils.addWitness(targetElement, witnessesMap.value[idno], variantItemsColors.value[idno])
     })
   }
 
@@ -199,6 +200,11 @@ export const useAnnotationsStore = defineStore('annotations', () => {
   const annotationLoaded = ({ items, refs }) => {
     annotations.value = items
     witnesses.value = refs
+
+    witnessesMap.value = refs.reduce((acc, cur) => {
+      acc[cur.idno] = cur;
+      return acc;
+    }, {});
 
     preprocessVariants()
     allocateWitnessColorInVariantItem()
@@ -447,6 +453,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     activeAnnotations,
     annotations,
     witnesses,
+    witnessesMap,
     filteredAnnotations,
     visibleAnnotations,
     isLoading,

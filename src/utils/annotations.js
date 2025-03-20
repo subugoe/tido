@@ -218,9 +218,10 @@ function createWitnessesWrapper() {
 }
 
 function createWitnessEl(witness, witnessColor) {
-  // create an html element of one witness
+  // create a html element of one witness
   const el = document.createElement("span");
-  el.innerHTML = witness
+  el.innerHTML = witness && witness.idnoAlt ? witness.idnoAlt : '-';
+  el.setAttribute('data-idno', witness.idno ?? '-');
   el.classList.add('t-rounded-3xl', 't-box-border', 't-py-0.5', 't-px-1.5', 't-text-xs', 't-font-semibold', 't-font-sans', 't-ml-[3px]')
   el.style.background = colors[witnessColor]['100']
   el.style.color = colors[witnessColor]['600']
@@ -241,7 +242,7 @@ export function removeWitnessesWrappers() {
   })
 }
 
-export function removeWitness(selector, witness) {
+export function removeWitness(selector, idno) {
   // find the witnesses span which contains each 'witness' span child element
   // find this witness inside the 'witnesses' html span and remove it
   const textPanel = document.querySelector('#text-content')
@@ -251,7 +252,7 @@ export function removeWitness(selector, witness) {
   if (!wrapper) return;
   if (Array.from(wrapper.children).length === 0) return;
 
-  const witnessEl = Array.from(wrapper.children).filter(item => item.innerHTML === witness)
+  const witnessEl = Array.from(wrapper.children).filter(item => item.getAttribute('data-idno') === idno)
   // witEl: refers to the current Witness chip that we will remove
   if (witnessEl.length > 0) witnessEl[0].remove()
 }
