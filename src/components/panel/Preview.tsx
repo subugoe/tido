@@ -1,19 +1,29 @@
 import { FC, ReactNode } from 'react'
 
 interface PreviewProps {
-  textEl: ReactNode,
-  textShown: boolean,
-  setTextShown: (textShown: boolean) => void,
-  imageUrl: string | undefined,
-  imageDescription?: string,
-  previewStyles: string,
-  additionalTextPreviewStyles: string
+  children: ReactNode[],
+  modes: Mode[],
+  modeIndex: number,
+  setModeIndex:(value: number) => void,
 }
 
-const Preview: FC<PreviewProps> = ({ textEl, imageUrl, imageDescription, textShown, setTextShown, previewStyles, additionalTextPreviewStyles }) => {
+interface Mode {
+  type: string
+}
+
+const Preview: FC<PreviewProps> = ({ children, modes, modeIndex, setModeIndex }) => {
+
+  function updateModeIndex() {
+    if (modeIndex === 0) {
+      setModeIndex(1)
+      return
+    }
+    setModeIndex(0)
+  }
+
   return (
-    <button className={previewStyles} onClick={() => setTextShown(!textShown)} title={textShown ? 'Click to view the image': 'Click to view the text'}>
-      {textShown ? <img src={imageUrl} alt={imageDescription} /> : <div className={additionalTextPreviewStyles}> {textEl} </div> }
+    <button onClick={() => updateModeIndex()} title={`Click to view the ${modes[modeIndex].type}`}>
+      {children[modeIndex] }
     </button>
   )
 }

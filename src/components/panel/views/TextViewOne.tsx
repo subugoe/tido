@@ -13,15 +13,30 @@ const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
 
   const { panelState } = usePanel()
   const imageUrl = panelState?.item?.image?.id
-  const [textShown, setTextShown] = useState(true)
+  const [previewModeIndex, setModeIndex] = useState(0)
 
-  const previewStyles = 't-z-20 t-absolute t-border-[2px] t-border-zinc-800 t-p-[1px] t-w-20 t-h-24 t-overflow-hidden t-bottom-12 t-right-12'
-  const additionalTextPreviewStyles = 't-bg-white hover:t-bg-gray-100 t-text-xs'
+
+  const previewModes = [
+    {
+      type: 'image'
+    },
+    {
+      type: 'text'
+    }
+  ]
 
   return (
     <div className="t-flex-1 t-overflow-hidden">
-      {textShown ? <TextRenderer htmlString={textHtml} /> : <OpenSeaDragonViewer />}
-      <Preview textEl={<TextRenderer htmlString={textHtml} />} textShown={textShown} setTextShown={setTextShown} imageUrl={imageUrl} imageDescription={'Digitalisat'} previewStyles={previewStyles} additionalTextPreviewStyles={additionalTextPreviewStyles} />
+      {previewModeIndex === 0 ? <TextRenderer htmlString={textHtml} /> : <OpenSeaDragonViewer />}
+      <div
+        className={'t-z-20 t-absolute t-border-[2px] t-border-zinc-800 t-p-[1px] t-w-20 t-h-24 t-overflow-hidden t-bottom-12 t-right-12'}>
+        <Preview modes={previewModes} modeIndex={previewModeIndex}  setModeIndex={setModeIndex} >
+          <img src={imageUrl} alt={'image of Digitalisat'} />
+          <div className={'t-bg-white hover:t-bg-gray-100 t-text-[5px]'}>
+            <TextRenderer htmlString={textHtml} />
+          </div>
+        </Preview>
+      </div>
     </div>
   )
 }
