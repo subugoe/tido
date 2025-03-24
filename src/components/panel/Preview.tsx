@@ -1,30 +1,30 @@
 import { FC, ReactNode } from 'react'
 
 interface PreviewProps {
-  children: ReactNode[],
-  modes: Mode[],
-  modeIndex: number,
-  setModeIndex:(value: number) => void,
+  previewA: ReactNode,
+  previewB: ReactNode,
+  mode: string,
+  setMode: (value: string) => void,
 }
 
-interface Mode {
-  type: string
-}
+const Preview: FC<PreviewProps> = ({ previewA, previewB, mode, setMode }) => {
 
-const Preview: FC<PreviewProps> = ({ children, modes, modeIndex, setModeIndex }) => {
-
-  function updateModeIndex() {
-    if (modeIndex === 0) {
-      setModeIndex(1)
+  function updateMode() {
+    if (mode === 'A') {
+      setMode('B')
       return
     }
-    setModeIndex(0)
+    setMode('A')
   }
 
   return (
-    <button onClick={() => updateModeIndex()} title={`Click to view the ${modes[modeIndex].type}`}>
-      {children[modeIndex] }
-    </button>
+    <div
+      className="t-z-20 t-absolute t-border-[2px] t-border-zinc-800 t-p-[1px] t-w-20 t-h-24 t-overflow-hidden t-bottom-12 t-right-12 hover:t-brightness-80"
+      onClick={() => updateMode()}>
+      <div className="hover:t-cursor-pointer hover:t-bg-gray-100 t-bg-white">
+        {mode === 'A' ? previewA : previewB  }
+      </div>
+    </div>
   )
 }
 
