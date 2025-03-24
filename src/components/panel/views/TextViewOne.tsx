@@ -4,7 +4,6 @@ import OpenSeaDragonViewer from '@/components/OpenSeaDragonViewer.tsx'
 import Preview from '@/components/panel/Preview.tsx'
 
 import { usePanel } from '@/contexts/PanelContext'
-import { usePanelStore } from '@/store/PanelStore.tsx'
 
 interface TextViewOneProps {
   textHtml: string
@@ -12,8 +11,8 @@ interface TextViewOneProps {
 
 const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
 
-  const { panelId } = usePanel()
-  const imageUrl = usePanelStore((state) => panelId && state.panels[panelId] ? state.panels[panelId].item?.image?.id: '')
+  const { panelState } = usePanel()
+  const imageUrl = panelState?.item?.image?.id
   const [textShown, setTextShown] = useState(true)
 
   const previewStyles = 't-z-20 t-absolute t-border-[2px] t-border-zinc-800 t-p-[1px] t-w-20 t-h-24 t-overflow-hidden t-bottom-12 t-right-12'
