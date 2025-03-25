@@ -38,6 +38,7 @@
     <script>
       window.addEventListener("load", function () {
         window.tido = new window.Tido({
+          lang: 'de',
           globalTree: true,
           colors: {
             primary: "#1E40AF",
@@ -50,34 +51,7 @@
               },
               manifestIndex: 1,
             },
-            {
-              entrypoint: {
-                url: "http://localhost:8181/example/textapi/collection.json",
-                type: "collection",
-              },
-              manifestIndex: 1,
-            },
-            {
-              entrypoint: {
-                url: "http://localhost:8181/example/textapi/collection.json",
-                type: "collection",
-              },
-              manifestIndex: 2,
-            },
-            {
-              entrypoint: {
-                url: "http://localhost:8181/example/textapi/collection.json",
-                type: "collection",
-              },
-              manifestIndex: 3,
-            },
-            {
-              entrypoint: {
-                url: "http://localhost:8181/example/textapi/collection.json",
-                type: "collection",
-              },
-              manifestIndex: 3,
-            },
+
           ],
         });
       });

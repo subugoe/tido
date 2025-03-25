@@ -83,7 +83,8 @@ declare global {
     container: string
     globalTree?: boolean
     panels?: PanelConfig[]
-    colors?: Colors
+    colors?: Colors,
+    lang: string
   }
 
   interface Content {
