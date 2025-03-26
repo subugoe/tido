@@ -13,6 +13,7 @@ const LanguageSwitcher = () => {
       <button onClick={() => handleLanguageChange('de')}>Deutsch</button>
       <button onClick={() => handleLanguageChange('en')}>English</button>
       <button onClick={() => handleLanguageChange('es')}>Español</button>
+      <button onClick={() => handleLanguageChange('hi')}>Indian</button>
       <button onClick={() => handleLanguageChange('ru')}>Russian</button>
       <button onClick={() => handleLanguageChange('tr')}>Turkish</button>
     </div>
