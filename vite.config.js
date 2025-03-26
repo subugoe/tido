@@ -1,7 +1,21 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import { resolve } from 'path';
 import fs from 'fs';
 import react from '@vitejs/plugin-react'
+
+function removeAttributes(attributes = []) {
+  return {
+    name: 'remove-attributes',
+    enforce: 'post',
+    transform(code, id) {
+      if (id.endsWith('.js') || id.endsWith('.tsx') || id.endsWith('.jsx')) {
+        const regex = new RegExp(`\(${attributes.join('|')})`, 'g');
+        return code.replace(regex, '');
+      }
+      return code;
+    },
+  }
+}
 
 function injectProjectConfig(projectName) {
   const config = projectName ? fs.readFileSync(`examples/config/${projectName}.json`, 'utf8') : null;
@@ -13,12 +27,15 @@ function injectProjectConfig(projectName) {
   }
 }
 
-export default defineConfig(() => {
+
+export default defineConfig(({ mode}) => {
   const projectName = process.argv.find(arg => arg.startsWith('--project='))?.split('=')[1] || null;
+  const env = loadEnv(mode, process.cwd());
 
   return {
     plugins: [
       react(),
+      ...(env.VITE_ENV === 'production' ? [removeAttributes(['data-cy'])] : []),
       injectProjectConfig(projectName)
     ],
     resolve: {
