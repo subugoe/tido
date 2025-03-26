@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 const LanguageSwitcher = () => {
+  // prop: a list of language codes
   const { i18n } = useTranslation() // Access the i18next instance to change language
 
   const handleLanguageChange = (language: string) => {

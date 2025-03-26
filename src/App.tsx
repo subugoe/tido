@@ -5,12 +5,17 @@ import { useDataStore } from '@/store/DataStore.tsx'
 
 import './i18n.ts'
 
+import '@/components/InitializeI18n.tsx'
+
 import TopBar from '@/components/TopBar'
 import GlobalTree from '@/components/tree/GlobalTree.tsx'
 
 import { createCollectionNodes } from '@/utils/tree.ts'
 import PanelsWrapper from '@/components/PanelsWrapper.tsx'
+
+import InitializeI18n from '@/components/InitializeI18n.tsx'
 import { useTranslation } from 'react-i18next'
+
 
 interface AppProps {
   customConfig: Config
@@ -22,12 +27,13 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
   const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
-
   const { i18n } = useTranslation() // Access the i18next instance to change language
+
 
   const handleLanguageChange = (language: string) => {
     i18n.changeLanguage(language) // Change the language dynamically
   }
+
 
   useEffect(() => {
     async function initTree(collections: CollectionMap) {
@@ -40,12 +46,10 @@ const App: FC<AppProps> = ({ customConfig }) => {
     initTree(collections)
   }, [collections])
 
-  useEffect(() => {
-    handleLanguageChange(customConfig.lang)
-  }, [])
 
   return (
     <div className="tido t-flex t-flex-col t-h-full">
+      <InitializeI18n translationsDirPath={customConfig.translationsDirPath} language={customConfig.lang} />
       <TopBar />
       <div className="t-flex-1 t-flex t-overflow-hidden">
         <GlobalTree />

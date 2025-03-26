@@ -84,7 +84,8 @@ declare global {
     globalTree?: boolean
     panels?: PanelConfig[]
     colors?: Colors,
-    lang: string
+    lang: string,
+    translationsDirPath: string
   }
 
   interface Content {
