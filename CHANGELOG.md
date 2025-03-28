@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.8.1](https://github.com/subugoe/tido/compare/v4.8.0...v4.8.1) (2025-03-28)
+
+
+### Bug Fixes
+
+* display annotations when no refs are given ([91613d8](https://github.com/subugoe/tido/commit/91613d840be5646841731490d745449ef1deb38a))
+
 ## [4.8.0](https://github.com/subugoe/tido/compare/v4.7.0...v4.8.0) (2025-03-20)
 
 
