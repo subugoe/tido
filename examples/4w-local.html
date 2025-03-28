@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head><title>TIDO</title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="dist/tido.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
+  continue.</strong></noscript>
+<header>
+  <a class="home" href="./">TIDO</a>
+  <span>Examples:</span>
+  <nav>
+    <select id="nav-select">
+      <option disabled selected hidden>Please select...</option>
+      <option value="./ahiqar-syriac.html">Ahiqar Syriac</option>
+      <option value="./ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</option>
+      <option value="./gfl.html">Goethes Farbenlehre in Berlin</option>
+      <option value="./4w.html">Vier Wachen</option>
+    </select>
+  </nav>
+</header>
+<div id="app"></div>
+<script src="dist/tido.js"></script>
+<script>
+  const select = document.getElementById('nav-select');
+  const pathArr = window.location.pathname.split('/')
+
+  select.value = './' + pathArr[pathArr.length - 1]
+
+  select.onchange = function (event) {
+    window.location = event.target.value
+  }
+
+  window.addEventListener('load', function () {
+    new window.Tido({
+      globalTree: true,
+      colors: {
+        primary: "#1E40AF",
+      },
+      panels: [
+        {
+          entrypoint: {
+            url: "http://localhost:8181/4w/reproduction/collection.json",
+            type: "collection",
+          },
+          manifestIndex: 0,
+        },
+      ],
+    });
+});
+</script>
+</body>
+</html>

@@ -33,53 +33,12 @@
       >
     </noscript>
     <div id="app"></div>
-
+    <!-- CONFIG PLACEHOLDER -->
     <script type="module" src="/src/main.tsx"></script>
     <script>
+      const config = JSON.parse(document.getElementById('config')?.textContent ?? '{}');
       window.addEventListener("load", function () {
-        window.tido = new window.Tido({
-          globalTree: true,
-          colors: {
-            primary: "#1E40AF",
-          },
-          panels: [
-            {
-              entrypoint: {
-                url: "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
-                type: "collection",
-              },
-              manifestIndex: 1,
-            },
-            {
-              entrypoint: {
-                url: "http://localhost:8181/example/textapi/collection.json",
-                type: "collection",
-              },
-              manifestIndex: 1,
-            },
-            {
-              entrypoint: {
-                url: "http://localhost:8181/example/textapi/collection.json",
-                type: "collection",
-              },
-              manifestIndex: 2,
-            },
-            {
-              entrypoint: {
-                url: "http://localhost:8181/example/textapi/collection.json",
-                type: "collection",
-              },
-              manifestIndex: 3,
-            },
-            {
-              entrypoint: {
-                url: "http://localhost:8181/example/textapi/collection.json",
-                type: "collection",
-              },
-              manifestIndex: 3,
-            },
-          ],
-        });
+        new window.Tido(config)
       });
     </script>
   </body>

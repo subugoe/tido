@@ -1,0 +1,255 @@
+@font-face {
+  font-family: "Junicode VF";
+  src: url("http://localhost:8181/4w/fonts/JunicodeVF-Roman.woff2");
+  font-weight: 300 700;
+  font-stretch: 75% 125%;
+}
+
+.text-area { 
+    font-family: 'Junicode VF';
+    font-size: 12pt;
+    margin: auto;
+    line-height: 2em;
+    margin-left: 80px
+}
+
+.container {
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.flex-direction {
+  flex-direction:row;
+}
+
+.column-a {
+  width: 40%;
+  height: auto;
+  padding: 10px
+}
+
+.column-b {
+  width: 40%;
+  height: auto;
+  padding: 10px;
+}
+
+.page-w-colums {
+  margin-top: 30px;
+}
+
+@media all and (max-width: 500px) {
+  .flex-direction{
+  flex-direction:column;
+  }
+  
+  .choice-container:focus > .abbr {
+      display: inline-block;
+      min-width: 1em;
+  }
+}
+
+.line-nr:before { content: ' '; display: block; }
+  
+.line-nr {
+    display: inline-block;
+    width: 35px;
+    color: #888;
+    font-size: smaller    
+}
+
+.line {
+  text-indent: -35px;
+  margin-left: 35px;
+}
+
+.sheet-nr {
+  color: #888;
+  font-size: smaller;
+  padding: 20px 0;
+}
+
+.sheet-nr::before {
+    content: "| ";
+}
+
+.sheet-nr::after {
+    content: " |";
+}
+
+.p { margin-top: 15px; margin-bottom: 15px; }
+.expan { display: none; }
+.larger { font-size: x-large; }
+
+.abbr { 
+  display: inline;
+  background-color: #eee;
+  cursor: pointer;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.choice-container {
+  position: relative;
+}
+
+.expan {
+  border: solid 1px #ddd;
+  border-radius: 3px;
+  display: none;
+  font-size: smaller;
+  max-width: fit-content;
+  padding: 5px;
+  word-wrap: break-word;
+}
+
+.choice-container:focus > .expan {
+  background-color: white;
+  display: block;
+  left: 50%;
+  max-width: unset !important;
+  position: absolute;
+  text-indent: 0;
+  top: 100%;
+  transform: translate(-50%, 0);
+  width: 15em;
+  z-index: 1;
+}
+
+.ext-2 {
+  font-size: 2lh;
+}
+
+.ext-3 {
+  font-size: 3lh;
+}
+
+body.body--dark .expan {
+  background-color: #2b2b2b !important;
+}
+
+.sim-add-right::before,
+.sim-add-left::before,
+.sim-add-top::before,
+.sim-add-bottom::before {
+  content: "\\\\"
+}
+
+.sim-add-right::after,
+.sim-add-left::after,
+.sim-add-top::after,
+.sim-add-bottom::after {
+  content: "//"
+}
+
+.sim-del,
+.sim-hi.s,
+.acc-del.s,
+.acc-hi.s {
+  text-decoration: line-through;
+}
+
+.acc-del.s
+.acc-hi.s {
+  text-decoration-color: red;
+}
+
+.sim-hi.deco.red,
+.sim-hi.in.red {
+  color: inherit;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.acc-hi.red {
+  color: red;
+}
+
+.acc-hi.deco.red {
+  color: initial;
+  text-decoration: line-through;
+  text-decoration-color: red;
+}
+
+.acc-hi.deco.red.larger {
+  font-size: x-large;
+}
+
+.acc-hi.in.red {
+  color: red;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.metamark.cue_initial {
+  display: none;
+}
+
+.acc-add-left {
+  position: absolute;
+  left: 0;
+  text-indent: 0;
+}
+
+.acc-add-right {
+  position: absolute;
+  left: 35%;
+  text-indent: 0;
+}
+
+.acc-add-across {
+  position: absolute;
+  text-indent: 0;
+}
+
+.acc-add-above,
+.acc-add-bottom {
+  padding-right: 35px;
+}
+
+.additions-bottom,
+.additions-top {
+  margin-left: 35px;
+}
+
+.additions-bottom {
+  margin-top: 30px;
+}
+
+.additions-top {
+  margin-bottom: 30px;
+}
+
+.acc-add-superlinear {
+  position: relative;
+  text-indent: 0;
+  top: -15px;
+}
+
+.offset-11 {
+  margin-top: 11lh;
+}
+
+.offset-31 {
+  margin-top: 31lh;
+}
+
+.offset-32 {
+  margin-top: 32lh;
+}
+
+.fw-type-header,
+.fw-place-top-center {
+  text-align: center;
+}
+
+.empty-column {
+  display: block;
+  width: 40%;
+}
+
+.ol {
+  text-decoration: overline;
+}
