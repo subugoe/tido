@@ -1,0 +1,22 @@
+{
+  "globalTree": true,
+  "colors": {
+    "primary": "#1E40AF"
+  },
+  "panels": [
+    {
+      "entrypoint": {
+        "url": "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
+        "type": "collection"
+      },
+      "manifestIndex": 1
+    },
+    {
+      "entrypoint": {
+        "url": "http://localhost:8181/example/textapi/collection.json",
+        "type": "collection"
+      },
+      "manifestIndex": 1
+    }
+  ]
+}
