@@ -197,7 +197,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     }
   };
 
-  const annotationLoaded = ({ items, refs }) => {
+  const annotationLoaded = ({ items = [], refs = [] }) => {
     annotations.value = items
     witnesses.value = refs
 
@@ -316,12 +316,13 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         return;
       }
 
-      const current = await request(annotations.first);
+      const page = await request(annotations.first);
 
-      if (Array.isArray(current.items)) {
-        annotationLoaded(current)
+      if (Array.isArray(page.items)) {
+        annotationLoaded(page)
       }
     } catch (err) {
+      console.error(err)
       annotationLoaded({ items: [], refs: [] })
     }
   };
