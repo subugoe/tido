@@ -1,0 +1,15 @@
+{
+  "globalTree": true,
+  "colors": {
+    "primary": "#1E40AF"
+  },
+  "panels": [
+    {
+      "entrypoint": {
+        "url": "http://localhost:8181/4w/reproduction/collection.json",
+        "type": "collection"
+      },
+      "manifestIndex": 0
+    }
+  ]
+}
