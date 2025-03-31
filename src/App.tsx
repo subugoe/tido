@@ -33,7 +33,7 @@ const App: FC<AppProps> = ({ customConfig }) => {
   }, [collections])
 
   return (
-    <div className="tido t-flex t-flex-col t-h-full">
+    <div className="tido t-flex t-flex-col t-h-full" data-cy="app">
       <TopBar />
       <div className="t-flex-1 t-flex t-overflow-hidden">
         <GlobalTree />
