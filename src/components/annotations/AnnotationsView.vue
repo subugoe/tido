@@ -37,20 +37,28 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(['init'])
 
+let lastLoadedAnnotations = null;
+let lastLoadedContentUrl = null;
+
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
 const activeContentUrl = computed<string>(() => contentStore.activeContentUrl);
-const updateTextHighlighting = computed(() =>
+const updateTextHighlighting = computed(() => {
   // We need to make sure that annotations are loaded (this.annotations),
   // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
   // and the annotation are filtered by type (this.filteredAnnotations).
-  `${annotations.value !== null}|${activeContentUrl.value}`);
+  const annotationsChanged = lastLoadedContentUrl !== activeContentUrl.value && lastLoadedAnnotations !== annotations.value
+  return `${annotations.value !== null}|${annotationsChanged}|${activeContentUrl.value}`
+});
 
 watch(
   updateTextHighlighting,
-  (contentData) => {
-    const [hasAnnotations, activeContentUrl] = contentData.split('|');
-    if (hasAnnotations !== 'true' || activeContentUrl === 'null') return;
+  (value) => {
+    const [hasAnnotations, annotationsChanged, activeContentUrl] = value.split('|');
+    if (hasAnnotations !== 'true' || annotationsChanged !== 'true' || activeContentUrl === 'null') return;
+    if (!value) return;
+    lastLoadedAnnotations = annotationStore.annotations;
+    lastLoadedContentUrl = contentStore.activeContentUrl
     annotationStore.resetAnnotations();
     annotationStore.selectFilteredAnnotations(props.types);
     annotationStore.highlightTargetsLevel0();
