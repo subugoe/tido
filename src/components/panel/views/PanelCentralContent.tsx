@@ -14,6 +14,8 @@ import { Skeleton } from '@/components/ui/skeleton.tsx'
 import EmptyMessage from '@/components/panel/EmptyMessage.tsx'
 import { apiRequest } from '@/utils/api.ts'
 
+
+
 const PanelCentralContent: FC = () => {
   const { panelId, panelState, loading } = usePanel()
 
@@ -23,6 +25,11 @@ const PanelCentralContent: FC = () => {
   const [text, setText] = useState<string>('')
 
   const [error, setError] = useState<string | null>(null)
+
+  function getContentUrlByType(type: string | undefined) {
+    if (!type) return undefined
+    return panelState?.item?.content.find(c => c.type.includes(type))?.url
+  }
 
   useEffect(() => {
     async function updateText(contentUrl: string) {
@@ -35,7 +42,8 @@ const PanelCentralContent: FC = () => {
       }
     }
 
-    const contentUrl = panelState?.item?.content[0].url ?? null
+    if (!panelState?.contentTypes.length) return
+    const contentUrl = getContentUrlByType(panelState?.contentTypes[activeContentTypeIndex].toLowerCase())
     if (contentUrl) updateText(contentUrl)
   }, [panelState, activeContentTypeIndex])
 

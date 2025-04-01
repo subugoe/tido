@@ -19,7 +19,7 @@ const TextRenderer: FC<Props> = ({ htmlString }) => {
     scrollContainer.innerHTML = htmlString
   }, [htmlString])
 
-  return <div data-panel={panelId} ref={ref} className="t-h-full t-overflow-auto" />
+  return <div data-panel={panelId} ref={ref} className="t-h-full t-relative t-overflow-auto" />
 }
 
 export default TextRenderer

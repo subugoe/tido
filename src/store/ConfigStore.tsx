@@ -8,7 +8,9 @@ interface ConfigStoreType {
 }
 
 export const useConfigStore = create<ConfigStoreType>((set, get) => ({
-  config: {},
+  config: {
+    container: '#app'
+  },
   addCustomConfig: (customConfig: Config) => {
     set({ config: customConfig })
   },
