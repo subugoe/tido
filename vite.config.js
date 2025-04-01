@@ -18,7 +18,8 @@ function removeAttributes(attributes = []) {
 }
 
 function injectProjectConfig(projectName) {
-  const config = projectName ? fs.readFileSync(`examples/config/${projectName}.json`, 'utf8') : null;
+
+  const config = fs.readFileSync(`examples/config/${projectName ?? 'default'}.json`, 'utf8');
   return {
     name: 'inject-project-config',
     transformIndexHtml(html) {

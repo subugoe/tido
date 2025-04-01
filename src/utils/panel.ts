@@ -40,19 +40,14 @@ export function getContentType(value: string): string {
 
 
 export function getContentTypes(content: Content[]): string[] {
-  const types: string[] = content.map((item) => {
-    if ('type' in item) return getContentType(item.type)
-    return 'missing'
-  })
-
-  return types
+  return content.filter(item => item.type && item.type.includes('text/html')).map((item) => getContentType(item.type))
 }
 
 export function getUniquePanels(panels: PanelConfig[] | undefined) {
   if (!panels) return []
 
   const uniquePanels = panels.filter((p, index, self) =>
-    index === self.findIndex((panel) => panel.entrypoint.url === p.entrypoint.url))
+    index === self.findIndex((panel) => panel.collection === p.collection))
 
   return uniquePanels
 }

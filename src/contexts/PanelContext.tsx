@@ -48,7 +48,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
     if (!panelId) return
     try {
       setLoading(true)
-      const collection = await getCollection(panelConfig.entrypoint.url)
+      const collection = await getCollection(panelConfig.collection)
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
       const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)
       const contentTypes: string[] = getContentTypes(item.content)
