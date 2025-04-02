@@ -151,7 +151,7 @@ declare global {
     collectionId: string | null
     manifest: Manifest | null
     item: Item | null
-    contentTypes?: string[]
+    contentTypes: string[]
     contentIndex: number
     viewIndex: number
     imageUrl?: string
@@ -224,7 +224,7 @@ declare global {
   }
 
   interface PanelConfig {
-    entrypoint: Entrypoint
+    collection: string
     color?: Colors
     manifestIndex?: number
     itemIndex?: number

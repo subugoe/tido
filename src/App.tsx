@@ -14,8 +14,7 @@ interface AppProps {
 }
 
 const App: FC<AppProps> = ({ customConfig }) => {
-  const addCustomConfig = useConfigStore((state) => state.addCustomConfig)
-  addCustomConfig(customConfig)
+  useConfigStore.getState().addCustomConfig(customConfig)
 
   const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
