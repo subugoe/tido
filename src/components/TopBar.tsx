@@ -25,7 +25,7 @@ const TopBar: FC = () => {
     <button className={`toggle-global-tree ${!globalTree ? 't-hidden' : ''}`} onClick={toggleGlobalTree}>
       { !showGlobalTree ? <ListCollapse /> : <X /> }
     </button>
-    <Modal TriggerButton={<Button>New</Button>}>
+    <Modal TriggerButton={<Button data-cy="new-collection">New</Button>}>
       <TreeSelectionModalContent />
     </Modal>
     <Modal TriggerButton={<Button>Sync Panels</Button>}>
