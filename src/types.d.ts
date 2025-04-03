@@ -72,18 +72,16 @@ declare global {
     modules?: Module[]
   }
 
-  interface Colors {
-    forceMode: string
-    primary: string
-    secondary: string
-    accent: string
+  interface ThemeConfig {
+    forceMode?: string
+    primaryColor?: string
   }
 
   interface Config {
     container: string
     globalTree?: boolean
     panels?: PanelConfig[]
-    colors?: Colors
+    theme?: ThemeConfig
   }
 
   interface Content {
