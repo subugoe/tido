@@ -5,6 +5,14 @@ const selectors = {
   tab: '[role="tablist"] [data-pc-section="nav"] [data-pc-name="tabpanel"]'
 }
 
+const props = [
+  'showNewCollectionButton=true',
+  'showNewCollectionButton=false',
+  'colors[primary]=#123456',
+  'colors[theme]=dark',
+  'colors[theme]=dark&colors[primary]=#123456',
+]
+
 describe('App', () => {
   beforeEach(() => {
     cy.visit('/4w-local.html')
