@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 't-bg-gray-900 t-text-gray-50 hover:t-bg-gray-900/90 dark:t-bg-gray-50 dark:t-text-gray-900 dark:hover:t-bg-gray-50/90',
+        default: 't-bg-primary t-text-gray-50 hover:t-bg-primary/90 dark:t-bg-gray-50 dark:t-text-gray-900 dark:hover:t-bg-gray-50/90',
         destructive:
           't-bg-red-500 t-text-gray-50 hover:t-bg-red-500/90 dark:t-bg-red-900 dark:t-text-gray-50 dark:t-hover:bg-red-900/90',
         outline:
@@ -20,7 +20,7 @@ const buttonVariants = cva(
           't-bg-gray-300 t-text-gray-900 hover:t-bg-gray-300/80 dark:t-bg-gray-700 dark:t-text-gray-50 dark:hover:t-bg-gray-700/80',
         ghost: 'hover:t-bg-gray-100 hover:t-text-gray-900 dark:hover:t-bg-gray-800 dark:hover:t-text-gray-50',
         ghostAmber: 't-text-amber-700 hover:t-bg-amber-300 hover:t-text-amber-800 dark:hover:t-bg-amber-800 dark:hover:t-text-gray-50',
-        link: 't-text-gray-900 t-underline-offset-4 hover:t-underline dark:t-text-gray-50',
+        link: 't-text-primary t-underline-offset-4 hover:t-underline dark:t-text-gray-50',
       },
       size: {
         default: 't-h-10 t-px-4 t-py-2',

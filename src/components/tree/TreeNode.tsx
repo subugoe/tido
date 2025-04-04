@@ -1,7 +1,6 @@
 import { FC, MouseEvent, useState } from 'react'
 
 import { useTree } from '@/contexts/TreeContext'
-import { useConfigStore } from '@/store/ConfigStore'
 import { ChevronRight } from 'lucide-react'
 
 
@@ -14,8 +13,6 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   const [hasChildren, setHasChildren] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const { onSelect, getChildren, selectedNodeId, setSelectedNodeId } = useTree()
-
-  const { colors } = useConfigStore().config
 
   async function handleNodeClick(e: MouseEvent<HTMLElement>) {
     e.preventDefault()
@@ -40,8 +37,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
   return <div className="t-mb-1">
     <div
-      className="t-flex t-items-center hover:t-bg-gray-100 t-px-2 t-py-1 t-rounded-md hover:t-cursor-pointer"
-      style={{ backgroundColor: selectedNodeId === node.id ? colors?.primary: '' }}
+      className={`t-flex t-items-center hover:t-bg-gray-100 t-px-2 t-py-1 t-rounded-md hover:t-cursor-pointer ${ selectedNodeId === node.id ? 't-bg-primary' : '' }`}
       onClick={(e) => handleNodeClick(e)}
     >
       {!node.leaf && <span className={`t-mt-[2px] t-mr-1 t-transition-all ${isExpanded && 't-rotate-90'}`}><ChevronRight /></span>}
