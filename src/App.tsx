@@ -17,6 +17,7 @@ import  initI18n  from '@/i18n'
 import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
 
+import { mergeTranslations } from '@/utils/translations.ts'
 
 interface AppProps {
   customConfig: Config
@@ -35,9 +36,10 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
     async function initApp() {
       initTree(collections)
+      const tidoTranslations = mergeTranslations('sq', 'translations')
       await initI18n(customConfig.translationsDirPath)
-      await i18n.changeLanguage( customConfig.lang)
-      setReady(true)
+      await i18n.changeLanguage(customConfig.lang)
+      setReady(true)  // after writing the translations in user's translations dir path
     }
 
     async function initTree(collections: CollectionMap) {
