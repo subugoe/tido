@@ -85,7 +85,8 @@ declare global {
     panels?: PanelConfig[]
     colors?: Colors,
     lang: string,
-    translationsDirPath: string
+    translationsDirPath: string,
+    translations: any
   }
 
   interface Content {

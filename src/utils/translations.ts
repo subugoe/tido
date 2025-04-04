@@ -8,7 +8,7 @@ async function getTranslations(filePath: string) {
 
 async function mergeTranslations(lang: string, translationsDirPath: string, configTranslations = {}) {
   let translations = {}
-  const tidoTranslationsPath = `/node_modules/tido/dist/translations/${lang}.json`
+  const tidoTranslationsPath = `/translations/tido/${lang}.json`
   const tidoTranslations =  await getTranslations(tidoTranslationsPath)
 
   console.log('tido translations', tidoTranslations)
@@ -17,9 +17,13 @@ async function mergeTranslations(lang: string, translationsDirPath: string, conf
 
   const userTranslations = await getTranslations(`${translationsDirPath}/${lang}.json`)
 
+  console.log('userTranslations', userTranslations)
+
   translations = typeof userTranslations === 'object' ? { ...translations, ...userTranslations } : translations
 
   translations = { ...translations, ...configTranslations }
+
+  console.log('merged translations', translations)
 }
 
 

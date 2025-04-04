@@ -36,7 +36,10 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
     async function initApp() {
       initTree(collections)
-      const tidoTranslations = mergeTranslations('sq', 'translations')
+      const lang = customConfig.lang
+      const tidoTranslations = mergeTranslations(lang, customConfig.translationsDirPath, customConfig.translations[lang])
+      // TODO: overwrite the translations into a results translations file
+      // TODO: init I18n using the results translations dir path
       await initI18n(customConfig.translationsDirPath)
       await i18n.changeLanguage(customConfig.lang)
       setReady(true)  // after writing the translations in user's translations dir path
