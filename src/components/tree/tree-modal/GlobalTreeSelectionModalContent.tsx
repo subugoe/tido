@@ -20,10 +20,7 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
   const updatePanel = useConfigStore(state => state.updatePanel)
 
   const newPanelConfig = {
-    entrypoint: {
-      url: selectedItemIndices.collectionUrl,
-      type: 'collection',
-    },
+    collection: selectedItemIndices.collectionUrl,
     manifestIndex: selectedItemIndices.manifestIndex,
     itemIndex: selectedItemIndices.itemIndex
   }

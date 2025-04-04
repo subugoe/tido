@@ -41,7 +41,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       onClick={(e) => handleNodeClick(e)}
     >
       {!node.leaf && <span className={`t-mt-[2px] t-mr-1 t-transition-all ${isExpanded && 't-rotate-90'}`}><ChevronRight /></span>}
-      <span>{node.label}</span>
+      <span className={`${node.leaf ? 't-ml-4': ''}`}>{node.label}</span>
     </div>
     {hasChildren && isExpanded && node.children?.map((item: TreeNode, i) => (
       <ul className="t-ml-3" key={i}>
