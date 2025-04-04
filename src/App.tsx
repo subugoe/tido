@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, Suspense, useState } from 'react'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
@@ -13,8 +13,9 @@ import GlobalTree from '@/components/tree/GlobalTree.tsx'
 import { createCollectionNodes } from '@/utils/tree.ts'
 import PanelsWrapper from '@/components/PanelsWrapper.tsx'
 
-import InitializeI18n from '@/components/InitializeI18n.tsx'
+import  initI18n  from '@/i18n'
 import { useTranslation } from 'react-i18next'
+import i18n from 'i18next'
 
 
 interface AppProps {
@@ -27,29 +28,31 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
   const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
-  const { i18n } = useTranslation() // Access the i18next instance to change language
-
-
-  const handleLanguageChange = (language: string) => {
-    i18n.changeLanguage(language) // Change the language dynamically
-  }
+  const [ready, setReady] = useState(false)
 
 
   useEffect(() => {
+
+    async function initApp() {
+      initTree(collections)
+      await initI18n(customConfig.translationsDirPath)
+      i18n.changeLanguage( customConfig.lang)
+      setReady(true)
+    }
+
     async function initTree(collections: CollectionMap) {
       const nodes = await createCollectionNodes(collections)
       if (!nodes) return
 
       setTreeNodes(nodes)
     }
-
-    initTree(collections)
+    initApp()
   }, [collections])
 
+  if (!ready) return <div> Loading ... </div>
 
   return (
     <div className="tido t-flex t-flex-col t-h-full">
-      <InitializeI18n translationsDirPath={customConfig.translationsDirPath} language={customConfig.lang} />
       <TopBar />
       <div className="t-flex-1 t-flex t-overflow-hidden">
         <GlobalTree />

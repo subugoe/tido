@@ -16,7 +16,7 @@ import { ListCollapse, X } from 'lucide-react'
 
 
 const TopBar: FC = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const globalTree = useConfigStore(state => state.config.globalTree)
 
   const setShowGlobalTree = useDataStore(state => state.setShowGlobalTree)
