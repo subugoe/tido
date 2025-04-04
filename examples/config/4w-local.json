@@ -1,7 +1,7 @@
 {
   "globalTree": true,
-  "colors": {
-    "primary": "#1E40AF"
+  "theme": {
+    "primaryColor": "#1E40AF"
   },
   "panels": [
     {

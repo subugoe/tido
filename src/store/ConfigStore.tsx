@@ -9,7 +9,10 @@ interface ConfigStoreType {
 
 export const useConfigStore = create<ConfigStoreType>((set, get) => ({
   config: {
-    container: '#app'
+    container: '#app',
+    theme: {
+      primaryColor: ''
+    }
   },
   addCustomConfig: (customConfig: Config) => {
     set({ config: customConfig })
