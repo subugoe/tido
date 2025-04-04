@@ -20,7 +20,6 @@ async function mergeTranslations(lang: string, translationsDirPath: string, conf
   translations = typeof userTranslations === 'object' ? { ...translations, ...userTranslations } : translations
 
   translations = { ...translations, ...configTranslations }
-  console.log('translations', translations)
 }
 
 
