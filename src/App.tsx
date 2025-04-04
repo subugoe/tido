@@ -36,7 +36,7 @@ const App: FC<AppProps> = ({ customConfig }) => {
     async function initApp() {
       initTree(collections)
       await initI18n(customConfig.translationsDirPath)
-      i18n.changeLanguage( customConfig.lang)
+      await i18n.changeLanguage( customConfig.lang)
       setReady(true)
     }
 

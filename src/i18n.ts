@@ -5,7 +5,7 @@ import HttpBackend from 'i18next-http-backend' // Import the HTTP backend
 // Initialize i18next with options
 // get the path of translation and the language
 
-const initI18n = (customPath = '') => {
+async function initI18n (customPath = '') {
   if (!i18n.isInitialized) {
     i18n
       .use(initReactI18next) // Integrates with React
