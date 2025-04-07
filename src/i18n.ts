@@ -5,18 +5,17 @@ import HttpBackend from 'i18next-http-backend' // Import the HTTP backend
 // Initialize i18next with options
 // get the path of translation and the language
 
-async function initI18n (customPath = '') {
+async function initI18n (translations) {
+  console.log('translations', translations)
   if (!i18n.isInitialized) {
     i18n
       .use(initReactI18next) // Integrates with React
       .use(HttpBackend)
       .init({
+        resources: translations,
         fallbackLng: 'en', // Default language if language detection fails
         interpolation: {
           escapeValue: false, // React already does escaping
-        },
-        backend: {
-          loadPath: `${customPath}/{{lng}}.json`, // Load translations from the /locales folder
         },
         react: {
           useSuspense: true, // Suspense support for loading translations

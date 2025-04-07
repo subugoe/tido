@@ -17,7 +17,7 @@ import  initI18n  from '@/i18n'
 import { useTranslation } from 'react-i18next'
 import i18n from 'i18next'
 
-import { mergeTranslations } from '@/utils/translations.ts'
+import { mergeTranslations, getTranslations } from '@/utils/translations.ts'
 
 interface AppProps {
   customConfig: Config
@@ -37,10 +37,14 @@ const App: FC<AppProps> = ({ customConfig }) => {
     async function initApp() {
       initTree(collections)
       const lang = customConfig.lang
-      const tidoTranslations = mergeTranslations(lang, customConfig.translationsDirPath, customConfig.translations[lang])
-      // TODO: overwrite the translations into a results translations file
-      // TODO: init I18n using the results translations dir path
-      await initI18n(customConfig.translationsDirPath)
+      const tidoTranslationsPath = `/locales/tido/${lang}/translation.json`
+      const tidoTranslations = await mergeTranslations(tidoTranslationsPath, customConfig.translations[lang])
+      const defaultTranslations = await getTranslations('/locales/tido/en/translation.json')
+      // TODO: init I18n using the resulting translations object
+      await initI18n({
+        [lang]: { 'translation': tidoTranslations },
+        ['en']: { 'translation': defaultTranslations }
+      })
       await i18n.changeLanguage(customConfig.lang)
       setReady(true)  // after writing the translations in user's translations dir path
     }

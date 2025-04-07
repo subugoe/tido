@@ -6,25 +6,15 @@ async function getTranslations(filePath: string) {
 }
 
 
-async function mergeTranslations(lang: string, translationsDirPath: string, configTranslations = {}) {
+async function mergeTranslations(tidoTranslationsPath: string, configTranslations = {}) {
   let translations = {}
-  const tidoTranslationsPath = `/translations/tido/${lang}.json`
+
   const tidoTranslations =  await getTranslations(tidoTranslationsPath)
-
-  console.log('tido translations', tidoTranslations)
-
   translations = typeof tidoTranslations === 'object' ? tidoTranslations : {}
-
-  const userTranslations = await getTranslations(`${translationsDirPath}/${lang}.json`)
-
-  console.log('userTranslations', userTranslations)
-
-  translations = typeof userTranslations === 'object' ? { ...translations, ...userTranslations } : translations
-
   translations = { ...translations, ...configTranslations }
-
   console.log('merged translations', translations)
+  return translations
 }
 
 
-export { mergeTranslations }
+export { mergeTranslations, getTranslations }
