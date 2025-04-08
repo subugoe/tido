@@ -25,33 +25,18 @@ const TopBar: FC = () => {
     setShowGlobalTree(!showGlobalTree)
   }
 
-  const metadata = [
-    {
-      'place': 'Egypt',
-      'year': 2000
-    },
-    {
-      'author': 'John',
-      'editor': 'McKensey'
-    }
-  ]
-
 
   return <div className="t-flex t-flex-row t-ml-6 t-mt-10 t-space-x-2">
 
     <button className={`toggle-global-tree ${!globalTree ? 't-hidden' : ''}`} onClick={toggleGlobalTree}>
       { !showGlobalTree ? <ListCollapse /> : <X /> }
     </button>
-    <Modal TriggerButton={<Button>{t('New')}</Button>}>
+    <Modal TriggerButton={<Button>{t('new')}</Button>}>
       <TreeSelectionModalContent />
     </Modal>
-    <Modal TriggerButton={<Button>{t('Sync Panels')}</Button>}>
+    <Modal TriggerButton={<Button>{t('sync_panels')}</Button>}>
       <SelectParallelPanels />
     </Modal>
-    <div className="t-ml-40">
-      {metadata.map(metadataGroup => Object.keys(metadataGroup).map(key => <p>{t(key)}</p>))}
-    </div>
-
   </div>
 }
 

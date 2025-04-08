@@ -14,10 +14,8 @@ import { createCollectionNodes } from '@/utils/tree.ts'
 import PanelsWrapper from '@/components/PanelsWrapper.tsx'
 
 import  initI18n  from '@/i18n'
-import { useTranslation } from 'react-i18next'
+import englishDefaultTranslations from '/translations/en.json'
 import i18n from 'i18next'
-
-import { mergeTranslations, getTranslations } from '@/utils/translations.ts'
 
 interface AppProps {
   customConfig: Config
@@ -37,12 +35,11 @@ const App: FC<AppProps> = ({ customConfig }) => {
     async function initApp() {
       initTree(collections)
       const lang = customConfig.lang
-      const tidoTranslationsPath = `/locales/tido/${lang}/translation.json`
-      const tidoTranslations = await mergeTranslations(tidoTranslationsPath, customConfig.translations[lang])
-      const defaultTranslations = await getTranslations('/locales/tido/en/translation.json')
-      // TODO: init I18n using the resulting translations object
+      const userTranslations =  customConfig.translations[lang]
+      const defaultTranslations = lang !== 'en' ? englishDefaultTranslations : { ...englishDefaultTranslations, ...userTranslations }
+
       await initI18n({
-        [lang]: { 'translation': tidoTranslations },
+        ...(lang !== 'en' && { [lang]: { 'translation':  userTranslations  } }),
         ['en']: { 'translation': defaultTranslations }
       })
       await i18n.changeLanguage(customConfig.lang)
@@ -58,7 +55,7 @@ const App: FC<AppProps> = ({ customConfig }) => {
     initApp()
   }, [collections])
 
-  if (!ready) return <div> Loading ... </div>
+  if (!ready) return <div> Loading Translations ... </div>
 
   return (
     <div className="tido t-flex t-flex-col t-h-full">
