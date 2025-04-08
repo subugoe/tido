@@ -9,14 +9,14 @@
       "manifestIndex": 0
     }
   ],
-  "lang": "de",
+  "lang": "en",
   "translations": {
     "de": {
       "new": "Neu",
       "sync_panels": "Panels synkronisieren"
     },
     "en": {
-      "new": "New",
+      "new": "Add new Panel",
       "sync_panels": "Sync Panels",
       "place": "Place",
       "year": "Year",

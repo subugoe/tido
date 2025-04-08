@@ -1,7 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-async function initI18n (translations: Translations) {
+async function initI18n (translations: TranslationsI18n) {
   console.log('translations ', translations)
   if (!i18n.isInitialized) {
     i18n

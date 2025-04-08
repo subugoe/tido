@@ -8,5 +8,16 @@
       "collection": "http://localhost:8181/4w/reproduction/collection.json",
       "manifestIndex": 0
     }
-  ]
+  ],
+  "lang": "de",
+  "translations": {
+    "de": {
+      "new": "Neu",
+      "sync_panels": "Panels synkronisieren",
+      "place": "Ort (ort)"
+    },
+    "en": {
+      "new": "Add new Panel"
+    }
+  }
 }

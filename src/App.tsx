@@ -12,6 +12,7 @@ import PanelsWrapper from '@/components/PanelsWrapper.tsx'
 
 import  initI18n  from '@/i18n'
 import enDefaultTranslations from '../public/translations/en.json'
+import deDefaultTranslations from '../public/translations/de.json'
 
 interface AppProps {
   customConfig: Config
@@ -35,24 +36,21 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
     async function initApp() {
       initTree(collections)
-      console.log('custom config', customConfig)
       const lang = customConfig.lang ?? 'en'
-      const userTranslations =  customConfig.translations[lang]
-      console.log('en default translations', enDefaultTranslations)
-      console.log('custom en translations, ', customConfig.translations['en'])
-      const defaultTranslations =  { ...enDefaultTranslations, ...customConfig.translations['en'] }
-      console.log('default translations', defaultTranslations)
+      const translationsInConfig =  customConfig.translations[lang]
+
+      let translations = {}
+      if (lang === 'en') translations = { ...enDefaultTranslations , ...translationsInConfig }
+      if (lang === 'de') translations = { ...deDefaultTranslations, ...translationsInConfig }
 
       await initI18n({
-        ...(lang !== 'en' && { [lang]: { 'translation':  userTranslations  } }),
-        ['en']: { 'translation': defaultTranslations }
+        [lang]: { translation: translations }
       })
       await i18n.changeLanguage(customConfig.lang)
       setReady(true)
     }
 
     initApp()
-
   }, [collections])
   if (!ready) return <div> Loading Translations ... </div>
 

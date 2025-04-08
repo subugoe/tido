@@ -301,6 +301,10 @@ declare global {
     [key: string]: Translation
   }
 
+  interface TranslationsI18n {
+    [key: string]: {'translation': Translations}
+  }
+
 
   interface CollectionMap {
     [key: string]: Collection
