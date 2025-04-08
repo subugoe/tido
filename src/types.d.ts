@@ -81,7 +81,9 @@ declare global {
     container: string
     globalTree?: boolean
     panels?: PanelConfig[]
-    theme?: ThemeConfig
+    theme?: ThemeConfig,
+    lang?: string,
+    translations: Translations
   }
 
   interface Content {
@@ -290,6 +292,15 @@ declare global {
     expanded?: boolean,
     children: TreeNode[]
   }
+
+  interface Translation {
+    [key: string]: string
+  }
+
+  interface Translations {
+    [key: string]: Translation
+  }
+
 
   interface CollectionMap {
     [key: string]: Collection

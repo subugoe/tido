@@ -12,6 +12,21 @@ export const useConfigStore = create<ConfigStoreType>((set, get) => ({
     container: '#app',
     theme: {
       primaryColor: ''
+    },
+    lang: 'de',
+    translations: {
+      de: {
+        'new': 'Neu',
+        'sync_panels': 'Panels synkronisieren'
+      },
+      en: {
+        'new': 'New',
+        'sync_panels': 'Sync Panels',
+        'place': 'Place',
+        'year': 'Year',
+        'author': 'Author',
+        'editor': 'Editor'
+      }
     }
   },
   addCustomConfig: (customConfig: Config) => {

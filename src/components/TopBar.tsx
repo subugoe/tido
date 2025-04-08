@@ -10,12 +10,16 @@ import { Button } from '@/components/ui/button.tsx'
 import SelectParallelPanels from '@/components/SelectParallelPanels.tsx'
 import { ListCollapse, X } from 'lucide-react'
 
+import { useTranslation } from 'react-i18next'
+
 
 const TopBar: FC = () => {
   const globalTree = useConfigStore(state => state.config.globalTree)
 
   const setShowGlobalTree = useDataStore(state => state.setShowGlobalTree)
   const showGlobalTree = useDataStore(state => state.showGlobalTree)
+
+  const { t } = useTranslation()
 
   function toggleGlobalTree() {
     setShowGlobalTree(!showGlobalTree)
@@ -25,10 +29,10 @@ const TopBar: FC = () => {
     <button className={`toggle-global-tree ${!globalTree ? 't-hidden' : ''}`} onClick={toggleGlobalTree}>
       { !showGlobalTree ? <ListCollapse /> : <X /> }
     </button>
-    <Modal TriggerButton={<Button data-cy="new-collection">New</Button>}>
+    <Modal TriggerButton={<Button data-cy="new-collection"> {t('new')}</Button>}>
       <TreeSelectionModalContent />
     </Modal>
-    <Modal TriggerButton={<Button>Sync Panels</Button>}>
+    <Modal TriggerButton={<Button>{t('sync_panels')}</Button>}>
       <SelectParallelPanels />
     </Modal>
   </div>

@@ -1,6 +1,6 @@
 {
   "globalTree": true,
-  "colors": {
+  "theme": {
     "primary": "#1E40AF"
   },
   "panels": [
@@ -8,5 +8,20 @@
       "collection": "http://localhost:8181/4w/reproduction/collection.json",
       "manifestIndex": 0
     }
-  ]
+  ],
+  "lang": "de",
+  "translations": {
+    "de": {
+      "new": "Neu",
+      "sync_panels": "Panels synkronisieren"
+    },
+    "en": {
+      "new": "New",
+      "sync_panels": "Sync Panels",
+      "place": "Place",
+      "year": "Year",
+      "author": "Author",
+      "editor": "Editor"
+    }
+  }
 }
