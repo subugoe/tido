@@ -37,7 +37,7 @@ const App: FC<AppProps> = ({ customConfig }) => {
     async function initApp() {
       initTree(collections)
       const lang = customConfig.lang ?? 'en'
-      const translationsInConfig =  customConfig.translations[lang]
+      const translationsInConfig =  customConfig.translations?.[lang] ?? {}
 
       let translations = {}
       if (lang === 'en') translations = { ...enDefaultTranslations , ...translationsInConfig }

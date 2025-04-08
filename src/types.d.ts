@@ -83,7 +83,7 @@ declare global {
     panels?: PanelConfig[]
     theme?: ThemeConfig,
     lang?: string,
-    translations: Translations
+    translations?: Translations
   }
 
   interface Content {
