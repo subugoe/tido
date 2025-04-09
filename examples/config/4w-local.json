@@ -13,6 +13,9 @@
   "translations": {
     "de": {
       "place": "Ort (ort)"
+    },
+    "en": {
+      "new": "Add a new panel"
     }
   }
 }

@@ -1,5 +1,4 @@
-import { FC, useEffect, useState } from 'react'
-import i18n from 'i18next'
+import { FC, useEffect } from 'react'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
@@ -10,9 +9,8 @@ import GlobalTree from '@/components/tree/GlobalTree.tsx'
 import { createCollectionNodes } from '@/utils/tree.ts'
 import PanelsWrapper from '@/components/PanelsWrapper.tsx'
 
-import  initI18n  from '@/i18n'
-import enDefaultTranslations from '../public/translations/en.json'
-import deDefaultTranslations from '../public/translations/de.json'
+import { createTranslations } from '@/utils/translations.ts'
+
 
 interface AppProps {
   customConfig: Config
@@ -20,6 +18,7 @@ interface AppProps {
 
 const App: FC<AppProps> = ({ customConfig }) => {
   useConfigStore.getState().addCustomConfig(customConfig)
+  createTranslations(customConfig, ['de', 'en'])
 
   const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)

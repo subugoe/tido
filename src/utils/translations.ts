@@ -1,9 +1,9 @@
 import initI18n from '@/i18n.ts'
 import i18n from 'i18next'
 
-async function createTranslations(config, languages: string[]) {
+async function createTranslations( config, languages: string[]) {
 
-  const translations = await loadTranslations(config, languages)
+  const translations = await loadTranslations( config, languages)
 
   await initI18n({
     ['en']: { translation: translations['en'] },
@@ -12,11 +12,11 @@ async function createTranslations(config, languages: string[]) {
   i18n.changeLanguage(config.lang)
 }
 
-async function loadTranslations(config, languages: string[]) {
+async function loadTranslations( config, languages: string[]) {
   const translations : {[key:string]: Translations} = {}
   for (const lang of languages) {
     const defaultTranslations = await import((`../../public/translations/${lang}.json`))
-    translations[lang] = { ...defaultTranslations, ...config.translations?.[lang] }
+    translations[lang] = { ...defaultTranslations.default, ...config.translations?.[lang] }
   }
 
   return translations
@@ -24,4 +24,4 @@ async function loadTranslations(config, languages: string[]) {
 
 
 
-export default { createTranslations }
+export { createTranslations }
