@@ -14,7 +14,7 @@ function validateContainer(input: any): ValidationResult<Config['container']> {
       ? input
       : (() => {
         if (input !== undefined)
-          errors['debug'] = 'must be a string'
+          errors['container'] = 'must be a string'
         return defaultConfig.container
       })()
   return { result, errors }
@@ -31,14 +31,14 @@ function validatePanels(input: any): ValidationResult<Config['panels']> {
   return { result, errors }
 }
 
-function validateShowNewCollectionButton(input: unknown): ValidationResult<Config['showNewCollectionButton']> {
+function validateShowNewCollectionButton(input: any): ValidationResult<Config['showNewCollectionButton']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'boolean'
       ? input
       : (() => {
         if (input !== undefined)
-          errors['debug'] = 'must be a boolean'
+          errors['showNewCollectionButton'] = 'must be a boolean'
         return defaultConfig.showNewCollectionButton
       })()
   return { result, errors }
