@@ -13,6 +13,7 @@ import { ListCollapse, X } from 'lucide-react'
 
 const TopBar: FC = () => {
   const globalTree = useConfigStore(state => state.config.globalTree)
+  const showNewCollectionButton = useConfigStore(state => state.config.showNewCollectionButton)
 
   const setShowGlobalTree = useDataStore(state => state.setShowGlobalTree)
   const showGlobalTree = useDataStore(state => state.showGlobalTree)
@@ -25,9 +26,10 @@ const TopBar: FC = () => {
     <button className={`toggle-global-tree ${!globalTree ? 't-hidden' : ''}`} onClick={toggleGlobalTree}>
       { !showGlobalTree ? <ListCollapse /> : <X /> }
     </button>
-    <Modal TriggerButton={<Button data-cy="new-collection">New</Button>}>
-      <TreeSelectionModalContent />
-    </Modal>
+    { showNewCollectionButton &&
+      <Modal TriggerButton={<Button data-cy="new-collection">New</Button>}>
+        <TreeSelectionModalContent />
+      </Modal> }
     <Modal TriggerButton={<Button>Sync Panels</Button>}>
       <SelectParallelPanels />
     </Modal>
