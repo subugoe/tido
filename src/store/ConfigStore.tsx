@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { defaultConfig } from '@/utils/config/default-config.ts'
+import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 
 interface ConfigStoreType {
   config: Config,
@@ -8,14 +10,11 @@ interface ConfigStoreType {
 }
 
 export const useConfigStore = create<ConfigStoreType>((set, get) => ({
-  config: {
-    container: '#app',
-    theme: {
-      primaryColor: ''
-    }
-  },
-  addCustomConfig: (customConfig: Config) => {
-    set({ config: customConfig })
+  config: defaultConfig,
+  addCustomConfig: (userConfig: Config) => {
+    const { config, errors } = mergeAndValidateConfig(userConfig)
+    if (Object.keys(errors).length > 0) console.error(errors)
+    set({ config })
   },
   addNewPanel: (newPanelConfig: PanelConfig) => {
     const newConfig = { ...get().config }
