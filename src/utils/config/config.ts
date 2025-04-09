@@ -7,7 +7,7 @@ type ValidationResult<T> = {
   errors: Record<string, string>;
 };
 
-function validateContainer(input: any): ValidationResult<Config['container']> {
+function validateContainer(input: any): ValidationResult<AppConfig['container']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'string'
@@ -20,7 +20,20 @@ function validateContainer(input: any): ValidationResult<Config['container']> {
   return { result, errors }
 }
 
-function validatePanels(input: any): ValidationResult<Config['panels']> {
+function validateGlobalTree(input: any): ValidationResult<AppConfig['showGlobalTree']> {
+  const errors: Record<string, string> = {}
+  const result =
+      typeof input === 'boolean'
+        ? input
+        : (() => {
+          if (input !== undefined)
+            errors['showGlobalTree'] = 'must be a boolean'
+          return defaultConfig.showGlobalTree
+        })()
+  return { result, errors }
+}
+
+function validatePanels(input: any): ValidationResult<AppConfig['panels']> {
   const errors: Record<string, string> = {}
   const result = Array.isArray(input) ? input : (() => {
     if (input !== undefined)
@@ -31,7 +44,7 @@ function validatePanels(input: any): ValidationResult<Config['panels']> {
   return { result, errors }
 }
 
-function validateShowNewCollectionButton(input: any): ValidationResult<Config['showNewCollectionButton']> {
+function validateShowNewCollectionButton(input: any): ValidationResult<AppConfig['showNewCollectionButton']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'boolean'
@@ -44,8 +57,7 @@ function validateShowNewCollectionButton(input: any): ValidationResult<Config['s
   return { result, errors }
 }
 
-
-function validateTheme(input: any): ValidationResult<Config['theme']> {
+function validateTheme(input: any): ValidationResult<AppConfig['theme']> {
   const errors: Record<string, string> = {}
   const result = {
     primaryColor:
@@ -59,26 +71,28 @@ function validateTheme(input: any): ValidationResult<Config['theme']> {
   return { result, errors }
 }
 
-
 export function mergeAndValidateConfig(
-  userConfig: Partial<Config>,
-): { config: Config; errors: Record<string, string> } {
+  userConfig: Partial<AppConfig>,
+): { config: AppConfig; errors: Record<string, string> } {
 
   const container = validateContainer(userConfig.container)
   const panels = validatePanels(userConfig.panels)
+  const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
   const showNewCollectionButton = validateShowNewCollectionButton(userConfig.showNewCollectionButton)
   const theme = validateTheme(userConfig.theme)
 
   const errors = {
     ...container.errors,
     ...panels.errors,
+    ...showGlobalTree.errors,
     ...showNewCollectionButton.errors,
     ...theme.errors
   }
 
-  const config: Config = {
+  const config: AppConfig = {
     container: container.result,
     panels: panels.result,
+    showGlobalTree: showGlobalTree.result,
     showNewCollectionButton: showNewCollectionButton.result,
     theme: theme.result
   }

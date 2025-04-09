@@ -8,17 +8,31 @@ import GlobalTree from '@/components/tree/GlobalTree.tsx'
 
 import { createCollectionNodes } from '@/utils/tree.ts'
 import PanelsWrapper from '@/components/PanelsWrapper.tsx'
+import { getRGBColor } from '@/utils/colors.ts'
+import { defaultConfig } from '@/utils/config/default-config.ts'
+import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 
 interface AppProps {
-  customConfig: Config
+  customConfig: Partial<AppConfig>
+}
+
+function createThemeStyles(config: AppConfig) {
+  const { container, theme } = config
+  const style = document.createElement('style')
+  style.innerHTML = `${container || defaultConfig.container} {${getRGBColor(theme.primaryColor, 'primary')}}`
+  document.head.appendChild(style)
 }
 
 const App: FC<AppProps> = ({ customConfig }) => {
-  useConfigStore.getState().addCustomConfig(customConfig)
+  const { config, errors } = mergeAndValidateConfig(customConfig)
+  if (Object.keys(errors).length > 0) console.error(errors)
+
+  createThemeStyles(config)
+
+  useConfigStore.getState().addCustomConfig(config)
 
   const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
-
 
   useEffect(() => {
     async function initTree(collections: CollectionMap) {
