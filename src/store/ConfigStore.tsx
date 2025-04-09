@@ -18,9 +18,9 @@ export const useConfigStore = create<ConfigStoreType>((set, get) => ({
     const { config, errors } = await mergeAndValidateConfig(userConfig)
     if (Object.keys(errors).length > 0) console.error(errors)
     set({ config })
-    // initialize translations
-    const lang = config.lang
-    const translationsI18n = { [lang]: { ['translation']: config.translations[lang] } }
+
+    const lang = (config.lang) as string
+    const translationsI18n = { [lang]: { ['translation']: config.translations?.[lang] as Translation } }
     await initI18n(translationsI18n)
     i18n.changeLanguage(config.lang)
   },
