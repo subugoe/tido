@@ -23,7 +23,6 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
   const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
-  const [ready, setReady] = useState(false)
 
 
   useEffect(() => {
@@ -34,25 +33,9 @@ const App: FC<AppProps> = ({ customConfig }) => {
       setTreeNodes(nodes)
     }
 
-    async function initApp() {
-      initTree(collections)
-      const lang = customConfig.lang ?? 'en'
-      const translationsInConfig =  customConfig.translations?.[lang] ?? {}
-
-      let translations = {}
-      if (lang === 'en') translations = { ...enDefaultTranslations , ...translationsInConfig }
-      if (lang === 'de') translations = { ...deDefaultTranslations, ...translationsInConfig }
-
-      await initI18n({
-        [lang]: { translation: translations }
-      })
-      await i18n.changeLanguage(customConfig.lang)
-      setReady(true)
-    }
-
-    initApp()
+    initTree(collections)
   }, [collections])
-  if (!ready) return <div> Loading Translations ... </div>
+
 
   return (
     <div className="tido t-flex t-flex-col t-h-full" data-cy="app">
