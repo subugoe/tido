@@ -5,6 +5,7 @@ import './css/style.css'
 
 import App from './App.tsx'
 import { getRGBColor } from '@/utils/colors.ts'
+import { defaultConfig } from '@/utils/config/default-config.ts'
 
 declare global {
   interface Window {
@@ -21,7 +22,7 @@ window.Tido = function Tido(config = {} as Config) {
   }
 
   const style = document.createElement('style')
-  style.innerHTML = `${container || '#app'} {${getRGBColor(theme?.primaryColor ?? '#3456aa', 'primary')}}`
+  style.innerHTML = `${container || '#app'} {${getRGBColor(theme?.primaryColor ?? defaultConfig.theme?.primaryColor, 'primary')}}`
   document.head.appendChild(style)
 
   createRoot(containerEl).render(<App customConfig={config} />)

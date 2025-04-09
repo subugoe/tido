@@ -80,6 +80,7 @@ declare global {
   interface Config {
     container: string
     globalTree?: boolean
+    showNewCollectionButton?: boolean
     panels?: PanelConfig[]
     theme?: ThemeConfig
   }
