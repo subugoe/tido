@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { defaultConfig } from '@/utils/config/default-config.ts'
 
 type ValidationResult<T> = {
@@ -29,7 +31,7 @@ function validatePanels(input: any): ValidationResult<Config['panels']> {
   return { result, errors }
 }
 
-function validateShowNewCollectionButton(input: any): ValidationResult<Config['showNewCollectionButton']> {
+function validateShowNewCollectionButton(input: unknown): ValidationResult<Config['showNewCollectionButton']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'boolean'
@@ -42,12 +44,13 @@ function validateShowNewCollectionButton(input: any): ValidationResult<Config['s
   return { result, errors }
 }
 
+
 function validateTheme(input: any): ValidationResult<Config['theme']> {
   const errors: Record<string, string> = {}
   const result = {
     primaryColor:
-      typeof input?.primaryColor === 'string'
-        ? input.primaryColor
+      typeof input === 'object' && typeof input['primaryColor'] === 'string'
+        ? input['primaryColor']
         : (() => {
           errors['theme.primaryColor'] = 'must be a valid hex color'
           return defaultConfig.theme?.primaryColor
