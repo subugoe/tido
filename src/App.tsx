@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
@@ -14,13 +14,20 @@ interface AppProps {
 }
 
 const App: FC<AppProps> = ({ customConfig }) => {
-  useConfigStore.getState().addCustomConfig(customConfig)
+
 
   const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
 
+  const [ready, setReady] = useState(false)
+
 
   useEffect(() => {
+    async function initConfig() {
+      await useConfigStore.getState().addCustomConfig(customConfig)
+      setReady(true)
+    }
+
     async function initTree(collections: CollectionMap) {
       const nodes = await createCollectionNodes(collections)
       if (!nodes) return
@@ -29,8 +36,10 @@ const App: FC<AppProps> = ({ customConfig }) => {
     }
 
     initTree(collections)
+    initConfig()
   }, [collections])
 
+  if (!ready) return <div> Loading ...</div>
   return (
     <div className="tido t-flex t-flex-col t-h-full" data-cy="app">
       <TopBar />

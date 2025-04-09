@@ -82,7 +82,9 @@ declare global {
     globalTree?: boolean
     showNewCollectionButton?: boolean
     panels?: PanelConfig[]
-    theme?: ThemeConfig
+    theme?: ThemeConfig,
+    lang?: string,
+    translations?: Translations
   }
 
   interface Content {
@@ -268,6 +270,14 @@ declare global {
   }
 
   type TitleType = 'main' | 'sub'
+
+  interface Translation {
+    [key: string]: string
+  }
+
+  interface Translations {
+    [key: string]: Translation
+  }
 
   type SuccessResponse<T> = {
     success: true

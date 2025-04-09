@@ -9,5 +9,15 @@
       "collection": "http://localhost:8181/4w/reproduction/collection.json",
       "manifestIndex": 0
     }
-  ]
+  ],
+  "lang": "fs",
+  "translations": {
+    "en": {
+      "new": "Add a new panel",
+      "sync_panels": "Synchronize panels"
+    },
+    "de":{
+      "sync_panels": "Panels synchronisieren"
+    }
+  }
 }

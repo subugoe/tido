@@ -6,6 +6,8 @@ const defaultConfig: Config = {
   theme: {
     primaryColor: '#3456aa'
   },
+  lang: 'en',
+  translations: {}
 }
 
 export {
