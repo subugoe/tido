@@ -81,10 +81,7 @@ async function validateTranslations(input: any, lang: string): Promise<Validatio
   } catch (error) {
     errors['translations'] = {}
     errors['translations']['translation_file'] = 'Please provide a valid `lang` value for which there is a TIDO translation file'
-    const enDefaultTranslations = await import((`../../../public/translations/en.json`))
-    result = { ['en']: enDefaultTranslations.default }
   }
-
 
   if (typeof input === 'undefined') {
     return { result, errors }
@@ -109,7 +106,7 @@ export async  function mergeAndValidateConfig(
   const showNewCollectionButton = validateShowNewCollectionButton(userConfig.showNewCollectionButton)
   const theme = validateTheme(userConfig.theme)
   const lang = validateLang(userConfig.lang, userConfig.translations)
-  const translations = await validateTranslations(userConfig.translations, lang.result)
+  const translations = await validateTranslations(userConfig.translations, lang.result as string)
 
   const errors = {
     ...container.errors,
