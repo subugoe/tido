@@ -1,5 +1,5 @@
 {
-  "globalTree": true,
+  "showGlobalTree": true,
   "theme": {
     "primaryColor": "#1E40AF"
   },

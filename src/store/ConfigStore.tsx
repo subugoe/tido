@@ -1,19 +1,16 @@
 import { create } from 'zustand'
 import { defaultConfig } from '@/utils/config/default-config.ts'
-import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 
 interface ConfigStoreType {
-  config: Config,
-  addCustomConfig: (customConfig: Config) => void,
+  config: AppConfig,
+  addCustomConfig: (customConfig: AppConfig) => void,
   addNewPanel: (newPanelConfig: PanelConfig) => void,
   updatePanel: (newPanelConfig: Partial<PanelConfig>, index: number) => void,
 }
 
 export const useConfigStore = create<ConfigStoreType>((set, get) => ({
   config: defaultConfig,
-  addCustomConfig: (userConfig: Config) => {
-    const { config, errors } = mergeAndValidateConfig(userConfig)
-    if (Object.keys(errors).length > 0) console.error(errors)
+  addCustomConfig: (config: AppConfig) => {
     set({ config })
   },
   addNewPanel: (newPanelConfig: PanelConfig) => {

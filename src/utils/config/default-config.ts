@@ -1,7 +1,7 @@
-const defaultConfig: Config = {
+const defaultConfig: AppConfig = {
   container: '#app',
-  globalTree: true,
   panels: [],
+  showGlobalTree: true,
   showNewCollectionButton: true,
   theme: {
     primaryColor: '#3456aa'
