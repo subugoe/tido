@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { defaultConfig } from '@/utils/config/default-config.ts'
+import enTranslations from '../../../public/translations/en.json'
+import deTranslations from '../../../public/translations/de.json'
 
 type ValidationResult<T> = {
   result: T;
@@ -59,43 +61,41 @@ function validateTheme(input: any): ValidationResult<Config['theme']> {
   return { result, errors }
 }
 
-function validateLang(input: any, translations: any): ValidationResult<Config['lang']> {
+function validateLang(input: any): ValidationResult<Config['lang']> {
   const errors: Record<string, string> = {}
   const result =
-    typeof input === 'string' && typeof translations === 'object' && Object.keys(translations).includes(input)
+    typeof input === 'string'
       ? input
       : (() => {
         if (input !== undefined)
-          errors['language'] = 'must be a string'
+          errors['language'] = 'lang must be a string'
         return defaultConfig.lang
       })()
   return { result, errors }
 }
 
-async function validateTranslations(input: any, lang: string): Promise<ValidationResult<Config['translations']>> {
+async function validateTranslations(input: any): Promise<ValidationResult<Config['translations']>> {
   const errors: Record<string, string>  = { }
-  let result: {[key: string]: Translation} = {}
-  try {
-    const defaultTranslations = await import((`../../../public/translations/${lang}.json`))
-    result = { [lang]: defaultTranslations.default ?? {} }
-  } catch (error) {
-    errors['translations'] = {}
-    errors['translations']['translation_file'] = 'Please provide a valid `lang` value for which there is a TIDO translation file'
-  }
-
-  if (typeof input === 'undefined') {
-    return { result, errors }
-  }
-
-  if (typeof input === 'object' && Object.keys(input).includes(lang)) {
-    result[lang] = { ...result[lang], ...input[lang] }
-    return { result, errors }
-  }
-
+  const result: {[key: string]: Translation} =
+      typeof input === 'object'
+        ? input
+        : (() => {
+          if (input !== undefined)
+            errors['translations'] = 'language needs to be an object'
+          return defaultConfig.translations
+        })()
   return { result, errors }
 }
 
+function mergeTranslations(defaultTranslations: Translation, userTranslations: Translation) {
+  return { ...defaultTranslations, ...userTranslations }
+}
 
+function getLang(lang: string, translations: Translations, defaultLangs: string[]): string {
+  console.log('lang', lang)
+  if (Object.keys(translations).includes(lang) || defaultLangs.includes(lang) ) return lang
+  return 'en'
+}
 
 export async  function mergeAndValidateConfig(
   userConfig: Partial<Config>,
@@ -105,8 +105,18 @@ export async  function mergeAndValidateConfig(
   const panels = validatePanels(userConfig.panels)
   const showNewCollectionButton = validateShowNewCollectionButton(userConfig.showNewCollectionButton)
   const theme = validateTheme(userConfig.theme)
-  const lang = validateLang(userConfig.lang, userConfig.translations)
+  const lang = validateLang(userConfig.lang)
+
   const translations = await validateTranslations(userConfig.translations, lang.result as string)
+
+  const mergedTranslations: Record<string, Translation> = {}
+  const defaultLangs = ['en', 'de']
+  const language = getLang(lang.result, translations.result, defaultLangs)
+  console.log('language', language)
+  const defaultTranslations =  language === 'en' ? enTranslations : language === 'de' ? deTranslations : {}
+  mergedTranslations[language] = mergeTranslations(defaultTranslations, translations.result?.[language])
+  console.log('merged translations', mergedTranslations)
+
 
   const errors = {
     ...container.errors,

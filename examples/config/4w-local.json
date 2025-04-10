@@ -10,14 +10,7 @@
       "manifestIndex": 0
     }
   ],
-  "lang": "fs",
+  "lang": "de",
   "translations": {
-    "en": {
-      "new": "Add a new panel",
-      "sync_panels": "Synchronize panels"
-    },
-    "de":{
-      "sync_panels": "Panels synchronisieren"
-    }
   }
 }
