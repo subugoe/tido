@@ -12,19 +12,19 @@ import { ListCollapse, X } from 'lucide-react'
 
 
 const TopBar: FC = () => {
-  const globalTree = useConfigStore(state => state.config.globalTree)
+  const showGlobalTreeConfig = useConfigStore(state => state.config.showGlobalTree)
   const showNewCollectionButton = useConfigStore(state => state.config.showNewCollectionButton)
 
   const setShowGlobalTree = useDataStore(state => state.setShowGlobalTree)
-  const showGlobalTree = useDataStore(state => state.showGlobalTree)
+  const isGlobalTreeCollapsed = useDataStore(state => state.showGlobalTree)
 
   function toggleGlobalTree() {
-    setShowGlobalTree(!showGlobalTree)
+    setShowGlobalTree(!isGlobalTreeCollapsed)
   }
 
   return <div className="t-flex t-flex-row t-ml-6 t-mt-10 t-space-x-2">
-    <button className={`toggle-global-tree ${!globalTree ? 't-hidden' : ''}`} onClick={toggleGlobalTree}>
-      { !showGlobalTree ? <ListCollapse /> : <X /> }
+    <button data-cy="global-tree-toggle" className={`${!showGlobalTreeConfig ? 't-hidden' : ''}`} onClick={toggleGlobalTree}>
+      { !isGlobalTreeCollapsed ? <ListCollapse /> : <X /> }
     </button>
     { showNewCollectionButton &&
       <Modal TriggerButton={<Button data-cy="new-collection">New</Button>}>

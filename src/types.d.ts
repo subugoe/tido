@@ -1,4 +1,6 @@
 declare global {
+  declare module '*.css';
+
   interface ActiveAnnotation {
     [key: string]: Annotation
   }
@@ -74,15 +76,15 @@ declare global {
 
   interface ThemeConfig {
     forceMode?: string
-    primaryColor?: string
+    primaryColor: string
   }
 
-  interface Config {
+  interface AppConfig {
     container: string
-    globalTree?: boolean
-    showNewCollectionButton?: boolean
-    panels?: PanelConfig[]
-    theme?: ThemeConfig
+    showGlobalTree: boolean
+    showNewCollectionButton: boolean
+    panels: PanelConfig[]
+    theme: ThemeConfig
   }
 
   interface Content {
