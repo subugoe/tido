@@ -2,6 +2,12 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
 function convertTranslations(translations: Translations) {
+  // translations are converted to expected 3 level format: lang, 'translation', key values translation object
+  // i.e {
+  //      'en': {
+  //          'translation': {'sync_panels': 'Sync Panels'}, {'new': 'New'}
+  //        }
+  //     }
   return Object.fromEntries(
     Object.entries(translations).map(([lang, values]) => [
       lang,

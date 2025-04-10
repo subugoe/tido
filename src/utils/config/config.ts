@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { defaultConfig } from '@/utils/config/default-config.ts'
-import { mergeTranslations } from '@/utils/translations.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
