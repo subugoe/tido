@@ -19,8 +19,6 @@ function initI18n (translations: Translations){
       .init({
         resources: resources,
         keySeparator: false,
-        ns: ['translation'], // still needed
-        defaultNS: 'translation',
         lng: 'en',
         fallbackLng: 'en', // Default language if language detection fails
         interpolation: {

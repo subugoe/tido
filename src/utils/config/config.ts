@@ -123,7 +123,7 @@ export function mergeAndValidateConfig(
   const defaultLangs = ['en', 'de']
   const language = getLanguage(lang.result, translations.result, defaultLangs)
   const defaultTranslations =  language === 'en' ? enTranslations : language === 'de' ? deTranslations : {}
-  mergedTranslations[language] = mergeTranslations(defaultTranslations, translations.result?.[language])
+  mergedTranslations[language] = { ...defaultTranslations, ...translations.result?.[language] }
 
 
   const errors = {
