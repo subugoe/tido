@@ -31,7 +31,7 @@ const TopBar: FC = () => {
       <Modal TriggerButton={<Button data-cy="new-collection">{t('new')}</Button>}>
         <TreeSelectionModalContent />
       </Modal> }
-    <Modal TriggerButton={<Button>{t('sync_panels')}</Button>}>
+    <Modal TriggerButton={<Button data-cy="sync-panels">{t('sync_panels')}</Button>}>
       <SelectParallelPanels />
     </Modal>
   </div>

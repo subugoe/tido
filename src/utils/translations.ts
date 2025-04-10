@@ -37,9 +37,5 @@ function initI18n (translations: Translations){
   }
 }
 
-function mergeTranslations(defaultTranslations: Translation, userTranslations: Translation) {
-  return { ...defaultTranslations, ...userTranslations }
-}
 
-
-export  { initI18n, mergeTranslations }
+export  { initI18n }

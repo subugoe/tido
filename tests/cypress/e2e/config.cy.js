@@ -22,4 +22,5 @@ describe('Config', () => {
   runConfigTest('showNewCollectionButton=false', 'showNewCollectionButton false', () => {
     cy.get('[data-cy="new-collection"]').should('be.visible', false)
   });
+
 });
