@@ -1,4 +1,5 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
+import i18n from 'i18next'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
@@ -11,6 +12,8 @@ import PanelsWrapper from '@/components/PanelsWrapper.tsx'
 import { getRGBColor } from '@/utils/colors.ts'
 import { defaultConfig } from '@/utils/config/default-config.ts'
 import { mergeAndValidateConfig } from '@/utils/config/config.ts'
+import { initI18n } from '@/utils/translations.ts'
+
 
 interface AppProps {
   customConfig: Partial<AppConfig>
@@ -33,8 +36,16 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
   const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
+  const [ready, setReady] = useState(false)
+
 
   useEffect(() => {
+    function initI18nTranslations(translations: Translations) {initI18n(translations)
+      initI18n(translations)
+      i18n.changeLanguage(config.lang)
+      setReady(true)
+    }
+
     async function initTree(collections: CollectionMap) {
       const nodes = await createCollectionNodes(collections)
       if (!nodes) return
@@ -43,7 +54,10 @@ const App: FC<AppProps> = ({ customConfig }) => {
     }
 
     initTree(collections)
+    initI18nTranslations(config.translations)
   }, [collections])
+
+  if (!ready) return <div>Loading ...</div>
 
   return (
     <div className="tido t-flex t-flex-col t-h-full" data-cy="app">

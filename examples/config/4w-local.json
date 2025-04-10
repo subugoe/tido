@@ -9,5 +9,14 @@
       "collection": "http://localhost:8181/4w/reproduction/collection.json",
       "manifestIndex": 0
     }
-  ]
+  ],
+  "lang": "en",
+  "translations": {
+    "de": {
+      "sync_panels": "Panels synchronisieren bitte"
+    },
+  "en":  {
+    "sync_panels": "Synchronize panels"
+  }
+  }
 }
