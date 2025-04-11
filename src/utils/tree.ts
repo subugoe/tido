@@ -1,4 +1,6 @@
 import { request } from '@/utils/http'
+import { useDataStore } from '@/store/DataStore.tsx'
+import { apiRequest } from '@/utils/api.ts'
 
 export async function createCollectionNodes(collections: CollectionMap): Promise<TreeNode[]> {
   const collectionsUrls = Object.keys(collections)
@@ -65,3 +67,36 @@ export async function getChildren(node: TreeNode): Promise<TreeNode[]> {
 export function getNodeIndices(nodeKey: string) {
   return nodeKey.split('-').map((index) => parseInt(index, 10))
 }
+
+export async function isCollectionInTree(url: string) {
+
+  console.log('is Collection in tree ?')
+
+  const treeCollections = useDataStore.getState().treeCollections
+  if (Object.keys(treeCollections).length === 0) return false
+  console.log('there are collections in tree!')
+  if (Object.keys(treeCollections).includes(url)) return true
+
+
+  for (const collectionId in treeCollections) {
+    const collection = await apiRequest<Collection>(collectionId)
+    if (await isCollectionInCollection(collection, url)) return true
+  }
+
+  return false
+}
+
+async function isCollectionInCollection(collection: Collection, url: string ) {
+  if (collection.id === url) return true
+
+  if (Array.isArray(collection.sequence)) {
+    for (const item of collection.sequence) {
+      if (item.type !== 'collection') continue
+      const collection = await apiRequest<Collection>(item.id)
+      if (await isCollectionInCollection(collection, url)) return true
+    }
+  }
+
+  return false
+}
+
