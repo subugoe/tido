@@ -45,10 +45,19 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
   }, [panelConfig, panelId])
 
   const init = async () => {
+
     if (!panelId) return
     try {
       setLoading(true)
-      const collection = await getCollection(panelConfig.collection)
+      // add a condition to perform getCollection as many times as we find one collection which has a sequence of manifests
+      let collectionId: string = panelConfig.collection
+      let collection: Collection = { '@context': '', collector: [], id: '', sequence: [], textapi: '', title: [] }
+      while (true) {
+        collection = await getCollection(collectionId)
+        if (collection.sequence[0].type === 'manifest') break
+        collectionId = collection.sequence[0].id
+      }
+
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
       const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)
       const contentTypes: string[] = getContentTypes(item.content)
