@@ -2,6 +2,9 @@
 
 import { defaultConfig } from '@/utils/config/default-config.ts'
 
+import enTranslations from '../../../public/translations/en.json'
+import deTranslations from '../../../public/translations/de.json'
+
 type ValidationResult<T> = {
   result: T;
   errors: Record<string, string>;
@@ -71,6 +74,38 @@ function validateTheme(input: any): ValidationResult<AppConfig['theme']> {
   return { result, errors }
 }
 
+function validateLang(input: any): ValidationResult<AppConfig['lang']> {
+  const errors: Record<string, string> = {}
+  const result =
+      typeof input === 'string'
+        ? input
+        : (() => {
+          if (input !== undefined)
+            errors['lang'] = 'lang must be a string'
+          return defaultConfig.lang
+        })()
+  return { result, errors }
+}
+
+function validateTranslations(input: any): ValidationResult<AppConfig['translations']> {
+  const errors: Record<string, string>  = { }
+  const result =
+      typeof input === 'object'
+        ? input
+        : (() => {
+          if (input !== undefined)
+            errors['translations'] = 'translations needs to be an object'
+          return defaultConfig.translations
+        })()
+  return { result, errors }
+}
+
+
+function getLanguage(lang: string, translations: Translations, defaultLangs: string[]): string {
+  if (Object.keys(translations).includes(lang) || defaultLangs.includes(lang)) return lang
+  return 'en'
+}
+
 export function mergeAndValidateConfig(
   userConfig: Partial<AppConfig>,
 ): { config: AppConfig; errors: Record<string, string> } {
@@ -80,13 +115,24 @@ export function mergeAndValidateConfig(
   const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
   const showNewCollectionButton = validateShowNewCollectionButton(userConfig.showNewCollectionButton)
   const theme = validateTheme(userConfig.theme)
+  const lang = validateLang(userConfig.lang)
+  const translations = validateTranslations(userConfig.translations)
+
+  const mergedTranslations: Record<string, Translation> = {}
+  const defaultLangs = ['en', 'de']
+  const language = getLanguage(lang.result, translations.result, defaultLangs)
+  const defaultTranslations =  language === 'en' ? enTranslations : language === 'de' ? deTranslations : {}
+  mergedTranslations[language] = { ...defaultTranslations, ...translations.result?.[language] }
+
 
   const errors = {
     ...container.errors,
     ...panels.errors,
     ...showGlobalTree.errors,
     ...showNewCollectionButton.errors,
-    ...theme.errors
+    ...theme.errors,
+    ...lang.errors,
+    ...translations.errors,
   }
 
   const config: AppConfig = {
@@ -94,7 +140,9 @@ export function mergeAndValidateConfig(
     panels: panels.result,
     showGlobalTree: showGlobalTree.result,
     showNewCollectionButton: showNewCollectionButton.result,
-    theme: theme.result
+    theme: theme.result,
+    lang: lang.result,
+    translations: mergedTranslations,
   }
 
   return { config, errors }

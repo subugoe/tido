@@ -9,5 +9,6 @@
       "collection": "http://localhost:8181/4w/reproduction/collection.json",
       "manifestIndex": 0
     }
-  ]
+  ],
+  "lang": "de"
 }

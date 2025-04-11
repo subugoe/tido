@@ -11,6 +11,8 @@ import PanelsWrapper from '@/components/PanelsWrapper.tsx'
 import { getRGBColor } from '@/utils/colors.ts'
 import { defaultConfig } from '@/utils/config/default-config.ts'
 import { mergeAndValidateConfig } from '@/utils/config/config.ts'
+import { initI18n } from '@/utils/translations.ts'
+
 
 interface AppProps {
   customConfig: Partial<AppConfig>
@@ -27,12 +29,15 @@ const App: FC<AppProps> = ({ customConfig }) => {
   const { config, errors } = mergeAndValidateConfig(customConfig)
   if (Object.keys(errors).length > 0) console.error(errors)
 
+  initI18n(config.translations, config.lang)
+
   createThemeStyles(config)
 
   useConfigStore.getState().addCustomConfig(config)
 
   const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
+
 
   useEffect(() => {
     async function initTree(collections: CollectionMap) {
@@ -44,6 +49,7 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
     initTree(collections)
   }, [collections])
+
 
   return (
     <div className="tido t-flex t-flex-col t-h-full" data-cy="app">
