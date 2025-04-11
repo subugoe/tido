@@ -5,7 +5,10 @@ function convertTranslations(translations: Translations) {
   // translations are converted to expected 3 level format: lang, 'translation', key values translation object
   // i.e {
   //      'en': {
-  //          'translation': {'sync_panels': 'Sync Panels'}, {'new': 'New'}
+  //          'translation': {
+  //             'sync_panels': 'Sync Panels',
+  //             'new': 'New'
+  //          }
   //        }
   //     }
   return Object.fromEntries(

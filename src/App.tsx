@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
 import i18n from 'i18next'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
@@ -30,22 +30,18 @@ const App: FC<AppProps> = ({ customConfig }) => {
   const { config, errors } = mergeAndValidateConfig(customConfig)
   if (Object.keys(errors).length > 0) console.error(errors)
 
+  initI18n(config.translations)
+  i18n.changeLanguage(config.lang)
+
   createThemeStyles(config)
 
   useConfigStore.getState().addCustomConfig(config)
 
   const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
-  const [ready, setReady] = useState(false)
 
 
   useEffect(() => {
-    function initI18nTranslations(translations: Translations) {initI18n(translations)
-      initI18n(translations)
-      i18n.changeLanguage(config.lang)
-      setReady(true)
-    }
-
     async function initTree(collections: CollectionMap) {
       const nodes = await createCollectionNodes(collections)
       if (!nodes) return
@@ -54,10 +50,8 @@ const App: FC<AppProps> = ({ customConfig }) => {
     }
 
     initTree(collections)
-    initI18nTranslations(config.translations)
   }, [collections])
 
-  if (!ready) return <div>Loading ...</div>
 
   return (
     <div className="tido t-flex t-flex-col t-h-full" data-cy="app">

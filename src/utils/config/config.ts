@@ -81,7 +81,7 @@ function validateLang(input: any): ValidationResult<AppConfig['lang']> {
         ? input
         : (() => {
           if (input !== undefined)
-            errors['language'] = 'lang must be a string'
+            errors['lang'] = 'lang must be a string'
           return defaultConfig.lang
         })()
   return { result, errors }
