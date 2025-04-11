@@ -1,6 +1,6 @@
 {
   "showGlobalTree": true,
-  "showNewCollectionButton": false,
+  "showNewCollectionButton": true,
   "theme": {
     "primaryColor": "#1E40AF"
   },
@@ -10,13 +10,5 @@
       "manifestIndex": 0
     }
   ],
-  "lang": "de",
-  "translations": {
-    "de": {
-      "sync_panels": "Panels synchronisieren bitte"
-    },
-  "en":  {
-    "sync_panels": "Synchronize panels"
-  }
-  }
+  "lang": "de"
 }

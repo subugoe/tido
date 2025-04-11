@@ -19,7 +19,7 @@ function convertTranslations(translations: Translations) {
   )
 }
 
-function initI18n (translations: Translations){
+function initI18n (translations: Translations, lang: string){
   if (!i18n.isInitialized) {
     const resources = convertTranslations(translations)
 
@@ -28,7 +28,7 @@ function initI18n (translations: Translations){
       .init({
         resources: resources,
         keySeparator: false,
-        lng: 'en',
+        lng: lang,
         fallbackLng: 'en', // Default language if language detection fails
         interpolation: {
           escapeValue: false, // React already does escaping
