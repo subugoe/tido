@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 
@@ -10,13 +11,13 @@ import { Button } from '@/components/ui/button.tsx'
 import SelectParallelPanels from '@/components/SelectParallelPanels.tsx'
 import { ListCollapse, X } from 'lucide-react'
 
-
 const TopBar: FC = () => {
   const showGlobalTreeConfig = useConfigStore(state => state.config.showGlobalTree)
   const showNewCollectionButton = useConfigStore(state => state.config.showNewCollectionButton)
 
   const setShowGlobalTree = useDataStore(state => state.setShowGlobalTree)
   const isGlobalTreeCollapsed = useDataStore(state => state.showGlobalTree)
+  const { t } = useTranslation()
 
   function toggleGlobalTree() {
     setShowGlobalTree(!isGlobalTreeCollapsed)
@@ -27,10 +28,10 @@ const TopBar: FC = () => {
       { !isGlobalTreeCollapsed ? <ListCollapse /> : <X /> }
     </button>
     { showNewCollectionButton &&
-      <Modal TriggerButton={<Button data-cy="new-collection">New</Button>}>
+      <Modal TriggerButton={<Button data-cy="new-collection">{t('new')}</Button>}>
         <TreeSelectionModalContent />
       </Modal> }
-    <Modal TriggerButton={<Button>Sync Panels</Button>}>
+    <Modal TriggerButton={<Button data-cy="sync-panels">{t('sync_panels')}</Button>}>
       <SelectParallelPanels />
     </Modal>
   </div>
