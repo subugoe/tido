@@ -1,5 +1,4 @@
 import { FC, useEffect } from 'react'
-import i18n from 'i18next'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
