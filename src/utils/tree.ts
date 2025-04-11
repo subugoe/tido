@@ -70,11 +70,8 @@ export function getNodeIndices(nodeKey: string) {
 
 export async function isCollectionInTree(url: string) {
 
-  console.log('is Collection in tree ?')
-
   const treeCollections = useDataStore.getState().treeCollections
   if (Object.keys(treeCollections).length === 0) return false
-  console.log('there are collections in tree!')
   if (Object.keys(treeCollections).includes(url)) return true
 
 
@@ -98,5 +95,22 @@ async function isCollectionInCollection(collection: Collection, url: string ) {
   }
 
   return false
+}
+
+export async function includesCollectionAsNested(parent: Collection, targetUrls: string[]): string[] {
+  if (!parent || typeof parent !== 'object') return []
+
+  if (Array.isArray(parent.sequence)) {
+    for (const item of parent.sequence) {
+      if (item.type !== 'collection') continue
+      const child = await apiRequest<Collection>(item.id)
+      if (targetUrls.includes(child.id)) {
+        return [targetUrls.find(url => url === child.id) ?? '']
+      }
+      includesCollectionAsNested(child, targetUrls)
+    }
+  }
+
+  return []
 }
 

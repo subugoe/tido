@@ -3,7 +3,7 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
-import { isCollectionInTree } from '@/utils/tree.ts'
+import { includesCollectionAsNested, isCollectionInTree } from '@/utils/tree.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 
@@ -67,9 +67,14 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
 
       // Append? to the treeCollections ?
       const existsCollectionInTree = await isCollectionInTree(panelConfig.collection)
-      console.log('exists collection in tree ?', panelConfig.collection, ' ', existsCollectionInTree)
-      console.log('tree of collections', useDataStore.getState().treeCollections)
       if (!existsCollectionInTree) useDataStore.getState().appendCollectionInTree(panelConfig.collection)
+      // check if this panelConfig collection contains already at least one of the treeCollections. If this is the case remove other contained collections from treeCollection
+
+      const collectionsInTree = Object.keys(useDataStore.getState().treeCollections)
+      console.log('collections in tree', collectionsInTree)
+      const includedCollection = includesCollectionAsNested(collection, collectionsInTree)
+      if (includedCollection[0] !== '') useDataStore.getState().removeChildCollectionsInTree(includedCollection[0])
+
 
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
       const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)

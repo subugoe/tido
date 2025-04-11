@@ -17,6 +17,7 @@ interface DataStoreType {
   showGlobalTree: boolean,
   setShowGlobalTree: (newValue: boolean) => void,
   appendCollectionInTree: (newCollectionId: string) => void,
+  removeChildCollectionsInTree: (child: string) => void
 }
 
 export const useDataStore = create<DataStoreType>((set, get) => ({
@@ -58,6 +59,12 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   },
   appendCollectionInTree: (newCollectionId: string) => {
     set( { treeCollections: { ...get().treeCollections, [newCollectionId]: '' } })
+  },
+
+  removeChildCollectionsInTree: (child: string) => {
+    const newTreeCollections = get().collections
+    delete newTreeCollections[child]
+    set({ treeCollections: newTreeCollections })
   }
 
 }))
