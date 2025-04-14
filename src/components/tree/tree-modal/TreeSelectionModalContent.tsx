@@ -35,6 +35,7 @@ const TreeSelectionModalContent: FC = () => {
     if (clickedItemUrl.current) {
       // transfer the clicked item indices
       const { collectionUrl, manifestIndex, itemIndex } = selectedItemIndices.current
+      console.log('item index clicked is', itemIndex)
       addNewPanel({
         collection: collectionUrl,
         manifestIndex: manifestIndex,
@@ -61,7 +62,10 @@ const TreeSelectionModalContent: FC = () => {
   function onSelect(node: TreeNode) {
     const { id } = node
     clickedItemUrl.current = id
-    const [collectionIndex, manifestIndex, itemIndex] = getNodeIndices(node.key)
+    const nodeIndices = getNodeIndices(node.key)
+    const collectionIndex = nodeIndices[0]
+    const manifestIndex = nodeIndices[nodeIndices.length - 2]
+    const itemIndex = nodeIndices[nodeIndices.length - 1]
     const collectionUrl = treeNodes[collectionIndex].id
     selectedItemIndices.current = { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
   }
