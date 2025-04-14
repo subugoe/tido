@@ -65,6 +65,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
         collectionId = collection.sequence[0].id
       }
 
+      console.log('collection', collection)
+      console.log('panelConfig', panelConfig)
 
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
       const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)

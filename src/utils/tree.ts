@@ -105,7 +105,7 @@ async function isCollectionInCollection(collection: Collection, url: string ) {
   return false
 }
 
-export async function includesCollectionAsNested(parent: Collection, targetUrls: string[]): string[] {
+export async function includesCollectionAsNested(parent: Collection, targetUrls: string[]): Promise<string[]> {
   if (!parent || typeof parent !== 'object') return []
   if (!Array.isArray(parent.sequence)) return []
 

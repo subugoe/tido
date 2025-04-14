@@ -43,11 +43,10 @@ const App: FC<AppProps> = ({ customConfig }) => {
     async function initTree(collections: CollectionMap) {
       const nodes = await createCollectionNodes(collections)
       if (!nodes) return
-      console.log('nodes', nodes)
+
       setTreeNodes(nodes)
     }
 
-    console.log('tree collections', collections)
     initTree(collections)
   }, [collections])
 
