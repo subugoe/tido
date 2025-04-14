@@ -6,13 +6,21 @@ export async function createCollectionNodes(collections: CollectionMap): Promise
   const collectionsUrls = Object.keys(collections)
   if (collectionsUrls.length === 0) return []
 
-  const nodes: TreeNode[] = []
+  let nodes: TreeNode[] = []
+
+  let nestedCollectionsInTree: string[] = []
 
   for (let i = 0; i < collectionsUrls.length; i++) {
-    await createCollectionNode(collectionsUrls[i], i).then((node) => {
+    await createCollectionNode(collectionsUrls[i], i).then(async (node) => {
+      // filter other collection urls beside the current collection url
+      const targetUrls = collectionsUrls.filter((_, index) => i !== index)
+      const nestedCollections = await includesCollectionAsNested(collections[collectionsUrls[i]], targetUrls)
+      nestedCollectionsInTree = [...nestedCollectionsInTree, ...nestedCollections]
       nodes.push(node)
     })
   }
+
+  nodes = nodes.filter(node => !nestedCollectionsInTree.includes(node.id))
 
   return nodes
 }
@@ -99,17 +107,19 @@ async function isCollectionInCollection(collection: Collection, url: string ) {
 
 export async function includesCollectionAsNested(parent: Collection, targetUrls: string[]): string[] {
   if (!parent || typeof parent !== 'object') return []
+  if (!Array.isArray(parent.sequence)) return []
 
-  if (Array.isArray(parent.sequence)) {
-    for (const item of parent.sequence) {
-      if (item.type !== 'collection') continue
-      const child = await apiRequest<Collection>(item.id)
-      if (targetUrls.includes(child.id)) {
-        return [targetUrls.find(url => url === child.id) ?? '']
-      }
-      includesCollectionAsNested(child, targetUrls)
+  if (targetUrls.includes(parent.id)) return [targetUrls.find(url => url === parent.id) ?? '']
+
+  for (const item of parent.sequence) {
+    if (item.type !== 'collection') continue
+    const child = await apiRequest<Collection>(item.id)
+    if (targetUrls.includes(child.id)) {
+      return [targetUrls.find(url => url === child.id) ?? '']
     }
+    includesCollectionAsNested(child, targetUrls)
   }
+
 
   return []
 }

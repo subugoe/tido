@@ -36,6 +36,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
 
   const panelState = usePanelStore(state => state.getPanelState(panelId))
 
+
   useEffect(() => {
 
     // On first render, create a new panel ID and initiate the panel in an empty state
@@ -52,7 +53,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
 
     if (!panelId) return
     try {
-      console.log('panel Config', panelConfig)
       setLoading(true)
       // add a condition to perform getCollection as many times as we find one collection which has a sequence of manifests
       let collectionId: string = panelConfig.collection
@@ -64,16 +64,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
         if (collection.sequence[0].type === 'manifest') break
         collectionId = collection.sequence[0].id
       }
-
-      // Append? to the treeCollections ?
-      const existsCollectionInTree = await isCollectionInTree(panelConfig.collection)
-      if (!existsCollectionInTree) useDataStore.getState().appendCollectionInTree(panelConfig.collection)
-      // check if this panelConfig collection contains already at least one of the treeCollections. If this is the case remove other contained collections from treeCollection
-
-      const collectionsInTree = Object.keys(useDataStore.getState().treeCollections)
-      console.log('collections in tree', collectionsInTree)
-      const includedCollection = includesCollectionAsNested(collection, collectionsInTree)
-      if (includedCollection[0] !== '') useDataStore.getState().removeChildCollectionsInTree(includedCollection[0])
 
 
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)

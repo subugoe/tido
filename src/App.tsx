@@ -35,7 +35,7 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
   useConfigStore.getState().addCustomConfig(config)
 
-  const treeCollections = useDataStore(state => state.treeCollections)
+  const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
 
 
@@ -43,12 +43,13 @@ const App: FC<AppProps> = ({ customConfig }) => {
     async function initTree(collections: CollectionMap) {
       const nodes = await createCollectionNodes(collections)
       if (!nodes) return
-
+      console.log('nodes', nodes)
       setTreeNodes(nodes)
     }
 
-    initTree(treeCollections)
-  }, [treeCollections])
+    console.log('tree collections', collections)
+    initTree(collections)
+  }, [collections])
 
 
   return (
