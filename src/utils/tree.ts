@@ -67,12 +67,22 @@ function getNodeIndices(nodeKey: string) {
   return nodeKey.split('-').map((index) => parseInt(index, 10))
 }
 
+function getSelectedItemIndices(indices: number[]) {
+  const treeNodes = useDataStore.getState().treeNodes
+  const rootCollectionIndex = indices[0]
+  const manifestIndex = indices[indices.length - 2]
+  const itemIndex = indices[indices.length - 1]
+
+  const collectionUrl = useDataStore.getState().treeCollections[treeNodes[rootCollectionIndex].id].leafCollectionId
+
+  return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
+}
+
 async function getLeafCollection(panelConfig: PanelConfig) {
   let collectionId: string = panelConfig.collection
   let collection
   while (true) {
     collection = await useDataStore.getState().initCollection(collectionId)
-
     if (collection.sequence[0].type === 'manifest') break
     collectionId = collection.sequence[0].id
   }
@@ -80,4 +90,4 @@ async function getLeafCollection(panelConfig: PanelConfig) {
   return { collection, collectionId }
 }
 
-export { getLeafCollection, createCollectionNodes, getChildren, getNodeIndices }
+export { getLeafCollection, createCollectionNodes, getChildren, getNodeIndices, getSelectedItemIndices }
