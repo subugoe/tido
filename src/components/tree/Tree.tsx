@@ -12,7 +12,6 @@ interface TreeProps {
 }
 
 const Tree: FC<TreeProps> = ({ nodes, onSelect, getChildren }) => {
-
   const tree =
     nodes?.length > 0 &&
     nodes.map((collection, i) => (

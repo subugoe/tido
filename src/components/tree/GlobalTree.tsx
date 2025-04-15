@@ -13,7 +13,6 @@ const GlobalTree: FC = () => {
     itemIndex: -1
   })
 
-
   const treeNodes = useDataStore(state => state.treeNodes)
   const [showSelectionModal, setShowSelectionModal] = useState(false)
   const [selectedPosition, setSelectedPosition] = useState({ x: 0, y: 0 })

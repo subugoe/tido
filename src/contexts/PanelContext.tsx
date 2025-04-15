@@ -5,10 +5,7 @@ import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { getLeafCollection } from '@/utils/tree.ts'
-
-
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
-
 
 interface PanelContentType {
   panelId: string | null
@@ -34,7 +31,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
 
   const panelState = usePanelStore(state => state.getPanelState(panelId))
 
-
   useEffect(() => {
 
     // On first render, create a new panel ID and initiate the panel in an empty state
@@ -48,13 +44,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
   }, [panelConfig, panelId])
 
   const init = async () => {
-
     if (!panelId) return
     try {
       setLoading(true)
-
       const { collection } = await getLeafCollection(panelConfig.collection)
-
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
       const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)
       const contentTypes: string[] = getContentTypes(item.content)

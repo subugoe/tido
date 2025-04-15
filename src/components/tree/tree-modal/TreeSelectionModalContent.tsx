@@ -35,7 +35,6 @@ const TreeSelectionModalContent: FC = () => {
     if (clickedItemUrl.current) {
       // transfer the clicked item indices
       const { collectionUrl, manifestIndex, itemIndex } = selectedItemIndices.current
-
       addNewPanel({
         collection: collectionUrl,
         manifestIndex: manifestIndex,
