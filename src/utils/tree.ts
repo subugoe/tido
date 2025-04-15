@@ -77,7 +77,7 @@ async function getLeafCollection(panelConfig: PanelConfig) {
     collectionId = collection.sequence[0].id
   }
 
-  return collection
+  return { collection, collectionId }
 }
 
 export { getLeafCollection, createCollectionNodes, getChildren, getNodeIndices }

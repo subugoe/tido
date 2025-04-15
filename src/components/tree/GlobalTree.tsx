@@ -18,8 +18,12 @@ const GlobalTree: FC = () => {
   const [selectedPosition, setSelectedPosition] = useState({ x: 0, y: 0 })
 
   function onSelectNode(node: TreeNode, target: HTMLElement) {
-    const [collectionIndex, manifestIndex, itemIndex] = getNodeIndices(node.key)
-    const collectionUrl = treeNodes[collectionIndex].id
+    const indices = getNodeIndices(node.key)
+    const rootCollectionIndex = indices[0]
+    const manifestIndex = indices[indices.length - 2]
+    const itemIndex = indices[indices.length - 1]
+
+    const collectionUrl = useDataStore.getState().treeCollections[treeNodes[rootCollectionIndex].id].leafCollectionId
     selectedItemIndices.current = { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
 
     // when we click at another item, show the modal

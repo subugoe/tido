@@ -55,9 +55,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
       setLoading(true)
       // add a condition to perform getCollection as many times as we find one collection which has a sequence of manifests
 
-      useDataStore.getState().appendCollectionInTree(panelConfig.collection)
 
-      const collection = await getLeafCollection(panelConfig)
+      console.log('panel config', panelConfig)
+      const { collection, collectionId } = await getLeafCollection(panelConfig)
+
+      useDataStore.getState().appendCollectionInTree(panelConfig.collection, collectionId)
 
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
       const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)
