@@ -15,22 +15,20 @@ interface DataStoreType {
   initAnnotations: (collectionId: string, url: string) => Promise<void>
   setTreeNodes: (newTreeNodes: TreeNode[]) => void
   showGlobalTree: boolean,
-  setShowGlobalTree: (newValue: boolean) => void
+  setShowGlobalTree: (newValue: boolean) => void,
 }
 
 export const useDataStore = create<DataStoreType>((set, get) => ({
   collections: {},
-  treeCollections: {},
   annotations: {},
   treeNodes: [],
   showGlobalTree: false,
   initCollection: async (url: string) => {
-
     if (url in get().collections) return get().collections[url].collection
 
     const collection = await apiRequest<Collection>(url)
 
-    // TODO: we need to check if this collection is already in treeCollections or child of existing treeCollections data, if not we add a new entry in treeCollections
+    // TODO: we need to check if this collection is already in treeCollections or child of existing treeCollections data
     const collections: CollectionMap = { ...get().collections }
     collections[collection.id] = {
       'collection': collection,

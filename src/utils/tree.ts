@@ -66,18 +66,17 @@ function getCollectionSlug(id: string) {
   return urlParts[urlParts.length - 2]
 }
 
-
 function getNodeIndices(nodeKey: string) {
   return nodeKey.split(',')
 }
-
 
 async function getLeafCollection(collectionUrl: string) {
   let collectionId: string = collectionUrl
   let collection
   while (true) {
     collection = await useDataStore.getState().initCollection(collectionId)
-    if (collection.sequence?.[0].type === 'manifest' ) break
+    if (!collection.sequence || collection.sequence.length === 0) break
+    if (collection.sequence[0].type === 'manifest') break
     collectionId = collection.sequence[0].id
   }
 
