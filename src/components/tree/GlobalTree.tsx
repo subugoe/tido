@@ -18,10 +18,7 @@ const GlobalTree: FC = () => {
   const [selectedPosition, setSelectedPosition] = useState({ x: 0, y: 0 })
 
   function onSelectNode(node: TreeNode, target: HTMLElement) {
-    const nodeIndices = getNodeIndices(node.key)
-    const collectionIndex = nodeIndices[0]
-    const manifestIndex = nodeIndices[nodeIndices.length - 2]
-    const itemIndex = nodeIndices[nodeIndices.length - 1]
+    const [collectionIndex, manifestIndex, itemIndex] = getNodeIndices(node.key)
     const collectionUrl = treeNodes[collectionIndex].id
     selectedItemIndices.current = { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
 

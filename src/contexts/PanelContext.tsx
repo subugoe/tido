@@ -3,7 +3,7 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
-import { includesCollectionAsNested, isCollectionInTree } from '@/utils/tree.ts'
+import { getLeafCollection } from '@/utils/tree.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 
@@ -30,7 +30,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const getCollection = useDataStore(state => state.initCollection)
   const initPanelState = usePanelStore((state) => state.initPanelState)
   const updateStorePanelState = usePanelStore((state) => state.updatePanelState)
 
@@ -55,18 +54,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
     try {
       setLoading(true)
       // add a condition to perform getCollection as many times as we find one collection which has a sequence of manifests
-      let collectionId: string = panelConfig.collection
-      let collection: Collection = { '@context': '', collector: [], id: '', sequence: [], textapi: '', title: [] }
 
-      // getLeafCollection()
-      while (true) {
-        collection = await getCollection(collectionId)
-        if (collection.sequence[0].type === 'manifest') break
-        collectionId = collection.sequence[0].id
-      }
+      useDataStore.getState().appendCollectionInTree(panelConfig.collection)
 
-      console.log('collection', collection)
-      console.log('panelConfig', panelConfig)
+      const collection = await getLeafCollection(panelConfig)
 
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
       const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)

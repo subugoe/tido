@@ -28,13 +28,11 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   showGlobalTree: false,
   initCollection: async (url: string) => {
 
-    //console.log('collections', get().collections)
     if (url in get().collections) return get().collections[url]
 
     const collection = await apiRequest<Collection>(url)
 
-    // for one collection we append it in treeCollections
-    // we need to check if this collection is already in treeCollections or child of existing treeCollections data, if not we add a new entry in treeCollections
+    // TODO: we need to check if this collection is already in treeCollections or child of existing treeCollections data, if not we add a new entry in treeCollections
 
     const collections: CollectionMap = { ...get().collections }
     collections[collection.id] = collection

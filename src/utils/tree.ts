@@ -1,26 +1,17 @@
 import { request } from '@/utils/http'
 import { useDataStore } from '@/store/DataStore.tsx'
-import { apiRequest } from '@/utils/api.ts'
 
-export async function createCollectionNodes(collections: CollectionMap): Promise<TreeNode[]> {
+async function createCollectionNodes(collections: CollectionMap): Promise<TreeNode[]> {
   const collectionsUrls = Object.keys(collections)
   if (collectionsUrls.length === 0) return []
 
-  let nodes: TreeNode[] = []
-
-  let nestedCollectionsInTree: string[] = []
+  const nodes: TreeNode[] = []
 
   for (let i = 0; i < collectionsUrls.length; i++) {
     await createCollectionNode(collectionsUrls[i], i).then(async (node) => {
-      // filter other collection urls beside the current collection url
-      const targetUrls = collectionsUrls.filter((_, index) => i !== index)
-      const nestedCollections = await includesCollectionAsNested(collections[collectionsUrls[i]], targetUrls)
-      nestedCollectionsInTree = [...nestedCollectionsInTree, ...nestedCollections]
       nodes.push(node)
     })
   }
-
-  nodes = nodes.filter(node => !nestedCollectionsInTree.includes(node.id))
 
   return nodes
 }
@@ -39,7 +30,7 @@ async function createCollectionNode(url: string, key: number) {
   return node
 }
 
-export async function getChildren(node: TreeNode): Promise<TreeNode[]> {
+async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   const { id } = node
   const parentKey = node.key
 
@@ -72,55 +63,21 @@ export async function getChildren(node: TreeNode): Promise<TreeNode[]> {
 }
 
 
-export function getNodeIndices(nodeKey: string) {
+function getNodeIndices(nodeKey: string) {
   return nodeKey.split('-').map((index) => parseInt(index, 10))
 }
 
-export async function isCollectionInTree(url: string) {
+async function getLeafCollection(panelConfig: PanelConfig) {
+  let collectionId: string = panelConfig.collection
+  let collection
+  while (true) {
+    collection = await useDataStore.getState().initCollection(collectionId)
 
-  const treeCollections = useDataStore.getState().treeCollections
-  if (Object.keys(treeCollections).length === 0) return false
-  if (Object.keys(treeCollections).includes(url)) return true
-
-
-  for (const collectionId in treeCollections) {
-    const collection = await apiRequest<Collection>(collectionId)
-    if (await isCollectionInCollection(collection, url)) return true
+    if (collection.sequence[0].type === 'manifest') break
+    collectionId = collection.sequence[0].id
   }
 
-  return false
+  return collection
 }
 
-async function isCollectionInCollection(collection: Collection, url: string ) {
-  if (collection.id === url) return true
-
-  if (Array.isArray(collection.sequence)) {
-    for (const item of collection.sequence) {
-      if (item.type !== 'collection') continue
-      const collection = await apiRequest<Collection>(item.id)
-      if (await isCollectionInCollection(collection, url)) return true
-    }
-  }
-
-  return false
-}
-
-export async function includesCollectionAsNested(parent: Collection, targetUrls: string[]): Promise<string[]> {
-  if (!parent || typeof parent !== 'object') return []
-  if (!Array.isArray(parent.sequence)) return []
-
-  if (targetUrls.includes(parent.id)) return [targetUrls.find(url => url === parent.id) ?? '']
-
-  for (const item of parent.sequence) {
-    if (item.type !== 'collection') continue
-    const child = await apiRequest<Collection>(item.id)
-    if (targetUrls.includes(child.id)) {
-      return [targetUrls.find(url => url === child.id) ?? '']
-    }
-    includesCollectionAsNested(child, targetUrls)
-  }
-
-
-  return []
-}
-
+export { getLeafCollection, createCollectionNodes, getChildren, getNodeIndices }
