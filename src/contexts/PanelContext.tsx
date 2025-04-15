@@ -3,9 +3,8 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
-import { getLeafCollection } from '@/utils/tree.ts'
 import { getSupport } from '@/utils/support-styling.ts'
-import { useDataStore } from '@/store/DataStore.tsx'
+import { getLeafCollection } from '@/utils/tree.ts'
 
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
@@ -53,11 +52,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
     if (!panelId) return
     try {
       setLoading(true)
-      // add a condition to perform getCollection as many times as we find one collection which has a sequence of manifests
 
-      const { collection, collectionId } = await getLeafCollection(panelConfig)
-
-      useDataStore.getState().appendCollectionInTree(panelConfig.collection, collectionId)
+      const { collection } = await getLeafCollection(panelConfig)
 
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
       const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)

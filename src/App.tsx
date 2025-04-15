@@ -35,7 +35,7 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
   useConfigStore.getState().addCustomConfig(config)
 
-  const treeCollections = useDataStore(state => state.treeCollections)
+  const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
 
 
@@ -47,8 +47,8 @@ const App: FC<AppProps> = ({ customConfig }) => {
       setTreeNodes(nodes)
     }
 
-    initTree(treeCollections)
-  }, [treeCollections])
+    initTree(collections)
+  }, [collections])
 
 
   return (

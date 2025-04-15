@@ -8,16 +8,13 @@ interface AnnotationMap {
 
 interface DataStoreType {
   collections: CollectionMap
-  treeCollections: any
   annotations: AnnotationMap
   treeNodes: TreeNode[]
   initCollection: (url: string) => Promise<Collection>
   initAnnotations: (collectionId: string, url: string) => Promise<void>
   setTreeNodes: (newTreeNodes: TreeNode[]) => void
   showGlobalTree: boolean,
-  setShowGlobalTree: (newValue: boolean) => void,
-  appendCollectionInTree: (newCollectionId: string, leafCollectionId: string) => void,
-  removeChildCollectionsInTree: (child: string) => void
+  setShowGlobalTree: (newValue: boolean) => void
 }
 
 export const useDataStore = create<DataStoreType>((set, get) => ({
@@ -35,7 +32,12 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
     // TODO: we need to check if this collection is already in treeCollections or child of existing treeCollections data, if not we add a new entry in treeCollections
 
     const collections: CollectionMap = { ...get().collections }
-    collections[collection.id] = collection
+    const urlParts = url.split('/')
+    const slug = urlParts[urlParts.length - 2]
+    collections[collection.id] = {
+      'collection': collection,
+      'slug': slug
+    }
     set({ collections })
 
     if (collection.annotationCollection) {
@@ -54,15 +56,5 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   },
   setShowGlobalTree: (newValue: boolean) => {
     set({ showGlobalTree: newValue })
-  },
-  appendCollectionInTree: (newCollectionId: string, leafCollectionId: string) => {
-    set( { treeCollections: { ...get().treeCollections, [newCollectionId]: { ['leafCollectionId']: leafCollectionId } } })
-  },
-
-  removeChildCollectionsInTree: (child: string) => {
-    const newTreeCollections = get().collections
-    delete newTreeCollections[child]
-    set({ treeCollections: newTreeCollections })
   }
-
 }))

@@ -7,8 +7,9 @@ import { Skeleton } from '@/components/ui/skeleton.tsx'
 const CollectionTitle: FC = () => {
   const { panelState } = usePanel()
   const collection = useDataStore(
-    (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId] : null
+    (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId].collection : null
   )
+
   return (
     <>
       { !collection && <Skeleton className="t-w-[100px] t-h-6" /> }

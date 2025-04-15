@@ -8,7 +8,7 @@ async function createCollectionNodes(collections: CollectionMap): Promise<TreeNo
   const nodes: TreeNode[] = []
 
   for (let i = 0; i < collectionsUrls.length; i++) {
-    await createCollectionNode(collectionsUrls[i], i).then(async (node) => {
+    await createCollectionNode(collectionsUrls[i]).then(async (node) => {
       nodes.push(node)
     })
   }
@@ -16,13 +16,16 @@ async function createCollectionNodes(collections: CollectionMap): Promise<TreeNo
   return nodes
 }
 
-async function createCollectionNode(url: string, key: number) {
+async function createCollectionNode(url: string) {
   const node: TreeNode = { key: '', id: '', type: '', label: '', children: [] }
 
   const response = await request<Collection>(url)
   if (!response.success) return node
 
-  node.key = key.toString()
+  const urlParts = url.split('/')
+  const slug = urlParts[urlParts.length - 2]
+
+  node.key = slug
   node.id = url
   node.type = 'collection'
   node.label = response.data.title[0].title
@@ -48,7 +51,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   for (let i = 0; i < items.length; i++) {
 
     const childNode: TreeNode = {
-      key: parentKey + '-' + i,
+      key: parentKey + '-' + items[i].type === 'collection' ? getCollectionSlug(items[i].id) : i.toString() ,
       id: items[i].id,
       label: items[i].label ?? 'label not found',
       type: items[i].type,
@@ -62,21 +65,16 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   return childrenNodes
 }
 
+function getCollectionSlug(id: string) {
+  const urlParts = id.split('/')
+  return urlParts[urlParts.length - 2]
+}
+
 
 function getNodeIndices(nodeKey: string) {
-  return nodeKey.split('-').map((index) => parseInt(index, 10))
+  return nodeKey.split('-')
 }
 
-function getSelectedItemIndices(indices: number[]) {
-  const treeNodes = useDataStore.getState().treeNodes
-  const rootCollectionIndex = indices[0]
-  const manifestIndex = indices[indices.length - 2]
-  const itemIndex = indices[indices.length - 1]
-
-  const collectionUrl = useDataStore.getState().treeCollections[treeNodes[rootCollectionIndex].id].leafCollectionId
-
-  return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
-}
 
 async function getLeafCollection(panelConfig: PanelConfig) {
   let collectionId: string = panelConfig.collection
@@ -88,6 +86,17 @@ async function getLeafCollection(panelConfig: PanelConfig) {
   }
 
   return { collection, collectionId }
+}
+
+function getSelectedItemIndices(node: TreeNode){
+  const collections = useDataStore.getState().collections
+  const indices = getNodeIndices(node.key)
+  const collectionSlug = indices[indices.length - 3]
+  const manifestIndex = parseInt(indices[indices.length - 2], 10)
+  const itemIndex = parseInt(indices[indices.length - 1], 10)
+  const collectionUrl = Object.keys(collections).filter(key => collections[key].slug === collectionSlug)[0]
+
+  return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
 }
 
 export { getLeafCollection, createCollectionNodes, getChildren, getNodeIndices, getSelectedItemIndices }

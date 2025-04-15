@@ -8,7 +8,7 @@ import Tree from '@/components/tree/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
 import { ClosePopover } from '@/components/ui/popover'
 
-import { getChildren, getNodeIndices, getSelectedItemIndices } from '@/utils/tree.ts'
+import { getChildren, getSelectedItemIndices } from '@/utils/tree.ts'
 
 
 const TreeSelectionModalContent: FC = () => {
@@ -59,10 +59,7 @@ const TreeSelectionModalContent: FC = () => {
 
 
   function onSelect(node: TreeNode) {
-    const { id } = node
-    clickedItemUrl.current = id
-    const indices = getNodeIndices(node.key)
-    selectedItemIndices.current = getSelectedItemIndices(indices)
+    selectedItemIndices.current = getSelectedItemIndices(node)
   }
 
 

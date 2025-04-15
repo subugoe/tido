@@ -19,6 +19,7 @@ const PanelsWrapper: FC = () => {
         ))
     }
   </div>
+
 }
 
 export default PanelsWrapper
