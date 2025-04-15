@@ -8,7 +8,7 @@ async function createCollectionNodes(collections: CollectionMap): Promise<TreeNo
   const nodes: TreeNode[] = []
 
   for (let i = 0; i < collectionsUrls.length; i++) {
-    await createCollectionNode(collectionsUrls[i]).then(async (node) => {
+    await createCollectionNode(collectionsUrls[i]).then((node) => {
       nodes.push(node)
     })
   }
