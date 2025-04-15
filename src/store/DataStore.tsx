@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { apiRequest } from '@/utils/api.ts'
+import { getCollectionSlug } from '@/utils/tree.ts'
 
 
 interface AnnotationMap {
@@ -30,14 +31,10 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
     const collection = await apiRequest<Collection>(url)
 
     // TODO: we need to check if this collection is already in treeCollections or child of existing treeCollections data, if not we add a new entry in treeCollections
-
     const collections: CollectionMap = { ...get().collections }
-
-    const urlParts = url.split('/')
-    const slug = urlParts[urlParts.length - 2]
     collections[collection.id] = {
       'collection': collection,
-      'slug': slug
+      'slug': getCollectionSlug(url)
     }
     set({ collections })
 

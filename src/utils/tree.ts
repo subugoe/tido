@@ -95,4 +95,6 @@ function getSelectedItemIndices(node: TreeNode){
   return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
 }
 
-export { getLeafCollection, createCollectionNodes, getChildren, getNodeIndices, getSelectedItemIndices }
+export { getLeafCollection, createCollectionNodes, getChildren,
+  getNodeIndices, getSelectedItemIndices, getCollectionSlug
+}
