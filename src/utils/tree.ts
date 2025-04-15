@@ -22,10 +22,7 @@ async function createCollectionNode(url: string) {
   const response = await request<Collection>(url)
   if (!response.success) return node
 
-  const urlParts = url.split('/')
-  const slug = urlParts[urlParts.length - 2]
-
-  node.key = slug
+  node.key = getCollectionSlug(url)
   node.id = url
   node.type = 'collection'
   node.label = response.data.title[0].title
