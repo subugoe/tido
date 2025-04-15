@@ -53,7 +53,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
     try {
       setLoading(true)
 
-      const { collection } = await getLeafCollection(panelConfig)
+      const { collection } = await getLeafCollection(panelConfig.collection)
 
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
       const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)

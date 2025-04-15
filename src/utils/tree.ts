@@ -49,9 +49,8 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   const items: Sequence[] = data.sequence
 
   for (let i = 0; i < items.length; i++) {
-
     const childNode: TreeNode = {
-      key: parentKey + '-' + items[i].type === 'collection' ? getCollectionSlug(items[i].id) : i.toString() ,
+      key: parentKey + ',' + (items[i].type === 'collection' ? getCollectionSlug(items[i].id) : i.toString()),
       id: items[i].id,
       label: items[i].label ?? 'label not found',
       type: items[i].type,
@@ -72,16 +71,16 @@ function getCollectionSlug(id: string) {
 
 
 function getNodeIndices(nodeKey: string) {
-  return nodeKey.split('-')
+  return nodeKey.split(',')
 }
 
 
-async function getLeafCollection(panelConfig: PanelConfig) {
-  let collectionId: string = panelConfig.collection
+async function getLeafCollection(collectionUrl: string) {
+  let collectionId: string = collectionUrl
   let collection
   while (true) {
     collection = await useDataStore.getState().initCollection(collectionId)
-    if (collection.sequence[0].type === 'manifest') break
+    if (collection.sequence?.[0].type === 'manifest' ) break
     collectionId = collection.sequence[0].id
   }
 
