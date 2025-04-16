@@ -24,8 +24,8 @@ export const useConfigStore = create<ConfigStoreType>((set, get) => ({
     set({
       config: {
         ...get().config,
-        ['rootNodes']: [
-          ...get().config.rootNodes ?? [],
+        ['rootCollections']: [
+          ...get().config.rootCollections,
           newRootNode
         ]
       }

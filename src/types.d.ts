@@ -87,7 +87,7 @@ declare global {
     theme: ThemeConfig,
     lang: string,
     translations: Translations,
-    rootCollections?: string[],
+    rootCollections: string[],
   }
 
   interface Content {

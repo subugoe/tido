@@ -27,6 +27,7 @@ function createThemeStyles(config: AppConfig) {
 
 const App: FC<AppProps> = ({ customConfig }) => {
   const { config, errors } = mergeAndValidateConfig(customConfig)
+
   if (Object.keys(errors).length > 0) console.error(errors)
 
   initI18n(config.translations, config.lang)

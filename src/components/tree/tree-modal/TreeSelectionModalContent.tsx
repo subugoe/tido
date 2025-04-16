@@ -54,7 +54,7 @@ const TreeSelectionModalContent: FC = () => {
       )
 
       // if new collection url not in the rootNodes - append it in rootNodes
-      appendRootNodeInTree(collectionUrl)
+      if (!(useConfigStore.getState().config.rootCollections.includes(collectionUrl))) appendRootNodeInTree(collectionUrl)
       await initCollection(collectionUrl)
     }
 
