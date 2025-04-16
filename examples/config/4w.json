@@ -1,0 +1,12 @@
+{
+  "globalTree": true,
+  "theme": {
+    "primaryColor": "#1E40AF"
+  },
+  "panels": [
+    {
+      "collection": "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/reproduction/collection.json",
+      "manifestIndex": 0
+    }
+  ]
+}
