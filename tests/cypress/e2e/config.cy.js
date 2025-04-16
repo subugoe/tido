@@ -12,6 +12,7 @@ describe('Config', () => {
     cy.get('[data-cy="new-collection"]').should('be.visible', true)
     cy.get('[data-cy="new-collection"]').should('have.text', 'New')
     cy.get('[data-cy="sync-panels"]').should('have.text', 'Sync Panels')
+    cy.get('[data-cy="pip"]').should('have.attr', 'data-selected', 'true')
   });
 
   // ===== Specific Config Values =====
@@ -27,5 +28,8 @@ describe('Config', () => {
   runConfigTest('lang=de', 'translations: read from default `de` file', () => {
     cy.get('[data-cy="new-collection"]').should('have.text', 'Neu')
     cy.get('[data-cy="sync-panels"]').should('have.text', 'Panels synchronisieren')
+  });
+  runConfigTest('defaultView=split', 'defaultView: split', () => {
+    cy.get('[data-cy="split"]').should('have.attr', 'data-selected', 'true')
   });
 });

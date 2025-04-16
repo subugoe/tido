@@ -1,12 +1,12 @@
 {
-  "showGlobalTree": true,
-  "theme": {
-    "primaryColor": "#1E40AF"
-  },
+  "defaultView": "split",
   "panels": [
     {
       "collection": "http://localhost:8181/4w/reproduction/collection.json",
       "manifestIndex": 0
     }
-  ]
+  ],
+  "theme": {
+    "primaryColor": "#1E40AF"
+  }
 }
