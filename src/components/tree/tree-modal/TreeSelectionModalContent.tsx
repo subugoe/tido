@@ -6,12 +6,17 @@ import { useDataStore } from '@/store/DataStore'
 
 import Tree from '@/components/tree/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
-import { ClosePopover } from '@/components/ui/popover'
 
 import { getChildren, getNodeIndices } from '@/utils/tree.ts'
+import { Button } from '@/components/ui/button.tsx'
+import { useTranslation } from 'react-i18next'
 
+interface Props {
+  onConfirm?: () => void
+}
 
-const TreeSelectionModalContent: FC = () => {
+const TreeSelectionModalContent: FC<Props> = ({ onConfirm }) => {
+  const { t } = useTranslation()
   const addNewPanel = useConfigStore(state => state.addNewPanel)
   const initCollection = useDataStore(state => state.initCollection)
   const treeNodes = useDataStore(state => state.treeNodes)
@@ -28,7 +33,7 @@ const TreeSelectionModalContent: FC = () => {
     inputValue.current = newValue
   }
 
-  async function handleSelectClick() {
+  async function handleConfirm() {
 
     let collectionUrl: string | undefined
 
@@ -55,6 +60,8 @@ const TreeSelectionModalContent: FC = () => {
 
       await initCollection(collectionUrl)
     }
+
+    if (onConfirm) onConfirm()
   }
 
 
@@ -67,22 +74,21 @@ const TreeSelectionModalContent: FC = () => {
   }
 
 
-  return <div className="t-flex t-flex-col t-w-[380px]">
-    <span className="t-font-bold t-mb-2">Enter a collection URL</span>
+  return <div className="t-flex t-flex-col">
+    <span className="t-font-bold t-mb-2">{ t('enter_collection_url') }</span>
     <InputField width={80} updateInputValue={updateInputValue} />
-    <span>Or choose:</span>
+    <span>{ t('or_choose') }:</span>
 
     <div className="t-max-h-80 t-overflow-y-auto">
       <Tree nodes={treeNodes} onSelect={onSelect} getChildren={getChildren} />
     </div>
-
-    <div className="t-pb-4">
-      <ClosePopover
-        className='t-bg-blue-500 t-text-white t-rounded t-flex t-text-center t-pl-2 t-ml-[80%] t-mt-10 t-items-center t-justify-items-center t-w-16 t-h-10'
-        onClick={() => handleSelectClick()}>
-        Select
-      </ClosePopover>
-    </div>
+    <Button
+      variant="default"
+      onClick={handleConfirm}
+      className="t-mt-6"
+    >
+      { t('confirm') }
+    </Button>
   </div>
 }
 

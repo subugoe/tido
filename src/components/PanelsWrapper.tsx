@@ -3,6 +3,7 @@ import { FC } from 'react'
 import Panel from '@/components/panel/Panel'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { PanelProvider } from '@/contexts/PanelContext.tsx'
+import AddPanel from '@/components/panel/AddPanel.tsx'
 
 const PanelsWrapper: FC = () => {
   const config = useConfigStore(state => state.config)
@@ -16,6 +17,7 @@ const PanelsWrapper: FC = () => {
           </PanelProvider>
         ))
     }
+    <AddPanel />
   </div>
 }
 
