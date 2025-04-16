@@ -7,7 +7,7 @@ import { useDataStore } from '@/store/DataStore'
 import Tree from '@/components/tree/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
 
-import { getChildren, getNodeIndices } from '@/utils/tree.ts'
+import { getChildren, getSelectedItemIndices, appendNodeInTree } from '@/utils/tree.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
 
@@ -58,6 +58,10 @@ const TreeSelectionModalContent: FC<Props> = ({ onConfirm }) => {
         }
       )
 
+      if (!(useConfigStore.getState().config.rootCollections.includes(collectionUrl))) {
+        appendNodeInTree(collectionUrl)
+        useConfigStore.getState().addRootCollection(collectionUrl)
+      }
       await initCollection(collectionUrl)
     }
 
@@ -68,9 +72,7 @@ const TreeSelectionModalContent: FC<Props> = ({ onConfirm }) => {
   function onSelect(node: TreeNode) {
     const { id } = node
     clickedItemUrl.current = id
-    const [collectionIndex, manifestIndex, itemIndex] = getNodeIndices(node.key)
-    const collectionUrl = treeNodes[collectionIndex].id
-    selectedItemIndices.current = { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
+    selectedItemIndices.current = getSelectedItemIndices(node)
   }
 
 

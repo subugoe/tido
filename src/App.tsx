@@ -6,7 +6,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 import TopBar from '@/components/TopBar'
 import GlobalTree from '@/components/tree/GlobalTree.tsx'
 
-import { createCollectionNodes } from '@/utils/tree.ts'
+import { addTreeCollectionsInCollectionMap, createCollectionNodes } from '@/utils/tree.ts'
 import PanelsWrapper from '@/components/PanelsWrapper.tsx'
 import { getRGBColor } from '@/utils/colors.ts'
 import { defaultConfig } from '@/utils/config/default-config.ts'
@@ -35,20 +35,22 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
   useConfigStore.getState().addCustomConfig(config)
 
-  const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
 
 
   useEffect(() => {
-    async function initTree(collections: CollectionMap) {
-      const nodes = await createCollectionNodes(collections)
+    async function initTree(rootCollections: string[]) {
+      const nodes = await createCollectionNodes(rootCollections)
+
+      // add rootCollection in Collections map
       if (!nodes) return
 
       setTreeNodes(nodes)
     }
 
-    initTree(collections)
-  }, [collections])
+    initTree(config.rootCollections)
+    addTreeCollectionsInCollectionMap(config.rootCollections)
+  }, [])
 
 
   return (

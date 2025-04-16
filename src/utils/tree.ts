@@ -1,13 +1,11 @@
 import { request } from '@/utils/http'
+import { useDataStore } from '@/store/DataStore.tsx'
 
-export async function createCollectionNodes(collections: CollectionMap): Promise<TreeNode[]> {
-  const collectionsUrls = Object.keys(collections)
-  if (collectionsUrls.length === 0) return []
-
+async function createCollectionNodes(rootNodes: string[]): Promise<TreeNode[]> {
   const nodes: TreeNode[] = []
 
-  for (let i = 0; i < collectionsUrls.length; i++) {
-    await createCollectionNode(collectionsUrls[i], i).then((node) => {
+  for (let i = 0; i < rootNodes.length; i++) {
+    await createCollectionNode(rootNodes[i]).then((node) => {
       nodes.push(node)
     })
   }
@@ -15,13 +13,13 @@ export async function createCollectionNodes(collections: CollectionMap): Promise
   return nodes
 }
 
-async function createCollectionNode(url: string, key: number) {
+async function createCollectionNode(url: string) {
   const node: TreeNode = { key: '', id: '', type: '', label: '', children: [] }
 
   const response = await request<Collection>(url)
   if (!response.success) return node
 
-  node.key = key.toString()
+  node.key = getCollectionSlug(url)
   node.id = url
   node.type = 'collection'
   node.label = response.data.title[0].title
@@ -29,7 +27,12 @@ async function createCollectionNode(url: string, key: number) {
   return node
 }
 
-export async function getChildren(node: TreeNode): Promise<TreeNode[]> {
+async function appendNodeInTree(collectionUrl: string) {
+  const newRootNode = await createCollectionNode(collectionUrl)
+  useDataStore.getState().appendRootNode(newRootNode)
+}
+
+async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   const { id } = node
   const parentKey = node.key
 
@@ -45,9 +48,8 @@ export async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   const items: Sequence[] = data.sequence
 
   for (let i = 0; i < items.length; i++) {
-
     const childNode: TreeNode = {
-      key: parentKey + '-' + i,
+      key: parentKey + ',' + (items[i].type === 'collection' ? getCollectionSlug(items[i].id) : i.toString()),
       id: items[i].id,
       label: items[i].label ?? 'label not found',
       type: items[i].type,
@@ -61,7 +63,32 @@ export async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   return childrenNodes
 }
 
+function getCollectionSlug(id: string) {
+  const urlParts = id.split('/')
+  return urlParts[urlParts.length - 2]
+}
 
-export function getNodeIndices(nodeKey: string) {
-  return nodeKey.split('-').map((index) => parseInt(index, 10))
+function getNodeIndices(nodeKey: string) {
+  return nodeKey.split(',')
+}
+
+function getSelectedItemIndices(node: TreeNode){
+  const collections = useDataStore.getState().collections
+  const indices = getNodeIndices(node.key)
+  const collectionSlug = indices[indices.length - 3]
+  const manifestIndex = parseInt(indices[indices.length - 2], 10)
+  const itemIndex = parseInt(indices[indices.length - 1], 10)
+  const collectionUrl = Object.keys(collections).filter(key => collections[key].slug === collectionSlug)[0]
+
+  return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
+}
+
+async function addTreeCollectionsInCollectionMap(rootCollections: string[]) {
+  for (const collection of rootCollections) {
+    await useDataStore.getState().initCollection(collection)
+  }
+}
+
+export {  createCollectionNodes, addTreeCollectionsInCollectionMap, getChildren, appendNodeInTree,
+  getNodeIndices, getSelectedItemIndices, getCollectionSlug
 }

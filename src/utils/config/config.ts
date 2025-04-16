@@ -100,6 +100,19 @@ function validateTranslations(input: any): ValidationResult<AppConfig['translati
   return { result, errors }
 }
 
+function validateRootCollections(input: any): ValidationResult<AppConfig['rootCollections']> {
+  const errors: Record<string, string> = {}
+  const result =
+    Array.isArray(input)
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['root Collections'] = 'root Collections needs to be an array'
+        return defaultConfig.rootCollections
+      })()
+  return { result, errors }
+}
+
 
 function getLanguage(lang: string, translations: Translations, defaultLangs: string[]): string {
   if (Object.keys(translations).includes(lang) || defaultLangs.includes(lang)) return lang
@@ -117,6 +130,7 @@ export function mergeAndValidateConfig(
   const theme = validateTheme(userConfig.theme)
   const lang = validateLang(userConfig.lang)
   const translations = validateTranslations(userConfig.translations)
+  const rootCollections = validateRootCollections(userConfig.rootCollections)
 
   const mergedTranslations: Record<string, Translation> = {}
   const defaultLangs = ['en', 'de']
@@ -133,6 +147,7 @@ export function mergeAndValidateConfig(
     ...theme.errors,
     ...lang.errors,
     ...translations.errors,
+    ...rootCollections.errors
   }
 
   const config: AppConfig = {
@@ -143,6 +158,7 @@ export function mergeAndValidateConfig(
     theme: theme.result,
     lang: lang.result,
     translations: mergedTranslations,
+    rootCollections: rootCollections.result,
   }
 
   return { config, errors }
