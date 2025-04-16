@@ -4,7 +4,7 @@ import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
-import { getLeafCollection } from '@/utils/tree.ts'
+import { useDataStore } from '@/store/DataStore.tsx'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {
@@ -26,6 +26,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const getCollection = useDataStore(state => state.initCollection)
   const initPanelState = usePanelStore((state) => state.initPanelState)
   const updateStorePanelState = usePanelStore((state) => state.updatePanelState)
 
@@ -47,7 +48,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
     if (!panelId) return
     try {
       setLoading(true)
-      const { collection } = await getLeafCollection(panelConfig.collection)
+      const collection = await getCollection(panelConfig.collection)
       const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
       const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)
       const contentTypes: string[] = getContentTypes(item.content)

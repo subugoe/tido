@@ -1,14 +1,11 @@
 import { request } from '@/utils/http'
 import { useDataStore } from '@/store/DataStore.tsx'
 
-async function createCollectionNodes(collections: CollectionMap): Promise<TreeNode[]> {
-  const collectionsUrls = Object.keys(collections)
-  if (collectionsUrls.length === 0) return []
-
+async function createCollectionNodes(rootNodes: string[]): Promise<TreeNode[]> {
   const nodes: TreeNode[] = []
 
-  for (let i = 0; i < collectionsUrls.length; i++) {
-    await createCollectionNode(collectionsUrls[i]).then((node) => {
+  for (let i = 0; i < rootNodes.length; i++) {
+    await createCollectionNode(rootNodes[i]).then((node) => {
       nodes.push(node)
     })
   }
@@ -28,6 +25,11 @@ async function createCollectionNode(url: string) {
   node.label = response.data.title[0].title
 
   return node
+}
+
+async function appendRootNodeInTree(collectionUrl: string) {
+  const newRootNode = await createCollectionNode(collectionUrl)
+  useDataStore.getState().appendRootNode(newRootNode)
 }
 
 async function getChildren(node: TreeNode): Promise<TreeNode[]> {
@@ -70,18 +72,6 @@ function getNodeIndices(nodeKey: string) {
   return nodeKey.split(',')
 }
 
-async function getLeafCollection(collectionUrl: string) {
-  let collectionId: string = collectionUrl
-  let collection
-  while (true) {
-    collection = await useDataStore.getState().initCollection(collectionId)
-    if (!collection.sequence || collection.sequence.length === 0) break
-    if (collection.sequence[0].type === 'manifest') break
-    collectionId = collection.sequence[0].id
-  }
-
-  return { collection, collectionId }
-}
 
 function getSelectedItemIndices(node: TreeNode){
   const collections = useDataStore.getState().collections
@@ -94,6 +84,6 @@ function getSelectedItemIndices(node: TreeNode){
   return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
 }
 
-export { getLeafCollection, createCollectionNodes, getChildren,
+export {  createCollectionNodes, getChildren, appendRootNodeInTree,
   getNodeIndices, getSelectedItemIndices, getCollectionSlug
 }

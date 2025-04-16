@@ -86,7 +86,8 @@ declare global {
     panels: PanelConfig[]
     theme: ThemeConfig,
     lang: string,
-    translations: Translations
+    translations: Translations,
+    rootCollections?: string[],
   }
 
   interface Content {

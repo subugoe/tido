@@ -8,7 +8,7 @@ import Tree from '@/components/tree/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
 import { ClosePopover } from '@/components/ui/popover'
 
-import { getChildren, getSelectedItemIndices } from '@/utils/tree.ts'
+import { getChildren, getSelectedItemIndices, appendRootNodeInTree } from '@/utils/tree.ts'
 
 
 const TreeSelectionModalContent: FC = () => {
@@ -53,8 +53,11 @@ const TreeSelectionModalContent: FC = () => {
         }
       )
 
+      // if new collection url not in the rootNodes - append it in rootNodes
+      appendRootNodeInTree(collectionUrl)
       await initCollection(collectionUrl)
     }
+
   }
 
 

@@ -35,20 +35,19 @@ const App: FC<AppProps> = ({ customConfig }) => {
 
   useConfigStore.getState().addCustomConfig(config)
 
-  const collections = useDataStore(state => state.collections)
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
 
 
   useEffect(() => {
-    async function initTree(collections: CollectionMap) {
-      const nodes = await createCollectionNodes(collections)
+    async function initTree(rootCollections: string[]) {
+      const nodes = await createCollectionNodes(rootCollections)
       if (!nodes) return
 
       setTreeNodes(nodes)
     }
 
-    initTree(collections)
-  }, [collections])
+    initTree(customConfig.rootCollections ?? [])
+  }, [])
 
 
   return (
