@@ -1,4 +1,9 @@
 {
   "new": "New",
-  "sync_panels": "Sync Panels"
+  "sync_panels": "Sync Panels",
+  "confirm": "Confirm",
+  "add_new_panel": "Add New Panel",
+  "choose_your_panel_content": "Choose your panel content",
+  "enter_collection_url": "Enter a collection URL",
+  "or_choose": "Or choose"
 }

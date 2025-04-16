@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
@@ -14,6 +14,7 @@ import { ListCollapse, X } from 'lucide-react'
 const TopBar: FC = () => {
   const showGlobalTreeConfig = useConfigStore(state => state.config.showGlobalTree)
   const showNewCollectionButton = useConfigStore(state => state.config.showNewCollectionButton)
+  const [showNewCollectionPopover, setShowNewCollectionPopover] = useState(false)
 
   const setShowGlobalTree = useDataStore(state => state.setShowGlobalTree)
   const isGlobalTreeCollapsed = useDataStore(state => state.showGlobalTree)
@@ -28,8 +29,12 @@ const TopBar: FC = () => {
       { !isGlobalTreeCollapsed ? <ListCollapse /> : <X /> }
     </button>
     { showNewCollectionButton &&
-      <Modal TriggerButton={<Button data-cy="new-collection">{t('new')}</Button>}>
-        <TreeSelectionModalContent />
+      <Modal
+        showPopover={showNewCollectionPopover}
+        onOpenChange={(isOpen) => setShowNewCollectionPopover(isOpen)}
+        TriggerButton={<Button data-cy="new-collection">{t('new')}</Button>}
+      >
+        <TreeSelectionModalContent onConfirm={() => setShowNewCollectionPopover(false)} />
       </Modal> }
     <Modal TriggerButton={<Button data-cy="sync-panels">{t('sync_panels')}</Button>}>
       <SelectParallelPanels />

@@ -4,5 +4,10 @@
   "place": "Ort",
   "year": "Jahr",
   "author": "Autor",
-  "editor": "Editor"
+  "editor": "Editor",
+  "confirm": "Bestätigen",
+  "add_new_panel": "Neues Panel hinzufügen",
+  "choose_your_panel_content": "Bitte wählen Sie Ihren Inhalt",
+  "enter_collection_url": "Geben eine Collection-URL ein",
+  "or_choose": "Oder wählen Sie"
 }
