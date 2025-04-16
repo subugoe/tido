@@ -5,6 +5,7 @@ import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {
@@ -26,6 +27,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const defaultView = useConfigStore.getState().config.defaultView
   const getCollection = useDataStore(state => state.initCollection)
   const initPanelState = usePanelStore((state) => state.initPanelState)
   const updateStorePanelState = usePanelStore((state) => state.updatePanelState)
@@ -65,7 +67,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
         manifest,
         item,
         contentIndex: 0,
-        viewIndex: 0,
+        viewIndex: mapToViewIndex(defaultView),
         contentTypes,
         activeTargetIndex: -1
       })
@@ -85,6 +87,14 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
   function updatePanelState(data: Partial<PanelState>) {
     if (!panelId) return
     updateStorePanelState(panelId, data)
+  }
+
+  function mapToViewIndex(view: ViewType): number {
+    if (view === 'pip') return 0
+    if (view === 'split') return 1
+    if (view === 'text') return 2
+    if (view === 'image') return 3
+    return 0
   }
 
   return (

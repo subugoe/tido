@@ -1,5 +1,5 @@
 {
-  "globalTree": true,
+  "defaultView": "split",
   "theme": {
     "primaryColor": "#1E40AF"
   },
