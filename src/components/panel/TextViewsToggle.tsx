@@ -7,16 +7,16 @@ import { Button } from '@/components/ui/button.tsx'
 import { Skeleton } from '@/components/ui/skeleton.tsx'
 
 interface IconKeys {
-  viewOne: ReactElement
-  text: ReactElement
+  pip: ReactElement
   split: ReactElement
+  text: ReactElement
   image: ReactElement
 }
 
 const icons = {
-  viewOne: <PictureInPicture2 />,
-  text: <AlignCenter />,
+  pip: <PictureInPicture2 />,
   split: <Columns2 />,
+  text: <AlignCenter />,
   image: <Image />,
 }
 
@@ -44,6 +44,8 @@ const TextViewsToggle: FC = () => {
               onClick={(e) => handleTextViewClick(e, i)}
               variant={panelState.viewIndex === i ? 'secondary' : 'ghost'}
               size="icon"
+              data-selected={panelState.viewIndex === i}
+              data-cy={key}
             >
               { icons[key as keyof IconKeys] }
             </Button>

@@ -23,6 +23,19 @@ function validateContainer(input: any): ValidationResult<AppConfig['container']>
   return { result, errors }
 }
 
+function validateDefaultView(input: any): ValidationResult<AppConfig['defaultView']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'string' && ['pip', 'split', 'text', 'image'].includes(input)
+      ? input as ViewType
+      : (() => {
+        if (input !== undefined)
+          errors['defaultView'] = 'defaultView must be a string'
+        return defaultConfig.defaultView
+      })()
+  return { result, errors }
+}
+
 function validateGlobalTree(input: any): ValidationResult<AppConfig['showGlobalTree']> {
   const errors: Record<string, string> = {}
   const result =
@@ -124,6 +137,7 @@ export function mergeAndValidateConfig(
 ): { config: AppConfig; errors: Record<string, string> } {
 
   const container = validateContainer(userConfig.container)
+  const defaultView = validateDefaultView(userConfig.defaultView)
   const panels = validatePanels(userConfig.panels)
   const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
   const showNewCollectionButton = validateShowNewCollectionButton(userConfig.showNewCollectionButton)
@@ -141,6 +155,7 @@ export function mergeAndValidateConfig(
 
   const errors = {
     ...container.errors,
+    ...defaultView.errors,
     ...panels.errors,
     ...showGlobalTree.errors,
     ...showNewCollectionButton.errors,
@@ -153,6 +168,7 @@ export function mergeAndValidateConfig(
   const config: AppConfig = {
     container: container.result,
     panels: panels.result,
+    defaultView: defaultView.result,
     showGlobalTree: showGlobalTree.result,
     showNewCollectionButton: showNewCollectionButton.result,
     theme: theme.result,

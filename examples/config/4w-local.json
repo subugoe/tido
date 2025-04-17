@@ -1,5 +1,5 @@
 {
-  "showGlobalTree": true,
+  "defaultView": "split",
   "showNewCollectionButton": false,
   "theme": {
     "primaryColor": "#1E40AF"

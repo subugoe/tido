@@ -54,9 +54,9 @@ const PanelCentralContent: FC = () => {
   if (panelState.viewIndex === 0) {
     return <TextViewOne textHtml={text} />
   } else if (panelState.viewIndex === 1) {
-    return <TextView textHtml={text} />
-  } else if (panelState.viewIndex === 2) {
     return <SplitView textHtml={text} />
+  } else if (panelState.viewIndex === 2) {
+    return <TextView textHtml={text} />
   } else if (panelState.viewIndex === 3) {
     return <ImageView />
   }
