@@ -5,5 +5,9 @@
   "add_new_panel": "Add New Panel",
   "choose_your_panel_content": "Choose your panel content",
   "enter_collection_url": "Enter a collection URL",
-  "or_choose": "Or choose"
+  "or_choose": "Or choose",
+  "no_image_available": "No image available",
+  "could_not_find_image": "Unfortunately, an image could not be found.",
+  "image_preview": "Image preview"
+
 }

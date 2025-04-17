@@ -9,5 +9,8 @@
   "add_new_panel": "Neues Panel hinzufügen",
   "choose_your_panel_content": "Bitte wählen Sie Ihren Inhalt",
   "enter_collection_url": "Geben eine Collection-URL ein",
-  "or_choose": "Oder wählen Sie"
+  "or_choose": "Oder wählen Sie",
+  "no_image_available": "Kein Bild verfügbar",
+  "could_not_find_image": "Leider konnte kein Bild gefunden werden.",
+  "image_preview": "Vorschau des Bildes"
 }

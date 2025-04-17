@@ -8,7 +8,7 @@ import NavigationButton from '@/components/panel/NavigationButton.tsx'
 
 const PanelHeader: FC = () => {
   return (
-    <div className="panel-header t-flex t-flex-col t-mb-6">
+    <div className="panel-header t-flex t-flex-col t-px-3 t-pt-3 t-pb-5">
       <div className="t-flex t-items-center t-mb-6">
         <CollectionTitle />
         <TextViewsToggle />
