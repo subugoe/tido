@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import OpenSeaDragonViewer from '@/components/OpenSeaDragonViewer'
+import ImageRenderer from '@/components/panel/ImageRenderer.tsx'
 
 import TextRenderer from '@/components/panel/TextRenderer.tsx'
 
@@ -9,11 +9,11 @@ interface SplitViewProps {
 
 const SplitView: FC<SplitViewProps> = ({ textHtml }) => {
   return (
-    <div className="t-flex t-overflow-hidden">
-      <div className="t-w-1/2 t-mr-3">
-        <OpenSeaDragonViewer />
-      </div>
+    <div className="t-flex t-h-full t-overflow-hidden">
       <div className="t-w-1/2">
+        <ImageRenderer />
+      </div>
+      <div className="t-w-1/2 t-border-l t-pl-3">
         <TextRenderer htmlString={textHtml} />
       </div>
     </div>
