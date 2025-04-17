@@ -86,7 +86,8 @@ declare global {
     panels: PanelConfig[]
     theme: ThemeConfig,
     lang: string,
-    translations: Translations
+    translations: Translations,
+    rootCollections: string[],
   }
 
   interface Content {
@@ -305,7 +306,10 @@ declare global {
   }
 
   interface CollectionMap {
-    [key: string]: Collection
+    [key: string]: {
+      slug: string,
+      collection: Collection
+    }
   }
 
   interface Position {

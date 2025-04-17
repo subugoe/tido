@@ -7,7 +7,8 @@ const defaultConfig: AppConfig = {
     primaryColor: '#3456aa'
   },
   lang: 'en',
-  translations: {}
+  translations: {},
+  rootCollections: []
 }
 
 export {
