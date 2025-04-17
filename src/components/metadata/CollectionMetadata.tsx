@@ -1,15 +1,10 @@
 import { FC } from 'react'
-import { useTranslation } from 'react-i18next'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import MetadataItem from '@/components/metadata/MetadataItem.tsx'
 
-interface CollectionMetadataProps {
-  item: Metadata
-}
 
-const CollectionMetadata: FC<CollectionMetadataProps> = () => {
-  const { t } = useTranslation()
+const CollectionMetadata: FC = () => {
   const { panelState } = usePanel()
   const collection = useDataStore(
     (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId].collection : null
@@ -45,7 +40,7 @@ const CollectionMetadata: FC<CollectionMetadataProps> = () => {
 
   return <div>
     {
-      metadata.map((meta) => <MetadataItem item={meta} />)
+      metadata.map((meta, i) => <MetadataItem item={meta} key={i} />)
     }
   </div>
 }

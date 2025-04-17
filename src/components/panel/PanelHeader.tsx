@@ -5,12 +5,22 @@ import PanelTitle from '@/components/panel/PanelTitle.tsx'
 import ContentTypesToggle from '@/components/panel/ContentTypesToggle.tsx'
 import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
 import NavigationButton from '@/components/panel/NavigationButton.tsx'
+import Modal from '@/components/Modal.tsx'
+import Metadata from '@/components/metadata/Metadata'
+import { Layers } from 'lucide-react'
+import { Button } from '@/components/ui/button.tsx'
 
 const PanelHeader: FC = () => {
   return (
     <div className="panel-header t-flex t-flex-col t-mb-6">
       <div className="t-flex t-items-center t-mb-6">
         <CollectionTitle />
+
+        <div className="t-ml-12">
+          <Modal TriggerButton={<Button variant={'outline'} size={'icon'}> {<Layers />} </Button>}>
+            <Metadata />
+          </Modal>
+        </div>
         <TextViewsToggle />
       </div>
       <div className="t-flex t-justify-center t-mb-4">
