@@ -79,17 +79,15 @@ declare global {
     primaryColor: string
   }
 
-  type ViewType = 'pip' | 'split' | 'text' | 'image'
-
   interface AppConfig {
     container: string
-    defaultView: ViewType
-    lang: string
     showGlobalTree: boolean
     showNewCollectionButton: boolean
     panels: PanelConfig[]
-    theme: ThemeConfig
-    translations: Translations
+    theme: ThemeConfig,
+    lang: string,
+    translations: Translations,
+    rootCollections: string[],
   }
 
   interface Content {
@@ -231,6 +229,7 @@ declare global {
 
   interface PanelConfig {
     collection: string
+    color?: Colors
     manifestIndex?: number
     itemIndex?: number
   }
@@ -307,7 +306,10 @@ declare global {
   }
 
   interface CollectionMap {
-    [key: string]: Collection
+    [key: string]: {
+      slug: string,
+      collection: Collection
+    }
   }
 
   interface Position {
