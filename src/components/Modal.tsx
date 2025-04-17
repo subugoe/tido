@@ -26,7 +26,7 @@ const Modal: FC<ModalProps> = ({
 
   return <Popover open={isOpen} onOpenChange={handleOpenChange} modal={true}>
     { TriggerButton ? (<PopoverTrigger asChild>{TriggerButton}</PopoverTrigger>) : <PopoverAnchor /> }
-    <PopoverContent sideOffset={-50} alignOffset={400} align="end">
+    <PopoverContent side="bottom" align="start"  sideOffset={8}>
       {children}
     </PopoverContent>
   </Popover>
