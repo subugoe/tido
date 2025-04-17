@@ -16,7 +16,7 @@ const PanelHeader: FC = () => {
       <div className="t-flex t-items-center t-mb-6">
         <CollectionTitle />
 
-        <div className="t-ml-12">
+        <div className="t-ml-12 t-w-[250px]">
           <Modal TriggerButton={<Button variant={'outline'} size={'icon'}> {<Layers />} </Button>}>
             <Metadata />
           </Modal>
