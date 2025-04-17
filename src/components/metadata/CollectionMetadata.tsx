@@ -25,14 +25,12 @@ const CollectionMetadata: FC = () => {
   const metadata = [
     ...collectionTitle
       .map((title) => ({
-        key: t(mappings[title.type] || 'title'),
+        key: mappings[title.type] || 'title',
         value: title.title,
       })),
     ...(collectorsName ? [{ key: 'collector', value: collectorsName }] : []),
     ...(description ? [{ key: 'description', value: description }] : []),
   ]
-
-  console.log('metadata', metadata)
 
 
   return <div>
