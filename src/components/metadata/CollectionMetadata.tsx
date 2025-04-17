@@ -4,7 +4,6 @@ import { useDataStore } from '@/store/DataStore.tsx'
 import MetadataItem from '@/components/metadata/MetadataItem.tsx'
 import { useTranslation } from 'react-i18next'
 import { getCollectorsName } from '@/utils/metadata.ts'
-import metadataItem from '@/components/metadata/MetadataItem.tsx'
 
 const CollectionMetadata: FC = () => {
   const { panelState } = usePanel()

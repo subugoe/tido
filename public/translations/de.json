@@ -13,5 +13,10 @@
   "title": "Titel",
   "subtitle": "Untertitel",
   "collector": "Kollektor",
-  "collection": "Sammlung"
+  "collection": "Sammlung",
+  "item": "Seite",
+  "label": "Label",
+  "language": "Sprache",
+  "image_license": "Bild Lizenz",
+  "image_notes": "Bild Notizen"
 }

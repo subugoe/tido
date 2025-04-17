@@ -9,5 +9,10 @@
   "title": "Title",
   "subtitle": "Subtitle",
   "collector": "Collector",
-  "collection": "Collection"
+  "item": "Page",
+  "collection": "Collection",
+  "label": "Label",
+  "language": "Language",
+  "image_license": "Image License",
+  "image_notes": "Image Notes"
 }

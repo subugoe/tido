@@ -13,7 +13,7 @@ const MetadataItem: FC<MetadataItemProps> = ({ item }) => {
       <h4 className="t-font-semibold t-text-sm t-text-gray-400">
         {t(item.key)}
       </h4>
-      <p className={'t-ml-1 t-mb-4'}> {t(item?.value ?? 'value not provided')}</p>
+      <p className={'t-ml-1 t-mb-4'}> {t(item?.value ?? 'value_missing')}</p>
     </div>
     <div className="nested-metadata">
       {
