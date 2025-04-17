@@ -1,6 +1,6 @@
 import { FC, ReactElement } from 'react'
 
-import { usePanel } from '@/contexts/PanelContext'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react'
@@ -12,7 +12,7 @@ interface ImageActions {
 }
 
 const ImageActionButtons: FC = () => {
-  const primaryColor = useConfigStore(state => state.config.colors?.primary)
+  const primaryColor = useConfigStore(state => state.config.theme.primaryColor)
   const { panelId } = usePanel()
 
   const actions: ImageActions[] = [

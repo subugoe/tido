@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
 
-import PanelCentralContent from '@/components/panel/views/PanelCentralContent'
+import PanelBody from '@/components/panel/PanelBody.tsx'
 import PanelHeader from '@/components/panel/PanelHeader.tsx'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
@@ -69,13 +69,13 @@ const Panel: FC = React.memo(() => {
         }
       }}
       className={
-        `panel t-relative t-flex t-flex-shrink-0 t-flex-col t-border-solid t-border-2 t-rounded-lg t-p-3 t-px-4
+        `panel t-relative t-flex t-flex-shrink-0 t-flex-col t-border-solid t-border-2 t-rounded-lg
         ${isScrollPanel ? 't-border-amber-300 t-ring-4 t-ring-amber-50' : 't-border-slate-200'}
       `}
     >
       {isScrollPanel && <ScrollPanelMenu className="t-absolute t-top-0 t-left-1/2 -t-translate-x-1/2" />}
       <PanelHeader />
-      <PanelCentralContent />
+      <PanelBody />
       <div
         className="t-z-10 t-absolute t-flex t-h-6 t-w-3 t-items-center t-justify-center t-rounded-sm t-border t-border-gray-200 t-bg-gray-200 dark:t-border-gray-800
         dark:t-bg-gray-800 -t-translate-y-1/2 t-top-1/2 -t-right-2"
