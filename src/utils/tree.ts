@@ -27,10 +27,6 @@ async function createCollectionNode(url: string) {
   return node
 }
 
-async function appendNodeInTree(collectionUrl: string) {
-  const newRootNode = await createCollectionNode(collectionUrl)
-  useDataStore.getState().appendRootNode(newRootNode)
-}
 
 async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   const { id } = node
@@ -83,12 +79,7 @@ function getSelectedItemIndices(node: TreeNode){
   return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
 }
 
-async function addTreeCollectionsInCollectionMap(rootCollections: string[]) {
-  for (const collection of rootCollections) {
-    await useDataStore.getState().initCollection(collection)
-  }
-}
 
-export {  createCollectionNodes, addTreeCollectionsInCollectionMap, getChildren, appendNodeInTree,
+export {  createCollectionNode, createCollectionNodes, getChildren,
   getNodeIndices, getSelectedItemIndices, getCollectionSlug
 }
