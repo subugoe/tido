@@ -3,6 +3,7 @@ const defaultConfig: AppConfig = {
   defaultView: 'pip',
   lang: 'en',
   panels: [],
+  rootCollections: [],
   showGlobalTree: true,
   showNewCollectionButton: true,
   theme: {

@@ -19,7 +19,7 @@ function next(panelState: PanelState) {
 
   const nextIndex = itemIndex + 1
   if (nextIndex > manifest?.sequence.length - 1) {
-    const sequence = useDataStore.getState().collections[collectionId].sequence
+    const sequence = useDataStore.getState().collections[collectionId].collection.sequence
 
     const nextManifestIndex = sequence.findIndex(({ id }) => id === manifest.id) + 1
     if (nextManifestIndex > sequence.length - 1) return
@@ -45,7 +45,7 @@ async function prev(panelState: PanelState) {
   const prevIndex = itemIndex - 1
 
   if (prevIndex < 0) {
-    const sequence = useDataStore.getState().collections[collectionId].sequence
+    const sequence = useDataStore.getState().collections[collectionId].collection.sequence
 
     // If the index is lower than 0, we will load the prev manifest's last item
     const prevManifestIndex = sequence.findIndex(({ id }) => id === manifest.id) - 1
@@ -84,7 +84,7 @@ const NavigationButton: FC<Props> = ({ isPrev = false }) => {
 
     const prevIndex = itemIndex - 1
     if (prevIndex < 0) {
-      const sequence = useDataStore.getState().collections[collectionId].sequence
+      const sequence = useDataStore.getState().collections[collectionId].collection.sequence
 
       const prevManifestIndex = sequence.findIndex(({ id }) => id === manifest.id) - 1
       if (prevManifestIndex < 0) return false
@@ -102,7 +102,7 @@ const NavigationButton: FC<Props> = ({ isPrev = false }) => {
 
     const nextIndex = itemIndex + 1
     if (nextIndex > manifest.sequence.length - 1) {
-      const sequence = useDataStore.getState().collections[collectionId].sequence
+      const sequence = useDataStore.getState().collections[collectionId].collection.sequence
 
       const nextManifestIndex = sequence.findIndex(({ id }) => id === manifest.id) + 1
       if (nextManifestIndex > sequence.length - 1) return false

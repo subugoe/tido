@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { apiRequest } from '@/utils/api.ts'
+import { getCollectionSlug } from '@/utils/tree.ts'
 
 
 interface AnnotationMap {
@@ -12,7 +13,8 @@ interface DataStoreType {
   treeNodes: TreeNode[]
   initCollection: (url: string) => Promise<Collection>
   initAnnotations: (collectionId: string, url: string) => Promise<void>
-  setTreeNodes: (newTreeNodes: TreeNode[]) => void
+  setTreeNodes: (newTreeNodes: TreeNode[]) => void,
+  appendRootNode: (newNode: TreeNode) => void,
   showGlobalTree: boolean,
   setShowGlobalTree: (newValue: boolean) => void,
 }
@@ -21,13 +23,21 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   collections: {},
   annotations: {},
   treeNodes: [],
+  appendRootNode: ( newNode: TreeNode ) => {
+    set({ treeNodes: [...get().treeNodes, newNode] })
+  },
   showGlobalTree: false,
   initCollection: async (url: string) => {
-    if (url in get().collections) return get().collections[url]
+    if (url in get().collections) return get().collections[url].collection
 
     const collection = await apiRequest<Collection>(url)
+
+    // TODO: we need to check if this collection is already in treeCollections or child of existing treeCollections data
     const collections: CollectionMap = { ...get().collections }
-    collections[collection.id] = collection
+    collections[collection.id] = {
+      'collection': collection,
+      'slug': getCollectionSlug(url)
+    }
     set({ collections })
 
     if (collection.annotationCollection) {

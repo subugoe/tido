@@ -85,6 +85,7 @@ declare global {
     container: string
     defaultView: ViewType
     lang: string
+    rootCollections: string[]
     showGlobalTree: boolean
     showNewCollectionButton: boolean
     panels: PanelConfig[]
@@ -307,7 +308,10 @@ declare global {
   }
 
   interface CollectionMap {
-    [key: string]: Collection
+    [key: string]: {
+      slug: string,
+      collection: Collection
+    }
   }
 
   interface Position {
