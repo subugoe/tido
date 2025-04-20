@@ -4,7 +4,7 @@ import ItemMetadata from '@/components/metadata/ItemMetadata.tsx'
 
 
 
-const Metadata: FC = ({  }) => {
+const Metadata: FC = () => {
 
   return <div>
     <CollectionMetadata />

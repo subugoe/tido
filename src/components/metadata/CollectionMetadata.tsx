@@ -3,7 +3,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import MetadataItem from '@/components/metadata/MetadataItem.tsx'
 import { useTranslation } from 'react-i18next'
-import { getCollectorsName } from '@/utils/metadata.ts'
+import { getCollectorsName, getCollectionMetadata } from '@/utils/metadata.ts'
 
 const CollectionMetadata: FC = () => {
   const { panelState } = usePanel()
@@ -16,20 +16,7 @@ const CollectionMetadata: FC = () => {
   const  description = collection?.description
   const collectionTitle: Title[] = collection?.title ?? []
 
-  const mappings = {
-    main: 'title',
-    sub: 'subtitle',
-  }
-
-  const metadata = [
-    ...collectionTitle
-      .map((title) => ({
-        key: mappings[title.type] || 'title',
-        value: title.title,
-      })),
-    ...(collectorsName ? [{ key: 'collector', value: collectorsName }] : []),
-    ...(description ? [{ key: 'description', value: description }] : []),
-  ]
+  const metadata = getCollectionMetadata(collectionTitle, collectorsName, description)
 
 
   return <div>
