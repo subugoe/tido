@@ -9,6 +9,7 @@ const Metadata: FC = () => {
 
   const { t } = useTranslation()
 
+
   return <div>
     <p className={'t-font-bold t-mb-2'}> { t('please_click_to_view_metadata') } </p>
     <CollectionMetadata />
