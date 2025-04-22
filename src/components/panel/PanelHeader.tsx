@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 import TextViewsToggle from '@/components/panel/TextViewsToggle'
 import PanelTitle from '@/components/panel/PanelTitle.tsx'
@@ -7,17 +7,20 @@ import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
 import NavigationButton from '@/components/panel/NavigationButton.tsx'
 import Modal from '@/components/Modal.tsx'
 import Metadata from '@/components/metadata/Metadata'
-import { Layers } from 'lucide-react'
+import { Info } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
 const PanelHeader: FC = () => {
+
+  const [showMetadata, setShowMetadata] = useState(false)
+
   return (
     <div className="panel-header t-flex t-flex-col t-mb-6">
       <div className="t-flex t-items-center t-mb-6">
         <CollectionTitle />
 
-        <div className="t-ml-12 t-w-[250px] t-text-wrap t-break-words">
-          <Modal TriggerButton={<Button variant={'outline'} size={'icon'}> {<Layers />} </Button>}>
+        <div className="t-ml-4 t-w-[250px] t-text-wrap t-break-words">
+          <Modal TriggerButton={<Button onClick={() => setShowMetadata(!showMetadata)} variant={showMetadata ? 'secondary' : 'ghost'} size={'icon'}> {<Info />} </Button>} >
             <Metadata />
           </Modal>
         </div>
