@@ -19,7 +19,7 @@ const Preview: FC<PreviewProps> = ({ previewA, previewB, mode, setMode }) => {
 
   return (
     <div
-      className="t-z-20 t-absolute t-border-[2px] t-border-zinc-800 t-p-[1px] t-w-20 t-h-24 t-overflow-hidden t-bottom-12 t-right-12 hover:t-brightness-[85%] t-transition-all"
+      className="t-z-20 t-absolute t-border-2 t-border-gray-600 t-rounded-md t-p-[1px] t-w-20 t-h-24 t-overflow-hidden t-bottom-12 t-right-12 hover:t-brightness-[90%] t-transition-all"
       onClick={() => updateMode()}>
       <div className="hover:t-cursor-pointer t-bg-white t-w-full t-h-full t-flex t-justify-center t-items-center">
         {mode === 'A' ? previewA : previewB  }

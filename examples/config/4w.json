@@ -1,12 +1,16 @@
 {
   "defaultView": "split",
-  "theme": {
-    "primaryColor": "#1E40AF"
-  },
+  "lang": "de",
   "panels": [
     {
       "collection": "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/reproduction/collection.json",
       "manifestIndex": 0
     }
+  ],
+  "theme": {
+    "primaryColor": "#1E40AF"
+  },
+  "rootCollections": [
+    "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/collection.json"
   ]
 }
