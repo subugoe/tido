@@ -52,15 +52,10 @@ const PanelBody: FC = () => {
     if (loading) return <Skeleton className="t-w-full t-h-full" />
     if (!panelState || !panelState.item) return <EmptyMessage />
 
-    if (panelState.viewIndex === 0) {
-      return <TextViewOne textHtml={text} />
-    } else if (panelState.viewIndex === 1) {
-      return <TextView textHtml={text} />
-    } else if (panelState.viewIndex === 2) {
-      return <SplitView textHtml={text} />
-    } else if (panelState.viewIndex === 3) {
-      return <ImageView />
-    }
+    if (panelState.viewIndex === 0) return <TextViewOne textHtml={text} />
+    else if (panelState.viewIndex === 1) return <SplitView textHtml={text} />
+    else if (panelState.viewIndex === 2) return <TextView textHtml={text} />
+    else if (panelState.viewIndex === 3) return <ImageView />
   }
 
   return <div className="t-overflow-hidden t-border-t t-flex-1">{ renderContent() }</div>

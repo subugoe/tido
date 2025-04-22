@@ -1,14 +1,15 @@
 {
-  "showGlobalTree": true,
-  "theme": {
-    "primaryColor": "#1E40AF"
-  },
+  "defaultView": "split",
+  "lang": "de",
   "panels": [
     {
-      "collection": "http://localhost:8181/4w/reproduction/collection.json",
+      "collection": "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/reproduction/collection.json",
       "manifestIndex": 0
     }
   ],
+  "theme": {
+    "primaryColor": "#1E40AF"
+  },
   "rootCollections": [
     "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/collection.json",
     "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json"
