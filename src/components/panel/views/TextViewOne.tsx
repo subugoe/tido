@@ -19,7 +19,6 @@ const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
   const imageUrl = panelState?.item?.image?.id
   const [previewMode, setMode] = useState('A')
 
-
   return (
     <div className="t-flex-1 t-h-full t-overflow-hidden t-pl-3">
       { previewMode === 'A' ? <TextRenderer htmlString={textHtml} /> : <ImageRenderer />}
