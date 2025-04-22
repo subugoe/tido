@@ -25,4 +25,13 @@ function getCollectionMetadata (collectionTitle: Title[], collectorsName: string
   ]
 }
 
-export { getCollectorsName, getCollectionMetadata }
+function getItemMetadata(item: Item | null) {
+  return [
+    { key: 'label', value: item?.n },
+    { key: 'language', value: item?.lang?.join(',') },
+    { key: 'image_license', value: item?.image?.license?.id },
+    { key: 'image_notes', value: item?.image?.license?.notes },
+  ].filter(i => i.value)
+}
+
+export { getCollectorsName, getCollectionMetadata, getItemMetadata }
