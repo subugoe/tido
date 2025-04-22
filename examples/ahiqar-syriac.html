@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head><title>TIDO</title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="dist/tido.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
+  continue.</strong></noscript>
+<header>
+  <a class="home" href="./">TIDO</a>
+  <span>Examples:</span>
+  <nav>
+    <select id="nav-select">
+      <option disabled selected hidden>Please select...</option>
+      <option value="./ahiqar-syriac.html">Ahiqar Syriac</option>
+      <option value="./ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</option>
+      <option value="./gfl.html">Goethes Farbenlehre in Berlin</option>
+    </select>
+  </nav>
+</header>
+<div id="app">
+  <div class="empty-container">
+    <h1>Coming soon.</h1>
+  </div>
+</div>
+<script src="dist/tido.js"></script>
+<script>
+window.addEventListener('load', function () {
+
+  const select = document.getElementById('nav-select');
+  const pathArr = window.location.pathname.split('/')
+
+  select.value = './' + pathArr[pathArr.length - 1]
+
+  select.onchange = function (event) {
+    window.location = event.target.value
+  }
+
+  return;
+
+  const tido = new Tido({
+    "collection": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
+    "labels": {
+      "item": "Sheet",
+      "manifest": "Manuscript"
+    },
+    "colors": {
+      "forceMode": "light",
+      "primary": "#1a3771"
+    },
+    "panels": [
+      {
+        "label": "contents_and_metadata",
+        "views": [
+          {
+            "id": "tree",
+            "label": "contents",
+            "connector": {
+              "id": 1
+            }
+          },
+          {
+            "id": "metadata",
+            "label": "metadata",
+            "connector": {
+              "id": 2,
+              "options": {
+                "collection": {
+                  "all": true
+                },
+                "manifest": {
+                  "all": true
+                },
+                "item": {
+                  "all": true
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "label": "image",
+        "views": [
+          {
+            "id": "image",
+            "label": "Image",
+            "connector": {
+              "id": 3
+            }
+          }]
+      },
+      {
+        "label": "text",
+        "views": [
+          {
+            "id": "text1",
+            "label": "Transcription",
+            "default": true,
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transcription"
+              }
+            }
+          },
+          {
+            "id": "text2",
+            "label": "Transliteration",
+            "connector": {
+              "id": 4,
+              "options": {
+                "type": "transliteration"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "label": "annotations",
+        "views": [
+          {
+            "id": "annotations1",
+            "label": "Editorial",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Person",
+                    "icon": "person"
+                  },
+                  {
+                    "name": "Place",
+                    "icon": "marker"
+                  },
+                  {
+                    "name": "Editorial Comment",
+                    "icon": "chat"
+                  },
+                  {
+                    "name": "Reference",
+                    "icon": "externalLink"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "annotations2",
+            "label": "Motif",
+            "connector": {
+              "id": 5,
+              "options": {
+                "types": [
+                  {
+                    "name": "Motif",
+                    "icon": "pen"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "annotations3",
+            "label": "Variants",
+            "connector": {
+              "id": 6
+            }
+          }
+        ]
+      }
+    ],
+    "translations": {
+      "en": {
+        "contents_and_metadata": "Contents & Metadata",
+        "next_item": "Next Sheet",
+        "previous_item": "Previous Sheet",
+        "next_manifest": "Next Manuscript",
+        "previous_manifest": "Previous Manuscript",
+        "item": "Sheet"
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
