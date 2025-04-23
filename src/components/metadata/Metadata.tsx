@@ -11,12 +11,14 @@ const Metadata: FC = () => {
   const { t } = useTranslation()
 
 
-  return <div className="t-w-[93%]">
+  return <div>
     <p className={'t-font-bold t-mb-1'}> { t('metadata') } </p>
-    <p className={'t-mb-2 t-text-[14px]'}> { t('please_click_to_view_metadata') } </p>
-    <CollectionMetadata />
-    <ManifestMetadata />
-    <ItemMetadata />
+    <p className={'t-mb-1 t-text-[14px]'}> { t('please_click_to_view_metadata') } </p>
+    <div className="t-max-h-[60vh] t-overflow-y-auto t-pr-4">
+      <CollectionMetadata />
+      <ManifestMetadata />
+      <ItemMetadata />
+    </div>
   </div>
 }
 

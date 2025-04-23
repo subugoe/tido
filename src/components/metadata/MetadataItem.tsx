@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
+import MetadataValue from '@/components/metadata/MetadataValue.tsx'
 
 interface MetadataItemProps {
   item: Metadata
@@ -13,7 +14,7 @@ const MetadataItem: FC<MetadataItemProps> = ({ item }) => {
       <h4 className="t-font-semibold t-text-sm t-text-gray-400">
         {t(item.key)}
       </h4>
-      <p className={'t-ml-1 t-mb-4'}> {t(item?.value ?? 'value_missing')}</p>
+      <MetadataValue value={item.value} />
     </div>
     <div className="nested-metadata">
       {

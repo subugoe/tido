@@ -19,7 +19,7 @@ const PanelHeader: FC = () => {
       <div className="t-flex t-items-center t-mb-6">
         <CollectionTitle />
 
-        <div className="t-ml-4 t-w-[250px] t-text-wrap t-break-words">
+        <div className="t-ml-4 t-w-[300px] t-text-wrap t-break-words">
           <Modal TriggerButton={<Button onClick={() => setShowMetadata(!showMetadata)} variant={showMetadata ? 'secondary' : 'ghost'} size={'icon'}>{<Info />} </Button>}
             onOpenChange={(isOpen) => setShowMetadata(isOpen)} showPopover={showMetadata}>
             <X className="t-absolute t-right-3 t-top-4 t-text-zinc-600 hover:t-text-zinc-700 hover:t-cursor-pointer"  size={15} onClick={() => setShowMetadata(false)} />
