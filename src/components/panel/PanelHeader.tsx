@@ -1,4 +1,6 @@
 import { FC, useState } from 'react'
+import { Info, X } from 'lucide-react'
+import { Button } from '@/components/ui/button.tsx'
 
 import TextViewsToggle from '@/components/panel/TextViewsToggle'
 import PanelTitle from '@/components/panel/PanelTitle.tsx'
@@ -7,11 +9,8 @@ import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
 import NavigationButton from '@/components/panel/NavigationButton.tsx'
 import Modal from '@/components/Modal.tsx'
 import Metadata from '@/components/metadata/Metadata'
-import { Info, X } from 'lucide-react'
-import { Button } from '@/components/ui/button.tsx'
 
 const PanelHeader: FC = () => {
-
   const [showMetadata, setShowMetadata] = useState(false)
 
   return (
