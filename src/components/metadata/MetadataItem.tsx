@@ -16,7 +16,7 @@ const MetadataItem: FC<MetadataItemProps> = ({ item }) => {
       </h4>
       <MetadataValue value={item.value} />
     </div>
-    <div className="nested-metadata">
+    <div className="nested-metadata t-ml-2">
       {
         item?.metadata?.map((meta, i) => <MetadataItem item={meta} key={i} />)
       }
