@@ -19,6 +19,8 @@
   "collection": "Sammlung",
   "manifest": "Manuskript",
   "license": "Lizenz",
+  "license_must_be_an_array": "Die Lizenz sollte als Array von Lizenzobjekten bereitgestellt werden",
+  "value_must_be_an_array": "Dieses Wert sollte als Array gegeben werden",
   "item": "Seite",
   "label": "Label",
   "language": "Sprache",

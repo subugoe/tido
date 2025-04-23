@@ -6,7 +6,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import MetadataItem from '@/components/metadata/MetadataItem.tsx'
 
-import { getCollectorsName, getCollectionMetadata } from '@/utils/metadata.ts'
+import { getCollectionMetadata } from '@/utils/metadata.ts'
 
 const CollectionMetadata: FC = () => {
   const { panelState } = usePanel()
@@ -16,17 +16,15 @@ const CollectionMetadata: FC = () => {
     (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId].collection : null
   )
 
-  const collectorsName: string | null = getCollectorsName(collection)
-  const  description = collection?.description
-  const collectionTitle: Title[] = collection?.title ?? []
+  const description = collection?.description
 
-  const metadata = getCollectionMetadata(collectionTitle, collectorsName, description)
+  const metadata = getCollectionMetadata(collection?.title, collection?.collector, description)
 
 
   return <div>
     <Accordion type="single" collapsible>
-      <AccordionItem value="item-1">
-        <AccordionTrigger>{ t('collection') }</AccordionTrigger>
+      <AccordionItem value="item-1" >
+        <AccordionTrigger className="t-py-1">{ t('collection') }</AccordionTrigger>
         <AccordionContent>
           <div className={'collection-metadata t-ml-2'}>
             {

@@ -16,6 +16,8 @@
   "collection": "Collection",
   "manifest": "Manifest",
   "license": "License",
+  "license_must_be_an_array": "License should be provided as an array of license objects",
+  "value_must_be_an_array": "Value must be an array",
   "label": "Label",
   "language": "Language",
   "image_license": "Image License",

@@ -1,44 +1,71 @@
 
-
-function getCollectorsName(collection: Collection | null): string | null {
-  if (!collection) return null
-  if (collection.collector.length === 0) return null
-  if (collection.collector.length === 1) return collection.collector[0].name
-
-  return collection.collector.map((collector) => collector.name).join(', ')
-}
-
-function getCollectionMetadata (collectionTitle: Title[], collectorsName: string | null, description: string | undefined) {
+function getCollectionMetadata (collectionTitle: Title[] | undefined, collectorsName: Actor[] | undefined, description: string | undefined) {
   const mappings = {
     main: 'title',
     sub: 'subtitle',
   }
 
+  const { result: collTitle, errors: titleErrors } = validateTitle(collectionTitle)
+  const { result: collectors } = validateCollectorsName(collectorsName)
+
+
   return [
-    ...collectionTitle
-      .map((title) => ({
-        key: mappings[title.type] || 'title',
-        value: title.title,
-      })),
-    ...(collectorsName ? [{ key: 'collector', value: collectorsName }] : []),
+    ...(Object.keys(titleErrors).length === 0 && collTitle.map((title) => ({
+      key: mappings[title.type] || 'title',
+      value: title.title,
+    })) || [{ key: 'title', value: titleErrors[Object.keys(titleErrors)[0]] }]),
+    ...([{ key: 'collector', value: collectors }]),
     ...(description ? [{ key: 'description', value: description }] : []),
   ]
 }
 
 function getManifestMetadata(manifest: Manifest | null) {
+  const { result, errors } = validateLicense(manifest?.license)
+
   return [
     { key: 'label', value: manifest?.label },
-    ...(validateLicense(manifest?.license) || []).map((license) => ({
+    ...(result || []).map((license) => ({
       key: 'license',
       value: license.id,
-    })),
+    })), { key: 'license', value: errors[Object.keys(errors)[0]] },
     ...(manifest?.metadata || [])
   ]
 }
 
-function validateLicense(license: License[] | undefined) {
-  if (!license || typeof(license) === 'string') return []
-  if (Array.isArray(license)) return license
+function validateCollectorsName(input: Actor[] | undefined) {
+  const result =
+    Array.isArray(input) && input.length > 0
+      ? input.length === 1 ? input[0].name : input.map((collector) => collector.name).join(', ')
+      : (() => {
+        return 'value_must_be_an_array'
+      })()
+  return { result }
+}
+
+function validateLicense(input: License[] | undefined) {
+  const errors: Record<string, string>  = { }
+  const result =
+    Array.isArray(input)
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['license'] = 'license_must_be_an_array'
+        return []
+      })()
+  return { result, errors }
+}
+
+function validateTitle(input: Title[] | undefined) {
+  const errors: Record<string, string>  = { }
+  const result =
+    Array.isArray(input)
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['title'] = 'value_must_be_an_array'
+        return []
+      })()
+  return { result, errors }
 }
 
 
@@ -51,4 +78,4 @@ function getItemMetadata(item: Item | null) {
   ].filter(i => i.value)
 }
 
-export { getCollectorsName, getCollectionMetadata, getManifestMetadata, getItemMetadata }
+export { getCollectionMetadata, getManifestMetadata, getItemMetadata, validateCollectorsName }
