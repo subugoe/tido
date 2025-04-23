@@ -13,5 +13,9 @@
   "no_image_available": "Kein Bild verfügbar",
   "could_not_find_image": "Leider konnte kein Bild gefunden werden.",
   "image_preview": "Vorschau des Bildes",
-  "could_not_load_image": "Leider konnte das Bild nicht geladen werden."
+  "could_not_load_image": "Leider konnte das Bild nicht geladen werden.",
+  "empty_panel": "Das ist ein leeres Panel.",
+  "error_occurred": "Ein Fehler ist aufgetreten",
+  "no_content_found": "Keinen passenden Inhalt gefunden.",
+  "unknown_error": "Unbekannter Fehler"
 }

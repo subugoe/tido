@@ -1,22 +1,14 @@
 {
-  "showGlobalTree": true,
   "theme": {
     "primaryColor": "#1E40AF"
   },
   "panels": [
     {
-      "entrypoint": {
-        "url": "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
-        "type": "collection"
-      },
-      "manifestIndex": 1
-    },
-    {
-      "entrypoint": {
-        "url": "http://localhost:8181/example/textapi/collection.json",
-        "type": "collection"
-      },
-      "manifestIndex": 1
+      "collection": "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
+      "manifestIndex": 0
     }
+  ],
+  "rootCollections": [
+    "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json"
   ]
 }

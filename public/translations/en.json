@@ -9,5 +9,9 @@
   "no_image_available": "No image available",
   "could_not_find_image": "Unfortunately, an image could not be found.",
   "image_preview": "Image preview",
-  "could_not_load_image": "Could not load the given image."
+  "could_not_load_image": "Could not load the given image.",
+  "empty_panel": "This is an empty panel.",
+  "error_occurred": "An error has occurred",
+  "no_content_found": "No content found.",
+  "unknown_error": "Unknown Error"
 }

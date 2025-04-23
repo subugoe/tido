@@ -13,6 +13,7 @@ interface PanelContentType {
   panelState: PanelState | null
   loading: boolean
   error: string | null
+  setError: (value: string | null) => void
   updatePanelState: (data: Partial<PanelState>) => void
 }
 
@@ -24,7 +25,7 @@ interface PanelProviderProps {
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index }) => {
   const [panelId, setPanelId] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const defaultView = useConfigStore.getState().config.defaultView
@@ -35,49 +36,48 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
   const panelState = usePanelStore(state => state.getPanelState(panelId))
 
   useEffect(() => {
-
     // On first render, create a new panel ID and initiate the panel in an empty state
     const id = crypto.randomUUID()
     setPanelId(id)
     initPanelState(id, index)
-  }, [initPanelState])
+  }, [])
 
   useEffect(() => {
+    if (!panelId) return
+    const init = async () => {
+      setLoading(true)
+      try {
+        const collection = await getCollection(panelConfig.collection)
+        const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
+        const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)
+        const contentTypes: string[] = getContentTypes(item.content)
+
+        const { support } = manifest
+
+        if (support && support.length > 0 && isNewManifest(manifest)) {
+          // Support can be loaded for a new manifest
+          await getSupport(support)
+        }
+
+        updateStorePanelState(panelId, {
+          collectionId: collection.id,
+          manifest,
+          item,
+          contentIndex: 0,
+          viewIndex: mapToViewIndex(defaultView),
+          contentTypes,
+          activeTargetIndex: -1
+        })
+      } catch (e) {
+        setError((e as ErrorResponse).message)
+        console.error(e)
+      } finally {
+        setLoading(false)
+      }
+    }
     init()
   }, [panelConfig, panelId])
 
-  const init = async () => {
-    if (!panelId) return
-    try {
-      setLoading(true)
-      const collection = await getCollection(panelConfig.collection)
-      const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
-      const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)
-      const contentTypes: string[] = getContentTypes(item.content)
-
-      const { support } = manifest
-
-      if (support && support.length > 0 && isNewManifest(manifest)) {
-        // Support can be loaded for a new manifest
-        await getSupport(support)
-      }
-
-      updateStorePanelState(panelId, {
-        collectionId: collection.id,
-        manifest,
-        item,
-        contentIndex: 0,
-        viewIndex: mapToViewIndex(defaultView),
-        contentTypes,
-        activeTargetIndex: -1
-      })
-    } catch (e) {
-      setError((e as ErrorResponse).message)
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   useEffect(() => {
     if (!panelId || !panelState) return
@@ -98,7 +98,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
   }
 
   return (
-    <PanelContext.Provider value={{ panelId, panelState, updatePanelState, loading, error }}>
+    <PanelContext.Provider value={{ panelId, panelState, updatePanelState, loading, error, setError }}>
       {children}
     </PanelContext.Provider>
   )
