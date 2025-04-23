@@ -21,7 +21,7 @@ function getCollectionMetadata (collectionTitle: Title[] | undefined, collectors
 
 function getManifestMetadata(manifest: Manifest | null) {
   const { result: license } = validateLicense(manifest?.license)
-  const { result: label } = validateLabel(manifest?.label)
+  const { result: label } = validateManifestLabel(manifest?.label)
 
   return [
     { key: 'label', value: label },
@@ -66,7 +66,7 @@ function validateLicense(input: License[] | undefined) {
   return { result }
 }
 
-function validateLabel(input: string | undefined ) {
+function validateManifestLabel(input: string | undefined ) {
   const result =
    input
      ? input
@@ -76,15 +76,50 @@ function validateLabel(input: string | undefined ) {
   return { result }
 }
 
+function validateItemLabel(input: string | undefined ) {
+  return input
+    ? input
+    : (() => {
+      return ''
+    })()
+}
 
+function validateItemLanguage(input: string[] | undefined) {
+  return Array.isArray(input)
+    ? input.join(',')
+    : (() => {
+      return ''
+    })()
+}
 
+function validateImageLicense(input: string | undefined ) {
+  return input
+    ? input
+    : (() => {
+      return ''
+    })()
+}
+
+function validateImageNotes(input: string | undefined ) {
+  return input
+    ? input
+    : (() => {
+      return ''
+    })()
+}
 
 function getItemMetadata(item: Item | null) {
+
+  const label  = validateItemLabel(item?.n)
+  const lang = validateItemLanguage(item?.lang)
+  const imageLicense = validateImageLicense(item?.image?.license?.id)
+  const imageNotes = validateImageNotes(item?.image?.license?.notes)
+
   return [
-    { key: 'label', value: item?.n },
-    { key: 'language', value: item?.lang?.join(',') },
-    { key: 'image_license', value: item?.image?.license?.id },
-    { key: 'image_notes', value: item?.image?.license?.notes },
+    { key: 'label', value: label },
+    { key: 'language', value: lang },
+    { key: 'image_license', value: imageLicense },
+    { key: 'image_notes', value: imageNotes },
   ].filter(i => i.value)
 }
 
