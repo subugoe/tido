@@ -15,7 +15,7 @@ function getCollectionMetadata (collectionTitle: Title[] | undefined, collectors
       value: title.title,
     })) || [{ key: 'title', value: titleErrors[Object.keys(titleErrors)[0]] }]),
     ...([{ key: 'collector', value: collectors }]),
-    ...(description ? [{ key: 'description', value: description }] : []),
+    ...(description && typeof description === 'string' ? [{ key: 'description', value: description }] : []),
   ]
 }
 
@@ -42,6 +42,19 @@ function validateCollectorsName(input: Actor[] | undefined) {
   return { result }
 }
 
+function validateTitle(input: Title[] | undefined) {
+  const errors: Record<string, string>  = { }
+  const result =
+    Array.isArray(input)
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['title'] = 'value_must_be_an_array'
+        return []
+      })()
+  return { result, errors }
+}
+
 function validateLicense(input: License[] | undefined) {
   const errors: Record<string, string>  = { }
   const result =
@@ -55,18 +68,7 @@ function validateLicense(input: License[] | undefined) {
   return { result, errors }
 }
 
-function validateTitle(input: Title[] | undefined) {
-  const errors: Record<string, string>  = { }
-  const result =
-    Array.isArray(input)
-      ? input
-      : (() => {
-        if (input !== undefined)
-          errors['title'] = 'value_must_be_an_array'
-        return []
-      })()
-  return { result, errors }
-}
+
 
 
 function getItemMetadata(item: Item | null) {
