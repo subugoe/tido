@@ -20,14 +20,15 @@ function getCollectionMetadata (collectionTitle: Title[] | undefined, collectors
 }
 
 function getManifestMetadata(manifest: Manifest | null) {
-  const { result, errors } = validateLicense(manifest?.license)
+  const { result: license } = validateLicense(manifest?.license)
+  const { result: label } = validateLabel(manifest?.label)
 
   return [
-    { key: 'label', value: manifest?.label },
-    ...(result || []).map((license) => ({
+    { key: 'label', value: label },
+    ...(license.length > 0 && license.map((item) => ({
       key: 'license',
-      value: license.id,
-    })), { key: 'license', value: errors[Object.keys(errors)[0]] },
+      value: item.id,
+    })) || [{ key: 'license', value: 'must_be_an_array' }]),
     ...(manifest?.metadata || [])
   ]
 }
@@ -56,16 +57,23 @@ function validateTitle(input: Title[] | undefined) {
 }
 
 function validateLicense(input: License[] | undefined) {
-  const errors: Record<string, string>  = { }
   const result =
     Array.isArray(input)
       ? input
       : (() => {
-        if (input !== undefined)
-          errors['license'] = 'license_must_be_an_array'
         return []
       })()
-  return { result, errors }
+  return { result }
+}
+
+function validateLabel(input: string | undefined ) {
+  const result =
+   input
+     ? input
+     : (() => {
+       return 'value_must_be_a_string'
+     })()
+  return { result }
 }
 
 
