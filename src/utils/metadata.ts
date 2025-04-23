@@ -28,7 +28,7 @@ function getManifestMetadata(manifest: Manifest | null) {
     ...(license.length > 0 && license.map((item) => ({
       key: 'license',
       value: item.id,
-    })) || [{ key: 'license', value: 'must_be_an_array' }]),
+    })) || [{ key: 'license', value: 'value_must_be_an_array' }]),
     ...(manifest?.metadata || [])
   ]
 }
