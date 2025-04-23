@@ -14,6 +14,8 @@
   "description": "Description",
   "item": "Page",
   "collection": "Collection",
+  "manifest": "Manifest",
+  "license": "License",
   "label": "Label",
   "language": "Language",
   "image_license": "Image License",

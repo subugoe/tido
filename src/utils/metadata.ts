@@ -25,6 +25,23 @@ function getCollectionMetadata (collectionTitle: Title[], collectorsName: string
   ]
 }
 
+function getManifestMetadata(manifest: Manifest | null) {
+  return [
+    { key: 'label', value: manifest?.label },
+    ...(validateLicense(manifest?.license) || []).map((license) => ({
+      key: 'license',
+      value: license.id,
+    })),
+    ...(manifest?.metadata || [])
+  ]
+}
+
+function validateLicense(license: License[] | undefined) {
+  if (!license || typeof(license) === 'string') return []
+  if (Array.isArray(license)) return license
+}
+
+
 function getItemMetadata(item: Item | null) {
   return [
     { key: 'label', value: item?.n },
@@ -34,4 +51,4 @@ function getItemMetadata(item: Item | null) {
   ].filter(i => i.value)
 }
 
-export { getCollectorsName, getCollectionMetadata, getItemMetadata }
+export { getCollectorsName, getCollectionMetadata, getManifestMetadata, getItemMetadata }

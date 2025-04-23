@@ -17,6 +17,8 @@
   "collector": "Kollektor",
   "description": "Beschreibung",
   "collection": "Sammlung",
+  "manifest": "Manuskript",
+  "license": "Lizenz",
   "item": "Seite",
   "label": "Label",
   "language": "Sprache",
