@@ -1,4 +1,6 @@
 import { FC, useEffect, useRef } from 'react'
+import DOMPurify from 'dompurify'
+
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
@@ -16,7 +18,7 @@ const TextRenderer: FC<Props> = ({ htmlString }) => {
     const parent = scrollContainer.parentElement
     if (!parent) return
 
-    scrollContainer.innerHTML = htmlString
+    scrollContainer.innerHTML = DOMPurify.sanitize(htmlString)
   }, [htmlString])
 
   return <div data-panel={panelId} ref={ref} className="t-h-full t-relative t-overflow-auto" />

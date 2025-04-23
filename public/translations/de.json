@@ -13,5 +13,21 @@
   "no_image_available": "Kein Bild verfügbar",
   "could_not_find_image": "Leider konnte kein Bild gefunden werden.",
   "image_preview": "Vorschau des Bildes",
-  "could_not_load_image": "Leider konnte das Bild nicht geladen werden."
+  "could_not_load_image": "Leider konnte das Bild nicht geladen werden.",
+  "metadata": "Metadaten",
+  "please_click_to_view_metadata": "Bitte klicken Sie auf die folgenden Überschriften, um die Metadaten anzuzeigen",
+  "title": "Titel",
+  "subtitle": "Untertitel",
+  "collector": "Kollektor",
+  "description": "Beschreibung",
+  "collection": "Sammlung",
+  "manifest": "Manuskript",
+  "license": "Lizenz",
+  "value_must_be_an_array": "Dieses Wert sollte als Array gegeben werden",
+  "value_must_be_a_string": "Der Wert muss ein String sein",
+  "item": "Seite",
+  "label": "Label",
+  "language": "Sprache",
+  "image_license": "Bild Lizenz",
+  "image_notes": "Bild Notizen"
 }

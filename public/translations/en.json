@@ -9,5 +9,21 @@
   "no_image_available": "No image available",
   "could_not_find_image": "Unfortunately, an image could not be found.",
   "image_preview": "Image preview",
-  "could_not_load_image": "Could not load the given image."
+  "could_not_load_image": "Could not load the given image.",
+  "metadata": "Metadata",
+  "please_click_to_view_metadata": "Please click headings below to view the metadata",
+  "title": "Title",
+  "subtitle": "Subtitle",
+  "collector": "Collector",
+  "description": "Description",
+  "item": "Page",
+  "collection": "Collection",
+  "manifest": "Manifest",
+  "license": "License",
+  "value_must_be_an_array": "Value must be an array",
+  "value_must_be_a_string": "Value must be a string",
+  "label": "Label",
+  "language": "Language",
+  "image_license": "Image License",
+  "image_notes": "Image Notes"
 }
