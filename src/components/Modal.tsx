@@ -4,7 +4,6 @@ import { Popover, PopoverContent, PopoverTrigger, PopoverAnchor } from '@/compon
 import { X } from 'lucide-react'
 
 interface ModalProps {
-  width?: number,
   children: ReactNode,
   TriggerButton?: ReactNode,
   showPopover?: boolean,
@@ -12,7 +11,7 @@ interface ModalProps {
 }
 
 const Modal: FC<ModalProps> = ({
-  children, TriggerButton, showPopover = false, onOpenChange, width
+  children, TriggerButton, showPopover = false, onOpenChange
 }) => {
 
   const [isOpen, setIsOpen] = useState(false)
@@ -29,7 +28,7 @@ const Modal: FC<ModalProps> = ({
 
   return <Popover open={isOpen} onOpenChange={handleOpenChange} modal={true}>
     { TriggerButton ? (<PopoverTrigger asChild>{TriggerButton}</PopoverTrigger>) : <PopoverAnchor /> }
-    <PopoverContent side="bottom" align="start"  sideOffset={8} className={`t-w-[${width ?? 200}px] t-pr-0`} >
+    <PopoverContent side="bottom" align="start"  sideOffset={8}>
       {children}
       <X className="t-absolute t-right-3 t-top-4 t-text-zinc-600 hover:t-text-zinc-700 hover:t-cursor-pointer"  size={15} onClick={() => setIsOpen(false)} />
     </PopoverContent>
