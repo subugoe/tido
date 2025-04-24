@@ -8,7 +8,6 @@ import TreeSelectionModalContent from '@/components/tree/tree-modal/TreeSelectio
 
 import { useDataStore } from '@/store/DataStore.tsx'
 import { Button } from '@/components/ui/button.tsx'
-import SelectParallelPanels from '@/components/SelectParallelPanels.tsx'
 import { ListCollapse, X } from 'lucide-react'
 
 const TopBar: FC = () => {
@@ -36,9 +35,6 @@ const TopBar: FC = () => {
       >
         <TreeSelectionModalContent onConfirm={() => setShowNewCollectionPopover(false)} />
       </Modal> }
-    <Modal TriggerButton={<Button data-cy="sync-panels">{t('sync_panels')}</Button>}>
-      <SelectParallelPanels />
-    </Modal>
   </div>
 }
 
