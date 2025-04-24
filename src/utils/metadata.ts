@@ -1,13 +1,13 @@
 
-function getCollectionMetadata (collectionTitle: Title[] | undefined, collectorsName: Actor[] | undefined, description: string | undefined) {
+function getCollectionMetadata (collection: Collection | null) {
   const mappings = {
     main: 'title',
     sub: 'subtitle',
   }
 
-  const { result: collTitle, errors: titleErrors } = validateTitle(collectionTitle)
-  const { result: collectors } = validateCollectorsName(collectorsName)
-
+  const description = collection?.description
+  const { result: collTitle, errors: titleErrors } = validateTitle(collection?.title)
+  const { result: collectors } = validateCollectorsName(collection?.collector)
 
   return [
     ...(Object.keys(titleErrors).length === 0 && collTitle.map((title) => ({

@@ -16,7 +16,7 @@ const CollectionMetadata: FC = () => {
     (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId].collection : null
   )
 
-  const metadata = getCollectionMetadata(collection?.title, collection?.collector, collection?.description)
+  const metadata = getCollectionMetadata(collection)
 
 
   return <div>
