@@ -17,8 +17,7 @@ export default {
   prefix: 't-',
   content: [
     './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
-    './ui/**/*.{ts,tsx}'
+    './src/**/*.{js,ts,jsx,tsx}'
   ],
   safelist: [
     { pattern: /(text|bg)-(red|blue|primary)+/ },
