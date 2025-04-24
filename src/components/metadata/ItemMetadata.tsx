@@ -18,20 +18,14 @@ const ItemMetadata: FC = () => {
 
   const metadata = getItemMetadata(item)
 
-  return <div>
-    <Accordion type="single" collapsible>
-      <AccordionItem value="item-1">
-        <AccordionTrigger className="t-relative [&>svg]:t-absolute [&>svg]:t-right-3">{ t('item') }</AccordionTrigger>
-        <AccordionContent>
-          <div className={'item-metadata t-ml-2'}>
-            {
-              metadata.map((meta, i) => <MetadataItem item={meta} key={i} />)
-            }
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  </div>
+  return <Accordion type="single" collapsible>
+    <AccordionItem value="item-1">
+      <AccordionTrigger className="t-relative [&>svg]:t-absolute [&>svg]:t-right-3">{ t('item') }</AccordionTrigger>
+      <AccordionContent>
+        <div className="t-ml-2"> { metadata.map((meta, i) => <MetadataItem item={meta} key={i} />) }</div>
+      </AccordionContent>
+    </AccordionItem>
+  </Accordion>
 }
 
 export default ItemMetadata

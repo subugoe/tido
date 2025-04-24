@@ -18,20 +18,14 @@ const ManifestMetadata: FC = () => {
 
   const metadata = getManifestMetadata(manifest)
 
-  return <div>
-    <Accordion type="single" collapsible>
-      <AccordionItem value="item-1">
-        <AccordionTrigger className="t-relative [&>svg]:t-absolute [&>svg]:t-right-3">{ t('manifest') }</AccordionTrigger>
-        <AccordionContent>
-          <div className={'manifest-metadata t-ml-2'}>
-            {
-              metadata.map((meta, i) => <MetadataItem item={meta} key={i} />)
-            }
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  </div>
+  return <Accordion type="single" collapsible>
+    <AccordionItem value="item-1">
+      <AccordionTrigger className="t-relative [&>svg]:t-absolute [&>svg]:t-right-3">{ t('manifest') }</AccordionTrigger>
+      <AccordionContent>
+        <div className="t-ml-2">{ metadata.map((meta, i) => <MetadataItem item={meta} key={i} />) }</div>
+      </AccordionContent>
+    </AccordionItem>
+  </Accordion>
 }
 
 export default ManifestMetadata
