@@ -18,7 +18,7 @@ const PanelHeader: FC = () => {
       <div className="t-flex t-items-center t-mb-6">
         <CollectionTitle />
 
-        <div className="t-ml-4 t-w-[400px] t-text-wrap t-break-words">
+        <div className="t-ml-1 t-w-[400px] t-text-wrap t-break-words">
           <Modal
             TriggerButton={<Button onClick={() => setShowMetadata(!showMetadata)}
               variant={showMetadata ? 'secondary' : 'ghost'}
