@@ -37,7 +37,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
   return <div className="t-mb-1">
     <div
-      className={`t-flex t-items-center hover:t-bg-gray-100 t-px-2 t-py-1 t-rounded-md hover:t-cursor-pointer ${ selectedNodeId === node.id ? 't-bg-primary' : '' }`}
+      className={`t-flex t-items-center t-px-2 t-py-1 t-rounded-md hover:t-cursor-pointer ${ selectedNodeId === node.id ? 't-shadow-sm t-border-[2px] t-border-gray-100 t-bg-gray-200' : 'hover:t-bg-gray-100 ' }`}
       onClick={(e) => handleNodeClick(e)}
     >
       {!node.leaf && <span className={`t-mt-[2px] t-mr-1 t-transition-all ${isExpanded && 't-rotate-90'}`}><ChevronRight /></span>}
