@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { Info, X } from 'lucide-react'
+import { Info } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
 import TextViewsToggle from '@/components/panel/TextViewsToggle'
@@ -25,7 +25,6 @@ const PanelHeader: FC = () => {
               size={'icon'}>{<Info />}
             </Button>}
             onOpenChange={(isOpen) => setShowMetadata(isOpen)} showPopover={showMetadata} width={400} >
-            <X className="t-absolute t-right-3 t-top-4 t-text-zinc-600 hover:t-text-zinc-700 hover:t-cursor-pointer"  size={15} onClick={() => setShowMetadata(false)} />
             <Metadata />
           </Modal>
         </div>

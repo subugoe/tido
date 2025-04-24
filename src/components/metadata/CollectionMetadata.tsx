@@ -22,7 +22,7 @@ const CollectionMetadata: FC = () => {
   return <div>
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1" >
-        <AccordionTrigger className="t-py-1 [&>svg]:t-absolute [&>svg]:t-right-3">{ t('collection') }</AccordionTrigger>
+        <AccordionTrigger className="t-py-1 t-relative [&>svg]:t-absolute [&>svg]:t-right-3">{ t('collection') }</AccordionTrigger>
         <AccordionContent>
           <div className={'collection-metadata t-ml-2'}>
             {

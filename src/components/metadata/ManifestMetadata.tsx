@@ -21,7 +21,7 @@ const ManifestMetadata: FC = () => {
   return <div>
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
-        <AccordionTrigger className="[&>svg]:t-absolute [&>svg]:t-right-3">{ t('manifest') }</AccordionTrigger>
+        <AccordionTrigger className="t-relative [&>svg]:t-absolute [&>svg]:t-right-3">{ t('manifest') }</AccordionTrigger>
         <AccordionContent>
           <div className={'manifest-metadata t-ml-2'}>
             {
