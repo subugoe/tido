@@ -21,7 +21,7 @@ const ItemMetadata: FC = () => {
   return <div>
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
-        <AccordionTrigger>{ t('item') }</AccordionTrigger>
+        <AccordionTrigger className="[&>svg]:t-absolute [&>svg]:t-right-3">{ t('item') }</AccordionTrigger>
         <AccordionContent>
           <div className={'item-metadata t-ml-2'}>
             {
