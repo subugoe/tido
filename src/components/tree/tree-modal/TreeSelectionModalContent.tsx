@@ -2,7 +2,7 @@ import { FC, useRef } from 'react'
 
 import { useConfigStore } from '@/store/ConfigStore'
 import { useDataStore } from '@/store/DataStore'
-
+import { TreeProvider } from '@/contexts/TreeContext.tsx'
 
 import Tree from '@/components/tree/Tree.tsx'
 import InputField from '@/components/base/InputField.tsx'
@@ -84,7 +84,9 @@ const TreeSelectionModalContent: FC<Props> = ({ onConfirm }) => {
     <span>{ t('or_choose') }:</span>
 
     <div className="t-max-h-80 t-overflow-y-auto">
-      <Tree nodes={treeNodes} onSelect={onSelect} getChildren={getChildren} />
+      <TreeProvider onSelect={onSelect} getChildren={getChildren}>
+        <Tree nodes={treeNodes} />
+      </TreeProvider>
     </div>
     <Button
       variant="default"
