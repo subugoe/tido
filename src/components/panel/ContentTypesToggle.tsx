@@ -16,7 +16,7 @@ const ContentTypesToggle: FC = () => {
     updatePanelState({ contentIndex })
   }
 
-  if (!panelState || !contentTypes) return <Skeleton className="t-w-[150px] t-h-6" />
+  if (!panelState || !contentTypes?.length) return <Skeleton className="t-w-[150px] t-h-6" />
 
   return (
     <div className="t-inline-flex t-h-9 t-items-center t-justify-center t-rounded-lg t-bg-gray-200 t-p-1 t-text-gray-200-foreground">

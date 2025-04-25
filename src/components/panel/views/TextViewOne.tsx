@@ -20,7 +20,7 @@ const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
   const [previewMode, setMode] = useState('A')
 
   return (
-    <div className="t-flex-1 t-h-full t-overflow-hidden t-pl-3">
+    <div className="t-flex-1 t-h-full t-overflow-hidden">
       { previewMode === 'A' ? <TextRenderer htmlString={textHtml} /> : <ImageRenderer />}
       <Preview
         previewA={

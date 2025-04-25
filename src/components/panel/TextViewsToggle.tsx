@@ -44,6 +44,7 @@ const TextViewsToggle: FC = () => {
               onClick={(e) => handleTextViewClick(e, i)}
               variant={panelState.viewIndex === i ? 'secondary' : 'ghost'}
               size="icon"
+              disabled={!panelState.contentTypes?.length}
               data-selected={panelState.viewIndex === i}
               data-cy={key}
             >

@@ -31,16 +31,22 @@ export function isItemContentValid(itemData: Item): boolean {
   return true
 }
 
-export function getContentType(value: string): string {
-  let type = value.split('type=')[1]
-  type = type.charAt(0).toUpperCase() + type.slice(1) // convert the first letter to upper case
-  return type ?? 'missing'
-  // when no string stays after type=, then the value is missing
+export function splitMIMEType(value: string): string[] {
+  return value.split(';type=')
 }
 
+export const SUPPORTED_MIME_TYPES = [
+  'text/html',
+  'text/plain',
+  'text/xml',
+  'application/xhtml+xml'
+]
 
 export function getContentTypes(content: Content[]): string[] {
-  return content.filter(item => item.type && item.type.includes('text/html')).map((item) => getContentType(item.type))
+  return content
+    .map((item) => splitMIMEType(item.type))
+    .filter(([type]) => type && SUPPORTED_MIME_TYPES.includes(type))
+    .map(([,param]) => param)
 }
 
 export function getUniquePanels(panels: PanelConfig[] | undefined) {
