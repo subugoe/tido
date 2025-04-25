@@ -11,11 +11,10 @@ import NavigationButton from '@/components/panel/NavigationButton.tsx'
 import Metadata from '@/components/metadata/Metadata'
 
 const PanelHeader: FC = () => {
-  // isOpen refers to the Metadata Modal
-  const [isOpen, setIsOpen] = useState(false)
+  const [showMetadataModal, setShowMetadataModal] = useState(false)
 
   const handleOpenChange = (open: boolean) => {
-    setIsOpen(open)
+    setShowMetadataModal(open)
   }
 
   return (
@@ -24,16 +23,16 @@ const PanelHeader: FC = () => {
         <CollectionTitle />
 
         <div className="t-ml-1 t-w-[400px] t-text-wrap t-break-words">
-          <Popover open={isOpen} onOpenChange={handleOpenChange} modal={true}>
+          <Popover open={showMetadataModal} onOpenChange={handleOpenChange} modal={true}>
             <PopoverTrigger asChild>
-              <Button onClick={() => setIsOpen(!isOpen)}
-                variant={isOpen ? 'secondary' : 'ghost'}
+              <Button onClick={() => setShowMetadataModal(!showMetadataModal)}
+                variant={showMetadataModal ? 'secondary' : 'ghost'}
                 size={'icon'}>{<Info />}
               </Button>
             </PopoverTrigger>
             <PopoverContent side="bottom" align="start"  sideOffset={8} className="t-w-[400px] t-pr-0" >
               <Metadata />
-              <X className="t-absolute t-right-3 t-top-4 t-text-zinc-600 hover:t-text-zinc-700 hover:t-cursor-pointer"  size={15} onClick={() => setIsOpen(false)} />
+              <X className="t-absolute t-right-3 t-top-4 t-text-zinc-600 hover:t-text-zinc-700 hover:t-cursor-pointer"  size={15} onClick={() => setShowMetadataModal(false)} />
             </PopoverContent>
           </Popover>
         </div>
