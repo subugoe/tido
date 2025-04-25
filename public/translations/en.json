@@ -13,5 +13,21 @@
   "empty_panel": "This is an empty panel.",
   "error_occurred": "An error has occurred",
   "no_content_found": "No content found.",
-  "unknown_error": "Unknown Error"
+  "unknown_error": "Unknown Error",
+  "metadata": "Metadata",
+  "please_click_to_view_metadata": "Please click headings below to view the metadata",
+  "title": "Title",
+  "subtitle": "Subtitle",
+  "collector": "Collector",
+  "description": "Description",
+  "item": "Page",
+  "collection": "Collection",
+  "manifest": "Manifest",
+  "license": "License",
+  "value_must_be_an_array": "Value must be an array",
+  "value_must_be_a_string": "Value must be a string",
+  "label": "Label",
+  "language": "Language",
+  "image_license": "Image License",
+  "image_notes": "Image Notes"
 }

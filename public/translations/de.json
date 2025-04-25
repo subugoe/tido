@@ -17,5 +17,21 @@
   "empty_panel": "Das ist ein leeres Panel.",
   "error_occurred": "Ein Fehler ist aufgetreten",
   "no_content_found": "Keinen passenden Inhalt gefunden.",
-  "unknown_error": "Unbekannter Fehler"
+  "unknown_error": "Unbekannter Fehler",
+  "metadata": "Metadaten",
+  "please_click_to_view_metadata": "Bitte klicken Sie auf die folgenden Überschriften, um die Metadaten anzuzeigen",
+  "title": "Titel",
+  "subtitle": "Untertitel",
+  "collector": "Kollektor",
+  "description": "Beschreibung",
+  "collection": "Sammlung",
+  "manifest": "Manuskript",
+  "license": "Lizenz",
+  "value_must_be_an_array": "Dieses Wert sollte als Array gegeben werden",
+  "value_must_be_a_string": "Der Wert muss ein String sein",
+  "item": "Seite",
+  "label": "Label",
+  "language": "Sprache",
+  "image_license": "Bild Lizenz",
+  "image_notes": "Bild Notizen"
 }
