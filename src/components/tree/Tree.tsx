@@ -1,17 +1,12 @@
 import { FC } from 'react'
 
-
-import { TreeProvider } from '@/contexts/TreeContext.tsx'
-
 import TreeNode from '@/components/tree/TreeNode'
 
 interface TreeProps {
-  nodes: TreeNode[],
-  onSelect(node: TreeNode, target: HTMLElement): void,
-  getChildren(node: TreeNode): Promise<TreeNode[]>
+  nodes: TreeNode[]
 }
 
-const Tree: FC<TreeProps> = ({ nodes, onSelect, getChildren }) => {
+const Tree: FC<TreeProps> = ({ nodes }) => {
   const tree =
     nodes?.length > 0 &&
     nodes.map((collection, i) => (
@@ -21,9 +16,7 @@ const Tree: FC<TreeProps> = ({ nodes, onSelect, getChildren }) => {
     ))
 
   return <div className="tree">
-    <TreeProvider onSelect={onSelect} getChildren={getChildren}>
-      {tree}
-    </TreeProvider>
+    {tree}
   </div>
 }
 
