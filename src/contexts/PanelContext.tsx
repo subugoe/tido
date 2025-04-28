@@ -15,6 +15,7 @@ interface PanelContentType {
   error: string | null
   setError: (value: string | null) => void
   updatePanelState: (data: Partial<PanelState>) => void
+  remove: () => void
 }
 
 interface PanelProviderProps {
@@ -32,6 +33,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
   const getCollection = useDataStore(state => state.initCollection)
   const initPanelState = usePanelStore((state) => state.initPanelState)
   const updateStorePanelState = usePanelStore((state) => state.updatePanelState)
+  const removePanel = usePanelStore(state => state.removePanel)
 
   const panelState = usePanelStore(state => state.getPanelState(panelId))
 
@@ -97,8 +99,14 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
     return 0
   }
 
+  function remove() {
+    if (!panelId) return
+    removePanel(panelId)
+    useConfigStore.getState().removePanel(index)
+  }
+
   return (
-    <PanelContext.Provider value={{ panelId, panelState, updatePanelState, loading, error, setError }}>
+    <PanelContext.Provider value={{ panelId, panelState, updatePanelState, loading, error, setError, remove }}>
       {children}
     </PanelContext.Provider>
   )

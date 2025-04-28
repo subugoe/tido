@@ -7,6 +7,7 @@ interface ConfigStoreType {
   addRootCollection: (newRootCollection: string) => void,
   addNewPanel: (newPanelConfig: PanelConfig) => void,
   updatePanel: (newPanelConfig: Partial<PanelConfig>, index: number) => void,
+  removePanel: (index: number) => void
 }
 
 export const useConfigStore = create<ConfigStoreType>((set, get) => ({
@@ -38,6 +39,11 @@ export const useConfigStore = create<ConfigStoreType>((set, get) => ({
       ...newPanelConfig
     }
 
+    set({ config: newConfig })
+  },
+  removePanel: (index: number) => {
+    const newConfig = { ...get().config }
+    newConfig.panels = newConfig.panels.filter((_, i) => i !== index)
     set({ config: newConfig })
   }
 }))
