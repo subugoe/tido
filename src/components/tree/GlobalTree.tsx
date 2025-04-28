@@ -42,21 +42,26 @@ const GlobalTree: FC = () => {
     }
   }, [])
 
-  return showGlobalTree && <div className="t-flex-shrink-0 t-w-[380px] t-mt-4 t-mr-4 t-pr-4 t-border-r-2 t-border-gray-200 t-overflow-auto">
-    <TreeProvider onSelect={onSelectNode} getChildren={getChildren}>
-      <Tree nodes={treeNodes} />
-      { showSelectionModal && <div
-        ref={modalRef}
-        className="t-fixed t-z-50 t-p-2 t-bg-white t-border t-border-gray-200 t-shadow-md t-rounded"
-        style={{
-          top: `${selectedPosition?.y + 40}px`,
-          left: `${selectedPosition?.x}px`,
-        }}
-      >
-        <GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current} onSelect={() => setShowSelectionModal(false)} />
-      </div> }
-    </TreeProvider>
+  return <div className={`${showGlobalTree ? 't-w-[380px]' : 't-w-[0px]'} t-flex t-transition-all t-mt-4 t-mb-4`}>
+    <div className={`t-flex-shrink-0 t-overflow-auto t-transition-all t-border-r-2 t-pr-4
+    t-mr-[16px] t-w-[364px] ${showGlobalTree ? 't-duration-300 t-opacity-100 ' : 't-duration-100 t-opacity-0'}`}>
+      <TreeProvider onSelect={onSelectNode} getChildren={getChildren}>
+        <Tree nodes={treeNodes} />
+        {showSelectionModal && <div
+          ref={modalRef}
+          className="t-fixed t-z-50 t-p-2 t-bg-white t-border t-border-gray-200 t-shadow-md t-rounded"
+          style={{
+            top: `${selectedPosition?.y + 40}px`,
+            left: `${selectedPosition?.x}px`,
+          }}
+        >
+          <GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current}
+            onSelect={() => setShowSelectionModal(false)} />
+        </div>}
+      </TreeProvider>
+    </div>
   </div>
+
 }
 
 export default GlobalTree
