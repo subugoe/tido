@@ -42,7 +42,7 @@ const GlobalTree: FC = () => {
     }
   }, [])
 
-  return showGlobalTree && <div className="t-flex-shrink-0 t-w-[380px] t-mt-4 t-mr-4 t-pr-4 t-border-r-2 t-border-gray-200 t-overflow-auto">
+  return <div className={`t-flex-shrink-0 t-mt-4 t-mr-4 t-pr-4 t-border-r-2 t-border-gray-200 t-overflow-auto t-transition-all t-duration-300 t-transform ${showGlobalTree ? 't-opacity-100 t-w-[380px]' : 't-opacity-0 t-w-[100px] t-pointer-events-none'}`}>
     <TreeProvider onSelect={onSelectNode} getChildren={getChildren}>
       <Tree nodes={treeNodes} />
       { showSelectionModal && <div
