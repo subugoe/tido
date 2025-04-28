@@ -33,5 +33,9 @@
   "label": "Label",
   "language": "Sprache",
   "image_license": "Bild Lizenz",
-  "image_notes": "Bild Notizen"
+  "image_notes": "Bild Notizen",
+  "from_new_collection": "Aus einer neuen Kollektion",
+  "from_new_collection_description": "Geben Sie eine neue Collection-URL ein. Sie können anschließend daraus einen Panel-Inhalt wählen.",
+  "from_existing_collections": "Aus bestehenden Kollektionen",
+  "from_existing_collections_description": "Wählen Sie aus Kollektionen, die bereits hinzugefügt wurden."
 }

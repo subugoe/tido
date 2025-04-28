@@ -100,6 +100,19 @@ function validateLang(input: any): ValidationResult<AppConfig['lang']> {
   return { result, errors }
 }
 
+function validateTitle(input: any): ValidationResult<AppConfig['title']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'string'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['title'] = 'title must be a string'
+        return defaultConfig.title
+      })()
+  return { result, errors }
+}
+
 function validateTranslations(input: any): ValidationResult<AppConfig['translations']> {
   const errors: Record<string, string>  = { }
   const result =
@@ -138,13 +151,14 @@ export function mergeAndValidateConfig(
 
   const container = validateContainer(userConfig.container)
   const defaultView = validateDefaultView(userConfig.defaultView)
+  const lang = validateLang(userConfig.lang)
   const panels = validatePanels(userConfig.panels)
   const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
   const showNewCollectionButton = validateShowNewCollectionButton(userConfig.showNewCollectionButton)
-  const theme = validateTheme(userConfig.theme)
-  const lang = validateLang(userConfig.lang)
-  const translations = validateTranslations(userConfig.translations)
   const rootCollections = validateRootCollections(userConfig.rootCollections)
+  const title = validateTitle(userConfig.title)
+  const theme = validateTheme(userConfig.theme)
+  const translations = validateTranslations(userConfig.translations)
 
   const mergedTranslations: Record<string, Translation> = {}
   const defaultLangs = ['en', 'de']
@@ -156,25 +170,27 @@ export function mergeAndValidateConfig(
   const errors = {
     ...container.errors,
     ...defaultView.errors,
+    ...lang.errors,
     ...panels.errors,
+    ...rootCollections.errors,
     ...showGlobalTree.errors,
     ...showNewCollectionButton.errors,
     ...theme.errors,
-    ...lang.errors,
+    ...title.errors,
     ...translations.errors,
-    ...rootCollections.errors
   }
 
   const config: AppConfig = {
     container: container.result,
     panels: panels.result,
     defaultView: defaultView.result,
+    lang: lang.result,
+    rootCollections: rootCollections.result,
     showGlobalTree: showGlobalTree.result,
     showNewCollectionButton: showNewCollectionButton.result,
     theme: theme.result,
-    lang: lang.result,
+    title: title.result,
     translations: mergedTranslations,
-    rootCollections: rootCollections.result,
   }
 
   return { config, errors }

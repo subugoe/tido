@@ -1,14 +1,16 @@
 {
   "defaultView": "split",
-  "showNewCollectionButton": false,
-  "theme": {
-    "primaryColor": "#1E40AF"
-  },
+  "lang": "de",
   "panels": [
     {
       "collection": "http://localhost:8181/4w/reproduction/collection.json",
       "manifestIndex": 0
     }
   ],
-  "lang": "de"
+  "theme": {
+    "primaryColor": "#1E40AF"
+  },
+  "rootCollections": [
+    "http://localhost:8181/4w/reproduction/collection.json"
+  ]
 }
