@@ -10,6 +10,12 @@
   "theme": {
     "primaryColor": "#1E40AF"
   },
+  "translations": {
+    "de": {
+      "accurate": "Handschriftengetreu",
+      "simplified": "Vereinfacht"
+    }
+  },
   "rootCollections": [
     "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/collection.json"
   ]

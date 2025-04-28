@@ -2,9 +2,11 @@ import { FC, MouseEvent } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext'
 import { Skeleton } from '@/components/ui/skeleton.tsx'
+import { useTranslation } from 'react-i18next'
 
 const ContentTypesToggle: FC = () => {
   const { panelState, updatePanelState } = usePanel()
+  const { t } = useTranslation()
 
   const { contentTypes, contentIndex } = panelState || {}
 
@@ -29,7 +31,7 @@ const ContentTypesToggle: FC = () => {
           key={i}
           onClick={(e) => handleTextTabClick(e, i)}
         >
-          {type}
+          {t(type)}
         </button>
       )) }
     </div>
