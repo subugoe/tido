@@ -5,9 +5,8 @@ import { useDataStore } from '@/store/DataStore'
 import { TreeProvider } from '@/contexts/TreeContext.tsx'
 
 import Tree from '@/components/tree/Tree.tsx'
-import InputField from '@/components/base/InputField.tsx'
 
-import { getChildren, getSelectedItemIndices, createCollectionNode } from '@/utils/tree.ts'
+import { getChildren, getSelectedItemIndices } from '@/utils/tree.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
 
@@ -15,12 +14,10 @@ interface Props {
   onConfirm?: () => void
 }
 
-const TreeSelectionModalContent: FC<Props> = ({ onConfirm }) => {
+const TreeSelection: FC<Props> = ({ onConfirm }) => {
   const { t } = useTranslation()
   const addNewPanel = useConfigStore(state => state.addNewPanel)
-  const initCollection = useDataStore(state => state.initCollection)
   const treeNodes = useDataStore(state => state.treeNodes)
-  const inputValue = useRef('')
   const clickedItemUrl = useRef('')
 
   const selectedItemIndices = useRef({
@@ -29,14 +26,7 @@ const TreeSelectionModalContent: FC<Props> = ({ onConfirm }) => {
     itemIndex: -1,
   })
 
-  function updateInputValue(newValue: string) {
-    inputValue.current = newValue
-  }
-
   async function handleConfirm() {
-
-    let collectionUrl: string | undefined
-
     if (clickedItemUrl.current) {
       // transfer the clicked item indices
       const { collectionUrl, manifestIndex, itemIndex } = selectedItemIndices.current
@@ -45,26 +35,6 @@ const TreeSelectionModalContent: FC<Props> = ({ onConfirm }) => {
         manifestIndex: manifestIndex,
         itemIndex: itemIndex
       })
-    }
-
-    if (inputValue.current !== '') {
-      collectionUrl = inputValue.current
-
-      addNewPanel(
-        {
-          collection: collectionUrl,
-          manifestIndex: 0,
-          itemIndex: 0
-        }
-      )
-
-      if (!(useConfigStore.getState().config.rootCollections.includes(collectionUrl))) {
-        const newRootNode = await createCollectionNode(collectionUrl)
-        useDataStore.getState().appendRootNode(newRootNode)
-        useConfigStore.getState().addRootCollection(collectionUrl)
-      }
-
-      await initCollection(collectionUrl)
     }
 
     if (onConfirm) onConfirm()
@@ -79,10 +49,6 @@ const TreeSelectionModalContent: FC<Props> = ({ onConfirm }) => {
 
 
   return <div className="t-flex t-flex-col">
-    <span className="t-font-bold t-mb-2">{ t('enter_collection_url') }</span>
-    <InputField width={80} updateInputValue={updateInputValue} />
-    <span>{ t('or_choose') }:</span>
-
     <div className="t-max-h-80 t-overflow-y-auto">
       <TreeProvider onSelect={onSelect} getChildren={getChildren}>
         <Tree nodes={treeNodes} />
@@ -99,4 +65,4 @@ const TreeSelectionModalContent: FC<Props> = ({ onConfirm }) => {
 }
 
 
-export default TreeSelectionModalContent
+export default TreeSelection

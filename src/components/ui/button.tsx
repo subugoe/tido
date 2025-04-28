@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  't-inline-flex t-items-center t-justify-center t-whitespace-nowrap t-rounded-md t-text-sm t-font-medium t-ring-offset-white t-transition-colors focus-visible:t-outline-none focus-visible:t-ring-2 focus-visible:t-ring-gray-950 focus-visible:t-ring-offset-2 disabled:t-pointer-events-none disabled:t-opacity-50 [&_svg]:t-pointer-events-none [&_svg]:t-size-4 [&_svg]:t-shrink-0 dark:t-ring-offset-gray-950 dark:focus-visible:t-ring-gray-300',
+  't-inline-flex t-items-center t-justify-center t-whitespace-nowrap t-rounded-md t-text-sm t-font-medium t-ring-offset-white t-transition-colors focus-visible:t-outline-none focus-visible:t-ring-2 focus-visible:t-ring-primary/60 focus-visible:t-ring-offset-2 disabled:t-pointer-events-none disabled:t-opacity-50 [&_svg]:t-pointer-events-none [&_svg]:t-shrink-0 dark:t-ring-offset-gray-950 dark:focus-visible:t-ring-gray-300',
   {
     variants: {
       variant: {
@@ -23,10 +23,11 @@ const buttonVariants = cva(
         link: 't-text-primary t-underline-offset-4 hover:t-underline dark:t-text-gray-50',
       },
       size: {
-        default: 't-h-10 t-px-4 t-py-2',
+        default: 't-h-10 t-px-4 t-py-2 [&_svg]:t-size-4',
         sm: 't-h-9 t-rounded-md t-px-3',
-        lg: 't-h-11 t-rounded-md t-px-8',
-        icon: 't-h-8 t-w-8 t-shrink-0',
+        lg: 't-h-11 t-rounded-md t-px-8 [&_svg]:t-size-4',
+        icon: 't-h-8 t-w-8 t-shrink-0 [&_svg]:t-size-4',
+        iconLg: 't-h-10 t-px-2 t-py-2 [&_svg]:t-size-5'
       },
     },
     defaultVariants: {

@@ -13,5 +13,6 @@
   "rootCollections": [
     "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/collection.json",
     "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json"
-  ]
+  ],
+  "title": "Vier Wachen Edition"
 }

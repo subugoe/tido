@@ -29,5 +29,9 @@
   "label": "Label",
   "language": "Language",
   "image_license": "Image License",
-  "image_notes": "Image Notes"
+  "image_notes": "Image Notes",
+  "from_new_collection": "From new collection",
+  "from_new_collection_description": "Enter a new collection URL. From that, you can choose the content for the new panel.",
+  "from_existing_collections": "From existing collections",
+  "from_existing_collections_description": "Choose from collections that already have been added."
 }

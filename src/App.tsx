@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
-import TopBar from '@/components/TopBar'
+import TopBar from '@/components/header/TopBar.tsx'
 import GlobalTree from '@/components/tree/GlobalTree.tsx'
 
 import { createCollectionNodes } from '@/utils/tree.ts'

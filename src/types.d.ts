@@ -90,6 +90,7 @@ declare global {
     showNewCollectionButton: boolean
     panels: PanelConfig[]
     theme: ThemeConfig
+    title: string
     translations: Translations
   }
 

@@ -1,0 +1,67 @@
+import { FC, useState } from 'react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
+import { Button } from '@/components/ui/button.tsx'
+import { Plus } from 'lucide-react'
+import AddNewPanelSelection from '@/components/header/AddNewPanelSelection.tsx'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx'
+import { useTranslation } from 'react-i18next'
+import AddNewCollectionForm from '@/components/AddNewCollectionForm.tsx'
+import TreeSelection from '@/components/tree/TreeSelection.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
+
+const AddNewPanel: FC = () => {
+  const title = useConfigStore(state => state.config.title)
+
+  const { t } = useTranslation()
+
+  const [showPopover, setShowPopover] = useState(false)
+  const [showDialog, setShowDialog] = useState(false)
+  const [step, setStep] = useState(1)
+
+  function onSelect(value: 'new' | 'existing') {
+    if (value === 'new') setStep(1)
+    else if (value === 'existing') setStep(2)
+
+    setShowPopover(false)
+    setShowDialog(true)
+  }
+
+  function onConfirmNewCollectionForm() {
+    setShowDialog(false)
+  }
+
+  return (
+    <>
+      <Popover
+        open={showPopover}
+        onOpenChange={(isOpen) => setShowPopover(isOpen)}
+      >
+        <PopoverTrigger asChild>
+          <Button data-cy="new-panel" className={title !== '' ? 't-ml-auto' : ''}><Plus className="-t-ml-1 t-mr-2" />{t('add_new_panel')}</Button>
+        </PopoverTrigger>
+        <PopoverContent align="end" className="!t-p-0">
+          <AddNewPanelSelection onSelect={onSelect} />
+        </PopoverContent>
+      </Popover>
+      <Dialog
+        open={showDialog}
+        onOpenChange={(isOpen) => setShowDialog(isOpen)}
+        modal={true}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{ t('choose_your_panel_content') }</DialogTitle>
+          </DialogHeader>
+          <DialogDescription asChild>
+            <>
+              { step === 1 && <AddNewCollectionForm onConfirm={onConfirmNewCollectionForm} /> }
+              { step === 2 && <TreeSelection onConfirm={onConfirmNewCollectionForm} /> }
+            </>
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
+
+export default AddNewPanel
