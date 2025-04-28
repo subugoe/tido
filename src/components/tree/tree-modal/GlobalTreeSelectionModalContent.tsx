@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
-
+import { useTree } from '@/contexts/TreeContext'
 
 interface SelectedItemIndicesType {
   collectionUrl: string
@@ -18,6 +18,7 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
   const panels = useConfigStore(state => state.config.panels)
   const addNewPanel = useConfigStore(state => state.addNewPanel)
   const updatePanel = useConfigStore(state => state.updatePanel)
+  const { setSelectedNodeId } = useTree()
 
   const newPanelConfig = {
     collection: selectedItemIndices.collectionUrl,
@@ -29,6 +30,7 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
     if (i !== undefined) updatePanel(newPanelConfig, i)
     else addNewPanel(newPanelConfig)
     onSelect()
+    setSelectedNodeId('')
   }
 
   let buttonsUpdatePanel

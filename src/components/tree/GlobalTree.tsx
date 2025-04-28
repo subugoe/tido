@@ -1,5 +1,8 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
+
 import { useDataStore } from '@/store/DataStore.tsx'
+import { TreeProvider } from '@/contexts/TreeContext.tsx'
+
 import Tree from '@/components/tree/Tree.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree/tree-modal/GlobalTreeSelectionModalContent.tsx'
 import { getChildren, getSelectedItemIndices } from '@/utils/tree.ts'
@@ -14,6 +17,7 @@ const GlobalTree: FC = () => {
   })
 
   const treeNodes = useDataStore(state => state.treeNodes)
+  const modalRef = useRef<HTMLDivElement>(null)
   const [showSelectionModal, setShowSelectionModal] = useState(false)
   const [selectedPosition, setSelectedPosition] = useState({ x: 0, y: 0 })
 
@@ -25,17 +29,33 @@ const GlobalTree: FC = () => {
     setSelectedPosition(target.getBoundingClientRect())
   }
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        setShowSelectionModal(false)
+      }
+    }
+
+    window.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      window.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   return showGlobalTree && <div className="t-flex-shrink-0 t-w-[380px] t-mt-4 t-mr-4 t-pr-4 t-border-r-2 t-border-gray-200 t-overflow-auto">
-    <Tree nodes={treeNodes} onSelect={onSelectNode} getChildren={getChildren} />
-    { showSelectionModal && <div
-      className="t-fixed t-z-50 t-p-2 t-bg-white t-border t-border-gray-200 t-shadow-md t-rounded"
-      style={{
-        top: `${selectedPosition?.y + 40}px`,
-        left: `${selectedPosition?.x}px`,
-      }}
-    >
-      <GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current} onSelect={() => setShowSelectionModal(false)} />
-    </div> }
+    <TreeProvider onSelect={onSelectNode} getChildren={getChildren}>
+      <Tree nodes={treeNodes} />
+      { showSelectionModal && <div
+        ref={modalRef}
+        className="t-fixed t-z-50 t-p-2 t-bg-white t-border t-border-gray-200 t-shadow-md t-rounded"
+        style={{
+          top: `${selectedPosition?.y + 40}px`,
+          left: `${selectedPosition?.x}px`,
+        }}
+      >
+        <GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current} onSelect={() => setShowSelectionModal(false)} />
+      </div> }
+    </TreeProvider>
   </div>
 }
 
