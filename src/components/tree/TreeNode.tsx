@@ -37,6 +37,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
   return <div className="t-mb-1">
     <div
+      data-cy="tree-node"
       className={`t-flex t-items-center t-px-2 t-py-1 t-rounded-md hover:t-cursor-pointer ${ selectedNodeId === node.id ? 't-shadow-sm t-border-[2px] t-border-gray-100 t-bg-gray-200' : 'hover:t-bg-gray-100' }`}
       onClick={(e) => handleNodeClick(e)}
     >
