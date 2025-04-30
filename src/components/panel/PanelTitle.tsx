@@ -20,7 +20,7 @@ const PanelHeader: FC = () => {
         { panelState && panelState.item && <span className="t-font-semibold">{ getManifestLabel() }</span>}
         <span className="t-w-[1px] t-h-[80%] t-bg-gray-400 t-mx-2 t-grow-0 t-shrink-0"></span>
         { (!panelState || !panelState.item) && <Skeleton className="t-w-[40px] t-h-6" />  }
-        { panelState && panelState.item && <span className="t-text-gray-600">{ getItemLabel() }</span>}
+        { panelState && panelState.item && <span className="t-text-gray-600" data-cy="item-label">{ getItemLabel() }</span>}
       </div>
     </>
   )

@@ -54,6 +54,7 @@ const GlobalTree: FC = () => {
             top: `${selectedPosition?.y + 40}px`,
             left: `${selectedPosition?.x}px`,
           }}
+          data-cy="global-tree-modal"
         >
           <GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current}
             onSelect={() => setShowSelectionModal(false)} />

@@ -7,7 +7,7 @@ import AddPanel from '@/components/panel/AddPanel.tsx'
 const PanelsWrapper: FC = () => {
   const config = useConfigStore(state => state.config)
 
-  return <div className="t-flex-1 t-flex t-h-full t-flex-row t-py-4 t-space-x-4 t-overflow-x-auto">
+  return <div className="t-flex-1 t-flex t-h-full t-flex-row t-py-4 t-space-x-4 t-overflow-x-auto" data-cy="panels-wrapper">
     {
       (config.panels ?? [])
         .map((panelConfig, i: number) => (
