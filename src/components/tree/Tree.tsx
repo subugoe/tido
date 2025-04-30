@@ -15,7 +15,7 @@ const Tree: FC<TreeProps> = ({ nodes }) => {
       </div>
     ))
 
-  return <div className="tree">
+  return <div className="tree" data-cy="tree">
     {tree}
   </div>
 }

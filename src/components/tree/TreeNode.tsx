@@ -45,7 +45,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       <span className={`${node.leaf ? 't-ml-4': ''}`}>{node.label}</span>
     </div>
     {hasChildren && isExpanded && node.children?.map((item: TreeNode, i) => (
-      <ul className="t-ml-3" key={i}>
+      <ul data-cy="tree-node-child" className="t-ml-3" key={i}>
         <TreeNode node={item} />
       </ul>
     ))}
