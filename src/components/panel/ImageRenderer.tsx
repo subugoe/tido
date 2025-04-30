@@ -12,18 +12,13 @@ const ImageRenderer: FC = () => {
   const { t } = useTranslation()
   const imageViewerRef = useRef(null)
 
-  const [imageViewerId, setImageViewerId] = useState('')
   const [error, setError] = useState<string | null>(null)
   const imageUrl = panelState?.item?.image?.id
 
   let viewer: OpenSeadragon.Viewer | null = null
 
   useEffect(() => {
-    setImageViewerId('viewer-' + panelId)
-  }, [panelId])
-
-  useEffect(() => {
-    if (!imageViewerRef.current || !imageViewerId) return
+    if (!imageViewerRef.current) return
 
     if (!imageUrl) {
       setError(t('could_not_find_image'))
@@ -31,9 +26,7 @@ const ImageRenderer: FC = () => {
     }
 
     viewer = OpenSeadragon({
-      id: imageViewerId,
-      prefixUrl:
-        'https://cdnjs.cloudflare.com/ajax/libs/openseadragon/2.4.2/images/',
+      element: imageViewerRef.current,
       tileSources: {
         type: 'image',
         url: imageUrl,
@@ -51,7 +44,7 @@ const ImageRenderer: FC = () => {
     return () => {
       if (viewer) viewer.destroy()
     }
-  }, [imageViewerId, imageUrl, imageViewerRef])
+  }, [imageUrl, imageViewerRef])
 
   return (
     <>
@@ -65,7 +58,7 @@ const ImageRenderer: FC = () => {
         </PanelContentWrapper>
         : <div className="t-flex t-flex-col t-h-full t-w-full">
           <ImageActionButtons />
-          <div id={imageViewerId} ref={imageViewerRef} className="t-w-full t-h-full" />
+          <div ref={imageViewerRef} className="t-w-full t-h-full" />
         </div>
       }
     </>
