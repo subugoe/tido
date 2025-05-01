@@ -57,7 +57,8 @@ describe('Tree', () => {
       .should('have.text', 'New Panel')         // click New Panel
       .click()
     cy.get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in second panel
-      .children().should('have.length', 2)
+      .find('[data-cy="panel"]')
+      .should('have.length', 2)
       .eq(1)
       .find('[data-cy="item-label"]')
       .should('have.text', 'Page unknown')     // Label is missing
@@ -82,7 +83,8 @@ describe('Tree', () => {
       .click()
 
     cy.get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in first panel
-      .children().should('have.length', 1)
+      .find('[data-cy="panel"]')
+      .should('have.length', 1)
       .eq(0)
       .find('[data-cy="item-label"]')
       .should('have.text', 'Page unknown')      // Label is missing
