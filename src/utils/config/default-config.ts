@@ -1,4 +1,5 @@
 const defaultConfig: AppConfig = {
+  allowNewCollections: true,
   container: '#app',
   defaultView: 'pip',
   lang: 'en',

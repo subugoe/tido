@@ -82,6 +82,7 @@ declare global {
   type ViewType = 'pip' | 'split' | 'text' | 'image'
 
   interface AppConfig {
+    allowNewCollections: boolean
     container: string
     defaultView: ViewType
     lang: string

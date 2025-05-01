@@ -10,6 +10,19 @@ type ValidationResult<T> = {
   errors: Record<string, string>;
 };
 
+function validateAllowNewCollections(input: any): ValidationResult<AppConfig['allowNewCollections']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'boolean'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['allowNewCollections'] = 'must be a boolean'
+        return defaultConfig.allowNewCollections
+      })()
+  return { result, errors }
+}
+
 function validateContainer(input: any): ValidationResult<AppConfig['container']> {
   const errors: Record<string, string> = {}
   const result =
@@ -149,6 +162,7 @@ export function mergeAndValidateConfig(
   userConfig: Partial<AppConfig>,
 ): { config: AppConfig; errors: Record<string, string> } {
 
+  const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
   const defaultView = validateDefaultView(userConfig.defaultView)
   const lang = validateLang(userConfig.lang)
@@ -168,6 +182,7 @@ export function mergeAndValidateConfig(
 
 
   const errors = {
+    ...allowNewCollections.errors,
     ...container.errors,
     ...defaultView.errors,
     ...lang.errors,
@@ -181,6 +196,7 @@ export function mergeAndValidateConfig(
   }
 
   const config: AppConfig = {
+    allowNewCollections: allowNewCollections.result,
     container: container.result,
     panels: panels.result,
     defaultView: defaultView.result,

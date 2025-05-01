@@ -11,6 +11,7 @@ import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 const AddNewPanel: FC = () => {
   const title = useConfigStore(state => state.config.title)
+  const allowNewCollections = useConfigStore(state => state.config.allowNewCollections)
 
   const { t } = useTranslation()
 
@@ -30,19 +31,36 @@ const AddNewPanel: FC = () => {
     setShowDialog(false)
   }
 
+  function renderTriggerButton() {
+    return <Button
+      {...(allowNewCollections ? {} : { onClick: () => {
+        setStep(2)
+        setShowDialog(true)
+      } })}
+      data-cy="new-panel"
+      className={title !== '' ? 't-ml-auto' : ''}
+    >
+      <Plus className="-t-ml-1 t-mr-2" />{t('add_new_panel')}
+    </Button>
+  }
+
+
   return (
     <>
-      <Popover
+      {allowNewCollections && <Popover
         open={showPopover}
         onOpenChange={(isOpen) => setShowPopover(isOpen)}
       >
         <PopoverTrigger asChild>
-          <Button data-cy="new-panel" className={title !== '' ? 't-ml-auto' : ''}><Plus className="-t-ml-1 t-mr-2" />{t('add_new_panel')}</Button>
+          { renderTriggerButton() }
         </PopoverTrigger>
         <PopoverContent align="end" className="!t-p-0">
           <AddNewPanelSelection onSelect={onSelect} />
         </PopoverContent>
-      </Popover>
+      </Popover>}
+
+      {!allowNewCollections && renderTriggerButton() }
+
       <Dialog
         open={showDialog}
         onOpenChange={(isOpen) => setShowDialog(isOpen)}
