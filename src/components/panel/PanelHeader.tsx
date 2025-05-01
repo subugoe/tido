@@ -9,9 +9,12 @@ import ContentTypesToggle from '@/components/panel/ContentTypesToggle.tsx'
 import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
 import NavigationButton from '@/components/panel/NavigationButton.tsx'
 import Metadata from '@/components/metadata/Metadata'
+import Actions from '@/components/panel/Actions.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 const PanelHeader: FC = () => {
   const [showMetadataModal, setShowMetadataModal] = useState(false)
+  const { panelState } = usePanel()
 
   const handleOpenChange = (open: boolean) => {
     setShowMetadataModal(open)
@@ -22,12 +25,16 @@ const PanelHeader: FC = () => {
       <div className="t-flex t-items-center t-mb-6">
         <CollectionTitle />
 
-        <div className="t-ml-1 t-w-[400px] t-text-wrap t-break-words">
+        <div className="t-ml-1 t-text-wrap t-break-words">
           <Popover open={showMetadataModal} onOpenChange={handleOpenChange} modal={true}>
             <PopoverTrigger asChild>
-              <Button onClick={() => setShowMetadataModal(!showMetadataModal)}
+              <Button
+                onClick={() => setShowMetadataModal(!showMetadataModal)}
                 variant={showMetadataModal ? 'secondary' : 'ghost'}
-                size={'icon'}>{<Info />}
+                size={'icon'}
+                disabled={!panelState?.contentTypes?.length}
+              >
+                {<Info />}
               </Button>
             </PopoverTrigger>
             <PopoverContent side="bottom" align="start"  sideOffset={8} className="t-w-[400px] t-pr-0" >
@@ -36,8 +43,8 @@ const PanelHeader: FC = () => {
             </PopoverContent>
           </Popover>
         </div>
-
-        <TextViewsToggle />
+        <div className="t-ml-auto t-mr-2"><TextViewsToggle /></div>
+        <Actions />
       </div>
       <div className="t-flex t-justify-center t-mb-4">
         <NavigationButton isPrev={true} />

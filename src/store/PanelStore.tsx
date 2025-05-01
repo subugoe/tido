@@ -18,6 +18,7 @@ interface PanelStoreTypes {
   updateViewIndex: (panelId: string, newViewIndex: number) => void
   getPanelState: (panelId: string | null) => PanelState | null
   setActiveTargetIndex: (panelId: string, index: number) => void
+  removePanel: (panelId: string) => void
 }
 
 function getDefaultPanelState(id: string, index: number): PanelState {
@@ -87,5 +88,20 @@ export const usePanelStore = create<PanelStoreTypes>((set, get) => ({
     const panelState = get().panels[panelId]
     panelState.activeTargetIndex = index
     get().updatePanels(panelId, panelState)
+  },
+  removePanel: (panelId: string) => {
+    const panels = get().panels
+    const updatedPanels = Object
+      .keys(panels)
+      .filter(key => key !== panelId)
+      .reduce((acc, cur) => {
+        acc = {
+          ...acc,
+          [cur]: panels[cur]
+        }
+        return acc
+      }, {} as PanelStates)
+
+    set({ panels: updatedPanels })
   }
 }))

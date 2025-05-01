@@ -15,15 +15,52 @@ const Panel: FC = React.memo(() => {
   const { panelId } = usePanel()
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
+  const [flexValues, setFlexValues] = useState({
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: '0%'
+  })
+
+  const cardRef = useRef(null)
+  const [resizing, setResizing] = useState(false)
+  const [isHoveringEdge, setIsHoveringEdge] = useState(false)
+
+  useEffect(() => {
+    // On mount, we need to decide how set the width. If there is space inside the wrapper,
+    // we can keep default flex settings, as they make the panel grow and use the remaining space.
+    // If there is not enough space, we omit all the growing capability and set a default width
+
+    const wrapper = document.getElementById('panels-wrapper')
+    if (!wrapper) return
+
+    const wrapperWidth = wrapper.getBoundingClientRect().width
+    const otherPanelEls = ([...wrapper.querySelectorAll('.panel')] as HTMLElement[])
+      .filter(el => el.id !== '' && el.id !== panelId)
+
+    // Return an array of widths. If a panel is in "grow" mode, it has no flexBasis pixel value.
+    // In that case, we set that value to min width as basis for total width calculation.
+    // The reason is that those panels can also shrink.
+    const otherPanelWidths = otherPanelEls.map(el => {
+      return (el.style.flexBasis.includes('px')) ? parseInt(el.style.flexBasis.replace('px', '')) : MIN_PANEL_WIDTH
+    })
+
+    const otherPanelsTotalWidth = otherPanelWidths.reduce((a, b) => a + b, 0)
+
+    // We are adding here an additional DEFAULT_PANEL_WIDTH for the ghost panel that is the last child in the wrapper.
+    const isFitting = (wrapperWidth - (otherPanelsTotalWidth + DEFAULT_PANEL_WIDTH)) >= 0
+
+    if (!isFitting) {
+      setFlexValues({
+        flexGrow: 0,
+        flexShrink: 0,
+        flexBasis: `${DEFAULT_PANEL_WIDTH}px`
+      })
+    }
+  }, [])
 
   useEffect(() => {
     setIsScrollPanel(panelId ? scrollPanelIds.includes(panelId) : false)
   }, [scrollPanelIds, panelId])
-
-  const cardRef = useRef(null)
-  const [width, setWidth] = useState(DEFAULT_PANEL_WIDTH)
-  const [resizing, setResizing] = useState(false)
-  const [isHoveringEdge, setIsHoveringEdge] = useState(false)
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -31,7 +68,11 @@ const Panel: FC = React.memo(() => {
       if (resizing) {
         const rect = (cardRef.current as HTMLElement).getBoundingClientRect()
         const newWidth = e.clientX - rect.left
-        setWidth(Math.max(MIN_PANEL_WIDTH, newWidth))
+        setFlexValues({
+          flexShrink: 0,
+          flexGrow: 0,
+          flexBasis: `${Math.max(MIN_PANEL_WIDTH, newWidth)}px`
+        })
         return
       }
 
@@ -54,9 +95,12 @@ const Panel: FC = React.memo(() => {
 
   return (
     <div
+      id={panelId ?? ''}
       ref={cardRef}
       style={{
-        width,
+        flexGrow: flexValues.flexGrow,
+        flexShrink: flexValues.flexShrink,
+        flexBasis: flexValues.flexBasis,
         userSelect: resizing ? 'none' : 'auto',
         cursor: isHoveringEdge ? 'ew-resize' : 'default',
       }}
@@ -69,7 +113,7 @@ const Panel: FC = React.memo(() => {
         }
       }}
       className={
-        `panel t-relative t-flex t-flex-shrink-0 t-flex-col t-border-solid t-border-2 t-rounded-lg
+        `panel t-relative t-flex t-flex-col t-border-solid t-border-2 t-rounded-lg
         ${isScrollPanel ? 't-border-amber-300 t-ring-4 t-ring-amber-50' : 't-border-slate-200'}
       `}
       data-cy="panel"

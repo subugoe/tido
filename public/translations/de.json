@@ -37,5 +37,6 @@
   "from_new_collection": "Aus einer neuen Kollektion",
   "from_new_collection_description": "Geben Sie eine neue Collection-URL ein. Sie können anschließend daraus einen Panel-Inhalt wählen.",
   "from_existing_collections": "Aus bestehenden Kollektionen",
-  "from_existing_collections_description": "Wählen Sie aus Kollektionen, die bereits hinzugefügt wurden."
+  "from_existing_collections_description": "Wählen Sie aus Kollektionen, die bereits hinzugefügt wurden.",
+  "remove_panel": "Remove panel"
 }

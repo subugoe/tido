@@ -20,6 +20,7 @@ const buttonVariants = cva(
           't-bg-gray-300 t-text-gray-900 hover:t-bg-gray-300/80 dark:t-bg-gray-700 dark:t-text-gray-50 dark:hover:t-bg-gray-700/80',
         ghost: 'hover:t-bg-gray-100 hover:t-text-gray-900 dark:hover:t-bg-gray-800 dark:hover:t-text-gray-50',
         ghostAmber: 't-text-amber-700 hover:t-bg-amber-300 hover:t-text-amber-800 dark:hover:t-bg-amber-800 dark:hover:t-text-gray-50',
+        ghostDestructive: 't-text-red-500 hover:t-bg-red-100 hover:t-text-red-600',
         link: 't-text-primary t-underline-offset-4 hover:t-underline dark:t-text-gray-50',
       },
       size: {
