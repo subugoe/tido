@@ -72,6 +72,7 @@ const Panel: FC = React.memo(() => {
         `panel t-relative t-flex t-flex-shrink-0 t-flex-col t-border-solid t-border-2 t-rounded-lg
         ${isScrollPanel ? 't-border-amber-300 t-ring-4 t-ring-amber-50' : 't-border-slate-200'}
       `}
+      data-cy="panel"
     >
       {isScrollPanel && <ScrollPanelMenu className="t-absolute t-top-0 t-left-1/2 -t-translate-x-1/2" />}
       <PanelHeader />
