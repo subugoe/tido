@@ -12,6 +12,7 @@ const Actions: FC = () => {
   const { remove } = usePanel()
 
   function removePanel() {
+    setIsOpen(false)
     remove()
   }
   return (
