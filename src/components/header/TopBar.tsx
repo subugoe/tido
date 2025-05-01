@@ -11,7 +11,7 @@ import AddNewPanel from '@/components/header/AddNewPanel.tsx'
 
 const TopBar: FC = () => {
   const showGlobalTreeConfig = useConfigStore(state => state.config.showGlobalTree)
-  const showNewCollectionButton = useConfigStore(state => state.config.showNewCollectionButton)
+  const showAddNewPanelButton = useConfigStore(state => state.config.showAddNewPanelButton)
   const title = useConfigStore(state => state.config.title)
 
   const setShowGlobalTree = useDataStore(state => state.setShowGlobalTree)
@@ -26,7 +26,7 @@ const TopBar: FC = () => {
       { !isGlobalTreeCollapsed ? <Menu /> : <X /> }
     </Button>
     { title !== '' && <Title /> }
-    { showNewCollectionButton && <AddNewPanel /> }
+    { showAddNewPanelButton && <AddNewPanel /> }
   </div>
 }
 

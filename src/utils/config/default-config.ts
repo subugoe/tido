@@ -5,7 +5,7 @@ const defaultConfig: AppConfig = {
   panels: [],
   rootCollections: [],
   showGlobalTree: true,
-  showNewCollectionButton: true,
+  showAddNewPanelButton: true,
   theme: {
     primaryColor: '#3456aa'
   },

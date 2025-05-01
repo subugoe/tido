@@ -6,8 +6,8 @@ const selectors = {
 }
 
 const props = [
-  'showNewCollectionButton=true',
-  'showNewCollectionButton=false',
+  'showAddNewPanelButton=true',
+  'showAddNewPanelButton=false',
   'colors[primary]=#123456',
   'colors[theme]=dark',
   'colors[theme]=dark&colors[primary]=#123456',

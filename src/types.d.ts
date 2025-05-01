@@ -87,7 +87,7 @@ declare global {
     lang: string
     rootCollections: string[]
     showGlobalTree: boolean
-    showNewCollectionButton: boolean
+    showAddNewPanelButton: boolean
     panels: PanelConfig[]
     theme: ThemeConfig
     title: string
