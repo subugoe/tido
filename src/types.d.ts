@@ -82,12 +82,13 @@ declare global {
   type ViewType = 'pip' | 'split' | 'text' | 'image'
 
   interface AppConfig {
+    allowNewCollections: boolean
     container: string
     defaultView: ViewType
     lang: string
     rootCollections: string[]
     showGlobalTree: boolean
-    showNewCollectionButton: boolean
+    showAddNewPanelButton: boolean
     panels: PanelConfig[]
     theme: ThemeConfig
     title: string

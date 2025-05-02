@@ -10,6 +10,19 @@ type ValidationResult<T> = {
   errors: Record<string, string>;
 };
 
+function validateAllowNewCollections(input: any): ValidationResult<AppConfig['allowNewCollections']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'boolean'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['allowNewCollections'] = 'must be a boolean'
+        return defaultConfig.allowNewCollections
+      })()
+  return { result, errors }
+}
+
 function validateContainer(input: any): ValidationResult<AppConfig['container']> {
   const errors: Record<string, string> = {}
   const result =
@@ -60,15 +73,15 @@ function validatePanels(input: any): ValidationResult<AppConfig['panels']> {
   return { result, errors }
 }
 
-function validateShowNewCollectionButton(input: any): ValidationResult<AppConfig['showNewCollectionButton']> {
+function validateShowNewCollectionButton(input: any): ValidationResult<AppConfig['showAddNewPanelButton']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'boolean'
       ? input
       : (() => {
         if (input !== undefined)
-          errors['showNewCollectionButton'] = 'must be a boolean'
-        return defaultConfig.showNewCollectionButton
+          errors['showAddNewPanelButton'] = 'must be a boolean'
+        return defaultConfig.showAddNewPanelButton
       })()
   return { result, errors }
 }
@@ -149,12 +162,13 @@ export function mergeAndValidateConfig(
   userConfig: Partial<AppConfig>,
 ): { config: AppConfig; errors: Record<string, string> } {
 
+  const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
   const defaultView = validateDefaultView(userConfig.defaultView)
   const lang = validateLang(userConfig.lang)
   const panels = validatePanels(userConfig.panels)
   const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
-  const showNewCollectionButton = validateShowNewCollectionButton(userConfig.showNewCollectionButton)
+  const showAddNewPanelButton = validateShowNewCollectionButton(userConfig.showAddNewPanelButton)
   const rootCollections = validateRootCollections(userConfig.rootCollections)
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
@@ -168,26 +182,28 @@ export function mergeAndValidateConfig(
 
 
   const errors = {
+    ...allowNewCollections.errors,
     ...container.errors,
     ...defaultView.errors,
     ...lang.errors,
     ...panels.errors,
     ...rootCollections.errors,
     ...showGlobalTree.errors,
-    ...showNewCollectionButton.errors,
+    ...showAddNewPanelButton.errors,
     ...theme.errors,
     ...title.errors,
     ...translations.errors,
   }
 
   const config: AppConfig = {
+    allowNewCollections: allowNewCollections.result,
     container: container.result,
     panels: panels.result,
     defaultView: defaultView.result,
     lang: lang.result,
     rootCollections: rootCollections.result,
     showGlobalTree: showGlobalTree.result,
-    showNewCollectionButton: showNewCollectionButton.result,
+    showAddNewPanelButton: showAddNewPanelButton.result,
     theme: theme.result,
     title: title.result,
     translations: mergedTranslations,

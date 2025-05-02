@@ -21,7 +21,7 @@ describe('Config', () => {
   runConfigTest('showGlobalTree=false', 'showGlobalTree false', () => {
     cy.get('[data-cy="global-tree-toggle"]').should('be.visible', false)
   });
-  runConfigTest('showNewCollectionButton=false', 'showNewCollectionButton false', () => {
+  runConfigTest('showAddNewPanelButton=false', 'showAddNewPanelButton false', () => {
     cy.get('[data-cy="new-panel"]').should('be.visible', false)
   });
   runConfigTest('lang=de', 'translations: read from default `de` file', () => {

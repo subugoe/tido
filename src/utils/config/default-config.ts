@@ -1,11 +1,12 @@
 const defaultConfig: AppConfig = {
+  allowNewCollections: true,
   container: '#app',
   defaultView: 'pip',
   lang: 'en',
   panels: [],
   rootCollections: [],
   showGlobalTree: true,
-  showNewCollectionButton: true,
+  showAddNewPanelButton: true,
   theme: {
     primaryColor: '#3456aa'
   },
