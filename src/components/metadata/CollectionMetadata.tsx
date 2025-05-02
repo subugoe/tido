@@ -21,9 +21,8 @@ const CollectionMetadata: FC = () => {
 
   return <Accordion type="single" collapsible>
     <AccordionItem value="item-1" >
-      <AccordionTrigger className="t-py-1 t-relative [&>svg]:t-absolute [&>svg]:t-right-3">{ t('collection') }</AccordionTrigger>
-      <AccordionContent><div className="t-ml-2">{ metadata.map((meta, i) => <MetadataItem item={meta} key={i} />)}</div>
-      </AccordionContent>
+      <AccordionTrigger>{ t('collection') }</AccordionTrigger>
+      <AccordionContent>{ metadata.map((meta, i) => <MetadataItem item={meta} key={i} />)}</AccordionContent>
     </AccordionItem>
   </Accordion>
 }
