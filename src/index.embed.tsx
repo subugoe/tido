@@ -3,16 +3,17 @@ import { createRoot } from 'react-dom/client'
 import '@/css/preflight.css'
 import '@/css/style.css'
 
-import App from './App.tsx'
+import { Tido as TidoApp } from './components/Tido.tsx'
 import { defaultConfig } from '@/utils/config/default-config.ts'
+import { TidoConfig } from '@/types'
 
 declare global {
   interface Window {
-    Tido: (config: AppConfig) => void
+    Tido: (config: TidoConfig) => void
   }
 }
 
-window.Tido = function Tido(config = {} as Partial<AppConfig>) {
+window.Tido = function Tido(config = {} as Partial<TidoConfig>) {
   const { container } = config
   const containerEl = document.querySelector(container ?? defaultConfig.container)
 
@@ -20,7 +21,7 @@ window.Tido = function Tido(config = {} as Partial<AppConfig>) {
     throw new Error('Container element not found')
   }
 
-  createRoot(containerEl).render(<App customConfig={config} />)
+  createRoot(containerEl).render(<TidoApp customConfig={config} />)
 }
 
 export default window.Tido

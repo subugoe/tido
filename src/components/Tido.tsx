@@ -12,20 +12,19 @@ import { getRGBColor } from '@/utils/colors.ts'
 import { defaultConfig } from '@/utils/config/default-config.ts'
 import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 import { initI18n } from '@/utils/translations.ts'
+import { TidoConfig, TidoProps } from '@/types'
 
 
-interface AppProps {
-  customConfig: Partial<AppConfig>
-}
 
-function createThemeStyles(config: AppConfig) {
+
+function createThemeStyles(config: TidoConfig) {
   const { container, theme } = config
   const style = document.createElement('style')
   style.innerHTML = `${container || defaultConfig.container} {${getRGBColor(theme.primaryColor, 'primary')}}`
   document.head.appendChild(style)
 }
 
-const App: FC<AppProps> = ({ customConfig }) => {
+export const Tido: FC<TidoProps> = ({ customConfig }) => {
   const { config, errors } = mergeAndValidateConfig(customConfig)
   if (Object.keys(errors).length > 0) console.error(errors)
 
@@ -65,5 +64,3 @@ const App: FC<AppProps> = ({ customConfig }) => {
     </div>
   )
 }
-
-export default App

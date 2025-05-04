@@ -1,3 +1,5 @@
+import React from 'react'
+
 declare global {
   declare module '*.css';
 
@@ -74,26 +76,6 @@ declare global {
     modules?: Module[]
   }
 
-  interface ThemeConfig {
-    forceMode?: string
-    primaryColor: string
-  }
-
-  type ViewType = 'pip' | 'split' | 'text' | 'image'
-
-  interface AppConfig {
-    allowNewCollections: boolean
-    container: string
-    defaultView: ViewType
-    lang: string
-    rootCollections: string[]
-    showGlobalTree: boolean
-    showAddNewPanelButton: boolean
-    panels: PanelConfig[]
-    theme: ThemeConfig
-    title: string
-    translations: Translations
-  }
 
   interface Content {
     '@context': string
@@ -232,11 +214,7 @@ declare global {
     warning: string
   }
 
-  interface PanelConfig {
-    collection: string
-    manifestIndex?: number
-    itemIndex?: number
-  }
+
 
   type RangeSelector = {
     type: 'RangeSelector'
@@ -278,14 +256,6 @@ declare global {
 
   type TitleType = 'main' | 'sub'
 
-  interface Translation {
-    [key: string]: string
-  }
-
-  interface Translations {
-    [key: string]: Translation
-  }
-
   type SuccessResponse<T> = {
     success: true
     data: T
@@ -321,4 +291,46 @@ declare global {
     y: number
   }
 }
+
+export interface PanelConfig {
+  collection: string
+  manifestIndex?: number
+  itemIndex?: number
+}
+
+export type ViewType = 'pip' | 'split' | 'text' | 'image'
+
+export interface ThemeConfig {
+  forceMode?: string
+  primaryColor: string
+}
+
+export interface Translation {
+  [key: string]: string
+}
+
+export interface TranslationsConfig {
+  [key: string]: Translation
+}
+
+export interface TidoConfig {
+  allowNewCollections: boolean
+  container: string
+  defaultView: ViewType
+  lang: string
+  rootCollections: string[]
+  showGlobalTree: boolean
+  showAddNewPanelButton: boolean
+  panels: PanelConfig[]
+  theme: ThemeConfig
+  title: string
+  translations: TranslationsConfig
+}
+
+export interface TidoProps {
+  customConfig: Partial<TidoConfig>
+}
+
+export declare class Tido extends React.Component<TidoProps, never> {}
+
 export {}

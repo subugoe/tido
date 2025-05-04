@@ -7,7 +7,7 @@
   <meta name="msapplication-tap-highlight" content="no">
   <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="dist/tido.css">
+  <link rel="stylesheet" href="dist/tido.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,15 +19,11 @@
   <nav>
     <select id="nav-select">
       <option disabled selected hidden>Please select...</option>
-      <option value="./ahiqar-syriac.html">Ahiqar Syriac</option>
-      <option value="./ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</option>
-      <option value="./gfl.html">Goethes Farbenlehre in Berlin</option>
-      <option value="./4w.html">Vier Wachen</option>
     </select>
   </nav>
 </header>
 <div id="app"></div>
-<script src="dist/tido.js"></script>
+<script src="dist/tido.min.js"></script>
 <script>
   const select = document.getElementById('nav-select');
   const pathArr = window.location.pathname.split('/')
