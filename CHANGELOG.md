@@ -71,4 +71,4 @@ All notable changes to this project will be documented in this file. See [commit
 * use config store instead of context ([69f2975](https://github.com/subugoe/tido/commit/69f2975bb70c311a5ecf279e0c889360981adbad))
 * use updatePanelState in text  views toggle ([0cf89cd](https://github.com/subugoe/tido/commit/0cf89cd86a76e5588e2d7370a54e4b521bd61a09))
 
-## For older versions of TIDO, please continue with this [CHANGELOG](https://github.com/subugoe/tido/blob/main/CHANGELOG.md).
+## For older versions of TIDO, please continue with the old [CHANGELOG](https://github.com/subugoe/tido/blob/main/CHANGELOG.md).
