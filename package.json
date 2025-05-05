@@ -1,6 +1,6 @@
 {
   "name": "tido",
-  "version": "4.3.0",
+  "version": "5.0.0-alpha.0",
   "description": "Text Viewer for Digital Objects (TIDO). A highly configurable client for the TextAPI.",
   "productName": "TIDO",
   "keywords": [
