@@ -1,28 +1,23 @@
 {
   "name": "tido",
   "version": "4.3.0",
-  "description": "Text Viewer for Digital Objects (TIDO)",
+  "description": "Text Viewer for Digital Objects (TIDO). A highly configurable client for the TextAPI.",
   "productName": "TIDO",
   "keywords": [
     "openseadragon",
     "subugoe",
+    "text",
+    "TextAPI",
     "TIDO",
     "viewer",
     "react",
-    "tailwindcss",
-    "primereact"
+    "tailwindcss"
   ],
   "license": "AGPL-3.0-or-later",
   "author": "Göttingen State and University Library - SUB",
   "contributors": [
-    "Noor Amtul <amtul@sub.uni-goettingen.de>",
-    "Manikanth Dindigala",
-    "Mathias Göbel <goebel@sub.uni-goettingen.de>",
     "Orlin Malkja <malkja@sub.uni-goettingen.de>",
-    "Paul Pestov <pestov@sub.uni-goettingen.de>",
-    "Frank Schneider",
-    "Michelle Weidling <weidling@sub.uni-goettingen.de>",
-    "Nils Windisch"
+    "Paul Pestov <pestov@sub.uni-goettingen.de>"
   ],
   "type": "module",
   "main": "./dist/index.cjs.js",
@@ -57,6 +52,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cypress": "^14.2.1",
+    "doctoc": "^2.2.1",
     "dompurify": "^3.2.5",
     "eslint": "^9.14.0",
     "eslint-plugin-react": "^7.37.2",
