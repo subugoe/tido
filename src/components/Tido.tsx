@@ -26,7 +26,7 @@ function createThemeStyles(config: TidoConfig) {
   styleEl.innerHTML = `.tido {${getRGBColor(theme.primaryColor, 'primary')}}`
 }
 
-export const Tido: FC<TidoProps> = ({ customConfig }) => {
+export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
   const { config, errors } = mergeAndValidateConfig(customConfig)
   if (Object.keys(errors).length > 0) console.error(errors)
 

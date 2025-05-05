@@ -328,7 +328,7 @@ export interface TidoConfig {
 }
 
 export interface TidoProps {
-  customConfig: Partial<TidoConfig>
+  config: Partial<TidoConfig>
 }
 
 export declare class Tido extends React.Component<TidoProps, never> {}
