@@ -51,6 +51,7 @@
     "autoprefixer": "^10.4.17",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "commit-and-tag-version": "^12.5.1",
     "cypress": "^14.2.1",
     "doctoc": "^2.2.1",
     "dompurify": "^3.2.5",
@@ -64,7 +65,6 @@
     "openseadragon": "^5.0.0",
     "postcss-html": "^1.7.0",
     "react-i18next": "^15.4.1",
-    "standard-version": "^9.5.0",
     "start-server-and-test": "^2.0.8",
     "tailwind-merge": "^2.5.5",
     "tailwindcss": "^3.4.14",
@@ -99,7 +99,7 @@
     "preview": "npm run build && vite preview",
     "preview:examples": "npm run build:test && cp -r dist/ examples/dist/ && npm run examples",
     "test": "start-server-and-test preview:examples 2222 cypress:headless",
-    "write-changelog": "standard-version"
+    "write-changelog": "commit-and-tag-version"
   },
   "files": [
     "src",
