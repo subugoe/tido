@@ -9,19 +9,21 @@ import GlobalTree from '@/components/tree/GlobalTree.tsx'
 import { createCollectionNodes } from '@/utils/tree.ts'
 import PanelsWrapper from '@/components/PanelsWrapper.tsx'
 import { getRGBColor } from '@/utils/colors.ts'
-import { defaultConfig } from '@/utils/config/default-config.ts'
 import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 import { initI18n } from '@/utils/translations.ts'
 import { TidoConfig, TidoProps } from '@/types'
 
-
-
-
 function createThemeStyles(config: TidoConfig) {
-  const { container, theme } = config
-  const style = document.createElement('style')
-  style.innerHTML = `${container || defaultConfig.container} {${getRGBColor(theme.primaryColor, 'primary')}}`
-  document.head.appendChild(style)
+  const { theme } = config
+  let styleEl = document.getElementById('tido-theme')
+
+  if (!styleEl) {
+    styleEl = document.createElement('style')
+    styleEl.id = 'tido-theme'
+    document.head.appendChild(styleEl)
+  }
+
+  styleEl.innerHTML = `.tido {${getRGBColor(theme.primaryColor, 'primary')}}`
 }
 
 export const Tido: FC<TidoProps> = ({ customConfig }) => {
