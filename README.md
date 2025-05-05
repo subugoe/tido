@@ -178,7 +178,7 @@ There are options to
 | container                            | String                                | `#app`    | Specifies the CSS selector where we should append the TIDO app to.                                                                                                                                                              |
 | defaultView                          | `pip` \| `split` \| `text` \| `image` | `pip`     | Specifies the default view type of all panels. Each new panel will start with view.                                                                                                                                             |
 | lang                                 | String (ISO 639-1 language code)      | `en`      | Specifies the current active language of the app. See [translations](#translations) chapter.                                                                                                                                    |
-| panels                               | PanelConfig[]                         | &darr;    | Defines an array of panel objects. The panels will appear in the same order.                                                                                                                                                    |
+| panels                               | PanelConfig[]                         | []        | Defines an array of panel objects. The panels will appear in the same order.                                                                                                                                                    |
 | panels[i].collection                 | String                                | -         | TextAPI collection URL                                                                                                                                                                                                          |
 | panels[i].manifestIndex              | Number                                | 0         | Index of a manifest object inside the sequence of a TextAPI collection specified under "collection".                                                                                                                            |
 | panels[i].itemIndex                  | Number                                | 0         | Index of an item object inside the sequence of a TextAPI manifest specified as index under "manifestIndex".                                                                                                                     |
@@ -200,7 +200,7 @@ Append your language under the `translations` key in the config and set the `lan
 as active language.
 
 Hint: There is a difference between fixed keys that we use internally (like `add_new_panel`) or dynamic keys that we might
-receive from the TextAPI (like dynamic metadata keys). If you want to translate the latter ones, just state them keys to your translation object.
+receive from the TextAPI (like dynamic metadata keys). If you want to translate the latter ones, just state them as keys to your translation object.
 Example:
 
 ```json
