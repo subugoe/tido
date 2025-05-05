@@ -21,7 +21,7 @@ window.Tido = function Tido(config = {} as Partial<TidoConfig>) {
     throw new Error('Container element not found')
   }
 
-  createRoot(containerEl).render(<TidoApp customConfig={config} />)
+  createRoot(containerEl).render(<TidoApp config={config} />)
 }
 
 export default window.Tido
