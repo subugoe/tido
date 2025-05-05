@@ -6,6 +6,7 @@ import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { PanelConfig, ViewType } from '@/types'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {

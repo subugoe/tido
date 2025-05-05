@@ -25,7 +25,10 @@
     "Nils Windisch"
   ],
   "type": "module",
-  "main": "dist/tido.js",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
+  "style": "./dist/style.css",
+  "types": "./dist/types.d.ts",
   "bugs": {
     "url": "https://github.com/subugoe/tido/issues"
   },
@@ -35,6 +38,10 @@
     "url": "git+https://github.com/subugoe/tido.git"
   },
   "private": false,
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
     "@radix-ui/react-accordion": "^1.2.7",
@@ -60,9 +67,6 @@
     "ncp": "^2.0.0",
     "openseadragon": "^5.0.0",
     "postcss-html": "^1.7.0",
-    "primereact": "^10.8.5",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
     "react-i18next": "^15.4.1",
     "standard-version": "^9.5.0",
     "start-server-and-test": "^2.0.8",
@@ -84,8 +88,10 @@
     "npm": ">= 6.13.4"
   },
   "scripts": {
-    "build": "vite build",
-    "build:test": "vite build --mode test",
+    "build": "npm run build:lib && npm run build:embed",
+    "build:lib": "vite build && cp src/types.d.ts dist/types.d.ts",
+    "build:embed": "vite build --config vite.embed.config.js",
+    "build:test": "vite build --config vite.embed.config.js --mode test",
     "cypress": "cypress open",
     "cypress:headless": "cypress run --headless",
     "dev": "node vite-start.js",
@@ -100,6 +106,7 @@
     "write-changelog": "standard-version"
   },
   "files": [
+    "src",
     "dist"
   ]
 }

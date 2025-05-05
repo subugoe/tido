@@ -4,13 +4,14 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
+import { TidoConfig, Translation, TranslationsConfig, ViewType } from '@/types'
 
 type ValidationResult<T> = {
   result: T;
   errors: Record<string, string>;
 };
 
-function validateAllowNewCollections(input: any): ValidationResult<AppConfig['allowNewCollections']> {
+function validateAllowNewCollections(input: any): ValidationResult<TidoConfig['allowNewCollections']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'boolean'
@@ -23,7 +24,7 @@ function validateAllowNewCollections(input: any): ValidationResult<AppConfig['al
   return { result, errors }
 }
 
-function validateContainer(input: any): ValidationResult<AppConfig['container']> {
+function validateContainer(input: any): ValidationResult<TidoConfig['container']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'string'
@@ -36,7 +37,7 @@ function validateContainer(input: any): ValidationResult<AppConfig['container']>
   return { result, errors }
 }
 
-function validateDefaultView(input: any): ValidationResult<AppConfig['defaultView']> {
+function validateDefaultView(input: any): ValidationResult<TidoConfig['defaultView']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'string' && ['pip', 'split', 'text', 'image'].includes(input)
@@ -49,7 +50,7 @@ function validateDefaultView(input: any): ValidationResult<AppConfig['defaultVie
   return { result, errors }
 }
 
-function validateGlobalTree(input: any): ValidationResult<AppConfig['showGlobalTree']> {
+function validateGlobalTree(input: any): ValidationResult<TidoConfig['showGlobalTree']> {
   const errors: Record<string, string> = {}
   const result =
       typeof input === 'boolean'
@@ -62,7 +63,7 @@ function validateGlobalTree(input: any): ValidationResult<AppConfig['showGlobalT
   return { result, errors }
 }
 
-function validatePanels(input: any): ValidationResult<AppConfig['panels']> {
+function validatePanels(input: any): ValidationResult<TidoConfig['panels']> {
   const errors: Record<string, string> = {}
   const result = Array.isArray(input) ? input : (() => {
     if (input !== undefined)
@@ -73,7 +74,7 @@ function validatePanels(input: any): ValidationResult<AppConfig['panels']> {
   return { result, errors }
 }
 
-function validateShowNewCollectionButton(input: any): ValidationResult<AppConfig['showAddNewPanelButton']> {
+function validateShowNewCollectionButton(input: any): ValidationResult<TidoConfig['showAddNewPanelButton']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'boolean'
@@ -86,7 +87,7 @@ function validateShowNewCollectionButton(input: any): ValidationResult<AppConfig
   return { result, errors }
 }
 
-function validateTheme(input: any): ValidationResult<AppConfig['theme']> {
+function validateTheme(input: any): ValidationResult<TidoConfig['theme']> {
   const errors: Record<string, string> = {}
   const result = {
     primaryColor:
@@ -100,7 +101,7 @@ function validateTheme(input: any): ValidationResult<AppConfig['theme']> {
   return { result, errors }
 }
 
-function validateLang(input: any): ValidationResult<AppConfig['lang']> {
+function validateLang(input: any): ValidationResult<TidoConfig['lang']> {
   const errors: Record<string, string> = {}
   const result =
       typeof input === 'string'
@@ -113,7 +114,7 @@ function validateLang(input: any): ValidationResult<AppConfig['lang']> {
   return { result, errors }
 }
 
-function validateTitle(input: any): ValidationResult<AppConfig['title']> {
+function validateTitle(input: any): ValidationResult<TidoConfig['title']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'string'
@@ -126,7 +127,7 @@ function validateTitle(input: any): ValidationResult<AppConfig['title']> {
   return { result, errors }
 }
 
-function validateTranslations(input: any): ValidationResult<AppConfig['translations']> {
+function validateTranslations(input: any): ValidationResult<TidoConfig['translations']> {
   const errors: Record<string, string>  = { }
   const result =
       typeof input === 'object'
@@ -139,7 +140,7 @@ function validateTranslations(input: any): ValidationResult<AppConfig['translati
   return { result, errors }
 }
 
-function validateRootCollections(input: any): ValidationResult<AppConfig['rootCollections']> {
+function validateRootCollections(input: any): ValidationResult<TidoConfig['rootCollections']> {
   const errors: Record<string, string> = {}
   const result =
     Array.isArray(input)
@@ -153,14 +154,14 @@ function validateRootCollections(input: any): ValidationResult<AppConfig['rootCo
 }
 
 
-function getLanguage(lang: string, translations: Translations, defaultLangs: string[]): string {
+function getLanguage(lang: string, translations: TranslationsConfig, defaultLangs: string[]): string {
   if (Object.keys(translations).includes(lang) || defaultLangs.includes(lang)) return lang
   return 'en'
 }
 
 export function mergeAndValidateConfig(
-  userConfig: Partial<AppConfig>,
-): { config: AppConfig; errors: Record<string, string> } {
+  userConfig: Partial<TidoConfig>,
+): { config: TidoConfig; errors: Record<string, string> } {
 
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
@@ -195,7 +196,7 @@ export function mergeAndValidateConfig(
     ...translations.errors,
   }
 
-  const config: AppConfig = {
+  const config: TidoConfig = {
     allowNewCollections: allowNewCollections.result,
     container: container.result,
     panels: panels.result,

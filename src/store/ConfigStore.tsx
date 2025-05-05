@@ -1,9 +1,10 @@
 import { create } from 'zustand'
 import { defaultConfig } from '@/utils/config/default-config.ts'
+import { PanelConfig, TidoConfig } from '@/types'
 
 interface ConfigStoreType {
-  config: AppConfig,
-  addCustomConfig: (customConfig: AppConfig) => void,
+  config: TidoConfig,
+  addCustomConfig: (customConfig: TidoConfig) => void,
   addRootCollection: (newRootCollection: string) => void,
   addNewPanel: (newPanelConfig: PanelConfig) => void,
   updatePanel: (newPanelConfig: Partial<PanelConfig>, index: number) => void,
@@ -12,7 +13,7 @@ interface ConfigStoreType {
 
 export const useConfigStore = create<ConfigStoreType>((set, get) => ({
   config: defaultConfig,
-  addCustomConfig: (config: AppConfig) => {
+  addCustomConfig: (config: TidoConfig) => {
     set({ config })
   },
   addRootCollection: (newRootCollection: string) => {

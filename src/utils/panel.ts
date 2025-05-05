@@ -1,5 +1,6 @@
 import { request } from '@/utils/http'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import { PanelConfig } from '@/types'
 
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {

@@ -1,7 +1,8 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import { TranslationsConfig } from '@/types'
 
-function convertTranslations(translations: Translations) {
+function convertTranslations(translations: TranslationsConfig) {
   // translations are converted to expected 3 level format: lang, 'translation', key values translation object
   // i.e {
   //      'en': {
@@ -19,7 +20,7 @@ function convertTranslations(translations: Translations) {
   )
 }
 
-function initI18n (translations: Translations, lang: string){
+function initI18n (translations: TranslationsConfig, lang: string){
   if (!i18n.isInitialized) {
     const resources = convertTranslations(translations)
 

@@ -1,4 +1,6 @@
-const defaultConfig: AppConfig = {
+import { TidoConfig } from '@/types'
+
+const defaultConfig: TidoConfig = {
   allowNewCollections: true,
   container: '#app',
   defaultView: 'pip',

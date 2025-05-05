@@ -3,12 +3,8 @@ import { resolve } from 'path';
 import fs from 'fs';
 import react from '@vitejs/plugin-react'
 import * as path from "node:path";
-import pkg from './package.json'
 import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
-const externalDeps = [
-  ...Object.keys(pkg.peerDependencies || {})
-]
 
 
 export default defineConfig(({ mode}) => {
@@ -19,7 +15,7 @@ export default defineConfig(({ mode}) => {
     plugins: [
       react(),
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
-      injectConfig(projectName),
+      injectConfig(projectName)
     ],
     resolve: {
       alias: {
@@ -28,23 +24,15 @@ export default defineConfig(({ mode}) => {
       },
     },
     build: {
-      lib: {
-        entry: path.resolve(__dirname, 'src/index.ts'),
-        name: 'Tido',
-        formats: ['es', 'cjs'],
-        fileName: (format) => `index.${format}.js`,
-      },
-      sourcemap: true,
+      emptyOutDir: false,
+      cssCodeSplit: true,
       rollupOptions: {
-        external: externalDeps,
+        input: path.resolve(__dirname, 'src/index.embed.tsx'),
         output: {
-          globals: {
-            react: 'React',
-            'react-dom': 'ReactDOM',
-          },
+          entryFileNames: 'tido.min.js',
+          assetFileNames: 'tido.min.[ext]',
         },
-      }
+      },
     },
-    cssCodeSplit: true,
   }
 });

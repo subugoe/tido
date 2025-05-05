@@ -27,7 +27,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       return
     }
 
-    onSelect(node, e.target)
+    onSelect(node, e.target as HTMLElement)
     setSelectedNodeId(node.id)
   }
 
