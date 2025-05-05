@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.1](https://github.com/subugoe/tido/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2025-05-05)
+
 ## 5.0.0-alpha.0 (2025-05-05)
 
 
