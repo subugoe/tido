@@ -6,53 +6,41 @@ import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
-import { PanelConfig, ViewType } from '@/types'
+import { ViewType } from '@/types'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {
-  panelId: string | null
-  panelState: PanelState | null
+  panelId: string
+  panelState: PanelState
   loading: boolean
   error: string | null
   setError: (value: string | null) => void
-  updatePanelState: (data: Partial<PanelState>) => void
+  updatePanel: (data: Partial<PanelState>) => void
   remove: () => void
 }
 
 interface PanelProviderProps {
   children?: ReactNode
-  panelConfig: PanelConfig
-  index: number
+  panelId: string
 }
 
-const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index }) => {
-  const [panelId, setPanelId] = useState<string | null>(null)
+const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const defaultView = useConfigStore.getState().config.defaultView
   const getCollection = useDataStore(state => state.initCollection)
-  const initPanelState = usePanelStore((state) => state.initPanelState)
-  const updateStorePanelState = usePanelStore((state) => state.updatePanelState)
-  const removePanel = usePanelStore(state => state.removePanel)
+  const updateStorePanelState = usePanelStore((state) => state.updatePanel)
 
-  const panelState = usePanelStore(state => state.getPanelState(panelId))
+  const panelState = usePanelStore(state => state.getPanel(panelId))
 
   useEffect(() => {
-    // On first render, create a new panel ID and initiate the panel in an empty state
-    const id = crypto.randomUUID()
-    setPanelId(id)
-    initPanelState(id, index)
-  }, [])
-
-  useEffect(() => {
-    if (!panelId) return
     const init = async () => {
       setLoading(true)
       try {
-        const collection = await getCollection(panelConfig.collection)
-        const manifest = await apiRequest<Manifest>(collection.sequence[panelConfig.manifestIndex ?? 0].id)
-        const item = await apiRequest<Item>(manifest.sequence[panelConfig.itemIndex ?? 0].id)
+        const collection = await getCollection(panelState.config.collection)
+        const manifest = await apiRequest<Manifest>(collection.sequence[panelState.config.manifestIndex ?? 0].id)
+        const item = await apiRequest<Item>(manifest.sequence[panelState.config.itemIndex ?? 0].id)
         const contentTypes: string[] = getContentTypes(item.content)
 
         const { support } = manifest
@@ -62,11 +50,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
           await getSupport(support)
         }
 
-        updateStorePanelState(panelId, {
+        updatePanel( {
           collectionId: collection.id,
           manifest,
           item,
-          contentIndex: 0,
           viewIndex: mapToViewIndex(defaultView),
           contentTypes,
           activeTargetIndex: -1
@@ -79,7 +66,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
       }
     }
     init()
-  }, [panelConfig, panelId])
+  }, [panelState.config, panelId])
 
 
   useEffect(() => {
@@ -87,8 +74,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
     if (panelState.activeTargetIndex > -1) selectSyncTargetByIndex(panelId, panelState.activeTargetIndex)
   }, [panelState?.activeTargetIndex])
 
-  function updatePanelState(data: Partial<PanelState>) {
-    if (!panelId) return
+  function updatePanel(data: Partial<PanelState>) {
     updateStorePanelState(panelId, data)
   }
 
@@ -101,13 +87,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelConfig, index })
   }
 
   function remove() {
-    if (!panelId) return
-    removePanel(panelId)
-    useConfigStore.getState().removePanel(index)
+    usePanelStore.getState().removePanel(panelId)
   }
 
   return (
-    <PanelContext.Provider value={{ panelId, panelState, updatePanelState, loading, error, setError, remove }}>
+    <PanelContext.Provider value={{ panelId, panelState, updatePanel, loading, error, setError, remove }}>
       {children}
     </PanelContext.Provider>
   )

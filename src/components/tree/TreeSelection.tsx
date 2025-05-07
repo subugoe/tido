@@ -1,6 +1,5 @@
 import { FC, useRef } from 'react'
 
-import { useConfigStore } from '@/store/ConfigStore'
 import { useDataStore } from '@/store/DataStore'
 import { TreeProvider } from '@/contexts/TreeContext.tsx'
 
@@ -9,6 +8,7 @@ import Tree from '@/components/tree/Tree.tsx'
 import { getChildren, getSelectedItemIndices } from '@/utils/tree.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 
 interface Props {
   onConfirm?: () => void
@@ -16,7 +16,7 @@ interface Props {
 
 const TreeSelection: FC<Props> = ({ onConfirm }) => {
   const { t } = useTranslation()
-  const addNewPanel = useConfigStore(state => state.addNewPanel)
+  const addPanel = usePanelStore(state => state.addPanel)
   const treeNodes = useDataStore(state => state.treeNodes)
   const clickedItemUrl = useRef('')
 
@@ -30,7 +30,7 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
     if (clickedItemUrl.current) {
       // transfer the clicked item indices
       const { collectionUrl, manifestIndex, itemIndex } = selectedItemIndices.current
-      addNewPanel({
+      addPanel({
         collection: collectionUrl,
         manifestIndex: manifestIndex,
         itemIndex: itemIndex

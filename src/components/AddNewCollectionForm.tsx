@@ -6,6 +6,7 @@ import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { createCollectionNode } from '@/utils/tree.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { Button } from '@/components/ui/button.tsx'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 
 interface Props {
   onConfirm?: () => void
@@ -13,7 +14,7 @@ interface Props {
 
 const AddNewCollectionForm: FC<Props> = ({ onConfirm }) => {
   const { t } = useTranslation()
-  const addNewPanel = useConfigStore.getState().addNewPanel
+  const addPanel = usePanelStore(state => state.addPanel)
   const initCollection = useDataStore.getState().initCollection
 
   let inputValue = ''
@@ -25,13 +26,11 @@ const AddNewCollectionForm: FC<Props> = ({ onConfirm }) => {
   async function onConfirmClick() {
     if (inputValue === '') return
 
-    addNewPanel(
-      {
-        collection: inputValue,
-        manifestIndex: 0,
-        itemIndex: 0
-      }
-    )
+    addPanel({
+      collection: inputValue,
+      manifestIndex: 0,
+      itemIndex: 0
+    })
 
     if (!(useConfigStore.getState().config.rootCollections.includes(inputValue))) {
       const newRootNode = await createCollectionNode(inputValue)

@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton.tsx'
 import { useTranslation } from 'react-i18next'
 
 const ContentTypesToggle: FC = () => {
-  const { panelState, updatePanelState } = usePanel()
+  const { panelState, updatePanel } = usePanel()
   const { t } = useTranslation()
 
   const { contentTypes, contentIndex } = panelState || {}
@@ -15,7 +15,7 @@ const ContentTypesToggle: FC = () => {
     contentIndex: number
   ) {
     e.preventDefault()
-    updatePanelState({ contentIndex })
+    updatePanel({ contentIndex })
   }
 
   if (!panelState || !contentTypes?.length) return <Skeleton className="t-w-[150px] t-h-6" />
