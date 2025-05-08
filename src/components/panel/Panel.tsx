@@ -59,7 +59,7 @@ const Panel: FC = React.memo(() => {
   }, [])
 
   useEffect(() => {
-    setIsScrollPanel(panelId ? scrollPanelIds.includes(panelId) : false)
+    setIsScrollPanel(scrollPanelIds.includes(panelId))
   }, [scrollPanelIds, panelId])
 
   useEffect(() => {
@@ -95,7 +95,7 @@ const Panel: FC = React.memo(() => {
 
   return (
     <div
-      id={panelId ?? ''}
+      id={panelId}
       ref={cardRef}
       style={{
         flexGrow: flexValues.flexGrow,

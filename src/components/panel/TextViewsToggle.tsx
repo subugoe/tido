@@ -22,7 +22,7 @@ const icons = {
 
 const TextViewsToggle: FC = () => {
   const { panelState } = usePanel()
-  const updatePanelState = usePanelStore((state) => state.updatePanelState)
+  const updatePanel = usePanelStore((state) => state.updatePanel)
 
   function handleTextViewClick(
     e: MouseEvent<HTMLButtonElement>,
@@ -30,7 +30,7 @@ const TextViewsToggle: FC = () => {
   ) {
     e.preventDefault()
     if (!panelState) return
-    updatePanelState(panelState.id, { viewIndex: newIndex })
+    updatePanel(panelState.id, { viewIndex: newIndex })
   }
 
   return (

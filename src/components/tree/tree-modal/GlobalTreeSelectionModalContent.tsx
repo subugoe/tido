@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { useTree } from '@/contexts/TreeContext'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 
 interface SelectedItemIndicesType {
   collectionUrl: string
@@ -15,9 +15,9 @@ interface GlobalTreeSelectionModalContentProps {
 
 const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> = ({ selectedItemIndices, onSelect }) => {
 
-  const panels = useConfigStore(state => state.config.panels)
-  const addNewPanel = useConfigStore(state => state.addNewPanel)
-  const updatePanel = useConfigStore(state => state.updatePanel)
+  const panels = usePanelStore(state => state.panels)
+  const updatePanel = usePanelStore(state => state.updatePanel)
+  const addPanel = usePanelStore(state => state.addPanel)
   const { setSelectedNodeId } = useTree()
 
   const newPanelConfig = {
@@ -27,15 +27,15 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
   }
 
   function select(i?: number) {
-    if (i !== undefined) updatePanel(newPanelConfig, i)
-    else addNewPanel(newPanelConfig)
+    if (i !== undefined) updatePanel(panels[i].id, { config: newPanelConfig })
+    else addPanel(newPanelConfig)
     onSelect()
     setSelectedNodeId('')
   }
 
   let buttonsUpdatePanel
-  if (panels && panels?.length > 0) {
-    buttonsUpdatePanel = panels?.map((_, i) => <button
+  if (panels.length > 0) {
+    buttonsUpdatePanel = panels.map((_, i) => <button
       className="t-bg-slate-200 t-w-20 t-h-8 t-mr-1 t-rounded-md hover:t-bg-slate-300" key={i} data-cy="button-update-panel"
       onClick={() => select(i)}>Panel {i + 1}</button>)
   }

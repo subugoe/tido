@@ -138,7 +138,6 @@ declare global {
 
   interface PanelState {
     id: string
-    index: number
     collectionId: string | null
     manifest: Manifest | null
     item: Item | null
@@ -147,6 +146,7 @@ declare global {
     viewIndex: number
     imageUrl?: string
     activeTargetIndex: number
+    config: PanelConfig
   }
 
   type ItemType = 'section' | 'page' | 'full'

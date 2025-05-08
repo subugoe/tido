@@ -1,107 +1,58 @@
 import { create } from 'zustand'
-
-interface PanelStates {
-  [id: string]: PanelState
-}
+import { PanelConfig } from '@/types'
 
 interface PanelStoreTypes {
-  panels: PanelStates // or panels: each panel has one opened item
+  panels: PanelState[] // or panels: each panel has one opened item
   activeTargetIndex: number
-  initPanelState: (id: string, index: number) => void
-  addPanelContent: (newPanel: PanelState) => void
-  updatePanelState: (id: string, data: Partial<PanelState>) => void
-  updatePanels: (panelId: string, updatedItem: PanelState) => void
-  updateContentToggleIndex: (
-    panelIndex: string,
-    newContentIndex: number
-  ) => void
-  updateViewIndex: (panelId: string, newViewIndex: number) => void
-  getPanelState: (panelId: string | null) => PanelState | null
+  addPanel: (config: PanelConfig) => void
+  updatePanel: (id: string, data: Partial<PanelState>) => void
+  getPanel: (panelId: string | null) => PanelState | null
   setActiveTargetIndex: (panelId: string, index: number) => void
   removePanel: (panelId: string) => void
+  initializePanels: (panelsConfig: PanelConfig[]) => void
 }
 
-function getDefaultPanelState(id: string, index: number): PanelState {
+function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
   return {
     id,
-    index,
+    config,
     collectionId: null,
     item: null,
     manifest: null,
     contentTypes: [],
     contentIndex: 0,
     viewIndex: 0,
-    activeTargetIndex: -1
+    activeTargetIndex: -1,
   }
 }
 
 export const usePanelStore = create<PanelStoreTypes>((set, get) => ({
-  panels: {},
+  panels: [],
   activeTargetIndex: -1,
-  initPanelState: (id: string, index: number) => {
-    get().updatePanelState(id, getDefaultPanelState(id, index))
+  addPanel: (config: PanelConfig) => {
+    set({ panels: [ ...get().panels, getDefaultPanelState(crypto.randomUUID(), config) ] })
   },
-  addPanelContent: (newPanel: PanelState) => {
-    const newPanels = { ...get().panels }
-    newPanels[newPanel.id] = newPanel
-    set({ panels: newPanels })
-  },
-
-  updateContentToggleIndex: (panelId: string, newContentIndex: number) => {
-    const panel = get().getPanelState(panelId)
-    if (!panel) return // TODO: add error handling
-
-    panel.contentIndex = newContentIndex
-    get().updatePanels(panelId, panel)
-  },
-  updatePanelState(id: string, data: Partial<PanelState>) {
+  updatePanel(id: string, data: Partial<PanelState>) {
     set({
-      panels: {
-        ...get().panels,
-        [id]: {
-          ...get().panels[id],
-          ...data
-        }
-      }
+      panels: get().panels.map(panel => {
+        if (panel.id !== id) return panel
+        return { ...panel, ...data }
+      })
     })
   },
-  updateViewIndex: (panelId: string, newViewIndex: number) => {
-    const panel = get().getPanelState(panelId)
-    if (!panel) return // TODO: add error handling
-
-    panel.viewIndex = newViewIndex
-    get().updatePanels(panelId, panel)
-  },
-
-  updatePanels: (panelId: string, updatedPanel: PanelState) => {
-    const newPanels = { ...get().panels }
-    newPanels[panelId] = updatedPanel
-    set({ panels: newPanels })
-  },
-
-  getPanelState: (panelId: string | null) => {
+  getPanel: (panelId: string | null) => {
     if (!panelId) return null
-    if (!(panelId in get().panels)) return null
-    return get().panels[panelId]
+    return get().panels.find(({ id }) => panelId === id)
   },
   setActiveTargetIndex: (panelId: string, index: number) => {
-    const panelState = get().panels[panelId]
-    panelState.activeTargetIndex = index
-    get().updatePanels(panelId, panelState)
+    get().updatePanel(panelId, { activeTargetIndex: index })
   },
   removePanel: (panelId: string) => {
-    const panels = get().panels
-    const updatedPanels = Object
-      .keys(panels)
-      .filter(key => key !== panelId)
-      .reduce((acc, cur) => {
-        acc = {
-          ...acc,
-          [cur]: panels[cur]
-        }
-        return acc
-      }, {} as PanelStates)
-
+    const updatedPanels = get().panels.filter(({ id }) => id !== panelId)
     set({ panels: updatedPanels })
-  }
+  },
+  initializePanels: (configs: PanelConfig[]) =>
+    set({
+      panels: configs.map((config) => getDefaultPanelState(crypto.randomUUID(), config))
+    })
 }))
