@@ -32,29 +32,29 @@ const AddNewPanelSelection: FC<Props> = ({ onSelect }) => {
   }
 
   return (
-    <div className="t-w-[420px] t-flex t-flex-col">
+    <div className="w-[420px] flex flex-col">
       { items
         .map(({ id, title, subtitle, icon }) =>
           <div
-            className="t-group t-flex t-items-start t-p-4 first:t-border-b
-            hover:t-bg-gray-100/80 t-transition-colors t-cursor-pointer
-            focus:t-outline-none focus-visible:t-ring-2 focus-visible:t-ring-primary/60 focus-visible:t-ring-offset-2
-            dark:t-border-gray-800 dark:t-text-gray-50 dark:t-ring-offset-gray-950 dark:focus-visible:t-ring-gray-300"
+            className="group flex items-start p-4 first:border-b
+            hover:bg-gray-100/80 transition-colors cursor-pointer
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2
+            dark:border-gray-800 dark:text-gray-50 dark:ring-offset-gray-950 dark:focus-visible:ring-gray-300"
             tabIndex={0}
             onClick={() => select(id)}
             key={id}
           >
             <div
-              className="t-mr-3 t-flex t-items-center t-justify-center t-aspect-square t-h-4 t-w-4 t-rounded-full
-              t-border-2 t-border-gray-300 group-hover:t-border-primary group-hover:t-text-primary t-ring-offset-white"
+              className="mr-3 flex items-center justify-center aspect-square h-4 w-4 rounded-full
+              border-2 border-gray-300 group-hover:border-primary group-hover:text-primary ring-offset-white"
             >
-              <Circle className="t-h-2.5 t-w-2.5 t-fill-current t-text-current t-opacity-0 group-hover:t-opacity-100 t-transition-all" />
+              <Circle className="h-2.5 w-2.5 fill-current text-current opacity-0 group-hover:opacity-100 transition-all" />
             </div>
             <div>
-              <p className="t-font-semibold t-leading-none group-hover:t-text-primary t-transition-colors">{ title }</p>
-              <p className="t-mt-4 t-text-sm t-text-gray-600">{ subtitle }</p>
+              <p className="font-semibold leading-none group-hover:text-primary transition-colors">{ title }</p>
+              <p className="mt-4 text-sm text-gray-600">{ subtitle }</p>
             </div>
-            <div className="t-text-gray-300 t-self-center t-ml-4 t-shrink-0">
+            <div className="text-gray-300 self-center ml-4 shrink-0">
               { icon }
             </div>
           </div>)

@@ -15,7 +15,7 @@ const PanelsWrapper: FC = () => {
     initializePanels(config.panels)
   }, [config.panels])
 
-  return <div id="panels-wrapper" className="t-flex-1 t-flex t-h-full t-py-4 t-space-x-4 t-overflow-x-auto" data-cy="panels-wrapper">
+  return <div id="panels-wrapper" className="flex-1 flex h-full py-4 space-x-4 overflow-x-auto" data-cy="panels-wrapper">
     {
       panels.map((state) => (
         <PanelProvider panelId={state.id} key={state.id}>

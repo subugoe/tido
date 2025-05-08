@@ -11,9 +11,9 @@ const Metadata: FC = () => {
 
 
   return <div>
-    <p className="t-font-bold t-mb-1"> { t('metadata') } </p>
-    <p className="t-mb-2 t-text-[14px]"> { t('please_click_to_view_metadata') } </p>
-    <div className="t-flex t-flex-col t-space-y-2 t-max-h-[60vh] t-overflow-y-auto t-mb-2">
+    <p className="font-bold mb-1"> { t('metadata') } </p>
+    <p className="mb-2 text-[14px]"> { t('please_click_to_view_metadata') } </p>
+    <div className="flex flex-col space-y-2 max-h-[60vh] overflow-y-auto mb-2">
       <CollectionMetadata />
       <ManifestMetadata />
       <ItemMetadata />

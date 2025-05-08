@@ -43,13 +43,13 @@ const ImageActionButtons: FC = () => {
     actions.length > 0 &&
     actions.map((action, i) => (
       <button
-        className="t-p-2 t-rounded hover:t-rounded-full hover:t-bg-gray-100 t-mr-1 t-w-8 t-h-8"
+        className="p-2 rounded hover:rounded-full hover:bg-gray-100 mr-1 w-8 h-8"
         key={i}
         id={action.id}
         title={action.tooltip}
       >
         <div
-          className="t-flex t-items-center t-justify-center"
+          className="flex items-center justify-center"
           style={{ color: primaryColor }}
         >
           {action.icon}
@@ -58,7 +58,7 @@ const ImageActionButtons: FC = () => {
     ))
 
   return (
-    <div className="t-flex t-items-center t-justify-center image-action-buttons t-mb-1">
+    <div className="flex items-center justify-center image-action-buttons mb-1">
       {actionButtons}
     </div>
   )

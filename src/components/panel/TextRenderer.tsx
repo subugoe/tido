@@ -21,7 +21,7 @@ const TextRenderer: FC<Props> = ({ htmlString }) => {
     scrollContainer.innerHTML = DOMPurify.sanitize(htmlString)
   }, [htmlString])
 
-  return <div data-panel={panelId} ref={ref} className="t-h-full t-relative t-overflow-auto t-px-3" />
+  return <div data-panel={panelId} ref={ref} className="h-full relative overflow-auto px-3" />
 }
 
 export default TextRenderer

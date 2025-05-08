@@ -50,15 +50,15 @@ const ImageRenderer: FC = () => {
     <>
       {error ?
         <PanelContentWrapper>
-          <div className="t-flex-1 t-flex t-flex-col t-items-center t-rounded-md t-bg-gray-100 t-p-3">
-            <Image className="t-text-gray-300 t-mt-[15vh]" size="60" />
-            <span className="t-mt-4 t-font-semibold t-text-gray-600">{ t('no_image_available') }</span>
-            <span className="t-mt-2 t-text-gray-600 t-text-center">{ error }</span>
+          <div className="flex-1 flex flex-col items-center rounded-md bg-gray-100 p-3">
+            <Image className="text-gray-300 mt-[15vh]" size="60" />
+            <span className="mt-4 font-semibold text-gray-600">{ t('no_image_available') }</span>
+            <span className="mt-2 text-gray-600 text-center">{ error }</span>
           </div>
         </PanelContentWrapper>
-        : <div className="t-flex t-flex-col t-h-full t-w-full">
+        : <div className="flex flex-col h-full w-full">
           <ImageActionButtons />
-          <div ref={imageViewerRef} className="t-w-full t-h-full" />
+          <div ref={imageViewerRef} className="w-full h-full" />
         </div>
       }
     </>

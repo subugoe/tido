@@ -45,14 +45,14 @@ const SelectParallelPanels: FC = () => {
   }
 
   return <>
-    <div className="t-flex t-space-x-2 t-mb-2">
+    <div className="flex space-x-2 mb-2">
       { Object.keys(panelStates).map((panelId, i) =>
         <Button key={panelId} variant={selected[panelId] ? 'secondarySelected' : 'secondary'} onClick={() => toggle(panelId)}>Panel {i}</Button>)
       }
     </div>
 
     <Button onClick={confirm}>Confirm</Button>
-    <Button onClick={unsync} className="t-ml-2">Unsync</Button>
+    <Button onClick={unsync} className="ml-2">Unsync</Button>
   </>
 
 }

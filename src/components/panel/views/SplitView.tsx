@@ -9,11 +9,11 @@ interface SplitViewProps {
 
 const SplitView: FC<SplitViewProps> = ({ textHtml }) => {
   return (
-    <div className="t-flex t-h-full t-overflow-hidden">
-      <div className="t-w-1/2">
+    <div className="flex h-full overflow-hidden">
+      <div className="w-1/2">
         <ImageRenderer />
       </div>
-      <div className="t-w-1/2 t-border-l t-pl-3">
+      <div className="w-1/2 border-l pl-3">
         <TextRenderer htmlString={textHtml} />
       </div>
     </div>

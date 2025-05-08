@@ -14,7 +14,6 @@ function withOpacity(variableName) {
 export default {
   darkMode: ['class', '[color-scheme="dark"]'],
   important: '.tido',
-  prefix: 't-',
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}'

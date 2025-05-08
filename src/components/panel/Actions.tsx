@@ -19,13 +19,13 @@ const Actions: FC = () => {
     <>
       <Popover open={isOpen} onOpenChange={(value) => setIsOpen(value)}>
         <PopoverTrigger asChild>
-          <Button className="-t-mr-2" variant="ghost" size="icon">
+          <Button className="-mr-2" variant="ghost" size="icon">
             <Ellipsis />
           </Button>
         </PopoverTrigger>
         <PopoverContent>
           <Button variant="ghostDestructive" onClick={removePanel}>
-            <Trash2 className="t-mr-2" /> { t('remove_panel') }
+            <Trash2 className="mr-2" /> { t('remove_panel') }
           </Button>
         </PopoverContent>
       </Popover>

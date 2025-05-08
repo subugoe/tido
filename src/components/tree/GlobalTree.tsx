@@ -42,14 +42,14 @@ const GlobalTree: FC = () => {
     }
   }, [])
 
-  return <div className={`${showGlobalTree ? 't-w-[380px]' : 't-w-[0px]'} t-flex t-transition-all t-mt-4 t-mb-4`}>
-    <div className={`t-flex-shrink-0 t-overflow-auto t-transition-all t-border-r-2 t-pr-4
-    t-mr-[16px] t-w-[364px] ${showGlobalTree ? 't-duration-300 t-opacity-100 ' : 't-duration-100 t-opacity-0'}`}>
+  return <div className={`${showGlobalTree ? 'w-[380px]' : 'w-[0px]'} flex transition-all mt-4 mb-4`}>
+    <div className={`flex-shrink-0 overflow-auto transition-all border-r-2 pr-4
+    mr-[16px] w-[364px] ${showGlobalTree ? 'duration-300 opacity-100 ' : 'duration-100 opacity-0'}`}>
       <TreeProvider onSelect={onSelectNode} getChildren={getChildren}>
         <Tree nodes={treeNodes} />
         {showSelectionModal && <div
           ref={modalRef}
-          className="t-fixed t-z-50 t-p-2 t-bg-white t-border t-border-gray-200 t-shadow-md t-rounded"
+          className="fixed z-50 p-2 bg-white border border-gray-200 shadow-md rounded"
           style={{
             top: `${selectedPosition?.y + 40}px`,
             left: `${selectedPosition?.x}px`,

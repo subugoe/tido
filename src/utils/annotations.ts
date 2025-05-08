@@ -34,7 +34,7 @@ function scrollToTarget(scrollContainer: HTMLElement, targetSelector: string) {
 
 function setHighlightingOnTarget(el: HTMLElement) {
   el.setAttribute('data-scroll-target', 'true')
-  el.classList.add('t-bg-gray-200', 't-cursor-pointer')
+  el.classList.add('bg-gray-200', 'cursor-pointer')
 }
 
 function setAnnotationIdOnTarget(el: HTMLElement, annotation: Annotation) {
@@ -42,8 +42,8 @@ function setAnnotationIdOnTarget(el: HTMLElement, annotation: Annotation) {
 }
 
 function setSelectedHighlightingOnTarget(el: HTMLElement) {
-  el.classList.remove('t-bg-gray-200')
-  el.classList.add('t-bg-blue-200')
+  el.classList.remove('bg-gray-200')
+  el.classList.add('bg-blue-200')
 }
 
 function resetHighlighting(container: HTMLElement, targetSelectors: string[]) {

@@ -18,7 +18,7 @@ const PanelTopBar: FC<Props> = ({ className }) => {
     setActiveTargetIndex(panelId, activeTargetIndex - 1)
   }
   return (
-    <div className={`t-flex t-bg-amber-200 t-rounded-b-md ${className}`}>
+    <div className={`flex bg-amber-200 rounded-b-md ${className}`}>
       <Button size="icon" variant="ghostAmber" onClick={onDown}>
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
           <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"

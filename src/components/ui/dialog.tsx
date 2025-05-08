@@ -19,7 +19,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      't-fixed t-inset-0 t-z-50 t-bg-black/40 data-[state=open]:t-animate-in data-[state=closed]:t-animate-out data-[state=closed]:t-fade-out-0 data-[state=open]:t-fade-in-0',
+      'fixed inset-0 z-50 bg-black/40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className
     )}
     {...props}
@@ -36,20 +36,20 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        't-fixed t-max-w-lg t-left-[50%] t-top-[50%] t-z-50 t-grid t-w-full t-translate-x-[-50%] t-translate-y-[-50%] t-gap-4 t-border t-border-gray-200 t-bg-white t-p-6 ' +
-        't-shadow-lg t-duration-200 data-[state=open]:t-animate-in data-[state=closed]:t-animate-out data-[state=closed]:t-fade-out-0 data-[state=open]:t-fade-in-0 ' +
-        'data-[state=closed]:t-zoom-out-95 data-[state=open]:t-zoom-in-95 data-[state=closed]:t-slide-out-to-left-1/2 data-[state=closed]:t-slide-out-to-top-[48%] ' +
-        'data-[state=open]:t-slide-in-from-left-1/2 data-[state=open]:t-slide-in-from-top-[48%] sm:t-rounded-lg dark:t-border-gray-800 dark:t-bg-gray-950',
+        'fixed max-w-lg left-[50%] top-[50%] z-50 grid w-full translate-x-[-50%] translate-y-[-50%] gap-4 border border-gray-200 bg-white p-6 ' +
+        'shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 ' +
+        'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] ' +
+        'data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg dark:border-gray-800 dark:bg-gray-950',
         className
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="t-absolute t-right-4 t-top-4 t-rounded-sm t-opacity-70 t-ring-offset-white t-transition-opacity hover:t-opacity-100 focus:t-outline-none
-      focus:t-ring-2 focus:t-ring-gray-950 focus:t-ring-offset-2 disabled:t-pointer-events-none data-[state=open]:t-bg-gray-100 data-[state=open]:t-text-gray-500
-      dark:t-ring-offset-gray-950 dark:focus:t-ring-gray-300 dark:data-[state=open]:t-bg-gray-800 dark:data-[state=open]:t-text-gray-400">
-        <X className="t-h-4 t-w-4" />
-        <span className="t-sr-only">Close</span>
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none
+      focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-gray-100 data-[state=open]:text-gray-500
+      dark:ring-offset-gray-950 dark:focus:ring-gray-300 dark:data-[state=open]:bg-gray-800 dark:data-[state=open]:text-gray-400">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
@@ -62,7 +62,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      't-flex t-flex-col t-mb-4 t-space-y-1.5 t-text-center sm:t-text-left',
+      'flex flex-col mb-4 space-y-1.5 text-center sm:text-left',
       className
     )}
     {...props}
@@ -76,7 +76,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      't-flex t-flex-col-reverse sm:t-flex-row sm:t-justify-end sm:t-space-x-2',
+      'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
       className
     )}
     {...props}
@@ -91,7 +91,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      't-text-lg t-font-semibold t-leading-none t-tracking-tight',
+      'text-lg font-semibold leading-none tracking-tight',
       className
     )}
     {...props}
@@ -105,7 +105,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn('t-text-sm t-text-gray-500 dark:t-text-gray-400', className)}
+    className={cn('text-sm text-gray-500 dark:text-gray-400', className)}
     {...props}
   />
 ))

@@ -5,7 +5,7 @@ const Title: FC = () => {
   const title = useConfigStore(state => state.config.title)
 
   return (
-    <h1 className="t-text-lg t-font-bold">{ title }</h1>
+    <h1 className="text-lg font-bold">{ title }</h1>
   )
 }
 

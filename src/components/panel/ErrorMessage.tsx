@@ -10,10 +10,10 @@ interface ErrorProps {
 const ErrorMessage: FC<ErrorProps> = ({ title, message }) => {
   return (
     <PanelContentWrapper>
-      <div className="t-flex-1 t-flex t-flex-col t-items-center t-rounded-md t-bg-gray-100 t-p-3">
-        <Ban className="t-text-gray-300 t-mt-[15vh]" size="60" />
-        <span className="t-mt-4 t-font-semibold t-text-gray-600">{ title }</span>
-        <span className="t-mt-2 t-text-gray-600 t-text-center">{ message }</span>
+      <div className="flex-1 flex flex-col items-center rounded-md bg-gray-100 p-3">
+        <Ban className="text-gray-300 mt-[15vh]" size="60" />
+        <span className="mt-4 font-semibold text-gray-600">{ title }</span>
+        <span className="mt-2 text-gray-600 text-center">{ message }</span>
       </div>
     </PanelContentWrapper>
   )

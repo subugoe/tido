@@ -21,11 +21,11 @@ const PanelHeader: FC = () => {
   }
 
   return (
-    <div className="panel-header t-flex t-flex-col t-px-3 t-pt-3 t-pb-5">
-      <div className="t-flex t-items-center t-mb-6">
+    <div className="panel-header flex flex-col px-3 pt-3 pb-5">
+      <div className="flex items-center mb-6">
         <CollectionTitle />
 
-        <div className="t-ml-1 t-text-wrap t-break-words">
+        <div className="ml-1 text-wrap break-words">
           <Popover open={showMetadataModal} onOpenChange={handleOpenChange} modal={true}>
             <PopoverTrigger asChild>
               <Button
@@ -37,21 +37,21 @@ const PanelHeader: FC = () => {
                 {<Info />}
               </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" align="start"  sideOffset={8} className="t-w-[400px] t-pr-0" >
+            <PopoverContent side="bottom" align="start"  sideOffset={8} className="w-[400px] pr-0" >
               <Metadata />
-              <X className="t-absolute t-right-3 t-top-4 t-text-zinc-600 hover:t-text-zinc-700 hover:t-cursor-pointer"  size={15} onClick={() => setShowMetadataModal(false)} />
+              <X className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"  size={15} onClick={() => setShowMetadataModal(false)} />
             </PopoverContent>
           </Popover>
         </div>
-        <div className="t-ml-auto t-mr-2"><TextViewsToggle /></div>
+        <div className="ml-auto mr-2"><TextViewsToggle /></div>
         <Actions />
       </div>
-      <div className="t-flex t-justify-center t-mb-4">
+      <div className="flex justify-center mb-4">
         <NavigationButton isPrev={true} />
         {<PanelTitle />}
         <NavigationButton />
       </div>
-      <div className="t-flex t-justify-center">
+      <div className="flex justify-center">
         {<ContentTypesToggle />}
       </div>
     </div>

@@ -45,9 +45,9 @@ const AddNewCollectionForm: FC<Props> = ({ onConfirm }) => {
 
   return (
     <>
-      <div className="t-flex t-items-end">
-        <div className="t-mr-2 t-flex-1 t-flex t-flex-col">
-          <Label htmlFor="add-new-panel-input" className="t-mb-2">{t('enter_collection_url')}</Label>
+      <div className="flex items-end">
+        <div className="mr-2 flex-1 flex flex-col">
+          <Label htmlFor="add-new-panel-input" className="mb-2">{t('enter_collection_url')}</Label>
           <Input id="add-new-panel-input" onChange={onChange} />
         </div>
         <Button onClick={onConfirmClick}>{ t('confirm') }</Button>
