@@ -1,6 +1,5 @@
 import { createRoot } from 'react-dom/client'
 
-import '@/css/preflight.css'
 import '@/css/style.css'
 
 import { Tido as TidoApp } from './components/Tido.tsx'

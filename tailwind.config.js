@@ -1,3 +1,5 @@
+import colors from 'tailwindcss/colors';
+
 function withOpacity(variableName) {
   return ({ opacityValue }) => {
     if (opacityValue !== undefined) {
@@ -11,13 +13,17 @@ function withOpacity(variableName) {
 
 export default {
   darkMode: ['class', '[color-scheme="dark"]'],
-  important: '.tido',
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
     extend: {
+      colors: {
+        primary: withOpacity('--color-primary'),
+        'primary-accent': withOpacity('--color-primary-accent'),
+        gray: colors.neutral,
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

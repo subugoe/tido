@@ -1,4 +1,3 @@
-import '@/css/preflight.css'
 import '@/css/style.css'
 
 export { Tido } from './components/Tido.tsx'
