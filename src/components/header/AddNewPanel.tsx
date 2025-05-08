@@ -54,7 +54,7 @@ const AddNewPanel: FC = () => {
         <PopoverTrigger asChild>
           { renderTriggerButton() }
         </PopoverTrigger>
-        <PopoverContent align="end" className="!p-0">
+        <PopoverContent align="end" className="p-0!">
           <AddNewPanelSelection onSelect={onSelect} />
         </PopoverContent>
       </Popover>}

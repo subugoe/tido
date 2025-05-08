@@ -1,7 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@config "../../tailwind.config.js";
 
+@theme {
+  --color-primary: #123456;
+}
 
 .tido {
     display: flex;

@@ -16,9 +16,6 @@ export default {
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}'
   ],
-  safelist: [
-    { pattern: /(text|bg)-(red|blue|primary)+/ },
-  ],
   theme: {
     extend: {
       keyframes: {
@@ -40,7 +37,4 @@ export default {
   plugins: [
     require("tailwindcss-animate")
   ],
-  corePlugins: {
-    preflight: false,
-  }
 };
