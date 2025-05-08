@@ -1,5 +1,3 @@
-import colors from 'tailwindcss/colors';
-
 function withOpacity(variableName) {
   return ({ opacityValue }) => {
     if (opacityValue !== undefined) {
@@ -23,11 +21,6 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        primary: withOpacity('--color-primary'),
-        'primary-accent': withOpacity('--color-primary-accent'),
-        gray: colors.neutral,
-      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
