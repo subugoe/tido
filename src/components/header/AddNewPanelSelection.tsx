@@ -36,7 +36,7 @@ const AddNewPanelSelection: FC<Props> = ({ onSelect }) => {
       { items
         .map(({ id, title, subtitle, icon }) =>
           <div
-            className="group flex items-start p-4 first:border-b
+            className="group flex items-start p-4 first:border-b border-gray-200
             hover:bg-gray-100/80 transition-colors cursor-pointer
             focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2
             dark:border-gray-800 dark:text-gray-50 dark:ring-offset-gray-950 dark:focus-visible:ring-gray-300"

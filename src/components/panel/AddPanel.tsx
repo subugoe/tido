@@ -13,7 +13,7 @@ const Panel: FC = () => {
     <>
       <div
         className={
-          `group relative flex flex-shrink-0 flex-col items-center justify-center w-[600px] border-solid hover:border-primary border-2 rounded-lg
+          `group relative flex shrink-0 flex-col items-center justify-center w-[600px] hover:border-primary border-2 border-gray-200 rounded-lg
         p-3 px-4 cursor-pointer transition-all`}
         onClick={() => setIsDialogOpen(true)}
       >

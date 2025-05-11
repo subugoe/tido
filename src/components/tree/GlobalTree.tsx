@@ -43,7 +43,7 @@ const GlobalTree: FC = () => {
   }, [])
 
   return <div className={`${showGlobalTree ? 'w-[380px]' : 'w-[0px]'} flex transition-all mt-4 mb-4`}>
-    <div className={`flex-shrink-0 overflow-auto transition-all border-r-2 pr-4
+    <div className={`shrink-0 overflow-auto transition-all border-r-2 border-gray-200 pr-4
     mr-[16px] w-[364px] ${showGlobalTree ? 'duration-300 opacity-100 ' : 'duration-100 opacity-0'}`}>
       <TreeProvider onSelect={onSelectNode} getChildren={getChildren}>
         <Tree nodes={treeNodes} />

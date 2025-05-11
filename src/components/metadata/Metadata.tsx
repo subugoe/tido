@@ -13,7 +13,7 @@ const Metadata: FC = () => {
   return <div>
     <p className="font-bold mb-1"> { t('metadata') } </p>
     <p className="mb-2 text-[14px]"> { t('please_click_to_view_metadata') } </p>
-    <div className="flex flex-col space-y-2 max-h-[60vh] overflow-y-auto mb-2">
+    <div className="flex flex-col space-y-2 max-h-[60vh] pr-3 overflow-y-auto">
       <CollectionMetadata />
       <ManifestMetadata />
       <ItemMetadata />

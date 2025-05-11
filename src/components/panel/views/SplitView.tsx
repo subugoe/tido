@@ -13,7 +13,7 @@ const SplitView: FC<SplitViewProps> = ({ textHtml }) => {
       <div className="w-1/2">
         <ImageRenderer />
       </div>
-      <div className="w-1/2 border-l pl-3">
+      <div className="w-1/2 border-l border-gray-200 pl-3">
         <TextRenderer htmlString={textHtml} />
       </div>
     </div>

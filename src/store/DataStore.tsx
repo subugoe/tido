@@ -40,9 +40,10 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
     }
     set({ collections })
 
-    if (collection.annotationCollection) {
-      await get().initAnnotations(collection.id, collection.annotationCollection)
-    }
+    // TODO: fix annotation loading
+    // if (collection.annotationCollection) {
+    //   await get().initAnnotations(collection.id, collection.annotationCollection)
+    // }
 
     return collection
   },

@@ -113,8 +113,8 @@ const Panel: FC = React.memo(() => {
         }
       }}
       className={
-        `panel relative flex flex-col border-solid border-2 rounded-lg
-        ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-slate-200'}
+        `panel relative flex flex-col border-gray-200 border-2 rounded-lg
+        ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-gray-200'}
       `}
       data-cy="panel"
     >

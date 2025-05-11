@@ -26,7 +26,10 @@ const ContentTypesToggle: FC = () => {
         <button
           aria-selected={contentIndex === i}
           data-state={contentIndex === i ? 'active' : 'inactive'}
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow text-gray-600 dark:text-gray-200"
+          className="inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background
+          transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+          disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-gray-900
+          data-[state=active]:shadow text-gray-600 dark:text-gray-200"
           role="tab"
           key={i}
           onClick={(e) => handleTextTabClick(e, i)}

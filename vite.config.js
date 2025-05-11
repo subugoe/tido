@@ -1,11 +1,13 @@
 import { defineConfig, loadEnv } from 'vite';
 import { resolve } from 'path';
-import fs from 'fs';
 import react from '@vitejs/plugin-react'
+import tailwindcss from "@tailwindcss/vite";
 import * as path from "node:path";
 import pkg from './package.json'
 import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
+
+
 const externalDeps = [
   ...Object.keys(pkg.peerDependencies || {})
 ]
@@ -18,6 +20,7 @@ export default defineConfig(({ mode}) => {
   return {
     plugins: [
       react(),
+      tailwindcss(),
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
       injectConfig(projectName),
     ],
