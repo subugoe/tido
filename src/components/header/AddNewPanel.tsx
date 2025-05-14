@@ -33,6 +33,7 @@ const AddNewPanel: FC = () => {
 
   function renderTriggerButton() {
     return <Button
+
       {...(allowNewCollections ? {} : { onClick: () => {
         setStep(2)
         setShowDialog(true)
