@@ -13,14 +13,14 @@ const Panel: FC = () => {
     <>
       <div
         className={
-          `t-group t-relative t-flex t-flex-shrink-0 t-flex-col t-items-center t-justify-center t-w-[600px] t-border-solid hover:t-border-primary t-border-2 t-rounded-lg
-        t-p-3 t-px-4 t-cursor-pointer t-transition-all`}
+          `group relative flex shrink-0 flex-col items-center justify-center w-[600px] hover:border-primary border-2 border-gray-200 rounded-lg
+        p-3 px-4 cursor-pointer transition-all`}
         onClick={() => setIsDialogOpen(true)}
       >
-        <div className="t-p-6 t-bg-gray-100 t-rounded-full t-leading-none">
-          <Plus className="t-text-gray-400 group-hover:t-text-primary" size="40" />
+        <div className="p-6 bg-gray-100 rounded-full leading-none">
+          <Plus className="text-gray-400 group-hover:text-primary" size="40" />
         </div>
-        <span className="t-mt-4 t-text-gray-400 t-font-semibold group-hover:t-text-primary">{t('add_new_panel')}</span>
+        <span className="mt-4 text-gray-400 font-semibold group-hover:text-primary">{t('add_new_panel')}</span>
       </div>
       <Dialog
         open={isDialogOpen}

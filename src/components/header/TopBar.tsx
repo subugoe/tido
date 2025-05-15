@@ -21,8 +21,8 @@ const TopBar: FC = () => {
     setShowGlobalTree(!isGlobalTreeCollapsed)
   }
 
-  return <div className="t-flex t-flex-row t-items-center">
-    <Button data-cy="global-tree-toggle" variant="ghost" size="iconLg" className={`${!showGlobalTreeConfig ? 't-hidden' : ''} t-mt-0.5 t-mr-2 -t-ml-2`} onClick={toggleGlobalTree}>
+  return <div className="flex flex-row items-center">
+    <Button data-cy="global-tree-toggle" variant="ghost" size="iconLg" className={`${!showGlobalTreeConfig ? 'hidden' : ''} mt-0.5 mr-2 -ml-2`} onClick={toggleGlobalTree}>
       { !isGlobalTreeCollapsed ? <Menu /> : <X /> }
     </Button>
     { title !== '' && <Title /> }

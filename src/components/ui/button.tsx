@@ -5,30 +5,32 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  't-inline-flex t-items-center t-justify-center t-whitespace-nowrap t-rounded-md t-text-sm t-font-medium t-ring-offset-white t-transition-colors focus-visible:t-outline-none focus-visible:t-ring-2 focus-visible:t-ring-primary/60 focus-visible:t-ring-offset-2 disabled:t-pointer-events-none disabled:t-opacity-50 [&_svg]:t-pointer-events-none [&_svg]:t-shrink-0 dark:t-ring-offset-gray-950 dark:focus-visible:t-ring-gray-300',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white cursor-pointer ' +
+  'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 ' +
+  'disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 dark:ring-offset-gray-950 dark:focus-visible:ring-gray-300',
   {
     variants: {
       variant: {
-        default: 't-bg-primary t-text-gray-50 hover:t-bg-primary/90 dark:t-bg-gray-50 dark:t-text-gray-900 dark:hover:t-bg-gray-50/90',
+        default: 'bg-primary text-gray-50 hover:bg-primary/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90',
         destructive:
-          't-bg-red-500 t-text-gray-50 hover:t-bg-red-500/90 dark:t-bg-red-900 dark:t-text-gray-50 dark:t-hover:bg-red-900/90',
+          'bg-red-500 text-gray-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-gray-50 dark:hover:bg-red-900/90',
         outline:
-          't-border t-border-gray-200 t-bg-white hover:t-bg-gray-100 hover:t-text-gray-900 dark:t-border-gray-800 dark:t-bg-gray-950 dark:hover:t-bg-gray-800 dark:hover:t-text-gray-50',
+          'border border-gray-200 bg-white hover:bg-gray-100 hover:text-gray-900 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50',
         secondary:
-          't-bg-gray-100 t-text-gray-900 hover:t-bg-gray-100/80 dark:t-bg-gray-800 dark:t-text-gray-50 dark:hover:t-bg-gray-800/80',
+          'bg-gray-100 text-gray-900 hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80',
         secondarySelected:
-          't-bg-gray-300 t-text-gray-900 hover:t-bg-gray-300/80 dark:t-bg-gray-700 dark:t-text-gray-50 dark:hover:t-bg-gray-700/80',
-        ghost: 'hover:t-bg-gray-100 hover:t-text-gray-900 dark:hover:t-bg-gray-800 dark:hover:t-text-gray-50',
-        ghostAmber: 't-text-amber-700 hover:t-bg-amber-300 hover:t-text-amber-800 dark:hover:t-bg-amber-800 dark:hover:t-text-gray-50',
-        ghostDestructive: 't-text-red-500 hover:t-bg-red-100 hover:t-text-red-600',
-        link: 't-text-primary t-underline-offset-4 hover:t-underline dark:t-text-gray-50',
+          'bg-gray-300 text-gray-900 hover:bg-gray-300/80 dark:bg-gray-700 dark:text-gray-50 dark:hover:bg-gray-700/80',
+        ghost: 'hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50',
+        ghostAmber: 'text-amber-700 hover:bg-amber-300 hover:text-amber-800 dark:hover:bg-amber-800 dark:hover:text-gray-50',
+        ghostDestructive: 'text-red-500 hover:bg-red-100 hover:text-red-600',
+        link: 'text-primary underline-offset-4 hover:underline dark:text-gray-50',
       },
       size: {
-        default: 't-h-10 t-px-4 t-py-2 [&_svg]:t-size-4',
-        sm: 't-h-9 t-rounded-md t-px-3',
-        lg: 't-h-11 t-rounded-md t-px-8 [&_svg]:t-size-4',
-        icon: 't-h-8 t-w-8 t-shrink-0 [&_svg]:t-size-4',
-        iconLg: 't-h-10 t-px-2 t-py-2 [&_svg]:t-size-5'
+        default: 'h-10 px-4 py-2 [&_svg]:size-4',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8 [&_svg]:size-4',
+        icon: 'h-8 w-8 shrink-0 [&_svg]:size-4',
+        iconLg: 'h-10 px-2 py-2 [&_svg]:size-5'
       },
     },
     defaultVariants: {

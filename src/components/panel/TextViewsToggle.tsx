@@ -37,7 +37,7 @@ const TextViewsToggle: FC = () => {
     <>
       { !panelState && <Skeleton /> }
       { panelState &&
-        <div className="text-views-toggle t-flex t-row t-ml-auto t-rounded-md t-h-8 t-space-x-1 -t-mr-1">
+        <div className="text-views-toggle flex row ml-auto rounded-md h-8 space-x-1 -mr-1">
           {Object.keys(icons).map((key, i) => (
             <Button
               key={i}

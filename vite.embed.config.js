@@ -1,10 +1,10 @@
 import { defineConfig, loadEnv } from 'vite';
 import { resolve } from 'path';
-import fs from 'fs';
 import react from '@vitejs/plugin-react'
 import * as path from "node:path";
 import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
+import tailwindcss from "@tailwindcss/vite";
 
 
 export default defineConfig(({ mode}) => {
@@ -14,6 +14,7 @@ export default defineConfig(({ mode}) => {
   return {
     plugins: [
       react(),
+      tailwindcss(),
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
       injectConfig(projectName)
     ],

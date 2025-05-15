@@ -114,7 +114,7 @@ const NavigationButton: FC<Props> = ({ isPrev = false }) => {
     variant="ghost"
     size="icon"
     disabled={isPrev ? !hasPrev() : !hasNext()}
-    className={`${isPrev ? 't-rotate-180 t-mr-1' : 't-ml-1'} t-rounded-full t-mt-1`}
+    className={`${isPrev ? 'rotate-180 mr-1' : 'ml-1'} rounded-full mt-1`}
     onClick={navigate}>
     <ChevronRight />
   </Button>

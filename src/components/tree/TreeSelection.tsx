@@ -48,8 +48,8 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
   }
 
 
-  return <div className="t-flex t-flex-col">
-    <div className="t-max-h-80 t-overflow-y-auto">
+  return <div className="flex flex-col">
+    <div className="max-h-80 overflow-y-auto">
       <TreeProvider onSelect={onSelect} getChildren={getChildren}>
         <Tree nodes={treeNodes} />
       </TreeProvider>
@@ -57,7 +57,7 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
     <Button
       variant="default"
       onClick={handleConfirm}
-      className="t-mt-6"
+      className="mt-6"
     >
       { t('confirm') }
     </Button>

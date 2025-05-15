@@ -57,9 +57,9 @@ export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
 
 
   return (
-    <div className="tido t-flex t-flex-col t-h-full" data-cy="app">
+    <div className="tido flex flex-col h-full" data-cy="app">
       <TopBar />
-      <div className="t-flex-1 t-flex t-overflow-hidden">
+      <div className="flex-1 flex overflow-hidden">
         <GlobalTree />
         <PanelsWrapper />
       </div>

@@ -113,19 +113,19 @@ const Panel: FC = React.memo(() => {
         }
       }}
       className={
-        `panel t-relative t-flex t-flex-col t-border-solid t-border-2 t-rounded-lg
-        ${isScrollPanel ? 't-border-amber-300 t-ring-4 t-ring-amber-50' : 't-border-slate-200'}
+        `panel relative flex flex-col border-gray-200 border-2 rounded-lg
+        ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-gray-200'}
       `}
       data-cy="panel"
     >
-      {isScrollPanel && <ScrollPanelMenu className="t-absolute t-top-0 t-left-1/2 -t-translate-x-1/2" />}
+      {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
       <PanelHeader />
       <PanelBody />
       <div
-        className="t-z-10 t-absolute t-flex t-h-6 t-w-3 t-items-center t-justify-center t-rounded-sm t-border t-border-gray-200 t-bg-gray-200 dark:t-border-gray-800
-        dark:t-bg-gray-800 -t-translate-y-1/2 t-top-1/2 -t-right-2"
+        className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-gray-200 bg-gray-200 dark:border-gray-800
+        dark:bg-gray-800 -translate-y-1/2 top-1/2 -right-2"
       >
-        <GripVertical className="t-h-4 t-w-2.5 t-text-gray-600" />
+        <GripVertical className="h-4 w-2.5 text-gray-600" />
       </div>
     </div>
   )

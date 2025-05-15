@@ -14,7 +14,7 @@ const AccordionItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
-    className={cn('border-b', className)}
+    className={cn(className)}
     {...props}
   />
 ))
@@ -24,17 +24,18 @@ const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => (
-  <AccordionPrimitive.Header className="t-flex">
+  <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        't-flex t-flex-1 t-items-center t-justify-between t-py-1.5 t-pl-4 t-pr-2 t-mr-1 t-rounded-md  t-bg-gray-100 hover:t-bg-gray-200 t-text-gray-700 t-font-medium t-transition-all [&[data-state=open]>svg]:t-rotate-180 data-[state=open]:t-mb-4',
+        'flex flex-1 items-center justify-between cursor-pointer py-2 px-4 mr-1 rounded-md bg-gray-100 hover:bg-gray-200 ' +
+        'text-gray-700 font-medium transition-all [&[data-state=open]>svg]:rotate-180 data-[state=open]:mb-4',
         className
       )}
       {...props}
     >
       {children}
-      <ChevronDown className="t-h-4 t-w-4 t-shrink-0 t-transition-transform t-duration-200" />
+      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ))
@@ -46,10 +47,10 @@ const AccordionContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Content
     ref={ref}
-    className="t-overflow-hidden t-ml-4 t-text-sm t-transition-all data-[state=closed]:t-animate-accordion-up data-[state=open]:t-animate-accordion-down"
+    className="overflow-hidden ml-4 text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
     {...props}
   >
-    <div className={cn('t-pb-4 t-pt-0', className)}>{children}</div>
+    <div className={cn('pb-4 pt-0', className)}>{children}</div>
   </AccordionPrimitive.Content>
 ))
 

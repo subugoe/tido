@@ -38,9 +38,9 @@ const AddNewPanel: FC = () => {
         setShowDialog(true)
       } })}
       data-cy="new-panel"
-      className={title !== '' ? 't-ml-auto' : ''}
+      className={title !== '' ? 'ml-auto' : ''}
     >
-      <Plus className="-t-ml-1 t-mr-2" />{t('add_new_panel')}
+      <Plus className="-ml-1 mr-2" />{t('add_new_panel')}
     </Button>
   }
 
@@ -54,7 +54,7 @@ const AddNewPanel: FC = () => {
         <PopoverTrigger asChild>
           { renderTriggerButton() }
         </PopoverTrigger>
-        <PopoverContent align="end" className="!t-p-0">
+        <PopoverContent align="end" className="p-0!">
           <AddNewPanelSelection onSelect={onSelect} />
         </PopoverContent>
       </Popover>}

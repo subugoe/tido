@@ -18,15 +18,18 @@ const ContentTypesToggle: FC = () => {
     updatePanel({ contentIndex })
   }
 
-  if (!panelState || !contentTypes?.length) return <Skeleton className="t-w-[150px] t-h-6" />
+  if (!panelState || !contentTypes?.length) return <Skeleton className="w-[150px] h-6" />
 
   return (
-    <div className="t-inline-flex t-h-9 t-items-center t-justify-center t-rounded-lg t-bg-gray-200 t-p-1 t-text-gray-200-foreground">
+    <div className="inline-flex h-9 items-center justify-center rounded-lg bg-gray-200 p-1 text-gray-200-foreground">
       { contentTypes && contentTypes.length > 0 && contentTypes.map((type, i) => (
         <button
           aria-selected={contentIndex === i}
           data-state={contentIndex === i ? 'active' : 'inactive'}
-          className="t-inline-flex t-items-center t-justify-center t-whitespace-nowrap t-rounded-md t-px-3 t-py-1 t-text-sm t-font-medium t-ring-offset-background t-transition-all focus-visible:t-outline-none focus-visible:t-ring-2 focus-visible:t-ring-ring focus-visible:t-ring-offset-2 disabled:t-pointer-events-none disabled:t-opacity-50 data-[state=active]:t-bg-white data-[state=active]:t-text-gray-900 data-[state=active]:t-shadow t-text-gray-600 dark:t-text-gray-200"
+          className="inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background
+          transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+          disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-gray-900
+          data-[state=active]:shadow text-gray-600 dark:text-gray-200"
           role="tab"
           key={i}
           onClick={(e) => handleTextTabClick(e, i)}

@@ -21,7 +21,7 @@ const IconRenderer: FC<IconRendererProps> = ({ htmlString, width, height }) => {
       const iconEls = ref.current.children
 
       const iconEl = iconEls[0]
-      iconEl.classList.add('t-w-' + iconWidth, 't-h-' + iconHeight)
+      iconEl.classList.add('w-' + iconWidth, 'h-' + iconHeight)
     }
   }, [htmlString, iconWidth, iconHeight])
 

@@ -35,17 +35,17 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
     setIsExpanded(!isExpanded)
   }
 
-  return <div className="t-mb-1">
+  return <div className="mb-1">
     <div
       data-cy="tree-node"
-      className={`t-flex t-items-center t-px-2 t-py-1 t-rounded-md hover:t-cursor-pointer ${ selectedNodeId === node.id ? 't-shadow-sm t-border-[2px] t-border-gray-100 t-bg-gray-200' : 'hover:t-bg-gray-100' }`}
+      className={`flex items-center px-2 py-1 rounded-md hover:cursor-pointer ${ selectedNodeId === node.id ? 'shadow-sm border-[2px] border-gray-100 bg-gray-200' : 'hover:bg-gray-100' }`}
       onClick={(e) => handleNodeClick(e)}
     >
-      {!node.leaf && <span className={`t-mt-[2px] t-mr-1 t-transition-all ${isExpanded && 't-rotate-90'}`}><ChevronRight /></span>}
-      <span className={`${node.leaf ? 't-ml-4': ''}`}>{node.label}</span>
+      {!node.leaf && <span className={`mt-[2px] mr-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight /></span>}
+      <span className={`${node.leaf ? 'ml-4': ''}`}>{node.label}</span>
     </div>
     {hasChildren && isExpanded && node.children?.map((item: TreeNode, i) => (
-      <ul data-cy="tree-node-child" className="t-ml-3" key={i}>
+      <ul data-cy="tree-node-child" className="ml-3" key={i}>
         <TreeNode node={item} />
       </ul>
     ))}

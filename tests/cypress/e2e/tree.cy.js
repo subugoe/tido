@@ -39,6 +39,7 @@ describe('Tree', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
     cy.get('[data-cy="tree-node"]')
       .click()
+    // TODO: testing for UI effect is not a good practice
     cy.get('[data-cy="tree-node-child"]')      // get manifests
       .first()                                          // click the first manifest
       .click()
@@ -46,7 +47,7 @@ describe('Tree', () => {
       .eq(1)                                      // position and click in second item
       .click()
       .find('[data-cy="tree-node"]')
-      .should('have.class', 't-bg-gray-200')   // UI effect of active item
+      .should('have.class', 'bg-gray-200')   // UI effect of active item
 
     cy.get('[data-cy="global-tree-modal"]')
       .get('[data-cy="buttons-update-panel"]')

@@ -11,7 +11,7 @@ const MetadataValue: FC<MetadataValueProps> = ( { value } ) => {
   const { t } = useTranslation()
 
 
-  return <div className="t-ml-1 t-mb-4">
+  return <div className="ml-1 mb-4">
     <TextRenderer htmlString={t(value ?? '')} />
   </div>
 }

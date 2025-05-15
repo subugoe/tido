@@ -12,7 +12,7 @@ const PreviewTextRenderer: FC<Props> = ({ htmlString }) => {
     (ref.current as HTMLElement).innerHTML = htmlString
   }, [htmlString])
 
-  return <div ref={ref} className="t-h-full t-overflow-hidden t-text-[5px]" />
+  return <div ref={ref} className="h-full overflow-hidden text-[5px]" />
 }
 
 export default PreviewTextRenderer

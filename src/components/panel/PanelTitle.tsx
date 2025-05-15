@@ -15,12 +15,12 @@ const PanelHeader: FC = () => {
 
   return (
     <>
-      <div className="t-flex t-items-center">
-        { (!panelState || !panelState.item) && <Skeleton className="t-w-[100px] t-h-6" />  }
-        { panelState && panelState.item && <span className="t-font-semibold">{ getManifestLabel() }</span>}
-        <span className="t-w-[1px] t-h-[80%] t-bg-gray-400 t-mx-2 t-grow-0 t-shrink-0"></span>
-        { (!panelState || !panelState.item) && <Skeleton className="t-w-[40px] t-h-6" />  }
-        { panelState && panelState.item && <span className="t-text-gray-600" data-cy="item-label">{ getItemLabel() }</span>}
+      <div className="flex items-center">
+        { (!panelState || !panelState.item) && <Skeleton className="w-[100px] h-6" />  }
+        { panelState && panelState.item && <span className="font-semibold">{ getManifestLabel() }</span>}
+        <span className="w-[1px] h-[80%] bg-gray-400 mx-2 grow-0 shrink-0"></span>
+        { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
+        { panelState && panelState.item && <span className="text-gray-600" data-cy="item-label">{ getItemLabel() }</span>}
       </div>
     </>
   )

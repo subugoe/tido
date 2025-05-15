@@ -11,9 +11,9 @@ const CollectionTitle: FC = () => {
   )
   return (
     <>
-      { !collection && <Skeleton className="t-w-[200px] t-h-6" /> }
+      { !collection && <Skeleton className="w-[200px] h-6" /> }
       {collection && <div
-        className="t-text-sm t-bg-gray-200 t-px-2 t-py-1 t-rounded-md t-font-semibold t-truncate t-max-w-[200px]"
+        className="text-sm bg-gray-200 px-2 py-1 rounded-md font-semibold truncate max-w-[200px]"
         title={collection.title[0].title}
       >
         { collection.title[0].title }
