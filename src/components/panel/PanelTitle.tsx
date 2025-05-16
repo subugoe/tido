@@ -7,14 +7,17 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useDataStore } from '@/store/DataStore.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import ItemLabel from '@/components/panel/ItemLabel.tsx'
 
 const PanelHeader: FC = () => {
   const { panelState } = usePanel()
 
   const [showModal, setShowModal] = useState(false)
+  const [showItemModal, setShowItemModal] = useState(false)
 
   const collection = useDataStore().collections[panelState.collectionId]?.collection
   const manifestsLabels = collection?.sequence.map((item) => item.label)
+  const itemsLabels = panelState?.manifest?.sequence.map((item) => item.label)
   const updatePanel = usePanelStore(state => state.updatePanel)
 
 
@@ -37,6 +40,14 @@ const PanelHeader: FC = () => {
     const manifest = await apiRequest<Manifest>(manifestId)
     const item = await apiRequest<Item>(manifest.sequence[0].id)
     updatePanel(panelState.id, { manifest: manifest, item: item })
+  }
+
+  async function handleItemClick (newItemLabel: string) {
+    console.log('handle Item click')
+    setShowItemModal(false)
+    const newItemId = panelState.manifest.sequence.filter((item) => item.label === newItemLabel)[0].id
+    const newItem = await apiRequest<Item>(newItemId)
+    updatePanel(panelState.id, { item: newItem })
   }
 
   return (
@@ -66,7 +77,7 @@ const PanelHeader: FC = () => {
               </Popover> }
         <span className="w-[1px] h-[80%] bg-gray-400 mx-2 grow-0 shrink-0"></span>
         { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
-        { panelState && panelState.item && <span className="text-gray-600" data-cy="item-label">{ getItemLabel() }</span>}
+        { panelState && panelState.item && <ItemLabel label={getItemLabel()} itemLabels={itemsLabels} handleItemClick={handleItemClick} showItemModal={showItemModal} setShowItemModal={setShowItemModal} />}
       </div>
     </>
   )
