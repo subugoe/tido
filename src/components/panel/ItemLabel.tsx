@@ -5,25 +5,32 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface ItemLabelProps {
   itemLabels: string[],
-  handleItemClick: (newItemLabel: string) => void,
+  updateItem: (newItemLabel: string) => void,
   showItemModal: boolean,
-  setShowItemModal: (show: boolean) => void
+  setShowItemModal: (show: boolean) => void,
 }
 
-const ItemLabel: FC<ItemLabelProps> = ({ itemLabels, handleItemClick, showItemModal, setShowItemModal }) => {
+const ItemLabel: FC<ItemLabelProps> = ({ itemLabels, updateItem, showItemModal, setShowItemModal }) => {
   const { panelState } = usePanel()
 
   const [internalOpen, setInternalOpen] = useState(showItemModal)
   const externallyOpened = useRef(false)
 
   const handleOpenChange = (open: boolean) => {
-    console.log('open', open)
-    console.log('externally opened', externallyOpened.current)
+    console.log('new value of open', open)
     if (!open && externallyOpened.current) {
       externallyOpened.current = false
       return
     }
     setInternalOpen(open)
+    console.log('show item modal in ItemLabel', showItemModal)
+    setShowItemModal(open)
+  }
+
+  function handleItemClick(newItemLabel: string) {
+    setInternalOpen(false)
+    setShowItemModal(false)
+    updateItem(newItemLabel)
   }
 
   function getItemLabel() {
@@ -32,7 +39,10 @@ const ItemLabel: FC<ItemLabelProps> = ({ itemLabels, handleItemClick, showItemMo
 
   useEffect(() => {
     // here first I need to get the manifests labels
-    if (showItemModal) externallyOpened.current = true
+    if (showItemModal) {
+      externallyOpened.current = true
+      console.log('opened from manifest modal')
+    }
     setInternalOpen(showItemModal)
   }, [showItemModal])
 
@@ -42,9 +52,9 @@ const ItemLabel: FC<ItemLabelProps> = ({ itemLabels, handleItemClick, showItemMo
       <Popover open={internalOpen} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
-            variant={showItemModal ? 'secondary' : 'ghost'}
+            variant={internalOpen ? 'secondary' : 'ghost'}
             className="font-semibold text-gray-600"
-            onClick={() =>  setShowItemModal(!showItemModal)}
+            onClick={() =>  setInternalOpen(!internalOpen)}
             data-cy="item-label">
             { getItemLabel() }
           </Button>

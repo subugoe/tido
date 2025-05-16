@@ -26,19 +26,13 @@ const PanelHeader: FC = () => {
 
   async function handleManifestClick(newManifestLabel: string) {
     setShowManifestModal(false)
-    if (!showItemModal) {
-      setShowItemModal(true)
-    }
-    else {
-      setShowItemModal(false)
-    }
+    setShowItemModal(true)
     const manifestId = collection.sequence.filter((item) => item.label === newManifestLabel)[0].id
     const manifest = await apiRequest<Manifest>(manifestId)
     updatePanel(panelState.id, { manifest: manifest })
   }
 
-  async function handleItemClick (newItemLabel: string) {
-    setShowItemModal(false)
+  async function updateItem(newItemLabel: string) {
     const newItemId = panelState.manifest.sequence.filter((item) => item.label === newItemLabel)[0].id
     const newItem = await apiRequest<Item>(newItemId)
     updatePanel(panelState.id, { item: newItem })
@@ -51,7 +45,7 @@ const PanelHeader: FC = () => {
         { panelState && panelState.item  && <ManifestLabel label={getManifestLabel()} manifestLabels={manifestsLabels} handleManifestClick={handleManifestClick} showManifestModal={showManifestModal} setShowManifestModal={setShowManifestModal} />}
         <span className="w-[1px] h-[80%] bg-gray-400 mx-2 grow-0 shrink-0"></span>
         { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
-        { panelState && panelState.item && <ItemLabel itemLabels={itemsLabels} handleItemClick={handleItemClick} showItemModal={showItemModal} setShowItemModal={setShowItemModal} />}
+        { panelState && panelState.item && <ItemLabel itemLabels={itemsLabels} updateItem={updateItem} showItemModal={showItemModal} setShowItemModal={setShowItemModal} />}
       </div>
     </>
   )
