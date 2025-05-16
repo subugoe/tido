@@ -34,5 +34,9 @@
   "from_new_collection_description": "Enter a new collection URL. From that, you can choose the content for the new panel.",
   "from_existing_collections": "From existing collections",
   "from_existing_collections_description": "Choose from collections that already have been added.",
-  "remove_panel": "Panel entfernen"
+  "remove_panel": "Panel entfernen",
+  "pip_view": "Swap view",
+  "split_view": "Split view",
+  "text_view": "Text view",
+  "image_view": "Image view"
 }
