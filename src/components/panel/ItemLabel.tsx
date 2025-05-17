@@ -4,15 +4,16 @@ import { Button } from '@/components/ui/button.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface ItemLabelProps {
-  itemLabels: string[],
+  itemsLabels: string[],
+  updateManifest: () => void,
   updateItem: (newItemLabel: string) => void,
   showItemModal: boolean,
-  selectedManifestTitle: boolean,
+  isManifestLabelSelected: boolean,
   setShowItemModal: (show: boolean) => void,
-  setSelectedManifestTitle:(value: boolean) => void
+  setIsManifestLabelSelected:(value: boolean) => void
 }
 
-const ItemLabel: FC<ItemLabelProps> = ({ itemLabels, updateItem, showItemModal, setShowItemModal, selectedManifestTitle, setSelectedManifestTitle }) => {
+const ItemLabel: FC<ItemLabelProps> = ({ itemsLabels, updateManifest, updateItem, showItemModal, setShowItemModal, isManifestLabelSelected, setIsManifestLabelSelected }) => {
   const { panelState } = usePanel()
 
   const [internalOpen, setInternalOpen] = useState(showItemModal)
@@ -23,16 +24,24 @@ const ItemLabel: FC<ItemLabelProps> = ({ itemLabels, updateItem, showItemModal, 
       externallyOpened.current = false
       return
     }
+
     setInternalOpen(open)
-    setSelectedManifestTitle(false)
+    setIsManifestLabelSelected(false)
     setShowItemModal(open)
   }
 
-  function handleItemClick(newItemLabel: string) {
+
+  async function handleItemClick(newItemLabel: string) {
+    if (isManifestLabelSelected) {
+      await updateManifest()
+      updateItem(newItemLabel)
+    }
+    else {
+      updateItem(newItemLabel)
+    }
     setInternalOpen(false)
     setShowItemModal(false)
-    updateItem(newItemLabel)
-    setSelectedManifestTitle(false)
+    setIsManifestLabelSelected(false)
   }
 
   function getItemLabel() {
@@ -40,11 +49,12 @@ const ItemLabel: FC<ItemLabelProps> = ({ itemLabels, updateItem, showItemModal, 
   }
 
   useEffect(() => {
-    if (selectedManifestTitle) {
+    if (isManifestLabelSelected) {
       externallyOpened.current = true
     }
+
     setInternalOpen(showItemModal)
-  }, [selectedManifestTitle])
+  }, [isManifestLabelSelected])
 
 
   return (
@@ -63,7 +73,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ itemLabels, updateItem, showItemModal, 
           <div className="text-gray-600">Please select an item to open</div>
           <div className="text-wrap">
             <div className="flex flex-col space-y-2 max-h-[350px] overflow-y-auto">
-              {itemLabels.map((label, i) => <Button
+              {itemsLabels.length > 0 && itemsLabels.map((label, i) => <Button
                 variant="ghost"
                 key={i} className="text-wrap h-fit min-h-8 overflow-hidden "
                 title={label ?? ''}
@@ -74,7 +84,6 @@ const ItemLabel: FC<ItemLabelProps> = ({ itemLabels, updateItem, showItemModal, 
         </PopoverContent>}
       </Popover>
     </>
-
   )
 }
 
