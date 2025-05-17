@@ -13,7 +13,6 @@ interface ItemLabelProps {
 const ManifestLabel: FC<ItemLabelProps> = ({ label, manifestLabels, handleManifestClick, showManifestModal, setShowManifestModal }) => {
 
   const handleOpenChange = (open: boolean) => {
-    console.log('open in Manist Popover', open)
     setShowManifestModal(open)
   }
 
@@ -30,7 +29,7 @@ const ManifestLabel: FC<ItemLabelProps> = ({ label, manifestLabels, handleManife
           </Button>
         </PopoverTrigger>
         {showManifestModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-4 max-w-[350px] w-fit max-h-[450px] h-fit pr-0 px-4 py-4">
-          <div>Please select a manifest to open</div>
+          <div className="text-gray-600">Please select a manifest to open</div>
           <div className="text-wrap">
             <div className="flex flex-col space-y-2 max-h-[350px] overflow-y-auto">
               {manifestLabels.map((label, i) => <Button
@@ -44,7 +43,6 @@ const ManifestLabel: FC<ItemLabelProps> = ({ label, manifestLabels, handleManife
         </PopoverContent>}
       </Popover>
     </>
-
   )
 }
 
