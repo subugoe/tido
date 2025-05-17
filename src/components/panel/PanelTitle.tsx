@@ -19,6 +19,7 @@ const PanelHeader: FC = () => {
   const manifestsLabels = collection?.sequence.map((item) => item.label)
   const updatePanel = usePanelStore(state => state.updatePanel)
   const selectedManifestLabel = useRef(null)
+  const selectedManifest = useRef(null)
   const [itemsLabels, setItemsLabels] = useState([])
 
 
@@ -35,6 +36,7 @@ const PanelHeader: FC = () => {
         const manifestId = collection?.sequence.find((manifest) => manifest.label === selectedManifestLabel.current).id
         const manifest = await apiRequest<Manifest>(manifestId)
         labels =  manifest.sequence.map((item) => item.label) || []
+        selectedManifest.current = manifest
       }
       setItemsLabels(labels)
     }
@@ -43,6 +45,7 @@ const PanelHeader: FC = () => {
 
 
   function getManifestLabel() {
+    if (selectedManifest.current) return selectedManifest.current.label
     return panelState?.manifest?.label ?? null
   }
 
@@ -61,9 +64,8 @@ const PanelHeader: FC = () => {
   }
 
   async function updateItem(newItemLabel: string) {
-    console.log('manifest', panelState.manifest)
-    console.log('item', )
-    const newItemId = panelState.manifest.sequence.filter((item) => item.label === newItemLabel)[0].id
+    const manifest = selectedManifest.current ? selectedManifest.current : panelState.manifest ?? null
+    const newItemId = manifest.sequence.filter((item) => item.label === newItemLabel)[0].id
     const newItem = await apiRequest<Item>(newItemId)
     updatePanel(panelState.id, { item: newItem })
   }
