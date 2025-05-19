@@ -23,7 +23,7 @@ const Actions: FC = () => {
             <Ellipsis />
           </Button>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent className="p-2">
           <Button variant="ghostDestructive" onClick={removePanel}>
             <Trash2 className="mr-2" /> { t('remove_panel') }
           </Button>

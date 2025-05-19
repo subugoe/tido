@@ -6,7 +6,7 @@
   "tailwind": {
     "css": "src/css/style.css",
     "baseColor": "gray",
-    "cssVariables": false
+    "cssVariables": true
   },
   "aliases": {
     "components": "@/components",

@@ -11,7 +11,6 @@ import NavigationButton from '@/components/panel/NavigationButton.tsx'
 import Metadata from '@/components/metadata/Metadata'
 import Actions from '@/components/panel/Actions.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 import { useTranslation } from 'react-i18next'
 
 const PanelHeader: FC = () => {
@@ -27,30 +26,20 @@ const PanelHeader: FC = () => {
     <div className="panel-header flex flex-col px-3 pt-3 pb-5">
       <div className="flex items-center mb-6">
         <CollectionTitle />
-
         <div className="ml-1 text-wrap break-words">
           <Popover open={showMetadataModal} onOpenChange={handleOpenChange} modal={true}>
             <PopoverTrigger asChild>
-              <TooltipProvider delayDuration={400}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      onClick={() => setShowMetadataModal(!showMetadataModal)}
-                      variant={showMetadataModal ? 'secondary' : 'ghost'}
-                      size={'icon'}
-                      disabled={!panelState?.contentTypes?.length}
-                    >
-                      {<Info />}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span className="leading-none">{ t('metadata') }</span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-
+              <Button
+                onClick={() => setShowMetadataModal(!showMetadataModal)}
+                variant={showMetadataModal ? 'secondary' : 'ghost'}
+                size={'icon'}
+                disabled={!panelState?.contentTypes?.length}
+                title={t('metadata')}
+              >
+                {<Info />}
+              </Button>
             </PopoverTrigger>
-            <PopoverContent side="bottom" align="start"  sideOffset={8} className="w-[400px] pr-0">
+            <PopoverContent side="bottom" align="start" className="w-[400px] pr-0">
               <Metadata />
               <X
                 className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"

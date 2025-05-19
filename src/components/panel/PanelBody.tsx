@@ -59,7 +59,7 @@ const PanelBody: FC = () => {
     else if (panelState.viewIndex === 3) return <ImageView />
   }
 
-  return <div className="overflow-hidden border-t border-gray-200 flex-1">{ renderContent() }</div>
+  return <div className="overflow-hidden border-t border-border flex-1">{ renderContent() }</div>
 }
 
 export default PanelBody

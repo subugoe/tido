@@ -38,5 +38,9 @@
   "pip_view": "Swap view",
   "split_view": "Split view",
   "text_view": "Text view",
-  "image_view": "Image view"
+  "image_view": "Image view",
+  "toggle_theme": "Toggle theme",
+  "light": "Light",
+  "dark": "Dark",
+  "system": "System"
 }

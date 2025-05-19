@@ -63,6 +63,19 @@ function validateGlobalTree(input: any): ValidationResult<TidoConfig['showGlobal
   return { result, errors }
 }
 
+function validateShowThemeToggle(input: any): ValidationResult<TidoConfig['showThemeToggle']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'boolean'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['showThemeToggle'] = 'must be a boolean'
+        return defaultConfig.showThemeToggle
+      })()
+  return { result, errors }
+}
+
 function validatePanels(input: any): ValidationResult<TidoConfig['panels']> {
   const errors: Record<string, string> = {}
   const result = Array.isArray(input) ? input : (() => {
@@ -168,8 +181,9 @@ export function mergeAndValidateConfig(
   const defaultView = validateDefaultView(userConfig.defaultView)
   const lang = validateLang(userConfig.lang)
   const panels = validatePanels(userConfig.panels)
-  const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
   const showAddNewPanelButton = validateShowNewCollectionButton(userConfig.showAddNewPanelButton)
+  const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
+  const showThemeToggle = validateShowThemeToggle(userConfig.showThemeToggle)
   const rootCollections = validateRootCollections(userConfig.rootCollections)
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
@@ -189,8 +203,9 @@ export function mergeAndValidateConfig(
     ...lang.errors,
     ...panels.errors,
     ...rootCollections.errors,
-    ...showGlobalTree.errors,
     ...showAddNewPanelButton.errors,
+    ...showGlobalTree.errors,
+    ...showThemeToggle.errors,
     ...theme.errors,
     ...title.errors,
     ...translations.errors,
@@ -203,8 +218,9 @@ export function mergeAndValidateConfig(
     defaultView: defaultView.result,
     lang: lang.result,
     rootCollections: rootCollections.result,
-    showGlobalTree: showGlobalTree.result,
     showAddNewPanelButton: showAddNewPanelButton.result,
+    showGlobalTree: showGlobalTree.result,
+    showThemeToggle: showThemeToggle.result,
     theme: theme.result,
     title: title.result,
     translations: mergedTranslations,
