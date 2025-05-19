@@ -1,28 +1,37 @@
-import { FC, MouseEvent, ReactElement } from 'react'
+import { FC, MouseEvent } from 'react'
 import { PictureInPicture2, Image, AlignCenter, Columns2 } from 'lucide-react'
 
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext'
 import { Button } from '@/components/ui/button.tsx'
 import { Skeleton } from '@/components/ui/skeleton.tsx'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
+import { useTranslation } from 'react-i18next'
 
-interface IconKeys {
-  pip: ReactElement
-  split: ReactElement
-  text: ReactElement
-  image: ReactElement
-}
-
-const icons = {
-  pip: <PictureInPicture2 />,
-  split: <Columns2 />,
-  text: <AlignCenter />,
-  image: <Image />,
-}
 
 const TextViewsToggle: FC = () => {
+  const { t } = useTranslation()
   const { panelState } = usePanel()
   const updatePanel = usePanelStore((state) => state.updatePanel)
+
+  const buttonsData = {
+    pip: {
+      icon: <PictureInPicture2 />,
+      tooltip: t('pip_view')
+    },
+    split: {
+      icon: <Columns2 />,
+      tooltip: t('split_view')
+    },
+    text: {
+      icon: <AlignCenter />,
+      tooltip: t('text_view')
+    },
+    image: {
+      icon: <Image />,
+      tooltip: t('image_view')
+    },
+  }
 
   function handleTextViewClick(
     e: MouseEvent<HTMLButtonElement>,
@@ -37,19 +46,27 @@ const TextViewsToggle: FC = () => {
     <>
       { !panelState && <Skeleton /> }
       { panelState &&
-        <div className="text-views-toggle flex row ml-auto rounded-md h-8 space-x-1 -mr-1">
-          {Object.keys(icons).map((key, i) => (
-            <Button
-              key={i}
-              onClick={(e) => handleTextViewClick(e, i)}
-              variant={panelState.viewIndex === i ? 'secondary' : 'ghost'}
-              size="icon"
-              disabled={!panelState.contentTypes?.length}
-              data-selected={panelState.viewIndex === i}
-              data-cy={key}
-            >
-              { icons[key as keyof IconKeys] }
-            </Button>
+        <div className="flex gap-1">
+          {Object.keys(buttonsData).map((key, i) => (
+            <TooltipProvider key={key} delayDuration={400}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={(e) => handleTextViewClick(e, i)}
+                    variant={panelState.viewIndex === i ? 'secondary' : 'ghost'}
+                    size="icon"
+                    disabled={!panelState.contentTypes?.length}
+                    data-selected={panelState.viewIndex === i}
+                    data-cy={key}
+                  >
+                    { buttonsData[key].icon }
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="leading-none">{ buttonsData[key].tooltip }</span>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           ))}
         </div>
       }
