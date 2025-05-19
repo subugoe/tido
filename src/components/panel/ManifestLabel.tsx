@@ -1,19 +1,36 @@
 import { FC } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
+import { apiRequest } from '@/utils/api.ts'
 
 interface ItemLabelProps {
   label: string,
   manifestLabels: string[],
-  handleManifestClick: (newItemLabel: string) => void,
   showManifestModal: boolean,
   setShowManifestModal: (show: boolean) => void,
+  updateSelectedManifest: (newManifest: Manifest | null) => void,
+  setShowItemModal: (show: boolean) => void,
+  setIsManifestLabelSelected: (isManifestLabelSelected: boolean) => void,
 }
 
-const ManifestLabel: FC<ItemLabelProps> = ({ label, manifestLabels, handleManifestClick, showManifestModal, setShowManifestModal }) => {
+const ManifestLabel: FC<ItemLabelProps> = ({ label, manifestLabels, showManifestModal, setShowManifestModal, updateSelectedManifest, setShowItemModal, setIsManifestLabelSelected }) => {
+  const { panelState } = usePanel()
+  const collection = useDataStore().collections[panelState.collectionId]?.collection
 
   const handleOpenChange = (open: boolean) => {
     setShowManifestModal(open)
+  }
+
+
+  async function handleManifestClick(label: string) {
+    const manifestId = collection?.sequence.find((manifest) => manifest.label === label).id
+    const manifest = await apiRequest<Manifest>(manifestId)
+    updateSelectedManifest(manifest)
+    setShowManifestModal(false)
+    setShowItemModal(true)
+    setIsManifestLabelSelected(true)
   }
 
   return (

@@ -19,31 +19,30 @@ const PanelHeader: FC = () => {
   const manifest = panelState.manifest
   const manifestsLabels = collection?.sequence.map((item) => item.label)
   const updatePanel = usePanelStore(state => state.updatePanel)
-  const selectedManifestLabel = useRef(null)
   const selectedManifest = useRef(null)
 
   const [itemsLabels, setItemsLabels] = useState([])
   const [manifestLabel, setManifestLabel] = useState(manifest?.label ?? null)
 
+  function updateSelectedManifest(newManifest: Manifest | null) {
+    selectedManifest.current = newManifest
+  }
 
   useEffect(() => {
     async function getItemsLabels() {
       let labels
       if (!collection) return []
-      if (!selectedManifestLabel.current) {
-        labels = manifest.sequence.map((item) => item.label)
+      if (selectedManifest.current) {
+        labels = selectedManifest.current.sequence.map((item) => item.label) || []
       }
       else {
-        const manifestId = collection?.sequence.find((manifest) => manifest.label === selectedManifestLabel.current).id
-        const manifest = await apiRequest<Manifest>(manifestId)
-        labels =  manifest.sequence.map((item) => item.label) || []
-        selectedManifest.current = manifest
+        labels = manifest.sequence.map((item) => item.label)
       }
 
       setItemsLabels(labels)
     }
     getItemsLabels()
-  }, [collection, manifest, selectedManifestLabel.current])
+  }, [collection, manifest, selectedManifest.current])
 
   useEffect(() => {
     function getManifestLabel() {
@@ -56,15 +55,8 @@ const PanelHeader: FC = () => {
 
 
 
-  async function handleManifestClick(newManifestLabel: string) {
-    setShowManifestModal(false)
-    setShowItemModal(true)
-    setIsManifestLabelSelected(true)
-    selectedManifestLabel.current = newManifestLabel
-  }
-
   async function updateManifest() {
-    const newManifestLabel = selectedManifestLabel.current
+    const newManifestLabel = selectedManifest.current.label
     const manifestId = collection.sequence.filter((item) => item.label === newManifestLabel)[0].id
     const manifest = await apiRequest<Manifest>(manifestId)
     await updatePanel(panelState.id, { manifest: manifest })
@@ -75,7 +67,6 @@ const PanelHeader: FC = () => {
     const newItemId = manifest.sequence.filter((item) => item.label === newItemLabel)[0].id
     const newItem = await apiRequest<Item>(newItemId)
     updatePanel(panelState.id, { item: newItem })
-    selectedManifestLabel.current = null
     selectedManifest.current = null
   }
 
@@ -84,7 +75,7 @@ const PanelHeader: FC = () => {
     <>
       <div className="flex items-center">
         { (!panelState || !panelState.item) && <Skeleton className="w-[100px] h-6" />  }
-        { panelState && panelState.item  && <ManifestLabel label={manifestLabel} manifestLabels={manifestsLabels} handleManifestClick={handleManifestClick} showManifestModal={showManifestModal} setShowManifestModal={setShowManifestModal} />}
+        { panelState && panelState.item  && <ManifestLabel label={manifestLabel} manifestLabels={manifestsLabels} showManifestModal={showManifestModal} setShowManifestModal={setShowManifestModal} updateSelectedManifest={updateSelectedManifest} setIsManifestLabelSelected={setIsManifestLabelSelected} setShowItemModal={setShowItemModal} />}
         <span className="w-[1px] h-[80%] bg-gray-400 mx-2 grow-0 shrink-0"></span>
         { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
         { panelState && panelState.item && <ItemLabel itemsLabels={itemsLabels} updateManifest={updateManifest} updateItem={updateItem} showItemModal={showItemModal} setShowItemModal={setShowItemModal} isManifestLabelSelected={isManifestLabelSelected} setIsManifestLabelSelected={setIsManifestLabelSelected} />}
