@@ -2,22 +2,44 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
+import { apiRequest } from '@/utils/api.ts'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 
 interface ItemLabelProps {
-  itemsLabels: string[],
-  updateManifest: () => void,
-  updateItem: (newItemLabel: string) => void,
+  selectedManifest: Manifest | null
+  updateSelectedManifest: (newManifest: Manifest | null) => void,
   showItemModal: boolean,
-  isManifestLabelSelected: boolean,
   setShowItemModal: (show: boolean) => void,
-  setIsManifestLabelSelected:(value: boolean) => void
 }
 
-const ItemLabel: FC<ItemLabelProps> = ({ itemsLabels, updateManifest, updateItem, showItemModal, setShowItemModal, isManifestLabelSelected, setIsManifestLabelSelected }) => {
+const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifest, showItemModal, setShowItemModal }) => {
   const { panelState } = usePanel()
+  const collection = useDataStore().collections[panelState.collectionId]?.collection
+  const manifest = panelState.manifest
+  const updatePanel = usePanelStore(state => state.updatePanel)
 
+  const [labels, setLabels] = useState([])
   const [internalOpen, setInternalOpen] = useState(showItemModal)
   const externallyOpened = useRef(false)
+
+
+  useEffect(() => {
+    async function getLabels() {
+      let labels
+      if (!collection) return []
+      if (selectedManifest) {
+        labels = selectedManifest.sequence.map((item) => item.label) || []
+      }
+      else {
+        labels = manifest.sequence.map((item) => item.label)
+      }
+
+      setLabels(labels)
+    }
+    getLabels()
+  }, [collection, manifest, selectedManifest])
+
 
   const handleOpenChange = (open: boolean) => {
     if (!open && externallyOpened.current) {
@@ -26,22 +48,30 @@ const ItemLabel: FC<ItemLabelProps> = ({ itemsLabels, updateManifest, updateItem
     }
 
     setInternalOpen(open)
-    setIsManifestLabelSelected(false)
+    updateSelectedManifest(null)
     setShowItemModal(open)
+  }
+
+  async function updateItem(newItemLabel: string) {
+    const manifest = selectedManifest ? selectedManifest : panelState.manifest ?? null
+    const newItemId = manifest.sequence.filter((item) => item.label === newItemLabel)[0].id
+    const newItem = await apiRequest<Item>(newItemId)
+    updatePanel(panelState.id, { item: newItem })
+    updateSelectedManifest(null)
   }
 
 
   async function handleItemClick(newItemLabel: string) {
-    if (isManifestLabelSelected) {
-      await updateManifest()
-      updateItem(newItemLabel)
+    if (selectedManifest) {
+      await updatePanel(panelState.id, { manifest: selectedManifest })
+      await updateItem(newItemLabel)
     }
     else {
-      updateItem(newItemLabel)
+      await updateItem(newItemLabel)
     }
     setInternalOpen(false)
     setShowItemModal(false)
-    setIsManifestLabelSelected(false)
+    updateSelectedManifest(null)
   }
 
   function getItemLabel() {
@@ -49,12 +79,12 @@ const ItemLabel: FC<ItemLabelProps> = ({ itemsLabels, updateManifest, updateItem
   }
 
   useEffect(() => {
-    if (isManifestLabelSelected) {
+    if (selectedManifest) {
       externallyOpened.current = true
     }
 
     setInternalOpen(showItemModal)
-  }, [isManifestLabelSelected])
+  }, [selectedManifest])
 
 
   return (
@@ -73,7 +103,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ itemsLabels, updateManifest, updateItem
           <div className="text-gray-600">Please select an item to open</div>
           <div className="text-wrap">
             <div className="flex flex-col space-y-2 max-h-[350px] overflow-y-auto">
-              {itemsLabels.length > 0 && itemsLabels.map((label, i) => <Button
+              {labels.length > 0 && labels.map((label, i) => <Button
                 variant="ghost"
                 key={i} className="text-wrap h-fit min-h-8 overflow-hidden "
                 title={label ?? ''}
