@@ -53,22 +53,22 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
     setShowItemModal(open)
   }
 
-  async function updateItem(newItemLabel: string, manifest: Manifest) {
+  async function getItem(newItemLabel: string, manifest: Manifest) {
     const newItemId = manifest.sequence.filter((item) => item.label === newItemLabel)[0].id
-    const newItem = await apiRequest<Item>(newItemId)
-    updatePanel(panelState.id, { item: newItem })
+    return await apiRequest<Item>(newItemId)
   }
-
 
   async function handleItemClick(newItemLabel: string) {
     const manifest = selectedManifest ? selectedManifest : panelState.manifest ?? null
-    if (selectedManifest) {
-      await updatePanel(panelState.id, { manifest: selectedManifest })
-      await updateItem(newItemLabel, manifest)
-    }
-    else {
-      await updateItem(newItemLabel, manifest)
-    }
+    const manifestIndex = collection.sequence.findIndex((item) => item.id === manifest.id)
+    const newItem = await getItem(newItemLabel, manifest)
+    const itemIndex = manifest.sequence.findIndex((item) => item.id === newItem.id)
+
+    updatePanel(panelState.id, {
+      manifest: manifest,
+      item: newItem,
+      config: { ...panelState.config, manifestIndex: manifestIndex, itemIndex: itemIndex }
+    })
 
     setShowItemModal(false)
     updateSelectedManifest(null)
