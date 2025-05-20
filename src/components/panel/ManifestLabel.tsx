@@ -47,7 +47,6 @@ const ManifestLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedMan
     <>
       <Popover open={showManifestModal} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
-
           <Button
             variant={showManifestModal ? 'secondary' : 'ghost'}
             className="relative font-semibold text-gray-600"
@@ -55,11 +54,10 @@ const ManifestLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedMan
             data-cy="item-label">
             { label }
             { selectedManifest && <div
-              className="absolute mb-12 flex items-center justify-center w-6 h-6 border-[1px] border-gray-400 text-yellow-300 text-xl font-bold rounded-full">
+              className="absolute mb-8 flex items-center justify-center w-4 h-4 border-[1px] border-gray-400 text-yellow-300 text-md font-bold rounded-full">
                 !
             </div> }
           </Button>
-
         </PopoverTrigger>
         {showManifestModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-4 max-w-[350px] w-fit max-h-[450px] h-fit pr-4 pl-2 py-2">
           <div className="text-gray-600 ml-1">Please select a manifest to open</div>
