@@ -61,7 +61,7 @@ const ManifestLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedMan
             </div> }
           </Button>
         </PopoverTrigger>
-        {showManifestModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[350px] w-fit max-h-[450px] h-fit pr-4 pl-2 py-2">
+        {showManifestModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[350px] w-fit max-h-[450px] pr-0 h-fit pl-2 py-2">
           <div className="text-gray-600 ml-1">Please select a manifest to open</div>
           <div className="text-wrap">
             <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
