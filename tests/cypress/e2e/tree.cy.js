@@ -62,7 +62,7 @@ describe('Tree', () => {
       .should('have.length', 2)
       .eq(1)
       .find('[data-cy="item-label"]')
-      .should('have.text', 'Page unknown')     // Label is missing
+      .should('have.text', 'Page 280')     // Label is missing
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
   })
 
@@ -88,7 +88,7 @@ describe('Tree', () => {
       .should('have.length', 1)
       .eq(0)
       .find('[data-cy="item-label"]')
-      .should('have.text', 'Page unknown')      // Label is missing
+      .should('have.text', 'Page 280')      // Label is missing
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
   })
 });
