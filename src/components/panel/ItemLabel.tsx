@@ -99,13 +99,13 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
             { getItemLabel() }
           </Button>
         </PopoverTrigger>
-        {internalOpen && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-4 max-w-[200px] w-fit max-h-[450px] h-fit pr-0 px-4 py-4">
-          <div className="text-gray-600">Please select an item to open</div>
+        {internalOpen && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-4 max-w-[200px] w-fit max-h-[450px] h-fit pr-4 pl-2 py-2">
+          <div className="text-gray-600 ml-1">Please select an item to open</div>
           <div className="text-wrap">
-            <div className="flex flex-col space-y-2 max-h-[350px] overflow-y-auto">
+            <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
               {labels.length > 0 && labels.map((label, i) => <Button
                 variant="ghost"
-                key={i} className="text-wrap h-fit min-h-8 overflow-hidden "
+                key={i} className="text-wrap h-fit min-h-8 overflow-hidden justify-start pl-2 py-1"
                 title={label ?? ''}
                 onClick={() => handleItemClick(label)}
               > {label }</Button>)}

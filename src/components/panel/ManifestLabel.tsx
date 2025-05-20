@@ -47,21 +47,28 @@ const ManifestLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedMan
     <>
       <Popover open={showManifestModal} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
+
           <Button
             variant={showManifestModal ? 'secondary' : 'ghost'}
-            className="font-semibold text-gray-600"
+            className="relative font-semibold text-gray-600"
             onClick={() =>  setShowManifestModal(!showManifestModal)}
             data-cy="item-label">
             { label }
+            { selectedManifest && <div
+              className="absolute mb-12 flex items-center justify-center w-6 h-6 border-[1px] border-gray-400 text-yellow-300 text-xl font-bold rounded-full">
+                !
+            </div> }
           </Button>
+
         </PopoverTrigger>
-        {showManifestModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-4 max-w-[350px] w-fit max-h-[450px] h-fit pr-0 px-4 py-4">
-          <div className="text-gray-600">Please select a manifest to open</div>
+        {showManifestModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-4 max-w-[350px] w-fit max-h-[450px] h-fit pr-4 pl-2 py-2">
+          <div className="text-gray-600 ml-1">Please select a manifest to open</div>
           <div className="text-wrap">
-            <div className="flex flex-col space-y-2 max-h-[350px] overflow-y-auto">
+            <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
               {labels.map((label, i) => <Button
                 variant="ghost"
-                key={i} className="text-wrap h-fit min-h-8 overflow-hidden"
+                key={i}
+                className="h-fit min-h-8 justify-start overflow-hidden pl-2"
                 title={label ?? ''}
                 onClick={() => handleManifestClick(label)}
               > {label }</Button>)}
