@@ -1,26 +1,32 @@
-import { FC } from 'react'
+import { FC, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Skeleton } from '@/components/ui/skeleton.tsx'
+
+import ItemLabel from '@/components/panel/ItemLabel.tsx'
+import ManifestLabel from '@/components/panel/ManifestLabel.tsx'
 
 const PanelHeader: FC = () => {
   const { panelState } = usePanel()
 
-  function getManifestLabel() {
-    return panelState?.manifest?.label ?? null
+  const [showManifestModal, setShowManifestModal] = useState(false)
+  const [showItemModal, setShowItemModal] = useState(false)
+
+  const selectedManifest = useRef(null)
+
+
+  function updateSelectedManifest(newManifest: Manifest | null) {
+    selectedManifest.current = newManifest
   }
 
-  function getItemLabel() {
-    return 'Page ' + (panelState?.item?.n ?? 'unknown')
-  }
 
   return (
     <>
       <div className="flex items-center">
         { (!panelState || !panelState.item) && <Skeleton className="w-[100px] h-6" />  }
-        { panelState && panelState.item && <span className="font-semibold">{ getManifestLabel() }</span>}
-        <span className="w-[1px] h-[80%] bg-muted mx-2 grow-0 shrink-0"></span>
+        { panelState && panelState.item  && <ManifestLabel showManifestModal={showManifestModal} setShowManifestModal={setShowManifestModal} updateSelectedManifest={updateSelectedManifest}  setShowItemModal={setShowItemModal} selectedManifest={selectedManifest.current} />}
+        <span className="w-[1px] h-[80%] bg-gray-400 mx-2 grow-0 shrink-0"></span>
         { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
-        { panelState && panelState.item && <span className="text-muted-foreground" data-cy="item-label">{ getItemLabel() }</span>}
+        { panelState && panelState.item && <ItemLabel selectedManifest={selectedManifest.current} updateSelectedManifest={updateSelectedManifest}  showItemModal={showItemModal} setShowItemModal={setShowItemModal}  />}
       </div>
     </>
   )
