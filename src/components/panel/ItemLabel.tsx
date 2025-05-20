@@ -22,7 +22,6 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
   const updatePanel = usePanelStore(state => state.updatePanel)
 
   const [labels, setLabels] = useState([])
-  const [internalOpen, setInternalOpen] = useState(showItemModal)
   const externallyOpened = useRef(false)
 
 
@@ -44,18 +43,17 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
 
 
   const handleOpenChange = (open: boolean) => {
+    // following if is used to prevent the natural close (not allowing setShowItemModal(open) to execute) of itemModal when we select a manifest label in modal. Without this if statement, the item modal opens and closes immediately, which is not what we want.
     if (!open && externallyOpened.current) {
       externallyOpened.current = false
       return
     }
 
-    setInternalOpen(open)
     updateSelectedManifest(null)
     setShowItemModal(open)
   }
 
-  async function updateItem(newItemLabel: string) {
-    const manifest = selectedManifest ? selectedManifest : panelState.manifest ?? null
+  async function updateItem(newItemLabel: string, manifest: Manifest) {
     const newItemId = manifest.sequence.filter((item) => item.label === newItemLabel)[0].id
     const newItem = await apiRequest<Item>(newItemId)
     updatePanel(panelState.id, { item: newItem })
@@ -64,14 +62,15 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
 
 
   async function handleItemClick(newItemLabel: string) {
+    const manifest = selectedManifest ? selectedManifest : panelState.manifest ?? null
     if (selectedManifest) {
       await updatePanel(panelState.id, { manifest: selectedManifest })
-      await updateItem(newItemLabel)
+      await updateItem(newItemLabel, manifest)
     }
     else {
-      await updateItem(newItemLabel)
+      await updateItem(newItemLabel, manifest)
     }
-    setInternalOpen(false)
+
     setShowItemModal(false)
     updateSelectedManifest(null)
   }
@@ -84,24 +83,22 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
     if (selectedManifest) {
       externallyOpened.current = true
     }
-
-    setInternalOpen(showItemModal)
   }, [selectedManifest])
 
 
   return (
     <>
-      <Popover open={internalOpen} onOpenChange={handleOpenChange}>
+      <Popover open={showItemModal} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
-            variant={internalOpen ? 'secondary' : 'ghost'}
+            variant={showItemModal ? 'secondary' : 'ghost'}
             className="font-semibold text-gray-600"
-            onClick={() =>  setInternalOpen(!internalOpen)}
+            onClick={() =>  setShowItemModal(!showItemModal)}
             data-cy="item-label">
             { getItemLabel() }
           </Button>
         </PopoverTrigger>
-        {internalOpen && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[200px] w-fit max-h-[450px] h-fit pr-0 pl-2 py-2">
+        {showItemModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[200px] w-fit max-h-[450px] h-fit pr-0 pl-2 py-2">
           <div className="text-gray-600 ml-1">Please select an item to open</div>
           <div className="text-wrap">
             <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
