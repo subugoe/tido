@@ -57,7 +57,6 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
     const newItemId = manifest.sequence.filter((item) => item.label === newItemLabel)[0].id
     const newItem = await apiRequest<Item>(newItemId)
     updatePanel(panelState.id, { item: newItem })
-    updateSelectedManifest(null)
   }
 
 
