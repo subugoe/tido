@@ -319,8 +319,9 @@ export interface TidoConfig {
   defaultView: ViewType
   lang: string
   rootCollections: string[]
-  showGlobalTree: boolean
   showAddNewPanelButton: boolean
+  showGlobalTree: boolean
+  showThemeToggle: boolean
   panels: PanelConfig[]
   theme: ThemeConfig
   title: string

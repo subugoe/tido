@@ -12,6 +12,7 @@ import { getRGBColor } from '@/utils/colors.ts'
 import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 import { initI18n } from '@/utils/translations.ts'
 import { TidoConfig, TidoProps } from '@/types'
+import { ThemeProvider } from '@/contexts/ThemeContext.tsx'
 
 function createThemeStyles(config: TidoConfig) {
   const { theme } = config
@@ -58,11 +59,13 @@ export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
 
   return (
     <div className="tido flex flex-col h-full" data-cy="app">
-      <TopBar />
-      <div className="flex-1 flex overflow-hidden">
-        <GlobalTree />
-        <PanelsWrapper />
-      </div>
+      <ThemeProvider>
+        <TopBar />
+        <div className="flex-1 flex overflow-hidden">
+          <GlobalTree />
+          <PanelsWrapper />
+        </div>
+      </ThemeProvider>
     </div>
   )
 }

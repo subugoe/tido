@@ -7,8 +7,9 @@ const defaultConfig: TidoConfig = {
   lang: 'en',
   panels: [],
   rootCollections: [],
-  showGlobalTree: true,
   showAddNewPanelButton: true,
+  showGlobalTree: true,
+  showThemeToggle: true,
   theme: {
     primaryColor: '#3456aa'
   },

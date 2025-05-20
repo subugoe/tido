@@ -42,5 +42,9 @@
   "pip_view": "Swap-Ansicht",
   "split_view": "Split-Ansicht",
   "text_view": "Text-Ansicht",
-  "image_view": "Bild-Ansicht"
+  "image_view": "Bild-Ansicht",
+  "toggle_theme": "Farbschema umschalten",
+  "light": "Hell",
+  "dark": "Dunkel",
+  "system": "System"
 }

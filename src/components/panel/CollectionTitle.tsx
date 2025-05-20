@@ -13,7 +13,7 @@ const CollectionTitle: FC = () => {
     <>
       { !collection && <Skeleton className="w-[200px] h-6" /> }
       {collection && <div
-        className="text-sm bg-gray-200 px-2 py-1 rounded-md font-semibold truncate max-w-[200px]"
+        className="text-sm bg-muted px-2 py-1 rounded-md font-semibold truncate max-w-[200px]"
         title={collection.title[0].title}
       >
         { collection.title[0].title }

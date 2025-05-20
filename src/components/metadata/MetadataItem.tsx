@@ -10,7 +10,7 @@ const MetadataItem: FC<MetadataItemProps> = ({ item }) => {
   const { t } = useTranslation()
 
   return <div>
-    <h4 className="font-semibold text-sm text-gray-400">
+    <h4 className="font-semibold text-sm text-muted-foreground">
       {t(item.key)}
     </h4>
     <MetadataValue value={item.value} />

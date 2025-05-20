@@ -18,9 +18,9 @@ const PanelHeader: FC = () => {
       <div className="flex items-center">
         { (!panelState || !panelState.item) && <Skeleton className="w-[100px] h-6" />  }
         { panelState && panelState.item && <span className="font-semibold">{ getManifestLabel() }</span>}
-        <span className="w-[1px] h-[80%] bg-gray-400 mx-2 grow-0 shrink-0"></span>
+        <span className="w-[1px] h-[80%] bg-muted mx-2 grow-0 shrink-0"></span>
         { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
-        { panelState && panelState.item && <span className="text-gray-600" data-cy="item-label">{ getItemLabel() }</span>}
+        { panelState && panelState.item && <span className="text-muted-foreground" data-cy="item-label">{ getItemLabel() }</span>}
       </div>
     </>
   )

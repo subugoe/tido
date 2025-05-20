@@ -6,17 +6,37 @@
 
 @theme inline {
   --color-primary: rgb(var(--tido-color-primary));
-  --color-gray-50: var(--color-neutral-50);
-  --color-gray-100: var(--color-neutral-100);
-  --color-gray-200: var(--color-neutral-200);
-  --color-gray-300: var(--color-neutral-300);
-  --color-gray-400: var(--color-neutral-400);
-  --color-gray-500: var(--color-neutral-500);
-  --color-gray-600: var(--color-neutral-600);
-  --color-gray-700: var(--color-neutral-700);
-  --color-gray-800: var(--color-neutral-800);
-  --color-gray-900: var(--color-neutral-900);
-  --color-gray-950: var(--color-neutral-950);
+  --color-primary-foreground: var(--tido-color-primary-foreground);
+  --color-gray-50: var(--color-zinc-50);
+  --color-gray-100: var(--color-zinc-100);
+  --color-gray-200: var(--color-zinc-200);
+  --color-gray-300: var(--color-zinc-300);
+  --color-gray-400: var(--color-zinc-400);
+  --color-gray-500: var(--color-zinc-500);
+  --color-gray-600: var(--color-zinc-600);
+  --color-gray-700: var(--color-zinc-700);
+  --color-gray-800: var(--color-zinc-800);
+  --color-gray-900: var(--color-zinc-900);
+  --color-gray-950: var(--color-zinc-950);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-tooltip: var(--tooltip);
+  --color-tooltip-foreground: var(--tooltip-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 }
 
 .tido {
@@ -24,4 +44,50 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+    color: var(--foreground);
+
+  --radius: 0.625rem;
+  --background: var(--color-white);
+  --foreground: oklch(0.145 0 0);
+  --card: var(--color-white);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: var(--color-white);
+  --popover-foreground: oklch(0.145 0 0);
+  --tooltip: var(--color-gray-800);
+  --tooltip-foreground: var(--color-gray-200);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: var(--color-gray-100);
+  --muted-foreground: var(--color-gray-600);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: var(--color-gray-200);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+}
+
+.tido.dark {
+  --background: var(--color-gray-900);
+  --foreground: var(--color-gray-200);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: var(--color-gray-800);
+  --popover-foreground: oklch(0.985 0 0);
+  --tooltip: var(--color-gray-700);
+  --tooltip-foreground: var(--color-gray-300);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: var(--color-gray-700);
+  --muted-foreground: var(--color-gray-200);
+  --accent: var(--color-gray-600);
+  --accent-foreground: var(--color-gray-100);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+
+  scrollbar-color: var(--color-gray-600) var(--color-gray-800);
 }
