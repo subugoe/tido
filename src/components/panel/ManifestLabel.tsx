@@ -56,7 +56,7 @@ const ManifestLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedMan
             data-cy="item-label">
             { selectedLabel }
             { selectedManifest && <div
-              className="absolute mb-8 flex items-center justify-center w-4 h-4 border-[1px] border-gray-400 text-yellow-300 text-md font-bold rounded-full">
+              className="absolute mb-4 right-1 flex items-center justify-center w-4 h-4 border-[1px] border-gray-400 text-yellow-300 text-md font-bold rounded-full">
                 !
             </div> }
           </Button>
@@ -69,7 +69,7 @@ const ManifestLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedMan
                 variant="ghost"
                 key={i}
                 style={{ color: label === selectedLabel ? primaryColor : '' }}
-                className={`h-fit min-h-8 justify-start overflow-hidden pl-2 `}
+                className={`h-fit min-h-8 justify-start overflow-hidden pl-2 mr-2`}
                 title={label ?? ''}
                 onClick={() => handleManifestClick(label)}
               > {label }</Button>)}

@@ -40,8 +40,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       try {
         const collection = await getCollection(panelState.config.collection)
         const manifest = await apiRequest<Manifest>(collection.sequence[panelState.config.manifestIndex ?? 0].id)
+        console.log('manifest', manifest)
         const item = await apiRequest<Item>(manifest.sequence[panelState.config.itemIndex ?? 0].id)
         const contentTypes: string[] = getContentTypes(item.content)
+
 
         const { support } = manifest
 

@@ -104,7 +104,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
               {labels.length > 0 && labels.map((label, i) => <Button
                 variant="ghost"
                 style={{ color: 'Page '+ label === getItemLabel() ? primaryColor : '' }}
-                key={i} className="text-wrap h-fit min-h-8 overflow-hidden justify-start pl-2 py-1"
+                key={i} className="text-wrap h-fit min-h-8 overflow-hidden justify-start pl-2 mr-2 py-1"
                 title={label ?? ''}
                 onClick={() => handleItemClick(label)}
               > {label }</Button>)}
