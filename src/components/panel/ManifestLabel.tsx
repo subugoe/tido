@@ -53,7 +53,7 @@ const ManifestLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedMan
             variant={showManifestModal ? 'secondary' : 'ghost'}
             className="relative font-semibold text-gray-600"
             onClick={() =>  setShowManifestModal(!showManifestModal)}
-            data-cy="item-label">
+            data-cy="manifest-label">
             { selectedLabel }
             { selectedManifest && <div
               className="absolute mb-4 right-1 flex items-center justify-center w-4 h-4 border-[1px] border-gray-400 text-yellow-300 text-md font-bold rounded-full">
