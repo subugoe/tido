@@ -5,11 +5,14 @@ import { useTranslation } from 'react-i18next'
 import { useUIStore } from '@/store/UIStore.tsx'
 import { AlignCenter, Columns2, Image, PictureInPicture2 } from 'lucide-react'
 import { PopoverTrigger } from '@radix-ui/react-popover'
+import { Checkbox } from '@/components/ui/checkbox'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 
 const SelectViewPopover: FC = () => {
   const [showPopover, setShowPopover] = useState(useUIStore.getState().showSelectViewPopover)
   const updateShowSelectViewPopover = useUIStore.getState().updateShowSelectViewPopover
+  const defaultView = useConfigStore.getState().config.defaultView
   const { t } = useTranslation()
 
   const buttonsData = {
@@ -41,9 +44,10 @@ const SelectViewPopover: FC = () => {
   return (
     <Popover open={showPopover} onOpenChange={handleOpenChange} >
       <PopoverTrigger />
-      {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 w-[250px] h-[300px] p-10">
+      {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 w-[250px] h-[300px] pl-2 pt-2 justify-start">
+        <div>{ t('Please select the view to show the text') }</div>
         {Object.keys(buttonsData).map((key, i) => (
-          <Button variant="ghost" key={key+'_'+i}>
+          <Button variant={defaultView === key ? 'secondary': 'ghost'} key={key+'_'+i} className="flex justify-start">
             <div className="flex space-x-1">
               <div>{buttonsData[key].icon} </div>
               <div>{buttonsData[key].title}</div>
@@ -51,6 +55,15 @@ const SelectViewPopover: FC = () => {
           </Button>
         )
         )}
+        <div className="flex items-center space-x-2 mt-2 ml-2">
+          <Checkbox id="do-not-ask-again"  />
+          <label
+            htmlFor="do-not-ask-again"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Do not ask again
+          </label>
+        </div>
       </PopoverContent>}
     </Popover>
   )

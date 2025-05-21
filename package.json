@@ -107,5 +107,8 @@
   "files": [
     "src",
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "@radix-ui/react-checkbox": "^1.3.2"
+  }
 }
