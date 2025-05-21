@@ -66,7 +66,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, updateSelecte
             <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
               {labels.map((label, i) => <Button
                 variant="ghost"
-                key={i}
+                key={label + '_'+i}
                 className={`h-fit min-h-8 justify-start overflow-hidden pl-2 mr-2 ${panelState.manifest.label === label ? 'text-sky-600': ''} `}
                 title={label ?? ''}
                 onClick={() => handleManifestClick(label)}

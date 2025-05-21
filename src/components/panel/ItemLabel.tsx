@@ -104,7 +104,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
             <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
               {labels.length > 0 && labels.map((label, i) => <Button
                 variant="ghost"
-                key={i} className={`text-wrap h-fit min-h-8 overflow-hidden justify-start pl-2 mr-2 py-1 ${panelState.item.n === label ? 'text-sky-600': ''}`}
+                key={label + '_'+ i} className={`text-wrap h-fit min-h-8 overflow-hidden justify-start pl-2 mr-2 py-1 ${panelState.item.n === label ? 'text-sky-600': ''}`}
                 title={label ?? ''}
                 onClick={() => handleItemClick(label)}
               > {label }</Button>)}
