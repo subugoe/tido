@@ -28,6 +28,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+
   const defaultView = useConfigStore.getState().config.defaultView
   const getCollection = useDataStore(state => state.initCollection)
   const updateStorePanelState = usePanelStore((state) => state.updatePanel)

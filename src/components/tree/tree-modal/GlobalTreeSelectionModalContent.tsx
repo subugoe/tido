@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { useTree } from '@/contexts/TreeContext'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 interface SelectedItemIndicesType {
   collectionUrl: string
@@ -27,8 +28,13 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
   }
 
   function select(i?: number) {
-    if (i !== undefined) updatePanel(panels[i].id, { config: newPanelConfig })
-    else addPanel(newPanelConfig)
+    if (i !== undefined) {
+      updatePanel(panels[i].id, { config: newPanelConfig })
+    }
+    else {
+      addPanel(newPanelConfig)
+      useUIStore.getState().updateShowSelectViewPopover(true)
+    }
     onSelect()
     setSelectedNodeId('')
   }

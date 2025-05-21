@@ -8,10 +8,12 @@ import { useTranslation } from 'react-i18next'
 import AddNewCollectionForm from '@/components/AddNewCollectionForm.tsx'
 import TreeSelection from '@/components/tree/TreeSelection.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 const AddNewPanel: FC = () => {
   const title = useConfigStore(state => state.config.title)
   const allowNewCollections = useConfigStore(state => state.config.allowNewCollections)
+  const updateShowSelectViewPopover = useUIStore(state => state.updateShowSelectViewPopover)
 
   const { t } = useTranslation()
 
@@ -22,13 +24,16 @@ const AddNewPanel: FC = () => {
   function onSelect(value: 'new' | 'existing') {
     if (value === 'new') setStep(1)
     else if (value === 'existing') setStep(2)
-
+    console.log('value selected', value)
     setShowPopover(false)
     setShowDialog(true)
   }
 
   function onConfirmNewCollectionForm() {
+    console.log('onconfirm new collection form')
     setShowDialog(false)
+    console.log('should open the select view popover')
+    updateShowSelectViewPopover(true)
   }
 
   function renderTriggerButton() {
