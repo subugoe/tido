@@ -9,20 +9,19 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { apiRequest } from '@/utils/api.ts'
 
 
-interface ItemLabelProps {
+interface ManifestLabelProps {
   selectedManifest: Manifest | null,
-  updateSelectedManifest: (newManifest: Manifest | null) => void,
-  showManifestModal: boolean,
-  setShowManifestModal: (show: boolean) => void,
+  updateSelectedManifest: (newManifest: Manifest | null) => void
   setShowItemModal: (show: boolean) => void,
 }
 
-const ManifestLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifest, showManifestModal, setShowManifestModal, setShowItemModal }) => {
+const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, updateSelectedManifest, setShowItemModal }) => {
   const { panelState } = usePanel()
   const { t } = useTranslation()
   const collection = useDataStore().collections[panelState.collectionId]?.collection
   const manifest = panelState.manifest
   const labels = collection?.sequence.map((item) => item.label)
+  const [showModal, setShowModal] = useState(false)
   const [selectedLabel, setSelectedLabel] = useState('')
 
   useEffect(() => {
@@ -38,30 +37,30 @@ const ManifestLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedMan
     const manifestId = collection?.sequence.find((manifest) => manifest.label === label).id
     const manifest = await apiRequest<Manifest>(manifestId)
     updateSelectedManifest(manifest)
-    setShowManifestModal(false)
+    setShowModal(false)
     setShowItemModal(true)
   }
 
   const handleOpenChange = (open: boolean) => {
-    setShowManifestModal(open)
+    setShowModal(open)
   }
 
 
 
   return (
     <>
-      <Popover open={showManifestModal} onOpenChange={handleOpenChange}>
+      <Popover open={showModal} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
-            variant={showManifestModal ? 'secondary' : 'ghost'}
+            variant={showModal ? 'secondary' : 'ghost'}
             className="relative font-semibold text-gray-600"
-            onClick={() =>  setShowManifestModal(!showManifestModal)}
+            onClick={() =>  setShowModal(!showModal)}
             data-cy="manifest-label">
             { selectedLabel }
             { selectedManifest && <CircleAlert className="absolute mb-4 right-1 text-yellow-300" /> }
           </Button>
         </PopoverTrigger>
-        {showManifestModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[350px] w-fit max-h-[450px] pr-0 h-fit pl-2 py-2">
+        {showModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[350px] w-fit max-h-[450px] pr-0 h-fit pl-2 py-2">
           <div className="text-gray-600 ml-1">{ t('please_select_a_manifest_to_open') }</div>
           <div className="text-wrap">
             <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
