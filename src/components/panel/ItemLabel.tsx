@@ -27,19 +27,16 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
 
 
   useEffect(() => {
-    async function getLabels() {
-      let labels
-      if (!collection) return []
-      if (selectedManifest) {
-        labels = selectedManifest.sequence.map((item) => item.label) || []
-      }
-      else {
-        labels = manifest.sequence.map((item) => item.label)
-      }
-
-      setLabels(labels)
+    let labels
+    if (!collection) return
+    if (selectedManifest) {
+      labels = selectedManifest.sequence.map((item) => item.label) || []
     }
-    getLabels()
+    else {
+      labels = manifest.sequence.map((item) => item.label)
+    }
+
+    setLabels(labels)
   }, [collection, manifest, selectedManifest])
 
 
