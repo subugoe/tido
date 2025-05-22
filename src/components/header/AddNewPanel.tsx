@@ -24,15 +24,12 @@ const AddNewPanel: FC = () => {
   function onSelect(value: 'new' | 'existing') {
     if (value === 'new') setStep(1)
     else if (value === 'existing') setStep(2)
-    console.log('value selected', value)
     setShowPopover(false)
     setShowDialog(true)
   }
 
   function onConfirmNewCollectionForm() {
-    console.log('onconfirm new collection form')
     setShowDialog(false)
-    console.log('should open the select view popover')
     updateShowSelectViewPopover(true)
   }
 

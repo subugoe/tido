@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { Popover, PopoverContent } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
@@ -20,6 +20,8 @@ const SelectViewPopover: FC = () => {
   const updateShowSelectViewPopover = useUIStore.getState().updateShowSelectViewPopover
   const [selectedView, setSelectedView] = useState(configStore.config.defaultView)
   const { t } = useTranslation()
+
+  const isCheckboxChecked = useRef<boolean>(false)
 
   const buttonsData = {
     pip: {
@@ -49,6 +51,7 @@ const SelectViewPopover: FC = () => {
   function handleConfirm(selectedView: ViewType) {
     usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView) })
     configStore.updateConfig({ defaultView: selectedView })
+    //localStorage.setItem('enabledSelectViewModal', 'true')
     setShowPopover(false)
   }
 
@@ -71,7 +74,9 @@ const SelectViewPopover: FC = () => {
         )
         )}
         <div className="flex items-center space-x-2 mt-4 ml-2">
-          <Checkbox id="do-not-ask-again"  />
+          <Checkbox id="do-not-ask-again" onCheckedChange={(checked) => {
+            isCheckboxChecked.current = !!checked
+          }}  />
           <label
             htmlFor="do-not-ask-again"
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
