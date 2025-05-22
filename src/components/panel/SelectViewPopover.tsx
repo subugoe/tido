@@ -3,16 +3,22 @@ import { Popover, PopoverContent } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
 import { useUIStore } from '@/store/UIStore.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 import { AlignCenter, Columns2, Image, PictureInPicture2 } from 'lucide-react'
 import { PopoverTrigger } from '@radix-ui/react-popover'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { ViewType } from '@/types'
+import { usePanelStore } from '@/store/PanelStore.tsx'
+import { mapToViewIndex } from '@/utils/panel.ts'
 
 
 const SelectViewPopover: FC = () => {
   const [showPopover, setShowPopover] = useState(useUIStore.getState().showSelectViewPopover)
+  const { panelState } = usePanel()
+  const configStore = useConfigStore()
   const updateShowSelectViewPopover = useUIStore.getState().updateShowSelectViewPopover
-  const defaultView = useConfigStore.getState().config.defaultView
+  const [selectedView, setSelectedView] = useState(configStore.config.defaultView)
   const { t } = useTranslation()
 
   const buttonsData = {
@@ -40,14 +46,23 @@ const SelectViewPopover: FC = () => {
     setShowPopover(open)
   }
 
+  function handleConfirm(selectedView: ViewType) {
+    usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView) })
+    configStore.updateConfig({ defaultView: selectedView })
+    setShowPopover(false)
+  }
+
+
 
   return (
     <Popover open={showPopover} onOpenChange={handleOpenChange} >
       <PopoverTrigger />
-      {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 w-[250px] h-[300px] pl-2 pt-2 justify-start">
+      {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8} className="relative flex flex-col space-y-2 w-[250px] h-[350px] pl-2 pt-2 justify-start">
         <div>{ t('Please select the view to show the text') }</div>
-        {Object.keys(buttonsData).map((key, i) => (
-          <Button variant={defaultView === key ? 'secondary': 'ghost'} key={key+'_'+i} className="flex justify-start">
+        {Object.keys(buttonsData).map((key: ViewType, i) => (
+          <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
+            className="flex justify-start"
+            onClick={() => setSelectedView(key)}>
             <div className="flex space-x-1">
               <div>{buttonsData[key].icon} </div>
               <div>{buttonsData[key].title}</div>
@@ -55,7 +70,7 @@ const SelectViewPopover: FC = () => {
           </Button>
         )
         )}
-        <div className="flex items-center space-x-2 mt-2 ml-2">
+        <div className="flex items-center space-x-2 mt-4 ml-2">
           <Checkbox id="do-not-ask-again"  />
           <label
             htmlFor="do-not-ask-again"
@@ -64,6 +79,7 @@ const SelectViewPopover: FC = () => {
             Do not ask again
           </label>
         </div>
+        <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('Confirm')}</Button>
       </PopoverContent>}
     </Popover>
   )

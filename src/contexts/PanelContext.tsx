@@ -2,11 +2,10 @@ import { ReactNode, createContext, useContext, useState, FC, useEffect } from 'r
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
-import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
+import { getContentTypes, isNewManifest, mapToViewIndex } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
-import { ViewType } from '@/types'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {
@@ -77,14 +76,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
   function updatePanel(data: Partial<PanelState>) {
     updateStorePanelState(panelId, data)
-  }
-
-  function mapToViewIndex(view: ViewType): number {
-    if (view === 'pip') return 0
-    if (view === 'split') return 1
-    if (view === 'text') return 2
-    if (view === 'image') return 3
-    return 0
   }
 
   function remove() {

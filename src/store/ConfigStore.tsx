@@ -6,6 +6,7 @@ interface ConfigStoreType {
   config: TidoConfig,
   addCustomConfig: (customConfig: TidoConfig) => void,
   addRootCollection: (newRootCollection: string) => void,
+  updateConfig: (data: Partial<TidoConfig>) => void,
 }
 
 export const useConfigStore = create<ConfigStoreType>((set, get) => ({
@@ -23,5 +24,10 @@ export const useConfigStore = create<ConfigStoreType>((set, get) => ({
         ]
       }
     })
-  }
+  },
+  updateConfig( data: Partial<TidoConfig>) {
+    set({
+      config: { ...get().config, ...data }
+    })
+  },
 }))
