@@ -1,4 +1,5 @@
 import { FC, useEffect } from 'react'
+import '@/css/style.css'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'

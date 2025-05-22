@@ -16,13 +16,18 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useUIStore } from '@/store/UIStore.tsx'
 
 export const ThemeToggle = () => {
   const { t } = useTranslation()
   const { setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
   const [enabledSelectViewModal, setEnabledSelectViewModal] = useState(localStorage.getItem('enabledSelectViewModal') === 'true')
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   function handleSwitchClick(e) {
     e.stopPropagation()
@@ -32,19 +37,10 @@ export const ThemeToggle = () => {
     }
     localStorage.setItem('enabledSelectViewModal', 'true')
   }
+  if (!mounted) return null
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button>Open</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-52 p-2">
-          <DropdownMenuItem>Item 1</DropdownMenuItem>
-          <DropdownMenuItem>Item 2</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" title="Settings" className="w-fit px-2">
