@@ -96,12 +96,12 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
           </Button>
         </PopoverTrigger>
         {showItemModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[200px] w-fit max-h-[450px] h-fit pr-0 pl-2 py-2">
-          <div className="text-gray-600 ml-1">{ t('please_select_an_item_to_open') }</div>
+          <div className="text-muted-foreground ml-1">{ t('please_select_an_item_to_open') }</div>
           <div className="text-wrap">
             <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
               {labels.length > 0 && labels.map((label, i) => <Button
                 variant="ghost"
-                key={label + '_'+ i} className={`text-wrap h-fit min-h-8 overflow-hidden justify-start pl-2 mr-2 py-1 ${panelState.item.n === label ? 'text-sky-600': ''}`}
+                key={label + '_'+ i} className={`text-wrap h-fit min-h-8 overflow-hidden justify-start pl-2 mr-2 py-1 ${panelState.item.n === label ? 'text-primary': ''}`}
                 title={label ?? ''}
                 onClick={() => handleItemClick(label)}
               > {label }</Button>)}

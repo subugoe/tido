@@ -57,17 +57,17 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, updateSelecte
             onClick={() =>  setShowModal(!showModal)}
             data-cy="manifest-label">
             { selectedLabel }
-            { selectedManifest && <CircleAlert className="absolute mb-4 right-1 text-yellow-300" /> }
+            { selectedManifest && <CircleAlert className="absolute mb-4 w-12 h-12 rounded-full right-1 text-white bg-yellow-300" /> }
           </Button>
         </PopoverTrigger>
         {showModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[350px] w-fit max-h-[450px] pr-0 h-fit pl-2 py-2">
-          <div className="text-gray-600 ml-1">{ t('please_select_a_manifest_to_open') }</div>
+          <div className="text-muted-foreground ml-1">{ t('please_select_a_manifest_to_open') }</div>
           <div className="text-wrap">
             <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
               {labels.map((label, i) => <Button
                 variant="ghost"
                 key={label + '_'+i}
-                className={`h-fit min-h-8 justify-start overflow-hidden pl-2 mr-2 ${panelState.manifest.label === label ? 'text-sky-600': ''} `}
+                className={`h-fit min-h-8 justify-start overflow-hidden pl-2 mr-2 ${panelState.manifest.label === label ? 'text-primary': ''} `}
                 title={label ?? ''}
                 onClick={() => handleManifestClick(label)}
               > {label }</Button>)}
