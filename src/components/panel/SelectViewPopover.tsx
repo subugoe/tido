@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Popover, PopoverContent } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
@@ -57,38 +57,51 @@ const SelectViewPopover: FC = () => {
     updateShowSelectViewPopover(false)
   }
 
+  const [animate, setAnimate] = useState(false)
 
+  useEffect(() => {
+    // Trigger the animation only once on mount
+    const timer = setTimeout(() => {
+      setAnimate(true)
+    }, 100) // slight delay ensures transition applies
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
-    <Popover open={showPopover} onOpenChange={handleOpenChange} >
-      <PopoverTrigger />
-      {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8} className="relative flex flex-col space-y-2 w-[250px] h-[350px] pl-2 pt-2 justify-start">
-        <div>{ t('Please select the view to show the text') }</div>
-        {Object.keys(buttonsData).map((key: ViewType, i) => (
-          <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
-            className="flex justify-start"
-            onClick={() => setSelectedView(key)}>
-            <div className="flex space-x-1">
-              <div>{buttonsData[key].icon} </div>
-              <div>{buttonsData[key].title}</div>
-            </div>
-          </Button>
-        )
-        )}
-        <div className="flex items-center space-x-2 mt-4 ml-2">
-          <Checkbox id="do-not-ask-again" onCheckedChange={(checked) => {
-            isCheckboxChecked.current = !!checked
-          }}  />
-          <label
-            htmlFor="do-not-ask-again"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
+    <div
+      className={`
+          absolute transition-all duration-700 ease-out
+          ${animate ? 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' : 'top-0 right-0'}`}>
+      <Popover open={showPopover} onOpenChange={handleOpenChange}>
+        <PopoverTrigger />
+        {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8} className="relative flex flex-col space-y-2 w-[250px] h-[350px] pl-2 pt-2 justify-start">
+          <div>{ t('Please select the view to show the text') }</div>
+          {Object.keys(buttonsData).map((key: ViewType, i) => (
+            <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
+              className="flex justify-start"
+              onClick={() => setSelectedView(key)}>
+              <div className="flex space-x-1">
+                <div>{buttonsData[key].icon} </div>
+                <div>{buttonsData[key].title}</div>
+              </div>
+            </Button>
+          )
+          )}
+          <div className="flex items-center space-x-2 mt-4 ml-2">
+            <Checkbox id="do-not-ask-again" onCheckedChange={(checked) => {
+              isCheckboxChecked.current = !!checked
+            }}  />
+            <label
+              htmlFor="do-not-ask-again"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
             Do not ask again
-          </label>
-        </div>
-        <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('Confirm')}</Button>
-      </PopoverContent>}
-    </Popover>
+            </label>
+          </div>
+          <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('Confirm')}</Button>
+        </PopoverContent>}
+      </Popover>
+    </div>
   )
 }
 

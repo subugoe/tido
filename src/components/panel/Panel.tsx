@@ -96,8 +96,6 @@ const Panel: FC = React.memo(() => {
     }
   }, [resizing])
 
-  console.log('enable S.V.M in Panel', useUIStore.getState().enabledSelectViewPopover)
-
   return (
     <div
       id={panelId}
@@ -126,9 +124,7 @@ const Panel: FC = React.memo(() => {
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
       <PanelHeader />
       <PanelBody />
-      <div className="absolute animation-slideToCenter">
-        {panelId === usePanelStore().getLastPanelId() && useUIStore.getState().enabledSelectViewPopover && useUIStore.getState().showSelectViewPopover ? <SelectViewPopover /> : null}
-      </div>
+      {panelId === usePanelStore().getLastPanelId() && useUIStore.getState().enabledSelectViewPopover && useUIStore.getState().showSelectViewPopover ? <SelectViewPopover /> : null}
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
          -translate-y-1/2 top-1/2 -right-2"
