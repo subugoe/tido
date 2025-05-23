@@ -16,9 +16,11 @@ const MIN_PANEL_WIDTH = 400
 
 const Panel: FC = React.memo(() => {
   const { panelId } = usePanel()
+  const enabledSelectViewPopover = useUIStore(state => state.enabledSelectViewPopover)
+  const showSelectViewState = useUIStore(state => state.showSelectViewPopover)
   const showSelectViewPopover = panelId === usePanelStore().getLastPanelId()
-    && useUIStore.getState().enabledSelectViewPopover &&
-    useUIStore.getState().showSelectViewPopover
+    && enabledSelectViewPopover && showSelectViewState
+
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
   const [flexValues, setFlexValues] = useState({
@@ -102,7 +104,6 @@ const Panel: FC = React.memo(() => {
   const [animate, setAnimate] = useState(false)
 
   useEffect(() => {
-    // Trigger the animation only once on mount
     const timer = setTimeout(() => {
       setAnimate(true)
     }, 100) // slight delay ensures transition applies
