@@ -21,7 +21,7 @@ import { useUIStore } from '@/store/UIStore.tsx'
 
 export const ThemeToggle = () => {
   const { t } = useTranslation()
-  const { setTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [enabledSelectViewModal, setEnabledSelectViewModal] = useState(localStorage.getItem('enabledSelectViewModal') === 'true')
 
@@ -50,21 +50,25 @@ export const ThemeToggle = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56 h-40 p-2">
           <DropdownMenuLabel>{t('Settings')}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <div>{ t('toggle_theme')}</div>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
-                <DropdownMenuItem onClick={() => setTheme('light')}>
-                  <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <DropdownMenuItem disabled={theme=== 'light'} onClick={() => setTheme('light')}>
+                  <Sun className="h-[1.2rem] w-[1.2rem]" />
                   { t('light') }</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('dark')}>
+                <DropdownMenuItem disabled={theme=== 'dark'} onClick={() => setTheme('dark')}>
                   <Moon className="h-[1.2rem] w-[1.2rem]" />
                   <span>{ t('dark') }</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme('system')}>{ t('system') }</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setTheme('system')}
+                  disabled={theme=== 'system'}
+                >
+                  { t('system') }
+                </DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
           </DropdownMenuSub>
