@@ -1,16 +1,20 @@
 import { FC, useRef, useState } from 'react'
-import { Popover, PopoverContent } from '@/components/ui/popover.tsx'
-import { Button } from '@/components/ui/button.tsx'
-import { useTranslation } from 'react-i18next'
+
 import { useUIStore } from '@/store/UIStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { AlignCenter, Columns2, Image, PictureInPicture2 } from 'lucide-react'
-import { PopoverTrigger } from '@radix-ui/react-popover'
-import { Checkbox } from '@/components/ui/checkbox'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
-import { ViewType } from '@/types'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useTranslation } from 'react-i18next'
+
+import { Popover, PopoverContent } from '@/components/ui/popover.tsx'
+import { Button } from '@/components/ui/button.tsx'
+import { PopoverTrigger } from '@radix-ui/react-popover'
+import { ViewType } from '@/types'
+import SelectViewButtons from '@/components/panel/select-view-popover/SelectViewButtons.tsx'
+import CheckboxInPopover from '@/components/panel/select-view-popover/CheckboxInPopover.tsx'
+
 import { mapToViewIndex } from '@/utils/panel.ts'
+
 
 interface SelectViewPopoverProps {
   animate: boolean
@@ -19,33 +23,12 @@ interface SelectViewPopoverProps {
 const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
   const [showPopover, setShowPopover] = useState(useUIStore.getState().showSelectViewPopover)
   const { panelState } = usePanel()
-  const configStore = useConfigStore()
   const updateShowSelectViewPopover = useUIStore.getState().updateShowSelectViewPopover
-  const [selectedView, setSelectedView] = useState(configStore.config.defaultView)
+  const [selectedView, setSelectedView] = useState(useConfigStore().config.defaultView)
   const updateEnabledSelectViewPopover = useUIStore.getState().updateEnabledSelectViewPopover
   const { t } = useTranslation()
 
-  const isCheckboxChecked = useRef<boolean>(false)
-
-  const buttonsData = {
-    pip: {
-      icon: <PictureInPicture2 />,
-      title: t('pip_view')
-    },
-    split: {
-      icon: <Columns2 />,
-      title: t('split_view')
-    },
-    text: {
-      icon: <AlignCenter />,
-      title: t('text_view')
-    },
-    image: {
-      icon: <Image />,
-      title: t('image_view')
-    },
-  }
-
+  const isChecked = useRef<boolean>(false)
 
   const handleOpenChange = (open: boolean) => {
     updateShowSelectViewPopover(open)
@@ -54,12 +37,15 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
 
   function handleConfirm(selectedView: ViewType) {
     usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView) })
-    configStore.updateConfig({ defaultView: selectedView })
-    if (isCheckboxChecked.current) updateEnabledSelectViewPopover(false)
+    useConfigStore.getState().updateConfig({ defaultView: selectedView })
+    if (isChecked.current) updateEnabledSelectViewPopover(false)
     setShowPopover(false)
     updateShowSelectViewPopover(false)
   }
 
+  function updateCheckedValue(newValue) {
+    isChecked.current = newValue
+  }
 
   return (
     <div className={`
@@ -73,28 +59,8 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
         {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8}
           className="absolute w-[300px] h-[350px] flex flex-col pl-2 pt-2 justify-start space-y-2">
           <div className="text-secondary-foreground">{ t('Please select the view to show the text') }</div>
-          {Object.keys(buttonsData).map((key: ViewType, i) => (
-            <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
-              className="flex justify-start"
-              onClick={() => setSelectedView(key)}>
-              <div className="flex space-x-2">
-                <div>{buttonsData[key].icon} </div>
-                <div>{buttonsData[key].title}</div>
-              </div>
-            </Button>
-          )
-          )}
-          <div className="flex items-center space-x-2 mt-4 ml-2">
-            <Checkbox id="do-not-ask-again" onCheckedChange={(checked) => {
-              isCheckboxChecked.current = !!checked
-            }}  />
-            <label
-              htmlFor="do-not-ask-again"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-                Do not ask again
-            </label>
-          </div>
+          <SelectViewButtons updateSelectedButton={setSelectedView} />
+          <CheckboxInPopover updateCheckedValue={updateCheckedValue} />
           <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('Confirm')}</Button>
         </PopoverContent>}
       </Popover>

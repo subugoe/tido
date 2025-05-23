@@ -8,7 +8,6 @@ import { Switch } from '@/components/ui/switch'
 
 
 const SelectViewPopoverSwitch: FC = () => {
-
   const [enabledSelectViewModal, setEnabledSelectViewModal]  = useState(useUIStore.getState().enabledSelectViewPopover)
   const updateEnabledSelectViewModal = useUIStore.getState().updateEnabledSelectViewPopover
   const allowSelectViewModal = useUIStore(state => state.enabledSelectViewPopover)

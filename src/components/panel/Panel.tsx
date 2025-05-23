@@ -7,7 +7,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useScrollStore } from '@/store/ScrollStore.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
-import SelectViewPopover from '@/components/panel/SelectViewPopover.tsx'
+import SelectViewPopover from '@/components/panel/select-view-popover/SelectViewPopover.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
 
@@ -145,8 +145,7 @@ const Panel: FC = React.memo(() => {
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
       <PanelHeader />
       <PanelBody />
-      {showSelectViewPopover ?
-        <SelectViewPopover animate={animate}  /> : null}
+      {showSelectViewPopover && <SelectViewPopover animate={animate}  /> }
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
          -translate-y-1/2 top-1/2 -right-2"
