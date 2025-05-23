@@ -24,11 +24,15 @@ export const ThemeToggle = () => {
   const [mounted, setMounted] = useState(false)
   const [enabledSelectViewModal, setEnabledSelectViewModal]  = useState(useUIStore.getState().enabledSelectViewPopover)
   const updateEnabledSelectViewModal = useUIStore.getState().updateEnabledSelectViewPopover
+  const allowSelectViewModal = useUIStore(state => state.enabledSelectViewPopover)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
+  useEffect(() => {
+    setEnabledSelectViewModal(allowSelectViewModal)
+  }, [allowSelectViewModal])
 
   function handleSwitchClick(e) {
     e.stopPropagation()
@@ -42,6 +46,7 @@ export const ThemeToggle = () => {
   }
 
   if (!mounted) return null
+
 
   return (
     <>
@@ -80,7 +85,7 @@ export const ThemeToggle = () => {
             <div className="flex items-center space-x-2">
               <Label htmlFor="toggle-select-view-modal">{t('enable_select_view_modal')}</Label>
               <Switch id="toggle-select-view-modal"
-                checked={useUIStore.getState().enabledSelectViewPopover === true}
+                checked={enabledSelectViewModal}
                 onCheckedChange={setEnabledSelectViewModal}
                 onClick={(e) => handleSwitchClick(e)}
               />
