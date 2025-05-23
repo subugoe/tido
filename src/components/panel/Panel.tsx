@@ -16,6 +16,9 @@ const MIN_PANEL_WIDTH = 400
 
 const Panel: FC = React.memo(() => {
   const { panelId } = usePanel()
+  const showSelectViewPopover = panelId === usePanelStore().getLastPanelId()
+    && useUIStore.getState().enabledSelectViewPopover &&
+    useUIStore.getState().showSelectViewPopover
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
   const [flexValues, setFlexValues] = useState({
@@ -96,6 +99,17 @@ const Panel: FC = React.memo(() => {
     }
   }, [resizing])
 
+  const [animate, setAnimate] = useState(false)
+
+  useEffect(() => {
+    // Trigger the animation only once on mount
+    const timer = setTimeout(() => {
+      setAnimate(true)
+    }, 100) // slight delay ensures transition applies
+    return () => clearTimeout(timer)
+  }, [showSelectViewPopover])
+
+
   return (
     <div
       id={panelId}
@@ -124,7 +138,10 @@ const Panel: FC = React.memo(() => {
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
       <PanelHeader />
       <PanelBody />
-      {panelId === usePanelStore().getLastPanelId() && useUIStore.getState().enabledSelectViewPopover && useUIStore.getState().showSelectViewPopover ? <SelectViewPopover /> : null}
+      {panelId === usePanelStore().getLastPanelId()
+          && useUIStore.getState().enabledSelectViewPopover &&
+       useUIStore.getState().showSelectViewPopover ?
+        <SelectViewPopover animate={animate}  /> : null}
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
          -translate-y-1/2 top-1/2 -right-2"

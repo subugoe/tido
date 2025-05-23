@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { Popover, PopoverContent } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
@@ -12,8 +12,11 @@ import { ViewType } from '@/types'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { mapToViewIndex } from '@/utils/panel.ts'
 
+interface SelectViewPopoverProps {
+  animate: boolean
+}
 
-const SelectViewPopover: FC = () => {
+const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
   const [showPopover, setShowPopover] = useState(useUIStore.getState().showSelectViewPopover)
   const { panelState } = usePanel()
   const configStore = useConfigStore()
@@ -57,24 +60,17 @@ const SelectViewPopover: FC = () => {
     updateShowSelectViewPopover(false)
   }
 
-  const [animate, setAnimate] = useState(false)
-
-  useEffect(() => {
-    // Trigger the animation only once on mount
-    const timer = setTimeout(() => {
-      setAnimate(true)
-    }, 100) // slight delay ensures transition applies
-    return () => clearTimeout(timer)
-  }, [])
 
   return (
     <div
-      className={`
-          absolute transition-all duration-700 ease-out
-          ${animate ? 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' : 'top-0 right-0'}`}>
+    >
       <Popover open={showPopover} onOpenChange={handleOpenChange}>
         <PopoverTrigger />
-        {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8} className="relative flex flex-col space-y-2 w-[250px] h-[350px] pl-2 pt-2 justify-start">
+        {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8}
+          className={`
+          absolute flex flex-col space-y-2 w-[250px] h-[350px] pl-2 pt-2 justify-start
+          transition-all duration-700 ease-out
+          ${animate ? 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' : 'top-0 right-0'}`}>
           <div>{ t('Please select the view to show the text') }</div>
           {Object.keys(buttonsData).map((key: ViewType, i) => (
             <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
