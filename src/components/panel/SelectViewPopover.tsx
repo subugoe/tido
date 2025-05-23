@@ -62,21 +62,22 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
 
 
   return (
-    <div
-    >
-      <Popover open={showPopover} onOpenChange={handleOpenChange}>
-        <PopoverTrigger />
-        {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8}
-          className={`
-          absolute flex flex-col space-y-2 w-[250px] h-[350px] pl-2 pt-2 justify-start
+    <div className={`
+          absolute w-[350px] h-[400px]
           transition-all duration-700 ease-out
           ${animate ? 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' : 'top-0 right-0'}`}>
-          <div>{ t('Please select the view to show the text') }</div>
+      <Popover open={showPopover} onOpenChange={handleOpenChange}>
+        <PopoverTrigger>
+          <div className="w-full opacity-0">Open</div>
+        </PopoverTrigger>
+        {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8}
+          className="absolute w-[300px] h-[350px] flex flex-col pl-2 pt-2 justify-start space-y-2">
+          <div className="text-secondary-foreground">{ t('Please select the view to show the text') }</div>
           {Object.keys(buttonsData).map((key: ViewType, i) => (
             <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
               className="flex justify-start"
               onClick={() => setSelectedView(key)}>
-              <div className="flex space-x-1">
+              <div className="flex space-x-2">
                 <div>{buttonsData[key].icon} </div>
                 <div>{buttonsData[key].title}</div>
               </div>
@@ -91,7 +92,7 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
               htmlFor="do-not-ask-again"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-            Do not ask again
+                Do not ask again
             </label>
           </div>
           <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('Confirm')}</Button>
