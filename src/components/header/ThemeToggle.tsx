@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuPortal,
-  DropdownMenuSeparator,
   DropdownMenuSub, DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
@@ -23,20 +22,25 @@ export const ThemeToggle = () => {
   const { t } = useTranslation()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const [enabledSelectViewModal, setEnabledSelectViewModal] = useState(localStorage.getItem('enabledSelectViewModal') === 'true')
+  const [enabledSelectViewModal, setEnabledSelectViewModal]  = useState(useUIStore.getState().enabledSelectViewPopover)
+  const updateEnabledSelectViewModal = useUIStore.getState().updateEnabledSelectViewPopover
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
+
   function handleSwitchClick(e) {
     e.stopPropagation()
     if (enabledSelectViewModal) {
-      localStorage.setItem('enabledSelectViewModal', 'false')
+      setEnabledSelectViewModal(false)
+      updateEnabledSelectViewModal(false)
       return
     }
-    localStorage.setItem('enabledSelectViewModal', 'true')
+    setEnabledSelectViewModal(true)
+    updateEnabledSelectViewModal(true)
   }
+
   if (!mounted) return null
 
   return (
@@ -76,7 +80,7 @@ export const ThemeToggle = () => {
             <div className="flex items-center space-x-2">
               <Label htmlFor="toggle-select-view-modal">{t('enable_select_view_modal')}</Label>
               <Switch id="toggle-select-view-modal"
-                checked={enabledSelectViewModal}
+                checked={useUIStore.getState().enabledSelectViewPopover === true}
                 onCheckedChange={setEnabledSelectViewModal}
                 onClick={(e) => handleSwitchClick(e)}
               />

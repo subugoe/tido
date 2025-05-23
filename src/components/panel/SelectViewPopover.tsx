@@ -19,6 +19,7 @@ const SelectViewPopover: FC = () => {
   const configStore = useConfigStore()
   const updateShowSelectViewPopover = useUIStore.getState().updateShowSelectViewPopover
   const [selectedView, setSelectedView] = useState(configStore.config.defaultView)
+  const udpateEnabledSelectViewPopover = useUIStore.getState().updateEnabledSelectViewPopover
   const { t } = useTranslation()
 
   const isCheckboxChecked = useRef<boolean>(false)
@@ -51,7 +52,7 @@ const SelectViewPopover: FC = () => {
   function handleConfirm(selectedView: ViewType) {
     usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView) })
     configStore.updateConfig({ defaultView: selectedView })
-    //localStorage.setItem('enabledSelectViewModal', 'true')
+    if (isCheckboxChecked.current) udpateEnabledSelectViewPopover(false)
     setShowPopover(false)
   }
 

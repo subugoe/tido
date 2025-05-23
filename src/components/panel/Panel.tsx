@@ -9,6 +9,7 @@ import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
 import SelectViewPopover from '@/components/panel/SelectViewPopover.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 const DEFAULT_PANEL_WIDTH = 600
 const MIN_PANEL_WIDTH = 400
@@ -95,6 +96,8 @@ const Panel: FC = React.memo(() => {
     }
   }, [resizing])
 
+  console.log('enable S.V.M in Panel', useUIStore.getState().enabledSelectViewPopover)
+
   return (
     <div
       id={panelId}
@@ -124,7 +127,7 @@ const Panel: FC = React.memo(() => {
       <PanelHeader />
       <PanelBody />
       <div className="absolute animation-slideToCenter">
-        {panelId === usePanelStore().getLastPanelId() && localStorage.getItem('enabledSelectViewModal') === 'true' ? <SelectViewPopover /> : null}
+        {panelId === usePanelStore().getLastPanelId() && useUIStore.getState().enabledSelectViewPopover ? <SelectViewPopover /> : null}
       </div>
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
