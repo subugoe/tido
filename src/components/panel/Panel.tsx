@@ -135,12 +135,16 @@ const Panel: FC = React.memo(() => {
       `}
       data-cy="panel"
     >
+      <div
+        className={`
+      absolute w-full h-full inset-0 bg-black/40 transition-opacity duration-500 z-10 backdrop-blur-xs
+      ${showSelectViewPopover ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+    `}
+      />
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
       <PanelHeader />
       <PanelBody />
-      {panelId === usePanelStore().getLastPanelId()
-          && useUIStore.getState().enabledSelectViewPopover &&
-       useUIStore.getState().showSelectViewPopover ?
+      {showSelectViewPopover ?
         <SelectViewPopover animate={animate}  /> : null}
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
