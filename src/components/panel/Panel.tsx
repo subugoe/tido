@@ -127,7 +127,7 @@ const Panel: FC = React.memo(() => {
       <PanelHeader />
       <PanelBody />
       <div className="absolute animation-slideToCenter">
-        {panelId === usePanelStore().getLastPanelId() && useUIStore.getState().enabledSelectViewPopover ? <SelectViewPopover /> : null}
+        {panelId === usePanelStore().getLastPanelId() && useUIStore.getState().enabledSelectViewPopover && useUIStore.getState().showSelectViewPopover ? <SelectViewPopover /> : null}
       </div>
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
