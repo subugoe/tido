@@ -34,7 +34,6 @@ const SelectViewPopoverSwitch: FC = () => {
         <Label htmlFor="toggle-select-view-modal">{t('enable_select_view_modal')}</Label>
         <Switch id="toggle-select-view-modal"
           checked={enabledSelectViewModal}
-          onCheckedChange={setEnabledSelectViewModal}
           onClick={(e) => handleSwitchClick(e)}
         />
       </div>
