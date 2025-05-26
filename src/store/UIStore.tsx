@@ -8,7 +8,7 @@ interface UIStoreTypes {
 }
 
 
-export const useUIStore = create<UIStoreTypes>((set, get) => ({
+export const useUIStore = create<UIStoreTypes>((set) => ({
   showSelectViewPopover: false,
   updateShowSelectViewPopover: (show: boolean) => {
     set({ showSelectViewPopover: show })

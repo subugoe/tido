@@ -42,6 +42,3 @@ const SelectViewPopoverSwitch: FC = () => {
 }
 
 export default SelectViewPopoverSwitch
-
-
-
