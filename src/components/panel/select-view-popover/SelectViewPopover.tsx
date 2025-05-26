@@ -61,7 +61,7 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
           <div className="text-muted-foreground">{ t('please_select_view_to_show_text') }</div>
           <SelectViewButtons updateSelectedButton={setSelectedView} />
           <CheckboxInPopover updateCheckedValue={updateCheckedValue} />
-          <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('Confirm')}</Button>
+          <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
         </PopoverContent>}
       </Popover>
     </div>

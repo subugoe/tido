@@ -43,7 +43,7 @@ const SelectViewButtons: FC<SelectViewButtonsProps> = ({ updateSelectedButton })
     <>
       {Object.keys(buttonsData).map((key: ViewType, i) => (
         <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
-          className="flex justify-start"
+          className={`flex justify-start hover:bg-muted ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
           onClick={() => setSelectedButton(key)}>
           <div className="flex space-x-2">
             <div>{buttonsData[key].icon} </div>
