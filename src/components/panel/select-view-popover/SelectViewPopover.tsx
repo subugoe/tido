@@ -58,7 +58,7 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
         </PopoverTrigger>
         {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8}
           className="absolute w-[300px] h-[350px] flex flex-col pl-2 pt-2 justify-start space-y-2">
-          <div className="text-secondary-foreground">{ t('Please select the view to show the text') }</div>
+          <div className="text-muted-foreground">{ t('please_select_view_to_show_text') }</div>
           <SelectViewButtons updateSelectedButton={setSelectedView} />
           <CheckboxInPopover updateCheckedValue={updateCheckedValue} />
           <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('Confirm')}</Button>

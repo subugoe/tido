@@ -1,6 +1,8 @@
+import { FC, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 
-import { FC, useRef } from 'react'
 
 interface Props {
   updateCheckedValue: (value: boolean) => void
@@ -8,6 +10,7 @@ interface Props {
 
 const CheckBoxInPopover: FC<Props> = ({ updateCheckedValue }) => {
   const isChecked = useRef<boolean>(false)
+  const { t } = useTranslation()
 
   function handleCheckedChange(checked) {
     isChecked.current = !!checked
@@ -21,7 +24,7 @@ const CheckBoxInPopover: FC<Props> = ({ updateCheckedValue }) => {
         htmlFor="do-not-ask-again"
         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
       >
-        Do not ask again
+        {t('do_not_ask_again')}
       </label>
     </div>
   )

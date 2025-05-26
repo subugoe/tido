@@ -46,5 +46,7 @@
   "toggle_theme": "Toggle theme",
   "light": "Light",
   "dark": "Dark",
-  "system": "System"
+  "system": "System",
+  "do_not_ask_again": "Do not ask again",
+  "please_select_view_to_show_text": "Please select the view to show the text"
 }

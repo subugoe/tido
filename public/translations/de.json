@@ -50,5 +50,7 @@
   "toggle_theme": "Farbschema umschalten",
   "light": "Hell",
   "dark": "Dunkel",
-  "system": "System"
+  "system": "System",
+  "do_not_ask_again": "Fragen Sie nicht mehr",
+  "please_select_view_to_show_text": "Bitte wählen Sie die Ansicht, um den Text anzuzeigen"
 }
