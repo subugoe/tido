@@ -89,7 +89,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
         <PopoverTrigger asChild>
           <Button
             variant={showItemModal ? 'secondary' : 'ghost'}
-            className="text-sm bg-muted px-2 py-1 rounded-md font-semibold truncate max-w-[200px]"
+            className="relative font-semibold text-secondary-foreground max-w-[250px] truncate px-2 py-1"
             onClick={() =>  setShowItemModal(!showItemModal)}
             title={getItemLabel()}
             data-cy="item-label">
