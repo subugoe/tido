@@ -11,11 +11,10 @@ import { apiRequest } from '@/utils/api.ts'
 
 interface ManifestLabelProps {
   selectedManifest: Manifest | null,
-  updateSelectedManifest: (newManifest: Manifest | null) => void
-  setShowItemModal: (show: boolean) => void,
+  onManifestSelect: (newManifest: Manifest | null) => void
 }
 
-const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, updateSelectedManifest, setShowItemModal }) => {
+const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSelect }) => {
   const { panelState } = usePanel()
   const { t } = useTranslation()
   const collection = useDataStore().collections[panelState.collectionId]?.collection
@@ -36,9 +35,8 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, updateSelecte
   async function handleManifestClick(label: string) {
     const manifestId = collection?.sequence.find((manifest) => manifest.label === label).id
     const manifest = await apiRequest<Manifest>(manifestId)
-    updateSelectedManifest(manifest)
+    onManifestSelect(manifest)
     setShowModal(false)
-    setShowItemModal(true)
   }
 
   const handleOpenChange = (open: boolean) => {
