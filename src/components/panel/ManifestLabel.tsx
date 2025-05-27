@@ -53,7 +53,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, updateSelecte
         <PopoverTrigger asChild>
           <Button
             variant={showModal ? 'secondary' : 'ghost'}
-            className="relative px-2 py-1 font-semibold text-secondary-foreground truncate max-w-[200px]"
+            className="relative text-sm bg-muted px-2 py-1 rounded-md font-semibold truncate max-w-[200px]"
             onClick={() =>  setShowModal(!showModal)}
             title={selectedLabel}
             data-cy="manifest-label">
