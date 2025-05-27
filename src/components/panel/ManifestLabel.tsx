@@ -46,19 +46,20 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, updateSelecte
   }
 
 
-
   return (
     <>
       <Popover open={showModal} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
             variant={showModal ? 'secondary' : 'ghost'}
-            className="relative font-semibold text-secondary-foreground max-w-[250px] truncate px-2 py-1"
             onClick={() =>  setShowModal(!showModal)}
             title={selectedLabel}
+            className="px-1"
             data-cy="manifest-label">
-            { selectedLabel }
-            { selectedManifest && <CircleAlert className="absolute mb-4 w-12 h-12 rounded-full right-1 text-white bg-yellow-300" /> }
+            <div className="relative font-semibold text-secondary-foreground rounded-md max-w-[250px] truncate px-1 py-1">
+              {selectedLabel}
+              { selectedManifest && <CircleAlert className="absolute w-12 h-12 rounded-full -top-1 right-1 text-white bg-yellow-300" />}
+            </div>
           </Button>
         </PopoverTrigger>
         {showModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[350px] w-fit max-h-[450px] pr-0 h-fit pl-0 py-4">
