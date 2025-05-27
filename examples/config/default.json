@@ -1,5 +1,5 @@
 {
-  "allowNewCollections": false,
+  "allowNewCollections": true,
   "defaultView": "split",
   "lang": "de",
   "panels": [
@@ -12,7 +12,8 @@
     "primaryColor": "#1E40AF"
   },
   "rootCollections": [
-    "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/collection.json"
+    "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/collection.json",
+    "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json"
   ],
   "translations": {
     "de": {

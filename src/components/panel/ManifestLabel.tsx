@@ -53,25 +53,24 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, updateSelecte
         <PopoverTrigger asChild>
           <Button
             variant={showModal ? 'secondary' : 'ghost'}
-            className="relative font-semibold text-secondary-foreground"
+            className="relative px-2 py-1 font-semibold text-secondary-foreground truncate max-w-[200px]"
             onClick={() =>  setShowModal(!showModal)}
+            title={selectedLabel}
             data-cy="manifest-label">
             { selectedLabel }
             { selectedManifest && <CircleAlert className="absolute mb-4 w-12 h-12 rounded-full right-1 text-white bg-yellow-300" /> }
           </Button>
         </PopoverTrigger>
-        {showModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[350px] w-fit max-h-[450px] pr-0 h-fit pl-2 py-2">
-          <div className="text-muted-foreground ml-1">{ t('please_select_a_manifest_to_open') }</div>
-          <div className="text-wrap">
-            <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
-              {labels.map((label, i) => <Button
-                variant="ghost"
-                key={label + '_'+i}
-                className={`h-fit min-h-8 justify-start overflow-hidden pl-2 mr-2 ${panelState.manifest.label === label ? 'text-primary': ''} `}
-                title={label ?? ''}
-                onClick={() => handleManifestClick(label)}
-              > {label }</Button>)}
-            </div>
+        {showModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[350px] w-fit max-h-[450px] pr-0 h-fit pl-0 py-4">
+          <div className="text-muted-foreground ml-1 px-2 mb-0">{ t('please_select_a_manifest_to_open') }</div>
+          <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto pb-1 pt-1 pl-2">
+            {labels.map((label, i) => <Button
+              variant="ghost"
+              key={label + '_'+i}
+              className={`h-8 justify-start overflow-hidden mr-2 pl-2 pr-1 py-1 ${panelState.manifest.label === label ? 'text-primary hover:text-primary': ''} `}
+              title={label ?? ''}
+              onClick={() => handleManifestClick(label)}
+            > {label }</Button>)}
           </div>
         </PopoverContent>}
       </Popover>

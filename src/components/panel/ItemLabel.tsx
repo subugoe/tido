@@ -89,23 +89,22 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
         <PopoverTrigger asChild>
           <Button
             variant={showItemModal ? 'secondary' : 'ghost'}
-            className="font-semibold text-secondary-foreground"
+            className="font-semibold text-secondary-foreground truncate max-w-[200px] px-2 py-1"
             onClick={() =>  setShowItemModal(!showItemModal)}
+            title={getItemLabel()}
             data-cy="item-label">
             { getItemLabel() }
           </Button>
         </PopoverTrigger>
-        {showItemModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[200px] w-fit max-h-[450px] h-fit pr-0 pl-2 py-2">
-          <div className="text-muted-foreground ml-1">{ t('please_select_an_item_to_open') }</div>
-          <div className="text-wrap">
-            <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto">
-              {labels.length > 0 && labels.map((label, i) => <Button
-                variant="ghost"
-                key={label + '_'+ i} className={`text-wrap h-fit min-h-8 overflow-hidden justify-start pl-2 mr-2 py-1 ${panelState.item.n === label ? 'text-primary': ''}`}
-                title={label ?? ''}
-                onClick={() => handleItemClick(label)}
-              > {label }</Button>)}
-            </div>
+        {showItemModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[200px] w-fit max-h-[450px] h-fit pr-0 pl-0 py-2">
+          <div className="text-wrap text-muted-foreground ml-1 mb-0 pl-1">{ t('please_select_an_item_to_open') }</div>
+          <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto pb-1 pt-1 pl-1">
+            {labels.length > 0 && labels.map((label, i) => <Button
+              variant="ghost"
+              key={label + '_'+ i} className={`h-8 overflow-hidden justify-start mr-2 py-1 pl-2 ${panelState.item.n === label ? 'text-primary hover:text-primary': ''}`}
+              title={label ?? ''}
+              onClick={() => handleItemClick(label)}
+            > {label }</Button>)}
           </div>
         </PopoverContent>}
       </Popover>
