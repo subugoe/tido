@@ -90,10 +90,10 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
           <Button
             variant={showItemModal ? 'secondary' : 'ghost'}
             onClick={() =>  setShowItemModal(!showItemModal)}
-            className="px-1"
+            className="px-2 py-1 h-7"
             title={getItemLabel()}
             data-cy="item-label">
-            <div className="font-semibold text-secondary-foreground rounded-md max-w-[250px] truncate px-1 py-1">
+            <div className="text-sm rounded-md font-semibold truncate max-w-[200px]">
               { getItemLabel() }
             </div>
           </Button>

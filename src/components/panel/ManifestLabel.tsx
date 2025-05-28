@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
-import { CircleAlert } from 'lucide-react'
 
 import { useDataStore } from '@/store/DataStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
@@ -52,12 +51,12 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
             variant={showModal ? 'secondary' : 'ghost'}
             onClick={() =>  setShowModal(!showModal)}
             title={selectedLabel}
-            className="px-1 relative"
-            data-cy="manifest-label">
-            <div className="font-semibold text-secondary-foreground rounded-md max-w-[250px] truncate px-1 py-1">
+            data-cy="manifest-label"
+            className="px-2 py-1 h-7"
+          >
+            <div className="text-sm rounded-md font-semibold truncate max-w-[200px]">
               {selectedLabel}
             </div>
-            { selectedManifest && <CircleAlert className="absolute w-12 h-12 rounded-full top-0 -mt-0 right-1 text-white bg-yellow-300" />}
           </Button>
         </PopoverTrigger>
         {showModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[350px] w-fit max-h-[450px] pr-0 h-fit pl-0 py-4">
