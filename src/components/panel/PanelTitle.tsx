@@ -15,6 +15,10 @@ const PanelHeader: FC = () => {
     if (newManifest) setShowItemModal(true)
   }
 
+  function onItemSelect() {
+    updateSelectedManifest(null)
+  }
+
   function updateSelectedManifest(newManifest: Manifest | null) {
     selectedManifest.current = newManifest
   }
@@ -27,7 +31,7 @@ const PanelHeader: FC = () => {
         { panelState && panelState.item  && <ManifestLabel onManifestSelect={onManifestSelect}  selectedManifest={selectedManifest.current} />}
         <span className="w-[1px] h-[80%] bg-gray-400 mx-2 grow-0 shrink-0"></span>
         { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
-        { panelState && panelState.item && <ItemLabel selectedManifest={selectedManifest.current} updateSelectedManifest={updateSelectedManifest}  showItemModal={showItemModal} setShowItemModal={setShowItemModal} />}
+        { panelState && panelState.item && <ItemLabel selectedManifest={selectedManifest.current} onItemSelect={onItemSelect}  showItemModal={showItemModal} setShowItemModal={setShowItemModal} />}
       </div>
     </>
   )

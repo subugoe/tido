@@ -10,12 +10,12 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 
 interface ItemLabelProps {
   selectedManifest: Manifest | null
-  updateSelectedManifest: (newManifest: Manifest | null) => void,
+  onItemSelect: () => void,
   showItemModal: boolean,
   setShowItemModal: (show: boolean) => void,
 }
 
-const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifest, showItemModal, setShowItemModal }) => {
+const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect, showItemModal, setShowItemModal }) => {
   const { panelState } = usePanel()
   const { t } = useTranslation()
   const collection = useDataStore().collections[panelState.collectionId]?.collection
@@ -47,7 +47,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
       return
     }
 
-    updateSelectedManifest(null)
+    onItemSelect()
     setShowItemModal(open)
   }
 
@@ -69,7 +69,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, updateSelectedManifes
     })
 
     setShowItemModal(false)
-    updateSelectedManifest(null)
+    onItemSelect()
   }
 
   function getItemLabel() {
