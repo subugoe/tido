@@ -10,18 +10,17 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 
 interface ItemLabelProps {
   selectedManifest: Manifest | null
-  onItemSelect: () => void,
-  showItemModal: boolean,
-  setShowItemModal: (show: boolean) => void,
+  onItemSelect: () => void
 }
 
-const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect, showItemModal, setShowItemModal }) => {
+const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
   const { panelState } = usePanel()
   const { t } = useTranslation()
   const collection = useDataStore().collections[panelState.collectionId]?.collection
   const manifest = panelState.manifest
   const updatePanel = usePanelStore(state => state.updatePanel)
 
+  const [showItemModal, setShowItemModal] = useState(false)
   const [labels, setLabels] = useState([])
   const externallyOpened = useRef(false)
 
@@ -31,6 +30,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect, showIte
     if (!collection) return
     if (selectedManifest) {
       labels = selectedManifest.sequence.map((item) => item.label) || []
+      setShowItemModal(true)
     }
     else {
       labels = manifest.sequence.map((item) => item.label)
