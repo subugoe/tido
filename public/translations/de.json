@@ -31,7 +31,7 @@
   "license": "Lizenz",
   "value_must_be_an_array": "Dieses Wert sollte als Array gegeben werden",
   "value_must_be_a_string": "Der Wert muss ein String sein",
-  "item": "Seite",
+  "item": "Artikel",
   "label": "Label",
   "language": "Sprache",
   "image_license": "Bild Lizenz",

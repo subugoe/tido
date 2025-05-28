@@ -73,7 +73,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
   }
 
   function getItemLabel() {
-    return 'Page ' + (panelState?.item?.n ?? 'unknown')
+    return t('item') + ' ' + (panelState?.item?.n ?? 'unknown')
   }
 
   useEffect(() => {
