@@ -52,7 +52,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
             onClick={() =>  setShowModal(!showModal)}
             title={selectedLabel}
             data-cy="manifest-label"
-            className="px-2 py-1 h-7"
+            className="px-2 py-1 h-7 w-[150px]"
           >
             <div className="text-sm rounded-md font-semibold truncate max-w-[200px]">
               {selectedLabel}
