@@ -87,18 +87,16 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
     <>
       <Popover open={showItemModal} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
-          <div className="w-[60px]">
-            <Button
-              variant={showItemModal ? 'secondary' : 'ghost'}
-              onClick={() =>  setShowItemModal(!showItemModal)}
-              className="px-2 py-1 h-7"
-              title={getItemLabel()}
-              data-cy="item-label">
-              <div className="text-sm rounded-md font-semibold truncate max-w-[250px]">
-                { getItemLabel() }
-              </div>
-            </Button>
-          </div>
+          <Button
+            variant={showItemModal ? 'secondary' : 'ghost'}
+            onClick={() =>  setShowItemModal(!showItemModal)}
+            className="px-2 py-1 h-7 w-24"
+            title={getItemLabel()}
+            data-cy="item-label">
+            <div className="text-sm rounded-md font-semibold truncate">
+              {getItemLabel()}
+            </div>
+          </Button>
         </PopoverTrigger>
         {showItemModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[200px] w-fit max-h-[450px] h-fit pr-0 pl-0 py-2">
           <div className="text-wrap text-muted-foreground ml-1 mb-0 pl-1">{ t('please_select_an_item_to_open') }</div>
