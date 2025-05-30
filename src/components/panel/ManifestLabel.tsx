@@ -49,7 +49,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className="text-sm rounded-md font-semibold hover:cursor-pointer hover:bg-muted px-2 py-1">
+        <div className="text-sm text-nowrap truncate w-[95%] rounded-md font-semibold hover:cursor-pointer hover:bg-muted px-2 py-1">
           {selectedLabel}
         </div>
       </DropdownMenuTrigger>
