@@ -34,10 +34,8 @@ const PanelHeader: FC = () => {
           </div>}
         <span className="w-[1px] h-[80%] grow-0 shrink-0  bg-gray-400 mx-2"></span>
         <div className="w-[50%]">
-          <div className="w-full">
-            { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
-            { panelState && panelState.item && <ItemLabel selectedManifest={selectedManifest} onItemSelect={onItemSelect} />}
-          </div>
+          { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
+          { panelState && panelState.item && <ItemLabel selectedManifest={selectedManifest} onItemSelect={onItemSelect} />}
         </div>
       </div>
     </>
