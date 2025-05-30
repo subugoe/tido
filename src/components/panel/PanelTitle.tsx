@@ -25,16 +25,18 @@ const PanelHeader: FC = () => {
 
   return (
     <>
-      <div className="flex items-center">
+      <div className="flex items-center h-8 mr-0">
         { (!panelState || !panelState.item) && <Skeleton className="w-[100px] h-6" />  }
         { panelState && panelState.item  &&
           <div className="relative">
             <ManifestLabel onManifestSelect={onManifestSelect}  selectedManifest={selectedManifest} />
             { selectedManifest && <CircleAlert className="absolute w-5 h-5 rounded-full top-0 -mt-1 right-1 text-white bg-yellow-600 stroke-2" />}
           </div>}
-        <span className="w-[1px] h-[80%] bg-gray-400 mx-2 grow-0 shrink-0"></span>
-        { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
-        { panelState && panelState.item && <ItemLabel selectedManifest={selectedManifest} onItemSelect={onItemSelect} />}
+        <span className="w-[1px] h-[80%] grow-0 shrink-0  bg-gray-400 mx-2"></span>
+        <div>
+          { (!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />  }
+          { panelState && panelState.item && <ItemLabel selectedManifest={selectedManifest} onItemSelect={onItemSelect} />}
+        </div>
       </div>
     </>
   )
