@@ -51,7 +51,7 @@ const PanelHeader: FC = () => {
         <div className="ml-auto mr-2"><TextViewsToggle /></div>
         <Actions />
       </div>
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center mb-4 space-x-4">
         <NavigationButton isPrev={true} />
         {<PanelTitle />}
         <NavigationButton />
