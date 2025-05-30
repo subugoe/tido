@@ -1,11 +1,11 @@
 import { FC, useEffect, useState } from 'react'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
-import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
 
 import { useDataStore } from '@/store/DataStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { apiRequest } from '@/utils/api.ts'
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu.tsx'
 
 
 interface ManifestLabelProps {
@@ -44,35 +44,27 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
 
 
   return (
-    <>
-      <Popover open={showModal} onOpenChange={handleOpenChange}>
-        <PopoverTrigger asChild>
-          <Button
-            variant={showModal ? 'secondary' : 'ghost'}
-            onClick={() =>  setShowModal(!showModal)}
-            title={selectedLabel}
-            data-cy="manifest-label"
-            className="px-2 py-1 h-7 w-40"
-          >
-            <div className="text-sm rounded-md font-semibold truncate">
-              {selectedLabel}
-            </div>
-          </Button>
-        </PopoverTrigger>
-        {showModal && <PopoverContent side="bottom" align="start" sideOffset={8} className="flex flex-col space-y-2 max-w-[350px] w-fit max-h-[450px] pr-0 h-fit pl-0 py-4">
-          <div className="text-muted-foreground ml-1 px-2 mb-0">{ t('please_select_a_manifest_to_open') }</div>
-          <div className="flex flex-col space-y-1 max-h-[350px] overflow-y-auto pb-1 pt-1 pl-2">
-            {labels.map((label, i) => <Button
-              variant="ghost"
-              key={label + '_'+i}
-              className={`h-8 justify-start overflow-hidden mr-2 pl-2 pr-1 py-1 ${panelState.manifest.label === label ? 'text-primary hover:text-primary': ''} `}
-              title={label ?? ''}
-              onClick={() => handleManifestClick(label)}
-            > {label }</Button>)}
-          </div>
-        </PopoverContent>}
-      </Popover>
-    </>
+    <DropdownMenu
+      open={showModal}
+      onOpenChange={handleOpenChange}
+    >
+      <DropdownMenuTrigger asChild>
+        <div className="text-sm rounded-md font-semibold truncate hover:cursor-pointer">
+          {selectedLabel}
+        </div>
+      </DropdownMenuTrigger>
+      {showModal && <DropdownMenuContent>
+        <div className="text-muted-foreground px-2 pt-1 mb-2 ">{ t('please_select_a_manifest_to_open') }</div>
+        {labels.map((label, i) => <DropdownMenuItem
+          key={label + '_'+i}
+          className={`hover:cursor-pointer ${panelState.manifest.label === label ? 'data-[highlighted]:text-primary text-primary' : ''} `}
+          title={label ?? ''}
+          onClick={() => handleManifestClick(label)}
+
+        > { label }
+        </DropdownMenuItem>)}
+      </DropdownMenuContent>}
+    </DropdownMenu>
   )
 }
 
