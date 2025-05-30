@@ -93,7 +93,8 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className="text-sm text-nowrap truncate w-[95%] rounded-md font-semibold hover:cursor-pointer hover:bg-muted px-2 py-1">
+        <div className="text-sm text-nowrap truncate w-[95%] rounded-md font-semibold hover:cursor-pointer hover:bg-muted px-2 py-1"
+          data-cy="item-label">
           {getItemLabel()}
         </div>
       </DropdownMenuTrigger>
