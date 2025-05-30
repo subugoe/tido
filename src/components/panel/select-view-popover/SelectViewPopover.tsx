@@ -6,9 +6,13 @@ import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useTranslation } from 'react-i18next'
 
-import { Popover, PopoverContent } from '@/components/ui/popover.tsx'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader, DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button.tsx'
-import { PopoverTrigger } from '@radix-ui/react-popover'
 import { ViewType } from '@/types'
 import SelectViewButtons from '@/components/panel/select-view-popover/SelectViewButtons.tsx'
 import CheckboxInPopover from '@/components/panel/select-view-popover/CheckboxInPopover.tsx'
@@ -52,18 +56,19 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
           absolute w-[350px] h-[400px]
           transition-all duration-700 ease-out
           ${animate ? 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' : 'top-0 right-0'}`}>
-      <Popover open={showPopover} onOpenChange={handleOpenChange}>
-        <PopoverTrigger>
-          <div className="w-full opacity-0">Open</div>
-        </PopoverTrigger>
-        {showPopover && <PopoverContent side="bottom" align="start" sideOffset={8}
-          className="absolute w-[300px] h-[350px] flex flex-col pl-2 pt-2 justify-start space-y-2">
-          <div className="text-muted-foreground">{ t('please_select_view_to_show_text') }</div>
+      <Dialog open={showPopover} onOpenChange={handleOpenChange}>
+        <DialogTrigger>Open</DialogTrigger>
+        <DialogContent  className="absolute w-[500px] h-[250px] flex flex-col pl-2 pt-2 justify-start space-y-2">
+          <DialogHeader>
+            <DialogTitle>
+              <div className="text-muted-foreground">{ t('please_select_view_to_show_text') }</div>
+            </DialogTitle>
+          </DialogHeader>
           <SelectViewButtons updateSelectedButton={setSelectedView} />
           <CheckboxInPopover updateCheckedValue={updateCheckedValue} />
           <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
-        </PopoverContent>}
-      </Popover>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

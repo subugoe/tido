@@ -17,19 +17,19 @@ const SelectViewButtons: FC<SelectViewButtonsProps> = ({ updateSelectedButton })
 
   const buttonsData = {
     pip: {
-      icon: <PictureInPicture2 />,
+      icon: PictureInPicture2,
       title: t('pip_view')
     },
     split: {
-      icon: <Columns2 />,
+      icon: Columns2,
       title: t('split_view')
     },
     text: {
-      icon: <AlignCenter />,
+      icon: AlignCenter,
       title: t('text_view')
     },
     image: {
-      icon: <Image />,
+      icon: Image,
       title: t('image_view')
     },
   }
@@ -40,19 +40,21 @@ const SelectViewButtons: FC<SelectViewButtonsProps> = ({ updateSelectedButton })
   }
 
   return (
-    <>
-      {Object.keys(buttonsData).map((key: ViewType, i) => (
-        <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
-          className={`flex justify-start hover:bg-muted ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
-          onClick={() => setSelectedButton(key)}>
-          <div className="flex space-x-2">
-            <div>{buttonsData[key].icon} </div>
-            <div>{buttonsData[key].title}</div>
-          </div>
-        </Button>
-      )
+    <div className="flex space-x-4">
+      {Object.keys(buttonsData).map((key: ViewType, i) => {
+        const Icon = buttonsData[key].icon
+        return (
+          <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
+            className={`flex justify-center hover:bg-muted w-25 h-25 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
+            onClick={() => setSelectedButton(key)}
+            title={buttonsData[key].title}
+          >
+            <Icon className="size-16 stroke-1" />
+          </Button>
+        )
+      }
       )}
-    </>
+    </div>
   )
 }
 
