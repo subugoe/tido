@@ -1,4 +1,5 @@
 import { FC, useEffect } from 'react'
+import '@/css/style.css'
 
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
@@ -32,7 +33,7 @@ export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
   if (Object.keys(errors).length > 0) console.error(errors)
 
   initI18n(config.translations, config.lang)
-
+  localStorage.setItem('enabledSelectViewModal','true')
   createThemeStyles(config)
 
   useConfigStore.getState().addCustomConfig(config)

@@ -8,12 +8,11 @@ import { Menu, X } from 'lucide-react'
 import Title from '@/components/header/Title.tsx'
 
 import AddNewPanel from '@/components/header/AddNewPanel.tsx'
-import { ThemeToggle } from '@/components/header/ThemeToggle.tsx'
+import Settings from '@/components/header/Settings.tsx'
 
 const TopBar: FC = () => {
   const showGlobalTreeConfig = useConfigStore(state => state.config.showGlobalTree)
   const showAddNewPanelButton = useConfigStore(state => state.config.showAddNewPanelButton)
-  const showThemeToggle = useConfigStore(state => state.config.showThemeToggle)
 
   const title = useConfigStore(state => state.config.title)
 
@@ -31,7 +30,7 @@ const TopBar: FC = () => {
     { title !== '' && <Title /> }
     <div className="ml-auto flex items-center gap-2">
       { showAddNewPanelButton && <AddNewPanel /> }
-      { showThemeToggle && <ThemeToggle /> }
+      <Settings />
     </div>
   </div>
 }

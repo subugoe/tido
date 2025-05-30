@@ -1,6 +1,6 @@
 import { request } from '@/utils/http'
 import { usePanelStore } from '@/store/PanelStore.tsx'
-import { PanelConfig } from '@/types'
+import { PanelConfig, ViewType } from '@/types'
 
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
@@ -67,4 +67,12 @@ export function isNewManifest(manifest: Manifest): boolean {
   }
 
   return true
+}
+
+export function mapToViewIndex(view: ViewType): number {
+  if (view === 'pip') return 0
+  if (view === 'split') return 1
+  if (view === 'text') return 2
+  if (view === 'image') return 3
+  return 0
 }

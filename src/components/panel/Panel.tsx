@@ -7,12 +7,20 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useScrollStore } from '@/store/ScrollStore.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
+import SelectViewPopover from '@/components/panel/select-view-popover/SelectViewPopover.tsx'
+import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 const DEFAULT_PANEL_WIDTH = 600
 const MIN_PANEL_WIDTH = 400
 
 const Panel: FC = React.memo(() => {
   const { panelId } = usePanel()
+  const enabledSelectViewPopover = useUIStore(state => state.enabledSelectViewPopover)
+  const showSelectViewState = useUIStore(state => state.showSelectViewPopover)
+  const showSelectViewPopover = panelId === usePanelStore().getLastPanelId()
+    && enabledSelectViewPopover && showSelectViewState
+
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
   const [flexValues, setFlexValues] = useState({
@@ -93,6 +101,16 @@ const Panel: FC = React.memo(() => {
     }
   }, [resizing])
 
+  const [animate, setAnimate] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimate(true)
+    }, 100) // slight delay ensures transition applies
+    return () => clearTimeout(timer)
+  }, [showSelectViewPopover])
+
+
   return (
     <div
       id={panelId}
@@ -118,9 +136,16 @@ const Panel: FC = React.memo(() => {
       `}
       data-cy="panel"
     >
+      <div
+        className={`
+      absolute w-full h-full inset-0 bg-black/40 transition-opacity duration-500 z-10 backdrop-blur-xs
+      ${showSelectViewPopover ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+    `}
+      />
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
       <PanelHeader />
       <PanelBody />
+      {showSelectViewPopover && <SelectViewPopover animate={animate}  /> }
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
          -translate-y-1/2 top-1/2 -right-2"
