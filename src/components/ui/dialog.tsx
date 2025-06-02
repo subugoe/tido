@@ -19,7 +19,7 @@ const DialogTrigger = ({
 const DialogPortal = ({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) => {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+  return <DialogPrimitive.Portal container={props.container ?? document.querySelector('.tido')} data-slot="dialog-portal" {...props} />
 }
 
 const DialogClose = ({
@@ -50,7 +50,7 @@ const DialogContent = ({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content>) => {
   return (
-    <DialogPortal container={document.querySelector('.tido')} data-slot="dialog-portal">
+    <div>
       <DialogOverlay />
       <DialogPrimitive.Content
         data-slot="dialog-content"
@@ -66,7 +66,7 @@ const DialogContent = ({
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>
-    </DialogPortal>
+    </div>
   )
 }
 

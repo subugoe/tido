@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Dialog,
   DialogContent,
-  DialogHeader, DialogTitle,
+  DialogHeader, DialogPortal, DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button.tsx'
@@ -21,16 +21,18 @@ import { mapToViewIndex } from '@/utils/panel.ts'
 
 
 interface SelectViewPopoverProps {
-  animate: boolean
+  animate: boolean,
+  parentEl?: HTMLElement,
 }
 
-const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
+const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate, parentEl }) => {
   const [showPopover, setShowPopover] = useState(useUIStore.getState().showSelectViewPopover)
   const { panelState } = usePanel()
   const updateShowSelectViewPopover = useUIStore.getState().updateShowSelectViewPopover
   const [selectedView, setSelectedView] = useState(useConfigStore().config.defaultView)
   const updateEnabledSelectViewPopover = useUIStore.getState().updateEnabledSelectViewPopover
   const { t } = useTranslation()
+
 
   const isChecked = useRef<boolean>(false)
 
@@ -52,13 +54,13 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
   }
 
   return (
-    <div className={`
-          absolute w-[350px] h-[400px]
-          transition-all duration-700 ease-out
-          ${animate ? 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' : 'top-0 right-0'}`}>
-      <Dialog open={showPopover} onOpenChange={handleOpenChange}>
-        <DialogTrigger>Open</DialogTrigger>
-        <DialogContent  className="absolute w-[500px] h-[250px] flex flex-col pl-2 pt-2 justify-start space-y-2">
+    <Dialog open={showPopover} onOpenChange={handleOpenChange}>
+      <DialogTrigger>Open</DialogTrigger>
+      <DialogPortal container={parentEl}>
+        <DialogContent className={`absolute w-[500px] h-[250px] flex flex-col
+           pl-2 pt-2 justify-start
+          transition-all duration-900 ease-out
+          ${animate ? `top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2` : 'top-0 right-0'}`}>
           <DialogHeader>
             <DialogTitle>
               <div className="text-muted-foreground">{ t('please_select_view_to_show_text') }</div>
@@ -68,8 +70,8 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate }) => {
           <CheckboxInPopover updateCheckedValue={updateCheckedValue} />
           <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
         </DialogContent>
-      </Dialog>
-    </div>
+      </DialogPortal>
+    </Dialog>
   )
 }
 

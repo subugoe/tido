@@ -111,6 +111,7 @@ const Panel: FC = React.memo(() => {
   }, [showSelectViewPopover])
 
 
+
   return (
     <div
       id={panelId}
@@ -138,14 +139,14 @@ const Panel: FC = React.memo(() => {
     >
       <div
         className={`
-      absolute w-full h-full inset-0 bg-black/40 transition-opacity duration-500 z-10 backdrop-blur-xs
+      absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs
       ${showSelectViewPopover ? 'opacity-100' : 'opacity-0 pointer-events-none'}
     `}
       />
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
       <PanelHeader />
       <PanelBody />
-      {showSelectViewPopover && <SelectViewPopover animate={animate}  /> }
+      {showSelectViewPopover && cardRef.current && <SelectViewPopover animate={animate} parentEl={cardRef.current}  /> }
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
          -translate-y-1/2 top-1/2 -right-2"
