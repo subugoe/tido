@@ -49,12 +49,12 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className="text-sm text-nowrap truncate w-[95%] rounded-md font-semibold hover:cursor-pointer hover:bg-muted px-2 py-1"
+        <div className="text-sm text-nowrap rounded-md font-semibold hover:cursor-pointer hover:bg-muted px-2 py-1"
           data-cy="manifest-label">
           {selectedLabel}
         </div>
       </DropdownMenuTrigger>
-      {showModal && <DropdownMenuContent>
+      <DropdownMenuContent>
         <div className="text-muted-foreground px-2 pt-1 mb-2 ">{ t('please_select_a_manifest_to_open') }</div>
         {labels.map((label, i) => <DropdownMenuItem
           key={label + '_'+i}
@@ -64,7 +64,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
 
         > { label }
         </DropdownMenuItem>)}
-      </DropdownMenuContent>}
+      </DropdownMenuContent>
     </DropdownMenu>
   )
 }
