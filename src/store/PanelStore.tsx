@@ -9,8 +9,7 @@ interface PanelStoreTypes {
   getPanel: (panelId: string | null) => PanelState | null
   setActiveTargetIndex: (panelId: string, index: number) => void
   removePanel: (panelId: string) => void
-  initializePanels: (panelsConfig: PanelConfig[]) => void,
-  getLastPanelId: () => string
+  initializePanels: (panelsConfig: PanelConfig[]) => void
 }
 
 function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
@@ -55,8 +54,5 @@ export const usePanelStore = create<PanelStoreTypes>((set, get) => ({
   initializePanels: (configs: PanelConfig[]) =>
     set({
       panels: configs.map((config) => getDefaultPanelState(crypto.randomUUID(), config))
-    }),
-  getLastPanelId(): string {
-    return get().panels[get().panels.length - 1].id
-  }
+    })
 }))

@@ -8,7 +8,6 @@ import { useScrollStore } from '@/store/ScrollStore.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
 import SelectViewPopover from '@/components/panel/select-view-popover/SelectViewPopover.tsx'
-import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
 
 const DEFAULT_PANEL_WIDTH = 600
@@ -18,7 +17,7 @@ const Panel: FC = React.memo(() => {
   const { panelId } = usePanel()
   const enabledSelectViewPopover = useUIStore(state => state.enabledSelectViewPopover)
   const showSelectViewState = useUIStore(state => state.showSelectViewPopover)
-  const showSelectViewPopover = panelId === usePanelStore().getLastPanelId()
+  const showSelectViewPopover = panelId === useUIStore(state => state.newestPanelId)
     && enabledSelectViewPopover && showSelectViewState
 
   const scrollPanelIds = useScrollStore(state => state.panelIds)

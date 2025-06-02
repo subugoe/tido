@@ -39,6 +39,7 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate, parentEl }) =>
   const handleOpenChange = (open: boolean) => {
     updateShowSelectViewPopover(open)
     setShowPopover(open)
+    useUIStore.getState().updateNewestPanelId('')
   }
 
   function handleConfirm(selectedView: ViewType) {
@@ -46,6 +47,7 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate, parentEl }) =>
     useConfigStore.getState().updateConfig({ defaultView: selectedView })
     if (isChecked.current) updateEnabledSelectViewPopover(false)
     setShowPopover(false)
+    useUIStore.getState().updateNewestPanelId('')
     updateShowSelectViewPopover(false)
   }
 
