@@ -25,7 +25,7 @@ const PanelHeader: FC = () => {
 
   return (
     <>
-      <div className="flex items-center mr-0">
+      <div className="flex items-center">
         { (!panelState || !panelState.item) && <Skeleton className="w-[100px] h-6" />  }
         { panelState && panelState.item  &&
           <div className="relative">
