@@ -6,6 +6,7 @@ import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { AlignCenter, Columns2, Image, PictureInPicture2 } from 'lucide-react'
 import { ViewType } from '@/types'
 import { Button } from '@/components/ui/button.tsx'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
 interface SelectViewButtonsProps {
   updateSelectedButton: (selectedView: ViewType) => void
@@ -39,18 +40,27 @@ const SelectViewButtons: FC<SelectViewButtonsProps> = ({ updateSelectedButton })
     updateSelectedButton(key)
   }
 
+
   return (
-    <div className="flex space-x-4">
+    <div className="flex gap-x-4">
       {Object.keys(buttonsData).map((key: ViewType, i) => {
         const Icon = buttonsData[key].icon
         return (
-          <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
-            className={`flex justify-center hover:bg-muted w-25 h-25 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
-            onClick={() => setSelectedButton(key)}
-            title={buttonsData[key].title}
-          >
-            <Icon className="size-16 stroke-1" />
-          </Button>
+          <TooltipProvider key={key} delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
+                  className={`flex justify-center hover:bg-muted w-25 h-25 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
+                  onClick={() => setSelectedButton(key)}
+                >
+                  <Icon className="size-16 stroke-1" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <span className="leading-none">{ buttonsData[key].title }</span>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )
       }
       )}
