@@ -16,6 +16,7 @@ const Panel: FC = () => {
           `group relative bg-background text-foreground flex shrink-0 flex-col items-center justify-center w-[600px] hover:border-primary border-2 border-border rounded-lg
         p-3 px-4 cursor-pointer transition-all`}
         onClick={() => setIsDialogOpen(true)}
+        data-cy="panel-placeholder"
       >
         <div className="p-6 bg-muted rounded-full leading-none">
           <Plus className="text-gray-400 group-hover:text-primary" size="40" />

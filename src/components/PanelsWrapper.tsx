@@ -23,7 +23,7 @@ const PanelsWrapper: FC = () => {
         </PanelProvider>
       ))
     }
-    <AddPanel />
+    { config.showPanelPlaceholder && <AddPanel /> }
   </div>
 }
 
