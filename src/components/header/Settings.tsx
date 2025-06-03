@@ -31,7 +31,7 @@ const SettingsComp: FC = () => {
             <span>Settings</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56 p-2">
+        <DropdownMenuContent align="end" className="w-56 p-2 hover:cursor-pointer">
           {showThemeToggle && <ThemeToggle /> }
           <DropdownMenuItem asChild>
             <SelectViewPopoverSwitch />

@@ -19,21 +19,21 @@ const ThemeToggle: FC = () => {
   return (
     <>
       <DropdownMenuSub>
-        <DropdownMenuSubTrigger>
-          <div>{ t('toggle_theme')}</div>
+        <DropdownMenuSubTrigger className="hover:cursor-pointer">
+          { t('toggle_theme') }
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
           <DropdownMenuSubContent>
-            <DropdownMenuItem disabled={theme=== 'light'} onClick={() => setTheme('light')}>
+            <DropdownMenuItem className={`hover:cursor-pointer ${theme==='light' ? 'bg-muted' : ''}`} onClick={() => setTheme('light')}>
               <Sun className="h-[1.2rem] w-[1.2rem]" />
               { t('light') }</DropdownMenuItem>
-            <DropdownMenuItem disabled={theme=== 'dark'} onClick={() => setTheme('dark')}>
+            <DropdownMenuItem className={`hover:cursor-pointer ${theme==='dark' ? 'bg-muted' : ''}`} onClick={() => setTheme('dark')}>
               <Moon className="h-[1.2rem] w-[1.2rem]" />
               <span>{ t('dark') }</span>
             </DropdownMenuItem>
             <DropdownMenuItem
+              className={`hover:cursor-pointer ${theme==='system' ? 'bg-muted' : ''}`}
               onClick={() => setTheme('system')}
-              disabled={theme=== 'system'}
             >
               { t('system') }
             </DropdownMenuItem>

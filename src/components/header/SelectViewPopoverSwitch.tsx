@@ -3,7 +3,6 @@ import { useUIStore } from '@/store/UIStore.tsx'
 import { useTranslation } from 'react-i18next'
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 
 
@@ -31,7 +30,7 @@ const SelectViewPopoverSwitch: FC = () => {
   return (
     <DropdownMenuItem>
       <div className="flex items-center space-x-2">
-        <Label htmlFor="toggle-select-view-modal">{t('enable_select_view_modal')}</Label>
+        <span className="hover:cursor-pointer">{t('enable_select_view_modal')}</span>
         <Switch id="toggle-select-view-modal"
           checked={enabledSelectViewModal}
           onClick={(e) => handleSwitchClick(e)}
