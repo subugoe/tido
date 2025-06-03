@@ -41,29 +41,33 @@ const SelectViewButtons: FC<SelectViewButtonsProps> = ({ updateSelectedButton })
   }
 
 
+
   return (
-    <div className="flex gap-x-4">
-      {Object.keys(buttonsData).map((key: ViewType, i) => {
-        const Icon = buttonsData[key].icon
-        return (
-          <TooltipProvider key={key} delayDuration={400}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
-                  className={`flex justify-center hover:bg-muted w-25 h-25 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
-                  onClick={() => setSelectedButton(key)}
-                >
-                  <Icon className="size-16 stroke-1" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <span className="leading-none">{ buttonsData[key].title }</span>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )
-      }
-      )}
+    <div className="flex relative">
+      <Button className="opacity-0 absolute -left-20"></Button>
+      <div className="flex gap-x-4">
+        {Object.keys(buttonsData).map((key: ViewType, i) => {
+          const Icon = buttonsData[key].icon
+          return (
+            <TooltipProvider key={'view-'+ key} delayDuration={400}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
+                    className={`flex justify-center hover:bg-muted w-25 h-25 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
+                    onClick={() => setSelectedButton(key)}
+                  >
+                    <Icon className="size-16 stroke-1" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="leading-none">{ buttonsData[key].title }</span>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )
+        }
+        )}
+      </div>
     </div>
   )
 }

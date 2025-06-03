@@ -59,7 +59,7 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate, parentEl }) =>
     <Dialog open={showPopover} onOpenChange={handleOpenChange}>
       <DialogTrigger>Open</DialogTrigger>
       <DialogPortal container={parentEl}>
-        <DialogContent className={`absolute w-[500px] h-[250px] flex flex-col
+        <DialogContent className={`absolute w-[500px] h-[250px] flex flex-col gap-y-6
            pl-2 pt-2 justify-start
           transition-all duration-900 ease-out
           ${animate ? `top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2` : 'top-0 right-0'}`}>
