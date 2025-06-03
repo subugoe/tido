@@ -1,24 +1,23 @@
 import { create } from 'zustand'
 
 interface UIStoreTypes {
-  showSelectViewPopover: boolean,
-  enabledSelectViewPopover: boolean,
+  showSelectTextView: boolean,
+  enabledSelectTextView: boolean,
   newestPanelId: string,
-  updateShowSelectViewPopover: (show: boolean) => void,
-  updateEnabledSelectViewPopover: (show: boolean) => void,
+  updateShowSelectTextView: (show: boolean) => void,
+  updateEnabledSelectTextView: (show: boolean) => void,
   updateNewestPanelId: (newPanelId: string) => void,
 }
 
-
 export const useUIStore = create<UIStoreTypes>((set) => ({
-  showSelectViewPopover: false,
-  enabledSelectViewPopover: true,
+  showSelectTextView: false,
+  enabledSelectTextView: true,
   newestPanelId: '',
-  updateShowSelectViewPopover: (show: boolean) => {
-    set({ showSelectViewPopover: show })
+  updateShowSelectTextView: (show: boolean) => {
+    set({ showSelectTextView: show })
   },
-  updateEnabledSelectViewPopover: (show: boolean) => {
-    set({ enabledSelectViewPopover: show })
+  updateEnabledSelectTextView: (show: boolean) => {
+    set({ enabledSelectTextView: show })
   },
   updateNewestPanelId: (newPanelId) => {
     set({ newestPanelId: newPanelId })

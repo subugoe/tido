@@ -13,7 +13,7 @@ import { useUIStore } from '@/store/UIStore.tsx'
 const AddNewPanel: FC = () => {
   const title = useConfigStore(state => state.config.title)
   const allowNewCollections = useConfigStore(state => state.config.allowNewCollections)
-  const updateShowSelectViewPopover = useUIStore(state => state.updateShowSelectViewPopover)
+  const updateShowSelectViewPopover = useUIStore(state => state.updateShowSelectTextView)
 
   const { t } = useTranslation()
 

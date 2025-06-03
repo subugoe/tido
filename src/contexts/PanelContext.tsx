@@ -61,6 +61,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         })
 
         useUIStore.getState().updateNewestPanelId(panelId)
+
       } catch (e) {
         setError((e as ErrorResponse).message)
         console.error(e)

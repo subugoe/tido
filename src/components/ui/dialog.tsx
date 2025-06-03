@@ -50,8 +50,7 @@ const DialogContent = ({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content>) => {
   return (
-    <div>
-      <DialogOverlay />
+    <>
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
@@ -66,7 +65,7 @@ const DialogContent = ({
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>
-    </div>
+    </>
   )
 }
 

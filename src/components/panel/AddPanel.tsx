@@ -12,7 +12,7 @@ const Panel: FC = () => {
 
   function onConfirm() {
     setIsDialogOpen(false)
-    useUIStore.getState().updateShowSelectViewPopover(true)
+    useUIStore.getState().updateShowSelectTextView(true)
   }
 
   return (

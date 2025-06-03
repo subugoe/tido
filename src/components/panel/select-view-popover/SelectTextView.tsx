@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Dialog,
   DialogContent,
-  DialogHeader, DialogPortal, DialogTitle,
+  DialogHeader, DialogOverlay, DialogPortal, DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button.tsx'
@@ -20,24 +20,24 @@ import CheckboxInPopover from '@/components/panel/select-view-popover/CheckboxIn
 import { mapToViewIndex } from '@/utils/panel.ts'
 
 
-interface SelectViewPopoverProps {
+interface SelectTextViewProps {
   animate: boolean,
   parentEl?: HTMLElement,
 }
 
-const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate, parentEl }) => {
-  const [showPopover, setShowPopover] = useState(useUIStore.getState().showSelectViewPopover)
+const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
+  const [showPopover, setShowPopover] = useState(useUIStore.getState().showSelectTextView)
   const { panelState } = usePanel()
-  const updateShowSelectViewPopover = useUIStore.getState().updateShowSelectViewPopover
+  const updateShowSelectTextView = useUIStore.getState().updateShowSelectTextView
   const [selectedView, setSelectedView] = useState(useConfigStore().config.defaultView)
-  const updateEnabledSelectViewPopover = useUIStore.getState().updateEnabledSelectViewPopover
+  const updateEnabledSelectTextView = useUIStore.getState().updateEnabledSelectTextView
   const { t } = useTranslation()
 
 
   const isChecked = useRef<boolean>(false)
 
   const handleOpenChange = (open: boolean) => {
-    updateShowSelectViewPopover(open)
+    updateShowSelectTextView(open)
     setShowPopover(open)
     useUIStore.getState().updateNewestPanelId('')
   }
@@ -45,10 +45,10 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate, parentEl }) =>
   function handleConfirm(selectedView: ViewType) {
     usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView) })
     useConfigStore.getState().updateConfig({ defaultView: selectedView })
-    if (isChecked.current) updateEnabledSelectViewPopover(false)
+    if (isChecked.current) updateEnabledSelectTextView(false)
     setShowPopover(false)
     useUIStore.getState().updateNewestPanelId('')
-    updateShowSelectViewPopover(false)
+    updateShowSelectTextView(false)
   }
 
   function updateCheckedValue(newValue) {
@@ -59,10 +59,12 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate, parentEl }) =>
     <Dialog open={showPopover} onOpenChange={handleOpenChange}>
       <DialogTrigger>Open</DialogTrigger>
       <DialogPortal container={parentEl}>
+        <DialogOverlay className="absolute" />
         <DialogContent className={`absolute w-[500px] h-[250px] flex flex-col gap-y-6
            pl-2 pt-2 justify-start
           transition-all duration-900 ease-out
-          ${animate ? `top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2` : 'top-0 right-0'}`}>
+          ${animate ? `top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2` : 'top-0 right-0'}`}
+        >
           <DialogHeader>
             <DialogTitle>
               <div className="text-muted-foreground">{ t('please_select_view_to_show_text') }</div>
@@ -77,4 +79,4 @@ const SelectViewPopover: FC<SelectViewPopoverProps> = ({ animate, parentEl }) =>
   )
 }
 
-export default SelectViewPopover
+export default SelectTextView
