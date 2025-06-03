@@ -36,11 +36,6 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
 
   const isChecked = useRef<boolean>(false)
 
-  const handleOpenChange = (open: boolean) => {
-    updateShowSelectTextView(open)
-    setShowPopover(open)
-    useUIStore.getState().updateNewestPanelId('')
-  }
 
   function handleConfirm(selectedView: ViewType) {
     usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView) })
@@ -56,7 +51,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
   }
 
   return (
-    <Dialog open={showPopover} onOpenChange={handleOpenChange}>
+    <Dialog open={showPopover}>
       <DialogTrigger>Open</DialogTrigger>
       <DialogPortal container={parentEl}>
         <DialogOverlay className="absolute" />
