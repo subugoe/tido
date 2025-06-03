@@ -12,6 +12,7 @@ describe('Config', () => {
     cy.get('[data-cy="new-panel"]').should('be.visible', true)
     cy.get('[data-cy="new-panel"]').should('have.text', 'Add New Panel')
     cy.get('[data-cy="pip"]').should('have.attr', 'data-selected', 'true')
+    cy.get('[data-cy="panel-placeholder"]').should('be.visible', true)
   });
 
   // ===== Specific Config Values =====
@@ -29,5 +30,8 @@ describe('Config', () => {
   });
   runConfigTest('defaultView=split', 'defaultView: split', () => {
     cy.get('[data-cy="split"]').should('have.attr', 'data-selected', 'true')
+  });
+  runConfigTest('panelPlaceholder=false', 'panelPlaceholder: false', () => {
+    cy.get('[data-cy="panel-placeholder"]').should('be.visible', false)
   });
 });

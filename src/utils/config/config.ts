@@ -76,6 +76,19 @@ function validateShowThemeToggle(input: any): ValidationResult<TidoConfig['showT
   return { result, errors }
 }
 
+function validateShowPanelPlaceholder(input: any): ValidationResult<TidoConfig['showPanelPlaceholder']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'boolean'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['showPanelPlaceholder'] = 'must be a boolean'
+        return defaultConfig.showPanelPlaceholder
+      })()
+  return { result, errors }
+}
+
 function validatePanels(input: any): ValidationResult<TidoConfig['panels']> {
   const errors: Record<string, string> = {}
   const result = Array.isArray(input) ? input : (() => {
@@ -166,7 +179,6 @@ function validateRootCollections(input: any): ValidationResult<TidoConfig['rootC
   return { result, errors }
 }
 
-
 function getLanguage(lang: string, translations: TranslationsConfig, defaultLangs: string[]): string {
   if (Object.keys(translations).includes(lang) || defaultLangs.includes(lang)) return lang
   return 'en'
@@ -183,6 +195,7 @@ export function mergeAndValidateConfig(
   const panels = validatePanels(userConfig.panels)
   const showAddNewPanelButton = validateShowNewCollectionButton(userConfig.showAddNewPanelButton)
   const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
+  const showPanelPlaceholder = validateShowPanelPlaceholder(userConfig.showPanelPlaceholder)
   const showThemeToggle = validateShowThemeToggle(userConfig.showThemeToggle)
   const rootCollections = validateRootCollections(userConfig.rootCollections)
   const title = validateTitle(userConfig.title)
@@ -205,6 +218,7 @@ export function mergeAndValidateConfig(
     ...rootCollections.errors,
     ...showAddNewPanelButton.errors,
     ...showGlobalTree.errors,
+    ...showPanelPlaceholder.errors,
     ...showThemeToggle.errors,
     ...theme.errors,
     ...title.errors,
@@ -220,6 +234,7 @@ export function mergeAndValidateConfig(
     rootCollections: rootCollections.result,
     showAddNewPanelButton: showAddNewPanelButton.result,
     showGlobalTree: showGlobalTree.result,
+    showPanelPlaceholder: showPanelPlaceholder.result,
     showThemeToggle: showThemeToggle.result,
     theme: theme.result,
     title: title.result,
