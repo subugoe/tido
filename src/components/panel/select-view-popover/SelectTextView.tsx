@@ -50,6 +50,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
     isChecked.current = newValue
   }
 
+
   return (
     <Dialog open={showPopover}>
       <DialogTrigger>Open</DialogTrigger>
