@@ -40,6 +40,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
   function handleConfirm(selectedView: ViewType) {
     usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView) })
     useConfigStore.getState().updateConfig({ defaultView: selectedView })
+
     if (isChecked.current) updateEnabledSelectTextView(false)
     setShowPopover(false)
     useUIStore.getState().updateNewestPanelId('')
@@ -55,7 +56,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
     <Dialog open={showPopover}>
       <DialogTrigger>Open</DialogTrigger>
       <DialogPortal container={parentEl}>
-        <DialogOverlay className="absolute" />
+        <DialogOverlay className="absolute bg-white opacity-[20%]" />
         <DialogContent className={`absolute w-[500px] h-[250px] flex flex-col gap-y-6
            pl-2 pt-2 justify-start
           transition-all duration-900 ease-out
