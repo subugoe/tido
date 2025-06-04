@@ -12,7 +12,7 @@ interface SelectViewButtonsProps {
   updateSelectedButton: (selectedView: ViewType) => void
 }
 
-const SelectViewButtons: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
+const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
   const [selectedView, setSelectedView] = useState(useConfigStore.getState().config.defaultView)
   const { t } = useTranslation()
 
@@ -72,4 +72,4 @@ const SelectViewButtons: FC<SelectViewButtonsProps> = ({ updateSelectedButton })
   )
 }
 
-export default SelectViewButtons
+export default Views

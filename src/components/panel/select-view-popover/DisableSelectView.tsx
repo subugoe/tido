@@ -8,7 +8,7 @@ interface Props {
   updateCheckedValue: (value: boolean) => void
 }
 
-const CheckBoxInPopover: FC<Props> = ({ updateCheckedValue }) => {
+const DisableSelectView: FC<Props> = ({ updateCheckedValue }) => {
   const isChecked = useRef<boolean>(false)
   const { t } = useTranslation()
 
@@ -30,4 +30,4 @@ const CheckBoxInPopover: FC<Props> = ({ updateCheckedValue }) => {
   )
 }
 
-export default CheckBoxInPopover
+export default DisableSelectView

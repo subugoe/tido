@@ -107,9 +107,10 @@ const Panel: FC = React.memo(() => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      let scrollPosX = 0
       if (showSelectTextView) {
         setAnimateSelectTextView(true)
-        const scrollPosX = cardRef.current.offsetLeft - cardRef.current.offsetWidth / 2
+        scrollPosX = cardRef.current.offsetLeft - cardRef.current.offsetWidth / 2
         document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
       }
     }, 100) // slight delay ensures transition applies

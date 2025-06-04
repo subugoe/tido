@@ -6,7 +6,7 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { Switch } from '@/components/ui/switch'
 
 
-const SelectViewPopoverSwitch: FC = () => {
+const ToggleSelectView: FC = () => {
   const [enabledSelectViewModal, setEnabledSelectViewModal]  = useState(useUIStore.getState().enabledSelectTextView)
   const updateEnabledSelectViewModal = useUIStore.getState().updateEnabledSelectTextView
   const allowSelectViewModal = useUIStore(state => state.enabledSelectTextView)
@@ -40,4 +40,4 @@ const SelectViewPopoverSwitch: FC = () => {
   )
 }
 
-export default SelectViewPopoverSwitch
+export default ToggleSelectView

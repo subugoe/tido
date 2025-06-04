@@ -14,8 +14,8 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button.tsx'
 import { ViewType } from '@/types'
-import SelectViewButtons from '@/components/panel/select-view-popover/SelectViewButtons.tsx'
-import CheckboxInPopover from '@/components/panel/select-view-popover/CheckboxInPopover.tsx'
+import Views from '@/components/panel/select-view-popover/Views.tsx'
+import DisableSelectView from '@/components/panel/select-view-popover/DisableSelectView.tsx'
 
 import { mapToViewIndex } from '@/utils/panel.ts'
 
@@ -31,7 +31,6 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
   const [selectedView, setSelectedView] = useState(useConfigStore().config.defaultView)
   const updateEnabledSelectTextView = useUIStore.getState().updateEnabledSelectTextView
   const { t } = useTranslation()
-
 
   const isChecked = useRef<boolean>(false)
 
@@ -65,8 +64,8 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
               <div className="text-muted-foreground">{ t('please_select_view_to_show_text') }</div>
             </DialogTitle>
           </DialogHeader>
-          <SelectViewButtons updateSelectedButton={setSelectedView} />
-          <CheckboxInPopover updateCheckedValue={updateCheckedValue} />
+          <Views updateSelectedButton={setSelectedView} />
+          <DisableSelectView updateCheckedValue={updateCheckedValue} />
           <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
         </DialogContent>
       </DialogPortal>
