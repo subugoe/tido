@@ -26,9 +26,8 @@ interface SelectTextViewProps {
 }
 
 const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
-  const [showPopover, setShowPopover] = useState(useUIStore.getState().showSelectTextView)
+  const [showPopover, setShowPopover] = useState(true)
   const { panelState } = usePanel()
-  const updateShowSelectTextView = useUIStore.getState().updateShowSelectTextView
   const [selectedView, setSelectedView] = useState(useConfigStore().config.defaultView)
   const updateEnabledSelectTextView = useUIStore.getState().updateEnabledSelectTextView
   const { t } = useTranslation()
@@ -43,8 +42,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
 
     if (isChecked.current) updateEnabledSelectTextView(false)
     setShowPopover(false)
-    useUIStore.getState().updateNewestPanelId('')
-    updateShowSelectTextView(false)
+    useUIStore.getState().updateShowSelectTextView(false)
   }
 
   function updateCheckedValue(newValue) {

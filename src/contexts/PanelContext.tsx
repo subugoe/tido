@@ -6,7 +6,6 @@ import { getContentTypes, isNewManifest, mapToViewIndex } from '@/utils/panel.ts
 import { getSupport } from '@/utils/support-styling.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
-import { useUIStore } from '@/store/UIStore.tsx'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {
@@ -59,8 +58,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           contentTypes,
           activeTargetIndex: -1
         })
-
-        useUIStore.getState().updateNewestPanelId(panelId)
 
       } catch (e) {
         setError((e as ErrorResponse).message)

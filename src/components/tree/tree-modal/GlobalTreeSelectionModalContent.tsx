@@ -32,8 +32,10 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
       updatePanel(panels[i].id, { config: newPanelConfig })
     }
     else {
-      addPanel(newPanelConfig)
-      useUIStore.getState().updateShowSelectViewPopover(true)
+      const newPanelId = crypto.randomUUID()
+      useUIStore.getState().updateNewestPanelId(newPanelId)
+      addPanel(newPanelConfig, newPanelId)
+      useUIStore.getState().updateShowSelectTextView(true)
     }
     onSelect()
     setSelectedNodeId('')

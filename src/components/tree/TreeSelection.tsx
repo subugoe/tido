@@ -9,6 +9,7 @@ import { getChildren, getSelectedItemIndices } from '@/utils/tree.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 interface Props {
   onConfirm?: () => void
@@ -30,11 +31,13 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
     if (clickedItemUrl.current) {
       // transfer the clicked item indices
       const { collectionUrl, manifestIndex, itemIndex } = selectedItemIndices.current
+      const newPanelId = crypto.randomUUID()
+      useUIStore.getState().updateNewestPanelId(newPanelId)
       addPanel({
         collection: collectionUrl,
         manifestIndex: manifestIndex,
         itemIndex: itemIndex
-      })
+      }, newPanelId)
     }
 
     if (onConfirm) onConfirm()
