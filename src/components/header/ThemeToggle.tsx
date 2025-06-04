@@ -23,7 +23,7 @@ const ThemeToggle: FC = () => {
           { t('toggle_theme') }
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
-          <DropdownMenuSubContent>
+          <DropdownMenuSubContent className="border border-border">
             <DropdownMenuItem className={`hover:cursor-pointer ${theme==='light' ? 'bg-muted' : ''}`} onClick={() => setTheme('light')}>
               <Sun className="h-[1.2rem] w-[1.2rem]" />
               { t('light') }</DropdownMenuItem>
