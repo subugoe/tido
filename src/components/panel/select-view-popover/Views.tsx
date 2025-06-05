@@ -44,7 +44,7 @@ const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
 
   return (
     <div className="flex relative justify-start">
-      <button hidden className="opacity-0 absolute -left-[100%]"></button>
+      <button  className="opacity-0 absolute -left-[100%]"></button>
       <div className="flex gap-x-4">
         {Object.keys(buttonsData).map((key: ViewType, i) => {
           const Icon = buttonsData[key].icon
