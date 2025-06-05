@@ -5,7 +5,7 @@ import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest, mapToViewIndex } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {
@@ -27,8 +27,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-
-  const defaultView = useConfigStore.getState().config.defaultView
+  const defaultView = useUIStore.getState().defaultView
   const getCollection = useDataStore(state => state.initCollection)
   const updateStorePanelState = usePanelStore((state) => state.updatePanel)
 

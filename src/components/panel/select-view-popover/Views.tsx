@@ -1,18 +1,17 @@
 import { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
-
 
 import { AlignCenter, Columns2, Image, PictureInPicture2 } from 'lucide-react'
 import { ViewType } from '@/types'
 import { Button } from '@/components/ui/button.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 interface SelectViewButtonsProps {
   updateSelectedButton: (selectedView: ViewType) => void
 }
 
 const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
-  const [selectedView, setSelectedView] = useState(useConfigStore.getState().config.defaultView)
+  const [selectedView, setSelectedView] = useState(useUIStore.getState().defaultView)
   const { t } = useTranslation()
 
   const buttonsData = {

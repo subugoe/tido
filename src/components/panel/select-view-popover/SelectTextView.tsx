@@ -37,7 +37,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
 
   function handleConfirm(selectedView: ViewType) {
     usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView) })
-    useConfigStore.getState().updateConfig({ defaultView: selectedView })
+    useUIStore.getState().updateView(selectedView)
 
     if (isChecked.current) updateEnabledSelectTextView(false)
     setShowPopover(false)
