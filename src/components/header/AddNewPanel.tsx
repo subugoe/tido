@@ -24,6 +24,7 @@ const AddNewPanel: FC = () => {
   function onSelect(value: 'new' | 'existing') {
     if (value === 'new') setStep(1)
     else if (value === 'existing') setStep(2)
+
     setShowPopover(false)
     setShowDialog(true)
   }
