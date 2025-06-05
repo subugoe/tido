@@ -66,7 +66,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
           </DialogHeader>
           <Views updateSelectedButton={setSelectedView} />
           <div className="flex justify-center">
-            <DialogFooter className="flex gap-x-4">
+            <DialogFooter className="flex gap-x-8">
               <DisableSelectView updateCheckedValue={updateCheckedValue} />
               <Button onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
             </DialogFooter>
