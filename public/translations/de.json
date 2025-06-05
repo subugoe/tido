@@ -16,12 +16,14 @@
   "could_not_load_image": "Leider konnte das Bild nicht geladen werden.",
   "empty_panel": "Das ist ein leeres Panel.",
   "error_occurred": "Ein Fehler ist aufgetreten",
+  "enable_select_view_modal": "View Auswahl Modal Aktivieren",
+  "disable_select_view_modal": "View Auswahl Modal Deaktivieren",
   "no_content_found": "Keinen passenden Inhalt gefunden.",
   "unknown_error": "Unbekannter Fehler",
   "metadata": "Metadaten",
   "please_click_to_view_metadata": "Bitte klicken Sie auf die folgenden Überschriften, um die Metadaten anzuzeigen",
-  "please_select_a_manifest_to_open": "Bitte wählen Sie zum Öffnen ein Manifest aus",
-  "please_select_an_item_to_open": "Bitte wählen Sie zum Öffnen einen Artikel aus",
+  "please_select_a_manifest_to_open": "Bitte wählen Sie zum Öffnen ein Manuksript aus",
+  "please_select_an_item_to_open": "Bitte wählen Sie zum Öffnen eine Seite aus",
   "title": "Titel",
   "subtitle": "Untertitel",
   "collector": "Kollektor",
@@ -48,5 +50,7 @@
   "toggle_theme": "Farbschema umschalten",
   "light": "Hell",
   "dark": "Dunkel",
-  "system": "System"
+  "system": "System",
+  "do_not_ask_again": "Bitte nicht erneut anzeigen",
+  "please_select_view_to_show_text": "Bitte wählen Sie die Ansicht, um den Text anzuzeigen"
 }
