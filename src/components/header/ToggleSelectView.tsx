@@ -8,22 +8,21 @@ import { Switch } from '@/components/ui/switch'
 
 const ToggleSelectView: FC = () => {
   const [enabled, setEnabled]  = useState(useUIStore.getState().enabledSelectTextView)
-  const updateEnabledSelectViewModal = useUIStore.getState().updateEnabledSelectTextView
-  const allowSelectViewModal = useUIStore(state => state.enabledSelectTextView)
   const { t } = useTranslation()
 
+  const updateEnabledSelectViewModal = useUIStore.getState().updateEnabledSelectTextView
+  const externalToggle = useUIStore(state => state.enabledSelectTextView)
+
   useEffect(() => {
-    setEnabled(allowSelectViewModal)
-  }, [allowSelectViewModal])
+    setEnabled(externalToggle)
+  }, [externalToggle])
 
   function handleSwitchClick(e) {
     e.stopPropagation()
     if (enabled) {
-      setEnabled(false)
       updateEnabledSelectViewModal(false)
       return
     }
-    setEnabled(true)
     updateEnabledSelectViewModal(true)
   }
 
