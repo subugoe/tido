@@ -9,10 +9,11 @@ import { useUIStore } from '@/store/UIStore.tsx'
 const Panel: FC = () => {
   const { t } = useTranslation()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const enabledSelectTextView = useUIStore(state => state.enabledSelectTextView)
 
   function onConfirm() {
     setIsDialogOpen(false)
-    useUIStore.getState().updateShowSelectTextView(true)
+    if (enabledSelectTextView) useUIStore.getState().updateShowSelectTextView(true)
   }
 
   return (

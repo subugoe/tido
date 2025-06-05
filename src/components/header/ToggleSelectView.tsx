@@ -7,23 +7,23 @@ import { Switch } from '@/components/ui/switch'
 
 
 const ToggleSelectView: FC = () => {
-  const [enabledSelectViewModal, setEnabledSelectViewModal]  = useState(useUIStore.getState().enabledSelectTextView)
+  const [enabled, setEnabled]  = useState(useUIStore.getState().enabledSelectTextView)
   const updateEnabledSelectViewModal = useUIStore.getState().updateEnabledSelectTextView
   const allowSelectViewModal = useUIStore(state => state.enabledSelectTextView)
   const { t } = useTranslation()
 
   useEffect(() => {
-    setEnabledSelectViewModal(allowSelectViewModal)
+    setEnabled(allowSelectViewModal)
   }, [allowSelectViewModal])
 
   function handleSwitchClick(e) {
     e.stopPropagation()
-    if (enabledSelectViewModal) {
-      setEnabledSelectViewModal(false)
+    if (enabled) {
+      setEnabled(false)
       updateEnabledSelectViewModal(false)
       return
     }
-    setEnabledSelectViewModal(true)
+    setEnabled(true)
     updateEnabledSelectViewModal(true)
   }
 
@@ -32,7 +32,7 @@ const ToggleSelectView: FC = () => {
       <div className="flex items-center space-x-2">
         <span className="hover:cursor-pointer">{t('enable_select_view_modal')}</span>
         <Switch id="toggle-select-view-modal"
-          checked={enabledSelectViewModal}
+          checked={enabled}
           onClick={(e) => handleSwitchClick(e)}
         />
       </div>
