@@ -52,12 +52,15 @@ const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
             <TooltipProvider key={'view-'+ key} delayDuration={400}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
-                    className={`flex justify-center hover:bg-muted w-21 h-21 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
-                    onClick={() => setSelectedButton(key)}
-                  >
-                    <Icon className="size-16 stroke-1" />
-                  </Button>
+                  <div className="flex flex-col gap-y-4">
+                    <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
+                      className={`flex justify-center hover:bg-muted w-21 h-21 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
+                      onClick={() => setSelectedButton(key)}
+                    >
+                      <Icon className="size-16 stroke-1" />
+                    </Button>
+                    <span className="leading-none ml-6">{ buttonsData[key].title.split('-')[0] }</span>
+                  </div>
                 </TooltipTrigger>
                 <TooltipContent>
                   <span className="leading-none">{ buttonsData[key].title }</span>
