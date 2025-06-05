@@ -18,7 +18,7 @@ const DisableSelectView: FC<Props> = ({ updateCheckedValue }) => {
   }
 
   return (
-    <div className="flex items-center space-x-2 mt-4 ml-2">
+    <div className="flex items-center space-x-2">
       <Checkbox id="do-not-ask-again" onCheckedChange={(checked) => handleCheckedChange(checked)} />
       <label
         htmlFor="do-not-ask-again"

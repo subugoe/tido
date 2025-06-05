@@ -43,7 +43,7 @@ const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
 
 
   return (
-    <div className="flex relative">
+    <div className="flex relative justify-start">
       <Button className="opacity-0 absolute -left-20"></Button>
       <div className="flex gap-x-4">
         {Object.keys(buttonsData).map((key: ViewType, i) => {
@@ -53,7 +53,7 @@ const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
-                    className={`flex justify-center hover:bg-muted w-25 h-25 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
+                    className={`flex justify-center hover:bg-muted w-21 h-21 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
                     onClick={() => setSelectedButton(key)}
                   >
                     <Icon className="size-16 stroke-1" />

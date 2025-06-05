@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 import {
   Dialog,
-  DialogContent,
+  DialogContent, DialogFooter,
   DialogHeader, DialogOverlay, DialogPortal, DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
@@ -54,19 +54,23 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
       <DialogTrigger>Open</DialogTrigger>
       <DialogPortal container={parentEl}>
         <DialogOverlay className="absolute bg-white opacity-[20%]" />
-        <DialogContent className={`absolute w-[500px] h-[250px] flex flex-col gap-y-6
-           pl-2 pt-2 justify-start
+        <DialogContent className={`absolute flex flex-col gap-y-4 w-fit
+           p-4 justify-start
           transition-all duration-900 ease-out
           ${animate ? `top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2` : 'top-0 right-0'}`}
         >
           <DialogHeader>
             <DialogTitle>
-              <div className="text-muted-foreground">{ t('please_select_view_to_show_text') }</div>
+              <div className="text-muted-foreground text-[15px]">{ t('please_select_view_to_show_text') }</div>
             </DialogTitle>
           </DialogHeader>
           <Views updateSelectedButton={setSelectedView} />
-          <DisableSelectView updateCheckedValue={updateCheckedValue} />
-          <Button className="absolute bottom-4 right-4" onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
+          <div className="flex justify-center">
+            <DialogFooter className="flex gap-x-4">
+              <DisableSelectView updateCheckedValue={updateCheckedValue} />
+              <Button onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
+            </DialogFooter>
+          </div>
         </DialogContent>
       </DialogPortal>
     </Dialog>
