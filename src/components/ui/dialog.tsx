@@ -50,7 +50,7 @@ const DialogOverlay = ({
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentCustomProps
->(({ className, children, showClose, ...props }) => (
+>(({ className, children, showClose = true, ...props }) => (
   <DialogPrimitive.Content
     data-slot="dialog-content"
     className={cn(

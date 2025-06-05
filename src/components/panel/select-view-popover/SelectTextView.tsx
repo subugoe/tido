@@ -56,7 +56,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
         <DialogOverlay className="absolute bg-white opacity-[20%]" />
         <DialogContent className={`absolute flex flex-col gap-y-4 w-fit
            p-4 justify-start
-          transition-all duration-900 ease-out
+          transition-all duration-600 ease-out
           ${animate ? `top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2` : 'top-0 right-0'}`}
         showClose={false}>
           <DialogHeader>
