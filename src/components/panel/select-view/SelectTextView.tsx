@@ -2,7 +2,6 @@ import { FC, useRef, useState } from 'react'
 
 import { useUIStore } from '@/store/UIStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useTranslation } from 'react-i18next'
 
@@ -28,8 +27,10 @@ interface SelectTextViewProps {
 const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
   const [showPopover, setShowPopover] = useState(true)
   const { panelState } = usePanel()
-  const [selectedView, setSelectedView] = useState(useConfigStore().config.defaultView)
-  const updateEnabledSelectTextView = useUIStore.getState().updateEnabledSelectTextView
+  const UIState = useUIStore.getState()
+
+  const [selectedView, setSelectedView] = useState(UIState.defaultView)
+  const updateEnabledSelectTextView = UIState.updateEnabledSelectTextView
   const { t } = useTranslation()
 
   const isChecked = useRef<boolean>(false)
