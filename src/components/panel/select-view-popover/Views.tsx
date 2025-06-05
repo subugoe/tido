@@ -47,8 +47,8 @@ const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
         {Object.keys(buttonsData).map((key: ViewType, i) => {
           const Icon = buttonsData[key].icon
           return (
-            <div className="flex flex-col gap-y-4">
-              <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
+            <div className="flex flex-col gap-y-4" key={key+'_'+i}>
+              <Button variant={selectedView === key ? 'secondary': 'ghost'}
                 className={`flex justify-center hover:bg-muted w-21 h-21 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
                 onClick={() => setSelectedButton(key)}
               >
