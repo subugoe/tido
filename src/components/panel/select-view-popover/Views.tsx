@@ -6,7 +6,6 @@ import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { AlignCenter, Columns2, Image, PictureInPicture2 } from 'lucide-react'
 import { ViewType } from '@/types'
 import { Button } from '@/components/ui/button.tsx'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
 interface SelectViewButtonsProps {
   updateSelectedButton: (selectedView: ViewType) => void
@@ -44,29 +43,19 @@ const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
 
   return (
     <div className="flex relative justify-start">
-      <button  className="opacity-0 absolute -left-[100%]"></button>
       <div className="flex gap-x-4">
         {Object.keys(buttonsData).map((key: ViewType, i) => {
           const Icon = buttonsData[key].icon
           return (
-            <TooltipProvider key={'view-'+ key} delayDuration={400}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex flex-col gap-y-4">
-                    <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
-                      className={`flex justify-center hover:bg-muted w-21 h-21 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
-                      onClick={() => setSelectedButton(key)}
-                    >
-                      <Icon className="size-16 stroke-1" />
-                    </Button>
-                    <span className="leading-none ml-6">{ buttonsData[key].title.split('-')[0] }</span>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <span className="leading-none">{ buttonsData[key].title }</span>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <div className="flex flex-col gap-y-4">
+              <Button variant={selectedView === key ? 'secondary': 'ghost'} key={key+'_'+i}
+                className={`flex justify-center hover:bg-muted w-21 h-21 ${selectedView === key ? 'shadow-sm bg-muted': ''}`}
+                onClick={() => setSelectedButton(key)}
+              >
+                <Icon className="size-16 stroke-1" />
+              </Button>
+              <span className="leading-none self-center">{ buttonsData[key].title.split('-')[0] }</span>
+            </div>
           )
         }
         )}
