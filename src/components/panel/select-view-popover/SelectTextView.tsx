@@ -58,7 +58,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
            p-4 justify-start
           transition-all duration-900 ease-out
           ${animate ? `top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2` : 'top-0 right-0'}`}
-        >
+        showClose={false}>
           <DialogHeader>
             <DialogTitle>
               <div className="text-muted-foreground text-[15px]">{ t('please_select_view_to_show_text') }</div>
