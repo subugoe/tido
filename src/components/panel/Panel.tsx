@@ -1,18 +1,25 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
 
-import PanelBody from '@/components/panel/PanelBody.tsx'
-import PanelHeader from '@/components/panel/PanelHeader.tsx'
-
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useScrollStore } from '@/store/ScrollStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
+
+import PanelBody from '@/components/panel/PanelBody.tsx'
+import PanelHeader from '@/components/panel/PanelHeader.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
+import SelectTextView from '@/components/panel/select-view/SelectTextView.tsx'
 
 const DEFAULT_PANEL_WIDTH = 600
 const MIN_PANEL_WIDTH = 400
 
 const Panel: FC = React.memo(() => {
   const { panelId } = usePanel()
+  const newestPanelId = useUIStore(state => state.newestPanelId)
+  const showSelectViewState = useUIStore(state => state.showSelectTextView)
+  const showSelectTextView = panelId === newestPanelId && showSelectViewState
+
+
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
   const [flexValues, setFlexValues] = useState({
@@ -24,6 +31,7 @@ const Panel: FC = React.memo(() => {
   const cardRef = useRef(null)
   const [resizing, setResizing] = useState(false)
   const [isHoveringEdge, setIsHoveringEdge] = useState(false)
+
 
   useEffect(() => {
     // On mount, we need to decide how set the width. If there is space inside the wrapper,
@@ -62,6 +70,7 @@ const Panel: FC = React.memo(() => {
     setIsScrollPanel(scrollPanelIds.includes(panelId))
   }, [scrollPanelIds, panelId])
 
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!cardRef.current) return
@@ -93,6 +102,13 @@ const Panel: FC = React.memo(() => {
     }
   }, [resizing])
 
+
+  useEffect(() => {
+    const scrollPosX = cardRef.current.offsetLeft - cardRef.current.offsetWidth / 2
+    document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
+  }, [showSelectTextView])
+
+
   return (
     <div
       id={panelId}
@@ -118,9 +134,16 @@ const Panel: FC = React.memo(() => {
       `}
       data-cy="panel"
     >
+      <div
+        className={`
+      absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs
+      ${showSelectTextView ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+    `}
+      />
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
       <PanelHeader />
       <PanelBody />
+      {showSelectTextView && cardRef.current && <SelectTextView parentEl={cardRef.current}  /> }
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
          -translate-y-1/2 top-1/2 -right-2"

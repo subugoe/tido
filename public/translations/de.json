@@ -16,6 +16,7 @@
   "could_not_load_image": "Leider konnte das Bild nicht geladen werden.",
   "empty_panel": "Das ist ein leeres Panel.",
   "error_occurred": "Ein Fehler ist aufgetreten",
+  "enable_select_view_modal": "Ansichtauswahl immer anzeigen",
   "no_content_found": "Keinen passenden Inhalt gefunden.",
   "unknown_error": "Unbekannter Fehler",
   "metadata": "Metadaten",
@@ -48,5 +49,7 @@
   "toggle_theme": "Farbschema umschalten",
   "light": "Hell",
   "dark": "Dunkel",
-  "system": "System"
+  "system": "System",
+  "do_not_ask_again": "Bitte nicht erneut anzeigen",
+  "please_select_view": "Bitte wählen Sie eine Ansicht"
 }

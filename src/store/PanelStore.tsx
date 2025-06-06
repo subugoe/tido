@@ -4,7 +4,7 @@ import { PanelConfig } from '@/types'
 interface PanelStoreTypes {
   panels: PanelState[] // or panels: each panel has one opened item
   activeTargetIndex: number
-  addPanel: (config: PanelConfig) => void
+  addPanel: (config: PanelConfig, newPanelId: string) => void
   updatePanel: (id: string, data: Partial<PanelState>) => void
   getPanel: (panelId: string | null) => PanelState | null
   setActiveTargetIndex: (panelId: string, index: number) => void
@@ -29,8 +29,8 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
 export const usePanelStore = create<PanelStoreTypes>((set, get) => ({
   panels: [],
   activeTargetIndex: -1,
-  addPanel: (config: PanelConfig) => {
-    set({ panels: [ ...get().panels, getDefaultPanelState(crypto.randomUUID(), config) ] })
+  addPanel: (config: PanelConfig, newPanelId) => {
+    set({ panels: [ ...get().panels, getDefaultPanelState(newPanelId, config) ] })
   },
   updatePanel(id: string, data: Partial<PanelState>) {
     set({

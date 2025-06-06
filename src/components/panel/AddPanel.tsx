@@ -4,10 +4,17 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx'
 import TreeSelection from '@/components/tree/TreeSelection.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 const Panel: FC = () => {
   const { t } = useTranslation()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const enabledSelectTextView = useUIStore(state => state.enabledSelectTextView)
+
+  function onConfirm() {
+    setIsDialogOpen(false)
+    if (enabledSelectTextView) useUIStore.getState().updateShowSelectTextView(true)
+  }
 
   return (
     <>
@@ -32,7 +39,7 @@ const Panel: FC = () => {
             <DialogTitle>{ t('choose_your_panel_content') }</DialogTitle>
           </DialogHeader>
           <DialogDescription asChild>
-            <TreeSelection onConfirm={() => setIsDialogOpen(false)} />
+            <TreeSelection onConfirm={() => onConfirm()} />
           </DialogDescription>
         </DialogContent>
       </Dialog>
