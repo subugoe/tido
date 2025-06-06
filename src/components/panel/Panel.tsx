@@ -15,10 +15,9 @@ const MIN_PANEL_WIDTH = 400
 
 const Panel: FC = React.memo(() => {
   const { panelId } = usePanel()
-  const enabledSelectTextView = useUIStore(state => state.enabledSelectTextView)
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectViewState = useUIStore(state => state.showSelectTextView)
-  const showSelectTextView = panelId === newestPanelId && enabledSelectTextView && showSelectViewState
+  const showSelectTextView = panelId === newestPanelId && showSelectViewState
 
 
   const scrollPanelIds = useScrollStore(state => state.panelIds)
