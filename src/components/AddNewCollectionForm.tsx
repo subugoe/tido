@@ -7,6 +7,7 @@ import { createCollectionNode } from '@/utils/tree.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 interface Props {
   onConfirm?: () => void
@@ -26,11 +27,14 @@ const AddNewCollectionForm: FC<Props> = ({ onConfirm }) => {
   async function onConfirmClick() {
     if (inputValue === '') return
 
+    const newPanelId = crypto.randomUUID()
+    useUIStore.getState().updateNewestPanelId(newPanelId)
+
     addPanel({
       collection: inputValue,
       manifestIndex: 0,
       itemIndex: 0
-    })
+    }, newPanelId)
 
     if (!(useConfigStore.getState().config.rootCollections.includes(inputValue))) {
       const newRootNode = await createCollectionNode(inputValue)
