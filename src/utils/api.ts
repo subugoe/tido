@@ -1,11 +1,15 @@
 import { request } from '@/utils/http.ts'
 
 export async function apiRequest<T>(url: string): Promise<T> {
-  const response = await request(url)
+  try {
+    const response = await request(url)
+    if (!response.success) {
+      throw new Error((response as ErrorResponse).message)
+    }
+    return response.data as T
 
-  if (!response.success) {
-    throw response
+  } catch (error) {
+    console.error(error)
+    return null
   }
-
-  return response.data as T
 }
