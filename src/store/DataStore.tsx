@@ -34,17 +34,19 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
 
     // TODO: we need to check if this collection is already in treeCollections or child of existing treeCollections data
     const collections: CollectionMap = { ...get().collections }
-    collections[collection.id] = {
-      'collection': collection,
-      'slug': getCollectionSlug(url)
+
+    if (collection) {
+      collections[collection.id] = {
+        'collection': collection,
+        'slug': getCollectionSlug(url)
+      }
+      set({ collections })
     }
-    set({ collections })
 
     // TODO: fix annotation loading
     // if (collection.annotationCollection) {
     //   await get().initAnnotations(collection.id, collection.annotationCollection)
     // }
-
     return collection
   },
   initAnnotations: async (collectionId: string, url: string) => {
