@@ -1,11 +1,12 @@
 import { ReactNode, createContext, useContext, useState, FC, useEffect } from 'react'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
+
 import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
-import { getContentTypes, isNewManifest, mapToViewIndex } from '@/utils/panel.ts'
+import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
-import { useDataStore } from '@/store/DataStore.tsx'
-import { useUIStore } from '@/store/UIStore.tsx'
+
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
 interface PanelContentType {
@@ -27,7 +28,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const defaultView = useUIStore(state => state.defaultView)
   const getCollection = useDataStore(state => state.initCollection)
   const updateStorePanelState = usePanelStore((state) => state.updatePanel)
 
@@ -53,7 +53,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           collectionId: collection.id,
           manifest,
           item,
-          viewIndex: mapToViewIndex(defaultView),
+          viewIndex: panelState.viewIndex,
           contentTypes,
           activeTargetIndex: -1
         })
