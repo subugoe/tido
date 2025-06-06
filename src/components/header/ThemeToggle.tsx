@@ -9,7 +9,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger
 } from '@/components/ui/dropdown-menu.tsx'
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Sun, MonitorCog } from 'lucide-react'
 
 
 const ThemeToggle: FC = () => {
@@ -23,7 +23,7 @@ const ThemeToggle: FC = () => {
           { t('toggle_theme') }
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
-          <DropdownMenuSubContent className="border border-border">
+          <DropdownMenuSubContent className="border border-border flex flex-col gap-y-1">
             <DropdownMenuItem className={`hover:cursor-pointer ${theme==='light' ? 'bg-muted' : ''}`} onClick={() => setTheme('light')}>
               <Sun className="h-[1.2rem] w-[1.2rem]" />
               { t('light') }</DropdownMenuItem>
@@ -35,6 +35,7 @@ const ThemeToggle: FC = () => {
               className={`hover:cursor-pointer ${theme==='system' ? 'bg-muted' : ''}`}
               onClick={() => setTheme('system')}
             >
+              <MonitorCog className="h-[1.2rem] w-[1.2rem]" />
               { t('system') }
             </DropdownMenuItem>
           </DropdownMenuSubContent>

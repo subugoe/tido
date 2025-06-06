@@ -62,7 +62,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
         showClose={false}>
           <DialogHeader>
             <DialogTitle>
-              <div className="text-muted-foreground text-[15px]">{ t('please_select_view') }</div>
+              <div className="text-[15px]">{ t('please_select_view') }</div>
             </DialogTitle>
           </DialogHeader>
           <Views updateSelectedButton={setSelectedView} />
