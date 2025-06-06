@@ -30,13 +30,13 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
   function select(i?: number) {
     if (i !== undefined) {
       updatePanel(panels[i].id, { config: newPanelConfig })
-    }
-    else {
+    } else {
       const newPanelId = crypto.randomUUID()
       useUIStore.getState().updateNewestPanelId(newPanelId)
       addPanel(newPanelConfig, newPanelId)
       useUIStore.getState().updateShowSelectTextView(true)
     }
+
     onSelect()
     setSelectedNodeId('')
   }

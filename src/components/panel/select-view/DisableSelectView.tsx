@@ -22,7 +22,7 @@ const DisableSelectView: FC<Props> = ({ updateCheckedValue }) => {
       <Checkbox id="do-not-ask-again" onCheckedChange={(checked) => handleCheckedChange(checked)} />
       <label
         htmlFor="do-not-ask-again"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        className="text-sm font-normal text-muted-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
       >
         {t('do_not_ask_again')}
       </label>
