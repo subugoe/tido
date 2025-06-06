@@ -62,11 +62,11 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
         showClose={false}>
           <DialogHeader>
             <DialogTitle>
-              <div className="text-muted-foreground text-[15px]">{ t('please_select_view_to_show_text') }</div>
+              <div className="text-muted-foreground text-[15px]">{ t('please_select_view') }</div>
             </DialogTitle>
           </DialogHeader>
           <Views updateSelectedButton={setSelectedView} />
-          <div className="flex justify-center">
+          <div className="flex">
             <DialogFooter className="flex gap-x-8">
               <DisableSelectView updateCheckedValue={updateCheckedValue} />
               <Button onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>

@@ -12,8 +12,7 @@
   "could_not_load_image": "Could not load the given image.",
   "empty_panel": "This is an empty panel.",
   "error_occurred": "An error has occurred",
-  "enable_select_view_modal": "Enable Select View Modal",
-  "disable_select_view_modal": "Disable Select View Modal",
+  "enable_select_view_modal": "Show view selection always",
   "no_content_found": "No content found.",
   "unknown_error": "Unknown Error",
   "metadata": "Metadata",
@@ -48,5 +47,5 @@
   "dark": "Dark",
   "system": "System",
   "do_not_ask_again": "Do not ask again",
-  "please_select_view_to_show_text": "Please select the view to show the text"
+  "please_select_view": "Please select view"
 }

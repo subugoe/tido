@@ -28,7 +28,6 @@ const SettingsComp: FC = () => {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" title="Settings" className="w-fit px-2">
             <Settings />
-            <span>Settings</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56 p-2 hover:cursor-pointer">
