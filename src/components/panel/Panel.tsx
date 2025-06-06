@@ -32,7 +32,6 @@ const Panel: FC = React.memo(() => {
   const [resizing, setResizing] = useState(false)
   const [isHoveringEdge, setIsHoveringEdge] = useState(false)
 
-  const [animateSelectTextView, setAnimateSelectTextView] = useState(false)
 
   useEffect(() => {
     // On mount, we need to decide how set the width. If there is space inside the wrapper,
@@ -105,15 +104,8 @@ const Panel: FC = React.memo(() => {
 
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      let scrollPosX = 0
-      if (showSelectTextView) {
-        setAnimateSelectTextView(true)
-        scrollPosX = cardRef.current.offsetLeft - cardRef.current.offsetWidth / 2
-        document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
-      }
-    }, 100) // slight delay ensures transition applies
-    return () => clearTimeout(timer)
+    const scrollPosX = cardRef.current.offsetLeft - cardRef.current.offsetWidth / 2
+    document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
   }, [showSelectTextView])
 
 
@@ -151,7 +143,7 @@ const Panel: FC = React.memo(() => {
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
       <PanelHeader />
       <PanelBody />
-      {showSelectTextView && cardRef.current && <SelectTextView animate={animateSelectTextView} parentEl={cardRef.current}  /> }
+      {showSelectTextView && cardRef.current && <SelectTextView parentEl={cardRef.current}  /> }
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
          -translate-y-1/2 top-1/2 -right-2"

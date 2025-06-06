@@ -20,11 +20,10 @@ import { mapToViewIndex } from '@/utils/panel.ts'
 
 
 interface SelectTextViewProps {
-  animate: boolean,
   parentEl?: HTMLElement,
 }
 
-const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
+const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
   const [showPopover, setShowPopover] = useState(true)
   const { panelState } = usePanel()
   const UIState = useUIStore.getState()
@@ -55,10 +54,8 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
       <DialogTrigger>Open</DialogTrigger>
       <DialogPortal container={parentEl}>
         <DialogOverlay className="absolute bg-white opacity-[20%]" />
-        <DialogContent className={`absolute flex flex-col gap-y-4 w-fit
-           p-4 justify-start
-          transition-all duration-600 ease-out
-          ${animate ? `top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2` : 'top-0 right-0'}`}
+        <DialogContent className={`absolute top-1/2 left-1/2 flex flex-col gap-y-4 w-fit
+           p-4 justify-start`}
         showClose={false}>
           <DialogHeader>
             <DialogTitle>
@@ -67,9 +64,9 @@ const SelectTextView: FC<SelectTextViewProps> = ({ animate, parentEl }) => {
           </DialogHeader>
           <Views updateSelectedButton={setSelectedView} />
           <div className="flex">
-            <DialogFooter className="flex gap-x-8">
+            <DialogFooter className="flex mt-2 w-full">
               <DisableSelectView updateCheckedValue={updateCheckedValue} />
-              <Button onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
+              <Button className="ml-auto" onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
             </DialogFooter>
           </div>
         </DialogContent>
