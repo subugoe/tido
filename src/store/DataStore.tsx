@@ -30,22 +30,26 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   initCollection: async (url: string) => {
     if (url in get().collections) return get().collections[url].collection
 
-    const collection = await apiRequest<Collection>(url)
+    try {
+      const collection = await apiRequest<Collection>(url)
 
-    // TODO: we need to check if this collection is already in treeCollections or child of existing treeCollections data
-    const collections: CollectionMap = { ...get().collections }
-    collections[collection.id] = {
-      'collection': collection,
-      'slug': getCollectionSlug(url)
+      // TODO: we need to check if this collection is already in treeCollections or child of existing treeCollections data
+      const collections: CollectionMap = { ...get().collections }
+      collections[collection.id] = {
+        'collection': collection,
+        'slug': getCollectionSlug(url)
+      }
+      set({ collections })
+
+      // TODO: fix annotation loading
+      // if (collection.annotationCollection) {
+      //   await get().initAnnotations(collection.id, collection.annotationCollection)
+      // }
+
+      return collection
+    } catch (error) {
+      console.error(error)
     }
-    set({ collections })
-
-    // TODO: fix annotation loading
-    // if (collection.annotationCollection) {
-    //   await get().initAnnotations(collection.id, collection.annotationCollection)
-    // }
-
-    return collection
   },
   initAnnotations: async (collectionId: string, url: string) => {
     const annotationsCollection = await apiRequest<AnnotationCollection>(url)

@@ -6,7 +6,9 @@ async function createCollectionNodes(rootNodes: string[]): Promise<TreeNode[]> {
 
   for (let i = 0; i < rootNodes.length; i++) {
     await createCollectionNode(rootNodes[i]).then((node) => {
-      nodes.push(node)
+      if (!node) return
+
+      nodes.push(node as TreeNode)
     })
   }
 
@@ -17,7 +19,7 @@ async function createCollectionNode(url: string) {
   const node: TreeNode = { key: '', id: '', type: '', label: '', children: [] }
 
   const response = await request<Collection>(url)
-  if (!response.success) return node
+  if (!response.success) return null
 
   node.key = getCollectionSlug(url)
   node.id = url
