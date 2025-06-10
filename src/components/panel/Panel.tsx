@@ -11,7 +11,7 @@ import { GripVertical } from 'lucide-react'
 import SelectTextView from '@/components/panel/select-view/SelectTextView.tsx'
 
 const DEFAULT_PANEL_WIDTH = 600
-const MIN_PANEL_WIDTH = 400
+const MIN_PANEL_WIDTH = 600
 
 const Panel: FC = React.memo(() => {
   const { panelId } = usePanel()
@@ -117,6 +117,7 @@ const Panel: FC = React.memo(() => {
         flexGrow: flexValues.flexGrow,
         flexShrink: flexValues.flexShrink,
         flexBasis: flexValues.flexBasis,
+        minWidth: `${MIN_PANEL_WIDTH}px`,
         userSelect: resizing ? 'none' : 'auto',
         cursor: isHoveringEdge ? 'ew-resize' : 'default',
       }}
