@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.2](https://github.com/subugoe/tido/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2025-06-10)
+
+
+### Features
+
+* add easier navigation inside a panel through manifest and item modals ([#666](https://github.com/subugoe/tido/issues/666)) ([ef32111](https://github.com/subugoe/tido/commit/ef321111d465532145efe48bdcbb818f7b3ae081))
+* add icon as preview in pip mode ([5821056](https://github.com/subugoe/tido/commit/5821056e6a9e28523cf69ddd015b2bbce9eebb9b))
+* add text view selection when creating a new panel ([885d344](https://github.com/subugoe/tido/commit/885d3441a9702ad319b20226990e99bb5f07591e))
+* add tooltips to buttons in panel header ([f02b691](https://github.com/subugoe/tido/commit/f02b691e32d3a4629dfbb2cef70086929b35868f))
+* make panel placeholder configurable ([4a23820](https://github.com/subugoe/tido/commit/4a23820f6e09530aeecd351cdd0d1936123a8350))
+* render panels from panel store instead of config store, avoid mutating panels config for updates and use panel store instead ([68d8357](https://github.com/subugoe/tido/commit/68d83578298d65811730a961f4e8502a3697adb0))
+* update default panel width ([3338c03](https://github.com/subugoe/tido/commit/3338c038c488b0f19eec150abb94bdafae08f424))
+* upgrade to React 19, add dark mode, refactor shadcn components to use CSS variables ([68d482e](https://github.com/subugoe/tido/commit/68d482e3e009d575371b599ccc78cb023802fa4b))
+* upgrade to TailwindCSS 4 ([8f808cc](https://github.com/subugoe/tido/commit/8f808cca2d1ea3ccb170006c00eac4eddedc484f))
+
+
+### Bug Fixes
+
+* read view index from panelState while rendering Panel ([90fb4f7](https://github.com/subugoe/tido/commit/90fb4f77b220d9b9aaac10d69d19c306d747f32a))
+* show the root nodes of tree with a valid api response ([2fd3c71](https://github.com/subugoe/tido/commit/2fd3c71bbd0d17834152bddc05610c9a618007c1))
+
+
+### Refactoring
+
+* remove prefixes for TailwindCSS classes ([0f67173](https://github.com/subugoe/tido/commit/0f67173bf3342d180725c06ac09babe196dde5e3))
+
 ## [5.0.0-alpha.1](https://github.com/subugoe/tido/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2025-05-05)
 
 ## 5.0.0-alpha.0 (2025-05-05)
