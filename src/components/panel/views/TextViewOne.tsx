@@ -1,11 +1,10 @@
 import { FC, useState } from 'react'
-import PreviewTextRenderer from '@/components/panel/PreviewTextRenderer.tsx'
 import TextRenderer from '@/components/panel/TextRenderer.tsx'
 import ImageRenderer from '@/components/panel/ImageRenderer.tsx'
 import Preview from '@/components/panel/Preview.tsx'
-import { Image } from 'lucide-react'
 
-import { usePanel } from '@/contexts/PanelContext'
+import { Button } from '@/components/ui/button.tsx'
+import { Text, Image } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 interface TextViewOneProps {
@@ -14,21 +13,39 @@ interface TextViewOneProps {
 
 const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
 
-  const { t } = useTranslation()
-  const { panelState } = usePanel()
-  const imageUrl = panelState?.item?.image?.id
   const [previewMode, setMode] = useState('A')
+  const { t } = useTranslation()
 
   return (
-    <div className="flex-1 h-full overflow-hidden">
+    <div className="flex-1 h-full">
       { previewMode === 'A' ? <TextRenderer htmlString={textHtml} /> : <ImageRenderer />}
       <Preview
         previewA={
-          imageUrl
-            ? <img src={imageUrl} alt={t('image_preview')} />
-            : <div className="text-gray-300"><Image size={64} /></div>
+          <Button
+            data-cy='preview-image'
+            className="px-2 py-3 h-auto shadow-xl"
+            variant="outline"
+            color="secondary"
+          >
+            <div className="flex flex-col justify-center items-center">
+              <Image className="size-8 mb-2" />
+              <div>{t('show_image')}</div>
+            </div>
+          </Button>
         }
-        previewB={<PreviewTextRenderer htmlString={textHtml} />}
+        previewB={
+          <Button
+            data-cy='preview-text'
+            className="px-2 py-3 h-auto shadow-xl"
+            variant="outline"
+            color="secondary"
+          >
+            <div className="flex flex-col justify-center items-center">
+              <Text className="size-8 mb-2" />
+              <div>{t('show_text')}</div>
+            </div>
+          </Button>
+        }
         mode={previewMode}
         setMode={setMode}
       />
