@@ -6,6 +6,7 @@ import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
 import tailwindcss from "@tailwindcss/vite";
 import { exec } from 'child_process';
+import {createPlainTidoCss} from ".build/create-plain-tido-css.js";
 
 
 
@@ -20,16 +21,8 @@ export default defineConfig(({ mode}) => {
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
       injectConfig(projectName),
       {
-        name: 'flatten-css-layers',
-        closeBundle() {
-          exec('npx postcss dist/tido.min.css -o dist/tido.min.css', (err, stdout, stderr) => {
-            if (err) {
-              console.error(stderr);
-            } else {
-              console.log(stdout || '✅ Layers flattened to plain.css');
-            }
-          });
-        }
+        name: 'produce-plain-tido-css',
+        closeBundle() {createPlainTidoCss()}
       }
     ],
     resolve: {
