@@ -22,7 +22,7 @@ export default defineConfig(({ mode}) => {
       {
         name: 'flatten-css-layers',
         closeBundle() {
-          exec('npx postcss dist/tido.min.css -o dist/tido.min.plain.css', (err, stdout, stderr) => {
+          exec('npx postcss dist/tido.min.css -o dist/tido.min.css', (err, stdout, stderr) => {
             if (err) {
               console.error(stderr);
             } else {
