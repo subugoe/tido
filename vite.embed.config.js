@@ -5,6 +5,9 @@ import * as path from "node:path";
 import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
 import tailwindcss from "@tailwindcss/vite";
+import { exec } from 'child_process';
+import {createPlainTidoCss} from ".build/create-plain-tido-css.js";
+
 
 
 export default defineConfig(({ mode}) => {
@@ -16,7 +19,11 @@ export default defineConfig(({ mode}) => {
       react(),
       tailwindcss(),
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
-      injectConfig(projectName)
+      injectConfig(projectName),
+      {
+        name: 'produce-plain-tido-css',
+        closeBundle() {createPlainTidoCss()}
+      }
     ],
     resolve: {
       alias: {
