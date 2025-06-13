@@ -1,17 +1,12 @@
 import { defineConfig, loadEnv } from 'vite';
 import { resolve } from 'path';
 import react from '@vitejs/plugin-react'
-import tailwindcss from "@tailwindcss/vite";
 import * as path from "node:path";
-import pkg from './package.json'
 import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
-import {createPlainTidoCss} from ".build/create-plain-tido-css.js";
+import tailwindcss from "@tailwindcss/vite";
+import {removeCssLayers} from ".build/remove-css-layers.js";
 
-
-const externalDeps = [
-  ...Object.keys(pkg.peerDependencies || {})
-]
 
 
 export default defineConfig(({ mode}) => {
@@ -24,10 +19,7 @@ export default defineConfig(({ mode}) => {
       tailwindcss(),
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
       injectConfig(projectName),
-      {
-        name: 'produce-plain-tido-css',
-        closeBundle() {createPlainTidoCss()}
-      }
+      removeCssLayers()
     ],
     resolve: {
       alias: {
@@ -36,23 +28,14 @@ export default defineConfig(({ mode}) => {
       },
     },
     build: {
-      lib: {
-        entry: path.resolve(__dirname, 'src/index.ts'),
-        name: 'Tido',
-        formats: ['es', 'cjs'],
-        fileName: (format) => `index.${format}.js`,
-      },
-      sourcemap: true,
+      emptyOutDir: false,
       rollupOptions: {
-        external: externalDeps,
+        input: path.resolve(__dirname, 'src/index.embed.tsx'),
         output: {
-          globals: {
-            react: 'React',
-            'react-dom': 'ReactDOM',
-          },
+          entryFileNames: 'tido.min.js',
+          assetFileNames: 'tido.min.[ext]',
         },
-      }
+      },
     },
-    cssCodeSplit: true,
   }
 });

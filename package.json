@@ -22,7 +22,7 @@
   "type": "module",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
-  "style": "./dist/style.css",
+  "style": "./dist/tido.min.css",
   "types": "./dist/types.d.ts",
   "bugs": {
     "url": "https://github.com/subugoe/tido/issues"
@@ -76,7 +76,7 @@
     "tailwindcss": "^4.1.5",
     "tw-animate-css": "^1.2.9",
     "typescript-eslint": "^8.12.2",
-    "vite": "^5.4.18",
+    "vite": "^5.4.19",
     "zustand": "^5.0.2"
   },
   "browserslist": [
@@ -91,9 +91,9 @@
   },
   "scripts": {
     "build": "npm run build:lib && npm run build:embed",
-    "build:lib": "vite build && cp src/types.d.ts dist/types.d.ts",
-    "build:embed": "vite build --config vite.embed.config.js",
-    "build:test": "vite build --config vite.embed.config.js --mode test",
+    "build:lib": "vite build --config vite.lib.config.js && cp src/types.d.ts dist/types.d.ts",
+    "build:embed": "vite build",
+    "build:test": "vite build --mode test",
     "cypress": "cypress open",
     "cypress:headless": "cypress run --headless",
     "dev": "node vite-start.js",
