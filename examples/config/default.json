@@ -1,25 +1,14 @@
 {
-  "allowNewCollections": true,
-  "defaultView": "split",
-  "lang": "de",
-  "panels": [
-    {
-      "collection": "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/reproduction/collection.json",
-      "manifestIndex": 0
-    }
-  ],
   "theme": {
     "primaryColor": "#1E40AF"
   },
-  "rootCollections": [
-    "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/collection.json",
-    "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json"
-  ],
-  "translations": {
-    "de": {
-      "accurate": "Handschriftengetreu",
-      "simplified": "Vereinfacht"
+  "panels": [
+    {
+      "collection": "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
+      "manifestIndex": 0
     }
-  },
-  "title": "Vier Wachen Edition"
+  ],
+  "rootCollections": [
+    "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json"
+  ]
 }
