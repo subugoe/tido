@@ -5,7 +5,7 @@ import * as path from "node:path";
 import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
 import tailwindcss from "@tailwindcss/vite";
-import {removeCssLayers} from ".build/remove-css-layers.js";
+import { renameCssLayers } from ".build/rename-css-layers.js";
 
 
 
@@ -19,7 +19,7 @@ export default defineConfig(({ mode}) => {
       tailwindcss(),
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
       injectConfig(projectName),
-      removeCssLayers()
+      renameCssLayers()
     ],
     resolve: {
       alias: {

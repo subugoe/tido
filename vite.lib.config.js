@@ -6,7 +6,7 @@ import * as path from "node:path";
 import pkg from './package.json'
 import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
-import { removeCssLayers } from ".build/remove-css-layers.js";
+import { renameCssLayers } from ".build/rename-css-layers.js";
 
 
 const externalDeps = [
@@ -24,7 +24,7 @@ export default defineConfig(({ mode}) => {
       tailwindcss(),
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
       injectConfig(projectName),
-      removeCssLayers()
+      renameCssLayers()
     ],
     resolve: {
       alias: {

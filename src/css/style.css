@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
-@config "../../tailwind.config.js";
 
 @custom-variant dark (&:where(.dark, .dark *, [color-scheme=dark], [color-scheme=dark] *));
 
@@ -66,6 +65,7 @@
   --border: var(--color-gray-200);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+  --container-lg: 32rem;
 }
 
 .tido.dark {
