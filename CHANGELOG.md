@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.3](https://github.com/subugoe/tido/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2025-06-16)
+
+
+### Bug Fixes
+
+* rename css layers with .tido ([560aa53](https://github.com/subugoe/tido/commit/560aa5373d72fed10903ca14c9b03cfd6b0e367c))
+* show the select view modal from 'add new collection' header button only when it is enabled ([b0c70a2](https://github.com/subugoe/tido/commit/b0c70a2f79b50775579baf1fd3a5491e042bb5cd))
+
 ## [5.0.0-alpha.2](https://github.com/subugoe/tido/compare/v5.0.0-alpha.1...v5.0.0-alpha.2) (2025-06-10)
 
 
