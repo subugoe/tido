@@ -1,13 +1,17 @@
 import { defineConfig, loadEnv } from 'vite';
 import { resolve } from 'path';
 import react from '@vitejs/plugin-react'
+import tailwindcss from "@tailwindcss/vite";
 import * as path from "node:path";
+import pkg from './package.json'
 import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
-import tailwindcss from "@tailwindcss/vite";
-import { exec } from 'child_process';
-import {createPlainTidoCss} from ".build/create-plain-tido-css.js";
+import { removeCssLayers } from ".build/remove-css-layers.js";
 
+
+const externalDeps = [
+  ...Object.keys(pkg.peerDependencies || {})
+]
 
 
 export default defineConfig(({ mode}) => {
@@ -20,10 +24,7 @@ export default defineConfig(({ mode}) => {
       tailwindcss(),
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
       injectConfig(projectName),
-      {
-        name: 'produce-plain-tido-css',
-        closeBundle() {createPlainTidoCss()}
-      }
+      removeCssLayers()
     ],
     resolve: {
       alias: {
@@ -32,15 +33,28 @@ export default defineConfig(({ mode}) => {
       },
     },
     build: {
-      emptyOutDir: false,
-      cssCodeSplit: true,
-      rollupOptions: {
-        input: path.resolve(__dirname, 'src/index.embed.tsx'),
-        output: {
-          entryFileNames: 'tido.min.js',
-          assetFileNames: 'tido.min.[ext]',
-        },
+      lib: {
+        entry: ['src/index.ts'],
+        formats: ['es', 'cjs'],
+        fileName: (format) => `index.${format}.js`,
+        // cssFileName: 'tido.min', // TODO: This does not work, why?
       },
+      sourcemap: true,
+      rollupOptions: {
+        external: externalDeps,
+        output: {
+          assetFileNames: (assetInfo) => {
+            if (assetInfo.name && assetInfo.name.endsWith('.css')) {
+              return 'tido.min.css'
+            }
+            return '[name][extname]'
+          },
+          globals: {
+            react: 'React',
+            'react-dom': 'ReactDOM',
+          },
+        },
+      }
     },
   }
 });
