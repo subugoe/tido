@@ -1,6 +1,6 @@
 import { useEffect, FC, useState, useRef } from 'react'
 import OpenSeadragon from 'openseadragon'
-import { Image } from 'lucide-react'
+import { Image, Loader2 } from 'lucide-react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import ImageActionButtons from '@/components/panel/ImageActionButtons.tsx'
@@ -13,6 +13,7 @@ const ImageRenderer: FC = () => {
   const imageViewerRef = useRef(null)
 
   const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
   const imageUrl = panelState?.item?.image?.id
 
   let viewer: OpenSeadragon.Viewer | null = null
@@ -41,10 +42,15 @@ const ImageRenderer: FC = () => {
       setError(t('could_not_load_image'))
     })
 
+    viewer.addOnceHandler('open', () => {
+      setLoading(false)
+    })
+
     return () => {
       if (viewer) viewer.destroy()
     }
   }, [imageUrl, imageViewerRef])
+
 
   return (
     <>
@@ -56,8 +62,11 @@ const ImageRenderer: FC = () => {
             <span className="mt-2 text-gray-600 text-center">{ error }</span>
           </div>
         </PanelContentWrapper>
-        : <div className="flex flex-col h-full w-full">
+        : <div className="flex relative flex-col h-full w-full">
           <ImageActionButtons />
+          {loading && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <Loader2 className="w-10 h-10 text-primary animate-spin" />
+          </div>}
           <div ref={imageViewerRef} className="w-full h-full" />
         </div>
       }
