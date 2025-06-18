@@ -257,8 +257,7 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     annotationStore.setActiveAnnotations(activeAnnotationsList)
 
     const selector = AnnotationUtils.generateTargetSelector(removeAnnotation);
-    const textEl = document.querySelector('#text-content')
-    const target = textEl.querySelector(selector)
+    const target = document.querySelector(selector)
 
     if (!target) return
 

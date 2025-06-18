@@ -50,26 +50,6 @@ export function addToAttribute(element, attribute, newValue) {
   }
 }
 
-export function elemToSelector(el) {
-  if (el.id === 'text-content') return '#text-content';
-  let str = el.tagName.toLowerCase();
-
-  if (el.id !== '') {
-    str += `#${el.id}`;
-  } else if (el.className) {
-    const classes = el.className.trim().split(/\s+/);
-    for (let i = 0; i < classes.length; i++) {
-      str += `.${classes[i]}`;
-    }
-  }
-
-  if (el.hasAttribute('data-target')) {
-    str += `[data-target=${el.getAttribute('data-target')}]`;
-  }
-
-  return `${elemToSelector(el.parentNode)} > ${str}`;
-}
-
 export function getValuesFromAttribute(element, attribute) {
   const value = element.getAttribute(attribute);
   return value ? value.split(' ') : [];
