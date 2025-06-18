@@ -16,7 +16,7 @@ function renameCssLayers() {
 
       let css = fs.readFileSync(cssPath, 'utf8');
 
-      css = css.replace(/@layer components;/g, "");
+      css = css.replace(/@layer components;|:root,\s*:host\s*/g, "");
       css = css.replace(/@layer properties|@layer theme|@layer base|@layer utilities/g, '.tido');
 
       fs.writeFileSync(cssPath, css);
