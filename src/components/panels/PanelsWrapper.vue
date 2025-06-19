@@ -12,6 +12,7 @@
         v-show="panel.show"
         :key="`pc${i}`"
         :panel="panel"
+        :panel-index="i"
         :active-view="getActiveView(i)"
         class="panel"
         :class="{

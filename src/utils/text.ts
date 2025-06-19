@@ -32,9 +32,16 @@ function discoverChildAnnotationIds(el, annotationIds = {}) {
   return annotationIds;
 }
 
+function mapActiveContentMapToString(obj: {[key: string]: string}): string {
+  const result = Object.keys(obj).map(key => `${key}+${obj[key]}`).join(',');
+
+  return result !== '' ? result : 'null';
+}
+
 
 export {
   getAnnotationIdsFromTarget,
   discoverParentAnnotationIds,
-  discoverChildAnnotationIds
+  discoverChildAnnotationIds,
+  mapActiveContentMapToString
 }

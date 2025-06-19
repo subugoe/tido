@@ -188,12 +188,11 @@ function createWitnessEl(witness, witnessColor) {
 export function removeWitnessesWrappers() {
   // remove witnesses in text Panel - it is used when switch off the variants tab
   const textPanelEls = document.querySelectorAll('.content-view')
-  const wrappers = textPanelEls.querySelectorAll('.witnesses')
-  if (!wrappers) return;
-  if(Array.from(wrappers).length === 0) return;
+  const wrappers = [];
+  textPanelEls.forEach(textPanel => wrappers.push(...Array.from(textPanel.querySelectorAll('.witnesses'))));
 
   // each target has its witnesses wrapper; for every target we remove its witnesses wrapper
-  Array.from(wrappers).forEach((wrapper) => {
+  wrappers.forEach((wrapper) => {
     wrapper.remove()
   })
 }
@@ -204,10 +203,9 @@ export function removeWitness(selector, idno) {
   const textPanels = document.querySelectorAll('.content-view')
   if (textPanels.length === 0) return;
 
-  let hasWitnesses = false;
-  textPanels.forEach(textPanel => hasWitnesses = textPanel.querySelectorAll('.witnesses').length > 0)
+  const index = Array.from(textPanels).findIndex(textPanel => textPanel.querySelectorAll('.witnesses').length > 0)
 
-  if (!hasWitnesses) return;
+  if (index === -1) return;
 
   const wrapper = getWitnessesWrapper(selector)
   if (!wrapper) return;

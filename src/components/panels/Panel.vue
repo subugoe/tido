@@ -175,6 +175,7 @@ export default {
       type: Object,
       default: () => { },
     },
+    panelIndex: Number,
     activeView: Number,
   },
   setup(props, { emit }) {
@@ -233,7 +234,7 @@ export default {
 
         switch (component) {
           case 'ContentView':
-            return createContentView(view, i);
+            return createContentView(view, i, props.panelIndex);
           case 'TreeView':
             return createTreeView(view);
           case 'MetadataView':
@@ -276,7 +277,7 @@ export default {
       return configValue;
     }
 
-    function createContentView(view, i) {
+    function createContentView(view, i, panelIndex) {
       const defaultFonts = {
         fontSize: 16,
         minSize: 14,
@@ -308,7 +309,7 @@ export default {
       tabs.value = [...tabs.value, {
         component,
         label,
-        props: { type, url, fontSize },
+        props: { type, url, fontSize, panelIndex },
         actions,
       }];
     }

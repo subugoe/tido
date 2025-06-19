@@ -77,11 +77,11 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     annotationStore.setActiveAnnotations(activeAnnotationsList)
 
     const selector: string = Utils.generateTargetSelector(newActiveAnnotation);
-    const elements: Array<HTMLElement> = (selector) ? [...document.querySelectorAll(selector)] : [];
+    const elements: Array<Element> = (selector) ? [...Array.from(document.querySelectorAll(selector))] : [];
 
     if (elements.length > 0) {
       // If the annotation target exists in the text panel
-      const target: HTMLElement = elements[0];
+      const target = elements[0] as HTMLElement;
 
       if (AnnotationUtils.isVariant(newActiveAnnotation)) {
         if (AnnotationUtils.getCurrentLevel(target) <= 0) {
@@ -326,12 +326,9 @@ export const useAnnotationsStore = defineStore('annotations', () => {
     }
   };
 
-  const addHighlightClickListeners = () => {
-    const textEl = document.querySelector('#text-content>div>*');
-
-    if (!textEl) return;
-
-    textEl.addEventListener('click', ({target}) => {
+  const addHighlightClickListeners = (root: HTMLElement) => {
+    if (!root) return;
+    root.addEventListener('click', ({target}) => {
       // The click event handler works like this:
       // When clicking on the text we pick the whole part of the text which belongs to the highest parent annotation.
       // Since the annotations can be nested we avoid handling each of them separately

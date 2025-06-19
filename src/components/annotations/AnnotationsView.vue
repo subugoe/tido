@@ -28,6 +28,7 @@ import * as TextUtils from '@/utils/text'
 
 import { useAnnotationsStore } from '@/stores/annotations';
 import { useContentsStore } from '@/stores/contents';
+import { mapActiveContentMapToString } from "@/utils/text";
 
 const annotationStore = useAnnotationsStore();
 const contentStore = useContentsStore();
@@ -42,23 +43,27 @@ let lastLoadedContentUrl = null;
 
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
 const filteredAnnotations = computed<Annotation[]>(() => annotationStore.filteredAnnotations);
-const activeContentUrl = computed<string>(() => contentStore.activeContentUrl);
+const activeContentMap = computed<{[key: string]: string }>(() => contentStore.activeContentMap);
 const updateTextHighlighting = computed(() => {
   // We need to make sure that annotations are loaded (this.annotations),
-  // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
+  // the text HTML is present in DOM (this.activeContentMap is set after DOM update)
   // and the annotation are filtered by type (this.filteredAnnotations).
-  const annotationsChanged = lastLoadedContentUrl !== activeContentUrl.value && lastLoadedAnnotations !== annotations.value
-  return `${annotations.value !== null}|${annotationsChanged}|${activeContentUrl.value}`
+  const activeContentString = mapActiveContentMapToString(activeContentMap.value);
+  const annotationsChanged = lastLoadedAnnotations !== annotations.value;
+  const contentChanged = lastLoadedContentUrl !== activeContentString;
+  return `${annotations.value !== null}|${contentChanged}|${annotationsChanged}|${activeContentString}`
 });
 
 watch(
   updateTextHighlighting,
   (value) => {
-    const [hasAnnotations, annotationsChanged, activeContentUrl] = value.split('|');
-    if (hasAnnotations !== 'true' || annotationsChanged !== 'true' || activeContentUrl === 'null') return;
     if (!value) return;
+
+    const [hasAnnotations, contentChanged, annotationsChanged, activeContentMap] = value.split('|');
+    if (hasAnnotations !== 'true' || (contentChanged !== 'true' && annotationsChanged !== 'true') || activeContentMap === 'null') return;
+
     lastLoadedAnnotations = annotationStore.annotations;
-    lastLoadedContentUrl = contentStore.activeContentUrl
+    lastLoadedContentUrl = activeContentMap;
     annotationStore.resetAnnotations();
     annotationStore.selectFilteredAnnotations(props.types);
     annotationStore.highlightTargetsLevel0();

@@ -11,7 +11,7 @@ import { useConfigStore } from '@/stores/config';
 import { useAnnotationsStore } from '@/stores/annotations';
 
 export const useContentsStore = defineStore('contents', () => {
-  const activeContentUrl = ref<string>(null);
+  const activeContentMap = ref<{[key: string]: string}>({});
   const collection = ref<Collection>(null);
   const item = ref<Item | null>(null);
   const itemUrl = ref<string | null>(null);
@@ -56,8 +56,8 @@ export const useContentsStore = defineStore('contents', () => {
     manifest.value = { ...payload };
   }
 
-  function setActiveContentUrl(payload: string) {
-    activeContentUrl.value = payload;
+  function setActiveContentMap(payload: string, panelIndex: number) {
+    activeContentMap.value = { ...activeContentMap.value, [panelIndex]: payload } ;
   }
 
   function findActiveManifestIndex(manifests: Manifest[] = [], itemUrl: string | null): number {
@@ -261,24 +261,24 @@ export const useContentsStore = defineStore('contents', () => {
   };
 
   return {
-    activeContentUrl,
+    activeContentMap,
     collection,
     item,
     itemUrl,
     manifests,
-    manifest, // states
+    manifest,
     collectionTitle,
-    itemIndex, // computed
+    itemIndex,
     setCollection,
     setItem,
     setItemUrl,
     setManifests,
     setManifest,
-    setActiveContentUrl, // mutations as functions
+    setActiveContentMap,
     findActiveManifestIndex,
     findManifestIndexOfManifestInConfig,
     getManifest,
-    isManifestPartInsideRangeValue, // actions as functions
+    isManifestPartInsideRangeValue,
     isItemPartInsideRangeValue,
     initCollection,
     initManifest,

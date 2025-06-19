@@ -6,7 +6,7 @@ import {useAnnotationsStore} from "@/stores/annotations";
 import {computed, onBeforeUnmount, watch} from "vue";
 import {useContentsStore} from "@/stores/contents";
 import TextEventBus from "@/utils/TextEventBus";
-import {getAnnotationIdsFromTarget} from "@/utils/text";
+import {getAnnotationIdsFromTarget, mapActiveContentMapToString} from "@/utils/text";
 import { getVariantAnnotations } from '@/utils/annotations'
 import { scrollIntoViewIfNeeded } from '@/utils/dom'
 
@@ -14,19 +14,19 @@ const annotationStore = useAnnotationsStore();
 const contentsStore = useContentsStore();
 
 const annotations = computed<Annotation[]>(() => annotationStore.annotations);
-const activeContentUrl = computed<string>(() => contentsStore.activeContentUrl);
+const activeContentMap = computed<{[key: string]: string }>(() => contentsStore.activeContentMap);
 
 const updateTextHighlighting = computed(() =>
   // We need to make sure that annotations are loaded (this.annotations),
-  // the text HTML is present in DOM (this.activeContentUrl is set after DOM update)
+  // the text HTML is present in DOM (this.activeContentMap is set after DOM update)
   // and the annotation are filtered by type (this.filteredAnnotations).
-  `${annotations.value !== null}|${activeContentUrl.value}`);
+  `${annotations.value !== null}|${mapActiveContentMapToString(activeContentMap.value)}`);
 
 watch(
   updateTextHighlighting,
   (contentData) => {
-    const [hasAnnotations, activeContentUrl] = contentData.split('|');
-    if (hasAnnotations !== 'true' || activeContentUrl === 'null') return;
+    const [hasAnnotations, activeContentMap] = contentData.split('|');
+    if (hasAnnotations !== 'true' || activeContentMap === 'null') return;
     annotationStore.resetAnnotations();
     annotationStore.selectFilteredAnnotations([{ name: 'Variant' }]);
     annotationStore.highlightTargetsLevel0();

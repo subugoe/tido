@@ -39,6 +39,7 @@ const props = defineProps({
   url: String,
   type: String,
   fontSize: Number,
+  panelIndex: Number
 });
 const emit = defineEmits(['loading']);
 const textContainer = useTemplateRef('textContainer');
@@ -81,9 +82,10 @@ async function loadContent(url) {
 
       const root = textContainer.value;
       annotationStore.addHighlightAttributesToText(root);
-      await annotationStore.addHighlightClickListeners();
+      await annotationStore.addHighlightClickListeners(root);
 
-      contentStore.setActiveContentUrl(props.url);
+      // In case of multiple text panels, we need to pass the panel index to track changes on the content in the annotation panel.
+      contentStore.setActiveContentMap(props.url, props.panelIndex);
     }, 100);
   } catch (err) {
     errorTextMessage.value = err.message;
