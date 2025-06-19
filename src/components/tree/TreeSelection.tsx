@@ -1,11 +1,11 @@
-import { FC, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { useDataStore } from '@/store/DataStore'
 import { TreeProvider } from '@/contexts/TreeContext.tsx'
 
 import Tree from '@/components/tree/Tree.tsx'
 
-import { getChildren, getSelectedItemIndices } from '@/utils/tree.ts'
+import { getChildren, getExpandedNode, getSelectedItemIndices } from '@/utils/tree.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
 import { usePanelStore } from '@/store/PanelStore.tsx'
@@ -18,7 +18,9 @@ interface Props {
 const TreeSelection: FC<Props> = ({ onConfirm }) => {
   const { t } = useTranslation()
   const addPanel = usePanelStore(state => state.addPanel)
-  const treeNodes = useDataStore(state => state.treeNodes)
+  const nodes = useDataStore(state => state.treeNodes)
+  // we define the way to show nodes in Global tree using "treeNodes"
+  const [treeNodes, setTreeNodes] = useState([])
   const clickedItemUrl = useRef('')
 
   const selectedItemIndices = useRef({
@@ -49,6 +51,17 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
     clickedItemUrl.current = id
     selectedItemIndices.current = getSelectedItemIndices(node)
   }
+
+  useEffect(() => {
+    // for now we define same loadNodes in every container which displays tree.
+    // Later we can customize the initial display based on the requirements
+    const loadNodes = async (nodes) => {
+      const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? await getExpandedNode(nodes[0]) : []
+      setTreeNodes(treeNodes)
+    }
+
+    loadNodes(nodes)
+  }, [nodes])
 
 
   return <div className="flex flex-col">

@@ -52,6 +52,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
       label: items[i].label ?? 'label not found',
       type: items[i].type,
       leaf: items[i].type === 'item',
+      expanded: false,
       children: []
     }
 
@@ -81,7 +82,12 @@ function getSelectedItemIndices(node: TreeNode){
   return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
 }
 
+async function getExpandedNode(node: TreeNode) {
+  node.children = [...await getChildren(node)]
+  if (node.children.length > 0) node.expanded = true
+  return [node]
+}
 
 export {  createCollectionNode, createCollectionNodes, getChildren,
-  getNodeIndices, getSelectedItemIndices, getCollectionSlug
+  getNodeIndices, getSelectedItemIndices, getCollectionSlug, getExpandedNode
 }

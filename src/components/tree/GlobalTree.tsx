@@ -5,7 +5,7 @@ import { TreeProvider } from '@/contexts/TreeContext.tsx'
 
 import Tree from '@/components/tree/Tree.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree/tree-modal/GlobalTreeSelectionModalContent.tsx'
-import { getChildren, getSelectedItemIndices } from '@/utils/tree.ts'
+import { getChildren, getExpandedNode, getSelectedItemIndices } from '@/utils/tree.ts'
 
 const GlobalTree: FC = () => {
 
@@ -16,7 +16,10 @@ const GlobalTree: FC = () => {
     itemIndex: -1
   })
 
-  const treeNodes = useDataStore(state => state.treeNodes)
+  // we define the way to show nodes in Global tree using "treeNodes"
+  const [treeNodes, setTreeNodes] = useState([])
+  const nodes = useDataStore(state => state.treeNodes)
+
   const modalRef = useRef<HTMLDivElement>(null)
   const [showSelectionModal, setShowSelectionModal] = useState(false)
   const [selectedPosition, setSelectedPosition] = useState({ x: 0, y: 0 })
@@ -41,6 +44,15 @@ const GlobalTree: FC = () => {
       window.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  useEffect(() => {
+    const loadNodes = async (nodes) => {
+      const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? await getExpandedNode(nodes[0]) : []
+      setTreeNodes(treeNodes)
+    }
+
+    loadNodes(nodes)
+  }, [nodes])
 
   return <div className={`${showGlobalTree ? 'w-[380px]' : 'w-[0px]'} flex bg-background transition-all py-4`}>
     <div className={`shrink-0 overflow-auto transition-all border-r-2 border-border pr-4
