@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.8.3](https://github.com/subugoe/tido/compare/v4.8.2...v4.8.3) (2025-06-19)
+
+
+### Bug Fixes
+
+* fix still broken highlighting behaviour for multiple text panels ([2ada943](https://github.com/subugoe/tido/commit/2ada9438e9ac7da602b1fe5b69776352fb540dbb))
+
 ### [4.8.2](https://github.com/subugoe/tido/compare/v4.8.1...v4.8.2) (2025-06-19)
 
 
