@@ -22,6 +22,7 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
   // we define the way to show nodes in Global tree using "treeNodes"
   const [treeNodes, setTreeNodes] = useState([])
   const clickedItemUrl = useRef('')
+  const [confirmActive, setConfirmActive] = useState(false)
 
   const selectedItemIndices = useRef({
     collectionUrl: '',
@@ -50,6 +51,7 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
     const { id } = node
     clickedItemUrl.current = id
     selectedItemIndices.current = getSelectedItemIndices(node)
+    setConfirmActive(true)
   }
 
   useEffect(() => {
@@ -74,6 +76,7 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
       variant="default"
       onClick={handleConfirm}
       className="mt-6"
+      disabled={!confirmActive}
     >
       { t('confirm') }
     </Button>
