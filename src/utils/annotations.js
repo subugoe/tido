@@ -89,8 +89,6 @@ export function generateTargetSelector(annotation) {
     }
   } else if (selector.type === 'CssSelector') {
     result = handleCssSelector(selector);
-  } else if (selector.type === 'RangeSelector') {
-    result = handleRangeSelector(selector);
   }
 
   const isValid = Utils.isSelectorValid(result);
@@ -100,48 +98,6 @@ export function generateTargetSelector(annotation) {
 
 export function handleCssSelector(selector) {
   return selector.value ?? null;
-}
-
-export function handleRangeSelector(selector) {
-  const { startSelector, endSelector } = selector;
-  if (startSelector && endSelector) {
-    if (startSelector.type === 'CssSelector') {
-      const start = document.querySelector(handleCssSelector(startSelector).replaceAll('\'', ''));
-      const end = document.querySelector(handleCssSelector(endSelector).replaceAll('\'', ''));
-
-      const elementsInRange = [];
-
-      let started = false;
-      let ended = false;
-
-      // eslint-disable-next-line no-inner-declarations
-      function findElementsInRangeRecursive(element) {
-        if (element === start) started = true;
-        if (element === end) {
-          ended = true;
-          return;
-        }
-
-        if (started && element.nodeValue !== ' ' && element.nodeName === '#text') {
-          elementsInRange.push(element.parentElement);
-          return;
-        }
-
-        [...element.childNodes]
-          .filter((childNode) => childNode.nodeName !== 'STYLE' && childNode.nodeName !== 'SCRIPT' && childNode.nodeName !== 'svg')
-          .forEach((childNode) => {
-            if (!ended) {
-              findElementsInRangeRecursive(childNode);
-            }
-          });
-      }
-
-      findElementsInRangeRecursive(document.getElementById('text-content'));
-
-      return elementsInRange.map((el) => Utils.elemToSelector(el)).join(',');
-    }
-  }
-  return null;
 }
 
 export function addIcon(element, annotation, iconName) {
@@ -231,8 +187,8 @@ function createWitnessEl(witness, witnessColor) {
 
 export function removeWitnessesWrappers() {
   // remove witnesses in text Panel - it is used when switch off the variants tab
-  const textPanelEl = document.querySelector('#text-content')
-  const wrappers = textPanelEl.getElementsByClassName('witnesses')
+  const textPanelEls = document.querySelectorAll('.content-view')
+  const wrappers = textPanelEls.querySelectorAll('.witnesses')
   if (!wrappers) return;
   if(Array.from(wrappers).length === 0) return;
 
@@ -245,8 +201,13 @@ export function removeWitnessesWrappers() {
 export function removeWitness(selector, idno) {
   // find the witnesses span which contains each 'witness' span child element
   // find this witness inside the 'witnesses' html span and remove it
-  const textPanel = document.querySelector('#text-content')
-  if (!textPanel.querySelector('.witnesses')) return;
+  const textPanels = document.querySelectorAll('.content-view')
+  if (textPanels.length === 0) return;
+
+  let hasWitnesses = false;
+  textPanels.forEach(textPanel => hasWitnesses = textPanel.querySelectorAll('.witnesses').length > 0)
+
+  if (!hasWitnesses) return;
 
   const wrapper = getWitnessesWrapper(selector)
   if (!wrapper) return;

@@ -14,6 +14,7 @@
 
     <div
       id="text-content"
+      ref="textContainer"
       class="custom-font item-content t-flex t-flex-col t-flex-1 t-overflow-auto"
     >
       <!-- eslint-disable -- https://eslint.vuejs.org/rules/no-v-html.html -->
@@ -25,7 +26,7 @@
 <script setup>
 
 import {
-  computed, readonly, ref, watch,
+  computed, readonly, ref, useTemplateRef, watch,
 } from 'vue';
 import { useConfigStore } from '@/stores/config';
 import { useAnnotationsStore } from '@/stores/annotations';
@@ -40,6 +41,7 @@ const props = defineProps({
   fontSize: Number,
 });
 const emit = defineEmits(['loading']);
+const textContainer = useTemplateRef('textContainer');
 
 const configStore = useConfigStore();
 const contentStore = useContentsStore();
@@ -77,7 +79,7 @@ async function loadContent(url) {
     setTimeout(async () => {
       emit('loading', false);
 
-      const root = document.getElementById('text-content');
+      const root = textContainer.value;
       annotationStore.addHighlightAttributesToText(root);
       await annotationStore.addHighlightClickListeners();
 
