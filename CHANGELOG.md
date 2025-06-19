@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.8.2](https://github.com/subugoe/tido/compare/v4.8.1...v4.8.2) (2025-06-19)
+
+
+### Bug Fixes
+
+* add "last loaded" variables to annotation view to keep track of new annotations more precisely ([39cd2eb](https://github.com/subugoe/tido/commit/39cd2eb9458691bb63fb055c8a0b998908e98818))
+* annotations usage for more than one configured text panels ([b90e767](https://github.com/subugoe/tido/commit/b90e767aabcc4fda1af90ec96dd852125d175dae))
+
 ### [4.8.1](https://github.com/subugoe/tido/compare/v4.8.0...v4.8.1) (2025-03-28)
 
 
