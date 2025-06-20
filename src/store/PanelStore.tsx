@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { PanelConfig } from '@/types'
 import { mapToViewIndex } from '@/utils/panel.ts'
 import { useUIStore } from '@/store/UIStore.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 interface PanelStoreTypes {
   panels: PanelState[] // or panels: each panel has one opened item
@@ -15,6 +16,7 @@ interface PanelStoreTypes {
 }
 
 function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
+  const views = useConfigStore.getState().config.views
   return {
     id,
     config,
@@ -23,7 +25,7 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     manifest: null,
     contentTypes: [],
     contentIndex: 0,
-    viewIndex: mapToViewIndex(useUIStore.getState().defaultView),
+    viewIndex: mapToViewIndex(useUIStore.getState().defaultView, views),
     activeTargetIndex: -1,
   }
 }

@@ -166,6 +166,17 @@ function validateTranslations(input: any): ValidationResult<TidoConfig['translat
   return { result, errors }
 }
 
+function validateViews(input: any): ValidationResult<TidoConfig['views']> {
+  const errors: Record<string, string> = {}
+  const result = Array.isArray(input) ? input : (() => {
+    if (input !== undefined)
+      errors['views'] = 'must be an array'
+    return defaultConfig.views ?? []
+  })()
+
+  return { result, errors }
+}
+
 function validateRootCollections(input: any): ValidationResult<TidoConfig['rootCollections']> {
   const errors: Record<string, string> = {}
   const result =
@@ -201,6 +212,7 @@ export function mergeAndValidateConfig(
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
   const translations = validateTranslations(userConfig.translations)
+  const views = validateViews(userConfig.views)
 
   const mergedTranslations: Record<string, Translation> = {}
   const defaultLangs = ['en', 'de']
@@ -223,6 +235,7 @@ export function mergeAndValidateConfig(
     ...theme.errors,
     ...title.errors,
     ...translations.errors,
+    ...views.errors,
   }
 
   const config: TidoConfig = {
@@ -239,6 +252,7 @@ export function mergeAndValidateConfig(
     theme: theme.result,
     title: title.result,
     translations: mergedTranslations,
+    views: views.result,
   }
 
   return { config, errors }

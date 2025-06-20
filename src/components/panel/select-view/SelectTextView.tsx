@@ -17,6 +17,7 @@ import Views from '@/components/panel/select-view/Views.tsx'
 import DisableSelectView from '@/components/panel/select-view/DisableSelectView.tsx'
 
 import { mapToViewIndex } from '@/utils/panel.ts'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 
 interface SelectTextViewProps {
@@ -27,6 +28,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
   const [showPopover, setShowPopover] = useState(true)
   const { panelState } = usePanel()
   const UIState = useUIStore.getState()
+  const views = useConfigStore.getState().config.views
 
   const [selectedView, setSelectedView] = useState(UIState.defaultView)
   const updateEnabledSelectTextView = UIState.updateEnabledSelectTextView
@@ -36,7 +38,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
 
 
   function handleConfirm(selectedView: ViewType) {
-    usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView) })
+    usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView, views) })
     useUIStore.getState().updateView(selectedView)
 
     if (isChecked.current) updateEnabledSelectTextView(false)

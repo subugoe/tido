@@ -12,6 +12,7 @@ import ErrorMessage from '@/components/panel/ErrorMessage.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { useTranslation } from 'react-i18next'
 import Loading from '@/components/ui/loading.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 
 const PanelBody: FC = () => {
@@ -19,6 +20,8 @@ const PanelBody: FC = () => {
   const { t } = useTranslation()
   const activeContentTypeIndex = panelState.contentIndex
   const [text, setText] = useState<string>('')
+
+  const views = useConfigStore(state => state.config.views)
 
   function getContentUrlByType(type: string | undefined) {
     if (!type) return undefined
@@ -53,10 +56,10 @@ const PanelBody: FC = () => {
     if (error) return <ErrorMessage message={error ?? t('unknown_error')} title={t('error_occurred')} />
     if (loading) return <Loading size={40} />
 
-    if (panelState.viewIndex === 0) return <TextViewOne textHtml={text} />
-    else if (panelState.viewIndex === 1) return <SplitView textHtml={text} />
-    else if (panelState.viewIndex === 2) return <TextView textHtml={text} />
-    else if (panelState.viewIndex === 3) return <ImageView />
+    if (views[panelState.viewIndex] === 'swap') return <TextViewOne textHtml={text} />
+    else if (views[panelState.viewIndex] === 'split') return <SplitView textHtml={text} />
+    else if (views[panelState.viewIndex] === 'text') return <TextView textHtml={text} />
+    else if (views[panelState.viewIndex] === 'image') return <ImageView />
   }
 
   return <div className="overflow-hidden border-t border-border flex-1">{ renderContent() }</div>
