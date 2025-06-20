@@ -47,7 +47,7 @@ const GlobalTree: FC = () => {
 
   useEffect(() => {
     const loadNodes = async (nodes) => {
-      const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? await getExpandedNode(nodes[0]) : []
+      const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? [await getExpandedNode(nodes[0])] : []
       setTreeNodes(treeNodes)
     }
 

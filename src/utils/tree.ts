@@ -82,10 +82,10 @@ function getSelectedItemIndices(node: TreeNode){
   return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
 }
 
-async function getExpandedNode(node: TreeNode) {
+async function getExpandedNode(node: TreeNode): Promise<TreeNode> {
   node.children = [...await getChildren(node)]
   if (node.children.length > 0) node.expanded = true
-  return [node]
+  return node
 }
 
 export {  createCollectionNode, createCollectionNodes, getChildren,
