@@ -7,15 +7,18 @@ import { Button } from '@/components/ui/button.tsx'
 import { Skeleton } from '@/components/ui/skeleton.tsx'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 import { useTranslation } from 'react-i18next'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { filterAndSortData } from '@/utils/panel.ts'
 
 
 const TextViewsToggle: FC = () => {
   const { t } = useTranslation()
   const { panelState } = usePanel()
   const updatePanel = usePanelStore((state) => state.updatePanel)
+  const views = useConfigStore(state => state.config.views)
 
-  const buttonsData = {
-    pip: {
+  const defaultButtonsData = {
+    swap: {
       icon: <PictureInPicture2 />,
       tooltip: t('pip_view')
     },
@@ -32,6 +35,8 @@ const TextViewsToggle: FC = () => {
       tooltip: t('image_view')
     },
   }
+
+  const buttonsData = filterAndSortData(defaultButtonsData, views)
 
   function handleTextViewClick(
     e: MouseEvent<HTMLButtonElement>,

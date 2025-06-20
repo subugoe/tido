@@ -3,7 +3,7 @@ import { TidoConfig } from '@/types'
 const defaultConfig: TidoConfig = {
   allowNewCollections: true,
   container: '#app',
-  defaultView: 'pip',
+  defaultView: 'swap',
   lang: 'en',
   panels: [],
   rootCollections: [],
@@ -15,7 +15,8 @@ const defaultConfig: TidoConfig = {
     primaryColor: '#3456aa'
   },
   title: '',
-  translations: {}
+  translations: {},
+  views: ['swap', 'split', 'text', 'image']
 }
 
 export {

@@ -11,7 +11,7 @@ describe('Config', () => {
     cy.get('[data-cy="global-tree-toggle"]').should('be.visible', true)
     cy.get('[data-cy="new-panel"]').should('be.visible', true)
     cy.get('[data-cy="new-panel"]').should('have.text', 'Add New Panel')
-    cy.get('[data-cy="pip"]').should('have.attr', 'data-selected', 'true')
+    cy.get('[data-cy="swap"]').should('have.attr', 'data-selected', 'true')
     cy.get('[data-cy="panel-placeholder"]').should('be.visible', true)
   });
 

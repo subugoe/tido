@@ -21,5 +21,6 @@
   },
   "rootCollections": [
     "http://localhost:8181/4w/reproduction/collection.json"
-  ]
+  ],
+  "views": ["swap", "split", "text", "image"]
 }

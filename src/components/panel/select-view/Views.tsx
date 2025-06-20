@@ -5,6 +5,8 @@ import { AlignCenter, Columns2, Image, PictureInPicture2 } from 'lucide-react'
 import { ViewType } from '@/types'
 import { Button } from '@/components/ui/button.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { filterAndSortData } from '@/utils/panel.ts'
 
 interface SelectViewButtonsProps {
   updateSelectedButton: (selectedView: ViewType) => void
@@ -13,9 +15,10 @@ interface SelectViewButtonsProps {
 const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
   const [selectedView, setSelectedView] = useState(useUIStore.getState().defaultView)
   const { t } = useTranslation()
+  const views = useConfigStore(state => state.config.views)
 
-  const buttonsData = {
-    pip: {
+  const defaultButtonsData = {
+    swap: {
       icon: PictureInPicture2,
       title: t('pip_view')
     },
@@ -32,6 +35,8 @@ const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
       title: t('image_view')
     },
   }
+
+  const buttonsData = filterAndSortData(defaultButtonsData, views)
 
   function setSelectedButton(key: ViewType) {
     setSelectedView(key)

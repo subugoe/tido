@@ -298,7 +298,7 @@ export interface PanelConfig {
   itemIndex?: number
 }
 
-export type ViewType = 'pip' | 'split' | 'text' | 'image'
+export type ViewType = 'swap' | 'split' | 'text' | 'image'
 
 export interface ThemeConfig {
   forceMode?: string
@@ -326,7 +326,8 @@ export interface TidoConfig {
   panels: PanelConfig[]
   theme: ThemeConfig
   title: string
-  translations: TranslationsConfig
+  translations: TranslationsConfig,
+  views: ViewType[]
 }
 
 export interface TidoProps {

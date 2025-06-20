@@ -69,10 +69,17 @@ export function isNewManifest(manifest: Manifest): boolean {
   return true
 }
 
-export function mapToViewIndex(view: ViewType): number {
-  if (view === 'pip') return 0
-  if (view === 'split') return 1
-  if (view === 'text') return 2
-  if (view === 'image') return 3
+export function mapToViewIndex(view: ViewType, views: ViewType[]): number {
+  if (views.includes(view)) return views.findIndex((v) => v === view)
   return 0
+}
+
+export function filterAndSortData( data, attributes: string[]) {
+  // data Object to have its keys sorted according to 'attributes' order
+  return attributes.reduce((obj, key) => {
+    if (key in data) {
+      obj[key] = data[key]
+    }
+    return obj
+  }, {})
 }

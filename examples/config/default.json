@@ -21,5 +21,6 @@
       "simplified": "Vereinfacht"
     }
   },
-  "title": "Vier Wachen Edition"
+  "title": "Vier Wachen Edition",
+  "views": ["swap", "split", "text", "image"]
 }
