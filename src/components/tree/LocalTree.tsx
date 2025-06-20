@@ -27,6 +27,7 @@ const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
       manifestIndex: manifestIndex,
       itemIndex: itemIndex
     } })
+
     onSelect()
   }
 

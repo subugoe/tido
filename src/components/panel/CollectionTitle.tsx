@@ -4,7 +4,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 import { Skeleton } from '@/components/ui/skeleton.tsx'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
-import {  X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import LocalTree from '@/components/tree/LocalTree.tsx'
 
@@ -22,7 +22,7 @@ const CollectionTitle: FC = () => {
     setShowLocalTree(open)
   }
 
-  function onSelect() {
+  function closeLocalTree() {
     setShowLocalTree(false)
   }
 
@@ -42,7 +42,7 @@ const CollectionTitle: FC = () => {
         </PopoverTrigger>
         <PopoverContent side="bottom" align="start" className="w-[400px] pr-0">
           <div className="font-semibold mb-2">{t('choose_your_panel_content')}</div>
-          <LocalTree collectionId={panelState.collectionId} onSelect={onSelect} />
+          <LocalTree collectionId={panelState.collectionId} onSelect={closeLocalTree} />
           <X
             className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"
             size={15} onClick={() => setShowLocalTree(false)}
