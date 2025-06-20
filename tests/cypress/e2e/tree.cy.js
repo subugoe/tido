@@ -6,14 +6,13 @@ describe('Tree', () => {
   it('Should display collection node', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
     cy.get('[data-cy="tree-node"]').should('be.visible')
+      .eq(0)
       .find('span')
       .should("have.text", "Vier Wachen vernetzt: Digitale Edition eines mystischen Traktats des Spätmittelalters");
   })
 
   it('Should render manifests of collection', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
-    cy.get('[data-cy="tree-node"]')
-      .click()
     cy.get('[data-cy="tree-node-child"]')
       .children()
       .should('have.length', 8)
@@ -27,7 +26,6 @@ describe('Tree', () => {
   it('Should show the right number of items', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
     cy.get('[data-cy="tree-node"]')
-      .click()
     cy.get('[data-cy="tree-node-child"]')
       .first()
       .click()
@@ -37,8 +35,6 @@ describe('Tree', () => {
 
   it('Should create a new panel using global tree', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
-    cy.get('[data-cy="tree-node"]')
-      .click()
     // TODO: testing for UI effect is not a good practice
     cy.get('[data-cy="tree-node-child"]')      // get manifests
       .first()                                          // click the first manifest
@@ -68,8 +64,6 @@ describe('Tree', () => {
 
   it('Should update a panel using global tree', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
-    cy.get('[data-cy="tree-node"]')
-      .click()
     cy.get('[data-cy="tree-node-child"]')      // get manifests
       .first()                                          // click the first manifest
       .click()

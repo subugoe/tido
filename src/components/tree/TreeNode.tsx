@@ -9,18 +9,13 @@ interface TreeNodeProps {
 }
 
 const TreeNode: FC<TreeNodeProps> = ({ node }) => {
-
-  const [hasChildren, setHasChildren] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(node.expanded)
   const { onSelect, getChildren, selectedNodeId, setSelectedNodeId } = useTree()
 
   async function handleNodeClick(e: MouseEvent<HTMLElement>) {
     e.preventDefault()
 
-    if (!hasChildren) {
-      node.children = [...await getChildren(node)]
-      if (node.children.length > 0) setHasChildren(true)
-    }
+    if (!node.expanded)  node.children = [...await getChildren(node)]
 
     if (node.children.length > 0) {
       toggleExpand()
@@ -30,6 +25,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
     onSelect(node, e.target as HTMLElement)
     setSelectedNodeId(node.id)
   }
+
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded)
@@ -44,7 +40,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       {!node.leaf && <span className={`mt-[2px] mr-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight /></span>}
       <span className={`${node.leaf ? 'ml-4': ''}`}>{node.label}</span>
     </div>
-    {hasChildren && isExpanded && node.children?.map((item: TreeNode, i) => (
+    { isExpanded && node.children?.map((item: TreeNode, i) => (
       <ul data-cy="tree-node-child" className="ml-3" key={i}>
         <TreeNode node={item} />
       </ul>
