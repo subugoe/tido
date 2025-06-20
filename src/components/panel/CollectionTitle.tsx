@@ -42,9 +42,7 @@ const CollectionTitle: FC = () => {
         </PopoverTrigger>
         <PopoverContent side="bottom" align="start" className="w-[400px] pr-0">
           <div className="font-semibold mb-2">{t('choose_your_panel_content')}</div>
-          <div>
-            <LocalTree collectionId={panelState.collectionId} onSelect={onSelect} />
-          </div>
+          <LocalTree collectionId={panelState.collectionId} onSelect={onSelect} />
           <X
             className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"
             size={15} onClick={() => setShowLocalTree(false)}
