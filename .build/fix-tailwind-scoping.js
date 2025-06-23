@@ -20,7 +20,6 @@ function fixTailwindScoping() {
       css = css.replace(/:host/g, '.tido:host');
       css = css.replace(/\.tido ::/g, '.tido *::');
       css = css.replace(/\.tido :/g, '.tido *:');
-      css = css.replace(/:where\(\.tido\s/g, '.tido *:where(');
 
       fs.writeFileSync(cssPath, css);
     },
