@@ -5,9 +5,8 @@ import * as path from "node:path";
 import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
 import tailwindcss from "@tailwindcss/vite";
-import { renameCssLayers } from ".build/rename-css-layers.js";
-
-
+import { fixTailwindScoping } from ".build/fix-tailwind-scoping.js";
+import {postcssRemoveLayer} from ".build/postcss-remove-layer.js";
 
 export default defineConfig(({ mode}) => {
   const projectName = process.argv.find(arg => arg.startsWith('--project='))?.split('=')[1] || null;
@@ -19,7 +18,7 @@ export default defineConfig(({ mode}) => {
       tailwindcss(),
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
       injectConfig(projectName),
-      renameCssLayers()
+      fixTailwindScoping()
     ],
     resolve: {
       alias: {
@@ -37,5 +36,12 @@ export default defineConfig(({ mode}) => {
         },
       },
     },
+    css: {
+      postcss: {
+        plugins: [
+          postcssRemoveLayer('properties')
+        ]
+      }
+    }
   }
 });

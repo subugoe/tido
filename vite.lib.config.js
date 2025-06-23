@@ -2,11 +2,11 @@ import { defineConfig, loadEnv } from 'vite';
 import { resolve } from 'path';
 import react from '@vitejs/plugin-react'
 import tailwindcss from "@tailwindcss/vite";
-import * as path from "node:path";
 import pkg from './package.json'
 import { injectConfig } from ".build/inject-config.js";
 import { removeAttrs } from ".build/remove-attrs.js";
-import { renameCssLayers } from ".build/rename-css-layers.js";
+import { fixTailwindScoping } from ".build/fix-tailwind-scoping.js";
+import {postcssRemoveLayer} from ".build/postcss-remove-layer.js";
 
 
 const externalDeps = [
@@ -24,7 +24,7 @@ export default defineConfig(({ mode}) => {
       tailwindcss(),
       ...(env.VITE_ENV === 'production' ? [removeAttrs(['data-cy'])] : []),
       injectConfig(projectName),
-      renameCssLayers()
+      fixTailwindScoping()
     ],
     resolve: {
       alias: {
@@ -56,5 +56,12 @@ export default defineConfig(({ mode}) => {
         },
       }
     },
+    css: {
+      postcss: {
+        plugins: [
+          postcssRemoveLayer('properties')
+        ]
+      }
+    }
   }
 });
