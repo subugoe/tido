@@ -143,7 +143,7 @@ declare global {
     item: Item | null
     contentTypes: string[]
     contentIndex: number
-    viewIndex: number
+    view: ViewType
     imageUrl?: string
     activeTargetIndex: number
     config: PanelConfig
@@ -298,7 +298,13 @@ export interface PanelConfig {
   itemIndex?: number
 }
 
-export type ViewType = 'pip' | 'split' | 'text' | 'image'
+export type ViewType = 'swap' | 'split' | 'text' | 'image'
+
+export interface ViewButtonData {
+  view: ViewType,
+  icon: React.Element,
+  title: string
+}
 
 export interface ThemeConfig {
   forceMode?: string
@@ -326,7 +332,8 @@ export interface TidoConfig {
   panels: PanelConfig[]
   theme: ThemeConfig
   title: string
-  translations: TranslationsConfig
+  translations: TranslationsConfig,
+  views: ViewType[]
 }
 
 export interface TidoProps {

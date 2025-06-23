@@ -53,10 +53,10 @@ const PanelBody: FC = () => {
     if (error) return <ErrorMessage message={error ?? t('unknown_error')} title={t('error_occurred')} />
     if (loading) return <Loading size={40} />
 
-    if (panelState.viewIndex === 0) return <TextViewOne textHtml={text} />
-    else if (panelState.viewIndex === 1) return <SplitView textHtml={text} />
-    else if (panelState.viewIndex === 2) return <TextView textHtml={text} />
-    else if (panelState.viewIndex === 3) return <ImageView />
+    if (panelState.view === 'swap') return <TextViewOne textHtml={text} />
+    else if (panelState.view === 'split') return <SplitView textHtml={text} />
+    else if (panelState.view === 'text') return <TextView textHtml={text} />
+    else if (panelState.view === 'image') return <ImageView />
   }
 
   return <div className="overflow-hidden border-t border-border flex-1">{ renderContent() }</div>

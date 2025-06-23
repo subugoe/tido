@@ -16,7 +16,7 @@ export const useUIStore = create<UIStoreTypes>((set) => ({
   showSelectTextView: false,
   enabledSelectTextView: true,
   newestPanelId: '',
-  defaultView: 'pip',
+  defaultView: 'swap',
   updateShowSelectTextView: (show: boolean) => {
     set({ showSelectTextView: show })
   },

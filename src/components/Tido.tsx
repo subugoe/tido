@@ -13,6 +13,7 @@ import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 import { initI18n } from '@/utils/translations.ts'
 import { TidoConfig, TidoProps } from '@/types'
 import { ThemeProvider } from '@/contexts/ThemeContext.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 function createThemeStyles(config: TidoConfig) {
   const { theme } = config
@@ -36,6 +37,7 @@ export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
   createThemeStyles(config)
 
   useConfigStore.getState().addCustomConfig(config)
+  useUIStore.getState().updateView(config.views.includes(config.defaultView) ? config.defaultView : config.views[0])
 
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
 

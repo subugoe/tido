@@ -40,7 +40,7 @@ function validateContainer(input: any): ValidationResult<TidoConfig['container']
 function validateDefaultView(input: any): ValidationResult<TidoConfig['defaultView']> {
   const errors: Record<string, string> = {}
   const result =
-    typeof input === 'string' && ['pip', 'split', 'text', 'image'].includes(input)
+    typeof input === 'string' && ['swap', 'split', 'text', 'image'].includes(input)
       ? input as ViewType
       : (() => {
         if (input !== undefined)
@@ -166,6 +166,19 @@ function validateTranslations(input: any): ValidationResult<TidoConfig['translat
   return { result, errors }
 }
 
+function validateViews(input: any): ValidationResult<TidoConfig['views']> {
+  const defaultViews: ViewType[] = ['swap', 'split', 'text', 'image']
+  const errors: Record<string, string> = {}
+
+  const result = Array.isArray(input) ? input.filter(item => defaultViews.includes(item)) : (() => {
+    if (input !== undefined)
+      errors['views'] = 'must be an array'
+    return defaultConfig.views ?? []
+  })()
+
+  return { result, errors }
+}
+
 function validateRootCollections(input: any): ValidationResult<TidoConfig['rootCollections']> {
   const errors: Record<string, string> = {}
   const result =
@@ -190,6 +203,7 @@ export function mergeAndValidateConfig(
 
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
+  const views = validateViews(userConfig.views)
   const defaultView = validateDefaultView(userConfig.defaultView)
   const lang = validateLang(userConfig.lang)
   const panels = validatePanels(userConfig.panels)
@@ -223,6 +237,7 @@ export function mergeAndValidateConfig(
     ...theme.errors,
     ...title.errors,
     ...translations.errors,
+    ...views.errors,
   }
 
   const config: TidoConfig = {
@@ -239,6 +254,7 @@ export function mergeAndValidateConfig(
     theme: theme.result,
     title: title.result,
     translations: mergedTranslations,
+    views: views.result,
   }
 
   return { config, errors }

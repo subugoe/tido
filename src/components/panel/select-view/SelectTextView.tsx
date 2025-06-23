@@ -16,8 +16,6 @@ import { ViewType } from '@/types'
 import Views from '@/components/panel/select-view/Views.tsx'
 import DisableSelectView from '@/components/panel/select-view/DisableSelectView.tsx'
 
-import { mapToViewIndex } from '@/utils/panel.ts'
-
 
 interface SelectTextViewProps {
   parentEl?: HTMLElement,
@@ -36,7 +34,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
 
 
   function handleConfirm(selectedView: ViewType) {
-    usePanelStore.getState().updatePanel(panelState.id, { viewIndex: mapToViewIndex(selectedView) })
+    usePanelStore.getState().updatePanel(panelState.id, { view: selectedView })
     useUIStore.getState().updateView(selectedView)
 
     if (isChecked.current) updateEnabledSelectTextView(false)
