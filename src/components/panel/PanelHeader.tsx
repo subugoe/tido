@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
-import { Info, X } from 'lucide-react'
+import { Info, PanelRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
 import TextViewsToggle from '@/components/panel/TextViewsToggle'
@@ -12,6 +12,14 @@ import Metadata from '@/components/metadata/Metadata'
 import Actions from '@/components/panel/Actions.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useTranslation } from 'react-i18next'
+
+const SidebarToggle = (props) => {
+  return <>
+    <Button variant="ghost" size="icon" {...props}>
+      <PanelRight />
+    </Button>
+  </>
+}
 
 const PanelHeader: FC = () => {
   const { t } = useTranslation()
@@ -48,8 +56,9 @@ const PanelHeader: FC = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="ml-auto mr-2"><TextViewsToggle /></div>
+        <div className="ml-auto"><TextViewsToggle /></div>
         <Actions />
+        <SidebarToggle className="ml-2" />
       </div>
       <div className="flex justify-center mb-4">
         <NavigationButton isPrev={true} />

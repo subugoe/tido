@@ -19,7 +19,7 @@ const TextViewOne: FC<TextViewOneProps> = ({ textHtml }) => {
 
   return (
     <div className="flex-1 h-full">
-      <Button onClick={() => setAGroup(!aGroup)} className={'absolute z-50 top-0 left-0'}>Toggle Annotations</Button>
+      <Button onClick={() => setAGroup(!aGroup)} className={'absolute z-50 top-[-20px] left-0 opacity-50'}>Toggle Annotations</Button>
       { previewMode === 'A' ? <TextRenderer htmlString={textHtml} aGroup={aGroup} /> : <ImageRenderer />}
       <Preview
         previewA={
