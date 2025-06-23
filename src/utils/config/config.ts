@@ -222,7 +222,7 @@ export function mergeAndValidateConfig(
   const defaultTranslations =  language === 'en' ? enTranslations : language === 'de' ? deTranslations : {}
   mergedTranslations[language] = { ...defaultTranslations, ...translations.result?.[language] }
 
-
+  console.log(userConfig.panels)
   const errors = {
     ...allowNewCollections.errors,
     ...container.errors,

@@ -53,6 +53,12 @@
       "id": "http://localhost:8181/example/textapi/manifest-4/manifest.json",
       "label": "Fourth Manifest",
       "type": "manifest"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/example/textapi/manifest-5/manifest.json",
+      "label": "Fifth Manifest",
+      "type": "manifest"
     }
   ]
 }

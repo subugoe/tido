@@ -4,11 +4,59 @@
   },
   "panels": [
     {
-      "collection": "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
-      "manifestIndex": 0
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    },
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
     }
   ],
   "rootCollections": [
-    "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json"
+    "http://localhost:8181/example/textapi/collection.json"
   ]
 }

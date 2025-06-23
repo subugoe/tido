@@ -1,16 +1,24 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import DOMPurify from 'dompurify'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
   htmlString: string
+  aGroup?: boolean
 }
 
 import React from 'react'
 
 const GenericElement = ({ tagName, props, children, isHighlighted }) => {
   const Tag = tagName
+  const [isHovered, setIsHovered] = useState(false)
+
+  function onClick() {
+    if (isHighlighted) {
+      props.onClick()
+    }
+  }
 
   return (
     <Tag
@@ -19,12 +27,13 @@ const GenericElement = ({ tagName, props, children, isHighlighted }) => {
         (props.className || '') +
         (isHighlighted ? ' bg-yellow-200 relative cursor-pointer' : '')
       }
-      onMouseEnter={isHighlighted ? props.onMouseEnter : props.onMouseEnter}
-      onClick={isHighlighted ? props.onClick : props.onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
     >
       {children}
-      {isHighlighted && (
-        <div className="text-sm p-2">You hovered over a target</div>
+      {isHovered && isHighlighted && (
+        <div className="absolute text-sm p-2 bg-white border border-border shadow-sm">You hovered over a target</div>
       )}
     </Tag>
   )
@@ -42,7 +51,11 @@ const convertNodeToReact = (node, key, matches, onClickTarget) => {
 
     const props = {}
     for (const attr of node.attributes) {
-      props[attr.name === 'class' ? 'className' : attr.name] = attr.value
+      if (attr.name === 'style') {
+        props.style = parseStyleString(attr.value)
+      } else {
+        props[attr.name === 'class' ? 'className' : attr.name] = attr.value
+      }
     }
 
     const isHighlighted = matches.includes(node)
@@ -65,12 +78,28 @@ const convertNodeToReact = (node, key, matches, onClickTarget) => {
   return null
 }
 
+const parseStyleString = (styleString) => {
+  return styleString
+    .split(';')
+    .filter((rule) => rule.trim() !== '')
+    .reduce((styleObj, rule) => {
+      const [key, value] = rule.split(':')
+      if (!key || !value) return styleObj
+
+      const camelKey = key
+        .trim()
+        .replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+
+      styleObj[camelKey] = value.trim()
+      return styleObj
+    }, {})
+}
 
 
-const TextRenderer: FC<Props> = ({ htmlString }) => {
+const TextRenderer: FC<Props> = ({ htmlString, aGroup = true }) => {
   const ref = useRef<HTMLInputElement>(null)
   const { panelId } = usePanel()
-  const selectors = ['#N1l4l2l2l4l4l4', '#N1l4l2l4l4l4l2l5']
+  const selectors = aGroup ? ['#a1', '#a2', '#a3', '#a4', '#a5', '#a6'] : ['#b1', '#b2', '#b3', '#b4', '#b5', '#b6']
   const onClickTarget = () => {}
 
   useEffect(() => {

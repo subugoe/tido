@@ -16,7 +16,12 @@
     {
       "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/content.jsonld",
       "url": "http://localhost:8181/example/content/transcription/manifest-5-item-1.html",
-      "type": "application/xhtml+xml;type=transcription"
+      "type": "application/xhtml+xml;type=Transcription"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/content.jsonld",
+      "url": "http://localhost:8181/example/content/transcription/manifest-5-item-1-content-2.html",
+      "type": "application/xhtml+xml;type=Translation"
     }
   ],
   "lang": [
