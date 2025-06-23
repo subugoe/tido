@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.4](https://github.com/subugoe/tido/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2025-06-23)
+
+
+### Features
+
+* add loading spinner while image is loading ([00ae8ac](https://github.com/subugoe/tido/commit/00ae8accff09dbc62376d6638d3f60a7a8bc0c86))
+* expand a single tree node initially ([77a23c4](https://github.com/subugoe/tido/commit/77a23c48ecf251e2c8be4e595e8703e42602bf43))
+* implement local tree ([2a5416f](https://github.com/subugoe/tido/commit/2a5416f81f4568b69bd738152e5e2c3660637180))
+* selecting an item makes Confirm button active ([f58ae3b](https://github.com/subugoe/tido/commit/f58ae3bfe5fafdc3d878e8b44c9911633713d554))
+
+
+### Refactoring
+
+* return node and not array from getExpandedNode ([ec1a496](https://github.com/subugoe/tido/commit/ec1a4962240334c6b33ee6776a337de214038e41))
+
 ## [5.0.0-alpha.3](https://github.com/subugoe/tido/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2025-06-16)
 
 
