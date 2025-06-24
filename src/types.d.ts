@@ -300,8 +300,6 @@ export interface PanelConfig {
 
 export type ViewType = 'swap' | 'split' | 'text' | 'image'
 
-export type ArrayOfObjects = Record<string, never>[];
-
 export interface ViewButtonData {
   view: ViewType,
   icon: React.Element,

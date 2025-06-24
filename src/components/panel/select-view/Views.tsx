@@ -38,7 +38,7 @@ const Views: FC<SelectViewButtonsProps> = ({ updateSelectedButton }) => {
   },
   ]
 
-  const buttonsData: ViewButtonData[] = filterAndSortData(defaultButtonsData, 'view', views)
+  const buttonsData: ViewButtonData[] = filterAndSortData(defaultButtonsData , 'view', views)
 
   function setSelectedButton(key: ViewType) {
     setSelectedView(key)
