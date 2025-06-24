@@ -9,7 +9,7 @@ import PanelHeader from '@/components/panel/PanelHeader.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
 import SelectTextView from '@/components/panel/select-view/SelectTextView.tsx'
-import Annotations from "@/components/panel/annotations/Annotations.tsx";
+import Annotations from '@/components/panel/annotations/Annotations.tsx'
 
 const DEFAULT_PANEL_WIDTH = 600
 const MIN_PANEL_WIDTH = 600
@@ -153,7 +153,7 @@ const Panel: FC = React.memo(() => {
           <GripVertical className="h-4 w-2.5 text-muted-foreground" />
         </div>
       </div>
-      { panelState.annotationsOpen && <div className="flex flex-col shrink-0 w-[400px]"><Annotations /></div> }
+      { panelState.annotationsOpen && <div className="flex flex-col shrink-0 border-l border-border w-[400px]"><Annotations /></div> }
     </div>
   )
 })

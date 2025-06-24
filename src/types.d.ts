@@ -148,6 +148,7 @@ declare global {
     activeTargetIndex: number
     config: PanelConfig
     annotationsOpen: boolean
+    annotations: Annotation[] | null
   }
 
   type ItemType = 'section' | 'page' | 'full'

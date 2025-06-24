@@ -24,7 +24,8 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     contentIndex: 0,
     view: useUIStore.getState().defaultView,
     activeTargetIndex: -1,
-    annotationsOpen: false
+    annotationsOpen: false,
+    annotations: null
   }
 }
 

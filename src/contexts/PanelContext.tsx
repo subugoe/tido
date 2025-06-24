@@ -24,6 +24,12 @@ interface PanelProviderProps {
   panelId: string
 }
 
+async function getAnnotations(annotationCollectionUrl: string): Promise<Annotation[]> {
+  const collection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
+  const page = await apiRequest<AnnotationPage>(collection.first)
+  return page.items
+}
+
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -40,6 +46,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         const collection = await getCollection(panelState.config.collection)
         const manifest = await apiRequest<Manifest>(collection.sequence[panelState.config.manifestIndex ?? 0].id)
         const item = await apiRequest<Item>(manifest.sequence[panelState.config.itemIndex ?? 0].id)
+        let annotations = null
+        if (item.annotationCollection) {
+          annotations = await getAnnotations(item.annotationCollection)
+        }
         const contentTypes: string[] = getContentTypes(item.content)
 
         const { support } = manifest
@@ -55,7 +65,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           item,
           view: panelState.view,
           contentTypes,
-          activeTargetIndex: -1
+          activeTargetIndex: -1,
+          annotations
         })
 
       } catch (e) {
