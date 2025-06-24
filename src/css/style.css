@@ -1,4 +1,4 @@
-@import "./preflight.css";
+@import "./preflight.css" layer(tido-preflight);
 @import "tailwindcss/theme.css";
 @import "tailwindcss/utilities.css";
 
