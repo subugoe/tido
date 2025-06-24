@@ -147,6 +147,7 @@ declare global {
     imageUrl?: string
     activeTargetIndex: number
     config: PanelConfig
+    annotationsOpen: boolean
   }
 
   type ItemType = 'section' | 'page' | 'full'

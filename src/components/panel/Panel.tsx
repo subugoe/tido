@@ -9,16 +9,16 @@ import PanelHeader from '@/components/panel/PanelHeader.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
 import SelectTextView from '@/components/panel/select-view/SelectTextView.tsx'
+import Annotations from "@/components/panel/annotations/Annotations.tsx";
 
 const DEFAULT_PANEL_WIDTH = 600
 const MIN_PANEL_WIDTH = 600
 
 const Panel: FC = React.memo(() => {
-  const { panelId } = usePanel()
+  const { panelId, panelState } = usePanel()
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectViewState = useUIStore(state => state.showSelectTextView)
   const showSelectTextView = panelId === newestPanelId && showSelectViewState
-
 
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
@@ -130,27 +130,30 @@ const Panel: FC = React.memo(() => {
         }
       }}
       className={
-        `panel relative bg-background text-foreground flex flex-col border-2 rounded-lg
+        `panel relative bg-background text-foreground flex border-2 rounded-lg
         ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-border'}
       `}
       data-cy="panel"
     >
-      <div
-        className={`
-      absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs
-      ${showSelectTextView ? 'opacity-100' : 'opacity-0 pointer-events-none'}
-    `}
-      />
-      {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
-      <PanelHeader />
-      <PanelBody />
-      {showSelectTextView && cardRef.current && <SelectTextView parentEl={cardRef.current}  /> }
-      <div
-        className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
+      <div className="flex flex-col grow-0">
+        <div
+          className={`
+            absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs
+            ${showSelectTextView ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+          `}
+        />
+        {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
+        <PanelHeader />
+        <PanelBody />
+        {showSelectTextView && cardRef.current && <SelectTextView parentEl={cardRef.current}  /> }
+        <div
+          className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
          -translate-y-1/2 top-1/2 -right-2"
-      >
-        <GripVertical className="h-4 w-2.5 text-muted-foreground" />
+        >
+          <GripVertical className="h-4 w-2.5 text-muted-foreground" />
+        </div>
       </div>
+      { panelState.annotationsOpen && <div className="flex flex-col shrink-0 w-[400px]"><Annotations /></div> }
     </div>
   )
 })

@@ -14,8 +14,15 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useTranslation } from 'react-i18next'
 
 const SidebarToggle = (props) => {
+  const { panelState, updatePanel } = usePanel()
+
+  function onClick() {
+    updatePanel({
+      annotationsOpen: !panelState.annotationsOpen
+    })
+  }
   return <>
-    <Button variant="ghost" size="icon" {...props}>
+    <Button variant="ghost" size="icon" {...props} onClick={onClick}>
       <PanelRight />
     </Button>
   </>
@@ -25,7 +32,6 @@ const PanelHeader: FC = () => {
   const { t } = useTranslation()
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const { panelState } = usePanel()
-
   const handleOpenChange = (open: boolean) => {
     setShowMetadataModal(open)
   }
