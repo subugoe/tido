@@ -6,6 +6,7 @@ import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
+import { ViewType } from '@/types'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -33,6 +34,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
   const panelState = usePanelStore(state => state.getPanel(panelId))
 
+  function getView(existsImage: boolean, textView: ViewType) {
+    if (existsImage) return panelState.view
+    if (['image', 'split', 'swap'].includes(panelState.view)) return textView
+  }
+
   useEffect(() => {
     const init = async () => {
       setLoading(true)
@@ -49,11 +55,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           await getSupport(support)
         }
 
+        const existsImage =  !!item?.image && !!item?.image.id
+
         updatePanel( {
           collectionId: collection.id,
           manifest,
           item,
-          view: panelState.view,
+          view: getView(existsImage, 'text'),
           contentTypes,
           activeTargetIndex: -1
         })

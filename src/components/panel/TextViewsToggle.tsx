@@ -20,6 +20,8 @@ const TextViewsToggle: FC = () => {
   const updatePanel = usePanelStore((state) => state.updatePanel)
   const views = useConfigStore(state => state.config.views)
 
+  const existsImage =  !!panelState.item?.image && !!panelState.item?.image.id
+
   const defaultButtonsData: ViewButtonData[] = [ {
     view : 'swap',
     icon: PictureInPicture2,
@@ -50,6 +52,7 @@ const TextViewsToggle: FC = () => {
     updatePanel(panelState.id, { view: newView })
   }
 
+
   return (
     <>
       { !panelState && <Skeleton /> }
@@ -65,7 +68,7 @@ const TextViewsToggle: FC = () => {
                     onClick={(e) => handleTextViewClick(e, button.view)}
                     variant={panelState.view === button.view ? 'secondary' : 'ghost'}
                     size="icon"
-                    disabled={!panelState.contentTypes?.length}
+                    disabled={!panelState.contentTypes?.length || (!existsImage && ['image', 'swap', 'split'].includes(button.view))}
                     data-selected={panelState.view === button.view}
                     data-cy={button.view}
                   >
