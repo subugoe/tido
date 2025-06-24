@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { PanelConfig } from '@/types'
-import { mapToViewIndex } from '@/utils/panel.ts'
 import { useUIStore } from '@/store/UIStore.tsx'
 
 interface PanelStoreTypes {
@@ -23,7 +22,7 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     manifest: null,
     contentTypes: [],
     contentIndex: 0,
-    viewIndex: mapToViewIndex(useUIStore.getState().defaultView),
+    view: useUIStore.getState().defaultView,
     activeTargetIndex: -1,
   }
 }

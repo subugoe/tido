@@ -53,7 +53,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           collectionId: collection.id,
           manifest,
           item,
-          viewIndex: panelState.viewIndex,
+          view: panelState.view,
           contentTypes,
           activeTargetIndex: -1
         })
