@@ -146,7 +146,8 @@ declare global {
     view: ViewType
     imageUrl?: string
     activeTargetIndex: number
-    config: PanelConfig
+    config: PanelConfig,
+    imageExists: boolean
   }
 
   type ItemType = 'section' | 'page' | 'full'
@@ -299,8 +300,6 @@ export interface PanelConfig {
 }
 
 export type ViewType = 'swap' | 'split' | 'text' | 'image'
-
-export type ArrayOfObjects = Record<string, never>[];
 
 export interface ViewButtonData {
   view: ViewType,
