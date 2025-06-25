@@ -1,5 +1,4 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import DOMPurify from 'dompurify'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
@@ -25,7 +24,7 @@ const GenericElement = ({ tagName, props, children, isHighlighted }) => {
       {...props}
       className={
         (props.className || '') +
-        (isHighlighted ? ' bg-yellow-200 relative cursor-pointer' : '')
+        (isHighlighted ? ' bg-gray-200 relative cursor-pointer' : '')
       }
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -96,10 +95,15 @@ const parseStyleString = (styleString) => {
 }
 
 
-const TextRenderer: FC<Props> = ({ htmlString, aGroup = true }) => {
+const TextRenderer: FC<Props> = ({ htmlString }) => {
   const ref = useRef<HTMLInputElement>(null)
-  const { panelId } = usePanel()
-  const selectors = aGroup ? ['#a1', '#a2', '#a3', '#a4', '#a5', '#a6'] : ['#b1', '#b2', '#b3', '#b4', '#b5', '#b6']
+  const { panelId, panelState } = usePanel()
+
+  let selectors = []
+  if (panelState.annotations) {
+    selectors = panelState.annotations.map(a => a.target[0].selector.value)
+  }
+
   const onClickTarget = () => {}
 
   useEffect(() => {
