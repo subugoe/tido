@@ -51,8 +51,9 @@ const TextViewsToggle: FC = () => {
     updatePanel(panelState.id, { view: newView })
   }
 
-  function isEnabled(buttonView: ViewType) {
-    return !(!panelState.imageExists && ['image', 'swap', 'split'].includes(buttonView))
+  function isDisabled(buttonView: ViewType) {
+    return (!panelState.imageExists && ['image', 'swap', 'split'].includes(buttonView))
+      || !panelState.contentTypes?.length
   }
 
 
@@ -71,7 +72,7 @@ const TextViewsToggle: FC = () => {
                     onClick={(e) => handleTextViewClick(e, button.view)}
                     variant={panelState.view === button.view ? 'secondary' : 'ghost'}
                     size="icon"
-                    disabled={!panelState.contentTypes?.length || !isEnabled(button.view)}
+                    disabled={isDisabled(button.view)}
                     data-selected={panelState.view === button.view}
                     data-cy={button.view}
                   >

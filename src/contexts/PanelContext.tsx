@@ -64,7 +64,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           view: getView(imageExists, 'text'),
           contentTypes,
           activeTargetIndex: -1,
-          imageExists: imageExists
+          imageExists
         })
 
       } catch (e) {
