@@ -8,7 +8,6 @@ import {
   Dialog,
   DialogContent, DialogFooter,
   DialogHeader, DialogOverlay, DialogPortal, DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button.tsx'
 import { ViewType } from '@/types'
@@ -21,7 +20,7 @@ interface SelectTextViewProps {
 }
 
 const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
-  const [showPopover, setShowPopover] = useState(true)
+  const [showDialog, setShowDialog] = useState(true)
   const { panelState, updatePanel } = usePanel()
   const UIState = useUIStore.getState()
 
@@ -38,7 +37,7 @@ const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
     useUIStore.getState().updateView(selectedView)
 
     if (isChecked.current) updateEnabledSelectTextView(false)
-    setShowPopover(false)
+    setShowDialog(false)
     useUIStore.getState().updateShowSelectTextView(false)
   }
 
@@ -48,13 +47,13 @@ const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
 
 
   return (
-    <Dialog open={showPopover}>
-      <DialogTrigger>Open</DialogTrigger>
+    <Dialog open={showDialog}>
       <DialogPortal container={parentEl}>
-        <DialogOverlay className="absolute bg-white opacity-[20%]" />
         <DialogContent className={`absolute top-1/2 left-1/2 flex flex-col gap-y-4 w-fit
            p-4 justify-start`}
-        showClose={false}>
+        customOverlay={<DialogOverlay className="absolute bg-white opacity-[20%]" />}
+        showClose={false}
+        >
           <DialogHeader>
             <DialogTitle>
               <div className="text-[15px]">{ t('please_select_view') }</div>
