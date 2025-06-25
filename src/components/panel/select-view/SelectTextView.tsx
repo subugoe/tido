@@ -2,7 +2,6 @@ import { FC, useRef, useState } from 'react'
 
 import { useUIStore } from '@/store/UIStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -23,7 +22,7 @@ interface SelectTextViewProps {
 
 const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
   const [showPopover, setShowPopover] = useState(true)
-  const { panelState } = usePanel()
+  const { panelState, updatePanel } = usePanel()
   const UIState = useUIStore.getState()
 
   const [selectedView, setSelectedView] = useState(UIState.defaultView)
@@ -34,7 +33,8 @@ const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
 
 
   function handleConfirm(selectedView: ViewType) {
-    usePanelStore.getState().updatePanel(panelState.id, { view: selectedView })
+    const newView = panelState.imageExists ? selectedView : 'text'
+    updatePanel({ view: newView })
     useUIStore.getState().updateView(selectedView)
 
     if (isChecked.current) updateEnabledSelectTextView(false)

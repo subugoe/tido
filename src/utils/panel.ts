@@ -1,6 +1,6 @@
 import { request } from '@/utils/http'
 import { usePanelStore } from '@/store/PanelStore.tsx'
-import { ArrayOfObjects, PanelConfig } from '@/types'
+import { ViewButtonData, PanelConfig } from '@/types'
 
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
@@ -69,9 +69,13 @@ export function isNewManifest(manifest: Manifest): boolean {
   return true
 }
 
-export function filterAndSortData( data: ArrayOfObjects, key: string,  orderArray: string[]) {
+export function filterAndSortData( data: ViewButtonData[], key: string,  orderArray: string[]) {
   // data array to have its keys sorted according to 'orderArray'
   return orderArray.map(orderItem => {
     return data.find(obj => (obj[key] as string).toLowerCase() === orderItem.toLowerCase())
   })
+}
+
+export function validateImage(item: Item) {
+  return !!item?.image?.id
 }

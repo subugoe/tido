@@ -4,8 +4,9 @@ import { useDataStore } from '@/store/DataStore.tsx'
 
 import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
-import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
+import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
+import { ViewType } from '@/types'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -33,6 +34,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
   const panelState = usePanelStore(state => state.getPanel(panelId))
 
+  function getView(existsImage: boolean, textView: ViewType) {
+    if (existsImage) return panelState.view
+    return textView
+  }
+
   useEffect(() => {
     const init = async () => {
       setLoading(true)
@@ -49,13 +55,16 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           await getSupport(support)
         }
 
+        const imageExists = validateImage(item)
+
         updatePanel( {
           collectionId: collection.id,
           manifest,
           item,
-          view: panelState.view,
+          view: getView(imageExists, 'text'),
           contentTypes,
-          activeTargetIndex: -1
+          activeTargetIndex: -1,
+          imageExists: imageExists
         })
 
       } catch (e) {
