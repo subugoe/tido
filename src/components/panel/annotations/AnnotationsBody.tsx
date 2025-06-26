@@ -9,19 +9,25 @@ const AnnotationsBody: FC = () => {
   const { panelState, panelId } = usePanel()
   const [mountedCount, setMountedCount] = useState(0)
   const [filteredAnnotations, setFilteredAnnotations] = useState([])
-  const textContainer = document.getElementById(panelId).querySelector(`[data-panel="${panelId}"]`)
+  const textContainer = document.getElementById(panelId).querySelector(`[data-panel="${panelId}"]`) as HTMLElement
   const containerTop = textContainer.getBoundingClientRect().top
   let frameId = null
   const handleChildMount = (target: HTMLElement, el: HTMLElement) => {
     setMountedCount(prev => prev + 1)
-    annotationEls.push({ target, el, prevTargetTop: 260 })
+    annotationEls.push({ target, el, targetPrevTop: target.getBoundingClientRect().top })
   }
 
   function trackTopChange() {
     // Counts the times that an annotation overlaps the previous one. Resets each time an annotation was positioned normally.
     let overlappingCount = 0
 
+    const changedEls = annotationEls
+      .filter(({ target, targetPrevTop }) => target.getBoundingClientRect() !== targetPrevTop)
+
+    if (!changedEls.length) return
+
     annotationEls.forEach(({ target, el, prevTargetTop }, i) => {
+
       const { top: targetTop } = target.getBoundingClientRect()
 
       if (targetTop !== prevTargetTop) {
@@ -61,6 +67,7 @@ const AnnotationsBody: FC = () => {
   useEffect(() => {
     if (mountedCount > 0 && mountedCount === filteredAnnotations.length) {
       console.log('All items are now mounted in the DOM')
+
       trackTopChange()
     }
     return () => cancelAnimationFrame(frameId)
