@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Dialog,
   DialogContent, DialogFooter,
-  DialogHeader, DialogOverlay, DialogPortal, DialogTitle,
+  DialogHeader, DialogOverlay, DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button.tsx'
 import { ViewType } from '@/types'
@@ -48,26 +48,24 @@ const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
 
   return (
     <Dialog open={showDialog}>
-      <DialogPortal container={parentEl}>
-        <DialogContent className={`absolute top-1/2 left-1/2 flex flex-col gap-y-4 w-fit
-           p-4 justify-start`}
+      <DialogContent className={`absolute top-1/2 left-1/2 flex flex-col gap-y-4 w-fit p-4 justify-start`}
+        container={parentEl}
         customOverlay={<DialogOverlay className="absolute bg-white opacity-[20%]" />}
         showClose={false}
-        >
-          <DialogHeader>
-            <DialogTitle>
-              <div className="text-[15px]">{ t('please_select_view') }</div>
-            </DialogTitle>
-          </DialogHeader>
-          <Views updateSelectedButton={setSelectedView} />
-          <div className="flex">
-            <DialogFooter className="flex mt-2 w-full">
-              <DisableSelectView updateCheckedValue={updateCheckedValue} />
-              <Button className="ml-auto" onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
-            </DialogFooter>
-          </div>
-        </DialogContent>
-      </DialogPortal>
+      >
+        <DialogHeader>
+          <DialogTitle>
+            <div className="text-[15px]">{ t('please_select_view') }</div>
+          </DialogTitle>
+        </DialogHeader>
+        <Views updateSelectedButton={setSelectedView} />
+        <div className="flex">
+          <DialogFooter className="flex mt-2 w-full">
+            <DisableSelectView updateCheckedValue={updateCheckedValue} />
+            <Button className="ml-auto" onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
+          </DialogFooter>
+        </div>
+      </DialogContent>
     </Dialog>
   )
 }
