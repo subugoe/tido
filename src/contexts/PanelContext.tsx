@@ -4,7 +4,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 
 import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
-import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
+import { getContentTypes, isNewManifest, MIN_PANEL_WIDTH } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
@@ -17,6 +17,8 @@ interface PanelContentType {
   setError: (value: string | null) => void
   updatePanel: (data: Partial<PanelState>) => void
   remove: () => void
+  bodyWidth: number
+  setBodyWidth: (value: number) => void
 }
 
 interface PanelProviderProps {
@@ -33,6 +35,7 @@ async function getAnnotations(annotationCollectionUrl: string): Promise<Annotati
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [bodyWidth, setBodyWidth] = useState(MIN_PANEL_WIDTH)
 
   const getCollection = useDataStore(state => state.initCollection)
   const updateStorePanelState = usePanelStore((state) => state.updatePanel)
@@ -94,7 +97,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   }
 
   return (
-    <PanelContext.Provider value={{ panelId, panelState, updatePanel, loading, error, setError, remove }}>
+    <PanelContext.Provider value={{ panelId, panelState, updatePanel, loading, error, setError, bodyWidth, setBodyWidth, remove }}>
       {children}
     </PanelContext.Provider>
   )

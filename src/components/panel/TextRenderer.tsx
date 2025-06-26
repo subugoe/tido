@@ -107,14 +107,8 @@ const TextRenderer: FC<Props> = ({ htmlString }) => {
   const onClickTarget = () => {}
 
   useEffect(() => {
-    // if (!ref?.current) return
-    //
-    // const scrollContainer = ref.current as HTMLElement
-    // const parent = scrollContainer.parentElement
-    // if (!parent) return
-    //
-    // scrollContainer.innerHTML = DOMPurify.sanitize(htmlString)
-  }, [htmlString])
+    console.log('text renderer mounted')
+  }, [])
 
   // Step 1: Memoize the parsed DOM
   const parsedDom = React.useMemo(() => {

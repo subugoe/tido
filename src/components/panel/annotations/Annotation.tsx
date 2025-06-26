@@ -4,57 +4,34 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 interface Props {
   data: Annotation
   onMount: (target: HTMLElement, el: HTMLElement) => void
+  onClick: (el: HTMLElement) => void
 }
 
-const Annotation: FC<Props> = React.memo(({ data, onMount }) => {
+const Annotation: FC<Props> = React.memo(({ data, onMount, onClick }) => {
   const { panelId } = usePanel()
   const ref = useRef(null)
   const target = document.getElementById(panelId).querySelector(data.target[0].selector.value)
-  const [top, setTop] = useState(0)
-  const prevTop = null
-  const containerTop = 0
-  const frameId = null
-  // function trackTopChange() {
-  //   const { top } = target.getBoundingClientRect()
-  //   if (top !== prevTop) {
-  //     const prevAnnotationEl = ref?.current.previousElementSibling
-  //     let currentTop = 0
-  //     if (prevAnnotationEl) {
-  //       const { top: prevAnnotationTop, height: prevHeight } = prevAnnotationEl.getBoundingClientRect()
-  //       currentTop = top - containerTop
-  //       const isOverlappingPrev = currentTop <= (prevAnnotationTop + prevHeight - containerTop)
-  //       console.log(prevAnnotationEl.style.top)
-  //     }
-  //
-  //     setTop(currentTop)
-  //     prevTop = top
-  //   }
-  //   frameId = requestAnimationFrame(trackTopChange)
-  // }
+  const [isSelected, setIsSelected] = useState(false)
 
   useEffect(() => {
     onMount(target, ref.current)
   }, [])
 
-  // useEffect(() => {
-  //   if (target) {
-  //     const rect = target.getBoundingClientRect()
-  //     const textContainer = document.getElementById(panelId).querySelector(`[data-panel="${panelId}"]`)
-  //     const textRect = textContainer.getBoundingClientRect()
-  //     containerTop = textRect.top
-  //     setTop(rect.top - containerTop)
-  //     trackTopChange()
-  //   }
-  //   return () => cancelAnimationFrame(frameId)
-  // }, [target])
+  function handleClick() {
+    onClick(ref.current)
+  }
+
+  useEffect(() => {
+    if (!ref.current) return
+    setIsSelected(!!ref.current.dataset.highlighted)
+
+  }, [ref.current?.dataset.highlighted])
 
   return <>
     <div
       ref={ref}
-      className="absolute flex-flex-col bg-background p-2 border border-border rounded-md shadow-sm w-4/5"
-      // style={{
-      //   ...top > -1 && { top },
-      // }}
+      className={`absolute flex-flex-col bg-background p-2 border border-border rounded-lg ${isSelected ? 'shadow-md' : 'shadow-sm'} w-4/5 transition-all`}
+      onClick={handleClick}
     >
       { typeof data.body.value === 'string' ? <span>{ data.body.value }</span> : '' }
     </div>

@@ -10,12 +10,11 @@ import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
 import SelectTextView from '@/components/panel/select-view/SelectTextView.tsx'
 import Annotations from '@/components/panel/annotations/Annotations.tsx'
+import { DEFAULT_PANEL_WIDTH, MIN_PANEL_WIDTH } from '@/utils/panel.ts'
 
-const DEFAULT_PANEL_WIDTH = 600
-const MIN_PANEL_WIDTH = 600
 
 const Panel: FC = React.memo(() => {
-  const { panelId, panelState } = usePanel()
+  const { panelId, panelState, bodyWidth, setBodyWidth } = usePanel()
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectViewState = useUIStore(state => state.showSelectTextView)
   const showSelectTextView = panelId === newestPanelId && showSelectViewState
@@ -25,13 +24,32 @@ const Panel: FC = React.memo(() => {
   const [flexValues, setFlexValues] = useState({
     flexGrow: 1,
     flexShrink: 1,
-    flexBasis: '0%'
+    flexBasis: '0px'
   })
 
   const cardRef = useRef(null)
   const [resizing, setResizing] = useState(false)
   const [isHoveringEdge, setIsHoveringEdge] = useState(false)
 
+  // useEffect(() => {
+  //   setBodyWidth(flexValues.flexBasis === '0px' ? cardRef.current.offsetWidth : flexValues.flexBasis)
+  // }, [flexValues.flexBasis])
+
+  useEffect(() => {
+    if (panelState.annotationsOpen) {
+      setFlexValues({
+        ...flexValues,
+        flexShrink: 0,
+        flexBasis: `${cardRef.current.offsetWidth + 400}px`
+      })
+    } else {
+      setFlexValues({
+        ...flexValues,
+        flexShrink: 1,
+        flexBasis: `0px`
+      })
+    }
+  }, [panelState.annotationsOpen])
 
   useEffect(() => {
     // On mount, we need to decide how set the width. If there is space inside the wrapper,
@@ -64,12 +82,12 @@ const Panel: FC = React.memo(() => {
         flexBasis: `${DEFAULT_PANEL_WIDTH}px`
       })
     }
+    setBodyWidth(cardRef.current.offsetWidth - 4)
   }, [])
 
   useEffect(() => {
     setIsScrollPanel(scrollPanelIds.includes(panelId))
   }, [scrollPanelIds, panelId])
-
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -82,6 +100,7 @@ const Panel: FC = React.memo(() => {
           flexGrow: 0,
           flexBasis: `${Math.max(MIN_PANEL_WIDTH, newWidth)}px`
         })
+        setBodyWidth(cardRef.current.offsetWidth - 4 - (panelState.annotationsOpen ? 400 : 0))
         return
       }
 
@@ -131,11 +150,12 @@ const Panel: FC = React.memo(() => {
       }}
       className={
         `panel relative bg-background text-foreground flex border-2 rounded-lg
+        ${resizing ? 'transition-none' : 'transition-[flex-basis]'}
         ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-border'}
       `}
       data-cy="panel"
     >
-      <div className="flex flex-col grow-0">
+      <div style={{ width: bodyWidth }} className="flex flex-col shrink-0">
         <div
           className={`
             absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs
@@ -153,7 +173,11 @@ const Panel: FC = React.memo(() => {
           <GripVertical className="h-4 w-2.5 text-muted-foreground" />
         </div>
       </div>
-      { panelState.annotationsOpen && <div className="flex flex-col shrink-0 border-l border-border w-[400px]"><Annotations /></div> }
+      { panelState.annotationsOpen && <div className="flex flex-col shrink-0 border-l border-border flex-1 overflow-hidden relative">
+        <div className="absolute w-[400px] h-full">
+          <Annotations />
+        </div>
+      </div> }
     </div>
   )
 })
