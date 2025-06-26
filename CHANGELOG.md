@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.5](https://github.com/subugoe/tido/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2025-06-26)
+
+
+### Features
+
+* add smart display of views ([66188fd](https://github.com/subugoe/tido/commit/66188fd342196e8cacf329e797aef4ceed09b1f2))
+* make view configurable ([1f329d6](https://github.com/subugoe/tido/commit/1f329d67f5cc0259faa1aebe9b06fc17c9bce748))
+
+
+### Bug Fixes
+
+* Improve Dialog component: add DialogPortal inside DialogContent (DC), DC takes a container and overlay prop ([819cff4](https://github.com/subugoe/tido/commit/819cff442a3f5608f0583eb88a5f8d25774d8fb2))
+* show select view dialog (svd) while opening a new panel from global tree, only when svd is enabled ([f03abdf](https://github.com/subugoe/tido/commit/f03abdf7db14031211bec69d08a18de3bd6c954c))
+
 ## [5.0.0-alpha.4](https://github.com/subugoe/tido/compare/v5.0.0-alpha.3...v5.0.0-alpha.4) (2025-06-23)
 
 
