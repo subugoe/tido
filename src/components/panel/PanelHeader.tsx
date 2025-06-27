@@ -14,7 +14,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useTranslation } from 'react-i18next'
 
 const SidebarToggle = (props) => {
-  const { panelState, updatePanel, setBodyWidth } = usePanel()
+  const { panelState, updatePanel } = usePanel()
 
   function onClick() {
     updatePanel({

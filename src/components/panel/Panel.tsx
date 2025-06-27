@@ -10,79 +10,29 @@ import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
 import SelectTextView from '@/components/panel/select-view/SelectTextView.tsx'
 import Annotations from '@/components/panel/annotations/Annotations.tsx'
-import { DEFAULT_PANEL_WIDTH, MIN_PANEL_WIDTH } from '@/utils/panel.ts'
 
 
 const Panel: FC = React.memo(() => {
-  const { panelId, panelState, bodyWidth, setBodyWidth } = usePanel()
+  const { panelId, panelState, resizer, initResizer } = usePanel()
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectViewState = useUIStore(state => state.showSelectTextView)
   const showSelectTextView = panelId === newestPanelId && showSelectViewState
 
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
-  const [flexValues, setFlexValues] = useState({
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: '0px'
-  })
 
   const cardRef = useRef(null)
-  const [resizing, setResizing] = useState(false)
-  const [isHoveringEdge, setIsHoveringEdge] = useState(false)
-
-  // useEffect(() => {
-  //   setBodyWidth(flexValues.flexBasis === '0px' ? cardRef.current.offsetWidth : flexValues.flexBasis)
-  // }, [flexValues.flexBasis])
 
   useEffect(() => {
-    if (panelState.annotationsOpen) {
-      setFlexValues({
-        ...flexValues,
-        flexShrink: 0,
-        flexBasis: `${cardRef.current.offsetWidth + 400}px`
-      })
-    } else {
-      setFlexValues({
-        ...flexValues,
-        flexShrink: 1,
-        flexBasis: `0px`
-      })
-    }
+    if (!resizer) return
+    resizer.setAnnotationsOpen(panelState.annotationsOpen)
   }, [panelState.annotationsOpen])
 
   useEffect(() => {
-    // On mount, we need to decide how set the width. If there is space inside the wrapper,
-    // we can keep default flex settings, as they make the panel grow and use the remaining space.
-    // If there is not enough space, we omit all the growing capability and set a default width
-
-    const wrapper = document.getElementById('panels-wrapper')
-    if (!wrapper) return
-
-    const wrapperWidth = wrapper.getBoundingClientRect().width
-    const otherPanelEls = ([...wrapper.querySelectorAll('.panel')] as HTMLElement[])
-      .filter(el => el.id !== '' && el.id !== panelId)
-
-    // Return an array of widths. If a panel is in "grow" mode, it has no flexBasis pixel value.
-    // In that case, we set that value to min width as basis for total width calculation.
-    // The reason is that those panels can also shrink.
-    const otherPanelWidths = otherPanelEls.map(el => {
-      return (el.style.flexBasis.includes('px')) ? parseInt(el.style.flexBasis.replace('px', '')) : MIN_PANEL_WIDTH
-    })
-
-    const otherPanelsTotalWidth = otherPanelWidths.reduce((a, b) => a + b, 0)
-
-    // We are adding here an additional DEFAULT_PANEL_WIDTH for the ghost panel that is the last child in the wrapper.
-    const isFitting = (wrapperWidth - (otherPanelsTotalWidth + DEFAULT_PANEL_WIDTH)) >= 0
-
-    if (!isFitting) {
-      setFlexValues({
-        flexGrow: 0,
-        flexShrink: 0,
-        flexBasis: `${DEFAULT_PANEL_WIDTH}px`
-      })
+    initResizer(cardRef.current)
+    return () => {
+      resizer.clean()
     }
-    setBodyWidth(cardRef.current.offsetWidth - 4)
   }, [])
 
   useEffect(() => {
@@ -90,72 +40,21 @@ const Panel: FC = React.memo(() => {
   }, [scrollPanelIds, panelId])
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!cardRef.current) return
-      if (resizing) {
-        const rect = (cardRef.current as HTMLElement).getBoundingClientRect()
-        const newWidth = e.clientX - rect.left
-        setFlexValues({
-          flexShrink: 0,
-          flexGrow: 0,
-          flexBasis: `${Math.max(MIN_PANEL_WIDTH, newWidth)}px`
-        })
-        setBodyWidth(cardRef.current.offsetWidth - 4 - (panelState.annotationsOpen ? 400 : 0))
-        return
-      }
-
-      // Hover detection logic (within 8px of right edge)
-      const rect = (cardRef.current as HTMLElement).getBoundingClientRect()
-      const offsetX = e.clientX - rect.left
-      setIsHoveringEdge(offsetX > rect.width - 8 && offsetX <= rect.width)
-    }
-
-    const handleMouseUp = () => setResizing(false)
-
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseup', handleMouseUp)
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [resizing])
-
-
-  useEffect(() => {
     const scrollPosX = cardRef.current.offsetLeft - cardRef.current.offsetWidth / 2
     document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
   }, [showSelectTextView])
-
 
   return (
     <div
       id={panelId}
       ref={cardRef}
-      style={{
-        flexGrow: flexValues.flexGrow,
-        flexShrink: flexValues.flexShrink,
-        flexBasis: flexValues.flexBasis,
-        minWidth: `${MIN_PANEL_WIDTH}px`,
-        userSelect: resizing ? 'none' : 'auto',
-        cursor: isHoveringEdge ? 'ew-resize' : 'default',
-      }}
-      onMouseDown={(e) => {
-        if (!cardRef.current) return
-        const rect = (cardRef.current as HTMLElement).getBoundingClientRect()
-        const offsetX = e.clientX - rect.left
-        if (offsetX > rect.width - 8) {
-          setResizing(true)
-        }
-      }}
       className={
         `panel relative bg-background text-foreground flex border-2 rounded-lg
-        ${resizing ? 'transition-none' : 'transition-[flex-basis]'}
         ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-border'}
       `}
       data-cy="panel"
     >
-      <div style={{ width: bodyWidth }} className="flex flex-col shrink-0">
+      <div className="main-content flex flex-col">
         <div
           className={`
             absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs

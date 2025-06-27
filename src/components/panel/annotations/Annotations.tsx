@@ -3,10 +3,10 @@ import AnnotationsHeader from '@/components/panel/annotations/AnnotationsHeader.
 import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 
 const Annotations: FC = () => {
-  return <>
+  return <div className="flex flex-col h-full">
     <AnnotationsHeader />
     <AnnotationsBody />
-  </>
+  </div>
 }
 
 export default Annotations
