@@ -8,11 +8,29 @@ interface Props {
 }
 
 import React from 'react'
+import eventBus from '@/utils/event-bus.ts'
+
+const END_CLASS = 'tido-text-end'
+
+const TextEnd = () => {
+  const ref = useRef()
+
+  useEffect(() => {
+    console.log(ref.current)
+    eventBus.emit('textRendered')
+  }, [ref.current])
+
+  return <span ref={ref} className={END_CLASS}></span>
+}
 
 const GenericElement = ({ tagName, props, children, isHighlighted }) => {
   const Tag = tagName
   const [isHovered, setIsHovered] = useState(false)
+  const ref = useRef()
 
+  useEffect(() => {
+    console.log(tagName)
+  }, [])
   function onClick() {
     if (isHighlighted) {
       props.onClick()
@@ -22,6 +40,7 @@ const GenericElement = ({ tagName, props, children, isHighlighted }) => {
   return (
     <Tag
       {...props}
+      ref={ref}
       className={
         (props.className || '') +
         (isHighlighted ? ' bg-gray-200 relative cursor-pointer' : '')
@@ -99,6 +118,10 @@ const TextRenderer: FC<Props> = ({ htmlString }) => {
   const ref = useRef<HTMLInputElement>(null)
   const { panelId, panelState } = usePanel()
 
+  useEffect(() => {
+    console.log('TextRendererr')
+  }, [])
+
   let selectors = []
   if (panelState.annotations) {
     selectors = panelState.annotations.map(a => a.target[0].selector.value)
@@ -113,7 +136,7 @@ const TextRenderer: FC<Props> = ({ htmlString }) => {
   // Step 1: Memoize the parsed DOM
   const parsedDom = React.useMemo(() => {
     const parser = new DOMParser()
-    const doc = parser.parseFromString(htmlString, 'text/html')
+    const doc = parser.parseFromString(`${htmlString}`, 'text/html')
     return doc
   }, [htmlString])
 
@@ -123,9 +146,13 @@ const TextRenderer: FC<Props> = ({ htmlString }) => {
       Array.from(parsedDom.body.querySelectorAll(selector))
     )
 
-    return Array.from(parsedDom.body.childNodes).map((node, i) =>
+    const comps = Array.from(parsedDom.body.childNodes).map((node, i) =>
       convertNodeToReact(node, i, matches, onClickTarget)
     )
+
+    comps.push(<TextEnd />)
+
+    return comps
   }, [parsedDom, selectors])
 
 

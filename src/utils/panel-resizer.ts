@@ -106,16 +106,11 @@ class PanelResizer {
     window.addEventListener('mouseup', handleMouseUp)
     window.addEventListener('mousedown', handleMouseDown)
 
-    this.eventListeners.push(...[{
-      name: 'mousemove',
-      listener: handleMouseMove
-    }, {
-      name: 'mouseup',
-      listener: handleMouseUp
-    }, {
-      name: 'mousedown',
-      listener: handleMouseDown
-    }])
+    this.eventListeners.push(...[
+      { name: 'mousemove', listener: handleMouseMove },
+      { name: 'mouseup', listener: handleMouseUp },
+      { name: 'mousedown', listener: handleMouseDown }
+    ])
   }
 
   setIsHoveringEdge(value: boolean) {

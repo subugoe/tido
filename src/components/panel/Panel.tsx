@@ -31,7 +31,7 @@ const Panel: FC = React.memo(() => {
   useEffect(() => {
     initResizer(cardRef.current)
     return () => {
-      resizer.clean()
+      if (resizer) resizer.clean()
     }
   }, [])
 
