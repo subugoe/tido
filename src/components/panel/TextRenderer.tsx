@@ -12,6 +12,7 @@ import { parseStyleString } from '@/utils/html-to-react.ts'
 const END_CLASS = 'tido-text-end'
 
 const GenericElement = ({ tagName, props, children, isHighlighted, isSelected = false }) => {
+  console.log(tagName)
   const Tag = tagName
   const [isHovered, setIsHovered] = useState(false)
 
@@ -19,6 +20,10 @@ const GenericElement = ({ tagName, props, children, isHighlighted, isSelected = 
     if (isHighlighted) {
       props.onClick()
     }
+  }
+
+  if (tagName === 'br') {
+    return <br />
   }
 
   return (
