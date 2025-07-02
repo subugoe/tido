@@ -5,7 +5,7 @@
   "panels": [
     {
       "collection": "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
-      "manifestIndex": 0
+      "manifestIndex": 1
     }
   ],
   "rootCollections": [

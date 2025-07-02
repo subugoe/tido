@@ -6,6 +6,7 @@ import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
+import { PanelResizer } from '@/utils/panel-resizer.ts'
 import { ViewType } from '@/types'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
@@ -18,6 +19,8 @@ interface PanelContentType {
   setError: (value: string | null) => void
   updatePanel: (data: Partial<PanelState>) => void
   remove: () => void
+  resizer: PanelResizer
+  initResizer: (el: HTMLElement) => void
 }
 
 interface PanelProviderProps {
@@ -25,9 +28,16 @@ interface PanelProviderProps {
   panelId: string
 }
 
+async function getAnnotations(annotationCollectionUrl: string): Promise<Annotation[]> {
+  const collection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
+  const page = await apiRequest<AnnotationPage>(collection.first)
+  return page.items
+}
+
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [resizer, setResizer] = useState<PanelResizer | null>(null)
 
   const getCollection = useDataStore(state => state.initCollection)
   const updateStorePanelState = usePanelStore((state) => state.updatePanel)
@@ -46,6 +56,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         const collection = await getCollection(panelState.config.collection)
         const manifest = await apiRequest<Manifest>(collection.sequence[panelState.config.manifestIndex ?? 0].id)
         const item = await apiRequest<Item>(manifest.sequence[panelState.config.itemIndex ?? 0].id)
+        let annotations = null
+        if (item.annotationCollection) {
+          annotations = await getAnnotations(item.annotationCollection)
+        }
         const contentTypes: string[] = getContentTypes(item.content)
 
         const { support } = manifest
@@ -64,6 +78,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           view: getView(imageExists, 'text'),
           contentTypes,
           activeTargetIndex: -1,
+          annotations,
           imageExists
         })
 
@@ -91,8 +106,12 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     usePanelStore.getState().removePanel(panelId)
   }
 
+  function initResizer(el: HTMLElement) {
+    setResizer(new PanelResizer(el))
+  }
+
   return (
-    <PanelContext.Provider value={{ panelId, panelState, updatePanel, loading, error, setError, remove }}>
+    <PanelContext.Provider value={{ panelId, panelState, updatePanel, loading, error, setError, remove, resizer, initResizer }}>
       {children}
     </PanelContext.Provider>
   )

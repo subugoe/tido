@@ -146,8 +146,11 @@ declare global {
     view: ViewType
     imageUrl?: string
     activeTargetIndex: number
-    config: PanelConfig,
+    config: PanelConfig
     imageExists: boolean
+    annotationsOpen: boolean
+    annotations: Annotation[] | null
+    textRendered: boolean
   }
 
   type ItemType = 'section' | 'page' | 'full'

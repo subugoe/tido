@@ -15,7 +15,7 @@ import Loading from '@/components/ui/loading.tsx'
 
 
 const PanelBody: FC = () => {
-  const { panelState, loading, error, setError } = usePanel()
+  const { panelState, loading, error, setError, bodyWidth } = usePanel()
   const { t } = useTranslation()
   const activeContentTypeIndex = panelState.contentIndex
   const [text, setText] = useState<string>('')

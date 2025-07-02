@@ -29,6 +29,7 @@ function createThemeStyles(config: TidoConfig) {
 }
 
 export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
+  console.log(customConfig)
   const { config, errors } = mergeAndValidateConfig(customConfig)
   if (Object.keys(errors).length > 0) console.error(errors)
 
