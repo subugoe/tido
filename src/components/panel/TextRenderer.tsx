@@ -9,10 +9,10 @@ interface Props {
 
 import React from 'react'
 import { parseStyleString } from '@/utils/html-to-react.ts'
+import { isAutoScrolling, removeAutoScrolling, syncScrollPosition } from '@/utils/scroll.ts'
 const END_CLASS = 'tido-text-end'
 
 const GenericElement = ({ tagName, props, children, isHighlighted, isSelected = false }) => {
-  console.log(tagName)
   const Tag = tagName
   const [isHovered, setIsHovered] = useState(false)
 
@@ -80,9 +80,11 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget, isSe
   )
 }
 
+let scrollTimeout
 
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
-  const ref = useRef<HTMLInputElement>(null)
+  const textWrapperRef = useRef<HTMLInputElement>(null)
+  const scrollContainerRef = useRef(null)
   const { panelId, panelState, updatePanel } = usePanel()
 
   let selectors = []
@@ -92,13 +94,27 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
 
   const onClickTarget = () => {}
 
-  // useEffect(() => {
-  //   console.log('updating htmlstring')
-  //   return () => {
-  //     console.log('cleanup htmlstring')
-  //     updatePanel({ textRendered: false })
-  //   }
-  // }, [htmlString])
+  useEffect(() => {
+    if (!scrollContainerRef.current) return
+    console.log('TextRenderer mount')
+    const onScroll = () => {
+      const target = document.querySelector(`[data-annotation-panel="${panelId}"]`)
+      if (isAutoScrolling(scrollContainerRef.current)) return
+      syncScrollPosition(scrollContainerRef.current, target)
+
+      clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout((event) => {
+        removeAutoScrolling(document.querySelector(`[data-annotation-panel="${panelId}"]`))
+      }, 150)
+    }
+    scrollContainerRef.current.addEventListener('scroll', onScroll)
+
+    return () => {
+      console.log('cleanup htmlstring')
+      updatePanel({ textRendered: false })
+      if (scrollContainerRef.current) scrollContainerRef.current.removeEventListener('scroll', onScroll)
+    }
+  }, [])
 
   // Step 1: Memoize the parsed DOM
   const parsedDom = React.useMemo(() => {
@@ -138,8 +154,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   }, [parsedDom, selectors])
 
 
-  return <div data-panel={panelId} ref={ref} className="h-full relative overflow-auto px-3">
-    { reactElements }
+  return <div ref={scrollContainerRef} data-panel={panelId} className="relative h-full overflow-auto px-3">
+    <div ref={textWrapperRef}>
+      { reactElements }
+    </div>
   </div>
 })
 

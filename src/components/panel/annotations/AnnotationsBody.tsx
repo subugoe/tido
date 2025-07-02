@@ -3,8 +3,12 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/Annotation.tsx'
 import eventBus from '@/utils/event-bus.ts'
 import panel from '@/components/panel/Panel.tsx'
+import { isAutoScrolling, removeAutoScrolling, syncScrollPosition } from '@/utils/scroll.ts'
 
 const ANNOTATION_GAP = 5
+
+let scrollTimeout
+
 
 const AnnotationsBody: FC = () => {
   const { panelState, panelId } = usePanel()
@@ -16,6 +20,7 @@ const AnnotationsBody: FC = () => {
   const containerTop = 236
 
   const ref = useRef()
+  const scrollContainerRef = useRef()
   const handleChildMount = (target: HTMLElement, el: HTMLElement) => {
     setMountedCount(prev => prev + 1)
     annotationEls.push({
@@ -89,18 +94,33 @@ const AnnotationsBody: FC = () => {
 
   useEffect(() => {
     if (panelState.textRendered && panelState.annotations) {
+      console.log('annotations filtering', textContainer.offsetHeight)
+      ref.current.style.height = `${textContainer.firstChild.offsetHeight}px`
+
       setFilteredAnnotations(panelState.annotations
         .filter(a => !!document.getElementById(panelId).querySelector(a.target[0].selector.value)))
     }
+
+    const onScroll = () => {
+      const target = document.querySelector(`[data-panel="${panelId}"]`)
+      if (isAutoScrolling(scrollContainerRef.current)) return
+      syncScrollPosition(scrollContainerRef.current, target)
+      clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout((event) => {
+        removeAutoScrolling(document.querySelector(`[data-panel="${panelId}"]`))
+      }, 150)
+    }
+    scrollContainerRef.current.addEventListener('scroll', onScroll)
 
     return () => {
       if (ref.current) ref.current.style.opacity = 0
       setAnnotationEls([])
       setMountedCount(0)
+      if (scrollContainerRef.current) scrollContainerRef.current.removeEventListener('scroll', onScroll)
     }
   }, [panelState.textRendered, panelState.annotations])
 
-  return <div className="relative border-t border-border bg-accent flex-1 p-2 overflow-hidden transition-opacity">
+  return <div ref={scrollContainerRef} data-annotation-panel={panelId} className="relative border-t border-border bg-accent flex-1 p-2 h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
     <div ref={ref} className="transition-opacity">
       { filteredAnnotations.map(a => <Annotation data={a} key={a.id} onMount={handleChildMount} onClick={handleAnnotationClick} />)}
     </div>
