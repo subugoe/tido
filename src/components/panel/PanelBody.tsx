@@ -12,6 +12,8 @@ import ErrorMessage from '@/components/panel/ErrorMessage.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { useTranslation } from 'react-i18next'
 import Loading from '@/components/ui/loading.tsx'
+import ScrollContainer from '@/components/panel/ScrollContainer.tsx'
+import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 
 
 const PanelBody: FC = () => {
@@ -52,6 +54,14 @@ const PanelBody: FC = () => {
   function renderContent() {
     if (error) return <ErrorMessage message={error ?? t('unknown_error')} title={t('error_occurred')} />
     if (loading) return <Loading size={40} />
+
+    return <ScrollContainer>
+      <TextView textHtml={text} />
+      <div className="absolute top-0 right-0">
+        <AnnotationsBody />
+      </div>
+    </ScrollContainer>
+
 
     if (panelState.view === 'swap') return <TextViewOne textHtml={text} />
     else if (panelState.view === 'split') return <SplitView textHtml={text} />

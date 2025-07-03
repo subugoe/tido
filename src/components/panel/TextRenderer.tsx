@@ -98,6 +98,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
     if (!scrollContainerRef.current) return
     console.log('TextRenderer mount')
     const onScroll = () => {
+      // console.log(document.getElementById('target-1').getBoundingClientRect().top,
+      //   document.getElementById('target-1').offsetTop)
       const target = document.querySelector(`[data-annotation-panel="${panelId}"]`)
       if (isAutoScrolling(scrollContainerRef.current)) return
       syncScrollPosition(scrollContainerRef.current, target)
@@ -154,7 +156,12 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   }, [parsedDom, selectors])
 
 
-  return <div ref={scrollContainerRef} data-panel={panelId} className="relative h-full overflow-auto px-3">
+  return <div
+    ref={scrollContainerRef}
+    data-panel={panelId}
+    className="relative h-full overflow-auto px-3"
+    style={{ scrollbarWidth: panelState.annotationsOpen ? 'none' : 'auto' }}
+  >
     <div ref={textWrapperRef}>
       { reactElements }
     </div>

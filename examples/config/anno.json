@@ -1,0 +1,12 @@
+{
+  "lang": "de",
+  "panels": [
+    {
+      "collection": "http://localhost:8181/example/textapi/collection.json",
+      "manifestIndex": 4
+    }
+  ],
+  "rootCollections": [
+    "http://localhost:8181/example/textapi/collection.json"
+  ]
+}

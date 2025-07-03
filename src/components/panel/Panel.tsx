@@ -37,8 +37,6 @@ const Panel: FC = React.memo(() => {
     } else {
       setRenderSidebarContent(false)
     }
-
-
   }, [panelState.annotationsOpen])
 
 
@@ -86,11 +84,11 @@ const Panel: FC = React.memo(() => {
           <GripVertical className="h-4 w-2.5 text-muted-foreground" />
         </div>
       </div>
-      { <div className={`flex flex-col border-l ${panelState.annotationsOpen ? 'border-border shrink-0 grow-1' : 'border-transparent shrink-1 grow-0'} overflow-hidden relative`}>
-        { renderSidebarContent && <div className="absolute w-[400px] h-full">
-          <Annotations />
-        </div> }
-      </div> }
+      {/*{ <div className={`flex flex-col border-l ${panelState.annotationsOpen ? 'border-border shrink-0 grow-1' : 'border-transparent shrink-1 grow-0'} overflow-hidden relative`}>*/}
+      {/*  { renderSidebarContent && <div className="absolute w-[400px] h-full">*/}
+      {/*    <Annotations />*/}
+      {/*  </div> }*/}
+      {/*</div> }*/}
     </div>
   )
 })

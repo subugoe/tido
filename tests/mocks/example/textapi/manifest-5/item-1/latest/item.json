@@ -26,5 +26,7 @@
   ],
   "lang": [
     "eng"
-  ]
+  ],
+  "annotationCollection": "http://localhost:8181/example/annotations/manifest-5/item-1/annotationCollection.json"
+
 }

@@ -1,0 +1,7 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "example/manifest-5/item-1/annotationCollection",
+  "type": "AnnotationCollection",
+  "label": "Example Annotations",
+  "first": "http://localhost:8181/example/annotations/manifest-5/item-1/annotationPage.json"
+}

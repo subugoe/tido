@@ -44,7 +44,6 @@ class PanelResizer {
     // We are adding here an additional DEFAULT_PANEL_WIDTH for the ghost panel that is the last child in the wrapper.
     const isFitting = (wrapperWidth - (otherPanelsTotalWidth + DEFAULT_PANEL_WIDTH)) >= 0
 
-    console.log(isFitting)
     if (!isFitting) {
       this.setFlexValues({
         flexGrow: '0',

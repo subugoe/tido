@@ -1,0 +1,97 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "manifest-5-item-1",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://ahiqar.uni-goettingen.de/ns/annotations/annotationCollection/3r177",
+    "label": "Ahiqar annotations for textgrid:3r177: Cod. Arab. 236 Copenhagen"
+  },
+  "next": "http://localhost:8181/example/annotations/manifest-5/item-1/3r177/annotationPage.json",
+  "prev": null,
+  "items": [
+    {
+      "body": {
+        "x-content-type": "Person",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": "At vero eos et accusam et justo duo dolores et ea rebum."
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#target-1"
+          },
+          "language": "ara",
+          "source": "http://localhost:8181/ahiqar/content/transcription/3r1bv-2a.html",
+          "format": "text/xml"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahiqar.uni-goettingen.de/ns/annotations/3r1bv/annotation-MD355074N1l4l2l4l4l8l2l3"
+    },
+    {
+      "body": {
+        "x-content-type": "Person",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": "accusam"
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#target-2"
+          },
+          "language": "ara",
+          "source": "http://localhost:8181/ahiqar/content/transcription/3r1bv-2a.html",
+          "format": "text/xml"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahiqar.uni-goettingen.de/ns/annotations/3r1bv/annotation-MD355074N1l4l2l4l4l12l2l3"
+    },
+    {
+      "body": {
+        "x-content-type": "Place",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": "At vero eos et accusam et justo duo dolores et ea rebum. At vero eos et accusam et justo duo dolores et ea rebum."
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#target-3"
+          },
+          "language": "ara",
+          "source": "http://localhost:8181/ahiqar/content/transcription/3r1bv-2a.html",
+          "format": "text/xml"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahiqar.uni-goettingen.de/ns/annotations/3r1bv/annotation-MD355074N1l4l2l4l4l14l2l3"
+    },
+    {
+      "body": {
+        "x-content-type": "Person",
+        "type": "TextualBody",
+        "format": "text/plain",
+        "value": "At vero eos et accusam et justo duo dolores et ea rebum."
+      },
+      "target": [
+        {
+          "selector": {
+            "type": "CssSelector",
+            "value": "#target-4"
+          },
+          "language": "ara",
+          "source": "http://localhost:8181/ahiqar/content/transcription/3r1bv-2a.html",
+          "format": "text/xml"
+        }
+      ],
+      "type": "Annotation",
+      "id": "http://ahiqar.uni-goettingen.de/ns/annotations/3r1bv/annotation-MD355074N1l4l2l4l4l16l2"
+    }
+  ]
+}

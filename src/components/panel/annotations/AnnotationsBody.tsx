@@ -16,17 +16,14 @@ const AnnotationsBody: FC = () => {
   const [annotationEls, setAnnotationEls] = useState([])
   const [filteredAnnotations, setFilteredAnnotations] = useState([])
   const textContainer = document.getElementById(panelId).querySelector(`[data-panel="${panelId}"]`) as HTMLElement
-  // const containerTop = textContainer.getBoundingClientRect().top
-  const containerTop = 236
 
   const ref = useRef()
-  const scrollContainerRef = useRef()
   const handleChildMount = (target: HTMLElement, el: HTMLElement) => {
     setMountedCount(prev => prev + 1)
     annotationEls.push({
       target,
       el,
-      desiredY: target.getBoundingClientRect().top + target.scrollTop,
+      desiredY: target.offsetTop
     })
     setAnnotationEls(annotationEls)
   }
@@ -38,11 +35,13 @@ const AnnotationsBody: FC = () => {
   }
 
   function trackTopChange() {
+    console.log('trackTopChange', annotationEls.length)
     if (annotationEls.length === 0) return
 
     // Set the desiredY according to current target positions
     for (let i = 0; i < annotationEls.length; i++) {
-      annotationEls[i].desiredY = annotationEls[i].target.getBoundingClientRect().top + annotationEls[i].target.scrollTop - containerTop
+      console.log('target top', annotationEls[i].target.getBoundingClientRect().top, textContainer.getBoundingClientRect().top)
+      annotationEls[i].desiredY = annotationEls[i].target.getBoundingClientRect().top - textContainer.getBoundingClientRect().top
     }
 
     annotationEls.sort((a, b) => a.desiredY - b.desiredY)
@@ -54,6 +53,10 @@ const AnnotationsBody: FC = () => {
       const minY = lastY + lastHeight + ANNOTATION_GAP
 
       let actualY = i === 0 ? annotationEl.desiredY : Math.max(annotationEl.desiredY, minY)
+
+      console.log('y', minY, annotationEl.desiredY, actualY)
+
+
       if (annotationEl.el.dataset.highlighted && actualY !== annotationEl.desiredY) {
         actualY = annotationEl.desiredY
         annotationEl.desiredY = actualY
@@ -81,6 +84,7 @@ const AnnotationsBody: FC = () => {
     let resizeObserver
     if (mountedCount > 0 && mountedCount === filteredAnnotations.length) {
       resizeObserver = new ResizeObserver(entries => {
+        console.log('ResizeObserver')
         if (entries[0].contentRect.width > 0) trackTopChange()
       })
       resizeObserver.observe(textContainer)
@@ -94,33 +98,20 @@ const AnnotationsBody: FC = () => {
 
   useEffect(() => {
     if (panelState.textRendered && panelState.annotations) {
-      console.log('annotations filtering', textContainer.offsetHeight)
       ref.current.style.height = `${textContainer.firstChild.offsetHeight}px`
 
       setFilteredAnnotations(panelState.annotations
         .filter(a => !!document.getElementById(panelId).querySelector(a.target[0].selector.value)))
     }
 
-    const onScroll = () => {
-      const target = document.querySelector(`[data-panel="${panelId}"]`)
-      if (isAutoScrolling(scrollContainerRef.current)) return
-      syncScrollPosition(scrollContainerRef.current, target)
-      clearTimeout(scrollTimeout)
-      scrollTimeout = setTimeout((event) => {
-        removeAutoScrolling(document.querySelector(`[data-panel="${panelId}"]`))
-      }, 150)
-    }
-    scrollContainerRef.current.addEventListener('scroll', onScroll)
-
     return () => {
       if (ref.current) ref.current.style.opacity = 0
       setAnnotationEls([])
       setMountedCount(0)
-      if (scrollContainerRef.current) scrollContainerRef.current.removeEventListener('scroll', onScroll)
     }
   }, [panelState.textRendered, panelState.annotations])
 
-  return <div ref={scrollContainerRef} data-annotation-panel={panelId} className="relative border-t border-border bg-accent flex-1 p-2 h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+  return <div data-annotation-panel={panelId} className="relative border-t border-border bg-accent flex-1 px-2 h-full overflow-y-auto">
     <div ref={ref} className="transition-opacity">
       { filteredAnnotations.map(a => <Annotation data={a} key={a.id} onMount={handleChildMount} onClick={handleAnnotationClick} />)}
     </div>
