@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
@@ -12,20 +12,44 @@ import ErrorMessage from '@/components/panel/ErrorMessage.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { useTranslation } from 'react-i18next'
 import Loading from '@/components/ui/loading.tsx'
-import ScrollContainer from '@/components/panel/ScrollContainer.tsx'
 import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 
 
 const PanelBody: FC = () => {
-  const { panelState, loading, error, setError, bodyWidth } = usePanel()
+  const { panelState, loading, error, resizer, initResizer, setError, setBodyMounted } = usePanel()
   const { t } = useTranslation()
   const activeContentTypeIndex = panelState.contentIndex
   const [text, setText] = useState<string>('')
+  const [showSidebar, setShowSidebar] = useState(false)
 
+
+  const scrollRef = useRef()
   function getContentUrlByType(type: string | undefined) {
     if (!type) return undefined
     return panelState?.item?.content.find(c => c.type.includes(type))?.url
   }
+
+  useEffect(() => {
+    if (!scrollRef.current) return
+    console.log('set body mounted')
+    setBodyMounted(true)
+    return () => setBodyMounted(false)
+  }, [scrollRef.current])
+
+  useEffect(() => {
+    if (!resizer) return
+    resizer.setAnnotationsOpen(panelState.annotationsOpen)
+
+    if (panelState.annotationsOpen) {
+      const timeout = setTimeout(() => {
+        setShowSidebar(true)
+      }, 600)
+
+      return () => clearTimeout(timeout)
+    } else {
+      setShowSidebar(false)
+    }
+  }, [panelState.annotationsOpen])
 
   useEffect(() => {
     async function updateText(contentUrl: string) {
@@ -55,12 +79,14 @@ const PanelBody: FC = () => {
     if (error) return <ErrorMessage message={error ?? t('unknown_error')} title={t('error_occurred')} />
     if (loading) return <Loading size={40} />
 
-    return <ScrollContainer>
-      <TextView textHtml={text} />
-      <div className="absolute top-0 right-0">
-        <AnnotationsBody />
+    return <div ref={scrollRef} data-scroll-container className="h-full overflow-y-auto relative">
+      <div data-text-container>
+        <TextView textHtml={text} />
       </div>
-    </ScrollContainer>
+      { panelState.annotationsOpen && <div className="absolute top-0 right-0 min-h-full border-l border-border w-[400px]">
+        {/*{ <AnnotationsBody /> }*/}
+      </div> }
+    </div>
 
 
     if (panelState.view === 'swap') return <TextViewOne textHtml={text} />
@@ -69,7 +95,7 @@ const PanelBody: FC = () => {
     else if (panelState.view === 'image') return <ImageView />
   }
 
-  return <div className="overflow-hidden border-t border-border flex-1">{ renderContent() }</div>
+  return <div className="border-t border-border flex-1">{ renderContent() }</div>
 }
 
 export default PanelBody

@@ -21,6 +21,8 @@ interface PanelContentType {
   remove: () => void
   resizer: PanelResizer
   initResizer: (el: HTMLElement) => void
+  setBodyMounted: (value: boolean) => void
+  bodyMounted: boolean
 }
 
 interface PanelProviderProps {
@@ -38,6 +40,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
+  const [bodyMounted, setBodyMounted] = useState(false)
 
   const getCollection = useDataStore(state => state.initCollection)
   const updateStorePanelState = usePanelStore((state) => state.updatePanel)
@@ -111,7 +114,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   }
 
   return (
-    <PanelContext.Provider value={{ panelId, panelState, updatePanel, loading, error, setError, remove, resizer, initResizer }}>
+    <PanelContext.Provider value={{ panelId, panelState, updatePanel, loading, error, setError, remove, resizer, initResizer, bodyMounted, setBodyMounted }}>
       {children}
     </PanelContext.Provider>
   )

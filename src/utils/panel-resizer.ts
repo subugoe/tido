@@ -1,18 +1,23 @@
-import { DEFAULT_PANEL_WIDTH, MIN_PANEL_WIDTH } from '@/utils/panel.ts'
+import { ANNOTATION_PANEL_WIDTH, DEFAULT_PANEL_WIDTH, MIN_PANEL_WIDTH } from '@/utils/panel.ts'
 
 
 class PanelResizer {
   panelEl: HTMLElement
   panelId: string
   mainContentEl: HTMLElement
+  textContainerEl: HTMLElement
+  scrollContainerEl: HTMLElement
   eventListeners = []
   isResizing = false
   annotationsOpen = false
+  userWidth = null
 
   constructor(panelEl: HTMLElement) {
     this.panelEl = panelEl
     this.panelId = this.panelEl.id
     this.mainContentEl = this.panelEl.querySelector('.main-content')
+    this.scrollContainerEl = this.panelEl.querySelector('[data-scroll-container]')
+    this.textContainerEl = this.panelEl.querySelector('[data-text-container]')
 
     this.init()
   }
@@ -69,6 +74,8 @@ class PanelResizer {
 
   setMainContentWidth(width: string | number) {
     this.mainContentEl.style.width = width === 'auto' ? width : `${width}px`
+    this.scrollContainerEl.style.width = width === 'auto' ? width : `${width as number + (this.annotationsOpen ? ANNOTATION_PANEL_WIDTH : 0)}px`
+    this.textContainerEl.style.width = width === 'auto' ? width : `${width}px`
   }
 
   dragToResize() {
@@ -81,7 +88,7 @@ class PanelResizer {
           flexGrow: '0',
           flexBasis: `${Math.max(MIN_PANEL_WIDTH, newWidth)}px`
         })
-        this.setMainContentWidth(this.panelEl.offsetWidth - 4 - (this.annotationsOpen ? 400 : 0))
+        this.setMainContentWidth(this.panelEl.offsetWidth - 4 - (this.annotationsOpen ? ANNOTATION_PANEL_WIDTH : 0))
         return
       }
 
@@ -132,16 +139,17 @@ class PanelResizer {
   setAnnotationsOpen(value: boolean) {
     this.annotationsOpen = value
     if (value) {
+      console.log(this.panelEl.offsetWidth)
       this.setFlexValues({
         flexGrow: this.panelEl.style.flexGrow,
         flexShrink: '0',
-        flexBasis: `${this.panelEl.offsetWidth + 400}px`
+        flexBasis: `${this.panelEl.offsetWidth + ANNOTATION_PANEL_WIDTH}px`
       })
-      this.setMainContentWidth(this.panelEl.offsetWidth - 5)
+      this.setMainContentWidth(this.panelEl.offsetWidth - 4)
     } else {
       this.setFlexValues({
         flexGrow: this.panelEl.style.flexGrow,
-        flexShrink: '1',
+        flexShrink: '0',
         flexBasis: `0px`
       })
     }

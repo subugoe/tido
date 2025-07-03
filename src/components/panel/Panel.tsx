@@ -9,43 +9,28 @@ import PanelHeader from '@/components/panel/PanelHeader.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
 import SelectTextView from '@/components/panel/select-view/SelectTextView.tsx'
-import Annotations from '@/components/panel/annotations/Annotations.tsx'
 
 
 const Panel: FC = React.memo(() => {
-  const { panelId, panelState, resizer, initResizer } = usePanel()
+  const { panelId, panelState, resizer, initResizer, bodyMounted } = usePanel()
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectViewState = useUIStore(state => state.showSelectTextView)
   const showSelectTextView = panelId === newestPanelId && showSelectViewState
 
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
-  const [renderSidebarContent, setRenderSidebarContent] = useState(false)
 
   const cardRef = useRef(null)
 
   useEffect(() => {
-    if (!resizer) return
-    resizer.setAnnotationsOpen(panelState.annotationsOpen)
+    if (!cardRef.current || !bodyMounted) return
+    console.log('panel')
 
-    if (panelState.annotationsOpen) {
-      const timeout = setTimeout(() => {
-        setRenderSidebarContent(true)
-      }, 600)
-
-      return () => clearTimeout(timeout)
-    } else {
-      setRenderSidebarContent(false)
-    }
-  }, [panelState.annotationsOpen])
-
-
-  useEffect(() => {
     initResizer(cardRef.current)
     return () => {
       if (resizer) resizer.clean()
     }
-  }, [])
+  }, [cardRef.current, bodyMounted])
 
   useEffect(() => {
     setIsScrollPanel(scrollPanelIds.includes(panelId))
@@ -61,12 +46,12 @@ const Panel: FC = React.memo(() => {
       id={panelId}
       ref={cardRef}
       className={
-        `panel relative bg-background text-foreground flex border-2 rounded-lg
+        `panel relative bg-background text-foreground flex border-2 rounded-lg overflow-hidden
         ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-border'}
       `}
       data-cy="panel"
     >
-      <div className={`main-content flex flex-col ${!panelState.annotationsOpen ? 'grow-1' : ''}`}>
+      <div className={`main-content flex flex-col ${!panelState.annotationsOpen ? 'grow-war-1' : ''}`}>
         <div
           className={`
             absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs
