@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.8.4](https://github.com/subugoe/tido/compare/v4.8.3...v4.8.4) (2025-07-08)
+
+
+### Bug Fixes
+
+* apply show setting from custom config for each panel ([7ad27b3](https://github.com/subugoe/tido/commit/7ad27b3db0f5c8a450a72fc50adf98c52e1b0fb6))
+
 ### [4.8.3](https://github.com/subugoe/tido/compare/v4.8.2...v4.8.3) (2025-06-19)
 
 
