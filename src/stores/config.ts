@@ -457,15 +457,10 @@ import { i18n } from '@/i18n';
             throw new Error(i18n.global.t('error_showpart_tido_url'));
           } else {
             // showValue needs to be an array of opened panel indices (Integers)
-            s = showValue.split('-').map(Number);
+            urlConfig.show = showValue.split('-').map(Number);
           }
         }
-        if (s === undefined) {
-          // If 's' is not given in URL, then we open all the panels which are given in config
-          urlConfig.show = Array.from({ length: numberPanels }, (value, index) => index);
-        } else {
-          urlConfig.show = s;
-        }
+
         return urlConfig;
       }
 
