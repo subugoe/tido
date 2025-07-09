@@ -21,6 +21,7 @@ const Panel: FC = React.memo(() => {
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
   const [showSidebarContent, setShowSidebarContent] = useState(false)
+  const [showSidebarBorders, setShowSidebarBorders] = useState(false)
 
 
   const cardRef = useRef(null)
@@ -37,12 +38,14 @@ const Panel: FC = React.memo(() => {
     if (!resizer) return
     resizer.setAnnotationsOpen(panelState.annotationsOpen)
     if (panelState.annotationsOpen) {
+      setShowSidebarBorders(true)
       const timeout = setTimeout(() => {
         setShowSidebarContent(true)
       }, 200)
       return () => clearTimeout(timeout)
     } else {
       setShowSidebarContent(false)
+      setShowSidebarBorders(false)
     }
   }, [panelState.annotationsOpen])
 
@@ -73,16 +76,18 @@ const Panel: FC = React.memo(() => {
       />
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
 
-      <div data-panel-header className="panel-header relative px-3 pt-3 pb-5">
-        <PanelHeader />
-        <div data-header-sidebar className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarContent ? 'border-border' : 'border-transparent'}`}>
+      <div className="relative">
+        <div data-panel-header className={`px-3 pt-3 pb-5`}>
+          <PanelHeader />
+        </div>
+        <div data-header-sidebar className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
         </div>
       </div>
-      <div data-scroll-container className={`h-full w-full bg-accent border-t border-border overflow-x-hidden overflow-y-auto relative flex flex-col`}>
-        <div data-text-container className={`min-h-full bg-background p-2`}>
+      <div data-scroll-container className={`h-full w-full bg-accent border-t border-border overflow-x-hidden overflow-y-auto relative`}>
+        <div data-text-container className={`bg-background p-2 min-h-full`}>
           <PanelBody />
         </div>
-        <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarContent ? 'border-border' : 'border-transparent'}`}>
+        <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
           { showSidebarContent && <AnnotationsBody /> }
         </div>
       </div>
