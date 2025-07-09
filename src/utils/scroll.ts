@@ -1,6 +1,7 @@
 const AUTO_SCROLLING_ATTR_NAME = 'data-auto-scrolling'
 
 function syncScrollPosition(source: HTMLElement, target: HTMLElement) {
+  if (!target) return
   setAutoScrolling(target)
   target.scrollTop = (source.scrollTop ?? 0) + 20
 }

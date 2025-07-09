@@ -16,12 +16,11 @@ import { filterAndSortData } from '@/utils/panel.ts'
 
 const TextViewsToggle: FC = () => {
   const { t } = useTranslation()
-  const { panelState } = usePanel()
-  const updatePanel = usePanelStore((state) => state.updatePanel)
+  const { panelState, updatePanel } = usePanel()
   const views = useConfigStore(state => state.config.views)
 
 
-  const defaultButtonsData: ViewButtonData[] = [ {
+  const defaultButtonsData: ViewButtonData[] = [{
     view : 'swap',
     icon: PictureInPicture2,
     title: t('pip_view')
@@ -37,8 +36,7 @@ const TextViewsToggle: FC = () => {
     view: 'image',
     icon: Image ,
     title: t('image_view')
-  },
-  ]
+  }]
 
   const buttonsData: ViewButtonData[] = filterAndSortData(defaultButtonsData, 'view', views)
 
@@ -48,14 +46,13 @@ const TextViewsToggle: FC = () => {
   ) {
     e.preventDefault()
     if (!panelState) return
-    updatePanel(panelState.id, { view: newView })
+    updatePanel({ view: newView, annotationSelectors: [] })
   }
 
   function isDisabled(buttonView: ViewType) {
     return (!panelState.imageExists && ['image', 'swap', 'split'].includes(buttonView))
       || !panelState.contentTypes?.length
   }
-
 
   return (
     <>

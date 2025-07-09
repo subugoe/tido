@@ -9,145 +9,88 @@ import PanelHeader from '@/components/panel/PanelHeader.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
 import SelectTextView from '@/components/panel/select-view/SelectTextView.tsx'
+import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 
-const DEFAULT_PANEL_WIDTH = 600
-const MIN_PANEL_WIDTH = 600
 
 const Panel: FC = React.memo(() => {
-  const { panelId } = usePanel()
+  const { panelId, panelState, resizer, initResizer } = usePanel()
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectViewState = useUIStore(state => state.showSelectTextView)
   const showSelectTextView = panelId === newestPanelId && showSelectViewState
 
-
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
-  const [flexValues, setFlexValues] = useState({
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: '0%'
-  })
+  const [showSidebarContent, setShowSidebarContent] = useState(false)
+
 
   const cardRef = useRef(null)
-  const [resizing, setResizing] = useState(false)
-  const [isHoveringEdge, setIsHoveringEdge] = useState(false)
-
 
   useEffect(() => {
-    // On mount, we need to decide how set the width. If there is space inside the wrapper,
-    // we can keep default flex settings, as they make the panel grow and use the remaining space.
-    // If there is not enough space, we omit all the growing capability and set a default width
-
-    const wrapper = document.getElementById('panels-wrapper')
-    if (!wrapper) return
-
-    const wrapperWidth = wrapper.getBoundingClientRect().width
-    const otherPanelEls = ([...wrapper.querySelectorAll('.panel')] as HTMLElement[])
-      .filter(el => el.id !== '' && el.id !== panelId)
-
-    // Return an array of widths. If a panel is in "grow" mode, it has no flexBasis pixel value.
-    // In that case, we set that value to min width as basis for total width calculation.
-    // The reason is that those panels can also shrink.
-    const otherPanelWidths = otherPanelEls.map(el => {
-      return (el.style.flexBasis.includes('px')) ? parseInt(el.style.flexBasis.replace('px', '')) : MIN_PANEL_WIDTH
-    })
-
-    const otherPanelsTotalWidth = otherPanelWidths.reduce((a, b) => a + b, 0)
-
-    // We are adding here an additional DEFAULT_PANEL_WIDTH for the ghost panel that is the last child in the wrapper.
-    const isFitting = (wrapperWidth - (otherPanelsTotalWidth + DEFAULT_PANEL_WIDTH)) >= 0
-
-    if (!isFitting) {
-      setFlexValues({
-        flexGrow: 0,
-        flexShrink: 0,
-        flexBasis: `${DEFAULT_PANEL_WIDTH}px`
-      })
+    if (!cardRef.current) return
+    initResizer(cardRef.current)
+    return () => {
+      if (resizer) resizer.clean()
     }
   }, [])
 
   useEffect(() => {
-    setIsScrollPanel(scrollPanelIds.includes(panelId))
-  }, [scrollPanelIds, panelId])
-
+    if (!resizer) return
+    resizer.setAnnotationsOpen(panelState.annotationsOpen)
+    if (panelState.annotationsOpen) {
+      const timeout = setTimeout(() => {
+        setShowSidebarContent(true)
+      }, 200)
+      return () => clearTimeout(timeout)
+    } else {
+      setShowSidebarContent(false)
+    }
+  }, [panelState.annotationsOpen])
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!cardRef.current) return
-      if (resizing) {
-        const rect = (cardRef.current as HTMLElement).getBoundingClientRect()
-        const newWidth = e.clientX - rect.left
-        setFlexValues({
-          flexShrink: 0,
-          flexGrow: 0,
-          flexBasis: `${Math.max(MIN_PANEL_WIDTH, newWidth)}px`
-        })
-        return
-      }
-
-      // Hover detection logic (within 8px of right edge)
-      const rect = (cardRef.current as HTMLElement).getBoundingClientRect()
-      const offsetX = e.clientX - rect.left
-      setIsHoveringEdge(offsetX > rect.width - 8 && offsetX <= rect.width)
-    }
-
-    const handleMouseUp = () => setResizing(false)
-
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseup', handleMouseUp)
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [resizing])
-
+    setIsScrollPanel(scrollPanelIds.includes(panelId))
+  }, [scrollPanelIds, panelId])
 
   useEffect(() => {
     const scrollPosX = cardRef.current.offsetLeft - cardRef.current.offsetWidth / 2
     document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
   }, [showSelectTextView])
 
-
   return (
     <div
       id={panelId}
       ref={cardRef}
-      style={{
-        flexGrow: flexValues.flexGrow,
-        flexShrink: flexValues.flexShrink,
-        flexBasis: flexValues.flexBasis,
-        minWidth: `${MIN_PANEL_WIDTH}px`,
-        userSelect: resizing ? 'none' : 'auto',
-        cursor: isHoveringEdge ? 'ew-resize' : 'default',
-      }}
-      onMouseDown={(e) => {
-        if (!cardRef.current) return
-        const rect = (cardRef.current as HTMLElement).getBoundingClientRect()
-        const offsetX = e.clientX - rect.left
-        if (offsetX > rect.width - 8) {
-          setResizing(true)
-        }
-      }}
       className={
-        `panel relative bg-background text-foreground flex flex-col border-2 rounded-lg
+        `panel relative bg-background text-foreground flex flex-col border-2 rounded-lg overflow-hidden transition-[flex-basis]
         ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-border'}
       `}
       data-cy="panel"
     >
       <div
         className={`
-      absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs
-      ${showSelectTextView ? 'opacity-100' : 'opacity-0 pointer-events-none'}
-    `}
+          absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs
+          ${showSelectTextView ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+        `}
       />
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
-      <PanelHeader />
-      <PanelBody />
+
+      <div data-panel-header className="panel-header relative px-3 pt-3 pb-5">
+        <PanelHeader />
+        <div data-header-sidebar className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarContent ? 'border-border' : 'border-transparent'}`}>
+        </div>
+      </div>
+      <div data-scroll-container className={`h-full w-full bg-accent border-t border-border overflow-x-hidden overflow-y-auto relative flex flex-col`}>
+        <div data-text-container className={`min-h-full bg-background p-2`}>
+          <PanelBody />
+        </div>
+        <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarContent ? 'border-border' : 'border-transparent'}`}>
+          { showSidebarContent && <AnnotationsBody /> }
+        </div>
+      </div>
+
       {showSelectTextView && cardRef.current && <SelectTextView parentEl={cardRef.current}  /> }
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
-         -translate-y-1/2 top-1/2 -right-2"
+       -translate-y-1/2 top-1/2 -right-2"
       >
         <GripVertical className="h-4 w-2.5 text-muted-foreground" />
       </div>

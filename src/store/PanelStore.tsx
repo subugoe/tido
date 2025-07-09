@@ -24,7 +24,10 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     contentIndex: 0,
     view: useUIStore.getState().defaultView,
     activeTargetIndex: -1,
-    imageExists: false
+    imageExists: false,
+    annotationsOpen: false,
+    annotations: null,
+    annotationSelectors: []
   }
 }
 

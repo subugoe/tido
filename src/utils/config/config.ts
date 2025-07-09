@@ -222,7 +222,6 @@ export function mergeAndValidateConfig(
   const defaultTranslations =  language === 'en' ? enTranslations : language === 'de' ? deTranslations : {}
   mergedTranslations[language] = { ...defaultTranslations, ...translations.result?.[language] }
 
-
   const errors = {
     ...allowNewCollections.errors,
     ...container.errors,

@@ -13,13 +13,11 @@ import { apiRequest } from '@/utils/api.ts'
 import { useTranslation } from 'react-i18next'
 import Loading from '@/components/ui/loading.tsx'
 
-
 const PanelBody: FC = () => {
   const { panelState, loading, error, setError } = usePanel()
   const { t } = useTranslation()
   const activeContentTypeIndex = panelState.contentIndex
   const [text, setText] = useState<string>('')
-
   function getContentUrlByType(type: string | undefined) {
     if (!type) return undefined
     return panelState?.item?.content.find(c => c.type.includes(type))?.url
@@ -50,16 +48,16 @@ const PanelBody: FC = () => {
   }, [loading, panelState, activeContentTypeIndex])
 
   function renderContent() {
-    if (error) return <ErrorMessage message={error ?? t('unknown_error')} title={t('error_occurred')} />
-    if (loading) return <Loading size={40} />
-
     if (panelState.view === 'swap') return <TextViewOne textHtml={text} />
     else if (panelState.view === 'split') return <SplitView textHtml={text} />
     else if (panelState.view === 'text') return <TextView textHtml={text} />
     else if (panelState.view === 'image') return <ImageView />
   }
 
-  return <div className="overflow-hidden border-t border-border flex-1">{ renderContent() }</div>
+  if (error) return <ErrorMessage message={error ?? t('unknown_error')} title={t('error_occurred')} />
+  if (loading) return <Loading size={40} />
+
+  return renderContent()
 }
 
 export default PanelBody

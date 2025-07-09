@@ -2,6 +2,10 @@ import { request } from '@/utils/http'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { ViewButtonData, PanelConfig } from '@/types'
 
+export const DEFAULT_PANEL_WIDTH = 600
+export const MIN_PANEL_WIDTH = 600
+export const ANNOTATION_PANEL_WIDTH = 400
+
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
   let manifestUrl: string = ''

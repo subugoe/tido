@@ -19,7 +19,7 @@ const Actions: FC = () => {
     <>
       <Popover open={isOpen} onOpenChange={(value) => setIsOpen(value)}>
         <PopoverTrigger asChild>
-          <Button className="-mr-2" variant="ghost" size="icon">
+          <Button variant="ghost" size="icon">
             <Ellipsis />
           </Button>
         </PopoverTrigger>

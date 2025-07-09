@@ -41,7 +41,7 @@ declare global {
 
   interface AnnotationContent {
     type: 'TextualBody'
-    value: string
+    value: string | object
     format: AnnotationContentFormat
     'x-content-type': AnnotationContentType
   }
@@ -146,8 +146,11 @@ declare global {
     view: ViewType
     imageUrl?: string
     activeTargetIndex: number
-    config: PanelConfig,
+    config: PanelConfig
     imageExists: boolean
+    annotationsOpen: boolean
+    annotations: Annotation[] | null
+    annotationSelectors: string[]
   }
 
   type ItemType = 'section' | 'page' | 'full'

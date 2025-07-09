@@ -1,0 +1,11 @@
+{
+  "lang": "de",
+  "panels": [
+    {
+      "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
+    }
+  ],
+  "rootCollections": [
+    "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
+  ]
+}

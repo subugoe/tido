@@ -13,7 +13,7 @@ const ContentTypesToggle: FC = () => {
 
   function handleTextTabClick(value: string) {
     const index = contentTypes.findIndex(type => type === value)
-    updatePanel({ contentIndex: index })
+    setTimeout(() => updatePanel({ contentIndex: index }), 100)
   }
 
   if (!panelState || !contentTypes?.length) return <Skeleton className="w-[150px] h-6" />

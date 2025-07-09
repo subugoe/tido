@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
-import { Info, X } from 'lucide-react'
+import { Info, PanelRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
 import TextViewsToggle from '@/components/panel/TextViewsToggle'
@@ -13,17 +13,31 @@ import Actions from '@/components/panel/Actions.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useTranslation } from 'react-i18next'
 
+const SidebarToggle = (props) => {
+  const { panelState, updatePanel } = usePanel()
+
+  function onClick() {
+    updatePanel({
+      annotationsOpen: !panelState.annotationsOpen
+    })
+  }
+  return <>
+    <Button variant="ghost" size="icon" {...props} onClick={onClick}>
+      <PanelRight />
+    </Button>
+  </>
+}
+
 const PanelHeader: FC = () => {
   const { t } = useTranslation()
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const { panelState } = usePanel()
-
   const handleOpenChange = (open: boolean) => {
     setShowMetadataModal(open)
   }
 
   return (
-    <div className="panel-header flex flex-col px-3 pt-3 pb-5">
+    <div className="flex flex-col">
       <div className="flex items-center mb-6">
         <CollectionTitle />
         <div className="ml-1 text-wrap break-words">
@@ -48,8 +62,9 @@ const PanelHeader: FC = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="ml-auto mr-2"><TextViewsToggle /></div>
+        <div className="ml-auto"><TextViewsToggle /></div>
         <Actions />
+        <SidebarToggle className="ml-2" />
       </div>
       <div className="flex justify-center mb-4">
         <NavigationButton isPrev={true} />
