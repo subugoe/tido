@@ -26,8 +26,7 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     activeTargetIndex: -1,
     imageExists: false,
     annotationsOpen: false,
-    annotations: null,
-    annotationSelectors: []
+    annotations: null
   }
 }
 

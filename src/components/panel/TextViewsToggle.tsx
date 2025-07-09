@@ -16,9 +16,8 @@ import { filterAndSortData } from '@/utils/panel.ts'
 
 const TextViewsToggle: FC = () => {
   const { t } = useTranslation()
-  const { panelState, updatePanel } = usePanel()
+  const { panelState, updatePanel, setAnnotationSelectors } = usePanel()
   const views = useConfigStore(state => state.config.views)
-
 
   const defaultButtonsData: ViewButtonData[] = [{
     view : 'swap',
@@ -46,7 +45,8 @@ const TextViewsToggle: FC = () => {
   ) {
     e.preventDefault()
     if (!panelState) return
-    updatePanel({ view: newView, annotationSelectors: [] })
+    updatePanel({ view: newView })
+    setAnnotationSelectors([])
   }
 
   function isDisabled(buttonView: ViewType) {

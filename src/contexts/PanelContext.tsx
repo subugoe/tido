@@ -21,6 +21,10 @@ interface PanelContentType {
   remove: () => void
   resizer: PanelResizer
   initResizer: (el: HTMLElement) => void
+  hoveredAnnotation: string | null
+  setHoveredAnnotation: (value: string | null) => void
+  annotationSelectors: string[]
+  setAnnotationSelectors: (value: string[]) => void
 }
 
 interface PanelProviderProps {
@@ -38,6 +42,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
+  const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
+  const [annotationSelectors, setAnnotationSelectors] = useState([])
 
   const getCollection = useDataStore(state => state.initCollection)
 
@@ -116,7 +122,21 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   }
 
   return (
-    <PanelContext.Provider value={{ panelId, panelState, updatePanel, loading, error, setError, remove, resizer, initResizer }}>
+    <PanelContext.Provider value={{
+      panelId,
+      panelState,
+      updatePanel,
+      loading,
+      error,
+      setError,
+      remove,
+      resizer,
+      initResizer,
+      hoveredAnnotation,
+      setHoveredAnnotation,
+      annotationSelectors,
+      setAnnotationSelectors
+    }}>
       {children}
     </PanelContext.Provider>
   )

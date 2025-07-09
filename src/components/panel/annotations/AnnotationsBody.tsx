@@ -5,7 +5,7 @@ import Annotation from '@/components/panel/annotations/Annotation.tsx'
 const ANNOTATION_GAP = 5
 
 const AnnotationsBody: FC = () => {
-  const { panelState, panelId } = usePanel()
+  const { panelState, panelId, annotationSelectors } = usePanel()
   const [mountedCount, setMountedCount] = useState(0)
   const [elements, setElements] = useState([])
   const [filteredAnnotations, setFilteredAnnotations] = useState([])
@@ -96,7 +96,7 @@ const AnnotationsBody: FC = () => {
   }, [mountedCount, filteredAnnotations])
 
   useEffect(() => {
-    if (panelState.annotationSelectors.length === 0) {
+    if (annotationSelectors.length === 0) {
       setFilteredAnnotations([])
       setMountedCount(0)
     } else {
@@ -109,7 +109,7 @@ const AnnotationsBody: FC = () => {
       setElements([])
       setMountedCount(0)
     }
-  }, [panelState.annotationSelectors])
+  }, [annotationSelectors])
 
   return <div ref={ref} className="transition-opacity opacity-0">
     {filteredAnnotations.map(a => <Annotation

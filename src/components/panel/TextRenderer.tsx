@@ -1,4 +1,4 @@
-import { FC, memo, useEffect, useRef, useState } from 'react'
+import { FC, memo, ReactNode, useEffect, useRef, useState } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
@@ -12,15 +12,40 @@ import React from 'react'
 import { parseStyleString } from '@/utils/html-to-react.ts'
 const END_CLASS = 'tido-text-end'
 
+interface GenericElementProps {
+  tagName: string
+  props: any
+  children: ReactNode
+  isHighlighted: boolean
+  isSelected: boolean
+}
 
-const GenericElement = ({ tagName, props, children, isHighlighted, isSelected = false }) => {
+const GenericElement: FC<GenericElementProps> = memo(({ tagName, props, children, isHighlighted, isSelected = false }) => {
   const Tag = tagName
+  const { hoveredAnnotation, setHoveredAnnotation } = usePanel()
   const [isHovered, setIsHovered] = useState(false)
   function onClick() {
     if (isHighlighted) {
       props.onClick()
     }
   }
+
+  function handleMouseEnter() {
+    if (isHighlighted) {
+      setIsHovered(true)
+      setHoveredAnnotation(props['data-annotation'])
+    }
+  }
+
+  function handleMouseLeave() {
+    setIsHovered(false)
+    setHoveredAnnotation(null)
+  }
+
+  useEffect(() => {
+    if (!hoveredAnnotation) setIsHovered(false)
+    else if (hoveredAnnotation === props['data-annotation']) setIsHovered(true)
+  }, [hoveredAnnotation])
 
   if (tagName === 'br') {
     return <br />
@@ -31,16 +56,17 @@ const GenericElement = ({ tagName, props, children, isHighlighted, isSelected = 
       {...props}
       className={
         (props.className || '') +
-        (isHighlighted ? ' bg-gray-200 relative cursor-pointer' : '')
+        (isHighlighted ? ' bg-gray-200 relative cursor-pointer' : '') +
+        (isHovered ? ' bg-primary/20' : '')
       }
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onClick={onClick}
     >
       {children}
     </Tag>
   )
-}
+})
 
 const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget, isSelected = false) => {
   if (node.nodeType === Node.TEXT_NODE) {
@@ -62,8 +88,13 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget, isSe
     }
   }
 
-  const isHighlighted = matches.includes(node)
-  if (isHighlighted) {
+  const annotationIds = Object.keys(matches).reduce((acc, cur) => {
+    const isMatch = matches[cur].includes(node)
+    return isMatch ? [...acc, cur] : acc
+  }, [])
+
+  if (annotationIds.length > 0) {
+    props['data-annotation'] = annotationIds.join(',')
     props.onClick = () => onClickTarget(node)
   }
 
@@ -72,7 +103,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget, isSe
       key={key}
       tagName={node.tagName.toLowerCase()}
       props={props}
-      isHighlighted={isHighlighted}
+      isHighlighted={annotationIds.length > 0}
       isSelected={isSelected}
     >
       {children}
@@ -82,14 +113,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget, isSe
 
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
-  const { panelState, updatePanel } = usePanel()
-  const [selectors, setSelectors] = useState([])
-
-  useEffect(() => {
-    if (panelState.annotations) {
-      setSelectors(panelState.annotations.map(a => a.target[0].selector.value))
-    }
-  }, [panelState.annotations])
+  const { panelState, setAnnotationSelectors } = usePanel()
 
   const onClickTarget = () => {}
 
@@ -113,18 +137,21 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const reactElements = React.useMemo(() => {
     const matchedSelectors = []
 
-    const matches = selectors.flatMap((selector) => {
-      const matchedNodes = Array.from(parsedDom.body.querySelectorAll(selector))
-      if (matchedNodes.length > 0) matchedSelectors.push(selector)
-      return matchedNodes
-    })
+    const matches = panelState.annotations.reduce((acc, cur) => {
+      const matchedNodes = Array.from(parsedDom.body.querySelectorAll(cur.target[0].selector.value))
+      if (matchedNodes.length > 0) {
+        matchedSelectors.push(cur.target[0].selector.value)
+        acc[cur.id] = matchedNodes
+      }
+      return acc
+    }, {})
 
-    updatePanel({ annotationSelectors: matchedSelectors })
+    setAnnotationSelectors(matchedSelectors)
 
     return Array.from(parsedDom.body.childNodes).map((node, i) =>
       convertNodeToReact(node as HTMLElement, i, matches, onClickTarget)
     )
-  }, [parsedDom, selectors])
+  }, [parsedDom, panelState.annotations])
 
   return <div className="relative">
     <div ref={textWrapperRef}>

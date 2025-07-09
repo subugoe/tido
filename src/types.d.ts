@@ -150,7 +150,6 @@ declare global {
     imageExists: boolean
     annotationsOpen: boolean
     annotations: Annotation[] | null
-    annotationSelectors: string[]
   }
 
   type ItemType = 'section' | 'page' | 'full'

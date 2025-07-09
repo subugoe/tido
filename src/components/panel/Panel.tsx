@@ -63,7 +63,7 @@ const Panel: FC = React.memo(() => {
       id={panelId}
       ref={cardRef}
       className={
-        `panel relative bg-background text-foreground flex flex-col border-2 rounded-lg overflow-hidden transition-[flex-basis]
+        `panel relative bg-background text-foreground flex flex-col border-2 rounded-lg transition-[flex-basis]
         ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-border'}
       `}
       data-cy="panel"

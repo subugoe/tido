@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { parseStyleString } from '@/utils/html-to-react.ts'
 
@@ -40,16 +40,29 @@ const convertNodeToReact = (node, key) => {
 }
 
 const Annotation: FC<Props> = React.memo(({ data, onMount, onClick, selected, top }) => {
-  const { panelId } = usePanel()
+  const { panelId, hoveredAnnotation, setHoveredAnnotation } = usePanel()
   const ref = useRef(null)
   const target = document.getElementById(panelId).querySelector(data.target[0].selector.value)
+  const [isHovered, setIsHovered] = useState(false)
 
   useEffect(() => {
     onMount(target, ref.current, data)
   }, [])
 
+  useEffect(() => {
+    if (!hoveredAnnotation) setIsHovered(false)
+    else if (hoveredAnnotation === data.id) setIsHovered(true)
+  }, [hoveredAnnotation])
+
   function handleClick() {
     onClick(ref.current, data)
+  }
+
+  function handleMouseEnter() {
+    setHoveredAnnotation(data.id)
+  }
+  function handleMouseLeave() {
+    setHoveredAnnotation(null)
   }
 
   const parsedDom = React.useMemo(() => {
@@ -68,8 +81,12 @@ const Annotation: FC<Props> = React.memo(({ data, onMount, onClick, selected, to
   return <>
     <div
       ref={ref}
-      className={`absolute flex-flex-col bg-background p-2 border border-border rounded-lg ${selected ? 'shadow-md' : 'shadow-sm'} transition-all max-h-16 overflow-hidden`}
+      className={`absolute flex-flex-col p-2 rounded-lg border border-border
+      ${selected ? 'shadow-md bg-background' : 'bg-accent border-border hover:bg-background cursor-pointer'}
+      ${isHovered ? 'border-primary' : ''} transition-all max-h-16 overflow-hidden`}
       onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       style={{ top }}
     >
       {children}
