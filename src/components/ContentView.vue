@@ -56,11 +56,14 @@ const contentStyle = computed(() => ({
   fontSize: `${props.fontSize}px`,
 }));
 
+let clickListener = null
+
 watch(
   () => props.url,
   loadContent,
   { immediate: true },
 );
+
 async function loadContent(url) {
   const annotationStore = useAnnotationsStore();
   content.value = '';
@@ -82,7 +85,9 @@ async function loadContent(url) {
 
       const root = textContainer.value;
       annotationStore.addHighlightAttributesToText(root);
-      await annotationStore.addHighlightClickListeners(root);
+
+      if (clickListener) root.removeEventListener('click', clickListener);
+      clickListener = annotationStore.addHighlightClickListeners(root);
 
       // In case of multiple text panels, we need to pass the panel index to track changes on the content in the annotation panel.
       contentStore.setActiveContentMap(props.url, props.panelIndex);

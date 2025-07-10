@@ -328,7 +328,8 @@ export const useAnnotationsStore = defineStore('annotations', () => {
 
   const addHighlightClickListeners = (root: HTMLElement) => {
     if (!root) return;
-    root.addEventListener('click', ({target}) => {
+
+    const listener = ({target}) => {
       // The click event handler works like this:
       // When clicking on the text we pick the whole part of the text which belongs to the highest parent annotation.
       // Since the annotations can be nested we avoid handling each of them separately
@@ -346,7 +347,11 @@ export const useAnnotationsStore = defineStore('annotations', () => {
         return;
       }
       TextEventBus.emit('click', { target })
-    });
+    }
+
+    root.addEventListener('click', listener);
+
+    return listener
   };
 
   function getNearestParentAnnotation(element) {
