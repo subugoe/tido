@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.8.5](https://github.com/subugoe/tido/compare/v4.8.4...v4.8.5) (2025-07-10)
+
+
+### Bug Fixes
+
+* avoid registering text click listeners multiple times ([f0df3d4](https://github.com/subugoe/tido/commit/f0df3d48c873310259fcb5b80d1a89e8d7fde031))
+
 ### [4.8.4](https://github.com/subugoe/tido/compare/v4.8.3...v4.8.4) (2025-07-08)
 
 
