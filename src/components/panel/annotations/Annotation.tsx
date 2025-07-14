@@ -4,7 +4,6 @@ import { parseStyleString } from '@/utils/html-to-react.ts'
 
 interface Props {
   data: Annotation
-  onMount: (target: HTMLElement, el: HTMLElement, annotation: Annotation) => void
   top: number
 }
 
@@ -37,15 +36,10 @@ const convertNodeToReact = (node, key) => {
   </Tag>
 }
 
-const Annotation: FC<Props> = React.memo(({ data, onMount, top }) => {
-  const { panelId, hoveredAnnotation, setHoveredAnnotation, selectedAnnotation, setSelectedAnnotation } = usePanel()
+const Annotation: FC<Props> = React.memo(({ data, top }) => {
+  const {  hoveredAnnotation, setHoveredAnnotation, selectedAnnotation, setSelectedAnnotation } = usePanel()
   const ref = useRef(null)
-  const target = document.getElementById(panelId).querySelector(data.target[0].selector.value)
   const [isHovered, setIsHovered] = useState(false)
-
-  useEffect(() => {
-    onMount(target, ref.current, data)
-  }, [])
 
   useEffect(() => {
     if (!hoveredAnnotation) setIsHovered(false)
@@ -83,6 +77,7 @@ const Annotation: FC<Props> = React.memo(({ data, onMount, top }) => {
   return <>
     <div
       ref={ref}
+      data-annotation={data.id}
       {...(isSelected() ? { 'data-selected': true } : {})}
       className={`absolute flex-flex-col p-2 rounded-lg border border-border
       ${isSelected() ? 'shadow-md bg-background' : 'bg-accent border-border hover:bg-background cursor-pointer'}

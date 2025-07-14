@@ -5,29 +5,19 @@ import Annotation from '@/components/panel/annotations/Annotation.tsx'
 const ANNOTATION_GAP = 5
 
 const AnnotationsBody: FC = () => {
-  const { panelState, panelId, annotationSelectors, selectedAnnotation } = usePanel()
-  const [mountedCount, setMountedCount] = useState(0)
+  const { panelId, filteredAnnotations, selectedAnnotation } = usePanel()
   const [elements, setElements] = useState([])
-  const [filteredAnnotations, setFilteredAnnotations] = useState([])
 
   const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-container]`) as HTMLElement)
   const [yMap, setYMap] = useState({})
+  const [loading, setLoading] = useState(false)
 
   const ref = useRef()
-  const handleChildMount = (target: HTMLElement, el: HTMLElement, annotation) => {
-    setMountedCount(prev => prev + 1)
-    elements.push({
-      target,
-      el,
-      desiredY: target.offsetTop,
-      annotation
-    })
-    setElements(elements)
-  }
 
   useEffect(() => {
-    trackTopChange()
+    if (selectedAnnotation) trackTopChange()
   }, [selectedAnnotation])
+
 
   function trackTopChange() {
     if (elements.length === 0) return
@@ -38,7 +28,6 @@ const AnnotationsBody: FC = () => {
     }
 
     elements.sort((a, b) => a.desiredY - b.desiredY)
-
     for (let i = 0; i < elements.length; i++) {
       const annotationEl = elements[i]
       const lastHeight = i === 0 ? 0 : elements[i - 1].el.offsetHeight
@@ -74,41 +63,53 @@ const AnnotationsBody: FC = () => {
   }
 
   useEffect(() => {
+    if (filteredAnnotations.length === 0) {
+      setElements([])
+    } else {
+      const annotationEls = Array.from(ref.current.childNodes)
+      const _elements = annotationEls.map(el => {
+        const annotation = filteredAnnotations.find(a => a.id === el.getAttribute('data-annotation'))
+        if (!annotation) return
+        const target = document.getElementById(panelId).querySelector(annotation.target[0].selector.value)
+        return {
+          target,
+          el,
+          desiredY: target.offsetTop,
+          annotation
+        }
+      })
+
+      setElements(_elements)
+    }
+
+    return () => {
+      setLoading(true)
+      setElements([])
+    }
+  }, [filteredAnnotations])
+
+  useEffect(() => {
     let resizeObserver
-    if (mountedCount > 0 && mountedCount === filteredAnnotations.length) {
+    let timeout
+    if (elements.length > 0) {
       resizeObserver = new ResizeObserver(entries => {
         if (entries[0].contentRect.width > 0) trackTopChange()
       })
       resizeObserver.observe(textContainer)
-      ref.current.style.opacity = 1
     }
+
+    setLoading(false)
 
     return () => {
       if (resizeObserver) resizeObserver.disconnect()
+      if (timeout) clearTimeout(timeout)
     }
-  }, [mountedCount, filteredAnnotations])
+  }, [elements])
 
-  useEffect(() => {
-    if (annotationSelectors.length === 0) {
-      setFilteredAnnotations([])
-      setMountedCount(0)
-    } else {
-      setFilteredAnnotations(panelState.annotations
-        .filter(a => !!document.getElementById(panelId).querySelector(a.target[0].selector.value)))
-    }
-
-    return () => {
-      if (ref.current) ref.current.style.opacity = 0
-      setElements([])
-      setMountedCount(0)
-    }
-  }, [annotationSelectors])
-
-  return <div ref={ref} className="transition-opacity opacity-0">
+  return <div ref={ref} className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
     {filteredAnnotations.map(a => <Annotation
       data={a}
       key={a.id}
-      onMount={handleChildMount}
       top={yMap[a.id]}
     />)}
   </div>

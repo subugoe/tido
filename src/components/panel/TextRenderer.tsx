@@ -112,7 +112,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
 
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
-  const { panelState, setAnnotationSelectors, setSelectedAnnotation } = usePanel()
+  const { panelState, setSelectedAnnotation, setFilteredAnnotations } = usePanel()
 
   const onClickTarget = (id: string) => {
     const annotation = panelState.annotations.find(a => a.id === id)
@@ -136,24 +136,26 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
     return parser.parseFromString(`${htmlString}<span class="${END_CLASS}"></span>`, 'text/html')
   }, [htmlString])
 
-  const reactElements = React.useMemo(() => {
-    const matchedSelectors = []
-
-    const matches = panelState.annotations.reduce((acc, cur) => {
+  const matchedAnnotationsMap = React.useMemo(() => {
+    return panelState.annotations.reduce((acc, cur) => {
       const matchedNodes = Array.from(parsedDom.body.querySelectorAll(cur.target[0].selector.value))
       if (matchedNodes.length > 0) {
-        matchedSelectors.push(cur.target[0].selector.value)
         acc[cur.id] = matchedNodes
       }
       return acc
     }, {})
-
-    setAnnotationSelectors(matchedSelectors)
-
-    return Array.from(parsedDom.body.childNodes).map((node, i) =>
-      convertNodeToReact(node as HTMLElement, i, matches, onClickTarget)
-    )
   }, [parsedDom, panelState.annotations])
+
+  useEffect(() => {
+    const filteredAnnotations = panelState.annotations.filter(a => matchedAnnotationsMap[a.id])
+    setFilteredAnnotations(filteredAnnotations)
+  }, [matchedAnnotationsMap])
+
+  const reactElements = React.useMemo(() => {
+    return Array.from(parsedDom.body.childNodes).map((node, i) =>
+      convertNodeToReact(node as HTMLElement, i, matchedAnnotationsMap, onClickTarget)
+    )
+  }, [matchedAnnotationsMap])
 
   return <div className="relative">
     <div ref={textWrapperRef}>
