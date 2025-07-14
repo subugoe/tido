@@ -5,8 +5,6 @@ import { parseStyleString } from '@/utils/html-to-react.ts'
 interface Props {
   data: Annotation
   onMount: (target: HTMLElement, el: HTMLElement, annotation: Annotation) => void
-  onClick: (el: HTMLElement, a: Annotation) => void
-  selected: boolean
   top: number
 }
 
@@ -39,8 +37,8 @@ const convertNodeToReact = (node, key) => {
   </Tag>
 }
 
-const Annotation: FC<Props> = React.memo(({ data, onMount, onClick, selected, top }) => {
-  const { panelId, hoveredAnnotation, setHoveredAnnotation } = usePanel()
+const Annotation: FC<Props> = React.memo(({ data, onMount, top }) => {
+  const { panelId, hoveredAnnotation, setHoveredAnnotation, selectedAnnotation, setSelectedAnnotation } = usePanel()
   const ref = useRef(null)
   const target = document.getElementById(panelId).querySelector(data.target[0].selector.value)
   const [isHovered, setIsHovered] = useState(false)
@@ -55,7 +53,7 @@ const Annotation: FC<Props> = React.memo(({ data, onMount, onClick, selected, to
   }, [hoveredAnnotation])
 
   function handleClick() {
-    onClick(ref.current, data)
+    setSelectedAnnotation(data)
   }
 
   function handleMouseEnter() {
@@ -63,6 +61,10 @@ const Annotation: FC<Props> = React.memo(({ data, onMount, onClick, selected, to
   }
   function handleMouseLeave() {
     setHoveredAnnotation(null)
+  }
+
+  function isSelected() {
+    return selectedAnnotation && selectedAnnotation.id === data.id
   }
 
   const parsedDom = React.useMemo(() => {
@@ -81,8 +83,9 @@ const Annotation: FC<Props> = React.memo(({ data, onMount, onClick, selected, to
   return <>
     <div
       ref={ref}
+      {...(isSelected() ? { 'data-selected': true } : {})}
       className={`absolute flex-flex-col p-2 rounded-lg border border-border
-      ${selected ? 'shadow-md bg-background' : 'bg-accent border-border hover:bg-background cursor-pointer'}
+      ${isSelected() ? 'shadow-md bg-background' : 'bg-accent border-border hover:bg-background cursor-pointer'}
       ${isHovered ? 'border-primary' : ''} transition-all max-h-16 overflow-hidden`}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}

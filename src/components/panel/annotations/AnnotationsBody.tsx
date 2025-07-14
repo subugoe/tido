@@ -5,13 +5,12 @@ import Annotation from '@/components/panel/annotations/Annotation.tsx'
 const ANNOTATION_GAP = 5
 
 const AnnotationsBody: FC = () => {
-  const { panelState, panelId, annotationSelectors } = usePanel()
+  const { panelState, panelId, annotationSelectors, selectedAnnotation } = usePanel()
   const [mountedCount, setMountedCount] = useState(0)
   const [elements, setElements] = useState([])
   const [filteredAnnotations, setFilteredAnnotations] = useState([])
 
   const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-container]`) as HTMLElement)
-  const [selected, setSelected] = useState(null)
   const [yMap, setYMap] = useState({})
 
   const ref = useRef()
@@ -26,15 +25,9 @@ const AnnotationsBody: FC = () => {
     setElements(elements)
   }
 
-  const handleAnnotationClick = (el: HTMLElement, a: Annotation) => {
-    elements.forEach(({ el }) => el.removeAttribute('data-selected'))
-    el.setAttribute('data-selected', 'true')
-    setSelected(a)
-  }
-
   useEffect(() => {
     trackTopChange()
-  }, [selected])
+  }, [selectedAnnotation])
 
   function trackTopChange() {
     if (elements.length === 0) return
@@ -54,7 +47,7 @@ const AnnotationsBody: FC = () => {
 
       const actualY = i === 0 ? annotationEl.desiredY : Math.max(annotationEl.desiredY, minY)
 
-      if (selected && annotationEl.annotation.id === selected.id && actualY !== annotationEl.desiredY) {
+      if (selectedAnnotation && annotationEl.annotation.id === selectedAnnotation.id && actualY !== annotationEl.desiredY) {
         moveBefore(i)
         continue
       }
@@ -116,8 +109,6 @@ const AnnotationsBody: FC = () => {
       data={a}
       key={a.id}
       onMount={handleChildMount}
-      onClick={handleAnnotationClick}
-      selected={selected && a.id === selected.id}
       top={yMap[a.id]}
     />)}
   </div>

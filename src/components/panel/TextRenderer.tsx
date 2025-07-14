@@ -17,16 +17,15 @@ interface GenericElementProps {
   props: any
   children: ReactNode
   isHighlighted: boolean
-  isSelected: boolean
 }
 
-const GenericElement: FC<GenericElementProps> = memo(({ tagName, props, children, isHighlighted, isSelected = false }) => {
+const GenericElement: FC<GenericElementProps> = memo(({ tagName, props, children, isHighlighted }) => {
   const Tag = tagName
-  const { hoveredAnnotation, setHoveredAnnotation } = usePanel()
+  const { hoveredAnnotation, setHoveredAnnotation, selectedAnnotation } = usePanel()
   const [isHovered, setIsHovered] = useState(false)
   function onClick() {
     if (isHighlighted) {
-      props.onClick()
+      props.onClick(props['data-annotation'])
     }
   }
 
@@ -56,8 +55,9 @@ const GenericElement: FC<GenericElementProps> = memo(({ tagName, props, children
       {...props}
       className={
         (props.className || '') +
-        (isHighlighted ? ' bg-gray-200 relative cursor-pointer' : '') +
-        (isHovered ? ' bg-primary/20' : '')
+        (isHighlighted ? ' bg-gray-100 relative cursor-pointer' : '') +
+        (isHovered ? ' bg-primary/20' : '') +
+        (selectedAnnotation && selectedAnnotation.id === props['data-annotation'] ? ' bg-primary/40' : '')
       }
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -68,7 +68,7 @@ const GenericElement: FC<GenericElementProps> = memo(({ tagName, props, children
   )
 })
 
-const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget, isSelected = false) => {
+const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   if (node.nodeType === Node.TEXT_NODE) {
     return node.textContent
   }
@@ -95,7 +95,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget, isSe
 
   if (annotationIds.length > 0) {
     props['data-annotation'] = annotationIds.join(',')
-    props.onClick = () => onClickTarget(node)
+    props.onClick = onClickTarget
   }
 
   return (
@@ -104,7 +104,6 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget, isSe
       tagName={node.tagName.toLowerCase()}
       props={props}
       isHighlighted={annotationIds.length > 0}
-      isSelected={isSelected}
     >
       {children}
     </GenericElement>
@@ -113,9 +112,12 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget, isSe
 
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
-  const { panelState, setAnnotationSelectors } = usePanel()
+  const { panelState, setAnnotationSelectors, setSelectedAnnotation } = usePanel()
 
-  const onClickTarget = () => {}
+  const onClickTarget = (id: string) => {
+    const annotation = panelState.annotations.find(a => a.id === id)
+    if (annotation) setSelectedAnnotation(annotation)
+  }
 
   const parsedDom = React.useMemo(() => {
     const observer = new MutationObserver(() => {

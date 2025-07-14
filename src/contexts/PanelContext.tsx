@@ -25,6 +25,8 @@ interface PanelContentType {
   setHoveredAnnotation: (value: string | null) => void
   annotationSelectors: string[]
   setAnnotationSelectors: (value: string[]) => void
+  selectedAnnotation: Annotation | null,
+  setSelectedAnnotation: (value: Annotation | null) => void
 }
 
 interface PanelProviderProps {
@@ -44,6 +46,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
   const [annotationSelectors, setAnnotationSelectors] = useState([])
+  const [selectedAnnotation, setSelectedAnnotation] = useState(null)
+
 
   const getCollection = useDataStore(state => state.initCollection)
 
@@ -135,7 +139,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       hoveredAnnotation,
       setHoveredAnnotation,
       annotationSelectors,
-      setAnnotationSelectors
+      setAnnotationSelectors,
+      selectedAnnotation,
+      setSelectedAnnotation
     }}>
       {children}
     </PanelContext.Provider>
