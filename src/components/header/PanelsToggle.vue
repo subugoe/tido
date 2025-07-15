@@ -119,9 +119,20 @@ function update(index, show) {
 }
 
 function reset() {
+  const initialConfig = window.localStorage.getItem('tido-config')
+  let configJSON;
+  if (initialConfig) {
+    configJSON = JSON.parse(initialConfig);
+  }
+
   toggles.value.forEach((toggle, index) => {
-    toggles.value[index].show = true;
-    configStore.setShowPanel({ index, show: true });
+    let show = true;
+
+    if (configJSON && configJSON.panels[index]) {
+      show = configJSON.panels[index].show ?? true;
+    }
+    toggles.value[index].show = show;
+    configStore.setShowPanel({ index, show });
   });
 }
 

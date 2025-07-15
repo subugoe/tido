@@ -501,6 +501,16 @@ import { i18n } from '@/i18n';
           });
         }
 
+        // To be able to reset to certain pre-configured values,
+        // we save a valid custom config to local storage
+        const configForStorage = {
+          ...defaultConfig,
+          ...customConfig,
+          header
+        };
+
+        window.localStorage.setItem('tido-config', JSON.stringify(configForStorage))
+
         const resultConfig = {
           ...defaultConfig,
           ...customConfig,
@@ -542,10 +552,7 @@ import { i18n } from '@/i18n';
 
     function setShowPanel( {index, show} ) {
       setShowPanelSetter(index, show)
-
-      let panelIndexes = config.value.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
-      if (panelIndexes.length === config.value.panels.length) panelIndexes = [];
-
+      const panelIndexes = config.value.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
       BookmarkService.updateShow(panelIndexes);
     }
 
