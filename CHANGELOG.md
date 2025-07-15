@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.8.6](https://github.com/subugoe/tido/compare/v4.8.5...v4.8.6) (2025-07-15)
+
+
+### Bug Fixes
+
+* reset button sets panel toggles to pre-configured state ([171704c](https://github.com/subugoe/tido/commit/171704c85276cda1a0e3f6a44b0dad40c4ce7b79))
+
 ### [4.8.5](https://github.com/subugoe/tido/compare/v4.8.4...v4.8.5) (2025-07-10)
 
 
