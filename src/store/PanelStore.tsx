@@ -22,7 +22,7 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     manifest: null,
     contentTypes: [],
     contentIndex: 0,
-    view: useUIStore.getState().defaultView,
+    mode: useUIStore.getState().defaultPanelMode,
     activeTargetIndex: -1,
     imageExists: false,
     annotationsOpen: false,

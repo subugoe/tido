@@ -37,7 +37,7 @@ export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
   createThemeStyles(config)
 
   useConfigStore.getState().addCustomConfig(config)
-  useUIStore.getState().updateView(config.views.includes(config.defaultView) ? config.defaultView : config.views[0])
+  useUIStore.getState().updatePanelMode(config.panelModes.includes(config.defaultPanelMode) ? config.defaultPanelMode : config.panelModes[0])
 
   const setTreeNodes = useDataStore(state => state.setTreeNodes)
 

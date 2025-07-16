@@ -19,7 +19,7 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
   const panels = usePanelStore(state => state.panels)
   const updatePanel = usePanelStore(state => state.updatePanel)
   const addPanel = usePanelStore(state => state.addPanel)
-  const enabledSelectTextView = useUIStore(state => state.enabledSelectTextView)
+  const enabledSelectPanelMode = useUIStore(state => state.enabledSelectPanelMode)
 
   const { setSelectedNodeId } = useTree()
 
@@ -37,7 +37,7 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
       useUIStore.getState().updateNewestPanelId(newPanelId)
       addPanel(newPanelConfig, newPanelId)
 
-      if (enabledSelectTextView) useUIStore.getState().updateShowSelectTextView(true)
+      if (enabledSelectPanelMode) useUIStore.getState().updateShowSelectPanelMode(true)
     }
 
     onSelect()

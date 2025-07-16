@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dropdown-menu.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import ThemeToggle from '@/components/header/ThemeToggle.tsx'
-import ToggleSelectView from '@/components/header/ToggleSelectView.tsx'
+import ShowSelectPanelModeToggle from '@/components/header/ShowSelectPanelModeToggle.tsx'
 import { Settings } from 'lucide-react'
 import { DropdownMenuItem } from '@radix-ui/react-dropdown-menu'
 
@@ -30,10 +30,10 @@ const SettingsComp: FC = () => {
             <Settings />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56 p-2 hover:cursor-pointer">
+        <DropdownMenuContent align="end" className="p-2 cursor-pointer">
           {showThemeToggle && <ThemeToggle /> }
           <DropdownMenuItem asChild>
-            <ToggleSelectView />
+            <ShowSelectPanelModeToggle />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

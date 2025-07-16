@@ -4,19 +4,18 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useScrollStore } from '@/store/ScrollStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
 
-import PanelBody from '@/components/panel/PanelBody.tsx'
 import PanelHeader from '@/components/panel/PanelHeader.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
-import SelectTextView from '@/components/panel/select-view/SelectTextView.tsx'
+import SelectPanelModeDialog from '@/components/panel/select-panel-mode/SelectPanelModeDialog.tsx'
 import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, resizer, initResizer } = usePanel()
   const newestPanelId = useUIStore(state => state.newestPanelId)
-  const showSelectViewState = useUIStore(state => state.showSelectTextView)
-  const showSelectTextView = panelId === newestPanelId && showSelectViewState
+  const showSelectModeState = useUIStore(state => state.showSelectPanelMode)
+  const showSelectPanelMode = panelId === newestPanelId && showSelectModeState
 
   const scrollPanelIds = useScrollStore(state => state.panelIds)
   const [isScrollPanel, setIsScrollPanel] = useState(false)
@@ -56,7 +55,7 @@ const Panel: FC = React.memo(() => {
   useEffect(() => {
     const scrollPosX = cardRef.current.offsetLeft - cardRef.current.offsetWidth / 2
     document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
-  }, [showSelectTextView])
+  }, [showSelectPanelMode])
 
   return (
     <div
@@ -71,7 +70,7 @@ const Panel: FC = React.memo(() => {
       <div
         className={`
           absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs
-          ${showSelectTextView ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+          ${showSelectPanelMode ? 'opacity-100' : 'opacity-0 pointer-events-none'}
         `}
       />
       {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
@@ -92,7 +91,7 @@ const Panel: FC = React.memo(() => {
         </div>
       </div>
 
-      {showSelectTextView && cardRef.current && <SelectTextView parentEl={cardRef.current}  /> }
+      {showSelectPanelMode && cardRef.current && <SelectPanelModeDialog parentEl={cardRef.current} />}
       <div
         className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted
        -translate-y-1/2 top-1/2 -right-2"

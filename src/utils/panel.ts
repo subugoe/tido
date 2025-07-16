@@ -1,6 +1,6 @@
 import { request } from '@/utils/http'
 import { usePanelStore } from '@/store/PanelStore.tsx'
-import { ViewButtonData, PanelConfig } from '@/types'
+import { PanelModeButtonData, PanelConfig } from '@/types'
 
 export const DEFAULT_PANEL_WIDTH = 600
 export const MIN_PANEL_WIDTH = 600
@@ -73,7 +73,7 @@ export function isNewManifest(manifest: Manifest): boolean {
   return true
 }
 
-export function filterAndSortData( data: ViewButtonData[], key: string,  orderArray: string[]) {
+export function filterAndSortData( data: PanelModeButtonData[], key: string,  orderArray: string[]) {
   // data array to have its keys sorted according to 'orderArray'
   return orderArray.map(orderItem => {
     return data.find(obj => (obj[key] as string).toLowerCase() === orderItem.toLowerCase())

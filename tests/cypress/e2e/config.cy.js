@@ -28,7 +28,7 @@ describe('Config', () => {
   runConfigTest('lang=de', 'translations: read from default `de` file', () => {
     cy.get('[data-cy="new-panel"]').should('have.text', 'Neues Panel hinzufügen')
   });
-  runConfigTest('defaultView=split', 'defaultView: split', () => {
+  runConfigTest('defaultPanelMode=split', 'defaultPanelMode: split', () => {
     cy.get('[data-cy="split"]').should('have.attr', 'data-selected', 'true')
   });
   runConfigTest('panelPlaceholder=false', 'panelPlaceholder: false', () => {

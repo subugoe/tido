@@ -3,7 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Info, PanelRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
-import TextViewsToggle from '@/components/panel/TextViewsToggle'
+import PanelModeToggle from '@/components/panel/PanelModeToggle.tsx'
 import PanelTitle from '@/components/panel/PanelTitle.tsx'
 import ContentTypesToggle from '@/components/panel/ContentTypesToggle.tsx'
 import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
@@ -62,7 +62,7 @@ const PanelHeader: FC = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="ml-auto"><TextViewsToggle /></div>
+        <div className="ml-auto"><PanelModeToggle /></div>
         <Actions />
         <SidebarToggle className="ml-2" />
       </div>

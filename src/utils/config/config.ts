@@ -4,7 +4,7 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, Translation, TranslationsConfig, ViewType } from '@/types'
+import { TidoConfig, Translation, TranslationsConfig, PanelMode } from '@/types'
 
 type ValidationResult<T> = {
   result: T;
@@ -37,15 +37,15 @@ function validateContainer(input: any): ValidationResult<TidoConfig['container']
   return { result, errors }
 }
 
-function validateDefaultView(input: any): ValidationResult<TidoConfig['defaultView']> {
+function validateDefaultPanelMode(input: any): ValidationResult<TidoConfig['defaultPanelMode']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'string' && ['swap', 'split', 'text', 'image'].includes(input)
-      ? input as ViewType
+      ? input as PanelMode
       : (() => {
         if (input !== undefined)
-          errors['defaultView'] = 'defaultView must be a string'
-        return defaultConfig.defaultView
+          errors['defaultPanelMode'] = 'defaultPanelMode must be a string'
+        return defaultConfig.defaultPanelMode
       })()
   return { result, errors }
 }
@@ -166,14 +166,14 @@ function validateTranslations(input: any): ValidationResult<TidoConfig['translat
   return { result, errors }
 }
 
-function validateViews(input: any): ValidationResult<TidoConfig['views']> {
-  const defaultViews: ViewType[] = ['swap', 'split', 'text', 'image']
+function validatePanelModes(input: any): ValidationResult<TidoConfig['panelModes']> {
+  const defaultPanelModes: PanelMode[] = ['swap', 'split', 'text', 'image']
   const errors: Record<string, string> = {}
 
-  const result = Array.isArray(input) ? input.filter(item => defaultViews.includes(item)) : (() => {
+  const result = Array.isArray(input) ? input.filter(item => defaultPanelModes.includes(item)) : (() => {
     if (input !== undefined)
-      errors['views'] = 'must be an array'
-    return defaultConfig.views ?? []
+      errors['panelModes'] = 'must be an array'
+    return defaultConfig.panelModes ?? []
   })()
 
   return { result, errors }
@@ -203,8 +203,8 @@ export function mergeAndValidateConfig(
 
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
-  const views = validateViews(userConfig.views)
-  const defaultView = validateDefaultView(userConfig.defaultView)
+  const panelModes = validatePanelModes(userConfig.panelModes)
+  const defaultPanelMode = validateDefaultPanelMode(userConfig.defaultPanelMode)
   const lang = validateLang(userConfig.lang)
   const panels = validatePanels(userConfig.panels)
   const showAddNewPanelButton = validateShowNewCollectionButton(userConfig.showAddNewPanelButton)
@@ -225,7 +225,7 @@ export function mergeAndValidateConfig(
   const errors = {
     ...allowNewCollections.errors,
     ...container.errors,
-    ...defaultView.errors,
+    ...defaultPanelMode.errors,
     ...lang.errors,
     ...panels.errors,
     ...rootCollections.errors,
@@ -236,14 +236,14 @@ export function mergeAndValidateConfig(
     ...theme.errors,
     ...title.errors,
     ...translations.errors,
-    ...views.errors,
+    ...panelModes.errors,
   }
 
   const config: TidoConfig = {
     allowNewCollections: allowNewCollections.result,
     container: container.result,
     panels: panels.result,
-    defaultView: defaultView.result,
+    defaultPanelMode: defaultPanelMode.result,
     lang: lang.result,
     rootCollections: rootCollections.result,
     showAddNewPanelButton: showAddNewPanelButton.result,
@@ -253,7 +253,7 @@ export function mergeAndValidateConfig(
     theme: theme.result,
     title: title.result,
     translations: mergedTranslations,
-    views: views.result,
+    panelModes: panelModes.result,
   }
 
   return { config, errors }

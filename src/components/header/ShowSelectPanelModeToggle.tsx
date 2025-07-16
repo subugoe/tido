@@ -6,12 +6,12 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { Switch } from '@/components/ui/switch'
 
 
-const ToggleSelectView: FC = () => {
-  const [enabled, setEnabled]  = useState(useUIStore.getState().enabledSelectTextView)
+const ShowSelectPanelModeToggle: FC = () => {
+  const [enabled, setEnabled]  = useState(useUIStore.getState().enabledSelectPanelMode)
   const { t } = useTranslation()
 
-  const updateEnabledSelectViewModal = useUIStore.getState().updateEnabledSelectTextView
-  const externalToggle = useUIStore(state => state.enabledSelectTextView)
+  const updateEnabledSelectModeModal = useUIStore.getState().updateEnabledSelectPanelMode
+  const externalToggle = useUIStore(state => state.enabledSelectPanelMode)
 
   useEffect(() => {
     setEnabled(externalToggle)
@@ -20,17 +20,17 @@ const ToggleSelectView: FC = () => {
   function handleSwitchClick(e) {
     e.stopPropagation()
     if (enabled) {
-      updateEnabledSelectViewModal(false)
+      updateEnabledSelectModeModal(false)
       return
     }
-    updateEnabledSelectViewModal(true)
+    updateEnabledSelectModeModal(true)
   }
 
   return (
     <DropdownMenuItem>
       <div className="flex items-center space-x-2">
-        <span className="hover:cursor-pointer">{t('enable_select_view_modal')}</span>
-        <Switch id="toggle-select-view-modal"
+        <label htmlFor="toggle-select-panel-mode-dialog" className="cursor-pointer whitespace-nowrap">{t('enable_select_panel_mode_dialog')}</label>
+        <Switch id="toggle-select-panel-mode-dialog"
           checked={enabled}
           onClick={(e) => handleSwitchClick(e)}
         />
@@ -39,4 +39,4 @@ const ToggleSelectView: FC = () => {
   )
 }
 
-export default ToggleSelectView
+export default ShowSelectPanelModeToggle

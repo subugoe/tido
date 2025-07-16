@@ -10,35 +10,35 @@ import {
   DialogHeader, DialogOverlay, DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button.tsx'
-import { ViewType } from '@/types'
-import Views from '@/components/panel/select-view/Views.tsx'
-import DisableSelectView from '@/components/panel/select-view/DisableSelectView.tsx'
+import { PanelMode } from '@/types'
+import Modes from '@/components/panel/select-panel-mode/Modes.tsx'
+import DontAskAgain from '@/components/panel/select-panel-mode/DontAskAgain.tsx'
 
 
-interface SelectTextViewProps {
+interface SelectPanelModeProps {
   parentEl?: HTMLElement,
 }
 
-const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
+const SelectPanelModeDialog: FC<SelectPanelModeProps> = ({ parentEl }) => {
   const [showDialog, setShowDialog] = useState(true)
   const { panelState, updatePanel } = usePanel()
   const UIState = useUIStore.getState()
 
-  const [selectedView, setSelectedView] = useState(UIState.defaultView)
-  const updateEnabledSelectTextView = UIState.updateEnabledSelectTextView
+  const [selectedMode, setSelectedMode] = useState(UIState.defaultPanelMode)
+  const updateEnabledSelectPanelMode = UIState.updateEnabledSelectPanelMode
   const { t } = useTranslation()
 
   const isChecked = useRef<boolean>(false)
 
 
-  function handleConfirm(selectedView: ViewType) {
-    const newView = panelState.imageExists ? selectedView : 'text'
-    updatePanel({ view: newView })
-    useUIStore.getState().updateView(selectedView)
+  function handleConfirm(selectedMode: PanelMode) {
+    const newMode = panelState.imageExists ? selectedMode : 'text'
+    updatePanel({ mode: newMode })
+    useUIStore.getState().updatePanelMode(selectedMode)
 
-    if (isChecked.current) updateEnabledSelectTextView(false)
+    if (isChecked.current) updateEnabledSelectPanelMode(false)
     setShowDialog(false)
-    useUIStore.getState().updateShowSelectTextView(false)
+    useUIStore.getState().updateShowSelectPanelMode(false)
   }
 
   function updateCheckedValue(newValue) {
@@ -55,14 +55,14 @@ const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
       >
         <DialogHeader>
           <DialogTitle>
-            <div className="text-[15px]">{ t('please_select_view') }</div>
+            <div className="text-[15px]">{ t('please_select_mode') }</div>
           </DialogTitle>
         </DialogHeader>
-        <Views updateSelectedButton={setSelectedView} />
+        <Modes updateSelectedButton={setSelectedMode} />
         <div className="flex">
           <DialogFooter className="flex mt-2 w-full">
-            <DisableSelectView updateCheckedValue={updateCheckedValue} />
-            <Button className="ml-auto" onClick={() => handleConfirm(selectedView)}> {t('confirm')}</Button>
+            <DontAskAgain onChange={updateCheckedValue} />
+            <Button className="ml-auto" onClick={() => handleConfirm(selectedMode)}> {t('confirm')}</Button>
           </DialogFooter>
         </div>
       </DialogContent>
@@ -70,4 +70,4 @@ const SelectTextView: FC<SelectTextViewProps> = ({ parentEl }) => {
   )
 }
 
-export default SelectTextView
+export default SelectPanelModeDialog

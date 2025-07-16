@@ -1,5 +1,5 @@
 {
-  "defaultView": "split",
+  "defaultPanelMode": "split",
   "lang": "de",
   "panels": [
     {
@@ -22,5 +22,5 @@
   "rootCollections": [
     "http://localhost:8181/4w/reproduction/collection.json"
   ],
-  "views": [ "split", "text", "image"]
+  "panelModes": [ "split", "text", "image"]
 }

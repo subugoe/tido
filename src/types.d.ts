@@ -143,7 +143,7 @@ declare global {
     item: Item | null
     contentTypes: string[]
     contentIndex: number
-    view: ViewType
+    mode: PanelMode
     imageUrl?: string
     activeTargetIndex: number
     config: PanelConfig
@@ -301,16 +301,16 @@ export interface PanelConfig {
   itemIndex?: number
 }
 
-export type ViewType = 'swap' | 'split' | 'text' | 'image'
+export type PanelMode = 'swap' | 'split' | 'text' | 'image'
 
-export interface ViewButtonData {
-  view: ViewType,
+export interface PanelModeButtonData {
+  mode: PanelMode,
   icon: React.Element,
   title: string
 }
 
 export interface ThemeConfig {
-  forceMode?: string
+  forcePanelMode?: string
   primaryColor: string
 }
 
@@ -325,7 +325,7 @@ export interface TranslationsConfig {
 export interface TidoConfig {
   allowNewCollections: boolean
   container: string
-  defaultView: ViewType
+  defaultPanelMode: PanelMode
   lang: string
   rootCollections: string[]
   showAddNewPanelButton: boolean
@@ -336,7 +336,7 @@ export interface TidoConfig {
   theme: ThemeConfig
   title: string
   translations: TranslationsConfig,
-  views: ViewType[]
+  panelModes: PanelMode[]
 }
 
 export interface TidoProps {

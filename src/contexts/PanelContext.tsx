@@ -7,7 +7,7 @@ import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
-import { ViewType } from '@/types'
+import { PanelMode } from '@/types'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -53,9 +53,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
   const panelState = usePanelStore(state => state.getPanel(panelId))
 
-  function getView(existsImage: boolean, textView: ViewType) {
-    if (existsImage) return panelState.view
-    return textView
+  function getPanelMode(existsImage: boolean, panelMode: PanelMode) {
+    if (existsImage) return panelState.mode
+    return panelMode
   }
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           collectionId: collection.id,
           manifest,
           item,
-          view: getView(imageExists, 'text'),
+          mode: getPanelMode(imageExists, 'text'),
           contentTypes,
           activeTargetIndex: -1,
           imageExists,

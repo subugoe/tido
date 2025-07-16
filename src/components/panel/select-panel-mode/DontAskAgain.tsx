@@ -5,16 +5,16 @@ import { Checkbox } from '@/components/ui/checkbox.tsx'
 
 
 interface Props {
-  updateCheckedValue: (value: boolean) => void
+  onChange: (value: boolean) => void
 }
 
-const DisableSelectView: FC<Props> = ({ updateCheckedValue }) => {
+const DontAskAgain: FC<Props> = ({ onChange }) => {
   const isChecked = useRef<boolean>(false)
   const { t } = useTranslation()
 
   function handleCheckedChange(checked) {
     isChecked.current = !!checked
-    updateCheckedValue(isChecked.current)
+    onChange(isChecked.current)
   }
 
   return (
@@ -30,4 +30,4 @@ const DisableSelectView: FC<Props> = ({ updateCheckedValue }) => {
   )
 }
 
-export default DisableSelectView
+export default DontAskAgain

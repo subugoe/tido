@@ -1,6 +1,5 @@
 import { FC, MouseEvent } from 'react'
 
-import { usePanelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext'
 import { useTranslation } from 'react-i18next'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
@@ -10,47 +9,47 @@ import { Skeleton } from '@/components/ui/skeleton.tsx'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 import { PictureInPicture2, Image, AlignCenter, Columns2 } from 'lucide-react'
 
-import { ViewButtonData, ViewType } from '@/types'
+import { PanelModeButtonData, PanelMode } from '@/types'
 import { filterAndSortData } from '@/utils/panel.ts'
 
 
-const TextViewsToggle: FC = () => {
+const PanelModeToggle: FC = () => {
   const { t } = useTranslation()
-  const { panelState, updatePanel, setAnnotationSelectors } = usePanel()
-  const views = useConfigStore(state => state.config.views)
+  const { panelState, updatePanel, setFilteredAnnotations } = usePanel()
+  const panelModes = useConfigStore(state => state.config.panelModes)
 
-  const defaultButtonsData: ViewButtonData[] = [{
-    view : 'swap',
+  const defaultButtonsData: PanelModeButtonData[] = [{
+    mode : 'swap',
     icon: PictureInPicture2,
-    title: t('pip_view')
+    title: t('pip_mode')
   },{
-    view : 'split',
+    mode : 'split',
     icon: Columns2 ,
-    title: t('split_view')
+    title: t('split_mode')
   },{
-    view: 'text',
+    mode: 'text',
     icon: AlignCenter ,
-    title: t('text_view')
+    title: t('text_mode')
   },{
-    view: 'image',
+    mode: 'image',
     icon: Image ,
-    title: t('image_view')
+    title: t('image_mode')
   }]
 
-  const buttonsData: ViewButtonData[] = filterAndSortData(defaultButtonsData, 'view', views)
+  const buttonsData: PanelModeButtonData[] = filterAndSortData(defaultButtonsData, 'mode', panelModes)
 
-  function handleTextViewClick(
+  function handlePanelModeClick(
     e: MouseEvent<HTMLButtonElement>,
-    newView: ViewType
+    newPanelMode: PanelMode
   ) {
     e.preventDefault()
     if (!panelState) return
-    updatePanel({ view: newView })
-    setAnnotationSelectors([])
+    updatePanel({ mode: newPanelMode })
+    setFilteredAnnotations([])
   }
 
-  function isDisabled(buttonView: ViewType) {
-    return (!panelState.imageExists && ['image', 'swap', 'split'].includes(buttonView))
+  function isDisabled(buttonPanelMode: PanelMode) {
+    return (!panelState.imageExists && ['image', 'swap', 'split'].includes(buttonPanelMode))
       || !panelState.contentTypes?.length
   }
 
@@ -62,16 +61,16 @@ const TextViewsToggle: FC = () => {
           {buttonsData.map((button) => {
             const Icon = button.icon
 
-            return (<TooltipProvider key={button.view} delayDuration={400}>
+            return (<TooltipProvider key={button.mode} delayDuration={400}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={(e) => handleTextViewClick(e, button.view)}
-                    variant={panelState.view === button.view ? 'secondary' : 'ghost'}
+                    onClick={(e) => handlePanelModeClick(e, button.mode)}
+                    variant={panelState.mode === button.mode ? 'secondary' : 'ghost'}
                     size="icon"
-                    disabled={isDisabled(button.view)}
-                    data-selected={panelState.view === button.view}
-                    data-cy={button.view}
+                    disabled={isDisabled(button.mode)}
+                    data-selected={panelState.mode === button.mode}
+                    data-cy={button.mode}
                   >
                     <Icon />
                   </Button>
@@ -88,4 +87,4 @@ const TextViewsToggle: FC = () => {
   )
 }
 
-export default TextViewsToggle
+export default PanelModeToggle

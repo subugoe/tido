@@ -1,6 +1,6 @@
 {
   "allowNewCollections": true,
-  "defaultView": "split",
+  "defaultMode": "split",
   "lang": "de",
   "panels": [
     {

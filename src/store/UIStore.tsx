@@ -1,32 +1,32 @@
 import { create } from 'zustand'
-import { ViewType } from '@/types'
+import { PanelMode } from '@/types'
 
 interface UIStoreTypes {
-  showSelectTextView: boolean,
-  enabledSelectTextView: boolean,
+  showSelectPanelMode: boolean,
+  enabledSelectPanelMode: boolean,
   newestPanelId: string,
-  defaultView: ViewType,
-  updateShowSelectTextView: (show: boolean) => void,
-  updateEnabledSelectTextView: (show: boolean) => void,
+  defaultPanelMode: PanelMode,
+  updateShowSelectPanelMode: (show: boolean) => void,
+  updateEnabledSelectPanelMode: (show: boolean) => void,
   updateNewestPanelId: (newPanelId: string) => void,
-  updateView: (view: ViewType) => void,
+  updatePanelMode: (mode: PanelMode) => void,
 }
 
 export const useUIStore = create<UIStoreTypes>((set) => ({
-  showSelectTextView: false,
-  enabledSelectTextView: true,
+  showSelectPanelMode: false,
+  enabledSelectPanelMode: true,
   newestPanelId: '',
-  defaultView: 'swap',
-  updateShowSelectTextView: (show: boolean) => {
-    set({ showSelectTextView: show })
+  defaultPanelMode: 'swap',
+  updateShowSelectPanelMode: (show: boolean) => {
+    set({ showSelectPanelMode: show })
   },
-  updateEnabledSelectTextView: (show: boolean) => {
-    set({ enabledSelectTextView: show })
+  updateEnabledSelectPanelMode: (show: boolean) => {
+    set({ enabledSelectPanelMode: show })
   },
   updateNewestPanelId: (newPanelId) => {
     set({ newestPanelId: newPanelId })
   },
-  updateView: (newView: ViewType) => {
-    set({ defaultView: newView })
+  updatePanelMode: (newPanelMode: PanelMode) => {
+    set({ defaultPanelMode: newPanelMode })
   }
 }))

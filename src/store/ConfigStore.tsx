@@ -12,7 +12,7 @@ interface ConfigStoreType {
 export const useConfigStore = create<ConfigStoreType>((set, get) => ({
   config: defaultConfig,
   addCustomConfig: (config: TidoConfig) => {
-    useUIStore.getState().updateView(config.defaultView)
+    useUIStore.getState().updatePanelMode(config.defaultPanelMode)
     set({ config })
   },
   addRootCollection: (newRootCollection: string) => {
