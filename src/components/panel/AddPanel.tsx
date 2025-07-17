@@ -9,16 +9,17 @@ import { useUIStore } from '@/store/UIStore.tsx'
 const Panel: FC = () => {
   const { t } = useTranslation()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const enabledSelectTextView = useUIStore(state => state.enabledSelectTextView)
+  const enabledSelectTextView = useUIStore(state => state.enabledSelectPanelMode)
 
   function onConfirm() {
     setIsDialogOpen(false)
-    if (enabledSelectTextView) useUIStore.getState().updateShowSelectTextView(true)
+    if (enabledSelectTextView) useUIStore.getState().updateShowSelectPanelMode(true)
   }
 
   return (
     <>
       <div
+        data-panel-placeholder
         className={
           `group relative bg-background text-foreground flex shrink-0 flex-col items-center justify-center w-[600px] hover:border-primary border-2 border-border rounded-lg
         p-3 px-4 cursor-pointer transition-all`}

@@ -1,92 +1,89 @@
-import { ANNOTATION_PANEL_WIDTH, DEFAULT_PANEL_WIDTH, MIN_PANEL_WIDTH } from '@/utils/panel.ts'
+import {
+  ANNOTATION_PANEL_WIDTH,
+  MIN_PANEL_WIDTH,
+  PANEL_BORDER_WIDTH,
+  PANEL_GAP
+} from '@/utils/panel.ts'
+import { PanelMode } from '@/types'
 
 
 class PanelResizer {
+  wrapper: HTMLElement
   panelEl: HTMLElement
   panelId: string
+  panelMode: PanelMode
   textContainerEl: HTMLElement
   scrollContainerEl: HTMLElement
+  imageContainerEl: HTMLElement
   headerEl: HTMLElement
   sidebarEl: HTMLElement
   headerSidebarEl: HTMLElement
+  resizeHandle: HTMLElement
+
   eventListeners = []
   isResizing = false
   annotationsOpen = false
-  userWidth = null
-
-  constructor(panelEl: HTMLElement) {
-    this.init(panelEl)
+  lastWidth = null
+  widthByMode = {
+    'swap': (width) => width,
+    'text': (width) => width,
+    'image': (width) => width,
+    'split': (width) => width / 2,
   }
 
-  init(panelEl: HTMLElement) {
+  constructor(panelEl: HTMLElement, panelMode: PanelMode) {
+    this.init(panelEl, panelMode)
+  }
+
+  init(panelEl: HTMLElement, panelMode: PanelMode) {
+    this.wrapper = document.getElementById('panels-wrapper')
     this.panelEl = panelEl
     this.panelId = this.panelEl.id
     this.scrollContainerEl = this.panelEl.querySelector('[data-scroll-container]')
     this.textContainerEl = this.panelEl.querySelector('[data-text-container]')
+    this.imageContainerEl = this.panelEl.querySelector('[data-image-container]')
     this.headerEl = this.panelEl.querySelector('[data-panel-header]')
     this.sidebarEl = this.panelEl.querySelector('[data-sidebar-container]')
     this.headerSidebarEl = this.panelEl.querySelector('[data-header-sidebar]')
+    this.resizeHandle = this.panelEl.querySelector('[data-resize-handle]')
 
-    // On mount, we need to decide how set the width. If there is space inside the wrapper,
-    // we can keep default flex settings, as they make the panel grow and use the remaining space.
-    // If there is not enough space, we omit all the growing capability and set a default width
+    this.panelMode = panelMode
 
     this.panelEl.style.minWidth = `${MIN_PANEL_WIDTH}px`
 
-    const wrapper = document.getElementById('panels-wrapper')
-    if (!wrapper) return
-
-    const wrapperWidth = wrapper.getBoundingClientRect().width
-    const otherPanelEls = ([...wrapper.querySelectorAll('.panel')] as HTMLElement[])
-      .filter(el => el.id !== '' && el.id !== this.panelId)
-
-    // Return an array of widths. If a panel is in "grow" mode, it has no flexBasis pixel value.
-    // In that case, we set that value to min width as basis for total width calculation.
-    // The reason is that those panels can also shrink.
-    const otherPanelWidths = otherPanelEls.map(el => {
-      return (el.style.flexBasis.includes('px')) ? parseInt(el.style.flexBasis.replace('px', '')) : MIN_PANEL_WIDTH
-    })
-
-    const otherPanelsTotalWidth = otherPanelWidths.reduce((a, b) => a + b, 0)
-
-    // We are adding here an additional DEFAULT_PANEL_WIDTH for the ghost panel that is the last child in the wrapper.
-    const isFitting = (wrapperWidth - (otherPanelsTotalWidth + DEFAULT_PANEL_WIDTH)) >= 0
-
-    if (!isFitting) {
-      this.setFlexValues({
-        flexGrow: '0',
-        flexShrink: '0',
-        flexBasis: `${DEFAULT_PANEL_WIDTH}px`
-      })
-    } else {
-      this.setFlexValues({})
-    }
-
-    this.setMainContentWidth('100%')
-
+    this.resize()
     this.dragToResize()
   }
 
   handleTextUpdate() {
-    const width = this.annotationsOpen ? Math.max(this.panelEl.offsetWidth - ANNOTATION_PANEL_WIDTH, MIN_PANEL_WIDTH) : '100%'
+    const width = (this.annotationsOpen ? Math.max(this.panelEl.offsetWidth - ANNOTATION_PANEL_WIDTH, MIN_PANEL_WIDTH) : this.panelEl.offsetWidth) - PANEL_BORDER_WIDTH * 2
     this.setMainContentWidth(width)
   }
 
-  setFlexValues({
-    flexGrow = '1',
-    flexShrink = '1',
-    flexBasis = '0px'
-  }) {
-    this.panelEl.style.flexGrow = flexGrow.toString()
-    this.panelEl.style.flexShrink = flexShrink.toString()
-    this.panelEl.style.flexBasis = flexBasis
+  setMainContentWidth(width: number) {
+    this.textContainerEl.style.width = `${this.widthByMode[this.panelMode](width)}px`
+    this.imageContainerEl.style.width = `${this.widthByMode[this.panelMode](width)}px`
+    this.headerEl.style.width = `${width}px`
+    this.sidebarEl.style.left = `${this.widthByMode[this.panelMode](width)}px`
+    this.headerSidebarEl.style.left = `${width}px`
   }
 
-  setMainContentWidth(width: string | number) {
-    this.textContainerEl.style.width = width === '100%' ? width : `${width}px`
-    this.headerEl.style.width = width === '100%' ? width : `${width}px`
-    this.sidebarEl.style.left = width === '100%' ? this.panelEl.offsetWidth + 'px' : `${width}px`
-    this.headerSidebarEl.style.left = width === '100%' ? this.panelEl.offsetWidth + 'px' : `${width}px`
+  resize() {
+    const wrapperStyle = window.getComputedStyle(this.wrapper)
+    const totalWidth = parseFloat(wrapperStyle.width)
+    const paddingLeft = parseFloat(wrapperStyle.paddingLeft) || 0
+    const paddingRight = parseFloat(wrapperStyle.paddingRight) || 0
+    const wrapperWidth = totalWidth - paddingLeft - paddingRight
+
+    const panels = ([...this.wrapper.querySelectorAll('.panel')] as HTMLElement[])
+    const placeholderWidth = (this.wrapper.querySelector('[data-panel-placeholder]') as HTMLElement)?.offsetWidth ?? 0
+
+    const baseWidth = (wrapperWidth - placeholderWidth - (PANEL_GAP * panels.length)) / panels.length
+    const finalWidth = Math.max(baseWidth, MIN_PANEL_WIDTH)
+    this.lastWidth = finalWidth
+
+    this.panelEl.style.width = `${finalWidth}px`
+    this.setMainContentWidth(finalWidth - PANEL_BORDER_WIDTH * 2)
   }
 
   dragToResize() {
@@ -94,12 +91,11 @@ class PanelResizer {
       if (this.isResizing) {
         const rect = this.panelEl.getBoundingClientRect()
         const newWidth = e.clientX - rect.left
-        this.userWidth = newWidth
-        this.setFlexValues({
-          flexShrink: '0',
-          flexGrow: '0',
-          flexBasis: `${Math.max(MIN_PANEL_WIDTH, newWidth)}px`
-        })
+
+        if (newWidth < MIN_PANEL_WIDTH + (this.annotationsOpen ? ANNOTATION_PANEL_WIDTH : 0)) return
+
+        this.lastWidth = newWidth
+        this.panelEl.style.width = `${newWidth}px`
         this.setMainContentWidth(this.panelEl.offsetWidth - 4 - (this.annotationsOpen ? ANNOTATION_PANEL_WIDTH : 0))
         return
       }
@@ -122,7 +118,7 @@ class PanelResizer {
 
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup', handleMouseUp)
-    window.addEventListener('mousedown', handleMouseDown)
+    this.resizeHandle.addEventListener('mousedown', handleMouseDown)
 
     this.eventListeners.push(...[
       { name: 'mousemove', listener: handleMouseMove },
@@ -141,9 +137,9 @@ class PanelResizer {
 
     if (value) {
       this.panelEl.classList.add('transition-none')
-      this.panelEl.classList.remove('transition-[flex-basis]')
+      this.panelEl.classList.remove('transition-[width]')
     } else {
-      this.panelEl.classList.add('transition-[flex-basis]')
+      this.panelEl.classList.add('transition-[width]')
       this.panelEl.classList.remove('transition-none')
     }
   }
@@ -151,26 +147,22 @@ class PanelResizer {
   setAnnotationsOpen(value: boolean) {
     this.annotationsOpen = value
     if (value) {
-      this.setFlexValues({
-        flexGrow: this.panelEl.style.flexGrow,
-        flexShrink: '0',
-        flexBasis: `${this.panelEl.offsetWidth + ANNOTATION_PANEL_WIDTH}px`
-      })
+      this.lastWidth = this.lastWidth + ANNOTATION_PANEL_WIDTH
+      this.panelEl.style.width = `${this.lastWidth}px`
 
-      this.setMainContentWidth(this.panelEl.offsetWidth - 4)
-
-      const sidebar = this.panelEl.querySelector('[data-sidebar-container]')
+      const sidebar = this.panelEl.querySelector('[data-sidebar-container]') as HTMLElement
       const scrollBarWidth = this.scrollContainerEl.offsetWidth - this.scrollContainerEl.clientWidth
 
       sidebar.style.right = `-${scrollBarWidth}px`
       sidebar.style.paddingRight = `${scrollBarWidth}px`
     } else {
-      this.setFlexValues({
-        flexGrow: this.panelEl.style.flexGrow,
-        flexShrink: '0',
-        flexBasis: this.userWidth !== null ? `${this.userWidth}px` : `0px`
-      })
+      this.lastWidth = this.lastWidth - ANNOTATION_PANEL_WIDTH
+      this.panelEl.style.width = `${this.lastWidth}px`
     }
+  }
+
+  setPanelMode(mode: PanelMode) {
+    this.panelMode = mode
   }
 
   clean() {

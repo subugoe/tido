@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button.tsx'
 
 import PanelModeToggle from '@/components/panel/PanelModeToggle.tsx'
 import PanelTitle from '@/components/panel/PanelTitle.tsx'
-import ContentTypesToggle from '@/components/panel/ContentTypesToggle.tsx'
 import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
 import NavigationButton from '@/components/panel/NavigationButton.tsx'
 import Metadata from '@/components/metadata/Metadata'
@@ -66,13 +65,10 @@ const PanelHeader: FC = () => {
         <Actions />
         <SidebarToggle className="ml-2" />
       </div>
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center">
         <NavigationButton isPrev={true} />
         {<PanelTitle />}
         <NavigationButton />
-      </div>
-      <div className="flex justify-center">
-        {<ContentTypesToggle />}
       </div>
     </div>
   )

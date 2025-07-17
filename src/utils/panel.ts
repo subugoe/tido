@@ -6,6 +6,9 @@ export const DEFAULT_PANEL_WIDTH = 600
 export const MIN_PANEL_WIDTH = 600
 export const ANNOTATION_PANEL_WIDTH = 400
 
+export const PANEL_BORDER_WIDTH = 2
+export const PANEL_GAP = 16
+
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
   let manifestUrl: string = ''

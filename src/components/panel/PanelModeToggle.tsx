@@ -15,8 +15,8 @@ import { filterAndSortData } from '@/utils/panel.ts'
 
 const PanelModeToggle: FC = () => {
   const { t } = useTranslation()
-  const { panelState, updatePanel, setFilteredAnnotations } = usePanel()
-  const panelModes = useConfigStore(state => state.config.panelModes)
+  const { panelState, updatePanel, setFilteredAnnotations, resizer } = usePanel()
+  const panelModes = useConfigStore.getState().config.panelModes
 
   const defaultButtonsData: PanelModeButtonData[] = [{
     mode : 'swap',
@@ -45,6 +45,7 @@ const PanelModeToggle: FC = () => {
     e.preventDefault()
     if (!panelState) return
     updatePanel({ mode: newPanelMode })
+    resizer.setPanelMode(newPanelMode)
     setFilteredAnnotations([])
   }
 

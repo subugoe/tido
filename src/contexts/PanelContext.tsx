@@ -121,7 +121,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     // The initResizer function is called either to init or re-init the resizer.
     // On re-init, we want to keep some settings from previous user interaction,
     // that is why we call handleTextUpdate
-    if (!resizer) setResizer(new PanelResizer(el))
+    if (!resizer) setResizer(new PanelResizer(el, panelState.mode))
     else resizer.handleTextUpdate()
   }
 

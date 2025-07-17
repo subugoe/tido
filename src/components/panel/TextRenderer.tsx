@@ -137,6 +137,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   }, [htmlString])
 
   const matchedAnnotationsMap = React.useMemo(() => {
+    if (!panelState.annotations) return {}
     return panelState.annotations.reduce((acc, cur) => {
       const matchedNodes = Array.from(parsedDom.body.querySelectorAll(cur.target[0].selector.value))
       if (matchedNodes.length > 0) {
@@ -147,7 +148,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   }, [parsedDom, panelState.annotations])
 
   useEffect(() => {
-    const filteredAnnotations = panelState.annotations.filter(a => matchedAnnotationsMap[a.id])
+    const filteredAnnotations = panelState.annotations?.filter(a => matchedAnnotationsMap[a.id]) ?? []
     setFilteredAnnotations(filteredAnnotations)
   }, [matchedAnnotationsMap])
 
