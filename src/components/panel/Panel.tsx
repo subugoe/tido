@@ -12,6 +12,7 @@ import ImageView from '@/components/panel/views/ImageView.tsx'
 import TextView from '@/components/panel/views/TextView.tsx'
 import Swapper from '@/components/panel/Swapper.tsx'
 import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
+import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, initResizer, resizer } = usePanel()
@@ -107,19 +108,22 @@ const Panel: FC = React.memo(() => {
           </div>
         </div>
 
-        <div className="flex h-full border-t border-border">
-          <div data-image-container className={`grow-0 shrink-0 ${showImage ? 'block' : 'hidden'} border-r border-border`}>
+        <div className="relative flex h-full overflow-hidden border-t border-border">
+          <div data-image-container
+            className={`grow-0 shrink-0 ${showImage ? 'block' : 'hidden'} border-r border-border`}>
             {showImage && <ImageView />}
           </div>
           <div data-scroll-container className={`h-full w-full bg-accent overflow-x-hidden overflow-y-auto relative`}>
-            <div data-text-container className={`bg-background p-2 min-h-full`}>
+            <div data-text-container className={`bg-background p-2 min-h-full relative`}>
               {showText && <TextView />}
               {showSwapper && <Swapper />}
             </div>
-            <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
+            <div data-sidebar-container
+              className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
               {showSidebarContent && <AnnotationsBody />}
             </div>
           </div>
+          <AnnotationHints />
         </div>
         {showSelectPanelMode && ref.current && <SelectPanelModeDialog parentEl={ref.current} />}
       </div>
