@@ -40,15 +40,7 @@ const TextView: FC = () => {
 
   }, [loading, panelState, activeContentTypeIndex])
 
-  return (
-    <div>
-      <div className="flex justify-center">
-        {<ContentTypesToggle />}
-      </div>
-      <TextRenderer htmlString={text} />
-    </div>
-
-  )
+  return <TextRenderer htmlString={text} />
 }
 
 export default TextView

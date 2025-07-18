@@ -19,6 +19,7 @@ class PanelResizer {
   sidebarEl: HTMLElement
   headerSidebarEl: HTMLElement
   resizeHandle: HTMLElement
+  textOptions: HTMLElement
 
   eventListeners = []
   isResizing = false
@@ -46,6 +47,7 @@ class PanelResizer {
     this.sidebarEl = this.panelEl.querySelector('[data-sidebar-container]')
     this.headerSidebarEl = this.panelEl.querySelector('[data-header-sidebar]')
     this.resizeHandle = this.panelEl.querySelector('[data-resize-handle]')
+    this.textOptions = this.panelEl.querySelector('[data-text-options]')
 
     this.panelMode = panelMode
 
@@ -66,6 +68,8 @@ class PanelResizer {
     this.headerEl.style.width = `${width}px`
     this.sidebarEl.style.left = `${this.widthByMode[this.panelMode](width)}px`
     this.headerSidebarEl.style.left = `${width}px`
+    this.textOptions.style.width = `${this.widthByMode[this.panelMode](width)}px`
+    this.textOptions.style.left = `${this.panelMode === 'split' ? width / 2 : 0}px`
   }
 
   resize() {
@@ -149,6 +153,7 @@ class PanelResizer {
     if (value) {
       this.lastWidth = this.lastWidth + ANNOTATION_PANEL_WIDTH
       this.panelEl.style.width = `${this.lastWidth}px`
+      this.textOptions.style.right = `${ANNOTATION_PANEL_WIDTH}px`
 
       const sidebar = this.panelEl.querySelector('[data-sidebar-container]') as HTMLElement
       const scrollBarWidth = this.scrollContainerEl.offsetWidth - this.scrollContainerEl.clientWidth

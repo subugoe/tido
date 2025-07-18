@@ -53,5 +53,6 @@
   "do_not_ask_again": "Bitte nicht erneut anzeigen",
   "please_select_view": "Bitte wählen Sie eine Ansicht",
   "show_image": "Zum Bild",
-  "show_text": "Zum Text"
+  "show_text": "Zum Text",
+  "text_type": "Texttyp"
 }

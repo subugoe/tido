@@ -1,15 +1,22 @@
-import { FC } from 'react'
+import { FC, useRef } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext'
 import { Skeleton } from '@/components/ui/skeleton.tsx'
 import { useTranslation } from 'react-i18next'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu.tsx'
+import { Button } from '@/components/ui/button.tsx'
+import { ChevronDown } from 'lucide-react'
 
 const ContentTypesToggle: FC = () => {
   const { panelState, updatePanel } = usePanel()
   const { t } = useTranslation()
-
   const { contentTypes, contentIndex } = panelState || {}
+  const triggerRef = useRef()
 
   function handleTextTabClick(value: string) {
     const index = contentTypes.findIndex(type => type === value)
@@ -20,13 +27,21 @@ const ContentTypesToggle: FC = () => {
 
   return (
     <>
-      { contentTypes && contentTypes.length > 0 && <Tabs defaultValue={contentTypes[contentIndex]} onValueChange={handleTextTabClick}>
-        <TabsList>
-          { contentTypes.map((type) => (
-            <TabsTrigger key={type} value={type}>{t(type)}</TabsTrigger>
-          )) }
-        </TabsList>
-      </Tabs> }
+      { contentTypes && contentTypes.length > 0 && <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button ref={triggerRef} variant="outline" size="sm">
+            { contentTypes[contentIndex] }<ChevronDown />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>{ t('text_type') } </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioGroup value={contentTypes[contentIndex]} onValueChange={handleTextTabClick}>
+            {contentTypes.map((type) => <DropdownMenuRadioItem value={type}>{type}</DropdownMenuRadioItem>) }
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      }
     </>
   )
 }
