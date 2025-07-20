@@ -29,7 +29,7 @@ const ContentTypesToggle: FC = () => {
     <>
       { contentTypes && contentTypes.length > 0 && <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button ref={triggerRef} variant="outline" size="sm">
+          <Button ref={triggerRef} variant="ghost" size="sm">
             { contentTypes[contentIndex] }<ChevronDown />
           </Button>
         </DropdownMenuTrigger>

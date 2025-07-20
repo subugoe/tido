@@ -158,7 +158,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
     )
   }, [matchedAnnotationsMap])
 
-  return <div className="relative">
+  return <div className="relative pt-12">
     <div ref={textWrapperRef}>
       { reactElements }
     </div>

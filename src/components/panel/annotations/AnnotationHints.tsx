@@ -6,6 +6,8 @@ interface HintProps {
   top: number
 }
 
+const LINE_OFFSET = 12
+
 const Hint: FC<HintProps> = ({ top }) => {
   return <div className={`absolute bg-primary h-[3px] w-full`} style={{ top }}></div>
 }
@@ -27,13 +29,12 @@ const AnnotationHints: FC = () => {
       const scrollHeight = resizer.textContainerEl.offsetHeight
       const barHeight = ref.current.offsetHeight
       const multiplier = target.offsetTop / scrollHeight
-      const top = barHeight * multiplier
+      const top = barHeight * multiplier + LINE_OFFSET
       return <Hint top={top} />
     })
-
   }, [filteredAnnotations])
 
-  return <div ref={ref} className="absolute top-0 right-0 w-[16px] h-full opacity-[0.5] pointer-events-none">
+  return <div ref={ref} className="absolute top-0 right-0 w-[16px] h-full flex pt-12 opacity-[0.5] pointer-events-none">
     { hints }
   </div>
 }

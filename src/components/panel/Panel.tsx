@@ -13,7 +13,7 @@ import TextView from '@/components/panel/views/TextView.tsx'
 import Swapper from '@/components/panel/Swapper.tsx'
 import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
-import ContentTypesToggle from '@/components/panel/ContentTypesToggle.tsx'
+import TextOptions from '@/components/panel/TextOptions.tsx'
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, initResizer, resizer } = usePanel()
@@ -110,23 +110,21 @@ const Panel: FC = React.memo(() => {
         </div>
 
         <div className="relative flex h-full overflow-hidden border-t border-border">
-          <div data-image-container
-            className={`grow-0 shrink-0 ${showImage ? 'block' : 'hidden'} border-r border-border`}>
+          <div data-image-container className={`grow-0 shrink-0 ${showImage ? 'block' : 'hidden'} border-r border-border`}>
             {showImage && <ImageView />}
           </div>
           <div data-scroll-container className={`h-full w-full bg-accent overflow-x-hidden overflow-y-auto relative`}>
-            <div data-text-container className={`bg-background p-2 pt-12 min-h-full relative`}>
+            <div data-text-container className={`bg-background p-2 pr-5 min-h-full relative`}>
               {showText && <TextView />}
               {showSwapper && <Swapper />}
             </div>
-            <div data-sidebar-container
-              className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
+            <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
               {showSidebarContent && <AnnotationsBody />}
             </div>
           </div>
           <AnnotationHints />
-          <div data-text-options className="absolute top-0 z-10 flex bg-accent w-full py-1.5 px-2 border-b border-border">
-            { showText && <div className="ml-aut"><ContentTypesToggle /></div> }
+          <div data-text-options className="absolute top-0 z-10 flex justify-center">
+            { showText && <TextOptions /> }
           </div>
         </div>
         {showSelectPanelMode && ref.current && <SelectPanelModeDialog parentEl={ref.current} />}
