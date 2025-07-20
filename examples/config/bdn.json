@@ -7,5 +7,6 @@
   ],
   "rootCollections": [
     "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
-  ]
+  ],
+  "panelModes": ["text"]
 }

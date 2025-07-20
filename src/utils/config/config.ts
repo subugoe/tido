@@ -169,14 +169,23 @@ function validateTranslations(input: any): ValidationResult<TidoConfig['translat
 function validatePanelModes(input: any): ValidationResult<TidoConfig['panelModes']> {
   const defaultPanelModes: PanelMode[] = ['swap', 'split', 'text', 'image']
   const errors: Record<string, string> = {}
+  if (!input || !Array.isArray(input)) {
+    errors['panelModes'] = 'must be an array'
+    return { errors, result: defaultConfig.panelModes }
+  }
 
-  const result = Array.isArray(input) ? input.filter(item => defaultPanelModes.includes(item)) : (() => {
-    if (input !== undefined)
-      errors['panelModes'] = 'must be an array'
-    return defaultConfig.panelModes ?? []
-  })()
+  if (input.length === 0) {
+    errors['panelModes'] = 'must have at least 1 value'
+    return { errors, result: defaultConfig.panelModes }
+  }
 
-  return { result, errors }
+  const corruptValues = input.filter(item => !defaultPanelModes.includes(item))
+  if (corruptValues.length) {
+    errors['panelModes'] = `${corruptValues.join(', ')} ${corruptValues.length > 1 ? 'are' : 'is'} not valid. Please use only ${defaultPanelModes.join(', ')}`
+    return { errors, result: defaultConfig.panelModes }
+  }
+
+  return { errors, result: input }
 }
 
 function validateRootCollections(input: any): ValidationResult<TidoConfig['rootCollections']> {

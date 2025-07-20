@@ -55,7 +55,7 @@ const SelectPanelModeDialog: FC<SelectPanelModeProps> = ({ parentEl }) => {
       >
         <DialogHeader>
           <DialogTitle>
-            <div className="text-[15px]">{ t('please_select_mode') }</div>
+            <div className="text-[15px]">{ t('please_select_panel_mode') }</div>
           </DialogTitle>
         </DialogHeader>
         <Modes updateSelectedButton={setSelectedMode} />

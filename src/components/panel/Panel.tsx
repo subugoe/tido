@@ -14,23 +14,29 @@ import Swapper from '@/components/panel/Swapper.tsx'
 import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, initResizer, resizer } = usePanel()
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectModeState = useUIStore(state => state.showSelectPanelMode)
-  const showSelectPanelMode = panelId === newestPanelId && showSelectModeState
-
+  const panelModes = useConfigStore.getState().config.panelModes
   const scrollPanelIds = useScrollStore(state => state.panelIds)
-  const [isScrollPanel, setIsScrollPanel] = useState(false)
 
   const ref = useRef(null)
 
+  const [isScrollPanel, setIsScrollPanel] = useState(false)
   const [showSidebarContent, setShowSidebarContent] = useState(false)
   const [showSidebarBorders, setShowSidebarBorders] = useState(false)
   const [showImage, setShowImage] = useState(false)
   const [showText, setShowText] = useState(false)
   const [showSwapper, setShowSwapper] = useState(false)
+
+  const [showSelectPanelMode, setShowSelectPanelMode] = useState(false)
+
+  useEffect(() => {
+    setShowSelectPanelMode(panelId === newestPanelId && showSelectModeState && panelModes.length > 1)
+  }, [panelId, newestPanelId, showSelectModeState])
 
   useEffect(() => {
     if (resizer) resizer.handleTextUpdate()
