@@ -47,7 +47,7 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
   let buttonsUpdatePanel
   if (panels.length > 0) {
     buttonsUpdatePanel = panels.map((_, i) => <button
-      className="bg-muted dark:bg-background w-20 h-8 mr-1 rounded-md hover:bg-secondary" key={i} data-cy="button-update-panel"
+      className="bg-accent hover:bg-muted w-20 h-8 mr-1 rounded-md cursor-pointer" key={i} data-cy="button-update-panel"
       onClick={() => select(i)}>Panel {i + 1}</button>)
   }
 
@@ -56,7 +56,7 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
       {buttonsUpdatePanel}
     </div>
     <button
-      className="button-new-panel bg-muted dark:bg-background w-24 h-8 mr-1 rounded-md hover:bg-background/80" data-cy="button-new-panel"
+      className="button-new-panel bg-accent hover:bg-muted w-24 h-8 mr-1 rounded-md cursor-pointer" data-cy="button-new-panel"
       onClick={() => select()}
     >New Panel</button>
   </div>

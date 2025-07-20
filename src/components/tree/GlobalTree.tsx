@@ -61,7 +61,7 @@ const GlobalTree: FC = () => {
         <Tree nodes={treeNodes} />
         {showSelectionModal && <div
           ref={modalRef}
-          className="fixed z-50 p-2 bg-popover border border-border shadow-md rounded"
+          className="fixed z-50 p-2 bg-background border border-border shadow-md rounded"
           style={{
             top: `${selectedPosition?.y + 40}px`,
             left: `${selectedPosition?.x}px`,

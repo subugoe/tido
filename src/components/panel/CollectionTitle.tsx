@@ -33,19 +33,19 @@ const CollectionTitle: FC = () => {
       {collection && <Popover open={showLocalTree} onOpenChange={handleOpenChange} modal={true}>
         <PopoverTrigger asChild>
           <Button
-            className="text-sm  px-2 py-1 h-7 rounded-md font-semibold truncate max-w-[300px] hover:cursor-pointer"
+            className="text-sm px-2 py-1 h-7 font-semibold truncate max-w-[300px]"
             title={collection.title[0].title}
             onClick={() => setShowLocalTree(!showLocalTree)}
-            variant={showLocalTree ? 'secondary' : 'ghost'}
+            variant="accent"
           >
-            { collection.title[0].title }
+            <span className="truncate">{ collection.title[0].title }</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent side="bottom" align="start" className="w-[400px] pr-0">
           <div className="font-semibold mb-2">{t('choose_your_panel_content')}</div>
           <LocalTree collectionId={panelState.collectionId} onSelect={closeLocalTree} />
           <X
-            className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"
+            className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 cursor-pointer"
             size={15} onClick={() => setShowLocalTree(false)}
           />
         </PopoverContent>
