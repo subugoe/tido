@@ -3,7 +3,6 @@ import TextRenderer from '@/components/panel/TextRenderer.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useTranslation } from 'react-i18next'
-import ContentTypesToggle from '@/components/panel/ContentTypesToggle.tsx'
 
 const TextView: FC = () => {
   const { panelState, loading, error, setError } = usePanel()

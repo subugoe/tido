@@ -1,6 +1,16 @@
-import { FC, memo, ReactNode, useEffect, useRef, useState } from 'react'
-
+import {
+  ComponentPropsWithoutRef, ElementType,
+  FC,
+  memo,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import React from 'react'
+import { parseStyleString } from '@/utils/html-to-react.ts'
+const END_CLASS = 'tido-text-end'
 
 interface Props {
   htmlString: string
@@ -8,19 +18,14 @@ interface Props {
   onReady?: () => void
 }
 
-import React from 'react'
-import { parseStyleString } from '@/utils/html-to-react.ts'
-const END_CLASS = 'tido-text-end'
-
-interface GenericElementProps {
-  tagName: string
-  props: any
+type GenericElementProps<T extends ElementType> = {
+  tagName: T
+  props?: ComponentPropsWithoutRef<T>
   children: ReactNode
   isHighlighted: boolean
-}
+} & ComponentPropsWithoutRef<T>
 
-const GenericElement: FC<GenericElementProps> = memo(({ tagName, props, children, isHighlighted }) => {
-  const Tag = tagName
+const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, children, isHighlighted }: GenericElementProps<T>)  => {
   const { hoveredAnnotation, setHoveredAnnotation, selectedAnnotation } = usePanel()
   const [isHovered, setIsHovered] = useState(false)
   function onClick() {
@@ -46,7 +51,7 @@ const GenericElement: FC<GenericElementProps> = memo(({ tagName, props, children
     else if (hoveredAnnotation === props['data-annotation']) setIsHovered(true)
   }, [hoveredAnnotation])
 
-  if (tagName === 'br') {
+  if (Tag === 'br') {
     return <br />
   }
 

@@ -14,9 +14,8 @@ const ImageRenderer: FC = () => {
 
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  const imageUrl = panelState?.item?.image?.id
 
-  let viewer: OpenSeadragon.Viewer | null = null
+  const imageUrl = panelState?.item?.image?.id
 
   useEffect(() => {
     if (!imageViewerRef.current) return
@@ -26,7 +25,7 @@ const ImageRenderer: FC = () => {
       return
     }
 
-    viewer = OpenSeadragon({
+    const viewer = OpenSeadragon({
       element: imageViewerRef.current,
       tileSources: {
         type: 'image',
@@ -45,7 +44,6 @@ const ImageRenderer: FC = () => {
     viewer.addOnceHandler('open', () => {
       setLoading(false)
     })
-
     return () => {
       if (viewer) viewer.destroy()
     }

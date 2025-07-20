@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { FC } from 'react'
 import { Image, Text } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'

@@ -93,7 +93,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className="text-sm text-nowrap max-w-[200px] truncate rounded-md font-semibold hover:cursor-pointer hover:bg-muted px-2 py-1"
+        <div className="text-sm text-nowrap max-w-[200px] truncate font-semibold bg-accent rounded-lg cursor-pointer hover:bg-muted px-2 py-1"
           data-cy="item-label">
           { getItemLabel() }
         </div>
@@ -102,7 +102,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
         <div className="text-muted-foreground px-2 pt-1 mb-2 ">{ t('please_select_an_item_to_open') }</div>
         {labels.map((label, i) => <DropdownMenuItem
           key={label + '_'+i}
-          className={`hover:cursor-pointer ${panelState.item.n === label ? 'data-[highlighted]:text-primary text-primary' : ''} `}
+          className={`cursor-pointer ${panelState.item.n === label ? 'data-[highlighted]:text-primary text-primary' : ''} `}
           title={label ?? ''}
           onClick={() => handleItemClick(label)}
 
