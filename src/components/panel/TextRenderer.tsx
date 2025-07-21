@@ -60,7 +60,7 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
       {...props}
       className={
         (props.className || '') +
-        (isHighlighted ? ' bg-gray-100 relative cursor-pointer' : '') +
+        (isHighlighted ? ' bg-gray-200 relative cursor-pointer' : '') +
         (isHovered ? ' bg-primary/20' : '') +
         (selectedAnnotation && selectedAnnotation.id === props['data-annotation'] ? ' bg-primary/40' : '')
       }
@@ -117,11 +117,16 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
 
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
-  const { panelState, setSelectedAnnotation, setFilteredAnnotations, showTextOptions } = usePanel()
+  const { panelState, setSelectedAnnotation, setFilteredAnnotations, showTextOptions, updatePanel } = usePanel()
 
   const onClickTarget = (id: string) => {
     const annotation = panelState.annotations.find(a => a.id === id)
-    if (annotation) setSelectedAnnotation(annotation)
+    if (annotation) {
+      if (!panelState.annotationsOpen) {
+        updatePanel({ annotationsOpen: true })
+      }
+      setSelectedAnnotation(annotation)
+    }
   }
 
   const parsedDom = React.useMemo(() => {
