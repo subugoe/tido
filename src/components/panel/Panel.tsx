@@ -17,7 +17,7 @@ import TextOptions from '@/components/panel/TextOptions.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 const Panel: FC = React.memo(() => {
-  const { panelId, panelState, initResizer, resizer } = usePanel()
+  const { panelId, panelState, initResizer, resizer, showTextOptions } = usePanel()
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectModeState = useUIStore(state => state.showSelectPanelMode)
   const panelModes = useConfigStore.getState().config.panelModes
@@ -33,6 +33,14 @@ const Panel: FC = React.memo(() => {
   const [showSwapper, setShowSwapper] = useState(false)
 
   const [showSelectPanelMode, setShowSelectPanelMode] = useState(false)
+
+  useEffect(() => {
+    if (!ref.current) return
+    initResizer(ref.current)
+    return () => {
+      if (resizer) resizer.clean()
+    }
+  }, [])
 
   useEffect(() => {
     setShowSelectPanelMode(panelId === newestPanelId && showSelectModeState && panelModes.length > 1)
@@ -73,14 +81,6 @@ const Panel: FC = React.memo(() => {
       setShowSidebarBorders(false)
     }
   }, [panelState.annotationsOpen])
-
-  useEffect(() => {
-    if (!ref.current) return
-    initResizer(ref.current)
-    return () => {
-      if (resizer) resizer.clean()
-    }
-  }, [])
 
   useEffect(() => {
     setIsScrollPanel(scrollPanelIds.includes(panelId))
@@ -130,7 +130,7 @@ const Panel: FC = React.memo(() => {
           </div>
           <AnnotationHints />
           <div data-text-options className="absolute top-0 z-10 flex justify-center">
-            { showText && <TextOptions /> }
+            { showTextOptions && <TextOptions /> }
           </div>
         </div>
         {showSelectPanelMode && ref.current && <SelectPanelModeDialog parentEl={ref.current} />}

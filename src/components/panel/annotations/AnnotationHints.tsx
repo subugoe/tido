@@ -13,7 +13,7 @@ const Hint: FC<HintProps> = ({ top }) => {
 }
 
 const AnnotationHints: FC = () => {
-  const { panelId, filteredAnnotations, resizer } = usePanel()
+  const { panelId, filteredAnnotations, resizer, showTextOptions } = usePanel()
   const ref = useRef()
   const hints = useMemo(() => {
     if (!filteredAnnotations || !ref.current) return []
@@ -25,16 +25,16 @@ const AnnotationHints: FC = () => {
       return acc
     }, [])
 
-    return targets.map(target => {
+    return targets.map((target, i) => {
       const scrollHeight = resizer.textContainerEl.offsetHeight
       const barHeight = ref.current.offsetHeight
       const multiplier = target.offsetTop / scrollHeight
       const top = barHeight * multiplier + LINE_OFFSET
-      return <Hint top={top} />
+      return <Hint key={target.tagName + i} top={top} />
     })
   }, [filteredAnnotations])
 
-  return <div ref={ref} className="absolute top-0 right-0 w-[16px] h-full flex pt-12 opacity-[0.5] pointer-events-none">
+  return <div ref={ref} className={`absolute top-0 right-0 w-[16px] h-full flex opacity-[0.5] pointer-events-none ${showTextOptions ? 'pt-12' : ''}`}>
     { hints }
   </div>
 }

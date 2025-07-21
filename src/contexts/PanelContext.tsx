@@ -27,6 +27,7 @@ interface PanelContentType {
   setFilteredAnnotations: (value: Annotation[]) => void
   selectedAnnotation: Annotation | null,
   setSelectedAnnotation: (value: Annotation | null) => void
+  showTextOptions: boolean
 }
 
 interface PanelProviderProps {
@@ -47,7 +48,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
   const [filteredAnnotations, setFilteredAnnotations] = useState([])
   const [selectedAnnotation, setSelectedAnnotation] = useState(null)
-
+  const [showTextOptions, setShowTextOptions] = useState(false)
 
   const getCollection = useDataStore(state => state.initCollection)
 
@@ -57,6 +58,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     if (existsImage) return panelState.mode
     return panelMode
   }
+
+  useEffect(() => {
+    const showText = panelState.mode !== 'image'
+    setShowTextOptions(showText && panelState.contentTypes.length > 1)
+  }, [panelState.mode, panelState.contentTypes])
 
   useEffect(() => {
     const init = async () => {
@@ -141,7 +147,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       filteredAnnotations,
       setFilteredAnnotations,
       selectedAnnotation,
-      setSelectedAnnotation
+      setSelectedAnnotation,
+      showTextOptions
     }}>
       {children}
     </PanelContext.Provider>
