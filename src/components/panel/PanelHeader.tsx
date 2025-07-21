@@ -11,6 +11,8 @@ import Metadata from '@/components/metadata/Metadata'
 import Actions from '@/components/panel/Actions.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useTranslation } from 'react-i18next'
+import useIsMobile from '@/utils/is-mobile.ts'
+import AnnotationsDrawer from "@/components/panel/annotations/AnnotationsDrawer.tsx";
 
 const SidebarToggle = (props) => {
   const { panelState, updatePanel } = usePanel()
@@ -31,6 +33,8 @@ const PanelHeader: FC = () => {
   const { t } = useTranslation()
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const { panelState } = usePanel()
+  const isMobile = useIsMobile()
+
   const handleOpenChange = (open: boolean) => {
     setShowMetadataModal(open)
   }
@@ -63,7 +67,7 @@ const PanelHeader: FC = () => {
         </div>
         <div className="ml-auto"><PanelModeToggle /></div>
         <Actions />
-        <SidebarToggle className="ml-2" />
+        { isMobile ? <AnnotationsDrawer /> : <SidebarToggle className="ml-2" /> }
       </div>
       <div className="flex justify-center">
         <NavigationButton isPrev={true} />

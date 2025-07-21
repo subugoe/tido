@@ -15,6 +15,7 @@ import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
+import useIsMobile from '@/utils/is-mobile.ts'
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, initResizer, resizer, showTextOptions } = usePanel()
@@ -25,6 +26,7 @@ const Panel: FC = React.memo(() => {
 
   const ref = useRef(null)
 
+  const isMobile = useIsMobile()
   const [isScrollPanel, setIsScrollPanel] = useState(false)
   const [showSidebarContent, setShowSidebarContent] = useState(false)
   const [showSidebarBorders, setShowSidebarBorders] = useState(false)
@@ -34,6 +36,9 @@ const Panel: FC = React.memo(() => {
 
   const [showSelectPanelMode, setShowSelectPanelMode] = useState(false)
 
+  useEffect(() => {
+    console.log(isMobile)
+  }, [isMobile])
   useEffect(() => {
     if (!ref.current) return
     initResizer(ref.current)
