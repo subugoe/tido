@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Button } from '@/components/ui/button.tsx'
-import { ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { apiRequest } from '@/utils/api.ts'
@@ -114,9 +114,9 @@ const NavigationButton: FC<Props> = ({ isPrev = false }) => {
     variant="ghost"
     size="icon"
     disabled={isPrev ? !hasPrev() : !hasNext()}
-    className={`${isPrev ? 'rotate-180 mr-1' : 'ml-1'} rounded-full mt-1`}
+    className={`${isPrev ? 'mr-1' : 'ml-1'} rounded-full`}
     onClick={navigate}>
-    <ChevronRight />
+    { isPrev ? <ChevronLeft /> : <ChevronRight /> }
   </Button>
 }
 

@@ -1,5 +1,7 @@
 {
-  "lang": "de",
+  "allowNewCollections": false,
+  "title": "BDN",
+  "lang": "en",
   "panels": [
     {
       "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
@@ -8,5 +10,18 @@
   "rootCollections": [
     "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
   ],
-  "panelModes": ["text"]
+  "theme": {
+    "primaryColor": "#2b7fff"
+  },
+  "showPanelPlaceholder": true,
+  "translations": {
+    "en": {
+      "contents_and_metadata": "Inhalt & Metadaten",
+      "next_item": "Nächste Seite",
+      "previous_item": "Vorherige Seite",
+      "next_manifest": "Nächste Editionseinheit",
+      "previous_manifest": "Vorherige Editionseinheit",
+      "item": "Seite"
+    }
+  }
 }

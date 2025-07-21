@@ -120,7 +120,7 @@ function validateTheme(input: any): ValidationResult<TidoConfig['theme']> {
       typeof input === 'object' && typeof input['primaryColor'] === 'string'
         ? input['primaryColor']
         : (() => {
-          errors['theme.primaryColor'] = 'must be a valid hex color'
+          if (input['primaryColor'] !== undefined) errors['theme.primaryColor'] = 'must be a valid hex color'
           return defaultConfig.theme?.primaryColor
         })()
   }
@@ -169,7 +169,10 @@ function validateTranslations(input: any): ValidationResult<TidoConfig['translat
 function validatePanelModes(input: any): ValidationResult<TidoConfig['panelModes']> {
   const defaultPanelModes: PanelMode[] = ['swap', 'split', 'text', 'image']
   const errors: Record<string, string> = {}
-  if (!input || !Array.isArray(input)) {
+
+  if (input === undefined) return { errors, result: defaultConfig.panelModes }
+
+  if (!Array.isArray(input)) {
     errors['panelModes'] = 'must be an array'
     return { errors, result: defaultConfig.panelModes }
   }

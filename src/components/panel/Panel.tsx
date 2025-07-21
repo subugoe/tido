@@ -108,10 +108,10 @@ const Panel: FC = React.memo(() => {
         {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
 
         <div className="relative">
-          <div data-panel-header className={`px-3 pt-3 pb-5`}>
+          <div data-panel-header className={`px-3 pt-3 pb-5 border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
             <PanelHeader />
           </div>
-          <div data-header-sidebar className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
+          <div data-header-sidebar className={`absolute top-0 h-full w-[400px] pl-2`}>
           </div>
         </div>
 
@@ -120,11 +120,11 @@ const Panel: FC = React.memo(() => {
             {showImage && <ImageView />}
           </div>
           <div data-scroll-container className={`h-full w-full bg-accent overflow-x-hidden overflow-y-auto relative`}>
-            <div data-text-container className={`bg-background p-2 pr-5 min-h-full relative`}>
+            <div data-text-container className={`bg-background p-2 pr-5 min-h-full relative border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
               {showText && <TextView />}
               {showSwapper && <Swapper />}
             </div>
-            <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2 border-l ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
+            <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2`}>
               {showSidebarContent && <AnnotationsBody />}
             </div>
           </div>
