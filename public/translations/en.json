@@ -50,6 +50,6 @@
   "please_select_panel_mode": "Please select a panel mode",
   "show_image": "Show image",
   "show_text": "Show text",
-  "text_type": "Text type"
-
+  "text_type": "Text type",
+  "select_item_to_continue": "A new manifest is selected. Now, please select a new item to continue."
 }

@@ -54,5 +54,6 @@
   "please_select_panel_mode": "Bitte wählen Sie einen Modus",
   "show_image": "Zum Bild",
   "show_text": "Zum Text",
-  "text_type": "Texttyp"
+  "text_type": "Texttyp",
+  "select_item_to_continue": "Ein neues Manifest wurde ausgewählt. Bitte wählen Sie nun ein Item, um fortzufahren"
 }

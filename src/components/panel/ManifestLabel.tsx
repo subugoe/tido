@@ -1,6 +1,4 @@
 import { FC, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-
 import { useDataStore } from '@/store/DataStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { apiRequest } from '@/utils/api.ts'
@@ -15,7 +13,6 @@ interface ManifestLabelProps {
 
 const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSelect }) => {
   const { panelState } = usePanel()
-  const { t } = useTranslation()
   const collection = useDataStore().collections[panelState.collectionId]?.collection
   const manifest = panelState.manifest
   const labels = collection?.sequence.map((item) => item.label)
@@ -42,26 +39,23 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
     setShowModal(open)
   }
 
-
   return (
     <DropdownMenu
       open={showModal}
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className="text-sm text-nowrap max-w-[200px] truncate bg-accent rounded-lg font-semibold hover:cursor-pointer hover:bg-muted px-2 py-1"
+        <div className={`text-sm text-nowrap max-w-[200px] truncate bg-accent rounded-lg font-semibold cursor-pointer hover:bg-muted px-2 py-1 ${selectedManifest ? 'text-muted-foreground animate-pulse' : ''}`}
           data-cy="manifest-label">
           {selectedLabel}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <div className="text-muted-foreground px-2 pt-1 mb-2 ">{ t('please_select_a_manifest_to_open') }</div>
         {labels.map((label, i) => <DropdownMenuItem
           key={label + '_'+i}
-          className={`hover:cursor-pointer ${panelState.manifest.label === label ? 'data-[highlighted]:text-primary text-primary' : ''} `}
+          className={`cursor-pointer ${panelState.manifest.label === label ? 'text-primary' : ''} `}
           title={label ?? ''}
           onClick={() => handleManifestClick(label)}
-
         > { label }
         </DropdownMenuItem>)}
       </DropdownMenuContent>

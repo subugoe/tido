@@ -93,19 +93,17 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className="text-sm text-nowrap max-w-[200px] truncate font-semibold bg-accent rounded-lg cursor-pointer hover:bg-muted px-2 py-1"
+        <div className={`text-sm text-nowrap max-w-[200px] truncate font-semibold ${showItemModal ? 'bg-muted' : 'bg-accent'} rounded-lg cursor-pointer hover:bg-muted px-2 py-1`}
           data-cy="item-label">
           { getItemLabel() }
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <div className="text-muted-foreground px-2 pt-1 mb-2 ">{ t('please_select_an_item_to_open') }</div>
         {labels.map((label, i) => <DropdownMenuItem
           key={label + '_'+i}
           className={`cursor-pointer ${panelState.item.n === label ? 'data-[highlighted]:text-primary text-primary' : ''} `}
           title={label ?? ''}
           onClick={() => handleItemClick(label)}
-
         > { label }
         </DropdownMenuItem>)}
       </DropdownMenuContent>
