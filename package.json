@@ -106,7 +106,7 @@
     "preview:examples": "npm run build:test && cp -r dist/ examples/dist/ && npm run examples",
     "test": "start-server-and-test preview:examples 2222 cypress:headless",
     "ui": "node ./build/shadcn.js",
-    "write-changelog": "commit-and-tag-version"
+    "changelog": "commit-and-tag-version"
   },
   "files": [
     "src",
