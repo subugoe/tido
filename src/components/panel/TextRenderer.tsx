@@ -74,6 +74,9 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
 })
 
 const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
+  // Main function to create GenericElement recursively out of HTML nodes.
+  // Additional attributes regarding annotations will be applied.
+
   if (node.nodeType === Node.TEXT_NODE) {
     return node.textContent
   }
@@ -84,7 +87,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
     convertNodeToReact(child, `${key}-${i}`, matches, onClickTarget)
   )
 
-  const props = {}
+  const props: ComponentPropsWithoutRef<ElementType> = {}
   for (const attr of node.attributes) {
     if (attr.name === 'style') {
       props.style = parseStyleString(attr.value)
@@ -106,7 +109,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   return (
     <GenericElement
       key={key}
-      tagName={node.tagName.toLowerCase()}
+      tagName={node.tagName.toLowerCase() as ElementType}
       props={props}
       isHighlighted={annotationIds.length > 0}
     >

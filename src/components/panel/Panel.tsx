@@ -72,6 +72,9 @@ const Panel: FC = React.memo(() => {
     resizer.setAnnotationsOpen(panelState.annotationsOpen)
     if (panelState.annotationsOpen) {
       setShowSidebarBorders(true)
+
+      // We want to delay the actual visibility of annotations a bit because of calculation of top positions.
+      // TODO: Maybe move it to annotation body
       const timeout = setTimeout(() => {
         setShowSidebarContent(true)
       }, 200)

@@ -6,6 +6,9 @@ const ANNOTATION_GAP = 5
 
 const AnnotationsBody: FC = () => {
   const { panelId, filteredAnnotations, selectedAnnotation } = usePanel()
+
+  // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
+  // position of each annotation.
   const [elements, setElements] = useState([])
 
   const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-container]`) as HTMLElement)
@@ -20,23 +23,33 @@ const AnnotationsBody: FC = () => {
 
 
   function trackTopChange() {
+    // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
+    // the key is the annotation id and the value is the top value.
+
     if (elements.length === 0) return
 
-    // Set the desiredY according to current target positions
+    // Set the desiredY according to current target clean positions (clean = actual position in the text)
     for (let i = 0; i < elements.length; i++) {
       elements[i].desiredY = elements[i].target.getBoundingClientRect().top - textContainer.getBoundingClientRect().top
     }
 
     elements.sort((a, b) => a.desiredY - b.desiredY)
+
     for (let i = 0; i < elements.length; i++) {
       const annotationEl = elements[i]
       const lastHeight = i === 0 ? 0 : elements[i - 1].el.offsetHeight
       const lastY = i === 0 ? 0 : elements[i - 1].desiredY
+
+      // The minimum top value needed if we want to place the current annotation right under the last one.
       const minY = lastY + lastHeight + ANNOTATION_GAP
 
+      // Next, we decide if that minimum value is even needed or if the desiredY is more below and therefore should be used instead.
       const actualY = i === 0 ? annotationEl.desiredY : Math.max(annotationEl.desiredY, minY)
 
       if (selectedAnnotation && annotationEl.annotation.id === selectedAnnotation.id && actualY !== annotationEl.desiredY) {
+        // If this is a selectedAnnotation, and it has some other annotations above
+        // (which caused the current to move down, for example if the selected annotation is in the same row with multiple other annotations),
+        // we want to move those annotations further above, so our selected one can be placed to the desiredY
         moveBefore(i)
         continue
       }

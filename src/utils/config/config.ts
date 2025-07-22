@@ -120,7 +120,7 @@ function validateTheme(input: any): ValidationResult<TidoConfig['theme']> {
       typeof input === 'object' && typeof input['primaryColor'] === 'string'
         ? input['primaryColor']
         : (() => {
-          if (input['primaryColor'] !== undefined) errors['theme.primaryColor'] = 'must be a valid hex color'
+          if (input !== undefined && input['primaryColor'] !== undefined) errors['theme.primaryColor'] = 'must be a valid hex color'
           return defaultConfig.theme?.primaryColor
         })()
   }

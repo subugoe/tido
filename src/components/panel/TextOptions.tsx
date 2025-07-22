@@ -16,7 +16,7 @@ const TextOptions: FC = () => {
       </div>
     </div>
     <div
-      className={`border-b border-x border-border bg-accent w-[32px] h-[18px] ${visible ? '-top-[18px]' : 'top-0 delay-200'} absolute left-1/2 -translate-x-1/2 transition-all cursor-pointer flex justify-center items-center`}
+      className={`border-b border-x border-border bg-accent w-[32px] h-[18px] ${visible ? '-top-[18px]' : 'top-0 delay-200'} absolute left-1/2 -translate-x-1/2 transition-all cursor-pointer flex justify-center items-center rounded-b-md`}
       onClick={() => setVisible(true)}
     >
       <ChevronDown size={16} />
