@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.6](https://github.com/subugoe/tido/compare/v5.0.0-alpha.4...v5.0.0-alpha.6) (2025-07-22)
+
+
+### Features
+
+* add annotation selection from text ([ae23947](https://github.com/subugoe/tido/commit/ae239472430c0b83b8913966e8a8244daf1b329c))
+* add annotations hints bar ([e84b66b](https://github.com/subugoe/tido/commit/e84b66b026a5ea5f4da7b65aef96fb668c8b374d))
+* add bidirectional hover highlighting for annotations and text targets ([17d7642](https://github.com/subugoe/tido/commit/17d7642a4a360f432fb433df2cc93a594873fa33))
+* add first implementation of annotations sidebar ([2fc1647](https://github.com/subugoe/tido/commit/2fc1647d4c648cac474c97ebb6d93f55fa10a022))
+* add smart display of views ([66188fd](https://github.com/subugoe/tido/commit/66188fd342196e8cacf329e797aef4ceed09b1f2))
+* add TextOptions component to Panel and add toggling visiblity, fix annotation hints positions ([1b692a8](https://github.com/subugoe/tido/commit/1b692a815228ac33d28718defb10e5940c01f389))
+* hide panel modes selections if only one mode to select, improve config validation ([c4f02a3](https://github.com/subugoe/tido/commit/c4f02a396b60f137ff829abf1a9ade4cfb0a807d))
+* hide text options when there is only 1 content type ([61227f4](https://github.com/subugoe/tido/commit/61227f4548b10b0e9e06b8427ce36827f099b2e1))
+* make clickable panel titles more recognizable, update neutral colors ([6793597](https://github.com/subugoe/tido/commit/67935976ce5fbebfdaafb31cd2a7f4416d0847bf))
+* make view configurable ([1f329d6](https://github.com/subugoe/tido/commit/1f329d67f5cc0259faa1aebe9b06fc17c9bce748))
+* move content types toggle visually inside the text view, use dropdown instead of tabs ([5f7e356](https://github.com/subugoe/tido/commit/5f7e356b37b76ea2dafa9cb20af0f181334fd3b7))
+* open panel sidebar on target click in text ([9bb535f](https://github.com/subugoe/tido/commit/9bb535fac6a9258bf7ef92868d6f093e47a67994))
+* remove headings in panel titles dropdowns, improve interactions ([f144132](https://github.com/subugoe/tido/commit/f144132461fad222b017f85dfc6fe7155d669ad7))
+* set pixel values for panel widths, remove flexbox mechanism, control the display of components directly inside the panel when updating panel mode ([d3a4c3b](https://github.com/subugoe/tido/commit/d3a4c3b4371efcca1c76caca37f25cd24be227f4))
+* use filtered annotations as part of panel context for central state ([ef656c3](https://github.com/subugoe/tido/commit/ef656c3c91f6b31f81e600a5bd2faf9b5a7852f4))
+
+
+### Bug Fixes
+
+* add chevron left in navigation button, fix some config validations ([fbaa157](https://github.com/subugoe/tido/commit/fbaa1571cac53f3b49bd7850981dc299813ab136))
+* Improve Dialog component: add DialogPortal inside DialogContent (DC), DC takes a container and overlay prop ([819cff4](https://github.com/subugoe/tido/commit/819cff442a3f5608f0583eb88a5f8d25774d8fb2))
+* set sidebar borders with own state variable ([260f1bf](https://github.com/subugoe/tido/commit/260f1bfe92a6cea864c8561070cb92189031dcd5))
+* show select view dialog (svd) while opening a new panel from global tree, only when svd is enabled ([f03abdf](https://github.com/subugoe/tido/commit/f03abdf7db14031211bec69d08a18de3bd6c954c))
+
+
+### Docs
+
+* update README ([75ebc14](https://github.com/subugoe/tido/commit/75ebc14ecad0a9bbbf59ebbcd467a439d2168d98))
+
+
+### Refactoring
+
+* fix typing issues ([8b52177](https://github.com/subugoe/tido/commit/8b5217757a309fd33998807964c365ab5b33324d))
+* minor config and design issue, add comments ([bfde5d0](https://github.com/subugoe/tido/commit/bfde5d08f598d64ecb1d1c43df0e6042a4818a44))
+* rename "view" to "panel mode" and everything related to that ([1fe4d14](https://github.com/subugoe/tido/commit/1fe4d14c284157c4fd54bb62f0086ce6f39528c1))
+
 ## [5.0.0-alpha.5](https://github.com/subugoe/tido/compare/v5.0.0-alpha.4...v5.0.0-alpha.5) (2025-06-26)
 
 
