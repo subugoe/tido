@@ -40,7 +40,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
         {!node.leaf && <span className={`mt-[2px] mr-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight /></span>}
         <span className={`${node.leaf ? 'ml-4': ''}`}>{node.label}</span>
       </div>
-      <div className="node-children flex-col">
+      <div className="flex-col" data-cy="node-children">
         { isExpanded && node.children?.map((item: TreeNode, i) => (
           <ul data-cy="tree-node-child" className="ml-3" key={i}>
             <TreeNode node={item} />
