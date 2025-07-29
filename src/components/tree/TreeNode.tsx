@@ -34,17 +34,20 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   return <div className="mb-1">
     <div
       data-cy="tree-node"
-      className={`flex items-center px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? 'bg-muted border border-border' : 'hover:bg-accent' }`}
-      onClick={(e) => handleNodeClick(e)}
     >
-      {!node.leaf && <span className={`mt-[2px] mr-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight /></span>}
-      <span className={`${node.leaf ? 'ml-4': ''}`}>{node.label}</span>
+      <div className={`flex px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? 'bg-muted border border-border' : 'hover:bg-accent' }`}
+        onClick={(e) => handleNodeClick(e)}>
+        {!node.leaf && <span className={`mt-[2px] mr-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight /></span>}
+        <span className={`${node.leaf ? 'ml-4': ''}`}>{node.label}</span>
+      </div>
+      <div className="node-children flex-col">
+        { isExpanded && node.children?.map((item: TreeNode, i) => (
+          <ul data-cy="tree-node-child" className="ml-3" key={i}>
+            <TreeNode node={item} />
+          </ul>
+        ))}
+      </div>
     </div>
-    { isExpanded && node.children?.map((item: TreeNode, i) => (
-      <ul data-cy="tree-node-child" className="ml-3" key={i}>
-        <TreeNode node={item} />
-      </ul>
-    ))}
   </div>
 }
 
