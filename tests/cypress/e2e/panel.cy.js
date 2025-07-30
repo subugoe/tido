@@ -14,11 +14,9 @@ describe('Panel', () => {
       .children()
       .eq(0)
       .children()
-      .should('have.length', 1)
-      .find('[data-cy="tree-node"]')
-      .first()
+      .should('have.length', 1)           // one root node
+      .children('[data-cy="node-children"]')
       .children()
-      .eq(1)
-      .children().should('have.length', 8)
+      .should('have.length', 8)           // children exists -> the root node is expanded initially
   })
 });
