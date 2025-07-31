@@ -51,4 +51,42 @@ describe('Panel', () => {
       .children().eq(0)
       .should('have.attr', 'data-cy', 'split')
   })
+
+  it('Should switch the panel mode and its corresponding panel body', () => {
+    cy.get('#panels-wrapper')
+      .find('[data-cy="panel-container"]')
+      .find('[data-image-container]')
+      .children().should('not.exist')   // data-image-container has no children in 'text' panelMode
+
+      // select split mode
+      .get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="panel-modes-toggle"]')
+      .children()
+      .first()
+      .click()
+      .parent()
+      .children()
+      .eq(0)
+      .should('have.attr', 'data-cy', 'split')
+      .should('have.attr', 'data-selected', 'true')          //'split' mode is selected
+      .parent()
+      .children()
+      .eq(1)
+      .should('have.attr', 'data-selected', 'false')
+
+      //below two blocks of code check whether the content is in split mode: the image container is not empty and there is text in scroll container
+
+      .get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="panel-container"]')
+      .find('[data-image-container]')
+      .children().should('not.have.length', 0)   // data-image-container now has children
+
+      .get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="panel-container"]')
+      .find('[data-scroll-container]')
+      .contains('fol. 279a')
+  })
 });

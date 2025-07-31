@@ -118,7 +118,7 @@ const Panel: FC = React.memo(() => {
           </div>
         </div>
 
-        <div className="relative flex h-full overflow-hidden border-t border-border">
+        <div className="relative flex h-full overflow-hidden border-t border-border" data-cy="panel-container">
           <div data-image-container className={`grow-0 shrink-0 ${showImage ? 'block' : 'hidden'} border-r border-border`}>
             {showImage && <ImageView />}
           </div>
