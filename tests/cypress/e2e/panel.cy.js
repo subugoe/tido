@@ -4,19 +4,36 @@ describe('Panel', () => {
   });
 
   it('Should navigate correctly in local tree', () => {
-    // click collection title opens a tree with the right root collection
+    // click collection title opens a tree with the expanded root collection and
     cy.get('[data-cy="panels-wrapper"]')
       .find('[data-cy="panel"]')
       .eq(0)
       .find('[data-cy="collection-title"]')
+      .find('span')
+      .contains( 'Ebene 1: Reproduktion der Dokumente')
       .click()
       .get('[data-cy="tree"]')
-      .children()
-      .eq(0)
-      .children()
-      .should('have.length', 1)           // one root node
+      .children().eq(1)
+      .children('[data-cy="tree-node"]')
+      .should('have.length', 1)           // initially we have one root node
       .children('[data-cy="node-children"]')
       .children()
       .should('have.length', 8)           // children exists -> the root node is expanded initially
+
+    // click at manifest and item updates the content correctly
+      .eq(2).click()
+      .find('[data-cy="node-children"]')
+      .first()
+      .children().should('have.length', 7)    // number of items of manifest
+      .eq(1).click()
+      .get('[data-radix-popper-content-wrapper]')     // popover is closed
+      .should('not.exist')
+      .get('[data-cy="manifest-label"]')
+      .contains('München BSB Cgm 627')
+      .get('[data-cy="item-label"]')
+      .contains('Page 243v')
+      .get('#panels-wrapper')
+      .find('.text-area').first()
+      .contains('fol. 243va')
   })
 });
