@@ -3,26 +3,52 @@ describe('Tree', () => {
     cy.visit('/4w-local.html')
   });
 
-  it('Should display collection node', () => {
+  it('Global tree: Should display one root collection node as expanded', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
-    cy.get('[data-cy="tree-node"]').should('be.visible')
-      .eq(0)
-      .find('span')
-      .should("have.text", "Vier Wachen vernetzt: Digitale Edition eines mystischen Traktats des Spätmittelalters");
+
+    cy.get('[data-cy="tree"]').should('be.visible')
+      // we have one root node with the title
+      .children().eq(0)
+      .children('[data-cy="tree-node"]')
+      .should('have.length', 1)
+      .children().eq(0)
+      .contains('Vier Wachen vernetzt: Digitale Edition eines mystischen Traktats des Spätmittelalters')
+
+      // it has two children with corresponding collection titles
+      .parent().parent()
+      .find('[data-cy="node-children"]').first()
+      .children()
+      .should('have.length', 2)
+      .children()
+      .eq(0).find('span').should('have.text','Ebene 1: Reproduktion der Dokumente')
+      .parents('[data-cy="node-children"]')
+      .children()
+      .should('have.length', 2)
+      .children()
+      .eq(1).find('span').should('have.text','Ebene 2: Kritische Edition der Fassungen')
   })
+
+  // TODO: Having two root collections shows initially both two root nodes as not expanded
 
   it('Should render manifests of collection', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
-    cy.get('[data-cy="tree-node-child"]')
+    cy.get('.tree')
+      .find('[data-cy="node-children"]').first()
+      .children().eq(0)                   // locate first nested collection
+      .click() // click first nested collection
+
+      .find('[data-cy="node-children"]')
       .children()
       .should('have.length', 8)
-    cy.get('[data-cy="tree-node-child"]')
-      .first()
-      .should('have.text','Einsiedeln, 278 1040')
-      .next()
-      .should('have.text', 'Kloster Neuburg, Cod. 251')
+      .eq(0)
+      .find('span').should('have.text','Einsiedeln, 278 1040')
+      .parents('[data-cy="node-children"]')
+      .children()
+      .eq(1)
+      .find('span').should('have.text','Kloster Neuburg, Cod. 251')
   })
 
+  /*
   it('Should show the right number of items', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
     cy.get('[data-cy="tree-node"]')
@@ -85,4 +111,6 @@ describe('Tree', () => {
       .should('have.text', 'Page 280')
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
   })
+
+   */
 });

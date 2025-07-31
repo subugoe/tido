@@ -38,7 +38,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       <div className={`flex items-center px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? 'bg-muted border border-border' : 'hover:bg-accent' }`}
         onClick={(e) => handleNodeClick(e)}>
         {!node.leaf && <span className={`mr-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight /></span>}
-        <span className={`${node.leaf ? 'ml-4': ''}`}>{node.label}</span>
+        <span className={`${node.leaf ? 'ml-4': ''}`} data-cy="node-label">{node.label}</span>
       </div>
       <div className="flex-col" data-cy="node-children">
         { isExpanded && node.children?.map((item: TreeNode, i) => (
