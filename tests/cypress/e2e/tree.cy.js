@@ -64,19 +64,28 @@ describe('Tree', () => {
       .eq(1).find('span').should('have.text','280')
   })
 
-  /*
+
   it('Should create a new panel using global tree', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
-    // TODO: testing for UI effect is not a good practice
-    cy.get('[data-cy="tree-node-child"]')      // get manifests
-      .first()                                          // click the first manifest
-      .click()
-      .find('[data-cy="tree-node-child"]')
-      .eq(1)                                      // position and click in second item
-      .click()
-      .find('[data-cy="tree-node"]')
-      .should('have.class', 'bg-muted')   // UI effect of active item
+      .get('.tree')
+      .find('[data-cy="node-children"]').first()
+      .children().eq(0)                   // locate first nested collection
+      .click() // click first nested collection
 
+      .find('[data-cy="node-children"]')
+      .children()
+      .should('have.length', 8)
+      .eq(0).click()
+      .find('[data-cy="node-children"]')
+      .children().should('have.length', 3)
+      .eq(1).click()                              // click the item 280
+
+      // Item is active
+      .find('[data-cy="tree-node"]').find('div').first()
+      .should('have.class','active')
+      .click()
+
+      // a popover is shown with two buttons (Panel 1, New Panel)
     cy.get('[data-cy="global-tree-modal"]')
       .get('[data-cy="buttons-update-panel"]')
       .children().should('have.length', 1)
@@ -85,6 +94,30 @@ describe('Tree', () => {
       .find('[data-cy="button-new-panel"]')
       .should('have.text', 'New Panel')         // click New Panel
       .click()
+
+      // a select view dialog should open:
+         // contains the select modes and the 'text' mode as initially selected
+      .get('#panels-wrapper')
+      .children().eq(1)
+      .find('div[role="dialog"]')
+      .find('[data-cy="modes-container"] [data-cy="modes"]')
+      .children().should('have.length', 3)
+      .eq(0).find('button').should('have.attr', 'data-cy', 'split')
+        .should('not.have.class', 'active')
+      .parents('[data-cy="modes"]').children()
+      .eq(1).find('button').should('have.attr', 'data-cy', 'text')
+        .should('have.class', 'active')             // 'text' mode should be selected
+      .parents('[data-cy="modes"]').children()
+      .eq(2).find('button').should('have.attr', 'data-cy', 'image')
+
+      .parents('div[role="dialog"]')
+      .find('button[id="do-not-ask-again"]').click()
+      .parents('div[role="dialog"]')
+
+
+      .find('button[data-cy="confirm"]')
+      .click()
+
     cy.get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in second panel
       .find('[data-cy="panel"]')
       .should('have.length', 2)
@@ -93,6 +126,8 @@ describe('Tree', () => {
       .should('have.text', 'Page 280')
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
   })
+
+  /*
 
   it('Should update a panel using global tree', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
