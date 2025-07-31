@@ -48,17 +48,23 @@ describe('Tree', () => {
       .find('span').should('have.text','Kloster Neuburg, Cod. 251')
   })
 
-  /*
   it('Should show the right number of items', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
-    cy.get('[data-cy="tree-node"]')
-    cy.get('[data-cy="tree-node-child"]')
-      .first()
-      .click()
-      .find('[data-cy="tree-node-child"]')
-      .should('have.length', 3)
+      .get('.tree')
+      .find('[data-cy="node-children"]').first()
+      .children().eq(0)                   // locate first nested collection
+      .click() // click first nested collection
+
+      .find('[data-cy="node-children"]')
+      .children()
+      .should('have.length', 8)
+      .eq(0).click()
+      .find('[data-cy="node-children"]')
+      .children().should('have.length', 3)
+      .eq(1).find('span').should('have.text','280')
   })
 
+  /*
   it('Should create a new panel using global tree', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
     // TODO: testing for UI effect is not a good practice
