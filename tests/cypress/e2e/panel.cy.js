@@ -1,3 +1,20 @@
+
+Cypress.Commands.add('validateLabel', (type, label) => {
+  // type: 'manifest' or 'item'
+  cy.get('#panels-wrapper')
+    .children().eq(0)
+    .find(`[data-cy=${type}-label]`)
+    .contains(label)
+})
+
+Cypress.Commands.add('validateText', (textSelector, content) => {
+  cy.get('#panels-wrapper')
+    .children().eq(0)
+    .find(textSelector)
+    .contains(content)
+})
+
+
 describe('Panel', () => {
   beforeEach(() => {
     cy.visit('/4w-local.html')
@@ -111,6 +128,23 @@ describe('Panel', () => {
       .children().eq(0)
       .find('.text-area')
       .contains('fol. 280a')
+  })
+
+  it('Should switch to next manifest', () => {
+    cy.get('#panels-wrapper')
+      .children()
+      .eq(0)
+      .find('[data-cy="panel-title-and-nav-arrows"]')
+      .find('[data-cy="next-button"]')
+      .click()
+      .click()
+      .click()  // should switch to the first item of Kloserneuburg manifest+
+
+    // Manifest and item labels should get updated
+      cy.validateLabel('manifest', 'Kloster Neuburg, Cod. 251')
+      cy.validateLabel('item', '192r')
+      cy.validateText('.text-area', 'fol. 192r')
+    // Text area should update
   })
 
   it('should navigate in item label', () => {
