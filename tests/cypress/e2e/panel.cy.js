@@ -90,6 +90,29 @@ describe('Panel', () => {
       .contains('fol. 279a')
   })
 
+  //  ------  Navigation  ---------
+
+  it('should switch to next item', () => {
+      cy.get('#panels-wrapper')
+        .children()
+        .eq(0)
+        .find('[data-cy="panel-title-and-nav-arrows"]')
+        .find('[data-cy="next-button"]')
+        .click()
+
+        // item label is updated
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="item-label"]')
+      .contains('Page 280')
+        // text content is updated
+
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('.text-area')
+      .contains('fol. 280a')
+  })
+
   it('should navigate in item label', () => {
     // item label is updated
     // text is updated
@@ -162,4 +185,7 @@ describe('Panel', () => {
       .find('.text-area')
       .contains('fol. 243va')
   })
+
+  // ----------- End of Navigation ---------
+
 });
