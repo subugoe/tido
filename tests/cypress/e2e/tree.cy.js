@@ -121,10 +121,10 @@ describe('Tree', () => {
       .eq(0).find('button').should('have.attr', 'data-cy', 'split')
         .should('not.have.class', 'active')
       .parents('[data-cy="modes"]').children()
-      .eq(2).find('button').should('have.attr', 'data-cy', 'image')
+      .eq(1).find('button').should('have.attr', 'data-cy', 'text')
       .should('have.class', 'active')
       .parents('[data-cy="modes"]').children()
-      .eq(1).find('button').should('have.attr', 'data-cy', 'text')
+      .eq(2).find('button').should('have.attr', 'data-cy', 'image')
         .should('not.have.class', 'active')             // 'text' mode should be select
         .click()                         // switch to 'text' mode
 
@@ -142,6 +142,11 @@ describe('Tree', () => {
       .eq(1)
       .find('[data-cy="item-label"]')
       .should('have.text', 'Page 280')
+      // switch to text mode
+      .parents('.panel')
+      .find('[data-cy="panel-modes-toggle"]')
+      .children()
+      .eq(1).click()                   // switch to text view to check the text content
       .parents('.panel')
       .find('.text-area').first()
       .contains('fol. 280a')
@@ -170,7 +175,7 @@ describe('Tree', () => {
       .should('have.length', 3)
       .eq(2)
       .find('[data-cy="panel-modes-toggle"]')
-      .find('button[data-cy="text"]')
+      .find('button[data-cy="image"]')
       .should('have.attr', 'data-selected', 'true')
 
       // 3) toggle in settings is off
