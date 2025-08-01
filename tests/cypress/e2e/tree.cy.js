@@ -132,21 +132,20 @@ describe('Tree', () => {
       .find('button[id="do-not-ask-again"]').click()
       .parents('div[role="dialog"]')
 
-
       .find('button[data-cy="confirm"]')
       .click()
 
     cy.get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in second panel
       .find('[data-cy="panel"]')
-      .should('have.length', 2)
+      .should('have.length', 2)      // now we have 2 panels
       .eq(1)
       .find('[data-cy="item-label"]')
-      .should('have.text', 'Page 280')
+      .should('have.text', 'Page 280')     // Panel was added after the first on e
       // switch to text mode
       .parents('.panel')
       .find('[data-cy="panel-modes-toggle"]')
       .children()
-      .eq(1).click()                   // switch to text view to check the text content
+      .eq(1).click()                   // switch to text mode to check the text content
       .parents('.panel')
       .find('.text-area').first()
       .contains('fol. 280a')
@@ -172,7 +171,7 @@ describe('Tree', () => {
     // 2) the new panel is automatically opened in 'text' selected mode
     cy.get('[data-cy="panels-wrapper"]')
       .find('.panel')
-      .should('have.length', 3)
+      .should('have.length', 3)     // we have 3 panels
       .eq(2)
       .find('[data-cy="panel-modes-toggle"]')
       .find('button[data-cy="image"]')
@@ -186,7 +185,42 @@ describe('Tree', () => {
       .find('[data-cy="select-panel-mode-toggle"]')
       .find('button')
       .should('have.attr','aria-checked','false')
+
+    // Reset toggle to 'on' shows the select mode dialog after selecting an item i.e in global tree
+
+      .click()
+      .should('have.attr', 'aria-checked', 'true')
+      .get('button[data-cy="settings"]')
+      .click({ force: true })
+
+      // select another item from tree
+      .get('.tree')
+      .find('[data-cy="node-children"]')
+      .children().eq(0)                   // locate first nested collection
+      .find('[data-cy="node-children"]').first()
+      .children().eq(1).click()
+      .find('[data-cy="node-children"]')
+      .children()
+      .eq(1).click()
+
+    // in the global tree modal: we should have 4 buttons (3 buttons to update the first 3 panels and 'New Panel')
+     .get('[data-cy="global-tree-modal"]')
+      .find('[data-cy="buttons-update-panel"]')
+      .children()
+      .last().should('have.text', 'Panel 3')
+
+    // under the fourth panel, we see a dialog which has a modes-container with 3 modes
+    cy.clickNewPanelInGlobalTree()
+      .get('#panels-wrapper')
+      .find('.panel')
+      .eq(3)
+      .find('div[role="dialog"]')
+      .find('div[data-cy="modes"')
+      .children().should('have.length', 3)
+      .eq(0)
+      .find('button[data-cy="split"]')
   })
+
 
 
   it('Should update a panel using global tree', () => {
