@@ -89,4 +89,77 @@ describe('Panel', () => {
       .find('[data-scroll-container]')
       .contains('fol. 279a')
   })
+
+  it('should navigate in item label', () => {
+    // item label is updated
+    // text is updated
+    // item modal is not anymore in DOM
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="item-label"]')
+      .contains('Page 279')
+      .click()
+
+      .get('[data-cy="dropdown-items"]')
+      .children().should('have.length', 3)
+      .eq(2)
+      .contains('281')
+      .click()
+
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="dropdown-items"]').should('not.exist')
+
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="item-label"]')
+      .contains('Page 281')
+
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('.text-area')
+      .contains('fol. 281a')
+  })
+
+  it('should navigate in manifest and consecutively in item labels', () => {
+      cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="manifest-label"]')
+      .contains('Einsiedeln, 278 1040')
+        .click()
+        .get('[data-cy="dropdown-manifests"]')
+        .children().should('have.length', 8)
+        .eq(1)
+        .contains(' Kloster Neuburg, Cod. 251')
+        .next()
+        .contains('München BSB Cgm 627')
+        .click()
+
+        // element 'dropdown-manifests' does not exist anymore in dom, 'dropdown-items' should be now in DOM
+        .get('[data-cy="dropdown-manifests"]').should('not.exist')
+        .get('[data-cy="dropdown-items"]')
+        .children().should('have.length', 7)
+        .eq(0).contains('243r')
+        .next()
+        .contains('243v')
+        .click()
+
+    // clicking this item: updates manifest and item labels and the text content
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="dropdown-items"]').should('not.exist')
+      .get('#panels-wrapper').find('.panel').eq(0)
+      .find('[data-cy="manifest-label"]')
+      .contains('München BSB Cgm 627')
+
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="item-label"]')
+      .contains('243v')
+
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('.text-area')
+      .contains('fol. 243va')
+  })
 });
