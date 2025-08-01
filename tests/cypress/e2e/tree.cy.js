@@ -121,11 +121,12 @@ describe('Tree', () => {
       .eq(0).find('button').should('have.attr', 'data-cy', 'split')
         .should('not.have.class', 'active')
       .parents('[data-cy="modes"]').children()
-      .eq(1).find('button').should('have.attr', 'data-cy', 'text')
-        .should('have.class', 'active')             // 'text' mode should be selected
-      .parents('[data-cy="modes"]').children()
       .eq(2).find('button').should('have.attr', 'data-cy', 'image')
-      .click()                         // switch to 'image' mode
+      .should('have.class', 'active')
+      .parents('[data-cy="modes"]').children()
+      .eq(1).find('button').should('have.attr', 'data-cy', 'text')
+        .should('not.have.class', 'active')             // 'text' mode should be select
+        .click()                         // switch to 'text' mode
 
       .parents('div[role="dialog"]')
       .find('button[id="do-not-ask-again"]').click()
@@ -141,9 +142,15 @@ describe('Tree', () => {
       .eq(1)
       .find('[data-cy="item-label"]')
       .should('have.text', 'Page 280')
+      .parents('.panel')
+      .find('.text-area').first()
+      .contains('fol. 280a')
+
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
 
-      // check 1) select mode dialog is not shown again  2) the new panel is automatically in 'image' mode
+    // Second opening of a new panel from Global tree
+      // select mode dialog should not be shown, since we checked the option: Please do not show again
+
     .get('.tree')
       .find('[data-cy="node-children"]')
       .children().eq(0)                   // locate first nested collection
@@ -154,17 +161,26 @@ describe('Tree', () => {
       .eq(2).click()
 
     cy.clickNewPanelInGlobalTree()
+    // check 1) select mode dialog is not shown again  2) the new panel is automatically in 'image' mode 3) Select mode toggle in settings is 'off'
     // 1) select mode dialog is not shown again
     cy.existSelectModeDialog(false)
-    // 2) the new panel is automatically in 'image' mode
+    // 2) the new panel is automatically opened in 'text' selected mode
     cy.get('[data-cy="panels-wrapper"]')
       .find('.panel')
       .should('have.length', 3)
       .eq(2)
       .find('[data-cy="panel-modes-toggle"]')
-      .find('button[data-cy="image"]')
+      .find('button[data-cy="text"]')
       .should('have.attr', 'data-selected', 'true')
-    // TODO: toggle in settings is off
+
+      // 3) toggle in settings is off
+    cy.get('[data-cy="header"]')
+      .find('button[data-cy="settings"]')
+      .click()
+      .get('[data-radix-menu-content]')
+      .find('[data-cy="select-panel-mode-toggle"]')
+      .find('button')
+      .should('have.attr','aria-checked','false')
   })
 
   /*
