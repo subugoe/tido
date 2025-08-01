@@ -183,16 +183,21 @@ describe('Tree', () => {
       .should('have.attr','aria-checked','false')
   })
 
-  /*
 
   it('Should update a panel using global tree', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
-    cy.get('[data-cy="tree-node-child"]')      // get manifests
-      .first()                                          // click the first manifest
-      .click()
-      .find('[data-cy="tree-node-child"]')
-      .eq(1)                                      // position and click in second item
-      .click()
+      .get('.tree')
+      .find('[data-cy="node-children"]').first()
+      .children().eq(0)                   // locate first nested collection
+      .click() // click first nested collection
+
+      .find('[data-cy="node-children"]')
+      .children()
+      .should('have.length', 8)
+      .eq(0).click()
+      .find('[data-cy="node-children"]')
+      .children()
+      .eq(1).click()
 
     cy.get('[data-cy="global-tree-modal"]')
       .get('[data-cy="buttons-update-panel"]')
@@ -206,8 +211,15 @@ describe('Tree', () => {
       .eq(0)
       .find('[data-cy="item-label"]')
       .should('have.text', 'Page 280')
+      .parents('.panel')
+      .find('[data-cy="panel-modes-toggle"]')
+      .children()
+      .eq(1).click()                   // switch to text view
+      .parents('.panel')
+      .find('.text-area').first()
+      .contains('fol. 280a')
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
   })
 
-   */
+
 });
