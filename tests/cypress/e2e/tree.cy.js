@@ -1,3 +1,18 @@
+Cypress.Commands.add('clickNewPanelInGlobalTree', () => {
+  cy.get('[data-cy="global-tree-modal"]')
+    .find('[data-cy="button-new-panel"]')
+    .should('have.text', 'New Panel')         // click New Panel
+    .click()
+})
+
+
+Cypress.Commands.add('existSelectModeDialog', (exists) => {
+  cy.get('#panels-wrapper')
+    .find('div[role="dialog"]').should(exists ? 'exist' : 'not.exist')
+})
+
+
+
 describe('Tree', () => {
   beforeEach(() => {
     cy.visit('/4w-local.html')
@@ -95,12 +110,13 @@ describe('Tree', () => {
       .should('have.text', 'New Panel')         // click New Panel
       .click()
 
-      // a select view dialog should open:
+      // a select mode dialog should open:
          // contains the select modes and the 'text' mode as initially selected
       .get('#panels-wrapper')
       .children().eq(1)
       .find('div[role="dialog"]')
       .find('[data-cy="modes-container"] [data-cy="modes"]')
+      .should('exist')
       .children().should('have.length', 3)
       .eq(0).find('button').should('have.attr', 'data-cy', 'split')
         .should('not.have.class', 'active')
@@ -109,6 +125,7 @@ describe('Tree', () => {
         .should('have.class', 'active')             // 'text' mode should be selected
       .parents('[data-cy="modes"]').children()
       .eq(2).find('button').should('have.attr', 'data-cy', 'image')
+      .click()                         // switch to 'image' mode
 
       .parents('div[role="dialog"]')
       .find('button[id="do-not-ask-again"]').click()
@@ -125,6 +142,29 @@ describe('Tree', () => {
       .find('[data-cy="item-label"]')
       .should('have.text', 'Page 280')
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
+
+      // check 1) select mode dialog is not shown again  2) the new panel is automatically in 'image' mode
+    .get('.tree')
+      .find('[data-cy="node-children"]')
+      .children().eq(0)                   // locate first nested collection
+      .find('[data-cy="node-children"]').first()
+      .children().eq(0)
+      .find('[data-cy="node-children"]')
+      .children()
+      .eq(2).click()
+
+    cy.clickNewPanelInGlobalTree()
+    // 1) select mode dialog is not shown again
+    cy.existSelectModeDialog(false)
+    // 2) the new panel is automatically in 'image' mode
+    cy.get('[data-cy="panels-wrapper"]')
+      .find('.panel')
+      .should('have.length', 3)
+      .eq(2)
+      .find('[data-cy="panel-modes-toggle"]')
+      .find('button[data-cy="image"]')
+      .should('have.attr', 'data-selected', 'true')
+    // TODO: toggle in settings is off
   })
 
   /*
