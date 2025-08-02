@@ -100,16 +100,12 @@ describe('Panel', () => {
       .find('[data-image-container]')
       .children().should('not.have.length', 0)   // data-image-container now has children
 
-      .get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="panel-container"]')
-      .find('[data-scroll-container]')
-      .contains('fol. 279a')
+      cy.validateText('.text-area', 'fol. 279a')
   })
 
   //  ------  Navigation  ---------
 
-  it('should switch to next item', () => {
+  it('Should switch to next item', () => {
       cy.get('#panels-wrapper')
         .children()
         .eq(0)
@@ -117,17 +113,9 @@ describe('Panel', () => {
         .find('[data-cy="next-button"]')
         .click()
 
-        // item label is updated
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="item-label"]')
-      .contains('Page 280')
-        // text content is updated
-
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('.text-area')
-      .contains('fol. 280a')
+    // item label and text is updated
+    cy.validateLabel('item','Page 280')
+    cy.validateText('.text-area', 'fol. 280a')
   })
 
   it('Should switch to next manifest', () => {
@@ -147,14 +135,11 @@ describe('Panel', () => {
     // Text area should update
   })
 
-  it('should navigate in item label', () => {
+  it('Should navigate in item label', () => {
     // item label is updated
     // text is updated
     // item modal is not anymore in DOM
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="item-label"]')
-      .contains('Page 279')
+    cy.validateLabel('item', 'Page 279')
       .click()
 
       .get('[data-cy="dropdown-items"]')
@@ -167,22 +152,14 @@ describe('Panel', () => {
       .children().eq(0)
       .find('[data-cy="dropdown-items"]').should('not.exist')
 
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="item-label"]')
-      .contains('Page 281')
-
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('.text-area')
-      .contains('fol. 281a')
+    cy.validateLabel('item', 'Page 281')       // item label is updated
+    cy.validateText('.text-area', 'fol. 281a')   // text is updated
   })
 
-  it('should navigate in manifest and consecutively in item labels', () => {
-      cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="manifest-label"]')
-      .contains('Einsiedeln, 278 1040')
+  it('Should navigate in manifest and consecutively in item labels', () => {
+
+    // validate Manifest Dropdown labels
+    cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
         .click()
         .get('[data-cy="dropdown-manifests"]')
         .children().should('have.length', 8)
@@ -204,22 +181,13 @@ describe('Panel', () => {
     // clicking this item: updates manifest and item labels and the text content
     cy.get('#panels-wrapper')
       .children().eq(0)
-      .find('[data-cy="dropdown-items"]').should('not.exist')
-      .get('#panels-wrapper').find('.panel').eq(0)
-      .find('[data-cy="manifest-label"]')
-      .contains('München BSB Cgm 627')
+      .find('[data-cy="dropdown-items"]').should('not.exist')   // item dropdown is closed
 
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="item-label"]')
-      .contains('243v')
-
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('.text-area')
-      .contains('fol. 243va')
+    // Update of content
+    cy.validateLabel('manifest', 'München BSB Cgm 627')
+    cy.validateLabel('item', '243v')
+    cy.validateText('.text-area', 'fol. 243va')
   })
 
   // ----------- End of Navigation ---------
-
 });
