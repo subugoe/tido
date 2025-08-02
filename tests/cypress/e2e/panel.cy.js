@@ -14,6 +14,13 @@ Cypress.Commands.add('validateText', (textSelector, content) => {
     .contains(content)
 })
 
+Cypress.Commands.add('findPanelTitleAndNavArrows', () => {
+  cy.get('#panels-wrapper')
+    .children()
+    .eq(0)
+    .find('[data-cy="panel-title-and-nav-arrows"]')
+})
+
 
 describe('Panel', () => {
   beforeEach(() => {
@@ -134,6 +141,23 @@ describe('Panel', () => {
       cy.validateText('.text-area', 'fol. 192r')
     // Text area should update
   })
+
+  it('Should switch to previous item', () => {
+      cy.findPanelTitleAndNavArrows()
+        .find('[data-cy="next-button"]')           // go to Page 280
+        .click()
+        cy.validateLabel('item','Page 280')
+
+      cy.findPanelTitleAndNavArrows()
+        .find('[data-cy="prev-button"]')          // go back to Page 279
+        .click()
+
+      cy.validateLabel('item','Page 279')
+      cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
+      cy.validateText('.text-area', 'fol. 279a')
+  })
+
+
 
   it('Should navigate in item label', () => {
     // item label is updated
