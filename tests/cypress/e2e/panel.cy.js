@@ -113,10 +113,7 @@ describe('Panel', () => {
   //  ------  Navigation  ---------
 
   it('Should switch to next item', () => {
-      cy.get('#panels-wrapper')
-        .children()
-        .eq(0)
-        .find('[data-cy="panel-title-and-nav-arrows"]')
+      cy.findPanelTitleAndNavArrows()
         .find('[data-cy="next-button"]')
         .click()
 
@@ -126,10 +123,7 @@ describe('Panel', () => {
   })
 
   it('Should switch to next manifest', () => {
-    cy.get('#panels-wrapper')
-      .children()
-      .eq(0)
-      .find('[data-cy="panel-title-and-nav-arrows"]')
+    cy.findPanelTitleAndNavArrows()
       .find('[data-cy="next-button"]')
       .click()
       .click()
@@ -155,6 +149,33 @@ describe('Panel', () => {
       cy.validateLabel('item','Page 279')
       cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
       cy.validateText('.text-area', 'fol. 279a')
+  })
+
+  it('Should switch to previous manifest', () => {
+    // Initially open München 627, first item in manifest label dropdown
+    // Click previous button
+    // should update the panel content with the previous manifest, last item, text area
+
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="manifest-label"]')
+      .click()
+      .get('[data-cy="dropdown-manifests"]')
+      .children()
+      .eq(2)
+      .click()
+
+      .get('[data-cy="dropdown-items"]')
+      .children()
+      .eq(0)
+      .click()
+
+      .findPanelTitleAndNavArrows()
+      .find('[data-cy="prev-button"]')
+      .click()
+
+    cy.validateLabel('manifest', 'Kloster Neuburg, Cod. 251')
+    cy.validateLabel('item','Page 72v')
+    cy.validateText('.text-area', 'fol. 72v')
   })
 
 
