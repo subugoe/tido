@@ -52,13 +52,9 @@ describe('Panel', () => {
       .eq(1).click()
       .get('[data-radix-popper-content-wrapper]')     // popover is closed
       .should('not.exist')
-      .get('[data-cy="manifest-label"]')
-      .contains('München BSB Cgm 627')
-      .get('[data-cy="item-label"]')
-      .contains('Page 243v')
-      .get('#panels-wrapper')
-      .find('.text-area').first()
-      .contains('fol. 243va')
+      cy.validateLabel('manifest', 'München BSB Cgm 627')
+      cy.validateLabel('item', 'Page 243v')
+      cy.validateText('.text-area', 'fol. 243va')
   })
 
   it('Should display the configured panelModes and the defaultPanelMode as selected', () => {
@@ -295,9 +291,34 @@ describe('Panel', () => {
       .should('not.have.attr', 'disabled')
   })
 
-  it('Should disable the next button in last manifest first item', () => {
+  it('Should disable the next button in last manifest last item', () => {
+    // navigate to last item of last manifest
+    cy.get('[data-cy="panels-wrapper"]')
+      .find('[data-cy="panel"]')
+      .eq(0)
+      .find('[data-cy="collection-title"]')
+      .click()
+      .get('[data-cy="tree"]')
+      .children().eq(1)
+      .children('[data-cy="tree-node"]')
+      .children('[data-cy="node-children"]')
+      .children()
+      .should('have.length', 8)
 
+      .last().click()
+      .find('[data-cy="node-children"]')
+      .children()
+      .last().click()
+
+    // 'prev' is not 'disabled'
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="prev-button"]')
+      .should('not.have.attr', 'disabled')
+
+    // 'next is 'disabled'
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="next-button"]')
+      .should('have.attr', 'disabled')
   })
-
   // ----------- End of Navigation ---------
 });
