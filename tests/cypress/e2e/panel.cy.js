@@ -283,5 +283,21 @@ describe('Panel', () => {
       .should('have.attr', 'data-selected', 'true')
   })
 
+  it('Should disable the prev button in first manifest first item', () => {
+    // 'prev' is disabled
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="prev-button"]')
+      .should('have.attr', 'disabled')
+
+    // 'next is not 'disabled'
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="next-button"]')
+      .should('not.have.attr', 'disabled')
+  })
+
+  it('Should disable the next button in last manifest first item', () => {
+
+  })
+
   // ----------- End of Navigation ---------
 });
