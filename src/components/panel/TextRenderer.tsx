@@ -120,7 +120,8 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
 
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
-  const { panelState, setSelectedAnnotation, setFilteredAnnotations, showTextOptions, updatePanel } = usePanel()
+  const { panelState, setSelectedAnnotation, setFilteredAnnotations,
+    setVisibleAnnotations, setSelectedAnnotationTypes , showTextOptions, updatePanel } = usePanel()
 
   const onClickTarget = (id: string) => {
     const annotation = panelState.annotations.find(a => a.id === id)
@@ -163,7 +164,15 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   useEffect(() => {
     const filteredAnnotations = panelState.annotations?.filter(a => matchedAnnotationsMap[a.id]) ?? []
     setFilteredAnnotations(filteredAnnotations)
+    setVisibleAnnotations(filteredAnnotations)
+    initSelectedAnnotationsTypes(filteredAnnotations)
   }, [matchedAnnotationsMap])
+
+  function initSelectedAnnotationsTypes(filteredAnnotations: Annotation[]) {
+    const contentTypes = filteredAnnotations.map(item => item.body['x-content-type'])
+    const uniqueContentTypes = [...new Set(contentTypes)]
+    setSelectedAnnotationTypes(uniqueContentTypes)
+  }
 
   const reactElements = React.useMemo(() => {
     return Array.from(parsedDom.body.childNodes).map((node, i) =>

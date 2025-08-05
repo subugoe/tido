@@ -5,7 +5,8 @@ import Annotation from '@/components/panel/annotations/Annotation.tsx'
 const ANNOTATION_GAP = 5
 
 const AnnotationsBody: FC = () => {
-  const { panelId, filteredAnnotations, selectedAnnotation } = usePanel()
+  const { panelId, filteredAnnotations, visibleAnnotations, setVisibleAnnotations, selectedAnnotation, selectedAnnotationTypes, setSelectedAnnotationTypes } = usePanel()
+
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
   // position of each annotation.
@@ -20,6 +21,11 @@ const AnnotationsBody: FC = () => {
   useEffect(() => {
     if (selectedAnnotation) trackTopChange()
   }, [selectedAnnotation])
+
+  useEffect(() => {
+    const visibleAnnots = filteredAnnotations.filter(annotation => selectedAnnotationTypes.includes(annotation.body['x-content-type']))
+    setVisibleAnnotations(visibleAnnots)
+  }, [selectedAnnotationTypes])
 
 
   function trackTopChange() {
@@ -75,14 +81,17 @@ const AnnotationsBody: FC = () => {
     moveBefore(index - 1)
   }
 
+
   useEffect(() => {
     if (filteredAnnotations.length === 0) {
       setElements([])
     } else {
+      const visibleAnnotations = [...filteredAnnotations]
       const annotationEls = Array.from(ref.current.childNodes)
       const _elements = annotationEls.map(el => {
-        const annotation = filteredAnnotations.find(a => a.id === el.getAttribute('data-annotation'))
+        const annotation = visibleAnnotations.find(a => a.id === el.getAttribute('data-annotation'))
         if (!annotation) return
+
         const target = document.getElementById(panelId).querySelector(annotation.target[0].selector.value)
         return {
           target,
@@ -119,8 +128,9 @@ const AnnotationsBody: FC = () => {
     }
   }, [elements])
 
+
   return <div ref={ref} className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
-    {filteredAnnotations.map(a => <Annotation
+    {visibleAnnotations.map(a => <Annotation
       data={a}
       key={a.id}
       top={yMap[a.id]}
