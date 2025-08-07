@@ -48,4 +48,19 @@ describe('Panel', () => {
     cy.validateText('.text-area', 'fol. 243va')
   })
 
+  it('Should display the configured panelModes and the defaultPanelMode as selected', () => {
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="panel-modes-toggle"]')
+      .first()
+      .children()
+      .should('have.length', 3)
+      .eq(1)                    // order of panelModes is displayed as provided
+      .should('have.attr', 'data-cy', 'text')
+      .should('have.attr', 'data-selected', 'true')
+      .parent()
+      .children().eq(0)
+      .should('have.attr', 'data-cy', 'split')
+  })
+
 })
