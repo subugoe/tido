@@ -58,7 +58,7 @@ const PanelModeToggle: FC = () => {
     <>
       { !panelState && <Skeleton /> }
       { panelState && buttonsData.length > 1 &&
-        <div className="flex gap-1">
+        <div className="flex gap-1" data-cy="panel-modes-toggle">
           {buttonsData.map((button) => {
             const Icon = button.icon
 
