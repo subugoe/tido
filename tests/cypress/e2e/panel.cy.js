@@ -226,5 +226,53 @@ describe('Panel', () => {
     cy.validateText('.text-area', 'fol. 243va')
   })
 
+  it('Should keep panel mode same after creating a new panel and navigating to another item in the first panel', () => {
+
+    // create a new panel and select 'image' as the panel mode
+    cy.get('[data-cy="global-tree-toggle"]').click()
+      .get('.tree')
+      .find('[data-cy="node-children"]').first()
+      .children().eq(0)                   // locate first nested collection
+      .click() // click first nested collection
+
+      .find('[data-cy="node-children"]')
+      .children()
+      .should('have.length', 8)
+      .eq(0).click()
+      .find('[data-cy="node-children"]')
+      .children().should('have.length', 3)
+      .eq(1).click()                              // click the item 280
+
+    // Click 'New Panel' in Global Tree Popover
+    cy.get('[data-cy="global-tree-modal"]')
+      .find('[data-cy="button-new-panel"]')
+      .should('have.text', 'New Panel')         // click New Panel
+      .click()
+
+      // a select mode dialog should open: we select 'image'
+      .get('#panels-wrapper')
+      .children().eq(1)
+      .find('div[role="dialog"]')
+      .find('[data-cy="modes-container"] [data-cy="modes"]')
+      .should('exist')
+      .children().should('have.length', 3)
+      .eq(2).find('button').should('have.attr', 'data-cy', 'image')
+      .click()                         // switch to 'text' mode
+
+      .parents('div[role="dialog"]')
+      .find('button[data-cy="confirm"]')
+      .click()
+
+    // 1)In first panel we navigate to next item and 2) make sure the panel mode is still 'text'
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="next-button"]')
+      .click()
+
+      .get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="panel-modes-toggle"]')
+      .find('[data-cy="text"]')
+      .should('have.attr', 'data-selected', 'true')
+  })
 
 })
