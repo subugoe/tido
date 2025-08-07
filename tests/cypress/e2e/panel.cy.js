@@ -275,4 +275,47 @@ describe('Panel', () => {
       .should('have.attr', 'data-selected', 'true')
   })
 
+  it('Should disable the prev button in first manifest first item', () => {
+    // 'prev' is disabled
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="prev-button"]')
+      .should('have.attr', 'disabled')
+
+    // 'next is not 'disabled'
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="next-button"]')
+      .should('not.have.attr', 'disabled')
+  })
+
+  it('Should disable the next button in last manifest last item', () => {
+    // navigate to last item of last manifest
+    cy.get('[data-cy="panels-wrapper"]')
+      .find('[data-cy="panel"]')
+      .eq(0)
+      .find('[data-cy="collection-title"]')
+      .click()
+      .get('[data-cy="tree"]')
+      .children().eq(1)
+      .children('[data-cy="tree-node"]')
+      .children('[data-cy="node-children"]')
+      .children()
+      .should('have.length', 8)
+
+      .last().click()
+      .find('[data-cy="node-children"]')
+      .children()
+      .last().click()
+
+    // 'prev' is not 'disabled'
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="prev-button"]')
+      .should('not.have.attr', 'disabled')
+
+    // 'next is 'disabled'
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="next-button"]')
+      .should('have.attr', 'disabled')
+  })
+  // ----------- End of Navigation ---------
+
 })
