@@ -1,3 +1,10 @@
+Cypress.Commands.add('findPanelTitleAndNavArrows', () => {
+  cy.get('#panels-wrapper')
+    .children()
+    .eq(0)
+    .find('[data-cy="panel-title-and-nav-arrows"]')
+})
+
 Cypress.Commands.add('validateLabel', (type, label) => {
   // type: 'manifest' or 'item'
   cy.get('#panels-wrapper')
@@ -97,5 +104,72 @@ describe('Panel', () => {
     cy.validateText('.text-area', 'fol. 279a')
   })
 
+  //  ------  Navigation  ---------
+
+  it('Should switch to next item', () => {
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="next-button"]')
+      .click()
+
+    // item label and text is updated
+    cy.validateLabel('item','Page 280')
+    cy.validateText('.text-area', 'fol. 280a')
+  })
+
+  it('Should switch to next manifest', () => {
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="next-button"]')
+      .click()
+      .click()
+      .click()  // should switch to the first item of Kloserneuburg manifest+
+
+    // Manifest and item labels should get updated
+    cy.validateLabel('manifest', 'Kloster Neuburg, Cod. 251')
+    cy.validateLabel('item', '192r')
+    cy.validateText('.text-area', 'fol. 192r')
+    // Text area should update
+  })
+
+  it('Should switch to previous item', () => {
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="next-button"]')           // go to Page 280
+      .click()
+    cy.validateLabel('item','Page 280')
+
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="prev-button"]')          // go back to Page 279
+      .click()
+
+    cy.validateLabel('item','Page 279')
+    cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
+    cy.validateText('.text-area', 'fol. 279a')
+  })
+
+  it('Should switch to previous manifest', () => {
+    // Initially open München 627, first item in manifest label dropdown
+    // Click previous button
+    // should update the panel content with the previous manifest, last item, text area
+
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="manifest-label"]')
+      .click()
+      .get('[data-cy="manifests-dropdown"]')
+      .children()
+      .eq(2)
+      .click()
+
+      .get('[data-cy="items-dropdown"]')
+      .children()
+      .eq(0)
+      .click()
+
+      .findPanelTitleAndNavArrows()
+      .find('[data-cy="prev-button"]')
+      .click()
+
+    cy.validateLabel('manifest', 'Kloster Neuburg, Cod. 251')
+    cy.validateLabel('item','Page 72v')
+    cy.validateText('.text-area', 'fol. 72v')
+  })
 
 })
