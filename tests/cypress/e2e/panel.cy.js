@@ -172,4 +172,59 @@ describe('Panel', () => {
     cy.validateText('.text-area', 'fol. 72v')
   })
 
+  it('Should navigate in item label', () => {
+    // item label is updated
+    // text is updated
+    // item modal is not anymore in DOM
+    cy.validateLabel('item', 'Page 279')
+      .click()
+
+      .get('[data-cy="items-dropdown"]')
+      .children().should('have.length', 3)
+      .eq(2)
+      .contains('281')
+      .click()
+
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="items-dropdown"]').should('not.exist')
+
+    cy.validateLabel('item', 'Page 281')       // item label is updated
+    cy.validateText('.text-area', 'fol. 281a')   // text is updated
+  })
+
+  it('Should navigate in manifest and consecutively in item labels', () => {
+
+    // validate Manifest Dropdown labels
+    cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
+      .click()
+      .get('[data-cy="manifests-dropdown"]')
+      .children().should('have.length', 8)
+      .eq(1)
+      .contains(' Kloster Neuburg, Cod. 251')
+      .next()
+      .contains('München BSB Cgm 627')
+      .click()
+
+      // element 'manifests-dropdown' does not exist anymore in dom, 'items-dropdown' should be now in DOM
+      .get('[data-cy="manifests-dropdown"]').should('not.exist')
+      .get('[data-cy="items-dropdown"]')
+      .children().should('have.length', 7)
+      .eq(0).contains('243r')
+      .next()
+      .contains('243v')
+      .click()
+
+    // clicking this item: updates manifest and item labels and the text content
+    cy.get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="items-dropdown"]').should('not.exist')   // item dropdown is closed
+
+    // Update of content
+    cy.validateLabel('manifest', 'München BSB Cgm 627')
+    cy.validateLabel('item', '243v')
+    cy.validateText('.text-area', 'fol. 243va')
+  })
+
+
 })
