@@ -1,6 +1,7 @@
 
 import { FC, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { Button } from '@/components/ui/button.tsx'
 
 interface AnnotationTypeProps {
   type: string
@@ -32,12 +33,15 @@ const AnnotationType: FC<AnnotationTypeProps> = ({ type }) => {
   }
 
   return (
-    <div
-      data-cy="annotation-type"
-      className={`w-fit rounded cursor-pointer px-1 py-0.5 ${selected ?  'bg-white text-black' : 'bg-black text-white'}`}
-      onClick={() => onAnnotationTypeSelect()}>
-      {type}
-    </div>
+    <Button
+      onClick={() => onAnnotationTypeSelect()}
+      variant={selected ? 'secondary' : 'ghost'}
+      className="w-fit p-2"
+      size="icon"
+      data-selected={selected}
+      data-cy={type}
+    >{type}
+    </Button>
   )
 }
 

@@ -5,9 +5,7 @@ import AnnotationType from '@/components/panel/annotations/AnnotationType.tsx'
 
 const AnnotationsHeader: FC = () => {
 
-  const { panelState, selectedAnnotationTypes } = usePanel()
-
-  const [annotationTypes, setAnnotationTypes] = useState(selectedAnnotationTypes)
+  const { panelState, annotationTypes, setAnnotationTypes } = usePanel()
 
   useEffect(() => {
     // get annotations which are related to text
@@ -23,7 +21,6 @@ const AnnotationsHeader: FC = () => {
     <div data-cy="annotations-header" className="flex mt-4 gap-2">
       { annotationTypes.map((type: string, i) => <AnnotationType type={type} key={'annotation-type-' +i} />)}
     </div>
-
   )
 }
 
