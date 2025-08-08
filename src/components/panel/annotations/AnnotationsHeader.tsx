@@ -5,20 +5,19 @@ import AnnotationType from '@/components/panel/annotations/AnnotationType.tsx'
 
 const AnnotationsHeader: FC = () => {
 
-  const { filteredAnnotations } = usePanel()
+  const { panelState } = usePanel()
 
   const [annotationTypes, setAnnotationTypes] = useState([])
 
   useEffect(() => {
-    const contentTypes = filteredAnnotations.map(item => item.body['x-content-type'])
+    const contentTypes = panelState.annotations.map(item => item.body['x-content-type'])
     const uniqueContentTypes = [...new Set(contentTypes)]
     setAnnotationTypes(uniqueContentTypes)
-  }, [filteredAnnotations])
+  }, [panelState.annotations])
 
-
-  return (
+  if (annotationTypes.length > 0) return (
     <div data-cy="annotations-header" className="flex mt-4 gap-2">
-      {annotationTypes.length > 0 && annotationTypes.map((type: string, i) => <AnnotationType type={type} key={'annotation-type-' +i} />)}
+      { annotationTypes.map((type: string, i) => <AnnotationType type={type} key={'annotation-type-' +i} />)}
     </div>
 
   )

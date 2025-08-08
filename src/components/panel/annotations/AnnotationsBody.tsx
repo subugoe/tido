@@ -5,8 +5,7 @@ import Annotation from '@/components/panel/annotations/Annotation.tsx'
 const ANNOTATION_GAP = 5
 
 const AnnotationsBody: FC = () => {
-  const { panelId, filteredAnnotations, visibleAnnotations, setVisibleAnnotations, selectedAnnotation, selectedAnnotationTypes, setSelectedAnnotationTypes } = usePanel()
-
+  const { panelId, filteredAnnotations, selectedAnnotation } = usePanel()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
   // position of each annotation.
@@ -22,11 +21,6 @@ const AnnotationsBody: FC = () => {
     if (selectedAnnotation) trackTopChange()
   }, [selectedAnnotation])
 
-  useEffect(() => {
-    const visibleAnnots = filteredAnnotations.filter(annotation => selectedAnnotationTypes.includes(annotation.body['x-content-type']))
-    setVisibleAnnotations(visibleAnnots)
-  }, [selectedAnnotationTypes])
-
 
   function trackTopChange() {
     // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
@@ -40,6 +34,7 @@ const AnnotationsBody: FC = () => {
     }
 
     elements.sort((a, b) => a.desiredY - b.desiredY)
+
 
     for (let i = 0; i < elements.length; i++) {
       const annotationEl = elements[i]
@@ -86,10 +81,9 @@ const AnnotationsBody: FC = () => {
     if (filteredAnnotations.length === 0) {
       setElements([])
     } else {
-      const visibleAnnotations = [...filteredAnnotations]
       const annotationEls = Array.from(ref.current.childNodes)
       const _elements = annotationEls.map(el => {
-        const annotation = visibleAnnotations.find(a => a.id === el.getAttribute('data-annotation'))
+        const annotation = filteredAnnotations.find(a => a.id === el.getAttribute('data-annotation'))
         if (!annotation) return
 
         const target = document.getElementById(panelId).querySelector(annotation.target[0].selector.value)
@@ -101,6 +95,7 @@ const AnnotationsBody: FC = () => {
         }
       })
 
+
       setElements(_elements)
     }
 
@@ -109,6 +104,7 @@ const AnnotationsBody: FC = () => {
       setElements([])
     }
   }, [filteredAnnotations])
+
 
   useEffect(() => {
     let resizeObserver
@@ -129,8 +125,9 @@ const AnnotationsBody: FC = () => {
   }, [elements])
 
 
+
   return <div ref={ref} className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
-    {visibleAnnotations.map(a => <Annotation
+    {filteredAnnotations.map(a => <Annotation
       data={a}
       key={a.id}
       top={yMap[a.id]}
