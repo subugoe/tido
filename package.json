@@ -14,7 +14,7 @@
     "tailwindcss"
   ],
   "license": "AGPL-3.0-or-later",
-  "author": "Göttingen State and University Library - SUB",
+  "author": "Göttingen State and University Library",
   "contributors": [
     "Orlin Malkja <malkja@sub.uni-goettingen.de>",
     "Paul Pestov <pestov@sub.uni-goettingen.de>"
@@ -65,7 +65,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "globals": "^15.11.0",
     "http-server": "^14.1.1",
-    "lucide-react": "^0.477.0",
+    "lucide-react": "^0.539.0",
     "ncp": "^2.0.0",
     "openseadragon": "^5.0.0",
     "postcss": "^8.5.5",

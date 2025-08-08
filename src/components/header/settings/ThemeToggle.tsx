@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@/contexts/ThemeContext'
+import { useTheme } from '@/contexts/ThemeContext.tsx'
 
 import {
   DropdownMenuItem,
@@ -19,20 +19,20 @@ const ThemeToggle: FC = () => {
   return (
     <>
       <DropdownMenuSub>
-        <DropdownMenuSubTrigger className="hover:cursor-pointer">
+        <DropdownMenuSubTrigger className="cursor-pointer">
           { t('toggle_theme') }
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
           <DropdownMenuSubContent className="border border-border flex flex-col gap-y-1">
-            <DropdownMenuItem className={`hover:cursor-pointer ${theme==='light' ? 'bg-muted' : ''}`} onClick={() => setTheme('light')}>
+            <DropdownMenuItem className={`${theme==='light' ? 'bg-muted' : ''}`} onClick={() => setTheme('light')}>
               <Sun className="h-[1.2rem] w-[1.2rem]" />
               { t('light') }</DropdownMenuItem>
-            <DropdownMenuItem className={`hover:cursor-pointer ${theme==='dark' ? 'bg-muted' : ''}`} onClick={() => setTheme('dark')}>
+            <DropdownMenuItem className={`${theme==='dark' ? 'bg-muted' : ''}`} onClick={() => setTheme('dark')}>
               <Moon className="h-[1.2rem] w-[1.2rem]" />
               <span>{ t('dark') }</span>
             </DropdownMenuItem>
             <DropdownMenuItem
-              className={`hover:cursor-pointer ${theme==='system' ? 'bg-muted' : ''}`}
+              className={`${theme==='system' ? 'bg-muted' : ''}`}
               onClick={() => setTheme('system')}
             >
               <MonitorCog className="h-[1.2rem] w-[1.2rem]" />
