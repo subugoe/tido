@@ -15,6 +15,8 @@ import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import AnnotationsSidebar from '@/components/panel/annotations/AnnotationsSidebar.tsx'
+import AnnotationsHeader from '@/components/panel/annotations/AnnotationsHeader.tsx'
+import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, initResizer, resizer, showTextOptions } = usePanel()
@@ -115,6 +117,11 @@ const Panel: FC = React.memo(() => {
             <PanelHeader />
           </div>
           <div data-header-sidebar className={`absolute top-0 h-full w-[400px] pl-2`}>
+            { showSidebarContent &&
+              <div className="absolute bottom-4">
+                <AnnotationsHeader />
+              </div>
+            }
           </div>
         </div>
 
@@ -128,7 +135,7 @@ const Panel: FC = React.memo(() => {
               {showSwapper && <Swapper />}
             </div>
             <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2`}>
-              {showSidebarContent && <AnnotationsSidebar />}
+              {showSidebarContent && <AnnotationsBody /> }
             </div>
           </div>
           <AnnotationHints />
