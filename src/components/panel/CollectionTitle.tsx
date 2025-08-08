@@ -37,6 +37,7 @@ const CollectionTitle: FC = () => {
             title={collection.title[0].title}
             onClick={() => setShowLocalTree(!showLocalTree)}
             variant="accent"
+            data-cy="collection-title"
           >
             <span className="truncate">{ collection.title[0].title }</span>
           </Button>

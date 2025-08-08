@@ -28,7 +28,7 @@ const ShowSelectPanelModeToggle: FC = () => {
 
   return (
     <DropdownMenuItem>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2" data-cy="select-panel-mode-toggle">
         <label htmlFor="toggle-select-panel-mode-dialog" className="cursor-pointer whitespace-nowrap">{t('enable_select_panel_mode_dialog')}</label>
         <Switch id="toggle-select-panel-mode-dialog"
           checked={enabled}

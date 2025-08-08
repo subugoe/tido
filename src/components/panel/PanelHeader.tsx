@@ -65,7 +65,7 @@ const PanelHeader: FC = () => {
         <Actions />
         <SidebarToggle className="ml-2" />
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center" data-cy="panel-title-and-nav-arrows">
         <NavigationButton isPrev={true} />
         {<PanelTitle />}
         <NavigationButton />

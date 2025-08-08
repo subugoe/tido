@@ -48,15 +48,15 @@ const Modes: FC<SelectPanelModeButtonsProps> = ({ updateSelectedButton }) => {
 
 
   return (
-    <div className="flex relative justify-start">
-      <div className="flex gap-x-4">
+    <div className="flex relative justify-start" data-cy="modes-container">
+      <div className="flex gap-x-4" data-cy="modes">
         {buttonsData.map((button, i) => {
           const Icon = button.icon
           const mode = button.mode
           return (
             <div className="flex flex-col" key={mode+'_'+i}>
               <Button variant={selectedPanelMode === mode ? 'secondary': 'ghost'}
-                className={`flex justify-center hover:bg-muted w-21 h-21 ${selectedPanelMode === mode ? 'shadow-sm bg-muted': ''}`}
+                className={`flex justify-center hover:bg-muted w-21 h-21 ${selectedPanelMode === mode ? 'active shadow-sm bg-muted': ''}`}
                 onClick={() => setSelectedButton(mode)}
                 data-cy={mode}
               >

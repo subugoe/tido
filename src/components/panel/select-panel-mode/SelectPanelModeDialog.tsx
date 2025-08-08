@@ -62,7 +62,7 @@ const SelectPanelModeDialog: FC<SelectPanelModeProps> = ({ parentEl }) => {
         <div className="flex">
           <DialogFooter className="flex mt-2 w-full">
             <DontAskAgain onChange={updateCheckedValue} />
-            <Button className="ml-auto" onClick={() => handleConfirm(selectedMode)}> {t('confirm')}</Button>
+            <Button className="ml-auto" data-cy="confirm" onClick={() => handleConfirm(selectedMode)}> {t('confirm')}</Button>
           </DialogFooter>
         </div>
       </DialogContent>

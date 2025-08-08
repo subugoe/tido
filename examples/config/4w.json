@@ -3,7 +3,7 @@
   "lang": "de",
   "panels": [
     {
-      "collection": "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/reproduction/collection.json",
+      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/reproduction/collection.json",
       "manifestIndex": 0
     }
   ],
@@ -20,7 +20,7 @@
     }
   },
   "rootCollections": [
-    "https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/collection.json"
+    "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/collection.json"
   ],
-  "views": [ "split", "text", "image"]
+  "panelModes": ["split", "text", "image"]
 }

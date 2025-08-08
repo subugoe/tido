@@ -115,7 +115,8 @@ const NavigationButton: FC<Props> = ({ isPrev = false }) => {
     size="icon"
     disabled={isPrev ? !hasPrev() : !hasNext()}
     className={`${isPrev ? 'mr-1' : 'ml-1'} rounded-full`}
-    onClick={navigate}>
+    onClick={navigate}
+    data-cy={isPrev ? 'prev-button': 'next-button'}>
     { isPrev ? <ChevronLeft /> : <ChevronRight /> }
   </Button>
 }
