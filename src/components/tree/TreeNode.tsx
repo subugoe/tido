@@ -1,7 +1,7 @@
 import { FC, MouseEvent, useState } from 'react'
 
 import { useTree } from '@/contexts/TreeContext'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Folder, LibraryBig, File, FolderOpen } from 'lucide-react'
 
 
 interface TreeNodeProps {
@@ -35,10 +35,16 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
     <div
       data-cy="tree-node"
     >
-      <div className={`flex items-center px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? 'bg-muted border border-border active' : 'hover:bg-accent' }`}
+      <div className={`flex items-start px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? 'bg-muted border border-border active' : 'hover:bg-accent' }`}
         onClick={(e) => handleNodeClick(e)}>
-        {!node.leaf && <span className={`mr-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight /></span>}
-        <span className={`${node.leaf ? 'ml-4': ''}`} data-cy="node-label">{node.label}</span>
+        {!node.leaf && <span className={`mt-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight size={18} /></span>}
+        <div className={`shrink-0 mt-1 mx-2 ${node.leaf ? 'ml-5': ''}`}>
+          { node.type === 'collection' && <LibraryBig size={18} />}
+          { node.type === 'manifest' && !isExpanded && <Folder size={18} />}
+          { node.type === 'manifest' && isExpanded && <FolderOpen size={18} />}
+          { node.type === 'item' && <File size={18} />}
+        </div>
+        <span data-cy="node-label">{node.label}</span>
       </div>
       <div className="flex-col" data-cy="node-children">
         { isExpanded && node.children?.map((item: TreeNode, i) => (
