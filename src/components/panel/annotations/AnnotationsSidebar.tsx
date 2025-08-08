@@ -8,7 +8,6 @@ const AnnotationsSidebar: FC = () => {
 
   return (
     <>
-      <AnnotationsHeader />
       <AnnotationsBody />
     </>
 

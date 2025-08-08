@@ -5,14 +5,18 @@ import AnnotationType from '@/components/panel/annotations/AnnotationType.tsx'
 
 const AnnotationsHeader: FC = () => {
 
-  const { panelState } = usePanel()
+  const { panelState, selectedAnnotationTypes } = usePanel()
 
-  const [annotationTypes, setAnnotationTypes] = useState([])
+  const [annotationTypes, setAnnotationTypes] = useState(selectedAnnotationTypes)
 
   useEffect(() => {
-    const contentTypes = panelState.annotations.map(item => item.body['x-content-type'])
-    const uniqueContentTypes = [...new Set(contentTypes)]
-    setAnnotationTypes(uniqueContentTypes)
+    // get annotations which are related to text
+    const textEl = document.querySelector('div[data-text-container]')
+    const filteredAnnotations = panelState.annotations.filter((a) =>
+      Array.from(textEl.querySelectorAll(a.target[0].selector.value)).length > 0)
+
+    const contentTypes = filteredAnnotations.map(item => item.body['x-content-type'])
+    setAnnotationTypes([...new Set(contentTypes)])
   }, [panelState.annotations])
 
   if (annotationTypes.length > 0) return (
