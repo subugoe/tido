@@ -118,7 +118,7 @@ const Panel: FC = React.memo(() => {
           </div>
           <div data-header-sidebar className={`absolute top-0 h-full w-[400px] pl-2`}>
             { showSidebarContent &&
-              <div className="absolute bottom-4">
+              <div className="absolute bottom-2">
                 <AnnotationsHeader />
               </div>
             }

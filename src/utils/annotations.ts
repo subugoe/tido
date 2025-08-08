@@ -214,7 +214,16 @@ function setupScrollPanels(panelIds: string[]) {
   setupSyncScrolling(panelStates)
 }
 
+function getUniqueWitnesses(variantAnnotations) {
+  let uniqueWitnesses = []
+  variantAnnotations.map((a) => {
+    uniqueWitnesses = [...uniqueWitnesses, ...a.body['value']['witnesses']]
+  })
+  return [...new Set(uniqueWitnesses)]
+}
+
 export {
   setupScrollPanels,
-  selectSyncTargetByIndex
+  selectSyncTargetByIndex,
+  getUniqueWitnesses
 }
