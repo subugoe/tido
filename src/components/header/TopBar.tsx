@@ -8,7 +8,7 @@ import { Menu, X } from 'lucide-react'
 import Title from '@/components/header/Title.tsx'
 
 import AddNewPanel from '@/components/header/AddNewPanel.tsx'
-import Settings from '@/components/header/Settings.tsx'
+import Settings from '@/components/header/settings/Settings.tsx'
 
 const TopBar: FC = () => {
   const showGlobalTreeConfig = useConfigStore(state => state.config.showGlobalTree)

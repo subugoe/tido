@@ -51,5 +51,15 @@
   "show_image": "Show image",
   "show_text": "Show text",
   "text_type": "Text type",
-  "select_item_to_continue": "A new manifest is selected. Now, please select a new item to continue."
+  "select_item_to_continue": "A new manifest is selected. Now, please select a new item to continue.",
+  "about_tido": "About TIDO",
+  "tido_description": "Slim, easy-to-use and mobile-friendly text and image viewer.",
+  "version": "Version",
+  "licensed_under": "Licensed under",
+  "sub": "Göttingen State and University Library",
+  "copyright": "Copyright (c)",
+  "documentation": "Documentation",
+  "report_bug": "Report A Bug",
+  "source_code": "Source Code"
+
 }
