@@ -55,5 +55,14 @@
   "show_image": "Zum Bild",
   "show_text": "Zum Text",
   "text_type": "Texttyp",
-  "select_item_to_continue": "Ein neues Manifest wurde ausgewählt. Bitte wählen Sie nun ein Item, um fortzufahren"
+  "select_item_to_continue": "Ein neues Manifest wurde ausgewählt. Bitte wählen Sie nun ein Item, um fortzufahren",
+  "about_tido": "Über TIDO",
+  "tido_description": "Schlanker, einfacher und mobilfreundlicher Viewer für Texte und Digitalisate.",
+  "version": "Version",
+  "licensed_under": "Lizensiert unter",
+  "sub": "Niedersächsische Staats- und Universitätsbibliothek Göttingen",
+  "copyright": "Copyright (c)",
+  "documentation": "Dokumentation",
+  "report_bug": "Fehler melden",
+  "source_code": "Source Code"
 }
