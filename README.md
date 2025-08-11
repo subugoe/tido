@@ -381,4 +381,4 @@ We use [SemVer](https://semver.org/) for versioning. For the versions available,
 
 ## Authors
 
-See the list of [contributors](https://gitlab.gwdg.de/subugoe/emo/tido/-/graphs/develop) who participated in this project.
+See the list of [contributors](https://github.com/subugoe/tido/graphs/contributors) who participated in this project.
