@@ -29,8 +29,6 @@ interface PanelContentType {
   setSelectedAnnotation: (value: Annotation | null) => void,
   annotationTypes: object,
   setAnnotationTypes: (annotationTypes: object) => void,
-  selectedAnnotationTypes: string[],
-  setSelectedAnnotationTypes: (values: string[]) => void,
   showTextOptions: boolean
 }
 

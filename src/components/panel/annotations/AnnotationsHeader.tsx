@@ -9,20 +9,17 @@ const AnnotationsHeader: FC = () => {
   const { panelState, filteredAnnotations, annotationTypes, setAnnotationTypes } = usePanel()
 
   function getUpdatedAnnotationTypes(contentTypes, oldAnnotationTypes: object) {
-    console.log('old annotation types', oldAnnotationTypes)
     const newAnnotationTypes = {}
     contentTypes.map((type) => {
-      console.log('content type', type)
       newAnnotationTypes[type] = type in oldAnnotationTypes ? oldAnnotationTypes[type] : true
     })
-    console.log('new annotation types', newAnnotationTypes)
     return newAnnotationTypes
   }
 
   useEffect(() => {
+    console.log('annotation types', annotationTypes)
+    console.log('filtered Annotations', filteredAnnotations)
     const contentTypes = [...Object.keys(annotationTypes), ...filteredAnnotations.map(item => item.body['x-content-type'])]
-    console.log('content types', contentTypes)
-    console.log('Filtered annotations', filteredAnnotations)
     const uniqueContentTypes = [...new Set(contentTypes)]
     const newAnnotationTypes = getUpdatedAnnotationTypes(uniqueContentTypes, annotationTypes)
     setAnnotationTypes(newAnnotationTypes)
