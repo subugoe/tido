@@ -57,6 +57,7 @@ const AnnotationFilterDropdown: FC<AnnotationFilterDropdownProps> = ({ type }) =
   }, [filteredAnnotations])
 
   useEffect(() => {
+    console.log('type')
     setShow(annotationTypes[type] === true)
   }, [annotationTypes[type]])
 

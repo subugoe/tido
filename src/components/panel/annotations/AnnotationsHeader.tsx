@@ -35,7 +35,7 @@ const AnnotationsHeader: FC = () => {
         { Object.keys(annotationTypes).map((type: string, i) => <AnnotationType type={type} key={'annotation-type-' +i} />)}
       </div>
       <div className="flex justify-center annotation-filter-dropdown">
-        <AnnotationFilterDropdown type='Variant' />
+        {annotationTypes['Variant'] === true && <AnnotationFilterDropdown type='Variant' />}
       </div>
     </div>
   )
