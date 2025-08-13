@@ -16,12 +16,14 @@
   "showPanelPlaceholder": true,
   "translations": {
     "en": {
-      "contents_and_metadata": "Inhalt & Metadaten",
-      "next_item": "Nächste Seite",
-      "previous_item": "Vorherige Seite",
-      "next_manifest": "Nächste Editionseinheit",
-      "previous_manifest": "Vorherige Editionseinheit",
-      "item": "Seite"
+      "common": {
+        "contents_and_metadata": "Inhalt & Metadaten",
+        "next_item": "Nächste Seite",
+        "previous_item": "Vorherige Seite",
+        "next_manifest": "Nächste Editionseinheit",
+        "previous_manifest": "Vorherige Editionseinheit",
+        "item": "Seite"
+      }
     }
   }
 }

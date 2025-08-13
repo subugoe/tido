@@ -1,14 +1,14 @@
 import { FC } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import CollectionMetadata from '@/components/metadata/CollectionMetadata.tsx'
 import ItemMetadata from '@/components/metadata/ItemMetadata.tsx'
 import ManifestMetadata from '@/components/metadata/ManifestMetadata.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 
 const Metadata: FC = () => {
-  const { t } = useTranslation()
-
+  const { usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
 
   return <div>
     <p className="font-bold mb-1"> { t('metadata') } </p>

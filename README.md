@@ -172,47 +172,67 @@ There are options to
 
 ### The Keys in Detail
 
-| Name                                 | Type                                  | Default   | Description                                                                                                                                                                                                                             |
-|--------------------------------------|---------------------------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| allowNewCollections                  | Boolean                               | true      | Toggles the ability to add new collections to the app through a user input.                                                                                                                                                             |
-| container                            | String                                | `#app`    | Specifies the CSS selector where we should append the TIDO app to.                                                                                                                                                                      |
-| defaultPanelMode                     | `pip` \| `split` \| `text` \| `image` | `pip`     | Specifies the default view type of all panels. Each new panel will start with view.                                                                                                                                                     |
-| lang                                 | String (ISO 639-1 language code)      | `en`      | Specifies the current active language of the app. See [translations](#translations) chapter.                                                                                                                                            |
-| panelModes                           | Array                                 | ['swap', 'split', 'text', 'image']          | Controls the display and order of panel mode toggles in the top right of a panel. At least 1 value is required. If not specified at all, TIDO will use the default value and try to display reasonable toggles and disable unused ones. |
-| panels                               | PanelConfig[]                         | []        | Defines an array of panel objects. The panels will appear in the same order.                                                                                                                                                            |
-| panels[i].collection                 | String                                | -         | TextAPI collection URL                                                                                                                                                                                                                  |
-| panels[i].manifestIndex              | Number                                | 0         | Index of a manifest object inside the sequence of a TextAPI collection specified under "collection".                                                                                                                                    |
-| panels[i].itemIndex                  | Number                                | 0         | Index of an item object inside the sequence of a TextAPI manifest specified as index under "manifestIndex".                                                                                                                             |
-| rootCollections                      | String[]                              | []        | Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.                                                                                      |
-| showGlobalTree                       | Boolean                               | true      | Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.                                                                                                                               |
-| showAddNewPanelButlton               | Boolean                               | true      | Toggles the display of the "add new panel" button.                                                                                                                                                                                      |
-| theme                                | Object                                | Object    | Specifies theme settings for UI elements.                                                                                                                                                                                               |
-| theme.primaryColor                   | String                                | `#3456aa` | Primary color of UI elements. Used on buttons and other interactive elements.                                                                                                                                                           |
-| title                                | String                                | empty     | Specifies the main title of the app in the header. Translatable.                                                                                                                                                                        |
-| translations                         | Object                                | null      | Specifies a custom translations object. See [translations](#translations) chapter.                                                                                                                                                      |
-| translations.[lang]                  | Object                                | null      | Defines a translation object for supported languages with the respective `lang` key.                                                                                                                                                    |
-| translations.[lang].[translationKey] | String                                | null      | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration.         |
+| Name                                 | Type                                  | Default                            | Description                                                                                                                                                                                                                             |
+|--------------------------------------|---------------------------------------|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| allowNewCollections                  | Boolean                               | true                               | Toggles the ability to add new collections to the app through a user input.                                                                                                                                                             |
+| container                            | String                                | `#app`                             | Specifies the CSS selector where we should append the TIDO app to.                                                                                                                                                                      |
+| defaultPanelMode                     | `pip` \| `split` \| `text` \| `image` | `pip`                              | Specifies the default view type of all panels. Each new panel will start with view.                                                                                                                                                     |
+| lang                                 | String (ISO 639-1 language code)      | `en`                               | Specifies the current active language of the app. See [translations](#translations) chapter.                                                                                                                                            |
+| panelModes                           | Array                                 | ['swap', 'split', 'text', 'image'] | Controls the display and order of panel mode toggles in the top right of a panel. At least 1 value is required. If not specified at all, TIDO will use the default value and try to display reasonable toggles and disable unused ones. |
+| panels                               | PanelConfig[]                         | []                                 | Defines an array of panel objects. The panels will appear in the same order.                                                                                                                                                            |
+| panels[i].collection                 | String                                | -                                  | TextAPI collection URL                                                                                                                                                                                                                  |
+| panels[i].manifestIndex              | Number                                | 0                                  | Index of a manifest object inside the sequence of a TextAPI collection specified under "collection".                                                                                                                                    |
+| panels[i].itemIndex                  | Number                                | 0                                  | Index of an item object inside the sequence of a TextAPI manifest specified as index under "manifestIndex".                                                                                                                             |
+| rootCollections                      | String[]                              | []                                 | Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.                                                                                      |
+| showGlobalTree                       | Boolean                               | true                               | Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.                                                                                                                               |
+| showAddNewPanelButlton               | Boolean                               | true                               | Toggles the display of the "add new panel" button.                                                                                                                                                                                      |
+| theme                                | Object                                | Object                             | Specifies theme settings for UI elements.                                                                                                                                                                                               |
+| theme.primaryColor                   | String                                | `#3456aa`                          | Primary color of UI elements. Used on buttons and other interactive elements.                                                                                                                                                           |
+| title                                | String                                | empty                              | Specifies the main title of the app in the header. Translatable.                                                                                                                                                                        |
+| translations                         | Object                                | null                               | Specifies a custom translations object. See [translations](#translations) chapter.                                                                                                                                                      |
+| translations.[lang]                  | TranslationNamespace                  | -                                  | Defines a language key. The value is a TranslationNamespace object.                                                                                                                                                                     |
+| translations.[lang].[namespace]      | Object                                | -                                  | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration.         |
+| translations.[lang].[namespace].[translationKey] | String                                | -                                  | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration.         |
 
 ### Translations
 We provide a flexible way to use TIDO in your desired language. First of all we keep all translation keys in files
 under `public/translations`. Each file has to follow the naming convention `[ISO 639-1 language code].json`. By default,
 we provide a limited amount of supported languages. However, you can configure your custom languages though the TIDO config object.
-Append your language under the `translations` key in the config and set the `lang` key to your language so it is treated
+Append your language under the `translations` key in the config and set the `lang` key to your language, so it is treated
 as active language.
+
+#### Collection Namespaces
+In TIDO we give you the ability to define custom translations for different collections.
+
+**This is how it works:**
+The translation key/value pairs are always wrapped by a namespace which can be either `common` or a collection slug.
+The default namespace is `common` and is used as a fallback namespace.
+You have to provide at least one namespace in your translation objects. If you don't need to use collection namespaces it has to be `common`.
+If the namespace is a TextAPI collection slug,
+we check at initialization time of each panel whether there is a match between the namespace key and the slug from the loaded collection.
+You don't need to provide a full set of translation key/value pairs on each namespace.
+As mentioned before, `common` is a fallback namespace, so if any translation key is missing on your collection namespace, it will still be translated from the `common`namespace.
 
 Hint: There is a difference between fixed keys that we use internally (like `add_new_panel`) or dynamic keys that we might
 receive from the TextAPI (like dynamic metadata keys). If you want to translate the latter ones, just state them as keys to your translation object.
-Example:
+
+**Example:**
 
 ```json
 {
   "lang": "fr",
   "translations": {
     "fr": {
-      "add_new_panel": "Ajouter un nouveau panneau",
-      "title": "Titre",
-      "my_custom_key": "Valeur très importante",
-      "That one string": "Ce texte"
+      "common": {
+        "add_new_panel": "Ajouter un nouveau panneau",
+        "title": "Titre",
+        "my_custom_key": "Valeur très importante",
+        "That one string": "Ce texte",
+        "manifest": "manuscrit"
+      },
+      "special_collection": {
+        "manifest": "livre"
+      }
     }
   }
 }
@@ -220,6 +240,7 @@ Example:
 You can see that the first two keys `add_new_panel` and `title` are our fixed app keys and the other two keys are custom
 project keys. If you set `lang` to a language that we don't support and omit certain translations in your config,
 we will display those in English. If you don't provide a translation for a custom key, it will be displayed just as-is.
+Also notice how the `manifest` key is being set to a different word for `special_collection`.
 
 ## Getting Started (Developers)
 

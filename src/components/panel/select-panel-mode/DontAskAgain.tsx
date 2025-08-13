@@ -1,7 +1,7 @@
 import { FC, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Checkbox } from '@/components/ui/checkbox.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 
 interface Props {
@@ -9,8 +9,9 @@ interface Props {
 }
 
 const DontAskAgain: FC<Props> = ({ onChange }) => {
+  const { usePanelTranslation } = usePanel()
   const isChecked = useRef<boolean>(false)
-  const { t } = useTranslation()
+  const { t } = usePanelTranslation()
 
   function handleCheckedChange(checked) {
     isChecked.current = !!checked

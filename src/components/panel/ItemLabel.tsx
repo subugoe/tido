@@ -1,5 +1,4 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
@@ -18,8 +17,8 @@ interface ItemLabelProps {
 }
 
 const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
-  const { panelState } = usePanel()
-  const { t } = useTranslation()
+  const { panelState, usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
   const collection = useDataStore().collections[panelState.collectionId]?.collection
   const manifest = panelState.manifest
   const updatePanel = usePanelStore(state => state.updatePanel)

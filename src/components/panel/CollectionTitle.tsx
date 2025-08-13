@@ -1,7 +1,6 @@
 import { FC, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
-import { useTranslation } from 'react-i18next'
 
 import LocalTree from '@/components/tree/LocalTree.tsx'
 import { Skeleton } from '@/components/ui/skeleton.tsx'
@@ -11,13 +10,13 @@ import { X } from 'lucide-react'
 
 
 const CollectionTitle: FC = () => {
-  const { panelState } = usePanel()
+  const { panelState, usePanelTranslation } = usePanel()
   const collection = useDataStore(
     (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId].collection : null
   )
 
   const [showLocalTree, setShowLocalTree] = useState(false)
-  const { t } = useTranslation()
+  const { t } = usePanelTranslation()
 
   const handleOpenChange = (open: boolean) => {
     setShowLocalTree(open)

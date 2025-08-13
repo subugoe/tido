@@ -2,11 +2,10 @@ import { FC, useEffect, useState } from 'react'
 import TextRenderer from '@/components/panel/TextRenderer.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useTranslation } from 'react-i18next'
 
 const TextView: FC = () => {
-  const { panelState, loading, error, setError } = usePanel()
-  const { t } = useTranslation()
+  const { panelState, loading, usePanelTranslation, error, setError } = usePanel()
+  const { t } = usePanelTranslation()
   const [text, setText] = useState<string>('')
 
   const activeContentTypeIndex = panelState.contentIndex

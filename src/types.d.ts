@@ -317,9 +317,12 @@ export interface ThemeConfig {
 export interface Translation {
   [key: string]: string
 }
+export interface TranslationNamespace {
+  [key: 'common' | string]: Translation
+}
 
 export interface TranslationsConfig {
-  [key: string]: Translation
+  [key: string]: TranslationNamespace
 }
 
 export interface TidoConfig {

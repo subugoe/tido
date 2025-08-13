@@ -2,7 +2,6 @@ import { FC, useRef, useState } from 'react'
 
 import { useUIStore } from '@/store/UIStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useTranslation } from 'react-i18next'
 
 import {
   Dialog,
@@ -21,12 +20,12 @@ interface SelectPanelModeProps {
 
 const SelectPanelModeDialog: FC<SelectPanelModeProps> = ({ parentEl }) => {
   const [showDialog, setShowDialog] = useState(true)
-  const { panelState, updatePanel } = usePanel()
+  const { panelState, updatePanel, usePanelTranslation } = usePanel()
   const UIState = useUIStore.getState()
 
   const [selectedMode, setSelectedMode] = useState(UIState.defaultPanelMode)
   const updateEnabledSelectPanelMode = UIState.updateEnabledSelectPanelMode
-  const { t } = useTranslation()
+  const { t } = usePanelTranslation()
 
   const isChecked = useRef<boolean>(false)
 

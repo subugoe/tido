@@ -2,7 +2,6 @@ import { FC, useRef } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext'
 import { Skeleton } from '@/components/ui/skeleton.tsx'
-import { useTranslation } from 'react-i18next'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,8 +12,8 @@ import { Button } from '@/components/ui/button.tsx'
 import { ChevronDown } from 'lucide-react'
 
 const ContentTypesToggle: FC = () => {
-  const { panelState, updatePanel } = usePanel()
-  const { t } = useTranslation()
+  const { panelState, updatePanel, usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
   const { contentTypes, contentIndex } = panelState || {}
   const triggerRef = useRef()
 

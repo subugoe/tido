@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import TreeSelection from '@/components/tree/TreeSelection.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
 
-const Panel: FC = () => {
+const AddPanel: FC = () => {
   const { t } = useTranslation()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const enabledSelectTextView = useUIStore(state => state.enabledSelectPanelMode)
@@ -48,4 +48,4 @@ const Panel: FC = () => {
   )
 }
 
-export default Panel
+export default AddPanel

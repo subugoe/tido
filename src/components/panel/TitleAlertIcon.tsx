@@ -1,10 +1,11 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 import { FC } from 'react'
 import { CircleAlert } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 const TitleAlertIcon: FC = () => {
-  const { t } = useTranslation()
+  const { usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
 
   return <TooltipProvider delayDuration={400}>
     <Tooltip>
