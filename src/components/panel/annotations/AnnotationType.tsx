@@ -9,16 +9,14 @@ interface AnnotationTypeProps {
 
 const AnnotationType: FC<AnnotationTypeProps> = ({ type }) => {
   const { annotationTypes, setAnnotationTypes, panelState, setFilteredAnnotations } = usePanel()
-  console.log('annotation types', annotationTypes)
-  const [selected, setSelected] = useState(annotationTypes[type])
+  const selected = annotationTypes[type]
 
   function onAnnotationTypeSelect() {
     // updateSelectedTypes
     const newAnnotationTypes = { ...annotationTypes }
     newAnnotationTypes[type] = !selected
-
+    console.log('new annotation types on annot select', newAnnotationTypes)
     setAnnotationTypes(newAnnotationTypes)
-    setSelected(!selected)
 
     // update filteredAnnotations
     const selectedAnnotationTypes = Object.keys(newAnnotationTypes).filter((type) => newAnnotationTypes[type] === true)
@@ -26,7 +24,6 @@ const AnnotationType: FC<AnnotationTypeProps> = ({ type }) => {
     const newFilteredAnnotations = getFilteredAnnotations(textEl, panelState.annotations, selectedAnnotationTypes)
     setFilteredAnnotations(newFilteredAnnotations)
   }
-
 
 
   function getFilteredAnnotations(textEl: Element, annotations: Annotation[], newAnnotationTypes: string[]) {

@@ -6,28 +6,27 @@ import AnnotationFilterDropdown from '@/components/panel/annotations/AnnotationF
 
 const AnnotationsHeader: FC = () => {
 
-  const { panelState, annotationTypes, setAnnotationTypes } = usePanel()
+  const { panelState, filteredAnnotations, annotationTypes, setAnnotationTypes } = usePanel()
 
   function getUpdatedAnnotationTypes(contentTypes, oldAnnotationTypes: object) {
+    console.log('old annotation types', oldAnnotationTypes)
     const newAnnotationTypes = {}
     contentTypes.map((type) => {
-      if (type in oldAnnotationTypes) newAnnotationTypes[type] = oldAnnotationTypes[type]
-      else newAnnotationTypes[type] = true
+      console.log('content type', type)
+      newAnnotationTypes[type] = type in oldAnnotationTypes ? oldAnnotationTypes[type] : true
     })
+    console.log('new annotation types', newAnnotationTypes)
     return newAnnotationTypes
   }
 
   useEffect(() => {
-    // get annotations which are related to text
-    const textEl = document.querySelector('div[data-text-container]')
-    const filteredAnnotations = panelState.annotations.filter((a) =>
-      Array.from(textEl.querySelectorAll(a.target[0].selector.value)).length > 0)
-
-    const contentTypes = filteredAnnotations.map(item => item.body['x-content-type'])
-    const newAnnotationTypes = getUpdatedAnnotationTypes(contentTypes, annotationTypes)
-    console.log('new annotatoin types', newAnnotationTypes)
+    const contentTypes = [...Object.keys(annotationTypes), ...filteredAnnotations.map(item => item.body['x-content-type'])]
+    console.log('content types', contentTypes)
+    console.log('Filtered annotations', filteredAnnotations)
+    const uniqueContentTypes = [...new Set(contentTypes)]
+    const newAnnotationTypes = getUpdatedAnnotationTypes(uniqueContentTypes, annotationTypes)
     setAnnotationTypes(newAnnotationTypes)
-  }, [panelState.annotations])
+  }, [filteredAnnotations])
 
   if (Object.keys(annotationTypes).length > 0) return (
     <div data-cy="annotations-header" className="flex flex-col items-center">
