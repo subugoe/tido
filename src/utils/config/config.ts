@@ -4,7 +4,7 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, Translation, TranslationsConfig, PanelMode } from '@/types'
+import { TidoConfig, PanelMode } from '@/types'
 
 type ValidationResult<T> = {
   result: T;
@@ -204,11 +204,6 @@ function validateRootCollections(input: any): ValidationResult<TidoConfig['rootC
   return { result, errors }
 }
 
-function getLanguage(lang: string, translations: TranslationsConfig, defaultLangs: string[]): string {
-  if (Object.keys(translations).includes(lang) || defaultLangs.includes(lang)) return lang
-  return 'en'
-}
-
 export function mergeAndValidateConfig(
   userConfig: Partial<TidoConfig>,
 ): { config: TidoConfig; errors: Record<string, string> } {
@@ -228,11 +223,16 @@ export function mergeAndValidateConfig(
   const theme = validateTheme(userConfig.theme)
   const translations = validateTranslations(userConfig.translations)
 
-  const mergedTranslations: Record<string, Translation> = {}
-  const defaultLangs = ['en', 'de']
-  const language = getLanguage(lang.result, translations.result, defaultLangs)
-  const defaultTranslations =  language === 'en' ? enTranslations : language === 'de' ? deTranslations : {}
-  mergedTranslations[language] = { ...defaultTranslations, ...translations.result?.[language] }
+  const mergedTranslations = {
+    en: { ...enTranslations, ...(translations.result.en ?? {}) },
+    de: { ...deTranslations, ...(translations.result.de ?? {}) },
+    ...Object.keys(translations.result)
+      .filter(key => key !== 'en' && key !== 'de')
+      .reduce((acc, cur) => {
+        acc[cur] = translations.result[cur]
+        return acc
+      }, {})
+  }
 
   const errors = {
     ...allowNewCollections.errors,

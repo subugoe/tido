@@ -30,14 +30,14 @@ const ContentTypesToggle: FC = () => {
       { contentTypes && contentTypes.length > 0 && <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button ref={triggerRef} variant="ghost" size="sm">
-            { contentTypes[contentIndex] }<ChevronDown />
+            { t(contentTypes[contentIndex]) }<ChevronDown />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>{ t('text_type') } </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup value={contentTypes[contentIndex]} onValueChange={handleTextTabClick}>
-            {contentTypes.map((type) => <DropdownMenuRadioItem value={type}>{type}</DropdownMenuRadioItem>) }
+            {contentTypes.map((type) => <DropdownMenuRadioItem value={type}>{ t(type) }</DropdownMenuRadioItem>) }
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
