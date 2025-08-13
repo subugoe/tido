@@ -27,8 +27,8 @@ interface PanelContentType {
   setFilteredAnnotations: (value: Annotation[]) => void,
   selectedAnnotation: Annotation | null,
   setSelectedAnnotation: (value: Annotation | null) => void,
-  annotationTypes: string[],
-  setAnnotationTypes: (annotationTypes: string[]) => void,
+  annotationTypes: object,
+  setAnnotationTypes: (annotationTypes: object) => void,
   selectedAnnotationTypes: string[],
   setSelectedAnnotationTypes: (values: string[]) => void,
   showTextOptions: boolean
@@ -51,8 +51,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
   const [filteredAnnotations, setFilteredAnnotations] = useState([])
-  const [annotationTypes, setAnnotationTypes] = useState([])
-  const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState([])
+  const [annotationTypes, setAnnotationTypes] = useState({})
   const [selectedAnnotation, setSelectedAnnotation] = useState(null)
   const [showTextOptions, setShowTextOptions] = useState(false)
 
@@ -156,8 +155,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       setSelectedAnnotation,
       annotationTypes,
       setAnnotationTypes,
-      selectedAnnotationTypes,
-      setSelectedAnnotationTypes,
       showTextOptions
     }}>
       {children}

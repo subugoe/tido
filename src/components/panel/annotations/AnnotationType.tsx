@@ -8,19 +8,22 @@ interface AnnotationTypeProps {
 }
 
 const AnnotationType: FC<AnnotationTypeProps> = ({ type }) => {
-  const { selectedAnnotationTypes, setSelectedAnnotationTypes, panelState, setFilteredAnnotations } = usePanel()
-  const [selected, setSelected] = useState(true)
+  const { annotationTypes, setAnnotationTypes, panelState, setFilteredAnnotations } = usePanel()
+  console.log('annotation types', annotationTypes)
+  const [selected, setSelected] = useState(annotationTypes[type])
 
   function onAnnotationTypeSelect() {
     // updateSelectedTypes
-    const newAnnotationTypes = selected ? selectedAnnotationTypes.filter(a => a !== type) : [...selectedAnnotationTypes, type]
-    setSelectedAnnotationTypes(newAnnotationTypes)
+    const newAnnotationTypes = { ...annotationTypes }
+    newAnnotationTypes[type] = !selected
 
+    setAnnotationTypes(newAnnotationTypes)
     setSelected(!selected)
 
     // update filteredAnnotations
+    const selectedAnnotationTypes = Object.keys(newAnnotationTypes).filter((type) => newAnnotationTypes[type] === true)
     const textEl = document.querySelector('div[data-text-container]')
-    const newFilteredAnnotations = getFilteredAnnotations(textEl, panelState.annotations, newAnnotationTypes)
+    const newFilteredAnnotations = getFilteredAnnotations(textEl, panelState.annotations, selectedAnnotationTypes)
     setFilteredAnnotations(newFilteredAnnotations)
   }
 

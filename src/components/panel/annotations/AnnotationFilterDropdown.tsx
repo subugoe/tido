@@ -19,9 +19,9 @@ interface AnnotationFilterDropdownProps {
 
 const AnnotationFilterDropdown: FC<AnnotationFilterDropdownProps> = ({ type }) => {
 
-  const { panelState, filteredAnnotations, selectedAnnotationTypes } = usePanel()
+  const { panelState, filteredAnnotations, annotationTypes } = usePanel()
 
-  const [ show, setShow] = useState(false)
+  const [ show, setShow] = useState(annotationTypes[type])
   const [items, setItems] = useState([])
   const [checkedValues, setCheckedValues] = useState(new Array(items.length).fill(true))
   const [label, setLabel] = useState('')
@@ -57,8 +57,8 @@ const AnnotationFilterDropdown: FC<AnnotationFilterDropdownProps> = ({ type }) =
   }, [filteredAnnotations])
 
   useEffect(() => {
-    setShow(selectedAnnotationTypes.includes(type))
-  }, [selectedAnnotationTypes])
+    setShow(annotationTypes[type] === true)
+  }, [annotationTypes[type]])
 
 
   return (
