@@ -10,6 +10,7 @@ const AnnotationsHeader: FC = () => {
   const { annotationTypes, matchedAnnotationsMap } = usePanel()     // global annotation types
   const [annotTypes, setAnnotTypes] = useState({})                  // annot types corresponding with highlighted targets
 
+
   useEffect(() => {
     // filter annot Types from annotationTypes of panel based on annotations which have target on text
     const matchedAnnotationsIds = Object.keys(matchedAnnotationsMap)
@@ -23,7 +24,8 @@ const AnnotationsHeader: FC = () => {
     )
 
     setAnnotTypes(newAnnotTypesObj)
-  }, [matchedAnnotationsMap])
+  }, [matchedAnnotationsMap, annotationTypes])
+
 
 
 
