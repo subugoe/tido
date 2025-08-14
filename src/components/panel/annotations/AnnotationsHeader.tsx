@@ -6,24 +6,8 @@ import AnnotationFilterDropdown from '@/components/panel/annotations/AnnotationF
 
 const AnnotationsHeader: FC = () => {
 
-  const { panelState, filteredAnnotations, annotationTypes, setAnnotationTypes } = usePanel()
+  const { annotationTypes } = usePanel()
 
-  function getUpdatedAnnotationTypes(contentTypes, oldAnnotationTypes: object) {
-    const newAnnotationTypes = {}
-    contentTypes.map((type) => {
-      newAnnotationTypes[type] = type in oldAnnotationTypes ? oldAnnotationTypes[type] : true
-    })
-    return newAnnotationTypes
-  }
-
-  useEffect(() => {
-    console.log('annotation types', annotationTypes)
-    console.log('filtered Annotations', filteredAnnotations)
-    const contentTypes = [...Object.keys(annotationTypes), ...filteredAnnotations.map(item => item.body['x-content-type'])]
-    const uniqueContentTypes = [...new Set(contentTypes)]
-    const newAnnotationTypes = getUpdatedAnnotationTypes(uniqueContentTypes, annotationTypes)
-    setAnnotationTypes(newAnnotationTypes)
-  }, [filteredAnnotations])
 
   if (Object.keys(annotationTypes).length > 0) return (
     <div data-cy="annotations-header" className="flex flex-col items-center">
