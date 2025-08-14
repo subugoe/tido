@@ -164,27 +164,29 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   useEffect(() => {
     const filteredAnnotations = panelState.annotations?.filter(a => matchedAnnotationsMap[a.id]) ?? []
     setFilteredAnnotations(filteredAnnotations)
-    initAnnotationsTypes(filteredAnnotations)
-  }, [matchedAnnotationsMap])
-
-  function initAnnotationsTypes(filteredAnnotations: Annotation[]) {
-    if (filteredAnnotations.length === 0) {
-      setAnnotationTypes({})
+    const contentTypes = filteredAnnotations.map(item => item.body['x-content-type'])
+    const uniqueContentTypes = [...new Set(contentTypes)]
+    if (filteredAnnotations.length > 0 && Object.keys(annotationTypes).length === 0) {
+      initializeAnnotationTypes(uniqueContentTypes)
       return
     }
-    let contentTypes = filteredAnnotations.map(item => item.body['x-content-type'])
-    contentTypes = [...new Set(contentTypes)]
+    if (filteredAnnotations.length > 0 && Object.keys(annotationTypes).length > 0) {
+      updateAnnotationsTypes(uniqueContentTypes, annotationTypes)
+    }
+  }, [matchedAnnotationsMap])
+
+
+  function initializeAnnotationTypes(contentTypes: string[]) {
+    const newAnnotationTypes = {}
+    contentTypes.map((type) => newAnnotationTypes[type] = true)
+    setAnnotationTypes(newAnnotationTypes)
+  }
+
+  function updateAnnotationsTypes(contentTypes: string[], annotationTypes: object) {
     const newAnnotationTypes = { ...annotationTypes }
-    // initial opening of text: length of annotationTypes is 0 => set all values to true
-    if (Object.keys(annotationTypes).length === 0) {
-      contentTypes.map((type) => newAnnotationTypes[type] = true)
-    }
-    else {
-      // if greater than 0 => remove that key from the annotation types
-      Object.keys(annotationTypes).map((type) => {
-        if (!contentTypes.includes(type)) delete newAnnotationTypes[type]
-      })
-    }
+    Object.keys(newAnnotationTypes).map((type) => {
+      if (!contentTypes.includes(type)) delete newAnnotationTypes[type]
+    })
 
     setAnnotationTypes(newAnnotationTypes)
   }
