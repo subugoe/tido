@@ -120,8 +120,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
 
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
-  const { panelState, setSelectedAnnotation, setFilteredAnnotations,
-    annotationTypes, setAnnotationTypes , showTextOptions, updatePanel } = usePanel()
+  const { panelState, setSelectedAnnotation, setFilteredAnnotations, showTextOptions, updatePanel } = usePanel()
 
   const onClickTarget = (id: string) => {
     const annotation = panelState.annotations.find(a => a.id === id)
@@ -162,34 +161,11 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   }, [parsedDom, panelState.annotations])
 
   useEffect(() => {
+
     const filteredAnnotations = panelState.annotations?.filter(a => matchedAnnotationsMap[a.id]) ?? []
     setFilteredAnnotations(filteredAnnotations)
-    const contentTypes = filteredAnnotations.map(item => item.body['x-content-type'])
-    const uniqueContentTypes = [...new Set(contentTypes)]
-    if (filteredAnnotations.length > 0 && Object.keys(annotationTypes).length === 0) {
-      initializeAnnotationTypes(uniqueContentTypes)
-      return
-    }
-    if (filteredAnnotations.length > 0 && Object.keys(annotationTypes).length > 0) {
-      updateAnnotationsTypes(uniqueContentTypes, annotationTypes)
-    }
   }, [matchedAnnotationsMap])
 
-
-  function initializeAnnotationTypes(contentTypes: string[]) {
-    const newAnnotationTypes = {}
-    contentTypes.map((type) => newAnnotationTypes[type] = true)
-    setAnnotationTypes(newAnnotationTypes)
-  }
-
-  function updateAnnotationsTypes(contentTypes: string[], annotationTypes: object) {
-    const newAnnotationTypes = { ...annotationTypes }
-    Object.keys(newAnnotationTypes).map((type) => {
-      if (!contentTypes.includes(type)) delete newAnnotationTypes[type]
-    })
-
-    setAnnotationTypes(newAnnotationTypes)
-  }
 
   const reactElements = React.useMemo(() => {
     return Array.from(parsedDom.body.childNodes).map((node, i) =>
