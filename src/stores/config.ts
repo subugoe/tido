@@ -499,6 +499,15 @@ import { i18n } from '@/i18n';
               ...panel,
             };
           });
+
+          // If the config has any panel with show:false, we need to set the bookmark.
+          // So if the custom config wants to hide a panel at initial loading, we need to reflect that to the bookmark.
+          const hasHiddenPanels = customConfig.panels.find(panelConfig => panelConfig.show === false)
+
+          if (hasHiddenPanels) {
+            const panelIndexes = customConfig.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
+            BookmarkService.updateShow(panelIndexes);
+          }
         }
 
         // To be able to reset to certain pre-configured values,
@@ -545,8 +554,8 @@ import { i18n } from '@/i18n';
         }
         setConfig(resultConfig)
 
-        if (urlConfig.activeViews)   setActiveViews(activeViews)
-        else   setDefaultActiveViews(false)   //dispatch('setDefaultActiveViews', false);
+        if (urlConfig.activeViews) setActiveViews(activeViews)
+        else setDefaultActiveViews(false)
     }
 
 

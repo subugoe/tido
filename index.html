@@ -27,7 +27,158 @@
 <script type="module" src="/src/main.js"></script>
 <script>
   window.addEventListener('load', function () {
-    window.tido = new window.Tido();
+    window.tido = new window.Tido({
+      collection: "https://api.ahiqar.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json",
+      container: "#app",
+      colors: {
+        primary: "#234ea6"
+      },
+      labels: {
+        item: "Sheet",
+        manifest: "Manuscript"
+      },
+      fitPanels: false,
+      panels: [
+        {
+          label: "contents_and_metadata",
+          views: [
+            {
+              id: "tree",
+              label: "contents",
+              connector: {
+                id: 1
+              }
+            },
+            {
+              id: "metadata",
+              label: "metadata",
+              connector: {
+                id: 2,
+                options: {
+                  collection: {
+                    all: true
+                  },
+                  manifest: {
+                    all: true
+                  },
+                  item: {
+                    all: true
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          label: "image",
+          views: [
+            {
+              id: "image",
+              label: "Image",
+              connector: {
+                id: 3
+              }
+            }]
+        },
+        {
+          label: "Transcription",
+          views: [
+            {
+              id: "text1",
+              label: "Transcription",
+              default: true,
+              connector: {
+                id: 4,
+                options: {
+                  type: "transcription"
+                }
+              }
+            }
+          ]
+        },
+        {
+          label: "Translation",
+          show: true,
+          views: [
+            {
+              id: "text3",
+              label: "Translation",
+              default: true,
+              connector: {
+                id: 4,
+                options: {
+                  type: "translation"
+                }
+              }
+            },
+          ]
+        },
+        {
+          label: "annotations",
+          views: [
+            {
+              id: "annotations1",
+              label: "Editorial",
+              connector: {
+                id: 5,
+                options: {
+                  types: [
+                    {
+                      name: "Person",
+                      icon: "person"
+                    },
+                    {
+                      name: "Place",
+                      icon: "marker"
+                    },
+                    {
+                      name: "Editorial Comment",
+                      icon: "chat"
+                    },
+                    {
+                      name: "Reference",
+                      icon: "externalLink"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              id: "annotations2",
+              label: "Motif",
+              connector: {
+                id: 5,
+                options: {
+                  types: [
+                    {
+                      name: "Motif",
+                      icon: "pen"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "annotations3",
+              "label": "Variants",
+              "connector": {
+                "id": 6
+              }
+            }
+          ]
+        }
+      ],
+      translations: {
+        en: {
+          contents_and_metadata: "Contents & Metadata",
+          next_item: "Next Sheet",
+          previous_item: "Previous Sheet",
+          next_manifest: "Next Manuscript",
+          previous_manifest: "Previous Manuscript",
+          item: "Sheet"
+        }
+      }
+    });
   });
   </script>
 </body>
