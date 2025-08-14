@@ -5,7 +5,7 @@ import Annotation from '@/components/panel/annotations/Annotation.tsx'
 const ANNOTATION_GAP = 5
 
 const AnnotationsBody: FC = () => {
-  const { panelId, filteredAnnotations, setFilteredAnnotations, annotationTypes, selectedAnnotation } = usePanel()
+  const { panelId, panelState, matchedAnnotationsMap, filteredAnnotations, setFilteredAnnotations, annotationTypes, selectedAnnotation } = usePanel()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
   // position of each annotation.
@@ -105,11 +105,16 @@ const AnnotationsBody: FC = () => {
     }
   }, [filteredAnnotations])
 
+
   useEffect(() => {
     // update filteredAnnotations based on change in annotationTypes
-    const selectedAnnotationTypes = Object.keys(annotationTypes).filter((type) => annotationTypes[type] === true)
-    const newFilteredAnnotations = filteredAnnotations.filter((a) => selectedAnnotationTypes.includes(a.body['x-content-type']))
-    setFilteredAnnotations(newFilteredAnnotations)
+    const matchedAnnotationsIds = Object.keys(matchedAnnotationsMap)
+    const filteredAnnotations = []
+    panelState.annotations.map((a) => {
+      if (matchedAnnotationsIds.includes(a.id) && annotationTypes[a.body['x-content-type']] === true) filteredAnnotations.push(a)
+    })
+
+    setFilteredAnnotations(filteredAnnotations)
   }, [annotationTypes])
 
 

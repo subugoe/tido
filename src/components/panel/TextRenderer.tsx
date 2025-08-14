@@ -120,7 +120,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
 
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
-  const { panelState, setSelectedAnnotation, setFilteredAnnotations, showTextOptions, updatePanel } = usePanel()
+  const { panelState, annotationTypes, setMatchedAnnotationsMap, setAnnotationTypes, setSelectedAnnotation, setFilteredAnnotations, showTextOptions, updatePanel } = usePanel()
 
   const onClickTarget = (id: string) => {
     const annotation = panelState.annotations.find(a => a.id === id)
@@ -151,20 +151,38 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
 
   const matchedAnnotationsMap = React.useMemo(() => {
     if (!panelState.annotations) return {}
-    return panelState.annotations.reduce((acc, cur) => {
+    const result = panelState.annotations.reduce((acc, cur) => {
       const matchedNodes = Array.from(parsedDom.body.querySelectorAll(cur.target[0].selector.value))
       if (matchedNodes.length > 0) {
         acc[cur.id] = matchedNodes
       }
       return acc
     }, {})
+
+    setMatchedAnnotationsMap(result)
+    return result
   }, [parsedDom, panelState.annotations])
 
   useEffect(() => {
-
     const filteredAnnotations = panelState.annotations?.filter(a => matchedAnnotationsMap[a.id]) ?? []
     setFilteredAnnotations(filteredAnnotations)
+    if (panelState.annotations?.length > 0) updateGlobalAnnotationTypes(panelState.annotations)
+
   }, [matchedAnnotationsMap])
+
+  function updateGlobalAnnotationTypes(annotations: Annotation[]) {
+    // for each new item there can be introduced new annotation types
+    const newAnnotationTypes = { ...annotationTypes }
+    const types = annotations.map((a) => a.body['x-content-type'])
+    const uniqueAnnotationTypes = [...new Set(types)]
+    if (uniqueAnnotationTypes.length > 0) {
+      uniqueAnnotationTypes.forEach((type) => {
+        if (!(type in newAnnotationTypes)) newAnnotationTypes[type] = true
+      })
+    }
+
+    setAnnotationTypes(newAnnotationTypes)
+  }
 
 
   const reactElements = React.useMemo(() => {
