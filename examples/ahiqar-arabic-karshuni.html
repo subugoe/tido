@@ -40,40 +40,41 @@ window.addEventListener('load', function () {
   }
 
   new Tido({
-    "collection": "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json",
-    "labels": {
-      "item": "Sheet",
-      "manifest": "Manuscript"
+    collection: "https://api.ahiqar.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/collection.json",
+    container: "#app",
+    colors: {
+      primary: "#234ea6"
     },
-    "colors": {
-      "forceMode": "light",
-      "primary": "#1a3771"
+    labels: {
+      item: "Sheet",
+      manifest: "Manuscript"
     },
-    "panels": [
+    fitPanels: false,
+    panels: [
       {
-        "label": "contents_and_metadata",
-        "views": [
+        label: "contents_and_metadata",
+        views: [
           {
-            "id": "tree",
-            "label": "contents",
-            "connector": {
-              "id": 1
+            id: "tree",
+            label: "contents",
+            connector: {
+              id: 1
             }
           },
           {
-            "id": "metadata",
-            "label": "metadata",
-            "connector": {
-              "id": 2,
-              "options": {
-                "collection": {
-                  "all": true
+            id: "metadata",
+            label: "metadata",
+            connector: {
+              id: 2,
+              options: {
+                collection: {
+                  all: true
                 },
-                "manifest": {
-                  "all": true
+                manifest: {
+                  all: true
                 },
-                "item": {
-                  "all": true
+                item: {
+                  all: true
                 }
               }
             }
@@ -81,82 +82,89 @@ window.addEventListener('load', function () {
         ]
       },
       {
-        "label": "image",
-        "views": [
+        label: "image",
+        views: [
           {
-            "id": "image",
-            "label": "Image",
-            "connector": {
-              "id": 3
+            id: "image",
+            label: "Image",
+            connector: {
+              id: 3
             }
           }]
       },
       {
-        "label": "text",
-        "views": [
+        label: "Transcription",
+        views: [
           {
-            "id": "text1",
-            "label": "Transcription",
-            "default": true,
-            "connector": {
-              "id": 4,
-              "options": {
-                "type": "transcription"
-              }
-            }
-          },
-          {
-            "id": "text2",
-            "label": "Transliteration",
-            "connector": {
-              "id": 4,
-              "options": {
-                "type": "transliteration"
+            id: "text1",
+            label: "Transcription",
+            default: true,
+            connector: {
+              id: 4,
+              options: {
+                type: "transcription"
               }
             }
           }
         ]
       },
       {
-        "label": "annotations",
-        "views": [
+        label: "Translation",
+        show: false,
+        views: [
           {
-            "id": "annotations1",
-            "label": "Editorial",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
+            id: "text3",
+            label: "Translation",
+            default: true,
+            connector: {
+              id: 4,
+              options: {
+                type: "translation"
+              }
+            }
+          },
+        ]
+      },
+      {
+        label: "annotations",
+        views: [
+          {
+            id: "annotations1",
+            label: "Editorial",
+            connector: {
+              id: 5,
+              options: {
+                types: [
                   {
-                    "name": "Person",
-                    "icon": "person"
+                    name: "Person",
+                    icon: "person"
                   },
                   {
-                    "name": "Place",
-                    "icon": "marker"
+                    name: "Place",
+                    icon: "marker"
                   },
                   {
-                    "name": "Editorial Comment",
-                    "icon": "chat"
+                    name: "Editorial Comment",
+                    icon: "chat"
                   },
                   {
-                    "name": "Reference",
-                    "icon": "externalLink"
+                    name: "Reference",
+                    icon: "externalLink"
                   }
                 ]
               }
             }
           },
           {
-            "id": "annotations2",
-            "label": "Motif",
-            "connector": {
-              "id": 5,
-              "options": {
-                "types": [
+            id: "annotations2",
+            label: "Motif",
+            connector: {
+              id: 5,
+              options: {
+                types: [
                   {
-                    "name": "Motif",
-                    "icon": "pen"
+                    name: "Motif",
+                    icon: "pen"
                   }
                 ]
               }
@@ -172,14 +180,14 @@ window.addEventListener('load', function () {
         ]
       }
     ],
-    "translations": {
-      "en": {
-        "contents_and_metadata": "Contents & Metadata",
-        "next_item": "Next Sheet",
-        "previous_item": "Previous Sheet",
-        "next_manifest": "Next Manuscript",
-        "previous_manifest": "Previous Manuscript",
-        "item": "Sheet"
+    translations: {
+      en: {
+        contents_and_metadata: "Contents & Metadata",
+        next_item: "Next Sheet",
+        previous_item: "Previous Sheet",
+        next_manifest: "Next Manuscript",
+        previous_manifest: "Previous Manuscript",
+        item: "Sheet"
       }
     }
   });
