@@ -168,19 +168,21 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   }, [matchedAnnotationsMap])
 
   function initAnnotationsTypes(filteredAnnotations: Annotation[]) {
-    console.log('old annot types', annotationTypes)
-    // we iterate through each existing annotation type and keep only those which are in filteredAnnotations
-    const contentTypes = filteredAnnotations.map(item => item.body['x-content-type'])
-    const uniqueContentTypes = [...new Set(contentTypes)]
-    const newAnnotationTypes = {}
-    if (Object.keys(annotationTypes).length > 0) {
+    if (filteredAnnotations.length === 0) return
+    let contentTypes = filteredAnnotations.map(item => item.body['x-content-type'])
+    contentTypes = [...new Set(contentTypes)]
+    const newAnnotationTypes = { ...annotationTypes }
+    // initial opening of text: length of annotationTypes is 0 => set all values to true
+    if (Object.keys(annotationTypes).length === 0) {
+      contentTypes.map((type) => newAnnotationTypes[type] = true)
+    }
+    else {
+      // if greater than 0 => remove that key from the annotation types
       Object.keys(annotationTypes).map((type) => {
-        if (uniqueContentTypes.includes(type)) newAnnotationTypes[type] = annotationTypes[type]
+        if (!contentTypes.includes(type)) delete newAnnotationTypes[type]
       })
     }
-    // initialize all filtered annotations
-    //if (uniqueContentTypes.length > 0)
-    console.log('newAnnotationTypes', newAnnotationTypes)
+
     setAnnotationTypes(newAnnotationTypes)
   }
 
