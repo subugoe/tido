@@ -1,5 +1,4 @@
 import { FC, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useUIStore } from '@/store/UIStore.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 
@@ -8,13 +7,15 @@ import { PanelModeButtonData, PanelMode } from '@/types'
 import { Button } from '@/components/ui/button.tsx'
 
 import { filterAndSortData } from '@/utils/panel.ts'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface SelectPanelModeButtonsProps {
   updateSelectedButton: (selectedMode: PanelMode) => void
 }
 
 const Modes: FC<SelectPanelModeButtonsProps> = ({ updateSelectedButton }) => {
-  const { t } = useTranslation()
+  const { usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
   const panelModes = useConfigStore(state => state.config.panelModes)
   const [selectedPanelMode, setSelectedPanelMode] = useState(useUIStore.getState().defaultPanelMode)
 

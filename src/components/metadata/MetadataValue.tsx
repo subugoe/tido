@@ -1,14 +1,15 @@
 import { FC } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import TextRenderer from '@/components/panel/TextRenderer.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface MetadataValueProps {
   value?: string
 }
 
 const MetadataValue: FC<MetadataValueProps> = ( { value } ) => {
-  const { t } = useTranslation()
+  const { usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
 
 
   return <div className="ml-1 mb-4">

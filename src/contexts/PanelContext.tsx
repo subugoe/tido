@@ -8,6 +8,8 @@ import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
 import { PanelMode } from '@/types'
+import { useTranslation, UseTranslationResponse } from 'react-i18next'
+import { getCollectionSlug } from '@/utils/tree.ts'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -28,6 +30,7 @@ interface PanelContentType {
   selectedAnnotation: Annotation | null,
   setSelectedAnnotation: (value: Annotation | null) => void
   showTextOptions: boolean
+  usePanelTranslation: () =>  UseTranslationResponse<'common', undefined>
 }
 
 interface PanelProviderProps {
@@ -57,6 +60,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   function getPanelMode(existsImage: boolean, panelMode: PanelMode) {
     if (existsImage) return panelState.mode
     return panelMode
+  }
+
+  function usePanelTranslation(): UseTranslationResponse<'common', never> {
+    const ns = panelState.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
+    return useTranslation(ns)
   }
 
   useEffect(() => {
@@ -148,7 +156,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       setFilteredAnnotations,
       selectedAnnotation,
       setSelectedAnnotation,
-      showTextOptions
+      showTextOptions,
+      usePanelTranslation
     }}>
       {children}
     </PanelContext.Provider>

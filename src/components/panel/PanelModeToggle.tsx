@@ -1,7 +1,6 @@
 import { FC, MouseEvent } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext'
-import { useTranslation } from 'react-i18next'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 import { Button } from '@/components/ui/button.tsx'
@@ -14,8 +13,8 @@ import { filterAndSortData } from '@/utils/panel.ts'
 
 
 const PanelModeToggle: FC = () => {
-  const { t } = useTranslation()
-  const { panelState, updatePanel, setFilteredAnnotations, resizer } = usePanel()
+  const { panelState, updatePanel, setFilteredAnnotations, usePanelTranslation, resizer } = usePanel()
+  const { t } = usePanelTranslation()
   const panelModes = useConfigStore.getState().config.panelModes
 
   const defaultButtonsData: PanelModeButtonData[] = [{

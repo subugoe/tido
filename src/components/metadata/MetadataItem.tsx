@@ -1,13 +1,14 @@
 import { FC } from 'react'
-import { useTranslation } from 'react-i18next'
 import MetadataValue from '@/components/metadata/MetadataValue.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface MetadataItemProps {
   item: Metadata
 }
 
 const MetadataItem: FC<MetadataItemProps> = ({ item }) => {
-  const { t } = useTranslation()
+  const { usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
 
   return <div>
     <h4 className="font-semibold text-sm text-muted-foreground">

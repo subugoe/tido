@@ -10,7 +10,6 @@ import NavigationButton from '@/components/panel/NavigationButton.tsx'
 import Metadata from '@/components/metadata/Metadata'
 import Actions from '@/components/panel/Actions.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useTranslation } from 'react-i18next'
 
 const SidebarToggle = (props) => {
   const { panelState, updatePanel } = usePanel()
@@ -28,7 +27,8 @@ const SidebarToggle = (props) => {
 }
 
 const PanelHeader: FC = () => {
-  const { t } = useTranslation()
+  const { usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const { panelState } = usePanel()
   const handleOpenChange = (open: boolean) => {

@@ -1,6 +1,5 @@
 import { FC } from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { useTranslation } from 'react-i18next'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
@@ -9,8 +8,8 @@ import MetadataItem from '@/components/metadata/MetadataItem.tsx'
 import { getCollectionMetadata } from '@/utils/metadata.ts'
 
 const CollectionMetadata: FC = () => {
-  const { panelState } = usePanel()
-  const { t } = useTranslation()
+  const { panelState, usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
 
   const collection = useDataStore(
     (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId].collection : null

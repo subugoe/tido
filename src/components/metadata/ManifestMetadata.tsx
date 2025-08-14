@@ -1,6 +1,5 @@
 import { FC } from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { useTranslation } from 'react-i18next'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
@@ -9,8 +8,8 @@ import { getManifestMetadata } from '@/utils/metadata.ts'
 
 
 const ManifestMetadata: FC = () => {
-  const { panelState } = usePanel()
-  const { t } = useTranslation()
+  const { panelState, usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
 
   const manifest = useDataStore(
     () => panelState && panelState.manifest ? panelState.manifest : null

@@ -17,8 +17,10 @@
   ],
   "translations": {
     "de": {
-      "accurate": "Handschriftengetreu",
-      "simplified": "Vereinfacht"
+      "reproduction": {
+        "accurate": "Handschriftengetreu",
+        "simplified": "Vereinfacht"
+      }
     }
   },
   "title": "Vier Wachen Edition"

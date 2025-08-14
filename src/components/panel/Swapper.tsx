@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Image, Text } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
-import { useTranslation } from 'react-i18next'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface PreviewProps {
   mode?: string,
@@ -9,7 +9,8 @@ interface PreviewProps {
 }
 
 const Swapper: FC<PreviewProps> = ({ mode = 'A', setMode = () => {} }) => {
-  const { t } = useTranslation()
+  const { usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
 
   function updateMode() {
     if (mode === 'A') {
