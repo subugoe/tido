@@ -168,7 +168,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   }, [matchedAnnotationsMap])
 
   function initAnnotationsTypes(filteredAnnotations: Annotation[]) {
-    if (filteredAnnotations.length === 0) return
+    if (filteredAnnotations.length === 0) {
+      setAnnotationTypes({})
+      return
+    }
     let contentTypes = filteredAnnotations.map(item => item.body['x-content-type'])
     contentTypes = [...new Set(contentTypes)]
     const newAnnotationTypes = { ...annotationTypes }
