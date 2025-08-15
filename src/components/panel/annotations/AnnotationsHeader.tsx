@@ -2,7 +2,6 @@
 import  { FC, useEffect, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import AnnotationType from '@/components/panel/annotations/AnnotationType.tsx'
-import AnnotationFilterDropdown from '@/components/panel/annotations/AnnotationFilterDropdown.tsx'
 
 const AnnotationsHeader: FC = () => {
 
@@ -28,14 +27,10 @@ const AnnotationsHeader: FC = () => {
 
 
 
-
   if (Object.keys(annotTypes).length > 0) return (
     <div data-cy="annotations-header" className="flex flex-col items-center">
       <div data-cy="annotation-types" className="flex gap-2 flex-wrap">
         { Object.keys(annotTypes).map((type: string, i) => <AnnotationType type={type} key={'annotation-type-' +i} />)}
-      </div>
-      <div className="flex justify-center annotation-filter-dropdown">
-        {annotTypes['Variant'] === true && <AnnotationFilterDropdown type='Variant' />}
       </div>
     </div>
   )
