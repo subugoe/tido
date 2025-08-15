@@ -109,12 +109,13 @@ const AnnotationsBody: FC = () => {
   useEffect(() => {
     // update filteredAnnotations based on change in annotationTypes
     const matchedAnnotationsIds = Object.keys(matchedAnnotationsMap)
-    const filteredAnnotations = []
+    const newFilteredAnnotations = []
     panelState.annotations.map((a) => {
-      if (matchedAnnotationsIds.includes(a.id) && annotationTypes[a.body['x-content-type']] === true) filteredAnnotations.push(a)
+      if (matchedAnnotationsIds.includes(a.id) && annotationTypes[a.body['x-content-type']] === true) newFilteredAnnotations.push(a)
     })
 
-    setFilteredAnnotations(filteredAnnotations)
+
+    setFilteredAnnotations(newFilteredAnnotations)
   }, [annotationTypes])
 
 
@@ -138,7 +139,7 @@ const AnnotationsBody: FC = () => {
 
 
 
-  return <div ref={ref} className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
+  return <div ref={ref} className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`} data-cy="annotations-list">
     {filteredAnnotations.map(a => <Annotation
       data={a}
       key={a.id}

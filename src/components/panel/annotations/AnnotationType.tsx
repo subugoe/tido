@@ -11,12 +11,15 @@ const AnnotationType: FC<AnnotationTypeProps> = ({ type }) => {
   const { annotationTypes, setAnnotationTypes } = usePanel()
   const selected = annotationTypes[type]
 
+
   function onAnnotationTypeSelect() {
     // updateSelectedTypes
     const newAnnotationTypes = { ...annotationTypes }
     newAnnotationTypes[type] = !selected
     setAnnotationTypes(newAnnotationTypes)
   }
+
+
 
 
   return (

@@ -37,6 +37,11 @@ function setHighlightingOnTarget(el: HTMLElement) {
   el.classList.add('bg-gray-200', 'cursor-pointer')
 }
 
+function removeHighlightingOnTarget(el: HTMLElement) {
+  el.setAttribute('data-scroll-target', 'false')
+  el.classList.remove('bg-gray-200', 'cursor-pointer')
+}
+
 function setAnnotationIdOnTarget(el: HTMLElement, annotation: Annotation) {
   el.setAttribute('data-annotation-id', annotation.id)
 }
@@ -214,16 +219,9 @@ function setupScrollPanels(panelIds: string[]) {
   setupSyncScrolling(panelStates)
 }
 
-function getUniqueWitnesses(variantAnnotations) {
-  let uniqueWitnesses = []
-  variantAnnotations.map((a) => {
-    uniqueWitnesses = [...uniqueWitnesses, ...a.body['value']['witnesses']]
-  })
-  return [...new Set(uniqueWitnesses)]
-}
-
 export {
   setupScrollPanels,
   selectSyncTargetByIndex,
-  getUniqueWitnesses
+  resetHighlighting,
+  removeHighlightingOnTarget
 }

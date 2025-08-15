@@ -12,10 +12,9 @@ const AnnotationsHeader: FC = () => {
 
   useEffect(() => {
     // filter annot Types from annotationTypes of panel based on annotations which have target on text
-    const matchedAnnotationsIds = Object.keys(matchedAnnotationsMap)
     const newAnnotTypes = []
     annotations.map((a) => {
-      if (matchedAnnotationsIds.includes(a.id)) newAnnotTypes.push(a.body['x-content-type'])
+      if (Object.keys(matchedAnnotationsMap).includes(a.id)) newAnnotTypes.push(a.body['x-content-type'])
     })
     const uniqueAnnotTypesAsArray = [...new Set(newAnnotTypes)]
     const newAnnotTypesObj = Object.fromEntries(
