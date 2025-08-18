@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { parseStyleString } from '@/utils/html-to-react.ts'
 
@@ -37,24 +37,25 @@ const convertNodeToReact = (node, key) => {
 }
 
 const Annotation: FC<Props> = React.memo(({ data, top }) => {
-  const {  hoveredAnnotation, setHoveredAnnotation, selectedAnnotation, setSelectedAnnotation } = usePanel()
+  const {  setHoveredAnnotation, selectedAnnotation, setSelectedAnnotation } = usePanel()
   const ref = useRef(null)
   const [isHovered, setIsHovered] = useState(false)
-
-  useEffect(() => {
-    if (!hoveredAnnotation) setIsHovered(false)
-    else if (hoveredAnnotation === data.id) setIsHovered(true)
-  }, [hoveredAnnotation])
 
   function handleClick() {
     setSelectedAnnotation(data)
   }
 
   function handleMouseEnter() {
-    setHoveredAnnotation(data.id)
+    setIsHovered(true)
+    setTimeout(() => {
+      setHoveredAnnotation(data.id)
+    }, 100)
   }
   function handleMouseLeave() {
-    setHoveredAnnotation(null)
+    setIsHovered(false)
+    setTimeout(() => {
+      setHoveredAnnotation(null)
+    }, 100)
   }
 
   function isSelected() {
