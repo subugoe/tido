@@ -15,6 +15,9 @@ import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
+import TextViewWarning from '@/components/panel/views/TextViewWarning.tsx'
+import TextViewError from '@/components/panel/views/TextViewError.tsx'
+import { ErrorBoundary } from 'react-error-boundary'
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, initResizer, resizer, showTextOptions } = usePanel()
@@ -123,8 +126,8 @@ const Panel: FC = React.memo(() => {
             {showImage && <ImageView />}
           </div>
           <div data-scroll-container className={`h-full w-full bg-accent overflow-x-hidden overflow-y-auto relative`}>
-            <div data-text-container className={`bg-background p-2 pr-5 min-h-full relative border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
-              {showText && <TextView />}
+            <div data-text-container className={`bg-background p-3 pr-5 min-h-full relative flex border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
+              {showText && <ErrorBoundary FallbackComponent={TextViewError}><TextView /></ErrorBoundary>}
               {showSwapper && <Swapper />}
             </div>
             <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2`}>
@@ -132,8 +135,11 @@ const Panel: FC = React.memo(() => {
             </div>
           </div>
           <AnnotationHints />
-          <div data-text-options className="absolute top-0 z-10 flex justify-center">
+          <div data-text-options className="absolute top-0 z-10 flex flex-col items-center justify-center">
             { showTextOptions && <TextOptions /> }
+          </div>
+          <div data-text-warning className="absolute bottom-0 z-10 flex flex-col items-center justify-center">
+            <TextViewWarning />
           </div>
         </div>
         {showSelectPanelMode && ref.current && <SelectPanelModeDialog parentEl={ref.current} />}

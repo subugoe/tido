@@ -70,6 +70,7 @@
     "openseadragon": "^5.0.0",
     "postcss": "^8.5.5",
     "postcss-cli": "^11.0.1",
+    "react-error-boundary": "^6.0.0",
     "react-i18next": "^15.4.1",
     "start-server-and-test": "^2.0.8",
     "tailwind-merge": "^2.5.5",
