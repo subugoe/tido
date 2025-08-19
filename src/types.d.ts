@@ -27,6 +27,10 @@ declare global {
     refs: Witness[]
   }
 
+  interface AnnotationTypesDict {
+    [key: AnnotationType]: boolean
+  }
+
   interface Witness {
     idno: string
     manifest: string
@@ -199,6 +203,13 @@ declare global {
     description?: string
     annotationCollection?: string
     modules?: Module[]
+  }
+
+  interface MatchedAnnotationsMap {
+    [key: string]: {
+      target: AnnotationTarget[],
+      filtered: boolean
+    }
   }
 
   interface Metadata {

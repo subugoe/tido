@@ -77,6 +77,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   // Main function to create GenericElement recursively out of HTML nodes.
   // Additional attributes regarding annotations will be applied.
 
+
   if (node.nodeType === Node.TEXT_NODE) {
     return node.textContent
   }
@@ -96,8 +97,9 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
     }
   }
 
+
   const annotationIds = Object.keys(matches).reduce((acc, cur) => {
-    const isMatch = matches[cur].includes(node)
+    const isMatch = matches[cur].target.includes(node) && matches[cur].filtered === true
     return isMatch ? [...acc, cur] : acc
   }, [])
 
@@ -120,7 +122,8 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
 
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
-  const { panelState, setSelectedAnnotation, setFilteredAnnotations, showTextOptions, updatePanel } = usePanel()
+  const { panelState, fullAnnotationTypes, setFullAnnotationTypes, matchedAnnotationsMap, setMatchedAnnotationsMap, setSelectedAnnotation, showTextOptions, updatePanel,  } = usePanel()
+
 
   const onClickTarget = (id: string) => {
     const annotation = panelState.annotations.find(a => a.id === id)
@@ -149,27 +152,50 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
     return parser.parseFromString(`${htmlString}<span class="${END_CLASS}"></span>`, 'text/html')
   }, [htmlString])
 
-  const matchedAnnotationsMap = React.useMemo(() => {
+  React.useMemo(() => {
     if (!panelState.annotations) return {}
-    return panelState.annotations.reduce((acc, cur) => {
+    const result: MatchedAnnotationsMap = panelState.annotations.reduce((acc, cur) => {
       const matchedNodes = Array.from(parsedDom.body.querySelectorAll(cur.target[0].selector.value))
       if (matchedNodes.length > 0) {
-        acc[cur.id] = matchedNodes
+        const annotType = cur.body['x-content-type']
+        acc[cur.id] = { target: matchedNodes, filtered: fullAnnotationTypes[annotType] ?? true }
       }
       return acc
     }, {})
+
+    setMatchedAnnotationsMap(result)
+    return result
   }, [parsedDom, panelState.annotations])
 
   useEffect(() => {
-    const filteredAnnotations = panelState.annotations?.filter(a => matchedAnnotationsMap[a.id]) ?? []
-    setFilteredAnnotations(filteredAnnotations)
+    if (!panelState.annotations || panelState.annotations?.length === 0) return
+    // when switching to a new item, we extend our "full" annotationTypes
+    const newAnnotationTypes = getUpdatedAnnotationTypes(panelState.annotations, fullAnnotationTypes)
+    setFullAnnotationTypes(newAnnotationTypes)
   }, [matchedAnnotationsMap])
+
+  function getUpdatedAnnotationTypes(annotations: Annotation[], annotationTypes) {
+    // for each new item there can be introduced new annotation types
+    const newAnnotationTypes = { ...annotationTypes }
+    const types = annotations.map((a) => a.body['x-content-type'])
+    const uniqueAnnotationTypes = [...new Set(types)]
+    if (uniqueAnnotationTypes.length > 0) {
+      uniqueAnnotationTypes.forEach((type) => {
+        if (!(type in newAnnotationTypes)) newAnnotationTypes[type] = true
+      })
+    }
+
+    return newAnnotationTypes
+  }
+
 
   const reactElements = React.useMemo(() => {
     return Array.from(parsedDom.body.childNodes).map((node, i) =>
       convertNodeToReact(node as HTMLElement, i, matchedAnnotationsMap, onClickTarget)
     )
   }, [matchedAnnotationsMap])
+
+
 
   return <div className={`relative ${showTextOptions ? 'pt-12' : ''}`}>
     <div ref={textWrapperRef}>

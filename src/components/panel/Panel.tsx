@@ -3,6 +3,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useScrollStore } from '@/store/ScrollStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 import PanelHeader from '@/components/panel/PanelHeader.tsx'
 import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
@@ -11,10 +12,10 @@ import SelectPanelModeDialog from '@/components/panel/select-panel-mode/SelectPa
 import ImageView from '@/components/panel/views/ImageView.tsx'
 import TextView from '@/components/panel/views/TextView.tsx'
 import Swapper from '@/components/panel/Swapper.tsx'
-import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
+import AnnotationsHeader from '@/components/panel/annotations/AnnotationsHeader.tsx'
+import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, initResizer, resizer, showTextOptions } = usePanel()
@@ -115,6 +116,11 @@ const Panel: FC = React.memo(() => {
             <PanelHeader />
           </div>
           <div data-header-sidebar className={`absolute top-0 h-full w-[400px] pl-2`}>
+            { showSidebarContent &&
+              <div className="absolute bottom-2">
+                <AnnotationsHeader />
+              </div>
+            }
           </div>
         </div>
 
@@ -128,7 +134,7 @@ const Panel: FC = React.memo(() => {
               {showSwapper && <Swapper />}
             </div>
             <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2`}>
-              {showSidebarContent && <AnnotationsBody />}
+              {showSidebarContent && <AnnotationsBody /> }
             </div>
           </div>
           <AnnotationHints />

@@ -5,11 +5,13 @@ import Annotation from '@/components/panel/annotations/Annotation.tsx'
 const ANNOTATION_GAP = 5
 
 const AnnotationsBody: FC = () => {
-  const { panelId, filteredAnnotations, selectedAnnotation } = usePanel()
+  const { panelId, panelState, matchedAnnotationsMap, selectedAnnotation } = usePanel()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
   // position of each annotation.
   const [elements, setElements] = useState([])
+
+  const filteredAnnotations = panelState.annotations.filter(a => Object.keys(matchedAnnotationsMap).includes(a.id) && matchedAnnotationsMap[a.id].filtered === true)
 
   const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-container]`) as HTMLElement)
   const [yMap, setYMap] = useState({})
@@ -34,6 +36,7 @@ const AnnotationsBody: FC = () => {
     }
 
     elements.sort((a, b) => a.desiredY - b.desiredY)
+
 
     for (let i = 0; i < elements.length; i++) {
       const annotationEl = elements[i]
@@ -75,6 +78,7 @@ const AnnotationsBody: FC = () => {
     moveBefore(index - 1)
   }
 
+
   useEffect(() => {
     if (filteredAnnotations.length === 0) {
       setElements([])
@@ -83,6 +87,7 @@ const AnnotationsBody: FC = () => {
       const _elements = annotationEls.map(el => {
         const annotation = filteredAnnotations.find(a => a.id === el.getAttribute('data-annotation'))
         if (!annotation) return
+
         const target = document.getElementById(panelId).querySelector(annotation.target[0].selector.value)
         return {
           target,
@@ -99,7 +104,8 @@ const AnnotationsBody: FC = () => {
       setLoading(true)
       setElements([])
     }
-  }, [filteredAnnotations])
+  }, [matchedAnnotationsMap])
+
 
   useEffect(() => {
     let resizeObserver
@@ -119,7 +125,9 @@ const AnnotationsBody: FC = () => {
     }
   }, [elements])
 
-  return <div ref={ref} className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
+
+
+  return <div ref={ref} className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`} data-cy="annotations-list">
     {filteredAnnotations.map(a => <Annotation
       data={a}
       key={a.id}
