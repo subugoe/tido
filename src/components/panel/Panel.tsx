@@ -123,7 +123,11 @@ const Panel: FC = React.memo(() => {
             {showImage && <ImageView />}
           </div>
           <div data-scroll-container className={`h-full w-full bg-accent overflow-x-hidden overflow-y-auto relative`}>
-            <div data-text-container className={`bg-background p-2 pr-5 min-h-full relative border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
+            <div data-scrollbar-proxy className="overflow-x-auto overflow-y-hidden sticky bottom-0 z-10">
+              <div className="h-[10px] bg-red-100"></div>
+            </div>
+            <div data-text-container
+              className={`bg-background p-2 pr-5 min-h-full relative border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
               {showText && <TextView />}
               {showSwapper && <Swapper />}
             </div>

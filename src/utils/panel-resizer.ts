@@ -13,6 +13,7 @@ class PanelResizer {
   panelId: string
   panelMode: PanelMode
   textContainerEl: HTMLElement
+  textScrollbarProxy: HTMLElement
   scrollContainerEl: HTMLElement
   imageContainerEl: HTMLElement
   headerEl: HTMLElement
@@ -42,6 +43,7 @@ class PanelResizer {
     this.panelId = this.panelEl.id
     this.scrollContainerEl = this.panelEl.querySelector('[data-scroll-container]')
     this.textContainerEl = this.panelEl.querySelector('[data-text-container]')
+    this.textScrollbarProxy = this.panelEl.querySelector('[data-scrollbar-proxy]')
     this.imageContainerEl = this.panelEl.querySelector('[data-image-container]')
     this.headerEl = this.panelEl.querySelector('[data-panel-header]')
     this.sidebarEl = this.panelEl.querySelector('[data-sidebar-container]')
@@ -52,6 +54,18 @@ class PanelResizer {
     this.panelMode = panelMode
 
     this.panelEl.style.minWidth = `${MIN_PANEL_WIDTH}px`
+
+    const proxy = this.textScrollbarProxy
+    const child = this.textContainerEl
+
+    proxy.addEventListener('scroll', () => {
+      child.scrollLeft = proxy.scrollLeft
+    })
+
+    // If you need two-way sync (e.g. user drags content):
+    child.addEventListener('scroll', () => {
+      proxy.scrollLeft = child.scrollLeft
+    })
 
     this.resize()
     this.dragToResize()
@@ -64,6 +78,7 @@ class PanelResizer {
 
   setMainContentWidth(width: number) {
     this.textContainerEl.style.width = `${this.widthByMode[this.panelMode](width)}px`
+    this.textScrollbarProxy.querySelector('div').style.width = `${this.widthByMode[this.panelMode](width)}px`
     this.imageContainerEl.style.width = `${this.widthByMode[this.panelMode](width)}px`
     this.headerEl.style.width = `${width}px`
     this.sidebarEl.style.left = `${this.widthByMode[this.panelMode](width)}px`
