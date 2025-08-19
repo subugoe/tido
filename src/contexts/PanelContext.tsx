@@ -31,6 +31,8 @@ interface PanelContentType {
   setSelectedAnnotation: (value: Annotation | null) => void
   showTextOptions: boolean
   usePanelTranslation: () =>  UseTranslationResponse<'common', undefined>
+  textWarning: string
+  setTextWarning: (warning: string) => void
 }
 
 interface PanelProviderProps {
@@ -52,6 +54,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [filteredAnnotations, setFilteredAnnotations] = useState([])
   const [selectedAnnotation, setSelectedAnnotation] = useState(null)
   const [showTextOptions, setShowTextOptions] = useState(false)
+  const [textWarning, setTextWarning] = useState('')
 
   const getCollection = useDataStore(state => state.initCollection)
 
@@ -157,7 +160,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       selectedAnnotation,
       setSelectedAnnotation,
       showTextOptions,
-      usePanelTranslation
+      usePanelTranslation,
+      textWarning,
+      setTextWarning
     }}>
       {children}
     </PanelContext.Provider>

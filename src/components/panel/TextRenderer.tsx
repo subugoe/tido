@@ -55,6 +55,10 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
     return <br />
   }
 
+  if (Tag === 'hr') {
+    return <hr />
+  }
+
   return (
     <Tag
       {...props}

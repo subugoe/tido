@@ -20,6 +20,7 @@ class PanelResizer {
   headerSidebarEl: HTMLElement
   resizeHandle: HTMLElement
   textOptions: HTMLElement
+  textWarning: HTMLElement
 
   eventListeners = []
   isResizing = false
@@ -48,6 +49,7 @@ class PanelResizer {
     this.headerSidebarEl = this.panelEl.querySelector('[data-header-sidebar]')
     this.resizeHandle = this.panelEl.querySelector('[data-resize-handle]')
     this.textOptions = this.panelEl.querySelector('[data-text-options]')
+    this.textWarning = this.panelEl.querySelector('[data-text-warning]')
 
     this.panelMode = panelMode
 
@@ -70,6 +72,8 @@ class PanelResizer {
     this.headerSidebarEl.style.left = `${width}px`
     this.textOptions.style.width = `${this.widthByMode[this.panelMode](width)}px`
     this.textOptions.style.left = `${this.panelMode === 'split' ? width / 2 : 0}px`
+    this.textWarning.style.width = `${this.widthByMode[this.panelMode](width)}px`
+    this.textWarning.style.left = `${this.panelMode === 'split' ? width / 2 : 0}px`
   }
 
   resize() {

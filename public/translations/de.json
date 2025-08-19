@@ -65,6 +65,10 @@
     "copyright": "Copyright (c)",
     "documentation": "Dokumentation",
     "report_bug": "Fehler melden",
-    "source_code": "Source Code"
+    "source_code": "Source Code",
+    "retry": "Erneut versuchen",
+    "text_loading_failed": "Text konnte nicht geladen werden",
+    "dismiss": "Verwerfen",
+    "text_not_displayed_correctly": "Der Text wird vermutlich nicht korrekt dargestellt, da er unerlaubte HTML-Elemente enthielt."
   }
 }
