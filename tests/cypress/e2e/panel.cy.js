@@ -13,10 +13,10 @@ Cypress.Commands.add('validateLabel', (type, label) => {
     .contains(label)
 })
 
-Cypress.Commands.add('validateText', (textSelector, content) => {
+Cypress.Commands.add('validateText', (content) => {
   cy.get('#panels-wrapper')
     .children().eq(0)
-    .find(textSelector)
+    .find('div[data-text-container]')
     .contains(content)
 })
 
@@ -52,7 +52,7 @@ describe('Panel', () => {
       .should('not.exist')
     cy.validateLabel('manifest', 'München BSB Cgm 627')
     cy.validateLabel('item', 'Page 243v')
-    cy.validateText('.text-area', 'fol. 243va')
+    cy.validateText('fol. 243va')
   })
 
   it('Should display the configured panelModes and the defaultPanelMode as selected', () => {
@@ -101,7 +101,7 @@ describe('Panel', () => {
       .find('[data-image-container]')
       .children().should('not.have.length', 0)   // data-image-container now has children
 
-    cy.validateText('.text-area', 'fol. 279a')
+    cy.validateText('fol. 279a')
   })
 
   //  ------  Navigation  ---------
@@ -113,7 +113,7 @@ describe('Panel', () => {
 
     // item label and text is updated
     cy.validateLabel('item','Page 280')
-    cy.validateText('.text-area', 'fol. 280a')
+    cy.validateText('fol. 280a')
   })
 
   it('Should switch to next manifest', () => {
@@ -126,7 +126,7 @@ describe('Panel', () => {
     // Manifest and item labels should get updated
     cy.validateLabel('manifest', 'Kloster Neuburg, Cod. 251')
     cy.validateLabel('item', '192r')
-    cy.validateText('.text-area', 'fol. 192r')
+    cy.validateText('fol. 192r')
     // Text area should update
   })
 
@@ -142,7 +142,7 @@ describe('Panel', () => {
 
     cy.validateLabel('item','Page 279')
     cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
-    cy.validateText('.text-area', 'fol. 279a')
+    cy.validateText('fol. 279a')
   })
 
   it('Should switch to previous manifest', () => {
@@ -169,7 +169,7 @@ describe('Panel', () => {
 
     cy.validateLabel('manifest', 'Kloster Neuburg, Cod. 251')
     cy.validateLabel('item','Page 72v')
-    cy.validateText('.text-area', 'fol. 72v')
+    cy.validateText('fol. 72v')
   })
 
   it('Should navigate in item label', () => {
@@ -190,7 +190,7 @@ describe('Panel', () => {
       .find('[data-cy="items-dropdown"]').should('not.exist')
 
     cy.validateLabel('item', 'Page 281')       // item label is updated
-    cy.validateText('.text-area', 'fol. 281a')   // text is updated
+    cy.validateText('fol. 281a')   // text is updated
   })
 
   it('Should navigate in manifest and consecutively in item labels', () => {
@@ -223,7 +223,7 @@ describe('Panel', () => {
     // Update of content
     cy.validateLabel('manifest', 'München BSB Cgm 627')
     cy.validateLabel('item', '243v')
-    cy.validateText('.text-area', 'fol. 243va')
+    cy.validateText('fol. 243va')
   })
 
   it('Should keep panel mode same after creating a new panel and navigating to another item in the first panel', () => {

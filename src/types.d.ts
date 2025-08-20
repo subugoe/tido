@@ -63,6 +63,10 @@ declare global {
     displayWhen?: string
   }
 
+  interface AnnotationTypesDict {
+    [key: AnnotationType]: boolean
+  }
+
   interface Collection {
     '@context': string
     textapi: string
@@ -199,6 +203,14 @@ declare global {
     description?: string
     annotationCollection?: string
     modules?: Module[]
+  }
+
+  interface MatchedAnnotationsMap {
+    [key: string]: {
+      target: AnnotationTarget[],
+      filtered: boolean,
+      annotation: Annotation
+    }
   }
 
   interface Metadata {

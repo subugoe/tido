@@ -1,15 +1,18 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/Annotation.tsx'
+import { getFilteredAnnotations } from '@/utils/annotations.ts'
 
 const ANNOTATION_GAP = 5
 
 const AnnotationsBody: FC = () => {
-  const { panelId, filteredAnnotations, selectedAnnotation } = usePanel()
+  const { panelId, matchedAnnotationsMap, selectedAnnotation } = usePanel()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
   // position of each annotation.
   const [elements, setElements] = useState([])
+
+  const filteredAnnotations = getFilteredAnnotations(matchedAnnotationsMap)
 
   const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-container]`) as HTMLElement)
   const [yMap, setYMap] = useState({})
@@ -76,7 +79,7 @@ const AnnotationsBody: FC = () => {
   }
 
   useEffect(() => {
-    if (filteredAnnotations.length === 0) {
+    if (filteredAnnotations?.length === 0) {
       setElements([])
     } else {
       const annotationEls = Array.from(ref.current.childNodes)
@@ -99,7 +102,7 @@ const AnnotationsBody: FC = () => {
       setLoading(true)
       setElements([])
     }
-  }, [filteredAnnotations])
+  }, [matchedAnnotationsMap])
 
   useEffect(() => {
     let resizeObserver
@@ -119,7 +122,8 @@ const AnnotationsBody: FC = () => {
     }
   }, [elements])
 
-  return <div ref={ref} className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
+
+  if (filteredAnnotations.length > 0) return <div ref={ref} className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
     {filteredAnnotations.map(a => <Annotation
       data={a}
       key={a.id}
