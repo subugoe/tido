@@ -214,7 +214,13 @@ function setupScrollPanels(panelIds: string[]) {
   setupSyncScrolling(panelStates)
 }
 
+function getFilteredAnnotations(matchedAnnotationsMap: MatchedAnnotationsMap) {
+  const filteredMatchedAnnotationsMap: MatchedAnnotationsMap = Object.fromEntries(Object.entries(matchedAnnotationsMap).filter(([, value]) => value.filtered === true))
+  return Object.values(filteredMatchedAnnotationsMap).map(value => value.annotation)
+}
+
 export {
   setupScrollPanels,
-  selectSyncTargetByIndex
+  selectSyncTargetByIndex,
+  getFilteredAnnotations
 }

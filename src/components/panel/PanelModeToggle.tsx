@@ -13,7 +13,7 @@ import { filterAndSortData } from '@/utils/panel.ts'
 
 
 const PanelModeToggle: FC = () => {
-  const { panelState, updatePanel, setFilteredAnnotations, usePanelTranslation, resizer } = usePanel()
+  const { panelState, updatePanel, usePanelTranslation, resizer } = usePanel()
   const { t } = usePanelTranslation()
   const panelModes = useConfigStore.getState().config.panelModes
 
@@ -45,7 +45,7 @@ const PanelModeToggle: FC = () => {
     if (!panelState) return
     updatePanel({ mode: newPanelMode })
     resizer.setPanelMode(newPanelMode)
-    setFilteredAnnotations([])
+    //setFilteredAnnotations([])
   }
 
   function isDisabled(buttonPanelMode: PanelMode) {

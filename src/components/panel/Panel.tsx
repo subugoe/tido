@@ -14,6 +14,7 @@ import Swapper from '@/components/panel/Swapper.tsx'
 import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
+import AnnotationsHeader from '@/components/panel/annotations/AnnotationsHeader.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
 import TextViewWarning from '@/components/panel/views/TextViewWarning.tsx'
 import TextViewError from '@/components/panel/views/TextViewError.tsx'
@@ -118,6 +119,11 @@ const Panel: FC = React.memo(() => {
             <PanelHeader />
           </div>
           <div data-header-sidebar className={`absolute top-0 h-full w-[400px] pl-2`}>
+            { showSidebarContent &&
+              <div className="absolute bottom-2">
+                <AnnotationsHeader />
+              </div>
+            }
           </div>
         </div>
 

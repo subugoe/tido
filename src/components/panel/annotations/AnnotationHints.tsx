@@ -13,7 +13,9 @@ const Hint: FC<HintProps> = ({ top }) => {
 }
 
 const AnnotationHints: FC = () => {
-  const { panelId, filteredAnnotations, resizer, showTextOptions } = usePanel()
+  const { panelId, matchedAnnotationsMap, resizer, showTextOptions } = usePanel()
+  const filteredAnnotations = Object.values(Object.fromEntries(Object.entries(matchedAnnotationsMap).filter(([, value]) => value.filtered === true))
+  ).map(value => value.annotation)
   const ref = useRef()
   const hints = useMemo(() => {
     if (!filteredAnnotations || !ref.current) return []
