@@ -136,7 +136,7 @@ const Panel: FC = React.memo(() => {
               {showText && <ErrorBoundary FallbackComponent={TextViewError}><TextView /></ErrorBoundary>}
               {showSwapper && <Swapper />}
             </div>
-            <div data-sidebar-container className={`absolute top-0 h-full w-[400px] pl-2`}>
+            <div data-sidebar-container className={`absolute top-0 h-full w-[400px] px-2`}>
               {showSidebarContent && <AnnotationsBody />}
             </div>
           </div>

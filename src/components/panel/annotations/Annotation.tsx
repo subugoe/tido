@@ -1,6 +1,7 @@
 import React, { FC, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { parseStyleString } from '@/utils/html-to-react.ts'
+import { Badge } from '@/components/ui/badge.tsx'
 
 interface Props {
   data: Annotation
@@ -80,7 +81,7 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
       ref={ref}
       data-annotation={data.id}
       {...(isSelected() ? { 'data-selected': true } : {})}
-      className={`absolute flex-flex-col p-2 rounded-lg border border-border
+      className={`absolute w-[calc(100%-2rem)] flex flex-col px-3 py-2 rounded-lg border border-border
       ${isSelected() ? 'shadow-md bg-background' : 'bg-accent border-border hover:bg-background cursor-pointer'}
       ${isHovered ? 'border-primary' : ''} transition-all max-h-16 overflow-hidden`}
       onClick={handleClick}
@@ -88,6 +89,7 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
       onMouseLeave={handleMouseLeave}
       style={{ top }}
     >
+      <Badge variant="secondary" className="mb-1">{ data.body['x-content-type'] }</Badge>
       {children}
     </div>
   </>

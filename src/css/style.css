@@ -60,7 +60,7 @@
   --tooltip: var(--color-gray-800);
   --tooltip-foreground: var(--color-gray-200);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: var(--color-gray-200);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: var(--color-gray-100);
   --muted-foreground: var(--color-gray-600);
