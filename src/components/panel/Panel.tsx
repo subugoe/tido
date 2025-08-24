@@ -132,7 +132,7 @@ const Panel: FC = React.memo(() => {
             {showImage && <ImageView />}
           </div>
           <div data-scroll-container className={`h-full w-full bg-accent overflow-x-hidden overflow-y-auto relative`}>
-            <div data-text-container className={`bg-background p-3 pr-5 min-h-full relative flex border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
+            <div data-text-container className={`bg-background p-3 pr-5 min-h-full relative flex border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'} ${showTextOptions ? 'pt-16': ''} `}>
               {showText && <ErrorBoundary FallbackComponent={TextViewError}><TextView /></ErrorBoundary>}
               {showSwapper && <Swapper />}
             </div>
