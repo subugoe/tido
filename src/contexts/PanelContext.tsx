@@ -115,7 +115,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         setError((e as ErrorResponse).message)
         console.error(e)
       } finally {
-        setLoading(false)
+        // add a timeout, since loading is finished when updatePanel() is finished
+        setTimeout(() => {
+          setLoading(false)
+        }, 100)
       }
     }
     init()
