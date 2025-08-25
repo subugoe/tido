@@ -127,7 +127,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
   const { panelState, fullAnnotationTypes, setFullAnnotationTypes, matchedAnnotationsMap,
-    setMatchedAnnotationsMap, setSelectedAnnotation, showTextOptions, updatePanel,  } = usePanel()
+    setMatchedAnnotationsMap, setSelectedAnnotation, updatePanel } = usePanel()
   const onClickTarget = (id: string) => {
     const annotation = panelState.annotations.find(a => a.id === id)
     if (annotation) {
@@ -195,7 +195,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
 
 
 
-  return <div className={`relative ${showTextOptions ? 'pt-12' : ''}`}>
+  return <div className="relative">
     <div ref={textWrapperRef}>
       { reactElements }
     </div>
