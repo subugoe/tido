@@ -45,7 +45,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className={`text-sm text-nowrap max-w-[200px] truncate bg-accent rounded-lg font-semibold cursor-pointer hover:bg-muted px-2 py-1 ${selectedManifest ? 'text-muted-foreground animate-pulse' : ''}`}
+        <div className={`text-sm text-nowrap max-w-[100px] @min-[600px]/panel:max-w-[200px] @min-[1200px]/panel:max-w-[400px] truncate bg-accent rounded-lg font-semibold cursor-pointer hover:bg-muted px-2 py-1 ${selectedManifest ? 'text-muted-foreground animate-pulse' : ''}`}
           data-cy="manifest-label">
           {selectedLabel}
         </div>

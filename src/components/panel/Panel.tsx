@@ -102,7 +102,7 @@ const Panel: FC = React.memo(() => {
     <div
       id={panelId}
       ref={ref}
-      className={`panel bg-background text-foreground grow-0 shrink-0 transition-[width] relative`}
+      className={`panel bg-background text-foreground grow-0 shrink-0 transition-[width] relative @container/panel`}
       data-cy="panel"
     >
       <div className={`h-full flex flex-col relative border-2 rounded-lg overflow-hidden ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-border'}`}>
