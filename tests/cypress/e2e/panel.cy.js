@@ -10,14 +10,14 @@ Cypress.Commands.add('validateLabel', (type, label) => {
   cy.get('#panels-wrapper')
     .children().eq(0)
     .find(`[data-cy=${type}-label]`)
-    .contains(label)
+    .should('contain.text',label)
 })
 
 Cypress.Commands.add('validateText', (content) => {
   cy.get('#panels-wrapper')
     .children().eq(0)
     .find('div[data-text-container]')
-    .contains(content)
+    .should('contain.text',content)
 })
 
 describe('Panel', () => {
@@ -118,16 +118,14 @@ describe('Panel', () => {
 
   it('Should switch to next manifest', () => {
     cy.findPanelTitleAndNavArrows()
+      .should('be.visible')
       .find('[data-cy="next-button"]')
       .click()
       .click()
       .click()  // should switch to the first item of Kloserneuburg manifest+
-
-    // Manifest and item labels should get updated
-    cy.validateLabel('manifest', 'Kloster Neuburg, Cod. 251')
-    cy.validateLabel('item', '192r')
-    cy.validateText('fol. 192r')
-    // Text area should update
+      .validateLabel('manifest', 'Kloster Neuburg, Cod. 251')         // Manifest and item labels should get updated
+      .validateLabel('item', '192r')
+      .validateText('fol. 192r')                        // Text area should update
   })
 
   it('Should switch to previous item', () => {
