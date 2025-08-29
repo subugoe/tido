@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.8.8](https://github.com/subugoe/tido/compare/v4.8.7...v4.8.8) (2025-08-29)
+
+
+### Bug Fixes
+
+* update the "show" bookmark for hidden panels only when url config was present ([72fa345](https://github.com/subugoe/tido/commit/72fa3451b1c8cd632058dd93c59c24a011369061))
+
 ### [4.8.7](https://github.com/subugoe/tido/compare/v4.8.6...v4.8.7) (2025-08-14)
 
 
