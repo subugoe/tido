@@ -10,6 +10,12 @@ import {
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import React from 'react'
 import { parseStyleString } from '@/utils/html-to-react.ts'
+import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
+import { apiRequest } from '@/utils/api.ts'
+import { getContentTypes } from '@/utils/panel.ts'
+import { waitForElementInDom } from '@/utils/other-functions.ts'
 const END_CLASS = 'tido-text-end'
 
 interface Props {
@@ -21,16 +27,40 @@ interface Props {
 type GenericElementProps<T extends ElementType> = {
   tagName: T
   props?: ComponentPropsWithoutRef<T>
-  children: ReactNode
-  isHighlighted: boolean
+  children: ReactNode,
+  node: HTMLElement,
+  isHighlighted: boolean,
 } & ComponentPropsWithoutRef<T>
 
-const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, children, isHighlighted }: GenericElementProps<T>)  => {
-  const { hoveredAnnotation, setHoveredAnnotation, selectedAnnotation } = usePanel()
+const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, children, node, isHighlighted }: GenericElementProps<T>)  => {
+  const { hoveredAnnotation, setHoveredAnnotation, selectedAnnotation, updatePanel, panelId } = usePanel()
   const [isHovered, setIsHovered] = useState(false)
+  const currentItemId = usePanel().panelState.item?.id
+  const contentIndex = usePanel().panelState.contentIndex
+  const contentTypes = usePanel().panelState.contentTypes
+  const isLink = Tag === 'a'
+  const isRefEl = node.getAttribute('rel') === 'true'
+
+
   function onClick() {
     if (isHighlighted) {
       props.onClick(props['data-annotation'])
+    }
+    if (isLink) {
+      if (node.children.length === 0) return
+      if (!(node.children[0] as HTMLElement).hasAttribute('data-ref-target')) return
+
+      const sourceEl = node.children[0] as HTMLElement
+      const targetSelector = sourceEl.getAttribute('data-ref-target')
+      const targetItemId = sourceEl.getAttribute('data-ref-item')
+      const targetContentType = sourceEl.getAttribute('data-ref-content-type')
+      if (targetItemId === currentItemId) {
+        const panelEl = document.getElementById(panelId)
+        const targetEl = panelEl.querySelector(targetSelector) as HTMLElement
+        scrollTargetWithinPanel(targetEl, targetContentType, contentTypes, contentIndex)
+        return
+      }
+      scrollTargetInNewPanel(sourceEl, targetSelector, targetContentType)
     }
   }
 
@@ -45,6 +75,58 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
     setIsHovered(false)
     setHoveredAnnotation(null)
   }
+
+  function scrollTargetWithinPanel(targetEl: HTMLElement, targetContentType: string, contentTypes: string[], currentContentIndex: number) {
+    const targetContentIndex = contentTypes.findIndex(type => type === targetContentType)
+    if (targetContentIndex === currentContentIndex) {
+      targetEl.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    // target is in new content type text
+    setTimeout(() => {
+      updatePanel({ contentIndex: targetContentIndex })
+    }, 200)
+
+    targetEl.scrollIntoView({ behavior: 'smooth' })
+    return
+  }
+
+  async function scrollTargetInNewPanel(sourceEl: HTMLElement, selector: string, contentType: string) {
+    // if target lies in another item create a new panel with the corresponding text api collection, manifest, item ids, content index AND scroll to target
+    const collectionId = sourceEl.getAttribute('data-ref-collection')
+    const manifestId = sourceEl.getAttribute('data-ref-manifest')
+    const itemId = sourceEl.getAttribute('data-ref-item')
+
+    const newPanelId = crypto.randomUUID()
+    useUIStore.getState().updateNewestPanelId(newPanelId)
+
+    const collection = await useDataStore.getState().initCollection(collectionId)
+    const manifestIndex = collection.sequence.findIndex(m => m.id === manifestId)
+    const manifest = await apiRequest<Manifest>(collection.sequence[manifestIndex].id)
+    const itemIndex = manifest.sequence.findIndex(i => i.id === itemId)
+    const item = await apiRequest<Item>(itemId)
+    const newContentTypes = getContentTypes(item.content)
+    const newContentIndex = newContentTypes.findIndex(type => type === contentType)
+
+    const newPanelConfig = {
+      collection: collectionId,
+      manifestIndex,
+      itemIndex,
+      contentIndex: newContentIndex
+    }
+
+    await usePanelStore.getState().addPanel(newPanelConfig, newPanelId)
+
+    // use setTimeout to create a small delay after creating a new panel
+    setTimeout(async () => {
+      waitForElementInDom('#'+newPanelId, (panelEl: HTMLElement) => {
+        const targetEl = panelEl.querySelector(selector) as HTMLElement
+        targetEl.scrollIntoView({ behavior: 'smooth' })
+      })
+    }, 500)
+  }
+
+
 
   useEffect(() => {
     if (!hoveredAnnotation) setIsHovered(false)
@@ -66,7 +148,9 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
         (props.className || '') +
         (isHighlighted ? ' bg-gray-200 relative cursor-pointer' : '') +
         (isHovered ? ' bg-primary/20' : '') +
-        (selectedAnnotation && selectedAnnotation.id === props['data-annotation'] ? ' bg-primary/40' : '')
+        (selectedAnnotation && selectedAnnotation.id === props['data-annotation'] ? 'bg-primary/40' : '') +
+        (isLink ? ' text-blue-600 underline cursor-pointer': '') +
+        (isRefEl ? ' bg-gray-400 font-bold' : '')
       }
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -76,6 +160,7 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
     </Tag>
   )
 })
+
 
 const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   // Main function to create GenericElement recursively out of HTML nodes.
@@ -92,6 +177,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   const children = Array.from(node.childNodes).map((child, i) =>
     convertNodeToReact(child, `${key}-${i}`, matches, onClickTarget)
   )
+
 
   const props: ComponentPropsWithoutRef<ElementType> = {}
   for (const attr of node.attributes) {
@@ -112,12 +198,22 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
     props.onClick = onClickTarget
   }
 
+
+  let newNode = node as HTMLElement
+  if (node.hasAttribute('data-ref-target')) {
+    const link = document.createElement('a')
+    link.appendChild(node)
+    newNode = link
+  }
+
+
   return (
     <GenericElement
       key={key}
-      tagName={node.tagName.toLowerCase() as ElementType}
+      tagName={newNode.tagName.toLowerCase() as ElementType}
       props={props}
       isHighlighted={annotationIds.length > 0}
+      node={newNode}
     >
       {children}
     </GenericElement>

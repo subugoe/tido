@@ -21,7 +21,7 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     item: null,
     manifest: null,
     contentTypes: [],
-    contentIndex: 0,
+    contentIndex: config.contentIndex ?? 0,
     mode: useUIStore.getState().defaultPanelMode,
     activeTargetIndex: -1,
     imageExists: false,
@@ -34,6 +34,7 @@ export const usePanelStore = create<PanelStoreTypes>((set, get) => ({
   panels: [],
   activeTargetIndex: -1,
   addPanel: (config: PanelConfig, newPanelId) => {
+    // TODO: newPanelId should be created here randomly, since it is not that important part of function interface
     set({ panels: [ ...get().panels, getDefaultPanelState(newPanelId, config) ] })
   },
   updatePanel(id: string, data: Partial<PanelState>) {
