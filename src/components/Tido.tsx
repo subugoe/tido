@@ -14,6 +14,7 @@ import { initI18n } from '@/utils/translations.ts'
 import { TidoConfig, TidoProps } from '@/types'
 import { ThemeProvider } from '@/contexts/ThemeContext.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
+import { Toaster } from 'sonner'
 
 function createThemeStyles(config: TidoConfig) {
   const { theme } = config
@@ -66,6 +67,7 @@ export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
         <div className="flex-1 flex overflow-hidden">
           <GlobalTree />
           <PanelsWrapper />
+          <Toaster position="bottom-center" />
         </div>
       </ThemeProvider>
     </div>

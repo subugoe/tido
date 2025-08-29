@@ -2,6 +2,8 @@ import { ReactNode, createContext, useContext, useState, FC, useEffect } from 'r
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
+import { toast } from 'sonner'
+
 import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
@@ -17,8 +19,6 @@ interface PanelContentType {
   panelId: string
   panelState: PanelState
   loading: boolean
-  error: string | null
-  setError: (value: string | null) => void
   updatePanel: (data: Partial<PanelState>) => void
   remove: () => void
   resizer: PanelResizer
@@ -42,15 +42,24 @@ interface PanelProviderProps {
   panelId: string
 }
 
+class CustomError extends Error {
+  constructor(title, message) {
+    super(message)
+    this.name = title
+  }
+}
+
 async function getAnnotations(annotationCollectionUrl: string): Promise<Annotation[]> {
-  const collection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
+  const collection: AnnotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
+  if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
+    throw new CustomError('Annotation collection error', 'Annotation collection content is not provided correctly in panel')
+  }
   const page = await apiRequest<AnnotationPage>(collection.first)
-  return page.items
+  return page.items ?? []
 }
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
   const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState({})
@@ -112,8 +121,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         })
 
       } catch (e) {
-        setError((e as ErrorResponse).message)
-        console.error(e)
+        toast.error(e.name, { description: e.message })
       } finally {
         // add a timeout, since loading is finished when updatePanel() is finished
         setTimeout(() => {
@@ -154,8 +162,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       panelState,
       updatePanel,
       loading,
-      error,
-      setError,
       remove,
       resizer,
       initResizer,
