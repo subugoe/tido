@@ -500,13 +500,17 @@ import { i18n } from '@/i18n';
             };
           });
 
-          // If the config has any panel with show:false, we need to set the bookmark.
-          // So if the custom config wants to hide a panel at initial loading, we need to reflect that to the bookmark.
-          const hasHiddenPanels = customConfig.panels.find(panelConfig => panelConfig.show === false)
 
-          if (hasHiddenPanels) {
-            const panelIndexes = customConfig.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
-            BookmarkService.updateShow(panelIndexes);
+          if (!urlConfig.show) {
+            // If the config has any panel with show:false, we need to set the bookmark.
+            // So if the custom config wants to hide a panel at initial loading, we need to reflect that to the bookmark.
+            // All of this, only when the URL does not set any "show" parameter.
+            const hasHiddenPanels = customConfig.panels.find(panelConfig => panelConfig.show === false)
+
+            if (hasHiddenPanels) {
+              const panelIndexes = customConfig.panels.reduce((acc, cur, i) => (cur.show ? [...acc, i] : acc), []);
+              BookmarkService.updateShow(panelIndexes);
+            }
           }
         }
 
