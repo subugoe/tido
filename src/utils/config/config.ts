@@ -224,8 +224,8 @@ export function mergeAndValidateConfig(
   const translations = validateTranslations(userConfig.translations)
 
   const mergedTranslations = {
-    en: { ...enTranslations, ...(translations.result.en ?? {}) },
-    de: { ...deTranslations, ...(translations.result.de ?? {}) },
+    en: deepMerge(enTranslations, translations.result.en ?? {}),
+    de: deepMerge(deTranslations, translations.result.de ?? {}),
     ...Object.keys(translations.result)
       .filter(key => key !== 'en' && key !== 'de')
       .reduce((acc, cur) => {
@@ -270,3 +270,20 @@ export function mergeAndValidateConfig(
 
   return { config, errors }
 }
+
+function deepMerge(obj1: object, obj2: object) {
+  const result = { ...obj1 }
+
+  for (const key in obj2) {
+    if (Object.hasOwn(obj2, key)) {
+      if (obj2[key] instanceof Object && obj1[key] instanceof Object) {
+        result[key] = deepMerge(obj1[key], obj2[key])
+      } else {
+        result[key] = obj2[key]
+      }
+    }
+  }
+
+  return result
+}
+
