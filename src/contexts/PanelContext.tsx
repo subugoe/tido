@@ -52,11 +52,12 @@ class CustomError extends Error {
 async function getAnnotations(annotationCollectionUrl: string): Promise<Annotation[]> {
   const collection: AnnotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
   if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
-    throw new CustomError('Annotation collection error', 'Annotation collection content is not provided correctly in panel')
+    throw new CustomError('annotation_collection_error_title', 'annotation_collection_error_message')
   }
   const page = await apiRequest<AnnotationPage>(collection.first)
   return page.items ?? []
 }
+
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
@@ -68,6 +69,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [showTextOptions, setShowTextOptions] = useState(false)
   const [textWarning, setTextWarning] = useState('')
 
+  const { t } = useTranslation()
   const getCollection = useDataStore(state => state.initCollection)
 
   const panelState = usePanelStore(state => state.getPanel(panelId))
@@ -81,6 +83,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     const ns = panelState.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
     return useTranslation(ns)
   }
+
 
   useEffect(() => {
     const showText = panelState.mode !== 'image'
@@ -121,7 +124,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         })
 
       } catch (e) {
-        toast.error(e.name, { description: e.message })
+        const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1
+        toast.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
       } finally {
         // add a timeout, since loading is finished when updatePanel() is finished
         setTimeout(() => {

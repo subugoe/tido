@@ -1,5 +1,7 @@
 {
   "common": {
+    "annotation_collection_error_title": "Error in annotation collection",
+    "annotation_collection_error_message": "Annotation collection content is not provided correctly in panel",
     "new": "New",
     "sync_panels": "Sync Panels",
     "confirm": "Confirm",
