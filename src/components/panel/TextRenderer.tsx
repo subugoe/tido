@@ -7,9 +7,13 @@ import {
   useRef,
   useState
 } from 'react'
+
+import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
+
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import React from 'react'
 import { parseStyleString } from '@/utils/html-to-react.ts'
+
 const END_CLASS = 'tido-text-end'
 
 interface Props {
@@ -21,13 +25,17 @@ interface Props {
 type GenericElementProps<T extends ElementType> = {
   tagName: T
   props?: ComponentPropsWithoutRef<T>
-  children: ReactNode
-  isHighlighted: boolean
+  children: ReactNode,
+  node: HTMLElement,
+  isHighlighted: boolean,
 } & ComponentPropsWithoutRef<T>
 
-const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, children, isHighlighted }: GenericElementProps<T>)  => {
+const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, children, node, isHighlighted }: GenericElementProps<T>)  => {
   const { hoveredAnnotation, setHoveredAnnotation, selectedAnnotation } = usePanel()
   const [isHovered, setIsHovered] = useState(false)
+  const isRefEl = node.getAttribute('rel') === 'true'
+
+
   function onClick() {
     if (isHighlighted) {
       props.onClick(props['data-annotation'])
@@ -45,6 +53,7 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
     setIsHovered(false)
     setHoveredAnnotation(null)
   }
+
 
   useEffect(() => {
     if (!hoveredAnnotation) setIsHovered(false)
@@ -66,7 +75,8 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
         (props.className || '') +
         (isHighlighted ? ' bg-gray-200 relative cursor-pointer' : '') +
         (isHovered ? ' bg-primary/20' : '') +
-        (selectedAnnotation && selectedAnnotation.id === props['data-annotation'] ? ' bg-primary/40' : '')
+        (selectedAnnotation && selectedAnnotation.id === props['data-annotation'] ? 'bg-primary/40' : '') +
+        (isRefEl ? ' bg-gray-400 font-bold' : '')
       }
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -76,6 +86,7 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
     </Tag>
   )
 })
+
 
 const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   // Main function to create GenericElement recursively out of HTML nodes.
@@ -92,6 +103,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   const children = Array.from(node.childNodes).map((child, i) =>
     convertNodeToReact(child, `${key}-${i}`, matches, onClickTarget)
   )
+
 
   const props: ComponentPropsWithoutRef<ElementType> = {}
   for (const attr of node.attributes) {
@@ -112,12 +124,18 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
     props.onClick = onClickTarget
   }
 
+  if (node.hasAttribute('data-ref-target')) {
+    return <CrossRefLink props={props} node={node} />
+  }
+
+
   return (
     <GenericElement
       key={key}
       tagName={node.tagName.toLowerCase() as ElementType}
       props={props}
       isHighlighted={annotationIds.length > 0}
+      node={node}
     >
       {children}
     </GenericElement>

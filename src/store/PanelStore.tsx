@@ -21,7 +21,7 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     item: null,
     manifest: null,
     contentTypes: [],
-    contentIndex: 0,
+    contentIndex: config.contentIndex ?? 0,
     mode: useUIStore.getState().defaultPanelMode,
     activeTargetIndex: -1,
     imageExists: false,
@@ -34,6 +34,7 @@ export const usePanelStore = create<PanelStoreTypes>((set, get) => ({
   panels: [],
   activeTargetIndex: -1,
   addPanel: (config: PanelConfig, newPanelId) => {
+    // TODO: newPanelId should be created here be as a random value. Then one would not create this value each time outside of this function, every time a new panel is created. Instead this function would take care of creating a new panelId
     set({ panels: [ ...get().panels, getDefaultPanelState(newPanelId, config) ] })
   },
   updatePanel(id: string, data: Partial<PanelState>) {
