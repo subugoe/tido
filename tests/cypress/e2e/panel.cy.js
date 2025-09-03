@@ -117,12 +117,17 @@ describe('Panel', () => {
   })
 
   it('Should switch to next manifest', () => {
-    cy.findPanelTitleAndNavArrows()
-      .should('be.visible')
+    cy.validateLabel('item','Page 279')
+      .click()
+    cy.get('[data-cy="items-dropdown"]')
+      .children()
+      .eq(2)
+      .click()
+      .validateLabel('item','Page 281')
+
+      .findPanelTitleAndNavArrows()
       .find('[data-cy="next-button"]')
-      .click()
-      .click()
-      .click()  // should switch to the first item of Kloserneuburg manifest+
+      .click()  // should switch to the first item of Klosterneuburg manifest
       .validateLabel('manifest', 'Kloster Neuburg, Cod. 251')         // Manifest and item labels should get updated
       .validateLabel('item', '192r')
       .validateText('fol. 192r')                        // Text area should update
