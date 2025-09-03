@@ -1,7 +1,7 @@
 {
   "allowNewCollections": false,
   "title": "BDN",
-  "lang": "en",
+  "lang": "de",
   "panels": [
     {
       "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
@@ -15,7 +15,7 @@
   },
   "showPanelPlaceholder": true,
   "translations": {
-    "en": {
+    "de": {
       "common": {
         "contents_and_metadata": "Inhalt & Metadaten",
         "next_item": "Nächste Seite",

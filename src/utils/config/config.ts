@@ -224,8 +224,8 @@ export function mergeAndValidateConfig(
   const translations = validateTranslations(userConfig.translations)
 
   const mergedTranslations = {
-    en: { ...enTranslations, ...(translations.result.en ?? {}) },
-    de: { ...deTranslations, ...(translations.result.de ?? {}) },
+    en: deepMerge(enTranslations, translations.result.en ?? {}),
+    de: deepMerge(deTranslations, translations.result.de ?? {}),
     ...Object.keys(translations.result)
       .filter(key => key !== 'en' && key !== 'de')
       .reduce((acc, cur) => {
@@ -233,6 +233,7 @@ export function mergeAndValidateConfig(
         return acc
       }, {})
   }
+
 
   const errors = {
     ...allowNewCollections.errors,
@@ -270,3 +271,22 @@ export function mergeAndValidateConfig(
 
   return { config, errors }
 }
+
+function deepMerge(objectA: object, objectB: object) {
+  // deep merge of two given objects
+  // we take initially objectA and iterate on it with the keys of objectB. For same key we override its value from objectB. When a new key is in objectB then we append it to objectA
+  const result = { ...objectA }
+
+  for (const key in objectB) {
+    if (Object.hasOwn(objectB, key)) {
+      if (objectB[key] instanceof Object && objectA[key] instanceof Object) {
+        result[key] = deepMerge(objectA[key], objectB[key])
+      } else {
+        result[key] = objectB[key]
+      }
+    }
+  }
+
+  return result
+}
+
