@@ -310,7 +310,8 @@ declare global {
 export interface PanelConfig {
   collection: string
   manifestIndex?: number
-  itemIndex?: number
+  itemIndex?: number,
+  contentIndex?: number
 }
 
 export type PanelMode = 'swap' | 'split' | 'text' | 'image'
