@@ -10,6 +10,7 @@ import {
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import React from 'react'
 import { parseStyleString } from '@/utils/html-to-react.ts'
+import { isSelected } from '@/utils/annotations.ts'
 const END_CLASS = 'tido-text-end'
 
 interface Props {
@@ -66,7 +67,7 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
         (props.className || '') +
         (isHighlighted ? ' bg-gray-200 relative cursor-pointer' : '') +
         (isHovered ? ' bg-primary/20' : '') +
-        (selectedAnnotation && selectedAnnotation.id === props['data-annotation'] ? ' bg-primary/40' : '')
+        (selectedAnnotation && isSelected(selectedAnnotation.id, props['data-annotation']) ? ' bg-primary/40' : '')
       }
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -80,7 +81,6 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
 const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   // Main function to create GenericElement recursively out of HTML nodes.
   // Additional attributes regarding annotations will be applied.
-
 
   if (node.nodeType === Node.TEXT_NODE) {
     return node.textContent

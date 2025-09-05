@@ -118,11 +118,8 @@ const Panel: FC = React.memo(() => {
           <div data-panel-header className={`px-3 pt-3 pb-5 border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
             <PanelHeader />
           </div>
-          <div data-header-sidebar className={`absolute top-0 h-full w-[400px] pl-2`}>
-            { showSidebarContent &&
-              <div className="absolute bottom-2">
-                <AnnotationsHeader />
-              </div>
+          <div data-header-sidebar className={`absolute top-0 h-full w-[400px]`}>
+            { showSidebarContent && <AnnotationsHeader />
             }
           </div>
         </div>
