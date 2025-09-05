@@ -97,10 +97,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         const collection = await getCollection(panelState.config.collection)
         const manifest = await apiRequest<Manifest>(collection.sequence[panelState.config.manifestIndex ?? 0].id)
         const item = await apiRequest<Item>(manifest.sequence[panelState.config.itemIndex ?? 0].id)
-        let annotations = null
-        if (item.annotationCollection) {
-          annotations = await getAnnotations(item.annotationCollection)
-        }
+
         const contentTypes: string[] = getContentTypes(item.content)
 
         const { support } = manifest
@@ -120,8 +117,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           contentTypes,
           activeTargetIndex: -1,
           imageExists,
-          annotations
         })
+
+        let annotations = null
+        if (item.annotationCollection) {
+          annotations = await getAnnotations(item.annotationCollection)
+          updatePanel({ annotations })
+        }
 
       } catch (e) {
         const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1
