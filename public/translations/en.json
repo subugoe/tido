@@ -10,6 +10,7 @@
     "enter_collection_url": "Enter a collection URL",
     "or_choose": "Or choose",
     "no_image_available": "No image available",
+    "no_items_found": "There are no items found.",
     "could_not_find_image": "Unfortunately, an image could not be found.",
     "image_preview": "Image preview",
     "could_not_load_image": "Could not load the given image.",

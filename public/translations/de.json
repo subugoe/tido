@@ -14,6 +14,7 @@
     "enter_collection_url": "Geben eine Collection-URL ein",
     "or_choose": "Oder wählen Sie",
     "no_image_available": "Kein Bild verfügbar",
+    "no_items_found": "Es wurden leider keine Einträge gefunden.",
     "could_not_find_image": "Leider konnte kein Bild gefunden werden.",
     "image_preview": "Vorschau des Bildes",
     "could_not_load_image": "Leider konnte das Bild nicht geladen werden.",
