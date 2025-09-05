@@ -73,9 +73,9 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
       {...props}
       className={
         (props.className || '') +
-        (isHighlighted ? ' bg-gray-200 relative cursor-pointer' : '') +
-        (isHovered ? ' bg-primary/20' : '') +
-        (selectedAnnotation && selectedAnnotation.id === props['data-annotation'] ? 'bg-primary/40' : '') +
+        (isHighlighted ? ' bg-gray-200 dark:bg-muted relative cursor-pointer' : '') +
+        (isHovered ? ' bg-primary/20 dark:bg-primary/50' : '') +
+        (selectedAnnotation && selectedAnnotation.id === props['data-annotation'] ? 'bg-primary/40 dark:bg-primary/80' : '') +
         (isRefEl ? ' bg-gray-400 font-bold' : '')
       }
       onMouseEnter={handleMouseEnter}
