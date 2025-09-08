@@ -82,7 +82,7 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
       data-annotation={data.id}
       {...(isSelected() ? { 'data-selected': true } : {})}
       className={`absolute w-[calc(100%-2rem)] flex flex-col px-3 py-2 rounded-lg border border-border
-      ${isSelected() ? 'shadow-md bg-background' : 'bg-accent border-border hover:bg-background cursor-pointer'}
+      ${isSelected() ? 'shadow-md bg-background outline-primary outline-2' : 'bg-accent border-border hover:bg-background cursor-pointer'}
       ${isHovered ? 'border-primary' : ''} transition-all max-h-16 overflow-hidden`}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
