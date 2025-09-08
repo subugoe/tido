@@ -140,10 +140,14 @@ describe('Tree', () => {
       .should('have.text', 'Page 280')     // Panel was added after the first on e
       // switch to text mode
       .parents('.panel')
-      .find('[data-cy="panel-modes-toggle"]')
+      .find('[data-cy="options-button"]')
+      .click()
+      .get('[data-cy="panel-mode-menu"]')
       .children()
       .eq(1).click()                   // switch to text mode to check the text content
-      .parents('.panel')
+      .get('[data-cy="panels-wrapper"]')
+      .find('[data-cy="panel"]')
+      .eq(1)
       .find('.text-area').first()
       .contains('fol. 280a')
 
@@ -170,14 +174,16 @@ describe('Tree', () => {
       .find('.panel')
       .should('have.length', 3)     // we have 3 panels
       .eq(2)
-      .find('[data-cy="panel-modes-toggle"]')
-      .find('button[data-cy="image"]')
+      .find('[data-cy="options-button"]')
+      .click()
+      .get('[data-cy="panel-mode-menu"]')
+      .find('[data-cy="image"]')
       .should('have.attr', 'data-selected', 'true')
 
     // 3) toggle in settings is off
     cy.get('[data-cy="header"]')
-      .find('button[data-cy="settings"]')
-      .click()
+      .find('[data-cy="settings"]')
+      .click({ force: true })
       .get('[data-radix-menu-content]')
       .find('[data-cy="select-panel-mode-toggle"]')
       .find('button')
@@ -187,7 +193,7 @@ describe('Tree', () => {
 
       .click()
       .should('have.attr', 'aria-checked', 'true')
-      .get('button[data-cy="settings"]')
+      .get('[data-cy="settings"]')
       .click({ force: true })
 
       // select another item from tree
@@ -215,7 +221,7 @@ describe('Tree', () => {
       .find('div[data-cy="modes"')
       .children().should('have.length', 3)
       .eq(0)
-      .find('button[data-cy="split"]')
+      .find('[data-cy="split"]')
   })
 
   it('Should update a panel using global tree', () => {
@@ -246,10 +252,14 @@ describe('Tree', () => {
       .find('[data-cy="item-label"]')
       .should('have.text', 'Page 280')
       .parents('.panel')
-      .find('[data-cy="panel-modes-toggle"]')
+      .find('[data-cy="options-button"]')
+      .click()
+      .get('[data-cy="panel-mode-menu"]')
       .children()
       .eq(1).click()                   // switch to text view
-      .parents('.panel')
+      .get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in first panel
+      .find('[data-cy="panel"]')
+      .eq(0)
       .find('.text-area').first()
       .contains('fol. 280a')
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')

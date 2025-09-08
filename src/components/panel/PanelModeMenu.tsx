@@ -59,7 +59,11 @@ const PanelModeMenu: FC = () => {
   return <>
     {!panelState && <Skeleton />}
     {panelState && visiblePanelModesData.length > 1 &&
-      <DropdownMenuRadioGroup value={selected} onValueChange={(value) => setSelected(value as PanelMode)}>
+      <DropdownMenuRadioGroup
+        value={selected}
+        onValueChange={(value) => setSelected(value as PanelMode)}
+        data-cy="panel-mode-menu"
+      >
         {visiblePanelModesData.map((button) => {
           const Icon = button.icon
 

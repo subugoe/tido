@@ -5,13 +5,17 @@ function runConfigTest(param, name, callback) {
   });
 }
 
+function getPanelModeOption(mode) {
+  return cy.get('[data-cy="options-button"]').click().get(`[data-cy="${mode}"]`)
+}
+
 describe('Config', () => {
   runConfigTest('', 'Should apply defaults', () => {
     cy.get('[data-cy="new-panel"]').should('have.css', 'background-color', 'rgb(52, 86, 170)')
     cy.get('[data-cy="global-tree-toggle"]').should('be.visible', true)
     cy.get('[data-cy="new-panel"]').should('be.visible', true)
     cy.get('[data-cy="new-panel"]').should('have.text', 'Add New Panel')
-    cy.get('[data-cy="swap"]').should('have.attr', 'data-selected', 'true')
+    getPanelModeOption('swap').should('have.attr', 'data-selected', 'true')
     cy.get('[data-cy="panel-placeholder"]').should('be.visible', true)
   });
 
@@ -29,7 +33,7 @@ describe('Config', () => {
     cy.get('[data-cy="new-panel"]').should('have.text', 'Neues Panel hinzufügen')
   });
   runConfigTest('defaultPanelMode=split', 'defaultPanelMode: split', () => {
-    cy.get('[data-cy="split"]').should('have.attr', 'data-selected', 'true')
+    getPanelModeOption('split').should('have.attr', 'data-selected', 'true')
   });
   runConfigTest('panelPlaceholder=false', 'panelPlaceholder: false', () => {
     cy.get('[data-cy="panel-placeholder"]').should('be.visible', false)

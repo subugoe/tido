@@ -22,11 +22,11 @@ const Options: FC = () => {
 
   return <DropdownMenu>
     <DropdownMenuTrigger asChild>
-      <Button variant="ghost" size="icon">
+      <Button variant="ghost" size="icon" data-cy="options-button">
         <Ellipsis />
       </Button>
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" className="w-48">
+    <DropdownMenuContent data-cy="options-content" align="end" className="w-48">
       <DropdownMenuLabel>{ t('options') }</DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuLabel className="text-xs">{ t('panel_modes') }</DropdownMenuLabel>
