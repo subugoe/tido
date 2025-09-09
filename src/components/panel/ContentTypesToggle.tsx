@@ -36,7 +36,7 @@ const ContentTypesToggle: FC = () => {
           <DropdownMenuLabel>{ t('text_type') } </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup value={contentTypes[contentIndex]} onValueChange={handleTextTabClick}>
-            {contentTypes.map((type) => <DropdownMenuRadioItem value={type}>{ t(type) }</DropdownMenuRadioItem>) }
+            {contentTypes.map((type, i) => <DropdownMenuRadioItem value={type} key={'contentType'+i}>{ t(type) }</DropdownMenuRadioItem>) }
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
