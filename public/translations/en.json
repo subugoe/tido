@@ -70,6 +70,9 @@
     "retry": "Retry",
     "text_loading_failed": "Text loading failed",
     "dismiss": "Dismiss",
-    "text_not_displayed_correctly": "The text is probably not displayed correctly because it contained unallowed HTML elements."
+    "text_not_displayed_correctly": "The text is probably not displayed correctly because it contained unallowed HTML elements.",
+    "witnesses": "Witnesses",
+    "selected_witnesses": "{{selected}} of {{total}} witnesses selected",
+    "unknown_witness": "Unknown witness"
   }
 }

@@ -29,25 +29,36 @@ declare global {
 
   interface Witness {
     idno: string
-    manifest: string
+    idnoAlt: string
+    title: string
   }
 
+  interface WitnessWithColor extends Witness {
+    bgColor: string
+    color: string
+  }
+
+
   interface Annotation {
-    body: AnnotationContent[]
+    body: AnnotationBody
     target: AnnotationTarget[]
     type: string
     id: string
   }
 
-  interface AnnotationContent {
+  interface AnnotationVariantValue {
+    witnesses: string[],
+    entry: string
+  }
+
+  interface AnnotationBody {
     type: 'TextualBody'
-    value: string | object
+    value: string | AnnotationVariantValue
     format: AnnotationContentFormat
-    'x-content-type': AnnotationContentType
+    'x-content-type': string
   }
 
   type AnnotationContentFormat = 'text/plain' | 'text/html'
-  type AnnotationContentType = 'Person' | 'Place'
 
   interface AnnotationTarget {
     selector: CssSelector | RangeSelector

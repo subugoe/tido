@@ -12,6 +12,7 @@ import { PanelResizer } from '@/utils/panel-resizer.ts'
 import { PanelMode } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
+import { setColors } from '@/utils/witness-colors.ts'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -34,7 +35,10 @@ interface PanelContentType {
   showTextOptions: boolean
   usePanelTranslation: () =>  UseTranslationResponse<'common', undefined>
   textWarning: string
-  setTextWarning: (warning: string) => void
+  setTextWarning: (warning: string) => void,
+  witnesses: WitnessWithColor[]
+  selectedWitnesses: WitnessWithColor[]
+  setSelectedWitnesses: (witnesses: WitnessWithColor[]) => void
 }
 
 interface PanelProviderProps {
@@ -49,15 +53,13 @@ class CustomError extends Error {
   }
 }
 
-async function getAnnotations(annotationCollectionUrl: string): Promise<Annotation[]> {
+async function getAnnotationPage(annotationCollectionUrl: string): Promise<AnnotationPage> {
   const collection: AnnotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
   if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
     throw new CustomError('annotation_collection_error_title', 'annotation_collection_error_message')
   }
-  const page = await apiRequest<AnnotationPage>(collection.first)
-  return page.items ?? []
+  return await apiRequest<AnnotationPage>(collection.first)
 }
-
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
@@ -68,6 +70,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [selectedAnnotation, setSelectedAnnotation] = useState(null)
   const [showTextOptions, setShowTextOptions] = useState(false)
   const [textWarning, setTextWarning] = useState('')
+  const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
+  const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
+
 
   const { t } = useTranslation()
   const getCollection = useDataStore(state => state.initCollection)
@@ -84,7 +89,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     return useTranslation(ns)
   }
 
-
   useEffect(() => {
     const showText = panelState.mode !== 'image'
     setShowTextOptions(showText && panelState.contentTypes.length > 1)
@@ -94,6 +98,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     const init = async () => {
       setLoading(true)
       try {
+        // Retrieve text data
+        // Trickle down from collection to item
         const collection = await getCollection(panelState.config.collection)
         const manifest = await apiRequest<Manifest>(collection.sequence[panelState.config.manifestIndex ?? 0].id)
         const item = await apiRequest<Item>(manifest.sequence[panelState.config.itemIndex ?? 0].id)
@@ -109,7 +115,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
         const imageExists = validateImage(item)
 
-        updatePanel( {
+        updatePanel({
           collectionId: collection.id,
           manifest,
           item,
@@ -119,9 +125,21 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           imageExists,
         })
 
+        // Retrieve annotation data
+        // Get an array of annotations and set up the witnesses
+        // Update annotations data separately for progressive loading (still show text if annotations are broken)
         let annotations = null
+        let _witnesses = []
         if (item.annotationCollection) {
-          annotations = await getAnnotations(item.annotationCollection)
+          const page = await getAnnotationPage(item.annotationCollection)
+          annotations = page.items ?? []
+          _witnesses = page.refs ?? []
+
+          if (_witnesses.length > 0) {
+            _witnesses = setColors(_witnesses)
+            setWitnesses(_witnesses)
+            setSelectedWitnesses(_witnesses)
+          }
           updatePanel({ annotations })
         }
 
@@ -182,7 +200,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       showTextOptions,
       usePanelTranslation,
       textWarning,
-      setTextWarning
+      setTextWarning,
+      witnesses,
+      selectedWitnesses,
+      setSelectedWitnesses
     }}>
       {children}
     </PanelContext.Provider>

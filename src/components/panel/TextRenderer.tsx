@@ -14,6 +14,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import React from 'react'
 import { parseStyleString } from '@/utils/html-to-react.ts'
 
+import { isSelected } from '@/utils/annotations.ts'
 const END_CLASS = 'tido-text-end'
 
 interface Props {
@@ -54,7 +55,6 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
     setHoveredAnnotation(null)
   }
 
-
   useEffect(() => {
     if (!hoveredAnnotation) setIsHovered(false)
     else if (hoveredAnnotation === props['data-annotation']) setIsHovered(true)
@@ -75,7 +75,7 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
         (props.className || '') +
         (isHighlighted ? ' bg-gray-200 dark:bg-muted relative cursor-pointer' : '') +
         (isHovered ? ' bg-primary/20 dark:bg-primary/50' : '') +
-        (selectedAnnotation && selectedAnnotation.id === props['data-annotation'] ? 'bg-primary/40 dark:bg-primary/80' : '') +
+        (selectedAnnotation && isSelected(selectedAnnotation.id, props['data-annotation']) ? ' bg-primary/40 dark:bg-primary/80' : '') +
         (isRefEl ? ' bg-gray-400 font-bold' : '')
       }
       onMouseEnter={handleMouseEnter}
@@ -87,11 +87,9 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
   )
 })
 
-
 const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   // Main function to create GenericElement recursively out of HTML nodes.
   // Additional attributes regarding annotations will be applied.
-
 
   if (node.nodeType === Node.TEXT_NODE) {
     return node.textContent
@@ -103,7 +101,6 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   const children = Array.from(node.childNodes).map((child, i) =>
     convertNodeToReact(child, `${key}-${i}`, matches, onClickTarget)
   )
-
 
   const props: ComponentPropsWithoutRef<ElementType> = {}
   for (const attr of node.attributes) {
@@ -146,8 +143,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
   const { panelState, fullAnnotationTypes, setFullAnnotationTypes, matchedAnnotationsMap,
     setMatchedAnnotationsMap, setSelectedAnnotation, updatePanel } = usePanel()
-  const onClickTarget = (id: string) => {
-    const annotation = panelState.annotations.find(a => a.id === id)
+  const onClickTarget = (idList: string) => {
+    const idArr = idList.split(',')
+    const last = idArr[idArr.length - 1]
+    const annotation = panelState.annotations.find(a => a.id === last)
     if (annotation) {
       if (!panelState.annotationsOpen) {
         updatePanel({ annotationsOpen: true })
