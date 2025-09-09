@@ -219,8 +219,13 @@ function getFilteredAnnotations(matchedAnnotationsMap: MatchedAnnotationsMap) {
   return Object.values(filteredMatchedAnnotationsMap).map(value => value.annotation)
 }
 
+function isSelected(selectedId: string, attrValue: string) {
+  return attrValue?.split(',').includes(selectedId) ?? false
+}
+
 export {
   setupScrollPanels,
   selectSyncTargetByIndex,
-  getFilteredAnnotations
+  getFilteredAnnotations,
+  isSelected
 }

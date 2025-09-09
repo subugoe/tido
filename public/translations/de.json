@@ -74,6 +74,9 @@
     "retry": "Erneut versuchen",
     "text_loading_failed": "Text konnte nicht geladen werden",
     "dismiss": "Verwerfen",
-    "text_not_displayed_correctly": "Der Text wird vermutlich nicht korrekt dargestellt, da er unerlaubte HTML-Elemente enthielt."
+    "text_not_displayed_correctly": "Der Text wird vermutlich nicht korrekt dargestellt, da er unerlaubte HTML-Elemente enthielt.",
+    "witnesses": "Textzeugen",
+    "selected_witnesses": "{{selected}} von {{total}} Textzeugen ausgewählt",
+    "unknown_witness": "Unbekannter Textzeuge"
   }
 }

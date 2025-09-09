@@ -34,7 +34,7 @@ const AnnotationType: FC<AnnotationTypeProps> = ({ type }) => {
       onClick={() => onSelect()}
       variant={selected ? 'secondary' : 'ghost'}
       className="w-fit p-2"
-      size="icon"
+      size="sm"
       data-selected={selected}
       data-cy={type}
     >{type}
