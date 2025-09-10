@@ -4,7 +4,7 @@ import { Ellipsis, Trash2 } from 'lucide-react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import {
   DropdownMenu,
-  DropdownMenuContent, DropdownMenuGroup,
+  DropdownMenuContent,
   DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu.tsx'
@@ -29,10 +29,7 @@ const Options: FC = () => {
     <DropdownMenuContent data-cy="options-content" align="end" className="w-48">
       <DropdownMenuLabel>{ t('options') }</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuLabel className="text-xs">{ t('panel_modes') }</DropdownMenuLabel>
-      <DropdownMenuGroup>
-        <PanelModeMenu />
-      </DropdownMenuGroup>
+      <PanelModeMenu />
       <DropdownMenuSeparator />
       <DropdownMenuItem onSelect={removePanel} className="text-destructive focus:text-destructive focus:bg-destructive/3">
         <Trash2 className="mr-2 text-destructive" /> { t('remove_panel') }

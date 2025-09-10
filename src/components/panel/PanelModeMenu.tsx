@@ -9,6 +9,8 @@ import { PictureInPicture2, Image, AlignCenter, Columns2 } from 'lucide-react'
 import { PanelModeButtonData, PanelMode } from '@/types'
 import { filterAndSortData } from '@/utils/panel.ts'
 import {
+  DropdownMenuGroup,
+  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu.tsx'
@@ -59,26 +61,31 @@ const PanelModeMenu: FC = () => {
   return <>
     {!panelState && <Skeleton />}
     {panelState && visiblePanelModesData.length > 1 &&
-      <DropdownMenuRadioGroup
-        value={selected}
-        onValueChange={(value) => setSelected(value as PanelMode)}
-        data-cy="panel-mode-menu"
-      >
-        {visiblePanelModesData.map((button) => {
-          const Icon = button.icon
-
-          return <DropdownMenuRadioItem
-            value={button.mode}
-            disabled={isDisabled(button.mode)}
-            data-selected={panelState.mode === button.mode}
-            data-cy={button.mode}
-            className="cursor-pointer"
+      <>
+        <DropdownMenuLabel className="text-xs">{ t('panel_modes') }</DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuRadioGroup
+            value={selected}
+            onValueChange={(value) => setSelected(value as PanelMode)}
+            data-cy="panel-mode-menu"
           >
-            <Icon />
-            <span className="leading-none ml-1">{button.title}</span>
-          </DropdownMenuRadioItem>
-        })}
-      </DropdownMenuRadioGroup>
+            {visiblePanelModesData.map((button) => {
+              const Icon = button.icon
+
+              return <DropdownMenuRadioItem
+                value={button.mode}
+                disabled={isDisabled(button.mode)}
+                data-selected={panelState.mode === button.mode}
+                data-cy={button.mode}
+                className="cursor-pointer"
+              >
+                <Icon />
+                <span className="leading-none ml-1">{button.title}</span>
+              </DropdownMenuRadioItem>
+            })}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuGroup>
+      </>
     }
   </>
 }
