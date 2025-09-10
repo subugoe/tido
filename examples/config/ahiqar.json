@@ -10,5 +10,6 @@
   ],
   "rootCollections": [
     "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json"
-  ]
+  ],
+  "panelModes": ["text"]
 }
