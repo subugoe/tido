@@ -322,7 +322,8 @@ export interface PanelConfig {
   collection: string
   manifestIndex?: number
   itemIndex?: number,
-  contentIndex?: number
+  contentIndex?: number,
+  mode?: PanelMode
 }
 
 export type PanelMode = 'swap' | 'split' | 'text' | 'image'

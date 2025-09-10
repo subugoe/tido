@@ -56,6 +56,8 @@
     "please_select_panel_mode": "Please select a panel mode",
     "show_image": "Show image",
     "show_text": "Show text",
+    "reference": "Reference",
+    "jump_to": "Jump to",
     "text_type": "Text type",
     "select_item_to_continue": "A new manifest is selected. Now, please select a new item to continue.",
     "about_tido": "About TIDO",

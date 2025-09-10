@@ -122,7 +122,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
   }
 
   if (node.hasAttribute('data-ref-target')) {
-    return <CrossRefLink props={props} node={node} />
+    return <CrossRefLink node={node} />
   }
 
 
