@@ -73,6 +73,12 @@
     "text_not_displayed_correctly": "The text is probably not displayed correctly because it contained unallowed HTML elements.",
     "witnesses": "Witnesses",
     "selected_witnesses": "{{selected}} of {{total}} witnesses selected",
-    "unknown_witness": "Unknown witness"
+    "unknown_witness": "Unknown witness",
+    "options": "Options",
+    "swap": "Swap",
+    "split": "Split",
+    "text": "Text",
+    "image": "Image",
+    "panel_modes": "Panel modes"
   }
 }

@@ -58,8 +58,9 @@ describe('Panel', () => {
   it('Should display the configured panelModes and the defaultPanelMode as selected', () => {
     cy.get('#panels-wrapper')
       .children().eq(0)
-      .find('[data-cy="panel-modes-toggle"]')
-      .first()
+      .find('[data-cy="options-button"]')
+      .click()
+      .get('[data-cy="panel-mode-menu"]')
       .children()
       .should('have.length', 3)
       .eq(1)                    // order of panelModes is displayed as provided
@@ -79,7 +80,9 @@ describe('Panel', () => {
       // select split mode
       .get('#panels-wrapper')
       .children().eq(0)
-      .find('[data-cy="panel-modes-toggle"]')
+      .get('[data-cy="options-button"]')
+      .click()
+      .get('[data-cy="panel-mode-menu"]')
       .children()
       .first()
       .click()
@@ -273,7 +276,9 @@ describe('Panel', () => {
 
       .get('#panels-wrapper')
       .children().eq(0)
-      .find('[data-cy="panel-modes-toggle"]')
+      .find('[data-cy="options-button"]')
+      .click()
+      .get('[data-cy="panel-mode-menu"]')
       .find('[data-cy="text"]')
       .should('have.attr', 'data-selected', 'true')
   })

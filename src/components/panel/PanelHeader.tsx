@@ -3,12 +3,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Info, PanelRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
-import PanelModeToggle from '@/components/panel/PanelModeToggle.tsx'
 import PanelTitle from '@/components/panel/PanelTitle.tsx'
 import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
 import NavigationButton from '@/components/panel/NavigationButton.tsx'
 import Metadata from '@/components/metadata/Metadata'
-import Actions from '@/components/panel/Actions.tsx'
+import Options from '@/components/panel/Options.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 const SidebarToggle = (props) => {
@@ -61,8 +60,7 @@ const PanelHeader: FC = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="ml-auto"><PanelModeToggle /></div>
-        <Actions />
+        <div className="ml-auto"><Options /></div>
         <SidebarToggle className="ml-2" />
       </div>
       <div className="flex justify-center" data-cy="panel-title-and-nav-arrows">

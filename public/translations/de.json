@@ -77,6 +77,12 @@
     "text_not_displayed_correctly": "Der Text wird vermutlich nicht korrekt dargestellt, da er unerlaubte HTML-Elemente enthielt.",
     "witnesses": "Textzeugen",
     "selected_witnesses": "{{selected}} von {{total}} Textzeugen ausgewählt",
-    "unknown_witness": "Unbekannter Textzeuge"
+    "unknown_witness": "Unbekannter Textzeuge",
+    "options": "Optionen",
+    "swap": "Swap",
+    "split": "Split",
+    "text": "Text",
+    "image": "Bild",
+    "panel_modes": "Panelmodi"
   }
 }
