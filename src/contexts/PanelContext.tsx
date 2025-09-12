@@ -127,6 +127,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
       } catch (e) {
         const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1
+        console.error(t(e.message))
         toast.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
       } finally {
         // add a timeout, since loading is finished when updatePanel() is finished

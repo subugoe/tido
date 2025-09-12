@@ -219,8 +219,26 @@ function getFilteredAnnotations(matchedAnnotationsMap: MatchedAnnotationsMap) {
   return Object.values(filteredMatchedAnnotationsMap).map(value => value.annotation)
 }
 
+function getExtendedFullAnnotationsTypesMap(annotations: Annotation[], prevFullAnnotationTypes: AnnotationTypesDict) {
+  // a new item might introduce new annotation types. we want to extend our list of annotation types so that we can preserve selected/not selected value when switching on other items
+  // i.e on item A we deselect annotation type: Person, if we switch to item B and there are annotations with type Person, then this type should be initially deselected.
+  if (!annotations || annotations?.length === 0) return
+  // when switching to a new item, we extend our "full" annotationTypes
+  const newAnnotationTypes = { ...prevFullAnnotationTypes }
+  const types = annotations.map((a) => a.body['x-content-type'])
+  const uniqueAnnotationTypes = [...new Set(types)]
+  if (uniqueAnnotationTypes.length > 0) {
+    uniqueAnnotationTypes.forEach((type) => {
+      if (!(type in newAnnotationTypes)) newAnnotationTypes[type] = true
+    })
+  }
+
+  return newAnnotationTypes
+}
+
 export {
   setupScrollPanels,
   selectSyncTargetByIndex,
-  getFilteredAnnotations
+  getFilteredAnnotations,
+  getExtendedFullAnnotationsTypesMap
 }
