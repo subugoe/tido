@@ -9,7 +9,7 @@ interface Props {
 }
 
 const NavigationButton: FC<Props> = ({ isPrev = false }) => {
-  const { panelState, updatePanel } = usePanel()
+  const { panelState, init } = usePanel()
 
   function navigate() {
     if (isPrev) prev()
@@ -66,16 +66,16 @@ const NavigationButton: FC<Props> = ({ isPrev = false }) => {
       const nextManifestIndex = sequence.findIndex(({ id }) => id === manifest.id) + 1
       if (nextManifestIndex > sequence.length - 1) return
 
-      updatePanel({ config: {
+      init({
         ...config,
         manifestIndex: nextManifestIndex,
         itemIndex: 0
-      } })
+      })
     } else {
-      updatePanel({ config: {
+      init({
         ...config,
         itemIndex: nextIndex
-      } })
+      })
     }
   }
 
@@ -96,17 +96,17 @@ const NavigationButton: FC<Props> = ({ isPrev = false }) => {
       if (prevManifestIndex < 0) return
       const prevManifest = await apiRequest<Manifest>(sequence[prevManifestIndex].id)
 
-      updatePanel({ config: {
+      init({
         ...config,
         manifestIndex: prevManifestIndex,
         itemIndex: prevManifest.sequence.length - 1
-      } })
+      })
     } else {
       // We load the previous item
-      updatePanel({ config: {
+      init({
         ...config,
         itemIndex: prevIndex
-      } })
+      })
     }
   }
 

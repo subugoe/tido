@@ -21,6 +21,7 @@ const TextView: FC = () => {
 
   useEffect(() => {
     async function updateText(contentUrl: string) {
+      setTextWarning('')
       try {
         const response = await apiRequest<string>(contentUrl)
         const cleanHtml = DOMPurify.sanitize(response, { FORBID_TAGS })

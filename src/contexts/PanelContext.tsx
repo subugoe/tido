@@ -9,7 +9,7 @@ import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
-import { PanelMode } from '@/types'
+import { PanelConfig, PanelMode } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
@@ -39,6 +39,7 @@ interface PanelContentType {
   witnesses: WitnessWithColor[]
   selectedWitnesses: WitnessWithColor[]
   setSelectedWitnesses: (witnesses: WitnessWithColor[]) => void
+  init: (config: PanelConfig) => void
 }
 
 interface PanelProviderProps {
@@ -89,71 +90,72 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     return useTranslation(ns)
   }
 
+  async function init(config: PanelConfig) {
+    setLoading(true)
+    try {
+      // Retrieve text data
+      // Trickle down from collection to item
+      const collection = await getCollection(config.collection)
+      const manifest = await apiRequest<Manifest>(collection.sequence[config.manifestIndex ?? 0].id)
+      const item = await apiRequest<Item>(manifest.sequence[config.itemIndex ?? 0].id)
+
+      const contentTypes: string[] = getContentTypes(item.content)
+
+      const { support } = manifest
+
+      if (support && support.length > 0 && isNewManifest(manifest)) {
+        // Support can be loaded for a new manifest
+        await getSupport(support)
+      }
+
+      const imageExists = validateImage(item)
+
+      updatePanel({
+        collectionId: collection.id,
+        manifest,
+        item,
+        mode: getPanelMode(imageExists, 'text'),
+        contentTypes,
+        activeTargetIndex: -1,
+        imageExists,
+      })
+
+      // Retrieve annotation data
+      // Get an array of annotations and set up the witnesses
+      // Update annotations data separately for progressive loading (still show text if annotations are broken)
+      let annotations = null
+      let _witnesses = []
+      if (item.annotationCollection) {
+        const page = await getAnnotationPage(item.annotationCollection)
+        annotations = page.items ?? []
+        _witnesses = page.refs ?? []
+
+        if (_witnesses.length > 0) {
+          _witnesses = setColors(_witnesses)
+          setWitnesses(_witnesses)
+          setSelectedWitnesses(_witnesses)
+        }
+        updatePanel({ annotations })
+      }
+
+    } catch (e) {
+      const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1
+      toast.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
+    } finally {
+      // add a timeout, since loading is finished when updatePanel() is finished
+      setTimeout(() => {
+        setLoading(false)
+      }, 100)
+    }
+  }
+
   useEffect(() => {
     const showText = panelState.mode !== 'image'
     setShowTextOptions(showText && panelState.contentTypes.length > 1)
   }, [panelState.mode, panelState.contentTypes])
 
   useEffect(() => {
-    const init = async () => {
-      setLoading(true)
-      try {
-        // Retrieve text data
-        // Trickle down from collection to item
-        const collection = await getCollection(panelState.config.collection)
-        const manifest = await apiRequest<Manifest>(collection.sequence[panelState.config.manifestIndex ?? 0].id)
-        const item = await apiRequest<Item>(manifest.sequence[panelState.config.itemIndex ?? 0].id)
-
-        const contentTypes: string[] = getContentTypes(item.content)
-
-        const { support } = manifest
-
-        if (support && support.length > 0 && isNewManifest(manifest)) {
-          // Support can be loaded for a new manifest
-          await getSupport(support)
-        }
-
-        const imageExists = validateImage(item)
-
-        updatePanel({
-          collectionId: collection.id,
-          manifest,
-          item,
-          mode: getPanelMode(imageExists, 'text'),
-          contentTypes,
-          activeTargetIndex: -1,
-          imageExists,
-        })
-
-        // Retrieve annotation data
-        // Get an array of annotations and set up the witnesses
-        // Update annotations data separately for progressive loading (still show text if annotations are broken)
-        let annotations = null
-        let _witnesses = []
-        if (item.annotationCollection) {
-          const page = await getAnnotationPage(item.annotationCollection)
-          annotations = page.items ?? []
-          _witnesses = page.refs ?? []
-
-          if (_witnesses.length > 0) {
-            _witnesses = setColors(_witnesses)
-            setWitnesses(_witnesses)
-            setSelectedWitnesses(_witnesses)
-          }
-          updatePanel({ annotations })
-        }
-
-      } catch (e) {
-        const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1
-        toast.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
-      } finally {
-        // add a timeout, since loading is finished when updatePanel() is finished
-        setTimeout(() => {
-          setLoading(false)
-        }, 100)
-      }
-    }
-    init()
+    init(panelState.config)
   }, [panelState.config, panelId])
 
 
@@ -203,7 +205,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       setTextWarning,
       witnesses,
       selectedWitnesses,
-      setSelectedWitnesses
+      setSelectedWitnesses,
+      init
     }}>
       {children}
     </PanelContext.Provider>
