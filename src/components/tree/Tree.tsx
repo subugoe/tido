@@ -9,8 +9,8 @@ interface TreeProps {
 const Tree: FC<TreeProps> = ({ nodes }) => {
   const tree =
     nodes?.length > 0 &&
-    nodes.map((collection) => (
-      <TreeNode node={collection} />
+    nodes.map((collection, i) => (
+      <TreeNode node={collection} key={collection.key + '_'+i} />
     ))
 
   return <div className="tree" data-cy="tree">
