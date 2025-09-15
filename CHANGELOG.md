@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.7](https://github.com/subugoe/tido/compare/v5.0.0-alpha.6...v5.0.0-alpha.7) (2025-09-15)
+
+
+### Features
+
+* add about modal in settings ([bd1de82](https://github.com/subugoe/tido/commit/bd1de827eea5bb2c8adb1fe321e05bb47dbb95ee))
+* add cross references in TextView ([d796235](https://github.com/subugoe/tido/commit/d7962350fe07afd16b10960c6d6ad539079bf305))
+* add namespaces to translations, use configured namespaces for different collection translations ([5616700](https://github.com/subugoe/tido/commit/56167002d59c68b37a70f8d81a478d60fc518426))
+* add small delay when hovering an annotation before highlighting the text ([85436e7](https://github.com/subugoe/tido/commit/85436e765cdc4b8752287bcf3134afd42f26a134))
+* add text sanitizing, show warning and error at text view ([beebd1c](https://github.com/subugoe/tido/commit/beebd1c26beeb2b3d9b9840a057e7e608b199037))
+* add tree icons for collection, manifest and item nodes ([41608a9](https://github.com/subugoe/tido/commit/41608a955e06550c486d8bc5fe34fef3f3b48154))
+* add type badges inside annotation items ([6ca1435](https://github.com/subugoe/tido/commit/6ca14358983179a062d5ca016f20fe64d0dee3a1))
+* add variants display in annotation items, witness filter in sidebar header ([33bbdd9](https://github.com/subugoe/tido/commit/33bbdd9d6f8d5581e7a093e2a151fa0884e136b9))
+* **cross ref:** always allow user to choose to navigate to target in the same panel or open a new panel ([cbda719](https://github.com/subugoe/tido/commit/cbda719382305de5b0b7aa7df6eba66316f7a1a4))
+* move panel modes menu to the options dropdown in panel header ([8b899f7](https://github.com/subugoe/tido/commit/8b899f70090e4c1239ecdebf19f8ed5a8188fd13))
+* resize panel titles based on panel width ([80f9848](https://github.com/subugoe/tido/commit/80f98487e3a6806ae3e4c0eae92ce0d2c1a24bd9))
+* toggle annotations list and highlighting of text using annotations types filter ([e102b4a](https://github.com/subugoe/tido/commit/e102b4a5556f2e19c661d79855e26bfefe3643ca))
+
+
+### Bug Fixes
+
+* add key to list elements ([da65890](https://github.com/subugoe/tido/commit/da658907dffa60416674476d616aff2c282bc1cd))
+* always load default translations (currently en and de) ([d33b054](https://github.com/subugoe/tido/commit/d33b05492f2882fbdca11e793f4d0f1aef9aa4ca))
+* **Annotations:** add a slightly thicker outline for selected annotation ([96fe5e6](https://github.com/subugoe/tido/commit/96fe5e6efc3e393d635637564f8b9cb7da3223fa))
+* **annotations:** handle empty target selector value ([01b9594](https://github.com/subugoe/tido/commit/01b95946185e763205b2ebb8c0f890efaced1984))
+* **annotations:** hide nav buttons in annotation types by default ([026e0f4](https://github.com/subugoe/tido/commit/026e0f4a83e7570dfa6b4757ef7636518792559b))
+* **dark mode:** show highlighted text clearly in dark mode ([d3e5dd2](https://github.com/subugoe/tido/commit/d3e5dd2267653dfcabfe8b95e38b95355e211c57))
+* handle error of annotation collection content using Toaster ([379fcb7](https://github.com/subugoe/tido/commit/379fcb7a0022cb2d495db677471b1758e4542133))
+* read and update annotations in PanelState after updating other panel states ([6ba1a00](https://github.com/subugoe/tido/commit/6ba1a00009fc957c0bb8eaa4f38fe66f0953af3b))
+* remove immediate focus outline at dialog close buttons when showing ([874b8ff](https://github.com/subugoe/tido/commit/874b8ffc28c865aa161059fba034cae39de7940c))
+* reset text warning on content update, don't overwrite initial panel config at navigation ([8f00dbc](https://github.com/subugoe/tido/commit/8f00dbccefa78c1ed3a87342e2885e8bad4067e1))
+* show Metadata Value as parsed HTML Element ([e3ec83b](https://github.com/subugoe/tido/commit/e3ec83b3b19f9f94adedb79a2f1aa5f95155ea9c))
+* show select panel mode dialog when creating a new panel from 'Add New Button' in header ([63819ab](https://github.com/subugoe/tido/commit/63819ab61cb0b574292679837abc6499e386b1e1))
+* **Swap Mode:** restore swap mode feature ([3486a45](https://github.com/subugoe/tido/commit/3486a45a6c8a5ef4875d0dc37e17de3de204af3a))
+* **Tree:** add an empty node when no items found ([a8fdc6e](https://github.com/subugoe/tido/commit/a8fdc6e425e5f4e6f667089bbc9a917bbbe8f7e7))
+* use correctly deep merge for translations ([38939c6](https://github.com/subugoe/tido/commit/38939c6de9f121d8330cbcbc28b8cd2b0160d176))
+* use Error Boundary for image renderer ([05abf33](https://github.com/subugoe/tido/commit/05abf33b7efcefe2dcd00de4a730143b89cc7fe0))
+
+
+### Docs
+
+* update contributors link in README ([0f656f5](https://github.com/subugoe/tido/commit/0f656f53f94849f33ab82db9117e11c5a11f0f9a))
+
+
+### Refactoring
+
+* improve the template of tree -  node children part of parent element ([b0c7c14](https://github.com/subugoe/tido/commit/b0c7c146fe505c296b354a97ccb25993090e642a))
+
 ## [5.0.0-alpha.6](https://github.com/subugoe/tido/compare/v5.0.0-alpha.4...v5.0.0-alpha.6) (2025-07-22)
 
 
