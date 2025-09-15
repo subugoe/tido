@@ -139,6 +139,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       }
 
     } catch (e) {
+      console.error(e)
       const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1
       toast.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
     } finally {
