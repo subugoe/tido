@@ -32,7 +32,8 @@ interface PanelContentType {
   setFullAnnotationTypes: (value: AnnotationTypesDict) => void,
   selectedAnnotation: Annotation | null,
   setSelectedAnnotation: (value: Annotation | null) => void
-  showTextOptions: boolean
+  showTextOptions: boolean,
+  setShowTextOptions: (value: boolean) => void,
   usePanelTranslation: () =>  UseTranslationResponse<'common', undefined>
   textWarning: string
   setTextWarning: (warning: string) => void,
@@ -201,6 +202,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       selectedAnnotation,
       setSelectedAnnotation,
       showTextOptions,
+      setShowTextOptions,
       usePanelTranslation,
       textWarning,
       setTextWarning,

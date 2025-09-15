@@ -4,20 +4,20 @@ import { Button } from '@/components/ui/button.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface PreviewProps {
-  mode?: string,
-  setMode?: (value: string) => void,
+  previewMode?: string,
+  setPreviewMode?: (value: string) => void,
 }
 
-const Swapper: FC<PreviewProps> = ({ mode = 'A', setMode = () => {} }) => {
+const Swapper: FC<PreviewProps> = ({ previewMode = 'A', setPreviewMode = () => {} }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
   function updateMode() {
-    if (mode === 'A') {
-      setMode('B')
+    if (previewMode === 'A') {
+      setPreviewMode('B')
       return
     }
-    setMode('A')
+    setPreviewMode('A')
   }
 
   const previewA = <Button
@@ -47,7 +47,7 @@ const Swapper: FC<PreviewProps> = ({ mode = 'A', setMode = () => {} }) => {
   return (
     <div className="z-20 absolute p-[1px] bottom-12 right-12 transition-all"
       onClick={() => updateMode()}>
-      {mode === 'A' ? previewA : previewB  }
+      {previewMode === 'A' ? previewA : previewB  }
     </div>
   )
 }

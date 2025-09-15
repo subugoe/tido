@@ -21,7 +21,7 @@ import TextViewError from '@/components/panel/views/TextViewError.tsx'
 import { ErrorBoundary } from 'react-error-boundary'
 
 const Panel: FC = React.memo(() => {
-  const { panelId, panelState, initResizer, resizer, showTextOptions } = usePanel()
+  const { panelId, panelState, initResizer, resizer, showTextOptions, setShowTextOptions } = usePanel()
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectModeState = useUIStore(state => state.showSelectPanelMode)
   const panelModes = useConfigStore.getState().config.panelModes
@@ -35,6 +35,8 @@ const Panel: FC = React.memo(() => {
   const [showImage, setShowImage] = useState(false)
   const [showText, setShowText] = useState(false)
   const [showSwapper, setShowSwapper] = useState(false)
+
+  const [swapperPreviewMode, setSwapperPreviewMode] = useState('A')
 
   const [showSelectPanelMode, setShowSelectPanelMode] = useState(false)
 
@@ -98,6 +100,22 @@ const Panel: FC = React.memo(() => {
     document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
   }, [showSelectPanelMode])
 
+  function updateSwapperMode(newPreviewMode: string) {
+    setSwapperPreviewMode(newPreviewMode)
+
+    if (newPreviewMode === 'A') {
+      // preview mode A = image, content is text
+      setShowImage(false)
+      setShowText(true)
+      setShowTextOptions(true)
+      return
+    }
+
+    setShowImage(true)
+    setShowText(false)
+    setShowTextOptions(false)
+  }
+
   return (
     <div
       id={panelId}
@@ -131,7 +149,6 @@ const Panel: FC = React.memo(() => {
           <div data-scroll-container className={`h-full w-full bg-accent overflow-x-hidden overflow-y-auto relative`}>
             <div data-text-container className={`bg-background p-3 pr-5 min-h-full relative flex border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'} ${showTextOptions ? 'pt-16': ''} `}>
               {showText && <ErrorBoundary FallbackComponent={TextViewError}><TextView /></ErrorBoundary>}
-              {showSwapper && <Swapper />}
             </div>
             <div data-sidebar-container className={`absolute top-0 h-full w-[400px] px-2`}>
               {showSidebarContent && <AnnotationsBody />}
@@ -144,6 +161,7 @@ const Panel: FC = React.memo(() => {
           <div data-text-warning className="absolute bottom-0 z-10 flex flex-col items-center justify-center">
             <TextViewWarning />
           </div>
+          {showSwapper && <Swapper previewMode={swapperPreviewMode} setPreviewMode={updateSwapperMode} />}
         </div>
         {showSelectPanelMode && ref.current && <SelectPanelModeDialog parentEl={ref.current} />}
       </div>
