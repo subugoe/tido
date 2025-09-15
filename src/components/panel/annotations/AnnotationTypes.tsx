@@ -51,34 +51,37 @@ const AnnotationTypes: FC<Props> = ({ typesMap }) => {
     updateScrollState()
   }, [typesMap])
 
-  return <div className="relative flex justify-center w-100 gap-1">
-    { showButtons && <Button
-      variant="ghost"
-      size="icon"
-      className="rounded-full"
-      onClick={() => scroll('left')}
-      disabled={scrolledToStart}
-    >
-      <ChevronLeft className="h-6 w-6" />
-    </Button> }
-    { Object.keys(typesMap).length > 1 && <div
-      ref={scrollRef}
-      data-cy="annotation-types"
-      className="flex flex-nowrap gap-2 overflow-x-auto max-w-[75%] pb-1"
-    >
-      { Object.keys(typesMap).map((type: string, i) => <AnnotationType type={type} key={'annotation-type-' +i} />)}
-    </div> }
+  return <>
+    {Object.keys(typesMap).length > 1 && <div className="relative flex justify-center w-100 gap-1">
+      { showButtons && <Button
+        variant="ghost"
+        size="icon"
+        className="rounded-full"
+        onClick={() => scroll('left')}
+        disabled={scrolledToStart}
+      >
+        <ChevronLeft className="h-6 w-6" />
+      </Button> }
+      { Object.keys(typesMap).length > 0 && <div
+        ref={scrollRef}
+        data-cy="annotation-types"
+        className="flex flex-nowrap gap-2 overflow-x-auto max-w-[75%] pb-1"
+      >
+        { Object.keys(typesMap).map((type: string, i) => <AnnotationType type={type} key={'annotation-type-' +i} />)}
+      </div> }
 
-    { showButtons && <Button
-      variant="ghost"
-      size="icon"
-      className=" rounded-full"
-      onClick={() => scroll('right')}
-      disabled={scrolledToEnd}
-    >
-      <ChevronRight className="h-6 w-6" />
-    </Button> }
-  </div>
+      { showButtons && <Button
+        variant="ghost"
+        size="icon"
+        className=" rounded-full"
+        onClick={() => scroll('right')}
+        disabled={scrolledToEnd}
+      >
+        <ChevronRight className="h-6 w-6" />
+      </Button> }
+    </div>
+    }
+  </>
 }
 
 export default AnnotationTypes
