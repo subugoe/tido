@@ -14,7 +14,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import React from 'react'
 import { parseStyleString } from '@/utils/html-to-react.ts'
 
-import { isSelected } from '@/utils/annotations.ts'
+import { getExtendedFullAnnotationsTypesMap, isSelected } from '@/utils/annotations.ts'
 const END_CLASS = 'tido-text-end'
 
 interface Props {
@@ -172,9 +172,17 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
     return parser.parseFromString(`${htmlString}<span class="${END_CLASS}"></span>`, 'text/html')
   }, [htmlString])
 
-  React.useMemo(() => {
+  const calculatedMatchedAnnotMap = React.useMemo(() => {
+    // switching to new item
+
     if (!panelState.annotations) return {}
     const result: MatchedAnnotationsMap = panelState.annotations.reduce((acc, cur) => {
+      const textSelector = cur.target[0].selector.value
+      if (!textSelector) {
+        console.error('Annotation error','Selector value of target is empty for this annotation', cur)
+        return acc
+      }
+
       const matchedNodes = Array.from(parsedDom.body.querySelectorAll(cur.target[0].selector.value))
       if (matchedNodes.length > 0) {
         const annotType = cur.body['x-content-type']
@@ -183,23 +191,17 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
       return acc
     }, {})
 
-    setMatchedAnnotationsMap(result)
     return result
   }, [parsedDom, panelState.annotations])
 
   useEffect(() => {
-    if (!panelState.annotations || panelState.annotations?.length === 0) return
-    // when switching to a new item, we extend our "full" annotationTypes
-    const newAnnotationTypes = { ...fullAnnotationTypes }
-    const types = panelState.annotations.map((a) => a.body['x-content-type'])
-    const uniqueAnnotationTypes = [...new Set(types)]
-    if (uniqueAnnotationTypes.length > 0) {
-      uniqueAnnotationTypes.forEach((type) => {
-        if (!(type in newAnnotationTypes)) newAnnotationTypes[type] = true
-      })
-    }
+    setMatchedAnnotationsMap(calculatedMatchedAnnotMap)
+  }, [calculatedMatchedAnnotMap])
 
-    setFullAnnotationTypes(newAnnotationTypes)
+
+  useEffect(() => {
+    const extendedFullAnnotationsTypesMap = getExtendedFullAnnotationsTypesMap(panelState.annotations, fullAnnotationTypes)
+    setFullAnnotationTypes(extendedFullAnnotationsTypesMap)
   }, [matchedAnnotationsMap])
 
 

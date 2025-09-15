@@ -28,6 +28,7 @@ const convertNodeToReact = (node, key) => {
   }
 
   return <Tag
+    key={'node-' + key}
     {...props}
     className={props.className || ''}
   >
@@ -55,7 +56,7 @@ const VariantContent: FC<Props> = React.memo(({ value }) => {
   return <div className="flex">
     <div>{children}</div>
     <div className="ml-auto flex gap-1">
-      {value.witnesses.map(witness => <WitnessChip idno={witness} />)}
+      {value.witnesses.map((witness, i) => <WitnessChip idno={witness} key={'witness' + i} />)}
     </div>
   </div>
 })

@@ -27,6 +27,7 @@ const convertNodeToReact = (node, key) => {
   }
 
   return <Tag
+    key={'node-' + key}
     {...props}
     className={props.className || ''}
   >
