@@ -81,6 +81,9 @@
     "split": "Split",
     "text": "Text",
     "image": "Image",
-    "panel_modes": "Panel modes"
+    "panel_modes": "Panel modes",
+    "display_annotations": "Display annotations",
+    "hide_annotations": "Hide annotations",
+    "no_annotations_available": "No annotations available"
   }
 }

@@ -85,6 +85,9 @@
     "split": "Split",
     "text": "Text",
     "image": "Bild",
-    "panel_modes": "Panelmodi"
+    "panel_modes": "Panelmodi",
+    "display_annotations": "Annotationen anzeigen",
+    "hide_annotations": "Annotationen verstecken",
+    "no_annotations_available": "Keine Annotationen verfügbar"
   }
 }
