@@ -91,7 +91,7 @@ export default {
   tabs: 'Tabs',
   'TEI document': 'TEI document',
   text: 'Text',
-  no_text_in_view: 'A text for this page does not exist yet.',
+  no_text_in_view: 'A text for this view does not exist yet.',
   no_text_available: 'No Text Available',
   text_size: 'Text size',
   title: 'Title',

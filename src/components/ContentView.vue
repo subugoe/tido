@@ -1,11 +1,11 @@
 <template>
   <div class="content-view t-px-4 t-pt-4">
     <div
-      v-if="notificationMessage"
+      v-if="errorTextMessage !== ''"
       class="t-p-2"
     >
       <MessageBox
-        :message="$t(notificationMessage)"
+        :message="$t(errorTextMessage)"
         :notification-colors="config.notificationColors"
         :title="$t('no_text_available')"
         type="warning"
@@ -13,6 +13,7 @@
     </div>
 
     <div
+      v-else
       id="text-content"
       ref="textContainer"
       class="custom-font item-content t-flex t-flex-col t-flex-1 t-overflow-auto"
@@ -26,7 +27,7 @@
 <script setup>
 
 import {
-  computed, readonly, ref, useTemplateRef, watch,
+  computed, ref, useTemplateRef, watch,
 } from 'vue';
 import { useConfigStore } from '@/stores/config';
 import { useAnnotationsStore } from '@/stores/annotations';
@@ -49,7 +50,6 @@ const contentStore = useContentsStore();
 
 const content = ref('');
 const errorTextMessage = ref(null);
-const notificationMessage = readonly(errorTextMessage);
 
 const config = computed(() => configStore.config);
 const contentStyle = computed(() => ({
@@ -65,12 +65,15 @@ watch(
 );
 
 async function loadContent(url) {
-  const annotationStore = useAnnotationsStore();
+  console.log(url)
   content.value = '';
+  if (!url) {
+    errorTextMessage.value = 'no_text_in_view';
+    return;
+  }
+  const annotationStore = useAnnotationsStore();
+
   try {
-    if (!url) {
-      return;
-    }
     errorTextMessage.value = '';
     emit('loading', true);
     await delay(300);
@@ -93,6 +96,7 @@ async function loadContent(url) {
       contentStore.setActiveContentMap(props.url, props.panelIndex);
     }, 100);
   } catch (err) {
+    console.error(err)
     errorTextMessage.value = err.message;
   }
 }

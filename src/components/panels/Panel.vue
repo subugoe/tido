@@ -290,7 +290,6 @@ export default {
 
       const type = connector.options?.type;
       const url: string | null = getContentUrl(type);
-      if (!url) return;
 
       const actionEvents = {
         update: (value) => {

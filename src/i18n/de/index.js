@@ -85,7 +85,7 @@ export default {
   tabs: 'Reiter',
   'TEI document': 'TEI-Dokument',
   text: 'Text',
-  no_text_in_view: 'Für diese Seite existiert noch kein Text.',
+  no_text_in_view: 'Für diese Ansicht existiert noch kein Text.',
   no_text_available: 'Kein Text verfügbar',
   text_size: 'Textgrösse',
   title: 'Titel',
