@@ -7,19 +7,21 @@ interface Props {
 }
 
 const WitnessChip: FC<Props> = React.memo(({ idno }) => {
-  const { witnesses } = usePanel()
+  const { witnesses, usePanelTranslation } = usePanel()
+
+  const { t } = usePanelTranslation()
 
   function getWitnessLabel(idno: string) {
-    return witnesses.find(w => w.idno === idno).idnoAlt ?? 'none'
+    return witnesses.find(w => w.idno === idno)?.idnoAlt ?? t('unknown_witness')
   }
 
   function getWitnessTitle(idno: string) {
-    return witnesses.find(w => w.idno === idno).title ?? 'none'
+    return witnesses.find(w => w.idno === idno)?.title ?? t('unknown_witness')
   }
 
   function getWitnessStyle(witnessIdno: string) {
     const witness = witnesses.find(w => w.idno === witnessIdno)
-    return { backgroundColor: witness?.bgColor ?? 'var(--muted)', color: witness.color ?? 'var(--muted-foreground)' }
+    return { backgroundColor: witness?.bgColor ?? 'var(--muted)', color: witness?.color ?? 'var(--muted-foreground)' }
   }
 
   return <TooltipProvider>
