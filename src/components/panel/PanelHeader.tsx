@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 import { Info, PanelRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
@@ -11,7 +11,12 @@ import Options from '@/components/panel/Options.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 const SidebarToggle = (props) => {
-  const { panelState, updatePanel } = usePanel()
+  const { panelState, updatePanel, matchedAnnotationsMap } = usePanel()
+  const [isDisabled, setIsDisabled] = useState(false)
+
+  useEffect(() => {
+    setIsDisabled(Object.keys(matchedAnnotationsMap).length === 0)
+  }, [matchedAnnotationsMap])
 
   function onClick() {
     updatePanel({
@@ -19,7 +24,7 @@ const SidebarToggle = (props) => {
     })
   }
   return <>
-    <Button variant="ghost" size="icon" {...props} onClick={onClick}>
+    <Button variant="ghost" size="icon" disabled={isDisabled} {...props} onClick={onClick}>
       <PanelRight />
     </Button>
   </>
