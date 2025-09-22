@@ -1,5 +1,7 @@
 import { request } from '@/utils/http'
 import { useDataStore } from '@/store/DataStore.tsx'
+import { isCollectionUrl, isManifestUrl } from '@/utils/api-validate.ts'
+import { getI18n } from 'react-i18next'
 
 async function createCollectionNodes(rootNodes: string[]): Promise<TreeNode[]> {
   const nodes: TreeNode[] = []
@@ -33,33 +35,32 @@ async function createCollectionNode(url: string) {
 async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   const { id } = node
   const parentKey = node.key
+  const { t } = getI18n()
 
-  const childrenNodes: TreeNode[] = []
-  const response = await request<Collection | Manifest>(id)
+  let data: Collection | Manifest
 
-  if (!response.success) return childrenNodes
-  const data = response.data
+  if (isCollectionUrl(id)) {
+    // If parent node is a collection, we initialize it like all collections, so it becomes available for panel loading
+    data = await useDataStore.getState().initCollection(id)
+  } else if (isManifestUrl(id)) {
+    const response = await request<Manifest>(id)
+    if (!response.success) return []
+    data = response.data
+  }
 
-  if (!data.sequence) return childrenNodes
-  if (data.sequence.length === 0) return childrenNodes
+  if (!data.sequence || data.sequence.length === 0) return []
 
   const items: Sequence[] = data.sequence
 
-  for (let i = 0; i < items.length; i++) {
-    const childNode: TreeNode = {
-      key: parentKey + ',' + (items[i].type === 'collection' ? getCollectionSlug(items[i].id) : i.toString()),
-      id: items[i].id,
-      label: items[i].label ?? 'label not found',
-      type: items[i].type,
-      leaf: items[i].type === 'item',
-      expanded: false,
-      children: []
-    }
-
-    childrenNodes.push(childNode)
-  }
-
-  return childrenNodes
+  return items.map(({ id, type, label = t('unknown_name') }, i) => ({
+    id,
+    type,
+    label,
+    key: parentKey + ',' + (type === 'collection' ? getCollectionSlug(id) : i.toString()),
+    leaf: type === 'item',
+    expanded: false,
+    children: []
+  }))
 }
 
 function getCollectionSlug(id: string) {

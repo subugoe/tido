@@ -85,6 +85,8 @@
     "split": "Split",
     "text": "Text",
     "image": "Bild",
-    "panel_modes": "Panelmodi"
+    "panel_modes": "Panelmodi",
+    "error_collection_url": "Collection URL \"{{url}}\" ist nicht korrekt formatiert.",
+    "unknown_name": "Unbekannter Name"
   }
 }
