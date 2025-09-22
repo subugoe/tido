@@ -11,17 +11,15 @@ interface TreeNodeProps {
 }
 
 const TreeNode: FC<TreeNodeProps> = ({ node }) => {
-  const [isExpanded, setIsExpanded] = useState(node.expanded)
   const { onSelect, getChildren, selectedNodeId, setSelectedNodeId } = useTree()
-
   const { t } = useTranslation()
-
+  const [isExpanded, setIsExpanded] = useState(node.expanded)
   const [showEmptyNode, setShowEmptyNode] = useState(false)
 
   async function handleNodeClick(e: MouseEvent<HTMLElement>) {
     e.preventDefault()
 
-    if (!node.expanded)  node.children = [...await getChildren(node)]
+    if (!node.expanded && !node.leaf) node.children = [...await getChildren(node)]
 
     if (node.children.length > 0) {
       toggleExpand()
@@ -35,22 +33,18 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       return
     }
 
-
     onSelect(node, e.target as HTMLElement)
     setSelectedNodeId(node.id)
   }
-
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded)
   }
 
-
   return <div className="mb-1">
-    <div
-      data-cy="tree-node"
-    >
-      <div className={`flex items-start px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? 'bg-muted border border-border active' : 'hover:bg-accent' }`}
+    <div data-cy="tree-node" data-node-key={node.key}>
+      <div
+        className={`flex items-start px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? 'bg-muted border border-border active' : 'hover:bg-accent' }`}
         onClick={(e) => handleNodeClick(e)}
       >
         {!node.leaf && <span className={`mt-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight size={18} /></span>}

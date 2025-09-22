@@ -89,5 +89,7 @@
     "display_annotations": "Annotationen anzeigen",
     "hide_annotations": "Annotationen verstecken",
     "no_annotations_available": "Keine Annotationen verfügbar"
+    "error_collection_url": "Collection URL \"{{url}}\" ist nicht korrekt formatiert.",
+    "unknown_name": "Unbekannter Name"
   }
 }
