@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 import { Info, PanelRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
@@ -9,19 +9,42 @@ import NavigationButton from '@/components/panel/NavigationButton.tsx'
 import Metadata from '@/components/metadata/Metadata'
 import Options from '@/components/panel/Options.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
 const SidebarToggle = (props) => {
-  const { panelState, updatePanel } = usePanel()
+  const { panelState, updatePanel, matchedAnnotationsMap, usePanelTranslation } = usePanel()
+  const [isDisabled, setIsDisabled] = useState(false)
+  const [tooltipMessage, setTooltipMessage] = useState('')
+  const { t } = usePanelTranslation()
+
+  useEffect(() => {
+    const hasNoAnnotations = Object.keys(matchedAnnotationsMap).length === 0
+    setIsDisabled(hasNoAnnotations)
+    if (hasNoAnnotations) setTooltipMessage(t('no_annotations_available'))
+    else setTooltipMessage(t(panelState.annotationsOpen ? 'hide_annotations' : 'display_annotations'))
+  }, [matchedAnnotationsMap, panelState.annotationsOpen])
 
   function onClick() {
     updatePanel({
       annotationsOpen: !panelState.annotationsOpen
     })
   }
+
   return <>
-    <Button variant="ghost" size="icon" {...props} onClick={onClick}>
-      <PanelRight />
-    </Button>
+    <TooltipProvider delayDuration={400}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div>
+            <Button variant="ghost" size="icon" disabled={isDisabled} {...props} onClick={onClick}>
+              <PanelRight />
+            </Button>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <span className="leading-none">{ tooltipMessage }</span>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   </>
 }
 
