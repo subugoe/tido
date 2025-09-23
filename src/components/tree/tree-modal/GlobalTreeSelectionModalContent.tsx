@@ -3,6 +3,8 @@ import { useTree } from '@/contexts/TreeContext'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
 
+import { showSelectPanelModeModalIfNeeded } from '@/utils/panel.ts'
+
 interface SelectedItemIndicesType {
   collectionUrl: string
   manifestIndex: number
@@ -19,7 +21,6 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
   const panels = usePanelStore(state => state.panels)
   const updatePanel = usePanelStore(state => state.updatePanel)
   const addPanel = usePanelStore(state => state.addPanel)
-  const enabledSelectPanelMode = useUIStore(state => state.enabledSelectPanelMode)
 
   const { setSelectedNodeId } = useTree()
 
@@ -29,15 +30,15 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
     itemIndex: selectedItemIndices.itemIndex
   }
 
-  function select(i?: number) {
+  async function select(i?: number) {
     if (i !== undefined) {
       updatePanel(panels[i].id, { config: newPanelConfig })
     } else {
       const newPanelId = crypto.randomUUID()
       useUIStore.getState().updateNewestPanelId(newPanelId)
-      addPanel(newPanelConfig, newPanelId)
 
-      if (enabledSelectPanelMode) useUIStore.getState().updateShowSelectPanelMode(true)
+      await showSelectPanelModeModalIfNeeded(newPanelConfig)
+      addPanel(newPanelConfig, newPanelId)
     }
 
     onSelect()

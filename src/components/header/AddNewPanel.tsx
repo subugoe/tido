@@ -8,12 +8,10 @@ import { useTranslation } from 'react-i18next'
 import AddNewCollectionForm from '@/components/AddNewCollectionForm.tsx'
 import TreeSelection from '@/components/tree/TreeSelection.tsx'
 import { useConfigStore } from '@/store/ConfigStore.tsx'
-import { useUIStore } from '@/store/UIStore.tsx'
 
 const AddNewPanel: FC = () => {
   const title = useConfigStore(state => state.config.title)
   const allowNewCollections = useConfigStore(state => state.config.allowNewCollections)
-  const enabledSelectTextView = useUIStore(state => state.enabledSelectPanelMode)
 
   const { t } = useTranslation()
 
@@ -31,7 +29,6 @@ const AddNewPanel: FC = () => {
 
   function onConfirmNewCollectionForm() {
     setShowDialog(false)
-    if (enabledSelectTextView) useUIStore.getState().updateShowSelectPanelMode(true)
   }
 
   function renderTriggerButton() {

@@ -11,6 +11,8 @@ import { useTranslation } from 'react-i18next'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
 
+import { showSelectPanelModeModalIfNeeded } from '@/utils/panel.ts'
+
 interface Props {
   onConfirm?: () => void
 }
@@ -36,11 +38,14 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
       const { collectionUrl, manifestIndex, itemIndex } = selectedItemIndices.current
       const newPanelId = crypto.randomUUID()
       useUIStore.getState().updateNewestPanelId(newPanelId)
-      addPanel({
+      const newPanelConfig = {
         collection: collectionUrl,
         manifestIndex: manifestIndex,
         itemIndex: itemIndex
-      }, newPanelId)
+      }
+
+      await showSelectPanelModeModalIfNeeded(newPanelConfig)
+      addPanel(newPanelConfig, newPanelId)
     }
 
     if (onConfirm) onConfirm()
