@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.8.9](https://github.com/subugoe/tido/compare/v4.8.8...v4.8.9) (2025-09-24)
+
+
+### Bug Fixes
+
+* show correct error message when no content type was found for configured text view ([06449aa](https://github.com/subugoe/tido/commit/06449aa56483b8dc13eda1b9bc87e102b6d960fe))
+
 ### [4.8.8](https://github.com/subugoe/tido/compare/v4.8.7...v4.8.8) (2025-08-29)
 
 
