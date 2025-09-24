@@ -323,7 +323,8 @@ export interface PanelConfig {
   manifestIndex?: number
   itemIndex?: number,
   contentIndex?: number,
-  mode?: PanelMode
+  mode?: PanelMode,
+  annotationsMode?: 'align' | 'list'
 }
 
 export type PanelMode = 'swap' | 'split' | 'text' | 'image'
@@ -364,7 +365,8 @@ export interface TidoConfig {
   theme: ThemeConfig
   title: string
   translations: TranslationsConfig,
-  panelModes: PanelMode[]
+  panelModes: PanelMode[],
+  annotationsMode: 'align' | 'list'
 }
 
 export interface TidoProps {

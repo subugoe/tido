@@ -6,17 +6,17 @@ import VariantContent from '@/components/panel/annotations/VariantContent.tsx'
 
 interface Props {
   data: Annotation
-  top: number
+  top?: number
 }
 
 
 const Annotation: FC<Props> = React.memo(({ data, top }) => {
-  const {  setHoveredAnnotation, selectedAnnotation, setSelectedAnnotation } = usePanel()
+  const {  setHoveredAnnotation, selectedAnnotation, setSelectedAnnotation, annotationsMode } = usePanel()
   const ref = useRef(null)
   const [isHovered, setIsHovered] = useState(false)
   const type = data.body['x-content-type']
   const value = data.body.value
-
+  
   function handleClick() {
     setSelectedAnnotation(data)
   }
@@ -43,7 +43,8 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
       ref={ref}
       data-annotation={data.id}
       {...(isSelected() ? { 'data-selected': true } : {})}
-      className={`absolute w-[calc(100%-2rem)] flex flex-col px-3 py-2 rounded-lg border border-border
+      className={`w-[calc(100%-2rem)] flex flex-col px-3 py-2 rounded-lg border border-border
+      ${annotationsMode === 'align' ? 'absolute' : 'mb-2'}
       ${isSelected() ? 'shadow-md bg-background outline-primary outline-2' : 'bg-accent border-border hover:bg-background cursor-pointer'}
       ${isHovered ? 'border-primary' : ''} transition-all max-h-18 overflow-hidden`}
       onClick={handleClick}

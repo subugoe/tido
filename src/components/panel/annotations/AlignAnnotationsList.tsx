@@ -5,7 +5,7 @@ import { getFilteredAnnotations } from '@/utils/annotations.ts'
 
 const ANNOTATION_GAP = 5
 
-const AnnotationsBody: FC = () => {
+const AlignAnnotationsList: FC = () => {
   const { panelId, matchedAnnotationsMap, selectedAnnotation } = usePanel()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
@@ -132,4 +132,4 @@ const AnnotationsBody: FC = () => {
   </div>
 }
 
-export default AnnotationsBody
+export default AlignAnnotationsList

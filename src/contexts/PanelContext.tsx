@@ -13,6 +13,7 @@ import { PanelConfig, PanelMode } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -40,7 +41,9 @@ interface PanelContentType {
   witnesses: WitnessWithColor[]
   selectedWitnesses: WitnessWithColor[]
   setSelectedWitnesses: (witnesses: WitnessWithColor[]) => void
-  init: (config: PanelConfig) => void
+  init: (config: PanelConfig) => void,
+  annotationsMode: 'align' | 'list',
+  setAnnotationsMode: (mode: 'align' | 'list') => void,
 }
 
 interface PanelProviderProps {
@@ -74,12 +77,15 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [textWarning, setTextWarning] = useState('')
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
+  const [annotationsMode, setAnnotationsMode] = useState('')
 
 
   const { t } = useTranslation()
   const getCollection = useDataStore(state => state.initCollection)
+  const initialAnnotationsMode = useConfigStore().config.annotationsMode
 
   const panelState = usePanelStore(state => state.getPanel(panelId))
+
 
   function getPanelMode(existsImage: boolean, panelMode: PanelMode) {
     if (existsImage) return panelState.mode
@@ -118,8 +124,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         mode: getPanelMode(imageExists, 'text'),
         contentTypes,
         activeTargetIndex: -1,
-        imageExists,
+        imageExists
       })
+
+      // initialize AnnotationsMode
+      if (!annotationsMode) setAnnotationsMode(initialAnnotationsMode)
 
       // Retrieve annotation data
       // Get an array of annotations and set up the witnesses
@@ -209,7 +218,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       witnesses,
       selectedWitnesses,
       setSelectedWitnesses,
-      init
+      init,
+      annotationsMode,
+      setAnnotationsMode
     }}>
       {children}
     </PanelContext.Provider>

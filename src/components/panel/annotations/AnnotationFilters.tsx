@@ -9,6 +9,7 @@ const AnnotationFilters: FC = () => {
   const textAnnotations = panelState.annotations?.length > 0 ? panelState.annotations.filter(a => Object.keys(matchedAnnotationsMap).includes(a.id)) : []
 
   useEffect(() => {
+    if (!fullAnnotationTypes) return
     if (Object.keys(fullAnnotationTypes).length === 0) return
     if (textAnnotations.length === 0) {
       setVisibleAnnotationTypes([])
@@ -25,9 +26,9 @@ const AnnotationFilters: FC = () => {
     return visibleAnnotationTypes[type] ?? false
   }
 
-  return <div className="flex flex-col items-center w-100 mt-2">
+  return <div className="flex flex-col items-center w-100 mt-4">
     <AnnotationTypes typesMap={visibleAnnotationTypes} />
-    { isVisibleType('Variant') && <div className="mt-2"><WitnessFilter /></div> }
+    { isVisibleType('Variant') && <div className="mt-1"><WitnessFilter /></div> }
   </div>
 }
 
