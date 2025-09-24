@@ -124,7 +124,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         mode: getPanelMode(imageExists, 'text'),
         contentTypes,
         activeTargetIndex: -1,
-        imageExists
+        imageExists,
+        config
       })
 
       // initialize AnnotationsMode
