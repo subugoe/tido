@@ -3,6 +3,9 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { PanelModeButtonData, PanelConfig } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
+
+import { existsImageInNewItem } from '@/utils/config/config.ts'
 
 export const DEFAULT_PANEL_WIDTH = 600
 export const MIN_PANEL_WIDTH = 600
@@ -103,4 +106,12 @@ export async function createNewPanel(collectionId: string, manifest: Manifest, i
 
   useUIStore.getState().updateNewestPanelId(newPanelId)
   await usePanelStore.getState().addPanel(newPanelConfig, newPanelId)
+}
+
+export async function showSelectPanelModeModalIfNeeded(newConfig: PanelConfig) {
+  const existsImage = await existsImageInNewItem(newConfig)
+  const showModal = existsImage && useUIStore.getState().enabledSelectPanelMode && useConfigStore.getState().config.panelModes.length > 1
+  if (showModal) {
+    useUIStore.getState().updateShowSelectPanelMode(true)
+  }
 }

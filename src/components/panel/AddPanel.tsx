@@ -4,16 +4,13 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx'
 import TreeSelection from '@/components/tree/TreeSelection.tsx'
-import { useUIStore } from '@/store/UIStore.tsx'
 
 const AddPanel: FC = () => {
   const { t } = useTranslation()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const enabledSelectTextView = useUIStore(state => state.enabledSelectPanelMode)
 
   function onConfirm() {
     setIsDialogOpen(false)
-    if (enabledSelectTextView) useUIStore.getState().updateShowSelectPanelMode(true)
   }
 
   return (

@@ -4,7 +4,8 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, PanelMode } from '@/types'
+import { TidoConfig, PanelMode, PanelConfig } from '@/types'
+import { apiRequest } from '@/utils/api.ts'
 
 type ValidationResult<T> = {
   result: T;
@@ -305,3 +306,9 @@ function deepMerge(objectA: object, objectB: object) {
   return result
 }
 
+export async function existsImageInNewItem(config: PanelConfig) {
+  const collection = await apiRequest<Collection>(config.collection)
+  const manifest = await apiRequest<Manifest>(collection.sequence[config.manifestIndex].id)
+  const item = await apiRequest<Item>(manifest.sequence[config.itemIndex].id)
+  return !!item.image
+}
