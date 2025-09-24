@@ -89,6 +89,8 @@ export function generateTargetSelector(annotation) {
     }
   } else if (selector.type === 'CssSelector') {
     result = handleCssSelector(selector);
+  } else if (selector.type === 'FragmentSelector') {
+    result = handleCssSelector(annotation.body.selector);
   }
 
   const isValid = Utils.isSelectorValid(result);
