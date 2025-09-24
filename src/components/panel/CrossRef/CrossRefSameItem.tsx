@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { usePanel } from '@/contexts/PanelContext.tsx'
+import { CustomError, usePanel } from '@/contexts/PanelContext.tsx'
 
 import {
   DropdownMenu,
@@ -16,6 +16,8 @@ import { ExternalLink } from 'lucide-react'
 
 import { createNewPanel } from '@/utils/panel.ts'
 import { waitForElementInDom } from '@/utils/dom.ts'
+import { usePanelStore } from '@/store/PanelStore.tsx'
+import { toast } from 'sonner'
 
 interface Props {
   node: HTMLElement
@@ -32,28 +34,40 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
   const itemLabel = item.n ? item.n : item.title?.length > 0 ? item.title[0].title : ''
 
   async function navigate(sourceEl: HTMLElement, contentTypes: string[], action: string) {
-    const targetContentType = sourceEl.getAttribute('data-ref-content-type')
-    const targetSelector = sourceEl.getAttribute('data-ref-target')
-    const newContentIndex = contentTypes.findIndex(type => type === targetContentType)
-    let panelEl, targetEl
+    try {
+      const targetContentType = sourceEl.getAttribute('data-ref-content-type')
+      if (!contentTypes.includes(targetContentType)) throw new CustomError('CrossRef Error Content type incorrect', 'Provided content type is not part of item content types in source el '+ sourceEl.outerHTML)
 
-    if (action === 'new') {
-      const newPanelId = crypto.randomUUID()
-      await createNewPanel(collectionId, manifest, item, newContentIndex, newPanelId)
-      waitForElementInDom('#' + newPanelId, targetSelector ,(newPanelEl: HTMLElement) => {
-        targetEl = newPanelEl.querySelector(targetSelector)
-      })
+      const targetSelector = sourceEl.getAttribute('data-ref-target')
+      if (!targetSelector.startsWith('#') && !targetSelector.startsWith('.')) throw new CustomError('CrossRef TargetSelector Error', 'Target selector is not provided correctly in source el '+ sourceEl.outerHTML)
+
+      const newContentIndex = contentTypes.findIndex(type => type === targetContentType)
+      let panelEl, targetEl
+
+      if (action === 'new') {
+        const newPanelId = crypto.randomUUID()
+        await createNewPanel(collectionId, manifest, item, newContentIndex, newPanelId)
+        waitForElementInDom('#' + newPanelId, targetSelector ,(newPanelEl: HTMLElement) => {
+          targetEl = newPanelEl.querySelector(targetSelector)
+        })
+      }
+
+      if (action === 'scroll-to') {
+        updatePanel({ contentIndex: newContentIndex })
+        panelEl = document.getElementById(panelId)
+        targetEl = panelEl.querySelector(targetSelector) as HTMLElement
+      }
+      setTimeout(() => {
+        // add timeout for smoother scrolling to target after clicking the link
+        if (!targetEl) throw new CustomError('Cross Ref Target element Error', 'Target element not found')
+        targetEl.scrollIntoView({ behavior: 'smooth' })
+      }, 500)
+    } catch(e) {
+      const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1
+      console.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
+      toast.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
     }
 
-    if (action === 'scroll-to') {
-      updatePanel({ contentIndex: newContentIndex })
-      panelEl = document.getElementById(panelId)
-      targetEl = panelEl.querySelector(targetSelector) as HTMLElement
-    }
-    setTimeout(() => {
-      // add timeout for smoother scrolling to target after clicking the link
-      if (targetEl)  targetEl.scrollIntoView({ behavior: 'smooth' })
-    }, 500)
   }
 
   function jumpTo() {
