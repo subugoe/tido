@@ -8,13 +8,17 @@ import {
   useState
 } from 'react'
 
-import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
+
+import React from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import React from 'react'
-import { parseStyleString } from '@/utils/html-to-react.ts'
+
+import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
 
 import { getExtendedFullAnnotationsTypesMap, isSelected } from '@/utils/annotations.ts'
+import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
+import { parseStyleString } from '@/utils/html-to-react.ts'
+
 const END_CLASS = 'tido-text-end'
 
 interface Props {
@@ -32,14 +36,14 @@ type GenericElementProps<T extends ElementType> = {
 } & ComponentPropsWithoutRef<T>
 
 const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, children, node, isHighlighted }: GenericElementProps<T>)  => {
-  const { hoveredAnnotation, setHoveredAnnotation, selectedAnnotation } = usePanel()
+  const { hoveredAnnotation, setHoveredAnnotation, selectedAnnotation, annotationsMode } = usePanel()
   const [isHovered, setIsHovered] = useState(false)
   const isRefEl = node.getAttribute('rel') === 'true'
 
 
   function onClick() {
     if (isHighlighted) {
-      props.onClick(props['data-annotation'])
+      props.onClick(props['data-annotation'], annotationsMode)
     }
   }
 
@@ -142,8 +146,18 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
   const { panelState, fullAnnotationTypes, setFullAnnotationTypes, matchedAnnotationsMap,
-    setMatchedAnnotationsMap, setSelectedAnnotation, updatePanel } = usePanel()
-  const onClickTarget = (idList: string) => {
+    setMatchedAnnotationsMap, setSelectedAnnotation, updatePanel, panelId } = usePanel()
+
+
+  function scrollIntoSelectedAnnotation(selectedAnnotation: Annotation) {
+    const annotationId = selectedAnnotation?.id
+    const panelEl = document.getElementById(panelId) as HTMLElement
+    const container = panelEl.querySelector('div[data-sidebar-container]') as HTMLElement
+    const annotationEl = container.querySelector('div[data-annotation="'+annotationId+'"]') as HTMLElement
+    scrollIntoViewIfNeeded(annotationEl, container)
+  }
+
+  const onClickTarget = (idList: string, annotationsMode: 'align' | 'list') => {
     const idArr = idList.split(',')
     const last = idArr[idArr.length - 1]
     const annotation = panelState.annotations.find(a => a.id === last)
@@ -152,6 +166,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
         updatePanel({ annotationsOpen: true })
       }
       setSelectedAnnotation(annotation)
+      if (annotationsMode === 'list') scrollIntoSelectedAnnotation(annotation)
     }
   }
 

@@ -11,7 +11,6 @@ import SelectPanelModeDialog from '@/components/panel/select-panel-mode/SelectPa
 import ImageView from '@/components/panel/views/ImageView.tsx'
 import TextView from '@/components/panel/views/TextView.tsx'
 import Swapper from '@/components/panel/Swapper.tsx'
-import AnnotationsBody from '@/components/panel/annotations/AnnotationsBody.tsx'
 import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
 import AnnotationsHeader from '@/components/panel/annotations/AnnotationsHeader.tsx'
@@ -19,9 +18,10 @@ import { useConfigStore } from '@/store/ConfigStore.tsx'
 import TextViewWarning from '@/components/panel/views/TextViewWarning.tsx'
 import TextViewError from '@/components/panel/views/TextViewError.tsx'
 import { ErrorBoundary } from 'react-error-boundary'
+import AnnotationsView from '@/components/panel/annotations/AnnotationsView.tsx'
 
 const Panel: FC = React.memo(() => {
-  const { panelId, panelState, initResizer, resizer, showTextOptions, setShowTextOptions } = usePanel()
+  const { panelId, panelState, initResizer, resizer, showTextOptions, setShowTextOptions, annotationsMode } = usePanel()
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectModeState = useUIStore(state => state.showSelectPanelMode)
   const panelModes = useConfigStore.getState().config.panelModes
@@ -146,12 +146,14 @@ const Panel: FC = React.memo(() => {
           <div data-image-container className={`grow-0 shrink-0 ${showImage ? 'block' : 'hidden'} border-r border-border`}>
             {showImage && <ImageView />}
           </div>
-          <div data-scroll-container className={`h-full w-full bg-accent overflow-x-hidden overflow-y-auto relative`}>
-            <div data-text-container className={`bg-background p-3 pr-5 min-h-full relative flex border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'} ${showTextOptions ? 'pt-16': ''} `}>
+          <div data-scroll-container className={`h-full w-full bg-accent relative ${annotationsMode === 'align' ? 'overflow-x-hidden overflow-y-auto' : '' }`}>
+            <div data-text-container className={`bg-background p-3 pr-5 min-h-full max-h-full  relative flex border-r
+                  ${showSidebarBorders ? 'border-border' : 'border-transparent'} ${showTextOptions ? 'pt-16': ''}
+                  ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''} `}>
               {showText && <ErrorBoundary FallbackComponent={TextViewError}><TextView /></ErrorBoundary>}
             </div>
-            <div data-sidebar-container className={`absolute top-0 h-full w-[400px] px-2`}>
-              {showSidebarContent && <AnnotationsBody />}
+            <div data-sidebar-container className={`absolute top-0 h-full w-[400px] px-2 ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''}`}>
+              {showSidebarContent && <AnnotationsView />}
             </div>
           </div>
           <AnnotationHints />

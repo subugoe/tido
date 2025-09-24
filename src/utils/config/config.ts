@@ -191,6 +191,19 @@ function validatePanelModes(input: any): ValidationResult<TidoConfig['panelModes
   return { errors, result: input }
 }
 
+function validateAnnotationsMode(input: any): ValidationResult<TidoConfig['annotationsMode']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'string'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['annotationsMode'] = 'annotationsMode should be either `align` or `list`'
+        return defaultConfig.annotationsMode
+      })()
+  return { result, errors }
+}
+
 function validateRootCollections(input: any): ValidationResult<TidoConfig['rootCollections']> {
   const errors: Record<string, string> = {}
   const result =
@@ -222,6 +235,7 @@ export function mergeAndValidateConfig(
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
   const translations = validateTranslations(userConfig.translations)
+  const annotationsMode = validateAnnotationsMode(userConfig.annotationsMode)
 
   const mergedTranslations = {
     en: deepMerge(enTranslations, translations.result.en ?? {}),
@@ -267,6 +281,7 @@ export function mergeAndValidateConfig(
     title: title.result,
     translations: mergedTranslations,
     panelModes: panelModes.result,
+    annotationsMode: annotationsMode.result,
   }
 
   return { config, errors }

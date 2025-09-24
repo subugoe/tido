@@ -11,5 +11,7 @@
   "rootCollections": [
     "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json"
   ],
-  "panelModes": ["text"]
+  "panelModes": ["text", "split"],
+  "defaultPanelMode": "split",
+  "annotationsMode": "list"
 }

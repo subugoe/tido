@@ -47,7 +47,7 @@
     "from_new_collection_description": "Geben Sie eine neue Collection-URL ein. Sie können anschließend daraus einen Panel-Inhalt wählen.",
     "from_existing_collections": "Aus bestehenden Kollektionen",
     "from_existing_collections_description": "Wählen Sie aus Kollektionen, die bereits hinzugefügt wurden.",
-    "remove_panel": "Remove panel",
+    "remove_panel": "Panel entfernen",
     "pip_mode": "Swap-Modus",
     "split_mode": "Split-Modus",
     "text_mode": "Text-Modus",
