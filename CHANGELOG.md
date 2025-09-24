@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.9.0](https://github.com/subugoe/tido/compare/v4.8.9...v4.9.0) (2025-09-24)
+
+
+### Features
+
+* add image overlay annotations ([9f51397](https://github.com/subugoe/tido/commit/9f51397cfbe811ea438e2084b5e5f5ae6a371de2))
+
 ### [4.8.9](https://github.com/subugoe/tido/compare/v4.8.8...v4.8.9) (2025-09-24)
 
 
