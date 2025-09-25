@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.8](https://github.com/subugoe/tido/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2025-09-25)
+
+
+### Features
+
+* add List Mode of Annotations ([00e179a](https://github.com/subugoe/tido/commit/00e179aaa38c09784c586ec07aa1c2bd48097738))
+* show tooltip at annotation sidebar toggle ([63f5c17](https://github.com/subugoe/tido/commit/63f5c176b78da6a4de844122098f650d41cb4249))
+
+
+### Bug Fixes
+
+* loading content from a more nested collection ([b332db4](https://github.com/subugoe/tido/commit/b332db40e3a860ca2234d6e8ad50cd7f21dfbf16))
+* prevent app crashing when clicking on annotations sidebar toggle when no annotations could be loaded ([c9a7bcd](https://github.com/subugoe/tido/commit/c9a7bcd7f26996b658f6f76dd1e5f56d98e6ae88))
+* show Panel Mode Selection Modal if necessary ([94746d5](https://github.com/subugoe/tido/commit/94746d5f6ef0fc09cb1d6e3878129b4c917c5076))
+* update panel config in update panel ([c6d7820](https://github.com/subugoe/tido/commit/c6d7820ec7cdaa15816002148d7a7217628fa502))
+* validate cross ref data ([8daeee5](https://github.com/subugoe/tido/commit/8daeee56824638ca9119ea1e524e68af93e1bd39))
+* **witness:** check for witness value in witness chip ([464b9bf](https://github.com/subugoe/tido/commit/464b9bf4c9a92d1cd1c12d5b8faaded38a6ac9c0))
+
 ## [5.0.0-alpha.7](https://github.com/subugoe/tido/compare/v5.0.0-alpha.6...v5.0.0-alpha.7) (2025-09-15)
 
 
