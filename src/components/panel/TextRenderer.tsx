@@ -18,6 +18,7 @@ import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
 import { getExtendedFullAnnotationsTypesMap, isSelected } from '@/utils/annotations.ts'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { parseStyleString } from '@/utils/html-to-react.ts'
+import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 const END_CLASS = 'tido-text-end'
 
@@ -125,7 +126,7 @@ const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
     props.onClick = onClickTarget
   }
 
-  if (node.hasAttribute('data-ref-target')) {
+  if (node.hasAttribute('data-ref-target') && useConfigStore.getState().config.useCrossRef ) {
     return <CrossRefLink node={node} />
   }
 

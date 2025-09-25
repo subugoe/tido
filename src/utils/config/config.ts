@@ -218,6 +218,19 @@ function validateRootCollections(input: any): ValidationResult<TidoConfig['rootC
   return { result, errors }
 }
 
+function validateUseCrossRef(input: any): ValidationResult<TidoConfig['useCrossRef']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'boolean'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['useCrossRef'] = 'useCrossRef needs to be a boolean'
+        return defaultConfig.useCrossRef
+      })()
+  return { result, errors }
+}
+
 export function mergeAndValidateConfig(
   userConfig: Partial<TidoConfig>,
 ): { config: TidoConfig; errors: Record<string, string> } {
@@ -237,6 +250,7 @@ export function mergeAndValidateConfig(
   const theme = validateTheme(userConfig.theme)
   const translations = validateTranslations(userConfig.translations)
   const annotationsMode = validateAnnotationsMode(userConfig.annotationsMode)
+  const useCrossRef = validateUseCrossRef(userConfig.useCrossRef)
 
   const mergedTranslations = {
     en: deepMerge(enTranslations, translations.result.en ?? {}),
@@ -265,6 +279,7 @@ export function mergeAndValidateConfig(
     ...title.errors,
     ...translations.errors,
     ...panelModes.errors,
+    ...annotationsMode.errors
   }
 
   const config: TidoConfig = {
@@ -283,6 +298,7 @@ export function mergeAndValidateConfig(
     translations: mergedTranslations,
     panelModes: panelModes.result,
     annotationsMode: annotationsMode.result,
+    useCrossRef: useCrossRef.result
   }
 
   return { config, errors }

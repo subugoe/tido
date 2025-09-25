@@ -366,7 +366,8 @@ export interface TidoConfig {
   title: string
   translations: TranslationsConfig,
   panelModes: PanelMode[],
-  annotationsMode: 'align' | 'list'
+  annotationsMode: 'align' | 'list',
+  useCrossRef: boolean
 }
 
 export interface TidoProps {

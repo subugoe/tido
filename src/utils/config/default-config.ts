@@ -16,6 +16,7 @@ const defaultConfig: TidoConfig = {
   },
   title: '',
   translations: {},
+  useCrossRef: true,
   panelModes: ['swap', 'split', 'text', 'image'],
   annotationsMode: 'align'
 }
