@@ -51,7 +51,7 @@ interface PanelProviderProps {
   panelId: string
 }
 
-class CustomError extends Error {
+export class CustomError extends Error {
   constructor(title, message) {
     super(message)
     this.name = title

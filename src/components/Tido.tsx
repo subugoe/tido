@@ -67,7 +67,7 @@ export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
         <div className="flex-1 flex overflow-hidden">
           <GlobalTree />
           <PanelsWrapper />
-          <Toaster position="bottom-center" />
+          <Toaster position="bottom-center" richColors expand={true}  />
         </div>
       </ThemeProvider>
     </div>
