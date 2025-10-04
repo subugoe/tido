@@ -2,6 +2,7 @@ import { request } from '@/utils/http'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { isCollectionUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { getI18n } from 'react-i18next'
+import { CustomError } from '@/contexts/PanelContext.tsx'
 
 async function createCollectionNodes(rootNodes: string[]): Promise<TreeNode[]> {
   const nodes: TreeNode[] = []
@@ -39,16 +40,19 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
 
   let data: Collection | Manifest
 
+  if (!isCollectionUrl(node.id) && !isManifestUrl(node.id)) throw new CustomError('Error in TextAPI '+node.type , 'Id "'+ node.id +'" is provided incorrectly')
+
   if (isCollectionUrl(id)) {
     // If parent node is a collection, we initialize it like all collections, so it becomes available for panel loading
     data = await useDataStore.getState().initCollection(id)
   } else if (isManifestUrl(id)) {
     const response = await request<Manifest>(id)
-    if (!response.success) return []
+    if (!response.success) throw new CustomError('Error '+(response as ErrorResponse).code, (response as ErrorResponse).message)
     data = response.data
   }
 
-  if (!data.sequence || data.sequence.length === 0) return []
+  if (!Object.hasOwn(data, 'sequence')) throw new CustomError('Invalid Content in TextAPI ' + node.type + ' with Id ' +node.id, '')
+  if (data.sequence.length === 0) return []
 
   const items: Sequence[] = data.sequence
 
