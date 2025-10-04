@@ -4,32 +4,50 @@ import { useTranslation } from 'react-i18next'
 import { ChevronRight, Folder, LibraryBig, File, FolderOpen } from 'lucide-react'
 
 import EmptyNode from '@/components/tree/EmptyNode.tsx'
+import ErrorNode from '@/components/tree/ErrorNode.tsx'
 
 
 interface TreeNodeProps {
   node: TreeNode,
 }
 
+
 const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   const { onSelect, getChildren, selectedNodeId, setSelectedNodeId } = useTree()
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(node.expanded)
   const [showEmptyNode, setShowEmptyNode] = useState(false)
+  const [showErrorNode, setShowErrorNode] = useState(false)
+  const [children, setChildren] = useState(node.children)
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded)
+  }
 
   async function handleNodeClick(e: MouseEvent<HTMLElement>) {
     e.preventDefault()
 
-    if (!node.expanded && !node.leaf) node.children = [...await getChildren(node)]
+    if (!node.leaf) toggleExpand()
 
-    if (node.children.length > 0) {
-      toggleExpand()
-      return
+    if (!node.leaf && isExpanded) return
+
+    if (!isExpanded && !node.leaf) {
+      try {
+        setShowErrorNode(false)
+        node.children = [...await getChildren(node)]
+        setChildren(node.children)
+        if (node.children.length > 0) return
+      } catch (error) {
+        console.error(error)
+        setShowErrorNode(true)
+        return
+      }
     }
 
-    // the node has no children and it is not a leaf node, so we should return
-    if (node.type !== 'item') {
+
+    // the node has no children and it is not a leaf node, so we should add an empty node and return
+    if (!node.leaf && node.children.length === 0) {
       setShowEmptyNode(true)
-      toggleExpand()
       return
     }
 
@@ -37,8 +55,17 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
     setSelectedNodeId(node.id)
   }
 
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded)
+
+  async function onErrorRetry() {
+    try {
+      setShowErrorNode(false)
+      node.children = [...await getChildren(node)]
+      setChildren(node.children)
+      // setChildren -> rerender the component
+    } catch(error) {
+      setShowErrorNode(true)
+      console.error(error)
+    }
   }
 
   return <div className="mb-1">
@@ -57,13 +84,14 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
         <span data-cy="node-label">{node.label}</span>
       </div>
       <div className="flex-col" data-cy="node-children">
-        { isExpanded && node.children?.map((item: TreeNode, i) => (
+        { isExpanded && children?.map((item: TreeNode, i) => (
           <ul data-cy="tree-node-child" className="ml-3" key={i}>
             <TreeNode node={item} />
           </ul>
         ))}
       </div>
       {showEmptyNode && isExpanded && <EmptyNode label={t('no_items_found')} />}
+      {showErrorNode && isExpanded && <ErrorNode onRetry={onErrorRetry} />}
     </div>
   </div>
 }

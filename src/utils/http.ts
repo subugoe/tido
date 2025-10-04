@@ -1,7 +1,7 @@
 const BLOB_CONTENT_TYPES = ['application/pdf', 'image/png', 'image/jpeg', 'audio/mpeg', 'video/mp4']
 const TEXT_CONTENT_TYPES = ['text/xhtml+xml', 'text/plain', 'text/html', 'text/css']
 
-export async function request<T>(url: string): Promise<HttpResponse<T>> {
+export async function request<T>(url: string): Promise<HttpResponse<T> | ErrorResponse>  {
   try {
     const response = await fetch(url)
     if (!response.ok) {
