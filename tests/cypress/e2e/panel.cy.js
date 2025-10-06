@@ -51,7 +51,7 @@ describe('Panel', () => {
       .get('[data-radix-popper-content-wrapper]')     // popover is closed
       .should('not.exist')
     cy.validateLabel('manifest', 'München BSB Cgm 627')
-    cy.validateLabel('item', 'Page 243v')
+    cy.validateLabel('item', '243v')
     cy.validateText('fol. 243va')
   })
 
@@ -115,18 +115,18 @@ describe('Panel', () => {
       .click()
 
     // item label and text is updated
-    cy.validateLabel('item','Page 280')
+    cy.validateLabel('item','280')
     cy.validateText('fol. 280a')
   })
 
   it('Should switch to next manifest', () => {
-    cy.validateLabel('item','Page 279')
+    cy.validateLabel('item','279')
       .click()
     cy.get('[data-cy="items-dropdown"]')
       .children()
       .eq(2)
       .click()
-      .validateLabel('item','Page 281')
+      .validateLabel('item','281')
 
       .findPanelTitleAndNavArrows()
       .find('[data-cy="next-button"]')
@@ -140,13 +140,13 @@ describe('Panel', () => {
     cy.findPanelTitleAndNavArrows()
       .find('[data-cy="next-button"]')           // go to Page 280
       .click()
-    cy.validateLabel('item','Page 280')
+    cy.validateLabel('item','280')
 
     cy.findPanelTitleAndNavArrows()
       .find('[data-cy="prev-button"]')          // go back to Page 279
       .click()
 
-    cy.validateLabel('item','Page 279')
+    cy.validateLabel('item','279')
     cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
     cy.validateText('fol. 279a')
   })
@@ -174,7 +174,7 @@ describe('Panel', () => {
       .click()
 
     cy.validateLabel('manifest', 'Kloster Neuburg, Cod. 251')
-    cy.validateLabel('item','Page 72v')
+    cy.validateLabel('item','72v')
     cy.validateText('fol. 72v')
   })
 
@@ -182,7 +182,7 @@ describe('Panel', () => {
     // item label is updated
     // text is updated
     // item modal is not anymore in DOM
-    cy.validateLabel('item', 'Page 279')
+    cy.validateLabel('item', '279')
       .click()
 
       .get('[data-cy="items-dropdown"]')
@@ -195,7 +195,7 @@ describe('Panel', () => {
       .children().eq(0)
       .find('[data-cy="items-dropdown"]').should('not.exist')
 
-    cy.validateLabel('item', 'Page 281')       // item label is updated
+    cy.validateLabel('item', '281')       // item label is updated
     cy.validateText('fol. 281a')   // text is updated
   })
 
