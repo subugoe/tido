@@ -17,8 +17,7 @@ interface ItemLabelProps {
 }
 
 const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
-  const { panelState, usePanelTranslation } = usePanel()
-  const { t } = usePanelTranslation()
+  const { panelState } = usePanel()
   const collection = useDataStore().collections[panelState.collectionId]?.collection
   const manifest = panelState.manifest
   const updatePanel = usePanelStore(state => state.updatePanel)
@@ -76,7 +75,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
   }
 
   function getItemLabel() {
-    return t('item') + ' ' + (panelState?.item?.n ?? 'unknown')
+    return panelState?.item?.n ?? 'unknown'
   }
 
   useEffect(() => {

@@ -137,7 +137,7 @@ describe('Tree', () => {
       .should('have.length', 2)      // now we have 2 panels
       .eq(1)
       .find('[data-cy="item-label"]')
-      .should('have.text', 'Page 280')     // Panel was added after the first on e
+      .should('have.text', '280')     // Panel was added after the first on e
       // switch to text mode
       .parents('.panel')
       .find('[data-cy="options-button"]')
@@ -250,7 +250,7 @@ describe('Tree', () => {
       .should('have.length', 1)
       .eq(0)
       .find('[data-cy="item-label"]')
-      .should('have.text', 'Page 280')
+      .should('have.text', '280')
       .parents('.panel')
       .find('[data-cy="options-button"]')
       .click()
@@ -264,6 +264,4 @@ describe('Tree', () => {
       .contains('fol. 280a')
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
   })
-
-
 })
