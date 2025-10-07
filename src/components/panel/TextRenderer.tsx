@@ -43,7 +43,7 @@ const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, child
 
   function onClick() {
     if (isHighlighted) {
-      props.onClick(props['data-annotation'], annotationsMode)
+      props.onClick(props['data-annotation'], annotationsMode, selectedAnnotation)
     }
   }
 
@@ -157,7 +157,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
     scrollIntoViewIfNeeded(annotationEl, container)
   }
 
-  const onClickTarget = (idList: string, annotationsMode: 'align' | 'list') => {
+  const onClickTarget = (idList: string, annotationsMode: 'align' | 'list', selectedAnnotation: Annotation) => {
     const idArr = idList.split(',')
     const last = idArr[idArr.length - 1]
     const annotation = panelState.annotations.find(a => a.id === last)
@@ -165,7 +165,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
       if (!panelState.annotationsOpen) {
         updatePanel({ annotationsOpen: true })
       }
-      setSelectedAnnotation(annotation)
+
+      if (selectedAnnotation && annotation.id === selectedAnnotation.id) setSelectedAnnotation(null) // deselect annotation
+      if (!selectedAnnotation || annotation.id !== selectedAnnotation.id)  setSelectedAnnotation(annotation) //select a new target
       if (annotationsMode === 'list') scrollIntoSelectedAnnotation(annotation)
     }
   }

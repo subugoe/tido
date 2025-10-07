@@ -16,7 +16,7 @@ const AnnotationsModeToggle: FC = () => {
     setAnnotationsMode('align')
   }
 
-  return <div className="flex items-center space-x-2 text-muted-foreground">
+  return <div className="flex items-center space-x-2 text-muted-foreground" aria-label="annotations-mode-toggle">
     <Label htmlFor="annotations-mode">List View</Label>
     <Switch id="annotations-mode" onCheckedChange={updateMode} checked={annotationsMode === 'list'} />
   </div>
