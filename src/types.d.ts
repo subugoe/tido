@@ -306,10 +306,7 @@ declare global {
   }
 
   interface CollectionMap {
-    [key: string]: {
-      slug: string,
-      collection: Collection
-    }
+    [key: string]: Collection
   }
 
   interface Position {

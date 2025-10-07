@@ -12,7 +12,7 @@ import { X } from 'lucide-react'
 const CollectionTitle: FC = () => {
   const { panelState, usePanelTranslation } = usePanel()
   const collection = useDataStore(
-    (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId].collection : null
+    (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId] : null
   )
 
   const [showLocalTree, setShowLocalTree] = useState(false)

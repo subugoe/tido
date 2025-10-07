@@ -13,7 +13,7 @@ interface ManifestLabelProps {
 
 const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSelect }) => {
   const { panelState } = usePanel()
-  const collection = useDataStore().collections[panelState.collectionId]?.collection
+  const collection = useDataStore().collections[panelState.collectionId]
   const manifest = panelState.manifest
   const labels = collection?.sequence.map((item) => item.label)
   const [showModal, setShowModal] = useState(false)
