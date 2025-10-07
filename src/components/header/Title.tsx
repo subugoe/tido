@@ -1,8 +1,8 @@
 import { FC } from 'react'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const Title: FC = () => {
-  const title = useConfigStore(state => state.config.title)
+  const { title } = useConfig()
 
   return (
     <h1 className="text-lg font-bold">{ title }</h1>

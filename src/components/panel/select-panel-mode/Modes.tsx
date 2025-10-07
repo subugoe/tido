@@ -1,13 +1,12 @@
 import { FC, useState } from 'react'
 import { useUIStore } from '@/store/UIStore.tsx'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
-
 import { AlignCenter, Columns2, Image, PictureInPicture2 } from 'lucide-react'
 import { PanelModeButtonData, PanelMode } from '@/types'
 import { Button } from '@/components/ui/button.tsx'
 
 import { filterAndSortData } from '@/utils/panel.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { useConfig } from '@/contexts/ConfigContext'
 
 interface SelectPanelModeButtonsProps {
   updateSelectedButton: (selectedMode: PanelMode) => void
@@ -16,7 +15,7 @@ interface SelectPanelModeButtonsProps {
 const Modes: FC<SelectPanelModeButtonsProps> = ({ updateSelectedButton }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
-  const panelModes = useConfigStore(state => state.config.panelModes)
+  const { panelModes } = useConfig()
   const [selectedPanelMode, setSelectedPanelMode] = useState(useUIStore.getState().defaultPanelMode)
 
 

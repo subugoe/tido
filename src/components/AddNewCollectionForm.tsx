@@ -2,12 +2,12 @@ import { ChangeEvent, FC } from 'react'
 import { Input } from '@/components/ui/input.tsx'
 import { useTranslation } from 'react-i18next'
 import { Label } from '@radix-ui/react-label'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { createCollectionNode } from '@/utils/tree.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 interface Props {
   onConfirm?: () => void
@@ -15,6 +15,7 @@ interface Props {
 
 const AddNewCollectionForm: FC<Props> = ({ onConfirm }) => {
   const { t } = useTranslation()
+  const { rootCollections } = useConfig()
   const addPanel = usePanelStore(state => state.addPanel)
   const initCollection = useDataStore.getState().initCollection
 
@@ -36,10 +37,9 @@ const AddNewCollectionForm: FC<Props> = ({ onConfirm }) => {
       itemIndex: 0
     }, newPanelId)
 
-    if (!(useConfigStore.getState().config.rootCollections.includes(inputValue))) {
+    if (!rootCollections.includes(inputValue)) {
       const newRootNode = await createCollectionNode(inputValue)
       useDataStore.getState().appendRootNode(newRootNode)
-      useConfigStore.getState().addRootCollection(inputValue)
     }
 
     await initCollection(inputValue)

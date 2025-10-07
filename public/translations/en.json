@@ -86,6 +86,10 @@
     "hide_annotations": "Hide annotations",
     "no_annotations_available": "No annotations available",
     "error_collection_url": "Collection URL \"{{url}}\" is not formatted correctly.",
-    "unknown_name": "Unknown name"
+    "unknown_name": "Unknown name",
+    "generate_share_url": "Click to generate a shareable link",
+    "copy_link": "Copy link",
+    "copied": "Copied",
+    "share_this_view": "Share this view"
   }
 }

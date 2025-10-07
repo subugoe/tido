@@ -13,7 +13,7 @@ import { PanelConfig, PanelMode } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -82,10 +82,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
   const { t } = useTranslation()
   const getCollection = useDataStore(state => state.initCollection)
-  const initialAnnotationsMode = useConfigStore().config.annotationsMode
+  const { annotationsMode: initialAnnotationsMode } = useConfig()
 
   const panelState = usePanelStore(state => state.getPanel(panelId))
-
 
   function getPanelMode(existsImage: boolean, panelMode: PanelMode) {
     if (existsImage) return panelState.mode

@@ -14,17 +14,17 @@ import Swapper from '@/components/panel/Swapper.tsx'
 import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
 import AnnotationsHeader from '@/components/panel/annotations/AnnotationsHeader.tsx'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
 import TextViewWarning from '@/components/panel/views/TextViewWarning.tsx'
 import TextViewError from '@/components/panel/views/TextViewError.tsx'
 import { ErrorBoundary } from 'react-error-boundary'
 import AnnotationsView from '@/components/panel/annotations/AnnotationsView.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, initResizer, resizer, showTextOptions, setShowTextOptions, annotationsMode } = usePanel()
+  const { panelModes } = useConfig()
   const newestPanelId = useUIStore(state => state.newestPanelId)
   const showSelectModeState = useUIStore(state => state.showSelectPanelMode)
-  const panelModes = useConfigStore.getState().config.panelModes
   const scrollPanelIds = useScrollStore(state => state.panelIds)
 
   const ref = useRef(null)

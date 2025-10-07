@@ -6,6 +6,7 @@ import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
 import { TidoConfig, PanelMode, PanelConfig } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
+import { decode, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 
 type ValidationResult<T> = {
   result: T;
@@ -218,9 +219,9 @@ function validateRootCollections(input: any): ValidationResult<TidoConfig['rootC
   return { result, errors }
 }
 
-export function mergeAndValidateConfig(
+export async function mergeAndValidateConfig(
   userConfig: Partial<TidoConfig>,
-): { config: TidoConfig; errors: Record<string, string> } {
+): Promise<{ config: TidoConfig; errors: Record<string, string> }> {
 
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
@@ -267,10 +268,57 @@ export function mergeAndValidateConfig(
     ...panelModes.errors,
   }
 
+  let panelsFromContentState: PanelConfig[]
+  const contentStateValue = hasContentState()
+
+  if (contentStateValue) {
+    try {
+      let contentState = null
+      if (isUrl(contentStateValue)) {
+        contentState = await apiRequest(contentStateValue)
+      } else {
+        contentState = await decode(contentStateValue)
+      }
+
+      panelsFromContentState = await Promise.all(contentState.target.map(async (target) => {
+        let manifestIndex = null
+        let itemIndex = null
+
+        const { collectionUrl, manifestUrl, itemUrl } = extractPanelConfig(target)
+
+        if (!collectionUrl) return null
+
+        const collectionData = await apiRequest<Collection>(collectionUrl)
+        manifestIndex = collectionData.sequence.findIndex(i => i.id === manifestUrl)
+
+        if (manifestIndex === -1) {
+          console.error(`Bookmarking Error: the provided manifest (${manifestUrl}) could not be found in collection (${collectionUrl})`)
+          manifestIndex = null
+        }
+
+        const manifestData = await apiRequest<Manifest>(manifestUrl)
+        itemIndex = manifestData.sequence.findIndex(i => i.id === itemUrl)
+
+        if (itemIndex === -1) {
+          console.error(`Bookmarking Error: the provided item (${itemUrl}) could not be found in manifest (${manifestUrl})`)
+          itemIndex = null
+        }
+
+        return {
+          collection: collectionUrl,
+          ...(itemIndex && { itemIndex }),
+          ...(manifestIndex && { manifestIndex }),
+        }
+      }))
+    } catch (e) {
+      console.error(`Bookmarking Error: Unexpected error during reading from the bookmarking string - ${e}`)
+    }
+  }
+
   const config: TidoConfig = {
     allowNewCollections: allowNewCollections.result,
     container: container.result,
-    panels: panels.result,
+    panels: panelsFromContentState ?? panels.result,
     defaultPanelMode: defaultPanelMode.result,
     lang: lang.result,
     rootCollections: rootCollections.result,
