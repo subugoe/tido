@@ -146,7 +146,7 @@ const Panel: FC = React.memo(() => {
           <div data-image-container className={`grow-0 shrink-0 ${showImage ? 'block' : 'hidden'} border-r border-border`}>
             {showImage && <ImageView />}
           </div>
-          <div data-scroll-container className={`h-full w-full bg-accent relative ${annotationsMode === 'align' ? 'overflow-x-hidden overflow-y-auto' : '' }`}>
+          <div data-scroll-container className={`h-full w-full bg-muted relative ${annotationsMode === 'align' ? 'overflow-x-hidden overflow-y-auto' : '' }`}>
             <div data-text-container className={`bg-background p-3 pr-5 min-h-full max-h-full  relative flex border-r
                   ${showSidebarBorders ? 'border-border' : 'border-transparent'} ${showTextOptions ? 'pt-16': ''}
                   ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''} `}>

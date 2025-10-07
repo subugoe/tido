@@ -35,7 +35,7 @@ const CollectionTitle: FC = () => {
             className="text-sm px-2 py-1 h-7 font-semibold truncate max-w-[200px] @min-[600px]/panel:max-w-[300px] @min-[1200px]/panel:max-w-[500px]"
             title={collection.title[0].title}
             onClick={() => setShowLocalTree(!showLocalTree)}
-            variant="accent"
+            variant="muted"
             data-cy="collection-title"
           >
             <span className="truncate">{ collection.title[0].title }</span>

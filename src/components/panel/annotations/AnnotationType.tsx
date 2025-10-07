@@ -32,7 +32,7 @@ const AnnotationType: FC<AnnotationTypeProps> = ({ type }) => {
   return (
     <Button
       onClick={() => onSelect()}
-      variant={selected ? 'secondary' : 'ghost'}
+      variant={selected ? 'default' : 'ghost'}
       className="w-fit p-2"
       size="sm"
       data-selected={selected}

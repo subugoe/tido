@@ -71,7 +71,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   return <div className="mb-1">
     <div data-cy="tree-node" data-node-key={node.key}>
       <div
-        className={`flex items-start px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? 'bg-muted border border-border active' : 'hover:bg-accent' }`}
+        className={`flex items-start px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? 'bg-muted border border-border active' : 'hover:bg-muted' }`}
         onClick={(e) => handleNodeClick(e)}
       >
         {!node.leaf && <span className={`mt-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight size={18} /></span>}
