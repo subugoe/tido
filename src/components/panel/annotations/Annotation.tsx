@@ -16,8 +16,12 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
   const [isHovered, setIsHovered] = useState(false)
   const type = data.body['x-content-type']
   const value = data.body.value
-  
+
   function handleClick() {
+    if (selectedAnnotation && selectedAnnotation.id === data.id) {
+      setSelectedAnnotation(null)
+      return
+    }
     setSelectedAnnotation(data)
   }
 
@@ -41,6 +45,7 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
   return <>
     <div
       ref={ref}
+      aria-label="annotation"
       data-annotation={data.id}
       {...(isSelected() ? { 'data-selected': true } : {})}
       className={`w-[calc(100%-2rem)] flex flex-col px-3 py-2 rounded-lg border border-border

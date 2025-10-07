@@ -6,7 +6,7 @@ import { getFilteredAnnotations } from '@/utils/annotations.ts'
 const ANNOTATION_GAP = 5
 
 const AlignAnnotationsList: FC = () => {
-  const { panelId, matchedAnnotationsMap, selectedAnnotation } = usePanel()
+  const { panelId, matchedAnnotationsMap, selectedAnnotation, setSelectedAnnotation } = usePanel()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
   // position of each annotation.
@@ -20,8 +20,29 @@ const AlignAnnotationsList: FC = () => {
 
   const ref = useRef()
 
+  function isClickedElAnnotation(clickedEl: HTMLElement) {
+    if (clickedEl.getAttribute('data-annotation')) return true
+    return clickedEl.parentElement?.getAttribute('data-annotation')
+  }
+
   useEffect(() => {
-    if (selectedAnnotation) trackTopChange()
+    trackTopChange()
+
+    const panelEl = document.getElementById(panelId) as HTMLElement
+    const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
+
+    async function deselectAnnotationOnOutsideClick(event: MouseEvent) {
+      // if we click at an annotation - we return false
+      if (isClickedElAnnotation(event.target as HTMLElement)) return
+      setSelectedAnnotation(null)
+    }
+
+    annotationsSideBarEl?.addEventListener('click', deselectAnnotationOnOutsideClick)
+
+    // Cleanup on unmount
+    return () => {
+      annotationsSideBarEl?.removeEventListener('click', deselectAnnotationOnOutsideClick)
+    }
   }, [selectedAnnotation])
 
 
@@ -82,9 +103,9 @@ const AlignAnnotationsList: FC = () => {
     if (filteredAnnotations?.length === 0) {
       setElements([])
     } else {
-      const annotationEls = Array.from(ref.current.childNodes)
+      const annotationEls = Array.from(ref.current?.childNodes)
       const _elements = annotationEls.map(el => {
-        const annotation = filteredAnnotations.find(a => a.id === el.getAttribute('data-annotation'))
+        const annotation = filteredAnnotations.find(a => a.id === (el as HTMLElement).getAttribute('data-annotation'))
         if (!annotation) return
         const target = document.getElementById(panelId).querySelector(annotation.target[0].selector.value)
         return {
@@ -94,7 +115,6 @@ const AlignAnnotationsList: FC = () => {
           annotation
         }
       })
-
       setElements(_elements)
     }
 
