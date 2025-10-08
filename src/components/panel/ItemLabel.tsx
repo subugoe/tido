@@ -18,7 +18,7 @@ interface ItemLabelProps {
 
 const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
   const { panelState } = usePanel()
-  const collection = useDataStore().collections[panelState.collectionId]?.collection
+  const collection = useDataStore().collections[panelState.collectionId]
   const manifest = panelState.manifest
   const updatePanel = usePanelStore(state => state.updatePanel)
 

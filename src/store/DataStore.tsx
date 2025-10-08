@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { apiRequest } from '@/utils/api.ts'
-import { getCollectionSlug } from '@/utils/tree.ts'
 import { isCollectionUrl } from '@/utils/api-validate.ts'
 import { getI18n } from 'react-i18next'
 
@@ -30,7 +29,7 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   },
   showGlobalTree: false,
   initCollection: async (url: string) => {
-    if (url in get().collections) return get().collections[url].collection
+    if (url in get().collections) return get().collections[url]
     const { t } = getI18n()
     try {
       if (!isCollectionUrl(url)) throw t('error_collection_url', { url })
@@ -38,10 +37,7 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
 
       // TODO: we need to check if this collection is already in treeCollections or child of existing treeCollections data
       const collections: CollectionMap = { ...get().collections }
-      collections[collection.id] = {
-        'collection': collection,
-        'slug': getCollectionSlug(url)
-      }
+      collections[collection.id] = collection
       set({ collections })
 
       // TODO: fix annotation loading

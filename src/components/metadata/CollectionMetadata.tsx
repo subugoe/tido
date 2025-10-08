@@ -12,7 +12,7 @@ const CollectionMetadata: FC = () => {
   const { t } = usePanelTranslation()
 
   const collection = useDataStore(
-    (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId].collection : null
+    (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId] : null
   )
 
   const metadata = getCollectionMetadata(collection)

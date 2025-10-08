@@ -24,7 +24,7 @@ async function createCollectionNode(url: string) {
   const response = await request<Collection>(url)
   if (!response.success) return null
 
-  node.key = getCollectionSlug(url)
+  node.key = url
   node.id = url
   node.type = 'collection'
   node.label = response.data.title[0].title
@@ -60,7 +60,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
     id,
     type,
     label,
-    key: parentKey + ',' + (type === 'collection' ? getCollectionSlug(id) : i.toString()),
+    key: parentKey + ',' + (type === 'collection' ? id : i.toString()),
     leaf: type === 'item',
     expanded: false,
     children: []
@@ -77,14 +77,14 @@ function getNodeIndices(nodeKey: string) {
 }
 
 function getSelectedItemIndices(node: TreeNode){
-  const collections = useDataStore.getState().collections
+  // const collections = useDataStore.getState().collections
   const indices = getNodeIndices(node.key)
-  const collectionSlug = indices[indices.length - 3]
+  const collectionUrl = indices[indices.length - 3]
   const manifestIndex = parseInt(indices[indices.length - 2], 10)
   const itemIndex = parseInt(indices[indices.length - 1], 10)
-  const collectionUrl = Object.keys(collections).filter(key => collections[key].slug === collectionSlug)[0]
+  // const collectionUrl = Object.keys(collections).filter(key => collections[key].slug === collectionSlug)[0]
 
-  return { collectionUrl: collectionUrl, manifestIndex: manifestIndex, itemIndex: itemIndex }
+  return { collectionUrl, manifestIndex, itemIndex }
 }
 
 async function getExpandedNode(node: TreeNode): Promise<TreeNode> {
