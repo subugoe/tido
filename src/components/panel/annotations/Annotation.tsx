@@ -50,7 +50,7 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
       {...(isSelected() ? { 'data-selected': true } : {})}
       className={`w-[calc(100%-2rem)] flex flex-col px-3 py-2 rounded-lg border border-border
       ${annotationsMode === 'align' ? 'absolute' : 'mb-2'}
-      ${isSelected() ? 'shadow-md bg-background outline-primary outline-2' : 'bg-accent border-border hover:bg-background cursor-pointer'}
+      ${isSelected() ? 'shadow-md bg-background outline-primary outline-2' : 'bg-muted border-border hover:bg-background cursor-pointer'}
       ${isHovered ? 'border-primary' : ''} transition-all max-h-18 overflow-hidden`}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}

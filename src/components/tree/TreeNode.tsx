@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useState } from 'react'
+import { FC, MouseEvent, useEffect, useState } from 'react'
 import { useTree } from '@/contexts/TreeContext'
 import { useTranslation } from 'react-i18next'
 import { ChevronRight, Folder, LibraryBig, File, FolderOpen } from 'lucide-react'
@@ -13,12 +13,30 @@ interface TreeNodeProps {
 
 
 const TreeNode: FC<TreeNodeProps> = ({ node }) => {
-  const { onSelect, getChildren, selectedNodeId, setSelectedNodeId } = useTree()
+  const { onSelect, getChildren, selectedNodeId, setSelectedNodeId, elevation } = useTree()
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(node.expanded)
   const [showEmptyNode, setShowEmptyNode] = useState(false)
   const [showErrorNode, setShowErrorNode] = useState(false)
   const [children, setChildren] = useState(node.children)
+  const [bg, setBg] = useState({
+    selected: 'bg-accent',
+    hover: 'hover:bg-muted'
+  })
+
+  useEffect(() => {
+    if (elevation === 0) {
+      setBg({
+        selected: 'bg-accent',
+        hover: 'hover:bg-muted'
+      })
+    } else if (elevation === 1) {
+      setBg({
+        selected: 'bg-accent',
+        hover: 'hover:bg-accent'
+      })
+    }
+  }, [elevation])
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded)
@@ -71,7 +89,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   return <div className="mb-1">
     <div data-cy="tree-node" data-node-key={node.key}>
       <div
-        className={`flex items-start px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? 'bg-muted border border-border active' : 'hover:bg-accent' }`}
+        className={`flex items-start px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover }`}
         onClick={(e) => handleNodeClick(e)}
       >
         {!node.leaf && <span className={`mt-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight size={18} /></span>}

@@ -18,7 +18,6 @@ const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
   const updatePanel = usePanelStore(state => state.updatePanel)
   const [treeNodes, setTreeNodes] = useState([])
 
-
   function onNodeSelect(node: TreeNode) {
     const { collectionUrl, manifestIndex, itemIndex } = getSelectedItemIndices(node)
 
@@ -39,11 +38,9 @@ const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
     initTreeNode(collectionId)
   }, [])
 
-
-
   return <div className="flex flex-col">
-    <div className="max-h-[60vh] overflow-y-auto">
-      <TreeProvider onSelect={onNodeSelect} getChildren={getChildren}>
+    <div className="max-h-[60vh] overflow-y-auto pr-2">
+      <TreeProvider onSelect={onNodeSelect} getChildren={getChildren} elevation={1}>
         <Tree nodes={treeNodes} />
       </TreeProvider>
     </div>

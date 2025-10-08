@@ -7,7 +7,7 @@ const TextOptions: FC = () => {
   const [visible, setVisible] = useState(true)
 
   return <>
-    <div className={`relative top-[8px] ${visible ? 'opacity-100 delay-200' : 'opacity-0'} bg-accent border rounded-lg border-border flex transition-all`}>
+    <div className={`relative top-[8px] ${visible ? 'opacity-100 delay-200' : 'opacity-0'} bg-muted border rounded-lg border-border flex transition-all`}>
       <ContentTypesToggle />
       <div className="border-l border-border">
         <Button variant="ghost" size="icon" onClick={() => setVisible(false)}>
