@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.9](https://github.com/subugoe/tido/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2025-10-08)
+
+
+### Features
+
+* add an error node on api request failure in tree (collection or manifest) ([a284768](https://github.com/subugoe/tido/commit/a2847688674450b9fa8026dd2c40396a37ec93d7))
+* deselect annotations on target/Annotation deselection and on outside click ([908b728](https://github.com/subugoe/tido/commit/908b728b49cb7e200c22a99f84cb0c90a430d6a6))
+
+
+### Bug Fixes
+
+* elevation hierarchy for backgrounds and hover effects ([0dfb713](https://github.com/subugoe/tido/commit/0dfb71356eb9c6158eda97134ee0072658946e7e))
+* keep track collections by their id and not by slugs - fixes loading of nested collections ([fff0fde](https://github.com/subugoe/tido/commit/fff0fde2e97084a953f1efab6e4b8763c300937b))
+* remove 'item' key from item label in Panel ([483690e](https://github.com/subugoe/tido/commit/483690e7a060c869cf0243c56e5ef9645a83a688))
+
 ## [5.0.0-alpha.8](https://github.com/subugoe/tido/compare/v5.0.0-alpha.7...v5.0.0-alpha.8) (2025-09-25)
 
 
