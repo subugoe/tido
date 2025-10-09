@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,14 +11,14 @@ import ShowSelectPanelModeToggle from '@/components/header/settings/ShowSelectPa
 import { CircleQuestionMark, Settings } from 'lucide-react'
 import About from '@/components/header/settings/About.tsx'
 import { useTranslation } from 'react-i18next'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 
 const SettingsComp: FC = () => {
   const { t } = useTranslation()
+  const { showThemeToggle } = useConfig()
   const [mounted, setMounted] = useState(false)
   const [showAboutDialog, setShowAboutDialog] = useState(false)
-
-  const showThemeToggle = useConfigStore(state => state.config.showThemeToggle)
 
   useEffect(() => {
     setMounted(true)

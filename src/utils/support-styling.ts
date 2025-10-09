@@ -1,9 +1,7 @@
-import { useConfigStore } from '@/store/ConfigStore.tsx'
-
-function loadFont(url: string, containerSelector: string) {
+function loadFont(url: string) {
   // to use a certain font on a text, then we only need to load the font file.
   // we load the font file using @font-face interface
-  const root = document.querySelector(`${containerSelector} .tido`)
+  const root = document.querySelector(`.tido`)
   if (!root) return
 
   const styleEl = document.createElement('style')
@@ -28,11 +26,9 @@ function loadCss (url: string){
 }
 
 export const getSupport = (support: Support[] | undefined) => {
-  const { container } = useConfigStore.getState().config
-
   support?.forEach((s) => {
     const hasElement = document.getElementById(s.url)
-    if (s.type === 'font' && !hasElement) loadFont(s.url, container)
+    if (s.type === 'font' && !hasElement) loadFont(s.url)
     if (s.type === 'css' && !hasElement) loadCss(s.url)
   })
 }

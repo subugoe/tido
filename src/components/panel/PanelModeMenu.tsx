@@ -1,11 +1,7 @@
 import { FC, useEffect, useState } from 'react'
-
 import { usePanel } from '@/contexts/PanelContext'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
-
 import { Skeleton } from '@/components/ui/skeleton.tsx'
 import { PictureInPicture2, Image, AlignCenter, Columns2 } from 'lucide-react'
-
 import { PanelModeButtonData, PanelMode } from '@/types'
 import { filterAndSortData } from '@/utils/panel.ts'
 import {
@@ -14,12 +10,13 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 
 const PanelModeMenu: FC = () => {
   const { panelState, updatePanel, usePanelTranslation, resizer } = usePanel()
   const { t } = usePanelTranslation()
-  const panelModes = useConfigStore.getState().config.panelModes
+  const { panelModes } = useConfig()
   const [selected, setSelected] = useState<PanelMode>(panelState.mode)
   const [visiblePanelModesData, setVisiblePanelModesData] = useState<PanelModeButtonData[]>([])
 

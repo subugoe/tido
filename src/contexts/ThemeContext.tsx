@@ -8,17 +8,17 @@ type ThemeProviderProps = {
   storageKey?: string
 }
 
-type ThemeProviderState = {
+type ThemeContextState = {
   theme: Theme
   setTheme: (theme: Theme) => void
 }
 
-const initialState: ThemeProviderState = {
+const initialState: ThemeContextState = {
   theme: 'system',
   setTheme: () => null,
 }
 
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
+const ThemeContext = createContext<ThemeContextState>(initialState)
 
 export const ThemeProvider = ({
   children,
@@ -57,14 +57,14 @@ export const ThemeProvider = ({
   }
 
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
+    <ThemeContext.Provider {...props} value={value}>
       {children}
-    </ThemeProviderContext.Provider>
+    </ThemeContext.Provider>
   )
 }
 
 export const useTheme = () => {
-  const context = useContext(ThemeProviderContext)
+  const context = useContext(ThemeContext)
 
   if (context === undefined)
     throw new Error('useTheme must be used within a ThemeProvider')

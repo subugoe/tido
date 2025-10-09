@@ -7,11 +7,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { useTranslation } from 'react-i18next'
 import AddNewCollectionForm from '@/components/AddNewCollectionForm.tsx'
 import TreeSelection from '@/components/tree/TreeSelection.tsx'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const AddNewPanel: FC = () => {
-  const title = useConfigStore(state => state.config.title)
-  const allowNewCollections = useConfigStore(state => state.config.allowNewCollections)
+  const { title, allowNewCollections } = useConfig()
 
   const { t } = useTranslation()
 

@@ -2,8 +2,8 @@ import { FC, ReactElement } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
-import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 interface ImageActions {
   icon: ReactElement
@@ -12,7 +12,7 @@ interface ImageActions {
 }
 
 const ImageActionButtons: FC = () => {
-  const primaryColor = useConfigStore(state => state.config.theme.primaryColor)
+  const { theme } = useConfig()
   const { panelId } = usePanel()
 
   const actions: ImageActions[] = [
@@ -50,7 +50,7 @@ const ImageActionButtons: FC = () => {
       >
         <div
           className="flex items-center justify-center"
-          style={{ color: primaryColor }}
+          style={{ color: theme.primaryColor }}
         >
           {action.icon}
         </div>

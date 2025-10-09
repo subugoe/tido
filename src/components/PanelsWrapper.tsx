@@ -1,19 +1,19 @@
 import { FC, useEffect } from 'react'
 import Panel from '@/components/panel/Panel'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
 import { PanelProvider } from '@/contexts/PanelContext.tsx'
 import AddPanel from '@/components/panel/AddPanel.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 
 const PanelsWrapper: FC = () => {
-  const config = useConfigStore(state => state.config)
+  const { panels: panelsConfig, showPanelPlaceholder } = useConfig()
   const panels = usePanelStore(state => state.panels)
-  const initializePanels = usePanelStore(state => state.initializePanels)
+  const initializePanels = usePanelStore.getState().initializePanels
 
   useEffect(() => {
-    initializePanels(config.panels)
-  }, [config.panels])
+    initializePanels(panelsConfig)
+  }, [])
 
   return <div id="panels-wrapper" className="bg-background flex-1 flex h-full py-4 space-x-4 overflow-x-auto pr-2" data-cy="panels-wrapper">
     {
@@ -23,7 +23,7 @@ const PanelsWrapper: FC = () => {
         </PanelProvider>
       ))
     }
-    { config.showPanelPlaceholder && <AddPanel /> }
+    { showPanelPlaceholder && <AddPanel /> }
   </div>
 }
 

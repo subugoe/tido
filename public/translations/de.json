@@ -91,6 +91,10 @@
     "hide_annotations": "Annotationen verstecken",
     "no_annotations_available": "Keine Annotationen verfügbar",
     "error_collection_url": "Collection URL \"{{url}}\" ist nicht korrekt formatiert.",
-    "unknown_name": "Unbekannter Name"
+    "unknown_name": "Unbekannter Name",
+    "generate_share_url": "Klick, um einen Link zum Teilen zu erstellen",
+    "copy_link": "Link kopieren",
+    "copied": "Kopiert",
+    "share_this_view": "Diese Ansicht teilen"
   }
 }

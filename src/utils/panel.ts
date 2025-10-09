@@ -3,7 +3,6 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { PanelModeButtonData, PanelConfig } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
-import { useConfigStore } from '@/store/ConfigStore.tsx'
 
 import { existsImageInNewItem } from '@/utils/config/config.ts'
 
@@ -108,9 +107,9 @@ export async function createNewPanel(collectionId: string, manifest: Manifest, i
   await usePanelStore.getState().addPanel(newPanelConfig, newPanelId)
 }
 
-export async function showSelectPanelModeModalIfNeeded(newConfig: PanelConfig) {
+export async function showSelectPanelModeModalIfNeeded(newConfig: PanelConfig, panelModes: string[]) {
   const existsImage = await existsImageInNewItem(newConfig)
-  const showModal = existsImage && useUIStore.getState().enabledSelectPanelMode && useConfigStore.getState().config.panelModes.length > 1
+  const showModal = existsImage && useUIStore.getState().enabledSelectPanelMode && panelModes.length > 1
   if (showModal) {
     useUIStore.getState().updateShowSelectPanelMode(true)
   }

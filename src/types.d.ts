@@ -370,6 +370,22 @@ export interface TidoProps {
   config: Partial<TidoConfig>
 }
 
+export interface TidoContentState {
+  type: 'Annotation'
+  motivation: ['contentState']
+  target: TidoContentStateTarget[]
+}
+
+export interface TidoContentStateTarget {
+  id: string
+  type: 'Item' | 'Manifest' | 'Collection'
+  partOf?: TidoContentStateTarget
+  state?: {
+    mode?: PanelMode
+    contentType?: string
+  }
+}
+
 export declare class Tido extends React.Component<TidoProps, never> {}
 
 export {}
