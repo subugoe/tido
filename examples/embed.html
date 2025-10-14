@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>TIDO</title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="dist/tido.min.css">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+<div id="app"></div>
+<script src="dist/tido.min.js"></script>
+<script>
+  new Tido({
+    panels: [{
+      collection: 'https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json'
+    }]
+  })
+</script>
+</body>
+</html>
