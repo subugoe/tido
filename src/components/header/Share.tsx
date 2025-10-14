@@ -4,7 +4,7 @@ import { Check, Copy, Share2 } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 import { useTranslation } from 'react-i18next'
 import { usePanelStore } from '@/store/PanelStore.tsx'
-import { createContentState, encode } from '@/utils/bookmarking.ts'
+import { createContentState, encodeState } from '@/utils/bookmarking.ts'
 import { Input } from '@/components/ui/input.tsx'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx'
 
@@ -19,7 +19,7 @@ const Share: FC = () => {
     setShowPopover(true)
     const panelStates = usePanelStore.getState().panels
     const contentState = createContentState(panelStates)
-    const encoded = await encode(contentState)
+    const encoded = await encodeState(contentState)
     const url = new URL(window.location.href)
 
     url.searchParams.set('tido', encoded)

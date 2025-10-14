@@ -14,7 +14,7 @@ function isUrl(str: string): boolean {
   }
 }
 
-async function encode(state: TidoContentState): Promise<string> {
+async function encodeState(state: TidoContentState): Promise<string> {
   const jsonStr = JSON.stringify(state)
   const input = new TextEncoder().encode(jsonStr)
 
@@ -35,7 +35,7 @@ async function encode(state: TidoContentState): Promise<string> {
   return base64urlNoPadding
 }
 
-async function decode(encoded: string): Promise<TidoContentState> {
+async function decodeState(encoded: string): Promise<TidoContentState> {
   // Convert Base64URL → Base64
   let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/')
 
@@ -110,8 +110,8 @@ function createContentState(panelStates: PanelState[]): TidoContentState {
 export {
   hasContentState,
   isUrl,
-  decode,
-  encode,
+  decodeState,
+  encodeState,
   extractPanelConfig,
   createContentState
 }

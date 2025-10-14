@@ -242,6 +242,79 @@ project keys. If you set `lang` to a language that we don't support and omit cer
 we will display those in English. If you don't provide a translation for a custom key, it will be displayed just as-is.
 Also notice how the `manifest` key is being set to a different word for `special_collection`.
 
+## Bookmarking
+
+You can save and share your current view with the bookmarking feature.
+This is useful e.g. when you want to create TIDO-Link from a search result or comparing multiple texts and
+share it to a colleague.
+
+### How it works
+TIDO reads and creates a string that is assigned as value to the `tido` GET-parameter at the URL.
+We inherit the principles of the [IIIF Content State API](https://iiif.io/api/content-state/1.0/) and use a similar approach.
+The value of the `tido` GET-Parameter can be either a URL that returns a `TidoContentState` JSON or
+an encoded `TidoContentState` JSON string. The `TidoContentState` contains all the information needed to recreate
+a certain panel configuration. If users want to create a new sharable state, they can click the "Share"-button in the app
+header and copy the resulting link.
+
+### Working with the state object
+We export a TypeScript interface `TidoContentState` where you can inspect the structure of the state object.
+Here is an example:
+```
+{
+  type: 'Annotation'
+  motivation: ['contentState']
+  target: [
+    {
+      id: 'https://example.com/my-item-1',
+      type: 'Item',
+      partOf: {
+        id: 'https://example.com/my-manifest-1'
+        type: 'Manifest'
+        partOf: {
+          id: 'https://example.com/my-collection-1'
+          type: 'Collection'
+        }
+      },
+      state: {
+        mode: 'split'
+      }
+    }
+  ]
+}
+```
+
+This object would open one panel load the content `https://example.com/my-item-1` into it. Since TIDO panels need further
+information from a manifest and collection, you need to provide those URLs using the `partOf` key. This is compliant
+with the `PanelConfig` object from the [configuration](#the-keys-in-detail).
+Please note that the `Item` and `Manifest` targets are not required. TIDO will load the first elements from the respective sequences.
+You can append the `state` key to the "root" target to specify further the state of a panel. Currently only the `mode`
+configuration can be applied.
+
+### Encoding/Decoding
+We provide the `encodeState` and `decodeState` functions as export in our npm package. You can use them like this:
+
+```JavaScript
+import { encodeState, decodeState } from 'tido'
+
+const encoded = await encodeState(myState)
+const decoded = await decodeState(encoded)
+```
+
+In case you want to implement the mechanism yourself, here is the procedure:
+
+- Encoding:
+  1. JSON-stringify the state object
+  2. GZIP-compress the JSON string
+  3. Base64 encode the compressed string
+  4. Convert to Base64URL (replace + with - and / with _, remove = )
+
+- Decoding:
+  1. Convert Base64URL to Base64
+  2. Convert Base64 to binary
+  3. GZIP-decompress the binary
+  4. Parse JSON string to object
+
+
 ## Getting Started (Developers)
 
 ### Prerequisites

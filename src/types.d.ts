@@ -387,5 +387,7 @@ export interface TidoContentStateTarget {
 }
 
 export declare class Tido extends React.Component<TidoProps, never> {}
+export declare function encodeState(state: TidoContentState): Promise<string>
+export declare function decodeState(encoded: string): Promise<TidoContentState>
 
 export {}
