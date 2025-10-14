@@ -85,8 +85,8 @@ class PanelResizer {
 
     const panels = ([...this.wrapper.querySelectorAll('.panel')] as HTMLElement[])
     const placeholderWidth = (this.wrapper.querySelector('[data-panel-placeholder]') as HTMLElement)?.offsetWidth ?? 0
-
-    const baseWidth = (wrapperWidth - placeholderWidth - (PANEL_GAP * panels.length)) / panels.length
+    const amountGaps = placeholderWidth > 0 ? panels.length : panels.length - 1
+    const baseWidth = (wrapperWidth - placeholderWidth - ANNOTATION_PANEL_WIDTH - (PANEL_GAP * amountGaps)) / panels.length
     const finalWidth = Math.max(baseWidth, MIN_PANEL_WIDTH)
     this.lastWidth = finalWidth
 
