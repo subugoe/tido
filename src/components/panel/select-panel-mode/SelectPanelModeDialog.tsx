@@ -20,7 +20,7 @@ interface SelectPanelModeProps {
 
 const SelectPanelModeDialog: FC<SelectPanelModeProps> = ({ parentEl }) => {
   const [showDialog, setShowDialog] = useState(true)
-  const { panelState, updatePanel, usePanelTranslation } = usePanel()
+  const { panelState, updatePanel, usePanelTranslation, resizer } = usePanel()
   const UIState = useUIStore.getState()
 
   const [selectedMode, setSelectedMode] = useState(UIState.defaultPanelMode)
@@ -34,6 +34,8 @@ const SelectPanelModeDialog: FC<SelectPanelModeProps> = ({ parentEl }) => {
     const newMode = panelState.imageExists ? selectedMode : 'text'
     updatePanel({ mode: newMode })
     useUIStore.getState().updatePanelMode(selectedMode)
+
+    resizer.setPanelMode(selectedMode)
 
     if (isChecked.current) updateEnabledSelectPanelMode(false)
     setShowDialog(false)
