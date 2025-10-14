@@ -1,5 +1,6 @@
 import '@/css/style.css'
 
+export type { TidoProps, TidoConfig, TidoContentState, TidoContentStateTarget } from './types.d.ts'
+
 export { Tido } from './components/Tido.tsx'
-export type { TidoProps } from './types.d.ts'
-export type { TidoConfig } from './types.d.ts'
+export { encodeState, decodeState } from './utils/bookmarking.ts'

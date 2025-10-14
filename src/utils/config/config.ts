@@ -6,7 +6,7 @@ import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
 import { TidoConfig, PanelMode, PanelConfig } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
-import { decode, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
+import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 
 type ValidationResult<T> = {
   result: T;
@@ -277,7 +277,7 @@ export async function mergeAndValidateConfig(
       if (isUrl(contentStateValue)) {
         contentState = await apiRequest(contentStateValue)
       } else {
-        contentState = await decode(contentStateValue)
+        contentState = await decodeState(contentStateValue)
       }
 
       panelsFromContentState = await Promise.all(contentState.target.map(async (target) => {
