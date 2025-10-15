@@ -1,8 +1,9 @@
-import React, { FC, useRef, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import AnnotationContent from '@/components/panel/annotations/AnnotationContent.tsx'
 import VariantContent from '@/components/panel/annotations/VariantContent.tsx'
+import { useText } from '@/contexts/TextContext.tsx'
 
 interface Props {
   data: Annotation
@@ -11,11 +12,16 @@ interface Props {
 
 
 const Annotation: FC<Props> = React.memo(({ data, top }) => {
-  const {  setHoveredAnnotation, selectedAnnotation, setSelectedAnnotation, annotationsMode } = usePanel()
+  const { selectedAnnotation, setSelectedAnnotation, annotationsMode } = usePanel()
+  const { setHoveredAnnotation, hoveredAnnotation } = useText()
   const ref = useRef(null)
   const [isHovered, setIsHovered] = useState(false)
   const type = data.body['x-content-type']
   const value = data.body.value
+
+  useEffect(() => {
+    setIsHovered(hoveredAnnotation === data.id)
+  }, [hoveredAnnotation])
 
   function handleClick() {
     if (selectedAnnotation && selectedAnnotation.id === data.id) {
@@ -27,15 +33,11 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
 
   function handleMouseEnter() {
     setIsHovered(true)
-    setTimeout(() => {
-      setHoveredAnnotation(data.id)
-    }, 100)
+    setHoveredAnnotation(data.id)
   }
   function handleMouseLeave() {
     setIsHovered(false)
-    setTimeout(() => {
-      setHoveredAnnotation(null)
-    }, 100)
+    setHoveredAnnotation(null)
   }
 
   function isSelected() {

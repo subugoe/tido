@@ -103,11 +103,11 @@ const AlignAnnotationsList: FC = () => {
     if (filteredAnnotations?.length === 0) {
       setElements([])
     } else {
-      const annotationEls = Array.from(ref.current?.childNodes)
+      const annotationEls = Array.from(ref.current?.childNodes ?? [])
       const _elements = annotationEls.map(el => {
         const annotation = filteredAnnotations.find(a => a.id === (el as HTMLElement).getAttribute('data-annotation'))
         if (!annotation) return
-        const target = document.getElementById(panelId).querySelector(annotation.target[0].selector.value)
+        const target: HTMLElement = document.getElementById(panelId).querySelector((annotation.target[0].selector as CssSelector).value)
         return {
           target,
           el,

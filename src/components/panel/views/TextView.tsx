@@ -36,6 +36,7 @@ const TextView: FC = () => {
     }
 
     if (loading || !panelState) return
+
     if (!panelState?.contentTypes.length) {
       showBoundary(t('no_content_found'))
       return
@@ -46,7 +47,7 @@ const TextView: FC = () => {
     if (contentUrl) updateText(contentUrl)
     else showBoundary(t('no_content_found'))
 
-  }, [loading, panelState, activeContentTypeIndex])
+  }, [loading, panelState?.contentTypes, activeContentTypeIndex])
 
   return <TextRenderer htmlString={text} />
 }

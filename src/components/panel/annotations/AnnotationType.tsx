@@ -7,7 +7,14 @@ interface AnnotationTypeProps {
 }
 
 const AnnotationType: FC<AnnotationTypeProps> = ({ type }) => {
-  const { fullAnnotationTypes, setFullAnnotationTypes, matchedAnnotationsMap, setMatchedAnnotationsMap } = usePanel()
+  const {
+    fullAnnotationTypes,
+    setFullAnnotationTypes,
+    matchedAnnotationsMap,
+    setMatchedAnnotationsMap,
+    setSelectedAnnotation,
+    selectedAnnotation
+  } = usePanel()
   const selected = fullAnnotationTypes[type]
 
   function onSelect() {
@@ -21,7 +28,13 @@ const AnnotationType: FC<AnnotationTypeProps> = ({ type }) => {
 
     const matchedAnnotationsMapOnSelect = { ...matchedAnnotationsMap }
     Object.keys(matchedAnnotationsMapOnSelect).forEach((key) => {
-      if (annotationIdsOfClickedType.includes(key)) matchedAnnotationsMapOnSelect[key].filtered = !selected
+      if (annotationIdsOfClickedType.includes(key)) {
+        matchedAnnotationsMapOnSelect[key].filtered = !selected
+
+        if (!matchedAnnotationsMapOnSelect[key].filtered && selectedAnnotation && selectedAnnotation.id === key) {
+          setSelectedAnnotation(null)
+        }
+      }
     })
 
     setMatchedAnnotationsMap(matchedAnnotationsMapOnSelect)

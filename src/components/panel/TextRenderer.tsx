@@ -1,25 +1,31 @@
 import {
-  ComponentPropsWithoutRef, ElementType,
   FC,
   memo,
-  ReactNode,
   useEffect,
   useRef,
   useState
 } from 'react'
 
-
 import React from 'react'
-
 import { usePanel } from '@/contexts/PanelContext.tsx'
-
 import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
-
-import { getExtendedFullAnnotationsTypesMap, isSelected } from '@/utils/annotations.ts'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
-import { parseStyleString } from '@/utils/html-to-react.ts'
-
-const END_CLASS = 'tido-text-end'
+import { useText } from '@/contexts/TextContext.tsx'
+import {
+  addAnnotationId,
+  addHighlightStyle,
+  addHoverStyle,
+  addSelectedStyle,
+  flipMatchedAnnotationsMap,
+  getAnnotationIds,
+  getCrossRefElements,
+  isSelected,
+  removeAnnotationIds,
+  removeHighlightStyle,
+  removeHoverStyle,
+  removeSelectedStyle
+} from '@/utils/text.ts'
+import { createPortal } from 'react-dom'
 
 interface Props {
   htmlString: string
@@ -27,127 +33,23 @@ interface Props {
   onReady?: () => void
 }
 
-type GenericElementProps<T extends ElementType> = {
-  tagName: T
-  props?: ComponentPropsWithoutRef<T>
-  children: ReactNode,
-  node: HTMLElement,
-  isHighlighted: boolean,
-} & ComponentPropsWithoutRef<T>
-
-const GenericElement = memo(<T extends ElementType>({ tagName: Tag, props, children, node, isHighlighted }: GenericElementProps<T>)  => {
-  const { hoveredAnnotation, setHoveredAnnotation, selectedAnnotation, annotationsMode } = usePanel()
-  const [isHovered, setIsHovered] = useState(false)
-  const isRefEl = node.getAttribute('rel') === 'true'
-
-
-  function onClick() {
-    if (isHighlighted) {
-      props.onClick(props['data-annotation'], annotationsMode, selectedAnnotation)
-    }
-  }
-
-  function handleMouseEnter() {
-    if (isHighlighted) {
-      setIsHovered(true)
-      setHoveredAnnotation(props['data-annotation'])
-    }
-  }
-
-  function handleMouseLeave() {
-    setIsHovered(false)
-    setHoveredAnnotation(null)
-  }
-
-  useEffect(() => {
-    if (!hoveredAnnotation) setIsHovered(false)
-    else if (hoveredAnnotation === props['data-annotation']) setIsHovered(true)
-  }, [hoveredAnnotation])
-
-  if (Tag === 'br') {
-    return <br />
-  }
-
-  if (Tag === 'hr') {
-    return <hr />
-  }
-
-  return (
-    <Tag
-      {...props}
-      className={
-        (props.className || '') +
-        (isHighlighted ? ' bg-gray-200 dark:bg-muted relative cursor-pointer' : '') +
-        (isHovered ? ' bg-primary/20 dark:bg-primary/50' : '') +
-        (selectedAnnotation && isSelected(selectedAnnotation.id, props['data-annotation']) ? ' bg-primary/40 dark:bg-primary/80' : '') +
-        (isRefEl ? ' bg-gray-400 font-bold' : '')
-      }
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={onClick}
-    >
-      {children}
-    </Tag>
-  )
-})
-
-const convertNodeToReact = (node: HTMLElement, key, matches, onClickTarget) => {
-  // Main function to create GenericElement recursively out of HTML nodes.
-  // Additional attributes regarding annotations will be applied.
-
-  if (node.nodeType === Node.TEXT_NODE) {
-    return node.textContent
-  }
-
-  if (node.nodeType !== Node.ELEMENT_NODE) return null
-
-
-  const children = Array.from(node.childNodes).map((child, i) =>
-    convertNodeToReact(child, `${key}-${i}`, matches, onClickTarget)
-  )
-
-  const props: ComponentPropsWithoutRef<ElementType> = {}
-  for (const attr of node.attributes) {
-    if (attr.name === 'style') {
-      props.style = parseStyleString(attr.value)
-    } else {
-      props[attr.name === 'class' ? 'className' : attr.name] = attr.value
-    }
-  }
-
-  const annotationIds = Object.keys(matches).reduce((acc, cur) => {
-    const isMatch = matches[cur].target.includes(node) && matches[cur].filtered === true
-    return isMatch ? [...acc, cur] : acc
-  }, [])
-
-  if (annotationIds.length > 0) {
-    props['data-annotation'] = annotationIds.join(',')
-    props.onClick = onClickTarget
-  }
-
-  if (node.hasAttribute('data-ref-target')) {
-    return <CrossRefLink node={node} />
-  }
-
-
-  return (
-    <GenericElement
-      key={key}
-      tagName={node.tagName.toLowerCase() as ElementType}
-      props={props}
-      isHighlighted={annotationIds.length > 0}
-      node={node}
-    >
-      {children}
-    </GenericElement>
-  )
-}
-
 const TextRenderer: FC<Props> = memo(({ htmlString }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
-  const { panelState, fullAnnotationTypes, setFullAnnotationTypes, matchedAnnotationsMap,
-    setMatchedAnnotationsMap, setSelectedAnnotation, updatePanel, panelId } = usePanel()
+  const {
+    panelState,
+    fullAnnotationTypes,
+    matchedAnnotationsMap,
+    setMatchedAnnotationsMap,
+    setSelectedAnnotation,
+    updatePanel,
+    panelId,
+    selectedAnnotation,
+    annotationsMode
+  } = usePanel()
 
+  const { hoveredAnnotation, setHoveredAnnotation } = useText()
+
+  const [portals, setPortals] = useState([])
 
   function scrollIntoSelectedAnnotation(selectedAnnotation: Annotation) {
     const annotationId = selectedAnnotation?.id
@@ -157,8 +59,16 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
     scrollIntoViewIfNeeded(annotationEl, container)
   }
 
-  const onClickTarget = (idList: string, annotationsMode: 'align' | 'list', selectedAnnotation: Annotation) => {
-    const idArr = idList.split(',')
+  const onClickTarget = (e: Event) => {
+    // Generic click listener
+    // TODO:  Be careful with state here. This listener will be added once a new map is created.
+    //  So this function will be called with those state values which existed at the time of adding.
+
+    const target = e.currentTarget as Element
+    const idsValue = getAnnotationIds(target)
+    if (!idsValue) return
+
+    const idArr = idsValue.split(',')
     const last = idArr[idArr.length - 1]
     const annotation = panelState.annotations.find(a => a.id === last)
     if (annotation) {
@@ -166,75 +76,145 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
         updatePanel({ annotationsOpen: true })
       }
 
-      if (selectedAnnotation && annotation.id === selectedAnnotation.id) setSelectedAnnotation(null) // deselect annotation
-      if (!selectedAnnotation || annotation.id !== selectedAnnotation.id)  setSelectedAnnotation(annotation) //select a new target
+      if (isSelected(target)) setSelectedAnnotation(null)
+      else setSelectedAnnotation(annotation)
       if (annotationsMode === 'list') scrollIntoSelectedAnnotation(annotation)
     }
   }
 
-  const parsedDom = React.useMemo(() => {
-    const observer = new MutationObserver(() => {
-      const lastChild = document.querySelector(`.${END_CLASS}`)
-      if (lastChild) {
-        observer.disconnect()
-      }
-    })
+  const onHoverTarget = (e: Event) => {
+    const target = e.currentTarget as Element
+    const idsValue = getAnnotationIds(target)
+    if (!idsValue) return
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    })
+    const idArr = idsValue.split(',')
+    const last = idArr[idArr.length - 1]
 
-    const parser = new DOMParser()
-    return parser.parseFromString(`${htmlString}<span class="${END_CLASS}"></span>`, 'text/html')
+    setHoveredAnnotation(last)
+  }
+
+  // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
+  const parsedDom: Element = React.useMemo(() => {
+    if (htmlString === '') return
+    const doc = new DOMParser().parseFromString(`${htmlString}`, 'text/html')
+    return doc.querySelector('body')
   }, [htmlString])
 
-  const calculatedMatchedAnnotMap = React.useMemo(() => {
-    // switching to new item
+  // Make the text visible - set the content of the Document object as children of textWrapperRef.
+  // Create cross ref links with portals.
+  useEffect(() => {
+    if (!parsedDom) return
 
-    if (!panelState.annotations) return {}
+    const links = getCrossRefElements(parsedDom)
+    setPortals(links.map(link => {
+      const mount = document.createElement(link.tagName)
+      link.replaceWith(mount)
+      return createPortal(<CrossRefLink node={link} />, mount)
+    }))
+
+    textWrapperRef.current.replaceChildren(parsedDom)
+  }, [parsedDom])
+
+  // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
+  useEffect(() => {
+    if (!panelState.annotations || !parsedDom) return
+
     const result: MatchedAnnotationsMap = panelState.annotations.reduce((acc, cur) => {
-      const textSelector = cur.target[0].selector.value
-      if (!textSelector) {
+      const selector = (cur.target[0].selector as CssSelector).value
+      if (!selector) {
         console.error('Annotation error','Selector value of target is empty for this annotation', cur)
         return acc
       }
 
-      const matchedNodes = Array.from(parsedDom.body.querySelectorAll(cur.target[0].selector.value))
+      const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
       if (matchedNodes.length > 0) {
+        matchedNodes.forEach(target => {
+          target.addEventListener('click', onClickTarget)
+          target.addEventListener('mouseover', onHoverTarget)
+        })
         const annotType = cur.body['x-content-type']
-        acc[cur.id] = { target: matchedNodes, filtered: fullAnnotationTypes[annotType] ?? true, annotation: cur }
+        acc[cur.id] = { target: matchedNodes, filtered: fullAnnotationTypes ? fullAnnotationTypes[annotType] ?? true : false, annotation: cur }
       }
       return acc
     }, {})
 
-    return result
+    setMatchedAnnotationsMap(result)
   }, [parsedDom, panelState.annotations])
 
+  // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
-    setMatchedAnnotationsMap(calculatedMatchedAnnotMap)
-  }, [calculatedMatchedAnnotMap])
+    Object.keys(matchedAnnotationsMap).forEach(key => {
+      const matched = matchedAnnotationsMap[key]
+      if (!matched.filtered) return
+      matched.target.forEach(target => {
+        removeHoverStyle(target)
+      })
+    })
 
+    if (!hoveredAnnotation) return
+    const matched = matchedAnnotationsMap[hoveredAnnotation]
+    matched.target.forEach(target => {
+      addHoverStyle(target)
+    })
+  }, [hoveredAnnotation])
 
+  // Apply highlighting styles on every map update
   useEffect(() => {
-    const extendedFullAnnotationsTypesMap = getExtendedFullAnnotationsTypesMap(panelState.annotations, fullAnnotationTypes)
-    setFullAnnotationTypes(extendedFullAnnotationsTypesMap)
+    flipMatchedAnnotationsMap(matchedAnnotationsMap).forEach(fa => {
+      const annotations = fa.annotations
+      const target = fa.target
+
+      let someFiltered = false
+
+      removeAnnotationIds(target)
+      removeHighlightStyle(target)
+
+      // Look if some of the annotations are visible and add the ids of those to the node
+      annotations.forEach((annotation, i) => {
+        if (fa.filtered[i]) {
+          addAnnotationId(target, annotation.id)
+        }
+        someFiltered = !someFiltered ? fa.filtered[i] : true
+      })
+
+      if (someFiltered) {
+        addHighlightStyle(target)
+      }
+    })
   }, [matchedAnnotationsMap])
 
+  // Apply selected styles on every selectedAnnotation update
+  useEffect(() => {
+    flipMatchedAnnotationsMap(matchedAnnotationsMap).forEach(fa => {
+      const annotations = fa.annotations
+      const target = fa.target
 
-  const reactElements = React.useMemo(() => {
-    return Array.from(parsedDom.body.childNodes).map((node, i) =>
-      convertNodeToReact(node as HTMLElement, i, matchedAnnotationsMap, onClickTarget)
-    )
-  }, [matchedAnnotationsMap, htmlString])
+      let someSelected = false
+      let someFiltered = false
 
+      removeSelectedStyle(target)
 
+      // Look if some of the annotations are visible and add the ids of those to the node
+      annotations.forEach((annotation, i) => {
+        if (!fa.filtered[i]) return
+        const isSelected = selectedAnnotation && selectedAnnotation.id === annotation.id
+        someSelected = !someSelected ? isSelected : true
+        someFiltered = !someFiltered ? fa.filtered[i] : true
+      })
 
+      if (someSelected) {
+        removeHighlightStyle(target)
+        addSelectedStyle(target)
+        return
+      }
+
+      if (someFiltered) addHighlightStyle(target)
+    })
+  }, [selectedAnnotation])
 
   return <div className="relative">
-    <div ref={textWrapperRef}>
-      { reactElements }
-    </div>
+    <div ref={textWrapperRef}></div>
+    {portals}
   </div>
 })
 
