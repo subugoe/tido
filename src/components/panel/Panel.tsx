@@ -150,7 +150,7 @@ const Panel: FC = React.memo(() => {
             <div data-text-container className={`bg-background p-3 pr-5 min-h-full max-h-full  relative flex border-r
                   ${showSidebarBorders ? 'border-border' : 'border-transparent'} ${showTextOptions ? 'pt-16': ''}
                   ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''} `}>
-              {showText && <ErrorBoundary FallbackComponent={TextViewError}><TextView /></ErrorBoundary>}
+              {showText && <ErrorBoundary FallbackComponent={TextViewError} resetKeys={[panelState.item?.id]}><TextView /></ErrorBoundary>}
             </div>
             <div data-sidebar-container className={`absolute top-0 h-full w-[400px] px-2 ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''}`}>
               {showSidebarContent && <AnnotationsView />}
