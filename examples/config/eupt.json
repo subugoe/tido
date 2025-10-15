@@ -1,0 +1,14 @@
+{
+  "theme": {
+    "primaryColor": "#3AA675"
+  },
+  "panels": [
+    {
+      "collection": "https://eupt.uni-goettingen.de/api/eupt/collection.json",
+      "contentIndex": 1
+    }
+  ],
+  "rootCollections": [
+    "https://eupt.uni-goettingen.de/api/eupt/collection.json"
+  ]
+}

@@ -10,7 +10,16 @@ import { Button } from '@/components/ui/button.tsx'
 import { ChevronDown } from 'lucide-react'
 
 const WitnessFilter: FC = () => {
-  const { witnesses, selectedWitnesses, setSelectedWitnesses, usePanelTranslation, matchedAnnotationsMap, setMatchedAnnotationsMap } = usePanel()
+  const {
+    witnesses,
+    selectedWitnesses,
+    setSelectedWitnesses,
+    usePanelTranslation,
+    matchedAnnotationsMap,
+    setMatchedAnnotationsMap,
+    setSelectedAnnotation,
+    selectedAnnotation
+  } = usePanel()
   const { t } = usePanelTranslation()
 
   function toggleSelectedWitness(witness: WitnessWithColor, checked: boolean) {
@@ -34,6 +43,10 @@ const WitnessFilter: FC = () => {
       const { annotation } = _matchedAnnotationsMap[key]
       if (annotation.body['x-content-type'] !== 'Variant') return
       _matchedAnnotationsMap[key].filtered = selectedWitnesses.some(selWit => (annotation.body.value as AnnotationVariantValue).witnesses.includes(selWit.idno))
+
+      if (!_matchedAnnotationsMap[key].filtered && selectedAnnotation && selectedAnnotation.id === key) {
+        setSelectedAnnotation(null)
+      }
     })
     setMatchedAnnotationsMap(_matchedAnnotationsMap)
   }, [selectedWitnesses])

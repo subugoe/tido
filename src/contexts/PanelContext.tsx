@@ -4,7 +4,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 
 import { toast } from 'sonner'
 
-import { selectSyncTargetByIndex } from '@/utils/annotations.ts'
+import { getExtendedFullAnnotationsTypesMap, selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
@@ -124,30 +124,32 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         contentTypes,
         activeTargetIndex: -1,
         imageExists,
-        config
+        config,
       })
 
       // initialize AnnotationsMode
       if (!annotationsMode) setAnnotationsMode(initialAnnotationsMode)
 
-      // Retrieve annotation data
-      // Get an array of annotations and set up the witnesses
-      // Update annotations data separately for progressive loading (still show text if annotations are broken)
-      let annotations = null
-      let _witnesses = []
       if (item.annotationCollection) {
-        const page = await getAnnotationPage(item.annotationCollection)
-        annotations = page.items ?? []
-        _witnesses = page.refs ?? []
+        // Retrieve annotation data
+        // Get an array of annotations and set up the witnesses
+        // Update annotations data separately for progressive loading (still show text if annotations are broken)
 
-        if (_witnesses.length > 0) {
-          _witnesses = setColors(_witnesses)
-          setWitnesses(_witnesses)
-          setSelectedWitnesses(_witnesses)
+        const page = await getAnnotationPage(item.annotationCollection)
+        const annotations = page.items ?? []
+        const witnesses = page.refs ?? []
+
+        const extendedFullAnnotationsTypesMap = getExtendedFullAnnotationsTypesMap(annotations, fullAnnotationTypes)
+        setFullAnnotationTypes(extendedFullAnnotationsTypesMap)
+
+        if (witnesses.length > 0) {
+          const witnessesWithColor = setColors(witnesses)
+          setWitnesses(witnessesWithColor)
+          setSelectedWitnesses(witnessesWithColor)
         }
+
         updatePanel({ annotations })
       }
-
     } catch (e) {
       console.error(e)
       const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1

@@ -19,6 +19,7 @@ import TextViewError from '@/components/panel/views/TextViewError.tsx'
 import { ErrorBoundary } from 'react-error-boundary'
 import AnnotationsView from '@/components/panel/annotations/AnnotationsView.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { TextProvider } from '@/contexts/TextContext.tsx'
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, initResizer, resizer, showTextOptions, setShowTextOptions, annotationsMode } = usePanel()
@@ -137,8 +138,7 @@ const Panel: FC = React.memo(() => {
             <PanelHeader />
           </div>
           <div data-header-sidebar className={`absolute top-0 h-full w-[400px]`}>
-            { showSidebarContent && <AnnotationsHeader />
-            }
+            { showSidebarContent && <AnnotationsHeader /> }
           </div>
         </div>
 
@@ -147,18 +147,21 @@ const Panel: FC = React.memo(() => {
             {showImage && <ImageView />}
           </div>
           <div data-scroll-container className={`h-full w-full bg-muted relative ${annotationsMode === 'align' ? 'overflow-x-hidden overflow-y-auto' : '' }`}>
-            <div data-text-container className={`bg-background p-3 pr-5 min-h-full max-h-full  relative flex border-r
-                  ${showSidebarBorders ? 'border-border' : 'border-transparent'} ${showTextOptions ? 'pt-16': ''}
+            <TextProvider>
+              <div data-text-container className={`bg-background p-3 pr-5 min-h-[calc(100%+1px)] relative flex border-r
+                  ${showSidebarBorders ? 'border-border' : 'border-transparent'} ${showTextOptions ? 'pt-16' : ''}
                   ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''} `}>
-              {showText && <ErrorBoundary FallbackComponent={TextViewError} resetKeys={[panelState.item?.id]}><TextView /></ErrorBoundary>}
-            </div>
-            <div data-sidebar-container className={`absolute top-0 h-full w-[400px] px-2 ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''}`}>
-              {showSidebarContent && <AnnotationsView />}
-            </div>
+                {showText && <ErrorBoundary FallbackComponent={TextViewError} resetKeys={[panelState.item?.id]}><TextView /></ErrorBoundary>}
+              </div>
+              <div data-sidebar-container className={`absolute top-0 h-full w-[400px] px-2 ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''}`}>
+                {showSidebarContent && <AnnotationsView />}
+              </div>
+            </TextProvider>
+
           </div>
           <AnnotationHints />
           <div data-text-options className="absolute top-0 z-10 flex flex-col items-center justify-center">
-            { showTextOptions && <TextOptions /> }
+            {showTextOptions && <TextOptions />}
           </div>
           <div data-text-warning className="absolute bottom-0 z-10 flex flex-col items-center justify-center">
             <TextViewWarning />

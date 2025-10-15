@@ -42,32 +42,26 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
       if (!targetSelector.startsWith('#') && !targetSelector.startsWith('.')) throw new CustomError('CrossRef TargetSelector Error', 'Target selector is not provided correctly in source el '+ sourceEl.outerHTML)
 
       const newContentIndex = contentTypes.findIndex(type => type === targetContentType)
-      let panelEl, targetEl
 
       if (action === 'new') {
         const newPanelId = crypto.randomUUID()
         await createNewPanel(collectionId, manifest, item, newContentIndex, newPanelId)
         waitForElementInDom('#' + newPanelId, targetSelector ,(newPanelEl: HTMLElement) => {
-          targetEl = newPanelEl.querySelector(targetSelector)
+          scrollToTarget(targetSelector, newPanelEl)
         })
       }
 
       if (action === 'scroll-to') {
         updatePanel({ contentIndex: newContentIndex })
-        panelEl = document.getElementById(panelId)
-        targetEl = panelEl.querySelector(targetSelector) as HTMLElement
+        setTimeout(() => {
+          scrollToTarget(targetSelector, document.getElementById(panelId))
+        }, 500)
       }
-      setTimeout(() => {
-        // add timeout for smoother scrolling to target after clicking the link
-        if (!targetEl) throw new CustomError('Cross Ref Target element Error', 'Target element not found')
-        targetEl.scrollIntoView({ behavior: 'smooth' })
-      }, 500)
     } catch(e) {
       const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1
       console.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
       toast.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
     }
-
   }
 
   function jumpTo() {
@@ -76,6 +70,13 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
 
   function openInNewPanel() {
     navigate(node, contentTypes, 'new')
+  }
+
+  function scrollToTarget(targetSelector: string, root: Element) {
+    const targetEl = root.querySelector(targetSelector) as HTMLElement
+    // add timeout for smoother scrolling to target after clicking the link
+    if (!targetEl) throw new CustomError('Cross Ref Target element Error', 'Target element not found')
+    targetEl.scrollIntoView({ behavior: 'smooth' })
   }
 
   const link = <a className="text-blue-600 underline cursor-pointer">
