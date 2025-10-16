@@ -91,6 +91,9 @@
     "generate_share_url": "Click to generate a shareable link",
     "copy_link": "Copy link",
     "copied": "Copied",
-    "share_this_view": "Share this view"
+    "share_this_view": "Share this view",
+    "panel_init_error": "Error while initializing the panel",
+    "error_is_not_leaf_collection": "The given collection (\"{{url}}\") does not contain any manifests. If it is a nested collection, please only specify the last child collection.",
+    "error_contains_no_items": "The given manifest \"{{url}}\" does not contain any items."
   }
 }

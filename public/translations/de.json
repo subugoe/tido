@@ -95,6 +95,9 @@
     "generate_share_url": "Klick, um einen Link zum Teilen zu erstellen",
     "copy_link": "Link kopieren",
     "copied": "Kopiert",
-    "share_this_view": "Diese Ansicht teilen"
+    "share_this_view": "Diese Ansicht teilen",
+    "panel_init_error": "Fehler beim Initialisieren des Panels",
+    "error_contains_no_manifests": "Die angegebene Kollektion \"{{url}}\" enthält keine Manifests. Falls es sich um eine verschachtelte Kollektion handelt, geben Sie bitte nur die letzte Kind-Kollektion an.",
+    "error_contains_no_items": "Das angegebene Manifest \"{{url}}\" enthält keine Items."
   }
 }
