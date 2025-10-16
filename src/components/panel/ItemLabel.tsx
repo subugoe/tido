@@ -96,7 +96,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
           { getItemLabel() }
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent data-cy="items-dropdown">
+      <DropdownMenuContent data-cy="items-dropdown" className="max-w-80">
         {labels.map((label, i) => <DropdownMenuItem
           key={label + '_'+i}
           className={`cursor-pointer ${panelState.item.n === label ? 'data-[highlighted]:text-primary text-primary' : ''} `}

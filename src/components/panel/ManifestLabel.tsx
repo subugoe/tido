@@ -50,7 +50,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
           {selectedLabel}
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent data-cy="manifests-dropdown">
+      <DropdownMenuContent data-cy="manifests-dropdown" className="max-w-80">
         {labels.map((label, i) => <DropdownMenuItem
           key={label + '_'+i}
           className={`cursor-pointer ${panelState.manifest.label === label ? 'text-primary' : ''} `}
