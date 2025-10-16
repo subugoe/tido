@@ -11,7 +11,6 @@ import SelectPanelModeDialog from '@/components/panel/select-panel-mode/SelectPa
 import ImageView from '@/components/panel/views/ImageView.tsx'
 import TextView from '@/components/panel/views/TextView.tsx'
 import Swapper from '@/components/panel/Swapper.tsx'
-import AnnotationHints from '@/components/panel/annotations/AnnotationHints.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
 import AnnotationsHeader from '@/components/panel/annotations/AnnotationsHeader.tsx'
 import TextViewWarning from '@/components/panel/views/TextViewWarning.tsx'
@@ -157,9 +156,7 @@ const Panel: FC = React.memo(() => {
                 {showSidebarContent && <AnnotationsView />}
               </div>
             </TextProvider>
-
           </div>
-          <AnnotationHints />
           <div data-text-options className="absolute top-0 z-10 flex flex-col items-center justify-center">
             {showTextOptions && <TextOptions />}
           </div>
