@@ -105,3 +105,20 @@ Elevation hierarchy:
 
   scrollbar-color: var(--color-gray-600) var(--color-gray-800);
 }
+
+.tido .loading circle:nth-child(1) {
+  /* middle */
+  animation: var(--animate-bounce);
+  animation-delay: 0.1s;
+}
+
+.tido .loading circle:nth-child(2) {
+  /* right */
+  animation: var(--animate-bounce);
+  animation-delay: 0.2s;
+}
+.tido .loading circle:nth-child(3) {
+  /* left */
+  animation: var(--animate-bounce);
+}
+

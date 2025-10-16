@@ -4,14 +4,16 @@ import { apiRequest } from '@/utils/api.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import DOMPurify from 'dompurify'
 import { useErrorBoundary } from 'react-error-boundary'
+import Loading from '@/components/ui/loading.tsx'
 
 const FORBID_TAGS = ['input', 'script', 'noscript', 'iframe', 'frame', 'frameset', 'noframes', 'applet', 'base', 'meta', 'form']
 
 const TextView: FC = () => {
-  const { panelState, loading, usePanelTranslation, setTextWarning } = usePanel()
+  const { panelState, usePanelTranslation, setTextWarning, loading: loadingPanel } = usePanel()
   const { t } = usePanelTranslation()
   const { showBoundary } = useErrorBoundary()
   const [text, setText] = useState<string>('')
+  const [loading, setLoading] = useState(false)
 
   const activeContentTypeIndex = panelState.contentIndex
   function getContentUrlByType(type: string | undefined) {
@@ -35,7 +37,10 @@ const TextView: FC = () => {
       }
     }
 
-    if (loading || !panelState) return
+    if (loadingPanel || !panelState) {
+      setLoading(true)
+      return
+    }
 
     if (!panelState?.contentTypes.length) {
       showBoundary(t('no_content_found'))
@@ -47,9 +52,18 @@ const TextView: FC = () => {
     if (contentUrl) updateText(contentUrl)
     else showBoundary(t('no_content_found'))
 
-  }, [loading, panelState?.contentTypes, activeContentTypeIndex])
+  }, [loadingPanel, panelState?.contentTypes, activeContentTypeIndex])
 
-  return <TextRenderer htmlString={text} />
+  function onReady() {
+    setLoading(false)
+  }
+
+  return <>
+    { loading && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
+      <Loading size={36} />
+    </div> }
+    <TextRenderer htmlString={text} onReady={onReady} />
+  </>
 }
 
 export default TextView
