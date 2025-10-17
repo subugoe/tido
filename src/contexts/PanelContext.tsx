@@ -2,8 +2,6 @@ import { ReactNode, createContext, useContext, useState, FC, useEffect } from 'r
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
-import { toast } from 'sonner'
-
 import { getExtendedFullAnnotationsTypesMap, selectSyncTargetByIndex } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
@@ -14,6 +12,8 @@ import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { hasItems, hasManifests } from '@/utils/api-validate.ts'
+import { useErrorBoundary } from 'react-error-boundary'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -79,8 +79,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
   const [annotationsMode, setAnnotationsMode] = useState('')
 
-
   const { t } = useTranslation()
+  const { showBoundary } = useErrorBoundary()
+
   const getCollection = useDataStore(state => state.initCollection)
   const { annotationsMode: initialAnnotationsMode } = useConfig()
 
@@ -102,7 +103,18 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       // Retrieve text data
       // Trickle down from collection to item
       const collection = await getCollection(config.collection)
-      const manifest = await apiRequest<Manifest>(collection.sequence[config.manifestIndex ?? 0].id)
+      if (!hasManifests(collection)) {
+        showBoundary(new CustomError(t('panel_init_error'), t('error_contains_no_manifests', { url: config.collection })))
+        return
+      }
+
+      const manifestUrl = collection.sequence[config.manifestIndex ?? 0].id
+      const manifest = await apiRequest<Manifest>(manifestUrl)
+      if (!hasItems(manifest)) {
+        showBoundary(new CustomError(t('panel_init_error'), t('error_contains_no_items', { url: manifestUrl })))
+        return
+      }
+
       const item = await apiRequest<Item>(manifest.sequence[config.itemIndex ?? 0].id)
 
       const contentTypes: string[] = getContentTypes(item.content)
@@ -124,7 +136,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         contentTypes,
         activeTargetIndex: -1,
         imageExists,
-        config,
+        config
       })
 
       // initialize AnnotationsMode
@@ -147,15 +159,12 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           setWitnesses(witnessesWithColor)
           setSelectedWitnesses(witnessesWithColor)
         }
-
         updatePanel({ annotations })
       }
-    } catch (e) {
-      console.error(e)
-      const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1
-      toast.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
+    } catch (e: Error) {
+      showBoundary(new CustomError(t('panel_init_error'), e.message))
     } finally {
-      // add a timeout, since loading is finished when updatePanel() is finished
+      // add a timeout to wait until updatePanel() is finished
       setTimeout(() => {
         setLoading(false)
       }, 100)
