@@ -77,21 +77,27 @@ class PanelResizer {
   }
 
   resize() {
-    const wrapperStyle = window.getComputedStyle(this.wrapper)
+    const width = PanelResizer.calculateWidth(this.wrapper)
+    this.lastWidth = width
+
+    this.panelEl.style.width = `${width}px`
+    this.setMainContentWidth(width - PANEL_BORDER_WIDTH * 2)
+  }
+
+  static calculateWidth(wrapper: HTMLElement): number {
+    // Function is static in order to reuse it without creating an instance.
+
+    const wrapperStyle = window.getComputedStyle(wrapper)
     const totalWidth = parseFloat(wrapperStyle.width)
     const paddingLeft = parseFloat(wrapperStyle.paddingLeft) || 0
     const paddingRight = parseFloat(wrapperStyle.paddingRight) || 0
     const wrapperWidth = totalWidth - paddingLeft - paddingRight
 
-    const panels = ([...this.wrapper.querySelectorAll('.panel')] as HTMLElement[])
-    const placeholderWidth = (this.wrapper.querySelector('[data-panel-placeholder]') as HTMLElement)?.offsetWidth ?? 0
+    const panels = ([...wrapper.querySelectorAll('.panel')] as HTMLElement[])
+    const placeholderWidth = (wrapper.querySelector('[data-panel-placeholder]') as HTMLElement)?.offsetWidth ?? 0
     const amountGaps = placeholderWidth > 0 ? panels.length : panels.length - 1
     const baseWidth = (wrapperWidth - placeholderWidth - ANNOTATION_PANEL_WIDTH - (PANEL_GAP * amountGaps)) / panels.length
-    const finalWidth = Math.max(baseWidth, MIN_PANEL_WIDTH)
-    this.lastWidth = finalWidth
-
-    this.panelEl.style.width = `${finalWidth}px`
-    this.setMainContentWidth(finalWidth - PANEL_BORDER_WIDTH * 2)
+    return Math.max(baseWidth, MIN_PANEL_WIDTH)
   }
 
   dragToResize() {
