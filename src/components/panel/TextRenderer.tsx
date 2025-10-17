@@ -33,7 +33,7 @@ interface Props {
   onReady?: () => void
 }
 
-const TextRenderer: FC<Props> = memo(({ htmlString }) => {
+const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
   const {
     panelState,
@@ -117,6 +117,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
     }))
 
     textWrapperRef.current.replaceChildren(parsedDom)
+    onReady()
   }, [parsedDom])
 
   // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
