@@ -82,7 +82,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
     }
   }
 
-  const onHoverTarget = (e: Event) => {
+  const onMouseEnterTarget = (e: Event) => {
     const target = e.currentTarget as Element
     const idsValue = getAnnotationIds(target)
     if (!idsValue) return
@@ -91,6 +91,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
     const last = idArr[idArr.length - 1]
 
     setHoveredAnnotation(last)
+  }
+
+  const onMouseLeaveTarget = () => {
+    setHoveredAnnotation(null)
   }
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
@@ -130,7 +134,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString }) => {
       if (matchedNodes.length > 0) {
         matchedNodes.forEach(target => {
           target.addEventListener('click', onClickTarget)
-          target.addEventListener('mouseover', onHoverTarget)
+          target.addEventListener('mouseenter', onMouseEnterTarget)
+          target.addEventListener('mouseleave', onMouseLeaveTarget)
+
         })
         const annotType = cur.body['x-content-type']
         acc[cur.id] = { target: matchedNodes, filtered: fullAnnotationTypes ? fullAnnotationTypes[annotType] ?? true : false, annotation: cur }
