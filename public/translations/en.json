@@ -5,6 +5,8 @@
     "new": "New",
     "sync_panels": "Sync Panels",
     "confirm": "Confirm",
+    "manifest_not_found": "$t(manifest) not found",
+    "item_not_found": "$t(item) not found",
     "add_new_panel": "Add New Panel",
     "choose_your_panel_content": "Choose your panel content",
     "enter_collection_url": "Enter a collection URL",
