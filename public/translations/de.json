@@ -9,6 +9,8 @@
     "author": "Autor",
     "editor": "Editor",
     "confirm": "Bestätigen",
+    "manifest_not_found": "$t(manifest) konnte nicht gefunden werden",
+    "item_not_found": "$t(item) konnte nicht gefunden werden",
     "add_new_panel": "Neues Panel hinzufügen",
     "choose_your_panel_content": "Bitte wählen Sie Ihren Inhalt",
     "enter_collection_url": "Geben eine Collection-URL ein",

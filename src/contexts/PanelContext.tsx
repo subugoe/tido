@@ -108,6 +108,16 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         return
       }
 
+      if (config.manifestIndex === -1) {
+        showBoundary(new CustomError(t('panel_init_error'), t('manifest_not_found')))
+        return
+      }
+
+      if (config.itemIndex === -1) {
+        showBoundary(new CustomError(t('panel_init_error'), t('item_not_found')))
+        return
+      }
+
       const manifestUrl = collection.sequence[config.manifestIndex ?? 0].id
       const manifest = await apiRequest<Manifest>(manifestUrl)
       if (!hasItems(manifest)) {
