@@ -9,16 +9,14 @@ import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
 import { GripVertical } from 'lucide-react'
 import SelectPanelModeDialog from '@/components/panel/select-panel-mode/SelectPanelModeDialog.tsx'
 import ImageView from '@/components/panel/views/ImageView.tsx'
-import TextView from '@/components/panel/views/TextView.tsx'
 import Swapper from '@/components/panel/Swapper.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
 import AnnotationsHeader from '@/components/panel/annotations/AnnotationsHeader.tsx'
 import TextViewWarning from '@/components/panel/views/TextViewWarning.tsx'
-import TextViewError from '@/components/panel/views/TextViewError.tsx'
-import { ErrorBoundary } from 'react-error-boundary'
 import AnnotationsView from '@/components/panel/annotations/AnnotationsView.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { TextProvider } from '@/contexts/TextContext.tsx'
+import TextViewContainer from '@/components/panel/views/TextViewContainer.tsx'
 
 const Panel: FC = React.memo(() => {
   const { panelId, panelState, initResizer, resizer, showTextOptions, setShowTextOptions, annotationsMode } = usePanel()
@@ -147,11 +145,7 @@ const Panel: FC = React.memo(() => {
           </div>
           <div data-scroll-container className={`h-full w-full bg-muted relative ${annotationsMode === 'align' ? 'overflow-x-hidden overflow-y-auto' : '' }`}>
             <TextProvider>
-              <div data-text-container className={`bg-background p-3 pr-5 min-h-[calc(100%+1px)] relative flex border-r
-                  ${showSidebarBorders ? 'border-border' : 'border-transparent'} ${showTextOptions ? 'pt-16' : ''}
-                  ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''} `}>
-                {showText && <ErrorBoundary FallbackComponent={TextViewError} resetKeys={[panelState.item?.id]}><TextView /></ErrorBoundary>}
-              </div>
+              <TextViewContainer showText={showText} showSidebarBorders={showSidebarBorders} />
               <div data-sidebar-container className={`absolute top-0 h-full w-[400px] px-2 ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''}`}>
                 {showSidebarContent && <AnnotationsView />}
               </div>
