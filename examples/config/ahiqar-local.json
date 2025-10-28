@@ -1,0 +1,17 @@
+{
+  "showGlobalTree": true,
+  "colors": {
+    "primary": "#1E40AF"
+  },
+  "panels": [
+    {
+      "collection": "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json",
+      "manifestIndex": 20
+    }
+  ],
+  "rootCollections": [
+    "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json"
+  ],
+  "panelModes": ["split", "text", "image"],
+  "defaultPanelMode": "text"
+}
