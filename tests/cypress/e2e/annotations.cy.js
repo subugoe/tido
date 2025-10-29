@@ -12,6 +12,15 @@ Cypress.Commands.add('clickAnnotationType', (i) => {
     .eq(i).click()
 })
 
+Cypress.Commands.add('checkNumberAnnotations', (number) => {
+  cy.getPanel()
+    .find('[data-sidebar-container="true"]')
+    .find('[data-annotation]')
+    .should('have.length', number)
+})
+
+
+
 describe('Annotations', () => {
     beforeEach(() => {
       cy.visit('/ahiqar-local.html')
@@ -22,10 +31,7 @@ describe('Annotations', () => {
     });
 
     it('Should check the initial number of annotations and a few values', () => {
-      cy.getPanel()
-        .find('[data-sidebar-container="true"]')
-        .find('[data-annotation]')
-        .should('have.length', 7)
+      cy.checkNumberAnnotations(7)
 
         .eq(0).contains('ܚܝܩܪ')
         .parents('[data-sidebar-container="true"]')
@@ -53,10 +59,7 @@ describe('Annotations', () => {
     it('Should hide respective annotations when deselecting certain annotation type', () => {
       cy.clickAnnotationType(0)
 
-      cy.getPanel()
-        .find('[data-sidebar-container="true"]')
-        .find('[data-annotation]')
-        .should('have.length', 2)
+      cy.checkNumberAnnotations(2)
         .eq(0).should('contain', 'Place')
         .next().should('contain', 'Place')
     })
@@ -65,10 +68,15 @@ describe('Annotations', () => {
       cy.clickAnnotationType(0)
       cy.clickAnnotationType(0)
 
-      cy.getPanel()
-        .find('[data-sidebar-container="true"]')
-        .find('[data-annotation]')
-        .should('have.length', 7)
+      cy.checkNumberAnnotations(7)
     })
+
+    it('Should hide all annotations when deselecting all annotation types', () => {
+      cy.clickAnnotationType(0)
+      cy.clickAnnotationType(1)
+
+      cy.checkNumberAnnotations(0)
+    })
+
   }
 )
