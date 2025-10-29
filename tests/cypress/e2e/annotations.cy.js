@@ -4,14 +4,22 @@ Cypress.Commands.add('getPanel', () => {
     .find('.panel')
 })
 
+Cypress.Commands.add('clickAnnotationType', (i) => {
+  cy.getPanel()
+    .find('[data-cy="annotations-header"]')
+    .find('[data-cy="annotation-types"]')
+    .children()
+    .eq(i).click()
+})
+
 describe('Annotations', () => {
-  beforeEach(() => {
-    cy.visit('/ahiqar-local.html')
-    cy.getPanel()
-      .find('[data-cy="sidebar-toggle"]')
-      .click()
-      .wait(100)
-  });
+    beforeEach(() => {
+      cy.visit('/ahiqar-local.html')
+      cy.getPanel()
+        .find('[data-cy="sidebar-toggle"]')
+        .click()
+        .wait(100)
+    });
 
     it('Should check the initial number of annotations and a few values', () => {
       cy.getPanel()
@@ -42,19 +50,25 @@ describe('Annotations', () => {
         .should('have.attr', 'data-selected', 'true')
     })
 
-  it ('Should hide respective annotations when deselecting certain annotation type', () => {
-    cy.getPanel()
-      .find('[data-cy="annotations-header"]')
-      .find('[data-cy="annotation-types"]')
-      .children()
-      .eq(0).click()
+    it('Should hide respective annotations when deselecting certain annotation type', () => {
+      cy.clickAnnotationType(0)
 
-    cy.getPanel()
-      .find('[data-sidebar-container="true"]')
-      .find('[data-annotation]')
-      .should('have.length', 2)
-      .eq(0).should('contain', 'Place')
-      .next().should('contain', 'Place')
-  })
+      cy.getPanel()
+        .find('[data-sidebar-container="true"]')
+        .find('[data-annotation]')
+        .should('have.length', 2)
+        .eq(0).should('contain', 'Place')
+        .next().should('contain', 'Place')
+    })
+
+    it('Should redisplay respective annotations when reselecting annotation type', () => {
+      cy.clickAnnotationType(0)
+      cy.clickAnnotationType(0)
+
+      cy.getPanel()
+        .find('[data-sidebar-container="true"]')
+        .find('[data-annotation]')
+        .should('have.length', 7)
+    })
   }
 )
