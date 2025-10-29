@@ -104,6 +104,17 @@ describe('Annotations', () => {
       .next().should('have.attr', 'data-selected', 'true').and('contain', 'Motif')
   })
 
+  it('Should update list of annotations on content type switch', () => {
+    cy.switchContentType(1)
+      .wait(100)
+      .checkNumberAnnotations(9)
+      .eq(0).should('contain', 'Person')
+      .parent().children()
+      .eq(7).should('contain', 'Editorial Comment')  // due to 'style.top' value it should be last, but in html it
+                                                     // appears one before last
+      .parent().children()
+      .eq(8).should('contain', 'Motif')
+  })
 
 
   it('Should preserve annotation types selection and hide respective annotations on item change', () => {
