@@ -41,5 +41,20 @@ describe('Annotations', () => {
         .should('contain', 'Place')
         .should('have.attr', 'data-selected', 'true')
     })
+
+  it ('Should hide respective annotations when deselecting certain annotation type', () => {
+    cy.getPanel()
+      .find('[data-cy="annotations-header"]')
+      .find('[data-cy="annotation-types"]')
+      .children()
+      .eq(0).click()
+
+    cy.getPanel()
+      .find('[data-sidebar-container="true"]')
+      .find('[data-annotation]')
+      .should('have.length', 2)
+      .eq(0).should('contain', 'Place')
+      .next().should('contain', 'Place')
+  })
   }
 )
