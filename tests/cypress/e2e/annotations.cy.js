@@ -40,15 +40,12 @@ Cypress.Commands.add('switchContentType', (index) => {
 
 
 
-
-
 describe('Annotations', () => {
     beforeEach(() => {
       cy.visit('/ahiqar-local.html')
       cy.getPanel()
         .find('[data-cy="sidebar-toggle"]')
         .click()
-        .wait(100)
     });
 
     it('Should check the initial number of annotations and a few values', () => {
@@ -119,7 +116,18 @@ describe('Annotations', () => {
 
   it('Should preserve annotation types selection and hide respective annotations on item change', () => {
     cy.switchContentType(1)
-  })
+      .clickAnnotationType(0)    // deselect first annotation type
+      .getPanel()
+      .find('[data-cy="panel-title-and-nav-arrows"]')
+      .find('[data-cy="next-button"]')
+      .click()
+                                // update of number of annotations and annotation types
+      .checkNumberAnnotations(2)
+      .eq(0).should('contain', 'Editorial Comment')
+      .next().should('contain', 'Motif')
 
+      .checkNumberAnnotationTypes(3)
+      .eq(0).should('have.attr', 'data-selected', 'false').and('contain', 'Person')
+  })
   }
 )
