@@ -19,6 +19,27 @@ Cypress.Commands.add('checkNumberAnnotations', (number) => {
     .should('have.length', number)
 })
 
+Cypress.Commands.add('checkNumberAnnotationTypes', (number) => {
+  cy.getPanel()
+    .find('[data-cy="annotations-header"]')
+    .find('[data-cy="annotation-types"]')
+    .children()
+    .should('have.length', number)
+})
+
+Cypress.Commands.add('switchContentType', (index) => {
+  cy.getPanel()
+    .find('[data-text-options="true"]')
+    .find('button')
+    .eq(0)    // open dropdown menu and not click at the right eye symbol
+    .click()
+    .get('[data-slot="dropdown-menu-radio-group"]')
+    .children()
+    .eq(index).click()  // change to content type of provided index
+})
+
+
+
 
 
 describe('Annotations', () => {
@@ -40,11 +61,7 @@ describe('Annotations', () => {
     })
 
     it('Should initially display the annotation types as selected', () => {
-      cy.getPanel()
-        .find('[data-cy="annotations-header"]')
-        .find('[data-cy="annotation-types"]')
-        .children()
-        .should('have.length', 2)
+      cy.checkNumberAnnotationTypes(2)
         .eq(0)
         .should('contain', 'Person')
         .should('have.attr', 'data-selected', 'true')
@@ -77,6 +94,21 @@ describe('Annotations', () => {
 
       cy.checkNumberAnnotations(0)
     })
+
+  it('Should update annotation types on content type switch', () => {
+    cy.switchContentType(1)
+      .checkNumberAnnotationTypes(4)
+      .eq(0).should('have.attr', 'data-selected', 'true').and('contain', 'Person')
+      .next().should('have.attr', 'data-selected', 'true').and('contain', 'Place')
+      .next().should('have.attr', 'data-selected', 'true').and('contain', 'Editorial Comment')
+      .next().should('have.attr', 'data-selected', 'true').and('contain', 'Motif')
+  })
+
+
+
+  it('Should preserve annotation types selection and hide respective annotations on item change', () => {
+    cy.switchContentType(1)
+  })
 
   }
 )
