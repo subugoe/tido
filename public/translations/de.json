@@ -1,7 +1,7 @@
 {
   "common": {
-    "annotation_collection_error_title": "Fehler in der Annotationssammlung",
-    "annotation_collection_error_message": "Der Inhalt der Annotationssammlung wird nicht korrekt angezeigt im Panel",
+    "annotation_collection_error_title": "Fehler in der Annotation Collection",
+    "annotation_collection_response_error": "Der abgerufene Inhalt der Annotation Collection ist ungültig.",
     "new": "Neu",
     "sync_panels": "Panels synchronisieren",
     "place": "Ort",

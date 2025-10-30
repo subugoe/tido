@@ -14,6 +14,7 @@ import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { hasItems, hasManifests } from '@/utils/api-validate.ts'
 import { useErrorBoundary } from 'react-error-boundary'
+import { toast } from 'sonner'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -58,14 +59,6 @@ export class CustomError extends Error {
   }
 }
 
-async function getAnnotationPage(annotationCollectionUrl: string): Promise<AnnotationPage> {
-  const collection: AnnotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
-  if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
-    throw new CustomError('annotation_collection_error_title', 'annotation_collection_error_message')
-  }
-  return await apiRequest<AnnotationPage>(collection.first)
-}
-
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
@@ -95,6 +88,14 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   function usePanelTranslation(): UseTranslationResponse<'common', never> {
     const ns = panelState.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
     return useTranslation(ns)
+  }
+
+  async function getAnnotationPage(annotationCollectionUrl: string): Promise<AnnotationPage> {
+    const collection: AnnotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
+    if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
+      throw new CustomError(t('panel_init_error'), t('annotation_collection_response_error'))
+    }
+    return await apiRequest<AnnotationPage>(collection.first)
   }
 
   async function init(config: PanelConfig) {
@@ -157,22 +158,28 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         // Get an array of annotations and set up the witnesses
         // Update annotations data separately for progressive loading (still show text if annotations are broken)
 
-        const page = await getAnnotationPage(item.annotationCollection)
-        const annotations = page.items ?? []
-        const witnesses = page.refs ?? []
+        try {
+          const page = await getAnnotationPage(item.annotationCollection)
+          const annotations = page.items ?? []
+          const witnesses = page.refs ?? []
 
-        const extendedFullAnnotationsTypesMap = getExtendedFullAnnotationsTypesMap(annotations, fullAnnotationTypes)
-        setFullAnnotationTypes(extendedFullAnnotationsTypesMap)
+          const extendedFullAnnotationsTypesMap = getExtendedFullAnnotationsTypesMap(annotations, fullAnnotationTypes)
+          setFullAnnotationTypes(extendedFullAnnotationsTypesMap)
 
-        if (witnesses.length > 0) {
-          const witnessesWithColor = setColors(witnesses)
-          setWitnesses(witnessesWithColor)
-          setSelectedWitnesses(witnessesWithColor)
+          if (witnesses.length > 0) {
+            const witnessesWithColor = setColors(witnesses)
+            setWitnesses(witnessesWithColor)
+            setSelectedWitnesses(witnessesWithColor)
+          }
+          updatePanel({ annotations })
+        } catch (e) {
+          console.error(e)
+          toast.error(e.name, { description: e.message })
         }
-        updatePanel({ annotations })
       }
-    } catch (e: Error) {
-      showBoundary(new CustomError(t('panel_init_error'), e.message))
+    } catch (e) {
+      if (e.name)
+        showBoundary(new CustomError(t('panel_init_error'), e.message))
     } finally {
       // add a timeout to wait until updatePanel() is finished
       setTimeout(() => {
