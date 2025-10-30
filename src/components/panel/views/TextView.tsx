@@ -5,15 +5,16 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import DOMPurify from 'dompurify'
 import { useErrorBoundary } from 'react-error-boundary'
 import Loading from '@/components/ui/loading.tsx'
+import { useText } from '@/contexts/TextContext.tsx'
 
 const FORBID_TAGS = ['input', 'script', 'noscript', 'iframe', 'frame', 'frameset', 'noframes', 'applet', 'base', 'meta', 'form']
 
 const TextView: FC = () => {
   const { panelState, usePanelTranslation, setTextWarning, loading: loadingPanel } = usePanel()
+  const { loadingText, setLoadingText } = useText()
   const { t } = usePanelTranslation()
   const { showBoundary } = useErrorBoundary()
   const [text, setText] = useState<string>('')
-  const [loading, setLoading] = useState(false)
 
   const activeContentTypeIndex = panelState.contentIndex
   function getContentUrlByType(type: string | undefined) {
@@ -38,7 +39,7 @@ const TextView: FC = () => {
     }
 
     if (loadingPanel || !panelState) {
-      setLoading(true)
+      setLoadingText(true)
       return
     }
 
@@ -55,11 +56,11 @@ const TextView: FC = () => {
   }, [loadingPanel, panelState?.contentTypes, activeContentTypeIndex])
 
   function onReady() {
-    setLoading(false)
+    setLoadingText(false)
   }
 
   return <>
-    { loading && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
+    { loadingText && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
       <Loading size={36} />
     </div> }
     <TextRenderer htmlString={text} onReady={onReady} />

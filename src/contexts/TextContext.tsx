@@ -3,6 +3,8 @@ import { createContext, useContext, useState } from 'react'
 type TextProviderState = {
   hoveredAnnotation: string | null
   setHoveredAnnotation: (value: string | null) => void
+  loadingText: boolean
+  setLoadingText: (value: boolean) => void
 }
 
 const TextProviderContext = createContext<TextProviderState>(null)
@@ -12,11 +14,14 @@ export const TextProvider = ({
 }) => {
 
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
+  const [loadingText, setLoadingText] = useState(false)
 
   return (
     <TextProviderContext.Provider value={{
       hoveredAnnotation,
-      setHoveredAnnotation
+      setHoveredAnnotation,
+      loadingText,
+      setLoadingText
     }}>
       {children}
     </TextProviderContext.Provider>
