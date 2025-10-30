@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.10](https://github.com/subugoe/tido/compare/v5.0.0-alpha.9...v5.0.0-alpha.10) (2025-10-30)
+
+
+### Features
+
+* add and fix loading state in image and text views ([bd91a38](https://github.com/subugoe/tido/commit/bd91a383f7f5a48f5e6ed2e4de7a8d3cc4df7eb7))
+* add first implementation of bookmarking ([03ee825](https://github.com/subugoe/tido/commit/03ee825d05bb664ed763c2e05f59973424868b3f))
+* add general panel error component, catch panel init errors ([#812](https://github.com/subugoe/tido/issues/812)) ([402ab99](https://github.com/subugoe/tido/commit/402ab9981b36196eccad12bc1057fe04ebde98d6))
+* clicking Cross Ref link should either display the opening selection options or an error view ([ff0337c](https://github.com/subugoe/tido/commit/ff0337cc7a1b3a2b1d41325e44e699b66347c8f8))
+* export encodeState and decodeState to the bundle ([f64c9d5](https://github.com/subugoe/tido/commit/f64c9d55e0a1e8cd31d6afd4e1a56649910f4782))
+* remove annotation hints ([4ea340f](https://github.com/subugoe/tido/commit/4ea340f3c13e66a06938a1b8474f50394bba5326))
+* subtract annotation sidebar from initial panel width, so it fits the container when opening iz ([fce3340](https://github.com/subugoe/tido/commit/fce33405d4a06873b9ff9d9eb873285d47a96f5f))
+
+
+### Bug Fixes
+
+* open correctly the selected mode when create a new panel ([02c4d95](https://github.com/subugoe/tido/commit/02c4d958e5428e0104e1bf983b3fd7744d4c5374))
+* prevent text loading screen to overflow ([d3676a7](https://github.com/subugoe/tido/commit/d3676a7010c30e2ca0681a9eda41752f5f7afedf))
+* reset error state on TextView on item change ([a89f160](https://github.com/subugoe/tido/commit/a89f160f753e8b9a84e58cddeaa8e0cfead3e5bd))
+* set max width to manifest/item label popovers ([a0c4eca](https://github.com/subugoe/tido/commit/a0c4ecac319b37a4a61e951ede9b556a44aa4afc))
+* show panel error on manifest/item label navigation when failing to find manifest/item ([31c6d05](https://github.com/subugoe/tido/commit/31c6d057455a144c48054983f9195450fc570c52))
+
+
+### Docs
+
+* update README, add embed example ([0320b80](https://github.com/subugoe/tido/commit/0320b80248dc63473cea68a9dcfc788513e4d0b7))
+
+
+### Refactoring
+
+* TextRenderer is now using JS native DOM manipulations instead of generic React components ([7568b1f](https://github.com/subugoe/tido/commit/7568b1fcb35f30d6d130aea7f60d724e2d901b20))
+* use mouseenter and mouseleave instead of mouseover in text hover ([e1edce7](https://github.com/subugoe/tido/commit/e1edce71de58a64c23cba081dad2e27acea1a822))
+
 ## [5.0.0-alpha.9](https://github.com/subugoe/tido/compare/v5.0.0-alpha.8...v5.0.0-alpha.9) (2025-10-08)
 
 
