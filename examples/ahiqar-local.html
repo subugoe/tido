@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head><title>TIDO</title>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="dist/tido.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
+  continue.</strong></noscript>
+<header>
+  <a class="home" href="./">TIDO</a>
+  <span>Examples:</span>
+  <nav>
+    <select id="nav-select">
+      <option disabled selected hidden>Please select...</option>
+    </select>
+  </nav>
+</header>
+<div id="app"></div>
+<script src="dist/tido.min.js"></script>
+<script>
+  const select = document.getElementById('nav-select');
+  const pathArr = window.location.pathname.split('/')
+
+  select.value = './' + pathArr[pathArr.length - 1]
+
+  select.onchange = function (event) {
+    window.location = event.target.value
+  }
+
+  window.addEventListener('load', function () {
+    new window.Tido({
+      showGlobalTree: true,
+      colors: {
+        primary: "#1E40AF",
+      },
+      panels: [
+        {
+          collection: "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json",
+          manifestIndex: 20,
+        },
+      ],
+      rootCollections: [
+        "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json"
+      ],
+      panelModes: ["split", "text", "image"],
+      defaultPanelMode: "text"
+    });
+  });
+</script>
+</body>
+</html>

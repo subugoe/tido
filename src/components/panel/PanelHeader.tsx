@@ -35,7 +35,7 @@ const SidebarToggle = (props) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <div>
-            <Button variant="ghost" size="icon" disabled={isDisabled} {...props} onClick={onClick}>
+            <Button variant="ghost" size="icon" disabled={isDisabled} {...props} onClick={onClick} data-cy="sidebar-toggle">
               <PanelRight />
             </Button>
           </div>
