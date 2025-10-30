@@ -1,23 +1,19 @@
-import { FC } from 'react'
+import { FC, useRef, useState } from 'react'
 
 import { CustomError, usePanel } from '@/contexts/PanelContext.tsx'
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu.tsx'
 
-import CrossRefTitle from '@/components/panel/CrossRef/CrossRefTitle.tsx'
-import { ExternalLink } from 'lucide-react'
 
 import { createNewPanel } from '@/utils/panel.ts'
-import { waitForElementInDom } from '@/utils/dom.ts'
+import { existsTargetInText, validateSelector, waitForElementInDom } from '@/utils/dom.ts'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { toast } from 'sonner'
+import Content from '@/components/panel/CrossRef/Content.tsx'
 
 interface Props {
   node: HTMLElement
@@ -33,14 +29,15 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
   const manifestLabel = panelState.manifest.label
   const itemLabel = item.n ? item.n : item.title?.length > 0 ? item.title[0].title : ''
 
+  const target = useRef<HTMLElement>(null)
+
+  const [error, setError] = useState(null)
+  const [openModal, setOpenModal] = useState(false)
+
   async function navigate(sourceEl: HTMLElement, contentTypes: string[], action: string) {
     try {
       const targetContentType = sourceEl.getAttribute('data-ref-content-type')
-      if (!contentTypes.includes(targetContentType)) throw new CustomError('CrossRef Error Content type incorrect', 'Provided content type is not part of item content types in source el '+ sourceEl.outerHTML)
-
       const targetSelector = sourceEl.getAttribute('data-ref-target')
-      if (!targetSelector.startsWith('#') && !targetSelector.startsWith('.')) throw new CustomError('CrossRef TargetSelector Error', 'Target selector is not provided correctly in source el '+ sourceEl.outerHTML)
-
       const newContentIndex = contentTypes.findIndex(type => type === targetContentType)
 
       if (action === 'new') {
@@ -52,16 +49,38 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
       }
 
       if (action === 'scroll-to') {
-        updatePanel({ contentIndex: newContentIndex })
+        if (newContentIndex !== panelState.contentIndex) updatePanel({ contentIndex: newContentIndex })
         setTimeout(() => {
           scrollToTarget(targetSelector, document.getElementById(panelId))
         }, 500)
       }
     } catch(e) {
       const panelNumber = usePanelStore.getState().panels.findIndex(p => p.id === panelId) + 1
-      console.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
-      toast.error(t(e.name), { description: t(e.message) + ' ' + panelNumber.toString() })
+      console.error(e + ' ' + panelNumber.toString())
+      toast.error(e +' ' + panelNumber.toString())
     }
+  }
+
+  async function onSelectLink() {
+    if (!target.current && !error) {
+      // validating content type and target's selector while clicking for first time
+      try {
+        const targetContentType = node.getAttribute('data-ref-content-type')
+        if (!contentTypes.includes(targetContentType)) throw new CustomError('cross_ref_error_title', 'referenced_content_type_error')
+
+        const targetSelector = node.getAttribute('data-ref-target')
+        if (!validateSelector(targetSelector)) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
+
+        const targetEl = await existsTargetInText(panelState.item, targetContentType, targetSelector) as HTMLElement
+        if (!targetEl) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
+        target.current = targetEl
+      } catch(e) {
+        setError(new CustomError(t(e.name), t(e.message.split(';')[0], { url: e.message.split(';')[1] })))
+      } finally {
+        setOpenModal(true)
+      }
+    }
+    setOpenModal(true)
   }
 
   function jumpTo() {
@@ -72,37 +91,24 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
     navigate(node, contentTypes, 'new')
   }
 
-  function scrollToTarget(targetSelector: string, root: Element) {
-    const targetEl = root.querySelector(targetSelector) as HTMLElement
-    // add timeout for smoother scrolling to target after clicking the link
-    if (!targetEl) throw new CustomError('Cross Ref Target element Error', 'Target element not found')
+  function scrollToTarget(targetSelector: string, panelEl: Element) {
+    const targetEl = panelEl.querySelector(targetSelector) as HTMLElement
     targetEl.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const link = <a className="text-blue-600 underline cursor-pointer">
+  const link = <a className="text-blue-600 underline cursor-pointer" onClick={onSelectLink}>
     {node.innerHTML}
   </a>
 
-  return <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      {link}
-    </DropdownMenuTrigger>
-    <DropdownMenuContent align="center" className="p-2">
-      <DropdownMenuLabel>
-        {t('reference')}
-      </DropdownMenuLabel>
-      <CrossRefTitle contentType={node.getAttribute('data-ref-content-type')} manifestLabel={manifestLabel} itemLabel={itemLabel} />
-      <DropdownMenuSeparator></DropdownMenuSeparator>
-      <DropdownMenuItem className="mt-2 cursor-pointer" onSelect={jumpTo}>
-        <span>{t('jump_to')}</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem className="cursor-pointer" onSelect={openInNewPanel}>
-        <span>{t('open_in_new_panel')} <ExternalLink size={16} className="inline" /></span>
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
-
-
+  return <>{link}
+    <DropdownMenu open={openModal} onOpenChange={() => setOpenModal(!openModal)}>
+      <DropdownMenuTrigger>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="center" className="p-2 max-w-sm text-wrap">
+        <Content error={error} itemLabel={itemLabel} manifestLabel={manifestLabel} node={node}
+          actionLabelThisPanel={t('jump_to')} actionNewPanel={openInNewPanel} actionThisPanel={jumpTo} />
+      </DropdownMenuContent>
+    </DropdownMenu></>
 }
 
 export default CrossRefSameItem

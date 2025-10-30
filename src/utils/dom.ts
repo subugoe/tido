@@ -1,3 +1,5 @@
+import { apiRequest } from '@/utils/api.ts'
+
 function waitForElementInDom(selector: string, textSelector: string, callback) {
   // selector: refers to a container element
   // textSelector: refers to a text part inside the container element
@@ -41,4 +43,16 @@ function scrollIntoViewIfNeeded(target: HTMLElement, container: HTMLElement) {
   }
 }
 
-export { waitForElementInDom, scrollIntoViewIfNeeded }
+async function existsTargetInText(item: Item, contentType: string,  selector: string) {
+  const contentIndex = item.content.findIndex(c => c.type.split('=')[1] === contentType)
+  const parser = new DOMParser()
+  const textString: string = await apiRequest(item.content[contentIndex].url)
+  const textEl = parser.parseFromString(textString, 'text/html')
+  return textEl.querySelector(selector)
+}
+
+function validateSelector(selector: string) {
+  return selector.startsWith('#') || selector.startsWith('.')
+}
+
+export { waitForElementInDom, scrollIntoViewIfNeeded, validateSelector, existsTargetInText }
