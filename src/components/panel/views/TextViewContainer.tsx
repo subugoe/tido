@@ -17,7 +17,7 @@ const TextViewContainer: FC<Props> = ({ showText, showSidebarBorders }) => {
     data-text-container
     className={`bg-background p-3 pr-5 relative flex border-r overflow-x-auto
       ${showSidebarBorders ? 'border-border' : 'border-transparent'} ${showTextOptions ? 'pt-16' : ''}
-      ${annotationsMode === 'list' ? 'overflow-y-auto' : ''}
+      ${annotationsMode === 'list' ? 'h-full overflow-y-auto' : ''}
       ${loadingText ? 'overflow-hidden min-h-full h-full' : 'min-h-[calc(100%+1px)]'} `}
   >
     {showText &&
