@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.11](https://github.com/subugoe/tido/compare/v5.0.0-alpha.10...v5.0.0-alpha.11) (2025-11-03)
+
+
+### Features
+
+* show annotation loading errors in toasts again ([c7aa2d8](https://github.com/subugoe/tido/commit/c7aa2d82fbeadf429484dea226d6540e825af9b5))
+
+
+### Bug Fixes
+
+* prevent double init of panel at navigation buttons ([4cd9e96](https://github.com/subugoe/tido/commit/4cd9e96f3d4d667507ad0eb7479ab6c8e915183c))
+
 ## [5.0.0-alpha.10](https://github.com/subugoe/tido/compare/v5.0.0-alpha.9...v5.0.0-alpha.10) (2025-10-30)
 
 
