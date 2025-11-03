@@ -1,0 +1,18 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/item.jsonld",
+  "textapi": "1.4.0",
+  "id": "http://localhost:8181/bdn/textapi/griesbach/a/griesbach-1-gr_chapter_i/latest/item.json",
+  "type": "section",
+  "n": "I. Religion, Offenbarung und Bibel",
+  "lang": [
+    "deu"
+  ],
+  "content": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "url": "http://localhost:8181/bdn/files/html/griesbach/griesbach-1-gr_chapter_i-a.html",
+      "type": "text/html;type=edition"
+    }
+  ],
+  "annotationCollection": "http://localhost:8181/bdn/files/anno/collection/griesbach/griesbach-1-gr_chapter_i-a.json"
+}

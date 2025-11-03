@@ -1,0 +1,57 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/collection.jsonld",
+  "textapi": "1.4.0",
+  "id": "http://localhost:8181/bdn/textapi/griesbach/collection.json",
+  "title": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/title.jsonld",
+      "title": "BdN III: Johann Jakob Griesbach, Anleitung zum Studium der popul\u00e4ren Dogmatik (1. Aufl. 1779; 2. Aufl. 1786; 3. Aufl. 1787; 4. Aufl. 1789)",
+      "type": "main"
+    }
+  ],
+  "collector": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/actor.jsonld",
+      "role": "Editor",
+      "name": "Stallmann, Marco"
+    }
+  ],
+  "sequence": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/bdn/textapi/griesbach/a/manifest.json",
+      "type": "manifest",
+      "label": "Auflage a (1. Aufl. 1779)"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/bdn/textapi/griesbach/b/manifest.json",
+      "type": "manifest",
+      "label": "Auflage b (2. Aufl. 1786)"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/bdn/textapi/griesbach/c/manifest.json",
+      "type": "manifest",
+      "label": "Auflage c (3. Aufl. 1787)"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/bdn/textapi/griesbach/d/manifest.json",
+      "type": "manifest",
+      "label": "Auflage d (4. Aufl. 1789)"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/bdn/textapi/griesbach/digital/manifest.json",
+      "type": "manifest",
+      "label": "Digitale Ansicht"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/bdn/textapi/griesbach/critical/manifest.json",
+      "type": "manifest",
+      "label": "Textkritische Ansicht mit c als Leittext"
+    }
+  ]
+}

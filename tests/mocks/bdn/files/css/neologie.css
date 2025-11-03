@@ -1,0 +1,133 @@
+/* GENERAL */
+
+.text-content {
+    line-height: 150%;
+}
+
+/* SINGLE EDITION VIEW */
+
+.text-content .title-page:first-of-type {
+    margin-top: 0;
+}
+
+.text-content .title-page {
+    margin-bottom: 10px;
+}
+
+.text-content .main-title,
+.text-content .title-page {
+    display: block;
+    text-align: center;
+    padding-top: 0;
+    margin-top: 40px;
+    font-size: inherit;
+}
+
+.text-content .main-title {
+    margin-bottom: 0;
+    line-height: 150%;
+}
+
+.text-content .list-item-toc {
+    display: block;
+    list-style-type: none;
+    padding-left: 25px;
+    text-indent: -20px;
+}
+
+.text-content .text-list {
+    padding-left: 0;
+    border-left:
+        5px dotted #eaeaea;
+}
+
+.text-content h2+.text-list {
+    margin-top: -10px;
+}
+
+.text-content h2 {
+    text-align: center;
+    font-size: inherit;
+    line-height: normal;
+    margin-top: 18px;
+    margin-bottom: 9px;
+}
+
+.text-content .hi {
+    font-style: italic;
+}
+
+.text-content .section,
+#text-cont .corrigenda {
+    margin-top: 50px;
+}
+
+.text-content .p:first-of-type {
+    text-indent: 0;
+}
+
+.text-content p {
+    text-indent: 25px;
+    margin-bottom: 9px;
+}
+
+.text-content .note {
+    font-size: smaller;
+    margin-right: 0;
+    text-indent: 0;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    margin-left: 20px;
+}
+
+.text-content svg {
+    width: 20px;
+    display: inline;
+    fill: rgb(35, 78, 166);
+}
+
+.text-content a {
+    color: rgb(35, 78, 166);
+    text-decoration: none;
+}
+
+.text-content svg:hover {
+    fill: rgb(131, 152, 197);
+}
+
+.text-content .app-entry {
+    font-size: smaller;
+    margin-right: 10px;
+}
+
+.text-content .critical-apparatus + .rdg {
+    margin-top: 50px;
+}
+
+.text-content .critical-apparatus {
+    line-height: 140%;
+    margin-top: 10px;
+}
+
+.text-content .insertion-wrapper {
+    white-space: nowrap;
+}
+
+.text-content .rdg,
+.text-content .rdg-crit,
+.text-content .rdg-digital {
+    font-size: smaller;
+    margin-right: 0;
+    text-indent: 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.text-content .note .rdg,
+.text-content .rdg .note,
+.text-content .note .rdg,
+.text-content .rdg .note,
+.text-content .rdg-crit .note,
+.text-content .rdg-crit .note {
+    font-size: inherit;
+}

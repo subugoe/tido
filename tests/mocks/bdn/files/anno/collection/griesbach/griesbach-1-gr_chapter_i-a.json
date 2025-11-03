@@ -1,0 +1,8 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "last": "/api/files/anno/page/griesbach/griesbach-1-gr_chapter_i-a.json",
+  "label": "Annotation Collection for griesbach/griesbach-1-gr_chapter_i-a",
+  "type": "AnnotationCollection",
+  "id": "http://localhost:3000/api/files/anno/collection/griesbach/griesbach-1-gr_chapter_i-a.json",
+  "first": "http://localhost:8181/bdn/files/anno/page/griesbach/griesbach-1-gr_chapter_i-a.json"
+}

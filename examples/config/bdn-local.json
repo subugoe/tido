@@ -1,0 +1,30 @@
+{
+  "allowNewCollections": false,
+  "title": "BDN",
+  "lang": "de",
+  "panels": [
+    {
+      "collection": "http://localhost:8181/bdn/textapi/griesbach/collection.json",
+      "itemIndex": 2
+    }
+  ],
+  "rootCollections": [
+    "http://localhost:8181/bdn/textapi/griesbach/collection.json"
+  ],
+  "theme": {
+    "primaryColor": "#2b7fff"
+  },
+  "showPanelPlaceholder": true,
+  "translations": {
+    "de": {
+      "common": {
+        "contents_and_metadata": "Inhalt & Metadaten",
+        "next_item": "Nächste Seite",
+        "previous_item": "Vorherige Seite",
+        "next_manifest": "Nächste Editionseinheit",
+        "previous_manifest": "Vorherige Editionseinheit",
+        "item": "Seite"
+      }
+    }
+  }
+}
