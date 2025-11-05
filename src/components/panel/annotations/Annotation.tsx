@@ -13,15 +13,15 @@ interface Props {
 
 const Annotation: FC<Props> = React.memo(({ data, top }) => {
   const { selectedAnnotation, setSelectedAnnotation, annotationsMode } = usePanel()
-  const { setHoveredAnnotation, hoveredAnnotation } = useText()
+  const { setHoveredAnnotations, hoveredAnnotations } = useText()
   const ref = useRef(null)
   const [isHovered, setIsHovered] = useState(false)
   const type = data.body['x-content-type']
   const value = data.body.value
 
   useEffect(() => {
-    setIsHovered(hoveredAnnotation === data.id)
-  }, [hoveredAnnotation])
+    setIsHovered(hoveredAnnotations?.includes(data.id))
+  }, [hoveredAnnotations])
 
   function handleClick() {
     if (selectedAnnotation && selectedAnnotation.id === data.id) {
@@ -33,11 +33,11 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
 
   function handleMouseEnter() {
     setIsHovered(true)
-    setHoveredAnnotation(data.id)
+    setHoveredAnnotations([data.id])
   }
   function handleMouseLeave() {
     setIsHovered(false)
-    setHoveredAnnotation(null)
+    setHoveredAnnotations(null)
   }
 
   function isSelected() {

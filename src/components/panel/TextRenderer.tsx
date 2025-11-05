@@ -49,7 +49,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     annotationsMode
   } = usePanel()
 
-  const { hoveredAnnotation, setHoveredAnnotation } = useText()
+  const { hoveredAnnotations, setHoveredAnnotations } = useText()
 
   const [portals, setPortals] = useState([])
 
@@ -107,13 +107,11 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     if (!idsValue) return
 
     const idArr = idsValue.split(',')
-    const last = idArr[idArr.length - 1]
-
-    setHoveredAnnotation(last)
+    setHoveredAnnotations(idArr)
   }
 
   const onMouseLeaveTarget = () => {
-    setHoveredAnnotation(null)
+    setHoveredAnnotations(null)
   }
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
@@ -177,12 +175,15 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
       })
     })
 
-    if (!hoveredAnnotation) return
-    const matched = matchedAnnotationsMap[hoveredAnnotation]
-    matched.target.forEach(target => {
-      addHoverStyle(target)
+    if (!hoveredAnnotations) return
+    hoveredAnnotations.forEach((annotation) => {
+      const matched = matchedAnnotationsMap[annotation]
+      matched.target.forEach(target => {
+        addHoverStyle(target)
+      })
     })
-  }, [hoveredAnnotation])
+
+  }, [hoveredAnnotations])
 
   // Apply highlighting styles on every map update
   useEffect(() => {
