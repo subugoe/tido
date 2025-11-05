@@ -33,6 +33,8 @@ interface Props {
   onReady?: () => void
 }
 
+const targetSelectionObject = {}
+
 const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
   const {
@@ -59,24 +61,41 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     scrollIntoViewIfNeeded(annotationEl, container)
   }
 
+  function getNewTargetSelection(targetAnnotationIds: string[], targetSelectionObject, targetId: string ) {
+    const newTargetSelectionObject = { ...targetSelectionObject }
+    if (!Object.hasOwn(newTargetSelectionObject, targetId))  newTargetSelectionObject[targetId] = 0
+    if (newTargetSelectionObject[targetId] < targetAnnotationIds.length - 1) newTargetSelectionObject[targetId] += 1
+    else newTargetSelectionObject[targetId] = 0
+
+    return newTargetSelectionObject
+  }
+
   const onClickTarget = (e: Event) => {
     // Generic click listener
     // TODO:  Be careful with state here. This listener will be added once a new map is created.
     //  So this function will be called with those state values which existed at the time of adding.
 
     const target = e.currentTarget as Element
+    const targetId = target.getAttribute('id')
     const idsValue = getAnnotationIds(target)
+
     if (!idsValue) return
 
     const idArr = idsValue.split(',')
-    const last = idArr[idArr.length - 1]
-    const annotation = panelState.annotations.find(a => a.id === last)
+
+    const newTargetSelectionObject = getNewTargetSelection(idArr, targetSelectionObject, targetId)
+    targetSelectionObject[targetId] = newTargetSelectionObject[targetId]
+    const newSelectedAnnotationIdx = targetSelectionObject[targetId]
+    const newAnnotationId = idArr[newSelectedAnnotationIdx]
+
+    const annotation = panelState.annotations.find(a => a.id === newAnnotationId)
+
     if (annotation) {
       if (!panelState.annotationsOpen) {
         updatePanel({ annotationsOpen: true })
       }
 
-      if (isSelected(target)) setSelectedAnnotation(null)
+      if (isSelected(target) && idArr.length === 1) setSelectedAnnotation(null)
       else setSelectedAnnotation(annotation)
       if (annotationsMode === 'list') scrollIntoSelectedAnnotation(annotation)
     }
