@@ -34,11 +34,15 @@ interface Props {
   onReady?: () => void
 }
 
-const targetSelectionObject = {}
-// {
-//  key: 'selected target Id',
-//  value: 'index of selected annotation'
-//  }
+interface targetSelectionDictType {
+  el: HTMLElement,
+  selectedAnnotationIdx: number
+}
+
+let targetSelectionDict: targetSelectionDictType = { el: null, selectedAnnotationIdx: null }
+// [{
+//  el: HTMLElement, selectedAnnotationIdx: number
+//  }]
 
 const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
@@ -69,24 +73,28 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     scrollIntoViewIfNeeded(annotationEl, container)
   }
 
-  function getNextSelectedAnnotationIndex(targetAnnotationIds: string[], targetSelection: object, targetId:string ) {
-    let newTargetSelectionObject = { ...targetSelection }
+  function isNewTargetSelection(targetSelectionDict: targetSelectionDictType, selectedTarget: HTMLElement) {
+    return targetSelectionDict.el !== selectedTarget
+  }
 
-    if (Object.keys(targetSelectionObject).length >= 1 && !Object.hasOwn(targetSelection, targetId)) {
-      // we have previously clicked a certain target and now we click a new target
-      // we want to keep only the last selected target in our object.
-      newTargetSelectionObject = Object.entries(newTargetSelectionObject).reduce((acc, [key, value]) => {
-        if (key === targetId) {
-          acc[key] = value
-        }
-        return acc
-      }, {})
+  function getUpdatedTargetSelection(targetAnnotationIds: string[], targetSelection: targetSelectionDictType, target: HTMLElement ) {
+    const newTargetSelectionObject: targetSelectionDictType = { ...targetSelection }
+
+    if (isNewTargetSelection(targetSelection, target)) {
+      newTargetSelectionObject.el = target
+      newTargetSelectionObject.selectedAnnotationIdx = 0
+      return newTargetSelectionObject
     }
-    if (!Object.hasOwn(newTargetSelectionObject, targetId))  return 0
-    if (newTargetSelectionObject[targetId] < targetAnnotationIds.length - 1) return newTargetSelectionObject[targetId] + 1
 
-    else return 0
-    // the circle of selected annotations is closed, we select again first annotation
+    if (newTargetSelectionObject.selectedAnnotationIdx < targetAnnotationIds.length - 1) {
+      newTargetSelectionObject.selectedAnnotationIdx += 1
+    }
+
+    else {
+      // we reached the last selected annotation -> we set idx to -1 which signalises later that we deselect the target
+      newTargetSelectionObject.selectedAnnotationIdx = -1
+    }
+    return newTargetSelectionObject
   }
 
   const onClickTarget = (e: Event) => {
@@ -95,17 +103,18 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     //  So this function will be called with those state values which existed at the time of adding.
 
     const target = e.currentTarget as Element
-    const targetId = target.id
+    const targetHtml = e.currentTarget as HTMLElement
     const idsValue = getAnnotationIds(target)
 
     if (!idsValue) return
 
     const idArr = idsValue.split(',')
 
-    const newSelectedAnnotationIdx = getNextSelectedAnnotationIndex(idArr, targetSelectionObject, targetId)
-    targetSelectionObject[targetId] = newSelectedAnnotationIdx
+    let newAnnotationId = null
+    targetSelectionDict = getUpdatedTargetSelection(idArr, targetSelectionDict, targetHtml)
+    const newSelectedAnnotationIdx = targetSelectionDict.selectedAnnotationIdx
+    if ( newSelectedAnnotationIdx !== -1) newAnnotationId = idArr[newSelectedAnnotationIdx]
     // index among target annotations
-    const newAnnotationId = idArr[newSelectedAnnotationIdx]
 
     const annotation = panelState.annotations.find(a => a.id === newAnnotationId)
 
@@ -114,9 +123,11 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
         updatePanel({ annotationsOpen: true })
       }
 
-      if (isSelected(target) && idArr.length === 1) setSelectedAnnotation(null)
-      else setSelectedAnnotation(annotation)
+      setSelectedAnnotation(annotation)
       if (annotationsModeRef.current === 'list') scrollIntoSelectedAnnotation(annotation)
+    }
+    else {
+      setSelectedAnnotation(null)
     }
   }
 
