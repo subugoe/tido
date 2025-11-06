@@ -33,7 +33,11 @@ interface Props {
   onReady?: () => void
 }
 
-const targetSelectionObject = {}
+let targetSelectionObject = {}
+// {
+//  key: 'selected target Id',
+//  value: 'index of selected annotation'
+//  }
 
 const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
@@ -61,11 +65,23 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     scrollIntoViewIfNeeded(annotationEl, container)
   }
 
-  function getNewTargetSelection(targetAnnotationIds: string[], targetSelectionObject, targetId: string ) {
-    const newTargetSelectionObject = { ...targetSelectionObject }
+  function getNewTargetSelection(targetAnnotationIds: string[], targetSelectionObject: object, targetId: string ) {
+    let newTargetSelectionObject = { ...targetSelectionObject }
+
+    if (Object.keys(targetSelectionObject).length >= 1 && !Object.hasOwn(targetSelectionObject, targetId)) {
+      // we have previously clicked a certain target and now we click a new target
+      // we want to keep only the last selected target in our object.
+      newTargetSelectionObject = Object.entries(newTargetSelectionObject).reduce((acc, [key, value]) => {
+        if (key === targetId) {
+          acc[key] = value
+        }
+        return acc
+      }, {})
+    }
     if (!Object.hasOwn(newTargetSelectionObject, targetId))  newTargetSelectionObject[targetId] = 0
     if (newTargetSelectionObject[targetId] < targetAnnotationIds.length - 1) newTargetSelectionObject[targetId] += 1
     else newTargetSelectionObject[targetId] = 0
+    // the circle of selected annotations is closed, we select again first annotation
 
     return newTargetSelectionObject
   }
@@ -83,9 +99,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
     const idArr = idsValue.split(',')
 
-    const newTargetSelectionObject = getNewTargetSelection(idArr, targetSelectionObject, targetId)
-    targetSelectionObject[targetId] = newTargetSelectionObject[targetId]
-    const newSelectedAnnotationIdx = targetSelectionObject[targetId]
+
+    targetSelectionObject = getNewTargetSelection(idArr, targetSelectionObject, targetId)
+    const newSelectedAnnotationIdx = targetSelectionObject[targetId]     // index among target annotations
     const newAnnotationId = idArr[newSelectedAnnotationIdx]
 
     const annotation = panelState.annotations.find(a => a.id === newAnnotationId)
