@@ -27,13 +27,14 @@ import {
 } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
 
+
 interface Props {
   htmlString: string
   aGroup?: boolean
   onReady?: () => void
 }
 
-let targetSelectionObject = {}
+const targetSelectionObject = {}
 // {
 //  key: 'selected target Id',
 //  value: 'index of selected annotation'
@@ -57,6 +58,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   const [portals, setPortals] = useState([])
 
+  const annotationsModeRef = useRef<'align' | 'list'>(null)
+  const matchedAnnotationsMapRef = useRef(null)
+
   function scrollIntoSelectedAnnotation(selectedAnnotation: Annotation) {
     const annotationId = selectedAnnotation?.id
     const panelEl = document.getElementById(panelId) as HTMLElement
@@ -65,25 +69,24 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     scrollIntoViewIfNeeded(annotationEl, container)
   }
 
-  function getNewTargetSelection(targetAnnotationIds: string[], targetSelectionObject: object, target:string ) {
-    let newTargetSelectionObject = { ...targetSelectionObject }
+  function getNextSelectedAnnotationIndex(targetAnnotationIds: string[], targetSelection: object, targetId:string ) {
+    let newTargetSelectionObject = { ...targetSelection }
 
-    if (Object.keys(targetSelectionObject).length >= 1 && !Object.hasOwn(targetSelectionObject, target)) {
+    if (Object.keys(targetSelectionObject).length >= 1 && !Object.hasOwn(targetSelection, targetId)) {
       // we have previously clicked a certain target and now we click a new target
       // we want to keep only the last selected target in our object.
       newTargetSelectionObject = Object.entries(newTargetSelectionObject).reduce((acc, [key, value]) => {
-        if (key === target) {
+        if (key === targetId) {
           acc[key] = value
         }
         return acc
       }, {})
     }
-    if (!Object.hasOwn(newTargetSelectionObject, target))  newTargetSelectionObject[target] = 0
-    if (newTargetSelectionObject[target] < targetAnnotationIds.length - 1) newTargetSelectionObject[target] += 1
-    else newTargetSelectionObject[target] = 0
-    // the circle of selected annotations is closed, we select again first annotation
+    if (!Object.hasOwn(newTargetSelectionObject, targetId))  return 0
+    if (newTargetSelectionObject[targetId] < targetAnnotationIds.length - 1) return newTargetSelectionObject[targetId] + 1
 
-    return newTargetSelectionObject
+    else return 0
+    // the circle of selected annotations is closed, we select again first annotation
   }
 
   const onClickTarget = (e: Event) => {
@@ -92,15 +95,16 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     //  So this function will be called with those state values which existed at the time of adding.
 
     const target = e.currentTarget as Element
-    const targetString = (e.currentTarget as HTMLElement).outerHTML
+    const targetId = target.id
     const idsValue = getAnnotationIds(target)
 
     if (!idsValue) return
 
     const idArr = idsValue.split(',')
 
-    targetSelectionObject = getNewTargetSelection(idArr, targetSelectionObject, targetString)
-    const newSelectedAnnotationIdx = targetSelectionObject[targetString]     // index among target annotations
+    const newSelectedAnnotationIdx = getNextSelectedAnnotationIndex(idArr, targetSelectionObject, targetId)
+    targetSelectionObject[targetId] = newSelectedAnnotationIdx
+    // index among target annotations
     const newAnnotationId = idArr[newSelectedAnnotationIdx]
 
     const annotation = panelState.annotations.find(a => a.id === newAnnotationId)
@@ -112,9 +116,15 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
       if (isSelected(target) && idArr.length === 1) setSelectedAnnotation(null)
       else setSelectedAnnotation(annotation)
-      if (annotationsMode === 'list') scrollIntoSelectedAnnotation(annotation)
+      if (annotationsModeRef.current === 'list') scrollIntoSelectedAnnotation(annotation)
     }
   }
+
+  useEffect(() => {
+    annotationsModeRef.current = annotationsMode
+  }, [annotationsMode])
+
+
 
   const onMouseEnterTarget = (e: Event) => {
     const target = e.currentTarget as Element
@@ -178,6 +188,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     }, {})
 
     setMatchedAnnotationsMap(result)
+    matchedAnnotationsMapRef.current = result
   }, [parsedDom, panelState.annotations])
 
   // Update hover styles each time hoveredAnnotation changes
