@@ -32,8 +32,6 @@ interface Props {
   onReady?: () => void
 }
 
-
-
 const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
   const {
