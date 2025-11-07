@@ -19,7 +19,6 @@ import {
   flipMatchedAnnotationsMap,
   getAnnotationIds,
   getCrossRefElements,
-  isSelected,
   removeAnnotationIds,
   removeHighlightStyle,
   removeHoverStyle,
@@ -36,12 +35,12 @@ interface Props {
 
 interface targetSelectionDictType {
   el: HTMLElement,
-  selectedAnnotationIdx: number
+  selectedAnnotationIndex: number
 }
 
-let targetSelectionDict: targetSelectionDictType = { el: null, selectedAnnotationIdx: null }
+let targetSelectionDict: targetSelectionDictType = { el: null, selectedAnnotationIndex: null }
 // [{
-//  el: HTMLElement, selectedAnnotationIdx: number
+//  el: HTMLElement, selectedAnnotationIndex: number
 //  }]
 
 const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
@@ -82,17 +81,17 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
     if (isNewTargetSelection(targetSelection, target)) {
       newTargetSelectionObject.el = target
-      newTargetSelectionObject.selectedAnnotationIdx = 0
+      newTargetSelectionObject.selectedAnnotationIndex = 0
       return newTargetSelectionObject
     }
 
-    if (newTargetSelectionObject.selectedAnnotationIdx < targetAnnotationIds.length - 1) {
-      newTargetSelectionObject.selectedAnnotationIdx += 1
+    if (newTargetSelectionObject.selectedAnnotationIndex < targetAnnotationIds.length - 1) {
+      newTargetSelectionObject.selectedAnnotationIndex += 1
     }
 
     else {
       // we reached the last selected annotation -> we set idx to -1 which signalises later that we deselect the target
-      newTargetSelectionObject.selectedAnnotationIdx = -1
+      newTargetSelectionObject.selectedAnnotationIndex = -1
     }
     return newTargetSelectionObject
   }
@@ -112,8 +111,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
     let newAnnotationId = null
     targetSelectionDict = getUpdatedTargetSelection(idArr, targetSelectionDict, targetHtml)
-    const newSelectedAnnotationIdx = targetSelectionDict.selectedAnnotationIdx
-    if (newSelectedAnnotationIdx !== -1) newAnnotationId = idArr[newSelectedAnnotationIdx]
+    const newSelectedAnnotationIndex = targetSelectionDict.selectedAnnotationIndex
+    if (newSelectedAnnotationIndex !== -1) newAnnotationId = idArr[newSelectedAnnotationIndex]
     // index among target annotations
 
     const annotation = panelState.annotations.find(a => a.id === newAnnotationId)
