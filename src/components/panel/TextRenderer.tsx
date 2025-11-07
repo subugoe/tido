@@ -113,7 +113,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     let newAnnotationId = null
     targetSelectionDict = getUpdatedTargetSelection(idArr, targetSelectionDict, targetHtml)
     const newSelectedAnnotationIdx = targetSelectionDict.selectedAnnotationIdx
-    if ( newSelectedAnnotationIdx !== -1) newAnnotationId = idArr[newSelectedAnnotationIdx]
+    if (newSelectedAnnotationIdx !== -1) newAnnotationId = idArr[newSelectedAnnotationIdx]
     // index among target annotations
 
     const annotation = panelState.annotations.find(a => a.id === newAnnotationId)
