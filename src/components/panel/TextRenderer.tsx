@@ -26,7 +26,6 @@ import {
 } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
 
-
 interface Props {
   htmlString: string
   aGroup?: boolean
@@ -62,7 +61,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const [portals, setPortals] = useState([])
 
   const annotationsModeRef = useRef<'align' | 'list'>(null)
-  const matchedAnnotationsMapRef = useRef(null)
 
   function scrollIntoSelectedAnnotation(selectedAnnotation: Annotation) {
     const annotationId = selectedAnnotation?.id
@@ -104,7 +102,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     const target = e.currentTarget as Element
     const targetHtml = e.currentTarget as HTMLElement
     const idsValue = getAnnotationIds(target)
-
     if (!idsValue) return
 
     const idArr = idsValue.split(',')
@@ -133,7 +130,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   useEffect(() => {
     annotationsModeRef.current = annotationsMode
   }, [annotationsMode])
-
 
 
   const onMouseEnterTarget = (e: Event) => {
@@ -198,7 +194,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     }, {})
 
     setMatchedAnnotationsMap(result)
-    matchedAnnotationsMapRef.current = result
   }, [parsedDom, panelState.annotations])
 
   // Update hover styles each time hoveredAnnotation changes
