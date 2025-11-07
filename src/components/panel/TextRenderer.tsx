@@ -32,15 +32,7 @@ interface Props {
   onReady?: () => void
 }
 
-interface targetSelectionDictType {
-  el: HTMLElement,
-  selectedAnnotationIndex: number
-}
 
-let targetSelectionDict: targetSelectionDictType = { el: null, selectedAnnotationIndex: null }
-// [{
-//  el: HTMLElement, selectedAnnotationIndex: number
-//  }]
 
 const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
@@ -61,6 +53,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const [portals, setPortals] = useState([])
 
   const annotationsModeRef = useRef<'align' | 'list'>(null)
+  const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
 
   function scrollIntoSelectedAnnotation(selectedAnnotation: Annotation) {
     const annotationId = selectedAnnotation?.id
@@ -70,29 +63,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     scrollIntoViewIfNeeded(annotationEl, container)
   }
 
-  function isNewTargetSelection(targetSelectionDict: targetSelectionDictType, selectedTarget: HTMLElement) {
-    return targetSelectionDict.el !== selectedTarget
-  }
-
-  function getUpdatedTargetSelection(targetAnnotationIds: string[], targetSelection: targetSelectionDictType, target: HTMLElement ) {
-    const newTargetSelectionObject: targetSelectionDictType = { ...targetSelection }
-
-    if (isNewTargetSelection(targetSelection, target)) {
-      newTargetSelectionObject.el = target
-      newTargetSelectionObject.selectedAnnotationIndex = 0
-      return newTargetSelectionObject
-    }
-
-    if (newTargetSelectionObject.selectedAnnotationIndex < targetAnnotationIds.length - 1) {
-      newTargetSelectionObject.selectedAnnotationIndex += 1
-    }
-
-    else {
-      // we reached the last selected annotation -> we set idx to -1 which signalises later that we deselect the target
-      newTargetSelectionObject.selectedAnnotationIndex = -1
-    }
-    return newTargetSelectionObject
-  }
 
   const onClickTarget = (e: Event) => {
     // Generic click listener
@@ -100,19 +70,20 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     //  So this function will be called with those state values which existed at the time of adding.
 
     const target = e.currentTarget as Element
-    const targetHtml = e.currentTarget as HTMLElement
     const idsValue = getAnnotationIds(target)
     if (!idsValue) return
 
-    const idArr = idsValue.split(',')
+    let newSelectedAnnotationIndex = -1
 
-    let newAnnotationId = null
-    targetSelectionDict = getUpdatedTargetSelection(idArr, targetSelectionDict, targetHtml)
-    const newSelectedAnnotationIndex = targetSelectionDict.selectedAnnotationIndex
-    if (newSelectedAnnotationIndex !== -1) newAnnotationId = idArr[newSelectedAnnotationIndex]
-    // index among target annotations
+    const targetEntry: MergedAnnotationEntry = flippedMatchedAnnotationsMapRef.current.filter(entry => entry.target === target)[0]
+    if (targetEntry.selectedAnnotationIndex === -1) newSelectedAnnotationIndex = 0
+    else if (targetEntry.selectedAnnotationIndex < targetEntry.annotations.length - 1) {
+      newSelectedAnnotationIndex = targetEntry.selectedAnnotationIndex += 1
+    }
 
-    const annotation = panelState.annotations.find(a => a.id === newAnnotationId)
+    targetEntry.selectedAnnotationIndex = newSelectedAnnotationIndex
+
+    const annotation = newSelectedAnnotationIndex !== -1 ? targetEntry.annotations[newSelectedAnnotationIndex] : null
 
     if (annotation) {
       if (!panelState.annotationsOpen) {
@@ -218,7 +189,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   // Apply highlighting styles on every map update
   useEffect(() => {
-    flipMatchedAnnotationsMap(matchedAnnotationsMap).forEach(fa => {
+    const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedAnnotationsMap)
+    flippedMatchedAnnotationsMapRef.current = flippedMatchedAnnotationsMap
+
+    flippedMatchedAnnotationsMap.forEach(fa => {
       const annotations = fa.annotations
       const target = fa.target
 
