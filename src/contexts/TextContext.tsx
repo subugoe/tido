@@ -1,8 +1,8 @@
 import { createContext, useContext, useState } from 'react'
 
 type TextProviderState = {
-  hoveredAnnotation: string | null
-  setHoveredAnnotation: (value: string | null) => void
+  hoveredAnnotations: string[] | null
+  setHoveredAnnotations: (value: string[] | null) => void
   loadingText: boolean
   setLoadingText: (value: boolean) => void
 }
@@ -13,13 +13,13 @@ export const TextProvider = ({
   children
 }) => {
 
-  const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
+  const [hoveredAnnotations, setHoveredAnnotations] = useState(null)
   const [loadingText, setLoadingText] = useState(false)
 
   return (
     <TextProviderContext.Provider value={{
-      hoveredAnnotation,
-      setHoveredAnnotation,
+      hoveredAnnotations,
+      setHoveredAnnotations,
       loadingText,
       setLoadingText
     }}>

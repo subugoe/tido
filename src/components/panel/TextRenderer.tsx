@@ -19,7 +19,6 @@ import {
   flipMatchedAnnotationsMap,
   getAnnotationIds,
   getCrossRefElements,
-  isSelected,
   removeAnnotationIds,
   removeHighlightStyle,
   removeHoverStyle,
@@ -47,9 +46,12 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     annotationsMode
   } = usePanel()
 
-  const { hoveredAnnotation, setHoveredAnnotation } = useText()
+  const { hoveredAnnotations, setHoveredAnnotations } = useText()
 
   const [portals, setPortals] = useState([])
+
+  const annotationsModeRef = useRef<'align' | 'list'>(null)
+  const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
 
   function scrollIntoSelectedAnnotation(selectedAnnotation: Annotation) {
     const annotationId = selectedAnnotation?.id
@@ -58,6 +60,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     const annotationEl = container.querySelector('div[data-annotation="'+annotationId+'"]') as HTMLElement
     scrollIntoViewIfNeeded(annotationEl, container)
   }
+
 
   const onClickTarget = (e: Event) => {
     // Generic click listener
@@ -68,19 +71,35 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     const idsValue = getAnnotationIds(target)
     if (!idsValue) return
 
-    const idArr = idsValue.split(',')
-    const last = idArr[idArr.length - 1]
-    const annotation = panelState.annotations.find(a => a.id === last)
+    let newSelectedAnnotationIndex = -1
+
+    const targetEntry: MergedAnnotationEntry = flippedMatchedAnnotationsMapRef.current.filter(entry => entry.target === target)[0]
+    if (targetEntry.selectedAnnotationIndex === -1) newSelectedAnnotationIndex = 0
+    else if (targetEntry.selectedAnnotationIndex < targetEntry.annotations.length - 1) {
+      newSelectedAnnotationIndex = targetEntry.selectedAnnotationIndex += 1
+    }
+
+    targetEntry.selectedAnnotationIndex = newSelectedAnnotationIndex
+
+    const annotation = newSelectedAnnotationIndex !== -1 ? targetEntry.annotations[newSelectedAnnotationIndex] : null
+
     if (annotation) {
       if (!panelState.annotationsOpen) {
         updatePanel({ annotationsOpen: true })
       }
 
-      if (isSelected(target)) setSelectedAnnotation(null)
-      else setSelectedAnnotation(annotation)
-      if (annotationsMode === 'list') scrollIntoSelectedAnnotation(annotation)
+      setSelectedAnnotation(annotation)
+      if (annotationsModeRef.current === 'list') scrollIntoSelectedAnnotation(annotation)
+    }
+    else {
+      setSelectedAnnotation(null)
     }
   }
+
+  useEffect(() => {
+    annotationsModeRef.current = annotationsMode
+  }, [annotationsMode])
+
 
   const onMouseEnterTarget = (e: Event) => {
     const target = e.currentTarget as Element
@@ -88,13 +107,11 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     if (!idsValue) return
 
     const idArr = idsValue.split(',')
-    const last = idArr[idArr.length - 1]
-
-    setHoveredAnnotation(last)
+    setHoveredAnnotations(idArr)
   }
 
   const onMouseLeaveTarget = () => {
-    setHoveredAnnotation(null)
+    setHoveredAnnotations(null)
   }
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
@@ -158,16 +175,22 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
       })
     })
 
-    if (!hoveredAnnotation) return
-    const matched = matchedAnnotationsMap[hoveredAnnotation]
-    matched.target.forEach(target => {
-      addHoverStyle(target)
+    if (!hoveredAnnotations) return
+    hoveredAnnotations.forEach((annotation) => {
+      const matched = matchedAnnotationsMap[annotation]
+      matched.target.forEach(target => {
+        addHoverStyle(target)
+      })
     })
-  }, [hoveredAnnotation])
+
+  }, [hoveredAnnotations])
 
   // Apply highlighting styles on every map update
   useEffect(() => {
-    flipMatchedAnnotationsMap(matchedAnnotationsMap).forEach(fa => {
+    const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedAnnotationsMap)
+    flippedMatchedAnnotationsMapRef.current = flippedMatchedAnnotationsMap
+
+    flippedMatchedAnnotationsMap.forEach(fa => {
       const annotations = fa.annotations
       const target = fa.target
 

@@ -81,11 +81,6 @@ function addCrossRefRelStyle(target: Element) {
   target.classList.add(...CROSS_REF_REL_STYLE)
 }
 
-interface MergedAnnotationEntry {
-  target: Element
-  annotations: Annotation[]
-  filtered: boolean[]
-}
 
 function flipMatchedAnnotationsMap(map: MatchedAnnotationsMap): MergedAnnotationEntry[] {
   // Flip the map in favor of targets. Each result array item contains a unique target.
@@ -104,6 +99,7 @@ function flipMatchedAnnotationsMap(map: MatchedAnnotationsMap): MergedAnnotation
           target: el,
           annotations: [],
           filtered: [],
+          selectedAnnotationIndex: -1
         }
         elementMap.set(el, merged)
       }

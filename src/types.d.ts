@@ -224,6 +224,13 @@ declare global {
     }
   }
 
+  interface MergedAnnotationEntry {
+    target: Element
+    annotations: Annotation[]
+    filtered: boolean[],
+    selectedAnnotationIndex: number
+  }
+
   interface Metadata {
     key: string
     value?: string
