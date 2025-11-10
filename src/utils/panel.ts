@@ -4,8 +4,6 @@ import { PanelModeButtonData, PanelConfig } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
-import { existsImageInNewItem } from '@/utils/config/config.ts'
-
 export const DEFAULT_PANEL_WIDTH = 600
 export const MIN_PANEL_WIDTH = 600
 export const SIDEBAR_DEFAULT_WIDTH = 400
