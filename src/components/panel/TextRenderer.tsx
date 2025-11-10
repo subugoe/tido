@@ -43,7 +43,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     updatePanel,
     panelId,
     selectedAnnotation,
-    annotationsMode
+    annotationsMode,
+    showTextOptions,
   } = usePanel()
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
@@ -154,7 +155,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
           target.addEventListener('click', onClickTarget)
           target.addEventListener('mouseenter', onMouseEnterTarget)
           target.addEventListener('mouseleave', onMouseLeaveTarget)
-
         })
         const annotType = cur.body['x-content-type']
         acc[cur.id] = { target: matchedNodes, filtered: fullAnnotationTypes ? fullAnnotationTypes[annotType] ?? true : false, annotation: cur }
@@ -242,8 +242,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     })
   }, [selectedAnnotation])
 
-  return <div className="relative">
-    <div ref={textWrapperRef}></div>
+  return <div className={`relative flex`}>
+    <div data-text-wrapper ref={textWrapperRef} className={showTextOptions ? 'pt-16' : ''}></div>
     {portals}
   </div>
 })

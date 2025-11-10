@@ -11,8 +11,6 @@ import { useTranslation } from 'react-i18next'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
 
-import { showSelectPanelModeModalIfNeeded } from '@/utils/panel.ts'
-import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 interface Props {
   onConfirm?: () => void
@@ -20,7 +18,6 @@ interface Props {
 
 const TreeSelection: FC<Props> = ({ onConfirm }) => {
   const { t } = useTranslation()
-  const { panelModes } = useConfig()
   const addPanel = usePanelStore(state => state.addPanel)
   const nodes = useDataStore(state => state.treeNodes)
   // we define the way to show nodes in Global tree using "treeNodes"
@@ -46,7 +43,6 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
         itemIndex: itemIndex
       }
 
-      await showSelectPanelModeModalIfNeeded(newPanelConfig, panelModes)
       addPanel(newPanelConfig, newPanelId)
     }
 

@@ -14,11 +14,12 @@ const AlignAnnotationsList: FC = () => {
 
   const filteredAnnotations = getFilteredAnnotations(matchedAnnotationsMap)
 
-  const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-container]`) as HTMLElement)
+  const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-wrapper]`) as HTMLElement)
   const [yMap, setYMap] = useState({})
   const [loading, setLoading] = useState(false)
+  const [height, setHeight] = useState(0)
 
-  const ref = useRef()
+  const ref = useRef(null)
 
   function isClickedElAnnotation(clickedEl: HTMLElement) {
     if (clickedEl.getAttribute('data-annotation')) return true
@@ -100,6 +101,10 @@ const AlignAnnotationsList: FC = () => {
   }
 
   useEffect(() => {
+    // Set height equal to textContainer height since the text can be way longer
+    // than the position of the last annotation.
+    setHeight(textContainer.getBoundingClientRect().height)
+
     if (filteredAnnotations?.length === 0) {
       setElements([])
     } else {
@@ -143,13 +148,18 @@ const AlignAnnotationsList: FC = () => {
   }, [elements])
 
 
-  if (filteredAnnotations.length > 0) return <div ref={ref} className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
-    {filteredAnnotations.map(a => <Annotation
-      data={a}
-      key={a.id}
-      top={yMap[a.id]}
-    />)}
-  </div>
+  if (filteredAnnotations.length > 0)
+    return <div
+      ref={ref}
+      className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}
+      style={{ height: `${height}px` }}
+    >
+      {filteredAnnotations.map(a => <Annotation
+        data={a}
+        key={a.id}
+        top={yMap[a.id]}
+      />)}
+    </div>
 }
 
 export default AlignAnnotationsList

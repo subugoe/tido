@@ -4,25 +4,25 @@ import { Button } from '@/components/ui/button.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface PreviewProps {
-  previewMode?: string,
-  setPreviewMode?: (value: string) => void,
+  activeMode?: string,
+  onChange?: (value: string) => void,
 }
 
-const Swapper: FC<PreviewProps> = ({ previewMode = 'A', setPreviewMode = () => {} }) => {
+const Swapper: FC<PreviewProps> = ({ activeMode = 'A', onChange = () => {} }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
   function updateMode() {
-    if (previewMode === 'A') {
-      setPreviewMode('B')
+    if (activeMode === 'A') {
+      onChange('B')
       return
     }
-    setPreviewMode('A')
+    onChange('A')
   }
 
   const previewA = <Button
     data-cy='preview-image'
-    className="px-2 py-3 h-auto shadow-xl"
+    className="px-2 py-3 h-auto shadow-md bg-background"
     variant="outline"
     color="secondary"
   >
@@ -34,7 +34,7 @@ const Swapper: FC<PreviewProps> = ({ previewMode = 'A', setPreviewMode = () => {
 
   const previewB = <Button
     data-cy='preview-text'
-    className="px-2 py-3 h-auto shadow-xl"
+    className="px-2 py-3 h-auto shadow-md bg-background"
     variant="outline"
     color="secondary"
   >
@@ -47,7 +47,7 @@ const Swapper: FC<PreviewProps> = ({ previewMode = 'A', setPreviewMode = () => {
   return (
     <div className="z-20 absolute p-[1px] bottom-12 right-12 transition-all"
       onClick={() => updateMode()}>
-      {previewMode === 'A' ? previewA : previewB  }
+      {activeMode === 'A' ? previewA : previewB  }
     </div>
   )
 }

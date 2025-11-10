@@ -26,7 +26,7 @@ const AnnotationFilters: FC = () => {
     return visibleAnnotationTypes[type] ?? false
   }
 
-  return <div className="flex flex-col items-center w-100 mt-4">
+  return <div className="flex flex-col items-center">
     <AnnotationTypes typesMap={visibleAnnotationTypes} />
     { isVisibleType('Variant') && <div className="mt-1"><WitnessFilter /></div> }
   </div>

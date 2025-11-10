@@ -8,10 +8,11 @@ import { existsImageInNewItem } from '@/utils/config/config.ts'
 
 export const DEFAULT_PANEL_WIDTH = 600
 export const MIN_PANEL_WIDTH = 600
-export const ANNOTATION_PANEL_WIDTH = 400
+export const SIDEBAR_DEFAULT_WIDTH = 400
 
 export const PANEL_BORDER_WIDTH = 2
 export const PANEL_GAP = 16
+export const PANEL_HEADER_HEIGHT = 120
 
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
@@ -105,12 +106,4 @@ export async function createNewPanel(collectionId: string, manifest: Manifest, i
 
   useUIStore.getState().updateNewestPanelId(newPanelId)
   await usePanelStore.getState().addPanel(newPanelConfig, newPanelId)
-}
-
-export async function showSelectPanelModeModalIfNeeded(newConfig: PanelConfig, panelModes: string[]) {
-  const existsImage = await existsImageInNewItem(newConfig)
-  const showModal = existsImage && useUIStore.getState().enabledSelectPanelMode && panelModes.length > 1
-  if (showModal) {
-    useUIStore.getState().updateShowSelectPanelMode(true)
-  }
 }

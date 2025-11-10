@@ -14,7 +14,7 @@ interface TreeProviderProps {
   children?: ReactNode
   onSelect(node: TreeNode, target: HTMLElement): void
   getChildren(node: TreeNode): Promise<TreeNode[]>
-  elevation: number
+  elevation?: number
 }
 
 const TreeProvider: FC<TreeProviderProps> = ({ children, onSelect, getChildren, elevation = 0 }) => {

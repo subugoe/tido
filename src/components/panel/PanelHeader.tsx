@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, memo, useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 import { Info, PanelRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
@@ -10,8 +10,9 @@ import Metadata from '@/components/metadata/Metadata'
 import Options from '@/components/panel/Options.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
+import { PANEL_HEADER_HEIGHT } from '@/utils/panel.ts'
 
-const SidebarToggle = (props) => {
+const SidebarToggle = memo((props) => {
   const { panelState, updatePanel, matchedAnnotationsMap, usePanelTranslation } = usePanel()
   const [isDisabled, setIsDisabled] = useState(false)
   const [tooltipMessage, setTooltipMessage] = useState('')
@@ -46,7 +47,7 @@ const SidebarToggle = (props) => {
       </Tooltip>
     </TooltipProvider>
   </>
-}
+})
 
 const PanelHeader: FC = () => {
   const { usePanelTranslation } = usePanel()
@@ -58,7 +59,7 @@ const PanelHeader: FC = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col border-b border-border p-3" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
       <div className="flex items-center mb-6">
         <CollectionTitle />
         <div className="ml-1 text-wrap break-words">
@@ -84,7 +85,7 @@ const PanelHeader: FC = () => {
           </Popover>
         </div>
         <div className="ml-auto"><Options /></div>
-        <SidebarToggle className="ml-2" />
+        <SidebarToggle />
       </div>
       <div className="flex justify-center" data-cy="panel-title-and-nav-arrows">
         <NavigationButton isPrev={true} />

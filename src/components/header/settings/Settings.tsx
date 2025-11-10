@@ -7,7 +7,6 @@ import {
 } from '@/components/ui/dropdown-menu.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import ThemeToggle from '@/components/header/settings/ThemeToggle.tsx'
-import ShowSelectPanelModeToggle from '@/components/header/settings/ShowSelectPanelModeToggle.tsx'
 import { CircleQuestionMark, Settings } from 'lucide-react'
 import About from '@/components/header/settings/About.tsx'
 import { useTranslation } from 'react-i18next'
@@ -36,9 +35,6 @@ const SettingsComp: FC = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="p-2 cursor-pointer">
           {showThemeToggle && <ThemeToggle /> }
-          <DropdownMenuItem asChild>
-            <ShowSelectPanelModeToggle />
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setShowAboutDialog(true)}>
             <CircleQuestionMark />
             <span>{t('about_tido')}</span>

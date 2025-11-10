@@ -109,28 +109,28 @@ describe('Tree', () => {
 
       // a select mode dialog should open:
       // contains the select modes and the 'text' mode as initially selected
-      .get('#panels-wrapper')
-      .children().eq(1)
-      .find('div[role="dialog"]')
-      .find('[data-cy="modes-container"] [data-cy="modes"]')
-      .should('exist')
-      .children().should('have.length', 3)
-      .eq(0).find('button').should('have.attr', 'data-cy', 'split')
-      .should('not.have.class', 'active')
-      .parents('[data-cy="modes"]').children()
-      .eq(1).find('button').should('have.attr', 'data-cy', 'text')
-      .should('have.class', 'active')
-      .parents('[data-cy="modes"]').children()
-      .eq(2).find('button').should('have.attr', 'data-cy', 'image')
-      .should('not.have.class', 'active')             // 'text' mode should be select
-      .click()                         // switch to 'text' mode
-
-      .parents('div[role="dialog"]')
-      .find('button[id="do-not-ask-again"]').click()
-      .parents('div[role="dialog"]')
-
-      .find('button[data-cy="confirm"]')
-      .click()
+      // .get('#panels-wrapper')
+      // .children().eq(1)
+      // .find('div[role="dialog"]')
+      // .find('[data-cy="modes-container"] [data-cy="modes"]')
+      // .should('exist')
+      // .children().should('have.length', 3)
+      // .eq(0).find('button').should('have.attr', 'data-cy', 'split')
+      // .should('not.have.class', 'active')
+      // .parents('[data-cy="modes"]').children()
+      // .eq(1).find('button').should('have.attr', 'data-cy', 'text')
+      // .should('have.class', 'active')
+      // .parents('[data-cy="modes"]').children()
+      // .eq(2).find('button').should('have.attr', 'data-cy', 'image')
+      // .should('not.have.class', 'active')             // 'text' mode should be select
+      // .click()                         // switch to 'text' mode
+      //
+      // .parents('div[role="dialog"]')
+      // .find('button[id="do-not-ask-again"]').click()
+      // .parents('div[role="dialog"]')
+      //
+      // .find('button[data-cy="confirm"]')
+      // .click()
 
     cy.get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in second panel
       .find('[data-cy="panel"]')
@@ -165,10 +165,10 @@ describe('Tree', () => {
       .children()
       .eq(2).click()
 
-    cy.clickNewPanelInGlobalTree()
+    // cy.clickNewPanelInGlobalTree()
     // check 1) select mode dialog is not shown again  2) the new panel is automatically in 'image' mode 3) Select mode toggle in settings is 'off'
     // 1) select mode dialog is not shown again
-    cy.existSelectModeDialog(false)
+    // cy.existSelectModeDialog(false)
     // 2) the new panel is automatically opened in 'text' selected mode
     cy.get('[data-cy="panels-wrapper"]')
       .find('.panel')
@@ -181,13 +181,13 @@ describe('Tree', () => {
       .should('have.attr', 'data-selected', 'true')
 
     // 3) toggle in settings is off
-    cy.get('[data-cy="header"]')
-      .find('[data-cy="settings"]')
-      .click({ force: true })
-      .get('[data-radix-menu-content]')
-      .find('[data-cy="select-panel-mode-toggle"]')
-      .find('button')
-      .should('have.attr','aria-checked','false')
+    // cy.get('[data-cy="header"]')
+    //   .find('[data-cy="settings"]')
+    //   .click({ force: true })
+    //   .get('[data-radix-menu-content]')
+    //   .find('[data-cy="select-panel-mode-toggle"]')
+    //   .find('button')
+    //   .should('have.attr','aria-checked','false')
 
       // Reset toggle to 'on' shows the select mode dialog after selecting an item i.e in global tree
 
@@ -213,15 +213,15 @@ describe('Tree', () => {
       .last().should('have.text', 'Panel 3')
 
     // under the fourth panel, we see a dialog which has a modes-container with 3 modes
-    cy.clickNewPanelInGlobalTree()
-      .get('#panels-wrapper')
-      .find('.panel')
-      .eq(3)
-      .find('div[role="dialog"]')
-      .find('div[data-cy="modes"')
-      .children().should('have.length', 3)
-      .eq(0)
-      .find('[data-cy="split"]')
+    // cy.clickNewPanelInGlobalTree()
+    //   .get('#panels-wrapper')
+    //   .find('.panel')
+    //   .eq(3)
+    //   .find('div[role="dialog"]')
+    //   .find('div[data-cy="modes"')
+    //   .children().should('have.length', 3)
+    //   .eq(0)
+    //   .find('[data-cy="split"]')
   })
 
   it('Should update a panel using global tree', () => {
