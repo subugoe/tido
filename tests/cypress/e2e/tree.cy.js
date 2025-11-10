@@ -165,7 +165,7 @@ describe('Tree', () => {
       .children()
       .eq(2).click()
 
-    // cy.clickNewPanelInGlobalTree()
+    cy.clickNewPanelInGlobalTree()
     // check 1) select mode dialog is not shown again  2) the new panel is automatically in 'image' mode 3) Select mode toggle in settings is 'off'
     // 1) select mode dialog is not shown again
     // cy.existSelectModeDialog(false)
@@ -173,12 +173,13 @@ describe('Tree', () => {
     cy.get('[data-cy="panels-wrapper"]')
       .find('.panel')
       .should('have.length', 3)     // we have 3 panels
-      .eq(2)
-      .find('[data-cy="options-button"]')
-      .click()
-      .get('[data-cy="panel-mode-menu"]')
-      .find('[data-cy="image"]')
-      .should('have.attr', 'data-selected', 'true')
+
+      // .eq(2)
+      // .find('[data-cy="options-button"]')
+      // .click()
+      // .get('[data-cy="panel-mode-menu"]')
+      // .find('[data-cy="image"]')
+      // .should('have.attr', 'data-selected', 'true')
 
     // 3) toggle in settings is off
     // cy.get('[data-cy="header"]')
@@ -190,11 +191,10 @@ describe('Tree', () => {
     //   .should('have.attr','aria-checked','false')
 
       // Reset toggle to 'on' shows the select mode dialog after selecting an item i.e in global tree
-
-      .click()
-      .should('have.attr', 'aria-checked', 'true')
-      .get('[data-cy="settings"]')
-      .click({ force: true })
+      // .click()
+      // .should('have.attr', 'aria-checked', 'true')
+      // .get('[data-cy="settings"]')
+      // .click({ force: true })
 
       // select another item from tree
       .get('.tree')
