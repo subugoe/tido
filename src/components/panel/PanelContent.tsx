@@ -68,10 +68,12 @@ const PanelContent: FC = React.memo(() => {
   }
 
   if (error) return <PanelError error={error} resetErrorBoundary={() => {}} />
-
   return (
     <div
-      className={`h-full flex flex-col relative overflow-hidden`}>
+      className={`h-full flex flex-col relative overflow-hidden`} style={{
+        '--sash-hover-size': '2px',
+        '--focus-border': 'rgb(var(--tido-color-primary))'
+      } as React.CSSProperties}>
       <div
         className="flex h-full w-full overflow-hidden border-t border-border" data-cy="panel-container">
         <TextProvider>
