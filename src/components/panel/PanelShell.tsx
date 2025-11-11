@@ -13,6 +13,10 @@ const PanelShell: FC<Props> = ({ children }) => {
     if (!ref.current) return
     initResizer(ref.current)
     getSidebarScroller()
+
+    // Scroll to this panel
+    const scrollPosX = ref.current.offsetLeft - ref.current.offsetWidth / 2
+    document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
   }, [ref])
 
   return <div
