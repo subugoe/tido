@@ -13,17 +13,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { PANEL_HEADER_HEIGHT } from '@/utils/panel.ts'
 
 const SidebarToggle = memo((props) => {
-  const { panelState, updatePanel, matchedAnnotationsMap, usePanelTranslation } = usePanel()
-  const [isDisabled, setIsDisabled] = useState(false)
+  const { panelState, updatePanel, usePanelTranslation } = usePanel()
   const [tooltipMessage, setTooltipMessage] = useState('')
   const { t } = usePanelTranslation()
 
   useEffect(() => {
-    const hasNoAnnotations = Object.keys(matchedAnnotationsMap).length === 0
-    setIsDisabled(hasNoAnnotations)
-    if (hasNoAnnotations) setTooltipMessage(t('no_annotations_available'))
-    else setTooltipMessage(t(panelState.annotationsOpen ? 'hide_annotations' : 'display_annotations'))
-  }, [matchedAnnotationsMap, panelState.annotationsOpen])
+    setTooltipMessage(t(panelState.annotationsOpen ? 'hide_annotations' : 'display_annotations'))
+  }, [panelState.annotationsOpen])
 
   function onClick() {
     updatePanel({
@@ -36,7 +32,7 @@ const SidebarToggle = memo((props) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <div>
-            <Button variant="ghost" size="icon" disabled={isDisabled} {...props} onClick={onClick} data-cy="sidebar-toggle">
+            <Button variant="ghost" size="icon" {...props} onClick={onClick} data-cy="sidebar-toggle">
               <PanelRight />
             </Button>
           </div>

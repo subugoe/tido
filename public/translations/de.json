@@ -100,6 +100,8 @@
     "display_annotations": "Annotationen anzeigen",
     "hide_annotations": "Annotationen verstecken",
     "no_annotations_available": "Keine Annotationen verfügbar",
+    "no_annotations_found": "Keine Annotationen gefunden",
+    "no_annotations_exist_for_current_text": "Es existieren keine Annotationen für den aktuell angezeigten Text.",
     "error_collection_url": "Collection URL \"{{url}}\" ist nicht korrekt formatiert.",
     "unknown_name": "Unbekannter Name",
     "generate_share_url": "Klick, um einen Link zum Teilen zu erstellen",
@@ -108,6 +110,7 @@
     "share_this_view": "Diese Ansicht teilen",
     "panel_init_error": "Fehler beim Initialisieren des Panels",
     "error_contains_no_manifests": "Die angegebene Kollektion \"{{url}}\" enthält keine Manifests. Falls es sich um eine verschachtelte Kollektion handelt, geben Sie bitte nur die letzte Kind-Kollektion an.",
-    "error_contains_no_items": "Das angegebene Manifest \"{{url}}\" enthält keine Items."
+    "error_contains_no_items": "Das angegebene Manifest \"{{url}}\" enthält keine Items.",
+    "annotations_init_error": "Fehler beim Initialisieren der Annotationen"
   }
 }

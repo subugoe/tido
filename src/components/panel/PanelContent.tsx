@@ -11,7 +11,7 @@ import { Allotment } from 'allotment'
 import SidebarView from '@/components/panel/views/SidebarView.tsx'
 import SwapView from '@/components/panel/views/SwapView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
-import { SIDEBAR_DEFAULT_WIDTH } from '@/utils/panel.ts'
+import { DEFAULT_PANEL_WIDTH, SIDEBAR_DEFAULT_WIDTH } from '@/utils/panel.ts'
 
 const PanelContent: FC = React.memo(() => {
   const { panelState, resizer, error } = usePanel()
@@ -75,11 +75,11 @@ const PanelContent: FC = React.memo(() => {
         '--focus-border': 'rgb(var(--tido-color-primary))'
       } as React.CSSProperties}>
       <div
-        className="flex h-full w-full overflow-hidden border-t border-border" data-cy="panel-container">
+        className="flex h-full w-full overflow-hidden" data-cy="panel-container">
         <TextProvider>
           <Allotment onChange={handleChange} proportionalLayout={true}>
             <Allotment.Pane
-              minSize={isOpening ? sizes.main : 30}
+              minSize={isOpening ? sizes.main : DEFAULT_PANEL_WIDTH}
               maxSize={isOpening ? sizes.main : Infinity}
             >
               <div className="flex flex-col h-full">
