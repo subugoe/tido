@@ -47,13 +47,13 @@ const About: FC<Props> = ({ show = false, onClose }) => {
           </p>
         </div>
         <DialogFooter className="sm:justify-start">
-          <Button variant="accent" asChild>
+          <Button variant="muted" asChild>
             <a href={README_URL} target="_blank"><Book />{ t('documentation') }</a>
           </Button>
-          <Button variant="accent" asChild>
+          <Button variant="muted" asChild>
             <a href={REPOSITORY_URL} target="_blank"><CodeXml /> { t('source_code') }</a>
           </Button>
-          <Button variant="accent" asChild>
+          <Button variant="muted" asChild>
             <a href={packageJson.bugs.url} target="_blank"><Bug />{ t('report_bug') }</a>
           </Button>
         </DialogFooter>

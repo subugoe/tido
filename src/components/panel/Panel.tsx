@@ -1,171 +1,21 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import { FC } from 'react'
+import PanelContent from '@/components/panel/PanelContent.tsx'
+import { PanelProvider } from '@/contexts/PanelContext.tsx'
+import { ErrorBoundary } from 'react-error-boundary'
+import PanelError from '@/components/panel/PanelError.tsx'
+import PanelShell from '@/components/panel/PanelShell.tsx'
 
-import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useScrollStore } from '@/store/ScrollStore.tsx'
-import { useUIStore } from '@/store/UIStore.tsx'
-
-import PanelHeader from '@/components/panel/PanelHeader.tsx'
-import ScrollPanelMenu from '@/components/panel/ScrollPanelMenu.tsx'
-import { GripVertical } from 'lucide-react'
-import SelectPanelModeDialog from '@/components/panel/select-panel-mode/SelectPanelModeDialog.tsx'
-import ImageView from '@/components/panel/views/ImageView.tsx'
-import Swapper from '@/components/panel/Swapper.tsx'
-import TextOptions from '@/components/panel/TextOptions.tsx'
-import AnnotationsHeader from '@/components/panel/annotations/AnnotationsHeader.tsx'
-import TextViewWarning from '@/components/panel/views/TextViewWarning.tsx'
-import AnnotationsView from '@/components/panel/annotations/AnnotationsView.tsx'
-import { useConfig } from '@/contexts/ConfigContext.tsx'
-import { TextProvider } from '@/contexts/TextContext.tsx'
-import TextViewContainer from '@/components/panel/views/TextViewContainer.tsx'
-
-const Panel: FC = React.memo(() => {
-  const { panelId, panelState, initResizer, resizer, showTextOptions, setShowTextOptions, annotationsMode } = usePanel()
-  const { panelModes } = useConfig()
-  const newestPanelId = useUIStore(state => state.newestPanelId)
-  const showSelectModeState = useUIStore(state => state.showSelectPanelMode)
-  const scrollPanelIds = useScrollStore(state => state.panelIds)
-
-  const ref = useRef(null)
-
-  const [isScrollPanel, setIsScrollPanel] = useState(false)
-  const [showSidebarContent, setShowSidebarContent] = useState(false)
-  const [showSidebarBorders, setShowSidebarBorders] = useState(false)
-  const [showImage, setShowImage] = useState(false)
-  const [showText, setShowText] = useState(false)
-  const [showSwapper, setShowSwapper] = useState(false)
-
-  const [swapperPreviewMode, setSwapperPreviewMode] = useState('A')
-
-  const [showSelectPanelMode, setShowSelectPanelMode] = useState(false)
-
-  useEffect(() => {
-    if (!ref.current) return
-    initResizer(ref.current)
-    return () => {
-      if (resizer) resizer.clean()
-    }
-  }, [])
-
-  useEffect(() => {
-    setShowSelectPanelMode(panelId === newestPanelId && showSelectModeState && panelModes.length > 1)
-  }, [panelId, newestPanelId, showSelectModeState])
-
-  useEffect(() => {
-    if (resizer) resizer.handleTextUpdate()
-    if (panelState.mode === 'swap') {
-      setShowImage(false)
-      setShowText(true)
-      setShowSwapper(true)
-    } else if (panelState.mode === 'split') {
-      setShowImage(true)
-      setShowText(true)
-      setShowSwapper(false)
-    } else if (panelState.mode === 'text') {
-      setShowImage(false)
-      setShowText(true)
-      setShowSwapper(false)
-    } else if (panelState.mode === 'image') {
-      setShowImage(true)
-      setShowText(false)
-      setShowSwapper(false)
-    }
-  }, [panelState.mode])
-
-  useEffect(() => {
-    if (!resizer) return
-    resizer.setAnnotationsOpen(panelState.annotationsOpen)
-    if (panelState.annotationsOpen) {
-      setShowSidebarBorders(true)
-
-      // We want to delay the actual visibility of annotations a bit because of calculation of top positions.
-      // TODO: Maybe move it to annotation body
-      const timeout = setTimeout(() => {
-        setShowSidebarContent(true)
-      }, 200)
-      return () => clearTimeout(timeout)
-    } else {
-      setShowSidebarContent(false)
-      setShowSidebarBorders(false)
-    }
-  }, [panelState.annotationsOpen])
-
-  useEffect(() => {
-    setIsScrollPanel(scrollPanelIds.includes(panelId))
-  }, [scrollPanelIds, panelId])
-
-  useEffect(() => {
-    const scrollPosX = ref.current.offsetLeft - ref.current.offsetWidth / 2
-    document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
-  }, [showSelectPanelMode])
-
-  function updateSwapperMode(newPreviewMode: string) {
-    setSwapperPreviewMode(newPreviewMode)
-
-    if (newPreviewMode === 'A') {
-      // preview mode A = image, content is text
-      setShowImage(false)
-      setShowText(true)
-      setShowTextOptions(true)
-      return
-    }
-
-    setShowImage(true)
-    setShowText(false)
-    setShowTextOptions(false)
-  }
-
-  return (
-    <div
-      id={panelId}
-      ref={ref}
-      className={`panel bg-background text-foreground grow-0 shrink-0 transition-[width] relative @container/panel`}
-      data-cy="panel"
-    >
-      <div className={`h-full flex flex-col relative border-2 rounded-lg overflow-hidden ${isScrollPanel ? 'border-amber-300 ring-4 ring-amber-50' : 'border-border'}`}>
-        <div
-          className={`
-          absolute w-full h-full inset-0 bg-white/40 transition-opacity duration-500 z-10 backdrop-blur-xs
-          ${showSelectPanelMode ? 'opacity-100' : 'opacity-0 pointer-events-none'}
-        `}
-        />
-        {isScrollPanel && <ScrollPanelMenu className="absolute top-0 left-1/2 -translate-x-1/2" />}
-
-        <div className="relative">
-          <div data-panel-header className={`px-3 pt-3 pb-5 border-r ${showSidebarBorders ? 'border-border' : 'border-transparent'}`}>
-            <PanelHeader />
-          </div>
-          <div data-header-sidebar className={`absolute top-0 h-full w-[400px]`}>
-            { showSidebarContent && <AnnotationsHeader /> }
-          </div>
-        </div>
-
-        <div className="relative flex h-full overflow-hidden border-t border-border" data-cy="panel-container">
-          <div data-image-container className={`grow-0 shrink-0 ${showImage ? 'block' : 'hidden'} border-r border-border`}>
-            {showImage && <ImageView />}
-          </div>
-          <div data-scroll-container className={`h-full w-full bg-muted relative ${annotationsMode === 'align' ? 'overflow-x-hidden overflow-y-auto' : '' }`}>
-            <TextProvider>
-              <TextViewContainer showText={showText} showSidebarBorders={showSidebarBorders} />
-              <div data-sidebar-container className={`absolute top-0 h-full w-[400px] px-2 ${annotationsMode === 'list' ? 'overflow-x-hidden overflow-y-auto' : ''}`}>
-                {showSidebarContent && <AnnotationsView />}
-              </div>
-            </TextProvider>
-          </div>
-          <div data-text-options className="absolute top-0 z-10 flex flex-col items-center justify-center">
-            {showTextOptions && <TextOptions />}
-          </div>
-          <div data-text-warning className="absolute bottom-0 z-10 flex flex-col items-center justify-center">
-            <TextViewWarning />
-          </div>
-          {showSwapper && <Swapper previewMode={swapperPreviewMode} setPreviewMode={updateSwapperMode} />}
-        </div>
-        {showSelectPanelMode && ref.current && <SelectPanelModeDialog parentEl={ref.current} />}
-      </div>
-      <div data-resize-handle className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted -translate-y-1/2 top-1/2 -right-[6px]">
-        <GripVertical className="h-4 w-2.5 text-muted-foreground" />
-      </div>
-    </div>
-  )
-})
+interface Props {
+  state: PanelState
+}
+const Panel: FC<Props> = ({ state }) => {
+  return <PanelProvider panelId={state.id}>
+    <PanelShell>
+      <ErrorBoundary FallbackComponent={PanelError} resetKeys={[JSON.stringify(state.config)]}>
+        <PanelContent />
+      </ErrorBoundary>
+    </PanelShell>
+  </PanelProvider>
+}
 
 export default Panel

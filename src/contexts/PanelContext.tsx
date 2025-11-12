@@ -1,8 +1,8 @@
-import { ReactNode, createContext, useContext, useState, FC, useEffect } from 'react'
+import { ReactNode, createContext, useContext, useState, FC, useEffect, useRef } from 'react'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
-import { getExtendedFullAnnotationsTypesMap, selectSyncTargetByIndex } from '@/utils/annotations.ts'
+import { getExtendedFullAnnotationsTypesMap } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
@@ -13,8 +13,8 @@ import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { hasItems, hasManifests } from '@/utils/api-validate.ts'
-import { useErrorBoundary } from 'react-error-boundary'
 import { toast } from 'sonner'
+import { SidebarScroller } from '@/utils/sidebar-scroller.ts'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -45,6 +45,8 @@ interface PanelContentType {
   init: (config: PanelConfig) => void,
   annotationsMode: 'align' | 'list',
   setAnnotationsMode: (mode: 'align' | 'list') => void,
+  getSidebarScroller: () => SidebarScroller,
+  error: CustomError
 }
 
 interface PanelProviderProps {
@@ -70,10 +72,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [textWarning, setTextWarning] = useState('')
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
-  const [annotationsMode, setAnnotationsMode] = useState('')
+  const [annotationsMode, setAnnotationsMode] = useState<'list' | 'align'>('align')
+  const sidebarScroller = useRef<SidebarScroller>(null)
+  const [error, setError] = useState<CustomError>(null)
 
   const { t } = useTranslation()
-  const { showBoundary } = useErrorBoundary()
 
   const getCollection = useDataStore(state => state.initCollection)
   const { annotationsMode: initialAnnotationsMode } = useConfig()
@@ -105,24 +108,24 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       // Trickle down from collection to item
       const collection = await getCollection(config.collection)
       if (!hasManifests(collection)) {
-        showBoundary(new CustomError(t('panel_init_error'), t('error_contains_no_manifests', { url: config.collection })))
+        setError(new CustomError(t('panel_init_error'), t('error_contains_no_manifests', { url: config.collection })))
         return
       }
 
       if (config.manifestIndex === -1) {
-        showBoundary(new CustomError(t('panel_init_error'), t('manifest_not_found')))
+        setError(new CustomError(t('panel_init_error'), t('manifest_not_found')))
         return
       }
 
       if (config.itemIndex === -1) {
-        showBoundary(new CustomError(t('panel_init_error'), t('item_not_found')))
+        setError(new CustomError(t('panel_init_error'), t('item_not_found')))
         return
       }
 
       const manifestUrl = collection.sequence[config.manifestIndex ?? 0].id
       const manifest = await apiRequest<Manifest>(manifestUrl)
       if (!hasItems(manifest)) {
-        showBoundary(new CustomError(t('panel_init_error'), t('error_contains_no_items', { url: manifestUrl })))
+        setError(new CustomError(t('panel_init_error'), t('error_contains_no_items', { url: manifestUrl })))
         return
       }
 
@@ -178,7 +181,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       }
     } catch (e) {
       if (e.name)
-        showBoundary(new CustomError(t('panel_init_error'), e.message))
+        setError(new CustomError(t('panel_init_error'), e.message))
     } finally {
       // add a timeout to wait until updatePanel() is finished
       setTimeout(() => {
@@ -196,12 +199,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     init(panelState.config)
   }, [panelState.config, panelId])
 
-
-  useEffect(() => {
-    if (!panelId || !panelState) return
-    if (panelState.activeTargetIndex > -1) selectSyncTargetByIndex(panelId, panelState.activeTargetIndex)
-  }, [panelState?.activeTargetIndex])
-
   function updatePanel(data: Partial<PanelState>) {
     usePanelStore.getState().updatePanel(panelId, data)
   }
@@ -211,13 +208,14 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   }
 
   function initResizer(el: HTMLElement) {
-    // The resizer handles render-intensive style updates, e.g. width updates on drag.
-    // Each panel creates an own instance.
-    // The initResizer function is called either to init or re-init the resizer.
-    // On re-init, we want to keep some settings from previous user interaction,
-    // that is why we call handleTextUpdate
-    if (!resizer) setResizer(new PanelResizer(el, panelState.mode))
-    else resizer.handleTextUpdate()
+    setResizer(new PanelResizer(el, panelState.mode))
+  }
+
+  function getSidebarScroller() {
+    if (!sidebarScroller.current) {
+      sidebarScroller.current = new SidebarScroller()
+    }
+    return sidebarScroller.current
   }
 
   return (
@@ -247,7 +245,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       setSelectedWitnesses,
       init,
       annotationsMode,
-      setAnnotationsMode
+      setAnnotationsMode,
+      getSidebarScroller,
+      error
     }}>
       {children}
     </PanelContext.Provider>

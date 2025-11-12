@@ -1,53 +1,52 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { Image, Text } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface PreviewProps {
-  previewMode?: string,
-  setPreviewMode?: (value: string) => void,
+  activeMode?: string,
+  onChange?: (value: string) => void,
 }
 
-const Swapper: FC<PreviewProps> = ({ previewMode = 'A', setPreviewMode = () => {} }) => {
+const PreviewButton: FC<{ children?: ReactNode }> = ({ children }) => {
+  return <Button
+    data-cy='preview-image'
+    className="px-2 py-3 h-auto shadow-md bg-background text-primary border-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 hover:bg-primary/4 hover:text-primary"
+    variant="outline"
+    color="secondary"
+  >
+    <div className="flex flex-col justify-center items-center">
+      { children }
+    </div>
+  </Button>
+}
+
+const Swapper: FC<PreviewProps> = ({ activeMode = 'A', onChange = () => {} }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
   function updateMode() {
-    if (previewMode === 'A') {
-      setPreviewMode('B')
+    if (activeMode === 'A') {
+      onChange('B')
       return
     }
-    setPreviewMode('A')
+    onChange('A')
   }
 
-  const previewA = <Button
-    data-cy='preview-image'
-    className="px-2 py-3 h-auto shadow-xl"
-    variant="outline"
-    color="secondary"
-  >
-    <div className="flex flex-col justify-center items-center">
-      <Image className="size-8 mb-2" />
-      <div>{t('show_image')}</div>
-    </div>
-  </Button>
+  const previewA = <PreviewButton>
+    <Image className="size-8 mb-2" />
+    <div>{t('show_image')}</div>
+  </PreviewButton>
 
-  const previewB = <Button
-    data-cy='preview-text'
-    className="px-2 py-3 h-auto shadow-xl"
-    variant="outline"
-    color="secondary"
-  >
-    <div className="flex flex-col justify-center items-center">
-      <Text className="size-8 mb-2" />
-      <div>{t('show_text')}</div>
-    </div>
-  </Button>
+  const previewB = <PreviewButton>
+    <Text className="size-8 mb-2" />
+    <div>{t('show_text')}</div>
+  </PreviewButton>
 
   return (
     <div className="z-20 absolute p-[1px] bottom-12 right-12 transition-all"
       onClick={() => updateMode()}>
-      {previewMode === 'A' ? previewA : previewB  }
+      {activeMode === 'A' ? previewA : previewB  }
     </div>
   )
 }

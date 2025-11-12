@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import PanelContentWrapper from '@/components/panel/PanelContentWrapper.tsx'
+import PanelContentWrapper from '@/components/panel/PanelShell.tsx'
 import { Ban } from 'lucide-react'
 
 interface ErrorProps {

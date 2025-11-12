@@ -1,7 +1,6 @@
 import {
-  ANNOTATION_PANEL_WIDTH,
+  SIDEBAR_DEFAULT_WIDTH,
   MIN_PANEL_WIDTH,
-  PANEL_BORDER_WIDTH,
   PANEL_GAP
 } from '@/utils/panel.ts'
 import { PanelMode } from '@/types'
@@ -12,26 +11,13 @@ class PanelResizer {
   panelEl: HTMLElement
   panelId: string
   panelMode: PanelMode
-  textContainerEl: HTMLElement
-  scrollContainerEl: HTMLElement
-  imageContainerEl: HTMLElement
-  headerEl: HTMLElement
-  sidebarEl: HTMLElement
-  headerSidebarEl: HTMLElement
   resizeHandle: HTMLElement
-  textOptions: HTMLElement
-  textWarning: HTMLElement
+  sidebarWidth: number = SIDEBAR_DEFAULT_WIDTH
 
   eventListeners = []
   isResizing = false
   annotationsOpen = false
   lastWidth = null
-  widthByMode = {
-    'swap': (width) => width,
-    'text': (width) => width,
-    'image': (width) => width,
-    'split': (width) => width / 2,
-  }
 
   constructor(panelEl: HTMLElement, panelMode: PanelMode) {
     this.init(panelEl, panelMode)
@@ -41,15 +27,7 @@ class PanelResizer {
     this.wrapper = document.getElementById('panels-wrapper')
     this.panelEl = panelEl
     this.panelId = this.panelEl.id
-    this.scrollContainerEl = this.panelEl.querySelector('[data-scroll-container]')
-    this.textContainerEl = this.panelEl.querySelector('[data-text-container]')
-    this.imageContainerEl = this.panelEl.querySelector('[data-image-container]')
-    this.headerEl = this.panelEl.querySelector('[data-panel-header]')
-    this.sidebarEl = this.panelEl.querySelector('[data-sidebar-container]')
-    this.headerSidebarEl = this.panelEl.querySelector('[data-header-sidebar]')
     this.resizeHandle = this.panelEl.querySelector('[data-resize-handle]')
-    this.textOptions = this.panelEl.querySelector('[data-text-options]')
-    this.textWarning = this.panelEl.querySelector('[data-text-warning]')
 
     this.panelMode = panelMode
 
@@ -59,34 +37,13 @@ class PanelResizer {
     this.dragToResize()
   }
 
-  handleTextUpdate() {
-    const width = (this.annotationsOpen ? Math.max(this.panelEl.offsetWidth - ANNOTATION_PANEL_WIDTH, MIN_PANEL_WIDTH) : this.panelEl.offsetWidth) - PANEL_BORDER_WIDTH * 2
-    this.setMainContentWidth(width)
-  }
-
-  setMainContentWidth(width: number) {
-    this.textContainerEl.style.width = `${this.widthByMode[this.panelMode](width)}px`
-    this.imageContainerEl.style.width = `${this.widthByMode[this.panelMode](width)}px`
-    this.headerEl.style.width = `${width}px`
-    this.sidebarEl.style.left = `${this.widthByMode[this.panelMode](width)}px`
-    this.headerSidebarEl.style.left = `${width}px`
-    this.textOptions.style.width = `${this.widthByMode[this.panelMode](width)}px`
-    this.textOptions.style.left = `${this.panelMode === 'split' ? width / 2 : 0}px`
-    this.textWarning.style.width = `${this.widthByMode[this.panelMode](width)}px`
-    this.textWarning.style.left = `${this.panelMode === 'split' ? width / 2 : 0}px`
-  }
-
   resize() {
-    const width = PanelResizer.calculateWidth(this.wrapper)
+    const width = this.calculateWidth(this.wrapper)
     this.lastWidth = width
-
     this.panelEl.style.width = `${width}px`
-    this.setMainContentWidth(width - PANEL_BORDER_WIDTH * 2)
   }
 
-  static calculateWidth(wrapper: HTMLElement): number {
-    // Function is static in order to reuse it without creating an instance.
-
+  calculateWidth(wrapper: HTMLElement): number {
     const wrapperStyle = window.getComputedStyle(wrapper)
     const totalWidth = parseFloat(wrapperStyle.width)
     const paddingLeft = parseFloat(wrapperStyle.paddingLeft) || 0
@@ -96,7 +53,7 @@ class PanelResizer {
     const panels = ([...wrapper.querySelectorAll('.panel')] as HTMLElement[])
     const placeholderWidth = (wrapper.querySelector('[data-panel-placeholder]') as HTMLElement)?.offsetWidth ?? 0
     const amountGaps = placeholderWidth > 0 ? panels.length : panels.length - 1
-    const baseWidth = (wrapperWidth - placeholderWidth - ANNOTATION_PANEL_WIDTH - (PANEL_GAP * amountGaps)) / panels.length
+    const baseWidth = (wrapperWidth - placeholderWidth - this.sidebarWidth - (PANEL_GAP * amountGaps)) / panels.length
     return Math.max(baseWidth, MIN_PANEL_WIDTH)
   }
 
@@ -106,11 +63,10 @@ class PanelResizer {
         const rect = this.panelEl.getBoundingClientRect()
         const newWidth = e.clientX - rect.left
 
-        if (newWidth < MIN_PANEL_WIDTH + (this.annotationsOpen ? ANNOTATION_PANEL_WIDTH : 0)) return
+        if (newWidth < MIN_PANEL_WIDTH + (this.annotationsOpen ? this.sidebarWidth : 0)) return
 
         this.lastWidth = newWidth
         this.panelEl.style.width = `${newWidth}px`
-        this.setMainContentWidth(this.panelEl.offsetWidth - 4 - (this.annotationsOpen ? ANNOTATION_PANEL_WIDTH : 0))
         return
       }
 
@@ -141,6 +97,10 @@ class PanelResizer {
     ])
   }
 
+  onResize(callback: (width: number) => void) {
+    callback(this.lastWidth)
+  }
+
   setIsHoveringEdge(value: boolean) {
     this.panelEl.style.cursor = value ? 'ew-resize' : 'default'
   }
@@ -161,23 +121,21 @@ class PanelResizer {
   setAnnotationsOpen(value: boolean) {
     this.annotationsOpen = value
     if (value) {
-      this.lastWidth = this.lastWidth + ANNOTATION_PANEL_WIDTH
+      this.lastWidth = this.lastWidth + this.sidebarWidth
       this.panelEl.style.width = `${this.lastWidth}px`
-      this.textOptions.style.right = `${ANNOTATION_PANEL_WIDTH}px`
-
-      const sidebar = this.panelEl.querySelector('[data-sidebar-container]') as HTMLElement
-      const scrollBarWidth = this.scrollContainerEl.offsetWidth - this.scrollContainerEl.clientWidth
-
-      sidebar.style.right = `-${scrollBarWidth}px`
-      sidebar.style.paddingRight = `${scrollBarWidth}px`
     } else {
-      this.lastWidth = this.lastWidth - ANNOTATION_PANEL_WIDTH
+      this.lastWidth = this.lastWidth - this.sidebarWidth
       this.panelEl.style.width = `${this.lastWidth}px`
+      this.sidebarWidth = SIDEBAR_DEFAULT_WIDTH
     }
   }
 
   setPanelMode(mode: PanelMode) {
     this.panelMode = mode
+  }
+
+  setSidebarWidth(value: number) {
+    this.sidebarWidth = value
   }
 
   clean() {
