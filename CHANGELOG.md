@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.12](https://github.com/subugoe/tido/compare/v5.0.0-alpha.11...v5.0.0-alpha.12) (2025-11-13)
+
+
+### Features
+
+* add empty and error state within the sidebar instead of toast, always keep the sidebar toggle enabled ([62ea88b](https://github.com/subugoe/tido/commit/62ea88b3bc4f584303424ae5c7b5a6dbfdf4d42d))
+* add multiple-annotations target selection  ([47483b5](https://github.com/subugoe/tido/commit/47483b5ce987f17d2bfa872d43dc810e8ff4bc89))
+* add resizable panes for every panel content element, remove old sync panel feature ([2aa5a86](https://github.com/subugoe/tido/commit/2aa5a8607c196be4619a4d5a4ebf72e5d8aedb1c))
+* add support for new content type header ([5619086](https://github.com/subugoe/tido/commit/5619086bcfd3f5b8a70dd7dd85207428fb91e4f4))
+
+
+### Bug Fixes
+
+* enable text scrolling in annotation list mode again ([fad0b21](https://github.com/subugoe/tido/commit/fad0b21764ca6df4f5f58efe6110e144dee91776))
+
 ## [5.0.0-alpha.11](https://github.com/subugoe/tido/compare/v5.0.0-alpha.10...v5.0.0-alpha.11) (2025-11-03)
 
 
