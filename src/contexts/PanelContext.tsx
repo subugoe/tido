@@ -104,6 +104,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
   async function init(config: PanelConfig) {
     setLoading(true)
+    setError(null)
+    setAnnotationsError(null)
     try {
       // Retrieve text data
       // Trickle down from collection to item
