@@ -46,7 +46,8 @@ interface PanelContentType {
   setAnnotationsMode: (mode: 'align' | 'list') => void,
   getSidebarScroller: () => SidebarScroller,
   error: CustomError | null,
-  annotationsError: CustomError | null
+  annotationsError: CustomError | null,
+  annotationsLoading: boolean
 }
 
 interface PanelProviderProps {
@@ -73,9 +74,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
   const [annotationsMode, setAnnotationsMode] = useState<'list' | 'align'>('align')
-  const sidebarScroller = useRef<SidebarScroller>(null)
   const [error, setError] = useState<CustomError>(null)
   const [annotationsError, setAnnotationsError] = useState<CustomError>(null)
+  const sidebarScroller = useRef<SidebarScroller>(null)
+  const [annotationsLoading, setAnnotationsLoading] = useState(false)
 
   const { t } = useTranslation()
 
@@ -104,6 +106,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
   async function init(config: PanelConfig) {
     setLoading(true)
+    setAnnotationsLoading(true)
     setError(null)
     setAnnotationsError(null)
     try {
@@ -180,6 +183,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         } catch (e) {
           console.error(e)
           setAnnotationsError(e)
+        } finally {
+          setTimeout(() => setAnnotationsLoading(false), 500)
         }
       }
     } catch (e) {
@@ -251,7 +256,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       setAnnotationsMode,
       getSidebarScroller,
       error,
-      annotationsError
+      annotationsError,
+      annotationsLoading
     }}>
       {children}
     </PanelContext.Provider>
