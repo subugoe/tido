@@ -13,7 +13,6 @@ import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { hasItems, hasManifests } from '@/utils/api-validate.ts'
-import { toast } from 'sonner'
 import { SidebarScroller } from '@/utils/sidebar-scroller.ts'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
@@ -46,7 +45,8 @@ interface PanelContentType {
   annotationsMode: 'align' | 'list',
   setAnnotationsMode: (mode: 'align' | 'list') => void,
   getSidebarScroller: () => SidebarScroller,
-  error: CustomError
+  error: CustomError | null,
+  annotationsError: CustomError | null
 }
 
 interface PanelProviderProps {
@@ -75,6 +75,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [annotationsMode, setAnnotationsMode] = useState<'list' | 'align'>('align')
   const sidebarScroller = useRef<SidebarScroller>(null)
   const [error, setError] = useState<CustomError>(null)
+  const [annotationsError, setAnnotationsError] = useState<CustomError>(null)
 
   const { t } = useTranslation()
 
@@ -96,13 +97,15 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   async function getAnnotationPage(annotationCollectionUrl: string): Promise<AnnotationPage> {
     const collection: AnnotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
     if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
-      throw new CustomError(t('panel_init_error'), t('annotation_collection_response_error'))
+      throw new CustomError(t('annotations_init_error'), t('annotation_collection_response_error'))
     }
     return await apiRequest<AnnotationPage>(collection.first)
   }
 
   async function init(config: PanelConfig) {
     setLoading(true)
+    setError(null)
+    setAnnotationsError(null)
     try {
       // Retrieve text data
       // Trickle down from collection to item
@@ -176,7 +179,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
           updatePanel({ annotations })
         } catch (e) {
           console.error(e)
-          toast.error(e.name, { description: e.message })
+          setAnnotationsError(e)
         }
       }
     } catch (e) {
@@ -247,7 +250,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       annotationsMode,
       setAnnotationsMode,
       getSidebarScroller,
-      error
+      error,
+      annotationsError
     }}>
       {children}
     </PanelContext.Provider>

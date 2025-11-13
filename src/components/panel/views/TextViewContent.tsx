@@ -38,6 +38,12 @@ const TextViewContent: FC = () => {
         const response = await apiRequest<string>(contentUrl)
         const cleanHtml = DOMPurify.sanitize(response, { FORBID_TAGS })
         setText(cleanHtml)
+
+        // Normally the loading is set to false when a text has finished rendering in TextRenderer.
+        // When trying to load the same text again it won't rerender, so the loading is always true.
+        // This is a fix for that.
+        if (text === cleanHtml) setLoadingText(false)
+
         const hasRemoved = DOMPurify.removed.length > 0
         setTextWarning(hasRemoved ? t('text_not_displayed_correctly') : '')
         if (hasRemoved) console.error('Removed HTML elements during text sanitization: ', DOMPurify.removed)

@@ -95,6 +95,8 @@
     "display_annotations": "Display annotations",
     "hide_annotations": "Hide annotations",
     "no_annotations_available": "No annotations available",
+    "no_annotations_found": "No annotations found",
+    "no_annotations_exist_for_current_text": "No annotations exist for the current text",
     "error_collection_url": "Collection URL \"{{url}}\" is not formatted correctly.",
     "unknown_name": "Unknown name",
     "generate_share_url": "Click to generate a shareable link",
@@ -103,6 +105,7 @@
     "share_this_view": "Share this view",
     "panel_init_error": "Error while initializing the panel",
     "error_is_not_leaf_collection": "The given collection (\"{{url}}\") does not contain any manifests. If it is a nested collection, please only specify the last child collection.",
-    "error_contains_no_items": "The given manifest \"{{url}}\" does not contain any items."
+    "error_contains_no_items": "The given manifest \"{{url}}\" does not contain any items.",
+    "annotations_init_error": "Error while initializing annotations"
   }
 }
