@@ -22,7 +22,7 @@ const PanelShell: FC<Props> = ({ children }) => {
   return <div
     id={panelId}
     ref={ref}
-    className={`panel bg-background text-foreground grow-0 shrink-0 relative @container/panel`}
+    className={`panel bg-background text-foreground grow-0 shrink-0 relative`}
     data-cy="panel"
   >
     <div className="h-full overflow-hidden relative border-2 border-border rounded-lg">

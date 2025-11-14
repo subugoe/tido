@@ -82,7 +82,7 @@ const PanelContent: FC = React.memo(() => {
               minSize={isOpening ? sizes.main : DEFAULT_PANEL_WIDTH}
               maxSize={isOpening ? sizes.main : Infinity}
             >
-              <div className="flex flex-col h-full">
+              <div className="flex flex-col h-full @container/panel">
                 <PanelHeader />
                 <div className="flex-1">
                   <Allotment proportionalLayout={true}>
