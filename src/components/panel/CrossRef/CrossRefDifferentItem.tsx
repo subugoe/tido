@@ -2,7 +2,6 @@ import { FC, useRef, useState } from 'react'
 
 import { CustomError, usePanel } from '@/contexts/PanelContext.tsx'
 
-import { LoaderCircle } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +13,7 @@ import { existsTargetInText, waitForElementInDom } from '@/utils/dom.ts'
 
 import Content from '@/components/panel/CrossRef/Content'
 import { validateCrossRefNode } from '@/utils/cross-ref.ts'
+import Loading from '@/components/ui/loading.tsx'
 
 interface Props {
   node: HTMLElement
@@ -114,13 +114,15 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
   </a>
 
   return <>{link}
-    {loading && <LoaderCircle size={36} className="animate-spin" />}
     <DropdownMenu open={openModal} onOpenChange={() => setOpenModal(!openModal)}>
       <DropdownMenuTrigger>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" className="p-2 max-w-sm text-wrap">
+      <DropdownMenuContent align="center" className="p-2 max-w-sm text-wrap rounded-lg relative overflow-hidden">
         <Content error={error} itemLabel={itemLabel} manifestLabel={manifestLabel} node={node}
           actionLabelThisPanel={t('open_in_this_panel')}  actionNewPanel={openInNewPanel} actionThisPanel={openInThisPanel}  />
+        {loading && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
+          <Loading size={36} />
+        </div>}
       </DropdownMenuContent>
     </DropdownMenu></>
 }
