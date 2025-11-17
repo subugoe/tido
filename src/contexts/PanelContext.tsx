@@ -183,8 +183,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         }
       }
     } catch (e) {
-      if (e.name)
-        setError(new CustomError(t('panel_init_error'), e.message))
+      console.error(e)
+      setError(new CustomError(t('panel_init_error'), e.message))
     } finally {
       // add a timeout to wait until updatePanel() is finished
       setTimeout(() => {
