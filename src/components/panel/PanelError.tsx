@@ -1,13 +1,13 @@
 import { FC } from 'react'
 import { CircleX } from 'lucide-react'
 import { FallbackProps } from 'react-error-boundary'
-import { CustomError } from '@/contexts/PanelContext.tsx'
-
+import { CustomError } from '@/utils/custom-error.ts'
 interface Props {
   error: CustomError
   resetErrorBoundary: () => void
 }
 const PanelError: FC<FallbackProps> = ({ error }: Props) => {
+
 
   return <div className="p-3 h-full flex">
     <div className="flex-1 flex flex-col items-center py-3 px-8 bg-red-50 dark:bg-red-300/20 rounded-lg">

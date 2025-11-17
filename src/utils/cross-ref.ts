@@ -1,5 +1,5 @@
 import { validateCollection, validateItem, validateManifest } from '@/utils/api-validate.ts'
-import { CustomError } from '@/contexts/PanelContext.tsx'
+import { CustomError } from '@/utils/custom-error.ts'
 import { getContentTypes } from '@/utils/panel.ts'
 import { validateSelector } from '@/utils/dom.ts'
 

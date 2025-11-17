@@ -1,4 +1,4 @@
-import { CustomError } from '@/contexts/PanelContext.tsx'
+import { CustomError } from '@/utils/custom-error.ts'
 import { apiRequest } from '@/utils/api.ts'
 
 function isCollectionUrl(url: string) {
@@ -57,7 +57,6 @@ async function validateManifest(manifestId: string) {
   return await validateResponse(data)
 }
 
-
 async function validateItem(id: string){
   if (!isItemUrl(id)) {
     return {
@@ -74,7 +73,6 @@ async function validateItem(id: string){
   }
   return { success: true, data }
 }
-
 
 export {
   isCollectionUrl,

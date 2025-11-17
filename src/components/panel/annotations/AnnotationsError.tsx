@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { CustomError } from '@/contexts/PanelContext.tsx'
+import { CustomError } from '@/utils/custom-error.ts'
 import { CircleX } from 'lucide-react'
 
 interface Props {

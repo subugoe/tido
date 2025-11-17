@@ -14,6 +14,7 @@ import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { hasItems, hasManifests } from '@/utils/api-validate.ts'
 import { SidebarScroller } from '@/utils/sidebar-scroller.ts'
+import { CustomError } from '@/utils/custom-error.ts'
 
 const PanelContext = createContext<PanelContentType | undefined>(undefined)
 
@@ -52,13 +53,6 @@ interface PanelContentType {
 interface PanelProviderProps {
   children?: ReactNode
   panelId: string
-}
-
-export class CustomError extends Error {
-  constructor(title, message) {
-    super(message)
-    this.name = title
-  }
 }
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {

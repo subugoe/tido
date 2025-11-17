@@ -2,7 +2,7 @@ import { request } from '@/utils/http'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { isCollectionUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { getI18n } from 'react-i18next'
-import { CustomError } from '@/contexts/PanelContext.tsx'
+import { CustomError } from '@/utils/custom-error.ts'
 
 async function createCollectionNodes(rootNodes: string[]): Promise<TreeNode[]> {
   const nodes: TreeNode[] = []

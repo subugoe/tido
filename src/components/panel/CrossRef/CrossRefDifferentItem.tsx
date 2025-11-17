@@ -1,6 +1,7 @@
 import { FC, useRef, useState } from 'react'
 
-import { CustomError, usePanel } from '@/contexts/PanelContext.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
+import { CustomError } from '@/utils/custom-error.ts'
 
 import { LoaderCircle } from 'lucide-react'
 import {
