@@ -186,6 +186,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         } finally {
           setTimeout(() => setAnnotationsLoading(false), 500)
         }
+      } else {
+        setAnnotationsLoading(false)
       }
     } catch (e) {
       if (e.name)
