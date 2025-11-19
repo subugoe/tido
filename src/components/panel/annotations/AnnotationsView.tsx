@@ -6,6 +6,7 @@ import AlignAnnotationsList from '@/components/panel/annotations/AlignAnnotation
 import AnnotationsList from '@/components/panel/annotations/AnnotationsList.tsx'
 import EmptyAnnotations from '@/components/panel/annotations/EmptyAnnotations.tsx'
 import AnnotationsError from '@/components/panel/annotations/AnnotationsError.tsx'
+import Loading from '@/components/ui/loading.tsx'
 
 interface ContainerProps {
   children?: ReactNode
@@ -17,7 +18,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({ children }, ref)
   </div>
 })
 const AnnotationsView: FC = () => {
-  const { matchedAnnotationsMap, annotationsError, annotationsMode, getSidebarScroller } = usePanel()
+  const { annotationsLoading, matchedAnnotationsMap, annotationsError, annotationsMode, getSidebarScroller } = usePanel()
   const scrollContainer = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -31,17 +32,19 @@ const AnnotationsView: FC = () => {
     }
   }, [scrollContainer])
 
-  if (annotationsError) return <Container ref={scrollContainer}>
-    <AnnotationsError error={annotationsError} />
-  </Container>
 
-  if (Object.keys(matchedAnnotationsMap).length === 0) return <Container ref={scrollContainer}>
-    <EmptyAnnotations />
-  </Container>
+  function getContent() {
+    if (annotationsError) return <AnnotationsError error={annotationsError} />
+    if (Object.keys(matchedAnnotationsMap).length === 0) return <EmptyAnnotations />
+    if (annotationsMode === 'align') return <AlignAnnotationsList />
+    if (annotationsMode === 'list') return <AnnotationsList />
+  }
 
   return <Container ref={scrollContainer}>
-    { annotationsMode === 'align' && <AlignAnnotationsList /> }
-    { annotationsMode === 'list' && <AnnotationsList /> }
+    { getContent() }
+    { annotationsLoading && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
+      <Loading size={36} />
+    </div> }
   </Container>
 }
 

@@ -86,14 +86,14 @@ const PanelContent: FC = React.memo(() => {
                 <PanelHeader />
                 <div className="flex-1">
                   <Allotment proportionalLayout={true}>
-                    {contentPanes.map((pane) => <Allotment.Pane>
+                    {contentPanes.map((pane) => <Allotment.Pane className="pl-[1px]">
                       {pane}
                     </Allotment.Pane>)}
                   </Allotment>
                 </div>
               </div>
             </Allotment.Pane>
-            {showSidebar && <Allotment.Pane preferredSize={SIDEBAR_DEFAULT_WIDTH} minSize={SIDEBAR_DEFAULT_WIDTH}><SidebarView /></Allotment.Pane>}
+            {showSidebar && <Allotment.Pane preferredSize={SIDEBAR_DEFAULT_WIDTH} minSize={SIDEBAR_DEFAULT_WIDTH} className="pl-[1px]"><SidebarView /></Allotment.Pane>}
           </Allotment>
         </TextProvider>
       </div>
