@@ -35,22 +35,21 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
   const [error, setError] = useState(null)
   const [openModal, setOpenModal] = useState(false)
 
-  async function navigate(sourceEl: HTMLElement, contentTypes: string[], action: string) {
+  async function navigate(sourceEl: HTMLElement, action: string) {
     try {
       const targetContentType = sourceEl.getAttribute('data-ref-content-type')
       const targetSelector = sourceEl.getAttribute('data-ref-target')
-      const newContentIndex = contentTypes.findIndex(type => type === targetContentType)
 
       if (action === 'new') {
         const newPanelId = crypto.randomUUID()
-        await createNewPanel(collectionId, manifest, item, newContentIndex, newPanelId)
-        waitForElementInDom('#' + newPanelId, targetSelector ,(newPanelEl: HTMLElement) => {
+        await createNewPanel(collectionId, manifest, item, targetContentType, newPanelId)
+        waitForElementInDom('#' + newPanelId, targetSelector, (newPanelEl: HTMLElement) => {
           scrollToTarget(targetSelector, newPanelEl)
         })
       }
 
       if (action === 'scroll-to') {
-        if (newContentIndex !== panelState.contentIndex) updatePanel({ contentIndex: newContentIndex })
+        if (targetContentType !== panelState.activeContentType) updatePanel({ activeContentType: targetContentType })
         setTimeout(() => {
           scrollToTarget(targetSelector, document.getElementById(panelId))
         }, 500)
@@ -85,11 +84,11 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
   }
 
   function jumpTo() {
-    navigate(node, contentTypes, 'scroll-to')
+    navigate(node, 'scroll-to')
   }
 
   function openInNewPanel() {
-    navigate(node, contentTypes, 'new')
+    navigate(node, 'new')
   }
 
   function scrollToTarget(targetSelector: string, panelEl: Element) {

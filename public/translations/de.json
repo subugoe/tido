@@ -113,6 +113,9 @@
     "panel_init_error": "Fehler beim Initialisieren des Panels",
     "error_contains_no_manifests": "Die angegebene Kollektion \"{{url}}\" enthält keine Manifests. Falls es sich um eine verschachtelte Kollektion handelt, geben Sie bitte nur die letzte Kind-Kollektion an.",
     "error_contains_no_items": "Das angegebene Manifest \"{{url}}\" enthält keine Items.",
-    "annotations_init_error": "Fehler beim Initialisieren der Annotationen"
+    "annotations_init_error": "Fehler beim Initialisieren der Annotationen",
+    "error_no_supported_content_types": "Das geladene Item enthält keine Content-Types, die von diesem Viewer unterstützt werden.",
+    "error_invalid_item_url": "Item URL \"{{url}}\" ist nicht korrekt formatiert.",
+    "error_invalid_manifest_url": "Manifest URL \"{{url}}\" ist nicht korrekt formatiert."
   }
 }

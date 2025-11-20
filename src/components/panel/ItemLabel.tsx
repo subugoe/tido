@@ -3,7 +3,6 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { apiRequest } from '@/utils/api.ts'
-import { usePanelStore } from '@/store/PanelStore.tsx'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,10 +16,9 @@ interface ItemLabelProps {
 }
 
 const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
-  const { panelState } = usePanel()
+  const { panelState, updatePanel } = usePanel()
   const collection = useDataStore().collections[panelState.collectionId]
   const manifest = panelState.manifest
-  const updatePanel = usePanelStore(state => state.updatePanel)
 
   const [showItemModal, setShowItemModal] = useState(false)
   const [labels, setLabels] = useState([])
@@ -60,14 +58,12 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
 
   async function handleItemClick(newItemLabel: string) {
     const manifest = selectedManifest ? selectedManifest : panelState.manifest ?? null
-    const manifestIndex = collection.sequence.findIndex((item) => item.id === manifest.id)
-    const newItem = await getItem(newItemLabel, manifest)
-    const itemIndex = manifest.sequence.findIndex((item) => item.id === newItem.id)
+    const item = await getItem(newItemLabel, manifest)
 
-    updatePanel(panelState.id, {
-      manifest: manifest,
-      item: newItem,
-      config: { ...panelState.config, manifestIndex: manifestIndex, itemIndex: itemIndex }
+    updatePanel({
+      manifest,
+      item,
+      config: { ...panelState.config, manifest: manifest.id, item: item.id }
     })
 
     setShowItemModal(false)

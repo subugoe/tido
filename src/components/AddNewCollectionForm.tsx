@@ -32,9 +32,7 @@ const AddNewCollectionForm: FC<Props> = ({ onConfirm }) => {
     useUIStore.getState().updateNewestPanelId(newPanelId)
 
     addPanel({
-      collection: inputValue,
-      manifestIndex: 0,
-      itemIndex: 0
+      collection: inputValue
     }, newPanelId)
 
     if (!rootCollections.includes(inputValue)) {

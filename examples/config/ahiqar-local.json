@@ -6,7 +6,7 @@
   "panels": [
     {
       "collection": "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json",
-      "manifestIndex": 20
+      "manifest": "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/3r176/manifest.json"
     }
   ],
   "rootCollections": [

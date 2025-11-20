@@ -4,14 +4,13 @@
   },
   "panels": [
     {
-      "collection": "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json",
-      "manifestIndex": 1
+      "collection": "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json"
     }
   ],
   "rootCollections": [
     "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json"
   ],
-  "panelModes": ["text", "split"],
+  "panelModes": ["text", "split", "swap"],
   "defaultPanelMode": "split",
   "annotationsMode": "list"
 }

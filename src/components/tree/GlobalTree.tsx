@@ -5,16 +5,12 @@ import { TreeProvider } from '@/contexts/TreeContext.tsx'
 
 import Tree from '@/components/tree/Tree.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree/tree-modal/GlobalTreeSelectionModalContent.tsx'
-import { getChildren, getExpandedNode, getSelectedItemIndices } from '@/utils/tree.ts'
+import { getChildren, getExpandedNode } from '@/utils/tree.ts'
 
 const GlobalTree: FC = () => {
 
   const showGlobalTree = useDataStore(state => state.showGlobalTree)
-  const selectedItemIndices = useRef({
-    collectionUrl: '',
-    manifestIndex: -1,
-    itemIndex: -1
-  })
+  const selectedNode = useRef<TreeNode>(null)
 
   // we define the way to show nodes in Global tree using "treeNodes"
   const [treeNodes, setTreeNodes] = useState([])
@@ -25,7 +21,7 @@ const GlobalTree: FC = () => {
   const [selectedPosition, setSelectedPosition] = useState({ x: 0, y: 0 })
 
   function onSelectNode(node: TreeNode, target: HTMLElement) {
-    selectedItemIndices.current = getSelectedItemIndices(node)
+    selectedNode.current = node
 
     // when we click at another item, show the modal
     setShowSelectionModal(true)
@@ -68,7 +64,7 @@ const GlobalTree: FC = () => {
           }}
           data-cy="global-tree-modal"
         >
-          <GlobalTreeSelectionModalContent selectedItemIndices={selectedItemIndices.current}
+          <GlobalTreeSelectionModalContent node={selectedNode.current}
             onSelect={() => setShowSelectionModal(false)} />
         </div>}
       </TreeProvider>

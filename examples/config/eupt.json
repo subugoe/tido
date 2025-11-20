@@ -5,7 +5,7 @@
   "panels": [
     {
       "collection": "https://eupt.uni-goettingen.de/api/eupt/collection.json",
-      "contentIndex": 1
+      "contentType": "philology"
     }
   ],
   "rootCollections": [

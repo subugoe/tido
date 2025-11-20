@@ -15,14 +15,12 @@ function isItemUrl(url: string) {
 
 function hasManifests(collection: Collection): boolean {
   if (!collection.sequence || !Array.isArray(collection.sequence)) return false
-  const first = collection.sequence[0].id
-  return isManifestUrl(first)
+  return collection.sequence.length > 0
 }
 
 function hasItems(manifest: Manifest): boolean {
   if (!manifest.sequence || !Array.isArray(manifest.sequence)) return false
-  const first = manifest.sequence[0].id
-  return isItemUrl(first)
+  return manifest.sequence.length > 0
 }
 
 async function validateResponse(data : Collection | Manifest) {

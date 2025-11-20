@@ -6,7 +6,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import Tree from '@/components/tree/Tree.tsx'
 
-import { createCollectionNode, getChildren, getExpandedNode, getSelectedItemIndices } from '@/utils/tree.ts'
+import { createCollectionNode, getChildren, getExpandedNode, getPanelConfigFromNode } from '@/utils/tree.ts'
 
 interface Props {
   collectionId: string,
@@ -19,14 +19,8 @@ const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
   const [treeNodes, setTreeNodes] = useState([])
 
   function onNodeSelect(node: TreeNode) {
-    const { collectionUrl, manifestIndex, itemIndex } = getSelectedItemIndices(node)
-
-    updatePanel( panelId, { config: {
-      collection: collectionUrl,
-      manifestIndex: manifestIndex,
-      itemIndex: itemIndex
-    } })
-
+    const config = getPanelConfigFromNode(node)
+    updatePanel( panelId, { config })
     onSelect()
   }
 
