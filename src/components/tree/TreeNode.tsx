@@ -134,9 +134,9 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   return <div className="mb-1">
     <div data-cy="tree-node" data-node-key={node.key} >
       <div
-        className={`flex relative items-start px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover }`}
+        className={`flex relative items-start h-8 px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover }`}
         onClick={(e) => handleNodeClick(e)}
-      >
+        title={node.label}>
         {!node.leaf && <span className={`mt-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight size={18} /></span>}
         <div className={`shrink-0 mt-1 mx-2 ${node.leaf ? 'ml-5': ''}`}>
           { node.type === 'collection' && <LibraryBig size={18} />}
@@ -144,9 +144,9 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
           { node.type === 'manifest' && isExpanded && <FolderOpen size={18} />}
           { node.type === 'item' && <File size={18} />}
         </div>
-        <span data-cy="node-label">{node.label}</span>
-        {panelsNumbersOpened.length > 0 && <div data-cy="tree-node-actions" className="grow relative justify-content items-center flex h-[100%]">
-          <div className="absolute right-0 top-1">
+        <span data-cy="node-label" className="truncate">{node.label}</span>
+        {panelsNumbersOpened.length > 0 && <div data-cy="tree-node-actions" className="grow relative flex items-center h-[100%]">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2">
             <OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} />
           </div>
         </div>}
