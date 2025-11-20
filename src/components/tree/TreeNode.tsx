@@ -144,8 +144,8 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
           { node.type === 'item' && <File size={18} />}
         </div>
         <span data-cy="node-label">{node.label}</span>
-        {panelsNumbersOpened.length > 0 && <div className={`absolute top-0 right-${node.type === 'collection' ? '[8%]'
-          : node.type === 'manifest' ? '[5%]' : '[2%]'}`} ><OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} /></div>}
+        {panelsNumbersOpened.length > 0 && <div className={`absolute top-0 ${node.type === 'collection' ? 'right-[8%]'
+          : node.type === 'manifest' ? 'right-[5%]' : 'right-[2%]'}`} ><OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} /></div>}
       </div>
       <div className="flex-col" data-cy="node-children">
         { isExpanded && children?.map((item: TreeNode, i) => (
