@@ -117,5 +117,5 @@ async function getExpandedNode(node: TreeNode): Promise<TreeNode> {
 }
 
 export {  createCollectionNode, createCollectionNodes, getChildren,
-  getNodeIndices, getSelectedItemIndices, getCollectionSlug, getExpandedNode
+  getNodeIndices, getSelectedItemIndices, getCollectionSlug, getExpandedNode, getRootChildrenCollectionsIds
 }
