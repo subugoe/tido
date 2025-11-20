@@ -46,6 +46,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   }, [elevation])
 
 
+
   useEffect(() => {
     // show icon green circle for 'currently opened items' and all its parent nodes
 
@@ -131,7 +132,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
 
   return <div className="mb-1">
-    <div data-cy="tree-node" data-node-key={node.key}>
+    <div data-cy="tree-node" data-node-key={node.key} >
       <div
         className={`flex relative items-start px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover }`}
         onClick={(e) => handleNodeClick(e)}
@@ -144,8 +145,11 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
           { node.type === 'item' && <File size={18} />}
         </div>
         <span data-cy="node-label">{node.label}</span>
-        {panelsNumbersOpened.length > 0 && <div className={`absolute top-0 ${node.type === 'collection' ? 'right-[8%]'
-          : node.type === 'manifest' ? 'right-[5%]' : 'right-[2%]'}`} ><OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} /></div>}
+        {panelsNumbersOpened.length > 0 && <div data-cy="tree-node-actions" className="grow relative justify-content items-center flex h-[100%]">
+          <div className="absolute right-0 top-1">
+            <OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} />
+          </div>
+        </div>}
       </div>
       <div className="flex-col" data-cy="node-children">
         { isExpanded && children?.map((item: TreeNode, i) => (
