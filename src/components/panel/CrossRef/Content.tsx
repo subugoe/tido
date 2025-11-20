@@ -3,7 +3,8 @@ import CrossRefError from '@/components/panel/CrossRef/CrossRefError.tsx'
 import { DropdownMenuItem, DropdownMenuLabel } from '@/components/ui/dropdown-menu.tsx'
 import CrossRefTitle from '@/components/panel/CrossRef/CrossRefTitle.tsx'
 import { ExternalLink } from 'lucide-react'
-import { CustomError, usePanel } from '@/contexts/PanelContext.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
+import { CustomError } from '@/utils/custom-error.ts'
 
 interface Props {
   error: CustomError,

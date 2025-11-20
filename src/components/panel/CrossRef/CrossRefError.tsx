@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { CircleX } from 'lucide-react'
-import { CustomError } from '@/contexts/PanelContext.tsx'
+import { CustomError } from '@/utils/custom-error.ts'
 import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
 
 interface Props {
