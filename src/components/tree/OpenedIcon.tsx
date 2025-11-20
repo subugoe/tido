@@ -29,7 +29,7 @@ const OpenedIcon: FC<Props> = ({ panelsNumbers, nodeType }) => {
 
 
   return <span title={getTooltip(nodeType, panelsNumbers)}>
-    <Circle className="text-green-500 fill-green-500" size={12} fill="true" onClick={(e) => scrollToPanel(e)}  />
+    <Circle className="text-green-500 fill-green-500" size={10} fill="true" onClick={(e) => scrollToPanel(e)}  />
   </span>
 }
 
