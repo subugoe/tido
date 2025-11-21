@@ -145,8 +145,8 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
           { node.type === 'item' && <File size={18} />}
         </div>
         <span data-cy="node-label" className="w-[80%] truncate">{node.label}</span>
-        {panelsNumbersOpened.length > 0 && <div data-cy="tree-node-actions" className="grow relative flex items-center h-[100%]">
-          <div className="absolute right-0 top-1/2 -translate-y-1/2">
+        {panelsNumbersOpened.length > 0 && <div data-cy="tree-node-actions" className="grow flex items-center h-[100%]">
+          <div className="pr-2">
             <OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} />
           </div>
         </div>}
