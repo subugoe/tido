@@ -1,6 +1,7 @@
 import { FC } from 'react'
 
 import { Circle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   panelsNumbers: number[],
@@ -9,11 +10,12 @@ interface Props {
 
 const OpenedIcon: FC<Props> = ({ panelsNumbers, nodeType }) => {
 
+  const { t } = useTranslation()
+
   function getTooltip(nodeType: string, panelsNumbers: number[]) {
     let tooltip = ''
-    if (nodeType === 'item') tooltip = 'The item is opened in panel(s) '
-    if (nodeType === 'manifest' || nodeType === 'collection') tooltip = 'Contains at least one item opened in panel(s) '
-    tooltip += panelsNumbers.join(',')
+    if (nodeType === 'item') tooltip =  t('item_opened_in_panels' , { panelNumbers: panelsNumbers.join(',') })
+    if (nodeType === 'manifest' || nodeType === 'collection') tooltip = t('contains_one_item_opened_in_panel', { panelNumbers: panelsNumbers.join(',') })
 
     return tooltip
   }

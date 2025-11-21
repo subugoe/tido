@@ -5,6 +5,8 @@
     "new": "New",
     "sync_panels": "Sync Panels",
     "confirm": "Confirm",
+    "contains_one_item_opened_in_panel": "Contains at least one Item opened in panel(s) {{panelNumbers}}",
+    "item_opened_in_panels": "The item is opened in panel(s) {{panelNumbers}}",
     "manifest_not_found": "$t(manifest) not found",
     "item_not_found": "$t(item) not found",
     "add_new_panel": "Add New Panel",

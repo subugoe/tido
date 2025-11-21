@@ -68,14 +68,14 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       childCollectionIds.push(node.id) // if current collection is leaf node, then we want to check if this node is present in any of panels
 
       panels?.forEach((panel, index) => {
-        if (childCollectionIds.includes(panel.collectionId))  newPanelsNumbersOpened.push(index + 1)
+        if (childCollectionIds.includes(panel.collectionId)) newPanelsNumbersOpened.push(index + 1)
       })
 
       setPanelsNumbersOpened(newPanelsNumbersOpened)
     }
 
     async function updatePanelsNumbersOpened() {
-      if (node.type === 'item' || node.type === 'manifest')   updatePanelsNumbersForItemOrManifest(node)
+      if (node.type === 'item' || node.type === 'manifest') updatePanelsNumbersForItemOrManifest(node)
       if (node.type === 'collection') updatePanelsNumbersForCollection(node)
     }
 
