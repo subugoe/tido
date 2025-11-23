@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { apiRequest } from '@/utils/api.ts'
 import { isCollectionUrl } from '@/utils/api-validate.ts'
 import { getI18n } from 'react-i18next'
-import { CustomError } from '@/contexts/PanelContext.tsx'
+import { CustomError } from '@/utils/custom-error.ts'
 
 
 interface AnnotationMap {

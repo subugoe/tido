@@ -2,6 +2,7 @@ import { request } from '@/utils/http'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { isCollectionUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { getI18n } from 'react-i18next'
+import { apiRequest } from '@/utils/api.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 
 async function createCollectionNodes(rootNodes: string[]): Promise<TreeNode[]> {
@@ -67,6 +68,28 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   }))
 }
 
+async function getRootChildrenCollectionsIds(rootCollection: Collection) {
+  const result = new Set()
+
+  async function getChildrenCollectionIds(collection: Collection) {
+    if (!collection.sequence || collection.sequence.length === 0) {
+      result.add(collection.id)
+      return
+    }
+
+    for (const item of collection.sequence) {
+      if (item.type === 'collection') {
+        result.add(item.id)
+        const child = await apiRequest<Collection>(item.id)
+        await getChildrenCollectionIds(child)
+      }
+    }
+  }
+
+  await getChildrenCollectionIds(rootCollection)
+  return Array.from(result)
+}
+
 function getCollectionSlug(id: string) {
   const urlParts = id.split('/')
   return urlParts[urlParts.length - 2]
@@ -94,5 +117,5 @@ async function getExpandedNode(node: TreeNode): Promise<TreeNode> {
 }
 
 export {  createCollectionNode, createCollectionNodes, getChildren,
-  getNodeIndices, getSelectedItemIndices, getCollectionSlug, getExpandedNode
+  getNodeIndices, getSelectedItemIndices, getCollectionSlug, getExpandedNode, getRootChildrenCollectionsIds
 }

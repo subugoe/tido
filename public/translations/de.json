@@ -9,6 +9,8 @@
     "author": "Autor",
     "editor": "Editor",
     "confirm": "Bestätigen",
+    "contains_one_item_opened_in_panel": "Enthält mindestens ein geöffnete Item in Panel(s) {{panelNumbers}}",
+    "item_opened_in_panels": "Das Item ist in Panel(s) {{panelNumbers}} geöffnet",
     "manifest_not_found": "$t(manifest) konnte nicht gefunden werden",
     "item_not_found": "$t(item) konnte nicht gefunden werden",
     "add_new_panel": "Neues Panel hinzufügen",
