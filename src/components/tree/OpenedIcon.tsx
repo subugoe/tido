@@ -1,6 +1,4 @@
 import { FC } from 'react'
-
-import { Circle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
@@ -31,13 +29,16 @@ const OpenedIcon: FC<Props> = ({ panelsNumbers, nodeType }) => {
   }
 
 
-  return <><TooltipProvider delayDuration={600}>
+  return <><TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
-        <Circle className="text-green-500 fill-green-500 hover:scale-130 transition-all duration-300" size={10} fill="true" onClick={(e) => scrollToPanel(e)}  />
+        <div
+          className="bg-primary w-2 h-2 hover:scale-130 transition-all duration-200 rounded-full"
+          onClick={(e) => scrollToPanel(e)}
+        ></div>
       </TooltipTrigger>
       <TooltipContent>
-        <span className="leading-none">{ getTooltip(nodeType, panelsNumbers) }</span>
+        {getTooltip(nodeType, panelsNumbers) }
       </TooltipContent>
     </Tooltip>
   </TooltipProvider>

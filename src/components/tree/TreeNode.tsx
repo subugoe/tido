@@ -9,6 +9,7 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import OpenedIcon from '@/components/tree/OpenedIcon.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { getRootChildrenCollectionsIds } from '@/utils/tree.ts'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
 
 interface TreeNodeProps {
@@ -131,36 +132,43 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   }
 
 
-  return <div className="mb-1">
-    <div data-cy="tree-node" data-node-key={node.key} >
-      <div
-        className={`flex relative items-start h-8 px-2 py-1 rounded-md cursor-pointer ${ selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover }`}
-        onClick={(e) => handleNodeClick(e)}
-        title={node.label}>
-        {!node.leaf && <span className={`mt-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight size={18} /></span>}
-        <div className={`shrink-0 mt-1 mx-2 ${node.leaf ? 'ml-5': ''}`}>
-          { node.type === 'collection' && <LibraryBig size={18} />}
-          { node.type === 'manifest' && !isExpanded && <Folder size={18} />}
-          { node.type === 'manifest' && isExpanded && <FolderOpen size={18} />}
-          { node.type === 'item' && <File size={18} />}
-        </div>
-        <span data-cy="node-label" className="w-[80%] truncate">{node.label}</span>
-        {panelsNumbersOpened.length > 0 && <div data-cy="tree-node-actions" className="grow flex items-center h-[100%]">
-          <div className="pr-2">
-            <OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} />
-          </div>
-        </div>}
+  return <div data-cy="tree-node" data-node-key={node.key} className="mb-1">
+    <div
+      className={`flex relative items-start h-8 px-2 py-1 rounded-md cursor-pointer ${selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover}`}
+      onClick={(e) => handleNodeClick(e)}
+    >
+      {!node.leaf &&
+        <span className={`mt-1 transition-all ${isExpanded && 'rotate-90'}`}><ChevronRight size={18} /></span>}
+      <div className={`shrink-0 mt-1 mx-2 ${node.leaf ? 'ml-5' : ''}`}>
+        {node.type === 'collection' && <LibraryBig size={18} />}
+        {node.type === 'manifest' && !isExpanded && <Folder size={18} />}
+        {node.type === 'manifest' && isExpanded && <FolderOpen size={18} />}
+        {node.type === 'item' && <File size={18} />}
       </div>
-      <div className="flex-col" data-cy="node-children">
-        { isExpanded && children?.map((item: TreeNode, i) => (
-          <ul data-cy="tree-node-child" className="ml-3" key={i}>
-            <TreeNode node={item} />
-          </ul>
-        ))}
+      <TooltipProvider skipDelayDuration={600}>
+        <Tooltip delayDuration={1000}>
+          <TooltipTrigger asChild>
+            <span data-cy="node-label" className="w-[80%] pr-2 truncate">{node.label}</span>
+          </TooltipTrigger>
+          <TooltipContent>
+            {node.label}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <div data-cy="tree-node-actions" className="w-6 shrink-0 grow-0 flex justify-end items-center h-[100%]">
+        {panelsNumbersOpened.length > 0 &&
+          <OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} />}
       </div>
-      {showEmptyNode && isExpanded && <EmptyNode label={t('no_items_found')} />}
-      {showErrorNode && isExpanded && <ErrorNode onRetry={onErrorRetry} />}
     </div>
+    <div className="flex-col" data-cy="node-children">
+      {isExpanded && children?.map((item: TreeNode, i) => (
+        <ul data-cy="tree-node-child" className="ml-3" key={i}>
+          <TreeNode node={item} />
+        </ul>
+      ))}
+    </div>
+    {showEmptyNode && isExpanded && <EmptyNode label={t('no_items_found')} />}
+    {showErrorNode && isExpanded && <ErrorNode onRetry={onErrorRetry} />}
   </div>
 }
 

@@ -75,7 +75,7 @@ Elevation hierarchy:
   --accent: var(--color-gray-100);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: var(--color-red-500);
-  --success: var(--color-green-400);
+  --success: var(--color-green-600);
   --border: var(--color-gray-200);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
