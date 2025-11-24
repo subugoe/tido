@@ -7,8 +7,6 @@ interface Props {
   resetErrorBoundary: () => void
 }
 const PanelError: FC<FallbackProps> = ({ error }: Props) => {
-
-
   return <div className="p-3 h-full flex">
     <div className="flex-1 flex flex-col items-center py-3 px-8 bg-red-50 dark:bg-red-300/20 rounded-lg">
       <CircleX className="text-red-500 mt-[15vh]" size="60" />
