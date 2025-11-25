@@ -15,7 +15,7 @@ const ContentTypesToggle: FC = () => {
   const { panelState, updatePanel, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
   const { contentTypes, contentIndex } = panelState || {}
-  const triggerRef = useRef()
+  const triggerRef = useRef(null)
 
   function handleTextTabClick(value: string) {
     const index = contentTypes.findIndex(type => type === value)
