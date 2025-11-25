@@ -97,9 +97,12 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
     targetEl.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const link = <a className="text-blue-600 underline cursor-pointer" onClick={onSelectLink}>
-    {node.innerHTML}
-  </a>
+  const link = <a
+    type="button"
+    onClick={onSelectLink}
+    className="text-blue-600 underline cursor-pointer"
+    dangerouslySetInnerHTML={{ __html: node.innerHTML }}
+  ></a>
 
   return <>{link}
     <DropdownMenu open={openModal} onOpenChange={() => setOpenModal(!openModal)}>

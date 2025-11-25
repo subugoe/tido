@@ -27,6 +27,7 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
   const { t } = usePanelTranslation()
 
   const collectionId = node.getAttribute('data-ref-collection')
+  const collection = useRef(null)
   const manifest = useRef(null)
   const item = useRef(null)
   const [itemLabel, setItemLabel] = useState<string>('')
@@ -39,7 +40,8 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
 
 
   async function computeNewItemIndices(sourceEl: HTMLElement) {
-    const { manifestData, itemData } = await validateCrossRefNode(sourceEl)
+    const { collection: collectionData, manifestData, itemData } = await validateCrossRefNode(sourceEl)
+    collection.current = collectionData
     manifest.current = manifestData
     item.current = itemData
     const newItemLabel = itemData.n ? itemData.n : itemData.title?.length > 0 ? itemData.title[0].title : ''
@@ -89,30 +91,40 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
     if (action === 'new') {
       newPanelId = crypto.randomUUID()
       await createNewPanel(collectionId, manifest.current, item.current, newContentIndex, newPanelId)
-    }
+    } else if (action === 'update') {
+      const collectionId = sourceEl.getAttribute('data-ref-collection')
+      const manifestId = sourceEl.getAttribute('data-ref-manifest')
+      const itemId = sourceEl.getAttribute('data-ref-item')
 
-    else if (action === 'update') {
+      const manifestIndex = collection.current.sequence.findIndex(seq => seq.id === manifestId)
+      const itemIndex = manifest.current.sequence.findIndex(seq => seq.id === itemId)
+
       updatePanel({
-        collectionId,
-        manifest: manifest.current,
-        item: item.current,
-        contentIndex: newContentIndex
+        config: {
+          collection: collectionId,
+          manifestIndex,
+          itemIndex,
+          contentIndex: newContentIndex
+        }
       })
     }
 
     waitForElementInDom('#' + newPanelId, selector, (panelEl: HTMLElement) => {
       targetEl = panelEl.querySelector(selector) as HTMLElement
-    })
 
-    // use setTimeout to create a small delay before actually scrolling to target
-    setTimeout(async () => {
-      targetEl.scrollIntoView({ behavior: 'smooth' })
-    }, 500)
+      // use setTimeout to create a small delay before actually scrolling to target
+      setTimeout(async () => {
+        targetEl.scrollIntoView({ behavior: 'smooth' })
+      }, 500)
+    })
   }
 
-  const link = <a type="button" onClick={onSelectLink} className="text-blue-600 underline cursor-pointer">
-    {node.innerHTML}
-  </a>
+  const link = <a
+    type="button"
+    onClick={onSelectLink}
+    className="text-blue-600 underline cursor-pointer"
+    dangerouslySetInnerHTML={{ __html: node.innerHTML }}
+  ></a>
 
   return <>{link}
     <DropdownMenu open={openModal} onOpenChange={() => setOpenModal(!openModal)}>
