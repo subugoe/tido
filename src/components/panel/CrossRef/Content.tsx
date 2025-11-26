@@ -27,7 +27,7 @@ const Content: FC<Props> = ({ error, node, manifestLabel, itemLabel, actionLabel
       <DropdownMenuLabel>
         {t('reference')}
       </DropdownMenuLabel>
-      <CrossRefTitle contentType={node.getAttribute('data-ref-content-type')} manifestLabel={manifestLabel} itemLabel={itemLabel} />
+      <CrossRefTitle contentType={t(node.getAttribute('data-ref-content-type'))} manifestLabel={manifestLabel} itemLabel={itemLabel} />
       <DropdownMenuItem className="mt-2 cursor-pointer" onSelect={actionThisPanel}>
         <span>{actionLabelThisPanel}</span>
       </DropdownMenuItem>

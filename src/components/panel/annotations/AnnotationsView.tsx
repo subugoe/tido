@@ -5,8 +5,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import AlignAnnotationsList from '@/components/panel/annotations/AlignAnnotationsList.tsx'
 import AnnotationsList from '@/components/panel/annotations/AnnotationsList.tsx'
 import EmptyAnnotations from '@/components/panel/annotations/EmptyAnnotations.tsx'
-import AnnotationsError from '@/components/panel/annotations/AnnotationsError.tsx'
-import Loading from '@/components/ui/loading.tsx'
+import { useErrorBoundary } from 'react-error-boundary'
 
 interface ContainerProps {
   children?: ReactNode
@@ -18,8 +17,11 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({ children }, ref)
   </div>
 })
 const AnnotationsView: FC = () => {
-  const { annotationsLoading, matchedAnnotationsMap, annotationsError, annotationsMode, getSidebarScroller } = usePanel()
+  const { matchedAnnotationsMap, annotationsError, annotationsMode, getSidebarScroller } = usePanel()
   const scrollContainer = useRef<HTMLDivElement>(null)
+  const { showBoundary } = useErrorBoundary()
+
+  if (annotationsError) showBoundary(annotationsError)
 
   useEffect(() => {
     if (!scrollContainer.current) return
@@ -34,7 +36,6 @@ const AnnotationsView: FC = () => {
 
 
   function getContent() {
-    if (annotationsError) return <AnnotationsError error={annotationsError} />
     if (Object.keys(matchedAnnotationsMap).length === 0) return <EmptyAnnotations />
     if (annotationsMode === 'align') return <AlignAnnotationsList />
     if (annotationsMode === 'list') return <AnnotationsList />
@@ -42,9 +43,6 @@ const AnnotationsView: FC = () => {
 
   return <Container ref={scrollContainer}>
     { getContent() }
-    { annotationsLoading && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
-      <Loading size={36} />
-    </div> }
   </Container>
 }
 

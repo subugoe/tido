@@ -16,19 +16,27 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
   const { setHoveredAnnotations, hoveredAnnotations } = useText()
   const ref = useRef(null)
   const [isHovered, setIsHovered] = useState(false)
+  const [isSelected, setIsSelected] = useState(false)
+
   const type = data.body['x-content-type']
   const value = data.body.value
 
   useEffect(() => {
     setIsHovered(hoveredAnnotations?.includes(data.id))
-  }, [hoveredAnnotations])
+  }, [data, hoveredAnnotations])
+
+  useEffect(() => {
+    setIsSelected(selectedAnnotation && selectedAnnotation.id === data.id)
+  }, [data, selectedAnnotation])
 
   function handleClick() {
     if (selectedAnnotation && selectedAnnotation.id === data.id) {
-      setSelectedAnnotation(null)
+      setIsSelected(false)
+      setTimeout(() => setSelectedAnnotation(data), 100)
       return
     }
-    setSelectedAnnotation(data)
+    setIsSelected(true)
+    setTimeout(() => setSelectedAnnotation(data), 100)
   }
 
   function handleMouseEnter() {
@@ -40,19 +48,15 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
     setHoveredAnnotations(null)
   }
 
-  function isSelected() {
-    return selectedAnnotation && selectedAnnotation.id === data.id
-  }
-
   return <>
     <div
       ref={ref}
       aria-label="annotation"
       data-annotation={data.id}
-      {...(isSelected() ? { 'data-selected': true } : {})}
+      {...(isSelected ? { 'data-selected': true } : {})}
       className={`w-[calc(100%-2rem)] flex flex-col px-3 py-2 rounded-lg border border-border
       ${annotationsMode === 'align' ? 'absolute' : 'mb-2'}
-      ${isSelected() ? 'shadow-md bg-background outline-primary outline-2' : 'bg-muted border-border hover:bg-background cursor-pointer'}
+      ${isSelected ? 'shadow-md bg-background outline-primary outline-2' : 'bg-muted border-border hover:bg-background cursor-pointer'}
       ${isHovered ? 'border-primary' : ''} transition-all max-h-18 overflow-hidden`}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}

@@ -21,7 +21,6 @@ describe('Tree', () => {
 
     cy.get('[data-cy="tree"]').should('be.visible')
       // we have one root node with the title
-      .children().eq(0)
       .children('[data-cy="tree-node"]')
       .should('have.length', 1)
       .children().eq(0)

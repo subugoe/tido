@@ -103,6 +103,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     setAnnotationsLoading(true)
     setError(null)
     setAnnotationsError(null)
+    setMatchedAnnotationsMap({})
     try {
       // Retrieve text data
       // Trickle down from collection to item

@@ -217,7 +217,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   useEffect(() => {
     flipMatchedAnnotationsMap(matchedAnnotationsMap).forEach(fa => {
       const annotations = fa.annotations
-      const target = fa.target
+      const target = fa.target as HTMLElement
 
       let someSelected = false
       let someFiltered = false
@@ -235,6 +235,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
       if (someSelected) {
         removeHighlightStyle(target)
         addSelectedStyle(target)
+        scrollIntoViewIfNeeded(target, target.closest('[data-text-container="true"]'))
         return
       }
 
