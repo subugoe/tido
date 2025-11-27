@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.13](https://github.com/subugoe/tido/compare/v5.0.0-alpha.12...v5.0.0-alpha.13) (2025-11-27)
+
+
+### Features
+
+* add selections marks in tree ([bafcc79](https://github.com/subugoe/tido/commit/bafcc79e931781e909ee05496bfd5e77e30fc83b))
+* add sidebar loading state ([063fba2](https://github.com/subugoe/tido/commit/063fba2231b1be463ae6272b9de2200293ef3039))
+* make content type display in cross ref popups translatable ([1480e7c](https://github.com/subugoe/tido/commit/1480e7c80a24cc21a7cb9334826d24ee9d08b098))
+* scroll to text target when selecting an annotation ([e947662](https://github.com/subugoe/tido/commit/e947662c2a787a7852fccb3449988e5cc051a827))
+
+
+### Bug Fixes
+
+* align vertically the 'opened' icon in tree node ([e7e9646](https://github.com/subugoe/tido/commit/e7e9646668a1d9d2de71b2c95352c0b0259a4db2))
+* diplay loading in cross ref popovers correctly ([d8aa3b7](https://github.com/subugoe/tido/commit/d8aa3b70ef05f7a8d3bdd994c6ef3602a20375ea))
+* panel label resize dependant on main pane size, not on whole panel size ([054bd9c](https://github.com/subugoe/tido/commit/054bd9caee73f43c8e3f5a69d05a824e07f9dbdc))
+* prevent overflow of content inside tree selection ([af75ba7](https://github.com/subugoe/tido/commit/af75ba78a18396928ac150123f6351009105e284))
+* render inner HTML of cross refs as HTML elements, fix opening different item in same panel ([312c41c](https://github.com/subugoe/tido/commit/312c41c56870069756fd977bff26a8a1e17447cd))
+* reset sidebar view when switching items, improve sidebar error handling ([1d37856](https://github.com/subugoe/tido/commit/1d37856365534c7881521fd71bbb45ebe4b15725))
+* show better error message for wrong collection URL ([64732b5](https://github.com/subugoe/tido/commit/64732b51e94458055aaba52057850ef16d9158b3))
+* show cross ref in cross ref nodes ([41fd6b3](https://github.com/subugoe/tido/commit/41fd6b3f27ea6989fff38c82215282d5d7a11414))
+* update tree node tooltips and styles, set selection mark color to primary ([b9b41c9](https://github.com/subugoe/tido/commit/b9b41c9a18342c4c200a16b667a726f7b6812d0b))
+
+
+### Refactoring
+
+* move CustomError to separate file to prevent hot reloading issues ([9dd72da](https://github.com/subugoe/tido/commit/9dd72da7e03c714a9c724fd778d2b55cdd09fe57))
+
 ## [5.0.0-alpha.12](https://github.com/subugoe/tido/compare/v5.0.0-alpha.11...v5.0.0-alpha.12) (2025-11-13)
 
 
