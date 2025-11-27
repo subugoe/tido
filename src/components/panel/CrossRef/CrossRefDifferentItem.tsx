@@ -98,7 +98,7 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
           collection: collectionId,
           manifest: manifestId,
           item: itemId,
-          activeContentType: contentType
+          contentType
         }
       })
     }
