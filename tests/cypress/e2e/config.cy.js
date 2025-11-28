@@ -99,7 +99,7 @@ describe('Config', () => {
         .should('be.enabled')
         .click()
         
-      cy.wait(100)
+      cy.get('[data-cy="annotations-header"]').should('be.visible')
 
       //check if toggle is on
       cy.get('[data-cy="annotations-header"]')
@@ -131,7 +131,7 @@ describe('Config', () => {
         .should('be.enabled')
         .click()
       
-      cy.wait(100)
+      cy.get('[data-cy="annotations-header"]').should('be.visible')
 
       //check if toggle is off
       cy.get('[data-cy="annotations-header"]')
