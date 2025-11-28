@@ -53,4 +53,21 @@ describe('Config', () => {
     cy.contains('From new collection').click()
     cy.contains('Enter a collection URL')
   });
+  runConfigTest('showThemeToggle=false', 'Should not show theme toggle', () => {
+    cy.get('[data-cy="settings"]').click()
+    cy.contains('Toggle theme').should('not.exist')
+  })
+  runConfigTest('showThemeToggle=true', 'Should show theme toggle', () => {
+    cy.get('[data-cy="settings"]').click()
+    
+    cy.contains('Light').should('not.exist')
+    cy.contains('Dark').should('not.exist')
+    cy.contains('System').should('not.exist')
+    
+    cy.contains('Toggle theme').click()
+    
+    cy.contains('Light').should('be.visible')
+    cy.contains('Dark').should('be.visible')
+    cy.contains('System').should('be.visible')
+  })
 });
