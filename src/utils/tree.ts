@@ -4,6 +4,9 @@ import { isCollectionUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { getI18n } from 'react-i18next'
 import { apiRequest } from '@/utils/api.ts'
 import { CustomError } from '@/utils/custom-error.ts'
+import { PanelConfig } from '@/types'
+
+const NODE_KEY_DELIMITER = '>>>>'
 
 async function createCollectionNodes(rootNodes: string[]): Promise<TreeNode[]> {
   const nodes: TreeNode[] = []
@@ -57,11 +60,11 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
 
   const items: Sequence[] = data.sequence
 
-  return items.map(({ id, type, label = t('unknown_name') }, i) => ({
+  return items.map(({ id, type, label = t('unknown_name') }) => ({
     id,
     type,
     label,
-    key: parentKey + ',' + (type === 'collection' ? id : i.toString()),
+    key: parentKey + NODE_KEY_DELIMITER + id,
     leaf: type === 'item',
     expanded: false,
     children: []
@@ -96,18 +99,16 @@ function getCollectionSlug(id: string) {
 }
 
 function getNodeIndices(nodeKey: string) {
-  return nodeKey.split(',')
+  return nodeKey.split(NODE_KEY_DELIMITER)
 }
 
-function getSelectedItemIndices(node: TreeNode){
-  // const collections = useDataStore.getState().collections
-  const indices = getNodeIndices(node.key)
-  const collectionUrl = indices[indices.length - 3]
-  const manifestIndex = parseInt(indices[indices.length - 2], 10)
-  const itemIndex = parseInt(indices[indices.length - 1], 10)
-  // const collectionUrl = Object.keys(collections).filter(key => collections[key].slug === collectionSlug)[0]
+function getPanelConfigFromNode(node: TreeNode): PanelConfig {
+  const ids = getNodeIndices(node.key)
+  const collection = ids[ids.length - 3]
+  const manifest = ids[ids.length - 2]
+  const item = ids[ids.length - 1]
 
-  return { collectionUrl, manifestIndex, itemIndex }
+  return { collection, manifest, item }
 }
 
 async function getExpandedNode(node: TreeNode): Promise<TreeNode> {
@@ -117,5 +118,5 @@ async function getExpandedNode(node: TreeNode): Promise<TreeNode> {
 }
 
 export {  createCollectionNode, createCollectionNodes, getChildren,
-  getNodeIndices, getSelectedItemIndices, getCollectionSlug, getExpandedNode, getRootChildrenCollectionsIds
+  getNodeIndices, getPanelConfigFromNode, getCollectionSlug, getExpandedNode, getRootChildrenCollectionsIds
 }

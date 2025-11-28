@@ -5,7 +5,7 @@
   "panels": [
     {
       "collection": "http://localhost:8181/bdn/textapi/griesbach/collection.json",
-      "itemIndex": 2
+      "item": "http://localhost:8181/bdn/textapi/griesbach/a/griesbach-1-gr_chapter_i/latest/item.json"
     }
   ],
   "rootCollections": [

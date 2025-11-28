@@ -2,7 +2,6 @@ import { request } from '@/utils/http'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { PanelModeButtonData, PanelConfig } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
-import { useDataStore } from '@/store/DataStore.tsx'
 
 export const DEFAULT_PANEL_WIDTH = 600
 export const MIN_PANEL_WIDTH = 600
@@ -90,16 +89,12 @@ export function validateImage(item: Item) {
   return !!item?.image?.id
 }
 
-export async function createNewPanel(collectionId: string, manifest: Manifest, item: Item, newContentIndex = 0, newPanelId: string) {
-  const collection = await useDataStore.getState().initCollection(collectionId)
-  const manifestIndex = collection.sequence.findIndex(m => m.id === manifest.id)
-  const itemIndex = manifest.sequence.findIndex(i => i.id === item.id)
-
+export async function createNewPanel(collectionId: string, manifest: Manifest, item: Item, newContentType: string, newPanelId: string) {
   const newPanelConfig : PanelConfig = {
     collection: collectionId,
-    manifestIndex,
-    itemIndex,
-    contentIndex: newContentIndex
+    manifest: manifest.id,
+    item: item.id,
+    contentType: newContentType
   }
 
   useUIStore.getState().updateNewestPanelId(newPanelId)

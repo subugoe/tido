@@ -4,8 +4,7 @@
   "lang": "de",
   "panels": [
     {
-      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/reproduction/collection.json",
-      "manifestIndex": 0
+      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/reproduction/collection.json"
     }
   ],
   "theme": {

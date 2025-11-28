@@ -12,7 +12,7 @@ import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import { hasItems, hasManifests } from '@/utils/api-validate.ts'
+import { hasItems, hasManifests, isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { SidebarScroller } from '@/utils/sidebar-scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 
@@ -105,34 +105,85 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     setAnnotationsError(null)
     setMatchedAnnotationsMap({})
     try {
-      // Retrieve text data
-      // Trickle down from collection to item
-      const collection = await getCollection(config.collection)
-      if (!hasManifests(collection)) {
-        setError(new CustomError(t('panel_init_error'), t('error_contains_no_manifests', { url: config.collection })))
-        return
+      let item: Item, manifest: Manifest, collection: Collection
+
+      // 1. Load anything we can see in the config.
+      if (config.item) {
+        if (isItemUrl(config.item)) item = await apiRequest<Item>(config.item)
+        else {
+          setError(new CustomError(t('panel_init_error'), t('error_invalid_item_url', { url: config.item })))
+          return
+        }
       }
 
-      if (config.manifestIndex === -1) {
-        setError(new CustomError(t('panel_init_error'), t('manifest_not_found')))
-        return
+      if (config.manifest) {
+        if (isManifestUrl(config.manifest)) manifest = await apiRequest<Manifest>(config.manifest)
+        else {
+          setError(new CustomError(t('panel_init_error'), t('error_invalid_manifest_url', { url: config.manifest })))
+          return
+        }
       }
 
-      if (config.itemIndex === -1) {
-        setError(new CustomError(t('panel_init_error'), t('item_not_found')))
-        return
+      if (config.collection) {
+        if (isCollectionUrl(config.collection)) collection = await getCollection(config.collection)
+        else {
+          setError(new CustomError(t('panel_init_error'), t('error_invalid_collection_url', { url: config.collection })))
+          return
+        }
       }
 
-      const manifestUrl = collection.sequence[config.manifestIndex ?? 0].id
-      const manifest = await apiRequest<Manifest>(manifestUrl)
-      if (!hasItems(manifest)) {
-        setError(new CustomError(t('panel_init_error'), t('error_contains_no_items', { url: manifestUrl })))
-        return
+      // 2. Analyze the received data and try load as much as possible.
+      // When a resource is missing, load the first one from the parent sequence.
+      if (item) {
+        if (collection && !manifest) await getFirstManifest()
+      } else {
+        if (!collection && !manifest) {
+          setError(new CustomError(t('panel_init_error'), t('something_went_completely_wrong')))
+          return
+        }
+
+        if (manifest) {
+          await getFirstItem()
+        } else if (collection) {
+          await getFirstManifest()
+          await getFirstItem()
+        }
       }
 
-      const item = await apiRequest<Item>(manifest.sequence[config.itemIndex ?? 0].id)
+      async function getFirstManifest() {
+        if (!hasManifests(collection)) {
+          throw new CustomError(t('panel_init_error'), t('error_contains_no_manifests', { url: config.collection }))
+        }
 
+        const first = collection.sequence[0].id
+        if (!isManifestUrl(first)) {
+          throw new CustomError(t('panel_init_error'), t('error_invalid_manifest_url', { url: first }))
+        }
+
+        manifest = await apiRequest<Manifest>(first)
+      }
+
+      async function getFirstItem() {
+        if (!hasItems(manifest)) {
+          throw new CustomError(t('panel_init_error'), t('error_contains_no_items', { url: manifest.id }))
+        }
+
+        const first = manifest.sequence[0].id
+        if (!isItemUrl(first)) {
+          throw new CustomError(t('panel_init_error'), t('error_invalid_item_url', { url: first }))
+        }
+
+        item = await apiRequest<Item>(manifest.sequence[0].id)
+      }
+
+
+      // 3. At this point "item" should exist, so we continue to load content from it.
       const contentTypes: string[] = getContentTypes(item.content)
+
+      if (contentTypes.length === 0) {
+        setError(new CustomError(t('panel_init_error'), t('error_no_supported_content_types')))
+        return
+      }
 
       const { support } = manifest
 
@@ -143,12 +194,14 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
       const imageExists = validateImage(item)
 
+      // 4. We update the panel state with the data.
       updatePanel({
         collectionId: collection.id,
         manifest,
         item,
         mode: getPanelMode(imageExists, 'text'),
         contentTypes,
+        activeContentType: config.contentType ?? contentTypes[0],
         activeTargetIndex: -1,
         imageExists
       })
@@ -157,7 +210,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       if (!annotationsMode) setAnnotationsMode(initialAnnotationsMode)
 
       if (item.annotationCollection) {
-        // Retrieve annotation data
+        // 5. Retrieve annotation data
         // Get an array of annotations and set up the witnesses
         // Update annotations data separately for progressive loading (still show text if annotations are broken)
 

@@ -4,7 +4,8 @@
   "lang": "de",
   "panels": [
     {
-      "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
+      "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json",
+      "manifest": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/critical/manifest.json"
     }
   ],
   "rootCollections": [

@@ -20,7 +20,7 @@ const TextViewContent: FC = () => {
   const [text, setText] = useState<string>('')
   const scrollContainer = useRef<HTMLDivElement>(null)
 
-  const activeContentTypeIndex = panelState.contentIndex
+  const activeContentType = panelState.activeContentType
   function getContentUrlByType(type: string | undefined) {
     if (!type) return undefined
     return panelState?.item?.content.find(c => c.type.includes(type))?.url
@@ -63,12 +63,12 @@ const TextViewContent: FC = () => {
       return
     }
 
-    const contentUrl = getContentUrlByType(panelState?.contentTypes[activeContentTypeIndex])
+    const contentUrl = getContentUrlByType(activeContentType)
 
     if (contentUrl) updateText(contentUrl)
     else showBoundary(t('no_content_found'))
 
-  }, [loadingPanel, panelState?.contentTypes, activeContentTypeIndex])
+  }, [loadingPanel, panelState?.contentTypes, activeContentType])
 
   function onReady() {
     setLoadingText(false)

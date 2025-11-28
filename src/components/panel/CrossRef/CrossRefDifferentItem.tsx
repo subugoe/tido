@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu.tsx'
 
-import { createNewPanel, getContentTypes } from '@/utils/panel.ts'
+import { createNewPanel } from '@/utils/panel.ts'
 import { existsTargetInText, waitForElementInDom } from '@/utils/dom.ts'
 
 import Content from '@/components/panel/CrossRef/Content'
@@ -79,32 +79,26 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
   }
 
 
-  async function navigate(sourceEl: HTMLElement, action: string, panelId: string) {
+  async function navigate(sourceEl: HTMLElement, action: string, panelId?: string) {
     let targetEl
     let newPanelId = panelId
     const contentType = sourceEl.getAttribute('data-ref-content-type')
     const selector = sourceEl.getAttribute('data-ref-target')
 
-    const newContentTypes = getContentTypes(item.current.content)
-    const newContentIndex = newContentTypes.findIndex(type => type === contentType)
-
     if (action === 'new') {
       newPanelId = crypto.randomUUID()
-      await createNewPanel(collectionId, manifest.current, item.current, newContentIndex, newPanelId)
+      await createNewPanel(collectionId, manifest.current, item.current, contentType, newPanelId)
     } else if (action === 'update') {
       const collectionId = sourceEl.getAttribute('data-ref-collection')
       const manifestId = sourceEl.getAttribute('data-ref-manifest')
       const itemId = sourceEl.getAttribute('data-ref-item')
 
-      const manifestIndex = collection.current.sequence.findIndex(seq => seq.id === manifestId)
-      const itemIndex = manifest.current.sequence.findIndex(seq => seq.id === itemId)
-
       updatePanel({
         config: {
           collection: collectionId,
-          manifestIndex,
-          itemIndex,
-          contentIndex: newContentIndex
+          manifest: manifestId,
+          item: itemId,
+          contentType
         }
       })
     }

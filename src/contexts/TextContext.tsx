@@ -12,7 +12,6 @@ const TextProviderContext = createContext<TextProviderState>(null)
 export const TextProvider = ({
   children
 }) => {
-
   const [hoveredAnnotations, setHoveredAnnotations] = useState(null)
   const [loadingText, setLoadingText] = useState(false)
 

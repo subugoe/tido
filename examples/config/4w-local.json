@@ -1,10 +1,8 @@
 {
-  "defaultPanelMode": "split",
   "lang": "de",
   "panels": [
     {
-      "collection": "http://localhost:8181/4w/reproduction/collection.json",
-      "manifestIndex": 0
+      "collection": "http://localhost:8181/4w/reproduction/collection.json"
     }
   ],
   "theme": {
@@ -24,5 +22,6 @@
   "rootCollections": [
     "http://localhost:8181/4w/collection.json"
   ],
-  "panelModes": [ "split", "text", "image"]
+  "panelModes": ["split", "text", "image"],
+  "defaultPanelMode": "text"
 }

@@ -157,7 +157,7 @@ declare global {
     manifest: Manifest | null
     item: Item | null
     contentTypes: string[]
-    contentIndex: number
+    activeContentType: string
     mode: PanelMode
     imageUrl?: string
     activeTargetIndex: number
@@ -324,10 +324,10 @@ declare global {
 
 export interface PanelConfig {
   collection: string
-  manifestIndex?: number
-  itemIndex?: number,
-  contentIndex?: number,
-  mode?: PanelMode,
+  manifest?: string
+  item?: string
+  contentType?: string
+  mode?: PanelMode
   annotationsMode?: 'align' | 'list'
 }
 

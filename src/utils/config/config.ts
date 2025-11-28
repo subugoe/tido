@@ -293,7 +293,6 @@ export async function mergeAndValidateConfig(
 
         if (manifestIndex === -1) {
           console.error(`Bookmarking Error: the provided manifest (${manifestUrl}) could not be found in collection (${collectionUrl})`)
-          manifestIndex = null
         }
 
         const manifestData = await apiRequest<Manifest>(manifestUrl)
@@ -301,13 +300,12 @@ export async function mergeAndValidateConfig(
 
         if (itemIndex === -1) {
           console.error(`Bookmarking Error: the provided item (${itemUrl}) could not be found in manifest (${manifestUrl})`)
-          itemIndex = null
         }
 
         return {
           collection: collectionUrl,
-          ...(itemIndex && { itemIndex }),
-          ...(manifestIndex && { manifestIndex }),
+          ...(itemIndex > -1 && { item: itemUrl }),
+          ...(manifestIndex > -1 && { manifest: manifestUrl }),
         }
       }))
     } catch (e) {
@@ -352,11 +350,4 @@ function deepMerge(objectA: object, objectB: object) {
   }
 
   return result
-}
-
-export async function existsImageInNewItem(config: PanelConfig) {
-  const collection = await apiRequest<Collection>(config.collection)
-  const manifest = await apiRequest<Manifest>(collection.sequence[config.manifestIndex].id)
-  const item = await apiRequest<Item>(manifest.sequence[config.itemIndex].id)
-  return !!item.image
 }

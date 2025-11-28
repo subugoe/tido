@@ -2,19 +2,14 @@ import { FC } from 'react'
 import { useTree } from '@/contexts/TreeContext'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
-
-interface SelectedItemIndicesType {
-  collectionUrl: string
-  manifestIndex: number
-  itemIndex: number
-}
+import { getPanelConfigFromNode } from '@/utils/tree.ts'
 
 interface GlobalTreeSelectionModalContentProps {
-  selectedItemIndices: SelectedItemIndicesType
+  node: TreeNode | null
   onSelect: () => void
 }
 
-const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> = ({ selectedItemIndices, onSelect }) => {
+const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> = ({ node, onSelect }) => {
 
   const panels = usePanelStore(state => state.panels)
   const updatePanel = usePanelStore(state => state.updatePanel)
@@ -22,20 +17,18 @@ const GlobalTreeSelectionModalContent: FC<GlobalTreeSelectionModalContentProps> 
 
   const { setSelectedNodeId } = useTree()
 
-  const newPanelConfig = {
-    collection: selectedItemIndices.collectionUrl,
-    manifestIndex: selectedItemIndices.manifestIndex,
-    itemIndex: selectedItemIndices.itemIndex
-  }
+  if (!node) return <div>'error'</div>
+
+  const panelConfig = getPanelConfigFromNode(node)
 
   async function select(i?: number) {
     if (i !== undefined) {
-      updatePanel(panels[i].id, { config: newPanelConfig })
+      updatePanel(panels[i].id, { config: panelConfig })
     } else {
       const newPanelId = crypto.randomUUID()
       useUIStore.getState().updateNewestPanelId(newPanelId)
 
-      addPanel(newPanelConfig, newPanelId)
+      addPanel(panelConfig, newPanelId)
     }
 
     onSelect()

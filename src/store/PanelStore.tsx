@@ -21,7 +21,7 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     item: null,
     manifest: null,
     contentTypes: [],
-    contentIndex: config.contentIndex ?? 0,
+    activeContentType: null,
     mode: config.mode ?? useUIStore.getState().defaultPanelMode,
     activeTargetIndex: -1,
     imageExists: false,

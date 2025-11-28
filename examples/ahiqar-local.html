@@ -24,7 +24,8 @@
 </header>
 <div id="app"></div>
 <script src="dist/tido.min.js"></script>
-<script>
+<script type="module">
+  const config = await fetch("./config/ahiqar-local.json").then(r => r.json())
   const select = document.getElementById('nav-select');
   const pathArr = window.location.pathname.split('/')
 
@@ -34,25 +35,7 @@
     window.location = event.target.value
   }
 
-  window.addEventListener('load', function () {
-    new window.Tido({
-      showGlobalTree: true,
-      colors: {
-        primary: "#1E40AF",
-      },
-      panels: [
-        {
-          collection: "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json",
-          manifestIndex: 20,
-        },
-      ],
-      rootCollections: [
-        "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json"
-      ],
-      panelModes: ["split", "text", "image"],
-      defaultPanelMode: "text"
-    });
-  });
+  new window.Tido(config);
 </script>
 </body>
 </html>

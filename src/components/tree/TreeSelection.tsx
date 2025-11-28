@@ -5,7 +5,7 @@ import { TreeProvider } from '@/contexts/TreeContext.tsx'
 
 import Tree from '@/components/tree/Tree.tsx'
 
-import { getChildren, getExpandedNode, getSelectedItemIndices } from '@/utils/tree.ts'
+import { getChildren, getExpandedNode, getPanelConfigFromNode } from '@/utils/tree.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
 import { usePanelStore } from '@/store/PanelStore.tsx'
@@ -25,25 +25,14 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
   const clickedItemUrl = useRef('')
   const [confirmActive, setConfirmActive] = useState(false)
 
-  const selectedItemIndices = useRef({
-    collectionUrl: '',
-    manifestIndex: -1,
-    itemIndex: -1,
-  })
+  const selectedNode = useRef<TreeNode>(null)
 
   async function handleConfirm() {
     if (clickedItemUrl.current) {
-      // transfer the clicked item indices
-      const { collectionUrl, manifestIndex, itemIndex } = selectedItemIndices.current
+      const config = getPanelConfigFromNode(selectedNode.current)
       const newPanelId = crypto.randomUUID()
       useUIStore.getState().updateNewestPanelId(newPanelId)
-      const newPanelConfig = {
-        collection: collectionUrl,
-        manifestIndex: manifestIndex,
-        itemIndex: itemIndex
-      }
-
-      addPanel(newPanelConfig, newPanelId)
+      addPanel(config, newPanelId)
     }
 
     if (onConfirm) onConfirm()
@@ -53,7 +42,7 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
   function onSelect(node: TreeNode) {
     const { id } = node
     clickedItemUrl.current = id
-    selectedItemIndices.current = getSelectedItemIndices(node)
+    selectedNode.current = node
     setConfirmActive(true)
   }
 

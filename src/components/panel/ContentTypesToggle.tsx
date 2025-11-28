@@ -14,12 +14,10 @@ import { ChevronDown } from 'lucide-react'
 const ContentTypesToggle: FC = () => {
   const { panelState, updatePanel, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
-  const { contentTypes, contentIndex } = panelState || {}
+  const { contentTypes, activeContentType } = panelState || {}
   const triggerRef = useRef(null)
-
   function handleTextTabClick(value: string) {
-    const index = contentTypes.findIndex(type => type === value)
-    setTimeout(() => updatePanel({ contentIndex: index }), 100)
+    setTimeout(() => updatePanel({ activeContentType: value }), 100)
   }
 
   if (!panelState || !contentTypes?.length) return <Skeleton className="w-[150px] h-6" />
@@ -29,14 +27,14 @@ const ContentTypesToggle: FC = () => {
       { contentTypes && contentTypes.length > 0 && <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button ref={triggerRef} variant="ghost" size="sm">
-            { t(contentTypes[contentIndex]) }<ChevronDown />
+            { t(activeContentType) }<ChevronDown />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>{ t('text_type') } </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup value={contentTypes[contentIndex]} onValueChange={handleTextTabClick}>
-            {contentTypes.map((type, i) => <DropdownMenuRadioItem value={type} key={'contentType'+i}>{ t(type) }</DropdownMenuRadioItem>) }
+          <DropdownMenuRadioGroup value={activeContentType} onValueChange={handleTextTabClick}>
+            {contentTypes.map((type, i) => <DropdownMenuRadioItem value={type} key={type+i}>{ t(type) }</DropdownMenuRadioItem>) }
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
