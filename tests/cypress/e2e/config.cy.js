@@ -50,8 +50,9 @@ describe('Config', () => {
   });
   runConfigTest('allowNewCollections=true', 'Should allow adding a panel from new collections', () => {
     cy.get('[data-cy="header"] [data-cy="new-panel"]').click()
+    cy.contains('From existing collections').should('exist')
     cy.contains('From new collection').click()
-    cy.contains('Enter a collection URL')
+    cy.contains('Enter a collection URL').should('exist')
   });
   runConfigTest('showThemeToggle=false', 'Should not show theme toggle', () => {
     cy.get('[data-cy="settings"]').click()
