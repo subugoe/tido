@@ -98,7 +98,9 @@ describe('Config', () => {
       cy.get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
-      
+        
+      cy.wait(100)
+
       //check if toggle is on
       cy.get('[data-cy="annotations-header"]')
         .find('button#annotations-mode')
@@ -128,6 +130,8 @@ describe('Config', () => {
       cy.get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
+      
+      cy.wait(100)
 
       //check if toggle is off
       cy.get('[data-cy="annotations-header"]')
