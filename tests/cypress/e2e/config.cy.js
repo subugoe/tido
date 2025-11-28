@@ -99,11 +99,11 @@ describe('Config', () => {
         .should('be.enabled')
         .click()
         
-      cy.get('[data-cy="annotations-header"]').should('be.visible')
-
       //check if toggle is on
       cy.get('[data-cy="annotations-header"]')
+        .should('be.visible')
         .find('button#annotations-mode')
+        .should('be.visible')
         .should('have.attr', 'data-state', 'checked')
 
       //check if "Successful courtier" is the last annotation 
@@ -131,11 +131,11 @@ describe('Config', () => {
         .should('be.enabled')
         .click()
       
-      cy.get('[data-cy="annotations-header"]').should('be.visible')
-
       //check if toggle is off
       cy.get('[data-cy="annotations-header"]')
+        .should('be.visible')
         .find('button#annotations-mode')
+        .should('be.visible')
         .should('have.attr', 'data-state', 'unchecked')
 
       //check if "Successful courtier" is NOT the last annotation 
