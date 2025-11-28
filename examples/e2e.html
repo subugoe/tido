@@ -20,26 +20,60 @@
 </head>
 <body>
 <div id="app"></div>
+<div id="alternativeApp"></div>
 <script src="dist/tido.min.js"></script>
 <script>
   function parseFormEncoded(queryString) {
     const params = new URLSearchParams(queryString);
     const result = {};
 
-    for (const [key, value] of params.entries()) {
-      const keys = key.split(/\[|\]/).filter(Boolean); // Split nested keys (e.g., "person[name]" → ["person", "name"])
-      let current = result;
+    for (const [rawKey, value] of params.entries()) {
+      let parts = rawKey.split(/\[|\]/).filter(p => p !== "");
 
-      while (keys.length > 1) {
-        const nextKey = keys.shift();
-        if (!current[nextKey]) {
-          current[nextKey] = isNaN(keys[0]) ? {} : []; // Detect if next key is an array index
-        }
-        current = current[nextKey];
+      const isArrayPush = rawKey.endsWith("[]");
+
+      // For array pushes, drop the last empty part entirely.
+      if (isArrayPush) {
+        // parts already filtered, so "exampleKey[]" becomes ["exampleKey"]
       }
 
-      const finalKey = keys.shift();
-      current[finalKey] = value;
+      let current = result;
+
+      // Traverse down the object tree
+      for (let i = 0; i < parts.length; i++) {
+        const key = parts[i];
+        const isLast = i === parts.length - 1;
+
+        if (isLast) {
+          // FINAL ASSIGNMENT
+          if (isArrayPush) {
+            // Ensure the target is an array
+            if (!Array.isArray(current[key])) {
+              current[key] = [];
+            }
+            current[key].push(
+              value === "true" ? true :
+              value === "false" ? false :
+              value
+            );
+          } else {
+            // Normal property assignment
+            current[key] =
+              value === "true" ? true :
+              value === "false" ? false :
+              value;
+          }
+        } else {
+          // Create containers along the path
+          if (!(key in current)) {
+            // Look ahead to know if next part implies array
+            const next = parts[i + 1];
+            const shouldBeArray = /^\d+$/.test(next);
+            current[key] = shouldBeArray ? [] : {};
+          }
+          current = current[key];
+        }
+      }
     }
 
     return result;
