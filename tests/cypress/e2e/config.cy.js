@@ -9,6 +9,23 @@ function getPanelModeOption(mode) {
   return cy.get('[data-cy="options-button"]').click().get(`[data-cy="${mode}"]`)
 }
 
+function updatePanelFromRootCollection(manifestIdx = 0, itemIdx = 0) {
+  cy.get('[data-cy="global-tree-toggle"]').click()
+  const manifestNode = cy.get('[data-cy="tree"]')
+    .eq(0)
+    .get('[data-cy="node-children"]')
+    .eq(0)
+    .children()
+    .eq(manifestIdx)
+      
+  manifestNode.click()
+  manifestNode.find('[data-cy="node-children"]')
+    .children()
+    .eq(itemIdx)
+    .click()
+  cy.get('[data-cy="buttons-update-panel"]').click() 
+}
+
 describe('Config', () => {
   runConfigTest('', 'Should apply defaults', () => {
     cy.get('[data-cy="new-panel"]').should('have.css', 'background-color', 'rgb(52, 86, 170)')
@@ -70,4 +87,65 @@ describe('Config', () => {
     cy.contains('Dark').should('be.visible')
     cy.contains('System').should('be.visible')
   })
+  //collection with annotations
+  runConfigTest('annotationsMode=list&rootCollections[]=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+    'Should have annotations list view preselected', () => {
+      //select panel with annotations
+      updatePanelFromRootCollection()
+      
+      //open annotations sidebar
+      cy.get('[data-cy="sidebar-toggle"]')
+        .should('be.enabled')
+        .click()
+      
+      //check if toggle is on
+      cy.get('[data-cy="annotations-header"]')
+        .find('button#annotations-mode')
+        .should('have.attr', 'data-state', 'checked')
+
+      //check if "Successful courtier" is the last annotation 
+      // Successful courtier is the last item in list view but not in align view
+      cy.get('[data-sidebar-container="true"]')
+        .find('[data-annotation]')
+        .should('have.length', 10)
+        .then($annotations => {
+          const top9 = $annotations.eq(9).position().top
+          const top8 = $annotations.eq(8).position().top
+
+          //in list view, the last item is below the second to last item for this collection
+          expect(top9, 'Annotation #10 should be below (have a higher position.top) annotation #9')
+            .to.be.gt(top8)
+        })
+    }
+  )
+  //collection with annotations
+  runConfigTest('annotationsMode=align&rootCollections[]=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+    'Should have annotations align view preselected', () => {
+      updatePanelFromRootCollection()
+
+      //open annotations sidebar
+      cy.get('[data-cy="sidebar-toggle"]')
+        .should('be.enabled')
+        .click()
+
+      //check if toggle is off
+      cy.get('[data-cy="annotations-header"]')
+        .find('button#annotations-mode')
+        .should('have.attr', 'data-state', 'unchecked')
+
+      //check if "Successful courtier" is NOT the last annotation 
+      // Successful courtier is the last item in list view but not in align view
+      cy.get('[data-sidebar-container="true"]')
+        .find('[data-annotation]')
+        .should('have.length', 10)
+        .then($annotations => {
+          const top9 = $annotations.eq(9).position().top
+          const top8 = $annotations.eq(8).position().top
+
+          //in align view, the last item is above the second to last item for this collection
+          expect(top9, 'Annotation #10 should be above (have a lower position.top) annotation #9')
+            .to.be.lt(top8)
+        })
+    }
+  )
 });
