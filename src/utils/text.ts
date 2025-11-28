@@ -48,12 +48,26 @@ function getAnnotationIds(target: Element) {
   return target.getAttribute(ANNOTATION_IDS_ATTRIBUTE)
 }
 
-function getCrossRefElements(root: Element) {
+function isCrossRefNested(crossRefNodes, node) {
+  let isNested = false
+  crossRefNodes.forEach((crossRef) => {
+    if (crossRef.contains(node)) {
+      isNested = true
+      return
+    }
+  })
+  return isNested
+}
+
+function getRootCrossRefElements(root: Element) {
+  // there might be cases when a cross ref includes other cross ref nodes
+  // in the list we append only the parent cross ref node in such cases
+
   const result = []
   function check(node: Element) {
     // Only process Element nodes (nodeType === 1)
     if (node.nodeType === Node.ELEMENT_NODE) {
-      if (node.hasAttribute(CROSS_REF_ATTRIBUTE)) {
+      if (node.hasAttribute(CROSS_REF_ATTRIBUTE) && !isCrossRefNested(result, node)) {
         result.push(node)
       }
 
@@ -126,7 +140,7 @@ export {
   addHighlightStyle,
   removeHighlightStyle,
   getAnnotationIds,
-  getCrossRefElements,
+  getRootCrossRefElements,
   flipMatchedAnnotationsMap,
   isSelected
 }

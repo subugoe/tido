@@ -155,9 +155,9 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <div data-cy="tree-node-actions" className="w-6 shrink-0 grow-0 flex justify-end items-center h-[100%]">
+      <div data-cy="tree-node-actions" className="w-6 shrink-0 grow-1 flex justify-end items-center h-[100%]">
         {panelsNumbersOpened.length > 0 &&
-          <OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} />}
+            <OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} />}
       </div>
     </div>
     <div className="flex-col" data-cy="node-children">

@@ -18,7 +18,7 @@ import {
   addSelectedStyle,
   flipMatchedAnnotationsMap,
   getAnnotationIds,
-  getCrossRefElements,
+  getRootCrossRefElements,
   removeAnnotationIds,
   removeHighlightStyle,
   removeHoverStyle,
@@ -127,7 +127,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   useEffect(() => {
     if (!parsedDom) return
 
-    const links = getCrossRefElements(parsedDom)
+    const links = getRootCrossRefElements(parsedDom)
     setPortals(links.map(link => {
       const mount = document.createElement(link.tagName)
       link.replaceWith(mount)
