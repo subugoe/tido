@@ -93,7 +93,8 @@ describe('Config', () => {
     'Should have annotations list view preselected', () => {
       //select panel with annotations
       updatePanelFromRootCollection()
-      
+      cy.get('[data-cy="manifest-label"]').should('contain', 'Cod. Arab. 236 Copenhagen')
+
       //open annotations sidebar
       cy.get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
@@ -125,6 +126,7 @@ describe('Config', () => {
   runConfigTest('annotationsMode=align&rootCollections[]=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations align view preselected', () => {
       updatePanelFromRootCollection()
+      cy.get('[data-cy="manifest-label"]').should('contain', 'Cod. Arab. 236 Copenhagen')
 
       //open annotations sidebar
       cy.get('[data-cy="sidebar-toggle"]')
