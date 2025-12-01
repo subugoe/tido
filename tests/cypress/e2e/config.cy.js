@@ -142,7 +142,7 @@ describe('Config', () => {
 
       //check if "Successful courtier" is NOT the last annotation 
       // Successful courtier is the last item in list view but not in align view
-      cy.get('[data-sidebar-container="true"]')
+      cy.wait(1000).get('[data-sidebar-container="true"]')
         .find('[data-annotation]')
         .should('have.length', 10)
         .then($annotations => {
