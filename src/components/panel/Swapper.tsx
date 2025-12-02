@@ -11,7 +11,7 @@ interface PreviewProps {
 const PreviewButton: FC<{ children?: ReactNode }> = ({ children }) => {
   return <Button
     data-cy='preview-image'
-    className="px-2 py-3 h-auto shadow-md bg-background text-primary border-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 hover:bg-primary/4 hover:text-primary"
+    className="px-2 py-3 h-auto shadow-md bg-background text-primary border-primary hover:border-primary hover:shadow-lg hover:shadow-primary/20 hover:text-primary hover:bg-background"
     variant="outline"
     color="secondary"
   >
