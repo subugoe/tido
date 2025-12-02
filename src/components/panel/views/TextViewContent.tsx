@@ -70,6 +70,11 @@ const TextViewContent: FC = () => {
 
   }, [loadingPanel, panelState?.contentTypes, activeContentType])
 
+  useEffect(() => {
+    if (!scrollContainer.current) return
+    scrollContainer.current.scrollTop = 0
+  }, [panelState.item])
+
   function onReady() {
     setLoadingText(false)
   }
