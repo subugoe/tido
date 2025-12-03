@@ -9,7 +9,7 @@ const ImageView: FC = () => {
   const { panelState } = usePanel()
 
   return (
-    <div className="flex w-full h-full" data-image-container>
+    <div className="flex w-full h-full relative" data-image-container>
       <ErrorBoundary FallbackComponent={ImageRendererError} resetKeys={[panelState.item?.id]}><ImageRenderer /></ErrorBoundary>
     </div>
   )

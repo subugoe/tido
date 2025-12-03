@@ -7,62 +7,68 @@ import { useErrorBoundary } from 'react-error-boundary'
 import Loading from '@/components/ui/loading.tsx'
 
 const ImageRenderer: FC = () => {
-  const { panelId, panelState, usePanelTranslation } = usePanel()
-  const loadingPanelData = usePanel().loading
+  const { panelId, panelState, usePanelTranslation, loading: loadingPanel } = usePanel()
   const { t } = usePanelTranslation()
   const { showBoundary } = useErrorBoundary()
 
-  const imageViewerRef = useRef(null)
+  const viewerContainerRef = useRef(null)
+  const viewerRef = useRef(null)
   const imageUrl = panelState?.item?.image?.id
   const [loading, setLoading] = useState(true)
 
-
   useEffect(() => {
+    setLoading(true)
 
-    if (loadingPanelData) return
+    if (loadingPanel) return
 
-    if (!imageUrl && !loadingPanelData) {
+    if (!imageUrl || !viewerRef.current) {
       showBoundary(t('could_not_find_image'))
       return
     }
 
-    setLoading(true)
+    const oldItem = viewerRef.current.world.getItemAt(0)
+    if (oldItem) viewerRef.current.world.removeItem(oldItem)
 
-    const viewer = OpenSeadragon({
-      element: imageViewerRef.current,
-      tileSources: {
-        type: 'image',
-        url: imageUrl,
-      },
+    viewerRef.current.open({
+      type: 'image',
+      url: imageUrl + 'p'
+    })
+  }, [imageUrl, loadingPanel])
+
+  useEffect(() => {
+    if (!viewerContainerRef.current) return
+
+    viewerRef.current = OpenSeadragon({
+      element: viewerContainerRef.current,
       zoomInButton: 'zoom-in-' + panelId,
       zoomOutButton: 'zoom-out-' + panelId,
       fullPageButton: 'full-screen-' + panelId,
       homeButton: 'exit-full-screen-' + panelId,
     })
 
-    viewer.addHandler('open-failed', () => {
+    viewerRef.current.addHandler('open-failed', (e) => {
+      console.error(e.message)
       showBoundary(t('could_not_load_image'))
     })
 
-    viewer.addOnceHandler('open', () => {
+    viewerRef.current.addHandler('open', function () {
       setLoading(false)
     })
     return () => {
-      if (viewer) viewer.destroy()
+      if (viewerRef.current) viewerRef.current.destroy()
     }
-  }, [loadingPanelData, imageUrl, imageViewerRef.current])
-
+  }, [])
 
 
   return (
     <>
       <div className="flex relative flex-col h-full w-full">
         <ImageActionButtons />
-        {loading && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <Loading size={36} />
-        </div>}
-        <div ref={imageViewerRef} className="w-full h-full" />
+        <div ref={viewerContainerRef} className="w-full h-full" />
       </div>
+      {loading && <div className="absolute z-50 bg-background w-full h-full">
+        <Loading size={36} />
+      </div>}
     </>
   )
 }
