@@ -31,7 +31,7 @@ const ImageRenderer: FC = () => {
 
     viewerRef.current.open({
       type: 'image',
-      url: imageUrl + 'p'
+      url: imageUrl
     })
   }, [imageUrl, loadingPanel])
 
