@@ -9,15 +9,20 @@ function getPanelModeOption(mode) {
   return cy.get('[data-cy="options-button"]').click().get(`[data-cy="${mode}"]`)
 }
 
-function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel) {
-  cy.get('[data-cy="collection-title"]')
-    .should('contain.text', collectionLabel)
+function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel, panelIdx=0) {
+  cy.get('[data-cy="panels-wrapper"]')
+    .find('[data-cy="panel"]')
+    .eq(panelIdx)
+    .within(() => {
+      cy.get('[data-cy="collection-title"]')
+        .should('contain.text', collectionLabel)
+    
+      cy.get('[data-cy="manifest-label"')
+        .should('contain.text', manifestLabel)
       
-  cy.get('[data-cy="manifest-label"')
-    .should('contain.text', manifestLabel)
-      
-  cy.get('[data-cy="item-label"]')
-    .should('contain.text', itemLabel)
+      cy.get('[data-cy="item-label"]')
+        .should('contain.text', itemLabel)
+    })
 }
 
 describe('Config', () => {
@@ -109,4 +114,41 @@ describe('Config', () => {
       )
     }
   )
+  runConfigTest('panels[0].collection=http://localhost:8181/4w/reproduction/collection.json&panels[1].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+    'Should show two panels with first item from two collections', () => {
+      cy.get('[data-cy="panels-wrapper"]')
+        .find('[data-cy="panel"]')
+        .should('have.length', 2)
+      
+      checkPanelItemLabels(
+        'Ebene 1: Reproduktion der Dokumente',
+        'Einsiedeln, 278 1040',
+        '279',
+        0
+      )
+
+      checkPanelItemLabels(
+        'Textual witnesses in Arabic and Karshuni',
+        'Cod. Arab. 236 Copenhagen',
+        '2a',
+        1
+      )
+    }
+  )
+  runConfigTest('panels[0].collection=http://localhost:8181/4w/reproduction/collection.json&panels[0].contentType=simplified',
+    'Should apply the given panel contentType', () => {
+      cy.get('[data-cy="content-type"]')
+        .should('contain.text', 'simplified')
+        .click()
+      
+      cy.get('[data-cy="content-types-dropdown"]')
+        .contains('simplified')
+        .should('have.attr', 'data-state', 'checked')
+
+      cy.get('[data-cy="content-types-dropdown"]')
+        .contains('accurate')
+        .should('have.attr', 'data-state', 'unchecked')
+    }
+  )
+  
 });
