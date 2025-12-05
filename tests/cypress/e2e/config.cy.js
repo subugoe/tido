@@ -11,13 +11,13 @@ function getPanelModeOption(mode) {
 
 function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel) {
   cy.get('[data-cy="collection-title"]')
-    .should('contain', collectionLabel)
+    .should('contain.text', collectionLabel)
       
   cy.get('[data-cy="manifest-label"')
-    .should('contain', manifestLabel)
+    .should('contain.text', manifestLabel)
       
   cy.get('[data-cy="item-label"]')
-    .should('contain', itemLabel)
+    .should('contain.text', itemLabel)
 }
 
 describe('Config', () => {
