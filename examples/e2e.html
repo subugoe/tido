@@ -28,7 +28,7 @@
     const result = {};
 
     for (const [rawKey, value] of params.entries()) {
-      let parts = rawKey.split(/\[|\]/).filter(p => p !== "");
+      let parts = rawKey.split(/\[|\]|\./).filter(p => p !== "");
 
       const isArrayPush = rawKey.endsWith("[]");
 
@@ -51,17 +51,38 @@
             if (!Array.isArray(current[key])) {
               current[key] = [];
             }
-            current[key].push(
-              value === "true" ? true :
-              value === "false" ? false :
-              value
-            );
+
+            // Check if the value is an object
+            if (value.startsWith("{") && value.endsWith("}")) {
+              try {
+                current[key].push(JSON.parse(value));
+              } catch (e) {
+                console.error("Error parsing JSON:", e);
+                current[key].push(value);
+              }
+            } else {
+              current[key].push(
+                value === "true" ? true :
+                value === "false" ? false :
+                value
+              );
+            }
           } else {
             // Normal property assignment
-            current[key] =
-              value === "true" ? true :
-              value === "false" ? false :
-              value;
+            // Check if the value is an object
+            if (value.startsWith("{") && value.endsWith("}")) {
+              try {
+                current[key] = JSON.parse(value);
+              } catch (e) {
+                console.error("Error parsing JSON:", e);
+                current[key] = value;
+              }
+            } else {
+              current[key] =
+                value === "true" ? true :
+                value === "false" ? false :
+                value;
+            }
           }
         } else {
           // Create containers along the path
@@ -105,7 +126,9 @@
   }
 
   const urlConfig = parseFormEncoded(window.location.search)
+  console.log(urlConfig)
   const config = deepMerge(defaultConfig, urlConfig);
+  console.log(config)
 
   new window.Tido(config);
 </script>
