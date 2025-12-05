@@ -9,6 +9,17 @@ function getPanelModeOption(mode) {
   return cy.get('[data-cy="options-button"]').click().get(`[data-cy="${mode}"]`)
 }
 
+function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel) {
+  cy.get('[data-cy="collection-title"]')
+    .should('contain.text', collectionLabel)
+      
+  cy.get('[data-cy="manifest-label"')
+    .should('contain.text', manifestLabel)
+      
+  cy.get('[data-cy="item-label"]')
+    .should('contain.text', itemLabel)
+}
+
 function updatePanelFromRootCollection(manifestIdx = 0, itemIdx = 0) {
   cy.get('[data-cy="global-tree-toggle"]').click()
   const manifestNode = cy.get('[data-cy="tree"]')
@@ -88,6 +99,33 @@ describe('Config', () => {
     cy.contains('Dark').should('be.visible')
     cy.contains('System').should('be.visible')
   })
+  runConfigTest('panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+    'Should show first item from first manifest when providing collection', () => {
+      checkPanelItemLabels(
+        'Textual witnesses in Arabic and Karshuni',
+        'Cod. Arab. 236 Copenhagen',
+        '2a'
+      )
+    }
+  )
+  runConfigTest('panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json&panels[0].manifest=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/3r176/manifest.json',
+    'Should show first item when providing collection and manifest', () => {
+      checkPanelItemLabels(
+        'Textual witnesses in Arabic and Karshuni',
+        'Brit.Mus. cod. Add. 7209',
+        '182b'
+      )
+    }
+  )
+  runConfigTest('panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json&panels[0].manifest=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/3r176/manifest.json&panels[0].item=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/3r176/183a/latest/item.json',
+    'Should show item when providing collection, manifest and item', () => {
+      checkPanelItemLabels(
+        'Textual witnesses in Arabic and Karshuni',
+        'Brit.Mus. cod. Add. 7209',
+        '183a'
+      )
+    }
+  )
   //collection with annotations
   runConfigTest('annotationsMode=list&rootCollections[]=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations list view preselected', () => {
