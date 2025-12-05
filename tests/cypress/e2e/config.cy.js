@@ -20,23 +20,6 @@ function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel) {
     .should('contain.text', itemLabel)
 }
 
-function updatePanelFromRootCollection(manifestIdx = 0, itemIdx = 0) {
-  cy.get('[data-cy="global-tree-toggle"]').click()
-  const manifestNode = cy.get('[data-cy="tree"]')
-    .eq(0)
-    .get('[data-cy="node-children"]')
-    .eq(0)
-    .children()
-    .eq(manifestIdx)
-      
-  manifestNode.click()
-  manifestNode.find('[data-cy="node-children"]')
-    .children()
-    .eq(itemIdx)
-    .click()
-  cy.get('[data-cy="buttons-update-panel"]').click() 
-}
-
 describe('Config', () => {
   runConfigTest('', 'Should apply defaults', () => {
     cy.get('[data-cy="new-panel"]').should('have.css', 'background-color', 'rgb(52, 86, 170)')
@@ -127,12 +110,8 @@ describe('Config', () => {
     }
   )
   //collection with annotations
-  runConfigTest('annotationsMode=list&rootCollections[]=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+  runConfigTest('annotationsMode=list&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations list view preselected', () => {
-      //select panel with annotations
-      updatePanelFromRootCollection()
-      cy.get('[data-cy="manifest-label"]').should('contain', 'Cod. Arab. 236 Copenhagen')
-
       //open annotations sidebar
       cy.get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
@@ -161,11 +140,8 @@ describe('Config', () => {
     }
   )
   //collection with annotations
-  runConfigTest('annotationsMode=align&rootCollections[]=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+  runConfigTest('annotationsMode=align&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations align view preselected', () => {
-      updatePanelFromRootCollection()
-      cy.get('[data-cy="manifest-label"]').should('contain', 'Cod. Arab. 236 Copenhagen')
-
       //open annotations sidebar
       cy.get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
