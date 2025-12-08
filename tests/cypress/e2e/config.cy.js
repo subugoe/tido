@@ -135,6 +135,7 @@ describe('Config', () => {
       )
     }
   )
+  //simplified is the second (=non-default) contentType of the collection
   runConfigTest('panels[0].collection=http://localhost:8181/4w/reproduction/collection.json&panels[0].contentType=simplified',
     'Should apply the given panel contentType', () => {
       cy.get('[data-cy="content-type"]')
