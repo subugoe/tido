@@ -20,7 +20,7 @@ const initialState: ThemeContextState = {
 
 const ThemeContext = createContext<ThemeContextState>(initialState)
 
-export const ThemeProvider = ({
+const ThemeProvider = ({
   children,
   defaultTheme = 'system',
   storageKey = 'tido-theme',
@@ -63,7 +63,7 @@ export const ThemeProvider = ({
   )
 }
 
-export const useTheme = () => {
+const useTheme = () => {
   const context = useContext(ThemeContext)
 
   if (context === undefined)
@@ -71,3 +71,5 @@ export const useTheme = () => {
 
   return context
 }
+
+export { ThemeProvider, useTheme }

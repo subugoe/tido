@@ -18,7 +18,7 @@ interface Props {
 
 const Content: FC<Props> = ({ error, node, manifestLabel, itemLabel, actionLabelThisPanel, actionNewPanel, actionThisPanel }) => {
 
-  const { usePanelTranslation } = usePanel()
+  const { usePanelTranslation, panelState } = usePanel()
   const { t } = usePanelTranslation()
 
   const content = error ?
@@ -27,7 +27,11 @@ const Content: FC<Props> = ({ error, node, manifestLabel, itemLabel, actionLabel
       <DropdownMenuLabel>
         {t('reference')}
       </DropdownMenuLabel>
-      <CrossRefTitle contentType={t(node.getAttribute('data-ref-content-type'))} manifestLabel={manifestLabel} itemLabel={itemLabel} />
+      <CrossRefTitle
+        contentType={panelState.contentTypes.length > 1 ? t(node.getAttribute('data-ref-content-type')) : ''}
+        manifestLabel={manifestLabel}
+        itemLabel={itemLabel}
+      />
       <DropdownMenuItem className="mt-2 cursor-pointer" onSelect={actionThisPanel}>
         <span>{actionLabelThisPanel}</span>
       </DropdownMenuItem>
