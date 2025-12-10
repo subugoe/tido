@@ -55,7 +55,7 @@
     "from_new_collection_description": "Enter a new collection URL. From that, you can choose the content for the new panel.",
     "from_existing_collections": "From existing collections",
     "from_existing_collections_description": "Choose from collections that already have been added.",
-    "remove_panel": "Remove panel",
+    "close_panel": "Close panel",
     "pip_mode": "Swap mode",
     "split_mode": "Split mode",
     "text_mode": "Text mode",
@@ -111,7 +111,7 @@
     "annotations_init_error": "Error while initializing annotations",
     "error_no_supported_content_types": "The given item does not contain any supported content types",
     "error_invalid_item_url": "The given item URL \"{{url}}\" is not formatted correctly.",
-    "error_invalid_manifest_url": "The given manifest URL \"{{url}}\" is not formatted correctly."
-
+    "error_invalid_manifest_url": "The given manifest URL \"{{url}}\" is not formatted correctly.",
+    "error_invalid_collection_url": "The given collection URL \"{{url}}\" is not formatted correctly."
   }
 }

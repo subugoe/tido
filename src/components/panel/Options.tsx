@@ -32,7 +32,7 @@ const Options: FC = () => {
       <PanelModeMenu />
       <DropdownMenuSeparator />
       <DropdownMenuItem onSelect={removePanel} className="text-destructive focus:text-destructive focus:bg-destructive/3">
-        <Trash2 className="mr-2 text-destructive" /> { t('remove_panel') }
+        <Trash2 className="mr-2 text-destructive" /> { t('close_panel') }
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
