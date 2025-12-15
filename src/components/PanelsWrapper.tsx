@@ -11,7 +11,7 @@ const PanelsWrapper: FC = () => {
 
   useEffect(() => {
     initializePanels(panelsConfig)
-  }, [])
+  }, [panelsConfig])
 
   return <div id="panels-wrapper" className="bg-background flex-1 flex h-full py-4 space-x-4 overflow-x-auto pr-2" data-cy="panels-wrapper">
     { panels.map((state) => <Panel state={state} key={state.id} />) }

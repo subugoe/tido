@@ -1,10 +1,9 @@
-import { createContext, useContext, use } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { TidoConfig } from '@/types'
 import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 import { promiseWithCache } from '@/utils/promise-cache.ts'
 import { getRGBColor } from '@/utils/colors.ts'
 import { useUIStore } from '@/store/UIStore.tsx'
-import { createCollectionNodes } from '@/utils/tree.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { initI18n } from '@/utils/translations.ts'
 
@@ -29,25 +28,42 @@ function createThemeStyles(config: TidoConfig) {
 const ConfigContext = createContext(null)
 
 export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) => {
-  const { config, errors } = use<{ config: TidoConfig; errors: Record<string, string> }>(promiseWithCache('config', () => mergeAndValidateConfig(userConfig)))
-  if (Object.keys(errors).length > 0) console.error(errors)
 
-  initI18n(config.translations, config.lang)
-  createThemeStyles(config)
+  const [config, setConfig] = useState<TidoConfig>()
+  const [loading, setLoading] = useState<boolean>(true)
 
-  const setTreeNodes = useDataStore(state => state.setTreeNodes)
+  const createTreeNodes = useDataStore.getState().createTreeNodes
 
-  useUIStore.getState().updatePanelMode(config.panelModes.includes(config.defaultPanelMode) ? config.defaultPanelMode : config.panelModes[0])
 
-  const nodes = use<TreeNode[]>(promiseWithCache('createCollectionNodes', () => createCollectionNodes(config.rootCollections)))
-  if (!nodes) return
+  useEffect(() => {
+    async function initApp() {
+      setLoading(true)
+      const { config, errors } = await mergeAndValidateConfig(userConfig)
+      if (Object.keys(errors).length > 0) console.error(errors)
+      initI18n(config.translations, config.lang)
+      createThemeStyles(config)
 
-  // add rootCollection in Collections map
-  config.rootCollections.forEach((collectionUrl, i) => {
-    use(promiseWithCache(`initCollection${i}`, () => useDataStore.getState().initCollection(collectionUrl)))
-  })
+      useUIStore.getState().updatePanelMode(config.panelModes.includes(config.defaultPanelMode) ? config.defaultPanelMode : config.panelModes[0])
 
-  setTreeNodes(nodes)
+      createTreeNodes(config.rootCollections)
+
+      // add rootCollection in Collections map
+      config.rootCollections.forEach((collectionUrl, i) => {
+        promiseWithCache(`initCollection${i}`, () => useDataStore.getState().initCollection(collectionUrl))
+      })
+
+      setConfig(config)
+      setLoading(false)
+    }
+
+    initApp()
+  }, [userConfig])
+
+
+  if (loading) {
+    return <div>Loading config...</div>
+  }
+
   return (
     <ConfigContext.Provider value={config}>
       {children}
@@ -59,7 +75,7 @@ export const useConfig = () => {
   const context = useContext(ConfigContext)
 
   if (context === undefined)
-    throw new Error('useTheme must be used within a AppProvider')
+    throw new Error('useConfig must be used within a AppProvider')
 
   return context
 }
