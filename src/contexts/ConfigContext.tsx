@@ -6,6 +6,7 @@ import { getRGBColor } from '@/utils/colors.ts'
 import { useUIStore } from '@/store/UIStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { initI18n } from '@/utils/translations.ts'
+import Loading from '@/components/ui/loading.tsx'
 
 type ConfigProviderProps = {
   children: React.ReactNode
@@ -61,7 +62,9 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
 
 
   if (loading) {
-    return <div>Loading config...</div>
+    return <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
+      <Loading size={36} />
+    </div>
   }
 
   return (
