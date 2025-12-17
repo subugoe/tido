@@ -22,6 +22,14 @@ and also view our production examples.
 - [Configuration](#configuration)
   - [The Keys in Detail](#the-keys-in-detail)
   - [Translations](#translations)
+    - [Collection Namespaces](#collection-namespaces)
+- [Bookmarking](#bookmarking)
+  - [How it works](#how-it-works)
+  - [Working with the state object](#working-with-the-state-object)
+  - [Encoding/Decoding](#encodingdecoding)
+- [Text Sanitization](#text-sanitization)
+  - [Forbidden Tags](#forbidden-tags)
+  - [Allowed Attributes](#allowed-attributes)
 - [Getting Started (Developers)](#getting-started-developers)
   - [Prerequisites](#prerequisites)
   - [Install](#install)
@@ -315,6 +323,31 @@ In case you want to implement the mechanism yourself, here is the procedure:
   3. GZIP-decompress the binary
   4. Parse JSON string to object
 
+## Text Sanitization
+
+TIDO uses [DOMPurify](https://github.com/cure53/DOMPurify) to sanitize the incoming text in order to provide
+the best security possible while working with dynamic HTML strings.
+We **extend** the [default configuration](https://github.com/cure53/DOMPurify/blob/main/src) of DOMPurify
+with the followings:
+
+### Forbidden Tags
+
+- `input`
+- `script`
+- `noscript`
+- `iframe`
+- `frame`
+- `frameset`
+- `noframes`
+- `applet`
+- `base`
+- `meta`
+- `form`
+
+### Allowed Attributes
+
+- `target`
+- `rel`
 
 ## Getting Started (Developers)
 
