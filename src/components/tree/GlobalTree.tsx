@@ -6,6 +6,8 @@ import { TreeProvider } from '@/contexts/TreeContext.tsx'
 import Tree from '@/components/tree/Tree.tsx'
 import GlobalTreeSelectionModalContent from '@/components/tree/tree-modal/GlobalTreeSelectionModalContent.tsx'
 import { getChildren, getExpandedNode } from '@/utils/tree.ts'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
+import AddNewPanelSelection from '@/components/header/AddNewPanelSelection.tsx'
 
 const GlobalTree: FC = () => {
 
@@ -50,23 +52,24 @@ const GlobalTree: FC = () => {
     loadNodes(nodes)
   }, [nodes])
 
-  return <div className={`${showGlobalTree ? 'w-[380px]' : 'w-[0px]'} flex bg-background transition-all py-4`}>
-    <div className={`shrink-0 overflow-auto [scrollbar-gutter:stable] transition-all border-r-2 border-border
+  return <div className={`${showGlobalTree ? 'w-[380px]' : 'w-0'} flex bg-background transition-all py-4`}>
+    <div className={`relative shrink-0 overflow-auto [scrollbar-gutter:stable] transition-all border-r-2 border-border
     mr-[16px] w-[364px] ${showGlobalTree ? 'duration-300 opacity-100 ' : 'duration-100 opacity-0'}`}>
       <TreeProvider onSelect={onSelectNode} getChildren={getChildren}>
         <Tree nodes={treeNodes} />
-        {showSelectionModal && <div
-          ref={modalRef}
-          className="fixed z-50 p-2 bg-background border border-border shadow-md rounded"
-          style={{
-            top: `${selectedPosition?.y + 40}px`,
-            left: `${selectedPosition?.x}px`,
-          }}
-          data-cy="global-tree-modal"
-        >
-          <GlobalTreeSelectionModalContent node={selectedNode.current}
-            onSelect={() => setShowSelectionModal(false)} />
-        </div>}
+
+        {/*{showSelectionModal && <div*/}
+        {/*  ref={modalRef}*/}
+        {/*  className="fixed z-50 p-2 bg-background border border-border shadow-md rounded"*/}
+        {/*  style={{*/}
+        {/*    top: `${selectedPosition?.y + 40}px`,*/}
+        {/*    left: `${selectedPosition?.x}px`,*/}
+        {/*  }}*/}
+        {/*  data-cy="global-tree-modal"*/}
+        {/*>*/}
+        {/*  <GlobalTreeSelectionModalContent node={selectedNode.current}*/}
+        {/*    onSelect={() => setShowSelectionModal(false)} />*/}
+        {/*</div>}*/}
       </TreeProvider>
     </div>
   </div>

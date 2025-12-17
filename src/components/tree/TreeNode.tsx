@@ -11,11 +11,9 @@ import { apiRequest } from '@/utils/api.ts'
 import { getRootChildrenCollectionsIds } from '@/utils/tree.ts'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
-
 interface TreeNodeProps {
   node: TreeNode,
 }
-
 
 const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   const { onSelect, getChildren, selectedNodeId, setSelectedNodeId, elevation } = useTree()
