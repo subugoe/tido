@@ -2,15 +2,12 @@ import { FC, useEffect, useRef, useState } from 'react'
 import TextRenderer from '@/components/panel/TextRenderer.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import DOMPurify from 'dompurify'
 import { useErrorBoundary } from 'react-error-boundary'
 import Loading from '@/components/ui/loading.tsx'
 import { useText } from '@/contexts/TextContext.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
 import TextViewWarning from '@/components/panel/views/TextViewWarning.tsx'
-
-
-const FORBID_TAGS = ['input', 'script', 'noscript', 'iframe', 'frame', 'frameset', 'noframes', 'applet', 'base', 'meta', 'form']
+import { sanitize } from '@/utils/text-sanitize.ts'
 
 const TextViewContent: FC = () => {
   const { panelState, showTextOptions, usePanelTranslation, setTextWarning, loading: loadingPanel, getSidebarScroller } = usePanel()
@@ -36,17 +33,17 @@ const TextViewContent: FC = () => {
       setTextWarning('')
       try {
         const response = await apiRequest<string>(contentUrl)
-        const cleanHtml = DOMPurify.sanitize(response, { FORBID_TAGS })
-        setText(cleanHtml)
+        const { output, removed } = sanitize(response)
+        setText(output)
 
         // Normally the loading is set to false when a text has finished rendering in TextRenderer.
         // When trying to load the same text again it won't rerender, so the loading is always true.
         // This is a fix for that.
-        if (text === cleanHtml) setLoadingText(false)
+        if (text === output) setLoadingText(false)
 
-        const hasRemoved = DOMPurify.removed.length > 0
+        const hasRemoved = removed.length > 0
         setTextWarning(hasRemoved ? t('text_not_displayed_correctly') : '')
-        if (hasRemoved) console.error('Removed HTML elements during text sanitization: ', DOMPurify.removed)
+        if (hasRemoved) console.error('Removed HTML elements during text sanitization: ', removed)
       } catch (e) {
         showBoundary(e)
         console.error(e)
