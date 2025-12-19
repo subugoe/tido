@@ -14,17 +14,25 @@ import { useText } from '@/contexts/TextContext.tsx'
 import {
   addAnnotationId,
   addHighlightStyle,
-  addHoverStyle,
+  addHoverStyle, addNestedTargetStyle,
   addSelectedStyle,
+  assignNestedTargetsInFlippedMatched,
   flipMatchedAnnotationsMap,
   getAnnotationIds,
+  getHoveredAnnotationsIds,
   getRootCrossRefElements,
+  getTargetsHoveredAnnotations,
+  getTextTargets,
+  isParentHovered,
+  isTargetPartOfSelectedAnnotation,
   removeAnnotationIds,
   removeHighlightStyle,
   removeHoverStyle,
+  removeNestedTargetStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
+import { computeNewSelectedAnnotationIndex } from '@/utils/annotations.ts'
 
 interface Props {
   htmlString: string
@@ -51,8 +59,11 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   const [portals, setPortals] = useState([])
 
+  const prevClickedTargetIndexRef = useRef<number>(null)
+
   const annotationsModeRef = useRef<'align' | 'list'>(null)
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
+  const targetsRef = useRef<HTMLElement[]>(null)
 
   function scrollIntoSelectedAnnotation(selectedAnnotation: Annotation) {
     const annotationId = selectedAnnotation?.id
@@ -62,6 +73,13 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     scrollIntoViewIfNeeded(annotationEl, container)
   }
 
+  function containsChildren(targets: HTMLElement[], target: HTMLElement) {
+    for(const t of targets) {
+      if (target.contains(t) && target !== t) return true
+    }
+    return false
+  }
+
 
   const onClickTarget = (e: Event) => {
     // Generic click listener
@@ -69,20 +87,19 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     //  So this function will be called with those state values which existed at the time of adding.
 
     const target = e.currentTarget as Element
+    const targetEntry: MergedAnnotationEntry = flippedMatchedAnnotationsMapRef.current.filter(entry => entry.target === target)[0]
+
+    if (!containsChildren(targetsRef.current, target as HTMLElement)) {
+      // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
+      e.stopPropagation()
+    }
+
     const idsValue = getAnnotationIds(target)
     if (!idsValue) return
 
-    let newSelectedAnnotationIndex = -1
+    targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedAnnotationsMapRef.current)
 
-    const targetEntry: MergedAnnotationEntry = flippedMatchedAnnotationsMapRef.current.filter(entry => entry.target === target)[0]
-    if (targetEntry.selectedAnnotationIndex === -1) newSelectedAnnotationIndex = 0
-    else if (targetEntry.selectedAnnotationIndex < targetEntry.annotations.length - 1) {
-      newSelectedAnnotationIndex = targetEntry.selectedAnnotationIndex += 1
-    }
-
-    targetEntry.selectedAnnotationIndex = newSelectedAnnotationIndex
-
-    const annotation = newSelectedAnnotationIndex !== -1 ? targetEntry.annotations[newSelectedAnnotationIndex] : null
+    const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
 
     if (annotation) {
       if (!panelState.annotationsOpen) {
@@ -90,6 +107,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
       }
 
       setSelectedAnnotation(annotation)
+      prevClickedTargetIndexRef.current = flippedMatchedAnnotationsMapRef.current.findIndex(entry => targetEntry === entry)
+
       if (annotationsModeRef.current === 'list') scrollIntoSelectedAnnotation(annotation)
     }
     else {
@@ -103,13 +122,13 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
 
   const onMouseEnterTarget = (e: Event) => {
-    const target = e.currentTarget as Element
-    const idsValue = getAnnotationIds(target)
-    if (!idsValue) return
+    const target = e.currentTarget as HTMLElement
+    const idsArray = getHoveredAnnotationsIds(target, targetsRef.current)
+    if (idsArray.length === 0) return
 
-    const idArr = idsValue.split(',')
-    setHoveredAnnotations(idArr)
+    setHoveredAnnotations(idsArray)
   }
+
 
   const onMouseLeaveTarget = () => {
     setHoveredAnnotations(null)
@@ -165,32 +184,59 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     setMatchedAnnotationsMap(result)
   }, [parsedDom, panelState.annotations])
 
+
+
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
-    Object.keys(matchedAnnotationsMap).forEach(key => {
-      const matched = matchedAnnotationsMap[key]
-      if (!matched.filtered) return
-      matched.target.forEach(target => {
+    const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
+    const targetsOfSelectedAnnotation = selectedAnnotation ? matchedAnnotationsMap[selectedAnnotation.id].target : []
+
+    flippedMatchedAnnotationsMapRef.current?.forEach(fa => {
+      const target = fa.target as HTMLElement
+      const annotations = fa.annotations
+
+      let someFiltered = false
+
+      // Look if some of the annotations are visible and add the ids of those to the node
+      annotations.forEach((_, i) => {
+        if (!fa.filtered[i]) return
+        someFiltered = !someFiltered ? fa.filtered[i] : true
+      })
+
+      if (someFiltered) {
         removeHoverStyle(target)
-      })
-    })
+        removeNestedTargetStyle(target)
+        removeHighlightStyle(target)
 
-    if (!hoveredAnnotations) return
-    hoveredAnnotations.forEach((annotation) => {
-      const matched = matchedAnnotationsMap[annotation]
-      matched.target.forEach(target => {
-        addHoverStyle(target)
-      })
-    })
+        const hasParentHovered = isParentHovered(targetsOfHoveredAnnotations, fa.parents)
 
+        if (targetsOfHoveredAnnotations.includes(target))  {
+          // Logic which hovers the targets
+          // hasParentHovered: condition to determine whether we should add the style to a nested target
+          if (!hasParentHovered) {
+            addHoverStyle(target)
+          }
+          else {
+            addHoverStyle(target)
+            addNestedTargetStyle(target)
+          }
+        }
+        else if (!isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
+          addHighlightStyle(target)
+        }
+      }
+    })
   }, [hoveredAnnotations])
+
+
 
   // Apply highlighting styles on every map update
   useEffect(() => {
     const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedAnnotationsMap)
-    flippedMatchedAnnotationsMapRef.current = flippedMatchedAnnotationsMap
+    targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
+    flippedMatchedAnnotationsMapRef.current = assignNestedTargetsInFlippedMatched(targetsRef.current, flippedMatchedAnnotationsMap)
 
-    flippedMatchedAnnotationsMap.forEach(fa => {
+    flippedMatchedAnnotationsMapRef.current.forEach(fa => {
       const annotations = fa.annotations
       const target = fa.target
 
@@ -213,33 +259,34 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     })
   }, [matchedAnnotationsMap])
 
+
   // Apply selected styles on every selectedAnnotation update
   useEffect(() => {
-    flipMatchedAnnotationsMap(matchedAnnotationsMap).forEach(fa => {
-      const annotations = fa.annotations
-      const target = fa.target as HTMLElement
+    const targetsOfSelectedAnnotation = selectedAnnotation ? matchedAnnotationsMap[selectedAnnotation.id].target : []
 
-      let someSelected = false
-      let someFiltered = false
+    flippedMatchedAnnotationsMapRef.current.forEach(fa => {
+      const target = fa.target as HTMLElement
+      const annotations = fa.annotations
 
       removeSelectedStyle(target)
+      removeHighlightStyle(target)
+
+      let someFiltered = false
 
       // Look if some of the annotations are visible and add the ids of those to the node
-      annotations.forEach((annotation, i) => {
+      annotations.forEach((_, i) => {
         if (!fa.filtered[i]) return
-        const isSelected = selectedAnnotation && selectedAnnotation.id === annotation.id
-        someSelected = !someSelected ? isSelected : true
         someFiltered = !someFiltered ? fa.filtered[i] : true
       })
 
-      if (someSelected) {
-        removeHighlightStyle(target)
+      if (isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
         addSelectedStyle(target)
         scrollIntoViewIfNeeded(target, target.closest('[data-text-container="true"]'))
         return
       }
-
-      if (someFiltered) addHighlightStyle(target)
+      else if(someFiltered) {
+        addHighlightStyle(target)
+      }
     })
   }, [selectedAnnotation])
 

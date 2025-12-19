@@ -11,7 +11,7 @@ function getPanelModeOption(mode) {
 
 describe('Config', () => {
   runConfigTest('', 'Should apply defaults', () => {
-    cy.get('[data-cy="new-panel"]').should('have.css', 'background-color', 'rgb(52, 86, 170)')
+    cy.get('[data-cy="new-panel"]').should('have.css', 'background-color', 'oklch(0.474346 0.140455 264.941)')
     cy.get('[data-cy="global-tree-toggle"]').should('be.visible')
     cy.get('[data-cy="new-panel"]').should('be.visible')
     cy.get('[data-cy="new-panel"]').should('have.text', 'Add New Panel')
@@ -21,7 +21,7 @@ describe('Config', () => {
 
   // ===== Specific Config Values =====
   runConfigTest('theme[primaryColor]=%2300ff00', 'theme.primaryColor custom', () => {
-    cy.get('[data-cy="new-panel"]').should('have.css', 'background-color', 'rgb(0, 255, 0)')
+    cy.get('[data-cy="new-panel"]').should('have.css', 'background-color', 'oklch(0.86644 0.294827 142.495)')
   });
   runConfigTest('showGlobalTree=false', 'showGlobalTree false', () => {
     cy.get('[data-cy="global-tree-toggle"]').should('not.exist')
@@ -60,13 +60,13 @@ describe('Config', () => {
   })
   runConfigTest('showThemeToggle=true', 'Should show theme toggle', () => {
     cy.get('[data-cy="settings"]').click()
-    
+
     cy.contains('Light').should('not.exist')
     cy.contains('Dark').should('not.exist')
     cy.contains('System').should('not.exist')
-    
+
     cy.contains('Toggle theme').click()
-    
+
     cy.contains('Light').should('be.visible')
     cy.contains('Dark').should('be.visible')
     cy.contains('System').should('be.visible')

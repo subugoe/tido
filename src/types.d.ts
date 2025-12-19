@@ -228,7 +228,8 @@ declare global {
     target: Element
     annotations: Annotation[]
     filtered: boolean[],
-    selectedAnnotationIndex: number
+    selectedAnnotationIndex: number,
+    parents: Element[]
   }
 
   interface Metadata {
@@ -343,6 +344,7 @@ export interface ThemeConfig {
   forcePanelMode?: string
   primaryColor: string
 }
+
 
 export interface Translation {
   [key: string]: string

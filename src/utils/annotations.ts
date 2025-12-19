@@ -29,8 +29,29 @@ function getExtendedFullAnnotationsTypesMap(annotations: Annotation[], prevFullA
   return newAnnotationTypes
 }
 
+function computeNewSelectedAnnotationIndex(targetEntry: MergedAnnotationEntry, prevClickedTargetIndex: number, flippedMatchedAnnotMap: MergedAnnotationEntry[]) {
+  let newSelectedAnnotationIndex = -1
+
+  // Clicking at target A -> A.selectedAnnotationIndex becomes 0
+  // Clicking at target B -> B.selectedAnnot Index becomes 0
+  // Clicking again at target A -> reset first A.selectedAnnotationIndex to -1, since its like clicking for the first time
+  // if we do not reset it and target A has only one annotation then it will not be selected
+
+  if (flippedMatchedAnnotMap[prevClickedTargetIndex]?.target !== targetEntry.target) targetEntry.selectedAnnotationIndex = -1
+
+  if (targetEntry.selectedAnnotationIndex === -1) {
+    newSelectedAnnotationIndex = 0
+  }
+  else if (targetEntry.selectedAnnotationIndex < targetEntry.annotations.length - 1) {
+    newSelectedAnnotationIndex = targetEntry.selectedAnnotationIndex += 1
+  }
+
+  return newSelectedAnnotationIndex
+}
+
 export {
   getFilteredAnnotations,
   isSelected,
   getExtendedFullAnnotationsTypesMap,
+  computeNewSelectedAnnotationIndex
 }
