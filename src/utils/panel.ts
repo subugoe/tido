@@ -3,13 +3,15 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { PanelModeButtonData, PanelConfig } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
 
-export const DEFAULT_PANEL_WIDTH = 600
-export const MIN_PANEL_WIDTH = 600
+export const MIN_PANEL_WIDTH = 800
+
+export const DEFAULT_PANEL_WIDTH = MIN_PANEL_WIDTH
+
 export const SIDEBAR_DEFAULT_WIDTH = 400
 
 export const PANEL_BORDER_WIDTH = 2
 export const PANEL_GAP = 16
-export const PANEL_HEADER_HEIGHT = 120
+export const PANEL_HEADER_HEIGHT = 60
 
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {

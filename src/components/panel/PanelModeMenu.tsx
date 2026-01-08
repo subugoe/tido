@@ -4,17 +4,12 @@ import { Skeleton } from '@/components/ui/skeleton.tsx'
 import { PictureInPicture2, Image, AlignCenter, Columns2 } from 'lucide-react'
 import { PanelModeButtonData, PanelMode } from '@/types'
 import { filterAndSortData } from '@/utils/panel.ts'
-import {
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-} from '@/components/ui/dropdown-menu.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
 
 
 const PanelModeMenu: FC = () => {
-  const { panelState, updatePanel, usePanelTranslation, resizer } = usePanel()
+  const { panelState, updatePanel, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
   const { panelModes } = useConfig()
   const [selected, setSelected] = useState<PanelMode>(panelState.mode)
@@ -28,7 +23,6 @@ const PanelModeMenu: FC = () => {
   useEffect(() => {
     if (!panelState) return
     updatePanel({ mode: selected })
-    resizer.setPanelMode(selected)
   }, [selected])
 
 
@@ -59,17 +53,18 @@ const PanelModeMenu: FC = () => {
     {!panelState && <Skeleton />}
     {panelState && visiblePanelModesData.length > 1 &&
       <>
-        <DropdownMenuLabel className="text-xs">{ t('panel_modes') }</DropdownMenuLabel>
-        <DropdownMenuGroup>
-          <DropdownMenuRadioGroup
-            value={selected}
-            onValueChange={(value) => setSelected(value as PanelMode)}
-            data-cy="panel-mode-menu"
-          >
+        <Select
+          value={selected}
+          onValueChange={(value) => setSelected(value as PanelMode)}
+        >
+          <SelectTrigger size="sm" data-cy="panel-mode-select">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent data-cy="panel-mode-menu">
             {visiblePanelModesData.map((button) => {
               const Icon = button.icon
 
-              return <DropdownMenuRadioItem
+              return <SelectItem
                 value={button.mode}
                 disabled={isDisabled(button.mode)}
                 data-selected={panelState.mode === button.mode}
@@ -77,11 +72,11 @@ const PanelModeMenu: FC = () => {
                 className="cursor-pointer"
               >
                 <Icon />
-                <span className="leading-none ml-1">{button.title}</span>
-              </DropdownMenuRadioItem>
+                <span className={`leading-none ml-1 ${panelState.mode === button.mode ? 'font-medium' : ''}`}>{button.title}</span>
+              </SelectItem>
             })}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
+          </SelectContent>
+        </Select>
       </>
     }
   </>

@@ -57,10 +57,10 @@ describe('Panel', () => {
   it('Should display the configured panelModes and the defaultPanelMode as selected', () => {
     cy.get('#panels-wrapper')
       .children().eq(0)
-      .find('[data-cy="options-button"]')
+      .find('[data-cy="panel-mode-select"]')
       .click()
       .get('[data-cy="panel-mode-menu"]')
-      .children()
+      .find('[data-slot="select-item"]')
       .should('have.length', 3)
       .eq(1)                    // order of panelModes is displayed as provided
       .should('have.attr', 'data-cy', 'text')
@@ -79,19 +79,23 @@ describe('Panel', () => {
       // select split mode
       .get('#panels-wrapper')
       .children().eq(0)
-      .get('[data-cy="options-button"]')
+      .find('[data-cy="panel-mode-select"]')
       .click()
       .get('[data-cy="panel-mode-menu"]')
-      .children()
+      .find('[data-slot="select-item"]')
       .first()
       .click()
-      .parent()
-      .children()
-      .eq(0)
+      .get('#panels-wrapper')
+      .children().eq(0)
+      .find('[data-cy="panel-mode-select"]')
+      .click()
+      .get('[data-cy="panel-mode-menu"]')
+      .find('[data-slot="select-item"]')
+      .first()
       .should('have.attr', 'data-cy', 'split')
       .should('have.attr', 'data-selected', 'true')          //'split' mode is selected
-      .parent()
-      .children()
+      .get('[data-cy="panel-mode-menu"]')
+      .find('[data-slot="select-item"]')
       .eq(1)
       .should('have.attr', 'data-selected', 'false')
 
@@ -110,7 +114,7 @@ describe('Panel', () => {
 
   it('Should switch to next item', () => {
     cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="next-button"]')
+      .find('[data-cy="next-item-button"]')
       .click()
 
     // item label and text is updated
@@ -128,7 +132,7 @@ describe('Panel', () => {
       .validateLabel('item','281')
 
       .findPanelTitleAndNavArrows()
-      .find('[data-cy="next-button"]')
+      .find('[data-cy="next-item-button"]')
       .click()  // should switch to the first item of Klosterneuburg manifest
       .validateLabel('manifest', 'Kloster Neuburg, Cod. 251')         // Manifest and item labels should get updated
       .validateLabel('item', '192r')
@@ -137,12 +141,12 @@ describe('Panel', () => {
 
   it('Should switch to previous item', () => {
     cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="next-button"]')           // go to Page 280
+      .find('[data-cy="next-item-button"]')           // go to Page 280
       .click()
     cy.validateLabel('item','280')
 
     cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="prev-button"]')          // go back to Page 279
+      .find('[data-cy="prev-item-button"]')          // go back to Page 279
       .click()
 
     cy.validateLabel('item','279')
@@ -169,7 +173,7 @@ describe('Panel', () => {
       .click()
 
       .findPanelTitleAndNavArrows()
-      .find('[data-cy="prev-button"]')
+      .find('[data-cy="prev-item-button"]')
       .click()
 
     cy.validateLabel('manifest', 'Kloster Neuburg, Cod. 251')
@@ -234,12 +238,12 @@ describe('Panel', () => {
   it('Should disable the prev button in first manifest first item', () => {
     // 'prev' is disabled
     cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="prev-button"]')
+      .find('[data-cy="prev-item-button"]')
       .should('have.attr', 'disabled')
 
     // 'next is not 'disabled'
     cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="next-button"]')
+      .find('[data-cy="next-item-button"]')
       .should('not.have.attr', 'disabled')
   })
 
@@ -263,12 +267,12 @@ describe('Panel', () => {
 
     // 'prev' is not 'disabled'
     cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="prev-button"]')
+      .find('[data-cy="prev-item-button"]')
       .should('not.have.attr', 'disabled')
 
     // 'next is 'disabled'
     cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="next-button"]')
+      .find('[data-cy="next-item-button"]')
       .should('have.attr', 'disabled')
   })
   // ----------- End of Navigation ---------

@@ -117,6 +117,7 @@
     "error_no_supported_content_types": "Das geladene Item enthält keine Content-Types, die von diesem Viewer unterstützt werden.",
     "error_invalid_item_url": "Item URL \"{{url}}\" ist nicht korrekt formatiert.",
     "error_invalid_manifest_url": "Manifest URL \"{{url}}\" ist nicht korrekt formatiert.",
-    "error_invalid_collection_url": "Collection URL \"{{url}}\" ist nicht korrekt formatiert."
+    "error_invalid_collection_url": "Collection URL \"{{url}}\" ist nicht korrekt formatiert.",
+    "annotations": "Annotationen"
   }
 }
