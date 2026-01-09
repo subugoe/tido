@@ -313,7 +313,7 @@ describe('Config', () => {
       .should('not.exist')
   });
   //collection with annotations
-  runConfigTest('annotationsMode=list&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+  runConfigTest('defaultAnnotationsMode=list&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations list view preselected', () => {
       //open annotations sidebar
       cy.get('[data-cy="sidebar-toggle"]')
@@ -343,7 +343,7 @@ describe('Config', () => {
     }
   )
   //collection with annotations
-  runConfigTest('annotationsMode=align&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+  runConfigTest('defaultAnnotationsMode=align&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations align view preselected', () => {
       //open annotations sidebar
       cy.get('[data-cy="sidebar-toggle"]')
