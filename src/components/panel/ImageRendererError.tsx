@@ -9,7 +9,7 @@ const ImageRendererError: FC<FallbackProps> = ({ error, resetErrorBoundary }) =>
   const { t } = usePanelTranslation()
 
 
-  return <div className="p-3 h-full flex">
+  return <div className="p-3 h-full w-full flex">
     <div className="flex-1 flex flex-col items-center py-3 px-8 bg-red-50 dark:bg-red-300/20 rounded-lg">
       <CircleX className="text-red-500 mt-[15vh]" size="60" />
       <span className="mt-4 font-semibold text-red-900 dark:text-red-50">{t('no_image_available')}</span>

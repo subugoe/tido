@@ -4,7 +4,7 @@
   "title": "Vier Wachen Edition",
   "panels": [
     {
-      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/reproduction/collection.json",
+      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/transcriptions/collection.json"
     }
   ],
   "theme": {

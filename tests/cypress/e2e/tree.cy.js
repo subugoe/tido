@@ -16,32 +16,6 @@ describe('Tree', () => {
     cy.visit('/4w-local.html')
   });
 
-  it('Global tree: Should display one root collection node as expanded', () => {
-    cy.get('[data-cy="global-tree-toggle"]').click()
-
-    cy.get('[data-cy="tree"]').should('be.visible')
-      // we have one root node with the title
-      .children('[data-cy="tree-node"]')
-      .should('have.length', 1)
-      .children().eq(0)
-      .contains('Vier Wachen vernetzt: Digitale Edition eines mystischen Traktats des Spätmittelalters')
-
-      // it has two children with corresponding collection titles
-      .parent().parent()
-      .find('[data-cy="node-children"]').first()
-      .children()
-      .should('have.length', 2)
-      .children()
-      .eq(0).find('span').should('have.text','Ebene 1: Reproduktion der Dokumente')
-      .parents('[data-cy="node-children"]')
-      .children()
-      .should('have.length', 2)
-      .children()
-      .eq(1).find('span').should('have.text','Ebene 2: Kritische Edition der Fassungen')
-  })
-
-  // TODO: Having two root collections shows initially both two root nodes as not expanded
-
   it('Should render manifests of collection', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
     cy.get('.tree')

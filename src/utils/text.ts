@@ -1,6 +1,7 @@
 const ANNOTATION_IDS_ATTRIBUTE = 'data-annotation-ids'
-const ANNOTATION_HOVER_CLASSES = ['bg-primary/20', 'dark:bg-primary/50']
-const SELECTED_ANNOTATION_CLASSES = ['bg-primary/40', 'dark:bg-primary/80']
+const ANNOTATION_HOVER_CLASSES = ['bg-annotation-hover', 'dark:bg-primary/50']
+const NESTED_TARGET_HOVER_CLASSES = ['rounded-md', 'outline']
+const SELECTED_ANNOTATION_CLASSES = ['bg-annotation-selected', 'dark:bg-primary/80']
 const SELECTED_ANNOTATION_ATTRIBUTE = 'data-annotation-selected'
 const HIGHLIGHTING_STYLE = ['bg-gray-200', 'dark:bg-muted', 'relative', 'cursor-pointer']
 const CROSS_REF_ATTRIBUTE = 'data-ref-target'
@@ -30,6 +31,14 @@ function addHoverStyle(target: Element) {
   target.classList.add(...ANNOTATION_HOVER_CLASSES)
 }
 
+function addNestedTargetStyle(target: Element) {
+  target.classList.add(...NESTED_TARGET_HOVER_CLASSES)
+}
+
+function removeNestedTargetStyle(target: Element) {
+  target.classList.remove(...NESTED_TARGET_HOVER_CLASSES)
+}
+
 function removeHoverStyle(target: Element) {
   target.classList.remove(...ANNOTATION_HOVER_CLASSES)
 }
@@ -46,6 +55,14 @@ function removeSelectedStyle(target: Element) {
 
 function getAnnotationIds(target: Element) {
   return target.getAttribute(ANNOTATION_IDS_ATTRIBUTE)
+}
+
+
+function isTargetPartOfSelectedAnnotation(target: Element, targetsOfSelectedAnnotation: Element[]) {
+  for (const t of targetsOfSelectedAnnotation) {
+    if (t.contains(target)) return true
+  }
+  return false
 }
 
 function isCrossRefNested(crossRefNodes, node) {
@@ -113,7 +130,8 @@ function flipMatchedAnnotationsMap(map: MatchedAnnotationsMap): MergedAnnotation
           target: el,
           annotations: [],
           filtered: [],
-          selectedAnnotationIndex: -1
+          selectedAnnotationIndex: -1,
+          parents: []
         }
         elementMap.set(el, merged)
       }
@@ -126,14 +144,91 @@ function flipMatchedAnnotationsMap(map: MatchedAnnotationsMap): MergedAnnotation
   return Array.from(elementMap.values())
 }
 
+function getParents(targets: Element[], target: Element) {
+  const parents: Element[] = []
+  for(const t of targets) {
+    if (t.contains(target) && t !== target) {
+      parents.push(t)
+    }
+  }
+  return parents
+}
+
+function getTextTargets(flippedMatchedAnnotationsMap: MergedAnnotationEntry[]): HTMLElement[] {
+  if (!flippedMatchedAnnotationsMap) return []
+
+  return flippedMatchedAnnotationsMap.reduce((acc, curr) => {
+    acc.push(curr.target)
+    return acc
+  }, [])
+}
+
+function getHoveredAnnotationsIds(target: HTMLElement, targets: HTMLElement[]) {
+  // a target may belong to multiple annotations -> we need to find all its related annotation ids, to be able to
+  //  1. add hover style on the found annotations
+  //  2. highlight the respective target of annotation
+  const idsArray: string[] = []
+  let parentEl = target
+
+  while(true) {
+    const foundTargets = targets.filter((t) => t.contains(parentEl))
+    if (foundTargets.length === 0) break
+
+    foundTargets.forEach((t) => {
+      const annotIds = getAnnotationIds(t)
+      if (annotIds) idsArray.push(...(annotIds.split(',')))
+    })
+
+    parentEl = parentEl.parentElement
+  }
+  return idsArray
+}
+
 function isSelected(target: Element) {
   return target.getAttribute(SELECTED_ANNOTATION_ATTRIBUTE) === 'true'
+}
+
+function assignNestedTargetsInFlippedMatched(targets: Element[], flippedMatchedAnnotationsMap: MergedAnnotationEntry[]) {
+  const newFlippedMatchedAnnotationsMap = [...flippedMatchedAnnotationsMap]
+  newFlippedMatchedAnnotationsMap.forEach(fa => {
+    const target = fa.target as HTMLElement
+    fa.parents = getParents(targets, target)
+  })
+  return newFlippedMatchedAnnotationsMap
+}
+
+function getTargetsHoveredAnnotations(hoveredAnnotations: string[], targets: Element[], matchedAnnotationsMap: MatchedAnnotationsMap) {
+  // get all targets (even nested ones) which belong to hoveredAnnotations
+  // it is not enough to just receive the targets of a hoveredAnnotation from the matchedAnnotationsMap
+  // it might contain a nested target, which we would miss -> check if that target of hoveredAnnotation contains any of the targets from flippedMatchedMapp
+
+  if (!hoveredAnnotations) return []
+  const result: Element[] = []
+
+  const annotationsTargets = hoveredAnnotations.map(key => matchedAnnotationsMap[key].target).flat()
+  const uniqueAnnotationTargets = [...new Set(annotationsTargets)]
+
+  targets.forEach(t => {
+    for(const annotTarget of uniqueAnnotationTargets) {
+      if (annotTarget.contains(t)) result.push(t)
+    }
+  })
+
+  return result
+}
+
+function isParentHovered(hoveredTargets: Element[], parentsEl: Element[]) {
+  return parentsEl.some(parent =>
+    hoveredTargets.some(ht => ht.contains(parent))
+  )
 }
 
 export {
   addAnnotationId,
   removeAnnotationIds,
   addHoverStyle,
+  addNestedTargetStyle,
+  removeNestedTargetStyle,
   removeHoverStyle,
   addSelectedStyle,
   removeSelectedStyle,
@@ -142,5 +237,11 @@ export {
   getAnnotationIds,
   getRootCrossRefElements,
   flipMatchedAnnotationsMap,
-  isSelected
+  getTextTargets,
+  getHoveredAnnotationsIds,
+  isSelected,
+  isTargetPartOfSelectedAnnotation,
+  assignNestedTargetsInFlippedMatched,
+  getTargetsHoveredAnnotations,
+  isParentHovered
 }

@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.14](https://github.com/subugoe/tido/compare/v5.0.0-alpha.13...v5.0.0-alpha.14) (2025-12-16)
+
+
+### Features
+
+* add close panel and retry buttons to panel error ([5d1ec2b](https://github.com/subugoe/tido/commit/5d1ec2b3bacd859577ca1b453aed48162badc00d))
+* omit content type in cross ref popover when there is only one available ([ac40423](https://github.com/subugoe/tido/commit/ac40423d9035b67a80724d83a989ec1ab9a2bc7d))
+* switching to new item should place text scroller to top of text ([5cbe7d2](https://github.com/subugoe/tido/commit/5cbe7d25bb7efeeefe5dfffda25c64558330e88b))
+* update panel config by using manifest/item IDs and content type values instead of indexes ([361184b](https://github.com/subugoe/tido/commit/361184bc7268fbafc4b6e60af96d8a85076937d8))
+
+
+### Bug Fixes
+
+* add loading app loading spinner ([32de5c0](https://github.com/subugoe/tido/commit/32de5c00e09643d216e9f30e0cd4ee8e7bf1eb18))
+* fix image view width ([c65888d](https://github.com/subugoe/tido/commit/c65888dc9a216f9373a1ec4ef1823ecc1ba8d404))
+
+
+### Docs
+
+* update README ([cf5e73e](https://github.com/subugoe/tido/commit/cf5e73eae1f85a0147b10ed1350a3002ce0851f7))
+
+
+### Refactoring
+
+* reorganize ConfigContext by initializing app in a useEffect and call 'mergeAndValidate' without a promise Cache mechanism ([5b29828](https://github.com/subugoe/tido/commit/5b29828fcf194d5259c1d3d6b47a1b5299548267))
+
 ## [5.0.0-alpha.13](https://github.com/subugoe/tido/compare/v5.0.0-alpha.12...v5.0.0-alpha.13) (2025-11-27)
 
 

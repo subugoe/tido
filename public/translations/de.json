@@ -60,7 +60,7 @@
     "from_new_collection_description": "Geben Sie eine neue Collection-URL ein. Sie können anschließend daraus einen Panel-Inhalt wählen.",
     "from_existing_collections": "Aus bestehenden Kollektionen",
     "from_existing_collections_description": "Wählen Sie aus Kollektionen, die bereits hinzugefügt wurden.",
-    "remove_panel": "Panel entfernen",
+    "close_panel": "Panel schließen",
     "pip_mode": "Swap-Modus",
     "split_mode": "Split-Modus",
     "text_mode": "Text-Modus",
@@ -116,6 +116,7 @@
     "annotations_init_error": "Fehler beim Initialisieren der Annotationen",
     "error_no_supported_content_types": "Das geladene Item enthält keine Content-Types, die von diesem Viewer unterstützt werden.",
     "error_invalid_item_url": "Item URL \"{{url}}\" ist nicht korrekt formatiert.",
-    "error_invalid_manifest_url": "Manifest URL \"{{url}}\" ist nicht korrekt formatiert."
+    "error_invalid_manifest_url": "Manifest URL \"{{url}}\" ist nicht korrekt formatiert.",
+    "error_invalid_collection_url": "Collection URL \"{{url}}\" ist nicht korrekt formatiert."
   }
 }

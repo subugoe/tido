@@ -3,6 +3,7 @@ import { apiRequest } from '@/utils/api.ts'
 import { isCollectionUrl } from '@/utils/api-validate.ts'
 import { getI18n } from 'react-i18next'
 import { CustomError } from '@/utils/custom-error.ts'
+import { createCollectionNodes } from '@/utils/tree.ts'
 
 
 interface AnnotationMap {
@@ -15,10 +16,10 @@ interface DataStoreType {
   treeNodes: TreeNode[]
   initCollection: (url: string) => Promise<Collection>
   initAnnotations: (collectionId: string, url: string) => Promise<void>
-  setTreeNodes: (newTreeNodes: TreeNode[]) => void,
   appendRootNode: (newNode: TreeNode) => void,
   showGlobalTree: boolean,
   setShowGlobalTree: (newValue: boolean) => void,
+  createTreeNodes: (rootCollections: string[]) => void
 }
 
 export const useDataStore = create<DataStoreType>((set, get) => ({
@@ -53,8 +54,9 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
     const annotationPage = await apiRequest<AnnotationPage>(annotationsCollection.first)
     set({ annotations: { ...get().annotations, [collectionId]: annotationPage.items } })
   },
-  setTreeNodes: (newTreeNodes: TreeNode[]) => {
-    set({ treeNodes: newTreeNodes })
+  createTreeNodes: async (rootCollections: string[]) => {
+    const nodes = await createCollectionNodes(rootCollections)
+    set({ treeNodes: nodes })
   },
   setShowGlobalTree: (newValue: boolean) => {
     set({ showGlobalTree: newValue })

@@ -32,7 +32,7 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
   function handleClick() {
     if (selectedAnnotation && selectedAnnotation.id === data.id) {
       setIsSelected(false)
-      setTimeout(() => setSelectedAnnotation(data), 100)
+      setTimeout(() => setSelectedAnnotation(null), 100)
       return
     }
     setIsSelected(true)

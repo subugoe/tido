@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
   contentType: string,
@@ -8,15 +7,9 @@ interface Props {
 }
 
 const CrossRefTitle: FC<Props> = ({ contentType, manifestLabel, itemLabel }) => {
-
-  const { usePanelTranslation } = usePanel()
-  const { t } = usePanelTranslation()
-
-
-  return <div className="ml-2 text-sm text-muted-foreground">
-    <div>{manifestLabel ?? ''}</div>
-    <div>  {itemLabel ?? ''}
-      {', ' + t(contentType)}</div>
+  return <div className="px-2 text-sm text-muted-foreground">
+    <p className="mb-1">{manifestLabel ?? ''} </p>
+    <p>{itemLabel ?? ''} { contentType !== '' && <span>{ ', ' + contentType }</span>}</p>
   </div>
 }
 
