@@ -114,6 +114,7 @@ describe('Tree', () => {
       // switch to text mode
       .parents('.panel')
       .find('[data-cy="panel-mode-select"]')
+      .scrollIntoView()
       .click()
       .get('[data-cy="panel-mode-menu"]')
       .find('[data-slot="select-item"]')
