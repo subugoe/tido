@@ -118,6 +118,11 @@
     "error_invalid_item_url": "Item URL \"{{url}}\" ist nicht korrekt formatiert.",
     "error_invalid_manifest_url": "Manifest URL \"{{url}}\" ist nicht korrekt formatiert.",
     "error_invalid_collection_url": "Collection URL \"{{url}}\" ist nicht korrekt formatiert.",
-    "annotations": "Annotationen"
+    "annotations": "Annotationen",
+    "switch_panel_mode": "Panelmodus wechseln",
+    "previous_item": "Vorheriges Item",
+    "next_item": "Nächstes Item",
+    "previous_manifest": "Vorheriges Manifest",
+    "next_manifest": "Nächstes Manifest"
   }
 }

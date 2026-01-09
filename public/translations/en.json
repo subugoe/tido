@@ -113,6 +113,11 @@
     "error_invalid_item_url": "The given item URL \"{{url}}\" is not formatted correctly.",
     "error_invalid_manifest_url": "The given manifest URL \"{{url}}\" is not formatted correctly.",
     "error_invalid_collection_url": "The given collection URL \"{{url}}\" is not formatted correctly.",
-    "annotations": "Annotations"
+    "annotations": "Annotations",
+    "switch_panel_mode": "Switch panel mode",
+    "previous_item": "Previous Item",
+    "next_item": "Next Item",
+    "previous_manifest": "Previous Manifest",
+    "next_manifest": "Next Manifest"
   }
 }

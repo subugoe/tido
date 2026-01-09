@@ -5,7 +5,16 @@ import { PictureInPicture2, Image, AlignCenter, Columns2 } from 'lucide-react'
 import { PanelModeButtonData, PanelMode } from '@/types'
 import { filterAndSortData } from '@/utils/panel.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select.tsx'
+import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 
 
 const PanelModeMenu: FC = () => {
@@ -57,24 +66,29 @@ const PanelModeMenu: FC = () => {
           value={selected}
           onValueChange={(value) => setSelected(value as PanelMode)}
         >
-          <SelectTrigger size="sm" data-cy="panel-mode-select">
-            <SelectValue />
-          </SelectTrigger>
+          <BaseTooltip message={t('switch_panel_mode')}>
+            <SelectTrigger size="sm" data-cy="panel-mode-select" className="[&_span]:hidden">
+              <SelectValue />
+            </SelectTrigger>
+          </BaseTooltip>
           <SelectContent data-cy="panel-mode-menu">
-            {visiblePanelModesData.map((button) => {
-              const Icon = button.icon
+            <SelectGroup>
+              <SelectLabel>{ t('panel_modes') }</SelectLabel>
+              {visiblePanelModesData.map((button) => {
+                const Icon = button.icon
 
-              return <SelectItem
-                value={button.mode}
-                disabled={isDisabled(button.mode)}
-                data-selected={panelState.mode === button.mode}
-                data-cy={button.mode}
-                className="cursor-pointer"
-              >
-                <Icon />
-                <span className={`leading-none ml-1 ${panelState.mode === button.mode ? 'font-medium' : ''}`}>{button.title}</span>
-              </SelectItem>
-            })}
+                return <SelectItem
+                  value={button.mode}
+                  disabled={isDisabled(button.mode)}
+                  data-selected={panelState.mode === button.mode}
+                  data-cy={button.mode}
+                  className="cursor-pointer"
+                >
+                  <Icon />
+                  <span className={`leading-none ml-1 ${panelState.mode === button.mode ? 'font-medium' : ''}`}>{button.title}</span>
+                </SelectItem>
+              })}
+            </SelectGroup>
           </SelectContent>
         </Select>
       </>
