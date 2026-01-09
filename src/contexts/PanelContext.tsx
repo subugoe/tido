@@ -57,9 +57,9 @@ interface PanelProviderProps {
 }
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
-  const { annotationsMode: initialAnnotationsMode } = useConfig()
-  
-  const [annotationsMode, setAnnotationsMode] = useState<'list' | 'align'>(initialAnnotationsMode)
+  const { defaultAnnotationsMode } = useConfig()
+
+  const [annotationsMode, setAnnotationsMode] = useState<'list' | 'align'>(defaultAnnotationsMode)
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
