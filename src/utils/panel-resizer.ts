@@ -3,14 +3,12 @@ import {
   MIN_PANEL_WIDTH,
   PANEL_GAP
 } from '@/utils/panel.ts'
-import { PanelMode } from '@/types'
 
 
 class PanelResizer {
   wrapper: HTMLElement
   panelEl: HTMLElement
   panelId: string
-  panelMode: PanelMode
   resizeHandle: HTMLElement
   sidebarWidth: number = SIDEBAR_DEFAULT_WIDTH
 
@@ -19,17 +17,15 @@ class PanelResizer {
   annotationsOpen = false
   lastWidth = null
 
-  constructor(panelEl: HTMLElement, panelMode: PanelMode) {
-    this.init(panelEl, panelMode)
+  constructor(panelEl: HTMLElement) {
+    this.init(panelEl)
   }
 
-  init(panelEl: HTMLElement, panelMode: PanelMode) {
+  init(panelEl: HTMLElement) {
     this.wrapper = document.getElementById('panels-wrapper')
     this.panelEl = panelEl
     this.panelId = this.panelEl.id
     this.resizeHandle = this.panelEl.querySelector('[data-resize-handle]')
-
-    this.panelMode = panelMode
 
     this.panelEl.style.minWidth = `${MIN_PANEL_WIDTH}px`
 
@@ -128,10 +124,6 @@ class PanelResizer {
       this.panelEl.style.width = `${this.lastWidth}px`
       this.sidebarWidth = SIDEBAR_DEFAULT_WIDTH
     }
-  }
-
-  setPanelMode(mode: PanelMode) {
-    this.panelMode = mode
   }
 
   setSidebarWidth(value: number) {

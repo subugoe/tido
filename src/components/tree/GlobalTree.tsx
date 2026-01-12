@@ -50,9 +50,9 @@ const GlobalTree: FC = () => {
     loadNodes(nodes)
   }, [nodes])
 
-  return <div className={`${showGlobalTree ? 'w-[380px]' : 'w-[0px]'} flex bg-background transition-all py-4`}>
+  return <div className={`${showGlobalTree ? 'w-[380px]' : 'w-0'} flex bg-background transition-all py-4`}>
     <div className={`shrink-0 overflow-auto [scrollbar-gutter:stable] transition-all border-r-2 border-border
-    mr-[16px] w-[364px] ${showGlobalTree ? 'duration-300 opacity-100 ' : 'duration-100 opacity-0'}`}>
+    mr-4 w-[364px] ${showGlobalTree ? 'duration-300 opacity-100 ' : 'duration-100 opacity-0'}`}>
       <TreeProvider onSelect={onSelectNode} getChildren={getChildren}>
         <Tree nodes={treeNodes} />
         {showSelectionModal && <div

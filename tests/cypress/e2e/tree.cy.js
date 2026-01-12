@@ -113,10 +113,11 @@ describe('Tree', () => {
       .should('have.text', '280')     // Panel was added after the first on e
       // switch to text mode
       .parents('.panel')
-      .find('[data-cy="options-button"]')
+      .find('[data-cy="panel-mode-select"]')
+      .scrollIntoView()
       .click()
       .get('[data-cy="panel-mode-menu"]')
-      .children()
+      .find('[data-slot="select-item"]')
       .eq(1).click()                   // switch to text mode to check the text content
       .get('[data-cy="panels-wrapper"]')
       .find('[data-cy="panel"]')
@@ -225,10 +226,10 @@ describe('Tree', () => {
       .find('[data-cy="item-label"]')
       .should('have.text', '280')
       .parents('.panel')
-      .find('[data-cy="options-button"]')
+      .find('[data-cy="panel-mode-select"]')
       .click()
       .get('[data-cy="panel-mode-menu"]')
-      .children()
+      .find('[data-slot="select-item"]')
       .eq(1).click()                   // switch to text view
       .get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in first panel
       .find('[data-cy="panel"]')

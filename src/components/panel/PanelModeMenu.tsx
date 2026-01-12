@@ -4,17 +4,21 @@ import { Skeleton } from '@/components/ui/skeleton.tsx'
 import { PictureInPicture2, Image, AlignCenter, Columns2 } from 'lucide-react'
 import { PanelModeButtonData, PanelMode } from '@/types'
 import { filterAndSortData } from '@/utils/panel.ts'
-import {
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-} from '@/components/ui/dropdown-menu.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select.tsx'
+import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 
 
 const PanelModeMenu: FC = () => {
-  const { panelState, updatePanel, usePanelTranslation, resizer } = usePanel()
+  const { panelState, updatePanel, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
   const { panelModes } = useConfig()
   const [selected, setSelected] = useState<PanelMode>(panelState.mode)
@@ -28,7 +32,6 @@ const PanelModeMenu: FC = () => {
   useEffect(() => {
     if (!panelState) return
     updatePanel({ mode: selected })
-    resizer.setPanelMode(selected)
   }, [selected])
 
 
@@ -59,29 +62,35 @@ const PanelModeMenu: FC = () => {
     {!panelState && <Skeleton />}
     {panelState && visiblePanelModesData.length > 1 &&
       <>
-        <DropdownMenuLabel className="text-xs">{ t('panel_modes') }</DropdownMenuLabel>
-        <DropdownMenuGroup>
-          <DropdownMenuRadioGroup
-            value={selected}
-            onValueChange={(value) => setSelected(value as PanelMode)}
-            data-cy="panel-mode-menu"
-          >
-            {visiblePanelModesData.map((button) => {
-              const Icon = button.icon
+        <Select
+          value={selected}
+          onValueChange={(value) => setSelected(value as PanelMode)}
+        >
+          <BaseTooltip message={t('switch_panel_mode')}>
+            <SelectTrigger size="sm" data-cy="panel-mode-select" className="[&_span]:hidden">
+              <SelectValue />
+            </SelectTrigger>
+          </BaseTooltip>
+          <SelectContent data-cy="panel-mode-menu">
+            <SelectGroup>
+              <SelectLabel>{ t('panel_modes') }</SelectLabel>
+              {visiblePanelModesData.map((button) => {
+                const Icon = button.icon
 
-              return <DropdownMenuRadioItem
-                value={button.mode}
-                disabled={isDisabled(button.mode)}
-                data-selected={panelState.mode === button.mode}
-                data-cy={button.mode}
-                className="cursor-pointer"
-              >
-                <Icon />
-                <span className="leading-none ml-1">{button.title}</span>
-              </DropdownMenuRadioItem>
-            })}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
+                return <SelectItem
+                  value={button.mode}
+                  disabled={isDisabled(button.mode)}
+                  data-selected={panelState.mode === button.mode}
+                  data-cy={button.mode}
+                  className="cursor-pointer"
+                >
+                  <Icon />
+                  <span className={`leading-none ml-1 ${panelState.mode === button.mode ? 'font-medium' : ''}`}>{button.title}</span>
+                </SelectItem>
+              })}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </>
     }
   </>

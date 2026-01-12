@@ -119,7 +119,7 @@ describe('Annotations', () => {
       .clickAnnotationType(0)    // deselect first annotation type
       .getPanel()
       .find('[data-cy="panel-title-and-nav-arrows"]')
-      .find('[data-cy="next-button"]')
+      .find('[data-cy="next-item-button"]')
       .click()
                                 // update of number of annotations and annotation types
       .checkNumberAnnotations(2)

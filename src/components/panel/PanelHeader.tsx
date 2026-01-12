@@ -1,16 +1,15 @@
 import { FC, memo, useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
-import { Info, PanelRight, X } from 'lucide-react'
+import { Info, X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
 import PanelTitle from '@/components/panel/PanelTitle.tsx'
 import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
-import NavigationButton from '@/components/panel/NavigationButton.tsx'
 import Metadata from '@/components/metadata/Metadata'
-import Options from '@/components/panel/Options.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 import { PANEL_HEADER_HEIGHT } from '@/utils/panel.ts'
+import PanelModeMenu from '@/components/panel/PanelModeMenu.tsx'
+import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 
 const SidebarToggle = memo((props) => {
   const { panelState, updatePanel, usePanelTranslation } = usePanel()
@@ -27,26 +26,21 @@ const SidebarToggle = memo((props) => {
     })
   }
 
-  return <>
-    <TooltipProvider delayDuration={400}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div>
-            <Button variant="ghost" size="icon" {...props} onClick={onClick} data-cy="sidebar-toggle">
-              <PanelRight />
-            </Button>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent>
-          <span className="leading-none">{ tooltipMessage }</span>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  </>
+  return <BaseTooltip message={tooltipMessage}>
+    <Button
+      variant="outline"
+      size="sm"
+      {...props}
+      onClick={onClick} data-cy="sidebar-toggle"
+      className={panelState.annotationsOpen ? 'bg-accent' : ''}
+    >
+      { t('annotations') }
+    </Button>
+  </BaseTooltip>
 })
 
 const PanelHeader: FC = () => {
-  const { usePanelTranslation } = usePanel()
+  const { usePanelTranslation, remove } = usePanel()
   const { t } = usePanelTranslation()
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const { panelState } = usePanel()
@@ -55,38 +49,41 @@ const PanelHeader: FC = () => {
   }
 
   return (
-    <div className="flex flex-col border-b border-border p-3" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
-      <div className="flex items-center mb-6">
-        <CollectionTitle />
-        <div className="ml-1 text-wrap break-words">
-          <Popover open={showMetadataModal} onOpenChange={handleOpenChange} modal={true}>
-            <PopoverTrigger asChild>
-              <Button
-                onClick={() => setShowMetadataModal(!showMetadataModal)}
-                variant={showMetadataModal ? 'secondary' : 'ghost'}
-                size={'icon'}
-                disabled={!panelState?.contentTypes?.length}
-                title={t('metadata')}
-              >
-                {<Info />}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="bottom" align="start" className="w-[400px] pr-0">
-              <Metadata />
-              <X
-                className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"
-                size={15} onClick={() => setShowMetadataModal(false)}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div className="ml-auto"><Options /></div>
+    <div className="flex items-center border-b border-border p-3" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
+      <CollectionTitle />
+      <div className="ml-1 text-wrap break-words">
+        <Popover open={showMetadataModal} onOpenChange={handleOpenChange} modal={true}>
+          <PopoverTrigger asChild>
+            <Button
+              onClick={() => setShowMetadataModal(!showMetadataModal)}
+              variant={showMetadataModal ? 'secondary' : 'ghost'}
+              size={'icon'}
+              disabled={!panelState?.contentTypes?.length}
+              title={t('metadata')}
+            >
+              {<Info />}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent side="bottom" align="start" className="w-[400px] pr-0">
+            <Metadata />
+            <X
+              className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"
+              size={15} onClick={() => setShowMetadataModal(false)}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div className="mx-auto flex justify-center" data-cy="panel-title-and-nav-arrows">
+        {<PanelTitle />}
+      </div>
+      <div className="ml-auto flex gap-2 mr-2">
+        <PanelModeMenu />
         <SidebarToggle />
       </div>
-      <div className="flex justify-center" data-cy="panel-title-and-nav-arrows">
-        <NavigationButton isPrev={true} />
-        {<PanelTitle />}
-        <NavigationButton />
+      <div className="flex gap-1">
+        <BaseTooltip message={t('close_panel')}>
+          <Button size="icon" variant="ghost" onClick={remove}><X className="text-destructie" /></Button>
+        </BaseTooltip>
       </div>
     </div>
   )

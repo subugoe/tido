@@ -264,7 +264,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   }
 
   function initResizer(el: HTMLElement) {
-    setResizer(new PanelResizer(el, panelState.mode))
+    setResizer(new PanelResizer(el))
   }
 
   function getSidebarScroller() {

@@ -3,7 +3,7 @@ function runConfigTest(param, name, callback, only=false) {
     cy.visit('/e2e.html?' + param);
     callback();
   }
-  
+
   if (only) {
     it.only(name, test);
   }
@@ -12,7 +12,12 @@ function runConfigTest(param, name, callback, only=false) {
 }
 
 function getPanelModeOption(mode) {
-  return cy.get('[data-cy="options-button"]').click().get(`[data-cy="${mode}"]`)
+  return cy
+    .get('[data-cy="panel-mode-select"]')
+    .click()
+    .get('[data-cy="panel-mode-menu"]')
+    .find(`[data-cy="${mode}"]`)
+  // return cy.get('[data-cy="panel-mode-menu"]').click().get()
 }
 
 function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel, panelIdx=0) {
@@ -22,17 +27,17 @@ function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel, panelId
     .within(() => {
       cy.get('[data-cy="collection-title"]')
         .should('contain.text', collectionLabel)
-    
+
       cy.get('[data-cy="manifest-label"')
         .should('contain.text', manifestLabel)
-      
+
       cy.get('[data-cy="item-label"]')
         .should('contain.text', itemLabel)
     })
 }
 
 function checkTreeExpandedCollectionManifests(
-  $manifestNodes, 
+  $manifestNodes,
   manifests = { count: 0, idx: 0, label: '' },
   items = { count: 0, idx: 0, label: '' }
 ) {
@@ -42,10 +47,10 @@ function checkTreeExpandedCollectionManifests(
     .eq(manifests.idx)
     .should('contain.text', manifests.label)
     .as('manifest')
-  
+
   cy.get('@manifest')
     .click()
-  
+
   cy.get('@manifest')
     .children('[data-cy="node-children"]')
     .find('[data-cy="tree-node"]')
@@ -63,12 +68,12 @@ function checkTreeCollapsedCollection($rootCollection, collectionLabel, manifest
     .should('not.be.visible')
 
   cy.get('@rootCollection')
-    .should('contain.text', collectionLabel)  
+    .should('contain.text', collectionLabel)
     .click()
-  
+
     .children('[data-cy="node-children"]')
     .should('be.visible')
-    
+
     .find('[data-cy="tree-node"]')
     .then(($manifestNodes) => {
       checkTreeExpandedCollectionManifests($manifestNodes, manifests, items)
@@ -169,7 +174,7 @@ describe('Config', () => {
       cy.get('[data-cy="panels-wrapper"]')
         .find('[data-cy="panel"]')
         .should('have.length', 2)
-      
+
       checkPanelItemLabels(
         'Ebene 1: Reproduktion der Dokumente',
         'Einsiedeln, 278 1040',
@@ -192,7 +197,7 @@ describe('Config', () => {
         .should('be.visible')
         .should('contain.text', 'simplified')
         .click()
-      
+
       cy.get('[data-cy="content-types-dropdown"]')
         .contains('simplified')
         .should('have.attr', 'data-state', 'checked')
@@ -208,24 +213,24 @@ describe('Config', () => {
       cy.get('[data-cy="global-tree-toggle"]')
         .should('be.visible')
         .click()
-      
+
       cy.get('[data-cy="tree"]')
         .children('[data-cy="tree-node"]')
         .eq(0)
         .as('rootCollection')
-      
+
       //should have a marker at collection level
-      cy.get('@rootCollection')  
+      cy.get('@rootCollection')
         .find('[data-cy="node-label"]')
         .eq(0)
         .should('contain.text', 'Ebene 1: Reproduktion der Dokumente')
         .siblings('[data-cy="tree-node-actions"]')
         .find('[data-cy="tree-node-marker"]')
         .should('be.visible')
-      
+
       cy.get('@rootCollection')
         .children('[data-cy="node-children"]') //manifest nodes
-        .find('[data-cy="tree-node-marker"]') 
+        .find('[data-cy="tree-node-marker"]')
         .should('have.length', 1)
         .parents('[data-cy="tree-node"]')
         .eq(0)
@@ -251,7 +256,7 @@ describe('Config', () => {
       cy.get('[data-cy="global-tree-toggle"]')
         .should('be.visible')
         .click()
-      
+
       cy.get('[data-cy="tree"]')
         .children('[data-cy="tree-node"]')
         .should('have.length', 1)
@@ -272,12 +277,12 @@ describe('Config', () => {
         })
     }
   );
-  runConfigTest('rootCollections[]=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json&rootCollections[]=http://localhost:8181/4w/reproduction/collection.json', 
+  runConfigTest('rootCollections[]=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json&rootCollections[]=http://localhost:8181/4w/reproduction/collection.json',
     'Should show two root collections in global tree with both root nodes collapsed', () => {
       cy.get('[data-cy="global-tree-toggle"]')
         .should('be.visible')
         .click()
-      
+
       cy.get('[data-cy="tree"]')
         .children('[data-cy="tree-node"]')
         .should('have.length', 2)
