@@ -312,4 +312,64 @@ describe('Config', () => {
     cy.get('[data-cy="global-tree-toggle"]')
       .should('not.exist')
   });
+  //collection with annotations
+  runConfigTest('defaultAnnotationsMode=list&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+    'Should have annotations list view preselected', () => {
+      //open annotations sidebar
+      cy.get('[data-cy="sidebar-toggle"]')
+        .should('be.enabled')
+        .click()
+        
+      //check if toggle is on
+      cy.get('[data-cy="annotations-header"]')
+        .should('be.visible')
+        .find('button#annotations-mode')
+        .should('be.visible')
+        .should('have.attr', 'data-state', 'checked')
+
+      //check if "Successful courtier" is the last annotation 
+      // Successful courtier is the last item in list view but not in align view
+      cy.get('[data-sidebar-container="true"]')
+        .find('[data-annotation]')
+        .should('have.length', 10)
+        .then($annotations => {
+          const top9 = $annotations.eq(9).position().top
+          const top8 = $annotations.eq(8).position().top
+
+          //in list view, the last item is below the second to last item for this collection
+          expect(top9, 'Annotation #10 should be below (have a higher position.top) annotation #9')
+            .to.be.gt(top8)
+        })
+    }
+  )
+  //collection with annotations
+  runConfigTest('defaultAnnotationsMode=align&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+    'Should have annotations align view preselected', () => {
+      //open annotations sidebar
+      cy.get('[data-cy="sidebar-toggle"]')
+        .should('be.enabled')
+        .click()
+      
+      //check if toggle is off
+      cy.get('[data-cy="annotations-header"]')
+        .should('be.visible')
+        .find('button#annotations-mode')
+        .should('be.visible')
+        .should('have.attr', 'data-state', 'unchecked')
+
+      //check if "Successful courtier" is NOT the last annotation 
+      // Successful courtier is the last item in list view but not in align view
+      cy.wait(1000).get('[data-sidebar-container="true"]')
+        .find('[data-annotation]')
+        .should('have.length', 10)
+        .then($annotations => {
+          const top9 = $annotations.eq(9).position().top
+          const top8 = $annotations.eq(8).position().top
+
+          //in align view, the last item is above the second to last item for this collection
+          expect(top9, 'Annotation #10 should be above (have a lower position.top) annotation #9')
+            .to.be.lt(top8)
+        })
+    }
+  )
 });
