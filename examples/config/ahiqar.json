@@ -12,5 +12,5 @@
   ],
   "panelModes": ["text", "split", "swap"],
   "defaultPanelMode": "split",
-  "annotationsMode": "list"
+  "defaultAnnotationsMode": "list"
 }
