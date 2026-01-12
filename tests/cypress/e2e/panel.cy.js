@@ -66,7 +66,7 @@ describe('Panel', () => {
       .should('have.attr', 'data-cy', 'text')
       .should('have.attr', 'data-selected', 'true')
       .parent()
-      .children().eq(0)
+      .children().eq(1) // eq(0) is the label "Panel modes"
       .should('have.attr', 'data-cy', 'split')
   })
 
