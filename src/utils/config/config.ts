@@ -193,7 +193,7 @@ function validatePanelModes(input: any): ValidationResult<TidoConfig['panelModes
   return { errors, result: input }
 }
 
-function validateAnnotationsMode(input: any): ValidationResult<TidoConfig['annotationsMode']> {
+function validateDefaultAnnotationsMode(input: any): ValidationResult<TidoConfig['defaultAnnotationsMode']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'string'
@@ -201,7 +201,7 @@ function validateAnnotationsMode(input: any): ValidationResult<TidoConfig['annot
       : (() => {
         if (input !== undefined)
           errors['annotationsMode'] = 'annotationsMode should be either `align` or `list`'
-        return defaultConfig.annotationsMode
+        return defaultConfig.defaultAnnotationsMode
       })()
   return { result, errors }
 }
@@ -237,7 +237,7 @@ export async function mergeAndValidateConfig(
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
   const translations = validateTranslations(userConfig.translations)
-  const annotationsMode = validateAnnotationsMode(userConfig.annotationsMode)
+  const defaultAnnotationsMode = validateDefaultAnnotationsMode(userConfig.defaultAnnotationsMode)
 
   const mergedTranslations = {
     en: deepMerge(enTranslations, translations.result.en ?? {}),
@@ -328,7 +328,7 @@ export async function mergeAndValidateConfig(
     title: title.result,
     translations: mergedTranslations,
     panelModes: panelModes.result,
-    annotationsMode: annotationsMode.result,
+    defaultAnnotationsMode: defaultAnnotationsMode.result,
   }
 
   return { config, errors }

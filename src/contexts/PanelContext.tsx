@@ -57,6 +57,9 @@ interface PanelProviderProps {
 }
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
+  const { defaultAnnotationsMode } = useConfig()
+
+  const [annotationsMode, setAnnotationsMode] = useState<'list' | 'align'>(defaultAnnotationsMode)
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
@@ -67,7 +70,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [textWarning, setTextWarning] = useState('')
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
-  const [annotationsMode, setAnnotationsMode] = useState<'list' | 'align'>('align')
   const [error, setError] = useState<CustomError>(null)
   const [annotationsError, setAnnotationsError] = useState<CustomError>(null)
   const sidebarScroller = useRef<SidebarScroller>(null)
@@ -76,7 +78,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const { t } = useTranslation()
 
   const getCollection = useDataStore(state => state.initCollection)
-  const { annotationsMode: initialAnnotationsMode } = useConfig()
 
   const panelState = usePanelStore(state => state.getPanel(panelId))
 
@@ -205,9 +206,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         activeTargetIndex: -1,
         imageExists
       })
-
-      // initialize AnnotationsMode
-      if (!annotationsMode) setAnnotationsMode(initialAnnotationsMode)
 
       if (item.annotationCollection) {
         // 5. Retrieve annotation data
