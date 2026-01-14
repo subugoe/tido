@@ -8,7 +8,7 @@ import TextViewContent from '@/components/panel/views/TextViewContent.tsx'
 const TextView: FC = () => {
   const { panelState } = usePanel()
 
-  return <div className={`bg-background relative flex h-full overflow-hidden`}>
+  return <div className={`bg-background relative flex h-full w-full overflow-hidden`}>
     <ErrorBoundary FallbackComponent={TextViewError} resetKeys={[panelState.item?.id]}>
       <TextViewContent />
     </ErrorBoundary>

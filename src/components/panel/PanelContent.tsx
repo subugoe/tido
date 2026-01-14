@@ -79,21 +79,21 @@ const PanelContent: FC = React.memo(() => {
         <TextProvider>
           <Allotment onChange={handleChange} proportionalLayout={true}>
             <Allotment.Pane
-              minSize={isOpening ? sizes.main : DEFAULT_PANEL_WIDTH}
+              minSize={isOpening ? sizes.main : DEFAULT_PANEL_WIDTH - 4}
               maxSize={isOpening ? sizes.main : Infinity}
             >
               <div className="flex flex-col h-full @container/panel">
                 <PanelHeader />
                 <div className="flex-1">
                   <Allotment proportionalLayout={true}>
-                    {contentPanes.map((pane) => <Allotment.Pane className="pl-[1px]">
+                    {contentPanes.map((pane) => <Allotment.Pane className="pl-px">
                       {pane}
                     </Allotment.Pane>)}
                   </Allotment>
                 </div>
               </div>
             </Allotment.Pane>
-            {showSidebar && <Allotment.Pane preferredSize={SIDEBAR_DEFAULT_WIDTH} minSize={SIDEBAR_DEFAULT_WIDTH} className="pl-[1px]"><SidebarView /></Allotment.Pane>}
+            {showSidebar && <Allotment.Pane preferredSize={SIDEBAR_DEFAULT_WIDTH} minSize={SIDEBAR_DEFAULT_WIDTH} className="pl-px"><SidebarView /></Allotment.Pane>}
           </Allotment>
         </TextProvider>
       </div>

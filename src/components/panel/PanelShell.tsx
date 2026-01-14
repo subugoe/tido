@@ -28,7 +28,7 @@ const PanelShell: FC<Props> = ({ children }) => {
     <div className="h-full overflow-hidden relative border-2 border-border rounded-lg">
       { children }
     </div>
-    <div data-resize-handle className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted -translate-y-1/2 top-1/2 -right-[6px]">
+    <div data-resize-handle className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted -translate-y-1/2 top-1/2 -right-1.5">
       <GripVertical className="h-4 w-2.5 text-muted-foreground" />
     </div>
   </div>
