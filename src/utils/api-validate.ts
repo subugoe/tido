@@ -10,7 +10,7 @@ function isManifestUrl(url: string) {
 }
 
 function isItemUrl(url: string) {
-  return url.includes('item.json')
+  return url.includes('item.json') || url.includes('full.json')
 }
 
 function hasManifests(collection: Collection): boolean {
