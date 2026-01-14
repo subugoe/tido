@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.15](https://github.com/subugoe/tido/compare/v5.0.0-alpha.14...v5.0.0-alpha.15) (2026-01-14)
+
+
+### Features
+
+* add nested annotations and allow (hex, rgb, hls) values to primaryColor ([35f677b](https://github.com/subugoe/tido/commit/35f677b303779db0d3d5533e9578d972d994936c))
+* add oklch format to config value for primary color ([3d4d3f1](https://github.com/subugoe/tido/commit/3d4d3f1c9ee08ac14773a61b39d2152190480599))
+* allow "target" attribute at text sanitizing ([cb1c80e](https://github.com/subugoe/tido/commit/cb1c80e601d4c0a40d04a3a51af52b0fda7095d5))
+* extend TextAPI item validation ([8473364](https://github.com/subugoe/tido/commit/847336438edb9c02343714d1e3af838a7621e136))
+* redesign panel header to be more compact, add manifest navigation buttons ([e7ad8f4](https://github.com/subugoe/tido/commit/e7ad8f4230aa3d20769830fbf18afb59dcfe35bd))
+
+
+### Bug Fixes
+
+* apply default annotations mode from config ([4e30c9d](https://github.com/subugoe/tido/commit/4e30c9d5166436be3926853f041277f2a4bc61b6))
+* text view loading spinner position ([a1efcb2](https://github.com/subugoe/tido/commit/a1efcb25a5efead44e93799eea73d5f6fd0b1377))
+
+
+### Docs
+
+* update README ([60f2e3f](https://github.com/subugoe/tido/commit/60f2e3fe7af72e929b454185497d582b54b7f122))
+
 ## [5.0.0-alpha.14](https://github.com/subugoe/tido/compare/v5.0.0-alpha.13...v5.0.0-alpha.14) (2025-12-16)
 
 
