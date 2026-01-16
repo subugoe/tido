@@ -340,7 +340,6 @@ export interface PanelModeButtonData {
 }
 
 export interface ThemeConfig {
-  forcePanelMode?: string
   primaryColor: string
 }
 
