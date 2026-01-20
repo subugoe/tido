@@ -380,7 +380,7 @@ describe('Config', () => {
         })
     }
   );
-  runConfigTest('lang=de&translations.de.common.add_new_panel=Willkürliche Übersetzung', 
+  runConfigTest('lang=de&translations.de.common.add_new_panel=Willk%C3%BCrliche%20%C3%9Cbersetzung', 
     'Should apply custom common translation "Willkürliche Übersetzung" to add-new-panel-button', () => {
       cy.get('[data-cy="new-panel"]').should('have.text', 'Willkürliche Übersetzung')
   });
