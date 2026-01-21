@@ -15,12 +15,13 @@ function getPanelModeSelect() {
   return cy.get('[data-cy="panel-mode-select"]')
 }
 
-function getPanelModeOption(mode) {
-  return getPanelModeSelect()
-    .click()
+function getPanelModeOption(mode, isDropdownMenuOpen=false) {
+  if (!isDropdownMenuOpen) {
+    getPanelModeSelect().click()
+  }
+  return cy
     .get('[data-cy="panel-mode-menu"]')
     .find(`[data-cy="${mode}"]`)
-  // return cy.get('[data-cy="panel-mode-menu"]').click().get()
 }
 
 function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel, panelIdx=0) {
@@ -396,11 +397,9 @@ describe('Config', () => {
     'Should have panel mode "text" preselected, with "split" as the only other selectable panel mode', () => {
       getPanelModeOption('text')
         .should('have.attr', 'data-selected', 'true')
-        .parents('[data-cy="panel-mode-menu"]').focus().type('{esc}')
-      getPanelModeOption('split')
+      getPanelModeOption('split', true)
         .should('have.attr', 'data-selected', 'false')
-        .parents('[data-cy="panel-mode-menu"]').focus().type('{esc}')
-      getPanelModeOption('swap')
+      getPanelModeOption('swap', true)
         .should('not.exist')
   });
   runConfigTest('panelModes[]=image', 
@@ -411,8 +410,7 @@ describe('Config', () => {
   'Should apply panel specific panel mode and ignore default panel mode for this panel', () => {
     getPanelModeOption('text')
       .should('have.attr', 'data-selected', 'true')
-      .parents('[data-cy="panel-mode-menu"]').focus().type('{esc}')
-    getPanelModeOption('split')
+    getPanelModeOption('split', true)
       .should('have.attr', 'data-selected', 'false')
   });
 });
