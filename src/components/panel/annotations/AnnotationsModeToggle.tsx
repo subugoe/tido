@@ -2,28 +2,26 @@ import { FC, useState } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group.tsx'
 
 const AnnotationsModeToggle: FC = () => {
-  const { annotationsMode, setAnnotationsMode } = usePanel()
+  const { annotationsMode, setAnnotationsMode, usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
   const [_mode, _setMode] = useState(annotationsMode)
-  function updateMode() {
-    let newMode
-    if (annotationsMode === 'align') newMode = 'list'
-    if (annotationsMode === 'list')  newMode = 'align'
-
+  function updateMode(value: AnnotationsMode) {
     // Debounce Switch animation from update of annotationsMode
-    _setMode(newMode)
+    _setMode(value)
 
     setTimeout(() => {
-      setAnnotationsMode(newMode)
+      setAnnotationsMode(value)
     }, 200)
   }
 
   return <div className="flex items-center space-x-2 text-muted-foreground" aria-label="annotations-mode-toggle">
-    <Label htmlFor="annotations-mode">List View</Label>
-    <Switch id="annotations-mode" onCheckedChange={updateMode} checked={_mode === 'list'} />
+    <ToggleGroup type="single" variant="outline" spacing={0} value={_mode} onValueChange={updateMode}>
+      <ToggleGroupItem value="list">{ t('list') }</ToggleGroupItem>
+      <ToggleGroupItem value="aligned">{ t('aligned') }</ToggleGroupItem>
+    </ToggleGroup>
   </div>
 }
 

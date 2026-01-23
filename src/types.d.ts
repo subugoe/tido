@@ -321,6 +321,8 @@ declare global {
     x: number,
     y: number
   }
+
+  type AnnotationsMode = 'aligned' | 'list'
 }
 
 export interface PanelConfig {
@@ -371,7 +373,7 @@ export interface TidoConfig {
   title: string
   translations: TranslationsConfig,
   panelModes: PanelMode[],
-  defaultAnnotationsMode: 'align' | 'list'
+  defaultAnnotationsMode: AnnotationsMode
 }
 
 export interface TidoProps {
