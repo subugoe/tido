@@ -196,11 +196,11 @@ function validatePanelModes(input: any): ValidationResult<TidoConfig['panelModes
 function validateDefaultAnnotationsMode(input: any): ValidationResult<TidoConfig['defaultAnnotationsMode']> {
   const errors: Record<string, string> = {}
   const result =
-    typeof input === 'string'
+    input === 'aligned' || input === 'list'
       ? input
       : (() => {
         if (input !== undefined)
-          errors['annotationsMode'] = 'annotationsMode should be either `align` or `list`'
+          errors['annotationsMode'] = 'annotationsMode should be either `aligned` or `list`'
         return defaultConfig.defaultAnnotationsMode
       })()
   return { result, errors }

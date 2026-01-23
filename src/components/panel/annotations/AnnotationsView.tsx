@@ -37,7 +37,7 @@ const AnnotationsView: FC = () => {
 
   function getContent() {
     if (Object.keys(matchedAnnotationsMap).length === 0) return <EmptyAnnotations />
-    if (annotationsMode === 'align') return <AlignAnnotationsList />
+    if (annotationsMode === 'aligned') return <AlignAnnotationsList />
     if (annotationsMode === 'list') return <AnnotationsList />
   }
 
