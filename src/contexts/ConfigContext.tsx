@@ -30,7 +30,7 @@ const ConfigContext = createContext(null)
 
 export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) => {
 
-  const [config, setConfig] = useState<TidoConfig>()
+  const [config, setConfig] = useState<TidoConfig>(null)
   const [loading, setLoading] = useState<boolean>(true)
 
   const createTreeNodes = useDataStore.getState().createTreeNodes

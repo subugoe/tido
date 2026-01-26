@@ -13,5 +13,56 @@
     "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json"
   ],
   "panelModes": ["split", "text", "image"],
-  "defaultPanelMode": "text"
+  "defaultPanelMode": "text",
+  "annotations": {
+    "types": {
+      "Place": {"label": "Ort"},
+      "dfm_614": {"label": "DFM Label Overwrite"}
+    },
+    "filters": {
+      "rootSelectionRule": "single",
+      "items": [
+        {
+          "types": ["Editorial Comment"],
+          "label": "Editorial",
+          "selected": true,
+          "items": [
+            {
+              "label": "Test 1",
+              "types": ["Person"],
+              "selected": true,
+              "items": [
+                { "label":  "Subtest 1" },
+                { "label":  "Subtest 2" }
+              ]
+            },
+            {
+              "label": "Test 2"
+            }
+          ]
+        },
+        {
+          "types": ["Motif"],
+          "label": "Motifs"
+        },
+        {
+          "types": ["Variant"],
+          "label": "Variants",
+          "items": [
+            {
+              "types": ["dfm_614"]
+            }
+          ]
+        },
+        {
+          "types": ["Dictionary"],
+          "label": "Dictionary"
+        },
+        {
+          "types": ["Line"],
+          "label": "Line"
+        }
+      ]
+    }
+  }
 }

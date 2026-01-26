@@ -123,6 +123,11 @@
     "previous_item": "Vorheriges Item",
     "next_item": "Nächstes Item",
     "previous_manifest": "Vorheriges Manifest",
-    "next_manifest": "Nächstes Manifest"
+    "next_manifest": "Nächstes Manifest",
+    "filters": "Filter",
+    "list": "Liste",
+    "aligned": "Textgebunden",
+    "no_annotation_filters": "Keine Filter für Annotationen vorhanden.",
+    "unnamed_filter": "Unbenannter Filter"
   }
 }

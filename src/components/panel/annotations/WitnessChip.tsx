@@ -8,7 +8,6 @@ interface Props {
 
 const WitnessChip: FC<Props> = React.memo(({ idno }) => {
   const { witnesses, usePanelTranslation } = usePanel()
-
   const { t } = usePanelTranslation()
 
   function getWitnessLabel(idno: string) {

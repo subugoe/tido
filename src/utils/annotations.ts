@@ -1,3 +1,45 @@
+import { FilterNode } from '@/types'
+
+function getSelectedTypes(nodes: FilterNode[]): AnnotationTypesDict {
+  let types: AnnotationTypesDict = {}
+
+  nodes.forEach(node => {
+    const nodeTypes = getSelectedTypesFromNode(node)
+    types = { ...types, ...nodeTypes }
+  })
+
+  return types
+}
+
+function getSelectedTypesFromNode(node: FilterNode): AnnotationTypesDict {
+  let types: AnnotationTypesDict = {}
+
+  if (node.selected && node.types) {
+    const isVariant = node.types.includes('Variant')
+
+    if (isVariant) {
+      // If a node has configured type "Variant", we ignore all other types and grandchildren
+      // and consider only direct children as "witnesses".
+      types['Variant'] = node.items?.map(item => item.types?.[0] ?? '') ?? []
+      return types
+    }
+
+    // Otherwise we set each type on the node as key in the result object.
+    types = node.types.reduce((acc, cur) => {
+      acc[cur] = [] // Empty array just to have default value for the key.
+      return acc
+    }, types)
+  }
+
+  if (node.items) {
+    node.items.forEach(child => {
+      types = { ...types, ...getSelectedTypesFromNode(child) }
+    })
+  }
+
+  return types
+}
+
 function getFilteredAnnotations(matchedAnnotationsMap: MatchedAnnotationsMap) {
   const filteredMatchedAnnotationsMap: MatchedAnnotationsMap = Object.fromEntries(Object.entries(matchedAnnotationsMap).filter(([, value]) => value.filtered === true))
   return Object.values(filteredMatchedAnnotationsMap).map(value => value.annotation)
@@ -5,28 +47,6 @@ function getFilteredAnnotations(matchedAnnotationsMap: MatchedAnnotationsMap) {
 
 function isSelected(selectedId: string, attrValue: string) {
   return attrValue?.split(',').includes(selectedId) ?? false
-}
-
-function getExtendedFullAnnotationsTypesMap(annotations: Annotation[], prevFullAnnotationTypes: AnnotationTypesDict) {
-  // a new item might introduce new annotation types.
-  // we want to extend our list of annotation types (prevFullAnnotationTypes) with the new annotation types
-  // from new item (annotations)
-  // preserve selected/not selected value when switching on other items
-  // annotations: belongs to the new item
-  // i.e on item A we deselect annotation type: Person, if we switch to item B and there are annotations with type
-  // Person, then this type should be initially deselected.
-  if (!annotations || annotations?.length === 0) return
-  // when switching to a new item, we extend our "full" annotationTypes
-  const newAnnotationTypes = { ...prevFullAnnotationTypes }
-  const types = annotations.map((a) => a.body['x-content-type'])
-  const uniqueAnnotationTypes = [...new Set(types)]
-  if (uniqueAnnotationTypes.length > 0) {
-    uniqueAnnotationTypes.forEach((type) => {
-      if (!(type in newAnnotationTypes)) newAnnotationTypes[type] = true
-    })
-  }
-
-  return newAnnotationTypes
 }
 
 function computeNewSelectedAnnotationIndex(targetEntry: MergedAnnotationEntry, prevClickedTargetIndex: number, flippedMatchedAnnotMap: MergedAnnotationEntry[]) {
@@ -50,8 +70,8 @@ function computeNewSelectedAnnotationIndex(targetEntry: MergedAnnotationEntry, p
 }
 
 export {
+  getSelectedTypes,
   getFilteredAnnotations,
   isSelected,
-  getExtendedFullAnnotationsTypesMap,
-  computeNewSelectedAnnotationIndex
+  computeNewSelectedAnnotationIndex,
 }
