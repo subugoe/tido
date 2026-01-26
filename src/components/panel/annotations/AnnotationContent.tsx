@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { parseStyleString } from '@/utils/html-to-react.ts'
 
 interface Props {
-  value: string
+  body: AnnotationBody
 }
 
 const convertNodeToReact = (node, key) => {
@@ -35,8 +35,8 @@ const convertNodeToReact = (node, key) => {
   </Tag>
 }
 
-const AnnotationContent: FC<Props> = React.memo(({ value }) => {
-
+const AnnotationContent: FC<Props> = React.memo(({ body }) => {
+  const { value } = body
   const parsedDom = React.useMemo(() => {
     const parser = new DOMParser()
     if (typeof value !== 'string') return null

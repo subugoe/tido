@@ -4,7 +4,7 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, PanelMode, PanelConfig } from '@/types'
+import { TidoConfig, PanelMode, PanelConfig, FilterNode } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 
@@ -213,9 +213,36 @@ function validateRootCollections(input: any): ValidationResult<TidoConfig['rootC
       ? input
       : (() => {
         if (input !== undefined)
-          errors['root Collections'] = 'root Collections needs to be an array'
+          errors['rootCollections'] = 'rootCollections needs to be an array'
         return defaultConfig.rootCollections
       })()
+  return { result, errors }
+}
+
+function validateAnnotations(input: any): ValidationResult<TidoConfig['annotations']> {
+  const result = { ...input }
+  const errors: Record<string, string> = {}
+
+  if (!result.filters || !result.types) {
+    errors['annotations'] = 'did not find "filters" or "types" key'
+    return { result: {}, errors }
+  }
+
+  if (!result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
+
+  function validateNode(node: FilterNode) {
+    node.selected = Object.hasOwn(node, 'selected') ? node.selected : false
+
+    if (node.items) {
+      node.items.forEach(item => validateNode(item))
+    }
+    return node
+  }
+
+  if (result.filters) {
+    result.filters.items = result.filters.items.map((item) => validateNode(item))
+  }
+
   return { result, errors }
 }
 
@@ -238,6 +265,7 @@ export async function mergeAndValidateConfig(
   const theme = validateTheme(userConfig.theme)
   const translations = validateTranslations(userConfig.translations)
   const defaultAnnotationsMode = validateDefaultAnnotationsMode(userConfig.defaultAnnotationsMode)
+  const annotations = validateAnnotations(userConfig.annotations)
 
   const mergedTranslations = {
     en: deepMerge(enTranslations, translations.result.en ?? {}),
@@ -266,6 +294,7 @@ export async function mergeAndValidateConfig(
     ...title.errors,
     ...translations.errors,
     ...panelModes.errors,
+    ...annotations.errors
   }
 
   let panelsFromContentState: PanelConfig[]
@@ -329,6 +358,7 @@ export async function mergeAndValidateConfig(
     translations: mergedTranslations,
     panelModes: panelModes.result,
     defaultAnnotationsMode: defaultAnnotationsMode.result,
+    annotations: annotations.result
   }
 
   return { config, errors }

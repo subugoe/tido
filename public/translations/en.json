@@ -118,6 +118,11 @@
     "previous_item": "Previous Item",
     "next_item": "Next Item",
     "previous_manifest": "Previous Manifest",
-    "next_manifest": "Next Manifest"
+    "next_manifest": "Next Manifest",
+    "filters": "Filters",
+    "list": "List",
+    "aligned": "Aligned",
+    "no_annotation_filters": "No annotation filters available.",
+    "unnamed_filter": "Unnamed filter"
   }
 }

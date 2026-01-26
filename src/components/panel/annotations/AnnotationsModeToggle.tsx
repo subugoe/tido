@@ -3,8 +3,13 @@ import { FC, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group.tsx'
+import { cn } from '@/lib/utils.ts'
 
-const AnnotationsModeToggle: FC = () => {
+interface Props {
+  className?: string
+}
+
+const AnnotationsModeToggle: FC<Props> = ({ className }) => {
   const { annotationsMode, setAnnotationsMode, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
   const [_mode, _setMode] = useState(annotationsMode)
@@ -17,10 +22,13 @@ const AnnotationsModeToggle: FC = () => {
     }, 200)
   }
 
-  return <div className="flex items-center space-x-2 text-muted-foreground" aria-label="annotations-mode-toggle">
+  return <div
+    className={cn('flex items-center space-x-2 text-muted-foreground', className)}
+    data-cy="annotations-mode-toggle"
+  >
     <ToggleGroup type="single" variant="outline" spacing={0} value={_mode} onValueChange={updateMode}>
-      <ToggleGroupItem value="list">{ t('list') }</ToggleGroupItem>
-      <ToggleGroupItem value="aligned">{ t('aligned') }</ToggleGroupItem>
+      <ToggleGroupItem value="list" data-cy="list">{ t('list') }</ToggleGroupItem>
+      <ToggleGroupItem value="aligned" data-cy="aligned">{ t('aligned') }</ToggleGroupItem>
     </ToggleGroup>
   </div>
 }

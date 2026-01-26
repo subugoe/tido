@@ -4,7 +4,27 @@
   "type": "AnnotationPage",
   "partOf": {
     "id": "http://ahiqar.uni-goettingen.de/ns/annotations/annotationCollection/3r176",
-    "label": "Ahiqar annotations for textgrid:3r176: Brit.Mus. cod. Add. 7209"
+    "label": "Ahiqar annotations for textgrid:3r176: Brit.Mus. cod. Add. 7209",
+    "refs": [
+      {
+        "idno": "Cod. Arab. 236",
+        "manifest": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/3r177/manifest.json"
+      },
+      {
+        "idno": "dfm_614",
+        "idnoAlt": "D",
+        "title" : "DFM, 614 162",
+        "manifest": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/3rbm9/manifest.json"
+      },
+      {
+        "idno": "Ming. syr. 258",
+        "manifest": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/3r17c/manifest.json"
+      },
+      {
+        "idno": "Sach. 339",
+        "manifest": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/3r179/manifest.json"
+      }
+    ]
   },
   "next": "http://localhost:8181/ahiqar/annotations/ahiqar/arabic-karshuni/3r176/183b/latest/annotationPage.json",
   "prev": "http://localhost:8181/ahiqar/annotations/ahiqar/arabic-karshuni/3r176/182b/latest/annotationPage.json",
@@ -285,10 +305,8 @@
         "x-content-type": "Variant",
         "type": "TextualBody",
         "format": "text/plain",
-        "value": {
-          "witness": "DFM 614",
-          "entry": "omisit"
-        }
+        "value": "omisit",
+        "witnesses": ["dfm_614"]
       },
       "target": [
         {
@@ -521,24 +539,6 @@
       ],
       "type": "Annotation",
       "id": "http://ahikar.uni-goettingen.de/ns/annotations/3r14z/annotation-variants-t_Brit_Mus_Add_7209_N1l5l3l5l5l29l4_w_3_3"
-    }
-  ],
-  "refs": [
-    {
-      "idno": "Cod. Arab. 236",
-      "manifest": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/3r177/manifest.json"
-    },
-    {
-      "idno": "DFM 614",
-      "manifest": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/3rbm9/manifest.json"
-    },
-    {
-      "idno": "Ming. syr. 258",
-      "manifest": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/3r17c/manifest.json"
-    },
-    {
-      "idno": "Sach. 339",
-      "manifest": "https://api.dev.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/arabic-karshuni/3r179/manifest.json"
     }
   ]
 }

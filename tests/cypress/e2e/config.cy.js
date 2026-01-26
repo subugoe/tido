@@ -324,15 +324,15 @@ describe('Config', () => {
       cy.get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
-        
-      //check if toggle is on
+
       cy.get('[data-cy="annotations-header"]')
         .should('be.visible')
-        .find('button#annotations-mode')
+        .find('[data-cy="annotations-mode-toggle"]')
+        .find('[data-cy="list"]')
         .should('be.visible')
-        .should('have.attr', 'data-state', 'checked')
+        .should('have.attr', 'data-state', 'on')
 
-      //check if "Successful courtier" is the last annotation 
+      //check if "Successful courtier" is the last annotation
       // Successful courtier is the last item in list view but not in align view
       cy.get('[data-sidebar-container="true"]')
         .find('[data-annotation]')
@@ -354,15 +354,15 @@ describe('Config', () => {
       cy.get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
-      
-      //check if toggle is off
+
       cy.get('[data-cy="annotations-header"]')
         .should('be.visible')
-        .find('button#annotations-mode')
+        .find('[data-cy="annotations-mode-toggle"]')
+        .find('[data-cy="aligned"]')
         .should('be.visible')
-        .should('have.attr', 'data-state', 'unchecked')
+        .should('have.attr', 'data-state', 'on')
 
-      //check if "Successful courtier" is NOT the last annotation 
+      //check if "Successful courtier" is NOT the last annotation
       // Successful courtier is the last item in list view but not in align view
       cy.wait(1000).get('[data-sidebar-container="true"]')
         .find('[data-annotation]')

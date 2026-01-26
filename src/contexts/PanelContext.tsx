@@ -2,12 +2,12 @@ import { ReactNode, createContext, useContext, useState, FC, useEffect, useRef }
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
-import { getExtendedFullAnnotationsTypesMap } from '@/utils/annotations.ts'
+import { getSelectedTypes } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
-import { PanelConfig, PanelMode } from '@/types'
+import { AnnotationFiltersConfig, PanelConfig, PanelMode } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
@@ -16,9 +16,9 @@ import { hasItems, hasManifests, isCollectionUrl, isItemUrl, isManifestUrl } fro
 import { SidebarScroller } from '@/utils/sidebar-scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 
-const PanelContext = createContext<PanelContentType | undefined>(undefined)
+const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
-interface PanelContentType {
+interface PanelContextType {
   panelId: string
   panelState: PanelState
   loading: boolean
@@ -30,8 +30,10 @@ interface PanelContentType {
   setHoveredAnnotation: (value: string | null) => void,
   matchedAnnotationsMap: MatchedAnnotationsMap,
   setMatchedAnnotationsMap: (value: MatchedAnnotationsMap) => void,
-  fullAnnotationTypes: AnnotationTypesDict | null,
-  setFullAnnotationTypes: (value: AnnotationTypesDict) => void,
+  annotationFilters: AnnotationFiltersConfig,
+  setAnnotationFilters: (value: AnnotationFiltersConfig) => void,
+  selectedAnnotationTypes: AnnotationTypesDict | null,
+  setSelectedAnnotationTypes: (value: AnnotationTypesDict) => void,
   selectedAnnotation: Annotation | null,
   setSelectedAnnotation: (value: Annotation | null) => void
   showTextOptions: boolean,
@@ -43,8 +45,8 @@ interface PanelContentType {
   selectedWitnesses: WitnessWithColor[]
   setSelectedWitnesses: (witnesses: WitnessWithColor[]) => void
   init: (config: PanelConfig) => void,
-  annotationsMode: 'align' | 'list',
-  setAnnotationsMode: (mode: 'align' | 'list') => void,
+  annotationsMode: AnnotationsMode,
+  setAnnotationsMode: (mode: AnnotationsMode) => void,
   getSidebarScroller: () => SidebarScroller,
   error: CustomError | null,
   annotationsError: CustomError | null,
@@ -57,19 +59,20 @@ interface PanelProviderProps {
 }
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
-  const { defaultAnnotationsMode } = useConfig()
+  const { defaultAnnotationsMode, annotations: annotationsConfig } = useConfig()
 
-  const [annotationsMode, setAnnotationsMode] = useState<'list' | 'align'>(defaultAnnotationsMode)
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
   const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState({})
-  const [fullAnnotationTypes, setFullAnnotationTypes] = useState({})
+  const [annotationFilters, setAnnotationFilters] = useState<AnnotationFiltersConfig>(null)
+  const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState(null)
   const [selectedAnnotation, setSelectedAnnotation] = useState(null)
   const [showTextOptions, setShowTextOptions] = useState(false)
   const [textWarning, setTextWarning] = useState('')
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
+  const [annotationsMode, setAnnotationsMode] = useState<AnnotationsMode>(defaultAnnotationsMode)
   const [error, setError] = useState<CustomError>(null)
   const [annotationsError, setAnnotationsError] = useState<CustomError>(null)
   const sidebarScroller = useRef<SidebarScroller>(null)
@@ -177,7 +180,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         item = await apiRequest<Item>(manifest.sequence[0].id)
       }
 
-
       // 3. At this point "item" should exist, so we continue to load content from it.
       const contentTypes: string[] = getContentTypes(item.content)
 
@@ -215,10 +217,12 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         try {
           const page = await getAnnotationPage(item.annotationCollection)
           const annotations = page.items ?? []
-          const witnesses = page.refs ?? []
+          const witnesses = page.partOf.refs ?? []
 
-          const extendedFullAnnotationsTypesMap = getExtendedFullAnnotationsTypesMap(annotations, fullAnnotationTypes)
-          setFullAnnotationTypes(extendedFullAnnotationsTypesMap)
+          if (annotationsConfig.filters) {
+            setAnnotationFilters(annotationsConfig.filters)
+            setSelectedAnnotationTypes(getSelectedTypes(annotationsConfig.filters.items))
+          }
 
           if (witnesses.length > 0) {
             const witnessesWithColor = setColors(witnesses)
@@ -255,6 +259,31 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     init(panelState.config)
   }, [panelState.config, panelId])
 
+  useEffect(() => {
+    const resultMap = { ...matchedAnnotationsMap }
+    Object.keys(resultMap).forEach(id => {
+      const { annotation } = resultMap[id]
+      const annotationType = annotation.body['x-content-type']
+      const hasSelectedType = Object.keys(selectedAnnotationTypes).includes(annotationType)
+
+      if (!hasSelectedType) {
+        resultMap[id].filtered = false
+        return
+      }
+
+      if (annotationType === 'Variant') {
+        const selectedSet = new Set(selectedAnnotationTypes[annotationType])
+        const hasSelectedWitness = annotation.body.witnesses?.some(value => selectedSet.has(value)) ?? false
+        resultMap[id].filtered = hasSelectedWitness
+        return
+      }
+
+      resultMap[id].filtered = true
+    })
+
+    setMatchedAnnotationsMap(resultMap)
+  }, [selectedAnnotationTypes])
+
   function updatePanel(data: Partial<PanelState>) {
     usePanelStore.getState().updatePanel(panelId, data)
   }
@@ -287,8 +316,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       setHoveredAnnotation,
       matchedAnnotationsMap,
       setMatchedAnnotationsMap,
-      fullAnnotationTypes,
-      setFullAnnotationTypes,
+      annotationFilters,
+      setAnnotationFilters,
+      selectedAnnotationTypes,
+      setSelectedAnnotationTypes,
       selectedAnnotation,
       setSelectedAnnotation,
       showTextOptions,
@@ -312,7 +343,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   )
 }
 
-function usePanel(): PanelContentType {
+function usePanel(): PanelContextType {
   const context =  useContext(PanelContext)
   if (!context) {
     throw new Error('usePanel must be used inside the PanelProvider')

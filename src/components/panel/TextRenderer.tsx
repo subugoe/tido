@@ -44,7 +44,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
   const {
     panelState,
-    fullAnnotationTypes,
+    selectedAnnotationTypes,
     matchedAnnotationsMap,
     setMatchedAnnotationsMap,
     setSelectedAnnotation,
@@ -61,7 +61,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   const prevClickedTargetIndexRef = useRef<number>(null)
 
-  const annotationsModeRef = useRef<'align' | 'list'>(null)
+  const annotationsModeRef = useRef<'aligned' | 'list'>(null)
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
 
@@ -176,7 +176,11 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
           target.addEventListener('mouseleave', onMouseLeaveTarget)
         })
         const annotType = cur.body['x-content-type']
-        acc[cur.id] = { target: matchedNodes, filtered: fullAnnotationTypes ? fullAnnotationTypes[annotType] ?? true : false, annotation: cur }
+        acc[cur.id] = {
+          target: matchedNodes,
+          filtered: !selectedAnnotationTypes || !!(selectedAnnotationTypes[annotType]),
+          annotation: cur
+        }
       }
       return acc
     }, {})
