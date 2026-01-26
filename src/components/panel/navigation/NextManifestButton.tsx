@@ -41,7 +41,7 @@ const NextManifestButton: FC = () => {
       contentType: activeContentType
     }
 
-    if (nextIndex > manifest?.sequence.length - 1) return
+    if (nextIndex > collectionSequence.length - 1) return
 
     newConfig = {
       collection: collectionId,
