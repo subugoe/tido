@@ -1,3 +1,5 @@
+import { Tree } from '../support/tree-helpers'
+
 function clickNewPanelInGlobalTree() {
   cy.get('[data-cy="global-tree-modal"]')
     .find('[data-cy="button-new-panel"]')
@@ -32,38 +34,38 @@ describe('Tree', () => {
   });
 
 
-  it('Should render manifests of collection', () => {
-    cy.get('[data-cy="global-tree-toggle"]').click()
-    cy.get('[data-cy="tree"]')
-      .find('[data-cy="node-children"]').first()
-      .children().eq(0)                   // locate first nested collection
-      .click() // click first nested collection
 
-      .find('[data-cy="node-children"]')
-      .children()
-      .should('have.length', 8)
-      .eq(0)
-      .find('span').should('have.text','Einsiedeln, 278 1040') //TODO: use better selector: data-cy="node-label"
-      .parents('[data-cy="node-children"]')
-      .children()
-      .eq(1)
-      .find('span').should('have.text','Kloster Neuburg, Cod. 251')
-  })
+  it.only('Should render collections, manifests, and items correctly', () => {
+    Tree.open()
+    // Get the rootCollection (expanded by default)
+    Tree.getRootNodes().first().then(($rootCollection) => {
+      // Assert rootCollection has 2 nested collections
+      Tree.shouldHaveChildren($rootCollection, 2)
 
-  it('Should show the right number of items', () => {
-    cy.get('[data-cy="global-tree-toggle"]').click()
-      .get('[data-cy="tree"]')
-      .find('[data-cy="node-children"]').first()
-      .children().eq(0)                   // locate first nested collection
-      .click() // click first nested collection
+      // Expand first nested collection: "Ebene 1: Reproduktion der Dokumente"
+      const nestedCollectionLabel = 'Ebene 1: Reproduktion der Dokumente'
+      Tree.clickNode(nestedCollectionLabel, $rootCollection).then(($nestedCollection) => {
+        Tree.shouldBeExpanded($nestedCollection)
+        Tree.shouldHaveChildren($nestedCollection, 8) // 8 manifests
 
-      .find('[data-cy="node-children"]')
-      .children()
-      .should('have.length', 8)
-      .eq(0).click()
-      .find('[data-cy="node-children"]')
-      .children().should('have.length', 3)
-      .eq(1).find('span').should('have.text','280')
+        // First manifest under this collection
+        const firstManifestLabel = 'Einsiedeln, 278 1040'
+        Tree.clickNode(firstManifestLabel, $nestedCollection).then(($manifest) => {
+          Tree.shouldHaveChildren($manifest, 3) // items
+
+          // Check second item of the first manifest
+          Tree.getChildAt($manifest, 1).then(($item) => {
+            Tree.shouldHaveLabel($item, '280')
+          })
+        })
+
+        // Second manifest under the collection
+        const secondManifestLabel = 'Kloster Neuburg, Cod. 251'
+        Tree.getDirectChildByLabel($nestedCollection, secondManifestLabel).then(($manifest2) => {
+          Tree.shouldHaveLabel($manifest2, secondManifestLabel)
+        })
+      })
+    })
   });
 
   it('Should create new panels using global tree', () => {
