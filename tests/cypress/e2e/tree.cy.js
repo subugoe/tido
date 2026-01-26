@@ -5,44 +5,34 @@ function clickNewPanelInGlobalTree() {
     .click()
 }
 
-function openItemFromTree(collectionIdx, manifestIdx, itemIdx) {
-  cy.get('[data-cy="tree"]')
-    .find('[data-cy="node-children"]')
-    .find('[data-cy="tree-node"]')
-    .eq(collectionIdx)
-    .as('collection')
-  
-  cy.get('@collection')
-    .click()
+/**
+ * Clicks on nested tree nodes by their labels in order
+ * @param {string[]} nodeLabels
+ */
+function clickNestedNodes(nodeLabels) {
+  let current = cy.get('[data-cy="tree"]')
 
-  cy.get('@collection')
-    .children('[data-cy="node-children"]')
-    .find('[data-cy="tree-node"]')
-    .eq(manifestIdx)
-    .as('manifest')
-  
-  cy.get('@manifest')
-    .click()
+  nodeLabels.forEach((label) => {
+    current = current
+      .contains(new RegExp("^" + label + "$"))
+      .closest('[data-cy="tree-node"],[data-cy="tree-node-leaf"]')
+      .click()
+      .then(($el) => {
+        // For next iteration, search inside the expanded node
+        current = cy.wrap($el);
+      })
+  })
 
-  cy.get('@manifest')
-    .children('[data-cy="node-children"]')
-    .find('[data-cy="tree-node"]')
-    .eq(itemIdx)
-    .as('item')
-
-  cy.get('@item')
-    .click()
-  
-  return cy.get('@item')
+  return current
 }
-
 
 describe('Tree', () => {
   beforeEach(() => {
     cy.visit('/4w-local.html')
   });
 
-  /*it('Should render manifests of collection', () => {
+
+  it('Should render manifests of collection', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
     cy.get('[data-cy="tree"]')
       .find('[data-cy="node-children"]').first()
@@ -74,12 +64,12 @@ describe('Tree', () => {
       .find('[data-cy="node-children"]')
       .children().should('have.length', 3)
       .eq(1).find('span').should('have.text','280')
-  })*/
+  });
 
-  it('Should create a new panel using global tree', () => {
+  it('Should create new panels using global tree', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
     // click the item 280                       
-    openItemFromTree(0, 0, 1)
+    clickNestedNodes(['Ebene 1: Reproduktion der Dokumente', 'Einsiedeln, 278 1040', '280'])
       // Item is active
       .find('div').first()
       .should('have.class','active')
@@ -87,7 +77,8 @@ describe('Tree', () => {
     // a popover is shown with two buttons (Panel 1, New Panel)
     cy.get('[data-cy="global-tree-modal"]')
       .get('[data-cy="buttons-update-panel"]')
-      .children().should('have.length', 1)
+      .find('[data-cy="button-update-panel"]')
+      .should('have.length', 1)
       .eq(0).should('have.text', 'Panel 1')
 
     clickNewPanelInGlobalTree()
@@ -99,7 +90,7 @@ describe('Tree', () => {
       .find('[data-cy="item-label"]')
       .should('have.text', '280')     // Panel was added after the first one
       // switch to text mode
-      .parents('.panel') //TODO: better selector?
+      .parents('[data-cy="panel"]')
       .find('[data-cy="panel-mode-select"]')
       .scrollIntoView()
       .click()
@@ -114,60 +105,32 @@ describe('Tree', () => {
 
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
 
-      // Second opening of a new panel from Global tree
-
-      .get('[data-cy="tree"]')
-      .find('[data-cy="node-children"]')
-      .children().eq(0)                   // locate first nested collection
-      .find('[data-cy="node-children"]').first()
-      .children().eq(0)
-      .find('[data-cy="node-children"]')
-      .children()
-      .eq(2).click()
+    // Second opening of a new panel from Global tree
+    clickNestedNodes(['280'])
 
     clickNewPanelInGlobalTree()
-    // check 1) select mode dialog is not shown again  2) the new panel is automatically in 'image' mode 3) Select mode toggle in settings is 'off'
-    // 1) select mode dialog is not shown again
-    // 2) the new panel is automatically opened in 'text' selected mode
+
     cy.get('[data-cy="panels-wrapper"]')
-      .find('.panel')
+      .find('[data-cy="panel"]')
       .should('have.length', 3)     // we have 3 panels
 
-      // select another item from tree
-      .get('[data-cy="tree"]')
-      .find('[data-cy="node-children"]')
-      .children().eq(0)                   // locate first nested collection
-      .find('[data-cy="node-children"]').first()
-      .children().eq(1).click()
-      .find('[data-cy="node-children"]')
-      .children()
-      .eq(1).click()
+    // select another item from tree
+    clickNestedNodes(['Kloster Neuburg, Cod. 251', '72v'])
 
-      // in the global tree modal: we should have 4 buttons (3 buttons to update the first 3 panels and 'New Panel')
-      .get('[data-cy="global-tree-modal"]')
+    // in the global tree modal: we should have 4 buttons (3 buttons to update the first 3 panels and 'New Panel')
+    cy.get('[data-cy="global-tree-modal"]')
       .find('[data-cy="buttons-update-panel"]')
-      .children()
+      .find('[data-cy="button-update-panel"]')
       .last().should('have.text', 'Panel 3')
-  })
+  });
 
   it('Should update a panel using global tree', () => {
     cy.get('[data-cy="global-tree-toggle"]').click()
-      .get('[data-cy="tree"]')
-      .find('[data-cy="node-children"]').first()
-      .children().eq(0)                   // locate first nested collection
-      .click() // click first nested collection
-
-      .find('[data-cy="node-children"]')
-      .children()
-      .should('have.length', 8)
-      .eq(0).click()
-      .find('[data-cy="node-children"]')
-      .children()
-      .eq(1).click()
+    clickNestedNodes(['Ebene 1: Reproduktion der Dokumente', 'Einsiedeln, 278 1040', '280'])
 
     cy.get('[data-cy="global-tree-modal"]')
-      .get('[data-cy="buttons-update-panel"]')
-      .children()
+      .find('[data-cy="buttons-update-panel"]')
+      .find('[data-cy="button-update-panel"]')
       .eq(0)
       .click()
 
@@ -177,7 +140,7 @@ describe('Tree', () => {
       .eq(0)
       .find('[data-cy="item-label"]')
       .should('have.text', '280')
-      .parents('.panel')
+      .parents('[data-cy="panel"]')
       .find('[data-cy="panel-mode-select"]')
       .click()
       .get('[data-cy="panel-mode-menu"]')
@@ -189,5 +152,5 @@ describe('Tree', () => {
       .find('.text-area').first()
       .contains('fol. 280a')
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
-  })
+  });
 })
