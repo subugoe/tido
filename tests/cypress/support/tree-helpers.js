@@ -28,8 +28,17 @@ export function getRootNodes() {
  * @returns {Cypress.Chainable<JQuery<HTMLElement>>}
  */
 export function getNodeLabel($node) {
-  return cy.wrap($node).find('[data-cy="node-label"]')
+  return cy.wrap($node).find('[data-cy="node-label"]').first()
 }
+
+/**
+ * @param {JQuery<HTMLElement} $node
+ * @returns {Cypress.Chainable<JQuery<HTMLElement>>}
+ */
+export function getNodeActions($node) {
+  return cy.wrap($node).find('[data-cy="tree-node-actions"]').first()
+}
+
 
 /**
  * Returns direct child tree nodes (exactly one level down),
@@ -45,7 +54,8 @@ export function getDirectChildren($node) {
   }
 
   return cy.wrap($node)
-    .find('> [data-cy="node-children"] [data-cy="tree-node"],[data-cy="tree-node-leaf"]')
+    .children('[data-cy="node-children"]')
+    .find('[data-cy="tree-node"], [data-cy="tree-node-leaf"]')
     .filter((_, el) => {
       // ensure this tree-node belongs to THIS node, not a deeper one
       return Cypress.$(el)
@@ -64,6 +74,7 @@ export function getDirectChildren($node) {
 export function getDirectChildByLabel($node, label) {
   return getDirectChildren($node)
     .contains('[data-cy="node-label"]', new RegExp(`^${label}$`))
+    .should('exist')
     .closest('[data-cy="tree-node"],[data-cy="tree-node-leaf"]')
 }
 
@@ -76,7 +87,9 @@ export function getDirectChildByLabel($node, label) {
  * @returns {Cypress.Chainable<JQuery<HTMLElement>>}
  */
 export function openGlobalTree() {
-  return cy.get('[data-cy="global-tree-toggle"]').click()
+  return cy.get('[data-cy="global-tree-toggle"]')
+    .should('be.visible')
+    .click()
 }
 
 /**
@@ -86,7 +99,9 @@ export function openGlobalTree() {
  * @returns {Cypress.Chainable<JQuery<HTMLElement>>}
  */
 export function clickNode(label, $scope) {
-  return getDirectChildByLabel($scope, label).click()
+  return getDirectChildByLabel($scope, label)
+    .should('be.visible')
+    .click()
 }
 
 /**
@@ -158,6 +173,26 @@ export function shouldBeCollapsed($node) {
   return cy.wrap($node).children('[data-cy="node-children"]').should('not.be.visible')
 }
 
+/**
+ * Assert that a node has a marker visible/not visible
+ * @param {JQuery<HTMLElement>} $node
+ * @returns {Cypress.Chainable<JQuery<HTMLElement>>}
+ */
+export function shouldHaveMarker($node, visible=true) {
+  getNodeActions($node)
+    .find('[data-cy="tree-node-marker"]')
+    .as('marker')
+  
+  if (visible) {
+    return cy.get('@marker')
+      .should('exist')
+      .should('be.visible')
+  }
+
+  return cy.get('@marker')
+      .should('not.exist')
+}
+
 /* ------------------------------------------------------------------ */
 /* Convenience namespace                                     */
 /* ------------------------------------------------------------------ */
@@ -169,6 +204,7 @@ export const Tree = {
   getDirectChildren,
   getDirectChildByLabel,
   getChildAt,
+  getNodeActions,
 
   // actions
   open: openGlobalTree,
@@ -180,6 +216,7 @@ export const Tree = {
   shouldHaveChildren,
   shouldHaveLabel,
   shouldBeExpanded,
-  shouldBeCollapsed
+  shouldBeCollapsed,
+  shouldHaveMarker
 
 }

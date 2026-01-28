@@ -75,7 +75,7 @@ describe('Tree', () => {
     })
   });
 
-  it.only('Should create new panels using global tree', () => {
+  it('Should create new panels using global tree', () => {
     Tree.open()
 
     // Select item 280 via full path
