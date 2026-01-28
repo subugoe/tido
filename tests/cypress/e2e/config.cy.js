@@ -1,3 +1,4 @@
+import { Panel } from '../support/panel-helpers'
 function runConfigTest(param, name, callback, only=false) {
   const test = () => {
     cy.visit('/e2e.html?' + param);
@@ -11,18 +12,6 @@ function runConfigTest(param, name, callback, only=false) {
   it(name, test);
 }
 
-function getPanelModeSelect() {
-  return cy.get('[data-cy="panel-mode-select"]')
-}
-
-function getPanelModeOption(mode, isDropdownMenuOpen=false) {
-  if (!isDropdownMenuOpen) {
-    getPanelModeSelect().click()
-  }
-  return cy
-    .get('[data-cy="panel-mode-menu"]')
-    .find(`[data-cy="${mode}"]`)
-}
 
 function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel, panelIdx=0) {
   cy.get('[data-cy="panels-wrapper"]')
@@ -90,7 +79,7 @@ describe('Config', () => {
     cy.get('[data-cy="global-tree-toggle"]').should('be.visible')
     cy.get('[data-cy="new-panel"]').should('be.visible')
     cy.get('[data-cy="new-panel"]').should('have.text', 'Add New Panel')
-    getPanelModeOption('swap').should('have.attr', 'data-selected', 'true')
+    Panel.getPanelModeOption('swap').should('have.attr', 'data-selected', 'true')
     cy.get('[data-cy="panel-placeholder"]').should('be.visible')
   });
 
@@ -108,7 +97,7 @@ describe('Config', () => {
     cy.get('[data-cy="new-panel"]').should('have.text', 'Neues Panel hinzufügen')
   });
   runConfigTest('defaultPanelMode=split', 'defaultPanelMode: split', () => {
-    getPanelModeOption('split').should('have.attr', 'data-selected', 'true')
+    Panel.getPanelModeOption('split').should('have.attr', 'data-selected', 'true')
   });
   runConfigTest('showPanelPlaceholder=true', 'Should show panel placeholder', () => {
     cy.get('[data-cy="panel-placeholder"]').should('be.visible')
@@ -395,22 +384,22 @@ describe('Config', () => {
   });
   runConfigTest('panelModes[]=text&panelModes[]=split',
     'Should have panel mode "text" preselected, with "split" as the only other selectable panel mode', () => {
-      getPanelModeOption('text')
+      Panel.getPanelModeOption('text')
         .should('have.attr', 'data-selected', 'true')
-      getPanelModeOption('split', true)
+      Panel.getPanelModeOption('split', true)
         .should('have.attr', 'data-selected', 'false')
-      getPanelModeOption('swap', true)
+      Panel.getPanelModeOption('swap', true)
         .should('not.exist')
   });
   runConfigTest('panelModes[]=image', 
     'Should not allow panel mode selection when configuring a singular panel mode', () => {
-      getPanelModeSelect().should('not.exist')
+      Panel.getPanelModeSelect().should('not.exist')
   });
   runConfigTest('defaultPanelMode=split&panels[0].mode=text', 
   'Should apply panel specific panel mode and ignore default panel mode for this panel', () => {
-    getPanelModeOption('text')
+    Panel.getPanelModeOption('text')
       .should('have.attr', 'data-selected', 'true')
-    getPanelModeOption('split', true)
+    Panel.getPanelModeOption('split', true)
       .should('have.attr', 'data-selected', 'false')
   });
 });
