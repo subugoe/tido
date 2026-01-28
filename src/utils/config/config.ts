@@ -223,12 +223,12 @@ function validateAnnotations(input: any): ValidationResult<TidoConfig['annotatio
   const result = { ...input }
   const errors: Record<string, string> = {}
 
-  if (!result.filters || !result.types) {
+  if (!result.filters && !result.types) {
     errors['annotations'] = 'did not find "filters" or "types" key'
     return { result: {}, errors }
   }
 
-  if (!result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
+  if (result.filters && !result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
 
   function validateNode(node: FilterNode) {
     node.selected = Object.hasOwn(node, 'selected') ? node.selected : false
