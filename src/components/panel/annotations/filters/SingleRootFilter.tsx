@@ -57,13 +57,16 @@ const SingleRootFilter: FC<Props> = ({ config, onChange }) => {
 
   return (
     <Tabs value={String(activeRootIndex)} onValueChange={handleTabChange}>
-      <TabsList>
-        {config.items.map((item, index) => (
-          <TabsTrigger key={index} value={String(index)}>
-            {item.label || `Filter ${index + 1}`}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      <div className="overflow-x-auto">
+        <TabsList>
+          {config.items.map((item, index) => (
+            <TabsTrigger key={index} value={String(index)}>
+              {item.label || `Filter ${index + 1}`}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
+
       {config.items.map((_, index) => (
         <TabsContent key={index} value={String(index)}>
           <div className="border border-border rounded-xl p-2">
