@@ -30,7 +30,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, depth = 0 }) => {
   }, [])
 
   function getTypeLabel(type: string) {
-    return annotationsConfig.types[type]?.label ?? type
+    return annotationsConfig.types?.[type]?.label ?? type
   }
 
   return (
@@ -45,7 +45,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, depth = 0 }) => {
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
         )}
-        {!hasChildren && <div className="w-6" />}
+        {!hasChildren && depth > 0 && <div className="w-6" />}
         <label className="flex items-center gap-2 flex-1 cursor-pointer">
           <input
             type="checkbox"
@@ -54,7 +54,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, depth = 0 }) => {
             className="h-4 w-4 rounded border-gray-300 accent-primary focus:ring-primary/20"
           />
           <span className="text-sm">{label}</span>
-          {node.types && node.types.length > 0 &&
+          {node.types && node.types.length > 1 &&
             <span className={`text-sm text-gray-500 italic`}>
               &nbsp; ({node.types.map(type => t(getTypeLabel(type))).join(', ')})
             </span>}

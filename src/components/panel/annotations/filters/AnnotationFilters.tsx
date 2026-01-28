@@ -20,7 +20,7 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
       <PopoverTrigger asChild>
         <Button variant="outline"><ListFilter /> { t('filters')}</Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-[450px] h-fit overflow-y-auto flex flex-col overflow-hidden">
+      <PopoverContent align="end" className="w-fit h-fit overflow-y-auto flex flex-col overflow-hidden">
         <h3 className="font-bold mb-4">Filters</h3>
         <AnnotationFiltersContent />
       </PopoverContent>
