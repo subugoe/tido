@@ -53,7 +53,7 @@ function checkTreeExpandedCollectionManifests(
 
   cy.get('@manifest')
     .children('[data-cy="node-children"]')
-    .find('[data-cy="tree-node"]')
+    .find('[data-cy="tree-node-leaf"]')
     .should('have.length', items.count)
 
     .eq(items.idx)

@@ -8,34 +8,41 @@ function clickNewPanelInGlobalTree() {
 }
 
 /**
- * Clicks on nested tree nodes by their labels in order
- * @param {string[]} nodeLabels
+ * Asserts that a panel at index contains an item
+ * and that its text view contains expected content.
  */
-function clickNestedNodes(nodeLabels) {
-  let current = cy.get('[data-cy="tree"]')
+function expectPanelWithText(panelIdx, itemLabel, textSnippet) {
+  cy.get('[data-cy="panels-wrapper"]')
+    .find('[data-cy="panel"]')
+    .eq(panelIdx)
+    .as('panel')
 
-  nodeLabels.forEach((label) => {
-    current = current
-      .contains(new RegExp("^" + label + "$"))
-      .closest('[data-cy="tree-node"],[data-cy="tree-node-leaf"]')
-      .click()
-      .then(($el) => {
-        // For next iteration, search inside the expanded node
-        current = cy.wrap($el);
-      })
-  })
+  cy.get('@panel')
+    .find('[data-cy="item-label"]')
+    .should('have.text', itemLabel)
 
-  return current
+  cy.get('@panel')
+    .find('[data-cy="panel-mode-select"]')
+    .click()
+
+  cy.get('[data-cy="panel-mode-menu"]')
+    .find('[data-slot="select-item"]')
+    .eq(1) // text mode
+    .click()
+
+  cy.get('@panel')
+    .find('.text-area')
+    .first()
+    .contains(textSnippet)
 }
+
 
 describe('Tree', () => {
   beforeEach(() => {
     cy.visit('/4w-local.html')
   });
 
-
-
-  it.only('Should render collections, manifests, and items correctly', () => {
+  it('Should render collections, manifests, and items correctly', () => {
     Tree.open()
     // Get the rootCollection (expanded by default)
     Tree.getRootNodes().first().then(($rootCollection) => {
@@ -68,91 +75,83 @@ describe('Tree', () => {
     })
   });
 
-  it('Should create new panels using global tree', () => {
-    cy.get('[data-cy="global-tree-toggle"]').click()
-    // click the item 280                       
-    clickNestedNodes(['Ebene 1: Reproduktion der Dokumente', 'Einsiedeln, 278 1040', '280'])
-      // Item is active
-      .find('div').first()
-      .should('have.class','active')
+  it.only('Should create new panels using global tree', () => {
+    Tree.open()
 
-    // a popover is shown with two buttons (Panel 1, New Panel)
+    // Select item 280 via full path
+    Tree.clickPath([
+      'Ebene 1: Reproduktion der Dokumente',
+      'Einsiedeln, 278 1040',
+      '280'
+    ])
+      .find('div')
+      .first()
+      .should('have.class', 'active')
+
+    // Popover shows update buttons for existing panels
     cy.get('[data-cy="global-tree-modal"]')
-      .get('[data-cy="buttons-update-panel"]')
+      .find('[data-cy="buttons-update-panel"]')
       .find('[data-cy="button-update-panel"]')
       .should('have.length', 1)
-      .eq(0).should('have.text', 'Panel 1')
+      .first()
+      .should('have.text', 'Panel 1')
 
-    clickNewPanelInGlobalTree()
-
-    cy.get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in second panel
-      .find('[data-cy="panel"]')
-      .should('have.length', 2)      // now we have 2 panels
-      .eq(1)
-      .find('[data-cy="item-label"]')
-      .should('have.text', '280')     // Panel was added after the first one
-      // switch to text mode
-      .parents('[data-cy="panel"]')
-      .find('[data-cy="panel-mode-select"]')
-      .scrollIntoView()
-      .click()
-      .get('[data-cy="panel-mode-menu"]')
-      .find('[data-slot="select-item"]')
-      .eq(1).click()                   // switch to text mode to check the text content
-      .get('[data-cy="panels-wrapper"]')
-      .find('[data-cy="panel"]')
-      .eq(1)
-      .find('.text-area').first()
-      .contains('fol. 280a')
-
-    cy.get('[data-cy="global-tree-modal"]').should('not.exist')
-
-    // Second opening of a new panel from Global tree
-    clickNestedNodes(['280'])
-
+    // Create second panel
     clickNewPanelInGlobalTree()
 
     cy.get('[data-cy="panels-wrapper"]')
       .find('[data-cy="panel"]')
-      .should('have.length', 3)     // we have 3 panels
+      .should('have.length', 2)
 
-    // select another item from tree
-    clickNestedNodes(['Kloster Neuburg, Cod. 251', '72v'])
+    expectPanelWithText(1, '280', 'fol. 280a')
 
-    // in the global tree modal: we should have 4 buttons (3 buttons to update the first 3 panels and 'New Panel')
+    // Tree modal closes after panel creation
+    cy.get('[data-cy="global-tree-modal"]').should('not.exist')
+
+    // Tree remains expanded -> we can now select by label only
+    Tree.clickPath(['280'])
+    clickNewPanelInGlobalTree()
+
+    cy.get('[data-cy="panels-wrapper"]')
+      .find('[data-cy="panel"]')
+      .should('have.length', 3)
+
+    // Select another item
+    Tree.clickPath([
+      'Kloster Neuburg, Cod. 251',
+      '72v'
+    ])
+
+    // Modal now shows update buttons for 3 panels
     cy.get('[data-cy="global-tree-modal"]')
       .find('[data-cy="buttons-update-panel"]')
       .find('[data-cy="button-update-panel"]')
-      .last().should('have.text', 'Panel 3')
-  });
+      .last()
+      .should('have.text', 'Panel 3')
+  })
+
 
   it('Should update a panel using global tree', () => {
-    cy.get('[data-cy="global-tree-toggle"]').click()
-    clickNestedNodes(['Ebene 1: Reproduktion der Dokumente', 'Einsiedeln, 278 1040', '280'])
+    Tree.open()
+
+    Tree.clickPath([
+      'Ebene 1: Reproduktion der Dokumente',
+      'Einsiedeln, 278 1040',
+      '280'
+    ])
 
     cy.get('[data-cy="global-tree-modal"]')
-      .find('[data-cy="buttons-update-panel"]')
       .find('[data-cy="button-update-panel"]')
-      .eq(0)
+      .first()
       .click()
 
-    cy.get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in first panel
+    cy.get('[data-cy="panels-wrapper"]')
       .find('[data-cy="panel"]')
       .should('have.length', 1)
-      .eq(0)
-      .find('[data-cy="item-label"]')
-      .should('have.text', '280')
-      .parents('[data-cy="panel"]')
-      .find('[data-cy="panel-mode-select"]')
-      .click()
-      .get('[data-cy="panel-mode-menu"]')
-      .find('[data-slot="select-item"]')
-      .eq(1).click()                   // switch to text view
-      .get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in first panel
-      .find('[data-cy="panel"]')
-      .eq(0)
-      .find('.text-area').first()
-      .contains('fol. 280a')
+
+    expectPanelWithText(0, '280', 'fol. 280a')
+
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
-  });
+  })
+
 })

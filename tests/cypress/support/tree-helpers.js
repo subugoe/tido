@@ -39,6 +39,11 @@ export function getNodeLabel($node) {
  * @returns {Cypress.Chainable<JQuery<HTMLElement>>}
  */
 export function getDirectChildren($node) {
+  //root level
+  if ($node.is('[data-cy="tree"]')) {
+    return cy.wrap($node).children('[data-cy="tree-node"]')
+  }
+
   return cy.wrap($node)
     .find('> [data-cy="node-children"] [data-cy="tree-node"],[data-cy="tree-node-leaf"]')
     .filter((_, el) => {
