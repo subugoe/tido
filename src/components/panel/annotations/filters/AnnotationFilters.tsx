@@ -23,8 +23,8 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className="w-fit h-fit overflow-y-auto flex flex-col overflow-hidden"
-        style={{ 'maxWidth': `calc(${SIDEBAR_DEFAULT_WIDTH}px - 2 * 0.75rem)` }}
+        className="h-fit overflow-y-auto flex flex-col overflow-hidden"
+        style={{ 'width': `calc(${SIDEBAR_DEFAULT_WIDTH}px - 2 * 0.75rem)` }}
       >
         <h3 className="font-bold mb-4">Filters</h3>
         <AnnotationFiltersContent />
