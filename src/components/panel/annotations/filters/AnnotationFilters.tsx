@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button.tsx'
 import { ListFilter } from 'lucide-react'
 import AnnotationFiltersContent from '@/components/panel/annotations/filters/AnnotationFiltersContent.tsx'
 import { cn } from '@/lib/utils.ts'
+import { SIDEBAR_DEFAULT_WIDTH } from '@/utils/panel.ts'
 
 
 interface Props {
@@ -20,7 +21,11 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
       <PopoverTrigger asChild>
         <Button variant="outline"><ListFilter /> { t('filters')}</Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-fit h-fit overflow-y-auto flex flex-col overflow-hidden">
+      <PopoverContent
+        align="start"
+        className="w-fit h-fit overflow-y-auto flex flex-col overflow-hidden"
+        style={{ 'maxWidth': `calc(${SIDEBAR_DEFAULT_WIDTH}px - 2 * 0.75rem)` }}
+      >
         <h3 className="font-bold mb-4">Filters</h3>
         <AnnotationFiltersContent />
       </PopoverContent>

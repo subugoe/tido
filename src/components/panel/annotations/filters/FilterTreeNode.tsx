@@ -45,7 +45,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, depth = 0 }) => {
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
         )}
-        {!hasChildren && depth > 0 && <div className="w-6" />}
+        {!hasChildren && <div className="w-6" />}
         <label className="flex items-center gap-2 flex-1 cursor-pointer">
           <input
             type="checkbox"

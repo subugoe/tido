@@ -13,7 +13,7 @@ const FilterTree: FC<Props> = ({ nodes, onToggle }) => {
   const { t } = usePanelTranslation()
 
   if (nodes.length === 0) {
-    return <div className="h-16 text-muted-foreground flex justify-center items-center">{ t('no_annotation_filters') }</div>
+    return <div className="h-16 px-3 text-sm text-muted-foreground flex justify-center items-center">{ t('no_annotation_filters') }</div>
   }
 
   return nodes.map((node, index) => (
