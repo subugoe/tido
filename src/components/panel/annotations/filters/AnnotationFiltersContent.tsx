@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 import { FilterNode } from '@/types'
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
@@ -10,23 +10,7 @@ const AnnotationFiltersContent: FC = () => {
     annotationFilters,
     setAnnotationFilters,
     setSelectedAnnotationTypes,
-    matchedAnnotationsMap
   } = usePanel()
-
-  useEffect(() => {
-    if (annotationFilters) return
-
-    const uniqueAnnotationTypes: string[] = [
-      ...new Set(Object.keys(matchedAnnotationsMap).map((id) => matchedAnnotationsMap[id].annotation.body['x-content-type']))
-    ]
-
-    setAnnotationFilters({
-      rootSelectionRule: 'multiple',
-      items: uniqueAnnotationTypes.map(type => ({ types: [type], selected: true }))
-    })
-
-  }, [])
-
 
   function onChange(updatedTree: FilterNode[]) {
     annotationFilters.items = updatedTree
