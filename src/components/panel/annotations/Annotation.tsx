@@ -19,7 +19,6 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
   const [isSelected, setIsSelected] = useState(false)
 
   const type = data.body['x-content-type']
-  const value = data.body.value
 
   useEffect(() => {
     setIsHovered(hoveredAnnotations?.includes(data.id))
@@ -55,7 +54,7 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
       data-annotation={data.id}
       {...(isSelected ? { 'data-selected': true } : {})}
       className={`w-[calc(100%-2rem)] flex flex-col px-3 py-2 rounded-lg border border-border
-      ${annotationsMode === 'align' ? 'absolute' : 'mb-2'}
+      ${annotationsMode === 'aligned' ? 'absolute' : 'mb-2'}
       ${isSelected ? 'shadow-md bg-background outline-primary outline-2' : 'bg-muted border-border hover:bg-background cursor-pointer'}
       ${isHovered ? 'border-primary' : ''} transition-all max-h-18 overflow-hidden`}
       onClick={handleClick}
@@ -64,8 +63,8 @@ const Annotation: FC<Props> = React.memo(({ data, top }) => {
       style={{ top }}
     >
       <Badge variant="secondary" className="mb-1">{ type }</Badge>
-      { type === 'Variant' && <VariantContent value={value as AnnotationVariantValue} /> }
-      { type !== 'Variant' && <AnnotationContent value={value as string} /> }
+      { type === 'Variant' && <VariantContent body={data.body} /> }
+      { type !== 'Variant' && <AnnotationContent body={data.body} /> }
     </div>
   </>
 })

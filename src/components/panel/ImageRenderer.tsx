@@ -16,24 +16,6 @@ const ImageRenderer: FC = () => {
   const imageUrl = panelState?.item?.image?.id
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    setLoading(true)
-
-    if (loadingPanel) return
-
-    if (!imageUrl || !viewerRef.current) {
-      showBoundary(t('could_not_find_image'))
-      return
-    }
-
-    const oldItem = viewerRef.current.world.getItemAt(0)
-    if (oldItem) viewerRef.current.world.removeItem(oldItem)
-
-    viewerRef.current.open({
-      type: 'image',
-      url: imageUrl
-    })
-  }, [imageUrl, loadingPanel])
 
   useEffect(() => {
     if (!viewerContainerRef.current) return
@@ -54,10 +36,32 @@ const ImageRenderer: FC = () => {
     viewerRef.current.addHandler('open', function () {
       setLoading(false)
     })
+
     return () => {
       if (viewerRef.current) viewerRef.current.destroy()
     }
   }, [])
+
+
+  useEffect(() => {
+    setLoading(true)
+
+    if (loadingPanel) return
+
+    if (!imageUrl || !viewerRef.current) {
+      showBoundary(t('could_not_find_image'))
+      return
+    }
+
+    const oldItem = viewerRef.current.world.getItemAt(0)
+    if (oldItem) viewerRef.current.world.removeItem(oldItem)
+
+    viewerRef.current.open({
+      type: 'image',
+      url: imageUrl
+    })
+  }, [imageUrl, loadingPanel])
+
 
 
   return (

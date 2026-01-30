@@ -3,7 +3,7 @@ import { parseStyleString } from '@/utils/html-to-react.ts'
 import WitnessChip from '@/components/panel/annotations/WitnessChip.tsx'
 
 interface Props {
-  value: AnnotationVariantValue
+  body: AnnotationBody
 }
 
 const convertNodeToReact = (node, key) => {
@@ -36,12 +36,11 @@ const convertNodeToReact = (node, key) => {
   </Tag>
 }
 
-const VariantContent: FC<Props> = React.memo(({ value }) => {
-
+const VariantContent: FC<Props> = React.memo(({ body }) => {
+  const { value, witnesses } = body
   const parsedDom = React.useMemo(() => {
     const parser = new DOMParser()
-    if (typeof value === 'string') return null
-    return parser.parseFromString(`${value.entry}`, 'text/html')
+    return parser.parseFromString(`${value}`, 'text/html')
   }, [value])
 
   const children = React.useMemo(() => {
@@ -55,9 +54,9 @@ const VariantContent: FC<Props> = React.memo(({ value }) => {
 
   return <div className="flex">
     <div>{children}</div>
-    <div className="ml-auto flex gap-1">
-      {value.witnesses.map((witness, i) => <WitnessChip idno={witness} key={'witness' + i} />)}
-    </div>
+    { witnesses && <div className="ml-auto flex gap-1">
+      {witnesses.map((witness, i) => <WitnessChip idno={witness} key={'witness' + i} />)}
+    </div> }
   </div>
 })
 

@@ -1,3 +1,4 @@
+import { Panel } from '../support/panel-helpers'
 import { Tree } from '../support/tree-helpers'
 
 function runConfigTest(param, name, callback, only=false) {
@@ -13,14 +14,6 @@ function runConfigTest(param, name, callback, only=false) {
   it(name, test);
 }
 
-function getPanelModeOption(mode) {
-  return cy
-    .get('[data-cy="panel-mode-select"]')
-    .click()
-    .get('[data-cy="panel-mode-menu"]')
-    .find(`[data-cy="${mode}"]`)
-  // return cy.get('[data-cy="panel-mode-menu"]').click().get()
-}
 
 function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel, panelIdx=0) {
   cy.get('[data-cy="panels-wrapper"]')
@@ -62,7 +55,7 @@ describe('Config', () => {
     cy.get('[data-cy="global-tree-toggle"]').should('be.visible')
     cy.get('[data-cy="new-panel"]').should('be.visible')
     cy.get('[data-cy="new-panel"]').should('have.text', 'Add New Panel')
-    getPanelModeOption('swap').should('have.attr', 'data-selected', 'true')
+    Panel.getPanelModeOption('swap').should('have.attr', 'data-selected', 'true')
     cy.get('[data-cy="panel-placeholder"]').should('be.visible')
   });
 
@@ -80,7 +73,7 @@ describe('Config', () => {
     cy.get('[data-cy="new-panel"]').should('have.text', 'Neues Panel hinzufügen')
   });
   runConfigTest('defaultPanelMode=split', 'defaultPanelMode: split', () => {
-    getPanelModeOption('split').should('have.attr', 'data-selected', 'true')
+    Panel.getPanelModeOption('split').should('have.attr', 'data-selected', 'true')
   });
   runConfigTest('showPanelPlaceholder=true', 'Should show panel placeholder', () => {
     cy.get('[data-cy="panel-placeholder"]').should('be.visible')
@@ -258,15 +251,15 @@ describe('Config', () => {
       cy.get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
-        
-      //check if toggle is on
+
       cy.get('[data-cy="annotations-header"]')
         .should('be.visible')
-        .find('button#annotations-mode')
+        .find('[data-cy="annotations-mode-toggle"]')
+        .find('[data-cy="list"]')
         .should('be.visible')
-        .should('have.attr', 'data-state', 'checked')
+        .should('have.attr', 'data-state', 'on')
 
-      //check if "Successful courtier" is the last annotation 
+      //check if "Successful courtier" is the last annotation
       // Successful courtier is the last item in list view but not in align view
       cy.get('[data-sidebar-container="true"]')
         .find('[data-annotation]')
@@ -287,15 +280,15 @@ describe('Config', () => {
       cy.get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
-      
-      //check if toggle is off
+
       cy.get('[data-cy="annotations-header"]')
         .should('be.visible')
-        .find('button#annotations-mode')
+        .find('[data-cy="annotations-mode-toggle"]')
+        .find('[data-cy="aligned"]')
         .should('be.visible')
-        .should('have.attr', 'data-state', 'unchecked')
+        .should('have.attr', 'data-state', 'on')
 
-      //check if "Successful courtier" is NOT the last annotation 
+      //check if "Successful courtier" is NOT the last annotation
       // Successful courtier is the last item in list view but not in align view
       cy.wait(1000).get('[data-sidebar-container="true"]')
         .find('[data-annotation]')
@@ -308,5 +301,37 @@ describe('Config', () => {
           expect(top9, 'Annotation #10 should be above (have a lower position.top) annotation #9')
             .to.be.lt(top8)
         })
+  });
+  runConfigTest('lang=de&translations.de.common.add_new_panel=Willk%C3%BCrliche%20%C3%9Cbersetzung', 
+    'Should apply custom common translation "Willkürliche Übersetzung" to add-new-panel-button', () => {
+      cy.get('[data-cy="new-panel"]').should('have.text', 'Willkürliche Übersetzung')
+  });
+  runConfigTest('lang=de&translations.de.common.accurate=genau&panels[0].collection=http://localhost:8181/4w/reproduction/collection.json',
+    'Should apply custom common translation "genau" for custom translation key "accurate"', () => {
+      cy.get('[data-cy="content-type"]').should('have.text', 'genau')  
+  });
+  runConfigTest('lang=de&translations.de.reproduction.accurate=genau&panels[0].collection=http://localhost:8181/4w/reproduction/collection.json',
+    'Should apply custom translation "genau" for custom translation key "accurate" and collection key "reproduction"', () => {
+      cy.get('[data-cy="content-type"]').should('have.text', 'genau')
+  });
+  runConfigTest('panelModes[]=text&panelModes[]=split',
+    'Should have panel mode "text" preselected, with "split" as the only other selectable panel mode', () => {
+      Panel.getPanelModeOption('text')
+        .should('have.attr', 'data-selected', 'true')
+      Panel.getPanelModeOption('split', true)
+        .should('have.attr', 'data-selected', 'false')
+      Panel.getPanelModeOption('swap', true)
+        .should('not.exist')
+  });
+  runConfigTest('panelModes[]=image', 
+    'Should not allow panel mode selection when configuring a singular panel mode', () => {
+      Panel.getPanelModeSelect().should('not.exist')
+  });
+  runConfigTest('defaultPanelMode=split&panels[0].mode=text', 
+  'Should apply panel specific panel mode and ignore default panel mode for this panel', () => {
+    Panel.getPanelModeOption('text')
+      .should('have.attr', 'data-selected', 'true')
+    Panel.getPanelModeOption('split', true)
+      .should('have.attr', 'data-selected', 'false')
   });
 });

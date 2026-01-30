@@ -1,7 +1,8 @@
 import { FC } from 'react'
 
 import { useTranslation } from 'react-i18next'
-import { Blocks, Circle, ListTree } from 'lucide-react'
+import { Blocks, ListTree } from 'lucide-react'
+import BaseRadio from '@/components/base/BaseRadio.tsx'
 
 
 type SelectionValue = 'new' | 'existing'
@@ -44,12 +45,7 @@ const AddNewPanelSelection: FC<Props> = ({ onSelect }) => {
             onClick={() => select(id)}
             key={id}
           >
-            <div
-              className="mr-3 flex items-center justify-center aspect-square h-4 w-4 rounded-full
-              border-2 border-gray-300 group-hover:border-primary group-hover:text-primary ring-offset-white"
-            >
-              <Circle className="h-2.5 w-2.5 fill-current text-current opacity-0 group-hover:opacity-100 transition-all" />
-            </div>
+            <BaseRadio className="mr-3" />
             <div>
               <p className="font-semibold leading-none group-hover:text-primary transition-colors">{ title }</p>
               <p className="mt-4 text-sm text-gray-600">{ subtitle }</p>

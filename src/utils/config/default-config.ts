@@ -17,7 +17,8 @@ const defaultConfig: TidoConfig = {
   title: '',
   translations: {},
   panelModes: ['swap', 'split', 'text', 'image'],
-  defaultAnnotationsMode: 'align'
+  defaultAnnotationsMode: 'aligned',
+  annotations: {}
 }
 
 export {

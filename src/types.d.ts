@@ -23,8 +23,12 @@ declare global {
   }
 
   interface AnnotationPage {
+    partOf: {
+      id: string
+      label: string
+      refs: Witness[]
+    }
     items: Annotation[]
-    refs: Witness[]
   }
 
   interface Witness {
@@ -53,9 +57,10 @@ declare global {
 
   interface AnnotationBody {
     type: 'TextualBody'
-    value: string | AnnotationVariantValue
+    value: string
     format: AnnotationContentFormat
     'x-content-type': string
+    witnesses?: string[]
   }
 
   type AnnotationContentFormat = 'text/plain' | 'text/html'
@@ -68,14 +73,13 @@ declare global {
   }
 
   interface AnnotationType {
-    name: string
+    label: string
     icon?: string
-    annotationType?: string
-    displayWhen?: string
+    value?: string
   }
 
   interface AnnotationTypesDict {
-    [key: AnnotationType]: boolean
+    [annotationType: string]: string[]
   }
 
   interface Collection {
@@ -217,7 +221,7 @@ declare global {
   }
 
   interface MatchedAnnotationsMap {
-    [key: string]: {
+    [annotationId: string]: {
       target: Element[],
       filtered: boolean,
       annotation: Annotation
@@ -321,6 +325,8 @@ declare global {
     x: number,
     y: number
   }
+
+  type AnnotationsMode = 'aligned' | 'list'
 }
 
 export interface PanelConfig {
@@ -340,7 +346,6 @@ export interface PanelModeButtonData {
 }
 
 export interface ThemeConfig {
-  forcePanelMode?: string
   primaryColor: string
 }
 
@@ -371,7 +376,32 @@ export interface TidoConfig {
   title: string
   translations: TranslationsConfig,
   panelModes: PanelMode[],
-  defaultAnnotationsMode: 'align' | 'list'
+  defaultAnnotationsMode: AnnotationsMode
+  annotations: AnnotationsConfig
+}
+
+export interface AnnotationTypeConfig {
+  label?: string
+  icon?: string
+}
+
+export interface AnnotationsConfig {
+  filters?: AnnotationFiltersConfig
+  types?: {
+    [type: string]: AnnotationTypeConfig
+  }
+}
+
+export interface AnnotationFiltersConfig {
+  rootSelectionRule: SelectionRule
+  items: FilterNode[]
+}
+
+export interface FilterNode {
+  types?: string[]
+  label?: string
+  selected?: boolean
+  items?: FilterNode[]
 }
 
 export interface TidoProps {
@@ -393,6 +423,8 @@ export interface TidoContentStateTarget {
     contentType?: string
   }
 }
+
+export type SelectionRule = 'single' | 'multiple'
 
 export declare class Tido extends React.Component<TidoProps, never> {}
 export declare function encodeState(state: TidoContentState): Promise<string>
