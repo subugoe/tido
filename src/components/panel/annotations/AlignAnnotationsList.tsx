@@ -29,6 +29,10 @@ const AlignAnnotationsList: FC = () => {
   useEffect(() => {
     const scroller = getSidebarScroller()
     scroller.start()
+
+    return () => {
+      scroller.stop()
+    }
   }, [])
 
   useEffect(() => {
