@@ -11,6 +11,7 @@ const AnnotationsList: FC = () => {
   const { matchedAnnotationsMap } = usePanel()
   const filteredAnnotations = getFilteredAnnotations(matchedAnnotationsMap)
 
+
   if (filteredAnnotations.length > 0) return <div className={`transition-opacity pt-4`}>
     {filteredAnnotations.map(a => <Annotation
       data={a}

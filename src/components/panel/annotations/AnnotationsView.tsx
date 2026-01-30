@@ -27,11 +27,6 @@ const AnnotationsView: FC = () => {
     if (!scrollContainer.current) return
     const scroller = getSidebarScroller()
     scroller.setSidebar(scrollContainer.current)
-    scroller.start()
-
-    return () => {
-      scroller.stop()
-    }
   }, [scrollContainer])
 
 
