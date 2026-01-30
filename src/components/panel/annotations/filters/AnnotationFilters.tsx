@@ -16,11 +16,16 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
   const { annotations: annotationsConfig } = useConfig()
   const {
     usePanelTranslation,
+    annotationFilters,
     setAnnotationFilters,
     matchedAnnotationsMap
   } = usePanel()
 
   const { t } = usePanelTranslation()
+
+
+
+  console.log('annotations filters', annotationFilters)
 
   useEffect(() => {
     // This is for the case where no specific annotation filters were configured.
@@ -32,9 +37,28 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
       ...new Set(Object.keys(matchedAnnotationsMap).map((id) => matchedAnnotationsMap[id].annotation.body['x-content-type']))
     ]
 
+    const newAnnotationFilters = { ...annotationFilters }
+
+    const existingTypes = new Set(
+      newAnnotationFilters.items?.flatMap(item => item.types)
+    )
+
+    console.log('existing types', existingTypes)
+
+    for (const type of uniqueAnnotationTypes) {
+      if (!existingTypes.has(type)) {
+        console.log('not existing type', type)
+        if (!newAnnotationFilters.hasOwnProperty('items')) newAnnotationFilters['items'] = []
+        newAnnotationFilters.items.push({
+          types: [type],
+          selected: true
+        })
+      }
+    }
+
     setAnnotationFilters({
       rootSelectionRule: 'multiple',
-      items: uniqueAnnotationTypes.map(type => ({ types: [type], selected: true }))
+      items: newAnnotationFilters.items
     })
 
   }, [matchedAnnotationsMap])
