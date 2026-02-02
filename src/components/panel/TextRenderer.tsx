@@ -33,6 +33,7 @@ import {
 } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
 import { computeNewSelectedAnnotationIndex } from '@/utils/annotations.ts'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 interface Props {
   htmlString: string
@@ -46,6 +47,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     panelState,
     selectedAnnotationTypes,
     matchedAnnotationsMap,
+    annotationFilters,
     setMatchedAnnotationsMap,
     setSelectedAnnotation,
     updatePanel,
@@ -54,6 +56,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     annotationsMode,
     showTextOptions,
   } = usePanel()
+
+  const config = useConfig()
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
 
@@ -65,13 +69,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
 
-  function scrollIntoSelectedAnnotation(selectedAnnotation: Annotation) {
-    const annotationId = selectedAnnotation?.id
-    const panelEl = document.getElementById(panelId) as HTMLElement
-    const container = panelEl.querySelector('div[data-sidebar-container]') as HTMLElement
-    const annotationEl = container.querySelector('div[data-annotation="'+annotationId+'"]') as HTMLElement
-    scrollIntoViewIfNeeded(annotationEl, container)
-  }
 
   function containsChildren(targets: HTMLElement[], target: HTMLElement) {
     for(const t of targets) {
@@ -88,6 +85,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
     const target = e.currentTarget as Element
     const targetEntry: MergedAnnotationEntry = flippedMatchedAnnotationsMapRef.current.filter(entry => entry.target === target)[0]
+
 
     if (!containsChildren(targetsRef.current, target as HTMLElement)) {
       // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
@@ -108,13 +106,12 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
       setSelectedAnnotation(annotation)
       prevClickedTargetIndexRef.current = flippedMatchedAnnotationsMapRef.current.findIndex(entry => targetEntry === entry)
-
-      if (annotationsModeRef.current === 'list') scrollIntoSelectedAnnotation(annotation)
     }
     else {
       setSelectedAnnotation(null)
     }
   }
+
 
   useEffect(() => {
     annotationsModeRef.current = annotationsMode
@@ -157,8 +154,22 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     onReady()
   }, [parsedDom])
 
+  function getFilteredValue(annotationFilters, isFiltersInConfig, selectedAnnotationTypes, annotType) {
+    if (isFiltersInConfig) return !selectedAnnotationTypes || !!(selectedAnnotationTypes[annotType])
+
+    console.log('is filteres in config', isFiltersInConfig)
+    console.log('annotation filters', annotationFilters)
+    /*
+    return annotationFilters.items.some(item =>
+      item.selected === true && item.types.includes(annotType)
+    )
+     */
+  }
+
+
   // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
   useEffect(() => {
+    console.log('annotation filters', annotationFilters)
     if (!panelState.annotations || !parsedDom) return
 
     const result: MatchedAnnotationsMap = panelState.annotations.reduce((acc, cur) => {
@@ -176,9 +187,12 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
           target.addEventListener('mouseleave', onMouseLeaveTarget)
         })
         const annotType = cur.body['x-content-type']
+        console.log('annot type', annotType)
+        console.log('selected annotation types on new item', selectedAnnotationTypes)
+        console.log('annotations filters', annotationFilters)
         acc[cur.id] = {
           target: matchedNodes,
-          filtered: !selectedAnnotationTypes || !!(selectedAnnotationTypes[annotType]),
+          filtered: true,
           annotation: cur
         }
       }
@@ -286,6 +300,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
       if (isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
         addSelectedStyle(target)
         scrollIntoViewIfNeeded(target, target.closest('[data-text-container="true"]'))
+        // TODO: add a scroll into view for select annotation ?
         return
       }
       else if(someFiltered) {

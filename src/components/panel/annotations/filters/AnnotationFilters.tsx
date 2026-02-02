@@ -25,7 +25,6 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
 
 
 
-  console.log('annotations filters', annotationFilters)
 
   useEffect(() => {
     // This is for the case where no specific annotation filters were configured.
@@ -43,11 +42,11 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
       newAnnotationFilters.items?.flatMap(item => item.types)
     )
 
-    console.log('existing types', existingTypes)
+    //console.log('existing types', existingTypes)
 
     for (const type of uniqueAnnotationTypes) {
       if (!existingTypes.has(type)) {
-        console.log('not existing type', type)
+        //console.log('not existing type', type)
         if (!newAnnotationFilters.hasOwnProperty('items')) newAnnotationFilters['items'] = []
         newAnnotationFilters.items.push({
           types: [type],
@@ -55,6 +54,8 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
         })
       }
     }
+
+    console.log('new annotation filters', newAnnotationFilters)
 
     setAnnotationFilters({
       rootSelectionRule: 'multiple',

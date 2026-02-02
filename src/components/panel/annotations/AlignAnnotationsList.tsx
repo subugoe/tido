@@ -1,18 +1,21 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/Annotation.tsx'
-import { getFilteredAnnotations } from '@/utils/annotations.ts'
 
 const ANNOTATION_GAP = 5
 
-const AlignAnnotationsList: FC = () => {
+interface Props {
+  filteredAnnotations: Annotation[]
+}
+
+const AlignAnnotationsList: FC<Props> = ({ filteredAnnotations }) => {
   const { panelId, matchedAnnotationsMap, selectedAnnotation, setSelectedAnnotation, getSidebarScroller } = usePanel()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
   // position of each annotation.
   const [elements, setElements] = useState([])
 
-  const filteredAnnotations = getFilteredAnnotations(matchedAnnotationsMap)
+  console.log('filtered annotations in Align Mode', filteredAnnotations )
 
   const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-wrapper]`) as HTMLElement)
   const [yMap, setYMap] = useState({})
@@ -61,6 +64,8 @@ const AlignAnnotationsList: FC = () => {
     // the key is the annotation id and the value is the top value.
 
     if (elements.length === 0) return
+
+    console.log('track top change')
 
     // Set the desiredY according to current target clean positions (clean = actual position in the text)
     for (let i = 0; i < elements.length; i++) {
@@ -136,7 +141,7 @@ const AlignAnnotationsList: FC = () => {
       setLoading(true)
       setElements([])
     }
-  }, [matchedAnnotationsMap])
+  }, [filteredAnnotations])
 
   useEffect(() => {
     let resizeObserver

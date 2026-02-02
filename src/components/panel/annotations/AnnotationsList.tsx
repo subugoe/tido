@@ -1,15 +1,12 @@
 import { FC } from 'react'
-import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import Annotation from '@/components/panel/annotations/Annotation.tsx'
 
-import { getFilteredAnnotations } from '@/utils/annotations.ts'
+interface Props {
+  filteredAnnotations: Annotation[]
+}
 
-
-const AnnotationsList: FC = () => {
-
-  const { matchedAnnotationsMap } = usePanel()
-  const filteredAnnotations = getFilteredAnnotations(matchedAnnotationsMap)
+const AnnotationsList: FC<Props> = ({ filteredAnnotations }) => {
 
 
   if (filteredAnnotations.length > 0) return <div className={`transition-opacity pt-4`}>

@@ -1,4 +1,4 @@
-import { FC, forwardRef, ReactNode, useEffect, useRef } from 'react'
+import { FC, forwardRef, ReactNode, useEffect, useRef, useState } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
@@ -6,6 +6,7 @@ import AlignAnnotationsList from '@/components/panel/annotations/AlignAnnotation
 import AnnotationsList from '@/components/panel/annotations/AnnotationsList.tsx'
 import EmptyAnnotations from '@/components/panel/annotations/EmptyAnnotations.tsx'
 import { useErrorBoundary } from 'react-error-boundary'
+import { getFilteredAnnotations } from '@/utils/annotations.ts'
 
 interface ContainerProps {
   children?: ReactNode
@@ -23,17 +24,24 @@ const AnnotationsView: FC = () => {
 
   if (annotationsError) showBoundary(annotationsError)
 
+  const [filteredAnnotations, setFilteredAnnotations] = useState([])
+
   useEffect(() => {
     if (!scrollContainer.current) return
     const scroller = getSidebarScroller()
     scroller.setSidebar(scrollContainer.current)
   }, [scrollContainer])
 
+  useEffect(() => {
+    const newFilteredAnnotations = getFilteredAnnotations(matchedAnnotationsMap)
+    setFilteredAnnotations(newFilteredAnnotations)
+  }, [matchedAnnotationsMap])
+
 
   function getContent() {
     if (Object.keys(matchedAnnotationsMap).length === 0) return <EmptyAnnotations />
-    if (annotationsMode === 'aligned') return <AlignAnnotationsList />
-    if (annotationsMode === 'list') return <AnnotationsList />
+    if (annotationsMode === 'aligned') return <AlignAnnotationsList filteredAnnotations={filteredAnnotations} />
+    if (annotationsMode === 'list') return <AnnotationsList filteredAnnotations={filteredAnnotations} />
   }
 
   return <Container ref={scrollContainer}>
