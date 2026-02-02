@@ -6,6 +6,7 @@ import AlignAnnotationsList from '@/components/panel/annotations/AlignAnnotation
 import AnnotationsList from '@/components/panel/annotations/AnnotationsList.tsx'
 import EmptyAnnotations from '@/components/panel/annotations/EmptyAnnotations.tsx'
 import { useErrorBoundary } from 'react-error-boundary'
+import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 
 interface ContainerProps {
   children?: ReactNode
@@ -17,7 +18,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({ children }, ref)
   </div>
 })
 const AnnotationsView: FC = () => {
-  const { matchedAnnotationsMap, annotationsError, annotationsMode, getSidebarScroller } = usePanel()
+  const { matchedAnnotationsMap, annotationsError, annotationsMode, selectedAnnotation, getSidebarScroller } = usePanel()
   const scrollContainer = useRef<HTMLDivElement>(null)
   const { showBoundary } = useErrorBoundary()
 
@@ -28,6 +29,12 @@ const AnnotationsView: FC = () => {
     const scroller = getSidebarScroller()
     scroller.setSidebar(scrollContainer.current)
   }, [scrollContainer])
+
+  useEffect(() => {
+    if (!selectedAnnotation || annotationsMode !== 'list') return
+    const selectedAnnotationEl = (scrollContainer.current as HTMLElement).querySelector(`div[data-annotation="${selectedAnnotation.id}"]`) as HTMLElement
+    scrollIntoViewIfNeeded(selectedAnnotationEl, scrollContainer.current)
+  }, [selectedAnnotation])
 
 
   function getContent() {
