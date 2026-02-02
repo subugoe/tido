@@ -65,13 +65,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
 
-  function scrollIntoSelectedAnnotation(selectedAnnotation: Annotation) {
-    const annotationId = selectedAnnotation?.id
-    const panelEl = document.getElementById(panelId) as HTMLElement
-    const container = panelEl.querySelector('div[data-sidebar-container]') as HTMLElement
-    const annotationEl = container.querySelector('div[data-annotation="'+annotationId+'"]') as HTMLElement
-    scrollIntoViewIfNeeded(annotationEl, container)
-  }
 
   function containsChildren(targets: HTMLElement[], target: HTMLElement) {
     for(const t of targets) {
@@ -108,8 +101,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
       setSelectedAnnotation(annotation)
       prevClickedTargetIndexRef.current = flippedMatchedAnnotationsMapRef.current.findIndex(entry => targetEntry === entry)
-
-      if (annotationsModeRef.current === 'list') scrollIntoSelectedAnnotation(annotation)
     }
     else {
       setSelectedAnnotation(null)
@@ -160,6 +151,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
   useEffect(() => {
     if (!panelState.annotations || !parsedDom) return
+
+    console.log('selected annotation types', selectedAnnotationTypes)
 
     const result: MatchedAnnotationsMap = panelState.annotations.reduce((acc, cur) => {
       const selector = (cur.target[0].selector as CssSelector).value
