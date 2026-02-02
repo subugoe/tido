@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
@@ -7,6 +7,7 @@ import AnnotationFiltersContent from '@/components/panel/annotations/filters/Ann
 import { cn } from '@/lib/utils.ts'
 import { SIDEBAR_DEFAULT_WIDTH } from '@/utils/panel.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { AnnotationFiltersConfig } from '@/types'
 
 
 interface Props {
@@ -18,11 +19,13 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
     usePanelTranslation,
     annotationFilters,
     setAnnotationFilters,
-    setSelectedAnnotationTypes,
     matchedAnnotationsMap
   } = usePanel()
 
   const { t } = usePanelTranslation()
+
+  const [visibleAnnotFilters, setVisibleAnnotFilters] = useState<AnnotationFiltersConfig>()
+
 
   useEffect(() => {
     // This is for the case where no specific annotation filters were configured.
@@ -34,19 +37,22 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
       ...new Set(Object.keys(matchedAnnotationsMap).map((id) => matchedAnnotationsMap[id].annotation.body['x-content-type']))
     ]
     const newAnnotationFilters = { ...annotationFilters }
+    if (!newAnnotationFilters.hasOwnProperty('items')) newAnnotationFilters['items'] = []
+    const newVisibleAnnotFilters: AnnotationFiltersConfig = {
+      rootSelectionRule: 'multiple',
+      items: []
+    }
 
-    const existingTypes = new Set(
-      newAnnotationFilters.items?.flatMap(item => item.types)
-    )
+    const typesInGlobalFilter = annotationFilters?.items ? new Set(annotationFilters.items?.flatMap(item => item.types)) : new Set([])
 
-    console.log('existing types', existingTypes)
 
-    const newSelectedTypes= {}
+    // TODO: use only one loop for updating annotationsFilter based on new item
+
+    // iterate through types in filter.
+    //    If a new type coming from matchedAnnotationsMap -> add it in filter
 
     for (const type of uniqueAnnotationTypes) {
-      if (!existingTypes.has(type)) {
-        console.log('not existing type', type)
-        if (!newAnnotationFilters.hasOwnProperty('items')) newAnnotationFilters['items'] = []
+      if (!typesInGlobalFilter.has(type)) {
         newAnnotationFilters.items.push({
           types: [type],
           selected: true
@@ -54,6 +60,20 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
       }
     }
 
+    // update visibleAnnotFilter containing items which are included in uniqueAnnotationTypes
+
+    if (annotationFilters) {
+      newVisibleAnnotFilters.items = annotationFilters?.items.filter(item =>
+        item.types.some(type => uniqueAnnotationTypes.includes(type))
+      )
+    }
+    else {
+      newVisibleAnnotFilters.items = newAnnotationFilters?.items.filter(item =>
+        item.types.some(type => uniqueAnnotationTypes.includes(type))
+      )
+    }
+
+    setVisibleAnnotFilters(newVisibleAnnotFilters)
 
     setAnnotationFilters({
       rootSelectionRule: 'multiple',
@@ -74,7 +94,7 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
         style={{ 'width': `calc(${SIDEBAR_DEFAULT_WIDTH}px - 2 * 0.75rem)` }}
       >
         <h3 className="font-bold mb-4">Filters</h3>
-        <AnnotationFiltersContent />
+        <AnnotationFiltersContent visibleAnnotFilters={visibleAnnotFilters} />
       </PopoverContent>
     </Popover>
   </div>

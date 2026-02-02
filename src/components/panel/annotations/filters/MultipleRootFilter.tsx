@@ -9,8 +9,9 @@ interface Props {
 }
 
 const MultipleRootFilter: FC<Props> = ({ config, onChange }) => {
+
   const [items, setItems] = useState<FilterNode[]>(() =>
-    JSON.parse(JSON.stringify(config.items))
+    JSON.parse(JSON.stringify(config?.items ?? []))
   )
 
   const handleToggle = useCallback(

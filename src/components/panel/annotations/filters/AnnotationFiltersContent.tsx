@@ -1,11 +1,15 @@
 import { FC } from 'react'
-import { FilterNode } from '@/types'
+import { AnnotationFiltersConfig, FilterNode } from '@/types'
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import SingleRootFilter from '@/components/panel/annotations/filters/SingleRootFilter.tsx'
 import MultipleRootFilter from '@/components/panel/annotations/filters/MultipleRootFilter.tsx'
 
-const AnnotationFiltersContent: FC = () => {
+interface Props {
+  visibleAnnotFilters: AnnotationFiltersConfig
+}
+
+const AnnotationFiltersContent: FC<Props> = ({ visibleAnnotFilters }) => {
   const {
     annotationFilters,
     setAnnotationFilters,
@@ -24,7 +28,7 @@ const AnnotationFiltersContent: FC = () => {
     return <SingleRootFilter config={annotationFilters} onChange={onChange} />
   }
 
-  return <MultipleRootFilter config={annotationFilters} onChange={onChange} />
+  return <MultipleRootFilter config={visibleAnnotFilters} onChange={onChange} />
 }
 
 export default AnnotationFiltersContent
