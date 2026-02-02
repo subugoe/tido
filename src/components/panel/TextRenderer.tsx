@@ -53,6 +53,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     selectedAnnotation,
     annotationsMode,
     showTextOptions,
+    annotationFilters
   } = usePanel()
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
@@ -160,6 +161,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
   useEffect(() => {
     if (!panelState.annotations || !parsedDom) return
+
+    console.log('selected annotations types', selectedAnnotationTypes)
+    console.log('annotation filters', annotationFilters)
 
     const result: MatchedAnnotationsMap = panelState.annotations.reduce((acc, cur) => {
       const selector = (cur.target[0].selector as CssSelector).value

@@ -16,7 +16,9 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
   const { annotations: annotationsConfig } = useConfig()
   const {
     usePanelTranslation,
+    annotationFilters,
     setAnnotationFilters,
+    setSelectedAnnotationTypes,
     matchedAnnotationsMap
   } = usePanel()
 
@@ -31,12 +33,34 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
     const uniqueAnnotationTypes: string[] = [
       ...new Set(Object.keys(matchedAnnotationsMap).map((id) => matchedAnnotationsMap[id].annotation.body['x-content-type']))
     ]
+    const newAnnotationFilters = { ...annotationFilters }
+
+    const existingTypes = new Set(
+      newAnnotationFilters.items?.flatMap(item => item.types)
+    )
+
+    console.log('existing types', existingTypes)
+
+    const newSelectedTypes= {}
+
+    for (const type of uniqueAnnotationTypes) {
+      if (!existingTypes.has(type)) {
+        console.log('not existing type', type)
+        if (!newAnnotationFilters.hasOwnProperty('items')) newAnnotationFilters['items'] = []
+        newAnnotationFilters.items.push({
+          types: [type],
+          selected: true
+        })
+      }
+    }
+
 
     setAnnotationFilters({
       rootSelectionRule: 'multiple',
-      items: uniqueAnnotationTypes.map(type => ({ types: [type], selected: true }))
+      items: newAnnotationFilters.items
     })
 
+    //setSelectedAnnotationTypes(newSelectedTypes)
   }, [matchedAnnotationsMap])
 
   return <div className={cn('flex flex-col items-center', className)}>
