@@ -18,7 +18,8 @@ const buttonVariants = cva(
         ghostAmber: 'text-amber-700 dark:text-amber-100 hover:bg-amber-200 hover:text-amber-800 dark:hover:bg-amber-700 dark:hover:text-amber-200',
         ghostDestructive: 'text-red-500 dark:text-red-400 hover:bg-red-300/10 hover:text-red-600 dark:hover:text-red-500',
         link: 'text-primary underline-offset-4 hover:underline',
-        muted: 'bg-muted hover:bg-accent'
+        muted: 'bg-muted hover:bg-accent',
+        text: 'bg-transparent text-primary hover:bg-transparent px-0'
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',

@@ -19,6 +19,9 @@ const AlignAnnotationsList: FC = () => {
   const [loading, setLoading] = useState(false)
   const [height, setHeight] = useState(0)
 
+  const [toggledAnnotation, setToggledAnnotation] = useState(null)
+
+
   const ref = useRef(null)
 
   function isClickedElAnnotation(clickedEl: HTMLElement) {
@@ -54,6 +57,14 @@ const AlignAnnotationsList: FC = () => {
       annotationsSideBarEl?.removeEventListener('click', deselectAnnotationOnOutsideClick)
     }
   }, [selectedAnnotation])
+
+
+  useEffect(() => {
+    if (toggledAnnotation) {
+      trackTopChange()
+      setToggledAnnotation(false)
+    }
+  }, [toggledAnnotation])
 
 
   function trackTopChange() {
@@ -167,6 +178,7 @@ const AlignAnnotationsList: FC = () => {
         data={a}
         key={a.id}
         top={yMap[a.id]}
+        onToggle={setToggledAnnotation}
       />)}
     </div>
 }
