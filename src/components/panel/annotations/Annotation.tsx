@@ -13,7 +13,7 @@ const DEFAULT_ANNOTATION_HEIGHT = 60
 interface Props {
   data: Annotation
   top?: number,
-  onToggle?: (annotation: Annotation) => void
+  onToggle?: (annotationId: string, element, finalHeight, translateY) => void
 }
 
 
@@ -70,13 +70,44 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
   function handleViewMore(e) {
     e.stopPropagation()
     setIsExpanded(true)
-    if (onToggle) onToggle(data)
+    // Step 1: Measure the expanded height
+    // Temporarily apply h-fit to measure
+    // Step 1: Get current collapsed height
+    const annotationEl = ref.current
+    const bodyEl = annotationBodyRef.current // we expand/collapse its content
+
+    const collapsedHeight = annotationEl.offsetHeight
+
+    // Step 1: Compute temporarily the new expanded height
+    bodyEl.classList.remove('h-18', 'overflow-y-hidden')
+    bodyEl.classList.add('h-fit')
+
+    // Force reflow
+    bodyEl.offsetHeight
+
+    const expandedHeight = annotationEl.offsetHeight
+
+    const translateY = expandedHeight - collapsedHeight
+
+
+    // Step 2: Revert back to collapsed state (no visual change yet)
+    bodyEl.classList.remove('h-fit', 'overflow-y-hidden')
+    bodyEl.classList.add('h-18')
+
+
+    console.log('top', annotationEl.top)
+    console.log('collapsed height', collapsedHeight)
+    console.log('expanded height', expandedHeight)
+    console.log('translateY', translateY)
+
+    console.log('on toggle', onToggle)
+    if (onToggle) onToggle(data.id, bodyEl, expandedHeight, translateY)
   }
 
   function handleViewLess(e) {
     e.stopPropagation()
     setIsExpanded(false)
-    if (onToggle) onToggle(data)
+    //if (onToggle) onToggle()
   }
 
   return <>
@@ -94,10 +125,12 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
       onMouseLeave={handleMouseLeave}
       style={{ top }}
     >
-      <Badge variant="secondary" className="mb-1">{ type }</Badge>
-      <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'} `}>
-        { type === 'Variant' && <VariantContent body={data.body} /> }
-        { type !== 'Variant' && <AnnotationContent body={data.body} /> }
+      <div ref={annotationBodyRef} className={`${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
+        <Badge variant="secondary" className="mb-1">{ type }</Badge>
+        <div  className={`transition-[height] duration-400 ease-in-out`}>
+          { type === 'Variant' && <VariantContent body={data.body} /> }
+          { type !== 'Variant' && <AnnotationContent body={data.body} /> }
+        </div>
       </div>
       { isLong && !isExpanded && <Button className="w-fit h-2 mt-4 px-0" variant="text" onClick={(e) => handleViewMore(e)} >{t('view_more')}</Button> }
       { isLong && isExpanded && <Button className="w-fit h-2 mt-4 px-0" variant="text" onClick={(e) => handleViewLess(e)} >{t('view_less')}</Button> }

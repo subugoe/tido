@@ -19,8 +19,6 @@ const AlignAnnotationsList: FC = () => {
   const [loading, setLoading] = useState(false)
   const [height, setHeight] = useState(0)
 
-  const [toggledAnnotation, setToggledAnnotation] = useState(null)
-
 
   const ref = useRef(null)
 
@@ -58,14 +56,37 @@ const AlignAnnotationsList: FC = () => {
     }
   }, [selectedAnnotation])
 
+  function getAnnotationsBelow(elements, annotationId) {
+    const index = elements.findIndex(el => el.annotation.id === annotationId)
+    if (index === -1) return []
 
-  useEffect(() => {
-    if (toggledAnnotation) {
-      trackTopChange()
-      setToggledAnnotation(false)
-    }
-  }, [toggledAnnotation])
+    return elements.slice(index + 1).map(element => element.el)
+  }
 
+
+
+  function onAnnotationToggle(annotationId, element, finalHeight, translateY) {
+    // Step 3: Push annotations below FIRST
+
+    const annotationsBelow = getAnnotationsBelow(elements, annotationId)
+    console.log('translate y', translateY)
+    annotationsBelow.forEach(ann => {
+      ann.style.transform = `translateY(${translateY}px)`
+      ann.style.transition = 'transform 300ms ease-out'
+    })
+
+    // Step 4: Expand the annotation (slightly delayed or same time)
+    setTimeout(() => {
+      element.style.height = finalHeight + 'px'
+      element.style.transition = 'height 300ms ease-out'
+    }, 0)
+
+    // Step 5: Update trackTopChange() after animation
+    setTimeout(() => {
+      console.log('track top change')
+      trackTopChange() // Recalculate final positions
+    }, 300)
+  }
 
   function trackTopChange() {
     // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
@@ -178,7 +199,7 @@ const AlignAnnotationsList: FC = () => {
         data={a}
         key={a.id}
         top={yMap[a.id]}
-        onToggle={setToggledAnnotation}
+        onToggle={onAnnotationToggle}
       />)}
     </div>
 }
