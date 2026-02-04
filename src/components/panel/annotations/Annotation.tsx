@@ -5,6 +5,7 @@ import AnnotationContent from '@/components/panel/annotations/AnnotationContent.
 import VariantContent from '@/components/panel/annotations/VariantContent.tsx'
 import { useText } from '@/contexts/TextContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
+import { useTranslation } from 'react-i18next'
 
 const DEFAULT_ANNOTATION_HEIGHT = 60
 
@@ -25,6 +26,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
   const [isSelected, setIsSelected] = useState(false)
   const [isLong, setIsLong] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+
+  const { t } = useTranslation()
 
   const type = data.body['x-content-type']
 
@@ -96,8 +99,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
         { type === 'Variant' && <VariantContent body={data.body} /> }
         { type !== 'Variant' && <AnnotationContent body={data.body} /> }
       </div>
-      { isLong && !isExpanded && <Button className="w-fit h-2 mt-4 px-0" variant="text" onClick={(e) => handleViewMore(e)} >View more</Button> }
-      { isLong && isExpanded && <Button className="w-fit h-2 mt-4 px-0" variant="text" onClick={(e) => handleViewLess(e)} >View less</Button> }
+      { isLong && !isExpanded && <Button className="w-fit h-2 mt-4 px-0" variant="text" onClick={(e) => handleViewMore(e)} >{t('view_more')}</Button> }
+      { isLong && isExpanded && <Button className="w-fit h-2 mt-4 px-0" variant="text" onClick={(e) => handleViewLess(e)} >{t('view_less')}</Button> }
     </div>
   </>
 })
