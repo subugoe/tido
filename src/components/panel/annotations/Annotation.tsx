@@ -99,9 +99,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
     console.log('collapsed height', collapsedHeight)
     console.log('expanded height', expandedHeight)
     console.log('translateY', translateY)
-
-    console.log('on toggle', onToggle)
-    if (onToggle) onToggle(data.id, bodyEl, expandedHeight, translateY)
+    if (onToggle) onToggle(data.id, annotationEl, expandedHeight, translateY)
   }
 
   function handleViewLess(e) {
@@ -125,12 +123,10 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
       onMouseLeave={handleMouseLeave}
       style={{ top }}
     >
-      <div ref={annotationBodyRef} className={`${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
+      <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
         <Badge variant="secondary" className="mb-1">{ type }</Badge>
-        <div  className={`transition-[height] duration-400 ease-in-out`}>
-          { type === 'Variant' && <VariantContent body={data.body} /> }
-          { type !== 'Variant' && <AnnotationContent body={data.body} /> }
-        </div>
+        { type === 'Variant' && <VariantContent body={data.body} /> }
+        { type !== 'Variant' && <AnnotationContent body={data.body} /> }
       </div>
       { isLong && !isExpanded && <Button className="w-fit h-2 mt-4 px-0" variant="text" onClick={(e) => handleViewMore(e)} >{t('view_more')}</Button> }
       { isLong && isExpanded && <Button className="w-fit h-2 mt-4 px-0" variant="text" onClick={(e) => handleViewLess(e)} >{t('view_less')}</Button> }
