@@ -7,17 +7,19 @@ import { useText } from '@/contexts/TextContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
 
-const DEFAULT_ANNOTATION_HEIGHT = 60
+const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 60
+const DEFAULT_ANNOTATION_BODY_HEIGHT = 72
 
 
 interface Props {
   data: Annotation
   top?: number,
   onExpand?: (annotationId: string, element, finalHeight, translateY) => void
+  onCollapse?: (annotationId, element, finalHeight, translateY) => void
 }
 
 
-const Annotation: FC<Props> = React.memo(({ data, top, onExpand }) => {
+const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) => {
   const { selectedAnnotation, setSelectedAnnotation, annotationsMode } = usePanel()
   const { setHoveredAnnotations, hoveredAnnotations } = useText()
   const ref = useRef(null)
@@ -26,6 +28,9 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand }) => {
   const [isSelected, setIsSelected] = useState(false)
   const [isLong, setIsLong] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+
+  const expandedHeightRef = useRef(null)
+  const collapsedHeightRef = useRef(null)
 
   const { t } = useTranslation()
 
@@ -42,7 +47,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand }) => {
   useEffect(() => {
     if (!annotationBodyRef.current) return
     const annotBodyHeight = annotationBodyRef.current.clientHeight
-    if (annotBodyHeight > DEFAULT_ANNOTATION_HEIGHT) setIsLong(true)
+    if (annotBodyHeight > THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT) setIsLong(true)
   }, [])
 
   function handleClick() {
@@ -77,6 +82,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand }) => {
     const bodyEl = annotationBodyRef.current // we expand/collapse its content
 
     const collapsedHeight = annotationEl.offsetHeight
+    collapsedHeightRef.current = annotationEl.offsetHeight
 
     // Step 1: Compute temporarily the new expanded height
     bodyEl.classList.remove('h-18', 'overflow-y-hidden')
@@ -86,13 +92,15 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand }) => {
     bodyEl.offsetHeight
 
     const expandedHeight = annotationEl.offsetHeight
+    expandedHeightRef.current = expandedHeight
+
     const translateY = expandedHeight - collapsedHeight
 
     const bodyElExpandedHeight = bodyEl.offsetHeight
 
     // Step 2: Revert back to collapsed state (no visual change yet)
-    bodyEl.classList.remove('h-fit', 'overflow-y-hidden')
-    bodyEl.classList.add('h-18')
+    bodyEl.classList.remove('h-fit')
+    bodyEl.classList.add('h-18', 'overflow-y-hidden')
 
     if (onExpand) onExpand(data.id, bodyEl, bodyElExpandedHeight, translateY)
   }
@@ -100,7 +108,15 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand }) => {
   function handleViewLess(e) {
     e.stopPropagation()
     setIsExpanded(false)
-    //if (onToggle) onToggle()
+
+    const annotationEl = ref.current
+    const bodyEl = annotationBodyRef.current // we expand/collapse its content
+
+
+    const collapsedHeight = annotationEl.offsetHeight
+    const translateY = expandedHeightRef.current - collapsedHeight.current
+
+    onCollapse(data.id, bodyEl, DEFAULT_ANNOTATION_BODY_HEIGHT, translateY)
   }
 
   return <>

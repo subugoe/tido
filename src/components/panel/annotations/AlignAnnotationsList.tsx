@@ -102,6 +102,40 @@ const AlignAnnotationsList: FC = () => {
     }, 1000)
   }
 
+  function onAnnotationCollapse(annotationId, element, finalHeight, translateY) {
+    const newElements = [...elements]
+
+    const annotationsBelow = getAnnotationsBelow(elements, annotationId)
+
+    const index = elements.findIndex(el => el.annotation.id === annotationId)
+
+    for(let i = 0; i < newElements.length ; i++) {
+      if (i > index) {
+        newElements[i].desiredY -= translateY
+      }
+    }
+
+    setElements(newElements)
+
+    // Step 4: Expand the annotation (slightly delayed or same time)
+    setTimeout(() => {
+      element.style.height = finalHeight + 'px'
+      element.style.transition = 'height 100ms ease-out'
+    },0)
+
+
+    annotationsBelow.forEach(ann => {
+      ann.style.top -= translateY   //`translateY(${translateY}px)`
+      ann.style.transition = 'transform ease-out'
+    })
+
+
+    // Step 5: Update trackTopChange() after animation
+    setTimeout(() => {
+      trackTopChange(newElements) // Recalculate final positions
+    }, 300)
+  }
+
   function trackTopChange(currentElements) {
     // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
     // the key is the annotation id and the value is the top value.
@@ -195,7 +229,7 @@ const AlignAnnotationsList: FC = () => {
     let timeout
     if (elements.length > 0) {
       resizeObserver = new ResizeObserver(entries => {
-        if (entries[0].contentRect.width > 0) trackTopChange(elements, 7)
+        if (entries[0].contentRect.width > 0) trackTopChange(elements)
       })
       resizeObserver.observe(textContainer)
     }
@@ -220,6 +254,7 @@ const AlignAnnotationsList: FC = () => {
         key={a.id}
         top={yMap[a.id]}
         onExpand={onAnnotationExpand}
+        onCollapse={onAnnotationCollapse}
       />)}
     </div>
 }
