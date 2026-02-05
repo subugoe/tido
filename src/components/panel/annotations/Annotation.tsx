@@ -29,8 +29,10 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
   const [isLong, setIsLong] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const expandedHeightRef = useRef(null)
-  const collapsedHeightRef = useRef(null)
+  const expandedHeightRef = useRef(-1)
+  const collapsedHeightRef = useRef(-1)
+
+  const expandedBodyHeightRef = useRef(-1)
 
   const { t } = useTranslation()
 
@@ -81,28 +83,32 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
     const annotationEl = ref.current
     const bodyEl = annotationBodyRef.current // we expand/collapse its content
 
-    const collapsedHeight = annotationEl.offsetHeight
-    collapsedHeightRef.current = annotationEl.offsetHeight
+    if (collapsedHeightRef.current === -1) {
+      collapsedHeightRef.current = annotationEl.offsetHeight
+    }
 
-    // Step 1: Compute temporarily the new expanded height
-    bodyEl.classList.remove('h-18', 'overflow-y-hidden')
-    bodyEl.classList.add('h-fit')
+    if (expandedBodyHeightRef.current === -1) {
+      // Step 1: Compute temporarily the new expanded height
+      bodyEl.classList.remove('h-18', 'overflow-y-hidden')
+      bodyEl.classList.add('h-fit')
 
-    // Force reflow
-    bodyEl.offsetHeight
+      // Force reflow
+      bodyEl.offsetHeight
+      expandedBodyHeightRef.current = bodyEl.offsetHeight
+      expandedHeightRef.current = annotationEl.offsetHeight
+      console.log('annotation expanded height', expandedHeightRef.current)
+    }
 
-    const expandedHeight = annotationEl.offsetHeight
-    expandedHeightRef.current = expandedHeight
 
-    const translateY = expandedHeight - collapsedHeight
-
-    const bodyElExpandedHeight = bodyEl.offsetHeight
+    const translateY = expandedHeightRef.current - collapsedHeightRef.current
 
     // Step 2: Revert back to collapsed state (no visual change yet)
-    bodyEl.classList.remove('h-fit')
-    bodyEl.classList.add('h-18', 'overflow-y-hidden')
+    if (expandedBodyHeightRef.current === -1) {
+      bodyEl.classList.remove('h-fit')
+      bodyEl.classList.add('h-18', 'overflow-y-hidden')
+    }
 
-    if (onExpand) onExpand(data.id, bodyEl, bodyElExpandedHeight, translateY)
+    if (onExpand) onExpand(data.id, bodyEl, expandedBodyHeightRef.current, translateY)
   }
 
   function handleViewLess(e) {
