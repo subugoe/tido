@@ -89,6 +89,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
 
     const translateY = expandedHeight - collapsedHeight
 
+    const bodyElExpandedHeight = bodyEl.offsetHeight
+
 
     // Step 2: Revert back to collapsed state (no visual change yet)
     bodyEl.classList.remove('h-fit', 'overflow-y-hidden')
@@ -99,7 +101,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
     console.log('collapsed height', collapsedHeight)
     console.log('expanded height', expandedHeight)
     console.log('translateY', translateY)
-    if (onToggle) onToggle(data.id, annotationEl, expandedHeight, translateY)
+    if (onToggle) onToggle(data.id, bodyEl, bodyElExpandedHeight, translateY)
   }
 
   function handleViewLess(e) {
