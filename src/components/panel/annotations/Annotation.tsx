@@ -15,7 +15,7 @@ interface Props {
   data: Annotation
   top?: number,
   onExpand?: (annotationId: string, element, finalHeight, translateY) => void
-  onCollapse?: (annotationId, element, finalHeight, translateY) => void
+  onCollapse?: (element, finalHeight) => void
 }
 
 
@@ -77,13 +77,12 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
   function handleViewMore(e) {
     e.stopPropagation()
     setIsExpanded(true)
-    // Step 1: Measure the expanded height
-    // Temporarily apply h-fit to measure
-    // Step 1: Get current collapsed height
+
     const annotationEl = ref.current
     const bodyEl = annotationBodyRef.current // we expand/collapse its content
 
     if (collapsedHeightRef.current === -1) {
+      // initial height is the collapsed height
       collapsedHeightRef.current = annotationEl.offsetHeight
     }
 
@@ -96,9 +95,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
       bodyEl.offsetHeight
       expandedBodyHeightRef.current = bodyEl.offsetHeight
       expandedHeightRef.current = annotationEl.offsetHeight
-      console.log('annotation expanded height', expandedHeightRef.current)
     }
-
 
     const translateY = expandedHeightRef.current - collapsedHeightRef.current
 
@@ -114,15 +111,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
   function handleViewLess(e) {
     e.stopPropagation()
     setIsExpanded(false)
-
-    const annotationEl = ref.current
     const bodyEl = annotationBodyRef.current // we expand/collapse its content
-
-
-    const collapsedHeight = annotationEl.offsetHeight
-    const translateY = expandedHeightRef.current - collapsedHeight.current
-
-    onCollapse(data.id, bodyEl, DEFAULT_ANNOTATION_BODY_HEIGHT, translateY)
+    onCollapse(bodyEl, DEFAULT_ANNOTATION_BODY_HEIGHT)
   }
 
   return <>
