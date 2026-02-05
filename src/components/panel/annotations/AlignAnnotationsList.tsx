@@ -64,42 +64,33 @@ const AlignAnnotationsList: FC = () => {
   }
 
 
-  function onAnnotationExpand(annotationId, element, finalHeight, translateY) {
-    // Step 3: Push annotations below FIRST
-
-    // we transition the body of Annotation
-    // element: annotationBodyEl
-    // finalHeight: final Height of bodyEl
+  function onAnnotationExpand(annotationId: string, bodyAnnotationEl: HTMLElement, bodyFinalHeight: number, translateY: number) {
+    // Idea: we transition the body of Annotation
+    // translateY: the amount that annotation expanded (expandedHeight - collapsedHeight). Necessary to push down the lower annotations
     const newElements = [...elements]
-
-    const annotationsBelow = getAnnotationsBelow(elements, annotationId)
-
     const index = elements.findIndex(el => el.annotation.id === annotationId)
 
+    // recompute the desiredY of the lower annotations
     for(let i = 0; i < newElements.length ; i++) {
       if (i > index) {
         newElements[i].desiredY += translateY
       }
     }
 
-    setElements(newElements)
+    // Step 3: Push down the lower annotations, to have space for the expansion of annotation
+    const map = newElements.reduce((acc, cur) => {
+      acc[cur.annotation.id] = cur.desiredY
+      return acc
+    }, {})
 
-    annotationsBelow.forEach(ann => {
-      ann.style.top += translateY   //`translateY(${translateY}px)`
-      ann.style.transition = 'transform ease-out'
-    })
+    setYMap(map)
+
 
     // Step 4: Expand the annotation (slightly delayed or same time)
     setTimeout(() => {
-      element.style.height = finalHeight + 'px'
-      element.style.transition = 'height 100ms ease-out'
+      bodyAnnotationEl.style.height = bodyFinalHeight + 'px'
+      bodyAnnotationEl.style.transition = 'height 300ms ease-out'
     },0)
-
-
-    // Step 5: Update trackTopChange() after animation
-    setTimeout(() => {
-      trackTopChange(newElements) // Recalculate final positions
-    }, 1000)
   }
 
   function onAnnotationCollapse(annotationId, element, finalHeight, translateY) {
