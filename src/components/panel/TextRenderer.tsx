@@ -223,9 +223,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   }, [hoveredAnnotations])
 
 
-
   // Apply highlighting styles on every map update
   useEffect(() => {
+    if (!matchedAnnotationsMap) return
     const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedAnnotationsMap)
     targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
     flippedMatchedAnnotationsMapRef.current = assignNestedTargetsInFlippedMatched(targetsRef.current, flippedMatchedAnnotationsMap)
@@ -253,9 +253,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     })
   }, [matchedAnnotationsMap])
 
-
   // Apply selected styles on every selectedAnnotation update
   useEffect(() => {
+    if (!matchedAnnotationsMap) return
     const targetsOfSelectedAnnotation = selectedAnnotation ? matchedAnnotationsMap[selectedAnnotation.id].target : []
 
     flippedMatchedAnnotationsMapRef.current.forEach(fa => {

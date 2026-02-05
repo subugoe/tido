@@ -11,7 +11,7 @@ const AnnotationsHeader: FC = () => {
     className="flex flex-col p-3 border-b border-border"
     style={{ height: `${PANEL_HEADER_HEIGHT}px` }}
   >
-    { Object.keys(matchedAnnotationsMap).length > 0 &&
+    { matchedAnnotationsMap && Object.keys(matchedAnnotationsMap).length > 0 &&
       <div className="flex">
         <AnnotationFilters  />
         <AnnotationsModeToggle className="ml-auto" />
