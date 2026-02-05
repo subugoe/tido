@@ -37,7 +37,7 @@ const AlignAnnotationsList: FC = () => {
   }, [])
 
   useEffect(() => {
-    trackTopChange(elements)
+    trackTopChange()
 
     const panelEl = document.getElementById(panelId) as HTMLElement
     const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
@@ -189,7 +189,7 @@ const AlignAnnotationsList: FC = () => {
     let timeout
     if (elements.length > 0) {
       resizeObserver = new ResizeObserver(entries => {
-        if (entries[0].contentRect.width > 0) trackTopChange(elements)
+        if (entries[0].contentRect.width > 0) trackTopChange()
       })
       resizeObserver.observe(textContainer)
     }
