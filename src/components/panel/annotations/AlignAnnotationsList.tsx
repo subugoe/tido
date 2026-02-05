@@ -87,7 +87,7 @@ const AlignAnnotationsList: FC = () => {
 
   function onAnnotationCollapse(bodyAnnotationEl: HTMLElement, bodyFinalHeight: number) {
 
-    // Step 4: Expand the annotation (slightly delayed or same time)
+    // Step 4: Collapse the annotation (slightly delayed or same time)
     setTimeout(() => {
       bodyAnnotationEl.style.height = bodyFinalHeight + 'px'
       bodyAnnotationEl.style.transition = 'height 100ms ease-out'

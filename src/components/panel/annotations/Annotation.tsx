@@ -112,7 +112,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
   function handleViewLess(e) {
     e.stopPropagation()
     setIsExpanded(false)
-    const bodyEl = annotationBodyRef.current // we expand/collapse its content
+    const bodyEl = annotationBodyRef.current // we collapse annotation body's content
     onCollapse(bodyEl, DEFAULT_ANNOTATION_BODY_HEIGHT)
   }
 
