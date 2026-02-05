@@ -113,7 +113,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
     e.stopPropagation()
     setIsExpanded(false)
     const bodyEl = annotationBodyRef.current // we collapse annotation body's content
-    onCollapse(bodyEl, DEFAULT_ANNOTATION_BODY_HEIGHT)
+    if (onCollapse) onCollapse(bodyEl, DEFAULT_ANNOTATION_BODY_HEIGHT)
   }
 
   return <>
