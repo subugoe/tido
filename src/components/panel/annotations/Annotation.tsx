@@ -87,7 +87,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
     }
 
     if (expandedBodyHeightRef.current === -1) {
-      // Step 1: Compute temporarily the new expanded height
+      // Step 1: Compute temporarily the new expanded height. This is done only once, when we expand for the first time
       bodyEl.classList.remove('h-18', 'overflow-y-hidden')
       bodyEl.classList.add('h-fit')
 
