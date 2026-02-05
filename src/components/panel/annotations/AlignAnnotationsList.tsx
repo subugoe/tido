@@ -56,13 +56,6 @@ const AlignAnnotationsList: FC = () => {
     }
   }, [selectedAnnotation])
 
-  function getAnnotationsBelow(elements, annotationId) {
-    const index = elements.findIndex(el => el.annotation.id === annotationId)
-    if (index === -1) return []
-
-    return elements.slice(index + 1).map(element => element.el)
-  }
-
 
   function onAnnotationExpand(annotationId: string, bodyAnnotationEl: HTMLElement, bodyFinalHeight: number, translateY: number) {
     // Idea: we transition the body of Annotation
@@ -85,7 +78,6 @@ const AlignAnnotationsList: FC = () => {
 
     setYMap(map)
 
-
     // Step 4: Expand the annotation (slightly delayed or same time)
     setTimeout(() => {
       bodyAnnotationEl.style.height = bodyFinalHeight + 'px'
@@ -93,10 +85,8 @@ const AlignAnnotationsList: FC = () => {
     },0)
   }
 
-  function onAnnotationCollapse(annotationId, element, finalHeight, translateY) {
+  function onAnnotationCollapse(annotationId: string, bodyAnnotationEl: HTMLElement, bodyFinalHeight: number, translateY: number) {
     const newElements = [...elements]
-
-    const annotationsBelow = getAnnotationsBelow(elements, annotationId)
 
     const index = elements.findIndex(el => el.annotation.id === annotationId)
 
@@ -106,19 +96,11 @@ const AlignAnnotationsList: FC = () => {
       }
     }
 
-    setElements(newElements)
-
     // Step 4: Expand the annotation (slightly delayed or same time)
     setTimeout(() => {
-      element.style.height = finalHeight + 'px'
-      element.style.transition = 'height 100ms ease-out'
+      bodyAnnotationEl.style.height = bodyFinalHeight + 'px'
+      bodyAnnotationEl.style.transition = 'height 100ms ease-out'
     },0)
-
-
-    annotationsBelow.forEach(ann => {
-      ann.style.top -= translateY   //`translateY(${translateY}px)`
-      ann.style.transition = 'transform ease-out'
-    })
 
 
     // Step 5: Update trackTopChange() after animation
@@ -130,9 +112,6 @@ const AlignAnnotationsList: FC = () => {
   function trackTopChange(currentElements) {
     // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
     // the key is the annotation id and the value is the top value.
-
-    if (currentElements.length === 0) return
-
 
     if (currentElements.length === 0) return
 
