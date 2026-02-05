@@ -86,21 +86,14 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
     bodyEl.offsetHeight
 
     const expandedHeight = annotationEl.offsetHeight
-
     const translateY = expandedHeight - collapsedHeight
 
     const bodyElExpandedHeight = bodyEl.offsetHeight
-
 
     // Step 2: Revert back to collapsed state (no visual change yet)
     bodyEl.classList.remove('h-fit', 'overflow-y-hidden')
     bodyEl.classList.add('h-18')
 
-
-    console.log('top', annotationEl.top)
-    console.log('collapsed height', collapsedHeight)
-    console.log('expanded height', expandedHeight)
-    console.log('translateY', translateY)
     if (onToggle) onToggle(data.id, bodyEl, bodyElExpandedHeight, translateY)
   }
 
