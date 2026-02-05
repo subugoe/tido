@@ -37,7 +37,7 @@ const AlignAnnotationsList: FC = () => {
   }, [])
 
   useEffect(() => {
-    trackTopChange(elements)
+    trackTopChange(elements, 0)
 
     const panelEl = document.getElementById(panelId) as HTMLElement
     const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
@@ -68,24 +68,39 @@ const AlignAnnotationsList: FC = () => {
   function onAnnotationToggle(annotationId, element, finalHeight, translateY) {
     // Step 3: Push annotations below FIRST
 
+    // we transition the body of Annotation
+    // element: annotationBodyEl
+    // finalHeight: final Height of bodyEl
     const newElements = [...elements]
+
+    const annotationEl = elements.find(el => el.annotation.id === annotationId)[0]
 
     const annotationsBelow = getAnnotationsBelow(elements, annotationId)
 
     const index = elements.findIndex(el => el.annotation.id === annotationId)
+    console.log('translate Y', translateY)
 
     for(let i = 0; i < newElements.length ; i++) {
       if (i > index) {
+        if (i===index+1) console.log('prev desired y of next element', newElements[i].desiredY)
         newElements[i].desiredY += translateY
+
       }
     }
 
+    console.log('new elements on Annotation Toggle', newElements)
+
+
     setElements(newElements)
 
+    console.log('shifting annotations below')
+
     annotationsBelow.forEach(ann => {
-      ann.style.transform = `translateY(${translateY}px)`
+      ann.style.top += translateY   //`translateY(${translateY}px)`
       ann.style.transition = 'transform ease-out'
     })
+
+    console.log('shifted annotations below')
 
     // Step 4: Expand the annotation (slightly delayed or same time)
     setTimeout(() => {
@@ -94,38 +109,40 @@ const AlignAnnotationsList: FC = () => {
     },0)
 
 
-
     // Step 5: Update trackTopChange() after animation
     setTimeout(() => {
       console.log('track top change')
       trackTopChange(newElements, index, 'expand') // Recalculate final positions
-    }, 100)
+    }, 1000)
   }
 
   function trackTopChange(currentElements, index, action='none') {
     // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
     // the key is the annotation id and the value is the top value.
 
-    console.log('current Elements', currentElements)
     if (!currentElements) return
     if (currentElements.length === 0) return
 
-    const newElements = [...currentElements]
+    //const newElements = [...currentElements]
 
-    if (newElements.length === 0) return
+    if (currentElements.length === 0) return
+
+
+    console.log('current Elements', currentElements)
+    console.log('expanded element', currentElements[index])
 
     // Set the desiredY according to current target clean positions (clean = actual position in the text)
-    for (let i = 0; i < newElements.length; i++) {
-      newElements[i].desiredY = newElements[i].target.getBoundingClientRect().top - textContainer.getBoundingClientRect().top
+    for (let i = 0; i < currentElements.length; i++) {
+      currentElements[i].desiredY = currentElements[i].target.getBoundingClientRect().top - textContainer.getBoundingClientRect().top
     }
 
-    newElements.sort((a, b) => a.desiredY - b.desiredY)
+    currentElements.sort((a, b) => a.desiredY - b.desiredY)
 
 
-    for (let i = 0; i < newElements.length; i++) {
-      const annotationEl = newElements[i]
-      const lastHeight = i === 0 ? 0 : newElements[i - 1].el.offsetHeight
-      const lastY = i === 0 ? 0 : newElements[i - 1].desiredY
+    for (let i = 0; i < currentElements.length; i++) {
+      const annotationEl = currentElements[i]
+      const lastHeight = i === 0 ? 0 : currentElements[i - 1].el.offsetHeight
+      const lastY = i === 0 ? 0 : currentElements[i - 1].desiredY
 
 
       // The minimum top value needed if we want to place the current annotation right under the last one.
@@ -136,12 +153,21 @@ const AlignAnnotationsList: FC = () => {
       // Next, we decide if that minimum value is even needed or if the desiredY is more below and therefore should be used instead.
       const actualY = i === 0 ? annotationEl.desiredY : Math.max(annotationEl.desiredY, minY)
 
+      if (i === index) {
+        console.log('expanded annot last y', lastY)
+        console.log('expanded annotation actualy y', actualY)
+      }
+
       if (i === index + 1) {
         console.log('last y', lastY)
         console.log('last Height', lastHeight)
         console.log('min y', minY)
         console.log('desired y', annotationEl.desiredY)
         console.log('actual Y', actualY)
+      }
+
+      if (action !== 'none') {
+        console.log('applied track top change')
       }
 
 
@@ -155,7 +181,7 @@ const AlignAnnotationsList: FC = () => {
       annotationEl.desiredY = actualY
     }
 
-    const map = newElements.reduce((acc, cur) => {
+    const map = currentElements.reduce((acc, cur) => {
       acc[cur.annotation.id] = cur.desiredY
       return acc
     }, {})
@@ -209,7 +235,7 @@ const AlignAnnotationsList: FC = () => {
     let timeout
     if (elements.length > 0) {
       resizeObserver = new ResizeObserver(entries => {
-        if (entries[0].contentRect.width > 0) trackTopChange(elements)
+        if (entries[0].contentRect.width > 0) trackTopChange(elements, 7)
       })
       resizeObserver.observe(textContainer)
     }
