@@ -92,6 +92,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
       bodyEl.classList.add('h-fit')
 
       // Force reflow
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       bodyEl.offsetHeight
       expandedBodyHeightRef.current = bodyEl.offsetHeight
       expandedHeightRef.current = annotationEl.offsetHeight
