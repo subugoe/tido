@@ -13,11 +13,11 @@ const DEFAULT_ANNOTATION_HEIGHT = 60
 interface Props {
   data: Annotation
   top?: number,
-  onToggle?: (annotationId: string, element, finalHeight, translateY) => void
+  onExpand?: (annotationId: string, element, finalHeight, translateY) => void
 }
 
 
-const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
+const Annotation: FC<Props> = React.memo(({ data, top, onExpand }) => {
   const { selectedAnnotation, setSelectedAnnotation, annotationsMode } = usePanel()
   const { setHoveredAnnotations, hoveredAnnotations } = useText()
   const ref = useRef(null)
@@ -94,7 +94,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle }) => {
     bodyEl.classList.remove('h-fit', 'overflow-y-hidden')
     bodyEl.classList.add('h-18')
 
-    if (onToggle) onToggle(data.id, bodyEl, bodyElExpandedHeight, translateY)
+    if (onExpand) onExpand(data.id, bodyEl, bodyElExpandedHeight, translateY)
   }
 
   function handleViewLess(e) {

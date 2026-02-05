@@ -64,8 +64,7 @@ const AlignAnnotationsList: FC = () => {
   }
 
 
-
-  function onAnnotationToggle(annotationId, element, finalHeight, translateY) {
+  function onAnnotationExpand(annotationId, element, finalHeight, translateY) {
     // Step 3: Push annotations below FIRST
 
     // we transition the body of Annotation
@@ -85,14 +84,10 @@ const AlignAnnotationsList: FC = () => {
 
     setElements(newElements)
 
-    console.log('shifting annotations below')
-
     annotationsBelow.forEach(ann => {
       ann.style.top += translateY   //`translateY(${translateY}px)`
       ann.style.transition = 'transform ease-out'
     })
-
-    console.log('shifted annotations below')
 
     // Step 4: Expand the annotation (slightly delayed or same time)
     setTimeout(() => {
@@ -224,7 +219,7 @@ const AlignAnnotationsList: FC = () => {
         data={a}
         key={a.id}
         top={yMap[a.id]}
-        onToggle={onAnnotationToggle}
+        onExpand={onAnnotationExpand}
       />)}
     </div>
 }
