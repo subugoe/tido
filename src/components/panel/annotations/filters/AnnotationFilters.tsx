@@ -15,6 +15,7 @@ interface Props {
 const AnnotationFilters: FC<Props> = ({ className }) => {
   const { annotations: annotationsConfig } = useConfig()
   const {
+    annotationFilters,
     usePanelTranslation,
     setAnnotationFilters,
     matchedAnnotationsMap
@@ -26,7 +27,7 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
     // This is for the case where no specific annotation filters were configured.
     // We extract all occurring types from the annotations that match the text.
 
-    if (annotationsConfig.filters) return
+    if (annotationsConfig.filters || annotationFilters !== null) return
 
     const uniqueAnnotationTypes: string[] = [
       ...new Set(Object.keys(matchedAnnotationsMap).map((id) => matchedAnnotationsMap[id].annotation.body['x-content-type']))
