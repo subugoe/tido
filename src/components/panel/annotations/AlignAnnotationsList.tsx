@@ -85,16 +85,7 @@ const AlignAnnotationsList: FC = () => {
     },0)
   }
 
-  function onAnnotationCollapse(annotationId: string, bodyAnnotationEl: HTMLElement, bodyFinalHeight: number, translateY: number) {
-    const newElements = [...elements]
-
-    const index = elements.findIndex(el => el.annotation.id === annotationId)
-
-    for(let i = 0; i < newElements.length ; i++) {
-      if (i > index) {
-        newElements[i].desiredY -= translateY
-      }
-    }
+  function onAnnotationCollapse(bodyAnnotationEl: HTMLElement, bodyFinalHeight: number) {
 
     // Step 4: Expand the annotation (slightly delayed or same time)
     setTimeout(() => {
@@ -102,31 +93,30 @@ const AlignAnnotationsList: FC = () => {
       bodyAnnotationEl.style.transition = 'height 100ms ease-out'
     },0)
 
-
     // Step 5: Update trackTopChange() after animation
     setTimeout(() => {
-      trackTopChange(newElements) // Recalculate final positions
+      trackTopChange() // Recalculate final positions
     }, 300)
   }
 
-  function trackTopChange(currentElements) {
+  function trackTopChange() {
     // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
     // the key is the annotation id and the value is the top value.
 
-    if (currentElements.length === 0) return
+    if (elements.length === 0) return
 
     // Set the desiredY according to current target clean positions (clean = actual position in the text)
-    for (let i = 0; i < currentElements.length; i++) {
-      currentElements[i].desiredY = currentElements[i].target.getBoundingClientRect().top - textContainer.getBoundingClientRect().top
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].desiredY = elements[i].target.getBoundingClientRect().top - textContainer.getBoundingClientRect().top
     }
 
-    currentElements.sort((a, b) => a.desiredY - b.desiredY)
+    elements.sort((a, b) => a.desiredY - b.desiredY)
 
 
-    for (let i = 0; i < currentElements.length; i++) {
-      const annotationEl = currentElements[i]
-      const lastHeight = i === 0 ? 0 : currentElements[i - 1].el.offsetHeight
-      const lastY = i === 0 ? 0 : currentElements[i - 1].desiredY
+    for (let i = 0; i < elements.length; i++) {
+      const annotationEl = elements[i]
+      const lastHeight = i === 0 ? 0 : elements[i - 1].el.offsetHeight
+      const lastY = i === 0 ? 0 : elements[i - 1].desiredY
 
 
       // The minimum top value needed if we want to place the current annotation right under the last one.
@@ -146,7 +136,7 @@ const AlignAnnotationsList: FC = () => {
       annotationEl.desiredY = actualY
     }
 
-    const map = currentElements.reduce((acc, cur) => {
+    const map = elements.reduce((acc, cur) => {
       acc[cur.annotation.id] = cur.desiredY
       return acc
     }, {})
