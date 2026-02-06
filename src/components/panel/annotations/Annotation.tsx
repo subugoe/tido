@@ -136,8 +136,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
         { type === 'Variant' && <VariantContent body={data.body} /> }
         { type !== 'Variant' && <AnnotationContent body={data.body} /> }
       </div>
-      { isLong && !isExpanded && <Button className="w-fit h-2 mt-4 px-0" variant="text" onClick={(e) => handleViewMore(e)} >{t('view_more')}</Button> }
-      { isLong && isExpanded && <Button className="w-fit h-2 mt-4 px-0" variant="text" onClick={(e) => handleViewLess(e)} >{t('view_less')}</Button> }
+      { isLong && !isExpanded && <Button className="mt-4" size='sm' variant="ghostPrimary" onClick={(e) => handleViewMore(e)} >{t('view_more')}</Button> }
+      { isLong && isExpanded && <Button className="mt-4" size='sm' variant="ghostPrimary" onClick={(e) => handleViewLess(e)} >{t('view_less')}</Button> }
     </div>
   </>
 })
