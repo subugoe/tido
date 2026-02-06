@@ -28,11 +28,10 @@ const SidebarToggle = memo((props) => {
 
   return <BaseTooltip message={tooltipMessage}>
     <Button
-      variant="outline"
+      variant={panelState.annotationsOpen ? 'secondary' : 'outline'}
       size="sm"
       {...props}
       onClick={onClick} data-cy="sidebar-toggle"
-      className={panelState.annotationsOpen ? 'bg-accent' : ''}
     >
       { t('annotations') }
     </Button>

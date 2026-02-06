@@ -33,7 +33,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-tooltip: var(--tooltip);
   --color-tooltip-foreground: var(--tooltip-foreground);
-  --color-secondary: var(--secondary);
+  --color-secondary: var(--color-gray-700);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -70,11 +70,11 @@ Elevation hierarchy:
   --tooltip: var(--color-gray-800);
   --tooltip-foreground: var(--color-gray-200);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: var(--color-gray-200);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: var(--color-gray-50);
+  --secondary: var(--color-gray-700);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(98.2% 0 0);
   --muted-foreground: var(--color-gray-600);
-  --accent: var(--color-gray-100);
+  --accent: oklch(95% 0.004 286.32);;
   --accent-foreground: oklch(0.205 0 0);
   --destructive: var(--color-red-500);
   --success: var(--color-green-600);
