@@ -19,6 +19,7 @@ const AlignAnnotationsList: FC = () => {
   const [loading, setLoading] = useState(false)
   const [height, setHeight] = useState(0)
 
+
   const ref = useRef(null)
 
   function isClickedElAnnotation(clickedEl: HTMLElement) {
@@ -56,6 +57,48 @@ const AlignAnnotationsList: FC = () => {
   }, [selectedAnnotation])
 
 
+  function onAnnotationExpand(annotationId: string, bodyAnnotationEl: HTMLElement, bodyFinalHeight: number, translateY: number) {
+    // Idea: we transition the body of Annotation
+    // translateY: the amount that annotation expanded (expandedHeight - collapsedHeight). Necessary to push down the lower annotations
+    const newElements = [...elements]
+    const index = elements.findIndex(el => el.annotation.id === annotationId)
+
+    // recompute the desiredY of the lower annotations
+    for(let i = 0; i < newElements.length ; i++) {
+      if (i > index) {
+        newElements[i].desiredY += translateY
+      }
+    }
+
+    // Step 3: Push down the lower annotations, to have space for the expansion of annotation
+    const map = newElements.reduce((acc, cur) => {
+      acc[cur.annotation.id] = cur.desiredY
+      return acc
+    }, {})
+
+    setYMap(map)
+
+    // Step 4: Expand the annotation (slightly delayed or same time)
+    setTimeout(() => {
+      bodyAnnotationEl.style.height = bodyFinalHeight + 'px'
+      bodyAnnotationEl.style.transition = 'height 300ms ease-out'
+    },0)
+  }
+
+  function onAnnotationCollapse(bodyAnnotationEl: HTMLElement, bodyFinalHeight: number) {
+
+    // Step 4: Collapse the annotation (slightly delayed or same time)
+    setTimeout(() => {
+      bodyAnnotationEl.style.height = bodyFinalHeight + 'px'
+      bodyAnnotationEl.style.transition = 'height 100ms ease-out'
+    },0)
+
+    // Step 5: Update trackTopChange() after animation
+    setTimeout(() => {
+      trackTopChange() // Recalculate final positions
+    }, 300)
+  }
+
   function trackTopChange() {
     // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
     // the key is the annotation id and the value is the top value.
@@ -69,16 +112,19 @@ const AlignAnnotationsList: FC = () => {
 
     elements.sort((a, b) => a.desiredY - b.desiredY)
 
+
     for (let i = 0; i < elements.length; i++) {
       const annotationEl = elements[i]
       const lastHeight = i === 0 ? 0 : elements[i - 1].el.offsetHeight
       const lastY = i === 0 ? 0 : elements[i - 1].desiredY
+
 
       // The minimum top value needed if we want to place the current annotation right under the last one.
       const minY = lastY + lastHeight + ANNOTATION_GAP
 
       // Next, we decide if that minimum value is even needed or if the desiredY is more below and therefore should be used instead.
       const actualY = i === 0 ? annotationEl.desiredY : Math.max(annotationEl.desiredY, minY)
+
 
       if (selectedAnnotation && annotationEl.annotation.id === selectedAnnotation.id && actualY !== annotationEl.desiredY) {
         // If this is a selectedAnnotation, and it has some other annotations above
@@ -167,6 +213,8 @@ const AlignAnnotationsList: FC = () => {
         data={a}
         key={a.id}
         top={yMap[a.id]}
+        onExpand={onAnnotationExpand}
+        onCollapse={onAnnotationCollapse}
       />)}
     </div>
 }
