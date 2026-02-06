@@ -64,7 +64,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
-  const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState({})
+  const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState(null)
   const [annotationFilters, setAnnotationFilters] = useState<AnnotationFiltersConfig>(null)
   const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState(null)
   const [selectedAnnotation, setSelectedAnnotation] = useState(null)
@@ -107,7 +107,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     setAnnotationsLoading(true)
     setError(null)
     setAnnotationsError(null)
-    setMatchedAnnotationsMap({})
+    setMatchedAnnotationsMap(null)
+    setAnnotationFilters(null)
+    setSelectedAnnotationTypes(null)
     try {
       let item: Item, manifest: Manifest, collection: Collection
 
@@ -260,6 +262,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   }, [panelState.config, panelId])
 
   useEffect(() => {
+    if (!selectedAnnotationTypes) return
+
     const resultMap = { ...matchedAnnotationsMap }
     Object.keys(resultMap).forEach(id => {
       const { annotation } = resultMap[id]
@@ -283,6 +287,23 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
     setMatchedAnnotationsMap(resultMap)
   }, [selectedAnnotationTypes])
+
+  useEffect(() => {
+    // This is for the case where no specific annotation filters were configured.
+    // We extract all occurring types from the annotations that match the text.
+
+    if (!matchedAnnotationsMap || Object.keys(matchedAnnotationsMap).length === 0 || annotationsConfig.filters || annotationFilters !== null) return
+
+    const uniqueAnnotationTypes: string[] = [
+      ...new Set(Object.keys(matchedAnnotationsMap).map((id) => matchedAnnotationsMap[id].annotation.body['x-content-type']))
+    ]
+
+    setAnnotationFilters({
+      rootSelectionRule: 'multiple',
+      items: uniqueAnnotationTypes.map(type => ({ types: [type], selected: true }))
+    })
+
+  }, [matchedAnnotationsMap])
 
   function updatePanel(data: Partial<PanelState>) {
     usePanelStore.getState().updatePanel(panelId, data)
