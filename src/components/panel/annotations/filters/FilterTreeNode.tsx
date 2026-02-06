@@ -8,16 +8,21 @@ interface Props {
   node: FilterNode
   path: number[]
   onToggle: (path: number[]) => void
-  depth?: number
+  indented?: boolean
 }
 
-const FilterTreeNode: FC<Props> = ({ node, path, onToggle, depth = 0 }) => {
+function hasChildren(node) {
+  return node.items && node.items.length > 0
+}
+
+const FilterTreeNode: FC<Props> = ({ node, path, onToggle, indented = false }) => {
   const { usePanelTranslation } = usePanel()
   const { annotations: annotationsConfig } = useConfig()
   const { t } = usePanelTranslation()
 
   const [isExpanded, setIsExpanded] = useState(false)
-  const hasChildren = node.items && node.items.length > 0
+  const _hasChildren = hasChildren(node)
+  const anyGrandChildren = node.items?.some((child) => hasChildren(child))
 
   const label = node.label ?? node.types?.[0] ?? t('unnamed_filter')
 
@@ -34,9 +39,9 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, depth = 0 }) => {
   }
 
   return (
-    <div className={depth > 0 ? 'ml-4' : ''}>
+    <div className="ml-6">
       <div className="flex items-center gap-2 py-1.5 rounded px-2 group transition-colors hover:bg-muted cursor-pointer">
-        {hasChildren && (
+        {_hasChildren && (
           <button
             onClick={toggleExpand}
             className="p-1 hover:bg-accent rounded-lg cursor-pointer"
@@ -45,7 +50,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, depth = 0 }) => {
             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
         )}
-        {!hasChildren && <div className="w-6" />}
+        {indented && <div className="w-6" />}
         <label className="flex items-center gap-2 flex-1 cursor-pointer">
           <input
             type="checkbox"
@@ -60,7 +65,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, depth = 0 }) => {
             </span>}
         </label>
       </div>
-      {hasChildren && isExpanded && (
+      {_hasChildren && isExpanded && (
         <div className="ml-4.5 mb-2 border-l-2 border-border">
           {node.items!.map((child, index) => (
             <FilterTreeNode
@@ -68,7 +73,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, depth = 0 }) => {
               node={child}
               path={[...path, index]}
               onToggle={onToggle}
-              depth={depth + 1}
+              indented={anyGrandChildren && !hasChildren(child)} // only intend if some sibling has children but this node does not
             />
           ))}
         </div>
