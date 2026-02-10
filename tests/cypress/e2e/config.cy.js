@@ -382,24 +382,24 @@ describe('Config', () => {
     'Should apply custom translation "genau" for custom translation key "accurate" and collection key "reproduction"', () => {
       cy.get('[data-cy="content-type"]').should('have.text', 'genau')
   });
-  runConfigTest('panelModes[]=text&panelModes[]=split',
-    'Should have panel mode "text" preselected, with "split" as the only other selectable panel mode', () => {
-      Panel.getPanelModeOption('text')
-        .should('have.attr', 'data-selected', 'true')
-      Panel.getPanelModeOption('split', true)
-        .should('have.attr', 'data-selected', 'false')
-      Panel.getPanelModeOption('swap', true)
-        .should('not.exist')
-  });
-  runConfigTest('panelModes[]=image',
-    'Should not allow panel mode selection when configuring a singular panel mode', () => {
-      Panel.getPanelModeSelect().should('not.exist')
-  });
-  runConfigTest('defaultPanelMode=split&panels[0].mode=text',
-  'Should apply panel specific panel mode and ignore default panel mode for this panel', () => {
-    Panel.getPanelModeOption('text')
-      .should('have.attr', 'data-selected', 'true')
-    Panel.getPanelModeOption('split', true)
-      .should('have.attr', 'data-selected', 'false')
-  });
+  // runConfigTest('panelModes[]=text&panelModes[]=split',
+  //   'Should have panel mode "text" preselected, with "split" as the only other selectable panel mode', () => {
+  //     Panel.getPanelModeOption('text')
+  //       .should('have.attr', 'data-selected', 'true')
+  //     Panel.getPanelModeOption('split', true)
+  //       .should('have.attr', 'data-selected', 'false')
+  //     Panel.getPanelModeOption('swap', true)
+  //       .should('not.exist')
+  // });
+  // runConfigTest('panelModes[]=image',
+  //   'Should not allow panel mode selection when configuring a singular panel mode', () => {
+  //     Panel.getPanelModeSelect().should('not.exist')
+  // });
+  // runConfigTest('defaultPanelMode=split&panels[0].mode=text',
+  // 'Should apply panel specific panel mode and ignore default panel mode for this panel', () => {
+  //   Panel.getPanelModeOption('text')
+  //     .should('have.attr', 'data-selected', 'true')
+  //   Panel.getPanelModeOption('split', true)
+  //     .should('have.attr', 'data-selected', 'false')
+  // });
 });

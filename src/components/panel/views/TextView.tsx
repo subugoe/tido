@@ -3,14 +3,20 @@ import TextViewError from '@/components/panel/views/TextViewError.tsx'
 import { FC } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import TextViewContent from '@/components/panel/views/TextViewContent.tsx'
+import { TextViewProvider } from '@/contexts/TextViewContext.tsx'
 
-
-const TextView: FC = () => {
+interface Props {
+  contentTypes: string[]
+  label?: string
+}
+const TextView: FC<Props> = ({ contentTypes, label }) => {
   const { panelState } = usePanel()
 
   return <div className={`bg-background relative flex h-full w-full overflow-hidden`}>
     <ErrorBoundary FallbackComponent={TextViewError} resetKeys={[panelState.item?.id]}>
-      <TextViewContent />
+      <TextViewProvider contentTypes={contentTypes} label={label}>
+        <TextViewContent />
+      </TextViewProvider>
     </ErrorBoundary>
   </div>
 }

@@ -3,7 +3,6 @@ import { TidoConfig } from '@/types'
 const defaultConfig: TidoConfig = {
   allowNewCollections: true,
   container: '#app',
-  defaultPanelMode: 'swap',
   lang: 'en',
   panels: [],
   rootCollections: [],
@@ -16,7 +15,15 @@ const defaultConfig: TidoConfig = {
   },
   title: '',
   translations: {},
-  panelModes: ['swap', 'split', 'text', 'image'],
+  panelViews: [
+    {
+      label: 'Image',
+      view: 'image'
+    }, {
+      label: 'Text',
+      view: 'text'
+    }
+  ],
   annotations: {
     defaultMode: 'aligned'
   }

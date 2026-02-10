@@ -1,18 +1,17 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/Annotation.tsx'
-import { getFilteredAnnotations } from '@/utils/annotations.ts'
+import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 
 const ANNOTATION_GAP = 5
 
 const AlignAnnotationsList: FC = () => {
-  const { panelId, matchedAnnotationsMap, selectedAnnotation, setSelectedAnnotation, getSidebarScroller } = usePanel()
+  const { panelId, selectedAnnotation, setSelectedAnnotation, getSidebarScroller } = usePanel()
+  const { filteredAnnotations } = useAnnotations()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
   // position of each annotation.
   const [elements, setElements] = useState([])
-
-  const filteredAnnotations = getFilteredAnnotations(matchedAnnotationsMap)
 
   const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-wrapper]`) as HTMLElement)
   const [yMap, setYMap] = useState({})
@@ -182,7 +181,7 @@ const AlignAnnotationsList: FC = () => {
       setLoading(true)
       setElements([])
     }
-  }, [matchedAnnotationsMap])
+  }, [filteredAnnotations])
 
   useEffect(() => {
     let resizeObserver

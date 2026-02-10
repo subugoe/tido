@@ -2,9 +2,11 @@ import { FC, useEffect, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { TriangleAlert } from 'lucide-react'
+import { useTextView } from '@/contexts/TextViewContext.tsx'
 
 const TextViewWarning: FC = () => {
-  const { textWarning, setTextWarning, usePanelTranslation } = usePanel()
+  const { usePanelTranslation } = usePanel()
+  const { textWarning, setTextWarning } = useTextView()
   const [visible, setVisible] = useState(false)
 
   const { t } = usePanelTranslation()

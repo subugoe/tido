@@ -7,13 +7,11 @@ import AnnotationFiltersContent from '@/components/panel/annotations/filters/Ann
 import { cn } from '@/lib/utils.ts'
 import { SIDEBAR_DEFAULT_WIDTH } from '@/utils/panel.ts'
 
-
 interface Props {
   className?: string
 }
 const AnnotationFilters: FC<Props> = ({ className }) => {
   const { usePanelTranslation } = usePanel()
-
   const { t } = usePanelTranslation()
 
   return <div className={cn('flex flex-col items-center', className)}>
