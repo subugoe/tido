@@ -1,0 +1,162 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book1/page2/rev1/annotationPage.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/book1/page2/rev1/annotationCollection.json",
+    "label": "Annotations for Pride and Prejudice, Chapter 2",
+    "total": 7
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Charles Bingley - A wealthy, amiable young gentleman who rents Netherfield Park. He becomes attracted to Jane Bennet.",
+        "format": "text/plain",
+        "x-content-type": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page2/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#bingley"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Lizzy - Affectionate nickname for Elizabeth Bennet, the novel's protagonist.",
+        "format": "text/plain",
+        "x-content-type": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page2/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#lizzy"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Public assemblies were social gatherings where dancing and socializing took place, important venues for courtship in Regency England.",
+        "format": "text/plain",
+        "x-content-type": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page2/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#assemblies"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Manuscript variant: \"amongst the earliest\" found in draft.",
+        "format": "text/plain",
+        "x-content-type": "Textual Variant"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page2/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-earliest"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-diplomatic-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Original shows \"trimming an hat\" with period article usage.",
+        "format": "text/plain",
+        "x-content-type": "Grammatical Feature"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page2/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-trimming"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Clarified from archaic construction for modern readers.",
+        "format": "text/plain",
+        "x-content-type": "Clarification"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page2/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-last"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-normalized-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Period idiom meaning \"have no means of knowing\".",
+        "format": "text/plain",
+        "x-content-type": "Idiomatic Expression"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page2/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-know"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

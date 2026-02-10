@@ -1,0 +1,99 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book2/page2/rev1/annotationPage.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/book2/page2/rev1/annotationCollection.json",
+    "label": "Annotations for Moby-Dick, Chapter 2",
+    "total": 4
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "New Bedford, Massachusetts was a major whaling port in the 19th century.",
+        "format": "text/plain",
+        "x-content-type": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page2/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#new-bedford"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Nantucket Island was the whaling capital of the world during this period.",
+        "format": "text/plain",
+        "x-content-type": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page2/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#nantucket"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Manuscript shows \"one shirt or two\" before author's revision.",
+        "format": "text/plain",
+        "x-content-type": "Authorial Revision"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page2/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-shirt"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Archaic form of \"Manhattan\" - Melville preferred historical spellings.",
+        "format": "text/plain",
+        "x-content-type": "Archaic Spelling"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page2/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-manhatto"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}
