@@ -4,11 +4,28 @@
   },
   "panels": [
     {
-      "collection": "https://eupt.uni-goettingen.de/api/eupt/collection.json",
+      "collection": "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collection.json",
+      "manifest": "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/KTU__1.14/manifest.json",
       "contentType": "philology"
     }
   ],
   "rootCollections": [
-    "https://eupt.uni-goettingen.de/api/eupt/collection.json"
+    "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collection.json"
+  ],
+  "panelViews": [
+    {
+      "label": "Autographie",
+      "view": "image"
+    },
+    {
+      "label": "Transliteration",
+      "view": "text",
+      "contentTypes": ["facsimile"]
+    },
+    {
+      "label": "Vokalisation & Übersetzung",
+      "view": "text",
+      "contentTypes": ["philology"]
+    }
   ]
 }

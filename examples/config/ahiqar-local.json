@@ -53,14 +53,6 @@
               "types": ["dfm_614"]
             }
           ]
-        },
-        {
-          "types": ["Dictionary"],
-          "label": "Dictionary"
-        },
-        {
-          "types": ["Line"],
-          "label": "Line"
         }
       ]
     }

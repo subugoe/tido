@@ -10,7 +10,16 @@
   "rootCollections": [
     "https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/collection.json"
   ],
-  "panelModes": ["text", "split", "swap"],
+  "panelModes": [
+    {
+      "label": "Image",
+      "view": "image"
+    },
+    {
+      "label": "Transcription",
+      "view": "image"
+    }
+  ],
   "defaultPanelMode": "split",
   "defaultAnnotationsMode": "list"
 }
