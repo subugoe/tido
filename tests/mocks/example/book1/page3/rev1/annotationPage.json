@@ -1,0 +1,190 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book1/page3/rev1/annotationPage.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/book1/page3/rev1/annotationCollection.json",
+    "label": "Annotations for Pride and Prejudice, Chapter 3",
+    "total": 8
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/book1/page3/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Mr. Fitzwilliam Darcy - A wealthy, proud gentleman who initially appears aloof. He is the male protagonist and Elizabeth's eventual love interest.",
+        "format": "text/plain",
+        "x-content-type": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page3/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#darcy"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page3/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Ten thousand pounds per year was an enormous income in Regency England, equivalent to millions today. This establishes Darcy as extremely wealthy.",
+        "format": "text/plain",
+        "x-content-type": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page3/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#income"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page3/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The assembly room was a public venue for dances and social gatherings, crucial for social interaction in provincial towns.",
+        "format": "text/plain",
+        "x-content-type": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page3/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#assembly-room"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page3/rev1/annotation-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "This passage establishes the contrast between Bingley's sociable nature and Darcy's proud demeanor, setting up the central dynamic of the novel.",
+        "format": "text/plain",
+        "x-content-type": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page3/rev1/content.html",
+          "selector": {
+            "type": "RangeSelector",
+            "startSelector": {
+              "type": "CssSelector",
+              "value": "#para2"
+            },
+            "endSelector": {
+              "type": "CssSelector",
+              "value": "#para4"
+            }
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page3/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Manuscript shows \"satisfactorie\" with Elizabethan spelling.",
+        "format": "text/plain",
+        "x-content-type": "Orthographic Feature"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page3/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-description"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page3/rev1/annotation-diplomatic-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Draft version had \"tall, fine person\" before author reordered.",
+        "format": "text/plain",
+        "x-content-type": "Authorial Revision"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page3/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-person"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page3/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Editorial note: Assembly rooms were public venues for social dancing.",
+        "format": "text/plain",
+        "x-content-type": "Cultural Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page3/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-room"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page3/rev1/annotation-normalized-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Period term meaning \"open and friendly in manner\".",
+        "format": "text/plain",
+        "x-content-type": "Semantic Clarification"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page3/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-unreserved"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book2/page1/rev1/annotationPage.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/book2/page1/rev1/annotationCollection.json",
+    "label": "Annotations for Moby-Dick, Chapter 1",
+    "total": 7
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "One of the most iconic opening lines in American literature. The narrator's name is biblical, suggesting themes of wandering and prophecy.",
+        "format": "text/plain",
+        "x-content-type": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ishmael"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Spleen refers to melancholy or depression in 19th-century medical terminology. Going to sea is presented as a cure for mental distress.",
+        "format": "text/plain",
+        "x-content-type": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#spleen"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The ocean as a universal symbol of mystery, danger, and sublime beauty - a central theme throughout the novel.",
+        "format": "text/plain",
+        "x-content-type": "Theme"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ocean"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Melville's manuscript shows heavy revision of this temporal phrase.",
+        "format": "text/plain",
+        "x-content-type": "Authorial Revision"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page1/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-precisely"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-diplomatic-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Original draft: \"dispelling the spleen\" before revision.",
+        "format": "text/plain",
+        "x-content-type": "Textual Variant"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page1/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-driving"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Poetic phrase for oceanic regions, typical of Melville's style.",
+        "format": "text/plain",
+        "x-content-type": "Stylistic Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page1/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-watery"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-normalized-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Famous metaphor for depression, influential in later literature.",
+        "format": "text/plain",
+        "x-content-type": "Literary Significance"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page1/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-november"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

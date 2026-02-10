@@ -1,0 +1,49 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/collection.jsonld",
+  "textapi": "1.4.0",
+  "id": "http://localhost:8181/example/collection.json",
+  "title": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/title.jsonld",
+      "title": "Classic Literature Collection",
+      "type": "main"
+    }
+  ],
+  "collector": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/actor.jsonld",
+      "role": ["collector"],
+      "name": "Digital Library Project",
+      "id": "collector-001"
+    }
+  ],
+  "description": "A collection of classic literature works with scholarly annotations",
+  "sequence": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/example/book1/manifest.json",
+      "type": "manifest",
+      "label": "Pride and Prejudice"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/example/book2/manifest.json",
+      "type": "manifest",
+      "label": "Moby-Dick"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/example/book3/manifest.json",
+      "type": "manifest",
+      "label": "The Great Gatsby"
+    }
+  ],
+  "total": 3,
+  "annotationCollection": "http://localhost:8181/example/annotationCollection.json",
+  "license": [
+    {
+      "id": "CC0-1.0",
+      "notes": "These works are in the public domain"
+    }
+  ]
+}

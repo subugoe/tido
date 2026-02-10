@@ -1,0 +1,23 @@
+{
+  "panels": [
+    {
+      "collection": "http://localhost:8181/example/collection.json",
+      "manifest": "http://localhost:8181/example/book1/manifest.json"
+    }
+  ],
+  "rootCollections": [
+    "http://localhost:8181/example/collection.json"
+  ],
+  "panelViews": [
+    {
+      "label": "Diplomatic",
+      "view": "text",
+      "contentTypes": ["diplomatic"]
+    },
+    {
+      "label": "Text",
+      "view": "text",
+      "contentTypes": ["normalized"]
+    }
+  ]
+}

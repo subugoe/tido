@@ -1,0 +1,246 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book1/page1/rev1/annotationPage.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/book1/page1/rev1/annotationCollection.json",
+    "label": "Annotations for Pride and Prejudice, Chapter 1",
+    "total": 11
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "This is one of the most famous opening lines in English literature. It sets the theme of marriage and social class that pervades the novel.",
+        "format": "text/plain",
+        "x-content-type": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#truth"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Refers to wealthy bachelors who were prime marriage candidates in Regency England.",
+        "format": "text/plain",
+        "x-content-type": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#man"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Mr. Bennet - The patriarch of the Bennet family, known for his wit and sarcasm.",
+        "format": "text/plain",
+        "x-content-type": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#bennet"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Netherfield Park - The estate rented by Mr. Bingley, which becomes central to the plot.",
+        "format": "text/plain",
+        "x-content-type": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#netherfield"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-5",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Mrs. Long - A neighbor who serves as a source of gossip and information.",
+        "format": "text/plain",
+        "x-content-type": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#mrs-long"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "This phrase appears in early manuscripts with variant punctuation.",
+        "format": "text/plain",
+        "x-content-type": "Textual Variant"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-however"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-diplomatic-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Original manuscript shows \"rightfull propertie\" with period spelling.",
+        "format": "text/plain",
+        "x-content-type": "Orthographic Feature"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-property"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-diplomatic-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Manuscript shows this phrase with interlinear revision.",
+        "format": "text/plain",
+        "x-content-type": "Authorial Revision"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-lady"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Modern usage would be \"who possesses\" but period phrasing preserved.",
+        "format": "text/plain",
+        "x-content-type": "Stylistic Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-possession"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-normalized-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Editorial note: Refers to the local gentry within visiting distance.",
+        "format": "text/plain",
+        "x-content-type": "Contextual Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-families"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-normalized-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Standardized from original \"answer'd he had not\".",
+        "format": "text/plain",
+        "x-content-type": "Modernization"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-replied"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}
