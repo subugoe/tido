@@ -1,0 +1,36 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/item.jsonld",
+  "textapi": "1.4.0",
+  "id": "http://localhost:8181/example/book1/page1/rev1/item.json",
+  "title": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/title.jsonld",
+      "title": "Chapter 1",
+      "type": "main"
+    }
+  ],
+  "type": "page",
+  "n": "1",
+  "lang": [
+    "eng"
+  ],
+  "content": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "url": "http://localhost:8181/example/book1/page1/rev1/content.html",
+      "type": "text/html;type=transcription"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "url": "http://localhost:8181/example/book1/page1/rev1/content-diplomatic.html",
+      "type": "text/html;type=diplomatic"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "url": "http://localhost:8181/example/book1/page1/rev1/content-normalized.html",
+      "type": "text/html;type=normalized"
+    }
+  ],
+  "description": "Opening chapter introducing the Bennet family",
+  "annotationCollection": "http://localhost:8181/example/book1/page1/rev1/annotationCollection.json"
+}
