@@ -130,6 +130,7 @@
     "no_annotation_filters": "Keine Filter für Annotationen vorhanden.",
     "unnamed_filter": "Unbenannter Filter",
     "view_more": "Mehr anzeigen",
-    "view_less": "Weniger anzeigen"
+    "view_less": "Weniger anzeigen",
+    "view": "Ansicht"
   }
 }

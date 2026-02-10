@@ -32,7 +32,7 @@ const PrevItemButton: FC = () => {
   }
 
   async function navigate() {
-    const { manifest, item, collectionId, activeContentType } = panelState || {}
+    const { manifest, item, collectionId } = panelState || {}
     if (!collectionId || !manifest || !item) return
 
     const itemIndex = manifest?.sequence.findIndex(({ id }) => id === item?.id) ?? -1
@@ -42,7 +42,6 @@ const PrevItemButton: FC = () => {
     const sequence = useDataStore.getState().collections[collectionId].sequence
     let newConfig: PanelConfig = {
       collection: collectionId,
-      contentType: activeContentType
     }
     if (prevIndex < 0) {
       // If the index is lower than 0, we will load the prev manifest's last item

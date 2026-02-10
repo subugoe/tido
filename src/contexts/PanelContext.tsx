@@ -4,10 +4,10 @@ import { useDataStore } from '@/store/DataStore.tsx'
 
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { apiRequest } from '@/utils/api.ts'
-import { getContentTypes, isNewManifest, validateImage } from '@/utils/panel.ts'
+import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
-import { AnnotationFiltersConfig, PanelConfig, PanelMode } from '@/types'
+import { AnnotationFiltersConfig, PanelConfig } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
@@ -28,8 +28,6 @@ interface PanelContextType {
   initResizer: (el: HTMLElement) => void
   hoveredAnnotation: string | null
   setHoveredAnnotation: (value: string | null) => void,
-  matchedAnnotationsMap: MatchedAnnotationsMap,
-  setMatchedAnnotationsMap: (value: MatchedAnnotationsMap) => void,
   annotationFilters: AnnotationFiltersConfig,
   setAnnotationFilters: (value: AnnotationFiltersConfig) => void,
   selectedAnnotationTypes: AnnotationTypesDict | null,
@@ -39,8 +37,6 @@ interface PanelContextType {
   showTextOptions: boolean,
   setShowTextOptions: (value: boolean) => void,
   usePanelTranslation: () =>  UseTranslationResponse<'common', undefined>
-  textWarning: string
-  setTextWarning: (warning: string) => void,
   witnesses: WitnessWithColor[]
   selectedWitnesses: WitnessWithColor[]
   setSelectedWitnesses: (witnesses: WitnessWithColor[]) => void
@@ -51,6 +47,8 @@ interface PanelContextType {
   error: CustomError | null,
   annotationsError: CustomError | null,
   annotationsLoading: boolean
+  matchedAnnotationsMaps: {[contentUrl: string]: MatchedAnnotationsMap}
+  updateMatchedAnnotationsMap: (contentUrl: string, map: MatchedAnnotationsMap) => void
 }
 
 interface PanelProviderProps {
@@ -59,17 +57,16 @@ interface PanelProviderProps {
 }
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
-  const { defaultAnnotationsMode, annotations: annotationsConfig } = useConfig()
+  const { defaultAnnotationsMode, annotations: annotationsConfig, panelViews: panelViewsConfig } = useConfig()
 
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
-  const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState(null)
+  const [matchedAnnotationsMaps, setMatchedAnnotationsMaps] = useState({})
   const [annotationFilters, setAnnotationFilters] = useState<AnnotationFiltersConfig>(null)
   const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState(null)
   const [selectedAnnotation, setSelectedAnnotation] = useState(null)
   const [showTextOptions, setShowTextOptions] = useState(false)
-  const [textWarning, setTextWarning] = useState('')
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
   const [annotationsMode, setAnnotationsMode] = useState<AnnotationsMode>(defaultAnnotationsMode)
@@ -83,11 +80,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const getCollection = useDataStore(state => state.initCollection)
 
   const panelState = usePanelStore(state => state.getPanel(panelId))
-
-  function getPanelMode(existsImage: boolean, panelMode: PanelMode) {
-    if (existsImage) return panelState.mode
-    return panelMode
-  }
 
   function usePanelTranslation(): UseTranslationResponse<'common', never> {
     const ns = panelState.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
@@ -107,7 +99,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     setAnnotationsLoading(true)
     setError(null)
     setAnnotationsError(null)
-    setMatchedAnnotationsMap(null)
+    setMatchedAnnotationsMaps({})
     setAnnotationFilters(null)
     setSelectedAnnotationTypes(null)
     try {
@@ -197,18 +189,15 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         await getSupport(support)
       }
 
-      const imageExists = validateImage(item)
-
       // 4. We update the panel state with the data.
       updatePanel({
-        collectionId: collection.id,
+        collectionId: collection?.id ?? null,
         manifest,
         item,
-        mode: getPanelMode(imageExists, 'text'),
         contentTypes,
         activeContentType: config.contentType ?? contentTypes[0],
         activeTargetIndex: -1,
-        imageExists
+        panelViews: panelViewsConfig.map(v => ({ ...v, visible: v.visible ?? true }))
       })
 
       if (item.annotationCollection) {
@@ -252,58 +241,67 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     }
   }
 
-  useEffect(() => {
-    const showText = panelState.mode !== 'image'
-    setShowTextOptions(showText && panelState.contentTypes.length > 1)
-  }, [panelState.mode, panelState.contentTypes])
+  function updateMatchedAnnotationsMap(contentUrl: string, map: MatchedAnnotationsMap) {
+    setMatchedAnnotationsMaps((prev) => ({
+      ...prev,
+      [contentUrl]: map
+    }))
+  }
 
   useEffect(() => {
     init(panelState.config)
   }, [panelState.config, panelId])
 
   useEffect(() => {
-    if (!selectedAnnotationTypes) return
+    const resultMap = {}
 
-    const resultMap = { ...matchedAnnotationsMap }
-    Object.keys(resultMap).forEach(id => {
-      const { annotation } = resultMap[id]
-      const annotationType = annotation.body['x-content-type']
-      const hasSelectedType = Object.keys(selectedAnnotationTypes).includes(annotationType)
+    Object
+      .keys(matchedAnnotationsMaps)
+      .forEach(contentUrl => {
+        const map = matchedAnnotationsMaps[contentUrl]
+        resultMap[contentUrl] = { ...map }
 
-      if (!hasSelectedType) {
-        resultMap[id].filtered = false
-        return
-      }
+        Object.keys(map).forEach(id => {
+          const { annotation } = map[id]
+          const annotationType = annotation.body['x-content-type']
+          const hasSelectedType = Object.keys(selectedAnnotationTypes).includes(annotationType)
 
-      if (annotationType === 'Variant') {
-        const selectedSet = new Set(selectedAnnotationTypes[annotationType])
-        const hasSelectedWitness = annotation.body.witnesses?.some(value => selectedSet.has(value)) ?? false
-        resultMap[id].filtered = hasSelectedWitness
-        return
-      }
+          if (!hasSelectedType) {
+            resultMap[contentUrl][id].filtered = false
+            return
+          }
 
-      resultMap[id].filtered = true
-    })
+          if (annotationType === 'Variant') {
+            const selectedSet = new Set(selectedAnnotationTypes[annotationType])
+            const hasSelectedWitness = annotation.body.witnesses?.some(value => selectedSet.has(value)) ?? false
+            resultMap[contentUrl][id].filtered = hasSelectedWitness
+            return
+          }
 
-    setMatchedAnnotationsMap(resultMap)
+          resultMap[contentUrl][id].filtered = true
+        })
+      })
+
+    setMatchedAnnotationsMaps(resultMap)
   }, [selectedAnnotationTypes])
 
   useEffect(() => {
     // This is for the case where no specific annotation filters were configured.
     // We extract all occurring types from the annotations that match the text.
+    const types = Object
+      .values(matchedAnnotationsMaps)
+      .flatMap(map => Object.values(map))
+      .map(item => item.annotation.body['x-content-type'])
 
-    if (!matchedAnnotationsMap || Object.keys(matchedAnnotationsMap).length === 0 || annotationsConfig.filters || annotationFilters !== null) return
-
-    const uniqueAnnotationTypes: string[] = [
-      ...new Set(Object.keys(matchedAnnotationsMap).map((id) => matchedAnnotationsMap[id].annotation.body['x-content-type']))
-    ]
+    if (annotationsConfig.filters || annotationFilters !== null || types.length === 0) return
+    const uniqueAnnotationTypes: string[] = [...new Set(types)]
 
     setAnnotationFilters({
       rootSelectionRule: 'multiple',
       items: uniqueAnnotationTypes.map(type => ({ types: [type], selected: true }))
     })
 
-  }, [matchedAnnotationsMap])
+  }, [matchedAnnotationsMaps])
 
   function updatePanel(data: Partial<PanelState>) {
     usePanelStore.getState().updatePanel(panelId, data)
@@ -335,8 +333,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       initResizer,
       hoveredAnnotation,
       setHoveredAnnotation,
-      matchedAnnotationsMap,
-      setMatchedAnnotationsMap,
       annotationFilters,
       setAnnotationFilters,
       selectedAnnotationTypes,
@@ -346,8 +342,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       showTextOptions,
       setShowTextOptions,
       usePanelTranslation,
-      textWarning,
-      setTextWarning,
       witnesses,
       selectedWitnesses,
       setSelectedWitnesses,
@@ -357,7 +351,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       getSidebarScroller,
       error,
       annotationsError,
-      annotationsLoading
+      annotationsLoading,
+      matchedAnnotationsMaps,
+      updateMatchedAnnotationsMap
     }}>
       {children}
     </PanelContext.Provider>

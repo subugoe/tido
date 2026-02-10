@@ -25,7 +25,7 @@ const PrevManifestButton: FC = () => {
   }
 
   async function navigate() {
-    const { manifest, item, collectionId, activeContentType } = panelState || {}
+    const { manifest, item, collectionId } = panelState || {}
     const collection = useDataStore.getState().collections[collectionId]
 
     if (!collectionId || !manifest || !item) return
@@ -40,7 +40,6 @@ const PrevManifestButton: FC = () => {
 
     init({
       collection: collectionId,
-      contentType: activeContentType,
       manifest: collectionSequence[prevIndex].id
     })
   }
