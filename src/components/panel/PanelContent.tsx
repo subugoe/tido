@@ -9,7 +9,6 @@ import TextView from '@/components/panel/views/TextView.tsx'
 import 'allotment/dist/style.css'
 import { Allotment } from 'allotment'
 import SidebarView from '@/components/panel/views/SidebarView.tsx'
-import SwapView from '@/components/panel/views/SwapView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
 import { DEFAULT_PANEL_WIDTH, SIDEBAR_DEFAULT_WIDTH } from '@/utils/panel.ts'
 
@@ -24,16 +23,14 @@ const PanelContent: FC = React.memo(() => {
   const [isOpening, setIsOpening] = useState(false)
 
   useEffect(() => {
-    if (panelState.mode === 'swap') {
-      setContentPanes([<SwapView />])
-    } else if (panelState.mode === 'split') {
-      setContentPanes([<ImageView />, <TextView />])
-    } else if (panelState.mode === 'text') {
-      setContentPanes([<TextView />])
-    } else if (panelState.mode === 'image') {
-      setContentPanes([<ImageView />])
-    }
-  }, [panelState.mode])
+    const panes = panelState.panelViews.filter(v => v.visible).map(v => {
+      if (v.view === 'image') return <ImageView />
+      else if (v.view === 'text') return <TextView label={v.label} contentTypes={v.contentTypes} />
+    })
+
+    setContentPanes(panes)
+
+  }, [panelState.panelViews])
 
   useEffect(() => {
     if (!resizer) return

@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { PanelConfig } from '@/types'
-import { useUIStore } from '@/store/UIStore.tsx'
 
 interface PanelStoreTypes {
   panels: PanelState[] // or panels: each panel has one opened item
@@ -22,11 +21,10 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     manifest: null,
     contentTypes: [],
     activeContentType: null,
-    mode: config.mode ?? useUIStore.getState().defaultPanelMode,
     activeTargetIndex: -1,
-    imageExists: false,
     annotationsOpen: false,
-    annotations: null
+    annotations: null,
+    panelViews: []
   }
 }
 

@@ -1,7 +1,6 @@
-import { FC, useRef } from 'react'
+import { FC } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext'
-import { Skeleton } from '@/components/ui/skeleton.tsx'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,28 +9,31 @@ import {
 } from '@/components/ui/dropdown-menu.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { ChevronDown } from 'lucide-react'
+import { useTextView } from '@/contexts/TextViewContext.tsx'
 
 const ContentTypesToggle: FC = () => {
-  const { panelState, updatePanel, usePanelTranslation } = usePanel()
+  const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
-  const { contentTypes, activeContentType } = panelState || {}
-  const triggerRef = useRef(null)
+  const { label, contentTypes, activeContentType, setActiveContentType } = useTextView()
   function handleTextTabClick(value: string) {
-    setTimeout(() => updatePanel({ activeContentType: value }), 100)
+    setTimeout(() => setActiveContentType(value), 100)
   }
 
-  if (!panelState || !contentTypes?.length) return <Skeleton className="w-[150px] h-6" />
+  function renderButton(isTrigger: boolean) {
+    return <Button variant="ghost" size="sm" className={!isTrigger ? 'hover:bg-muted' : ''} data-cy="content-type">
+      {t(label)}: { t(activeContentType) } {isTrigger && <ChevronDown />}
+    </Button>
+  }
 
   return (
     <>
-      { contentTypes && contentTypes.length > 0 && <DropdownMenu>
+      { contentTypes.length === 1 && renderButton(false)}
+      { contentTypes.length > 1 && <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button ref={triggerRef} variant="ghost" size="sm" data-cy="content-type">
-            { t(activeContentType) }<ChevronDown />
-          </Button>
+          { renderButton(true) }
         </DropdownMenuTrigger>
         <DropdownMenuContent data-cy="content-types-dropdown">
-          <DropdownMenuLabel>{ t('text_type') } </DropdownMenuLabel>
+          <DropdownMenuLabel>{ t(label) } </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup value={activeContentType} onValueChange={handleTextTabClick}>
             {contentTypes.map((type, i) => <DropdownMenuRadioItem value={type} key={type+i}>{ t(type) }</DropdownMenuRadioItem>) }

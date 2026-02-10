@@ -26,7 +26,7 @@ const NextManifestButton: FC = () => {
   }
 
   function navigate() {
-    const { manifest, item, collectionId, activeContentType } = panelState || {}
+    const { manifest, item, collectionId } = panelState || {}
     if (!collectionId || !manifest || !item) return
     const collection = useDataStore.getState().collections[collectionId]
 
@@ -38,14 +38,12 @@ const NextManifestButton: FC = () => {
     const collectionSequence = useDataStore.getState().collections[collectionId].sequence
     let newConfig: PanelConfig = {
       collection: collectionId,
-      contentType: activeContentType
     }
 
     if (nextIndex > collectionSequence.length - 1) return
 
     newConfig = {
       collection: collectionId,
-      contentType: activeContentType,
       manifest: collectionSequence[nextIndex].id,
     }
 

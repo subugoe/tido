@@ -8,7 +8,7 @@ import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
 import Metadata from '@/components/metadata/Metadata'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { PANEL_HEADER_HEIGHT } from '@/utils/panel.ts'
-import PanelModeMenu from '@/components/panel/PanelModeMenu.tsx'
+import PanelViewsMenu from '@/components/panel/PanelViewsMenu.tsx'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 
 const SidebarToggle = memo((props) => {
@@ -76,7 +76,7 @@ const PanelHeader: FC = () => {
         {<PanelTitle />}
       </div>
       <div className="ml-auto flex gap-2 mr-2">
-        <PanelModeMenu />
+        <PanelViewsMenu />
         <SidebarToggle />
       </div>
       <div className="flex gap-1">

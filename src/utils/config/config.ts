@@ -4,7 +4,7 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, PanelMode, PanelConfig, FilterNode } from '@/types'
+import { TidoConfig, PanelConfig, FilterNode } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 
@@ -35,19 +35,6 @@ function validateContainer(input: any): ValidationResult<TidoConfig['container']
         if (input !== undefined)
           errors['container'] = 'must be a string'
         return defaultConfig.container
-      })()
-  return { result, errors }
-}
-
-function validateDefaultPanelMode(input: any): ValidationResult<TidoConfig['defaultPanelMode']> {
-  const errors: Record<string, string> = {}
-  const result =
-    typeof input === 'string' && ['swap', 'split', 'text', 'image'].includes(input)
-      ? input as PanelMode
-      : (() => {
-        if (input !== undefined)
-          errors['defaultPanelMode'] = 'defaultPanelMode must be a string'
-        return defaultConfig.defaultPanelMode
       })()
   return { result, errors }
 }
@@ -168,26 +155,19 @@ function validateTranslations(input: any): ValidationResult<TidoConfig['translat
   return { result, errors }
 }
 
-function validatePanelModes(input: any): ValidationResult<TidoConfig['panelModes']> {
-  const defaultPanelModes: PanelMode[] = ['swap', 'split', 'text', 'image']
+function validatePanelViews(input: any): ValidationResult<TidoConfig['panelViews']> {
   const errors: Record<string, string> = {}
 
-  if (input === undefined) return { errors, result: defaultConfig.panelModes }
+  if (input === undefined) return { errors, result: defaultConfig.panelViews }
 
   if (!Array.isArray(input)) {
-    errors['panelModes'] = 'must be an array'
-    return { errors, result: defaultConfig.panelModes }
+    errors['panelViews'] = 'must be an array'
+    return { errors, result: defaultConfig.panelViews }
   }
 
   if (input.length === 0) {
-    errors['panelModes'] = 'must have at least 1 value'
-    return { errors, result: defaultConfig.panelModes }
-  }
-
-  const corruptValues = input.filter(item => !defaultPanelModes.includes(item))
-  if (corruptValues.length) {
-    errors['panelModes'] = `${corruptValues.join(', ')} ${corruptValues.length > 1 ? 'are' : 'is'} not valid. Please use only ${defaultPanelModes.join(', ')}`
-    return { errors, result: defaultConfig.panelModes }
+    errors['panelViews'] = 'must have at least 1 value'
+    return { errors, result: defaultConfig.panelViews }
   }
 
   return { errors, result: input }
@@ -254,8 +234,7 @@ export async function mergeAndValidateConfig(
 
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
-  const panelModes = validatePanelModes(userConfig.panelModes)
-  const defaultPanelMode = validateDefaultPanelMode(userConfig.defaultPanelMode)
+  const panelViews = validatePanelViews(userConfig.panelViews)
   const lang = validateLang(userConfig.lang)
   const panels = validatePanels(userConfig.panels)
   const showAddNewPanelButton = validateShowNewCollectionButton(userConfig.showAddNewPanelButton)
@@ -284,7 +263,6 @@ export async function mergeAndValidateConfig(
   const errors = {
     ...allowNewCollections.errors,
     ...container.errors,
-    ...defaultPanelMode.errors,
     ...lang.errors,
     ...panels.errors,
     ...rootCollections.errors,
@@ -295,7 +273,7 @@ export async function mergeAndValidateConfig(
     ...theme.errors,
     ...title.errors,
     ...translations.errors,
-    ...panelModes.errors,
+    ...panelViews.errors,
     ...annotations.errors
   }
 
@@ -348,7 +326,6 @@ export async function mergeAndValidateConfig(
     allowNewCollections: allowNewCollections.result,
     container: container.result,
     panels: panelsFromContentState ?? panels.result,
-    defaultPanelMode: defaultPanelMode.result,
     lang: lang.result,
     rootCollections: rootCollections.result,
     showAddNewPanelButton: showAddNewPanelButton.result,
@@ -358,7 +335,7 @@ export async function mergeAndValidateConfig(
     theme: theme.result,
     title: title.result,
     translations: mergedTranslations,
-    panelModes: panelModes.result,
+    panelViews: panelViews.result,
     annotations: annotations.result
   }
 

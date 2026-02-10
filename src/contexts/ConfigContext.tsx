@@ -3,7 +3,6 @@ import { TidoConfig } from '@/types'
 import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 import { promiseWithCache } from '@/utils/promise-cache.ts'
 import { getAppPrimaryAndForegroundColor } from '@/utils/colors.ts'
-import { useUIStore } from '@/store/UIStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { initI18n } from '@/utils/translations.ts'
 import Loading from '@/components/ui/loading.tsx'
@@ -44,8 +43,6 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
       if (Object.keys(errors).length > 0) console.error(errors)
       initI18n(config.translations, config.lang)
       createThemeStyles(config)
-
-      useUIStore.getState().updatePanelMode(config.panelModes.includes(config.defaultPanelMode) ? config.defaultPanelMode : config.panelModes[0])
 
       createTreeNodes(config.rootCollections)
 

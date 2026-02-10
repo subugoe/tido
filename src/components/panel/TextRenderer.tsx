@@ -33,6 +33,7 @@ import {
 } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
 import { computeNewSelectedAnnotationIndex } from '@/utils/annotations.ts'
+import { useTextView } from '@/contexts/TextViewContext.tsx'
 
 interface Props {
   htmlString: string
@@ -45,16 +46,14 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const {
     panelState,
     selectedAnnotationTypes,
-    matchedAnnotationsMap,
-    setMatchedAnnotationsMap,
     setSelectedAnnotation,
     updatePanel,
     selectedAnnotation,
     annotationsMode,
-    showTextOptions,
   } = usePanel()
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
+  const { matchedAnnotationsMap, setMatchedAnnotationsMap, activeContentUrl } = useTextView()
 
   const [portals, setPortals] = useState([])
 
@@ -119,7 +118,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     setHoveredAnnotations(idsArray)
   }
 
-
   const onMouseLeaveTarget = () => {
     setHoveredAnnotations(null)
   }
@@ -152,9 +150,11 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     if (!panelState.annotations || !parsedDom) return
 
     const result: MatchedAnnotationsMap = panelState.annotations.reduce((acc, cur) => {
-      const selector = (cur.target[0].selector as CssSelector).value
-      if (!selector) {
-        console.error('Annotation error','Selector value of target is empty for this annotation', cur)
+      const isSource = cur.target[0].source === activeContentUrl
+      const selector = (cur.target[0].selector as CssSelector)?.value
+
+      if (!isSource || !selector) {
+        if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
         return acc
       }
 
@@ -178,12 +178,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     setMatchedAnnotationsMap(result)
   }, [parsedDom, panelState.annotations])
 
-
-
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
-    const targetsOfSelectedAnnotation = selectedAnnotation ? matchedAnnotationsMap[selectedAnnotation.id].target : []
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ? matchedAnnotationsMap[selectedAnnotation.id].target : []
 
     flippedMatchedAnnotationsMapRef.current?.forEach(fa => {
       const target = fa.target as HTMLElement
@@ -222,9 +220,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     })
   }, [hoveredAnnotations])
 
-
   // Apply highlighting styles on every map update
   useEffect(() => {
+    console.log('update map')
     if (!matchedAnnotationsMap) return
     const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedAnnotationsMap)
     targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
@@ -256,7 +254,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   // Apply selected styles on every selectedAnnotation update
   useEffect(() => {
     if (!matchedAnnotationsMap) return
-    const targetsOfSelectedAnnotation = selectedAnnotation ? matchedAnnotationsMap[selectedAnnotation.id].target : []
+    const targetsOfSelectedAnnotation =
+      selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id])
+        ? matchedAnnotationsMap[selectedAnnotation.id].target
+        : []
 
     flippedMatchedAnnotationsMapRef.current.forEach(fa => {
       const target = fa.target as HTMLElement
@@ -284,8 +285,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     })
   }, [selectedAnnotation])
 
-  return <div className={`relative flex`}>
-    <div data-text-wrapper ref={textWrapperRef} className={showTextOptions ? 'pt-16' : ''}></div>
+  return <div className={`relative flex pt-16`}>
+    <div data-text-wrapper ref={textWrapperRef}></div>
     {portals}
   </div>
 })
