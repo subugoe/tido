@@ -31,7 +31,7 @@ export const TextViewProvider = ({
   const { t } = usePanelTranslation()
 
   const [textWarning, setTextWarning] = useState('')
-  const [activeContentType, setActiveContentType] = useState(contentTypes[0])
+  const [activeContentType, setActiveContentType] = useState(null)
   const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState<MatchedAnnotationsMap>(null)
   const [text, setText] = useState<string>('')
 
@@ -80,11 +80,6 @@ export const TextViewProvider = ({
       return
     }
 
-    if (!panelState?.contentTypes.length) {
-      showBoundary(t('no_content_found'))
-      return
-    }
-
     const contentUrl = getContentUrlByType(activeContentType)
 
     if (contentUrl) {
@@ -93,7 +88,15 @@ export const TextViewProvider = ({
     }
     else showBoundary(t('no_content_found'))
 
-  }, [loadingPanel, contentTypes, activeContentType])
+  }, [loadingPanel, activeContentType])
+
+  useEffect(() => {
+    if (contentTypes.length === 0) {
+      showBoundary(t('no_content_found'))
+      return
+    }
+    setActiveContentType(contentTypes[0])
+  }, [contentTypes])
 
   return (
     <TextViewContext.Provider value={{

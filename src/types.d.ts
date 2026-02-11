@@ -162,8 +162,6 @@ declare global {
     collectionId: string | null
     manifest: Manifest | null
     item: Item | null
-    contentTypes: string[]
-    activeContentType: string
     imageUrl?: string
     activeTargetIndex: number
     config: PanelConfig

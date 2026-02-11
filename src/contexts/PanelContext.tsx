@@ -189,13 +189,17 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         await getSupport(support)
       }
 
+      panelViewsConfig.forEach(panelView => {
+        if (panelView.view === 'text' && !panelView.contentTypes) {
+          panelView.contentTypes = contentTypes
+        }
+      })
+
       // 4. We update the panel state with the data.
       updatePanel({
         collectionId: collection?.id ?? null,
         manifest,
         item,
-        contentTypes,
-        activeContentType: config.contentType ?? contentTypes[0],
         activeTargetIndex: -1,
         panelViews: panelViewsConfig.map(v => ({ ...v, visible: v.visible ?? true }))
       })

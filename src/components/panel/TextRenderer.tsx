@@ -159,6 +159,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
       }
 
       const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
+
       if (matchedNodes.length > 0) {
         matchedNodes.forEach(target => {
           target.addEventListener('click', onClickTarget)
@@ -222,7 +223,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   // Apply highlighting styles on every map update
   useEffect(() => {
-    console.log('update map')
     if (!matchedAnnotationsMap) return
     const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedAnnotationsMap)
     targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
