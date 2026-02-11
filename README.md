@@ -21,6 +21,9 @@ and also view our production examples.
     - [React](#react)
 - [Configuration](#configuration)
   - [The Keys in Detail](#the-keys-in-detail)
+  - [Annotations](#annotations)
+    - [Types](#types)
+    - [Filters](#filters)
   - [Translations](#translations)
     - [Collection Namespaces](#collection-namespaces)
 - [Bookmarking](#bookmarking)
@@ -183,6 +186,9 @@ There are options to
 | Name                                             | Type                                  | Default                                                                            | Description                                                                                                                                                                                                                                                         |
 |--------------------------------------------------|---------------------------------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | allowNewCollections                              | Boolean                               | true                                                                               | Toggles the ability to add new collections to the app through a user input.                                                                                                                                                                                         |
+| annotations                                      | AnnotationsConfig                     | {}                                                                                 | Configures the display of annotations and their filtering options. See [annotations](#annotations) chapter.                                                                                                                                                         |
+| annotations.types                                | AnnotationTypeConfigMap               | -                                                                                  | A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.                                                                                                                                                  |
+| annotations.filters                              | AnnotationFiltersConfig               | -                                                                                  | Defines a nested object of filter options.                                                                                                                                                                                                                          |
 | container                                        | String                                | `#app`                                                                             | Specifies the CSS selector where we should append the TIDO app to.                                                                                                                                                                                                  |
 | defaultPanelMode                                 | `pip` \| `split` \| `text` \| `image` | `pip`                                                                              | Specifies the default view type of all panels. Each new panel will start with view.                                                                                                                                                                                 |
 | defaultAnnotationsMode                           | `aligned` \| `list`                   | `aligned`                                                                          | Specifies which mode to use for displaying annotations per default. Aligned mode will arrange annotations at the top position of text targets. List mode will ignore positioning and arrange the annotations vertically one after another.                          |
@@ -203,6 +209,124 @@ There are options to
 | translations.[lang]                              | TranslationNamespace                  | -                                                                                  | Defines a language key. The value is a TranslationNamespace object.                                                                                                                                                                                                 |
 | translations.[lang].[namespace]                  | Object                                | -                                                                                  | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration.                                     |
 | translations.[lang].[namespace].[translationKey] | String                                | -                                                                                  | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration.                                     |
+
+### Annotations
+We provide configuration options to customize both the display and filtering of annotations.
+
+The configuration is organized by concern. Each aspect can be defined independently using its own configuration object
+under a dedicated key.
+
+Working with annotations, especially variants, can be complex.
+Variant annotations reference one or more witnesses, which are identified by string identifiers.
+Within the configuration, these witness identifiers are treated as annotation types.
+This allows you to apply the same configuration principles to witnesses as you would to any other annotation type.
+
+If no annotations configuration is provided at all, TIDO will discover the currently available annotations on-the-fly.
+The visible types and filters are highly dependant on the loaded  panel content.
+
+#### Types
+
+| Key   | Type                    |
+|-------|-------------------------|
+| types | AnnotationTypeConfigMap |
+
+A map of config objects for annotation types. Each key represents the annotation type string ("x-content-type").
+Each value is an `AnnotationTypeConfig` object for setting a custom label and icon.
+These values will be used in the UI to customize the display of annotations items in the panel sidebar.
+
+As mentioned above, variant annotations are a special case. In order to configure the witnesses display,
+you can set a the `idno` value from the `refs`-Array in the annotationsPage response.
+
+**Example:**
+
+```json
+{
+  "annotations": {
+    "types": {
+      "Place": { "label": "Ort" },
+      "witness_a": { "label": "Witness A" }
+    }
+  }
+}
+```
+
+#### Filters
+
+| Key     | Type                    |
+|---------|-------------------------|
+| filters | AnnotationFiltersConfig |
+
+Annotations displayed in the sidebar can be filtered by their type. You can define a hierarchical structure for these
+filter options, referred to as a filter tree.
+Each node in the filter tree can control multiple annotation types simultaneously. Therefore, you need to
+specify an array of annotation types that should be affected by a given filter node.
+
+At the root level, you can optionally define a `rootSelectionRule` (allowed values: `multiple` or `single`) to control
+the overall behavior and layout of the filter UI:
+
+If set to `single`, the UI renders a tab bar containing the root-level nodes and a content area below it.
+Selecting a tab updates the content area to display the child nodes of the selected root option.
+
+If set to `multiple`, a multi-selection tree is rendered without a tab bar,
+allowing multiple root-level nodes to be selected simultaneously.
+
+If the rule is not specified, we set it to `multiple`.
+
+Please note that TIDO does not currently validate `selected` states.
+If you use the `selected` property on filter tree nodes, ensure that the configured default states are logically consistent.
+
+**Example:**
+
+```json
+{
+  "annotations": {
+    "filters": {
+      "rootSelectionRule": "single",
+      "items": [
+        {
+          "label": "Variants",
+          "items": [
+            {
+              "label": "Witness A",
+              "types": ["witness_a"]
+            },
+            {
+              "label": "Witness B",
+              "types": ["witness_b"]
+            }
+          ]
+        },
+        {
+          "label": "Commentary",
+          "items": [
+            {
+              "label": "Entities",
+              "items": [
+                {
+                  "label": "Places",
+                  "types": ["place", "region"]
+                },
+                {
+                  "label": "Persons",
+                  "types": ["person"]
+                }
+              ]
+            },
+            {
+              "label": "Additions",
+              "types": ["addition"]
+            }
+          ]
+        },
+        {
+          "label": "Dictionary",
+          "types": ["dict"]
+        }
+      ]
+    }
+  }
+}
+```
 
 ### Translations
 We provide a flexible way to use TIDO in your desired language. First of all we keep all translation keys in files

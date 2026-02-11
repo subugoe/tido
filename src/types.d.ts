@@ -385,11 +385,13 @@ export interface AnnotationTypeConfig {
   icon?: string
 }
 
+export interface AnnotationTypeConfigMap {
+  [type: string]: AnnotationTypeConfig
+}
+
 export interface AnnotationsConfig {
   filters?: AnnotationFiltersConfig
-  types?: {
-    [type: string]: AnnotationTypeConfig
-  }
+  types?: AnnotationTypeConfigMap
 }
 
 export interface AnnotationFiltersConfig {
