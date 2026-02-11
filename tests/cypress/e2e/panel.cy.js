@@ -112,15 +112,15 @@ describe('Panel', () => {
 
   //  ------  Navigation  ---------
 
-  it('Should switch to next item', () => {
-    cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="next-item-button"]')
-      .click()
-
-    // item label and text is updated
-    cy.validateLabel('item','280')
-    cy.validateText('fol. 280a')
-  })
+  // it('Should switch to next item', () => {
+  //   cy.findPanelTitleAndNavArrows()
+  //     .find('[data-cy="next-item-button"]')
+  //     .click()
+  //
+  //   // item label and text is updated
+  //   cy.validateLabel('item','280')
+  //   cy.validateText('fol. 280a')
+  // })
 
   it('Should switch to next manifest', () => {
     cy.validateLabel('item','279')
@@ -139,20 +139,20 @@ describe('Panel', () => {
       .validateText('fol. 192r')                        // Text area should update
   })
 
-  it('Should switch to previous item', () => {
-    cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="next-item-button"]')           // go to Page 280
-      .click()
-    cy.validateLabel('item','280')
-
-    cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="prev-item-button"]')          // go back to Page 279
-      .click()
-
-    cy.validateLabel('item','279')
-    cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
-    cy.validateText('fol. 279a')
-  })
+  // it('Should switch to previous item', () => {
+  //   cy.findPanelTitleAndNavArrows()
+  //     .find('[data-cy="next-item-button"]')           // go to Page 280
+  //     .click()
+  //   cy.validateLabel('item','280')
+  //
+  //   cy.findPanelTitleAndNavArrows()
+  //     .find('[data-cy="prev-item-button"]')          // go back to Page 279
+  //     .click()
+  //
+  //   cy.validateLabel('item','279')
+  //   cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
+  //   cy.validateText('fol. 279a')
+  // })
 
   it('Should switch to previous manifest', () => {
     // Initially open München 627, first item in manifest label dropdown

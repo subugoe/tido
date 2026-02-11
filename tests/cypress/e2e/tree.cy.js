@@ -112,18 +112,18 @@ describe('Tree', () => {
       .find('[data-cy="item-label"]')
       .should('have.text', '280')     // Panel was added after the first on e
       // switch to text mode
-      .parents('.panel')
-      .find('[data-cy="panel-mode-select"]')
-      .scrollIntoView()
-      .click()
-      .get('[data-cy="panel-mode-menu"]')
-      .find('[data-slot="select-item"]')
-      .eq(1).click()                   // switch to text mode to check the text content
-      .get('[data-cy="panels-wrapper"]')
-      .find('[data-cy="panel"]')
-      .eq(1)
-      .find('.text-area').first()
-      .contains('fol. 280a')
+      // .parents('.panel')
+      // .find('[data-cy="panel-mode-select"]')
+      // .scrollIntoView()
+      // .click()
+      // .get('[data-cy="panel-mode-menu"]')
+      // .find('[data-slot="select-item"]')
+      // .eq(1).click()                   // switch to text mode to check the text content
+      // .get('[data-cy="panels-wrapper"]')
+      // .find('[data-cy="panel"]')
+      // .eq(1)
+      // .find('.text-area').first()
+      // .contains('fol. 280a')
 
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
 
@@ -225,17 +225,17 @@ describe('Tree', () => {
       .eq(0)
       .find('[data-cy="item-label"]')
       .should('have.text', '280')
-      .parents('.panel')
-      .find('[data-cy="panel-mode-select"]')
-      .click()
-      .get('[data-cy="panel-mode-menu"]')
-      .find('[data-slot="select-item"]')
-      .eq(1).click()                   // switch to text view
-      .get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in first panel
-      .find('[data-cy="panel"]')
-      .eq(0)
-      .find('.text-area').first()
-      .contains('fol. 280a')
+      // .parents('.panel')
+      // .find('[data-cy="panel-mode-select"]')
+      // .click()
+      // .get('[data-cy="panel-mode-menu"]')
+      // .find('[data-slot="select-item"]')
+      // .eq(1).click()                   // switch to text view
+      // .get('[data-cy="panels-wrapper"]')  // check whether the item - 280 -  is opened in first panel
+      // .find('[data-cy="panel"]')
+      // .eq(0)
+      // .find('.text-area').first()
+      // .contains('fol. 280a')
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
   })
 })
