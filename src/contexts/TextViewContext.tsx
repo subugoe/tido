@@ -46,6 +46,11 @@ export const TextViewProvider = ({
   useEffect(() => {
     if (!activeContentUrl || !matchedAnnotationsMap) return
     updateMatchedAnnotationsMap(activeContentUrl, matchedAnnotationsMap)
+
+    return () => {
+      // On destroy, remove the map from the higher up map
+      updateMatchedAnnotationsMap(activeContentUrl, null)
+    }
   }, [matchedAnnotationsMap, activeContentUrl])
 
   // Once the higher up map is updated, update the local map
@@ -75,7 +80,7 @@ export const TextViewProvider = ({
       }
     }
 
-    if (loadingPanel || !panelState) {
+    if (loadingPanel || !panelState || !activeContentType) {
       setLoadingText(true)
       return
     }

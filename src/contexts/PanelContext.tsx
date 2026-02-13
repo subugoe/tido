@@ -246,10 +246,26 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   }
 
   function updateMatchedAnnotationsMap(contentUrl: string, map: MatchedAnnotationsMap) {
-    setMatchedAnnotationsMaps((prev) => ({
-      ...prev,
-      [contentUrl]: map
-    }))
+    setMatchedAnnotationsMaps((prev) => {
+      if (map === null) {
+        if (prev[contentUrl]) {
+          // When annotations from the given content url should disappear, remove that key and return the rest
+          return Object.keys(prev).reduce((acc, key) => {
+            if (key !== contentUrl) acc[key] = prev[key]
+            return acc
+          }, {})
+        }
+        // If the given content url was present at all and the caller is trying to add "null" as map,
+        // avoid it and return the old value
+        return prev
+      }
+
+      // If a new value for a map exists, just update it
+      return {
+        ...prev,
+        [contentUrl]: map
+      }
+    })
   }
 
   useEffect(() => {
