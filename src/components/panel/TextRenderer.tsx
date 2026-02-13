@@ -285,8 +285,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     })
   }, [selectedAnnotation, matchedAnnotationsMap])
 
-  return <div className={`relative flex pt-16`}>
-    <div data-text-wrapper ref={textWrapperRef}></div>
+  return <div className="relative flex">
+    <div data-text-wrapper ref={textWrapperRef} className="pt-16"></div>
     {portals}
   </div>
 })
