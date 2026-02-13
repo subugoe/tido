@@ -63,7 +63,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
 
-
   function containsChildren(targets: HTMLElement[], target: HTMLElement) {
     for(const t of targets) {
       if (target.contains(t) && target !== t) return true
@@ -181,6 +180,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
+    if (!hoveredAnnotations) return
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ? matchedAnnotationsMap[selectedAnnotation.id].target : []
 
@@ -283,7 +283,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
         addHighlightStyle(target)
       }
     })
-  }, [selectedAnnotation])
+  }, [selectedAnnotation, matchedAnnotationsMap])
 
   return <div className={`relative flex pt-16`}>
     <div data-text-wrapper ref={textWrapperRef}></div>
