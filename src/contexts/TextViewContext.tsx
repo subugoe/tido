@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, RefObject, useContext, useEffect, useRef, useState } from 'react'
 import { apiRequest } from '@/utils/api.ts'
 import { sanitize } from '@/utils/text-sanitize.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
@@ -10,7 +10,7 @@ type State = {
   setTextWarning: (warning: string) => void
   contentTypes: string[]
   activeContentType: string
-  activeContentUrl: string
+  activeContentUrl: RefObject<string>
   setActiveContentType: (contentType: string) => void
   label: string
   text: string
@@ -35,8 +35,7 @@ export const TextViewProvider = ({
   const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState<MatchedAnnotationsMap>(null)
   const [text, setText] = useState<string>('')
 
-  const [activeContentUrl, setActiveContentUrl] = useState(null)
-
+  const activeContentUrl = useRef(null)
   function getContentUrlByType(type: string | undefined) {
     if (!type) return undefined
     return panelState?.item?.content.find(c => c.type.includes(type))?.url
@@ -44,19 +43,20 @@ export const TextViewProvider = ({
 
   // Once a new local map is set, update the higher up map
   useEffect(() => {
-    if (!activeContentUrl || !matchedAnnotationsMap) return
-    updateMatchedAnnotationsMap(activeContentUrl, matchedAnnotationsMap)
+    if (!activeContentUrl.current || !matchedAnnotationsMap) return
+    const url = activeContentUrl.current
+    updateMatchedAnnotationsMap(url, matchedAnnotationsMap)
 
     return () => {
       // On destroy, remove the map from the higher up map
-      updateMatchedAnnotationsMap(activeContentUrl, null)
+      updateMatchedAnnotationsMap(url, null)
     }
   }, [matchedAnnotationsMap, activeContentUrl])
 
   // Once the higher up map is updated, update the local map
   useEffect(() => {
-    setMatchedAnnotationsMap(matchedAnnotationsMaps[activeContentUrl])
-  }, [matchedAnnotationsMaps, setMatchedAnnotationsMap, activeContentUrl])
+    setMatchedAnnotationsMap(matchedAnnotationsMaps[activeContentUrl.current])
+  }, [matchedAnnotationsMaps, setMatchedAnnotationsMap])
 
   useEffect(() => {
     async function updateText(contentUrl: string) {
@@ -88,7 +88,7 @@ export const TextViewProvider = ({
     const contentUrl = getContentUrlByType(activeContentType)
 
     if (contentUrl) {
-      setActiveContentUrl(contentUrl)
+      activeContentUrl.current = contentUrl
       updateText(contentUrl)
     }
     else showBoundary(t('no_content_found'))

@@ -149,7 +149,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     if (!panelState.annotations || !parsedDom) return
 
     const result: MatchedAnnotationsMap = panelState.annotations.reduce((acc, cur) => {
-      const isSource = cur.target[0].source === activeContentUrl
+      const isSource = cur.target[0].source === activeContentUrl.current
       const selector = (cur.target[0].selector as CssSelector)?.value
 
       if (!isSource || !selector) {
