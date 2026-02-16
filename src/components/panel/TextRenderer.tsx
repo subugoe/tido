@@ -180,7 +180,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
-    if (!hoveredAnnotations) return
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ? matchedAnnotationsMap[selectedAnnotation.id].target : []
 
@@ -208,13 +207,11 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
           // hasParentHovered: condition to determine whether we should add the style to a nested target
           if (!hasParentHovered) {
             addHoverStyle(target)
-          }
-          else {
+          } else {
             addHoverStyle(target)
             addNestedTargetStyle(target)
           }
-        }
-        else if (!isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
+        } else if (!isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
           addHighlightStyle(target)
         }
       }
