@@ -12,7 +12,7 @@ interface Props {
 const AnnotationsModeToggle: FC<Props> = ({ className }) => {
   const { annotationsMode, setAnnotationsMode, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
-  const [_mode, _setMode] = useState(annotationsMode)
+  const [_mode, _setMode] = useState<AnnotationsMode>(annotationsMode)
   function updateMode(value: AnnotationsMode) {
     // Debounce Switch animation from update of annotationsMode
     _setMode(value)

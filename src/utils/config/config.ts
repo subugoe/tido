@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+const DEFAULT_ANNOTATIONS_MODE = 'aligned'
+
 import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
@@ -10,7 +12,7 @@ import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils
 
 type ValidationResult<T> = {
   result: T;
-  errors: Record<string, string>;
+  errors: Record<string, string | object>;
 };
 
 function validateAllowNewCollections(input: any): ValidationResult<TidoConfig['allowNewCollections']> {
@@ -193,18 +195,6 @@ function validatePanelModes(input: any): ValidationResult<TidoConfig['panelModes
   return { errors, result: input }
 }
 
-function validateDefaultAnnotationsMode(input: any): ValidationResult<TidoConfig['defaultAnnotationsMode']> {
-  const errors: Record<string, string> = {}
-  const result =
-    input === 'aligned' || input === 'list'
-      ? input
-      : (() => {
-        if (input !== undefined)
-          errors['annotationsMode'] = 'annotationsMode should be either `aligned` or `list`'
-        return defaultConfig.defaultAnnotationsMode
-      })()
-  return { result, errors }
-}
 
 function validateRootCollections(input: any): ValidationResult<TidoConfig['rootCollections']> {
   const errors: Record<string, string> = {}
@@ -221,11 +211,24 @@ function validateRootCollections(input: any): ValidationResult<TidoConfig['rootC
 
 function validateAnnotations(input: any): ValidationResult<TidoConfig['annotations']> {
   const result = { ...input }
-  const errors: Record<string, string> = {}
+
+  const errors: Record<string, object> = {
+    'annotations': {}
+  }
 
   if (!result.filters && !result.types) {
-    errors['annotations'] = 'did not find "filters" or "types" key'
-    return { result: {}, errors }
+    errors['annotations']['filters'] = 'did not find "filters" or "types" key'
+  }
+
+  if (result?.singleMode && !['aligned', 'list'].includes(result.singleMode)) {
+    // if 'singleMode' is provided wrong -> we provide both modes to user
+    errors['annotations']['mode'] = 'mode is a value either "aligned" or "list"'
+    result.defaultMode = DEFAULT_ANNOTATIONS_MODE
+  }
+
+  if (!result.singleMode && !result.defaultMode) {
+    // none between 'singleMode' and 'defaultMode' is provided -> both modes are provided
+    result.defaultMode = DEFAULT_ANNOTATIONS_MODE
   }
 
   if (result.filters && !result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
@@ -248,7 +251,7 @@ function validateAnnotations(input: any): ValidationResult<TidoConfig['annotatio
 
 export async function mergeAndValidateConfig(
   userConfig: Partial<TidoConfig>,
-): Promise<{ config: TidoConfig; errors: Record<string, string> }> {
+): Promise<{ config: TidoConfig; errors: Record<string, object | string> }> {
 
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
@@ -264,8 +267,8 @@ export async function mergeAndValidateConfig(
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
   const translations = validateTranslations(userConfig.translations)
-  const defaultAnnotationsMode = validateDefaultAnnotationsMode(userConfig.defaultAnnotationsMode)
   const annotations = validateAnnotations(userConfig.annotations)
+
 
   const mergedTranslations = {
     en: deepMerge(enTranslations, translations.result.en ?? {}),
@@ -357,7 +360,6 @@ export async function mergeAndValidateConfig(
     title: title.result,
     translations: mergedTranslations,
     panelModes: panelModes.result,
-    defaultAnnotationsMode: defaultAnnotationsMode.result,
     annotations: annotations.result
   }
 

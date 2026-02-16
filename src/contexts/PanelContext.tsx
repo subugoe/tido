@@ -59,7 +59,7 @@ interface PanelProviderProps {
 }
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
-  const { defaultAnnotationsMode, annotations: annotationsConfig } = useConfig()
+  const { annotations: annotationsConfig } = useConfig()
 
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
@@ -72,7 +72,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [textWarning, setTextWarning] = useState('')
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
-  const [annotationsMode, setAnnotationsMode] = useState<AnnotationsMode>(defaultAnnotationsMode)
+  const [annotationsMode, setAnnotationsMode] = useState<AnnotationsMode>(annotationsConfig.singleMode ?? annotationsConfig.defaultMode)
   const [error, setError] = useState<CustomError>(null)
   const [annotationsError, setAnnotationsError] = useState<CustomError>(null)
   const sidebarScroller = useRef<SidebarScroller>(null)
@@ -88,6 +88,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     if (existsImage) return panelState.mode
     return panelMode
   }
+
 
   function usePanelTranslation(): UseTranslationResponse<'common', never> {
     const ns = panelState.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
