@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-const DEFAULT_ANNOTATIONS_MODE = 'aligned'
-
 import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
@@ -209,8 +207,9 @@ function validateRootCollections(input: any): ValidationResult<TidoConfig['rootC
   return { result, errors }
 }
 
-function validateAnnotations(input: any): ValidationResult<TidoConfig['annotations']> {
+function validateAnnotations(input: any, defaultConfig: Partial<TidoConfig>): ValidationResult<TidoConfig['annotations']> {
   const result = { ...input }
+  const defaultMode = defaultConfig.annotations.defaultMode
 
   const errors: Record<string, object> = {
     'annotations': {}
@@ -223,12 +222,12 @@ function validateAnnotations(input: any): ValidationResult<TidoConfig['annotatio
   if (result?.singleMode && !['aligned', 'list'].includes(result.singleMode)) {
     // if 'singleMode' is provided wrong -> we provide both modes to user
     errors['annotations']['mode'] = 'mode is a value either "aligned" or "list"'
-    result.defaultMode = DEFAULT_ANNOTATIONS_MODE
+    result.defaultMode = defaultMode
   }
 
   if (!result.singleMode && !result.defaultMode) {
     // none between 'singleMode' and 'defaultMode' is provided -> both modes are provided
-    result.defaultMode = DEFAULT_ANNOTATIONS_MODE
+    result.defaultMode = defaultMode
   }
 
   if (result.filters && !result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
@@ -250,7 +249,7 @@ function validateAnnotations(input: any): ValidationResult<TidoConfig['annotatio
 }
 
 export async function mergeAndValidateConfig(
-  userConfig: Partial<TidoConfig>,
+  userConfig: Partial<TidoConfig>, defaultConfig: Partial<TidoConfig>
 ): Promise<{ config: TidoConfig; errors: Record<string, object | string> }> {
 
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
@@ -267,7 +266,7 @@ export async function mergeAndValidateConfig(
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
   const translations = validateTranslations(userConfig.translations)
-  const annotations = validateAnnotations(userConfig.annotations)
+  const annotations = validateAnnotations(userConfig.annotations, defaultConfig)
 
 
   const mergedTranslations = {
