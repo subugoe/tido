@@ -15,6 +15,8 @@ declare global {
     idref?: Idref[]
   }
 
+  type AnnotationsMode = 'aligned' | 'list'
+
   interface AnnotationCollection {
     id: string
     first: string
@@ -326,7 +328,6 @@ declare global {
     y: number
   }
 
-  type AnnotationsMode = 'aligned' | 'list'
 }
 
 export interface PanelConfig {
@@ -376,7 +377,6 @@ export interface TidoConfig {
   title: string
   translations: TranslationsConfig,
   panelModes: PanelMode[],
-  defaultAnnotationsMode: AnnotationsMode
   annotations: AnnotationsConfig
 }
 
@@ -391,7 +391,9 @@ export interface AnnotationTypeConfigMap {
 
 export interface AnnotationsConfig {
   filters?: AnnotationFiltersConfig
-  types?: AnnotationTypeConfigMap
+  types?: AnnotationTypeConfigMap,
+  singleMode?: AnnotationsMode,
+  defaultMode?: AnnotationsMode
 }
 
 export interface AnnotationFiltersConfig {

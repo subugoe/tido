@@ -26,5 +26,8 @@
         "item": "Seite"
       }
     }
+  },
+  "annotations": {
+    "singleMode": "aligned"
   }
 }
