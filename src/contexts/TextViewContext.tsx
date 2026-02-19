@@ -55,6 +55,7 @@ export const TextViewProvider = ({
 
   // Once the higher up map is updated, update the local map
   useEffect(() => {
+    if (!Object.hasOwn(matchedAnnotationsMaps, activeContentUrl.current)) return
     setMatchedAnnotationsMap(matchedAnnotationsMaps[activeContentUrl.current])
   }, [matchedAnnotationsMaps, setMatchedAnnotationsMap])
 
