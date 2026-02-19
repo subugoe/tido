@@ -276,7 +276,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         return
       }
 
-      if (annotationType === 'Variant') {
+      if (annotationsConfig.filters && annotationType === 'Variant') {
+        // Annotations of type "Variant" are usually filtered by their witness ids.
+        // Therefore, selectedAnnotationTypes holds arrays as values. Each item is used for witness id strings.
+        // If no filters are configured, that array becomes always empty - just like for other annotation types.
+        // So, we check for selected witnesses only if a config is present.
         const selectedSet = new Set(selectedAnnotationTypes[annotationType])
         const hasSelectedWitness = annotation.body.witnesses?.some(value => selectedSet.has(value)) ?? false
         resultMap[id].filtered = hasSelectedWitness
