@@ -1,0 +1,34 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/item.jsonld",
+  "textapi": "1.3.0",
+  "x-app-version": "11.4.3",
+  "id": "example/manifest-1/item-1",
+  "title": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/title.jsonld",
+      "title": "This is the first page",
+      "type": "main"
+    }
+  ],
+  "type": "page",
+  "n": "1",
+  "content": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/content.jsonld",
+      "url": "http://localhost:8181/example-with-iiif/content/transcription/manifest-1-item-1.html",
+      "type": "application/xhtml+xml;type=transcription"
+    }
+  ],
+  "image": {
+    "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/image.jsonld",
+    "type": "iiif",
+    "id": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/img/einsiedeln_278_1040/279",
+    "info": "https://digital.blb-karlsruhe.de/i3f/v20/1217320/info.json",
+    "license": {
+      "id": "CC-BY-4.0?"
+    }
+  },
+  "lang": [
+    "eng"
+  ]
+}

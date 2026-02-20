@@ -26,6 +26,12 @@ const ImageRenderer: FC = () => {
       zoomOutButton: 'zoom-out-' + panelId,
       fullPageButton: 'full-screen-' + panelId,
       homeButton: 'exit-full-screen-' + panelId,
+
+      minZoomLevel: 0.5,
+      maxZoomLevel: 10,
+      defaultZoomLevel: 0,
+      visibilityRatio: 1.0,
+      constrainDuringPan: true
     })
 
     viewerRef.current.addHandler('open-failed', (e) => {
@@ -56,11 +62,19 @@ const ImageRenderer: FC = () => {
     const oldItem = viewerRef.current.world.getItemAt(0)
     if (oldItem) viewerRef.current.world.removeItem(oldItem)
 
-    viewerRef.current.open({
-      type: 'image',
-      url: imageUrl
-    })
-  }, [imageUrl, loadingPanel])
+    const imageType = panelState.item?.image?.type
+
+    if (imageType === 'simple' || !imageType) {
+      viewerRef.current.open({
+        type: 'image',
+        url: imageUrl
+      })
+    }
+    else if (imageType === 'iiif') {
+      const infoFileUrl = panelState.item?.image?.info
+      viewerRef.current.open(infoFileUrl)
+    }
+  }, [panelState.item, loadingPanel])
 
 
 
