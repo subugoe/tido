@@ -1,0 +1,99 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book3/page2/rev1/annotationPage.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/book3/page2/rev1/annotationCollection.json",
+    "label": "Annotations for The Great Gatsby, Chapter 2",
+    "total": 4
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/book3/page2/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The valley of ashes symbolizes the moral and social decay hidden beneath the wealth and glamour of the era.",
+        "format": "text/plain",
+        "x-content-type": "Symbol"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page2/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#valley"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page2/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The billboard of Dr. T.J. Eckleburg represents the eyes of God watching over a morally bankrupt society.",
+        "format": "text/plain",
+        "x-content-type": "Symbol"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page2/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#tj-eckleburg"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page2/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Typescript shows variant spacing in different drafts.",
+        "format": "text/plain",
+        "x-content-type": "Orthographic Variant"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page2/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-halfway"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page2/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Symbolic landscape representing moral wasteland of the era.",
+        "format": "text/plain",
+        "x-content-type": "Symbolic Interpretation"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page2/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-desolate"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

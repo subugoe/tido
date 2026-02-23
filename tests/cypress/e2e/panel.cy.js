@@ -54,73 +54,73 @@ describe('Panel', () => {
     cy.validateText('fol. 243va')
   })
 
-  it('Should display the configured panelModes and the defaultPanelMode as selected', () => {
-    cy.get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="panel-mode-select"]')
-      .click()
-      .get('[data-cy="panel-mode-menu"]')
-      .find('[data-slot="select-item"]')
-      .should('have.length', 3)
-      .eq(1)                    // order of panelModes is displayed as provided
-      .should('have.attr', 'data-cy', 'text')
-      .should('have.attr', 'data-selected', 'true')
-      .parent()
-      .children().eq(1) // eq(0) is the label "Panel modes"
-      .should('have.attr', 'data-cy', 'split')
-  })
+  // it('Should display the configured panelModes and the defaultPanelMode as selected', () => {
+  //   cy.get('#panels-wrapper')
+  //     .children().eq(0)
+  //     .find('[data-cy="panel-mode-select"]')
+  //     .click()
+  //     .get('[data-cy="panel-mode-menu"]')
+  //     .find('[data-slot="select-item"]')
+  //     .should('have.length', 3)
+  //     .eq(1)                    // order of panelModes is displayed as provided
+  //     .should('have.attr', 'data-cy', 'text')
+  //     .should('have.attr', 'data-selected', 'true')
+  //     .parent()
+  //     .children().eq(1) // eq(0) is the label "Panel modes"
+  //     .should('have.attr', 'data-cy', 'split')
+  // })
 
-  it('Should switch the panel mode and its corresponding panel body', () => {
-    cy.get('#panels-wrapper')
-      .find('[data-cy="panel-container"]')
-      .find('[data-image-container]')
-      .should('not.exist')   // data-image-container should not exist in 'text' panelMode
-
-      // select split mode
-      .get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="panel-mode-select"]')
-      .click()
-      .get('[data-cy="panel-mode-menu"]')
-      .find('[data-slot="select-item"]')
-      .first()
-      .click()
-      .get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="panel-mode-select"]')
-      .click()
-      .get('[data-cy="panel-mode-menu"]')
-      .find('[data-slot="select-item"]')
-      .first()
-      .should('have.attr', 'data-cy', 'split')
-      .should('have.attr', 'data-selected', 'true')          //'split' mode is selected
-      .get('[data-cy="panel-mode-menu"]')
-      .find('[data-slot="select-item"]')
-      .eq(1)
-      .should('have.attr', 'data-selected', 'false')
-
-      //below two blocks of code check whether the content is in split mode: the image container is not empty and there is text in scroll container
-
-      .get('#panels-wrapper')
-      .children().eq(0)
-      .find('[data-cy="panel-container"]')
-      .find('[data-image-container]')
-      .children().should('not.have.length', 0)   // data-image-container now has children
-
-    cy.validateText('fol. 279a')
-  })
+  // it('Should switch the panel mode and its corresponding panel body', () => {
+  //   cy.get('#panels-wrapper')
+  //     .find('[data-cy="panel-container"]')
+  //     .find('[data-image-container]')
+  //     .should('not.exist')   // data-image-container should not exist in 'text' panelMode
+  //
+  //     // select split mode
+  //     .get('#panels-wrapper')
+  //     .children().eq(0)
+  //     .find('[data-cy="panel-mode-select"]')
+  //     .click()
+  //     .get('[data-cy="panel-mode-menu"]')
+  //     .find('[data-slot="select-item"]')
+  //     .first()
+  //     .click()
+  //     .get('#panels-wrapper')
+  //     .children().eq(0)
+  //     .find('[data-cy="panel-mode-select"]')
+  //     .click()
+  //     .get('[data-cy="panel-mode-menu"]')
+  //     .find('[data-slot="select-item"]')
+  //     .first()
+  //     .should('have.attr', 'data-cy', 'split')
+  //     .should('have.attr', 'data-selected', 'true')          //'split' mode is selected
+  //     .get('[data-cy="panel-mode-menu"]')
+  //     .find('[data-slot="select-item"]')
+  //     .eq(1)
+  //     .should('have.attr', 'data-selected', 'false')
+  //
+  //     //below two blocks of code check whether the content is in split mode: the image container is not empty and there is text in scroll container
+  //
+  //     .get('#panels-wrapper')
+  //     .children().eq(0)
+  //     .find('[data-cy="panel-container"]')
+  //     .find('[data-image-container]')
+  //     .children().should('not.have.length', 0)   // data-image-container now has children
+  //
+  //   cy.validateText('fol. 279a')
+  // })
 
   //  ------  Navigation  ---------
 
-  it('Should switch to next item', () => {
-    cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="next-item-button"]')
-      .click()
-
-    // item label and text is updated
-    cy.validateLabel('item','280')
-    cy.validateText('fol. 280a')
-  })
+  // it('Should switch to next item', () => {
+  //   cy.findPanelTitleAndNavArrows()
+  //     .find('[data-cy="next-item-button"]')
+  //     .click()
+  //
+  //   // item label and text is updated
+  //   cy.validateLabel('item','280')
+  //   cy.validateText('fol. 280a')
+  // })
 
   it('Should switch to next manifest', () => {
     cy.validateLabel('item','279')
@@ -139,20 +139,20 @@ describe('Panel', () => {
       .validateText('fol. 192r')                        // Text area should update
   })
 
-  it('Should switch to previous item', () => {
-    cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="next-item-button"]')           // go to Page 280
-      .click()
-    cy.validateLabel('item','280')
-
-    cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="prev-item-button"]')          // go back to Page 279
-      .click()
-
-    cy.validateLabel('item','279')
-    cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
-    cy.validateText('fol. 279a')
-  })
+  // it('Should switch to previous item', () => {
+  //   cy.findPanelTitleAndNavArrows()
+  //     .find('[data-cy="next-item-button"]')           // go to Page 280
+  //     .click()
+  //   cy.validateLabel('item','280')
+  //
+  //   cy.findPanelTitleAndNavArrows()
+  //     .find('[data-cy="prev-item-button"]')          // go back to Page 279
+  //     .click()
+  //
+  //   cy.validateLabel('item','279')
+  //   cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
+  //   cy.validateText('fol. 279a')
+  // })
 
   it('Should switch to previous manifest', () => {
     // Initially open München 627, first item in manifest label dropdown

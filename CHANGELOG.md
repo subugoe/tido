@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.16](https://github.com/subugoe/tido/compare/v5.0.0-alpha.15...v5.0.0-alpha.16) (2026-02-12)
+
+
+### Features
+
+* add handle long annotations ([1f0f665](https://github.com/subugoe/tido/commit/1f0f6651e67a41faba9ebdabbc3e1876566802f6))
+* add scroll to selected annotation on target click ([c7adcf0](https://github.com/subugoe/tido/commit/c7adcf0ad594c758287f4aa085b45818936a6beb))
+* implement annotation filters with configuration ([94ff3cf](https://github.com/subugoe/tido/commit/94ff3cf85c215a3ea8715c287ba156fcfb2869a9))
+* use secondary color, update muted and accent colors ([2e83d83](https://github.com/subugoe/tido/commit/2e83d832f146ada95f2c7a000f169a5eaa111684))
+
+
+### Bug Fixes
+
+* add scroll to annotation filter tabs ([f01714f](https://github.com/subugoe/tido/commit/f01714f44e0e9024a9792f84a633444d7024c0c6))
+* enable scrolling of sidebar in Aligned Mode, disable it in List Mode ([0ab20e1](https://github.com/subugoe/tido/commit/0ab20e1e8a5a1f25ab8307818574f4e48d6adaff))
+* fix checked state issues at annotation filters ([70b5731](https://github.com/subugoe/tido/commit/70b5731fb7b90f05d07dcfca43046ef6d5ff027b))
+* hide global tree after collapsing it to prevent interactions with it ([8301b0c](https://github.com/subugoe/tido/commit/8301b0c970ea0f09bf797f55696482d3b9111b87))
+* improve annotations config validation, hide types display when there is only one at filter node, set width fit on filters popover ([189fcb6](https://github.com/subugoe/tido/commit/189fcb624d60efdca23247c8231eeabcabed304b))
+* remove bug with next manifest button ([5da0fa7](https://github.com/subugoe/tido/commit/5da0fa779707d42cc2924d87887e75a0667e40e1))
+* remove faulty indentation of annotation filter items ([5a14cc0](https://github.com/subugoe/tido/commit/5a14cc08029e206fac7264a7f9c2be7dc2c9c047))
+* scroll accurately to any target (nested or not) in textContainer on annotation selection in ListMode ([c45c6a6](https://github.com/subugoe/tido/commit/c45c6a66f7266850bf859e90f4b75e5cd9ba0f5e))
+* set fixed width to annotation filters ([626b2db](https://github.com/subugoe/tido/commit/626b2dbc9253241b6410142a64d9a7f058d27c9d))
+* show correctly image when switching from text to image containing mode ([d0deafc](https://github.com/subugoe/tido/commit/d0deafcedf28dd87055335e4aee88fb86a8ecbc4))
+* update unconfigured annotation filters on item change ([d098f86](https://github.com/subugoe/tido/commit/d098f86bb36ca1cb6d2180b8839d2471b0c8b8fe))
+
+
+### Docs
+
+* add annotations docs to README ([2f59877](https://github.com/subugoe/tido/commit/2f5987701732e7db8b5b6e4979d3fbd0be74db27))
+
+
+### Refactoring
+
+* fix and refactor some minor comps ([d41907f](https://github.com/subugoe/tido/commit/d41907f9cea3f9b6aa7198cafca3227d71477b3b))
+* include start and stop scroller in AlignAnnotationsList Component ([9bc2675](https://github.com/subugoe/tido/commit/9bc2675993709fd0b02a52b84ae62728b9c9f169))
+* use "aligned" instead of "align" in annotation modes, update README ([da96da5](https://github.com/subugoe/tido/commit/da96da5d7913191ebd6de8593cdeb55da4570511))
+
 ## [5.0.0-alpha.15](https://github.com/subugoe/tido/compare/v5.0.0-alpha.14...v5.0.0-alpha.15) (2026-01-14)
 
 

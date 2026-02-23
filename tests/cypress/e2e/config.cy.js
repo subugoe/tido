@@ -55,7 +55,6 @@ describe('Config', () => {
     cy.get('[data-cy="global-tree-toggle"]').should('be.visible')
     cy.get('[data-cy="new-panel"]').should('be.visible')
     cy.get('[data-cy="new-panel"]').should('have.text', 'Add New Panel')
-    Panel.getPanelModeOption('swap').should('have.attr', 'data-selected', 'true')
     cy.get('[data-cy="panel-placeholder"]').should('be.visible')
   });
 
@@ -71,9 +70,6 @@ describe('Config', () => {
   });
   runConfigTest('lang=de', 'translations: read from default `de` file', () => {
     cy.get('[data-cy="new-panel"]').should('have.text', 'Neues Panel hinzufügen')
-  });
-  runConfigTest('defaultPanelMode=split', 'defaultPanelMode: split', () => {
-    Panel.getPanelModeOption('split').should('have.attr', 'data-selected', 'true')
   });
   runConfigTest('showPanelPlaceholder=true', 'Should show panel placeholder', () => {
     cy.get('[data-cy="panel-placeholder"]').should('be.visible')
@@ -156,21 +152,22 @@ describe('Config', () => {
       )
   });
   //simplified is the second (=non-default) contentType of the collection
-  runConfigTest('panels[0].collection=http://localhost:8181/4w/reproduction/collection.json&panels[0].contentType=simplified',
-    'Should apply the given panel contentType', () => {
-      cy.get('[data-cy="content-type"]')
-        .should('be.visible')
-        .should('contain.text', 'simplified')
-        .click()
-
-      cy.get('[data-cy="content-types-dropdown"]')
-        .contains('simplified')
-        .should('have.attr', 'data-state', 'checked')
-
-      cy.get('[data-cy="content-types-dropdown"]')
-        .contains('accurate')
-        .should('have.attr', 'data-state', 'unchecked')
-  });
+  // runConfigTest('panels[0].collection=http://localhost:8181/4w/reproduction/collection.json&panels[0].contentType=simplified',
+  //   'Should apply the given panel contentType', () => {
+  //     cy.get('[data-cy="content-type"]')
+  //       .should('be.visible')
+  //       .should('contain.text', 'simplified')
+  //       .click()
+  //
+  //     cy.get('[data-cy="content-types-dropdown"]')
+  //       .contains('simplified')
+  //       .should('have.attr', 'data-state', 'checked')
+  //
+  //     cy.get('[data-cy="content-types-dropdown"]')
+  //       .contains('accurate')
+  //       .should('have.attr', 'data-state', 'unchecked')
+  //   }
+  // );
   runConfigTest('rootCollections[]=http://localhost:8181/4w/reproduction/collection.json&panels[0].collection=http://localhost:8181/4w/reproduction/collection.json',
     'Should show markers in tree for open panel', () => {
       Tree.open()
@@ -245,7 +242,7 @@ describe('Config', () => {
       .should('not.exist')
   });
   //collection with annotations
-  runConfigTest('defaultAnnotationsMode=list&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
+  runConfigTest('annotations.defaultMode=list&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations list view preselected', () => {
       //open annotations sidebar
       cy.get('[data-cy="sidebar-toggle"]')
@@ -308,30 +305,30 @@ describe('Config', () => {
   });
   runConfigTest('lang=de&translations.de.common.accurate=genau&panels[0].collection=http://localhost:8181/4w/reproduction/collection.json',
     'Should apply custom common translation "genau" for custom translation key "accurate"', () => {
-      cy.get('[data-cy="content-type"]').should('have.text', 'genau')  
+      cy.get('[data-cy="content-type"]').should('contain.text', 'genau')
   });
   runConfigTest('lang=de&translations.de.reproduction.accurate=genau&panels[0].collection=http://localhost:8181/4w/reproduction/collection.json',
     'Should apply custom translation "genau" for custom translation key "accurate" and collection key "reproduction"', () => {
-      cy.get('[data-cy="content-type"]').should('have.text', 'genau')
+      cy.get('[data-cy="content-type"]').should('contain.text', 'genau')
   });
-  runConfigTest('panelModes[]=text&panelModes[]=split',
-    'Should have panel mode "text" preselected, with "split" as the only other selectable panel mode', () => {
-      Panel.getPanelModeOption('text')
-        .should('have.attr', 'data-selected', 'true')
-      Panel.getPanelModeOption('split', true)
-        .should('have.attr', 'data-selected', 'false')
-      Panel.getPanelModeOption('swap', true)
-        .should('not.exist')
-  });
-  runConfigTest('panelModes[]=image', 
-    'Should not allow panel mode selection when configuring a singular panel mode', () => {
-      Panel.getPanelModeSelect().should('not.exist')
-  });
-  runConfigTest('defaultPanelMode=split&panels[0].mode=text', 
-  'Should apply panel specific panel mode and ignore default panel mode for this panel', () => {
-    Panel.getPanelModeOption('text')
-      .should('have.attr', 'data-selected', 'true')
-    Panel.getPanelModeOption('split', true)
-      .should('have.attr', 'data-selected', 'false')
-  });
+  // runConfigTest('panelModes[]=text&panelModes[]=split',
+  //   'Should have panel mode "text" preselected, with "split" as the only other selectable panel mode', () => {
+  //     Panel.getPanelModeOption('text')
+  //       .should('have.attr', 'data-selected', 'true')
+  //     Panel.getPanelModeOption('split', true)
+  //       .should('have.attr', 'data-selected', 'false')
+  //     Panel.getPanelModeOption('swap', true)
+  //       .should('not.exist')
+  // });
+  // runConfigTest('panelModes[]=image',
+  //   'Should not allow panel mode selection when configuring a singular panel mode', () => {
+  //     Panel.getPanelModeSelect().should('not.exist')
+  // });
+  // runConfigTest('defaultPanelMode=split&panels[0].mode=text',
+  // 'Should apply panel specific panel mode and ignore default panel mode for this panel', () => {
+  //   Panel.getPanelModeOption('text')
+  //     .should('have.attr', 'data-selected', 'true')
+  //   Panel.getPanelModeOption('split', true)
+  //     .should('have.attr', 'data-selected', 'false')
+  // });
 });

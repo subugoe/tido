@@ -205,7 +205,9 @@ function getTargetsHoveredAnnotations(hoveredAnnotations: string[], targets: Ele
   if (!hoveredAnnotations) return []
   const result: Element[] = []
 
-  const annotationsTargets = hoveredAnnotations.map(key => matchedAnnotationsMap[key].target).flat()
+  const annotationsTargets = hoveredAnnotations
+    .filter(key => !!(matchedAnnotationsMap[key]))
+    .map(key => matchedAnnotationsMap[key].target).flat()
   const uniqueAnnotationTargets = [...new Set(annotationsTargets)]
 
   targets.forEach(t => {

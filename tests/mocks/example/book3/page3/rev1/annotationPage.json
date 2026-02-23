@@ -1,0 +1,99 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book3/page3/rev1/annotationPage.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/book3/page3/rev1/annotationCollection.json",
+    "label": "Annotations for The Great Gatsby, Chapter 3",
+    "total": 4
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/book3/page3/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The extravagant parties symbolize the excess and superficiality of the Jazz Age.",
+        "format": "text/plain",
+        "x-content-type": "Symbol"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page3/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#blue-gardens"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page3/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Jay Gatsby - The mysterious millionaire who throws lavish parties, hoping to reunite with Daisy.",
+        "format": "text/plain",
+        "x-content-type": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page3/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#gatsby-intro"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page3/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Manuscript shows different word order in early draft.",
+        "format": "text/plain",
+        "x-content-type": "Syntactic Revision"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page3/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-gardens-people"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page3/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Social commentary: Most party guests were uninvited crashers.",
+        "format": "text/plain",
+        "x-content-type": "Cultural Observation"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page3/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-invited"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

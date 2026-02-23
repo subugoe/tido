@@ -4,13 +4,13 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, PanelMode, PanelConfig, FilterNode } from '@/types'
+import { TidoConfig, PanelConfig, FilterNode } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 
 type ValidationResult<T> = {
   result: T;
-  errors: Record<string, string>;
+  errors: Record<string, string | object>;
 };
 
 function validateAllowNewCollections(input: any): ValidationResult<TidoConfig['allowNewCollections']> {
@@ -35,19 +35,6 @@ function validateContainer(input: any): ValidationResult<TidoConfig['container']
         if (input !== undefined)
           errors['container'] = 'must be a string'
         return defaultConfig.container
-      })()
-  return { result, errors }
-}
-
-function validateDefaultPanelMode(input: any): ValidationResult<TidoConfig['defaultPanelMode']> {
-  const errors: Record<string, string> = {}
-  const result =
-    typeof input === 'string' && ['swap', 'split', 'text', 'image'].includes(input)
-      ? input as PanelMode
-      : (() => {
-        if (input !== undefined)
-          errors['defaultPanelMode'] = 'defaultPanelMode must be a string'
-        return defaultConfig.defaultPanelMode
       })()
   return { result, errors }
 }
@@ -168,43 +155,24 @@ function validateTranslations(input: any): ValidationResult<TidoConfig['translat
   return { result, errors }
 }
 
-function validatePanelModes(input: any): ValidationResult<TidoConfig['panelModes']> {
-  const defaultPanelModes: PanelMode[] = ['swap', 'split', 'text', 'image']
+function validatePanelViews(input: any): ValidationResult<TidoConfig['panelViews']> {
   const errors: Record<string, string> = {}
 
-  if (input === undefined) return { errors, result: defaultConfig.panelModes }
+  if (input === undefined) return { errors, result: defaultConfig.panelViews }
 
   if (!Array.isArray(input)) {
-    errors['panelModes'] = 'must be an array'
-    return { errors, result: defaultConfig.panelModes }
+    errors['panelViews'] = 'must be an array'
+    return { errors, result: defaultConfig.panelViews }
   }
 
   if (input.length === 0) {
-    errors['panelModes'] = 'must have at least 1 value'
-    return { errors, result: defaultConfig.panelModes }
-  }
-
-  const corruptValues = input.filter(item => !defaultPanelModes.includes(item))
-  if (corruptValues.length) {
-    errors['panelModes'] = `${corruptValues.join(', ')} ${corruptValues.length > 1 ? 'are' : 'is'} not valid. Please use only ${defaultPanelModes.join(', ')}`
-    return { errors, result: defaultConfig.panelModes }
+    errors['panelViews'] = 'must have at least 1 value'
+    return { errors, result: defaultConfig.panelViews }
   }
 
   return { errors, result: input }
 }
 
-function validateDefaultAnnotationsMode(input: any): ValidationResult<TidoConfig['defaultAnnotationsMode']> {
-  const errors: Record<string, string> = {}
-  const result =
-    input === 'aligned' || input === 'list'
-      ? input
-      : (() => {
-        if (input !== undefined)
-          errors['annotationsMode'] = 'annotationsMode should be either `aligned` or `list`'
-        return defaultConfig.defaultAnnotationsMode
-      })()
-  return { result, errors }
-}
 
 function validateRootCollections(input: any): ValidationResult<TidoConfig['rootCollections']> {
   const errors: Record<string, string> = {}
@@ -219,13 +187,27 @@ function validateRootCollections(input: any): ValidationResult<TidoConfig['rootC
   return { result, errors }
 }
 
-function validateAnnotations(input: any): ValidationResult<TidoConfig['annotations']> {
+function validateAnnotations(input: any, defaultConfig: Partial<TidoConfig>): ValidationResult<TidoConfig['annotations']> {
   const result = { ...input }
-  const errors: Record<string, string> = {}
+  const defaultMode = defaultConfig.annotations.defaultMode
+
+  const errors: Record<string, object> = {
+    'annotations': {}
+  }
 
   if (!result.filters && !result.types) {
-    errors['annotations'] = 'did not find "filters" or "types" key'
-    return { result: {}, errors }
+    errors['annotations']['filters'] = 'did not find "filters" or "types" key'
+  }
+
+  if (result?.singleMode && !['aligned', 'list'].includes(result.singleMode)) {
+    // if 'singleMode' is provided wrong -> we provide both modes to user
+    errors['annotations']['mode'] = 'mode is a value either "aligned" or "list"'
+    result.defaultMode = defaultMode
+  }
+
+  if (!result.singleMode && !result.defaultMode) {
+    // none between 'singleMode' and 'defaultMode' is provided -> both modes are provided
+    result.defaultMode = defaultMode
   }
 
   if (result.filters && !result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
@@ -247,13 +229,12 @@ function validateAnnotations(input: any): ValidationResult<TidoConfig['annotatio
 }
 
 export async function mergeAndValidateConfig(
-  userConfig: Partial<TidoConfig>,
-): Promise<{ config: TidoConfig; errors: Record<string, string> }> {
+  userConfig: Partial<TidoConfig>, defaultConfig: Partial<TidoConfig>
+): Promise<{ config: TidoConfig; errors: Record<string, object | string> }> {
 
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
-  const panelModes = validatePanelModes(userConfig.panelModes)
-  const defaultPanelMode = validateDefaultPanelMode(userConfig.defaultPanelMode)
+  const panelViews = validatePanelViews(userConfig.panelViews)
   const lang = validateLang(userConfig.lang)
   const panels = validatePanels(userConfig.panels)
   const showAddNewPanelButton = validateShowNewCollectionButton(userConfig.showAddNewPanelButton)
@@ -264,8 +245,8 @@ export async function mergeAndValidateConfig(
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
   const translations = validateTranslations(userConfig.translations)
-  const defaultAnnotationsMode = validateDefaultAnnotationsMode(userConfig.defaultAnnotationsMode)
-  const annotations = validateAnnotations(userConfig.annotations)
+  const annotations = validateAnnotations(userConfig.annotations, defaultConfig)
+
 
   const mergedTranslations = {
     en: deepMerge(enTranslations, translations.result.en ?? {}),
@@ -282,7 +263,6 @@ export async function mergeAndValidateConfig(
   const errors = {
     ...allowNewCollections.errors,
     ...container.errors,
-    ...defaultPanelMode.errors,
     ...lang.errors,
     ...panels.errors,
     ...rootCollections.errors,
@@ -293,7 +273,7 @@ export async function mergeAndValidateConfig(
     ...theme.errors,
     ...title.errors,
     ...translations.errors,
-    ...panelModes.errors,
+    ...panelViews.errors,
     ...annotations.errors
   }
 
@@ -346,7 +326,6 @@ export async function mergeAndValidateConfig(
     allowNewCollections: allowNewCollections.result,
     container: container.result,
     panels: panelsFromContentState ?? panels.result,
-    defaultPanelMode: defaultPanelMode.result,
     lang: lang.result,
     rootCollections: rootCollections.result,
     showAddNewPanelButton: showAddNewPanelButton.result,
@@ -356,8 +335,7 @@ export async function mergeAndValidateConfig(
     theme: theme.result,
     title: title.result,
     translations: mergedTranslations,
-    panelModes: panelModes.result,
-    defaultAnnotationsMode: defaultAnnotationsMode.result,
+    panelViews: panelViews.result,
     annotations: annotations.result
   }
 

@@ -15,6 +15,8 @@ declare global {
     idref?: Idref[]
   }
 
+  type AnnotationsMode = 'aligned' | 'list'
+
   interface AnnotationCollection {
     id: string
     first: string
@@ -160,15 +162,12 @@ declare global {
     collectionId: string | null
     manifest: Manifest | null
     item: Item | null
-    contentTypes: string[]
-    activeContentType: string
-    mode: PanelMode
     imageUrl?: string
     activeTargetIndex: number
     config: PanelConfig
-    imageExists: boolean
     annotationsOpen: boolean
     annotations: Annotation[] | null
+    panelViews: PanelView[]
   }
 
   type ItemType = 'section' | 'page' | 'full'
@@ -326,7 +325,6 @@ declare global {
     y: number
   }
 
-  type AnnotationsMode = 'aligned' | 'list'
 }
 
 export interface PanelConfig {
@@ -334,15 +332,15 @@ export interface PanelConfig {
   manifest?: string
   item?: string
   contentType?: string
-  mode?: PanelMode
 }
 
-export type PanelMode = 'swap' | 'split' | 'text' | 'image'
+export type PanelViewType = 'text' | 'image'
 
-export interface PanelModeButtonData {
-  mode: PanelMode,
-  icon: React.Element,
-  title: string
+export interface PanelView {
+  label?: string
+  view: PanelViewType
+  contentTypes?: string[]
+  visible?: boolean
 }
 
 export interface ThemeConfig {
@@ -364,7 +362,6 @@ export interface TranslationsConfig {
 export interface TidoConfig {
   allowNewCollections: boolean
   container: string
-  defaultPanelMode: PanelMode
   lang: string
   rootCollections: string[]
   showAddNewPanelButton: boolean
@@ -375,8 +372,7 @@ export interface TidoConfig {
   theme: ThemeConfig
   title: string
   translations: TranslationsConfig,
-  panelModes: PanelMode[],
-  defaultAnnotationsMode: AnnotationsMode
+  panelViews: PanelView[],
   annotations: AnnotationsConfig
 }
 
@@ -385,11 +381,15 @@ export interface AnnotationTypeConfig {
   icon?: string
 }
 
+export interface AnnotationTypeConfigMap {
+  [type: string]: AnnotationTypeConfig
+}
+
 export interface AnnotationsConfig {
   filters?: AnnotationFiltersConfig
-  types?: {
-    [type: string]: AnnotationTypeConfig
-  }
+  types?: AnnotationTypeConfigMap,
+  singleMode?: AnnotationsMode,
+  defaultMode?: AnnotationsMode
 }
 
 export interface AnnotationFiltersConfig {
@@ -419,9 +419,13 @@ export interface TidoContentStateTarget {
   type: 'Item' | 'Manifest' | 'Collection'
   partOf?: TidoContentStateTarget
   state?: {
-    mode?: PanelMode
-    contentType?: string
+    views?: PanelViewContentState[]
   }
+}
+
+export interface PanelViewContentState {
+  visible: boolean
+  active?: string
 }
 
 export type SelectionRule = 'single' | 'multiple'

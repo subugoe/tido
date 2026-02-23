@@ -1,0 +1,99 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book2/page3/rev1/annotationPage.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/book2/page3/rev1/annotationCollection.json",
+    "label": "Annotations for Moby-Dick, Chapter 3",
+    "total": 4
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The Spouter-Inn is where Ishmael first meets Queequeg, establishing their friendship.",
+        "format": "text/plain",
+        "x-content-type": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#spouter-inn"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Queequeg - A Polynesian harpooneer who becomes Ishmael's close friend and shipmate.",
+        "format": "text/plain",
+        "x-content-type": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#queequeg"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Architectural term preserved from manuscript description.",
+        "format": "text/plain",
+        "x-content-type": "Descriptive Detail"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-gable"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Archaic past participle, modernized would be \"smoke-damaged\".",
+        "format": "text/plain",
+        "x-content-type": "Lexical Modernization"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-besmoked"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

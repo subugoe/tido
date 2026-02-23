@@ -28,7 +28,7 @@ function scrollIntoViewIfNeeded(target: HTMLElement, container: HTMLElement) {
   const { bottom: targetBottom, top: targetTop } = target.getBoundingClientRect()
   const { top: containerTop, height: containerHeight } = container.getBoundingClientRect()
 
-  const offsetTop = target.offsetTop
+  const offsetTop = targetTop - containerTop + container.scrollTop
   const targetHeight = target.offsetHeight
 
   // Desired scrollTop to bring the element to the vertical center

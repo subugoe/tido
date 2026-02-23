@@ -33,6 +33,7 @@ import {
 } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
 import { computeNewSelectedAnnotationIndex } from '@/utils/annotations.ts'
+import { useTextView } from '@/contexts/TextViewContext.tsx'
 
 interface Props {
   htmlString: string
@@ -45,17 +46,14 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const {
     panelState,
     selectedAnnotationTypes,
-    matchedAnnotationsMap,
-    setMatchedAnnotationsMap,
     setSelectedAnnotation,
     updatePanel,
-    panelId,
     selectedAnnotation,
     annotationsMode,
-    showTextOptions,
   } = usePanel()
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
+  const { matchedAnnotationsMap, setMatchedAnnotationsMap, activeContentUrl } = useTextView()
 
   const [portals, setPortals] = useState([])
 
@@ -64,14 +62,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const annotationsModeRef = useRef<'aligned' | 'list'>(null)
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
-
-  function scrollIntoSelectedAnnotation(selectedAnnotation: Annotation) {
-    const annotationId = selectedAnnotation?.id
-    const panelEl = document.getElementById(panelId) as HTMLElement
-    const container = panelEl.querySelector('div[data-sidebar-container]') as HTMLElement
-    const annotationEl = container.querySelector('div[data-annotation="'+annotationId+'"]') as HTMLElement
-    scrollIntoViewIfNeeded(annotationEl, container)
-  }
 
   function containsChildren(targets: HTMLElement[], target: HTMLElement) {
     for(const t of targets) {
@@ -108,8 +98,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
       setSelectedAnnotation(annotation)
       prevClickedTargetIndexRef.current = flippedMatchedAnnotationsMapRef.current.findIndex(entry => targetEntry === entry)
-
-      if (annotationsModeRef.current === 'list') scrollIntoSelectedAnnotation(annotation)
     }
     else {
       setSelectedAnnotation(null)
@@ -128,7 +116,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
     setHoveredAnnotations(idsArray)
   }
-
 
   const onMouseLeaveTarget = () => {
     setHoveredAnnotations(null)
@@ -162,13 +149,16 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     if (!panelState.annotations || !parsedDom) return
 
     const result: MatchedAnnotationsMap = panelState.annotations.reduce((acc, cur) => {
-      const selector = (cur.target[0].selector as CssSelector).value
-      if (!selector) {
-        console.error('Annotation error','Selector value of target is empty for this annotation', cur)
+      const isSource = cur.target[0].source === activeContentUrl.current
+      const selector = (cur.target[0].selector as CssSelector)?.value
+
+      if (!isSource || !selector) {
+        if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
         return acc
       }
 
       const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
+
       if (matchedNodes.length > 0) {
         matchedNodes.forEach(target => {
           target.addEventListener('click', onClickTarget)
@@ -188,12 +178,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     setMatchedAnnotationsMap(result)
   }, [parsedDom, panelState.annotations])
 
-
-
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
-    const targetsOfSelectedAnnotation = selectedAnnotation ? matchedAnnotationsMap[selectedAnnotation.id].target : []
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ? matchedAnnotationsMap[selectedAnnotation.id].target : []
 
     flippedMatchedAnnotationsMapRef.current?.forEach(fa => {
       const target = fa.target as HTMLElement
@@ -219,23 +207,20 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
           // hasParentHovered: condition to determine whether we should add the style to a nested target
           if (!hasParentHovered) {
             addHoverStyle(target)
-          }
-          else {
+          } else {
             addHoverStyle(target)
             addNestedTargetStyle(target)
           }
-        }
-        else if (!isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
+        } else if (!isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
           addHighlightStyle(target)
         }
       }
     })
   }, [hoveredAnnotations])
 
-
-
   // Apply highlighting styles on every map update
   useEffect(() => {
+    if (!matchedAnnotationsMap) return
     const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedAnnotationsMap)
     targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
     flippedMatchedAnnotationsMapRef.current = assignNestedTargetsInFlippedMatched(targetsRef.current, flippedMatchedAnnotationsMap)
@@ -263,10 +248,13 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     })
   }, [matchedAnnotationsMap])
 
-
   // Apply selected styles on every selectedAnnotation update
   useEffect(() => {
-    const targetsOfSelectedAnnotation = selectedAnnotation ? matchedAnnotationsMap[selectedAnnotation.id].target : []
+    if (!matchedAnnotationsMap) return
+    const targetsOfSelectedAnnotation =
+      selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id])
+        ? matchedAnnotationsMap[selectedAnnotation.id].target
+        : []
 
     flippedMatchedAnnotationsMapRef.current.forEach(fa => {
       const target = fa.target as HTMLElement
@@ -292,10 +280,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
         addHighlightStyle(target)
       }
     })
-  }, [selectedAnnotation])
+  }, [selectedAnnotation, matchedAnnotationsMap])
 
-  return <div className={`relative flex`}>
-    <div data-text-wrapper ref={textWrapperRef} className={showTextOptions ? 'pt-16' : ''}></div>
+  return <div className="relative flex">
+    <div data-text-wrapper ref={textWrapperRef} className="pt-16"></div>
     {portals}
   </div>
 })

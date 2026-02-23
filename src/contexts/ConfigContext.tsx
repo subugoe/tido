@@ -3,10 +3,10 @@ import { TidoConfig } from '@/types'
 import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 import { promiseWithCache } from '@/utils/promise-cache.ts'
 import { getAppPrimaryAndForegroundColor } from '@/utils/colors.ts'
-import { useUIStore } from '@/store/UIStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { initI18n } from '@/utils/translations.ts'
 import Loading from '@/components/ui/loading.tsx'
+import { defaultConfig } from '@/utils/config/default-config.ts'
 
 type ConfigProviderProps = {
   children: React.ReactNode
@@ -39,12 +39,10 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
   useEffect(() => {
     async function initApp() {
       setLoading(true)
-      const { config, errors } = await mergeAndValidateConfig(userConfig)
+      const { config, errors } = await mergeAndValidateConfig(userConfig, defaultConfig)
       if (Object.keys(errors).length > 0) console.error(errors)
       initI18n(config.translations, config.lang)
       createThemeStyles(config)
-
-      useUIStore.getState().updatePanelMode(config.panelModes.includes(config.defaultPanelMode) ? config.defaultPanelMode : config.panelModes[0])
 
       createTreeNodes(config.rootCollections)
 

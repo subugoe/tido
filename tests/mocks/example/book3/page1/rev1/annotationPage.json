@@ -1,0 +1,162 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book3/page1/rev1/annotationPage.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/book3/page1/rev1/annotationCollection.json",
+    "label": "Annotations for The Great Gatsby, Chapter 1",
+    "total": 7
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/book3/page1/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "This opening advice establishes Nick as the novel's moral center and non-judgmental narrator.",
+        "format": "text/plain",
+        "x-content-type": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#criticizing"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page1/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "West Egg represents new money and the newly rich, where Gatsby lives.",
+        "format": "text/plain",
+        "x-content-type": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#west-egg"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page1/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "East Egg represents old money and established wealth, where Tom and Daisy live.",
+        "format": "text/plain",
+        "x-content-type": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#east-egg"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page1/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Typescript shows this phrase added in margin during revision.",
+        "format": "text/plain",
+        "x-content-type": "Marginal Addition"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page1/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-vulnerable"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page1/rev1/annotation-diplomatic-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Original typescript: \"advantages you have had\" before contraction.",
+        "format": "text/plain",
+        "x-content-type": "Stylistic Revision"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page1/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-advantages"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page1/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Social commentary on 1920s class divisions in Long Island.",
+        "format": "text/plain",
+        "x-content-type": "Social Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page1/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-fashionable"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book3/page1/rev1/annotation-normalized-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Geographic note: Refers to the sound between the two peninsulas.",
+        "format": "text/plain",
+        "x-content-type": "Geographical Clarification"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book3/page1/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-bay"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

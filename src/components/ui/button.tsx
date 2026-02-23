@@ -13,16 +13,17 @@ const buttonVariants = cva(
         destructive: 'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
         success: 'bg-success text-white shadow-xs hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40 dark:bg-success/60',
         outline: 'border border-border shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
-        secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
+        secondary: 'bg-secondary text-secondary-foreground border border-secondary shadow-xs hover:bg-gray-800',
         ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent',
         ghostAmber: 'text-amber-700 dark:text-amber-100 hover:bg-amber-200 hover:text-amber-800 dark:hover:bg-amber-700 dark:hover:text-amber-200',
         ghostDestructive: 'text-red-500 dark:text-red-400 hover:bg-red-300/10 hover:text-red-600 dark:hover:text-red-500',
+        ghostPrimary: 'text-primary hover:bg-primary/10 dark:hover:bg-primary/20 w-fit',
         link: 'text-primary underline-offset-4 hover:underline',
-        muted: 'bg-muted hover:bg-accent'
+        muted: 'bg-muted hover:bg-accent',
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',
-        sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
+        sm: 'h-8 px-2.5 py-1 rounded-md gap-1.5 has-[>svg]:px-2.5',
         lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
         icon: 'h-8 w-8 shrink-0 justify-center [&_svg]:size-4',
         iconLg: 'h-10 px-2 py-2 [&_svg]:size-5'

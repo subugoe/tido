@@ -123,6 +123,9 @@
     "list": "List",
     "aligned": "Aligned",
     "no_annotation_filters": "No annotation filters available.",
-    "unnamed_filter": "Unnamed filter"
+    "unnamed_filter": "Unnamed filter",
+    "view_more": "View more",
+    "view_less": "View less",
+    "view": "View"
   }
 }

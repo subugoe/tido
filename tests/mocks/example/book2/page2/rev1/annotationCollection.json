@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book2/page2/rev1/annotationCollection.json",
+  "type": "AnnotationCollection",
+  "label": "Annotations for Moby-Dick, Chapter 2",
+  "total": 4,
+  "first": "http://localhost:8181/example/book2/page2/rev1/annotationPage.json",
+  "last": "http://localhost:8181/example/book2/page2/rev1/annotationPage.json"
+}
