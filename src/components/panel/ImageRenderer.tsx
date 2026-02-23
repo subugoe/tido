@@ -62,17 +62,16 @@ const ImageRenderer: FC = () => {
     const oldItem = viewerRef.current.world.getItemAt(0)
     if (oldItem) viewerRef.current.world.removeItem(oldItem)
 
-    const imageType = panelState.item?.image?.type
+    const imageType = panelState.item?.image?.['x-type']
 
-    if (imageType === 'simple' || !imageType) {
+    if (imageType === 'image' || !imageType) {
       viewerRef.current.open({
         type: 'image',
         url: imageUrl
       })
     }
     else if (imageType === 'iiif') {
-      const infoFileUrl = panelState.item?.image?.info
-      viewerRef.current.open(infoFileUrl)
+      viewerRef.current.open(imageUrl)
     }
   }, [panelState.item, loadingPanel])
 

@@ -21,9 +21,8 @@
   ],
   "image": {
     "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/image.jsonld",
-    "type": "iiif",
-    "id": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/img/einsiedeln_278_1040/279",
-    "info": "https://digital.blb-karlsruhe.de/i3f/v20/1217320/info.json",
+    "id": "https://digital.blb-karlsruhe.de/i3f/v20/1217320/info.json",
+    "x-type": "iiif",
     "license": {
       "id": "CC-BY-4.0?"
     }
