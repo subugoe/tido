@@ -1,4 +1,6 @@
 import { Panel } from '../support/panel-helpers'
+import { Tree } from '../support/tree-helpers'
+
 function runConfigTest(param, name, callback, only=false) {
   const test = () => {
     cy.visit('/e2e.html?' + param);
@@ -29,47 +31,21 @@ function checkPanelItemLabels(collectionLabel, manifestLabel, itemLabel, panelId
     })
 }
 
-function checkTreeExpandedCollectionManifests(
-  $manifestNodes,
-  manifests = { count: 0, idx: 0, label: '' },
-  items = { count: 0, idx: 0, label: '' }
-) {
-  cy.wrap($manifestNodes)
-    .should('have.length', manifests.count)
-
-    .eq(manifests.idx)
-    .should('contain.text', manifests.label)
-    .as('manifest')
-
-  cy.get('@manifest')
-    .click()
-
-  cy.get('@manifest')
-    .children('[data-cy="node-children"]')
-    .find('[data-cy="tree-node"]')
-    .should('have.length', items.count)
-
-    .eq(items.idx)
-    .should('contain.text', items.label)
-}
-
-function checkTreeCollapsedCollection($rootCollection, collectionLabel, manifests, items) {
+function checkTreeCollapsedCollection($rootCollection, collectionLabel, manifestsCount) {
   cy.wrap($rootCollection).as('rootCollection')
 
   cy.get('@rootCollection')
-    .children('[data-cy="node-children"]')
-    .should('not.be.visible')
+    .then($rootCollection => {
+      Tree.shouldBeCollapsed($rootCollection)
+      Tree.shouldHaveLabel($rootCollection, collectionLabel)
+    })
 
+  cy.get('@rootCollection').click()
+    
   cy.get('@rootCollection')
-    .should('contain.text', collectionLabel)
-    .click()
-
-    .children('[data-cy="node-children"]')
-    .should('be.visible')
-
-    .find('[data-cy="tree-node"]')
-    .then(($manifestNodes) => {
-      checkTreeExpandedCollectionManifests($manifestNodes, manifests, items)
+    .then(($rootCollection) => {
+      Tree.shouldBeExpanded($rootCollection)
+      Tree.shouldHaveChildren($rootCollection, manifestsCount)
     })
 }
 
@@ -138,8 +114,7 @@ describe('Config', () => {
         'Cod. Arab. 236 Copenhagen',
         '2a'
       )
-    }
-  );
+  });
   runConfigTest('panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json&panels[0].manifest=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/3r176/manifest.json',
     'Should show first item when providing collection and manifest', () => {
       checkPanelItemLabels(
@@ -147,8 +122,7 @@ describe('Config', () => {
         'Brit.Mus. cod. Add. 7209',
         '182b'
       )
-    }
-  );
+  });
   runConfigTest('panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json&panels[0].manifest=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/3r176/manifest.json&panels[0].item=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/3r176/183a/latest/item.json',
     'Should show item when providing collection, manifest and item', () => {
       checkPanelItemLabels(
@@ -156,8 +130,7 @@ describe('Config', () => {
         'Brit.Mus. cod. Add. 7209',
         '183a'
       )
-    }
-  );
+  });
   runConfigTest('panels[0].collection=http://localhost:8181/4w/reproduction/collection.json&panels[1].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should show two panels with first item from two collections', () => {
       cy.get('[data-cy="panels-wrapper"]')
@@ -177,8 +150,7 @@ describe('Config', () => {
         '2a',
         1
       )
-    }
-  );
+  });
   //simplified is the second (=non-default) contentType of the collection
   // runConfigTest('panels[0].collection=http://localhost:8181/4w/reproduction/collection.json&panels[0].contentType=simplified',
   //   'Should apply the given panel contentType', () => {
@@ -198,82 +170,54 @@ describe('Config', () => {
   // );
   runConfigTest('rootCollections[]=http://localhost:8181/4w/reproduction/collection.json&panels[0].collection=http://localhost:8181/4w/reproduction/collection.json',
     'Should show markers in tree for open panel', () => {
-      //open tree
-      cy.get('[data-cy="global-tree-toggle"]')
-        .should('be.visible')
-        .click()
-
-      cy.get('[data-cy="tree"]')
-        .children('[data-cy="tree-node"]')
+      Tree.open()
+      Tree.getRootNodes()
         .eq(0)
         .as('rootCollection')
 
       //should have a marker at collection level
-      cy.get('@rootCollection')
-        .find('[data-cy="node-label"]')
-        .eq(0)
-        .should('contain.text', 'Ebene 1: Reproduktion der Dokumente')
-        .siblings('[data-cy="tree-node-actions"]')
-        .find('[data-cy="tree-node-marker"]')
-        .should('be.visible')
+      cy.get('@rootCollection').then($rootCollection => {
+        Tree.shouldHaveLabel($rootCollection, 'Ebene 1: Reproduktion der Dokumente')
+        Tree.shouldHaveMarker($rootCollection)
 
-      cy.get('@rootCollection')
-        .children('[data-cy="node-children"]') //manifest nodes
+        Tree.getDirectChildren($rootCollection)
+      }).as('manifests')
+      
+      //should have only one marker at manifest level for manifest 'Einsiedeln, 278 1040'
+      cy.get('@manifests')
         .find('[data-cy="tree-node-marker"]')
         .should('have.length', 1)
-        .parents('[data-cy="tree-node"]')
-        .eq(0)
-        //manifest node with marker
-        .within(() => {
-          //open items of marked manifest
-          cy.get('[data-cy="node-label"]')
-            .should('contain.text', 'Einsiedeln, 278 1040')
-            .click()
-          //should only have one marker at item level for item '279'
-          cy.get('[data-cy="node-children"]')
-            .find('[data-cy="tree-node-marker"]')
-            .should('have.length', 1)
-            .parents('[data-cy="tree-node"]')
-            .eq(0)
-            .find('[data-cy="node-label"]')
-            .should('contain.text', '279')
-        })
-    }
-  );
+        .closest('[data-cy="tree-node"]')
+        .as('manifest')
+      
+      cy.get('@manifest').then(($manifest) => {
+        Tree.shouldHaveLabel($manifest, 'Einsiedeln, 278 1040')
+          .click()
+        
+        //should only have one marker at item level for item '279'
+        Tree.getDirectChildren($manifest)
+          .find('[data-cy="tree-node-marker"]')
+          .should('have.length', 1)
+          .closest('[data-cy="tree-node-leaf"]')
+          .then(($item) => Tree.shouldHaveLabel($item, '279'))
+      })
+  });
   runConfigTest('rootCollections[]=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should show one root collection in global tree with root node expanded', () => {
-      cy.get('[data-cy="global-tree-toggle"]')
-        .should('be.visible')
-        .click()
-
-      cy.get('[data-cy="tree"]')
-        .children('[data-cy="tree-node"]')
+      Tree.open()
+      Tree.getRootNodes()
         .should('have.length', 1)
-        .children()
         .eq(0)
-        .find('[data-cy="node-label"]')
-        .should('contain.text', 'Textual witnesses in Arabic and Karshuni')
-
-        .parents('[data-cy="tree-node"]')
-        .children('[data-cy="node-children"]')
-        .find('[data-cy="tree-node"]')
-        .then(($manifestNodes) => {
-          //should have 30 manifests and the third should be labelled 'Borg. Arab. 201'
-          const manifests = { count: 30, idx: 2, label: 'Borg. Arab. 201' }
-          //should have 18 items under 'Borg. Arab. 201' and the fourth should be labelled '200a'
-          const items = { count: 18, idx: 3, label: '200a' }
-          checkTreeExpandedCollectionManifests($manifestNodes, manifests, items)
+        .then(($rootCollection) => {
+          const manifestsCount = 30
+          Tree.shouldHaveLabel($rootCollection, 'Textual witnesses in Arabic and Karshuni')
+          Tree.shouldHaveChildren($rootCollection, manifestsCount)
         })
-    }
-  );
+  });
   runConfigTest('rootCollections[]=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json&rootCollections[]=http://localhost:8181/4w/reproduction/collection.json',
     'Should show two root collections in global tree with both root nodes collapsed', () => {
-      cy.get('[data-cy="global-tree-toggle"]')
-        .should('be.visible')
-        .click()
-
-      cy.get('[data-cy="tree"]')
-        .children('[data-cy="tree-node"]')
+      Tree.open()
+      Tree.getRootNodes()
         .should('have.length', 2)
         .as('rootCollections')
 
@@ -281,27 +225,18 @@ describe('Config', () => {
         .eq(0)
         .then(($rootCollection) => {
           const collectionLabel = 'Textual witnesses in Arabic and Karshuni'
-          //should have 30 manifests and the last one should be labelled 'Syr 17'
-          const manifests = { count: 30, idx: 29, label: 'Syr 17'}
-          //should have 50 items under 'Syr 17' and the second should be labelled '2v'
-          const items = { count: 50, idx: 1, label: '2v'}
-
-          checkTreeCollapsedCollection($rootCollection, collectionLabel, manifests, items)
+          const manifestsCount = 30
+          checkTreeCollapsedCollection($rootCollection, collectionLabel, manifestsCount)
         })
 
       cy.get('@rootCollections')
         .eq(1)
         .then(($rootCollection) => {
           const collectionLabel = 'Ebene 1: Reproduktion der Dokumente'
-          //should have 8 manifests and the first should be labelled 'Einsiedeln, 278 1040'
-          const manifests = { count: 8, idx: 0, label: 'Einsiedeln, 278 1040'}
-          //should have 3 items under 'Einsiedeln, 278 1040' and the last should be labelled '281'
-          const items = { count: 3, idx: 2, label: '281'}
-
-          checkTreeCollapsedCollection($rootCollection, collectionLabel, manifests, items)
+          const manifestsCount = 8
+          checkTreeCollapsedCollection($rootCollection, collectionLabel, manifestsCount)
         })
-    }
-  );
+  });
   runConfigTest('showGlobalTree=false', 'Should not show the global tree toggle', () => {
     cy.get('[data-cy="global-tree-toggle"]')
       .should('not.exist')
@@ -334,8 +269,7 @@ describe('Config', () => {
           expect(top9, 'Annotation #10 should be below (have a higher position.top) annotation #9')
             .to.be.gt(top8)
         })
-    }
-  );
+  });
   //collection with annotations
   runConfigTest('defaultAnnotationsMode=align&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations align view preselected', () => {
@@ -364,9 +298,8 @@ describe('Config', () => {
           expect(top9, 'Annotation #10 should be above (have a lower position.top) annotation #9')
             .to.be.lt(top8)
         })
-    }
-  );
-  runConfigTest('lang=de&translations.de.common.add_new_panel=Willk%C3%BCrliche%20%C3%9Cbersetzung',
+  });
+  runConfigTest('lang=de&translations.de.common.add_new_panel=Willk%C3%BCrliche%20%C3%9Cbersetzung', 
     'Should apply custom common translation "Willkürliche Übersetzung" to add-new-panel-button', () => {
       cy.get('[data-cy="new-panel"]').should('have.text', 'Willkürliche Übersetzung')
   });

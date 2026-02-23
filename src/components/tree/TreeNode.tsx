@@ -132,7 +132,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
   }
 
 
-  return <div data-cy="tree-node" data-node-key={node.key} className="mb-1">
+  return <div {...(node.leaf ? { 'data-cy': 'tree-node-leaf' } : { 'data-cy': 'tree-node' })} data-node-key={node.key} className="mb-1">
     <div
       className={`flex relative items-start h-8 px-2 py-1 rounded-md cursor-pointer ${selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover}`}
       onClick={(e) => handleNodeClick(e)}
