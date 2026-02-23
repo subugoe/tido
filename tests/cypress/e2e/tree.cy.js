@@ -22,21 +22,6 @@ function expectPanelWithText(panelIdx, itemLabel, textSnippet) {
     .should('have.text', itemLabel)
 
   cy.get('@panel')
-    .find('[data-cy="panel-mode-select"]')
-    .as('panelModeSelect')
-  
-  cy.get('@panelModeSelect')
-    .click()
-
-  cy.get('[data-cy="panel-mode-menu"]')
-    .find('[data-slot="select-item"]')
-    .eq(1) // text mode
-    .click()
-  
-  cy.get('@panelModeSelect')
-    .should('have.attr', 'data-state', 'closed')
-
-  cy.get('@panel')
     .find('.text-area')
     .first()
     .contains(textSnippet)
