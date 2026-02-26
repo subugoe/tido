@@ -12,6 +12,12 @@ import Loading from '@/components/ui/loading.tsx'
 
 
 export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
+
+  function dataLoaded(numberPanels: number) {
+    console.log('number of panels loaded', numberPanels)
+  }
+
+
   return (
     <div className="tido flex flex-col h-full" data-cy="app">
       <ThemeProvider>
@@ -20,7 +26,7 @@ export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
             <TopBar />
             <div className="flex-1 flex overflow-hidden">
               <GlobalTree />
-              <PanelsWrapper />
+              <PanelsWrapper onPanelsLoaded={dataLoaded} />
               <Toaster position="bottom-center" richColors expand={true}  />
             </div>
           </ConfigProvider>
