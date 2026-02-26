@@ -222,7 +222,7 @@ function colorStringToOKLCH(colorString: string): OKLCH {
 const getAppPrimaryAndForegroundColor = (primaryColor: string, type: string) => {
   const oklch = colorStringToOKLCH(primaryColor)
   return `--tido-color-${type}: oklch(${oklch?.l} ${oklch?.c} ${oklch?.h} / 1); --tido-color-${type}-foreground: oklch(0.985 0 0);
-  --annotation-hover: oklch(0.93 0.04 ${oklch?.h}); --annotation-selected: oklch(0.7 0.07 ${oklch?.h})`
+  --annotation-hover: oklch(0.95 0.04 ${oklch?.h}); --annotation-selected: oklch(0.8 0.07 ${oklch?.h})`
 }
 
 export { getAppPrimaryAndForegroundColor }
