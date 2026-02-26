@@ -20,7 +20,7 @@ function getSelectedTypesFromNode(node: FilterNode): AnnotationTypesDict {
     if (isVariant) {
       // If a node has configured type "Variant", we ignore all other types and grandchildren
       // and consider only direct children as "witnesses".
-      types['Variant'] = node.items?.map(item => item.types?.[0] ?? '') ?? []
+      types['Variant'] = node.items?.filter(item => item.selected).map(item => item.types?.[0] ?? '') ?? []
       return types
     }
 
