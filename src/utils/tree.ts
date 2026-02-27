@@ -58,7 +58,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   if (!Object.hasOwn(data, 'sequence')) throw new CustomError('Invalid Content in TextAPI ' + node.type + ' with Id ' +node.id, '')
   if (data.sequence.length === 0) return []
 
-  const items: Sequence[] = data.sequence
+  const items = data.sequence
 
   return items.map(({ id, type, label = t('unknown_name') }) => ({
     id,
@@ -67,12 +67,12 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
     key: parentKey + NODE_KEY_DELIMITER + id,
     leaf: type === 'item',
     expanded: false,
-    children: []
+    children: [] as TreeNode[]
   }))
 }
 
 async function getRootChildrenCollectionsIds(rootCollection: Collection) {
-  const result = new Set()
+  const result = new Set<string>()
 
   async function getChildrenCollectionIds(collection: Collection) {
     if (!collection.sequence || collection.sequence.length === 0) {

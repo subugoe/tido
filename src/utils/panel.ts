@@ -1,6 +1,6 @@
 import { request } from '@/utils/http'
 import { usePanelStore } from '@/store/PanelStore.tsx'
-import { PanelModeButtonData, PanelConfig } from '@/types'
+import { PanelConfig } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
 
 export const MIN_PANEL_WIDTH = 800
@@ -15,7 +15,7 @@ export const PANEL_HEADER_HEIGHT = 60
 
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
-  let manifestUrl: string = ''
+  let manifestUrl = ''
   if (documentType === 'collection') {
     manifestUrl = documentData?.sequence[index].id
   }
@@ -80,7 +80,7 @@ export function isNewManifest(manifest: Manifest): boolean {
   return true
 }
 
-export function filterAndSortData( data: PanelModeButtonData[], key: string,  orderArray: string[]) {
+export function filterAndSortData<T extends Record<string, unknown>>( data: T[], key: string,  orderArray: string[]) {
   // data array to have its keys sorted according to 'orderArray'
   return orderArray.map(orderItem => {
     return data.find(obj => (obj[key] as string).toLowerCase() === orderItem.toLowerCase())

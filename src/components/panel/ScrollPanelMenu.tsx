@@ -8,7 +8,8 @@ interface Props {
 const PanelTopBar: FC<Props> = ({ className }) => {
   const { panelId } = usePanel()
   const setActiveTargetIndex = usePanelStore(state => state.setActiveTargetIndex)
-  const activeTargetIndex = usePanelStore(state => state.panels[panelId].activeTargetIndex)
+  const panels = usePanelStore(state => state.panels)
+  const activeTargetIndex = panels.find(p => p.id === panelId)?.activeTargetIndex ?? 0
 
   function onDown() {
     setActiveTargetIndex(panelId, activeTargetIndex + 1)

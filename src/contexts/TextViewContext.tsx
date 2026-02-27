@@ -1,4 +1,4 @@
-import { createContext, RefObject, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, RefObject, useContext, useEffect, useRef, useState, ReactNode } from 'react'
 import { apiRequest } from '@/utils/api.ts'
 import { sanitize } from '@/utils/text-sanitize.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
@@ -24,6 +24,10 @@ export const TextViewProvider = ({
   contentTypes,
   label,
   children
+}: {
+  contentTypes: string[]
+  label: string
+  children: ReactNode
 }) => {
   const { panelState, loading: loadingPanel, usePanelTranslation, matchedAnnotationsMaps, updateMatchedAnnotationsMap } = usePanel()
   const { setLoadingText } = useText()

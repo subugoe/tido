@@ -1,6 +1,6 @@
 import { apiRequest } from '@/utils/api.ts'
 
-function waitForElementInDom(selector: string, textSelector: string, callback) {
+function waitForElementInDom(selector: string, textSelector: string, callback: (el: Element) => void) {
   // selector: refers to a container element
   // textSelector: refers to a text part inside the container element
 

@@ -20,6 +20,7 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      "@typescript-eslint/no-inferrable-types": "error",
       "react/jsx-curly-spacing": ["error", {"when": "never"}],
       "react/jsx-equals-spacing": ["error", "never"],
       "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }],

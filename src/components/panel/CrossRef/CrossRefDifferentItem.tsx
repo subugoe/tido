@@ -45,7 +45,7 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
     manifest.current = manifestData
     item.current = itemData
     const newItemLabel = itemData.n ? itemData.n : itemData.title?.length > 0 ? itemData.title[0].title : ''
-    setManifestLabel(manifestData.label)
+    setManifestLabel((manifestData as Manifest).label)
     setItemLabel(newItemLabel)
     return itemData
   }
@@ -80,7 +80,7 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
 
 
   async function navigate(sourceEl: HTMLElement, action: string, panelId?: string) {
-    let targetEl
+    let targetEl: HTMLElement | undefined
     let newPanelId = panelId
     const contentType = sourceEl.getAttribute('data-ref-content-type')
     const selector = sourceEl.getAttribute('data-ref-target')

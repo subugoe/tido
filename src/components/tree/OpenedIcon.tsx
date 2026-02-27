@@ -19,7 +19,7 @@ const OpenedIcon: FC<Props> = ({ panelsNumbers, nodeType }) => {
     return tooltip
   }
 
-  function scrollToPanel(e) {
+  function scrollToPanel(e: React.MouseEvent) {
     if (panelsNumbers.length === 0) console.error('panelsNumbers should have at least one element in order to scroll to the respecive panel')
     e.stopPropagation()
     const firstPanelIndex = panelsNumbers[0] - 1 // index of first panel

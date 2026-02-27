@@ -12,10 +12,10 @@ class PanelResizer {
   resizeHandle: HTMLElement
   sidebarWidth: number = SIDEBAR_DEFAULT_WIDTH
 
-  eventListeners = []
+  eventListeners: Array<{ name: string; listener: EventListener }> = []
   isResizing = false
   annotationsOpen = false
-  lastWidth = null
+  lastWidth: number | null = null
 
   constructor(panelEl: HTMLElement) {
     this.init(panelEl)
@@ -74,7 +74,7 @@ class PanelResizer {
 
     const handleMouseUp = () => this.setIsResizing(false)
 
-    const handleMouseDown = (e) => {
+    const handleMouseDown = (e: MouseEvent) => {
       const rect = this.panelEl.getBoundingClientRect()
       const offsetX = e.clientX - rect.left
       if (offsetX > rect.width - 8) {

@@ -6,20 +6,21 @@ interface Props {
   body: AnnotationBody
 }
 
-const convertNodeToReact = (node, key) => {
+const convertNodeToReact = (node: ChildNode, key: string | number): React.ReactNode => {
   if (node.nodeType === Node.TEXT_NODE) {
     return node.textContent
   }
 
   if (node.nodeType !== Node.ELEMENT_NODE) return null
 
-  const Tag = node.tagName.toLowerCase()
+  const element = node as Element
+  const tagName = element.tagName.toLowerCase()
   const children = Array.from(node.childNodes).map((child, i) =>
     convertNodeToReact(child, `${key}-${i}`)
   )
 
-  const props = {}
-  for (const attr of node.attributes) {
+  const props: Record<string, unknown> = {}
+  for (const attr of element.attributes) {
     if (attr.name === 'style') {
       props.style = parseStyleString(attr.value)
     } else {
@@ -27,13 +28,12 @@ const convertNodeToReact = (node, key) => {
     }
   }
 
-  return <Tag
-    key={'node-' + key}
-    {...props}
-    className={props.className || ''}
-  >
-    {children}
-  </Tag>
+  const childrenArray = children as React.ReactElement[]
+  return React.createElement(
+    tagName,
+    { key: 'node-' + key, ...props, className: (props.className as string) || '' },
+    ...childrenArray
+  )
 }
 
 const VariantContent: FC<Props> = React.memo(({ body }) => {

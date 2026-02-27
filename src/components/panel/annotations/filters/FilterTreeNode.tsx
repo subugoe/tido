@@ -11,7 +11,7 @@ interface Props {
   indented?: boolean
 }
 
-function hasChildren(node) {
+function hasChildren(node: FilterNode) {
   return node.items && node.items.length > 0
 }
 

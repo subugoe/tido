@@ -52,7 +52,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
     // show icon green circle for 'currently opened items' and all its parent nodes
 
     async function updatePanelsNumbersForItemOrManifest(node: TreeNode) {
-      const newPanelsNumbersOpened = []
+      const newPanelsNumbersOpened: number[] = []
       panels?.forEach((panel, index) => {
         if (node.type === 'item' ? panel.item?.id === node.id : panel.manifest?.id === node.id) {
           newPanelsNumbersOpened.push(index + 1)
@@ -63,7 +63,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
 
     async function updatePanelsNumbersForCollection(node: TreeNode) {
-      const newPanelsNumbersOpened = []
+      const newPanelsNumbersOpened: number[] = []
       const rootCollection = await apiRequest<Collection>(node.id)
       const childCollectionIds = await getRootChildrenCollectionsIds(rootCollection)
       childCollectionIds.push(node.id) // if current collection is leaf node, then we want to check if this node is present in any of panels

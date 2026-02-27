@@ -56,26 +56,26 @@ async function decodeState(encoded: string): Promise<TidoContentState> {
   return JSON.parse(jsonStr)
 }
 
-function extractPanelConfig(target): { collectionUrl: string, itemUrl: string, manifestUrl: string } {
-  const result = {
+function extractPanelConfig(target: TidoContentStateTarget): { collectionUrl: string | null, itemUrl: string | null, manifestUrl: string | null } {
+  const result: { collectionUrl: string | null, itemUrl: string | null, manifestUrl: string | null } = {
     itemUrl: null,
     manifestUrl: null,
     collectionUrl: null,
   }
 
-  function traverse(target: TidoContentStateTarget) {
-    if (!target || !target.id || !isUrl(target.id) || !target.type) return
+  function traverse(t: TidoContentStateTarget) {
+    if (!t || !t.id || !isUrl(t.id) || !t.type) return
 
-    if (target.type === 'Item') {
-      result.itemUrl = target.id
-    } else if (target.type === 'Manifest') {
-      result.manifestUrl = target.id
-    } else if (target.type === 'Collection') {
-      result.collectionUrl = target.id
+    if (t.type === 'Item') {
+      result.itemUrl = t.id
+    } else if (t.type === 'Manifest') {
+      result.manifestUrl = t.id
+    } else if (t.type === 'Collection') {
+      result.collectionUrl = t.id
     }
 
-    if (target.partOf) {
-      traverse(target.partOf)
+    if (t.partOf) {
+      traverse(t.partOf)
     }
   }
 
