@@ -184,6 +184,30 @@ There are options to
 
 ### The Keys in Detail
 
+| Name                                             | Type                                  | Default                                                                            | Description                                                                                                                                                                                                                                                         |
+|--------------------------------------------------|---------------------------------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| allowNewCollections                              | Boolean                               | true                                                                               | Toggles the ability to add new collections to the app through a user input.                                                                                                                                                                                         |
+| annotations                                      | AnnotationsConfig                     | {}                                                                                 | Configures the display of annotations and their filtering options. See [annotations](#annotations) chapter.                                                                                                                                                         |
+| annotations.types                                | AnnotationTypeConfigMap               | -                                                                                  | A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.                                                                                                                                                  |
+| annotations.filters                              | AnnotationFiltersConfig               | -                                                                                  | Defines a nested object of filter options.                                                                                                                                                                                                                          |
+| container                                        | String                                | `#app`                                                                             | Specifies the CSS selector where we should append the TIDO app to.                                                                                                                                                                                                  |
+| lang                                             | String (ISO 639-1 language code)      | `en`                                                                               | Specifies the current active language of the app. See [translations](#translations) chapter.                                                                                                                                                                        |
+| panelModes                                       | Array                                 | ['swap', 'split', 'text', 'image']                                                 | Controls the display and order of panel mode toggles in the top right of a panel. At least 1 value is required. If not specified at all, TIDO will use the default value and try to display reasonable toggles and disable unused ones.                             |
+| panels                                           | PanelConfig[]                         | []                                                                                 | Defines an array of panel objects. The panels will appear in the same order.                                                                                                                                                                                        |
+| panels[i].collection                             | String                                | -                                                                                  | TextAPI collection URL.                                                                                                                                                                                                                                             |
+| panels[i].manifest                               | String                                | -                                                                                  | TextAPI manifest URL. If not specified, the first manifest of the collection will be used.                                                                                                                                                                          |                                                                                                                                                                                                                            |
+| panels[i].item                                   | String                                | -                                                                                  | TextAPI item URL. If not specified, the first item of the collection will be used.                                                                                                                                                                                  |
+| panels[i].contentType                            | String                                | -                                                                                  | Specifies the value of the content type that should be displayed. TextAPI items can serve multiple texts in the "content" array. Each content object is identified by the "type" property. Here, we match the string after "type=" from the value of that property. |
+| rootCollections                                  | String[]                              | []                                                                                 | Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.                                                                                                                  |
+| showGlobalTree                                   | Boolean                               | true                                                                               | Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.                                                                                                                                                           |
+| showAddNewPanelButton                            | Boolean                               | true                                                                               | Toggles the display of the "add new panel" button.                                                                                                                                                                                                                  |
+| theme                                            | Object                                | Object                                                                             | Specifies theme settings for UI elements.                                                                                                                                                                                                                           |
+| theme.primaryColor                               | String                                | `#3456aa`, `rgb(79, 70, 229)`, `hsl(243, 75%, 59%)`, `oklch(0.4743 0.1405 264.94)` | Primary color of UI elements. Used on buttons and other interactive elements. The value can be provided as string in following color systems (hex, rgb, hsl, oklch). Alpha channel is not supported.                                                                |
+| title                                            | String                                | empty                                                                              | Specifies the main title of the app in the header. Translatable.                                                                                                                                                                                                    |
+| translations                                     | Object                                | null                                                                               | Specifies a custom translations object. See [translations](#translations) chapter.                                                                                                                                                                                  |
+| translations.[lang]                              | TranslationNamespace                  | -                                                                                  | Defines a language key. The value is a TranslationNamespace object.                                                                                                                                                                                                 |
+| translations.[lang].[namespace]                  | Object                                | -                                                                                  | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration.                                     |
+| translations.[lang].[namespace].[translationKey] | String                                | -                                                                                  | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration.                                     |
 | Name                                             | Type                             | Default                                                                            | Description                                                                                                                                                                                                                                                         |
 |--------------------------------------------------|----------------------------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | allowNewCollections                              | Boolean                          | true                                                                               | Toggles the ability to add new collections to the app through a user input.                                                                                                                                                                                         |
@@ -337,7 +361,41 @@ If you use the `selected` property on filter tree nodes, ensure that the configu
     }
   }
 }
+
 ```
+
+#### AnnotationsMode
+
+By default we provide an AnnotationsMode toggle which enables switching between `list` and `aligned` mode. Aligned mode
+will arrange annotations at the top position of text targets. List mode will ignore positioning and arrange the annotations
+vertically one after another.
+To specify the initial selected mode you should add `defaultMode` in `annotations` config as following.
+
+**Example:**
+
+```json
+{
+  "annotations": {
+    "defaultMode": "list"
+  }
+}
+```
+
+You can also have only one mode of annotations. In this case AnnotationsToggle is not shown anymore.
+To accomplish this, you should add `singleMode` key in config as shown below.
+
+**Example:**
+
+```json
+{
+  "annotations": {
+    "singleMode": "aligned"
+  }
+}
+```
+
+If no key regarding modes is specified, then by default AnnotationsToggle is shown with `aligned` mode as initially selected.
+
 
 ### Translations
 We provide a flexible way to use TIDO in your desired language. First of all we keep all translation keys in files
