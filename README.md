@@ -25,6 +25,7 @@ and also view our production examples.
   - [Annotations](#annotations)
     - [Types](#types)
     - [Filters](#filters)
+    - [AnnotationsMode](#annotationsmode)
   - [Translations](#translations)
     - [Collection Namespaces](#collection-namespaces)
 - [Bookmarking](#bookmarking)
