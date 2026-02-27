@@ -14,8 +14,8 @@ const DEFAULT_ANNOTATION_BODY_HEIGHT = 72
 interface Props {
   data: Annotation
   top?: number,
-  onExpand?: (annotationId: string, element, finalHeight, translateY) => void
-  onCollapse?: (element, finalHeight) => void
+  onExpand?: (annotationId: string, element: HTMLElement, finalHeight: number, translateY: number) => void
+  onCollapse?: (element: HTMLElement, finalHeight: number) => void
 }
 
 
@@ -74,7 +74,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
   }
 
 
-  function handleViewMore(e) {
+  function handleViewMore(e: React.MouseEvent) {
     e.stopPropagation()
     setIsExpanded(true)
 
@@ -109,7 +109,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
     if (onExpand) onExpand(data.id, bodyEl, expandedBodyHeightRef.current, translateY)
   }
 
-  function handleViewLess(e) {
+  function handleViewLess(e: React.MouseEvent) {
     e.stopPropagation()
     setIsExpanded(false)
     const bodyEl = annotationBodyRef.current // we collapse annotation body's content

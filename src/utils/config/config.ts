@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, PanelConfig, FilterNode } from '@/types'
+import { TidoConfig, PanelConfig, FilterNode, TidoContentState, TidoContentStateTarget } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 
@@ -13,7 +11,7 @@ type ValidationResult<T> = {
   errors: Record<string, string | object>;
 };
 
-function validateAllowNewCollections(input: any): ValidationResult<TidoConfig['allowNewCollections']> {
+function validateAllowNewCollections(input: unknown): ValidationResult<TidoConfig['allowNewCollections']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'boolean'
@@ -26,7 +24,7 @@ function validateAllowNewCollections(input: any): ValidationResult<TidoConfig['a
   return { result, errors }
 }
 
-function validateContainer(input: any): ValidationResult<TidoConfig['container']> {
+function validateContainer(input: unknown): ValidationResult<TidoConfig['container']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'string'
@@ -39,7 +37,7 @@ function validateContainer(input: any): ValidationResult<TidoConfig['container']
   return { result, errors }
 }
 
-function validateGlobalTree(input: any): ValidationResult<TidoConfig['showGlobalTree']> {
+function validateGlobalTree(input: unknown): ValidationResult<TidoConfig['showGlobalTree']> {
   const errors: Record<string, string> = {}
   const result =
       typeof input === 'boolean'
@@ -52,7 +50,7 @@ function validateGlobalTree(input: any): ValidationResult<TidoConfig['showGlobal
   return { result, errors }
 }
 
-function validateShowThemeToggle(input: any): ValidationResult<TidoConfig['showThemeToggle']> {
+function validateShowThemeToggle(input: unknown): ValidationResult<TidoConfig['showThemeToggle']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'boolean'
@@ -65,7 +63,7 @@ function validateShowThemeToggle(input: any): ValidationResult<TidoConfig['showT
   return { result, errors }
 }
 
-function validateShowPanelPlaceholder(input: any): ValidationResult<TidoConfig['showPanelPlaceholder']> {
+function validateShowPanelPlaceholder(input: unknown): ValidationResult<TidoConfig['showPanelPlaceholder']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'boolean'
@@ -78,9 +76,9 @@ function validateShowPanelPlaceholder(input: any): ValidationResult<TidoConfig['
   return { result, errors }
 }
 
-function validatePanels(input: any): ValidationResult<TidoConfig['panels']> {
+function validatePanels(input: unknown): ValidationResult<TidoConfig['panels']> {
   const errors: Record<string, string> = {}
-  const result = Array.isArray(input) ? input : (() => {
+  const result = Array.isArray(input) ? input as TidoConfig['panels'] : (() => {
     if (input !== undefined)
       errors['panels'] = 'must be an array'
     return defaultConfig.panels ?? []
@@ -89,7 +87,7 @@ function validatePanels(input: any): ValidationResult<TidoConfig['panels']> {
   return { result, errors }
 }
 
-function validateShowNewCollectionButton(input: any): ValidationResult<TidoConfig['showAddNewPanelButton']> {
+function validateShowNewCollectionButton(input: unknown): ValidationResult<TidoConfig['showAddNewPanelButton']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'boolean'
@@ -102,21 +100,22 @@ function validateShowNewCollectionButton(input: any): ValidationResult<TidoConfi
   return { result, errors }
 }
 
-function validateTheme(input: any): ValidationResult<TidoConfig['theme']> {
+function validateTheme(input: unknown): ValidationResult<TidoConfig['theme']> {
   const errors: Record<string, string> = {}
+  const inputObj = typeof input === 'object' && input !== null ? input as Record<string, unknown> : null
   const result = {
     primaryColor:
-      typeof input === 'object' && typeof input['primaryColor'] === 'string'
-        ? input['primaryColor']
+      inputObj && typeof inputObj['primaryColor'] === 'string'
+        ? inputObj['primaryColor'] as string
         : (() => {
-          if (input !== undefined && input['primaryColor'] !== undefined) errors['theme.primaryColor'] = 'must be a valid rgb, hex, hsl or oklch color'
+          if (input !== undefined && inputObj && inputObj['primaryColor'] !== undefined) errors['theme.primaryColor'] = 'must be a valid rgb, hex, hsl or oklch color'
           return defaultConfig.theme?.primaryColor
         })()
   }
   return { result, errors }
 }
 
-function validateLang(input: any): ValidationResult<TidoConfig['lang']> {
+function validateLang(input: unknown): ValidationResult<TidoConfig['lang']> {
   const errors: Record<string, string> = {}
   const result =
       typeof input === 'string'
@@ -129,7 +128,7 @@ function validateLang(input: any): ValidationResult<TidoConfig['lang']> {
   return { result, errors }
 }
 
-function validateTitle(input: any): ValidationResult<TidoConfig['title']> {
+function validateTitle(input: unknown): ValidationResult<TidoConfig['title']> {
   const errors: Record<string, string> = {}
   const result =
     typeof input === 'string'
@@ -142,11 +141,11 @@ function validateTitle(input: any): ValidationResult<TidoConfig['title']> {
   return { result, errors }
 }
 
-function validateTranslations(input: any): ValidationResult<TidoConfig['translations']> {
-  const errors: Record<string, string>  = { }
+function validateTranslations(input: unknown): ValidationResult<TidoConfig['translations']> {
+  const errors: Record<string, string> = {}
   const result =
-      typeof input === 'object'
-        ? input
+      typeof input === 'object' && input !== null
+        ? input as TidoConfig['translations']
         : (() => {
           if (input !== undefined)
             errors['translations'] = 'translations needs to be an object'
@@ -155,7 +154,7 @@ function validateTranslations(input: any): ValidationResult<TidoConfig['translat
   return { result, errors }
 }
 
-function validatePanelViews(input: any): ValidationResult<TidoConfig['panelViews']> {
+function validatePanelViews(input: unknown): ValidationResult<TidoConfig['panelViews']> {
   const errors: Record<string, string> = {}
 
   if (input === undefined) return { errors, result: defaultConfig.panelViews }
@@ -170,15 +169,15 @@ function validatePanelViews(input: any): ValidationResult<TidoConfig['panelViews
     return { errors, result: defaultConfig.panelViews }
   }
 
-  return { errors, result: input }
+  return { errors, result: input as TidoConfig['panelViews'] }
 }
 
 
-function validateRootCollections(input: any): ValidationResult<TidoConfig['rootCollections']> {
+function validateRootCollections(input: unknown): ValidationResult<TidoConfig['rootCollections']> {
   const errors: Record<string, string> = {}
   const result =
     Array.isArray(input)
-      ? input
+      ? input as TidoConfig['rootCollections']
       : (() => {
         if (input !== undefined)
           errors['rootCollections'] = 'rootCollections needs to be an array'
@@ -187,32 +186,30 @@ function validateRootCollections(input: any): ValidationResult<TidoConfig['rootC
   return { result, errors }
 }
 
-function validateAnnotations(input: any, defaultConfig: Partial<TidoConfig>): ValidationResult<TidoConfig['annotations']> {
-  const result = { ...input }
-  const defaultMode = defaultConfig.annotations.defaultMode
+function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): ValidationResult<TidoConfig['annotations']> {
+  const result = (typeof input === 'object' && input !== null ? input : {}) as Partial<TidoConfig['annotations']>
+  const defaultMode = defaultCfg.annotations?.defaultMode
 
   const errors: Record<string, object> = {
     'annotations': {}
   }
 
   if (!result.filters && !result.types) {
-    errors['annotations']['filters'] = 'did not find "filters" or "types" key'
+    (errors['annotations'] as Record<string, string>)['filters'] = 'did not find "filters" or "types" key'
   }
 
   if (result?.singleMode && !['aligned', 'list'].includes(result.singleMode)) {
-    // if 'singleMode' is provided wrong -> we provide both modes to user
-    errors['annotations']['mode'] = 'mode is a value either "aligned" or "list"'
+    (errors['annotations'] as Record<string, string>)['mode'] = 'mode is a value either "aligned" or "list"'
     result.defaultMode = defaultMode
   }
 
   if (!result.singleMode && !result.defaultMode) {
-    // none between 'singleMode' and 'defaultMode' is provided -> both modes are provided
     result.defaultMode = defaultMode
   }
 
   if (result.filters && !result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
 
-  function validateNode(node: FilterNode) {
+  function validateNode(node: FilterNode): FilterNode {
     node.selected = Object.hasOwn(node, 'selected') ? node.selected : false
 
     if (node.items) {
@@ -225,7 +222,7 @@ function validateAnnotations(input: any, defaultConfig: Partial<TidoConfig>): Va
     result.filters.items = result.filters.items.map((item) => validateNode(item))
   }
 
-  return { result, errors }
+  return { result: result as TidoConfig['annotations'], errors }
 }
 
 export async function mergeAndValidateConfig(
@@ -256,7 +253,7 @@ export async function mergeAndValidateConfig(
       .reduce((acc, cur) => {
         acc[cur] = translations.result[cur]
         return acc
-      }, {})
+      }, {} as Record<string, unknown>)
   }
 
 
@@ -277,46 +274,48 @@ export async function mergeAndValidateConfig(
     ...annotations.errors
   }
 
-  let panelsFromContentState: PanelConfig[]
+  let panelsFromContentState: PanelConfig[] | undefined
   const contentStateValue = hasContentState()
 
   if (contentStateValue) {
     try {
-      let contentState = null
+      let contentState: TidoContentState | null = null
       if (isUrl(contentStateValue)) {
-        contentState = await apiRequest(contentStateValue)
+        contentState = await apiRequest<TidoContentState>(contentStateValue)
       } else {
         contentState = await decodeState(contentStateValue)
       }
 
-      panelsFromContentState = await Promise.all(contentState.target.map(async (target) => {
-        let manifestIndex = null
-        let itemIndex = null
+      if (contentState) {
+        panelsFromContentState = await Promise.all(contentState.target.map(async (target: TidoContentStateTarget) => {
+          let manifestIndex: number | null = null
+          let itemIndex: number | null = null
 
-        const { collectionUrl, manifestUrl, itemUrl } = extractPanelConfig(target)
+          const { collectionUrl, manifestUrl, itemUrl } = extractPanelConfig(target)
 
-        if (!collectionUrl) return null
+          if (!collectionUrl) return null
 
-        const collectionData = await apiRequest<Collection>(collectionUrl)
-        manifestIndex = collectionData.sequence.findIndex(i => i.id === manifestUrl)
+          const collectionData = await apiRequest<Collection>(collectionUrl)
+          manifestIndex = collectionData.sequence.findIndex(i => i.id === manifestUrl)
 
-        if (manifestIndex === -1) {
-          console.error(`Bookmarking Error: the provided manifest (${manifestUrl}) could not be found in collection (${collectionUrl})`)
-        }
+          if (manifestIndex === -1) {
+            console.error(`Bookmarking Error: the provided manifest (${manifestUrl}) could not be found in collection (${collectionUrl})`)
+          }
 
-        const manifestData = await apiRequest<Manifest>(manifestUrl)
-        itemIndex = manifestData.sequence.findIndex(i => i.id === itemUrl)
+          const manifestData = await apiRequest<Manifest>(manifestUrl)
+          itemIndex = manifestData.sequence.findIndex(i => i.id === itemUrl)
 
-        if (itemIndex === -1) {
-          console.error(`Bookmarking Error: the provided item (${itemUrl}) could not be found in manifest (${manifestUrl})`)
-        }
+          if (itemIndex === -1) {
+            console.error(`Bookmarking Error: the provided item (${itemUrl}) could not be found in manifest (${manifestUrl})`)
+          }
 
-        return {
-          collection: collectionUrl,
-          ...(itemIndex > -1 && { item: itemUrl }),
-          ...(manifestIndex > -1 && { manifest: manifestUrl }),
-        }
-      }))
+          return {
+            collection: collectionUrl,
+            ...(itemIndex > -1 && { item: itemUrl }),
+            ...(manifestIndex > -1 && { manifest: manifestUrl }),
+          }
+        }))
+      }
     } catch (e) {
       console.error(`Bookmarking Error: Unexpected error during reading from the bookmarking string - ${e}`)
     }
@@ -342,17 +341,16 @@ export async function mergeAndValidateConfig(
   return { config, errors }
 }
 
-function deepMerge(objectA: object, objectB: object) {
-  // deep merge of two given objects
-  // we take initially objectA and iterate on it with the keys of objectB. For same key we override its value from objectB. When a new key is in objectB then we append it to objectA
+function deepMerge<T extends Record<string, unknown>>(objectA: T, objectB: Partial<T>): T {
   const result = { ...objectA }
 
   for (const key in objectB) {
     if (Object.hasOwn(objectB, key)) {
-      if (objectB[key] instanceof Object && objectA[key] instanceof Object) {
-        result[key] = deepMerge(objectA[key], objectB[key])
+      const k = key as keyof T
+      if (objectB[k] instanceof Object && objectA[key] instanceof Object) {
+        result[k] = deepMerge(objectA[key] as Record<string, unknown>, objectB[k] as Record<string, unknown>) as T[keyof T]
       } else {
-        result[key] = objectB[key]
+        result[k] = objectB[k] as T[keyof T]
       }
     }
   }

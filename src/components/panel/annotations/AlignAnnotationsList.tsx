@@ -14,7 +14,7 @@ const AlignAnnotationsList: FC = () => {
   const [elements, setElements] = useState([])
 
   const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-wrapper]`) as HTMLElement)
-  const [yMap, setYMap] = useState({})
+  const [yMap, setYMap] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(false)
   const [height, setHeight] = useState(0)
 
@@ -184,8 +184,8 @@ const AlignAnnotationsList: FC = () => {
   }, [filteredAnnotations])
 
   useEffect(() => {
-    let resizeObserver
-    let timeout
+    let resizeObserver: ResizeObserver | undefined
+    let timeout: ReturnType<typeof setTimeout> | undefined
     if (elements.length > 0) {
       resizeObserver = new ResizeObserver(entries => {
         if (entries[0].contentRect.width > 0) trackTopChange()

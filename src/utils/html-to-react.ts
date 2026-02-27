@@ -1,14 +1,14 @@
-const parseStyleString = (styleString) => {
+const parseStyleString = (styleString: string): Record<string, string> => {
   return styleString
     .split(';')
-    .filter((rule) => rule.trim() !== '')
-    .reduce((styleObj, rule) => {
+    .filter((rule: string) => rule.trim() !== '')
+    .reduce((styleObj: Record<string, string>, rule: string) => {
       const [key, value] = rule.split(':')
       if (!key || !value) return styleObj
 
       const camelKey = key
         .trim()
-        .replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+        .replace(/-([a-z])/g, (_: string, letter: string) => letter.toUpperCase())
 
       styleObj[camelKey] = value.trim()
       return styleObj

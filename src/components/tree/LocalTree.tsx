@@ -25,7 +25,7 @@ const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
   }
 
   useEffect(() => {
-    async function initTreeNode(collectionId) {
+    async function initTreeNode(collectionId: string) {
       const collectionNode = await createCollectionNode(collectionId)
       setTreeNodes([await getExpandedNode(collectionNode)])
     }

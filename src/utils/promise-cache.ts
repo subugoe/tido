@@ -1,6 +1,6 @@
-const cache = new Map()
+const cache = new Map<string, Promise<unknown>>()
 
-function promiseWithCache(key, asyncFn) {
+function promiseWithCache(key: string, asyncFn: () => Promise<unknown>) {
   if (!cache.has(key)) {
     cache.set(key, asyncFn())
   }

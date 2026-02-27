@@ -137,7 +137,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     setPortals(links.map(link => {
       const mount = document.createElement(link.tagName)
       link.replaceWith(mount)
-      return createPortal(<CrossRefLink node={link} />, mount)
+      return createPortal(<CrossRefLink node={link as HTMLElement} />, mount)
     }))
 
     textWrapperRef.current.replaceChildren(parsedDom)
@@ -148,7 +148,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   useEffect(() => {
     if (!panelState.annotations || !parsedDom) return
 
-    const result: MatchedAnnotationsMap = panelState.annotations.reduce((acc, cur) => {
+    const result: MatchedAnnotationsMap = panelState.annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
       const isSource = cur.target[0].source === activeContentUrl.current
       const selector = (cur.target[0].selector as CssSelector)?.value
 

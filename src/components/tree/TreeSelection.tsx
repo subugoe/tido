@@ -49,7 +49,7 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
   useEffect(() => {
     // for now we define same loadNodes in every container which displays tree.
     // Later we can customize the initial display based on the requirements
-    const loadNodes = async (nodes) => {
+    const loadNodes = async (nodes: TreeNode[]) => {
       const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? [await getExpandedNode(nodes[0])] : []
       setTreeNodes(treeNodes)
     }

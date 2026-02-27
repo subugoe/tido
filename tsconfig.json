@@ -27,6 +27,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "noImplicitAny": true,
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

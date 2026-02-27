@@ -34,7 +34,7 @@ const ImageRenderer: FC = () => {
       constrainDuringPan: true
     })
 
-    viewerRef.current.addHandler('open-failed', (e) => {
+    viewerRef.current.addHandler('open-failed', (e: { message: string }) => {
       console.error(e.message)
       showBoundary(t('could_not_load_image'))
     })
@@ -62,7 +62,7 @@ const ImageRenderer: FC = () => {
     const oldItem = viewerRef.current.world.getItemAt(0)
     if (oldItem) viewerRef.current.world.removeItem(oldItem)
 
-    const imageType = panelState.item?.image?.['x-type']
+    const imageType = panelState.item?.image ? (panelState.item.image as unknown as Record<string, unknown>)['x-type'] as string : undefined
 
     if (imageType === 'image' || !imageType) {
       viewerRef.current.open({

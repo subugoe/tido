@@ -33,7 +33,7 @@ export async function request<T>(url: string): Promise<HttpResponse<T> | ErrorRe
   }
 }
 
-function createErrorResponse(message: string = '', code: number = 500): ErrorResponse {
+function createErrorResponse(message = '', code = 500): ErrorResponse {
   return {
     success: false,
     message,

@@ -63,7 +63,7 @@ function hslStringToHsl(hslString: string): [number, number, number] {
 function hslStringToRgb(hslString: string): RGB {
   const [h, s, l] = hslStringToHsl(hslString)
 
-  const hue2rgb = (p, q, t) => {
+  const hue2rgb = (p: number, q: number, t: number): number => {
     if (t < 0) t += 1
     if (t > 1) t -= 1
     if (t < 1/6) return p + (q - p) * 6 * t
@@ -180,7 +180,7 @@ function linearRgbToOklab({ r, g, b }: RGB): OKLAB {
   }
 }
 
-function srgbToLinear(c) {
+function srgbToLinear(c: number): number {
   return c <= 0.04045
     ? c / 12.92
     : Math.pow((c + 0.055) / 1.055, 2.4)

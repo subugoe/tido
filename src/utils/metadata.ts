@@ -1,6 +1,6 @@
 
 function getCollectionMetadata (collection: Collection | null) {
-  const mappings = {
+  const mappings: Record<string, string> = {
     main: 'title',
     sub: 'subtitle',
   }
@@ -11,7 +11,7 @@ function getCollectionMetadata (collection: Collection | null) {
 
   return [
     ...(Object.keys(titleErrors).length === 0 && collTitle.map((title) => ({
-      key: mappings[title.type] || 'title',
+      key: mappings[title.type as keyof typeof mappings] || 'title',
       value: title.title,
     })) || [{ key: 'title', value: titleErrors[Object.keys(titleErrors)[0]] }]),
     ...([{ key: 'collector', value: collectors }]),
@@ -45,24 +45,24 @@ function validateCollectorsName(input: Actor[] | undefined) {
 
 function validateTitle(input: Title[] | undefined) {
   const errors: Record<string, string>  = { }
-  const result =
-    Array.isArray(input)
-      ? input
-      : (() => {
-        if (input !== undefined)
-          errors['title'] = 'value_must_be_an_array'
-        return []
-      })()
+  let result: Title[]
+  if (Array.isArray(input)) {
+    result = input
+  } else {
+    if (input !== undefined)
+      errors['title'] = 'value_must_be_an_array'
+    result = []
+  }
   return { result, errors }
 }
 
-function validateLicense(input: License[] | undefined) {
-  const result =
-    Array.isArray(input)
-      ? input
-      : (() => {
-        return []
-      })()
+function validateLicense(input: License[] | undefined): { result: License[] } {
+  let result: License[]
+  if (Array.isArray(input)) {
+    result = input
+  } else {
+    result = []
+  }
   return { result }
 }
 

@@ -49,7 +49,7 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
       }
 
       if (action === 'scroll-to') {
-        if (targetContentType !== panelState.activeContentType) updatePanel({ activeContentType: targetContentType })
+        if (targetContentType !== panelState.activeContentType) updatePanel({ activeContentType: targetContentType } as Partial<PanelState>)
         setTimeout(() => {
           scrollToTarget(targetSelector, document.getElementById(panelId))
         }, 500)

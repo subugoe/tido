@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { getFilteredAnnotations } from '@/utils/annotations.ts'
 
@@ -8,13 +8,13 @@ type State = {
 
 const AnnotationsContext = createContext<State>(null)
 
-export const AnnotationsProvider = ({ children }) => {
+export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
   const { matchedAnnotationsMaps } = usePanel()
   const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([])
 
 
   useEffect(() => {
-    const newFiltered = []
+    const newFiltered: Annotation[] = []
     Object
       .keys(matchedAnnotationsMaps)
       .forEach(contentUrl => {

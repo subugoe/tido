@@ -1,4 +1,4 @@
-const witnessColorsCache = {}
+const witnessColorsCache: Record<string, string[]> = {}
 let index = 0
 export function generateWitnessColors(idno: string): string[] {
   const bgSaturation = 40

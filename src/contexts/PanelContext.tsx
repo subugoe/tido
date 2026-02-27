@@ -7,7 +7,7 @@ import { apiRequest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
-import { AnnotationFiltersConfig, PanelConfig } from '@/types'
+import { AnnotationFiltersConfig, PanelConfig, PanelView } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
@@ -62,7 +62,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
-  const [matchedAnnotationsMaps, setMatchedAnnotationsMaps] = useState({})
+  const [matchedAnnotationsMaps, setMatchedAnnotationsMaps] = useState<{[contentUrl: string]: MatchedAnnotationsMap}>({})
   const [annotationFilters, setAnnotationFilters] = useState<AnnotationFiltersConfig>(null)
   const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState(null)
   const [selectedAnnotation, setSelectedAnnotation] = useState(null)
@@ -175,7 +175,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       }
 
       // 3. At this point "item" should exist, so we continue to load content from it.
-      const contentTypes: string[] = getContentTypes(item.content)
+      const contentTypes = getContentTypes(item.content)
 
       if (contentTypes.length === 0) {
         setError(new CustomError(t('panel_init_error'), t('error_no_supported_content_types')))
@@ -189,7 +189,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         await getSupport(support)
       }
 
-      panelViewsConfig.forEach(panelView => {
+      panelViewsConfig.forEach((panelView: PanelView) => {
         if (panelView.view === 'text' && !panelView.contentTypes) {
           panelView.contentTypes = contentTypes
         }
@@ -201,7 +201,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
         manifest,
         item,
         activeTargetIndex: -1,
-        panelViews: panelViewsConfig.map(v => ({ ...v, visible: v.visible ?? true }))
+        panelViews: panelViewsConfig.map((v: PanelView) => ({ ...v, visible: v.visible ?? true }))
       })
 
       if (item.annotationCollection) {
@@ -250,7 +250,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       if (map === null) {
         if (prev[contentUrl]) {
           // When annotations from the given content url should disappear, remove that key and return the rest
-          return Object.keys(prev).reduce((acc, key) => {
+          return Object.keys(prev).reduce((acc: {[contentUrl: string]: MatchedAnnotationsMap}, key) => {
             if (key !== contentUrl) acc[key] = prev[key]
             return acc
           }, {})
@@ -273,7 +273,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
   }, [panelState.config, panelId])
 
   useEffect(() => {
-    const resultMap = {}
+    const resultMap: {[contentUrl: string]: MatchedAnnotationsMap} = {}
 
     Object
       .keys(matchedAnnotationsMaps)
@@ -293,7 +293,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
 
           if (annotationsConfig.filters && annotationType === 'Variant') {
             const selectedSet = new Set(selectedAnnotationTypes[annotationType])
-            const hasSelectedWitness = annotation.body.witnesses?.some(value => selectedSet.has(value)) ?? false
+            const hasSelectedWitness = annotation.body.witnesses?.some((value: string) => selectedSet.has(value)) ?? false
             resultMap[contentUrl][id].filtered = hasSelectedWitness
             return
           }
@@ -314,7 +314,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
       .map(item => item.annotation.body['x-content-type'])
 
     if (annotationsConfig.filters || annotationFilters !== null || types.length === 0) return
-    const uniqueAnnotationTypes: string[] = [...new Set(types)]
+    const uniqueAnnotationTypes = [...new Set(types)]
 
     setAnnotationFilters({
       rootSelectionRule: 'multiple',

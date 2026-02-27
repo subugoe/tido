@@ -55,7 +55,7 @@ const PanelContent: FC = React.memo(() => {
     }
   }, [panelState.annotationsOpen])
 
-  const handleChange = (newSizes) => {
+  const handleChange = (newSizes: number[]) => {
     setSizes({
       main: newSizes[0],
       sidebar: newSizes[1] ?? 0

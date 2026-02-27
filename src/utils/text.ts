@@ -65,7 +65,7 @@ function isTargetPartOfSelectedAnnotation(target: Element, targetsOfSelectedAnno
   return false
 }
 
-function isCrossRefNested(crossRefNodes, node) {
+function isCrossRefNested(crossRefNodes: Element[], node: Element) {
   let isNested = false
   crossRefNodes.forEach((crossRef) => {
     if (crossRef.contains(node)) {
@@ -80,7 +80,7 @@ function getRootCrossRefElements(root: Element) {
   // there might be cases when a cross ref includes other cross ref nodes
   // in the list we append only the parent cross ref node in such cases
 
-  const result = []
+  const result: Element[] = []
   function check(node: Element) {
     // Only process Element nodes (nodeType === 1)
     if (node.nodeType === Node.ELEMENT_NODE) {

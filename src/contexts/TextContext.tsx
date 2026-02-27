@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, ReactNode } from 'react'
 
 type TextProviderState = {
   hoveredAnnotations: string[] | null
@@ -11,6 +11,8 @@ const TextProviderContext = createContext<TextProviderState>(null)
 
 export const TextProvider = ({
   children
+}: {
+  children: ReactNode
 }) => {
   const [hoveredAnnotations, setHoveredAnnotations] = useState(null)
   const [loadingText, setLoadingText] = useState(false)
