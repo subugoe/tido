@@ -9,21 +9,19 @@ import { TidoConfig } from '@/types'
 
 declare global {
   interface Window {
-    Tido: (config: TidoConfig) => void
+    Tido: (config: Partial<TidoConfig>) => void
   }
 }
 
-window.Tido = function Tido(config = {} as Partial<TidoConfig>) {
+window.Tido = function Tido(this: TidoPublicApi, config = {} as Partial<TidoConfig>) {
   const { container } = config
   const containerEl = document.querySelector(container ?? defaultConfig.container)
-  // const encodeState = encodeState
-  // const decodeState = decodeState
 
   if (!containerEl) {
     throw new Error('Container element not found')
   }
 
-  createRoot(containerEl).render(<TidoApp config={config} />)
+  createRoot(containerEl).render(<TidoApp config={config} onReady={() => this.onReady?.()} />)
 }
 
 window.Tido.encodeState = encodeState

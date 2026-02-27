@@ -325,6 +325,10 @@ declare global {
     y: number
   }
 
+  interface TidoPublicApi {
+    onReady?: () => void
+  }
+
 }
 
 export interface PanelConfig {
@@ -405,7 +409,8 @@ export interface FilterNode {
 }
 
 export interface TidoProps {
-  config: Partial<TidoConfig>
+  config: Partial<TidoConfig>,
+  onReady?: () => void;
 }
 
 export interface TidoContentState {

@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react'
+import { FC, Suspense, useEffect, useRef } from 'react'
 
 import TopBar from '@/components/header/TopBar.tsx'
 import GlobalTree from '@/components/tree/GlobalTree.tsx'
@@ -11,10 +11,15 @@ import { ConfigProvider } from '@/contexts/ConfigContext.tsx'
 import Loading from '@/components/ui/loading.tsx'
 
 
-export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
+export const Tido: FC<TidoProps> = ({ config: customConfig, onReady }) => {
+  const onReadyRef = useRef(onReady)
 
-  function dataLoaded(numberPanels: number) {
-    console.log('number of panels loaded', numberPanels)
+  useEffect(() => {
+    onReadyRef.current = onReady
+  }, [onReady])
+
+  function dataLoaded() {
+    onReadyRef.current?.()
   }
 
 
