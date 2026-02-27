@@ -1,0 +1,51 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: TIDO - Text Viewer for Digital Objects
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Paul
+    family-names: Pestov
+    email: pestov@sub.uni-goettingen.de
+    affiliation: >-
+      Göttingen University, Göttingen State and University
+      Library
+    orcid: 'https://orcid.org/0000-0001-6093-572X'
+  - given-names: Orlin
+    family-names: Malkja
+    email: malkja@sub.uni-goettingen.de
+    affiliation: >-
+      Göttingen University, Göttingen State and University
+      Library
+    orcid: 'https://orcid.org/0009-0000-2712-7309'
+identifiers:
+  - type: url
+    value: 'https://github.com/subugoe/tido/tree/v5.0.0-alpha.17'
+repository-code: 'https://github.com/subugoe/tido/'
+repository-artifact: 'https://www.npmjs.com/package/tido/v/5.0.0-alpha.17'
+abstract: >-
+  TIDO, a Text Viewer for Digital Objects, is a client
+  application for the TextAPI to create scholarly digital
+  editions. With a highly flexible configuration of TIDO,
+  authors are able to define specific views and navigation
+  patterns for their research content. A dynamic panel-based
+  workspace provides on the one hand just enough flexibility
+  for the users to encourage a "discovery" and overcome the
+  limitations of traditional print editions and on the hand,
+  as authors, keep control and guide users through the
+  nuances of the source material.  
+keywords:
+  - software
+  - client
+  - JavaScript
+  - digital edition
+  - digital humanities
+  - TextAPI
+license: AGPL-3.0-or-later
+commit: 8f7e3ea8b28c77d0a0fab7e959bae80cdaf2ca71
+version: 5.0.0-alpha.17
+date-released: '2026-02-27'
