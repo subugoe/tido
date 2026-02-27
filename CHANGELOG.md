@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.17](https://github.com/subugoe/tido/compare/v5.0.0-alpha.16...v5.0.0-alpha.17) (2026-02-27)
+
+
+### Features
+
+* add config for annotations mode [#929](https://github.com/subugoe/tido/issues/929) ([93afb76](https://github.com/subugoe/tido/commit/93afb76d516875d7bd77b9240a4d0daee5ff8c68))
+* add extended split views, remove old panel modes ([94231f7](https://github.com/subugoe/tido/commit/94231f74e81c3ecd2ee93e484e5e17c35fbbc5dc))
+* allow using IIIF Images ([00690ea](https://github.com/subugoe/tido/commit/00690ead1db8abc9914ac6e921193e9443d0ec1d))
+
+
+### Bug Fixes
+
+* discover content types for text without config ([f0c1a59](https://github.com/subugoe/tido/commit/f0c1a59c66b7a96fbe6aa702eae8098639708415))
+* filter variants correctly based on witnesses selection ([96aa5dd](https://github.com/subugoe/tido/commit/96aa5dd80c2f1514fd61d41e7fd7711d105f840f))
+* fix alignment of annotations ([f41ce8f](https://github.com/subugoe/tido/commit/f41ce8fec322912c57f5f69b6a0bf4d67d52f237))
+* fix removing text hover style on mouse leave ([750f45b](https://github.com/subugoe/tido/commit/750f45bdc7536ab3053dd111c71f871782624de2))
+* fix switching content type ([b9e8302](https://github.com/subugoe/tido/commit/b9e8302082ecfec5516d4a05260bf6e6f4ff7ad0))
+* prevent circular matchedAnnotationMaps on empty local map update ([a5359c3](https://github.com/subugoe/tido/commit/a5359c31b090c13c62d08bf6f7848d42df8aec71))
+* reload texts correctly at toggling with a selected annotation ([59a9fd4](https://github.com/subugoe/tido/commit/59a9fd4dabba9c09e60d7695d9acaa71f04138fa))
+* show "Variant" annotations again when checking the filter if no filters config was provided ([89cb34a](https://github.com/subugoe/tido/commit/89cb34addd25a9dab98e90c6dc8ff7ec7135dc22))
+* update annotations when a view is toggled ([15c2cd9](https://github.com/subugoe/tido/commit/15c2cd98c4ea5da1361f6eabba79c59b34caeb32))
+* update colors of selected and hovered annotation in the text for better contrast ([9b0574d](https://github.com/subugoe/tido/commit/9b0574d34506d96c51beb033628c8db8a416b842))
+
+
+### Docs
+
+* update README with AnnotationsMode config ([#942](https://github.com/subugoe/tido/issues/942)) ([90619cf](https://github.com/subugoe/tido/commit/90619cf09b802e3b8e958c6d2584569258cc709b))
+* update README with panel views config ([4e4b070](https://github.com/subugoe/tido/commit/4e4b070dd07b451fd2775d38b2c697c8ec225b9f))
+* update toc ([ba6d187](https://github.com/subugoe/tido/commit/ba6d187e4a44b6b37b8237877e83b26d17583dcf))
+
 ## [5.0.0-alpha.16](https://github.com/subugoe/tido/compare/v5.0.0-alpha.15...v5.0.0-alpha.16) (2026-02-12)
 
 
