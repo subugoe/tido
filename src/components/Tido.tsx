@@ -1,4 +1,4 @@
-import { FC, Suspense, useEffect, useRef } from 'react'
+import { FC, Suspense } from 'react'
 
 import TopBar from '@/components/header/TopBar.tsx'
 import GlobalTree from '@/components/tree/GlobalTree.tsx'
@@ -12,14 +12,9 @@ import Loading from '@/components/ui/loading.tsx'
 
 
 export const Tido: FC<TidoProps> = ({ config: customConfig, onReady }) => {
-  const onReadyRef = useRef(onReady)
-
-  useEffect(() => {
-    onReadyRef.current = onReady
-  }, [onReady])
 
   function dataLoaded() {
-    onReadyRef.current?.()
+    onReady()
   }
 
 
