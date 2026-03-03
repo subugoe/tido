@@ -5,7 +5,7 @@ import '@/css/style.css'
 import { Tido as TidoApp } from './components/Tido.tsx'
 import { defaultConfig } from '@/utils/config/default-config.ts'
 import { encodeState, decodeState } from '@/utils/bookmarking.ts'
-import { TidoConfig } from '@/types'
+import { TidoConfig, TidoInstance } from '@/types'
 
 declare global {
   interface Window {
@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-window.Tido = function Tido(this: TidoPublicApi, config = {} as Partial<TidoConfig>) {
+window.Tido = function Tido(this: TidoInstance, config = {} as Partial<TidoConfig>) {
   const { container } = config
   const containerEl = document.querySelector(container ?? defaultConfig.container)
 

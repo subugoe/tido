@@ -324,11 +324,6 @@ declare global {
     x: number,
     y: number
   }
-
-  interface TidoPublicApi {
-    onReady?: () => void
-  }
-
 }
 
 export interface PanelConfig {
@@ -379,6 +374,7 @@ export interface TidoConfig {
   panelViews: PanelView[],
   annotations: AnnotationsConfig
 }
+
 
 export interface AnnotationTypeConfig {
   label?: string
@@ -435,6 +431,9 @@ export interface PanelViewContentState {
 
 export type SelectionRule = 'single' | 'multiple'
 
+export interface TidoInstance {
+  onReady?: () => void
+}
 export declare class Tido extends React.Component<TidoProps, never> {}
 export declare function encodeState(state: TidoContentState): Promise<string>
 export declare function decodeState(encoded: string): Promise<TidoContentState>
