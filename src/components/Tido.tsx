@@ -11,7 +11,13 @@ import { ConfigProvider } from '@/contexts/ConfigContext.tsx'
 import Loading from '@/components/ui/loading.tsx'
 
 
-export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
+export const Tido: FC<TidoProps> = ({ config: customConfig, onReady }) => {
+
+  function dataLoaded() {
+    onReady()
+  }
+
+
   return (
     <div className="tido flex flex-col h-full" data-cy="app">
       <ThemeProvider>
@@ -20,7 +26,7 @@ export const Tido: FC<TidoProps> = ({ config: customConfig }) => {
             <TopBar />
             <div className="flex-1 flex overflow-hidden">
               <GlobalTree />
-              <PanelsWrapper />
+              <PanelsWrapper onPanelsLoaded={dataLoaded} />
               <Toaster position="bottom-center" richColors expand={true}  />
             </div>
           </ConfigProvider>

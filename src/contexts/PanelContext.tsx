@@ -53,10 +53,11 @@ interface PanelContextType {
 
 interface PanelProviderProps {
   children?: ReactNode
-  panelId: string
+  panelId: string,
+  onLoaded?: () => void,
 }
 
-const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
+const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) => {
   const { annotations: annotationsConfig, panelViews: panelViewsConfig } = useConfig()
 
   const [loading, setLoading] = useState(true)
@@ -240,6 +241,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId }) => {
     } finally {
       // add a timeout to wait until updatePanel() is finished
       setTimeout(() => {
+        onLoaded()
         setLoading(false)
       }, 100)
     }
