@@ -2,19 +2,10 @@
   "allowNewCollections": false,
   "title": "BDN",
   "lang": "de",
-  "panels": [
-    {
-      "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json",
-      "manifest": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/critical/manifest.json"
-    }
-  ],
-  "rootCollections": [
-    "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
-  ],
   "theme": {
     "primaryColor": "#2b7fff"
   },
-  "showPanelPlaceholder": true,
+  "showPanelPlaceholder": false,
   "translations": {
     "de": {
       "common": {
@@ -27,7 +18,83 @@
       }
     }
   },
+  "panelViews": [
+    {
+      "label": "Text",
+      "view": "text",
+      "contentTypes": [
+        "edition"
+      ]
+    }
+  ],
   "annotations": {
-    "singleMode": "aligned"
-  }
+    "singleMode": "aligned",
+    "types": {},
+    "filters": {
+      "rootSelectionRule": "single",
+      "items": [
+        {
+          "label": "Textkritik",
+          "selected": true,
+          "types": [
+            "Variant"
+          ],
+          "items": [
+            {
+              "label": "Auflage a",
+              "selected": true,
+              "types": [
+                "a"
+              ]
+            },
+            {
+              "label": "Auflage b",
+              "selected": true,
+              "types": [
+                "b"
+              ]
+            },
+            {
+              "label": "Auflage d",
+              "selected": true,
+              "types": [
+                "d"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "Erläuterungen",
+          "types": [
+            "EditorialCorrection"
+          ],
+          "items": [
+            {
+              "label": "Satzfehlerkorrektur",
+              "types": [
+                "Satzfehlerkorrektur"
+              ],
+              "selected": false
+            },
+            {
+              "label": "Autorschaftliche Korrektur",
+              "types": [
+                "Autorschaftliche Korrektur"
+              ],
+              "selected": false
+            }
+          ],
+          "selected": false
+        }
+      ]
+    }
+  },
+  "panels": [
+    {
+      "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
+    }
+  ],
+  "rootCollections": [
+    "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
+  ]
 }
