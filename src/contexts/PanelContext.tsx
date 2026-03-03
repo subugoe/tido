@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useState, FC, useEffect, useRef } from 'react'
+import { ReactNode, createContext, useContext, useState, FC, useEffect, useRef, SetStateAction, Dispatch } from 'react'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
@@ -29,7 +29,7 @@ interface PanelContextType {
   hoveredAnnotation: string | null
   setHoveredAnnotation: (value: string | null) => void,
   annotationFilters: AnnotationFiltersConfig,
-  setAnnotationFilters: (value: AnnotationFiltersConfig) => void,
+  setAnnotationFilters:  Dispatch<SetStateAction<AnnotationFiltersConfig>>,
   selectedAnnotationTypes: AnnotationTypesDict | null,
   setSelectedAnnotationTypes: (value: AnnotationTypesDict) => void,
   selectedAnnotation: Annotation | null,

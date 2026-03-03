@@ -13,9 +13,13 @@ const AnnotationFiltersContent: FC = () => {
   } = usePanel()
 
   function onChange(updatedTree: FilterNode[]) {
-    annotationFilters.items = updatedTree
-    setAnnotationFilters(annotationFilters)
-    setSelectedAnnotationTypes(getSelectedTypes(updatedTree))
+    setTimeout(() => {
+      setAnnotationFilters(prev => ({
+        ...prev,
+        items: updatedTree
+      }))
+      setSelectedAnnotationTypes(getSelectedTypes(updatedTree))
+    }, 100)
   }
 
   if (!annotationFilters) return null

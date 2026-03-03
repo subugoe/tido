@@ -24,7 +24,6 @@ const SingleRootFilter: FC<Props> = ({ config, onChange }) => {
 
   const handleToggle = useCallback(
     (rootindex: number) => (path: number[]) => {
-      console.log(rootindex, path)
       setTreeStates((prev) => {
         const newStates = { ...prev }
         newStates[rootindex] = updateNodeSelection(path, newStates[rootindex])
