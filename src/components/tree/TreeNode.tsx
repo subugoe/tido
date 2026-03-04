@@ -5,7 +5,6 @@ import { ChevronRight, Folder, LibraryBig, File, FolderOpen } from 'lucide-react
 
 import EmptyNode from '@/components/tree/EmptyNode.tsx'
 import ErrorNode from '@/components/tree/ErrorNode.tsx'
-import { usePanelStore } from '@/store/PanelStore.tsx'
 import OpenedIcon from '@/components/tree/OpenedIcon.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { getRootChildrenCollectionsIds } from '@/utils/tree.ts'
@@ -18,8 +17,7 @@ interface TreeNodeProps {
 
 
 const TreeNode: FC<TreeNodeProps> = ({ node }) => {
-  const { onSelect, getChildren, selectedNodeId, setSelectedNodeId, elevation } = useTree()
-  const panels = usePanelStore(state => state.panels)
+  const { onSelect, getChildren, selectedNodeId, setSelectedNodeId, elevation, panels } = useTree()
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(node.expanded)
   const [showEmptyNode, setShowEmptyNode] = useState(false)
