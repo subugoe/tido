@@ -4,18 +4,26 @@ import {
   PANEL_GAP
 } from '@/utils/panel.ts'
 
-
 class PanelResizer {
   wrapper: HTMLElement
   panelEl: HTMLElement
+  mainContentEl: HTMLElement
+  sidebarEl: HTMLElement | null = null
+
   panelId: string
   resizeHandle: HTMLElement
   sidebarWidth: number = SIDEBAR_DEFAULT_WIDTH
 
-  eventListeners: Array<{ name: string; listener: EventListener }> = []
+  panelEventListeners: { el: HTMLElement | Window; name: string; listener: EventListener }[] = []
+  sidebarEventListeners: { el: HTMLElement | Window; name: string; listener: EventListener }[] = []
+
   isResizing = false
+  isSidebarResizing = false
   annotationsOpen = false
   lastWidth: number | null = null
+
+  private isDragToResizeInitialized = false
+  private isSidebarResizeInitialized = false
 
   constructor(panelEl: HTMLElement) {
     this.init(panelEl)
@@ -24,8 +32,10 @@ class PanelResizer {
   init(panelEl: HTMLElement) {
     this.wrapper = document.getElementById('panels-wrapper')
     this.panelEl = panelEl
+    this.mainContentEl = panelEl.querySelector('.main-content')
+    this.sidebarEl = panelEl.querySelector('.sidebar')
     this.panelId = this.panelEl.id
-    this.resizeHandle = this.panelEl.querySelector('[data-resize-handle]')
+    this.resizeHandle = this.panelEl.querySelector('[data-panel-resize-handle]')
 
     this.panelEl.style.minWidth = `${MIN_PANEL_WIDTH}px`
 
@@ -33,10 +43,27 @@ class PanelResizer {
     this.dragToResize()
   }
 
+  // ─── Panel edge resize ───────────────────────────────────────────────────────
+
   resize() {
     const width = this.calculateWidth(this.wrapper)
-    this.lastWidth = width
-    this.panelEl.style.width = `${width}px`
+    this.onResizePanel(width)
+  }
+
+  onResizePanel(newWidth: number) {
+    this.lastWidth = newWidth
+    this.panelEl.style.width = `${newWidth}px`
+
+    if (this.annotationsOpen) {
+      const mainWidth = newWidth - this.sidebarWidth
+      this.mainContentEl.style.width = `${mainWidth}px`
+      this.sidebarEl.style.left = `${mainWidth}px`
+      this.sidebarEl.style.width = `${this.sidebarWidth}px`
+    } else {
+      this.mainContentEl.style.width = `${newWidth}px`
+      this.sidebarEl.style.left = `${newWidth}px`
+      this.sidebarEl.style.width = '0px'
+    }
   }
 
   calculateWidth(wrapper: HTMLElement): number {
@@ -54,6 +81,9 @@ class PanelResizer {
   }
 
   dragToResize() {
+    if (this.isDragToResizeInitialized) return
+    this.isDragToResizeInitialized = true
+
     const handleMouseMove = (e: MouseEvent) => {
       if (this.isResizing) {
         const rect = this.panelEl.getBoundingClientRect()
@@ -61,15 +91,15 @@ class PanelResizer {
 
         if (newWidth < MIN_PANEL_WIDTH + (this.annotationsOpen ? this.sidebarWidth : 0)) return
 
-        this.lastWidth = newWidth
-        this.panelEl.style.width = `${newWidth}px`
+        this.onResizePanel(newWidth)
         return
       }
 
-      // Hover detection logic (within 8px of right edge)
       const rect = this.panelEl.getBoundingClientRect()
       const offsetX = e.clientX - rect.left
-      this.setIsHoveringEdge(offsetX > rect.width - 8 && offsetX <= rect.width)
+      const isNearEdge = offsetX > rect.width - 12 && offsetX <= rect.width
+
+      this.setIsHoveringEdge(isNearEdge)
     }
 
     const handleMouseUp = () => this.setIsResizing(false)
@@ -77,24 +107,20 @@ class PanelResizer {
     const handleMouseDown = (e: MouseEvent) => {
       const rect = this.panelEl.getBoundingClientRect()
       const offsetX = e.clientX - rect.left
-      if (offsetX > rect.width - 8) {
+      if (offsetX > rect.width - 12) {
         this.setIsResizing(true)
       }
     }
 
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup', handleMouseUp)
-    this.resizeHandle.addEventListener('mousedown', handleMouseDown)
+    this.panelEl.addEventListener('mousedown', handleMouseDown)
 
-    this.eventListeners.push(...[
-      { name: 'mousemove', listener: handleMouseMove },
-      { name: 'mouseup', listener: handleMouseUp },
-      { name: 'mousedown', listener: handleMouseDown }
-    ])
-  }
-
-  onResize(callback: (width: number) => void) {
-    callback(this.lastWidth)
+    this.panelEventListeners.push(
+      { el: window, name: 'mousemove', listener: handleMouseMove },
+      { el: window, name: 'mouseup', listener: handleMouseUp },
+      { el: this.panelEl, name: 'mousedown', listener: handleMouseDown }
+    )
   }
 
   setIsHoveringEdge(value: boolean) {
@@ -114,15 +140,102 @@ class PanelResizer {
     }
   }
 
-  setAnnotationsOpen(value: boolean) {
-    this.annotationsOpen = value
-    if (value) {
-      this.lastWidth = this.lastWidth + this.sidebarWidth
-      this.panelEl.style.width = `${this.lastWidth}px`
+  // ─── Sidebar split resize ────────────────────────────────────────────────────
+
+  private initSidebarResize() {
+    if (!this.sidebarEl) return
+    if (this.isSidebarResizeInitialized) return
+    this.isSidebarResizeInitialized = true
+
+    const handleMouseDown = (e: MouseEvent) => {
+      if (!this.sidebarEl) return
+
+      const sidebarRect = this.sidebarEl.getBoundingClientRect()
+      const offsetX = e.clientX - sidebarRect.left
+
+      if (offsetX > 12) return
+
+      e.preventDefault()
+      e.stopPropagation()
+      this.isSidebarResizing = true
+      this.panelEl.style.userSelect = 'none'
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!this.sidebarEl) return
+
+      const sidebarRect = this.sidebarEl.getBoundingClientRect()
+      const offsetX = e.clientX - sidebarRect.left
+      const isNearEdge = offsetX <= 12
+
+      if (!this.isSidebarResizing) {
+        this.sidebarEl.style.cursor = isNearEdge ? 'ew-resize' : 'default'
+        return
+      }
+
+      const panelRect = this.panelEl.getBoundingClientRect()
+      const newMainWidth = e.clientX - panelRect.left
+      const newSidebarWidth = panelRect.width - newMainWidth
+
+      if (newMainWidth < MIN_PANEL_WIDTH || newSidebarWidth < SIDEBAR_DEFAULT_WIDTH) return
+
+      this.mainContentEl.style.width = `${newMainWidth}px`
+      this.sidebarEl.style.left = `${newMainWidth}px`
+      this.sidebarEl.style.width = `${newSidebarWidth}px`
+      this.sidebarWidth = newSidebarWidth
+    }
+
+    const handleMouseUp = () => {
+      if (!this.isSidebarResizing) return
+      this.isSidebarResizing = false
+      this.panelEl.style.userSelect = 'auto'
+    }
+
+    this.sidebarEl.addEventListener('mousedown', handleMouseDown)
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
+
+    this.sidebarEventListeners.push(
+      { el: this.sidebarEl, name: 'mousedown', listener: handleMouseDown },
+      { el: window, name: 'mousemove', listener: handleMouseMove },
+      { el: window, name: 'mouseup', listener: handleMouseUp }
+    )
+  }
+
+  private teardownSidebarResize() {
+    this.sidebarEventListeners.forEach(({ el, name, listener }) => {
+      el.removeEventListener(name, listener)
+    })
+    this.sidebarEventListeners = []
+    this.isSidebarResizeInitialized = false
+
+    if (this.sidebarEl) {
+      this.sidebarEl.style.cursor = ''
+    }
+  }
+
+  // ─── Annotations open/close ──────────────────────────────────────────────────
+
+  setAnnotationsOpen(isOpen: boolean) {
+    if (isOpen === this.annotationsOpen) return
+    this.annotationsOpen = isOpen
+
+    if (isOpen) {
+      const newWidth = this.lastWidth + this.sidebarWidth
+      this.onResizePanel(newWidth)
+      this.initSidebarResize()
     } else {
-      this.lastWidth = this.lastWidth - this.sidebarWidth
-      this.panelEl.style.width = `${this.lastWidth}px`
+      // Reset sidebarWidth before onResizePanel so the subtraction uses the right value
       this.sidebarWidth = SIDEBAR_DEFAULT_WIDTH
+
+      // Clear any manual drag overrides so onResizePanel takes full control
+      this.mainContentEl.style.width = ''
+      this.sidebarEl.style.left = ''
+      this.sidebarEl.style.width = ''
+
+      const newWidth = this.lastWidth - this.sidebarWidth
+      this.onResizePanel(newWidth)
+      this.teardownSidebarResize()
     }
   }
 
@@ -130,13 +243,17 @@ class PanelResizer {
     this.sidebarWidth = value
   }
 
+  // ─── Cleanup ─────────────────────────────────────────────────────────────────
+
   clean() {
-    this.eventListeners.forEach(({ name, listener }) => {
-      window.removeEventListener(name, listener)
+    [...this.panelEventListeners, ...this.sidebarEventListeners].forEach(({ el, name, listener }) => {
+      el.removeEventListener(name, listener)
     })
+    this.panelEventListeners = []
+    this.sidebarEventListeners = []
+    this.isDragToResizeInitialized = false
+    this.isSidebarResizeInitialized = false
   }
 }
 
-export {
-  PanelResizer
-}
+export { PanelResizer }

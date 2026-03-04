@@ -1,12 +1,12 @@
 import { FC, ReactNode, useEffect, useRef } from 'react'
-import { GripVertical } from 'lucide-react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 
 interface Props {
   children?: ReactNode
 }
 const PanelShell: FC<Props> = ({ children }) => {
-  const { panelId, initResizer, getSidebarScroller } = usePanel()
+  const { panelId, initResizer, getSidebarScroller, resizer } = usePanel()
   const ref = useRef(null)
 
   useEffect(() => {
@@ -17,20 +17,22 @@ const PanelShell: FC<Props> = ({ children }) => {
     // Scroll to this panel
     const scrollPosX = ref.current.offsetLeft - ref.current.offsetWidth / 2
     document.getElementById('panels-wrapper').scrollTo({ left: scrollPosX, behavior: 'smooth' })
+
+    return () => {
+      resizer?.clean()
+    }
   }, [ref])
 
   return <div
     id={panelId}
     ref={ref}
-    className={`panel bg-background text-foreground grow-0 shrink-0 relative`}
+    className={`panel bg-background text-foreground grow-0 shrink-0 relative transition-width`}
     data-cy="panel"
   >
     <div className="h-full overflow-hidden relative border-2 border-border rounded-lg">
       { children }
     </div>
-    <div data-resize-handle className="z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted -translate-y-1/2 top-1/2 -right-1.5">
-      <GripVertical className="h-4 w-2.5 text-muted-foreground" />
-    </div>
+    <ResizeHandle className="-right-1.5" data-panel-resize-handle />
   </div>
 }
 
