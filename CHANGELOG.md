@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.18](https://github.com/subugoe/tido/compare/v5.0.0-alpha.17...v5.0.0-alpha.18) (2026-03-04)
+
+
+### Features
+
+* add onReady public API when data are loaded  ([9ecb73f](https://github.com/subugoe/tido/commit/9ecb73f48e9a69cab3ee72293dfc7bc18654045f))
+
+
+### Bug Fixes
+
+* avoid unnecessary collection requests on panel updates ([d844728](https://github.com/subugoe/tido/commit/d844728dad0a771ce34a36a8a474430411ab12cf))
+* debounce annotation filter checkbox and perform safer updating of the state ([5a746a3](https://github.com/subugoe/tido/commit/5a746a3056b5a1cba55ad7d62768f6db3846cc2a))
+
+
+### Docs
+
+* add CITATION.cff ([6b028dc](https://github.com/subugoe/tido/commit/6b028dc462e879777f0e7d12aaf97fca5ea640c5))
+
+
+### Refactoring
+
+* fix TypeScript issues, add typecheck command ([bd945b0](https://github.com/subugoe/tido/commit/bd945b02494f82ed1da132386c20e120d6d9cdf4))
+
 ## [5.0.0-alpha.17](https://github.com/subugoe/tido/compare/v5.0.0-alpha.16...v5.0.0-alpha.17) (2026-02-27)
 
 
