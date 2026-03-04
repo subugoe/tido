@@ -10,17 +10,12 @@ import 'allotment/dist/style.css'
 import { Allotment } from 'allotment'
 import SidebarView from '@/components/panel/views/SidebarView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
-import { DEFAULT_PANEL_WIDTH, SIDEBAR_DEFAULT_WIDTH } from '@/utils/panel.ts'
+import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 
 const PanelContent: FC = React.memo(() => {
   const { panelState, resizer, error } = usePanel()
   const [showSidebar, setShowSidebar] = useState(false)
   const [contentPanes, setContentPanes] = useState([])
-  const [sizes, setSizes] = useState({
-    main: 0,
-    sidebar: 0
-  })
-  const [isOpening, setIsOpening] = useState(false)
 
   useEffect(() => {
     const panes = panelState.panelViews.filter(v => v.visible).map(v => {
@@ -34,9 +29,7 @@ const PanelContent: FC = React.memo(() => {
 
   useEffect(() => {
     if (!resizer) return
-    setIsOpening(true)
     resizer.setAnnotationsOpen(panelState.annotationsOpen)
-    const isOpeningTimeout = setTimeout(() => setIsOpening(false), 500)
 
     let sidebarContentTimeout = null
 
@@ -50,51 +43,38 @@ const PanelContent: FC = React.memo(() => {
     }
 
     return () => {
-      clearTimeout(isOpeningTimeout)
       if (sidebarContentTimeout) clearTimeout(sidebarContentTimeout)
     }
   }, [panelState.annotationsOpen])
 
-  const handleChange = (newSizes: number[]) => {
-    setSizes({
-      main: newSizes[0],
-      sidebar: newSizes[1] ?? 0
-    })
-
-    if (newSizes[1]) resizer.setSidebarWidth(newSizes[1])
-  }
 
   if (error) return <PanelError error={error} resetErrorBoundary={() => {}} />
   return (
-    <div
-      className={`h-full flex flex-col relative overflow-hidden`} style={{
-        '--sash-hover-size': '2px',
-        '--focus-border': 'rgb(var(--tido-color-primary))'
-      } as React.CSSProperties}>
+    <TextProvider>
       <div
-        className="flex h-full w-full overflow-hidden" data-cy="panel-container">
-        <TextProvider>
-          <Allotment onChange={handleChange} proportionalLayout={true}>
-            <Allotment.Pane
-              minSize={isOpening ? sizes.main : DEFAULT_PANEL_WIDTH - 4}
-              maxSize={isOpening ? sizes.main : Infinity}
-            >
-              <div className="flex flex-col h-full @container/panel">
-                <PanelHeader />
-                <div className="flex-1">
-                  <Allotment proportionalLayout={true}>
-                    {contentPanes.map((pane) => <Allotment.Pane className="pl-px">
-                      {pane}
-                    </Allotment.Pane>)}
-                  </Allotment>
-                </div>
-              </div>
-            </Allotment.Pane>
-            {showSidebar && <Allotment.Pane preferredSize={SIDEBAR_DEFAULT_WIDTH} minSize={SIDEBAR_DEFAULT_WIDTH} className="pl-px"><SidebarView /></Allotment.Pane>}
-          </Allotment>
-        </TextProvider>
+        className={`h-full flex flex-col relative overflow-hidden`} style={{
+          '--sash-hover-size': '2px',
+          '--focus-border': 'rgb(var(--tido-color-primary))'
+        } as React.CSSProperties}>
+        <div className="h-full w-full overflow-hidden relative" data-cy="panel-container">
+          <div className="main-content flex flex-col h-full @container/panel">
+            <PanelHeader />
+            <div className="flex-1">
+              <Allotment proportionalLayout={true}>
+                {contentPanes.map((pane) => <Allotment.Pane>
+                  {pane}
+                </Allotment.Pane>)}
+              </Allotment>
+            </div>
+          </div>
+          <div className="sidebar absolute h-full top-0">
+            <div className="absolute inset-y-0 left-0 w-px bg-border z-10" />
+            <ResizeHandle className="-left-1.5" data-sidebar-resize-handle />
+            {showSidebar && <SidebarView />}
+          </div>
+        </div>
       </div>
-    </div>
+    </TextProvider>
   )
 })
 
