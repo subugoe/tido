@@ -6,6 +6,7 @@ type ThemeProviderProps = {
   children: React.ReactNode
   defaultTheme?: Theme
   storageKey?: string
+  onThemeChange?: (theme: Theme) => void
 }
 
 type ThemeContextState = {
@@ -24,6 +25,7 @@ const ThemeProvider = ({
   children,
   defaultTheme = 'system',
   storageKey = 'tido-theme',
+  onThemeChange,
   ...props
 }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<Theme>(
@@ -53,11 +55,12 @@ const ThemeProvider = ({
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme)
       setTheme(theme)
+      onThemeChange?.(theme)
     },
   }
 
   return (
-    <ThemeContext.Provider {...props} value={value}>
+    <ThemeContext.Provider {...props} value={value} >
       {children}
     </ThemeContext.Provider>
   )

@@ -7,6 +7,7 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 import { encodeState, decodeState } from '@/utils/bookmarking.ts'
 import { TidoConfig, TidoInstance } from '@/types'
 
+
 declare global {
   interface Window {
     Tido: (config: Partial<TidoConfig>) => void
@@ -21,7 +22,13 @@ window.Tido = function Tido(this: TidoInstance, config = {} as Partial<TidoConfi
     throw new Error('Container element not found')
   }
 
-  createRoot(containerEl).render(<TidoApp config={config} onReady={() => this.onReady?.()} />)
+  /*
+  this.setTheme = (newTheme) => {
+    setTheme(newTheme)
+  }
+  */
+
+  createRoot(containerEl).render(<TidoApp config={config} onReady={() => this.onReady?.()} onThemeChange={(theme) => this.onThemeChange?.(theme)} /> )
 }
 
 window.Tido.encodeState = encodeState

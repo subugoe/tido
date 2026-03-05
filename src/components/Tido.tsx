@@ -11,7 +11,7 @@ import { ConfigProvider } from '@/contexts/ConfigContext.tsx'
 import Loading from '@/components/ui/loading.tsx'
 
 
-export const Tido: FC<TidoProps> = ({ config: customConfig, onReady }) => {
+export const Tido: FC<TidoProps> = ({ config: customConfig, onReady, onThemeChange }) => {
 
   function dataLoaded() {
     onReady()
@@ -20,7 +20,7 @@ export const Tido: FC<TidoProps> = ({ config: customConfig, onReady }) => {
 
   return (
     <div className="tido flex flex-col h-full" data-cy="app">
-      <ThemeProvider>
+      <ThemeProvider onThemeChange={onThemeChange}>
         <Suspense fallback={<Loading size={36} />}>
           <ConfigProvider userConfig={customConfig}>
             <TopBar />
