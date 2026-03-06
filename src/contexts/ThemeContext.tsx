@@ -54,7 +54,6 @@ const ThemeProvider = ({
   }, [theme])
 
   useEffect(() => {
-    console.log('update new theme from website', themeUI)
     if (themeUI) setTheme(themeUI)
   }, [themeUI])
 
