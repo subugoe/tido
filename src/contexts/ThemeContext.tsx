@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 type Theme = 'dark' | 'light' | 'system'
 
@@ -6,6 +7,7 @@ type ThemeProviderProps = {
   children: React.ReactNode
   defaultTheme?: Theme
   storageKey?: string
+  onThemeChange?: (theme: Theme) => void
 }
 
 type ThemeContextState = {
@@ -24,11 +26,14 @@ const ThemeProvider = ({
   children,
   defaultTheme = 'system',
   storageKey = 'tido-theme',
+  onThemeChange,
   ...props
 }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   )
+
+  const { theme: themeUI } = useUIStore()
 
   useEffect(() => {
     const root = document.querySelector('.tido')
@@ -48,16 +53,21 @@ const ThemeProvider = ({
     root.classList.add(theme)
   }, [theme])
 
+  useEffect(() => {
+    if (themeUI) setTheme(themeUI)
+  }, [themeUI])
+
   const value = {
     theme,
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme)
       setTheme(theme)
+      onThemeChange?.(theme)
     },
   }
 
   return (
-    <ThemeContext.Provider {...props} value={value}>
+    <ThemeContext.Provider {...props} value={value} >
       {children}
     </ThemeContext.Provider>
   )
