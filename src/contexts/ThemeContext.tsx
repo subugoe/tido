@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 type Theme = 'dark' | 'light' | 'system'
 
@@ -32,6 +33,8 @@ const ThemeProvider = ({
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   )
 
+  const { theme: themeUI } = useUIStore()
+
   useEffect(() => {
     const root = document.querySelector('.tido')
 
@@ -49,6 +52,11 @@ const ThemeProvider = ({
 
     root.classList.add(theme)
   }, [theme])
+
+  useEffect(() => {
+    console.log('update new theme from website', themeUI)
+    if (themeUI) setTheme(themeUI)
+  }, [themeUI])
 
   const value = {
     theme,

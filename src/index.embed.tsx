@@ -5,7 +5,8 @@ import '@/css/style.css'
 import { Tido as TidoApp } from './components/Tido.tsx'
 import { defaultConfig } from '@/utils/config/default-config.ts'
 import { encodeState, decodeState } from '@/utils/bookmarking.ts'
-import { TidoConfig, TidoInstance } from '@/types'
+import { TidoConfig, TidoInstance, ThemeConfig } from '@/types'
+import { useUIStore } from '@/store/UIStore.tsx'
 
 
 declare global {
@@ -17,18 +18,27 @@ declare global {
 window.Tido = function Tido(this: TidoInstance, config = {} as Partial<TidoConfig>) {
   const { container } = config
   const containerEl = document.querySelector(container ?? defaultConfig.container)
+  const { updateTheme } = useUIStore.getState()
 
   if (!containerEl) {
     throw new Error('Container element not found')
   }
 
-  /*
   this.setTheme = (newTheme) => {
-    setTheme(newTheme)
+    updateTheme(newTheme)
   }
-  */
 
-  createRoot(containerEl).render(<TidoApp config={config} onReady={() => this.onReady?.()} onThemeChange={(theme) => this.onThemeChange?.(theme)} /> )
+
+  const handleReady = () => this.onReady?.()
+  const handleThemeChange = (theme: ThemeConfig['theme']) => this.onThemeChange?.(theme)
+
+  createRoot(containerEl).render(
+    <TidoApp
+      config={config}
+      onReady={handleReady}
+      onThemeChange={handleThemeChange}
+    />
+  )
 }
 
 window.Tido.encodeState = encodeState
