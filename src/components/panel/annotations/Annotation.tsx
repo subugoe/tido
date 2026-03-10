@@ -6,6 +6,7 @@ import VariantContent from '@/components/panel/annotations/VariantContent.tsx'
 import { useText } from '@/contexts/TextContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 60
 const DEFAULT_ANNOTATION_BODY_HEIGHT = 72
@@ -20,6 +21,7 @@ interface Props {
 
 
 const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) => {
+  const { annotations: annotationsConfig } = useConfig()
   const { selectedAnnotation, setSelectedAnnotation, annotationsMode } = usePanel()
   const { setHoveredAnnotations, hoveredAnnotations } = useText()
   const ref = useRef(null)
@@ -36,7 +38,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse }) =
 
   const { t } = useTranslation()
 
-  const type = data.body['x-content-type']
+  const type = annotationsConfig?.types?.[data.body['x-content-type']] ?? data.body['x-content-type']
 
   useEffect(() => {
     setIsHovered(hoveredAnnotations?.includes(data.id))
