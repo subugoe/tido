@@ -8,6 +8,20 @@
       "contentType": "philology"
     }
   ],
+  "panelViews": [
+    {
+      "label": "Autographie",
+      "view": "image"
+    }, {
+      "label": "Transkription",
+      "view": "text",
+      "contentTypes": ["facsimile"]
+    }, {
+      "label": "Vokalisation & Übersetzung",
+      "view": "text",
+      "contentTypes": ["philology"]
+    }
+  ],
   "rootCollections": [
     "https://eupt.uni-goettingen.de/api/eupt/collection.json"
   ]
