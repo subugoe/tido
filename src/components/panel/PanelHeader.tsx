@@ -42,7 +42,6 @@ const PanelHeader: FC = () => {
   const { usePanelTranslation, remove } = usePanel()
   const { t } = usePanelTranslation()
   const [showMetadataModal, setShowMetadataModal] = useState(false)
-  const { panelState } = usePanel()
   const handleOpenChange = (open: boolean) => {
     setShowMetadataModal(open)
   }
@@ -50,14 +49,13 @@ const PanelHeader: FC = () => {
   return (
     <div className="flex items-center border-b border-border p-3" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
       <CollectionTitle />
-      <div className="ml-1 text-wrap break-words">
+      <div className="ml-1 text-wrap wrap-break-word">
         <Popover open={showMetadataModal} onOpenChange={handleOpenChange} modal={true}>
           <PopoverTrigger asChild>
             <Button
               onClick={() => setShowMetadataModal(!showMetadataModal)}
               variant={showMetadataModal ? 'secondary' : 'ghost'}
               size={'icon'}
-              disabled={!panelState?.contentTypes?.length}
               title={t('metadata')}
             >
               {<Info />}
