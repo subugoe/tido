@@ -56,9 +56,12 @@ const AlignAnnotationsList: FC = () => {
   }, [selectedAnnotation])
 
 
-  function onAnnotationExpand(annotationId: string, bodyAnnotationEl: HTMLElement, bodyFinalHeight: number, translateY: number) {
+  function onAnnotationExpand(annotationId: string, expandableEl: HTMLElement, expandableElFinalHeight: number, translateY: number) {
     // Idea: we transition the body of Annotation
+    // expandableEl: (arg 2)
+    // expandableElFinalHeight (arg 3)
     // translateY: the amount that annotation expanded (expandedHeight - collapsedHeight). Necessary to push down the lower annotations
+
     const newElements = [...elements]
     const index = elements.findIndex(el => el.annotation.id === annotationId)
 
@@ -77,11 +80,10 @@ const AlignAnnotationsList: FC = () => {
 
     setYMap(map)
 
-    // Step 4: Expand the annotation (slightly delayed or same time)
     setTimeout(() => {
-      bodyAnnotationEl.style.height = bodyFinalHeight + 'px'
-      bodyAnnotationEl.style.transition = 'height 300ms ease-out'
-    },0)
+      expandableEl.style.height = expandableElFinalHeight + 'px'
+      expandableEl.style.transition = 'height 300ms ease-out'
+    }, 0)
   }
 
   function onAnnotationCollapse(bodyAnnotationEl: HTMLElement, bodyFinalHeight: number) {

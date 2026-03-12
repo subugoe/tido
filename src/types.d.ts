@@ -229,6 +229,21 @@ declare global {
     }
   }
 
+  interface NestedMatchedAnnotationsMap {
+    [annotationId: string]: {
+      annotation: Annotation
+      nestedAnnotations: Annotation[],
+      internalTargets: {
+        selectors: string[],
+        elements: HTMLElement[],
+      }
+      externalTargets: {
+        selectors: string[],
+        elements: HTMLElement[],
+      }
+    }
+  }
+
   interface MergedAnnotationEntry {
     target: Element
     annotations: Annotation[]
