@@ -23,6 +23,6 @@
     }
   ],
   "rootCollections": [
-    "https://eupt.uni-goettingen.de/api/eupt/collection.json"
+    "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collection.json"
   ]
 }
