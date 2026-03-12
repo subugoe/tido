@@ -180,6 +180,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
+    if (!matchedAnnotationsMap) return
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ? matchedAnnotationsMap[selectedAnnotation.id].target : []
 
