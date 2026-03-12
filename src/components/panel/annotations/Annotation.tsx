@@ -157,7 +157,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
     setHoveredNestedAnnotationIds(annotationIds)
   }
 
-  function onMouseLeaveTarget(e: Event) {
+  function onMouseLeaveTarget() {
     setHoveredNestedAnnotationIds([])
   }
 
@@ -203,7 +203,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
     // if we have clicked a target -> we should not proceed further in its parentAnnotation, also in this function
     const clickedEl = e.target
     const flippedMatchedAnnotationsMap = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
-    if (Object.values(flippedMatchedAnnotationsMap).some((entry: any) => entry.el === clickedEl)) return
+    if (Object.values(flippedMatchedAnnotationsMap).some((entry: object) => entry.el === clickedEl)) return
 
 
     if (selectedAnnotation && selectedAnnotation.id === data.id) {

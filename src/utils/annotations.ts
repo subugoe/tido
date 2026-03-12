@@ -143,7 +143,7 @@ function getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap) {
     if (externalTargetSelectors.length < 0) return
 
     externalTargetSelectors.forEach((selector) => {
-      if (!flippedNestedMatchedAnnotationsMap.hasOwnProperty(selector)) {
+      if (!Object.hasOwn(flippedNestedMatchedAnnotationsMap, selector)) {
         const el = document.querySelector<HTMLElement>(selector)
         flippedNestedMatchedAnnotationsMap[selector] = {
           annotationIds: [annotationId],
