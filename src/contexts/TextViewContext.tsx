@@ -14,6 +14,7 @@ type State = {
   setActiveContentType: (contentType: string) => void
   label: string
   text: string
+  visible: boolean
   matchedAnnotationsMap: MatchedAnnotationsMap
   setMatchedAnnotationsMap: (map: MatchedAnnotationsMap) => void
 }
@@ -23,10 +24,12 @@ const TextViewContext = createContext<State>(null)
 export const TextViewProvider = ({
   contentTypes,
   label,
+  visible,
   children
 }: {
   contentTypes: string[]
   label: string
+  visible: boolean
   children: ReactNode
 }) => {
   const { panelState, loading: loadingPanel, usePanelTranslation, matchedAnnotationsMaps, updateMatchedAnnotationsMap } = usePanel()
@@ -118,6 +121,7 @@ export const TextViewProvider = ({
       setActiveContentType,
       label,
       text,
+      visible,
       matchedAnnotationsMap,
       setMatchedAnnotationsMap
     }}>
