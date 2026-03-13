@@ -18,10 +18,11 @@ const PanelContent: FC = React.memo(() => {
   const [contentPanes, setContentPanes] = useState([])
 
   useEffect(() => {
-    const panes = panelState.panelViews.filter(v => v.visible).map((v) => {
+    const panes = panelState.panelViews.map((v) => {
       const key = `${v.view}-${v.label || 'default'}`
+      const visible = v.visible ?? true
       if (v.view === 'image') return <ImageView key={key} />
-      else return <TextView key={key} label={v.label} contentTypes={v.contentTypes} />
+      else return <TextView key={key} label={v.label} contentTypes={v.contentTypes} visible={visible} />
     })
 
     setContentPanes(panes)
@@ -62,9 +63,12 @@ const PanelContent: FC = React.memo(() => {
             <PanelHeader />
             <div className="flex-1">
               <Allotment proportionalLayout={true}>
-                {contentPanes.map((pane) => <Allotment.Pane key={pane.key}>
-                  {pane}
-                </Allotment.Pane>)}
+                {contentPanes.map((pane, index) => {
+                  const visible = panelState.panelViews[index]?.visible ?? true
+                  return <Allotment.Pane key={pane.key} visible={visible}>
+                    {pane}
+                  </Allotment.Pane>
+                })}
               </Allotment>
             </div>
           </div>

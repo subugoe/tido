@@ -2,6 +2,7 @@ import {
   FC,
   memo,
   useEffect,
+  useMemo,
   useRef,
   useState
 } from 'react'
@@ -55,7 +56,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   } = usePanel()
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
-  const { matchedAnnotationsMap, setMatchedAnnotationsMap, activeContentUrl } = useTextView()
+  const { matchedAnnotationsMap, setMatchedAnnotationsMap, activeContentUrl, visible } = useTextView()
 
   const [portals, setPortals] = useState([])
 
@@ -65,13 +66,17 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
 
+  // This is the actual value for matched annotations that is used for rendering.
+  // With the state "matchedAnnotationsMap" we create a data-driven version of the map while with "displayedMap"
+  // we create a UI-driven value. This applies when the user toggles on/off the TextView.
+  const displayedMap = useMemo(() => visible ? matchedAnnotationsMap : {}, [visible, matchedAnnotationsMap])
+
   function containsChildren(targets: HTMLElement[], target: HTMLElement) {
     for(const t of targets) {
       if (target.contains(t) && target !== t) return true
     }
     return false
   }
-
 
   const onClickTarget = (e: Event) => {
     // Generic click listener
@@ -109,7 +114,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   useEffect(() => {
     annotationsModeRef.current = annotationsMode
   }, [annotationsMode])
-
 
   const onMouseEnterTarget = (e: Event) => {
     const target = e.currentTarget as HTMLElement
@@ -150,7 +154,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   useEffect(() => {
     if (!panelState.annotations || !parsedDom) return
 
-    const result: MatchedAnnotationsMap = panelState.annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
+    const result = panelState.annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
       const isSource = cur.target[0].source === activeContentUrl.current
       const selector = (cur.target[0].selector as CssSelector)?.value
 
@@ -219,8 +223,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   // Apply highlighting styles on every map update
   useEffect(() => {
-    if (!matchedAnnotationsMap) return
-    const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedAnnotationsMap)
+    if (!displayedMap) return
+    const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(displayedMap)
     targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
     flippedMatchedAnnotationsMapRef.current = assignNestedTargetsInFlippedMatched(targetsRef.current, flippedMatchedAnnotationsMap)
 
@@ -247,14 +251,14 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
         addHighlightStyle(target)
       }
     })
-  }, [matchedAnnotationsMap])
+  }, [displayedMap])
 
   // Apply selected styles on every selectedAnnotation update
   useEffect(() => {
-    if (!matchedAnnotationsMap) return
+    if (!displayedMap) return
     const targetsOfSelectedAnnotation =
-      selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id])
-        ? matchedAnnotationsMap[selectedAnnotation.id].target
+      selectedAnnotation && !!(displayedMap[selectedAnnotation.id])
+        ? displayedMap[selectedAnnotation.id].target
         : []
 
     flippedMatchedAnnotationsMapRef.current.forEach(fa => {
@@ -281,7 +285,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
         addHighlightStyle(target)
       }
     })
-  }, [selectedAnnotation, matchedAnnotationsMap])
+  }, [selectedAnnotation, displayedMap])
 
   return <div className="relative flex">
     <div data-text-wrapper ref={textWrapperRef} className="pt-16"></div>
