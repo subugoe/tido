@@ -53,7 +53,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   } = usePanel()
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
-  const { matchedAnnotationsMap, setMatchedAnnotationsMap, activeContentUrl } = useTextView()
+  const { matchedAnnotationsMap, setMatchedAnnotationsMap, activeContentUrl, visible } = useTextView()
 
   const [portals, setPortals] = useState([])
 
@@ -148,35 +148,39 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   useEffect(() => {
     if (!panelState.annotations || !parsedDom) return
 
-    const result: MatchedAnnotationsMap = panelState.annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
-      const isSource = cur.target[0].source === activeContentUrl.current
-      const selector = (cur.target[0].selector as CssSelector)?.value
+    let result: MatchedAnnotationsMap = {}
 
-      if (!isSource || !selector) {
-        if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
-        return acc
-      }
+    if (visible) {
+      result = panelState.annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
+        const isSource = cur.target[0].source === activeContentUrl.current
+        const selector = (cur.target[0].selector as CssSelector)?.value
 
-      const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
-
-      if (matchedNodes.length > 0) {
-        matchedNodes.forEach(target => {
-          target.addEventListener('click', onClickTarget)
-          target.addEventListener('mouseenter', onMouseEnterTarget)
-          target.addEventListener('mouseleave', onMouseLeaveTarget)
-        })
-        const annotType = cur.body['x-content-type']
-        acc[cur.id] = {
-          target: matchedNodes,
-          filtered: !selectedAnnotationTypes || !!(selectedAnnotationTypes[annotType]),
-          annotation: cur
+        if (!isSource || !selector) {
+          if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
+          return acc
         }
-      }
-      return acc
-    }, {})
+
+        const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
+
+        if (matchedNodes.length > 0) {
+          matchedNodes.forEach(target => {
+            target.addEventListener('click', onClickTarget)
+            target.addEventListener('mouseenter', onMouseEnterTarget)
+            target.addEventListener('mouseleave', onMouseLeaveTarget)
+          })
+          const annotType = cur.body['x-content-type']
+          acc[cur.id] = {
+            target: matchedNodes,
+            filtered: !selectedAnnotationTypes || !!(selectedAnnotationTypes[annotType]),
+            annotation: cur
+          }
+        }
+        return acc
+      }, {})
+    }
 
     setMatchedAnnotationsMap(result)
-  }, [parsedDom, panelState.annotations])
+  }, [parsedDom, panelState.annotations, visible])
 
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
