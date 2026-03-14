@@ -1,6 +1,7 @@
 const ANNOTATION_IDS_ATTRIBUTE = 'data-annotation-ids'
+const ANNOTATION_BASE_STYLE = ['rounded']
 const ANNOTATION_HOVER_CLASSES = ['bg-annotation-hover', 'dark:bg-primary/50']
-const NESTED_TARGET_HOVER_CLASSES = ['rounded-md', 'outline']
+const NESTED_TARGET_HOVER_CLASSES = ['outline']
 const SELECTED_ANNOTATION_CLASSES = ['bg-annotation-selected', 'dark:bg-primary/80']
 const SELECTED_ANNOTATION_ATTRIBUTE = 'data-annotation-selected'
 const HIGHLIGHTING_STYLE = ['bg-gray-200', 'dark:bg-muted', 'relative', 'cursor-pointer']
@@ -16,6 +17,14 @@ function addAnnotationId(target: Element, id: string) {
 
 function removeAnnotationIds(target: Element) {
   target.removeAttribute(ANNOTATION_IDS_ATTRIBUTE)
+}
+
+function addAnnotationBaseStyle(target: Element) {
+  target.classList.add(...ANNOTATION_BASE_STYLE)
+}
+
+function removeAnnotationBaseStyle(target: Element) {
+  target.classList.remove(...ANNOTATION_BASE_STYLE)
 }
 
 
@@ -228,6 +237,8 @@ function isParentHovered(hoveredTargets: Element[], parentsEl: Element[]) {
 export {
   addAnnotationId,
   removeAnnotationIds,
+  addAnnotationBaseStyle,
+  removeAnnotationBaseStyle,
   addHoverStyle,
   addNestedTargetStyle,
   removeNestedTargetStyle,
