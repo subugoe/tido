@@ -12,6 +12,7 @@ import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import {
+  addAnnotationBaseStyle,
   addAnnotationId,
   addHighlightStyle,
   addHoverStyle, addNestedTargetStyle,
@@ -25,6 +26,7 @@ import {
   getTextTargets,
   isParentHovered,
   isTargetPartOfSelectedAnnotation,
+  removeAnnotationBaseStyle,
   removeAnnotationIds,
   removeHighlightStyle,
   removeHoverStyle,
@@ -203,12 +205,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
         const hasParentHovered = isParentHovered(targetsOfHoveredAnnotations, fa.parents)
 
         if (targetsOfHoveredAnnotations.includes(target))  {
-          // Logic which hovers the targets
-          // hasParentHovered: condition to determine whether we should add the style to a nested target
-          if (!hasParentHovered) {
-            addHoverStyle(target)
-          } else {
-            addHoverStyle(target)
+          addHoverStyle(target)
+          if (hasParentHovered) {
             addNestedTargetStyle(target)
           }
         } else if (!isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
@@ -232,12 +230,14 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
       let someFiltered = false
 
       removeAnnotationIds(target)
+      removeAnnotationBaseStyle(target)
       removeHighlightStyle(target)
 
       // Look if some of the annotations are visible and add the ids of those to the node
       annotations.forEach((annotation, i) => {
         if (fa.filtered[i]) {
           addAnnotationId(target, annotation.id)
+          addAnnotationBaseStyle(target)
         }
         someFiltered = !someFiltered ? fa.filtered[i] : true
       })
