@@ -17,7 +17,7 @@ import {
   removeSelectedStyle
 } from '@/utils/text.ts'
 import {
-  findInternalTargetsInAnnotation, findTargetsInsideAnnotation,
+  findTargetsInsideAnnotation,
   getAnnotationIdsByEl,
   getFlippedNestedMatchedAnnotationsMap
 } from '@/utils/annotations.ts'
@@ -82,25 +82,12 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
       removeSelectedStyle(targetEl)
       removeHighlightStyle(targetEl)
 
-
-      const isAnnotationInAnnotation = !selectedAnnotation?.target[0].source.endsWith('.html')
-      if (isAnnotationInAnnotation && selectedAnnotation) {
-        const targetsSelectors = nestedMatchedAnnotationsMap[selectedAnnotation.id].externalTargets.selectors
-        targetsSelectors.forEach((selector: string) => {
-          const targetEl = document.querySelector(selector) as Element
-          removeHighlightStyle(targetEl)
-          addSelectedStyle(targetEl)
-        })
+      if (isTargetPartOfSelectedAnnotation(targetEl, targetsOfSelectedAnnotation)) {
+        addSelectedStyle(targetEl)
+        return
       }
-
       else {
-        if (isTargetPartOfSelectedAnnotation(targetEl, targetsOfSelectedAnnotation)) {
-          addSelectedStyle(targetEl)
-          return
-        }
-        else {
-          addHighlightStyle(targetEl)
-        }
+        addHighlightStyle(targetEl)
       }
     })
   }, [data, selectedAnnotation])
