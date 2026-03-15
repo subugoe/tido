@@ -1,6 +1,7 @@
 import React, { FC, useRef, useState, useEffect } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import Annotation from '@/components/panel/annotations/Annotation.tsx'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   nestedAnnotations: Annotation[],
@@ -13,6 +14,8 @@ const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onExpand
 
   const [expanded, setExpanded] = useState(false)
   const nestedAnnotationsRef = useRef(null)
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     setExpanded(showExpanded)
@@ -38,7 +41,7 @@ const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onExpand
 
   return <div className="w-full h-full flex flex-col border-t-[1px] border-gray-400 bg-gray-100">
     <div className="flex footer-stripe pr-4 py-1 justify-end hover:bg-gray-200 hover:cursor-pointer" onClick={(e) => handleClick(e)}>
-      <span className="p-0.5 text-sm">{nestedAnnotations.length} nested {nestedAnnotations.length > 1 ? 'annotations' : 'annotation'} </span>
+      <span className="p-0.5 text-sm">{nestedAnnotations.length} {nestedAnnotations.length > 1 ? t('nested_annotations') : t('nested_annotation')} </span>
       {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
     </div>
     {expanded && <div className="nested-annotations border-l-2 ml-[2px] border-gray-400 pl-2  mt-2 flex flex-col gap-1 w-full h-fit" ref={nestedAnnotationsRef}>

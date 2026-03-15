@@ -2,6 +2,8 @@
   "common": {
     "annotation_collection_error_title": "Fehler in der Annotation Collection",
     "annotation_collection_response_error": "Der abgerufene Inhalt der Annotation Collection ist ungültig.",
+    "nested_annotation": "verschachtelte Annotation",
+    "nested_annotations": "verschachtelte Annotationen",
     "new": "Neu",
     "sync_panels": "Panels synchronisieren",
     "place": "Ort",
