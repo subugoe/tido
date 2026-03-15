@@ -60,6 +60,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
   const { t } = useTranslation()
 
   const type = annotationsConfig?.types?.[data.body['x-content-type']] ?? data.body['x-content-type']
+  const panelEl = document.getElementById(panelState.id) as HTMLElement
+
 
   useEffect(() => {
     setIsHovered(hoveredAnnotations?.includes(data.id))
@@ -68,7 +70,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
   useEffect(() => {
     setIsSelected(selectedAnnotation && selectedAnnotation.id === data.id)
 
-    const targetsOfSelectedAnnotation = selectedAnnotation && !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => document.querySelector(selector)) : []
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => panelEl.querySelector(selector)) : []
 
     // remove all hover and selected styles of all targets
     const flippedNestedMatched = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
@@ -105,8 +107,9 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
       nestedMatchedAnnotationsMap[id]?.target ?? []
     )
 
+
     const targetsOfSelectedAnnotation = selectedAnnotation &&
-    !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => document.querySelector(selector)) : []
+    !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => panelEl.querySelector(selector)) : []
     Object.keys(flippedNestedMatched).forEach((targetSelector) => {
       const targetEl = document.querySelector(targetSelector)
       if (targetEl && selectorsHoveredAnnotations?.includes(targetSelector)) {
