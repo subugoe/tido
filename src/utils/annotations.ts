@@ -89,29 +89,17 @@ function findTargetsInsideAnnotation(annotationId: string, itemAnnotations: Anno
     let cssValue: string | null = null
 
     if (selector.type === 'CssSelector')  cssValue = selector.value
-    else if (selector.type === 'RangeSelector') cssValue = selector.startSelector?.value ?? null
-
-    if (!cssValue) return {}
+    // TODO: we need to handle Range selectors
     if (cssValue) selectors.push(cssValue)
   })
   return selectors
 }
 
-function findExternalTargetsInAnnotation(annotation: Annotation) {
-  const elements: HTMLElement[] = []
-  const selectors: string[] = []
-  if (annotation.target[0].source === 'text/html') return { elements, selectors }
-  annotation.target.forEach((target: AnnotationTarget) => {
-    const selector = target.selector.value
-    const el = document.querySelector<HTMLElement>(selector)
-    if (el) elements.push(el)
-    selectors.push(selector)
+function findTargets(annotation: Annotation): string[] {
+  return annotation.target.map((target) => {
+    if (target.selector.type === 'CssSelector') return target.selector.value
+    // TODO: include case of Range Selectors
   })
-
-  return {
-    elements,
-    selectors
-  }
 }
 
 function getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap) {
@@ -128,10 +116,10 @@ function getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap) {
 
   Object.keys(nestedMatchedAnnotationsMap).forEach((annotationId) => {
     const entry = nestedMatchedAnnotationsMap[annotationId]
-    const externalTargetSelectors = entry.externalTargets.selectors
-    if (externalTargetSelectors.length < 0) return
+    const target = entry.target
+    if (target.length < 0) return
 
-    externalTargetSelectors.forEach((selector) => {
+    target.forEach((selector: string) => {
       if (!Object.hasOwn(flippedNestedMatchedAnnotationsMap, selector)) {
         const el = document.querySelector<HTMLElement>(selector)
         flippedNestedMatchedAnnotationsMap[selector] = {
@@ -163,7 +151,7 @@ export {
   isSelected,
   computeNewSelectedAnnotationIndex,
   findTargetsInsideAnnotation,
-  findExternalTargetsInAnnotation,
+  findTargets,
   getNestedAnnotations,
   getFlippedNestedMatchedAnnotationsMap,
   getAnnotationIdsByEl

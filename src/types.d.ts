@@ -229,14 +229,16 @@ declare global {
     }
   }
 
+  // we want nestedMatchedAnnotationsMap to be accessible to every annotation.
+  // since some childAnnotations are not mounted yet, we can't know the HTMLElement of their targets
+  // We would need to maintain 'target': Element[] synchronized among all annotations -> that would require to update
+  // state `nestedMatchedAnnotationsMap`, which is not a good practice.
+  // Therefore let's keep `target`: string[], also an Array of selectors
   interface NestedMatchedAnnotationsMap {
     [annotationId: string]: {
       annotation: Annotation
       nestedAnnotations: Annotation[],
-      externalTargets: {
-        selectors: string[],
-        elements: HTMLElement[],
-      }
+      target: string[]
     }
   }
 

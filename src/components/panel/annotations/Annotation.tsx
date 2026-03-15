@@ -40,7 +40,7 @@ interface Props {
 const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isNested = false }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { selectedAnnotation, setSelectedAnnotation, annotationsMode, panelState } = usePanel()
-  const { nestedMatchedAnnotationsMap, hoveredNestedAnnotationIds, setNestedMatchedAnnotationsMap, setHoveredNestedAnnotationIds  } = useAnnotations()
+  const { nestedMatchedAnnotationsMap, hoveredNestedAnnotationIds, setHoveredNestedAnnotationIds  } = useAnnotations()
   const { setHoveredAnnotations, hoveredAnnotations } = useText()
   const ref = useRef(null)
   const annotationBodyRef = useRef(null)
@@ -68,10 +68,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
   useEffect(() => {
     setIsSelected(selectedAnnotation && selectedAnnotation.id === data.id)
 
-    const targetsOfSelectedAnnotation =
-      selectedAnnotation && !!(nestedMatchedAnnotationsMap[selectedAnnotation.id])
-        ? nestedMatchedAnnotationsMap[selectedAnnotation.id].externalTargets.elements
-        : []
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => document.querySelector(selector)) : []
 
     // remove all hover and selected styles of all targets
     const flippedNestedMatched = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
@@ -105,14 +102,11 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
     setIsHovered(hoveredNestedAnnotationIds?.includes(data.id))
 
     const selectorsHoveredAnnotations = hoveredNestedAnnotationIds?.flatMap(id =>
-      nestedMatchedAnnotationsMap[id]?.externalTargets?.selectors ?? []
+      nestedMatchedAnnotationsMap[id]?.target ?? []
     )
 
-    const targetsOfSelectedAnnotation = selectedAnnotation && !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].externalTargets.elements : []
-
-    // if target El belongs to hoveredAnnotation -> add hover style
-    // if targetEl does not belong to selected annotation -> add highlight style
-    // targets belonging to selected annotation -> we do nothing, since it preserve its selected style
+    const targetsOfSelectedAnnotation = selectedAnnotation &&
+    !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => document.querySelector(selector)) : []
     Object.keys(flippedNestedMatched).forEach((targetSelector) => {
       const targetEl = document.querySelector(targetSelector)
       if (targetEl && selectorsHoveredAnnotations?.includes(targetSelector)) {
@@ -188,16 +182,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
         target.addEventListener('mouseleave', onMouseLeaveTarget)
       }
     })
-
-    if (nestedMatchedAnnotationsMap[data.id]['externalTargets']['selectors'].length > 0) {
-      const newTargets : HTMLElement[] = []
-      nestedMatchedAnnotationsMap[data.id]['externalTargets']['selectors'].forEach((selector) => {
-        const target = document.querySelector(selector) as HTMLElement
-        newTargets.push(target)
-      })
-      nestedMatchedAnnotationsMap[data.id]['externalTargets']['elements'] = newTargets
-    }
-    setNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
   }, [])
 
   function handleClick(e) {

@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import {
-  findExternalTargetsInAnnotation,
+import { findTargets,
   getFilteredAnnotations,
   getNestedAnnotations
 } from '@/utils/annotations.ts'
@@ -47,11 +46,10 @@ export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
       const newNestedMatchedAnnotationsMap: NestedMatchedAnnotationsMap = {}
       itemAnnotations.forEach((annotation) => {
         const nestedAnnotations = getNestedAnnotations(annotation, itemAnnotations)
-
-        const externalTargets = findExternalTargetsInAnnotation(annotation)
+        const target = findTargets(annotation)
         newNestedMatchedAnnotationsMap[annotation.id] = {
           nestedAnnotations,
-          externalTargets,
+          target,
           annotation
         }
       })
