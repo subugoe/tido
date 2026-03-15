@@ -1,28 +1,43 @@
 {
-  "defaultView": "split",
+  "allowNewCollections": false,
+  "title": "Ebene 1: Transkriptionen",
   "lang": "de",
-  "title": "Vier Wachen Edition",
   "panels": [
     {
-      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/transcriptions/collection.json"
+      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/transcriptions/collection.json",
+      "manifest": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/transcriptions/einsiedeln_278_1040/manifest.json"
     }
   ],
   "theme": {
-    "primaryColor": "#1E40AF"
+    "primaryColor": "#2b7fff"
   },
+  "rootCollections": [
+    "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/transcriptions/collection.json"
+  ],
+  "showPanelPlaceholder": false,
   "translations": {
     "de": {
       "common": {
-        "accurate": "Handschriftengetreu",
         "simplified": "Vereinfacht",
-        "item": "Seite",
-        "please_select_a_manifest_to_open": "Bitte wählen Sie zum Öffnen ein Manuskript aus",
-        "please_select_an_item_to_open": "Bitte wählen Sie zum Öffnen eine Seite aus"
+        "accurate": "Handschriftengetreu",
+        "edited": "Ediert",
+        "item": "Seite"
       }
     }
   },
-  "rootCollections": [
-    "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/collection.json"
-  ],
-  "panelModes": ["split", "text", "image"]
+  "panelViews": [
+    {
+      "label": "Bild",
+      "view": "image"
+    },
+    {
+      "label": "Text",
+      "view": "text",
+      "contentTypes": [
+        "accurate",
+        "simplified",
+        "edited"
+      ]
+    }
+  ]
 }

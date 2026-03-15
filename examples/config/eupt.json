@@ -4,8 +4,8 @@
   },
   "panels": [
     {
-      "collection": "https://eupt.uni-goettingen.de/api/eupt/collection.json",
-      "contentType": "philology"
+      "collection": "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collection.json",
+      "manifest": "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/KTU__1.14/manifest.json"
     }
   ],
   "panelViews": [
