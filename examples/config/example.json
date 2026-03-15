@@ -19,5 +19,8 @@
       "view": "text",
       "contentTypes": ["normalized"]
     }
-  ]
+  ],
+  "annotations": {
+    "defaultMode": "list"
+  }
 }

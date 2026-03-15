@@ -280,7 +280,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
         addHighlightStyle(target)
       }
     })
-  }, [selectedAnnotation, matchedAnnotationsMap])
+  }, [matchedAnnotationsMap])
 
   return <div className="relative flex">
     <div data-text-wrapper ref={textWrapperRef} className="pt-16"></div>

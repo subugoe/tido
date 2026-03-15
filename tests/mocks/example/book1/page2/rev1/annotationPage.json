@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example/book1/page2/rev1/annotationCollection.json",
     "label": "Annotations for Pride and Prejudice, Chapter 2",
-    "total": 7
+    "total": 12
   },
   "next": null,
   "prev": null,
@@ -16,8 +16,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Charles Bingley - A wealthy, amiable young gentleman who rents Netherfield Park. He becomes attracted to Jane Bennet.",
-        "format": "text/plain",
+        "value": "Charles Bingley - <span id=\"bingley-character\">A wealthy, amiable young gentleman who rents Netherfield Park</span>. He becomes attracted to Jane Bennet.",
+        "format": "text/html",
         "x-content-type": "Character"
       },
       "target": [
@@ -37,8 +37,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Lizzy - Affectionate nickname for Elizabeth Bennet, the novel's protagonist.",
-        "format": "text/plain",
+        "value": "Lizzy - <span id=\"lizzy-nickname\">Affectionate nickname for Elizabeth Bennet, the novel's protagonist</span>.",
+        "format": "text/html",
         "x-content-type": "Character"
       },
       "target": [
@@ -58,8 +58,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Public assemblies were social gatherings where dancing and socializing took place, important venues for courtship in Regency England.",
-        "format": "text/plain",
+        "value": "Public assemblies were <span id=\"assembly-gatherings\">social gatherings where dancing and socializing took place</span>, important venues for courtship in Regency England.",
+        "format": "text/html",
         "x-content-type": "Historical Context"
       },
       "target": [
@@ -79,8 +79,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Manuscript variant: \"amongst the earliest\" found in draft.",
-        "format": "text/plain",
+        "value": "Manuscript variant: <span id=\"earliest-variant\">\"amongst the earliest\" found in draft</span>, suggesting Austen softened the phrasing in revision.",
+        "format": "text/html",
         "x-content-type": "Textual Variant"
       },
       "target": [
@@ -100,8 +100,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Original shows \"trimming an hat\" with period article usage.",
-        "format": "text/plain",
+        "value": "Original shows <span id=\"period-article-usage\">\"trimming an hat\" with period article usage</span> before words beginning with a consonantal 'h'.",
+        "format": "text/html",
         "x-content-type": "Grammatical Feature"
       },
       "target": [
@@ -121,8 +121,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Clarified from archaic construction for modern readers.",
-        "format": "text/plain",
+        "value": "<span id=\"archaic-construction\">Clarified from archaic construction for modern readers</span>; the original idiom \"to the last\" means \"right up until the end\".",
+        "format": "text/html",
         "x-content-type": "Clarification"
       },
       "target": [
@@ -142,8 +142,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Period idiom meaning \"have no means of knowing\".",
-        "format": "text/plain",
+        "value": "Period idiom meaning <span id=\"period-idiom\">\"have no means of knowing\"</span>, reflecting the social constraints on women's access to information.",
+        "format": "text/html",
         "x-content-type": "Idiomatic Expression"
       },
       "target": [
@@ -157,6 +157,91 @@
           "language": "eng"
         }
       ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-L2-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Bingley's easy temperament contrasts deliberately with Darcy's reserve — <span id=\"bingley-foil\">Austen uses him as a social foil to highlight class anxiety</span> in the marriage market.",
+        "format": "text/html",
+        "x-content-type": "Literary Analysis"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page2/rev1/annotation-1",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#bingley-character"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-L2-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The use of \"Lizzy\" here signals <span id=\"family-intimacy\">the informality of the Bennet household's domestic register</span>, in contrast to the formal address used in public scenes.",
+        "format": "text/html",
+        "x-content-type": "Stylistic Note"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page2/rev1/annotation-2",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#lizzy-nickname"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-L2-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The variant \"amongst the earliest\" points to <span id=\"textual-transmission\">an early layer of composition before Austen's systematic revision</span> of Chapter 2's opening.",
+        "format": "text/html",
+        "x-content-type": "Scholarly Commentary"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page2/rev1/annotation-diplomatic-1",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#earliest-variant"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-L3-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "This reading of Bingley as foil aligns with <span id=\"bingley-darcy-dynamic\">D.A. Miller's argument on the complementary pairing of Bingley and Darcy</span> as a structural device throughout the novel.",
+        "format": "text/html",
+        "x-content-type": "Bibliographic Reference"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page2/rev1/annotation-L2-1",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#bingley-foil"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page2/rev1/annotation-L4-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Miller's structural reading has been <span id=\"miller-critique\">challenged by feminist narratologists who prioritise voice over character pairing</span> as the organising principle of Austen's irony.",
+        "format": "text/html",
+        "x-content-type": "Counter-argument"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page2/rev1/annotation-L3-1",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#bingley-darcy-dynamic"
+        }
+      }]
     }
   ]
 }
