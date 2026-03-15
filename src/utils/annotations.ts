@@ -76,13 +76,9 @@ function getNestedAnnotations(annotation: Annotation, itemAnnotations: Annotatio
   return itemAnnotations.filter((annot)  => annot.target[0].source === annotation.id)
 }
 
-function findInternalTargetsInAnnotation(annotationId: string, itemAnnotations: Annotation[]) {
+function findTargetsInsideAnnotation(annotationId: string, itemAnnotations: Annotation[]) {
   // if annotation Id appears as target Array.source -> from each target we get an html element out of selector
   const nestedAnnotations = itemAnnotations.filter((annot) => annot.target[0]?.source === annotationId)
-
-  const annotationEl = document.querySelector(`div[data-annotation="${annotationId}"]`) as HTMLElement
-
-  const elements: HTMLElement[] = []
   const selectors: string[] = []
 
   nestedAnnotations.forEach((annot) => {
@@ -96,16 +92,9 @@ function findInternalTargetsInAnnotation(annotationId: string, itemAnnotations: 
     else if (selector.type === 'RangeSelector') cssValue = selector.startSelector?.value ?? null
 
     if (!cssValue) return {}
-
-    const el = annotationEl?.querySelector(cssValue)
-    if (el) elements.push(el)
     if (cssValue) selectors.push(cssValue)
-
   })
-  return {
-    selectors,
-    elements
-  }
+  return selectors
 }
 
 function findExternalTargetsInAnnotation(annotation: Annotation) {
@@ -173,7 +162,7 @@ export {
   getFilteredAnnotations,
   isSelected,
   computeNewSelectedAnnotationIndex,
-  findInternalTargetsInAnnotation,
+  findTargetsInsideAnnotation,
   findExternalTargetsInAnnotation,
   getNestedAnnotations,
   getFlippedNestedMatchedAnnotationsMap,

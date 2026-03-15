@@ -49,15 +49,9 @@ export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
       itemAnnotations.forEach((annotation) => {
         const nestedAnnotations = getNestedAnnotations(annotation, itemAnnotations)
 
-        // each rendered Annotation may contain 'targets' to which its nested annotations refer to
-        // we use 'internalTargets' to refer to these 'targets'
-        // only when we render an Annotation we can highlight its 'internalTargets'
-        // to identify these targets efficiently and not try to find them for each rendered annotation -> we add 'internalTargets' to this data structure
-        const internalTargets = findInternalTargetsInAnnotation(annotation.id, itemAnnotations)
         const externalTargets = findExternalTargetsInAnnotation(annotation)
         newNestedMatchedAnnotationsMap[annotation.id] = {
           nestedAnnotations,
-          internalTargets,
           externalTargets,
           annotation
         }

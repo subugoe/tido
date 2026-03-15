@@ -16,7 +16,11 @@ import {
   removeHoverStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
-import { getAnnotationIdsByEl, getFlippedNestedMatchedAnnotationsMap } from '@/utils/annotations.ts'
+import {
+  findInternalTargetsInAnnotation, findTargetsInsideAnnotation,
+  getAnnotationIdsByEl,
+  getFlippedNestedMatchedAnnotationsMap
+} from '@/utils/annotations.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 60
@@ -35,7 +39,7 @@ interface Props {
 
 const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isNested = false }) => {
   const { annotations: annotationsConfig } = useConfig()
-  const { selectedAnnotation, setSelectedAnnotation, annotationsMode } = usePanel()
+  const { selectedAnnotation, setSelectedAnnotation, annotationsMode, panelState } = usePanel()
   const { nestedMatchedAnnotationsMap, hoveredNestedAnnotationIds, setNestedMatchedAnnotationsMap, setHoveredNestedAnnotationIds  } = useAnnotations()
   const { setHoveredAnnotations, hoveredAnnotations } = useText()
   const ref = useRef(null)
@@ -45,6 +49,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
   const [isLong, setIsLong] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [showNestedAnnotations, setShowNestedAnnotations] = useState(false)
+
 
   const nestedAnnotationsRef = useRef(null)
   const clickedTargetRef = useRef(null)
@@ -176,7 +181,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
   }
 
 
-
   useEffect(() => {
     if (!annotationBodyRef.current) return
     const annotBodyHeight = annotationBodyRef.current.clientHeight
@@ -186,8 +190,9 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
 
     // we add highlighting to annotations
     // for each new nested Annotation - we add highlighting once it is mounted.
-    const internalSelectors = nestedMatchedAnnotationsMap[data.id]['internalTargets']['selectors']
-    internalSelectors.forEach((selector) => {
+    const itemAnnotations = panelState.annotations
+    const targetsInsideAnnotation = findTargetsInsideAnnotation(data.id, itemAnnotations)
+    targetsInsideAnnotation.forEach((selector) => {
       const target = document.querySelector(selector)
       if (target) {
         addHighlightStyle(target)

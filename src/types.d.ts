@@ -233,10 +233,6 @@ declare global {
     [annotationId: string]: {
       annotation: Annotation
       nestedAnnotations: Annotation[],
-      internalTargets: {
-        selectors: string[],
-        elements: HTMLElement[],
-      }
       externalTargets: {
         selectors: string[],
         elements: HTMLElement[],
