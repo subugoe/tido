@@ -306,7 +306,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
     onMouseLeave={handleMouseLeave}
     style={{ top }}
   >
-    <div className="px-3">
+    <div className="px-3 pb-2">
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
         <Badge variant="accent" className="mb-1">{ type }</Badge>
         { type === 'Variant' && <VariantContent body={data.body} /> }
