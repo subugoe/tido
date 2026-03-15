@@ -57,8 +57,6 @@ function computeNewSelectedAnnotationIndex(targetEntry: MergedAnnotationEntry, p
   // Clicking again at target A -> reset first A.selectedAnnotationIndex to -1, since its like clicking for the first time
   // if we do not reset it and target A has only one annotation then it will not be selected
 
-  console.log('flipped matched annot map', flippedMatchedAnnotMap)
-
   if (flippedMatchedAnnotMap[prevClickedTargetIndex]?.target !== targetEntry.target) targetEntry.selectedAnnotationIndex = -1
 
   if (targetEntry.selectedAnnotationIndex === -1) {
