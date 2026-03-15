@@ -1,4 +1,4 @@
-import { FilterNode } from '@/types'
+import { FilterNode, FlippedNestedMatchedAnnotationsMap } from '@/types'
 
 function getSelectedTypes(nodes: FilterNode[]): AnnotationTypesDict {
   let types: AnnotationTypesDict = {}
@@ -100,24 +100,15 @@ function findTargets(annotation: Annotation): string[] {
   })
 }
 
-function getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap) {
-  //
-  // {
-  //  'selector': {
-  //    'el': HTMLElement,
-  //    'annotationIds': string[]
-  //  }
-  // }
+function getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap: NestedMatchedAnnotationsMap) {
 
-
-  const flippedNestedMatchedAnnotationsMap = {}
+  const flippedNestedMatchedAnnotationsMap: FlippedNestedMatchedAnnotationsMap = {}
 
   Object.keys(nestedMatchedAnnotationsMap).forEach((annotationId) => {
     const entry = nestedMatchedAnnotationsMap[annotationId]
     const target = entry.target
-    if (target.length < 0) return
 
-    target.forEach((selector: string) => {
+    target?.forEach((selector: string) => {
       if (!Object.hasOwn(flippedNestedMatchedAnnotationsMap, selector)) {
         const el = document.querySelector<HTMLElement>(selector)
         flippedNestedMatchedAnnotationsMap[selector] = {
@@ -130,7 +121,6 @@ function getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap) {
       }
     })
   })
-
 
   return flippedNestedMatchedAnnotationsMap
 }
