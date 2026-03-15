@@ -18,7 +18,6 @@ import {
 } from '@/utils/text.ts'
 import { getAnnotationIdsByEl, getFlippedNestedMatchedAnnotationsMap } from '@/utils/annotations.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 
 const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 60
 const DEFAULT_ANNOTATION_BODY_HEIGHT = 72
@@ -49,7 +48,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
 
   const nestedAnnotationsRef = useRef(null)
   const clickedTargetRef = useRef(null)
-
 
   const collapsedBodyHeightRef = useRef(-1)
   const expandedBodyHeightRef = useRef(-1)
@@ -93,7 +91,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
       else {
         if (isTargetPartOfSelectedAnnotation(targetEl, targetsOfSelectedAnnotation)) {
           addSelectedStyle(targetEl)
-          scrollIntoViewIfNeeded(targetEl as HTMLElement, targetEl.closest('[data-text-container="true"]'))
           return
         }
         else {
@@ -101,8 +98,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
         }
       }
     })
-
-
   }, [data, selectedAnnotation])
 
   useEffect(() => {
@@ -223,7 +218,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
     const clickedEl = e.target
     const flippedMatchedAnnotationsMap = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
     if (Object.values(flippedMatchedAnnotationsMap).some((entry: object) => entry.el === clickedEl)) return
-
 
     if (selectedAnnotation && selectedAnnotation.id === data.id) {
       setIsSelected(false)
