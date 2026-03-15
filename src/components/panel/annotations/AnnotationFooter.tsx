@@ -40,11 +40,11 @@ const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onExpand
 
 
   return <div className="w-full h-full flex flex-col border-t-[1px] border-gray-400 bg-gray-100">
-    <div className="flex footer-stripe pr-4 py-1 justify-end hover:bg-gray-200 hover:cursor-pointer" onClick={(e) => handleClick(e)}>
+    <div className="flex footer-stripe pr-4 py-1 items-center justify-end hover:bg-gray-200 hover:cursor-pointer" onClick={(e) => handleClick(e)}>
       <span className="p-0.5 text-sm">{nestedAnnotations.length} {nestedAnnotations.length > 1 ? t('nested_annotations') : t('nested_annotation')} </span>
-      {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+      {expanded ? <ChevronUp size={18} className="" /> : <ChevronDown size={18} />}
     </div>
-    {expanded && <div className="nested-annotations border-l-2 ml-[2px] border-gray-400 pl-2  mt-2 flex flex-col gap-1 w-full h-fit" ref={nestedAnnotationsRef}>
+    {expanded && <div className="nested-annotations pl-4  mt-2 flex flex-col gap-1 w-full h-fit" ref={nestedAnnotationsRef}>
       {nestedAnnotations.map((annotation) => <Annotation key={annotation.id} data={annotation} isNested={true} /> )}
     </div>
     }
