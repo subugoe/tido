@@ -18,6 +18,7 @@ import {
 } from '@/utils/text.ts'
 import { getAnnotationIdsByEl, getFlippedNestedMatchedAnnotationsMap } from '@/utils/annotations.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 
 const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 60
 const DEFAULT_ANNOTATION_BODY_HEIGHT = 72
@@ -64,26 +65,44 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
   useEffect(() => {
     setIsSelected(selectedAnnotation && selectedAnnotation.id === data.id)
 
+    const targetsOfSelectedAnnotation =
+      selectedAnnotation && !!(nestedMatchedAnnotationsMap[selectedAnnotation.id])
+        ? nestedMatchedAnnotationsMap[selectedAnnotation.id].externalTargets.elements
+        : []
+
     // remove all hover and selected styles of all targets
     const flippedNestedMatched = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
     Object.keys(flippedNestedMatched).forEach((targetSelector) => {
       const targetEl = document.querySelector(targetSelector)
-      if (targetEl) {
-        removeHoverStyle(targetEl)
-        removeSelectedStyle(targetEl)
-        addHighlightStyle(targetEl)
+      if (!targetEl) return
+
+      removeSelectedStyle(targetEl)
+      removeHighlightStyle(targetEl)
+
+
+      const isAnnotationInAnnotation = !selectedAnnotation?.target[0].source.endsWith('.html')
+      if (isAnnotationInAnnotation && selectedAnnotation) {
+        const targetsSelectors = nestedMatchedAnnotationsMap[selectedAnnotation.id].externalTargets.selectors
+        targetsSelectors.forEach((selector: string) => {
+          const targetEl = document.querySelector(selector) as Element
+          removeHighlightStyle(targetEl)
+          addSelectedStyle(targetEl)
+        })
+      }
+
+      else {
+        if (isTargetPartOfSelectedAnnotation(targetEl, targetsOfSelectedAnnotation)) {
+          addSelectedStyle(targetEl)
+          scrollIntoViewIfNeeded(targetEl as HTMLElement, targetEl.closest('[data-text-container="true"]'))
+          return
+        }
+        else {
+          addHighlightStyle(targetEl)
+        }
       }
     })
 
-    const isAnnotationInAnnotation = selectedAnnotation && !selectedAnnotation.target[0].source.endsWith('.html')
-    if (isAnnotationInAnnotation) {
-      const targetsSelectors = nestedMatchedAnnotationsMap[selectedAnnotation.id].externalTargets.selectors
-      targetsSelectors.forEach((selector) => {
-        const targetEl = document.querySelector(selector) as Element
-        removeHighlightStyle(targetEl)
-        addSelectedStyle(targetEl)
-      })
-    }
+
   }, [data, selectedAnnotation])
 
   useEffect(() => {
