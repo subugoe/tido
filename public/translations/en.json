@@ -2,6 +2,8 @@
   "common": {
     "annotation_collection_error_title": "Error in annotation collection",
     "annotation_collection_response_error": "The retrieved response from the annotation collection is invalid.",
+    "nested_annotation": "nested annotation",
+    "nested_annotations": "nested annotations",
     "new": "New",
     "sync_panels": "Sync Panels",
     "confirm": "Confirm",

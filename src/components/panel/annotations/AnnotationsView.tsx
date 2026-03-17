@@ -35,6 +35,7 @@ const AnnotationsView: FC = () => {
   useEffect(() => {
     if (!selectedAnnotation || annotationsMode !== 'list') return
     const selectedAnnotationEl = (scrollContainer.current as HTMLElement).querySelector(`div[data-annotation="${selectedAnnotation.id}"]`) as HTMLElement
+    if (!selectedAnnotationEl) return
     scrollIntoViewIfNeeded(selectedAnnotationEl, scrollContainer.current)
   }, [selectedAnnotation])
 
