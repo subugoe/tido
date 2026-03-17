@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example/book1/page1/rev1/annotationCollection.json",
     "label": "Annotations for Pride and Prejudice, Chapter 1",
-    "total": 11
+    "total": 17
   },
   "next": null,
   "prev": null,
@@ -16,8 +16,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "This is one of the most famous opening lines in English literature. It sets the theme of marriage and social class that pervades the novel.",
-        "format": "text/plain",
+        "value": "This is one of the <span id=\"famous-opening-lines\">most famous opening lines in English literature</span>. It sets the theme of marriage and social class that pervades the novel.",
+        "format": "text/html",
         "x-content-type": "Literary Analysis"
       },
       "target": [
@@ -37,8 +37,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Refers to wealthy bachelors who were prime marriage candidates in Regency England.",
-        "format": "text/plain",
+        "value": "Refers to wealthy bachelors who were <span id=\"marriage-candidates\">prime marriage candidates in Regency England</span>.",
+        "format": "text/html",
         "x-content-type": "Historical Context"
       },
       "target": [
@@ -58,8 +58,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Mr. Bennet - The patriarch of the Bennet family, known for his wit and sarcasm.",
-        "format": "text/plain",
+        "value": "Mr. Bennet - The patriarch of the Bennet family, known for his <span id=\"wit-and-sarcasm\">wit and sarcasm</span>.",
+        "format": "text/html",
         "x-content-type": "Character"
       },
       "target": [
@@ -79,8 +79,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Netherfield Park - The estate rented by Mr. Bingley, which becomes central to the plot.",
-        "format": "text/plain",
+        "value": "Netherfield Park - <span id=\"netherfield-park-estate\">The estate rented by Mr. Bingley</span>, which becomes central to the plot.",
+        "format": "text/html",
         "x-content-type": "Place"
       },
       "target": [
@@ -100,8 +100,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Mrs. Long - A neighbor who serves as a source of gossip and information.",
-        "format": "text/plain",
+        "value": "Mrs. Long - <span id=\"mrs-long-character\">A neighbor who serves as a source of gossip and information</span>.",
+        "format": "text/html",
         "x-content-type": "Character"
       },
       "target": [
@@ -117,12 +117,33 @@
       ]
     },
     {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-6",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A <span id=\"neighbourhood-visiting\">neighbourhood in Regency England typically meant families within a day's visiting distance</span>, roughly a five-mile radius.",
+        "format": "text/html",
+        "x-content-type": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#neighbourhood"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
       "id": "http://localhost:8181/example/book1/page1/rev1/annotation-diplomatic-1",
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "This phrase appears in early manuscripts with variant punctuation.",
-        "format": "text/plain",
+        "value": "This phrase appears <span id=\"famous-opening-lines\">with variant</span> in early manuscripts This phrase appears in early manuscripts This phrase appears in early manuscripts <span id=\"famous-opening-lines-2\">with variant</span>This phrase appears in early manuscripts  punctuation.",
+        "format": "text/html",
         "x-content-type": "Textual Variant"
       },
       "target": [
@@ -142,8 +163,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Original manuscript shows \"rightfull propertie\" with period spelling.",
-        "format": "text/plain",
+        "value": "Original manuscript shows <span id=\"rightfull-propertie\">\"rightfull propertie\" with period spelling</span>.",
+        "format": "text/html",
         "x-content-type": "Orthographic Feature"
       },
       "target": [
@@ -163,8 +184,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Manuscript shows this phrase with interlinear revision.",
-        "format": "text/plain",
+        "value": "Manuscript shows this phrase with <span id=\"interlinear-revision\">interlinear revision</span>.",
+        "format": "text/html",
         "x-content-type": "Authorial Revision"
       },
       "target": [
@@ -184,8 +205,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Modern usage would be \"who possesses\" but period phrasing preserved.",
-        "format": "text/plain",
+        "value": "Modern usage would be \"who possesses\" but <span id=\"period-phrasing\">period phrasing preserved</span>.",
+        "format": "text/html",
         "x-content-type": "Stylistic Note"
       },
       "target": [
@@ -205,8 +226,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Editorial note: Refers to the local gentry within visiting distance.",
-        "format": "text/plain",
+        "value": "Editorial note: Refers to the <span id=\"local-gentry\">local gentry within visiting distance</span>.",
+        "format": "text/html",
         "x-content-type": "Contextual Note"
       },
       "target": [
@@ -226,8 +247,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Standardized from original \"answer'd he had not\".",
-        "format": "text/plain",
+        "value": "Standardized from <span id=\"answered-he-had-not\">original \"answer'd he had not\"</span>.",
+        "format": "text/html",
         "x-content-type": "Modernization"
       },
       "target": [
@@ -241,6 +262,159 @@
           "language": "eng"
         }
       ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-L2-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "This literary analysis is rooted in the 20th-century <span id=\"austen-scholarship\">Austen scholarship tradition</span> established by critics such as Reuben Brower.",
+        "format": "text/html",
+        "x-content-type": "Scholarly Commentary"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page1/rev1/annotation-diplomatic-1",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#famous-opening-lines-2"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-L2-1b",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The variant punctuation in early manuscripts reflects <span id=\"scribal-practice\">scribal practice of the period</span>, where comma usage was not yet standardized.",
+        "format": "text/html",
+        "x-content-type": "Codicological Note"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page1/rev1/annotation-diplomatic-1",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#famous-opening-lines"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-L2-1c",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Cross-referencing with the <span id=\"chapman-edition\">R.W. Chapman 1923 edition</span> reveals that this variant was silently regularized in most 20th-century reprints.",
+        "format": "text/html",
+        "x-content-type": "Editorial History"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page1/rev1/annotation-diplomatic-1",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#famous-opening-lines"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-L2-1d",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "This textual variant is significant because <span id=\"punctuation-meaning\">punctuation changes can subtly alter the ironic tone</span> of the sentence as read aloud.",
+        "format": "text/html",
+        "x-content-type": "Rhetorical Analysis"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page1/rev1/annotation-diplomatic-1",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#famous-opening-lines"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-L2-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The historical context note draws primarily on <span id=\"vickery-georgian\">Amanda Vickery's work on Georgian England</span> and the marriage market.",
+        "format": "text/html",
+        "x-content-type": "Bibliographic Reference"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page1/rev1/annotation-2",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#marriage-candidates"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-L2-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The character description overlooks Mr. Bennet's <span id=\"ironic-detachment\">deliberate ironic detachment from his own social standing</span>.",
+        "format": "text/html",
+        "x-content-type": "Critical Objection"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page1/rev1/annotation-3",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#wit-and-sarcasm"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-L3-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Agreed — see also the influence of <span id=\"leavis-criticism\">F.R. Leavis on this strand of Austen criticism</span>, particularly his emphasis on moral seriousness.",
+        "format": "text/html",
+        "x-content-type": "Agreement"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page1/rev1/annotation-L2-1",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#austen-scholarship"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-L3-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Counter-point: Vickery's framing has been contested by <span id=\"post-colonial-readings\">more recent post-colonial readings of Austen's domestic sphere</span>.",
+        "format": "text/html",
+        "x-content-type": "Counter-argument"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page1/rev1/annotation-L2-2",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#vickery-georgian"
+        }
+      }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-L4-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "<span id=\"leavis-great-tradition\">Leavis's 'The Great Tradition' (1948)</span> is the canonical reference here, though it subordinates Austen to later novelists. His framework has itself been heavily critiqued since the 1970s.",
+        "format": "text/html",
+        "x-content-type": "Bibliographic Note"
+      },
+      "target": [{
+        "source": "http://localhost:8181/example/book1/page1/rev1/annotation-L3-1",
+        "selector": {
+          "type": "CssSelector",
+          "value": "#leavis-criticism"
+        }
+      }]
     }
   ]
 }

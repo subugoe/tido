@@ -11,7 +11,8 @@ const defaultConfig: TidoConfig = {
   showPanelPlaceholder: true,
   showThemeToggle: true,
   theme: {
-    primaryColor: '#3456aa'
+    primaryColor: '#3456aa',
+    theme: 'system'
   },
   title: '',
   translations: {},
