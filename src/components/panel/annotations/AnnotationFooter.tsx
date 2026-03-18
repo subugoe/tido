@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 interface Props {
   nestedAnnotations: Annotation[],
   showExpanded: boolean,
-  onExpand?: (e: React.MouseEvent<HTMLDivElement>, expandType: string) => void,
+  onExpand?: () => void,
   onCollapse?: () => void
 }
 
@@ -24,7 +24,6 @@ const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onExpand
     e.stopPropagation()
     if (!expanded) {
       setExpanded(true)
-      onExpand(e, 'nested-annotations')
       return
     }
     setExpanded(false)
@@ -35,8 +34,12 @@ const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onExpand
     if (showExpanded) setExpanded(true)
   }, [showExpanded])
 
+  useEffect(() => {
+    if (expanded) onExpand()
+  }, [expanded])
 
-  return <div className="w-full h-full flex flex-col border-t-[1px] border-gray-400 bg-gray-100">
+
+  return <div className="w-full h-fit flex flex-col border-t-[1px] border-gray-400 bg-gray-100">
     <div className="flex footer-stripe pr-4 py-1 items-center justify-end hover:bg-border hover:cursor-pointer" onClick={(e) => handleClick(e)}>
       <span className="p-0.5 text-sm">{nestedAnnotations.length} {nestedAnnotations.length > 1 ? t('nested_annotations') : t('nested_annotation')} </span>
       {expanded ? <ChevronUp size={18} className="" /> : <ChevronDown size={18} />}
