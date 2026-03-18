@@ -6,11 +6,12 @@ import { useTranslation } from 'react-i18next'
 interface Props {
   nestedAnnotations: Annotation[],
   showExpanded: boolean,
+  onToggle?: (annotation: Annotation) => void
   onExpand?: () => void,
   onCollapse?: () => void
 }
 
-const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onExpand, onCollapse }) => {
+const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onToggle, onExpand, onCollapse }) => {
 
   const [expanded, setExpanded] = useState(false)
   const nestedAnnotationsRef = useRef(null)
@@ -45,7 +46,7 @@ const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onExpand
       {expanded ? <ChevronUp size={18} className="" /> : <ChevronDown size={18} />}
     </div>
     {expanded && <div className="nested-annotations pl-4  mt-2 flex flex-col gap-1 w-full h-fit" ref={nestedAnnotationsRef}>
-      {nestedAnnotations.map((annotation) => <Annotation key={annotation.id} data={annotation} isNested={true} /> )}
+      {nestedAnnotations.map((annotation) => <Annotation key={annotation.id} data={annotation} isNested={true} onToggle={onToggle} /> )}
     </div>
     }
   </div>

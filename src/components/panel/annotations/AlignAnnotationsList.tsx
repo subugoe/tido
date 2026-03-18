@@ -57,9 +57,8 @@ const AlignAnnotationsList: FC = () => {
 
   useEffect(() => {
     if (toggledAnnotation) {
-      console.log('track top change')
       trackTopChange()
-      setToggledAnnotation(false)
+      setToggledAnnotation(null)
     }
   }, [toggledAnnotation])
 

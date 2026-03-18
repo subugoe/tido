@@ -252,7 +252,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
       { isLong && !isExpanded && <Button className="mt-4" size='sm' variant="ghostPrimary" onClick={(e) => handleViewMore(e)} >{t('view_more')}</Button> }
       { isLong && isExpanded && <Button className="mt-4" size='sm' variant="ghostPrimary" onClick={(e) => handleViewLess(e)} >{t('view_less')}</Button> }
     </div>
-    { nestedAnnotationsRef.current?.length > 0 && <AnnotationFooter nestedAnnotations={nestedAnnotationsRef.current} showExpanded={showNestedAnnotations} onExpand={expandNestedAnnotations} onCollapse={collapseNestedAnnotations} /> }
+    { nestedAnnotationsRef.current?.length > 0 && <AnnotationFooter nestedAnnotations={nestedAnnotationsRef.current} onToggle={onToggle} showExpanded={showNestedAnnotations} onExpand={expandNestedAnnotations} onCollapse={collapseNestedAnnotations} /> }
   </div>
 })
 
