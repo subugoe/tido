@@ -17,22 +17,15 @@ const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onToggle
   const nestedAnnotationsRef = useRef(null)
   const { t } = useTranslation()
 
-  useEffect(() => {
-    setExpanded(showExpanded)
-  }, [showExpanded])
-
   function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     e.stopPropagation()
-    if (!expanded) {
-      setExpanded(true)
-      return
-    }
-    setExpanded(false)
+    setExpanded(!expanded)
+    if (!expanded) return
     onCollapse()
   }
 
   useEffect(() => {
-    if (showExpanded) setExpanded(true)
+    setExpanded(showExpanded)
   }, [showExpanded])
 
   useEffect(() => {
