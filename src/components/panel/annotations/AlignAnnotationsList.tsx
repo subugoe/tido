@@ -17,13 +17,12 @@ const AlignAnnotationsList: FC = () => {
   const [yMap, setYMap] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(false)
   const [height, setHeight] = useState(0)
-
+  const [toggledAnnotation, setToggledAnnotation] = useState(null)
 
   const ref = useRef(null)
 
   function isClickedElAnnotation(clickedEl: HTMLElement) {
-    if (clickedEl.getAttribute('data-annotation')) return true
-    return clickedEl.parentElement?.getAttribute('data-annotation')
+    return clickedEl.closest('[data-annotation]')
   }
 
   useEffect(() => {
@@ -55,45 +54,13 @@ const AlignAnnotationsList: FC = () => {
     }
   }, [selectedAnnotation])
 
-
-  function onAnnotationExpand(annotationId: string, expandableEl: HTMLElement, expandableElFinalHeight: number, translateY: number) {
-    const newElements = [...elements]
-    const index = elements.findIndex(el => el.annotation.id === annotationId)
-
-    // recompute the desiredY of the lower annotations
-    for(let i = 0; i < newElements.length ; i++) {
-      if (i > index) {
-        newElements[i].desiredY += translateY
-      }
+  useEffect(() => {
+    if (toggledAnnotation) {
+      trackTopChange()
+      setToggledAnnotation(null)
     }
+  }, [toggledAnnotation])
 
-    // Step 3: Push down the lower annotations, to have space for the expansion of annotation
-    const map = newElements.reduce((acc, cur) => {
-      acc[cur.annotation.id] = cur.desiredY
-      return acc
-    }, {})
-
-    setYMap(map)
-
-    setTimeout(() => {
-      expandableEl.style.height = expandableElFinalHeight + 'px'
-      expandableEl.style.transition = 'height 300ms ease-out'
-    }, 0)
-  }
-
-  function onAnnotationCollapse(bodyAnnotationEl: HTMLElement, bodyFinalHeight: number) {
-
-    // Step 4: Collapse the annotation (slightly delayed or same time)
-    setTimeout(() => {
-      bodyAnnotationEl.style.height = bodyFinalHeight + 'px'
-      bodyAnnotationEl.style.transition = 'height 100ms ease-out'
-    },0)
-
-    // Step 5: Update trackTopChange() after animation
-    setTimeout(() => {
-      trackTopChange() // Recalculate final positions
-    }, 300)
-  }
 
   function trackTopChange() {
     // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
@@ -120,7 +87,6 @@ const AlignAnnotationsList: FC = () => {
 
       // Next, we decide if that minimum value is even needed or if the desiredY is more below and therefore should be used instead.
       const actualY = i === 0 ? annotationEl.desiredY : Math.max(annotationEl.desiredY, minY)
-
 
       if (selectedAnnotation && annotationEl.annotation.id === selectedAnnotation.id && actualY !== annotationEl.desiredY) {
         // If this is a selectedAnnotation, and it has some other annotations above
@@ -209,8 +175,7 @@ const AlignAnnotationsList: FC = () => {
         data={a}
         key={a.id}
         top={yMap[a.id]}
-        onExpand={onAnnotationExpand}
-        onCollapse={onAnnotationCollapse}
+        onToggle={setToggledAnnotation}
       />)}
     </div>
 }

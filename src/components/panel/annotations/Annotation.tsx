@@ -24,19 +24,16 @@ import {
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 60
-const DEFAULT_ANNOTATION_BODY_HEIGHT = 72
-
 
 interface Props {
   data: Annotation
   top?: number,
-  onExpand?: (annotationId: string, element: HTMLElement, finalHeight: number, translateY: number) => void
-  onCollapse?: (element: HTMLElement, finalHeight: number) => void
+  onToggle?: (annotation: Annotation) => void
   isNested?: boolean
 }
 
 
-const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isNested = false }) => {
+const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = false }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { selectedAnnotation, setSelectedAnnotation, annotationsMode, panelState } = usePanel()
   const { nestedMatchedAnnotationsMap, hoveredNestedAnnotationIds, setHoveredNestedAnnotationIds  } = useAnnotations()
@@ -51,9 +48,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
 
 
   const nestedAnnotationsRef = useRef(null)
-
-  const collapsedBodyHeightRef = useRef(-1)
-  const expandedBodyHeightRef = useRef(-1)
 
   const { t } = useTranslation()
 
@@ -138,9 +132,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
     }
   }
 
-  function collapseNestedAnnotations() {
-    setShowNestedAnnotations(false)
-  }
 
   function onMouseEnterTarget(e: Event) {
     const flippedNestedMatchedAnnotationsMap = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
@@ -210,79 +201,41 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
     setHoveredNestedAnnotationIds(null)
   }
 
-  function getExpandableInfoOnViewMore(bodyEl: HTMLElement) {
-    let expandableElFinalHeight = 0
-    const expandableEl = bodyEl
-    if (collapsedBodyHeightRef.current === -1) {
-      // initial height is the collapsed height
-      collapsedBodyHeightRef.current = bodyEl.offsetHeight
-    }
-
-    if (expandedBodyHeightRef.current === -1) {
-      // Step 1: Compute temporarily the new expanded height. This is done only once, when we expand for the first time
-      bodyEl.classList.remove('h-18', 'overflow-y-hidden')
-      bodyEl.classList.add('h-fit')
-
-      // Force reflow
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      bodyEl.offsetHeight
-      expandedBodyHeightRef.current = bodyEl.offsetHeight
-
-      expandableElFinalHeight = expandedBodyHeightRef.current
-    }
-    else {
-      expandableElFinalHeight = expandedBodyHeightRef.current
-    }
-
-    const translateY = expandedBodyHeightRef.current - collapsedBodyHeightRef.current
-
-    // Step 2: Revert back to collapsed state (no visual change yet)
-    if (expandedBodyHeightRef.current === -1) {
-      bodyEl.classList.remove('h-fit')
-      bodyEl.classList.add('h-18', 'overflow-y-hidden')
-    }
-
-    return {
-      expandableEl,
-      expandableElFinalHeight,
-      translateY
-    }
+  function expandNestedAnnotations() {
+    setIsExpanded(true)
+    setShowNestedAnnotations(true)
+    if (onToggle) onToggle(data)
   }
 
-  function expandAnnotation(e: React.MouseEvent, expandType: 'view-more' | 'nested-annotations') {
-    e?.stopPropagation()
-    setIsExpanded(true)
-
-    const bodyEl = annotationBodyRef.current
-
-    if (expandType === 'view-more') {
-      const { expandableEl, expandableElFinalHeight, translateY } = getExpandableInfoOnViewMore(bodyEl)
-      if (onExpand) onExpand(data.id, expandableEl, expandableElFinalHeight, translateY)
-    }
+  function collapseNestedAnnotations() {
+    setShowNestedAnnotations(false)
+    if (onToggle) onToggle(data)
   }
 
 
   function handleViewMore(e: React.MouseEvent) {
-    expandAnnotation(e, 'view-more')
+    e.stopPropagation()
+    setIsExpanded(true)
+    if (onToggle) onToggle(data)
   }
 
   function handleViewLess(e: React.MouseEvent) {
     e.stopPropagation()
     setIsExpanded(false)
-    const bodyEl = annotationBodyRef.current // we collapse annotation body's content
-    if (onCollapse) onCollapse(bodyEl, DEFAULT_ANNOTATION_BODY_HEIGHT)
+    if (onToggle) onToggle(data)
   }
+
 
   return <div
     ref={ref}
     aria-label="annotation"
     data-annotation={data.id}
     {...(isSelected ? { 'data-selected': true } : {})}
-    className={` flex flex-col pt-2 rounded-lg border border-border h-fit overflow-x-hidden
+    className={` flex flex-col pt-2 rounded-lg border border-border h-fit overflow-x-hidden transition-[top]
       ${annotationsMode === 'aligned' && !isNested ? 'absolute' : 'mb-2'}
       ${annotationsMode === 'aligned' ? 'w-[calc(100%-1.3rem)]': !isNested ? 'w-[100%]': 'w-[calc(100%-0.3rem)]' }
       ${isSelected ? 'shadow-md bg-background outline-primary outline-2' : 'bg-muted border-border hover:bg-background cursor-pointer'}
-      ${isHovered ? 'border-primary' : ''} transition-[height] duration-400 ease-in-out h-54 overflow-y-hidden`}
+      ${isHovered ? 'border-primary' : ''}`}
     onClick={handleClick}
     onMouseEnter={handleMouseEnter}
     onMouseLeave={handleMouseLeave}
@@ -297,7 +250,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onExpand, onCollapse, isN
       { isLong && !isExpanded && <Button className="mt-4" size='sm' variant="ghostPrimary" onClick={(e) => handleViewMore(e)} >{t('view_more')}</Button> }
       { isLong && isExpanded && <Button className="mt-4" size='sm' variant="ghostPrimary" onClick={(e) => handleViewLess(e)} >{t('view_less')}</Button> }
     </div>
-    { nestedAnnotationsRef.current?.length > 0 && <AnnotationFooter nestedAnnotations={nestedAnnotationsRef.current} showExpanded={showNestedAnnotations} onExpand={expandAnnotation} onCollapse={collapseNestedAnnotations} /> }
+    { nestedAnnotationsRef.current?.length > 0 && <AnnotationFooter nestedAnnotations={nestedAnnotationsRef.current} onToggle={onToggle} showExpanded={showNestedAnnotations} onExpand={expandNestedAnnotations} onCollapse={collapseNestedAnnotations} /> }
   </div>
 })
 

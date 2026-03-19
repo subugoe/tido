@@ -6,43 +6,40 @@ import { useTranslation } from 'react-i18next'
 interface Props {
   nestedAnnotations: Annotation[],
   showExpanded: boolean,
-  onExpand?: (e: React.MouseEvent<HTMLDivElement>, expandType: string) => void,
+  onToggle?: (annotation: Annotation) => void
+  onExpand?: () => void,
   onCollapse?: () => void
 }
 
-const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onExpand, onCollapse }) => {
+const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onToggle, onExpand, onCollapse }) => {
 
   const [expanded, setExpanded] = useState(false)
   const nestedAnnotationsRef = useRef(null)
   const { t } = useTranslation()
 
-  useEffect(() => {
-    setExpanded(showExpanded)
-  }, [showExpanded])
-
   function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     e.stopPropagation()
-    if (!expanded) {
-      setExpanded(true)
-      onExpand(e, 'nested-annotations')
-      return
-    }
-    setExpanded(false)
+    setExpanded(!expanded)
+    if (!expanded) return
     onCollapse()
   }
 
   useEffect(() => {
-    if (showExpanded) setExpanded(true)
+    setExpanded(showExpanded)
   }, [showExpanded])
 
+  useEffect(() => {
+    if (expanded) onExpand()
+  }, [expanded])
 
-  return <div className="w-full h-full flex flex-col border-t-[1px] border-gray-400 bg-gray-100">
+
+  return <div className="w-full h-fit flex flex-col border-t-[1px] border-gray-400 bg-gray-100">
     <div className="flex footer-stripe pr-4 py-1 items-center justify-end hover:bg-border hover:cursor-pointer" onClick={(e) => handleClick(e)}>
       <span className="p-0.5 text-sm">{nestedAnnotations.length} {nestedAnnotations.length > 1 ? t('nested_annotations') : t('nested_annotation')} </span>
       {expanded ? <ChevronUp size={18} className="" /> : <ChevronDown size={18} />}
     </div>
     {expanded && <div className="nested-annotations pl-4  mt-2 flex flex-col gap-1 w-full h-fit" ref={nestedAnnotationsRef}>
-      {nestedAnnotations.map((annotation) => <Annotation key={annotation.id} data={annotation} isNested={true} /> )}
+      {nestedAnnotations.map((annotation) => <Annotation key={annotation.id} data={annotation} isNested={true} onToggle={onToggle} /> )}
     </div>
     }
   </div>
