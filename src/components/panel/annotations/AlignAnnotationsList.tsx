@@ -22,8 +22,7 @@ const AlignAnnotationsList: FC = () => {
   const ref = useRef(null)
 
   function isClickedElAnnotation(clickedEl: HTMLElement) {
-    if (clickedEl.getAttribute('data-annotation')) return true
-    return clickedEl.parentElement?.getAttribute('data-annotation')
+    return clickedEl.closest('[data-annotation]')
   }
 
   useEffect(() => {
@@ -86,17 +85,8 @@ const AlignAnnotationsList: FC = () => {
       // The minimum top value needed if we want to place the current annotation right under the last one.
       const minY = lastY + lastHeight + ANNOTATION_GAP
 
-
-
       // Next, we decide if that minimum value is even needed or if the desiredY is more below and therefore should be used instead.
       const actualY = i === 0 ? annotationEl.desiredY : Math.max(annotationEl.desiredY, minY)
-
-      if (i===2) {
-        console.log('last height', lastHeight)
-        console.log('min Y', minY)
-        console.log('annotation el desired Y', annotationEl.desiredY)
-        console.log('actual Y', actualY)
-      }
 
       if (selectedAnnotation && annotationEl.annotation.id === selectedAnnotation.id && actualY !== annotationEl.desiredY) {
         // If this is a selectedAnnotation, and it has some other annotations above
