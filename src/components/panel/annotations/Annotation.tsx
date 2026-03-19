@@ -51,8 +51,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
 
   const { t } = useTranslation()
 
-
-
   const type = annotationsConfig?.types?.[data.body['x-content-type']] ?? data.body['x-content-type']
 
   useEffect(() => {
@@ -135,7 +133,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   }
 
 
-
   function onMouseEnterTarget(e: Event) {
     const flippedNestedMatchedAnnotationsMap = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
     const annotationIds = getAnnotationIdsByEl(flippedNestedMatchedAnnotationsMap, e.currentTarget as HTMLElement)
@@ -206,6 +203,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
 
   function expandNestedAnnotations() {
     setIsExpanded(true)
+    setShowNestedAnnotations(true)
     if (onToggle) onToggle(data)
   }
 
@@ -233,7 +231,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     aria-label="annotation"
     data-annotation={data.id}
     {...(isSelected ? { 'data-selected': true } : {})}
-    className={` flex flex-col pt-2 rounded-lg border border-border h-fit overflow-x-hidden
+    className={` flex flex-col pt-2 rounded-lg border border-border h-fit overflow-x-hidden transition-[top]
       ${annotationsMode === 'aligned' && !isNested ? 'absolute' : 'mb-2'}
       ${annotationsMode === 'aligned' ? 'w-[calc(100%-1.3rem)]': !isNested ? 'w-[100%]': 'w-[calc(100%-0.3rem)]' }
       ${isSelected ? 'shadow-md bg-background outline-primary outline-2' : 'bg-muted border-border hover:bg-background cursor-pointer'}
