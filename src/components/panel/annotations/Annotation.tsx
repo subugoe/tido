@@ -226,6 +226,14 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     if (onToggle) onToggle(data)
   }
 
+  function renderViewButton(viewType: 'view-more' | 'view-less') {
+    return <Button className="mt-2 text-sm gap-1" size='xs' variant="ghostPrimary"
+      onClick={(e) => viewType === 'view-more' ? handleViewMore(e) : handleViewLess(e)} >
+      {viewType === 'view-more' ? t('view_more') : t('view_less')}
+      {viewType === 'view-more' ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+    </Button>
+  }
+
 
   return <div
     ref={ref}
@@ -248,10 +256,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
         { type === 'Variant' && <VariantContent body={data.body} /> }
         { type !== 'Variant' && <AnnotationContent body={data.body} /> }
       </div>
-      { isLong && !isExpanded && <Button className="mt-2 text-sm gap-1" size='xs' variant="ghostPrimary" onClick={(e) => handleViewMore(e)} >
-        {t('view_more')}
-        <ChevronDown size={14} /></Button> }
-      { isLong && isExpanded && <Button className="mt-2 text-sm gap-1" size='xs' variant="ghostPrimary" onClick={(e) => handleViewLess(e)} >{t('view_less')} <ChevronUp size={14} /></Button> }
+      { isLong && !isExpanded && renderViewButton('view-more')}
+      { isLong && isExpanded && renderViewButton('view-less') }
     </div>
     { nestedAnnotationsRef.current?.length > 0 && <AnnotationFooter nestedAnnotations={nestedAnnotationsRef.current} onToggle={onToggle} showExpanded={showNestedAnnotations} onExpand={expandNestedAnnotations} onCollapse={collapseNestedAnnotations} /> }
   </div>
