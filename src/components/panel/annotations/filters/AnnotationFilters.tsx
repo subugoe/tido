@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
@@ -13,18 +13,18 @@ interface Props {
 const AnnotationFilters: FC<Props> = ({ className }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
+  const [open, setOpen] = useState(false)
 
   return <div className={cn('flex flex-col items-center', className)}>
-    <Popover>
+    <Popover onOpenChange={(value) => setOpen(value)}>
       <PopoverTrigger asChild>
-        <Button variant="outline"><ListFilter />{ t('filters') }</Button>
+        <Button variant="outline" className={open ? 'bg-muted' : ''}><ListFilter />{ t('filters') }</Button>
       </PopoverTrigger>
       <PopoverContent
         align="start"
         className="h-fit overflow-y-auto flex flex-col overflow-hidden"
         style={{ 'width': `calc(${SIDEBAR_DEFAULT_WIDTH}px - 2 * 0.75rem)` }}
       >
-        <h3 className="font-bold mb-4">{ t('filters') }</h3>
         <AnnotationFiltersContent />
       </PopoverContent>
     </Popover>
