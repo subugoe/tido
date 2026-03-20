@@ -22,8 +22,9 @@ import {
   getFlippedNestedMatchedAnnotationsMap
 } from '@/utils/annotations.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 
-const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 60
+const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 72
 
 interface Props {
   data: Annotation
@@ -242,13 +243,15 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     style={{ top }}
   >
     <div className="px-3 pb-2">
+      <Badge variant="accent" className="mb-1">{ type }</Badge>
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
-        <Badge variant="accent" className="mb-1">{ type }</Badge>
         { type === 'Variant' && <VariantContent body={data.body} /> }
         { type !== 'Variant' && <AnnotationContent body={data.body} /> }
       </div>
-      { isLong && !isExpanded && <Button className="mt-4" size='sm' variant="ghostPrimary" onClick={(e) => handleViewMore(e)} >{t('view_more')}</Button> }
-      { isLong && isExpanded && <Button className="mt-4" size='sm' variant="ghostPrimary" onClick={(e) => handleViewLess(e)} >{t('view_less')}</Button> }
+      { isLong && !isExpanded && <Button className="mt-2 text-sm gap-1" size='xs' variant="ghostPrimary" onClick={(e) => handleViewMore(e)} >
+        {t('view_more')}
+        <ChevronDown size={14} /></Button> }
+      { isLong && isExpanded && <Button className="mt-2 text-sm gap-1" size='xs' variant="ghostPrimary" onClick={(e) => handleViewLess(e)} >{t('view_less')} <ChevronUp size={14} /></Button> }
     </div>
     { nestedAnnotationsRef.current?.length > 0 && <AnnotationFooter nestedAnnotations={nestedAnnotationsRef.current} onToggle={onToggle} showExpanded={showNestedAnnotations} onExpand={expandNestedAnnotations} onCollapse={collapseNestedAnnotations} /> }
   </div>
