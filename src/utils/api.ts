@@ -1,6 +1,5 @@
 import { request } from '@/utils/http.ts'
 import { CustomError } from '@/utils/custom-error.ts'
-import { } from 'react-i18next'
 import { hasItems, hasManifests, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import i18n from 'i18next'
 
