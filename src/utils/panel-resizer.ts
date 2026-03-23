@@ -1,7 +1,8 @@
 import {
   SIDEBAR_DEFAULT_WIDTH,
   MIN_PANEL_WIDTH,
-  PANEL_GAP
+  PANEL_GAP,
+  PANEL_BORDER_WIDTH
 } from '@/utils/panel.ts'
 
 class PanelResizer {
@@ -56,12 +57,12 @@ class PanelResizer {
 
     if (this.annotationsOpen) {
       const mainWidth = newWidth - this.sidebarWidth
-      this.mainContentEl.style.width = `${mainWidth}px`
-      this.sidebarEl.style.left = `${mainWidth}px`
+      this.mainContentEl.style.width = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
+      this.sidebarEl.style.left = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
       this.sidebarEl.style.width = `${this.sidebarWidth}px`
     } else {
-      this.mainContentEl.style.width = `${newWidth}px`
-      this.sidebarEl.style.left = `${newWidth}px`
+      this.mainContentEl.style.width = `${newWidth - PANEL_BORDER_WIDTH * 2}px`
+      this.sidebarEl.style.left = `${newWidth - PANEL_BORDER_WIDTH * 2}px`
       this.sidebarEl.style.width = '0px'
     }
   }
@@ -179,8 +180,8 @@ class PanelResizer {
 
       if (newMainWidth < MIN_PANEL_WIDTH || newSidebarWidth < SIDEBAR_DEFAULT_WIDTH) return
 
-      this.mainContentEl.style.width = `${newMainWidth}px`
-      this.sidebarEl.style.left = `${newMainWidth}px`
+      this.mainContentEl.style.width = `${newMainWidth - PANEL_BORDER_WIDTH * 2}px`
+      this.sidebarEl.style.left = `${newMainWidth - PANEL_BORDER_WIDTH * 2}px`
       this.sidebarEl.style.width = `${newSidebarWidth}px`
       this.sidebarWidth = newSidebarWidth
     }

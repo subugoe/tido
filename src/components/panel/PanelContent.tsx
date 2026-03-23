@@ -74,8 +74,8 @@ const PanelContent: FC = React.memo(() => {
           </div>
           <div className="sidebar absolute h-full top-0">
             <div className="absolute inset-y-0 left-0 w-px bg-border z-40" />
-            <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle />
-            {showSidebar && <SidebarView />}
+            { showSidebar && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle /> }
+            { showSidebar && <SidebarView /> }
           </div>
         </div>
       </div>
