@@ -15,13 +15,16 @@ const ContentTypesToggle: FC = () => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
   const { label, contentTypes, activeContentType, setActiveContentType } = useTextView()
+
   function handleTextTabClick(value: string) {
     setTimeout(() => setActiveContentType(value), 100)
   }
 
   function renderButton(isTrigger: boolean) {
+    const buttonLabel = isTrigger ? t(label) + ': ' + t(activeContentType) : t(label ?? activeContentType)
+
     return <Button variant="ghost" size="sm" className={!isTrigger ? 'hover:bg-muted' : ''} data-cy="content-type">
-      {t(label)}: { t(activeContentType) } {isTrigger && <ChevronDown />}
+      {buttonLabel} {isTrigger && <ChevronDown />}
     </Button>
   }
 
