@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.19](https://github.com/subugoe/tido/compare/v5.0.0-alpha.18...v5.0.0-alpha.19) (2026-03-23)
+
+
+### Features
+
+* add implementation of Annotations in Annotations in List Mode ([db76f7e](https://github.com/subugoe/tido/commit/db76f7e13478aeff196a22cf6e6ccc94570b05c6))
+* add rounded corners to annotation targets ([f86670a](https://github.com/subugoe/tido/commit/f86670abb01cdbef164d8ccf06e3254d53facf2d))
+* add theme switch programmatically  ([#952](https://github.com/subugoe/tido/issues/952)) ([18f0fae](https://github.com/subugoe/tido/commit/18f0faee33a5d798f997c2016bff3f94eac7dc2b))
+* expand/collapse properly nested annotations in Align Mode ([50939b2](https://github.com/subugoe/tido/commit/50939b2c85bcacf65284911109dfc42dc9cae34a))
+* resolve annotation filter issues ([#969](https://github.com/subugoe/tido/issues/969)) ([760ebb6](https://github.com/subugoe/tido/commit/760ebb6decf0dff20e0ca32d93690d7d6217409f))
+
+
+### Bug Fixes
+
+* check correctly if we are clicking on AnnotationEl ([8efc9fc](https://github.com/subugoe/tido/commit/8efc9fcea9ebdbd39b3900f0100761bce5f422a0))
+* keep mounted instances when toggling views ([0f4a287](https://github.com/subugoe/tido/commit/0f4a2877350ade58d9e2f3ab2c72947fab6c0c00))
+* make smaller design of View More button ([fcd03c0](https://github.com/subugoe/tido/commit/fcd03c08a1f71b9ef2f0e6782bdf5e5935fda936))
+* prevent error state in TextView when toggling after selected annotation ([1bba2b0](https://github.com/subugoe/tido/commit/1bba2b097ecbc9b46b429c15f37d0ee8919b4b29))
+* remove disabling of metadata button in panel header ([23c68ac](https://github.com/subugoe/tido/commit/23c68ac97026337dad646961a00c2cd0dcbff281))
+* restore transition of Annotation ([8ab16f6](https://github.com/subugoe/tido/commit/8ab16f640654a77491be3556012084bc0cea020f))
+* show complete first-level annotation even when expanding a nested annotation within it ([5a8bab4](https://github.com/subugoe/tido/commit/5a8bab4001c9687ebe8f0044eb0645194cd9a44b))
+* show View More button when the annotation body threshold is exceeded ([4dee527](https://github.com/subugoe/tido/commit/4dee5275bb0ba2410529b58d06ba9223e7456855))
+* use type value from annotations config in Annotation items ([9be003f](https://github.com/subugoe/tido/commit/9be003feb6acc9d50ba42daff9c1208c3f6cb61a))
+
+
+### Refactoring
+
+* create function renderViewButton to render 'View More' or 'View Less' Button ([f44b3a7](https://github.com/subugoe/tido/commit/f44b3a78873dc84c2e83b7e3cd023f34e28b4ad2))
+* improve code in AnnotationFooter regarding expand/collapse ([1604472](https://github.com/subugoe/tido/commit/16044727434780f8605d7078f0546d50a67f1cb6))
+* use native resizing of sidebar instead of nested Allotment panes ([6f21bf9](https://github.com/subugoe/tido/commit/6f21bf99c43c36d944dae3c9a379f7b6b1a3dfe1))
+* use visible state to toggle panel views instead of re-mounting ([623005b](https://github.com/subugoe/tido/commit/623005b7f90fe7ef961cf6d350e9d8162b85a4ad))
+* use visible state to toggle panel views instead of re-mounting ([5463d3e](https://github.com/subugoe/tido/commit/5463d3e58fbd5da3040c0ed427303196b19cda47))
+
 ## [5.0.0-alpha.18](https://github.com/subugoe/tido/compare/v5.0.0-alpha.17...v5.0.0-alpha.18) (2026-03-04)
 
 
