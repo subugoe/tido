@@ -35,7 +35,7 @@ import {
   removeSelectedStyle
 } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
-import { computeNewSelectedAnnotationIndex } from '@/utils/annotations.ts'
+import { computeNewSelectedAnnotationIndex, isFiltered } from '@/utils/annotations.ts'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
 
 interface Props {
@@ -171,10 +171,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
           target.addEventListener('mouseenter', onMouseEnterTarget)
           target.addEventListener('mouseleave', onMouseLeaveTarget)
         })
-        const annotType = cur.body['x-content-type']
+
         acc[cur.id] = {
           target: matchedNodes,
-          filtered: !selectedAnnotationTypes || !!(selectedAnnotationTypes[annotType]),
+          filtered: !selectedAnnotationTypes || isFiltered(cur, selectedAnnotationTypes),
           annotation: cur
         }
       }

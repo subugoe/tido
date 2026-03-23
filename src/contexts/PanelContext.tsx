@@ -2,8 +2,8 @@ import { ReactNode, createContext, useContext, useState, FC, useEffect, useRef, 
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
-import { getSelectedTypes } from '@/utils/annotations.ts'
-import { apiRequest } from '@/utils/api.ts'
+import { getSelectedTypes, isFiltered } from '@/utils/annotations.ts'
+import { apiRequest, getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
@@ -12,7 +12,7 @@ import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import { hasItems, hasManifests, isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
+import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { SidebarScroller } from '@/utils/sidebar-scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 
@@ -79,20 +79,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const { t } = useTranslation()
 
   const getCollection = useDataStore(state => state.initCollection)
-
   const panelState = usePanelStore(state => state.getPanel(panelId))
 
   function usePanelTranslation(): UseTranslationResponse<'common', never> {
     const ns = panelState.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
     return useTranslation(ns)
-  }
-
-  async function getAnnotationPage(annotationCollectionUrl: string): Promise<AnnotationPage> {
-    const collection: AnnotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
-    if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
-      throw new CustomError(t('annotations_init_error'), t('annotation_collection_response_error'))
-    }
-    return await apiRequest<AnnotationPage>(collection.first)
   }
 
   async function init(config: PanelConfig) {
@@ -101,8 +92,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     setError(null)
     setAnnotationsError(null)
     setMatchedAnnotationsMaps({})
-    setAnnotationFilters(null)
-    setSelectedAnnotationTypes(null)
+
+    if (!annotationsConfig.filters) {
+      // We have to reset the selected types if no filters config is given, in order to re-discover types again on-the-fly.
+      // TODO: This way maintaining selected types thoughout item change is not possible. We need a way to fix this.
+      setSelectedAnnotationTypes(null)
+    }
+
     try {
       let item: Item, manifest: Manifest, collection: Collection
 
@@ -134,7 +130,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       // 2. Analyze the received data and try load as much as possible.
       // When a resource is missing, load the first one from the parent sequence.
       if (item) {
-        if (collection && !manifest) await getFirstManifest()
+        if (collection && !manifest) manifest = await getFirstManifest(collection)
       } else {
         if (!collection && !manifest) {
           setError(new CustomError(t('panel_init_error'), t('something_went_completely_wrong')))
@@ -142,37 +138,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         }
 
         if (manifest) {
-          await getFirstItem()
+          item = await getFirstItem(manifest)
         } else if (collection) {
-          await getFirstManifest()
-          await getFirstItem()
+          manifest = await getFirstManifest(collection)
+          item = await getFirstItem(manifest)
         }
-      }
-
-      async function getFirstManifest() {
-        if (!hasManifests(collection)) {
-          throw new CustomError(t('panel_init_error'), t('error_contains_no_manifests', { url: config.collection }))
-        }
-
-        const first = collection.sequence[0].id
-        if (!isManifestUrl(first)) {
-          throw new CustomError(t('panel_init_error'), t('error_invalid_manifest_url', { url: first }))
-        }
-
-        manifest = await apiRequest<Manifest>(first)
-      }
-
-      async function getFirstItem() {
-        if (!hasItems(manifest)) {
-          throw new CustomError(t('panel_init_error'), t('error_contains_no_items', { url: manifest.id }))
-        }
-
-        const first = manifest.sequence[0].id
-        if (!isItemUrl(first)) {
-          throw new CustomError(t('panel_init_error'), t('error_invalid_item_url', { url: first }))
-        }
-
-        item = await apiRequest<Item>(manifest.sequence[0].id)
       }
 
       // 3. At this point "item" should exist, so we continue to load content from it.
@@ -214,11 +184,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
           const page = await getAnnotationPage(item.annotationCollection)
           const annotations = page.items ?? []
           const witnesses = page.partOf.refs ?? []
-
-          if (annotationsConfig.filters) {
-            setAnnotationFilters(annotationsConfig.filters)
-            setSelectedAnnotationTypes(getSelectedTypes(annotationsConfig.filters.items))
-          }
 
           if (witnesses.length > 0) {
             const witnessesWithColor = setColors(witnesses)
@@ -271,38 +236,31 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   }
 
   useEffect(() => {
+    if (annotationsConfig.filters) {
+      setAnnotationFilters(annotationsConfig.filters)
+      setSelectedAnnotationTypes(getSelectedTypes(annotationsConfig.filters.items))
+    }
+  }, [])
+
+  useEffect(() => {
     init(panelState.config)
   }, [panelState.config, panelId])
 
   useEffect(() => {
     const resultMap: {[contentUrl: string]: MatchedAnnotationsMap} = {}
+    if (selectedAnnotationTypes) {
+      Object
+        .keys(matchedAnnotationsMaps)
+        .forEach(contentUrl => {
+          const map = matchedAnnotationsMaps[contentUrl]
+          resultMap[contentUrl] = { ...map }
 
-    Object
-      .keys(matchedAnnotationsMaps)
-      .forEach(contentUrl => {
-        const map = matchedAnnotationsMaps[contentUrl]
-        resultMap[contentUrl] = { ...map }
-
-        Object.keys(map).forEach(id => {
-          const { annotation } = map[id]
-          const annotationType = annotation.body['x-content-type']
-          const hasSelectedType = Object.keys(selectedAnnotationTypes).includes(annotationType)
-
-          if (!hasSelectedType) {
-            resultMap[contentUrl][id].filtered = false
-            return
-          }
-
-          if (annotationsConfig.filters && annotationType === 'Variant') {
-            const selectedSet = new Set(selectedAnnotationTypes[annotationType])
-            const hasSelectedWitness = annotation.body.witnesses?.some((value: string) => selectedSet.has(value)) ?? false
-            resultMap[contentUrl][id].filtered = hasSelectedWitness
-            return
-          }
-
-          resultMap[contentUrl][id].filtered = true
+          Object.keys(map).forEach(id => {
+            const { annotation } = map[id]
+            resultMap[contentUrl][id].filtered = isFiltered(annotation, selectedAnnotationTypes)
+          })
         })
-      })
+    }
 
     setMatchedAnnotationsMaps(resultMap)
   }, [selectedAnnotationTypes])
@@ -310,19 +268,21 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   useEffect(() => {
     // This is for the case where no specific annotation filters were configured.
     // We extract all occurring types from the annotations that match the text.
+    if (annotationsConfig.filters) return
+
     const types = Object
       .values(matchedAnnotationsMaps)
       .flatMap(map => Object.values(map))
       .map(item => item.annotation.body['x-content-type'])
 
-    if (annotationsConfig.filters || annotationFilters !== null || types.length === 0) return
+    if (types.length === 0) return
+
     const uniqueAnnotationTypes = [...new Set(types)]
 
     setAnnotationFilters({
       rootSelectionRule: 'multiple',
       items: uniqueAnnotationTypes.map(type => ({ types: [type], selected: true }))
     })
-
   }, [matchedAnnotationsMaps])
 
   function updatePanel(data: Partial<PanelState>) {

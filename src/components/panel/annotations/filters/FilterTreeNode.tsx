@@ -3,6 +3,7 @@ import { FilterNode } from '@/types'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { Checkbox } from '@/components/ui/checkbox.tsx'
 
 interface Props {
   node: FilterNode
@@ -52,12 +53,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, indented = false }) =
         )}
         {indented && <div className="w-6" />}
         <label className="flex items-center gap-2 flex-1 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={node.selected}
-            onChange={handleCheckboxChange}
-            className="h-4 w-4 rounded border-gray-300 accent-primary focus:ring-primary/20"
-          />
+          <Checkbox checked={node.selected} onCheckedChange={handleCheckboxChange} />
           <span className="text-sm">{label}</span>
           {node.types && node.types.length > 1 &&
             <span className={`text-sm text-gray-500 italic`}>

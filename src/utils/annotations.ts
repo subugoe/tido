@@ -41,12 +41,10 @@ function getSelectedTypesFromNode(node: FilterNode): AnnotationTypesDict {
 }
 
 function getFilteredAnnotations(matchedAnnotationsMap: MatchedAnnotationsMap) {
-  const filteredMatchedAnnotationsMap: MatchedAnnotationsMap = Object.fromEntries(Object.entries(matchedAnnotationsMap).filter(([, value]) => value.filtered === true))
-  return Object.values(filteredMatchedAnnotationsMap).map(value => value.annotation)
-}
-
-function isSelected(selectedId: string, attrValue: string) {
-  return attrValue?.split(',').includes(selectedId) ?? false
+  return Object.values(matchedAnnotationsMap).reduce<Annotation[]>((acc, value) => {
+    if (value.filtered === true) acc.push(value.annotation)
+    return acc
+  }, [])
 }
 
 function computeNewSelectedAnnotationIndex(targetEntry: MergedAnnotationEntry, prevClickedTargetIndex: number, flippedMatchedAnnotMap: MergedAnnotationEntry[]) {
@@ -134,10 +132,22 @@ function getAnnotationIdsByEl(
   return entry?.annotationIds ?? []
 }
 
+function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict) {
+  const type = annotation.body['x-content-type']
+  if (!selectedTypes || !selectedTypes[type]) return false
+
+  if (type === 'Variant') {
+    const witnesses = annotation.body.witnesses
+    return witnesses.every(witness => selectedTypes[type].includes(witness))
+  }
+
+  return true
+}
+
 export {
   getSelectedTypes,
   getFilteredAnnotations,
-  isSelected,
+  isFiltered,
   computeNewSelectedAnnotationIndex,
   findTargetsInsideAnnotation,
   findTargets,

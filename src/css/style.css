@@ -72,7 +72,7 @@ Elevation hierarchy:
   --primary-foreground: oklch(0.985 0 0);
   --secondary: var(--color-gray-700);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(98.2% 0 0);
+  --muted: oklch(97.8% 0 0);
   --muted-foreground: var(--color-gray-600);
   --accent: oklch(95% 0.004 286.32);;
   --accent-foreground: oklch(0.205 0 0);
