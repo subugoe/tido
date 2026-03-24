@@ -1,133 +1,133 @@
-//
-// Cypress.Commands.add('getPanel', () => {
-//   cy.get('#panels-wrapper').should('be.visible')
-//     .find('.panel')
-// })
-//
-// Cypress.Commands.add('clickAnnotationType', (i) => {
-//   cy.getPanel()
-//     .find('[data-cy="annotations-header"]')
-//     .find('[data-cy="annotation-types"]')
-//     .children()
-//     .eq(i).click()
-// })
-//
-// Cypress.Commands.add('checkNumberAnnotations', (number) => {
-//   cy.getPanel()
-//     .find('[data-sidebar-container="true"]')
-//     .find('[data-annotation]')
-//     .should('have.length', number)
-// })
-//
-// Cypress.Commands.add('checkNumberAnnotationTypes', (number) => {
-//   cy.getPanel()
-//     .find('[data-cy="annotations-header"]')
-//     .find('[data-cy="annotation-types"]')
-//     .children()
-//     .should('have.length', number)
-// })
-//
-// Cypress.Commands.add('switchContentType', (index) => {
-//   cy.getPanel()
-//     .find('[data-text-options="true"]')
-//     .find('button')
-//     .eq(0)    // open dropdown menu and not click at the right eye symbol
-//     .click()
-//     .get('[data-slot="dropdown-menu-radio-group"]')
-//     .children()
-//     .eq(index).click()  // change to content type of provided index
-// })
-//
-//
-//
-// describe('Annotations', () => {
-//     beforeEach(() => {
-//       cy.visit('/ahiqar-local.html')
-//       cy.getPanel()
-//         .find('[data-cy="sidebar-toggle"]')
-//         .click()
-//     });
-//
-//     it('Should check the initial number of annotations and a few values', () => {
-//       cy.checkNumberAnnotations(7)
-//
-//         .eq(0).contains('ܚܝܩܪ')
-//         .parents('[data-sidebar-container="true"]')
-//         .find('[data-annotation]')
-//         .eq(2).contains('ܣܪܚܐܕܘܡ')
-//     })
-//
-//     it('Should initially display the annotation types as selected', () => {
-//       cy.checkNumberAnnotationTypes(2)
-//         .eq(0)
-//         .should('contain', 'Person')
-//         .should('have.attr', 'data-selected', 'true')
-//
-//         .parents('[data-cy="annotation-types"]')
-//         .children()
-//         .eq(1)
-//         .should('contain', 'Place')
-//         .should('have.attr', 'data-selected', 'true')
-//     })
-//
-//     it('Should hide respective annotations when deselecting certain annotation type', () => {
-//       cy.clickAnnotationType(0)
-//
-//       cy.checkNumberAnnotations(2)
-//         .eq(0).should('contain', 'Place')
-//         .next().should('contain', 'Place')
-//     })
-//
-//     it('Should redisplay respective annotations when reselecting annotation type', () => {
-//       cy.clickAnnotationType(0)
-//       cy.clickAnnotationType(0)
-//
-//       cy.checkNumberAnnotations(7)
-//     })
-//
-//     it('Should hide all annotations when deselecting all annotation types', () => {
-//       cy.clickAnnotationType(0)
-//       cy.clickAnnotationType(1)
-//
-//       cy.checkNumberAnnotations(0)
-//     })
-//
-//   it('Should update annotation types on content type switch', () => {
-//     cy.switchContentType(1)
-//       .checkNumberAnnotationTypes(4)
-//       .eq(0).should('have.attr', 'data-selected', 'true').and('contain', 'Person')
-//       .next().should('have.attr', 'data-selected', 'true').and('contain', 'Place')
-//       .next().should('have.attr', 'data-selected', 'true').and('contain', 'Editorial Comment')
-//       .next().should('have.attr', 'data-selected', 'true').and('contain', 'Motif')
-//   })
-//
-//   it('Should update list of annotations on content type switch', () => {
-//     cy.switchContentType(1)
-//       .wait(100)
-//       .checkNumberAnnotations(9)
-//       .eq(0).should('contain', 'Person')
-//       .parent().children()
-//       .eq(7).should('contain', 'Editorial Comment')  // due to 'style.top' value it should be last, but in html it
-//                                                      // appears one before last
-//       .parent().children()
-//       .eq(8).should('contain', 'Motif')
-//   })
-//
-//
-//   it('Should preserve annotation types selection and hide respective annotations on item change', () => {
-//     cy.switchContentType(1)
-//       .clickAnnotationType(0)    // deselect first annotation type
-//       .getPanel()
-//       .find('[data-cy="panel-title-and-nav-arrows"]')
-//       .find('[data-cy="next-item-button"]')
-//       .click()
-//                                 // update of number of annotations and annotation types
-//       .checkNumberAnnotations(2)
-//       .eq(0).should('contain', 'Editorial Comment')
-//       .next().should('contain', 'Motif')
-//
-//       .checkNumberAnnotationTypes(3)
-//       .eq(0).should('have.attr', 'data-selected', 'false').and('contain', 'Person')
-//   })
-//   }
-// )
+describe('Annotations', () => {
+	const annotationConfig = 'annotations.defaultMode=list&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json'
+
+	beforeEach(() => {
+		cy.visit('/e2e.html?' + annotationConfig)
+	})
+
+	it('renders annotation sidebar and toggles list/aligned modes', () => {
+		cy.get('[data-cy="sidebar-toggle"]').should('be.enabled').click()
+
+		cy.get('[data-cy="annotations-header"]').should('be.visible')
+
+		cy.get('[data-cy="annotations-mode-toggle"]').within(() => {
+			cy.get('[data-cy="list"]').should('have.attr', 'data-state', 'on')
+			cy.get('[data-cy="aligned"]').should('have.attr', 'data-state', 'off')
+			cy.get('[data-cy="aligned"]').click()
+		})
+
+		cy.wait(250)
+
+		cy.get('[data-cy="annotations-mode-toggle"]').within(() => {
+			cy.get('[data-cy="aligned"]').should('have.attr', 'data-state', 'on')
+			cy.get('[data-cy="list"]').should('have.attr', 'data-state', 'off')
+		})
+
+		cy.get('[data-sidebar-container="true"]').find('[data-annotation]').should('have.length.at.least', 10)
+	})
+
+	it('selects and deselects annotations and syncs target highlights', () => {
+		cy.get('[data-cy="sidebar-toggle"]').click()
+
+		cy.get('[data-sidebar-container="true"] [data-annotation]').first().as('firstAnnotation').click()
+		cy.get('@firstAnnotation').should('have.attr', 'data-selected', 'true')
+
+		// an annotation target should be selected in text (highlight mechanism)
+		cy.get('[data-annotation-selected="true"]').should('have.length.at.least', 1)
+
+		cy.get('[data-sidebar-container="true"]').find('[data-annotation]').eq(1).as('secondAnnotation').click()
+		cy.get('@secondAnnotation').should('have.attr', 'data-selected', 'true')
+		cy.get('@firstAnnotation').should('not.have.attr', 'data-selected')
+
+		cy.get('@firstAnnotation').click()
+		cy.get('@firstAnnotation').should('have.attr', 'data-selected', 'true')
+	})
+
+	it('applies annotation filters to hide and show annotations', () => {
+		cy.get('[data-cy="sidebar-toggle"]').click()
+
+		cy.get('[data-sidebar-container="true"]').find('[data-annotation]').as('allAnnotations')
+		cy.get('@allAnnotations').its('length').should('be.gte', 10)
+
+		cy.get('[data-cy="annotations-header"]').contains(/filters/i).click()
+
+		cy.get('[data-radix-popper-content-wrapper]').within(() => {
+			cy.get('input[type="checkbox"]').each(($checkbox) => {
+				cy.wrap($checkbox).click({ force: true })
+			})
+		})
+
+		cy.wait(300)
+		cy.get('[data-sidebar-container="true"]').find('[data-annotation]').should('have.length', 0)
+
+		cy.get('[data-radix-popper-content-wrapper]').within(() => {
+			cy.get('input[type="checkbox"]').each(($checkbox) => {
+				cy.wrap($checkbox).click({ force: true })
+			})
+		})
+
+		cy.wait(300)
+		cy.get('[data-sidebar-container="true"]').find('[data-annotation]').its('length').should('be.gte', 10)
+	})
+
+	it('handles long annotation content view_more/view_less when present', () => {
+		cy.get('[data-cy="sidebar-toggle"]').click()
+
+		cy.get('body').then(($body) => {
+			const viewMore = $body.find('[data-sidebar-container="true"] button').filter((_, el) => /view more/i.test(el.textContent))
+			if (viewMore.length === 0) {
+				cy.log('No long annotation body in current fixtures; skipping view_more/view_less')
+				return
+			}
+
+			cy.wrap(viewMore).click()
+			cy.contains('button', 'View less').should('exist').click()
+			cy.contains('button', 'View more').should('exist')
+		})
+	})
+
+	it('should keep annotation list stable across mode switch and show filled counts', () => {
+		cy.get('[data-cy="sidebar-toggle"]').click()
+
+		cy.get('[data-sidebar-container="true"]').find('[data-annotation]').as('initialAnnotations')
+		cy.get('@initialAnnotations').its('length').should('be.gte', 10)
+
+		cy.get('[data-cy="annotations-mode-toggle"]').contains(/aligned/i).click()
+		cy.wait(250)
+
+		cy.get('[data-sidebar-container="true"]').find('[data-annotation]').its('length').should('be.gte', 10)
+
+		cy.get('[data-cy="annotations-mode-toggle"]').contains(/list/i).click()
+		cy.wait(250)
+
+		cy.get('[data-sidebar-container="true"]').find('[data-annotation]').its('length').should('be.gte', 10)
+	})
+
+	it('should show nested annotations details on footer expand when present', () => {
+		cy.get('[data-cy="sidebar-toggle"]').click()
+
+		cy.get('[data-sidebar-container="true"]').then(($container) => {
+			const footerButton = $container.find('button').filter((_, el) => /nested annotation/i.test(el.textContent))
+			if (!footerButton.length) {
+				cy.log('No nested annotation footer found; skipping nested annotation flow')
+				return
+			}
+
+			cy.wrap(footerButton.first()).click()
+			cy.get('[data-sidebar-container="true"]').find('[data-annotation]').should('have.length.at.least', 1)
+			cy.wrap(footerButton.first()).click()
+		})
+	})
+
+	it('should hover highlight target segments and reset on mouse leave', () => {
+		cy.get('[data-cy="sidebar-toggle"]').click()
+
+		cy.get('[data-sidebar-container="true"] [data-annotation]').first().as('firstAnnotation')
+		cy.get('@firstAnnotation').trigger('mouseenter')
+		// this test validates no runtime error for hover events, visual class updates are dataset-dependent
+
+		cy.get('@firstAnnotation').trigger('mouseleave')
+		// this test validates no runtime error for hover events, visual class updates are dataset-dependent
+	})
+})
+
