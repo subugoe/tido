@@ -160,23 +160,34 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         await getSupport(support)
       }
 
-      panelViewsConfig.forEach((panelView: PanelView) => {
-        if (panelView.view === 'text' && !panelView.contentTypes) {
-          panelView.contentTypes = contentTypes
-        }
-      })
+      // 4. We discover the correct "views" config. This can come from a global config (root key "panelViews")
+      // or local config (key "views" in the panel config).
+      const resultPanelViews: PanelView[] = (panelViewsConfig as PanelView[])
+        .map((globalPanelView, i) => {
+          return {
+            ...globalPanelView,
+            ...(config.views?.[i] ?? {}),
+          }
+        })
+        .map(v => {
+          if (v.view === 'text' && !v.contentTypes) {
+            v.contentTypes = contentTypes
+          }
+          return v
+        })
+        .map(v => ({ ...v, visible: v.visible ?? true }))
 
-      // 4. We update the panel state with the data.
+      // 5. We update the panel state with the data.
       updatePanel({
         collectionId: collection?.id ?? null,
         manifest,
         item,
         activeTargetIndex: -1,
-        panelViews: panelViewsConfig.map((v: PanelView) => ({ ...v, visible: v.visible ?? true }))
+        panelViews: resultPanelViews
       })
 
       if (item.annotationCollection) {
-        // 5. Retrieve annotation data
+        // 6. Retrieve annotation data
         // Get an array of annotations and set up the witnesses
         // Update annotations data separately for progressive loading (still show text if annotations are broken)
 

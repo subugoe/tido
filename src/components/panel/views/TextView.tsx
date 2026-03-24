@@ -6,16 +6,15 @@ import TextViewContent from '@/components/panel/views/TextViewContent.tsx'
 import { TextViewProvider } from '@/contexts/TextViewContext.tsx'
 
 interface Props {
-  contentTypes: string[]
-  label?: string
+  viewIndex: number
   visible: boolean
 }
-const TextView: FC<Props> = ({ contentTypes, label, visible }) => {
+const TextView: FC<Props> = ({ viewIndex, visible }) => {
   const { panelState } = usePanel()
 
   return <div className={`bg-background relative z-1 flex h-full w-full overflow-hidden`}>
     <ErrorBoundary FallbackComponent={TextViewError} resetKeys={[panelState.item?.id]}>
-      <TextViewProvider contentTypes={contentTypes} label={label} visible={visible}>
+      <TextViewProvider viewIndex={viewIndex} visible={visible}>
         <TextViewContent />
       </TextViewProvider>
     </ErrorBoundary>

@@ -9,12 +9,13 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu.tsx'
 
-import { createNewPanel } from '@/utils/panel.ts'
+import { createNewPanel, setNewActiveContentType } from '@/utils/panel.ts'
 import { existsTargetInText, waitForElementInDom } from '@/utils/dom.ts'
 
 import Content from '@/components/panel/CrossRef/Content'
 import { validateCrossRefNode } from '@/utils/cross-ref.ts'
 import Loading from '@/components/ui/loading.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 interface Props {
   node: HTMLElement
@@ -22,7 +23,8 @@ interface Props {
 
 const CrossRefDifferentItem: FC<Props> = ({ node }) => {
 
-  const { updatePanel, panelId, usePanelTranslation } = usePanel()
+  const { panelViews: panelViewsConfig } = useConfig()
+  const { updatePanel, panelId, usePanelTranslation, panelState } = usePanel()
 
   const { t } = usePanelTranslation()
 
@@ -85,9 +87,21 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
     const contentType = sourceEl.getAttribute('data-ref-content-type')
     const selector = sourceEl.getAttribute('data-ref-target')
 
+    // We need to open that content which contains the cross ref target. Since a panel can have multiple views,
+    // we need to find out which view is able to display the content type. Because panel views can be configured freely,
+    // we cannot know which view is meant exactly. So we just take the first found.
+    const firstViewIndex = panelState.panelViews.findIndex(view => view.contentTypes.includes(contentType))
+
     if (action === 'new') {
       newPanelId = crypto.randomUUID()
-      await createNewPanel(collectionId, manifest.current, item.current, contentType, newPanelId)
+      await createNewPanel(
+        collectionId,
+        manifest.current,
+        item.current,
+        setNewActiveContentType(contentType, firstViewIndex, panelViewsConfig),
+        newPanelId
+      )
+
     } else if (action === 'update') {
       const collectionId = sourceEl.getAttribute('data-ref-collection')
       const manifestId = sourceEl.getAttribute('data-ref-manifest')
@@ -98,7 +112,7 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
           collection: collectionId,
           manifest: manifestId,
           item: itemId,
-          contentType
+          views: setNewActiveContentType(contentType, firstViewIndex, panelState.panelViews),
         }
       })
     }

@@ -351,16 +351,17 @@ declare global {
 export interface PanelConfig {
   collection: string
   manifest?: string
-  item?: string
-  contentType?: string
+  item?: string,
+  views?: PanelView[]
 }
 
 export type PanelViewType = 'text' | 'image'
 
 export interface PanelView {
+  activeContentType?: string
+  contentTypes?: string[]
   label?: string
   view: PanelViewType
-  contentTypes?: string[]
   visible?: boolean
 }
 

@@ -10,24 +10,27 @@ import {
 } from '@/components/ui/dropdown-menu.tsx'
 
 
-import { createNewPanel } from '@/utils/panel.ts'
+import { createNewPanel, setNewActiveContentType } from '@/utils/panel.ts'
 import { existsTargetInText, validateSelector, waitForElementInDom } from '@/utils/dom.ts'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { toast } from 'sonner'
 import Content from '@/components/panel/CrossRef/Content.tsx'
+import { useTextView } from '@/contexts/TextViewContext.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 interface Props {
   node: HTMLElement
 }
 
 const CrossRefSameItem: FC<Props> = ({ node }) => {
+  const { panelViews: panelViewsConfig } = useConfig()
 
-  const { updatePanel, panelState, usePanelTranslation, panelId } = usePanel()
+  const { panelState, usePanelTranslation, panelId } = usePanel()
+  const { activeContentType, setActiveContentType, contentTypes } = useTextView()
   const { collectionId, manifest, item } = panelState
   const { t } = usePanelTranslation()
-  const contentTypes = panelState.contentTypes
 
-  const manifestLabel = panelState.manifest.label
+  const manifestLabel = manifest.label
   const itemLabel = item.n ? item.n : item.title?.length > 0 ? item.title[0].title : ''
 
   const target = useRef<HTMLElement>(null)
@@ -40,16 +43,27 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
       const targetContentType = sourceEl.getAttribute('data-ref-content-type')
       const targetSelector = sourceEl.getAttribute('data-ref-target')
 
+      // We need to open that content which contains the cross ref target. Since a panel can have multiple views,
+      // we need to find out which view is able to display the content type. Because panel views can be configured freely,
+      // we cannot know which view is meant exactly. So we just take the first found.
+      const firstViewIndex = panelState.panelViews.findIndex(view => view.contentTypes.includes(targetContentType))
+
       if (action === 'new') {
         const newPanelId = crypto.randomUUID()
-        await createNewPanel(collectionId, manifest, item, targetContentType, newPanelId)
+        await createNewPanel(
+          collectionId,
+          manifest,
+          item,
+          setNewActiveContentType(targetContentType, firstViewIndex, panelViewsConfig),
+          newPanelId
+        )
         waitForElementInDom('#' + newPanelId, targetSelector, (newPanelEl: HTMLElement) => {
           scrollToTarget(targetSelector, newPanelEl)
         })
       }
 
       if (action === 'scroll-to') {
-        if (targetContentType !== panelState.activeContentType) updatePanel({ activeContentType: targetContentType } as Partial<PanelState>)
+        if (targetContentType !== activeContentType) setActiveContentType(targetContentType)
         setTimeout(() => {
           scrollToTarget(targetSelector, document.getElementById(panelId))
         }, 500)

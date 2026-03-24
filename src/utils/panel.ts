@@ -1,6 +1,6 @@
 import { request } from '@/utils/http'
 import { usePanelStore } from '@/store/PanelStore.tsx'
-import { PanelConfig } from '@/types'
+import { PanelConfig, PanelView } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
 
 export const MIN_PANEL_WIDTH = 800
@@ -88,12 +88,25 @@ export function validateImage(item: Item) {
   return !!item?.image?.id
 }
 
-export async function createNewPanel(collectionId: string, manifest: Manifest, item: Item, newContentType: string, newPanelId: string) {
+export function setNewActiveContentType(contentType: string, index: number, views: PanelView[]) {
+  return views.map((v, i) => {
+    if (i === index) v.activeContentType = contentType
+    return v
+  })
+}
+
+export async function createNewPanel(
+  collectionId: string,
+  manifest: Manifest,
+  item: Item,
+  newPanelViews: PanelView[],
+  newPanelId: string
+) {
   const newPanelConfig : PanelConfig = {
     collection: collectionId,
     manifest: manifest.id,
     item: item.id,
-    contentType: newContentType
+    views: newPanelViews
   }
 
   useUIStore.getState().updateNewestPanelId(newPanelId)

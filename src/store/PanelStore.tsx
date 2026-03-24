@@ -20,7 +20,6 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     item: null,
     manifest: null,
     contentTypes: [],
-    activeContentType: null,
     activeTargetIndex: -1,
     annotationsOpen: false,
     annotations: null,

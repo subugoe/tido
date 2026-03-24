@@ -22,23 +22,21 @@ type State = {
 const TextViewContext = createContext<State>(null)
 
 export const TextViewProvider = ({
-  contentTypes,
-  label,
+  viewIndex,
   visible,
   children
 }: {
-  contentTypes: string[]
-  label: string
+  viewIndex: number
   visible: boolean
   children: ReactNode
 }) => {
-  const { panelState, loading: loadingPanel, usePanelTranslation, matchedAnnotationsMaps, updateMatchedAnnotationsMap } = usePanel()
+  const { panelState, loading: loadingPanel, usePanelTranslation, matchedAnnotationsMaps, updateMatchedAnnotationsMap, updatePanel } = usePanel()
+  const { contentTypes, activeContentType, label } = panelState.panelViews[viewIndex] ?? {}
   const { setLoadingText } = useText()
   const { showBoundary } = useErrorBoundary()
   const { t } = usePanelTranslation()
 
   const [textWarning, setTextWarning] = useState('')
-  const [activeContentType, setActiveContentType] = useState(null)
   const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState<MatchedAnnotationsMap>(null)
   const [text, setText] = useState<string>('')
 
@@ -108,8 +106,19 @@ export const TextViewProvider = ({
       showBoundary(t('no_content_found'))
       return
     }
-    setActiveContentType(contentTypes[0])
+    if (!activeContentType || !contentTypes.includes(activeContentType)) {
+      setActiveContentType(contentTypes[0])
+    }
   }, [contentTypes])
+
+  function setActiveContentType(type: string | null) {
+    updatePanel({
+      panelViews: panelState.panelViews.map((v, i) => {
+        if (i === viewIndex) v.activeContentType = type
+        return v
+      })
+    })
+  }
 
   return (
     <TextViewContext.Provider value={{
