@@ -402,7 +402,6 @@ export interface TidoConfig {
 
 export interface AnnotationTypeConfig {
   label?: string
-  icon?: string
 }
 
 export interface AnnotationTypeConfigMap {

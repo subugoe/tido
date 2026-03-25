@@ -52,7 +52,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
 
   const { t } = useTranslation()
 
-  const type = annotationsConfig?.types?.[data.body['x-content-type']] ?? data.body['x-content-type']
+  const type = data.body['x-content-type']
+  const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
 
   useEffect(() => {
     setIsHovered(hoveredAnnotations?.includes(data.id))
@@ -251,7 +252,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     style={{ top }}
   >
     <div className="px-3 pb-2">
-      <Badge variant="accent" className="mb-1">{ type }</Badge>
+      <Badge variant="accent" className="mb-1">{ typeLabel }</Badge>
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
         { type === 'Variant' && <VariantContent body={data.body} /> }
         { type !== 'Variant' && <AnnotationContent body={data.body} /> }
