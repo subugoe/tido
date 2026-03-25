@@ -170,6 +170,7 @@ declare global {
     panelViews: PanelView[]
     contentTypes: string[]
     activeContentType: string | null
+    selectedAnnotation?: Annotation
   }
 
   type ItemType = 'section' | 'page' | 'full'

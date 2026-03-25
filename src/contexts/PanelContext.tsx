@@ -66,7 +66,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [matchedAnnotationsMaps, setMatchedAnnotationsMaps] = useState<{[contentUrl: string]: MatchedAnnotationsMap}>({})
   const [annotationFilters, setAnnotationFilters] = useState<AnnotationFiltersConfig>(null)
   const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState(null)
-  const [selectedAnnotation, setSelectedAnnotation] = useState(null)
   const [showTextOptions, setShowTextOptions] = useState(false)
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
@@ -80,6 +79,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
   const getCollection = useDataStore(state => state.initCollection)
   const panelState = usePanelStore(state => state.getPanel(panelId))
+  const selectedAnnotation = panelState.selectedAnnotation
 
   function usePanelTranslation(): UseTranslationResponse<'common', never> {
     const ns = panelState.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
@@ -308,6 +308,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       sidebarScroller.current = new SidebarScroller()
     }
     return sidebarScroller.current
+  }
+
+  function setSelectedAnnotation(selectedAnnotation: Annotation) {
+    updatePanel({ selectedAnnotation })
   }
 
   return (
