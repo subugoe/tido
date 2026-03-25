@@ -162,20 +162,15 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
       // 4. We discover the correct "views" config. This can come from a global config (root key "panelViews")
       // or local config (key "views" in the panel config).
-      const resultPanelViews: PanelView[] = (panelViewsConfig as PanelView[])
-        .map((globalPanelView, i) => {
-          return {
-            ...globalPanelView,
-            ...(config.views?.[i] ?? {}),
-          }
-        })
-        .map(v => {
-          if (v.view === 'text' && !v.contentTypes) {
-            v.contentTypes = contentTypes
-          }
-          return v
-        })
-        .map(v => ({ ...v, visible: v.visible ?? true }))
+      const resultPanelViews: PanelView[] =
+        config.views && config.views.length > 0
+          ? config.views.map((view, i) => ({
+            ...(panelViewsConfig[i] ?? {}),
+            ...view,
+            contentTypes: view.view === 'text' && !view.contentTypes ? contentTypes : view.contentTypes,
+            visible: view.visible ?? true,
+          }))
+          : panelViewsConfig
 
       // 5. We update the panel state with the data.
       updatePanel({
