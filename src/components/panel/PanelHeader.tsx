@@ -17,18 +17,18 @@ const SidebarToggle = memo((props) => {
   const { t } = usePanelTranslation()
 
   useEffect(() => {
-    setTooltipMessage(t(panelState.annotationsOpen ? 'hide_annotations' : 'display_annotations'))
-  }, [panelState.annotationsOpen])
+    setTooltipMessage(t(panelState.showSidebar ? 'hide_annotations' : 'display_annotations'))
+  }, [panelState.showSidebar])
 
   function onClick() {
     updatePanel({
-      annotationsOpen: !panelState.annotationsOpen
+      showSidebar: !panelState.showSidebar
     })
   }
 
   return <BaseTooltip message={tooltipMessage}>
     <Button
-      variant={panelState.annotationsOpen ? 'secondary' : 'outline'}
+      variant={panelState.showSidebar ? 'secondary' : 'outline'}
       size="sm"
       {...props}
       onClick={onClick} data-cy="sidebar-toggle"

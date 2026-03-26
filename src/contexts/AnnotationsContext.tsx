@@ -13,7 +13,7 @@ type State = {
 const AnnotationsContext = createContext<State>(null)
 
 export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
-  const { matchedAnnotationsMaps, panelState, annotationsMode } = usePanel()
+  const { matchedAnnotationsMaps, annotations } = usePanel()
   const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([])
   const [nestedMatchedAnnotationsMap, setNestedMatchedAnnotationsMap ] = useState<NestedMatchedAnnotationsMap>({})
   const [hoveredNestedAnnotationIds, setHoveredNestedAnnotationIds ] = useState<string[]>([])
@@ -30,9 +30,10 @@ export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
   }, [matchedAnnotationsMaps])
 
   useEffect(() => {
+    if (!annotations) return
     const newNestedMatchedAnnotationsMap: NestedMatchedAnnotationsMap = {}
-    panelState.annotations.forEach((annotation) => {
-      const nestedAnnotations = getNestedAnnotations(annotation, panelState.annotations)
+    annotations.forEach((annotation) => {
+      const nestedAnnotations = getNestedAnnotations(annotation, annotations)
       const target = findTargets(annotation)
       newNestedMatchedAnnotationsMap[annotation.id] = {
         nestedAnnotations,
@@ -41,7 +42,7 @@ export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
       }
     })
     setNestedMatchedAnnotationsMap(newNestedMatchedAnnotationsMap)
-  }, [panelState.annotations, annotationsMode])
+  }, [annotations])
 
   return (
     <AnnotationsContext.Provider value={{

@@ -9,10 +9,11 @@ import { AnnotationsProvider } from '@/contexts/AnnotationsContext.tsx'
 
 const SidebarView: FC = () => {
   const { annotationsLoading, panelState } = usePanel()
+  const itemId = panelState.item?.id
 
   return (
     <div className="flex flex-col h-full" data-sidebar-container>
-      <ErrorBoundary FallbackComponent={AnnotationsError} resetKeys={[panelState.item?.id]}>
+      <ErrorBoundary FallbackComponent={AnnotationsError} resetKeys={[itemId]}>
         <AnnotationsProvider>
           <AnnotationsHeader />
           <AnnotationsView />

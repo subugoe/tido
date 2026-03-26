@@ -165,12 +165,11 @@ declare global {
     imageUrl?: string
     activeTargetIndex: number
     config: PanelConfig
-    annotationsOpen: boolean
-    annotations: Annotation[] | null
+    showSidebar: boolean
+    selectedAnnotation?: Annotation
     panelViews: PanelView[]
     contentTypes: string[]
     activeContentType: string | null
-    selectedAnnotation?: Annotation
   }
 
   type ItemType = 'section' | 'page' | 'full'

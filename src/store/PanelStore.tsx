@@ -21,8 +21,8 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     manifest: null,
     contentTypes: [],
     activeTargetIndex: -1,
-    annotationsOpen: false,
-    annotations: null,
+    showSidebar: false,
+    activeContentType: null,
     panelViews: []
   }
 }

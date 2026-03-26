@@ -53,6 +53,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     updatePanel,
     selectedAnnotation,
     annotationsMode,
+    annotations,
   } = usePanel()
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
@@ -99,8 +100,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
 
     if (annotation) {
-      if (!panelState.annotationsOpen) {
-        updatePanel({ annotationsOpen: true })
+      if (!panelState.showSidebar) {
+        updatePanel({ showSidebar: true })
       }
 
       setSelectedAnnotation(annotation)
@@ -152,9 +153,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
   useEffect(() => {
-    if (!panelState.annotations || !parsedDom) return
+    if (!annotations || !parsedDom) return
 
-    const result = panelState.annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
+    const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
       const isSource = cur.target[0].source === activeContentUrl.current
       const selector = (cur.target[0].selector as CssSelector)?.value
 
@@ -182,7 +183,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     }, {})
 
     setMatchedAnnotationsMap(result)
-  }, [parsedDom, panelState.annotations])
+  }, [parsedDom, annotations])
 
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {

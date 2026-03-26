@@ -32,6 +32,7 @@ interface PanelContextType {
   setAnnotationFilters:  Dispatch<SetStateAction<AnnotationFiltersConfig>>,
   selectedAnnotationTypes: AnnotationTypesDict | null,
   setSelectedAnnotationTypes: (value: AnnotationTypesDict) => void,
+  annotations: Annotation[] | null,
   selectedAnnotation: Annotation | null,
   setSelectedAnnotation: (value: Annotation | null) => void
   showTextOptions: boolean,
@@ -67,6 +68,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [annotationFilters, setAnnotationFilters] = useState<AnnotationFiltersConfig>(null)
   const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState(null)
   const [showTextOptions, setShowTextOptions] = useState(false)
+  const [annotations, setAnnotations] = useState<Annotation[] | null>(null)
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
   const [annotationsMode, setAnnotationsMode] = useState<AnnotationsMode>(annotationsConfig.singleMode ?? annotationsConfig.defaultMode)
@@ -79,7 +81,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
   const getCollection = useDataStore(state => state.initCollection)
   const panelState = usePanelStore(state => state.getPanel(panelId))
-  const selectedAnnotation = panelState.selectedAnnotation
 
   function usePanelTranslation(): UseTranslationResponse<'common', never> {
     const ns = panelState.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
@@ -196,7 +197,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
             setWitnesses(witnessesWithColor)
             setSelectedWitnesses(witnessesWithColor)
           }
-          updatePanel({ annotations })
+
+          setAnnotations(annotations)
+          if (config.selectedAnnotation) {
+            updatePanel({ selectedAnnotation: annotations.find(a => a.id === config.selectedAnnotation) ?? null })
+          }
         } catch (e) {
           console.error(e)
           setAnnotationsError(e)
@@ -329,7 +334,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       setAnnotationFilters,
       selectedAnnotationTypes,
       setSelectedAnnotationTypes,
-      selectedAnnotation,
+      annotations,
+      selectedAnnotation: panelState.selectedAnnotation,
       setSelectedAnnotation,
       showTextOptions,
       setShowTextOptions,
