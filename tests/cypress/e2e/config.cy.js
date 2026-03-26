@@ -276,11 +276,13 @@ describe('Config', () => {
   runConfigTest('defaultAnnotationsMode=align&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations align view preselected', () => {
       //open annotations sidebar
-      cy.get('[data-cy="sidebar-toggle"]')
+      cy
+        .get('[data-cy="item-label"')
+        .should('contain', '2a')
+        .get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
-
-      cy.get('[data-cy="annotations-header"]')
+        .get('[data-cy="annotations-header"]')
         .should('be.visible')
         .find('[data-cy="annotations-mode-toggle"]')
         .find('[data-cy="aligned"]')
