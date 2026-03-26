@@ -353,6 +353,8 @@ export interface PanelConfig {
   manifest?: string
   item?: string,
   views?: PanelView[]
+  selectedAnnotation?: string
+  showSidebar?: boolean
 }
 
 export type PanelViewType = 'text' | 'image'
@@ -446,6 +448,7 @@ export interface TidoContentStateTarget {
   partOf?: TidoContentStateTarget
   state?: {
     views?: PanelViewContentState[]
+    annotation?: string
   }
 }
 

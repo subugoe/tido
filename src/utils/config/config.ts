@@ -295,7 +295,7 @@ export async function mergeAndValidateConfig(
           let manifestIndex: number | null = null
           let itemIndex: number | null = null
 
-          const { collectionUrl, manifestUrl, itemUrl } = extractPanelConfig(target)
+          const { collectionUrl, manifestUrl, itemUrl, selectedAnnotationId } = extractPanelConfig(target)
 
           if (!collectionUrl) return null
 
@@ -317,6 +317,7 @@ export async function mergeAndValidateConfig(
             collection: collectionUrl,
             ...(itemIndex > -1 && { item: itemUrl }),
             ...(manifestIndex > -1 && { manifest: manifestUrl }),
+            ...(selectedAnnotationId && { selectedAnnotation: selectedAnnotationId, showSidebar: true })
           }
         }))
       }

@@ -179,8 +179,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         manifest,
         item,
         activeTargetIndex: -1,
-        panelViews: resultPanelViews
+        panelViews: resultPanelViews,
+        showSidebar: config.showSidebar ?? false
       })
+
 
       if (item.annotationCollection) {
         // 6. Retrieve annotation data
@@ -315,8 +317,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     return sidebarScroller.current
   }
 
-  function setSelectedAnnotation(selectedAnnotation: Annotation) {
-    updatePanel({ selectedAnnotation })
+  function setSelectedAnnotation(annotation: Annotation | null) {
+    updatePanel({ selectedAnnotation: annotation })
   }
 
   return (
