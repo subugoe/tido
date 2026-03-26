@@ -36,7 +36,7 @@ interface Props {
 
 const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = false }) => {
   const { annotations: annotationsConfig } = useConfig()
-  const { selectedAnnotation, setSelectedAnnotation, annotationsMode, panelState } = usePanel()
+  const { selectedAnnotation, setSelectedAnnotation, annotationsMode, annotations, panelId } = usePanel()
   const { nestedMatchedAnnotationsMap, hoveredNestedAnnotationIds, setHoveredNestedAnnotationIds  } = useAnnotations()
   const { setHoveredAnnotations, hoveredAnnotations } = useText()
   const ref = useRef(null)
@@ -61,7 +61,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
 
   useEffect(() => {
     setIsSelected(selectedAnnotation && selectedAnnotation.id === data.id)
-    const panelEl = document.getElementById(panelState.id) as HTMLElement
+    const panelEl = document.getElementById(panelId) as HTMLElement
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => panelEl.querySelector(selector)) : []
 
     const flippedNestedMatched = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
@@ -89,7 +89,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
       nestedMatchedAnnotationsMap[id]?.target ?? []
     )
 
-    const panelEl = document.getElementById(panelState.id) as HTMLElement
+    const panelEl = document.getElementById(panelId) as HTMLElement
     const targetsOfSelectedAnnotation = selectedAnnotation &&
     !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => panelEl.querySelector(selector)) : []
 
@@ -155,8 +155,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     nestedAnnotationsRef.current = nestedMatchedAnnotationsMap[data.id]['nestedAnnotations']
 
     // for each new nested Annotation - we add highlighting once it is mounted.
-    const itemAnnotations = panelState.annotations
-    const targetsInsideAnnotation = findTargetsInsideAnnotation(data.id, itemAnnotations)
+    const targetsInsideAnnotation = findTargetsInsideAnnotation(data.id, annotations)
     targetsInsideAnnotation.forEach((selector) => {
       const target = document.querySelector(selector)
       if (target) {

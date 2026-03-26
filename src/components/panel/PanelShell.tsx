@@ -21,7 +21,7 @@ const PanelShell: FC<Props> = ({ children }) => {
     return () => {
       resizer?.clean()
     }
-  }, [ref])
+  }, [])
 
   return <div
     id={panelId}

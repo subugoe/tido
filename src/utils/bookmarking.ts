@@ -56,11 +56,12 @@ async function decodeState(encoded: string): Promise<TidoContentState> {
   return JSON.parse(jsonStr)
 }
 
-function extractPanelConfig(target: TidoContentStateTarget): { collectionUrl: string | null, itemUrl: string | null, manifestUrl: string | null } {
-  const result: { collectionUrl: string | null, itemUrl: string | null, manifestUrl: string | null } = {
+function extractPanelConfig(target: TidoContentStateTarget): { collectionUrl: string | null, itemUrl: string | null, manifestUrl: string | null, selectedAnnotationId: string | null } {
+  const result: { collectionUrl: string | null, itemUrl: string | null, manifestUrl: string | null, selectedAnnotationId: string | null } = {
     itemUrl: null,
     manifestUrl: null,
     collectionUrl: null,
+    selectedAnnotationId: null
   }
 
   function traverse(t: TidoContentStateTarget) {
@@ -68,6 +69,7 @@ function extractPanelConfig(target: TidoContentStateTarget): { collectionUrl: st
 
     if (t.type === 'Item') {
       result.itemUrl = t.id
+      if (t.state?.annotation) result.selectedAnnotationId = t.state.annotation
     } else if (t.type === 'Manifest') {
       result.manifestUrl = t.id
     } else if (t.type === 'Collection') {
@@ -84,15 +86,19 @@ function extractPanelConfig(target: TidoContentStateTarget): { collectionUrl: st
 }
 
 function createContentState(panelStates: PanelState[]): TidoContentState {
-  const target: TidoContentStateTarget[] = panelStates.map(state => {
+
+  const target: TidoContentStateTarget[] = panelStates.map(({ selectedAnnotation, item, manifest, collectionId, }) => {
+    const state = selectedAnnotation ? { annotation: selectedAnnotation.id } : undefined
+
     return {
-      id: state.item.id,
+      id: item.id,
       type: 'Item',
+      ...(state && { state }),
       partOf: {
-        id: state.manifest.id,
+        id: manifest.id,
         type: 'Manifest',
         partOf: {
-          id: state.collectionId,
+          id: collectionId,
           type: 'Collection'
         }
       }

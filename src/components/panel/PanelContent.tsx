@@ -14,7 +14,7 @@ import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 
 const PanelContent: FC = React.memo(() => {
   const { panelState, resizer, error } = usePanel()
-  const [showSidebar, setShowSidebar] = useState(false)
+  const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
 
   useEffect(() => {
@@ -31,23 +31,23 @@ const PanelContent: FC = React.memo(() => {
 
   useEffect(() => {
     if (!resizer) return
-    resizer.setAnnotationsOpen(panelState.annotationsOpen)
+    resizer.setShowSidebar(panelState.showSidebar)
 
     let sidebarContentTimeout = null
 
-    if (panelState.annotationsOpen) {
+    if (panelState.showSidebar) {
       // Set flag that displays sidebar pane after the panel shell transition has finished
       sidebarContentTimeout = setTimeout(() => {
-        setShowSidebar(true)
+        setShowSidebarContent(true)
       }, 200)
     } else {
-      setShowSidebar(false)
+      setShowSidebarContent(false)
     }
 
     return () => {
       if (sidebarContentTimeout) clearTimeout(sidebarContentTimeout)
     }
-  }, [panelState.annotationsOpen])
+  }, [panelState.showSidebar])
 
 
   if (error) return <PanelError error={error} resetErrorBoundary={() => {}} />
@@ -74,8 +74,8 @@ const PanelContent: FC = React.memo(() => {
           </div>
           <div className="sidebar absolute h-full top-0">
             <div className="absolute inset-y-0 left-0 w-px bg-border z-40" />
-            { showSidebar && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle /> }
-            { showSidebar && <SidebarView /> }
+            { showSidebarContent && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle /> }
+            { showSidebarContent && <SidebarView /> }
           </div>
         </div>
       </div>

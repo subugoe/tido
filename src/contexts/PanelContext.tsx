@@ -32,6 +32,7 @@ interface PanelContextType {
   setAnnotationFilters:  Dispatch<SetStateAction<AnnotationFiltersConfig>>,
   selectedAnnotationTypes: AnnotationTypesDict | null,
   setSelectedAnnotationTypes: (value: AnnotationTypesDict) => void,
+  annotations: Annotation[] | null,
   selectedAnnotation: Annotation | null,
   setSelectedAnnotation: (value: Annotation | null) => void
   showTextOptions: boolean,
@@ -66,8 +67,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [matchedAnnotationsMaps, setMatchedAnnotationsMaps] = useState<{[contentUrl: string]: MatchedAnnotationsMap}>({})
   const [annotationFilters, setAnnotationFilters] = useState<AnnotationFiltersConfig>(null)
   const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState(null)
-  const [selectedAnnotation, setSelectedAnnotation] = useState(null)
   const [showTextOptions, setShowTextOptions] = useState(false)
+  const [annotations, setAnnotations] = useState<Annotation[] | null>(null)
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessWithColor[]>([])
   const [annotationsMode, setAnnotationsMode] = useState<AnnotationsMode>(annotationsConfig.singleMode ?? annotationsConfig.defaultMode)
@@ -162,15 +163,19 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
       // 4. We discover the correct "views" config. This can come from a global config (root key "panelViews")
       // or local config (key "views" in the panel config).
+      const enhanceView = (view: PanelView): Partial<PanelView> => ({
+        ...view,
+        contentTypes: view.view === 'text' && !view.contentTypes ? contentTypes : view.contentTypes,
+        visible: view.visible ?? true,
+      })
+
       const resultPanelViews: PanelView[] =
         config.views && config.views.length > 0
           ? config.views.map((view, i) => ({
             ...(panelViewsConfig[i] ?? {}),
-            ...view,
-            contentTypes: view.view === 'text' && !view.contentTypes ? contentTypes : view.contentTypes,
-            visible: view.visible ?? true,
+            ...enhanceView(view),
           }))
-          : panelViewsConfig
+          : panelViewsConfig.map((view: PanelView) => enhanceView(view))
 
       // 5. We update the panel state with the data.
       updatePanel({
@@ -178,8 +183,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         manifest,
         item,
         activeTargetIndex: -1,
-        panelViews: resultPanelViews
+        panelViews: resultPanelViews,
+        showSidebar: config.showSidebar ?? false
       })
+
 
       if (item.annotationCollection) {
         // 6. Retrieve annotation data
@@ -196,7 +203,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
             setWitnesses(witnessesWithColor)
             setSelectedWitnesses(witnessesWithColor)
           }
-          updatePanel({ annotations })
+
+          setAnnotations(annotations)
+          if (config.selectedAnnotation) {
+            updatePanel({ selectedAnnotation: annotations.find(a => a.id === config.selectedAnnotation) ?? null })
+          }
         } catch (e) {
           console.error(e)
           setAnnotationsError(e)
@@ -310,6 +321,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     return sidebarScroller.current
   }
 
+  function setSelectedAnnotation(annotation: Annotation | null) {
+    updatePanel({ selectedAnnotation: annotation })
+  }
+
   return (
     <PanelContext.Provider value={{
       panelId,
@@ -325,7 +340,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       setAnnotationFilters,
       selectedAnnotationTypes,
       setSelectedAnnotationTypes,
-      selectedAnnotation,
+      annotations,
+      selectedAnnotation: panelState.selectedAnnotation,
       setSelectedAnnotation,
       showTextOptions,
       setShowTextOptions,

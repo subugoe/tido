@@ -20,7 +20,7 @@ class PanelResizer {
 
   isResizing = false
   isSidebarResizing = false
-  annotationsOpen = false
+  showSidebar = false
   lastWidth: number | null = null
 
   private isDragToResizeInitialized = false
@@ -55,7 +55,7 @@ class PanelResizer {
     this.lastWidth = newWidth
     this.panelEl.style.width = `${newWidth}px`
 
-    if (this.annotationsOpen) {
+    if (this.showSidebar) {
       const mainWidth = newWidth - this.sidebarWidth
       this.mainContentEl.style.width = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
       this.sidebarEl.style.left = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
@@ -90,7 +90,7 @@ class PanelResizer {
         const rect = this.panelEl.getBoundingClientRect()
         const newWidth = e.clientX - rect.left
 
-        if (newWidth < MIN_PANEL_WIDTH + (this.annotationsOpen ? this.sidebarWidth : 0)) return
+        if (newWidth < MIN_PANEL_WIDTH + (this.showSidebar ? this.sidebarWidth : 0)) return
 
         this.onResizePanel(newWidth)
         return
@@ -215,11 +215,11 @@ class PanelResizer {
     }
   }
 
-  // ─── Annotations open/close ──────────────────────────────────────────────────
+  // ─── Sidebar show/hide ──────────────────────────────────────────────────
 
-  setAnnotationsOpen(isOpen: boolean) {
-    if (isOpen === this.annotationsOpen) return
-    this.annotationsOpen = isOpen
+  setShowSidebar(isOpen: boolean) {
+    if (isOpen === this.showSidebar) return
+    this.showSidebar = isOpen
 
     if (isOpen) {
       const newWidth = this.lastWidth + this.sidebarWidth

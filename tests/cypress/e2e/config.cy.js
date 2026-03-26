@@ -41,7 +41,7 @@ function checkTreeCollapsedCollection($rootCollection, collectionLabel, manifest
     })
 
   cy.get('@rootCollection').click()
-    
+
   cy.get('@rootCollection')
     .then(($rootCollection) => {
       Tree.shouldBeExpanded($rootCollection)
@@ -182,18 +182,18 @@ describe('Config', () => {
 
         Tree.getDirectChildren($rootCollection)
       }).as('manifests')
-      
+
       //should have only one marker at manifest level for manifest 'Einsiedeln, 278 1040'
       cy.get('@manifests')
         .find('[data-cy="tree-node-marker"]')
         .should('have.length', 1)
         .closest('[data-cy="tree-node"]')
         .as('manifest')
-      
+
       cy.get('@manifest').then(($manifest) => {
         Tree.shouldHaveLabel($manifest, 'Einsiedeln, 278 1040')
           .click()
-        
+
         //should only have one marker at item level for item '279'
         Tree.getDirectChildren($manifest)
           .find('[data-cy="tree-node-marker"]')
@@ -244,12 +244,14 @@ describe('Config', () => {
   //collection with annotations
   runConfigTest('annotations.defaultMode=list&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations list view preselected', () => {
+      cy
+        .get('[data-cy="item-label"')
+        .should('contain', '2a')
       //open annotations sidebar
-      cy.get('[data-cy="sidebar-toggle"]')
+        .get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
-
-      cy.get('[data-cy="annotations-header"]')
+        .get('[data-cy="annotations-header"]')
         .should('be.visible')
         .find('[data-cy="annotations-mode-toggle"]')
         .find('[data-cy="list"]')
@@ -274,11 +276,13 @@ describe('Config', () => {
   runConfigTest('defaultAnnotationsMode=align&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations align view preselected', () => {
       //open annotations sidebar
-      cy.get('[data-cy="sidebar-toggle"]')
+      cy
+        .get('[data-cy="item-label"')
+        .should('contain', '2a')
+        .get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
-
-      cy.get('[data-cy="annotations-header"]')
+        .get('[data-cy="annotations-header"]')
         .should('be.visible')
         .find('[data-cy="annotations-mode-toggle"]')
         .find('[data-cy="aligned"]')
@@ -299,7 +303,7 @@ describe('Config', () => {
             .to.be.lt(top8)
         })
   });
-  runConfigTest('lang=de&translations.de.common.add_new_panel=Willk%C3%BCrliche%20%C3%9Cbersetzung', 
+  runConfigTest('lang=de&translations.de.common.add_new_panel=Willk%C3%BCrliche%20%C3%9Cbersetzung',
     'Should apply custom common translation "Willkürliche Übersetzung" to add-new-panel-button', () => {
       cy.get('[data-cy="new-panel"]').should('have.text', 'Willkürliche Übersetzung')
   });
