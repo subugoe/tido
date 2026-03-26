@@ -178,13 +178,16 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
           : panelViewsConfig.map((view: PanelView) => enhanceView(view))
 
       // 5. We update the panel state with the data.
+      const isFirstLoad = panelState.panelViews.length === 0
       updatePanel({
         collectionId: collection?.id ?? null,
         manifest,
         item,
         activeTargetIndex: -1,
-        panelViews: resultPanelViews,
-        showSidebar: config.showSidebar ?? false
+        ...(isFirstLoad ? {
+          panelViews: resultPanelViews,
+          showSidebar: config.showSidebar ?? false
+        } : {})
       })
 
 
