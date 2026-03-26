@@ -244,13 +244,14 @@ describe('Config', () => {
   //collection with annotations
   runConfigTest('annotations.defaultMode=list&panels[0].collection=http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json',
     'Should have annotations list view preselected', () => {
-      cy.get('[data-cy="item-label"').should('contain', '2a')
+      cy
+        .get('[data-cy="item-label"')
+        .should('contain', '2a')
       //open annotations sidebar
-      cy.get('[data-cy="sidebar-toggle"]')
+        .get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
-
-      cy.get('[data-cy="annotations-header"]')
+        .get('[data-cy="annotations-header"]')
         .should('be.visible')
         .find('[data-cy="annotations-mode-toggle"]')
         .find('[data-cy="list"]')
