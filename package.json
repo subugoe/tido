@@ -102,7 +102,7 @@
     "build:embed": "vite build",
     "build:test": "vite build --mode test",
     "cypress": "cypress open",
-    "cypress:headless": "cypress run --headless",
+    "cypress:headless": "cypress run --browser chrome --headless",
     "dev": "node vite-start.js",
     "fix": "npx eslint --fix src ",
     "lint": "npx eslint src",
