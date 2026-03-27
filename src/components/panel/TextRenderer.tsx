@@ -37,6 +37,7 @@ import {
 import { createPortal } from 'react-dom'
 import { computeNewSelectedAnnotationIndex, isFiltered } from '@/utils/annotations.ts'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 interface Props {
   htmlString: string
@@ -46,6 +47,7 @@ interface Props {
 
 const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const textWrapperRef = useRef<HTMLInputElement>(null)
+  const { showContentTypeToggle } = useConfig()
   const {
     panelState,
     selectedAnnotationTypes,
@@ -296,7 +298,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   }, [selectedAnnotation, displayedMap])
 
   return <div className="relative flex">
-    <div data-text-wrapper ref={textWrapperRef} className="pt-16"></div>
+    <div data-text-wrapper ref={textWrapperRef} className={showContentTypeToggle ? 'pt-16' : 'pt-2'}></div>
     {portals}
   </div>
 })
