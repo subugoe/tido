@@ -6,11 +6,13 @@ import { useText } from '@/contexts/TextContext.tsx'
 import TextOptions from '@/components/panel/TextOptions.tsx'
 import TextViewWarning from '@/components/panel/views/TextViewWarning.tsx'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const TextViewContent: FC = () => {
   const { panelState, getSidebarScroller } = usePanel()
   const { loadingText, setLoadingText } = useText()
   const { text } = useTextView()
+  const { showContentTypeToggle } = useConfig()
   const scrollContainer = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -28,9 +30,9 @@ const TextViewContent: FC = () => {
   }
 
   return <>
-    <div data-text-options className="absolute w-full top-0 z-10 flex flex-col items-center justify-center">
+    {showContentTypeToggle && <div data-text-options className="absolute w-full top-0 z-10 flex flex-col items-center justify-center">
       <TextOptions />
-    </div>
+    </div>}
     <div data-text-container ref={scrollContainer} className="h-full w-full overflow-auto px-3">
       <TextRenderer htmlString={text} onReady={onReady} />
     </div>

@@ -390,6 +390,7 @@ export interface TidoConfig {
   lang: string
   rootCollections: string[]
   showAddNewPanelButton: boolean
+  showContentTypeToggle: boolean
   showGlobalTree: boolean
   showPanelPlaceholder: boolean
   showThemeToggle: boolean

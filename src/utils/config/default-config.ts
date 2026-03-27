@@ -7,6 +7,7 @@ const defaultConfig: TidoConfig = {
   panels: [],
   rootCollections: [],
   showAddNewPanelButton: true,
+  showContentTypeToggle: true,
   showGlobalTree: true,
   showPanelPlaceholder: true,
   showThemeToggle: true,
