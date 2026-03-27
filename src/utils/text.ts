@@ -167,7 +167,7 @@ function getTextTargets(flippedMatchedAnnotationsMap: MergedAnnotationEntry[]): 
   if (!flippedMatchedAnnotationsMap) return []
 
   return flippedMatchedAnnotationsMap.reduce((acc, curr) => {
-    acc.push(curr.target)
+    if (curr.filtered) acc.push(curr.target)
     return acc
   }, [])
 }

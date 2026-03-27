@@ -124,8 +124,15 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     setHoveredAnnotations(idsArray)
   }
 
-  const onMouseLeaveTarget = () => {
-    setHoveredAnnotations(null)
+  const onMouseLeaveTarget = (e: Event) => {
+    // hoveredAnnotations can contain parent targets.
+    // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
+    const target = e.currentTarget as HTMLElement
+    const annotIds = getAnnotationIds(target)
+    const idsArray = annotIds.split(',')
+    if (idsArray.length === 0) return
+
+    setHoveredAnnotations(hoveredAnnotations.filter(a => !idsArray.includes(a)))
   }
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
