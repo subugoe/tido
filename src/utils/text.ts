@@ -1,8 +1,8 @@
 const ANNOTATION_IDS_ATTRIBUTE = 'data-annotation-ids'
 const ANNOTATION_BASE_STYLE = ['rounded']
-const ANNOTATION_HOVER_CLASSES = ['bg-annotation-hover', 'dark:bg-primary/50']
+const ANNOTATION_HOVER_CLASSES = ['bg-annotation-hover']
 const NESTED_TARGET_HOVER_CLASSES = ['outline']
-const SELECTED_ANNOTATION_CLASSES = ['bg-annotation-selected', 'dark:bg-primary/80']
+const SELECTED_ANNOTATION_CLASSES = ['bg-annotation-selected']
 const SELECTED_ANNOTATION_ATTRIBUTE = 'data-annotation-selected'
 const HIGHLIGHTING_STYLE = ['bg-gray-200', 'dark:bg-muted', 'relative', 'cursor-pointer']
 const CROSS_REF_ATTRIBUTE = 'data-ref-target'

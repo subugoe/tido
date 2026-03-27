@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { TidoConfig } from '@/types'
 import { mergeAndValidateConfig } from '@/utils/config/config.ts'
 import { promiseWithCache } from '@/utils/promise-cache.ts'
-import { getAppPrimaryAndForegroundColor } from '@/utils/colors.ts'
+import { getColors } from '@/utils/colors.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { initI18n } from '@/utils/translations.ts'
 import Loading from '@/components/ui/loading.tsx'
@@ -23,7 +23,7 @@ function createThemeStyles(config: TidoConfig) {
     document.head.appendChild(styleEl)
   }
 
-  styleEl.innerHTML = `.tido {${getAppPrimaryAndForegroundColor(theme.primaryColor, 'primary')}}`
+  styleEl.innerHTML = `.tido {${getColors(theme.primaryColor)}}`
 }
 
 const ConfigContext = createContext(null)

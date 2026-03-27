@@ -13,6 +13,7 @@
   --color-primary-foreground: var(--tido-color-primary-foreground);
   --color-annotation-hover: var(--annotation-hover);
   --color-annotation-selected: var(--annotation-selected);
+
   --color-gray-50: var(--color-zinc-50);
   --color-gray-100: var(--color-zinc-100);
   --color-gray-200: var(--color-zinc-200);
@@ -60,6 +61,9 @@ Elevation hierarchy:
   height: 100%;
   color: var(--foreground);
 
+  --annotation-hover: var(--tido-color-primary-shade-1);
+  --annotation-selected: var(--tido-color-primary-shade-2);
+
   --radius: 0.625rem;
   --background: var(--color-white);
   --foreground: oklch(0.145 0 0);
@@ -85,6 +89,9 @@ Elevation hierarchy:
 }
 
 .tido.dark {
+  --annotation-hover: var(--tido-color-primary-shade-4);
+  --annotation-selected: var(--tido-color-primary-shade-3);
+
   --background: var(--color-gray-900);
   --foreground: var(--color-gray-200);
   --card: oklch(0.205 0 0);

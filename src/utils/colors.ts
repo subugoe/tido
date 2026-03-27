@@ -219,10 +219,16 @@ function colorStringToOKLCH(colorString: string): OKLCH {
   throw new Error('Unsupported color format')
 }
 
-const getAppPrimaryAndForegroundColor = (primaryColor: string, type: string) => {
-  const oklch = colorStringToOKLCH(primaryColor)
-  return `--tido-color-${type}: oklch(${oklch?.l} ${oklch?.c} ${oklch?.h} / 1); --tido-color-${type}-foreground: oklch(0.985 0 0);
-  --annotation-hover: oklch(0.95 0.04 ${oklch?.h}); --annotation-selected: oklch(0.8 0.07 ${oklch?.h})`
+const getColors = (color: string) => {
+  const oklch = colorStringToOKLCH(color)
+  return `
+    --tido-color-primary: oklch(${oklch?.l} ${oklch?.c} ${oklch?.h} / 1);
+    --tido-color-primary-foreground: oklch(0.985 0 0);
+    --tido-color-primary-shade-1: oklch(0.95 0.04 ${oklch?.h});
+    --tido-color-primary-shade-2: oklch(0.8 0.07 ${oklch?.h});
+    --tido-color-primary-shade-3: oklch(0.4 0.06 ${oklch?.h});
+    --tido-color-primary-shade-4: oklch(0.25 0.03 ${oklch?.h});
+  `
 }
 
-export { getAppPrimaryAndForegroundColor }
+export { getColors }
