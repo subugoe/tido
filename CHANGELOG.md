@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.20](https://github.com/subugoe/tido/compare/v5.0.0-alpha.19...v5.0.0-alpha.20) (2026-03-30)
+
+
+### Features
+
+* add "showContentTypeToggle" config option ([22387f9](https://github.com/subugoe/tido/commit/22387f94fd9f8804a3065697ca378757246f0c1a))
+* add "views" to panel config to override the global "panelViews" option ([3727931](https://github.com/subugoe/tido/commit/372793165b17289a4e10b419e042f0381a722c7a))
+* add dark theme annotation colors ([4f5918d](https://github.com/subugoe/tido/commit/4f5918d694af02d97af19f865713a2bea7d79815))
+* implement annotation bookmarking, add "selectedAnnotation" and "showSidebar" to panel config ([e74dace](https://github.com/subugoe/tido/commit/e74dace148699496e09adaa3e8a29cfea8c89ca9))
+* omit active content type display in toggle when only one available ([0735bf4](https://github.com/subugoe/tido/commit/0735bf4972df480c0568832edb6037628b5fad79))
+
+
+### Bug Fixes
+
+* panel loading without pre-configured panel views ([19ce5a9](https://github.com/subugoe/tido/commit/19ce5a90d3a5ee598ee8419066fc7ba5c8208f04))
+* preserve panel state during navigation ([f05c2cb](https://github.com/subugoe/tido/commit/f05c2cbe4a77df3a682c9b90bb9aa91c843f92a1))
+* remove hover style only from the current target ([e6d279e](https://github.com/subugoe/tido/commit/e6d279eb4a933e8a54ffc725a9d2d97f477ad44b))
+* remove padding top from text if no content type toggle is visible ([fa3a4c4](https://github.com/subugoe/tido/commit/fa3a4c4009ba4c79cc3817cf98b5a5b18ef0f36d))
+* set main content width without "jumping" when resizing ([a9853f4](https://github.com/subugoe/tido/commit/a9853f462a9ea5970fa5f18b5b1f2b24e15c5142))
+* update or open panels correctly when coming from a cross-ref link, refactor active content type setting ([2dfc953](https://github.com/subugoe/tido/commit/2dfc953d52bd04abc1c2e3edcdf3c40f7cbb9557))
+* use configuration of annotation types correctly ([0016062](https://github.com/subugoe/tido/commit/00160626cd273721d55310ce4d475a1a92e5fd9f))
+* visibility of separation borders while loading ([80b0161](https://github.com/subugoe/tido/commit/80b01619e786551c1d8be966d2ff40be42bc65bd))
+
+
+### Docs
+
+* sort config key alphabetically in README ([e89fbac](https://github.com/subugoe/tido/commit/e89fbace3699d2b2473d998f197d2fde0c8d5050))
+* update panelViews config in README ([d1740ef](https://github.com/subugoe/tido/commit/d1740efa1d905962648b75fb532a466e0a403d51))
+
+
+### Refactoring
+
+* detach annotations from PanelState, rename annotationsOpen to showSidebar ([875a4b4](https://github.com/subugoe/tido/commit/875a4b465dfa81a36c5590494c5fb50e22810215))
+* move selectedAnnotation to PanelState ([7ea2f5c](https://github.com/subugoe/tido/commit/7ea2f5c15a05f8df8299b9989fbb667b521ea363))
+
 ## [5.0.0-alpha.19](https://github.com/subugoe/tido/compare/v5.0.0-alpha.18...v5.0.0-alpha.19) (2026-03-23)
 
 
