@@ -138,7 +138,7 @@ function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict) 
 
   if (type === 'Variant') {
     const witnesses = annotation.body.witnesses
-    return witnesses.every(witness => selectedTypes[type].includes(witness))
+    return witnesses.some(witness => selectedTypes[type].includes(witness))
   }
 
   return true

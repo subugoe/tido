@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { parseStyleString } from '@/utils/html-to-react.ts'
 import WitnessChip from '@/components/panel/annotations/WitnessChip.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
   body: AnnotationBody
@@ -38,6 +39,10 @@ const convertNodeToReact = (node: ChildNode, key: string | number): React.ReactN
 
 const VariantContent: FC<Props> = React.memo(({ body }) => {
   const { value, witnesses } = body
+  const { selectedAnnotationTypes } = usePanel()
+
+  const filteredWitnesses = selectedAnnotationTypes['Variant'] ? witnesses.filter(witness => selectedAnnotationTypes['Variant'].includes(witness)) : witnesses
+
   const parsedDom = React.useMemo(() => {
     const parser = new DOMParser()
     return parser.parseFromString(`${value}`, 'text/html')
@@ -50,13 +55,11 @@ const VariantContent: FC<Props> = React.memo(({ body }) => {
     )
   }, [parsedDom])
 
-
-
   return <div className="flex">
     <div>{children}</div>
-    { witnesses && <div className="ml-auto flex gap-1">
-      {witnesses.map((witness, i) => <WitnessChip idno={witness} key={'witness' + i} />)}
-    </div> }
+    <div className="ml-auto flex gap-1">
+      {filteredWitnesses.map((witness, i) => <WitnessChip idno={witness} key={'witness' + i} />)}
+    </div>
   </div>
 })
 
