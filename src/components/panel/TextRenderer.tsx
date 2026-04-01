@@ -4,12 +4,9 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState
 } from 'react'
 
-import React from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import {
@@ -22,7 +19,6 @@ import {
   flipMatchedAnnotationsMap,
   getAnnotationIds,
   getHoveredAnnotationsIds,
-  getRootCrossRefElements,
   getTargetsHoveredAnnotations,
   getTextTargets,
   isParentHovered,
@@ -34,10 +30,10 @@ import {
   removeNestedTargetStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
-import { createPortal } from 'react-dom'
-import { computeNewSelectedAnnotationIndex, isFiltered } from '@/utils/annotations.ts'
+import { computeNewSelectedAnnotationIndex } from '@/utils/annotations.ts'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import GenericTextRenderer from '@/components/GenericTextRenderer.tsx'
 
 interface Props {
   htmlString: string
@@ -46,7 +42,6 @@ interface Props {
 }
 
 const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
-  const textWrapperRef = useRef<HTMLInputElement>(null)
   const { showContentTypeToggle } = useConfig()
   const {
     panelState,
@@ -61,7 +56,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
   const { matchedAnnotationsMap, setMatchedAnnotationsMap, activeContentUrl, visible } = useTextView()
 
-  const [portals, setPortals] = useState([])
 
   const prevClickedTargetIndexRef = useRef<number>(null)
 
@@ -134,65 +128,9 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     const idsArray = annotIds.split(',')
     if (idsArray.length === 0) return
 
-    setHoveredAnnotations(hoveredAnnotations.filter(a => !idsArray.includes(a)))
+    setHoveredAnnotations(hoveredAnnotations?.filter(a => !idsArray.includes(a)))
   }
 
-  // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
-  const parsedDom: Element = React.useMemo(() => {
-    if (htmlString === '') return
-    const doc = new DOMParser().parseFromString(`${htmlString}`, 'text/html')
-    return doc.querySelector('body')
-  }, [htmlString])
-
-  // Make the text visible - set the content of the Document object as children of textWrapperRef.
-  // Create cross ref links with portals.
-  useEffect(() => {
-    if (!parsedDom) return
-
-    const links = getRootCrossRefElements(parsedDom)
-    setPortals(links.map(link => {
-      const mount = document.createElement(link.tagName)
-      link.replaceWith(mount)
-      return createPortal(<CrossRefLink node={link as HTMLElement} />, mount)
-    }))
-
-    textWrapperRef.current.replaceChildren(parsedDom)
-    onReady()
-  }, [parsedDom])
-
-  // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
-  useEffect(() => {
-    if (!annotations || !parsedDom) return
-
-    const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
-      const isSource = cur.target[0].source === activeContentUrl.current
-      const selector = (cur.target[0].selector as CssSelector)?.value
-
-      if (!isSource || !selector) {
-        if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
-        return acc
-      }
-
-      const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
-
-      if (matchedNodes.length > 0) {
-        matchedNodes.forEach(target => {
-          target.addEventListener('click', onClickTarget)
-          target.addEventListener('mouseenter', onMouseEnterTarget)
-          target.addEventListener('mouseleave', onMouseLeaveTarget)
-        })
-
-        acc[cur.id] = {
-          target: matchedNodes,
-          filtered: !selectedAnnotationTypes || isFiltered(cur, selectedAnnotationTypes),
-          annotation: cur
-        }
-      }
-      return acc
-    }, {})
-
-    setMatchedAnnotationsMap(result)
-  }, [parsedDom, annotations])
 
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
@@ -298,8 +236,11 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   }, [selectedAnnotation, displayedMap])
 
   return <div className="relative flex">
-    <div data-text-wrapper ref={textWrapperRef} className={showContentTypeToggle ? 'pt-16' : 'pt-2'}></div>
-    {portals}
+    <div data-text-wrapper  className={showContentTypeToggle ? 'pt-16' : 'pt-2'}></div>
+    <div>
+      <GenericTextRenderer  htmlString={htmlString} onReady={onReady} activeContentUrl={activeContentUrl.current} selectedAnnotationTypes={selectedAnnotationTypes} onClickTarget={onClickTarget}
+        onMouseEnterTarget={onMouseEnterTarget} onMouseLeaveTarget={onMouseLeaveTarget} isAnnotation={false} updateMatchedAnnotationsMap={setMatchedAnnotationsMap} />
+    </div>
   </div>
 })
 
