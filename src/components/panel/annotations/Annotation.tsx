@@ -23,6 +23,7 @@ import {
 } from '@/utils/annotations.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { ChevronDown, ChevronUp } from 'lucide-react'
+import GenericTextRenderer from '@/components/GenericTextRenderer.tsx'
 
 const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 72
 
@@ -47,12 +48,14 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   const [isExpanded, setIsExpanded] = useState(false)
   const [showNestedAnnotations, setShowNestedAnnotations] = useState(false)
 
+  console.log('top', top)
 
   const nestedAnnotationsRef = useRef(null)
 
   const { t } = useTranslation()
 
   const type = data.body['x-content-type']
+  console.log('data', data)
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
 
   useEffect(() => {
@@ -254,7 +257,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
       <Badge variant="accent" className="mb-1">{ typeLabel }</Badge>
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
         { type === 'Variant' && <VariantContent body={data.body} /> }
-        { type !== 'Variant' && <AnnotationContent body={data.body} /> }
+        { type !== 'Variant' && <GenericTextRenderer htmlString={data.body.value}  isAnnotation={true} /> }
       </div>
       { isLong && !isExpanded && renderViewButton('view-more')}
       { isLong && isExpanded && renderViewButton('view-less') }

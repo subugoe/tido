@@ -9,12 +9,12 @@ interface Props {
   htmlString?: string,
   onReady?: () => void,
   matchedAnnotationsMap?: object,
-  activeContentUrl: string,
-  selectedAnnotationTypes: object,
-  updateMatchedAnnotationsMap: (newMatchedAnnotationsMap: object) => void,
-  onClickTarget: (e: Event) => void,
-  onMouseEnterTarget: (e: Event) => void,
-  onMouseLeaveTarget: (e: Event) => void,
+  activeContentUrl?: string,
+  selectedAnnotationTypes?: object,
+  updateMatchedAnnotationsMap?: (newMatchedAnnotationsMap: object) => void,
+  onClickTarget?: (e: Event) => void,
+  onMouseEnterTarget?: (e: Event) => void,
+  onMouseLeaveTarget?: (e: Event) => void,
   isAnnotation: boolean
 }
 const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, matchedAnnotationsMap, updateMatchedAnnotationsMap, activeContentUrl, isAnnotation
@@ -36,6 +36,8 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, matchedAnnotation
     if (!parsedDom) return
 
     const links = getRootCrossRefElements(parsedDom)
+    console.log('parsed dom', parsedDom)
+    console.log('links', links)
     setPortals(links.map(link => {
       const mount = document.createElement(link.tagName)
       link.replaceWith(mount)
@@ -43,12 +45,14 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, matchedAnnotation
     }))
 
     textWrapperRef.current.replaceChildren(parsedDom)
-    onReady()
+    if (onReady) onReady()
   }, [parsedDom])
 
   // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
   useEffect(() => {
     if (!annotations || !parsedDom) return
+
+    if (isAnnotation) return
 
     const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
       const isSource = cur.target[0].source === activeContentUrl
