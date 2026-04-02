@@ -223,9 +223,10 @@ declare global {
 
   interface MatchedAnnotationsMap {
     [annotationId: string]: {
-      target: Element[],
-      filtered: boolean,
-      annotation: Annotation
+      target: string[],
+      filtered?: boolean,
+      annotation: Annotation,
+      nestedAnnotations: Annotation[]
     }
   }
 

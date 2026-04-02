@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
-import AnnotationContent from '@/components/panel/annotations/AnnotationContent.tsx'
 import VariantContent from '@/components/panel/annotations/VariantContent.tsx'
 import { useText } from '@/contexts/TextContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
@@ -48,14 +47,11 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   const [isExpanded, setIsExpanded] = useState(false)
   const [showNestedAnnotations, setShowNestedAnnotations] = useState(false)
 
-  console.log('top', top)
-
   const nestedAnnotationsRef = useRef(null)
 
   const { t } = useTranslation()
 
   const type = data.body['x-content-type']
-  console.log('data', data)
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
 
   useEffect(() => {
@@ -67,6 +63,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     const panelEl = document.getElementById(panelId) as HTMLElement
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => panelEl.querySelector(selector)) : []
 
+    // TODO: flippedNestedMatched should be created each time a new item is navigated and used here
     const flippedNestedMatched = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
     Object.keys(flippedNestedMatched).forEach((targetSelector) => {
       const targetEl = document.querySelector(targetSelector)

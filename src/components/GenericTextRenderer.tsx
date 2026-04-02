@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { getRootCrossRefElements } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
 import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
-import { isFiltered } from '@/utils/annotations.ts'
+import { findTargets, getNestedAnnotations, isFiltered } from '@/utils/annotations.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
@@ -36,8 +36,6 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, matchedAnnotation
     if (!parsedDom) return
 
     const links = getRootCrossRefElements(parsedDom)
-    console.log('parsed dom', parsedDom)
-    console.log('links', links)
     setPortals(links.map(link => {
       const mount = document.createElement(link.tagName)
       link.replaceWith(mount)
@@ -47,6 +45,23 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, matchedAnnotation
     textWrapperRef.current.replaceChildren(parsedDom)
     if (onReady) onReady()
   }, [parsedDom])
+
+  function createMatchedAnnotationsMap(annotations: Annotation[], selectedAnnotationTypes: AnnotationTypesDict = {}) {
+    if (!annotations) return
+    const matchedAnnotationsMap: MatchedAnnotationsMap = {}
+    annotations.forEach((annotation) => {
+      const nestedAnnotations = getNestedAnnotations(annotation, annotations)
+      const target = findTargets(annotation)
+      matchedAnnotationsMap[annotation.id] = {
+        nestedAnnotations,
+        target,
+        annotation
+      }
+      if (annotation.target[0].source.endsWith('.html')) matchedAnnotationsMap[annotation.id].filtered = !selectedAnnotationTypes || isFiltered(annotation, selectedAnnotationTypes)
+    })
+
+    return matchedAnnotationsMap
+  }
 
   // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
   useEffect(() => {
@@ -77,7 +92,7 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, matchedAnnotation
           annotation: cur
         }
 
-        if (!isAnnotation) acc[cur.id].filtered = !selectedAnnotationTypes || isFiltered(cur, selectedAnnotationTypes)
+        acc[cur.id].filtered = !selectedAnnotationTypes || isFiltered(cur, selectedAnnotationTypes)
       }
       return acc
     }, {})
