@@ -64,7 +64,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const [portals, setPortals] = useState([])
 
   const prevClickedTargetIndexRef = useRef<number>(null)
-
+  const hoveredAnnotationsRef = useRef<string[] | null>(null)
   const annotationsModeRef = useRef<'aligned' | 'list'>(null)
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
@@ -134,7 +134,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     const idsArray = annotIds.split(',')
     if (idsArray.length === 0) return
 
-    setHoveredAnnotations(hoveredAnnotations.filter(a => !idsArray.includes(a)))
+    setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
   }
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
@@ -196,6 +196,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
+    hoveredAnnotationsRef.current = hoveredAnnotations
     if (!matchedAnnotationsMap) return
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ? matchedAnnotationsMap[selectedAnnotation.id].target : []
