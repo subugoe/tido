@@ -236,8 +236,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   }, [selectedAnnotation, displayedMap])
 
   return <div className="relative flex">
-    <div data-text-wrapper  className={showContentTypeToggle ? 'pt-16' : 'pt-2'}></div>
-    <div>
+    <div data-text-wrapper  className={showContentTypeToggle ? 'pt-16' : 'pt-2'}>
       <GenericTextRenderer  htmlString={htmlString} onReady={onReady} activeContentUrl={activeContentUrl.current} selectedAnnotationTypes={selectedAnnotationTypes} onClickTarget={onClickTarget}
         onMouseEnterTarget={onMouseEnterTarget} onMouseLeaveTarget={onMouseLeaveTarget} isAnnotation={false} updateMatchedAnnotationsMap={setMatchedAnnotationsMap} />
     </div>
