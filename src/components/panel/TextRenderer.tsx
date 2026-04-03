@@ -50,6 +50,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     updatePanel,
     selectedAnnotation,
     annotationsMode,
+    panelId
   } = usePanel()
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
@@ -134,9 +135,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   // Update hover styles each time hoveredAnnotation changes
   useEffect(() => {
     if (!matchedAnnotationsMap) return
+    const panelEl = document.getElementById(panelId)
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ?
-      matchedAnnotationsMap[selectedAnnotation.id].target.map((selector) => document.querySelector(selector)) : []
+      matchedAnnotationsMap[selectedAnnotation.id].target.map((selector) => panelEl.querySelector(selector)) : []
 
     flippedMatchedAnnotationsMapRef.current?.forEach(fa => {
       const target = fa.target as HTMLElement

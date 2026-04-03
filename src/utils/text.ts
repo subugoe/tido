@@ -254,6 +254,7 @@ export {
   getTextTargets,
   getHoveredAnnotationsIds,
   isSelected,
+  getParents,
   isTargetPartOfSelectedAnnotation,
   assignNestedTargetsInFlippedMatched,
   getTargetsHoveredAnnotations,

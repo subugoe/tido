@@ -113,7 +113,7 @@ function findTargets(annotation: Annotation): string[] {
   })
 }
 
-function getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap: NestedMatchedAnnotationsMap) {
+function getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap: MatchedAnnotationsMap) {
   // append only the targets which are located in 'Annotation', but not in 'Text'
   const flippedNestedMatchedAnnotationsMap: FlippedNestedMatchedAnnotationsMap = {}
 

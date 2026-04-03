@@ -10,7 +10,7 @@ import AnnotationFooter from '@/components/panel/annotations/AnnotationFooter.ts
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 import {
   addHighlightStyle,
-  addHoverStyle, addSelectedStyle, isTargetPartOfSelectedAnnotation,
+  addHoverStyle, addNestedTargetStyle, addSelectedStyle, getParents, isParentHovered, isTargetPartOfSelectedAnnotation,
   removeHighlightStyle,
   removeHoverStyle,
   removeSelectedStyle
@@ -82,26 +82,44 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     })
   }, [data, selectedAnnotation])
 
+  function addParentsToTarget(flippedNestedMatchedAnnotationsMap: FlippedNestedMatchedAnnotationsMap, targetsInSidebar: Element[]) {
+    const newFlippedNestedMatchedAnnotationsMap = { ...flippedNestedMatchedAnnotationsMap }
+    Object.keys(flippedNestedMatchedAnnotationsMap).forEach((target) => {
+      const targetEl = flippedNestedMatchedAnnotationsMap[target].el
+      newFlippedNestedMatchedAnnotationsMap[target].parents = getParents(targetsInSidebar, targetEl)
+    })
+    return newFlippedNestedMatchedAnnotationsMap
+  }
+
   useEffect(() => {
     setIsHovered(hoveredNestedAnnotationIds?.includes(data.id))
 
-    const selectorsHoveredAnnotations = hoveredNestedAnnotationIds?.flatMap(id =>
-      nestedMatchedAnnotationsMap[id]?.target ?? []
+    const panelEl = document.getElementById(panelId) as HTMLElement
+    const targetsHoveredAnnotations = hoveredNestedAnnotationIds?.flatMap(id =>
+      nestedMatchedAnnotationsMap[id]?.target.map(selector => panelEl.querySelector(selector)) ?? []
     )
 
-    const panelEl = document.getElementById(panelId) as HTMLElement
     const targetsOfSelectedAnnotation = selectedAnnotation &&
     !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => panelEl.querySelector(selector)) : []
 
-    const flippedNestedMatched = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
+    let flippedNestedMatched = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
+    const targetsInAnnotation = Object.keys(nestedMatchedAnnotationsMap).forEach((annotationId)
+    flippedNestedMatched = addParentsToTarget(flippedNestedMatched, targetsInSidebar)
+
     Object.keys(flippedNestedMatched).forEach((targetSelector) => {
-      const targetEl = panelEl.querySelector(targetSelector)
+      const targetEl = flippedNestedMatched[targetSelector].el
       if (targetEl) {
         removeHighlightStyle(targetEl)
         removeHoverStyle(targetEl)
 
-        if (selectorsHoveredAnnotations?.includes(targetSelector)) {
+        if (targetsHoveredAnnotations?.includes(targetEl)) {
           addHoverStyle(targetEl)
+
+          const hasParentHovered = isParentHovered(targetsHoveredAnnotations, flippedNestedMatched[targetSelector].parents)
+          // TODO: If has parent annotations hovered then add nestedHoverStyle
+          if (hasParentHovered) {
+            addNestedTargetStyle(targetEl)
+          }
         }
         else if (!isTargetPartOfSelectedAnnotation(targetEl, targetsOfSelectedAnnotation)) {
           addHighlightStyle(targetEl)
