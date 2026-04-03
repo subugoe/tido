@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { findTargets, getFilteredAnnotations, getNestedAnnotations } from '@/utils/annotations.ts'
+import {
+  createMatchedAnnotationsMap,
+  getFilteredAnnotations,
+} from '@/utils/annotations.ts'
 
 type State = {
   filteredAnnotations: Annotation[],
@@ -31,16 +34,7 @@ export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!annotations) return
-    const newNestedMatchedAnnotationsMap: NestedMatchedAnnotationsMap = {}
-    annotations.forEach((annotation) => {
-      const nestedAnnotations = getNestedAnnotations(annotation, annotations)
-      const target = findTargets(annotation)
-      newNestedMatchedAnnotationsMap[annotation.id] = {
-        nestedAnnotations,
-        target,
-        annotation
-      }
-    })
+    const newNestedMatchedAnnotationsMap = createMatchedAnnotationsMap(annotations)
     setNestedMatchedAnnotationsMap(newNestedMatchedAnnotationsMap)
   }, [annotations])
 

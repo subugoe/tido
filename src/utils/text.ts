@@ -132,17 +132,18 @@ function flipMatchedAnnotationsMap(map: MatchedAnnotationsMap): MergedAnnotation
     const { target, annotation, filtered } = entry
 
     for (const el of target) {
-      let merged = elementMap.get(el)
+      const targetEl = document.querySelector(el)
+      let merged = elementMap.get(targetEl)
 
       if (!merged) {
         merged = {
-          target: el,
+          target: targetEl,
           annotations: [],
           filtered: [],
           selectedAnnotationIndex: -1,
           parents: []
         }
-        elementMap.set(el, merged)
+        elementMap.set(targetEl, merged)
       }
 
       merged.annotations.push(annotation)
@@ -216,7 +217,7 @@ function getTargetsHoveredAnnotations(hoveredAnnotations: string[], targets: Ele
 
   const annotationsTargets = hoveredAnnotations
     .filter(key => !!(matchedAnnotationsMap[key]))
-    .map(key => matchedAnnotationsMap[key].target).flat()
+    .map(key => document.querySelector(matchedAnnotationsMap[key].target)).flat()
   const uniqueAnnotationTargets = [...new Set(annotationsTargets)]
 
   targets.forEach(t => {

@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { getRootCrossRefElements } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
 import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
-import { findTargets, getNestedAnnotations, isFiltered } from '@/utils/annotations.ts'
+import { createMatchedAnnotationsMap } from '@/utils/annotations.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
@@ -10,14 +10,14 @@ interface Props {
   onReady?: () => void,
   matchedAnnotationsMap?: object,
   activeContentUrl?: string,
-  selectedAnnotationTypes?: object,
+  selectedAnnotationTypes?: AnnotationTypesDict,
   updateMatchedAnnotationsMap?: (newMatchedAnnotationsMap: object) => void,
   onClickTarget?: (e: Event) => void,
   onMouseEnterTarget?: (e: Event) => void,
   onMouseLeaveTarget?: (e: Event) => void,
   isAnnotation: boolean
 }
-const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, matchedAnnotationsMap, updateMatchedAnnotationsMap, activeContentUrl, isAnnotation
+const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnnotationsMap, activeContentUrl, isAnnotation
   , selectedAnnotationTypes, onClickTarget, onMouseEnterTarget, onMouseLeaveTarget }) => {
   const { annotations } = usePanel()
   const [portals, setPortals] = useState([])
@@ -46,59 +46,37 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, matchedAnnotation
     if (onReady) onReady()
   }, [parsedDom])
 
-  function createMatchedAnnotationsMap(annotations: Annotation[], selectedAnnotationTypes: AnnotationTypesDict = {}) {
-    if (!annotations) return
-    const matchedAnnotationsMap: MatchedAnnotationsMap = {}
-    annotations.forEach((annotation) => {
-      const nestedAnnotations = getNestedAnnotations(annotation, annotations)
-      const target = findTargets(annotation)
-      matchedAnnotationsMap[annotation.id] = {
-        nestedAnnotations,
-        target,
-        annotation
-      }
-      if (annotation.target[0].source.endsWith('.html')) matchedAnnotationsMap[annotation.id].filtered = !selectedAnnotationTypes || isFiltered(annotation, selectedAnnotationTypes)
-    })
-
-    return matchedAnnotationsMap
-  }
 
   // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
   useEffect(() => {
     if (!annotations || !parsedDom) return
 
-    if (isAnnotation) return
+    let matchedAnnotationsMap: MatchedAnnotationsMap = {}
+    if (!isAnnotation) {
+      matchedAnnotationsMap = createMatchedAnnotationsMap(annotations, activeContentUrl, selectedAnnotationTypes)
+      // add highlighting to targets in text
+      annotations.forEach((annotation) => {
+        const isSource = annotation.target[0].source === activeContentUrl
+        const selector = (annotation.target[0].selector as CssSelector)?.value
 
-    const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
-      const isSource = cur.target[0].source === activeContentUrl
-      const selector = (cur.target[0].selector as CssSelector)?.value
-
-      if (!isSource || !selector) {
-        if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
-        return acc
-      }
-
-      const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
-
-      if (matchedNodes.length > 0) {
-        matchedNodes.forEach(target => {
-          target.addEventListener('click', onClickTarget)
-          target.addEventListener('mouseenter', onMouseEnterTarget)
-          target.addEventListener('mouseleave', onMouseLeaveTarget)
-        })
-
-        acc[cur.id] = {
-          target: matchedNodes,
-          annotation: cur
+        if (!isSource || !selector) {
+          if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', annotation)
+          return
         }
 
-        acc[cur.id].filtered = !selectedAnnotationTypes || isFiltered(cur, selectedAnnotationTypes)
-      }
-      return acc
-    }, {})
+        const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
 
-    updateMatchedAnnotationsMap(result)
-  }, [parsedDom, annotations])
+        if (matchedNodes.length > 0) {
+          matchedNodes.forEach(target => {
+            target.addEventListener('click', onClickTarget)
+            target.addEventListener('mouseenter', onMouseEnterTarget)
+            target.addEventListener('mouseleave', onMouseLeaveTarget)
+          })
+        }})
+
+      updateMatchedAnnotationsMap(matchedAnnotationsMap)
+    }}, [parsedDom, annotations])
+
 
   return <div ref={textWrapperRef}>
     {portals}

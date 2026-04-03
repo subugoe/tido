@@ -50,7 +50,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     updatePanel,
     selectedAnnotation,
     annotationsMode,
-    annotations,
   } = usePanel()
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
