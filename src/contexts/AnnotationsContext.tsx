@@ -7,8 +7,8 @@ import {
 
 type State = {
   filteredAnnotations: Annotation[],
-  nestedMatchedAnnotationsMap: NestedMatchedAnnotationsMap,
-  setNestedMatchedAnnotationsMap: (newNestedMatchedAnnotationsMap: NestedMatchedAnnotationsMap) => void,
+  nestedMatchedAnnotationsMap: MatchedAnnotationsMap,
+  setNestedMatchedAnnotationsMap: (newNestedMatchedAnnotationsMap: MatchedAnnotationsMap) => void,
   hoveredNestedAnnotationIds: string[],
   setHoveredNestedAnnotationIds: (newHoveredAnnotationIds: string[]) => void,
 }
@@ -18,7 +18,7 @@ const AnnotationsContext = createContext<State>(null)
 export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
   const { matchedAnnotationsMaps, annotations } = usePanel()
   const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([])
-  const [nestedMatchedAnnotationsMap, setNestedMatchedAnnotationsMap ] = useState<NestedMatchedAnnotationsMap>({})
+  const [nestedMatchedAnnotationsMap, setNestedMatchedAnnotationsMap ] = useState<MatchedAnnotationsMap>({})
   const [hoveredNestedAnnotationIds, setHoveredNestedAnnotationIds ] = useState<string[]>([])
 
 

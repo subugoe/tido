@@ -221,25 +221,18 @@ declare global {
     modules?: Module[]
   }
 
-  interface MatchedAnnotationsMap {
-    [annotationId: string]: {
-      target: string[],
-      filtered?: boolean,
-      annotation: Annotation,
-      nestedAnnotations: Annotation[]
-    }
-  }
 
   // we want nestedMatchedAnnotationsMap to be accessible to every annotation.
   // since some childAnnotations are not mounted yet, we can't know the HTMLElement of their targets
   // We would need to maintain 'target': Element[] synchronized among all annotations -> that would require to update
   // state `nestedMatchedAnnotationsMap`, which is not a good practice.
   // Therefore let's keep `target`: string[], also an Array of selectors
-  interface NestedMatchedAnnotationsMap {
+  interface MatchedAnnotationsMap {
     [annotationId: string]: {
+      target: string[],
+      filtered?: boolean,
       annotation: Annotation,
-      nestedAnnotations: Annotation[],
-      target: string[]
+      nestedAnnotations: Annotation[]
     }
   }
 
