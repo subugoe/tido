@@ -67,12 +67,10 @@ function computeNewSelectedAnnotationIndex(targetEntry: MergedAnnotationEntry, p
   return newSelectedAnnotationIndex
 }
 
-function createMatchedAnnotationsMap(annotations: Annotation[], activeContentUrl: string | null = null, selectedAnnotationTypes: AnnotationTypesDict = {}) {
+function createMatchedAnnotationsMap(annotations: Annotation[], selectedAnnotationTypes: AnnotationTypesDict = {}) {
   if (!annotations) return
   const matchedAnnotationsMap: MatchedAnnotationsMap = {}
   annotations.forEach((annotation) => {
-    if (annotation.target[0].source !== activeContentUrl && activeContentUrl) return
-
     const nestedAnnotations = getNestedAnnotations(annotation, annotations)
     const target = findTargets(annotation)
     matchedAnnotationsMap[annotation.id] = {

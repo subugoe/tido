@@ -53,7 +53,8 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
 
     let matchedAnnotationsMap: MatchedAnnotationsMap = {}
     if (!isAnnotation) {
-      matchedAnnotationsMap = createMatchedAnnotationsMap(annotations, activeContentUrl, selectedAnnotationTypes)
+      const annotationsInText = annotations.filter(annotation => annotation.target[0].source === activeContentUrl)
+      matchedAnnotationsMap = createMatchedAnnotationsMap(annotationsInText, selectedAnnotationTypes)
       // add highlighting to targets in text
       annotations.forEach((annotation) => {
         const isSource = annotation.target[0].source === activeContentUrl
