@@ -135,7 +135,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   useEffect(() => {
     if (!matchedAnnotationsMap) return
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
-    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ? matchedAnnotationsMap[selectedAnnotation.id].target : []
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ?
+      matchedAnnotationsMap[selectedAnnotation.id].target.map((selector) => document.querySelector(selector)) : []
 
     flippedMatchedAnnotationsMapRef.current?.forEach(fa => {
       const target = fa.target as HTMLElement
@@ -205,7 +206,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     if (!displayedMap) return
     const targetsOfSelectedAnnotation =
       selectedAnnotation && !!(displayedMap[selectedAnnotation.id])
-        ? displayedMap[selectedAnnotation.id].target
+        ? displayedMap[selectedAnnotation.id].target.map((selector) => document.querySelector(selector))
         : []
 
     flippedMatchedAnnotationsMapRef.current.forEach(fa => {
