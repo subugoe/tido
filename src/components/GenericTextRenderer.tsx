@@ -16,7 +16,11 @@ import {
 } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
 import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
-import { computeNewSelectedAnnotationIndex, createMatchedAnnotationsMap, isFiltered } from '@/utils/annotations.ts'
+import {
+  computeNewSelectedAnnotationIndex,
+  getNestedAnnotations,
+  isFiltered
+} from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
@@ -121,10 +125,9 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
     const matchedAnnotationsMap = matchedAnnotationsMapRef.current
 
     if (!matchedAnnotationsMap) return
-    const panelEl = document.getElementById(panelId)
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ?
-      matchedAnnotationsMap[selectedAnnotation.id].target.map((selector) => panelEl.querySelector(selector)) : []
+      matchedAnnotationsMap[selectedAnnotation.id].target : []
 
     flippedMatchedAnnotationsMapRef.current?.forEach(fa => {
       const target = fa.target as HTMLElement
@@ -171,17 +174,9 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
   useEffect(() => {
     if (!annotations || !parsedDom) return
 
-    let matchedAnnotationsMap: MatchedAnnotationsMap = {}
-
     const annotationsInText = annotations.filter(annotation => annotation.target[0].source === source)
-    matchedAnnotationsMap = createMatchedAnnotationsMap(annotationsInText, isAnnotation)
-    matchedAnnotationsMapRef.current = matchedAnnotationsMap
 
-    if (!isAnnotation) matchedAnnotationsMap = assignFilteredInMap(matchedAnnotationsMap, selectedAnnotationTypes, annotations)
-    flippedMatchedAnnotationsMapRef.current = flipMatchedAnnotationsMap(matchedAnnotationsMap)
-    targetsRef.current = getTextTargets(flippedMatchedAnnotationsMapRef.current)
-
-
+    let matchedAnnotationsMap: MatchedAnnotationsMap = {}
     annotations.forEach((annotation) => {
       const isSource = annotation.target[0].source === source
       const selector = (annotation.target[0].selector as CssSelector)?.value
@@ -193,6 +188,14 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
 
       const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
 
+      const nestedAnnotations = getNestedAnnotations(annotation, annotationsInText)
+      matchedAnnotationsMap[annotation.id] = {
+        nestedAnnotations,
+        target: matchedNodes,
+        annotation
+      }
+      if (isAnnotation) matchedAnnotationsMap[annotation.id].filtered = true
+
       if (matchedNodes.length > 0) {
         matchedNodes.forEach(target => {
           addAnnotationId(target, annotation.id)
@@ -201,6 +204,11 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
           target.addEventListener('mouseleave', onMouseLeaveTarget)
         })
       }})
+
+    if (!isAnnotation) matchedAnnotationsMap = assignFilteredInMap(matchedAnnotationsMap, selectedAnnotationTypes, annotations)
+    matchedAnnotationsMapRef.current = matchedAnnotationsMap
+    flippedMatchedAnnotationsMapRef.current = flipMatchedAnnotationsMap(matchedAnnotationsMap)
+    targetsRef.current = getTextTargets(flippedMatchedAnnotationsMapRef.current)
 
     if (!isAnnotation) updateMatchedAnnotationsMap(matchedAnnotationsMap)
   }, [parsedDom, annotations])

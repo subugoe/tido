@@ -229,7 +229,7 @@ declare global {
   // Therefore let's keep `target`: string[], also an Array of selectors
   interface MatchedAnnotationsMap {
     [annotationId: string]: {
-      target: string[],
+      target: Element[],
       filtered?: boolean,
       annotation: Annotation,
       nestedAnnotations: Annotation[]

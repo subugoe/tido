@@ -82,11 +82,13 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   }
 
 
+
   // Apply highlighting styles on every map update
   useEffect(() => {
     if (!displayedMap) return
     const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(displayedMap)
     targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
+    console.log('targets', targetsRef.current)
     flippedMatchedAnnotationsMapRef.current = assignNestedTargetsInFlippedMatched(targetsRef.current, flippedMatchedAnnotationsMap)
 
     flippedMatchedAnnotationsMapRef.current.forEach(fa => {
@@ -119,7 +121,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     if (!displayedMap) return
     const targetsOfSelectedAnnotation =
       selectedAnnotation && !!(displayedMap[selectedAnnotation.id])
-        ? displayedMap[selectedAnnotation.id].target.map((selector) => document.querySelector(selector))
+        ? displayedMap[selectedAnnotation.id].target
         : []
 
     flippedMatchedAnnotationsMapRef.current.forEach(fa => {
