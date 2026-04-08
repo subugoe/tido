@@ -235,6 +235,13 @@ function isParentHovered(hoveredTargets: Element[], parentsEl: Element[]) {
   )
 }
 
+function containsChildren(targets: HTMLElement[], target: HTMLElement) {
+  for(const t of targets) {
+    if (target.contains(t) && target !== t) return true
+  }
+  return false
+}
+
 export {
   addAnnotationId,
   removeAnnotationIds,
@@ -247,6 +254,7 @@ export {
   addSelectedStyle,
   removeSelectedStyle,
   addHighlightStyle,
+  containsChildren,
   removeHighlightStyle,
   getAnnotationIds,
   getRootCrossRefElements,

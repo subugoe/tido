@@ -3,7 +3,7 @@ import {
   addAnnotationId, addHighlightStyle,
   addHoverStyle,
   addNestedTargetStyle,
-  flipMatchedAnnotationsMap,
+  flipMatchedAnnotationsMap, getAnnotationIds,
   getHoveredAnnotationsIds,
   getRootCrossRefElements,
   getTargetsHoveredAnnotations,
@@ -16,9 +16,11 @@ import {
 } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
 import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
-import { createMatchedAnnotationsMap, isFiltered } from '@/utils/annotations.ts'
+import { computeNewSelectedAnnotationIndex, createMatchedAnnotationsMap, isFiltered } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+
+import { containsChildren } from '@/utils/text.ts'
 
 interface Props {
   htmlString?: string,
@@ -27,15 +29,15 @@ interface Props {
   updateMatchedAnnotationsMap?: (newMatchedAnnotationsMap: object) => void,
   annotations: Annotation[],
   source: string,
-  onClickTarget?: (e: Event) => void,
+  onTargetClick?: () => void,
   onMouseLeaveTarget?: (e: Event) => void,
   isAnnotation: boolean
 }
 const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnnotationsMap, annotations, source, isAnnotation
-  , selectedAnnotationTypes, onClickTarget, onMouseLeaveTarget }) => {
+  , selectedAnnotationTypes, onTargetClick ,onMouseLeaveTarget }) => {
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
-  const { selectedAnnotation, panelId } = usePanel()
+  const { selectedAnnotation, setSelectedAnnotation, panelId } = usePanel()
 
   const [portals, setPortals] = useState([])
   const textWrapperRef = useRef<HTMLDivElement>(null)
@@ -44,6 +46,7 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
   const matchedAnnotationsMapRef = useRef<MatchedAnnotationsMap>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
+  const prevClickedTargetIndexRef = useRef<number>(null)
 
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
@@ -77,6 +80,38 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
 
     setHoveredAnnotations(idsArray)
   }
+
+  const onClickTarget = (e: Event) => {
+    // Generic click listener
+    // TODO:  Be careful with state here. This listener will be added once a new map is created.
+    //  So this function will be called with those state values which existed at the time of adding.
+
+    const target = e.currentTarget as Element
+    const targetEntry: MergedAnnotationEntry = flippedMatchedAnnotationsMapRef.current.filter(entry => entry.target === target)[0]
+
+    if (!containsChildren(targetsRef.current, target as HTMLElement)) {
+      // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
+      e.stopPropagation()
+    }
+
+    const idsValue = getAnnotationIds(target)
+    if (!idsValue) return
+
+    targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedAnnotationsMapRef.current)
+
+    const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
+
+    if (annotation) {
+      setSelectedAnnotation(annotation)
+      prevClickedTargetIndexRef.current = flippedMatchedAnnotationsMapRef.current.findIndex(entry => targetEntry === entry)
+      if (onTargetClick) onTargetClick()
+    }
+    else {
+      setSelectedAnnotation(null)
+    }
+  }
+
+
 
   useEffect(() => {
     // get all targets of hoveredAnnotations

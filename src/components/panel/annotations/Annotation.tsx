@@ -15,10 +15,7 @@ import {
   removeHighlightStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
-import {
-  getAnnotationIdsByEl,
-  getFlippedNestedMatchedAnnotationsMap
-} from '@/utils/annotations.ts'
+import { getFlippedNestedMatchedAnnotationsMap } from '@/utils/annotations.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import GenericTextRenderer from '@/components/GenericTextRenderer.tsx'
@@ -81,28 +78,13 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     })
   }, [data, selectedAnnotation])
 
-
-  function onClickTarget(e: Event) {
+  function onTargetClick() {
     // expand parentAnnotation of target when clicking it
     //  clicking at a target -> expands the nested annotations
     //    -> since the nested annotations are expanded, then we show the full parent annotation
     //      -> reason: makes easier the functionality of showing another selected target when clicking at another nested annotation whose target is not initially shown in parentAnnotation
     setIsExpanded(true)
-
-    const nestedAnnotations = nestedAnnotationsRef.current
-    if (nestedAnnotations && nestedAnnotations.length > 0) {
-      // from flippedMatchedAnnotationsMap select its first nested annotation
-      const flippedNestedMatchedAnnotationsMap = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
-      const targetAnnotationIds = getAnnotationIdsByEl(flippedNestedMatchedAnnotationsMap, e.target as HTMLElement)
-      // get the first nested annotation which belongs to the selected target
-      for (let i = 0; i< nestedAnnotations.length; i++ ) {
-        if (targetAnnotationIds.includes(nestedAnnotations[i].id)) {
-          setShowNestedAnnotations(true)
-          setSelectedAnnotation(nestedAnnotations[i])
-          break
-        }
-      }
-    }
+    setShowNestedAnnotations(true)
   }
 
 
@@ -204,7 +186,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
         { type === 'Variant' && <VariantContent body={data.body} /> }
         { type !== 'Variant' && <GenericTextRenderer htmlString={data.body.value} source={data.id} annotations={nestedAnnotationsRef.current}
-          isAnnotation={true} onMouseLeaveTarget={onMouseLeaveTarget} onClickTarget={onClickTarget}  /> }
+          isAnnotation={true} onMouseLeaveTarget={onMouseLeaveTarget} onTargetClick={onTargetClick}  /> }
       </div>
       { isLong && !isExpanded && renderViewButton('view-more')}
       { isLong && isExpanded && renderViewButton('view-less') }

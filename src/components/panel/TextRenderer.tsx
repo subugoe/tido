@@ -24,7 +24,6 @@ import {
   removeHighlightStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
-import { computeNewSelectedAnnotationIndex } from '@/utils/annotations.ts'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import GenericTextRenderer from '@/components/GenericTextRenderer.tsx'
@@ -40,18 +39,15 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const {
     panelState,
     selectedAnnotationTypes,
-    setSelectedAnnotation,
     updatePanel,
     annotations,
     selectedAnnotation,
     annotationsMode,
   } = usePanel()
 
-  const { hoveredAnnotations, setHoveredAnnotations } = useText()
+  const { setHoveredAnnotations } = useText()
   const { matchedAnnotationsMap, setMatchedAnnotationsMap, activeContentUrl, visible } = useTextView()
 
-
-  const prevClickedTargetIndexRef = useRef<number>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
   const annotationsModeRef = useRef<'aligned' | 'list'>(null)
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
@@ -62,43 +58,10 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   // we create a UI-driven value. This applies when the user toggles on/off the TextView.
   const displayedMap = useMemo(() => visible ? matchedAnnotationsMap : {}, [visible, matchedAnnotationsMap])
 
-  function containsChildren(targets: HTMLElement[], target: HTMLElement) {
-    for(const t of targets) {
-      if (target.contains(t) && target !== t) return true
-    }
-    return false
-  }
 
-  const onClickTarget = (e: Event) => {
-    // Generic click listener
-    // TODO:  Be careful with state here. This listener will be added once a new map is created.
-    //  So this function will be called with those state values which existed at the time of adding.
-
-    const target = e.currentTarget as Element
-    const targetEntry: MergedAnnotationEntry = flippedMatchedAnnotationsMapRef.current.filter(entry => entry.target === target)[0]
-
-    if (!containsChildren(targetsRef.current, target as HTMLElement)) {
-      // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
-      e.stopPropagation()
-    }
-
-    const idsValue = getAnnotationIds(target)
-    if (!idsValue) return
-
-    targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedAnnotationsMapRef.current)
-
-    const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
-
-    if (annotation) {
-      if (!panelState.showSidebar) {
-        updatePanel({ showSidebar: true })
-      }
-
-      setSelectedAnnotation(annotation)
-      prevClickedTargetIndexRef.current = flippedMatchedAnnotationsMapRef.current.findIndex(entry => targetEntry === entry)
-    }
-    else {
-      setSelectedAnnotation(null)
+  function onTargetClick() {
+    if (!panelState.showSidebar) {
+      updatePanel({ showSidebar: true })
     }
   }
 
@@ -187,8 +150,8 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
 
   return <div className="relative flex">
     <div data-text-wrapper  className={showContentTypeToggle ? 'pt-16' : 'pt-2'}>
-      <GenericTextRenderer  htmlString={htmlString} onReady={onReady} source={activeContentUrl.current} annotations={annotations} selectedAnnotationTypes={selectedAnnotationTypes} onClickTarget={onClickTarget}
-        onMouseLeaveTarget={onMouseLeaveTarget} isAnnotation={false} updateMatchedAnnotationsMap={setMatchedAnnotationsMap} />
+      <GenericTextRenderer  htmlString={htmlString} onReady={onReady} source={activeContentUrl.current} annotations={annotations} selectedAnnotationTypes={selectedAnnotationTypes}
+        onTargetClick={onTargetClick} onMouseLeaveTarget={onMouseLeaveTarget} isAnnotation={false} updateMatchedAnnotationsMap={setMatchedAnnotationsMap} />
     </div>
   </div>
 })
