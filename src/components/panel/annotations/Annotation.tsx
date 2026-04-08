@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
-import AnnotationContent from '@/components/panel/annotations/AnnotationContent.tsx'
 import VariantContent from '@/components/panel/annotations/VariantContent.tsx'
 import { useText } from '@/contexts/TextContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
@@ -11,18 +10,18 @@ import AnnotationFooter from '@/components/panel/annotations/AnnotationFooter.ts
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 import {
   addHighlightStyle,
-  addHoverStyle, addSelectedStyle, isTargetPartOfSelectedAnnotation,
+  addSelectedStyle,
+  isTargetPartOfSelectedAnnotation,
   removeHighlightStyle,
-  removeHoverStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
 import {
-  findTargetsInsideAnnotation,
   getAnnotationIdsByEl,
   getFlippedNestedMatchedAnnotationsMap
 } from '@/utils/annotations.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { ChevronDown, ChevronUp } from 'lucide-react'
+import GenericTextRenderer from '@/components/GenericTextRenderer.tsx'
 
 const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 72
 
@@ -36,8 +35,8 @@ interface Props {
 
 const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = false }) => {
   const { annotations: annotationsConfig } = useConfig()
-  const { selectedAnnotation, setSelectedAnnotation, annotationsMode, annotations, panelId } = usePanel()
-  const { nestedMatchedAnnotationsMap, hoveredNestedAnnotationIds, setHoveredNestedAnnotationIds  } = useAnnotations()
+  const { selectedAnnotation, setSelectedAnnotation, annotationsMode, panelId } = usePanel()
+  const { nestedMatchedAnnotationsMap, setHoveredNestedAnnotationIds  } = useAnnotations()
   const { setHoveredAnnotations, hoveredAnnotations } = useText()
   const ref = useRef(null)
   const annotationBodyRef = useRef(null)
@@ -46,7 +45,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   const [isLong, setIsLong] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [showNestedAnnotations, setShowNestedAnnotations] = useState(false)
-
 
   const nestedAnnotationsRef = useRef(null)
 
@@ -64,6 +62,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     const panelEl = document.getElementById(panelId) as HTMLElement
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => panelEl.querySelector(selector)) : []
 
+    // TODO: flippedNestedMatched should be created each time a new item is navigated and used here
     const flippedNestedMatched = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
     Object.keys(flippedNestedMatched).forEach((targetSelector) => {
       const targetEl = document.querySelector(targetSelector)
@@ -81,34 +80,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
       }
     })
   }, [data, selectedAnnotation])
-
-  useEffect(() => {
-    setIsHovered(hoveredNestedAnnotationIds?.includes(data.id))
-
-    const selectorsHoveredAnnotations = hoveredNestedAnnotationIds?.flatMap(id =>
-      nestedMatchedAnnotationsMap[id]?.target ?? []
-    )
-
-    const panelEl = document.getElementById(panelId) as HTMLElement
-    const targetsOfSelectedAnnotation = selectedAnnotation &&
-    !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => panelEl.querySelector(selector)) : []
-
-    const flippedNestedMatched = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
-    Object.keys(flippedNestedMatched).forEach((targetSelector) => {
-      const targetEl = panelEl.querySelector(targetSelector)
-      if (targetEl) {
-        removeHighlightStyle(targetEl)
-        removeHoverStyle(targetEl)
-
-        if (selectorsHoveredAnnotations?.includes(targetSelector)) {
-          addHoverStyle(targetEl)
-        }
-        else if (!isTargetPartOfSelectedAnnotation(targetEl, targetsOfSelectedAnnotation)) {
-          addHighlightStyle(targetEl)
-        }
-      }
-    })
-  }, [hoveredNestedAnnotationIds])
 
 
   function onClickTarget(e: Event) {
@@ -135,13 +106,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   }
 
 
-  function onMouseEnterTarget(e: Event) {
-    const flippedNestedMatchedAnnotationsMap = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
-    const annotationIds = getAnnotationIdsByEl(flippedNestedMatchedAnnotationsMap, e.currentTarget as HTMLElement)
-    // add hover style to annotation els
-    setHoveredNestedAnnotationIds(annotationIds)
-  }
-
   function onMouseLeaveTarget() {
     setHoveredNestedAnnotationIds([])
   }
@@ -153,19 +117,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     if (annotBodyHeight > THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT) setIsLong(true)
 
     nestedAnnotationsRef.current = nestedMatchedAnnotationsMap[data.id]['nestedAnnotations']
-
-    // for each new nested Annotation - we add highlighting once it is mounted.
-    const targetsInsideAnnotation = findTargetsInsideAnnotation(data.id, annotations)
-    targetsInsideAnnotation.forEach((selector) => {
-      const target = document.querySelector(selector)
-      if (target) {
-        addHighlightStyle(target)
-        target.addEventListener('click', onClickTarget)
-        target.addEventListener('mouseenter', onMouseEnterTarget)
-        target.addEventListener('mouseleave', onMouseLeaveTarget)
-      }
-    })
   }, [])
+
 
   function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     // we should get the deepest level annotation as selected
@@ -189,10 +142,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   }
 
   function handleMouseEnter() {
-    if (!data.target[0].source.endsWith('.html')) {
-      setHoveredNestedAnnotationIds([data.id])
-      return
-    }
     setHoveredAnnotations([data.id])
   }
 
@@ -254,7 +203,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
       <Badge variant="accent" className="mb-1">{ typeLabel }</Badge>
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
         { type === 'Variant' && <VariantContent body={data.body} /> }
-        { type !== 'Variant' && <AnnotationContent body={data.body} /> }
+        { type !== 'Variant' && <GenericTextRenderer htmlString={data.body.value} source={data.id} annotations={nestedAnnotationsRef.current}
+          isAnnotation={true} onMouseLeaveTarget={onMouseLeaveTarget} onClickTarget={onClickTarget}  /> }
       </div>
       { isLong && !isExpanded && renderViewButton('view-more')}
       { isLong && isExpanded && renderViewButton('view-less') }
