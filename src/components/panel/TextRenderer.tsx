@@ -88,7 +88,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
     if (!displayedMap) return
     const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(displayedMap)
     targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
-    console.log('targets', targetsRef.current)
     flippedMatchedAnnotationsMapRef.current = assignNestedTargetsInFlippedMatched(targetsRef.current, flippedMatchedAnnotationsMap)
 
     flippedMatchedAnnotationsMapRef.current.forEach(fa => {
