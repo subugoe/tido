@@ -14,6 +14,8 @@ const CrossRefLink: FC<Props> = ({  node }) => {
 
   const { panelState } = usePanel()
 
+  if (!node) return null
+
   const isTargetInDiffItem = node.getAttribute('data-ref-item') !== panelState.item?.id
 
   console.log('node in CrossRefLink', node)

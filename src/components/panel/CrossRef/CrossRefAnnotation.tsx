@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
@@ -18,16 +18,7 @@ const CrossRefAnnotation: FC<Props> = ({ nodeLink }) => {
 
   const { annotations } = usePanel()
 
-  const nodeEl = useRef<HTMLElement>(null)
-
-  function getCrossRefAnnotation(annotationEl: HTMLElement, annotations: Annotation[]) {
-    // CrossRefAnnotation is the Annotation which contains CrossRefInformation -> information of our target
-    const annotationId = annotationEl.getAttribute('data-annotation')
-    const crossRefAnnotations = annotations.filter(a => a.body?.source?.['x-content-type'] === 'CrossRef')
-    return crossRefAnnotations.find(annotation =>
-      annotation.target?.some((a) => a.source?.id === annotationId)
-    )
-  }
+  const [nodeEl, setNodeEl] = useState<HTMLElement>(null)
 
   function getContentType(contents: Content[], url: string) {
     const content = contents.find(c => c.url === url)
@@ -37,7 +28,15 @@ const CrossRefAnnotation: FC<Props> = ({ nodeLink }) => {
     return eqIndex !== -1 ? content.type.slice(eqIndex + 1) : content.type
   }
 
+  function getContentUrl(annotationId: string, annotations: Annotation[]) {
+    const annotation = annotations.filter(annotation => annotation.id === annotationId)[0]
+    if (annotation) {
+      return annotation.target[0].source
+    }
+  }
+
   async function getCrossRefEl(crossRefAnnotation: Annotation) {
+    console.log('cross ref annotation', crossRefAnnotation)
     const annotationId = crossRefAnnotation.body?.source?.id
     const collection = crossRefAnnotation.body?.source?.collection
     const manifest = crossRefAnnotation.body?.source?.manifest
@@ -45,7 +44,8 @@ const CrossRefAnnotation: FC<Props> = ({ nodeLink }) => {
 
     // compute content type -> read item object ->
 
-    const contentUrl = crossRefAnnotation.target[0].source
+    const contentUrl = getContentUrl(annotationId, annotations)
+    console.log('content Url', contentUrl)
 
     // get ContentUrl of this annotation
     // read item and find the content type which corresponds to this contentUrl
@@ -62,30 +62,21 @@ const CrossRefAnnotation: FC<Props> = ({ nodeLink }) => {
     node.setAttribute('data-ref-content-type', contentType)
     node.setAttribute('data-selected-annotation', annotationId)
 
-    return node
+    setNodeEl(node)
   }
 
   useEffect(() => {
 
-    async function assignNode(crossRefAnnotation: Annotation) {
-      nodeEl.current = await getCrossRefEl(crossRefAnnotation)
-      //console.log('nodeEl', nodeEl.current)
-    }
-
     if (!annotations) return
 
-    const annotationEl = nodeLink.closest('[data-annotation]') as HTMLElement
-    console.log('annotationEl', annotationEl)
-    if (!annotationEl) return
-    //const annotationEl2 = document.querySelector('[data-annotation="https://textapi.mha.d.sub.uni-goettingen.de/api/annotations/annotationPage/MHA01/B6r/ftn1"]') as HTMLElement
-    //console.log('annotation El as div', annotationEl)
-    const crossRefAnnotation = getCrossRefAnnotation(annotationEl, annotations)
-    assignNode(crossRefAnnotation)
+    const nodeSelector = '#'+ nodeLink.getAttribute('id')
+    const crossRefAnnotations =  annotations.filter(a => a.body?.source?.['x-content-type'] === 'CrossRef')
+    const crossRefAnnotation = crossRefAnnotations.filter(annotation => annotation.target[0].selector.value === nodeSelector)[0]
+    if (crossRefAnnotation)  getCrossRefEl(crossRefAnnotation)
   }, [])
 
 
-
-  return  <CrossRefLink node={nodeLink} />
+  return  <CrossRefLink node={nodeEl} />
 }
 
 export default CrossRefAnnotation
