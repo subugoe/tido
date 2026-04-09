@@ -163,7 +163,7 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
   function assignFilteredInMap(matchedMap: MatchedAnnotationsMap, selectedAnnotationTypes: AnnotationTypesDict, annotations: Annotation[]) {
     const newMap = { ...matchedMap }
     annotations.forEach((annotation) => {
-      if (newMap.hasOwnProperty(annotation.id)) newMap[annotation.id].filtered = !selectedAnnotationTypes || isFiltered(annotation, selectedAnnotationTypes)
+      if (Object.prototype.hasOwnProperty.call(newMap, annotation.id)) newMap[annotation.id].filtered = !selectedAnnotationTypes || isFiltered(annotation, selectedAnnotationTypes)
     })
     return newMap
   }
