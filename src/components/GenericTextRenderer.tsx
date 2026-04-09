@@ -1,55 +1,62 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, memo, useEffect, useRef, useState } from 'react'
 import {
-  addAnnotationId, addHighlightStyle,
+  addAnnotationBaseStyle,
+  addAnnotationId,
+  addHighlightStyle,
   addHoverStyle,
   addNestedTargetStyle,
-  flipMatchedAnnotationsMap, getAnnotationIds,
+  addSelectedStyle,
+  assignNestedTargetsInFlippedMatched,
+  flipMatchedAnnotationsMap,
+  getAnnotationIds,
   getHoveredAnnotationsIds,
   getRootCrossRefElements,
   getTargetsHoveredAnnotations,
   getTextTargets,
   isParentHovered,
   isTargetPartOfSelectedAnnotation,
+  removeAnnotationBaseStyle,
+  removeAnnotationIds,
   removeHighlightStyle,
   removeHoverStyle,
-  removeNestedTargetStyle
+  removeNestedTargetStyle,
+  removeSelectedStyle
 } from '@/utils/text.ts'
 import { createPortal } from 'react-dom'
 import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
-import {
-  computeNewSelectedAnnotationIndex,
-  getNestedAnnotations,
-  isFiltered
-} from '@/utils/annotations.ts'
+import { computeNewSelectedAnnotationIndex, getNestedAnnotations, isFiltered } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { containsChildren } from '@/utils/text.ts'
 
 interface Props {
-  htmlString?: string,
-  onReady?: () => void,
-  selectedAnnotationTypes?: AnnotationTypesDict,
-  updateMatchedAnnotationsMap?: (newMatchedAnnotationsMap: object) => void,
-  annotations: Annotation[],
-  source: string,
-  onTargetClick?: () => void,
-  onMouseLeaveTarget?: (e: Event) => void,
-  isAnnotation: boolean
+  htmlString?: string
+  onReady?: () => void
+  onUpdateMatchedAnnotationsMap?: (map: MatchedAnnotationsMap) => void
+  source: string
+  onSelect?: () => void
+  ignoreFilters?: boolean
 }
-const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnnotationsMap, annotations, source, isAnnotation
-  , selectedAnnotationTypes, onTargetClick ,onMouseLeaveTarget }) => {
+const GenericTextRenderer: FC<Props> = memo(({
+  htmlString,
+  onReady,
+  onUpdateMatchedAnnotationsMap,
+  source,
+  onSelect,
+  ignoreFilters = false
+}) => {
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
-  const { selectedAnnotation, setSelectedAnnotation } = usePanel()
+  const { selectedAnnotation, selectedAnnotationTypes, setSelectedAnnotation, annotations } = usePanel()
   const [portals, setPortals] = useState([])
+  const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
-  const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
-  const matchedAnnotationsMapRef = useRef<MatchedAnnotationsMap>(null)
+  const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const prevClickedTargetIndexRef = useRef<number>(null)
-
+  const hoveredAnnotationsRef = useRef<string[] | null>(null)
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
   const parsedDom: Element = React.useMemo(() => {
@@ -58,7 +65,7 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
     return doc.querySelector('body')
   }, [htmlString])
 
-  // Make the text visible - set the content of the Document object as children of textWrapperRef.
+  // Attach the content of the Document object as children of textWrapperRef.
   // Create cross ref links with portals.
   useEffect(() => {
     if (!parsedDom) return
@@ -74,58 +81,88 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
     if (onReady) onReady()
   }, [parsedDom])
 
-
-  const onMouseEnterTarget = (e: Event) => {
-    const target = e.currentTarget as HTMLElement
-    const idsArray = getHoveredAnnotationsIds(target, targetsRef.current)
-    if (idsArray.length === 0) return
-    setHoveredAnnotations(idsArray)
-  }
-
-  const onClickTarget = (e: Event) => {
-    // Generic click listener
-    // TODO:  Be careful with state here. This listener will be added once a new map is created.
-    //  So this function will be called with those state values which existed at the time of adding.
-
-    const target = e.currentTarget as Element
-    const targetEntry: MergedAnnotationEntry = flippedMatchedAnnotationsMapRef.current.filter(entry => entry.target === target)[0]
-
-    if (!containsChildren(targetsRef.current, target as HTMLElement)) {
-      // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
-      e.stopPropagation()
-    }
-
-    const idsValue = getAnnotationIds(target)
-    if (!idsValue) return
-
-    targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedAnnotationsMapRef.current)
-
-    const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
-
-    if (annotation) {
-      setSelectedAnnotation(annotation)
-      prevClickedTargetIndexRef.current = flippedMatchedAnnotationsMapRef.current.findIndex(entry => targetEntry === entry)
-      if (onTargetClick) onTargetClick()
-    }
-    else {
-      setSelectedAnnotation(null)
-    }
-  }
-
-
+  // Create and set matchedMap by identifying target nodes. Add listeners to targets.
   useEffect(() => {
-    // get all targets of hoveredAnnotations
-    // get all targets of selectedAnnotations
-    // if necessary update styles of targets
+    if (!annotations || !parsedDom) return
+    const annotationsInText = annotations.filter(annotation => annotation.target[0].source === source)
 
-    const matchedAnnotationsMap = matchedAnnotationsMapRef.current
+    const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
+      const isSource = cur.target[0].source === source
+      const selector = (cur.target[0].selector as CssSelector)?.value
 
-    if (!matchedAnnotationsMap) return
-    const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedAnnotationsMap)
-    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedAnnotationsMap[selectedAnnotation.id]) ?
-      matchedAnnotationsMap[selectedAnnotation.id].target : []
+      if (!isSource || !selector) {
+        if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
+        return acc
+      }
 
-    flippedMatchedAnnotationsMapRef.current?.forEach(fa => {
+      const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
+
+      if (matchedNodes.length > 0) {
+        matchedNodes.forEach(target => {
+          target.addEventListener('click', onClickTarget)
+          target.addEventListener('mouseenter', onMouseEnterTarget)
+          target.addEventListener('mouseleave', onMouseLeaveTarget)
+        })
+
+        const nestedAnnotations = getNestedAnnotations(cur, annotationsInText)
+
+        acc[cur.id] = {
+          target: matchedNodes,
+          filtered: !selectedAnnotationTypes || ignoreFilters ||isFiltered(cur, selectedAnnotationTypes),
+          annotation: cur,
+          nestedAnnotations
+        }
+      }
+      return acc
+    }, {})
+    setMatchedMap(result)
+    if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
+
+    flippedMatchedMapRef.current = flipMatchedAnnotationsMap(matchedMap)
+    targetsRef.current = getTextTargets(flippedMatchedMapRef.current)
+
+  }, [parsedDom, annotations])
+
+  // Apply highlighting styles on every map update
+  useEffect(() => {
+    if (!matchedMap) return
+    const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedMap)
+    targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
+    flippedMatchedMapRef.current = assignNestedTargetsInFlippedMatched(targetsRef.current, flippedMatchedAnnotationsMap)
+
+    flippedMatchedMapRef.current.forEach(fa => {
+      const annotations = fa.annotations
+      const target = fa.target
+
+      let someFiltered = false
+
+      removeAnnotationIds(target)
+      removeAnnotationBaseStyle(target)
+      removeHighlightStyle(target)
+
+      // Look if some of the annotations are visible and add the ids of those to the node
+      annotations.forEach((annotation, i) => {
+        if (fa.filtered[i]) {
+          addAnnotationId(target, annotation.id)
+          addAnnotationBaseStyle(target)
+        }
+        someFiltered = !someFiltered ? fa.filtered[i] : true
+      })
+
+      if (someFiltered) {
+        addHighlightStyle(target)
+      }
+    })
+  }, [matchedMap])
+
+  // Update styles of targets if necessary on update of hoveredAnnotations
+  useEffect(() => {
+    if (!matchedMap) return
+    const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedMap)
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.id]) ?
+      matchedMap[selectedAnnotation.id].target : []
+
+    flippedMatchedMapRef.current?.forEach(fa => {
       const target = fa.target as HTMLElement
       const annotations = fa.annotations
 
@@ -156,62 +193,92 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
     })
   }, [hoveredAnnotations])
 
+  // Apply selected styles on every selectedAnnotation update
+  useEffect(() => {
+    if (!matchedMap) return
 
-  function assignFilteredInMap(matchedMap: MatchedAnnotationsMap, selectedAnnotationTypes: AnnotationTypesDict, annotations: Annotation[]) {
-    const newMap = { ...matchedMap }
-    annotations.forEach((annotation) => {
-      if (Object.prototype.hasOwnProperty.call(newMap, annotation.id)) newMap[annotation.id].filtered = !selectedAnnotationTypes || isFiltered(annotation, selectedAnnotationTypes)
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.id])
+      ? matchedMap[selectedAnnotation.id].target
+      : []
+
+    if (!flippedMatchedMapRef.current) return
+
+    flippedMatchedMapRef.current.forEach(fa => {
+      const target = fa.target as HTMLElement
+      const annotations = fa.annotations
+
+      removeSelectedStyle(target)
+      removeHighlightStyle(target)
+
+      let someFiltered = false
+
+      // Look if some of the annotations are visible and add the ids of those to the node
+      annotations.forEach((_, i) => {
+        if (!fa.filtered[i]) return
+        someFiltered = !someFiltered ? fa.filtered[i] : true
+      })
+
+      if (isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
+        addSelectedStyle(target)
+        return
+      } else if(someFiltered) {
+        addHighlightStyle(target)
+      }
     })
-    return newMap
+  }, [selectedAnnotation, matchedMap])
+
+  const onMouseEnterTarget = (e: Event) => {
+    const target = e.currentTarget as HTMLElement
+    const idsArray = getHoveredAnnotationsIds(target, targetsRef.current)
+    if (idsArray.length === 0) return
+
+    setHoveredAnnotations(idsArray)
   }
 
-  // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
-  useEffect(() => {
-    if (!annotations || !parsedDom) return
+  const onMouseLeaveTarget = (e: Event) => {
+    // hoveredAnnotations can contain parent targets.
+    // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
+    const target = e.currentTarget as HTMLElement
+    const annotIds = getAnnotationIds(target)
+    const idsArray = annotIds.split(',')
+    if (idsArray.length === 0) return
 
-    const annotationsInText = annotations.filter(annotation => annotation.target[0].source === source)
+    setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
+  }
 
-    let matchedAnnotationsMap: MatchedAnnotationsMap = {}
-    annotations.forEach((annotation) => {
-      const isSource = annotation.target[0].source === source
-      const selector = (annotation.target[0].selector as CssSelector)?.value
+  const onClickTarget = (e: Event) => {
+    // Generic click listener
+    // TODO:  Be careful with state here. This listener will be added once a new map is created.
+    //  So this function will be called with those state values which existed at the time of adding.
 
-      if (!isSource || !selector) {
-        if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', annotation)
-        return
-      }
+    const target = e.currentTarget as Element
+    const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
 
-      const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
+    if (!containsChildren(targetsRef.current, target as HTMLElement)) {
+      // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
+      e.stopPropagation()
+    }
 
-      const nestedAnnotations = getNestedAnnotations(annotation, annotationsInText)
-      matchedAnnotationsMap[annotation.id] = {
-        nestedAnnotations,
-        target: matchedNodes,
-        annotation
-      }
-      if (isAnnotation) matchedAnnotationsMap[annotation.id].filtered = true
+    const idsValue = getAnnotationIds(target)
+    if (!idsValue) return
 
-      if (matchedNodes.length > 0) {
-        matchedNodes.forEach(target => {
-          addAnnotationId(target, annotation.id)
-          target.addEventListener('click', onClickTarget)
-          target.addEventListener('mouseenter', onMouseEnterTarget)
-          target.addEventListener('mouseleave', onMouseLeaveTarget)
-        })
-      }})
+    targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedMapRef.current)
 
-    if (!isAnnotation) matchedAnnotationsMap = assignFilteredInMap(matchedAnnotationsMap, selectedAnnotationTypes, annotations)
-    matchedAnnotationsMapRef.current = matchedAnnotationsMap
-    flippedMatchedAnnotationsMapRef.current = flipMatchedAnnotationsMap(matchedAnnotationsMap)
-    targetsRef.current = getTextTargets(flippedMatchedAnnotationsMapRef.current)
+    const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
 
-    if (!isAnnotation) updateMatchedAnnotationsMap(matchedAnnotationsMap)
-  }, [parsedDom, annotations])
-
+    if (annotation) {
+      setSelectedAnnotation(annotation)
+      prevClickedTargetIndexRef.current = flippedMatchedMapRef.current.findIndex(entry => targetEntry === entry)
+      if (onSelect) onSelect()
+    }
+    else {
+      setSelectedAnnotation(null)
+    }
+  }
 
   return <div ref={textWrapperRef}>
     {portals}
   </div>
-}
+})
 
 export default GenericTextRenderer
