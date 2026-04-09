@@ -29,7 +29,6 @@ interface Props {
   isNested?: boolean
 }
 
-
 const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = false }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { selectedAnnotation, setSelectedAnnotation, annotationsMode, panelId } = usePanel()
@@ -44,7 +43,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   const [showNestedAnnotations, setShowNestedAnnotations] = useState(false)
 
   const nestedAnnotationsRef = useRef(null)
-
   const { t } = useTranslation()
 
   const type = data.body['x-content-type']
@@ -87,11 +85,9 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     setShowNestedAnnotations(true)
   }
 
-
   function onMouseLeaveTarget() {
     setHoveredNestedAnnotationIds([])
   }
-
 
   useEffect(() => {
     if (!annotationBodyRef.current) return
@@ -100,7 +96,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
 
     nestedAnnotationsRef.current = nestedMatchedAnnotationsMap[data.id]['nestedAnnotations']
   }, [])
-
 
   function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     // we should get the deepest level annotation as selected

@@ -41,12 +41,10 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
   , selectedAnnotationTypes, onTargetClick ,onMouseLeaveTarget }) => {
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
-  const { selectedAnnotation, setSelectedAnnotation, panelId } = usePanel()
-
+  const { selectedAnnotation, setSelectedAnnotation } = usePanel()
   const [portals, setPortals] = useState([])
+
   const textWrapperRef = useRef<HTMLDivElement>(null)
-
-
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
   const matchedAnnotationsMapRef = useRef<MatchedAnnotationsMap>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
@@ -81,7 +79,6 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
     const target = e.currentTarget as HTMLElement
     const idsArray = getHoveredAnnotationsIds(target, targetsRef.current)
     if (idsArray.length === 0) return
-
     setHoveredAnnotations(idsArray)
   }
 
@@ -114,7 +111,6 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
       setSelectedAnnotation(null)
     }
   }
-
 
 
   useEffect(() => {
@@ -164,11 +160,10 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
   function assignFilteredInMap(matchedMap: MatchedAnnotationsMap, selectedAnnotationTypes: AnnotationTypesDict, annotations: Annotation[]) {
     const newMap = { ...matchedMap }
     annotations.forEach((annotation) => {
-      if (newMap.hasOwnProperty(annotation.id)) newMap[annotation.id].filtered = !selectedAnnotationTypes || isFiltered(annotation, selectedAnnotationTypes)
+      if (Object.prototype.hasOwnProperty.call(newMap, annotation.id)) newMap[annotation.id].filtered = !selectedAnnotationTypes || isFiltered(annotation, selectedAnnotationTypes)
     })
     return newMap
   }
-
 
   // Create and set matchedAnnotationsMap by identifying target nodes. Add click listeners to targets.
   useEffect(() => {

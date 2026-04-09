@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useRef } from 'react'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import {
   createMatchedAnnotationsMap,
