@@ -110,6 +110,9 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
     targetEl.scrollIntoView({ behavior: 'smooth' })
   }
 
+  console.log('node', node)
+  console.log('inner html', node.innerHTML)
+
   const link = <a
     type="button"
     onClick={onSelectLink}

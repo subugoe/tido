@@ -164,6 +164,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   return <div
     ref={ref}
     aria-label="annotation"
+    id={data.id}
     data-annotation={data.id}
     {...(isSelected ? { 'data-selected': true } : {})}
     className={` flex flex-col pt-2 rounded-lg border border-border h-fit overflow-x-hidden transition-[top]

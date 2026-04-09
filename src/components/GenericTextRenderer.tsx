@@ -25,6 +25,8 @@ import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { containsChildren } from '@/utils/text.ts'
+import CrossRefAnnotation from '@/components/panel/CrossRef/CrossRefAnnotation.tsx'
+import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 
 interface Props {
   htmlString?: string,
@@ -43,6 +45,7 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
   const { selectedAnnotation, setSelectedAnnotation } = usePanel()
   const [portals, setPortals] = useState([])
+
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedAnnotationsMapRef = useRef<MergedAnnotationEntry[]>(null)
@@ -67,7 +70,8 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
     setPortals(links.map(link => {
       const mount = document.createElement(link.tagName)
       link.replaceWith(mount)
-      return createPortal(<CrossRefLink node={link as HTMLElement} />, mount)
+      const crossRefComp = !isAnnotation ? <CrossRefLink node={link as HTMLElement} /> : <CrossRefAnnotation nodeLink={link as HTMLElement}  />
+      return createPortal(crossRefComp, mount)
     }))
 
     textWrapperRef.current.replaceChildren(parsedDom)

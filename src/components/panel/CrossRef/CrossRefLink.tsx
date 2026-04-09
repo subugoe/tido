@@ -16,6 +16,7 @@ const CrossRefLink: FC<Props> = ({  node }) => {
 
   const isTargetInDiffItem = node.getAttribute('data-ref-item') !== panelState.item?.id
 
+  console.log('node in CrossRefLink', node)
 
   if (isTargetInDiffItem) return <CrossRefDifferentItem node={node} />
   return <CrossRefSameItem node={node} />

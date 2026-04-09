@@ -34,7 +34,7 @@ export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!annotations) return
-    const newNestedMatchedAnnotationsMap = createMatchedAnnotationsMap(annotations)
+    const newNestedMatchedAnnotationsMap = createMatchedAnnotationsMap(annotations, true)
     setNestedMatchedAnnotationsMap(newNestedMatchedAnnotationsMap)
   }, [annotations])
 
