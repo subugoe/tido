@@ -120,6 +120,8 @@ function getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap: Matc
   Object.keys(nestedMatchedAnnotationsMap).forEach((annotationId) => {
     const entry = nestedMatchedAnnotationsMap[annotationId]
     const target = entry.target
+    // body.source content type is used for CrossRef in Annotations -> not relevant
+    if (entry.annotation.body.source?.['x-content-type']) return
     const targetLocation = entry.annotation.target[0].source.endsWith('.html') ? 'text' : 'annotation'
 
     if (targetLocation === 'text') return
