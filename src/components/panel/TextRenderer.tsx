@@ -82,7 +82,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   }
 
 
-
   // Apply highlighting styles on every map update
   useEffect(() => {
     if (!displayedMap) return

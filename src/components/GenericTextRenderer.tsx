@@ -41,7 +41,7 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
   , selectedAnnotationTypes, onTargetClick ,onMouseLeaveTarget }) => {
 
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
-  const { selectedAnnotation, setSelectedAnnotation, panelId } = usePanel()
+  const { selectedAnnotation, setSelectedAnnotation } = usePanel()
 
   const [portals, setPortals] = useState([])
   const textWrapperRef = useRef<HTMLDivElement>(null)
@@ -114,7 +114,6 @@ const GenericTextRenderer: FC<Props> = ({ htmlString, onReady, updateMatchedAnno
       setSelectedAnnotation(null)
     }
   }
-
 
 
   useEffect(() => {
