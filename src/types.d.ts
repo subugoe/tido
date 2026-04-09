@@ -238,8 +238,8 @@ declare global {
 
   interface FlippedNestedMatchedAnnotationsMap {
     [targetSelector: string]: {
-      'el': HTMLElement,
-      'annotationIds': string[],
+      el: HTMLElement,
+      annotationIds: string[],
       parents: Element[]
     }
   }

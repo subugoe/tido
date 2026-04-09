@@ -1,50 +1,62 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import {
-  createMatchedAnnotationsMap,
   getFilteredAnnotations,
 } from '@/utils/annotations.ts'
 
+type MatchedMaps = {[id: string]: MatchedAnnotationsMap}
+
 type State = {
   filteredAnnotations: Annotation[],
-  nestedMatchedAnnotationsMap: MatchedAnnotationsMap,
-  setNestedMatchedAnnotationsMap: (newNestedMatchedAnnotationsMap: MatchedAnnotationsMap) => void,
-  hoveredNestedAnnotationIds: string[],
-  setHoveredNestedAnnotationIds: (newHoveredAnnotationIds: string[]) => void,
+  matchedMaps: MatchedMaps,
+  updateMatchedMap: (id: string, map: MatchedAnnotationsMap) => void
 }
 
 const AnnotationsContext = createContext<State>(null)
 
 export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
-  const { matchedAnnotationsMaps, annotations } = usePanel()
+  const { matchedAnnotationsMaps: textMatchedMaps } = usePanel()
   const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([])
-  const [nestedMatchedAnnotationsMap, setNestedMatchedAnnotationsMap ] = useState<MatchedAnnotationsMap>({})
-  const [hoveredNestedAnnotationIds, setHoveredNestedAnnotationIds ] = useState<string[]>([])
-
+  const [matchedMaps, setMatchedMaps ] = useState<MatchedMaps>({})
 
   useEffect(() => {
     const newFiltered: Annotation[] = []
     Object
-      .keys(matchedAnnotationsMaps)
+      .keys(textMatchedMaps)
       .forEach(contentUrl => {
-        newFiltered.push(...getFilteredAnnotations(matchedAnnotationsMaps[contentUrl]))
+        newFiltered.push(...getFilteredAnnotations(textMatchedMaps[contentUrl]))
       })
     setFilteredAnnotations(newFiltered)
-  }, [matchedAnnotationsMaps])
+  }, [textMatchedMaps])
 
-  useEffect(() => {
-    if (!annotations) return
-    const newNestedMatchedAnnotationsMap = createMatchedAnnotationsMap(annotations)
-    setNestedMatchedAnnotationsMap(newNestedMatchedAnnotationsMap)
-  }, [annotations])
+  function updateMatchedMap(id: string, map: MatchedAnnotationsMap) {
+    setMatchedMaps((prev) => {
+      if (map === null) {
+        if (prev[id]) {
+          // When annotations from the given content url should disappear, remove that key and return the rest
+          return Object.keys(prev).reduce((acc: {[contentUrl: string]: MatchedAnnotationsMap}, key) => {
+            if (key !== id) acc[key] = prev[key]
+            return acc
+          }, {})
+        }
+        // If the given content url was present at all and the caller is trying to add "null" as map,
+        // avoid it and return the old value
+        return prev
+      }
+
+      // If a new value for a map exists, just update it
+      return {
+        ...prev,
+        [id]: map
+      }
+    })
+  }
 
   return (
     <AnnotationsContext.Provider value={{
       filteredAnnotations,
-      nestedMatchedAnnotationsMap,
-      setNestedMatchedAnnotationsMap,
-      hoveredNestedAnnotationIds,
-      setHoveredNestedAnnotationIds
+      matchedMaps,
+      updateMatchedMap
     }}>
       {children}
     </AnnotationsContext.Provider>

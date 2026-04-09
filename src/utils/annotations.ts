@@ -67,7 +67,7 @@ function computeNewSelectedAnnotationIndex(targetEntry: MergedAnnotationEntry, p
   return newSelectedAnnotationIndex
 }
 
-function createMatchedAnnotationsMap(annotations: Annotation[], isAnnotation: boolean) {
+function createMatchedAnnotationsMap(annotations: Annotation[], isAnnotation = false) {
   if (!annotations) return
   const matchedAnnotationsMap: MatchedAnnotationsMap = {}
   annotations.forEach((annotation) => {
