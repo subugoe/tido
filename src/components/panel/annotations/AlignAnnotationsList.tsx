@@ -130,6 +130,10 @@ const AlignAnnotationsList: FC = () => {
         const annotation = filteredAnnotations.find(a => a.id === (el as HTMLElement).getAttribute('data-annotation'))
         if (!annotation) return
         const target: HTMLElement = document.getElementById(panelId).querySelector((annotation.target[0].selector as CssSelector).value)
+        if (!target) {
+          console.error('There exists no target in text from the selector value of this annotation', annotation)
+          return
+        }
         return {
           target,
           el,
@@ -137,7 +141,7 @@ const AlignAnnotationsList: FC = () => {
           annotation
         }
       })
-      setElements(_elements)
+      setElements(_elements.filter(Boolean))
     }
 
     return () => {

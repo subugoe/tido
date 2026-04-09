@@ -229,9 +229,16 @@ function getTargetsHoveredAnnotations(hoveredAnnotations: string[], targets: Ele
 }
 
 function isParentHovered(hoveredTargets: Element[], parentsEl: Element[]) {
-  return parentsEl.some(parent =>
+  return parentsEl?.some(parent =>
     hoveredTargets.some(ht => ht.contains(parent))
   )
+}
+
+function containsChildren(targets: HTMLElement[], target: HTMLElement) {
+  for(const t of targets) {
+    if (target.contains(t) && target !== t) return true
+  }
+  return false
 }
 
 export {
@@ -246,6 +253,7 @@ export {
   addSelectedStyle,
   removeSelectedStyle,
   addHighlightStyle,
+  containsChildren,
   removeHighlightStyle,
   getAnnotationIds,
   getRootCrossRefElements,
@@ -253,6 +261,7 @@ export {
   getTextTargets,
   getHoveredAnnotationsIds,
   isSelected,
+  getParents,
   isTargetPartOfSelectedAnnotation,
   assignNestedTargetsInFlippedMatched,
   getTargetsHoveredAnnotations,
