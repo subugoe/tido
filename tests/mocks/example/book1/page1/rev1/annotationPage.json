@@ -205,7 +205,7 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "Modern usage would be \"who possesses\" but <span id=\"period-phrasing\">period phrasing preserved</span>.",
+        "value": "Modern usage would be \"who possesses\" but <span id=\"period-phrasing\"> period phrasing preserved</span> <span id=\"period-phrasing\"> period phrasing preserved</span> <span data-target=\"#QVausMHA1_text_Anm1\"> cross ref</span.",
         "format": "text/html",
         "x-content-type": "Stylistic Note"
       },
@@ -415,6 +415,75 @@
           "value": "#leavis-criticism"
         }
       }]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-1",
+      "type": "Annotation",
+      "body": {
+        "source": {
+          "id": "http://localhost:8181/example/book2/page3/rev1/annotation-1",
+          "collection": "http://localhost:8181/example/collection.json",
+          "manifest": "http://localhost:8181/example/book2/manifest.json",
+          "item": "http://localhost:8181/example/book2/page3/rev1/item.json",
+          "x-content-type": "CrossRef"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/annotation-normalized-1",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#famous-opening-lines"
+          },
+          "format": "application/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-2",
+      "type": "Annotation",
+      "body": {
+        "source": {
+          "id": "http://localhost:8181/example/book2/page5/rev1/annotation-note-3",
+          "collection": "http://localhost:8181/example/collection.json",
+          "manifest": "http://localhost:8181/example/book2/manifest.json",
+          "item": "http://localhost:8181/example/book2/page5/rev1/item.json",
+          "x-content-type": "CrossRef"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/annotation-2",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#marriage-candidates"
+          },
+          "format": "application/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-3",
+      "type": "Annotation",
+      "body": {
+        "source": {
+          "id": "http://localhost:8181/example/book3/page1/rev1/annotation-commentary-7",
+          "collection": "http://localhost:8181/example/collection.json",
+          "manifest": "http://localhost:8181/example/book3/manifest.json",
+          "item": "http://localhost:8181/example/book3/page1/rev1/item.json",
+          "x-content-type": "CrossRef"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/annotation-3",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#wit-and-sarcasm"
+          },
+          "format": "application/html"
+        }
+      ]
     }
   ]
 }
