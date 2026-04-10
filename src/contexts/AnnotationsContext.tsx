@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import {
-  getFilteredAnnotations,
-} from '@/utils/annotations.ts'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { getFilteredAnnotations } from '@/utils/annotations.ts'
 
 type MatchedMaps = {[id: string]: MatchedAnnotationsMap}
 
@@ -15,16 +14,19 @@ type State = {
 const AnnotationsContext = createContext<State>(null)
 
 export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
+  const { annotations: annotationsConfig } = useConfig()
   const { matchedAnnotationsMaps: textMatchedMaps } = usePanel()
   const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([])
   const [matchedMaps, setMatchedMaps ] = useState<MatchedMaps>({})
 
   useEffect(() => {
+    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
     const newFiltered: Annotation[] = []
     Object
       .keys(textMatchedMaps)
       .forEach(contentUrl => {
-        newFiltered.push(...getFilteredAnnotations(textMatchedMaps[contentUrl]))
+        const filtered = getFilteredAnnotations(textMatchedMaps[contentUrl])
+        newFiltered.push(...filtered.filter(a => !tooltipTypes.includes(a.body['x-content-type'])))
       })
     setFilteredAnnotations(newFiltered)
   }, [textMatchedMaps])

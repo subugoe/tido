@@ -224,6 +224,10 @@ function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): V
     result.defaultMode = defaultMode
   }
 
+  if (!result.tooltipTypes) {
+    result.tooltipTypes = []
+  }
+
   if (result.filters && !result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
 
   function validateNode(node: FilterNode): FilterNode {

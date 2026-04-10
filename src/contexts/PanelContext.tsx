@@ -268,6 +268,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
   useEffect(() => {
     const resultMap: {[contentUrl: string]: MatchedAnnotationsMap} = {}
+    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
     if (selectedAnnotationTypes) {
       Object
         .keys(matchedAnnotationsMaps)
@@ -277,7 +278,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
           Object.keys(map).forEach(id => {
             const { annotation } = map[id]
-            resultMap[contentUrl][id].filtered = isFiltered(annotation, selectedAnnotationTypes)
+            resultMap[contentUrl][id].filtered = isFiltered(annotation, selectedAnnotationTypes, tooltipTypes)
           })
         })
     }
@@ -290,10 +291,12 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     // We extract all occurring types from the annotations that match the text.
     if (annotationsConfig.filters) return
 
+    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
     const types = Object
       .values(matchedAnnotationsMaps)
       .flatMap(map => Object.values(map))
       .map(item => item.annotation.body['x-content-type'])
+      .filter(type => !tooltipTypes.includes(type))
 
     if (types.length === 0) return
 

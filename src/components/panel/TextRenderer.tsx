@@ -48,16 +48,14 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   }, [annotationsMode])
 
 
-  return <div className="relative flex">
-    <div data-text-wrapper className={showContentTypeToggle ? 'pt-16' : 'pt-2'}>
-      <GenericTextRenderer
-        htmlString={htmlString}
-        onReady={onReady}
-        source={activeContentUrl.current}
-        onSelect={onSelect}
-        onUpdateMatchedAnnotationsMap={onMatchedMapUpdate}
-      />
-    </div>
+  return <div className={`relative flex ${showContentTypeToggle ? 'pt-16' : 'pt-2'}`}>
+    <GenericTextRenderer
+      htmlString={htmlString}
+      onReady={onReady}
+      source={activeContentUrl.current}
+      onSelect={onSelect}
+      onUpdateMatchedAnnotationsMap={onMatchedMapUpdate}
+    />
   </div>
 })
 

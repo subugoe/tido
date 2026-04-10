@@ -13,12 +13,15 @@ interface Props {
 const AnnotationFilters: FC<Props> = ({ className }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
+  const { annotationFilters } = usePanel()
   const [open, setOpen] = useState(false)
+
+  const hasFilters = annotationFilters?.items && annotationFilters.items.length > 0
 
   return <div className={cn('flex flex-col items-center', className)}>
     <Popover onOpenChange={(value) => setOpen(value)}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className={open ? 'bg-muted' : ''}><ListFilter />{ t('filters') }</Button>
+        <Button variant="outline" className={open ? 'bg-muted' : ''} disabled={!hasFilters}><ListFilter />{ t('filters') }</Button>
       </PopoverTrigger>
       <PopoverContent
         align="start"

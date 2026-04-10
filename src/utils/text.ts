@@ -1,6 +1,6 @@
 const ANNOTATION_IDS_ATTRIBUTE = 'data-annotation-ids'
 const ANNOTATION_BASE_STYLE = ['rounded']
-const ANNOTATION_HOVER_CLASSES = ['bg-annotation-hover']
+const ANNOTATION_HOVER_CLASSES = ['bg-annotation-hover', 'cursor-pointer']
 const NESTED_TARGET_HOVER_CLASSES = ['outline']
 const SELECTED_ANNOTATION_CLASSES = ['bg-annotation-selected']
 const SELECTED_ANNOTATION_ATTRIBUTE = 'data-annotation-selected'
