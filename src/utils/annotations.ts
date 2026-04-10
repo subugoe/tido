@@ -104,8 +104,10 @@ function getAnnotationIdsByEl(
   return entry?.annotationIds ?? []
 }
 
-function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict) {
+function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, tooltipTypes: string[] = []) {
   const type = annotation.body['x-content-type']
+  if (tooltipTypes.includes(type)) return true
+
   if (!selectedTypes || !selectedTypes[type]) return false
 
   if (type === 'Variant') {

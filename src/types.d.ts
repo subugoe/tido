@@ -401,6 +401,7 @@ export interface AnnotationTypeConfigMap {
 export interface AnnotationsConfig {
   filters?: AnnotationFiltersConfig
   types?: AnnotationTypeConfigMap,
+  tooltipTypes?: string[]
   singleMode?: AnnotationsMode,
   defaultMode?: AnnotationsMode
 }

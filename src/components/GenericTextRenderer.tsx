@@ -29,6 +29,8 @@ import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { containsChildren } from '@/utils/text.ts'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
+import TooltipAnnotation from '@/components/panel/annotations/TooltipAnnotation.tsx'
 
 interface Props {
   htmlString?: string
@@ -46,11 +48,15 @@ const GenericTextRenderer: FC<Props> = memo(({
   onSelect,
   ignoreFilters = false
 }) => {
-
+  const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
   const { selectedAnnotation, selectedAnnotationTypes, setSelectedAnnotation, annotations } = usePanel()
   const [portals, setPortals] = useState([])
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
+
+  const [tooltipAnnotation, setTooltipAnnotation] = useState<Annotation | null>(null)
+  const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
+  const [tooltipOpen, setTooltipOpen] = useState(false)
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
@@ -98,6 +104,8 @@ const GenericTextRenderer: FC<Props> = memo(({
       const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
 
       if (matchedNodes.length > 0) {
+        const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
+
         matchedNodes.forEach(target => {
           target.addEventListener('click', onClickTarget)
           target.addEventListener('mouseenter', onMouseEnterTarget)
@@ -108,7 +116,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
         acc[cur.id] = {
           target: matchedNodes,
-          filtered: !selectedAnnotationTypes || ignoreFilters ||isFiltered(cur, selectedAnnotationTypes),
+          filtered: !selectedAnnotationTypes || ignoreFilters || isFiltered(cur, selectedAnnotationTypes, tooltipTypes),
           annotation: cur,
           nestedAnnotations
         }
@@ -121,7 +129,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     flippedMatchedMapRef.current = flipMatchedAnnotationsMap(matchedMap)
     targetsRef.current = getTextTargets(flippedMatchedMapRef.current)
 
-  }, [parsedDom, annotations])
+  }, [parsedDom, annotations, annotationsConfig])
 
   // Apply highlighting styles on every map update
   useEffect(() => {
@@ -267,17 +275,39 @@ const GenericTextRenderer: FC<Props> = memo(({
     const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
 
     if (annotation) {
-      setSelectedAnnotation(annotation)
-      prevClickedTargetIndexRef.current = flippedMatchedMapRef.current.findIndex(entry => targetEntry === entry)
-      if (onSelect) onSelect()
+      const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
+      const contentType = annotation.body['x-content-type']
+
+      if (tooltipTypes.includes(contentType)) {
+        setTooltipAnnotation(annotation)
+        setTooltipTargetElement(target as HTMLElement)
+        setTooltipOpen(true)
+      } else {
+        setSelectedAnnotation(annotation)
+        prevClickedTargetIndexRef.current = flippedMatchedMapRef.current.findIndex(entry => targetEntry === entry)
+        if (onSelect) onSelect()
+      }
     }
     else {
       setSelectedAnnotation(null)
     }
   }
 
-  return <div ref={textWrapperRef}>
+  const closeTooltip = () => {
+    setTooltipAnnotation(null)
+    setTooltipTargetElement(null)
+    setTooltipOpen(false)
+    setHoveredAnnotations([])
+  }
+
+  return <div data-text-wrapper ref={textWrapperRef} className="relative">
     {portals}
+    <TooltipAnnotation
+      annotation={tooltipAnnotation}
+      targetElement={tooltipTargetElement}
+      open={tooltipOpen}
+      onClose={closeTooltip}
+    />
   </div>
 })
 
