@@ -8,17 +8,11 @@ import { useTranslation } from 'react-i18next'
 
 import AnnotationFooter from '@/components/panel/annotations/AnnotationFooter.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
-import {
-  addHighlightStyle,
-  addSelectedStyle,
-  isTargetPartOfSelectedAnnotation,
-  removeHighlightStyle,
-  removeSelectedStyle
-} from '@/utils/text.ts'
-import { getFlippedNestedMatchedAnnotationsMap } from '@/utils/annotations.ts'
+
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import GenericTextRenderer from '@/components/GenericTextRenderer.tsx'
+import { flipMatchedAnnotationsMap } from '@/utils/text.ts'
 
 const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 72
 
@@ -31,18 +25,21 @@ interface Props {
 
 const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = false }) => {
   const { annotations: annotationsConfig } = useConfig()
-  const { selectedAnnotation, setSelectedAnnotation, annotationsMode, panelId } = usePanel()
-  const { nestedMatchedAnnotationsMap, setHoveredNestedAnnotationIds  } = useAnnotations()
+  const { selectedAnnotation, setSelectedAnnotation, annotationsMode, annotations } = usePanel()
+  const { updateMatchedMap } = useAnnotations()
   const { setHoveredAnnotations, hoveredAnnotations } = useText()
-  const ref = useRef(null)
-  const annotationBodyRef = useRef(null)
+
   const [isHovered, setIsHovered] = useState(false)
   const [isSelected, setIsSelected] = useState(false)
   const [isLong, setIsLong] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [showNestedAnnotations, setShowNestedAnnotations] = useState(false)
+  const [showChildAnnotations, setShowChildAnnotations] = useState(false)
+  const [childAnnotations, setChildAnnotations] = useState([])
 
-  const nestedAnnotationsRef = useRef(null)
+  const ref = useRef(null)
+  const annotationBodyRef = useRef(null)
+  const targetsRef = useRef([])
+
   const { t } = useTranslation()
 
   const type = data.body['x-content-type']
@@ -54,48 +51,28 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
 
   useEffect(() => {
     setIsSelected(selectedAnnotation && selectedAnnotation.id === data.id)
-    const panelEl = document.getElementById(panelId) as HTMLElement
-    const targetsOfSelectedAnnotation = selectedAnnotation && !!(nestedMatchedAnnotationsMap[selectedAnnotation.id]) ? nestedMatchedAnnotationsMap[selectedAnnotation.id].target.map((selector: string) => panelEl.querySelector(selector)) : []
-
-    // TODO: flippedNestedMatched should be created each time a new item is navigated and used here
-    const flippedNestedMatched = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
-    Object.keys(flippedNestedMatched).forEach((targetSelector) => {
-      const targetEl = document.querySelector(targetSelector)
-      if (!targetEl) return
-
-      removeSelectedStyle(targetEl)
-      removeHighlightStyle(targetEl)
-
-      if (isTargetPartOfSelectedAnnotation(targetEl, targetsOfSelectedAnnotation)) {
-        addSelectedStyle(targetEl)
-        return
-      }
-      else {
-        addHighlightStyle(targetEl)
-      }
-    })
   }, [data, selectedAnnotation])
 
-  function onTargetClick() {
+  function onSelect() {
     // expand parentAnnotation of target when clicking it
     //  clicking at a target -> expands the nested annotations
     //    -> since the nested annotations are expanded, then we show the full parent annotation
     //      -> reason: makes easier the functionality of showing another selected target when clicking at another nested annotation whose target is not initially shown in parentAnnotation
     setIsExpanded(true)
-    setShowNestedAnnotations(true)
-  }
-
-  function onMouseLeaveTarget() {
-    setHoveredNestedAnnotationIds([])
+    setShowChildAnnotations(true)
   }
 
   useEffect(() => {
     if (!annotationBodyRef.current) return
     const annotBodyHeight = annotationBodyRef.current.clientHeight
     if (annotBodyHeight > THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT) setIsLong(true)
-
-    nestedAnnotationsRef.current = nestedMatchedAnnotationsMap[data.id]['nestedAnnotations']
+    setChildAnnotations(annotations.filter((a) => a.target[0].source === data.id))
   }, [])
+
+  function onUpdateMatchedMap(map: MatchedAnnotationsMap){
+    updateMatchedMap(data.id, map)
+    targetsRef.current = flipMatchedAnnotationsMap(map).map(entry => entry.target)
+  }
 
   function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     // we should get the deepest level annotation as selected
@@ -105,8 +82,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     // this function considers click on Annotation
     // if we have clicked a target -> we should not proceed further in its parentAnnotation, also in this function
     const clickedEl = e.target
-    const flippedMatchedAnnotationsMap = getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap)
-    if (Object.values(flippedMatchedAnnotationsMap).some((entry) => entry.el === clickedEl)) return
+    if (targetsRef.current.includes(clickedEl)) return
 
     if (selectedAnnotation && selectedAnnotation.id === data.id) {
       setIsSelected(false)
@@ -125,20 +101,18 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   function handleMouseLeave() {
     setIsHovered(false)
     setHoveredAnnotations(null)
-    setHoveredNestedAnnotationIds(null)
   }
 
   function expandNestedAnnotations() {
     setIsExpanded(true)
-    setShowNestedAnnotations(true)
+    setShowChildAnnotations(true)
     if (onToggle) onToggle(data)
   }
 
   function collapseNestedAnnotations() {
-    setShowNestedAnnotations(false)
+    setShowChildAnnotations(false)
     if (onToggle) onToggle(data)
   }
-
 
   function handleViewMore(e: React.MouseEvent) {
     e.stopPropagation()
@@ -180,13 +154,24 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
       <Badge variant="accent" className="mb-1">{ typeLabel }</Badge>
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
         { type === 'Variant' && <VariantContent body={data.body} /> }
-        { type !== 'Variant' && <GenericTextRenderer htmlString={data.body.value} source={data.id} annotations={nestedAnnotationsRef.current}
-          isAnnotation={true} onMouseLeaveTarget={onMouseLeaveTarget} onTargetClick={onTargetClick}  /> }
+        { type !== 'Variant' && <GenericTextRenderer
+          htmlString={data.body.value}
+          source={data.id}
+          ignoreFilters={true}
+          onSelect={onSelect}
+          onUpdateMatchedAnnotationsMap={onUpdateMatchedMap}
+        /> }
       </div>
       { isLong && !isExpanded && renderViewButton('view-more')}
       { isLong && isExpanded && renderViewButton('view-less') }
     </div>
-    { nestedAnnotationsRef.current?.length > 0 && <AnnotationFooter nestedAnnotations={nestedAnnotationsRef.current} onToggle={onToggle} showExpanded={showNestedAnnotations} onExpand={expandNestedAnnotations} onCollapse={collapseNestedAnnotations} /> }
+    { childAnnotations.length > 0 && <AnnotationFooter
+      nestedAnnotations={childAnnotations}
+      onToggle={onToggle}
+      showExpanded={showChildAnnotations}
+      onExpand={expandNestedAnnotations}
+      onCollapse={collapseNestedAnnotations}
+    /> }
   </div>
 })
 

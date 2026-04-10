@@ -67,23 +67,6 @@ function computeNewSelectedAnnotationIndex(targetEntry: MergedAnnotationEntry, p
   return newSelectedAnnotationIndex
 }
 
-function createMatchedAnnotationsMap(annotations: Annotation[], isAnnotation: boolean) {
-  if (!annotations) return
-  const matchedAnnotationsMap: MatchedAnnotationsMap = {}
-  annotations.forEach((annotation) => {
-    const nestedAnnotations = getNestedAnnotations(annotation, annotations)
-    const target = findTargets(annotation)
-    matchedAnnotationsMap[annotation.id] = {
-      nestedAnnotations,
-      target,
-      annotation
-    }
-    if (isAnnotation) matchedAnnotationsMap[annotation.id].filtered = true
-  })
-
-  return matchedAnnotationsMap
-}
-
 function getNestedAnnotations(annotation: Annotation, itemAnnotations: Annotation[]) {
   if (itemAnnotations.length === 0) return []
   return itemAnnotations.filter((annot)  => annot.target[0].source === annotation.id)
@@ -113,34 +96,6 @@ function findTargets(annotation: Annotation): string[] {
   })
 }
 
-function getFlippedNestedMatchedAnnotationsMap(nestedMatchedAnnotationsMap: MatchedAnnotationsMap) {
-  // append only the targets which are located in 'Annotation', but not in 'Text'
-  const flippedNestedMatchedAnnotationsMap: FlippedNestedMatchedAnnotationsMap = {}
-
-  Object.keys(nestedMatchedAnnotationsMap).forEach((annotationId) => {
-    const entry = nestedMatchedAnnotationsMap[annotationId]
-    const target = entry.target
-    const targetLocation = entry.annotation.target[0].source.endsWith('.html') ? 'text' : 'annotation'
-
-    if (targetLocation === 'text') return
-
-    target?.forEach((selector: string) => {
-      if (!Object.hasOwn(flippedNestedMatchedAnnotationsMap, selector)) {
-        const el = document.querySelector<HTMLElement>(selector)
-        flippedNestedMatchedAnnotationsMap[selector] = {
-          annotationIds: [annotationId],
-          el
-        }
-      }
-      else {
-        flippedNestedMatchedAnnotationsMap[selector].annotationIds.push(annotationId)
-      }
-    })
-  })
-
-  return flippedNestedMatchedAnnotationsMap
-}
-
 function getAnnotationIdsByEl(
   flipped: Record<string, { el: HTMLElement, annotationIds: string[] }>,
   el: HTMLElement
@@ -166,10 +121,8 @@ export {
   getFilteredAnnotations,
   isFiltered,
   computeNewSelectedAnnotationIndex,
-  createMatchedAnnotationsMap,
   findTargetsInsideAnnotation,
   findTargets,
   getNestedAnnotations,
-  getFlippedNestedMatchedAnnotationsMap,
   getAnnotationIdsByEl
 }

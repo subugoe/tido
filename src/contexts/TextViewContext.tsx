@@ -15,8 +15,6 @@ type State = {
   label: string
   text: string
   visible: boolean
-  matchedAnnotationsMap: MatchedAnnotationsMap
-  setMatchedAnnotationsMap: (map: MatchedAnnotationsMap) => void
 }
 
 const TextViewContext = createContext<State>(null)
@@ -30,14 +28,14 @@ export const TextViewProvider = ({
   visible: boolean
   children: ReactNode
 }) => {
-  const { panelState, loading: loadingPanel, usePanelTranslation, matchedAnnotationsMaps, updateMatchedAnnotationsMap, updatePanel } = usePanel()
+  const { panelState, loading: loadingPanel, usePanelTranslation, updatePanel } = usePanel()
   const { contentTypes, activeContentType, label } = panelState.panelViews[viewIndex] ?? {}
   const { setLoadingText } = useText()
   const { showBoundary } = useErrorBoundary()
   const { t } = usePanelTranslation()
 
   const [textWarning, setTextWarning] = useState('')
-  const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState<MatchedAnnotationsMap>(null)
+  // const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState<MatchedAnnotationsMap>(null)
   const [text, setText] = useState<string>('')
 
   const activeContentUrl = useRef(null)
@@ -45,24 +43,6 @@ export const TextViewProvider = ({
     if (!type) return undefined
     return panelState?.item?.content.find(c => c.type.includes(type))?.url
   }
-
-  // Once a new local map is set, update the higher up map
-  useEffect(() => {
-    if (!activeContentUrl.current || !matchedAnnotationsMap) return
-    const url = activeContentUrl.current
-    updateMatchedAnnotationsMap(url, matchedAnnotationsMap)
-
-    return () => {
-      // On destroy, remove the map from the higher up map
-      updateMatchedAnnotationsMap(url, null)
-    }
-  }, [matchedAnnotationsMap, activeContentUrl])
-
-  // Once the higher up map is updated, update the local map
-  useEffect(() => {
-    if (!Object.hasOwn(matchedAnnotationsMaps, activeContentUrl.current)) return
-    setMatchedAnnotationsMap(matchedAnnotationsMaps[activeContentUrl.current])
-  }, [matchedAnnotationsMaps, setMatchedAnnotationsMap])
 
   useEffect(() => {
     async function updateText(contentUrl: string) {
@@ -130,9 +110,7 @@ export const TextViewProvider = ({
       setActiveContentType,
       label,
       text,
-      visible,
-      matchedAnnotationsMap,
-      setMatchedAnnotationsMap
+      visible
     }}>
       {children}
     </TextViewContext.Provider>

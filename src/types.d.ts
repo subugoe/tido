@@ -236,14 +236,6 @@ declare global {
     }
   }
 
-  interface FlippedNestedMatchedAnnotationsMap {
-    [targetSelector: string]: {
-      'el': HTMLElement,
-      'annotationIds': string[],
-      parents: Element[]
-    }
-  }
-
   interface MergedAnnotationEntry {
     target: Element
     annotations: Annotation[]
