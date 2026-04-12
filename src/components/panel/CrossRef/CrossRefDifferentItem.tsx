@@ -90,7 +90,7 @@ const CrossRefDifferentItem: FC<Props> = ({ node }) => {
     // We need to open that content which contains the cross ref target. Since a panel can have multiple views,
     // we need to find out which view is able to display the content type. Because panel views can be configured freely,
     // we cannot know which view is meant exactly. So we just take the first found.
-    const firstViewIndex = panelState.panelViews.findIndex(view => view.contentTypes.includes(contentType))
+    const firstViewIndex = panelState.panelViews.findIndex(view => view.contentTypes?.includes(contentType))
 
     if (action === 'new') {
       newPanelId = crypto.randomUUID()

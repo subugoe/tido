@@ -46,7 +46,7 @@ declare global {
 
 
   interface Annotation {
-    body: AnnotationBody
+    body: AnnotationBody | AnnotationBodyCrossRef
     target: AnnotationTarget[]
     type: string
     id: string
@@ -64,6 +64,17 @@ declare global {
     'x-content-type': string
     witnesses?: string[]
   }
+
+  interface AnnotationBodyCrossRef {
+    source: {
+      id: string,
+      collection: string,
+      manifest: string,
+      item: string,
+      'x-content-type': string,
+    }
+  }
+
 
   type AnnotationContentFormat = 'text/plain' | 'text/html'
 
@@ -108,6 +119,15 @@ declare global {
   type CssSelector = {
     type: 'CssSelector'
     value: string
+  }
+
+  interface CrossRefInfo {
+    collection: string,
+    manifest: string,
+    item: string,
+    annotationId: string,
+    contentType: string,
+    selectedAnnotation: Annotation
   }
 
   interface DataIntegrity {

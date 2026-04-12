@@ -421,7 +421,7 @@
       "type": "Annotation",
       "body": {
         "source": {
-          "id": "http://localhost:8181/example/book2/page3/rev1/annotation-1",
+          "id": "http://localhost:8181/example/book2/page3/rev1/annotation-normalized-3",
           "collection": "http://localhost:8181/example/collection.json",
           "manifest": "http://localhost:8181/example/book2/manifest.json",
           "item": "http://localhost:8181/example/book2/page3/rev1/item.json",

@@ -66,7 +66,9 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     if (!annotationBodyRef.current) return
     const annotBodyHeight = annotationBodyRef.current.clientHeight
     if (annotBodyHeight > THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT) setIsLong(true)
-    setChildAnnotations(annotations.filter((a) => a.target[0].source === data.id))
+    const children = annotations.filter((a) => a.target[0].source === data.id)
+    const nonCrossRefChildren = children.filter((a) => a.body?.source?.['x-content-type'] !== 'CrossRef')
+    setChildAnnotations(nonCrossRefChildren)
   }, [])
 
   function onUpdateMatchedMap(map: MatchedAnnotationsMap){

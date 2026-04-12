@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example/book2/page3/rev1/annotationCollection.json",
     "label": "Annotations for Moby-Dick, Chapter 3",
-    "total": 4
+    "total": 12
   },
   "next": null,
   "prev": null,
@@ -22,7 +22,7 @@
       },
       "target": [
         {
-          "source": "http://localhost:8181/example/book2/page3/rev1/content.html",
+          "source": "http://localhost:8181/example/book2/page3/rev1/content-diplomatic.html",
           "selector": {
             "type": "CssSelector",
             "value": "#spouter-inn"
@@ -89,6 +89,174 @@
           "selector": {
             "type": "CssSelector",
             "value": "#norm-besmoked"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The oil-painting depicts a whale caught in a storm, foreshadowing the novel's themes of man versus nature.",
+        "format": "text/plain",
+        "x-content-type": "Artistic Object"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#oil-painting"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A harpooneer in the 19th century was a skilled sailor responsible for throwing the harpoon at whales during a hunt.",
+        "format": "text/plain",
+        "x-content-type": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#harpooneer"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-5",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The opening paragraph establishes the inn's cramped, atmospheric setting, central to the mood of the chapter.",
+        "format": "text/plain",
+        "x-content-type": "Setting"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#para1"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-diplomatic-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The manuscript alternates between \"oil-painting\" (hyphenated) and \"oil painting\" across different witness copies.",
+        "format": "text/plain",
+        "x-content-type": "Textual Variant"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#oil-painting"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-diplomatic-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The alternative spelling \"Quohog\" appears in the first American edition (Harper & Brothers, 1851) but was corrected in subsequent printings.",
+        "format": "text/plain",
+        "x-content-type": "Editorial Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-alt"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-diplomatic-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The term \"harpooneer\" is spelled inconsistently across the manuscript; \"harpooner\" (single 'e') also appears.",
+        "format": "text/plain",
+        "x-content-type": "Orthographic Feature"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content-diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#harpooneer"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-normalized-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Normalized to \"Spouter Inn\" (without hyphen) to follow the convention adopted by the Northwestern-Newberry edition.",
+        "format": "text/plain",
+        "x-content-type": "Modernization"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-punct"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page3/rev1/annotation-normalized-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Queequeg's name is retained without normalization as it is Melville's deliberate phonetic rendering of a Polynesian name.",
+        "format": "text/plain",
+        "x-content-type": "Stylistic Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book2/page3/rev1/content-normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#queequeg"
           },
           "format": "text/html",
           "language": "eng"

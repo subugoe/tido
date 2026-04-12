@@ -100,13 +100,15 @@ export async function createNewPanel(
   manifest: Manifest,
   item: Item,
   newPanelViews: PanelView[],
-  newPanelId: string
+  newPanelId: string,
+  showSidebar?: boolean,
 ) {
   const newPanelConfig : PanelConfig = {
     collection: collectionId,
     manifest: manifest.id,
     item: item.id,
-    views: newPanelViews
+    views: newPanelViews,
+    showSidebar: showSidebar ?? false,
   }
 
   useUIStore.getState().updateNewestPanelId(newPanelId)

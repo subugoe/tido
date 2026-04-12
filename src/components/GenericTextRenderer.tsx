@@ -29,6 +29,7 @@ import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { containsChildren } from '@/utils/text.ts'
+import CrossRefTooltip from '@/components/panel/annotations/CrossRefTooltip.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import TooltipAnnotation from '@/components/panel/annotations/TooltipAnnotation.tsx'
 
@@ -80,7 +81,10 @@ const GenericTextRenderer: FC<Props> = memo(({
     setPortals(links.map(link => {
       const mount = document.createElement(link.tagName)
       link.replaceWith(mount)
-      return createPortal(<CrossRefLink node={link as HTMLElement} />, mount)
+      // for now we render two cross ref components based on where it occurs
+      //   in Panel's text we have CrossRefLink
+      //   in Annotation we have CrossRefTooltip
+      return createPortal(source.endsWith('.html') ? <CrossRefLink node={link as HTMLElement} /> : <CrossRefTooltip targetElement={link as HTMLElement} source={source} />, mount)
     }))
 
     textWrapperRef.current.replaceChildren(parsedDom)
