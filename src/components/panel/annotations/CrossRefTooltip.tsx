@@ -98,7 +98,7 @@ const CrossRefTooltip: FC<Props> = ({ targetElement, source }) => {
         className="max-w-60"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-1 py-0.5 flex-col">
+        <div className="flex-col">
           <div className="mb-2"> {t('reference')}</div>
           <div>
             <Button variant="ghost" className="pl-3 w-[90%]" onClick={(e) => openInThisPanel(e, crossRefInfoRef.current)}>{t('open_in_this_panel')}</Button>
