@@ -27,7 +27,8 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import TooltipAnnotation from '@/components/panel/annotations/TooltipAnnotation.tsx'
+import TargetTooltip from '@/components/panel/TargetTooltip.tsx'
+import { apiRequest } from '@/utils/api.ts'
 
 interface Props {
   htmlString?: string
@@ -53,6 +54,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const [tooltipAnnotation, setTooltipAnnotation] = useState<Annotation | null>(null)
   const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
   const [tooltipOpen, setTooltipOpen] = useState(false)
+  const [crossRefInfo, setCrossRefInfo] = useState<CrossRefInfo | null>(null)
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
@@ -161,7 +163,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
       if (someFiltered) {
         if (annotations.length === 1) {
-          if (annotations[0].body?.source?.['x-content-type'] === 'CrossRef') {
+          if ((annotations[0].body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef') {
             addCrossRefTargetStyle(target)
           }
         }
@@ -264,7 +266,35 @@ const GenericTextRenderer: FC<Props> = memo(({
     setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
   }
 
-  const onClickTarget = (e: Event) => {
+  async function getCrossRefInfo(annotation: Annotation) {
+    // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
+
+    const body = annotation.body as AnnotationBodyCrossRef
+    const source = body.source
+    const refItem = source.item
+    const refItemData = await apiRequest<Item>(refItem)
+    const refAnnotationId = source?.id
+
+    const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
+    const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
+    const refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
+    // TODO: In Popover show error when refAnnotation is not found, due to error in CrossRef Information
+    const contentUrl = refAnnotation.target[0].source
+    const refContentType = refItemData.content.find(c => c.url === contentUrl).type?.split('type=')[1]
+
+    return {
+      collection: source.collection,
+      manifest: source.manifest,
+      item: source.item,
+      contentType: refContentType,
+      annotationId: source?.id,
+      selectedAnnotation: refAnnotation
+    }
+  }
+
+
+
+  const onClickTarget = async (e: Event) => {
     // Generic click listener
     // TODO:  Be careful with state here. This listener will be added once a new map is created.
     //  So this function will be called with those state values which existed at the time of adding.
@@ -284,9 +314,20 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
 
+    // compute crossRefInfo
+    const crossRefAnnotation = annotations
+      .filter(a => (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef')
+      .find(a => a.target[0].source === source)
+    if (crossRefAnnotation) {
+      const crossRefInfo = await getCrossRefInfo(crossRefAnnotation)
+      setCrossRefInfo(crossRefInfo)
+      setTooltipTargetElement(target as HTMLElement)
+      setTooltipOpen(true)
+    }
+
     if (annotation) {
       const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-      const contentType = annotation.body['x-content-type']
+      const contentType = (annotation.body as AnnotationBody)['x-content-type']
 
       if (tooltipTypes.includes(contentType)) {
         setTooltipAnnotation(annotation)
@@ -297,8 +338,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         prevClickedTargetIndexRef.current = flippedMatchedMapRef.current.findIndex(entry => targetEntry === entry)
         if (onSelect) onSelect()
       }
-    }
-    else {
+    } else {
       setSelectedAnnotation(null)
     }
   }
@@ -311,12 +351,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   }
 
   return <div data-text-wrapper ref={textWrapperRef} className="relative">
-    <TooltipAnnotation
-      annotation={tooltipAnnotation}
-      targetElement={tooltipTargetElement}
-      open={tooltipOpen}
-      onClose={closeTooltip}
-    />
+    <TargetTooltip annotation={tooltipAnnotation} targetElement={tooltipTargetElement} open={tooltipOpen} onClose={closeTooltip} crossRefInfo={crossRefInfo} />
   </div>
 })
 

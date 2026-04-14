@@ -23,6 +23,7 @@ const CrossRefTarget: FC<Props> = ({ node, source, onClick }) => {
 
     const body = annotation.body as AnnotationBodyCrossRef
     const source = body.source
+    console.log('source', source)
     const refItem = source.item
     const refItemData = await apiRequest<Item>(refItem)
     const refAnnotationId = source?.id
@@ -30,6 +31,8 @@ const CrossRefTarget: FC<Props> = ({ node, source, onClick }) => {
     const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
     const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
     const refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
+    // TODO: In Popover show error when refAnnotation is not found, due to error in CrossRef Information
+    console.log('ref annotation', refAnnotation)
     const contentUrl = refAnnotation.target[0].source
     const refContentType = refItemData.content.find(c => c.url === contentUrl).type?.split('type=')[1]
 

@@ -42,7 +42,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
 
   const { t } = useTranslation()
 
-  const type = data.body['x-content-type']
+  const type = (data.body as AnnotationBody)['x-content-type']
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     const annotBodyHeight = annotationBodyRef.current.clientHeight
     if (annotBodyHeight > THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT) setIsLong(true)
     const children = annotations.filter((a) => a.target[0].source === data.id)
-    const nonCrossRefChildren = children.filter((a) => a.body?.source?.['x-content-type'] !== 'CrossRef')
+    const nonCrossRefChildren = children.filter((a) => (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] !== 'CrossRef')
     setChildAnnotations(nonCrossRefChildren)
   }, [])
 
@@ -155,9 +155,9 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     <div className="px-3 pb-2">
       <Badge variant="accent" className="mb-1">{ typeLabel }</Badge>
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
-        { type === 'Variant' && <VariantContent body={data.body} /> }
+        { type === 'Variant' && <VariantContent body={data.body as AnnotationBody} /> }
         { type !== 'Variant' && <GenericTextRenderer
-          htmlString={data.body.value}
+          htmlString={(data.body as AnnotationBody).value}
           source={data.id}
           ignoreFilters={true}
           onSelect={onSelect}
