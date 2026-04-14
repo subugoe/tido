@@ -1,7 +1,7 @@
 import React, { FC, memo, useEffect, useRef, useState } from 'react'
 import {
   addAnnotationBaseStyle,
-  addAnnotationId,
+  addAnnotationId, addCrossRefTargetStyle,
   addHighlightStyle,
   addHoverStyle,
   addNestedTargetStyle,
@@ -10,7 +10,6 @@ import {
   flipMatchedAnnotationsMap,
   getAnnotationIds,
   getHoveredAnnotationsIds,
-  getRootCrossRefElements,
   getTargetsHoveredAnnotations,
   getTextTargets,
   isParentHovered,
@@ -22,14 +21,11 @@ import {
   removeNestedTargetStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
-import { createPortal } from 'react-dom'
-import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
 import { computeNewSelectedAnnotationIndex, getNestedAnnotations, isFiltered } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { containsChildren } from '@/utils/text.ts'
-import CrossRefTooltip from '@/components/panel/annotations/CrossRefTooltip.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import TooltipAnnotation from '@/components/panel/annotations/TooltipAnnotation.tsx'
 
@@ -52,7 +48,6 @@ const GenericTextRenderer: FC<Props> = memo(({
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
   const { selectedAnnotation, selectedAnnotationTypes, setSelectedAnnotation, annotations } = usePanel()
-  const [portals, setPortals] = useState([])
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
   const [tooltipAnnotation, setTooltipAnnotation] = useState<Annotation | null>(null)
@@ -77,15 +72,18 @@ const GenericTextRenderer: FC<Props> = memo(({
   useEffect(() => {
     if (!parsedDom) return
 
-    const links = getRootCrossRefElements(parsedDom)
-    setPortals(links.map(link => {
-      const mount = document.createElement(link.tagName)
-      link.replaceWith(mount)
-      // for now we render two cross ref components based on where it occurs
-      //   in Panel's text we have CrossRefLink
-      //   in Annotation we have CrossRefTooltip
-      return createPortal(source.endsWith('.html') ? <CrossRefLink node={link as HTMLElement} /> : <CrossRefTooltip targetElement={link as HTMLElement} source={source} />, mount)
-    }))
+
+    /*
+    // TODO: when we have only CrossRef to this target and NOT normal annotations, to display this as link
+    // add highlight style to crossRef
+    const crossRefAnnotations = annotations.filter(annotation => annotation.target[0].source === source && annotation.body?.source?.['x-content-type'] === 'CrossRef')
+    crossRefAnnotations.forEach(annotation => {
+      const selector = (annotation.target[0].selector as CssSelector)?.value
+      if (!selector) return
+      Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
+        addHighlightStyle(el)
+      })
+    }) */
 
     textWrapperRef.current.replaceChildren(parsedDom)
     if (onReady) onReady()
@@ -162,7 +160,15 @@ const GenericTextRenderer: FC<Props> = memo(({
       })
 
       if (someFiltered) {
-        addHighlightStyle(target)
+        if (annotations.length === 1) {
+          if (annotations[0].body?.source?.['x-content-type'] === 'CrossRef') {
+            addCrossRefTargetStyle(target)
+          }
+        }
+        else {
+          addHighlightStyle(target)
+        }
+
       }
     })
   }, [matchedMap])
@@ -305,7 +311,6 @@ const GenericTextRenderer: FC<Props> = memo(({
   }
 
   return <div data-text-wrapper ref={textWrapperRef} className="relative">
-    {portals}
     <TooltipAnnotation
       annotation={tooltipAnnotation}
       targetElement={tooltipTargetElement}

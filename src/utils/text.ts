@@ -5,6 +5,7 @@ const NESTED_TARGET_HOVER_CLASSES = ['outline']
 const SELECTED_ANNOTATION_CLASSES = ['bg-annotation-selected']
 const SELECTED_ANNOTATION_ATTRIBUTE = 'data-annotation-selected'
 const HIGHLIGHTING_STYLE = ['bg-gray-200', 'dark:bg-muted', 'relative', 'cursor-pointer']
+const CROSS_REF_TARGET_STYLE = ['text-blue-500']
 const CROSS_REF_ATTRIBUTE = 'data-target'
 const CROSS_REF_REL_ATTRIBUTE = 'rel'
 const CROSS_REF_REL_STYLE = ['bg-gray-400', 'font-bold']
@@ -64,6 +65,10 @@ function removeSelectedStyle(target: Element) {
 
 function getAnnotationIds(target: Element) {
   return target.getAttribute(ANNOTATION_IDS_ATTRIBUTE)
+}
+
+function addCrossRefTargetStyle(target: Element) {
+  target.classList.add(...CROSS_REF_TARGET_STYLE)
 }
 
 
@@ -265,5 +270,6 @@ export {
   isTargetPartOfSelectedAnnotation,
   assignNestedTargetsInFlippedMatched,
   getTargetsHoveredAnnotations,
-  isParentHovered
+  isParentHovered,
+  addCrossRefTargetStyle
 }
