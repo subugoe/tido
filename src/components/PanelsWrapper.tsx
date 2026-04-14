@@ -5,7 +5,7 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 import Panel from '@/components/panel/Panel.tsx'
 
 interface Props {
-  onPanelsLoaded: () => void
+  onPanelsLoaded?: () => void
 }
 
 const PanelsWrapper: FC<Props> = ({ onPanelsLoaded }) => {
@@ -22,7 +22,9 @@ const PanelsWrapper: FC<Props> = ({ onPanelsLoaded }) => {
 
   function incrementPanelLoaded() {
     numberPanelsLoadedRef.current += 1
-    if (numberPanelsLoadedRef.current === panels.length) onPanelsLoaded()
+    if (numberPanelsLoadedRef.current === panels.length && onPanelsLoaded) {
+      onPanelsLoaded()
+    }
   }
 
 
