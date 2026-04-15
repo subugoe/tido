@@ -132,6 +132,7 @@ declare global {
     selectedAnnotation?: Annotation,
     manifestLabel?: string,
     itemLabel?: string,
+    isDifferentItem: boolean
   }
 
   interface DataIntegrity {

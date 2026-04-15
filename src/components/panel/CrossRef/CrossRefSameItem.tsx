@@ -122,7 +122,7 @@ const CrossRefSameItem: FC<Props> = ({ node }) => {
       <DropdownMenuTrigger>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="p-2 max-w-sm text-wrap">
-        <Content error={error} itemLabel={itemLabel} manifestLabel={manifestLabel} node={node}
+        <Content error={error} itemLabel={itemLabel} manifestLabel={manifestLabel}
           actionLabelThisPanel={t('jump_to')} actionNewPanel={openInNewPanel} actionThisPanel={jumpTo} />
       </DropdownMenuContent>
     </DropdownMenu></>

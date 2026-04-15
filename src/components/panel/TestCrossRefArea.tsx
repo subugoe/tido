@@ -35,6 +35,7 @@ const TestCrossRefArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
             ...crossRefInfo,
             manifestLabel: (manifestData as Manifest).label,
             itemLabel: newItemLabel,
+            isDifferentItem
           }
           // TODO: if (!await existsTargetInText(extendedCrossRefInfoRef.current.refItemData, extendedCrossRefInfoRef.current.contentType, extendedCrossRefInfoRef.current.selector)) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
           loadedData.current = true
@@ -50,8 +51,8 @@ const TestCrossRefArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
   }, [])
 
 
-  if (isDifferentItem) return <CrossRefDifferentItem crossRefInfo={extendedCrossRefInfoRef.current} error={error} loading={loading} onSelect={onSelect} />
-  return <div>Cross Ref same component</div>
+  return <CrossRefDifferentItem crossRefInfo={extendedCrossRefInfoRef.current} error={error} loading={loading} onSelect={onSelect} />
+
 }
 
 export default TestCrossRefArea

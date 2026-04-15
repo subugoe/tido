@@ -42,7 +42,8 @@ const CrossRefDifferentItem: FC<Props> = ({ crossRefInfo, error, loading, onSele
 
   async function navigate(crossRefInfo: CrossRefInfo, action: string, panelId?: string) {
     let newPanelId = panelId
-    const contentType = crossRefInfo.contentType
+    const contentType = crossRefInfo?.contentType
+
 
     // We need to open that content which contains the cross ref target. Since a panel can have multiple views,
     // we need to find out which view is able to display the content type. Because panel views can be configured freely,
@@ -81,7 +82,7 @@ const CrossRefDifferentItem: FC<Props> = ({ crossRefInfo, error, loading, onSele
       setTimeout(() => {
         const refEl = panelEl.querySelector(refSelector) as HTMLElement
         refEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        if (scrollArea === 'sidebar')   usePanelStore.getState().updatePanel(newPanelId, { selectedAnnotation: crossRefInfo.selectedAnnotation })
+        if (scrollArea === 'sidebar') usePanelStore.getState().updatePanel(newPanelId, { selectedAnnotation: crossRefInfo.selectedAnnotation })
       }, 700)
     })
   }
@@ -89,7 +90,7 @@ const CrossRefDifferentItem: FC<Props> = ({ crossRefInfo, error, loading, onSele
 
   return <div className="max-w-sm text-wrap rounded-lg relative overflow-hidden">
     <Content error={error} itemLabel={crossRefInfo?.itemLabel} manifestLabel={crossRefInfo?.manifestLabel} contentType={crossRefInfo?.contentType}
-      actionLabelThisPanel={t('open_in_this_panel')}  actionNewPanel={openInNewPanel} actionThisPanel={openInThisPanel}  />
+      actionLabelThisPanel={crossRefInfo?.isDifferentItem ? t('open_in_this_panel') : t('jump_to')}  actionNewPanel={openInNewPanel} actionThisPanel={openInThisPanel}  />
     {loading && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
       <Loading size={36} />
     </div>}
