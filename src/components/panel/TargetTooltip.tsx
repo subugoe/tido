@@ -14,7 +14,7 @@ const TargetTooltip: FC<Props> = ({ annotation, targetElement, crossRefInfo,  op
 
   if (!targetElement) return null
 
-  const content = (annotation?.body as AnnotationBody).value
+  const content = (annotation?.body as AnnotationBody)?.value
 
 
   return (
