@@ -17,8 +17,7 @@ describe('Annotations', () => {
 	})
 
 	it('Should open annotation sidebar', () => {
-		openSidebar()
-		sidebar().should('be.visible')
+		cy.get(selectors.sidebarToggle).click().get(selectors.sidebarContainer).should('be.visible')
 	})
 
 	it('Should close annotation sidebar', () => {
