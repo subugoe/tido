@@ -127,9 +127,11 @@ declare global {
     item: string,
     contentType: string,
     selector: string,
-    refItem: Item,
+    refItemData: Item,
     annotationId?: string,
-    selectedAnnotation?: Annotation
+    selectedAnnotation?: Annotation,
+    manifestLabel?: string,
+    itemLabel?: string,
   }
 
   interface DataIntegrity {

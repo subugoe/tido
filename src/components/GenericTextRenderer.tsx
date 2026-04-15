@@ -260,7 +260,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
     const target = e.currentTarget as HTMLElement
     const annotIds = getAnnotationIds(target)
-    const idsArray = annotIds.split(',')
+    const idsArray = annotIds?.split(',')
     if (idsArray.length === 0) return
 
     setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
@@ -274,12 +274,22 @@ const GenericTextRenderer: FC<Props> = memo(({
     const refItem = source.item
     const refItemData = await apiRequest<Item>(refItem)
     const refAnnotationId = source?.id
+    let refAnnotation
 
-    const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
-    const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
-    const refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
+    const isCrossRefInAnnotation = !annotation?.target[0]?.source.endsWith('.html')
+
+    let contentUrl: string
+    if (isCrossRefInAnnotation)  {
+      const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
+      const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
+      refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
+      contentUrl = refAnnotation.target[0].source
+    }
+
+    if (!isCrossRefInAnnotation) contentUrl = annotation.target[0].source
+
     // TODO: In Popover show error when refAnnotation is not found, due to error in CrossRef Information
-    const contentUrl = refAnnotation.target[0].source
+    // TODO: compute refContentType based on where the annotation references
     const refContentType = refItemData.content.find(c => c.url === contentUrl).type?.split('type=')[1]
 
     return {
@@ -288,11 +298,11 @@ const GenericTextRenderer: FC<Props> = memo(({
       item: source.item,
       contentType: refContentType,
       annotationId: source?.id,
-      selectedAnnotation: refAnnotation,
-      selector: (annotation.target[0].selector as CssSelector)?.value
+      ...(isCrossRefInAnnotation && { selectedAnnotation: refAnnotation }),
+      selector: (annotation.target[0].selector as CssSelector)?.value,
+      refItemData
     }
   }
-
 
 
   const onClickTarget = async (e: Event) => {
@@ -319,6 +329,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     const crossRefAnnotation = annotations
       .filter(a => (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef')
       .find(a => a.target[0].source === source)
+
     if (crossRefAnnotation) {
       const crossRefInfo = await getCrossRefInfo(crossRefAnnotation)
       setCrossRefInfo(crossRefInfo)

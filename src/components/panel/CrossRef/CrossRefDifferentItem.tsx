@@ -1,151 +1,99 @@
-import { FC, useRef, useState } from 'react'
+import { FC } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { CustomError } from '@/utils/custom-error.ts'
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu.tsx'
-
 import { createNewPanel, setNewActiveContentType } from '@/utils/panel.ts'
-import { existsTargetInText, waitForElementInDom } from '@/utils/dom.ts'
+import { waitForElementInDom } from '@/utils/dom.ts'
 
 import Content from '@/components/panel/CrossRef/Content'
-import { validateCrossRefNode } from '@/utils/cross-ref.ts'
 import Loading from '@/components/ui/loading.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { apiRequest } from '@/utils/api.ts'
+import { usePanelStore } from '@/store/PanelStore.tsx'
 
 interface Props {
-  node: HTMLElement
+  crossRefInfo: CrossRefInfo,
+  error: CustomError,
+  loading: boolean,
+  onSelect: () => void,
 }
 
-const CrossRefDifferentItem: FC<Props> = ({ node }) => {
+const CrossRefDifferentItem: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => {
 
   const { panelViews: panelViewsConfig } = useConfig()
   const { updatePanel, panelId, usePanelTranslation, panelState } = usePanel()
 
   const { t } = usePanelTranslation()
 
-  const collectionId = node.getAttribute('data-ref-collection')
-  const collection = useRef(null)
-  const manifest = useRef(null)
-  const item = useRef(null)
-  const [itemLabel, setItemLabel] = useState<string>('')
-  const [manifestLabel, setManifestLabel] = useState<string>('')
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [openModal, setOpenModal] = useState(false)
-  const loadedData = useRef<boolean>(null)
-
-
-  async function computeNewItemIndices(sourceEl: HTMLElement) {
-    const { collection: collectionData, manifestData, itemData } = await validateCrossRefNode(sourceEl)
-    collection.current = collectionData
-    manifest.current = manifestData
-    item.current = itemData
-    const newItemLabel = itemData.n ? itemData.n : itemData.title?.length > 0 ? itemData.title[0].title : ''
-    setManifestLabel((manifestData as Manifest).label)
-    setItemLabel(newItemLabel)
-    return itemData
+  function openInThisPanel(e) {
+    e.stopPropagation()
+    onSelect()
+    navigate(crossRefInfo, 'update', panelId)
   }
 
-  async function onSelectLink() {
-    if (!error && !loadedData.current) {
-      setLoading(true)
-      try {
-        const item = await computeNewItemIndices(node)
-        const contentType = node.getAttribute('data-ref-content-type')
-        const selector = node.getAttribute('data-ref-target')
-        if (!await existsTargetInText(item, contentType, selector)) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
-        loadedData.current = true
-      } catch(e) {
-        setError(new CustomError(t(e.name), t(e.message)))
-      } finally {
-        setLoading(false)
-        setOpenModal(true)
-      }
-    }
-
-    setOpenModal(true)
-  }
-
-  function openInThisPanel() {
-    navigate(node, 'update', panelId)
-  }
-
-  function openInNewPanel() {
-    navigate(node, 'new', panelId)
+  function openInNewPanel(e) {
+    e.stopPropagation()
+    onSelect()
+    navigate(crossRefInfo, 'new', panelId)
   }
 
 
-  async function navigate(sourceEl: HTMLElement, action: string, panelId?: string) {
-    let targetEl: HTMLElement | undefined
+  async function navigate(crossRefInfo: CrossRefInfo, action: string, panelId?: string) {
     let newPanelId = panelId
-    const contentType = sourceEl.getAttribute('data-ref-content-type')
-    const selector = sourceEl.getAttribute('data-ref-target')
+    const contentType = crossRefInfo.contentType
 
     // We need to open that content which contains the cross ref target. Since a panel can have multiple views,
     // we need to find out which view is able to display the content type. Because panel views can be configured freely,
     // we cannot know which view is meant exactly. So we just take the first found.
     const firstViewIndex = panelState.panelViews.findIndex(view => view.contentTypes?.includes(contentType))
+    const refManifest = await apiRequest<Manifest>(crossRefInfo.manifest)
+    const refItem = await apiRequest<Item>(crossRefInfo.item)
 
     if (action === 'new') {
       newPanelId = crypto.randomUUID()
       await createNewPanel(
-        collectionId,
-        manifest.current,
-        item.current,
+        crossRefInfo.collection,
+        refManifest,
+        refItem,
         setNewActiveContentType(contentType, firstViewIndex, panelViewsConfig),
-        newPanelId
+        newPanelId,
+        true
       )
-
     } else if (action === 'update') {
-      const collectionId = sourceEl.getAttribute('data-ref-collection')
-      const manifestId = sourceEl.getAttribute('data-ref-manifest')
-      const itemId = sourceEl.getAttribute('data-ref-item')
-
       updatePanel({
         config: {
-          collection: collectionId,
-          manifest: manifestId,
-          item: itemId,
+          collection: crossRefInfo.collection,
+          manifest: crossRefInfo.manifest,
+          item: crossRefInfo.item,
           views: setNewActiveContentType(contentType, firstViewIndex, panelState.panelViews),
-        }
+        },
       })
     }
 
-    waitForElementInDom('#' + newPanelId, selector, (panelEl: HTMLElement) => {
-      targetEl = panelEl.querySelector(selector) as HTMLElement
+    // TODO: is it possible to have  ids for the target in annotation globally unique in sidebar ?
+    const scrollArea = Object.hasOwn(crossRefInfo, 'selectedAnnotation') ? 'sidebar' : 'text'
+    const refSelector = scrollArea === 'text' ? crossRefInfo.selector : `[data-annotation="${crossRefInfo.annotationId}"]`
 
+    waitForElementInDom(`#${newPanelId}`, refSelector, (panelEl: Element) => {
       // use setTimeout to create a small delay before actually scrolling to target
-      setTimeout(async () => {
-        targetEl.scrollIntoView({ behavior: 'smooth' })
-      }, 500)
+      setTimeout(() => {
+        const refEl = panelEl.querySelector(refSelector) as HTMLElement
+        refEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        if (scrollArea === 'sidebar')   usePanelStore.getState().updatePanel(newPanelId, { selectedAnnotation: crossRefInfo.selectedAnnotation })
+      }, 700)
     })
   }
 
-  const link = <a
-    type="button"
-    onClick={onSelectLink}
-    className="text-blue-600 underline cursor-pointer"
-    dangerouslySetInnerHTML={{ __html: node.innerHTML }}
-  ></a>
 
-  return <>{link}
-    <DropdownMenu open={openModal} onOpenChange={() => setOpenModal(!openModal)}>
-      <DropdownMenuTrigger>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" className="p-2 max-w-sm text-wrap rounded-lg relative overflow-hidden">
-        <Content error={error} itemLabel={itemLabel} manifestLabel={manifestLabel} node={node}
-          actionLabelThisPanel={t('open_in_this_panel')}  actionNewPanel={openInNewPanel} actionThisPanel={openInThisPanel}  />
-        {loading && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
-          <Loading size={36} />
-        </div>}
-      </DropdownMenuContent>
-    </DropdownMenu></>
+  return <div className="max-w-sm text-wrap rounded-lg relative overflow-hidden">
+    <Content error={error} itemLabel={crossRefInfo?.itemLabel} manifestLabel={crossRefInfo?.manifestLabel} contentType={crossRefInfo?.contentType}
+      actionLabelThisPanel={t('open_in_this_panel')}  actionNewPanel={openInNewPanel} actionThisPanel={openInThisPanel}  />
+    {loading && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
+      <Loading size={36} />
+    </div>}
+  </div>
 }
 
 export default CrossRefDifferentItem
