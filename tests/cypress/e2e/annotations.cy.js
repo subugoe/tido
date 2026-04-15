@@ -13,7 +13,7 @@ describe('Annotations', () => {
 	}
 
 	beforeEach(() => {
-		cy.visit('/e2e.html?' + annotationConfig)
+		cy.visit('/e2e.html?' + annotationConfig).get('#panels-wrapper').should('be.visible')
 	})
 
 	it('Should open annotation sidebar', () => {
