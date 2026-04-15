@@ -25,6 +25,7 @@ const CrossRefActionArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
 
   useEffect(() => {
     crossRefInfoRef.current = crossRefInfo
+    console.log('cross ref', crossRefInfo)
   }, [])
 
 
@@ -60,12 +61,17 @@ const CrossRefActionArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
       })
     }
 
-    waitForElementInDom(`#${newPanelId}`, `[data-annotation="${crossRefInfo.annotationId}"]`, (panelEl: Element) => {
+    // TODO: is it possible to have  ids for the target in annotation globally unique in sidebar ?
+    const scrollArea = Object.hasOwn(crossRefInfo, 'selectedAnnotation') ? 'sidebar' : 'text'
+    const refSelector = scrollArea === 'text' ? crossRefInfo.selector : `[data-annotation="${crossRefInfo.annotationId}"]`
+
+    // TODO: using selector from target.selector -> located its html el and scroll to it
+    waitForElementInDom(`#${newPanelId}`, refSelector, (panelEl: Element) => {
       // use setTimeout to create a small delay before actually scrolling to target
       setTimeout(() => {
-        const annotationEl = panelEl.querySelector(`[data-annotation="${crossRefInfo.annotationId}"]`) as HTMLElement
-        annotationEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        usePanelStore.getState().updatePanel(newPanelId, { selectedAnnotation: crossRefInfo.selectedAnnotation })
+        const refEl = panelEl.querySelector(refSelector) as HTMLElement
+        refEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        if (scrollArea === 'sidebar')   usePanelStore.getState().updatePanel(newPanelId, { selectedAnnotation: crossRefInfo.selectedAnnotation })
       }, 700)
     })
   }

@@ -288,7 +288,8 @@ const GenericTextRenderer: FC<Props> = memo(({
       item: source.item,
       contentType: refContentType,
       annotationId: source?.id,
-      selectedAnnotation: refAnnotation
+      selectedAnnotation: refAnnotation,
+      selector: (annotation.target[0].selector as CssSelector)?.value
     }
   }
 
