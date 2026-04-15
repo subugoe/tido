@@ -3,13 +3,10 @@ describe('Annotations', () => {
 
 	const selectors = {
 		sidebarToggle: '[data-cy="sidebar-toggle"]',
-		annotationsHeader: '[data-cy="annotations-header"]',
-		annotationsModeToggle: '[data-cy="annotations-mode-toggle"]',
-		sidebarContainer: '[data-sidebar-container="true"]',
-		annotation: '[data-annotation]',
-		filterArea: '[data-cy="annotations-header"]',
-		popover: '[data-radix-popper-content-wrapper]'
+		sidebarContainer: '[data-sidebar-container]'
 	}
+
+	const sidebar = () => cy.get(selectors.sidebarContainer)
 
 	const openSidebar = () => {
 		cy.get(selectors.sidebarToggle).click()
@@ -19,37 +16,37 @@ describe('Annotations', () => {
 		cy.visit('/e2e.html?' + annotationConfig)
 	})
 
-	it('opens annotation sidebar', () => {
+	it('Should open annotation sidebar', () => {
 		openSidebar()
-		cy.get(selectors.sidebarContainer).should('be.visible')
+		sidebar().should('be.visible')
 	})
 
-	it('closes annotation sidebar', () => {
+	it('Should close annotation sidebar', () => {
 		openSidebar()
 		cy.get(selectors.sidebarToggle).click()
 		cy.get(selectors.sidebarContainer).should('not.exist')
 	})
 
-	it('toggles annotation mode list/aligned', () => {
+	it('Should toggle annotation mode list/aligned', () => {
 		openSidebar()
 
-		cy.get(selectors.annotationsModeToggle).within(() => {
+		sidebar().within(() => {
 			cy.get('[data-cy="list"]').should('have.attr', 'data-state', 'on')
 			cy.get('[data-cy="aligned"]').should('have.attr', 'data-state', 'off').click()
 		})
 
 		cy.wait(250)
 
-		cy.get(selectors.annotationsModeToggle).within(() => {
+		sidebar().within(() => {
 			cy.get('[data-cy="aligned"]').should('have.attr', 'data-state', 'on')
 			cy.get('[data-cy="list"]').should('have.attr', 'data-state', 'off')
 		})
 	})
 
-	it('selects exactly one annotation at a time', () => {
+	it('Should select exactly one annotation at a time', () => {
 		openSidebar()
 
-		cy.get(`${selectors.sidebarContainer} ${selectors.annotation}`).as('annots')
+		sidebar().find('[data-annotation]').as('annots')
 		cy.get('@annots').its('length').should('be.gte', 2)
 
 		cy.get('@annots').first().as('first').click().should('have.attr', 'data-selected', 'true')
@@ -58,47 +55,47 @@ describe('Annotations', () => {
 		cy.get('@first').should('not.have.attr', 'data-selected')
 	})
 
-	it('opens filter popover and toggles filters off/on', () => {
+	it('Should open filter popover and toggle filters off/on', () => {
 		openSidebar()
 
-		cy.get(selectors.sidebarContainer).then(($container) => {
-			cy.wrap($container.find(selectors.annotation).length).as('initialCount')
+		sidebar().then(($container) => {
+			cy.wrap($container.find('[data-annotation]').length).as('initialCount')
 		})
 
-		cy.get(selectors.filterArea).contains(/filters/i).click()
-		cy.get(selectors.popover).should('be.visible')
+		sidebar().contains('button', /filters/i).click()
+		cy.get('[data-slot="popover-content"]').should('be.visible')
 
-		cy.get(`${selectors.popover} input[type="checkbox"]`).each(($checkbox) => {
-			if ($checkbox.is(':checked')) {
+		cy.get('[data-slot="popover-content"] [data-slot="checkbox"]').each(($checkbox) => {
+			if ($checkbox.attr('data-state') === 'checked') {
 				cy.wrap($checkbox).click({ force: true })
 			}
 		})
 
 		cy.wait(300)
 		cy.get('@initialCount').then((initialCount) => {
-			cy.get(selectors.sidebarContainer).then(($container) => {
-				expect($container.find(selectors.annotation).length).to.be.lt(initialCount)
+			sidebar().then(($container) => {
+				expect($container.find('[data-annotation]').length).to.be.lt(initialCount)
 			})
 		})
 
-		cy.get(`${selectors.popover} input[type="checkbox"]`).each(($checkbox) => {
-			if (!$checkbox.is(':checked')) {
+		cy.get('[data-slot="popover-content"] [data-slot="checkbox"]').each(($checkbox) => {
+			if ($checkbox.attr('data-state') !== 'checked') {
 				cy.wrap($checkbox).click({ force: true })
 			}
 		})
 
 		cy.wait(300)
 		cy.get('@initialCount').then((initialCount) => {
-			cy.get(selectors.sidebarContainer).then(($container) => {
-				expect($container.find(selectors.annotation).length).to.be.gte(initialCount)
+			sidebar().then(($container) => {
+				expect($container.find('[data-annotation]').length).to.be.gte(initialCount)
 			})
 		})
 	})
 
-	it('expands nested annotation footer if present', () => {
+	it('Should expand nested annotation footer if present', () => {
 		openSidebar()
 
-		cy.get(selectors.sidebarContainer).then(($container) => {
+		sidebar().then(($container) => {
 			const footerButton = $container.find('button').filter((_, el) => /nested annotation/i.test(el.textContent))
 			if (!footerButton.length) {
 				cy.log('No nested annotation footer in this dataset')
@@ -106,17 +103,17 @@ describe('Annotations', () => {
 			}
 
 			cy.wrap(footerButton.first()).click()
-			cy.get(`${selectors.sidebarContainer} ${selectors.annotation}`).should('have.length.at.least', 1)
+			cy.wrap($container.find('[data-annotation]')).should('have.length.at.least', 1)
 			cy.wrap(footerButton.first()).click()
 		})
 	})
 
-	it('supports view more/less on lengthy annotation body when available', () => {
+	it('Should support view more/less on lengthy annotation body when available', () => {
 		openSidebar()
 
-		cy.get('body').then(($body) => {
-			const viewMoreBtn = $body
-				.find(`${selectors.sidebarContainer} button`)
+		sidebar().then(($container) => {
+			const viewMoreBtn = $container
+				.find('button')
 				.filter((_, el) => /view more/i.test(el.textContent))
 
 			if (!viewMoreBtn.length) {
@@ -130,10 +127,10 @@ describe('Annotations', () => {
 		})
 	})
 
-	it('triggers hover events on first annotation', () => {
+	it('Should trigger hover events on first annotation', () => {
 		openSidebar()
 
-		cy.get(`${selectors.sidebarContainer} ${selectors.annotation}`).first().as('firstAnnotation')
+		sidebar().find('[data-annotation]').first().as('firstAnnotation')
 		cy.get('@firstAnnotation').trigger('mouseenter')
 		cy.get('@firstAnnotation').trigger('mouseleave')
 	})
