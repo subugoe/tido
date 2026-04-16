@@ -1,18 +1,40 @@
-import { FC } from 'react'
+import { FC, RefObject, useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverAnchor } from '@/components/ui/popover'
 import CrossRefActionArea from '@/components/panel/CrossRefActionArea.tsx'
 
 interface Props {
   annotation: Annotation | null
   targetElement: HTMLElement | null,
+  wrapperRef: RefObject<HTMLDivElement>,
   crossRefInfo: CrossRefInfo,
   open: boolean
   onClose: () => void
 }
 
-const TargetTooltip: FC<Props> = ({ annotation, targetElement, crossRefInfo,  open, onClose,  }) => {
+interface AnchorRect { left: number; top: number; width: number; height: number }
 
-  if (!targetElement) return null
+const TargetTooltip: FC<Props> = ({ annotation, targetElement, wrapperRef, crossRefInfo,  open, onClose,  }) => {
+  const [anchorRect, setAnchorRect] = useState<AnchorRect | null>(null)
+
+  // 1. Reason why storing the coordinates of target in a state: TargetTooltip reads targetElement.offsetLeft/offsetTop directly in the render function. Every time you hover
+  //   another target, setHoveredAnnotations triggers a re-render of GenericTextRenderer (and thus TargetTooltip), which re-reads the
+  //   live DOM offsets — at that point hover styles may have shifted the layout, so the values differ from when the click happened. fix: capture the position once when targetElement is set, and use those frozen values for the anchor.
+  // 2. the calculations are needed to position the targetTooltip correctly when scrolling or when clicking on target which
+  // is located close to lower edge of viewport, i.e to show it above the target
+
+  useEffect(() => {
+    if (!targetElement || !wrapperRef.current) return
+    const wrapperRect = wrapperRef.current.getBoundingClientRect()
+    const targetRect = targetElement.getBoundingClientRect()
+    setAnchorRect({
+      left: targetRect.left - wrapperRect.left,
+      top: targetRect.top - wrapperRect.top,
+      width: targetRect.width,
+      height: targetRect.height,
+    })
+  }, [targetElement])
+
+  if (!targetElement || !anchorRect) return null
 
   const content = (annotation?.body as AnnotationBody)?.value
 
@@ -22,12 +44,7 @@ const TargetTooltip: FC<Props> = ({ annotation, targetElement, crossRefInfo,  op
       <PopoverAnchor asChild>
         <div
           className="absolute pointer-events-none"
-          style={{
-            left: targetElement.offsetLeft,
-            top: targetElement.offsetTop,
-            width: targetElement.offsetWidth,
-            height: targetElement.offsetHeight,
-          }}
+          style={anchorRect}
         />
       </PopoverAnchor>
       <PopoverContent
