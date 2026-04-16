@@ -262,7 +262,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     const target = e.currentTarget as HTMLElement
     const annotIds = getAnnotationIds(target)
     const idsArray = annotIds?.split(',')
-    if (idsArray.length === 0) return
+    if (idsArray?.length === 0) return
 
     setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
   }
@@ -305,19 +305,15 @@ const GenericTextRenderer: FC<Props> = memo(({
     }
   }
 
-  function getCrossRefAnnotationInText(annotations, target) {
-    return annotations.filter(annotation => annotation.body['x-content-type'] === 'CrossRef')
-  }
-
-
   const onClickTarget = async (e: Event) => {
     // Generic click listener
     // TODO:  Be careful with state here. This listener will be added once a new map is created.
     //  So this function will be called with those state values which existed at the time of adding.
 
+    console.log('clicking a target')
+
     const target = e.currentTarget as Element
     const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
-    console.log('target entry', targetEntry)
 
 
     if (!containsChildren(targetsRef.current, target as HTMLElement)) {
@@ -325,22 +321,21 @@ const GenericTextRenderer: FC<Props> = memo(({
       e.stopPropagation()
     }
 
-    const idsValue = getAnnotationIds(target)
-    if (!idsValue) return
 
-    targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedMapRef.current)
-
-    const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
-
-    // getCrossRefAnnotations
-    // compute crossRefInfo
-    console.log('clicked target', target)
     const crossRefAnnotation = annotations
-      .filter(a => (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef')
-      .find(a => a.target[0].source === source)
+      .filter(a => {
+        const isInSource = a.target[0].source === source
+        const isCrossRef = source.endsWith('.html')
+          ? (a.body as AnnotationBodyCrossRef)?.['x-content-type'] === 'CrossRef'
+          : (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
+        return isInSource && isCrossRef
+      })
+      .find(a => {
+        const selector = (a.target[0].selector as CssSelector)?.value
+        if (!selector) return false
+        return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
+      })
 
-    console.log('annotations', annotations)
-    console.log('source', source)
     console.log('cross ref annotation', crossRefAnnotation)
 
     if (crossRefAnnotation) {
@@ -350,6 +345,14 @@ const GenericTextRenderer: FC<Props> = memo(({
       setTooltipTargetElement(target as HTMLElement)
       setTooltipOpen(true)
     }
+
+    const idsValue = getAnnotationIds(target)
+    console.log('ids value', idsValue)
+    if (!idsValue) return
+
+    targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedMapRef.current)
+
+    const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
 
     if (annotation) {
       const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
