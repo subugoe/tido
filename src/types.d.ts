@@ -406,6 +406,7 @@ export interface TidoConfig {
   showGlobalTree: boolean
   showPanelPlaceholder: boolean
   showThemeToggle: boolean
+  showCrossRefLabels: boolean
   panels: PanelConfig[]
   theme: ThemeConfig
   title: string
