@@ -4,19 +4,16 @@ import { validateCrossRefNode } from '@/utils/cross-ref.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
 
-
 interface Props {
   crossRefInfo: CrossRefInfo,
   onSelect: () => void
 }
 
 const CrossRefActionArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
-
   const { usePanelTranslation } = usePanel()
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const { t } = usePanelTranslation()
-
 
   const extendedCrossRefInfoRef = useRef<CrossRefInfo>(null)
   const loadedData = useRef<boolean>(null)
@@ -45,7 +42,6 @@ const CrossRefActionArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
 
     readCrossRefLabels(crossRefInfo)
   }, [])
-
 
   return <CrossRefLink crossRefInfo={extendedCrossRefInfoRef.current} error={error} loading={loading} onSelect={onSelect} />
 
