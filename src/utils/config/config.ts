@@ -228,6 +228,14 @@ function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): V
     result.tooltipTypes = []
   }
 
+  result.crossRefContentType = typeof result.crossRefContentType === 'string'
+    ? result.crossRefContentType
+    : (() => {
+      if (result.crossRefContentType !== undefined)
+        (errors['annotations'] as Record<string, string>)['crossRefContentType'] = 'must be a string'
+      return 'CrossRef'
+    })()
+
   if (result.filters && !result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
 
   function validateNode(node: FilterNode): FilterNode {

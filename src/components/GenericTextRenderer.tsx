@@ -304,13 +304,12 @@ const GenericTextRenderer: FC<Props> = memo(({
       e.stopPropagation()
     }
 
-
     const crossRefAnnotation = annotations
       .filter(a => {
         const isInSource = a.target?.[0].source === source
         const isCrossRef = source.endsWith('.html')
-          ? (a.body as AnnotationBody)?.['x-content-type'] === 'CrossRef'
-          : (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
+          ? (a.body as AnnotationBody)?.['x-content-type'] === annotationsConfig?.crossRefContentType
+          : (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === annotationsConfig?.crossRefContentType
         return isInSource && isCrossRef
       })
       .find(a => {
@@ -327,7 +326,6 @@ const GenericTextRenderer: FC<Props> = memo(({
     }
 
     const idsValue = getAnnotationIds(target)
-    console.log('ids value', idsValue)
     if (!idsValue) return
 
     targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedMapRef.current)
@@ -361,7 +359,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   }
 
   return <div data-text-wrapper ref={textWrapperRef} className="relative">
-    <TargetTooltip annotation={tooltipAnnotation} targetElement={tooltipTargetElement} open={tooltipOpen} onClose={closeTooltip} crossRefInfo={crossRefInfo} />
+    <TargetTooltip annotation={tooltipAnnotation} targetElement={tooltipTargetElement} wrapperRef={textWrapperRef} open={tooltipOpen} onClose={closeTooltip} crossRefInfo={crossRefInfo} />
   </div>
 })
 

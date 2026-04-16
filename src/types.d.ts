@@ -428,7 +428,8 @@ export interface AnnotationsConfig {
   types?: AnnotationTypeConfigMap,
   tooltipTypes?: string[]
   singleMode?: AnnotationsMode,
-  defaultMode?: AnnotationsMode
+  defaultMode?: AnnotationsMode,
+  crossRefContentType?: string
 }
 
 export interface AnnotationFiltersConfig {
