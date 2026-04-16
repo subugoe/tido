@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import React, { FC } from 'react'
 import CrossRefError from '@/components/panel/CrossRef/CrossRefError.tsx'
 import CrossRefTitle from '@/components/panel/CrossRef/CrossRefTitle.tsx'
 import { ExternalLink } from 'lucide-react'
@@ -12,8 +12,8 @@ interface Props {
   itemLabel: string,
   contentType: string
   actionLabelThisPanel: string
-  actionNewPanel: (e) => void,
-  actionThisPanel: (e) => void,
+  actionNewPanel: (e: React.MouseEvent<HTMLButtonElement>) => void,
+  actionThisPanel: (e: React.MouseEvent<HTMLButtonElement>) => void,
 }
 
 const Content: FC<Props> = ({ error, manifestLabel, itemLabel, contentType, actionLabelThisPanel, actionNewPanel, actionThisPanel }) => {

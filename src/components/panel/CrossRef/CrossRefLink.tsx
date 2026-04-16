@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import React, { FC } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { CustomError } from '@/utils/custom-error.ts'
@@ -28,13 +28,13 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
   const { t } = usePanelTranslation()
 
 
-  function openInThisPanel(e) {
+  function openInThisPanel(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
     onSelect()
     navigate(crossRefInfo, 'update', panelId)
   }
 
-  function openInNewPanel(e) {
+  function openInNewPanel(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
     onSelect()
     navigate(crossRefInfo, 'new', panelId)
