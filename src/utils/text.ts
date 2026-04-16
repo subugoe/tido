@@ -8,7 +8,7 @@ const HIGHLIGHTING_STYLE = ['bg-gray-200', 'dark:bg-muted', 'relative', 'cursor-
 const CROSS_REF_TARGET_STYLE = ['text-blue-500', 'underline', 'cross-ref-target']
 const CROSS_REF_ATTRIBUTE = 'data-target'
 const CROSS_REF_REL_ATTRIBUTE = 'rel'
-const CROSS_REF_REL_STYLE = ['bg-gray-400', 'font-bold']
+const CROSS_REF_REL_STYLE = ['bg-yellow-200']
 
 function addAnnotationId(target: Element, id: string) {
   let old = getAnnotationIds(target)
@@ -69,6 +69,10 @@ function getAnnotationIds(target: Element) {
 
 function addCrossRefTargetStyle(target: Element) {
   target.classList.add(...CROSS_REF_TARGET_STYLE)
+}
+
+function addCrossReferencedElStyle(target: Element) {
+  target.classList.add(...CROSS_REF_REL_STYLE)
 }
 
 
@@ -271,5 +275,6 @@ export {
   assignNestedTargetsInFlippedMatched,
   getTargetsHoveredAnnotations,
   isParentHovered,
-  addCrossRefTargetStyle
+  addCrossRefTargetStyle,
+  addCrossReferencedElStyle
 }

@@ -270,14 +270,16 @@ const GenericTextRenderer: FC<Props> = memo(({
   async function getCrossRefInfo(annotation: Annotation) {
     // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
 
+
+    const isCrossRefInAnnotation = !annotation?.target[0]?.source.endsWith('.html')
+
     const body = annotation.body as AnnotationBodyCrossRef
     const source = body.source
     const refItem = source.item
     const refItemData = await apiRequest<Item>(refItem)
-    const refAnnotationId = source?.id
+    const refAnnotationId = isCrossRefInAnnotation ? source?.id : null
     let refAnnotation
 
-    const isCrossRefInAnnotation = !annotation?.target[0]?.source.endsWith('.html')
 
     let contentUrl: string
     if (isCrossRefInAnnotation)  {
@@ -287,10 +289,9 @@ const GenericTextRenderer: FC<Props> = memo(({
       contentUrl = refAnnotation.target[0].source
     }
 
-    if (!isCrossRefInAnnotation) contentUrl = annotation.target[0].source
+    if (!isCrossRefInAnnotation) contentUrl = annotation.body?.source?.id
 
     // TODO: In Popover show error when refAnnotation is not found, due to error in CrossRef Information
-    // TODO: compute refContentType based on where the annotation references
     const refContentType = refItemData.content.find(c => c.url === contentUrl).type?.split('type=')[1]
 
     return {
@@ -298,7 +299,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       manifest: source.manifest,
       item: source.item,
       contentType: refContentType,
-      annotationId: source?.id,
+      annotationId: refAnnotationId,
       ...(isCrossRefInAnnotation && { selectedAnnotation: refAnnotation }),
       ...(!isCrossRefInAnnotation && { selector: (annotation.body as AnnotationBodyCrossRef)?.selector?.value }),
       refItemData
@@ -309,8 +310,6 @@ const GenericTextRenderer: FC<Props> = memo(({
     // Generic click listener
     // TODO:  Be careful with state here. This listener will be added once a new map is created.
     //  So this function will be called with those state values which existed at the time of adding.
-
-    console.log('clicking a target')
 
     const target = e.currentTarget as Element
     const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
@@ -340,14 +339,12 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     if (crossRefAnnotation) {
       const crossRefInfo = await getCrossRefInfo(crossRefAnnotation)
-      console.log('crossRefInfo', crossRefInfo)
       setCrossRefInfo(crossRefInfo)
       setTooltipTargetElement(target as HTMLElement)
       setTooltipOpen(true)
     }
 
     const idsValue = getAnnotationIds(target)
-    console.log('ids value', idsValue)
     if (!idsValue) return
 
     targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedMapRef.current)

@@ -11,6 +11,7 @@ import Loading from '@/components/ui/loading.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import { addCrossReferencedElStyle } from '@/utils/text.ts'
 
 interface Props {
   crossRefInfo: CrossRefInfo,
@@ -60,7 +61,7 @@ const CrossRefDifferentItem: FC<Props> = ({ crossRefInfo, error, loading, onSele
         refItem,
         setNewActiveContentType(contentType, firstViewIndex, panelViewsConfig),
         newPanelId,
-        true
+        !!crossRefInfo.selectedAnnotation
       )
     } else if (action === 'update') {
       updatePanel({
@@ -81,6 +82,7 @@ const CrossRefDifferentItem: FC<Props> = ({ crossRefInfo, error, loading, onSele
       // use setTimeout to create a small delay before actually scrolling to target
       setTimeout(() => {
         const refEl = panelEl.querySelector(refSelector) as HTMLElement
+        addCrossReferencedElStyle(refEl)
         refEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
         if (scrollArea === 'sidebar') usePanelStore.getState().updatePanel(newPanelId, { selectedAnnotation: crossRefInfo.selectedAnnotation })
       }, 700)
