@@ -33,12 +33,12 @@ const Content: FC<Props> = ({ error, manifestLabel, itemLabel, contentType, acti
         itemLabel={itemLabel}
       />
       <div className="mt-2">
-        <Button variant="ghost" className="pl-3 w-[90%]" onClick={(e) => actionThisPanel(e)}>{actionLabelThisPanel}</Button>
-        <Button variant="ghost" className="w-[90%]" onClick={(e) => actionNewPanel(e)}>{t('open_in_new_panel')} <ExternalLink size={16} className="inline" /></Button>
+        <Button variant="ghost" className="pl-3 w-full" onClick={(e) => actionThisPanel(e)}>{actionLabelThisPanel}</Button>
+        <Button variant="ghost" className="w-full" onClick={(e) => actionNewPanel(e)}>{t('open_in_new_panel')} <ExternalLink size={16} className="inline" /></Button>
       </div>
     </>
 
-  return  <>{content}</>
+  return  <div className="w-full">{content}</div>
 }
 
 export default Content

@@ -1,10 +1,8 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import CrossRefDifferentItem from '@/components/panel/CrossRef/CrossRefDifferentItem.tsx'
-import CrossRefSameItem from '@/components/panel/CrossRef/CrossRefSameItem.tsx'
 import { validateCrossRefNode } from '@/utils/cross-ref.ts'
-import { existsTargetInText } from '@/utils/dom.ts'
 import { CustomError } from '@/utils/custom-error.ts'
+import CrossRefLinkTest from '@/components/panel/CrossRef/CrossRefLinkTest.tsx'
 
 
 interface Props {
@@ -51,7 +49,7 @@ const TestCrossRefArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
   }, [])
 
 
-  return <CrossRefDifferentItem crossRefInfo={extendedCrossRefInfoRef.current} error={error} loading={loading} onSelect={onSelect} />
+  return <CrossRefLinkTest crossRefInfo={extendedCrossRefInfoRef.current} error={error} loading={loading} onSelect={onSelect} />
 
 }
 

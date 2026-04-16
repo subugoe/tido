@@ -3,7 +3,7 @@ import { FC } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import CrossRefSameItem from '@/components/panel/CrossRef/CrossRefSameItem.tsx'
-import CrossRefDifferentItem from '@/components/panel/CrossRef/CrossRefDifferentItem.tsx'
+import CrossRefDifferentItem from '@/components/panel/CrossRef/CrossRefLinkTest.tsx'
 
 
 interface Props {
