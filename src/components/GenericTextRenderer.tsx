@@ -95,6 +95,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       const isCrossRefAnnotation = source.endsWith('.html') ? (cur.body as AnnotationBody)?.['x-content-type'] === 'CrossRef' : (cur.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
       if (isCrossRefAnnotation) {
         Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
+          console.log('cross ref target', el)
           addCrossRefTargetStyle(el)
         })
       }
@@ -327,8 +328,6 @@ const GenericTextRenderer: FC<Props> = memo(({
         return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
       })
 
-    console.log('cross ref annotation', crossRefAnnotation)
-
     if (crossRefAnnotation) {
       const crossRefInfo = await getCrossRefInfo(crossRefAnnotation)
       setCrossRefInfo(crossRefInfo)
@@ -337,6 +336,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     }
 
     const idsValue = getAnnotationIds(target)
+    console.log('ids value', idsValue)
     if (!idsValue) return
 
     targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedMapRef.current)
@@ -364,6 +364,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const closeTooltip = () => {
     setTooltipAnnotation(null)
     setTooltipTargetElement(null)
+    setCrossRefInfo(null)
     setTooltipOpen(false)
     setHoveredAnnotations([])
   }
