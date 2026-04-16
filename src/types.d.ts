@@ -76,7 +76,6 @@ declare global {
     selector?: CssSelector
   }
 
-
   type AnnotationContentFormat = 'text/plain' | 'text/html'
 
   interface AnnotationTarget {
@@ -127,8 +126,8 @@ declare global {
     manifest: string,
     item: string,
     contentType: string,
-    selector: string,
     refItemData: Item,
+    selector?: string,
     selectedAnnotation?: Annotation,
     manifestLabel?: string,
     itemLabel?: string

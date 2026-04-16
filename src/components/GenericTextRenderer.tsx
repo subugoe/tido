@@ -264,7 +264,6 @@ const GenericTextRenderer: FC<Props> = memo(({
     const target = e.currentTarget as Element
     const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
 
-
     if (!containsChildren(targetsRef.current, target as HTMLElement)) {
       // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
       e.stopPropagation()
