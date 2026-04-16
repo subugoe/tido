@@ -95,7 +95,6 @@ const GenericTextRenderer: FC<Props> = memo(({
       const isCrossRefAnnotation = source.endsWith('.html') ? (cur.body as AnnotationBody)?.['x-content-type'] === 'CrossRef' : (cur.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
       if (isCrossRefAnnotation) {
         Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
-          console.log('cross ref target', el)
           addCrossRefTargetStyle(el)
         })
       }
