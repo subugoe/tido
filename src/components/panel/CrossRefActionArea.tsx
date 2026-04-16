@@ -1,12 +1,8 @@
-import { FC, useEffect, useRef } from 'react'
-import { Button } from '@/components/ui/button.tsx'
+import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useConfig } from '@/contexts/ConfigContext.tsx'
-import { apiRequest } from '@/utils/api.ts'
-import { createNewPanel, setNewActiveContentType } from '@/utils/panel.ts'
-import { waitForElementInDom } from '@/utils/dom.ts'
-import { usePanelStore } from '@/store/PanelStore.tsx'
-import { ExternalLink } from 'lucide-react'
+import { validateCrossRefNode } from '@/utils/cross-ref.ts'
+import { CustomError } from '@/utils/custom-error.ts'
+import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
 
 
 interface Props {
@@ -16,88 +12,45 @@ interface Props {
 
 const CrossRefActionArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
 
-  const { panelState, updatePanel, panelId, usePanelTranslation } = usePanel()
-  const { panelViews: panelViewsConfig } = useConfig()
+  const { panelState, usePanelTranslation } = usePanel()
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
   const { t } = usePanelTranslation()
 
 
-  const crossRefInfoRef = useRef<CrossRefInfo>(null)
+  const extendedCrossRefInfoRef = useRef<CrossRefInfo>(null)
+  const loadedData = useRef<boolean>(null)
+  const isDifferentItem = crossRefInfo?.item !== panelState.item?.id
 
   useEffect(() => {
-    crossRefInfoRef.current = crossRefInfo
-    console.log('cross ref', crossRefInfo)
+    async function readCrossRefLabels(crossRefInfo: CrossRefInfo) {
+      if (!error && !loadedData.current) {
+        setLoading(true)
+        try {
+          const { manifestData, itemData } = await validateCrossRefNode(crossRefInfo)
+          const newItemLabel = itemData.n ? itemData.n : itemData.title?.length > 0 ? itemData.title[0].title : ''
+          extendedCrossRefInfoRef.current = {
+            ...crossRefInfo,
+            manifestLabel: (manifestData as Manifest).label,
+            itemLabel: newItemLabel,
+            isDifferentItem
+          }
+          // TODO: if (!await existsTargetInText(extendedCrossRefInfoRef.current.refItemData, extendedCrossRefInfoRef.current.contentType, extendedCrossRefInfoRef.current.selector)) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
+          loadedData.current = true
+        } catch(e) {
+          setError(new CustomError(t(e.name), t(e.message)))
+        } finally {
+          setLoading(false)
+        }
+      }
+    }
+
+    readCrossRefLabels(crossRefInfo)
   }, [])
 
 
-  async function navigate(crossRefInfo: CrossRefInfo, action: string, panelId?: string) {
-    let newPanelId = panelId
-    const contentType = crossRefInfo.contentType
+  return <CrossRefLink crossRefInfo={extendedCrossRefInfoRef.current} error={error} loading={loading} onSelect={onSelect} />
 
-    // We need to open that content which contains the cross ref target. Since a panel can have multiple views,
-    // we need to find out which view is able to display the content type. Because panel views can be configured freely,
-    // we cannot know which view is meant exactly. So we just take the first found.
-    const firstViewIndex = panelState.panelViews.findIndex(view => view.contentTypes?.includes(contentType))
-    const refManifest = await apiRequest<Manifest>(crossRefInfo.manifest)
-    const refItem = await apiRequest<Item>(crossRefInfo.item)
-
-    if (action === 'new') {
-      newPanelId = crypto.randomUUID()
-      await createNewPanel(
-        crossRefInfo.collection,
-        refManifest,
-        refItem,
-        setNewActiveContentType(contentType, firstViewIndex, panelViewsConfig),
-        newPanelId,
-        true
-      )
-    } else if (action === 'update') {
-      updatePanel({
-        config: {
-          collection: crossRefInfo.collection,
-          manifest: crossRefInfo.manifest,
-          item: crossRefInfo.item,
-          views: setNewActiveContentType(contentType, firstViewIndex, panelState.panelViews),
-        },
-      })
-    }
-
-    // TODO: is it possible to have  ids for the target in annotation globally unique in sidebar ?
-    const scrollArea = Object.hasOwn(crossRefInfo, 'selectedAnnotation') ? 'sidebar' : 'text'
-    const refSelector = scrollArea === 'text' ? crossRefInfo.selector : `[data-annotation="${crossRefInfo.annotationId}"]`
-
-    // TODO: using selector from target.selector -> located its html el and scroll to it
-    waitForElementInDom(`#${newPanelId}`, refSelector, (panelEl: Element) => {
-      // use setTimeout to create a small delay before actually scrolling to target
-      setTimeout(() => {
-        const refEl = panelEl.querySelector(refSelector) as HTMLElement
-        refEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        if (scrollArea === 'sidebar')   usePanelStore.getState().updatePanel(newPanelId, { selectedAnnotation: crossRefInfo.selectedAnnotation })
-      }, 700)
-    })
-  }
-
-  function openInThisPanel(e: MouseEvent, crossRefInfo: CrossRefInfo) {
-    e.stopPropagation()
-    onSelect()
-    navigate(crossRefInfo, 'update', panelId)
-  }
-
-  function openInNewPanel(e: MouseEvent, crossRefInfo: CrossRefInfo) {
-    e.stopPropagation()
-    onSelect()
-    navigate(crossRefInfo, 'new')
-  }
-
-
-  return (
-    <div className="flex-col">
-      <div className="mb-2"> {t('reference')}</div>
-      <div>
-        <Button variant="ghost" className="pl-3 w-[90%]" onClick={(e) => openInThisPanel(e, crossRefInfoRef.current)}>{t('open_in_this_panel')}</Button>
-        <Button variant="ghost" className="w-[90%]" onClick={(e) => openInNewPanel(e, crossRefInfoRef.current)}>{t('open_in_new_panel')} <ExternalLink size={16} className="inline" /></Button>
-      </div>
-    </div>
-  )
 }
 
 export default CrossRefActionArea

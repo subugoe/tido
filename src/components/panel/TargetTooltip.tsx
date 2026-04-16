@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Popover, PopoverContent, PopoverAnchor } from '@/components/ui/popover'
-import TestCrossRefArea from '@/components/panel/TestCrossRefArea.tsx'
+import CrossRefActionArea from '@/components/panel/CrossRefActionArea.tsx'
 
 interface Props {
   annotation: Annotation | null
@@ -37,7 +37,7 @@ const TargetTooltip: FC<Props> = ({ annotation, targetElement, crossRefInfo,  op
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <div dangerouslySetInnerHTML={{ __html: content }} />
-        {crossRefInfo && <TestCrossRefArea crossRefInfo={crossRefInfo} onSelect={onClose} />}
+        {crossRefInfo && <CrossRefActionArea crossRefInfo={crossRefInfo} onSelect={onClose} />}
       </PopoverContent>
     </Popover>
   )
