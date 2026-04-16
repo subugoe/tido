@@ -52,8 +52,9 @@ const TargetTooltip: FC<Props> = ({ annotation, targetElement, wrapperRef, cross
         sideOffset={4}
         side="bottom"
         onOpenAutoFocus={(e) => e.preventDefault()}
+        className="max-w-80"
       >
-        <div dangerouslySetInnerHTML={{ __html: content }} className="border-b-1 pb-1 border-muted-foreground mb-1" />
+        {content && <div dangerouslySetInnerHTML={{ __html: content }} className={crossRefInfo ? 'border-b pb-1 border-muted-foreground mb-1' : ''} />}
         {crossRefInfo && <CrossRefActionArea crossRefInfo={crossRefInfo} onSelect={onClose} />}
       </PopoverContent>
     </Popover>
