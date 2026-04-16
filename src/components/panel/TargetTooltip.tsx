@@ -13,7 +13,7 @@ interface Props {
 
 interface AnchorRect { left: number; top: number; width: number; height: number }
 
-const TargetTooltip: FC<Props> = ({ annotation, targetElement, wrapperRef, crossRefInfo,  open, onClose,  }) => {
+const TargetTooltip: FC<Props> = ({ annotation, targetElement, wrapperRef, crossRefInfo,  open, onClose }) => {
   const [anchorRect, setAnchorRect] = useState<AnchorRect | null>(null)
 
   // 1. Reason why storing the coordinates of target in a state: TargetTooltip reads targetElement.offsetLeft/offsetTop directly in the render function. Every time you hover

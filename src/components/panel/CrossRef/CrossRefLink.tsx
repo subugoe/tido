@@ -24,9 +24,8 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
 
   const { panelViews: panelViewsConfig } = useConfig()
   const { updatePanel, panelId, usePanelTranslation, panelState } = usePanel()
-  const isDifferentItem = crossRefInfo?.item !== panelState.item?.id
-
   const { t } = usePanelTranslation()
+  const isDifferentItem = crossRefInfo?.item !== panelState.item?.id
 
 
   function openInThisPanel(e: React.MouseEvent<HTMLButtonElement>) {
@@ -40,7 +39,6 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
     onSelect()
     navigate(crossRefInfo, 'new', panelId)
   }
-
 
   async function navigate(crossRefInfo: CrossRefInfo, action: string, panelId?: string) {
     let newPanelId = panelId
@@ -74,7 +72,6 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
       })
     }
 
-    // TODO: is it possible to have  ids for the target in annotation globally unique in sidebar ?
     const scrollArea = Object.hasOwn(crossRefInfo, 'selectedAnnotation') ? 'sidebar' : 'text'
     const refSelector = scrollArea === 'text' ? crossRefInfo.selector : `[data-annotation="${crossRefInfo.annotationId}"]`
 
