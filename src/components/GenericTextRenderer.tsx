@@ -263,7 +263,6 @@ const GenericTextRenderer: FC<Props> = memo(({
   async function getCrossRefInfo(annotation: Annotation) {
     // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
 
-
     const isCrossRefInAnnotation = !annotation?.target[0]?.source.endsWith('.html')
 
     const body = annotation.body as AnnotationBodyCrossRef
@@ -282,7 +281,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       contentUrl = refAnnotation.target[0].source
     }
 
-    if (!isCrossRefInAnnotation) contentUrl = annotation.body?.source?.id
+    if (!isCrossRefInAnnotation) contentUrl = (annotation.body as AnnotationBodyCrossRef)?.source?.id
 
     // TODO: In Popover show error when refAnnotation is not found, due to error in CrossRef Information
     const refContentType = refItemData.content.find(c => c.url === contentUrl).type?.split('type=')[1]
@@ -318,7 +317,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       .filter(a => {
         const isInSource = a.target[0].source === source
         const isCrossRef = source.endsWith('.html')
-          ? (a.body as AnnotationBodyCrossRef)?.['x-content-type'] === 'CrossRef'
+          ? (a.body as AnnotationBody)?.['x-content-type'] === 'CrossRef'
           : (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
         return isInSource && isCrossRef
       })
