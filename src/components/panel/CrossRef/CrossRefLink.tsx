@@ -24,6 +24,7 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
 
   const { panelViews: panelViewsConfig } = useConfig()
   const { updatePanel, panelId, usePanelTranslation, panelState } = usePanel()
+  const isDifferentItem = crossRefInfo?.item !== panelState.item?.id
 
   const { t } = usePanelTranslation()
 
@@ -91,7 +92,7 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
 
   return <div className="max-w-sm w-60 text-wrap rounded-lg relative overflow-hidden">
     <Content error={error} itemLabel={crossRefInfo?.itemLabel} manifestLabel={crossRefInfo?.manifestLabel} contentType={crossRefInfo?.contentType}
-      actionLabelThisPanel={crossRefInfo?.isDifferentItem ? t('open_in_this_panel') : t('jump_to')}  actionNewPanel={openInNewPanel} actionThisPanel={openInThisPanel}  />
+      actionLabelThisPanel={isDifferentItem ? t('open_in_this_panel') : t('jump_to')}  actionNewPanel={openInNewPanel} actionThisPanel={openInThisPanel}  />
     {loading && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
       <Loading size={36} />
     </div>}

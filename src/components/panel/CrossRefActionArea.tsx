@@ -12,7 +12,7 @@ interface Props {
 
 const CrossRefActionArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
 
-  const { panelState, usePanelTranslation } = usePanel()
+  const { usePanelTranslation } = usePanel()
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const { t } = usePanelTranslation()
@@ -20,7 +20,6 @@ const CrossRefActionArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
 
   const extendedCrossRefInfoRef = useRef<CrossRefInfo>(null)
   const loadedData = useRef<boolean>(null)
-  const isDifferentItem = crossRefInfo?.item !== panelState.item?.id
 
   useEffect(() => {
     async function readCrossRefLabels(crossRefInfo: CrossRefInfo) {
@@ -32,8 +31,7 @@ const CrossRefActionArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
           extendedCrossRefInfoRef.current = {
             ...crossRefInfo,
             manifestLabel: (manifestData as Manifest).label,
-            itemLabel: newItemLabel,
-            isDifferentItem
+            itemLabel: newItemLabel
           }
           // TODO: if (!await existsTargetInText(extendedCrossRefInfoRef.current.refItemData, extendedCrossRefInfoRef.current.contentType, extendedCrossRefInfoRef.current.selector)) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
           loadedData.current = true
