@@ -129,7 +129,6 @@ declare global {
     contentType: string,
     selector: string,
     refItemData: Item,
-    annotationId?: string,
     selectedAnnotation?: Annotation,
     manifestLabel?: string,
     itemLabel?: string

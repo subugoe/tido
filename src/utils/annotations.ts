@@ -1,4 +1,5 @@
 import { FilterNode } from '@/types'
+import { apiRequest } from '@/utils/api.ts'
 
 function getSelectedTypes(nodes: FilterNode[]): AnnotationTypesDict {
   let types: AnnotationTypesDict = {}
@@ -105,17 +106,49 @@ function getAnnotationIdsByEl(
 }
 
 function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, tooltipTypes: string[] = []) {
-  const type = annotation.body['x-content-type']
+  const type = (annotation.body as AnnotationBody)['x-content-type']
   if (tooltipTypes.includes(type)) return true
 
   if (!selectedTypes || !selectedTypes[type]) return false
 
   if (type === 'Variant') {
-    const witnesses = annotation.body.witnesses
+    const witnesses = (annotation.body as AnnotationBody).witnesses
     return witnesses.some(witness => selectedTypes[type].includes(witness))
   }
 
   return true
+}
+
+async function getCrossRefInfo(annotation: Annotation) {
+  // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
+  const isCrossRefInAnnotation = !annotation?.target[0]?.source.endsWith('.html')
+
+  const source = (annotation.body as AnnotationBodyCrossRef).source
+  const refItemData = await apiRequest<Item>(source.item)
+  const refAnnotationId = source?.id
+  let refAnnotation
+  let contentUrl: string
+
+  if (isCrossRefInAnnotation)  {
+    const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
+    const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
+    refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
+    contentUrl = refAnnotation?.target?.[0].source
+  }
+
+  if (!isCrossRefInAnnotation) contentUrl = (annotation.body as AnnotationBodyCrossRef)?.source?.id
+  // TODO: In Popover show error when refAnnotation is not found, due to error in CrossRef Information
+  const refContentType = refItemData.content.find(c => c.url === contentUrl)?.type?.split('type=')[1]
+
+  return {
+    collection: source.collection,
+    manifest: source.manifest,
+    item: source.item,
+    contentType: refContentType,
+    ...(isCrossRefInAnnotation && { selectedAnnotation: refAnnotation }),
+    ...(!isCrossRefInAnnotation && { selector: (annotation.body as AnnotationBodyCrossRef)?.selector?.value }),
+    refItemData
+  }
 }
 
 export {
@@ -126,5 +159,6 @@ export {
   findTargetsInsideAnnotation,
   findTargets,
   getNestedAnnotations,
-  getAnnotationIdsByEl
+  getAnnotationIdsByEl,
+  getCrossRefInfo
 }

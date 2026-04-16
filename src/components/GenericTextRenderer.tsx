@@ -21,14 +21,17 @@ import {
   removeNestedTargetStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
-import { computeNewSelectedAnnotationIndex, getNestedAnnotations, isFiltered } from '@/utils/annotations.ts'
+import {
+  computeNewSelectedAnnotationIndex,
+  getCrossRefInfo,
+  getNestedAnnotations,
+  isFiltered
+} from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-
 import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import TargetTooltip from '@/components/panel/TargetTooltip.tsx'
-import { apiRequest } from '@/utils/api.ts'
 
 interface Props {
   htmlString?: string
@@ -252,43 +255,6 @@ const GenericTextRenderer: FC<Props> = memo(({
     setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
   }
 
-  async function getCrossRefInfo(annotation: Annotation) {
-    // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
-
-    const isCrossRefInAnnotation = !annotation?.target[0]?.source.endsWith('.html')
-
-    const body = annotation.body as AnnotationBodyCrossRef
-    const source = body.source
-    const refItem = source.item
-    const refItemData = await apiRequest<Item>(refItem)
-    const refAnnotationId = isCrossRefInAnnotation ? source?.id : null
-    let refAnnotation
-
-
-    let contentUrl: string
-    if (isCrossRefInAnnotation)  {
-      const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
-      const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
-      refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
-      contentUrl = refAnnotation?.target?.[0].source
-    }
-
-    if (!isCrossRefInAnnotation) contentUrl = (annotation.body as AnnotationBodyCrossRef)?.source?.id
-
-    // TODO: In Popover show error when refAnnotation is not found, due to error in CrossRef Information
-    const refContentType = refItemData.content.find(c => c.url === contentUrl)?.type?.split('type=')[1]
-
-    return {
-      collection: source.collection,
-      manifest: source.manifest,
-      item: source.item,
-      contentType: refContentType,
-      annotationId: refAnnotationId,
-      ...(isCrossRefInAnnotation && { selectedAnnotation: refAnnotation }),
-      ...(!isCrossRefInAnnotation && { selector: (annotation.body as AnnotationBodyCrossRef)?.selector?.value }),
-      refItemData
-    }
-  }
 
   const onClickTarget = async (e: Event) => {
     // Generic click listener

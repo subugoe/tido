@@ -73,7 +73,7 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
     }
 
     const scrollArea = Object.hasOwn(crossRefInfo, 'selectedAnnotation') ? 'sidebar' : 'text'
-    const refSelector = scrollArea === 'text' ? crossRefInfo.selector : `[data-annotation="${crossRefInfo.annotationId}"]`
+    const refSelector = scrollArea === 'text' ? crossRefInfo.selector : `[data-annotation="${crossRefInfo.selectedAnnotation.id}"]`
 
     waitForElementInDom(`#${newPanelId}`, refSelector, (panelEl: Element) => {
       // use setTimeout to create a small delay before actually scrolling to target
