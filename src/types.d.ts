@@ -72,7 +72,8 @@ declare global {
       manifest: string,
       item: string,
       'x-content-type': string,
-    }
+    },
+    selector?: CssSelector
   }
 
 

@@ -75,17 +75,17 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!parsedDom) return
 
 
-    /*
+
     // TODO: when we have only CrossRef to this target and NOT normal annotations, to display this as link
     // add highlight style to crossRef
-    const crossRefAnnotations = annotations.filter(annotation => annotation.target[0].source === source && annotation.body?.source?.['x-content-type'] === 'CrossRef')
+    const crossRefAnnotations = annotations.filter(annotation => annotation.target[0].source === source && source.endsWith('.html') ? (annotation.body)?.['x-content-type'] === 'CrossRef' : (annotation.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef')
     crossRefAnnotations.forEach(annotation => {
       const selector = (annotation.target[0].selector as CssSelector)?.value
       if (!selector) return
       Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
-        addHighlightStyle(el)
+        addCrossRefTargetStyle(el)
       })
-    }) */
+    })
 
     textWrapperRef.current.replaceChildren(parsedDom)
     if (onReady) onReady()
@@ -94,9 +94,10 @@ const GenericTextRenderer: FC<Props> = memo(({
   // Create and set matchedMap by identifying target nodes. Add listeners to targets.
   useEffect(() => {
     if (!annotations || !parsedDom) return
-    const annotationsInText = annotations.filter(annotation => annotation.target[0].source === source)
+    const annotationsInText = annotations.filter(annotation => annotation.target?.[0].source === source)
 
     const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
+      if (!cur.target) return acc
       const isSource = cur.target[0].source === source
       const selector = (cur.target[0].selector as CssSelector)?.value
 
@@ -299,9 +300,13 @@ const GenericTextRenderer: FC<Props> = memo(({
       contentType: refContentType,
       annotationId: source?.id,
       ...(isCrossRefInAnnotation && { selectedAnnotation: refAnnotation }),
-      selector: (annotation.target[0].selector as CssSelector)?.value,
+      ...(!isCrossRefInAnnotation && { selector: (annotation.body as AnnotationBodyCrossRef)?.selector?.value }),
       refItemData
     }
+  }
+
+  function getCrossRefAnnotationInText(annotations, target) {
+    return annotations.filter(annotation => annotation.body['x-content-type'] === 'CrossRef')
   }
 
 
@@ -312,6 +317,8 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     const target = e.currentTarget as Element
     const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
+    console.log('target entry', targetEntry)
+
 
     if (!containsChildren(targetsRef.current, target as HTMLElement)) {
       // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
@@ -325,13 +332,20 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
 
+    // getCrossRefAnnotations
     // compute crossRefInfo
+    console.log('clicked target', target)
     const crossRefAnnotation = annotations
       .filter(a => (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef')
       .find(a => a.target[0].source === source)
 
+    console.log('annotations', annotations)
+    console.log('source', source)
+    console.log('cross ref annotation', crossRefAnnotation)
+
     if (crossRefAnnotation) {
       const crossRefInfo = await getCrossRefInfo(crossRefAnnotation)
+      console.log('crossRefInfo', crossRefInfo)
       setCrossRefInfo(crossRefInfo)
       setTooltipTargetElement(target as HTMLElement)
       setTooltipOpen(true)
