@@ -70,22 +70,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   }, [htmlString])
 
   // Attach the content of the Document object as children of textWrapperRef.
-  // Create cross ref links with portals.
   useEffect(() => {
     if (!parsedDom) return
-
-
-
-    // TODO: when we have only CrossRef to this target and NOT normal annotations, to display this as link
-    // add highlight style to crossRef
-    const crossRefAnnotations = annotations.filter(annotation => annotation.target[0].source === source && source.endsWith('.html') ? (annotation.body)?.['x-content-type'] === 'CrossRef' : (annotation.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef')
-    crossRefAnnotations.forEach(annotation => {
-      const selector = (annotation.target[0].selector as CssSelector)?.value
-      if (!selector) return
-      Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
-        addCrossRefTargetStyle(el)
-      })
-    })
 
     textWrapperRef.current.replaceChildren(parsedDom)
     if (onReady) onReady()
@@ -104,6 +90,13 @@ const GenericTextRenderer: FC<Props> = memo(({
       if (!isSource || !selector) {
         if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
         return acc
+      }
+
+      const isCrossRefAnnotation = source.endsWith('.html') ? (cur.body as AnnotationBody)?.['x-content-type'] === 'CrossRef' : (cur.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
+      if (isCrossRefAnnotation) {
+        Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
+          addCrossRefTargetStyle(el)
+        })
       }
 
       const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
