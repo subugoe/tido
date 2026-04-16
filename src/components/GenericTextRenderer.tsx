@@ -156,15 +156,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       })
 
       if (someFiltered) {
-        if (annotations.length === 1) {
-          if ((annotations[0].body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef') {
-            addCrossRefTargetStyle(target)
-          }
-        }
-        else {
-          addHighlightStyle(target)
-        }
-
+        addHighlightStyle(target)
       }
     })
   }, [matchedMap])
@@ -278,13 +270,13 @@ const GenericTextRenderer: FC<Props> = memo(({
       const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
       const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
       refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
-      contentUrl = refAnnotation.target[0].source
+      contentUrl = refAnnotation?.target?.[0].source
     }
 
     if (!isCrossRefInAnnotation) contentUrl = (annotation.body as AnnotationBodyCrossRef)?.source?.id
 
     // TODO: In Popover show error when refAnnotation is not found, due to error in CrossRef Information
-    const refContentType = refItemData.content.find(c => c.url === contentUrl).type?.split('type=')[1]
+    const refContentType = refItemData.content.find(c => c.url === contentUrl)?.type?.split('type=')[1]
 
     return {
       collection: source.collection,
@@ -315,7 +307,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     const crossRefAnnotation = annotations
       .filter(a => {
-        const isInSource = a.target[0].source === source
+        const isInSource = a.target?.[0].source === source
         const isCrossRef = source.endsWith('.html')
           ? (a.body as AnnotationBody)?.['x-content-type'] === 'CrossRef'
           : (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
