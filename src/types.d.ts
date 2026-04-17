@@ -46,7 +46,7 @@ declare global {
 
 
   interface Annotation {
-    body: AnnotationBody
+    body: AnnotationBody | AnnotationBodyCrossRef
     target: AnnotationTarget[]
     type: string
     id: string
@@ -63,6 +63,17 @@ declare global {
     format: AnnotationContentFormat
     'x-content-type': string
     witnesses?: string[]
+  }
+
+  interface AnnotationBodyCrossRef {
+    source: {
+      id: string,
+      collection: string,
+      manifest: string,
+      item: string,
+      'x-content-type': string,
+    },
+    selector?: CssSelector
   }
 
   type AnnotationContentFormat = 'text/plain' | 'text/html'
@@ -108,6 +119,18 @@ declare global {
   type CssSelector = {
     type: 'CssSelector'
     value: string
+  }
+
+  interface CrossRefInfo {
+    collection: string,
+    manifest: string,
+    item: string,
+    contentType: string,
+    refItemData: Item,
+    selector?: string,
+    selectedAnnotation?: Annotation,
+    manifestLabel?: string,
+    itemLabel?: string
   }
 
   interface DataIntegrity {
@@ -381,6 +404,7 @@ export interface TidoConfig {
   showGlobalTree: boolean
   showPanelPlaceholder: boolean
   showThemeToggle: boolean
+  showCrossRefLabels: boolean
   panels: PanelConfig[]
   theme: ThemeConfig
   title: string
@@ -403,7 +427,8 @@ export interface AnnotationsConfig {
   types?: AnnotationTypeConfigMap,
   tooltipTypes?: string[]
   singleMode?: AnnotationsMode,
-  defaultMode?: AnnotationsMode
+  defaultMode?: AnnotationsMode,
+  crossRefContentType?: string
 }
 
 export interface AnnotationFiltersConfig {

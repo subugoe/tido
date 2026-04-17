@@ -1,7 +1,7 @@
 import React, { FC, memo, useEffect, useRef, useState } from 'react'
 import {
   addAnnotationBaseStyle,
-  addAnnotationId,
+  addAnnotationId, addCrossRefTargetStyle,
   addHighlightStyle,
   addHoverStyle,
   addNestedTargetStyle,
@@ -10,7 +10,6 @@ import {
   flipMatchedAnnotationsMap,
   getAnnotationIds,
   getHoveredAnnotationsIds,
-  getRootCrossRefElements,
   getTargetsHoveredAnnotations,
   getTextTargets,
   isParentHovered,
@@ -22,15 +21,17 @@ import {
   removeNestedTargetStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
-import { createPortal } from 'react-dom'
-import CrossRefLink from '@/components/panel/CrossRef/CrossRefLink.tsx'
-import { computeNewSelectedAnnotationIndex, getNestedAnnotations, isFiltered } from '@/utils/annotations.ts'
+import {
+  computeNewSelectedAnnotationIndex,
+  getCrossRefInfo,
+  getNestedAnnotations,
+  isFiltered
+} from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-
 import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import TooltipAnnotation from '@/components/panel/annotations/TooltipAnnotation.tsx'
+import TargetTooltip from '@/components/panel/TargetTooltip.tsx'
 
 interface Props {
   htmlString?: string
@@ -51,12 +52,12 @@ const GenericTextRenderer: FC<Props> = memo(({
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
   const { selectedAnnotation, selectedAnnotationTypes, setSelectedAnnotation, annotations } = usePanel()
-  const [portals, setPortals] = useState([])
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
   const [tooltipAnnotation, setTooltipAnnotation] = useState<Annotation | null>(null)
   const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
   const [tooltipOpen, setTooltipOpen] = useState(false)
+  const [crossRefInfo, setCrossRefInfo] = useState<CrossRefInfo | null>(null)
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
@@ -72,16 +73,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   }, [htmlString])
 
   // Attach the content of the Document object as children of textWrapperRef.
-  // Create cross ref links with portals.
   useEffect(() => {
     if (!parsedDom) return
-
-    const links = getRootCrossRefElements(parsedDom)
-    setPortals(links.map(link => {
-      const mount = document.createElement(link.tagName)
-      link.replaceWith(mount)
-      return createPortal(<CrossRefLink node={link as HTMLElement} />, mount)
-    }))
 
     textWrapperRef.current.replaceChildren(parsedDom)
     if (onReady) onReady()
@@ -90,15 +83,23 @@ const GenericTextRenderer: FC<Props> = memo(({
   // Create and set matchedMap by identifying target nodes. Add listeners to targets.
   useEffect(() => {
     if (!annotations || !parsedDom) return
-    const annotationsInText = annotations.filter(annotation => annotation.target[0].source === source)
+    const annotationsInText = annotations.filter(annotation => annotation.target?.[0].source === source)
 
     const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
+      if (!cur.target) return acc
       const isSource = cur.target[0].source === source
       const selector = (cur.target[0].selector as CssSelector)?.value
 
       if (!isSource || !selector) {
         if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
         return acc
+      }
+
+      const isCrossRefAnnotation = source.endsWith('.html') ? (cur.body as AnnotationBody)?.['x-content-type'] === 'CrossRef' : (cur.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
+      if (isCrossRefAnnotation) {
+        Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
+          addCrossRefTargetStyle(el)
+        })
       }
 
       const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
@@ -248,13 +249,14 @@ const GenericTextRenderer: FC<Props> = memo(({
     // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
     const target = e.currentTarget as HTMLElement
     const annotIds = getAnnotationIds(target)
-    const idsArray = annotIds.split(',')
-    if (idsArray.length === 0) return
+    const idsArray = annotIds?.split(',')
+    if (idsArray?.length === 0) return
 
     setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
   }
 
-  const onClickTarget = (e: Event) => {
+
+  const onClickTarget = async (e: Event) => {
     // Generic click listener
     // TODO:  Be careful with state here. This listener will be added once a new map is created.
     //  So this function will be called with those state values which existed at the time of adding.
@@ -267,6 +269,27 @@ const GenericTextRenderer: FC<Props> = memo(({
       e.stopPropagation()
     }
 
+    const crossRefAnnotation = annotations
+      .filter(a => {
+        const isInSource = a.target?.[0].source === source
+        const isCrossRef = source.endsWith('.html')
+          ? (a.body as AnnotationBody)?.['x-content-type'] === annotationsConfig?.crossRefContentType
+          : (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === annotationsConfig?.crossRefContentType
+        return isInSource && isCrossRef
+      })
+      .find(a => {
+        const selector = (a.target[0].selector as CssSelector)?.value
+        if (!selector) return false
+        return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
+      })
+
+    if (crossRefAnnotation) {
+      const crossRefInfo = await getCrossRefInfo(crossRefAnnotation)
+      setCrossRefInfo(crossRefInfo)
+      setTooltipTargetElement(target as HTMLElement)
+      setTooltipOpen(true)
+    }
+
     const idsValue = getAnnotationIds(target)
     if (!idsValue) return
 
@@ -276,7 +299,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     if (annotation) {
       const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-      const contentType = annotation.body['x-content-type']
+      const contentType = (annotation.body as AnnotationBody)['x-content-type']
 
       if (tooltipTypes.includes(contentType)) {
         setTooltipAnnotation(annotation)
@@ -287,8 +310,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         prevClickedTargetIndexRef.current = flippedMatchedMapRef.current.findIndex(entry => targetEntry === entry)
         if (onSelect) onSelect()
       }
-    }
-    else {
+    } else {
       setSelectedAnnotation(null)
     }
   }
@@ -296,18 +318,13 @@ const GenericTextRenderer: FC<Props> = memo(({
   const closeTooltip = () => {
     setTooltipAnnotation(null)
     setTooltipTargetElement(null)
+    setCrossRefInfo(null)
     setTooltipOpen(false)
     setHoveredAnnotations([])
   }
 
   return <div data-text-wrapper ref={textWrapperRef} className="relative">
-    {portals}
-    <TooltipAnnotation
-      annotation={tooltipAnnotation}
-      targetElement={tooltipTargetElement}
-      open={tooltipOpen}
-      onClose={closeTooltip}
-    />
+    <TargetTooltip annotation={tooltipAnnotation} targetElement={tooltipTargetElement} wrapperRef={textWrapperRef} open={tooltipOpen} onClose={closeTooltip} crossRefInfo={crossRefInfo} />
   </div>
 })
 

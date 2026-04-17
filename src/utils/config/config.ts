@@ -203,6 +203,19 @@ function validateRootCollections(input: unknown): ValidationResult<TidoConfig['r
   return { result, errors }
 }
 
+function validateShowCrossRefLabels(input: unknown): ValidationResult<TidoConfig['showCrossRefLabels']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'boolean'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['showCrossRefLabels'] = 'must be a boolean'
+        return defaultConfig.showCrossRefLabels
+      })()
+  return { result, errors }
+}
+
 function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): ValidationResult<TidoConfig['annotations']> {
   const result = (typeof input === 'object' && input !== null ? input : {}) as Partial<TidoConfig['annotations']>
   const defaultMode = defaultCfg.annotations?.defaultMode
@@ -227,6 +240,14 @@ function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): V
   if (!result.tooltipTypes) {
     result.tooltipTypes = []
   }
+
+  result.crossRefContentType = typeof result.crossRefContentType === 'string'
+    ? result.crossRefContentType
+    : (() => {
+      if (result.crossRefContentType !== undefined)
+        (errors['annotations'] as Record<string, string>)['crossRefContentType'] = 'must be a string'
+      return 'CrossRef'
+    })()
 
   if (result.filters && !result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
 
@@ -260,6 +281,7 @@ export async function mergeAndValidateConfig(
   const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
   const showPanelPlaceholder = validateShowPanelPlaceholder(userConfig.showPanelPlaceholder)
   const showThemeToggle = validateShowThemeToggle(userConfig.showThemeToggle)
+  const showCrossRefLabels = validateShowCrossRefLabels(userConfig.showCrossRefLabels)
   const rootCollections = validateRootCollections(userConfig.rootCollections)
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
@@ -290,6 +312,7 @@ export async function mergeAndValidateConfig(
     ...showGlobalTree.errors,
     ...showPanelPlaceholder.errors,
     ...showThemeToggle.errors,
+    ...showCrossRefLabels.errors,
     ...theme.errors,
     ...title.errors,
     ...translations.errors,
@@ -356,6 +379,7 @@ export async function mergeAndValidateConfig(
     showGlobalTree: showGlobalTree.result,
     showPanelPlaceholder: showPanelPlaceholder.result,
     showThemeToggle: showThemeToggle.result,
+    showCrossRefLabels: showCrossRefLabels.result,
     theme: theme.result,
     title: title.result,
     translations: mergedTranslations,

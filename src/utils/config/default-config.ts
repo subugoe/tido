@@ -11,6 +11,7 @@ const defaultConfig: TidoConfig = {
   showGlobalTree: true,
   showPanelPlaceholder: true,
   showThemeToggle: true,
+  showCrossRefLabels: true,
   theme: {
     primaryColor: '#3456aa',
     theme: 'system'

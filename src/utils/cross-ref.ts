@@ -3,29 +3,26 @@ import { CustomError } from '@/utils/custom-error.ts'
 import { getContentTypes } from '@/utils/panel.ts'
 import { validateSelector } from '@/utils/dom.ts'
 
-async function validateCrossRefNode(sourceEl: HTMLElement)  {
+async function validateCrossRefNode(crossRefInfo: CrossRefInfo)  {
   let collection, manifest, item
-  const collectionId = sourceEl.getAttribute('data-ref-collection')
-  const manifestId = sourceEl.getAttribute('data-ref-manifest')
-  const itemId = sourceEl.getAttribute('data-ref-item')
-  const targetSelector = sourceEl.getAttribute('data-ref-target')
-  const contentType = sourceEl.getAttribute('data-ref-content-type')
 
-  const collectionResponse = await validateCollection(collectionId)
-  if (collectionResponse.success) collection = collectionResponse.data
+  const collectionResponse = await validateCollection(crossRefInfo.collection)
+  if (collectionResponse.success) collection = (collectionResponse.data) as Collection
   else throw collectionResponse.error
 
-  const manifestResponse = await validateManifest(manifestId)
-  if (manifestResponse.success) manifest = manifestResponse.data
+  const manifestResponse = await validateManifest(crossRefInfo.manifest)
+  if (manifestResponse.success) manifest = (manifestResponse.data) as Manifest
   else throw manifestResponse.error
 
-  const itemResponse = await validateItem(itemId)
+  const itemResponse = await validateItem(crossRefInfo.item)
   if (itemResponse.success) item = itemResponse.data
   else throw itemResponse.error
 
-  if (!validateSelector(targetSelector)) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
+  if (crossRefInfo?.selector) {
+    if (!validateSelector(crossRefInfo.selector)) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
+  }
   const contentTypes = getContentTypes(item.content)
-  if (!contentTypes.includes(contentType)) throw new CustomError('cross_ref_error_title', 'referenced_content_type_error')
+  if (!contentTypes.includes(crossRefInfo.contentType)) throw new CustomError('cross_ref_error_title', 'referenced_content_type_error')
 
   return {
     collection,

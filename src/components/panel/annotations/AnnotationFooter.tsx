@@ -39,7 +39,7 @@ const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onToggle
       {expanded ? <ChevronUp size={18} className="" /> : <ChevronDown size={18} />}
     </div>
     {expanded && <div className="nested-annotations pl-4  mt-2 flex flex-col gap-1 w-full h-fit" ref={nestedAnnotationsRef}>
-      {nestedAnnotations.map((annotation) => <Annotation key={annotation.id} data={annotation} isNested={true} onToggle={onToggle} /> )}
+      {nestedAnnotations.map((annotation) => <Annotation key={annotation.id} data={annotation} isNested={true} onToggle={onToggle} />)}
     </div>
     }
   </div>
