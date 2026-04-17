@@ -287,6 +287,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   }, [selectedAnnotationTypes])
 
   useEffect(() => {
+    getSidebarScroller().setMatchedMap(matchedAnnotationsMaps)
+
     // This is for the case where no specific annotation filters were configured.
     // We extract all occurring types from the annotations that match the text.
     if (annotationsConfig.filters) return

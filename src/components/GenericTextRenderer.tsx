@@ -1,7 +1,8 @@
 import React, { FC, memo, useEffect, useRef, useState } from 'react'
 import {
   addAnnotationBaseStyle,
-  addAnnotationId, addCrossRefTargetStyle,
+  addAnnotationId,
+  addCrossRefTargetStyle,
   addHighlightStyle,
   addHoverStyle,
   addNestedTargetStyle,
@@ -40,6 +41,7 @@ interface Props {
   source: string
   onSelect?: () => void
   ignoreFilters?: boolean
+  paddingTop?: boolean
 }
 const GenericTextRenderer: FC<Props> = memo(({
   htmlString,
@@ -47,7 +49,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   onUpdateMatchedAnnotationsMap,
   source,
   onSelect,
-  ignoreFilters = false
+  ignoreFilters = false,
+  paddingTop = false
 }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
@@ -248,9 +251,9 @@ const GenericTextRenderer: FC<Props> = memo(({
     // hoveredAnnotations can contain parent targets.
     // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
     const target = e.currentTarget as HTMLElement
-    const annotIds = getAnnotationIds(target)
-    const idsArray = annotIds?.split(',')
-    if (idsArray?.length === 0) return
+    const annotIds = getAnnotationIds(target) ?? ''
+    const idsArray = annotIds.split(',')
+    if (idsArray.length === 0) return
 
     setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
   }
@@ -323,8 +326,15 @@ const GenericTextRenderer: FC<Props> = memo(({
     setHoveredAnnotations([])
   }
 
-  return <div data-text-wrapper ref={textWrapperRef} className="relative">
-    <TargetTooltip annotation={tooltipAnnotation} targetElement={tooltipTargetElement} wrapperRef={textWrapperRef} open={tooltipOpen} onClose={closeTooltip} crossRefInfo={crossRefInfo} />
+  return <div data-text-wrapper ref={textWrapperRef} className={`relative ${paddingTop ? 'pt-16' : 'pt-2'}`}>
+    <TargetTooltip
+      annotation={tooltipAnnotation}
+      targetElement={tooltipTargetElement}
+      wrapperRef={textWrapperRef}
+      open={tooltipOpen}
+      onClose={closeTooltip}
+      crossRefInfo={crossRefInfo}
+    />
   </div>
 })
 
