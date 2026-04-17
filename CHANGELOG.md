@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.21](https://github.com/subugoe/tido/compare/v5.0.0-alpha.20...v5.0.0-alpha.21) (2026-04-17)
+
+
+### Features
+
+* Implement cross ref in annotations and in text with the new cross ref data structure ([db07f3a](https://github.com/subugoe/tido/commit/db07f3a85f07ca6ef5138cea3026b80d3f51267a))
+* show annotation if at least one witness is selected in filters (again), show only filtered witness chips ([8fe7a6f](https://github.com/subugoe/tido/commit/8fe7a6fafe46b31a7ebcdbb2a2338fe944b37539))
+
+
+### Bug Fixes
+
+* fix mouse leave outside of text at annotation targets ([5a3acd2](https://github.com/subugoe/tido/commit/5a3acd21d94c8ceb08a129280fbc647aa5be2350))
+* remove element from `èlements` in AlignAnnotationsList, when target is not found ([c8658aa](https://github.com/subugoe/tido/commit/c8658aae981e1f0521899f5ee9c5e6c6db842897))
+
+
+### Refactoring
+
+* deal with onClickTarget in GenericTextRenderer ([71efa16](https://github.com/subugoe/tido/commit/71efa1607a88d7bf8418432720c4138b5303afe6))
+* generalize the text rendering further ([9956e05](https://github.com/subugoe/tido/commit/9956e0527540a8a5b2118fcf4f521118bcdf9ca0))
+* GenericTextRender which highlights targets and takes care of useEffect hoveredAnnotations ([d4d7783](https://github.com/subugoe/tido/commit/d4d7783a6ad77341594a97eb9e4396f79ce82518))
+* restore 'target' as Element instead of string in MatchedAnnotationsMap ([6e16177](https://github.com/subugoe/tido/commit/6e161775a13796306719120a1dc9ebc9b3e20f14))
+
 ## [5.0.0-alpha.20](https://github.com/subugoe/tido/compare/v5.0.0-alpha.19...v5.0.0-alpha.20) (2026-03-30)
 
 
