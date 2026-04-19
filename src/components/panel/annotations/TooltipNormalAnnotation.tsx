@@ -9,16 +9,17 @@ interface Props {
 
 const TooltipNormalAnnotation: FC<Props> = ({ annotation }) => {
   const { annotations: annotationsConfig } = useConfig()
-  const { updatePanel } = usePanel()
+  const { updatePanel, selectedAnnotation } = usePanel()
 
   const ref = useRef<HTMLDivElement>(null)
 
   const type = (annotation.body as AnnotationBody)['x-content-type']
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
   const content = (annotation.body as AnnotationBody).value
+  const isSelected = selectedAnnotation?.id === annotation.id
 
   function handleSelection() {
-    updatePanel({ selectedAnnotation: annotation })
+    updatePanel({ selectedAnnotation: isSelected ? null : annotation })
   }
 
   useEffect(() => {
@@ -30,7 +31,11 @@ const TooltipNormalAnnotation: FC<Props> = ({ annotation }) => {
   }, [content])
 
   return (
-    <div className="flex flex-col pt-2 rounded-lg border border-border bg-muted hover:border-primary hover:cursor-pointer" onClick={handleSelection}>
+    <div
+      className={`flex flex-col pt-2 rounded-lg border border-border hover:cursor-pointer
+        ${isSelected ? 'shadow-md bg-background outline-primary outline-2' : 'bg-muted hover:border-primary'}`}
+      onClick={handleSelection}
+    >
       <div className="px-3 pb-2">
         <Badge variant="accent" className="mb-1">{typeLabel}</Badge>
         <div ref={ref} />

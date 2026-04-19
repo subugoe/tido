@@ -26,9 +26,6 @@ const Content: FC<Props> = ({ error, manifestLabel, itemLabel, contentType, acti
   const content = error ?
     <CrossRefError error={error} />
     :  <>
-      <div>
-        {t('reference')}
-      </div>
       {showCrossRefLabels && <CrossRefTitle
         contentType={panelState.contentTypes.length > 1 ? t(contentType) : ''}
         manifestLabel={manifestLabel}
