@@ -13,8 +13,9 @@ import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
-import { SidebarScroller } from '@/utils/sidebar-scroller.ts'
+import { Scroller } from '@/utils/scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
+import { addSyncHoverStyle, removeSyncHoverStyle } from '@/utils/text.ts'
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
@@ -44,12 +45,15 @@ interface PanelContextType {
   init: (config: PanelConfig) => void,
   annotationsMode: AnnotationsMode,
   setAnnotationsMode: (mode: AnnotationsMode) => void,
-  getSidebarScroller: () => SidebarScroller,
+  getScroller: () => Scroller,
   error: CustomError | null,
   annotationsError: CustomError | null,
   annotationsLoading: boolean
   matchedAnnotationsMaps: {[contentUrl: string]: MatchedAnnotationsMap}
   updateMatchedAnnotationsMap: (contentUrl: string, map: MatchedAnnotationsMap) => void
+  syncAnnotations: Annotation[] | null
+  updateSyncMap: (contentUrl: string, map: SyncMap) => void
+  setHoveredSyncAnnotations: (value: string[] | null) => void
 }
 
 interface PanelProviderProps {
@@ -74,8 +78,12 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [annotationsMode, setAnnotationsMode] = useState<AnnotationsMode>(annotationsConfig.singleMode ?? annotationsConfig.defaultMode)
   const [error, setError] = useState<CustomError>(null)
   const [annotationsError, setAnnotationsError] = useState<CustomError>(null)
-  const sidebarScroller = useRef<SidebarScroller>(null)
+  const scroller = useRef<Scroller>(null)
   const [annotationsLoading, setAnnotationsLoading] = useState(false)
+
+  const [syncAnnotations, setSyncAnnotations] = useState<Annotation[] | null>(null)
+  const [syncMaps, setSyncMaps] = useState<{[contentUrl: string]: SyncMap}>({})
+  const [hoveredSyncAnnotations, setHoveredSyncAnnotations] = useState(null)
 
   const { t } = useTranslation()
 
@@ -220,6 +228,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       } else {
         setAnnotationsLoading(false)
       }
+
+      if (collection.annotationCollection) {
+        const page = await getAnnotationPage(collection.annotationCollection)
+        const annotations = page.items ?? []
+        setSyncAnnotations(annotations)
+      }
+
     } catch (e) {
       console.error(e)
       setError(new CustomError(t('panel_init_error'), e.message))
@@ -255,6 +270,15 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     })
   }
 
+  function updateSyncMap(contentUrl: string, map: SyncMap) {
+    setSyncMaps(prev => {
+      return {
+        ...prev,
+        [contentUrl]: map
+      }
+    })
+  }
+
   useEffect(() => {
     if (annotationsConfig.filters) {
       setAnnotationFilters(annotationsConfig.filters)
@@ -265,6 +289,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   useEffect(() => {
     init(panelState.config)
   }, [panelState.config, panelId])
+
+  useEffect(() => {
+    getScroller().setSyncMaps(syncMaps)
+  }, [syncMaps])
 
   useEffect(() => {
     const resultMap: {[contentUrl: string]: MatchedAnnotationsMap} = {}
@@ -287,7 +315,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   }, [selectedAnnotationTypes])
 
   useEffect(() => {
-    getSidebarScroller().setMatchedMap(matchedAnnotationsMaps)
+    getScroller().setMatchedMap(matchedAnnotationsMaps)
 
     // This is for the case where no specific annotation filters were configured.
     // We extract all occurring types from the annotations that match the text.
@@ -297,7 +325,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     const types = Object
       .values(matchedAnnotationsMaps)
       .flatMap(map => Object.values(map))
-      .map(item => item.annotation.body['x-content-type'])
+      .map(item => (item.annotation.body as AnnotationBody)['x-content-type'])
       .filter(type => !tooltipTypes.includes(type))
 
     if (types.length === 0) return
@@ -309,6 +337,22 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       items: uniqueAnnotationTypes.map(type => ({ types: [type], selected: true }))
     })
   }, [matchedAnnotationsMaps])
+
+  useEffect(() => {
+    Object
+      .values(syncMaps)
+      .forEach(map => {
+        Object
+          .keys(map)
+          .forEach(key => {
+            if (hoveredSyncAnnotations && hoveredSyncAnnotations.includes(key)) {
+              map[key].forEach(target => addSyncHoverStyle(target))
+            } else {
+              map[key].forEach(target => removeSyncHoverStyle(target))
+            }
+          })
+      })
+  }, [hoveredSyncAnnotations])
 
   function updatePanel(data: Partial<PanelState>) {
     usePanelStore.getState().updatePanel(panelId, data)
@@ -322,11 +366,11 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     setResizer(new PanelResizer(el))
   }
 
-  function getSidebarScroller() {
-    if (!sidebarScroller.current) {
-      sidebarScroller.current = new SidebarScroller()
+  function getScroller() {
+    if (!scroller.current) {
+      scroller.current = new Scroller()
     }
-    return sidebarScroller.current
+    return scroller.current
   }
 
   function setSelectedAnnotation(annotation: Annotation | null) {
@@ -360,12 +404,15 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       init,
       annotationsMode,
       setAnnotationsMode,
-      getSidebarScroller,
+      getScroller: getScroller,
       error,
       annotationsError,
       annotationsLoading,
       matchedAnnotationsMaps,
-      updateMatchedAnnotationsMap
+      updateMatchedAnnotationsMap,
+      syncAnnotations,
+      updateSyncMap,
+      setHoveredSyncAnnotations
     }}>
       {children}
     </PanelContext.Provider>

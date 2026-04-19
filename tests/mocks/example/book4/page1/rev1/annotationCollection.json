@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book4/annotationCollection.json",
+  "type": "AnnotationCollection",
+  "label": "Annotations for The Road Not Taken",
+  "total": 10,
+  "first": "http://localhost:8181/example/book4/page1/rev1/annotationPage.json",
+  "last": "http://localhost:8181/example/book4/page1/rev1/annotationPage.json"
+}

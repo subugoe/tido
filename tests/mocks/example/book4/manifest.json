@@ -1,0 +1,59 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/manifest.jsonld",
+  "textapi": "1.4.0",
+  "id": "http://localhost:8181/example/book4/manifest.json",
+  "label": "The Road Not Taken",
+  "sequence": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/example/book4/page1/rev1/item.json",
+      "type": "item",
+      "label": "Stanza 1"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/example/book4/page1/rev1/item.json",
+      "type": "item",
+      "label": "Stanza 2"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/example/book4/page1/rev1/item.json",
+      "type": "item",
+      "label": "Stanza 3"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
+      "id": "http://localhost:8181/example/book4/page1/rev1/item.json",
+      "type": "item",
+      "label": "Stanza 4"
+    }
+  ],
+  "total": 1,
+  "actor": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/actor.jsonld",
+      "role": ["author"],
+      "name": "Robert Frost",
+      "id": "author-frost"
+    }
+  ],
+  "metadata": [
+    {
+      "key": "Published",
+      "value": "1916"
+    },
+    {
+      "key": "Genre",
+      "value": "Poetry"
+    }
+  ],
+  "license": [
+    {
+      "id": "PD-US",
+      "notes": "Public domain - published 1916"
+    }
+  ],
+  "description": "A famous poem by Robert Frost about choices",
+  "annotationCollection": "http://localhost:8181/example/book4/annotationCollection.json"
+}

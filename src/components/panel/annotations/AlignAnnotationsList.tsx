@@ -6,7 +6,7 @@ import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 const ANNOTATION_GAP = 5
 
 const AlignAnnotationsList: FC = () => {
-  const { panelId, selectedAnnotation, setSelectedAnnotation, getSidebarScroller } = usePanel()
+  const { panelId, selectedAnnotation, setSelectedAnnotation } = usePanel()
   const { filteredAnnotations } = useAnnotations()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
@@ -24,15 +24,6 @@ const AlignAnnotationsList: FC = () => {
   function isClickedElAnnotation(clickedEl: HTMLElement) {
     return clickedEl.closest('[data-annotation]')
   }
-
-  useEffect(() => {
-    const scroller = getSidebarScroller()
-    scroller.start()
-
-    return () => {
-      scroller.stop()
-    }
-  }, [])
 
   useEffect(() => {
     trackTopChange()

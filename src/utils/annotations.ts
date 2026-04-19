@@ -101,7 +101,7 @@ function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, 
 
 async function getCrossRefInfo(annotation: Annotation) {
   // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
-  const isCrossRefInAnnotation = !annotation?.target[0]?.source.endsWith('.html')
+  const isCrossRefInAnnotation = !getSource(annotation?.target[0]).id.endsWith('.html')
 
   const source = (annotation.body as AnnotationBodyCrossRef).source
   const refItemData = await apiRequest<Item>(source.item)
@@ -113,7 +113,7 @@ async function getCrossRefInfo(annotation: Annotation) {
     const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
     const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
     refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
-    contentUrl = refAnnotation?.target?.[0].source
+    contentUrl = getSource(refAnnotation?.target?.[0]).id
   }
 
   if (!isCrossRefInAnnotation) contentUrl = (annotation.body as AnnotationBodyCrossRef)?.source?.id
@@ -131,6 +131,13 @@ async function getCrossRefInfo(annotation: Annotation) {
   }
 }
 
+function getSource(target: AnnotationTarget): AnnotationTargetSource {
+  if (typeof target.source === 'object') {
+    return target.source
+  }
+  return { id: target.source }
+}
+
 export {
   getSelectedTypes,
   getFilteredAnnotations,
@@ -139,5 +146,6 @@ export {
   findTargets,
   getNestedAnnotations,
   getAnnotationIdsByEl,
-  getCrossRefInfo
+  getCrossRefInfo,
+  getSource
 }

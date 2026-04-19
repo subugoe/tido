@@ -19,7 +19,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({ children }, ref)
   </div>
 })
 const AnnotationsView: FC = () => {
-  const { annotationsError, annotationsMode, selectedAnnotation, getSidebarScroller } = usePanel()
+  const { annotationsError, annotationsMode, selectedAnnotation, getScroller } = usePanel()
   const { filteredAnnotations } = useAnnotations()
   const scrollContainer = useRef<HTMLDivElement>(null)
   const { showBoundary } = useErrorBoundary()
@@ -28,8 +28,10 @@ const AnnotationsView: FC = () => {
 
   useEffect(() => {
     if (!scrollContainer.current) return
-    const scroller = getSidebarScroller()
+    const scroller = getScroller()
     scroller.setSidebar(scrollContainer.current)
+    scroller.startSidebar()
+    return () => scroller.stopSidebar()
   }, [scrollContainer])
 
   useEffect(() => {

@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/annotationCollection.json",
+  "type": "AnnotationCollection",
+  "label": "Synopsis connections for Classic Literature Collection",
+  "total": 4,
+  "first": "http://localhost:8181/example/annotationPage.json",
+  "last": "http://localhost:8181/example/annotationPage.json"
+}

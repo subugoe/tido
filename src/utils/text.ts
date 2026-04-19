@@ -9,11 +9,15 @@ const CROSS_REF_TARGET_STYLE = ['text-blue-500', 'underline']
 const CROSS_REF_ATTRIBUTE = 'data-target'
 const CROSS_REF_REL_ATTRIBUTE = 'rel'
 const CROSS_REF_REL_STYLE = ['bg-yellow-200']
+const SYNC_TARGET_HOVER_STYLE = ['bg-amber-200']
+const SYNC_ANNOTATION_ID_ATTRIBUTE = 'data-sync-annotation-id'
+const SYNC_HIGHLIGHT_STYLE = ['cursor-pointer']
+
 
 function addAnnotationId(target: Element, id: string) {
-  let old = getAnnotationIds(target)
-  old =  old ? `${old},${id}` : id
-  target.setAttribute(ANNOTATION_IDS_ATTRIBUTE, [...new Set(old.split(','))].join())
+  const ids = getAnnotationIds(target)
+  ids.push(id)
+  target.setAttribute(ANNOTATION_IDS_ATTRIBUTE, [...new Set(ids)].join())
 }
 
 function removeAnnotationIds(target: Element) {
@@ -33,8 +37,28 @@ function addHighlightStyle(target: Element) {
   target.classList.add(...HIGHLIGHTING_STYLE)
 }
 
+function addSyncHighlightStyle(target: Element) {
+  target.classList.add(...SYNC_HIGHLIGHT_STYLE)
+}
+
+function addSyncHoverStyle(target: Element) {
+  target.classList.add(...SYNC_TARGET_HOVER_STYLE)
+}
+
+function addSyncAnnotationId(target: Element, id: string) {
+  target.setAttribute(SYNC_ANNOTATION_ID_ATTRIBUTE, id)
+}
+
 function removeHighlightStyle(target: Element) {
   target.classList.remove(...HIGHLIGHTING_STYLE)
+}
+
+function removeSyncHighlightStyle(target: Element) {
+  target.classList.remove(...SYNC_HIGHLIGHT_STYLE)
+}
+
+function removeSyncHoverStyle(target: Element) {
+  target.classList.remove(...SYNC_TARGET_HOVER_STYLE)
 }
 
 function addHoverStyle(target: Element) {
@@ -64,7 +88,13 @@ function removeSelectedStyle(target: Element) {
 }
 
 function getAnnotationIds(target: Element) {
-  return target.getAttribute(ANNOTATION_IDS_ATTRIBUTE)
+  const value = target.getAttribute(ANNOTATION_IDS_ATTRIBUTE) ?? ''
+  return value.split(',')
+}
+
+function getSyncAnnotationIds(target: Element) {
+  const value = target.getAttribute(SYNC_ANNOTATION_ID_ATTRIBUTE) ?? ''
+  return value.split(',')
 }
 
 function addCrossRefTargetStyle(target: Element) {
@@ -193,7 +223,7 @@ function getHoveredAnnotationsIds(target: HTMLElement, targets: HTMLElement[]) {
 
     foundTargets.forEach((t) => {
       const annotIds = getAnnotationIds(t)
-      if (annotIds) idsArray.push(...(annotIds.split(',')))
+      if (annotIds) idsArray.push(...annotIds)
     })
 
     parentEl = parentEl.parentElement
@@ -261,9 +291,13 @@ export {
   addSelectedStyle,
   removeSelectedStyle,
   addHighlightStyle,
+  addSyncHighlightStyle,
   containsChildren,
   removeHighlightStyle,
+  removeSyncHighlightStyle,
+  removeSyncHoverStyle,
   getAnnotationIds,
+  getSyncAnnotationIds,
   getRootCrossRefElements,
   flipMatchedAnnotationsMap,
   getTextTargets,
@@ -275,5 +309,7 @@ export {
   getTargetsHoveredAnnotations,
   isParentHovered,
   addCrossRefTargetStyle,
-  addCrossReferencedElStyle
+  addCrossReferencedElStyle,
+  addSyncHoverStyle,
+  addSyncAnnotationId
 }
