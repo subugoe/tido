@@ -5,6 +5,7 @@
   "theme": {
     "primaryColor": "#2b7fff"
   },
+  "showCrossRefLabels": true,
   "showPanelPlaceholder": false,
   "translations": {
     "de": {
@@ -28,6 +29,7 @@
     }
   ],
   "annotations": {
+    "tooltipTypes": ["EditorialCorrection", "EditorialComment"],
     "singleMode": "aligned",
     "types": {},
     "filters": {

@@ -1,41 +1,26 @@
 import { FC } from 'react'
-import { Popover, PopoverContent, PopoverAnchor } from '@/components/ui/popover'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { Badge } from '@/components/ui/badge.tsx'
 
 interface Props {
   annotation: Annotation | null
-  targetElement: HTMLElement | null
-  open: boolean
-  onClose: () => void
 }
 
-const AnnotationTooltip: FC<Props> = ({ annotation, targetElement, open, onClose }) => {
-  if (!annotation || !targetElement) return null
+const TooltipAnnotation: FC<Props> = ({ annotation }) => {
+  const { annotations: annotationsConfig } = useConfig()
+  const type = (annotation.body as AnnotationBody)['x-content-type']
+  const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
+  const content = (annotation.body as AnnotationBody).value
 
-  const content = annotation.body.value
 
   return (
-    <Popover open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <PopoverAnchor asChild>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: targetElement.offsetLeft,
-            top: targetElement.offsetTop,
-            width: targetElement.offsetWidth,
-            height: targetElement.offsetHeight,
-          }}
-        />
-      </PopoverAnchor>
-      <PopoverContent
-        align="center"
-        sideOffset={4}
-        side="bottom"
-        className="max-w-64"
-      >
+    <div className="flex flex-col h-20 pt-2 rounded-lg border border-border bg-muted">
+      <div className="px-3 pb-2">
+        <Badge variant="accent" className="mb-1">{typeLabel}</Badge>
         <div dangerouslySetInnerHTML={{ __html: content }} />
-      </PopoverContent>
-    </Popover>
+      </div>
+    </div>
   )
 }
 
-export default AnnotationTooltip
+export default TooltipAnnotation
