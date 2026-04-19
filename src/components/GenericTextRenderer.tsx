@@ -321,10 +321,10 @@ const GenericTextRenderer: FC<Props> = memo(({
       else {
         setSelectedAnnotation(normalAnnotations[0])
         selectedAnnotationRef.current = normalAnnotations[0]
+        if (onSelect) onSelect()
       }
     }
 
-    if (onSelect) onSelect()
   }
 
   const closeTooltip = () => {
@@ -335,8 +335,9 @@ const GenericTextRenderer: FC<Props> = memo(({
     setHoveredAnnotations([])
   }
 
-  return <div data-text-wrapper ref={textWrapperRef} className="relative">
-    <TargetTooltipContainer relatedAnnotations={relatedAnnotations} crossRefAnnotation={crossRefAnnotation} targetElement={tooltipTargetElement} open={tooltipOpen} onClose={closeTooltip} />
+  return <div data-text-wrapper ref={textWrapperRef} className={`relative ${paddingTop ? 'pt-16' : 'pt-2'}`}>
+    <TargetTooltipContainer relatedAnnotations={relatedAnnotations} crossRefAnnotation={crossRefAnnotation}
+      targetElement={tooltipTargetElement} open={tooltipOpen} onClose={closeTooltip} />
   </div>
 })
 
