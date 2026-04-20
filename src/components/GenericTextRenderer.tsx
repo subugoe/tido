@@ -101,10 +101,10 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (annotations) {
       const annotationsInText = annotations.filter(annotation => annotation.target?.[0].source === source)
 
-    const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
-      if (!cur.target) return acc
-      const isSource = cur.target[0].source === source
-      const selector = (cur.target[0].selector as CssSelector)?.value
+      const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
+        if (!cur.target) return acc
+        const isSource = cur.target[0].source === source
+        const selector = (cur.target[0].selector as CssSelector)?.value
 
         if (!isSource || !selector) {
           if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
