@@ -19,7 +19,8 @@ const TooltipNormalAnnotation: FC<Props> = ({ annotation }) => {
   const isSelected = selectedAnnotation?.id === annotation.id
 
   function handleSelection() {
-    updatePanel({ selectedAnnotation: isSelected ? null : annotation })
+    updatePanel({ selectedAnnotation: isSelected ? null : annotation, showSidebar: true })
+
   }
 
   useEffect(() => {
