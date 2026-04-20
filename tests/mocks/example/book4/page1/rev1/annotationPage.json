@@ -1,0 +1,225 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/book4/page1/rev1/annotationPage.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/book4/annotationCollection.json",
+    "label": "Annotations for The Road Not Taken",
+    "total": 10
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/book4/page1/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The famous opening lines that establish the <span id=\"choice-theme\">central theme of choices</span> in the poem.",
+        "format": "text/html",
+        "x-content-type": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book4/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#word-1"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book4/page1/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A <span id=\"yellow-woods\">symbolic setting representing life's decisions</span> - the autumnal forest reflects the autumn of life.",
+        "format": "text/html",
+        "x-content-type": "Symbolic Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book4/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#word-7"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book4/page1/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The <span id=\"traveler-trope\">worn path represents the common, conventional choice</span> that most people make.",
+        "format": "text/html",
+        "x-content-type": "Interpretation"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book4/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#word-79"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book4/page1/rev1/annotation-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "This famous line captures the <span id=\"regret-theme\">regret and contemplation that comes with choice</span>.",
+        "format": "text/html",
+        "x-content-type": "Thematic Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book4/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#word-119"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book4/page1/rev1/annotation-5",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The <span id=\"repeated-stanza\">repetition of the final stanza</span> creates a powerful rhetorical effect.",
+        "format": "text/html",
+        "x-content-type": "Structural Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book4/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#word-145"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book4/page1/rev1/annotation-6",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Textual correction: Original manuscript reads <span id=\"typed-cor\">\"typed correction\"</span> - later editions changed to 'telling'.",
+        "format": "text/html",
+        "x-content-type": "Textual Correction"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book4/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#word-124"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book4/page1/rev1/annotation-7",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Editorial note: This stanza appears in early manuscripts as a later addition <span id=\"handwritten-insertion\">in Frost's own hand</span>.",
+        "format": "text/html",
+        "x-content-type": "Textual History"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book4/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#word-273"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book4/page1/rev1/annotation-8",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Note: The final stanza contains <span id=\"stopping-woods\">'Stopping by Woods' elements</span> - this poem was written shortly after.",
+        "format": "text/html",
+        "x-content-type": "Cross-reference"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book4/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#word-276"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book4/page1/rev1/annotation-9",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Commentary: Frost originally wrote this as a joke for his friend <span id=\"friend-exc\">Thomas Fay</span>, but it became his most beloved poem.",
+        "format": "text/html",
+        "x-content-type": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book4/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#word-548"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book4/page1/rev1/annotation-10",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Critical note: Frost's reading of this poem at Kennedy's inauguration is considered one of the <span id=\"poetry-politics\">most political poetry readings in American history</span>.",
+        "format": "text/html",
+        "x-content-type": "Cultural Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book4/page1/rev1/content.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#word-556"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

@@ -6,13 +6,13 @@ interface Props {
   children?: ReactNode
 }
 const PanelShell: FC<Props> = ({ children }) => {
-  const { panelId, initResizer, getSidebarScroller, resizer } = usePanel()
+  const { panelId, initResizer, getScroller, resizer } = usePanel()
   const ref = useRef(null)
 
   useEffect(() => {
     if (!ref.current) return
     initResizer(ref.current)
-    getSidebarScroller()
+    getScroller()
 
     // Scroll to this panel
     const scrollPosX = ref.current.offsetLeft - ref.current.offsetWidth / 2

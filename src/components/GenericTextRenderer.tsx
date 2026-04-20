@@ -7,10 +7,13 @@ import {
   addHoverStyle,
   addNestedTargetStyle,
   addSelectedStyle,
+  addSyncAnnotationId,
+  addSyncHighlightStyle,
   assignNestedTargetsInFlippedMatched,
   flipMatchedAnnotationsMap,
   getAnnotationIds,
   getHoveredAnnotationsIds,
+  getSyncAnnotationIds,
   getTargetsHoveredAnnotations,
   getTextTargets,
   isParentHovered,
@@ -24,6 +27,7 @@ import {
 } from '@/utils/text.ts'
 import {
   getNestedAnnotations,
+  getSource,
   isFiltered
 } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
@@ -53,7 +57,15 @@ const GenericTextRenderer: FC<Props> = memo(({
 }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
-  const { selectedAnnotation, setSelectedAnnotation, selectedAnnotationTypes, annotations } = usePanel()
+  const {
+    selectedAnnotation,
+    selectedAnnotationTypes,
+    setSelectedAnnotation,
+    annotations,
+    syncAnnotations,
+    updateSyncMap,
+    setHoveredSyncAnnotations
+  } = usePanel()
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
   const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
@@ -84,53 +96,82 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   // Create and set matchedMap by identifying target nodes. Add listeners to targets.
   useEffect(() => {
-    if (!annotations || !parsedDom) return
-    const annotationsInText = annotations.filter(annotation => annotation.target?.[0].source === source)
+    if (!parsedDom) return
 
-    const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
-      if (!cur.target) return acc
-      const isSource = cur.target[0].source === source
-      const selector = (cur.target[0].selector as CssSelector)?.value
+    if (annotations) {
+      const annotationsInText = annotations.filter(annotation => annotation.target?.[0].source === source)
 
-      if (!isSource || !selector) {
-        if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
-        return acc
-      }
+      const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
+        if (!cur.target) return acc
+        const isSource = cur.target[0].source === source
+        const selector = (cur.target[0].selector as CssSelector)?.value
 
-      const isCrossRefAnnotation = source.endsWith('.html') ? (cur.body as AnnotationBody)?.['x-content-type'] === 'CrossRef' : (cur.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
-      if (isCrossRefAnnotation) {
-        Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
-          addCrossRefTargetStyle(el)
-        })
-      }
-
-      const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
-
-      if (matchedNodes.length > 0) {
-        const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-
-        matchedNodes.forEach(target => {
-          target.addEventListener('click', onClickTarget)
-          target.addEventListener('mouseenter', onMouseEnterTarget)
-          target.addEventListener('mouseleave', onMouseLeaveTarget)
-        })
-
-        const nestedAnnotations = getNestedAnnotations(cur, annotationsInText)
-
-        acc[cur.id] = {
-          target: matchedNodes,
-          filtered: !selectedAnnotationTypes || ignoreFilters || isFiltered(cur, selectedAnnotationTypes, tooltipTypes),
-          annotation: cur,
-          nestedAnnotations
+        if (!isSource || !selector) {
+          if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
+          return acc
         }
-      }
-      return acc
-    }, {})
-    setMatchedMap(result)
-    if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
 
-    flippedMatchedMapRef.current = flipMatchedAnnotationsMap(matchedMap)
-    targetsRef.current = getTextTargets(flippedMatchedMapRef.current)
+        const isCrossRefAnnotation = source.endsWith('.html') ? (cur.body as AnnotationBody)?.['x-content-type'] === 'CrossRef' : (cur.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
+        if (isCrossRefAnnotation) {
+          Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
+            addCrossRefTargetStyle(el)
+          })
+        }
+
+        const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
+
+        if (matchedNodes.length > 0) {
+          const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
+
+          matchedNodes.forEach(target => {
+            target.addEventListener('click', onClickTarget)
+            target.addEventListener('mouseenter', onMouseEnterTarget)
+            target.addEventListener('mouseleave', onMouseLeaveTarget)
+          })
+
+          const nestedAnnotations = getNestedAnnotations(cur, annotationsInText)
+
+          acc[cur.id] = {
+            target: matchedNodes,
+            filtered: !selectedAnnotationTypes || ignoreFilters || isFiltered(cur, selectedAnnotationTypes, tooltipTypes),
+            annotation: cur,
+            nestedAnnotations
+          }
+        }
+        return acc
+      }, {})
+      setMatchedMap(result)
+      if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
+
+      flippedMatchedMapRef.current = flipMatchedAnnotationsMap(matchedMap)
+      targetsRef.current = getTextTargets(flippedMatchedMapRef.current)
+    }
+
+    if (syncAnnotations) {
+      const map = syncAnnotations.reduce((acc, cur) => {
+        const target = cur.target.find(t => getSource(t).id === source)
+        if (!target) return acc
+
+        const selector = (target.selector as CssSelector)?.value
+        const targets = Array.from(parsedDom.querySelectorAll(selector))
+
+        if (!targets) return acc
+
+        targets.forEach(target => {
+          addSyncAnnotationId(target, cur.id)
+          addAnnotationBaseStyle(target)
+          addSyncHighlightStyle(target)
+          target.addEventListener('mouseenter', onMouseEnterSyncTarget)
+          target.addEventListener('mouseleave', onMouseLeaveSyncTarget)
+        })
+
+        acc[cur.id] = targets
+
+        return acc
+      }, {} as { [key: string]: Element[] })
+
+      updateSyncMap(source, map)
+    }
 
   }, [parsedDom, annotations, annotationsConfig])
 
@@ -232,7 +273,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       if (isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
         addSelectedStyle(target)
         return
-      } else if(someFiltered) {
+      } else if (someFiltered) {
         addHighlightStyle(target)
       }
     })
@@ -250,8 +291,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     // hoveredAnnotations can contain parent targets.
     // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
     const target = e.currentTarget as HTMLElement
-    const annotIds = getAnnotationIds(target) ?? ''
-    const idsArray = annotIds.split(',')
+    const idsArray = getAnnotationIds(target)
     if (idsArray.length === 0) return
 
     setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
@@ -324,6 +364,23 @@ const GenericTextRenderer: FC<Props> = memo(({
       }
     }
 
+  }
+
+  const onMouseEnterSyncTarget = (e: Event) => {
+    const target = e.currentTarget as HTMLElement
+    const idsArray = getSyncAnnotationIds(target)
+    if (idsArray.length === 0) return
+
+    setHoveredSyncAnnotations(idsArray)
+  }
+
+  const onMouseLeaveSyncTarget = (e: Event) => {
+    // hoveredAnnotations can contain parent targets.
+    // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
+    const target = e.currentTarget as HTMLElement
+    const idsArray = getSyncAnnotationIds(target)
+    if (idsArray.length === 0) return
+    setHoveredSyncAnnotations(null)
   }
 
   const closeTooltip = () => {

@@ -9,16 +9,20 @@ import { useTextView } from '@/contexts/TextViewContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const TextViewContent: FC = () => {
-  const { panelState, getSidebarScroller } = usePanel()
+  const { panelState, getScroller } = usePanel()
   const { loadingText, setLoadingText } = useText()
-  const { text } = useTextView()
+  const { text, activeContentUrl } = useTextView()
   const { showContentTypeToggle } = useConfig()
   const scrollContainer = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!scrollContainer.current) return
-    getSidebarScroller().setText(scrollContainer.current)
-  }, [scrollContainer])
+    const url = activeContentUrl.current
+    if (!scrollContainer.current || !url) return
+    const scroller = getScroller()
+    scroller.setText(url, scrollContainer.current)
+    scroller.startText(url)
+    return () => scroller.stopText(url)
+  }, [scrollContainer.current, activeContentUrl.current])
 
   useEffect(() => {
     if (!scrollContainer.current) return

@@ -2,7 +2,7 @@
   "panels": [
     {
       "collection": "http://localhost:8181/example/collection.json",
-      "manifest": "http://localhost:8181/example/book1/manifest.json"
+      "manifest": "http://localhost:8181/example/book4/manifest.json"
     }
   ],
   "rootCollections": [
@@ -12,12 +12,12 @@
     {
       "label": "Diplomatic",
       "view": "text",
-      "contentTypes": ["diplomatic"]
+      "contentTypes": ["transcription"]
     },
     {
       "label": "Text",
       "view": "text",
-      "contentTypes": ["normalized"]
+      "contentTypes": ["translation"]
     }
   ]
 }

@@ -78,11 +78,19 @@ declare global {
 
   type AnnotationContentFormat = 'text/plain' | 'text/html'
 
+  interface AnnotationTargetSource {
+    id: string
+    collection?: string
+    manifest?: string
+    item?: string
+  }
+
   interface AnnotationTarget {
     selector: CssSelector | RangeSelector
     format: string
-    language: string
-    source: string
+    language?: string
+    source: string | AnnotationTargetSource
+    motivation?: string
   }
 
   interface AnnotationType {
@@ -264,6 +272,10 @@ declare global {
     annotations: Annotation[]
     filtered: boolean[],
     parents: Element[]
+  }
+
+  interface SyncMap {
+    [source: string]: Element[]
   }
 
   interface Metadata {
