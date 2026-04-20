@@ -148,7 +148,6 @@ function flipMatchedAnnotationsMap(map: MatchedAnnotationsMap): MergedAnnotation
           target: el,
           annotations: [],
           filtered: [],
-          selectedAnnotationIndex: -1,
           parents: []
         }
         elementMap.set(el, merged)

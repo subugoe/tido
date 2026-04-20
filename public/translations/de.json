@@ -125,6 +125,8 @@
     "previous_item": "Vorheriges Item",
     "next_item": "Nächstes Item",
     "previous_manifest": "Vorheriges Manifest",
+    "sidebar": "Seitenleiste",
+    "tooltip": "Tooltip",
     "next_manifest": "Nächstes Manifest",
     "filters": "Filter",
     "list": "Liste",

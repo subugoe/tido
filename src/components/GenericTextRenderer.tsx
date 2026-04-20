@@ -23,8 +23,6 @@ import {
   removeSelectedStyle
 } from '@/utils/text.ts'
 import {
-  computeNewSelectedAnnotationIndex,
-  getCrossRefInfo,
   getNestedAnnotations,
   isFiltered
 } from '@/utils/annotations.ts'
@@ -32,7 +30,8 @@ import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import TargetTooltip from '@/components/panel/TargetTooltip.tsx'
+import TargetTooltipContainer from '@/components/panel/TargetTooltipContainer.tsx'
+import TargetTooltipContent from '@/components/panel/TargetTooltipContent.tsx'
 
 interface Props {
   htmlString?: string
@@ -54,18 +53,18 @@ const GenericTextRenderer: FC<Props> = memo(({
 }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
-  const { selectedAnnotation, selectedAnnotationTypes, setSelectedAnnotation, annotations } = usePanel()
+  const { selectedAnnotation, setSelectedAnnotation, selectedAnnotationTypes, annotations } = usePanel()
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
-  const [tooltipAnnotation, setTooltipAnnotation] = useState<Annotation | null>(null)
   const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
   const [tooltipOpen, setTooltipOpen] = useState(false)
-  const [crossRefInfo, setCrossRefInfo] = useState<CrossRefInfo | null>(null)
+  const [crossRefAnnotations, setCrossRefAnnotations] = useState<Annotation[]>([])
+  const [relatedAnnotations, setRelatedAnnotations] = useState<Annotation[]>([])
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
+  const selectedAnnotationRef = useRef<Annotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
-  const prevClickedTargetIndexRef = useRef<number>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
@@ -272,7 +271,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       e.stopPropagation()
     }
 
-    const crossRefAnnotation = annotations
+    const crossRefAnnotations = annotations
       .filter(a => {
         const isInSource = a.target?.[0].source === source
         const isCrossRef = source.endsWith('.html')
@@ -280,61 +279,67 @@ const GenericTextRenderer: FC<Props> = memo(({
           : (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === annotationsConfig?.crossRefContentType
         return isInSource && isCrossRef
       })
-      .find(a => {
+      .filter(a => {
         const selector = (a.target[0].selector as CssSelector)?.value
         if (!selector) return false
         return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
       })
 
-    if (crossRefAnnotation) {
-      const crossRefInfo = await getCrossRefInfo(crossRefAnnotation)
-      setCrossRefInfo(crossRefInfo)
-      setTooltipTargetElement(target as HTMLElement)
+    const crossRefContentType = annotationsConfig?.crossRefContentType
+    const seen = new Set<string>()
+    // compute related annotations: all annotations for the clicked target and its parent targets
+    const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
+      .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
+      .flatMap(entry => entry.annotations)
+      .filter(a => !seen.has(a.id) && seen.add(a.id))
+      .filter(a => (a.body as AnnotationBody)['x-content-type'] !== crossRefContentType)
+
+    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
+
+    const normalAnnotations = tooltipTypes.length === 0
+      ? newRelatedAnnotations
+      : newRelatedAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
+
+    const openTooltip = !(normalAnnotations.length === 1 && newRelatedAnnotations.length === 1 && crossRefAnnotations.length === 0)
+
+    if (openTooltip) {
       setTooltipOpen(true)
+      setTooltipTargetElement(target as HTMLElement)
+      setRelatedAnnotations(newRelatedAnnotations)
     }
 
-    const idsValue = getAnnotationIds(target)
-    if (!idsValue) return
+    setCrossRefAnnotations(crossRefAnnotations)
 
-    targetEntry.selectedAnnotationIndex = computeNewSelectedAnnotationIndex(targetEntry, prevClickedTargetIndexRef.current, flippedMatchedMapRef.current)
-
-    const annotation = targetEntry.selectedAnnotationIndex !== -1 ? targetEntry.annotations[targetEntry.selectedAnnotationIndex] : null
-
-    if (annotation) {
-      const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-      const contentType = (annotation.body as AnnotationBody)['x-content-type']
-
-      if (tooltipTypes.includes(contentType)) {
-        setTooltipAnnotation(annotation)
-        setTooltipTargetElement(target as HTMLElement)
-        setTooltipOpen(true)
-      } else {
-        setSelectedAnnotation(annotation)
-        prevClickedTargetIndexRef.current = flippedMatchedMapRef.current.findIndex(entry => targetEntry === entry)
+    // when we have only one normal annotation then we should select the annotation in Sidebar and not open tooltip. (select + deselect annotation)
+    if (!openTooltip && normalAnnotations.length === 1) {
+      // we need selectedAnnotationRef since the click listener has not an updated value of selectedAnnotation, it has the 'null' when it was initially created
+      if (targetEntry.annotations[0].id === selectedAnnotationRef.current?.id) {
+        setSelectedAnnotation(null)
+        selectedAnnotationRef.current = null
+      }
+      else {
+        setSelectedAnnotation(normalAnnotations[0])
+        selectedAnnotationRef.current = normalAnnotations[0]
         if (onSelect) onSelect()
       }
-    } else {
-      setSelectedAnnotation(null)
     }
+
   }
 
   const closeTooltip = () => {
-    setTooltipAnnotation(null)
-    setTooltipTargetElement(null)
-    setCrossRefInfo(null)
     setTooltipOpen(false)
+    setTooltipTargetElement(null)
+    setCrossRefAnnotations([])
+    setRelatedAnnotations([])
     setHoveredAnnotations([])
   }
 
   return <div data-text-wrapper ref={textWrapperRef} className={`relative ${paddingTop ? 'pt-16' : 'pt-2'}`}>
-    <TargetTooltip
-      annotation={tooltipAnnotation}
-      targetElement={tooltipTargetElement}
-      wrapperRef={textWrapperRef}
-      open={tooltipOpen}
-      onClose={closeTooltip}
-      crossRefInfo={crossRefInfo}
-    />
+    <TargetTooltipContainer
+      targetElement={tooltipTargetElement} open={tooltipOpen} onClose={closeTooltip}
+    >
+      <TargetTooltipContent crossRefAnnotations={crossRefAnnotations} relatedAnnotations={relatedAnnotations} onClose={closeTooltip} />
+    </TargetTooltipContainer>
   </div>
 })
 

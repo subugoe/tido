@@ -263,7 +263,6 @@ declare global {
     target: Element
     annotations: Annotation[]
     filtered: boolean[],
-    selectedAnnotationIndex: number,
     parents: Element[]
   }
 

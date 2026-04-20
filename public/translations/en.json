@@ -120,6 +120,8 @@
     "previous_item": "Previous Item",
     "next_item": "Next Item",
     "previous_manifest": "Previous Manifest",
+    "sidebar": "Sidebar",
+    "tooltip": "Tooltip",
     "next_manifest": "Next Manifest",
     "filters": "Filters",
     "list": "List",
