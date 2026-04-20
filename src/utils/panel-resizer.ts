@@ -3,7 +3,7 @@ import {
   MIN_PANEL_WIDTH,
   PANEL_GAP,
   PANEL_BORDER_WIDTH
-} from '@/utils/panel.ts'
+} from '@/utils/constants'
 
 class PanelResizer {
   wrapper: HTMLElement

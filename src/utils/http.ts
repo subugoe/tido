@@ -1,5 +1,7 @@
-const BLOB_CONTENT_TYPES = ['application/pdf', 'image/png', 'image/jpeg', 'audio/mpeg', 'video/mp4']
-const TEXT_CONTENT_TYPES = ['text/xhtml+xml', 'text/plain', 'text/html', 'text/css']
+import {
+  BLOB_CONTENT_TYPES,
+  TEXT_CONTENT_TYPES
+} from './constants'
 
 export async function request<T>(url: string): Promise<HttpResponse<T> | ErrorResponse> {
   try {

@@ -1,18 +1,16 @@
-const ANNOTATION_IDS_ATTRIBUTE = 'data-annotation-ids'
-const ANNOTATION_BASE_STYLE = ['rounded']
-const ANNOTATION_HOVER_CLASSES = ['bg-annotation-hover', 'cursor-pointer']
-const NESTED_TARGET_HOVER_CLASSES = ['outline']
-const SELECTED_ANNOTATION_CLASSES = ['bg-annotation-selected']
-const SELECTED_ANNOTATION_ATTRIBUTE = 'data-annotation-selected'
-const HIGHLIGHTING_STYLE = ['bg-gray-200', 'dark:bg-muted', 'relative', 'cursor-pointer']
-const CROSS_REF_TARGET_STYLE = ['text-blue-500', 'underline']
-const CROSS_REF_ATTRIBUTE = 'data-target'
-const CROSS_REF_REL_ATTRIBUTE = 'rel'
-const CROSS_REF_REL_STYLE = ['bg-yellow-200']
-const SYNC_TARGET_HOVER_STYLE = ['bg-amber-200']
-const SYNC_ANNOTATION_ID_ATTRIBUTE = 'data-sync-annotation-id'
-const SYNC_HIGHLIGHT_STYLE = ['cursor-pointer']
-
+import {
+  ANNOTATION_IDS_ATTRIBUTE,
+  ANNOTATION_BASE_STYLE,
+  ANNOTATION_HOVER_CLASSES,
+  NESTED_TARGET_HOVER_CLASSES,
+  SELECTED_ANNOTATION_CLASSES,
+  SELECTED_ANNOTATION_ATTRIBUTE,
+  HIGHLIGHTING_STYLE,
+  CROSS_REF_TARGET_STYLE,
+  CROSS_REF_ATTRIBUTE,
+  CROSS_REF_REL_ATTRIBUTE,
+  CROSS_REF_REL_STYLE
+} from './constants'
 
 function addAnnotationId(target: Element, id: string) {
   const ids = getAnnotationIds(target)

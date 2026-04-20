@@ -1,7 +1,5 @@
 import DOMPurify from 'dompurify'
-
-const FORBID_TAGS = ['input', 'script', 'noscript', 'iframe', 'frame', 'frameset', 'noframes', 'applet', 'base', 'meta', 'form']
-const ADD_ATTR = ['target', 'rel']
+import { FORBID_TAGS, ADD_ATTR } from './constants'
 DOMPurify.addHook('afterSanitizeAttributes', function (node) {
   if (node.tagName === 'A' && node.getAttribute('target') === '_blank') {
     node.setAttribute('rel', 'noopener')

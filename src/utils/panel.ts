@@ -2,13 +2,7 @@ import { request } from '@/utils/http'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { PanelConfig, PanelView } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
-
-export const MIN_PANEL_WIDTH = 800
-export const DEFAULT_PANEL_WIDTH = MIN_PANEL_WIDTH
-export const SIDEBAR_DEFAULT_WIDTH = 400
-export const PANEL_BORDER_WIDTH = 2
-export const PANEL_GAP = 16
-export const PANEL_HEADER_HEIGHT = 60
+import { SUPPORTED_MIME_TYPES } from './constants'
 
 // get the url of the document (collection or manifest) which will be shown in the panel
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
@@ -43,13 +37,6 @@ export function isItemContentValid(itemData: Item): boolean {
 export function splitMIMEType(value: string): string[] {
   return value.split(';type=')
 }
-
-export const SUPPORTED_MIME_TYPES = [
-  'text/html',
-  'text/plain',
-  'text/xml',
-  'application/xhtml+xml'
-]
 
 export function getContentTypes(content: Content[]): string[] {
   return content

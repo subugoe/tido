@@ -5,8 +5,7 @@ import { getI18n } from 'react-i18next'
 import { apiRequest } from '@/utils/api.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { PanelConfig } from '@/types'
-
-const NODE_KEY_DELIMITER = '>>>>'
+import { NODE_KEY_DELIMITER } from './constants'
 
 async function createCollectionNodes(rootNodes: string[]): Promise<TreeNode[]> {
   const nodes: TreeNode[] = []

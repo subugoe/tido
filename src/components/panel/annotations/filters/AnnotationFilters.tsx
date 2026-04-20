@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button.tsx'
 import { ListFilter } from 'lucide-react'
 import AnnotationFiltersContent from '@/components/panel/annotations/filters/AnnotationFiltersContent.tsx'
 import { cn } from '@/lib/utils.ts'
-import { SIDEBAR_DEFAULT_WIDTH } from '@/utils/panel.ts'
+import { SIDEBAR_DEFAULT_WIDTH } from '@/utils/constants'
 
 interface Props {
   className?: string

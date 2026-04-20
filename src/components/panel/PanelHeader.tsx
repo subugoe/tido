@@ -7,7 +7,7 @@ import PanelTitle from '@/components/panel/PanelTitle.tsx'
 import CollectionTitle from '@/components/panel/CollectionTitle.tsx'
 import Metadata from '@/components/metadata/Metadata'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { PANEL_HEADER_HEIGHT } from '@/utils/panel.ts'
+import { PANEL_HEADER_HEIGHT } from '@/utils/constants'
 import PanelViewsMenu from '@/components/panel/PanelViewsMenu.tsx'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 

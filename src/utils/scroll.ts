@@ -1,4 +1,4 @@
-const AUTO_SCROLLING_ATTR_NAME = 'data-auto-scrolling'
+import { AUTO_SCROLLING_ATTR_NAME } from './constants'
 
 function syncScrollPosition(source: HTMLElement, target: HTMLElement) {
   if (!target) return
