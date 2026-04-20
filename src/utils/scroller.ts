@@ -43,6 +43,7 @@ class Scroller {
   }
 
   scrollOtherTexts(contentUrl: string) {
+    if (!this.syncMaps[contentUrl] || this.texts[contentUrl]) return
     const text = this.texts[contentUrl]
     const textRect = text.getBoundingClientRect()
     const scrollTop = text.scrollTop
