@@ -58,7 +58,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
   const [tooltipOpen, setTooltipOpen] = useState(false)
-  const [crossRefAnnotation, setCrossRefAnnotation] = useState<Annotation | null>(null)
+  const [crossRefAnnotations, setCrossRefAnnotations] = useState<Annotation[]>([])
   const [relatedAnnotations, setRelatedAnnotations] = useState<Annotation[]>([])
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
@@ -271,7 +271,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       e.stopPropagation()
     }
 
-    const crossRefAnnotation = annotations
+    const crossRefAnnotations = annotations
       .filter(a => {
         const isInSource = a.target?.[0].source === source
         const isCrossRef = source.endsWith('.html')
@@ -279,7 +279,7 @@ const GenericTextRenderer: FC<Props> = memo(({
           : (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === annotationsConfig?.crossRefContentType
         return isInSource && isCrossRef
       })
-      .find(a => {
+      .filter(a => {
         const selector = (a.target[0].selector as CssSelector)?.value
         if (!selector) return false
         return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
@@ -300,7 +300,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       ? newRelatedAnnotations
       : newRelatedAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
 
-    const openTooltip = !(normalAnnotations.length === 1 && newRelatedAnnotations.length === 1 && !crossRefAnnotation )
+    const openTooltip = !(normalAnnotations.length === 1 && newRelatedAnnotations.length === 1 && crossRefAnnotations.length === 0)
 
     if (openTooltip) {
       setTooltipOpen(true)
@@ -308,9 +308,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       setRelatedAnnotations(newRelatedAnnotations)
     }
 
-    if (crossRefAnnotation) {
-      setCrossRefAnnotation(crossRefAnnotation)
-    }
+    setCrossRefAnnotations(crossRefAnnotations)
 
     // when we have only one normal annotation then we should select the annotation in Sidebar and not open tooltip. (select + deselect annotation)
     if (!openTooltip && normalAnnotations.length === 1) {
@@ -331,7 +329,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const closeTooltip = () => {
     setTooltipOpen(false)
     setTooltipTargetElement(null)
-    setCrossRefAnnotation(null)
+    setCrossRefAnnotations([])
     setRelatedAnnotations([])
     setHoveredAnnotations([])
   }
@@ -340,7 +338,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     <TargetTooltipContainer
       targetElement={tooltipTargetElement} open={tooltipOpen} onClose={closeTooltip}
     >
-      <TargetTooltipContent crossRefAnnotation={crossRefAnnotation} relatedAnnotations={relatedAnnotations} onClose={closeTooltip} />
+      <TargetTooltipContent crossRefAnnotations={crossRefAnnotations} relatedAnnotations={relatedAnnotations} onClose={closeTooltip} />
     </TargetTooltipContainer>
   </div>
 })
