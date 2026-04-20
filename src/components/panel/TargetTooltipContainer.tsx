@@ -27,7 +27,7 @@ const TargetTooltipContainer: FC<Props> = memo(({
     <Popover open={open} onOpenChange={() => onClose()}>
       <PopoverAnchor asChild>
         <div
-          className="absolute pointer-events-none bg-red-400"
+          className="absolute pointer-events-none"
           style={{
             left: targetRect.left - wrapperRect.left,
             top: targetRect.top - wrapperRect.top,
