@@ -42,7 +42,6 @@
       ]
     }
   ],
-  "annotationCollection": "http://localhost:8181/ahiqar/annotations/ahiqar/arabic-karshuni/annotationCollection.json",
   "description": "Arabic/Karshuni collection for the Ahiqar project. Funded by DFG, 2018\u20132021, University of G\u00f6ttingen",
   "sequence": [
     {
