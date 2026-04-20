@@ -46,7 +46,7 @@ const TargetTooltipContent: FC<Props> = ({ crossRefAnnotation, relatedAnnotation
   return (<div className="w-[95%]">
     {tooltipAnnotations.length > 0 && (
       <div className={crossRefInfo ? 'border-b-1 pb-1 border-muted-foreground mb-2' : ''}>
-        {renderLabel('Tooltip')}
+        {renderLabel(t('tooltip'))}
         {tooltipAnnotations.map((ta) => <div className="mb-2"><TooltipAnnotation key={ta.id} annotation={ta} /></div>)}
       </div>
     )}
@@ -56,7 +56,7 @@ const TargetTooltipContent: FC<Props> = ({ crossRefAnnotation, relatedAnnotation
     </div>}
     {normalAnnotations.length > 0 && (
       <div className={(crossRefInfo || tooltipAnnotations.length > 0) ? 'border-t-1 pt-2 border-muted-foreground' : ''}>
-        {renderLabel('Sidebar')}
+        {renderLabel(t('sidebar'))}
         {normalAnnotations.map(na => <div className="mb-2"><TooltipNormalAnnotation key={na.id} annotation={na} /></div>)}
       </div>
     )}
