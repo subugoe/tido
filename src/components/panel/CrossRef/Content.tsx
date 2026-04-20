@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import CrossRefError from '@/components/panel/CrossRef/CrossRefError.tsx'
 import CrossRefTitle from '@/components/panel/CrossRef/CrossRefTitle.tsx'
-import { ExternalLink } from 'lucide-react'
+import { Plus, RefreshCcw } from 'lucide-react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { CustomError } from '@/utils/custom-error.ts'
@@ -31,9 +31,21 @@ const Content: FC<Props> = ({ error, manifestLabel, itemLabel, contentType, acti
         manifestLabel={manifestLabel}
         itemLabel={itemLabel}
       />}
-      <div className="mt-2">
-        <Button variant="ghost" className="pl-3 w-full" onClick={(e) => actionThisPanel(e)}>{actionLabelThisPanel}</Button>
-        <Button variant="ghost" className="w-full" onClick={(e) => actionNewPanel(e)}>{t('open_in_new_panel')} <ExternalLink size={16} className="inline" /></Button>
+      <div className="flex gap-2 mt-2">
+        <Button
+          variant="muted"
+          size="sm"
+          onClick={(e) => actionThisPanel(e)}>
+          <RefreshCcw size={16} />
+          {actionLabelThisPanel}
+        </Button>
+        <Button
+          variant="muted"
+          size="sm"
+          onClick={(e) => actionNewPanel(e)}>
+          <Plus size={16} />
+          {t('open_in_new_panel')}
+        </Button>
       </div>
     </>
 

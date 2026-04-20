@@ -43,7 +43,12 @@ const CrossRefActionArea: FC<Props> = ({ crossRefInfo, onSelect }) => {
     readCrossRefLabels(crossRefInfo)
   }, [])
 
-  return <CrossRefLink crossRefInfo={extendedCrossRefInfoRef.current} error={error} loading={loading} onSelect={onSelect} />
+  return <CrossRefLink
+    crossRefInfo={extendedCrossRefInfoRef.current}
+    error={error}
+    loading={loading}
+    onSelect={onSelect}
+  />
 
 }
 

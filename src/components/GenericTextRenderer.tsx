@@ -393,9 +393,15 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   return <div data-text-wrapper ref={textWrapperRef} className={`relative ${paddingTop ? 'pt-16' : 'pt-2'}`}>
     <TargetTooltipContainer
-      targetElement={tooltipTargetElement} open={tooltipOpen} onClose={closeTooltip}
-    >
-      <TargetTooltipContent crossRefAnnotations={crossRefAnnotations} relatedAnnotations={relatedAnnotations} onClose={closeTooltip} />
+      target={tooltipTargetElement}
+      wrapper={textWrapperRef.current}
+      open={tooltipOpen}
+      onClose={closeTooltip}>
+      <TargetTooltipContent
+        crossRefAnnotations={crossRefAnnotations}
+        relatedAnnotations={relatedAnnotations}
+        onClose={closeTooltip}
+      />
     </TargetTooltipContainer>
   </div>
 })

@@ -7,7 +7,7 @@ interface Props {
 }
 
 const CrossRefTitle: FC<Props> = ({ contentType, manifestLabel, itemLabel }) => {
-  return <div className="px-2 text-sm text-muted-foreground">
+  return <div className="text-sm">
     <p className="mb-1">{manifestLabel ?? ''} </p>
     <p>{itemLabel ?? ''} { contentType !== '' && <span>{ ', ' + contentType }</span>}</p>
   </div>

@@ -38,29 +38,27 @@ const TargetTooltipContent: FC<Props> = ({ crossRefAnnotations, relatedAnnotatio
   }, [crossRefAnnotations])
 
   function renderLabel(label: string) {
-    return <p className="px-2 py-1.5 text-sm font-medium">{label}</p>
+    return <p className="py-1 mb-1 text-xs font-medium text-muted-foreground">{label}</p>
   }
 
-
-  return (<div className="w-[95%]">
+  return <div className="flex flex-col gap-4">
     {tooltipAnnotations.length > 0 && (
-      <div className={crossRefInfos.length > 0 ? 'border-b-1 pb-1 border-muted-foreground mb-2' : ''}>
+      <div className={crossRefInfos.length > 0 ? 'border-b border-border' : ''}>
         {renderLabel(t('tooltip'))}
         {tooltipAnnotations.map((ta) => <div className="mb-2"><TooltipAnnotation key={ta.id} annotation={ta} /></div>)}
       </div>
     )}
-    {crossRefInfos.length > 0 && <div className="mb-2">
+    {crossRefInfos.length > 0 && <p className="flex flex-col gap-1">
       {renderLabel(t('reference'))}
-      {crossRefInfos.map((info, i) => <div key={i} className="mb-1"><CrossRefActionArea crossRefInfo={info} onSelect={handleCrossRefSelection} /></div>)}
-    </div>}
+      {crossRefInfos.map((info, i) => <CrossRefActionArea key={i} crossRefInfo={info} onSelect={handleCrossRefSelection} />)}
+    </p>}
     {normalAnnotations.length > 0 && (
-      <div className={(crossRefInfos.length > 0 || tooltipAnnotations.length > 0) ? 'border-t-1 pt-2 border-muted-foreground' : ''}>
-        {renderLabel(t('sidebar'))}
-        {normalAnnotations.map(na => <div className="mb-2"><TooltipNormalAnnotation key={na.id} annotation={na} /></div>)}
-      </div>
+      <p className={`flex flex-col gap-2 ${(crossRefInfos.length > 0 || tooltipAnnotations.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
+        {renderLabel(tooltipAnnotations.length === 0 && crossRefInfos.length === 0 ? t('annotations') : t('more_annotations'))}
+        {normalAnnotations.map(na => <TooltipNormalAnnotation key={na.id} annotation={na} />)}
+      </p>
     )}
   </div>
-  )
 }
 
 export default TargetTooltipContent

@@ -135,6 +135,8 @@
     "unnamed_filter": "Unbenannter Filter",
     "view_more": "Mehr anzeigen",
     "view_less": "Weniger anzeigen",
-    "view": "Ansicht"
+    "view": "Ansicht",
+    "show_in_sidebar": "In Seiteleiste anzeigen",
+    "more_annotations": "Weitere Annotationen"
   }
 }
