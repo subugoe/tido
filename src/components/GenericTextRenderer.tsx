@@ -31,6 +31,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import TargetTooltipContainer from '@/components/panel/TargetTooltipContainer.tsx'
+import TargetTooltipContent from '@/components/panel/TargetTooltipContent.tsx'
 
 interface Props {
   htmlString?: string
@@ -336,8 +337,11 @@ const GenericTextRenderer: FC<Props> = memo(({
   }
 
   return <div data-text-wrapper ref={textWrapperRef} className={`relative ${paddingTop ? 'pt-16' : 'pt-2'}`}>
-    <TargetTooltipContainer relatedAnnotations={relatedAnnotations} crossRefAnnotation={crossRefAnnotation}
-      targetElement={tooltipTargetElement} open={tooltipOpen} onClose={closeTooltip} />
+    <TargetTooltipContainer
+      targetElement={tooltipTargetElement} open={tooltipOpen} onClose={closeTooltip}
+    >
+      <TargetTooltipContent crossRefAnnotation={crossRefAnnotation} relatedAnnotations={relatedAnnotations} onClose={closeTooltip} />
+    </TargetTooltipContainer>
   </div>
 })
 

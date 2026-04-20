@@ -1,12 +1,10 @@
-import { FC, memo, useEffect, useState } from 'react'
+import React, { FC, memo, useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverAnchor } from '@/components/ui/popover'
-import TargetTooltipContent from '@/components/panel/TargetTooltipContent.tsx'
 import { X } from 'lucide-react'
 
 interface Props {
   targetElement: HTMLElement | null,
-  relatedAnnotations: Annotation[],
-  crossRefAnnotation: Annotation,
+  children?: React.ReactNode,
   open: boolean
   onClose: () => void
 }
@@ -18,7 +16,7 @@ interface Position {
   height: number
 }
 
-const TargetTooltipContainer: FC<Props> = memo(({ targetElement, relatedAnnotations, crossRefAnnotation, open, onClose }) => {
+const TargetTooltipContainer: FC<Props> = memo(({ targetElement, children, open, onClose }) => {
   // anchor div reads offsetLeft/Top/Width/Height live on every render. When hover adds/removes classes that affect layout (e.g. a border),
   // those values shift. The fix: snapshot the position in a useEffect that only runs when the element reference changes.
 
@@ -61,7 +59,7 @@ const TargetTooltipContainer: FC<Props> = memo(({ targetElement, relatedAnnotati
         >
           <X size={16} />
         </div>
-        <TargetTooltipContent crossRefAnnotation={crossRefAnnotation} relatedAnnotations={relatedAnnotations} onClose={onClose} />
+        {children}
       </PopoverContent>
     </Popover>
   )
