@@ -10,6 +10,10 @@ export const CROSS_REF_ATTRIBUTE = 'data-target'
 export const CROSS_REF_REL_ATTRIBUTE = 'rel'
 export const CROSS_REF_REL_STYLE = ['bg-yellow-200']
 
+export const SYNC_TARGET_HOVER_STYLE = ['bg-amber-200']
+export const SYNC_ANNOTATION_ID_ATTRIBUTE = 'data-sync-annotation-id'
+export const SYNC_HIGHLIGHT_STYLE = ['cursor-pointer']
+
 export const MIN_PANEL_WIDTH = 800
 export const DEFAULT_PANEL_WIDTH = MIN_PANEL_WIDTH
 export const SIDEBAR_DEFAULT_WIDTH = 400

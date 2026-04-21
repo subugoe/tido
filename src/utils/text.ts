@@ -9,7 +9,10 @@ import {
   CROSS_REF_TARGET_STYLE,
   CROSS_REF_ATTRIBUTE,
   CROSS_REF_REL_ATTRIBUTE,
-  CROSS_REF_REL_STYLE
+  CROSS_REF_REL_STYLE,
+  SYNC_HIGHLIGHT_STYLE,
+  SYNC_TARGET_HOVER_STYLE,
+  SYNC_ANNOTATION_ID_ATTRIBUTE
 } from './constants'
 
 function addAnnotationId(target: Element, id: string) {
