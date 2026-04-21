@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-alpha.22](https://github.com/subugoe/tido/compare/v5.0.0-alpha.21...v5.0.0-alpha.22) (2026-04-21)
+
+
+### Features
+
+* add Action Areas in target tooltip [#994](https://github.com/subugoe/tido/issues/994) ([b713d55](https://github.com/subugoe/tido/commit/b713d55a66ce74d61c75502208b7aef2af3ee748))
+* add panel view synopsis - read sync annotations from collection and synchronize them on hover and scroll ([7cc05a5](https://github.com/subugoe/tido/commit/7cc05a52c45a36d58e0d18c8165fa9938798e82a))
+* add target-based synced scrolling in text when scrolling the sidebar ([a28a46a](https://github.com/subugoe/tido/commit/a28a46a389794c72929583271e995b33748b4599))
+* update generic tooltip and cross ref design ([c4f0ef5](https://github.com/subugoe/tido/commit/c4f0ef56e517c975e0af75d8168953b4d1295b1c))
+* update tooltip annotation design ([3479043](https://github.com/subugoe/tido/commit/3479043cb8518491f4e9325ff7ece25e6e798275))
+
+
+### Bug Fixes
+
+* add null check to scrolling function ([53f4862](https://github.com/subugoe/tido/commit/53f4862b724f3557c4cf02ba4fc382ebf5376038))
+* improve design in TooltipAnnotation ([ac7325d](https://github.com/subugoe/tido/commit/ac7325d2509e8b2311f2aebadf307f50d13f84ff))
+* scrolling in panel view synopsis ([15972f6](https://github.com/subugoe/tido/commit/15972f6d36285e2f4026a8c8285163eaa11b86ff))
+
+
+### Refactoring
+
+* move constants to separate file ([ca72296](https://github.com/subugoe/tido/commit/ca722961c5ff802431d4ea91e6ffc17380ea3c7a))
+
 ## [5.0.0-alpha.21](https://github.com/subugoe/tido/compare/v5.0.0-alpha.20...v5.0.0-alpha.21) (2026-04-17)
 
 
