@@ -3,10 +3,11 @@
   "title": "BDN",
   "lang": "de",
   "theme": {
-    "primaryColor": "#2b7fff"
+    "primaryColor": "#2b7fff",
+    "theme": "system"
   },
-  "showCrossRefLabels": true,
   "showPanelPlaceholder": false,
+  "showContentTypeToggle": false,
   "translations": {
     "de": {
       "common": {
@@ -22,16 +23,29 @@
   "panelViews": [
     {
       "label": "Text",
-      "view": "text",
-      "contentTypes": [
-        "edition"
-      ]
+      "view": "text"
     }
   ],
   "annotations": {
-    "tooltipTypes": ["EditorialCorrection", "EditorialComment"],
     "singleMode": "aligned",
-    "types": {},
+    "tooltipTypes": [
+      "EditorialCorrection",
+      "AuthorialCorrection"
+    ],
+    "types": {
+      "Variant": {
+        "label": "Textkritik"
+      },
+      "EditorialCorrection": {
+        "label": "Satzfehlerkorrektur"
+      },
+      "AuthorialCorrection": {
+        "label": "Autorschaftliche Korrektur"
+      },
+      "EditorialCommentary": {
+        "label": "Editorische Erläuterung"
+      }
+    },
     "filters": {
       "rootSelectionRule": "single",
       "items": [
@@ -67,30 +81,35 @@
         },
         {
           "label": "Erläuterungen",
-          "types": [
-            "EditorialCorrection"
-          ],
+          "selected": false,
           "items": [
             {
               "label": "Satzfehlerkorrektur",
+              "selected": true,
               "types": [
-                "Satzfehlerkorrektur"
-              ],
-              "selected": false
+                "EditorialCorrection"
+              ]
             },
             {
               "label": "Autorschaftliche Korrektur",
+              "selected": true,
               "types": [
-                "Autorschaftliche Korrektur"
-              ],
-              "selected": false
+                "AuthorialCorrection"
+              ]
+            },
+            {
+              "label": "Editorische Erläuterung",
+              "selected": true,
+              "types": [
+                "EditorialCommentary"
+              ]
             }
-          ],
-          "selected": false
+          ]
         }
       ]
     }
   },
+  "showCrossRefLabels": true,
   "panels": [
     {
       "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
