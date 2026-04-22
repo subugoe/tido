@@ -100,9 +100,11 @@ class Scroller {
       .values(this.matchedMap)
       .flatMap(map => Object.values(map))
       .filter(item => item.filtered)
+    // TODO: Ther problem here is that tooltip annotations appear also as filtered=true, we need to handle them better
 
     const entry = mapEntries.find(entry => {
       const card = this.sidebar.querySelector(`[data-annotation="${entry.annotation.id}"]`) as HTMLElement
+      if (!card) return false
       const top = parseInt(card.style.top)
       const bottom = top + card.offsetHeight
       return refY >= top && refY < bottom
