@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef } from 'react'
-import AddPanel from '@/components/panel/AddPanel.tsx'
+import AddPanel from '@/components/AddPanel.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import Panel from '@/components/panel/Panel.tsx'

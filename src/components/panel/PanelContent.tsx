@@ -2,13 +2,13 @@ import React, { FC, useEffect, useState } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
-import PanelHeader from '@/components/panel/PanelHeader.tsx'
-import ImageView from '@/components/panel/views/ImageView.tsx'
+import PanelHeader from '@/components/panel/header/PanelHeader.tsx'
+import ImageView from '@/components/panel/views/image/ImageView.tsx'
 import { TextProvider } from '@/contexts/TextContext.tsx'
-import TextView from '@/components/panel/views/TextView.tsx'
+import TextView from '@/components/panel/views/text/TextView.tsx'
 import 'allotment/dist/style.css'
 import { Allotment } from 'allotment'
-import SidebarView from '@/components/panel/views/SidebarView.tsx'
+import SidebarView from '@/components/panel/views/sidebar/SidebarView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 
