@@ -1,5 +1,6 @@
 import React, { FC, memo, useEffect, useRef, useState } from 'react'
 import {
+  addActiveTargetStyle,
   addAnnotationBaseStyle,
   addAnnotationId,
   addCrossRefTargetStyle,
@@ -17,7 +18,8 @@ import {
   getTargetsHoveredAnnotations,
   getTextTargets,
   isParentHovered,
-  isTargetPartOfSelectedAnnotation,
+  partOfSelectedTargets,
+  removeActiveTargetStyle,
   removeAnnotationBaseStyle,
   removeAnnotationIds,
   removeHighlightStyle,
@@ -78,6 +80,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const selectedAnnotationRef = useRef<Annotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
+  const clickedTargetRef = useRef<HTMLElement | null>(null)
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
   const parsedDom: Element = React.useMemo(() => {
@@ -210,6 +213,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   // Update styles of targets if necessary on update of hoveredAnnotations
   useEffect(() => {
     if (!matchedMap) return
+    hoveredAnnotationsRef.current = hoveredAnnotations
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedMap)
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.id]) ?
       matchedMap[selectedAnnotation.id].target : []
@@ -232,13 +236,13 @@ const GenericTextRenderer: FC<Props> = memo(({
         removeHighlightStyle(target)
 
         const hasParentHovered = isParentHovered(targetsOfHoveredAnnotations, fa.parents)
-
+        // TODO: Problem- we select a sidebar annotation from tooltip AND close the tooltip -> the target should have the selected style
         if (targetsOfHoveredAnnotations.includes(target))  {
           addHoverStyle(target)
           if (hasParentHovered) {
             addNestedTargetStyle(target)
           }
-        } else if (!isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
+        } else if (!partOfSelectedTargets(target, targetsOfSelectedAnnotation) && target !== clickedTargetRef.current) {
           addHighlightStyle(target)
         }
       }
@@ -249,6 +253,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   useEffect(() => {
     if (!matchedMap) return
 
+    selectedAnnotationRef.current = selectedAnnotation
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.id])
       ? matchedMap[selectedAnnotation.id].target
       : []
@@ -270,9 +275,13 @@ const GenericTextRenderer: FC<Props> = memo(({
         someFiltered = !someFiltered ? fa.filtered[i] : true
       })
 
-      if (isTargetPartOfSelectedAnnotation(target, targetsOfSelectedAnnotation)) {
+      if (partOfSelectedTargets(target, targetsOfSelectedAnnotation)) {
         addSelectedStyle(target)
         return
+        // when click in target popover a sidebar annotation and deselect it again, then we land in this useffect where we recomputed the styles.
+        // for the active target we should add the active target style
+      } else if (target === clickedTargetRef.current && selectedAnnotation) {
+        addActiveTargetStyle(target)
       } else if (someFiltered) {
         addHighlightStyle(target)
       }
@@ -364,6 +373,8 @@ const GenericTextRenderer: FC<Props> = memo(({
       }
     }
 
+    if (target !== clickedTargetRef.current)  addActiveTargetStyle(target)
+    clickedTargetRef.current = target as HTMLElement
   }
 
   const onMouseEnterSyncTarget = (e: Event) => {
@@ -389,6 +400,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     setCrossRefAnnotations([])
     setRelatedAnnotations([])
     setHoveredAnnotations([])
+    removeActiveTargetStyle(clickedTargetRef.current)
+    clickedTargetRef.current = null
   }
 
   return <div data-text-wrapper ref={textWrapperRef} className={`relative ${paddingTop ? 'pt-16' : 'pt-2'}`}>
