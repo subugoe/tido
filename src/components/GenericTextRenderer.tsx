@@ -80,7 +80,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const selectedAnnotationRef = useRef<Annotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
-  const clickedTargetRef = useRef<HTMLElement | null>(null)
+  const activeTargetRef = useRef<HTMLElement | null>(null)
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
   const parsedDom: Element = React.useMemo(() => {
@@ -236,13 +236,12 @@ const GenericTextRenderer: FC<Props> = memo(({
         removeHighlightStyle(target)
 
         const hasParentHovered = isParentHovered(targetsOfHoveredAnnotations, fa.parents)
-        // TODO: Problem- we select a sidebar annotation from tooltip AND close the tooltip -> the target should have the selected style
         if (targetsOfHoveredAnnotations.includes(target))  {
           addHoverStyle(target)
           if (hasParentHovered) {
             addNestedTargetStyle(target)
           }
-        } else if (!partOfSelectedTargets(target, targetsOfSelectedAnnotation) && target !== clickedTargetRef.current) {
+        } else if (!partOfSelectedTargets(target, targetsOfSelectedAnnotation)) {
           addHighlightStyle(target)
         }
       }
@@ -278,10 +277,6 @@ const GenericTextRenderer: FC<Props> = memo(({
       if (partOfSelectedTargets(target, targetsOfSelectedAnnotation)) {
         addSelectedStyle(target)
         return
-        // when click in target popover a sidebar annotation and deselect it again, then we land in this useffect where we recomputed the styles.
-        // for the active target we should add the active target style
-      } else if (target === clickedTargetRef.current && selectedAnnotation) {
-        addActiveTargetStyle(target)
       } else if (someFiltered) {
         addHighlightStyle(target)
       }
@@ -355,6 +350,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       setTooltipOpen(true)
       setTooltipTargetElement(target as HTMLElement)
       setRelatedAnnotations(newRelatedAnnotations)
+      if (target !== activeTargetRef.current)  addActiveTargetStyle(target)
     }
 
     setCrossRefAnnotations(crossRefAnnotations)
@@ -373,8 +369,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       }
     }
 
-    if (target !== clickedTargetRef.current)  addActiveTargetStyle(target)
-    clickedTargetRef.current = target as HTMLElement
+    activeTargetRef.current = target as HTMLElement
   }
 
   const onMouseEnterSyncTarget = (e: Event) => {
@@ -400,8 +395,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     setCrossRefAnnotations([])
     setRelatedAnnotations([])
     setHoveredAnnotations([])
-    removeActiveTargetStyle(clickedTargetRef.current)
-    clickedTargetRef.current = null
+    removeActiveTargetStyle(activeTargetRef.current)
+    activeTargetRef.current = null
   }
 
   return <div data-text-wrapper ref={textWrapperRef} className={`relative ${paddingTop ? 'pt-16' : 'pt-2'}`}>
