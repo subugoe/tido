@@ -174,6 +174,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       const enhanceView = (view: PanelView): Partial<PanelView> => ({
         ...view,
         contentTypes: view.view === 'text' && !view.contentTypes ? contentTypes : view.contentTypes,
+        activeContentType: contentTypes?.length > 0 && contentTypes[0],
         visible: view.visible ?? true,
       })
 
