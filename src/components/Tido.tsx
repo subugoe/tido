@@ -17,7 +17,7 @@ export const Tido: FC<TidoProps> = ({ config: customConfig, theme, onReady, onTh
   const { updateTheme } = useUIStore()
 
   function dataLoaded() {
-    onReady()
+    if (onReady) onReady()
   }
 
   useEffect(() => {
