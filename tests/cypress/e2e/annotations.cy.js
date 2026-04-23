@@ -1,5 +1,5 @@
 describe('Annotations', () => {
-    
+
     const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
     const annotationConfig = `annotations.defaultMode=list&panels[0].collection=${apiUrl}/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json`;
 
@@ -15,7 +15,9 @@ describe('Annotations', () => {
 
     beforeEach(() => {
         cy.visit('/e2e.html?' + annotationConfig)
-        cy.get('#panels-wrapper').should('be.visible')
+        cy
+          .get('[data-cy="item-label"]')
+          .contains('2a')
     })
 
     it('Should open annotation sidebar', () => {
@@ -47,7 +49,7 @@ describe('Annotations', () => {
         openSidebar()
 
         sidebar().find('[data-annotation]').as('annots')
-        cy.get('@annots').should('have.length.gte', 2) 
+        cy.get('@annots').should('have.length.gte', 2)
 
         cy.get('@annots').first().as('first').click().should('have.attr', 'data-selected', 'true')
 
@@ -105,7 +107,7 @@ describe('Annotations', () => {
     it('Should support view more/less on lengthy annotation body when available', () => {
         openSidebar()
 
-       
+
         sidebar().find('[data-annotation]').should('exist')
 
         sidebar().then(($container) => {
