@@ -22,7 +22,6 @@ function getDefaultPanelState(id: string, config: PanelConfig): PanelState {
     contentTypes: [],
     activeTargetIndex: -1,
     showSidebar: false,
-    activeContentType: null,
     panelViews: []
   }
 }
