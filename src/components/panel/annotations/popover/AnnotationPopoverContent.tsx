@@ -48,15 +48,15 @@ const AnnotationPopoverContent: FC<Props> = ({ crossRefAnnotations, relatedAnnot
         {tooltipAnnotations.map((ta) => <div className="mb-2"><TooltipItem key={ta.id} annotation={ta} /></div>)}
       </div>
     )}
-    {crossRefInfos.length > 0 && <p className="flex flex-col gap-1">
+    {crossRefInfos.length > 0 && <div className="flex flex-col gap-1">
       {renderLabel(t('reference'))}
       {crossRefInfos.map((info, i) => <CrossRefItem key={i} crossRefInfo={info} onSelect={handleCrossRefSelection} />)}
-    </p>}
+    </div>}
     {normalAnnotations.length > 0 && (
-      <p className={`flex flex-col gap-2 ${(crossRefInfos.length > 0 || tooltipAnnotations.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
+      <div className={`flex flex-col gap-2 ${(crossRefInfos.length > 0 || tooltipAnnotations.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
         {renderLabel(tooltipAnnotations.length === 0 && crossRefInfos.length === 0 ? t('annotations') : t('more_annotations'))}
         {normalAnnotations.map(na => <BaseItem key={na.id} annotation={na} />)}
-      </p>
+      </div>
     )}
   </div>
 }
