@@ -9,6 +9,7 @@ export const CROSS_REF_TARGET_STYLE = ['text-blue-500', 'underline']
 export const CROSS_REF_ATTRIBUTE = 'data-target'
 export const CROSS_REF_REL_ATTRIBUTE = 'rel'
 export const CROSS_REF_REL_STYLE = ['bg-yellow-200']
+export const ACTIVE_TARGET_STYLE = ['!bg-annotation-selected']
 
 export const SYNC_TARGET_HOVER_STYLE = ['bg-amber-200']
 export const SYNC_ANNOTATION_ID_ATTRIBUTE = 'data-sync-annotation-id'

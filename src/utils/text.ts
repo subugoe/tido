@@ -12,7 +12,8 @@ import {
   CROSS_REF_REL_STYLE,
   SYNC_HIGHLIGHT_STYLE,
   SYNC_TARGET_HOVER_STYLE,
-  SYNC_ANNOTATION_ID_ATTRIBUTE
+  SYNC_ANNOTATION_ID_ATTRIBUTE,
+  ACTIVE_TARGET_STYLE
 } from './constants'
 
 function addAnnotationId(target: Element, id: string) {
@@ -83,6 +84,15 @@ function addSelectedStyle(target: Element) {
   target.setAttribute(SELECTED_ANNOTATION_ATTRIBUTE, 'true')
 }
 
+function addActiveTargetStyle(target: Element) {
+  target.classList.add(...ACTIVE_TARGET_STYLE)
+}
+
+function removeActiveTargetStyle(target: Element) {
+  target.classList.remove(...ACTIVE_TARGET_STYLE)
+
+}
+
 function removeSelectedStyle(target: Element) {
   target.classList.remove(...SELECTED_ANNOTATION_CLASSES)
   target.removeAttribute(SELECTED_ANNOTATION_ATTRIBUTE)
@@ -107,8 +117,8 @@ function addCrossReferencedElStyle(target: Element) {
 }
 
 
-function isTargetPartOfSelectedAnnotation(target: Element, targetsOfSelectedAnnotation: Element[]) {
-  for (const t of targetsOfSelectedAnnotation) {
+function partOfSelectedTargets(target: Element, selectedTargets: Element[]) {
+  for (const t of selectedTargets) {
     if (t.contains(target)) return true
   }
   return false
@@ -305,12 +315,14 @@ export {
   getHoveredAnnotationsIds,
   isSelected,
   getParents,
-  isTargetPartOfSelectedAnnotation,
+  partOfSelectedTargets,
   assignNestedTargetsInFlippedMatched,
   getTargetsHoveredAnnotations,
   isParentHovered,
   addCrossRefTargetStyle,
   addCrossReferencedElStyle,
   addSyncHoverStyle,
-  addSyncAnnotationId
+  addSyncAnnotationId,
+  addActiveTargetStyle,
+  removeActiveTargetStyle
 }
