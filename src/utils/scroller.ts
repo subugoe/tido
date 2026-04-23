@@ -47,8 +47,12 @@ class Scroller {
     const text = this.texts[contentUrl]
     const textRect = text.getBoundingClientRect()
     const scrollTop = text.scrollTop
+
+    const remainingBottomHeight = text.clientHeight * (1 - SYNC_SCROLL_THRESHOLD_BOTTOM)
+    const remainingScrollAmount = text.scrollHeight - scrollTop - text.clientHeight
+    const isNearBottom = remainingScrollAmount <= remainingBottomHeight
     const refTop = scrollTop + text.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-    const refBottom = scrollTop + text.clientHeight * SYNC_SCROLL_THRESHOLD_BOTTOM
+    const refBottom = isNearBottom ? scrollTop + text.clientHeight : scrollTop + text.clientHeight * SYNC_SCROLL_THRESHOLD_BOTTOM
 
     const annotationIds = Object.keys(this.syncMaps[contentUrl])
     let focusedTarget: HTMLElement | undefined
