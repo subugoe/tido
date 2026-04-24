@@ -82,15 +82,15 @@ class Scroller {
       const otherMap = this.syncMaps[otherUrl]
       const otherTargets = otherMap[focusedAnnotationId]
 
-      if (!otherTargets) break
+      if (!otherTargets || otherTargets.length === 0) break
 
       const otherText = this.texts[otherUrl]
       const otherTextRect = otherText.getBoundingClientRect()
       const targetRect = otherTargets[0].getBoundingClientRect()
 
       const targetTop = targetRect.top - otherTextRect.top + otherText.scrollTop
-      const targetOffset = otherText.clientHeight * 0.35
-      otherText.scrollTop = targetTop - targetOffset
+      const targetOffset = otherText.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
+      otherText.scrollTop = isNearBottom ? scrollTop : targetTop - targetOffset
     }
 
     setTimeout(() => this.isSyncing = false, 20)
