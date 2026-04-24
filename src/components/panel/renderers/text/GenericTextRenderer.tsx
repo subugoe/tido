@@ -319,9 +319,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     const crossRefAnnotations = annotations
       .filter(a => {
         const isInSource = a.target?.[0].source === source
-        const isCrossRef = source.endsWith('.html')
-          ? (a.body as AnnotationBody)?.['x-content-type'] === annotationsConfig?.crossRefContentType
-          : (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === annotationsConfig?.crossRefContentType
+        const isCrossRef = getAnnotationContentType(a) === annotationsConfig?.crossRefContentType
         return isInSource && isCrossRef
       })
       .filter(a => {

@@ -140,8 +140,8 @@ function getSource(target: AnnotationTarget): AnnotationTargetSource {
 
 function getAnnotationContentType(annotation: Annotation) {
   const body = annotation.body
-  if ('source' in body) return (body as AnnotationBodyCrossRef).source['x-content-type']
-  return (body as AnnotationBody)['x-content-type']
+  if ('x-content-type' in body) return body['x-content-type']
+  return body.source?.['x-content-type']
 }
 
 export {
