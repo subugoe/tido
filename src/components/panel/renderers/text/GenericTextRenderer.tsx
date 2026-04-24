@@ -28,6 +28,7 @@ import {
   removeSelectedStyle
 } from '@/utils/text.ts'
 import {
+  getAnnotationContentType,
   getNestedAnnotations,
   getSource,
   isFiltered
@@ -335,8 +336,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
       .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
       .flatMap(entry => entry.annotations)
-      .filter(a => !seen.has(a.id) && seen.add(a.id))
-      .filter(a => (a.body as AnnotationBody)['x-content-type'] !== crossRefContentType)
+      .filter(a => !seen.has(a.id) && seen.add(a.id) && getAnnotationContentType(a) !== crossRefContentType)
 
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 

@@ -138,6 +138,12 @@ function getSource(target: AnnotationTarget): AnnotationTargetSource {
   return { id: target.source }
 }
 
+function getAnnotationContentType(annotation: Annotation) {
+  const body = annotation.body
+  if ('source' in body) return (body as AnnotationBodyCrossRef).source['x-content-type']
+  return (body as AnnotationBody)['x-content-type']
+}
+
 export {
   getSelectedTypes,
   getFilteredAnnotations,
@@ -147,5 +153,6 @@ export {
   getNestedAnnotations,
   getAnnotationIdsByEl,
   getCrossRefInfo,
-  getSource
+  getSource,
+  getAnnotationContentType
 }
