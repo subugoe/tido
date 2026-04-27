@@ -289,13 +289,6 @@ declare global {
     editionPrints?: boolean
   }
 
-  interface MessageBoxColors {
-    info: string
-    warning: string
-  }
-
-
-
   type RangeSelector = {
     type: 'RangeSelector'
     startSelector: CssSelector
@@ -444,14 +437,21 @@ export interface AnnotationsConfig {
 
 export interface AnnotationFiltersConfig {
   rootSelectionRule: SelectionRule
+  selectedIndex?: number
   items: FilterNode[]
 }
 
+export type VariantType = { Variant: string }
+export type FilterType = string | VariantType
+
 export interface FilterNode {
-  types?: string[]
+  types?: FilterType[]
   label?: string
-  selected?: boolean
   items?: FilterNode[]
+}
+
+export interface FilterNodeWithSelection extends FilterNode {
+  selected?: boolean
 }
 
 export interface TidoProps {

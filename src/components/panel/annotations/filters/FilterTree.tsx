@@ -1,10 +1,10 @@
 import { FC } from 'react'
-import { FilterNode } from '@/types'
+import { FilterNodeWithSelection } from '@/types'
 import FilterTreeNode from '@/components/panel/annotations/filters/FilterTreeNode.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
-  nodes: FilterNode[]
+  nodes: FilterNodeWithSelection[]
   onToggle: (path: number[]) => void
 }
 

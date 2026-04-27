@@ -283,6 +283,21 @@ const GenericTextRenderer: FC<Props> = memo(({
     })
   }, [selectedAnnotation, matchedMap])
 
+  useEffect(() => {
+    const resultMap = { ...matchedMap }
+    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
+    if (selectedAnnotationTypes) {
+      Object.keys(resultMap).forEach(id => {
+        const { annotation } = resultMap[id]
+        resultMap[id].filtered = isFiltered(annotation, selectedAnnotationTypes, tooltipTypes)
+      })
+    }
+
+    setMatchedMap(resultMap)
+    if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(resultMap)
+
+  }, [selectedAnnotationTypes])
+
   const onMouseEnterTarget = (e: Event) => {
     const target = e.currentTarget as HTMLElement
     const idsArray = getHoveredAnnotationsIds(target, targetsRef.current)

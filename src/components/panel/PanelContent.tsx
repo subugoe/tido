@@ -19,7 +19,7 @@ const PanelContent: FC = React.memo(() => {
 
   useEffect(() => {
     const panes = panelState.panelViews.map((v, i) => {
-      const key = `${v.view}-${v.label || 'default'}`
+      const key = `${v.view}-${v.label || 'default'}-${i}`
       const visible = v.visible ?? true
       if (v.view === 'image') return <ImageView key={key} />
       else return <TextView key={key} viewIndex={i} visible={visible} />

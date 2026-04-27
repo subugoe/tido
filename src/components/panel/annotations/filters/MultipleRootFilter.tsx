@@ -1,28 +1,28 @@
 import FilterTree from '@/components/panel/annotations/filters/FilterTree.tsx'
-import { updateNodeSelection } from '@/utils/filter-tree.ts'
-import { FC, useCallback, useState } from 'react'
-import { AnnotationFiltersConfig, FilterNode } from '@/types'
+import { updateNodesSelection } from '@/utils/filter-tree.ts'
+import { getSelectedTypesFromNode } from '@/utils/annotations.ts'
+import { FC } from 'react'
+import { FilterNodeWithSelection } from '@/types'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
-interface Props {
-  config: AnnotationFiltersConfig
-  onChange?: (items: FilterNode[]) => void
-}
 
-const MultipleRootFilter: FC<Props> = ({ config, onChange }) => {
-  const [items, setItems] = useState<FilterNode[]>(() =>
-    JSON.parse(JSON.stringify(config.items))
-  )
+const MultipleRootFilter: FC = () => {
+  const { setSelectedAnnotationTypes, annotationFilters, setAnnotationFilters } = usePanel()
 
-  const handleToggle = useCallback(
-    (path: number[]) => {
-      const newItems = updateNodeSelection(path, items)
-      setItems(newItems)
-      onChange?.(newItems)
-    },
-    [items, onChange]
-  )
+  const handleToggle = (path: number[]) => {
+    let newFilters: FilterNodeWithSelection[] = [...annotationFilters]
+    newFilters = updateNodesSelection(path, newFilters)
+    setAnnotationFilters(newFilters)
 
-  return <FilterTree nodes={items} onToggle={handleToggle} />
+    let types: AnnotationTypesDict = {}
+    newFilters.forEach(node => {
+      const nodeTypes = getSelectedTypesFromNode(node)
+      types = { ...types, ...nodeTypes }
+    })
+    setTimeout(() => setSelectedAnnotationTypes(types), 100)
+  }
+
+  return <FilterTree nodes={annotationFilters} onToggle={handleToggle} />
 }
 
 export default MultipleRootFilter

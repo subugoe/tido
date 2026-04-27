@@ -2,7 +2,7 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, PanelConfig, FilterNode, TidoContentState, TidoContentStateTarget } from '@/types'
+import { TidoConfig, PanelConfig, TidoContentState, TidoContentStateTarget } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 
@@ -220,12 +220,8 @@ function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): V
   const result = (typeof input === 'object' && input !== null ? input : {}) as Partial<TidoConfig['annotations']>
   const defaultMode = defaultCfg.annotations?.defaultMode
 
-  const errors: Record<string, object> = {
-    'annotations': {}
-  }
-
-  if (!result.filters && !result.types) {
-    (errors['annotations'] as Record<string, string>)['filters'] = 'did not find "filters" or "types" key'
+  let errors: Record<string, object> = {
+    annotations: {}
   }
 
   if (result?.singleMode && !['aligned', 'list'].includes(result.singleMode)) {
@@ -251,18 +247,23 @@ function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): V
 
   if (result.filters && !result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
 
-  function validateNode(node: FilterNode): FilterNode {
-    node.selected = Object.hasOwn(node, 'selected') ? node.selected : false
+  if (result.filters?.selectedIndex) {
+    const { selectedIndex, items } = result.filters
+    const itemsLength = items?.length ?? 0
+    const isValidIndex = Number.isInteger(selectedIndex) && selectedIndex >= 0 && selectedIndex < itemsLength
 
-    if (node.items) {
-      node.items.forEach(item => validateNode(item))
+    if (!isValidIndex) {
+      if (itemsLength > 0) {
+        (errors['annotations'] as Record<string, string>)['selectedIndex'] = `must be between 0 and ${itemsLength - 1}`
+        result.filters.selectedIndex = 0
+      } else {
+        (errors['annotations'] as Record<string, string>)['selectedIndex'] = 'must be an integer'
+        delete result.filters.selectedIndex
+      }
     }
-    return node
   }
 
-  if (result.filters) {
-    result.filters.items = result.filters.items.map((item) => validateNode(item))
-  }
+  if (Object.keys(errors.annotations).length === 0) errors = {}
 
   return { result: result as TidoConfig['annotations'], errors }
 }

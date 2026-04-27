@@ -1,26 +1,37 @@
-import { FilterNode } from '@/types'
+import { FilterNodeWithSelection, FilterType } from '@/types'
 
-const updateNodeSelection = (path: number[], items: FilterNode[]): FilterNode[] => {
+const updateNodesSelection = (path: number[], items: FilterNodeWithSelection[], selected?: boolean): FilterNodeWithSelection[] => {
   const clonedItems = JSON.parse(JSON.stringify(items))
-  let current: FilterNode[] = clonedItems
+  let current: FilterNodeWithSelection[] = clonedItems
 
   for (let i = 0; i < path.length - 1; i++) {
     current = current[path[i]].items!
   }
 
-  function updateNode(node: FilterNode, selected: boolean) {
-    node.selected = selected
-    if (node.items) {
-      node.items.forEach(item => updateNode(item, selected))
-    }
-  }
-
   const lastIndex = path[path.length - 1]
-  updateNode(current[lastIndex], !current[lastIndex].selected)
+  const newSelected = selected === undefined ? !current[lastIndex].selected : !current[lastIndex].selected
+
+  updateNodeSelection(current[lastIndex], newSelected)
 
   return clonedItems
 }
 
+function updateNodeSelection(node: FilterNodeWithSelection, selected: boolean) {
+  node.selected = selected
+  if (node.items) {
+    node.items.forEach(item => updateNodeSelection(item, selected))
+  }
+}
+
+function getTypeValue(type: FilterType) {
+  if (typeof type === 'object') {
+    return Object.keys(type)[0] ?? null
+  }
+  return type
+}
+
 export {
-  updateNodeSelection
+  updateNodesSelection,
+  updateNodeSelection,
+  getTypeValue
 }

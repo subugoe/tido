@@ -40,8 +40,8 @@ const PanelViewsMenu: FC = () => {
       <>
         <Popover>
           <BaseTooltip message={t('switch_panel_mode')}>
-            <PopoverTrigger asChild data-cy="panel-mode-select" className="[&_span]:hidden">
-              <Button variant="outline" size="sm"><Settings2 /> { t('view') }</Button>
+            <PopoverTrigger asChild data-cy="panel-mode-select">
+              <Button variant="outline" size="sm"><Settings2 /> <span className="hidden @min-[1000px]/panel:inline">{ t('view') }</span></Button>
             </PopoverTrigger>
           </BaseTooltip>
           <PopoverContent data-cy="panel-mode-menu" className="p-1 gap-2">

@@ -1,75 +1,46 @@
-import { updateNodeSelection } from '@/utils/filter-tree.ts'
+import { updateNodesSelection } from '@/utils/filter-tree.ts'
 import { FC, useCallback, useState } from 'react'
-import { AnnotationFiltersConfig, FilterNode } from '@/types'
 import FilterTree from '@/components/panel/annotations/filters/FilterTree.tsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx'
+import { usePanel } from '@/contexts/PanelContext.tsx'
+import { getSelectedTypesFromNode } from '@/utils/annotations.ts'
+import { FilterNodeWithSelection } from '@/types'
 
-interface Props {
-  config: AnnotationFiltersConfig
-  onChange?: (items: FilterNode[]) => void
-}
+const SingleRootFilter: FC = () => {
+  const { setSelectedAnnotationTypes, annotationFilters, setAnnotationFilters } = usePanel()
+  const [activeRootIndex, setActiveRootIndex] = useState(annotationFilters.findIndex(node => node.selected))
 
-
-const SingleRootFilter: FC<Props> = ({ config, onChange }) => {
-  const [activeRootIndex, setActiveRootIndex] = useState(config.items.findIndex(item => item.selected))
-
-  // Initialize tree states from config, re-initialize if config changes
-  const [treeStates, setTreeStates] = useState<{ [key: number]: FilterNode[] }>(() => {
-    const initial: { [key: number]: FilterNode[] } = {}
-    config.items.forEach((item, index) => {
-      initial[index] = JSON.parse(JSON.stringify(item.items || []))
-    })
-    return initial
-  })
-
-  const handleToggle = useCallback(
-    (rootindex: number) => (path: number[]) => {
-      setTreeStates((prev) => {
-        const newStates = { ...prev }
-        newStates[rootindex] = updateNodeSelection(path, newStates[rootindex])
-
-        const newItems = [...config.items]
-        newItems[rootindex] = {
-          ...newItems[rootindex],
-          items: newStates[rootindex]
-        }
-        onChange?.(newItems)
-
-        return newStates
-      })
-    },
-    [config.items, onChange]
-  )
-
+  const handleToggle = (path: number[]) => {
+    const newFilters: FilterNodeWithSelection[] = [...annotationFilters]
+    newFilters[activeRootIndex].items = updateNodesSelection(path, newFilters[activeRootIndex].items)
+    setAnnotationFilters(newFilters)
+    setTimeout(() => setSelectedAnnotationTypes(getSelectedTypesFromNode(newFilters[activeRootIndex])), 100)
+  }
 
   const handleTabChange = useCallback((value: string) => {
     const index = parseInt(value)
     setActiveRootIndex(index)
-
-    const newItems = [...config.items]
-    newItems.forEach((item, i) => {
-      item.selected = i == index
-    })
-    onChange?.(newItems)
-
-  }, [])
+    annotationFilters.forEach((node, i) => node.selected = i === index)
+    setAnnotationFilters(annotationFilters)
+    setTimeout(() => setSelectedAnnotationTypes(getSelectedTypesFromNode(annotationFilters[index])), 100)
+  }, [setAnnotationFilters])
 
   return (
     <Tabs value={String(activeRootIndex)} onValueChange={handleTabChange}>
       <div className="overflow-x-auto">
         <TabsList>
-          {config.items.map((item, index) => (
+          {annotationFilters.map((node, index) => (
             <TabsTrigger key={index} value={String(index)}>
-              {item.label || `Filter ${index + 1}`}
+              {node.label || `Filter ${index + 1}`}
             </TabsTrigger>
           ))}
         </TabsList>
       </div>
 
-      {config.items.map((_, index) => (
+      {annotationFilters.map((node, index) => (
         <TabsContent key={index} value={String(index)}>
           <div className="border border-border rounded-xl p-2">
-            <FilterTree nodes={treeStates[index] || []} onToggle={handleToggle(index)} />
+            <FilterTree nodes={node.items} onToggle={handleToggle} />
           </div>
         </TabsContent>
       ))}

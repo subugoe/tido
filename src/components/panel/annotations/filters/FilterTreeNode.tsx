@@ -1,18 +1,19 @@
 import { FC, useCallback, useState } from 'react'
-import { FilterNode } from '@/types'
+import { FilterNodeWithSelection } from '@/types'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
+import { getTypeValue } from '@/utils/filter-tree.ts'
 
 interface Props {
-  node: FilterNode
+  node: FilterNodeWithSelection
   path: number[]
   onToggle: (path: number[]) => void
   indented?: boolean
 }
 
-function hasChildren(node: FilterNode) {
+function hasChildren(node: FilterNodeWithSelection) {
   return node.items && node.items.length > 0
 }
 
@@ -25,7 +26,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, indented = false }) =
   const _hasChildren = hasChildren(node)
   const anyGrandChildren = node.items?.some((child) => hasChildren(child))
 
-  const label = node.label ?? node.types?.[0] ?? t('unnamed_filter')
+  const label = node.label ?? getTypeLabel(getTypeValue(node.types?.[0])) ?? t('unnamed_filter')
 
   const handleCheckboxChange = useCallback(() => {
     onToggle(path)
@@ -57,7 +58,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, indented = false }) =
           <span className="text-sm">{label}</span>
           {node.types && node.types.length > 1 &&
             <span className={`text-sm text-gray-500 italic`}>
-              &nbsp; ({node.types.map(type => t(getTypeLabel(type))).join(', ')})
+              &nbsp; ({node.types.map(type => t(getTypeLabel(getTypeValue(type)))).join(', ')})
             </span>}
         </label>
       </div>

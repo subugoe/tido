@@ -48,58 +48,54 @@
     },
     "filters": {
       "rootSelectionRule": "single",
+      "selectedIndex": 0,
       "items": [
         {
           "label": "Textkritik",
-          "selected": true,
-          "types": [
-            "Variant"
-          ],
           "items": [
             {
               "label": "Auflage a",
-              "selected": true,
               "types": [
-                "a"
+                {
+                  "Variant": "a"
+                }
               ]
             },
             {
               "label": "Auflage b",
-              "selected": true,
               "types": [
-                "b"
+                {
+                  "Variant": "b"
+                }
               ]
             },
             {
               "label": "Auflage d",
-              "selected": true,
               "types": [
-                "d"
+                {
+                  "Variant": "d"
+                }
               ]
             }
           ]
         },
         {
           "label": "Erläuterungen",
-          "selected": false,
           "items": [
             {
               "label": "Satzfehlerkorrektur",
-              "selected": true,
               "types": [
                 "EditorialCorrection"
               ]
             },
             {
               "label": "Autorschaftliche Korrektur",
-              "selected": true,
               "types": [
                 "AuthorialCorrection"
               ]
             },
             {
               "label": "Editorische Erläuterung",
-              "selected": true,
               "types": [
                 "EditorialCommentary"
               ]

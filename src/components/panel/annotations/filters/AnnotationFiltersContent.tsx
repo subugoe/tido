@@ -1,34 +1,18 @@
 import { FC } from 'react'
-import { FilterNode } from '@/types'
-import { getSelectedTypes } from '@/utils/annotations.ts'
-import { usePanel } from '@/contexts/PanelContext.tsx'
 import SingleRootFilter from '@/components/panel/annotations/filters/SingleRootFilter.tsx'
 import MultipleRootFilter from '@/components/panel/annotations/filters/MultipleRootFilter.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const AnnotationFiltersContent: FC = () => {
-  const {
-    annotationFilters,
-    setAnnotationFilters,
-    setSelectedAnnotationTypes,
-  } = usePanel()
+  const { annotations: config } = useConfig()
 
-  function onChange(updatedTree: FilterNode[]) {
-    setTimeout(() => {
-      setAnnotationFilters(prev => ({
-        ...prev,
-        items: updatedTree
-      }))
-      setSelectedAnnotationTypes(getSelectedTypes(updatedTree))
-    }, 100)
+  if (!config) return null
+
+  if (config.filters?.rootSelectionRule && config.filters.rootSelectionRule === 'single') {
+    return <SingleRootFilter />
   }
 
-  if (!annotationFilters) return null
-
-  if (annotationFilters.rootSelectionRule === 'single') {
-    return <SingleRootFilter config={annotationFilters} onChange={onChange} />
-  }
-
-  return <MultipleRootFilter config={annotationFilters} onChange={onChange} />
+  return <MultipleRootFilter />
 }
 
 export default AnnotationFiltersContent
