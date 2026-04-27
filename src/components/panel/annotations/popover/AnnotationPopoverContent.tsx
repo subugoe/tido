@@ -7,22 +7,38 @@ import BaseItem from '@/components/panel/annotations/popover/items/BaseItem.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
+  target: HTMLElement | null,
   crossRefAnnotations: Annotation[],
   relatedAnnotations: Annotation[]
   onClose: () => void
 }
 
 
-const AnnotationPopoverContent: FC<Props> = ({ crossRefAnnotations, relatedAnnotations, onClose }) => {
+const AnnotationPopoverContent: FC<Props> = ({ target,crossRefAnnotations, relatedAnnotations, onClose }) => {
 
-  const { usePanelTranslation } = usePanel()
+  const { usePanelTranslation, panelId } = usePanel()
   const { annotations: annotationsConfig } = useConfig()
   const { t } = usePanelTranslation()
   const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
   const [crossRefInfos, setCrossRefInfos] = useState<CrossRefInfo[]>([])
-  const tooltipAnnotations = relatedAnnotations.filter(a => tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
-  const normalAnnotations = relatedAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
+
+  const panelEl = panelId ? document.getElementById(panelId) : null
+  const deepestTargetAnnotation = (annotation: Annotation) =>
+    annotation.target.some(t => panelEl?.querySelector((t.selector as CssSelector).value) === target)
+
+  function sortByDirectTarget(a: Annotation, b: Annotation) {
+    if (deepestTargetAnnotation(a) && !deepestTargetAnnotation(b)) return -1
+    if (!deepestTargetAnnotation(a) && deepestTargetAnnotation(b)) return 1
+    return 0
+  }
+
+  const tooltipAnnotations = relatedAnnotations
+    .filter(a => tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
+    .sort(sortByDirectTarget)
+  const normalAnnotations = relatedAnnotations
+    .filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
+    .sort(sortByDirectTarget)
 
   function handleCrossRefSelection() {
     setCrossRefInfos([])
