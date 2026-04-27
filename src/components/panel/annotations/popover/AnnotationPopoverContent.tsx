@@ -25,7 +25,8 @@ const AnnotationPopoverContent: FC<Props> = ({ target,crossRefAnnotations, relat
 
   const panelEl = panelId ? document.getElementById(panelId) : null
   const deepestTargetAnnotation = (annotation: Annotation) =>
-    annotation.target.some(t => panelEl?.querySelector((t.selector as CssSelector).value) === target)
+    annotation.target.some(t => Array.from(panelEl?.querySelectorAll((t.selector as CssSelector).value)
+      ?? []).includes(target as Element))
 
   function sortByDirectTarget(a: Annotation, b: Annotation) {
     if (deepestTargetAnnotation(a) && !deepestTargetAnnotation(b)) return -1
