@@ -19,7 +19,6 @@ import {
   getTextTargets,
   isParentHovered,
   partOfSelectedTargets,
-  removeActiveTargetStyle,
   removeAnnotationBaseStyle,
   removeAnnotationIds,
   removeHighlightStyle,
@@ -37,8 +36,7 @@ import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
-import AnnotationPopoverContent from '@/components/panel/annotations/popover/AnnotationPopoverContent.tsx'
+import AnnotationPopover from '@/components/panel/annotations/popover/AnnotationPopover.tsx'
 
 interface Props {
   htmlString?: string
@@ -63,7 +61,6 @@ const GenericTextRenderer: FC<Props> = memo(({
   const {
     selectedAnnotation,
     selectedAnnotationTypes,
-    setSelectedAnnotation,
     annotations,
     syncAnnotations,
     updateSyncMap,
@@ -72,16 +69,13 @@ const GenericTextRenderer: FC<Props> = memo(({
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
   const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
-  const [tooltipOpen, setTooltipOpen] = useState(false)
-  const [crossRefAnnotations, setCrossRefAnnotations] = useState<Annotation[]>([])
-  const [relatedAnnotations, setRelatedAnnotations] = useState<Annotation[]>([])
+  const [targetCountClick, setTargetCountClick] = useState(0)
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
   const selectedAnnotationRef = useRef<Annotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
-  const activeTargetRef = useRef<HTMLElement | null>(null)
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
   const parsedDom: Element = React.useMemo(() => {
@@ -309,65 +303,13 @@ const GenericTextRenderer: FC<Props> = memo(({
     //  So this function will be called with those state values which existed at the time of adding.
 
     const target = e.currentTarget as Element
-    const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
-
     if (!containsChildren(targetsRef.current, target as HTMLElement)) {
       // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
       e.stopPropagation()
     }
 
-    const crossRefAnnotations = annotations
-      .filter(a => {
-        const isInSource = a.target?.[0].source === source
-        const isCrossRef = getAnnotationContentType(a) === annotationsConfig?.crossRefContentType
-        return isInSource && isCrossRef
-      })
-      .filter(a => {
-        const selector = (a.target[0].selector as CssSelector)?.value
-        if (!selector) return false
-        return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
-      })
-
-    const crossRefContentType = annotationsConfig?.crossRefContentType
-    const seen = new Set<string>()
-    // compute related annotations: all annotations for the clicked target and its parent targets
-    const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
-      .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
-      .flatMap(entry => entry.annotations)
-      .filter(a => !seen.has(a.id) && seen.add(a.id) && getAnnotationContentType(a) !== crossRefContentType)
-
-    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-
-    const normalAnnotations = tooltipTypes.length === 0
-      ? newRelatedAnnotations
-      : newRelatedAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
-
-    const openTooltip = !(normalAnnotations.length === 1 && newRelatedAnnotations.length === 1 && crossRefAnnotations.length === 0)
-
-    if (openTooltip) {
-      setTooltipOpen(true)
-      setTooltipTargetElement(target as HTMLElement)
-      setRelatedAnnotations(newRelatedAnnotations)
-      if (target !== activeTargetRef.current)  addActiveTargetStyle(target)
-    }
-
-    setCrossRefAnnotations(crossRefAnnotations)
-
-    // when we have only one normal annotation then we should select the annotation in Sidebar and not open tooltip. (select + deselect annotation)
-    if (!openTooltip && normalAnnotations.length === 1) {
-      // we need selectedAnnotationRef since the click listener has not an updated value of selectedAnnotation, it has the 'null' when it was initially created
-      if (targetEntry.annotations[0].id === selectedAnnotationRef.current?.id) {
-        setSelectedAnnotation(null)
-        selectedAnnotationRef.current = null
-      }
-      else {
-        setSelectedAnnotation(normalAnnotations[0])
-        selectedAnnotationRef.current = normalAnnotations[0]
-        if (onSelect) onSelect()
-      }
-    }
-
-    activeTargetRef.current = target as HTMLElement
+    setTooltipTargetElement(target as HTMLElement)
+    setTargetCountClick((prev) => prev+1)
   }
 
   const onMouseEnterSyncTarget = (e: Event) => {
@@ -387,29 +329,14 @@ const GenericTextRenderer: FC<Props> = memo(({
     setHoveredSyncAnnotations(null)
   }
 
-  const closeTooltip = () => {
-    setTooltipOpen(false)
-    setTooltipTargetElement(null)
-    setCrossRefAnnotations([])
-    setRelatedAnnotations([])
+  const handleOnClose = () => {
     setHoveredAnnotations([])
-    removeActiveTargetStyle(activeTargetRef.current)
-    activeTargetRef.current = null
+    setTooltipTargetElement(null)
   }
 
   return <div data-text-wrapper ref={textWrapperRef} className={`relative ${paddingTop ? 'pt-16' : 'pt-2'}`}>
-    <AnnotationPopoverContainer
-      target={tooltipTargetElement}
-      wrapper={textWrapperRef.current}
-      open={tooltipOpen}
-      onClose={closeTooltip}>
-      <AnnotationPopoverContent
-        crossRefAnnotations={crossRefAnnotations}
-        relatedAnnotations={relatedAnnotations}
-        onClose={closeTooltip}
-      />
-    </AnnotationPopoverContainer>
-  </div>
+    <AnnotationPopover target={tooltipTargetElement} annotations={annotations} triggerCount={targetCountClick} wrapper={textWrapperRef.current}
+      onSelect={onSelect} onClose={handleOnClose} /></div>
 })
 
 export default GenericTextRenderer
