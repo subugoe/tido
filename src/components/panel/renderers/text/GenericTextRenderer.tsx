@@ -1,6 +1,5 @@
 import React, { FC, memo, useEffect, useRef, useState } from 'react'
 import {
-  addActiveTargetStyle,
   addAnnotationBaseStyle,
   addAnnotationId,
   addCrossRefTargetStyle,
@@ -27,7 +26,6 @@ import {
   removeSelectedStyle
 } from '@/utils/text.ts'
 import {
-  getAnnotationContentType,
   getNestedAnnotations,
   getSource,
   isFiltered
