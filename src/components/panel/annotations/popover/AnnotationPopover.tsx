@@ -60,8 +60,8 @@ const AnnotationPopover: FC<Props> = memo(({
           if (getAnnotationContentType(annotation) === crossRefContentType) return false
 
           return annotation.target.some(t => {
-            const targetEl = panelEl.querySelector((t.selector as CssSelector).value)
-            return targetEl && (targetEl === target || targetEl.contains(target))
+            const targetEls = Array.from(panelEl.querySelectorAll((t.selector as CssSelector).value))
+            return targetEls.some(el => el === target || el.contains(target))
           })
         })
 

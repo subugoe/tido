@@ -34,7 +34,6 @@ import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import AnnotationPopover from '@/components/panel/annotations/popover/AnnotationPopover.tsx'
 
 interface Props {
   htmlString?: string
@@ -43,16 +42,17 @@ interface Props {
   source: string
   onSelect?: () => void
   ignoreFilters?: boolean
-  paddingTop?: boolean
+  paddingTop?: boolean,
+  onTargetClick: (target: Element, annotations: Annotation[], wrapper: HTMLElement) => void,
 }
 const GenericTextRenderer: FC<Props> = memo(({
   htmlString,
   onReady,
   onUpdateMatchedAnnotationsMap,
   source,
-  onSelect,
   ignoreFilters = false,
-  paddingTop = false
+  paddingTop = false,
+  onTargetClick
 }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
@@ -62,12 +62,10 @@ const GenericTextRenderer: FC<Props> = memo(({
     annotations,
     syncAnnotations,
     updateSyncMap,
-    setHoveredSyncAnnotations
+    setHoveredSyncAnnotations,
+    panelId
   } = usePanel()
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
-
-  const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
-  const [targetCountClick, setTargetCountClick] = useState(0)
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
@@ -306,8 +304,16 @@ const GenericTextRenderer: FC<Props> = memo(({
       e.stopPropagation()
     }
 
-    setTooltipTargetElement(target as HTMLElement)
-    setTargetCountClick((prev) => prev+1)
+    const panelEl = document.getElementById(panelId)
+    const targetAnnotations = annotations
+      .filter(annotation => {
+        return annotation.target.some(t => {
+          const targetEls = Array.from(panelEl.querySelectorAll((t.selector as CssSelector).value))
+          return targetEls.some(el => el === target || el.contains(target))
+        })
+      })
+
+    onTargetClick(target, targetAnnotations, textWrapperRef.current)
   }
 
   const onMouseEnterSyncTarget = (e: Event) => {
@@ -327,14 +333,10 @@ const GenericTextRenderer: FC<Props> = memo(({
     setHoveredSyncAnnotations(null)
   }
 
-  const handleOnClose = () => {
-    setHoveredAnnotations([])
-    setTooltipTargetElement(null)
-  }
+
 
   return <div data-text-wrapper ref={textWrapperRef} className={`relative ${paddingTop ? 'pt-16' : 'pt-2'}`}>
-    <AnnotationPopover target={tooltipTargetElement} annotations={annotations} triggerCount={targetCountClick} wrapper={textWrapperRef.current}
-      onSelect={onSelect} onClose={handleOnClose} /></div>
+  </div>
 })
 
 export default GenericTextRenderer
