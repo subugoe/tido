@@ -1,40 +1,52 @@
-import { FilterNode } from '@/types'
+import { AnnotationFiltersConfig, FilterNodeWithSelection, VariantType } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
+import { getTypeValue } from '@/utils/filter-tree.ts'
 
-function getSelectedTypes(nodes: FilterNode[]): AnnotationTypesDict {
+function getSelectedTypes(config: AnnotationFiltersConfig): AnnotationTypesDict {
   let types: AnnotationTypesDict = {}
 
-  nodes.forEach(node => {
-    const nodeTypes = getSelectedTypesFromNode(node)
-    types = { ...types, ...nodeTypes }
-  })
+  const isSingleRoot = config.rootSelectionRule === 'single'
+
+  if (isSingleRoot) {
+    return getSelectedTypesFromNode(config.items[config.selectedIndex])
+  } else {
+    config.items.forEach(node => {
+      const nodeTypes = getSelectedTypesFromNode(node)
+      types = { ...types, ...nodeTypes }
+    })
+  }
 
   return types
 }
 
-function getSelectedTypesFromNode(node: FilterNode): AnnotationTypesDict {
+function getSelectedTypesFromNode(node: FilterNodeWithSelection): AnnotationTypesDict {
   let types: AnnotationTypesDict = {}
-
   if (node.selected && node.types) {
-    const isVariant = node.types.includes('Variant')
-
-    if (isVariant) {
-      // If a node has configured type "Variant", we ignore all other types and grandchildren
-      // and consider only direct children as "witnesses".
-      types['Variant'] = node.items?.filter(item => item.selected).map(item => item.types?.[0] ?? '') ?? []
-      return types
-    }
-
     // Otherwise we set each type on the node as key in the result object.
     types = node.types.reduce((acc, cur) => {
-      acc[cur] = [] // Empty array just to have default value for the key.
+      const typeValue = getTypeValue(cur)
+
+      if (typeValue === 'Variant') {
+        acc['Variant'] = [
+          ...(acc['Variant'] ?? []),
+          (cur as VariantType)['Variant']
+        ]
+      } else {
+        acc[cur as string] = [] // Empty array just to have default value for the key.
+      }
+
       return acc
     }, types)
   }
 
   if (node.items) {
     node.items.forEach(child => {
-      types = { ...types, ...getSelectedTypesFromNode(child) }
+      const childTypes = getSelectedTypesFromNode(child)
+      Object.keys(childTypes).forEach(key => {
+        const existing = types[key] || []
+        const incoming = childTypes[key] || []
+        types[key] = [...existing, ...incoming]
+      })
     })
   }
 
@@ -93,7 +105,7 @@ function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, 
 
   if (type === 'Variant') {
     const witnesses = (annotation.body as AnnotationBody).witnesses
-    return witnesses.some(witness => selectedTypes[type].includes(witness))
+    return witnesses.some(witness => selectedTypes['Variant'].includes(witness))
   }
 
   return true
@@ -146,6 +158,7 @@ function getAnnotationContentType(annotation: Annotation) {
 
 export {
   getSelectedTypes,
+  getSelectedTypesFromNode,
   getFilteredAnnotations,
   isFiltered,
   findTargetsInsideAnnotation,

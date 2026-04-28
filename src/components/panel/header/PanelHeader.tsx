@@ -10,11 +10,25 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { PANEL_HEADER_HEIGHT } from '@/utils/constants.ts'
 import PanelViewsMenu from '@/components/panel/header/PanelViewsMenu.tsx'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
+import { getFilteredAnnotations } from '@/utils/annotations.ts'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { Badge } from '@/components/ui/badge.tsx'
 
 const SidebarToggle = memo((props) => {
-  const { panelState, updatePanel, usePanelTranslation } = usePanel()
+  const { annotations: annotationsConfig } = useConfig()
+  const { panelState, updatePanel, usePanelTranslation, matchedAnnotationsMaps } = usePanel()
   const [tooltipMessage, setTooltipMessage] = useState('')
   const { t } = usePanelTranslation()
+
+
+  const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
+  const filteredAnnotations: Annotation[] = []
+  Object
+    .keys(matchedAnnotationsMaps)
+    .forEach(contentUrl => {
+      const filtered = getFilteredAnnotations(matchedAnnotationsMaps[contentUrl])
+      filteredAnnotations.push(...filtered.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type'])))
+    })
 
   useEffect(() => {
     setTooltipMessage(t(panelState.showSidebar ? 'hide_annotations' : 'display_annotations'))
@@ -28,12 +42,13 @@ const SidebarToggle = memo((props) => {
 
   return <BaseTooltip message={tooltipMessage}>
     <Button
-      variant={panelState.showSidebar ? 'secondary' : 'outline'}
+      variant={panelState.showSidebar ? 'outline' : 'outline'}
       size="sm"
       {...props}
+      className={panelState.showSidebar ? 'ring-1 ring-secondary/50 border-secondary' : ''}
       onClick={onClick} data-cy="sidebar-toggle"
     >
-      { t('annotations') }
+      { t('annotations') } <Badge className="px-1.5 py-0.5 rounded-full text-xs leading-none" variant={panelState.showSidebar ? 'secondary' : 'accent'}>{ filteredAnnotations.length }</Badge>
     </Button>
   </BaseTooltip>
 })
@@ -47,9 +62,9 @@ const PanelHeader: FC = () => {
   }
 
   return (
-    <div className="flex items-center border-b border-border p-3" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
-      <CollectionTitle />
-      <div className="ml-1 text-wrap wrap-break-word">
+    <div className="relative flex items-center border-b border-border p-3" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
+      <div className="@min-[1000px]/panel:absolute h-full flex items-center gap-1">
+        <CollectionTitle />
         <Popover open={showMetadataModal} onOpenChange={handleOpenChange} modal={true}>
           <PopoverTrigger asChild>
             <Button
@@ -70,14 +85,12 @@ const PanelHeader: FC = () => {
           </PopoverContent>
         </Popover>
       </div>
-      <div className="mx-auto flex justify-center" data-cy="panel-title-and-nav-arrows">
+      <div className="ml-4 @min-[1000px]/panel:mx-auto flex justify-center" data-cy="panel-title-and-nav-arrows">
         {<PanelTitle />}
       </div>
-      <div className="ml-auto flex gap-2 mr-2">
+      <div className="absolute h-full top-0 right-2 flex items-center gap-2">
         <PanelViewsMenu />
         <SidebarToggle />
-      </div>
-      <div className="flex gap-1">
         <BaseTooltip message={t('close_panel')}>
           <Button size="icon" variant="ghost" onClick={remove}><X className="text-destructie" /></Button>
         </BaseTooltip>

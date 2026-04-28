@@ -41,7 +41,9 @@ const VariantContent: FC<Props> = React.memo(({ body }) => {
   const { value, witnesses } = body
   const { selectedAnnotationTypes } = usePanel()
 
-  const filteredWitnesses = selectedAnnotationTypes['Variant'] ? witnesses.filter(witness => selectedAnnotationTypes['Variant'].includes(witness)) : witnesses
+  const filteredWitnesses = selectedAnnotationTypes && selectedAnnotationTypes['Variant']
+    ? witnesses.filter(witness => selectedAnnotationTypes['Variant'].includes(witness))
+    : witnesses
 
   const parsedDom = React.useMemo(() => {
     const parser = new DOMParser()

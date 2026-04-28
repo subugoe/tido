@@ -2,12 +2,12 @@ import { ReactNode, createContext, useContext, useState, FC, useEffect, useRef, 
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
-import { getSelectedTypes, isFiltered } from '@/utils/annotations.ts'
+import { getSelectedTypes } from '@/utils/annotations.ts'
 import { apiRequest, getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getSupport } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
-import { AnnotationFiltersConfig, PanelConfig, PanelView } from '@/types'
+import { FilterNodeWithSelection, PanelConfig, PanelView } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
@@ -16,6 +16,7 @@ import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.
 import { Scroller } from '@/utils/scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { addSyncHoverStyle, removeSyncHoverStyle } from '@/utils/text.ts'
+import { updateNodeSelection } from '@/utils/filter-tree.ts'
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
@@ -29,8 +30,8 @@ interface PanelContextType {
   initResizer: (el: HTMLElement) => void
   hoveredAnnotation: string | null
   setHoveredAnnotation: (value: string | null) => void,
-  annotationFilters: AnnotationFiltersConfig,
-  setAnnotationFilters:  Dispatch<SetStateAction<AnnotationFiltersConfig>>,
+  annotationFilters: FilterNodeWithSelection[],
+  setAnnotationFilters:  Dispatch<SetStateAction<FilterNodeWithSelection[]>>,
   selectedAnnotationTypes: AnnotationTypesDict | null,
   setSelectedAnnotationTypes: (value: AnnotationTypesDict) => void,
   annotations: Annotation[] | null,
@@ -69,7 +70,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
   const [matchedAnnotationsMaps, setMatchedAnnotationsMaps] = useState<{[contentUrl: string]: MatchedAnnotationsMap}>({})
-  const [annotationFilters, setAnnotationFilters] = useState<AnnotationFiltersConfig>(null)
+  const [annotationFilters, setAnnotationFilters] = useState<FilterNodeWithSelection[]>( null)
   const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState(null)
   const [showTextOptions, setShowTextOptions] = useState(false)
   const [annotations, setAnnotations] = useState<Annotation[] | null>(null)
@@ -282,8 +283,20 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
   useEffect(() => {
     if (annotationsConfig.filters) {
-      setAnnotationFilters(annotationsConfig.filters)
-      setSelectedAnnotationTypes(getSelectedTypes(annotationsConfig.filters.items))
+
+      const filterNodesWithSelection = annotationsConfig.filters.items.map((node: FilterNodeWithSelection, i: number) => {
+        if (annotationsConfig.filters.rootSelectionRule === 'single') {
+          node.selected = i === annotationsConfig.filters.selectedIndex
+          node.items.forEach(item => updateNodeSelection(item, true))
+        } else {
+          updateNodeSelection(node, true)
+        }
+
+        return node
+      })
+
+      setAnnotationFilters(filterNodesWithSelection)
+      setSelectedAnnotationTypes(getSelectedTypes(annotationsConfig.filters))
     }
   }, [])
 
@@ -296,47 +309,24 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   }, [syncMaps])
 
   useEffect(() => {
-    const resultMap: {[contentUrl: string]: MatchedAnnotationsMap} = {}
-    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-    if (selectedAnnotationTypes) {
-      Object
-        .keys(matchedAnnotationsMaps)
-        .forEach(contentUrl => {
-          const map = matchedAnnotationsMaps[contentUrl]
-          resultMap[contentUrl] = { ...map }
-
-          Object.keys(map).forEach(id => {
-            const { annotation } = map[id]
-            resultMap[contentUrl][id].filtered = isFiltered(annotation, selectedAnnotationTypes, tooltipTypes)
-          })
-        })
-    }
-
-    setMatchedAnnotationsMaps(resultMap)
-  }, [selectedAnnotationTypes])
-
-  useEffect(() => {
     getScroller().setMatchedMap(matchedAnnotationsMaps)
 
     // This is for the case where no specific annotation filters were configured.
     // We extract all occurring types from the annotations that match the text.
-    if (annotationsConfig.filters) return
+    if (annotationsConfig.filters || annotationFilters !== null) return
 
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
     const types = Object
       .values(matchedAnnotationsMaps)
       .flatMap(map => Object.values(map))
       .map(item => (item.annotation.body as AnnotationBody)['x-content-type'])
-      .filter(type => !tooltipTypes.includes(type))
+      .filter(type => type !== undefined && !tooltipTypes.includes(type))
 
     if (types.length === 0) return
 
     const uniqueAnnotationTypes = [...new Set(types)]
 
-    setAnnotationFilters({
-      rootSelectionRule: 'multiple',
-      items: uniqueAnnotationTypes.map(type => ({ types: [type], selected: true }))
-    })
+    setAnnotationFilters(uniqueAnnotationTypes.map(type => ({ types: [type], selected: true })))
   }, [matchedAnnotationsMaps])
 
   useEffect(() => {

@@ -16,7 +16,7 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
   const { annotationFilters } = usePanel()
   const [open, setOpen] = useState(false)
 
-  const hasFilters = annotationFilters?.items && annotationFilters.items.length > 0
+  const hasFilters = annotationFilters && annotationFilters.length > 0
 
   return <div className={cn('flex flex-col items-center', className)}>
     <Popover onOpenChange={(value) => setOpen(value)}>
