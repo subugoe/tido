@@ -3,6 +3,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { validateCrossRefNode } from '@/utils/cross-ref.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import CrossRefLink from '@/components/panel/annotations/popover/cross-ref/CrossRefLink.tsx'
+import { existsTargetInText } from '@/utils/dom.ts'
 
 interface Props {
   crossRefInfo: CrossRefInfo,
@@ -30,8 +31,9 @@ const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect }) => {
             manifestLabel: (manifestData as Manifest).label,
             itemLabel: newItemLabel
           }
-          // TODO: if (!await existsTargetInText(extendedCrossRefInfoRef.current.refItemData, extendedCrossRefInfoRef.current.contentType, extendedCrossRefInfoRef.current.selector)) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
-          loadedData.current = true
+          const targetExists = await existsTargetInText(extendedCrossRefInfoRef.current.refItemData, extendedCrossRefInfoRef.current.contentType, extendedCrossRefInfoRef.current.selector)
+          if (!targetExists) setError(new CustomError(t('cross_ref_error_title'), t('referenced_element_not_found')))
+          else loadedData.current = true
         } catch(e) {
           setError(new CustomError(t(e.name), t(e.message)))
         } finally {
