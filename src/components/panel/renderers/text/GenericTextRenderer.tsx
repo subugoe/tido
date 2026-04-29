@@ -419,6 +419,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       open={tooltipOpen}
       onClose={closeTooltip}>
       <AnnotationPopoverContent
+        target={tooltipTargetElement}
         crossRefAnnotations={crossRefAnnotations}
         relatedAnnotations={relatedAnnotations}
         onClose={closeTooltip}
