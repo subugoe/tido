@@ -3,6 +3,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { validateCrossRefNode } from '@/utils/cross-ref.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import CrossRefLink from '@/components/panel/annotations/popover/cross-ref/CrossRefLink.tsx'
+import { apiRequest } from '@/utils/api.ts'
 
 interface Props {
   crossRefInfo: CrossRefInfo,
@@ -30,7 +31,16 @@ const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect }) => {
             manifestLabel: (manifestData as Manifest).label,
             itemLabel: newItemLabel
           }
-          // TODO: if (!await existsTargetInText(extendedCrossRefInfoRef.current.refItemData, extendedCrossRefInfoRef.current.contentType, extendedCrossRefInfoRef.current.selector)) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
+          if (crossRefInfo.textType === 'text') {
+            // for cross ref referring to text part. Throw error when referenced el cannot be found due to a false selector
+            const contentIndex = itemData.content.findIndex(c => c.type.split('=')[1] === crossRefInfo.contentType)
+            const parser = new DOMParser()
+            const referencedText: string = await apiRequest(itemData.content[contentIndex].url)
+            const textEl = parser.parseFromString(referencedText, 'text/html')
+            const targetExists = textEl.querySelector(crossRefInfo.selector)
+            if (!targetExists) setError(new CustomError(t('cross_ref_error_title'), t('referenced_element_not_found')))
+          }
+
           loadedData.current = true
         } catch(e) {
           setError(new CustomError(t(e.name), t(e.message)))

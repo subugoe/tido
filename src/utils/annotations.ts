@@ -129,13 +129,13 @@ async function getCrossRefInfo(annotation: Annotation) {
   }
 
   if (!isCrossRefInAnnotation) contentUrl = (annotation.body as AnnotationBodyCrossRef)?.source?.id
-  // TODO: In Popover show error when refAnnotation is not found, due to error in CrossRef Information
-  const refContentType = refItemData.content.find(c => c.url === contentUrl)?.type?.split('type=')[1]
+  const refContentType = refItemData.content?.find(c => c.url === contentUrl)?.type?.split('type=')[1]
 
   return {
     collection: source.collection,
     manifest: source.manifest,
     item: source.item,
+    textType: isCrossRefInAnnotation ? 'annotation': 'text',
     contentType: refContentType,
     ...(isCrossRefInAnnotation && { selectedAnnotation: refAnnotation }),
     ...(!isCrossRefInAnnotation && { selector: (annotation.body as AnnotationBodyCrossRef)?.selector?.value }),
