@@ -138,7 +138,8 @@ declare global {
     selector?: string,
     selectedAnnotation?: Annotation,
     manifestLabel?: string,
-    itemLabel?: string
+    itemLabel?: string,
+    textType: 'text' | 'annotation',     // referenced text
   }
 
   interface DataIntegrity {

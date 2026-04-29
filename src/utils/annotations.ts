@@ -135,6 +135,7 @@ async function getCrossRefInfo(annotation: Annotation) {
     collection: source.collection,
     manifest: source.manifest,
     item: source.item,
+    textType: isCrossRefInAnnotation ? 'annotation': 'text',
     contentType: refContentType,
     ...(isCrossRefInAnnotation && { selectedAnnotation: refAnnotation }),
     ...(!isCrossRefInAnnotation && { selector: (annotation.body as AnnotationBodyCrossRef)?.selector?.value }),
