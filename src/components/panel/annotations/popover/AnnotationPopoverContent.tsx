@@ -16,14 +16,14 @@ interface Props {
 
 const AnnotationPopoverContent: FC<Props> = ({ target, crossRefAnnotations, relatedAnnotations, onClose }) => {
 
-  const { usePanelTranslation, panelId } = usePanel()
   const { annotations: annotationsConfig } = useConfig()
+  const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
   const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
   const [crossRefInfos, setCrossRefInfos] = useState<CrossRefInfo[]>([])
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setDisplayAnnotations] = useState(null)
+  const [loading, setLoading] = useState(true)
+
   const tooltipAnnotationsRef = useRef<Annotation[]>(null)
   const normalAnnotationsRef = useRef<Annotation[]>(null)
 
@@ -49,7 +49,7 @@ const AnnotationPopoverContent: FC<Props> = ({ target, crossRefAnnotations, rela
     normalAnnotationsRef.current = relatedAnnotations.filter(a =>
       !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type'])).sort(sortByDirectTarget)
 
-    setDisplayAnnotations(true)
+    setLoading(false)
     computeCrossRefInfos(crossRefAnnotations)
   }, [target])
 
@@ -64,6 +64,7 @@ const AnnotationPopoverContent: FC<Props> = ({ target, crossRefAnnotations, rela
     return <p className="py-1 mb-1 text-xs font-medium text-muted-foreground">{label}</p>
   }
 
+  if (loading) return <div>Loading ...</div>
   return <div className="flex flex-col gap-4">
     {tooltipAnnotationsRef.current?.length > 0 && (
       <div className={crossRefInfos.length > 0 ? 'border-b border-border' : ''}>
