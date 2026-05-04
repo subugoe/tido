@@ -7,12 +7,11 @@ declare global {
     [key: string]: Annotation
   }
 
-  interface Actor {
-    '@context': string
+  interface Agent {
     role: string[]
     name: string
-    id?: string
-    idref?: Idref[]
+    id: string | null
+    sameAs: string[] | null
   }
 
   type AnnotationsMode = 'aligned' | 'list'
@@ -105,23 +104,27 @@ declare global {
 
   interface Collection {
     '@context': string
-    textapi: string
+    textApiVersion: string
     id: string
-    title: Title[]
-    collector: Actor[]
+    titles: string[]
+    collectors: Agent[]
     description?: string
-    sequence: Sequence[]
-    total?: number
+    total: number
     annotationCollection?: string
-    modules?: Module[]
+    type: 'TextApiCollection'
+    revision: string
+    editors: Agent[]
+    collections: string[] | null
+    manifests: string[] | null
+    via: string | null
+    prevRevision: string | null
   }
 
 
   interface Content {
-    '@context': string
-    url: string
-    type: string
-    integrity?: DataIntegrity
+    id: string
+    contentType: string
+    integrity: DataIntegrity | null
   }
 
   type CssSelector = {
@@ -169,24 +172,30 @@ declare global {
   interface Image {
     '@context': string
     id: string
-    manifest?: string
-    license: License
+    manifest: string | null
+    license: string
+    type: string
+    copyright: string | null
   }
 
   interface Item {
-    '@context': string
-    textapi: string
+    '@context'?: string
+    textapiVersion?: string
     id: string
-    title?: Title[]
-    type: ItemType
-    n?: string
-    lang: ItemLangCode[]
-    langAlt?: string[]
-    content: Content[]
+    textItemType: ItemType
+    type: string
+    division: string | null
+    languages: ItemLangCode[]
+    langAlt: string[] | null
+    contents: Content[]
     description?: string
-    image?: Image
+    images: Image[] | null
     annotationCollection?: string
-    modules?: Module[]
+    revision: string
+    prevRevision: string | null
+    titles: string[] | null
+    via: string
+
   }
 
   interface PanelState {
@@ -235,21 +244,29 @@ declare global {
   }
 
   interface Manifest {
-    '@context': string
-    textapi: string
+    '@context'?: string
     id: string
     label: string
-    sequence: Sequence[]
+    items: string[] | null
     total?: number
-    actor?: Actor[]
+    agents?: Agent[] | null
     repository?: Repository[]
     image?: Image
     metadata?: Metadata[]
-    support?: Support[]
-    license: License[]
+    assets?: Asset[]
+    license: string
     description?: string
     annotationCollection?: string
-    modules?: Module[]
+    copyright: string | null
+    revision: string
+    partOf: string[] | null
+    prevRevision: string | null
+    origin: string | null
+    identifier: string | null
+    textClasses: string[] | null
+    via: string | null
+    type: string
+    textApiVersion?: string
   }
 
 
@@ -280,8 +297,7 @@ declare global {
 
   interface Metadata {
     key: string
-    value?: string
-    metadata?: Metadata[]
+    value: string | Metadata[]
   }
 
   interface Module {
@@ -298,9 +314,11 @@ declare global {
   interface Repository {
     '@context': string
     label?: string
-    url: string
-    baseUrl: string
     id: string
+    externalId: string | null
+    type: string | null
+    country: string | null
+    place: string | null
   }
 
   interface Sequence {
@@ -310,11 +328,11 @@ declare global {
     label?: string
   }
 
-  interface Support {
-    '@context': string
-    type: SupportType
-    mime: string
-    url: string
+  interface Asset {
+    id: string
+    assetType: string
+    contentType: string
+    type: string
     integrity?: DataIntegrity
   }
 

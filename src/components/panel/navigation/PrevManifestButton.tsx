@@ -17,7 +17,7 @@ const PrevManifestButton: FC = () => {
 
     if (!collectionId || !manifest || !item) return false
 
-    const manifestIndex = collection?.sequence.findIndex(({ id }) => id === manifest?.id) ?? -1
+    const manifestIndex = collection?.manifests.findIndex((id) => id === manifest?.id) ?? -1
     if (manifestIndex === -1) return false
 
     const prevIndex = manifestIndex - 1
@@ -30,17 +30,17 @@ const PrevManifestButton: FC = () => {
 
     if (!collectionId || !manifest || !item) return
 
-    const manifestIndex = collection?.sequence.findIndex(({ id }) => id === manifest?.id) ?? -1
+    const manifestIndex = collection?.manifests.findIndex((id) => id === manifest?.id) ?? -1
     if (manifestIndex === -1) return
 
     const prevIndex = manifestIndex - 1
-    const collectionSequence = useDataStore.getState().collections[collectionId].sequence
+    const manifests = collection.manifests
 
     if (prevIndex < 0) return
 
     init({
       collection: collectionId,
-      manifest: collectionSequence[prevIndex].id
+      manifest: manifests[prevIndex]
     })
   }
 

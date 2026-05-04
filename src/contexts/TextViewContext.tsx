@@ -41,7 +41,7 @@ export const TextViewProvider = ({
   const activeContentUrl = useRef(null)
   function getContentUrlByType(type: string | undefined) {
     if (!type) return undefined
-    return panelState?.item?.content.find(c => c.type.includes(type))?.url
+    return panelState?.item?.contents.find(c => c.contentType.includes(type))?.id
   }
 
   useEffect(() => {

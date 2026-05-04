@@ -5,7 +5,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { apiRequest, getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
-import { getSupport } from '@/utils/support-styling.ts'
+import { getAssets } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
 import { FilterNodeWithSelection, PanelConfig, PanelView } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
@@ -156,18 +156,18 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       }
 
       // 3. At this point "item" should exist, so we continue to load content from it.
-      const contentTypes = getContentTypes(item.content)
+      const contentTypes = getContentTypes(item.contents)
 
       if (contentTypes.length === 0) {
         setError(new CustomError(t('panel_init_error'), t('error_no_supported_content_types')))
         return
       }
 
-      const { support } = manifest
+      const { assets } = manifest
 
-      if (support && support.length > 0 && isNewManifest(manifest)) {
-        // Support can be loaded for a new manifest
-        await getSupport(support)
+      if (assets && assets.length > 0 && isNewManifest(manifest)) {
+        // Assets can be loaded for a new manifest
+        await getAssets(assets)
       }
 
       // 4. We discover the correct "views" config. This can come from a global config (root key "panelViews")

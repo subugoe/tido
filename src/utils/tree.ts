@@ -30,7 +30,7 @@ async function createCollectionNode(url: string) {
   node.key = url
   node.id = url
   node.type = 'collection'
-  node.label = response.data.title[0].title
+  node.label = response.data.titles[0] || ''
 
   return node
 }
@@ -54,37 +54,43 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
     data = response.data
   }
 
-  if (!Object.hasOwn(data, 'sequence')) throw new CustomError('Invalid Content in TextAPI ' + node.type + ' with Id ' +node.id, '')
-  if (data.sequence.length === 0) return []
+  // Handle both Collection (manifests) and Manifest (items)
+  // Both are now string arrays (IDs)
+  const ids = 'manifests' in data ? data.manifests : 'items' in data ? data.items : []
 
-  const items = data.sequence
+  if (!ids || ids.length === 0) return []
 
-  return items.map(({ id, type, label = t('unknown_name') }) => ({
-    id,
-    type,
-    label,
-    key: parentKey + NODE_KEY_DELIMITER + id,
-    leaf: type === 'item',
-    expanded: false,
-    children: [] as TreeNode[]
-  }))
+  // For both Collections and Manifests, the IDs are strings
+  return ids.map((id: string) => {
+    const isManifest = 'manifests' in data
+    return {
+      id,
+      type: isManifest ? 'manifest' : 'item',
+      label: id.split('/').pop() || t('unknown_name'),
+      key: parentKey + NODE_KEY_DELIMITER + id,
+      leaf: !isManifest,
+      expanded: false,
+      children: [] as TreeNode[]
+    }
+  })
 }
 
 async function getRootChildrenCollectionsIds(rootCollection: Collection) {
   const result = new Set<string>()
 
   async function getChildrenCollectionIds(collection: Collection) {
-    if (!collection.sequence || collection.sequence.length === 0) {
+    // Check manifests for collections
+    const collectionIds = collection.collections || []
+
+    if (collectionIds.length === 0) {
       result.add(collection.id)
       return
     }
 
-    for (const item of collection.sequence) {
-      if (item.type === 'collection') {
-        result.add(item.id)
-        const child = await apiRequest<Collection>(item.id)
-        await getChildrenCollectionIds(child)
-      }
+    for (const id of collectionIds) {
+      result.add(id)
+      const child = await apiRequest<Collection>(id)
+      await getChildrenCollectionIds(child)
     }
   }
 

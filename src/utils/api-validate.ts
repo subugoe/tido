@@ -2,29 +2,30 @@ import { CustomError } from '@/utils/custom-error.ts'
 import { apiRequest } from '@/utils/api.ts'
 
 function isCollectionUrl(url: string) {
-  return url.includes('collection.json')
+  return url.includes('/collections/')
 }
 
 function isManifestUrl(url: string) {
-  return url.includes('manifest.json')
+  return url.includes('/manifests/')
 }
 
 function isItemUrl(url: string) {
-  return url.includes('item.json') || url.includes('full.json')
+  return url.includes('/items/')
 }
 
 function hasManifests(collection: Collection): boolean {
-  if (!collection.sequence || !Array.isArray(collection.sequence)) return false
-  return collection.sequence.length > 0
+  return Array.isArray(collection.manifests) && collection.manifests.length > 0
 }
 
 function hasItems(manifest: Manifest): boolean {
-  if (!manifest.sequence || !Array.isArray(manifest.sequence)) return false
-  return manifest.sequence.length > 0
+  return Array.isArray(manifest.items) && (manifest.items?.length ?? 0) > 0
 }
 
 async function validateResponse(data : Collection | Manifest) {
-  if (typeof data !== 'object' || !Object.hasOwn(data, 'sequence')) {
+  const hasContent = 'manifests' in data
+    ? (data.manifests?.length ?? 0) > 0
+    : (data.items?.length ?? 0) > 0
+  if (typeof data !== 'object' || !hasContent) {
     return {
       success: false,
       error: new CustomError('cross_ref_error_title', 'collection_or_manifest_data_error'),
@@ -63,7 +64,7 @@ async function validateItem(id: string){
     }
   }
   const data = await apiRequest<Item>(id)
-  if (typeof data !== 'object' || !Object.hasOwn(data, 'content')) {
+  if (typeof data !== 'object' || !Array.isArray(data.contents)) {
     return {
       success: false,
       error: new CustomError('cross_ref_error_title', 'item_data_error')

@@ -5,7 +5,6 @@ import { apiRequest } from '@/utils/api.ts'
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu.tsx'
 
-
 interface ManifestLabelProps {
   selectedManifest: Manifest | null,
   onManifestSelect: (newManifest: Manifest | null) => void
@@ -15,9 +14,23 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
   const { panelState } = usePanel()
   const collection = useDataStore().collections[panelState.collectionId]
   const manifest = panelState.manifest
-  const labels = collection?.sequence.map((item) => item.label)
   const [showModal, setShowModal] = useState(false)
   const [selectedLabel, setSelectedLabel] = useState('')
+  const [manifestOptions, setManifestOptions] = useState<{id: string, label: string}[]>([])
+
+  useEffect(() => {
+    async function loadManifestOptions() {
+      if (!collection?.manifests) return
+      const manifests = await Promise.all(
+        collection.manifests.map(async (id) => {
+          const m = await apiRequest<Manifest>(id)
+          return { id: m.id, label: m.label }
+        })
+      )
+      setManifestOptions(manifests)
+    }
+    loadManifestOptions()
+  }, [collection])
 
   useEffect(() => {
     function getManifestLabel() {
@@ -29,7 +42,8 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
   }, [selectedManifest, manifest])
 
   async function handleManifestClick(label: string) {
-    const manifestId = collection?.sequence.find((manifest) => manifest.label === label).id
+    const manifestId = manifestOptions.find((m) => m.label === label)?.id
+    if (!manifestId) return
     const manifest = await apiRequest<Manifest>(manifestId)
     onManifestSelect(manifest)
     setShowModal(false)
@@ -51,12 +65,12 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent data-cy="manifests-dropdown" className="max-w-80">
-        {labels && labels.map((label, i) => <DropdownMenuItem
-          key={label + '_'+i}
-          className={`cursor-pointer ${panelState.manifest.label === label ? 'text-primary' : ''} `}
-          title={label ?? ''}
-          onClick={() => handleManifestClick(label)}
-        > { label }
+        {manifestOptions.map((m, i) => <DropdownMenuItem
+          key={m.id + '_'+i}
+          className={`cursor-pointer ${panelState.manifest?.id === m.id ? 'text-primary' : ''} `}
+          title={m.label ?? ''}
+          onClick={() => handleManifestClick(m.label)}
+        > { m.label }
         </DropdownMenuItem>)}
       </DropdownMenuContent>
     </DropdownMenu>

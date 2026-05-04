@@ -25,10 +25,10 @@ function loadCss (url: string){
   document.head.appendChild(element)
 }
 
-export const getSupport = (support: Support[] | undefined) => {
-  support?.forEach((s) => {
-    const hasElement = document.getElementById(s.url)
-    if (s.type === 'font' && !hasElement) loadFont(s.url)
-    if (s.type === 'css' && !hasElement) loadCss(s.url)
+export const getAssets = (assets: Asset[] | undefined) => {
+  assets?.forEach((s) => {
+    const hasElement = document.getElementById(s.id)
+    if (s.assetType === 'font' && !hasElement) loadFont(s.id)
+    if (s.assetType === 'css' && !hasElement) loadCss(s.id)
   })
 }

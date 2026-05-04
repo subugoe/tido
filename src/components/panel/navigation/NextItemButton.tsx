@@ -14,54 +14,56 @@ const NextItemButton: FC = () => {
 
   function hasNext() {
     const { manifest, item, collectionId } = panelState || {}
-    if (!collectionId || !manifest || !item) return
+    if (!collectionId || !manifest || !item) return false
 
-    const itemIndex = manifest?.sequence.findIndex(({ id }) => id === item?.id) ?? -1
-    if (itemIndex === -1) return
+    const itemIndex = manifest?.items?.findIndex((id) => id === item?.id) ?? -1
+    if (itemIndex === -1) return false
 
     const nextIndex = itemIndex + 1
-    if (nextIndex > manifest.sequence.length - 1) {
-      const sequence = useDataStore.getState().collections[collectionId].sequence
+    if (nextIndex > (manifest.items?.length ?? 0) - 1) {
+      const manifests = useDataStore.getState().collections[collectionId].manifests
 
-      const nextManifestIndex = sequence.findIndex(({ id }) => id === manifest.id) + 1
-      if (nextManifestIndex > sequence.length - 1) return false
+      const nextManifestIndex = manifests.findIndex((id) => id === manifest.id) + 1
+      if (nextManifestIndex > manifests.length - 1) return false
     }
     return true
   }
 
-  function navigate() {
+  async function navigate() {
     const { manifest, item, collectionId } = panelState || {}
     if (!collectionId || !manifest || !item) return
 
-    const itemIndex = manifest?.sequence.findIndex(({ id }) => id === item?.id) ?? -1
+    const itemIndex = manifest?.items?.findIndex((id) => id === item?.id) ?? -1
 
     if (itemIndex === -1) return
 
     const nextIndex = itemIndex + 1
-    const sequence = useDataStore.getState().collections[collectionId].sequence
+    const manifests = useDataStore.getState().collections[collectionId].manifests
     let newConfig: PanelConfig = {
       collection: collectionId,
     }
 
-    if (nextIndex > manifest?.sequence.length - 1) {
-      const nextManifestIndex = sequence.findIndex(({ id }) => id === manifest.id) + 1
-      if (nextManifestIndex > sequence.length - 1) return
+    if (nextIndex > (manifest.items?.length ?? 0) - 1) {
+      const nextManifestIndex = manifests.findIndex((id) => id === manifest.id) + 1
+      if (nextManifestIndex > manifests.length - 1) return
 
       newConfig = {
         ...newConfig,
-        manifest: sequence[nextManifestIndex].id
+        manifest: manifests[nextManifestIndex]
       }
     } else {
+      const nextItemId = manifest.items?.[nextIndex]
+      if (!nextItemId) return
+
       newConfig = {
         ...newConfig,
         manifest: manifest.id,
-        item: manifest.sequence[nextIndex].id,
+        item: nextItemId
       }
     }
 
     init(newConfig)
   }
-
 
   return <NavigationButton
     isDisabled={isDisabled}

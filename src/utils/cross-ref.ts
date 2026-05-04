@@ -21,7 +21,7 @@ async function validateCrossRefNode(crossRefInfo: CrossRefInfo)  {
   if (crossRefInfo?.selector) {
     if (!validateSelector(crossRefInfo.selector)) throw new CustomError('cross_ref_error_title', 'referenced_element_not_found')
   }
-  const contentTypes = getContentTypes(item.content)
+  const contentTypes = getContentTypes(item.contents)
   if (!contentTypes.includes(crossRefInfo.contentType)) throw new CustomError('cross_ref_error_title', 'referenced_content_type_error')
 
   return {

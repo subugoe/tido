@@ -8,7 +8,7 @@ import { SUPPORTED_MIME_TYPES } from './constants'
 export function getManifestUrl(documentData: Manifest | Collection, documentType: string, index: number): string {
   let manifestUrl = ''
   if (documentType === 'collection') {
-    manifestUrl = documentData?.sequence[index].id
+    manifestUrl = (documentData as Collection).manifests[index]
   }
   else if (documentType === 'manifest') {
     manifestUrl = documentData?.id
@@ -23,14 +23,15 @@ export async function getManifestData(documentData: Collection | Manifest, docum
 }
 
 export async function getItemData(manifestData: Manifest): Promise<HttpResponse<Item>> {
-  const itemUrl = manifestData?.sequence[0].id
+  const itemUrl = manifestData?.items?.[0]
+  if (!itemUrl) throw new Error('No items found')
   return await request<Item>(itemUrl)
 }
 
 
 export function isItemContentValid(itemData: Item): boolean {
-  if (!('content' in itemData)) return false
-  if (itemData.content.length === 0) return false
+  if (!('contents' in itemData)) return false
+  if (itemData.contents.length === 0) return false
   return true
 }
 
@@ -40,7 +41,7 @@ export function splitMIMEType(value: string): string[] {
 
 export function getContentTypes(content: Content[]): string[] {
   return content
-    .map((item) => splitMIMEType(item.type))
+    .map((item) => splitMIMEType(item.contentType))
     .filter(([type]) => type && SUPPORTED_MIME_TYPES.includes(type))
     .map(([,param]) => param)
 }
@@ -72,7 +73,7 @@ export function filterAndSortData<T extends Record<string, unknown>>( data: T[],
 }
 
 export function validateImage(item: Item) {
-  return !!item?.image?.id
+  return !!item?.images?.[0]?.id
 }
 
 export function setNewActiveContentType(contentType: string, index: number, views: PanelView[]) {
