@@ -246,6 +246,9 @@ function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): V
     })()
 
   if (result.filters && !result.filters.rootSelectionRule) result.filters.rootSelectionRule = 'multiple'
+  if (result.filters && result.filters.rootSelectionRule === 'single' && result.filters.selectedIndex === undefined) {
+    result.filters.selectedIndex = 0
+  }
 
   if (result.filters?.selectedIndex) {
     const { selectedIndex, items } = result.filters

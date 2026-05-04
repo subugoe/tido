@@ -287,7 +287,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       const filterNodesWithSelection = annotationsConfig.filters.items.map((node: FilterNodeWithSelection, i: number) => {
         if (annotationsConfig.filters.rootSelectionRule === 'single') {
           node.selected = i === annotationsConfig.filters.selectedIndex
-          node.items.forEach(item => updateNodeSelection(item, true))
+          node.items?.forEach(item => updateNodeSelection(item, true))
         } else {
           updateNodeSelection(node, true)
         }

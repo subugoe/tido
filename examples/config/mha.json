@@ -1,17 +1,9 @@
 {
-  "rootCollections": ["https://textapi.mha.d.sub.uni-goettingen.de/api/mha/collection.json"],
-  "panels": [
-    {
-      "collection": "https://textapi.mha.d.sub.uni-goettingen.de/api/mha/collection.json",
-      "manifest": "https://textapi.mha.d.sub.uni-goettingen.de/api/mha/MHA01/manifest.json",
-      "item": "https://textapi.mha.d.sub.uni-goettingen.de/api/mha/MHA01/front/latest/item.json"
-    }
-  ],
   "allowNewCollections": false,
-  "defaultPanelMode": "split",
   "lang": "de",
   "theme": {
-    "primaryColor": "#2b7fff"
+    "primaryColor": "#2b7fff",
+    "theme": "system"
   },
   "showPanelPlaceholder": false,
   "translations": {
@@ -22,10 +14,53 @@
         "previous_item": "Vorherige Seite",
         "next_manifest": "Nächste Editionseinheit",
         "previous_manifest": "Vorherige Editionseinheit",
-        "item": "",
+        "item": "Seite",
         "collector": "Herausgeberin"
       }
     }
   },
-  "panelModes": ["split", "text", "image"]
+  "panels": [
+    {
+      "collection": "https://textapi.mha.d.sub.uni-goettingen.de/api/mha/collection.json",
+      "manifest": "https://textapi.mha.d.sub.uni-goettingen.de/api/mha/MHA01/manifest.json"
+    }
+  ],
+  "panelViews": [
+    {
+      "label": "Image",
+      "view": "image"
+    },
+    {
+      "label": "Text",
+      "view": "text"
+    }
+  ],
+  "annotations": {
+    "filters": {
+      "rootSelectionRule": "single",
+      "items": [
+        {
+          "label": "Sachkommentar",
+          "selected": true,
+          "types": [
+            "EditorialNote"
+          ]
+        },
+        {
+          "label": "Textkritischer apparat",
+          "selected": false,
+          "types": [
+            "Textkrit"
+          ]
+        }
+      ]
+    },
+    "defaultMode": "aligned",
+    "tooltipTypes": [],
+    "crossRefContentType": "CrossRef"
+  },
+  "showContentTypeToggle": false,
+  "rootCollections": [
+    "https://textapi.mha.d.sub.uni-goettingen.de/api/mha/collection.json"
+  ]
 }
