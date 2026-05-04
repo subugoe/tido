@@ -41,6 +41,7 @@ const AnnotationPopoverContainer: FC<Props> = memo(({
         sideOffset={4}
         side="bottom"
         onOpenAutoFocus={(e) => e.preventDefault()}
+        hideWhenDetached={true}
       >
         <div
           onClick={onClose}
