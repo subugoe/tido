@@ -18,11 +18,11 @@ const NextManifestButton: FC = () => {
 
     const collection = useDataStore.getState().collections[collectionId]
 
-    const manifestIndex = collection?.sequence.findIndex(({ id }) => id === manifest?.id) ?? -1
+    const manifestIndex = collection?.manifests.findIndex((id) => id === manifest?.id) ?? -1
     if (manifestIndex === -1) return
 
     const nextIndex = manifestIndex + 1
-    return nextIndex <= collection.sequence.length - 1
+    return nextIndex <= collection.manifests.length - 1
   }
 
   function navigate() {
@@ -30,21 +30,25 @@ const NextManifestButton: FC = () => {
     if (!collectionId || !manifest || !item) return
     const collection = useDataStore.getState().collections[collectionId]
 
-    const manifestIndex = collection?.sequence.findIndex(({ id }) => id === manifest?.id) ?? -1
+    const manifestIndex = collection?.manifests.findIndex((id) => id === manifest?.id) ?? -1
 
     if (manifestIndex === -1) return
 
     const nextIndex = manifestIndex + 1
-    const collectionSequence = useDataStore.getState().collections[collectionId].sequence
+    const manifests = collection.manifests
     let newConfig: PanelConfig = {
       collection: collectionId,
     }
 
-    if (nextIndex > collectionSequence.length - 1) return
+    if (nextIndex > manifests.length - 1) return
+
+    const manifestId = typeof manifests[nextIndex] === 'object'
+      ? (manifests[nextIndex] as Manifest).id
+      : (manifests[nextIndex] as string)
 
     newConfig = {
       collection: collectionId,
-      manifest: collectionSequence[nextIndex].id,
+      manifest: manifestId,
     }
 
     init(newConfig)

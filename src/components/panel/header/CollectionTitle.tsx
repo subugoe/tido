@@ -33,12 +33,12 @@ const CollectionTitle: FC = () => {
         <PopoverTrigger asChild>
           <Button
             className="text-sm px-2 py-1 h-7 font-semibold truncate max-w-[120px] @min-[1000px]/panel:max-w-[200px] @min-[1200px]/panel:max-w-[400px]"
-            title={collection.title[0].title}
+            title={collection.titles[0]}
             onClick={() => setShowLocalTree(!showLocalTree)}
             variant="muted"
             data-cy="collection-title"
           >
-            <span className="truncate">{ collection.title[0].title }</span>
+            <span className="truncate">{ collection.titles[0] }</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent side="bottom" align="start" className="w-[400px] pr-0">

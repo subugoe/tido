@@ -14,8 +14,8 @@ const MetadataItem: FC<MetadataItemProps> = ({ item }) => {
     <h4 className="font-semibold text-sm text-muted-foreground">
       {t(item.key)}
     </h4>
-    <MetadataValue value={item.value} />
-    <div className="ml-2">{item?.metadata?.map((meta, i) => <MetadataItem item={meta} key={i} />)} </div>
+    {typeof item.value === 'string' && <MetadataValue value={item.value} />}
+    {Array.isArray(item.value) && item.value.map((meta, i) => <MetadataItem item={meta} key={i} />)}
   </div>
 }
 

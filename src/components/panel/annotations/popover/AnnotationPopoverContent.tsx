@@ -40,7 +40,7 @@ const AnnotationPopoverContent: FC<Props> = ({ target, crossRefAnnotations, rela
     }
 
     async function computeCrossRefInfos(annotations: Annotation[]) {
-      const infos: CrossRefInfo[] = await Promise.all(annotations.map(a => getCrossRefInfo(a)))
+      const infos: CrossRefInfo[] = await Promise.all(annotations.map(a => getCrossRefInfo(a))) as CrossRefInfo[]
       setCrossRefInfos(infos)
     }
 

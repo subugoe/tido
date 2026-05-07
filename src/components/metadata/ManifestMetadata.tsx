@@ -6,24 +6,26 @@ import { useDataStore } from '@/store/DataStore.tsx'
 import MetadataItem from '@/components/metadata/MetadataItem.tsx'
 import { getManifestMetadata } from '@/utils/metadata.ts'
 
-
 const ManifestMetadata: FC = () => {
   const { panelState, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
   const manifest = useDataStore(
-    () => panelState && panelState.manifest ? panelState.manifest : null
+    () => panelState?.manifest ?? null
   )
 
   const metadata = getManifestMetadata(manifest)
 
+  if (metadata.length === 0) return null
+
   return <Accordion type="single" collapsible>
     <AccordionItem value="item-1">
       <AccordionTrigger>{ t('manifest') }</AccordionTrigger>
-      <AccordionContent>{ metadata.map((meta, i) => <MetadataItem item={meta} key={i} />) }</AccordionContent>
+      <AccordionContent>
+        { metadata.map((meta, i) => <MetadataItem item={meta} key={i} />) }
+      </AccordionContent>
     </AccordionItem>
   </Accordion>
 }
 
 export default ManifestMetadata
-

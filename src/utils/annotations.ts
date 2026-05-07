@@ -129,7 +129,7 @@ async function getCrossRefInfo(annotation: Annotation) {
   }
 
   if (!isCrossRefInAnnotation) contentUrl = (annotation.body as AnnotationBodyCrossRef)?.source?.id
-  const refContentType = refItemData.content?.find(c => c.url === contentUrl)?.type?.split('type=')[1]
+  const refContentType = refItemData.contents?.find(c => c.id === contentUrl)?.contentType?.split('type=')[1]
 
   return {
     collection: source.collection,

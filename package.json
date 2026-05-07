@@ -98,7 +98,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "npm run build:lib && npm run build:embed",
-    "build:lib": "vite build --config vite.lib.config.js && cp src/types.d.ts dist/types.d.ts",
+    "build:lib": "vite build --config vite.lib.config.js && cp src/types/index.d.ts dist/types.d.ts",
     "build:embed": "vite build",
     "build:test": "vite build --mode test",
     "cypress": "cypress open",

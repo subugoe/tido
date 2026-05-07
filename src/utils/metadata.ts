@@ -1,39 +1,47 @@
-
 function getCollectionMetadata (collection: Collection | null) {
-  const mappings: Record<string, string> = {
-    main: 'title',
-    sub: 'subtitle',
+  const description = collection?.description
+  const { result: collTitles } = validateTitles(collection?.titles)
+  const { result: collectors } = validateCollectorsName(collection?.collectors)
+
+  const metadata: Metadata[] = [
+    ...(collTitles.map((title) => ({
+      key: 'title',
+      type: 'TextApiMetadata',
+      value: title,
+    }))),
+  ]
+
+  if (collectors) {
+    metadata.push({ key: 'collectors', type: 'TextApiMetadata', value: collectors })
   }
 
-  const description = collection?.description
-  const { result: collTitle, errors: titleErrors } = validateTitle(collection?.title)
-  const { result: collectors } = validateCollectorsName(collection?.collector)
+  if (description && typeof description === 'string') {
+    metadata.push({ key: 'description', type: 'TextApiMetadata', value: description })
+  }
 
-  return [
-    ...(Object.keys(titleErrors).length === 0 && collTitle.map((title) => ({
-      key: mappings[title.type as keyof typeof mappings] || 'title',
-      value: title.title,
-    })) || [{ key: 'title', value: titleErrors[Object.keys(titleErrors)[0]] }]),
-    ...([{ key: 'collector', value: collectors }]),
-    ...(description && typeof description === 'string' ? [{ key: 'description', value: description }] : []),
-  ]
+  return metadata
 }
 
 function getManifestMetadata(manifest: Manifest | null) {
   const { result: license } = validateLicense(manifest?.license)
   const { result: label } = validateManifestLabel(manifest?.label)
 
-  return [
-    { key: 'label', value: label },
-    ...(license.length > 0 && license.map((item) => ({
-      key: 'license',
-      value: item.id,
-    })) || [{ key: 'license', value: 'value_must_be_an_array' }]),
-    ...(manifest?.metadata || [])
+  const metadata: Metadata[] = [
+    { key: 'label', type: 'TextApiMetadata', value: label },
   ]
+
+  if (license) {
+    metadata.push({ key: 'license', type: 'TextApiMetadata', value: license })
+  }
+
+  if (manifest?.metadata) {
+    metadata.push(...manifest.metadata)
+  }
+
+  return metadata
 }
 
-function validateCollectorsName(input: Actor[] | undefined) {
+function validateCollectorsName(input: Agent[] | undefined) {
   const result =
     Array.isArray(input) && input.length > 0
       ? input.length === 1 ? input[0].name : input.map((collector) => collector.name).join(', ')
@@ -43,26 +51,13 @@ function validateCollectorsName(input: Actor[] | undefined) {
   return { result }
 }
 
-function validateTitle(input: Title[] | undefined) {
-  const errors: Record<string, string>  = { }
-  let result: Title[]
-  if (Array.isArray(input)) {
-    result = input
-  } else {
-    if (input !== undefined)
-      errors['title'] = 'value_must_be_an_array'
-    result = []
-  }
-  return { result, errors }
+function validateTitles(input: string[] | undefined) {
+  const result: string[] = Array.isArray(input) ? input : []
+  return { result }
 }
 
-function validateLicense(input: License[] | undefined): { result: License[] } {
-  let result: License[]
-  if (Array.isArray(input)) {
-    result = input
-  } else {
-    result = []
-  }
+function validateLicense(input: string | undefined) {
+  const result = input || ''
   return { result }
 }
 
@@ -109,18 +104,19 @@ function validateImageNotes(input: string | undefined ) {
 }
 
 function getItemMetadata(item: Item | null) {
-
-  const label  = validateItemLabel(item?.n)
-  const lang = validateItemLanguage(item?.lang)
-  const imageLicense = validateImageLicense(item?.image?.license?.id)
-  const imageNotes = validateImageNotes(item?.image?.license?.notes)
+  const titles = item?.titles
+  const firstTitle = titles && titles.length > 0 ? titles[0] : undefined
+  const label = validateItemLabel(firstTitle)
+  const lang = validateItemLanguage(item?.languages)
+  const imageLicense = validateImageLicense(item?.images?.[0]?.license)
+  const imageNotes = validateImageNotes(item?.images?.[0]?.copyright)
 
   return [
-    { key: 'label', value: label },
-    { key: 'language', value: lang },
-    { key: 'image_license', value: imageLicense },
-    { key: 'image_notes', value: imageNotes },
+    { key: 'label', type: 'TextApiMetadata', value: label },
+    { key: 'language', type: 'TextApiMetadata', value: lang },
+    { key: 'image_license', type: 'TextApiMetadata', value: imageLicense },
+    { key: 'image_notes', type: 'TextApiMetadata', value: imageNotes },
   ].filter(i => i.value)
 }
 
-export { getCollectionMetadata, getManifestMetadata, getItemMetadata, validateCollectorsName }
+export { getCollectionMetadata, getManifestMetadata, getItemMetadata, validateCollectorsName, validateTitles }

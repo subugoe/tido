@@ -7,15 +7,14 @@
   "lang": "de",
   "panels": [
     {
-      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/transcriptions/collection.json",
-      "manifest": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/transcriptions/einsiedeln_278_1040/manifest.json"
+      "collection": "https://textapi.test.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/transcriptions"
     }
   ],
   "theme": {
     "primaryColor": "#2b7fff"
   },
   "rootCollections": [
-    "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/transcriptions/collection.json"
+    "https://textapi.test.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/all"
   ],
   "showPanelPlaceholder": false,
   "translations": {
@@ -24,7 +23,9 @@
         "simplified": "Vereinfacht",
         "accurate": "Handschriftengetreu",
         "edited": "Ediert",
-        "item": "Seite"
+        "item": "Seite",
+        "transcriptions": "Transkriptionen",
+        "einsiedeln_278_1040": "E: 3. Viertel 14. Jh."
       }
     }
   },

@@ -15,19 +15,18 @@ const PrevItemButton: FC = () => {
 
   function hasPrev() {
     const { manifest, item, collectionId } = panelState || {}
-    if (!collectionId || !manifest || !item) return
+    if (!collectionId || !manifest || !item) return false
 
-    const itemIndex = manifest?.sequence.findIndex(({ id }) => id === item?.id) ?? -1
-    if (itemIndex === -1) return
+    const itemIndex = manifest?.items?.findIndex((id) => id === item?.id) ?? -1
+    if (itemIndex === -1) return false
 
     const prevIndex = itemIndex - 1
     if (prevIndex < 0) {
-      const sequence = useDataStore.getState().collections[collectionId].sequence
+      const manifests = useDataStore.getState().collections[collectionId].manifests
 
-      const prevManifestIndex = sequence.findIndex(({ id }) => id === manifest.id) - 1
+      const prevManifestIndex = manifests.findIndex((id) => id === manifest.id) - 1
       if (prevManifestIndex < 0) return false
     }
-
     return true
   }
 
@@ -35,31 +34,53 @@ const PrevItemButton: FC = () => {
     const { manifest, item, collectionId } = panelState || {}
     if (!collectionId || !manifest || !item) return
 
-    const itemIndex = manifest?.sequence.findIndex(({ id }) => id === item?.id) ?? -1
+    const itemIndex = manifest?.items?.findIndex((id) => id === item?.id) ?? -1
+
     if (itemIndex === -1) return
 
     const prevIndex = itemIndex - 1
-    const sequence = useDataStore.getState().collections[collectionId].sequence
+    const manifests = useDataStore.getState().collections[collectionId].manifests
     let newConfig: PanelConfig = {
       collection: collectionId,
     }
+
     if (prevIndex < 0) {
       // If the index is lower than 0, we will load the prev manifest's last item
-      const prevManifestIndex = sequence.findIndex(({ id }) => id === manifest.id) - 1
+      const prevManifestIndex = manifests.findIndex((id) => id === manifest.id) - 1
       if (prevManifestIndex < 0) return
-      const prevManifest = await apiRequest<Manifest>(sequence[prevManifestIndex].id)
+
+      const prevMmanifestId = typeof manifests[prevManifestIndex] === 'object'
+        ? (manifests[prevManifestIndex] as Manifest).id
+        : (manifests[prevManifestIndex] as string)
+
+      const prevManifest = await apiRequest<Manifest>(prevMmanifestId)
+
+      // Get the last item ID from the previous manifest
+      const lastItem = prevManifest.items?.[prevManifest.items.length - 1]
+      if (!lastItem) return
+
+      const itemId = typeof lastItem === 'object'
+        ? (lastItem as Item).id
+        : lastItem
 
       newConfig = {
         ...newConfig,
-        manifest: sequence[prevManifestIndex].id,
-        item: prevManifest.sequence[prevManifest.sequence.length - 1].id
+        manifest: prevMmanifestId,
+        item: itemId
       }
     } else {
       // We load the previous item
+      const prevItem = manifest.items?.[prevIndex]
+      if (!prevItem) return
+
+      const itemId = typeof prevItem === 'object'
+        ? (prevItem as Item).id
+        : prevItem
+
       newConfig = {
         ...newConfig,
         manifest: manifest.id,
-        item: manifest.sequence[prevIndex].id
+        item: itemId
       }
     }
 

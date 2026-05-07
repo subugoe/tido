@@ -13,9 +13,8 @@ const ImageRenderer: FC = () => {
 
   const viewerContainerRef = useRef(null)
   const viewerRef = useRef(null)
-  const imageUrl = panelState?.item?.image?.id
+  const imageUrl = panelState?.item?.images?.[0]?.id
   const [loading, setLoading] = useState(true)
-
 
   useEffect(() => {
     if (!viewerContainerRef.current) return
@@ -48,7 +47,6 @@ const ImageRenderer: FC = () => {
     }
   }, [])
 
-
   useEffect(() => {
     setLoading(true)
 
@@ -62,7 +60,7 @@ const ImageRenderer: FC = () => {
     const oldItem = viewerRef.current.world.getItemAt(0)
     if (oldItem) viewerRef.current.world.removeItem(oldItem)
 
-    const imageType = panelState.item?.image ? (panelState.item.image as unknown as Record<string, unknown>)['x-type'] as string : undefined
+    const imageType = panelState.item?.images?.[0] ? (panelState.item.images[0] as unknown as Record<string, unknown>)['x-type'] as string : undefined
 
     if (imageType === 'image' || !imageType) {
       viewerRef.current.open({
