@@ -1,7 +1,7 @@
 describe('Annotations', () => {
 
     const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
-    const annotationConfig = `annotations.defaultMode=list&panels[0].collection=${apiUrl}/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json`;
+    const annotationConfig = `annotations.defaultMode=list&panels[0].collection=${apiUrl}/example/collections/example.json`;
 
     const selectors = {
         sidebarToggle: '[data-cy="sidebar-toggle"]',
@@ -17,7 +17,7 @@ describe('Annotations', () => {
         cy.visit('/e2e.html?' + annotationConfig)
         cy
           .get('[data-cy="item-label"]')
-          .contains('2a')
+          .contains('Pride and Prejudice, Chapter 1')
     })
 
     it('Should open annotation sidebar', () => {

@@ -2,7 +2,7 @@
   "lang": "de",
   "panels": [
     {
-      "collection": "http://localhost:8181/4w/reproduction/collection.json"
+      "collection": "http://localhost:8181/4w/collections/transcriptions.json"
     }
   ],
   "theme": {
@@ -20,7 +20,7 @@
     }
   },
   "rootCollections": [
-    "http://localhost:8181/4w/collection.json"
+    "http://localhost:8181/4w/collections/transcriptions.json"
   ],
   "panelModes": ["split", "text", "image"],
   "defaultPanelMode": "text"

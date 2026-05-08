@@ -1,22 +1,23 @@
 {
-  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/collection.jsonld",
-  "textapi": "1.4.0",
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
   "id": "http://localhost:8181/bdn/textapi/griesbach/collection.json",
-  "title": [
+  "titles": [
+    "BdN III: Johann Jakob Griesbach, Anleitung zum Studium der populären Dogmatik (1. Aufl. 1779; 2. Aufl. 1786; 3. Aufl. 1787; 4. Aufl. 1789)"
+  ],
+  "collectors": [
     {
-      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/title.jsonld",
-      "title": "BdN III: Johann Jakob Griesbach, Anleitung zum Studium der popul\u00e4ren Dogmatik (1. Aufl. 1779; 2. Aufl. 1786; 3. Aufl. 1787; 4. Aufl. 1789)",
-      "type": "main"
+      "name": "Stallmann, Marco",
+      "roles": [
+        "Editor"
+      ]
     }
   ],
-  "collector": [
-    {
-      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/actor.jsonld",
-      "role": "Editor",
-      "name": "Stallmann, Marco"
-    }
-  ],
-  "sequence": [
+  "created": "2024-01-01T00:00:00Z",
+  "revision": "1",
+  "total": 6,
+  "textapiType": "TextApiCollection",
+  "manifests": [
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/bdn/textapi/griesbach/a/manifest.json",

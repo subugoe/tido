@@ -1,61 +1,49 @@
 {
-  "textapi": "1.3.0",
-  "x-app-version": "11.4.3",
-  "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/collection.jsonld",
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
   "id": "http://localhost:8181/example-with-iiif/textapi/collection.json",
-  "title": [
-    {
-      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/title.jsonld",
-      "title": "Example Collection",
-      "type": "main"
-    }
+  "titles": [
+    "Example Collection"
   ],
-  "collector": [
+  "collectors": [
     {
-      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/actor.jsonld",
       "name": "The TIDO team",
-      "role": [
+      "roles": [
         "collector"
-      ],
-      "idref": [
-        {
-          "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/idref.jsonld",
-          "base": "http://d-nb.info/gnd/",
-          "id": "1",
-          "type": "GND"
-        }
       ]
     }
   ],
-  "annotationCollection": "http://localhost:8181/example/annotations/annotationCollection.json",
-  "description": "These annotations represent connections between multiple texts",
-  "sequence": [
+  "created": "2024-01-01T00:00:00Z",
+  "revision": "1",
+  "total": 5,
+  "textapiType": "TextApiCollection",
+  "manifests": [
     {
-      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/sequence.jsonld",
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/example-with-iiif/textapi/manifest-1/manifest.json",
       "label": "First Manifest",
       "type": "manifest"
     },
     {
-      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/sequence.jsonld",
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/example-with-iiif/textapi/manifest-2/manifest.json",
       "label": "Second Manifest",
       "type": "manifest"
     },
     {
-      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/sequence.jsonld",
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/example-with-iiif/textapi/manifest-3/manifest.json",
       "label": "Third Manifest",
       "type": "manifest"
     },
     {
-      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/sequence.jsonld",
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/example-with-iiif/textapi/manifest-4/manifest.json",
       "label": "Fourth Manifest",
       "type": "manifest"
     },
     {
-      "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/sequence.jsonld",
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/example/textapi/manifest-5/manifest.json",
       "label": "Fifth Manifest",
       "type": "manifest"

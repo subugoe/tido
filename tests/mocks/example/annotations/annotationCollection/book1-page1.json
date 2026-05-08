@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/annotations/annotationCollection/book1-page1.json",
+  "type": "AnnotationCollection",
+  "label": "Annotations for Pride and Prejudice, Chapter 1",
+  "total": 17,
+  "first": "http://localhost:8181/example/annotations/annotationPage/book1-page1.json",
+  "last": "http://localhost:8181/example/annotations/annotationPage/book1-page1.json"
+}

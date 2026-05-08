@@ -1,5 +1,11 @@
 import { Tree } from '../support/tree-helpers'
 
+const parentCollection = 'http://localhost:8181/example/collections/example-parent.json'
+const collection = 'http://localhost:8181/example/collections/example.json'
+
+const config = `rootCollections[0]=${parentCollection}&panels[0].collection=${collection}&panels[0].manifest=http://localhost:8181/example/manifests/book2.json`;
+
+
 function clickNewPanelInGlobalTree() {
   cy.get('[data-cy="global-tree-modal"]')
     .find('[data-cy="button-new-panel"]')
@@ -22,43 +28,42 @@ function expectPanelWithText(panelIdx, itemLabel, textSnippet) {
     .should('have.text', itemLabel)
 
   cy.get('@panel')
-    .find('.text-area')
-    .first()
+    .find('[data-text-container]')
     .contains(textSnippet)
 }
 
 
 describe('Tree', () => {
   beforeEach(() => {
-    cy.visit('/4w-local.html')
+    cy.visit('/e2e.html?' + config)
   });
 
   it('Should render collections, manifests, and items correctly', () => {
     Tree.open()
     // Get the rootCollection (expanded by default)
     Tree.getRootNodes().first().then(($rootCollection) => {
-      // Assert rootCollection has 2 nested collections
-      Tree.shouldHaveChildren($rootCollection, 2)
+      // Assert rootCollection has 1 nested collection
+      Tree.shouldHaveChildren($rootCollection, 1)
 
       // Expand first nested collection: "Ebene 1: Reproduktion der Dokumente"
-      const nestedCollectionLabel = 'Ebene 1: Reproduktion der Dokumente'
+      const nestedCollectionLabel = 'example.json'
       Tree.clickNode(nestedCollectionLabel, $rootCollection).then(($nestedCollection) => {
         Tree.shouldBeExpanded($nestedCollection)
-        Tree.shouldHaveChildren($nestedCollection, 8) // 8 manifests
+        Tree.shouldHaveChildren($nestedCollection, 3) // 3 manifests
 
         // First manifest under this collection
-        const firstManifestLabel = 'Einsiedeln, 278 1040'
+        const firstManifestLabel = 'book1.json'
         Tree.clickNode(firstManifestLabel, $nestedCollection).then(($manifest) => {
           Tree.shouldHaveChildren($manifest, 3) // items
 
           // Check second item of the first manifest
           Tree.getChildAt($manifest, 1).then(($item) => {
-            Tree.shouldHaveLabel($item, '280')
+            Tree.shouldHaveLabel($item, 'book1-page2.json')
           })
         })
 
         // Second manifest under the collection
-        const secondManifestLabel = 'Kloster Neuburg, Cod. 251'
+        const secondManifestLabel = 'book2.json'
         Tree.getDirectChildByLabel($nestedCollection, secondManifestLabel).then(($manifest2) => {
           Tree.shouldHaveLabel($manifest2, secondManifestLabel)
         })
@@ -71,9 +76,9 @@ describe('Tree', () => {
 
     // Select item 280 via full path
     Tree.clickPath([
-      'Ebene 1: Reproduktion der Dokumente',
-      'Einsiedeln, 278 1040',
-      '280'
+      'example.json',
+      'book1.json',
+      'book1-page2.json'
     ])
       .find('div')
       .first()
@@ -94,13 +99,13 @@ describe('Tree', () => {
       .find('[data-cy="panel"]')
       .should('have.length', 2)
 
-    expectPanelWithText(1, '280', 'fol. 280a')
+    expectPanelWithText(1, 'Pride and Prejudice, Chapter 2', 'Pride and Prejudice')
 
     // Tree modal closes after panel creation
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
 
     // Tree remains expanded -> we can now select by label only
-    Tree.clickPath(['280'])
+    Tree.clickPath(['book1-page3.json'])
     clickNewPanelInGlobalTree()
 
     cy.get('[data-cy="panels-wrapper"]')
@@ -109,8 +114,8 @@ describe('Tree', () => {
 
     // Select another item
     Tree.clickPath([
-      'Kloster Neuburg, Cod. 251',
-      '72v'
+      'book3.json',
+      'book3-page1.json'
     ])
 
     // Modal now shows update buttons for 3 panels
@@ -126,9 +131,9 @@ describe('Tree', () => {
     Tree.open()
 
     Tree.clickPath([
-      'Ebene 1: Reproduktion der Dokumente',
-      'Einsiedeln, 278 1040',
-      '280'
+      'example.json',
+      'book1.json',
+      'book1-page3.json'
     ])
 
     cy.get('[data-cy="global-tree-modal"]')
@@ -140,7 +145,7 @@ describe('Tree', () => {
       .find('[data-cy="panel"]')
       .should('have.length', 1)
 
-    expectPanelWithText(0, '280', 'fol. 280a')
+    expectPanelWithText(0, 'Pride and Prejudice, Chapter 3', 'Pride and Prejudice, Chapter 3')
 
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
   })

@@ -1,0 +1,8 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/4w/annotations/annotationCollection//wolfenbuettel_hab_cod_151_noviss_4-203v.json",
+  "type": "AnnotationCollection",
+  "label": "Annotations for item wolfenbuettel_hab_cod_151_noviss_4-203v",
+  "first": "http://localhost:8181/4w/annotations/annotationPage/wolfenbuettel_hab_cod_151_noviss_4-203v.json",
+  "last": "http://localhost:8181/4w/annotations/annotationPage/wolfenbuettel_hab_cod_151_noviss_4-203v.json"
+}

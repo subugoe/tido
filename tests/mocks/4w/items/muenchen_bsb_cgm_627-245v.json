@@ -1,0 +1,36 @@
+{
+  "@context": "https://editions.sub.uni-goettingen.de/context.json",
+  "textapiVersion": "2.0.0",
+  "id": "http://localhost:8181/4w/items/muenchen_bsb_cgm_627-245v.json",
+  "textItemType": "page",
+  "division": "Seite muenchen_bsb_cgm_627-245v",
+  "languages": [
+    "deu"
+  ],
+  "contents": [
+    {
+      "id": "http://localhost:8181/4w/xml/muenchen_bsb_cgm_627-245v.json",
+      "contentType": "application/xml"
+    },
+    {
+      "id": "http://localhost:8181/4w/html/muenchen_bsb_cgm_627-245v_accurate.html",
+      "contentType": "text/html;type=accurate"
+    },
+    {
+      "id": "http://localhost:8181/4w/html/muenchen_bsb_cgm_627-245v_simplified.html",
+      "contentType": "text/html;type=simplified"
+    },
+    {
+      "id": "http://localhost:8181/4w/html/muenchen_bsb_cgm_627-245v_edited.html",
+      "contentType": "text/html;type=edited"
+    }
+  ],
+  "images": [
+    {
+      "id": "http://localhost:8181/text-api.png",
+      "mimetype": "image/jpeg",
+      "license": "CC-BY-SA-4.0"
+    }
+  ],
+  "annotationCollection": "http://localhost:8181/4w/annotations/annotationCollection/muenchen_bsb_cgm_627-245v.json"
+}
