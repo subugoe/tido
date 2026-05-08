@@ -160,6 +160,13 @@ const AlignAnnotationsList: FC = () => {
 
   useEffect(() => {
     trackTopChange()
+    /*
+    if (selectedAnnotation) {
+      const scroller = getScroller()
+      const contentUrl = selectedAnnotation.target[0].source
+      //scroller.syncTextToSidebar(contentUrl)
+    } */
+
 
     const panelEl = document.getElementById(panelId) as HTMLElement
     const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
