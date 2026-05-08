@@ -115,7 +115,10 @@ async function getRootChildrenCollectionsIds(rootCollection: Collection) {
 
 function getCollectionSlug(id: string) {
   const urlParts = id.split('/')
-  return urlParts[urlParts.length - 2]
+  const markerIndex = urlParts.findIndex(part => part === 'collections')
+
+  if (markerIndex === -1 || urlParts.length <= markerIndex) return null
+  return urlParts[markerIndex + 1].split('.')[0]
 }
 
 function getNodeIndices(nodeKey: string) {
