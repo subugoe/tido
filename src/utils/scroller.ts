@@ -96,6 +96,10 @@ class Scroller {
     setTimeout(() => this.isSyncing = false, 20)
   }
 
+  syncSidebarToText(contentUrl: string | AnnotationTargetSource) {
+    this.syncScroll(this.texts[contentUrl], this.sidebar)
+  }
+
   handleSidebarScroll() {
     if (this.isSyncing || !this.sidebar) return
     const refY = this.sidebar.scrollTop + this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_TOP

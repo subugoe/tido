@@ -6,7 +6,7 @@ import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 const ANNOTATION_GAP = 5
 
 const AlignAnnotationsList: FC = () => {
-  const { panelId, selectedAnnotation, setSelectedAnnotation } = usePanel()
+  const { panelId, selectedAnnotation, setSelectedAnnotation, getScroller, panelState } = usePanel()
   const { filteredAnnotations } = useAnnotations()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
@@ -26,26 +26,6 @@ const AlignAnnotationsList: FC = () => {
   }
 
   useEffect(() => {
-    trackTopChange()
-
-    const panelEl = document.getElementById(panelId) as HTMLElement
-    const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
-
-    async function deselectAnnotationOnOutsideClick(event: MouseEvent) {
-      // if we click at an annotation - we return false
-      if (isClickedElAnnotation(event.target as HTMLElement)) return
-      setSelectedAnnotation(null)
-    }
-
-    annotationsSideBarEl?.addEventListener('click', deselectAnnotationOnOutsideClick)
-
-    // Cleanup on unmount
-    return () => {
-      annotationsSideBarEl?.removeEventListener('click', deselectAnnotationOnOutsideClick)
-    }
-  }, [selectedAnnotation])
-
-  useEffect(() => {
     if (toggledAnnotation) {
       trackTopChange()
       setToggledAnnotation(null)
@@ -57,6 +37,7 @@ const AlignAnnotationsList: FC = () => {
     // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
     // the key is the annotation id and the value is the top value.
 
+    console.log('elements', elements)
     if (elements.length === 0) return
 
     // Set the desiredY according to current target clean positions (clean = actual position in the text)
@@ -94,6 +75,8 @@ const AlignAnnotationsList: FC = () => {
       return acc
     }, {})
 
+    console.log('update y map positions of annots')
+
     setYMap(map)
   }
 
@@ -116,6 +99,18 @@ const AlignAnnotationsList: FC = () => {
     if (filteredAnnotations?.length === 0) {
       setElements([])
     } else {
+      // scroll to text Scroll position
+
+      const scroller = getScroller()
+      const firstTextView = panelState.panelViews.find(v => v.view === 'text')
+      const contentUrl = panelState.item?.content.find(c =>
+        c.type.includes(firstTextView?.activeContentType))?.url
+      scroller.syncSidebarToText(contentUrl)
+      // get content url of the first panelView which is text
+      //const contentUrl = panelState.panelViews[0].
+
+      //scroller.syncSidebarToText(selectedAnnotation.target[0].source)
+
       const annotationEls = Array.from(ref.current?.childNodes ?? [])
       const _elements = annotationEls.map(el => {
         const annotation = filteredAnnotations.find(a => a.id === (el as HTMLElement).getAttribute('data-annotation'))
@@ -146,7 +141,10 @@ const AlignAnnotationsList: FC = () => {
     let timeout: ReturnType<typeof setTimeout> | undefined
     if (elements.length > 0) {
       resizeObserver = new ResizeObserver(entries => {
-        if (entries[0].contentRect.width > 0) trackTopChange()
+        if (entries[0].contentRect.width > 0) {
+          trackTopChange()
+        }
+
       })
       resizeObserver.observe(textContainer)
     }
@@ -158,6 +156,27 @@ const AlignAnnotationsList: FC = () => {
       if (timeout) clearTimeout(timeout)
     }
   }, [elements])
+
+
+  useEffect(() => {
+    trackTopChange()
+
+    const panelEl = document.getElementById(panelId) as HTMLElement
+    const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
+
+    async function deselectAnnotationOnOutsideClick(event: MouseEvent) {
+      // if we click at an annotation - we return false
+      if (isClickedElAnnotation(event.target as HTMLElement)) return
+      setSelectedAnnotation(null)
+    }
+
+    annotationsSideBarEl?.addEventListener('click', deselectAnnotationOnOutsideClick)
+
+    // Cleanup on unmount
+    return () => {
+      annotationsSideBarEl?.removeEventListener('click', deselectAnnotationOnOutsideClick)
+    }
+  }, [selectedAnnotation])
 
 
   if (filteredAnnotations.length > 0)
