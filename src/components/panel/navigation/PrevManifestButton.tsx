@@ -17,7 +17,10 @@ const PrevManifestButton: FC = () => {
 
     if (!collectionId || !manifest || !item) return false
 
-    const manifestIndex = collection?.manifests.findIndex((id) => id === manifest?.id) ?? -1
+    const manifestIndex = collection?.manifests.findIndex((cur) => {
+      const id = typeof cur === 'object' ? cur.id : cur
+      return id === manifest?.id
+    }) ?? -1
     if (manifestIndex === -1) return false
 
     const prevIndex = manifestIndex - 1
@@ -30,7 +33,10 @@ const PrevManifestButton: FC = () => {
 
     if (!collectionId || !manifest || !item) return
 
-    const manifestIndex = collection?.manifests.findIndex((id) => id === manifest?.id) ?? -1
+    const manifestIndex = collection?.manifests.findIndex((cur) => {
+      const id = typeof cur === 'object' ? cur.id : cur
+      return id === manifest?.id
+    }) ?? -1
     if (manifestIndex === -1) return
 
     const prevIndex = manifestIndex - 1

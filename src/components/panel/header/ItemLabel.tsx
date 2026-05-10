@@ -34,7 +34,8 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
     const items = (targetManifest.items || [])
       .map(item => {
         const id = typeof item === 'object' ? item.id : item
-        return { id, label: t(id.split('/').pop()) }
+        const label = t(typeof item === 'object' ? item.division : id.split('/').pop())
+        return { id, label }
       })
 
     setLabels(items)

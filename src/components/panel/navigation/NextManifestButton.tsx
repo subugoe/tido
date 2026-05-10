@@ -18,7 +18,10 @@ const NextManifestButton: FC = () => {
 
     const collection = useDataStore.getState().collections[collectionId]
 
-    const manifestIndex = collection?.manifests.findIndex((id) => id === manifest?.id) ?? -1
+    const manifestIndex = collection?.manifests.findIndex((cur) => {
+      const id = typeof cur === 'object' ? cur.id : cur
+      return id === manifest?.id
+    }) ?? -1
     if (manifestIndex === -1) return
 
     const nextIndex = manifestIndex + 1
@@ -30,7 +33,10 @@ const NextManifestButton: FC = () => {
     if (!collectionId || !manifest || !item) return
     const collection = useDataStore.getState().collections[collectionId]
 
-    const manifestIndex = collection?.manifests.findIndex((id) => id === manifest?.id) ?? -1
+    const manifestIndex = collection?.manifests.findIndex((cur) => {
+      const id = typeof cur === 'object' ? cur.id : cur
+      return id === manifest?.id
+    }) ?? -1
 
     if (manifestIndex === -1) return
 

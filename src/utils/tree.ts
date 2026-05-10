@@ -65,12 +65,29 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
     data[sequenceKey as keyof typeof data] as Collection[] | Manifest[] | Item[] | string[] | undefined
   if (!sequence) return []
 
-  const ids = sequence.map(item => typeof item === 'object' ? item.id : item)
+  const idsAndLabels = sequence.map(item => {
 
-  if (!ids || ids.length === 0) return []
+    let id
+    let label
+
+    if (typeof item === 'object') {
+      id = item.id
+      if (item.textapiType === 'TextApiCollection') label = item.titles[0]
+      else if (item.textapiType === 'TextApiManifest') label = item.label
+      else if (item.textapiType === 'TextApiItem') label = item.division
+    } else {
+      id = item
+      label = id.split('/').pop()
+    }
+
+
+    return { id, label }
+  })
+
+  if (!idsAndLabels || idsAndLabels.length === 0) return []
 
   // For both Collections and Manifests, the IDs are strings
-  return ids.map((id: string) => {
+  return idsAndLabels.map(({ id, label }) => {
     let type = ''
 
     if (isCollectionUrl(id)) type = 'collection'
@@ -80,7 +97,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
     return {
       id,
       type,
-      label: id.split('/').pop(),
+      label,
       key: parentKey + NODE_KEY_DELIMITER + id,
       leaf: type === 'item',
       expanded: false,

@@ -16,14 +16,20 @@ const NextItemButton: FC = () => {
     const { manifest, item, collectionId } = panelState || {}
     if (!collectionId || !manifest || !item) return false
 
-    const itemIndex = manifest?.items?.findIndex((id) => id === item?.id) ?? -1
+    const itemIndex = manifest?.items?.findIndex((cur) => {
+      const id = typeof cur === 'object' ? cur.id : cur
+      return id === item?.id
+    }) ?? -1
     if (itemIndex === -1) return false
 
     const nextIndex = itemIndex + 1
     if (nextIndex > (manifest.items?.length ?? 0) - 1) {
       const manifests = useDataStore.getState().collections[collectionId].manifests
 
-      const nextManifestIndex = manifests.findIndex((id) => id === manifest.id) + 1
+      const nextManifestIndex = manifests.findIndex((cur) => {
+        const id = typeof cur === 'object' ? cur.id : cur
+        return id === manifest.id
+      }) + 1
       if (nextManifestIndex > manifests.length - 1) return false
     }
     return true
@@ -33,7 +39,10 @@ const NextItemButton: FC = () => {
     const { manifest, item, collectionId } = panelState || {}
     if (!collectionId || !manifest || !item) return
 
-    const itemIndex = manifest?.items?.findIndex((id) => id === item?.id) ?? -1
+    const itemIndex = manifest?.items?.findIndex((cur) => {
+      const id = typeof cur === 'object' ? cur.id : cur
+      return id === item?.id
+    }) ?? -1
 
     if (itemIndex === -1) return
 
@@ -44,7 +53,10 @@ const NextItemButton: FC = () => {
     }
 
     if (nextIndex > (manifest.items?.length ?? 0) - 1) {
-      const nextManifestIndex = manifests.findIndex((id) => id === manifest.id) + 1
+      const nextManifestIndex = manifests.findIndex((cur) => {
+        const id = typeof cur === 'object' ? cur.id : cur
+        return id === manifest.id
+      }) + 1
       if (nextManifestIndex > manifests.length - 1) return
 
       const manifestId = typeof manifests[nextManifestIndex] === 'object'

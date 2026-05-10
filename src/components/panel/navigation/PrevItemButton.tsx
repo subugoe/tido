@@ -17,14 +17,20 @@ const PrevItemButton: FC = () => {
     const { manifest, item, collectionId } = panelState || {}
     if (!collectionId || !manifest || !item) return false
 
-    const itemIndex = manifest?.items?.findIndex((id) => id === item?.id) ?? -1
+    const itemIndex = manifest?.items?.findIndex((cur) => {
+      const id = typeof cur === 'object' ? item.id : cur
+      return id === item?.id
+    }) ?? -1
     if (itemIndex === -1) return false
 
     const prevIndex = itemIndex - 1
     if (prevIndex < 0) {
       const manifests = useDataStore.getState().collections[collectionId].manifests
 
-      const prevManifestIndex = manifests.findIndex((id) => id === manifest.id) - 1
+      const prevManifestIndex = manifests.findIndex((cur) => {
+        const id = typeof cur === 'object' ? cur.id : cur
+        return id === manifest.id
+      }) - 1
       if (prevManifestIndex < 0) return false
     }
     return true
@@ -34,7 +40,10 @@ const PrevItemButton: FC = () => {
     const { manifest, item, collectionId } = panelState || {}
     if (!collectionId || !manifest || !item) return
 
-    const itemIndex = manifest?.items?.findIndex((id) => id === item?.id) ?? -1
+    const itemIndex = manifest?.items?.findIndex((cur) => {
+      const id = typeof cur === 'object' ? cur.id : cur
+      return id === item?.id
+    }) ?? -1
 
     if (itemIndex === -1) return
 
@@ -46,7 +55,10 @@ const PrevItemButton: FC = () => {
 
     if (prevIndex < 0) {
       // If the index is lower than 0, we will load the prev manifest's last item
-      const prevManifestIndex = manifests.findIndex((id) => id === manifest.id) - 1
+      const prevManifestIndex = manifests.findIndex((cur) => {
+        const id = typeof cur === 'object' ? cur.id : cur
+        return id === manifest.id
+      }) - 1
       if (prevManifestIndex < 0) return
 
       const prevMmanifestId = typeof manifests[prevManifestIndex] === 'object'
