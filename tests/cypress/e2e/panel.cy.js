@@ -55,8 +55,11 @@ describe('Panel', () => {
       .eq(1).click()
       .get('[data-radix-popper-content-wrapper]')     // popover is closed
       .should('not.exist')
+      .get('#panels-wrapper')
+      .children().eq(0)
+      .find('[aria-label="Loading"]')
+      .should('exist')
 
-     cy
       .validateLabel('manifest', 'The Great Gatsby')
       .validateLabel('item', 'The Great Gatsby, Chapter 2')
       .validateText('This is a valley of ashes—a fantastic farm where ashes grow')
