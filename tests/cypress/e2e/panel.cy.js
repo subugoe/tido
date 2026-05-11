@@ -21,6 +21,8 @@ Cypress.Commands.add('validateText', (content) => {
   cy.get('#panels-wrapper')
     .children().eq(0)
     .find('div[data-text-container]')
+    .children()
+    .first()
     .should('contain.text',content)
 })
 
@@ -53,9 +55,11 @@ describe('Panel', () => {
       .eq(1).click()
       .get('[data-radix-popper-content-wrapper]')     // popover is closed
       .should('not.exist')
-    cy.validateLabel('manifest', 'The Great Gatsby')
-    cy.validateLabel('item', 'The Great Gatsby, Chapter 2')
-    cy.validateText('half way between')
+
+     cy
+      .validateLabel('manifest', 'The Great Gatsby')
+      .validateLabel('item', 'The Great Gatsby, Chapter 2')
+      .validateText('This is a valley of ashes—a fantastic farm where ashes grow')
   })
 
   // it('Should display the configured panelModes and the defaultPanelMode as selected', () => {
@@ -140,7 +144,7 @@ describe('Panel', () => {
       .click()  // should switch to the first item of Klosterneuburg manifest
       .validateLabel('manifest', 'The Great Gatsby')         // Manifest and item labels should get updated
       .validateLabel('item', 'The Great Gatsby, Chapter 1')
-      .validateText('Chapter 1 [Diplomatic Transcription]')                        // Text area should update
+      .validateText('I lived at West Egg, the—well')                        // Text area should update
   })
 
   // it('Should switch to previous item', () => {
@@ -223,7 +227,7 @@ describe('Panel', () => {
     // Update of content
     cy.validateLabel('manifest', 'The Great Gatsby')
     cy.validateLabel('item', 'The Great Gatsby, Chapter 2')
-    cy.validateText('Chapter 2 [Diplomatic Transcription]')
+    cy.validateText('This is a valley of ashes—a fantastic farm where ashes grow like wheat')
   })
 
   it('Should disable the next button in last manifest last item', () => {
