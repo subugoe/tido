@@ -133,4 +133,20 @@ describe('Annotations', () => {
         cy.get('@firstAnnotation').trigger('mouseenter')
         cy.get('@firstAnnotation').trigger('mouseleave')
     })
+
+    it('Should display configured custom labels and icons for annotation types', () => {
+        const label = 'person';
+        const icon = 'person-badge';
+        const customLabelsConfig = `annotations.defaultMode=list&panels[0].collection=${apiUrl}/ahiqar/textapi/ahiqar/arabic-karshuni/collection.json&annotations.types.person.label=${label}&annotations.types.person.icon=${icon}`;
+
+        cy.visit('/e2e.html?' + customLabelsConfig);
+        cy.get('[data-cy="item-label"]').contains('2a');
+
+        openSidebar();
+
+        sidebar().find('[data-annotation]').should('have.length.at.least', 1);
+
+        sidebar().find('svg').should('be.visible');
+
+    });
 })
