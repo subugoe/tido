@@ -172,20 +172,32 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
       // 4. We discover the correct "views" config. This can come from a global config (root key "panelViews")
       // or local config (key "views" in the panel config).
-      const enhanceView = (view: PanelView): Partial<PanelView> => ({
-        ...view,
-        contentTypes: view.view === 'text' && !view.contentTypes ? contentTypes : view.contentTypes,
-        activeContentType: contentTypes?.length > 0 && contentTypes[0],
-        visible: view.visible ?? true,
-      })
+      const enhanceView = (view: PanelView, viewIndex: number): Partial<PanelView> => {
+        const oldActiveContentType = panelState.panelViews[viewIndex]?.activeContentType ?? null
+        let activeContentType = null
+        if (contentTypes?.length > 0) {
+          if (oldActiveContentType) {
+            activeContentType = contentTypes.includes(oldActiveContentType) ? oldActiveContentType : contentTypes[0]
+          } else {
+            activeContentType = contentTypes[0]
+          }
+        }
+
+        return {
+          ...view,
+          contentTypes: view.view === 'text' && !view.contentTypes ? contentTypes : view.contentTypes,
+          activeContentType,
+          visible: view.visible ?? true,
+        }
+      }
 
       const resultPanelViews: PanelView[] =
         config.views && config.views.length > 0
           ? config.views.map((view, i) => ({
             ...(panelViewsConfig[i] ?? {}),
-            ...enhanceView(view),
+            ...enhanceView(view, i),
           }))
-          : panelViewsConfig.map((view: PanelView) => enhanceView(view))
+          : panelViewsConfig.map((view: PanelView, i: number) => enhanceView(view, i))
 
       // 5. We update the panel state with the data.
       updatePanel({
@@ -193,7 +205,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         manifest,
         item,
         panelViews: resultPanelViews,
-        showSidebar: config.showSidebar ?? false,
+        showSidebar: config.showSidebar ?? panelState.showSidebar,
       })
 
       if (item.annotationCollection) {
