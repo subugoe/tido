@@ -80,7 +80,6 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
       label = id.split('/').pop()
     }
 
-
     return { id, label }
   })
 
