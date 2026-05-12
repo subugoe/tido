@@ -363,7 +363,6 @@ const GenericTextRenderer: FC<Props> = memo(({
         return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
       })
 
-    const crossRefContentType = annotationsConfig?.crossRefContentType
     const seen = new Set<string>()
     // compute related annotations: all annotations for the clicked target and its parent targets
     const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
