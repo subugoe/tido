@@ -1,0 +1,370 @@
+@font-face {
+  font-family: "Junicode VF";
+  src: url("../fonts/JunicodeVF-Roman.woff2");
+  font-weight: 300 700;
+  font-stretch: 75% 125%;
+}
+
+@font-face {
+  font-family: "Junicode VF";
+  src: url("../fonts/JunicodeVF-Italic.woff2");
+  font-style: italic;
+  font-weight: 300 700;
+  font-stretch: 75% 125%;
+}
+
+/* Main layout structure */
+.text-area {
+    width: 100%;
+    max-width: 1400px;
+    font-family: 'Junicode VF';
+    font-size: 12pt;
+    line-height: 2em;
+}
+
+/*width: 700px; alter Wert */
+.page-w-colums {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    width: 100%;
+}
+
+
+.container.flex-direction {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1400px;
+}
+
+.column-a, .column-b {
+  min-width: 450px;
+  height: auto;
+  margin-left: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 700px;
+  overflow: hidden;
+}
+
+/* no left/right margins here */
+.simplified .column-a,
+.simplified .column-b,
+.edited .column-a,
+.edited .column-b {
+  min-width: 250px;
+}
+
+.column-main {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+}
+
+
+/* Margin notes styling */
+.margin-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 80px;
+}
+
+.notes-left,
+.notes-right {
+    width: 100px;
+}
+
+.margin-line {
+    min-height: 2em;
+    font-size: 14px;
+    color: inherit;
+    background-color: transparent;
+    border: none;
+    display: flex;
+}
+
+/* Main text styling */
+.main-text {
+    flex: 1;
+    padding: 0;
+}
+
+.line-nr:before { content: ' '; display: block; }
+
+.line-nr {
+    display: inline-block;
+    width: 35px;
+    color: #888;
+    font-size: smaller
+}
+
+.line {
+  text-indent: -35px;
+  margin-left: 35px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  height: 2em;
+}
+
+.line:has( .ext-3) {
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+}
+
+.sheet-nr {
+  color: #888;
+  font-size: smaller;
+  padding-bottom: 20px;
+}
+
+.sheet-nr::before {
+    content: "| ";
+}
+
+.sheet-nr::after {
+    content: " |";
+}
+
+.p { margin-top: 15px; margin-bottom: 15px; }
+.larger { font-size: x-large; }
+
+.abbr {
+  display: inline;
+  background-color: #eee;
+  cursor: pointer;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ext-2 {
+  font-size: 2lh;
+}
+
+.ext-3 {
+  font-size: 3lh;
+}
+
+/* general rules for additions */
+.subst .acc-add::before,
+.subst .acc-add-across-a::before,
+.subst .acc-add-across-b::before,
+.subst .acc-add-superlinear::before,
+.sim-add::before {
+  content: "\\"
+}
+
+.subst .acc-add::after,
+.subst .acc-add-across-a::after,
+.subst .acc-add-across-b::after,
+.subst .acc-add-superlinear::after,
+.sim-add::after {
+  content: "/"
+}
+
+/* rules for connected additions */
+
+.acc-add.prev.next::before,
+.sim-add.prev.next::before {
+  content: ""
+}
+
+.acc-add.prev.next::after,
+.sim-add.prev.next::after {
+  content: ""
+}
+
+.acc-add.prev::before,
+.sim-add.prev::before {
+  content: ""
+}
+
+.sim-add.prev::after {
+  content: "/"
+}
+
+.sim-add.next::before {
+  content: "\\"
+}
+
+.acc-add.next::after,
+.sim-add.next::after {
+  content: ""
+}
+
+.sim-del,
+.ed-del,
+.acc-del,
+.acc.del {
+  text-decoration: line-through;
+}
+
+.acc-del.s,
+.acc-hi.s {
+  text-decoration-color: red;
+}
+
+.sim-hi.deco.red,
+.sim-hi.in.red {
+  color: inherit;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.acc-hi.red {
+  color: red;
+}
+
+.acc-hi.deco.red {
+  color: initial;
+  text-decoration: line-through;
+  text-decoration-color: red;
+}
+
+.acc-hi.deco.red.larger {
+  font-size: x-large;
+}
+
+.acc-hi.in.red {
+  color: red;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.metamark.cue_initial {
+  display: none;
+}
+
+.acc-add-left-a {
+  position: absolute;
+  left: 10px;
+  text-indent: 0;
+}
+
+.acc-add-left-b {
+  position: absolute;
+  left: 310px;
+  text-indent: 0;
+}
+
+.acc-add-top {
+  position: absolute;
+  text-indent: 0;
+}
+
+
+.left-a {
+  left: 10px;
+}
+
+.acc-add-right-a {
+  position: absolute;
+  right: 350px;
+  text-indent: 0;
+}
+
+.acc-add-right-b {
+  position: absolute;
+  right: 10px;
+  text-indent: 0;
+}
+
+.acc-add-above,
+.acc-add-bottom {
+  padding-right: 35px;
+}
+
+.additions-bottom,
+.additions-top {
+  margin-left: 35px;
+}
+
+.additions-bottom {
+  margin-top: 30px;
+}
+
+.additions-top {
+  margin-bottom: 30px;
+}
+
+.acc-add-superlinear,
+.acc-add.superlinear,
+.acc-add-superlinear-a,
+.acc-add-superlinear-b,
+.acc-hi.sup {
+  position: relative;
+  text-indent: 0;
+  top: -10px;
+}
+
+.acc.sublinear {
+  position: relative;
+  text-indent: 0;
+  top: 10px;
+}
+
+.fw-type-header,
+.fw-place-top-center {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.empty-column {
+  display: block;
+  width: 450px;
+}
+
+.ol {
+  text-decoration: overline;
+}
+
+.line.skeleton {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  background: #f7f7f7;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.line.skeleton .line-nr {
+  color: #ccc;
+}
+
+.illegible {
+  text-decoration: line-through;
+}
+
+.lb {
+  display: block;
+}
+
+.extent1::after {
+  content: " ";
+}
+
+.fwb-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ed-add.later {
+  font-style: italic;
+}
+
+.below {
+  vertical-align: bottom;
+  position: relative;
+  top: 0.9em;
+}
+
+.initials-offset {
+  margin-top: 2.5em;
+}

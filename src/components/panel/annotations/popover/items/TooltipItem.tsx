@@ -8,7 +8,7 @@ interface Props {
 
 const TooltipItem: FC<Props> = ({ annotation }) => {
   const { annotations: annotationsConfig } = useConfig()
-  const type = (annotation.body as AnnotationBody)['x-content-type']
+  const type = (annotation.body as AnnotationBody).annotationType
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
   const content = (annotation.body as AnnotationBody).value
 

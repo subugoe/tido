@@ -5,6 +5,11 @@ import i18n from 'i18next'
 
 const { t } = i18n
 
+// Helper to extract ID string from collection/manifest/item array elements
+function getIdFromElement(element: string | { id: string }): string {
+  return typeof element === 'object' ? element.id : element
+}
+
 async function apiRequest<T>(url: string): Promise<T> {
   const response = await request(url)
 
@@ -29,7 +34,7 @@ async function getFirstManifest(collection: Collection) {
     throw new CustomError(t('panel_init_error'), t('error_contains_no_manifests', { url: collection.id }))
   }
 
-  const first = collection.sequence[0].id
+  const first = getIdFromElement(collection.manifests[0])
   if (!isManifestUrl(first)) {
     throw new CustomError(t('panel_init_error'), t('error_invalid_manifest_url', { url: first }))
   }
@@ -42,12 +47,13 @@ async function getFirstItem(manifest: Manifest) {
     throw new CustomError(t('panel_init_error'), t('error_contains_no_items', { url: manifest.id }))
   }
 
-  const first = manifest.sequence[0].id
-  if (!isItemUrl(first)) {
-    throw new CustomError(t('panel_init_error'), t('error_invalid_item_url', { url: first }))
+  const first = manifest.items?.[0]
+  const firstId = first ? getIdFromElement(first) : undefined
+  if (!firstId || !isItemUrl(firstId)) {
+    throw new CustomError(t('panel_init_error'), t('error_invalid_item_url', { url: firstId }))
   }
 
-  return await apiRequest<Item>(manifest.sequence[0].id)
+  return await apiRequest<Item>(firstId)
 }
 
 

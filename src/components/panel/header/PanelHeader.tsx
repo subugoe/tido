@@ -27,7 +27,7 @@ const SidebarToggle = memo((props) => {
     .keys(matchedAnnotationsMaps)
     .forEach(contentUrl => {
       const filtered = getFilteredAnnotations(matchedAnnotationsMaps[contentUrl])
-      filteredAnnotations.push(...filtered.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type'])))
+      filteredAnnotations.push(...filtered.filter(a => !tooltipTypes.includes((a.body as AnnotationBody).annotationType)))
     })
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 import { getSelectedTypes } from '@/utils/annotations.ts'
 import { apiRequest, getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
-import { getSupport } from '@/utils/support-styling.ts'
+import { getAssets } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
 import { FilterNodeWithSelection, PanelConfig, PanelView } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
@@ -22,7 +22,7 @@ const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
 interface PanelContextType {
   panelId: string
-  panelState: PanelState
+  panelState: PanelState | null
   loading: boolean
   updatePanel: (data: Partial<PanelState>) => void
   remove: () => void
@@ -92,7 +92,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const panelState = usePanelStore(state => state.getPanel(panelId))
 
   function usePanelTranslation(): UseTranslationResponse<'common', never> {
-    const ns = panelState.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
+    const ns = panelState?.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
     return useTranslation(ns)
   }
 
@@ -156,50 +156,57 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       }
 
       // 3. At this point "item" should exist, so we continue to load content from it.
-      const contentTypes = getContentTypes(item.content)
+      const contentTypes = getContentTypes(item.contents)
 
       if (contentTypes.length === 0) {
         setError(new CustomError(t('panel_init_error'), t('error_no_supported_content_types')))
         return
       }
 
-      const { support } = manifest
+      const { assets } = manifest
 
-      if (support && support.length > 0 && isNewManifest(manifest)) {
-        // Support can be loaded for a new manifest
-        await getSupport(support)
+      if (assets && assets.length > 0 && isNewManifest(manifest)) {
+        // Assets can be loaded for a new manifest
+        await getAssets(assets)
       }
 
       // 4. We discover the correct "views" config. This can come from a global config (root key "panelViews")
       // or local config (key "views" in the panel config).
-      const enhanceView = (view: PanelView): Partial<PanelView> => ({
-        ...view,
-        contentTypes: view.view === 'text' && !view.contentTypes ? contentTypes : view.contentTypes,
-        activeContentType: contentTypes?.length > 0 && contentTypes[0],
-        visible: view.visible ?? true,
-      })
+      const enhanceView = (view: PanelView, viewIndex: number): Partial<PanelView> => {
+        const oldActiveContentType = panelState.panelViews[viewIndex]?.activeContentType ?? null
+        let activeContentType = null
+        if (contentTypes?.length > 0) {
+          if (oldActiveContentType) {
+            activeContentType = contentTypes.includes(oldActiveContentType) ? oldActiveContentType : contentTypes[0]
+          } else {
+            activeContentType = contentTypes[0]
+          }
+        }
+
+        return {
+          ...view,
+          contentTypes: view.view === 'text' && !view.contentTypes ? contentTypes : view.contentTypes,
+          activeContentType,
+          visible: view.visible ?? true,
+        }
+      }
 
       const resultPanelViews: PanelView[] =
         config.views && config.views.length > 0
           ? config.views.map((view, i) => ({
             ...(panelViewsConfig[i] ?? {}),
-            ...enhanceView(view),
+            ...enhanceView(view, i),
           }))
-          : panelViewsConfig.map((view: PanelView) => enhanceView(view))
+          : panelViewsConfig.map((view: PanelView, i: number) => enhanceView(view, i))
 
       // 5. We update the panel state with the data.
-      const isFirstLoad = panelState.panelViews.length === 0
       updatePanel({
         collectionId: collection?.id ?? null,
         manifest,
         item,
-        activeTargetIndex: -1,
-        ...(isFirstLoad ? {
-          panelViews: resultPanelViews,
-          showSidebar: config.showSidebar ?? false
-        } : {})
+        panelViews: resultPanelViews,
+        showSidebar: config.showSidebar ?? panelState.showSidebar,
       })
-
 
       if (item.annotationCollection) {
         // 6. Retrieve annotation data
@@ -319,7 +326,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     const types = Object
       .values(matchedAnnotationsMaps)
       .flatMap(map => Object.values(map))
-      .map(item => (item.annotation.body as AnnotationBody)['x-content-type'])
+      .map(item => (item.annotation.body as AnnotationBody).annotationType)
       .filter(type => type !== undefined && !tooltipTypes.includes(type))
 
     if (types.length === 0) return

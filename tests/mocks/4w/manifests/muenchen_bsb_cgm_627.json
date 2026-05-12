@@ -1,0 +1,59 @@
+{
+  "@context": "https://editions.sub.uni-goettingen.de/context.json",
+  "textapiVersion": "2.0.0",
+  "id": "http://localhost:8181/4w/manifests/muenchen_bsb_cgm_627.json",
+  "label": "M1: 1458",
+  "items": [
+    "http://localhost:8181/4w/items/muenchen_bsb_cgm_627-243r.json",
+    "http://localhost:8181/4w/items/muenchen_bsb_cgm_627-243v.json",
+    "http://localhost:8181/4w/items/muenchen_bsb_cgm_627-244r.json",
+    "http://localhost:8181/4w/items/muenchen_bsb_cgm_627-244v.json",
+    "http://localhost:8181/4w/items/muenchen_bsb_cgm_627-245r.json",
+    "http://localhost:8181/4w/items/muenchen_bsb_cgm_627-245v.json",
+    "http://localhost:8181/4w/items/muenchen_bsb_cgm_627-246r.json"
+  ],
+  "assets": [
+    {
+      "assetType": "css",
+      "contentType": "text/css",
+      "id": "http://localhost:8181/4w/css/styles-2.css"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/JunicodeVF-Roman.woff2"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/Junicode-Italic.ttf"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/Junicode-Light.ttf"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/Junicode-Bold.ttf"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/JunicodeVF-Italic.woff2"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/Junicode-Regular.ttf"
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "metadata": [
+    {
+      "key": "Zitationshinweis",
+      "value": "M1: 1458. <i>Vier Wachen vernetzt: Digitale Edition eines mystischen Traktats des Spätmittelalters</i> (Version Draft 1.0). <a href=\"https://textapi.test.vierwachen.d.sub.uni-goettingen.de/\" target=\"_blank\">https://textapi.test.vierwachen.d.sub.uni-goettingen.de/</a> [07-05-2026]. Bearbeitet von Henrike Manuwald.<div class=\"padding\"/>"
+    }
+  ]
+}

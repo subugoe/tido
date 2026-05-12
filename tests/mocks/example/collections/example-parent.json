@@ -1,0 +1,23 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example/collections/example-parent.json",
+  "titles": [
+    "Classic Literature Parent Collection"
+  ],
+  "collectors": [
+    {
+      "name": "Digital Library Project",
+      "roles": [
+        "collector"
+      ]
+    }
+  ],
+  "created": "2024-01-01T00:00:00Z",
+  "revision": "1",
+  "total": 1,
+  "textapiType": "TextApiCollection",
+  "collections": [
+    "http://localhost:8181/example/collections/example.json"
+  ]
+}

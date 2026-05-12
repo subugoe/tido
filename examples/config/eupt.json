@@ -4,8 +4,8 @@
   },
   "panels": [
     {
-      "collection": "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collection.json",
-      "manifest": "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/KTU__1.14/manifest.json"
+      "collection": "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collections/all",
+      "manifest": "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/manifests/KTU__1.14"
     }
   ],
 
@@ -27,6 +27,6 @@
     "tooltipTypes": ["DictLink"]
   },
   "rootCollections": [
-    "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collection.json"
+    "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collections/all"
   ]
 }

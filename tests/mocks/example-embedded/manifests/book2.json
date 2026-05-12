@@ -1,0 +1,110 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example/manifests/book2.json",
+  "label": "Moby-Dick",
+  "items": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+      "textapi": "2.0.0",
+      "id": "http://localhost:8181/example/items/book2-page1.json",
+      "textapiType": "TextApiItem",
+      "revision": "1",
+      "division": "Moby-Dick, Chapter 1 - Loomings",
+      "titles": [
+        "1"
+      ],
+      "languages": [
+        "eng"
+      ],
+      "contents": [
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "contentType": "text/html;type=transcription"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example/html/book2-page1_diplomatic.html",
+          "contentType": "text/html;type=diplomatic"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example/html/book2-page1_normalized.html",
+          "contentType": "text/html;type=normalized"
+        }
+      ],
+      "textItemType": "page",
+      "annotationCollection": "http://localhost:8181/example/annotations/annotationCollection/book2-page1.json"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+      "textapi": "2.0.0",
+      "id": "http://localhost:8181/example/items/book2-page2.json",
+      "textapiType": "TextApiItem",
+      "revision": "1",
+      "division": "Moby-Dick, Chapter 2 - The Carpet-Bag",
+      "titles": [
+        "2"
+      ],
+      "languages": [
+        "eng"
+      ],
+      "contents": [
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "contentType": "text/html;type=transcription"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example/html/book2-page2_diplomatic.html",
+          "contentType": "text/html;type=diplomatic"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example/html/book2-page2_normalized.html",
+          "contentType": "text/html;type=normalized"
+        }
+      ],
+      "textItemType": "page",
+      "annotationCollection": "http://localhost:8181/example/annotations/annotationCollection/book2-page2.json"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+      "textapi": "2.0.0",
+      "id": "http://localhost:8181/example/items/book2-page3.json",
+      "textapiType": "TextApiItem",
+      "revision": "1",
+      "division": "Moby-Dick, Chapter 3 - The Spouter-Inn",
+      "titles": [
+        "3"
+      ],
+      "languages": [
+        "eng"
+      ],
+      "contents": [
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example/html/book2-page3_transcription.html",
+          "contentType": "text/html;type=transcription"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example/html/book2-page3_diplomatic.html",
+          "contentType": "text/html;type=diplomatic"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example/html/book2-page3_normalized.html",
+          "contentType": "text/html;type=normalized"
+        }
+      ],
+      "textItemType": "page",
+      "annotationCollection": "http://localhost:8181/example/annotations/annotationCollection/book2-page3.json"
+    }
+  ],
+  "textapiType": "TextApiManifest",
+  "revision": "1",
+  "license": "CC0-1.0"
+}

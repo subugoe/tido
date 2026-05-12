@@ -346,14 +346,20 @@ export async function mergeAndValidateConfig(
           if (!collectionUrl) return null
 
           const collectionData = await apiRequest<Collection>(collectionUrl)
-          manifestIndex = collectionData.sequence.findIndex(i => i.id === manifestUrl)
+          manifestIndex = collectionData.manifests.findIndex(m => {
+            const id = typeof m === 'object' ? m.id : m
+            return id === manifestUrl
+          })
 
           if (manifestIndex === -1) {
             console.error(`Bookmarking Error: the provided manifest (${manifestUrl}) could not be found in collection (${collectionUrl})`)
           }
 
           const manifestData = await apiRequest<Manifest>(manifestUrl)
-          itemIndex = manifestData.sequence.findIndex(i => i.id === itemUrl)
+          itemIndex = manifestData.items?.findIndex(i => {
+            const id = typeof i === 'object' ? i.id : i
+            return id === itemUrl
+          }) ?? -1
 
           if (itemIndex === -1) {
             console.error(`Bookmarking Error: the provided item (${itemUrl}) could not be found in manifest (${manifestUrl})`)

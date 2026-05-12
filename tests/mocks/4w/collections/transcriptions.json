@@ -1,0 +1,22 @@
+{
+  "@context": "https://editions.sub.uni-goettingen.de/context.json",
+  "textapiVersion": "2.0.0",
+  "id": "http://localhost:8181/4w/collections/transcriptions.json",
+  "titles": [
+    "Transkriptionen"
+  ],
+  "collectors": [
+    {
+      "roles": [
+        "collector"
+      ],
+      "name": "Prof. Dr. Henrike Manuwald"
+    }
+  ],
+  "manifests": [
+    "http://localhost:8181/4w/manifests/einsiedeln_278_1040.json",
+    "http://localhost:8181/4w/manifests/klosterneuburg_cod_251.json",
+    "http://localhost:8181/4w/manifests/muenchen_bsb_cgm_627.json",
+    "http://localhost:8181/4w/manifests/wolfenbuettel_hab_cod_151_noviss_4.json"
+  ]
+}

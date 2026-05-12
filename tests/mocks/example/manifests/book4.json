@@ -1,0 +1,15 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example/manifests/book4.json",
+  "label": "The Road Not Taken",
+  "items": [
+    "http://localhost:8181/example/items/book4-page1.json",
+    "http://localhost:8181/example/items/book4-page1.json",
+    "http://localhost:8181/example/items/book4-page1.json",
+    "http://localhost:8181/example/items/book4-page1.json"
+  ],
+  "textapiType": "TextApiManifest",
+  "revision": "1",
+  "license": "PD-US"
+}

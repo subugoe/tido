@@ -25,7 +25,7 @@ const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect }) => {
         setLoading(true)
         try {
           const { manifestData, itemData } = await validateCrossRefNode(crossRefInfo)
-          const newItemLabel = itemData.n ? itemData.n : itemData.title?.length > 0 ? itemData.title[0].title : ''
+          const newItemLabel = itemData.titles?.[0] || ''
           extendedCrossRefInfoRef.current = {
             ...crossRefInfo,
             manifestLabel: (manifestData as Manifest).label,
@@ -33,9 +33,9 @@ const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect }) => {
           }
           if (crossRefInfo.textType === 'text') {
             // for cross ref referring to text part. Throw error when referenced el cannot be found due to a false selector
-            const contentIndex = itemData.content.findIndex(c => c.type.split('=')[1] === crossRefInfo.contentType)
+            const contentIndex = itemData.contents?.findIndex(c => c.contentType.split('=')[1] === crossRefInfo.contentType)
             const parser = new DOMParser()
-            const referencedText: string = await apiRequest(itemData.content[contentIndex].url)
+            const referencedText: string = await apiRequest(itemData.contents[contentIndex].id)
             const textEl = parser.parseFromString(referencedText, 'text/html')
             const targetExists = textEl.querySelector(crossRefInfo.selector)
             if (!targetExists) setError(new CustomError(t('cross_ref_error_title'), t('referenced_element_not_found')))

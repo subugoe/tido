@@ -12,18 +12,21 @@ const ItemMetadata: FC = () => {
   const { t } = usePanelTranslation()
 
   const item = useDataStore(
-    () => panelState && panelState.item ? panelState.item : null
+    () => panelState?.item ?? null
   )
 
   const metadata = getItemMetadata(item)
 
+  if (metadata.length === 0) return null
+
   return <Accordion type="single" collapsible>
     <AccordionItem value="item-1">
       <AccordionTrigger>{ t('item') }</AccordionTrigger>
-      <AccordionContent>{ metadata.map((meta, i) => <MetadataItem item={meta} key={i} />) }</AccordionContent>
+      <AccordionContent>
+        { metadata.map((meta, i) => <MetadataItem item={meta} key={i} />) }
+      </AccordionContent>
     </AccordionItem>
   </Accordion>
 }
 
 export default ItemMetadata
-

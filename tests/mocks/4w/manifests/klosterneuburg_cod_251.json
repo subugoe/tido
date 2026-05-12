@@ -1,0 +1,54 @@
+{
+  "@context": "https://editions.sub.uni-goettingen.de/context.json",
+  "textapiVersion": "2.0.0",
+  "id": "http://localhost:8181/4w/manifests/klosterneuburg_cod_251.json",
+  "label": "Kl: 1380er Jahre",
+  "items": [
+    "http://localhost:8181/4w/items/klosterneuburg_cod_251-72v.json",
+    "http://localhost:8181/4w/items/klosterneuburg_cod_251-192r.json"
+  ],
+  "assets": [
+    {
+      "assetType": "css",
+      "contentType": "text/css",
+      "id": "http://localhost:8181/4w/css/styles-2.css"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/JunicodeVF-Roman.woff2"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/Junicode-Italic.ttf"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/Junicode-Light.ttf"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/Junicode-Bold.ttf"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/JunicodeVF-Italic.woff2"
+    },
+    {
+      "assetType": "font",
+      "contentType": "font/ttf",
+      "id": "http://localhost:8181/4w/fonts/Junicode-Regular.ttf"
+    }
+  ],
+  "license": "CC-BY-SA-4.0",
+  "metadata": [
+    {
+      "key": "Zitationshinweis",
+      "value": "Kl: 1380er Jahre. <i>Vier Wachen vernetzt: Digitale Edition eines mystischen Traktats des Spätmittelalters</i> (Version Draft 1.0). <a href=\"https://textapi.test.vierwachen.d.sub.uni-goettingen.de/\" target=\"_blank\">https://textapi.test.vierwachen.d.sub.uni-goettingen.de/</a> [07-05-2026]. Bearbeitet von Henrike Manuwald.<div class=\"padding\"/>"
+    }
+  ]
+}

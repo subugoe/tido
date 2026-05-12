@@ -98,7 +98,7 @@ function getAnnotationIdsByEl(
 }
 
 function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, tooltipTypes: string[] = []) {
-  const type = (annotation.body as AnnotationBody)['x-content-type']
+  const type = (annotation.body as AnnotationBody).annotationType
   if (tooltipTypes.includes(type)) return true
 
   if (!selectedTypes || !selectedTypes[type]) return false
@@ -129,7 +129,7 @@ async function getCrossRefInfo(annotation: Annotation) {
   }
 
   if (!isCrossRefInAnnotation) contentUrl = (annotation.body as AnnotationBodyCrossRef)?.source?.id
-  const refContentType = refItemData.content?.find(c => c.url === contentUrl)?.type?.split('type=')[1]
+  const refContentType = refItemData.contents?.find(c => c.id === contentUrl)?.contentType?.split('type=')[1]
 
   return {
     collection: source.collection,
@@ -152,8 +152,8 @@ function getSource(target: AnnotationTarget): AnnotationTargetSource {
 
 function getAnnotationContentType(annotation: Annotation) {
   const body = annotation.body
-  if ('x-content-type' in body) return body['x-content-type']
-  return body.source?.['x-content-type']
+  if ('x-content-type' in body) return body.annotationType
+  return body.source?.annotationType
 }
 
 export {

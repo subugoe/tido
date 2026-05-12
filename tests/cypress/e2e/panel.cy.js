@@ -1,3 +1,7 @@
+const collection = 'http://localhost:8181/example/collections/example.json'
+const config = `panels[0].collection=${collection}&panels[0].manifest=http://localhost:8181/example/manifests/book2.json`;
+
+
 Cypress.Commands.add('findPanelTitleAndNavArrows', () => {
   cy.get('#panels-wrapper')
     .children()
@@ -17,12 +21,14 @@ Cypress.Commands.add('validateText', (content) => {
   cy.get('#panels-wrapper')
     .children().eq(0)
     .find('div[data-text-container]')
+    .children()
+    .first()
     .should('contain.text',content)
 })
 
 describe('Panel', () => {
   beforeEach(() => {
-    cy.visit('/4w-local.html')
+    cy.visit('/e2e.html?' + config)
   });
 
   it('Should navigate correctly in local tree', () => {
@@ -32,26 +38,31 @@ describe('Panel', () => {
       .eq(0)
       .find('[data-cy="collection-title"]')
       .find('span')
-      .contains('Ebene 1: Reproduktion der Dokumente')
+      .contains('Classic Literature Collection')
       .click()
       .get('[data-cy="tree"]')
-      .children('[data-cy="tree-node"]').eq(1)
+      .children('[data-cy="tree-node"]').eq(0)
       .should('have.length', 1)           // initially we have one root node
       .children('[data-cy="node-children"]')
       .children()
-      .should('have.length', 8)           // children exists -> the root node is expanded initially
+      .should('have.length', 3)           // children exists -> the root node is expanded initially
 
       // click at manifest and item updates the content correctly
       .eq(2).click()
       .find('[data-cy="node-children"]')
       .first()
-      .children().should('have.length', 7)    // number of items of manifest
+      .children().should('have.length', 3)    // number of items of manifest
       .eq(1).click()
       .get('[data-radix-popper-content-wrapper]')     // popover is closed
       .should('not.exist')
-    cy.validateLabel('manifest', 'München BSB Cgm 627')
-    cy.validateLabel('item', '243v')
-    cy.validateText('fol. 243va')
+      .get('#panels-wrapper')
+      .children().eq(0)
+      .find('[aria-label="Loading"]')
+      .should('exist')
+
+      .validateLabel('manifest', 'The Great Gatsby')
+      .validateLabel('item', 'The Great Gatsby, Chapter 2')
+      .validateText('This is a valley of ashes—a fantastic farm where ashes grow')
   })
 
   // it('Should display the configured panelModes and the defaultPanelMode as selected', () => {
@@ -123,20 +134,20 @@ describe('Panel', () => {
   // })
 
   it('Should switch to next manifest', () => {
-    cy.validateLabel('item','279')
+    cy.validateLabel('item', 'Moby-Dick, Chapter 1 - Loomings')
       .click()
     cy.get('[data-cy="items-dropdown"]')
       .children()
       .eq(2)
       .click()
-      .validateLabel('item','281')
+      .validateLabel('item','Moby-Dick, Chapter 3 - The Spouter-Inn')
 
       .findPanelTitleAndNavArrows()
       .find('[data-cy="next-item-button"]')
       .click()  // should switch to the first item of Klosterneuburg manifest
-      .validateLabel('manifest', 'Kloster Neuburg, Cod. 251')         // Manifest and item labels should get updated
-      .validateLabel('item', '192r')
-      .validateText('fol. 192r')                        // Text area should update
+      .validateLabel('manifest', 'The Great Gatsby')         // Manifest and item labels should get updated
+      .validateLabel('item', 'The Great Gatsby, Chapter 1')
+      .validateText('I lived at West Egg, the—well')                        // Text area should update
   })
 
   // it('Should switch to previous item', () => {
@@ -149,7 +160,7 @@ describe('Panel', () => {
   //     .find('[data-cy="prev-item-button"]')          // go back to Page 279
   //     .click()
   //
-  //   cy.validateLabel('item','279')
+  //   cy.validateLabel('item','Seite einsiedeln_278_1040-279')
   //   cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
   //   cy.validateText('fol. 279a')
   // })
@@ -160,68 +171,55 @@ describe('Panel', () => {
     // should update the panel content with the previous manifest, last item, text area
 
     cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="manifest-label"]')
-      .click()
-      .get('[data-cy="manifests-dropdown"]')
-      .children()
-      .eq(2)
-      .click()
-
-      .get('[data-cy="items-dropdown"]')
-      .children()
-      .eq(0)
-      .click()
-
-      .findPanelTitleAndNavArrows()
       .find('[data-cy="prev-item-button"]')
       .click()
 
-    cy.validateLabel('manifest', 'Kloster Neuburg, Cod. 251')
-    cy.validateLabel('item','72v')
-    cy.validateText('fol. 72v')
+    cy.validateLabel('manifest', 'Pride and Prejudice')
+    cy.validateLabel('item','Pride and Prejudice, Chapter 3')
+    cy.validateText('Chapter 3')
   })
 
   it('Should navigate in item label', () => {
     // item label is updated
     // text is updated
     // item modal is not anymore in DOM
-    cy.validateLabel('item', '279')
+    cy.validateLabel('item', 'Moby-Dick, Chapter 1 - Loomings')
       .click()
 
       .get('[data-cy="items-dropdown"]')
       .children().should('have.length', 3)
       .eq(2)
-      .contains('281')
+      .contains('book2-page3.json')
       .click()
 
     cy.get('#panels-wrapper')
       .children().eq(0)
       .find('[data-cy="items-dropdown"]').should('not.exist')
 
-    cy.validateLabel('item', '281')       // item label is updated
-    cy.validateText('fol. 281a')   // text is updated
+    cy.validateLabel('item', 'Moby-Dick, Chapter 3 - The Spouter-Inn')       // item label is updated
+    cy.validateText('Chapter 3 - The Spouter-Inn')   // text is updated
   })
 
   it('Should navigate in manifest and consecutively in item labels', () => {
 
     // validate Manifest Dropdown labels
-    cy.validateLabel('manifest', 'Einsiedeln, 278 1040')
+    cy.validateLabel('manifest', 'Moby-Dick')
       .click()
       .get('[data-cy="manifests-dropdown"]')
-      .children().should('have.length', 8)
+      .children().should('have.length', 3)
       .eq(1)
-      .contains(' Kloster Neuburg, Cod. 251')
+      .contains('Moby-Dick')
       .next()
-      .contains('München BSB Cgm 627')
+      .contains('The Great Gatsby')
       .click()
 
       // element 'manifests-dropdown' does not exist anymore in dom, 'items-dropdown' should be now in DOM
       .get('[data-cy="manifests-dropdown"]').should('not.exist')
       .get('[data-cy="items-dropdown"]')
-      .children().should('have.length', 7)
-      .eq(0).contains('243r')
+      .children().should('have.length', 3)
+      .eq(0).contains('book3-page1.json')
       .next()
-      .contains('243v')
+      .contains('book3-page2.json')
       .click()
 
     // clicking this item: updates manifest and item labels and the text content
@@ -230,21 +228,9 @@ describe('Panel', () => {
       .find('[data-cy="items-dropdown"]').should('not.exist')   // item dropdown is closed
 
     // Update of content
-    cy.validateLabel('manifest', 'München BSB Cgm 627')
-    cy.validateLabel('item', '243v')
-    cy.validateText('fol. 243va')
-  })
-
-  it('Should disable the prev button in first manifest first item', () => {
-    // 'prev' is disabled
-    cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="prev-item-button"]')
-      .should('have.attr', 'disabled')
-
-    // 'next is not 'disabled'
-    cy.findPanelTitleAndNavArrows()
-      .find('[data-cy="next-item-button"]')
-      .should('not.have.attr', 'disabled')
+    cy.validateLabel('manifest', 'The Great Gatsby')
+    cy.validateLabel('item', 'The Great Gatsby, Chapter 2')
+    cy.validateText('This is a valley of ashes—a fantastic farm where ashes grow like wheat')
   })
 
   it('Should disable the next button in last manifest last item', () => {
@@ -255,10 +241,10 @@ describe('Panel', () => {
       .find('[data-cy="collection-title"]')
       .click()
       .get('[data-cy="tree"]')
-      .children('[data-cy="tree-node"]').eq(1)
+      .children('[data-cy="tree-node"]').eq(0)
       .children('[data-cy="node-children"]')
       .children()
-      .should('have.length', 8)
+      .should('have.length', 3)
 
       .last().click()
       .find('[data-cy="node-children"]')
@@ -275,6 +261,21 @@ describe('Panel', () => {
       .find('[data-cy="next-item-button"]')
       .should('have.attr', 'disabled')
   })
-  // ----------- End of Navigation ---------
+})
 
+describe('Panel with book 1', () => {
+  it('Should disable the prev button in first manifest first item', () => {
+    const config = `panels[0].collection=${collection}`;
+
+    cy.visit('/e2e.html?' + config)
+    // 'prev' is disabled
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="prev-item-button"]')
+      .should('have.attr', 'disabled')
+
+    // 'next is not 'disabled'
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="next-item-button"]')
+      .should('not.have.attr', 'disabled')
+  })
 })

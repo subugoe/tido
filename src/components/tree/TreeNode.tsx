@@ -30,6 +30,8 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
   const [panelsNumbersOpened, setPanelsNumbersOpened] = useState([])
 
+  const label = t(node.label ?? 'unknown_name')
+
   useEffect(() => {
     if (elevation === 0) {
       setBg({
@@ -43,8 +45,6 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       })
     }
   }, [elevation])
-
-
 
   useEffect(() => {
     // show icon green circle for 'currently opened items' and all its parent nodes
@@ -129,7 +129,6 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
     }
   }
 
-
   return <div {...(node.leaf ? { 'data-cy': 'tree-node-leaf' } : { 'data-cy': 'tree-node' })} data-node-key={node.key} className="mb-1">
     <div
       className={`flex relative items-start h-8 px-2 py-1 rounded-md cursor-pointer ${selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover}`}
@@ -146,11 +145,9 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       <TooltipProvider skipDelayDuration={600}>
         <Tooltip delayDuration={1000}>
           <TooltipTrigger asChild>
-            <span data-cy="node-label" className="w-[80%] pr-2 truncate">{node.label}</span>
+            <span data-cy="node-label" className="w-[80%] pr-2 truncate">{label}</span>
           </TooltipTrigger>
-          <TooltipContent>
-            {node.label}
-          </TooltipContent>
+          <TooltipContent>{label}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <div data-cy="tree-node-actions" className="w-6 shrink-0 grow-1 flex justify-end items-center h-[100%]">
