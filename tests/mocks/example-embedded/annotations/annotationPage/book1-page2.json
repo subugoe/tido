@@ -18,7 +18,7 @@
         "type": "TextualBody",
         "value": "Charles Bingley - <span id=\"bingley-character\">A wealthy, amiable young gentleman who rents Netherfield Park</span>. He becomes attracted to Jane Bennet.",
         "format": "text/html",
-        "x-content-type": "Character"
+        "annotationType": "Character"
       },
       "target": [
         {
@@ -39,7 +39,7 @@
         "type": "TextualBody",
         "value": "Lizzy - <span id=\"lizzy-nickname\">Affectionate nickname for Elizabeth Bennet, the novel's protagonist</span>.",
         "format": "text/html",
-        "x-content-type": "Character"
+        "annotationType": "Character"
       },
       "target": [
         {
@@ -60,7 +60,7 @@
         "type": "TextualBody",
         "value": "Public assemblies were <span id=\"assembly-gatherings\">social gatherings where dancing and socializing took place</span>, important venues for courtship in Regency England.",
         "format": "text/html",
-        "x-content-type": "Historical Context"
+        "annotationType": "Historical Context"
       },
       "target": [
         {
@@ -81,7 +81,7 @@
         "type": "TextualBody",
         "value": "Manuscript variant: <span id=\"earliest-variant\">\"amongst the earliest\" found in draft</span>, suggesting Austen softened the phrasing in revision.",
         "format": "text/html",
-        "x-content-type": "Textual Variant"
+        "annotationType": "Textual Variant"
       },
       "target": [
         {
@@ -102,7 +102,7 @@
         "type": "TextualBody",
         "value": "Original shows <span id=\"period-article-usage\">\"trimming an hat\" with period article usage</span> before words beginning with a consonantal 'h'.",
         "format": "text/html",
-        "x-content-type": "Grammatical Feature"
+        "annotationType": "Grammatical Feature"
       },
       "target": [
         {
@@ -123,7 +123,7 @@
         "type": "TextualBody",
         "value": "<span id=\"archaic-construction\">Clarified from archaic construction for modern readers</span>; the original idiom \"to the last\" means \"right up until the end\".",
         "format": "text/html",
-        "x-content-type": "Clarification"
+        "annotationType": "Clarification"
       },
       "target": [
         {
@@ -144,7 +144,7 @@
         "type": "TextualBody",
         "value": "Period idiom meaning <span id=\"period-idiom\">\"have no means of knowing\"</span>, reflecting the social constraints on women's access to information.",
         "format": "text/html",
-        "x-content-type": "Idiomatic Expression"
+        "annotationType": "Idiomatic Expression"
       },
       "target": [
         {
@@ -165,7 +165,7 @@
         "type": "TextualBody",
         "value": "Bingley's easy temperament contrasts deliberately with Darcy's reserve — <span id=\"bingley-foil\">Austen uses him as a social foil to highlight class anxiety</span> in the marriage market.",
         "format": "text/html",
-        "x-content-type": "Literary Analysis"
+        "annotationType": "Literary Analysis"
       },
       "target": [
         {
@@ -184,7 +184,7 @@
         "type": "TextualBody",
         "value": "The use of \"Lizzy\" here signals <span id=\"family-intimacy\">the informality of the Bennet household's domestic register</span>, in contrast to the formal address used in public scenes.",
         "format": "text/html",
-        "x-content-type": "Stylistic Note"
+        "annotationType": "Stylistic Note"
       },
       "target": [
         {
@@ -203,7 +203,7 @@
         "type": "TextualBody",
         "value": "The variant \"amongst the earliest\" points to <span id=\"textual-transmission\">an early layer of composition before Austen's systematic revision</span> of Chapter 2's opening.",
         "format": "text/html",
-        "x-content-type": "Scholarly Commentary"
+        "annotationType": "Scholarly Commentary"
       },
       "target": [
         {
@@ -222,7 +222,7 @@
         "type": "TextualBody",
         "value": "This reading of Bingley as foil aligns with <span id=\"bingley-darcy-dynamic\">D.A. Miller's argument on the complementary pairing of Bingley and Darcy</span> as a structural device throughout the novel.",
         "format": "text/html",
-        "x-content-type": "Bibliographic Reference"
+        "annotationType": "Bibliographic Reference"
       },
       "target": [
         {
@@ -241,7 +241,7 @@
         "type": "TextualBody",
         "value": "Miller's structural reading has been <span id=\"miller-critique\">challenged by feminist narratologists who prioritise voice over character pairing</span> as the organising principle of Austen's irony.",
         "format": "text/html",
-        "x-content-type": "Counter-argument"
+        "annotationType": "Counter-argument"
       },
       "target": [
         {

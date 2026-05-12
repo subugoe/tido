@@ -326,7 +326,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     const types = Object
       .values(matchedAnnotationsMaps)
       .flatMap(map => Object.values(map))
-      .map(item => (item.annotation.body as AnnotationBody)['x-content-type'])
+      .map(item => (item.annotation.body as AnnotationBody).annotationType)
       .filter(type => type !== undefined && !tooltipTypes.includes(type))
 
     if (types.length === 0) return

@@ -18,7 +18,7 @@
         "type": "TextualBody",
         "value": "The famous opening lines that establish the <span id=\"choice-theme\">central theme of choices</span> in the poem.",
         "format": "text/html",
-        "x-content-type": "Literary Analysis"
+        "annotationType": "Literary Analysis"
       },
       "target": [
         {
@@ -39,7 +39,7 @@
         "type": "TextualBody",
         "value": "A <span id=\"yellow-woods\">symbolic setting representing life's decisions</span> - the autumnal forest reflects the autumn of life.",
         "format": "text/html",
-        "x-content-type": "Symbolic Analysis"
+        "annotationType": "Symbolic Analysis"
       },
       "target": [
         {
@@ -60,7 +60,7 @@
         "type": "TextualBody",
         "value": "The <span id=\"traveler-trope\">worn path represents the common, conventional choice</span> that most people make.",
         "format": "text/html",
-        "x-content-type": "Interpretation"
+        "annotationType": "Interpretation"
       },
       "target": [
         {
@@ -81,7 +81,7 @@
         "type": "TextualBody",
         "value": "This famous line captures the <span id=\"regret-theme\">regret and contemplation that comes with choice</span>.",
         "format": "text/html",
-        "x-content-type": "Thematic Analysis"
+        "annotationType": "Thematic Analysis"
       },
       "target": [
         {
@@ -102,7 +102,7 @@
         "type": "TextualBody",
         "value": "The <span id=\"repeated-stanza\">repetition of the final stanza</span> creates a powerful rhetorical effect.",
         "format": "text/html",
-        "x-content-type": "Structural Analysis"
+        "annotationType": "Structural Analysis"
       },
       "target": [
         {
@@ -123,7 +123,7 @@
         "type": "TextualBody",
         "value": "Textual correction: Original manuscript reads <span id=\"typed-cor\">\"typed correction\"</span> - later editions changed to 'telling'.",
         "format": "text/html",
-        "x-content-type": "Textual Correction"
+        "annotationType": "Textual Correction"
       },
       "target": [
         {
@@ -144,7 +144,7 @@
         "type": "TextualBody",
         "value": "Editorial note: This stanza appears in early manuscripts as a later addition <span id=\"handwritten-insertion\">in Frost's own hand</span>.",
         "format": "text/html",
-        "x-content-type": "Textual History"
+        "annotationType": "Textual History"
       },
       "target": [
         {
@@ -165,7 +165,7 @@
         "type": "TextualBody",
         "value": "Note: The final stanza contains <span id=\"stopping-woods\">'Stopping by Woods' elements</span> - this poem was written shortly after.",
         "format": "text/html",
-        "x-content-type": "Cross-reference"
+        "annotationType": "Cross-reference"
       },
       "target": [
         {
@@ -186,7 +186,7 @@
         "type": "TextualBody",
         "value": "Commentary: Frost originally wrote this as a joke for his friend <span id=\"friend-exc\">Thomas Fay</span>, but it became his most beloved poem.",
         "format": "text/html",
-        "x-content-type": "Historical Context"
+        "annotationType": "Historical Context"
       },
       "target": [
         {
@@ -207,7 +207,7 @@
         "type": "TextualBody",
         "value": "Critical note: Frost's reading of this poem at Kennedy's inauguration is considered one of the <span id=\"poetry-politics\">most political poetry readings in American history</span>.",
         "format": "text/html",
-        "x-content-type": "Cultural Context"
+        "annotationType": "Cultural Context"
       },
       "target": [
         {

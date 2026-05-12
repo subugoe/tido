@@ -45,9 +45,9 @@ const AnnotationPopoverContent: FC<Props> = ({ target, crossRefAnnotations, rela
     }
 
     tooltipAnnotationsRef.current = relatedAnnotations.filter(a =>
-      tooltipTypes.includes((a.body as AnnotationBody)['x-content-type'])).sort(sortByDirectTarget)
+      tooltipTypes.includes((a.body as AnnotationBody).annotationType)).sort(sortByDirectTarget)
     normalAnnotationsRef.current = relatedAnnotations.filter(a =>
-      !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type'])).sort(sortByDirectTarget)
+      !tooltipTypes.includes((a.body as AnnotationBody).annotationType)).sort(sortByDirectTarget)
 
     setLoading(false)
     computeCrossRefInfos(crossRefAnnotations)

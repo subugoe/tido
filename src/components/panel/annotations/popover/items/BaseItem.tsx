@@ -16,7 +16,7 @@ const BaseItem: FC<Props> = ({ annotation }) => {
 
   const [text, setText] = useState('')
 
-  const type = (annotation.body as AnnotationBody)['x-content-type']
+  const type = (annotation.body as AnnotationBody).annotationType
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
   const content = (annotation.body as AnnotationBody).value
   const isSelected = selectedAnnotation?.id === annotation.id

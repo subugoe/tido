@@ -18,7 +18,7 @@
         "type": "TextualBody",
         "value": "New Bedford, Massachusetts was a major whaling port in the 19th century.",
         "format": "text/plain",
-        "x-content-type": "Place"
+        "annotationType": "Place"
       },
       "target": [
         {
@@ -39,7 +39,7 @@
         "type": "TextualBody",
         "value": "Nantucket Island was the whaling capital of the world during this period.",
         "format": "text/plain",
-        "x-content-type": "Place"
+        "annotationType": "Place"
       },
       "target": [
         {
@@ -60,7 +60,7 @@
         "type": "TextualBody",
         "value": "Manuscript shows \"one shirt or two\" before author's revision.",
         "format": "text/plain",
-        "x-content-type": "Authorial Revision"
+        "annotationType": "Authorial Revision"
       },
       "target": [
         {
@@ -81,7 +81,7 @@
         "type": "TextualBody",
         "value": "Archaic form of \"Manhattan\" - Melville preferred historical spellings.",
         "format": "text/plain",
-        "x-content-type": "Archaic Spelling"
+        "annotationType": "Archaic Spelling"
       },
       "target": [
         {

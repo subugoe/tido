@@ -18,7 +18,7 @@
         "type": "TextualBody",
         "value": "This is one of the <span id=\"famous-opening-lines\">most famous opening lines in English literature</span>. It sets the theme of marriage and social class that pervades the novel.",
         "format": "text/html",
-        "x-content-type": "Literary Analysis"
+        "annotationType": "Literary Analysis"
       },
       "target": [
         {
@@ -39,7 +39,7 @@
         "type": "TextualBody",
         "value": "Refers to wealthy bachelors who were <span id=\"marriage-candidates\">prime marriage candidates in Regency England</span>.",
         "format": "text/html",
-        "x-content-type": "Historical Context"
+        "annotationType": "Historical Context"
       },
       "target": [
         {
@@ -60,7 +60,7 @@
         "type": "TextualBody",
         "value": "Mr. Bennet - The patriarch of the Bennet family, known for his <span id=\"wit-and-sarcasm\">wit and sarcasm</span>.",
         "format": "text/html",
-        "x-content-type": "Character"
+        "annotationType": "Character"
       },
       "target": [
         {
@@ -81,7 +81,7 @@
         "type": "TextualBody",
         "value": "Netherfield Park - <span id=\"netherfield-park-estate\">The estate rented by Mr. Bingley</span>, which becomes central to the plot.",
         "format": "text/html",
-        "x-content-type": "Place"
+        "annotationType": "Place"
       },
       "target": [
         {
@@ -102,7 +102,7 @@
         "type": "TextualBody",
         "value": "Mrs. Long - <span id=\"mrs-long-character\">A neighbor who serves as a source of gossip and information</span>.",
         "format": "text/html",
-        "x-content-type": "Character"
+        "annotationType": "Character"
       },
       "target": [
         {
@@ -123,7 +123,7 @@
         "type": "TextualBody",
         "value": "A <span id=\"neighbourhood-visiting\">neighbourhood in Regency England typically meant families within a day's visiting distance</span>, roughly a five-mile radius.",
         "format": "text/html",
-        "x-content-type": "Historical Context"
+        "annotationType": "Historical Context"
       },
       "target": [
         {
@@ -144,7 +144,7 @@
         "type": "TextualBody",
         "value": "This phrase appears <span id=\"famous-opening-lines\">with variant</span> in early manuscripts This phrase appears in early manuscripts This phrase appears in early manuscripts <span id=\"famous-opening-lines-2\">with variant</span>This phrase appears in early manuscripts  punctuation.",
         "format": "text/html",
-        "x-content-type": "Textual Variant"
+        "annotationType": "Textual Variant"
       },
       "target": [
         {
@@ -165,7 +165,7 @@
         "type": "TextualBody",
         "value": "Original manuscript shows <span id=\"rightfull-propertie\">\"rightfull propertie\" with period spelling</span>.",
         "format": "text/html",
-        "x-content-type": "Orthographic Feature"
+        "annotationType": "Orthographic Feature"
       },
       "target": [
         {
@@ -186,7 +186,7 @@
         "type": "TextualBody",
         "value": "Manuscript shows this phrase with <span id=\"interlinear-revision\">interlinear revision</span>.",
         "format": "text/html",
-        "x-content-type": "Authorial Revision"
+        "annotationType": "Authorial Revision"
       },
       "target": [
         {
@@ -207,7 +207,7 @@
         "type": "TextualBody",
         "value": "Modern usage would be \"who possesses\" but <span id=\"period-phrasing\"> period phrasing preserved</span> <span id=\"period-phrasing\"> period phrasing preserved</span> <span data-target=\"#QVausMHA1_text_Anm1\"> cross ref</span.",
         "format": "text/html",
-        "x-content-type": "Stylistic Note"
+        "annotationType": "Stylistic Note"
       },
       "target": [
         {
@@ -228,7 +228,7 @@
         "type": "TextualBody",
         "value": "Editorial note: Refers to the <span id=\"local-gentry\">local gentry within visiting distance</span>.",
         "format": "text/html",
-        "x-content-type": "Contextual Note"
+        "annotationType": "Contextual Note"
       },
       "target": [
         {
@@ -249,7 +249,7 @@
         "type": "TextualBody",
         "value": "Standardized from <span id=\"answered-he-had-not\">original \"answer'd he had not\"</span>.",
         "format": "text/html",
-        "x-content-type": "Modernization"
+        "annotationType": "Modernization"
       },
       "target": [
         {
@@ -270,7 +270,7 @@
         "type": "TextualBody",
         "value": "This literary analysis is rooted in the 20th-century <span id=\"austen-scholarship\">Austen scholarship tradition</span> established by critics such as Reuben Brower.",
         "format": "text/html",
-        "x-content-type": "Scholarly Commentary"
+        "annotationType": "Scholarly Commentary"
       },
       "target": [
         {
@@ -289,7 +289,7 @@
         "type": "TextualBody",
         "value": "The variant punctuation in early manuscripts reflects <span id=\"scribal-practice\">scribal practice of the period</span>, where comma usage was not yet standardized.",
         "format": "text/html",
-        "x-content-type": "Codicological Note"
+        "annotationType": "Codicological Note"
       },
       "target": [
         {
@@ -308,7 +308,7 @@
         "type": "TextualBody",
         "value": "Cross-referencing with the <span id=\"chapman-edition\">R.W. Chapman 1923 edition</span> reveals that this variant was silently regularized in most 20th-century reprints.",
         "format": "text/html",
-        "x-content-type": "Editorial History"
+        "annotationType": "Editorial History"
       },
       "target": [
         {
@@ -327,7 +327,7 @@
         "type": "TextualBody",
         "value": "This textual variant is significant because <span id=\"punctuation-meaning\">punctuation changes can subtly alter the ironic tone</span> of the sentence as read aloud.",
         "format": "text/html",
-        "x-content-type": "Rhetorical Analysis"
+        "annotationType": "Rhetorical Analysis"
       },
       "target": [
         {
@@ -346,7 +346,7 @@
         "type": "TextualBody",
         "value": "The historical context note draws primarily on <span id=\"vickery-georgian\">Amanda Vickery's work on Georgian England</span> and the marriage market.",
         "format": "text/html",
-        "x-content-type": "Bibliographic Reference"
+        "annotationType": "Bibliographic Reference"
       },
       "target": [
         {
@@ -365,7 +365,7 @@
         "type": "TextualBody",
         "value": "The character description overlooks Mr. Bennet's <span id=\"ironic-detachment\">deliberate ironic detachment from his own social standing</span>.",
         "format": "text/html",
-        "x-content-type": "Critical Objection"
+        "annotationType": "Critical Objection"
       },
       "target": [
         {
@@ -384,7 +384,7 @@
         "type": "TextualBody",
         "value": "Agreed — see also the influence of <span id=\"leavis-criticism\">F.R. Leavis on this strand of Austen criticism</span>, particularly his emphasis on moral seriousness.",
         "format": "text/html",
-        "x-content-type": "Agreement"
+        "annotationType": "Agreement"
       },
       "target": [
         {
@@ -403,7 +403,7 @@
         "type": "TextualBody",
         "value": "Counter-point: Vickery's framing has been contested by <span id=\"post-colonial-readings\">more recent post-colonial readings of Austen's domestic sphere</span>.",
         "format": "text/html",
-        "x-content-type": "Counter-argument"
+        "annotationType": "Counter-argument"
       },
       "target": [
         {
@@ -422,7 +422,7 @@
         "type": "TextualBody",
         "value": "<span id=\"leavis-great-tradition\">Leavis's 'The Great Tradition' (1948)</span> is the canonical reference here, though it subordinates Austen to later novelists. His framework has itself been heavily critiqued since the 1970s.",
         "format": "text/html",
-        "x-content-type": "Bibliographic Note"
+        "annotationType": "Bibliographic Note"
       },
       "target": [
         {
@@ -443,7 +443,7 @@
           "collection": "http://localhost:8181/example/collection.json",
           "manifest": "http://localhost:8181/example/manifests/book2.json",
           "item": "http://localhost:8181/example/items/book2-page3.json",
-          "x-content-type": "CrossRef"
+          "annotationType": "CrossRef"
         }
       },
       "target": [
@@ -466,7 +466,7 @@
           "collection": "http://localhost:8181/example/collection.json",
           "manifest": "http://localhost:8181/example/manifests/book2.json",
           "item": "http://localhost:8181/example/book2/page5/rev1/item.json",
-          "x-content-type": "CrossRef"
+          "annotationType": "CrossRef"
         }
       },
       "target": [
@@ -489,7 +489,7 @@
           "collection": "http://localhost:8181/example/collection.json",
           "manifest": "http://localhost:8181/example/manifests/book3.json",
           "item": "http://localhost:8181/example/items/book3-page1.json",
-          "x-content-type": "CrossRef"
+          "annotationType": "CrossRef"
         }
       },
       "target": [

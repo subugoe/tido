@@ -18,7 +18,7 @@
         "type": "TextualBody",
         "value": "The valley of ashes symbolizes the moral and social decay hidden beneath the wealth and glamour of the era.",
         "format": "text/plain",
-        "x-content-type": "Symbol"
+        "annotationType": "Symbol"
       },
       "target": [
         {
@@ -39,7 +39,7 @@
         "type": "TextualBody",
         "value": "The billboard of Dr. T.J. Eckleburg represents the eyes of God watching over a morally bankrupt society.",
         "format": "text/plain",
-        "x-content-type": "Symbol"
+        "annotationType": "Symbol"
       },
       "target": [
         {
@@ -60,7 +60,7 @@
         "type": "TextualBody",
         "value": "Typescript shows variant spacing in different drafts.",
         "format": "text/plain",
-        "x-content-type": "Orthographic Variant"
+        "annotationType": "Orthographic Variant"
       },
       "target": [
         {
@@ -81,7 +81,7 @@
         "type": "TextualBody",
         "value": "Symbolic landscape representing moral wasteland of the era.",
         "format": "text/plain",
-        "x-content-type": "Symbolic Interpretation"
+        "annotationType": "Symbolic Interpretation"
       },
       "target": [
         {

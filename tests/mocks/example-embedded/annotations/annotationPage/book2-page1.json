@@ -18,7 +18,7 @@
         "type": "TextualBody",
         "value": "One of the most iconic opening lines in American literature. The narrator's name is biblical, suggesting themes of wandering and prophecy.",
         "format": "text/plain",
-        "x-content-type": "Literary Analysis"
+        "annotationType": "Literary Analysis"
       },
       "target": [
         {
@@ -39,7 +39,7 @@
         "type": "TextualBody",
         "value": "Spleen refers to melancholy or depression in 19th-century medical terminology. Going to sea is presented as a cure for mental distress.",
         "format": "text/plain",
-        "x-content-type": "Historical Context"
+        "annotationType": "Historical Context"
       },
       "target": [
         {
@@ -60,7 +60,7 @@
         "type": "TextualBody",
         "value": "The ocean as a universal symbol of mystery, danger, and sublime beauty - a central theme throughout the novel.",
         "format": "text/plain",
-        "x-content-type": "Theme"
+        "annotationType": "Theme"
       },
       "target": [
         {
@@ -81,7 +81,7 @@
         "type": "TextualBody",
         "value": "Melville's manuscript shows heavy revision of this temporal phrase.",
         "format": "text/plain",
-        "x-content-type": "Authorial Revision"
+        "annotationType": "Authorial Revision"
       },
       "target": [
         {
@@ -102,7 +102,7 @@
         "type": "TextualBody",
         "value": "Original draft: \"dispelling the spleen\" before revision.",
         "format": "text/plain",
-        "x-content-type": "Textual Variant"
+        "annotationType": "Textual Variant"
       },
       "target": [
         {
@@ -123,7 +123,7 @@
         "type": "TextualBody",
         "value": "Poetic phrase for oceanic regions, typical of Melville's style.",
         "format": "text/plain",
-        "x-content-type": "Stylistic Note"
+        "annotationType": "Stylistic Note"
       },
       "target": [
         {
@@ -144,7 +144,7 @@
         "type": "TextualBody",
         "value": "Famous metaphor for depression, influential in later literature.",
         "format": "text/plain",
-        "x-content-type": "Literary Significance"
+        "annotationType": "Literary Significance"
       },
       "target": [
         {

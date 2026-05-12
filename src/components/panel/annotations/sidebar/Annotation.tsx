@@ -42,7 +42,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
 
   const { t } = useTranslation()
 
-  const type = (data.body as AnnotationBody)['x-content-type']
+  const type = (data.body as AnnotationBody).annotationType
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     const annotBodyHeight = annotationBodyRef.current.clientHeight
     if (annotBodyHeight > THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT) setIsLong(true)
     const children = annotations.filter((a) => a.target?.[0].source === data.id)
-    const nonCrossRefChildren = children.filter((a) => (a.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] !== 'CrossRef')
+    const nonCrossRefChildren = children.filter((a) => (a.body as AnnotationBodyCrossRef)?.source?.annotationType !== 'CrossRef')
     setChildAnnotations(nonCrossRefChildren)
   }, [])
 

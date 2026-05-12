@@ -115,7 +115,7 @@ const GenericTextRenderer: FC<Props> = memo(({
           return acc
         }
 
-        const isCrossRefAnnotation = source.endsWith('.html') ? (cur.body as AnnotationBody)?.['x-content-type'] === 'CrossRef' : (cur.body as AnnotationBodyCrossRef)?.source?.['x-content-type'] === 'CrossRef'
+        const isCrossRefAnnotation = source.endsWith('.html') ? (cur.body as AnnotationBody)?.annotationType === 'CrossRef' : (cur.body as AnnotationBodyCrossRef)?.source?.annotationType === 'CrossRef'
         if (isCrossRefAnnotation) {
           Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
             addCrossRefTargetStyle(el)
@@ -355,7 +355,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     const normalAnnotations = tooltipTypes.length === 0
       ? newRelatedAnnotations
-      : newRelatedAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
+      : newRelatedAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody).annotationType))
 
     const openTooltip = !(normalAnnotations.length === 1 && newRelatedAnnotations.length === 1 && crossRefAnnotations.length === 0)
 

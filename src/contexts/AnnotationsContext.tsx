@@ -28,7 +28,7 @@ export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
         const filtered = getFilteredAnnotations(textMatchedMaps[contentUrl])
         newFiltered.push(...filtered.filter(a => {
           const body = a.body as AnnotationBody
-          return !tooltipTypes.includes(body['x-content-type'])
+          return !tooltipTypes.includes(body.annotationType)
         }))
       })
     setFilteredAnnotations(newFiltered)

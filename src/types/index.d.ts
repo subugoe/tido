@@ -44,17 +44,17 @@ declare global {
     type: 'TextualBody'
     value: string
     format: AnnotationContentFormat
-    'x-content-type': string
+    annotationType: string
     witnesses?: string[]
   }
 
   interface AnnotationBodyCrossRef {
     source: {
-      id: string,
-      collection: string,
-      manifest: string,
-      item: string,
-      'x-content-type': string,
+      id: string
+      collection: string
+      manifest: string
+      item: string
+      annotationType: string
     },
     selector?: CssSelector
   }

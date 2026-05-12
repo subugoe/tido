@@ -18,7 +18,7 @@
         "type": "TextualBody",
         "value": "The extravagant parties symbolize the excess and superficiality of the Jazz Age.",
         "format": "text/plain",
-        "x-content-type": "Symbol"
+        "annotationType": "Symbol"
       },
       "target": [
         {
@@ -39,7 +39,7 @@
         "type": "TextualBody",
         "value": "Jay Gatsby - The mysterious millionaire who throws lavish parties, hoping to reunite with Daisy.",
         "format": "text/plain",
-        "x-content-type": "Character"
+        "annotationType": "Character"
       },
       "target": [
         {
@@ -60,7 +60,7 @@
         "type": "TextualBody",
         "value": "Manuscript shows different word order in early draft.",
         "format": "text/plain",
-        "x-content-type": "Syntactic Revision"
+        "annotationType": "Syntactic Revision"
       },
       "target": [
         {
@@ -81,7 +81,7 @@
         "type": "TextualBody",
         "value": "Social commentary: Most party guests were uninvited crashers.",
         "format": "text/plain",
-        "x-content-type": "Cultural Observation"
+        "annotationType": "Cultural Observation"
       },
       "target": [
         {
