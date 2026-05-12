@@ -18,7 +18,7 @@ const PrevItemButton: FC = () => {
     if (!collectionId || !manifest || !item) return false
 
     const itemIndex = manifest?.items?.findIndex((cur) => {
-      const id = typeof cur === 'object' ? item.id : cur
+      const id = typeof cur === 'object' ? cur.id : cur
       return id === item?.id
     }) ?? -1
     if (itemIndex === -1) return false
@@ -61,11 +61,11 @@ const PrevItemButton: FC = () => {
       }) - 1
       if (prevManifestIndex < 0) return
 
-      const prevMmanifestId = typeof manifests[prevManifestIndex] === 'object'
+      const prevManifestId = typeof manifests[prevManifestIndex] === 'object'
         ? (manifests[prevManifestIndex] as Manifest).id
         : (manifests[prevManifestIndex] as string)
 
-      const prevManifest = await apiRequest<Manifest>(prevMmanifestId)
+      const prevManifest = await apiRequest<Manifest>(prevManifestId)
 
       // Get the last item ID from the previous manifest
       const lastItem = prevManifest.items?.[prevManifest.items.length - 1]
@@ -77,7 +77,7 @@ const PrevItemButton: FC = () => {
 
       newConfig = {
         ...newConfig,
-        manifest: prevMmanifestId,
+        manifest: prevManifestId,
         item: itemId
       }
     } else {
