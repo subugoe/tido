@@ -82,6 +82,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
   const activeTargetRef = useRef<HTMLElement | null>(null)
+  const selectedAnnotationTypesRef = useRef<AnnotationTypesDict | null>(null)
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
   const parsedDom: Element = React.useMemo(() => {
@@ -296,7 +297,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     setMatchedMap(resultMap)
     if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(resultMap)
-
+    selectedAnnotationTypesRef.current = selectedAnnotationTypes
   }, [selectedAnnotationTypes])
 
   const onMouseEnterTarget = (e: Event) => {
@@ -315,6 +316,18 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (idsArray.length === 0) return
 
     setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
+  }
+
+  function includeAnnotationInPopover(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict | null) {
+    // filter Variant Annotations based on witnesses in selectedAnnotationTypes
+    // filter all other annotations which have type as key in selectedAnnotation types
+    const annotationType = (annotation.body as AnnotationBody)['x-content-type']
+    if (annotationType === 'Variant') {
+      return selectedAnnotationTypes?.['Variant']?.some(witness => annotation.body.witnesses.includes(witness))
+    }
+    else {
+      return Object.keys(selectedAnnotationTypes).includes(annotationType)
+    }
   }
 
 
@@ -343,26 +356,34 @@ const GenericTextRenderer: FC<Props> = memo(({
         return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
       })
 
-    const crossRefContentType = annotationsConfig?.crossRefContentType
     const seen = new Set<string>()
+    const crossRefContentType = annotationsConfig?.crossRefContentType
     // compute related annotations: all annotations for the clicked target and its parent targets
     const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
       .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
       .flatMap(entry => entry.annotations)
       .filter(a => !seen.has(a.id) && seen.add(a.id) && getAnnotationContentType(a) !== crossRefContentType)
 
+    console.log('new related annotations', newRelatedAnnotations)
+
+    const newFilteredAnnotations = newRelatedAnnotations.filter(a => includeAnnotationInPopover(a, selectedAnnotationTypesRef.current))
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
+    console.log('new filteredAnnotations', newFilteredAnnotations)
+    console.log('tooltip types', tooltipTypes)
 
     const normalAnnotations = tooltipTypes.length === 0
-      ? newRelatedAnnotations
-      : newRelatedAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
+      ? newFilteredAnnotations
+      : newFilteredAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
 
-    const openTooltip = !(normalAnnotations.length === 1 && newRelatedAnnotations.length === 1 && crossRefAnnotations.length === 0)
+
+    console.log('normal annotations', normalAnnotations)
+
+    const openTooltip = !([0,1].includes(normalAnnotations.length) && [0,1].includes(newFilteredAnnotations.length) && crossRefAnnotations.length === 0)
 
     if (openTooltip) {
       setTooltipOpen(true)
       setTooltipTargetElement(target as HTMLElement)
-      setRelatedAnnotations(newRelatedAnnotations)
+      setRelatedAnnotations(newFilteredAnnotations)
       if (target !== activeTargetRef.current)  addActiveTargetStyle(target)
     }
 
