@@ -82,6 +82,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
   const activeTargetRef = useRef<HTMLElement | null>(null)
+  const selectedAnnotationTypesRef = useRef<AnnotationTypesDict | null>(null)
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
   const parsedDom: Element = React.useMemo(() => {
@@ -296,7 +297,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     setMatchedMap(resultMap)
     if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(resultMap)
-
+    selectedAnnotationTypesRef.current = selectedAnnotationTypes
   }, [selectedAnnotationTypes])
 
   const onMouseEnterTarget = (e: Event) => {
@@ -317,6 +318,18 @@ const GenericTextRenderer: FC<Props> = memo(({
     setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
   }
 
+  function isFilteredAnnotation(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict) {
+    // filter Variant Annotations based on witnesses in selectedAnnotationTypes
+    // filter all other annotations which have type as key in selectedAnnotation types
+    const annotationType = annotation.body['x-content-type']
+    if (annotationType === 'Variant') {
+      return selectedAnnotationTypes?.['Variant']?.some(witness => annotation.body.witnesses.includes(witness))
+    }
+    else {
+      return Object.keys(selectedAnnotationTypes).includes(annotationType)
+    }
+  }
+
 
   const onClickTarget = async (e: Event) => {
     // Generic click listener
@@ -325,6 +338,13 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     const target = e.currentTarget as Element
     const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
+
+    let hasFilteredAnnotations = false
+    targetEntry?.annotations.forEach(annotation => {
+      if (isFilteredAnnotation(annotation, selectedAnnotationTypesRef.current)) hasFilteredAnnotations = true
+    })
+
+    if (!hasFilteredAnnotations) return
 
     if (!containsChildren(targetsRef.current, target as HTMLElement)) {
       // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
@@ -349,7 +369,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
       .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
       .flatMap(entry => entry.annotations)
-      .filter(a => !seen.has(a.id) && seen.add(a.id) && getAnnotationContentType(a) !== crossRefContentType)
+      .filter(a => !seen.has(a.id) && seen.add(a.id) && isFilteredAnnotation(a, selectedAnnotationTypesRef.current))
 
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
@@ -357,7 +377,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       ? newRelatedAnnotations
       : newRelatedAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody).annotationType))
 
-    const openTooltip = !(normalAnnotations.length === 1 && newRelatedAnnotations.length === 1 && crossRefAnnotations.length === 0)
+    const openTooltip = !([0,1].includes(normalAnnotations.length) && [0,1].includes(newRelatedAnnotations.length) && crossRefAnnotations.length === 0)
 
     if (openTooltip) {
       setTooltipOpen(true)
