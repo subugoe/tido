@@ -318,7 +318,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
   }
 
-  function includeAnnotationInPopover(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict | null) {
+  function isFilteredAnnotation(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict | null) {
     // filter Variant Annotations based on witnesses in selectedAnnotationTypes
     // filter all other annotations which have type as key in selectedAnnotation types
     const annotationType = (annotation.body as AnnotationBody)['x-content-type']
@@ -341,7 +341,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     let hasFilteredAnnotations = false
     targetEntry?.annotations.forEach(annot => {
-      if (includeAnnotationInPopover(annot, selectedAnnotationTypesRef.current)) hasFilteredAnnotations = true
+      if (isFilteredAnnotation(annot, selectedAnnotationTypesRef.current)) hasFilteredAnnotations = true
     })
 
     if (!hasFilteredAnnotations) return
@@ -364,26 +364,24 @@ const GenericTextRenderer: FC<Props> = memo(({
       })
 
     const seen = new Set<string>()
-    const crossRefContentType = annotationsConfig?.crossRefContentType
     // compute related annotations: all annotations for the clicked target and its parent targets
     const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
       .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
       .flatMap(entry => entry.annotations)
-      .filter(a => !seen.has(a.id) && seen.add(a.id) && getAnnotationContentType(a) !== crossRefContentType)
+      .filter(a => !seen.has(a.id) && seen.add(a.id) &&  isFilteredAnnotation(a, selectedAnnotationTypesRef.current))
 
-    const newFilteredAnnotations = newRelatedAnnotations.filter(a => includeAnnotationInPopover(a, selectedAnnotationTypesRef.current))
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
     const normalAnnotations = tooltipTypes.length === 0
-      ? newFilteredAnnotations
-      : newFilteredAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
+      ? newRelatedAnnotations
+      : newRelatedAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
 
-    const openTooltip = !([0,1].includes(normalAnnotations.length) && [0,1].includes(newFilteredAnnotations.length) && crossRefAnnotations.length === 0)
+    const openTooltip = !([0,1].includes(normalAnnotations.length) && [0,1].includes(newRelatedAnnotations.length) && crossRefAnnotations.length === 0)
 
     if (openTooltip) {
       setTooltipOpen(true)
       setTooltipTargetElement(target as HTMLElement)
-      setRelatedAnnotations(newFilteredAnnotations)
+      setRelatedAnnotations(newRelatedAnnotations)
       if (target !== activeTargetRef.current)  addActiveTargetStyle(target)
     }
 
