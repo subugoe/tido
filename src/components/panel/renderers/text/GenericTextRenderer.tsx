@@ -339,6 +339,13 @@ const GenericTextRenderer: FC<Props> = memo(({
     const target = e.currentTarget as Element
     const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
 
+    let hasFilteredAnnotations = false
+    targetEntry?.annotations.forEach(annot => {
+      if (includeAnnotationInPopover(annot, selectedAnnotationTypesRef.current)) hasFilteredAnnotations = true
+    })
+
+    if (!hasFilteredAnnotations) return
+
     if (!containsChildren(targetsRef.current, target as HTMLElement)) {
       // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
       e.stopPropagation()
@@ -364,19 +371,12 @@ const GenericTextRenderer: FC<Props> = memo(({
       .flatMap(entry => entry.annotations)
       .filter(a => !seen.has(a.id) && seen.add(a.id) && getAnnotationContentType(a) !== crossRefContentType)
 
-    console.log('new related annotations', newRelatedAnnotations)
-
     const newFilteredAnnotations = newRelatedAnnotations.filter(a => includeAnnotationInPopover(a, selectedAnnotationTypesRef.current))
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-    console.log('new filteredAnnotations', newFilteredAnnotations)
-    console.log('tooltip types', tooltipTypes)
 
     const normalAnnotations = tooltipTypes.length === 0
       ? newFilteredAnnotations
       : newFilteredAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody)['x-content-type']))
-
-
-    console.log('normal annotations', normalAnnotations)
 
     const openTooltip = !([0,1].includes(normalAnnotations.length) && [0,1].includes(newFilteredAnnotations.length) && crossRefAnnotations.length === 0)
 
@@ -391,8 +391,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     // when we have only one normal annotation then we should select the annotation in Sidebar and not open tooltip. (select + deselect annotation)
     if (!openTooltip && normalAnnotations.length === 1) {
-      // we need selectedAnnotationRef since the click listener has not an updated value of selectedAnnotation, it has the 'null' when it was initially created
-      if (targetEntry.annotations[0].id === selectedAnnotationRef.current?.id) {
+      if (targetEntry.annotations[0].id === selectedAnnotationRef.current?.id){
         setSelectedAnnotation(null)
         selectedAnnotationRef.current = null
       }
