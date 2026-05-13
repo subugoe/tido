@@ -28,7 +28,6 @@ import {
   removeSelectedStyle
 } from '@/utils/text.ts'
 import {
-  getAnnotationContentType,
   getNestedAnnotations,
   getSource,
   isFiltered
@@ -116,8 +115,7 @@ const GenericTextRenderer: FC<Props> = memo(({
           return acc
         }
 
-        const isCrossRefAnnotation = source.endsWith('.html') ? (cur.body as AnnotationBody)?.annotationType === 'CrossRef' : (cur.body as AnnotationBodyCrossRef)?.source?.annotationType === 'CrossRef'
-        if (isCrossRefAnnotation) {
+        if (cur.body.annotationType === annotationsConfig?.crossRefContentType) {
           Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
             addCrossRefTargetStyle(el)
           })
@@ -321,7 +319,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   function isFilteredAnnotation(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict) {
     // filter Variant Annotations based on witnesses in selectedAnnotationTypes
     // filter all other annotations which have type as key in selectedAnnotation types
-    const annotationType = annotation.body['x-content-type']
+    const annotationType = annotation.body.annotationType
     if (annotationType === 'Variant') {
       return selectedAnnotationTypes?.['Variant']?.some(witness => annotation.body.witnesses.includes(witness))
     }
@@ -354,7 +352,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     const crossRefAnnotations = annotations
       .filter(a => {
         const isInSource = a.target?.[0].source === source
-        const isCrossRef = getAnnotationContentType(a) === annotationsConfig?.crossRefContentType
+        const isCrossRef = a.body.annotationType === annotationsConfig?.crossRefContentType
         return isInSource && isCrossRef
       })
       .filter(a => {

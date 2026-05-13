@@ -115,7 +115,7 @@ async function getCrossRefInfo(annotation: Annotation) {
   // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
   const isCrossRefInAnnotation = !getSource(annotation?.target[0]).id.endsWith('.html')
 
-  const source = (annotation.body as AnnotationBodyCrossRef).source
+  const source = annotation.body.source
   const refItemData = await apiRequest<Item>(source.item)
   const refAnnotationId = source?.id
   let refAnnotation
@@ -128,7 +128,7 @@ async function getCrossRefInfo(annotation: Annotation) {
     contentUrl = getSource(refAnnotation?.target?.[0]).id
   }
 
-  if (!isCrossRefInAnnotation) contentUrl = (annotation.body as AnnotationBodyCrossRef)?.source?.id
+  if (!isCrossRefInAnnotation) contentUrl = annotation.body.source?.id
   const refContentType = refItemData.contents?.find(c => c.id === contentUrl)?.contentType?.split('type=')[1]
 
   return {
@@ -138,7 +138,7 @@ async function getCrossRefInfo(annotation: Annotation) {
     textType: isCrossRefInAnnotation ? 'annotation': 'text',
     contentType: refContentType,
     ...(isCrossRefInAnnotation && { selectedAnnotation: refAnnotation }),
-    ...(!isCrossRefInAnnotation && { selector: (annotation.body as AnnotationBodyCrossRef)?.selector?.value }),
+    ...(!isCrossRefInAnnotation && { selector: annotation.body.selector?.value }),
     refItemData
   }
 }
@@ -148,12 +148,6 @@ function getSource(target: AnnotationTarget): AnnotationTargetSource {
     return target.source
   }
   return { id: target.source }
-}
-
-function getAnnotationContentType(annotation: Annotation) {
-  const body = annotation.body
-  if ('x-content-type' in body) return body.annotationType
-  return body.source?.annotationType
 }
 
 export {
@@ -166,6 +160,5 @@ export {
   getNestedAnnotations,
   getAnnotationIdsByEl,
   getCrossRefInfo,
-  getSource,
-  getAnnotationContentType
+  getSource
 }
