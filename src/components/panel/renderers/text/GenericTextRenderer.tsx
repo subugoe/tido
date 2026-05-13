@@ -71,6 +71,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   } = usePanel()
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
+
   const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
   const [tooltipOpen, setTooltipOpen] = useState(false)
   const [crossRefAnnotations, setCrossRefAnnotations] = useState<Annotation[]>([])
@@ -135,10 +136,9 @@ const GenericTextRenderer: FC<Props> = memo(({
           })
 
           const nestedAnnotations = getNestedAnnotations(cur, annotationsInText)
-
           acc[cur.id] = {
             target: matchedNodes,
-            filtered: !selectedAnnotationTypes || ignoreFilters || isFiltered(cur, selectedAnnotationTypes, tooltipTypes),
+            filtered: annotationsConfig?.crossRefContentType !== cur.body['x-content-type'] ? (!selectedAnnotationTypes || ignoreFilters || isFiltered(cur, selectedAnnotationTypes, tooltipTypes)) : false,
             annotation: cur,
             nestedAnnotations
           }
@@ -321,6 +321,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   function isFilteredAnnotation(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict | null) {
     // filter Variant Annotations based on witnesses in selectedAnnotationTypes
     // filter all other annotations which have type as key in selectedAnnotation types
+    if (!selectedAnnotationTypes) return true
+
     const annotationType = (annotation.body as AnnotationBody)['x-content-type']
     if (annotationType === 'Variant') {
       return selectedAnnotationTypes?.['Variant']?.some(witness => annotation.body.witnesses.includes(witness))
