@@ -34,7 +34,7 @@ declare global {
 
 
   interface Annotation {
-    body: AnnotationBody | AnnotationBodyCrossRef
+    body: AnnotationBody
     target: AnnotationTarget[]
     type: string
     id: string
@@ -46,16 +46,12 @@ declare global {
     format: AnnotationContentFormat
     annotationType: string
     witnesses?: string[]
-  }
-
-  interface AnnotationBodyCrossRef {
-    source: {
+    source?: {
       id: string
       collection: string
       manifest: string
       item: string
-      annotationType: string
-    },
+    }
     selector?: CssSelector
   }
 
@@ -88,7 +84,8 @@ declare global {
 
   type CssSelector = {
     type: 'CssSelector'
-    value: string
+    value: string,
+    conformsTo?: string
   }
 
   interface CrossRefInfo {
