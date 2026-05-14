@@ -105,6 +105,7 @@ const AlignAnnotationsList: FC = () => {
       const firstTextView = panelState.panelViews.find(v => v.view === 'text')
       const contentUrl = panelState.item?.content.find(c =>
         c.type.includes(firstTextView?.activeContentType))?.url
+      console.log('sync sidebar to text')
       scroller.syncSidebarToText(contentUrl)
       // get content url of the first panelView which is text
       //const contentUrl = panelState.panelViews[0].
@@ -159,14 +160,9 @@ const AlignAnnotationsList: FC = () => {
 
 
   useEffect(() => {
-    trackTopChange()
-    /*
-    if (selectedAnnotation) {
-      const scroller = getScroller()
-      const contentUrl = selectedAnnotation.target[0].source
-      //scroller.syncTextToSidebar(contentUrl)
-    } */
-
+    // if the selected Annotation came from text -> track top change
+    // if not, we do not make trackTopChange
+    //trackTopChange()
 
     const panelEl = document.getElementById(panelId) as HTMLElement
     const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
