@@ -217,8 +217,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!matchedMap) return
     hoveredAnnotationsRef.current = hoveredAnnotations
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedMap)
-    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.id]) ?
-      matchedMap[selectedAnnotation.id].target : []
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.annotation.id]) ?
+      matchedMap[selectedAnnotation.annotation.id].target : []
 
     flippedMatchedMapRef.current?.forEach(fa => {
       const target = fa.target as HTMLElement
@@ -255,8 +255,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!matchedMap) return
 
     selectedAnnotationRef.current = selectedAnnotation
-    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.id])
-      ? matchedMap[selectedAnnotation.id].target
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.annotation.id])
+      ? matchedMap[selectedAnnotation.annotation.id].target
       : []
 
     if (!flippedMatchedMapRef.current) return
@@ -391,13 +391,17 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     // when we have only one normal annotation then we should select the annotation in Sidebar and not open tooltip. (select + deselect annotation)
     if (!openTooltip && normalAnnotations.length === 1) {
-      if (targetEntry.annotations[0].id === selectedAnnotationRef.current?.id){
+      if (targetEntry.annotations[0].id === selectedAnnotationRef.current?.annotation.id){
         setSelectedAnnotation(null)
         selectedAnnotationRef.current = null
       }
       else {
-        setSelectedAnnotation(normalAnnotations[0])
-        selectedAnnotationRef.current = normalAnnotations[0]
+        const selectedAnnotation = {
+          annotation: normalAnnotations[0],
+          origin: 'text'
+        }
+        setSelectedAnnotation(selectedAnnotation)
+        selectedAnnotationRef.current = selectedAnnotation
         if (onSelect) onSelect()
       }
     }

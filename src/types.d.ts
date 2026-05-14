@@ -198,7 +198,7 @@ declare global {
     activeTargetIndex: number
     config: PanelConfig
     showSidebar: boolean
-    selectedAnnotation?: Annotation
+    selectedAnnotation?: SelectedAnnotation
     panelViews: PanelView[]
     contentTypes: string[]
   }
@@ -320,6 +320,11 @@ declare global {
 
   type SequenceType = 'collection' | 'manifest' | 'item'
   type SupportType = 'font' | 'css'
+
+  export interface SelectedAnnotation {
+    annotation: Annotation,
+    origin: 'text' | 'annotation' | 'other'
+  }
 
   interface Title {
     '@context': string

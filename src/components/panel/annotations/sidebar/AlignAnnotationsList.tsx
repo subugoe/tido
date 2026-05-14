@@ -60,7 +60,7 @@ const AlignAnnotationsList: FC = () => {
       // Next, we decide if that minimum value is even needed or if the desiredY is more below and therefore should be used instead.
       const actualY = i === 0 ? annotationEl.desiredY : Math.max(annotationEl.desiredY, minY)
 
-      if (selectedAnnotation && annotationEl.annotation.id === selectedAnnotation.id && actualY !== annotationEl.desiredY) {
+      if (selectedAnnotation && annotationEl.annotation.id === selectedAnnotation.annotation.id && actualY !== annotationEl.desiredY) {
         // If this is a selectedAnnotation, and it has some other annotations above
         // (which caused the current to move down, for example if the selected annotation is in the same row with multiple other annotations),
         // we want to move those annotations further above, so our selected one can be placed to the desiredY
@@ -162,10 +162,34 @@ const AlignAnnotationsList: FC = () => {
   useEffect(() => {
     // if the selected Annotation came from text -> track top change
     // if not, we do not make trackTopChange
-    //trackTopChange()
 
+    // check the origin of selecting annotation (text, annotation) -> remains bookmarking:
+    // if it was text -> apply trackTopChange)
+    // if it annotation ->
+    // scroll text view to target
+    // do not scroll sidebar, do not apply track topChange)
+    // else:
+    // scrollInText, sync Sidebar, trackTopChange
     const panelEl = document.getElementById(panelId) as HTMLElement
     const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
+
+
+    if (!selectedAnnotation) return
+    const { annotation, origin } = selectedAnnotation
+    if (origin === 'text') {
+      console.log('origin: text')
+      trackTopChange()
+    } else if (origin === 'annotation') {
+      const target = annotation.target[0]
+      console.log('origin: annotation')
+      const targetSourceUrl = target.source
+      const text = panelEl.querySelector(`div[data-content-url="${targetSourceUrl}"]`)
+      const targetEl = text.querySelector(target.selector.value)
+      // scroll text view to target
+    } else {
+      // from bookmarking or from config
+
+    }
 
     async function deselectAnnotationOnOutsideClick(event: MouseEvent) {
       // if we click at an annotation - we return false
