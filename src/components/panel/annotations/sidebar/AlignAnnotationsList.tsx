@@ -97,10 +97,12 @@ const AlignAnnotationsList: FC = () => {
     if (filteredAnnotations?.length === 0) {
       setElements([])
     } else {
-      // scroll to text Scroll position
 
       const scroller = getScroller()
-      scroller.syncSidebarToText(selectedAnnotation.annotation.target[0]?.source)
+      const firstTextView = panelState.panelViews.find(v => v.view === 'text')
+      const contentUrl = panelState.item?.content.find(c =>
+        c.type.includes(firstTextView?.activeContentType))?.url
+      scroller.syncSidebarToText(contentUrl)
 
       const annotationEls = Array.from(ref.current?.childNodes ?? [])
       const _elements = annotationEls.map(el => {
@@ -166,7 +168,8 @@ const AlignAnnotationsList: FC = () => {
     if (!selectedAnnotation) return
     const { annotation, origin } = selectedAnnotation
     if (origin === 'text') {
-      console.log('track top change')
+      const scroller = getScroller()
+      scroller.syncSidebarToText(selectedAnnotation.annotation.target[0]?.source)
       trackTopChange()
     } else if (origin !== 'text' && origin !== 'annotation') {
       // selectedAnnotation comes from Bookmarking or config
