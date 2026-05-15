@@ -222,7 +222,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
             updatePanel({ selectedAnnotation: {
               annotation: annotations.find(a => a.id === config.selectedAnnotation) ?? null,
               origin: 'other'
-            } })
+            },
+            showSidebar: true
+            })
           }
         } catch (e) {
           console.error(e)

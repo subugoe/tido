@@ -136,7 +136,7 @@ declare global {
     contentType: string,
     refItemData: Item,
     selector?: string,
-    selectedAnnotation?: Annotation,
+    selectedAnnotation?: SelectedAnnotation,
     manifestLabel?: string,
     itemLabel?: string,
     textType: 'text' | 'annotation',     // referenced text
@@ -321,6 +321,7 @@ declare global {
   type SequenceType = 'collection' | 'manifest' | 'item'
   type SupportType = 'font' | 'css'
 
+  // "other" refers to origin in [bookmarking, config]
   export interface SelectedAnnotation {
     annotation: Annotation,
     origin: 'text' | 'annotation' | 'other'
