@@ -79,7 +79,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
-  const selectedAnnotationRef = useRef<Annotation | null>(null)
+  const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
   const activeTargetRef = useRef<HTMLElement | null>(null)

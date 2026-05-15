@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
+import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 
 const ANNOTATION_GAP = 5
 
@@ -173,22 +174,17 @@ const AlignAnnotationsList: FC = () => {
     const panelEl = document.getElementById(panelId) as HTMLElement
     const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
 
-
     if (!selectedAnnotation) return
     const { annotation, origin } = selectedAnnotation
     if (origin === 'text') {
-      console.log('origin: text')
       trackTopChange()
-    } else if (origin === 'annotation') {
+    } else if (origin !== 'text' && origin !== 'annotation') {
+      // selectedAnnotation comes from Bookmarking or config
       const target = annotation.target[0]
-      console.log('origin: annotation')
       const targetSourceUrl = target.source
-      const text = panelEl.querySelector(`div[data-content-url="${targetSourceUrl}"]`)
-      const targetEl = text.querySelector(target.selector.value)
-      // scroll text view to target
-    } else {
-      // from bookmarking or from config
-
+      const textEl = panelEl.querySelector(`div[data-content-url="${targetSourceUrl}"]`)
+      const targetEl = textEl.querySelector(target.selector.value)
+      scrollIntoViewIfNeeded(targetEl, textEl as HTMLElement)
     }
 
     async function deselectAnnotationOnOutsideClick(event: MouseEvent) {

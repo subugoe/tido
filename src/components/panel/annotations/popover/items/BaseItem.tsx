@@ -19,10 +19,16 @@ const BaseItem: FC<Props> = ({ annotation }) => {
   const type = (annotation.body as AnnotationBody)['x-content-type']
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
   const content = (annotation.body as AnnotationBody).value
-  const isSelected = selectedAnnotation?.id === annotation.id
+  const isSelected = selectedAnnotation?.annotation.id === annotation.id
 
   function handleSelection() {
-    updatePanel({ selectedAnnotation: isSelected ? null : annotation, showSidebar: true })
+    updatePanel(
+      { selectedAnnotation: isSelected ? null : {
+        annotation,
+        origin: 'text'
+      },
+      showSidebar: true }
+    )
   }
 
   useEffect(() => {
