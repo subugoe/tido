@@ -369,7 +369,7 @@ export async function mergeAndValidateConfig(
             collection: collectionUrl,
             ...(itemIndex > -1 && { item: itemUrl }),
             ...(manifestIndex > -1 && { manifest: manifestUrl }),
-            ...(selectedAnnotationId && { selectedAnnotation: selectedAnnotationId, showSidebar: true })
+            ...(selectedAnnotationId && { selectedAnnotationId, showSidebar: true })
           }
         }))
       }

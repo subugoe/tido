@@ -95,7 +95,7 @@ declare global {
     contentType: string,
     refItemData: Item,
     selector?: string,
-    selectedAnnotation?: Annotation,
+    selectedAnnotation?: SelectedAnnotation,
     manifestLabel?: string,
     itemLabel?: string,
     textType: 'text' | 'annotation',     // referenced text
@@ -115,7 +115,7 @@ declare global {
     activeTargetIndex: number
     config: PanelConfig
     showSidebar: boolean
-    selectedAnnotation?: Annotation
+    selectedAnnotation?: SelectedAnnotation
     panelViews: PanelView[]
     contentTypes: string[]
   }
@@ -193,7 +193,7 @@ export interface PanelConfig {
   manifest?: string
   item?: string,
   views?: PanelView[]
-  selectedAnnotation?: string
+  selectedAnnotationId?: string
   showSidebar?: boolean
 }
 
@@ -301,6 +301,12 @@ export interface TidoContentStateTarget {
     views?: PanelViewContentState[]
     annotation?: string
   }
+}
+
+// "other" refers to origin in [bookmarking, config]
+export interface SelectedAnnotation {
+  annotation: Annotation,
+  origin: 'text' | 'annotation' | 'other'
 }
 
 export interface PanelViewContentState {

@@ -38,6 +38,7 @@ import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
 import AnnotationPopoverContent from '@/components/panel/annotations/popover/AnnotationPopoverContent.tsx'
+import { SelectedAnnotation } from '@/types'
 
 interface Props {
   htmlString?: string
@@ -77,7 +78,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
-  const selectedAnnotationRef = useRef<Annotation | null>(null)
+  const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
   const activeTargetRef = useRef<HTMLElement | null>(null)
@@ -215,8 +216,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!matchedMap) return
     hoveredAnnotationsRef.current = hoveredAnnotations
     const targetsOfHoveredAnnotations = getTargetsHoveredAnnotations(hoveredAnnotations, targetsRef.current, matchedMap)
-    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.id]) ?
-      matchedMap[selectedAnnotation.id].target : []
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.annotation.id]) ?
+      matchedMap[selectedAnnotation.annotation.id].target : []
 
     flippedMatchedMapRef.current?.forEach(fa => {
       const target = fa.target as HTMLElement
@@ -253,8 +254,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!matchedMap) return
 
     selectedAnnotationRef.current = selectedAnnotation
-    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.id])
-      ? matchedMap[selectedAnnotation.id].target
+    const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.annotation.id])
+      ? matchedMap[selectedAnnotation.annotation.id].target
       : []
 
     if (!flippedMatchedMapRef.current) return
@@ -319,6 +320,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   function isFilteredAnnotation(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict) {
     // filter Variant Annotations based on witnesses in selectedAnnotationTypes
     // filter all other annotations which have type as key in selectedAnnotation types
+    if (!selectedAnnotationTypes) return true
+
     const annotationType = annotation.body.annotationType
     if (annotationType === 'Variant') {
       return selectedAnnotationTypes?.['Variant']?.some(witness => annotation.body.witnesses.includes(witness))
@@ -388,13 +391,17 @@ const GenericTextRenderer: FC<Props> = memo(({
     // when we have only one normal annotation then we should select the annotation in Sidebar and not open tooltip. (select + deselect annotation)
     if (!openTooltip && normalAnnotations.length === 1) {
       // we need selectedAnnotationRef since the click listener has not an updated value of selectedAnnotation, it has the 'null' when it was initially created
-      if (targetEntry.annotations[0].id === selectedAnnotationRef.current?.id) {
+      if (targetEntry.annotations[0].id === selectedAnnotationRef.current?.annotation.id) {
         setSelectedAnnotation(null)
         selectedAnnotationRef.current = null
       }
       else {
-        setSelectedAnnotation(normalAnnotations[0])
-        selectedAnnotationRef.current = normalAnnotations[0]
+        const selectedAnnotation = {
+          annotation: normalAnnotations[0],
+          origin: 'text'
+        }
+        setSelectedAnnotation(selectedAnnotation)
+        selectedAnnotationRef.current = selectedAnnotation
         if (onSelect) onSelect()
       }
     }
