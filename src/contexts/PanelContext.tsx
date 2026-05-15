@@ -218,9 +218,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
           }
 
           setAnnotations(annotations)
-          if (config.selectedAnnotation) {
+          if (config.selectedAnnotationId) {
             updatePanel({ selectedAnnotation: {
-              annotation: annotations.find(a => a.id === config.selectedAnnotation) ?? null,
+              annotation: annotations.find(a => a.id === config.selectedAnnotationId) ?? null,
               origin: 'other'
             },
             showSidebar: true

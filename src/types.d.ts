@@ -373,7 +373,7 @@ export interface PanelConfig {
   manifest?: string
   item?: string,
   views?: PanelView[]
-  selectedAnnotation?: string
+  selectedAnnotationId?: string
   showSidebar?: boolean
 }
 
