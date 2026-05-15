@@ -38,7 +38,6 @@ const AlignAnnotationsList: FC = () => {
     // This function calculates all top positions from all currently visible annotations and sets them as "yMap" where
     // the key is the annotation id and the value is the top value.
 
-    console.log('elements', elements)
     if (elements.length === 0) return
 
     // Set the desiredY according to current target clean positions (clean = actual position in the text)
@@ -76,8 +75,6 @@ const AlignAnnotationsList: FC = () => {
       return acc
     }, {})
 
-    console.log('update y map positions of annots')
-
     setYMap(map)
   }
 
@@ -103,15 +100,7 @@ const AlignAnnotationsList: FC = () => {
       // scroll to text Scroll position
 
       const scroller = getScroller()
-      const firstTextView = panelState.panelViews.find(v => v.view === 'text')
-      const contentUrl = panelState.item?.content.find(c =>
-        c.type.includes(firstTextView?.activeContentType))?.url
-      console.log('sync sidebar to text')
-      scroller.syncSidebarToText(contentUrl)
-      // get content url of the first panelView which is text
-      //const contentUrl = panelState.panelViews[0].
-
-      //scroller.syncSidebarToText(selectedAnnotation.target[0].source)
+      scroller.syncSidebarToText(selectedAnnotation.annotation.target[0]?.source)
 
       const annotationEls = Array.from(ref.current?.childNodes ?? [])
       const _elements = annotationEls.map(el => {
@@ -177,6 +166,7 @@ const AlignAnnotationsList: FC = () => {
     if (!selectedAnnotation) return
     const { annotation, origin } = selectedAnnotation
     if (origin === 'text') {
+      console.log('track top change')
       trackTopChange()
     } else if (origin !== 'text' && origin !== 'annotation') {
       // selectedAnnotation comes from Bookmarking or config
