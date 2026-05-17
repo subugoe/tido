@@ -9,6 +9,7 @@ if (existsSync(dst)) {
 }
 
 cpSync(src, dst, { recursive: true })
+cpSync('tests/mocks/text-api.png', join(dst, 'text-api.png'))
 
 function replaceInFiles(dir) {
   for (const entry of readdirSync(dir)) {
@@ -17,7 +18,8 @@ function replaceInFiles(dir) {
       replaceInFiles(full)
     } else if (extname(full) === '.json') {
       const content = readFileSync(full, 'utf8')
-      const replaced = content.replace(/http:\/\/localhost:8181\/example/g, 'http://localhost:2222/api')
+      let replaced = content.replace(/http:\/\/localhost:8181\/example/g, 'http://localhost:2222/api')
+      replaced = replaced.replace(/http:\/\/localhost:8181\/text-api\.png/g, 'http://localhost:2222/api/text-api.png')
       if (content !== replaced) {
         writeFileSync(full, replaced)
       }

@@ -11,6 +11,13 @@
   "languages": [
     "eng"
   ],
+  "images": [
+    {
+      "id": "http://localhost:8181/text-api.png",
+      "license": "CC0-1.0",
+      "mimetype": "image/png"
+    }
+  ],
   "contents": [
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
