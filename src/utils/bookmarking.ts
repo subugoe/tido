@@ -88,7 +88,7 @@ function extractPanelConfig(target: TidoContentStateTarget): { collectionUrl: st
 function createContentState(panelStates: PanelState[]): TidoContentState {
 
   const target: TidoContentStateTarget[] = panelStates.map(({ selectedAnnotation, item, manifest, collectionId, }) => {
-    const state = selectedAnnotation ? { annotation: selectedAnnotation.id } : undefined
+    const state = selectedAnnotation ? { annotation: selectedAnnotation.annotation.id } : undefined
 
     return {
       id: item.id,

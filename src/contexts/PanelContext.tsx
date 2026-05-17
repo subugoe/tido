@@ -7,7 +7,7 @@ import { apiRequest, getAnnotationPage, getFirstItem, getFirstManifest } from '@
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getAssets } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
-import { FilterNodeWithSelection, PanelConfig, PanelView } from '@/types'
+import { FilterNodeWithSelection, PanelConfig, PanelView, SelectedAnnotation } from '@/types'
 import { useTranslation, UseTranslationResponse } from 'react-i18next'
 import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
@@ -35,8 +35,8 @@ interface PanelContextType {
   selectedAnnotationTypes: AnnotationTypesDict | null,
   setSelectedAnnotationTypes: (value: AnnotationTypesDict) => void,
   annotations: Annotation[] | null,
-  selectedAnnotation: Annotation | null,
-  setSelectedAnnotation: (value: Annotation | null) => void
+  selectedAnnotation: SelectedAnnotation | null,
+  setSelectedAnnotation: (value: SelectedAnnotation | null) => void
   showTextOptions: boolean,
   setShowTextOptions: (value: boolean) => void,
   usePanelTranslation: () =>  UseTranslationResponse<'common', undefined>
@@ -225,9 +225,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
           }
 
           setAnnotations(annotations)
-          if (config.selectedAnnotation) {
-            updatePanel({ selectedAnnotation: annotations.find(a => a.id === config.selectedAnnotation) ?? null })
-          }
+          if (config.selectedAnnotationId) {
+            updatePanel({ selectedAnnotation: {
+              annotation: annotations.find(a => a.id === config.selectedAnnotationId) ?? null,
+              origin: 'other'
+            },
+            showSidebar: true
+            })          }
         } catch (e) {
           console.error(e)
           setAnnotationsError(e)
@@ -371,8 +375,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     return scroller.current
   }
 
-  function setSelectedAnnotation(annotation: Annotation | null) {
-    updatePanel({ selectedAnnotation: annotation })
+  function setSelectedAnnotation(selectedAnnotation: SelectedAnnotation | null) {
+    updatePanel({ selectedAnnotation })
   }
 
   return (

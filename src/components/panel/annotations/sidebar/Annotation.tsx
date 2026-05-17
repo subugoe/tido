@@ -50,7 +50,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   }, [data, hoveredAnnotations])
 
   useEffect(() => {
-    setIsSelected(selectedAnnotation && selectedAnnotation.id === data.id)
+    setIsSelected(selectedAnnotation && selectedAnnotation.annotation.id === data.id)
   }, [data, selectedAnnotation])
 
   function onSelect() {
@@ -86,14 +86,17 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     const clickedEl = e.target
     if (targetsRef.current.includes(clickedEl)) return
 
-    if (selectedAnnotation && selectedAnnotation.id === data.id) {
+    if (selectedAnnotation && selectedAnnotation.annotation.id === data.id) {
       setIsSelected(false)
       setTimeout(() => setSelectedAnnotation(null), 100)
       return
     }
 
     setIsSelected(true)
-    setTimeout(() => setSelectedAnnotation(data), 100)
+    setTimeout(() => setSelectedAnnotation({
+      annotation: data,
+      origin: 'annotation'
+    }), 100)
   }
 
   function handleMouseEnter() {
