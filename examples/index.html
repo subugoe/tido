@@ -1,90 +1,571 @@
 <!DOCTYPE html>
-<html>
-<head><title>TIDO</title>
+<html lang="en">
+<head>
   <meta charset="utf-8">
-  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="format-detection" content="telephone=no">
-  <meta name="msapplication-tap-highlight" content="no">
-  <meta name="viewport" content="initial-scale=1,maximum-scale=5,minimum-scale=1,width=device-width">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="dist/tido.css">
-  <link rel="stylesheet" href="style.css">
-
-</head>
-<body>
-<noscript><strong>We're sorry but TIDO doesn't work properly without JavaScript enabled. Please enable it to
-  continue.</strong></noscript>
-<header>
-  <a class="home" href="./">TIDO</a>
-  <div class="input-container">
-    <form onsubmit="load(event)">
-    <input id="url-input" type="text" autocomplete="on" placeholder="Enter your manifest or collection URL here...">
-    <button type="submit">Load</button>
-    </form>
-  </div>
-  <span>Other examples:</span>
-  <nav>
-    <select id="nav-select">
-      <option disabled selected hidden>Please select...</option>
-      <option value="./ahiqar-syriac.html">Ahiqar Syriac</option>
-      <option value="./ahiqar-arabic-karshuni.html">Ahiqar Arabic-Karshuni</option>
-      <option value="./gfl.html">Goethes Farbenlehre in Berlin</option>
-    </select>
-  </nav>
-</header>
-
-<div id="app">
-  <div class="empty-container">
-    <h1>Welcome to the preview website for the TIDO Viewer.</h1>
-    <p>Please enter your TextAPI entrypoint URL above or inspect some of our production examples.</p>
-  </div>
-</div>
-<script src="dist/tido.js"></script>
-<script>
-  let tido;
-  const manifest = new URLSearchParams(window.location.search).get('manifest')
-  const collection = new URLSearchParams(window.location.search).get('collection')
-
-  if (manifest || collection) {
-    const config = {
-      ...(manifest ? { manifest } : {}),
-      ...(collection ? { collection } : {}),
+  <meta name="description" content="TIDO Playground — live-edit your TextAPI viewer configuration">
+  <title>TIDO Playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dist/tido.min.css">
+  <style>
+    :root {
+      --editor-bg: #1e1e1e;
+      --editor-fg: #d4d4d4;
+      --editor-line-bg: #252526;
+      --editor-line-fg: #858585;
+      --editor-caret: #aeafad;
+      --editor-gutter: #2d2d2d;
+      --pane-header-bg: #2d2d2d;
+      --pane-header-fg: #969696;
+      --pane-header-border: #3c3c3c;
+      --divider-bg: #333;
+      --divider-hover: #007acc;
+      --error-color: #f48771;
+      --valid-color: #6a9955;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --header-height: 44px;
+      --header-bg: #181818;
+      --header-fg: #b0b0b0;
+      --header-fg-muted: #6a6a6a;
+      --header-border: #2a2a2a;
+      --split-ratio: 0.4;
+      --min-pane-height: 120px;
+      --divider-size: 5px;
     }
 
-    tido = new Tido(config)
-  }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
-  const select = document.getElementById('nav-select');
-  select.onchange = function (event) {
-    window.location = event.target.value
-  }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #1e1e1e;
+      font-family: var(--font-ui);
+    }
 
+    #app-header {
+      flex: 0 0 var(--header-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--header-height);
+      padding: 0 16px;
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--header-border);
+      user-select: none;
+      z-index: 20;
+    }
 
-  function load(event) {
-    event.preventDefault()
-    const input = document.getElementById('url-input')
+    #app-header .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--header-fg);
+      letter-spacing: 0.2px;
+    }
 
-    const isManifest = input.value.includes('manifest.json')
-    const isCollection = input.value.includes('collection.json')
+    #app-header .brand svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
 
-    if (!isManifest && !isCollection) return
+    .gh-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--header-fg-muted);
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: color 0.15s ease, background 0.15s ease;
+    }
 
-    const url = new URL(window.location)
+    .gh-link:hover {
+      color: var(--header-fg);
+      background: rgba(255, 255, 255, 0.06);
+    }
 
-    if (isManifest) url.searchParams.set('manifest', input.value)
-    if (isCollection) url.searchParams.set('collection', input.value)
+    .gh-link svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      fill: currentColor;
+    }
 
-    window.history.pushState(null, null, url)
+    #playground {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      height: calc(100vh - var(--header-height));
+      width: 100%;
+      background: var(--editor-bg);
+    }
 
-    document.getElementById('app').innerHTML = ''
-    tido = null
+    #editor-pane {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: var(--min-pane-height);
+      overflow: hidden;
+      position: relative;
+    }
 
-    setTimeout(() => {
-      tido = new Tido({
-        manifest: input.value
+    #viewer-pane {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: var(--min-pane-height);
+      overflow: hidden;
+      background: #fff;
+      position: relative;
+    }
+
+    #divider {
+      flex: 0 0 var(--divider-size);
+      background: var(--divider-bg);
+      cursor: row-resize;
+      position: relative;
+      z-index: 10;
+      transition: background 0.15s ease;
+    }
+
+    #divider:hover,
+    #divider.dragging {
+      background: var(--divider-hover);
+    }
+
+    #divider::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 32px;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      transition: opacity 0.15s ease;
+      opacity: 0;
+    }
+
+    #divider:hover::after,
+    #divider.dragging::after {
+      opacity: 1;
+    }
+
+    .pane-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 28px;
+      padding: 0 16px;
+      background: var(--pane-header-bg);
+      border-bottom: 1px solid var(--pane-header-border);
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .pane-title {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      color: var(--pane-header-fg);
+      text-transform: uppercase;
+    }
+
+    .config-status {
+      font-size: 11px;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .config-status.valid {
+      color: var(--valid-color);
+    }
+
+    .config-status.invalid {
+      color: var(--error-color);
+    }
+
+    .config-status.idle {
+      color: var(--pane-header-fg);
+    }
+
+    .editor-wrapper {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+      background: var(--editor-bg);
+    }
+
+    .line-numbers {
+      flex: 0 0 48px;
+      padding: 12px 8px 12px 12px;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--editor-line-fg);
+      background: var(--editor-gutter);
+      overflow: hidden;
+      user-select: none;
+      counter-reset: line;
+      white-space: pre;
+      border-right: 1px solid var(--pane-header-border);
+    }
+
+    .line-numbers span {
+      display: block;
+      counter-increment: line;
+    }
+
+    .line-numbers span::before {
+      content: counter(line);
+    }
+
+    #config-editor {
+      flex: 1;
+      padding: 12px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--editor-fg);
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      caret-color: var(--editor-caret);
+      tab-size: 2;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: auto;
+      white-space: pre;
+      overflow-wrap: normal;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+
+    #config-editor::placeholder {
+      color: #5a5a5a;
+      font-style: italic;
+    }
+
+    #config-editor::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    #config-editor::-webkit-scrollbar-track {
+      background: var(--editor-bg);
+    }
+
+    #config-editor::-webkit-scrollbar-thumb {
+      background: #424242;
+      border-radius: 5px;
+      border: 2px solid var(--editor-bg);
+    }
+
+    #config-editor::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    #config-editor::-webkit-scrollbar-corner {
+      background: var(--editor-bg);
+    }
+
+    #config-error {
+      flex: 0 0 0;
+      padding: 0 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 0;
+      color: var(--error-color);
+      background: #2d1b1b;
+      overflow: hidden;
+      transition: flex 0.2s ease, padding 0.2s ease, line-height 0.2s ease;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    #config-error.visible {
+      flex: 0 0 28px;
+      padding: 6px 16px;
+      line-height: 16px;
+    }
+
+    #app {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .playground-fade {
+      animation: pgFadeIn 0.25s ease;
+    }
+
+    @keyframes pgFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .playground-error-overlay {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--error-color);
+      font-size: 14px;
+      padding: 24px;
+      text-align: center;
+      background: #fafafa;
+    }
+
+    @media (max-width: 640px) {
+      .line-numbers { display: none; }
+      .pane-header { height: 24px; padding: 0 10px; }
+      #config-editor { padding: 8px 12px; font-size: 12px; }
+      .gh-link span { display: none; }
+      #app-header .brand span { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header id="app-header">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5A2.5 2.5 0 0 1 4 19.5Z"/>
+        <path d="M8 7h8"/>
+        <path d="M8 11h6"/>
+      </svg>
+      <span>TIDO Viewer Playground</span>
+    </div>
+    <a class="gh-link" href="https://github.com/subugoe/tido" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+      <span>subugoe/tido</span>
+    </a>
+  </header>
+  <div id="playground">
+    <div id="editor-pane">
+      <div class="pane-header">
+        <span class="pane-title">Config</span>
+        <span id="config-status" class="config-status idle">idle</span>
+      </div>
+      <div class="editor-wrapper">
+        <div class="line-numbers" id="line-numbers" aria-hidden="true">1</div>
+        <textarea
+          id="config-editor"
+          spellcheck="false"
+          autocorrect="off"
+          autocapitalize="off"
+          placeholder='{ &quot;panels&quot;: [{ &quot;collection&quot;: &quot;...&quot; }] }'
+        >{
+  "panels": [],
+  "rootCollections": [],
+  "title": "TIDO Playground"
+}</textarea>
+      </div>
+      <div id="config-error"></div>
+    </div>
+    <div id="divider" role="separator" aria-orientation="horizontal" aria-label="Resize panes"></div>
+    <div id="viewer-pane">
+      <div class="pane-header">
+        <span class="pane-title">Viewer</span>
+      </div>
+      <div id="app"></div>
+    </div>
+  </div>
+
+  <script src="dist/tido.min.js"></script>
+  <script>
+    (function () {
+      var editor = document.getElementById('config-editor')
+      var lineNumbers = document.getElementById('line-numbers')
+      var errorEl = document.getElementById('config-error')
+      var statusEl = document.getElementById('config-status')
+      var appEl = document.getElementById('app')
+      var divider = document.getElementById('divider')
+      var editorPane = document.getElementById('editor-pane')
+      var viewerPane = document.getElementById('viewer-pane')
+      var playground = document.getElementById('playground')
+
+      var tidoInstance = null
+      var validConfig = null
+      var applyTimer = null
+      var instanceCounter = 0
+      var isDragging = false
+
+      function updateLineNumbers() {
+        var count = (editor.value.match(/\n/g) || []).length + 1
+        var html = ''
+        for (var i = 1; i <= count; i++) {
+          html += '<span></span>'
+        }
+        lineNumbers.innerHTML = html
+      }
+
+      function syncLineScroll() {
+        lineNumbers.scrollTop = editor.scrollTop
+      }
+
+      function setStatus(state, msg) {
+        statusEl.className = 'config-status ' + state
+        statusEl.textContent = msg
+      }
+
+      function showError(msg) {
+        if (msg) {
+          errorEl.textContent = '\u2716 ' + msg
+          errorEl.classList.add('visible')
+        } else {
+          errorEl.classList.remove('visible')
+          errorEl.textContent = ''
+        }
+      }
+
+      function applyConfig(config) {
+        appEl.innerHTML = ''
+        tidoInstance = null
+
+        var containerId = 'tido-instance-' + (++instanceCounter)
+        var container = document.createElement('div')
+        container.id = containerId
+        container.style.width = '100%'
+        container.style.height = '100%'
+        appEl.appendChild(container)
+
+        var mergedConfig = {}
+        if (config) {
+          for (var k in config) {
+            if (Object.prototype.hasOwnProperty.call(config, k) && k !== 'container') {
+              mergedConfig[k] = config[k]
+            }
+          }
+        }
+        mergedConfig.container = '#' + containerId
+
+        try {
+          tidoInstance = new window.Tido(mergedConfig)
+          container.classList.add('playground-fade')
+        } catch (e) {
+          console.error('TIDO instantiation failed:', e)
+          appEl.innerHTML = ''
+          var errDiv = document.createElement('div')
+          errDiv.className = 'playground-error-overlay'
+          errDiv.textContent = 'Failed to initialize TIDO: ' + (e.message || e)
+          appEl.appendChild(errDiv)
+        }
+      }
+
+      function handleEditorChange() {
+        var raw = editor.value
+        var trimmed = raw.trim()
+
+        if (!trimmed) {
+          if (applyTimer) {
+            clearTimeout(applyTimer)
+            applyTimer = null
+          }
+          showError(null)
+          setStatus('idle', 'idle')
+          validConfig = null
+          return
+        }
+
+        try {
+          var parsed = JSON.parse(trimmed)
+          showError(null)
+          setStatus('valid', '\u2713 valid')
+          validConfig = parsed
+
+          if (applyTimer) {
+            clearTimeout(applyTimer)
+          }
+          applyTimer = setTimeout(function () {
+            applyConfig(parsed)
+            applyTimer = null
+          }, 500)
+        } catch (e) {
+          if (applyTimer) {
+            clearTimeout(applyTimer)
+            applyTimer = null
+          }
+          var msg = e.message || 'Invalid JSON'
+          showError(msg)
+          setStatus('invalid', '\u2717 error')
+          validConfig = null
+        }
+      }
+
+      editor.addEventListener('input', function () {
+        updateLineNumbers()
+        handleEditorChange()
       })
-    }, 200)
-  }
-</script>
+
+      editor.addEventListener('scroll', syncLineScroll)
+
+      editor.addEventListener('keydown', function (e) {
+        if (e.key === 'Tab') {
+          e.preventDefault()
+          var start = editor.selectionStart
+          var end = editor.selectionEnd
+          editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end)
+          editor.selectionStart = editor.selectionEnd = start + 2
+          updateLineNumbers()
+          handleEditorChange()
+        }
+      })
+
+      function initResize(e) {
+        isDragging = true
+        divider.classList.add('dragging')
+        document.body.style.cursor = 'row-resize'
+        document.body.style.userSelect = 'none'
+        document.addEventListener('mousemove', doResize)
+        document.addEventListener('mouseup', stopResize)
+        e.preventDefault()
+      }
+
+      function doResize(e) {
+        if (!isDragging) return
+        var rect = playground.getBoundingClientRect()
+        var totalH = rect.height
+        var y = e.clientY - rect.top
+        var minH = 120
+        var ratio = Math.max(minH / totalH, Math.min(1 - minH / totalH, y / totalH))
+        editorPane.style.flex = '0 0 ' + (ratio * 100) + '%'
+        viewerPane.style.flex = '0 0 ' + ((1 - ratio) * 100) + '%'
+      }
+
+      function stopResize() {
+        if (!isDragging) return
+        isDragging = false
+        divider.classList.remove('dragging')
+        document.body.style.cursor = ''
+        document.body.style.userSelect = ''
+        document.removeEventListener('mousemove', doResize)
+        document.removeEventListener('mouseup', stopResize)
+      }
+
+      divider.addEventListener('mousedown', initResize)
+
+      updateLineNumbers()
+      handleEditorChange()
+    })()
+  </script>
 </body>
 </html>
