@@ -75,6 +75,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const [tooltipOpen, setTooltipOpen] = useState(false)
   const [crossRefAnnotations, setCrossRefAnnotations] = useState<Annotation[]>([])
   const [relatedAnnotations, setRelatedAnnotations] = useState<Annotation[]>([])
+  const [tooltipAnnotations, setTooltipAnnotations] = useState<Annotation[]>([])
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
@@ -321,9 +322,10 @@ const GenericTextRenderer: FC<Props> = memo(({
   function isFilteredAnnotation(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict) {
     // filter Variant Annotations based on witnesses in selectedAnnotationTypes
     // filter all other annotations which have type as key in selectedAnnotation types
-    if (!selectedAnnotationTypes) return true
-
     const annotationType = annotation.body.annotationType
+
+    if (!selectedAnnotationTypes || annotationsConfig.tooltipTypes?.includes(annotationType)) return true
+
     if (annotationType === 'Variant') {
       return selectedAnnotationTypes?.['Variant']?.some(witness => annotation.body.witnesses.includes(witness))
     } else {
@@ -373,16 +375,27 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
-    const normalAnnotations = tooltipTypes.length === 0
-      ? newRelatedAnnotations
-      : newRelatedAnnotations.filter(a => !tooltipTypes.includes((a.body as AnnotationBody).annotationType))
+    let normalAnnotations = []
+    const _tooltipAnnotations = [] as Annotation[]
 
-    const openTooltip = !([0,1].includes(normalAnnotations.length) && [0,1].includes(newRelatedAnnotations.length) && crossRefAnnotations.length === 0)
+    if (tooltipTypes.length === 0) {
+      normalAnnotations = newRelatedAnnotations
+    } else {
+      normalAnnotations = newRelatedAnnotations.filter(a => {
+        const isTooltipAnnotation = tooltipTypes.includes(a.body.annotationType)
+        if (!isTooltipAnnotation) return true
+        _tooltipAnnotations.push(a)
+        return false
+      })
+    }
+
+    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1
 
     if (openTooltip) {
       setTooltipOpen(true)
       setTooltipTargetElement(target as HTMLElement)
-      setRelatedAnnotations(newRelatedAnnotations)
+      setRelatedAnnotations(normalAnnotations)
+      setTooltipAnnotations(_tooltipAnnotations)
       if (target !== activeTargetRef.current)  addActiveTargetStyle(target)
     }
 
@@ -446,6 +459,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         target={tooltipTargetElement}
         crossRefAnnotations={crossRefAnnotations}
         relatedAnnotations={relatedAnnotations}
+        tooltipAnnotations={tooltipAnnotations}
         onClose={closeTooltip}
       />
     </AnnotationPopoverContainer>

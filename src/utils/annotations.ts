@@ -111,7 +111,7 @@ function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, 
   return true
 }
 
-async function getCrossRefInfo(annotation: Annotation) {
+async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
   // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
   const isCrossRefInAnnotation = !getSource(annotation?.target[0]).id.endsWith('.html')
 
@@ -137,7 +137,7 @@ async function getCrossRefInfo(annotation: Annotation) {
     item: source.item,
     textType: isCrossRefInAnnotation ? 'annotation': 'text',
     contentType: refContentType,
-    ...(isCrossRefInAnnotation && { selectedAnnotation: refAnnotation }),
+    ...(isCrossRefInAnnotation && { selectedAnnotation: { annotation: refAnnotation, origin: 'other' } }),
     ...(!isCrossRefInAnnotation && { selector: annotation.body.selector?.value }),
     refItemData
   }

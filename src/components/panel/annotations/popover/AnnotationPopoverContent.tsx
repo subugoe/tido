@@ -1,5 +1,4 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { getCrossRefInfo } from '@/utils/annotations.ts'
 import TooltipItem from '@/components/panel/annotations/popover/items/TooltipItem.tsx'
 import CrossRefItem from '@/components/panel/annotations/popover/items/CrossRefItem.tsx'
@@ -10,16 +9,20 @@ interface Props {
   target: Element,
   crossRefAnnotations: Annotation[],
   relatedAnnotations: Annotation[]
+  tooltipAnnotations: Annotation[]
   onClose: () => void
 }
 
 
-const AnnotationPopoverContent: FC<Props> = ({ target, crossRefAnnotations, relatedAnnotations, onClose }) => {
-
-  const { annotations: annotationsConfig } = useConfig()
+const AnnotationPopoverContent: FC<Props> = ({
+  target,
+  crossRefAnnotations,
+  relatedAnnotations,
+  tooltipAnnotations,
+  onClose,
+}) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
-  const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
   const [crossRefInfos, setCrossRefInfos] = useState<CrossRefInfo[]>([])
   const [loading, setLoading] = useState(true)
@@ -44,10 +47,8 @@ const AnnotationPopoverContent: FC<Props> = ({ target, crossRefAnnotations, rela
       setCrossRefInfos(infos)
     }
 
-    tooltipAnnotationsRef.current = relatedAnnotations.filter(a =>
-      tooltipTypes.includes((a.body as AnnotationBody).annotationType)).sort(sortByDirectTarget)
-    normalAnnotationsRef.current = relatedAnnotations.filter(a =>
-      !tooltipTypes.includes((a.body as AnnotationBody).annotationType)).sort(sortByDirectTarget)
+    tooltipAnnotationsRef.current = tooltipAnnotations.sort(sortByDirectTarget)
+    normalAnnotationsRef.current = relatedAnnotations.sort(sortByDirectTarget)
 
     setLoading(false)
     computeCrossRefInfos(crossRefAnnotations)
