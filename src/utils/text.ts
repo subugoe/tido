@@ -99,7 +99,8 @@ function removeSelectedStyle(target: Element) {
 }
 
 function getAnnotationIds(target: Element) {
-  const value = target.getAttribute(ANNOTATION_IDS_ATTRIBUTE) ?? ''
+  const value = target.getAttribute(ANNOTATION_IDS_ATTRIBUTE)
+  if (!value) return []
   return value.split(',')
 }
 
