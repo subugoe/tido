@@ -89,7 +89,10 @@ const GenericTextRenderer: FC<Props> = memo(({
   const parsedDom: Element = React.useMemo(() => {
     if (htmlString === '') return
     const doc = new DOMParser().parseFromString(`${htmlString}`, 'text/html')
-    return doc.querySelector('body')
+    const body = doc.querySelector('body')
+    const div = doc.createElement('div')
+    div.replaceChildren(...body.childNodes)
+    return div
   }, [htmlString])
 
   // Attach the content of the Document object as children of textWrapperRef.
