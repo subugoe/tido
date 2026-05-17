@@ -12,6 +12,7 @@
   --color-primary: var(--tido-color-primary);
   --color-primary-foreground: var(--tido-color-primary-foreground);
   --color-annotation-hover: var(--annotation-hover);
+  --color-sync-annotation-hover: var(--color-amber-200);
   --color-annotation-selected: var(--annotation-selected);
 
   --color-gray-50: var(--color-zinc-50);
