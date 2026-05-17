@@ -7,7 +7,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 
 
 const MultipleRootFilter: FC = () => {
-  const { setSelectedAnnotationTypes, annotationFilters, setAnnotationFilters } = usePanel()
+  const { setSelectedAnnotationTypes, annotationFilters, setAnnotationFilters, witnesses } = usePanel()
 
   const handleToggle = (path: number[]) => {
     let newFilters: FilterNodeWithSelection[] = [...annotationFilters]
@@ -17,6 +17,7 @@ const MultipleRootFilter: FC = () => {
     let types: AnnotationTypesDict = {}
     newFilters.forEach(node => {
       const nodeTypes = getSelectedTypesFromNode(node)
+      if (Object.hasOwn(nodeTypes, 'Variant')) nodeTypes['Variant'] = witnesses.map(w => w.idno)
       types = { ...types, ...nodeTypes }
     })
     setTimeout(() => setSelectedAnnotationTypes(types), 100)
