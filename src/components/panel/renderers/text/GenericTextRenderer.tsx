@@ -394,12 +394,12 @@ const GenericTextRenderer: FC<Props> = memo(({
       if (targetEntry.annotations[0].id === selectedAnnotationRef.current?.annotation.id) {
         setSelectedAnnotation(null)
         selectedAnnotationRef.current = null
-      }
-      else {
+      } else {
         const selectedAnnotation = {
           annotation: normalAnnotations[0],
           origin: 'text'
-        }
+        } as SelectedAnnotation
+
         setSelectedAnnotation(selectedAnnotation)
         selectedAnnotationRef.current = selectedAnnotation
         if (onSelect) onSelect()
