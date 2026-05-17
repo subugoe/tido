@@ -303,8 +303,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     const target = e.currentTarget as HTMLElement
     const idsArray = getHoveredAnnotationsIds(target, targetsRef.current)
     if (idsArray.length === 0) return
-
-    setHoveredAnnotations(idsArray)
+    hoveredAnnotationsRef.current = idsArray
+    setHoveredAnnotations(hoveredAnnotationsRef.current)
   }
 
   const onMouseLeaveTarget = (e: Event) => {
@@ -314,7 +314,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     const idsArray = getAnnotationIds(target)
     if (idsArray.length === 0) return
 
-    setHoveredAnnotations(hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null)
+    hoveredAnnotationsRef.current = hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null
+    setHoveredAnnotations(hoveredAnnotationsRef.current)
   }
 
   function isFilteredAnnotation(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict) {
@@ -325,8 +326,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     const annotationType = annotation.body.annotationType
     if (annotationType === 'Variant') {
       return selectedAnnotationTypes?.['Variant']?.some(witness => annotation.body.witnesses.includes(witness))
-    }
-    else {
+    } else {
       return Object.keys(selectedAnnotationTypes).includes(annotationType)
     }
   }

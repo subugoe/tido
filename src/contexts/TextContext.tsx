@@ -1,8 +1,8 @@
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useState, ReactNode, SetStateAction, Dispatch } from 'react'
 
 type TextProviderState = {
   hoveredAnnotations: string[] | null
-  setHoveredAnnotations: (value: string[] | null) => void
+  setHoveredAnnotations:  Dispatch<SetStateAction<string[]>>
   loadingText: boolean
   setLoadingText: (value: boolean) => void
 }
@@ -14,7 +14,7 @@ export const TextProvider = ({
 }: {
   children: ReactNode
 }) => {
-  const [hoveredAnnotations, setHoveredAnnotations] = useState(null)
+  const [hoveredAnnotations, setHoveredAnnotations] = useState<string[] | null>(null)
   const [loadingText, setLoadingText] = useState(false)
 
   return (
