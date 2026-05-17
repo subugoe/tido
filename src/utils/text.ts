@@ -240,7 +240,7 @@ function getHoveredAnnotationsIds(target: HTMLElement, targets: HTMLElement[]) {
 
     parentEl = parentEl.parentElement
   }
-  return idsArray
+  return [...new Set(idsArray)]
 }
 
 function isSelected(target: Element) {
