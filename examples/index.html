@@ -14,6 +14,11 @@
     :root {
       --editor-bg: #1e1e1e;
       --editor-fg: #d4d4d4;
+      --hl-key: #9cdcfe;
+      --hl-string: #ce9178;
+      --hl-number: #b5cea8;
+      --hl-bool: #569cd6;
+      --hl-punct: #d4d4d4;
       --editor-line-bg: #252526;
       --editor-line-fg: #858585;
       --editor-caret: #aeafad;
@@ -102,6 +107,38 @@
       height: 18px;
       flex-shrink: 0;
       fill: currentColor;
+    }
+
+    #preset-select {
+      background: #252526;
+      color: #cccccc;
+      border: 1px solid #3c3c3c;
+      border-radius: 4px;
+      padding: 4px 28px 4px 10px;
+      font-size: 13px;
+      font-family: var(--font-ui);
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%23888888'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      transition: border-color 0.15s ease;
+    }
+
+    #preset-select:hover {
+      border-color: #555;
+    }
+
+    #preset-select:focus-visible {
+      border-color: var(--divider-hover);
+    }
+
+    #preset-select option {
+      background: #2d2d2d;
+      color: #cccccc;
     }
 
     #playground {
@@ -212,6 +249,13 @@
       background: var(--editor-bg);
     }
 
+    .editor-container {
+      flex: 1;
+      display: flex;
+      position: relative;
+      min-height: 0;
+    }
+
     .line-numbers {
       flex: 0 0 48px;
       padding: 12px 8px 12px 12px;
@@ -243,7 +287,7 @@
       font-family: var(--font-mono);
       font-size: 13px;
       line-height: 1.55;
-      color: var(--editor-fg);
+      color: transparent;
       background: transparent;
       border: none;
       outline: none;
@@ -256,6 +300,12 @@
       overflow-wrap: normal;
       overflow-x: auto;
       overflow-y: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    #config-editor::selection {
+      background: #264f78;
     }
 
     #config-editor::placeholder {
@@ -286,6 +336,38 @@
       background: var(--editor-bg);
     }
 
+    .highlight-overlay {
+      position: absolute;
+      inset: 0;
+      margin: 0;
+      padding: 12px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--editor-fg);
+      background: transparent;
+      pointer-events: none;
+      white-space: pre;
+      overflow: hidden;
+      tab-size: 2;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: auto;
+      overflow-wrap: normal;
+      z-index: 1;
+    }
+
+    .highlight-overlay code {
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+    }
+
+    .hl-key { color: var(--hl-key); }
+    .hl-string { color: var(--hl-string); }
+    .hl-number { color: var(--hl-number); }
+    .hl-bool { color: var(--hl-bool); }
+    .hl-punct { color: var(--hl-punct); }
+
     #config-error {
       flex: 0 0 0;
       padding: 0 16px;
@@ -310,6 +392,7 @@
       flex: 1;
       overflow: hidden;
       position: relative;
+      padding: 20px;
     }
 
     .playground-fade {
@@ -337,8 +420,10 @@
       .line-numbers { display: none; }
       .pane-header { height: 24px; padding: 0 10px; }
       #config-editor { padding: 8px 12px; font-size: 12px; }
+      .highlight-overlay { padding: 8px 12px; font-size: 12px; }
       .gh-link span { display: none; }
       #app-header .brand span { font-size: 12px; }
+      #preset-select { font-size: 12px; max-width: 140px; }
     }
   </style>
 </head>
@@ -352,6 +437,10 @@
       </svg>
       <span>TIDO Viewer Playground</span>
     </div>
+    <select id="preset-select">
+      <option value="custom">Custom</option>
+      <option value="example-collection">Example Collection</option>
+    </select>
     <a class="gh-link" href="https://github.com/subugoe/tido" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub">
       <svg viewBox="0 0 16 16" aria-hidden="true">
         <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
@@ -367,7 +456,9 @@
       </div>
       <div class="editor-wrapper">
         <div class="line-numbers" id="line-numbers" aria-hidden="true">1</div>
-        <textarea
+        <div class="editor-container">
+          <pre class="highlight-overlay" id="highlight-overlay" aria-hidden="true"><code id="highlight-code"></code></pre>
+          <textarea
           id="config-editor"
           spellcheck="false"
           autocorrect="off"
@@ -378,6 +469,7 @@
   "rootCollections": [],
   "title": "TIDO Playground"
 }</textarea>
+        </div>
       </div>
       <div id="config-error"></div>
     </div>
@@ -402,12 +494,97 @@
       var editorPane = document.getElementById('editor-pane')
       var viewerPane = document.getElementById('viewer-pane')
       var playground = document.getElementById('playground')
+      var highlightOverlay = document.getElementById('highlight-overlay')
+      var highlightCode = document.getElementById('highlight-code')
 
       var tidoInstance = null
       var validConfig = null
       var applyTimer = null
       var instanceCounter = 0
       var isDragging = false
+      var presetSelect = document.getElementById('preset-select')
+
+      var presets = {
+        'example-collection': {
+          "panels": [
+            {
+              "collection": "http://localhost:2222/api/collections/example.json"
+            }
+          ],
+          "rootCollections": [
+            "http://localhost:2222/api/collections/example.json"
+          ],
+          "title": "Example Collection"
+        }
+      }
+
+      function highlightJSON(str) {
+        var out = []
+        var i = 0
+        while (i < str.length) {
+          var ch = str[i]
+          if (ch === '"') {
+            var start = i
+            i++
+            while (i < str.length && (str[i] !== '"' || str[i - 1] === '\\')) i++
+            i++
+            var raw = str.slice(start, i)
+            var esc = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            var isKey = false
+            var j = i
+            while (j < str.length && str[j] <= ' ') j++
+            isKey = str[j] === ':'
+            out.push('<span class="' + (isKey ? 'hl-key' : 'hl-string') + '">' + esc + '</span>')
+          } else if (ch >= '0' && ch <= '9' || ch === '-' && i + 1 < str.length && str[i + 1] >= '0' && str[i + 1] <= '9') {
+            var start = i
+            if (str[i] === '-') i++
+            while (i < str.length && (str[i] >= '0' && str[i] <= '9' || str[i] === '.')) i++
+            if (i < str.length && (str[i] === 'e' || str[i] === 'E')) {
+              i++
+              if (i < str.length && (str[i] === '+' || str[i] === '-')) i++
+              while (i < str.length && str[i] >= '0' && str[i] <= '9') i++
+            }
+            var raw = str.slice(start, i)
+            out.push('<span class="hl-number">' + raw + '</span>')
+          } else if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z') {
+            var start = i
+            while (i < str.length && (str[i] >= 'a' && str[i] <= 'z' || str[i] >= 'A' && str[i] <= 'Z')) i++
+            var word = str.slice(start, i)
+            if (word === 'true' || word === 'false' || word === 'null') {
+              out.push('<span class="hl-bool">' + word + '</span>')
+            } else {
+              out.push(word)
+            }
+          } else if (ch === '{' || ch === '}' || ch === '[' || ch === ']' || ch === ':' || ch === ',') {
+            out.push('<span class="hl-punct">' + ch + '</span>')
+            i++
+          } else {
+            if (ch === '&') out.push('&amp;')
+            else if (ch === '<') out.push('&lt;')
+            else if (ch === '>') out.push('&gt;')
+            else out.push(ch)
+            i++
+          }
+        }
+        return out.join('')
+      }
+
+      function updateHighlight() {
+        highlightCode.innerHTML = highlightJSON(editor.value)
+      }
+
+      function loadPreset(value) {
+        var json = presets[value]
+        if (!json) return
+        editor.value = JSON.stringify(json, null, 2)
+        updateLineNumbers()
+        updateHighlight()
+        handleEditorChange()
+      }
+
+      presetSelect.addEventListener('change', function () {
+        loadPreset(this.value)
+      })
 
       function updateLineNumbers() {
         var count = (editor.value.match(/\n/g) || []).length + 1
@@ -416,10 +593,6 @@
           html += '<span></span>'
         }
         lineNumbers.innerHTML = html
-      }
-
-      function syncLineScroll() {
-        lineNumbers.scrollTop = editor.scrollTop
       }
 
       function setStatus(state, msg) {
@@ -513,10 +686,15 @@
 
       editor.addEventListener('input', function () {
         updateLineNumbers()
+        updateHighlight()
         handleEditorChange()
       })
 
-      editor.addEventListener('scroll', syncLineScroll)
+      editor.addEventListener('scroll', function () {
+        lineNumbers.scrollTop = editor.scrollTop
+        highlightOverlay.scrollTop = editor.scrollTop
+        highlightOverlay.scrollLeft = editor.scrollLeft
+      })
 
       editor.addEventListener('keydown', function (e) {
         if (e.key === 'Tab') {
@@ -526,6 +704,7 @@
           editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end)
           editor.selectionStart = editor.selectionEnd = start + 2
           updateLineNumbers()
+          updateHighlight()
           handleEditorChange()
         }
       })
@@ -564,6 +743,7 @@
       divider.addEventListener('mousedown', initResize)
 
       updateLineNumbers()
+      updateHighlight()
       handleEditorChange()
     })()
   </script>
