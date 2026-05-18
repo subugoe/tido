@@ -5,15 +5,15 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "develop", "next" ]
+    branches: [ "develop", "main" ]
   pull_request:
-    branches: [ "develop", "main", "next" ]
+    branches: [ "develop", "main" ]
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
      matrix:
-       node-version: [20, 22]
+       node-version: [22, 24]
     steps:
     - uses: actions/checkout@v4
     - name: Get npm cache directory
