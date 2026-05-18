@@ -28,6 +28,8 @@ const PanelViewsMenu: FC = () => {
   }, [panelState.panelViews])
 
   function update(index: number, visible: boolean) {
+    if (!visible && data.filter(v => v.visible).length === 1) return
+
     data[index].visible = visible
     updatePanel({
       panelViews: data.map(({ visible }, i) => ({ ...panelState.panelViews[i], visible }))
