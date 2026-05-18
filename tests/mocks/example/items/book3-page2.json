@@ -13,7 +13,7 @@
   ],
   "images": [
     {
-      "id": "http://localhost:8181/text-api.png",
+      "id": "http://localhost:8181/example/text-api.png",
       "license": "CC0-1.0",
       "mimetype": "image/png"
     }
