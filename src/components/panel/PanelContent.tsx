@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
@@ -7,7 +7,7 @@ import ImageView from '@/components/panel/views/image/ImageView.tsx'
 import { TextProvider } from '@/contexts/TextContext.tsx'
 import TextView from '@/components/panel/views/text/TextView.tsx'
 import 'allotment/dist/style.css'
-import { Allotment } from 'allotment'
+import { Allotment, AllotmentHandle } from 'allotment'
 import SidebarView from '@/components/panel/views/sidebar/SidebarView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
@@ -16,6 +16,11 @@ const PanelContent: FC = React.memo(() => {
   const { panelState, resizer, error } = usePanel()
   const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
+  const allotmentRef = useRef<AllotmentHandle>(null)
+
+  const visibleCount = panelState.panelViews.filter(v => v.visible ?? true).length
+  // equal preferred size is computed before rendering - when we call allotment.reset() -> Allotment uses the updated preferred sizes
+  const equalPreferredSize = visibleCount > 0 ? `${100 / visibleCount}%` : '100%'
 
   useEffect(() => {
     const panes = panelState.panelViews.map((v, i) => {
@@ -25,8 +30,8 @@ const PanelContent: FC = React.memo(() => {
       else return <TextView key={key} viewIndex={i} visible={visible} />
     })
 
+    allotmentRef.current?.reset()
     setContentPanes(panes)
-
   }, [panelState.panelViews])
 
   useEffect(() => {
@@ -51,6 +56,8 @@ const PanelContent: FC = React.memo(() => {
 
 
   if (error) return <PanelError error={error} resetErrorBoundary={() => {}} />
+
+
   return (
     <TextProvider>
       <div
@@ -62,10 +69,10 @@ const PanelContent: FC = React.memo(() => {
           <div className="main-content flex flex-col h-full @container/panel">
             <PanelHeader />
             <div className="flex-1">
-              <Allotment proportionalLayout={true}>
+              <Allotment ref={allotmentRef} proportionalLayout={true}>
                 {contentPanes.map((pane, index) => {
                   const visible = panelState.panelViews[index]?.visible ?? true
-                  return <Allotment.Pane key={pane.key} visible={visible}>
+                  return <Allotment.Pane key={pane.key} visible={visible} preferredSize={equalPreferredSize}>
                     {pane}
                   </Allotment.Pane>
                 })}
