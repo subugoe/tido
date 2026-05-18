@@ -485,58 +485,60 @@
   <script src="dist/tido.min.js"></script>
   <script>
     (function () {
-      var editor = document.getElementById('config-editor')
-      var lineNumbers = document.getElementById('line-numbers')
-      var errorEl = document.getElementById('config-error')
-      var statusEl = document.getElementById('config-status')
-      var appEl = document.getElementById('app')
-      var divider = document.getElementById('divider')
-      var editorPane = document.getElementById('editor-pane')
-      var viewerPane = document.getElementById('viewer-pane')
-      var playground = document.getElementById('playground')
-      var highlightOverlay = document.getElementById('highlight-overlay')
-      var highlightCode = document.getElementById('highlight-code')
+      const editor = document.getElementById('config-editor')
+      const lineNumbers = document.getElementById('line-numbers')
+      const errorEl = document.getElementById('config-error')
+      const statusEl = document.getElementById('config-status')
+      const appEl = document.getElementById('app')
+      const divider = document.getElementById('divider')
+      const editorPane = document.getElementById('editor-pane')
+      const viewerPane = document.getElementById('viewer-pane')
+      const playground = document.getElementById('playground')
+      const highlightOverlay = document.getElementById('highlight-overlay')
+      const highlightCode = document.getElementById('highlight-code')
 
-      var tidoInstance = null
-      var validConfig = null
-      var applyTimer = null
-      var instanceCounter = 0
-      var isDragging = false
-      var presetSelect = document.getElementById('preset-select')
+      let tidoInstance = null
+      let validConfig = null
+      let applyTimer = null
+      let instanceCounter = 0
+      let isDragging = false
+      const presetSelect = document.getElementById('preset-select')
+      const baseUrl = window.location.href
 
-      var presets = {
+
+      const presets = {
         'example-collection': {
           "panels": [
             {
-              "collection": "http://localhost:2222/api/collections/example.json"
+              "collection": `${baseUrl}api/collections/example.json`
             }
           ],
           "rootCollections": [
-            "http://localhost:2222/api/collections/example.json"
+            `${baseUrl}api/collections/example.json`
           ],
           "title": "Example Collection"
         }
       }
 
       function highlightJSON(str) {
-        var out = []
-        var i = 0
+        const out = []
+        let i = 0
         while (i < str.length) {
-          var ch = str[i]
+          const ch = str[i]
           if (ch === '"') {
-            var start = i
+            const start = i
             i++
             while (i < str.length && (str[i] !== '"' || str[i - 1] === '\\')) i++
             i++
-            var raw = str.slice(start, i)
-            var esc = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            var isKey = false
-            var j = i
+            const raw = str.slice(start, i)
+            const esc = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            let isKey = false
+            let j = i
             while (j < str.length && str[j] <= ' ') j++
             isKey = str[j] === ':'
             out.push('<span class="' + (isKey ? 'hl-key' : 'hl-string') + '">' + esc + '</span>')
           } else if (ch >= '0' && ch <= '9' || ch === '-' && i + 1 < str.length && str[i + 1] >= '0' && str[i + 1] <= '9') {
-            var start = i
+            const start = i
             if (str[i] === '-') i++
             while (i < str.length && (str[i] >= '0' && str[i] <= '9' || str[i] === '.')) i++
             if (i < str.length && (str[i] === 'e' || str[i] === 'E')) {
@@ -544,12 +546,12 @@
               if (i < str.length && (str[i] === '+' || str[i] === '-')) i++
               while (i < str.length && str[i] >= '0' && str[i] <= '9') i++
             }
-            var raw = str.slice(start, i)
+            const raw = str.slice(start, i)
             out.push('<span class="hl-number">' + raw + '</span>')
           } else if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z') {
-            var start = i
+            const start = i
             while (i < str.length && (str[i] >= 'a' && str[i] <= 'z' || str[i] >= 'A' && str[i] <= 'Z')) i++
-            var word = str.slice(start, i)
+            const word = str.slice(start, i)
             if (word === 'true' || word === 'false' || word === 'null') {
               out.push('<span class="hl-bool">' + word + '</span>')
             } else {
@@ -574,7 +576,7 @@
       }
 
       function loadPreset(value) {
-        var json = presets[value]
+        const json = presets[value]
         if (!json) return
         editor.value = JSON.stringify(json, null, 2)
         updateLineNumbers()
@@ -587,9 +589,9 @@
       })
 
       function updateLineNumbers() {
-        var count = (editor.value.match(/\n/g) || []).length + 1
-        var html = ''
-        for (var i = 1; i <= count; i++) {
+        const count = (editor.value.match(/\n/g) || []).length + 1
+        let html = ''
+        for (let i = 1; i <= count; i++) {
           html += '<span></span>'
         }
         lineNumbers.innerHTML = html
@@ -614,16 +616,16 @@
         appEl.innerHTML = ''
         tidoInstance = null
 
-        var containerId = 'tido-instance-' + (++instanceCounter)
-        var container = document.createElement('div')
+        const containerId = 'tido-instance-' + (++instanceCounter)
+        const container = document.createElement('div')
         container.id = containerId
         container.style.width = '100%'
         container.style.height = '100%'
         appEl.appendChild(container)
 
-        var mergedConfig = {}
+        const mergedConfig = {}
         if (config) {
-          for (var k in config) {
+          for (const k in config) {
             if (Object.prototype.hasOwnProperty.call(config, k) && k !== 'container') {
               mergedConfig[k] = config[k]
             }
@@ -637,7 +639,7 @@
         } catch (e) {
           console.error('TIDO instantiation failed:', e)
           appEl.innerHTML = ''
-          var errDiv = document.createElement('div')
+          const errDiv = document.createElement('div')
           errDiv.className = 'playground-error-overlay'
           errDiv.textContent = 'Failed to initialize TIDO: ' + (e.message || e)
           appEl.appendChild(errDiv)
@@ -645,8 +647,8 @@
       }
 
       function handleEditorChange() {
-        var raw = editor.value
-        var trimmed = raw.trim()
+        const raw = editor.value
+        const trimmed = raw.trim()
 
         if (!trimmed) {
           if (applyTimer) {
@@ -660,7 +662,7 @@
         }
 
         try {
-          var parsed = JSON.parse(trimmed)
+          const parsed = JSON.parse(trimmed)
           showError(null)
           setStatus('valid', '\u2713 valid')
           validConfig = parsed
@@ -677,7 +679,7 @@
             clearTimeout(applyTimer)
             applyTimer = null
           }
-          var msg = e.message || 'Invalid JSON'
+          const msg = e.message || 'Invalid JSON'
           showError(msg)
           setStatus('invalid', '\u2717 error')
           validConfig = null
@@ -699,8 +701,8 @@
       editor.addEventListener('keydown', function (e) {
         if (e.key === 'Tab') {
           e.preventDefault()
-          var start = editor.selectionStart
-          var end = editor.selectionEnd
+          const start = editor.selectionStart
+          const end = editor.selectionEnd
           editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end)
           editor.selectionStart = editor.selectionEnd = start + 2
           updateLineNumbers()
@@ -721,11 +723,11 @@
 
       function doResize(e) {
         if (!isDragging) return
-        var rect = playground.getBoundingClientRect()
-        var totalH = rect.height
-        var y = e.clientY - rect.top
-        var minH = 120
-        var ratio = Math.max(minH / totalH, Math.min(1 - minH / totalH, y / totalH))
+        const rect = playground.getBoundingClientRect()
+        const totalH = rect.height
+        const y = e.clientY - rect.top
+        const minH = 120
+        const ratio = Math.max(minH / totalH, Math.min(1 - minH / totalH, y / totalH))
         editorPane.style.flex = '0 0 ' + (ratio * 100) + '%'
         viewerPane.style.flex = '0 0 ' + ((1 - ratio) * 100) + '%'
       }
