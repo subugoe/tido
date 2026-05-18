@@ -11,7 +11,7 @@ const args = Object.fromEntries(
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
 
 const srcUrl = args.srcUrl ?? 'http://localhost:8181/example'
-const dstUrl = args.dstUrl === 'gh' ? pkg.homepage : (args.dstUrl ?? 'http://localhost:2222/api')
+const dstUrl = args.dstUrl === 'gh' ? `${pkg.homepage}/api` : (args.dstUrl ?? 'http://localhost:2222/api')
 
 const src = 'tests/mocks/example'
 const dst = 'examples/api'
