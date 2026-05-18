@@ -58,6 +58,7 @@ jobs:
           npm ci
           npm run build
           cp -r dist/ examples/dist
+          node .build/copy-api-mocks.js --dstUrl=gh
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
