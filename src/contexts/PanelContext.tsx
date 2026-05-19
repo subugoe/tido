@@ -191,7 +191,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         }
       }
 
-      const resultPanelViews: PanelView[] =
+      // next line we prioritize the views changed from the user on the current panel. I.e toggle off views and navigate to a new item on same panel
+      // we should preserve the selected views from user for this panel
+      const resultPanelViews: PanelView[] = panelState.panelViews && panelState.panelViews.length > 0 ? panelState.panelViews:
         config.views && config.views.length > 0
           ? config.views.map((view, i) => ({
             ...(panelViewsConfig[i] ?? {}),
