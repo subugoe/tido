@@ -38,21 +38,27 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
 
   useEffect(() => {
     async function initApp() {
-      setLoading(true)
-      const { config, errors } = await mergeAndValidateConfig(userConfig, defaultConfig)
-      if (Object.keys(errors).length > 0) console.error(errors)
-      initI18n(config.translations, config.lang)
-      createThemeStyles(config)
+      try {
+        setLoading(true)
+        const { config, errors } = await mergeAndValidateConfig(userConfig, defaultConfig)
+        if (Object.keys(errors).length > 0) console.error(errors)
+        initI18n(config.translations, config.lang)
+        createThemeStyles(config)
 
-      createTreeNodes(config.rootCollections)
+        createTreeNodes(config.rootCollections)
 
-      // add rootCollection in Collections map
-      config.rootCollections.forEach((collectionUrl, i) => {
-        promiseWithCache(`initCollection${i}`, () => useDataStore.getState().initCollection(collectionUrl))
-      })
+        setConfig(config)
+        await Promise.all(
+          config.rootCollections.map((collectionUrl, i) =>
+            promiseWithCache(`initCollection${i}`, () => useDataStore.getState().initCollection(collectionUrl))
+          )
+        )
 
-      setConfig(config)
-      setLoading(false)
+      } catch(e) {
+        console.error(e)
+      } finally {
+        setTimeout(() => setLoading(false), 400)
+      }
     }
 
     initApp()
