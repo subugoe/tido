@@ -13,7 +13,7 @@ import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 
 const PanelContent: FC = React.memo(() => {
-  const { panelState, resizer, error } = usePanel()
+  const { panelState, resizer, error, init } = usePanel()
   const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
   const allotmentRef = useRef<AllotmentHandle>(null)
@@ -55,8 +55,7 @@ const PanelContent: FC = React.memo(() => {
   }, [panelState.showSidebar])
 
 
-  if (error) return <PanelError error={error} resetErrorBoundary={() => {}} />
-
+  if (error) return <PanelError error={error} resetErrorBoundary={() => init(panelState.config)} />
 
   return (
     <TextProvider>
