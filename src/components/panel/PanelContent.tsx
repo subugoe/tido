@@ -11,9 +11,12 @@ import { Allotment, AllotmentHandle } from 'allotment'
 import SidebarView from '@/components/panel/views/sidebar/SidebarView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
+import Loading from '@/components/ui/loading.tsx'
+import { useTranslation } from 'react-i18next'
 
 const PanelContent: FC = React.memo(() => {
-  const { panelState, resizer, error, init } = usePanel()
+  const { panelState, resizer, error, init, loading } = usePanel()
+  const { t } = useTranslation()
   const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
   const allotmentRef = useRef<AllotmentHandle>(null)
@@ -54,6 +57,12 @@ const PanelContent: FC = React.memo(() => {
     }
   }, [panelState.showSidebar])
 
+  if (loading) return <div className="w-full h-full flex pt-[30%] justify-center bg-gray-100">
+    <div>
+      {t('loading_data')}...
+      <div><Loading size={36} /> </div>
+    </div>
+  </div>
 
   if (error) return <PanelError error={error} resetErrorBoundary={() => init(panelState.config)} />
 
