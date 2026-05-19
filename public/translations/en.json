@@ -84,6 +84,7 @@
     "report_bug": "Report A Bug",
     "source_code": "Source Code",
     "retry": "Retry",
+    "loading_data": "Loading data",
     "text_loading_failed": "Text loading failed",
     "dismiss": "Dismiss",
     "text_not_displayed_correctly": "The text is probably not displayed correctly because it contained unallowed HTML elements.",
