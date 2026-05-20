@@ -62,8 +62,11 @@ class PanelResizer {
       this.sidebarEl.style.width = `${this.sidebarWidth}px`
     } else {
       this.mainContentEl.style.width = `${newWidth - PANEL_BORDER_WIDTH * 2}px`
-      this.sidebarEl.style.left = `${newWidth - PANEL_BORDER_WIDTH * 2}px`
-      this.sidebarEl.style.width = '0px'
+      if (this.sidebarEl) {
+        // when Panel is in error state -> PanelError is shown, Sidebar view is not mounted -> we need this check
+        this.sidebarEl.style.left = `${newWidth - PANEL_BORDER_WIDTH * 2}px`
+        this.sidebarEl.style.width = '0px'
+      }
     }
   }
 
