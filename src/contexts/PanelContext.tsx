@@ -34,6 +34,7 @@ interface PanelContextType {
   setAnnotationFilters:  Dispatch<SetStateAction<FilterNodeWithSelection[]>>,
   selectedAnnotationTypes: AnnotationTypesDict | null,
   setSelectedAnnotationTypes: (value: AnnotationTypesDict) => void,
+  setError : (error: CustomError | null) => void,
   annotations: Annotation[] | null,
   selectedAnnotation: SelectedAnnotation | null,
   setSelectedAnnotation: (value: SelectedAnnotation | null) => void
@@ -410,6 +411,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       setAnnotationsMode,
       getScroller: getScroller,
       error,
+      setError,
       annotationsError,
       annotationsLoading,
       matchedAnnotationsMaps,

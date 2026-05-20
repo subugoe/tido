@@ -15,7 +15,7 @@ import Loading from '@/components/ui/loading.tsx'
 import { useTranslation } from 'react-i18next'
 
 const PanelContent: FC = React.memo(() => {
-  const { panelState, resizer, error, init, loading } = usePanel()
+  const { init, panelState, resizer, error, loading } = usePanel()
   const { t } = useTranslation()
   const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
@@ -57,25 +57,27 @@ const PanelContent: FC = React.memo(() => {
     }
   }, [panelState.showSidebar])
 
-  if (loading) return <div className="main-content w-full h-full flex pt-[30%] justify-center bg-gray-100">
-    <div>
-      {t('loading_data')}...
-      <div><Loading size={36} /> </div>
-    </div>
-  </div>
 
-  if (error) return <PanelError error={error} resetErrorBoundary={() => init(panelState.config)} />
+  if (error && !loading) return <PanelError error={error} resetErrorBoundary={() =>  init(panelState.config)} />
 
-  return (
-    <TextProvider>
-      <div
-        className={`h-full flex flex-col relative overflow-hidden`} style={{
-          '--sash-hover-size': '2px',
-          '--focus-border': 'rgb(var(--tido-color-primary))'
-        } as React.CSSProperties}>
-        <div className="h-full w-full overflow-hidden relative" data-cy="panel-container">
-          <div className="main-content flex flex-col h-full @container/panel">
-            <PanelHeader />
+  return (<TextProvider>
+    <div
+      className={`h-full flex flex-col relative overflow-hidden`} style={{
+        '--sash-hover-size': '2px',
+        '--focus-border': 'rgb(var(--tido-color-primary))'
+      } as React.CSSProperties}>
+      <div className="h-full w-full overflow-hidden relative" data-cy="panel-container">
+        {loading &&
+          <div className="absolute inset-0 flex justify-center top-[30%] z-10">
+            <div className="text-center">
+              {t('loading_panel_data')}
+              <div><Loading size={36} /></div>
+            </div>
+          </div>
+        }
+        <div className="main-content flex flex-col h-full @container/panel">
+          <PanelHeader />
+          {!loading && <>
             <div className="flex-1">
               <Allotment ref={allotmentRef} proportionalLayout={true}>
                 {contentPanes.map((pane, index) => {
@@ -86,15 +88,16 @@ const PanelContent: FC = React.memo(() => {
                 })}
               </Allotment>
             </div>
-          </div>
-          <div className="sidebar absolute h-full top-0">
-            <div className="absolute inset-y-0 left-0 w-px bg-border z-40" />
-            { showSidebarContent && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle /> }
-            { showSidebarContent && <SidebarView /> }
-          </div>
+          </>}
+        </div>
+        <div className="sidebar absolute h-full top-0">
+          <div className="absolute inset-y-0 left-0 w-px bg-border z-40" />
+          { showSidebarContent && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle /> }
+          { showSidebarContent && <SidebarView /> }
         </div>
       </div>
-    </TextProvider>
+    </div>
+  </TextProvider>
   )
 })
 

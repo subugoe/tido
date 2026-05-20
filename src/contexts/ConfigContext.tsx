@@ -57,7 +57,7 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
       } catch(e) {
         console.error(e)
       } finally {
-        setTimeout(() => setLoading(false), 400)
+        setLoading(false)
       }
     }
 
