@@ -89,6 +89,7 @@
     "report_bug": "Fehler melden",
     "source_code": "Source Code",
     "retry": "Erneut versuchen",
+    "loading_panel_data": "Daten des Panels werden geladen",
     "text_loading_failed": "Text konnte nicht geladen werden",
     "dismiss": "Verwerfen",
     "text_not_displayed_correctly": "Der Text wird vermutlich nicht korrekt dargestellt, da er unerlaubte HTML-Elemente enthielt.",

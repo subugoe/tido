@@ -43,10 +43,13 @@ const GlobalTree: FC = () => {
 
   useEffect(() => {
     const loadNodes = async (nodes: TreeNode[]) => {
-      const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? [await getExpandedNode(nodes[0])] : []
-      setTreeNodes(treeNodes)
+      try {
+        const treeNodes = nodes.length > 1 ? nodes : nodes.length === 1 ? [await getExpandedNode(nodes[0])] : []
+        setTreeNodes(treeNodes)
+      } catch {
+        console.error('error while loading data in Global tree')
+      }
     }
-
     loadNodes(nodes)
   }, [nodes])
 
