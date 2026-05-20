@@ -57,7 +57,7 @@ const PanelContent: FC = React.memo(() => {
     }
   }, [panelState.showSidebar])
 
-  if (loading) return <div className="w-full h-full flex pt-[30%] justify-center bg-gray-100">
+  if (loading) return <div className="main-content w-full h-full flex pt-[30%] justify-center bg-gray-100">
     <div>
       {t('loading_data')}...
       <div><Loading size={36} /> </div>
