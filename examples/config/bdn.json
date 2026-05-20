@@ -108,10 +108,10 @@
   "showCrossRefLabels": true,
   "panels": [
     {
-      "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
+      "collection": "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/collections/griesbach"
     }
   ],
   "rootCollections": [
-    "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/griesbach/collection.json"
+    "https://bdnportal.d.sub.uni-goettingen.de/api/textapi/collections/all"
   ]
 }

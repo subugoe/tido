@@ -21,8 +21,8 @@
   },
   "panels": [
     {
-      "collection": "https://textapi.mha.d.sub.uni-goettingen.de/api/mha/collection.json",
-      "manifest": "https://textapi.mha.d.sub.uni-goettingen.de/api/mha/MHA01/manifest.json"
+      "collection": "https://textapi.mha.d.sub.uni-goettingen.de/api/collections/all",
+      "manifest": "https://textapi.mha.d.sub.uni-goettingen.de/api/manifests/MHA01"
     }
   ],
   "panelViews": [
@@ -61,6 +61,6 @@
   },
   "showContentTypeToggle": false,
   "rootCollections": [
-    "https://textapi.mha.d.sub.uni-goettingen.de/api/mha/collection.json"
+    "https://textapi.mha.d.sub.uni-goettingen.de/api/collections/all"
   ]
 }
