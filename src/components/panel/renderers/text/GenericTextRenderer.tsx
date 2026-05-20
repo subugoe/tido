@@ -47,7 +47,7 @@ interface Props {
   source: string
   onSelect?: () => void
   ignoreFilters?: boolean
-  paddingTop?: boolean
+  paddingTop?: number // tailwind scale value i.e 16 for pt-16
 }
 const GenericTextRenderer: FC<Props> = memo(({
   htmlString,
@@ -56,7 +56,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   source,
   onSelect,
   ignoreFilters = false,
-  paddingTop = false
+  paddingTop = 0
 }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
@@ -452,7 +452,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     activeTargetRef.current = null
   }
 
-  return <div data-text-wrapper ref={textWrapperRef} className={`relative ${paddingTop ? 'pt-16' : 'pt-2'}`}>
+  return <div data-text-wrapper ref={textWrapperRef} className="relative" style={{ paddingTop: `${paddingTop * 0.25}rem` }}>
     <AnnotationPopoverContainer
       target={tooltipTargetElement}
       wrapper={textWrapperRef.current}
