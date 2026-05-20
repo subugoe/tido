@@ -8,7 +8,8 @@
   <title>TIDO Playground</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
   <link rel="stylesheet" href="dist/tido.min.css">
   <style>
     :root {
@@ -169,13 +170,35 @@
       position: relative;
     }
 
+    #mobile-notice {
+      display: none;
+      margin: auto 12px 12px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.03);
+      color: #888;
+      font-size: 11px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
     #divider {
       flex: 0 0 var(--divider-size);
       background: var(--divider-bg);
       cursor: row-resize;
       position: relative;
       z-index: 10;
-      transition: background 0.15s ease;
+      transition: background 0.25s ease;
+      touch-action: none;
+    }
+
+    #divider::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -8px;
+      bottom: -8px;
     }
 
     #divider:hover,
@@ -192,14 +215,15 @@
       width: 32px;
       height: 3px;
       border-radius: 2px;
-      background: rgba(255, 255, 255, 0.15);
-      transition: opacity 0.15s ease;
-      opacity: 0;
+      background: rgba(255, 255, 255, 0.18);
+      transition: opacity 0.2s ease, width 0.2s ease, background 0.2s ease;
     }
 
     #divider:hover::after,
     #divider.dragging::after {
       opacity: 1;
+      width: 48px;
+      background: rgba(255, 255, 255, 0.35);
     }
 
     .pane-header {
@@ -221,6 +245,39 @@
       letter-spacing: 0.8px;
       color: var(--pane-header-fg);
       text-transform: uppercase;
+    }
+
+    .pane-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .expand-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--pane-header-fg);
+      font-size: 13px;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+      opacity: 0.5;
+      transition: opacity 0.15s ease, background 0.15s ease;
+    }
+
+    .expand-btn:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .expand-btn.expanded {
+      opacity: 1;
     }
 
     .config-status {
@@ -362,11 +419,25 @@
       line-height: inherit;
     }
 
-    .hl-key { color: var(--hl-key); }
-    .hl-string { color: var(--hl-string); }
-    .hl-number { color: var(--hl-number); }
-    .hl-bool { color: var(--hl-bool); }
-    .hl-punct { color: var(--hl-punct); }
+    .hl-key {
+      color: var(--hl-key);
+    }
+
+    .hl-string {
+      color: var(--hl-string);
+    }
+
+    .hl-number {
+      color: var(--hl-number);
+    }
+
+    .hl-bool {
+      color: var(--hl-bool);
+    }
+
+    .hl-punct {
+      color: var(--hl-punct);
+    }
 
     #config-error {
       flex: 0 0 0;
@@ -400,8 +471,12 @@
     }
 
     @keyframes pgFadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
 
     .playground-error-overlay {
@@ -416,338 +491,961 @@
       background: #fafafa;
     }
 
+    .config-ref-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--pane-header-fg);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      cursor: pointer;
+      vertical-align: middle;
+      margin-left: 6px;
+      transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      padding: 1px 4px;
+      line-height: 1;
+    }
+
+    .config-ref-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .config-popover-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .config-popover-overlay.open {
+      display: block;
+    }
+
+    .config-popover {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      width: min(90vw, 960px);
+      height: min(85vh, 800px);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      flex-direction: column;
+    }
+
+    .config-popover.open {
+      display: flex;
+    }
+
+    .config-popover-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      padding: 12px 20px;
+      border-bottom: 1px solid #e9ecef;
+      background: #f8f9fa;
+    }
+
+    .config-popover-header h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .config-popover-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: #6c757d;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .config-popover-close:hover {
+      background: #e9ecef;
+      color: #1a1a1a;
+    }
+
+    .config-popover-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+    }
+
+    .config-popover-body h1 {
+      font-size: 1.5rem;
+      margin: 1.25rem 1.5rem .5rem;
+      color: #111;
+    }
+
+    .config-popover-body h2 {
+      font-size: 1.25rem;
+      margin: 1.5rem 1.5rem .5rem;
+      padding-bottom: .3rem;
+      border-bottom: 2px solid #e9ecef;
+      color: #222;
+    }
+
+    .config-popover-body h3 {
+      font-size: 1.1rem;
+      margin: 1.25rem 1.5rem .35rem;
+      color: #333;
+    }
+
+    .config-popover-body h4 {
+      font-size: 1rem;
+      margin: 1rem 1.5rem .3rem;
+      color: #444;
+    }
+
+    .config-popover-body p {
+      margin: .5rem 1.5rem;
+    }
+
+    .config-popover-body a {
+      color: #3456aa;
+      text-decoration: none;
+    }
+
+    .config-popover-body a:hover {
+      text-decoration: underline;
+    }
+
+    .config-popover-body code {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      background: #f1f3f5;
+      padding: .15em .4em;
+      border-radius: 4px;
+      font-size: .875em;
+    }
+
+    .config-popover-body pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: .75rem 1rem;
+      margin: .5rem 1.5rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: .8125rem;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .config-popover-body pre[data-lang]::before {
+      content: attr(data-lang);
+      position: absolute;
+      top: .4rem;
+      right: .75rem;
+      font-size: .65rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .config-popover-body pre code {
+      background: none;
+      padding: 0;
+      font-size: inherit;
+      color: inherit;
+      border-radius: 0;
+    }
+
+    .config-popover-body .table-wrap {
+      overflow-x: auto;
+      margin: .5rem 1.5rem;
+    }
+
+    .config-popover-body table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .8125rem;
+    }
+
+    .config-popover-body th,
+    .config-popover-body td {
+      text-align: left;
+      padding: .45rem .6rem;
+      border: 1px solid #dee2e6;
+    }
+
+    .config-popover-body th {
+      background: #f1f3f5;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .config-popover-body tr:nth-child(even) td {
+      background: #f8f9fa;
+    }
+
+    .config-popover-body li {
+      margin: .25rem 0 .25rem 1.5rem;
+    }
+
+    .config-popover-body details {
+      margin: .5rem 1.5rem;
+      padding: .5rem .75rem;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+    }
+
+    .config-popover-body summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .config-popover-body .source-note {
+      margin: 1rem 1.5rem 1.5rem;
+      padding-top: .75rem;
+      border-top: 1px solid #e9ecef;
+      font-size: .75rem;
+      color: #6c757d;
+    }
+
+    @media (max-width: 768px) {
+      #app-header {
+        padding: 0 10px;
+        gap: 6px;
+      }
+
+      #app-header .brand span {
+        font-size: 12px;
+      }
+
+      .gh-link {
+        padding: 4px 6px;
+      }
+
+      .gh-link span {
+        display: none;
+      }
+
+      #preset-select {
+        font-size: 12px;
+        max-width: 120px;
+        padding: 3px 24px 3px 8px;
+      }
+    }
+
     @media (max-width: 640px) {
-      .line-numbers { display: none; }
-      .pane-header { height: 24px; padding: 0 10px; }
-      #config-editor { padding: 8px 12px; font-size: 12px; }
-      .highlight-overlay { padding: 8px 12px; font-size: 12px; }
-      .gh-link span { display: none; }
-      #app-header .brand span { font-size: 12px; }
-      #preset-select { font-size: 12px; max-width: 140px; }
+      :root {
+        --header-height: 40px;
+        --min-pane-height: 80px;
+        --divider-size: 8px;
+      }
+
+      #mobile-notice { display: flex; }
+
+      .line-numbers {
+        display: none;
+      }
+
+      .pane-header {
+        height: 26px;
+        padding: 0 10px;
+      }
+
+      .pane-title {
+        font-size: 10px;
+      }
+
+      .config-status {
+        font-size: 10px;
+      }
+
+      #config-editor {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .highlight-overlay {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      #app-header .brand span {
+        display: none;
+      }
+
+      #preset-select {
+        font-size: 12px;
+        max-width: 100px;
+      }
+
+      #app {
+        padding: 10px;
+      }
+
+      .config-popover {
+        width: 100vw;
+        height: 100dvh;
+        top: 0;
+        left: 0;
+        transform: none;
+        border-radius: 0;
+      }
+
+      .config-popover-header {
+        padding: 10px 14px;
+      }
+
+      .config-popover-header h2 {
+        font-size: 13px;
+      }
+
+      .config-popover-body h1 {
+        font-size: 1.25rem;
+        margin: 1rem 1rem .4rem;
+      }
+
+      .config-popover-body h2 {
+        font-size: 1.1rem;
+        margin: 1.25rem 1rem .4rem;
+      }
+
+      .config-popover-body h3 {
+        font-size: 1rem;
+        margin: 1rem 1rem .3rem;
+      }
+
+      .config-popover-body h4 {
+        font-size: .95rem;
+        margin: .75rem 1rem .25rem;
+      }
+
+      .config-popover-body p {
+        margin: .4rem 1rem;
+      }
+
+      .config-popover-body pre {
+        margin: .4rem 1rem;
+      }
+
+      .config-popover-body .table-wrap {
+        margin: .4rem 1rem;
+      }
+
+      .config-popover-body .source-note {
+        margin: .75rem 1rem 1rem;
+      }
+
+      .config-popover-body .table-wrap {
+        overflow-x: visible;
+      }
+
+      .config-popover-body thead {
+        display: none;
+      }
+
+      .config-popover-body tbody,
+      .config-popover-body tr,
+      .config-popover-body td {
+        display: block;
+      }
+
+      .config-popover-body tr {
+        padding: .5rem .25rem;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .config-popover-body tr:last-child {
+        border-bottom: none;
+      }
+
+      .config-popover-body td {
+        border: none;
+        padding: .15rem .25rem .15rem 6.5rem;
+        position: relative;
+        font-size: .8125rem;
+        min-height: 1.4em;
+      }
+
+      .config-popover-body td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: .25rem;
+        width: 6rem;
+        font-weight: 600;
+        color: #666;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .config-popover-body td:first-child {
+        padding-left: .25rem;
+        font-weight: 600;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .85em;
+        color: #1a1a1a;
+      }
+
+      .config-popover-body td:first-child::before {
+        display: none;
+      }
+    }
+
+    @media (max-width: 400px) {
+      #preset-select {
+        max-width: 140px;
+        font-size: 11px;
+      }
+
+      #app-header .brand svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .gh-link svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    #playground::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.015;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .config-popover-body::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .config-popover-body::-webkit-scrollbar-track {
+      background: #f1f3f5;
+    }
+
+    .config-popover-body::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+
+    .config-popover-body::-webkit-scrollbar-thumb:hover {
+      background: #aaa;
     }
   </style>
 </head>
 <body>
-  <header id="app-header">
-    <div class="brand">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5A2.5 2.5 0 0 1 4 19.5Z"/>
-        <path d="M8 7h8"/>
-        <path d="M8 11h6"/>
-      </svg>
-      <span>TIDO Viewer Playground</span>
-    </div>
-    <select id="preset-select">
-      <option value="custom">Custom</option>
-      <option value="example-collection">Example Collection</option>
-    </select>
-    <a class="gh-link" href="https://github.com/subugoe/tido" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub">
-      <svg viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-      </svg>
-      <span>subugoe/tido</span>
-    </a>
-  </header>
-  <div id="playground">
-    <div id="editor-pane">
-      <div class="pane-header">
-        <span class="pane-title">Config</span>
+<header id="app-header">
+  <div class="brand">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+         stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5A2.5 2.5 0 0 1 4 19.5Z"/>
+      <path d="M8 7h8"/>
+      <path d="M8 11h6"/>
+    </svg>
+    <span>TIDO Viewer Playground</span>
+  </div>
+  <select id="preset-select"></select>
+  <a class="gh-link" href="https://github.com/subugoe/tido" target="_blank" rel="noopener noreferrer"
+     aria-label="View source on GitHub">
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path
+        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+    <span>subugoe/tido</span>
+  </a>
+</header>
+<div id="playground">
+  <div id="editor-pane">
+    <div class="pane-header">
+      <span class="pane-title">Config<button id="config-ref-btn" class="config-ref-btn"
+                                             aria-label="Configuration Reference">How to configure</button></span>
+      <span class="pane-header-actions">
         <span id="config-status" class="config-status idle">idle</span>
-      </div>
-      <div class="editor-wrapper">
-        <div class="line-numbers" id="line-numbers" aria-hidden="true">1</div>
-        <div class="editor-container">
-          <pre class="highlight-overlay" id="highlight-overlay" aria-hidden="true"><code id="highlight-code"></code></pre>
-          <textarea
+        <button class="expand-btn" data-pane="editor" aria-label="Expand editor pane" title="Expand">⛶</button>
+      </span>
+    </div>
+    <div class="editor-wrapper">
+      <div class="line-numbers" id="line-numbers" aria-hidden="true">1</div>
+      <div class="editor-container">
+        <pre class="highlight-overlay" id="highlight-overlay" aria-hidden="true"><code id="highlight-code"></code></pre>
+        <textarea
           id="config-editor"
           spellcheck="false"
           autocorrect="off"
           autocapitalize="off"
           placeholder='{ &quot;panels&quot;: [{ &quot;collection&quot;: &quot;...&quot; }] }'
-        >{
-  "panels": [],
-  "rootCollections": [],
-  "title": "TIDO Playground"
-}</textarea>
-        </div>
+        ></textarea>
       </div>
-      <div id="config-error"></div>
     </div>
-    <div id="divider" role="separator" aria-orientation="horizontal" aria-label="Resize panes"></div>
-    <div id="viewer-pane">
-      <div class="pane-header">
-        <span class="pane-title">Viewer</span>
-      </div>
-      <div id="app"></div>
-    </div>
+    <div id="config-error"></div>
   </div>
+  <div id="divider" role="separator" aria-orientation="horizontal" aria-label="Resize panes"></div>
+  <div id="viewer-pane">
+    <div class="pane-header">
+      <span class="pane-title">Viewer</span>
+      <button class="expand-btn" data-pane="viewer" aria-label="Expand viewer pane" title="Expand">⛶</button>
+    </div>
+    <div id="app"></div>
+    <div id="mobile-notice">Best experienced on desktop</div>
+  </div>
+</div>
 
-  <script src="dist/tido.min.js"></script>
-  <script>
-    (function () {
-      const editor = document.getElementById('config-editor')
-      const lineNumbers = document.getElementById('line-numbers')
-      const errorEl = document.getElementById('config-error')
-      const statusEl = document.getElementById('config-status')
-      const appEl = document.getElementById('app')
-      const divider = document.getElementById('divider')
-      const editorPane = document.getElementById('editor-pane')
-      const viewerPane = document.getElementById('viewer-pane')
-      const playground = document.getElementById('playground')
-      const highlightOverlay = document.getElementById('highlight-overlay')
-      const highlightCode = document.getElementById('highlight-code')
+<div id="config-ref-overlay" class="config-popover-overlay"></div>
+<div id="config-ref-popover" class="config-popover">
+  <div class="config-popover-header">
+    <h2>TIDO — Configuration Reference</h2>
+    <button id="config-ref-close" class="config-popover-close">&times;</button>
+  </div>
+  <div class="config-popover-body"></div>
+</div>
 
-      let tidoInstance = null
-      let validConfig = null
-      let applyTimer = null
-      let instanceCounter = 0
-      let isDragging = false
-      const presetSelect = document.getElementById('preset-select')
-      const baseUrl = window.location.href
+<script src="dist/tido.min.js"></script>
+<script>
+  (function () {
+    const editor = document.getElementById('config-editor')
+    const lineNumbers = document.getElementById('line-numbers')
+    const errorEl = document.getElementById('config-error')
+    const statusEl = document.getElementById('config-status')
+    const appEl = document.getElementById('app')
+    const divider = document.getElementById('divider')
+    const editorPane = document.getElementById('editor-pane')
+    const viewerPane = document.getElementById('viewer-pane')
+    const playground = document.getElementById('playground')
+    const highlightOverlay = document.getElementById('highlight-overlay')
+    const highlightCode = document.getElementById('highlight-code')
 
+    let tidoInstance = null
+    let validConfig = null
+    let applyTimer = null
+    let instanceCounter = 0
+    let isDragging = false
+    const presetSelect = document.getElementById('preset-select')
+    const COLLECTIONS_API = 'https://editions.sub.uni-goettingen.de/textapi/v2/collections/'
 
-      const presets = {
-        'example-collection': {
-          "panels": [
-            {
-              "collection": `${baseUrl}api/collections/example.json`
-            }
-          ],
-          "rootCollections": [
-            `${baseUrl}api/collections/example.json`
-          ],
-          "title": "Example Collection"
+    const onePanelConfig = {
+      panels: [
+        {collection: ''}
+      ],
+      rootCollections: [
+        ''
+      ],
+      title: ''
+    }
+
+    const PRESETS = [
+      {
+        id: 'example-collection', label: 'Example Collection', config: {
+          panels: [{ collection: window.location.href + 'api/collections/example.json' }],
+          rootCollections: [window.location.href + 'api/collections/example.json'],
+          title: 'Example Collection'
+        }
+      },
+      {
+        id: 'custom', label: 'Custom', config: {
+          panels: [],
+          rootCollections: [],
+          title: 'TIDO Playground'
         }
       }
+    ]
 
-      function highlightJSON(str) {
-        const out = []
-        let i = 0
-        while (i < str.length) {
-          const ch = str[i]
-          if (ch === '"') {
-            const start = i
+    function buildOptions() {
+      presetSelect.innerHTML = ''
+      PRESETS.forEach(function (p) {
+        var opt = document.createElement('option')
+        opt.value = p.id
+        opt.textContent = p.label
+        presetSelect.appendChild(opt)
+      })
+    }
+
+    fetch(COLLECTIONS_API)
+      .then(function (r) { return r.json() })
+      .then(function (urls) {
+        urls.forEach(function (url) {
+          var id = url.replace(/\/+$/, '').split('/collections/').pop()
+          var label = id.charAt(0).toUpperCase() + id.slice(1)
+          var config = JSON.parse(JSON.stringify(onePanelConfig))
+          config.panels[0].collection = url
+          config.rootCollections[0] = url
+          config.title = label
+          PRESETS.splice(1, 0, { id: id, label: label, config: config })
+        })
+      })
+      .catch(function () {})
+      .finally(function () {
+        buildOptions()
+        presetSelect.value = 'example-collection'
+        loadPreset('example-collection')
+      })
+
+    function highlightJSON(str) {
+      const out = []
+      let i = 0
+      while (i < str.length) {
+        const ch = str[i]
+        if (ch === '"') {
+          const start = i
+          i++
+          while (i < str.length && (str[i] !== '"' || str[i - 1] === '\\')) i++
+          i++
+          const raw = str.slice(start, i)
+          const esc = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          let isKey = false
+          let j = i
+          while (j < str.length && str[j] <= ' ') j++
+          isKey = str[j] === ':'
+          out.push('<span class="' + (isKey ? 'hl-key' : 'hl-string') + '">' + esc + '</span>')
+        } else if (ch >= '0' && ch <= '9' || ch === '-' && i + 1 < str.length && str[i + 1] >= '0' && str[i + 1] <= '9') {
+          const start = i
+          if (str[i] === '-') i++
+          while (i < str.length && (str[i] >= '0' && str[i] <= '9' || str[i] === '.')) i++
+          if (i < str.length && (str[i] === 'e' || str[i] === 'E')) {
             i++
-            while (i < str.length && (str[i] !== '"' || str[i - 1] === '\\')) i++
-            i++
-            const raw = str.slice(start, i)
-            const esc = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            let isKey = false
-            let j = i
-            while (j < str.length && str[j] <= ' ') j++
-            isKey = str[j] === ':'
-            out.push('<span class="' + (isKey ? 'hl-key' : 'hl-string') + '">' + esc + '</span>')
-          } else if (ch >= '0' && ch <= '9' || ch === '-' && i + 1 < str.length && str[i + 1] >= '0' && str[i + 1] <= '9') {
-            const start = i
-            if (str[i] === '-') i++
-            while (i < str.length && (str[i] >= '0' && str[i] <= '9' || str[i] === '.')) i++
-            if (i < str.length && (str[i] === 'e' || str[i] === 'E')) {
-              i++
-              if (i < str.length && (str[i] === '+' || str[i] === '-')) i++
-              while (i < str.length && str[i] >= '0' && str[i] <= '9') i++
-            }
-            const raw = str.slice(start, i)
-            out.push('<span class="hl-number">' + raw + '</span>')
-          } else if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z') {
-            const start = i
-            while (i < str.length && (str[i] >= 'a' && str[i] <= 'z' || str[i] >= 'A' && str[i] <= 'Z')) i++
-            const word = str.slice(start, i)
-            if (word === 'true' || word === 'false' || word === 'null') {
-              out.push('<span class="hl-bool">' + word + '</span>')
-            } else {
-              out.push(word)
-            }
-          } else if (ch === '{' || ch === '}' || ch === '[' || ch === ']' || ch === ':' || ch === ',') {
-            out.push('<span class="hl-punct">' + ch + '</span>')
-            i++
+            if (i < str.length && (str[i] === '+' || str[i] === '-')) i++
+            while (i < str.length && str[i] >= '0' && str[i] <= '9') i++
+          }
+          const raw = str.slice(start, i)
+          out.push('<span class="hl-number">' + raw + '</span>')
+        } else if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z') {
+          const start = i
+          while (i < str.length && (str[i] >= 'a' && str[i] <= 'z' || str[i] >= 'A' && str[i] <= 'Z')) i++
+          const word = str.slice(start, i)
+          if (word === 'true' || word === 'false' || word === 'null') {
+            out.push('<span class="hl-bool">' + word + '</span>')
           } else {
-            if (ch === '&') out.push('&amp;')
-            else if (ch === '<') out.push('&lt;')
-            else if (ch === '>') out.push('&gt;')
-            else out.push(ch)
-            i++
+            out.push(word)
           }
-        }
-        return out.join('')
-      }
-
-      function updateHighlight() {
-        highlightCode.innerHTML = highlightJSON(editor.value)
-      }
-
-      function loadPreset(value) {
-        const json = presets[value]
-        if (!json) return
-        editor.value = JSON.stringify(json, null, 2)
-        updateLineNumbers()
-        updateHighlight()
-        handleEditorChange()
-      }
-
-      presetSelect.addEventListener('change', function () {
-        loadPreset(this.value)
-      })
-
-      function updateLineNumbers() {
-        const count = (editor.value.match(/\n/g) || []).length + 1
-        let html = ''
-        for (let i = 1; i <= count; i++) {
-          html += '<span></span>'
-        }
-        lineNumbers.innerHTML = html
-      }
-
-      function setStatus(state, msg) {
-        statusEl.className = 'config-status ' + state
-        statusEl.textContent = msg
-      }
-
-      function showError(msg) {
-        if (msg) {
-          errorEl.textContent = '\u2716 ' + msg
-          errorEl.classList.add('visible')
+        } else if (ch === '{' || ch === '}' || ch === '[' || ch === ']' || ch === ':' || ch === ',') {
+          out.push('<span class="hl-punct">' + ch + '</span>')
+          i++
         } else {
-          errorEl.classList.remove('visible')
-          errorEl.textContent = ''
+          if (ch === '&') out.push('&amp;')
+          else if (ch === '<') out.push('&lt;')
+          else if (ch === '>') out.push('&gt;')
+          else out.push(ch)
+          i++
         }
       }
+      return out.join('')
+    }
 
-      function applyConfig(config) {
-        appEl.innerHTML = ''
-        tidoInstance = null
+    function updateHighlight() {
+      highlightCode.innerHTML = highlightJSON(editor.value)
+    }
 
-        const containerId = 'tido-instance-' + (++instanceCounter)
-        const container = document.createElement('div')
-        container.id = containerId
-        container.style.width = '100%'
-        container.style.height = '100%'
-        appEl.appendChild(container)
-
-        const mergedConfig = {}
-        if (config) {
-          for (const k in config) {
-            if (Object.prototype.hasOwnProperty.call(config, k) && k !== 'container') {
-              mergedConfig[k] = config[k]
-            }
-          }
-        }
-        mergedConfig.container = '#' + containerId
-
-        try {
-          tidoInstance = new window.Tido(mergedConfig)
-          container.classList.add('playground-fade')
-        } catch (e) {
-          console.error('TIDO instantiation failed:', e)
-          appEl.innerHTML = ''
-          const errDiv = document.createElement('div')
-          errDiv.className = 'playground-error-overlay'
-          errDiv.textContent = 'Failed to initialize TIDO: ' + (e.message || e)
-          appEl.appendChild(errDiv)
-        }
-      }
-
-      function handleEditorChange() {
-        const raw = editor.value
-        const trimmed = raw.trim()
-
-        if (!trimmed) {
-          if (applyTimer) {
-            clearTimeout(applyTimer)
-            applyTimer = null
-          }
-          showError(null)
-          setStatus('idle', 'idle')
-          validConfig = null
-          return
-        }
-
-        try {
-          const parsed = JSON.parse(trimmed)
-          showError(null)
-          setStatus('valid', '\u2713 valid')
-          validConfig = parsed
-
-          if (applyTimer) {
-            clearTimeout(applyTimer)
-          }
-          applyTimer = setTimeout(function () {
-            applyConfig(parsed)
-            applyTimer = null
-          }, 500)
-        } catch (e) {
-          if (applyTimer) {
-            clearTimeout(applyTimer)
-            applyTimer = null
-          }
-          const msg = e.message || 'Invalid JSON'
-          showError(msg)
-          setStatus('invalid', '\u2717 error')
-          validConfig = null
-        }
-      }
-
-      editor.addEventListener('input', function () {
-        updateLineNumbers()
-        updateHighlight()
-        handleEditorChange()
-      })
-
-      editor.addEventListener('scroll', function () {
-        lineNumbers.scrollTop = editor.scrollTop
-        highlightOverlay.scrollTop = editor.scrollTop
-        highlightOverlay.scrollLeft = editor.scrollLeft
-      })
-
-      editor.addEventListener('keydown', function (e) {
-        if (e.key === 'Tab') {
-          e.preventDefault()
-          const start = editor.selectionStart
-          const end = editor.selectionEnd
-          editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end)
-          editor.selectionStart = editor.selectionEnd = start + 2
+    function loadPreset(id) {
+      for (var i = 0; i < PRESETS.length; i++) {
+        if (PRESETS[i].id === id && PRESETS[i].config) {
+          editor.value = JSON.stringify(PRESETS[i].config, null, 2)
           updateLineNumbers()
           updateHighlight()
           handleEditorChange()
+          return
+        }
+      }
+    }
+
+    presetSelect.addEventListener('change', function () {
+      loadPreset(this.value)
+    })
+
+    var expandedPane = null
+    var savedRatios = null
+
+    document.querySelectorAll('.expand-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var pane = this.getAttribute('data-pane')
+        if (expandedPane === pane) {
+          restoreSplit()
+        } else {
+          expandPane(pane)
         }
       })
+    })
 
-      function initResize(e) {
-        isDragging = true
-        divider.classList.add('dragging')
-        document.body.style.cursor = 'row-resize'
-        document.body.style.userSelect = 'none'
-        document.addEventListener('mousemove', doResize)
-        document.addEventListener('mouseup', stopResize)
-        e.preventDefault()
+    function expandPane(pane) {
+      if (expandedPane) restoreSplit()
+      savedRatios = {
+        editor: editorPane.style.flex || '',
+        viewer: viewerPane.style.flex || '',
+        editorMinH: editorPane.style.minHeight || '',
+        viewerMinH: viewerPane.style.minHeight || ''
+      }
+      expandedPane = pane
+      if (pane === 'editor') {
+        editorPane.style.flex = '1 1 100%'
+        editorPane.style.minHeight = '0'
+        viewerPane.style.flex = '0 0 0'
+        viewerPane.style.minHeight = '0'
+      } else {
+        editorPane.style.flex = '0 0 0'
+        editorPane.style.minHeight = '0'
+        viewerPane.style.flex = '1 1 100%'
+        viewerPane.style.minHeight = '0'
+      }
+      var btn = document.querySelector('.expand-btn[data-pane="' + pane + '"]')
+      btn.textContent = '⤢'
+      btn.title = 'Restore split'
+      btn.classList.add('expanded')
+    }
+
+    function restoreSplit() {
+      if (!expandedPane) return
+      var btn = document.querySelector('.expand-btn.expanded')
+      btn.textContent = '⛶'
+      btn.title = 'Expand'
+      btn.classList.remove('expanded')
+      editorPane.style.flex = savedRatios.editor
+      viewerPane.style.flex = savedRatios.viewer
+      editorPane.style.minHeight = savedRatios.editorMinH
+      viewerPane.style.minHeight = savedRatios.viewerMinH
+      expandedPane = null
+      savedRatios = null
+    }
+
+    function updateLineNumbers() {
+      const count = (editor.value.match(/\n/g) || []).length + 1
+      let html = ''
+      for (let i = 1; i <= count; i++) {
+        html += '<span></span>'
+      }
+      lineNumbers.innerHTML = html
+    }
+
+    function setStatus(state, msg) {
+      statusEl.className = 'config-status ' + state
+      statusEl.textContent = msg
+    }
+
+    function showError(msg) {
+      if (msg) {
+        errorEl.textContent = '\u2716 ' + msg
+        errorEl.classList.add('visible')
+      } else {
+        errorEl.classList.remove('visible')
+        errorEl.textContent = ''
+      }
+    }
+
+    function applyConfig(config) {
+      appEl.innerHTML = ''
+      tidoInstance = null
+
+      const containerId = 'tido-instance-' + (++instanceCounter)
+      const container = document.createElement('div')
+      container.id = containerId
+      container.style.width = '100%'
+      container.style.height = '100%'
+      appEl.appendChild(container)
+
+      const mergedConfig = {}
+      if (config) {
+        for (const k in config) {
+          if (Object.prototype.hasOwnProperty.call(config, k) && k !== 'container') {
+            mergedConfig[k] = config[k]
+          }
+        }
+      }
+      mergedConfig.container = '#' + containerId
+
+      try {
+        tidoInstance = new window.Tido(mergedConfig)
+        container.classList.add('playground-fade')
+      } catch (e) {
+        console.error('TIDO instantiation failed:', e)
+        appEl.innerHTML = ''
+        const errDiv = document.createElement('div')
+        errDiv.className = 'playground-error-overlay'
+        errDiv.textContent = 'Failed to initialize TIDO: ' + (e.message || e)
+        appEl.appendChild(errDiv)
+      }
+    }
+
+    function handleEditorChange() {
+      const raw = editor.value
+      const trimmed = raw.trim()
+
+      if (!trimmed) {
+        if (applyTimer) {
+          clearTimeout(applyTimer)
+          applyTimer = null
+        }
+        showError(null)
+        setStatus('idle', 'idle')
+        validConfig = null
+        return
       }
 
-      function doResize(e) {
-        if (!isDragging) return
-        const rect = playground.getBoundingClientRect()
-        const totalH = rect.height
-        const y = e.clientY - rect.top
-        const minH = 120
-        const ratio = Math.max(minH / totalH, Math.min(1 - minH / totalH, y / totalH))
-        editorPane.style.flex = '0 0 ' + (ratio * 100) + '%'
-        viewerPane.style.flex = '0 0 ' + ((1 - ratio) * 100) + '%'
+      try {
+        const parsed = JSON.parse(trimmed)
+        showError(null)
+        setStatus('valid', '\u2713 valid')
+        validConfig = parsed
+
+        if (applyTimer) {
+          clearTimeout(applyTimer)
+        }
+        applyTimer = setTimeout(function () {
+          applyConfig(parsed)
+          applyTimer = null
+        }, 500)
+      } catch (e) {
+        if (applyTimer) {
+          clearTimeout(applyTimer)
+          applyTimer = null
+        }
+        const msg = e.message || 'Invalid JSON'
+        showError(msg)
+        setStatus('invalid', '\u2717 error')
+        validConfig = null
       }
+    }
 
-      function stopResize() {
-        if (!isDragging) return
-        isDragging = false
-        divider.classList.remove('dragging')
-        document.body.style.cursor = ''
-        document.body.style.userSelect = ''
-        document.removeEventListener('mousemove', doResize)
-        document.removeEventListener('mouseup', stopResize)
-      }
-
-      divider.addEventListener('mousedown', initResize)
-
+    editor.addEventListener('input', function () {
       updateLineNumbers()
       updateHighlight()
       handleEditorChange()
-    })()
-  </script>
+    })
+
+    editor.addEventListener('scroll', function () {
+      lineNumbers.scrollTop = editor.scrollTop
+      highlightOverlay.scrollTop = editor.scrollTop
+      highlightOverlay.scrollLeft = editor.scrollLeft
+    })
+
+    editor.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab') {
+        e.preventDefault()
+        const start = editor.selectionStart
+        const end = editor.selectionEnd
+        editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end)
+        editor.selectionStart = editor.selectionEnd = start + 2
+        updateLineNumbers()
+        updateHighlight()
+        handleEditorChange()
+      }
+    })
+
+    function getY(e) {
+      return e.touches ? e.touches[0].clientY : e.clientY
+    }
+
+    function initResize(e) {
+      isDragging = true
+      divider.classList.add('dragging')
+      document.body.style.cursor = 'row-resize'
+      document.body.style.userSelect = 'none'
+      document.body.style.touchAction = 'none'
+      document.addEventListener('mousemove', doResize)
+      document.addEventListener('mouseup', stopResize)
+      document.addEventListener('touchmove', doResize, {passive: false})
+      document.addEventListener('touchend', stopResize)
+      e.preventDefault()
+    }
+
+    function doResize(e) {
+      if (!isDragging) return
+      const rect = playground.getBoundingClientRect()
+      const totalH = rect.height
+      const y = getY(e) - rect.top
+      const minH = 120
+      const ratio = Math.max(minH / totalH, Math.min(1 - minH / totalH, y / totalH))
+      editorPane.style.flex = '0 0 ' + (ratio * 100) + '%'
+      viewerPane.style.flex = '0 0 ' + ((1 - ratio) * 100) + '%'
+      if (e.cancelable) e.preventDefault()
+    }
+
+    function stopResize() {
+      if (!isDragging) return
+      isDragging = false
+      divider.classList.remove('dragging')
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+      document.body.style.touchAction = ''
+      document.removeEventListener('mousemove', doResize)
+      document.removeEventListener('mouseup', stopResize)
+      document.removeEventListener('touchmove', doResize)
+      document.removeEventListener('touchend', stopResize)
+    }
+
+    divider.addEventListener('mousedown', initResize)
+    divider.addEventListener('touchstart', initResize, {passive: false})
+  })()
+
+  const configRefBtn = document.getElementById('config-ref-btn')
+  const configRefPopover = document.getElementById('config-ref-popover')
+  const configRefOverlay = document.getElementById('config-ref-overlay')
+  const configRefClose = document.getElementById('config-ref-close')
+
+  let configRefLoaded = false
+
+  function openConfigRef() {
+    if (!configRefLoaded) {
+      configRefLoaded = true
+      const popoverBody = document.querySelector('.config-popover-body')
+      popoverBody.innerHTML = '<p style="padding:1.5rem;color:#888;text-align:center;">Loading\u2026</p>'
+      fetch('config-reference.html')
+        .then(function (r) {
+          return r.text()
+        })
+        .then(function (html) {
+          popoverBody.innerHTML = html
+          popoverBody.querySelectorAll('table').forEach(function (table) {
+            var headers = []
+            table.querySelectorAll('thead th').forEach(function (th) {
+              headers.push(th.textContent.trim())
+            })
+            if (!headers.length) return
+            table.querySelectorAll('tbody tr').forEach(function (tr) {
+              tr.querySelectorAll('td').forEach(function (td, i) {
+                if (headers[i]) td.setAttribute('data-label', headers[i])
+              })
+            })
+          })
+        })
+        .catch(function () {
+          popoverBody.innerHTML = '<p style="padding:1.5rem;color:#f48771;text-align:center;">Failed to load configuration reference.</p>'
+        })
+    }
+    configRefPopover.classList.add('open')
+    configRefOverlay.classList.add('open')
+  }
+
+  function closeConfigRef() {
+    configRefPopover.classList.remove('open')
+    configRefOverlay.classList.remove('open')
+  }
+
+  configRefBtn.addEventListener('click', openConfigRef)
+  configRefClose.addEventListener('click', closeConfigRef)
+  configRefOverlay.addEventListener('click', closeConfigRef)
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeConfigRef()
+  })
+</script>
 </body>
 </html>

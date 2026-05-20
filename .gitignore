@@ -37,3 +37,4 @@ yarn-error.log*
 *.sln
 
 examples/dist
+examples/api
