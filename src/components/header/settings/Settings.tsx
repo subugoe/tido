@@ -29,7 +29,7 @@ const SettingsComp: FC = () => {
     <div className="h-fit">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" title="Settings" className="w-fit px-2" data-cy="settings">
+          <Button variant="ghost" size="icon" title="Settings" data-cy="settings">
             <Settings />
           </Button>
         </DropdownMenuTrigger>

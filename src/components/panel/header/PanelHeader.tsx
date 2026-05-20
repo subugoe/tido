@@ -48,7 +48,7 @@ const SidebarToggle = memo((props) => {
       className={panelState.showSidebar ? 'ring-1 ring-secondary/50 border-secondary' : ''}
       onClick={onClick} data-cy="sidebar-toggle"
     >
-      { t('annotations') } <Badge className="px-1.5 py-0.5 rounded-full text-xs leading-none" variant={panelState.showSidebar ? 'secondary' : 'accent'}>{ filteredAnnotations.length }</Badge>
+      <span className="hidden @min-[600px]/panel:inline">{ t('annotations') }</span> <Badge className="px-1.5 py-0.5 rounded-full text-xs leading-none" variant={panelState.showSidebar ? 'secondary' : 'accent'}>{ filteredAnnotations.length }</Badge>
     </Button>
   </BaseTooltip>
 })
@@ -88,7 +88,7 @@ const PanelHeader: FC = () => {
       <div className="ml-4 @min-[1000px]/panel:mx-auto flex justify-center" data-cy="panel-title-and-nav-arrows">
         {<PanelTitle />}
       </div>
-      <div className="absolute h-full top-0 right-2 flex items-center gap-2">
+      <div className="absolute h-full top-0 right-2 flex items-center gap-1 @min-[600px]/panel:gap-2">
         <PanelViewsMenu />
         <SidebarToggle />
         <BaseTooltip message={t('close_panel')}>

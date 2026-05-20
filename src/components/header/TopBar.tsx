@@ -18,12 +18,14 @@ const TopBar: FC = () => {
     setShowGlobalTree(!isGlobalTreeCollapsed)
   }
 
-  return <div className="flex flex-row items-center bg-background" data-cy="header">
-    <Button data-cy="global-tree-toggle" variant="ghost" size="iconLg" className={`${!showGlobalTree ? 'hidden' : ''} mt-0.5 mr-2 -ml-2`} onClick={toggleGlobalTree}>
+  return <div className="flex flex-row items-center bg-background px-2 md:px-4" data-cy="header">
+    <Button data-cy="global-tree-toggle" variant="ghost" size="iconLg"
+      className={`${!showGlobalTree ? 'hidden' : ''} mt-0.5 mr-2 -ml-2 shrink-0`}
+      onClick={toggleGlobalTree}>
       { !isGlobalTreeCollapsed ? <Menu /> : <X /> }
     </Button>
     { title !== '' && <Title /> }
-    <div className="ml-auto flex items-center gap-2">
+    <div className="ml-auto flex items-center gap-1 md:gap-2 shrink-0">
       { showAddNewPanelButton && <AddNewPanel /> }
       <Share />
       <Settings />

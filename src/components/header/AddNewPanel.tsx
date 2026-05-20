@@ -39,7 +39,7 @@ const AddNewPanel: FC = () => {
       data-cy="new-panel"
       className={title !== '' ? 'ml-auto' : ''}
     >
-      <Plus className="-ml-1 mr-2" />{t('add_new_panel')}
+      <Plus className="sm:-ml-1 sm:mr-2" /><span className="hidden sm:inline">{t('add_new_panel')}</span>
     </Button>
   }
 
