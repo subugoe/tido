@@ -33,10 +33,10 @@ const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onToggle
   }, [expanded])
 
 
-  return <div className="w-full h-fit flex flex-col border-t-[1px] border-gray-400 bg-gray-100">
-    <div className="flex footer-stripe pr-4 py-1 items-center justify-end hover:bg-border hover:cursor-pointer" onClick={(e) => handleClick(e)}>
-      <span className="p-0.5 text-sm">{nestedAnnotations.length} {nestedAnnotations.length > 1 ? t('nested_annotations') : t('nested_annotation')} </span>
-      {expanded ? <ChevronUp size={18} className="" /> : <ChevronDown size={18} />}
+  return <div className="w-full h-fit flex flex-col border-t border-border bg-muted cursor-pointer">
+    <div className="flex footer-stripe pr-4 py-1 items-center justify-end text-xs text-muted-foreground" onClick={(e) => handleClick(e)}>
+      <span className="p-0.5">{nestedAnnotations.length} {nestedAnnotations.length > 1 ? t('nested_annotations') : t('nested_annotation')}</span>
+      <span className="mt-0.5">{expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</span>
     </div>
     {expanded && <div className="nested-annotations pl-4  mt-2 flex flex-col gap-1 w-full h-fit" ref={nestedAnnotationsRef}>
       {nestedAnnotations.map((annotation) => <Annotation key={annotation.id} data={annotation} isNested={true} onToggle={onToggle} />)}

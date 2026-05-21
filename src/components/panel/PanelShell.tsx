@@ -29,7 +29,7 @@ const PanelShell: FC<Props> = ({ children }) => {
     className={`panel bg-background text-foreground grow-0 shrink-0 relative transition-width`}
     data-cy="panel"
   >
-    <div className="h-full overflow-hidden relative border-2 border-border rounded-lg">
+    <div className="h-full overflow-hidden relative border-2 border-border rounded-[16px]">
       { children }
     </div>
     <ResizeHandle className="-right-1.5" data-panel-resize-handle />

@@ -4,6 +4,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { Button } from '@/components/ui/button.tsx'
 
 interface ImageActions {
   icon: ReactElement
@@ -42,11 +43,13 @@ const ImageActionButtons: FC = () => {
   const actionButtons =
     actions.length > 0 &&
     actions.map((action, i) => (
-      <button
-        className="p-2 rounded hover:rounded-full hover:bg-gray-100 mr-1 w-8 h-8"
+      <Button
+        variant="ghost"
+        size="icon"
         key={i}
         id={action.id}
         title={action.tooltip}
+        className="rounded-full"
       >
         <div
           className="flex items-center justify-center"
@@ -54,11 +57,11 @@ const ImageActionButtons: FC = () => {
         >
           {action.icon}
         </div>
-      </button>
+      </Button>
     ))
 
   return (
-    <div className="flex items-center justify-center image-action-buttons mb-1">
+    <div className="flex items-center justify-center image-action-buttons gap-2 my-1">
       {actionButtons}
     </div>
   )
