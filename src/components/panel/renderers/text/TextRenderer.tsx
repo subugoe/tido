@@ -38,9 +38,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   }
 
   function onSelect() {
-    if (!panelState.showSidebar) {
-      updatePanel({ showSidebar: true })
-    }
+    updatePanel({ showSidebar: true })
   }
 
   useEffect(() => {
