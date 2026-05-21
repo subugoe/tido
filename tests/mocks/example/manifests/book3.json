@@ -2,7 +2,6 @@
   "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
   "textapi": "2.0.0",
   "id": "http://localhost:8181/example/manifests/book3.json",
-  "label": "The Great Gatsby",
   "items": [
     "http://localhost:8181/example/items/book3-page1.json",
     "http://localhost:8181/example/items/book3-page2.json",
@@ -10,5 +9,8 @@
   ],
   "textapiType": "TextApiManifest",
   "revision": "1",
-  "license": "CC0-1.0"
+  "license": "CC0-1.0",
+  "titles": [
+    "The Great Gatsby"
+  ]
 }

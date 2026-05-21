@@ -25,7 +25,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
         collection.manifests.map(async (cur) => {
           const id = typeof cur === 'object' ? cur.id : cur
           const m = await apiRequest<Manifest>(id)
-          return { id: m.id, label: m.label }
+          return { id: m.id, label: m.titles?.length > 0 && m.titles[0] || '' }
         })
       )
       setManifestOptions(manifests)
@@ -35,7 +35,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
 
   useEffect(() => {
     function getManifestLabel() {
-      const label = selectedManifest ? selectedManifest.label : panelState?.manifest?.label ?? null
+      const label = selectedManifest ? selectedManifest.titles?.[0] ?? '' : panelState?.manifest?.titles?.[0] ?? ''
       setSelectedLabel(label)
     }
 

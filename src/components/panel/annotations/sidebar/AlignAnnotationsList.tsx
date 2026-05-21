@@ -41,7 +41,7 @@ const AlignAnnotationsList: FC = () => {
       const target = annotation.target[0]
       const targetSourceUrl = target.source
       const textEl = panelEl.querySelector(`div[data-content-url="${targetSourceUrl}"]`)
-      const targetEl = textEl.querySelector(target.selector.value)
+      const targetEl = textEl.querySelector((target.selector as CssSelector).value) as HTMLElement
       scrollIntoViewIfNeeded(targetEl, textEl as HTMLElement)
     }
 

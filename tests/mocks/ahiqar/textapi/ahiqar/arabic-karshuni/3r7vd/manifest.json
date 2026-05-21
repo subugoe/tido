@@ -2,7 +2,6 @@
   "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
   "textapi": "2.0.0",
   "id": "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/3r7vd/manifest.json",
-  "label": "Mingana Arabic Christian 93",
   "items": [
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
@@ -164,5 +163,8 @@
   "textapiType": "TextApiManifest",
   "revision": "1",
   "total": 26,
-  "license": "CC-BY-SA-4.0"
+  "license": "CC-BY-SA-4.0",
+  "titles": [
+    "Mingana Arabic Christian 93"
+  ]
 }

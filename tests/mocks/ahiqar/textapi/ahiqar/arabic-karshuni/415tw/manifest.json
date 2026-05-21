@@ -2,7 +2,6 @@
   "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
   "textapi": "2.0.0",
   "id": "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/415tw/manifest.json",
-  "label": "Syr 17",
   "items": [
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
@@ -308,5 +307,8 @@
   "textapiType": "TextApiManifest",
   "revision": "1",
   "total": 50,
-  "license": "CC-BY-SA-4.0"
+  "license": "CC-BY-SA-4.0",
+  "titles": [
+    "Syr 17"
+  ]
 }

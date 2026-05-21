@@ -2,7 +2,6 @@
   "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
   "textapi": "2.0.0",
   "id": "http://localhost:8181/gfl/textapi/Z_1819-06-03_l/manifest.json",
-  "label": "3. Juni 1819. Kultusministerium an Raabe (Konzept)",
   "items": [
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
@@ -20,5 +19,8 @@
   "textapiType": "TextApiManifest",
   "revision": "1",
   "total": 2,
-  "license": "MIT"
+  "license": "MIT",
+  "titles": [
+    "3. Juni 1819. Kultusministerium an Raabe (Konzept)"
+  ]
 }

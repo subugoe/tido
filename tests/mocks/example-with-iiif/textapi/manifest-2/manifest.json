@@ -2,7 +2,6 @@
   "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
   "textapi": "2.0.0",
   "id": "http://localhost:8181/example-with-iiif/textapi/manifest-2/manifest.json",
-  "label": "Second Manifest",
   "items": [
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
@@ -14,5 +13,8 @@
   "textapiType": "TextApiManifest",
   "revision": "1",
   "total": 1,
-  "license": "MIT"
+  "license": "MIT",
+  "titles": [
+    "Second Manifest"
+  ]
 }

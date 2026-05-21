@@ -2,7 +2,6 @@
   "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
   "textapi": "2.0.0",
   "id": "http://localhost:8181/ahiqar/textapi/ahiqar/arabic-karshuni/40z89/manifest.json",
-  "label": "Lebanon, Ṣarbā (Jūniyah), Ordre Basilien Alepin, MS 956",
   "items": [
     {
       "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/sequence.jsonld",
@@ -427,5 +426,8 @@
       "@context": "https://gitlab.gwdg.de/subugoe/emo/text-api/-/raw/main/jsonld/license.jsonld",
       "id": "[CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode)"
     }
+  ],
+  "titles": [
+    "Lebanon, Ṣarbā (Jūniyah), Ordre Basilien Alepin, MS 956"
   ]
 }

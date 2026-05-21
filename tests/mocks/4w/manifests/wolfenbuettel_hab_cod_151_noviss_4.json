@@ -2,7 +2,6 @@
   "@context": "https://editions.sub.uni-goettingen.de/context.json",
   "textapiVersion": "2.0.0",
   "id": "http://localhost:8181/4w/manifests/wolfenbuettel_hab_cod_151_noviss_4.json",
-  "label": "W: um 1470",
   "items": [
     "http://localhost:8181/4w/items/wolfenbuettel_hab_cod_151_noviss_4-203v.json",
     "http://localhost:8181/4w/items/wolfenbuettel_hab_cod_151_noviss_4-204r.json",
@@ -53,5 +52,8 @@
       "key": "Zitationshinweis",
       "value": "W: um 1470. <i>Vier Wachen vernetzt: Digitale Edition eines mystischen Traktats des Spätmittelalters</i> (Version Draft 1.0). <a href=\"https://textapi.test.vierwachen.d.sub.uni-goettingen.de/\" target=\"_blank\">https://textapi.test.vierwachen.d.sub.uni-goettingen.de/</a> [07-05-2026]. Bearbeitet von Henrike Manuwald.<div class=\"padding\"/>"
     }
+  ],
+  "titles": [
+    "W: um 1470"
   ]
 }
