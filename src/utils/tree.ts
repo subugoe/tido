@@ -28,7 +28,7 @@ async function createCollectionNode(url: string) {
   node.key = url
   node.id = url
   node.type = 'collection'
-  node.label = response.data.titles[0] || ''
+  node.label = response.data.titles?.length > 0 && response.data.titles[0] || ''
 
   return node
 }
@@ -40,7 +40,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
 
   let data: Collection | Manifest
 
-  if (!isCollectionUrl(id) && !isManifestUrl(id)) throw new CustomError('Error in TextAPI '+node.type , 'Id "'+ id +'" is provided incorrectly')
+  if (!isCollectionUrl(id) && !isManifestUrl(id)) throw new CustomError('Error in TextAPI ' + node.type , 'Id "'+ id +'" is provided incorrectly')
 
   if (isCollectionUrl(id)) {
     // If parent node is a collection, we initialize it like all collections, so it becomes available for panel loading
@@ -73,7 +73,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
     if (typeof item === 'object') {
       id = item.id
       if (item.textapiType === 'TextApiCollection') label = item.titles[0]
-      else if (item.textapiType === 'TextApiManifest') label = item.label
+      else if (item.textapiType === 'TextApiManifest') label = item.titles?.[0]
       else if (item.textapiType === 'TextApiItem') label = item.division
     } else {
       id = item

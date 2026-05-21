@@ -96,8 +96,9 @@ class Scroller {
     setTimeout(() => this.isSyncing = false, 20)
   }
 
-  syncSidebarToText(contentUrl: string | AnnotationTargetSource) {
-    this.syncScroll(this.texts[contentUrl], this.sidebar)
+  syncSidebarToText(targetSource: string | AnnotationTargetSource) {
+    const url = typeof targetSource === 'string' ? targetSource : targetSource.id
+    this.syncScroll(this.texts[url], this.sidebar)
   }
 
   handleSidebarScroll() {

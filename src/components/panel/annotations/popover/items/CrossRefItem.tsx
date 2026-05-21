@@ -25,10 +25,10 @@ const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect }) => {
         setLoading(true)
         try {
           const { manifestData, itemData } = await validateCrossRefNode(crossRefInfo)
-          const newItemLabel = itemData.titles?.[0] || ''
+          const newItemLabel = itemData.titles?.length > 0 && itemData.titles?.[0] || ''
           extendedCrossRefInfoRef.current = {
             ...crossRefInfo,
-            manifestLabel: (manifestData as Manifest).label,
+            manifestLabel: ((manifestData as Manifest).titles?.length > 0 && (manifestData as Manifest).titles?.[0]) ?? '',
             itemLabel: newItemLabel
           }
           if (crossRefInfo.textType === 'text') {

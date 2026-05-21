@@ -6,17 +6,17 @@ function getCollectionMetadata (collection: Collection | null) {
   const metadata: Metadata[] = [
     ...(collTitles.map((title) => ({
       key: 'title',
-      type: 'TextApiMetadata',
+      textapiType: 'TextApiMetadata',
       value: title,
     }))),
   ]
 
   if (collectors) {
-    metadata.push({ key: 'collectors', type: 'TextApiMetadata', value: collectors })
+    metadata.push({ key: 'collectors', textapiType: 'TextApiMetadata', value: collectors })
   }
 
   if (description && typeof description === 'string') {
-    metadata.push({ key: 'description', type: 'TextApiMetadata', value: description })
+    metadata.push({ key: 'description', textapiType: 'TextApiMetadata', value: description })
   }
 
   return metadata
@@ -24,14 +24,14 @@ function getCollectionMetadata (collection: Collection | null) {
 
 function getManifestMetadata(manifest: Manifest | null) {
   const { result: license } = validateLicense(manifest?.license)
-  const { result: label } = validateManifestLabel(manifest?.label)
+  const { result: label } = validateManifestLabel(manifest?.titles.length > 0 && manifest?.titles[0])
 
   const metadata: Metadata[] = [
-    { key: 'label', type: 'TextApiMetadata', value: label },
+    { key: 'label', textapiType: 'TextApiMetadata', value: label },
   ]
 
   if (license) {
-    metadata.push({ key: 'license', type: 'TextApiMetadata', value: license })
+    metadata.push({ key: 'license', textapiType: 'TextApiMetadata', value: license })
   }
 
   if (manifest?.metadata) {
@@ -112,10 +112,10 @@ function getItemMetadata(item: Item | null) {
   const imageNotes = validateImageNotes(item?.images?.[0]?.copyright)
 
   return [
-    { key: 'label', type: 'TextApiMetadata', value: label },
-    { key: 'language', type: 'TextApiMetadata', value: lang },
-    { key: 'image_license', type: 'TextApiMetadata', value: imageLicense },
-    { key: 'image_notes', type: 'TextApiMetadata', value: imageNotes },
+    { key: 'label', textapiType: 'TextApiMetadata', value: label },
+    { key: 'language', textapiType: 'TextApiMetadata', value: lang },
+    { key: 'image_license', textapiType: 'TextApiMetadata', value: imageLicense },
+    { key: 'image_notes', textapiType: 'TextApiMetadata', value: imageNotes },
   ].filter(i => i.value)
 }
 
