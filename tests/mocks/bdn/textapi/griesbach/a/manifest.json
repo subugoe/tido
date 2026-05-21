@@ -2,7 +2,6 @@
   "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
   "textapi": "2.0.0",
   "id": "http://localhost:8181/bdn/textapi/griesbach/a/manifest.json",
-  "label": "Auflage a (1. Aufl. 1779)",
   "items": [
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
@@ -68,5 +67,8 @@
   "textapiType": "TextApiManifest",
   "revision": "1",
   "total": 10,
-  "license": "CC-BY-SA-3.0"
+  "license": "CC-BY-SA-3.0",
+  "titles": [
+    "Auflage a (1. Aufl. 1779)"
+  ]
 }
