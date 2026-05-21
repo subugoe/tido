@@ -183,6 +183,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   }, [parsedDom, annotations, annotationsConfig])
 
+
   // Apply highlighting styles on every map update
   useEffect(() => {
     if (!matchedMap) return
@@ -413,7 +414,8 @@ const GenericTextRenderer: FC<Props> = memo(({
       } else {
         const selectedAnnotation = {
           annotation: normalAnnotations[0],
-          origin: 'text'
+          origin: 'text',
+          contentUrl: source,
         } as SelectedAnnotation
 
         setSelectedAnnotation(selectedAnnotation)

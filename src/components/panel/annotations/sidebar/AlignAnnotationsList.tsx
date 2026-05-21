@@ -34,7 +34,9 @@ const AlignAnnotationsList: FC = () => {
     const { annotation, origin } = selectedAnnotation
     if (origin === 'text') {
       const scroller = getScroller()
-      scroller.syncSidebarToText(selectedAnnotation.annotation.target[0]?.source)
+      // here we need the activeContent url of the text container where the target was clicked. - to align with the right text pane
+      const { contentUrl } = selectedAnnotation
+      scroller.syncSidebarToText(contentUrl)
       trackTopChange()
     } else if (origin  === 'other') {
       // selectedAnnotation comes from Bookmarking or config
