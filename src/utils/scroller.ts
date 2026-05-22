@@ -38,7 +38,8 @@ class Scroller {
   syncScroll(source: HTMLElement, target: HTMLElement) {
     if (!source || !target) return
     this.isSyncing = true
-    target.scrollTop = source.scrollTop
+
+    requestAnimationFrame(() => target.scrollTop = source.scrollTop)
     requestAnimationFrame(() => (this.isSyncing = false))
   }
 
@@ -96,9 +97,8 @@ class Scroller {
     setTimeout(() => this.isSyncing = false, 20)
   }
 
-  syncSidebarToText(targetSource: string | AnnotationTargetSource) {
-    const url = typeof targetSource === 'string' ? targetSource : targetSource.id
-    this.syncScroll(this.texts[url], this.sidebar)
+  syncSidebarToText(contentUrl: string) {
+    this.syncScroll(this.texts[contentUrl], this.sidebar)
   }
 
   handleSidebarScroll() {
@@ -141,6 +141,7 @@ class Scroller {
     if (this.isSyncing) return
     const contentUrl = (e.target as HTMLElement).getAttribute('data-content-url')
     this.scrollOtherTexts(contentUrl)
+    console.log('handle text scroll')
     this.syncScroll(this.texts[contentUrl], this.sidebar)
   }
 

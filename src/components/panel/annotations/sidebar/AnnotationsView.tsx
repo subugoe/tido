@@ -8,6 +8,7 @@ import EmptyAnnotations from '@/components/panel/annotations/sidebar/EmptyAnnota
 import { useErrorBoundary } from 'react-error-boundary'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
+import { getSource } from '@/utils/annotations.ts'
 
 interface ContainerProps {
   children?: ReactNode
@@ -35,7 +36,20 @@ const AnnotationsView: FC = () => {
   }, [scrollContainer])
 
   useEffect(() => {
-    if (!selectedAnnotation || annotationsMode !== 'list') return
+    if (!selectedAnnotation) return
+    const scroller = getScroller()
+    if (annotationsMode === 'aligned' && selectedAnnotation.origin === 'text') {
+      const { contentUrl } = selectedAnnotation
+      // we need to wait till annotations are added to sidebar AND overflow has happened
+      console.log('sidebar height', scroller.sidebar.scrollHeight)
+      const rafId = requestAnimationFrame(() => {
+        scroller.syncSidebarToText(contentUrl)
+
+        console.log('scrollHeight', scroller.sidebar.scrollHeight)  // should be > 784
+      })
+      return () => cancelAnimationFrame(rafId)
+    }
+
     const selectedAnnotationEl = (scrollContainer.current as HTMLElement).querySelector(`div[data-annotation="${selectedAnnotation.annotation.id}"]`) as HTMLElement
     if (!selectedAnnotationEl) return
     scrollIntoViewIfNeeded(selectedAnnotationEl, scrollContainer.current)

@@ -3,6 +3,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
+import { getSource } from '@/utils/annotations.ts'
 
 const ANNOTATION_GAP = 5
 
@@ -33,8 +34,6 @@ const AlignAnnotationsList: FC = () => {
     if (!selectedAnnotation) return
     const { annotation, origin } = selectedAnnotation
     if (origin === 'text') {
-      const scroller = getScroller()
-      scroller.syncSidebarToText(selectedAnnotation.annotation.target[0]?.source)
       trackTopChange()
     } else if (origin  === 'other') {
       // selectedAnnotation comes from Bookmarking or config
@@ -166,7 +165,10 @@ const AlignAnnotationsList: FC = () => {
     let timeout: ReturnType<typeof setTimeout> | undefined
     if (elements.length > 0) {
       resizeObserver = new ResizeObserver(entries => {
-        if (entries[0].contentRect.width > 0) trackTopChange()
+        if (entries[0].contentRect.width > 0) {
+          console.log('call trackTopChange')
+          trackTopChange()
+        }
       })
       resizeObserver.observe(textContainer)
     }
