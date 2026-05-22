@@ -20,6 +20,7 @@ const PanelContent: FC = React.memo(() => {
   const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
   const allotmentRef = useRef<AllotmentHandle>(null)
+  console.log('re-render')
 
   const visibleCount = panelState.panelViews.filter(v => v.visible ?? true).length
   // equal preferred size is computed before rendering - when we call allotment.reset() -> Allotment uses the updated preferred sizes
@@ -91,7 +92,7 @@ const PanelContent: FC = React.memo(() => {
           </>}
         </div>
         <div className="sidebar absolute h-full top-0">
-          <div className="absolute inset-y-0 left-0 w-px bg-border z-40" />
+          <div className={`absolute ${panelState.showSidebar ? 'inset-y-0' : ''} left-0 w-px bg-border z-40`} />
           { showSidebarContent && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle /> }
           { showSidebarContent && <SidebarView /> }
         </div>
