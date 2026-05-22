@@ -141,7 +141,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
           acc[cur.id] = {
             target: matchedNodes,
-            filtered: !selectedAnnotationTypes || ignoreFilters || isFiltered(cur, selectedAnnotationTypes, tooltipTypes),
+            filtered: annotationsConfig?.crossRefContentType !== cur.body?.annotationType ? (!selectedAnnotationTypes || ignoreFilters || isFiltered(cur, selectedAnnotationTypes, tooltipTypes)) : false,
             annotation: cur,
             nestedAnnotations
           }
