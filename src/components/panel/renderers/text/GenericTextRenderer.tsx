@@ -112,7 +112,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
       const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
         if (!cur.target) return acc
-        const isSource = cur.target[0].source === source
+        const isSource = getSource(cur.target[0]).id === source
         const selector = (cur.target[0].selector as CssSelector)?.value
 
         if (!isSource || !selector) {

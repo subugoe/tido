@@ -62,11 +62,11 @@ function getFilteredAnnotations(matchedAnnotationsMap: MatchedAnnotationsMap) {
 
 function getNestedAnnotations(annotation: Annotation, itemAnnotations: Annotation[]) {
   if (itemAnnotations.length === 0) return []
-  return itemAnnotations.filter((annot)  => annot.target[0].source === annotation.id)
+  return itemAnnotations.filter((annot)  => getSource(annot.target[0]).id === annotation.id)
 }
 
 function findTargetsInsideAnnotation(annotationId: string, itemAnnotations: Annotation[]) {
-  const nestedAnnotations = itemAnnotations.filter((annot) => annot.target[0]?.source === annotationId)
+  const nestedAnnotations = itemAnnotations.filter((annot) => getSource(annot.target[0])?.id === annotationId)
   const selectors: string[] = []
 
   nestedAnnotations.forEach((annot) => {
