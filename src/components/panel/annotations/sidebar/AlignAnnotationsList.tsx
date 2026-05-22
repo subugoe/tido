@@ -21,6 +21,7 @@ const AlignAnnotationsList: FC = () => {
   const [toggledAnnotation, setToggledAnnotation] = useState(null)
 
   const ref = useRef(null)
+  const contentUrlRef = useRef<string | null>(null)
 
   function isClickedElAnnotation(clickedEl: HTMLElement) {
     return clickedEl.closest('[data-annotation]')
@@ -33,8 +34,8 @@ const AlignAnnotationsList: FC = () => {
     if (!selectedAnnotation) return
     const { annotation, origin } = selectedAnnotation
     if (origin === 'text') {
-      const scroller = getScroller()
-      scroller.syncSidebarToText(selectedAnnotation.annotation.target[0]?.source)
+      const { contentUrl } = selectedAnnotation
+      contentUrlRef.current = contentUrl
       trackTopChange()
     } else if (origin  === 'other') {
       // selectedAnnotation comes from Bookmarking or config
@@ -130,11 +131,12 @@ const AlignAnnotationsList: FC = () => {
     if (filteredAnnotations?.length === 0) {
       setElements([])
     } else {
-      const scroller = getScroller()
-      const firstTextView = panelState.panelViews.find(v => v.view === 'text')
-      const contentUrl = panelState.item?.contents.find(c =>
-        c.contentType.includes(firstTextView?.activeContentType))?.id
-      scroller.syncSidebarToText(contentUrl)
+      if (!selectedAnnotation) {
+        // intial opening of sidebar - we just
+        const firstTextView = panelState.panelViews.find(v => v.view === 'text')
+        contentUrlRef.current = panelState.item?.contents.find(c =>
+          c.contentType.includes(firstTextView?.activeContentType))?.id
+      }
 
       const annotationEls = Array.from(ref.current?.childNodes ?? [])
       const _elements = annotationEls.map(el => {
@@ -162,6 +164,13 @@ const AlignAnnotationsList: FC = () => {
   }, [filteredAnnotations])
 
   useEffect(() => {
+    if (elements.length > 0 && contentUrlRef.current) {
+      // this useEffect happens after the above useEffect [filteredAnnotation]. In the [filteredAnnotations] the
+      // height of sidebar is set equal to that of textContainer -> sidebar height is now larger then default fixed height -> scrolling can happen
+      getScroller().syncSidebarToText(contentUrlRef.current)
+      contentUrlRef.current = null
+    }
+
     let resizeObserver: ResizeObserver | undefined
     let timeout: ReturnType<typeof setTimeout> | undefined
     if (elements.length > 0) {

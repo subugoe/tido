@@ -20,7 +20,6 @@ const PanelContent: FC = React.memo(() => {
   const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
   const allotmentRef = useRef<AllotmentHandle>(null)
-  console.log('re-render')
 
   const visibleCount = panelState.panelViews.filter(v => v.visible ?? true).length
   // equal preferred size is computed before rendering - when we call allotment.reset() -> Allotment uses the updated preferred sizes

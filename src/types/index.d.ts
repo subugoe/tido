@@ -306,7 +306,8 @@ export interface TidoContentStateTarget {
 // "other" refers to origin in [bookmarking, config]
 export interface SelectedAnnotation {
   annotation: Annotation,
-  origin: 'text' | 'annotation' | 'other'
+  origin: 'text' | 'annotation' | 'other',
+  contentUrl?: string
 }
 
 export interface PanelViewContentState {
