@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { MoveRight } from 'lucide-react'
+import { useTextView } from '@/contexts/TextViewContext.tsx'
 
 interface Props {
   annotation: Annotation | null
@@ -11,6 +12,7 @@ interface Props {
 
 const BaseItem: FC<Props> = ({ annotation }) => {
   const { annotations: annotationsConfig } = useConfig()
+  const { activeContentUrl } = useTextView()
   const { updatePanel, selectedAnnotation, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
@@ -25,7 +27,8 @@ const BaseItem: FC<Props> = ({ annotation }) => {
     updatePanel(
       { selectedAnnotation: isSelected ? null : {
         annotation,
-        origin: 'text'
+        origin: 'text',
+        contentUrl: activeContentUrl.current
       },
       showSidebar: true }
     )
