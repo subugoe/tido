@@ -413,7 +413,8 @@ const GenericTextRenderer: FC<Props> = memo(({
       } else {
         const selectedAnnotation = {
           annotation: normalAnnotations[0],
-          origin: 'text'
+          origin: 'text',
+          contentUrl: source
         } as SelectedAnnotation
 
         setSelectedAnnotation(selectedAnnotation)
