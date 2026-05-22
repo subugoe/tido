@@ -347,7 +347,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     let hasFilteredAnnotations = false
     targetEntry?.annotations.forEach(annotation => {
-      if (isFilteredAnnotation(annotation, selectedAnnotationTypesRef.current)) hasFilteredAnnotations = true
+      if (isFilteredAnnotation(annotation, selectedAnnotationTypesRef.current) || annotation.body.annotationType === annotationsConfig?.crossRefContentType) hasFilteredAnnotations = true
     })
 
     if (!hasFilteredAnnotations) return
