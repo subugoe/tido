@@ -9,6 +9,7 @@ import Metadata from '@/components/metadata/Metadata.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { PANEL_HEADER_HEIGHT } from '@/utils/constants.ts'
 import PanelViewsMenu from '@/components/panel/header/PanelViewsMenu.tsx'
+import FullScreenToggle from '@/components/panel/header/FullScreenToggle.tsx'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 import { getFilteredAnnotations } from '@/utils/annotations.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
@@ -54,7 +55,7 @@ const SidebarToggle = memo((props) => {
 })
 
 const PanelHeader: FC = () => {
-  const { usePanelTranslation, remove } = usePanel()
+  const { usePanelTranslation, remove, containerRef } = usePanel()
   const { t } = usePanelTranslation()
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const handleOpenChange = (open: boolean) => {
@@ -76,7 +77,7 @@ const PanelHeader: FC = () => {
               {<Info />}
             </Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start" className="w-[400px] pr-0">
+          <PopoverContent side="bottom" align="start" className="w-[400px] pr-0" container={containerRef.current}>
             <Metadata />
             <X
               className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"
@@ -89,6 +90,7 @@ const PanelHeader: FC = () => {
         {<PanelTitle />}
       </div>
       <div className="absolute h-full top-0 right-2 flex items-center gap-1 @min-[600px]/panel:gap-2">
+        <FullScreenToggle />
         <PanelViewsMenu />
         <SidebarToggle />
         <BaseTooltip message={t('close_panel')}>

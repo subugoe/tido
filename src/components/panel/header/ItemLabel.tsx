@@ -16,7 +16,7 @@ interface ItemLabelProps {
 }
 
 const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
-  const { panelState, updatePanel, usePanelTranslation } = usePanel()
+  const { panelState, updatePanel, usePanelTranslation, containerRef } = usePanel()
   const { t } = usePanelTranslation()
   const collection = useDataStore().collections[panelState.collectionId]
   const manifest = panelState.manifest
@@ -101,7 +101,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
           { getItemLabel() }
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent data-cy="items-dropdown" className="max-w-80">
+      <DropdownMenuContent data-cy="items-dropdown" className="max-w-80" container={containerRef.current}>
         {labels.map((item, i) => <DropdownMenuItem
           key={item.id + '_'+i}
           className={`cursor-pointer ${panelState.item?.id === item.id ? 'data-[highlighted]:text-primary text-primary' : ''} `}

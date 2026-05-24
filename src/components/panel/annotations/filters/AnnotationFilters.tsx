@@ -11,9 +11,8 @@ interface Props {
   className?: string
 }
 const AnnotationFilters: FC<Props> = ({ className }) => {
-  const { usePanelTranslation } = usePanel()
+  const { usePanelTranslation, annotationFilters, containerRef } = usePanel()
   const { t } = usePanelTranslation()
-  const { annotationFilters } = usePanel()
   const [open, setOpen] = useState(false)
 
   const hasFilters = annotationFilters && annotationFilters.length > 0
@@ -27,6 +26,7 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
         align="start"
         className="h-fit overflow-y-auto flex flex-col overflow-hidden"
         style={{ 'width': `calc(${SIDEBAR_DEFAULT_WIDTH}px - 2 * 0.75rem)` }}
+        container={containerRef.current}
       >
         <AnnotationFiltersContent />
       </PopoverContent>

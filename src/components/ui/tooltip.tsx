@@ -39,10 +39,11 @@ const TooltipContent = ({
   className,
   sideOffset = 0,
   children,
+  container,
   ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Content>) => {
+}: React.ComponentProps<typeof TooltipPrimitive.Content> & { container?: HTMLElement | null }) => {
   return (
-    <TooltipPortal container={document.querySelector('.tido')}>
+    <TooltipPortal container={container ?? document.querySelector('.tido')}>
       <TooltipPrimitive.Content
         data-slot="tooltip-content"
         sideOffset={sideOffset}

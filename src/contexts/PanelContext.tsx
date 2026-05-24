@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useState, FC, useEffect, useRef, SetStateAction, Dispatch } from 'react'
+import React, { ReactNode, createContext, useContext, useState, FC, useEffect, useRef, SetStateAction, Dispatch } from 'react'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
@@ -26,6 +26,9 @@ interface PanelContextType {
   loading: boolean
   updatePanel: (data: Partial<PanelState>) => void
   remove: () => void
+  containerRef: React.RefObject<HTMLDivElement>
+  isFullscreen: boolean
+  enterFullscreen: () => void
   resizer: PanelResizer
   initResizer: (el: HTMLElement) => void
   hoveredAnnotation: string | null
@@ -66,6 +69,21 @@ interface PanelProviderProps {
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) => {
   const { annotations: annotationsConfig, panelViews: panelViewsConfig } = useConfig()
+
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  // The key reason of useEffect: when the user presses Escape to exit fullscreen, the browser exits fullscreen on its own without calling any React code.
+  //  Without that listener, isFullscreen would stay true in React even though the panel is no longer fullscreen
+  useEffect(() => {
+    const handler = () => setIsFullscreen(!!document.fullscreenElement)
+    document.addEventListener('fullscreenchange', handler)
+    return () => document.removeEventListener('fullscreenchange', handler)
+  }, [])
+
+  const enterFullscreen = () => {
+    wrapperRef.current?.requestFullscreen()
+  }
 
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
@@ -389,6 +407,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       updatePanel,
       loading,
       remove,
+      containerRef: wrapperRef,
+      isFullscreen,
+      enterFullscreen,
       resizer,
       initResizer,
       hoveredAnnotation,
@@ -420,7 +441,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       updateSyncMap,
       setHoveredSyncAnnotations
     }}>
-      {children}
+      <div ref={wrapperRef} className="flex items-stretch">
+        {children}
+      </div>
     </PanelContext.Provider>
   )
 }
@@ -434,4 +457,4 @@ function usePanel(): PanelContextType {
   return context
 }
 
-export { PanelProvider, usePanel }
+export { PanelContext, PanelProvider, usePanel }

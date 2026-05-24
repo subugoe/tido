@@ -70,6 +70,8 @@
     "please_select_panel_mode": "Please select a panel mode",
     "show_image": "Show image",
     "show_text": "Show text",
+    "show_fullscreen": "Open fullscreen",
+    "exit_fullscreen": "Exit fullscreen",
     "reference": "Reference",
     "jump_to": "Jump to",
     "text_type": "Text type",
