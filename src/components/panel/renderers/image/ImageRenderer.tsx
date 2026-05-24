@@ -39,6 +39,7 @@ const ImageRenderer: FC = () => {
     })
 
     viewerRef.current.addHandler('open', function () {
+      viewerRef.current.viewport.zoomTo(viewerRef.current.viewport.getHomeZoom() * 0.9, undefined, true)
       setLoading(false)
     })
 
