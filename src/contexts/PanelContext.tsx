@@ -259,7 +259,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       setTimeout(() => {
         onLoaded()
         setLoading(false)
-      }, 500)
+      }, 100)
     }
   }
 

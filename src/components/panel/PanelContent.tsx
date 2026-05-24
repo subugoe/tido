@@ -12,11 +12,9 @@ import SidebarView from '@/components/panel/views/sidebar/SidebarView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 import Loading from '@/components/ui/loading.tsx'
-import { useTranslation } from 'react-i18next'
 
 const PanelContent: FC = React.memo(() => {
   const { init, panelState, resizer, error, loading } = usePanel()
-  const { t } = useTranslation()
   const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
   const allotmentRef = useRef<AllotmentHandle>(null)
@@ -67,33 +65,27 @@ const PanelContent: FC = React.memo(() => {
         '--focus-border': 'rgb(var(--tido-color-primary))'
       } as React.CSSProperties}>
       <div className="h-full w-full overflow-hidden relative" data-cy="panel-container">
-        {loading &&
-          <div className="absolute inset-0 flex justify-center top-[30%] z-10">
-            <div className="text-center">
-              {t('loading_panel_data')}
-              <div><Loading size={36} /></div>
-            </div>
-          </div>
-        }
         <div className="main-content flex flex-col h-full @container/panel">
           <PanelHeader />
-          {!loading && <>
-            <div className="flex-1">
-              <Allotment ref={allotmentRef} proportionalLayout={true}>
-                {contentPanes.map((pane, index) => {
-                  const visible = panelState.panelViews[index]?.visible ?? true
-                  return <Allotment.Pane key={pane.key} visible={visible} preferredSize={equalPreferredSize}>
-                    {pane}
-                  </Allotment.Pane>
-                })}
-              </Allotment>
+          <div className="flex-1">
+            {loading && <div className="h-full flex items-center justify-center">
+              <Loading size={36} />
             </div>
-          </>}
+            }
+            {!loading && <Allotment ref={allotmentRef} proportionalLayout={true}>
+              {contentPanes.map((pane, index) => {
+                const visible = panelState.panelViews[index]?.visible ?? true
+                return <Allotment.Pane key={pane.key} visible={visible} preferredSize={equalPreferredSize}>
+                  {pane}
+                </Allotment.Pane>
+              })}
+            </Allotment> }
+          </div>
         </div>
         <div className="sidebar absolute h-full top-0">
           <div className={`absolute ${panelState.showSidebar ? 'inset-y-0' : ''} left-0 w-px bg-border z-40`} />
-          { showSidebarContent && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle /> }
-          { showSidebarContent && <SidebarView /> }
+          {showSidebarContent && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle />}
+          {showSidebarContent && <SidebarView />}
         </div>
       </div>
     </div>
