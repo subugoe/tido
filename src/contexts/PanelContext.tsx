@@ -87,6 +87,12 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
+
+  useEffect(() => {
+    if (!resizer) return
+    resizer.updateLayoutWidths(isFullscreen)
+  }, [isFullscreen, resizer])
+
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
   const [matchedAnnotationsMaps, setMatchedAnnotationsMaps] = useState<{[contentUrl: string]: MatchedAnnotationsMap}>({})
   const [annotationFilters, setAnnotationFilters] = useState<FilterNodeWithSelection[]>( null)
