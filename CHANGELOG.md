@@ -2,6 +2,96 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.0](https://github.com/subugoe/tido/compare/v5.0.0-alpha.22...v5.0.0-beta.0) (2026-05-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* upgrade TextAPI support to v2.0.0
+
+### Features
+
+* add active style to tooltip target on click ([#995](https://github.com/subugoe/tido/issues/995)) ([974888b](https://github.com/subugoe/tido/commit/974888b4f7af175d0faec00bf202d589d0e2e097))
+* add basic support for embedded TextAPI responses ([cdfe53a](https://github.com/subugoe/tido/commit/cdfe53a11c59651402e9ad994292797434ff9ade))
+* add display of only filtered annotations in Annotation Popover  ([#1021](https://github.com/subugoe/tido/issues/1021)) ([5d59fb7](https://github.com/subugoe/tido/commit/5d59fb733a29243cbd58bacb8e52705f4b2ec1b7))
+* add loading state for Panel when loading data + increase the loading time to make it visible for user ([61ea035](https://github.com/subugoe/tido/commit/61ea03513a50ec9b32f4723e88a0c84cda79f3f9))
+* add prevent the last pane from closing ([69ea469](https://github.com/subugoe/tido/commit/69ea46963873388f7019da86b79f89a2cb543625))
+* prioritize sync annotation hover style over other styles ([5f7f32f](https://github.com/subugoe/tido/commit/5f7f32fab27c9e98a3992dd132bc04d3ae92e080))
+* scroll to selected Annotation (text -> annotation, bookmarking, config selectedAnnotationId) ([01d6f4e](https://github.com/subugoe/tido/commit/01d6f4e125f8d7397e8e4b58d8ac5117d95b30cc))
+* set light theme in playground ([acc0271](https://github.com/subugoe/tido/commit/acc02710b24dbd3517640c71e229a30bfa1b93c6))
+* sort target popover annotations based on deepest clicked target ([b7e452f](https://github.com/subugoe/tido/commit/b7e452fd6a97946916015789222ca547f6e2d712))
+* update panel shell corners, annotation footer styles, image button styles ([29c2ee5](https://github.com/subugoe/tido/commit/29c2ee54987a640ba649a2e4e9943f49fc99fa8a))
+* update TextAPI types ([3b6c06b](https://github.com/subugoe/tido/commit/3b6c06b79bb72d0fba0dcea8906ec7f1611ea539))
+* upgrade TextAPI support to v2.0.0 ([268332b](https://github.com/subugoe/tido/commit/268332bece62254f89019ad00d817e131300d003))
+* use "annotationType" instead of "x-content-type" in annotations ([54307b0](https://github.com/subugoe/tido/commit/54307b0f3b5f2cf8a16661874e00432335a8923b))
+* use "selectedIndex" and add new option for "Variant" types in annotation filters ([99ed75b](https://github.com/subugoe/tido/commit/99ed75b73ac91e1164ccd27d9689c720547a42e7))
+
+
+### Bug Fixes
+
+* adapt types according to the updated textapi types ([7e4bc3d](https://github.com/subugoe/tido/commit/7e4bc3d1d41242dbc9fdca2f92d6eecf48450061))
+* add a loading UI inside Panel ([b21932a](https://github.com/subugoe/tido/commit/b21932a4c908062b57733e93b74e0b977f7f75bd))
+* add annotation ids to targets correctly ([33f0cf7](https://github.com/subugoe/tido/commit/33f0cf722f8cf4d7a1099a956833f4693060503a))
+* add loading when target popover data is being loaded ([b0974c5](https://github.com/subugoe/tido/commit/b0974c5df3dadc184077188893d0dac75faf39dd))
+* add needed 'main-content' class in Loading container of panel ([07103aa](https://github.com/subugoe/tido/commit/07103aa1bb80bfbf37277ef4f13f7e97400b4a6b))
+* add optional checking in FilterTree ([e2c4161](https://github.com/subugoe/tido/commit/e2c4161c409c109da8e7f74e5fbdf08f8f78206a))
+* add try and catch while initializing App in ConfigContext ([80d2374](https://github.com/subugoe/tido/commit/80d237480dcecac81c401a319260e581a6e7dd0a))
+* add try/catch in loading data in Global Tree ([229e82c](https://github.com/subugoe/tido/commit/229e82cbedc82f8be17f3beacec482fcc95fdaeb))
+* add visible padding between container and image in ImageTextRenderer ([b1def2f](https://github.com/subugoe/tido/commit/b1def2fcbb623800fb5b40cab402a975a3e35c15))
+* allow the cross ref data (even wrong) to be returned and then handled in CrossRefItem component ([6578fb6](https://github.com/subugoe/tido/commit/6578fb6c50d05500a7a5b75c5150a5969e6a1ba0))
+* avoid adding annotation ids multiple times to hoveredAnnotations ([33d02cc](https://github.com/subugoe/tido/commit/33d02cc7a0273c2dfe087ef72554ed972879757a))
+* check whether Sidebar El exists before assigning styles on that in panelResizer ([ea39e3e](https://github.com/subugoe/tido/commit/ea39e3e2e509c5c092fb757301c52ed672ad03b8))
+* clicking at a sidebar annotation in annotation popover should scroll in sidebar to selected annotation ([467b061](https://github.com/subugoe/tido/commit/467b061f41ac911ca1461c513a0041d677f44b03))
+* **CrossRef:** restore checking the existence of target in text ([cf1cbd2](https://github.com/subugoe/tido/commit/cf1cbd277733bca91beb1584ce046176f9bd440a))
+* do not include Cross Ref in Annotation filters ([a0e9714](https://github.com/subugoe/tido/commit/a0e97148ca871f11223104749d71282de78fbcb5))
+* exclude correctly crossRefAnnotations from the Annotations containing text ([8c2aee3](https://github.com/subugoe/tido/commit/8c2aee3dec4ed5458636d5e3931306761f1d0348))
+* fix bookmarking ([8c23bf4](https://github.com/subugoe/tido/commit/8c23bf4ac6cb07e28881a5cc9c0b87c7daaf231a))
+* fix getting collection slugs ([278b4a0](https://github.com/subugoe/tido/commit/278b4a0eb44f1e5fb2fcc62b02cf908437ae45f4))
+* fix left-over hover highlighting on mouseleave of nested annotations ([cdbc718](https://github.com/subugoe/tido/commit/cdbc7187a1cf351ca1c48d3d84fee1bf1eb44cae))
+* fix sidebar scrolling errors when there are configured tooltip annotations ([c144beb](https://github.com/subugoe/tido/commit/c144beb537edbeeca535a7c6025f9f1d0120df07))
+* hide annotation popover on text scroll ([54dc541](https://github.com/subugoe/tido/commit/54dc541d6ab098df1cee0f575d07fdeeb2c8e6ec))
+* highlight again targets of Variant and reshow the variant annotations when reselecting it in multiple filters ([d48587f](https://github.com/subugoe/tido/commit/d48587f68b3ed293c7da271e6fa87a40d1de895c))
+* improve annotation filters config validation and update MHA config ([6b8c04d](https://github.com/subugoe/tido/commit/6b8c04d9cc8cd5ba217880684a1472756faa95ed))
+* improve sync target scrolling ([0b880b4](https://github.com/subugoe/tido/commit/0b880b4841e9045f71816cac260de395c6d8d45b))
+* include bottom zone at sync scrolling when the text is reaching it's end ([06dd107](https://github.com/subugoe/tido/commit/06dd107329dd782cb5911aab4c16ff4846b13ccb))
+* keep old values for active content type and showSidebar at item switch ([5b75452](https://github.com/subugoe/tido/commit/5b75452a2e8538b5d803651c172694626c6704f4))
+* on panel update always load new content types from item ([d1c812e](https://github.com/subugoe/tido/commit/d1c812e28c50be8e396b815cb2c8734b6b128eb3))
+* open annotation popover when clicking a cross ref link ([81e9250](https://github.com/subugoe/tido/commit/81e9250e7b4d13391a1151695d23c64eea0beebb))
+* open initially the first content type for the text pane (add activeContentType) to panelView ([5fae1e2](https://github.com/subugoe/tido/commit/5fae1e2ec2d64cc6a195b0faa34349cdbc2a1050))
+* preserve the selected views in a panel when toggling some off and navigate to a new item ([4895a9e](https://github.com/subugoe/tido/commit/4895a9e44386a61ded855e16e1b844bb70ff0592))
+* prev item button ([9377b47](https://github.com/subugoe/tido/commit/9377b47cb36f10cfcada06077eafa22f4f420dd5))
+* reinitialize Panel once we click retry button on error state ([1407a10](https://github.com/subugoe/tido/commit/1407a10ae6035ccab102c6d75ee2c71a1df5e819))
+* remove sidebar border when closed ([89722bf](https://github.com/subugoe/tido/commit/89722bf4e2aac1e81c45701d4162b42d176345c3))
+* resolve HTML console errors during annotation popover rendering ([b13e608](https://github.com/subugoe/tido/commit/b13e608ac592a6f53df3d41c1e5b12219d6e3fe9))
+* should not render cross ref annotations ([1fe35a7](https://github.com/subugoe/tido/commit/1fe35a71ddc6480afacbb826810126ebf2565ada))
+* show single tooltip annotations again ([bdd0888](https://github.com/subugoe/tido/commit/bdd08882840e93c5de9da5b83c9f69411dabfcf1))
+* show visible panes with same width AND prevent them from overlapping each other ([f4447a7](https://github.com/subugoe/tido/commit/f4447a7f65b78a9efedc30ac921cd05442044b84))
+* sync sidebar with scrolled text in the right time - after the height of sidebar is now scrollable AND align sidebar with the respective text pane ([1f588c3](https://github.com/subugoe/tido/commit/1f588c3d23adcddc6fd0793318d61de72d0ccc51))
+* update header styles on mobile screens ([9347a49](https://github.com/subugoe/tido/commit/9347a49ee6076e22544a562e8ff72883c3657e7a))
+* update selection color in playground editor ([6020d2b](https://github.com/subugoe/tido/commit/6020d2b0795dd6a23890ed832ce34d22e93a194c))
+* use "div" instead of "body" as root element for texts ([32a92f7](https://github.com/subugoe/tido/commit/32a92f73e2bac54a4cbfeb9785d59533fc39090c))
+
+
+### Docs
+
+* add "api" folder to preview command, add example data selection to playground ([27aa530](https://github.com/subugoe/tido/commit/27aa5308a26feba7f5d348dfbaf72518c4a49417))
+* add first implementation of the TIDO Playground ([a513ecb](https://github.com/subugoe/tido/commit/a513ecb56e9f06e992b7b10f0ad3656bfb9b7d9e))
+* copy example api in github pages ([71415e4](https://github.com/subugoe/tido/commit/71415e4f26c04ac8884102892e06d9a6aab58a30))
+* update BDN and MHA configs ([6fc3803](https://github.com/subugoe/tido/commit/6fc3803a269de671d79ef8a8c2085310f8d5f50f))
+* update playground ([78c4194](https://github.com/subugoe/tido/commit/78c4194016650a9c016ad12cd1b0256ef3489bee))
+* update playground ([592b394](https://github.com/subugoe/tido/commit/592b3942643998f34b1c6003c89a0f8f382e01ff))
+* update playground - add config reference, add TACOS collections ([cdd0825](https://github.com/subugoe/tido/commit/cdd08255396a8fd6a3e3c7218ddac90e1d8b5f42))
+
+
+### Refactoring
+
+* check whether the referenced target exists in text ([6839394](https://github.com/subugoe/tido/commit/6839394b14dd8cea83b5bca8cb06261ac758bdac))
+* move loading to panel content body ([8a7733b](https://github.com/subugoe/tido/commit/8a7733bd50867b6639e7f987830c62af9bfbed40))
+* retrieve better crossRefAnnotations ([918d1ce](https://github.com/subugoe/tido/commit/918d1ce34b98faf70cf805ac771b194983d0cb8b))
+* retrieve target.source using getSource method ([85d3e8f](https://github.com/subugoe/tido/commit/85d3e8f5faf2af9321c40ec5a5b674e597d51bc2))
+* update file and directory structure ([75aa6cb](https://github.com/subugoe/tido/commit/75aa6cb177249d866ece814ed53f9c3e3f6c4543))
+* use paddingTop prop directly as value in GenericTextRenderer ([097c4a1](https://github.com/subugoe/tido/commit/097c4a161d0a0bc76fcdc66b46513e202eab7a35))
+
 ## [5.0.0-alpha.22](https://github.com/subugoe/tido/compare/v5.0.0-alpha.21...v5.0.0-alpha.22) (2026-04-21)
 
 
