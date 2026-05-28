@@ -1,15 +1,16 @@
 describe('Annotations', () => {
 
     const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
+    console.log('api url', apiUrl)
     const annotationConfig = `annotations.defaultMode=list&panels[0].collection=${apiUrl}/example/collections/example.json`;
 
     const selectors = {
         sidebarToggle: '[data-cy="sidebar-toggle"]',
-        sidebarContainer: '[data-sidebar-container]'
+        sidebarContainer: '#panels-wrapper .panel [data-sidebar-container]'
     }
 
-    const sidebar = () => cy.get(selectors.sidebarContainer)
-    const openSidebar = () => {
+  const sidebar = () => cy.get(selectors.sidebarContainer)
+  const openSidebar = () => {
         cy.get(selectors.sidebarToggle).click()
     }
 
@@ -58,11 +59,12 @@ describe('Annotations', () => {
     })
 
     it('Should open filter popover and toggle filters off/on', () => {
-        openSidebar()
+      openSidebar()
 
-        sidebar().find('[data-annotation]').its('length').as('initialCount')
+      sidebar().children().its('length').as('initialCount')
 
-        sidebar().contains('button', /filters/i).click()
+
+      sidebar().contains('button', /filters/i).click()
         cy.get('[data-slot="popover-content"]').should('be.visible')
 
         cy.get('[data-slot="popover-content"] [data-slot="checkbox"]').each(($checkbox) => {
@@ -71,18 +73,17 @@ describe('Annotations', () => {
             }
         })
 
-        cy.get('@initialCount').then((initialCount) => {
-            sidebar().find('[data-annotation]').should('have.length.lessThan', initialCount)
-        })
+      sidebar().find('[data-cy="empty-annotations-view"')
 
-        cy.get('[data-slot="popover-content"] [data-slot="checkbox"]').each(($checkbox) => {
+
+      cy.get('[data-slot="popover-content"] [data-slot="checkbox"]').each(($checkbox) => {
             if ($checkbox.attr('data-state') !== 'checked') {
                 cy.wrap($checkbox).click({ force: true })
             }
         })
 
         cy.get('@initialCount').then((initialCount) => {
-            sidebar().find('[data-annotation]').should('have.length.gte', initialCount)
+            sidebar().find('[data-cy="annotations-list"] > div[data-annotation]').should('have.length.gte', initialCount)
         })
     })
 

@@ -6,7 +6,7 @@ import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 const AnnotationsList: FC = () => {
   const { filteredAnnotations } = useAnnotations()
 
-  if (filteredAnnotations.length > 0) return <div className={`transition-opacity pt-4`}>
+  if (filteredAnnotations.length > 0) return <div data-cy="annotations-list" className={`transition-opacity pt-4`}>
     {filteredAnnotations.map(a => <Annotation
       data={a}
       key={a.id}
