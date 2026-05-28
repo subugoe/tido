@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.1](https://github.com/subugoe/tido/compare/v5.0.0-beta.0...v5.0.0-beta.1) (2026-05-28)
+
+
+### Features
+
+* discover tree title even if textapiType is missing ([23f4846](https://github.com/subugoe/tido/commit/23f4846e52e40d40f29d3738af306616c686322e))
+
+
+### Bug Fixes
+
+* remove panel loading template ([f3bd11f](https://github.com/subugoe/tido/commit/f3bd11fa5978a588b0c81d33f95fdbf3e94318ef))
+
+
+### Docs
+
+* add config reference for playground ([0810e2b](https://github.com/subugoe/tido/commit/0810e2b2aeeba98cfaf2e4f69c601936e6d2b2ba))
+
 ## [5.0.0-beta.0](https://github.com/subugoe/tido/compare/v5.0.0-alpha.22...v5.0.0-beta.0) (2026-05-27)
 
 
