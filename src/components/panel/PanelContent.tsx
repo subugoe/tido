@@ -11,7 +11,6 @@ import { Allotment, AllotmentHandle } from 'allotment'
 import SidebarView from '@/components/panel/views/sidebar/SidebarView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
-import Loading from '@/components/ui/loading.tsx'
 
 const PanelContent: FC = React.memo(() => {
   const { init, panelState, resizer, error, loading } = usePanel()
@@ -68,18 +67,14 @@ const PanelContent: FC = React.memo(() => {
         <div className="main-content flex flex-col h-full @container/panel">
           <PanelHeader />
           <div className="flex-1">
-            {loading && <div className="h-full flex items-center justify-center">
-              <Loading size={36} />
-            </div>
-            }
-            {!loading && <Allotment ref={allotmentRef} proportionalLayout={true}>
+            <Allotment ref={allotmentRef} proportionalLayout={true}>
               {contentPanes.map((pane, index) => {
                 const visible = panelState.panelViews[index]?.visible ?? true
                 return <Allotment.Pane key={pane.key} visible={visible} preferredSize={equalPreferredSize}>
                   {pane}
                 </Allotment.Pane>
               })}
-            </Allotment> }
+            </Allotment>
           </div>
         </div>
         <div className="sidebar absolute h-full top-0">
