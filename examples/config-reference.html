@@ -1,0 +1,481 @@
+    <h1>TIDO — Configuration Reference</h1>
+    <p style="color:#555;margin-bottom:1.5rem;">
+      Auto-generated from <code>README.md</code>.
+    </p>
+    <p>You can fully customize the viewer&#39;s behaviour by providing a configuration object to the TIDO instance.
+    First of all, there should be set either a <code>collection</code> or a <code>manifest</code> value.</p>
+    <p>By default, TIDO will render 5 panels displaying sequence tree, metadata, image, text content and annotation views.</p>
+    <p>There are options to</p>
+    <ul>
+    <li>add/remove multiple panels</li>
+    <li>freely combine view components in panels</li>
+    <li>show/hide header features</li>
+    <li>change the color scheme</li>
+    <li>and more ...</li>
+    </ul>
+    <p><strong>Example configuration:</strong></p>
+    <details>
+    <summary>Click to open</summary><pre><code class="language-html">&lt;script id=&quot;tido-config&quot; type=&quot;application/json&quot;&gt;
+      {
+        &quot;allowNewCollections&quot;: false,
+        &quot;defaultPanelMode&quot;: &quot;split&quot;,
+        &quot;lang&quot;: &quot;de&quot;,
+        &quot;panels&quot;: [
+          {
+            &quot;collection&quot;: &quot;https://api.ahiqar.uni-goettingen.de/textapi/ahiqar/syriac/collection.json&quot;,
+            &quot;manifest&quot;: &quot;https://api.ahiqar.sub.uni-goettingen.de/textapi/ahiqar/syriac/3r145/manifest.json&quot;
+          }
+        ],
+        &quot;theme&quot;: {
+          &quot;primaryColor&quot;: &quot;#1E40AF&quot;
+        },
+        &quot;rootCollections&quot;: [
+          &quot;https://textapi.dev.vierwachen.sub.uni-goettingen.de/api/4w/collection.json&quot;
+        ],
+        &quot;translations&quot;: {
+          &quot;de&quot;: {
+            &quot;accurate&quot;: &quot;Handschriftengetreu&quot;,
+            &quot;simplified&quot;: &quot;Vereinfacht&quot;
+          }
+        },
+        &quot;title&quot;: &quot;Vier Wachen Edition&quot;
+      }
+    &lt;/script&gt;
+    </code></pre>
+    </details><h3>The Keys in Detail</h3>
+    <table>
+    <thead>
+    <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Default</th>
+    <th>Description</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>allowNewCollections</td>
+    <td>Boolean</td>
+    <td>true</td>
+    <td>Toggles the ability to add new collections to the app through a user input.</td>
+    </tr>
+    <tr>
+    <td>annotations</td>
+    <td>AnnotationsConfig</td>
+    <td>{}</td>
+    <td>Configures the display of annotations and their filtering options. See <a href="#annotations">annotations</a> chapter.</td>
+    </tr>
+    <tr>
+    <td>annotations.defaultMode</td>
+    <td>String</td>
+    <td><code>aligned</code></td>
+    <td>An annotations mode toggle is shown. Initial selected mode is <code>aligned</code> mode</td>
+    </tr>
+    <tr>
+    <td>annotations.filters</td>
+    <td>AnnotationFiltersConfig</td>
+    <td>-</td>
+    <td>Defines a nested object of filter options.</td>
+    </tr>
+    <tr>
+    <td>annotations.filters.rootSelectionRule</td>
+    <td>String</td>
+    <td><code>multiple</code></td>
+    <td>Controls the overall behavior and layout of the filter UI. Allowed values: <code>multiple</code> or <code>single</code>. When set to <code>single</code>, a tab bar is rendered for root-level nodes.</td>
+    </tr>
+    <tr>
+    <td>annotations.filters.selectedIndex</td>
+    <td>Number</td>
+    <td>-</td>
+    <td>Index of the initially selected filter node in the filter tree. Only applies when <code>rootSelectionRule</code> is set to <code>single</code>.</td>
+    </tr>
+    <tr>
+    <td>annotations.filters.items</td>
+    <td>FilterNode[]</td>
+    <td>-</td>
+    <td>Array of filter nodes defining the hierarchical filter tree structure.</td>
+    </tr>
+    <tr>
+    <td>annotations.filters.items[i].types</td>
+    <td>String[] | VariantType[]</td>
+    <td>-</td>
+    <td>Array of annotation type identifiers that a filter node controls. Can be plain strings (e.g., <code>&quot;person&quot;</code>, <code>&quot;place&quot;</code>) or variant witness objects (e.g., <code>{ Variant: &quot;witness_id&quot; }</code>).</td>
+    </tr>
+    <tr>
+    <td>annotations.filters.items[i].label</td>
+    <td>String</td>
+    <td>-</td>
+    <td>Label to display for a filter node.</td>
+    </tr>
+    <tr>
+    <td>annotations.filters.items[i].items</td>
+    <td>FilterNode[]</td>
+    <td>-</td>
+    <td>Child filter nodes for nested filtering.</td>
+    </tr>
+    <tr>
+    <td>annotations.singleMode</td>
+    <td>String</td>
+    <td>-</td>
+    <td>Specifies only one annotations mode, which can be either <code>aligned</code> or <code>list</code></td>
+    </tr>
+    <tr>
+    <td>annotations.types</td>
+    <td>AnnotationTypeConfigMap</td>
+    <td>-</td>
+    <td>A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.</td>
+    </tr>
+    <tr>
+    <td>annotations.types[i].label</td>
+    <td>String</td>
+    <td>-</td>
+    <td>Custom label to display for an annotation type.</td>
+    </tr>
+    <tr>
+    <td>annotations.tooltipTypes</td>
+    <td>String[]</td>
+    <td>-</td>
+    <td>Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.</td>
+    </tr>
+    <tr>
+    <td>container</td>
+    <td>String</td>
+    <td><code>#app</code></td>
+    <td>Specifies the CSS selector where we should append the TIDO app to.</td>
+    </tr>
+    <tr>
+    <td>lang</td>
+    <td>String (ISO 639-1 language code)</td>
+    <td><code>en</code></td>
+    <td>Specifies the current active language of the app. See <a href="#translations">translations</a> chapter.</td>
+    </tr>
+    <tr>
+    <td>panels</td>
+    <td>PanelConfig[]</td>
+    <td>[]</td>
+    <td>Defines an array of panel objects. The panels will appear in the same order.</td>
+    </tr>
+    <tr>
+    <td>panels[i].collection</td>
+    <td>String</td>
+    <td>-</td>
+    <td>TextAPI collection URL.</td>
+    </tr>
+    <tr>
+    <td>panels[i].item</td>
+    <td>String</td>
+    <td>-</td>
+    <td>TextAPI item URL. If not specified, the first item of the collection will be used.</td>
+    </tr>
+    <tr>
+    <td>panels[i].manifest</td>
+    <td>String</td>
+    <td>-</td>
+    <td>TextAPI manifest URL. If not specified, the first manifest of the collection will be used.</td>
+    </tr>
+    <tr>
+    <td>panels[i].selectedAnnotation</td>
+    <td>String</td>
+    <td>-</td>
+    <td>Specifies the ID of a specific annotation to select/display when the panel loads.</td>
+    </tr>
+    <tr>
+    <td>panels[i].showSidebar</td>
+    <td>Boolean</td>
+    <td>-</td>
+    <td>Controls whether the annotations sidebar is visible for this panel.</td>
+    </tr>
+    <tr>
+    <td>panels[i].views</td>
+    <td>PanelViewConfig[]</td>
+    <td>-</td>
+    <td>Overrides the global <code>panelViews</code> config for this specific panel. Use this to customize views per panel while still inheriting unset properties from the global config.</td>
+    </tr>
+    <tr>
+    <td>panelViews</td>
+    <td>PanelViewConfig[]</td>
+    <td><code>[{label: &quot;Image&quot;, view: &quot;image&quot;}, {label: &quot;Text&quot;, view: &quot;text&quot;}]</code></td>
+    <td>Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the &quot;View&quot; dropdown in the panel header. See <a href="#panel-views">Panel Views</a> chapter.</td>
+    </tr>
+    <tr>
+    <td>panelViews[i].activeContentType</td>
+    <td>String</td>
+    <td>-</td>
+    <td>Specifies which content type should be active/selected by default for this view. Use with contentTypes to set the default selection.</td>
+    </tr>
+    <tr>
+    <td>panelViews[i].contentTypes</td>
+    <td>String[]</td>
+    <td>-</td>
+    <td>Specifies a list of TextAPI content type identifiers. If multiple are given, a content type toggle with a dropdown selection will be shown. Users can then switch the respective content type within a split pane.</td>
+    </tr>
+    <tr>
+    <td>panelViews[i].label</td>
+    <td>String</td>
+    <td><code>Image</code> | <code>Text</code></td>
+    <td>Specifies a label for a view. It appears as title prefix in the content type toggle and in the &quot;View&quot; selection dropdown in the panel header.</td>
+    </tr>
+    <tr>
+    <td>panelViews[i].view</td>
+    <td><code>image</code> | <code>text</code></td>
+    <td><code>image</code> | <code>text</code></td>
+    <td>Specifies a view identifier that should be loaded into a split pane.</td>
+    </tr>
+    <tr>
+    <td>panelViews[i].visible</td>
+    <td>Boolean</td>
+    <td>true</td>
+    <td>Controls whether this view is visible in the panel. When false, the view will be hidden but can be toggled on via the &quot;View&quot; dropdown.</td>
+    </tr>
+    <tr>
+    <td>rootCollections</td>
+    <td>String[]</td>
+    <td>[]</td>
+    <td>Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.</td>
+    </tr>
+    <tr>
+    <td>showAddNewPanelButton</td>
+    <td>Boolean</td>
+    <td>true</td>
+    <td>Toggles the display of the &quot;add new panel&quot; button.</td>
+    </tr>
+    <tr>
+    <td>showContentTypeToggle</td>
+    <td>Boolean</td>
+    <td>true</td>
+    <td>Toggles the display of the content type toggle in TextViews. When false, the whole bar is hidden.</td>
+    </tr>
+    <tr>
+    <td>showGlobalTree</td>
+    <td>Boolean</td>
+    <td>true</td>
+    <td>Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.</td>
+    </tr>
+    <tr>
+    <td>theme</td>
+    <td>Object</td>
+    <td>Object</td>
+    <td>Specifies theme settings for UI elements.</td>
+    </tr>
+    <tr>
+    <td>theme.primaryColor</td>
+    <td>String</td>
+    <td><code>#3456aa</code>, <code>rgb(79, 70, 229)</code>, <code>hsl(243, 75%, 59%)</code>, <code>oklch(0.4743 0.1405 264.94)</code></td>
+    <td>Primary color of UI elements. Used on buttons and other interactive elements. The value can be provided as string in following color systems (hex, rgb, hsl, oklch). Alpha channel is not supported.</td>
+    </tr>
+    <tr>
+    <td>title</td>
+    <td>String</td>
+    <td>empty</td>
+    <td>Specifies the main title of the app in the header. Translatable.</td>
+    </tr>
+    <tr>
+    <td>translations</td>
+    <td>Object</td>
+    <td>null</td>
+    <td>Specifies a custom translations object. See <a href="#translations">translations</a> chapter.</td>
+    </tr>
+    <tr>
+    <td>translations.[lang]</td>
+    <td>TranslationNamespace</td>
+    <td>-</td>
+    <td>Defines a language key. The value is a TranslationNamespace object.</td>
+    </tr>
+    <tr>
+    <td>translations.[lang].[namespace]</td>
+    <td>Object</td>
+    <td>-</td>
+    <td>Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a <a href="#translations">list</a> that we expose for overriding in the configuration.</td>
+    </tr>
+    <tr>
+    <td>translations.[lang].[namespace].[translationKey]</td>
+    <td>String</td>
+    <td>-</td>
+    <td>Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a <a href="#translations">list</a> that we expose for overriding in the configuration.</td>
+    </tr>
+    </tbody></table>
+    <h3>Panel Views</h3>
+    <p>This array of <code>PanelViewConfig</code> objects defines the actual visible content inside a panel. It is a list of
+    objects, each of which creates a resizable split pane inside the panel. This configuration will be applied to all
+    additionally added panels. Users can toggle on/off each split pane by the &quot;View&quot; dropdown in the panel header.
+    It will show your configured labels of each <code>PanelViewConfig</code> as options. If no label is stated, it will show the raw
+    content type identifier instead.</p>
+    <h3>Annotations</h3>
+    <p>We provide configuration options to customize both the display and filtering of annotations.</p>
+    <p>The configuration is organized by concern. Each aspect can be defined independently using its own configuration object
+    under a dedicated key.</p>
+    <p>Working with annotations, especially variants, can be complex.
+    Variant annotations reference one or more witnesses, which are identified by string identifiers.
+    Within the configuration, these witness identifiers are treated as annotation types.
+    This allows you to apply the same configuration principles to witnesses as you would to any other annotation type.</p>
+    <p>If no annotations configuration is provided at all, TIDO will discover the currently available annotations on-the-fly.
+    The visible types and filters are highly dependent on the loaded  panel content.</p>
+    <h4>Types</h4>
+    <table>
+    <thead>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>types</td>
+    <td>AnnotationTypeConfigMap</td>
+    </tr>
+    </tbody></table>
+    <p>A map of config objects for annotation types. Each key represents the annotation type string (&quot;x-content-type&quot;).
+    Each value is an <code>AnnotationTypeConfig</code> object for setting a custom label and icon.
+    These values will be used in the UI to customize the display of annotations items in the panel sidebar.</p>
+    <p>As mentioned above, variant annotations are a special case. In order to configure the witnesses display,
+    you can set a the <code>idno</code> value from the <code>refs</code>-Array in the annotationsPage response.</p>
+    <p><strong>Example:</strong></p>
+    <pre><code class="language-json">{
+      &quot;annotations&quot;: {
+        &quot;types&quot;: {
+          &quot;Place&quot;: { &quot;label&quot;: &quot;Ort&quot; },
+          &quot;witness_a&quot;: { &quot;label&quot;: &quot;Witness A&quot; }
+        }
+      }
+    }
+    </code></pre>
+    <h4>Filters</h4>
+    <table>
+    <thead>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+    <td>filters</td>
+    <td>AnnotationFiltersConfig</td>
+    </tr>
+    </tbody></table>
+    <p>Annotations displayed in the sidebar can be filtered by their type. You can define a hierarchical structure for these
+    filter options, referred to as a filter tree.
+    Each node in the filter tree can control multiple annotation types simultaneously. Therefore, you need to
+    specify an array of annotation types that should be affected by a given filter node.</p>
+    <p>At the root level, you can optionally define a <code>rootSelectionRule</code> (allowed values: <code>multiple</code> or <code>single</code>) to control
+    the overall behavior and layout of the filter UI:</p>
+    <p>If set to <code>single</code>, the UI renders a tab bar containing the root-level nodes and a content area below it.
+    Selecting a tab updates the content area to display the child nodes of the selected root option.</p>
+    <p>If set to <code>multiple</code>, a multi-selection tree is rendered without a tab bar,
+    allowing multiple root-level nodes to be selected simultaneously.</p>
+    <p>If the rule is not specified, we set it to <code>multiple</code>.</p>
+    <p><strong>Example:</strong></p>
+    <pre><code class="language-json">{
+      &quot;annotations&quot;: {
+        &quot;filters&quot;: {
+          &quot;rootSelectionRule&quot;: &quot;single&quot;,
+          &quot;items&quot;: [
+            {
+              &quot;label&quot;: &quot;Variants&quot;,
+              &quot;types&quot;: [&quot;Variant&quot;],
+              &quot;items&quot;: [
+                {
+                  &quot;label&quot;: &quot;Witness A&quot;,
+                  &quot;types&quot;: [&quot;witness_a&quot;]
+                },
+                {
+                  &quot;label&quot;: &quot;Witness B&quot;,
+                  &quot;types&quot;: [&quot;witness_b&quot;]
+                }
+              ]
+            },
+            {
+              &quot;label&quot;: &quot;Commentary&quot;,
+              &quot;items&quot;: [
+                {
+                  &quot;label&quot;: &quot;Entities&quot;,
+                  &quot;items&quot;: [
+                    {
+                      &quot;label&quot;: &quot;Places&quot;,
+                      &quot;types&quot;: [&quot;place&quot;, &quot;region&quot;]
+                    },
+                    {
+                      &quot;label&quot;: &quot;Persons&quot;,
+                      &quot;types&quot;: [&quot;person&quot;]
+                    }
+                  ]
+                },
+                {
+                  &quot;label&quot;: &quot;Additions&quot;,
+                  &quot;types&quot;: [&quot;addition&quot;]
+                }
+              ]
+            },
+            {
+              &quot;label&quot;: &quot;Dictionary&quot;,
+              &quot;types&quot;: [&quot;dict&quot;]
+            }
+          ]
+        }
+      }
+    }
+    </code></pre>
+    <h4>AnnotationsMode</h4>
+    <p>By default we provide an AnnotationsMode toggle which enables switching between <code>list</code> and <code>aligned</code> mode. Aligned mode
+    will arrange annotations at the top position of text targets. List mode will ignore positioning and arrange the annotations
+    vertically one after another.
+    To specify the initial selected mode you should add <code>defaultMode</code> in <code>annotations</code> config as following.</p>
+    <p><strong>Example:</strong></p>
+    <pre><code class="language-json">{
+      &quot;annotations&quot;: {
+        &quot;defaultMode&quot;: &quot;list&quot;
+      }
+    }
+    </code></pre>
+    <p>You can also have only one mode of annotations. In this case AnnotationsToggle is not shown anymore.
+    To accomplish this, you should add <code>singleMode</code> key in config as shown below.</p>
+    <p><strong>Example:</strong></p>
+    <pre><code class="language-json">{
+      &quot;annotations&quot;: {
+        &quot;singleMode&quot;: &quot;aligned&quot;
+      }
+    }
+    </code></pre>
+    <p>If no key regarding modes is specified, then by default AnnotationsToggle is shown with <code>aligned</code> mode as initially selected.</p>
+    <h3>Translations</h3>
+    <p>We provide a flexible way to use TIDO in your desired language. First of all we keep all translation keys in files
+    under <code>public/translations</code>. Each file has to follow the naming convention <code>[ISO 639-1 language code].json</code>. By default,
+    we provide a limited amount of supported languages. However, you can configure your custom languages though the TIDO config object.
+    Append your language under the <code>translations</code> key in the config and set the <code>lang</code> key to your language, so it is treated
+    as active language.</p>
+    <h4>Collection Namespaces</h4>
+    <p>In TIDO we give you the ability to define custom translations for different collections.</p>
+    <p><strong>This is how it works:</strong>
+    The translation key/value pairs are always wrapped by a namespace which can be either <code>common</code> or a collection slug.
+    The default namespace is <code>common</code> and is used as a fallback namespace.
+    You have to provide at least one namespace in your translation objects. If you don&#39;t need to use collection namespaces it still has to be <code>common</code>.
+    If the namespace is a TextAPI collection slug,
+    we check at initialization time of each panel whether there is a match between the namespace key and the slug from the loaded collection.
+    You don&#39;t need to provide a full set of translation key/value pairs on each namespace.
+    As mentioned before, <code>common</code> is a fallback namespace, so if any translation key is missing on your collection namespace, it will still be translated from the <code>common</code>namespace.</p>
+    <p>Hint: There is a difference between fixed keys that we use internally (like <code>add_new_panel</code>) or dynamic keys that we might
+    receive from the TextAPI (like dynamic metadata keys). If you want to translate the latter ones, just state them as keys to your translation object.</p>
+    <p><strong>Example:</strong></p>
+    <pre><code class="language-json">{
+      &quot;lang&quot;: &quot;fr&quot;,
+      &quot;translations&quot;: {
+        &quot;fr&quot;: {
+          &quot;common&quot;: {
+            &quot;add_new_panel&quot;: &quot;Ajouter un nouveau panneau&quot;,
+            &quot;title&quot;: &quot;Titre&quot;,
+            &quot;my_custom_key&quot;: &quot;Valeur très importante&quot;,
+            &quot;That one string&quot;: &quot;Ce texte&quot;,
+            &quot;manifest&quot;: &quot;manuscrit&quot;
+          },
+          &quot;special_collection&quot;: {
+            &quot;manifest&quot;: &quot;livre&quot;
+          }
+        }
+      }
+    }
+    </code></pre>
+    <p>You can see that the first two keys <code>add_new_panel</code> and <code>title</code> are our fixed app keys and the other two keys are custom
+    project keys. If you set <code>lang</code> to a language that we don&#39;t support and omit certain translations in your config,
+    we will display those in English. If you don&#39;t provide a translation for a custom key, it will be displayed just as-is.
+    Also notice how the <code>manifest</code> key is being set to a different word for <code>special_collection</code>.</p>
+    
+    <div class="source-note">
+      Source: <code>README.md</code> — <a href="https://github.com/subugoe/tido">TIDO</a>
+    </div>
