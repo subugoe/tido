@@ -63,7 +63,6 @@ describe('Annotations', () => {
 
       sidebar().find('[data-cy="annotations-list"] > div[data-annotation]').should('have.length',6)
 
-
       sidebar().contains('button', /filters/i).click()
         cy.get('[data-slot="popover-content"]').should('be.visible')
 
@@ -74,7 +73,6 @@ describe('Annotations', () => {
         })
 
       sidebar().find('[data-cy="empty-annotations-view"')
-
 
       cy.get('[data-slot="popover-content"] [data-slot="checkbox"]').each(($checkbox) => {
             if ($checkbox.attr('data-state') !== 'checked') {
@@ -97,23 +95,11 @@ describe('Annotations', () => {
     it('Should support view more/less on lengthy annotation body when available', () => {
         openSidebar()
 
-
         sidebar().find('[data-annotation]').should('exist')
 
-        sidebar().then(($container) => {
-            const viewMoreBtn = $container
-                .find('button')
-                .filter((_, el) => /view more/i.test(el.textContent))
-
-            if (!viewMoreBtn.length) {
-                cy.log('No view more button in this dataset, skipping')
-                return
-            }
-
-            cy.wrap(viewMoreBtn.first()).click()
-            cy.contains('button', /view less/i).should('exist').click()
-            cy.contains('button', /view more/i).should('exist')
-        })
+        sidebar().find('[data-annotation]').first().contains('button', /view more/i).click()
+        cy.contains('button', /view less/i).should('exist').click()
+        cy.contains('button', /view more/i).should('exist')
     })
 
     it('Should trigger hover events on first annotation', () => {
