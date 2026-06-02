@@ -16,7 +16,7 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "This is one of the <span id=\"famous-opening-lines\">most famous opening lines in English literature</span>. It sets the theme of marriage and social class that pervades the novel.",
+        "value": "This is one of the <span id=\"famous-opening-lines\">most famous opening lines in English literature</span>. It sets the theme of marriage and social class that pervades the novel. It sets the theme of marriage and social class that pervades the novel",
         "format": "text/html",
         "annotationType": "Literary Analysis"
       },

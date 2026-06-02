@@ -33,8 +33,8 @@ const AnnotationFooter: FC<Props> = ({ nestedAnnotations, showExpanded, onToggle
   }, [expanded])
 
 
-  return <div className="w-full h-fit flex flex-col border-t border-border bg-muted cursor-pointer">
-    <div className="flex footer-stripe pr-4 py-1 items-center justify-end text-xs text-muted-foreground" onClick={(e) => handleClick(e)}>
+  return <div className="w-full h-fit flex flex-col border-t border-border bg-muted cursor-pointer" data-cy="footer">
+    <div className="flex pr-4 py-1 items-center justify-end text-xs text-muted-foreground" onClick={(e) => handleClick(e)}>
       <span className="p-0.5">{nestedAnnotations.length} {nestedAnnotations.length > 1 ? t('nested_annotations') : t('nested_annotation')}</span>
       <span className="mt-0.5">{expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</span>
     </div>

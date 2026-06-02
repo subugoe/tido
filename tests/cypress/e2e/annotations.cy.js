@@ -61,7 +61,7 @@ describe('Annotations', () => {
     it('Should open filter popover and toggle filters off/on', () => {
       openSidebar()
 
-      sidebar().children().its('length').as('initialCount')
+      sidebar().find('[data-cy="annotations-list"] > div[data-annotation]').should('have.length',6)
 
 
       sidebar().contains('button', /filters/i).click()
@@ -81,28 +81,17 @@ describe('Annotations', () => {
                 cy.wrap($checkbox).click({ force: true })
             }
         })
+      sidebar().find('[data-cy="annotations-list"] > div[data-annotation]').should('have.length',6)
 
-        cy.get('@initialCount').then((initialCount) => {
-            sidebar().find('[data-cy="annotations-list"] > div[data-annotation]').should('have.length.gte', initialCount)
-        })
     })
 
     it('Should expand nested annotation footer if present', () => {
         openSidebar()
 
         sidebar().find('[data-annotation]').should('exist')
-
-        sidebar().then(($container) => {
-            const footerButton = $container.find('button').filter((_, el) => /nested annotation/i.test(el.textContent))
-            if (!footerButton.length) {
-                cy.log('No nested annotation footer in this dataset')
-                return
-            }
-
-            cy.wrap(footerButton.first()).click()
-            sidebar().find('[data-annotation]').should('have.length.at.least', 1)
-            cy.wrap(footerButton.first()).click()
-        })
+        const footer =  sidebar().find('div[data-cy="footer"]').first()
+        footer.click()
+        footer.find('div[data-annotation]').should('have.length.at.least', 1)
     })
 
     it('Should support view more/less on lengthy annotation body when available', () => {
