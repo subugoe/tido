@@ -53,12 +53,12 @@ describe('Panel', () => {
       .first()
       .children().should('have.length', 3)    // number of items of manifest
       .eq(1).click()
-      .get('[data-radix-popper-content-wrapper]')     // popover is closed
-      .should('not.exist')
       .get('#panels-wrapper')
       .children().eq(0)
       .find('[aria-label="Loading"]')
       .should('exist')
+      .get('[data-radix-popper-content-wrapper]')     // popover is closed
+      .should('not.exist')
 
       .validateLabel('manifest', 'The Great Gatsby')
       .validateLabel('item', 'The Great Gatsby, Chapter 2')
