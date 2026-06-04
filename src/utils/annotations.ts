@@ -157,18 +157,14 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
   }
 }
 
-async function getCrossRefInfos(annotations: Annotation[]): Promise<CrossRefInfo[]> {
+async function getCrossRefInfos(annotations: Annotation[]): Promise<(CrossRefInfo | CustomError)[]> {
   const results = await Promise.allSettled(annotations.map(a => getCrossRefInfo(a)))
-
-  console.log('results', results)
-
-  results
-    .filter(r => r.status === 'rejected')
-    .forEach(r => console.error('Failed to resolve cross ref info', (r as PromiseRejectedResult).reason))
-
-  return results
-    .filter((r): r is PromiseFulfilledResult<CrossRefInfo> => r.status === 'fulfilled')
-    .map(r => r.value)
+  return results.map(r =>
+    r.status === 'fulfilled' ? r.value : ({
+      name: 'CrossRef error',
+      message: r.reason.name
+    } as CustomError)
+  )
 }
 
 function getSource(target: AnnotationTarget): AnnotationTargetSource {

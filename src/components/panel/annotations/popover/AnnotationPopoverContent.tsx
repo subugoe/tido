@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { getCrossRefInfos } from '@/utils/annotations.ts'
+import { CustomError } from '@/utils/custom-error.ts'
 import TooltipItem from '@/components/panel/annotations/popover/items/TooltipItem.tsx'
 import CrossRefItem from '@/components/panel/annotations/popover/items/CrossRefItem.tsx'
 import BaseItem from '@/components/panel/annotations/popover/items/BaseItem.tsx'
@@ -25,6 +26,7 @@ const AnnotationPopoverContent: FC<Props> = ({
   const { t } = usePanelTranslation()
 
   const [crossRefInfos, setCrossRefInfos] = useState<CrossRefInfo[]>([])
+  const [crossRefErrors, setCrossRefErrors] = useState<CustomError[]>([])
   const [loading, setLoading] = useState(true)
 
   const tooltipAnnotationsRef = useRef<Annotation[]>(null)
@@ -44,18 +46,15 @@ const AnnotationPopoverContent: FC<Props> = ({
     }
 
     async function computeCrossRefInfos(annotations: Annotation[]) {
-      const crossRefInfos = await getCrossRefInfos(annotations)
-      setCrossRefInfos(crossRefInfos)
+      const results = await getCrossRefInfos(annotations)
+      setCrossRefInfos(results.filter((r): r is CrossRefInfo => !(Object.hasOwn(r, 'name') && Object.hasOwn(r, 'message'))))
+      setCrossRefErrors(results.filter((r): r is CustomError => Object.hasOwn(r, 'name') && Object.hasOwn(r, 'message')))
     }
 
     tooltipAnnotationsRef.current = tooltipAnnotations.sort(sortByDirectTarget)
     normalAnnotationsRef.current = relatedAnnotations.sort(sortByDirectTarget)
 
-    console.log('normalAnnotations ref', relatedAnnotations)
-    console.log('tooltip annotations', tooltipAnnotations)
-
     setLoading(false)
-    console.log('APContent crossRefAnnotations', crossRefAnnotations)
     computeCrossRefInfos(crossRefAnnotations)
   }, [target])
 
@@ -78,9 +77,10 @@ const AnnotationPopoverContent: FC<Props> = ({
         {tooltipAnnotationsRef.current?.map((ta) => <div className="mb-2"><TooltipItem key={ta.id} annotation={ta} /></div>)}
       </div>
     )}
-    {crossRefInfos.length > 0 && <div className="flex flex-col gap-1">
+    {(crossRefInfos.length > 0 || crossRefErrors.length > 0) && <div className="flex flex-col gap-1">
       {renderLabel(t('reference'))}
       {crossRefInfos.map((info, i) => <CrossRefItem key={i} crossRefInfo={info} onSelect={handleCrossRefSelection} />)}
+      {crossRefErrors.map((error, i) => <CrossRefItem key={`error-${i}`} crossRefError={error} onSelect={handleCrossRefSelection} />)}
     </div>}
     {normalAnnotationsRef.current?.length > 0 && (
       <div className={`flex flex-col gap-2 ${(crossRefInfos.length > 0 || tooltipAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>

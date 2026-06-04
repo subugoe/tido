@@ -6,13 +6,14 @@ import CrossRefLink from '@/components/panel/annotations/popover/cross-ref/Cross
 import { apiRequest } from '@/utils/api.ts'
 
 interface Props {
-  crossRefInfo: CrossRefInfo,
-  onSelect: () => void
+  crossRefInfo?: CrossRefInfo,
+  crossRefError?: CustomError,
+  onSelect: () => void,
 }
 
-const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect }) => {
+const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect, crossRefError = null }) => {
   const { usePanelTranslation } = usePanel()
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<CustomError>(crossRefError)
   const [loading, setLoading] = useState(false)
   const { t } = usePanelTranslation()
 
@@ -50,7 +51,7 @@ const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect }) => {
       }
     }
 
-    readCrossRefLabels(crossRefInfo)
+    if (!crossRefError) readCrossRefLabels(crossRefInfo)
   }, [])
 
   return <CrossRefLink
