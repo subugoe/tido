@@ -113,14 +113,9 @@ const GenericTextRenderer: FC<Props> = memo(({
 
       const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
         if (!cur.target) return acc
-        console.log('cur', cur)
         const targetSource = getSource(cur.target[0]).id
         const isSource = targetSource === source
         const selector = (cur.target[0].selector as CssSelector)?.value
-
-        console.log('source', source)
-        console.log('isSource', isSource)
-        console.log('selector', selector)
 
         if (!isSource || !selector) {
           if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
@@ -134,10 +129,8 @@ const GenericTextRenderer: FC<Props> = memo(({
         }
 
         const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
-        console.log('matchedNodes', matchedNodes)
 
         if (matchedNodes.length > 0) {
-          console.log('adding entry to matchedAnnotationsMap')
           const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
           matchedNodes.forEach(target => {
@@ -355,10 +348,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     //  So this function will be called with those state values which existed at the time of adding.
 
     const target = e.currentTarget as Element
-    console.log('flipped matchedRef', flippedMatchedMapRef.current)
     const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
-
-    console.log('target entry', targetEntry)
 
     let hasFilteredAnnotations = false
     targetEntry?.annotations.forEach(annotation => {
@@ -383,8 +373,6 @@ const GenericTextRenderer: FC<Props> = memo(({
         if (!selector) return false
         return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
       })
-
-    console.log('crossRef annotations', crossRefAnnotations)
 
     const seen = new Set<string>()
     // compute related annotations: all annotations for the clicked target and its parent targets

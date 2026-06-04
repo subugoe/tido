@@ -114,21 +114,22 @@ function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, 
 
 async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
   // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
-  const isCrossRefInAnnotation = !getSource(annotation?.target[0]).id.endsWith('.html')
+  const isCrossRefInAnnotation = !annotation.body.source.id.endsWith('.html')
 
   const source = annotation.body.source
-  let refItemData = null
+  let refItemData: Item = null
   const refAnnotationId = source?.id
   let refAnnotation
   let contentUrl: string
+  let failedRequestUrl: string
 
-  if (isCrossRefInAnnotation)  {
-    let failedRequestUrl: string
+  try {
+    failedRequestUrl = source.item
+    refItemData = await apiRequest<Item>(source.item)
 
-    try {
-      failedRequestUrl = source.item
-      refItemData = await apiRequest<Item>(source.item)
+    console.log('is cross ref in annotation', isCrossRefInAnnotation)
 
+    if (isCrossRefInAnnotation) {
       failedRequestUrl = refItemData.annotationCollection
       const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
 
@@ -136,13 +137,15 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
       const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
 
       refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
+      console.log('referenced annotation', refAnnotation)
       contentUrl = getSource(refAnnotation?.target?.[0]).id
-    } catch(e) {
-      throw new CustomError(`Error loading data in Cross Ref. Failed request: ${failedRequestUrl}`, e)
+    } else {
+      contentUrl = source?.id
     }
+  } catch(e) {
+    throw new CustomError(`Error loading data in Cross Ref. Failed request: ${failedRequestUrl}`, e)
   }
 
-  if (!isCrossRefInAnnotation) contentUrl = annotation.body.source?.id
   const refContentType = refItemData?.contents?.find(c => c.id === contentUrl)?.contentType?.split('type=')[1]
 
   return {
