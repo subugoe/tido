@@ -16,6 +16,8 @@ const BaseItem: FC<Props> = ({ annotation }) => {
   const { updatePanel, selectedAnnotation, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
+  console.log('rendering base item')
+
   const [text, setText] = useState('')
 
   const type = annotation.body.annotationType

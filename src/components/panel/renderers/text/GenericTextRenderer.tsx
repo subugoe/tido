@@ -79,6 +79,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
+  const matchedMapRef = useRef<MatchedAnnotationsMap>(null)
   const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
@@ -112,8 +113,14 @@ const GenericTextRenderer: FC<Props> = memo(({
 
       const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
         if (!cur.target) return acc
-        const isSource = getSource(cur.target[0]).id === source
+        console.log('cur', cur)
+        const targetSource = getSource(cur.target[0]).id
+        const isSource = targetSource === source
         const selector = (cur.target[0].selector as CssSelector)?.value
+
+        console.log('source', source)
+        console.log('isSource', isSource)
+        console.log('selector', selector)
 
         if (!isSource || !selector) {
           if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
@@ -127,8 +134,10 @@ const GenericTextRenderer: FC<Props> = memo(({
         }
 
         const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
+        console.log('matchedNodes', matchedNodes)
 
         if (matchedNodes.length > 0) {
+          console.log('adding entry to matchedAnnotationsMap')
           const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
           matchedNodes.forEach(target => {
@@ -185,7 +194,8 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   // Apply highlighting styles on every map update
   useEffect(() => {
-    if (!matchedMap) return
+    if (Object.keys(matchedMap).length === 0) return
+
     const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedMap)
     targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
     flippedMatchedMapRef.current = assignNestedTargetsInFlippedMatched(targetsRef.current, flippedMatchedAnnotationsMap)
@@ -289,6 +299,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   }, [selectedAnnotation, matchedMap])
 
   useEffect(() => {
+    if (Object.keys(matchedMap).length === 0) return
+
     const resultMap = { ...matchedMap }
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
     if (selectedAnnotationTypes) {
@@ -343,7 +355,10 @@ const GenericTextRenderer: FC<Props> = memo(({
     //  So this function will be called with those state values which existed at the time of adding.
 
     const target = e.currentTarget as Element
+    console.log('flipped matchedRef', flippedMatchedMapRef.current)
     const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
+
+    console.log('target entry', targetEntry)
 
     let hasFilteredAnnotations = false
     targetEntry?.annotations.forEach(annotation => {
@@ -369,12 +384,14 @@ const GenericTextRenderer: FC<Props> = memo(({
         return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
       })
 
+    console.log('crossRef annotations', crossRefAnnotations)
+
     const seen = new Set<string>()
     // compute related annotations: all annotations for the clicked target and its parent targets
     const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
       .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
       .flatMap(entry => entry.annotations)
-      .filter(a => !seen.has(a.id) && seen.add(a.id) && isFilteredAnnotation(a, selectedAnnotationTypesRef.current))
+      .filter(a => !seen.has(a.id) && seen.add(a.id) && a.body.annotationType !== annotationsConfig?.crossRefContentType && isFilteredAnnotation(a, selectedAnnotationTypesRef.current))
 
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 

@@ -30,6 +30,7 @@ const AnnotationPopoverContent: FC<Props> = ({
   const tooltipAnnotationsRef = useRef<Annotation[]>(null)
   const normalAnnotationsRef = useRef<Annotation[]>(null)
 
+
   useEffect(() => {
     const panelEl = panelId ? document.getElementById(panelId) : null
     const deepestTargetAnnotation = (annotation: Annotation) =>
@@ -44,11 +45,15 @@ const AnnotationPopoverContent: FC<Props> = ({
 
     async function computeCrossRefInfos(annotations: Annotation[]) {
       const infos: CrossRefInfo[] = await Promise.all(annotations.map(a => getCrossRefInfo(a))) as CrossRefInfo[]
+      console.log('cross refs', infos)
       setCrossRefInfos(infos)
     }
 
     tooltipAnnotationsRef.current = tooltipAnnotations.sort(sortByDirectTarget)
     normalAnnotationsRef.current = relatedAnnotations.sort(sortByDirectTarget)
+
+    console.log('normalAnnotations ref', relatedAnnotations)
+    console.log('tooltip annotations', tooltipAnnotations)
 
     setLoading(false)
     computeCrossRefInfos(crossRefAnnotations)
