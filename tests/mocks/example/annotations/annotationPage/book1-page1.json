@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example/annotations/annotationCollection/book1-page1.json",
     "label": "Annotations for Pride and Prejudice, Chapter 1",
-    "total": 17
+    "total": 21
   },
   "next": null,
   "prev": null,
@@ -482,6 +482,90 @@
             "value": "#wit-and-sarcasm"
           },
           "format": "application/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-7",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The opening sentence is a classic example of free indirect discourse coloured by irony, stating a communal assumption as if it were objective fact.",
+        "format": "text/html",
+        "annotationType": "Rhetorical Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#truth"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-8",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A \"good fortune\" in 1813 typically meant an annual income of £4,000–£10,000, placing such a man firmly among the landed gentry.",
+        "format": "text/html",
+        "annotationType": "Economic Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#man"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-9",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Mr. Bennet's terse reply demonstrates Austen's economy of dialogue, conveying his detachment through brevity.",
+        "format": "text/html",
+        "annotationType": "Narrative Technique"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#para4"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-10",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Mrs. Long functions as a node in the novel's information network, through which news of new arrivals circulates.",
+        "format": "text/html",
+        "annotationType": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#mrs-long"
+          },
+          "format": "text/html",
+          "language": "eng"
         }
       ]
     }
