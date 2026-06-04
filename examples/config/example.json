@@ -2,7 +2,7 @@
   "panels": [
     {
       "collection": "http://localhost:8181/example/collections/example.json",
-      "manifest": "http://localhost:8181/example/manifests/book2.json"
+      "manifest": "http://localhost:8181/example/manifests/book1.json"
     }
   ],
   "rootCollections": [

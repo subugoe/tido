@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example/annotations/annotationCollection/book1-page1.json",
     "label": "Annotations for Pride and Prejudice, Chapter 1",
-    "total": 21
+    "total": 25
   },
   "next": null,
   "prev": null,
@@ -443,12 +443,14 @@
       "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-2",
       "type": "Annotation",
       "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "application/json",
         "source": {
-          "id": "http://localhost:8181/example/book2/page5/rev1/annotation-note-3",
-          "collection": "http://localhost:8181/example/collection.json",
+          "id": "http://localhost:8181/example/book2/page1/rev1/annotation-2",
+          "collection": "http://localhost:8181/example/collections/example.json",
           "manifest": "http://localhost:8181/example/manifests/book2.json",
-          "item": "http://localhost:8181/example/book2/page5/rev1/item.json",
-          "annotationType": "CrossRef"
+          "item": "http://localhost:8181/example/items/book2-page1.json"
         }
       },
       "target": [
@@ -458,7 +460,7 @@
             "type": "CssSelector",
             "value": "#marriage-candidates"
           },
-          "format": "application/html"
+          "format": "application/json"
         }
       ]
     },
@@ -563,6 +565,118 @@
           "selector": {
             "type": "CssSelector",
             "value": "#mrs-long"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-from-annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "application/json",
+        "source": {
+          "id": "http://localhost:8181/example/book2/page1/rev1/annotation-1",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/annotation-1",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#famous-opening-lines"
+          },
+          "format": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-from-annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "application/json",
+        "source": {
+          "id": "http://localhost:8181/example/book2/page1/rev1/annotation-3",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/book1/page1/rev1/annotation-2",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#marriage-candidates"
+          },
+          "format": "application/json"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-text-1",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "text/html",
+        "selector": {
+          "type": "CssSelector",
+          "conformsTo": "http://tools.ietf.org/rfc/rfc3236",
+          "value": "#ishmael"
+        },
+        "source": {
+          "id": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#netherfield"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book1/page1/rev1/annotation-crossref-text-2",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "text/html",
+        "selector": {
+          "type": "CssSelector",
+          "conformsTo": "http://tools.ietf.org/rfc/rfc3236",
+          "value": "#spleen"
+        },
+        "source": {
+          "id": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book2.json",
+          "item": "http://localhost:8181/example/items/book2-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#neighbourhood"
           },
           "format": "text/html",
           "language": "eng"
