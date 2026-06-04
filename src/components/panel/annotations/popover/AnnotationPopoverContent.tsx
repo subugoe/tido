@@ -8,6 +8,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
   target: Element,
+  source: string
   crossRefAnnotations: Annotation[],
   relatedAnnotations: Annotation[]
   tooltipAnnotations: Annotation[]
@@ -17,6 +18,7 @@ interface Props {
 
 const AnnotationPopoverContent: FC<Props> = ({
   target,
+  source,
   crossRefAnnotations,
   relatedAnnotations,
   tooltipAnnotations,
@@ -32,7 +34,6 @@ const AnnotationPopoverContent: FC<Props> = ({
   const tooltipAnnotationsRef = useRef<Annotation[]>(null)
   const normalAnnotationsRef = useRef<Annotation[]>(null)
 
-
   useEffect(() => {
     const panelEl = panelId ? document.getElementById(panelId) : null
     const deepestTargetAnnotation = (annotation: Annotation) =>
@@ -47,6 +48,7 @@ const AnnotationPopoverContent: FC<Props> = ({
 
     async function computeCrossRefInfos(annotations: Annotation[]) {
       const results = await getCrossRefInfos(annotations)
+
       setCrossRefInfos(results.filter((r): r is CrossRefInfo => !(Object.hasOwn(r, 'name') && Object.hasOwn(r, 'message'))))
       setCrossRefErrors(results.filter((r): r is CustomError => Object.hasOwn(r, 'name') && Object.hasOwn(r, 'message')))
     }
@@ -85,7 +87,7 @@ const AnnotationPopoverContent: FC<Props> = ({
     {normalAnnotationsRef.current?.length > 0 && (
       <div className={`flex flex-col gap-2 ${(crossRefInfos.length > 0 || tooltipAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
         {renderLabel(tooltipAnnotationsRef.current?.length === 0 && crossRefInfos.length === 0 ? t('annotations') : t('more_annotations'))}
-        {normalAnnotationsRef.current?.map(na => <BaseItem key={na.id} annotation={na} />)}
+        {normalAnnotationsRef.current?.map(na => <BaseItem key={na.id} annotation={na} source={source} />)}
       </div>
     )}
   </div>
