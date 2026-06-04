@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { getCrossRefInfo } from '@/utils/annotations.ts'
+import { getCrossRefInfos } from '@/utils/annotations.ts'
 import TooltipItem from '@/components/panel/annotations/popover/items/TooltipItem.tsx'
 import CrossRefItem from '@/components/panel/annotations/popover/items/CrossRefItem.tsx'
 import BaseItem from '@/components/panel/annotations/popover/items/BaseItem.tsx'
@@ -44,9 +44,8 @@ const AnnotationPopoverContent: FC<Props> = ({
     }
 
     async function computeCrossRefInfos(annotations: Annotation[]) {
-      const infos: CrossRefInfo[] = await Promise.all(annotations.map(a => getCrossRefInfo(a))) as CrossRefInfo[]
-      console.log('cross refs', infos)
-      setCrossRefInfos(infos)
+      const crossRefInfos = await getCrossRefInfos(annotations)
+      setCrossRefInfos(crossRefInfos)
     }
 
     tooltipAnnotationsRef.current = tooltipAnnotations.sort(sortByDirectTarget)
@@ -56,6 +55,7 @@ const AnnotationPopoverContent: FC<Props> = ({
     console.log('tooltip annotations', tooltipAnnotations)
 
     setLoading(false)
+    console.log('APContent crossRefAnnotations', crossRefAnnotations)
     computeCrossRefInfos(crossRefAnnotations)
   }, [target])
 
