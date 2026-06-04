@@ -79,7 +79,6 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
-  const matchedMapRef = useRef<MatchedAnnotationsMap>(null)
   const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
@@ -113,8 +112,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
       const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
         if (!cur.target) return acc
-        const targetSource = getSource(cur.target[0]).id
-        const isSource = targetSource === source
+        const isSource = getSource(cur.target[0]).id === source
         const selector = (cur.target[0].selector as CssSelector)?.value
 
         if (!isSource || !selector) {
