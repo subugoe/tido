@@ -59,6 +59,7 @@ describe('Panel', () => {
       .should('exist')
       .get('[data-radix-popper-content-wrapper]')     // popover is closed
       .should('not.exist')
+      .wait(100)
 
       .validateLabel('manifest', 'The Great Gatsby')
       .validateLabel('item', 'The Great Gatsby, Chapter 2')
