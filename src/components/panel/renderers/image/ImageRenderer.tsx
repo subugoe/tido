@@ -1,5 +1,5 @@
 import  { useEffect, FC, useState, useRef } from 'react'
-import OpenSeadragon from 'openseadragon'
+import OpenSeadragon, { Viewer } from 'openseadragon'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import ImageActionButtons from '@/components/panel/views/image/ImageActionButtons.tsx'
@@ -12,7 +12,7 @@ const ImageRenderer: FC = () => {
   const { showBoundary } = useErrorBoundary()
 
   const viewerContainerRef = useRef(null)
-  const viewerRef = useRef(null)
+  const viewerRef = useRef<Viewer>(null)
   const imageUrl = panelState?.item?.images?.[0]?.id
   const [loading, setLoading] = useState(true)
 
@@ -39,12 +39,19 @@ const ImageRenderer: FC = () => {
     })
 
     viewerRef.current.addHandler('open', function () {
-      viewerRef.current.viewport.zoomTo(viewerRef.current.viewport.getHomeZoom() * 0.9, undefined, true)
+      setInitialZoom()
       setLoading(false)
     })
 
+    const resize = new ResizeObserver(() => {
+      setTimeout(() => viewerRef.current.viewport.ensureVisible(true), 100)
+    })
+
+    resize.observe(viewerContainerRef.current)
+
     return () => {
       if (viewerRef.current) viewerRef.current.destroy()
+      resize.disconnect()
     }
   }, [])
 
@@ -66,14 +73,17 @@ const ImageRenderer: FC = () => {
     if (imageType === 'image' || !imageType) {
       viewerRef.current.open({
         type: 'image',
-        url: imageUrl
+        url: imageUrl,
       })
-    }
-    else if (imageType === 'iiif') {
+    } else if (imageType === 'iiif') {
       viewerRef.current.open(imageUrl)
     }
   }, [panelState.item, loadingPanel])
 
+  function setInitialZoom() {
+    if (!viewerRef.current) return
+    viewerRef.current.viewport.zoomTo(viewerRef.current.viewport.getHomeZoom() * 0.9, undefined, true)
+  }
 
 
   return (
