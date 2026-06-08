@@ -127,8 +127,6 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
     failedRequestUrl = source.item
     refItemData = await apiRequest<Item>(source.item)
 
-    console.log('is cross ref in annotation', isCrossRefInAnnotation)
-
     if (isCrossRefInAnnotation) {
       failedRequestUrl = refItemData.annotationCollection
       const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
@@ -137,7 +135,6 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
       const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
 
       refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
-      console.log('referenced annotation', refAnnotation)
       contentUrl = getSource(refAnnotation?.target?.[0]).id
     } else {
       contentUrl = source?.id

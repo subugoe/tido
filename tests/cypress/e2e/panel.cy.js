@@ -18,18 +18,15 @@ Cypress.Commands.add('validateLabel', (type, label) => {
 })
 
 Cypress.Commands.add('validateText', (content) => {
-  // wait until the new text has finished loading (loading overlay gone)
-  // before asserting, otherwise we may read the previous text
   cy.get('#panels-wrapper')
     .children().eq(0)
     .find('[aria-label="Loading"]')
     .should('not.exist')
+
   cy.get('#panels-wrapper')
     .children().eq(0)
     .find('div[data-text-container]')
-    .children()
-    .first()
-    .should('contain.text',content)
+    .should('contain.text', content)
 })
 
 describe('Panel', () => {
