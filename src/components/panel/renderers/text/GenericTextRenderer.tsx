@@ -60,6 +60,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
+
   const {
     selectedAnnotation,
     selectedAnnotationTypes,
