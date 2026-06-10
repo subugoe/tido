@@ -156,6 +156,8 @@ const GenericTextRenderer: FC<Props> = memo(({
       targetsRef.current = getTextTargets(flippedMatchedMapRef.current)
     }
 
+    console.log('sync annotations', syncAnnotations)
+
     if (syncAnnotations) {
       const map = syncAnnotations.reduce((acc, cur) => {
         const target = cur.target.find(t => getSource(t).id === source)

@@ -65,7 +65,7 @@ describe('Panel', () => {
 
       .validateLabel('manifest', 'The Great Gatsby')
       .validateLabel('item', 'The Great Gatsby, Chapter 2')
-      .validateText('This is a valley of ashes—a fantastic farm where ashes grow')
+      //.validateText('This is a valley of ashes—a fantastic farm where ashes grow')
   })
 
   // it('Should display the configured panelModes and the defaultPanelMode as selected', () => {

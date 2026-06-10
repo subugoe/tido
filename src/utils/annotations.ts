@@ -90,14 +90,6 @@ function findTargets(annotation: Annotation): string[] {
   })
 }
 
-function getAnnotationIdsByEl(
-  flipped: Record<string, { el: HTMLElement, annotationIds: string[] }>,
-  el: HTMLElement
-): string[] {
-  const entry = Object.values(flipped).find(v => v.el === el)
-  return entry?.annotationIds ?? []
-}
-
 function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, tooltipTypes: string[] = []) {
   const type = (annotation.body as AnnotationBody).annotationType
   if (tooltipTypes.includes(type)) return true
@@ -157,16 +149,6 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
   }
 }
 
-async function getCrossRefInfos(annotations: Annotation[]): Promise<(CrossRefInfo | CustomError)[]> {
-  const results = await Promise.allSettled(annotations.map(a => getCrossRefInfo(a)))
-  return results.map(r =>
-    r.status === 'fulfilled' ? r.value : ({
-      name: 'CrossRef error',
-      message: r.reason.name
-    } as CustomError)
-  )
-}
-
 function getSource(target: AnnotationTarget): AnnotationTargetSource {
   if (typeof target.source === 'object') {
     return target.source
@@ -182,8 +164,6 @@ export {
   findTargetsInsideAnnotation,
   findTargets,
   getNestedAnnotations,
-  getAnnotationIdsByEl,
   getCrossRefInfo,
-  getCrossRefInfos,
   getSource
 }
