@@ -1,6 +1,7 @@
 import { AnnotationFiltersConfig, FilterNodeWithSelection, VariantType } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
 import { getTypeValue } from '@/utils/filter-tree.ts'
+import { CustomError } from '@/utils/custom-error.ts'
 
 function getSelectedTypes(config: AnnotationFiltersConfig): AnnotationTypesDict {
   let types: AnnotationTypesDict = {}
@@ -89,14 +90,6 @@ function findTargets(annotation: Annotation): string[] {
   })
 }
 
-function getAnnotationIdsByEl(
-  flipped: Record<string, { el: HTMLElement, annotationIds: string[] }>,
-  el: HTMLElement
-): string[] {
-  const entry = Object.values(flipped).find(v => v.el === el)
-  return entry?.annotationIds ?? []
-}
-
 function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, tooltipTypes: string[] = []) {
   const type = (annotation.body as AnnotationBody).annotationType
   if (tooltipTypes.includes(type)) return true
@@ -113,23 +106,36 @@ function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, 
 
 async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
   // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
-  const isCrossRefInAnnotation = !getSource(annotation?.target[0]).id.endsWith('.html')
+  const isCrossRefInAnnotation = !annotation.body.source.id.endsWith('.html')
 
   const source = annotation.body.source
-  const refItemData = await apiRequest<Item>(source.item)
+  let refItemData: Item = null
   const refAnnotationId = source?.id
   let refAnnotation
   let contentUrl: string
+  let failedRequestUrl: string
 
-  if (isCrossRefInAnnotation)  {
-    const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
-    const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
-    refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
-    contentUrl = getSource(refAnnotation?.target?.[0]).id
+  try {
+    failedRequestUrl = source.item
+    refItemData = await apiRequest<Item>(source.item)
+
+    if (isCrossRefInAnnotation) {
+      failedRequestUrl = refItemData.annotationCollection
+      const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
+
+      failedRequestUrl = annotationCollection.first
+      const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
+
+      refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
+      contentUrl = getSource(refAnnotation?.target?.[0]).id
+    } else {
+      contentUrl = source?.id
+    }
+  } catch(e) {
+    throw new CustomError(`Error loading data in Cross Ref. Failed request: ${failedRequestUrl}`, e)
   }
 
-  if (!isCrossRefInAnnotation) contentUrl = annotation.body.source?.id
-  const refContentType = refItemData.contents?.find(c => c.id === contentUrl)?.contentType?.split('type=')[1]
+  const refContentType = refItemData?.contents?.find(c => c.id === contentUrl)?.contentType?.split('type=')[1]
 
   return {
     collection: source.collection,
@@ -158,7 +164,6 @@ export {
   findTargetsInsideAnnotation,
   findTargets,
   getNestedAnnotations,
-  getAnnotationIdsByEl,
   getCrossRefInfo,
   getSource
 }

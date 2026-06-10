@@ -51,9 +51,9 @@ describe('Annotations', () => {
         sidebar().find('[data-annotation]').as('annots')
         cy.get('@annots').should('have.length.gte', 2)
 
-        cy.get('@annots').first().as('first').click().should('have.attr', 'data-selected', 'true')
+        cy.get('@annots').eq(3).as('first').click().should('have.attr', 'data-selected', 'true')
 
-        cy.get('@annots').eq(1).as('second').click().should('have.attr', 'data-selected', 'true')
+        cy.get('@annots').eq(4).click().should('have.attr', 'data-selected', 'true')
         cy.get('@first').should('not.have.attr', 'data-selected')
     })
 

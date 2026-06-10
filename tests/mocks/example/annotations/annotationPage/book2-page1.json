@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example/annotations/annotationCollection/book2-page1.json",
     "label": "Annotations for Moby-Dick, Chapter 1",
-    "total": 7
+    "total": 9
   },
   "next": null,
   "prev": null,
@@ -152,6 +152,63 @@
           "selector": {
             "type": "CssSelector",
             "value": "#norm-november"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-crossref-annotation",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "application/json",
+        "source": {
+          "id": "http://localhost:8181/example/book1/page1/rev1/annotation-5",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book1.json",
+          "item": "http://localhost:8181/example/items/book1-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ishmael"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-crossref-html",
+      "type": "Annotation",
+      "body": {
+        "type": "SpecificResource",
+        "annotationType": "CrossRef",
+        "format": "text/html",
+        "selector": {
+          "type": "CssSelector",
+          "conformsTo": "http://tools.ietf.org/rfc/rfc3236",
+          "value": "#truth"
+        },
+        "source": {
+          "id": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "collection": "http://localhost:8181/example/collections/example.json",
+          "manifest": "http://localhost:8181/example/manifests/book1.json",
+          "item": "http://localhost:8181/example/items/book1-page1.json"
+        }
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ocean"
           },
           "format": "text/html",
           "language": "eng"

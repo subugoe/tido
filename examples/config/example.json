@@ -7,5 +7,8 @@
   ],
   "rootCollections": [
     "http://localhost:8181/example/collections/example.json"
-  ]
+  ],
+  "annotations": {
+    "crossRefContentType": "CrossRef"
+  }
 }

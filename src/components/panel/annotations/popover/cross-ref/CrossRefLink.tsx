@@ -68,6 +68,7 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
           item: crossRefInfo.item,
           views: setNewActiveContentType(contentType, firstViewIndex, panelState.panelViews),
         },
+        showSidebar: !!crossRefInfo.selectedAnnotation,
       })
     }
 

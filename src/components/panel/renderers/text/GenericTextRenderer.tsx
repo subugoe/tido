@@ -60,6 +60,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
+
   const {
     selectedAnnotation,
     selectedAnnotationTypes,
@@ -155,6 +156,8 @@ const GenericTextRenderer: FC<Props> = memo(({
       targetsRef.current = getTextTargets(flippedMatchedMapRef.current)
     }
 
+    console.log('sync annotations', syncAnnotations)
+
     if (syncAnnotations) {
       const map = syncAnnotations.reduce((acc, cur) => {
         const target = cur.target.find(t => getSource(t).id === source)
@@ -185,7 +188,8 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   // Apply highlighting styles on every map update
   useEffect(() => {
-    if (!matchedMap) return
+    if (Object.keys(matchedMap).length === 0) return
+
     const flippedMatchedAnnotationsMap = flipMatchedAnnotationsMap(matchedMap)
     targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
     flippedMatchedMapRef.current = assignNestedTargetsInFlippedMatched(targetsRef.current, flippedMatchedAnnotationsMap)
@@ -289,6 +293,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   }, [selectedAnnotation, matchedMap])
 
   useEffect(() => {
+    if (Object.keys(matchedMap).length === 0) return
+
     const resultMap = { ...matchedMap }
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
     if (selectedAnnotationTypes) {
@@ -374,7 +380,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
       .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
       .flatMap(entry => entry.annotations)
-      .filter(a => !seen.has(a.id) && seen.add(a.id) && isFilteredAnnotation(a, selectedAnnotationTypesRef.current))
+      .filter(a => !seen.has(a.id) && seen.add(a.id) && a.body.annotationType !== annotationsConfig?.crossRefContentType && isFilteredAnnotation(a, selectedAnnotationTypesRef.current))
 
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
@@ -461,6 +467,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       onClose={closeTooltip}>
       <AnnotationPopoverContent
         target={tooltipTargetElement}
+        source={source}
         crossRefAnnotations={crossRefAnnotations}
         relatedAnnotations={relatedAnnotations}
         tooltipAnnotations={tooltipAnnotations}

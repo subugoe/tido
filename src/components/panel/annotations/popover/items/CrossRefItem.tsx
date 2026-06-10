@@ -4,15 +4,16 @@ import { validateCrossRefNode } from '@/utils/cross-ref.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import CrossRefLink from '@/components/panel/annotations/popover/cross-ref/CrossRefLink.tsx'
 import { apiRequest } from '@/utils/api.ts'
+import { getCrossRefInfo } from '@/utils/annotations.ts'
 
 interface Props {
-  crossRefInfo: CrossRefInfo,
-  onSelect: () => void
+  annotation: Annotation
+  onSelect: () => void,
 }
 
-const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect }) => {
+const CrossRefItem: FC<Props> = ({ annotation, onSelect }) => {
   const { usePanelTranslation } = usePanel()
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<CustomError>(null)
   const [loading, setLoading] = useState(false)
   const { t } = usePanelTranslation()
 
@@ -20,10 +21,14 @@ const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect }) => {
   const loadedData = useRef<boolean>(null)
 
   useEffect(() => {
-    async function readCrossRefLabels(crossRefInfo: CrossRefInfo) {
+
+    async function readData(annotation: Annotation) {
+
+      // read crossRefLabels
       if (!error && !loadedData.current) {
         setLoading(true)
         try {
+          const crossRefInfo = await getCrossRefInfo(annotation)
           const { manifestData, itemData } = await validateCrossRefNode(crossRefInfo)
           const newItemLabel = itemData.titles?.length > 0 && itemData.titles?.[0] || ''
           extendedCrossRefInfoRef.current = {
@@ -50,7 +55,7 @@ const CrossRefItem: FC<Props> = ({ crossRefInfo, onSelect }) => {
       }
     }
 
-    readCrossRefLabels(crossRefInfo)
+    readData(annotation)
   }, [])
 
   return <CrossRefLink
