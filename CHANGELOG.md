@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.2](https://github.com/subugoe/tido/compare/v5.0.0-beta.1...v5.0.0-beta.2) (2026-06-10)
+
+
+### Features
+
+* show annotation sidebar item in annotation popover when clicking a target which is in text or in an annotation ([4845c2e](https://github.com/subugoe/tido/commit/4845c2e0c1faf7638beabcaa7d1e5927673313f2))
+* show CrossRef Error when facing error when loading crossRef Information from CrossRefAnnotation ([5346af4](https://github.com/subugoe/tido/commit/5346af440ee3482dd60ebf892d7e1526f4bbe128))
+
+
+### Bug Fixes
+
+* check correctly when the cross Ref Annotation references to an annotation ([371eed3](https://github.com/subugoe/tido/commit/371eed3d55d3638043258a44292729d12a544328))
+* set initial zoom of image after toggling the view on again ([#1058](https://github.com/subugoe/tido/issues/1058)) ([0e4a67a](https://github.com/subugoe/tido/commit/0e4a67a87f3c6b83cb16a719fe2661399370f006))
+* should open sidebar when cross ref is opened in the same panel and referencing an annotation ([211cac7](https://github.com/subugoe/tido/commit/211cac785dd702142d71d6962046500464cec356))
+* use Promise.allSettled to allow to return data for correct cross ref annotations and report errors for the non-right annotations ([737bd73](https://github.com/subugoe/tido/commit/737bd7346aa6b7f77da5fb2b2a973c964da08c91))
+
+
+### Refactoring
+
+* CrossRefItem receives annotation as prop and computes crossRefInfo itself ([b73a2e7](https://github.com/subugoe/tido/commit/b73a2e7e7dbd52de3ac1536c12f67aff294e5d9e))
+* remove unused functions (getAnnotationIdsByEl, getCrossRefInfos) ([8cc3cc4](https://github.com/subugoe/tido/commit/8cc3cc41ec0161094185c9a2a272f750d4774cf9))
+
 ## [5.0.0-beta.1](https://github.com/subugoe/tido/compare/v5.0.0-beta.0...v5.0.0-beta.1) (2026-05-28)
 
 
