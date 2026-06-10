@@ -103,6 +103,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     setError(null)
     setAnnotationsError(null)
     setMatchedAnnotationsMaps({})
+    setSelectedAnnotation(null)
 
     if (!annotationsConfig.filters) {
       // We have to reset the selected types if no filters config is given, in order to re-discover types again on-the-fly.
