@@ -1,4 +1,4 @@
-import { TidoContentState, TidoContentStateTarget } from '@/types'
+import { PanelConfig, TidoContentState, TidoContentStatePanelState, TidoContentStateTarget } from '@/types'
 
 function hasContentState() {
   const params = new URL(window.location.href).searchParams
@@ -56,24 +56,26 @@ async function decodeState(encoded: string): Promise<TidoContentState> {
   return JSON.parse(jsonStr)
 }
 
-function extractPanelConfig(target: TidoContentStateTarget): { collectionUrl: string | null, itemUrl: string | null, manifestUrl: string | null, selectedAnnotationId: string | null } {
-  const result: { collectionUrl: string | null, itemUrl: string | null, manifestUrl: string | null, selectedAnnotationId: string | null } = {
-    itemUrl: null,
-    manifestUrl: null,
-    collectionUrl: null,
-    selectedAnnotationId: null
+function extractPanelConfig(target: TidoContentStateTarget): PanelConfig {
+  const result: PanelConfig = {
+    item: null,
+    manifest: null,
+    collection: null,
+    selectedAnnotationId: null,
+    views: []
   }
 
   function traverse(t: TidoContentStateTarget) {
     if (!t || !t.id || !isUrl(t.id) || !t.type) return
 
     if (t.type === 'Item') {
-      result.itemUrl = t.id
+      result.item = t.id
       if (t.state?.annotation) result.selectedAnnotationId = t.state.annotation
+      if (t.state.views) result.views = t.state.views.map(visible => ({ visible, view: 'text' }))
     } else if (t.type === 'Manifest') {
-      result.manifestUrl = t.id
+      result.manifest = t.id
     } else if (t.type === 'Collection') {
-      result.collectionUrl = t.id
+      result.collection = t.id
     }
 
     if (t.partOf) {
@@ -87,8 +89,16 @@ function extractPanelConfig(target: TidoContentStateTarget): { collectionUrl: st
 
 function createContentState(panelStates: PanelState[]): TidoContentState {
 
-  const target: TidoContentStateTarget[] = panelStates.map(({ selectedAnnotation, item, manifest, collectionId, }) => {
-    const state = selectedAnnotation ? { annotation: selectedAnnotation.annotation.id } : undefined
+  const target: TidoContentStateTarget[] = panelStates.map(({ selectedAnnotation, item, manifest, collectionId, panelViews }) => {
+    const state: TidoContentStatePanelState = {}
+
+    if (selectedAnnotation) {
+      state.annotation = selectedAnnotation.annotation.id
+    }
+
+    if (panelViews) {
+      state.views = panelViews.map(v => v.visible)
+    }
 
     return {
       id: item.id,

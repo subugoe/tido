@@ -2,7 +2,7 @@ import { defaultConfig } from '@/utils/config/default-config.ts'
 
 import enTranslations from '../../../public/translations/en.json'
 import deTranslations from '../../../public/translations/de.json'
-import { TidoConfig, PanelConfig, TidoContentState, TidoContentStateTarget } from '@/types'
+import { TidoConfig, PanelConfig, TidoContentState, TidoContentStateTarget, PanelView } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 
@@ -337,39 +337,48 @@ export async function mergeAndValidateConfig(
       }
 
       if (contentState) {
-        panelsFromContentState = await Promise.all(contentState.target.map(async (target: TidoContentStateTarget) => {
+        panelsFromContentState = await Promise.all(contentState.target.map(async (target: TidoContentStateTarget, i) => {
           let manifestIndex: number | null = null
           let itemIndex: number | null = null
 
-          const { collectionUrl, manifestUrl, itemUrl, selectedAnnotationId } = extractPanelConfig(target)
+          const { collection, manifest, item, selectedAnnotationId, views } = extractPanelConfig(target)
 
-          if (!collectionUrl) return null
+          if (!collection) return null
 
-          const collectionData = await apiRequest<Collection>(collectionUrl)
+          const collectionData = await apiRequest<Collection>(collection)
           manifestIndex = collectionData.manifests.findIndex(m => {
             const id = typeof m === 'object' ? m.id : m
-            return id === manifestUrl
+            return id === manifest
           })
 
           if (manifestIndex === -1) {
-            console.error(`Bookmarking Error: the provided manifest (${manifestUrl}) could not be found in collection (${collectionUrl})`)
+            console.error(`Bookmarking Error: the provided manifest (${manifest}) could not be found in collection (${collection})`)
           }
 
-          const manifestData = await apiRequest<Manifest>(manifestUrl)
+          const manifestData = await apiRequest<Manifest>(manifest)
           itemIndex = manifestData.items?.findIndex(i => {
             const id = typeof i === 'object' ? i.id : i
-            return id === itemUrl
+            return id === item
           }) ?? -1
 
           if (itemIndex === -1) {
-            console.error(`Bookmarking Error: the provided item (${itemUrl}) could not be found in manifest (${manifestUrl})`)
+            console.error(`Bookmarking Error: the provided item (${item}) could not be found in manifest (${manifest})`)
+          }
+
+          let resultViews: PanelView[] | null = null
+          if (panels.result) {
+            const viewsFromConfig = panels.result[i]?.views ?? defaultConfig.panelViews
+            if (viewsFromConfig) {
+              resultViews = viewsFromConfig.map((v, j) => ({ ...v, visible: views[j].visible ?? v.visible }))
+            }
           }
 
           return {
-            collection: collectionUrl,
-            ...(itemIndex > -1 && { item: itemUrl }),
-            ...(manifestIndex > -1 && { manifest: manifestUrl }),
-            ...(selectedAnnotationId && { selectedAnnotationId, showSidebar: true })
+            collection,
+            ...(itemIndex > -1 && { item }),
+            ...(manifestIndex > -1 && { manifest }),
+            ...(selectedAnnotationId && { selectedAnnotationId, showSidebar: true }),
+            ...(resultViews && { views: resultViews })
           }
         }))
       }

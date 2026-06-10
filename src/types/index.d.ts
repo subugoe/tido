@@ -297,10 +297,12 @@ export interface TidoContentStateTarget {
   id: string
   type: 'Item' | 'Manifest' | 'Collection'
   partOf?: TidoContentStateTarget
-  state?: {
-    views?: PanelViewContentState[]
-    annotation?: string
-  }
+  state?: TidoContentStatePanelState
+}
+
+export interface TidoContentStatePanelState {
+  views?: boolean[]
+  annotation?: string
 }
 
 // "other" refers to origin in [bookmarking, config]
@@ -308,11 +310,6 @@ export interface SelectedAnnotation {
   annotation: Annotation,
   origin: 'text' | 'annotation' | 'other',
   contentUrl?: string
-}
-
-export interface PanelViewContentState {
-  visible: boolean
-  active?: string
 }
 
 export type SelectionRule = 'single' | 'multiple'
