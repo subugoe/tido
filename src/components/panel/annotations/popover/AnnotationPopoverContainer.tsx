@@ -1,6 +1,7 @@
 import React, { FC, memo } from 'react'
 import { Popover, PopoverContent, PopoverAnchor } from '@/components/ui/popover.tsx'
 import { X } from 'lucide-react'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
   target: HTMLElement | null
@@ -18,6 +19,7 @@ const AnnotationPopoverContainer: FC<Props> = memo(({
   onClose
 }) => {
 
+  const { containerRef } = usePanel()
   const wrapperRect = wrapper?.getBoundingClientRect()
   const targetRect = target?.getBoundingClientRect()
 
@@ -42,6 +44,7 @@ const AnnotationPopoverContainer: FC<Props> = memo(({
         side="bottom"
         onOpenAutoFocus={(e) => e.preventDefault()}
         hideWhenDetached={true}
+        container={containerRef.current}
       >
         <div
           onClick={onClose}

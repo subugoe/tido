@@ -11,7 +11,7 @@ interface ManifestLabelProps {
 }
 
 const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSelect }) => {
-  const { panelState } = usePanel()
+  const { panelState, containerRef } = usePanel()
   const collection = useDataStore().collections[panelState.collectionId]
   const manifest = panelState.manifest
   const [showModal, setShowModal] = useState(false)
@@ -65,7 +65,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
           {selectedLabel}
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent data-cy="manifests-dropdown" className="max-w-80">
+      <DropdownMenuContent data-cy="manifests-dropdown" className="max-w-80" container={containerRef.current}>
         {manifestOptions.map((m, i) => <DropdownMenuItem
           key={m.id + '_'+i}
           className={`cursor-pointer ${panelState.manifest?.id === m.id ? 'text-primary' : ''} `}

@@ -14,7 +14,7 @@ interface PanelView {
 }
 
 const PanelViewsMenu: FC = () => {
-  const { panelState, usePanelTranslation, updatePanel } = usePanel()
+  const { panelState, usePanelTranslation, updatePanel, containerRef } = usePanel()
   const { t } = usePanelTranslation()
   const [data, setData] = useState<PanelView[]>([])
 
@@ -46,7 +46,7 @@ const PanelViewsMenu: FC = () => {
               <Button variant="outline" size="sm"><Settings2 /> <span className="hidden @min-[1000px]/panel:inline">{ t('view') }</span></Button>
             </PopoverTrigger>
           </BaseTooltip>
-          <PopoverContent data-cy="panel-mode-menu" className="p-1 gap-2">
+          <PopoverContent data-cy="panel-mode-menu" className="p-1 gap-2" container={containerRef.current}>
             {data.map((view, i) => {
               const Icon = view.icon
 

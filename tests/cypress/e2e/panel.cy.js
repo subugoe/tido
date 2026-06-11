@@ -137,7 +137,9 @@ describe('Panel', () => {
   // })
 
   it('Should switch to next manifest', () => {
-    cy.validateLabel('item', 'Moby-Dick, Chapter 1 - Loomings')
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="item-label"]')
+      .should('contain.text', 'Moby-Dick, Chapter 1 - Loomings')
       .click()
     cy.get('[data-cy="items-dropdown"]')
       .children()
@@ -186,9 +188,10 @@ describe('Panel', () => {
     // item label is updated
     // text is updated
     // item modal is not anymore in DOM
-    cy.validateLabel('item', 'Moby-Dick, Chapter 1 - Loomings')
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="item-label"]')
+      .should('contain.text', 'Moby-Dick, Chapter 1 - Loomings')
       .click()
-
       .get('[data-cy="items-dropdown"]')
       .children().should('have.length', 3)
       .eq(2)
@@ -206,7 +209,9 @@ describe('Panel', () => {
   it('Should navigate in manifest and consecutively in item labels', () => {
 
     // validate Manifest Dropdown labels
-    cy.validateLabel('manifest', 'Moby-Dick')
+    cy.findPanelTitleAndNavArrows()
+      .find('[data-cy="manifest-label"]')
+      .should('contain.text', 'Moby-Dick')
       .click()
       .get('[data-cy="manifests-dropdown"]')
       .children().should('have.length', 3)

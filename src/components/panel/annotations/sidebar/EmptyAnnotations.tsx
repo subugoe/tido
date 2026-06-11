@@ -7,7 +7,7 @@ import { TableOfContents } from 'lucide-react'
 const EmptyAnnotations: FC = () => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
-  return <Empty className="mt-16">
+  return <Empty className="mt-16" data-cy="empty-annotations-view">
     <EmptyHeader>
       <EmptyMedia variant="icon" className="bg-background text-muted-foreground">
         <TableOfContents />

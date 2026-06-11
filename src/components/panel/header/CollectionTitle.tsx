@@ -10,7 +10,7 @@ import { X } from 'lucide-react'
 
 
 const CollectionTitle: FC = () => {
-  const { panelState, usePanelTranslation } = usePanel()
+  const { panelState, usePanelTranslation, containerRef } = usePanel()
   const collection = useDataStore(
     (state) => panelState && panelState.collectionId ? state.collections[panelState.collectionId] : null
   )
@@ -41,7 +41,7 @@ const CollectionTitle: FC = () => {
             <span className="truncate">{ collection.titles[0] }</span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent side="bottom" align="start" className="w-[400px] pr-0">
+        <PopoverContent side="bottom" align="start" className="w-[400px] pr-0" container={containerRef.current}>
           <div className="font-semibold mb-2">{t('choose_your_panel_content')}</div>
           <LocalTree collectionId={panelState.collectionId} onSelect={closeLocalTree} />
           <X

@@ -12,7 +12,7 @@ import { ChevronDown } from 'lucide-react'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
 
 const ContentTypesToggle: FC = () => {
-  const { usePanelTranslation } = usePanel()
+  const { usePanelTranslation, containerRef } = usePanel()
   const { t } = usePanelTranslation()
   const { label, contentTypes, activeContentType, setActiveContentType } = useTextView()
 
@@ -35,7 +35,7 @@ const ContentTypesToggle: FC = () => {
         <DropdownMenuTrigger asChild>
           { renderButton(true) }
         </DropdownMenuTrigger>
-        <DropdownMenuContent data-cy="content-types-dropdown">
+        <DropdownMenuContent data-cy="content-types-dropdown" container={containerRef.current}>
           <DropdownMenuLabel>{ t(label) } </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup value={activeContentType} onValueChange={handleTextTabClick}>

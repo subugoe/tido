@@ -1,15 +1,16 @@
 describe('Annotations', () => {
 
     const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
+    console.log('api url', apiUrl)
     const annotationConfig = `annotations.defaultMode=list&panels[0].collection=${apiUrl}/example/collections/example.json`;
 
     const selectors = {
         sidebarToggle: '[data-cy="sidebar-toggle"]',
-        sidebarContainer: '[data-sidebar-container]'
+        sidebarContainer: '#panels-wrapper .panel [data-sidebar-container]'
     }
 
-    const sidebar = () => cy.get(selectors.sidebarContainer)
-    const openSidebar = () => {
+  const sidebar = () => cy.get(selectors.sidebarContainer)
+  const openSidebar = () => {
         cy.get(selectors.sidebarToggle).click()
     }
 
@@ -58,11 +59,11 @@ describe('Annotations', () => {
     })
 
     it('Should open filter popover and toggle filters off/on', () => {
-        openSidebar()
+      openSidebar()
 
-        sidebar().find('[data-annotation]').its('length').as('initialCount')
+      sidebar().find('[data-cy="annotations-list"] > div[data-annotation]').should('have.length',6)
 
-        sidebar().contains('button', /filters/i).click()
+      sidebar().contains('button', /filters/i).click()
         cy.get('[data-slot="popover-content"]').should('be.visible')
 
         cy.get('[data-slot="popover-content"] [data-slot="checkbox"]').each(($checkbox) => {
@@ -71,59 +72,34 @@ describe('Annotations', () => {
             }
         })
 
-        cy.get('@initialCount').then((initialCount) => {
-            sidebar().find('[data-annotation]').should('have.length.lessThan', initialCount)
-        })
+      sidebar().find('[data-cy="empty-annotations-view"')
 
-        cy.get('[data-slot="popover-content"] [data-slot="checkbox"]').each(($checkbox) => {
+      cy.get('[data-slot="popover-content"] [data-slot="checkbox"]').each(($checkbox) => {
             if ($checkbox.attr('data-state') !== 'checked') {
                 cy.wrap($checkbox).click({ force: true })
             }
         })
+      sidebar().find('[data-cy="annotations-list"] > div[data-annotation]').should('have.length',6)
 
-        cy.get('@initialCount').then((initialCount) => {
-            sidebar().find('[data-annotation]').should('have.length.gte', initialCount)
-        })
     })
 
     it('Should expand nested annotation footer if present', () => {
         openSidebar()
 
         sidebar().find('[data-annotation]').should('exist')
-
-        sidebar().then(($container) => {
-            const footerButton = $container.find('button').filter((_, el) => /nested annotation/i.test(el.textContent))
-            if (!footerButton.length) {
-                cy.log('No nested annotation footer in this dataset')
-                return
-            }
-
-            cy.wrap(footerButton.first()).click()
-            sidebar().find('[data-annotation]').should('have.length.at.least', 1)
-            cy.wrap(footerButton.first()).click()
-        })
+        const footer =  sidebar().find('div[data-cy="footer"]').first()
+        footer.click()
+        footer.find('div[data-annotation]').should('have.length.at.least', 1)
     })
 
     it('Should support view more/less on lengthy annotation body when available', () => {
         openSidebar()
 
-
         sidebar().find('[data-annotation]').should('exist')
 
-        sidebar().then(($container) => {
-            const viewMoreBtn = $container
-                .find('button')
-                .filter((_, el) => /view more/i.test(el.textContent))
-
-            if (!viewMoreBtn.length) {
-                cy.log('No view more button in this dataset, skipping')
-                return
-            }
-
-            cy.wrap(viewMoreBtn.first()).click()
-            cy.contains('button', /view less/i).should('exist').click()
-            cy.contains('button', /view more/i).should('exist')
-        })
+        sidebar().find('[data-annotation]').first().contains('button', /view more/i).click()
+        cy.contains('button', /view less/i).should('exist').click()
+        cy.contains('button', /view more/i).should('exist')
     })
 
     it('Should trigger hover events on first annotation', () => {

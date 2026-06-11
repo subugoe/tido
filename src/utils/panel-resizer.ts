@@ -21,6 +21,7 @@ class PanelResizer {
   isResizing = false
   isSidebarResizing = false
   showSidebar = false
+  isFullscreen = false
   lastWidth: number | null = null
 
   private isDragToResizeInitialized = false
@@ -53,21 +54,30 @@ class PanelResizer {
 
   onResizePanel(newWidth: number) {
     this.lastWidth = newWidth
-    this.panelEl.style.width = `${newWidth}px`
+    this.applyWidths(this.isFullscreen ? window.innerWidth : newWidth)
+  }
+
+  private applyWidths(totalWidth: number) {
+    this.panelEl.style.width = `${totalWidth}px`
 
     if (this.showSidebar) {
-      const mainWidth = newWidth - this.sidebarWidth
+      const mainWidth = totalWidth - this.sidebarWidth
       this.mainContentEl.style.width = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
       this.sidebarEl.style.left = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
       this.sidebarEl.style.width = `${this.sidebarWidth}px`
     } else {
-      this.mainContentEl.style.width = `${newWidth - PANEL_BORDER_WIDTH * 2}px`
+      this.mainContentEl.style.width = `${totalWidth - PANEL_BORDER_WIDTH * 2}px`
       if (this.sidebarEl) {
         // when Panel is in error state -> PanelError is shown, Sidebar view is not mounted -> we need this check
-        this.sidebarEl.style.left = `${newWidth - PANEL_BORDER_WIDTH * 2}px`
+        this.sidebarEl.style.left = `${totalWidth - PANEL_BORDER_WIDTH * 2}px`
         this.sidebarEl.style.width = '0px'
       }
     }
+  }
+
+  updateLayoutWidths(value: boolean) {
+    this.isFullscreen = value
+    this.applyWidths(value ? window.innerWidth : this.lastWidth)
   }
 
   calculateWidth(wrapper: HTMLElement): number {

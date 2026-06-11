@@ -3,6 +3,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
+import { getSource } from '@/utils/annotations.ts'
 
 const ANNOTATION_GAP = 5
 
@@ -37,10 +38,10 @@ const AlignAnnotationsList: FC = () => {
       const { contentUrl } = selectedAnnotation
       contentUrlRef.current = contentUrl
       trackTopChange()
-    } else if (origin  === 'other') {
+    } else if (origin  === 'other' || origin === 'annotation') {
       // selectedAnnotation comes from Bookmarking or config
       const target = annotation.target[0]
-      const targetSourceUrl = target.source
+      const targetSourceUrl = getSource(target).id
       const textEl = panelEl.querySelector(`div[data-content-url="${targetSourceUrl}"]`)
       const targetEl = textEl.querySelector((target.selector as CssSelector).value) as HTMLElement
       scrollIntoViewIfNeeded(targetEl, textEl as HTMLElement)
@@ -192,6 +193,7 @@ const AlignAnnotationsList: FC = () => {
   if (filteredAnnotations.length > 0)
     return <div
       ref={ref}
+      data-cy="annotations-list"
       className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}
       style={{ height: `${height}px` }}
     >
