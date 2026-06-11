@@ -71,7 +71,7 @@ function extractPanelConfig(target: TidoContentStateTarget): PanelConfig {
     if (t.type === 'Item') {
       result.item = t.id
       if (t.state?.annotation) result.selectedAnnotationId = t.state.annotation
-      if (t.state.views) result.views = t.state.views.map(visible => ({ visible, view: 'text' }))
+      if (t.state.views) result.views = t.state.views.map(({ visible, activeContentType }) => ({ visible, activeContentType, view: 'text' }))
     } else if (t.type === 'Manifest') {
       result.manifest = t.id
     } else if (t.type === 'Collection') {
@@ -97,7 +97,7 @@ function createContentState(panelStates: PanelState[]): TidoContentState {
     }
 
     if (panelViews) {
-      state.views = panelViews.map(v => v.visible)
+      state.views = panelViews.map(({ visible, activeContentType }) => ({ visible, activeContentType }))
     }
 
     return {

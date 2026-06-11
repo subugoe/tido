@@ -65,7 +65,7 @@ interface PanelProviderProps {
 }
 
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) => {
-  const { annotations: annotationsConfig, panelViews: panelViewsConfig } = useConfig()
+  const { annotations: annotationsConfig, panelViews: globalPanelViewsConfig } = useConfig()
 
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
@@ -181,7 +181,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
           if (oldActiveContentType) {
             activeContentType = contentTypes.includes(oldActiveContentType) ? oldActiveContentType : contentTypes[0]
           } else {
-            activeContentType = contentTypes[0]
+            activeContentType = view.activeContentType ?? contentTypes[0]
           }
         }
 
@@ -198,10 +198,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       const resultPanelViews: PanelView[] = panelState.panelViews && panelState.panelViews.length > 0 ? panelState.panelViews:
         config.views && config.views.length > 0
           ? config.views.map((view, i) => ({
-            ...(panelViewsConfig[i] ?? {}),
+            ...(globalPanelViewsConfig[i] ?? {}),
             ...enhanceView(view, i),
           }))
-          : panelViewsConfig.map((view: PanelView, i: number) => enhanceView(view, i))
+          : globalPanelViewsConfig.map((view: PanelView, i: number) => enhanceView(view, i))
 
       // 5. We update the panel state with the data.
       updatePanel({

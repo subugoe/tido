@@ -301,7 +301,7 @@ export interface TidoContentStateTarget {
 }
 
 export interface TidoContentStatePanelState {
-  views?: boolean[]
+  views?: Partial<PanelView>[]
   annotation?: string
 }
 
