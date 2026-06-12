@@ -37,6 +37,7 @@ const AlignAnnotationsList: FC = () => {
       const { contentUrl } = selectedAnnotation
       contentUrlRef.current = contentUrl
       trackTopChange()
+      getScroller().syncSidebarToText(contentUrl)
     } else if (origin  === 'other') {
       // selectedAnnotation comes from Bookmarking or config
       const target = annotation.target[0]
