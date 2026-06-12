@@ -2,7 +2,6 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
-import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 
 const ANNOTATION_GAP = 5
 
@@ -38,13 +37,22 @@ const AlignAnnotationsList: FC = () => {
       contentUrlRef.current = contentUrl
       trackTopChange()
       getScroller().syncSidebarToText(contentUrl)
-    } else if (origin  === 'other') {
-      // selectedAnnotation comes from Bookmarking or config
+    } else {
+      const scroller = getScroller()
       const target = annotation.target[0]
-      const targetSourceUrl = target.source
-      const textEl = panelEl.querySelector(`div[data-content-url="${targetSourceUrl}"]`)
-      const targetEl = textEl.querySelector((target.selector as CssSelector).value) as HTMLElement
-      scrollIntoViewIfNeeded(targetEl, textEl as HTMLElement)
+      const targetSourceUrl = typeof target.source === 'string' ? target.source : target.source.id
+      const textScrollContainer = scroller.getText(targetSourceUrl)
+      if (!textScrollContainer) return
+
+      const targetEl = textScrollContainer.querySelector((target.selector as CssSelector).value) as HTMLElement
+      const annotationEl = panelEl.querySelector(`[data-annotation="${annotation.id}"]`) as HTMLElement
+      if (!targetEl || !annotationEl) return
+
+      const targetRect = targetEl.getBoundingClientRect()
+      const annotationRect = annotationEl.getBoundingClientRect()
+      const delta = targetRect.top - annotationRect.top
+
+      getScroller().scrollTextSmoothly(targetSourceUrl, delta)
     }
 
     async function deselectAnnotationOnOutsideClick(event: MouseEvent) {
@@ -92,7 +100,7 @@ const AlignAnnotationsList: FC = () => {
       // The minimum top value needed if we want to place the current annotation right under the last one.
       const minY = lastY + lastHeight + ANNOTATION_GAP
 
-      // Next, we decide if that minimum value is even needed or if the desiredY is more below and therefore should be used instead.
+      // Next, we decide if that minimum value is even needed or if the desiredY is further below and therefore should be used instead.
       const actualY = i === 0 ? annotationEl.desiredY : Math.max(annotationEl.desiredY, minY)
 
       if (selectedAnnotation && annotationEl.annotation.id === selectedAnnotation.annotation.id && actualY !== annotationEl.desiredY) {
@@ -102,6 +110,7 @@ const AlignAnnotationsList: FC = () => {
         moveBefore(i)
         continue
       }
+      // Otherwise, we set the calculated position
       annotationEl.desiredY = actualY
     }
 

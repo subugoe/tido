@@ -27,6 +27,10 @@ class Scroller {
     element.setAttribute('data-content-url', url)
   }
 
+  getText(contentUrl: string) {
+    return this.texts[contentUrl]
+  }
+
   setMatchedMap(map: {[contentUrl: string]: MatchedAnnotationsMap}) {
     this.matchedMap = map
   }
@@ -158,6 +162,17 @@ class Scroller {
 
   stopText(contentUrl: string) {
     this.texts[contentUrl].removeEventListener('scroll', this.handleTextScrollBound)
+  }
+
+  scrollTextSmoothly(contentUrl: string, delta: number) {
+    const text = this.texts[contentUrl]
+    if (!text) return
+
+    this.isSyncing = true
+    text.scrollTo({ top: text.scrollTop + delta, behavior: 'smooth' })
+    setTimeout(() => {
+      this.isSyncing = false
+    }, 600)
   }
 }
 
