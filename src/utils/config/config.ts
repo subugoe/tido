@@ -367,12 +367,12 @@ export async function mergeAndValidateConfig(
 
           let resultViews: PanelView[] | null = null
           if (panels.result) {
-            const viewsFromConfig = panels.result[i]?.views ?? defaultConfig.panelViews
+            const viewsFromConfig = panels.result[i]?.views ?? panelViews.result
             if (viewsFromConfig) {
               resultViews = viewsFromConfig.map((v, j) => ({
                 ...v,
-                visible: views[j].visible ?? v.visible,
-                activeContentType: views[j].activeContentType ?? v.activeContentType
+                visible: views[j]?.visible ?? v.visible ?? true,
+                activeContentType: views[j]?.activeContentType ?? v.activeContentType
               }))
             }
           }
