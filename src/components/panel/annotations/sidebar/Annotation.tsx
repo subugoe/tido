@@ -53,7 +53,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     setIsSelected(selectedAnnotation && selectedAnnotation.annotation.id === data.id)
   }, [data, selectedAnnotation])
 
-  function onSelect() {
+  function openChildAnnotations() {
     // expand parentAnnotation of target when clicking it
     //  clicking at a target -> expands the nested annotations
     //    -> since the nested annotations are expanded, then we show the full parent annotation
@@ -163,7 +163,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
           htmlString={(data.body as AnnotationBody).value}
           source={data.id}
           ignoreFilters={true}
-          onSelect={onSelect}
+          onSelect={openChildAnnotations}
           onUpdateMatchedAnnotationsMap={onUpdateMatchedMap}
         /> }
       </div>

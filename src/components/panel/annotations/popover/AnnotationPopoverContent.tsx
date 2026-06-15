@@ -10,7 +10,8 @@ interface Props {
   crossRefAnnotations: Annotation[],
   relatedAnnotations: Annotation[]
   tooltipAnnotations: Annotation[]
-  onClose: () => void
+  onClose: () => void,
+  onBaseItemSelection?: () => void,
 }
 
 
@@ -20,6 +21,7 @@ const AnnotationPopoverContent : FC<Props> = ({
   crossRefAnnotations,
   relatedAnnotations,
   tooltipAnnotations,
+  onBaseItemSelection,
   onClose,
 }) => {
   const { usePanelTranslation, panelId } = usePanel()
@@ -29,6 +31,8 @@ const AnnotationPopoverContent : FC<Props> = ({
 
   const tooltipAnnotationsRef = useRef<Annotation[]>(null)
   const normalAnnotationsRef = useRef<Annotation[]>(null)
+
+  const isSourceText = source.endsWith('.html')
 
   useEffect(() => {
     const panelEl = panelId ? document.getElementById(panelId) : null
@@ -53,13 +57,24 @@ const AnnotationPopoverContent : FC<Props> = ({
     onClose()
   }
 
+  function onBaseItemSelect(isSourceText: boolean) {
+    // BaseItem's Popover is opened through target click in an Annotation
+    if (!isSourceText) {
+      onClose()
+      onBaseItemSelection()
+    }
+  }
+
 
   function renderLabel(label: string) {
     return <p className="py-1 mb-1 text-xs font-medium text-muted-foreground">{label}</p>
   }
 
   if (loading) return <div>Loading ...</div>
-  return <div className="flex flex-col gap-4">
+  return <div
+    className="flex flex-col gap-4"
+    onClick={(e) => e.stopPropagation()}
+  >
     {tooltipAnnotationsRef.current?.length > 0 && (
       <div className={crossRefAnnotations.length > 0 ? 'border-b border-border' : ''}>
         {renderLabel(t('tooltip'))}
@@ -73,7 +88,7 @@ const AnnotationPopoverContent : FC<Props> = ({
     {normalAnnotationsRef.current?.length > 0 && (
       <div className={`flex flex-col gap-2 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
         {renderLabel(tooltipAnnotationsRef.current?.length === 0 && crossRefAnnotations.length === 0 ? t('annotations') : t('more_annotations'))}
-        {normalAnnotationsRef.current?.map(na => <BaseItem key={na.id} annotation={na} source={source} />)}
+        {normalAnnotationsRef.current?.map(na => <BaseItem key={na.id} annotation={na} source={source} onSelect={() => onBaseItemSelect(isSourceText)}  />)}
       </div>
     )}
   </div>
