@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, MouseEvent, useEffect, useState } from 'react'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
@@ -7,10 +7,11 @@ import { MoveRight } from 'lucide-react'
 
 interface Props {
   annotation: Annotation | null,
-  source: string
+  source: string,
+  onSelect?: (source: string) => void,
 }
 
-const BaseItem: FC<Props> = ({ annotation, source }) => {
+const BaseItem: FC<Props> = ({ annotation, source, onSelect }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { updatePanel, selectedAnnotation, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
@@ -22,15 +23,18 @@ const BaseItem: FC<Props> = ({ annotation, source }) => {
   const content = (annotation.body as AnnotationBody).value
   const isSelected = selectedAnnotation?.annotation.id === annotation.id
 
-  function handleSelection() {
+  function handleSelection(e: MouseEvent) {
+    e.stopPropagation()
     updatePanel(
       { selectedAnnotation: isSelected ? null : {
         annotation,
-        origin: 'text',
+        origin: source.endsWith('.html') ? 'text' : 'annotation',
         contentUrl: source
       },
       showSidebar: true }
     )
+
+    if (onSelect) onSelect(source)
   }
 
   useEffect(() => {
@@ -45,7 +49,7 @@ const BaseItem: FC<Props> = ({ annotation, source }) => {
       className={`relative group flex flex-col px-3 py-2 min-w-80 max-w-[380px] rounded-lg border border-border hover:cursor-pointer
         ${isSelected ? 'shadow-md bg-background outline-primary outline-2' : 'hover:border-primary'}`}
       {...(isSelected ? { 'data-selected': '' } : {})}
-      onClick={handleSelection}
+      onClick={(e) => handleSelection(e)}
     >
       <div className="flex gap-4">
         <div className="whitespace-nowrap truncate overflow-hidden">{text}</div>
