@@ -34,6 +34,7 @@ import {
 } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
@@ -60,6 +61,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
+  const assignTargetEls = useSynopsisStore(state => state.assignTargetEls)
 
   const {
     selectedAnnotation,
@@ -68,7 +70,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     annotations,
     syncAnnotations,
     updateSyncMap,
-    setHoveredSyncAnnotations
+    setHoveredSyncAnnotations,
+    panelId
   } = usePanel()
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
@@ -181,6 +184,11 @@ const GenericTextRenderer: FC<Props> = memo(({
 
       updateSyncMap(source, map)
     }
+
+    // add a function to assign html element to each target in syncMaps of SynopsisStore
+    // - get all targets for this "source" - contentUrl in syncMaps
+    // - for each selectorValue -> we locate the target and assign as targetEl -> panelEl.querySelector()
+    assignTargetEls(source, textWrapperRef.current, panelId)
 
   }, [parsedDom, annotations, annotationsConfig])
 

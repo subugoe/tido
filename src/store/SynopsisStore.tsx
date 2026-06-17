@@ -24,6 +24,7 @@ interface SynopsisStoreTypes {
   removeSyncMap: (key: string) => void
   resetSyncMaps: () => void,
   addSyncTargets: (collectionUrl: string) => Promise<void>,
+  assignTargetEls: (source: string, panelEl: HTMLElement | null, panelId: string) => void,
 }
 
 // Only CssSelectors carry a `value`. RangeSelectors are not handled yet (see findTargets in utils/annotations).
@@ -78,7 +79,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
     // updateSyncMap
     // for each annotation, go through each target
     // each target create an object
-    // {contentUrl: {target: {targetEl: null, panelId: '', syncedTargets:[], selector: []}}} -> in selector append value of selector.value from Annotation target
+    // {contentUrl: {selectorValue: {targetEl: null, panelId: '', syncedTargets:[], selector: []}}} -> in selector append value of selector.value from Annotation target
     //   {
     //   }
     //   }
@@ -115,5 +116,21 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
     })
 
     set({ syncMaps })
+  },
+  // assign the rendered html element to each sync target of a given source (contentUrl)
+  assignTargetEls: (source: string, panelEl: HTMLElement | null, panelId: string) => {
+    // get all targets for this "source" - contentUrl in syncMaps
+    const sourceMap = get().syncMaps[source]
+    if (!sourceMap || !panelEl) return
+
+    const updatedSourceMap: Record<string, SyncTarget> = {}
+
+    // for each selectorValue -> we locate the target and assign as targetEl -> panelEl.querySelector()
+    Object.entries(sourceMap).forEach(([selectorValue, syncTarget]) => {
+      const targetEl = panelEl.querySelector<HTMLElement>(selectorValue)
+      updatedSourceMap[selectorValue] = { ...syncTarget, targetEl, panelId }
+    })
+
+    set({ syncMaps: { ...get().syncMaps, [source]: updatedSourceMap } })
   }
 }))
