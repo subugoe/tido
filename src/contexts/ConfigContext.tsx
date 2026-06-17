@@ -7,6 +7,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 import { initI18n } from '@/utils/translations.ts'
 import Loading from '@/components/ui/loading.tsx'
 import { defaultConfig } from '@/utils/config/default-config.ts'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 
 type ConfigProviderProps = {
   children: React.ReactNode
@@ -46,6 +47,8 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
         createThemeStyles(config)
 
         createTreeNodes(config.rootCollections)
+
+        config.rootCollections.forEach(url => useSynopsisStore.getState().addSyncTargets(url))
 
         setConfig(config)
         await Promise.all(
