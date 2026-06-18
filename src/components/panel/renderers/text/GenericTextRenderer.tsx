@@ -64,13 +64,16 @@ const GenericTextRenderer: FC<Props> = memo(({
   const assignTargetEls = useSynopsisStore(state => state.assignTargetEls)
   const appendSyncTargets = useSynopsisStore(state => state.appendSyncTargets)
 
+  const syncMaps = useSynopsisStore(state => state.syncMaps)
+
+  console.log('syncMaps', syncMaps)
+
   const {
     selectedAnnotation,
     selectedAnnotationTypes,
     setSelectedAnnotation,
     annotations,
     syncAnnotations,
-    updateSyncMap,
     setHoveredSyncAnnotations,
     panelId
   } = usePanel()
@@ -166,13 +169,16 @@ const GenericTextRenderer: FC<Props> = memo(({
     // - for each selectorValue -> we locate the target and assign as targetEl -> panelEl.querySelector()
     assignTargetEls(source, textWrapperRef.current, panelId)
 
+    console.log('sync annotations', syncAnnotations)
+
     if (syncAnnotations) {
-      const map = syncAnnotations.reduce((acc, cur) => {
+      syncAnnotations.reduce((acc, cur) => {
         const target = cur.target.find(t => getSource(t).id === source)
         if (!target) return acc
 
         const selector = (target.selector as CssSelector)?.value
         const targets = Array.from(parsedDom.querySelectorAll(selector))
+        console.log('targets', targets)
 
         if (!targets) return acc
 
@@ -184,13 +190,8 @@ const GenericTextRenderer: FC<Props> = memo(({
           target.addEventListener('mouseleave', onMouseLeaveSyncTarget)
         })
 
-        acc[cur.id] = targets
-
         return acc
       }, {} as { [key: string]: Element[] })
-
-      updateSyncMap(source, map)
-
       // append the panel collection's synoptic annotations into the global syncMaps
       appendSyncTargets(source, syncAnnotations, textWrapperRef.current, panelId)
     }

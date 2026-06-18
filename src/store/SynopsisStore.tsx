@@ -125,10 +125,13 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   // The targets are already rendered, so we locate their elements and match them against
   // the existing sync targets (keyed by the element) instead of relying on the selector value.
   appendSyncTargets: (source: string, syncAnnotations: Annotation[], panelEl: HTMLElement | null, panelId: string) => {
-    if (!panelEl || !syncAnnotations) return
+    // do not touch syncMaps when there are no synoptic annotations to merge
+    if (!panelEl || !syncAnnotations || syncAnnotations.length === 0) return
 
     const syncMaps: SyncMaps = { ...get().syncMaps }
     const sourceMap: Record<string, SyncTarget> = { ...(syncMaps[source] ?? {}) }
+
+    let changed = false
 
     syncAnnotations.forEach((annotation) => {
       annotation.target.forEach((target) => {
@@ -176,8 +179,12 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
 
         // keep the existing key when matched by element, otherwise key by selector value
         sourceMap[existingKey ?? selectorValue] = syncTarget
+        changed = true
       })
     })
+
+    // nothing matched the rendered source, so leave syncMaps untouched
+    if (!changed) return
 
     syncMaps[source] = sourceMap
     set({ syncMaps })

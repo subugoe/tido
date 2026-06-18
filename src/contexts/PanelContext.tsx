@@ -54,7 +54,6 @@ interface PanelContextType {
   matchedAnnotationsMaps: {[contentUrl: string]: MatchedAnnotationsMap}
   updateMatchedAnnotationsMap: (contentUrl: string, map: MatchedAnnotationsMap) => void
   syncAnnotations: Annotation[] | null
-  updateSyncMap: (contentUrl: string, map: SyncMap) => void
   setHoveredSyncAnnotations: (value: string[] | null) => void
 }
 
@@ -418,7 +417,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       matchedAnnotationsMaps,
       updateMatchedAnnotationsMap,
       syncAnnotations,
-      updateSyncMap,
       setHoveredSyncAnnotations
     }}>
       {children}
