@@ -34,7 +34,7 @@ import {
 } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { useSynopsisStore, SyncedTargetRef } from '@/store/SynopsisStore.tsx'
 import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
@@ -64,10 +64,6 @@ const GenericTextRenderer: FC<Props> = memo(({
   const assignTargetEls = useSynopsisStore(state => state.assignTargetEls)
   const appendSyncTargets = useSynopsisStore(state => state.appendSyncTargets)
 
-  const syncMaps = useSynopsisStore(state => state.syncMaps)
-
-  console.log('syncMaps', syncMaps)
-
   const {
     selectedAnnotation,
     selectedAnnotationTypes,
@@ -84,6 +80,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const [crossRefAnnotations, setCrossRefAnnotations] = useState<Annotation[]>([])
   const [relatedAnnotations, setRelatedAnnotations] = useState<Annotation[]>([])
   const [tooltipAnnotations, setTooltipAnnotations] = useState<Annotation[]>([])
+  const [syncTargets, setSyncTargets] = useState<SyncedTargetRef[]>([])
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
@@ -169,8 +166,6 @@ const GenericTextRenderer: FC<Props> = memo(({
     // - for each selectorValue -> we locate the target and assign as targetEl -> panelEl.querySelector()
     assignTargetEls(source, textWrapperRef.current, panelId)
 
-    console.log('sync annotations', syncAnnotations)
-
     if (syncAnnotations) {
       syncAnnotations.reduce((acc, cur) => {
         const target = cur.target.find(t => getSource(t).id === source)
@@ -178,7 +173,6 @@ const GenericTextRenderer: FC<Props> = memo(({
 
         const selector = (target.selector as CssSelector)?.value
         const targets = Array.from(parsedDom.querySelectorAll(selector))
-        console.log('targets', targets)
 
         if (!targets) return acc
 
@@ -186,6 +180,7 @@ const GenericTextRenderer: FC<Props> = memo(({
           addSyncAnnotationId(target, cur.id)
           addAnnotationBaseStyle(target)
           addSyncHighlightStyle(target)
+          target.addEventListener('click', onClickTarget)
           target.addEventListener('mouseenter', onMouseEnterSyncTarget)
           target.addEventListener('mouseleave', onMouseLeaveSyncTarget)
         })
@@ -361,14 +356,25 @@ const GenericTextRenderer: FC<Props> = memo(({
     //  So this function will be called with those state values which existed at the time of adding.
 
     const target = e.currentTarget as Element
-    const targetEntry: MergedAnnotationEntry = flippedMatchedMapRef.current.filter(entry => entry.target === target)[0]
+
+    // 1) Read the latest store state imperatively to avoid a stale syncMaps closure
+    //    (opening another panel can update syncMaps after this listener was attached),
+    //    then find the sync entry of this source whose element is the clicked target
+    //    and collect its synced targets (the same text in other sources/panels).
+    const { syncMaps } = useSynopsisStore.getState()
+    const sourceSyncMap = syncMaps[source] ?? {}
+    const clickedSyncTarget = Object.values(sourceSyncMap).find(syncTarget => syncTarget.targetEl === target)
+    const newSyncTargets = clickedSyncTarget?.syncedTargets ?? []
+
+    const targetEntry: MergedAnnotationEntry = (flippedMatchedMapRef.current ?? []).filter(entry => entry.target === target)[0]
 
     let hasFilteredAnnotations = false
     targetEntry?.annotations.forEach(annotation => {
       if (isFilteredAnnotation(annotation, selectedAnnotationTypesRef.current) || annotation.body.annotationType === annotationsConfig?.crossRefContentType) hasFilteredAnnotations = true
     })
 
-    if (!hasFilteredAnnotations) return
+    // nothing to show for this element: neither filtered annotations nor synced targets
+    if (!hasFilteredAnnotations && newSyncTargets.length === 0) return
 
     if (!containsChildren(targetsRef.current, target as HTMLElement)) {
       // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
@@ -410,13 +416,15 @@ const GenericTextRenderer: FC<Props> = memo(({
       })
     }
 
-    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1
+    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1 || newSyncTargets.length > 0
 
     if (openTooltip) {
       setTooltipOpen(true)
       setTooltipTargetElement(target as HTMLElement)
       setRelatedAnnotations(normalAnnotations)
       setTooltipAnnotations(_tooltipAnnotations)
+      // 2) pass the synced targets of this entry to the popover content
+      setSyncTargets(newSyncTargets)
       if (target !== activeTargetRef.current)  addActiveTargetStyle(target)
     }
 
@@ -466,6 +474,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     setTooltipTargetElement(null)
     setCrossRefAnnotations([])
     setRelatedAnnotations([])
+    setSyncTargets([])
     setHoveredAnnotations([])
     removeActiveTargetStyle(activeTargetRef.current)
     activeTargetRef.current = null
@@ -483,6 +492,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         crossRefAnnotations={crossRefAnnotations}
         relatedAnnotations={relatedAnnotations}
         tooltipAnnotations={tooltipAnnotations}
+        syncTargets={syncTargets}
         onBaseItemSelection={onSelect}
         onClose={closeTooltip}
       />

@@ -3,13 +3,13 @@ import { apiRequest } from '@/utils/api.ts'
 import { getSource } from '@/utils/annotations.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 
-interface SyncedTargetRef {
-  contentUrl: string
+export interface SyncedTargetRef {
+  source: AnnotationTargetSource
   selector: string
   targetEl: HTMLElement | null
 }
 
-interface SyncTarget {
+export interface SyncTarget {
   targetEl: HTMLElement | null
   panelId: string
   syncedTargets: SyncedTargetRef[]
@@ -107,12 +107,12 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
         const syncedTargets = annotation.target
           .filter((sibling) => sibling !== target)
           .map((sibling) => ({
-            contentUrl: getSource(sibling).id,
+            source: getSource(sibling),
             selector: getSelectorValue(sibling),
             // elements are not rendered yet at this point; they get assigned later via assignTargetEls
             targetEl: null as HTMLElement | null
           }))
-          .filter((ref): ref is SyncedTargetRef => Boolean(ref.contentUrl && ref.selector))
+          .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))
 
         syncMaps[contentUrl][selectorValue].syncedTargets.push(...syncedTargets)
         syncMaps[contentUrl][selectorValue].selector.push(selectorValue)
@@ -159,19 +159,19 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
         annotation.target
           .filter((sibling) => sibling !== target)
           .map((sibling) => {
-            const siblingContentUrl = getSource(sibling).id
+            const siblingSource = getSource(sibling)
             const siblingSelector = getSelectorValue(sibling)
             return {
-              contentUrl: siblingContentUrl,
+              source: siblingSource,
               selector: siblingSelector,
               // resolve the sibling element from the global syncMaps when its panel is already rendered
-              targetEl: syncMaps[siblingContentUrl]?.[siblingSelector]?.targetEl ?? null
+              targetEl: syncMaps[siblingSource.id]?.[siblingSelector]?.targetEl ?? null
             }
           })
-          .filter((ref): ref is SyncedTargetRef => Boolean(ref.contentUrl && ref.selector))
+          .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))
           .forEach((ref) => {
             const alreadyAdded = syncTarget.syncedTargets.some(
-              (existing) => existing.contentUrl === ref.contentUrl &&
+              (existing) => existing.source.id === ref.source.id &&
                 (existing.targetEl === ref.targetEl || existing.selector === ref.selector)
             )
             if (!alreadyAdded) syncTarget.syncedTargets.push(ref)
