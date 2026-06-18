@@ -6,6 +6,7 @@ import { useDataStore } from '@/store/DataStore.tsx'
 interface SyncedTargetRef {
   contentUrl: string
   selector: string
+  targetEl: HTMLElement | null
 }
 
 interface SyncTarget {
@@ -24,6 +25,7 @@ interface SynopsisStoreTypes {
   removeSyncMap: (key: string) => void
   resetSyncMaps: () => void,
   addSyncTargets: (collectionUrl: string) => Promise<void>,
+  appendSyncTargets: (source: string, syncAnnotations: Annotation[], panelEl: HTMLElement | null, panelId: string) => void,
   assignTargetEls: (source: string, panelEl: HTMLElement | null, panelId: string) => void,
 }
 
@@ -106,7 +108,9 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
           .filter((sibling) => sibling !== target)
           .map((sibling) => ({
             contentUrl: getSource(sibling).id,
-            selector: getSelectorValue(sibling)
+            selector: getSelectorValue(sibling),
+            // elements are not rendered yet at this point; they get assigned later via assignTargetEls
+            targetEl: null as HTMLElement | null
           }))
           .filter((ref): ref is SyncedTargetRef => Boolean(ref.contentUrl && ref.selector))
 
@@ -115,6 +119,67 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
       })
     })
 
+    set({ syncMaps })
+  },
+  // Merge the panel collection's synoptic annotations into syncMaps for the given source.
+  // The targets are already rendered, so we locate their elements and match them against
+  // the existing sync targets (keyed by the element) instead of relying on the selector value.
+  appendSyncTargets: (source: string, syncAnnotations: Annotation[], panelEl: HTMLElement | null, panelId: string) => {
+    if (!panelEl || !syncAnnotations) return
+
+    const syncMaps: SyncMaps = { ...get().syncMaps }
+    const sourceMap: Record<string, SyncTarget> = { ...(syncMaps[source] ?? {}) }
+
+    syncAnnotations.forEach((annotation) => {
+      annotation.target.forEach((target) => {
+        const contentUrl = getSource(target).id
+        const selectorValue = getSelectorValue(target)
+        // we can only locate targets that belong to the source rendered in this panel
+        if (contentUrl !== source || !selectorValue) return
+
+        // 1) locate the targetEl using the target selector
+        const targetEl = panelEl.querySelector<HTMLElement>(selectorValue)
+        if (!targetEl) return
+
+        // 2) find the existing sync target in the source map by its element
+        const existingKey = Object.keys(sourceMap).find((key) => sourceMap[key].targetEl === targetEl)
+        const syncTarget: SyncTarget = existingKey
+          ? { ...sourceMap[existingKey], selector: [...sourceMap[existingKey].selector], syncedTargets: [...sourceMap[existingKey].syncedTargets] }
+          : { targetEl, panelId, syncedTargets: [], selector: [] }
+
+        // 3) append the selector value if it is not already tracked for this element
+        if (!syncTarget.selector.includes(selectorValue)) {
+          syncTarget.selector.push(selectorValue)
+        }
+
+        // for each annotation target: add the sibling targets to syncedTargets if not added yet
+        annotation.target
+          .filter((sibling) => sibling !== target)
+          .map((sibling) => {
+            const siblingContentUrl = getSource(sibling).id
+            const siblingSelector = getSelectorValue(sibling)
+            return {
+              contentUrl: siblingContentUrl,
+              selector: siblingSelector,
+              // resolve the sibling element from the global syncMaps when its panel is already rendered
+              targetEl: syncMaps[siblingContentUrl]?.[siblingSelector]?.targetEl ?? null
+            }
+          })
+          .filter((ref): ref is SyncedTargetRef => Boolean(ref.contentUrl && ref.selector))
+          .forEach((ref) => {
+            const alreadyAdded = syncTarget.syncedTargets.some(
+              (existing) => existing.contentUrl === ref.contentUrl &&
+                (existing.targetEl === ref.targetEl || existing.selector === ref.selector)
+            )
+            if (!alreadyAdded) syncTarget.syncedTargets.push(ref)
+          })
+
+        // keep the existing key when matched by element, otherwise key by selector value
+        sourceMap[existingKey ?? selectorValue] = syncTarget
+      })
+    })
+
+    syncMaps[source] = sourceMap
     set({ syncMaps })
   },
   // assign the rendered html element to each sync target of a given source (contentUrl)

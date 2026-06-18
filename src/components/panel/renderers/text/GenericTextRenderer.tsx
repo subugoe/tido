@@ -62,6 +62,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
   const assignTargetEls = useSynopsisStore(state => state.assignTargetEls)
+  const appendSyncTargets = useSynopsisStore(state => state.appendSyncTargets)
 
   const {
     selectedAnnotation,
@@ -159,6 +160,12 @@ const GenericTextRenderer: FC<Props> = memo(({
       targetsRef.current = getTextTargets(flippedMatchedMapRef.current)
     }
 
+
+    // add a function to assign html element to each target in syncMaps of SynopsisStore
+    // - get all targets for this "source" - contentUrl in syncMaps
+    // - for each selectorValue -> we locate the target and assign as targetEl -> panelEl.querySelector()
+    assignTargetEls(source, textWrapperRef.current, panelId)
+
     if (syncAnnotations) {
       const map = syncAnnotations.reduce((acc, cur) => {
         const target = cur.target.find(t => getSource(t).id === source)
@@ -183,12 +190,10 @@ const GenericTextRenderer: FC<Props> = memo(({
       }, {} as { [key: string]: Element[] })
 
       updateSyncMap(source, map)
-    }
 
-    // add a function to assign html element to each target in syncMaps of SynopsisStore
-    // - get all targets for this "source" - contentUrl in syncMaps
-    // - for each selectorValue -> we locate the target and assign as targetEl -> panelEl.querySelector()
-    assignTargetEls(source, textWrapperRef.current, panelId)
+      // append the panel collection's synoptic annotations into the global syncMaps
+      appendSyncTargets(source, syncAnnotations, textWrapperRef.current, panelId)
+    }
 
   }, [parsedDom, annotations, annotationsConfig])
 
