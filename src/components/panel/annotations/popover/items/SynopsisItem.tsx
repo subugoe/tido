@@ -7,7 +7,7 @@ import { createNewPanel, getContentTypes, setNewActiveContentType, splitMIMEType
 import { Button } from '@/components/ui/button.tsx'
 import { Columns2 } from 'lucide-react'
 import { PanelView } from '@/types'
-import { SyncedTargetRef } from '@/store/SynopsisStore.tsx'
+import { SyncedTargetRef, useSynopsisStore } from '@/store/SynopsisStore.tsx'
 
 interface Props {
   syncTargets: SyncedTargetRef[]
@@ -17,6 +17,13 @@ const SynopsisItem: FC<Props> = ({ syncTargets }) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
   const { panelViews: panelViewsConfig } = useConfig()
+  const setSyncedTargets = useSynopsisStore((state) => state.setSyncedTargets)
+
+  function onClick() {
+    openSyncedPanels()
+    // store the synced targets so each panel can highlight and scroll to its own target
+    setSyncedTargets(syncTargets)
+  }
 
   // Build a text view that displays the synced content of the given panel's item.
   function buildSyncedTextView(panel: PanelState, source: AnnotationTargetSource): PanelView {
@@ -91,7 +98,7 @@ const SynopsisItem: FC<Props> = ({ syncTargets }) => {
         size="sm"
         variant="outline"
         className="justify-start"
-        onClick={openSyncedPanels}
+        onClick={onClick}
       >
         <Columns2 /> {t('open_synced_panels')}
       </Button>

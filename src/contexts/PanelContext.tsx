@@ -286,15 +286,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     })
   }
 
-  function updateSyncMap(contentUrl: string, map: SyncMap) {
-    setSyncMaps(prev => {
-      return {
-        ...prev,
-        [contentUrl]: map
-      }
-    })
-  }
-
   useEffect(() => {
     if (annotationsConfig.filters) {
 

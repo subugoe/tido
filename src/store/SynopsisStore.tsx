@@ -21,12 +21,15 @@ type SyncMaps = Record<string, Record<string, SyncTarget>>
 
 interface SynopsisStoreTypes {
   syncMaps: SyncMaps
+  // the synced targets of the entry the user chose to open from the synopsis popover
+  syncedTargets: SyncedTargetRef[]
   setSyncMap: (key: string, value: Record<string, SyncTarget>) => void
   removeSyncMap: (key: string) => void
   resetSyncMaps: () => void,
   addSyncTargets: (collectionUrl: string) => Promise<void>,
   appendSyncTargets: (source: string, syncAnnotations: Annotation[], panelEl: HTMLElement | null, panelId: string) => void,
   assignTargetEls: (source: string, panelEl: HTMLElement | null, panelId: string) => void,
+  setSyncedTargets: (syncedTargets: SyncedTargetRef[]) => void,
 }
 
 // Only CssSelectors carry a `value`. RangeSelectors are not handled yet (see findTargets in utils/annotations).
@@ -54,6 +57,10 @@ async function findAnnotationCollectionUrl(collection: Collection): Promise<stri
 
 export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   syncMaps: {},
+  syncedTargets: [],
+  setSyncedTargets: (syncedTargets) => {
+    set({ syncedTargets })
+  },
   setSyncMap: (key, value) => {
     set({ syncMaps: { ...get().syncMaps, [key]: value } })
   },
