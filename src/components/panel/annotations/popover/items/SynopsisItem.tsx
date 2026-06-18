@@ -1,11 +1,12 @@
 import { FC } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
-import { useUIStore } from '@/store/UIStore.tsx'
-import { getContentTypes, splitMIMEType } from '@/utils/panel.ts'
+import { apiRequest } from '@/utils/api.ts'
+import { createNewPanel, getContentTypes, setNewActiveContentType, splitMIMEType } from '@/utils/panel.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { Columns2 } from 'lucide-react'
-import { PanelConfig, PanelView } from '@/types'
+import { PanelView } from '@/types'
 import { SyncedTargetRef } from '@/store/SynopsisStore.tsx'
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 const SynopsisItem: FC<Props> = ({ syncTargets }) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
+  const { panelViews: panelViewsConfig } = useConfig()
 
   // Build a text view that displays the synced content of the given panel's item.
   function buildSyncedTextView(panel: PanelState, source: AnnotationTargetSource): PanelView {
@@ -60,19 +62,27 @@ const SynopsisItem: FC<Props> = ({ syncTargets }) => {
     })
   }
 
-  function openInNewPanel(source: AnnotationTargetSource) {
-    // a new panel needs at least a collection
-    if (!source.collection) return
+  async function openInNewPanel(source: AnnotationTargetSource) {
+    // a new panel needs at least a collection, manifest and item
+    if (!source.collection || !source.manifest || !source.item) return
 
-    const newPanelConfig: PanelConfig = {
-      collection: source.collection,
-      manifest: source.manifest,
-      item: source.item
-    }
+    const manifest = await apiRequest<Manifest>(source.manifest)
+    const item = await apiRequest<Item>(source.item)
+
+    // find the content type that corresponds to the synced content (source.id), so the new
+    // panel opens the text view that shows exactly that content instead of the default one.
+    const content = item.contents?.find((c) => c.id === source.id)
+    const [, activeContentType] = content ? splitMIMEType(content.contentType) : []
+    const textViewIndex = panelViewsConfig.findIndex((view: PanelView) => view.view === 'text')
 
     const newPanelId = crypto.randomUUID()
-    useUIStore.getState().updateNewestPanelId(newPanelId)
-    usePanelStore.getState().addPanel(newPanelConfig, newPanelId)
+    await createNewPanel(
+      source.collection,
+      manifest,
+      item,
+      activeContentType ? setNewActiveContentType(activeContentType, textViewIndex, panelViewsConfig) : panelViewsConfig,
+      newPanelId
+    )
   }
 
   return (
