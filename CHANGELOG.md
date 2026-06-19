@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.3](https://github.com/subugoe/tido/compare/v5.0.0-beta.2...v5.0.0-beta.3) (2026-06-19)
+
+
+### Features
+
+* save active content type in panel views in bookmarking ([#1050](https://github.com/subugoe/tido/issues/1050)) ([d9ef139](https://github.com/subugoe/tido/commit/d9ef139dd468cde1ef82f1787506e4f3114f252a))
+* save panel views in bookmarking ([#1050](https://github.com/subugoe/tido/issues/1050)) ([2d4d0f9](https://github.com/subugoe/tido/commit/2d4d0f974b1f58cd75344d8b37f42e8196c6a135))
+* scroll text to annotation's position upon selection in sidebar to align them ([#1062](https://github.com/subugoe/tido/issues/1062)) ([2f3da3c](https://github.com/subugoe/tido/commit/2f3da3c87a7428a925a52a4893f0f319a9288d02))
+
+
+### Bug Fixes
+
+* clicking at BaseItem in Annotation's Popover closes the Popover and open child annotations ([76caaae](https://github.com/subugoe/tido/commit/76caaae0bfde5c607ad89de0e1a626838e9952ca))
+* fix panel views in bookmarking ([cd89b9b](https://github.com/subugoe/tido/commit/cd89b9b4cf65166cf7f99ccd7130f5ce13e09a8b))
+* initialize to null selectedAnnotation when loading a new item ([13af35e](https://github.com/subugoe/tido/commit/13af35e986d435c00d04e3cdd423e41c0d1f781a))
+* sync sidebar and text scroll position "manually" at while selecting from text to avoid alignment issues ([#1062](https://github.com/subugoe/tido/issues/1062)) ([6426dda](https://github.com/subugoe/tido/commit/6426dda4b41129713a5169e10cf5e2ee21bb178c))
+
 ## [5.0.0-beta.2](https://github.com/subugoe/tido/compare/v5.0.0-beta.1...v5.0.0-beta.2) (2026-06-10)
 
 
