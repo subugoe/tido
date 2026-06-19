@@ -41,6 +41,7 @@ import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
 import AnnotationPopoverContent from '@/components/panel/annotations/popover/AnnotationPopoverContent.tsx'
+import SynopsisItem from '@/components/panel/annotations/popover/items/SynopsisItem.tsx'
 import { SelectedAnnotation } from '@/types'
 
 interface Props {
@@ -408,6 +409,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     const clickedSyncTarget = Object.values(sourceSyncMap).find(syncTarget => syncTarget.targetEl === target)
     const newSyncTargets = clickedSyncTarget?.syncedTargets ?? []
 
+    // TODO: Fix bug: Click at a new target should check if there are syncedTargets -> if yes -> should make them null or so
+
     // y-position of the clicked target within its scroll container's visible height
     // (ignoring scroll position), so each synced panel can scroll its own synced target
     // to the same y-position and align it with this one.
@@ -530,6 +533,17 @@ const GenericTextRenderer: FC<Props> = memo(({
     activeTargetRef.current = null
   }
 
+  // Close the popover when the synopsis is opened, but keep the clicked target's active style
+  // so it stays highlighted while its synced targets are shown in the other panels.
+  const onSynopsisItemClick = () => {
+    setTooltipOpen(false)
+    setCrossRefAnnotations([])
+    setRelatedAnnotations([])
+  }
+
+
+
+
   return <div data-text-wrapper ref={textWrapperRef} className="relative" style={{ paddingTop: `${paddingTop * 0.25}rem` }}>
     <AnnotationPopoverContainer
       target={tooltipTargetElement}
@@ -542,10 +556,12 @@ const GenericTextRenderer: FC<Props> = memo(({
         crossRefAnnotations={crossRefAnnotations}
         relatedAnnotations={relatedAnnotations}
         tooltipAnnotations={tooltipAnnotations}
-        syncTargets={syncTargets}
         onBaseItemSelection={onSelect}
         onClose={closeTooltip}
-      />
+      >
+        {syncTargets.targets.length > 0 &&
+          <SynopsisItem syncTargets={syncTargets} onSelect={onSynopsisItemClick} />}
+      </AnnotationPopoverContent>
     </AnnotationPopoverContainer>
   </div>
 })
