@@ -10,19 +10,22 @@ import { PanelView } from '@/types'
 import { SyncTargets, useSynopsisStore } from '@/store/SynopsisStore.tsx'
 
 interface Props {
-  syncTargets: SyncTargets
+  syncTargets: SyncTargets,
+  onSelect: () => void
 }
 
-const SynopsisItem: FC<Props> = ({ syncTargets }) => {
+const SynopsisItem: FC<Props> = ({ syncTargets, onSelect }) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
   const { panelViews: panelViewsConfig } = useConfig()
   const setSyncedTargets = useSynopsisStore((state) => state.setSyncedTargets)
 
   function onClick() {
+    onSelect()
     openSyncedPanels()
     // store the synced targets so each panel can highlight and scroll to its own target
     setSyncedTargets(syncTargets)
+
   }
 
   // Whether the panel already has a text view showing the synced content (source.id).
@@ -63,7 +66,12 @@ const SynopsisItem: FC<Props> = ({ syncTargets }) => {
       const { source } = syncTarget
       if (!source.item) return
 
+      // check if any other opened panel includes the source.item
+      console.log('source item', source.item)
+      console.log('panels', panels)
       const otherPanel = panels.find((panel) => panel.id !== panelId && panel.item?.id === source.item)
+      console.log('other panel', otherPanel)
+
 
       // 1) source.item is in the current panel, or is not open in any other panel -> open a new panel
       if (currentPanel?.item?.id === source.item || !otherPanel) {

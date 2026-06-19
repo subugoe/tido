@@ -98,7 +98,7 @@ const AnnotationPopoverContent : FC<Props> = ({
     {syncTargets?.targets.length > 0 && (
       <div className={`flex flex-col gap-1 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current?.length > 0 || normalAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
         {renderLabel(t('synopsis'))}
-        <SynopsisItem syncTargets={syncTargets} />
+        <SynopsisItem syncTargets={syncTargets} onSelect={() => onClose()} />
       </div>
     )}
   </div>
