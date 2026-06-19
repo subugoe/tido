@@ -25,6 +25,15 @@ const SynopsisItem: FC<Props> = ({ syncTargets }) => {
     setSyncedTargets(syncTargets)
   }
 
+  // Whether the panel already has a text view showing the synced content (source.id).
+  function panelShowsSource(panel: PanelState, source: AnnotationTargetSource): boolean {
+    return panel.panelViews.some((view) => {
+      if (view.view !== 'text' || !view.activeContentType) return false
+      const content = panel.item?.contents.find((c) => c.contentType.includes(view.activeContentType))
+      return content?.id === source.id
+    })
+  }
+
   // Build a text view that displays the synced content of the given panel's item.
   function buildSyncedTextView(panel: PanelState, source: AnnotationTargetSource): PanelView {
     const contentTypes = panel.item ? getContentTypes(panel.item.contents) : []
@@ -41,7 +50,12 @@ const SynopsisItem: FC<Props> = ({ syncTargets }) => {
   }
 
   function openSyncedPanels() {
-    // read the latest panels imperatively so we account for panels opened in between
+    // Idea
+    // - Case 1 — source item is in the current panel, or not open in any other panel → openInNewPanel(source).
+    // - Case 2 — source item is already open in another panel:
+    //     - 2a) it's missing → append the synced text view.
+    //     - 2b) that panel already shows a text view for source.id → do nothing.
+
     const panels = usePanelStore.getState().panels
     const currentPanel = panels.find((panel) => panel.id === panelId)
 
@@ -49,23 +63,22 @@ const SynopsisItem: FC<Props> = ({ syncTargets }) => {
       const { source } = syncTarget
       if (!source.item) return
 
-      // 1) if the source item is the same as the current panel, open it in another (new) panel
-      if (currentPanel?.item?.id === source.item) {
+      const otherPanel = panels.find((panel) => panel.id !== panelId && panel.item?.id === source.item)
+
+      // 1) source.item is in the current panel, or is not open in any other panel -> open a new panel
+      if (currentPanel?.item?.id === source.item || !otherPanel) {
         openInNewPanel(source)
         return
       }
 
-      // 2) if the item is already opened in another panel, add a text view to it
-      const otherPanel = panels.find((panel) => panel.id !== panelId && panel.item?.id === source.item)
-      if (otherPanel) {
-        usePanelStore.getState().updatePanel(otherPanel.id, {
-          panelViews: [...otherPanel.panelViews, buildSyncedTextView(otherPanel, source)]
-        })
-        return
-      }
+      // 2) source.item is already opened in another panel
+      // 2b) it already shows the text view for source.id -> do nothing
+      if (panelShowsSource(otherPanel, source)) return
 
-      // 3) otherwise open a new panel for the synced source
-      openInNewPanel(source)
+      // 2a) it misses the text view for source.id -> add one
+      usePanelStore.getState().updatePanel(otherPanel.id, {
+        panelViews: [...otherPanel.panelViews, buildSyncedTextView(otherPanel, source)]
+      })
     })
   }
 
