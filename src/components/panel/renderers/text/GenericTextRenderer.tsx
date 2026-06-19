@@ -4,6 +4,7 @@ import {
   addAnnotationBaseStyle,
   addAnnotationId,
   addCrossRefTargetStyle,
+  addSynopsisStyle,
   addHighlightStyle,
   addHoverStyle,
   addNestedTargetStyle,
@@ -24,6 +25,7 @@ import {
   removeAnnotationIds,
   removeHighlightStyle,
   removeHoverStyle,
+  removeSynopsisStyle,
   removeNestedTargetStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
@@ -63,6 +65,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
   const assignTargetEls = useSynopsisStore(state => state.assignTargetEls)
   const appendSyncTargets = useSynopsisStore(state => state.appendSyncTargets)
+  const syncedTargets = useSynopsisStore(state => state.syncedTargets)
 
   const {
     selectedAnnotation,
@@ -107,6 +110,45 @@ const GenericTextRenderer: FC<Props> = memo(({
     textWrapperRef.current.replaceChildren(parsedDom)
     if (onReady) onReady()
   }, [parsedDom])
+
+  // When synced targets are chosen from a synopsis popover, highlight the ones that belong to
+  // this renderer's source and scroll its container so each sits at the same y-position within
+  // the container as the clicked target. Runs once the text is attached (parsedDom) and on every
+  // selection change
+  useEffect(() => {
+    if (!parsedDom || !textWrapperRef.current) return
+    if (!syncedTargets || syncedTargets.targets.length === 0) return
+
+    const { yPos, targets } = syncedTargets
+
+    // track the elements we highlight so the cleanup can remove their style afterwards
+    const highlightedEls: HTMLElement[] = []
+
+    targets.forEach((syncedTarget) => {
+      // only handle synced targets that belong to the content rendered here
+      if (syncedTarget.source.id !== source) return
+
+      const targetEl = textWrapperRef.current.querySelector(syncedTarget.selector) as HTMLElement
+      if (!targetEl) return
+
+      addSynopsisStyle(targetEl)
+      highlightedEls.push(targetEl)
+
+      // scroll so this target's y-position within the container matches the clicked target's
+      const scrollContainer = targetEl.closest('[data-text-container]') as HTMLElement
+      if (scrollContainer) {
+        const currentY = targetEl.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+        const desiredScrollTop = scrollContainer.scrollTop + currentY - yPos
+        const maxScrollTop = scrollContainer.scrollHeight - scrollContainer.clientHeight
+        scrollContainer.scrollTo({ top: Math.max(0, Math.min(desiredScrollTop, maxScrollTop)), behavior: 'smooth' })
+      }
+    })
+
+    // remove the synopsis style from these sync targets before the next run / on unmount
+    return () => {
+      highlightedEls.forEach((el) => removeSynopsisStyle(el))
+    }
+  }, [syncedTargets, parsedDom, source])
 
   // Create and set matchedMap by identifying target nodes. Add listeners to targets.
   useEffect(() => {
@@ -432,7 +474,6 @@ const GenericTextRenderer: FC<Props> = memo(({
       setRelatedAnnotations(normalAnnotations)
       setTooltipAnnotations(_tooltipAnnotations)
       // 2) pass the synced targets of this entry (and the clicked target's y-position) to the popover content
-      console.log('clicked yPos', clickedYPos)
       setSyncTargets({ yPos: clickedYPos, targets: newSyncTargets })
       if (target !== activeTargetRef.current)  addActiveTargetStyle(target)
     }

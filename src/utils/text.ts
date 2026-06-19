@@ -117,6 +117,16 @@ function addCrossReferencedElStyle(target: Element) {
   target.classList.add(...CROSS_REF_REL_STYLE)
 }
 
+// Synopsis (synced target) highlight. Uses the cross-ref style for now, but kept separate
+// so it can diverge later without affecting actual cross-references.
+function addSynopsisStyle(target: Element) {
+  target.classList.add(...CROSS_REF_REL_STYLE)
+}
+
+function removeSynopsisStyle(target: Element) {
+  target.classList.remove(...CROSS_REF_REL_STYLE)
+}
+
 
 function partOfSelectedTargets(target: Element, selectedTargets: Element[]) {
   for (const t of selectedTargets) {
@@ -322,6 +332,8 @@ export {
   isParentHovered,
   addCrossRefTargetStyle,
   addCrossReferencedElStyle,
+  addSynopsisStyle,
+  removeSynopsisStyle,
   addSyncHoverStyle,
   addSyncAnnotationId,
   addActiveTargetStyle,

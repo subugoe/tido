@@ -25,7 +25,6 @@ const SynopsisItem: FC<Props> = ({ syncTargets, onSelect }) => {
     openSyncedPanels()
     // store the synced targets so each panel can highlight and scroll to its own target
     setSyncedTargets(syncTargets)
-
   }
 
   // Whether the panel already has a text view showing the synced content (source.id).
@@ -67,11 +66,7 @@ const SynopsisItem: FC<Props> = ({ syncTargets, onSelect }) => {
       if (!source.item) return
 
       // check if any other opened panel includes the source.item
-      console.log('source item', source.item)
-      console.log('panels', panels)
       const otherPanel = panels.find((panel) => panel.id !== panelId && panel.item?.id === source.item)
-      console.log('other panel', otherPanel)
-
 
       // 1) source.item is in the current panel, or is not open in any other panel -> open a new panel
       if (currentPanel?.item?.id === source.item || !otherPanel) {
