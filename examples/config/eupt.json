@@ -1,4 +1,7 @@
 {
+  "annotations": {
+    "tooltipTypes": ["DictLink", "Linguistic"]
+  },
   "theme": {
     "primaryColor": "#3AA675"
   },
@@ -23,9 +26,6 @@
       "contentTypes": ["philology"]
     }
   ],
-  "annotations": {
-    "tooltipTypes": ["DictLink"]
-  },
   "rootCollections": [
     "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collections/all"
   ]
