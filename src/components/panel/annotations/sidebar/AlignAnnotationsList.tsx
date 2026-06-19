@@ -6,7 +6,7 @@ import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 const ANNOTATION_GAP = 5
 
 const AlignAnnotationsList: FC = () => {
-  const { panelId, selectedAnnotation, setSelectedAnnotation, getScroller, panelState } = usePanel()
+  const { panelId, selectedAnnotation, setSelectedAnnotation, getScroller } = usePanel()
   const { filteredAnnotations } = useAnnotations()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
@@ -16,7 +16,6 @@ const AlignAnnotationsList: FC = () => {
   const [textContainer] = useState(document.getElementById(panelId).querySelector(`[data-text-wrapper]`) as HTMLElement)
   const [yMap, setYMap] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(false)
-  const [height, setHeight] = useState(0)
   const [toggledAnnotation, setToggledAnnotation] = useState(null)
 
   const ref = useRef(null)
@@ -136,9 +135,6 @@ const AlignAnnotationsList: FC = () => {
   }
 
   useEffect(() => {
-    // Set height equal to textContainer height since the text can be way longer
-    // than the position of the last annotation.
-    setHeight(textContainer.getBoundingClientRect().height)
 
     if (filteredAnnotations?.length === 0) {
       setElements([])
@@ -191,7 +187,6 @@ const AlignAnnotationsList: FC = () => {
     return <div
       ref={ref}
       className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}
-      style={{ height: `${height}px` }}
     >
       {filteredAnnotations.map(a => <Annotation
         data={a}
