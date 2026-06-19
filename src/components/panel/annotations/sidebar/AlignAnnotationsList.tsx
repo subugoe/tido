@@ -80,11 +80,15 @@ const AlignAnnotationsList: FC = () => {
 
     if (elements.length === 0) return
 
-    const textTop = textContainer.getBoundingClientRect().top
-
-    // Set the desiredY according to current target clean positions (clean = actual position in the text)
+    // Set the desiredY according to current target clean positions (clean = actual position in the text + scrolled distance)
     for (let i = 0; i < elements.length; i++) {
-      elements[i].desiredY = elements[i].target.getBoundingClientRect().top - textTop
+      const scrollParent = elements[0].target.closest('[data-text-container]')
+      const parentRect = scrollParent.getBoundingClientRect()
+      const el = elements[i].target
+      const elRect = el.getBoundingClientRect()
+
+      // Distance from span to parent's visible top, plus how far parent has scrolled
+      elements[i].desiredY = (elRect.top - parentRect.top) + scrollParent.scrollTop
     }
 
     elements.sort((a, b) => a.desiredY - b.desiredY)
@@ -106,13 +110,14 @@ const AlignAnnotationsList: FC = () => {
       if (selectedAnnotation && annotationEl.annotation.id === selectedAnnotation.annotation.id && actualY !== annotationEl.desiredY) {
         // If this is a selectedAnnotation, and it has some other annotations above,
         // we have to align that annotation with the target in text.
-        // (which caused the current to move down, for example if the selected annotation is in the same row with multiple other annotations),
-        // we want to move those annotations further above, so our selected one can be placed to the desiredY
+        // Since this is exactly the "desiredY" position, we don't need to do anything here,
+        // but we need to move all previous annotations further above if needed,
+        // so their positions don't overlap with our selected one.
         moveBefore(i)
-        continue
+      } else {
+        // Otherwise, we set the calculated position
+        annotationEl.desiredY = actualY
       }
-      // Otherwise, we set the calculated position
-      annotationEl.desiredY = actualY
     }
 
     const map = elements.reduce((acc, cur) => {
@@ -148,6 +153,7 @@ const AlignAnnotationsList: FC = () => {
           console.error('There exists no target in text from the selector value of this annotation', annotation)
           return
         }
+
         return {
           target,
           el,
