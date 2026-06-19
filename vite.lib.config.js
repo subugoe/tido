@@ -37,7 +37,7 @@ export default defineConfig(({ mode}) => {
         entry: ['src/index.ts'],
         formats: ['es', 'cjs'],
         fileName: (format) => `index.${format}.js`,
-        // cssFileName: 'tido.min', // TODO: This does not work, why?
+        cssFileName: 'tido.min',
       },
       sourcemap: true,
       rollupOptions: {
