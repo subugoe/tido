@@ -1,0 +1,35 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example-synopsis-2/items/book4-page1.json",
+  "textapiType": "TextApiItem",
+  "revision": "1",
+  "division": "The Road Not Taken, Stanza 1",
+  "titles": [
+    "1"
+  ],
+  "languages": [
+    "eng"
+  ],
+  "images": [
+    {
+      "id": "http://localhost:8181/text-api.png",
+      "license": "CC0-1.0",
+      "mimetype": "image/png"
+    }
+  ],
+  "contents": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "id": "http://localhost:8181/example-synopsis-2/html/book4-page1_transcription.html",
+      "contentType": "text/html;type=transcription"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "id": "http://localhost:8181/example-synopsis-2/html/book4-page1_translation.html",
+      "contentType": "text/html;type=translation"
+    }
+  ],
+  "textItemType": "page",
+  "annotationCollection": "http://localhost:8181/example-synopsis-2/annotations/annotationCollection/book4-page1.json"
+}

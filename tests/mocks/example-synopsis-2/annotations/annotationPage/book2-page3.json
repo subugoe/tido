@@ -1,0 +1,267 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example-synopsis-2/annotations/annotationPage/book2-page3.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example-synopsis-2/annotations/annotationCollection/book2-page3.json",
+    "label": "Annotations for Synopsis-2 · Whale Voyages, Chapter 3",
+    "total": 12
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The Spouter-Inn is where Ishmael first meets Queequeg, establishing their friendship.",
+        "format": "text/plain",
+        "annotationType": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#spouter-inn"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Queequeg - A Polynesian harpooneer who becomes Ishmael's close friend and shipmate.",
+        "format": "text/plain",
+        "annotationType": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#queequeg"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Architectural term preserved from manuscript description.",
+        "format": "text/plain",
+        "annotationType": "Descriptive Detail"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-gable"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Archaic past participle, modernized would be \"smoke-damaged\".",
+        "format": "text/plain",
+        "annotationType": "Lexical Modernization"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-besmoked"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The oil-painting depicts a whale caught in a storm, foreshadowing the novel's themes of man versus nature.",
+        "format": "text/plain",
+        "annotationType": "Artistic Object"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#oil-painting"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A harpooneer in the 19th century was a skilled sailor responsible for throwing the harpoon at whales during a hunt.",
+        "format": "text/plain",
+        "annotationType": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#harpooneer"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-5",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The opening paragraph establishes the inn's cramped, atmospheric setting, central to the mood of the chapter.",
+        "format": "text/plain",
+        "annotationType": "Setting"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#para1"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-diplomatic-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The manuscript alternates between \"oil-painting\" (hyphenated) and \"oil painting\" across different witness copies.",
+        "format": "text/plain",
+        "annotationType": "Textual Variant"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#oil-painting"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-diplomatic-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The alternative spelling \"Quohog\" appears in the first American edition (Harper & Brothers, 1851) but was corrected in subsequent printings.",
+        "format": "text/plain",
+        "annotationType": "Editorial Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-alt"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-diplomatic-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The term \"harpooneer\" is spelled inconsistently across the manuscript; \"harpooner\" (single 'e') also appears.",
+        "format": "text/plain",
+        "annotationType": "Orthographic Feature"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#harpooneer"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-normalized-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Normalized to \"Spouter Inn\" (without hyphen) to follow the convention adopted by the Northwestern-Newberry edition.",
+        "format": "text/plain",
+        "annotationType": "Modernization"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-punct"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book2/page3/rev1/annotation-normalized-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Queequeg's name is retained without normalization as it is Melville's deliberate phonetic rendering of a Polynesian name.",
+        "format": "text/plain",
+        "annotationType": "Stylistic Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book2-page3_normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#queequeg"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

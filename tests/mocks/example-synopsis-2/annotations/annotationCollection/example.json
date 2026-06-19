@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example-synopsis-2/annotations/annotationCollection/example.json",
+  "type": "AnnotationCollection",
+  "label": "Synopsis connections for Synopsis-2 Library",
+  "total": 4,
+  "first": "http://localhost:8181/example-synopsis-2/annotations/annotationPage/example.json",
+  "last": "http://localhost:8181/example-synopsis-2/annotations/annotationPage/example.json"
+}
