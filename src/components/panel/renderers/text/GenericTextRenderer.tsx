@@ -84,7 +84,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const [crossRefAnnotations, setCrossRefAnnotations] = useState<Annotation[]>([])
   const [relatedAnnotations, setRelatedAnnotations] = useState<Annotation[]>([])
   const [tooltipAnnotations, setTooltipAnnotations] = useState<Annotation[]>([])
-  const [syncTargets, setSyncTargets] = useState<SyncTargets>({ yPos: 0, targets: [] })
+  const [syncTargets, setSyncTargets] = useState<SyncTargets>({ yPos: 0, originTarget: null, targets: [] })
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
@@ -120,7 +120,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!parsedDom || !textWrapperRef.current) return
     if (!syncedTargets || syncedTargets.targets.length === 0) return
 
-    const { yPos, targets } = syncedTargets
+    const { yPos, targets, originTarget: prevClickedTarget } = syncedTargets
 
     // track the elements we highlight so the cleanup can remove their style afterwards
     const highlightedEls: HTMLElement[] = []
@@ -145,9 +145,11 @@ const GenericTextRenderer: FC<Props> = memo(({
       }
     })
 
-    // remove the synopsis style from these sync targets before the next run / on unmount
+    // before the next run / on unmount: remove the synopsis style from these sync targets and
+    // clear the active style of the previously clicked (origin) target
     return () => {
       highlightedEls.forEach((el) => removeSynopsisStyle(el))
+      if (prevClickedTarget) removeActiveTargetStyle(prevClickedTarget)
     }
   }, [syncedTargets, parsedDom, source])
 
@@ -477,7 +479,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       setRelatedAnnotations(normalAnnotations)
       setTooltipAnnotations(_tooltipAnnotations)
       // 2) pass the synced targets of this entry (and the clicked target's y-position) to the popover content
-      setSyncTargets({ yPos: clickedYPos, targets: newSyncTargets })
+      setSyncTargets({ yPos: clickedYPos, originTarget: target as HTMLElement, targets: newSyncTargets })
       if (target !== activeTargetRef.current)  addActiveTargetStyle(target)
     }
 
@@ -527,7 +529,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     setTooltipTargetElement(null)
     setCrossRefAnnotations([])
     setRelatedAnnotations([])
-    setSyncTargets({ yPos: 0, targets: [] })
+    setSyncTargets({ yPos: 0, originTarget: null, targets: [] })
     setHoveredAnnotations([])
     removeActiveTargetStyle(activeTargetRef.current)
     activeTargetRef.current = null

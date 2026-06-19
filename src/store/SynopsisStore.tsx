@@ -14,6 +14,9 @@ export interface SyncedTargetRef {
 // each panel can scroll its own synced target to the same y-position.
 export interface SyncTargets {
   yPos: number
+  // the target that was clicked to open the synopsis; kept so its active style can be cleared
+  // when the next synopsis selection is made
+  originTarget: HTMLElement | null
   targets: SyncedTargetRef[]
 }
 
@@ -65,7 +68,7 @@ async function findAnnotationCollectionUrl(collection: Collection): Promise<stri
 
 export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   syncMaps: {},
-  syncedTargets: { yPos: 0, targets: [] },
+  syncedTargets: { yPos: 0, originTarget: null, targets: [] },
   setSyncedTargets: (syncedTargets) => {
     set({ syncedTargets })
   },
