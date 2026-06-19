@@ -2,7 +2,7 @@ import { FC, ReactNode, useEffect, useRef } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
-import { waitForElementInDom, scrollIntoViewIfNeeded } from '@/utils/dom.ts'
+import { waitForElementInDom } from '@/utils/dom.ts'
 import { addCrossReferencedElStyle } from '@/utils/text.ts'
 
 interface Props {
@@ -28,10 +28,13 @@ const PanelShell: FC<Props> = ({ children }) => {
     }
   }, [])
 
-  // When synced targets are chosen from a synopsis popover, highlight and scroll to the
-  // target in this panel if one of its views currently displays the target's content.
+  // When synced targets are chosen from a synopsis popover, highlight the target in this
+  // panel and scroll its container so the synced target sits at the same y-position within
+  // the container as the clicked target. Only applies when a view here shows its content.
   useEffect(() => {
-    if (!syncedTargets || syncedTargets.length === 0 || !panelState?.item) return
+    if (!syncedTargets || syncedTargets.targets.length === 0 || !panelState?.item) return
+
+    const { yPos, targets } = syncedTargets
 
     // content URLs currently shown by this panel's text views
     const shownContentUrls = panelState.panelViews
@@ -40,7 +43,7 @@ const PanelShell: FC<Props> = ({ children }) => {
         : undefined)
       .filter(Boolean)
 
-    syncedTargets.forEach((syncedTarget) => {
+    targets.forEach((syncedTarget) => {
       if (!shownContentUrls.includes(syncedTarget.source.id)) return
 
       // wait until the target is rendered inside this panel, then highlight and scroll to it
@@ -50,9 +53,14 @@ const PanelShell: FC<Props> = ({ children }) => {
 
         addCrossReferencedElStyle(targetEl)
 
+        // scroll so this target's y-position within the container matches the clicked target's
         const scrollContainer = targetEl.closest('[data-text-container]') as HTMLElement
-        if (scrollContainer) scrollIntoViewIfNeeded(targetEl, scrollContainer)
-        else targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        if (scrollContainer) {
+          const currentY = targetEl.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+          const desiredScrollTop = scrollContainer.scrollTop + currentY - yPos
+          const maxScrollTop = scrollContainer.scrollHeight - scrollContainer.clientHeight
+          scrollContainer.scrollTo({ top: Math.max(0, Math.min(desiredScrollTop, maxScrollTop)), behavior: 'smooth' })
+        }
       })
     })
   }, [syncedTargets, panelState?.item, panelState?.panelViews, panelId])

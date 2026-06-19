@@ -9,6 +9,14 @@ export interface SyncedTargetRef {
   targetEl: HTMLElement | null
 }
 
+// Payload chosen from a synopsis popover: the synced targets plus the clicked target's
+// y-position within its scroll container's visible height (ignoring scroll position), so
+// each panel can scroll its own synced target to the same y-position.
+export interface SyncTargets {
+  yPos: number
+  targets: SyncedTargetRef[]
+}
+
 export interface SyncTarget {
   targetEl: HTMLElement | null
   panelId: string
@@ -22,14 +30,14 @@ type SyncMaps = Record<string, Record<string, SyncTarget>>
 interface SynopsisStoreTypes {
   syncMaps: SyncMaps
   // the synced targets of the entry the user chose to open from the synopsis popover
-  syncedTargets: SyncedTargetRef[]
+  syncedTargets: SyncTargets
   setSyncMap: (key: string, value: Record<string, SyncTarget>) => void
   removeSyncMap: (key: string) => void
   resetSyncMaps: () => void,
   addSyncTargets: (collectionUrl: string) => Promise<void>,
   appendSyncTargets: (source: string, syncAnnotations: Annotation[], panelEl: HTMLElement | null, panelId: string) => void,
   assignTargetEls: (source: string, panelEl: HTMLElement | null, panelId: string) => void,
-  setSyncedTargets: (syncedTargets: SyncedTargetRef[]) => void,
+  setSyncedTargets: (syncedTargets: SyncTargets) => void,
 }
 
 // Only CssSelectors carry a `value`. RangeSelectors are not handled yet (see findTargets in utils/annotations).
@@ -57,7 +65,7 @@ async function findAnnotationCollectionUrl(collection: Collection): Promise<stri
 
 export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   syncMaps: {},
-  syncedTargets: [],
+  syncedTargets: { yPos: 0, targets: [] },
   setSyncedTargets: (syncedTargets) => {
     set({ syncedTargets })
   },

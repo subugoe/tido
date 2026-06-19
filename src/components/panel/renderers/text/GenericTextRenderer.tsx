@@ -34,7 +34,7 @@ import {
 } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useSynopsisStore, SyncedTargetRef } from '@/store/SynopsisStore.tsx'
+import { useSynopsisStore, SyncTargets } from '@/store/SynopsisStore.tsx'
 import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
@@ -80,7 +80,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const [crossRefAnnotations, setCrossRefAnnotations] = useState<Annotation[]>([])
   const [relatedAnnotations, setRelatedAnnotations] = useState<Annotation[]>([])
   const [tooltipAnnotations, setTooltipAnnotations] = useState<Annotation[]>([])
-  const [syncTargets, setSyncTargets] = useState<SyncedTargetRef[]>([])
+  const [syncTargets, setSyncTargets] = useState<SyncTargets>({ yPos: 0, targets: [] })
 
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
@@ -366,6 +366,14 @@ const GenericTextRenderer: FC<Props> = memo(({
     const clickedSyncTarget = Object.values(sourceSyncMap).find(syncTarget => syncTarget.targetEl === target)
     const newSyncTargets = clickedSyncTarget?.syncedTargets ?? []
 
+    // y-position of the clicked target within its scroll container's visible height
+    // (ignoring scroll position), so each synced panel can scroll its own synced target
+    // to the same y-position and align it with this one.
+    const clickedScrollContainer = (target as HTMLElement).closest('[data-text-container]') as HTMLElement | null
+    const clickedYPos = clickedScrollContainer
+      ? target.getBoundingClientRect().top - clickedScrollContainer.getBoundingClientRect().top
+      : 0
+
     const targetEntry: MergedAnnotationEntry = (flippedMatchedMapRef.current ?? []).filter(entry => entry.target === target)[0]
 
     let hasFilteredAnnotations = false
@@ -423,8 +431,9 @@ const GenericTextRenderer: FC<Props> = memo(({
       setTooltipTargetElement(target as HTMLElement)
       setRelatedAnnotations(normalAnnotations)
       setTooltipAnnotations(_tooltipAnnotations)
-      // 2) pass the synced targets of this entry to the popover content
-      setSyncTargets(newSyncTargets)
+      // 2) pass the synced targets of this entry (and the clicked target's y-position) to the popover content
+      console.log('clicked yPos', clickedYPos)
+      setSyncTargets({ yPos: clickedYPos, targets: newSyncTargets })
       if (target !== activeTargetRef.current)  addActiveTargetStyle(target)
     }
 
@@ -474,7 +483,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     setTooltipTargetElement(null)
     setCrossRefAnnotations([])
     setRelatedAnnotations([])
-    setSyncTargets([])
+    setSyncTargets({ yPos: 0, targets: [] })
     setHoveredAnnotations([])
     removeActiveTargetStyle(activeTargetRef.current)
     activeTargetRef.current = null

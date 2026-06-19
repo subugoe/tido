@@ -4,7 +4,7 @@ import CrossRefItem from '@/components/panel/annotations/popover/items/CrossRefI
 import BaseItem from '@/components/panel/annotations/popover/items/BaseItem.tsx'
 import SynopsisItem from '@/components/panel/annotations/popover/items/SynopsisItem.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { SyncedTargetRef } from '@/store/SynopsisStore.tsx'
+import { SyncTargets } from '@/store/SynopsisStore.tsx'
 
 interface Props {
   target: Element,
@@ -12,7 +12,7 @@ interface Props {
   crossRefAnnotations: Annotation[],
   relatedAnnotations: Annotation[]
   tooltipAnnotations: Annotation[]
-  syncTargets: SyncedTargetRef[]
+  syncTargets: SyncTargets
   onClose: () => void,
   onBaseItemSelection?: () => void,
 }
@@ -95,7 +95,7 @@ const AnnotationPopoverContent : FC<Props> = ({
         {normalAnnotationsRef.current?.map(na => <BaseItem key={na.id} annotation={na} source={source} onSelect={() => onBaseItemSelect(isSourceText)}  />)}
       </div>
     )}
-    {syncTargets?.length > 0 && (
+    {syncTargets?.targets.length > 0 && (
       <div className={`flex flex-col gap-1 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current?.length > 0 || normalAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
         {renderLabel(t('synopsis'))}
         <SynopsisItem syncTargets={syncTargets} />

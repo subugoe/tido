@@ -7,10 +7,10 @@ import { createNewPanel, getContentTypes, setNewActiveContentType, splitMIMEType
 import { Button } from '@/components/ui/button.tsx'
 import { Columns2 } from 'lucide-react'
 import { PanelView } from '@/types'
-import { SyncedTargetRef, useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { SyncTargets, useSynopsisStore } from '@/store/SynopsisStore.tsx'
 
 interface Props {
-  syncTargets: SyncedTargetRef[]
+  syncTargets: SyncTargets
 }
 
 const SynopsisItem: FC<Props> = ({ syncTargets }) => {
@@ -45,7 +45,7 @@ const SynopsisItem: FC<Props> = ({ syncTargets }) => {
     const panels = usePanelStore.getState().panels
     const currentPanel = panels.find((panel) => panel.id === panelId)
 
-    syncTargets.forEach((syncTarget) => {
+    syncTargets.targets.forEach((syncTarget) => {
       const { source } = syncTarget
       if (!source.item) return
 
