@@ -20,7 +20,6 @@ const AlignAnnotationsList: FC = () => {
   const [toggledAnnotation, setToggledAnnotation] = useState(null)
 
   const ref = useRef(null)
-  const contentUrlRef = useRef<string | null>(null)
 
   function isClickedElAnnotation(clickedEl: HTMLElement) {
     return clickedEl.closest('[data-annotation]')
@@ -34,7 +33,6 @@ const AlignAnnotationsList: FC = () => {
     const { annotation, origin } = selectedAnnotation
     if (origin === 'text') {
       const { contentUrl } = selectedAnnotation
-      contentUrlRef.current = contentUrl
       trackTopChange()
       getScroller().syncSidebarToText(contentUrl)
     } else {
@@ -83,28 +81,32 @@ const AlignAnnotationsList: FC = () => {
 
     if (elements.length === 0) return
 
+    const textTop = textContainer.getBoundingClientRect().top
+
     // Set the desiredY according to current target clean positions (clean = actual position in the text)
     for (let i = 0; i < elements.length; i++) {
-      elements[i].desiredY = elements[i].target.getBoundingClientRect().top - textContainer.getBoundingClientRect().top
+      elements[i].desiredY = elements[i].target.getBoundingClientRect().top - textTop
     }
 
     elements.sort((a, b) => a.desiredY - b.desiredY)
-
 
     for (let i = 0; i < elements.length; i++) {
       const annotationEl = elements[i]
       const lastHeight = i === 0 ? 0 : elements[i - 1].el.offsetHeight
       const lastY = i === 0 ? 0 : elements[i - 1].desiredY
 
-
       // The minimum top value needed if we want to place the current annotation right under the last one.
       const minY = lastY + lastHeight + ANNOTATION_GAP
 
-      // Next, we decide if that minimum value is even needed or if the desiredY is further below and therefore should be used instead.
+      // Next, we calculate the actual position that will be set to the annotation element.
+      // For the first element, we just go with the desired position.
+      // For all next elements, we check if the desired position is further below the minimum possible position.
+      // If not, we go with the minimum position, which results in the "stacking" order of annotation.
       const actualY = i === 0 ? annotationEl.desiredY : Math.max(annotationEl.desiredY, minY)
 
       if (selectedAnnotation && annotationEl.annotation.id === selectedAnnotation.annotation.id && actualY !== annotationEl.desiredY) {
-        // If this is a selectedAnnotation, and it has some other annotations above
+        // If this is a selectedAnnotation, and it has some other annotations above,
+        // we have to align that annotation with the target in text.
         // (which caused the current to move down, for example if the selected annotation is in the same row with multiple other annotations),
         // we want to move those annotations further above, so our selected one can be placed to the desiredY
         moveBefore(i)
@@ -141,13 +143,6 @@ const AlignAnnotationsList: FC = () => {
     if (filteredAnnotations?.length === 0) {
       setElements([])
     } else {
-      if (!selectedAnnotation) {
-        // intial opening of sidebar - we just
-        const firstTextView = panelState.panelViews.find(v => v.view === 'text')
-        contentUrlRef.current = panelState.item?.contents.find(c =>
-          c.contentType.includes(firstTextView?.activeContentType))?.id
-      }
-
       const annotationEls = Array.from(ref.current?.childNodes ?? [])
       const _elements = annotationEls.map(el => {
         const annotation = filteredAnnotations.find(a => a.id === (el as HTMLElement).getAttribute('data-annotation'))
@@ -174,13 +169,6 @@ const AlignAnnotationsList: FC = () => {
   }, [filteredAnnotations])
 
   useEffect(() => {
-    if (elements.length > 0 && contentUrlRef.current) {
-      // this useEffect happens after the above useEffect [filteredAnnotation]. In the [filteredAnnotations] the
-      // height of sidebar is set equal to that of textContainer -> sidebar height is now larger then default fixed height -> scrolling can happen
-      getScroller().syncSidebarToText(contentUrlRef.current)
-      contentUrlRef.current = null
-    }
-
     let resizeObserver: ResizeObserver | undefined
     let timeout: ReturnType<typeof setTimeout> | undefined
     if (elements.length > 0) {
