@@ -27,14 +27,14 @@ export interface SyncTarget {
   selector: string[]
 }
 
-// contentUrl -> selector value -> sync target
-type SyncMaps = Record<string, Record<string, SyncTarget>>
+// contentUrl -> sync targets (one entry per known target; a clicked target is identified by its targetEl)
+type SyncMaps = Record<string, SyncTarget[]>
 
 interface SynopsisStoreTypes {
   syncMaps: SyncMaps
   // the synced targets of the entry the user chose to open from the synopsis popover
   syncedTargets: SyncTargets
-  setSyncMap: (key: string, value: Record<string, SyncTarget>) => void
+  setSyncMap: (key: string, value: SyncTarget[]) => void
   removeSyncMap: (key: string) => void
   removeSyncMaps: (contentUrls: string[]) => void
   resetSyncMaps: () => void,
@@ -106,12 +106,10 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
     const syncAnnotations = annotationPage.items
 
     // updateSyncMap
-    // for each annotation, go through each target
-    // each target create an object
-    // {contentUrl: {selectorValue: {targetEl: null, panelId: '', syncedTargets:[], selector: []}}} -> in selector append value of selector.value from Annotation target
-    //   {
-    //   }
-    //   }
+    // for each annotation, go through each target and build one SyncTarget per target.
+    // {contentUrl: [{targetEl: null, panelId: '', syncedTargets:[], selector: [selectorValue]}]}
+    // The targets are not rendered yet (targetEl is null), so we match an existing entry by its
+    // selector here; once rendered, lookups happen by targetEl.
     const syncMaps: SyncMaps = { ...get().syncMaps }
 
     syncAnnotations.forEach((annotation) => {
@@ -120,14 +118,11 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
         const selectorValue = getSelectorValue(target)
         if (!contentUrl || !selectorValue) return
 
-        if (!syncMaps[contentUrl]) syncMaps[contentUrl] = {}
-        if (!syncMaps[contentUrl][selectorValue]) {
-          syncMaps[contentUrl][selectorValue] = {
-            targetEl: null,
-            panelId: '',
-            syncedTargets: [],
-            selector: []
-          }
+        if (!syncMaps[contentUrl]) syncMaps[contentUrl] = []
+        let syncTarget = syncMaps[contentUrl].find((st) => st.selector.includes(selectorValue))
+        if (!syncTarget) {
+          syncTarget = { targetEl: null, panelId: '', syncedTargets: [], selector: [selectorValue] }
+          syncMaps[contentUrl].push(syncTarget)
         }
 
         // the sibling targets of the same annotation are the ones this target is synced with
@@ -141,8 +136,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
           }))
           .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))
 
-        syncMaps[contentUrl][selectorValue].syncedTargets.push(...syncedTargets)
-        syncMaps[contentUrl][selectorValue].selector.push(selectorValue)
+        syncTarget.syncedTargets.push(...syncedTargets)
       })
     })
 
@@ -156,7 +150,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
     if (!panelEl || !syncAnnotations || syncAnnotations.length === 0) return
 
     const newSyncMaps: SyncMaps = { ...get().syncMaps }
-    const sourceMap: Record<string, SyncTarget> = { ...(newSyncMaps[source] ?? {}) }
+    const sourceList: SyncTarget[] = [...(newSyncMaps[source] ?? [])]
 
     let changed = false
 
@@ -171,10 +165,10 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
         const targetEl = panelEl.querySelector<HTMLElement>(selectorValue)
         if (!targetEl) return
 
-        // 2) find the existing sync target in the source map by its element
-        const existingKey = Object.keys(sourceMap).find((key) => sourceMap[key].targetEl === targetEl)
-        const syncTarget: SyncTarget = existingKey
-          ? { ...sourceMap[existingKey], selector: [...sourceMap[existingKey].selector], syncedTargets: [...sourceMap[existingKey].syncedTargets] }
+        // 2) find the existing sync target in the source list by its element
+        const existingIndex = sourceList.findIndex((st) => st.targetEl === targetEl)
+        const syncTarget: SyncTarget = existingIndex >= 0
+          ? { ...sourceList[existingIndex], selector: [...sourceList[existingIndex].selector], syncedTargets: [...sourceList[existingIndex].syncedTargets] }
           : { targetEl, panelId, syncedTargets: [], selector: [] }
 
         // 3) append the selector value if it is not already tracked for this element
@@ -188,11 +182,12 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
           .map((sibling) => {
             const siblingSource = getSource(sibling)
             const siblingSelector = getSelectorValue(sibling)
+            // resolve the sibling element from its rendered container when its panel is already rendered
+            const siblingContainerEl = siblingSelector ? document.querySelector<HTMLElement>(`[data-content-url="${siblingSource.id}"]`) : null
             return {
               source: siblingSource,
               selector: siblingSelector,
-              // resolve the sibling element from the global syncMaps when its panel is already rendered
-              targetEl: newSyncMaps[siblingSource.id]?.[siblingSelector]?.targetEl ?? null
+              targetEl: siblingContainerEl?.querySelector<HTMLElement>(siblingSelector) ?? null
             }
           })
           .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))
@@ -202,48 +197,45 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
                 (existing.targetEl === ref.targetEl || existing.selector === ref.selector)
             )
             // The collection which includes refTarget did not include syncAnnotations related to that. However when a new collection is added and includes this target in synopsis, then we should be able to click at this ref and open its synopsis.
-
-            if (!ref.targetEl) {
-              const refContainerEl = document.querySelector<HTMLElement>(`[data-content-url="${ref.source.id}"]`)
-              const refTargetEl = refContainerEl?.querySelector<HTMLElement>(ref.selector) ?? null
-              if (refTargetEl) {
-                newSyncMaps[ref.source.id][ref.selector].targetEl = refTargetEl
-              }
+            // Bind the located element to the sibling's own sync target so it becomes clickable.
+            // That entry was seeded by addSyncTargets without a targetEl, so we match it by element or selector.
+            if (ref.targetEl) {
+              const refSyncTarget = newSyncMaps[ref.source.id]?.find((st) => st.targetEl === ref.targetEl || st.selector.includes(ref.selector))
+              if (refSyncTarget) refSyncTarget.targetEl = ref.targetEl
             }
 
             if (!alreadyAdded) syncTarget.syncedTargets.push(ref)
           })
 
-        // keep the existing key when matched by element, otherwise key by selector value
-        sourceMap[existingKey ?? selectorValue] = syncTarget
+        // replace the matched entry, otherwise append the new one
+        if (existingIndex >= 0) sourceList[existingIndex] = syncTarget
+        else sourceList.push(syncTarget)
         changed = true
       })
     })
 
-    console.log('source map', sourceMap)
-
     // nothing matched the rendered source, so leave syncMaps untouched
     if (!changed) return
 
-    console.log('source', source)
-
-    newSyncMaps[source] = sourceMap
+    newSyncMaps[source] = sourceList
     set({ syncMaps: newSyncMaps })
   },
   // assign the rendered html element to each sync target of a given source (contentUrl)
   assignTargetEls: (source: string, panelEl: HTMLElement | null, panelId: string) => {
     // get all targets for this "source" - contentUrl in syncMaps
-    const sourceMap = get().syncMaps[source]
-    if (!sourceMap || !panelEl) return
+    const sourceList = get().syncMaps[source]
+    if (!sourceList || !panelEl) return
 
-    const updatedSourceMap: Record<string, SyncTarget> = {}
-
-    // for each selectorValue -> we locate the target and assign as targetEl -> panelEl.querySelector()
-    Object.entries(sourceMap).forEach(([selectorValue, syncTarget]) => {
-      const targetEl = panelEl.querySelector<HTMLElement>(selectorValue)
-      updatedSourceMap[selectorValue] = { ...syncTarget, targetEl, panelId }
+    // for each sync target -> locate the element via the first tracked selector that resolves in this panel
+    const updatedList = sourceList.map((syncTarget) => {
+      let targetEl: HTMLElement | null = null
+      for (const selectorValue of syncTarget.selector) {
+        targetEl = panelEl.querySelector<HTMLElement>(selectorValue)
+        if (targetEl) break
+      }
+      return { ...syncTarget, targetEl, panelId }
     })
 
-    set({ syncMaps: { ...get().syncMaps, [source]: updatedSourceMap } })
+    set({ syncMaps: { ...get().syncMaps, [source]: updatedList } })
   }
 }))

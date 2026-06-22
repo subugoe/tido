@@ -407,8 +407,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     //    then find the sync entry of this source whose element is the clicked target
     //    and collect its synced targets (the same text in other sources/panels).
     const { syncMaps } = useSynopsisStore.getState()
-    const sourceSyncMap = syncMaps[source] ?? {}
-    const clickedSyncTarget = Object.values(sourceSyncMap).find(syncTarget => syncTarget.targetEl === target)
+    const sourceSyncTargets = syncMaps[source] ?? []
+    const clickedSyncTarget = sourceSyncTargets.find(syncTarget => syncTarget.targetEl === target)
     const newSyncTargets = clickedSyncTarget?.syncedTargets ?? []
 
     // TODO: Fix bug: Click at a new target should check if there are syncedTargets -> if yes -> should make them null or so
