@@ -34,7 +34,6 @@ import {
 } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { containsChildren } from '@/utils/text.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
 import AnnotationPopoverContent from '@/components/panel/annotations/popover/AnnotationPopoverContent.tsx'
@@ -83,7 +82,6 @@ const GenericTextRenderer: FC<Props> = memo(({
   const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
-  const activeTargetRef = useRef<HTMLElement | null>(null)
   const selectedAnnotationTypesRef = useRef<AnnotationTypesDict | null>(null)
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
@@ -356,10 +354,20 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     if (!hasFilteredAnnotations) return
 
-    if (!containsChildren(targetsRef.current, target as HTMLElement)) {
-      // handle only click events on 'deepest' target -> ignore click events on its containing targets while selection
-      e.stopPropagation()
-    }
+    // e.target = the deepest DOM node the user actually clicked
+    // e.currentTarget (target) = the annotation target this listener is attached to
+    // If the actual click landed inside a child annotation target, this is a parent
+    // that should not process the event — the child's handler will take care of it.
+    const clickTarget = e.target as HTMLElement
+    const isClickInsideChildTarget = targetsRef.current.some(
+      t => t !== target && (target as HTMLElement).contains(t) && t.contains(clickTarget)
+    )
+
+    if (isClickInsideChildTarget) return
+
+    // This is the deepest annotation target under the click — process it and prevent
+    // ancestors from also reacting.
+    e.stopPropagation()
 
     const crossRefAnnotations = annotations
       .filter(a => {
@@ -403,7 +411,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       setTooltipTargetElement(target as HTMLElement)
       setRelatedAnnotations(normalAnnotations)
       setTooltipAnnotations(_tooltipAnnotations)
-      if (target !== activeTargetRef.current)  addActiveTargetStyle(target)
+      addActiveTargetStyle(target)
     }
 
     setCrossRefAnnotations(crossRefAnnotations)
@@ -426,8 +434,6 @@ const GenericTextRenderer: FC<Props> = memo(({
         if (onSelect) onSelect()
       }
     }
-
-    activeTargetRef.current = target as HTMLElement
   }
 
   const onMouseEnterSyncTarget = (e: Event) => {
@@ -449,12 +455,11 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   const closeTooltip = () => {
     setTooltipOpen(false)
-    setTooltipTargetElement(null)
     setCrossRefAnnotations([])
     setRelatedAnnotations([])
     setHoveredAnnotations([])
-    removeActiveTargetStyle(activeTargetRef.current)
-    activeTargetRef.current = null
+    removeActiveTargetStyle(tooltipTargetElement)
+    setTooltipTargetElement(null)
   }
 
   return <div data-text-wrapper ref={textWrapperRef} className="relative" style={{ paddingTop: `${paddingTop * 0.25}rem` }}>

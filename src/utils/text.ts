@@ -284,13 +284,6 @@ function isParentHovered(hoveredTargets: Element[], parentsEl: Element[]) {
   )
 }
 
-function containsChildren(targets: HTMLElement[], target: HTMLElement) {
-  for(const t of targets) {
-    if (target.contains(t) && target !== t) return true
-  }
-  return false
-}
-
 export {
   addAnnotationId,
   removeAnnotationIds,
@@ -304,7 +297,6 @@ export {
   removeSelectedStyle,
   addHighlightStyle,
   addSyncHighlightStyle,
-  containsChildren,
   removeHighlightStyle,
   removeSyncHighlightStyle,
   removeSyncHoverStyle,
