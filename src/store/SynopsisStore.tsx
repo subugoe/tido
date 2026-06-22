@@ -146,8 +146,8 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
     // do not touch syncMaps when there are no synoptic annotations to merge
     if (!panelEl || !syncAnnotations || syncAnnotations.length === 0) return
 
-    const syncMaps: SyncMaps = { ...get().syncMaps }
-    const sourceMap: Record<string, SyncTarget> = { ...(syncMaps[source] ?? {}) }
+    const newSyncMaps: SyncMaps = { ...get().syncMaps }
+    const sourceMap: Record<string, SyncTarget> = { ...(newSyncMaps[source] ?? {}) }
 
     let changed = false
 
@@ -183,7 +183,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
               source: siblingSource,
               selector: siblingSelector,
               // resolve the sibling element from the global syncMaps when its panel is already rendered
-              targetEl: syncMaps[siblingSource.id]?.[siblingSelector]?.targetEl ?? null
+              targetEl: newSyncMaps[siblingSource.id]?.[siblingSelector]?.targetEl ?? null
             }
           })
           .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))
@@ -192,6 +192,16 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
               (existing) => existing.source.id === ref.source.id &&
                 (existing.targetEl === ref.targetEl || existing.selector === ref.selector)
             )
+            // The collection which includes refTarget did not include syncAnnotations related to that. However when a new collection is added and includes this target in synopsis, then we should be able to click at this ref and open its synopsis.
+
+            if (!ref.targetEl) {
+              const refContainerEl = document.querySelector<HTMLElement>(`[data-content-url="${ref.source.id}"]`)
+              const refTargetEl = refContainerEl?.querySelector<HTMLElement>(ref.selector) ?? null
+              if (refTargetEl) {
+                newSyncMaps[ref.source.id][ref.selector].targetEl = refTargetEl
+              }
+            }
+
             if (!alreadyAdded) syncTarget.syncedTargets.push(ref)
           })
 
@@ -204,8 +214,8 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
     // nothing matched the rendered source, so leave syncMaps untouched
     if (!changed) return
 
-    syncMaps[source] = sourceMap
-    set({ syncMaps })
+    newSyncMaps[source] = sourceMap
+    set({ syncMaps: newSyncMaps })
   },
   // assign the rendered html element to each sync target of a given source (contentUrl)
   assignTargetEls: (source: string, panelEl: HTMLElement | null, panelId: string) => {
