@@ -84,7 +84,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   },
   addSyncTargets: async (collectionUrl: string) => {
     // check if annotationCollection is provided
-    // if not, check for collections key recursively -> in each collection object, check for annotationCollection
+    // if not, check for collections key recursively (findAnnotationCollectionUrl) -> in each collection object, check for annotationCollection
     const collection = await useDataStore.getState().initCollection(collectionUrl)
     const annotationCollectionUrl = await findAnnotationCollectionUrl(collection)
     if (!annotationCollectionUrl) return

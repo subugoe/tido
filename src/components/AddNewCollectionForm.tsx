@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useUIStore } from '@/store/UIStore.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 
 interface Props {
   onConfirm?: () => void
@@ -18,6 +19,7 @@ const AddNewCollectionForm: FC<Props> = ({ onConfirm }) => {
   const { rootCollections } = useConfig()
   const addPanel = usePanelStore(state => state.addPanel)
   const initCollection = useDataStore.getState().initCollection
+  const addSyncTargets = useSynopsisStore.getState().addSyncTargets
 
   let inputValue = ''
 
@@ -38,6 +40,7 @@ const AddNewCollectionForm: FC<Props> = ({ onConfirm }) => {
     if (!rootCollections.includes(inputValue)) {
       const newRootNode = await createCollectionNode(inputValue)
       useDataStore.getState().appendRootNode(newRootNode)
+      await addSyncTargets(inputValue)
     }
 
     await initCollection(inputValue)
