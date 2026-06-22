@@ -13,6 +13,7 @@ import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 import { getFilteredAnnotations } from '@/utils/annotations.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 
 const SidebarToggle = memo((props) => {
   const { annotations: annotationsConfig } = useConfig()
@@ -54,11 +55,24 @@ const SidebarToggle = memo((props) => {
 })
 
 const PanelHeader: FC = () => {
-  const { usePanelTranslation, remove } = usePanel()
+  const { usePanelTranslation, remove, panelState } = usePanel()
   const { t } = usePanelTranslation()
+  const removeSyncMaps = useSynopsisStore(state => state.removeSyncMaps)
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const handleOpenChange = (open: boolean) => {
     setShowMetadataModal(open)
+  }
+
+  function handlePanelRemove() {
+    remove()
+
+    // remove the panel's entries in syncMaps: the contentUrls of all content types across its views
+    const contentUrls = (panelState?.panelViews ?? [])
+      .flatMap(view => view.contentTypes ?? [])
+      .map(contentType => panelState?.item?.contents.find(c => c.contentType.includes(contentType))?.id)
+      .filter((contentUrl)=> Boolean(contentUrl))
+
+    removeSyncMaps(contentUrls)
   }
 
   return (
@@ -92,7 +106,7 @@ const PanelHeader: FC = () => {
         <PanelViewsMenu />
         <SidebarToggle />
         <BaseTooltip message={t('close_panel')}>
-          <Button size="icon" variant="ghost" onClick={remove}><X className="text-destructie" /></Button>
+          <Button size="icon" variant="ghost" onClick={handlePanelRemove}><X className="text-destructie" /></Button>
         </BaseTooltip>
       </div>
     </div>

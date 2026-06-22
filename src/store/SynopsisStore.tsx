@@ -36,6 +36,7 @@ interface SynopsisStoreTypes {
   syncedTargets: SyncTargets
   setSyncMap: (key: string, value: Record<string, SyncTarget>) => void
   removeSyncMap: (key: string) => void
+  removeSyncMaps: (contentUrls: string[]) => void
   resetSyncMaps: () => void,
   addSyncTargets: (collectionUrl: string) => Promise<void>,
   appendSyncTargets: (source: string, syncAnnotations: Annotation[], panelEl: HTMLElement | null, panelId: string) => void,
@@ -77,6 +78,14 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   },
   removeSyncMap: (key) => {
     const { [key]: _removed, ...rest } = get().syncMaps
+    set({ syncMaps: rest })
+  },
+  // Remove all syncMaps entries whose key matches one of the given contentUrls
+  // (e.g. the contentUrls rendered in a panel's views that is being closed).
+  removeSyncMaps: (contentUrls) => {
+    const rest = Object.fromEntries(
+      Object.entries(get().syncMaps).filter(([contentUrl]) => !contentUrls.includes(contentUrl))
+    )
     set({ syncMaps: rest })
   },
   resetSyncMaps: () => {
@@ -211,8 +220,12 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
       })
     })
 
+    console.log('source map', sourceMap)
+
     // nothing matched the rendered source, so leave syncMaps untouched
     if (!changed) return
+
+    console.log('source', source)
 
     newSyncMaps[source] = sourceMap
     set({ syncMaps: newSyncMaps })
