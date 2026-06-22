@@ -11,24 +11,26 @@ import PrevManifestButton from '@/components/panel/navigation/PrevManifestButton
 import NextManifestButton from '@/components/panel/navigation/NextManifestButton.tsx'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 
-const PanelHeader: FC = () => {
+const PanelTitle: FC = () => {
   const { panelState, usePanelTranslation } = usePanel()
-  const [selectedManifest, setSelectedManifest] = useState(null)
+  const [isSelecting, setIsSelecting] = useState(false)
+  const [selectedManifest, setSelectedManifest] = useState<Manifest | null>(null)
 
   const { t } = usePanelTranslation()
 
-  function onManifestSelect(newManifest: Manifest | null) {
-    updateSelectedManifest(newManifest)
+  function onManifestSelect(newManifest: Manifest) {
+    setSelectedManifest(newManifest)
+    setIsSelecting(true)
   }
 
   function onItemSelect() {
-    updateSelectedManifest(null)
+    setIsSelecting(false)
   }
 
-  function updateSelectedManifest(newManifest: Manifest | null) {
-    setSelectedManifest(newManifest)
+  function onItemDropdownClose(closeWithoutSelect: boolean) {
+    setIsSelecting(false)
+    if (closeWithoutSelect) setSelectedManifest(null)
   }
-
 
   return (
     <>
@@ -40,8 +42,8 @@ const PanelHeader: FC = () => {
               <PrevManifestButton />
             </BaseTooltip>
             <div className="relative">
-              <ManifestLabel onManifestSelect={onManifestSelect} selectedManifest={selectedManifest} />
-              {selectedManifest && <TitleAlertIcon />}
+              <ManifestLabel onSelect={onManifestSelect} isSelecting={isSelecting} />
+              {isSelecting && <TitleAlertIcon />}
             </div>
             <BaseTooltip message={t('next_manifest')}>
               <NextManifestButton />
@@ -56,7 +58,11 @@ const PanelHeader: FC = () => {
               <BaseTooltip message={t('previous_item')}>
                 <PrevItemButton />
               </BaseTooltip>
-              <ItemLabel selectedManifest={selectedManifest} onItemSelect={onItemSelect} />
+              <ItemLabel
+                selectedManifest={selectedManifest}
+                onSelect={onItemSelect}
+                onDropdownClose={onItemDropdownClose}
+              />
               <BaseTooltip message={t('next_item')}>
                 <NextItemButton />
               </BaseTooltip>
@@ -68,4 +74,4 @@ const PanelHeader: FC = () => {
   )
 }
 
-export default PanelHeader
+export default PanelTitle

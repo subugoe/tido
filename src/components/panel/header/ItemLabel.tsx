@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
@@ -12,25 +12,27 @@ import {
 
 interface ItemLabelProps {
   selectedManifest: Manifest | null
-  onItemSelect: () => void
+  onSelect: (item: Item) => void
+  onDropdownClose: (closeWithoutSelect: boolean) => void
 }
 
-const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
-  const { panelState, updatePanel, usePanelTranslation } = usePanel()
+const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onSelect, onDropdownClose }) => {
+  const { panelState, usePanelTranslation, init } = usePanel()
   const { t } = usePanelTranslation()
   const collection = useDataStore().collections[panelState.collectionId]
   const manifest = panelState.manifest
 
-  const [showItemModal, setShowItemModal] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
   const [labels, setLabels] = useState<{id: string, label: string}[]>([])
-  const externallyOpened = useRef(false)
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null)
 
   useEffect(() => {
     if (!collection) return
     const targetManifest = selectedManifest || manifest
     if (!targetManifest) return
 
-    // items is now string[] (IDs), create labels with IDs
+    setSelectedItem(null)
+
     const items = (targetManifest.items || [])
       .map(item => {
         const id = typeof item === 'object' ? item.id : item
@@ -39,25 +41,22 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
       })
 
     setLabels(items)
-
-    if (selectedManifest) {
-      setShowItemModal(true)
-    }
   }, [collection, manifest, selectedManifest])
 
-  const handleOpenChange = (open: boolean) => {
-    // following if is used to prevent the natural close (not allowing setShowItemModal(open) to execute) of itemModal when we select a manifest label in modal. Without this if statement, the item modal opens and closes immediately, which is not what we want.
-    if (!open && externallyOpened.current) {
-      externallyOpened.current = false
-      return
+  useEffect(() => {
+    if (selectedManifest) {
+      setShowDropdown(true)
     }
+  }, [selectedManifest])
 
-    onItemSelect()
-    setShowItemModal(open)
+  const handleOpenChange = (open: boolean) => {
+    setShowDropdown(open)
+    if (!open) {
+      onDropdownClose(selectedItem === null)
+    }
   }
 
   async function getItem(newItemId: string) {
-    // Find the item ID by matching the label (which is derived from the ID)
     if (!newItemId) return null
     return await apiRequest<Item>(newItemId)
   }
@@ -70,33 +69,23 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onItemSelect }) => {
 
     if (!item) return
 
-    updatePanel({
-      manifest: targetManifest,
-      item,
-      config: { ...panelState.config, manifest: targetManifest.id, item: item.id }
-    })
-
-    setShowItemModal(false)
-    onItemSelect()
+    setSelectedItem(item)
+    setShowDropdown(false)
+    onSelect(item)
+    init({ ...panelState.config, manifest: targetManifest.id, item: item.id })
   }
 
   function getItemLabel() {
     return t(panelState?.item?.division ?? 'unknown')
   }
 
-  useEffect(() => {
-    if (selectedManifest) {
-      externallyOpened.current = true
-    }
-  }, [selectedManifest])
-
   return (
     <DropdownMenu
-      open={showItemModal}
+      open={showDropdown}
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate font-semibold ${showItemModal ? 'bg-accent' : 'bg-muted'} rounded-lg cursor-pointer hover:bg-accent px-2 py-1`}
+        <div className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate font-semibold ${showDropdown ? 'bg-accent' : 'bg-muted'} rounded-lg cursor-pointer hover:bg-accent px-2 py-1`}
           data-cy="item-label">
           { getItemLabel() }
         </div>

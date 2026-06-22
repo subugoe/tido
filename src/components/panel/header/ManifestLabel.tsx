@@ -6,15 +6,16 @@ import { apiRequest } from '@/utils/api.ts'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu.tsx'
 
 interface ManifestLabelProps {
-  selectedManifest: Manifest | null,
-  onManifestSelect: (newManifest: Manifest | null) => void
+  isSelecting: boolean,
+  onSelect: (newManifest: Manifest) => void
 }
 
-const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSelect }) => {
+const ManifestLabel: FC<ManifestLabelProps> = ({ isSelecting, onSelect }) => {
   const { panelState } = usePanel()
   const collection = useDataStore().collections[panelState.collectionId]
   const manifest = panelState.manifest
   const [showModal, setShowModal] = useState(false)
+  const [selectedManifest, setSelectedManifest] = useState<Manifest | null>(null)
   const [selectedLabel, setSelectedLabel] = useState('')
   const [manifestOptions, setManifestOptions] = useState<{id: string, label: string}[]>([])
 
@@ -42,11 +43,20 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
     getManifestLabel()
   }, [selectedManifest, manifest])
 
+  useEffect(() => {
+    setSelectedManifest(null)
+  }, [manifest])
+
+  useEffect(() => {
+    if (!isSelecting) setSelectedManifest(null)
+  }, [isSelecting])
+
   async function handleManifestClick(label: string) {
     const manifestId = manifestOptions.find((m) => m.label === label)?.id
     if (!manifestId) return
     const manifest = await apiRequest<Manifest>(manifestId)
-    onManifestSelect(manifest)
+    setSelectedManifest(manifest)
+    onSelect(manifest)
     setShowModal(false)
   }
 
@@ -60,7 +70,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate bg-muted rounded-lg font-semibold cursor-pointer hover:bg-accent px-2 py-1 ${selectedManifest ? 'text-muted-foreground animate-pulse' : ''}`}
+        <div className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate bg-muted rounded-lg font-semibold cursor-pointer hover:bg-accent px-2 py-1 ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
           data-cy="manifest-label">
           {selectedLabel}
         </div>
