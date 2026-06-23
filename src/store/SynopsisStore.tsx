@@ -20,11 +20,32 @@ export interface SyncTargets {
   targets: SyncedTargetRef[]
 }
 
-export interface SyncTarget {
+// Per-panel info for a sync target. The same content can be open in several panels at
+// once, so each panel keeps its own rendered element (and the selectors that resolved
+// it) plus the synced targets resolved for that panel, keyed by panelId in SyncTarget.panels.
+export interface SyncTargetPanel {
   targetEl: HTMLElement | null
-  panelId: string
-  syncedTargets: SyncedTargetRef[]
   selector: string[]
+  syncedTargets: SyncedTargetRef[]
+}
+
+export interface SyncTarget {
+  // per-panel info keyed by panelId; UNRENDERED_PANEL ('') holds entries seeded before
+  // any panel rendered them (targetEl still null)
+  panels: Record<string, SyncTargetPanel>
+}
+
+// placeholder panel key for targets seeded (by addSyncTargets) before any panel renders them
+const UNRENDERED_PANEL = ''
+
+// a sync target tracks a given selector value in one of its panels
+function hasSelector(syncTarget: SyncTarget, selectorValue: string): boolean {
+  return Object.values(syncTarget.panels).some((p) => p.selector.includes(selectorValue))
+}
+
+// a sync target has the given rendered element in one of its panels
+function hasTargetEl(syncTarget: SyncTarget, targetEl: HTMLElement): boolean {
+  return Object.values(syncTarget.panels).some((p) => p.targetEl === targetEl)
 }
 
 // contentUrl -> sync targets (one entry per known target; a clicked target is identified by its targetEl)
@@ -119,11 +140,15 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
         if (!contentUrl || !selectorValue) return
 
         if (!syncMaps[contentUrl]) syncMaps[contentUrl] = []
-        let syncTarget = syncMaps[contentUrl].find((st) => st.selector.includes(selectorValue))
+        let syncTarget = syncMaps[contentUrl].find((st) => hasSelector(st, selectorValue))
         if (!syncTarget) {
-          syncTarget = { targetEl: null, panelId: '', syncedTargets: [], selector: [selectorValue] }
+          // not rendered yet: seed under the placeholder panel key with the known selector
+          syncTarget = { panels: { [UNRENDERED_PANEL]: { targetEl: null, selector: [selectorValue], syncedTargets: [] } } }
           syncMaps[contentUrl].push(syncTarget)
         }
+        // at seed time nothing is rendered, so the synced targets live under the placeholder panel
+        const seedPanel = syncTarget.panels[UNRENDERED_PANEL]
+          ?? (syncTarget.panels[UNRENDERED_PANEL] = { targetEl: null, selector: [], syncedTargets: [] })
 
         // the sibling targets of the same annotation are the ones this target is synced with
         const syncedTargets = annotation.target
@@ -136,7 +161,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
           }))
           .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))
 
-        syncTarget.syncedTargets.push(...syncedTargets)
+        seedPanel.syncedTargets.push(...syncedTargets)
       })
     })
 
@@ -165,16 +190,32 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
         const targetEl = panelEl.querySelector<HTMLElement>(selectorValue)
         if (!targetEl) return
 
-        // 2) find the existing sync target in the source list by its element
-        const existingIndex = sourceList.findIndex((st) => st.targetEl === targetEl)
-        const syncTarget: SyncTarget = existingIndex >= 0
-          ? { ...sourceList[existingIndex], selector: [...sourceList[existingIndex].selector], syncedTargets: [...sourceList[existingIndex].syncedTargets] }
-          : { targetEl, panelId, syncedTargets: [], selector: [] }
+        // 2) find the existing sync target representing this logical target. Match by any
+        //    tracked selector (or element) across panels, so several panels showing the same
+        //    content share one entry and only differ by their per-panel rendered element.
+        const existingIndex = sourceList.findIndex((st) => hasSelector(st, selectorValue) || hasTargetEl(st, targetEl))
+        const existing = existingIndex >= 0 ? sourceList[existingIndex] : null
 
-        // 3) append the selector value if it is not already tracked for this element
-        if (!syncTarget.selector.includes(selectorValue)) {
-          syncTarget.selector.push(selectorValue)
+        // copy the existing panels (drop the unrendered placeholder now that a panel renders it)
+        const panels: Record<string, SyncTargetPanel> = {}
+        for (const [pid, ref] of Object.entries(existing?.panels ?? {})) {
+          if (pid === UNRENDERED_PANEL) continue
+          panels[pid] = { targetEl: ref.targetEl, selector: [...ref.selector], syncedTargets: [...ref.syncedTargets] }
         }
+
+        const seedPanel = existing?.panels[UNRENDERED_PANEL]
+
+        // 3) merge this panel's rendered element, selector and synced targets into its own
+        //    panel entry, carrying over anything previously seeded under the placeholder key
+        const panelSelectors = panels[panelId]?.selector ?? (seedPanel ? [...seedPanel.selector] : [])
+        if (!panelSelectors.includes(selectorValue)) panelSelectors.push(selectorValue)
+
+        const panelSyncedTargets = panels[panelId]?.syncedTargets ?? (seedPanel ? [...seedPanel.syncedTargets] : [])
+        panels[panelId] = { targetEl, selector: panelSelectors, syncedTargets: panelSyncedTargets }
+
+        const syncTarget: SyncTarget = { panels }
+        // synced targets are tracked per panel; collect them into this panel's entry
+        const currentPanel = panels[panelId]
 
         // for each annotation target: add the sibling targets to syncedTargets if not added yet
         annotation.target
@@ -192,7 +233,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
           })
           .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))
           .forEach((ref) => {
-            const alreadyAdded = syncTarget.syncedTargets.some(
+            const alreadyAdded = currentPanel.syncedTargets.some(
               (existing) => existing.source.id === ref.source.id &&
                 (existing.targetEl === ref.targetEl || existing.selector === ref.selector)
             )
@@ -200,11 +241,21 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
             // Bind the located element to the sibling's own sync target so it becomes clickable.
             // That entry was seeded by addSyncTargets without a targetEl, so we match it by element or selector.
             if (ref.targetEl) {
-              const refSyncTarget = newSyncMaps[ref.source.id]?.find((st) => st.targetEl === ref.targetEl || st.selector.includes(ref.selector))
-              if (refSyncTarget) refSyncTarget.targetEl = ref.targetEl
+              const refSyncTarget = newSyncMaps[ref.source.id]?.find((st) => hasTargetEl(st, ref.targetEl!) || hasSelector(st, ref.selector))
+              if (refSyncTarget) {
+                // bind under the sibling's own panel (resolved from the DOM), keeping its selector
+                const refPanelId = ref.targetEl.closest('[data-panel-id]')?.getAttribute('data-panel-id') ?? UNRENDERED_PANEL
+                const refPanel = refSyncTarget.panels[refPanelId]
+                const refPanelSelectors = refPanel?.selector ?? []
+                if (!refPanelSelectors.includes(ref.selector)) refPanelSelectors.push(ref.selector)
+                refSyncTarget.panels = {
+                  ...refSyncTarget.panels,
+                  [refPanelId]: { targetEl: ref.targetEl, selector: refPanelSelectors, syncedTargets: refPanel?.syncedTargets ?? [] },
+                }
+              }
             }
 
-            if (!alreadyAdded) syncTarget.syncedTargets.push(ref)
+            if (!alreadyAdded) currentPanel.syncedTargets.push(ref)
           })
 
         // replace the matched entry, otherwise append the new one
@@ -226,14 +277,34 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
     const sourceList = get().syncMaps[source]
     if (!sourceList || !panelEl) return
 
-    // for each sync target -> locate the element via the first tracked selector that resolves in this panel
+    // for each sync target -> locate its element in this panel using any of its tracked
+    // selectors (collected across panels, incl. the unrendered seed), then record the
+    // rendered element under this panel's own key without disturbing other panels' entries
     const updatedList = sourceList.map((syncTarget) => {
+      const selectors = Array.from(new Set(Object.values(syncTarget.panels).flatMap((p) => p.selector)))
+
       let targetEl: HTMLElement | null = null
-      for (const selectorValue of syncTarget.selector) {
-        targetEl = panelEl.querySelector<HTMLElement>(selectorValue)
-        if (targetEl) break
+      const matchedSelectors: string[] = []
+      for (const selectorValue of selectors) {
+        const el = panelEl.querySelector<HTMLElement>(selectorValue)
+        if (!el) continue
+        if (!targetEl) targetEl = el
+        matchedSelectors.push(selectorValue)
       }
-      return { ...syncTarget, targetEl, panelId }
+
+      // this panel does not render this target -> leave its panels untouched
+      if (!targetEl) return syncTarget
+
+      // carry over the synced targets already known for this panel (or seeded under the placeholder)
+      const seedPanel = syncTarget.panels[UNRENDERED_PANEL]
+      const syncedTargets = syncTarget.panels[panelId]?.syncedTargets ?? (seedPanel ? [...seedPanel.syncedTargets] : [])
+
+      // drop the placeholder seed now that a real panel renders this target
+      const { [UNRENDERED_PANEL]: _seed, ...renderedPanels } = syncTarget.panels
+      return {
+        ...syncTarget,
+        panels: { ...renderedPanels, [panelId]: { targetEl, selector: matchedSelectors, syncedTargets } },
+      }
     })
 
     set({ syncMaps: { ...get().syncMaps, [source]: updatedList } })

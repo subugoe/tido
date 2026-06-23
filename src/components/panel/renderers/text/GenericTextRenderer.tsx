@@ -408,8 +408,16 @@ const GenericTextRenderer: FC<Props> = memo(({
     //    and collect its synced targets (the same text in other sources/panels).
     const { syncMaps } = useSynopsisStore.getState()
     const sourceSyncTargets = syncMaps[source] ?? []
-    const clickedSyncTarget = sourceSyncTargets.find(syncTarget => syncTarget.targetEl === target)
-    const newSyncTargets = clickedSyncTarget?.syncedTargets ?? []
+    // the same content can be open in several panels, so match the clicked element against
+    // each panel's rendered element to find the specific panel entry it belongs to; its
+    // synced targets are the ones resolved for that panel
+    const clickedPanel = sourceSyncTargets
+      .flatMap(syncTarget => Object.values(syncTarget.panels))
+      .find(panel => panel.targetEl === target)
+
+
+    console.log('sync connection', clickedPanel)
+    const newSyncTargets = clickedPanel?.syncedTargets ?? []
 
     // TODO: Fix bug: Click at a new target should check if there are syncedTargets -> if yes -> should make them null or so
 
@@ -546,7 +554,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
 
 
-  return <div data-text-wrapper ref={textWrapperRef} className="relative" style={{ paddingTop: `${paddingTop * 0.25}rem` }}>
+  return <div data-text-wrapper data-panel-id={panelId} ref={textWrapperRef} className="relative" style={{ paddingTop: `${paddingTop * 0.25}rem` }}>
     <AnnotationPopoverContainer
       target={tooltipTargetElement}
       wrapper={textWrapperRef.current}
