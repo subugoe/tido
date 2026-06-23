@@ -85,7 +85,17 @@ export function validateImage(item: Item) {
 export function setNewActiveContentType(contentType: string, index: number, views: PanelView[]) {
   // return a new array with a new object for the matching view, so the updated
   // activeContentType is an actual change (no in-place mutation of the shared views)
-  return views.map((v, i) => i === index ? { ...v, activeContentType: contentType } : v)
+  // also adds contentType to the matching view's
+  // contentTypes array when it isn't already present
+  return views.map((v, i) => {
+    if (i !== index) return v
+
+    const contentTypes = v.contentTypes?.includes(contentType)
+      ? v.contentTypes
+      : [...(v.contentTypes ?? []), contentType]
+
+    return { ...v, activeContentType: contentType, contentTypes }
+  })
 }
 
 export async function createNewPanel(
