@@ -11,25 +11,23 @@ import {
 } from '@/components/ui/dropdown-menu.tsx'
 
 interface ItemLabelProps {
-  selectedManifest: Manifest | null
-  onSelect: (item: Item) => void
-  onDropdownClose: (closeWithoutSelect: boolean) => void
+  onSelect?: (itemId: string) => void
+  onDropdownClose?: (closeWithoutSelect: boolean) => void
+  showDropdown?: boolean,
+  setShowDropdown?: (value: boolean) => void
 }
 
-const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onSelect, onDropdownClose }) => {
-  const { panelState, usePanelTranslation, init } = usePanel()
+const ItemLabel: FC<ItemLabelProps> = ({ showDropdown = false, setShowDropdown, onSelect, onDropdownClose }) => {
+  const { panelState, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
   const collection = useDataStore().collections[panelState.collectionId]
   const manifest = panelState.manifest
 
-  const [showDropdown, setShowDropdown] = useState(false)
   const [labels, setLabels] = useState<{id: string, label: string}[]>([])
-  const skipOnItemSelect = useRef(false)
-  const prevSelectedManifest = useRef(selectedManifest)
 
   useEffect(() => {
     if (!collection) return
-    const targetManifest = selectedManifest || manifest
+    const targetManifest = manifest
     if (!targetManifest) return
 
     const items = (targetManifest.items || [])
@@ -40,41 +38,18 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onSelect, onDropdownC
       })
 
     setLabels(items)
-
-    setShowDropdown(selectedManifest !== null)
-
-    prevSelectedManifest.current = selectedManifest
-  }, [collection, manifest, selectedManifest])
+  }, [collection, manifest])
 
   const handleOpenChange = (open: boolean) => {
     setShowDropdown(open)
-    if (!open && !skipOnItemSelect.current) {
-      onDropdownClose(true)
-    }
-    skipOnItemSelect.current = false
+    // if (!open && !skipOnItemSelect.current) {
+    //   onDropdownClose(true)
+    // }
+    // skipOnItemSelect.current = false
   }
 
-  async function getItem(newItemId: string) {
-    if (!newItemId) return null
-    return await apiRequest<Item>(newItemId)
-  }
-
-  async function handleItemClick(newItemId: string) {
-    const targetManifest = selectedManifest || panelState.manifest
-    if (!targetManifest) return
-
-    skipOnItemSelect.current = true
-
-    const item = await getItem(newItemId)
-
-    if (!item) {
-      skipOnItemSelect.current = false
-      return
-    }
-
-    setShowDropdown(false)
-    await init({ ...panelState.config, manifest: targetManifest.id, item: item.id })
-    onSelect(item)
+  async function handleItemClick(itemId: string) {
+    onSelect(itemId)
   }
 
   function getItemLabel() {

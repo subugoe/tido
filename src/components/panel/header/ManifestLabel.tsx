@@ -7,7 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 interface ManifestLabelProps {
   isSelecting: boolean,
-  onSelect: (newManifest: Manifest) => void
+  onSelect: (manifestId: string) => void
 }
 
 const ManifestLabel: FC<ManifestLabelProps> = ({ isSelecting, onSelect }) => {
@@ -16,6 +16,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ isSelecting, onSelect }) => {
   const [showModal, setShowModal] = useState(false)
   const [selectedManifest, setSelectedManifest] = useState<Manifest | null>(null)
   const [manifestOptions, setManifestOptions] = useState<{id: string, label: string}[]>([])
+
 
   useEffect(() => {
     async function loadManifestOptions() {
@@ -45,9 +46,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ isSelecting, onSelect }) => {
   async function handleManifestClick(label: string) {
     const manifestId = manifestOptions.find((m) => m.label === label)?.id
     if (!manifestId) return
-    const manifest = await apiRequest<Manifest>(manifestId)
-    setSelectedManifest(manifest)
-    onSelect(manifest)
+    onSelect(manifestId)
     setShowModal(false)
   }
 
