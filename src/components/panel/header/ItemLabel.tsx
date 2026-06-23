@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
@@ -24,14 +24,12 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onSelect, onDropdownC
 
   const [showDropdown, setShowDropdown] = useState(false)
   const [labels, setLabels] = useState<{id: string, label: string}[]>([])
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null)
+  const skipOnItemSelect = useRef(false)
 
   useEffect(() => {
     if (!collection) return
     const targetManifest = selectedManifest || manifest
     if (!targetManifest) return
-
-    setSelectedItem(null)
 
     const items = (targetManifest.items || [])
       .map(item => {
@@ -41,19 +39,18 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onSelect, onDropdownC
       })
 
     setLabels(items)
-  }, [collection, manifest, selectedManifest])
 
-  useEffect(() => {
     if (selectedManifest) {
       setShowDropdown(true)
     }
-  }, [selectedManifest])
+  }, [collection, manifest, selectedManifest])
 
   const handleOpenChange = (open: boolean) => {
     setShowDropdown(open)
-    if (!open) {
-      onDropdownClose(selectedItem === null)
+    if (!open && !skipOnItemSelect.current) {
+      onDropdownClose(true)
     }
+    skipOnItemSelect.current = false
   }
 
   async function getItem(newItemId: string) {
@@ -65,14 +62,18 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onSelect, onDropdownC
     const targetManifest = selectedManifest || panelState.manifest
     if (!targetManifest) return
 
+    skipOnItemSelect.current = true
+
     const item = await getItem(newItemId)
 
-    if (!item) return
+    if (!item) {
+      skipOnItemSelect.current = false
+      return
+    }
 
-    setSelectedItem(item)
     setShowDropdown(false)
+    await init({ ...panelState.config, manifest: targetManifest.id, item: item.id })
     onSelect(item)
-    init({ ...panelState.config, manifest: targetManifest.id, item: item.id })
   }
 
   function getItemLabel() {

@@ -13,10 +13,8 @@ interface ManifestLabelProps {
 const ManifestLabel: FC<ManifestLabelProps> = ({ isSelecting, onSelect }) => {
   const { panelState } = usePanel()
   const collection = useDataStore().collections[panelState.collectionId]
-  const manifest = panelState.manifest
   const [showModal, setShowModal] = useState(false)
   const [selectedManifest, setSelectedManifest] = useState<Manifest | null>(null)
-  const [selectedLabel, setSelectedLabel] = useState('')
   const [manifestOptions, setManifestOptions] = useState<{id: string, label: string}[]>([])
 
   useEffect(() => {
@@ -35,21 +33,14 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ isSelecting, onSelect }) => {
   }, [collection])
 
   useEffect(() => {
-    function getManifestLabel() {
-      const label = selectedManifest ? selectedManifest.titles?.[0] ?? '' : panelState?.manifest?.titles?.[0] ?? ''
-      setSelectedLabel(label)
-    }
-
-    getManifestLabel()
-  }, [selectedManifest, manifest])
-
-  useEffect(() => {
     setSelectedManifest(null)
-  }, [manifest])
+  }, [panelState?.manifest?.id])
 
   useEffect(() => {
-    if (!isSelecting) setSelectedManifest(null)
-  }, [isSelecting])
+    if (!isSelecting && selectedManifest) {
+      setSelectedManifest(null)
+    }
+  }, [isSelecting, selectedManifest])
 
   async function handleManifestClick(label: string) {
     const manifestId = manifestOptions.find((m) => m.label === label)?.id
@@ -72,7 +63,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ isSelecting, onSelect }) => {
       <DropdownMenuTrigger asChild>
         <div className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate bg-muted rounded-lg font-semibold cursor-pointer hover:bg-accent px-2 py-1 ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
           data-cy="manifest-label">
-          {selectedLabel}
+          {selectedManifest?.titles?.[0] ?? panelState?.manifest?.titles?.[0] ?? ''}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent data-cy="manifests-dropdown" className="max-w-80">

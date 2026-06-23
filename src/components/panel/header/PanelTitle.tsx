@@ -25,6 +25,7 @@ const PanelTitle: FC = () => {
 
   function onItemSelect() {
     setIsSelecting(false)
+    setSelectedManifest(null)
   }
 
   function onItemDropdownClose(closeWithoutSelect: boolean) {
