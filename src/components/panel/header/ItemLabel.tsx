@@ -25,6 +25,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onSelect, onDropdownC
   const [showDropdown, setShowDropdown] = useState(false)
   const [labels, setLabels] = useState<{id: string, label: string}[]>([])
   const skipOnItemSelect = useRef(false)
+  const prevSelectedManifest = useRef(selectedManifest)
 
   useEffect(() => {
     if (!collection) return
@@ -40,9 +41,9 @@ const ItemLabel: FC<ItemLabelProps> = ({ selectedManifest, onSelect, onDropdownC
 
     setLabels(items)
 
-    if (selectedManifest) {
-      setShowDropdown(true)
-    }
+    setShowDropdown(selectedManifest !== null)
+
+    prevSelectedManifest.current = selectedManifest
   }, [collection, manifest, selectedManifest])
 
   const handleOpenChange = (open: boolean) => {
