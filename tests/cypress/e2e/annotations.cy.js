@@ -107,7 +107,6 @@ describe('Annotations', () => {
     it('Should support view more/less on lengthy annotation body when available', () => {
         openSidebar()
 
-
         sidebar().find('[data-annotation]').should('exist')
 
         sidebar().then(($container) => {
@@ -132,5 +131,36 @@ describe('Annotations', () => {
         sidebar().find('[data-annotation]').first().as('firstAnnotation')
         cy.get('@firstAnnotation').trigger('mouseenter')
         cy.get('@firstAnnotation').trigger('mouseleave')
+    })
+
+    it('Should display custom labels for annotation types when configured', () => {
+        const customLabel = 'Character'
+        const type = 'Place'
+        cy.visit(`/e2e.html?${annotationConfig}&annotations.types[${type}].label=${customLabel}`)
+        cy.get('[data-cy="item-label"]').contains('Pride and Prejudice, Chapter 1')
+        openSidebar()
+        sidebar().find('[data-annotation]', { timeout: 10000 }).should('have.length.at.least', 1)
+        sidebar()
+            .find('[data-slot="badge"]')
+            .should('contain.text', customLabel)
+    })
+
+    it('Should show "No annotations found" when all annotations are filtered out', () => {
+        openSidebar()
+        sidebar().contains('button', /filters/i).click()
+        cy.get('[data-slot="popover-content"] [data-slot="checkbox"][data-state="checked"]').each(($checkbox) => {
+            cy.wrap($checkbox).click({ force: true })
+        })
+        cy.contains('No annotations found').should('be.visible')
+    })
+
+    it('Should show "No annotations available" when the document has no annotations', () => {
+        openSidebar()
+        sidebar().find('[data-annotation]').should('have.length.at.least', 1)
+        sidebar().contains('button', /filters/i).click()
+        cy.get('[data-slot="popover-content"] [data-slot="checkbox"][data-state="checked"]').each(($checkbox) => {
+            cy.wrap($checkbox).click({ force: true })
+        })
+        cy.contains('No annotations found').should('be.visible')
     })
 })
