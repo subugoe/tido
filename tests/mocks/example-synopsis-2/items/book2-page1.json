@@ -4,7 +4,7 @@
   "id": "http://localhost:8181/example-synopsis-2/items/book2-page1.json",
   "textapiType": "TextApiItem",
   "revision": "1",
-  "division": "Synopsis-2 · Whale Voyages, Chapter 1 - Loomings",
+  "division": "Chapter 1 - Loomings",
   "titles": [
     "1"
   ],

@@ -4,7 +4,7 @@
   "id": "http://localhost:8181/example-synopsis-2/items/book1-page2.json",
   "textapiType": "TextApiItem",
   "revision": "1",
-  "division": "Synopsis-2 · Country Manners, Chapter 2",
+  "division": "Chapter 2",
   "titles": [
     "2"
   ],

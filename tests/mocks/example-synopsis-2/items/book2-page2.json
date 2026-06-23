@@ -4,7 +4,7 @@
   "id": "http://localhost:8181/example-synopsis-2/items/book2-page2.json",
   "textapiType": "TextApiItem",
   "revision": "1",
-  "division": "Synopsis-2 · Whale Voyages, Chapter 2 - The Carpet-Bag",
+  "division": "Chapter 2 - The Carpet-Bag",
   "titles": [
     "2"
   ],

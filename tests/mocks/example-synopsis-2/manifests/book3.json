@@ -9,7 +9,7 @@
       "id": "http://localhost:8181/example-synopsis-2/items/book3-page1.json",
       "textapiType": "TextApiItem",
       "revision": "1",
-      "division": "Synopsis-2 · Jazz Age, Chapter 1",
+      "division": "Chapter 1",
       "titles": [
         "1"
       ],
@@ -42,7 +42,7 @@
       "id": "http://localhost:8181/example-synopsis-2/items/book3-page2.json",
       "textapiType": "TextApiItem",
       "revision": "1",
-      "division": "Synopsis-2 · Jazz Age, Chapter 2",
+      "division": "Chapter 2",
       "titles": [
         "2"
       ],
@@ -75,7 +75,7 @@
       "id": "http://localhost:8181/example-synopsis-2/items/book3-page3.json",
       "textapiType": "TextApiItem",
       "revision": "1",
-      "division": "Synopsis-2 · Jazz Age, Chapter 3",
+      "division": "Chapter 3",
       "titles": [
         "3"
       ],
@@ -107,6 +107,6 @@
   "revision": "1",
   "license": "CC0-1.0",
   "titles": [
-    "Synopsis-2 · Jazz Age"
+    "Jazz Age"
   ]
 }

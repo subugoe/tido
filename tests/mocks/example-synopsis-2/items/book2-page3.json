@@ -4,7 +4,7 @@
   "id": "http://localhost:8181/example-synopsis-2/items/book2-page3.json",
   "textapiType": "TextApiItem",
   "revision": "1",
-  "division": "Synopsis-2 · Whale Voyages, Chapter 3 - The Spouter-Inn",
+  "division": "Chapter 3 - The Spouter-Inn",
   "titles": [
     "3"
   ],

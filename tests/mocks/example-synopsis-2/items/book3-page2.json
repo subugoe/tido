@@ -4,7 +4,7 @@
   "id": "http://localhost:8181/example-synopsis-2/items/book3-page2.json",
   "textapiType": "TextApiItem",
   "revision": "1",
-  "division": "Synopsis-2 · Jazz Age, Chapter 2",
+  "division": "Chapter 2",
   "titles": [
     "2"
   ],

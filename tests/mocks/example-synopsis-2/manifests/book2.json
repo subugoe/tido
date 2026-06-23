@@ -9,7 +9,7 @@
       "id": "http://localhost:8181/example-synopsis-2/items/book2-page1.json",
       "textapiType": "TextApiItem",
       "revision": "1",
-      "division": "Synopsis-2 · Whale Voyages, Chapter 1 - Loomings",
+      "division": "Chapter 1 - Loomings",
       "titles": [
         "1"
       ],
@@ -42,7 +42,7 @@
       "id": "http://localhost:8181/example-synopsis-2/items/book2-page2.json",
       "textapiType": "TextApiItem",
       "revision": "1",
-      "division": "Synopsis-2 · Whale Voyages, Chapter 2 - The Carpet-Bag",
+      "division": "Chapter 2 - The Carpet-Bag",
       "titles": [
         "2"
       ],
@@ -75,7 +75,7 @@
       "id": "http://localhost:8181/example-synopsis-2/items/book2-page3.json",
       "textapiType": "TextApiItem",
       "revision": "1",
-      "division": "Synopsis-2 · Whale Voyages, Chapter 3 - The Spouter-Inn",
+      "division": "Chapter 3 - The Spouter-Inn",
       "titles": [
         "3"
       ],
@@ -107,6 +107,6 @@
   "revision": "1",
   "license": "CC0-1.0",
   "titles": [
-    "Synopsis-2 · Whale Voyages"
+    "Whale Voyages"
   ]
 }

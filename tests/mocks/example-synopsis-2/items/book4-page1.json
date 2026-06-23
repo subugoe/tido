@@ -4,7 +4,7 @@
   "id": "http://localhost:8181/example-synopsis-2/items/book4-page1.json",
   "textapiType": "TextApiItem",
   "revision": "1",
-  "division": "The Road Not Taken, Stanza 1",
+  "division": "Stanza 1",
   "titles": [
     "1"
   ],
