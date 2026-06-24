@@ -1,12 +1,12 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
-import { FC, ReactNode } from 'react'
+import { FC, memo, ReactNode } from 'react'
 
 
 interface Props {
   children: ReactNode,
   message: string
 }
-const BaseTooltip: FC<Props> = ({ children, message = '' }) => {
+const BaseTooltip: FC<Props> = memo(({ children, message = '' }) => {
 
   return <TooltipProvider delayDuration={400}>
     <Tooltip>
@@ -20,6 +20,6 @@ const BaseTooltip: FC<Props> = ({ children, message = '' }) => {
       </TooltipContent>
     </Tooltip>
   </TooltipProvider>
-}
+})
 
 export default BaseTooltip

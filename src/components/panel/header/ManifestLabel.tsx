@@ -1,52 +1,22 @@
-import { FC, useEffect, useState } from 'react'
-import { useDataStore } from '@/store/DataStore.tsx'
+import { FC, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { apiRequest } from '@/utils/api.ts'
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu.tsx'
 
 interface ManifestLabelProps {
-  selectedManifest: Manifest | null,
-  onManifestSelect: (newManifest: Manifest | null) => void
+  isSelecting: boolean,
+  onSelect: (manifestId: string) => void,
+  options: DropdownOption[]
+  selectedLabel: string
 }
 
-const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSelect }) => {
+const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelecting, onSelect }) => {
   const { panelState } = usePanel()
-  const collection = useDataStore().collections[panelState.collectionId]
-  const manifest = panelState.manifest
   const [showModal, setShowModal] = useState(false)
-  const [selectedLabel, setSelectedLabel] = useState('')
-  const [manifestOptions, setManifestOptions] = useState<{id: string, label: string}[]>([])
 
-  useEffect(() => {
-    async function loadManifestOptions() {
-      if (!collection?.manifests) return
-      const manifests = await Promise.all(
-        collection.manifests.map(async (cur) => {
-          const id = typeof cur === 'object' ? cur.id : cur
-          const m = await apiRequest<Manifest>(id)
-          return { id: m.id, label: m.titles?.length > 0 && m.titles[0] || '' }
-        })
-      )
-      setManifestOptions(manifests)
-    }
-    loadManifestOptions()
-  }, [collection])
 
-  useEffect(() => {
-    function getManifestLabel() {
-      const label = selectedManifest ? selectedManifest.titles?.[0] ?? '' : panelState?.manifest?.titles?.[0] ?? ''
-      setSelectedLabel(label)
-    }
-
-    getManifestLabel()
-  }, [selectedManifest, manifest])
-
-  async function handleManifestClick(label: string) {
-    const manifestId = manifestOptions.find((m) => m.label === label)?.id
-    if (!manifestId) return
-    const manifest = await apiRequest<Manifest>(manifestId)
-    onManifestSelect(manifest)
+  async function handleManifestClick(id: string) {
+    onSelect(id)
     setShowModal(false)
   }
 
@@ -60,18 +30,18 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ selectedManifest, onManifestSel
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate bg-muted rounded-lg font-semibold cursor-pointer hover:bg-accent px-2 py-1 ${selectedManifest ? 'text-muted-foreground animate-pulse' : ''}`}
+        <div className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate bg-muted rounded-lg font-semibold cursor-pointer hover:bg-accent px-2 py-1 ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
           data-cy="manifest-label">
-          {selectedLabel}
+          { selectedLabel }
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent data-cy="manifests-dropdown" className="max-w-80">
-        {manifestOptions.map((m, i) => <DropdownMenuItem
-          key={m.id + '_'+i}
-          className={`cursor-pointer ${panelState.manifest?.id === m.id ? 'text-primary' : ''} `}
-          title={m.label ?? ''}
-          onClick={() => handleManifestClick(m.label)}
-        > { m.label }
+        {options.map(({ id, label }, i) => <DropdownMenuItem
+          key={id + '_'+i}
+          className={`cursor-pointer ${panelState.manifest?.id === id ? 'text-primary' : ''} `}
+          title={label ?? ''}
+          onClick={() => handleManifestClick(id)}
+        > { label }
         </DropdownMenuItem>)}
       </DropdownMenuContent>
     </DropdownMenu>

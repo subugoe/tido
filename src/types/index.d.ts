@@ -186,6 +186,11 @@ declare global {
   interface CollectionMap {
     [key: string]: Collection
   }
+
+  interface DropdownOption {
+    id: string
+    label: string
+  }
 }
 
 export interface PanelConfig {
