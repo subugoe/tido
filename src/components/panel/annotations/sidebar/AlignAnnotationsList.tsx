@@ -7,7 +7,7 @@ const ANNOTATION_GAP = 5
 
 const AlignAnnotationsList: FC = () => {
   const { panelId, selectedAnnotation, setSelectedAnnotation, getScroller } = usePanel()
-  const { filteredAnnotations } = useAnnotations()
+  const { filteredAnnotations, setAlignmentLoading } = useAnnotations()
 
   // Elements represents an array of several infos for each visible annotation. These infos are needed to update the top
   // position of each annotation.
@@ -19,6 +19,7 @@ const AlignAnnotationsList: FC = () => {
   const [toggledAnnotation, setToggledAnnotation] = useState(null)
 
   const ref = useRef(null)
+  const isFirstMount = useRef(true)
 
   function isClickedElAnnotation(clickedEl: HTMLElement) {
     return clickedEl.closest('[data-annotation]')
@@ -126,6 +127,8 @@ const AlignAnnotationsList: FC = () => {
     }, {})
 
     setYMap(map)
+    setLoading(false)
+    setAlignmentLoading(false)
   }
 
   function moveBefore(index: number) {
@@ -140,9 +143,16 @@ const AlignAnnotationsList: FC = () => {
   }
 
   useEffect(() => {
-
+    if (!isFirstMount.current) {
+      setLoading(true)
+    } else {
+      isFirstMount.current = false
+    }
+    setAlignmentLoading(true)
     if (filteredAnnotations?.length === 0) {
       setElements([])
+      setLoading(false)
+      setAlignmentLoading(false)
     } else {
       const annotationEls = Array.from(ref.current?.childNodes ?? [])
       const _elements = annotationEls.map(el => {
@@ -165,14 +175,12 @@ const AlignAnnotationsList: FC = () => {
     }
 
     return () => {
-      setLoading(true)
       setElements([])
     }
   }, [filteredAnnotations])
 
   useEffect(() => {
     let resizeObserver: ResizeObserver | undefined
-    let timeout: ReturnType<typeof setTimeout> | undefined
     if (elements.length > 0) {
       resizeObserver = new ResizeObserver(entries => {
         if (entries[0].contentRect.width > 0) trackTopChange()
@@ -180,11 +188,8 @@ const AlignAnnotationsList: FC = () => {
       resizeObserver.observe(textContainer)
     }
 
-    setLoading(false)
-
     return () => {
       if (resizeObserver) resizeObserver.disconnect()
-      if (timeout) clearTimeout(timeout)
     }
   }, [elements])
 

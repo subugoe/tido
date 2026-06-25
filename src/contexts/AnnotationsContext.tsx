@@ -8,7 +8,9 @@ type MatchedMaps = {[id: string]: MatchedAnnotationsMap}
 type State = {
   filteredAnnotations: Annotation[],
   matchedMaps: MatchedMaps,
-  updateMatchedMap: (id: string, map: MatchedAnnotationsMap) => void
+  updateMatchedMap: (id: string, map: MatchedAnnotationsMap) => void,
+  alignmentLoading: boolean,
+  setAlignmentLoading: (value: boolean) => void
 }
 
 const AnnotationsContext = createContext<State>(null)
@@ -17,6 +19,7 @@ export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { matchedAnnotationsMaps: textMatchedMaps } = usePanel()
   const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([])
+  const [alignmentLoading, setAlignmentLoading] = useState(true)
   const [matchedMaps, setMatchedMaps ] = useState<MatchedMaps>({})
 
   useEffect(() => {
@@ -61,7 +64,9 @@ export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
     <AnnotationsContext.Provider value={{
       filteredAnnotations,
       matchedMaps,
-      updateMatchedMap
+      updateMatchedMap,
+      alignmentLoading,
+      setAlignmentLoading
     }}>
       {children}
     </AnnotationsContext.Provider>

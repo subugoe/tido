@@ -28,7 +28,7 @@ export const Tido: FC<TidoProps> = ({ config: customConfig, theme, onReady, onTh
   return (
     <div className="tido flex flex-col h-full" data-cy="app">
       <ThemeProvider  onThemeChange={onThemeChange}>
-        <Suspense fallback={<Loading size={36} />}>
+        <Suspense fallback={<Loading />}>
           <ConfigProvider userConfig={customConfig}>
             <TopBar />
             <div className="flex-1 flex overflow-hidden">

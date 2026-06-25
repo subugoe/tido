@@ -98,7 +98,7 @@ const CrossRefLink: FC<Props> = ({ crossRefInfo, error, loading, onSelect }) => 
       actionThisPanel={openInThisPanel}
     />
     {loading && <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
-      <Loading size={36} />
+      <Loading />
     </div>}
   </div>
 }

@@ -11,6 +11,7 @@ import { Allotment, AllotmentHandle } from 'allotment'
 import SidebarView from '@/components/panel/views/sidebar/SidebarView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
+import Loading from '@/components/ui/loading.tsx'
 
 const PanelContent: FC = React.memo(() => {
   const { init, panelState, resizer, error, loading } = usePanel()
@@ -79,6 +80,7 @@ const PanelContent: FC = React.memo(() => {
         </div>
         <div className="sidebar absolute h-full top-0">
           <div className={`absolute ${panelState.showSidebar ? 'inset-y-0' : ''} left-0 w-px bg-border z-40`} />
+          {!showSidebarContent && <Loading />}
           {showSidebarContent && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle />}
           {showSidebarContent && <SidebarView />}
         </div>

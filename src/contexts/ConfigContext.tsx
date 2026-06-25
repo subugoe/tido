@@ -67,7 +67,7 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
 
   if (loading) {
     return <div className="absolute z-10 bg-background left-0 top-0 w-full h-full">
-      <Loading size={36} />
+      <Loading />
     </div>
   }
 

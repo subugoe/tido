@@ -93,7 +93,7 @@ const ImageRenderer: FC = () => {
         <div ref={viewerContainerRef} className="w-full h-full" />
       </div>
       {loading && <div className="absolute z-50 bg-background w-full h-full">
-        <Loading size={36} />
+        <Loading />
       </div>}
     </>
   )
