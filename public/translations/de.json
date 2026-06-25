@@ -138,6 +138,8 @@
     "view_less": "Weniger anzeigen",
     "view": "Ansicht",
     "show_in_sidebar": "In Seiteleiste anzeigen",
-    "more_annotations": "Weitere Annotationen"
+    "more_annotations": "Weitere Annotationen",
+    "synopsis": "Synopse",
+    "open_synced_panels": "In Panels öffnen"
   }
 }

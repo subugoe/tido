@@ -3,6 +3,10 @@
     {
       "collection": "http://localhost:8181/example/collections/example.json",
       "manifest": "http://localhost:8181/example/manifests/book2.json"
+    },
+    {
+      "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+      "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json"
     }
   ],
   "rootCollections": [
@@ -10,5 +14,27 @@
   ],
   "annotations": {
     "crossRefContentType": "CrossRef"
-  }
+  },
+  "panelViews": [
+    {
+      "label": "Text",
+      "view": "text",
+      "contentTypes": [
+        "diplomatic",
+        "transcription",
+        "translation"
+      ]
+    },
+    {
+      "label": "Text",
+      "view": "text",
+      "activeContentType": "diplomatic",
+      "contentTypes": [
+        "diplomatic",
+        "transcription",
+        "translation",
+        "normalized"
+      ]
+    }
+  ]
 }

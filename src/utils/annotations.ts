@@ -156,6 +156,12 @@ function getSource(target: AnnotationTarget): AnnotationTargetSource {
   return { id: target.source }
 }
 
+// Only CssSelectors carry a `value`. RangeSelectors are not handled yet (see findTargets in utils/annotations).
+function getSelectorValue(target: AnnotationTarget): string | null {
+  if (target.selector?.type === 'CssSelector') return target.selector.value
+  return null
+}
+
 export {
   getSelectedTypes,
   getSelectedTypesFromNode,
@@ -165,5 +171,6 @@ export {
   findTargets,
   getNestedAnnotations,
   getCrossRefInfo,
-  getSource
+  getSource,
+  getSelectorValue
 }

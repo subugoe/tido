@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example-synopsis-2/annotations/annotationCollection/book3-page3.json",
+  "type": "AnnotationCollection",
+  "label": "Annotations for Synopsis-2 · Jazz Age, Chapter 3",
+  "total": 4,
+  "first": "http://localhost:8181/example-synopsis-2/annotations/annotationPage/book3-page3.json",
+  "last": "http://localhost:8181/example-synopsis-2/annotations/annotationPage/book3-page3.json"
+}
