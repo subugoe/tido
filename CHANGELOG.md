@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.4](https://github.com/subugoe/tido/compare/v5.0.0-beta.3...v5.0.0-beta.4) (2026-06-25)
+
+
+### Features
+
+* add loading overlay in sidebar ([c3e3416](https://github.com/subugoe/tido/commit/c3e3416daa672eca7654f5bbe7a42e6d65b6d346))
+
+
+### Bug Fixes
+
+* click outside the item label closes and resets selected things correctly, refactor panel title components to be more dumb ([#897](https://github.com/subugoe/tido/issues/897)) ([ad640e3](https://github.com/subugoe/tido/commit/ad640e38155cdc91a287852237d34656997cf3cc))
+* fix "views" check when reading content state ([#1076](https://github.com/subugoe/tido/issues/1076)) ([6b37d4f](https://github.com/subugoe/tido/commit/6b37d4f7b4a97e307fb19c7660601373e140514f))
+* get a target's position correctly during alignment calculation for the sidebar - fixes selecting and aligning from text ([a18632b](https://github.com/subugoe/tido/commit/a18632b7b31f665649fd2d5a760f890bde5603b6))
+* update handling clicks on nested text targets ([#1018](https://github.com/subugoe/tido/issues/1018)) ([3a746d4](https://github.com/subugoe/tido/commit/3a746d47e3005e5c6298aa9ac726f92d1b68911d))
+
+
+### Refactoring
+
+* remove contentUrl ref from AlignAnnotationsList since the issue ([#1040](https://github.com/subugoe/tido/issues/1040)) was fixed differently in [#1062](https://github.com/subugoe/tido/issues/1062) ([331f3ad](https://github.com/subugoe/tido/commit/331f3ada6bb455da0cc38e743631ff980f8f8103))
+* remove height calculation for sidebar content since it was not helpful ([0163ecf](https://github.com/subugoe/tido/commit/0163ecfbf0621b0e11943870a7a4479134687431))
+
 ## [5.0.0-beta.3](https://github.com/subugoe/tido/compare/v5.0.0-beta.2...v5.0.0-beta.3) (2026-06-19)
 
 
