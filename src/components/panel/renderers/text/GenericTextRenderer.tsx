@@ -10,7 +10,6 @@ import {
   addNestedTargetStyle,
   addSelectedStyle,
   addSyncAnnotationId,
-  addSyncHighlightStyle,
   assignNestedTargetsInFlippedMatched,
   flipMatchedAnnotationsMap,
   getAnnotationIds,
@@ -93,6 +92,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
   const syncedTargets = useSynopsisStore(state => state.syncedTargets)
+  const hoveredSyncedTargets = useSynopsisStore(state => state.hoveredSyncedTargets)
+  const setHoveredSyncedTargets = useSynopsisStore.getState().setHoveredSyncedTargets
   // only the sync annotations touching this renderer's source. useShallow so a store update for a
   // different source (which produces a new bySource map) doesn't re-render/re-run this renderer.
   const sourceSyncAnnotations = useSynopsisStore(
@@ -103,8 +104,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     selectedAnnotation,
     selectedAnnotationTypes,
     setSelectedAnnotation,
-    annotations,
-    setHoveredSyncAnnotations
+    annotations
   } = usePanel()
 
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
@@ -145,6 +145,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   // this renderer's source and scroll its container so each sits at the same y-position within
   // the container as the clicked target.
   useEffect(() => {
+
     if (!parsedDom || !textWrapperRef.current) return
     if (!syncedTargets || syncedTargets.targets.length === 0) return
 
@@ -177,9 +178,54 @@ const GenericTextRenderer: FC<Props> = memo(({
     // clear the active style of the previously clicked (origin) target
     return () => {
       highlightedEls.forEach((el) => removeSynopsisStyle(el))
-      if (prevClickedTarget) removeActiveTargetStyle(prevClickedTarget)
+      if (prevClickedTarget) {
+        removeActiveTargetStyle(prevClickedTarget)
+      }
     }
   }, [syncedTargets, parsedDom, source])
+
+  // While a target is hovered, highlight the synced targets that belong to this renderer's source.
+  // Same as the syncedTargets effect above but without scrolling - hovering should only preview the
+  // connected targets, not move any panel.
+  useEffect(() => {
+    if (!parsedDom || !textWrapperRef.current) return
+    if (!hoveredSyncedTargets || hoveredSyncedTargets.length === 0) return
+
+    // track the elements we highlight so the cleanup can remove their style afterwards
+    const highlightedEls: HTMLElement[] = []
+
+    hoveredSyncedTargets.forEach((syncedTarget) => {
+      // only handle synced targets that belong to the content rendered here
+      if (syncedTarget.source.id !== source) return
+
+      const targetEl = textWrapperRef.current.querySelector(syncedTarget.selector) as HTMLElement
+      if (!targetEl) return
+
+      addAnnotationBaseStyle(targetEl)
+      addSynopsisStyle(targetEl)
+      highlightedEls.push(targetEl)
+    })
+
+
+    // before the next run / on unmount: remove the synopsis style from these sync targets, but keep
+    // it for any element that is part of the current syncedTargets selection - either the clicked
+    // origin target, or one of its synced targets (resolved by selector within its own source).
+    return () => {
+      const currentSyncedTargets = useSynopsisStore.getState().syncedTargets
+      highlightedEls.forEach((el) => {
+        const belongsToSyncedTargets =
+          el === currentSyncedTargets.originTarget ||
+          currentSyncedTargets.targets.some((syncedTarget) =>
+            syncedTarget.source.id === source &&
+            textWrapperRef.current?.querySelector(syncedTarget.selector) === el
+          )
+
+        if (!belongsToSyncedTargets) {
+          removeSynopsisStyle(el)
+        }
+      })
+    }
+  }, [hoveredSyncedTargets, parsedDom, source])
 
   // Create and set matchedMap by identifying target nodes. Add listeners to targets.
   useEffect(() => {
@@ -250,7 +296,6 @@ const GenericTextRenderer: FC<Props> = memo(({
         if (getSyncAnnotationIds(el).some(Boolean)) return
         addSyncAnnotationId(el, cur.id)
         addAnnotationBaseStyle(el)
-        addSyncHighlightStyle(el)
         el.addEventListener('click', onClickTarget)
         el.addEventListener('mouseenter', onMouseEnterSyncTarget)
         el.addEventListener('mouseleave', onMouseLeaveSyncTarget)
@@ -533,19 +578,36 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   const onMouseEnterSyncTarget = (e: Event) => {
     const target = e.currentTarget as HTMLElement
-    const idsArray = getSyncAnnotationIds(target)
-    if (idsArray.length === 0) return
 
-    setHoveredSyncAnnotations(idsArray)
+    addSynopsisStyle(target)
+
+    // Find the targets this hovered target is synced with and publish them so every renderer can
+    // highlight its own synced targets (without scrolling - see the hoveredSyncedTargets effect).
+    const sourceSyncAnnotations = useSynopsisStore.getState().syncAnnotationsBySource.get(source) ?? []
+    const newSyncTargets = getSyncedTargets(target as HTMLElement, source, sourceSyncAnnotations)
+    setHoveredSyncedTargets(newSyncTargets)
   }
 
   const onMouseLeaveSyncTarget = (e: Event) => {
     // hoveredAnnotations can contain parent targets.
     // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
+
     const target = e.currentTarget as HTMLElement
-    const idsArray = getSyncAnnotationIds(target)
-    if (idsArray.length === 0) return
-    setHoveredSyncAnnotations(null)
+    const syncedTargets = useSynopsisStore.getState().syncedTargets
+
+    // Keep the synopsis highlight if this target is part of the current syncedTargets selection -
+    // either the clicked origin target, or one of its synced targets (resolved by selector within
+    // its own source). In that case we must not remove its synopsisStyle on mouse leave.
+    const belongsToSyncedTargets = target === syncedTargets.originTarget ||
+      syncedTargets.targets.some((syncedTarget) =>
+        syncedTarget.source.id === source &&
+        textWrapperRef.current?.querySelector(syncedTarget.selector) === target
+      )
+
+    if (!belongsToSyncedTargets) {
+      removeSynopsisStyle(target)
+      setHoveredSyncedTargets([])
+    }
   }
 
   const closeTooltip = () => {

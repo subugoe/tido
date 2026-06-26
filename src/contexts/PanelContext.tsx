@@ -15,7 +15,6 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { Scroller } from '@/utils/scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
-import { addSyncHoverStyle, removeSyncHoverStyle } from '@/utils/text.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 
@@ -54,7 +53,6 @@ interface PanelContextType {
   annotationsLoading: boolean
   matchedAnnotationsMaps: {[contentUrl: string]: MatchedAnnotationsMap}
   updateMatchedAnnotationsMap: (contentUrl: string, map: MatchedAnnotationsMap) => void
-  setHoveredSyncAnnotations: (value: string[] | null) => void
 }
 
 interface PanelProviderProps {
@@ -83,7 +81,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [annotationsLoading, setAnnotationsLoading] = useState(false)
 
   const [syncMaps] = useState<{[contentUrl: string]: SyncMap}>({})
-  const [hoveredSyncAnnotations, setHoveredSyncAnnotations] = useState(null)
 
   const { t } = useTranslation()
 
@@ -336,21 +333,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     setAnnotationFilters(uniqueAnnotationTypes.map(type => ({ types: [type], selected: true })))
   }, [matchedAnnotationsMaps])
 
-  useEffect(() => {
-    Object
-      .values(syncMaps)
-      .forEach(map => {
-        Object
-          .keys(map)
-          .forEach(key => {
-            if (hoveredSyncAnnotations && hoveredSyncAnnotations.includes(key)) {
-              map[key].forEach(target => addSyncHoverStyle(target))
-            } else {
-              map[key].forEach(target => removeSyncHoverStyle(target))
-            }
-          })
-      })
-  }, [hoveredSyncAnnotations])
 
   function updatePanel(data: Partial<PanelState>) {
     usePanelStore.getState().updatePanel(panelId, data)
@@ -409,7 +391,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       annotationsLoading,
       matchedAnnotationsMaps,
       updateMatchedAnnotationsMap,
-      setHoveredSyncAnnotations
     }}>
       {children}
     </PanelContext.Provider>

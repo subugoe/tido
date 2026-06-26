@@ -217,6 +217,34 @@
             "item": "http://localhost:8181/example-synopsis-2/items/book2-page1.json"
           },
           "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#watery-part"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book1.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book1-page1.json"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#netherfield"
+          },
+          "source": {
+            "id": "http://localhost:8181/example/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/example-embedded/collections/example.json",
+            "manifest": "http://localhost:8181/example-embedded/manifests/book1.json",
+            "item": "http://localhost:8181/example-embedded/items/book1-page1.json"
+          },
+          "format": "text/html"
         }
       ]
     },

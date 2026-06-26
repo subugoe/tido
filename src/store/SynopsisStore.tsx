@@ -29,9 +29,12 @@ interface SynopsisStoreTypes {
   syncAnnotationsBySource: Map<string, Annotation[]>
   // the synced targets of the entry the user chose to open from the synopsis popover
   syncedTargets: SyncTargets
+  // the synced targets of the target currently hovered - highlighted (without scrolling) while hovering
+  hoveredSyncedTargets: SyncedTargetRef[]
   addSyncAnnotations: (annotations: Annotation[]) => void
   addSyncAnnotationsFromCollection: (collectionUrl: string) => Promise<void>
   setSyncedTargets: (syncedTargets: SyncTargets) => void
+  setHoveredSyncedTargets: (hoveredSyncedTargets: SyncedTargetRef[]) => void
 }
 
 // Walk the collection tree until we find a collection that includes an annotationCollection.
@@ -55,8 +58,12 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   syncAnnotations: [],
   syncAnnotationsBySource: new Map(),
   syncedTargets: { yPos: 0, originTarget: null, targets: [] },
+  hoveredSyncedTargets: [],
   setSyncedTargets: (syncedTargets) => {
     set({ syncedTargets })
+  },
+  setHoveredSyncedTargets: (hoveredSyncedTargets) => {
+    set({ hoveredSyncedTargets })
   },
   // Merge the given annotations into syncAnnotations (skipping any whose id is already known) and
   // index them by their targets' source. Only the arrays of the affected sources are replaced, so
