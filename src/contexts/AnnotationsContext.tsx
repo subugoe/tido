@@ -17,10 +17,14 @@ const AnnotationsContext = createContext<State>(null)
 
 export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
   const { annotations: annotationsConfig } = useConfig()
-  const { matchedAnnotationsMaps: textMatchedMaps } = usePanel()
+  const { matchedAnnotationsMaps: textMatchedMaps, annotationsMode } = usePanel()
   const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([])
-  const [alignmentLoading, setAlignmentLoading] = useState(true)
+  const [alignmentLoading, setAlignmentLoading] = useState(false)
   const [matchedMaps, setMatchedMaps ] = useState<MatchedMaps>({})
+
+  useEffect(() => {
+    if (annotationsMode === 'aligned') setAlignmentLoading(true)
+  }, [annotationsMode])
 
   useEffect(() => {
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []

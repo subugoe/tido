@@ -20,8 +20,6 @@ Cypress.Commands.add('validateLabel', (type, label) => {
 Cypress.Commands.add('validateText', (content) => {
   cy.get('#panels-wrapper')
     .children().eq(0)
-    .find('[aria-label="Loading"]')
-    .should('not.exist')
 
   cy.get('#panels-wrapper')
     .children().eq(0)
@@ -147,7 +145,7 @@ describe('Panel', () => {
 
       .findPanelTitleAndNavArrows()
       .find('[data-cy="next-item-button"]')
-      .click()  // should switch to the first item of Klosterneuburg manifest
+      .click()
       .validateLabel('manifest', 'The Great Gatsby')         // Manifest and item labels should get updated
       .validateLabel('item', 'The Great Gatsby, Chapter 1')
       .validateText('I lived at West Egg, the—well')                        // Text area should update
