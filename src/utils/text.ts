@@ -279,7 +279,7 @@ function getTargetsHoveredAnnotations(hoveredAnnotations: string[], targets: Ele
     .map(key => matchedAnnotationsMap[key].target).flat()
   const uniqueAnnotationTargets = [...new Set(annotationsTargets)]
 
-  targets.forEach(t => {
+  targets?.forEach(t => {
     for(const annotTarget of uniqueAnnotationTargets) {
       if (annotTarget.contains(t)) result.push(t)
     }

@@ -479,7 +479,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     // If the actual click landed inside a child annotation target, this is a parent
     // that should not process the event — the child's handler will take care of it.
     const clickTarget = e.target as HTMLElement
-    const isClickInsideChildTarget = targetsRef.current.some(
+    const isClickInsideChildTarget = targetsRef.current?.some(
       t => t !== target && (target as HTMLElement).contains(t) && t.contains(clickTarget)
     )
 
@@ -506,17 +506,16 @@ const GenericTextRenderer: FC<Props> = memo(({
       ? target.getBoundingClientRect().top - clickedScrollContainer.getBoundingClientRect().top
       : 0
 
-    const crossRefAnnotations = annotations
-      .filter(a => {
-        const isInSource = a.target?.[0].source === source
-        const isCrossRef = a.body.annotationType === annotationsConfig?.crossRefContentType
-        return isInSource && isCrossRef
-      })
+    const crossRefAnnotations = (annotations?.filter(a => {
+      const isInSource = a.target?.[0].source === source
+      const isCrossRef = a.body.annotationType === annotationsConfig?.crossRefContentType
+      return isInSource && isCrossRef
+    })
       .filter(a => {
         const selector = (a.target[0].selector as CssSelector)?.value
         if (!selector) return false
         return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
-      })
+      })) ?? []
 
     const seen = new Set<string>()
     // compute related annotations: all annotations for the clicked target and its parent targets
@@ -533,12 +532,12 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (tooltipTypes.length === 0) {
       normalAnnotations = newRelatedAnnotations
     } else {
-      normalAnnotations = newRelatedAnnotations.filter(a => {
+      normalAnnotations = (newRelatedAnnotations.filter(a => {
         const isTooltipAnnotation = tooltipTypes.includes(a.body.annotationType)
         if (!isTooltipAnnotation) return true
         _tooltipAnnotations.push(a)
         return false
-      })
+      })) ?? []
     }
 
     const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1 || newSyncTargets.length > 0
