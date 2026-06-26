@@ -1,0 +1,112 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example-synopsis-2/manifests/book1.json",
+  "items": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+      "textapi": "2.0.0",
+      "id": "http://localhost:8181/example-synopsis-2/items/book1-page1.json",
+      "textapiType": "TextApiItem",
+      "revision": "1",
+      "division": "Chapter 1",
+      "titles": [
+        "1"
+      ],
+      "languages": [
+        "eng"
+      ],
+      "contents": [
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example-synopsis-2/html/book1-page1_transcription.html",
+          "contentType": "text/html;type=transcription"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example-synopsis-2/html/book1-page1_diplomatic.html",
+          "contentType": "text/html;type=diplomatic"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example-synopsis-2/html/book1-page1_normalized.html",
+          "contentType": "text/html;type=normalized"
+        }
+      ],
+      "annotationCollection": "http://localhost:8181/example-synopsis-2/annotations/annotationCollection/book1-page1.json",
+      "textItemType": "page"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+      "textapi": "2.0.0",
+      "id": "http://localhost:8181/example-synopsis-2/items/book1-page2.json",
+      "textapiType": "TextApiItem",
+      "revision": "1",
+      "division": "Chapter 2",
+      "titles": [
+        "2"
+      ],
+      "languages": [
+        "eng"
+      ],
+      "contents": [
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example-synopsis-2/html/book1-page2_transcription.html",
+          "contentType": "text/html;type=transcription"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example-synopsis-2/html/book1-page2_diplomatic.html",
+          "contentType": "text/html;type=diplomatic"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example-synopsis-2/html/book1-page2_normalized.html",
+          "contentType": "text/html;type=normalized"
+        }
+      ],
+      "annotationCollection": "http://localhost:8181/example-synopsis-2/annotations/annotationCollection/book1-page2.json",
+      "textItemType": "page"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+      "textapi": "2.0.0",
+      "id": "http://localhost:8181/example-synopsis-2/items/book1-page3.json",
+      "textapiType": "TextApiItem",
+      "revision": "1",
+      "division": "Chapter 3",
+      "titles": [
+        "3"
+      ],
+      "languages": [
+        "eng"
+      ],
+      "contents": [
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example-synopsis-2/html/book1-page3_transcription.html",
+          "contentType": "text/html;type=transcription"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example-synopsis-2/html/book1-page3_diplomatic.html",
+          "contentType": "text/html;type=diplomatic"
+        },
+        {
+          "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+          "id": "http://localhost:8181/example-synopsis-2/html/book1-page3_normalized.html",
+          "contentType": "text/html;type=normalized"
+        }
+      ],
+      "annotationCollection": "http://localhost:8181/example-synopsis-2/annotations/annotationCollection/book1-page3.json",
+      "textItemType": "page"
+    }
+  ],
+  "textapiType": "TextApiManifest",
+  "revision": "1",
+  "license": "CC0-1.0",
+  "titles": [
+    "Country Manners"
+  ]
+}

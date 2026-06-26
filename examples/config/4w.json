@@ -7,14 +7,14 @@
   "lang": "de",
   "panels": [
     {
-      "collection": "https://textapi.test.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/transcriptions"
+      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/versions"
     }
   ],
   "theme": {
     "primaryColor": "#2b7fff"
   },
   "rootCollections": [
-    "https://textapi.test.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/all"
+    "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/all"
   ],
   "showPanelPlaceholder": false,
   "translations": {
@@ -31,16 +31,14 @@
   },
   "panelViews": [
     {
-      "label": "Bild",
-      "view": "image"
-    },
-    {
       "label": "Text",
       "view": "text",
+      "activeContentType": "ebene2_versionen",
       "contentTypes": [
         "accurate",
         "simplified",
-        "edited"
+        "edited",
+        "ebene2_versionen"
       ]
     }
   ]

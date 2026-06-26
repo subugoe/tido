@@ -133,6 +133,8 @@
     "view_less": "View less",
     "view": "View",
     "show_in_sidebar": "Show in sidebar",
-    "more_annotations": "More annotations"
+    "more_annotations": "More annotations",
+    "synopsis": "Synopsis",
+    "open_synced_panels": "Open in panels"
   }
 }

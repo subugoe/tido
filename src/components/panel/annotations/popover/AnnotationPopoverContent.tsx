@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, ReactNode, useEffect, useRef, useState } from 'react'
 import TooltipItem from '@/components/panel/annotations/popover/items/TooltipItem.tsx'
 import CrossRefItem from '@/components/panel/annotations/popover/items/CrossRefItem.tsx'
 import BaseItem from '@/components/panel/annotations/popover/items/BaseItem.tsx'
@@ -10,6 +10,8 @@ interface Props {
   crossRefAnnotations: Annotation[],
   relatedAnnotations: Annotation[]
   tooltipAnnotations: Annotation[]
+  // the synopsis item is provided as a child so syncTargets need not be drilled through here
+  children?: ReactNode
   onClose: () => void,
   onBaseItemSelection?: () => void,
 }
@@ -21,6 +23,7 @@ const AnnotationPopoverContent : FC<Props> = ({
   crossRefAnnotations,
   relatedAnnotations,
   tooltipAnnotations,
+  children,
   onBaseItemSelection,
   onClose,
 }) => {
@@ -89,6 +92,12 @@ const AnnotationPopoverContent : FC<Props> = ({
       <div className={`flex flex-col gap-2 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
         {renderLabel(tooltipAnnotationsRef.current?.length === 0 && crossRefAnnotations.length === 0 ? t('annotations') : t('more_annotations'))}
         {normalAnnotationsRef.current?.map(na => <BaseItem key={na.id} annotation={na} source={source} onSelect={() => onBaseItemSelect(isSourceText)}  />)}
+      </div>
+    )}
+    {children && (
+      <div className={`flex flex-col gap-1 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current?.length > 0 || normalAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
+        {renderLabel(t('synopsis'))}
+        {children}
       </div>
     )}
   </div>

@@ -1,0 +1,257 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example-synopsis-2/annotations/annotationPage/book1-page2.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example-synopsis-2/annotations/annotationCollection/book1-page2.json",
+    "label": "Annotations for Synopsis-2 · Country Manners, Chapter 2",
+    "total": 12
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Charles Bingley - <span id=\"bingley-character\">A wealthy, amiable young gentleman who rents Netherfield Park</span>. He becomes attracted to Jane Bennet.",
+        "format": "text/html",
+        "annotationType": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book1-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#bingley"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Lizzy - <span id=\"lizzy-nickname\">Affectionate nickname for Elizabeth Bennet, the novel's protagonist</span>.",
+        "format": "text/html",
+        "annotationType": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book1-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#lizzy"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Public assemblies were <span id=\"assembly-gatherings\">social gatherings where dancing and socializing took place</span>, important venues for courtship in Regency England.",
+        "format": "text/html",
+        "annotationType": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book1-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#assemblies"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-diplomatic-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Manuscript variant: <span id=\"earliest-variant\">\"amongst the earliest\" found in draft</span>, suggesting Austen softened the phrasing in revision.",
+        "format": "text/html",
+        "annotationType": "Textual Variant"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book1-page2_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-earliest"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-diplomatic-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Original shows <span id=\"period-article-usage\">\"trimming an hat\" with period article usage</span> before words beginning with a consonantal 'h'.",
+        "format": "text/html",
+        "annotationType": "Grammatical Feature"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book1-page2_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-trimming"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-normalized-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "<span id=\"archaic-construction\">Clarified from archaic construction for modern readers</span>; the original idiom \"to the last\" means \"right up until the end\".",
+        "format": "text/html",
+        "annotationType": "Clarification"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book1-page2_normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-last"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-normalized-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Period idiom meaning <span id=\"period-idiom\">\"have no means of knowing\"</span>, reflecting the social constraints on women's access to information.",
+        "format": "text/html",
+        "annotationType": "Idiomatic Expression"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/html/book1-page2_normalized.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#norm-know"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-L2-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Bingley's easy temperament contrasts deliberately with Darcy's reserve — <span id=\"bingley-foil\">Austen uses him as a social foil to highlight class anxiety</span> in the marriage market.",
+        "format": "text/html",
+        "annotationType": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-1",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#bingley-character"
+          }
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-L2-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The use of \"Lizzy\" here signals <span id=\"family-intimacy\">the informality of the Bennet household's domestic register</span>, in contrast to the formal address used in public scenes.",
+        "format": "text/html",
+        "annotationType": "Stylistic Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-2",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#lizzy-nickname"
+          }
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-L2-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The variant \"amongst the earliest\" points to <span id=\"textual-transmission\">an early layer of composition before Austen's systematic revision</span> of Chapter 2's opening.",
+        "format": "text/html",
+        "annotationType": "Scholarly Commentary"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-diplomatic-1",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#earliest-variant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-L3-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "This reading of Bingley as foil aligns with <span id=\"bingley-darcy-dynamic\">D.A. Miller's argument on the complementary pairing of Bingley and Darcy</span> as a structural device throughout the novel.",
+        "format": "text/html",
+        "annotationType": "Bibliographic Reference"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-L2-1",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#bingley-foil"
+          }
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-L4-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Miller's structural reading has been <span id=\"miller-critique\">challenged by feminist narratologists who prioritise voice over character pairing</span> as the organising principle of Austen's irony.",
+        "format": "text/html",
+        "annotationType": "Counter-argument"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-synopsis-2/book1/page2/rev1/annotation-L3-1",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#bingley-darcy-dynamic"
+          }
+        }
+      ]
+    }
+  ]
+}

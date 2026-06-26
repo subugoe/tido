@@ -1,0 +1,11 @@
+{
+  "panels": [
+    {
+      "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+      "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json"
+    }
+  ],
+  "rootCollections": [
+    "http://localhost:8181/example-synopsis-2/collections/example-parent.json"
+  ]
+}

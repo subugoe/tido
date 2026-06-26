@@ -15,8 +15,8 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { Scroller } from '@/utils/scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
-import { addSyncHoverStyle, removeSyncHoverStyle } from '@/utils/text.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
@@ -53,9 +53,6 @@ interface PanelContextType {
   annotationsLoading: boolean
   matchedAnnotationsMaps: {[contentUrl: string]: MatchedAnnotationsMap}
   updateMatchedAnnotationsMap: (contentUrl: string, map: MatchedAnnotationsMap) => void
-  syncAnnotations: Annotation[] | null
-  updateSyncMap: (contentUrl: string, map: SyncMap) => void
-  setHoveredSyncAnnotations: (value: string[] | null) => void
 }
 
 interface PanelProviderProps {
@@ -83,9 +80,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const scroller = useRef<Scroller>(null)
   const [annotationsLoading, setAnnotationsLoading] = useState(false)
 
-  const [syncAnnotations, setSyncAnnotations] = useState<Annotation[] | null>(null)
-  const [syncMaps, setSyncMaps] = useState<{[contentUrl: string]: SyncMap}>({})
-  const [hoveredSyncAnnotations, setHoveredSyncAnnotations] = useState(null)
+  const [syncMaps] = useState<{[contentUrl: string]: SyncMap}>({})
 
   const { t } = useTranslation()
 
@@ -247,9 +242,12 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       }
 
       if (collection.annotationCollection) {
+        // keep this panel's own sync annotations locally (exposed via context) and also
+        // append them into the global (deduped) store, so every GenericTextRenderer can build
+        // its local syncMap from the global set plus its own panel's annotations
         const page = await getAnnotationPage(collection.annotationCollection)
-        const annotations = page.items ?? []
-        setSyncAnnotations(annotations)
+        const newSyncAnnotations = page.items ?? []
+        useSynopsisStore.getState().addSyncAnnotations(newSyncAnnotations)
       }
 
     } catch (e) {
@@ -280,15 +278,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       }
 
       // If a new value for a map exists, just update it
-      return {
-        ...prev,
-        [contentUrl]: map
-      }
-    })
-  }
-
-  function updateSyncMap(contentUrl: string, map: SyncMap) {
-    setSyncMaps(prev => {
       return {
         ...prev,
         [contentUrl]: map
@@ -344,21 +333,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     setAnnotationFilters(uniqueAnnotationTypes.map(type => ({ types: [type], selected: true })))
   }, [matchedAnnotationsMaps])
 
-  useEffect(() => {
-    Object
-      .values(syncMaps)
-      .forEach(map => {
-        Object
-          .keys(map)
-          .forEach(key => {
-            if (hoveredSyncAnnotations && hoveredSyncAnnotations.includes(key)) {
-              map[key].forEach(target => addSyncHoverStyle(target))
-            } else {
-              map[key].forEach(target => removeSyncHoverStyle(target))
-            }
-          })
-      })
-  }, [hoveredSyncAnnotations])
 
   function updatePanel(data: Partial<PanelState>) {
     usePanelStore.getState().updatePanel(panelId, data)
@@ -417,9 +391,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       annotationsLoading,
       matchedAnnotationsMaps,
       updateMatchedAnnotationsMap,
-      syncAnnotations,
-      updateSyncMap,
-      setHoveredSyncAnnotations
     }}>
       {children}
     </PanelContext.Provider>
