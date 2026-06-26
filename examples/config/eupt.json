@@ -1,6 +1,20 @@
 {
   "annotations": {
-    "tooltipTypes": ["DictLink", "Linguistic"]
+    "tooltipTypes": [
+      "DictLink",
+      "Linguistic"
+    ],
+    "types": {
+      "EditorialComment-epi": {
+        "label": "epigraphischer Kommentar"
+      },
+      "EditorialComment-phil": {
+        "label": "philologischer Kommentar"
+      },
+      "PoetologicalGlossary": {
+        "label": "Poetologisches Glossar"
+      }
+    }
   },
   "theme": {
     "primaryColor": "#3AA675"
