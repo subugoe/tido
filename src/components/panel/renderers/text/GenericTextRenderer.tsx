@@ -45,12 +45,12 @@ import { SelectedAnnotation } from '@/types'
 
 
 // Resolve the targets that `clickedEl` (which lives in `source`) is synced with, on demand: from
-// the annotations touching this source, keep the ones whose own-source target is the clicked
+// the clicked target's sync annotations, keep the ones whose own-source target is the clicked
 // element, and collect that target's siblings (retrieved by source.id + selector).
-function getSyncedTargets(clickedEl: HTMLElement, source: string, sourceSyncAnnotations: Annotation[]): SyncedTargetRef[] {
+function getSyncedTargets(clickedEl: HTMLElement, source: string, targetSyncAnnotations: Annotation[]): SyncedTargetRef[] {
   const result: SyncedTargetRef[] = []
 
-  sourceSyncAnnotations.forEach((annotation) => {
+  targetSyncAnnotations.forEach((annotation) => {
     // the annotation's target that belongs to this source and is the clicked element
     const ownTarget = annotation.target.find((t) => {
       const selector = getSelectorValue(t)
@@ -122,6 +122,9 @@ const GenericTextRenderer: FC<Props> = memo(({
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
   const selectedAnnotationTypesRef = useRef<AnnotationTypesDict | null>(null)
+  // Map of each sync target element in this source to the sync annotations that touch it. Built in
+  // the sourceSyncAnnotations effect and read by the click/hover listeners to resolve synced targets.
+  const targetsSyncMapRef = useRef<Map<HTMLElement, Annotation[]>>(new Map())
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
   const parsedDom: Element = React.useMemo(() => {
@@ -236,6 +239,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
       const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
         if (!cur.target) return acc
+
         const isSource = getSource(cur.target[0]).id === source
         const selector = (cur.target[0].selector as CssSelector)?.value
 
@@ -272,6 +276,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         }
         return acc
       }, {})
+
       setMatchedMap(result)
       if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
 
@@ -293,12 +298,20 @@ const GenericTextRenderer: FC<Props> = memo(({
       if (!selector) return
 
       Array.from(parsedDom.querySelectorAll(selector)).forEach((el) => {
-        if (getSyncAnnotationIds(el).some(Boolean)) return
-        addSyncAnnotationId(el, cur.id)
-        addAnnotationBaseStyle(el)
-        el.addEventListener('click', onClickTarget)
-        el.addEventListener('mouseenter', onMouseEnterSyncTarget)
-        el.addEventListener('mouseleave', onMouseLeaveSyncTarget)
+        const targetEl = el as HTMLElement
+
+        // accumulate this target's sync annotations; skip an annotation already in its list
+        const existing = targetsSyncMapRef.current.get(targetEl) ?? []
+        if (!existing.some((a) => a.id === cur.id)) {
+          targetsSyncMapRef.current.set(targetEl, [...existing, cur])
+        }
+
+        if (getSyncAnnotationIds(targetEl).some(Boolean)) return
+        addSyncAnnotationId(targetEl, cur.id)
+        addAnnotationBaseStyle(targetEl)
+        targetEl.addEventListener('click', onClickTarget)
+        targetEl.addEventListener('mouseenter', onMouseEnterSyncTarget)
+        targetEl.addEventListener('mouseleave', onMouseLeaveSyncTarget)
       })
     })
   }, [parsedDom, sourceSyncAnnotations])
@@ -489,10 +502,10 @@ const GenericTextRenderer: FC<Props> = memo(({
     // ancestors from also reacting.
     e.stopPropagation()
 
-    // Resolve the targets the clicked element is synced with on demand. Read the store imperatively
-    // (the listener closure would capture stale state) and only the annotations touching this source.
-    const sourceSyncAnnotations = useSynopsisStore.getState().syncAnnotationsBySource.get(source) ?? []
-    const newSyncTargets = getSyncedTargets(target as HTMLElement, source, sourceSyncAnnotations)
+    // Resolve the targets the clicked element is synced with on demand, using the clicked target's
+    // sync annotations recorded in targetsSyncMapRef (read via ref to avoid stale closure state).
+    const targetSyncAnnotations = targetsSyncMapRef.current.get(target as HTMLElement) ?? []
+    const newSyncTargets = getSyncedTargets(target as HTMLElement, source, targetSyncAnnotations)
 
     if (!hasFilteredAnnotations && newSyncTargets.length === 0) return
 
@@ -582,8 +595,8 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     // Find the targets this hovered target is synced with and publish them so every renderer can
     // highlight its own synced targets (without scrolling - see the hoveredSyncedTargets effect).
-    const sourceSyncAnnotations = useSynopsisStore.getState().syncAnnotationsBySource.get(source) ?? []
-    const newSyncTargets = getSyncedTargets(target as HTMLElement, source, sourceSyncAnnotations)
+    const targetSyncAnnotations = targetsSyncMapRef.current.get(target) ?? []
+    const newSyncTargets = getSyncedTargets(target, source, targetSyncAnnotations)
     setHoveredSyncedTargets(newSyncTargets)
   }
 
