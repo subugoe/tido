@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.5](https://github.com/subugoe/tido/compare/v5.0.0-beta.4...v5.0.0-beta.5) (2026-06-30)
+
+
+### Features
+
+* add enable sync scrolling between panes in different panels ([#1086](https://github.com/subugoe/tido/issues/1086)) ([072b0ad](https://github.com/subugoe/tido/commit/072b0ad15f9e4bb7bb3f8f66b167ffdf8559d74d))
+* add hovering for Pane/Panel Synopsis ([#1082](https://github.com/subugoe/tido/issues/1082)) ([09ae9dd](https://github.com/subugoe/tido/commit/09ae9dde95e5c2266374249d4b259294581c014e))
+* add implementation of Panel Synopsis ([#933](https://github.com/subugoe/tido/issues/933)) ([622ab77](https://github.com/subugoe/tido/commit/622ab770aa39819cb826dd310b2fe1ad58408d47))
+* update EUPT config ([251ca40](https://github.com/subugoe/tido/commit/251ca40cb8e81feee011b4ba21a0c7fdba94cbb9))
+
+
+### Bug Fixes
+
+* clicking at a target having sync annotations, but no other normal annotations should not produce error ([76f5b4a](https://github.com/subugoe/tido/commit/76f5b4acca4f4b5e0cd092f5753257bab9e95c8e))
+* fix endless loading for list mode in sidebar, fix tests naively ([fcb2674](https://github.com/subugoe/tido/commit/fcb2674091d9829f5dd01d9f46da05f3863fdbcd))
+
+
+### Refactoring
+
+* optimise the data structure storing syncAnnotations of text to target based ([80e0461](https://github.com/subugoe/tido/commit/80e0461786f032e9cb24a862bcd509734411af55))
+
 ## [5.0.0-beta.4](https://github.com/subugoe/tido/compare/v5.0.0-beta.3...v5.0.0-beta.4) (2026-06-25)
 
 
