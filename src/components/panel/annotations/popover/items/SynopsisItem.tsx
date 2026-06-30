@@ -18,13 +18,13 @@ const SynopsisItem: FC<Props> = ({ syncTargets, onSelect }) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
   const { panelViews: panelViewsConfig } = useConfig()
-  const setSyncedTargets = useSynopsisStore((state) => state.setSyncedTargets)
+  const setActiveSyncedTargets = useSynopsisStore((state) => state.setActiveSyncedTargets)
 
   function onClick() {
     onSelect()
     openSyncedPanels()
     // store the synced targets so each panel can highlight and scroll to its own target
-    setSyncedTargets(syncTargets)
+    setActiveSyncedTargets(syncTargets)
   }
 
   // Whether the panel already has a text view showing the synced content (source.id).

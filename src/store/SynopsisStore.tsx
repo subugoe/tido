@@ -8,13 +8,13 @@ export interface SyncedTargetRef {
   selector: string
 }
 
-// Payload chosen from a synopsis popover: the synced targets plus the clicked target's
-// y-position within its scroll container's visible height (ignoring scroll position), so
-// each panel can scroll its own synced target to the same y-position.
+// Payload of synced targets plus the origin target's y-position within its scroll container's
+// visible height (ignoring scroll position), so each panel can scroll its own synced target to the
+// same y-position.
 export interface SyncTargets {
   yPos: number
-  // the target that was clicked to open the synopsis; kept so its active style can be cleared
-  // when the next synopsis selection is made
+  // the origin target the sync was resolved from; kept so its active style can be cleared when the
+  // next selection is made
   originTarget: HTMLElement | null
   targets: SyncedTargetRef[]
 }
@@ -27,13 +27,16 @@ interface SynopsisStoreTypes {
   // to resolve a clicked target's synced targets on demand. Same annotation appears under every
   // source it targets.
   syncAnnotationsBySource: Map<string, Annotation[]>
-  // the synced targets of the entry the user chose to open from the synopsis popover
-  syncedTargets: SyncTargets
+  // the synced targets resolved from a synopsis popover selection - highlighted and scrolled into alignment
+  activeSyncedTargets: SyncTargets
+  // the synced targets resolved while the user scrolls a panel - only scrolled into alignment, not highlighted
+  scrolledSyncedTargets: SyncTargets
   // the synced targets of the target currently hovered - highlighted (without scrolling) while hovering
   hoveredSyncedTargets: SyncedTargetRef[]
   addSyncAnnotations: (annotations: Annotation[]) => void
   addSyncAnnotationsFromCollection: (collectionUrl: string) => Promise<void>
-  setSyncedTargets: (syncedTargets: SyncTargets) => void
+  setActiveSyncedTargets: (activeSyncedTargets: SyncTargets) => void
+  setScrolledSyncedTargets: (scrolledSyncedTargets: SyncTargets) => void
   setHoveredSyncedTargets: (hoveredSyncedTargets: SyncedTargetRef[]) => void
 }
 
@@ -57,10 +60,14 @@ async function findAnnotationCollectionUrl(collection: Collection): Promise<stri
 export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   syncAnnotations: [],
   syncAnnotationsBySource: new Map(),
-  syncedTargets: { yPos: 0, originTarget: null, targets: [] },
+  activeSyncedTargets: { yPos: 0, originTarget: null, targets: [] },
+  scrolledSyncedTargets: { yPos: 0, originTarget: null, targets: [] },
   hoveredSyncedTargets: [],
-  setSyncedTargets: (syncedTargets) => {
-    set({ syncedTargets })
+  setActiveSyncedTargets: (activeSyncedTargets) => {
+    set({ activeSyncedTargets })
+  },
+  setScrolledSyncedTargets: (scrolledSyncedTargets) => {
+    set({ scrolledSyncedTargets })
   },
   setHoveredSyncedTargets: (hoveredSyncedTargets) => {
     set({ hoveredSyncedTargets })

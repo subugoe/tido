@@ -3,6 +3,30 @@ import { getSource } from '@/utils/annotations.ts'
 const SYNC_SCROLL_THRESHOLD_TOP = 0.35
 const SYNC_SCROLL_THRESHOLD_BOTTOM = 0.45
 
+// Find the target currently sitting in the scroll container's "focused" band - the first target
+// overlapping the reference window between SYNC_SCROLL_THRESHOLD_TOP and _BOTTOM (extended down to
+// the container bottom when scrolled near the end). Shared by scrollOtherTexts and the synopsis
+// scroll listener in GenericTextRenderer.
+export function findFocusedTarget(scrollContainer: HTMLElement, targets: Element[]): HTMLElement | undefined {
+  const containerRect = scrollContainer.getBoundingClientRect()
+  const scrollTop = scrollContainer.scrollTop
+
+  const remainingBottomHeight = scrollContainer.clientHeight * (1 - SYNC_SCROLL_THRESHOLD_BOTTOM)
+  const remainingScrollAmount = scrollContainer.scrollHeight - scrollTop - scrollContainer.clientHeight
+  const isNearBottom = remainingScrollAmount <= remainingBottomHeight
+  const refTop = scrollTop + scrollContainer.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
+  const refBottom = isNearBottom
+    ? scrollTop + scrollContainer.clientHeight
+    : scrollTop + scrollContainer.clientHeight * SYNC_SCROLL_THRESHOLD_BOTTOM
+
+  return targets.find((target) => {
+    const targetRect = target.getBoundingClientRect()
+    const targetTop = targetRect.top - containerRect.top + scrollTop
+    const targetBottom = targetRect.bottom - containerRect.top + scrollTop
+    return targetTop < refBottom && targetBottom > refTop
+  }) as HTMLElement | undefined
+}
+
 class Scroller {
   private sidebar: HTMLElement | null = null
   private texts: {[contentUrl: string]: HTMLElement} = {}
@@ -47,30 +71,21 @@ class Scroller {
   }
 
   scrollOtherTexts(contentUrl: string) {
+    //console.log('scroll other texts', contentUrl)
     if (!this.syncMaps[contentUrl] || !this.texts[contentUrl]) return
     const text = this.texts[contentUrl]
-    const textRect = text.getBoundingClientRect()
     const scrollTop = text.scrollTop
 
     const remainingBottomHeight = text.clientHeight * (1 - SYNC_SCROLL_THRESHOLD_BOTTOM)
     const remainingScrollAmount = text.scrollHeight - scrollTop - text.clientHeight
     const isNearBottom = remainingScrollAmount <= remainingBottomHeight
-    const refTop = scrollTop + text.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-    const refBottom = isNearBottom ? scrollTop + text.clientHeight : scrollTop + text.clientHeight * SYNC_SCROLL_THRESHOLD_BOTTOM
 
     const annotationIds = Object.keys(this.syncMaps[contentUrl])
     let focusedTarget: HTMLElement | undefined
     let focusedAnnotationId: string | undefined
 
     for (const id of annotationIds) {
-      const targets = this.syncMaps[contentUrl][id]
-
-      focusedTarget = targets.find(target => {
-        const targetRect = target.getBoundingClientRect()
-        const targetTop = targetRect.top - textRect.top + scrollTop
-        const targetBottom = targetRect.bottom - textRect.top + scrollTop
-        return targetTop < refBottom && targetBottom > refTop
-      }) as HTMLElement
+      focusedTarget = findFocusedTarget(text, this.syncMaps[contentUrl][id])
 
       if (focusedTarget) {
         focusedAnnotationId = id

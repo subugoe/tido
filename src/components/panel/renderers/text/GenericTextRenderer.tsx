@@ -36,6 +36,7 @@ import {
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useSynopsisStore, SyncTargets, SyncedTargetRef } from '@/store/SynopsisStore.tsx'
+import { findFocusedTarget } from '@/utils/scroller.ts'
 import { useShallow } from 'zustand/react/shallow'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
@@ -45,12 +46,12 @@ import { SelectedAnnotation } from '@/types'
 
 
 // Resolve the targets that `clickedEl` (which lives in `source`) is synced with, on demand: from
-// the annotations touching this source, keep the ones whose own-source target is the clicked
+// the clicked target's sync annotations, keep the ones whose own-source target is the clicked
 // element, and collect that target's siblings (retrieved by source.id + selector).
-function getSyncedTargets(clickedEl: HTMLElement, source: string, sourceSyncAnnotations: Annotation[]): SyncedTargetRef[] {
+function getSyncedTargets(clickedEl: HTMLElement, source: string, targetSyncAnnotations: Annotation[]): SyncedTargetRef[] {
   const result: SyncedTargetRef[] = []
 
-  sourceSyncAnnotations.forEach((annotation) => {
+  targetSyncAnnotations.forEach((annotation) => {
     // the annotation's target that belongs to this source and is the clicked element
     const ownTarget = annotation.target.find((t) => {
       const selector = getSelectorValue(t)
@@ -91,7 +92,8 @@ const GenericTextRenderer: FC<Props> = memo(({
 }) => {
   const { annotations: annotationsConfig } = useConfig()
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
-  const syncedTargets = useSynopsisStore(state => state.syncedTargets)
+  const activeSyncedTargets = useSynopsisStore(state => state.activeSyncedTargets)
+  const scrolledSyncedTargets = useSynopsisStore(state => state.scrolledSyncedTargets)
   const hoveredSyncedTargets = useSynopsisStore(state => state.hoveredSyncedTargets)
   const setHoveredSyncedTargets = useSynopsisStore.getState().setHoveredSyncedTargets
   // only the sync annotations touching this renderer's source. useShallow so a store update for a
@@ -122,6 +124,16 @@ const GenericTextRenderer: FC<Props> = memo(({
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
   const selectedAnnotationTypesRef = useRef<AnnotationTypesDict | null>(null)
+  // Map of each sync target element in this source to the sync annotations that touch it. Built in
+  // the sourceSyncAnnotations effect and read by the click/hover/scroll listeners to resolve synced targets.
+  const targetsSyncMapRef = useRef<Map<HTMLElement, Annotation[]>>(new Map())
+  // Distinguish user-driven scrolling from programmatic (sync) scrolling: a programmatic scrollTo
+  // emits scroll events but never a wheel/touch/keyboard gesture or a pointer (scrollbar) drag, so
+  // only scrolls backed by a recent user gesture publish a sync. See the scroll listener effect.
+  const lastUserScrollAtRef = useRef(0)
+  const isPointerDownRef = useRef(false)
+  // the last focused target we published while scrolling, to avoid re-publishing within the same target
+  const lastScrolledFocusTargetRef = useRef<HTMLElement | null>(null)
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
   const parsedDom: Element = React.useMemo(() => {
@@ -147,9 +159,9 @@ const GenericTextRenderer: FC<Props> = memo(({
   useEffect(() => {
 
     if (!parsedDom || !textWrapperRef.current) return
-    if (!syncedTargets || syncedTargets.targets.length === 0) return
+    if (!activeSyncedTargets || activeSyncedTargets.targets.length === 0) return
 
-    const { yPos, targets, originTarget: prevClickedTarget } = syncedTargets
+    const { yPos, targets, originTarget: prevClickedTarget } = activeSyncedTargets
 
     // track the elements we highlight so the cleanup can remove their style afterwards
     const highlightedEls: HTMLElement[] = []
@@ -182,7 +194,32 @@ const GenericTextRenderer: FC<Props> = memo(({
         removeActiveTargetStyle(prevClickedTarget)
       }
     }
-  }, [syncedTargets, parsedDom, source])
+  }, [activeSyncedTargets, parsedDom, source])
+
+  // When synced targets are resolved while the user scrolls another panel, scroll this renderer's
+  // container so its first matching synced target sits at the same y-position as the origin target.
+  // No highlighting - scrolling should only realign the panels.
+  useEffect(() => {
+    if (!parsedDom || !textWrapperRef.current) return
+    if (!scrolledSyncedTargets || scrolledSyncedTargets.targets.length === 0) return
+
+    const { yPos, targets } = scrolledSyncedTargets
+
+    // only scroll to the first synced target that belongs to the content rendered here
+    const syncedTarget = targets.find((t) => t.source.id === source)
+    if (!syncedTarget) return
+
+    const targetEl = textWrapperRef.current.querySelector(syncedTarget.selector) as HTMLElement
+    if (!targetEl) return
+
+    const scrollContainer = targetEl.closest('[data-text-container]') as HTMLElement
+    if (!scrollContainer) return
+
+    const currentY = targetEl.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+    const desiredScrollTop = scrollContainer.scrollTop + currentY - yPos
+    const maxScrollTop = scrollContainer.scrollHeight - scrollContainer.clientHeight
+    scrollContainer.scrollTo({ top: Math.max(0, Math.min(desiredScrollTop, maxScrollTop)), behavior: 'smooth' })
+  }, [scrolledSyncedTargets, parsedDom, source])
 
   // While a target is hovered, highlight the synced targets that belong to this renderer's source.
   // Same as the syncedTargets effect above but without scrolling - hovering should only preview the
@@ -208,10 +245,10 @@ const GenericTextRenderer: FC<Props> = memo(({
 
 
     // before the next run / on unmount: remove the synopsis style from these sync targets, but keep
-    // it for any element that is part of the current syncedTargets selection - either the clicked
+    // it for any element that is part of the active synced targets selection - either the clicked
     // origin target, or one of its synced targets (resolved by selector within its own source).
     return () => {
-      const currentSyncedTargets = useSynopsisStore.getState().syncedTargets
+      const currentSyncedTargets = useSynopsisStore.getState().activeSyncedTargets
       highlightedEls.forEach((el) => {
         const belongsToSyncedTargets =
           el === currentSyncedTargets.originTarget ||
@@ -227,6 +264,75 @@ const GenericTextRenderer: FC<Props> = memo(({
     }
   }, [hoveredSyncedTargets, parsedDom, source])
 
+  // Sync the other panels while the user scrolls this one: when a sync target enters this source's
+  // focused band, resolve its synced targets and publish them so each other panel scrolls its own
+  // target into alignment (without highlighting - see the activeSyncedTargets effect).
+  useEffect(() => {
+    if (!parsedDom || !textWrapperRef.current) return
+    const scrollContainer = textWrapperRef.current.closest('[data-text-container]') as HTMLElement | null
+    if (!scrollContainer) return
+
+    // Only genuine user scrolling should drive the sync. A programmatic scrollTo (the alignment) and
+    // a layout shift both emit scroll events but neither emits a wheel/touch/keyboard gesture nor a
+    // pointer (scrollbar) drag, so we record those gestures and require a recent one in onScroll.
+    const USER_SCROLL_WINDOW = 200
+    const SCROLL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Spacebar'])
+    const markUserScroll = () => { lastUserScrollAtRef.current = performance.now() }
+    // keydown fires on the focused element and bubbles to the container only when focus is inside it -
+    // exactly when the user is keyboard-scrolling this panel (onPointerDown focuses the container, which
+    // carries tabIndex={-1}). Filter to the keys that actually scroll so unrelated typing isn't counted.
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (SCROLL_KEYS.has(e.key)) markUserScroll()
+    }
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.button === 0) isPointerDownRef.current = true
+      // Make this panel the keyboard scroll target so arrow/page keys scroll it and their keydown
+      // is recognised as a user gesture (the container carries tabIndex={-1} to be focusable).
+      scrollContainer.focus({ preventScroll: true })
+    }
+    const onPointerUp = () => { isPointerDownRef.current = false }
+
+    const onScroll = () => {
+      const isUserScroll = isPointerDownRef.current || performance.now() - lastUserScrollAtRef.current < USER_SCROLL_WINDOW
+      if (!isUserScroll) return
+
+      const focusedTarget = findFocusedTarget(scrollContainer, Array.from(targetsSyncMapRef.current.keys()))
+      if (!focusedTarget || focusedTarget === lastScrolledFocusTargetRef.current) return
+      lastScrolledFocusTargetRef.current = focusedTarget
+
+      const targetSyncAnnotations = targetsSyncMapRef.current.get(focusedTarget) ?? []
+      const newSyncTargets = getSyncedTargets(focusedTarget, source, targetSyncAnnotations)
+      if (newSyncTargets.length === 0) return
+
+      // y-position of the focused target within the scroll container's visible height, so every other
+      // panel can scroll its own synced target to the same y-position and align it with this one.
+      const yPos = focusedTarget.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+
+      useSynopsisStore.getState().setScrolledSyncedTargets({
+        yPos,
+        originTarget: focusedTarget,
+        targets: newSyncTargets
+      })
+    }
+
+    scrollContainer.addEventListener('wheel', markUserScroll, { passive: true })
+    scrollContainer.addEventListener('touchmove', markUserScroll, { passive: true })
+    scrollContainer.addEventListener('keydown', onKeyDown)
+    scrollContainer.addEventListener('pointerdown', onPointerDown)
+    // a scrollbar drag can release outside the container, so clear the flag on a window-level pointerup
+    window.addEventListener('pointerup', onPointerUp)
+    scrollContainer.addEventListener('scroll', onScroll, { passive: true })
+
+    return () => {
+      scrollContainer.removeEventListener('wheel', markUserScroll)
+      scrollContainer.removeEventListener('touchmove', markUserScroll)
+      scrollContainer.removeEventListener('keydown', onKeyDown)
+      scrollContainer.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('pointerup', onPointerUp)
+      scrollContainer.removeEventListener('scroll', onScroll)
+    }
+  }, [parsedDom, source])
+
   // Create and set matchedMap by identifying target nodes. Add listeners to targets.
   useEffect(() => {
     if (!parsedDom) return
@@ -236,6 +342,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
       const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
         if (!cur.target) return acc
+
         const isSource = getSource(cur.target[0]).id === source
         const selector = (cur.target[0].selector as CssSelector)?.value
 
@@ -272,6 +379,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         }
         return acc
       }, {})
+
       setMatchedMap(result)
       if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
 
@@ -293,12 +401,20 @@ const GenericTextRenderer: FC<Props> = memo(({
       if (!selector) return
 
       Array.from(parsedDom.querySelectorAll(selector)).forEach((el) => {
-        if (getSyncAnnotationIds(el).some(Boolean)) return
-        addSyncAnnotationId(el, cur.id)
-        addAnnotationBaseStyle(el)
-        el.addEventListener('click', onClickTarget)
-        el.addEventListener('mouseenter', onMouseEnterSyncTarget)
-        el.addEventListener('mouseleave', onMouseLeaveSyncTarget)
+        const targetEl = el as HTMLElement
+
+        // accumulate this target's sync annotations; skip an annotation already in its list
+        const existing = targetsSyncMapRef.current.get(targetEl) ?? []
+        if (!existing.some((a) => a.id === cur.id)) {
+          targetsSyncMapRef.current.set(targetEl, [...existing, cur])
+        }
+
+        if (getSyncAnnotationIds(targetEl).some(Boolean)) return
+        addSyncAnnotationId(targetEl, cur.id)
+        addAnnotationBaseStyle(targetEl)
+        targetEl.addEventListener('click', onClickTarget)
+        targetEl.addEventListener('mouseenter', onMouseEnterSyncTarget)
+        targetEl.addEventListener('mouseleave', onMouseLeaveSyncTarget)
       })
     })
   }, [parsedDom, sourceSyncAnnotations])
@@ -489,10 +605,10 @@ const GenericTextRenderer: FC<Props> = memo(({
     // ancestors from also reacting.
     e.stopPropagation()
 
-    // Resolve the targets the clicked element is synced with on demand. Read the store imperatively
-    // (the listener closure would capture stale state) and only the annotations touching this source.
-    const sourceSyncAnnotations = useSynopsisStore.getState().syncAnnotationsBySource.get(source) ?? []
-    const newSyncTargets = getSyncedTargets(target as HTMLElement, source, sourceSyncAnnotations)
+    // Resolve the targets the clicked element is synced with on demand, using the clicked target's
+    // sync annotations recorded in targetsSyncMapRef (read via ref to avoid stale closure state).
+    const targetSyncAnnotations = targetsSyncMapRef.current.get(target as HTMLElement) ?? []
+    const newSyncTargets = getSyncedTargets(target as HTMLElement, source, targetSyncAnnotations)
 
     if (!hasFilteredAnnotations && newSyncTargets.length === 0) return
 
@@ -582,8 +698,8 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     // Find the targets this hovered target is synced with and publish them so every renderer can
     // highlight its own synced targets (without scrolling - see the hoveredSyncedTargets effect).
-    const sourceSyncAnnotations = useSynopsisStore.getState().syncAnnotationsBySource.get(source) ?? []
-    const newSyncTargets = getSyncedTargets(target as HTMLElement, source, sourceSyncAnnotations)
+    const targetSyncAnnotations = targetsSyncMapRef.current.get(target) ?? []
+    const newSyncTargets = getSyncedTargets(target, source, targetSyncAnnotations)
     setHoveredSyncedTargets(newSyncTargets)
   }
 
@@ -592,13 +708,13 @@ const GenericTextRenderer: FC<Props> = memo(({
     // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
 
     const target = e.currentTarget as HTMLElement
-    const syncedTargets = useSynopsisStore.getState().syncedTargets
+    const activeSyncedTargets = useSynopsisStore.getState().activeSyncedTargets
 
-    // Keep the synopsis highlight if this target is part of the current syncedTargets selection -
+    // Keep the synopsis highlight if this target is part of the active synced targets selection -
     // either the clicked origin target, or one of its synced targets (resolved by selector within
     // its own source). In that case we must not remove its synopsisStyle on mouse leave.
-    const belongsToSyncedTargets = target === syncedTargets.originTarget ||
-      syncedTargets.targets.some((syncedTarget) =>
+    const belongsToSyncedTargets = target === activeSyncedTargets.originTarget ||
+      activeSyncedTargets.targets.some((syncedTarget) =>
         syncedTarget.source.id === source &&
         textWrapperRef.current?.querySelector(syncedTarget.selector) === target
       )
