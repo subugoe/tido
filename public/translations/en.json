@@ -91,6 +91,10 @@
     "witnesses": "Witnesses",
     "selected_witnesses": "{{selected}} of {{total}} witnesses selected",
     "unknown_witness": "Unknown witness",
+    "synoptical_witnesses": "Synoptical Witnesses",
+    "select_all": "Select all",
+    "witnesses_count": "{{selected}} of {{total}}",
+    "witness_open": "open",
     "options": "Options",
     "swap": "Swap",
     "split": "Split",
@@ -135,6 +139,8 @@
     "show_in_sidebar": "Show in sidebar",
     "more_annotations": "More annotations",
     "synopsis": "Synopsis",
-    "open_synced_panels": "Open in panels"
+    "open_synced_panels": "Open in panels",
+    "replace_panels": "Replace existing panels",
+    "replace_panels_hint": "Other panels are closed. The current panel stays on the left, new ones open to its right."
   }
 }

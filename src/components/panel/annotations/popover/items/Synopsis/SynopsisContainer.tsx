@@ -4,27 +4,27 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { createNewPanel, getContentTypes, setNewActiveContentType, splitMIMEType } from '@/utils/panel.ts'
-import { Button } from '@/components/ui/button.tsx'
-import { Columns2 } from 'lucide-react'
 import { PanelView } from '@/types'
-import { SyncTargets, useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { SyncedTargetRef, SyncTargets, useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import SynopsisContent from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContent.tsx'
 
 interface Props {
   syncTargets: SyncTargets,
   onSelect: () => void
 }
 
-const SynopsisItem: FC<Props> = ({ syncTargets, onSelect }) => {
+const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
   const { panelViews: panelViewsConfig } = useConfig()
   const setActiveSyncedTargets = useSynopsisStore((state) => state.setActiveSyncedTargets)
 
-  function onClick() {
+  function onOpenPanelsClick(selectedTargets: SyncedTargetRef[], replacePanels: boolean) {
     onSelect()
-    openSyncedPanels()
+    if (replacePanels) openWithSubstitute(selectedTargets)
+    else openAdditionalPanel(selectedTargets)
     // store the synced targets so each panel can highlight and scroll to its own target
-    setActiveSyncedTargets(syncTargets)
+    setActiveSyncedTargets({ ...syncTargets, targets: selectedTargets })
   }
 
   // Whether the panel already has a text view showing the synced content (source.id).
@@ -51,7 +51,23 @@ const SynopsisItem: FC<Props> = ({ syncTargets, onSelect }) => {
     }
   }
 
-  function openSyncedPanels() {
+  // Replace the existing panels (except the current one) with a fresh panel per selected witness.
+  function openWithSubstitute(selectedTargets: SyncedTargetRef[]) {
+    // remove all panels except the current one so new ones open to its right
+    const panels = usePanelStore.getState().panels
+    panels.forEach((panel) => {
+      if (panel.id !== panelId) usePanelStore.getState().removePanel(panel.id)
+    })
+
+    selectedTargets.forEach((syncTarget) => {
+      const { source } = syncTarget
+      if (!source.item) return
+
+      openInNewPanel(source)
+    })
+  }
+
+  function openAdditionalPanel(selectedTargets: SyncedTargetRef[]) {
     // Idea
     // - Case 1 — the source content url (source.id) is already shown in a panel → do nothing.
     // - Case 2 — the source item is open in another panel (but not this content) → append the synced text view.
@@ -59,7 +75,7 @@ const SynopsisItem: FC<Props> = ({ syncTargets, onSelect }) => {
 
     const panels = usePanelStore.getState().panels
 
-    syncTargets.targets.forEach((syncTarget) => {
+    selectedTargets.forEach((syncTarget) => {
       const { source } = syncTarget
       if (!source.item) return
 
@@ -104,17 +120,11 @@ const SynopsisItem: FC<Props> = ({ syncTargets, onSelect }) => {
   }
 
   return (
-    <div className="flex flex-col gap-1">
-      <Button
-        size="sm"
-        variant="outline"
-        className="justify-start"
-        onClick={onClick}
-      >
-        <Columns2 /> {t('open_synced_panels')}
-      </Button>
-    </div>
+    <SynopsisContent
+      syncTargets={syncTargets}
+      onOpenSyncedPanels={onOpenPanelsClick}
+    />
   )
 }
 
-export default SynopsisItem
+export default SynopsisContainer
