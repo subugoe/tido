@@ -41,8 +41,8 @@ import { useShallow } from 'zustand/react/shallow'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
 import AnnotationPopoverContent from '@/components/panel/annotations/popover/AnnotationPopoverContent.tsx'
-import SynopsisItem from '@/components/panel/annotations/popover/items/SynopsisItem.tsx'
 import { SelectedAnnotation } from '@/types'
+import SynopsisContainer from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContainer.tsx'
 
 
 // Resolve the targets that `clickedEl` (which lives in `source`) is synced with, on demand: from
@@ -762,7 +762,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         onClose={closeTooltip}
       >
         {syncTargets.targets.length > 0 &&
-          <SynopsisItem syncTargets={syncTargets} onSelect={onSynopsisItemClick} />}
+          <SynopsisContainer syncTargets={syncTargets} onSelect={onSynopsisItemClick} />}
       </AnnotationPopoverContent>
     </AnnotationPopoverContainer>
   </div>

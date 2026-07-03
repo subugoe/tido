@@ -96,6 +96,10 @@
     "witnesses": "Textzeugen",
     "selected_witnesses": "{{selected}} von {{total}} Textzeugen ausgewählt",
     "unknown_witness": "Unbekannter Textzeuge",
+    "synoptical_witnesses": "Synoptische Zeugen",
+    "select_all": "Alle auswählen",
+    "witnesses_count": "{{selected}} von {{total}}",
+    "witness_open": "offen",
     "options": "Optionen",
     "swap": "Swap",
     "split": "Split",
@@ -140,6 +144,8 @@
     "show_in_sidebar": "In Seiteleiste anzeigen",
     "more_annotations": "Weitere Annotationen",
     "synopsis": "Synopse",
-    "open_synced_panels": "In Panels öffnen"
+    "open_synced_panels": "In Panels öffnen",
+    "replace_panels": "Bestehende Panels ersetzen",
+    "replace_panels_hint": "Andere Panels werden geschlossen. Das aktuelle Panel bleibt links, neue öffnen rechts davon."
   }
 }
