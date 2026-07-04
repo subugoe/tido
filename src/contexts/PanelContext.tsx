@@ -180,9 +180,12 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
           }
         }
 
+        const isSubsetOfContentTypes = view.contentTypes?.every((contentType) => contentTypes?.includes(contentType)) ?? false
+        const newContentTypes = isSubsetOfContentTypes ? view.contentTypes : contentTypes
+
         return {
           ...view,
-          contentTypes: view.view === 'text' && !view.contentTypes ? contentTypes : view.contentTypes,
+          contentTypes: view.view === 'text' && newContentTypes,
           activeContentType,
           visible: view.visible ?? true,
         }
