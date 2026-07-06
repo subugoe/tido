@@ -8,6 +8,17 @@ export interface SyncedTargetRef {
   selector: string
 }
 
+// A sync target element discovered in a panel's text together with the sync annotations that touch
+// it. Mirrors an entry of GenericTextRenderer's targetsSyncMap (Map<HTMLElement, Annotation[]>) and
+// is collected in PanelContext so the SyncTargetsNavigation can step through them.
+export interface SyncedTargetEntry {
+  target: HTMLElement
+  annotations: Annotation[]
+  // the content url (source.id) of the renderer the target lives in, needed to resolve its synced
+  // targets via getSyncedTargets.
+  source: string
+}
+
 // Payload of synced targets plus the origin target's y-position within its scroll container's
 // visible height (ignoring scroll position), so each panel can scroll its own synced target to the
 // same y-position.

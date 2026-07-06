@@ -16,7 +16,7 @@ import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.
 import { Scroller } from '@/utils/scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
-import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { useSynopsisStore, SyncedTargetEntry } from '@/store/SynopsisStore.tsx'
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
@@ -53,6 +53,10 @@ interface PanelContextType {
   annotationsLoading: boolean
   matchedAnnotationsMaps: {[contentUrl: string]: MatchedAnnotationsMap}
   updateMatchedAnnotationsMap: (contentUrl: string, map: MatchedAnnotationsMap) => void
+  // all sync target elements discovered across this panel's text renderers, deduped by element.
+  syncedTargets: SyncedTargetEntry[]
+  // append the given sync target entries, skipping any whose target element is already known.
+  addSyncedTargets: (entries: SyncedTargetEntry[]) => void
 }
 
 interface PanelProviderProps {
@@ -81,6 +85,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [annotationsLoading, setAnnotationsLoading] = useState(false)
 
   const [syncMaps] = useState<{[contentUrl: string]: SyncMap}>({})
+  const [syncedTargets, setSyncedTargets] = useState<SyncedTargetEntry[]>([])
 
   const { t } = useTranslation()
 
@@ -98,6 +103,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     setError(null)
     setAnnotationsError(null)
     setMatchedAnnotationsMaps({})
+    setSyncedTargets([])
     setSelectedAnnotation(null)
 
     if (!annotationsConfig.filters) {
@@ -265,6 +271,16 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     }
   }
 
+  function addSyncedTargets(entries: SyncedTargetEntry[]) {
+    if (!entries || entries.length === 0) return
+    setSyncedTargets((prev) => {
+      const existing = new Set(prev.map((e) => e.target))
+      const additions = entries.filter((e) => !existing.has(e.target))
+      if (additions.length === 0) return prev
+      return [...prev, ...additions]
+    })
+  }
+
   function updateMatchedAnnotationsMap(contentUrl: string, map: MatchedAnnotationsMap) {
     setMatchedAnnotationsMaps((prev) => {
       if (map === null) {
@@ -394,6 +410,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       annotationsLoading,
       matchedAnnotationsMaps,
       updateMatchedAnnotationsMap,
+      syncedTargets,
+      addSyncedTargets,
     }}>
       {children}
     </PanelContext.Provider>

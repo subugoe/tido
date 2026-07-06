@@ -29,14 +29,17 @@ import {
   removeSelectedStyle
 } from '@/utils/text.ts'
 import {
-  getNestedAnnotations, getSelectorValue,
+  getNestedAnnotations,
+  getSelectorValue,
   getSource,
+  getSyncedTargets,
   isFiltered
 } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useSynopsisStore, SyncTargets, SyncedTargetRef } from '@/store/SynopsisStore.tsx'
+import { useSynopsisStore, SyncTargets } from '@/store/SynopsisStore.tsx'
 import { findFocusedTarget } from '@/utils/scroller.ts'
+import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { useShallow } from 'zustand/react/shallow'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
@@ -44,33 +47,6 @@ import AnnotationPopoverContent from '@/components/panel/annotations/popover/Ann
 import { SelectedAnnotation } from '@/types'
 import SynopsisContainer from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContainer.tsx'
 
-
-// Resolve the targets that `clickedEl` (which lives in `source`) is synced with, on demand: from
-// the clicked target's sync annotations, keep the ones whose own-source target is the clicked
-// element, and collect that target's siblings (retrieved by source.id + selector).
-function getSyncedTargets(clickedEl: HTMLElement, source: string, targetSyncAnnotations: Annotation[]): SyncedTargetRef[] {
-  const result: SyncedTargetRef[] = []
-
-  targetSyncAnnotations.forEach((annotation) => {
-    // the annotation's target that belongs to this source and is the clicked element
-    const ownTarget = annotation.target.find((t) => {
-      const selector = getSelectorValue(t)
-      return getSource(t).id === source && selector && clickedEl.matches(selector)
-    })
-    if (!ownTarget) return
-
-    annotation.target
-      .filter((sibling) => sibling !== ownTarget)
-      .map((sibling) => ({ source: getSource(sibling), selector: getSelectorValue(sibling) }))
-      .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))
-      .forEach((ref) => {
-        const exists = result.some((e) => e.source.id === ref.source.id && e.selector === ref.selector)
-        if (!exists) result.push(ref)
-      })
-  })
-
-  return result
-}
 
 interface Props {
   htmlString?: string
@@ -106,7 +82,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     selectedAnnotation,
     selectedAnnotationTypes,
     setSelectedAnnotation,
-    annotations
+    annotations,
+    addSyncedTargets
   } = usePanel()
 
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
@@ -162,6 +139,23 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!activeSyncedTargets || activeSyncedTargets.targets.length === 0) return
 
     const { yPos, targets, originTarget: prevClickedTarget } = activeSyncedTargets
+
+    // If the origin target lives in this renderer's text (e.g. the selection came from the
+    // SyncTargetsNavigation stepping through this panel's targets), bring it into view, re-open its
+    // popover and re-apply its active style so it stays highlighted while its synced targets show
+    // in the other panels.
+    if (prevClickedTarget && textWrapperRef.current.contains(prevClickedTarget)) {
+      const scrollContainer = prevClickedTarget.closest('[data-text-container]') as HTMLElement | null
+      if (scrollContainer) scrollIntoViewIfNeeded(prevClickedTarget, scrollContainer)
+
+      const originSyncAnnotations = targetsSyncMapRef.current.get(prevClickedTarget) ?? []
+      const originSyncTargets = getSyncedTargets(prevClickedTarget, source, originSyncAnnotations)
+
+      setTooltipOpen(true)
+      setTooltipTargetElement(prevClickedTarget)
+      addActiveTargetStyle(prevClickedTarget)
+      setSyncTargets({ yPos, originTarget: prevClickedTarget, targets: originSyncTargets })
+    }
 
     // track the elements we highlight so the cleanup can remove their style afterwards
     const highlightedEls: HTMLElement[] = []
@@ -417,6 +411,12 @@ const GenericTextRenderer: FC<Props> = memo(({
         targetEl.addEventListener('mouseleave', onMouseLeaveSyncTarget)
       })
     })
+
+    // publish this source's sync targets to the panel so SyncTargetsNavigation can step through them.
+    // addSyncedTargets dedupes by element, so already-known targets are skipped.
+    const entries = Array.from(targetsSyncMapRef.current.entries())
+      .map(([target, targetAnnotations]) => ({ target, annotations: targetAnnotations, source }))
+    addSyncedTargets(entries)
   }, [parsedDom, sourceSyncAnnotations])
 
   // Apply highlighting styles on every map update
