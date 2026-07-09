@@ -294,6 +294,13 @@ function isParentHovered(hoveredTargets: Element[], parentsEl: Element[]) {
   )
 }
 
+// Resolve the content url of a text view from its active content type - mirrors TextViewContext,
+// so the per-source syncedTargetsMap can be aggregated in panelViews order.
+function getContentUrlByType(contents: Content[], type: string | undefined) {
+  if (!type) return undefined
+  return contents.find(c => c.contentType.includes(type))?.id
+}
+
 
 export {
   addAnnotationId,
@@ -330,5 +337,6 @@ export {
   addSyncHoverStyle,
   addSyncAnnotationId,
   addActiveTargetStyle,
-  removeActiveTargetStyle
+  removeActiveTargetStyle,
+  getContentUrlByType
 }

@@ -8,17 +8,6 @@ export interface SyncedTargetRef {
   selector: string
 }
 
-// A sync target element discovered in a panel's text together with the sync annotations that touch
-// it. Mirrors an entry of GenericTextRenderer's targetsSyncMap (Map<HTMLElement, Annotation[]>) and
-// is collected in PanelContext so the SyncTargetsNavigation can step through them.
-export interface SyncedTargetEntry {
-  target: HTMLElement
-  annotations: Annotation[]
-  // the content url (source.id) of the renderer the target lives in, needed to resolve its synced
-  // targets via getSyncedTargets.
-  source: string
-}
-
 // Payload of synced targets plus the origin target's y-position within its scroll container's
 // visible height (ignoring scroll position), so each panel can scroll its own synced target to the
 // same y-position.
@@ -44,11 +33,15 @@ interface SynopsisStoreTypes {
   scrolledSyncedTargets: SyncTargets
   // the synced targets of the target currently hovered - highlighted (without scrolling) while hovering
   hoveredSyncedTargets: SyncedTargetRef[]
+  // the target navigated to via the SyncTargetsNavigation arrows - the panel that contains it scrolls
+  // to it and highlights it (see the navigatedTarget effect in GenericTextRenderer)
+  navigatedTarget: HTMLElement | null
   addSyncAnnotations: (annotations: Annotation[]) => void
   addSyncAnnotationsFromCollection: (collectionUrl: string) => Promise<void>
   setActiveSyncedTargets: (activeSyncedTargets: SyncTargets) => void
   setScrolledSyncedTargets: (scrolledSyncedTargets: SyncTargets) => void
   setHoveredSyncedTargets: (hoveredSyncedTargets: SyncedTargetRef[]) => void
+  setNavigatedTarget: (navigatedTarget: HTMLElement | null) => void
 }
 
 // Walk the collection tree until we find a collection that includes an annotationCollection.
@@ -74,6 +67,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   activeSyncedTargets: { yPos: 0, originTarget: null, targets: [] },
   scrolledSyncedTargets: { yPos: 0, originTarget: null, targets: [] },
   hoveredSyncedTargets: [],
+  navigatedTarget: null,
   setActiveSyncedTargets: (activeSyncedTargets) => {
     set({ activeSyncedTargets })
   },
@@ -82,6 +76,9 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   },
   setHoveredSyncedTargets: (hoveredSyncedTargets) => {
     set({ hoveredSyncedTargets })
+  },
+  setNavigatedTarget: (navigatedTarget) => {
+    set({ navigatedTarget })
   },
   // Merge the given annotations into syncAnnotations (skipping any whose id is already known) and
   // index them by their targets' source. Only the arrays of the affected sources are replaced, so
