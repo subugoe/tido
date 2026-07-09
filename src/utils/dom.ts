@@ -22,7 +22,10 @@ function waitForElementInDom(selector: string, textSelector: string, callback: (
   })
 }
 
-function scrollIntoViewIfNeeded(target: HTMLElement, container: HTMLElement) {
+// Scrolls the target to the vertical center of the container if it is out of view. Returns the
+// scrollTop the container ends up at (the current scrollTop when no scroll was needed), so callers
+// can derive the target's final y-position within the container.
+function scrollIntoViewIfNeeded(target: HTMLElement, container: HTMLElement): number {
   const { bottom: targetBottom, top: targetTop } = target.getBoundingClientRect()
   const { top: containerTop, height: containerHeight } = container.getBoundingClientRect()
 
@@ -38,7 +41,9 @@ function scrollIntoViewIfNeeded(target: HTMLElement, container: HTMLElement) {
 
   if (targetBottom > containerHeight || targetTop < containerTop) {
     container.scrollTo({ top: finalScrollTop, behavior: 'smooth' })
+    return finalScrollTop
   }
+  return container.scrollTop
 }
 
 function validateSelector(selector: string) {
