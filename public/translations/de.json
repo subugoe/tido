@@ -150,6 +150,7 @@
     "synoptic_target": "Synoptisches Ziel",
     "previous_synoptic_target": "Vorheriges synoptisches Ziel",
     "next_synoptic_target": "Nächstes synoptisches Ziel",
+    "open_synoptic_targets_navigation": "Öffnen, um synoptische Ziele zu navigieren",
     "collapse": "Einklappen"
   }
 }
