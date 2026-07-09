@@ -12,12 +12,14 @@ import SidebarView from '@/components/panel/views/sidebar/SidebarView.tsx'
 import PanelError from '@/components/panel/PanelError.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
 import Loading from '@/components/ui/loading.tsx'
+import { getContentUrlByType } from '@/utils/text.ts'
 
 const PanelContent: FC = React.memo(() => {
-  const { init, panelState, resizer, error, loading } = usePanel()
+  const { init, panelState, resizer, error, loading, syncedTargetsMap, setSyncedTargets } = usePanel()
   const [showSidebarContent, setShowSidebarContent] = useState(panelState.showSidebar)
   const [contentPanes, setContentPanes] = useState([])
   const allotmentRef = useRef<AllotmentHandle>(null)
+
 
   const visibleCount = panelState.panelViews.filter(v => v.visible ?? true).length
   // equal preferred size is computed before rendering - when we call allotment.reset() -> Allotment uses the updated preferred sizes
@@ -34,6 +36,22 @@ const PanelContent: FC = React.memo(() => {
     allotmentRef.current?.reset()
     setContentPanes(panes)
   }, [panelState.panelViews])
+
+  // Aggregate the per-source sync targets into a single ordered list, walking the panelViews in
+  // order and only including the visible text views. Re-runs when the views change or when a
+  // renderer adds/updates its targets in syncedTargetsMap.
+  useEffect(() => {
+    const aggregated = panelState.panelViews.reduce<HTMLElement[]>((acc, view) => {
+      const visible = view.visible ?? true
+      if (view.view !== 'text' || !visible) return acc
+      const url = getContentUrlByType(panelState.item.contents, view.activeContentType)
+      const targets = url ? syncedTargetsMap[url] : undefined
+      if (targets) acc.push(...targets)
+      return acc
+    }, [])
+    setSyncedTargets(aggregated)
+  }, [panelState.panelViews, syncedTargetsMap])
+
 
   useEffect(() => {
     if (!resizer) return

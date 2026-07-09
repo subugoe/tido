@@ -33,11 +33,14 @@ interface SynopsisStoreTypes {
   scrolledSyncedTargets: SyncTargets
   // the synced targets of the target currently hovered - highlighted (without scrolling) while hovering
   hoveredSyncedTargets: SyncedTargetRef[]
+  // the target navigated  via the TargetNavigation, scrolling, clicking target
+  navigatedTarget: HTMLElement | null
   addSyncAnnotations: (annotations: Annotation[]) => void
   addSyncAnnotationsFromCollection: (collectionUrl: string) => Promise<void>
   setActiveSyncedTargets: (activeSyncedTargets: SyncTargets) => void
   setScrolledSyncedTargets: (scrolledSyncedTargets: SyncTargets) => void
   setHoveredSyncedTargets: (hoveredSyncedTargets: SyncedTargetRef[]) => void
+  setNavigatedTarget: (navigatedTarget: HTMLElement | null) => void
 }
 
 // Walk the collection tree until we find a collection that includes an annotationCollection.
@@ -63,6 +66,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   activeSyncedTargets: { yPos: 0, originTarget: null, targets: [] },
   scrolledSyncedTargets: { yPos: 0, originTarget: null, targets: [] },
   hoveredSyncedTargets: [],
+  navigatedTarget: null,
   setActiveSyncedTargets: (activeSyncedTargets) => {
     set({ activeSyncedTargets })
   },
@@ -71,6 +75,9 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   },
   setHoveredSyncedTargets: (hoveredSyncedTargets) => {
     set({ hoveredSyncedTargets })
+  },
+  setNavigatedTarget: (navigatedTarget) => {
+    set({ navigatedTarget })
   },
   // Merge the given annotations into syncAnnotations (skipping any whose id is already known) and
   // index them by their targets' source. Only the arrays of the affected sources are replaced, so

@@ -2,6 +2,7 @@ import { AnnotationFiltersConfig, FilterNodeWithSelection, VariantType } from '@
 import { apiRequest } from '@/utils/api.ts'
 import { getTypeValue } from '@/utils/filter-tree.ts'
 import { CustomError } from '@/utils/custom-error.ts'
+import type { SyncedTargetRef, SyncTargets } from '@/store/SynopsisStore.tsx'
 
 function getSelectedTypes(config: AnnotationFiltersConfig): AnnotationTypesDict {
   let types: AnnotationTypesDict = {}
@@ -162,6 +163,49 @@ function getSelectorValue(target: AnnotationTarget): string | null {
   return null
 }
 
+// Resolve the targets that `clickedEl` (which lives in `source`) is synced with, on demand: from
+// the clicked target's sync annotations, keep the ones whose own-source target is the clicked
+// element, and collect that target's siblings (retrieved by source.id + selector).
+function getSyncedTargets(clickedEl: HTMLElement, source: string, targetSyncAnnotations: Annotation[]): SyncedTargetRef[] {
+  const result: SyncedTargetRef[] = []
+
+  targetSyncAnnotations.forEach((annotation) => {
+    // the annotation's target that belongs to this source and is the clicked element
+    const ownTarget = annotation.target.find((t) => {
+      const selector = getSelectorValue(t)
+      return getSource(t).id === source && selector && clickedEl.matches(selector)
+    })
+    if (!ownTarget) return
+
+    annotation.target
+      .filter((sibling) => sibling !== ownTarget)
+      .map((sibling) => ({ source: getSource(sibling), selector: getSelectorValue(sibling) }))
+      .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))
+      .forEach((ref) => {
+        const exists = result.some((e) => e.source.id === ref.source.id && e.selector === ref.selector)
+        if (!exists) result.push(ref)
+      })
+  })
+
+  return result
+}
+
+// Whether an element is part of the active synced targets selection - either the clicked origin
+// target, or one of its synced targets (resolved by selector within the given source). Used to keep
+// the synopsis highlight on such elements when other interactions (hover/scroll) would remove it.
+function isPartOfActiveSyncedTargets(
+  el: HTMLElement,
+  activeSyncedTargets: SyncTargets,
+  source: string,
+  container: HTMLElement | null
+): boolean {
+  return el === activeSyncedTargets.originTarget ||
+    activeSyncedTargets.targets.some((syncedTarget) =>
+      syncedTarget.source.id === source &&
+      container?.querySelector(syncedTarget.selector) === el
+    )
+}
+
 export {
   getSelectedTypes,
   getSelectedTypesFromNode,
@@ -172,5 +216,7 @@ export {
   getNestedAnnotations,
   getCrossRefInfo,
   getSource,
-  getSelectorValue
+  getSelectorValue,
+  getSyncedTargets,
+  isPartOfActiveSyncedTargets
 }

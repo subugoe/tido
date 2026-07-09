@@ -17,6 +17,7 @@ import { Scroller } from '@/utils/scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { getContentUrlByType } from '@/utils/text.ts'
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
@@ -53,6 +54,12 @@ interface PanelContextType {
   annotationsLoading: boolean
   matchedAnnotationsMaps: {[contentUrl: string]: MatchedAnnotationsMap}
   updateMatchedAnnotationsMap: (contentUrl: string, map: MatchedAnnotationsMap) => void
+  // sync target elements per content url (source) and the keys ordered by the order the text views appear in panelViews.
+  syncedTargetsMap: {[contentUrl: string]: HTMLElement[]}
+  addSyncedTargets: (targets: HTMLElement[], source: string, panelViews: PanelView[]) => void
+  // the sync targets aggregated across the visible text views (in panelViews order)
+  syncedTargets: HTMLElement[]
+  setSyncedTargets: (targets: HTMLElement[]) => void
 }
 
 interface PanelProviderProps {
@@ -81,6 +88,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [annotationsLoading, setAnnotationsLoading] = useState(false)
 
   const [syncMaps] = useState<{[contentUrl: string]: SyncMap}>({})
+  const [syncedTargetsMap, setSyncedTargetsMap] = useState<{[contentUrl: string]: HTMLElement[]}>({})
+  const [syncedTargets, setSyncedTargets] = useState<HTMLElement[]>([])
 
   const { t } = useTranslation()
 
@@ -98,6 +107,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     setError(null)
     setAnnotationsError(null)
     setMatchedAnnotationsMaps({})
+    setSyncedTargetsMap({})
+    setSyncedTargets([])
     setSelectedAnnotation(null)
 
     if (!annotationsConfig.filters) {
@@ -265,6 +276,27 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     }
   }
 
+  function addSyncedTargets(targets: HTMLElement[], source: string, panelViews: PanelView[]) {
+    if (!source) return
+    setSyncedTargetsMap((prev) => {
+      const existing = prev[source] ?? []
+      const existingSet = new Set(existing)
+      const additions = (targets ?? []).filter((t) => !existingSet.has(t))
+      if (additions.length === 0 && prev[source]) return prev
+
+      const next = { ...prev, [source]: [...existing, ...additions] }
+
+      // rebuild the map so its keys follow the order the text views appear in panelViews
+      const ordered: {[contentUrl: string]: HTMLElement[]} = {}
+      panelViews?.forEach((view) => {
+        const url = getContentUrlByType(panelState.item.contents, view.activeContentType)
+        if (url && next[url]) ordered[url] = next[url]
+      })
+
+      return ordered
+    })
+  }
+
   function updateMatchedAnnotationsMap(contentUrl: string, map: MatchedAnnotationsMap) {
     setMatchedAnnotationsMaps((prev) => {
       if (map === null) {
@@ -394,6 +426,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       annotationsLoading,
       matchedAnnotationsMaps,
       updateMatchedAnnotationsMap,
+      syncedTargetsMap,
+      addSyncedTargets,
+      syncedTargets,
+      setSyncedTargets,
     }}>
       {children}
     </PanelContext.Provider>
