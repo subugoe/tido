@@ -33,8 +33,7 @@ interface SynopsisStoreTypes {
   scrolledSyncedTargets: SyncTargets
   // the synced targets of the target currently hovered - highlighted (without scrolling) while hovering
   hoveredSyncedTargets: SyncedTargetRef[]
-  // the target navigated to via the SyncTargetsNavigation arrows - the panel that contains it scrolls
-  // to it and highlights it (see the navigatedTarget effect in GenericTextRenderer)
+  // the target navigated  via the TargetNavigation, scrolling, clicking target
   navigatedTarget: HTMLElement | null
   addSyncAnnotations: (annotations: Annotation[]) => void
   addSyncAnnotationsFromCollection: (collectionUrl: string) => Promise<void>

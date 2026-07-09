@@ -85,6 +85,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     selectedAnnotationTypes,
     setSelectedAnnotation,
     annotations,
+    syncedTargets,
     addSyncedTargets,
     panelState
   } = usePanel()
@@ -179,9 +180,6 @@ const GenericTextRenderer: FC<Props> = memo(({
     }
   }, [activeSyncedTargets, parsedDom, source])
 
-  // When synced targets are resolved while the user scrolls another panel, scroll this renderer's
-  // container so its first matching synced target sits at the same y-position as the origin target.
-  // No highlighting - scrolling should only realign the panels.
   useEffect(() => {
     if (!parsedDom || !textWrapperRef.current) return
     if (!scrolledSyncedTargets || scrolledSyncedTargets.targets.length === 0) return
@@ -204,12 +202,9 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     scrollContainer.scrollTo({ top: Math.max(0, Math.min(desiredScrollTop, maxScrollTop)), behavior: 'smooth' })
 
-    // highlight only when this alignment was driven by arrow navigation (the sync's origin target is
-    // the navigated target), not by user scrolling
+    // add synopsis style to synced target when it was scrolled to a sync target in another text
     if (originTarget && originTarget === navigatedTarget) addSynopsisStyle(targetEl)
 
-    // remove the synopsis style from the previous target on the next run / unmount, unless it is part
-    // of the active synced targets selection (the clicked origin target or one of its synced targets)
     return () => {
       const currentSyncedTargets = useSynopsisStore.getState().activeSyncedTargets
       if (!isPartOfActiveSyncedTargets(targetEl, currentSyncedTargets, source, textWrapperRef.current)) {
@@ -219,8 +214,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   }, [scrolledSyncedTargets, parsedDom, source])
 
   // While a target is hovered, highlight the synced targets that belong to this renderer's source.
-  // Same as the syncedTargets effect above but without scrolling - hovering should only preview the
-  // connected targets, not move any panel.
+  // Same as the syncedTargets effect above but without scrolling
   useEffect(() => {
     if (!parsedDom || !textWrapperRef.current) return
     if (!hoveredSyncedTargets || hoveredSyncedTargets.length === 0) return
@@ -240,10 +234,6 @@ const GenericTextRenderer: FC<Props> = memo(({
       highlightedEls.push(targetEl)
     })
 
-
-    // before the next run / on unmount: remove the synopsis style from these sync targets, but keep
-    // it for any element that is part of the active synced targets selection - either the clicked
-    // origin target, or one of its synced targets (resolved by selector within its own source).
     return () => {
       const currentSyncedTargets = useSynopsisStore.getState().activeSyncedTargets
       highlightedEls.forEach((el) => {
@@ -254,22 +244,40 @@ const GenericTextRenderer: FC<Props> = memo(({
     }
   }, [hoveredSyncedTargets, parsedDom, source])
 
-  // When a target is navigated to via the SyncTargetsNavigation arrows: if it lives in this
+  // When a target is navigated to via the TargetNavigation arrows: if it lives in this
   // renderer's text, scroll to it and highlight it. The style is removed again on the next navigation.
   useEffect(() => {
     if (!parsedDom || !textWrapperRef.current) return
-    if (!navigatedTarget) return
+
+    // add synopsis Style to the first sync target of text
+    if (!navigatedTarget) {
+      const firstTarget = syncedTargets[0]
+      if (!firstTarget || !textWrapperRef.current.contains(firstTarget)) return
+
+      addSynopsisStyle(firstTarget)
+
+      return () => {
+        const currentSyncedTargets = useSynopsisStore.getState().activeSyncedTargets
+        if (!isPartOfActiveSyncedTargets(firstTarget, currentSyncedTargets, source, textWrapperRef.current)) {
+          removeSynopsisStyle(firstTarget)
+        }
+      }
+    }
 
     // only the panel whose scroll container holds this target scrolls to and highlights it
     const scrollContainer = textWrapperRef.current.closest('[data-text-container]') as HTMLElement | null
+    if (!navigatedTarget) return
     if (!scrollContainer || !scrollContainer.contains(navigatedTarget)) return
 
+    // this text is the one which navigated to the next sync target -> we should set its synced targets as scrolledSyncedTargets
+    // so that they scroll as well to their sync target
     addSynopsisStyle(navigatedTarget)
     const finalScrollTop = scrollIntoViewIfNeeded(navigatedTarget, scrollContainer)
 
     const targetSyncAnnotations = targetsSyncMapRef.current.get(navigatedTarget) ?? []
-    const syncedTargets = getSyncedTargets(navigatedTarget, source, targetSyncAnnotations)
-    if (syncedTargets.length > 0) {
+    // the targets which are synced with the navigatedTarget
+    const navigatedSyncedTargets = getSyncedTargets(navigatedTarget, source, targetSyncAnnotations)
+    if (navigatedSyncedTargets.length > 0) {
       // yPos must be where the navigated target ENDS UP after the (smooth, async) scroll, not its
       // current position - otherwise an off-screen target publishes a huge yPos and the other panels
       // clamp their desiredScrollTop to 0. Derive it from the container's final scrollTop.
@@ -278,7 +286,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       useSynopsisStore.getState().setScrolledSyncedTargets({
         yPos,
         originTarget: navigatedTarget,
-        targets: syncedTargets
+        targets: navigatedSyncedTargets
       })
     }
 
@@ -288,7 +296,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         removeSynopsisStyle(navigatedTarget)
       }
     }
-  }, [navigatedTarget, parsedDom, source])
+  }, [navigatedTarget, parsedDom, source, syncedTargets])
 
   // Sync the other panels while the user scrolls this one: when a sync target enters this source's
   // focused band, resolve its synced targets and publish them so each other panel scrolls its own
@@ -339,6 +347,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         originTarget: focusedTarget,
         targets: newSyncTargets
       })
+      setNavigatedTarget(focusedTarget)
     }
 
     scrollContainer.addEventListener('wheel', markUserScroll, { passive: true })
@@ -745,12 +754,12 @@ const GenericTextRenderer: FC<Props> = memo(({
     // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
 
     const target = e.currentTarget as HTMLElement
-    const activeSyncedTargets = useSynopsisStore.getState().activeSyncedTargets
+    // TODO: hovering out a navigated target should not remove its synopsis style - a solution is to use a local ref
+    //  for navigated target and add a useEffect which keeps track of that value
+    const removeStyle = !isPartOfActiveSyncedTargets(target, activeSyncedTargets, source, textWrapperRef.current)
+      && target !== navigatedTarget
 
-    // Keep the synopsis highlight if this target is part of the active synced targets selection -
-    // either the clicked origin target, or one of its synced targets (resolved by selector within
-    // its own source). In that case we must not remove its synopsisStyle on mouse leave.
-    if (!isPartOfActiveSyncedTargets(target, activeSyncedTargets, source, textWrapperRef.current)) {
+    if (removeStyle) {
       removeSynopsisStyle(target)
       setHoveredSyncedTargets([])
     }

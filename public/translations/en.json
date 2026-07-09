@@ -145,6 +145,7 @@
     "synoptic_target": "Synoptic target",
     "previous_synoptic_target": "Previous synoptic target",
     "next_synoptic_target": "Next synoptic target",
+    "open_synoptic_targets_navigation": "Open to navigate synoptic targets",
     "collapse": "Collapse"
   }
 }
