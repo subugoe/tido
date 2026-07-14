@@ -196,8 +196,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
         return {
           ...view,
-          contentTypes: view.view === 'text' && newContentTypes,
-          activeContentType,
+          ...(view.view !== 'image' && { contentTypes: newContentTypes }),
+          ...(view.view !== 'image' && { activeContentType }),
           visible: view.visible ?? true,
         }
       }
