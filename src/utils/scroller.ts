@@ -120,6 +120,30 @@ class Scroller {
     this.syncScroll(this.texts[url], this.sidebar)
   }
 
+  // Bring a sidebar card into the sync band (between SYNC_SCROLL_THRESHOLD_TOP and _BOTTOM of the
+  // sidebar's height) - the same band handleSidebarScroll uses to pick the focused annotation.
+  // No-op when the card already overlaps the band. Scrolling is instant so callers can read the
+  // card's updated rect right after.
+  scrollSidebarCardIntoSyncBand(card: HTMLElement) {
+    if (!this.sidebar || !card) return
+
+    const sidebarRect = this.sidebar.getBoundingClientRect()
+    const cardRect = card.getBoundingClientRect()
+    const scrollTop = this.sidebar.scrollTop
+
+    const cardTop = cardRect.top - sidebarRect.top + scrollTop
+    const cardBottom = cardTop + cardRect.height
+
+    const bandTop = scrollTop + this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
+    const bandBottom = scrollTop + this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_BOTTOM
+
+    if (cardTop < bandBottom && cardBottom > bandTop) return
+
+    this.isSyncing = true
+    this.sidebar.scrollTop = cardTop - this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
+    setTimeout(() => this.isSyncing = false, 20)
+  }
+
   handleSidebarScroll() {
     if (this.isSyncing || !this.sidebar) return
     const refY = this.sidebar.scrollTop + this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_TOP

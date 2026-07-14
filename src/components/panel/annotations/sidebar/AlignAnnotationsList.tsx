@@ -46,11 +46,18 @@ const AlignAnnotationsList: FC = () => {
       const annotationEl = panelEl.querySelector(`[data-annotation="${annotation.id}"]`) as HTMLElement
       if (!targetEl || !annotationEl) return
 
+      // Mitigates the bug which arises in the case when a selected annotation (i.e selected through cross ref)
+      // initially lies very below and moves upwards, but does not land in the sync region (45%-80%). In this case
+      // the text containing the respective would not scroll, since the annotation is not in sync region. Therefore
+      // we make sure that the selected annotation appears in sync scroll region
+      scroller.scrollSidebarCardIntoSyncBand(annotationEl)
+
+      // Read the rects after the sidebar scroll so the delta reflects the card's final position.
       const targetRect = targetEl.getBoundingClientRect()
       const annotationRect = annotationEl.getBoundingClientRect()
       const delta = targetRect.top - annotationRect.top
 
-      getScroller().scrollTextSmoothly(targetSourceUrl, delta)
+      scroller.scrollTextSmoothly(targetSourceUrl, delta)
     }
 
     async function deselectAnnotationOnOutsideClick(event: MouseEvent) {
