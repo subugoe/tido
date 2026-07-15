@@ -407,7 +407,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
           acc[cur.id] = {
             target: matchedNodes,
-            filtered: annotationsConfig?.crossRefContentType !== cur.body?.annotationType ? (!selectedAnnotationTypes || ignoreFilters || isFiltered(cur, selectedAnnotationTypes, tooltipTypes)) : false,
+            filtered: (cur.body.annotationType && annotationsConfig?.crossRefContentType !== cur.body?.annotationType) ? (!selectedAnnotationTypes || ignoreFilters || isFiltered(cur, selectedAnnotationTypes, tooltipTypes)) : false,
             annotation: cur,
             nestedAnnotations
           }
@@ -415,10 +415,12 @@ const GenericTextRenderer: FC<Props> = memo(({
         return acc
       }, {})
 
+      selectedAnnotationTypesRef.current = selectedAnnotationTypes
+
       setMatchedMap(result)
       if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
 
-      flippedMatchedMapRef.current = flipMatchedAnnotationsMap(matchedMap)
+      flippedMatchedMapRef.current = flipMatchedAnnotationsMap(result)
       targetsRef.current = getTextTargets(flippedMatchedMapRef.current)
     }
 
@@ -608,7 +610,6 @@ const GenericTextRenderer: FC<Props> = memo(({
     // filter Variant Annotations based on witnesses in selectedAnnotationTypes
     // filter all other annotations which have type as key in selectedAnnotation types
     const annotationType = annotation.body.annotationType
-
     if (!selectedAnnotationTypes || annotationsConfig.tooltipTypes?.includes(annotationType)) return true
 
     if (annotationType === 'Variant') {
@@ -625,13 +626,6 @@ const GenericTextRenderer: FC<Props> = memo(({
     //  So this function will be called with those state values which existed at the time of adding.
 
     const target = e.currentTarget as Element
-
-    const targetEntry: MergedAnnotationEntry = (flippedMatchedMapRef.current ?? []).filter(entry => entry.target === target)[0]
-
-    let hasFilteredAnnotations = false
-    targetEntry?.annotations.forEach(annotation => {
-      if (isFilteredAnnotation(annotation, selectedAnnotationTypesRef.current) || annotation.body.annotationType === annotationsConfig?.crossRefContentType) hasFilteredAnnotations = true
-    })
 
     // e.target = the deepest DOM node the user actually clicked
     // e.currentTarget (target) = the annotation target this listener is attached to
@@ -652,8 +646,6 @@ const GenericTextRenderer: FC<Props> = memo(({
     // sync annotations recorded in targetsSyncMapRef (read via ref to avoid stale closure state).
     const targetSyncAnnotations = targetsSyncMapRef.current.get(target as HTMLElement) ?? []
     const newSyncTargets = getSyncedTargets(target as HTMLElement, source, targetSyncAnnotations)
-
-    if (!hasFilteredAnnotations && newSyncTargets.length === 0) return
 
     // TODO: Fix bug: Click at a new target should check if there are syncedTargets -> if yes -> should make them null or so
 
@@ -719,7 +711,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     // when we have only one normal annotation then we should select the annotation in Sidebar and not open tooltip. (select + deselect annotation)
     if (!openTooltip && normalAnnotations.length === 1) {
       // we need selectedAnnotationRef since the click listener has not an updated value of selectedAnnotation, it has the 'null' when it was initially created
-      if (targetEntry.annotations[0].id === selectedAnnotationRef.current?.annotation.id) {
+      if (normalAnnotations[0].id === selectedAnnotationRef.current?.annotation.id) {
         setSelectedAnnotation(null)
         selectedAnnotationRef.current = null
       } else {
