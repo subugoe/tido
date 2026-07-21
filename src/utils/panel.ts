@@ -49,7 +49,8 @@ export function getContentTypes(content: Content[]): string[] {
   return content
     .map((item) => splitMIMEType(item.contentType))
     .filter(([type]) => type && SUPPORTED_MIME_TYPES.includes(type))
-    .map(([,param]) => param)
+    // when the contentType has no ';type=' param, fall back to the MIME type itself
+    .map(([type, param]) => param ?? type)
 }
 
 export function getUniquePanels(panels: PanelConfig[] | undefined) {
