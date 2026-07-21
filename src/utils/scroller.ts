@@ -47,6 +47,10 @@ class Scroller {
     this.sidebar = element
   }
 
+  getSidebar() {
+    return this.sidebar
+  }
+
   setText(url: string, element: HTMLElement) {
     this.texts[url] = element
     element.setAttribute('data-content-url', url)
@@ -157,8 +161,10 @@ class Scroller {
     this.focusedAnnotationId = bandEntry.annotation.id
 
     const entry = bandEntry
+    if (this.isSyncing) return
     this.isSyncing = true
     const targetElement = entry.target[0]
+
     if (targetElement) {
       const contentUrl = getSource(entry.annotation.target[0]).id
       const text = this.texts[getSource(entry.annotation.target[0]).id]
@@ -176,7 +182,9 @@ class Scroller {
     if (this.isSyncing) return
     const contentUrl = (e.target as HTMLElement).getAttribute('data-content-url')
     this.scrollOtherTexts(contentUrl)
-    if (this.originSelection === 'text')  this.syncScroll(this.texts[contentUrl], this.sidebar)
+    if (this.originSelection === 'text')  {
+      this.syncScroll(this.texts[contentUrl], this.sidebar)
+    }
   }
 
   startSidebar() {
@@ -195,11 +203,25 @@ class Scroller {
     this.texts[contentUrl].removeEventListener('scroll', this.handleTextScrollBound)
   }
 
-  scrollTextSmoothly(contentUrl: string, delta: number) {
+  // Scrolls the text by delta. The scroll is deliberate, so handleTextScroll must not treat it as a
+  // user scroll and sync on top of it - isSyncing keeps the listener out until the scroll has come
+  // to a stop.
+  scrollText(contentUrl: string, delta: number) {
     const text = this.texts[contentUrl]
     if (!text) return
 
-    text.scrollTo({ top: text.scrollTop + delta, behavior: 'smooth' })
+    // Landing on the scrollTop we are already at - because delta is zero or the container is at the
+    // end of its range - scrolls nothing and so never reaches scrollend, which means the guard has
+    // to be lifted right here instead.
+    const maxScrollTop = text.scrollHeight - text.clientHeight
+    const top = Math.max(0, Math.min(text.scrollTop + delta, maxScrollTop))
+    if (top === text.scrollTop) {
+      this.isSyncing = false
+      return
+    }
+
+    text.addEventListener('scrollend', () => (this.isSyncing = false), { once: true })
+    text.scrollTo({ top, behavior: 'smooth' })
   }
 }
 
