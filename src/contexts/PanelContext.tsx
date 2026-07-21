@@ -229,6 +229,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         try {
           const page = await getAnnotationPage(item.annotationCollection)
           const annotations = page.items ?? []
+          console.log('annotations', annotations)
           const witnesses = page.partOf.refs ?? []
 
           if (witnesses.length > 0) {
@@ -335,6 +336,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       })
 
       setAnnotationFilters(filterNodesWithSelection)
+      const selectedTypes = getSelectedTypes(annotationsConfig.filters)
+      console.log('selectedTypes', selectedTypes)
       setSelectedAnnotationTypes(getSelectedTypes(annotationsConfig.filters))
     }
   }, [])
@@ -346,6 +349,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   useEffect(() => {
     getScroller().setSyncMaps(syncMaps)
   }, [syncMaps])
+
 
   useEffect(() => {
     getScroller().setMatchedMap(matchedAnnotationsMaps)

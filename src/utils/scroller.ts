@@ -72,6 +72,9 @@ class Scroller {
     this.originSelection = value
   }
 
+  getOriginSelection() {
+    return this.originSelection
+  }
 
   syncScroll(source: HTMLElement, target: HTMLElement) {
     if (!source || !target) return
