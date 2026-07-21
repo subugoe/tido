@@ -34,9 +34,9 @@ const AlignAnnotationsList: FC = () => {
     let cancelPendingScroll: (() => void) | undefined
     const { annotation, origin } = selectedAnnotation
     if (origin === 'text') {
-      const { contentUrl } = selectedAnnotation
+      // we do not sync sidebar to text here, since the annotations are not rendered, the sidebar is not yet scrollable
+      // and the scrollTop would become 0
       trackTopChange()
-      getScroller().syncSidebarToText(contentUrl)
     } else {
       const scroller = getScroller()
       const target = annotation.target[0]
@@ -82,6 +82,14 @@ const AlignAnnotationsList: FC = () => {
       annotationsSideBarEl?.removeEventListener('click', deselectAnnotationOnOutsideClick)
     }
   }, [selectedAnnotation])
+
+  // Runs after yMap is committed - i.e. once the annotations are positioned and the sidebar has its
+  // full scrollable height. Only then is it safe to sync the sidebar scroll to the text.
+  useEffect(() => {
+    if (getScroller().getOriginSelection() !== 'text') return
+    if (!selectedAnnotation?.contentUrl) return
+    getScroller().syncSidebarToText(selectedAnnotation.contentUrl)
+  }, [yMap])
 
 
   useEffect(() => {
