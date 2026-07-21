@@ -2,7 +2,8 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
-import { SYNC_SCROLL_THRESHOLD_TOP } from '@/utils/scroller.ts'
+import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
+import { SelectedAnnotation } from '@/types'
 
 const ANNOTATION_GAP = 5
 
@@ -26,46 +27,62 @@ const AlignAnnotationsList: FC = () => {
     return clickedEl.closest('[data-annotation]')
   }
 
+  // Lines the text up with the card of the selected annotation. The card has to be standing still
+  // before we can measure it, so when the sidebar first has to scroll the card into view we defer
+  // the text scroll until that scroll has ended.
+  function alignTextToAnnotation(panelEl: HTMLElement, selectedAnnotation: SelectedAnnotation, signal: AbortSignal) {
+    const { annotation, origin } = selectedAnnotation
+    const scroller = getScroller()
+    const sidebar = scroller.getSidebar()
+    const target = annotation.target[0]
+    const targetSourceUrl = typeof target.source === 'string' ? target.source : target.source.id
+    const textScrollContainer = scroller.getText(targetSourceUrl)
+    if (!sidebar || !textScrollContainer) return
+
+    const targetEl = textScrollContainer.querySelector((target.selector as CssSelector).value) as HTMLElement
+    const annotationEl = panelEl.querySelector(`[data-annotation="${annotation.id}"]`) as HTMLElement
+    if (!targetEl || !annotationEl) return
+
+    // The sidebar does not move along with the text, so once it has settled the card's top is a
+    // fixed reference: scrolling the text by the distance between the two puts the target exactly
+    // on the card in a single scroll.
+    function scrollTextToCard() {
+      const delta = targetEl.getBoundingClientRect().top - annotationEl.getBoundingClientRect().top
+      scroller.scrollText(targetSourceUrl, delta)
+    }
+
+    // A selection made in the sidebar itself needs no sidebar scroll: the card is where the user
+    // just clicked, so the text can be aligned to it straight away.
+    if (origin === 'annotation') {
+      scrollTextToCard()
+      return
+    }
+
+    // Returns the scrollTop the sidebar settles at. Getting the current one back means the card was
+    // already in view and no scroll was started, so there is no scrollend to wait for.
+    const settledScrollTop = scrollIntoViewIfNeeded(annotationEl, sidebar)
+    if (settledScrollTop === sidebar.scrollTop) scrollTextToCard()
+    else sidebar.addEventListener('scrollend', scrollTextToCard, { once: true, signal })
+  }
+
   useEffect(() => {
     const panelEl = document.getElementById(panelId) as HTMLElement
     const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
 
     if (!selectedAnnotation) return
-    let cancelPendingScroll: (() => void) | undefined
-    const { annotation, origin } = selectedAnnotation
-    if (origin === 'text') {
+    const controller = new AbortController()
+    const scroller = getScroller()
+    if (selectedAnnotation.origin === 'text') {
       // we do not sync sidebar to text here, since the annotations are not rendered, the sidebar is not yet scrollable
       // and the scrollTop would become 0
       trackTopChange()
     } else {
-      const scroller = getScroller()
-      const target = annotation.target[0]
-      const targetSourceUrl = typeof target.source === 'string' ? target.source : target.source.id
-      const textScrollContainer = scroller.getText(targetSourceUrl)
-      if (!textScrollContainer) return
-
-      const targetEl = textScrollContainer.querySelector((target.selector as CssSelector).value) as HTMLElement
-      const annotationEl = panelEl.querySelector(`[data-annotation="${annotation.id}"]`) as HTMLElement
-      if (!targetEl || !annotationEl) return
-
-
-      // 1. Scroll the text so the target sits in the sync band.
-      const targetRect = targetEl.getBoundingClientRect()
-      const textRect = textScrollContainer.getBoundingClientRect()
-      const targetTop = targetRect.top - textRect.top + textScrollContainer.scrollTop
-      const targetOffset = textScrollContainer.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-      textScrollContainer.scrollTop = targetTop - targetOffset
-      scroller.scrollOtherTexts(targetSourceUrl)
-
-      // 2. Wait a frame so the jump above is committed, then re-read the target's new top and
-      //    smooth-scroll it to line up with the annotation card
-      const rafId = requestAnimationFrame(() => {
-        const scrolledTargetRect = targetEl.getBoundingClientRect()
-        const annotationRect = annotationEl.getBoundingClientRect()
-        const delta = scrolledTargetRect.top - annotationRect.top
-        scroller.scrollTextSmoothly(targetSourceUrl, delta)
-      })
-      cancelPendingScroll = () => cancelAnimationFrame(rafId)
+      // Cases: 1) select an annotation directly 2) external selection of annotation i.e due to cross ref link
+      // text will align to selectedAnnotation, so it will programmatically scroll.
+      // we do not want to scroll sidebar due to a programmatic scroll of textContainer
+      // set "isSyncing" to true to prevent this
+      scroller.setIsSyncing(true)
+      alignTextToAnnotation(panelEl, selectedAnnotation, controller.signal)
     }
 
     async function deselectAnnotationOnOutsideClick(event: MouseEvent) {
@@ -74,13 +91,10 @@ const AlignAnnotationsList: FC = () => {
       setSelectedAnnotation(null)
     }
 
-    annotationsSideBarEl?.addEventListener('click', deselectAnnotationOnOutsideClick)
+    annotationsSideBarEl?.addEventListener('click', deselectAnnotationOnOutsideClick, { signal: controller.signal })
 
     // Cleanup on unmount
-    return () => {
-      cancelPendingScroll?.()
-      annotationsSideBarEl?.removeEventListener('click', deselectAnnotationOnOutsideClick)
-    }
+    return () => controller.abort()
   }, [selectedAnnotation])
 
   // Runs after yMap is committed - i.e. once the annotations are positioned and the sidebar has its
