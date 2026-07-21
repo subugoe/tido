@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
+import { SYNC_SCROLL_THRESHOLD_TOP } from '@/utils/scroller.ts'
 
 const ANNOTATION_GAP = 5
 
@@ -30,6 +31,7 @@ const AlignAnnotationsList: FC = () => {
     const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
 
     if (!selectedAnnotation) return
+    let cancelPendingScroll: (() => void) | undefined
     const { annotation, origin } = selectedAnnotation
     if (origin === 'text') {
       const { contentUrl } = selectedAnnotation
@@ -46,18 +48,24 @@ const AlignAnnotationsList: FC = () => {
       const annotationEl = panelEl.querySelector(`[data-annotation="${annotation.id}"]`) as HTMLElement
       if (!targetEl || !annotationEl) return
 
-      // Mitigates the bug which arises in the case when a selected annotation (i.e selected through cross ref)
-      // initially lies very below and moves upwards, but does not land in the sync region (45%-80%). In this case
-      // the text containing the respective would not scroll, since the annotation is not in sync region. Therefore
-      // we make sure that the selected annotation appears in sync scroll region
-      scroller.scrollSidebarCardIntoSyncBand(annotationEl)
 
-      // Read the rects after the sidebar scroll so the delta reflects the card's final position.
+      // 1. Scroll the text so the target sits in the sync band.
       const targetRect = targetEl.getBoundingClientRect()
-      const annotationRect = annotationEl.getBoundingClientRect()
-      const delta = targetRect.top - annotationRect.top
+      const textRect = textScrollContainer.getBoundingClientRect()
+      const targetTop = targetRect.top - textRect.top + textScrollContainer.scrollTop
+      const targetOffset = textScrollContainer.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
+      textScrollContainer.scrollTop = targetTop - targetOffset
+      scroller.scrollOtherTexts(targetSourceUrl)
 
-      scroller.scrollTextSmoothly(targetSourceUrl, delta)
+      // 2. Wait a frame so the jump above is committed, then re-read the target's new top and
+      //    smooth-scroll it to line up with the annotation card
+      const rafId = requestAnimationFrame(() => {
+        const scrolledTargetRect = targetEl.getBoundingClientRect()
+        const annotationRect = annotationEl.getBoundingClientRect()
+        const delta = scrolledTargetRect.top - annotationRect.top
+        scroller.scrollTextSmoothly(targetSourceUrl, delta)
+      })
+      cancelPendingScroll = () => cancelAnimationFrame(rafId)
     }
 
     async function deselectAnnotationOnOutsideClick(event: MouseEvent) {
@@ -70,9 +78,11 @@ const AlignAnnotationsList: FC = () => {
 
     // Cleanup on unmount
     return () => {
+      cancelPendingScroll?.()
       annotationsSideBarEl?.removeEventListener('click', deselectAnnotationOnOutsideClick)
     }
   }, [selectedAnnotation])
+
 
   useEffect(() => {
     if (toggledAnnotation) {

@@ -1,6 +1,6 @@
 import { getSource } from '@/utils/annotations.ts'
 
-const SYNC_SCROLL_THRESHOLD_TOP = 0.35
+export const SYNC_SCROLL_THRESHOLD_TOP = 0.35
 const SYNC_SCROLL_THRESHOLD_BOTTOM = 0.45
 
 // Find the target currently sitting in the scroll container's "focused" band - the first target
@@ -31,6 +31,7 @@ class Scroller {
   private sidebar: HTMLElement | null = null
   private texts: {[contentUrl: string]: HTMLElement} = {}
   private isSyncing = false
+  private originSelection: 'text' | 'annotation' = 'text'
   private focusedAnnotationId: string | null = null
   private matchedMap: {[contentUrl: string]: MatchedAnnotationsMap} = {}
   private syncMaps: {[contentUrl: string]: SyncMap} = {}
@@ -63,6 +64,15 @@ class Scroller {
     this.syncMaps = map
   }
 
+  setIsSyncing(value: boolean) {
+    this.isSyncing = value
+  }
+
+  setOriginSelection(value: 'text' | 'annotation') {
+    this.originSelection = value
+  }
+
+
   syncScroll(source: HTMLElement, target: HTMLElement) {
     if (!source || !target) return
     this.isSyncing = true
@@ -71,7 +81,6 @@ class Scroller {
   }
 
   scrollOtherTexts(contentUrl: string) {
-    //console.log('scroll other texts', contentUrl)
     if (!this.syncMaps[contentUrl] || !this.texts[contentUrl]) return
     const text = this.texts[contentUrl]
     const scrollTop = text.scrollTop
@@ -110,6 +119,7 @@ class Scroller {
       const targetTop = targetRect.top - otherTextRect.top + otherText.scrollTop
       const targetOffset = otherText.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
       otherText.scrollTop = isNearBottom ? scrollTop : targetTop - targetOffset
+
     }
 
     setTimeout(() => this.isSyncing = false, 20)
@@ -120,29 +130,6 @@ class Scroller {
     this.syncScroll(this.texts[url], this.sidebar)
   }
 
-  // Bring a sidebar card into the sync band (between SYNC_SCROLL_THRESHOLD_TOP and _BOTTOM of the
-  // sidebar's height) - the same band handleSidebarScroll uses to pick the focused annotation.
-  // No-op when the card already overlaps the band. Scrolling is instant so callers can read the
-  // card's updated rect right after.
-  scrollSidebarCardIntoSyncBand(card: HTMLElement) {
-    if (!this.sidebar || !card) return
-
-    const sidebarRect = this.sidebar.getBoundingClientRect()
-    const cardRect = card.getBoundingClientRect()
-    const scrollTop = this.sidebar.scrollTop
-
-    const cardTop = cardRect.top - sidebarRect.top + scrollTop
-    const cardBottom = cardTop + cardRect.height
-
-    const bandTop = scrollTop + this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-    const bandBottom = scrollTop + this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_BOTTOM
-
-    if (cardTop < bandBottom && cardBottom > bandTop) return
-
-    this.isSyncing = true
-    this.sidebar.scrollTop = cardTop - this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-    setTimeout(() => this.isSyncing = false, 20)
-  }
 
   handleSidebarScroll() {
     if (this.isSyncing || !this.sidebar) return
@@ -154,7 +141,7 @@ class Scroller {
       .filter(item => item.filtered)
     // TODO: Ther problem here is that tooltip annotations appear also as filtered=true, we need to handle them better
 
-    const entry = mapEntries.find(entry => {
+    const bandEntry = mapEntries.find(entry => {
       const card = this.sidebar.querySelector(`[data-annotation="${entry.annotation.id}"]`) as HTMLElement
       if (!card) return false
       const top = parseInt(card.style.top)
@@ -162,9 +149,11 @@ class Scroller {
       return refY >= top && refY < bottom
     })
 
-    if (!entry || entry.annotation.id === this.focusedAnnotationId) return
+    if (!bandEntry || bandEntry.annotation.id === this.focusedAnnotationId) return
 
-    this.focusedAnnotationId = entry.annotation.id
+    this.focusedAnnotationId = bandEntry.annotation.id
+
+    const entry = bandEntry
     this.isSyncing = true
     const targetElement = entry.target[0]
     if (targetElement) {
@@ -184,7 +173,7 @@ class Scroller {
     if (this.isSyncing) return
     const contentUrl = (e.target as HTMLElement).getAttribute('data-content-url')
     this.scrollOtherTexts(contentUrl)
-    this.syncScroll(this.texts[contentUrl], this.sidebar)
+    if (this.originSelection === 'text')  this.syncScroll(this.texts[contentUrl], this.sidebar)
   }
 
   startSidebar() {
@@ -207,11 +196,7 @@ class Scroller {
     const text = this.texts[contentUrl]
     if (!text) return
 
-    this.isSyncing = true
     text.scrollTo({ top: text.scrollTop + delta, behavior: 'smooth' })
-    setTimeout(() => {
-      this.isSyncing = false
-    }, 600)
   }
 }
 
