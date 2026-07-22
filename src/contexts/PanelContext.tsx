@@ -229,7 +229,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         try {
           const page = await getAnnotationPage(item.annotationCollection)
           const annotations = page.items ?? []
-          console.log('annotations', annotations)
           const witnesses = page.partOf.refs ?? []
 
           if (witnesses.length > 0) {
@@ -240,9 +239,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
           setAnnotations(annotations)
           if (config.selectedAnnotationId) {
+            getScroller().setOriginSelection('config')
             updatePanel({ selectedAnnotation: {
               annotation: annotations.find(a => a.id === config.selectedAnnotationId) ?? null,
-              origin: 'other'
+              origin: 'config'
             },
             showSidebar: true
             })          }
