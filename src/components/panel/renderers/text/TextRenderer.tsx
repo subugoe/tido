@@ -18,7 +18,6 @@ interface Props {
 const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const { showContentTypeToggle } = useConfig()
   const {
-    panelState,
     updatePanel,
     annotationsMode,
     updateMatchedAnnotationsMap
@@ -38,9 +37,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   }
 
   function onSelect() {
-    if (!panelState.showSidebar) {
-      updatePanel({ showSidebar: true })
-    }
+    updatePanel({ showSidebar: true })
   }
 
   useEffect(() => {
