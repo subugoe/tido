@@ -4,6 +4,7 @@ import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { SelectedAnnotation } from '@/types'
+import { getSource } from '@/utils/annotations.ts'
 
 const ANNOTATION_GAP = 5
 
@@ -122,7 +123,12 @@ const AlignAnnotationsList: FC = () => {
 
     // Set the desiredY according to current target clean positions (clean = actual position in the text + scrolled distance)
     for (let i = 0; i < elements.length; i++) {
-      const scrollParent = elements[0].target.closest('[data-text-container]')
+      // a target of an annotation may lie in different panel views, i.e when 2 panel view are opened and target lies in 2 pane
+      // we should be able to locate the textContainer in the 2nd pane
+      const contentUrl = getSource(elements[i].annotation.target[0]).id
+      const scrollParent = document.getElementById(panelId).querySelector(`[data-content-url="${contentUrl}"]`) as HTMLElement
+      if (!scrollParent) continue
+
       const parentRect = scrollParent.getBoundingClientRect()
       const el = elements[i].target
       const elRect = el.getBoundingClientRect()
