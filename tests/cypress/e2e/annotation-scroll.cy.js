@@ -44,6 +44,13 @@ describe('Annotation scrolling and alignment', () => {
   const shirtTargetSelector = '#dipl-shirt'
   const shirtCard = cardFor('annotation-diplomatic-1', 'page2')
 
+  // "Lazarus" sits near the end of Chapter 2's transcription, so a panel that opens with this
+  // annotation already selected has to scroll both the sidebar and the text to reach it.
+  const lazarusTargetSelector = '#lazarus'
+  const lazarusAnnotationId = `${apiUrl}/example/book2/page2/rev1/annotation-24`
+  const lazarusCard = cardFor('annotation-24', 'page2')
+  const preselectedLazarusConfig = `&panels[0].selectedAnnotationId=${lazarusAnnotationId}`
+
   // Halfway down Chapter 1's diplomatic text, far enough from both ends that the view can scroll
   // the target to wherever the card sits.
   const diplomaticMiddleTargetSelector = '#dipl-crowds'
@@ -323,5 +330,36 @@ describe('Annotation scrolling and alignment', () => {
     cy.get(selectors.textContainer).eq(1).its('0.scrollTop').should('be.greaterThan', 0)
 
     expectCardAlignedWithTarget(diplomaticMiddleCard, diplomaticMiddleTargetSelector, 0)
+  })
+
+  it('Should open with the configured annotation already selected, scrolled to and aligned', () => {
+    // selectedAnnotationId opens the sidebar on its own, so nothing here clicks anything.
+    visitItem(chapter2, twoTextViewsConfig + preselectedLazarusConfig)
+    waitForSidebar()
+
+    // 1. The sidebar scrolled down the list to the card instead of staying at the top.
+    cy.get(selectors.sidebarScroll).should(($sidebar) => {
+      const sidebar = $sidebar[0]
+      const cardEl = sidebar.querySelector(lazarusCard)
+      const cardOffsetTop = cardEl.getBoundingClientRect().top - sidebar.getBoundingClientRect().top + sidebar.scrollTop
+
+      expect(sidebar.scrollTop, 'sidebar scrollTop reached the card').to.be.greaterThan(0)
+      expect(sidebar.scrollTop, 'sidebar scrollTop sits within a viewport of the card')
+        .to.be.closeTo(cardOffsetTop, sidebar.clientHeight)
+    })
+
+    // 2. The card is the selected one.
+    cy.get(lazarusCard).should('have.attr', 'data-selected', 'true')
+      .wait(100)
+
+    // 3. The transcription - the view the target lives in - scrolled down to it.
+    cy.get(selectors.textContainer).eq(0).its('0.scrollTop').should('be.greaterThan', 0)
+
+    // 4. The target itself is marked as selected in the text.
+    cy.get(selectors.textContainer).eq(0).find(lazarusTargetSelector)
+      .should('have.attr', 'data-annotation-selected', 'true')
+
+    // 5. Card and target sit on exactly the same y position.
+    expectCardAlignedWithTarget(lazarusCard, lazarusTargetSelector, 0)
   })
 })
