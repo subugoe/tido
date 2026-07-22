@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example/annotations/annotationCollection/book2-page1.json",
     "label": "Annotations for Moby-Dick, Chapter 1",
-    "total": 44
+    "total": 46
   },
   "next": null,
   "prev": null,
@@ -845,6 +845,48 @@
           "selector": {
             "type": "CssSelector",
             "value": "#dipl-driving"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-diplomatic-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The cancelled reading \"walking towards the sea\" is still legible beneath the revision.",
+        "format": "text/plain",
+        "annotationType": "Authorial Revision"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-crowds"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-diplomatic-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Written in a smaller hand crowded against the foot of the leaf, suggesting the sentence was added late.",
+        "format": "text/plain",
+        "annotationType": "Scribal Hand"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-phantom"
           },
           "format": "text/html",
           "language": "eng"
