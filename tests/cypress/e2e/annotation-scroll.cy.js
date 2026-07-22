@@ -26,6 +26,21 @@ describe('Annotation scrolling and alignment', () => {
   const thirdTargetSelector = '#meditation-water'
   const thirdCard = cardFor('annotation-28')
 
+  // "never mind how long precisely" is spelled out as its own target in the diplomatic text only,
+  // so clicking it is only possible in a view showing that content type.
+  const diplomaticTargetSelector = '#dipl-precisely'
+  const diplomaticCard = cardFor('annotation-diplomatic-1')
+
+  // Two text views side by side: the transcription on the left and the diplomatic text on the
+  // right, the same pairing the example config ships.
+  const twoTextViews = [
+    { label: 'Text', view: 'text', activeContentType: 'transcription', contentTypes: ['diplomatic', 'transcription', 'translation'] },
+    { label: 'Text', view: 'text', activeContentType: 'diplomatic', contentTypes: ['diplomatic', 'transcription', 'translation', 'normalized'] },
+  ]
+  const twoTextViewsConfig = twoTextViews
+    .map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`)
+    .join('')
+
   const selectors = {
     panel: '[data-cy="panel"]',
     sidebarContainer: '[data-sidebar-container]',
@@ -135,13 +150,16 @@ describe('Annotation scrolling and alignment', () => {
       .wait(100)
   }
 
-  beforeEach(() => {
-    cy.visit('/e2e.html?' + config)
+  // Loads the item. Tests needing a different panel layout pass their own config on top.
+  const visitItem = (extraConfig = '') => {
+    cy.visit('/e2e.html?' + config + extraConfig)
     cy.get('[data-cy="item-label"]').contains('Moby-Dick, Chapter 1 - Loomings')
     cy.get(selectors.textContainer).find(targetSelector).should('exist')
-  })
+  }
 
   it('Should click a target and open the sidebar + align the annotation with its target', () => {
+    visitItem()
+
     selectFirstAnnotationInText()
 
     expectSidebarToFollowText()
@@ -149,6 +167,8 @@ describe('Annotation scrolling and alignment', () => {
   })
 
   it('Should scroll the text to the target when the annotation is selected in the sidebar', () => {
+    visitItem()
+
     // Open the sidebar without touching the text, so the target is still off screen.
     cy.get(selectors.sidebarToggle).click()
     waitForSidebar()
@@ -188,6 +208,8 @@ describe('Annotation scrolling and alignment', () => {
   })
 
   it('Should follow a second target clicked further down the text', () => {
+    visitItem()
+
     // Start from the end state of the first test: sidebar open, "watery part of the world"
     // selected and aligned in the middle of the panel.
     selectFirstAnnotationInText()
@@ -216,5 +238,32 @@ describe('Annotation scrolling and alignment', () => {
 
     expectSidebarToFollowText()
     expectCardAlignedWithTarget(thirdCard, thirdTargetSelector, 0)
+  })
+
+  it('Should scroll the sidebar back to the annotation when a target in the second text view is clicked', () => {
+    visitItem(twoTextViewsConfig)
+
+    cy.get(selectors.textContainer).should('have.length', 2)
+    cy.get(selectors.textContainer).eq(1).find(diplomaticTargetSelector).should('exist')
+
+    cy.get(selectors.sidebarToggle).click()
+    waitForSidebar()
+
+    // Park the sidebar at the very bottom, far away from where the diplomatic annotation sits.
+    cy.get(selectors.sidebarScroll).scrollTo('bottom', { duration: 1000 })
+    cy.get(selectors.sidebarScroll).its('0.scrollTop').should('be.greaterThan', 0)
+      .as('sidebarScrollTopAtBottom')
+
+    cy.get(selectors.textContainer).eq(1).find(diplomaticTargetSelector).click({ scrollBehavior: false })
+
+    cy.get(diplomaticCard).should('have.attr', 'data-selected', 'true')
+      .wait(100)
+
+    // The sidebar has to leave the bottom to bring the card back into view.
+    cy.get('@sidebarScrollTopAtBottom').then((scrollTopAtBottom) => {
+      cy.get(selectors.sidebarScroll).its('0.scrollTop').should('be.lessThan', scrollTopAtBottom)
+    })
+
+    expectCardAlignedWithTarget(diplomaticCard, diplomaticTargetSelector, 0)
   })
 })
