@@ -3,7 +3,6 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
-import { SelectedAnnotation } from '@/types'
 import { getSource } from '@/utils/annotations.ts'
 
 const ANNOTATION_GAP = 5
@@ -21,6 +20,13 @@ const AlignAnnotationsList: FC = () => {
   const [loading, setLoading] = useState(false)
   const [toggledAnnotation, setToggledAnnotation] = useState(null)
 
+  // The cards are absolutely positioned, so the list only gains height once every top value has been
+  // committed. Until then there is nothing to scroll and scrollIntoViewIfNeeded would clamp to 0,
+  // leaving the card at the very top of the sidebar however far down the list it really belongs.
+  // Selections that arrive before that (i.e through config selectedAnnotationId) wait for this to flip;
+  // once sidebar is scrollable, then we can scroll to the selectedAnnotation
+  const [isSidebarScrollable, setIsSidebarScrollable] = useState(false)
+
   const ref = useRef(null)
   const isFirstMount = useRef(true)
 
@@ -28,63 +34,50 @@ const AlignAnnotationsList: FC = () => {
     return clickedEl.closest('[data-annotation]')
   }
 
-  // Lines the text up with the card of the selected annotation. The card has to be standing still
-  // before we can measure it, so when the sidebar first has to scroll the card into view we defer
-  // the text scroll until that scroll has ended.
-  function alignTextToAnnotation(panelEl: HTMLElement, selectedAnnotation: SelectedAnnotation, signal: AbortSignal) {
-    const { annotation, origin } = selectedAnnotation
-    const scroller = getScroller()
-    const sidebar = scroller.getSidebar()
+  // The card in the sidebar and the target in whichever text view holds it. Null when either is
+  // missing - the view showing that content type may not be open, or the card may be filtered out.
+  function getAlignmentPair(panelEl: HTMLElement, annotation: Annotation) {
     const target = annotation.target[0]
-    const targetSourceUrl = typeof target.source === 'string' ? target.source : target.source.id
-    const textScrollContainer = scroller.getText(targetSourceUrl)
-    if (!sidebar || !textScrollContainer) return
+    const targetSourceUrl = getSource(target).id
+    const textScrollContainer = getScroller().getText(targetSourceUrl)
+    if (!textScrollContainer) return null
 
     const targetEl = textScrollContainer.querySelector((target.selector as CssSelector).value) as HTMLElement
     const annotationEl = panelEl.querySelector(`[data-annotation="${annotation.id}"]`) as HTMLElement
-    if (!targetEl || !annotationEl) return
+    if (!targetEl || !annotationEl) return null
 
-    // The sidebar does not move along with the text, so once it has settled the card's top is a
-    // fixed reference: scrolling the text by the distance between the two puts the target exactly
-    // on the card in a single scroll.
-    function scrollTextToCard() {
-      const delta = targetEl.getBoundingClientRect().top - annotationEl.getBoundingClientRect().top
-      scroller.scrollText(targetSourceUrl, delta)
-    }
+    return { targetEl, annotationEl, targetSourceUrl }
+  }
 
-    // A selection made in the sidebar itself needs no sidebar scroll: the card is where the user
-    // just clicked, so the text can be aligned to it straight away.
-    if (origin === 'annotation') {
-      scrollTextToCard()
-      return
-    }
+
+  function alignTextToAnnotation(panelEl: HTMLElement, annotation: Annotation) {
+    const pair = getAlignmentPair(panelEl, annotation)
+    if (!pair) return
+
+    const delta = pair.targetEl.getBoundingClientRect().top - pair.annotationEl.getBoundingClientRect().top
+    getScroller().scrollText(pair.targetSourceUrl, delta)
+  }
+
+  // Brings the card into the sidebar viewport, then lines the text up with it. Only call this once
+  // the sidebar is scrollable - see isSidebarScrollable above.
+  function scrollSidebarToAnnotation(panelEl: HTMLElement, annotation: Annotation, signal: AbortSignal) {
+    const sidebar = getScroller().getSidebar()
+    const pair = getAlignmentPair(panelEl, annotation)
+    if (!sidebar || !pair) return
 
     // Returns the scrollTop the sidebar settles at. Getting the current one back means the card was
-    // already in view and no scroll was started, so there is no scrollend to wait for.
-    const settledScrollTop = scrollIntoViewIfNeeded(annotationEl, sidebar)
-    if (settledScrollTop === sidebar.scrollTop) scrollTextToCard()
-    else sidebar.addEventListener('scrollend', scrollTextToCard, { once: true, signal })
+    // already in view and no scroll was started, so there is no scrollend to wait for and the card
+    // is already standing still.
+    const settledScrollTop = scrollIntoViewIfNeeded(pair.annotationEl, sidebar)
+    // we align text once the sidebar scroll to the selectedAnnotation has finished
+    if (settledScrollTop === sidebar.scrollTop) alignTextToAnnotation(panelEl, annotation)
+    else sidebar.addEventListener('scrollend', () => alignTextToAnnotation(panelEl, annotation), { once: true, signal })
   }
 
   useEffect(() => {
     const panelEl = document.getElementById(panelId) as HTMLElement
     const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
-
-    if (!selectedAnnotation) return
     const controller = new AbortController()
-    const scroller = getScroller()
-    if (selectedAnnotation.origin === 'text') {
-      // we do not sync sidebar to text here, since the annotations are not rendered, the sidebar is not yet scrollable
-      // and the scrollTop would become 0
-      trackTopChange()
-    } else {
-      // Cases: 1) select an annotation directly 2) external selection of annotation i.e due to cross ref link
-      // text will align to selectedAnnotation, so it will programmatically scroll.
-      // we do not want to scroll sidebar due to a programmatic scroll of textContainer
-      // set "isSyncing" to true to prevent this
-      scroller.setIsSyncing(true)
-      alignTextToAnnotation(panelEl, selectedAnnotation, controller.signal)
-    }
 
     async function deselectAnnotationOnOutsideClick(event: MouseEvent) {
       // if we click at an annotation - we return false
@@ -98,9 +91,48 @@ const AlignAnnotationsList: FC = () => {
     return () => controller.abort()
   }, [selectedAnnotation])
 
+  // Re-runs when a selection is made and again when the sidebar first becomes scrollable, which is
+  // what a selection arriving before the cards were positioned is waiting for.
+  useEffect(() => {
+    const panelEl = document.getElementById(panelId) as HTMLElement
+
+    if (!selectedAnnotation) return
+    const controller = new AbortController()
+    const scroller = getScroller()
+
+    if (selectedAnnotation.origin === 'annotation') {
+      scroller.setIsSyncing(true)
+      alignTextToAnnotation(panelEl, selectedAnnotation.annotation)
+      return
+    }
+
+    if (selectedAnnotation.origin === 'text') {
+      // we do not sync sidebar to text here, since the annotations are not rendered, the sidebar is not yet scrollable
+      // and the scrollTop would become 0
+      trackTopChange()
+      return
+    }
+
+    // Everything else - cross ref, bookmarking, a selectedAnnotationId in the config - has to scroll
+    // the sidebar to the annotation first. Computing the positions is what makes that possible, and this
+    // effect runs again once they are in.
+    if (!isSidebarScrollable) {
+      trackTopChange()
+      return
+    }
+
+    scroller.setIsSyncing(true)
+    scrollSidebarToAnnotation(panelEl, selectedAnnotation.annotation, controller.signal)
+
+    return () => controller.abort()
+  }, [selectedAnnotation, isSidebarScrollable])
+
   // Runs after yMap is committed - i.e. once the annotations are positioned and the sidebar has its
   // full scrollable height. Only then is it safe to sync the sidebar scroll to the text.
   useEffect(() => {
+    const sidebar = getScroller().getSidebar()
+    if (sidebar) setIsSidebarScrollable(sidebar.scrollHeight > sidebar.clientHeight)
+
     if (getScroller().getOriginSelection() !== 'text') return
     if (!selectedAnnotation?.contentUrl) return
     getScroller().syncSidebarToText(selectedAnnotation.contentUrl)

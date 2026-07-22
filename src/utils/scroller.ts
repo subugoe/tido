@@ -31,7 +31,7 @@ class Scroller {
   private sidebar: HTMLElement | null = null
   private texts: {[contentUrl: string]: HTMLElement} = {}
   private isSyncing = false
-  private originSelection: 'text' | 'annotation' = 'text'
+  private originSelection: 'text' | 'annotation' | 'config' = 'text'
   private focusedAnnotationId: string | null = null
   private matchedMap: {[contentUrl: string]: MatchedAnnotationsMap} = {}
   private syncMaps: {[contentUrl: string]: SyncMap} = {}
@@ -72,7 +72,7 @@ class Scroller {
     this.isSyncing = value
   }
 
-  setOriginSelection(value: 'text' | 'annotation') {
+  setOriginSelection(value: 'text' | 'annotation' | 'config') {
     this.originSelection = value
   }
 

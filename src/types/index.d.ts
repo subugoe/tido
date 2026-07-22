@@ -310,10 +310,11 @@ export interface TidoContentStatePanelState {
   annotation?: string
 }
 
-// "other" refers to origin in [bookmarking, config]
+// "config" refers to a selectedAnnotationId given in the config, "bookmarking" to a selection
+// restored from a bookmarked state, "cross-ref" to following a cross reference inside an annotation
 export interface SelectedAnnotation {
   annotation: Annotation,
-  origin: 'text' | 'annotation' | 'other',
+  origin: 'text' | 'annotation' | 'bookmarking' | 'config' | 'cross-ref',
   contentUrl?: string
 }
 
