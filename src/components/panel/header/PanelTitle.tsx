@@ -51,7 +51,7 @@ const PanelTitle: FC = () => {
     if (!item) return
 
     setShowItemDropdown(false)
-    await init({ ...panelState.config, manifest: targetManifest.id, item: item.id })
+    await init({ ...panelState.config, manifest: targetManifest.id, item: item.id, selectedAnnotationId: null })
   }, [selectedManifest, panelState, init])
 
   const onItemDropdownClose = useCallback(() => {
