@@ -5,12 +5,327 @@
   "partOf": {
     "id": "http://localhost:8181/example/annotations/annotationCollection/book2-page1.json",
     "label": "Annotations for Moby-Dick, Chapter 1",
-    "total": 9
+    "total": 46
   },
   "next": null,
   "prev": null,
   "startIndex": 0,
   "items": [
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The novel opens in the voice of a dead schoolmaster, distancing the reader from the story before it has even begun.",
+        "format": "text/plain",
+        "annotationType": "Narrative Frame"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#usher"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-5",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Dust and death are introduced in the very first paragraph, long before the first whale.",
+        "format": "text/plain",
+        "annotationType": "Theme"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#mortality"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-6",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Richard Hakluyt (c. 1553-1616), compiler of English voyage narratives. Melville spells the name as it appeared in his source.",
+        "format": "text/plain",
+        "annotationType": "Source"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#hackluyt"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-7",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Melville quotes Webster's 1828 dictionary, which derives the word from a root meaning to roll or vault.",
+        "format": "text/plain",
+        "annotationType": "Lexicography"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#webster"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-8",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Richardson's dictionary offers a competing Dutch and German etymology, deliberately placed next to Webster's.",
+        "format": "text/plain",
+        "annotationType": "Lexicography"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#richardson"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-9",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The Fegee (Fijian) term for whale. The reduplication marks emphasis, roughly \"the very big fish\".",
+        "format": "text/plain",
+        "annotationType": "Philology"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#pekee"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-10",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A second fictional compiler. The Extracts are presented as scholarship gathered by a pitiable underling.",
+        "format": "text/plain",
+        "annotationType": "Narrative Frame"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#sub-sub"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-11",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Melville warns the reader in advance not to mistake the Extracts for reliable cetology.",
+        "format": "text/plain",
+        "annotationType": "Authorial Aside"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#higgledy"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-12",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Genesis 1:21. The whale enters the book through scripture, on the fifth day of creation.",
+        "format": "text/plain",
+        "annotationType": "Biblical Reference"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#genesis"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-13",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Job 41. Leviathan is the recurring biblical name for the whale throughout the novel.",
+        "format": "text/plain",
+        "annotationType": "Biblical Reference"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#leviathan"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-14",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Jonah 1:17. The Jonah story returns in full in Father Mapple’s sermon in Chapter 9.",
+        "format": "text/plain",
+        "annotationType": "Biblical Reference"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#jonah"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-15",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Isaiah 27:1. Leviathan here is an adversary to be slain, foreshadowing Ahab’s hunt.",
+        "format": "text/plain",
+        "annotationType": "Biblical Reference"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#piercing-serpent"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-16",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Sir William Davenant (1606-1668), from the preface to Gondibert.",
+        "format": "text/plain",
+        "annotationType": "Source"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#davenant"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-17",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "John Hunter, 18th-century surgeon and anatomist. Melville mixes scripture with dissection reports.",
+        "format": "text/plain",
+        "annotationType": "Natural History"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#blood"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-18",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Georges Cuvier classified the whale as a mammal, a point the narrator later disputes at length.",
+        "format": "text/plain",
+        "annotationType": "Natural History"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#cuvier"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
     {
       "id": "http://localhost:8181/example/book2/page1/rev1/annotation-1",
       "type": "Annotation",
@@ -26,6 +341,27 @@
           "selector": {
             "type": "CssSelector",
             "value": "#ishmael"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-19",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A deliberately vague phrase. The narrator names no destination, only an element.",
+        "format": "text/plain",
+        "annotationType": "Style"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#watery-part"
           },
           "format": "text/html",
           "language": "eng"
@@ -54,6 +390,69 @@
       ]
     },
     {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-20",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The soul is given a season and a weather. One of the most quoted images in the novel.",
+        "format": "text/plain",
+        "annotationType": "Metaphor"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#november"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-21",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Short for hypochondria, used in the 19th century for low spirits rather than imagined illness.",
+        "format": "text/plain",
+        "annotationType": "Vocabulary"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#hypos"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-22",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Cato the Younger killed himself with his sword after Caesar’s victory. Going to sea is offered as the milder alternative.",
+        "format": "text/plain",
+        "annotationType": "Classical Allusion"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#cato"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
       "id": "http://localhost:8181/example/book2/page1/rev1/annotation-3",
       "type": "Annotation",
       "body": {
@@ -68,6 +467,342 @@
           "selector": {
             "type": "CssSelector",
             "value": "#ocean"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-23",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "An archaic name for Manhattan, chosen for its Indigenous root rather than its commercial present.",
+        "format": "text/plain",
+        "annotationType": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manhattoes"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-24",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The southern tip of Manhattan, then a popular waterfront promenade.",
+        "format": "text/plain",
+        "annotationType": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#battery"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-25",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A walk along the East River waterfront, from the Lower East Side down to the harbour.",
+        "format": "text/plain",
+        "annotationType": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#corlears"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-26",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Clerks and shopmen, drawn to the water on their one free day. The list of verbs binds them to their furniture.",
+        "format": "text/plain",
+        "annotationType": "Social Observation"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#landsmen"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-27",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Magnetism recurs throughout the novel, most notably when Ahab remagnetises the ship’s needles in Chapter 124.",
+        "format": "text/plain",
+        "annotationType": "Imagery"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#compass-needles"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-28",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The chapter’s central claim: water draws thought, and thought draws men to water.",
+        "format": "text/plain",
+        "annotationType": "Theme"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#meditation-water"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-29",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The Narcissus myth is made the key to the whole book: what men seek in the sea is their own ungraspable image.",
+        "format": "text/plain",
+        "annotationType": "Classical Allusion"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#narcissus"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-30",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Named by Melville himself as \"the key to it all\", and the interpretive hinge of the chapter.",
+        "format": "text/plain",
+        "annotationType": "Theme"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#phantom-of-life"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-31",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The narrator defines himself by refusal: not a passenger, not a Commodore, not a Captain, not a Cook.",
+        "format": "text/plain",
+        "annotationType": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#passenger"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-32",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The crew’s quarters in the bow, the least comfortable and lowest-status berth on the ship.",
+        "format": "text/plain",
+        "annotationType": "Nautical Term"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#forecastle"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-33",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Written in 1851, ten years before the American Civil War. The question is left pointedly unanswered.",
+        "format": "text/plain",
+        "annotationType": "Social Commentary"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#who-aint-a-slave"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-34",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Melville’s comic formulation of a levelling cosmic justice: everyone is knocked about equally.",
+        "format": "text/plain",
+        "annotationType": "Philosophy"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#universal-thump"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-35",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A joke: the Pythagorean prohibition on eating beans, and so on the wind that follows.",
+        "format": "text/plain",
+        "annotationType": "Allusion"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#pythagorean"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-36",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The whale is named as the true motive only at the end of the chapter, after all the practical reasons are exhausted.",
+        "format": "text/plain",
+        "annotationType": "Foreshadowing"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#great-whale"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-37",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The narrator’s restlessness is presented as a temperament, not a decision.",
+        "format": "text/plain",
+        "annotationType": "Character"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#things-remote"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-38",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The closing image of the chapter: Moby Dick appears first as a dream, white and shrouded, before he is ever named.",
+        "format": "text/plain",
+        "annotationType": "Foreshadowing"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#hooded-phantom"
           },
           "format": "text/html",
           "language": "eng"
@@ -110,6 +845,48 @@
           "selector": {
             "type": "CssSelector",
             "value": "#dipl-driving"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-diplomatic-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The cancelled reading \"walking towards the sea\" is still legible beneath the revision.",
+        "format": "text/plain",
+        "annotationType": "Authorial Revision"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-crowds"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page1/rev1/annotation-diplomatic-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Written in a smaller hand crowded against the foot of the leaf, suggesting the sentence was added late.",
+        "format": "text/plain",
+        "annotationType": "Scribal Hand"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page1_diplomatic.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-phantom"
           },
           "format": "text/html",
           "language": "eng"

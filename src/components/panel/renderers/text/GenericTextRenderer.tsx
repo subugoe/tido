@@ -87,7 +87,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     annotations,
     syncedTargets,
     addSyncedTargets,
-    panelState
+    panelState,
+    getScroller
   } = usePanel()
 
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
@@ -641,6 +642,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     // This is the deepest annotation target under the click — process it and prevent
     // ancestors from also reacting.
     e.stopPropagation()
+
+    getScroller().setOriginSelection('text')
 
     // Resolve the targets the clicked element is synced with on demand, using the clicked target's
     // sync annotations recorded in targetsSyncMapRef (read via ref to avoid stale closure state).

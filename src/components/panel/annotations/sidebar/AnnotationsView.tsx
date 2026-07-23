@@ -14,7 +14,7 @@ interface ContainerProps {
 }
 
 const Container = forwardRef<HTMLDivElement, ContainerProps>(({ children }, ref) => {
-  return <div ref={ref} className="relative flex-1 overflow-y-auto px-3 bg-muted">
+  return <div ref={ref} data-sidebar-scroll-container className="relative flex-1 overflow-y-auto px-3 bg-muted">
     { children }
   </div>
 })

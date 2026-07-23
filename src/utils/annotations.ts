@@ -144,7 +144,7 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
     item: source.item,
     textType: isCrossRefInAnnotation ? 'annotation': 'text',
     contentType: refContentType,
-    ...(isCrossRefInAnnotation && { selectedAnnotation: { annotation: refAnnotation, origin: 'other' } }),
+    ...(isCrossRefInAnnotation && { selectedAnnotation: { annotation: refAnnotation, origin: 'cross-ref' } }),
     ...(!isCrossRefInAnnotation && { selector: annotation.body.selector?.value }),
     refItemData
   }

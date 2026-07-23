@@ -239,9 +239,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
           setAnnotations(annotations)
           if (config.selectedAnnotationId) {
+            getScroller().setOriginSelection('config')
             updatePanel({ selectedAnnotation: {
               annotation: annotations.find(a => a.id === config.selectedAnnotationId) ?? null,
-              origin: 'other'
+              origin: 'config'
             },
             showSidebar: true
             })          }
@@ -335,7 +336,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       })
 
       setAnnotationFilters(filterNodesWithSelection)
-      setSelectedAnnotationTypes(getSelectedTypes(annotationsConfig.filters))
+      const selectedTypes = getSelectedTypes(annotationsConfig.filters)
+      setSelectedAnnotationTypes(selectedTypes)
     }
   }, [])
 
@@ -346,6 +348,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   useEffect(() => {
     getScroller().setSyncMaps(syncMaps)
   }, [syncMaps])
+
 
   useEffect(() => {
     getScroller().setMatchedMap(matchedAnnotationsMaps)

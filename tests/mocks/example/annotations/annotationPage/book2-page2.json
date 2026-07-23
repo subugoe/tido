@@ -5,12 +5,75 @@
   "partOf": {
     "id": "http://localhost:8181/example/annotations/annotationCollection/book2-page2.json",
     "label": "Annotations for Moby-Dick, Chapter 2",
-    "total": 4
+    "total": 30
   },
   "next": null,
   "prev": null,
   "startIndex": 0,
   "items": [
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A soft travelling bag made from carpet fabric, cheap and common for sailors in the 1840s.",
+        "format": "text/plain",
+        "annotationType": "Lexicography"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#carpet-bag"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The southern tip of South America, the standard and much dreaded route into the Pacific.",
+        "format": "text/plain",
+        "annotationType": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#cape-horn"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-5",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Melville's archaic form for Manhattan, echoing the Dutch settlement name.",
+        "format": "text/plain",
+        "annotationType": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#manhatto"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
     {
       "id": "http://localhost:8181/example/book2/page2/rev1/annotation-1",
       "type": "Annotation",
@@ -33,6 +96,27 @@
       ]
     },
     {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-6",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The date fixes the delay that strands Ishmael ashore and sets the chapter in motion.",
+        "format": "text/plain",
+        "annotationType": "Narrative Frame"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#saturday-night"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
       "id": "http://localhost:8181/example/book2/page2/rev1/annotation-2",
       "type": "Annotation",
       "body": {
@@ -47,6 +131,468 @@
           "selector": {
             "type": "CssSelector",
             "value": "#nantucket"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-7",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Ishmael's insistence on a Nantucket ship is the first sign of his romanticism about the trade.",
+        "format": "text/plain",
+        "annotationType": "Theme"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#nantucket-craft"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-8",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Nantucket as Tyre and New Bedford as Carthage: the older port founds the richer one.",
+        "format": "text/plain",
+        "annotationType": "Source"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#tyre-carthage"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-9",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The Wampanoag were the first shore whalers of the region, a debt the industry rarely acknowledged.",
+        "format": "text/plain",
+        "annotationType": "Historical Note"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#red-men"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-10",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Ishmael addressing himself by name is a habit that returns whenever he is broke or afraid.",
+        "format": "text/plain",
+        "annotationType": "Narrative Frame"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ishmael-self"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-11",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The first of three inns Ishmael passes, each named for a stage of the hunt.",
+        "format": "text/plain",
+        "annotationType": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#crossed-harpoons"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-12",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The second inn, warm enough to melt the snow in front of it and so beyond his purse.",
+        "format": "text/plain",
+        "annotationType": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#sword-fish-inn"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-13",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Poverty is measured throughout the chapter in the state of Ishmael's footwear.",
+        "format": "text/plain",
+        "annotationType": "Theme"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#patched-boots"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-14",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The stumble over the ashes prepares the Gomorrah joke in the next clause.",
+        "format": "text/plain",
+        "annotationType": "Literary Significance"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ash-box"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-15",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Genesis 19: the city destroyed by fire, invoked for a porch full of cinders.",
+        "format": "text/plain",
+        "annotationType": "Biblical Allusion"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#gomorrah"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-16",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Tophet and the Black Parliament turn a wrong door into a vision of judgement.",
+        "format": "text/plain",
+        "annotationType": "Literary Significance"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#black-parliament"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-17",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The pun on \"The Trap\" closes the sequence of misread inn signs.",
+        "format": "text/plain",
+        "annotationType": "Theme"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#wretched-entertainment"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-18",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The inn that will carry the rest of the chapter, and where Queequeg is waiting.",
+        "format": "text/plain",
+        "annotationType": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#spouter-inn"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-19",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Coffin is a real Nantucket surname, which does not stop it reading as an omen.",
+        "format": "text/plain",
+        "annotationType": "Foreshadowing"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#coffin-name"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-20",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The creaking sign is the first of the chapter's many wind-driven noises.",
+        "format": "text/plain",
+        "annotationType": "Narrative Frame"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#swinging-sign"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-21",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Acts 27:14, the storm wind that wrecks Paul's ship; Melville makes it a New England gale.",
+        "format": "text/plain",
+        "annotationType": "Source"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#euroclydon"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-22",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The black-letter quotation is Melville's invention, attributed to a book only he owns.",
+        "format": "text/plain",
+        "annotationType": "Source"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#glass-window"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-23",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The body as a badly built house is a figure the chapter keeps returning to.",
+        "format": "text/plain",
+        "annotationType": "Theme"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#lint-here"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-24",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Luke 16: the beggar at the rich man's gate, here freezing on a New Bedford curbstone.",
+        "format": "text/plain",
+        "annotationType": "Biblical Allusion"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#lazarus"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-25",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The rich man of the same parable, given a red wrapper and a colder one to come.",
+        "format": "text/plain",
+        "annotationType": "Biblical Allusion"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dives"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-26",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Named for its heat, as far from a December curbstone as Ishmael can imagine.",
+        "format": "text/plain",
+        "annotationType": "Place"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#sumatra"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-27",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The iceberg moored off the Moluccas is the chapter's sharpest image of things out of place.",
+        "format": "text/plain",
+        "annotationType": "Literary Significance"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#iceberg"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/book2/page2/rev1/annotation-28",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The closing line hands the reader over to the next chapter.",
+        "format": "text/plain",
+        "annotationType": "Narrative Frame"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book2-page2_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#spouter-place"
           },
           "format": "text/html",
           "language": "eng"
