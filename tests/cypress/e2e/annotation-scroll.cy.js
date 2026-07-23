@@ -66,8 +66,32 @@ describe('Annotation scrolling and alignment', () => {
     .map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`)
     .join('')
 
+  // Chapter 1 of Pride and Prejudice - the first item of the first manifest of the example
+  // collection, so opening the collection alone lands on it.
+  const prideChapter1 = {
+    label: 'Pride and Prejudice, Chapter 1',
+    ready: '#truth',
+  }
+
+  // The body of Pride and Prejudice's first annotation spells out "most famous opening lines in
+  // English literature" as its own target, and a CrossRef annotation hangs off that span pointing at
+  // the first annotation of Moby-Dick, Chapter 1. Cross references are only recognised as such when
+  // the config names the annotation type carrying them.
+  const crossRefConfig = `annotations.defaultMode=aligned&annotations.crossRefContentType=CrossRef`
+    + `&panels[0].collection=${collection}`
+    + twoTextViewsConfig
+  const crossRefSourceCard = `[data-annotation="${apiUrl}/example/book1/page1/rev1/annotation-1"]`
+  const crossRefSpan = '[id="famous-opening-lines"]'
+
+  // The referenced annotation and its target: "Ishmael" opens Chapter 1 of Moby-Dick, but sits well
+  // below the Etymology and Extracts sections, so reaching it means scrolling both areas.
+  const ishmaelCard = cardFor('annotation-1')
+  const ishmaelTargetSelector = '#ishmael'
+
   const selectors = {
     panel: '[data-cy="panel"]',
+    panelsWrapper: '[data-cy="panels-wrapper"]',
+    popover: '[data-slot="popover-content"]',
     sidebarContainer: '[data-sidebar-container]',
     sidebarLoading: '[data-cy="sidebar-loading"]',
     sidebarScroll: '[data-sidebar-scroll-container]',
@@ -361,5 +385,73 @@ describe('Annotation scrolling and alignment', () => {
 
     // 5. Card and target sit on exactly the same y position.
     expectCardAlignedWithTarget(lazarusCard, lazarusTargetSelector, 0)
+  })
+
+  it('Should open a cross reference from annotation pointing to another annotation in a new panel, scrolledIntoView ' +
+    '+ scroll its target and align it with its annotation', () => {
+    // The collection on its own opens its first manifest and first item: Pride and Prejudice,
+    // Chapter 1.
+    cy.visit(`/e2e.html?${crossRefConfig}`)
+    cy.get('[data-cy="item-label"]').contains(prideChapter1.label)
+    cy.get(selectors.textContainer).eq(0).find(prideChapter1.ready).should('exist')
+
+    cy.get(selectors.sidebarToggle).click()
+    waitForSidebar()
+
+    // The cross reference hangs off a span inside the annotation body in the sidebar, not off a
+    // target in the text - so the click happens on the card.
+    cy.get(crossRefSourceCard).find(crossRefSpan).click()
+
+    // The reference names where it points: the Moby-Dick manifest, item "1".
+    cy.get(selectors.popover).should('be.visible').within(() => {
+      cy.contains('p', 'Reference').should('exist')
+      cy.contains('p', 'Moby-Dick').should('exist')
+      cy.contains('p', '1').should('exist')
+      cy.contains('button', 'Open in this Panel').should('exist')
+      cy.contains('button', 'Open in new Panel').should('exist')
+    })
+
+    // The popover opens directly below the span it belongs to.
+    cy.get(crossRefSourceCard).find(crossRefSpan).then(($span) => {
+      cy.get(selectors.popover).should(($popover) => {
+        expect($popover[0].getBoundingClientRect().top, 'popover opens below the span')
+          .to.be.greaterThan($span[0].getBoundingClientRect().bottom)
+      })
+    })
+
+    cy.get(selectors.popover).contains('button', 'Open in new Panel').click()
+
+    // a. The popover closes and b. the reference is opened next to the panel it was clicked in.
+    cy.get(selectors.popover).should('not.exist')
+    cy.get(selectors.panelsWrapper).find(selectors.panel).should('have.length', 2)
+
+    const secondPanel = () => cy.get(selectors.panel).eq(1)
+
+    // c. The new panel shows the referenced manifest and item.
+    secondPanel().find('[data-cy="manifest-label"]').should('contain.text', 'Moby-Dick')
+    secondPanel().find('[data-cy="item-label"]').should('contain.text', 'Moby-Dick, Chapter 1 - Loomings')
+
+    // d. The sidebar scrolled down the list to the referenced annotation and selected it.
+    secondPanel().find(ishmaelCard).should('have.attr', 'data-selected', 'true')
+
+    // e. The target lives in the transcription, which is the first of the two text views the panel
+    // was opened with. That view scrolled to the target and marks it as selected.
+    secondPanel().find('[data-cy="content-type"]').eq(0).should('contain.text', 'transcription')
+    secondPanel().find(selectors.textContainer).eq(0).find(ishmaelTargetSelector)
+      .should('have.attr', 'data-annotation-selected', 'true')
+
+    // f. Both areas left their top, and card and target sit on exactly the same y position.
+    secondPanel().find(selectors.sidebarScroll).its('0.scrollTop').should('be.greaterThan', 100)
+    secondPanel().find(selectors.textContainer).eq(0).its('0.scrollTop').should('be.greaterThan', 100)
+
+    secondPanel().should(($panel) => {
+      const panel = $panel[0]
+      const targetEl = panel.querySelectorAll(selectors.textContainer)[0].querySelector(ishmaelTargetSelector)
+      const cardEl = panel.querySelector(ishmaelCard)
+      const targetY = yInPanel(targetEl, panel)
+      const cardY = yInPanel(cardEl, panel)
+
+      expect(cardY, `card y ${cardY} vs target y ${targetY}`).to.be.closeTo(targetY, 0)
+    })
   })
 })

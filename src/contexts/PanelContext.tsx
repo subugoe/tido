@@ -337,8 +337,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
       setAnnotationFilters(filterNodesWithSelection)
       const selectedTypes = getSelectedTypes(annotationsConfig.filters)
-      console.log('selectedTypes', selectedTypes)
-      setSelectedAnnotationTypes(getSelectedTypes(annotationsConfig.filters))
+      setSelectedAnnotationTypes(selectedTypes)
     }
   }, [])
 
