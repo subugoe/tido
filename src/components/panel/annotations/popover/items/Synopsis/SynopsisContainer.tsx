@@ -27,9 +27,10 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
     setActiveSyncedTargets({ ...syncTargets, targets: selectedTargets })
   }
 
-  // Whether the panel already has a text view showing the synced content (source.id).
-  function panelShowsSource(panel: PanelState, source: AnnotationTargetSource): boolean {
-    return panel.panelViews.some((view) => {
+  // The index of the panel's text view showing the synced content (source.id), or -1 when the panel
+  // has no view for it. A view found here may still be hidden.
+  function findSyncedTextViewIndex(panel: PanelState, source: AnnotationTargetSource): number {
+    return panel.panelViews.findIndex((view) => {
       if (view.view !== 'text' || !view.activeContentType) return false
       const content = panel.item?.contents.find((c) => c.contentType.includes(view.activeContentType))
       return content?.id === source.id
@@ -69,9 +70,10 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
 
   function openAdditionalPanel(selectedTargets: SyncedTargetRef[]) {
     // Idea
-    // - Case 1 — the source content url (source.id) is already shown in a panel → do nothing.
-    // - Case 2 — the source item is open in another panel (but not this content) → append the synced text view.
-    // - Case 3 — the source content is not open anywhere → openInNewPanel(source).
+    // - Case 1 — the source item is not open in any panel → openInNewPanel(source).
+    // - Case 2 — its panel already has a view for the source content url (source.id) → show that view.
+    // - Case 3 — its panel has no view for that content → append the synced text view.
+    // Cases 2 and 3 differ only in the views they hand to the panel, so both end in the same update.
 
     const panels = usePanelStore.getState().panels
 
@@ -79,20 +81,20 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
       const { source } = syncTarget
       if (!source.item) return
 
-      // 1) the source content url (source.id) is already shown in a panel -> nothing to do
-      if (panels.some((panel) => panelShowsSource(panel, source))) return
-
-      // 2) the source item is open in another panel (but not this content) -> append the synced text view
-      const otherPanel = panels.find((panel) => panel.id !== panelId && panel.item?.id === source.item)
-      if (otherPanel) {
-        usePanelStore.getState().updatePanel(otherPanel.id, {
-          panelViews: [...otherPanel.panelViews, buildSyncedTextView(otherPanel, source)]
-        })
+      // 1) the panel the source item is open in - without one there is nothing to update
+      const panel = panels.find((panel) => panel.item?.id === source.item)
+      if (!panel) {
+        openInNewPanel(source)
         return
       }
 
-      // 3) the source content is not open anywhere -> open a new panel
-      openInNewPanel(source)
+      const syncedViewIndex = findSyncedTextViewIndex(panel, source)
+
+      const panelViews = syncedViewIndex === -1
+        ? [...panel.panelViews, buildSyncedTextView(panel, source)]
+        : panel.panelViews.map((view, i) => i === syncedViewIndex ? { ...view, visible: true } : view)
+
+      usePanelStore.getState().updatePanel(panel.id, { panelViews })
     })
   }
 
