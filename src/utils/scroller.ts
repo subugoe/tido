@@ -126,7 +126,6 @@ class Scroller {
       const targetTop = targetRect.top - otherTextRect.top + otherText.scrollTop
       const targetOffset = otherText.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
       otherText.scrollTop = isNearBottom ? scrollTop : targetTop - targetOffset
-
     }
 
     setTimeout(() => this.isSyncing = false, 20)
