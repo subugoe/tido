@@ -54,6 +54,10 @@ interface PanelContextType {
   annotationsLoading: boolean
   matchedAnnotationsMaps: {[contentUrl: string]: MatchedAnnotationsMap}
   updateMatchedAnnotationsMap: (contentUrl: string, map: MatchedAnnotationsMap) => void
+  // Discovered annotation types keyed per text (contentUrl), used only when no annotation filters are
+  // configured. The flat annotationFilters list is derived from these entries.
+  annotationTypesBySource: {[contentUrl: string]: FilterNodeWithSelection[]}
+  updateAnnotationTypesBySource: (contentUrl: string, types: FilterNodeWithSelection[]) => void
   // sync target elements per content url (source) and the keys ordered by the order the text views appear in panelViews.
   syncedTargetsMap: {[contentUrl: string]: HTMLElement[]}
   addSyncedTargets: (targets: HTMLElement[], source: string, panelViews: PanelView[]) => void
@@ -75,6 +79,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
   const [matchedAnnotationsMaps, setMatchedAnnotationsMaps] = useState<{[contentUrl: string]: MatchedAnnotationsMap}>({})
+  const [annotationTypesBySource, setAnnotationTypesBySource] = useState<{[contentUrl: string]: FilterNodeWithSelection[]}>({})
   const [annotationFilters, setAnnotationFilters] = useState<FilterNodeWithSelection[]>( null)
   const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState(null)
   const [showTextOptions, setShowTextOptions] = useState(false)
@@ -115,6 +120,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       // We have to reset the selected types if no filters config is given, in order to re-discover types again on-the-fly.
       // TODO: This way maintaining selected types thoughout item change is not possible. We need a way to fix this.
       setSelectedAnnotationTypes(null)
+      // Clear the per-text discovered types so a new item starts from a clean slate; the visible filter
+      // list is derived from these in MultipleRootFilter.
+      setAnnotationTypesBySource({})
     }
 
     try {
@@ -321,6 +329,12 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     })
   }
 
+  // Store the annotation types a text discovered under its contentUrl. Keying per text lets the flat
+  // annotationFilters be re-derived, and lets a text's types be dropped when its view is hidden.
+  function updateAnnotationTypesBySource(contentUrl: string, types: FilterNodeWithSelection[]) {
+    setAnnotationTypesBySource(prev => ({ ...prev, [contentUrl]: types }))
+  }
+
   useEffect(() => {
     if (annotationsConfig.filters) {
 
@@ -352,23 +366,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
   useEffect(() => {
     getScroller().setMatchedMap(matchedAnnotationsMaps)
-
-    // This is for the case where no specific annotation filters were configured.
-    // We extract all occurring types from the annotations that match the text.
-    if (annotationsConfig.filters || annotationFilters !== null) return
-
-    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-    const types = Object
-      .values(matchedAnnotationsMaps)
-      .flatMap(map => Object.values(map))
-      .map(item => (item.annotation.body as AnnotationBody).annotationType)
-      .filter(type => type !== undefined && !tooltipTypes.includes(type) && type !== annotationsConfig?.crossRefContentType)
-
-    if (types.length === 0) return
-
-    const uniqueAnnotationTypes = [...new Set(types)]
-
-    setAnnotationFilters(uniqueAnnotationTypes.map(type => ({ types: [type], selected: true })))
   }, [matchedAnnotationsMaps])
 
 
@@ -429,6 +426,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       annotationsLoading,
       matchedAnnotationsMaps,
       updateMatchedAnnotationsMap,
+      annotationTypesBySource,
+      updateAnnotationTypesBySource,
       syncedTargetsMap,
       addSyncedTargets,
       syncedTargets,
