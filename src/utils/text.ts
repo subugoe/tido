@@ -15,6 +15,7 @@ import {
   SYNC_ANNOTATION_ID_ATTRIBUTE,
   ACTIVE_TARGET_STYLE
 } from './constants'
+import { AnnotationsConfig, FilterNodeWithSelection, FilterType, PanelView } from '@/types'
 
 function addAnnotationId(target: Element, id: string) {
   const ids = getAnnotationIds(target)
@@ -302,6 +303,50 @@ function getContentUrlByType(contents: Content[], type: string | undefined) {
 }
 
 
+// Extract the annotation type filters occurring in a single text's matched annotations. Used when no
+// annotation filters were configured: each text contributes its own types (skipping tooltip types and
+// the cross reference content type), which PanelContext keys by the text's contentUrl. The flat,
+// deduplicated annotationFilters list is then derived from those per-contentUrl entries, so a text's
+// types can be dropped again when its view is hidden.
+function getDiscoveredAnnotationTypes(
+  matchedAnnotationsMap: MatchedAnnotationsMap,
+  annotationsConfig: AnnotationsConfig
+): FilterNodeWithSelection[] {
+  const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
+  const types = Object
+    .values(matchedAnnotationsMap)
+    .map(item => (item.annotation.body as AnnotationBody).annotationType)
+    .filter(type => type !== undefined && !tooltipTypes.includes(type) && type !== annotationsConfig?.crossRefContentType)
+
+  return [...new Set(types)].map(type => ({ types: [type], selected: true }))
+}
+
+// Collect the unique annotation types discovered across the currently visible text views. Used (when no
+// annotation filters were configured) both to build the visible filter list and to decide whether the
+// Filters button has anything to show. A view maps to its contentUrl via its active content type,
+// mirroring TextViewContext.
+function getVisibleAnnotationTypes(
+  annotationTypesBySource: { [contentUrl: string]: FilterNodeWithSelection[] },
+  panelViews: PanelView[],
+  contents: Content[]
+): FilterType[] {
+  const visibleContentUrls = new Set(
+    panelViews
+      .filter(view => view.visible ?? true)
+      .map(view => getContentUrlByType(contents, view.activeContentType))
+      .filter(Boolean)
+  )
+
+  const types = Object
+    .entries(annotationTypesBySource)
+    .filter(([contentUrl]) => visibleContentUrls.has(contentUrl))
+    .flatMap(([, nodes]) => nodes)
+    .flatMap(node => node.types ?? [])
+
+  return [...new Set(types)]
+}
+
+
 export {
   addAnnotationId,
   removeAnnotationIds,
@@ -338,5 +383,7 @@ export {
   addSyncAnnotationId,
   addActiveTargetStyle,
   removeActiveTargetStyle,
-  getContentUrlByType
+  getContentUrlByType,
+  getDiscoveredAnnotationTypes,
+  getVisibleAnnotationTypes
 }
