@@ -10,6 +10,7 @@ import {
   addNestedTargetStyle,
   addSelectedStyle,
   addSyncAnnotationId,
+  getDiscoveredAnnotationTypes,
   assignNestedTargetsInFlippedMatched,
   flipMatchedAnnotationsMap,
   getAnnotationIds,
@@ -84,6 +85,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     selectedAnnotation,
     selectedAnnotationTypes,
     setSelectedAnnotation,
+    updateAnnotationTypesBySource,
     annotations,
     syncedTargets,
     addSyncedTargets,
@@ -420,6 +422,12 @@ const GenericTextRenderer: FC<Props> = memo(({
 
       setMatchedMap(result)
       if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
+
+      // When no annotation filters were configured, store the types this text contains keyed by its
+      // contentUrl (source). PanelContext derives the flat annotationFilters from these per-text entries.
+      if (!annotationsConfig?.filters) {
+        updateAnnotationTypesBySource(source, getDiscoveredAnnotationTypes(result, annotationsConfig))
+      }
 
       flippedMatchedMapRef.current = flipMatchedAnnotationsMap(result)
       targetsRef.current = getTextTargets(flippedMatchedMapRef.current)
