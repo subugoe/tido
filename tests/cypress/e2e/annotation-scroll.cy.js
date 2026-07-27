@@ -97,16 +97,34 @@ describe('Annotation scrolling and alignment', () => {
     sidebarScroll: '[data-sidebar-scroll-container]',
     sidebarToggle: '[data-cy="sidebar-toggle"]',
     textContainer: '[data-text-container]',
+    viewsMenu: '[data-cy="panel-mode-menu"]',
+    viewsMenuToggle: '[data-cy="panel-mode-select"]',
   }
 
   // Vertical distance from the top of the panel - the frame both the text and the sidebar live in.
   const yInPanel = (el, panel) => el.getBoundingClientRect().top - panel.getBoundingClientRect().top
+
+  // Vertical distance from the top of the sidebar's viewport. With the sidebar at scrollTop 0 this
+  // is also the card's own `top`, since the cards are positioned against this container and it
+  // carries no vertical padding.
+  const yInSidebar = (el, sidebar) => el.getBoundingClientRect().top - sidebar.getBoundingClientRect().top
 
   // The overlay covers the sidebar while the annotations load and while the cards are being
   // positioned. Nothing about their placement is final until it is gone.
   const waitForSidebar = () => {
     cy.get(selectors.sidebarContainer).should('be.visible')
     cy.get(selectors.sidebarLoading).should('not.exist')
+  }
+
+  // Flips the visibility switch of one of the panel's views. The menu holds one switch per view in
+  // panelViews order, so index 1 is the second text view. It stays open after the click, so it is
+  // dismissed before returning - otherwise it covers the panel for whatever asserts next.
+  const toggleView = (index) => {
+    cy.get(selectors.viewsMenuToggle).click()
+    cy.get(selectors.viewsMenu).find('[data-slot="switch"]').should('have.length', 2)
+    cy.get(selectors.viewsMenu).find('[data-slot="switch"]').eq(index).click()
+    cy.get('body').type('{esc}')
+    cy.get(selectors.viewsMenu).should('not.exist')
   }
 
   // Puts the target at a given fraction of the text container height, measured from its top, so
@@ -180,6 +198,30 @@ describe('Annotation scrolling and alignment', () => {
         const cardY = yInPanel($card[0], $panel[0])
 
         expect(cardY, `card y ${cardY} vs target y ${targetY}`).to.be.closeTo(targetY, tolerance)
+      })
+    })
+  }
+
+  // The cards of the aligned list are absolutely positioned from heights measured before they are
+  // placed, so a card measured at the wrong width - or before a later commit has grown it - is
+  // stacked as if it were shorter than it renders, and the card below ends up drawn over it. Card
+  // heights are font dependent and differ between machines, so the invariant is the ordering, not
+  // any particular top value: every card starts below the bottom of the one above it.
+  const expectNoOverlappingCards = () => {
+    // Only the top level cards are positioned - a nested annotation flows inside the card it
+    // belongs to - so the list wrapper's own children are what has to be checked.
+    cy.get(selectors.sidebarScroll).find('> div > [data-annotation]').should(($cards) => {
+      const boxes = [...$cards]
+        .map((cardEl) => ({
+          id: cardEl.getAttribute('data-annotation').split('/').pop(),
+          top: cardEl.getBoundingClientRect().top,
+          bottom: cardEl.getBoundingClientRect().bottom,
+        }))
+        .sort((a, b) => a.top - b.top)
+
+      boxes.slice(1).forEach((box, index) => {
+        const above = boxes[index]
+        expect(box.top, `${box.id} starts below ${above.id}`).to.be.at.least(above.bottom)
       })
     })
   }
@@ -329,6 +371,57 @@ describe('Annotation scrolling and alignment', () => {
     })
 
     expectCardAlignedWithTarget(shirtCard, shirtTargetSelector, 0)
+  })
+
+  // Tests the bug in issue #1121 Bug: Overlap of annotations
+  it('Should place the diplomatic annotation at the same position after its view is toggled off and on', () => {
+    visitItem(chapter2, twoTextViewsConfig)
+
+    cy.get(selectors.sidebarToggle).click()
+    waitForSidebar()
+
+    // Nothing has scrolled the sidebar, so distances measured from its top edge are the cards' own
+    // top values.
+    cy.get(selectors.sidebarScroll).its('0.scrollTop').should('equal', 0)
+
+    expectNoOverlappingCards()
+
+    // Where the card lands in the freshly opened list is the reference the toggle has to reproduce.
+    // It is read at runtime rather than pinned to a number, since the cards are as tall as the
+    // machine's fonts make them.
+    cy.get(selectors.sidebarScroll).then(($sidebar) => {
+      cy.get(shirtCard).then(($card) => {
+        cy.wrap(yInSidebar($card[0], $sidebar[0])).as('shirtCardTopBeforeToggle')
+      })
+    })
+
+    // The annotation targets the diplomatic text, so switching that view off takes its card out of
+    // the sidebar entirely.
+    toggleView(1)
+    waitForSidebar()
+    cy.get(shirtCard).should('not.exist')
+
+    // Switching it back on rebuilds the list and re-runs the alignment from scratch.
+    toggleView(1)
+    waitForSidebar()
+    cy.get(shirtCard).should('exist')
+
+    cy.get(selectors.sidebarScroll).its('0.scrollTop').should('equal', 0)
+
+    // Same top as before: the rebuilt list has to measure the cards at the width they are rendered
+    // at, otherwise they wrap a line taller than the stacking allowed for and the card is pushed
+    // down.
+    cy.get('@shirtCardTopBeforeToggle').then((topBeforeToggle) => {
+      cy.get(selectors.sidebarScroll).then(($sidebar) => {
+        cy.get(shirtCard).should(($card) => {
+          const top = yInSidebar($card[0], $sidebar[0])
+          expect(top, `card top ${top} vs ${topBeforeToggle} before the toggle`)
+            .to.be.closeTo(topBeforeToggle, 0.5)
+        })
+      })
+    })
+
+    expectNoOverlappingCards()
   })
 
   it('Selecting an annotation should scroll the text in second view to its target', () => {
