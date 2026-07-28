@@ -1057,7 +1057,55 @@
       title: ''
     }
 
-    const PRESETS = [
+    const PRESETS = [{
+      id: 'eupt-1',
+      label: 'Edition des ugaritischen poetischen Textkorpus',
+      config: {
+        "annotations": {
+          "tooltipTypes": [
+            "DictLink",
+            "Linguistic"
+          ],
+          "types": {
+            "EditorialComment-epi": {
+              "label": "epigraphischer Kommentar"
+            },
+            "EditorialComment-phil": {
+              "label": "philologischer Kommentar"
+            },
+            "PoetologicalGlossary": {
+              "label": "Poetologisches Glossar"
+            }
+          }
+        },
+        "theme": {
+          "primaryColor": "#3AA675"
+        },
+        "panels": [
+          {
+            "collection": "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collections/all",
+            "manifest": "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/manifests/KTU__1.14"
+          }
+        ],
+
+        "panelViews": [
+          {
+            "label": "Autographie",
+            "view": "image"
+          }, {
+            "label": "Transkription",
+            "view": "text",
+            "contentTypes": ["facsimile"]
+          }, {
+            "label": "Vokalisation & Übersetzung",
+            "view": "text",
+            "contentTypes": ["philology"]
+          }
+        ],
+        "rootCollections": [
+          "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collections/all"
+        ]
+     }},
       {
         id: 'example-collection', label: 'Example Collection', config: {
           panels: [{ collection: window.location.href + 'api/collections/example.json' }],
