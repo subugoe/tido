@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/dynamic-synopsis-example/annotations/annotationCollection/example.json",
+  "type": "AnnotationCollection",
+  "label": "Synopsis connections for Dynamic Synopsis Library",
+  "total": 7,
+  "first": "http://localhost:8181/dynamic-synopsis-example/annotations/annotationPage/example.json",
+  "last": "http://localhost:8181/dynamic-synopsis-example/annotations/annotationPage/example.json"
+}

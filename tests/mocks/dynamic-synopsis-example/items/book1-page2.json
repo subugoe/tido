@@ -1,0 +1,22 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/dynamic-synopsis-example/items/book1-page2.json",
+  "textapiType": "TextApiItem",
+  "revision": "1",
+  "division": "Page 2",
+  "titles": [
+    "2"
+  ],
+  "languages": [
+    "eng"
+  ],
+  "contents": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page2_transcription.html",
+      "contentType": "text/html;type=transcription"
+    }
+  ],
+  "textItemType": "page"
+}
