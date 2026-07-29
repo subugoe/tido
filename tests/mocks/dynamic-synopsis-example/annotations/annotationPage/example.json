@@ -1,0 +1,406 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/dynamic-synopsis-example/annotations/annotationPage/example.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/dynamic-synopsis-example/annotations/annotationCollection/example.json",
+    "label": "Synopsis connections for Dynamic Synopsis Library",
+    "total": 7
+  },
+  "next": null,
+  "prev": null,
+  "items": [
+    {
+      "id": "http://localhost:8181/dynamic-synopsis-example/annotations/annotation/dynamic-sync-1",
+      "type": "Annotation",
+      "motivation": "linking",
+      "body": {
+        "type": "TextualBody",
+        "value": "Ishmael (Synopsis-2 transcription) ↔ Ishmael (Dynamic Synopsis witness)",
+        "format": "text/plain"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page1_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ishmael"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ishmael-dyn"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_diplomatic.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ishmael-dyn"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/dynamic-synopsis-example/annotations/annotation/dynamic-sync-2",
+      "type": "Annotation",
+      "motivation": "linking",
+      "body": {
+        "type": "TextualBody",
+        "value": "Ishmael (Synopsis-2 transcription) ↔ the loomings of the voyage (Dynamic Synopsis witness)",
+        "format": "text/plain"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page1_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ishmael"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#great-water"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page2_transcription.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page2.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#loomings-echo"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/dynamic-synopsis-example/annotations/annotation/dynamic-sync-3",
+      "type": "Annotation",
+      "motivation": "linking",
+      "body": {
+        "type": "TextualBody",
+        "value": "the ocean (Synopsis-2 diplomatic) ↔ the great water (Dynamic Synopsis witness)",
+        "format": "text/plain"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page1_diplomatic.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ocean"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page1_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ocean"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#great-water"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_diplomatic.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#great-water"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/dynamic-synopsis-example/annotations/annotation/dynamic-sync-4",
+      "type": "Annotation",
+      "motivation": "linking",
+      "body": {
+        "type": "TextualBody",
+        "value": "never mind how long precisely (Synopsis-2 diplomatic) ↔ Dynamic Synopsis witness",
+        "format": "text/plain"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page1_diplomatic.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-precisely"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#precisely"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_diplomatic.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#precisely"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/dynamic-synopsis-example/annotations/annotation/dynamic-sync-5",
+      "type": "Annotation",
+      "motivation": "linking",
+      "body": {
+        "type": "TextualBody",
+        "value": "driving off (Synopsis-2 diplomatic) ↔ the spleen passage in the other witnesses",
+        "format": "text/plain"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page1_diplomatic.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#dipl-driving"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page1_transcription.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#spleen"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page2_transcription.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page2.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#driving-off"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/dynamic-synopsis-example/annotations/annotation/dynamic-sync-6",
+      "type": "Annotation",
+      "motivation": "linking",
+      "body": {
+        "type": "TextualBody",
+        "value": "going to sea (Dynamic Synopsis witness) ↔ the watery part of the world (Classic Literature)",
+        "format": "text/plain"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page2_transcription.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page2.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#sea-voyage"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example/html/book2-page1_transcription.html",
+            "collection": "http://localhost:8181/example/collections/example.json",
+            "manifest": "http://localhost:8181/example/manifests/book2.json",
+            "item": "http://localhost:8181/example/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#watery-part"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example/html/book2-page1_diplomatic.html",
+            "collection": "http://localhost:8181/example/collections/example.json",
+            "manifest": "http://localhost:8181/example/manifests/book2.json",
+            "item": "http://localhost:8181/example/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#watery-part"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/dynamic-synopsis-example/annotations/annotation/dynamic-sync-7",
+      "type": "Annotation",
+      "motivation": "linking",
+      "body": {
+        "type": "TextualBody",
+        "value": "the purse (Dynamic Synopsis witness) ↔ going to sea as a passenger (Classic Literature)",
+        "format": "text/plain"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#purse"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_diplomatic.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#purse"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example/html/book2-page1_transcription.html",
+            "collection": "http://localhost:8181/example/collections/example.json",
+            "manifest": "http://localhost:8181/example/manifests/book2.json",
+            "item": "http://localhost:8181/example/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#passenger"
+          },
+          "format": "text/html"
+        }
+      ]
+    }
+  ]
+}
