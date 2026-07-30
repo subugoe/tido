@@ -4,7 +4,7 @@
   "id": "http://localhost:8181/example/items/book2-page3.json",
   "textapiType": "TextApiItem",
   "revision": "1",
-  "division": "Moby-Dick, Chapter 3 - The Spouter-Inn",
+  "division": "Page 3",
   "titles": [
     "3"
   ],

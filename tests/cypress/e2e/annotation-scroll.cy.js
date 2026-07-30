@@ -12,12 +12,12 @@ describe('Annotation scrolling and alignment', () => {
   // a long list of annotations against a diplomatic text short enough that it never scrolls itself.
   const chapter1 = {
     item: `${apiUrl}/example/items/book2-page1.json`,
-    label: 'Moby-Dick, Chapter 1 - Loomings',
+    label: 'Page 1',
     ready: '#watery-part',
   }
   const chapter2 = {
     item: `${apiUrl}/example/items/book2-page2.json`,
-    label: 'Moby-Dick, Chapter 2 - The Carpet-Bag',
+    label: 'Page 2',
     ready: '#carpet-bag',
   }
 
@@ -69,7 +69,7 @@ describe('Annotation scrolling and alignment', () => {
   // Chapter 1 of Pride and Prejudice - the first item of the first manifest of the example
   // collection, so opening the collection alone lands on it.
   const prideChapter1 = {
-    label: 'Pride and Prejudice, Chapter 1',
+    label: 'Page 1',
     ready: '#truth',
   }
 
@@ -522,7 +522,7 @@ describe('Annotation scrolling and alignment', () => {
 
     // c. The new panel shows the referenced manifest and item.
     secondPanel().find('[data-cy="manifest-label"]').should('contain.text', 'Moby-Dick')
-    secondPanel().find('[data-cy="item-label"]').should('contain.text', 'Moby-Dick, Chapter 1 - Loomings')
+    secondPanel().find('[data-cy="item-label"]').should('contain.text', 'Page 1')
 
     // d. The sidebar scrolled down the list to the referenced annotation and selected it.
     secondPanel().find(ishmaelCard).should('have.attr', 'data-selected', 'true')

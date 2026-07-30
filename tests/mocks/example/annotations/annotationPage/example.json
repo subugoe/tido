@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example/annotations/annotationCollection/example.json",
     "label": "Word connections between English and German text",
-    "total": 556
+    "total": 558
   },
   "next": null,
   "prev": null,
@@ -20021,6 +20021,128 @@
           "selector": {
             "type": "CssSelector",
             "value": "#word-556"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/annotation/cross-collection-sync-1",
+      "type": "Annotation",
+      "motivation": "linking",
+      "body": {
+        "type": "TextualBody",
+        "value": "The Carpet-Bag (Classic Literature witness) \u2194 Ishmael (Dynamic Synopsis witness)",
+        "format": "text/plain"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ishmael-dyn"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example/html/book2-page2_transcription.html",
+            "collection": "http://localhost:8181/example/collections/example.json",
+            "manifest": "http://localhost:8181/example/manifests/book2.json",
+            "item": "http://localhost:8181/example/items/book2-page2.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#carpet-bag"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example/html/book2-page2_diplomatic.html",
+            "collection": "http://localhost:8181/example/collections/example.json",
+            "manifest": "http://localhost:8181/example/manifests/book2.json",
+            "item": "http://localhost:8181/example/items/book2-page2.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#carpet-bag"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/example/collections/example.json",
+            "manifest": "http://localhost:8181/example/manifests/book1.json",
+            "item": "http://localhost:8181/example/items/book1-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#man"
+          },
+          "format": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/annotation/cross-collection-sync-2",
+      "type": "Annotation",
+      "motivation": "linking",
+      "body": {
+        "type": "TextualBody",
+        "value": "Later mentions in Classic Literature \u2194 the loomings of the voyage (Dynamic Synopsis witness)",
+        "format": "text/plain"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page2_transcription.html",
+            "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
+            "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page2.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#loomings-echo"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example/html/book2-page2_transcription.html",
+            "collection": "http://localhost:8181/example/collections/example.json",
+            "manifest": "http://localhost:8181/example/manifests/book2.json",
+            "item": "http://localhost:8181/example/items/book2-page2.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#ishmael-self"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example/html/book3-page1_transcription.html",
+            "collection": "http://localhost:8181/example/collections/example.json",
+            "manifest": "http://localhost:8181/example/manifests/book3.json",
+            "item": "http://localhost:8181/example/items/book3-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#east-egg"
           },
           "format": "text/html"
         }

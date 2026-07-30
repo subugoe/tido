@@ -153,7 +153,7 @@ describe('Config', () => {
       checkPanelItemLabels(
         'Classic Literature Collection',
         'Pride and Prejudice',
-        'Chapter 1',
+        'Page 1',
         1
       )
   });
@@ -252,7 +252,7 @@ describe('Config', () => {
     'Should have annotations list view preselected', () => {
       cy
         .get('[data-cy="item-label"')
-        .should('contain', 'Chapter 1')
+        .should('contain', 'Page 1')
       //open annotations sidebar
         .get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
@@ -286,7 +286,7 @@ describe('Config', () => {
       //open annotations sidebar
       cy
         .get('[data-cy="item-label"')
-        .should('contain', 'Chapter 1')
+        .should('contain', 'Page 1')
         .get('[data-cy="sidebar-toggle"]')
         .should('be.enabled')
         .click()
