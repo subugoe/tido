@@ -19,12 +19,12 @@ describe('Scroll positions across content type and item changes', () => {
       .join('')
 
   const chapter1 = {
-    label: 'Moby-Dick, Chapter 1 - Loomings',
+    label: 'Page 1',
     ready: '#ishmael',
   }
   // The item the next arrow moves on to.
   const chapter2 = {
-    label: 'Moby-Dick, Chapter 2 - The Carpet-Bag',
+    label: 'Page 2',
     ready: '#carpet-bag',
   }
 

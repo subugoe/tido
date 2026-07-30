@@ -70,7 +70,7 @@
       "motivation": "linking",
       "body": {
         "type": "TextualBody",
-        "value": "Ishmael (Synopsis-2 transcription) ↔ the loomings of the voyage (Dynamic Synopsis witness)",
+        "value": "the watery part of the world (Synopsis-2) ↔ the great water (Dynamic Synopsis witness)",
         "format": "text/plain"
       },
       "target": [
@@ -84,7 +84,21 @@
           },
           "selector": {
             "type": "CssSelector",
-            "value": "#ishmael"
+            "value": "#watery-part"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "source": {
+            "id": "http://localhost:8181/example-synopsis-2/html/book2-page1_diplomatic.html",
+            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
+            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
+            "item": "http://localhost:8181/example-synopsis-2/items/book2-page1.json"
+          },
+          "selector": {
+            "type": "CssSelector",
+            "value": "#watery-part"
           },
           "format": "text/html"
         },
@@ -105,14 +119,14 @@
         {
           "type": "SpecificResource",
           "source": {
-            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page2_transcription.html",
+            "id": "http://localhost:8181/dynamic-synopsis-example/html/book1-page1_diplomatic.html",
             "collection": "http://localhost:8181/dynamic-synopsis-example/collections/example.json",
             "manifest": "http://localhost:8181/dynamic-synopsis-example/manifests/book1.json",
-            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page2.json"
+            "item": "http://localhost:8181/dynamic-synopsis-example/items/book1-page1.json"
           },
           "selector": {
             "type": "CssSelector",
-            "value": "#loomings-echo"
+            "value": "#great-water"
           },
           "format": "text/html"
         }

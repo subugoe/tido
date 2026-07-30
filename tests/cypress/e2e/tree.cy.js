@@ -99,7 +99,7 @@ describe('Tree', () => {
       .find('[data-cy="panel"]')
       .should('have.length', 2)
 
-    expectPanelWithText(1, 'Pride and Prejudice, Chapter 2', 'Pride and Prejudice')
+    expectPanelWithText(1, 'Page 2', 'Pride and Prejudice')
 
     // Tree modal closes after panel creation
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
@@ -145,7 +145,7 @@ describe('Tree', () => {
       .find('[data-cy="panel"]')
       .should('have.length', 1)
 
-    expectPanelWithText(0, 'Pride and Prejudice, Chapter 3', 'Pride and Prejudice, Chapter 3')
+    expectPanelWithText(0, 'Page 3', 'Pride and Prejudice, Chapter 3')
 
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
   })
