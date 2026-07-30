@@ -104,7 +104,7 @@ function navigateItem(panelIndex, direction) {
   getPanel(panelIndex)
     .find('[data-cy="panel-title-and-nav-arrows"]')
     .find(`[data-cy="${direction}-item-button"]`)
-    .click()
+    .click({force: true})
 }
 
 function findText(panelIndex, contentType) {

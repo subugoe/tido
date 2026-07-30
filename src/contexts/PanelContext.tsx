@@ -17,7 +17,6 @@ import { Scroller } from '@/utils/scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
-import { getContentUrlByType } from '@/utils/text.ts'
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
@@ -58,9 +57,10 @@ interface PanelContextType {
   // configured. The flat annotationFilters list is derived from these entries.
   annotationTypesBySource: {[contentUrl: string]: FilterNodeWithSelection[]}
   updateAnnotationTypesBySource: (contentUrl: string, types: FilterNodeWithSelection[]) => void
-  // sync target elements per content url (source) and the keys ordered by the order the text views appear in panelViews.
+  // sync target elements per content url (source). Unordered - PanelContent aggregates the entries in
+  // panelViews order.
   syncedTargetsMap: {[contentUrl: string]: HTMLElement[]}
-  addSyncedTargets: (targets: HTMLElement[], source: string, panelViews: PanelView[]) => void
+  addSyncedTargets: (targets: HTMLElement[], source: string) => void
   // the sync targets aggregated across the visible text views (in panelViews order)
   syncedTargets: HTMLElement[]
   setSyncedTargets: (targets: HTMLElement[]) => void
@@ -285,24 +285,15 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     }
   }
 
-  function addSyncedTargets(targets: HTMLElement[], source: string, panelViews: PanelView[]) {
+
+  function addSyncedTargets(targets: HTMLElement[], source: string) {
     if (!source) return
     setSyncedTargetsMap((prev) => {
-      const existing = prev[source] ?? []
-      const existingSet = new Set(existing)
-      const additions = (targets ?? []).filter((t) => !existingSet.has(t))
-      if (additions.length === 0 && prev[source]) return prev
+      const existing = prev[source]
+      const next = targets ?? []
+      if (existing && existing.length === next.length && existing.every((t, i) => t === next[i])) return prev
 
-      const next = { ...prev, [source]: [...existing, ...additions] }
-
-      // rebuild the map so its keys follow the order the text views appear in panelViews
-      const ordered: {[contentUrl: string]: HTMLElement[]} = {}
-      panelViews?.forEach((view) => {
-        const url = getContentUrlByType(panelState.item.contents, view.activeContentType)
-        if (url && next[url]) ordered[url] = next[url]
-      })
-
-      return ordered
+      return { ...prev, [source]: next }
     })
   }
 

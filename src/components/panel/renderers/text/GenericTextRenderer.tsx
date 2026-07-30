@@ -89,7 +89,6 @@ const GenericTextRenderer: FC<Props> = memo(({
     annotations,
     syncedTargets,
     addSyncedTargets,
-    panelState,
     getScroller
   } = usePanel()
 
@@ -470,7 +469,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       return aRect.top - bRect.top || aRect.left - bRect.left
     })
 
-    addSyncedTargets(sortedTargets, source, panelState.panelViews)
+    addSyncedTargets(sortedTargets, source)
   }, [parsedDom, sourceSyncAnnotations])
 
   // Apply highlighting styles on every map update
