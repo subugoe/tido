@@ -281,20 +281,6 @@
             "value": "#carpet-bag"
           },
           "source": {
-            "id": "http://localhost:8181/example-synopsis-2/html/book2-page2_transcription.html",
-            "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
-            "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",
-            "item": "http://localhost:8181/example-synopsis-2/items/book2-page2.json"
-          },
-          "format": "text/html"
-        },
-        {
-          "type": "SpecificResource",
-          "selector": {
-            "type": "CssSelector",
-            "value": "#carpet-bag"
-          },
-          "source": {
             "id": "http://localhost:8181/example-synopsis-2/html/book2-page2_diplomatic.html",
             "collection": "http://localhost:8181/example-synopsis-2/collections/example.json",
             "manifest": "http://localhost:8181/example-synopsis-2/manifests/book2.json",

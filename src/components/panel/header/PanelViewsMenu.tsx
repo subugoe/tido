@@ -55,6 +55,7 @@ const PanelViewsMenu: FC = () => {
                 {view.label}
                 <Switch
                   className="ml-auto"
+                  data-cy="panel-view-toggle"
                   onCheckedChange={(checked) => update(i, checked)}
                   checked={view.visible}
                 />
