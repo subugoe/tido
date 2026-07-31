@@ -184,7 +184,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!parsedDom || !textWrapperRef.current) return
     if (!scrolledSyncedTargets || scrolledSyncedTargets.targets.length === 0) return
 
-    const { yPos, targets, originTarget } = scrolledSyncedTargets
+    const { yPos, targets } = scrolledSyncedTargets
 
     // only scroll to the first synced target that belongs to the content rendered here
     const syncedTarget = targets.find((t) => t.source.id === source)
@@ -203,7 +203,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     scrollContainer.scrollTo({ top: Math.max(0, Math.min(desiredScrollTop, maxScrollTop)), behavior: 'smooth' })
 
     // add synopsis style to synced target when it was scrolled to a sync target in another text
-    if (originTarget && originTarget === navigatedTarget) addSynopsisStyle(targetEl)
+    if (targetEl) addSynopsisStyle(targetEl)
 
     return () => {
       const currentSyncedTargets = useSynopsisStore.getState().activeSyncedTargets
@@ -267,7 +267,9 @@ const GenericTextRenderer: FC<Props> = memo(({
     // only the panel whose scroll container holds this target scrolls to and highlights it
     const scrollContainer = textWrapperRef.current.closest('[data-text-container]') as HTMLElement | null
     if (!navigatedTarget) return
-    if (!scrollContainer || !scrollContainer.contains(navigatedTarget)) return
+    if (!scrollContainer || !scrollContainer.contains(navigatedTarget))
+
+      if (navigatedTarget !== activeSyncedTargets.originTarget) addSynopsisStyle(navigatedTarget)
 
     // this text is the one which navigated to the next sync target -> we should set its synced targets as scrolledSyncedTargets
     // so that they scroll as well to their sync target
@@ -295,7 +297,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         removeSynopsisStyle(navigatedTarget)
       }
     }
-  }, [navigatedTarget, parsedDom, source, syncedTargets])
+  }, [navigatedTarget, parsedDom, source, syncedTargets, activeSyncedTargets])
 
   // Sync the other panels while the user scrolls this one: when a sync target enters this source's
   // focused band, resolve its synced targets and publish them so each other panel scrolls its own
