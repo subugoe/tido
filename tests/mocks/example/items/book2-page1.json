@@ -4,7 +4,7 @@
   "id": "http://localhost:8181/example/items/book2-page1.json",
   "textapiType": "TextApiItem",
   "revision": "1",
-  "division": "Moby-Dick, Chapter 1 - Loomings",
+  "division": "Page 1",
   "titles": [
     "1"
   ],

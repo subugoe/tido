@@ -62,7 +62,7 @@ describe('Panel', () => {
       .should('not.exist')
 
       .validateLabel('manifest', 'The Great Gatsby')
-      .validateLabel('item', 'The Great Gatsby, Chapter 2')
+      .validateLabel('item', 'Page 2')
       //.validateText('This is a valley of ashes—a fantastic farm where ashes grow')
   })
 
@@ -135,19 +135,19 @@ describe('Panel', () => {
   // })
 
   it('Should switch to next manifest', () => {
-    cy.validateLabel('item', 'Moby-Dick, Chapter 1 - Loomings')
+    cy.validateLabel('item', 'Page 1')
       .click()
     cy.get('[data-cy="items-dropdown"]')
       .children()
       .eq(2)
       .click()
-      .validateLabel('item','Moby-Dick, Chapter 3 - The Spouter-Inn')
+      .validateLabel('item','Page 3')
 
       .findPanelTitleAndNavArrows()
       .find('[data-cy="next-item-button"]')
       .click()
       .validateLabel('manifest', 'The Great Gatsby')         // Manifest and item labels should get updated
-      .validateLabel('item', 'The Great Gatsby, Chapter 1')
+      .validateLabel('item', 'Page 1')
       .validateText('I lived at West Egg, the—well')                        // Text area should update
   })
 
@@ -176,7 +176,7 @@ describe('Panel', () => {
       .click()
 
     cy.validateLabel('manifest', 'Pride and Prejudice')
-    cy.validateLabel('item','Pride and Prejudice, Chapter 3')
+    cy.validateLabel('item','Page 3')
     cy.validateText('Chapter 3')
   })
 
@@ -184,7 +184,7 @@ describe('Panel', () => {
     // item label is updated
     // text is updated
     // item modal is not anymore in DOM
-    cy.validateLabel('item', 'Moby-Dick, Chapter 1 - Loomings')
+    cy.validateLabel('item', 'Page 1')
       .click()
 
       .get('[data-cy="items-dropdown"]')
@@ -197,7 +197,7 @@ describe('Panel', () => {
       .children().eq(0)
       .find('[data-cy="items-dropdown"]').should('not.exist')
 
-    cy.validateLabel('item', 'Moby-Dick, Chapter 3 - The Spouter-Inn')       // item label is updated
+    cy.validateLabel('item', 'Page 3')       // item label is updated
     cy.validateText('Chapter 3 - The Spouter-Inn')   // text is updated
   })
 
@@ -230,7 +230,7 @@ describe('Panel', () => {
 
     // Update of content
     cy.validateLabel('manifest', 'The Great Gatsby')
-    cy.validateLabel('item', 'The Great Gatsby, Chapter 2')
+    cy.validateLabel('item', 'Page 2')
     cy.validateText('This is a valley of ashes—a fantastic farm where ashes grow like wheat')
   })
 

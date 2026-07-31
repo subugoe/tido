@@ -1,0 +1,382 @@
+import {
+  getActiveViews,
+  getItem,
+  getSyncAnnotations,
+  getSyncTargetCounts,
+  getTargetPosition,
+  isInSyncBand,
+  sumSyncTargets,
+  SYNC_SCROLL_THRESHOLD_BOTTOM,
+  SYNC_SCROLL_THRESHOLD_TOP
+} from '../support/synopsis-helpers'
+
+// Panels are opened exactly as in examples/config/example.json:
+// Panel 1: 'Example' collection, second manifest (book2), first item
+// Panel 2: 'Synopsis-example' collection, second manifest (book2), first item
+const exampleCollection = 'http://localhost:8181/example/collections/example.json'
+const synopsisCollection = 'http://localhost:8181/example-synopsis-2/collections/example.json'
+
+const panels = [
+  {
+    collection: exampleCollection,
+    manifest: 'http://localhost:8181/example/manifests/book2.json'
+  },
+  {
+    collection: synopsisCollection,
+    manifest: 'http://localhost:8181/example-synopsis-2/manifests/book2.json'
+  }
+]
+
+const rootCollections = [exampleCollection]
+
+const panelViews = [
+  {
+    label: 'Text',
+    view: 'text',
+    contentTypes: ['diplomatic', 'transcription', 'translation']
+  },
+  {
+    label: 'Text',
+    view: 'text',
+    activeContentType: 'diplomatic',
+    contentTypes: ['diplomatic', 'transcription', 'translation', 'normalized']
+  }
+]
+
+const config = [
+  ...panels.flatMap((panel, i) => [
+    `panels[${i}].collection=${panel.collection}`,
+    `panels[${i}].manifest=${panel.manifest}`
+  ]),
+  ...rootCollections.map(collection => `rootCollections[]=${collection}`),
+  'annotations.crossRefContentType=CrossRef',
+  ...panelViews.map(view => `panelViews[]=${encodeURIComponent(JSON.stringify(view))}`)
+].join('&')
+
+const SYNOPSIS_STYLE_CLASS = 'bg-yellow-200'
+const SYNOPSIS_PANEL = 1
+// Where a target is placed to become the focused one of its pane: in the middle of the sync band,
+// which leaves the targets of the lines above it above the band - the focused target is the first
+// one overlapping it (findFocusedTarget of utils/scroller.ts)
+const SYNC_BAND_SCROLL_RATIO = (SYNC_SCROLL_THRESHOLD_TOP + SYNC_SCROLL_THRESHOLD_BOTTOM) / 2
+// how far apart the two synced targets may sit after the panes have been aligned
+const ALIGNMENT_TOLERANCE = 10
+const ISHMAEL = '#ishmael'
+const WATERY_PART = '#watery-part'
+
+// Sync targets per rendered text of each panel, computed from the sync annotations of the
+// collections in 'panels' and in 'rootCollections' - see support/synopsis-helpers.js
+const syncTargets = []
+
+// The first two items of the synopsis panel (Chapter 1, Chapter 2) and the sync targets of the
+// second one - the panel keeps its rendered content types while navigating to it
+const items = []
+let nextItemSyncTargets = []
+
+function getPanel(index) {
+  return cy.get('[data-cy="panels-wrapper"]')
+    .find('[data-cy="panel"]')
+    .eq(index)
+}
+
+function getSyncTargetNavigation(panelIndex) {
+  return getPanel(panelIndex).find('[data-cy="sync-target-navigation"]')
+}
+
+// Toggle a text view of a panel on/off in the panel views menu
+function togglePanelView(panelIndex, viewIndex) {
+  getPanel(panelIndex)
+    .find('[data-cy="panel-mode-select"]')
+    .click()
+
+  cy.get('[data-cy="panel-mode-menu"]')
+    .find('[data-cy="panel-view-toggle"]')
+    .eq(viewIndex)
+    .click()
+
+  // close the menu again so it does not cover the panel
+  cy.get('body').type('{esc}')
+  cy.get('[data-cy="panel-mode-menu"]').should('not.exist')
+}
+
+// Navigate a panel to the next / previous item
+function navigateItem(panelIndex, direction) {
+  getPanel(panelIndex)
+    .find('[data-cy="panel-title-and-nav-arrows"]')
+    .find(`[data-cy="${direction}-item-button"]`)
+    .click({force: true})
+}
+
+function findText(panelIndex, contentType) {
+  return syncTargets[panelIndex].find(text => text.contentType === contentType)
+}
+
+function getTextPane(contentUrl) {
+  return cy.get(`[data-text-container][data-content-url="${contentUrl}"]`)
+}
+
+// The two text panes of the synopsis panel, by content type
+function getPanes() {
+  return getPanel(SYNOPSIS_PANEL).find('[data-text-container]')
+}
+
+function pickPanes($panes) {
+  return {
+    transcription: $panes.filter(`[data-content-url="${findText(SYNOPSIS_PANEL, 'transcription').contentUrl}"]`)[0],
+    diplomatic: $panes.filter(`[data-content-url="${findText(SYNOPSIS_PANEL, 'diplomatic').contentUrl}"]`)[0]
+  }
+}
+
+function hasSynopsisStyle(pane, selector) {
+  return pane.querySelector(selector).classList.contains(SYNOPSIS_STYLE_CLASS)
+}
+
+// Scroll a text pane until the given target enters its sync band. Only a genuine user scroll drives
+// the synopsis sync, so the gesture the pane listens for (a pressed pointer) is triggered before
+// scrolling - see the scroll listener in GenericTextRenderer.
+function scrollTargetIntoSyncBand(contentUrl, selector) {
+  getTextPane(contentUrl).trigger('pointerdown', { button: 0 })
+
+  getTextPane(contentUrl).then($pane => {
+    const pane = $pane[0]
+    const { top } = getTargetPosition(pane, selector)
+    const scrollTop = pane.scrollTop + top - pane.clientHeight * SYNC_BAND_SCROLL_RATIO
+
+    cy.wrap($pane).scrollTo(0, Math.max(0, scrollTop))
+  })
+
+  getTextPane(contentUrl).trigger('pointerup')
+}
+
+// Hover a target in / out. The scroll position of the pane is part of the state under test, so
+// cypress must not scroll the target to the top of the pane before dispatching the event.
+function hoverTarget(contentUrl, selector, event) {
+  getTextPane(contentUrl).find(selector).trigger(event, { scrollBehavior: false })
+}
+
+describe('Panel Synopsis', () => {
+  before(() => {
+    cy.then(async () => {
+      const collections = [...panels.map(panel => panel.collection), ...rootCollections]
+      const syncAnnotations = await getSyncAnnotations(collections)
+
+      for (const panel of panels) {
+        syncTargets.push(await getSyncTargetCounts(panel, panelViews, syncAnnotations))
+      }
+
+      // the next item (Chapter 2) is rendered with the content types the panel already shows
+      const activeViews = getActiveViews(panelViews, syncTargets[SYNOPSIS_PANEL])
+      nextItemSyncTargets = await getSyncTargetCounts(panels[SYNOPSIS_PANEL], activeViews, syncAnnotations, 1)
+      items.push(await getItem(panels[SYNOPSIS_PANEL], 0), await getItem(panels[SYNOPSIS_PANEL], 1))
+    }).then(() => syncTargets.forEach((counts, i) =>
+      cy.log(`Panel ${i + 1} sync targets: ${counts.map(c => `${c.contentType}=${c.count}`).join(', ')}`)))
+  })
+
+  beforeEach(() => {
+    cy.visit('/e2e.html?' + config)
+    // wait until both panels have rendered their texts
+    cy.get('[data-cy="panel"]').should('have.length', panels.length)
+    getPanel(SYNOPSIS_PANEL).find('[data-text-container]').should('have.length', panelViews.length)
+  })
+
+  it('Should show the Sync Target Navigation only in a panel that renders synced targets', () => {
+    // the data of this config gives synced targets to Panel 2 only
+    expect(sumSyncTargets(syncTargets[0])).to.equal(0)
+    expect(sumSyncTargets(syncTargets[SYNOPSIS_PANEL])).to.be.greaterThan(0)
+
+    // Panel 2 renders synced targets -> navigation is displayed on top of the panel
+    getSyncTargetNavigation(SYNOPSIS_PANEL).should('exist')
+
+    // Panel 1 renders no synced targets -> no navigation
+    getSyncTargetNavigation(0).should('not.exist')
+  })
+
+  it('Should display the first of all synced targets in the Sync Target Navigation of Panel 2', () => {
+    getSyncTargetNavigation(SYNOPSIS_PANEL)
+      .find('[data-cy="sync-target-counter"]')
+      .should('have.text', `1/${sumSyncTargets(syncTargets[SYNOPSIS_PANEL])}`)
+
+    // bottom button (next synoptic target) is active, top button (previous synoptic target) is disabled
+    getSyncTargetNavigation(SYNOPSIS_PANEL)
+      .find('[data-cy="sync-target-nav-button"]')
+      .should('have.length', 2)
+      .eq(0)
+      .should('not.have.attr', 'disabled')
+
+    getSyncTargetNavigation(SYNOPSIS_PANEL)
+      .find('[data-cy="sync-target-nav-button"]')
+      .eq(1)
+      .should('have.attr', 'disabled')
+  })
+
+  it('Should highlight the first synced target of the left pane in Panel 2', () => {
+    getPanel(SYNOPSIS_PANEL)
+      .find('[data-text-container]')
+      .eq(0)                                 // left pane
+      .find('#ishmael')
+      .should(($target) => {
+        const classList = Array.from($target[0].classList)
+        expect(classList[classList.length - 1]).to.equal(SYNOPSIS_STYLE_CLASS)
+      })
+  })
+
+  it('Should count only the synced targets of the visible texts when a text is toggled off and on again', () => {
+    const transcription = findText(SYNOPSIS_PANEL, 'transcription')
+    const total = sumSyncTargets(syncTargets[SYNOPSIS_PANEL])
+    const withoutTranscription = sumSyncTargets(syncTargets[SYNOPSIS_PANEL], ['diplomatic'])
+
+    getSyncTargetNavigation(SYNOPSIS_PANEL)
+      .find('[data-cy="sync-target-counter"]')
+      .should('have.text', `1/${total}`)
+
+    // toggle 'transcription' off -> only the synced targets of the visible 'diplomatic' text are counted
+    togglePanelView(SYNOPSIS_PANEL, transcription.viewIndex)
+
+    getPanel(SYNOPSIS_PANEL)
+      .find('[data-text-container]:visible')
+      .should('have.length', panelViews.length - 1)
+
+    getSyncTargetNavigation(SYNOPSIS_PANEL)
+      .find('[data-cy="sync-target-counter"]')
+      .should('have.text', `1/${withoutTranscription}`)
+
+    // toggle 'transcription' back on -> the whole panel is counted again
+    togglePanelView(SYNOPSIS_PANEL, transcription.viewIndex)
+
+    getPanel(SYNOPSIS_PANEL)
+      .find('[data-text-container]:visible')
+      .should('have.length', panelViews.length)
+
+    getSyncTargetNavigation(SYNOPSIS_PANEL)
+      .find('[data-cy="sync-target-counter"]')
+      .should('have.text', `1/${total}`)
+  })
+
+  it('Should update the synced targets when navigating to the next item and back to the previous one', () => {
+    const [chapter1, chapter2] = items
+    const chapter1Total = sumSyncTargets(syncTargets[SYNOPSIS_PANEL])
+    const chapter2Total = sumSyncTargets(nextItemSyncTargets)
+
+    expect(chapter2Total).to.be.greaterThan(0)
+
+    getPanel(SYNOPSIS_PANEL)
+      .find('[data-cy="item-label"]')
+      .should('contain.text', chapter1.division)
+
+    getSyncTargetNavigation(SYNOPSIS_PANEL)
+      .find('[data-cy="sync-target-counter"]')
+      .should('have.text', `1/${chapter1Total}`)
+
+    // next item (Chapter 2) -> the navigation counts the synced targets of the new texts
+    navigateItem(SYNOPSIS_PANEL, 'next')
+
+    getPanel(SYNOPSIS_PANEL)
+      .find('[data-cy="item-label"]')
+      .should('contain.text', chapter2.division)
+
+    getSyncTargetNavigation(SYNOPSIS_PANEL)
+      .find('[data-cy="sync-target-counter"]')
+      .should('have.text', `1/${chapter2Total}`)
+
+    // back to the previous item (Chapter 1) -> the counts of that item are restored
+    navigateItem(SYNOPSIS_PANEL, 'prev')
+
+    getPanel(SYNOPSIS_PANEL)
+      .find('[data-cy="item-label"]')
+      .should('contain.text', chapter1.division)
+
+    getSyncTargetNavigation(SYNOPSIS_PANEL)
+      .find('[data-cy="sync-target-counter"]')
+      .should('have.text', `1/${chapter1Total}`)
+  })
+
+  it('Should align the synced target of the other pane when a target is scrolled into the sync band', () => {
+    const transcription = findText(SYNOPSIS_PANEL, 'transcription')
+
+    // scroll '#ishmael' of the transcription pane into the sync band of that pane
+    scrollTargetIntoSyncBand(transcription.contentUrl, ISHMAEL)
+
+    getPanes().should($panes => {
+      const panes = pickPanes($panes)
+      const scrolled = getTargetPosition(panes.transcription, ISHMAEL)
+      const synced = getTargetPosition(panes.diplomatic, ISHMAEL)
+
+      // the diplomatic pane scrolled its own '#ishmael' to the y position of the scrolled one
+      expect(Math.abs(synced.top - scrolled.top), `y distance of both '${ISHMAEL}' targets`)
+        .to.be.lessThan(ALIGNMENT_TOLERANCE)
+
+      // both targets sit in the sync band of their pane
+      expect(isInSyncBand(panes.transcription, ISHMAEL), `'${ISHMAEL}' of transcription in sync band`).to.be.true
+      expect(isInSyncBand(panes.diplomatic, ISHMAEL), `'${ISHMAEL}' of diplomatic in sync band`).to.be.true
+    })
+  })
+
+  it('Should move the synopsis style to the target scrolled into the sync band and highlight a hovered pair temporarily', () => {
+    const transcription = findText(SYNOPSIS_PANEL, 'transcription')
+    const diplomatic = findText(SYNOPSIS_PANEL, 'diplomatic')
+
+    // 1. scroll '#ishmael' of the transcription pane into its sync band - the diplomatic pane follows
+    scrollTargetIntoSyncBand(transcription.contentUrl, ISHMAEL)
+
+    getPanes().should($panes => {
+      const panes = pickPanes($panes)
+      const scrolled = getTargetPosition(panes.transcription, ISHMAEL)
+      const synced = getTargetPosition(panes.diplomatic, ISHMAEL)
+
+      expect(Math.abs(synced.top - scrolled.top), `y distance of both '${ISHMAEL}' targets`)
+        .to.be.lessThan(ALIGNMENT_TOLERANCE)
+      expect(isInSyncBand(panes.transcription, ISHMAEL), `'${ISHMAEL}' of transcription in sync band`).to.be.true
+      expect(isInSyncBand(panes.diplomatic, ISHMAEL), `'${ISHMAEL}' of diplomatic in sync band`).to.be.true
+
+      expect(hasSynopsisStyle(panes.transcription, ISHMAEL), `'${ISHMAEL}' of transcription is styled`).to.be.true
+      expect(hasSynopsisStyle(panes.diplomatic, ISHMAEL), `'${ISHMAEL}' of diplomatic is styled`).to.be.true
+    })
+
+    // 2. now scroll '#watery-part' of the diplomatic pane into its sync band - the transcription
+    // pane follows and the synopsis style moves from the '#ishmael' pair to the '#watery-part' pair
+    scrollTargetIntoSyncBand(diplomatic.contentUrl, WATERY_PART)
+
+    getPanes().should($panes => {
+      const panes = pickPanes($panes)
+      const scrolled = getTargetPosition(panes.diplomatic, WATERY_PART)
+      const synced = getTargetPosition(panes.transcription, WATERY_PART)
+
+      expect(Math.abs(synced.top - scrolled.top), `y distance of both '${WATERY_PART}' targets`)
+        .to.be.lessThan(ALIGNMENT_TOLERANCE)
+
+      expect(hasSynopsisStyle(panes.diplomatic, WATERY_PART), `'${WATERY_PART}' of diplomatic is styled`).to.be.true
+      expect(hasSynopsisStyle(panes.transcription, WATERY_PART), `'${WATERY_PART}' of transcription is styled`).to.be.true
+
+      // the previously synced pair lost the synopsis style again
+      expect(hasSynopsisStyle(panes.diplomatic, ISHMAEL), `'${ISHMAEL}' of diplomatic is styled`).to.be.false
+      expect(hasSynopsisStyle(panes.transcription, ISHMAEL), `'${ISHMAEL}' of transcription is styled`).to.be.false
+    })
+
+    // 3. hovering '#ishmael' in the diplomatic pane highlights it and its synced target in the other
+    // pane, while the pair in the sync band keeps its style
+    hoverTarget(diplomatic.contentUrl, ISHMAEL, 'mouseenter')
+
+    getPanes().should($panes => {
+      const panes = pickPanes($panes)
+
+      expect(hasSynopsisStyle(panes.diplomatic, ISHMAEL), `hovered '${ISHMAEL}' of diplomatic is styled`).to.be.true
+      expect(hasSynopsisStyle(panes.transcription, ISHMAEL), `synced '${ISHMAEL}' of transcription is styled`).to.be.true
+
+      expect(hasSynopsisStyle(panes.diplomatic, WATERY_PART), `'${WATERY_PART}' of diplomatic is styled`).to.be.true
+      expect(hasSynopsisStyle(panes.transcription, WATERY_PART), `'${WATERY_PART}' of transcription is styled`).to.be.true
+    })
+
+    // 4. hovering out removes the style of the hovered pair only
+    hoverTarget(diplomatic.contentUrl, ISHMAEL, 'mouseleave')
+
+    getPanes().should($panes => {
+      const panes = pickPanes($panes)
+
+      expect(hasSynopsisStyle(panes.diplomatic, ISHMAEL), `'${ISHMAEL}' of diplomatic is styled`).to.be.false
+      expect(hasSynopsisStyle(panes.transcription, ISHMAEL), `'${ISHMAEL}' of transcription is styled`).to.be.false
+
+      expect(hasSynopsisStyle(panes.diplomatic, WATERY_PART), `'${WATERY_PART}' of diplomatic is styled`).to.be.true
+      expect(hasSynopsisStyle(panes.transcription, WATERY_PART), `'${WATERY_PART}' of transcription is styled`).to.be.true
+    })
+  })
+})

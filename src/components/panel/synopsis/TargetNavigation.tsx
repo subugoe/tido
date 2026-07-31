@@ -79,7 +79,7 @@ const SyncTargetNavigation: FC = () => {
   if (collapsed) return <NavigationCollapsed onOpen={() => setCollapsed(false)} />
 
   return (
-    <div className={EXPANDED_POSITION}>
+    <div className={EXPANDED_POSITION} data-cy="sync-target-navigation">
       <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 shadow-md">
         <span className="whitespace-nowrap text-sm font-medium">{t('synoptic_target')}</span>
         <span className="h-5 w-px bg-border" />
@@ -90,7 +90,10 @@ const SyncTargetNavigation: FC = () => {
         >
           <ChevronDown />
         </NavigationButton>
-        <Badge className="min-w-10 justify-center rounded-full border-transparent bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900">
+        <Badge
+          className="min-w-10 justify-center rounded-full border-transparent bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900"
+          data-cy="sync-target-counter"
+        >
           {navigatedTargetIndex + 1}/{total}
         </Badge>
         <NavigationButton

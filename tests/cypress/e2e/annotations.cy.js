@@ -67,7 +67,7 @@ describe('Annotations', () => {
   // and the sidebar done positioning its cards.
   const openChapter3 = () => {
     openItem(1, 2)
-    cy.get('[data-cy="item-label"]').contains('Moby-Dick, Chapter 3 - The Spouter-Inn')
+    cy.get('[data-cy="item-label"]').contains('Page 3')
     cy.get(selectors.textContainer).should('have.length', 2)
 
     openSidebar()
@@ -155,7 +155,7 @@ describe('Annotations', () => {
     cy.visit('/e2e.html?' + annotationConfig)
     cy
       .get('[data-cy="item-label"]')
-      .contains('Pride and Prejudice, Chapter 1')
+      .contains('Page 1')
   })
 
   it('Should open annotation sidebar', () => {
@@ -275,7 +275,7 @@ describe('Annotations', () => {
     const customLabel = 'Character'
     const type = 'Place'
     cy.visit(`/e2e.html?${annotationConfig}&annotations.types[${type}].label=${customLabel}`)
-    cy.get('[data-cy="item-label"]').contains('Pride and Prejudice, Chapter 1')
+    cy.get('[data-cy="item-label"]').contains('Page 1')
     openSidebar()
     sidebar().find('[data-annotation]', {timeout: 10000}).should('have.length.at.least', 1)
     sidebar()

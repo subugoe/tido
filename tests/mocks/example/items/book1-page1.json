@@ -4,7 +4,7 @@
   "id": "http://localhost:8181/example/items/book1-page1.json",
   "textapiType": "TextApiItem",
   "revision": "1",
-  "division": "Pride and Prejudice, Chapter 1",
+  "division": "Page 1",
   "titles": [
     "1"
   ],

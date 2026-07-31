@@ -4,7 +4,7 @@
   "id": "http://localhost:8181/example/items/book2-page2.json",
   "textapiType": "TextApiItem",
   "revision": "1",
-  "division": "Moby-Dick, Chapter 2 - The Carpet-Bag",
+  "division": "Page 2",
   "titles": [
     "2"
   ],
