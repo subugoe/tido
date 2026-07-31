@@ -147,10 +147,11 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!parsedDom || !textWrapperRef.current) return
     if (!activeSyncedTargets || activeSyncedTargets.targets.length === 0) return
 
-    const { yPos, targets, originTarget: prevClickedTarget } = activeSyncedTargets
+    const { yPos, targets, originTarget } = activeSyncedTargets
 
     // track the elements we highlight so the cleanup can remove their style afterwards
     const highlightedEls: HTMLElement[] = []
+    const prevClickedTarget = originTarget
 
     targets.forEach((syncedTarget) => {
       // only handle synced targets that belong to the content rendered here
@@ -172,13 +173,10 @@ const GenericTextRenderer: FC<Props> = memo(({
       }
     })
 
-    // before the next run / on unmount: remove the synopsis style from these sync targets and
-    // clear the active style of the previously clicked (origin) target
+    // before the next run / on unmount: remove the synopsis and active style from the targets in prevous sync connection
     return () => {
       highlightedEls.forEach((el) => removeSynopsisStyle(el))
-      if (prevClickedTarget) {
-        removeActiveTargetStyle(prevClickedTarget)
-      }
+      if (prevClickedTarget) removeActiveTargetStyle(prevClickedTarget)
     }
   }, [activeSyncedTargets, parsedDom, source])
 
@@ -273,7 +271,6 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     // this text is the one which navigated to the next sync target -> we should set its synced targets as scrolledSyncedTargets
     // so that they scroll as well to their sync target
-    addSynopsisStyle(navigatedTarget)
     const finalScrollTop = scrollIntoViewIfNeeded(navigatedTarget, scrollContainer)
 
     const targetSyncAnnotations = targetsSyncMapRef.current.get(navigatedTarget) ?? []
@@ -701,20 +698,23 @@ const GenericTextRenderer: FC<Props> = memo(({
       })) ?? []
     }
 
-    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1 || newSyncTargets.length > 0
+    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1 || newSyncTargets.length > 1
 
     if (openTooltip) {
       setTooltipOpen(true)
       setTooltipTargetElement(target as HTMLElement)
       setRelatedAnnotations(normalAnnotations)
       setTooltipAnnotations(_tooltipAnnotations)
-      addActiveTargetStyle(target)
       // pass the synced targets of this entry (and the clicked target's y-position) to the popover content
-      if (newSyncTargets.length > 0) {
-        setSyncTargets({ yPos: clickedYPos, originTarget: target as HTMLElement, targets: newSyncTargets })
-        setNavigatedTarget(target as HTMLElement)
-      }
     }
+
+    if (newSyncTargets.length > 0) {
+      const activeTargets = { yPos: clickedYPos, originTarget: target as HTMLElement, targets: newSyncTargets }
+      useSynopsisStore.getState().setActiveSyncedTargets(activeTargets)
+      setSyncTargets(activeTargets)
+      setNavigatedTarget(target as HTMLElement)
+    }
+    addActiveTargetStyle(target)
 
     setCrossRefAnnotations(crossRefAnnotations)
 
