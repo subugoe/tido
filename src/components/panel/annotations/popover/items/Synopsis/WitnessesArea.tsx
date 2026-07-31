@@ -80,8 +80,8 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
     <div className="flex flex-col gap-3">
       {/* title + badge */}
       <div className="flex items-center gap-2">
-        <h3 className="text-sm font-semibold">{t('synoptical_witnesses')}</h3>
-        <Badge variant="accent" className="font-semibold">{selectedCount}/{total}</Badge>
+        <h3 data-cy="synoptical-witnesses-title" className="text-sm font-semibold">{t('synoptical_witnesses')}</h3>
+        <Badge data-cy="synoptical-witnesses-counter" variant="accent" className="font-semibold">{selectedCount}/{total}</Badge>
       </div>
 
       {/* select-all checkbox + gray count label */}
@@ -93,7 +93,7 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
       </div>
 
       {/* scrollable list of witnesses */}
-      <div className="flex flex-col gap-2 max-h-64 overflow-y-auto pr-2">
+      <div data-cy="witness-list" className="flex flex-col gap-2 max-h-64 overflow-y-auto pr-2">
         {targets.map((st) => (
           <WitnessItem
             key={st.source.id}

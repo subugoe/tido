@@ -46,6 +46,8 @@ const BaseItem: FC<Props> = ({ annotation, source, onSelect }) => {
 
   return (
     <div
+      data-cy="popover-annotation-item"
+      data-annotation={annotation.id}
       className={`relative group flex flex-col px-3 py-2 min-w-80 max-w-[380px] rounded-lg border border-border hover:cursor-pointer
         ${isSelected ? 'shadow-md bg-background outline-primary outline-2' : 'hover:border-primary'}`}
       {...(isSelected ? { 'data-selected': '' } : {})}

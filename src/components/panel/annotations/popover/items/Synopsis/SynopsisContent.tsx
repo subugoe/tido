@@ -33,6 +33,7 @@ const SynopsisContent: FC<Props> = ({ syncTargets, onOpenSyncedPanels }) => {
       </div>
 
       <Button
+        data-cy="open-synced-panels"
         disabled={selectedTargets.length === 0}
         onClick={() => onOpenSyncedPanels(selectedTargets, replacePanels)}
         className="w-full h-auto py-2 justify-center text-sm disabled:bg-muted disabled:text-muted-foreground disabled:opacity-100"

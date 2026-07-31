@@ -70,32 +70,33 @@ const AnnotationPopoverContent : FC<Props> = ({
 
 
   function renderLabel(label: string) {
-    return <p className="py-1 mb-1 text-xs font-medium text-muted-foreground">{label}</p>
+    return <p data-cy="popover-section-label" className="py-1 mb-1 text-xs font-medium text-muted-foreground">{label}</p>
   }
 
   if (loading) return <div>Loading ...</div>
   return <div
+    data-cy="annotation-popover-content"
     className="flex flex-col gap-4"
     onClick={(e) => e.stopPropagation()}
   >
     {tooltipAnnotationsRef.current.length > 0 && (
-      <div className={crossRefAnnotations.length > 0 ? 'border-b border-border' : ''}>
+      <div data-cy="popover-tooltip-section" className={crossRefAnnotations.length > 0 ? 'border-b border-border' : ''}>
         {renderLabel(t('tooltip'))}
         {tooltipAnnotationsRef.current.map((ta) => <div className="mb-2"><TooltipItem key={ta.id} annotation={ta} /></div>)}
       </div>
     )}
-    {crossRefAnnotations.length > 0 && <div className="flex flex-col gap-1">
+    {crossRefAnnotations.length > 0 && <div data-cy="popover-reference-section" className="flex flex-col gap-1">
       {renderLabel(t('reference'))}
       {crossRefAnnotations.map((annotation, i) => <CrossRefItem key={i} annotation={annotation} onSelect={handleCrossRefSelection} />)}
     </div>}
     {normalAnnotationsRef.current.length > 0 && (
-      <div className={`flex flex-col gap-2 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
+      <div data-cy="popover-annotations-section" className={`flex flex-col gap-2 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
         {renderLabel(tooltipAnnotationsRef.current.length === 0 && crossRefAnnotations.length === 0 ? t('annotations') : t('more_annotations'))}
         {normalAnnotationsRef.current.map(na => <BaseItem key={na.id} annotation={na} source={source} onSelect={() => onBaseItemSelect(isSourceText)}  />)}
       </div>
     )}
     {children && (
-      <div className={`flex flex-col gap-1 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current?.length > 0 || normalAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
+      <div data-cy="popover-synopsis-section" className={`flex flex-col gap-1 ${(crossRefAnnotations.length > 0 || tooltipAnnotationsRef.current?.length > 0 || normalAnnotationsRef.current?.length > 0) ? 'border-t pt-2 border-border' : ''}`}>
         {renderLabel(t('synopsis'))}
         {children}
       </div>
