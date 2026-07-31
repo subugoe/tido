@@ -249,6 +249,12 @@ const GenericTextRenderer: FC<Props> = memo(({
   useEffect(() => {
     if (!parsedDom || !textWrapperRef.current) return
 
+    // only the panel whose scroll container holds this target scrolls to and highlights it
+    const scrollContainer = textWrapperRef.current.closest('[data-text-container]') as HTMLElement | null
+    if (!navigatedTarget) return
+    if (!scrollContainer || !scrollContainer.contains(navigatedTarget)) return
+
+    /*
     // add synopsis Style to the first sync target of text
     if (!navigatedTarget) {
       const firstTarget = syncedTargets[0]
@@ -263,13 +269,10 @@ const GenericTextRenderer: FC<Props> = memo(({
         }
       }
     }
+     */
 
-    // only the panel whose scroll container holds this target scrolls to and highlights it
-    const scrollContainer = textWrapperRef.current.closest('[data-text-container]') as HTMLElement | null
-    if (!navigatedTarget) return
-    if (!scrollContainer || !scrollContainer.contains(navigatedTarget))
 
-      if (navigatedTarget !== activeSyncedTargets.originTarget) addSynopsisStyle(navigatedTarget)
+    if (navigatedTarget !== activeSyncedTargets.originTarget) addSynopsisStyle(navigatedTarget)
 
     // this text is the one which navigated to the next sync target -> we should set its synced targets as scrolledSyncedTargets
     // so that they scroll as well to their sync target
@@ -700,7 +703,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       })) ?? []
     }
 
-    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1 || newSyncTargets.length > 1
+    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1 || newSyncTargets.length > 1 || newSyncTargets.length === 1 && normalAnnotations.length === 1
 
     if (openTooltip) {
       setTooltipOpen(true)
@@ -710,10 +713,12 @@ const GenericTextRenderer: FC<Props> = memo(({
       // pass the synced targets of this entry (and the clicked target's y-position) to the popover content
     }
 
-    if (newSyncTargets.length > 0) {
-      const activeTargets = { yPos: clickedYPos, originTarget: target as HTMLElement, targets: newSyncTargets }
+    const areOnlySyncedTargets = _tooltipAnnotations.length > 0 && crossRefAnnotations.length > 0 && normalAnnotations.length > 0
+    const activeTargets = { yPos: clickedYPos, originTarget: target as HTMLElement, targets: newSyncTargets }
+    setSyncTargets(activeTargets)
+
+    if (areOnlySyncedTargets && newSyncTargets.length > 0) {
       useSynopsisStore.getState().setActiveSyncedTargets(activeTargets)
-      setSyncTargets(activeTargets)
       setNavigatedTarget(target as HTMLElement)
     }
     addActiveTargetStyle(target)
