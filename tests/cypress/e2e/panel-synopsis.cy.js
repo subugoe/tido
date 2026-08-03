@@ -75,6 +75,9 @@ const OCEAN_ANNOTATION_TEXT = 'The ocean as a universal'
 const MAN_CONTENT_URL = 'http://localhost:8181/example-synopsis-2/html/book1-page1_transcription.html'
 const WITNESS_TITLE = 'Country Manners'
 const WITNESS_ITEM_LABEL = 'Chapter 1'
+// the manifest Panel 2 opens - '#ishmael' is synced with its own diplomatic text, with Chapter 2 of
+// this manifest and with Chapter 1 of 'Country Manners'
+const WHALE_VOYAGES = 'Whale Voyages'
 
 // Sync targets per rendered text of each panel, computed from the sync annotations of the
 // collections in 'panels' and in 'rootCollections' - see support/synopsis-helpers.js
@@ -184,10 +187,31 @@ function scrollTargetIntoSyncBand(contentUrl, selector) {
   getTextPane(contentUrl).trigger('pointerup')
 }
 
-// Hover a target in / out. The scroll position of the pane is part of the state under test, so
-// cypress must not scroll the target to the top of the pane before dispatching the event.
+// How far inside its pane a target has to sit to be hovered safely - closer to an edge it may be
+// clipped or covered by the elements floating above the pane (sync target navigation, scrollbar)
+const HOVER_SAFE_MARGIN = 60
+
+// Hover a target in / out. The target is awaited until it exists and, only if it sits outside the
+// safely visible area of its pane, scrolled in by the smallest amount that brings it there - the
+// scroll position of the pane is part of the state under test, so neither cypress nor this helper
+// may scroll the target to the top of the pane. A scroll without a pressed pointer does not drive
+// the synopsis sync (see the scroll listener of GenericTextRenderer), so the state under test
+// survives the correction.
 function hoverTarget(contentUrl, selector, event) {
-  getTextPane(contentUrl).find(selector).trigger(event, { scrollBehavior: false })
+  getTextPane(contentUrl).find(selector).should('exist')
+
+  getTextPane(contentUrl).then($pane => {
+    const pane = $pane[0]
+    const { top, bottom, height } = getTargetPosition(pane, selector)
+    const above = top - HOVER_SAFE_MARGIN
+    const below = bottom - (height - HOVER_SAFE_MARGIN)
+    // negative: the target sits above the safe area, positive: below it, 0: it is already inside
+    const delta = above < 0 ? above : Math.max(below, 0)
+
+    if (delta !== 0) cy.wrap($pane).scrollTo(0, Math.max(0, pane.scrollTop + delta))
+  })
+
+  getTextPane(contentUrl).find(selector).trigger(event, { scrollBehavior: false, force: true })
 }
 
 describe('Panel Synopsis', () => {
@@ -513,5 +537,76 @@ describe('Panel Synopsis', () => {
       expect(Math.abs(targetYPosition(syncedPane, MAN) - targetYPosition(clickedPane, OCEAN)),
         `y distance of '${OCEAN}' and its synced '${MAN}'`).to.be.lessThan(ALIGNMENT_TOLERANCE)
     })
+  })
+
+  // Panel 2 opens 'Whale Voyages', Chapter 1 - the item both tests below work on
+  it('Should keep the synopsis style of a scrolled sync connection when one of its targets is hovered out', () => {
+    const transcription = findText(SYNOPSIS_PANEL, 'transcription')
+    const diplomatic = findText(SYNOPSIS_PANEL, 'diplomatic')
+
+    // scrolling '#watery-part' into the sync band of the transcription makes it the scrolled
+    // connection: the target itself plus the '#watery-part' it is synced with in the diplomatic text
+    scrollTargetIntoSyncBand(transcription.contentUrl, WATERY_PART)
+
+    const expectPairStyled = (label) => getPanes().should($panes => {
+      const panes = pickPanes($panes)
+      expect(hasSynopsisStyle(panes.transcription, WATERY_PART), `'${WATERY_PART}' of transcription is styled ${label}`).to.be.true
+      expect(hasSynopsisStyle(panes.diplomatic, WATERY_PART), `'${WATERY_PART}' of diplomatic is styled ${label}`).to.be.true
+    })
+
+    expectPairStyled('after the scroll')
+
+    // hovering the scrolled target itself in and out leaves the connection untouched
+    hoverTarget(transcription.contentUrl, WATERY_PART, 'mouseenter')
+    hoverTarget(transcription.contentUrl, WATERY_PART, 'mouseleave')
+
+    expectPairStyled('after hovering the transcription target out')
+
+    // ... and so does hovering its synced target in the other pane
+    hoverTarget(diplomatic.contentUrl, WATERY_PART, 'mouseenter')
+    hoverTarget(diplomatic.contentUrl, WATERY_PART, 'mouseleave')
+
+    expectPairStyled('after hovering the diplomatic target out')
+  })
+
+  it('Should keep the styles of an active sync connection when one of its targets is hovered out', () => {
+    const transcription = findText(SYNOPSIS_PANEL, 'transcription')
+    const diplomatic = findText(SYNOPSIS_PANEL, 'diplomatic')
+
+    scrollTargetIntoSyncBand(transcription.contentUrl, ISHMAEL)
+
+    // DEBUG: let the scroll driven sync settle before '#ishmael' is looked up and clicked
+    cy.wait(1000)
+
+    getTextPane(transcription.contentUrl).find(ISHMAEL).click({ force: true })
+    getPopover().should('be.visible')
+
+    // add the second 'Whale Voyages' witness (Chapter 2) to the selection and open it
+    getPopover()
+      .find('[data-cy="witness-item"]')
+      .filter((_, el) => el.querySelector('[data-cy="witness-label"]').textContent === WHALE_VOYAGES)
+      .should('have.length', 3)
+      .eq(1)
+      .click()
+
+    getPopover().find('[data-cy="open-synced-panels"]').click()
+
+    cy.get('[data-cy="annotation-popover-content"]').should('not.exist')
+    cy.get('[data-cy="panel"]').should('have.length', panels.length + 1)
+
+    // the clicked target keeps the active style when it is hovered in and out again
+    hoverTarget(transcription.contentUrl, ISHMAEL, 'mouseenter')
+    hoverTarget(transcription.contentUrl, ISHMAEL, 'mouseleave')
+
+    getTextPane(transcription.contentUrl).find(ISHMAEL).should($target =>
+      expect(hasActiveStyle($target[0]), `clicked '${ISHMAEL}' keeps the active style`).to.be.true)
+
+    // ... and its synced target of the diplomatic text keeps the synopsis style
+    hoverTarget(diplomatic.contentUrl, ISHMAEL, 'mouseenter')
+    hoverTarget(diplomatic.contentUrl, ISHMAEL, 'mouseleave')
+
+    getTextPane(diplomatic.contentUrl).find(ISHMAEL).should($target =>
+      expect($target[0].classList.contains(SYNOPSIS_STYLE_CLASS),
+        `synced '${ISHMAEL}' of diplomatic keeps the synopsis style`).to.be.true)
   })
 })

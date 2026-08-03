@@ -40,6 +40,7 @@ const SyncTargetNavigation: FC = () => {
 
   // When a scroll aligns the panels, move the counter to the target this panel was aligned on.
   useEffect(() => {
+    if (!scrolledSyncedTargets) return
     const matchIndex = findNavigatedTargetIndex(scrolledSyncedTargets, syncedTargets)
     if (matchIndex === -1) return
 
@@ -47,6 +48,7 @@ const SyncTargetNavigation: FC = () => {
   }, [scrolledSyncedTargets, syncedTargets])
 
   useEffect(() => {
+    if (!activeSyncedTargets) return
     const matchIndex = findNavigatedTargetIndex(activeSyncedTargets, syncedTargets)
     if (matchIndex !== -1) {
       setNavigatedTargetIndex(matchIndex)

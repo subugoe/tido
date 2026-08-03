@@ -111,6 +111,14 @@ const GenericTextRenderer: FC<Props> = memo(({
   // Map of each sync target element in this source to the sync annotations that touch it. Built in
   // the sourceSyncAnnotations effect and read by the click/hover/scroll listeners to resolve synced targets.
   const targetsSyncMapRef = useRef<Map<HTMLElement, Annotation[]>>(new Map())
+  // "navigatedTargetRef" and "activeSyncedTargetRef" are necessary in order to prevent removing the hover synopsis style
+  // on mouse leave from the targets belonging to either the navigatedTarget or in an active sync connection
+  const navigatedTargetRef = useRef<HTMLElement | null>(navigatedTarget)
+  const activeSyncedTargetRef = useRef<SyncTargets>(activeSyncedTargets)
+  // the sync connection the last scroll resolved - kept so opening a synopsis can drop the style
+  // it left on the targets of that connection
+  const scrolledSyncedTargetsRef = useRef<SyncTargets>(scrolledSyncedTargets)
+
   // Distinguish user-driven scrolling from programmatic (sync) scrolling: a programmatic scrollTo
   // emits scroll events but never a wheel/touch/keyboard gesture or a pointer (scrollbar) drag, so
   // only scrolls backed by a recent user gesture publish a sync. See the scroll listener effect.
@@ -143,6 +151,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   // this renderer's source and scroll its container so each sits at the same y-position within
   // the container as the clicked target.
   useEffect(() => {
+    activeSyncedTargetRef.current = activeSyncedTargets
 
     if (!parsedDom || !textWrapperRef.current) return
     if (!activeSyncedTargets || activeSyncedTargets.targets.length === 0) return
@@ -181,6 +190,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   }, [activeSyncedTargets, parsedDom, source])
 
   useEffect(() => {
+    scrolledSyncedTargetsRef.current = scrolledSyncedTargets
+
     if (!parsedDom || !textWrapperRef.current) return
     if (!scrolledSyncedTargets || scrolledSyncedTargets.targets.length === 0) return
 
@@ -235,11 +246,13 @@ const GenericTextRenderer: FC<Props> = memo(({
     })
 
     return () => {
-      const currentSyncedTargets = useSynopsisStore.getState().activeSyncedTargets
+
       highlightedEls.forEach((el) => {
-        if (!isPartOfActiveSyncedTargets(el, currentSyncedTargets, source, textWrapperRef.current)) {
-          removeSynopsisStyle(el)
-        }
+        const partOfSyncConnection = [activeSyncedTargetRef.current, scrolledSyncedTargetsRef.current]
+          .some((syncTargets) => isPartOfActiveSyncedTargets(el, syncTargets, source, textWrapperRef.current))
+
+        const removeStyle = !partOfSyncConnection && el !== navigatedTargetRef.current
+        if (removeStyle) removeSynopsisStyle(el)
       })
     }
   }, [hoveredSyncedTargets, parsedDom, source])
@@ -247,6 +260,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   // When a target is navigated to via the TargetNavigation arrows: if it lives in this
   // renderer's text, scroll to it and highlight it. The style is removed again on the next navigation.
   useEffect(() => {
+    navigatedTargetRef.current = navigatedTarget
+
     if (!parsedDom || !textWrapperRef.current) return
 
     // only the panel whose scroll container holds this target scrolls to and highlights it
@@ -763,10 +778,12 @@ const GenericTextRenderer: FC<Props> = memo(({
     // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
 
     const target = e.currentTarget as HTMLElement
-    // TODO: hovering out a navigated target should not remove its synopsis style - a solution is to use a local ref
-    //  for navigated target and add a useEffect which keeps track of that value
-    const removeStyle = !isPartOfActiveSyncedTargets(target, activeSyncedTargets, source, textWrapperRef.current)
-      && target !== navigatedTarget
+    // we shouldn't remove the synopsis style to targets belonging to either the navigatedTarget or
+    // to a sync connection - the active one (chosen in a synopsis) or the one the last scroll resolved
+    const partOfSyncConnection = [activeSyncedTargetRef.current, scrolledSyncedTargetsRef.current]
+      .some((syncTargets) => isPartOfActiveSyncedTargets(target, syncTargets, source, textWrapperRef.current))
+
+    const removeStyle = !partOfSyncConnection && target !== navigatedTargetRef.current
 
     if (removeStyle) {
       removeSynopsisStyle(target)
@@ -790,6 +807,18 @@ const GenericTextRenderer: FC<Props> = memo(({
     setTooltipOpen(false)
     setCrossRefAnnotations([])
     setRelatedAnnotations([])
+
+    // The last scroll left the synopsis style on the targets of the sync connection it resolved.
+    // The synopsis opened here establishes a new connection, so that style is dropped - both from
+    // the target the scroll started at and from the targets of this text it was synced with.
+    const { originTarget, targets } = scrolledSyncedTargetsRef.current ?? {}
+    if (originTarget) removeSynopsisStyle(originTarget)
+
+    targets?.forEach((syncedTarget) => {
+      if (syncedTarget.source.id !== source) return
+      const targetEl = textWrapperRef.current?.querySelector(syncedTarget.selector)
+      if (targetEl) removeSynopsisStyle(targetEl)
+    })
   }
 
 
