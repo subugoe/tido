@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.6](https://github.com/subugoe/tido/compare/v5.0.0-beta.5...v5.0.0-beta.6) (2026-08-03)
+
+
+### Features
+
+* add navigate to synced targets top to bottom for each pane + scroll other panels when navigate to next/prev synoptic target by arrow + implement the update of navigatedTargetNumber based on scrolling, target click ([d47fdf9](https://github.com/subugoe/tido/commit/d47fdf98149a29dba9d38a661b0f46606fcae658))
+* add navigation to sync targets by arrow click ([2237d14](https://github.com/subugoe/tido/commit/2237d1444d33e2d4978c60802597ab3515ce08af))
+* add panel synopsis Witness Selection in Popover ([#1088](https://github.com/subugoe/tido/issues/1088)) ([7c7eeb7](https://github.com/subugoe/tido/commit/7c7eeb72b73107c9ba70f9884e9d957aedd42a1b))
+* add synopsis style to first synoptic target of text on mount + add synopsis style to the focused sync target while scrolling ([d21c18c](https://github.com/subugoe/tido/commit/d21c18c5659e388cdcf9ce4e10e1249883fcf40d))
+* implement - selecting an annotation in different ways (cross ref, annotation) should first scroll sidebar to annotation if needed and then scroll textContainer to its target ([69a9009](https://github.com/subugoe/tido/commit/69a9009baf43d820d90e13a9ec0878a52dd63c3a))
+
+
+### Bug Fixes
+
+* add synopsis style (yellow color) to the target when scrolling to it and it is not selected ([5d7cb24](https://github.com/subugoe/tido/commit/5d7cb245e27798781a233afbfffa9cc5b80ee734))
+* align annotation in yPos so that it doesn't overlap with its upper annotation ([#1121](https://github.com/subugoe/tido/issues/1121)) ([742884d](https://github.com/subugoe/tido/commit/742884d3f8210995bbed1cb1de5a237a5e4ea37d))
+* align correctly the annotations to their targets in text when switching off another text view ([#1122](https://github.com/subugoe/tido/issues/1122)) ([65f01b5](https://github.com/subugoe/tido/commit/65f01b51506c845849eaffcceefed3a45b6e8a2b))
+* clicking a cross ref in annotation referring to another annotation should scroll the text to the target ([#1093](https://github.com/subugoe/tido/issues/1093)) ([9a68199](https://github.com/subugoe/tido/commit/9a68199c7c7d653354532fe77228ed38ae2bc1b7))
+* clicking a target should not show in popover annotations which do not belong to the pre-selected annotation types ([2d6d184](https://github.com/subugoe/tido/commit/2d6d184132dcbf6b39bd16ae9a11277a4f4fba15))
+* clicking a target when sidebar is not opened should scroll to selected annotation ([f06f437](https://github.com/subugoe/tido/commit/f06f4378ede710862edf29b47ed7c51abd77484c))
+* clicking a target which has a sidebar annotation and a synoptic target should open the popover first and a further click in annotation should open sidebar correctly incl. selected annotation ([#1138](https://github.com/subugoe/tido/issues/1138)) ([bf31921](https://github.com/subugoe/tido/commit/bf3192135850d135f2ed98e8bf623ef9aafa58a3))
+* navigate to a new item should update correctly the panel's synced targets ([#1134](https://github.com/subugoe/tido/issues/1134)) (first solution) ([67e6252](https://github.com/subugoe/tido/commit/67e6252ebb84cc9ea24e38aeff42d43509083633))
+* navigate to an item through manifest and item labels should remove possible originally configured selectedAnnotationId in a panelConfig ([#1112](https://github.com/subugoe/tido/issues/1112)) ([5076cc3](https://github.com/subugoe/tido/commit/5076cc3f30d254f6217610ae481fec84f81337c9))
+* open the synced target in a new text view, even when its text was not visible but configured in panelViews ([#1095](https://github.com/subugoe/tido/issues/1095)) ([0c30acd](https://github.com/subugoe/tido/commit/0c30acde9cc4f837d91cfd444909ed65908de6e6))
+* render text when the contentType is only MIME type ([6692e08](https://github.com/subugoe/tido/commit/6692e086c80078873eefda8661d656ebac43f2ce))
+* select a target in second panel view should align the selected annotation with target ([91d5efd](https://github.com/subugoe/tido/commit/91d5efd7b7f9b73762591dfb4a67b89725c551f4))
+* selecting a sync target having only one related synced target should provide correct behaviour ([#1137](https://github.com/subugoe/tido/issues/1137)) ([3170665](https://github.com/subugoe/tido/commit/31706650c8d0b92da707f9c65fe648171c464eeb))
+* should not remove the synopsis style on mouse leave to a target which belongs to an active sync connection or a scrolled target ([#1129](https://github.com/subugoe/tido/issues/1129)) ([921228a](https://github.com/subugoe/tido/commit/921228adbe17c86cc9cd2985ab14b2fd8b42a3bb))
+* should open sidebar on each target click ([3b811d1](https://github.com/subugoe/tido/commit/3b811d1e6b12f081f340f71a747e93c3ea583985))
+* should scroll sidebar correctly to selected annotation provided in config (selectedAnnotationId) ([834bbca](https://github.com/subugoe/tido/commit/834bbca0cb76cd7696646eb59560fffe24075439))
+* show correctly the text when the item contentTypes are different than the pre-configured global panelViews contentTypes ([#1092](https://github.com/subugoe/tido/issues/1092)) ([3fd56d7](https://github.com/subugoe/tido/commit/3fd56d76a52a7ac595256a19a52cfdf4592076bb))
+* show the annotation types in filters for all rendered texts ([#1083](https://github.com/subugoe/tido/issues/1083)) ([0353745](https://github.com/subugoe/tido/commit/0353745945259bd77db43582cba7eb731b483558))
+
+
+### Docs
+
+* add GFL page which redirects to playground (for legacy reasons) ([557b701](https://github.com/subugoe/tido/commit/557b701e696141453fa22351a909f9e0a3a61d98))
+* add URL bookmarking of config in playground ([1c2809c](https://github.com/subugoe/tido/commit/1c2809c1982f76702ac39b14c2006ca30dd669d4))
+
+
+### Refactoring
+
+* selecting an annotation should first scroll text very close to the annotation AND then scroll it very precisely vertically to the annotation (they need to be sequentially) ([65ed6b4](https://github.com/subugoe/tido/commit/65ed6b45a320029bd252c91f83fcf68785a28476))
+
 ## [5.0.0-beta.5](https://github.com/subugoe/tido/compare/v5.0.0-beta.4...v5.0.0-beta.5) (2026-06-30)
 
 
