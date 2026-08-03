@@ -39,7 +39,6 @@ const AnnotationPopoverContainer: FC<Props> = memo(({
       <PopoverContent
         align="center"
         sideOffset={4}
-        side="bottom"
         onOpenAutoFocus={(e) => e.preventDefault()}
         hideWhenDetached={true}
       >
