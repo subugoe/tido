@@ -16,5 +16,16 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 
+// suppress a benign ResizeObserver runtime error that some browsers emit
+// and which otherwise fails Cypress tests:
+// "ResizeObserver loop completed with undelivered notifications."
+Cypress.on('uncaught:exception', (err) => {
+  if (err && err.message && err.message.includes('ResizeObserver loop completed with undelivered notifications')) {
+    // returning false prevents Cypress from failing the test
+    return false
+  }
+  // allow other errors to fail the tests
+})
+
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
