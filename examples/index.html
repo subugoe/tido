@@ -1108,8 +1108,8 @@
      }},
       {
         id: 'example-collection', label: 'Example Collection', config: {
-          panels: [{ collection: window.location.href + 'api/collections/example.json' }],
-          rootCollections: [window.location.href + 'api/collections/example.json'],
+          panels: [{ collection: window.location.origin + window.location.pathname + 'api/collections/example.json' }],
+          rootCollections: [window.location.origin + window.location.pathname + 'api/collections/example.json'],
           title: 'Example Collection'
         }
       },
@@ -1132,6 +1132,20 @@
       })
     }
 
+    function getConfigParam() {
+      return new URLSearchParams(window.location.search).get('config')
+    }
+
+    function setConfigParam(id) {
+      const url = new URL(window.location.href)
+      if (id) {
+        url.searchParams.set('config', id)
+      } else {
+        url.searchParams.delete('config')
+      }
+      history.replaceState(null, '', url)
+    }
+
     fetch(COLLECTIONS_API)
       .then(function (r) { return r.json() })
       .then(function (urls) {
@@ -1148,8 +1162,13 @@
       .catch(function () {})
       .finally(function () {
         buildOptions()
-        presetSelect.value = 'example-collection'
-        loadPreset('example-collection')
+        let initial = 'example-collection'
+        const urlParam = getConfigParam()
+        if (urlParam && PRESETS.some(function (p) { return p.id === urlParam && p.config })) {
+          initial = urlParam
+        }
+        presetSelect.value = initial
+        loadPreset(initial)
       })
 
     function highlightJSON(str) {
@@ -1220,7 +1239,11 @@
     }
 
     presetSelect.addEventListener('change', function () {
-      loadPreset(this.value)
+      const id = this.value
+      loadPreset(id)
+      if (PRESETS.some(function (p) { return p.id === id })) {
+        setConfigParam(id)
+      }
     })
 
     var expandedPane = null
