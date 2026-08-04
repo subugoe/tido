@@ -14,6 +14,7 @@ export const ACTIVE_TARGET_STYLE = ['not-[.bg-sync-annotation-hover]:!bg-annotat
 export const SYNC_TARGET_HOVER_STYLE = ['!bg-sync-annotation-hover']
 export const SYNC_ANNOTATION_ID_ATTRIBUTE = 'data-sync-annotation-id'
 export const SYNC_HIGHLIGHT_STYLE = ['cursor-pointer']
+export const SYNC_NAVIGATION_POSITION = 'absolute top-0 z-50 -translate-x-1/2'
 
 export const MIN_PANEL_WIDTH = 800
 export const DEFAULT_PANEL_WIDTH = MIN_PANEL_WIDTH

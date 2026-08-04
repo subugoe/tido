@@ -24,6 +24,7 @@ const PanelShell: FC<Props> = ({ children }) => {
     }
   }, [])
 
+
   return <div
     id={panelId}
     ref={ref}
