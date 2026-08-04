@@ -52,6 +52,7 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
 
     setOpenedWitnesses(opened)
     setSelectedWitnesses({ ...opened })
+    applySelection({ ...opened })
   }, [])
 
 

@@ -728,7 +728,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       // pass the synced targets of this entry (and the clicked target's y-position) to the popover content
     }
 
-    const areOnlySyncedTargets = _tooltipAnnotations.length > 0 && crossRefAnnotations.length > 0 && normalAnnotations.length > 0
+    const areOnlySyncedTargets = _tooltipAnnotations.length === 0 && crossRefAnnotations.length === 0 && normalAnnotations.length === 0
     const activeTargets = { yPos: clickedYPos, originTarget: target as HTMLElement, targets: newSyncTargets }
     setSyncTargets(activeTargets)
 
