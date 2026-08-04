@@ -76,7 +76,7 @@ const AlignAnnotationsList: FC = () => {
 
   useEffect(() => {
     const panelEl = document.getElementById(panelId) as HTMLElement
-    const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-container="true"]') as HTMLElement
+    const annotationsSideBarEl = panelEl?.querySelector('div[data-sidebar-scroll-container="true"]') as HTMLElement
     const controller = new AbortController()
 
     async function deselectAnnotationOnOutsideClick(event: MouseEvent) {
