@@ -7,11 +7,12 @@ import { Badge } from '@/components/ui/badge.tsx'
 import NavigationButton from '@/components/panel/synopsis/NavigationButton.tsx'
 import NavigationCollapsed from '@/components/panel/synopsis/NavigationCollapsed.tsx'
 import { useSynopsisStore, SyncTargets } from '@/store/SynopsisStore.tsx'
+import { PANEL_BORDER_WIDTH, SYNC_NAVIGATION_POSITION } from '@/utils/constants.ts'
 
-const EXPANDED_POSITION = 'absolute left-1/2 top-0 z-50 -translate-x-1/2 -translate-y-[calc(100%-6px)]'
+const VERTICAL_OFFSET = '-translate-y-[calc(100%-6px)]'
 
 const SyncTargetNavigation: FC = () => {
-  const { syncedTargets, usePanelTranslation } = usePanel()
+  const { panelId, syncedTargets, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
   const setNavigatedTarget = useSynopsisStore(state => state.setNavigatedTarget)
   const navigatedTarget = useSynopsisStore(state => state.navigatedTarget)
@@ -19,6 +20,22 @@ const SyncTargetNavigation: FC = () => {
   const scrolledSyncedTargets = useSynopsisStore(state => state.scrolledSyncedTargets)
   const [navigatedTargetIndex, setNavigatedTargetIndex] = useState(0)
   const [collapsed, setCollapsed] = useState(false)
+  const [centerX, setCenterX] = useState(0)
+
+  // The navigation sits next to the panel card, so it cannot inherit the width of the main content
+  // it belongs to. Track that width instead and center the navigation on it - opening the sidebar
+  // widens the panel to the right while the main content keeps its width, so the navigation stays.
+  useEffect(() => {
+    const mainContentEl = document.getElementById(panelId)?.querySelector('.main-content')
+    if (!mainContentEl) return
+
+    const observer = new ResizeObserver(([entry]) => {
+      setCenterX(PANEL_BORDER_WIDTH + entry.contentRect.width / 2)
+    })
+    observer.observe(mainContentEl)
+
+    return () => observer.disconnect()
+  }, [panelId])
 
   function findNavigatedTargetIndex({ originTarget, targets }: SyncTargets, syncedTargets: HTMLElement[]) {
     const originIndex = originTarget ? syncedTargets.findIndex((el) => el === originTarget) : -1
@@ -78,10 +95,14 @@ const SyncTargetNavigation: FC = () => {
   }
 
 
-  if (collapsed) return <NavigationCollapsed onOpen={() => setCollapsed(false)} />
+  if (collapsed) return <NavigationCollapsed onOpen={() => setCollapsed(false)} centerX={centerX} />
 
   return (
-    <div className={EXPANDED_POSITION} data-cy="sync-target-navigation">
+    <div
+      className={`${SYNC_NAVIGATION_POSITION} ${VERTICAL_OFFSET}`}
+      style={{ left: `${centerX}px` }}
+      data-cy="sync-target-navigation"
+    >
       <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 shadow-md">
         <span className="whitespace-nowrap text-sm font-medium">{t('synoptic_target')}</span>
         <span className="h-5 w-px bg-border" />
