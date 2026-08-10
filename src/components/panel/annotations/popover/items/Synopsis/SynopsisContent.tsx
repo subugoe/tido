@@ -2,11 +2,11 @@ import { FC, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
-import { SyncedTargetRef, SyncTargets } from '@/store/SynopsisStore.tsx'
+import { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import WitnessesArea from '@/components/panel/annotations/popover/items/Synopsis/WitnessesArea.tsx'
 
 interface Props {
-  syncTargets: SyncTargets
+  syncTargets: SynopsisConnection
   onOpenSyncedPanels: (selectedTargets: SyncedTargetRef[], replacePanels: boolean) => void
 }
 

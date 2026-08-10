@@ -3,28 +3,35 @@ import { getSource } from '@/utils/annotations.ts'
 export const SYNC_SCROLL_THRESHOLD_TOP = 0.35
 const SYNC_SCROLL_THRESHOLD_BOTTOM = 0.45
 
-// Find the target currently sitting in the scroll container's "focused" band - the first target
-// overlapping the reference window between SYNC_SCROLL_THRESHOLD_TOP and _BOTTOM (extended down to
-// the container bottom when scrolled near the end). Shared by scrollOtherTexts and the synopsis
-// scroll listener in GenericTextRenderer.
+// Find the topmost target sitting in the scroll container's "focused" band - the strip of the
+// visible area between SYNC_SCROLL_THRESHOLD_TOP and _BOTTOM, extended down to the container bottom
+// when scrolled near the end. The band is part of the visible area, so a target overlapping it is on
+// screen by definition. Shared by scrollOtherTexts and the synopsis scroll listener in
+// GenericTextRenderer.
 export function findFocusedTarget(scrollContainer: HTMLElement, targets: Element[]): HTMLElement | undefined {
-  const containerRect = scrollContainer.getBoundingClientRect()
-  const scrollTop = scrollContainer.scrollTop
+  const { top, bottom, height } = scrollContainer.getBoundingClientRect()
 
-  const remainingBottomHeight = scrollContainer.clientHeight * (1 - SYNC_SCROLL_THRESHOLD_BOTTOM)
-  const remainingScrollAmount = scrollContainer.scrollHeight - scrollTop - scrollContainer.clientHeight
-  const isNearBottom = remainingScrollAmount <= remainingBottomHeight
-  const refTop = scrollTop + scrollContainer.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
-  const refBottom = isNearBottom
-    ? scrollTop + scrollContainer.clientHeight
-    : scrollTop + scrollContainer.clientHeight * SYNC_SCROLL_THRESHOLD_BOTTOM
+  const remainingScrollAmount = scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight
+  const isNearBottom = remainingScrollAmount <= height * (1 - SYNC_SCROLL_THRESHOLD_BOTTOM)
 
-  return targets.find((target) => {
-    const targetRect = target.getBoundingClientRect()
-    const targetTop = targetRect.top - containerRect.top + scrollTop
-    const targetBottom = targetRect.bottom - containerRect.top + scrollTop
-    return targetTop < refBottom && targetBottom > refTop
-  }) as HTMLElement | undefined
+  const bandTop = top + height * SYNC_SCROLL_THRESHOLD_TOP
+  const bandBottom = isNearBottom ? bottom : top + height * SYNC_SCROLL_THRESHOLD_BOTTOM
+
+  let focusedTarget: HTMLElement | undefined
+  let smallestTop = Infinity
+
+  targets.forEach((target) => {
+    const { top: targetTop, bottom: targetBottom } = target.getBoundingClientRect()
+    if (targetTop >= bandBottom || targetBottom <= bandTop) return
+
+    // the one closest to the top of the band, whatever order the targets come in
+    if (targetTop < smallestTop) {
+      smallestTop = targetTop
+      focusedTarget = target as HTMLElement
+    }
+  })
+
+  return focusedTarget
 }
 
 class Scroller {

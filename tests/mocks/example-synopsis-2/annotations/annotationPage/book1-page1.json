@@ -67,7 +67,7 @@
           "source": "http://localhost:8181/example-synopsis-2/html/book1-page1_transcription.html",
           "selector": {
             "type": "CssSelector",
-            "value": "#bennet"
+            "value": "#bennet1"
           },
           "format": "text/html",
           "language": "eng"
