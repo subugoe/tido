@@ -20,6 +20,7 @@ export interface SynopsisConnection {
   // y-position of navigatedTarget within its scroll container's visible height (ignoring scroll
   // position), so every panel can scroll its own synced target to the same y-position
   yPos: number
+  source?: string
 }
 
 export const EMPTY_SYNOPSIS_CONNECTION: SynopsisConnection = {

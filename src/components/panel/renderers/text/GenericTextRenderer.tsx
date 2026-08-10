@@ -144,10 +144,12 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!parsedDom || !textWrapperRef.current) return
     if (!activeSynopsisConnection) return
 
-    const { navigatedTarget, otherSyncedTargets, yPos } = activeSynopsisConnection
+    const { navigatedTarget, otherSyncedTargets, yPos, source: synopsisSource } = activeSynopsisConnection
     if (!navigatedTarget) return
 
-    addSynopsisSelectedStyle(navigatedTarget)
+    const isScrollSource = synopsisSource === 'scroll'
+
+    if (!isScrollSource) addSynopsisSelectedStyle(navigatedTarget)
 
     // the connection's targets that live in this text, resolved from their selector
     const ownTargets = otherSyncedTargets
@@ -156,7 +158,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       .filter(Boolean)
 
     ownTargets.forEach((targetEl) => {
-      addSynopsisSelectedStyle(targetEl)
+      if (!isScrollSource) addSynopsisSelectedStyle(targetEl)
 
       // scroll so this target's y-position within the container matches the navigated target's
       const scrollContainer = targetEl.closest('[data-text-container]') as HTMLElement
@@ -249,7 +251,8 @@ const GenericTextRenderer: FC<Props> = memo(({
       useSynopsisStore.getState().setActiveSynopsisConnection({
         navigatedTarget: focusedTarget,
         otherSyncedTargets: newSyncTargets,
-        yPos
+        yPos,
+        source: 'scroll'
       })
     }
 
@@ -357,7 +360,8 @@ const GenericTextRenderer: FC<Props> = memo(({
 
         if (getSyncAnnotationIds(targetEl).some(Boolean)) return
         addSyncAnnotationId(targetEl, cur.id)
-        addHighlightStyle(targetEl)
+        // TODO: the synopsis style should be added based on annotation types we allow for default highlighting
+        // addHighlightStyle(targetEl)
         addAnnotationBaseStyle(targetEl)
         targetEl.addEventListener('click', onClickTarget)
         targetEl.addEventListener('mouseenter', onMouseEnterSyncTarget)
@@ -683,6 +687,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     setSyncTargets(EMPTY_SYNOPSIS_CONNECTION)
     setHoveredAnnotations([])
     removeActiveTargetStyle(tooltipTargetElement)
+    removeSynopsisSelectedStyle(tooltipTargetElement)
   }
 
   // Close the popover when the synopsis is opened. The witness selection publishes the new active

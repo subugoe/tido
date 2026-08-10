@@ -10,7 +10,7 @@ export const CROSS_REF_ATTRIBUTE = 'data-target'
 export const CROSS_REF_REL_ATTRIBUTE = 'rel'
 export const CROSS_REF_REL_STYLE = ['bg-yellow-200']
 export const SYNOPSIS_SELECTED_STYLE = ['bg-yellow-500']
-export const SYNOPSIS_HOVER_STYLE = ['bg-yellow-300']
+export const SYNOPSIS_HOVER_STYLE = ['bg-yellow-300', 'cursor-pointer']
 export const ACTIVE_TARGET_STYLE = ['bg-annotation-selected']
 
 export const SYNC_TARGET_HOVER_STYLE = ['!bg-sync-annotation-hover']

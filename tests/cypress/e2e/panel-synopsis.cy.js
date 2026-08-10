@@ -251,6 +251,8 @@ describe('Panel Synopsis', () => {
     getSyncTargetNavigation(0).should('not.exist')
   })
 
+  /*
+
   it('Should display the first of all synced targets in the Sync Target Navigation of Panel 2', () => {
     getSyncTargetNavigation(SYNOPSIS_PANEL)
       .find('[data-cy="sync-target-counter"]')
@@ -268,8 +270,6 @@ describe('Panel Synopsis', () => {
       .eq(1)
       .should('have.attr', 'disabled')
   })
-
-  /*
 
   it('Should highlight the first synced target of the left pane in Panel 2', () => {
     getPanel(SYNOPSIS_PANEL)

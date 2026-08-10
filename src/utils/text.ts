@@ -93,7 +93,6 @@ function addActiveTargetStyle(target: Element) {
 
 function removeActiveTargetStyle(target: Element) {
   target.classList.remove(...ACTIVE_TARGET_STYLE)
-
 }
 
 function removeSelectedStyle(target: Element) {

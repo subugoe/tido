@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import NavigationButton from '@/components/panel/synopsis/NavigationButton.tsx'
 import NavigationCollapsed from '@/components/panel/synopsis/NavigationCollapsed.tsx'
+import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { getSyncedTargets } from '@/utils/annotations.ts'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
@@ -117,40 +118,40 @@ const SyncTargetNavigation: FC = () => {
       style={{ left: `${centerX}px` }}
       data-cy="sync-target-navigation"
     >
-      <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 shadow-md">
-        <span className="whitespace-nowrap text-sm font-medium">{t('synoptic_target')}</span>
-        <span className="h-5 w-px bg-border" />
-        <NavigationButton
-          isDisabled={isLast}
-          ariaLabel={t('next_synoptic_target')}
-          onSelect={() => goToTarget(navigatedTargetIndex + 1, syncedTargets)}
-        >
-          <ChevronDown />
-        </NavigationButton>
-        <Badge
-          className="min-w-10 justify-center rounded-full border-transparent bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900"
-          data-cy="sync-target-counter"
-        >
-          {navigatedTargetIndex + 1}/{total}
-        </Badge>
-        <NavigationButton
-          isDisabled={isFirst}
-          ariaLabel={t('previous_synoptic_target')}
-          onSelect={() => goToTarget(navigatedTargetIndex - 1, syncedTargets)}
-        >
-          <ChevronUp />
-        </NavigationButton>
-        <span className="h-5 w-px bg-border" />
-        <Button
-          size="icon"
-          variant="ghost"
-          className="h-6 w-6 rounded-full text-muted-foreground"
-          aria-label={t('collapse')}
-          onClick={() => setCollapsed(true)}
-        >
-          <EyeOff />
-        </Button>
-      </div>
+      <BaseTooltip message={t('synoptic_target')}>
+        <div className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 shadow-md">
+          <NavigationButton
+            isDisabled={isFirst}
+            ariaLabel={t('previous_synoptic_target')}
+            onSelect={() => goToTarget(navigatedTargetIndex - 1, syncedTargets)}
+          >
+            <ChevronUp />
+          </NavigationButton>
+          <Badge
+            className="min-w-10 justify-center rounded-full border-transparent bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900"
+            data-cy="sync-target-counter"
+          >
+            {navigatedTargetIndex + 1}/{total}
+          </Badge>
+          <NavigationButton
+            isDisabled={isLast}
+            ariaLabel={t('next_synoptic_target')}
+            onSelect={() => goToTarget(navigatedTargetIndex + 1, syncedTargets)}
+          >
+            <ChevronDown />
+          </NavigationButton>
+          <span className="h-5 w-px bg-border" />
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-6 w-6 rounded-full text-muted-foreground"
+            aria-label={t('collapse')}
+            onClick={() => setCollapsed(true)}
+          >
+            <EyeOff />
+          </Button>
+        </div>
+      </BaseTooltip>
     </div>
   )
 }
