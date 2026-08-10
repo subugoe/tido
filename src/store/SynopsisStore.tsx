@@ -8,15 +8,24 @@ export interface SyncedTargetRef {
   selector: string
 }
 
-// Payload of synced targets plus the origin target's y-position within its scroll container's
-// visible height (ignoring scroll position), so each panel can scroll its own synced target to the
-// same y-position.
-export interface SyncTargets {
+// The sync connection currently navigated to. Established by clicking a sync target, scrolling a
+// panel, choosing witnesses in a synopsis popover or the TargetNavigation arrows. Every renderer
+// highlights the connection's targets that live in its own text and scrolls its one into alignment.
+export interface SynopsisConnection {
+  // the target the connection was navigated from - the clicked, scrolled-to or arrow-navigated element
+  navigatedTarget: HTMLElement | null
+  // the targets it is synced with, kept as selector refs: each renderer resolves the ones of its
+  // own source within its own DOM, so a source rendered in several panels is handled everywhere
+  otherSyncedTargets: SyncedTargetRef[]
+  // y-position of navigatedTarget within its scroll container's visible height (ignoring scroll
+  // position), so every panel can scroll its own synced target to the same y-position
   yPos: number
-  // the origin target the sync was resolved from; kept so its active style can be cleared when the
-  // next selection is made
-  originTarget: HTMLElement | null
-  targets: SyncedTargetRef[]
+}
+
+export const EMPTY_SYNOPSIS_CONNECTION: SynopsisConnection = {
+  navigatedTarget: null,
+  otherSyncedTargets: [],
+  yPos: 0
 }
 
 interface SynopsisStoreTypes {
@@ -27,20 +36,14 @@ interface SynopsisStoreTypes {
   // to resolve a clicked target's synced targets on demand. Same annotation appears under every
   // source it targets.
   syncAnnotationsBySource: Map<string, Annotation[]>
-  // the synced targets resolved from a synopsis popover selection - highlighted and scrolled into alignment
-  activeSyncedTargets: SyncTargets
-  // the synced targets resolved while the user scrolls a panel - only scrolled into alignment, not highlighted
-  scrolledSyncedTargets: SyncTargets
+  // the sync connection the panels are currently aligned on - highlighted and scrolled into alignment
+  activeSynopsisConnection: SynopsisConnection
   // the synced targets of the target currently hovered - highlighted (without scrolling) while hovering
   hoveredSyncedTargets: SyncedTargetRef[]
-  // the target navigated  via the TargetNavigation, scrolling, clicking target
-  navigatedTarget: HTMLElement | null
   addSyncAnnotations: (annotations: Annotation[]) => void
   addSyncAnnotationsFromCollection: (collectionUrl: string) => Promise<void>
-  setActiveSyncedTargets: (activeSyncedTargets: SyncTargets) => void
-  setScrolledSyncedTargets: (scrolledSyncedTargets: SyncTargets) => void
+  setActiveSynopsisConnection: (activeSynopsisConnection: SynopsisConnection) => void
   setHoveredSyncedTargets: (hoveredSyncedTargets: SyncedTargetRef[]) => void
-  setNavigatedTarget: (navigatedTarget: HTMLElement | null) => void
 }
 
 // Walk the collection tree until we find a collection that includes an annotationCollection.
@@ -63,21 +66,13 @@ async function findAnnotationCollectionUrl(collection: Collection): Promise<stri
 export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
   syncAnnotations: [],
   syncAnnotationsBySource: new Map(),
-  activeSyncedTargets: { yPos: 0, originTarget: null, targets: [] },
-  scrolledSyncedTargets: { yPos: 0, originTarget: null, targets: [] },
+  activeSynopsisConnection: EMPTY_SYNOPSIS_CONNECTION,
   hoveredSyncedTargets: [],
-  navigatedTarget: null,
-  setActiveSyncedTargets: (activeSyncedTargets) => {
-    set({ activeSyncedTargets })
-  },
-  setScrolledSyncedTargets: (scrolledSyncedTargets) => {
-    set({ scrolledSyncedTargets })
+  setActiveSynopsisConnection: (activeSynopsisConnection) => {
+    set({ activeSynopsisConnection })
   },
   setHoveredSyncedTargets: (hoveredSyncedTargets) => {
     set({ hoveredSyncedTargets })
-  },
-  setNavigatedTarget: (navigatedTarget) => {
-    set({ navigatedTarget })
   },
   // Merge the given annotations into syncAnnotations (skipping any whose id is already known) and
   // index them by their targets' source. Only the arrays of the affected sources are replaced, so

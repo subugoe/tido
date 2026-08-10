@@ -6,18 +6,19 @@ import { Button } from '@/components/ui/button.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import NavigationButton from '@/components/panel/synopsis/NavigationButton.tsx'
 import NavigationCollapsed from '@/components/panel/synopsis/NavigationCollapsed.tsx'
-import { useSynopsisStore, SyncTargets } from '@/store/SynopsisStore.tsx'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { getSyncedTargets } from '@/utils/annotations.ts'
+import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { PANEL_BORDER_WIDTH, SYNC_NAVIGATION_POSITION } from '@/utils/constants.ts'
 
 const VERTICAL_OFFSET = '-translate-y-[calc(100%-6px)]'
 
 const SyncTargetNavigation: FC = () => {
-  const { panelId, syncedTargets, usePanelTranslation } = usePanel()
+  const { panelId, syncedTargets, syncedTargetsMap, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
-  const setNavigatedTarget = useSynopsisStore(state => state.setNavigatedTarget)
-  const navigatedTarget = useSynopsisStore(state => state.navigatedTarget)
-  const activeSyncedTargets = useSynopsisStore(state => state.activeSyncedTargets)
-  const scrolledSyncedTargets = useSynopsisStore(state => state.scrolledSyncedTargets)
+  const activeSynopsisConnection = useSynopsisStore(state => state.activeSynopsisConnection)
+  const setActiveSynopsisConnection = useSynopsisStore(state => state.setActiveSynopsisConnection)
+  const syncAnnotationsBySource = useSynopsisStore(state => state.syncAnnotationsBySource)
   const [navigatedTargetIndex, setNavigatedTargetIndex] = useState(0)
   const [collapsed, setCollapsed] = useState(false)
   const [centerX, setCenterX] = useState(0)
@@ -37,36 +38,33 @@ const SyncTargetNavigation: FC = () => {
     return () => observer.disconnect()
   }, [panelId])
 
-  function findNavigatedTargetIndex({ originTarget, targets }: SyncTargets, syncedTargets: HTMLElement[]) {
-    const originIndex = originTarget ? syncedTargets.findIndex((el) => el === originTarget) : -1
-    if (originIndex !== -1) return originIndex
-
-    return syncedTargets.findIndex((el) => targets.some((ref) => el.matches(ref.selector)))
+  // The source (content url) the given sync target belongs to - the key of syncedTargetsMap whose
+  // targets contain it. Needed to resolve a target's sync annotations.
+  function findTargetSource(target: HTMLElement): string | undefined {
+    return Object.keys(syncedTargetsMap).find((contentUrl) => syncedTargetsMap[contentUrl]?.includes(target))
   }
 
-  // Move the counter to the target that was last navigated to. navigatedTarget is published by
-  // whichever panel's arrows were used
+  // This panel's target of the active connection: its navigated target when the connection started
+  // here, otherwise the connection's synced target that lives in one of this panel's texts.
+  function findConnectionTargetIndex(syncedTargets: HTMLElement[]) {
+    const { navigatedTarget, otherSyncedTargets } = activeSynopsisConnection
+
+    const navigatedIndex = navigatedTarget ? syncedTargets.indexOf(navigatedTarget) : -1
+    if (navigatedIndex !== -1) return navigatedIndex
+
+    return syncedTargets.findIndex((el) => otherSyncedTargets.some((syncedTarget) =>
+      syncedTargetsMap[syncedTarget.source.id]?.includes(el) && el.matches(syncedTarget.selector)
+    ))
+  }
+
+  // Move the counter to this panel's target of the connection, whichever panel established it -
+  // by clicking a sync target, scrolling or the arrows.
   useEffect(() => {
-    if (!navigatedTarget) return
-
-    const newSyncedTargetIndex = syncedTargets.findIndex((el) => el === navigatedTarget)
-    if (newSyncedTargetIndex === -1) return
-
-    setNavigatedTargetIndex(newSyncedTargetIndex)
-  }, [navigatedTarget, syncedTargets])
-
-  // When a scroll aligns the panels, move the counter to the target this panel was aligned on.
-  useEffect(() => {
-    if (!scrolledSyncedTargets) return
-    const matchIndex = findNavigatedTargetIndex(scrolledSyncedTargets, syncedTargets)
-    if (matchIndex === -1) return
-
-    setNavigatedTargetIndex(matchIndex)
-  }, [scrolledSyncedTargets, syncedTargets])
-
-  useEffect(() => {
-    if (!activeSyncedTargets) return
-    const matchIndex = findNavigatedTargetIndex(activeSyncedTargets, syncedTargets)
+    if (!activeSynopsisConnection) {
+      setNavigatedTargetIndex(0)
+      return
+    }
+    const matchIndex = findConnectionTargetIndex(syncedTargets)
     if (matchIndex !== -1) {
       setNavigatedTargetIndex(matchIndex)
       return
@@ -75,7 +73,7 @@ const SyncTargetNavigation: FC = () => {
     // otherwise just keep the index within range when the set of targets shrinks, i.e when toggling off a panel view text
     const newNavigatedIndex = syncedTargets.length === 0 ? 0 : Math.min(navigatedTargetIndex, syncedTargets.length - 1)
     setNavigatedTargetIndex(newNavigatedIndex)
-  }, [activeSyncedTargets, syncedTargets])
+  }, [activeSynopsisConnection, syncedTargets])
 
 
 
@@ -91,7 +89,23 @@ const SyncTargetNavigation: FC = () => {
     const nextIndex = Math.max(0, Math.min(index, syncedTargets.length - 1))
     if (nextIndex === navigatedTargetIndex) return
 
-    setNavigatedTarget(syncedTargets[nextIndex])
+    const target = syncedTargets[nextIndex]
+    const source = findTargetSource(target)
+    const otherSyncedTargets = source
+      ? getSyncedTargets(target, source, syncAnnotationsBySource.get(source) ?? [])
+      : []
+
+    // Scroll the target into view first: the other panels align their own targets to where it ends
+    // up, so yPos must be derived from the scrollTop the container settles at, not its current one.
+    const scrollContainer = target.closest('[data-text-container]') as HTMLElement | null
+    let yPos = 0
+    if (scrollContainer) {
+      const finalScrollTop = scrollIntoViewIfNeeded(target, scrollContainer)
+      const offsetTop = target.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top + scrollContainer.scrollTop
+      yPos = offsetTop - finalScrollTop
+    }
+
+    setActiveSynopsisConnection({ navigatedTarget: target, otherSyncedTargets, yPos })
   }
 
 

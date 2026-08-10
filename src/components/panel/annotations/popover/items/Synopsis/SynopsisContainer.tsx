@@ -5,11 +5,11 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { apiRequest } from '@/utils/api.ts'
 import { createNewPanel, getContentTypes, setNewActiveContentType, splitMIMEType } from '@/utils/panel.ts'
 import { PanelView } from '@/types'
-import { SyncedTargetRef, SyncTargets, useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { SyncedTargetRef, SynopsisConnection, useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import SynopsisContent from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContent.tsx'
 
 interface Props {
-  syncTargets: SyncTargets,
+  syncTargets: SynopsisConnection,
   onSelect: () => void
 }
 
@@ -17,14 +17,14 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
   const { panelViews: panelViewsConfig } = useConfig()
-  const setActiveSyncedTargets = useSynopsisStore((state) => state.setActiveSyncedTargets)
+  const setActiveSynopsisConnection = useSynopsisStore((state) => state.setActiveSynopsisConnection)
 
   function onOpenPanelsClick(selectedTargets: SyncedTargetRef[], replacePanels: boolean) {
     onSelect()
     if (replacePanels) openWithSubstitute(selectedTargets)
     else openAdditionalPanel(selectedTargets)
-    // store the synced targets so each panel can highlight and scroll to its own target
-    setActiveSyncedTargets({ ...syncTargets, targets: selectedTargets })
+    // publish the connection so each panel can highlight and scroll to its own target
+    setActiveSynopsisConnection({ ...syncTargets, otherSyncedTargets: selectedTargets })
   }
 
   // The index of the panel's text view showing the synced content (source.id), or -1 when the panel

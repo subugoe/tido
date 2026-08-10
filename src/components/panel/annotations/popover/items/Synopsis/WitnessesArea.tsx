@@ -4,10 +4,10 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 import WitnessItem from '@/components/panel/annotations/popover/items/Synopsis/WitnessItem.tsx'
-import { SyncedTargetRef, SyncTargets } from '@/store/SynopsisStore.tsx'
+import { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 
 interface Props {
-  syncTargets: SyncTargets
+  syncTargets: SynopsisConnection
   onSelect: (selected: SyncedTargetRef[]) => void
 }
 
@@ -18,7 +18,7 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
-  const targets = syncTargets.targets
+  const targets = syncTargets.otherSyncedTargets
   const [openedWitnesses, setOpenedWitnesses] = useState<WitnessMap>({})
   const [selectedWitnesses, setSelectedWitnesses] = useState<WitnessMap>({})
 

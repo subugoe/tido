@@ -10,6 +10,8 @@ import {
   CROSS_REF_ATTRIBUTE,
   CROSS_REF_REL_ATTRIBUTE,
   CROSS_REF_REL_STYLE,
+  SYNOPSIS_SELECTED_STYLE,
+  SYNOPSIS_HOVER_STYLE,
   SYNC_HIGHLIGHT_STYLE,
   SYNC_TARGET_HOVER_STYLE,
   SYNC_ANNOTATION_ID_ATTRIBUTE,
@@ -126,6 +128,24 @@ function addSynopsisStyle(target: Element) {
 
 function removeSynopsisStyle(target: Element) {
   target.classList.remove(...CROSS_REF_REL_STYLE)
+}
+
+// The target a synopsis connection was opened from - stronger than the plain synopsis highlight.
+function addSynopsisSelectedStyle(target: Element) {
+  target.classList.add(...SYNOPSIS_SELECTED_STYLE)
+}
+
+function removeSynopsisSelectedStyle(target: Element) {
+  target.classList.remove(...SYNOPSIS_SELECTED_STYLE)
+}
+
+// Hovered sync target - sits between the plain synopsis highlight and the selected one.
+function addSynopsisHoverStyle(target: Element) {
+  target.classList.add(...SYNOPSIS_HOVER_STYLE)
+}
+
+function removeSynopsisHoverStyle(target: Element) {
+  target.classList.remove(...SYNOPSIS_HOVER_STYLE)
 }
 
 
@@ -379,6 +399,10 @@ export {
   addCrossReferencedElStyle,
   addSynopsisStyle,
   removeSynopsisStyle,
+  addSynopsisSelectedStyle,
+  removeSynopsisSelectedStyle,
+  addSynopsisHoverStyle,
+  removeSynopsisHoverStyle,
   addSyncHoverStyle,
   addSyncAnnotationId,
   addActiveTargetStyle,

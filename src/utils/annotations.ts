@@ -2,7 +2,7 @@ import { AnnotationFiltersConfig, FilterNodeWithSelection, VariantType } from '@
 import { apiRequest } from '@/utils/api.ts'
 import { getTypeValue } from '@/utils/filter-tree.ts'
 import { CustomError } from '@/utils/custom-error.ts'
-import type { SyncedTargetRef, SyncTargets } from '@/store/SynopsisStore.tsx'
+import type { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 
 function getSelectedTypes(config: AnnotationFiltersConfig): AnnotationTypesDict {
   let types: AnnotationTypesDict = {}
@@ -190,17 +190,16 @@ function getSyncedTargets(clickedEl: HTMLElement, source: string, targetSyncAnno
   return result
 }
 
-// Whether an element is part of the active synced targets selection - either the clicked origin
-// target, or one of its synced targets (resolved by selector within the given source). Used to keep
-// the synopsis highlight on such elements when other interactions (hover/scroll) would remove it.
-function isPartOfActiveSyncedTargets(
+// Whether an element belongs to the given synopsis connection - either as its navigated target or
+// as one of the synced targets of the given source, resolved by selector within the container.
+function isPartOfActiveSynopsisConnection(
   el: HTMLElement,
-  activeSyncedTargets: SyncTargets,
+  connection: SynopsisConnection,
   source: string,
   container: HTMLElement | null
 ): boolean {
-  return el === activeSyncedTargets.originTarget ||
-    activeSyncedTargets.targets.some((syncedTarget) =>
+  return el === connection.navigatedTarget ||
+    connection.otherSyncedTargets.some((syncedTarget) =>
       syncedTarget.source.id === source &&
       container?.querySelector(syncedTarget.selector) === el
     )
@@ -218,5 +217,5 @@ export {
   getSource,
   getSelectorValue,
   getSyncedTargets,
-  isPartOfActiveSyncedTargets
+  isPartOfActiveSynopsisConnection
 }
