@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.7](https://github.com/subugoe/tido/compare/v5.0.0-beta.6...v5.0.0-beta.7) (2026-08-11)
+
+
+### Features
+
+* add implementation to treat an active synoptic connection separated from a selected target (style) ([d534898](https://github.com/subugoe/tido/commit/d5348981343a8d99e32645b739eb972e66ad35b5))
+* do not show synopsis style on scrolling ([46c4d1b](https://github.com/subugoe/tido/commit/46c4d1b7b24efa310803418752db769cfa7c3327))
+* keep the sync target navigation arrows in the same position (middle) of panel views even after opening sidebar ([#1145](https://github.com/subugoe/tido/issues/1145)) ([9f3abfc](https://github.com/subugoe/tido/commit/9f3abfc92b2ebe7a9f7e115c2b06d225b2ff8dad))
+
+
+### Bug Fixes
+
+* add the active style only to the latest clicked target ([#1142](https://github.com/subugoe/tido/issues/1142)) ([a737988](https://github.com/subugoe/tido/commit/a73798833904648822f62bb1f9abd0d4660ed8b2))
+* allow default opening of Annotation Popover where there is more space for that (i.e click at a target close to bottom of panel, then it opens on top of clicked target) ([c7810e9](https://github.com/subugoe/tido/commit/c7810e9de156641feb7f92df6f122c8656f8ac57))
+* prevent truncating the header title on large screens ([4aa3a0a](https://github.com/subugoe/tido/commit/4aa3a0a25940bba4e4933cf65f154e14cfb780ce))
+* should not deselect annotation when opening annotations filter ([#1104](https://github.com/subugoe/tido/issues/1104)) ([5bb2712](https://github.com/subugoe/tido/commit/5bb271274395125e19c7a07aaa3c7d1b3c322295))
+* show synoptic targets even when all sync targets are initially pre-opened in panels ([#1143](https://github.com/subugoe/tido/issues/1143)) ([c7eed2b](https://github.com/subugoe/tido/commit/c7eed2b4cda05b90ad87c724e25a5c0d93a9037c))
+
+
+### Docs
+
+* update redirect link ([0856c50](https://github.com/subugoe/tido/commit/0856c50d090b176cd04a8aed11a7b21f4b18264a))
+
 ## [5.0.0-beta.6](https://github.com/subugoe/tido/compare/v5.0.0-beta.5...v5.0.0-beta.6) (2026-08-03)
 
 
