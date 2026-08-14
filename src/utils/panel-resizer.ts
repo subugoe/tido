@@ -34,7 +34,7 @@ class PanelResizer {
     this.wrapper = document.getElementById('panels-wrapper')
     this.panelEl = panelEl
     this.mainContentEl = panelEl.querySelector('.main-content')
-    this.sidebarEl = panelEl.querySelector('.sidebar')
+    this.sidebarEl = panelEl.querySelector('[data-sidebar-container]')
     this.panelId = this.panelEl.id
     this.resizeHandle = this.panelEl.querySelector('[data-panel-resize-handle]')
 

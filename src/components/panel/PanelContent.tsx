@@ -96,7 +96,7 @@ const PanelContent: FC = React.memo(() => {
             </Allotment>
           </div>
         </div>
-        <div className="sidebar absolute h-full top-0">
+        <div className="absolute h-full top-0" data-sidebar-container>
           <div className={`absolute ${panelState.showSidebar ? 'inset-y-0' : ''} left-0 w-px bg-border z-40`} />
           {!showSidebarContent && <Loading />}
           {showSidebarContent && <ResizeHandle className="-left-1.5 z-50" data-sidebar-resize-handle />}
