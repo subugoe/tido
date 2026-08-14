@@ -58,7 +58,7 @@ jobs:
         run: |
           npm ci
           npm run build
-          cp -r dist/ examples/dist
+          cp -r dist/. examples/dist
           node .build/copy-api-mocks.js --dstUrl=gh
 
       - name: Upload artifact

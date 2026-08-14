@@ -263,7 +263,8 @@ export interface AnnotationsConfig {
   tooltipTypes?: string[]
   singleMode?: AnnotationsMode,
   defaultMode?: AnnotationsMode,
-  crossRefContentType?: string
+  crossRefContentType?: string,
+  disableHighlighting?: string[]
 }
 
 export interface AnnotationFiltersConfig {

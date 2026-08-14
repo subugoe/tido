@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useRef, useState } from 'react'
+import React, { FC, memo, useEffect, useMemo, useRef, useState } from 'react'
 import {
   addActiveTargetStyle,
   addAnnotationBaseStyle,
@@ -69,6 +69,10 @@ const GenericTextRenderer: FC<Props> = memo(({
   paddingTop = 0
 }) => {
   const { annotations: annotationsConfig } = useConfig()
+  const disabledHighlightTypes = useMemo(
+    () => new Set(annotationsConfig?.disableHighlighting ?? []),
+    [annotationsConfig]
+  )
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
   const activeSynopsisConnection = useSynopsisStore(state => state.activeSynopsisConnection)
   const hoveredSyncedTargets = useSynopsisStore(state => state.hoveredSyncedTargets)
@@ -105,6 +109,10 @@ const GenericTextRenderer: FC<Props> = memo(({
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
   const selectedAnnotationTypesRef = useRef<AnnotationTypesDict | null>(null)
+  // Targets whose annotations are all types in annotations.disableHighlighting. Built for free in
+  // the main highlight effect's loop (the flipped map only changes when matchedMap does), and read
+  // by the hover/selected effects to skip the grey/nested-border styles for those targets.
+  const disabledTargetsRef = useRef<Set<Element>>(new Set())
   // Map of each sync target element in this source to the sync annotations that touch it. Built in
   // the sourceSyncAnnotations effect and read by the click/hover/scroll listeners to resolve synced targets.
   const targetsSyncMapRef = useRef<Map<HTMLElement, Annotation[]>>(new Map())
@@ -386,6 +394,8 @@ const GenericTextRenderer: FC<Props> = memo(({
     targetsRef.current = getTextTargets(flippedMatchedAnnotationsMap)
     flippedMatchedMapRef.current = assignNestedTargetsInFlippedMatched(targetsRef.current, flippedMatchedAnnotationsMap)
 
+    const disabledTargets = new Set<Element>()
+
     flippedMatchedMapRef.current.forEach(fa => {
       const annotations = fa.annotations
       const target = fa.target
@@ -405,11 +415,18 @@ const GenericTextRenderer: FC<Props> = memo(({
         someFiltered = !someFiltered ? fa.filtered[i] : true
       })
 
-      if (someFiltered) {
+      const allDisabled = annotations.length > 0 &&
+        annotations.every(a => disabledHighlightTypes.has(a.body.annotationType))
+
+      if (allDisabled) disabledTargets.add(target)
+
+      if (someFiltered && !allDisabled) {
         addHighlightStyle(target)
       }
     })
-  }, [matchedMap])
+
+    disabledTargetsRef.current = disabledTargets
+  }, [matchedMap, disabledHighlightTypes])
 
   // Update styles of targets if necessary on update of hoveredAnnotations
   useEffect(() => {
@@ -436,14 +453,26 @@ const GenericTextRenderer: FC<Props> = memo(({
         removeNestedTargetStyle(target)
         removeHighlightStyle(target)
 
+        const allDisabled = disabledTargetsRef.current.has(target)
         const hasParentHovered = isParentHovered(targetsOfHoveredAnnotations, fa.parents)
-        if (targetsOfHoveredAnnotations.includes(target))  {
-          addHoverStyle(target)
-          if (hasParentHovered) {
+        const hasHighlightedParentHovered = isParentHovered(
+          targetsOfHoveredAnnotations,
+          fa.parents.filter(parent => !disabledTargetsRef.current.has(parent))
+        )
+
+        if (targetsOfHoveredAnnotations.includes(target)) {
+          if (!allDisabled && hasHighlightedParentHovered) {
+            addHoverStyle(target)
             addNestedTargetStyle(target)
+          } else if (!allDisabled && hasParentHovered) {
+            // Hovered parent(s) are all disabled annotations: render the grey highlight
+            // instead of the nested border so the target reads as a plain highlight.
+            addHighlightStyle(target)
+          } else {
+            addHoverStyle(target)
           }
         } else if (!partOfSelectedTargets(target, targetsOfSelectedAnnotation)) {
-          addHighlightStyle(target)
+          if (!allDisabled) addHighlightStyle(target)
         }
       }
     })
@@ -478,7 +507,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       if (partOfSelectedTargets(target, targetsOfSelectedAnnotation)) {
         addSelectedStyle(target)
         return
-      } else if (someFiltered) {
+      } else if (someFiltered && !disabledTargetsRef.current.has(target)) {
         addHighlightStyle(target)
       }
     })

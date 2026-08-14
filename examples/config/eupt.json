@@ -4,6 +4,7 @@
       "DictLink",
       "Linguistic"
     ],
+    "disableHighlighting": ["DictLink", "Linguistic", "EditorialComment-epi", "EditorialComment-phil", "PoetologicalGlossary"],
     "types": {
       "EditorialComment-epi": {
         "label": "epigraphischer Kommentar"

@@ -237,6 +237,13 @@ function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): V
     result.tooltipTypes = []
   }
 
+  if (!Array.isArray(result.disableHighlighting) || result.disableHighlighting.some(t => typeof t !== 'string')) {
+    if (result.disableHighlighting !== undefined) {
+      (errors['annotations'] as Record<string, string>)['disableHighlighting'] = 'must be an array of strings'
+    }
+    result.disableHighlighting = []
+  }
+
   result.crossRefContentType = typeof result.crossRefContentType === 'string'
     ? result.crossRefContentType
     : (() => {

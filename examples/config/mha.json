@@ -56,7 +56,7 @@
       ]
     },
     "defaultMode": "aligned",
-    "tooltipTypes": [],
+    "tooltipTypes": ["BibliographicReference"],
     "crossRefContentType": "CrossRef"
   },
   "showContentTypeToggle": false,

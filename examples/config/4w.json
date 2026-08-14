@@ -1,7 +1,8 @@
 {
   "allowNewCollections": false,
   "annotations": {
-    "tooltipTypes": ["FWB"]
+    "tooltipTypes": ["FWB"],
+    "disableHighlighting": ["FWB"]
   },
   "title": "Ebene 1: Transkriptionen",
   "lang": "de",
