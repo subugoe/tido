@@ -450,37 +450,82 @@ header and copy the resulting link.
 
 ### Working with the state object
 We export a TypeScript interface `TidoContentState` where you can inspect the structure of the state object.
-Here is an example:
+
+#### TidoContentState
+
+The top-level content state object follows the [IIIF Content State](https://iiif.io/api/content-state/1.0/) pattern:
+
+| Key        | Type                       | Required | Description                                                                 |
+|------------|----------------------------|----------|-----------------------------------------------------------------------------|
+| type       | `'Annotation'`             | Yes      | Always `'Annotation'`. Identifies this as a content state object.            |
+| motivation | `['contentState']`         | Yes      | Always `['contentState']`. Describes the purpose of this annotation.        |
+| target     | `TidoContentStateTarget[]` | Yes      | Array of panel targets. Each element represents one open panel.             |
+
+#### TidoContentStateTarget
+
+Each target in the array describes a panel to open. Targets are nested via `partOf` to express the hierarchy Item → Manifest → Collection:
+
+| Key   | Type                       | Required | Description                                                                                           |
+|-------|----------------------------|----------|-------------------------------------------------------------------------------------------------------|
+| id    | `string`                   | Yes      | URL identifying the resource (item, manifest, or collection URL from the TextAPI).                   |
+| type  | `'Item' \| 'Manifest' \| 'Collection'` | Yes      | The resource type. The outermost target should be `'Item'`.                                  |
+| partOf | `TidoContentStateTarget` | No       | Nested parent target. An Item references its Manifest, which in turn references its Collection.       |
+| state | `TidoContentStatePanelState` | No    | Panel-level state such as active views and selected annotation.                                       |
+
+#### TidoContentStatePanelState
+
+Optional state attached to the outermost (Item) target:
+
+| Key        | Type                       | Required | Description                                                                              |
+|------------|----------------------------|----------|------------------------------------------------------------------------------------------|
+| views      | `Partial<PanelView>[]`     | No       | Array describing the visibility and active content type of each view in the panel.        |
+| annotation | `string`                   | No       | ID of an annotation to select when the panel loads.                                      |
+
+#### PanelView (partial)
+
+Each element in the `views` array supports the following keys (all optional within the content state context):
+
+| Key              | Type       | Description                                                                                     |
+|------------------|------------|-------------------------------------------------------------------------------------------------|
+| visible          | `boolean`  | Whether the view pane is visible. Hidden views can be toggled on via the panel header dropdown.  |
+| activeContentType| `string`   | The content type to activate by default when multiple `contentTypes` are available.              |
+
+#### Full example
+
 ```
 {
-  type: 'Annotation'
-  motivation: ['contentState']
+  type: 'Annotation',
+  motivation: ['contentState'],
   target: [
     {
       id: 'https://example.com/my-item-1',
       type: 'Item',
       partOf: {
-        id: 'https://example.com/my-manifest-1'
-        type: 'Manifest'
+        id: 'https://example.com/my-manifest-1',
+        type: 'Manifest',
         partOf: {
-          id: 'https://example.com/my-collection-1'
+          id: 'https://example.com/my-collection-1',
           type: 'Collection'
         }
       },
       state: {
-        mode: 'split'
+        views: [
+          { visible: true, activeContentType: 'diplomatic' },
+          { visible: true }
+        ],
+        annotation: 'annotation-123'
       }
     }
   ]
 }
 ```
 
-This object would open one panel load the content `https://example.com/my-item-1` into it. Since TIDO panels need further
-information from a manifest and collection, you need to provide those URLs using the `partOf` key. This is compliant
+This object opens one panel loading `https://example.com/my-item-1`. Since TIDO panels need further
+information from a manifest and collection, those URLs are provided via the nested `partOf` targets. This hierarchy is compliant
 with the `PanelConfig` object from the [configuration](#the-keys-in-detail).
-Please note that the `Item` and `Manifest` targets are not required. TIDO will load the first elements from the respective sequences.
-You can append the `state` key to the "root" target to specify further the state of a panel. Currently only the `mode`
-configuration can be applied.
+
+The `Item` and `Manifest` targets are optional — TIDO will load the first elements from the respective sequences if omitted.
+The `Collection` target is required so TIDO can resolve the correct panel context.
 
 ### Encoding/Decoding
 We provide the `encodeState` and `decodeState` functions as export in our npm package. You can use them like this:
