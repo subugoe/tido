@@ -1,0 +1,23 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example/items/empty-images-page.json",
+  "textapiType": "TextApiItem",
+  "revision": "1",
+  "division": "Page 1",
+  "titles": [
+    "Empty Images Page"
+  ],
+  "languages": [
+    "eng"
+  ],
+  "images": [],
+  "contents": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "id": "http://localhost:8181/example/html/empty-images-page_transcription.html",
+      "contentType": "text/html;type=transcription"
+    }
+  ],
+  "textItemType": "page"
+}

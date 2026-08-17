@@ -25,6 +25,7 @@
     "referenced_element_not_found": "The referenced HTML element could not be located because the selector was incorrect.",
     "referenced_content_type_error": "Referenced content type is not valid.",
     "could_not_find_image": "Unfortunately, an image could not be found.",
+    "no_images_found": "No images found for this item.",
     "image_preview": "Image preview",
     "could_not_load_image": "Could not load the given image.",
     "could_not_load_data": "Failed to load data",

@@ -79,10 +79,6 @@ export function filterAndSortData<T extends Record<string, unknown>>( data: T[],
   })
 }
 
-export function validateImage(item: Item) {
-  return !!item?.images?.[0]?.id
-}
-
 export function setNewActiveContentType(contentType: string, index: number, views: PanelView[]) {
   // return a new array with a new object for the matching view, so the updated
   // activeContentType is an actual change (no in-place mutation of the shared views)

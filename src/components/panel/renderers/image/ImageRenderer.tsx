@@ -60,6 +60,11 @@ const ImageRenderer: FC = () => {
 
     if (loadingPanel) return
 
+    if (panelState.item?.images && panelState.item.images.length === 0) {
+      showBoundary(t('no_images_found'))
+      return
+    }
+
     if (!imageUrl || !viewerRef.current) {
       showBoundary(t('could_not_find_image'))
       return

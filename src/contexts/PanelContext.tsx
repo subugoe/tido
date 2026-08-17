@@ -17,6 +17,7 @@ import { Scroller } from '@/utils/scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { isPanelViewsUserExplicit } from '@/utils/config/config.ts'
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
@@ -219,6 +220,19 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
             ...enhanceView(view, i),
           }))
           : globalPanelViewsConfig.map((view: PanelView, i: number) => enhanceView(view, i))
+
+      // Auto-hide image pane when item has no images, unless explicitly configured
+      if (!item?.images) {
+        const hasExplicitImageConfig =
+          config.views?.some(v => v.view === 'image') ||
+          (isPanelViewsUserExplicit() && globalPanelViewsConfig?.some((v: PanelView) => v.view === 'image'))
+
+        if (!hasExplicitImageConfig) {
+          for (const v of resultPanelViews) {
+            if (v.view === 'image') v.visible = false
+          }
+        }
+      }
 
       // 5. We update the panel state with the data.
       updatePanel({

@@ -6,6 +6,12 @@ import { TidoConfig, PanelConfig, TidoContentState, TidoContentStateTarget, Pane
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
 
+let _panelViewsUserExplicit = false
+
+export function isPanelViewsUserExplicit(): boolean {
+  return _panelViewsUserExplicit
+}
+
 type ValidationResult<T> = {
   result: T;
   errors: Record<string, string | object>;
@@ -174,18 +180,24 @@ function validateTranslations(input: unknown): ValidationResult<TidoConfig['tran
 function validatePanelViews(input: unknown): ValidationResult<TidoConfig['panelViews']> {
   const errors: Record<string, string> = {}
 
-  if (input === undefined) return { errors, result: defaultConfig.panelViews }
+  if (input === undefined) {
+    _panelViewsUserExplicit = false
+    return { errors, result: defaultConfig.panelViews }
+  }
 
   if (!Array.isArray(input)) {
     errors['panelViews'] = 'must be an array'
+    _panelViewsUserExplicit = false
     return { errors, result: defaultConfig.panelViews }
   }
 
   if (input.length === 0) {
     errors['panelViews'] = 'must have at least 1 value'
+    _panelViewsUserExplicit = false
     return { errors, result: defaultConfig.panelViews }
   }
 
+  _panelViewsUserExplicit = true
   return { errors, result: input as TidoConfig['panelViews'] }
 }
 
@@ -343,6 +355,7 @@ export async function mergeAndValidateConfig(
         contentState = await decodeState(contentStateValue)
       }
 
+      console.log(contentState)
       if (contentState) {
         panelsFromContentState = await Promise.all(contentState.target.map(async (target: TidoContentStateTarget, i) => {
           let manifestIndex: number | null = null
