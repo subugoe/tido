@@ -398,12 +398,21 @@ export async function mergeAndValidateConfig(
     }
   }
 
+  const collectionsFromState = panelsFromContentState
+    ?.filter(p => p.collection)
+    .map(p => p.collection) ?? []
+
+  const mergedRootCollections = [...new Set([
+    ...rootCollections.result,
+    ...collectionsFromState
+  ])]
+
   const config: TidoConfig = {
     allowNewCollections: allowNewCollections.result,
     container: container.result,
     panels: panelsFromContentState ?? panels.result,
     lang: lang.result,
-    rootCollections: rootCollections.result,
+    rootCollections: mergedRootCollections,
     showAddNewPanelButton: showAddNewPanelButton.result,
     showContentTypeToggle: showContentTypeToggle.result,
     showGlobalTree: showGlobalTree.result,
