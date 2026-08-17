@@ -494,9 +494,9 @@ describe('Panel Synopsis', () => {
     // same annotation there
     getPopover().find('[data-cy="popover-annotation-item"]').click()
 
-    getPanel(SYNOPSIS_PANEL).find('[data-sidebar-container]').should('be.visible')
+    getPanel(SYNOPSIS_PANEL).find('[data-sidebar-view]').should('be.visible')
     getPanel(SYNOPSIS_PANEL)
-      .find(`[data-sidebar-container] [data-annotation="${OCEAN_ANNOTATION}"]`)
+      .find(`[data-sidebar-view] [data-annotation="${OCEAN_ANNOTATION}"]`)
       .should('have.attr', 'data-selected')
 
     // 5. deselecting it in the popover clears the selection in both places
@@ -504,7 +504,7 @@ describe('Panel Synopsis', () => {
 
     getPopover().find('[data-cy="popover-annotation-item"]').should('not.have.attr', 'data-selected')
     getPanel(SYNOPSIS_PANEL)
-      .find(`[data-sidebar-container] [data-annotation="${OCEAN_ANNOTATION}"]`)
+      .find(`[data-sidebar-view] [data-annotation="${OCEAN_ANNOTATION}"]`)
       .should('not.have.attr', 'data-selected')
 
     // 6. selecting the 'Country Manners' witness and opening it adds a third panel showing the

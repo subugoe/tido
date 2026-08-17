@@ -25,7 +25,7 @@ const SidebarView: FC = () => {
   const itemId = panelState.item?.id
 
   return (
-    <div className="flex flex-col h-full" data-sidebar-container>
+    <div className="flex flex-col h-full" data-sidebar-view>
       <ErrorBoundary FallbackComponent={AnnotationsError} resetKeys={[itemId]}>
         <AnnotationsProvider>
           <AnnotationsHeader />

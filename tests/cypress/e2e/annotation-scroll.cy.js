@@ -92,7 +92,7 @@ describe('Annotation scrolling and alignment', () => {
     panel: '[data-cy="panel"]',
     panelsWrapper: '[data-cy="panels-wrapper"]',
     popover: '[data-slot="popover-content"]',
-    sidebarContainer: '[data-sidebar-container]',
+    sidebarContainer: '[data-sidebar-view]',
     sidebarLoading: '[data-cy="sidebar-loading"]',
     sidebarScroll: '[data-sidebar-scroll-container]',
     sidebarToggle: '[data-cy="sidebar-toggle"]',

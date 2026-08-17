@@ -268,7 +268,7 @@ describe('Config', () => {
       // Annotations in list view should actually also maintain the order of appearance.
       //check if "Successful courtier" is the last annotation
       // Successful courtier is the last item in list view but not in align view
-      // cy.get('[data-sidebar-container="true"]')
+      // cy.get('[data-sidebar-view="true"]')
       //   .find('[data-annotation]')
       //   .should('have.length', 10)
       //   .then($annotations => {
@@ -301,7 +301,7 @@ describe('Config', () => {
       // Annotations in both views should actually also maintain the order of appearance.
       //check if "Successful courtier" is NOT the last annotation
       // Successful courtier is the last item in list view but not in align view
-      // cy.wait(1000).get('[data-sidebar-container="true"]')
+      // cy.wait(1000).get('[data-sidebar-view="true"]')
       //   .find('[data-annotation]')
       //   .should('have.length', 10)
       //   .then($annotations => {

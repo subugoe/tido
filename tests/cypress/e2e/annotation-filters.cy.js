@@ -18,7 +18,7 @@ describe('Annotation filters derived from the rendered texts', () => {
 
   const selectors = {
     sidebarToggle: '[data-cy="sidebar-toggle"]',
-    sidebarContainer: '[data-sidebar-container]',
+    sidebarContainer: '[data-sidebar-view]',
     contentType: '[data-cy="content-type"]',
     textContainer: '[data-text-container]',
     popover: '[data-slot="popover-content"]',

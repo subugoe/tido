@@ -16,7 +16,7 @@ describe('Annotation disableHighlighting', () => {
 
   const selectors = {
     sidebarToggle: '[data-cy="sidebar-toggle"]',
-    sidebarContainer: '[data-sidebar-container]',
+    sidebarContainer: '[data-sidebar-view]',
     textContainer: '[data-text-container]',
   };
 

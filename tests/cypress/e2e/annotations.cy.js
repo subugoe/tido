@@ -36,7 +36,7 @@ describe('Annotations', () => {
 
   const selectors = {
     sidebarToggle: '[data-cy="sidebar-toggle"]',
-    sidebarContainer: '[data-sidebar-container]',
+    sidebarContainer: '[data-sidebar-view]',
     sidebarLoading: '[data-cy="sidebar-loading"]',
     panel: '[data-cy="panel"]',
     textContainer: '[data-text-container]',
