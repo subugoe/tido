@@ -1,6 +1,7 @@
 import { request } from '@/utils/http.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { hasItems, hasManifests, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
+import { useDataStore } from '@/store/DataStore.tsx'
 import i18n from 'i18next'
 
 const { t } = i18n
@@ -14,7 +15,11 @@ async function apiRequest<T>(url: string): Promise<T> {
   const response = await request(url)
 
   if (!response.success) {
-    throw response
+    const err = response as ErrorResponse
+    throw new CustomError(
+      t('error_loading_data'),
+      `Failed to load ${url}: ${err.message} (${err.code})`
+    )
   }
 
   return response.data as T
@@ -39,7 +44,7 @@ async function getFirstManifest(collection: Collection) {
     throw new CustomError(t('panel_init_error'), t('error_invalid_manifest_url', { url: first }))
   }
 
-  return await apiRequest<Manifest>(first)
+  return await useDataStore.getState().initManifest(first)
 }
 
 async function getFirstItem(manifest: Manifest) {
@@ -53,7 +58,7 @@ async function getFirstItem(manifest: Manifest) {
     throw new CustomError(t('panel_init_error'), t('error_invalid_item_url', { url: firstId }))
   }
 
-  return await apiRequest<Item>(firstId)
+  return await useDataStore.getState().initItem(firstId)
 }
 
 

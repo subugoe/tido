@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
-import { apiRequest } from '@/utils/api.ts'
+import { useDataStore } from '@/store/DataStore.tsx'
 import { createNewPanel, getContentTypes, setNewActiveContentType, splitMIMEType } from '@/utils/panel.ts'
 import { PanelView } from '@/types'
 import { SyncedTargetRef, SynopsisConnection, useSynopsisStore } from '@/store/SynopsisStore.tsx'
@@ -102,23 +102,27 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
     // a new panel needs at least a collection, manifest and item
     if (!source.collection || !source.manifest || !source.item) return
 
-    const manifest = await apiRequest<Manifest>(source.manifest)
-    const item = await apiRequest<Item>(source.item)
+    try {
+      const manifest = await useDataStore.getState().initManifest(source.manifest)
+      const item = await useDataStore.getState().initItem(source.item)
 
-    // find the content type that corresponds to the synced content (source.id), so the new
-    // panel opens the text view that shows exactly that content instead of the default one.
-    const content = item.contents?.find((c) => c.id === source.id)
-    const [, activeContentType] = content ? splitMIMEType(content.contentType) : []
-    const textViewIndex = panelViewsConfig.findIndex((view: PanelView) => view.view === 'text' && view.contentTypes.includes(activeContentType))
+      // find the content type that corresponds to the synced content (source.id), so the new
+      // panel opens the text view that shows exactly that content instead of the default one.
+      const content = item.contents?.find((c) => c.id === source.id)
+      const [, activeContentType] = content ? splitMIMEType(content.contentType) : []
+      const textViewIndex = panelViewsConfig.findIndex((view: PanelView) => view.view === 'text' && view.contentTypes.includes(activeContentType))
 
-    const newPanelId = crypto.randomUUID()
-    await createNewPanel(
-      source.collection,
-      manifest,
-      item,
-      activeContentType ? setNewActiveContentType(activeContentType, textViewIndex, panelViewsConfig) : panelViewsConfig,
-      newPanelId
-    )
+      const newPanelId = crypto.randomUUID()
+      await createNewPanel(
+        source.collection,
+        manifest,
+        item,
+        activeContentType ? setNewActiveContentType(activeContentType, textViewIndex, panelViewsConfig) : panelViewsConfig,
+        newPanelId
+      )
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   return (

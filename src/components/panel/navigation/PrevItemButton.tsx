@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from 'react'
 import NavigationButton from '@/components/panel/navigation/NavigationButton.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { PanelConfig } from '@/types'
-import { apiRequest } from '@/utils/api.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 const PrevItemButton: FC = () => {
@@ -65,7 +64,7 @@ const PrevItemButton: FC = () => {
         ? (manifests[prevManifestIndex] as Manifest).id
         : (manifests[prevManifestIndex] as string)
 
-      const prevManifest = await apiRequest<Manifest>(prevManifestId)
+      const prevManifest = await useDataStore.getState().initManifest(prevManifestId)
 
       // Get the last item ID from the previous manifest
       const lastItem = prevManifest.items?.[prevManifest.items.length - 1]

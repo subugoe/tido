@@ -5,6 +5,7 @@ import deTranslations from '../../../public/translations/de.json'
 import { TidoConfig, PanelConfig, TidoContentState, TidoContentStateTarget, PanelView } from '@/types'
 import { apiRequest } from '@/utils/api.ts'
 import { decodeState, extractPanelConfig, hasContentState, isUrl } from '@/utils/bookmarking.ts'
+import { useDataStore } from '@/store/DataStore.tsx'
 
 let _panelViewsUserExplicit = false
 
@@ -365,7 +366,7 @@ export async function mergeAndValidateConfig(
 
           if (!collection) return null
 
-          const collectionData = await apiRequest<Collection>(collection)
+          const collectionData = await useDataStore.getState().initCollection(collection)
           manifestIndex = collectionData.manifests.findIndex(m => {
             const id = typeof m === 'object' ? m.id : m
             return id === manifest
@@ -375,7 +376,7 @@ export async function mergeAndValidateConfig(
             console.error(`Bookmarking Error: the provided manifest (${manifest}) could not be found in collection (${collection})`)
           }
 
-          const manifestData = await apiRequest<Manifest>(manifest)
+          const manifestData = await useDataStore.getState().initManifest(manifest)
           itemIndex = manifestData.items?.findIndex(i => {
             const id = typeof i === 'object' ? i.id : i
             return id === item

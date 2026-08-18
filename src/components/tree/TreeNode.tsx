@@ -6,7 +6,7 @@ import { ChevronRight, Folder, LibraryBig, File, FolderOpen } from 'lucide-react
 import EmptyNode from '@/components/tree/EmptyNode.tsx'
 import ErrorNode from '@/components/tree/ErrorNode.tsx'
 import OpenedIcon from '@/components/tree/OpenedIcon.tsx'
-import { apiRequest } from '@/utils/api.ts'
+import { useDataStore } from '@/store/DataStore.tsx'
 import { getRootChildrenCollectionsIds } from '@/utils/tree.ts'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
@@ -62,7 +62,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
     async function updatePanelsNumbersForCollection(node: TreeNode) {
       const newPanelsNumbersOpened: number[] = []
-      const rootCollection = await apiRequest<Collection>(node.id)
+      const rootCollection = await useDataStore.getState().initCollection(node.id)
       const childCollectionIds = await getRootChildrenCollectionsIds(rootCollection)
       childCollectionIds.push(node.id) // if current collection is leaf node, then we want to check if this node is present in any of panels
 

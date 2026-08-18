@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { TidoConfig } from '@/types'
 import { mergeAndValidateConfig } from '@/utils/config/config.ts'
-import { promiseWithCache } from '@/utils/promise-cache.ts'
 import { getColors } from '@/utils/colors.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { initI18n } from '@/utils/translations.ts'
@@ -46,16 +45,15 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
         initI18n(config.translations, config.lang)
         createThemeStyles(config)
 
+        await Promise.all(
+          config.rootCollections.map(url => useDataStore.getState().initCollection(url))
+        )
+
         createTreeNodes(config.rootCollections)
 
-        config.rootCollections.forEach(url => useSynopsisStore.getState().addSyncAnnotationsFromCollection(url))
-
         setConfig(config)
-        await Promise.all(
-          config.rootCollections.map((collectionUrl, i) =>
-            promiseWithCache(`initCollection${i}`, () => useDataStore.getState().initCollection(collectionUrl))
-          )
-        )
+
+        config.rootCollections.forEach(url => useSynopsisStore.getState().addSyncAnnotationsFromCollection(url))
 
       } catch(e) {
         console.error(e)

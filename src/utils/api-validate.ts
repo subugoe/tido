@@ -1,5 +1,5 @@
 import { CustomError } from '@/utils/custom-error.ts'
-import { apiRequest } from '@/utils/api.ts'
+import { useDataStore } from '@/store/DataStore.tsx'
 
 export type SuccessResult<T> = { success: true; data: T }
 export type ErrorResult = { success: false; error: CustomError }
@@ -36,7 +36,7 @@ async function validateCollection(collectionId: string): Promise<SuccessResult<C
   if (!isCollectionUrl(collectionId)) {
     return error(new CustomError('cross_ref_error_title', 'collection_url_error'))
   }
-  const data = await apiRequest<Collection>(collectionId)
+  const data = await useDataStore.getState().initCollection(collectionId)
   const hasContent = Array.isArray(data.manifests) && data.manifests.length > 0
   if (typeof data !== 'object' || !hasContent) {
     return error(new CustomError('cross_ref_error_title', 'collection_or_manifest_data_error'))
@@ -48,7 +48,7 @@ async function validateManifest(manifestId: string): Promise<SuccessResult<Manif
   if (!isManifestUrl(manifestId)) {
     return error(new CustomError('cross_ref_error_title', 'manifest_url_error'))
   }
-  const data = await apiRequest<Manifest>(manifestId)
+  const data = await useDataStore.getState().initManifest(manifestId)
   const hasContent = Array.isArray(data.items) && data.items.length > 0
   if (typeof data !== 'object' || !hasContent) {
     return error(new CustomError('cross_ref_error_title', 'collection_or_manifest_data_error'))
@@ -60,7 +60,7 @@ async function validateItem(id: string): Promise<SuccessResult<Item> | ErrorResu
   if (!isItemUrl(id)) {
     return error(new CustomError('cross_ref_error_title', 'item_url_error'))
   }
-  const data = await apiRequest<Item>(id)
+  const data = await useDataStore.getState().initItem(id)
   if (typeof data !== 'object' || !Array.isArray(data.contents)) {
     return error(new CustomError('cross_ref_error_title', 'item_data_error'))
   }

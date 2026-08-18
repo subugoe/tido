@@ -1,7 +1,5 @@
-import { request } from '@/utils/http'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
-import { apiRequest } from '@/utils/api.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { PanelConfig } from '@/types'
 import { NODE_KEY_DELIMITER } from './constants'
@@ -22,13 +20,12 @@ async function createCollectionNodes(rootIds: string[]): Promise<TreeNode[]> {
 async function createCollectionNode(url: string) {
   const node: TreeNode = { key: '', id: '', type: '', label: '', children: [] }
 
-  const response = await request<Collection>(url)
-  if (!response.success) return null
+  const collection = await useDataStore.getState().initCollection(url)
 
   node.key = url
   node.id = url
   node.type = 'collection'
-  node.label = response.data.titles?.length > 0 && response.data.titles[0] || ''
+  node.label = collection.titles?.length > 0 && collection.titles[0] || ''
 
   return node
 }
@@ -46,9 +43,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
     // If parent node is a collection, we initialize it like all collections, so it becomes available for panel loading
     data = await useDataStore.getState().initCollection(id)
   } else if (isManifestUrl(id)) {
-    const response = await request<Manifest>(id)
-    if (!response.success) throw new CustomError('Error '+(response as ErrorResponse).code, (response as ErrorResponse).message)
-    data = response.data
+    data = await useDataStore.getState().initManifest(id)
   }
 
   // Handle both Collection (manifests) and Manifest (items)
@@ -120,7 +115,7 @@ async function getRootChildrenCollectionsIds(rootCollection: Collection) {
 
     for (const id of collectionIds) {
       result.add(id)
-      const child = await apiRequest<Collection>(id)
+      const child = await useDataStore.getState().initCollection(id)
       await getChildrenCollectionIds(child)
     }
   }

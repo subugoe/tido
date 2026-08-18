@@ -3,7 +3,7 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
 import { getSelectedTypes } from '@/utils/annotations.ts'
-import { apiRequest, getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
+import { getAnnotationPage, getFirstItem, getFirstManifest } from '@/utils/api.ts'
 import { getContentTypes, isNewManifest } from '@/utils/panel.ts'
 import { getAssets } from '@/utils/support-styling.ts'
 import { PanelResizer } from '@/utils/panel-resizer.ts'
@@ -100,6 +100,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const { t } = useTranslation()
 
   const getCollection = useDataStore(state => state.initCollection)
+  const getManifest = useDataStore(state => state.initManifest)
+  const getItem = useDataStore(state => state.initItem)
   const panelState = usePanelStore(state => state.getPanel(panelId))
 
   function usePanelTranslation(): UseTranslationResponse<'common', never> {
@@ -131,7 +133,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
       // 1. Load anything we can see in the config.
       if (config.item) {
-        if (isItemUrl(config.item)) item = await apiRequest<Item>(config.item)
+        if (isItemUrl(config.item)) item = await getItem(config.item)
         else {
           setError(new CustomError(t('panel_init_error'), t('error_invalid_item_url', { url: config.item })))
           return
@@ -139,7 +141,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       }
 
       if (config.manifest) {
-        if (isManifestUrl(config.manifest)) manifest = await apiRequest<Manifest>(config.manifest)
+        if (isManifestUrl(config.manifest)) manifest = await getManifest(config.manifest)
         else {
           setError(new CustomError(t('panel_init_error'), t('error_invalid_manifest_url', { url: config.manifest })))
           return

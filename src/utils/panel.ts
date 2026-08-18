@@ -1,5 +1,5 @@
-import { request } from '@/utils/http'
 import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
 import { PanelConfig, PanelView } from '@/types'
 import { useUIStore } from '@/store/UIStore.tsx'
 import { SUPPORTED_MIME_TYPES } from './constants'
@@ -19,19 +19,19 @@ export function getManifestUrl(documentData: Manifest | Collection, documentType
   return manifestUrl
 }
 
-export async function getManifestData(documentData: Collection | Manifest, documentType: string, index: number): Promise<HttpResponse<Manifest>> {
+export async function getManifestData(documentData: Collection | Manifest, documentType: string, index: number): Promise<Manifest> {
   const manifestUrl = getManifestUrl(documentData, documentType, index)
-  return await request<Manifest>(manifestUrl)
+  return await useDataStore.getState().initManifest(manifestUrl)
 }
 
-export async function getItemData(manifestData: Manifest): Promise<HttpResponse<Item>> {
+export async function getItemData(manifestData: Manifest): Promise<Item> {
   const item = manifestData?.items?.[0]
   if (!item) throw new Error('No items found')
 
   const itemId = typeof item === 'object'
     ? (item as Item).id
     : item
-  return await request<Item>(itemId)
+  return await useDataStore.getState().initItem(itemId)
 }
 
 

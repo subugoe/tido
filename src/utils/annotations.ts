@@ -3,6 +3,7 @@ import { apiRequest } from '@/utils/api.ts'
 import { getTypeValue } from '@/utils/filter-tree.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import type { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
+import { useDataStore } from '@/store/DataStore.tsx'
 
 function getSelectedTypes(config: AnnotationFiltersConfig): AnnotationTypesDict {
   let types: AnnotationTypesDict = {}
@@ -118,7 +119,7 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
 
   try {
     failedRequestUrl = source.item
-    refItemData = await apiRequest<Item>(source.item)
+    refItemData = await useDataStore.getState().initItem(source.item)
 
     if (isCrossRefInAnnotation) {
       failedRequestUrl = refItemData.annotationCollection
@@ -133,7 +134,7 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
       contentUrl = source?.id
     }
   } catch(e) {
-    throw new CustomError(`Error loading data in Cross Ref. Failed request: ${failedRequestUrl}`, e)
+    throw new CustomError(`Error loading data in Cross Ref. Failed request: ${failedRequestUrl}`, e.message || String(e))
   }
 
   const refContentType = refItemData?.contents?.find(c => c.id === contentUrl)?.contentType?.split('type=')[1]

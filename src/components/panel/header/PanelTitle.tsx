@@ -9,7 +9,6 @@ import NextItemButton from '@/components/panel/navigation/NextItemButton.tsx'
 import PrevManifestButton from '@/components/panel/navigation/PrevManifestButton.tsx'
 import NextManifestButton from '@/components/panel/navigation/NextManifestButton.tsx'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
-import { apiRequest } from '@/utils/api.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import TitleAlertIcon from '@/components/panel/header/TitleAlertIcon.tsx'
 
@@ -33,7 +32,7 @@ const PanelTitle: FC = () => {
   )
 
   const onManifestSelect = useCallback(async (manifestId: string) => {
-    const manifest = await apiRequest<Manifest>(manifestId)
+    const manifest = await useDataStore.getState().initManifest(manifestId)
     setSelectedManifest(manifest)
     setIsSelecting(true)
     setShowItemDropdown(true)
@@ -46,7 +45,7 @@ const PanelTitle: FC = () => {
     const targetManifest = selectedManifest || panelState.manifest
     if (!targetManifest) return
 
-    const item = await apiRequest<Item>(itemId)
+    const item = await useDataStore.getState().initItem(itemId)
 
     if (!item) return
 
@@ -65,7 +64,7 @@ const PanelTitle: FC = () => {
       const manifests = await Promise.all(
         collection.manifests.map(async (cur) => {
           const id = typeof cur === 'object' ? cur.id : cur
-          const m = await apiRequest<Manifest>(id)
+          const m = await useDataStore.getState().initManifest(id)
           return { id: m.id, label: m.titles?.length > 0 && m.titles[0] || '' }
         })
       )

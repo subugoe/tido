@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { apiRequest } from '@/utils/api.ts'
+import { useDataStore } from '@/store/DataStore.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 import { cn } from '@/lib/utils'
@@ -22,8 +22,12 @@ const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect }
   useEffect(() => {
     async function loadWitness() {
       if (!syncedTarget.source.manifest) return
-      const manifest = await apiRequest<Manifest>(syncedTarget.source.manifest)
-      setLabel(manifest.titles?.[0] ?? t('unknown_witness'))
+      try {
+        const manifest = await useDataStore.getState().initManifest(syncedTarget.source.manifest)
+        setLabel(manifest.titles?.[0] ?? t('unknown_witness'))
+      } catch {
+        setLabel(t('unknown_witness'))
+      }
     }
 
     loadWitness()
