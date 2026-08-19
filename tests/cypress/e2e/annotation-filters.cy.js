@@ -166,3 +166,190 @@ describe('Annotation filters derived from the rendered texts', () => {
     expectFilters(4, ['Character', 'Artistic Object', 'Historical Context', 'Setting']);
   });
 });
+
+
+describe('Annotation filters configured in config', () => {
+
+  const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181';
+  const collection = `${apiUrl}/example/collections/example.json`;
+  const manifest = `${apiUrl}/example/manifests/book2.json`;
+  // Moby-Dick, third item (Chapter 3).
+  const item = `${apiUrl}/example/items/book2-page3.json`;
+
+  const views = [
+    { label: 'Text', view: 'text', activeContentType: 'transcription', contentTypes: ['transcription', 'diplomatic', 'normalized'] },
+    { label: 'Text', view: 'text', activeContentType: 'diplomatic', contentTypes: ['transcription', 'diplomatic', 'normalized'] },
+  ];
+
+  // Two configured filter items: Place (a diplomatic type) and Character (a transcription type).
+  // Labels are provided so the filter rows show human-readable text.
+  const filterItems = [
+    { types: ['Place'], label: 'Place' },
+    { types: ['Character'], label: 'Character' },
+  ];
+
+  const filtersParam = filterItems
+    .map(item => `&annotations.filters.items[]=${encodeURIComponent(JSON.stringify(item))}`)
+    .join('');
+
+  const config = `panels[0].collection=${collection}&panels[0].manifest=${manifest}&panels[0].item=${item}`
+    + filtersParam
+    + views.map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
+
+  const selectors = {
+    sidebarToggle: '[data-cy="sidebar-toggle"]',
+    sidebarContainer: '[data-sidebar-view]',
+    contentType: '[data-cy="content-type"]',
+    textContainer: '[data-text-container]',
+    popover: '[data-slot="popover-content"]',
+    checkbox: '[data-slot="checkbox"]',
+    viewsSelect: '[data-cy="panel-mode-select"]',
+    viewsMenu: '[data-cy="panel-mode-menu"]',
+    viewSwitch: '[data-slot="switch"]',
+    prevItem: '[data-cy="prev-item-button"]',
+    nextItem: '[data-cy="next-item-button"]',
+  };
+
+  const sidebar = () => cy.get(selectors.sidebarContainer);
+  const filterRow = (label) => cy.get(selectors.popover).contains('label', label);
+
+  const openFilters = () => {
+    cy.get(selectors.sidebarToggle).click();
+    sidebar().contains('button', /filters/i).click();
+    cy.get(selectors.popover).should('be.visible');
+  };
+
+  const openViewsMenu = () => {
+    cy.get(selectors.viewsSelect).click();
+    cy.get(selectors.viewsMenu).should('be.visible');
+  };
+
+  const setView = (index, visible) => {
+    cy.get(`${selectors.viewsMenu} ${selectors.viewSwitch}`).eq(index).click();
+    cy.get(`${selectors.viewsMenu} ${selectors.viewSwitch}`)
+      .eq(index)
+      .should('have.attr', 'data-state', visible ? 'checked' : 'unchecked');
+  };
+
+  const closeViewsMenu = () => {
+    cy.get(selectors.viewsSelect).click();
+    cy.get(selectors.viewsMenu).should('not.exist');
+  };
+
+  beforeEach(() => {
+    cy.visit('/e2e.html?' + config);
+
+    cy.get(selectors.textContainer).should('have.length', 2);
+    cy.get(selectors.textContainer).eq(0).find('#para1').should('exist');
+    cy.get(selectors.textContainer).eq(1).find('#spouter-inn').should('exist');
+  });
+
+  it('shows exactly the configured filters instead of auto-derived ones', () => {
+    openFilters();
+
+    // Only the 2 configured filters are shown, not the 8 auto-derived types.
+    cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 2);
+    filterRow('Place').should('exist');
+    filterRow('Character').should('exist');
+  });
+
+  it('deselecting a configured filter removes the corresponding annotation highlights', () => {
+    openFilters();
+
+    // Both types are selected by default — Place targets #spouter-inn, Character targets #queequeg.
+    cy.get(selectors.textContainer).eq(1).find('#spouter-inn').should('have.attr', 'data-annotation-ids');
+    cy.get(selectors.textContainer).eq(0).find('#queequeg').should('have.attr', 'data-annotation-ids');
+
+    // Deselect Place — diplomatic annotation highlight disappears.
+    filterRow('Place').find(selectors.checkbox).click({ force: true });
+    cy.get(selectors.textContainer).eq(1).find('#spouter-inn').should('not.have.attr', 'data-annotation-ids');
+
+    // Deselect Character — transcription annotation highlight disappears.
+    filterRow('Character').find(selectors.checkbox).click({ force: true });
+    cy.get(selectors.textContainer).eq(0).find('#queequeg').should('not.have.attr', 'data-annotation-ids');
+  });
+
+  it('re-selecting a configured filter restores the annotation highlight', () => {
+    openFilters();
+
+    // Deselect Place and re-select it.
+    filterRow('Place').find(selectors.checkbox).click({ force: true });
+    cy.get(selectors.textContainer).eq(1).find('#spouter-inn').should('not.have.attr', 'data-annotation-ids');
+
+    filterRow('Place').find(selectors.checkbox).click({ force: true });
+    cy.get(selectors.textContainer).eq(1).find('#spouter-inn').should('have.attr', 'data-annotation-ids');
+  });
+
+  it('keeps configured filters unchanged when a view is hidden', () => {
+    openViewsMenu();
+    setView(0, false); // hide the transcription view
+    closeViewsMenu();
+
+    openFilters();
+
+    // The filter list is still the same 2 configured items — not reduced to diplomatic-only types.
+    cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 2);
+    filterRow('Place').should('exist');
+    filterRow('Character').should('exist');
+  });
+
+  it('persists configured filters across item navigation', () => {
+    openFilters();
+    cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 2);
+
+    // Navigate to the previous item (Chapter 2). Sidebar stays open.
+    cy.get(selectors.prevItem).click();
+    cy.get(selectors.textContainer).eq(0).find('#carpet-bag').should('exist');
+    cy.get(selectors.textContainer).eq(1).find('#dipl-shirt').should('exist');
+
+    sidebar().contains('button', /filters/i).click();
+    cy.get(selectors.popover).should('be.visible');
+
+    // The filter list is still the same 2 configured items, regardless of what types Chapter 2 has.
+    cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 2);
+    filterRow('Place').should('exist');
+    filterRow('Character').should('exist');
+
+    // Navigate back to Chapter 3. Sidebar stays open.
+    cy.get(selectors.nextItem).click();
+    cy.get(selectors.textContainer).eq(0).find('#para1').should('exist');
+
+    sidebar().contains('button', /filters/i).click();
+    cy.get(selectors.popover).should('be.visible');
+    cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 2);
+  });
+
+  it('shows configured filter for a type that has no annotation in the current item', () => {
+    // Configure a type that does not exist in book2-page3 at all.
+    const extraFilter = { types: ['NonexistentType'], label: 'Nonexistent' };
+    const extraConfig = `panels[0].collection=${collection}&panels[0].manifest=${manifest}&panels[0].item=${item}`
+      + `&annotations.filters.items[]=${encodeURIComponent(JSON.stringify(filterItems[0]))}`
+      + `&annotations.filters.items[]=${encodeURIComponent(JSON.stringify(extraFilter))}`
+      + views.map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
+
+    cy.visit('/e2e.html?' + extraConfig);
+    cy.get(selectors.textContainer).should('have.length', 2);
+
+    openFilters();
+
+    // Both configured filters appear — even though NonexistentType has no matching annotations.
+    cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 2);
+    filterRow('Place').should('exist');
+    filterRow('Nonexistent').should('exist');
+  });
+
+  it('deselecting all configured filters removes all annotation highlights', () => {
+    openFilters();
+
+    cy.get(selectors.textContainer).eq(1).find('#spouter-inn').should('have.attr', 'data-annotation-ids');
+
+    // Deselect all configured filters.
+    cy.get(`${selectors.popover} ${selectors.checkbox}[data-state="checked"]`).each(($checkbox) => {
+      cy.wrap($checkbox).click({ force: true });
+    });
+
+    // All annotation highlights are gone.
+    cy.get(selectors.textContainer).eq(1).find('#spouter-inn').should('not.have.attr', 'data-annotation-ids');
+    cy.get(selectors.textContainer).eq(0).find('#queequeg').should('not.have.attr', 'data-annotation-ids');
+  });
+});

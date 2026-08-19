@@ -9,17 +9,20 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 
 const MultipleRootFilter: FC = () => {
-  const { setSelectedAnnotationTypes, witnesses, panelState, annotationTypesBySource } = usePanel()
+  const { setSelectedAnnotationTypes, witnesses, panelState, annotationTypesBySource, annotationFilters: contextFilters, setAnnotationFilters: setContextFilters } = usePanel()
   const { annotations: annotationsConfig } = useConfig()
 
-  const [annotationFilters, setAnnotationFilters] = useState<FilterNodeWithSelection[]>([])
+  const [localFilters, setLocalFilters] = useState<FilterNodeWithSelection[]>([])
+
+  const annotationFilters = annotationsConfig.filters ? contextFilters : localFilters
+  const setAnnotationFilters = annotationsConfig.filters ? setContextFilters : setLocalFilters
 
   // Recompute the local list whenever the visible views change (or a text contributes new types).
   // Only relevant when no annotation filters were configured; with a config, annotationFilters is fixed.
   useEffect(() => {
     if (annotationsConfig.filters) return
 
-    setAnnotationFilters(previous => {
+    setLocalFilters(previous => {
       const types = getVisibleAnnotationTypes(annotationTypesBySource, panelState.panelViews, panelState?.item?.contents ?? [])
 
       return types.map(type => {

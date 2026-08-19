@@ -1,5 +1,12 @@
 {
   "annotations": {
+    "filters": {
+      "items": [
+        {"types": ["EditorialComment-epi"]},
+        {"types": ["EditorialComment-phil"]},
+        {"types": ["PoetologicalGlossary"]}
+      ]
+    },
     "tooltipTypes": [
       "DictLink",
       "Linguistic"
@@ -7,16 +14,17 @@
     "disableHighlighting": ["DictLink", "Linguistic", "EditorialComment-epi", "EditorialComment-phil", "PoetologicalGlossary"],
     "types": {
       "EditorialComment-epi": {
-        "label": "epigraphischer Kommentar"
+        "label": "Epigraphischer Kommentar"
       },
       "EditorialComment-phil": {
-        "label": "philologischer Kommentar"
+        "label": "Philologischer Kommentar"
       },
       "PoetologicalGlossary": {
-        "label": "Poetologisches Glossar"
+        "label": "Versstruktur und Stilistik"
       }
     }
   },
+  "lang": "de",
   "theme": {
     "primaryColor": "#3AA675"
   },
