@@ -2,14 +2,18 @@
   "annotations": {
     "filters": {
       "items": [
-        {"types": ["EditorialComment-epi"]},
-        {"types": ["EditorialComment-phil"]},
-        {"types": ["PoetologicalGlossary"]}
+        {
+          "types": ["EditorialComment-epi"]},
+        {
+          "types": ["EditorialComment-phil"]},
+        {
+          "types": ["PoetologicalGlossary"]}
       ]
     },
     "tooltipTypes": [
       "DictLink",
-      "Linguistic"
+      "Linguistic",
+      "BibliographicReference"
     ],
     "disableHighlighting": ["DictLink", "Linguistic", "EditorialComment-epi", "EditorialComment-phil", "PoetologicalGlossary"],
     "types": {
