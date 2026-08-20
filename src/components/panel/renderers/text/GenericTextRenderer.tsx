@@ -589,6 +589,9 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     // Resolve the targets the clicked element is synced with on demand, using the clicked target's
     // sync annotations recorded in targetsSyncMapRef (read via ref to avoid stale closure state).
+    const synopsisDisabled = !!annotationsConfig?.disableSynopsisSelection
+    const isSyncTarget = targetsSyncMapRef.current.has(target as HTMLElement)
+    if (synopsisDisabled && isSyncTarget) return
     const targetSyncAnnotations = targetsSyncMapRef.current.get(target as HTMLElement) ?? []
     const newSyncTargets = getSyncedTargets(target as HTMLElement, source, targetSyncAnnotations)
 
@@ -647,13 +650,13 @@ const GenericTextRenderer: FC<Props> = memo(({
       // pass the synced targets of this entry (and the clicked target's y-position) to the popover content
     }
 
-    const areOnlySyncedTargets = _tooltipAnnotations.length === 0 && crossRefAnnotations.length === 0 && normalAnnotations.length === 0
+    const areOnlySyncedTargets = !synopsisDisabled && _tooltipAnnotations.length === 0 && crossRefAnnotations.length === 0 && normalAnnotations.length === 0
     const clickedConnection: SynopsisConnection = {
       navigatedTarget: target as HTMLElement,
       otherSyncedTargets: newSyncTargets,
       yPos: clickedYPos
     }
-    setSyncTargets(clickedConnection)
+    if (!synopsisDisabled) setSyncTargets(clickedConnection)
 
     // a plain sync target - nothing to show in the popover, so the click establishes the connection
     // right away (the effect above styles and aligns it)
@@ -745,7 +748,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         onBaseItemSelection={onSelect}
         onClose={closeTooltip}
       >
-        {syncTargets.otherSyncedTargets.length > 0 &&
+        {!annotationsConfig?.disableSynopsisSelection && syncTargets.otherSyncedTargets.length > 0 &&
           <SynopsisContainer syncTargets={syncTargets} onSelect={onSynopsisItemClick} />}
       </AnnotationPopoverContent>
     </AnnotationPopoverContainer>

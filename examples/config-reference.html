@@ -77,6 +77,12 @@
     <td>Annotation types whose targets are rendered without the base grey highlight and the nested target border. Clicking such a target still opens its annotation, and hover and selection feedback stay active.</td>
     </tr>
     <tr>
+    <td>annotations.disableSynopsisSelection</td>
+    <td>Boolean</td>
+    <td>-</td>
+    <td>When <code>true</code>, disables synopsis selection on sync target click and hides the synopsis section in the annotation popover. Sync targets still display their base annotation but no synopsis connection is established.</td>
+    </tr>
+    <tr>
     <td>annotations.filters</td>
     <td>AnnotationFiltersConfig</td>
     <td>-</td>
@@ -440,6 +446,15 @@
     }
     </code></pre>
     <p>If no key regarding modes is specified, then by default AnnotationsToggle is shown with <code>aligned</code> mode as initially selected.</p>
+    <h4>Disable Synopsis Selection</h4>
+    <p>By default, clicking a sync target in a text view establishes a synopsis connection, allowing cross-panel scrolling and alignment. To disable this behavior, set <code>disableSynopsisSelection</code> to <code>true</code>. When disabled, sync target clicks are ignored and the synopsis section in the annotation popover is hidden. The base annotation highlight on sync targets is unaffected.</p>
+    <p><strong>Example:</strong></p>
+    <pre><code class="language-json">{
+      &quot;annotations&quot;: {
+        &quot;disableSynopsisSelection&quot;: true
+      }
+    }
+    </code></pre>
     <h3>Translations</h3>
     <p>We provide a flexible way to use TIDO in your desired language. First of all we keep all translation keys in files
     under <code>public/translations</code>. Each file has to follow the naming convention <code>[ISO 639-1 language code].json</code>. By default,

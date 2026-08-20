@@ -265,6 +265,7 @@ export interface AnnotationsConfig {
   defaultMode?: AnnotationsMode,
   crossRefContentType?: string,
   disableHighlighting?: string[]
+  disableSynopsisSelection?: boolean
 }
 
 export interface AnnotationFiltersConfig {

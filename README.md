@@ -191,6 +191,7 @@ There are options to
 | annotations                                      | AnnotationsConfig                | {}                                                                                 | Configures the display of annotations and their filtering options. See [annotations](#annotations) chapter.                                                                                                                     |
 | annotations.defaultMode                          | String                           | `aligned`                                                                          | An annotations mode toggle is shown. Initial selected mode is `aligned` mode                                                                                                                                                    |
 | annotations.disableHighlighting                  | String[]                         | -                                                                                  | Annotation types whose targets are rendered without the base grey highlight and the nested target border. Clicking such a target still opens its annotation, and hover and selection feedback stay active.                         |
+| annotations.disableSynopsisSelection             | Boolean                          | -                                                                                  | When `true`, disables synopsis selection on sync target click and hides the synopsis section in the annotation popover. Sync targets still display their base annotation but no synopsis connection is established.                |
 | annotations.filters                              | AnnotationFiltersConfig          | -                                                                                  | Defines a nested object of filter options.                                                                                                                                                                                      |
 | annotations.filters.rootSelectionRule            | String                           | `multiple`                                                                         | Controls the overall behavior and layout of the filter UI. Allowed values: `multiple` or `single`. When set to `single`, a tab bar is rendered for root-level nodes.                                                            |
 | annotations.filters.selectedIndex                | Number                           | -                                                                                  | Index of the initially selected filter node in the filter tree. Only applies when `rootSelectionRule` is set to `single`.                                                                                                       |
@@ -384,6 +385,20 @@ To accomplish this, you should add `singleMode` key in config as shown below.
 ```
 
 If no key regarding modes is specified, then by default AnnotationsToggle is shown with `aligned` mode as initially selected.
+
+#### Disable Synopsis Selection
+
+By default, clicking a sync target in a text view establishes a synopsis connection, allowing cross-panel scrolling and alignment. To disable this behavior, set `disableSynopsisSelection` to `true`. When disabled, sync target clicks are ignored and the synopsis section in the annotation popover is hidden. The base annotation highlight on sync targets is unaffected.
+
+**Example:**
+
+```json
+{
+  "annotations": {
+    "disableSynopsisSelection": true
+  }
+}
+```
 
 
 ### Translations

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
@@ -13,11 +13,34 @@ interface Props {
   onSelect: () => void
 }
 
+// Whether a synced target's source content is loaded in a panel AND visible via a text view.
+function isWitnessOpened(source: AnnotationTargetSource, panels: PanelState[]): boolean {
+  const panel = source.item ? panels.find((p) => p.item?.id === source.item) : undefined
+  return !!panel?.panelViews.some((view) => {
+    if (view.view !== 'text' || (view.visible ?? true) === false || !view.activeContentType) return false
+    const content = panel.item?.contents.find((c) => c.contentType.includes(view.activeContentType!))
+    return content?.id === source.id
+  })
+}
+
 const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
   const { panelViews: panelViewsConfig } = useConfig()
   const setActiveSynopsisConnection = useSynopsisStore((state) => state.setActiveSynopsisConnection)
+
+  const targets = syncTargets.otherSyncedTargets
+
+  const allWitnessesOpened = useMemo(() => {
+    if (targets.length === 0) return false
+    const panels = usePanelStore.getState().panels
+    return targets.every((st) => isWitnessOpened(st.source, panels))
+  }, [targets])
+
+  function onSelectTarget(target: SyncedTargetRef) {
+    onSelect()
+    setActiveSynopsisConnection({ ...syncTargets, otherSyncedTargets: [target] })
+  }
 
   function onOpenPanelsClick(selectedTargets: SyncedTargetRef[], replacePanels: boolean) {
     onSelect()
@@ -128,7 +151,9 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
   return (
     <SynopsisContent
       syncTargets={syncTargets}
+      allWitnessesOpened={allWitnessesOpened}
       onOpenSyncedPanels={onOpenPanelsClick}
+      onSelectTarget={onSelectTarget}
     />
   )
 }

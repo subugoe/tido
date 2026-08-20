@@ -11,9 +11,10 @@ interface Props {
   isOpened: boolean
   isSelected: boolean
   onSelect: () => void
+  selectOnly?: boolean
 }
 
-const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect }) => {
+const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect, selectOnly = false }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
@@ -24,6 +25,7 @@ const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect }
       if (!syncedTarget.source.manifest) return
       try {
         const manifest = await useDataStore.getState().initManifest(syncedTarget.source.manifest)
+        console.log(manifest)
         setLabel(manifest.titles?.[0] ?? t('unknown_witness'))
       } catch {
         setLabel(t('unknown_witness'))
@@ -46,9 +48,9 @@ const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect }
           : 'border-border hover:bg-muted'
       )}
     >
-      <Checkbox checked={isSelected} tabIndex={-1} className="pointer-events-none" />
+      {!selectOnly && <Checkbox checked={isSelected} tabIndex={-1} className="pointer-events-none" />}
       <span data-cy="witness-label" className="flex-1 truncate text-sm">{label}</span>
-      {isOpened && (
+      {!selectOnly && isOpened && (
         <Badge className="border-transparent bg-green-100 text-green-700 font-semibold dark:bg-green-900/30 dark:text-green-400">
           {t('witness_open')}
         </Badge>

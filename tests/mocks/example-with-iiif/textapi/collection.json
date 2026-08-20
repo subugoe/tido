@@ -22,30 +22,35 @@
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/example-with-iiif/textapi/manifest-1/manifest.json",
       "label": "First Manifest",
+      "titles": ["First Manifest"],
       "type": "manifest"
     },
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/example-with-iiif/textapi/manifest-2/manifest.json",
       "label": "Second Manifest",
+      "titles": ["Second Manifest"],
       "type": "manifest"
     },
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/example-with-iiif/textapi/manifest-3/manifest.json",
       "label": "Third Manifest",
+      "titles": ["Third Manifest"],
       "type": "manifest"
     },
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/example-with-iiif/textapi/manifest-4/manifest.json",
       "label": "Fourth Manifest",
+      "titles": ["Fourth Manifest"],
       "type": "manifest"
     },
     {
       "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/sequence.jsonld",
       "id": "http://localhost:8181/example/textapi/manifest-5/manifest.json",
       "label": "Fifth Manifest",
+      "titles": ["Fifth Manifest"],
       "type": "manifest"
     }
   ]

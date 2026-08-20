@@ -286,6 +286,11 @@ function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): V
     }
   }
 
+  if (result.disableSynopsisSelection !== undefined && typeof result.disableSynopsisSelection !== 'boolean') {
+    (errors['annotations'] as Record<string, string>)['disableSynopsisSelection'] = 'must be a boolean'
+    delete result.disableSynopsisSelection
+  }
+
   if (Object.keys(errors.annotations).length === 0) errors = {}
 
   return { result: result as TidoConfig['annotations'], errors }
