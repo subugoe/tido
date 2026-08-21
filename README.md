@@ -131,7 +131,7 @@ export default function TidoPage() {
 }
 ```
 
-Below you can find a detailed explanation of the configuration object.
+Below you can find a [detailed explanation](#the-keys-in-detail) of the configuration object.
 
 ## Configuration
 
@@ -185,50 +185,378 @@ There are options to
 
 ### The Keys in Detail
 
-| Name                                             | Type                             | Default                                                                            | Description                                                                                                                                                                                                                     |
-|--------------------------------------------------|----------------------------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| allowNewCollections                              | Boolean                          | true                                                                               | Toggles the ability to add new collections to the app through a user input.                                                                                                                                                     |
-| annotations                                      | AnnotationsConfig                | {}                                                                                 | Configures the display of annotations and their filtering options. See [annotations](#annotations) chapter.                                                                                                                     |
-| annotations.defaultMode                          | String                           | `aligned`                                                                          | An annotations mode toggle is shown. Initial selected mode is `aligned` mode                                                                                                                                                    |
-| annotations.disableHighlighting                  | String[]                         | -                                                                                  | Annotation types whose targets are rendered without the base grey highlight and the nested target border. Clicking such a target still opens its annotation, and hover and selection feedback stay active.                         |
-| annotations.disableSynopsisSelection             | Boolean                          | -                                                                                  | When `true`, disables synopsis selection on sync target click and hides the synopsis section in the annotation popover. Sync targets still display their base annotation but no synopsis connection is established.                |
-| annotations.filters                              | AnnotationFiltersConfig          | -                                                                                  | Defines a nested object of filter options.                                                                                                                                                                                      |
-| annotations.filters.rootSelectionRule            | String                           | `multiple`                                                                         | Controls the overall behavior and layout of the filter UI. Allowed values: `multiple` or `single`. When set to `single`, a tab bar is rendered for root-level nodes.                                                            |
-| annotations.filters.selectedIndex                | Number                           | -                                                                                  | Index of the initially selected filter node in the filter tree. Only applies when `rootSelectionRule` is set to `single`.                                                                                                       |
-| annotations.filters.items                        | FilterNode[]                     | -                                                                                  | Array of filter nodes defining the hierarchical filter tree structure.                                                                                                                                                          |
-| annotations.filters.items[i].types               | String[] \| VariantType[]        | -                                                                                  | Array of annotation type identifiers that a filter node controls. Can be plain strings (e.g., `"person"`, `"place"`) or variant witness objects (e.g., `{ Variant: "witness_id" }`).                                            |
-| annotations.filters.items[i].label               | String                           | -                                                                                  | Label to display for a filter node.                                                                                                                                                                                             |
-| annotations.filters.items[i].items               | FilterNode[]                     | -                                                                                  | Child filter nodes for nested filtering.                                                                                                                                                                                        |
-| annotations.singleMode                           | String                           | -                                                                                  | Specifies only one annotations mode, which can be either `aligned` or `list`                                                                                                                                                    |
-| annotations.types                                | AnnotationTypeConfigMap          | -                                                                                  | A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.                                                                                                              |
-| annotations.types[i].label                       | String                           | -                                                                                  | Custom label to display for an annotation type.                                                                                                                                                                                 |
-| annotations.tooltipTypes                         | String[]                         | -                                                                                  | Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.                                                                                                 |
-| container                                        | String                           | `#app`                                                                             | Specifies the CSS selector where we should append the TIDO app to.                                                                                                                                                              |
-| lang                                             | String (ISO 639-1 language code) | `en`                                                                               | Specifies the current active language of the app. See [translations](#translations) chapter.                                                                                                                                    |
-| panels                                           | PanelConfig[]                    | []                                                                                 | Defines an array of panel objects. The panels will appear in the same order.                                                                                                                                                    |
-| panels[i].collection                             | String                           | -                                                                                  | TextAPI collection URL.                                                                                                                                                                                                         |
-| panels[i].item                                   | String                           | -                                                                                  | TextAPI item URL. If not specified, the first item of the collection will be used.                                                                                                                                              |
-| panels[i].manifest                               | String                           | -                                                                                  | TextAPI manifest URL. If not specified, the first manifest of the collection will be used.                                                                                                                                      |
-| panels[i].selectedAnnotation                     | String                           | -                                                                                  | Specifies the ID of a specific annotation to select/display when the panel loads.                                                                                                                                               |
-| panels[i].showSidebar                            | Boolean                          | -                                                                                  | Controls whether the annotations sidebar is visible for this panel.                                                                                                                                                             |
-| panels[i].views                                  | PanelViewConfig[]                | -                                                                                  | Overrides the global `panelViews` config for this specific panel. Use this to customize views per panel while still inheriting unset properties from the global config.                                                         |
-| panelViews                                       | PanelViewConfig[]                | `[{label: "Image", view: "image"}, {label: "Text", view: "text"}]`                 | Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the "View" dropdown in the panel header. See [Panel Views](#panel-views) chapter.                   |
-| panelViews[i].activeContentType                  | String                           | -                                                                                  | Specifies which content type should be active/selected by default for this view. Use with contentTypes to set the default selection.                                                                                            |
-| panelViews[i].contentTypes                       | String[]                         | -                                                                                  | Specifies a list of TextAPI content type identifiers. If multiple are given, a content type toggle with a dropdown selection will be shown. Users can then switch the respective content type within a split pane.              |
-| panelViews[i].label                              | String                           | `Image` \| `Text`                                                                  | Specifies a label for a view. It appears as title prefix in the content type toggle and in the "View" selection dropdown in the panel header.                                                                                   |
-| panelViews[i].view                               | `image` \| `text`                | `image` \| `text`                                                                  | Specifies a view identifier that should be loaded into a split pane.                                                                                                                                                            |
-| panelViews[i].visible                            | Boolean                          | true                                                                               | Controls whether this view is visible in the panel. When false, the view will be hidden but can be toggled on via the "View" dropdown.                                                                                          |
-| rootCollections                                  | String[]                         | []                                                                                 | Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.                                                                              |
-| showAddNewPanelButton                            | Boolean                          | true                                                                               | Toggles the display of the "add new panel" button.                                                                                                                                                                              |
-| showContentTypeToggle                            | Boolean                          | true                                                                               | Toggles the display of the content type toggle in TextViews. When false, the whole bar is hidden.                                                                                                                               |
-| showGlobalTree                                   | Boolean                          | true                                                                               | Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.                                                                                                                       |
-| theme                                            | Object                           | Object                                                                             | Specifies theme settings for UI elements.                                                                                                                                                                                       |
-| theme.primaryColor                               | String                           | `#3456aa`, `rgb(79, 70, 229)`, `hsl(243, 75%, 59%)`, `oklch(0.4743 0.1405 264.94)` | Primary color of UI elements. Used on buttons and other interactive elements. The value can be provided as string in following color systems (hex, rgb, hsl, oklch). Alpha channel is not supported.                            |
-| title                                            | String                           | empty                                                                              | Specifies the main title of the app in the header. Translatable.                                                                                                                                                                |
-| translations                                     | Object                           | null                                                                               | Specifies a custom translations object. See [translations](#translations) chapter.                                                                                                                                              |
-| translations.[lang]                              | TranslationNamespace             | -                                                                                  | Defines a language key. The value is a TranslationNamespace object.                                                                                                                                                             |
-| translations.[lang].[namespace]                  | Object                           | -                                                                                  | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration. |
-| translations.[lang].[namespace].[translationKey] | String                           | -                                                                                  | Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration. |
+#### General
+
+---
+
+##### `allowNewCollections`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the ability to add new collections to the app through a user input.
+
+---
+
+##### `container`
+
+- **Type:** String
+- **Default:** `#app`
+
+Specifies the CSS selector where we should append the TIDO app to.
+
+---
+
+##### `lang`
+
+- **Type:** String (ISO 639-1 language code)
+- **Default:** `en`
+
+Specifies the current active language of the app. See [translations](#translations) chapter.
+
+---
+
+##### `panels`
+
+- **Type:** PanelConfig[]
+- **Default:** `[]`
+
+Defines an array of panel objects. The panels will appear in the same order.
+
+---
+
+##### `panels[i].collection`
+
+- **Type:** String
+
+TextAPI collection URL.
+
+---
+
+##### `panels[i].item`
+
+- **Type:** String
+
+TextAPI item URL. If not specified, the first item of the collection will be used.
+
+---
+
+##### `panels[i].manifest`
+
+- **Type:** String
+
+TextAPI manifest URL. If not specified, the first manifest of the collection will be used.
+
+---
+
+##### `panels[i].selectedAnnotation`
+
+- **Type:** String
+
+Specifies the ID of a specific annotation to select/display when the panel loads.
+
+---
+
+##### `panels[i].showSidebar`
+
+- **Type:** Boolean
+
+Controls whether the annotations sidebar is visible for this panel.
+
+---
+
+##### `panels[i].views`
+
+- **Type:** PanelViewConfig[]
+
+Overrides the global `panelViews` config for this specific panel. Use this to customize views per panel while still inheriting unset properties from the global config.
+
+---
+
+##### `rootCollections`
+
+- **Type:** String[]
+- **Default:** `[]`
+
+Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.
+
+---
+
+##### `showAddNewPanelButton`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the display of the "add new panel" button.
+
+---
+
+##### `showContentTypeToggle`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the display of the content type toggle in TextViews. When false, the whole bar is hidden.
+
+---
+
+##### `showGlobalTree`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.
+
+---
+
+##### `title`
+
+- **Type:** String
+- **Default:** *(empty)*
+
+Specifies the main title of the app in the header. Translatable.
+
+---
+
+#### Annotations
+
+---
+
+##### `annotations`
+
+- **Type:** AnnotationsConfig
+- **Default:** `{}`
+
+Configures the display of annotations and their filtering options. See [annotations](#annotations) chapter.
+
+---
+
+##### `annotations.defaultMode`
+
+- **Type:** String
+- **Default:** `aligned`
+
+An annotations mode toggle is shown. Initial selected mode is `aligned` mode.
+
+---
+
+##### `annotations.disableHighlighting`
+
+- **Type:** String[]
+
+Annotation types whose targets are rendered without the base grey highlight and the nested target border. Clicking such a target still opens its annotation, and hover and selection feedback stay active.
+
+---
+
+##### `annotations.disableSynopsisSelection`
+
+- **Type:** Boolean
+
+When `true`, disables synopsis selection on sync target click and hides the synopsis section in the annotation popover. Sync targets still display their base annotation but no synopsis connection is established.
+
+---
+
+##### `annotations.filters`
+
+- **Type:** AnnotationFiltersConfig
+
+Defines a nested object of filter options.
+
+---
+
+##### `annotations.filters.rootSelectionRule`
+
+- **Type:** String
+- **Default:** `multiple`
+
+Controls the overall behavior and layout of the filter UI. Allowed values: `multiple` or `single`. When set to `single`, a tab bar is rendered for root-level nodes.
+
+---
+
+##### `annotations.filters.selectedIndex`
+
+- **Type:** Number
+
+Index of the initially selected filter node in the filter tree. Only applies when `rootSelectionRule` is set to `single`.
+
+---
+
+##### `annotations.filters.items`
+
+- **Type:** FilterNode[]
+
+Array of filter nodes defining the hierarchical filter tree structure.
+
+---
+
+##### `annotations.filters.items[i].types`
+
+- **Type:** String[] | VariantType[]
+
+Array of annotation type identifiers that a filter node controls. Can be plain strings (e.g., `"person"`, `"place"`) or variant witness objects (e.g., `{ Variant: "witness_id" }`).
+
+---
+
+##### `annotations.filters.items[i].label`
+
+- **Type:** String
+
+Label to display for a filter node.
+
+---
+
+##### `annotations.filters.items[i].items`
+
+- **Type:** FilterNode[]
+
+Child filter nodes for nested filtering.
+
+---
+
+##### `annotations.singleMode`
+
+- **Type:** String
+
+Specifies only one annotations mode, which can be either `aligned` or `list`.
+
+---
+
+##### `annotations.types`
+
+- **Type:** AnnotationTypeConfigMap
+
+A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.
+
+---
+
+##### `annotations.types[i].label`
+
+- **Type:** String
+
+Custom label to display for an annotation type.
+
+---
+
+##### `annotations.tooltipTypes`
+
+- **Type:** String[]
+
+Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.
+
+---
+
+#### Panel Views
+
+---
+
+##### `panelViews`
+
+- **Type:** PanelViewConfig[]
+- **Default:** `[{label: "Image", view: "image"}, {label: "Text", view: "text"}]`
+
+Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the "View" dropdown in the panel header. See [Panel Views](#panel-views) chapter.
+
+---
+
+##### `panelViews[i].activeContentType`
+
+- **Type:** String
+
+Specifies which content type should be active/selected by default for this view. Use with `contentTypes` to set the default selection.
+
+---
+
+##### `panelViews[i].contentTypes`
+
+- **Type:** String[]
+
+Specifies a list of TextAPI content type identifiers. If multiple are given, a content type toggle with a dropdown selection will be shown. Users can then switch the respective content type within a split pane.
+
+---
+
+##### `panelViews[i].label`
+
+- **Type:** String
+- **Default:** `Image` | `Text`
+
+Specifies a label for a view. It appears as title prefix in the content type toggle and in the "View" selection dropdown in the panel header.
+
+---
+
+##### `panelViews[i].view`
+
+- **Type:** `image` | `text`
+- **Default:** `image` | `text`
+
+Specifies a view identifier that should be loaded into a split pane.
+
+---
+
+##### `panelViews[i].visible`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Controls whether this view is visible in the panel. When false, the view will be hidden but can be toggled on via the "View" dropdown.
+
+---
+
+#### Theme
+
+---
+
+##### `theme`
+
+- **Type:** Object
+- **Default:** `{}`
+
+Specifies theme settings for UI elements.
+
+---
+
+##### `theme.primaryColor`
+
+- **Type:** String
+- **Default:** `#3456aa`, `rgb(79, 70, 229)`, `hsl(243, 75%, 59%)`, `oklch(0.4743 0.1405 264.94)`
+
+Primary color of UI elements. Used on buttons and other interactive elements. The value can be provided as string in the following color systems: hex, rgb, hsl, oklch. Alpha channel is not supported.
+
+---
+
+#### Translations
+
+---
+
+##### `translations`
+
+- **Type:** Object
+- **Default:** `null`
+
+Specifies a custom translations object. See [translations](#translations) chapter.
+
+---
+
+##### `translations.[lang]`
+
+- **Type:** TranslationNamespace
+
+Defines a language key. The value is a TranslationNamespace object.
+
+---
+
+##### `translations.[lang].[namespace]`
+
+- **Type:** Object
+
+Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration.
+
+---
+
+##### `translations.[lang].[namespace].[translationKey]`
+
+- **Type:** String
+
+Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a [list](#translations) that we expose for overriding in the configuration.
 
 ### Panel Views
 This array of `PanelViewConfig` objects defines the actual visible content inside a panel. It is a list of
@@ -670,7 +998,7 @@ The development build will be available under `localhost:5173`.
 
 #### Preview Production Build with examples
 
-You can also inspect some example TIDO configurations that we provide under `/examples`.
+You can also inspect some [example TIDO configurations](#preview-production-build-with-examples) that we provide under `/examples`.
 Run this command which will create a TIDO production build, copy the result files into `/examples`
 and start up a local web server:
 
@@ -691,11 +1019,11 @@ You can start your own local API server with this command:
 npm run api
 ```
 
-The server will be available at `localhost:8181`. Check out `/tests/mocks` inspect the files.
+The server will be available at `localhost:8181`. Check out [`/tests/mocks`](#testing) to inspect the files.
 
 ### Testing
 
-We run tests only on production code. So you need to make sure to create a TIDO build before starting to run tests.
+We run tests only on production code. So you need to make sure to [create a TIDO build](#build) before starting to run tests.
 
 #### Quick Test Run
 
@@ -708,8 +1036,8 @@ This is a minimal command to run tests once on your local machine.
 If you want to gain more control during development you can do the following.
 Prepare the environment before running the tests:
 
-- `npm run api`
-- `npm run preview:examples`
+- [`npm run api`](#start-mock-api)
+- [`npm run preview:examples`](#preview-production-build-with-examples)
 
 Now you can run the tests on your local machine with a proper Cypress UI and selective steps
 or run the tests only in headless mode which will prompt the results on the console.
