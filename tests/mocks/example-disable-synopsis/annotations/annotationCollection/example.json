@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example-disable-synopsis/annotations/annotationCollection/example.json",
+  "type": "AnnotationCollection",
+  "label": "Synopsis connections for Disable-Synopsis Library",
+  "total": 1,
+  "first": "http://localhost:8181/example-disable-synopsis/annotations/annotationPage/example.json",
+  "last": "http://localhost:8181/example-disable-synopsis/annotations/annotationPage/example.json"
+}

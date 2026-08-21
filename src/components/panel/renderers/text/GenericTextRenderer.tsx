@@ -589,9 +589,9 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     // Resolve the targets the clicked element is synced with on demand, using the clicked target's
     // sync annotations recorded in targetsSyncMapRef (read via ref to avoid stale closure state).
-    const synopsisDisabled = !!annotationsConfig?.disableSynopsisSelection
-    const isSyncTarget = targetsSyncMapRef.current.has(target as HTMLElement)
-    if (synopsisDisabled && isSyncTarget) return
+    // With disableSynopsisSelection a sync target still goes through the regular click handling -
+    // only its synopsis behavior (connection, action area) is skipped below.
+    const synopsisSelectionDisabled = !!annotationsConfig?.disableSynopsisSelection
     const targetSyncAnnotations = targetsSyncMapRef.current.get(target as HTMLElement) ?? []
     const newSyncTargets = getSyncedTargets(target as HTMLElement, source, targetSyncAnnotations)
 
@@ -639,7 +639,10 @@ const GenericTextRenderer: FC<Props> = memo(({
       })) ?? []
     }
 
-    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1 || newSyncTargets.length > 1 || newSyncTargets.length === 1 && normalAnnotations.length === 1
+    // Sync-target-based clauses only apply when the synopsis is enabled - with it disabled the
+    // popover's synopsis area is hidden, so witness counts alone must not open (an empty) popover.
+    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1
+      || (!synopsisSelectionDisabled && (newSyncTargets.length > 1 || newSyncTargets.length === 1 && normalAnnotations.length === 1))
 
     if (openTooltip) {
       setTooltipOpen(true)
@@ -650,13 +653,13 @@ const GenericTextRenderer: FC<Props> = memo(({
       // pass the synced targets of this entry (and the clicked target's y-position) to the popover content
     }
 
-    const areOnlySyncedTargets = !synopsisDisabled && _tooltipAnnotations.length === 0 && crossRefAnnotations.length === 0 && normalAnnotations.length === 0
+    const areOnlySyncedTargets = !synopsisSelectionDisabled && _tooltipAnnotations.length === 0 && crossRefAnnotations.length === 0 && normalAnnotations.length === 0
     const clickedConnection: SynopsisConnection = {
       navigatedTarget: target as HTMLElement,
       otherSyncedTargets: newSyncTargets,
       yPos: clickedYPos
     }
-    if (!synopsisDisabled) setSyncTargets(clickedConnection)
+    if (!synopsisSelectionDisabled) setSyncTargets(clickedConnection)
 
     // a plain sync target - nothing to show in the popover, so the click establishes the connection
     // right away (the effect above styles and aligns it)

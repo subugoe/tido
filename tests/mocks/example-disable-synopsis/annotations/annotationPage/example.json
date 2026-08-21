@@ -1,0 +1,49 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example-disable-synopsis/annotations/annotationPage/example.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example-disable-synopsis/annotations/annotationCollection/example.json",
+    "label": "Synopsis connections for Disable-Synopsis Library",
+    "total": 1
+  },
+  "next": null,
+  "prev": null,
+  "items": [
+    {
+      "id": "http://localhost:8181/example-disable-synopsis/annotations/annotation/synopsis-1",
+      "type": "Annotation",
+      "motivation": "linking",
+      "target": [
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#multi"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-disable-synopsis/html/book1-page1_transcription.html",
+            "collection": "http://localhost:8181/example-disable-synopsis/collections/example.json",
+            "manifest": "http://localhost:8181/example-disable-synopsis/manifests/book1.json",
+            "item": "http://localhost:8181/example-disable-synopsis/items/book1-page1.json"
+          },
+          "format": "text/html"
+        },
+        {
+          "type": "SpecificResource",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#multi"
+          },
+          "source": {
+            "id": "http://localhost:8181/example-disable-synopsis/html/book1-page1_diplomatic.html",
+            "collection": "http://localhost:8181/example-disable-synopsis/collections/example.json",
+            "manifest": "http://localhost:8181/example-disable-synopsis/manifests/book1.json",
+            "item": "http://localhost:8181/example-disable-synopsis/items/book1-page1.json"
+          },
+          "format": "text/html"
+        }
+      ]
+    }
+  ]
+}

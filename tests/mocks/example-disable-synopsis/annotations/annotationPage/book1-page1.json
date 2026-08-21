@@ -1,0 +1,78 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example-disable-synopsis/annotations/annotationPage/book1-page1.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example-disable-synopsis/annotations/annotationCollection/book1-page1.json",
+    "label": "Annotations for Disable-Synopsis · Island Chronicle, Chapter 1",
+    "total": 3
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example-disable-synopsis/book1/page1/rev1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The stone quays are the oldest surviving structure of the island and date back to the first settlement.",
+        "format": "text/plain",
+        "annotationType": "Historical Context"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-disable-synopsis/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#multi"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-disable-synopsis/book1/page1/rev1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Building the quays in stone instead of wood marks the settlers as intending to stay permanently.",
+        "format": "text/plain",
+        "annotationType": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-disable-synopsis/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#multi"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example-disable-synopsis/book1/page1/rev1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "The diplomatic text spells the phrase 'stan quayes', an earlier stage of the language.",
+        "format": "text/plain",
+        "annotationType": "Textual Variant"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example-disable-synopsis/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#multi"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

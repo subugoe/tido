@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example-disable-synopsis/annotations/annotationCollection/book1-page1.json",
+  "type": "AnnotationCollection",
+  "label": "Annotations for Disable-Synopsis · Island Chronicle, Chapter 1",
+  "total": 3,
+  "first": "http://localhost:8181/example-disable-synopsis/annotations/annotationPage/book1-page1.json",
+  "last": "http://localhost:8181/example-disable-synopsis/annotations/annotationPage/book1-page1.json"
+}
