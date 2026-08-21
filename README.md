@@ -265,6 +265,15 @@ Controls whether the annotations sidebar is visible for this panel.
 
 ---
 
+##### `panels[i].showSynopsisNavigation`
+
+- **Type:** Boolean
+- **Default:** *(root-level `showSynopsisNavigation`)*
+
+Controls whether the Sync Target Navigation is rendered for this panel, overriding the root-level `showSynopsisNavigation`. Set to `false` to hide it - the panel's sync targets remain clickable, only the navigation UI is not rendered.
+
+---
+
 ##### `panels[i].views`
 
 - **Type:** PanelViewConfig[]
@@ -306,6 +315,15 @@ Toggles the display of the content type toggle in TextViews. When false, the who
 - **Default:** `true`
 
 Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.
+
+---
+
+##### `showSynopsisNavigation`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Controls whether the Sync Target Navigation is rendered in panels. Set to `false` to hide it in all panels - can be overridden per panel via `panels[i].showSynopsisNavigation`.
 
 ---
 

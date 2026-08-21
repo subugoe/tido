@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, EyeOff } from 'lucide-react'
 
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import NavigationButton from '@/components/panel/synopsis/NavigationButton.tsx'
@@ -15,7 +16,8 @@ import { PANEL_BORDER_WIDTH, SYNC_NAVIGATION_POSITION } from '@/utils/constants.
 const VERTICAL_OFFSET = '-translate-y-[calc(100%-6px)]'
 
 const SyncTargetNavigation: FC = () => {
-  const { panelId, syncedTargets, syncedTargetsMap, usePanelTranslation } = usePanel()
+  const { panelId, panelState, syncedTargets, syncedTargetsMap, usePanelTranslation } = usePanel()
+  const { showSynopsisNavigation } = useConfig()
   const { t } = usePanelTranslation()
   const activeSynopsisConnection = useSynopsisStore(state => state.activeSynopsisConnection)
   const setActiveSynopsisConnection = useSynopsisStore(state => state.setActiveSynopsisConnection)
@@ -79,6 +81,8 @@ const SyncTargetNavigation: FC = () => {
 
 
   const total = syncedTargets.length
+  // a panel-level setting wins over the root-level one (default: shown)
+  if ((panelState.config.showSynopsisNavigation ?? showSynopsisNavigation) === false) return null
   if (total === 0) return null
 
   const isFirst = navigatedTargetIndex === 0

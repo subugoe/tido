@@ -54,6 +54,7 @@
       "contentTypes": ["philology"]
     }
   ],
+  "showSynopsisNavigation": false,
   "rootCollections": [
     "https://eupt-tido5.d.sub.uni-goettingen.de/api/eupt/collections/all"
   ]

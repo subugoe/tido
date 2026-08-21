@@ -83,6 +83,19 @@ function validateShowPanelPlaceholder(input: unknown): ValidationResult<TidoConf
   return { result, errors }
 }
 
+function validateShowSynopsisNavigation(input: unknown): ValidationResult<TidoConfig['showSynopsisNavigation']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'boolean'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['showSynopsisNavigation'] = 'must be a boolean'
+        return defaultConfig.showSynopsisNavigation
+      })()
+  return { result, errors }
+}
+
 function validatePanels(input: unknown): ValidationResult<TidoConfig['panels']> {
   const errors: Record<string, string> = {}
   const result = Array.isArray(input) ? input as TidoConfig['panels'] : (() => {
@@ -311,6 +324,7 @@ export async function mergeAndValidateConfig(
   const showPanelPlaceholder = validateShowPanelPlaceholder(userConfig.showPanelPlaceholder)
   const showThemeToggle = validateShowThemeToggle(userConfig.showThemeToggle)
   const showCrossRefLabels = validateShowCrossRefLabels(userConfig.showCrossRefLabels)
+  const showSynopsisNavigation = validateShowSynopsisNavigation(userConfig.showSynopsisNavigation)
   const rootCollections = validateRootCollections(userConfig.rootCollections)
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
@@ -342,6 +356,7 @@ export async function mergeAndValidateConfig(
     ...showPanelPlaceholder.errors,
     ...showThemeToggle.errors,
     ...showCrossRefLabels.errors,
+    ...showSynopsisNavigation.errors,
     ...theme.errors,
     ...title.errors,
     ...translations.errors,
@@ -361,8 +376,8 @@ export async function mergeAndValidateConfig(
         contentState = await decodeState(contentStateValue)
       }
 
-      console.log(contentState)
       if (contentState) {
+        console.info('Received Content State from URL: ', contentState)
         panelsFromContentState = await Promise.all(contentState.target.map(async (target: TidoContentStateTarget, i) => {
           let manifestIndex: number | null = null
           let itemIndex: number | null = null
@@ -438,6 +453,7 @@ export async function mergeAndValidateConfig(
     showPanelPlaceholder: showPanelPlaceholder.result,
     showThemeToggle: showThemeToggle.result,
     showCrossRefLabels: showCrossRefLabels.result,
+    showSynopsisNavigation: showSynopsisNavigation.result,
     theme: theme.result,
     title: title.result,
     translations: mergedTranslations,

@@ -12,6 +12,7 @@ const defaultConfig: TidoConfig = {
   showPanelPlaceholder: true,
   showThemeToggle: true,
   showCrossRefLabels: true,
+  showSynopsisNavigation: true,
   theme: {
     primaryColor: '#3456aa',
     theme: 'system'

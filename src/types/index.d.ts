@@ -200,6 +200,7 @@ export interface PanelConfig {
   views?: PanelView[]
   selectedAnnotationId?: string
   showSidebar?: boolean
+  showSynopsisNavigation?: boolean
 }
 
 export type PanelViewType = 'text' | 'image'
@@ -240,6 +241,7 @@ export interface TidoConfig {
   showPanelPlaceholder: boolean
   showThemeToggle: boolean
   showCrossRefLabels: boolean
+  showSynopsisNavigation: boolean
   panels: PanelConfig[]
   theme: ThemeConfig
   title: string

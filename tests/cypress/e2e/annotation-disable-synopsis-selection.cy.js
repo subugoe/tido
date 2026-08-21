@@ -29,8 +29,13 @@ function getPopover() {
   return cy.get('[data-cy="annotation-popover-content"]')
 }
 
-function clickSyncTarget(contentUrl, selector) {
-  cy.get(`[data-text-container][data-content-url="${contentUrl}"]`).find(selector).click()
+// scoped to a panel: specs opening the same manifest twice would otherwise match the
+// identically-named text container in every panel
+function clickSyncTarget(contentUrl, selector, panelIndex = 0) {
+  getPanel(panelIndex)
+    .find(`[data-text-container][data-content-url="${contentUrl}"]`)
+    .find(selector)
+    .click()
 }
 
 function visit(config, panelCount = 2) {
@@ -65,7 +70,8 @@ describe('Annotation disableSynopsisSelection', () => {
 
     it('Does not apply the active style to the clicked sync target', () => {
       clickSyncTarget(BOOK2_PAGE1_TRANSCRIPTION, OCEAN_SELECTOR)
-      cy.get(`[data-text-container][data-content-url="${BOOK2_PAGE1_TRANSCRIPTION}"]`)
+      getPanel(0)
+        .find(`[data-text-container][data-content-url="${BOOK2_PAGE1_TRANSCRIPTION}"]`)
         .find(OCEAN_SELECTOR)
         .should('not.have.class', SYNOPSIS_SELECTED_STYLE)
     })

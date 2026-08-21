@@ -103,6 +103,13 @@
     </ul>
     <p>Controls whether the annotations sidebar is visible for this panel.</p>
     <hr>
+    <h5><code>panels[i].showSynopsisNavigation</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <em>(root-level <code>showSynopsisNavigation</code>)</em></li>
+    </ul>
+    <p>Controls whether the Sync Target Navigation is rendered for this panel, overriding the root-level <code>showSynopsisNavigation</code>. Set to <code>false</code> to hide it - the panel&#39;s sync targets remain clickable, only the navigation UI is not rendered.</p>
+    <hr>
     <h5><code>panels[i].views</code></h5>
     <ul>
     <li><strong>Type:</strong> PanelViewConfig[]</li>
@@ -136,6 +143,13 @@
     <li><strong>Default:</strong> <code>true</code></li>
     </ul>
     <p>Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.</p>
+    <hr>
+    <h5><code>showSynopsisNavigation</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Controls whether the Sync Target Navigation is rendered in panels. Set to <code>false</code> to hide it in all panels - can be overridden per panel via <code>panels[i].showSynopsisNavigation</code>.</p>
     <hr>
     <h5><code>title</code></h5>
     <ul>
