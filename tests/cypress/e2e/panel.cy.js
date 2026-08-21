@@ -148,7 +148,6 @@ describe('Panel', () => {
       .click()
       .validateLabel('manifest', 'The Great Gatsby')         // Manifest and item labels should get updated
       .validateLabel('item', 'Page 1')
-      .wait(1000)
       .validateText('I lived at West Egg, the—well')                        // Text area should update
   })
 

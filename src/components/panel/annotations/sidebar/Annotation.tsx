@@ -73,7 +73,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
         && childType !== 'CrossRef'
         && !tooltipTypes.includes(childType)
     })
-    console.log(children)
     setChildAnnotations(children)
   }, [])
 

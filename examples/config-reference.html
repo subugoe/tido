@@ -43,268 +43,286 @@
     &lt;/script&gt;
     </code></pre>
     </details><h3>The Keys in Detail</h3>
-    <table>
-    <thead>
-    <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Default</th>
-    <th>Description</th>
-    </tr>
-    </thead>
-    <tbody><tr>
-    <td>allowNewCollections</td>
-    <td>Boolean</td>
-    <td>true</td>
-    <td>Toggles the ability to add new collections to the app through a user input.</td>
-    </tr>
-    <tr>
-    <td>annotations</td>
-    <td>AnnotationsConfig</td>
-    <td>{}</td>
-    <td>Configures the display of annotations and their filtering options. See <a href="#annotations">annotations</a> chapter.</td>
-    </tr>
-    <tr>
-    <td>annotations.defaultMode</td>
-    <td>String</td>
-    <td><code>aligned</code></td>
-    <td>An annotations mode toggle is shown. Initial selected mode is <code>aligned</code> mode</td>
-    </tr>
-    <tr>
-    <td>annotations.disableHighlighting</td>
-    <td>String[]</td>
-    <td>-</td>
-    <td>Annotation types whose targets are rendered without the base grey highlight and the nested target border. Clicking such a target still opens its annotation, and hover and selection feedback stay active.</td>
-    </tr>
-    <tr>
-    <td>annotations.disableSynopsisSelection</td>
-    <td>Boolean</td>
-    <td>-</td>
-    <td>When <code>true</code>, disables synopsis selection on sync target click and hides the synopsis section in the annotation popover. Sync targets still display their base annotation but no synopsis connection is established.</td>
-    </tr>
-    <tr>
-    <td>annotations.filters</td>
-    <td>AnnotationFiltersConfig</td>
-    <td>-</td>
-    <td>Defines a nested object of filter options.</td>
-    </tr>
-    <tr>
-    <td>annotations.filters.rootSelectionRule</td>
-    <td>String</td>
-    <td><code>multiple</code></td>
-    <td>Controls the overall behavior and layout of the filter UI. Allowed values: <code>multiple</code> or <code>single</code>. When set to <code>single</code>, a tab bar is rendered for root-level nodes.</td>
-    </tr>
-    <tr>
-    <td>annotations.filters.selectedIndex</td>
-    <td>Number</td>
-    <td>-</td>
-    <td>Index of the initially selected filter node in the filter tree. Only applies when <code>rootSelectionRule</code> is set to <code>single</code>.</td>
-    </tr>
-    <tr>
-    <td>annotations.filters.items</td>
-    <td>FilterNode[]</td>
-    <td>-</td>
-    <td>Array of filter nodes defining the hierarchical filter tree structure.</td>
-    </tr>
-    <tr>
-    <td>annotations.filters.items[i].types</td>
-    <td>String[] | VariantType[]</td>
-    <td>-</td>
-    <td>Array of annotation type identifiers that a filter node controls. Can be plain strings (e.g., <code>&quot;person&quot;</code>, <code>&quot;place&quot;</code>) or variant witness objects (e.g., <code>{ Variant: &quot;witness_id&quot; }</code>).</td>
-    </tr>
-    <tr>
-    <td>annotations.filters.items[i].label</td>
-    <td>String</td>
-    <td>-</td>
-    <td>Label to display for a filter node.</td>
-    </tr>
-    <tr>
-    <td>annotations.filters.items[i].items</td>
-    <td>FilterNode[]</td>
-    <td>-</td>
-    <td>Child filter nodes for nested filtering.</td>
-    </tr>
-    <tr>
-    <td>annotations.singleMode</td>
-    <td>String</td>
-    <td>-</td>
-    <td>Specifies only one annotations mode, which can be either <code>aligned</code> or <code>list</code></td>
-    </tr>
-    <tr>
-    <td>annotations.types</td>
-    <td>AnnotationTypeConfigMap</td>
-    <td>-</td>
-    <td>A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.</td>
-    </tr>
-    <tr>
-    <td>annotations.types[i].label</td>
-    <td>String</td>
-    <td>-</td>
-    <td>Custom label to display for an annotation type.</td>
-    </tr>
-    <tr>
-    <td>annotations.tooltipTypes</td>
-    <td>String[]</td>
-    <td>-</td>
-    <td>Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.</td>
-    </tr>
-    <tr>
-    <td>container</td>
-    <td>String</td>
-    <td><code>#app</code></td>
-    <td>Specifies the CSS selector where we should append the TIDO app to.</td>
-    </tr>
-    <tr>
-    <td>lang</td>
-    <td>String (ISO 639-1 language code)</td>
-    <td><code>en</code></td>
-    <td>Specifies the current active language of the app. See <a href="#translations">translations</a> chapter.</td>
-    </tr>
-    <tr>
-    <td>panels</td>
-    <td>PanelConfig[]</td>
-    <td>[]</td>
-    <td>Defines an array of panel objects. The panels will appear in the same order.</td>
-    </tr>
-    <tr>
-    <td>panels[i].collection</td>
-    <td>String</td>
-    <td>-</td>
-    <td>TextAPI collection URL.</td>
-    </tr>
-    <tr>
-    <td>panels[i].item</td>
-    <td>String</td>
-    <td>-</td>
-    <td>TextAPI item URL. If not specified, the first item of the collection will be used.</td>
-    </tr>
-    <tr>
-    <td>panels[i].manifest</td>
-    <td>String</td>
-    <td>-</td>
-    <td>TextAPI manifest URL. If not specified, the first manifest of the collection will be used.</td>
-    </tr>
-    <tr>
-    <td>panels[i].selectedAnnotation</td>
-    <td>String</td>
-    <td>-</td>
-    <td>Specifies the ID of a specific annotation to select/display when the panel loads.</td>
-    </tr>
-    <tr>
-    <td>panels[i].showSidebar</td>
-    <td>Boolean</td>
-    <td>-</td>
-    <td>Controls whether the annotations sidebar is visible for this panel.</td>
-    </tr>
-    <tr>
-    <td>panels[i].views</td>
-    <td>PanelViewConfig[]</td>
-    <td>-</td>
-    <td>Overrides the global <code>panelViews</code> config for this specific panel. Use this to customize views per panel while still inheriting unset properties from the global config.</td>
-    </tr>
-    <tr>
-    <td>panelViews</td>
-    <td>PanelViewConfig[]</td>
-    <td><code>[{label: &quot;Image&quot;, view: &quot;image&quot;}, {label: &quot;Text&quot;, view: &quot;text&quot;}]</code></td>
-    <td>Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the &quot;View&quot; dropdown in the panel header. See <a href="#panel-views">Panel Views</a> chapter.</td>
-    </tr>
-    <tr>
-    <td>panelViews[i].activeContentType</td>
-    <td>String</td>
-    <td>-</td>
-    <td>Specifies which content type should be active/selected by default for this view. Use with contentTypes to set the default selection.</td>
-    </tr>
-    <tr>
-    <td>panelViews[i].contentTypes</td>
-    <td>String[]</td>
-    <td>-</td>
-    <td>Specifies a list of TextAPI content type identifiers. If multiple are given, a content type toggle with a dropdown selection will be shown. Users can then switch the respective content type within a split pane.</td>
-    </tr>
-    <tr>
-    <td>panelViews[i].label</td>
-    <td>String</td>
-    <td><code>Image</code> | <code>Text</code></td>
-    <td>Specifies a label for a view. It appears as title prefix in the content type toggle and in the &quot;View&quot; selection dropdown in the panel header.</td>
-    </tr>
-    <tr>
-    <td>panelViews[i].view</td>
-    <td><code>image</code> | <code>text</code></td>
-    <td><code>image</code> | <code>text</code></td>
-    <td>Specifies a view identifier that should be loaded into a split pane.</td>
-    </tr>
-    <tr>
-    <td>panelViews[i].visible</td>
-    <td>Boolean</td>
-    <td>true</td>
-    <td>Controls whether this view is visible in the panel. When false, the view will be hidden but can be toggled on via the &quot;View&quot; dropdown.</td>
-    </tr>
-    <tr>
-    <td>rootCollections</td>
-    <td>String[]</td>
-    <td>[]</td>
-    <td>Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.</td>
-    </tr>
-    <tr>
-    <td>showAddNewPanelButton</td>
-    <td>Boolean</td>
-    <td>true</td>
-    <td>Toggles the display of the &quot;add new panel&quot; button.</td>
-    </tr>
-    <tr>
-    <td>showContentTypeToggle</td>
-    <td>Boolean</td>
-    <td>true</td>
-    <td>Toggles the display of the content type toggle in TextViews. When false, the whole bar is hidden.</td>
-    </tr>
-    <tr>
-    <td>showGlobalTree</td>
-    <td>Boolean</td>
-    <td>true</td>
-    <td>Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.</td>
-    </tr>
-    <tr>
-    <td>theme</td>
-    <td>Object</td>
-    <td>Object</td>
-    <td>Specifies theme settings for UI elements.</td>
-    </tr>
-    <tr>
-    <td>theme.primaryColor</td>
-    <td>String</td>
-    <td><code>#3456aa</code>, <code>rgb(79, 70, 229)</code>, <code>hsl(243, 75%, 59%)</code>, <code>oklch(0.4743 0.1405 264.94)</code></td>
-    <td>Primary color of UI elements. Used on buttons and other interactive elements. The value can be provided as string in following color systems (hex, rgb, hsl, oklch). Alpha channel is not supported.</td>
-    </tr>
-    <tr>
-    <td>title</td>
-    <td>String</td>
-    <td>empty</td>
-    <td>Specifies the main title of the app in the header. Translatable.</td>
-    </tr>
-    <tr>
-    <td>translations</td>
-    <td>Object</td>
-    <td>null</td>
-    <td>Specifies a custom translations object. See <a href="#translations">translations</a> chapter.</td>
-    </tr>
-    <tr>
-    <td>translations.[lang]</td>
-    <td>TranslationNamespace</td>
-    <td>-</td>
-    <td>Defines a language key. The value is a TranslationNamespace object.</td>
-    </tr>
-    <tr>
-    <td>translations.[lang].[namespace]</td>
-    <td>Object</td>
-    <td>-</td>
-    <td>Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a <a href="#translations">list</a> that we expose for overriding in the configuration.</td>
-    </tr>
-    <tr>
-    <td>translations.[lang].[namespace].[translationKey]</td>
-    <td>String</td>
-    <td>-</td>
-    <td>Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a <a href="#translations">list</a> that we expose for overriding in the configuration.</td>
-    </tr>
-    </tbody></table>
+    <h4>General</h4>
+    <hr>
+    <h5><code>allowNewCollections</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Toggles the ability to add new collections to the app through a user input.</p>
+    <hr>
+    <h5><code>container</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    <li><strong>Default:</strong> <code>#app</code></li>
+    </ul>
+    <p>Specifies the CSS selector where we should append the TIDO app to.</p>
+    <hr>
+    <h5><code>lang</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String (ISO 639-1 language code)</li>
+    <li><strong>Default:</strong> <code>en</code></li>
+    </ul>
+    <p>Specifies the current active language of the app. See <a href="#translations">translations</a> chapter.</p>
+    <hr>
+    <h5><code>panels</code></h5>
+    <ul>
+    <li><strong>Type:</strong> PanelConfig[]</li>
+    <li><strong>Default:</strong> <code>[]</code></li>
+    </ul>
+    <p>Defines an array of panel objects. The panels will appear in the same order.</p>
+    <hr>
+    <h5><code>panels[i].collection</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>TextAPI collection URL.</p>
+    <hr>
+    <h5><code>panels[i].item</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>TextAPI item URL. If not specified, the first item of the collection will be used.</p>
+    <hr>
+    <h5><code>panels[i].manifest</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>TextAPI manifest URL. If not specified, the first manifest of the collection will be used.</p>
+    <hr>
+    <h5><code>panels[i].selectedAnnotation</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>Specifies the ID of a specific annotation to select/display when the panel loads.</p>
+    <hr>
+    <h5><code>panels[i].showSidebar</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    </ul>
+    <p>Controls whether the annotations sidebar is visible for this panel.</p>
+    <hr>
+    <h5><code>panels[i].views</code></h5>
+    <ul>
+    <li><strong>Type:</strong> PanelViewConfig[]</li>
+    </ul>
+    <p>Overrides the global <code>panelViews</code> config for this specific panel. Use this to customize views per panel while still inheriting unset properties from the global config.</p>
+    <hr>
+    <h5><code>rootCollections</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String[]</li>
+    <li><strong>Default:</strong> <code>[]</code></li>
+    </ul>
+    <p>Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.</p>
+    <hr>
+    <h5><code>showAddNewPanelButton</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Toggles the display of the &quot;add new panel&quot; button.</p>
+    <hr>
+    <h5><code>showContentTypeToggle</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Toggles the display of the content type toggle in TextViews. When false, the whole bar is hidden.</p>
+    <hr>
+    <h5><code>showGlobalTree</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.</p>
+    <hr>
+    <h5><code>title</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    <li><strong>Default:</strong> <em>(empty)</em></li>
+    </ul>
+    <p>Specifies the main title of the app in the header. Translatable.</p>
+    <hr>
+    <h4>Annotations</h4>
+    <hr>
+    <h5><code>annotations</code></h5>
+    <ul>
+    <li><strong>Type:</strong> AnnotationsConfig</li>
+    <li><strong>Default:</strong> <code>{}</code></li>
+    </ul>
+    <p>Configures the display of annotations and their filtering options. See <a href="#annotations">annotations</a> chapter.</p>
+    <hr>
+    <h5><code>annotations.defaultMode</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    <li><strong>Default:</strong> <code>aligned</code></li>
+    </ul>
+    <p>An annotations mode toggle is shown. Initial selected mode is <code>aligned</code> mode.</p>
+    <hr>
+    <h5><code>annotations.disableHighlighting</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String[]</li>
+    </ul>
+    <p>Annotation types whose targets are rendered without the base grey highlight and the nested target border. Clicking such a target still opens its annotation, and hover and selection feedback stay active.</p>
+    <hr>
+    <h5><code>annotations.disableSynopsisSelection</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    </ul>
+    <p>When <code>true</code>, disables synopsis selection on sync target click and hides the synopsis section in the annotation popover. Sync targets still display their base annotation but no synopsis connection is established.</p>
+    <hr>
+    <h5><code>annotations.filters</code></h5>
+    <ul>
+    <li><strong>Type:</strong> AnnotationFiltersConfig</li>
+    </ul>
+    <p>Defines a nested object of filter options.</p>
+    <hr>
+    <h5><code>annotations.filters.rootSelectionRule</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    <li><strong>Default:</strong> <code>multiple</code></li>
+    </ul>
+    <p>Controls the overall behavior and layout of the filter UI. Allowed values: <code>multiple</code> or <code>single</code>. When set to <code>single</code>, a tab bar is rendered for root-level nodes.</p>
+    <hr>
+    <h5><code>annotations.filters.selectedIndex</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Number</li>
+    </ul>
+    <p>Index of the initially selected filter node in the filter tree. Only applies when <code>rootSelectionRule</code> is set to <code>single</code>.</p>
+    <hr>
+    <h5><code>annotations.filters.items</code></h5>
+    <ul>
+    <li><strong>Type:</strong> FilterNode[]</li>
+    </ul>
+    <p>Array of filter nodes defining the hierarchical filter tree structure.</p>
+    <hr>
+    <h5><code>annotations.filters.items[i].types</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String[] | VariantType[]</li>
+    </ul>
+    <p>Array of annotation type identifiers that a filter node controls. Can be plain strings (e.g., <code>&quot;person&quot;</code>, <code>&quot;place&quot;</code>) or variant witness objects (e.g., <code>{ Variant: &quot;witness_id&quot; }</code>).</p>
+    <hr>
+    <h5><code>annotations.filters.items[i].label</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>Label to display for a filter node.</p>
+    <hr>
+    <h5><code>annotations.filters.items[i].items</code></h5>
+    <ul>
+    <li><strong>Type:</strong> FilterNode[]</li>
+    </ul>
+    <p>Child filter nodes for nested filtering.</p>
+    <hr>
+    <h5><code>annotations.singleMode</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>Specifies only one annotations mode, which can be either <code>aligned</code> or <code>list</code>.</p>
+    <hr>
+    <h5><code>annotations.types</code></h5>
+    <ul>
+    <li><strong>Type:</strong> AnnotationTypeConfigMap</li>
+    </ul>
+    <p>A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.</p>
+    <hr>
+    <h5><code>annotations.types[i].label</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>Custom label to display for an annotation type.</p>
+    <hr>
+    <h5><code>annotations.tooltipTypes</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String[]</li>
+    </ul>
+    <p>Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.</p>
+    <hr>
+    <h4>Panel Views</h4>
+    <hr>
+    <h5><code>panelViews</code></h5>
+    <ul>
+    <li><strong>Type:</strong> PanelViewConfig[]</li>
+    <li><strong>Default:</strong> <code>[{label: &quot;Image&quot;, view: &quot;image&quot;}, {label: &quot;Text&quot;, view: &quot;text&quot;}]</code></li>
+    </ul>
+    <p>Configures an initial distribution of content views inside each panel. The defined views here can then be toggled on/off in the &quot;View&quot; dropdown in the panel header. See <a href="#panel-views">Panel Views</a> chapter.</p>
+    <hr>
+    <h5><code>panelViews[i].activeContentType</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>Specifies which content type should be active/selected by default for this view. Use with <code>contentTypes</code> to set the default selection.</p>
+    <hr>
+    <h5><code>panelViews[i].contentTypes</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String[]</li>
+    </ul>
+    <p>Specifies a list of TextAPI content type identifiers. If multiple are given, a content type toggle with a dropdown selection will be shown. Users can then switch the respective content type within a split pane.</p>
+    <hr>
+    <h5><code>panelViews[i].label</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    <li><strong>Default:</strong> <code>Image</code> | <code>Text</code></li>
+    </ul>
+    <p>Specifies a label for a view. It appears as title prefix in the content type toggle and in the &quot;View&quot; selection dropdown in the panel header.</p>
+    <hr>
+    <h5><code>panelViews[i].view</code></h5>
+    <ul>
+    <li><strong>Type:</strong> <code>image</code> | <code>text</code></li>
+    <li><strong>Default:</strong> <code>image</code> | <code>text</code></li>
+    </ul>
+    <p>Specifies a view identifier that should be loaded into a split pane.</p>
+    <hr>
+    <h5><code>panelViews[i].visible</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Controls whether this view is visible in the panel. When false, the view will be hidden but can be toggled on via the &quot;View&quot; dropdown.</p>
+    <hr>
+    <h4>Theme</h4>
+    <hr>
+    <h5><code>theme</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Object</li>
+    <li><strong>Default:</strong> <code>{}</code></li>
+    </ul>
+    <p>Specifies theme settings for UI elements.</p>
+    <hr>
+    <h5><code>theme.primaryColor</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    <li><strong>Default:</strong> <code>#3456aa</code>, <code>rgb(79, 70, 229)</code>, <code>hsl(243, 75%, 59%)</code>, <code>oklch(0.4743 0.1405 264.94)</code></li>
+    </ul>
+    <p>Primary color of UI elements. Used on buttons and other interactive elements. The value can be provided as string in the following color systems: hex, rgb, hsl, oklch. Alpha channel is not supported.</p>
+    <hr>
+    <h4>Translations</h4>
+    <hr>
+    <h5><code>translations</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Object</li>
+    <li><strong>Default:</strong> <code>null</code></li>
+    </ul>
+    <p>Specifies a custom translations object. See <a href="#translations">translations</a> chapter.</p>
+    <hr>
+    <h5><code>translations.[lang]</code></h5>
+    <ul>
+    <li><strong>Type:</strong> TranslationNamespace</li>
+    </ul>
+    <p>Defines a language key. The value is a TranslationNamespace object.</p>
+    <hr>
+    <h5><code>translations.[lang].[namespace]</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Object</li>
+    </ul>
+    <p>Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a <a href="#translations">list</a> that we expose for overriding in the configuration.</p>
+    <hr>
+    <h5><code>translations.[lang].[namespace].[translationKey]</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a <a href="#translations">list</a> that we expose for overriding in the configuration.</p>
     <h3>Panel Views</h3>
     <p>This array of <code>PanelViewConfig</code> objects defines the actual visible content inside a panel. It is a list of
     objects, each of which creates a resizable split pane inside the panel. This configuration will be applied to all

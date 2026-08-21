@@ -1,4 +1,4 @@
-import { createContext, RefObject, useContext, useEffect, useRef, useState, ReactNode } from 'react'
+import { createContext, RefObject, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react'
 import { apiRequest } from '@/utils/api.ts'
 import { sanitize } from '@/utils/text-sanitize.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
@@ -39,16 +39,25 @@ export const TextViewProvider = ({
   const [text, setText] = useState<string>('')
 
   const activeContentUrl = useRef(null)
-  function getContentUrlByType(type: string | undefined) {
-    if (!type) return undefined
-    return panelState?.item?.contents.find(c => c.contentType.includes(type))?.id
-  }
+
+  // The content url of the active item for the active content type. Depending on this value (instead
+  // of only on the panel loading state) makes the text reload whenever the item actually changes -
+  // the loading flag alone can miss a transition when two navigations overlap.
+  const contentUrl = useMemo(
+    () => panelState?.item?.contents.find(c => c.contentType.includes(activeContentType))?.id,
+    [panelState?.item, activeContentType]
+  )
 
   useEffect(() => {
-    async function updateText(contentUrl: string) {
+    // Ignore responses of outdated requests: when the content url changes while a fetch is still in
+    // flight, its late response must not overwrite the text of the newer one.
+    let stale = false
+
+    async function updateText(url: string) {
       setTextWarning('')
       try {
-        const response = await apiRequest<string>(contentUrl)
+        const response = await apiRequest<string>(url)
+        if (stale) return
         const { output, removed } = sanitize(response)
         setText(output)
 
@@ -61,6 +70,7 @@ export const TextViewProvider = ({
         setTextWarning(hasRemoved ? t('text_not_displayed_correctly') : '')
         if (hasRemoved) console.error('Removed HTML elements during text sanitization: ', removed)
       } catch (e) {
+        if (stale) return
         showBoundary(e)
         console.error(e)
       }
@@ -68,18 +78,20 @@ export const TextViewProvider = ({
 
     if (loadingPanel || !panelState || !activeContentType) {
       setLoadingText(true)
-      return
+      return () => { stale = true }
     }
 
-    const contentUrl = getContentUrlByType(activeContentType)
-
-    if (contentUrl) {
-      activeContentUrl.current = contentUrl
-      updateText(contentUrl)
+    if (!contentUrl) {
+      showBoundary(t('no_content_found'))
+      return () => { stale = true }
     }
-    else showBoundary(t('no_content_found'))
 
-  }, [loadingPanel, activeContentType])
+    activeContentUrl.current = contentUrl
+    updateText(contentUrl)
+
+    return () => { stale = true }
+
+  }, [loadingPanel, activeContentType, contentUrl])
 
   useEffect(() => {
     if (contentTypes.length === 0) {
