@@ -39,17 +39,24 @@ const AnnotationPopoverContainer: FC<Props> = memo(({
       <PopoverContent
         align="center"
         sideOffset={4}
+        collisionPadding={8}
         onOpenAutoFocus={(e) => e.preventDefault()}
         hideWhenDetached={true}
+        className="relative flex max-h-(--radix-popover-content-available-height) max-w-(--radix-popover-content-available-width) flex-col overflow-hidden p-0"
       >
         <div
           onClick={onClose}
-          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground hover:cursor-pointer"
+          className="absolute top-4 right-4 z-10 text-muted-foreground hover:text-foreground hover:cursor-pointer"
           aria-label="Close"
         >
           <X size={16} />
         </div>
-        {children}
+        <div
+          data-cy="annotation-popover-scroll-area"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 break-words"
+        >
+          {children}
+        </div>
       </PopoverContent>
     </Popover>
   )
