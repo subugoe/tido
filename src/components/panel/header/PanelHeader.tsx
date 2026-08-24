@@ -1,6 +1,6 @@
 import { FC, memo, useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.tsx'
-import { Info, X } from 'lucide-react'
+import { Info, MessageSquareText, X } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
 import PanelTitle from '@/components/panel/header/PanelTitle.tsx'
@@ -48,7 +48,8 @@ const SidebarToggle = memo((props) => {
       className={panelState.showSidebar ? 'ring-1 ring-secondary/50 border-secondary' : ''}
       onClick={onClick} data-cy="sidebar-toggle"
     >
-      <span className="hidden @min-[600px]/panel:inline">{ t('annotations') }</span>
+      <span className="hidden @min-[1000px]/panel:inline">{ t('annotations') }</span>
+      <MessageSquareText className="hidden @max-[999px]/panel:inline" />
       <Badge className="px-1.5 py-0.5 rounded-full text-xs leading-none" variant={panelState.showSidebar ? 'secondary' : 'accent'}>
         { filteredAnnotations.length }
       </Badge>
@@ -65,8 +66,8 @@ const PanelHeader: FC = () => {
   }
 
   return (
-    <div className="relative flex items-center border-b border-border p-3 bg-muted" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
-      <div className="@min-[1000px]/panel:absolute h-full flex items-center gap-1">
+    <div className="relative flex items-center border-b border-border px-2 bg-muted" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
+      <div className="absolute h-full flex items-center gap-1">
         <CollectionTitle />
         <Popover open={showMetadataModal} onOpenChange={handleOpenChange} modal={true}>
           <PopoverTrigger asChild>
@@ -88,7 +89,7 @@ const PanelHeader: FC = () => {
           </PopoverContent>
         </Popover>
       </div>
-      <div className="ml-4 @min-[1000px]/panel:mx-auto flex justify-center" data-cy="panel-title-and-nav-arrows">
+      <div className="mx-auto flex justify-center" data-cy="panel-title-and-nav-arrows">
         {<PanelTitle />}
       </div>
       <div className="absolute h-full top-0 right-2 flex items-center gap-1 @min-[600px]/panel:gap-2">

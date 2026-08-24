@@ -12,7 +12,7 @@ const NavigationButton: FC<Props> = ({ isPrev = false, isDisabled = false, navig
 
   return <Button
     variant="ghost"
-    size="icon"
+    size="iconSm"
     disabled={isDisabled}
     className="rounded-lg"
     onClick={navigate}

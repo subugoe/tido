@@ -41,7 +41,8 @@ const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowD
       onOpenChange={handleOpenChange}
     >
       <DropdownMenuTrigger asChild>
-        <div className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate font-semibold ${showDropdown ? 'bg-accent' : 'bg-muted'} rounded-lg cursor-pointer hover:bg-accent px-2 py-1`}
+        <div
+          className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate font-semibold border border-border shadow-xs ${showDropdown ? 'bg-accent' : 'bg-muted'} rounded-lg cursor-pointer hover:bg-accent px-2 py-1`}
           data-cy="item-label">
           { getItemLabel() }
         </div>
