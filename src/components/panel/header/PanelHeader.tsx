@@ -48,7 +48,10 @@ const SidebarToggle = memo((props) => {
       className={panelState.showSidebar ? 'ring-1 ring-secondary/50 border-secondary' : ''}
       onClick={onClick} data-cy="sidebar-toggle"
     >
-      <span className="hidden @min-[600px]/panel:inline">{ t('annotations') }</span> <Badge className="px-1.5 py-0.5 rounded-full text-xs leading-none" variant={panelState.showSidebar ? 'secondary' : 'accent'}>{ filteredAnnotations.length }</Badge>
+      <span className="hidden @min-[600px]/panel:inline">{ t('annotations') }</span>
+      <Badge className="px-1.5 py-0.5 rounded-full text-xs leading-none" variant={panelState.showSidebar ? 'secondary' : 'accent'}>
+        { filteredAnnotations.length }
+      </Badge>
     </Button>
   </BaseTooltip>
 })

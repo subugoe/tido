@@ -1,16 +1,16 @@
 export const ANNOTATION_IDS_ATTRIBUTE = 'data-annotation-ids'
 export const ANNOTATION_BASE_STYLE = ['rounded']
 export const ANNOTATION_HOVER_CLASSES = ['bg-annotation-hover', 'cursor-pointer']
-export const NESTED_TARGET_HOVER_CLASSES = ['outline']
+export const NESTED_TARGET_HOVER_CLASSES = ['outline', 'dark:outline-gray-400']
 export const SELECTED_ANNOTATION_CLASSES = ['bg-annotation-selected']
 export const SELECTED_ANNOTATION_ATTRIBUTE = 'data-annotation-selected'
-export const HIGHLIGHTING_STYLE = ['bg-gray-200', 'dark:bg-muted', 'relative', 'cursor-pointer']
+export const HIGHLIGHTING_STYLE = ['bg-gray-200', 'dark:bg-accent', 'relative', 'cursor-pointer']
 export const CROSS_REF_TARGET_STYLE = ['text-blue-500', 'underline']
 export const CROSS_REF_ATTRIBUTE = 'data-target'
 export const CROSS_REF_REL_ATTRIBUTE = 'rel'
 export const CROSS_REF_REL_STYLE = ['bg-yellow-200']
-export const SYNOPSIS_SELECTED_STYLE = ['bg-yellow-500']
-export const SYNOPSIS_HOVER_STYLE = ['bg-yellow-300', 'cursor-pointer']
+export const SYNOPSIS_SELECTED_STYLE = ['bg-yellow-500', 'dark:bg-yellow-700']
+export const SYNOPSIS_HOVER_STYLE = ['bg-yellow-200', 'dark:bg-yellow-900', 'cursor-pointer']
 export const ACTIVE_TARGET_STYLE = ['bg-annotation-selected']
 
 export const SYNC_TARGET_HOVER_STYLE = ['!bg-sync-annotation-hover']
@@ -21,9 +21,9 @@ export const SYNC_NAVIGATION_POSITION = 'absolute top-0 z-50 -translate-x-1/2'
 export const MIN_PANEL_WIDTH = 800
 export const DEFAULT_PANEL_WIDTH = MIN_PANEL_WIDTH
 export const SIDEBAR_DEFAULT_WIDTH = 400
-export const PANEL_BORDER_WIDTH = 2
+export const PANEL_BORDER_WIDTH = 1
 export const PANEL_GAP = 16
-export const PANEL_HEADER_HEIGHT = 60
+export const PANEL_HEADER_HEIGHT = 48
 
 export const SUPPORTED_MIME_TYPES = [
   'text/html',

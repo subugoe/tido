@@ -7,16 +7,16 @@ const TextOptions: FC = () => {
   const [visible, setVisible] = useState(true)
 
   return <>
-    <div className={`relative top-2 ${visible ? 'opacity-100 delay-200' : 'opacity-0'} bg-muted border rounded-lg border-border flex transition-all`}>
+    <div className={`relative top-2 ${visible ? 'opacity-100 delay-200' : 'opacity-0'} bg-muted border rounded-full border-border flex transition-all`}>
       <ContentTypesToggle />
       <div className="border-l border-border">
-        <Button variant="ghost" size="icon" onClick={() => setVisible(false)}>
+        <Button variant="ghost" size="icon" className="rounded-r-full rounded-l-none" onClick={() => setVisible(false)}>
           <EyeOff />
         </Button>
       </div>
     </div>
     <div
-      className={`border-b border-x border-border bg-accent w-8 h-[18px] ${visible ? '-top-[18px]' : 'top-0 delay-200'} absolute left-1/2 -translate-x-1/2 transition-all cursor-pointer flex justify-center items-center rounded-b-md`}
+      className={`border-b border-x border-border bg-accent w-8 h-4.5 ${visible ? '-top-4.5' : 'top-0 delay-200'} absolute left-1/2 -translate-x-1/2 transition-all cursor-pointer flex justify-center items-center rounded-b-md`}
       onClick={() => setVisible(true)}
     >
       <ChevronDown size={16} />

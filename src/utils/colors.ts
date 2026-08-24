@@ -226,8 +226,8 @@ const getColors = (color: string) => {
     --tido-color-primary-foreground: oklch(0.985 0 0);
     --tido-color-primary-shade-1: oklch(0.95 0.04 ${oklch?.h});
     --tido-color-primary-shade-2: oklch(0.8 0.07 ${oklch?.h});
-    --tido-color-primary-shade-3: oklch(0.4 0.06 ${oklch?.h});
-    --tido-color-primary-shade-4: oklch(0.25 0.03 ${oklch?.h});
+    --tido-color-primary-shade-3: oklch(0.5 0.06 ${oklch?.h});
+    --tido-color-primary-shade-4: oklch(0.35 0.03 ${oklch?.h});
   `
 }
 

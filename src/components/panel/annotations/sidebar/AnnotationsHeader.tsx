@@ -9,7 +9,7 @@ const AnnotationsHeader: FC = () => {
 
   return <div
     data-cy="annotations-header"
-    className="flex flex-col p-3 border-b border-border"
+    className="flex flex-col px-3 justify-center border-b border-border"
     style={{ height: `${PANEL_HEADER_HEIGHT}px` }}
   >
     <div className="flex">

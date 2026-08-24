@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  "inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all cursor-pointer disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  'inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all cursor-pointer disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
   {
     variants: {
       variant: {
@@ -14,7 +14,7 @@ const buttonVariants = cva(
         success: 'bg-success text-white shadow-xs hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40 dark:bg-success/60',
         outline: 'border border-border shadow-xs hover:bg-muted dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
         secondary: 'bg-secondary text-secondary-foreground border border-secondary shadow-xs hover:bg-gray-800',
-        ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent',
+        ghost: 'hover:bg-accent hover:text-accent-foreground dark:text-gray-400 dark:hover:bg-accent',
         ghostAmber: 'text-amber-700 dark:text-amber-100 hover:bg-amber-200 hover:text-amber-800 dark:hover:bg-amber-700 dark:hover:text-amber-200',
         ghostDestructive: 'text-red-500 dark:text-red-400 hover:bg-red-300/10 hover:text-red-600 dark:hover:text-red-500',
         ghostPrimary: 'text-primary hover:bg-primary/10 dark:hover:bg-primary/20 w-fit',
@@ -24,10 +24,10 @@ const buttonVariants = cva(
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',
         xs: 'h-6 px-1.5 py-1 text-xs rounded-md',
-        sm: 'h-8 px-2.5 py-1 rounded-md gap-1.5 has-[>svg]:px-2.5',
-        lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
+        sm: 'h-8 px-2.5 py-1 rounded-lg gap-1.5 has-[>svg]:px-2.5',
+        lg: 'h-10 rounded-lg px-6 has-[>svg]:px-4',
         icon: 'h-8 w-8 shrink-0 justify-center [&_svg]:size-4',
-        iconLg: 'h-10 px-2 py-2 [&_svg]:size-5'
+        iconLg: 'h-10 w-10 px-2 py-2 [&_svg]:size-6'
       },
     },
     defaultVariants: {

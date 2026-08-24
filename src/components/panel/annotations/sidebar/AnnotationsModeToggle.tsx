@@ -26,7 +26,7 @@ const AnnotationsModeToggle: FC<Props> = ({ className }) => {
     className={cn('flex items-center space-x-2 text-muted-foreground', className)}
     data-cy="annotations-mode-toggle"
   >
-    <ToggleGroup type="single" variant="outline" spacing={0} value={_mode} onValueChange={updateMode}>
+    <ToggleGroup type="single" variant="outline" size="sm" spacing={0} value={_mode} onValueChange={updateMode}>
       <ToggleGroupItem value="list" data-cy="list">{ t('list') }</ToggleGroupItem>
       <ToggleGroupItem value="aligned" data-cy="aligned">{ t('aligned') }</ToggleGroupItem>
     </ToggleGroup>

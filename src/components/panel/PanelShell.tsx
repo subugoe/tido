@@ -32,7 +32,7 @@ const PanelShell: FC<Props> = ({ children }) => {
     data-cy="panel"
   >
     <SyncTargetNavigation />
-    <div className="h-full overflow-hidden relative border-2 border-border rounded-[16px]">
+    <div className="h-full overflow-hidden relative border border-border rounded-2xl shadow-xs">
       { children }
     </div>
     <ResizeHandle className="-right-1.5" data-panel-resize-handle />
