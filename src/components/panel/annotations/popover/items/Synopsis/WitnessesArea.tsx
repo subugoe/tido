@@ -94,7 +94,7 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
       </div>
 
       {/* scrollable list of witnesses */}
-      <div data-cy="witness-list" className="flex flex-col gap-2 max-h-64 overflow-y-auto pr-2">
+      <div data-cy="witness-list" className="flex flex-col gap-1.5">
         {targets.map((st) => (
           <WitnessItem
             key={st.source.id}

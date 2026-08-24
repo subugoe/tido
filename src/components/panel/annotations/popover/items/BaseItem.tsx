@@ -48,15 +48,15 @@ const BaseItem: FC<Props> = ({ annotation, source, onSelect }) => {
     <div
       data-cy="popover-annotation-item"
       data-annotation={annotation.id}
-      className={`relative group flex flex-col px-3 py-2 min-w-80 max-w-[380px] rounded-lg border border-border hover:cursor-pointer
+      className={`relative group flex flex-col px-2 py-1.5 min-w-80 max-w-[380px] rounded-lg border border-border cursor-pointer
         ${isSelected ? 'shadow-md bg-background outline-primary outline-2' : 'hover:border-primary'}`}
       {...(isSelected ? { 'data-selected': '' } : {})}
       onClick={(e) => handleSelection(e)}
     >
       <div className="flex gap-4">
-        <div className="whitespace-nowrap truncate overflow-hidden">{text}</div>
+        <div className="whitespace-nowrap truncate overflow-hidden text-sm">{text}</div>
         <Badge variant="accent" className="ml-auto truncate group-hover:not-group-data-[selected]:invisible">{typeLabel}</Badge>
-        <Button size="xs" className="absolute top-2 right-3 hidden group-hover:not-group-data-[selected]:flex">
+        <Button size="xs" className="absolute top-1.5 right-2 hidden group-hover:not-group-data-[selected]:flex">
           {t('show_in_sidebar')} <MoveRight />
         </Button>
       </div>

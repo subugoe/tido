@@ -42,7 +42,7 @@ const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect, 
       {...(isSelected ? { 'data-selected': '' } : {})}
       onClick={onSelect}
       className={cn(
-        'flex items-center gap-3 w-full rounded-md border px-3 py-2.5 text-left transition-colors cursor-pointer',
+        'flex items-center gap-2 w-full rounded-md border px-3 py-1.5 text-left transition-colors cursor-pointer',
         isSelected
           ? 'bg-primary/5 border-primary/40 hover:bg-primary/10'
           : 'border-border hover:bg-muted'

@@ -40,7 +40,7 @@ const SynopsisContent: FC<Props> = ({ syncTargets, allWitnessesOpened, onOpenSyn
 
   // At least one witness is not loaded — show the full selection UI.
   return (
-    <div className="flex flex-col gap-4 w-[360px]">
+    <div className="flex flex-col gap-4 w-[380px]">
       <WitnessesArea syncTargets={syncTargets} onSelect={setSelectedTargets} />
 
       {/* replace-panels toggle + hint shown only when checked */}
@@ -50,7 +50,7 @@ const SynopsisContent: FC<Props> = ({ syncTargets, allWitnessesOpened, onOpenSyn
           {t('replace_panels')}
         </label>
         {replacePanels && (
-          <p className="text-sm text-muted-foreground pl-6">{t('replace_panels_hint')}</p>
+          <p className="text-xs text-muted-foreground pl-6">{t('replace_panels_hint')}</p>
         )}
       </div>
 

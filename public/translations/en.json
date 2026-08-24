@@ -142,7 +142,7 @@
     "synopsis": "Synopsis",
     "open_synced_panels": "Open in panels",
     "replace_panels": "Replace existing panels",
-    "replace_panels_hint": "Other panels are closed. The current panel stays on the left, new ones open to its right.",
+    "replace_panels_hint": "Closes all other panels. The current panel remains in place, any newly opened panels appear to its right.",
     "synoptic_target": "Synoptic target",
     "previous_synoptic_target": "Previous synoptic target",
     "next_synoptic_target": "Next synoptic target",
