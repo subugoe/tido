@@ -65,7 +65,7 @@ const PanelHeader: FC = () => {
   }
 
   return (
-    <div className="relative flex items-center border-b border-border p-3" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
+    <div className="relative flex items-center border-b border-border p-3 bg-muted" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
       <div className="@min-[1000px]/panel:absolute h-full flex items-center gap-1">
         <CollectionTitle />
         <Popover open={showMetadataModal} onOpenChange={handleOpenChange} modal={true}>

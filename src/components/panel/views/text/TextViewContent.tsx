@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, UIEvent, useEffect, useRef, useState } from 'react'
 import TextRenderer from '@/components/panel/renderers/text/TextRenderer.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Loading from '@/components/ui/loading.tsx'
@@ -14,6 +14,7 @@ const TextViewContent: FC = () => {
   const { text, activeContentUrl } = useTextView()
   const { showContentTypeToggle } = useConfig()
   const scrollContainer = useRef<HTMLDivElement>(null)
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     const url = activeContentUrl.current
@@ -27,7 +28,12 @@ const TextViewContent: FC = () => {
   useEffect(() => {
     if (!scrollContainer.current) return
     scrollContainer.current.scrollTop = 0
+    setScrolled(false)
   }, [panelState.item])
+
+  function onScroll(e: UIEvent<HTMLDivElement>) {
+    setScrolled(e.currentTarget.scrollTop > 0)
+  }
 
   function onReady() {
     setLoadingText(false)
@@ -35,9 +41,9 @@ const TextViewContent: FC = () => {
 
   return <>
     {showContentTypeToggle && <div data-text-options className="absolute w-full top-0 z-10 flex flex-col items-center justify-center">
-      <TextOptions />
+      <TextOptions scrolled={scrolled} />
     </div>}
-    <div data-text-container ref={scrollContainer} tabIndex={-1} className="h-full w-full overflow-auto px-3 focus:outline-none">
+    <div data-text-container ref={scrollContainer} tabIndex={-1} onScroll={onScroll} className="h-full w-full overflow-auto px-3 focus:outline-none">
       <TextRenderer htmlString={text} onReady={onReady} />
     </div>
     <div data-text-warning className="absolute w-full bottom-0 z-10 flex flex-col items-center justify-center">

@@ -3,16 +3,18 @@ import ContentTypesToggle from '@/components/panel/views/text/ContentTypesToggle
 import { ChevronDown, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 
-const TextOptions: FC = () => {
+const TextOptions: FC<{ scrolled: boolean }> = ({ scrolled }) => {
   const [visible, setVisible] = useState(true)
 
   return <>
-    <div className={`relative top-2 ${visible ? 'opacity-100 delay-200' : 'opacity-0'} bg-muted border rounded-full border-border flex transition-all`}>
-      <ContentTypesToggle />
-      <div className="border-l border-border">
-        <Button variant="ghost" size="icon" className="rounded-r-full rounded-l-none" onClick={() => setVisible(false)}>
-          <EyeOff />
-        </Button>
+    <div className={`relative top-2 ${visible ? 'opacity-100 delay-200' : 'opacity-0'} bg-muted border rounded-full border-border flex transition-opacity`}>
+      <div className={`w-full flex rounded-full transition-shadow ${scrolled ? 'shadow-md' : ''}`}>
+        <ContentTypesToggle />
+        <div className="border-l border-border">
+          <Button variant="ghost" size="icon" className="rounded-r-full rounded-l-none" onClick={() => setVisible(false)}>
+            <EyeOff />
+          </Button>
+        </div>
       </div>
     </div>
     <div
