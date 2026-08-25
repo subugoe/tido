@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { apiRequest } from '@/utils/api.ts'
+import { getAnnotationPage } from '@/utils/api.ts'
 import { getSource } from '@/utils/annotations.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 
@@ -108,8 +108,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
     const annotationCollectionUrl = await findAnnotationCollectionUrl(collection)
     if (!annotationCollectionUrl) return
 
-    const annotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
-    const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
-    get().addSyncAnnotations(annotationPage.items ?? [])
+    const page = await getAnnotationPage(annotationCollectionUrl)
+    get().addSyncAnnotations(page.items ?? [])
   },
 }))

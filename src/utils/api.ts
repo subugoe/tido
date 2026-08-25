@@ -11,6 +11,11 @@ function getIdFromElement(element: string | { id: string }): string {
   return typeof element === 'object' ? element.id : element
 }
 
+// Inflight map tracks ongoing annotation page fetches by collection URL. When multiple callers
+// request the same annotation collection before the first fetch completes, they share the same
+// promise instead of firing duplicate requests. Entries are cleaned up once the promise settles.
+const inflightAnnotationPages = new Map<string, Promise<AnnotationPage>>()
+
 async function apiRequest<T>(url: string): Promise<T> {
   const response = await request(url)
 
@@ -27,11 +32,24 @@ async function apiRequest<T>(url: string): Promise<T> {
 
 
 async function getAnnotationPage(annotationCollectionUrl: string): Promise<AnnotationPage> {
-  const collection: AnnotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
-  if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
-    throw new CustomError(t('annotations_init_error'), t('annotation_collection_response_error'))
+  if (inflightAnnotationPages.has(annotationCollectionUrl)) {
+    return inflightAnnotationPages.get(annotationCollectionUrl)!
   }
-  return await apiRequest<AnnotationPage>(collection.first)
+
+  const promise = (async () => {
+    const collection: AnnotationCollection = await apiRequest<AnnotationCollection>(annotationCollectionUrl)
+    if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
+      throw new CustomError(t('annotations_init_error'), t('annotation_collection_response_error'))
+    }
+    return await apiRequest<AnnotationPage>(collection.first)
+  })()
+
+  inflightAnnotationPages.set(annotationCollectionUrl, promise)
+  try {
+    return await promise
+  } finally {
+    inflightAnnotationPages.delete(annotationCollectionUrl)
+  }
 }
 
 async function getFirstManifest(collection: Collection) {
