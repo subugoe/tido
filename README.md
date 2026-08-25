@@ -198,6 +198,129 @@ Toggles the ability to add new collections to the app through a user input.
 
 ---
 
+##### `annotations`
+
+- **Type:** AnnotationsConfig
+- **Default:** `{}`
+
+Configures the display of annotations and their filtering options. See [annotations](#annotations) chapter.
+
+---
+
+##### `annotations.defaultMode`
+
+- **Type:** String
+- **Default:** `aligned`
+
+An annotations mode toggle is shown. Initial selected mode is `aligned` mode.
+
+---
+
+##### `annotations.disableHighlighting`
+
+- **Type:** String[]
+
+Annotation types whose targets are rendered without the base grey highlight and the nested target border. Clicking such a target still opens its annotation, and hover and selection feedback stay active.
+
+---
+
+##### `annotations.disableSynopsisSelection`
+
+- **Type:** Boolean
+
+When `true`, disables synopsis selection on sync target click and hides the synopsis section in the annotation popover. Sync targets still display their base annotation but no synopsis connection is established.
+
+---
+
+##### `annotations.filters`
+
+- **Type:** AnnotationFiltersConfig
+
+Defines a nested object of filter options.
+
+---
+
+##### `annotations.filters.items`
+
+- **Type:** FilterNode[]
+
+Array of filter nodes defining the hierarchical filter tree structure.
+
+---
+
+##### `annotations.filters.items[i].items`
+
+- **Type:** FilterNode[]
+
+Child filter nodes for nested filtering.
+
+---
+
+##### `annotations.filters.items[i].label`
+
+- **Type:** String
+
+Label to display for a filter node.
+
+---
+
+##### `annotations.filters.items[i].types`
+
+- **Type:** String[] | VariantType[]
+
+Array of annotation type identifiers that a filter node controls. Can be plain strings (e.g., `"person"`, `"place"`) or variant witness objects (e.g., `{ Variant: "witness_id" }`).
+
+---
+
+##### `annotations.filters.rootSelectionRule`
+
+- **Type:** String
+- **Default:** `multiple`
+
+Controls the overall behavior and layout of the filter UI. Allowed values: `multiple` or `single`. When set to `single`, a tab bar is rendered for root-level nodes.
+
+---
+
+##### `annotations.filters.selectedIndex`
+
+- **Type:** Number
+
+Index of the initially selected filter node in the filter tree. Only applies when `rootSelectionRule` is set to `single`.
+
+---
+
+##### `annotations.singleMode`
+
+- **Type:** String
+
+Specifies only one annotations mode, which can be either `aligned` or `list`.
+
+---
+
+##### `annotations.tooltipTypes`
+
+- **Type:** String[]
+
+Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.
+
+---
+
+##### `annotations.types`
+
+- **Type:** AnnotationTypeConfigMap
+
+A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.
+
+---
+
+##### `annotations.types[i].label`
+
+- **Type:** String
+
+Custom label to display for an annotation type.
+
+---
+
 ##### `container`
 
 - **Type:** String
@@ -282,191 +405,6 @@ Overrides the global `panelViews` config for this specific panel. Use this to cu
 
 ---
 
-##### `rootCollections`
-
-- **Type:** String[]
-- **Default:** `[]`
-
-Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.
-
----
-
-##### `showAddNewPanelButton`
-
-- **Type:** Boolean
-- **Default:** `true`
-
-Toggles the display of the "add new panel" button.
-
----
-
-##### `showContentTypeToggle`
-
-- **Type:** Boolean
-- **Default:** `true`
-
-Toggles the display of the content type toggle in TextViews. When false, the whole bar is hidden.
-
----
-
-##### `showGlobalTree`
-
-- **Type:** Boolean
-- **Default:** `true`
-
-Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.
-
----
-
-##### `showSynopsisNavigation`
-
-- **Type:** Boolean
-- **Default:** `true`
-
-Controls whether the Sync Target Navigation is rendered in panels. Set to `false` to hide it in all panels - can be overridden per panel via `panels[i].showSynopsisNavigation`.
-
----
-
-##### `title`
-
-- **Type:** String
-- **Default:** *(empty)*
-
-Specifies the main title of the app in the header. Translatable.
-
----
-
-#### Annotations
-
----
-
-##### `annotations`
-
-- **Type:** AnnotationsConfig
-- **Default:** `{}`
-
-Configures the display of annotations and their filtering options. See [annotations](#annotations) chapter.
-
----
-
-##### `annotations.defaultMode`
-
-- **Type:** String
-- **Default:** `aligned`
-
-An annotations mode toggle is shown. Initial selected mode is `aligned` mode.
-
----
-
-##### `annotations.disableHighlighting`
-
-- **Type:** String[]
-
-Annotation types whose targets are rendered without the base grey highlight and the nested target border. Clicking such a target still opens its annotation, and hover and selection feedback stay active.
-
----
-
-##### `annotations.disableSynopsisSelection`
-
-- **Type:** Boolean
-
-When `true`, disables synopsis selection on sync target click and hides the synopsis section in the annotation popover. Sync targets still display their base annotation but no synopsis connection is established.
-
----
-
-##### `annotations.filters`
-
-- **Type:** AnnotationFiltersConfig
-
-Defines a nested object of filter options.
-
----
-
-##### `annotations.filters.rootSelectionRule`
-
-- **Type:** String
-- **Default:** `multiple`
-
-Controls the overall behavior and layout of the filter UI. Allowed values: `multiple` or `single`. When set to `single`, a tab bar is rendered for root-level nodes.
-
----
-
-##### `annotations.filters.selectedIndex`
-
-- **Type:** Number
-
-Index of the initially selected filter node in the filter tree. Only applies when `rootSelectionRule` is set to `single`.
-
----
-
-##### `annotations.filters.items`
-
-- **Type:** FilterNode[]
-
-Array of filter nodes defining the hierarchical filter tree structure.
-
----
-
-##### `annotations.filters.items[i].types`
-
-- **Type:** String[] | VariantType[]
-
-Array of annotation type identifiers that a filter node controls. Can be plain strings (e.g., `"person"`, `"place"`) or variant witness objects (e.g., `{ Variant: "witness_id" }`).
-
----
-
-##### `annotations.filters.items[i].label`
-
-- **Type:** String
-
-Label to display for a filter node.
-
----
-
-##### `annotations.filters.items[i].items`
-
-- **Type:** FilterNode[]
-
-Child filter nodes for nested filtering.
-
----
-
-##### `annotations.singleMode`
-
-- **Type:** String
-
-Specifies only one annotations mode, which can be either `aligned` or `list`.
-
----
-
-##### `annotations.types`
-
-- **Type:** AnnotationTypeConfigMap
-
-A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.
-
----
-
-##### `annotations.types[i].label`
-
-- **Type:** String
-
-Custom label to display for an annotation type.
-
----
-
-##### `annotations.tooltipTypes`
-
-- **Type:** String[]
-
-Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.
-
----
-
-#### Panel Views
-
----
-
 ##### `panelViews`
 
 - **Type:** PanelViewConfig[]
@@ -519,7 +457,48 @@ Controls whether this view is visible in the panel. When false, the view will be
 
 ---
 
-#### Theme
+##### `rootCollections`
+
+- **Type:** String[]
+- **Default:** `[]`
+
+Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.
+
+---
+
+##### `showAddNewPanelButton`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the display of the "add new panel" button.
+
+---
+
+##### `showContentTypeToggle`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the display of the content type toggle in TextViews. When false, the whole bar is hidden.
+
+---
+
+##### `showGlobalTree`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.
+
+---
+
+##### `showSynopsisNavigation`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Controls whether the Sync Target Navigation is rendered in panels. Set to `false` to hide it in all panels - can be overridden per panel via `panels[i].showSynopsisNavigation`.
 
 ---
 
@@ -541,7 +520,12 @@ Primary color of UI elements. Used on buttons and other interactive elements. Th
 
 ---
 
-#### Translations
+##### `title`
+
+- **Type:** String
+- **Default:** *(empty)*
+
+Specifies the main title of the app in the header. Translatable.
 
 ---
 
