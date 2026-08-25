@@ -27,7 +27,7 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
   return <div className={cn('flex flex-col items-center', className)}>
     <Popover onOpenChange={(value) => setOpen(value)}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className={open ? 'bg-muted' : ''} disabled={!hasFilters}><ListFilter />{ t('filters') }</Button>
+        <Button variant="outline" size="sm" className={open ? 'bg-muted' : ''} disabled={!hasFilters}><ListFilter />{ t('filters') }</Button>
       </PopoverTrigger>
       <PopoverContent
         align="start"
