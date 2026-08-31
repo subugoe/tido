@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.8](https://github.com/subugoe/tido/compare/v5.0.0-beta.7...v5.0.0-beta.8) (2026-08-31)
+
+
+### Features
+
+* add "disableHighlighting" config option ([5c4545f](https://github.com/subugoe/tido/commit/5c4545f303bc55aad00c202fd07c5e202fce7e97))
+* add config option "showSynopsisNavigation" ([3fcfed1](https://github.com/subugoe/tido/commit/3fcfed16a104e559976dafabdb7eb274845bc545))
+* add shadow to content type toggle on scroll ([6abf355](https://github.com/subugoe/tido/commit/6abf355eb0cb83acfec431010d090059c3f2b60f))
+* add support for embedded TextAPI responses by caching already requested resources ([#1089](https://github.com/subugoe/tido/issues/1089)) ([7e8fe3b](https://github.com/subugoe/tido/commit/7e8fe3b4445283c61b70d3d86f2f1a6928738984))
+* avoid rendering image pane if no images were received from TextAPI item ([21e91f1](https://github.com/subugoe/tido/commit/21e91f1000f1444f63ca98c0a578bc5064ac1d67))
+* show root collections from bookmarking state in global tree ([ae1ed9f](https://github.com/subugoe/tido/commit/ae1ed9f97800e92ca2e0777bcedcf6d06e5aee78))
+* show simplified synopsis action area when all witnesses are already loaded, add "disableSynopsisSelection" config option ([#1151](https://github.com/subugoe/tido/issues/1151)) ([dfcc14e](https://github.com/subugoe/tido/commit/dfcc14e11300694fa7a47fe62bf84c1bc1dbe8bc))
+* update design - lighter borders, smaller panel header, better dark mode colors ([946c893](https://github.com/subugoe/tido/commit/946c8938a8bf357911317cc1b71730c8cec15418))
+* update panel header design - accent bg color, more room at min width ([824fd2a](https://github.com/subugoe/tido/commit/824fd2aa368f4d5d2dd5e4cf8ee981fdacc491c8))
+* update synopsis area popover design - more compact, align widths ([0974688](https://github.com/subugoe/tido/commit/097468865a54257b00fa8889e33e8012aec7b50b))
+
+
+### Bug Fixes
+
+* display configured filters again ([8eeb1b6](https://github.com/subugoe/tido/commit/8eeb1b663141462f4c55c6e1745ca793424b8535))
+* do not display configured tooltip annotation types as child annotations anymore ([#1157](https://github.com/subugoe/tido/issues/1157)) ([d20017f](https://github.com/subugoe/tido/commit/d20017f8a4c0128bbc82be28361d6d5b2fcc37b1))
+* improve switching texts in text view ([bfcb842](https://github.com/subugoe/tido/commit/bfcb84260d37566389a0d48ad1ad7172b593b563))
+* prevent unreachable annotation popover areas by make it scrollable ([#1130](https://github.com/subugoe/tido/issues/1130)) ([b88707e](https://github.com/subugoe/tido/commit/b88707e560f000ae4ff4f1d39e8a7782800f1e07))
+* remove "sidebar" CSS class to avoid conflicts ([3fde38d](https://github.com/subugoe/tido/commit/3fde38d16dbf9392ab74561548880ccb2c053fa2))
+
+
+### Docs
+
+* restructure configuration table to flat list - becomes sharable ([cc8fc1b](https://github.com/subugoe/tido/commit/cc8fc1b51db1fde8923d5b47e5f0f1acdc10a01b))
+* sort config keys alphabetically ([12ba45d](https://github.com/subugoe/tido/commit/12ba45daafbeb22dd19e2285f3fdea77825e464f))
+* update bookmarking docs ([feaee96](https://github.com/subugoe/tido/commit/feaee965c317d46b2144ace56b92042cb871d733))
+
 ## [5.0.0-beta.7](https://github.com/subugoe/tido/compare/v5.0.0-beta.6...v5.0.0-beta.7) (2026-08-11)
 
 
