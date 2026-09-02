@@ -7,6 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu.tsx'
+import { Button } from '@/components/ui/button.tsx'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
 interface ItemLabelProps {
   onSelect?: (itemId: string) => void
@@ -40,13 +42,22 @@ const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowD
       open={showDropdown}
       onOpenChange={handleOpenChange}
     >
-      <DropdownMenuTrigger asChild>
-        <div
-          className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate font-semibold border border-border shadow-xs ${showDropdown ? 'bg-accent' : 'bg-muted'} rounded-lg cursor-pointer hover:bg-accent px-2 py-1`}
-          data-cy="item-label">
-          { getItemLabel() }
-        </div>
-      </DropdownMenuTrigger>
+      <Tooltip>
+        <DropdownMenuTrigger asChild>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className={`max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate ${showDropdown ? 'bg-muted' : ''}`}
+              data-cy="item-label">
+              <span className="truncate">{ getItemLabel() }</span>
+            </Button>
+          </TooltipTrigger>
+        </DropdownMenuTrigger>
+        <TooltipContent>
+          <span className="leading-none">{ getItemLabel() }</span>
+        </TooltipContent>
+      </Tooltip>
       <DropdownMenuContent data-cy="items-dropdown" className="max-w-80">
         {options.map(({ id, label }, i) => <DropdownMenuItem
           key={id + '_'+i}

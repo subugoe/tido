@@ -10,7 +10,7 @@ const TitleAlertIcon: FC = () => {
   return <TooltipProvider delayDuration={400}>
     <Tooltip>
       <TooltipTrigger asChild>
-        <CircleAlert className="absolute w-5 h-5 rounded-full top-0 -mt-1 right-1 text-white bg-yellow-500 stroke-2" />
+        <CircleAlert className="absolute z-10 w-5 h-5 rounded-full top-0 -mt-1 right-1 text-white bg-yellow-500 stroke-2" />
       </TooltipTrigger>
       <TooltipContent>
         <span className="leading-none">{ t('select_item_to_continue') }</span>

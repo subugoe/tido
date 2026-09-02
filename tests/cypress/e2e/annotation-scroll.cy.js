@@ -97,8 +97,9 @@ describe('Annotation scrolling and alignment', () => {
     sidebarScroll: '[data-sidebar-scroll-container]',
     sidebarToggle: '[data-cy="sidebar-toggle"]',
     textContainer: '[data-text-container]',
-    viewsMenu: '[data-cy="panel-mode-menu"]',
-    viewsMenuToggle: '[data-cy="panel-mode-select"]',
+    viewsMenu: '[data-cy="panel-menu-dropdown"]',
+    viewsMenuToggle: '[data-cy="panel-menu"]',
+    viewSwitch: '[data-cy="panel-view-toggle"]',
   }
 
   // Vertical distance from the top of the panel - the frame both the text and the sidebar live in.
@@ -121,8 +122,8 @@ describe('Annotation scrolling and alignment', () => {
   // dismissed before returning - otherwise it covers the panel for whatever asserts next.
   const toggleView = (index) => {
     cy.get(selectors.viewsMenuToggle).click()
-    cy.get(selectors.viewsMenu).find('[data-slot="switch"]').should('have.length', 2)
-    cy.get(selectors.viewsMenu).find('[data-slot="switch"]').eq(index).click()
+    cy.get(selectors.viewsMenu).find(selectors.viewSwitch).should('have.length', 2)
+    cy.get(selectors.viewsMenu).find(selectors.viewSwitch).eq(index).click()
     cy.get('body').type('{esc}')
     cy.get(selectors.viewsMenu).should('not.exist')
   }

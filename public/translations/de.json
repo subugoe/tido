@@ -15,9 +15,10 @@
     "item_opened_in_panels": "Das Item ist in Panel(s) {{panelNumbers}} geöffnet",
     "manifest_not_found": "$t(manifest) konnte nicht gefunden werden",
     "item_not_found": "$t(item) konnte nicht gefunden werden",
-    "add_new_panel": "Neues Panel hinzufügen",
+    "open_new_panel": "Neues Panel öffnen",
     "choose_your_panel_content": "Bitte wählen Sie Ihren Inhalt",
     "enter_collection_url": "Geben eine Collection-URL ein",
+    "collection_added": "Kollektion hinzugefügt. Es wurde ein neues Panel erstellt.",
     "or_choose": "Oder wählen Sie",
     "no_image_available": "Kein Bild verfügbar",
     "no_items_found": "Es wurden leider keine Einträge gefunden.",
@@ -67,6 +68,8 @@
     "split_mode": "Split-Modus",
     "text_mode": "Text-Modus",
     "image_mode": "Bild-Modus",
+    "library": "Bibliothek",
+    "settings": "Einstellungen",
     "toggle_theme": "Farbschema umschalten",
     "light": "Hell",
     "dark": "Dunkel",
@@ -79,6 +82,7 @@
     "reference": "Verweis",
     "text_type": "Texttyp",
     "select_item_to_continue": "Ein neues Manifest wurde ausgewählt. Bitte wählen Sie nun ein Item, um fortzufahren",
+    "select_item_from_selected_manifest": "Sie haben ein neues Manifest ausgewählt. Bitte wählen Sie auch ein Item daraus, um fortzufahren.",
     "about_tido": "Über TIDO",
     "tido_description": "Schlanker, einfacher und mobilfreundlicher Viewer für Texte und Digitalisate.",
     "version": "Version",
@@ -151,6 +155,11 @@
     "previous_synoptic_target": "Vorheriges synoptisches Ziel",
     "next_synoptic_target": "Nächstes synoptisches Ziel",
     "open_synoptic_targets_navigation": "Öffnen, um synoptische Ziele zu navigieren",
-    "collapse": "Einklappen"
+    "collapse": "Einklappen",
+    "sync_panel": "Panel synchronisieren",
+    "lock_scrolling": "Scrollen synchronisieren",
+    "sync_annotations": "Annotationen synchronisieren",
+    "sync_item_selection": "Item-Auswahl synchronisieren",
+    "new_collection": "Neue Collection"
   }
 }

@@ -23,9 +23,9 @@ describe('Annotation filters derived from the rendered texts', () => {
     textContainer: '[data-text-container]',
     popover: '[data-slot="popover-content"]',
     checkbox: '[data-slot="checkbox"]',
-    viewsSelect: '[data-cy="panel-mode-select"]',
-    viewsMenu: '[data-cy="panel-mode-menu"]',
-    viewSwitch: '[data-slot="switch"]',
+    viewsMenuToggle: '[data-cy="panel-menu"]',
+    viewsMenu: '[data-cy="panel-menu-dropdown"]',
+    viewSwitch: '[data-cy="panel-view-toggle"]',
     prevItem: '[data-cy="prev-item-button"]',
     nextItem: '[data-cy="next-item-button"]',
   };
@@ -37,7 +37,7 @@ describe('Annotation filters derived from the rendered texts', () => {
   const filterRow = (label) => cy.get(selectors.popover).contains('label', label);
 
   const openViewsMenu = () => {
-    cy.get(selectors.viewsSelect).click();
+    cy.get(selectors.viewsMenuToggle).click();
     cy.get(selectors.viewsMenu).should('be.visible');
   };
 
@@ -49,8 +49,10 @@ describe('Annotation filters derived from the rendered texts', () => {
       .should('have.attr', 'data-state', visible ? 'checked' : 'unchecked');
   };
 
+  // Dismiss the open Radix dropdown menu (clicking the trigger no longer closes it reliably once
+  // an item has been interacted with, so Escape is used).
   const closeViewsMenu = () => {
-    cy.get(selectors.viewsSelect).click();
+    cy.get('body').type('{esc}');
     cy.get(selectors.viewsMenu).should('not.exist');
   };
 
@@ -203,9 +205,9 @@ describe('Annotation filters configured in config', () => {
     textContainer: '[data-text-container]',
     popover: '[data-slot="popover-content"]',
     checkbox: '[data-slot="checkbox"]',
-    viewsSelect: '[data-cy="panel-mode-select"]',
-    viewsMenu: '[data-cy="panel-mode-menu"]',
-    viewSwitch: '[data-slot="switch"]',
+    viewsMenuToggle: '[data-cy="panel-menu"]',
+    viewsMenu: '[data-cy="panel-menu-dropdown"]',
+    viewSwitch: '[data-cy="panel-view-toggle"]',
     prevItem: '[data-cy="prev-item-button"]',
     nextItem: '[data-cy="next-item-button"]',
   };
@@ -220,7 +222,7 @@ describe('Annotation filters configured in config', () => {
   };
 
   const openViewsMenu = () => {
-    cy.get(selectors.viewsSelect).click();
+    cy.get(selectors.viewsMenuToggle).click();
     cy.get(selectors.viewsMenu).should('be.visible');
   };
 
@@ -232,7 +234,7 @@ describe('Annotation filters configured in config', () => {
   };
 
   const closeViewsMenu = () => {
-    cy.get(selectors.viewsSelect).click();
+    cy.get('body').type('{esc}');
     cy.get(selectors.viewsMenu).should('not.exist');
   };
 

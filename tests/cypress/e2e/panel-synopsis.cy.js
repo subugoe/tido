@@ -101,17 +101,17 @@ function getSyncTargetNavigation(panelIndex) {
 // Toggle a text view of a panel on/off in the panel views menu
 function togglePanelView(panelIndex, viewIndex) {
   getPanel(panelIndex)
-    .find('[data-cy="panel-mode-select"]')
+    .find('[data-cy="panel-menu"]')
     .click()
 
-  cy.get('[data-cy="panel-mode-menu"]')
+  cy.get('[data-cy="panel-menu-dropdown"]')
     .find('[data-cy="panel-view-toggle"]')
     .eq(viewIndex)
     .click()
 
   // close the menu again so it does not cover the panel
   cy.get('body').type('{esc}')
-  cy.get('[data-cy="panel-mode-menu"]').should('not.exist')
+  cy.get('[data-cy="panel-menu-dropdown"]').should('not.exist')
 }
 
 // Navigate a panel to the next / previous item

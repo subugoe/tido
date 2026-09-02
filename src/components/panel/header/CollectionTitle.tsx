@@ -32,10 +32,11 @@ const CollectionTitle: FC = () => {
       {collection && <Popover open={showLocalTree} onOpenChange={handleOpenChange} modal={true}>
         <PopoverTrigger asChild>
           <Button
-            className="text-sm px-2 py-1 h-7 font-semibold truncate border border-border shadow-xs max-w-[120px] @min-[1000px]/panel:max-w-[200px] @min-[1200px]/panel:max-w-[400px]"
+            className="absolute font-semibold truncate max-w-[150px] @min-[1000px]/panel:max-w-[250px]"
             title={collection.titles[0]}
             onClick={() => setShowLocalTree(!showLocalTree)}
-            variant="muted"
+            size="sm"
+            variant="outline"
             data-cy="collection-title"
           >
             <span className="truncate">{ collection.titles[0] }</span>

@@ -65,6 +65,7 @@ const NextManifestButton: FC = () => {
     isDisabled={isDisabled}
     navigate={navigate}
     dataCy="next-manifest-button"
+    tooltipKey="next_manifest"
   />
 
 }

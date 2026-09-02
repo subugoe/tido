@@ -1,7 +1,6 @@
 import { FC, ReactNode, useEffect, useRef } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import ResizeHandle from '@/components/panel/ResizeHandle.tsx'
-import SyncTargetNavigation from '@/components/panel/synopsis/TargetNavigation.tsx'
 
 interface Props {
   children?: ReactNode
@@ -28,11 +27,10 @@ const PanelShell: FC<Props> = ({ children }) => {
   return <div
     id={panelId}
     ref={ref}
-    className={`panel bg-background text-foreground grow-0 shrink-0 relative transition-width`}
+    className={`panel text-foreground grow-0 shrink-0 relative transition-width`}
     data-cy="panel"
   >
-    <SyncTargetNavigation />
-    <div className="h-full overflow-hidden relative border border-border rounded-2xl shadow-xs">
+    <div className="h-full bg-background overflow-hidden relative border border-border rounded-2xl shadow-xs">
       { children }
     </div>
     <ResizeHandle className="-right-1.5" data-panel-resize-handle />

@@ -1,4 +1,3 @@
-import { Panel } from '../support/panel-helpers'
 import { Tree } from '../support/tree-helpers'
 
 function runConfigTest(param, name, callback, only=false) {
@@ -51,10 +50,8 @@ function checkTreeCollapsedCollection($rootCollection, collectionLabel, manifest
 
 describe('Config', () => {
   runConfigTest('', 'Should apply defaults', () => {
-    cy.get('[data-cy="new-panel"]').should('have.css', 'background-color', 'oklch(0.474346 0.140455 264.941)')
-    cy.get('[data-cy="global-tree-toggle"]').should('be.visible')
+    cy.get('[data-cy="rail-menu-toggle"]').should('be.visible')
     cy.get('[data-cy="new-panel"]').should('be.visible')
-    cy.get('[data-cy="new-panel"]').should('have.text', 'Add New Panel')
     cy.get('[data-cy="panel-placeholder"]').should('be.visible')
   });
 
@@ -63,7 +60,7 @@ describe('Config', () => {
     cy.get('[data-cy="new-panel"]').should('have.css', 'background-color', 'oklch(0.86644 0.294827 142.495)')
   });
   runConfigTest('showGlobalTree=false', 'showGlobalTree false', () => {
-    cy.get('[data-cy="global-tree-toggle"]').should('not.exist')
+    cy.get('[data-cy="rail-menu-toggle"]').should('not.exist')
   });
   runConfigTest('showAddNewPanelButton=false', 'showAddNewPanelButton false', () => {
     cy.get('[data-cy="new-panel"]').should('not.exist')
@@ -75,7 +72,9 @@ describe('Config', () => {
     cy.get('[data-cy="content-type"]').should('be.visible')
   });
   runConfigTest('lang=de', 'translations: read from default `de` file', () => {
-    cy.get('[data-cy="new-panel"]').should('have.text', 'Neues Panel hinzufügen')
+    cy.get('[data-cy="new-panel"]').click()
+    cy.get('[data-cy="rail-title"]').should('have.text', 'Neues Panel öffnen')
+    cy.contains('Aus bestehenden Kollektionen').should('be.visible')
   });
   runConfigTest('showPanelPlaceholder=true', 'Should show panel placeholder', () => {
     cy.get('[data-cy="panel-placeholder"]').should('be.visible')
@@ -84,17 +83,19 @@ describe('Config', () => {
     cy.get('[data-cy="panel-placeholder"]').should('not.exist')
   });
   runConfigTest('title=4%20Wachen', 'Should apply custom title', () => {
-    cy.get('h1').should('have.text', '4 Wachen')
+    cy.get('[data-cy="rail-menu-toggle"]').click()
+    cy.get('[data-cy="rail-title"]').should('have.text', '4 Wachen')
   });
   runConfigTest('container=%23alternativeApp', 'Should append the app to a custom container', () => {
     cy.get('#alternativeApp [data-cy="app"]').should('exist')
     cy.get('#app [data-cy="app"]').should('not.exist')
   });
   runConfigTest('allowNewCollections=true', 'Should allow adding a panel from new collections', () => {
-    cy.get('[data-cy="header"] [data-cy="new-panel"]').click()
+    cy.get('[data-cy="new-panel"]').click()
     cy.contains('From existing collections').should('exist')
-    cy.contains('From new collection').click()
+    cy.get('[data-cy="open-new-panel-new"]').click()
     cy.contains('Enter a collection URL').should('exist')
+    cy.get('[data-cy="new-collection-input"]').should('exist')
   });
   runConfigTest('showThemeToggle=false', 'Should not show theme toggle', () => {
     cy.get('[data-cy="settings"]').click()
@@ -102,12 +103,6 @@ describe('Config', () => {
   });
   runConfigTest('showThemeToggle=true', 'Should show theme toggle', () => {
     cy.get('[data-cy="settings"]').click()
-
-    cy.contains('Light').should('not.exist')
-    cy.contains('Dark').should('not.exist')
-    cy.contains('System').should('not.exist')
-
-    cy.contains('Toggle theme').click()
 
     cy.contains('Light').should('be.visible')
     cy.contains('Dark').should('be.visible')
@@ -244,7 +239,7 @@ describe('Config', () => {
         })
   });
   runConfigTest('showGlobalTree=false', 'Should not show the global tree toggle', () => {
-    cy.get('[data-cy="global-tree-toggle"]')
+    cy.get('[data-cy="rail-menu-toggle"]')
       .should('not.exist')
   });
   //collection with annotations
@@ -259,10 +254,14 @@ describe('Config', () => {
         .click()
         .get('[data-cy="annotations-header"]')
         .should('be.visible')
-        .find('[data-cy="annotations-mode-toggle"]')
-        .find('[data-cy="list"]')
+      //the mode toggle moved behind the "…" menu - open it to inspect the preselected mode
+        .get('[data-cy="annotations-menu"]')
+        .click()
+      cy.get('[data-cy="list"]')
         .should('be.visible')
         .should('have.attr', 'data-state', 'on')
+      cy.get('[data-cy="aligned"]').should('have.attr', 'data-state', 'off')
+      cy.get('body').type('{esc}')
 
       // Hint: commented out this test because the order of annotations it's not a testable evidence.
       // Annotations in list view should actually also maintain the order of appearance.
@@ -292,10 +291,14 @@ describe('Config', () => {
         .click()
         .get('[data-cy="annotations-header"]')
         .should('be.visible')
-        .find('[data-cy="annotations-mode-toggle"]')
-        .find('[data-cy="aligned"]')
+      //the mode toggle moved behind the "…" menu - open it to inspect the preselected mode
+        .get('[data-cy="annotations-menu"]')
+        .click()
+      cy.get('[data-cy="aligned"]')
         .should('be.visible')
         .should('have.attr', 'data-state', 'on')
+      cy.get('[data-cy="list"]').should('have.attr', 'data-state', 'off')
+      cy.get('body').type('{esc}')
 
       // Hint: commented out this test because the order of annotations it's not a testable evidence.
       // Annotations in both views should actually also maintain the order of appearance.
@@ -313,9 +316,10 @@ describe('Config', () => {
       //       .to.be.lt(top8)
       //   })
   });
-  runConfigTest('lang=de&translations.de.common.add_new_panel=Willk%C3%BCrliche%20%C3%9Cbersetzung',
-    'Should apply custom common translation "Willkürliche Übersetzung" to add-new-panel-button', () => {
-      cy.get('[data-cy="new-panel"]').should('have.text', 'Willkürliche Übersetzung')
+  runConfigTest('lang=de&translations.de.common.open_new_panel=Willk%C3%BCrliche%20%C3%9Cbersetzung',
+    'Should apply custom common translation "Willkürliche Übersetzung" to open-new-panel-button', () => {
+      cy.get('[data-cy="new-panel"]').trigger('mouseenter')
+      cy.contains('Willkürliche Übersetzung').should('exist')
   });
   runConfigTest('lang=de&translations.de.common.accurate=genau&panels[0].collection=http://localhost:8181/4w/collections/transcriptions.json',
     'Should apply custom common translation "genau" for custom translation key "accurate"', () => {
@@ -325,24 +329,4 @@ describe('Config', () => {
     'Should apply custom translation "genau" for custom translation key "accurate" and collection key "reproduction"', () => {
       cy.get('[data-cy="content-type"]').should('contain.text', 'genau')
   });
-  // runConfigTest('panelModes[]=text&panelModes[]=split',
-  //   'Should have panel mode "text" preselected, with "split" as the only other selectable panel mode', () => {
-  //     Panel.getPanelModeOption('text')
-  //       .should('have.attr', 'data-selected', 'true')
-  //     Panel.getPanelModeOption('split', true)
-  //       .should('have.attr', 'data-selected', 'false')
-  //     Panel.getPanelModeOption('swap', true)
-  //       .should('not.exist')
-  // });
-  // runConfigTest('panelModes[]=image',
-  //   'Should not allow panel mode selection when configuring a singular panel mode', () => {
-  //     Panel.getPanelModeSelect().should('not.exist')
-  // });
-  // runConfigTest('defaultPanelMode=split&panels[0].mode=text',
-  // 'Should apply panel specific panel mode and ignore default panel mode for this panel', () => {
-  //   Panel.getPanelModeOption('text')
-  //     .should('have.attr', 'data-selected', 'true')
-  //   Panel.getPanelModeOption('split', true)
-  //     .should('have.attr', 'data-selected', 'false')
-  // });
 });

@@ -2,6 +2,8 @@ import { FC, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu.tsx'
+import { Button } from '@/components/ui/button.tsx'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
 interface ManifestLabelProps {
   isSelecting: boolean,
@@ -11,7 +13,8 @@ interface ManifestLabelProps {
 }
 
 const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelecting, onSelect }) => {
-  const { panelState } = usePanel()
+  const { panelState, usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
   const [showModal, setShowModal] = useState(false)
 
 
@@ -29,12 +32,22 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelec
       open={showModal}
       onOpenChange={handleOpenChange}
     >
-      <DropdownMenuTrigger asChild>
-        <div className={`text-sm text-nowrap max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate bg-muted rounded-lg font-semibold cursor-pointer border border-border shadow-xs hover:bg-accent px-2 py-1 ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
-          data-cy="manifest-label">
-          { selectedLabel }
-        </div>
-      </DropdownMenuTrigger>
+      <Tooltip>
+        <DropdownMenuTrigger asChild>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className={`relative max-w-[120px] @min-[1200px]/panel:max-w-[300px] h-full truncate ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
+              data-cy="manifest-label">
+              <span className="truncate">{ selectedLabel }</span>
+            </Button>
+          </TooltipTrigger>
+        </DropdownMenuTrigger>
+        <TooltipContent>
+          <span className="leading-none">{ isSelecting ? t('select_item_from_selected_manifest') : selectedLabel }</span>
+        </TooltipContent>
+      </Tooltip>
       <DropdownMenuContent data-cy="manifests-dropdown" className="max-w-80">
         {options.map(({ id, label }, i) => <DropdownMenuItem
           key={id + '_'+i}

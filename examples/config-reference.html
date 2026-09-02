@@ -52,6 +52,99 @@
     </ul>
     <p>Toggles the ability to add new collections to the app through a user input.</p>
     <hr>
+    <h5><code>annotations</code></h5>
+    <ul>
+    <li><strong>Type:</strong> AnnotationsConfig</li>
+    <li><strong>Default:</strong> <code>{}</code></li>
+    </ul>
+    <p>Configures the display of annotations and their filtering options. See <a href="#annotations">annotations</a> chapter.</p>
+    <hr>
+    <h5><code>annotations.defaultMode</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    <li><strong>Default:</strong> <code>aligned</code></li>
+    </ul>
+    <p>An annotations mode toggle is shown. Initial selected mode is <code>aligned</code> mode.</p>
+    <hr>
+    <h5><code>annotations.disableHighlighting</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String[]</li>
+    </ul>
+    <p>Annotation types whose targets are rendered without the base grey highlight and the nested target border. Clicking such a target still opens its annotation, and hover and selection feedback stay active.</p>
+    <hr>
+    <h5><code>annotations.disableSynopsisSelection</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    </ul>
+    <p>When <code>true</code>, disables synopsis selection on sync target click and hides the synopsis section in the annotation popover. Sync targets still display their base annotation but no synopsis connection is established.</p>
+    <hr>
+    <h5><code>annotations.filters</code></h5>
+    <ul>
+    <li><strong>Type:</strong> AnnotationFiltersConfig</li>
+    </ul>
+    <p>Defines a nested object of filter options.</p>
+    <hr>
+    <h5><code>annotations.filters.items</code></h5>
+    <ul>
+    <li><strong>Type:</strong> FilterNode[]</li>
+    </ul>
+    <p>Array of filter nodes defining the hierarchical filter tree structure.</p>
+    <hr>
+    <h5><code>annotations.filters.items[i].items</code></h5>
+    <ul>
+    <li><strong>Type:</strong> FilterNode[]</li>
+    </ul>
+    <p>Child filter nodes for nested filtering.</p>
+    <hr>
+    <h5><code>annotations.filters.items[i].label</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>Label to display for a filter node.</p>
+    <hr>
+    <h5><code>annotations.filters.items[i].types</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String[] | VariantType[]</li>
+    </ul>
+    <p>Array of annotation type identifiers that a filter node controls. Can be plain strings (e.g., <code>&quot;person&quot;</code>, <code>&quot;place&quot;</code>) or variant witness objects (e.g., <code>{ Variant: &quot;witness_id&quot; }</code>).</p>
+    <hr>
+    <h5><code>annotations.filters.rootSelectionRule</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    <li><strong>Default:</strong> <code>multiple</code></li>
+    </ul>
+    <p>Controls the overall behavior and layout of the filter UI. Allowed values: <code>multiple</code> or <code>single</code>. When set to <code>single</code>, a tab bar is rendered for root-level nodes.</p>
+    <hr>
+    <h5><code>annotations.filters.selectedIndex</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Number</li>
+    </ul>
+    <p>Index of the initially selected filter node in the filter tree. Only applies when <code>rootSelectionRule</code> is set to <code>single</code>.</p>
+    <hr>
+    <h5><code>annotations.singleMode</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>Specifies only one annotations mode, which can be either <code>aligned</code> or <code>list</code>.</p>
+    <hr>
+    <h5><code>annotations.tooltipTypes</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String[]</li>
+    </ul>
+    <p>Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.</p>
+    <hr>
+    <h5><code>annotations.types</code></h5>
+    <ul>
+    <li><strong>Type:</strong> AnnotationTypeConfigMap</li>
+    </ul>
+    <p>A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.</p>
+    <hr>
+    <h5><code>annotations.types[i].label</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    </ul>
+    <p>Custom label to display for an annotation type.</p>
+    <hr>
     <h5><code>container</code></h5>
     <ul>
     <li><strong>Type:</strong> String</li>
@@ -116,145 +209,6 @@
     </ul>
     <p>Overrides the global <code>panelViews</code> config for this specific panel. Use this to customize views per panel while still inheriting unset properties from the global config.</p>
     <hr>
-    <h5><code>rootCollections</code></h5>
-    <ul>
-    <li><strong>Type:</strong> String[]</li>
-    <li><strong>Default:</strong> <code>[]</code></li>
-    </ul>
-    <p>Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.</p>
-    <hr>
-    <h5><code>showAddNewPanelButton</code></h5>
-    <ul>
-    <li><strong>Type:</strong> Boolean</li>
-    <li><strong>Default:</strong> <code>true</code></li>
-    </ul>
-    <p>Toggles the display of the &quot;add new panel&quot; button.</p>
-    <hr>
-    <h5><code>showContentTypeToggle</code></h5>
-    <ul>
-    <li><strong>Type:</strong> Boolean</li>
-    <li><strong>Default:</strong> <code>true</code></li>
-    </ul>
-    <p>Toggles the display of the content type toggle in TextViews. When false, the whole bar is hidden.</p>
-    <hr>
-    <h5><code>showGlobalTree</code></h5>
-    <ul>
-    <li><strong>Type:</strong> Boolean</li>
-    <li><strong>Default:</strong> <code>true</code></li>
-    </ul>
-    <p>Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.</p>
-    <hr>
-    <h5><code>showSynopsisNavigation</code></h5>
-    <ul>
-    <li><strong>Type:</strong> Boolean</li>
-    <li><strong>Default:</strong> <code>true</code></li>
-    </ul>
-    <p>Controls whether the Sync Target Navigation is rendered in panels. Set to <code>false</code> to hide it in all panels - can be overridden per panel via <code>panels[i].showSynopsisNavigation</code>.</p>
-    <hr>
-    <h5><code>title</code></h5>
-    <ul>
-    <li><strong>Type:</strong> String</li>
-    <li><strong>Default:</strong> <em>(empty)</em></li>
-    </ul>
-    <p>Specifies the main title of the app in the header. Translatable.</p>
-    <hr>
-    <h4>Annotations</h4>
-    <hr>
-    <h5><code>annotations</code></h5>
-    <ul>
-    <li><strong>Type:</strong> AnnotationsConfig</li>
-    <li><strong>Default:</strong> <code>{}</code></li>
-    </ul>
-    <p>Configures the display of annotations and their filtering options. See <a href="#annotations">annotations</a> chapter.</p>
-    <hr>
-    <h5><code>annotations.defaultMode</code></h5>
-    <ul>
-    <li><strong>Type:</strong> String</li>
-    <li><strong>Default:</strong> <code>aligned</code></li>
-    </ul>
-    <p>An annotations mode toggle is shown. Initial selected mode is <code>aligned</code> mode.</p>
-    <hr>
-    <h5><code>annotations.disableHighlighting</code></h5>
-    <ul>
-    <li><strong>Type:</strong> String[]</li>
-    </ul>
-    <p>Annotation types whose targets are rendered without the base grey highlight and the nested target border. Clicking such a target still opens its annotation, and hover and selection feedback stay active.</p>
-    <hr>
-    <h5><code>annotations.disableSynopsisSelection</code></h5>
-    <ul>
-    <li><strong>Type:</strong> Boolean</li>
-    </ul>
-    <p>When <code>true</code>, disables synopsis selection on sync target click and hides the synopsis section in the annotation popover. Sync targets still display their base annotation but no synopsis connection is established.</p>
-    <hr>
-    <h5><code>annotations.filters</code></h5>
-    <ul>
-    <li><strong>Type:</strong> AnnotationFiltersConfig</li>
-    </ul>
-    <p>Defines a nested object of filter options.</p>
-    <hr>
-    <h5><code>annotations.filters.rootSelectionRule</code></h5>
-    <ul>
-    <li><strong>Type:</strong> String</li>
-    <li><strong>Default:</strong> <code>multiple</code></li>
-    </ul>
-    <p>Controls the overall behavior and layout of the filter UI. Allowed values: <code>multiple</code> or <code>single</code>. When set to <code>single</code>, a tab bar is rendered for root-level nodes.</p>
-    <hr>
-    <h5><code>annotations.filters.selectedIndex</code></h5>
-    <ul>
-    <li><strong>Type:</strong> Number</li>
-    </ul>
-    <p>Index of the initially selected filter node in the filter tree. Only applies when <code>rootSelectionRule</code> is set to <code>single</code>.</p>
-    <hr>
-    <h5><code>annotations.filters.items</code></h5>
-    <ul>
-    <li><strong>Type:</strong> FilterNode[]</li>
-    </ul>
-    <p>Array of filter nodes defining the hierarchical filter tree structure.</p>
-    <hr>
-    <h5><code>annotations.filters.items[i].types</code></h5>
-    <ul>
-    <li><strong>Type:</strong> String[] | VariantType[]</li>
-    </ul>
-    <p>Array of annotation type identifiers that a filter node controls. Can be plain strings (e.g., <code>&quot;person&quot;</code>, <code>&quot;place&quot;</code>) or variant witness objects (e.g., <code>{ Variant: &quot;witness_id&quot; }</code>).</p>
-    <hr>
-    <h5><code>annotations.filters.items[i].label</code></h5>
-    <ul>
-    <li><strong>Type:</strong> String</li>
-    </ul>
-    <p>Label to display for a filter node.</p>
-    <hr>
-    <h5><code>annotations.filters.items[i].items</code></h5>
-    <ul>
-    <li><strong>Type:</strong> FilterNode[]</li>
-    </ul>
-    <p>Child filter nodes for nested filtering.</p>
-    <hr>
-    <h5><code>annotations.singleMode</code></h5>
-    <ul>
-    <li><strong>Type:</strong> String</li>
-    </ul>
-    <p>Specifies only one annotations mode, which can be either <code>aligned</code> or <code>list</code>.</p>
-    <hr>
-    <h5><code>annotations.types</code></h5>
-    <ul>
-    <li><strong>Type:</strong> AnnotationTypeConfigMap</li>
-    </ul>
-    <p>A map of config objects for annotation types. This is used to display custom labels and icons in annotation items.</p>
-    <hr>
-    <h5><code>annotations.types[i].label</code></h5>
-    <ul>
-    <li><strong>Type:</strong> String</li>
-    </ul>
-    <p>Custom label to display for an annotation type.</p>
-    <hr>
-    <h5><code>annotations.tooltipTypes</code></h5>
-    <ul>
-    <li><strong>Type:</strong> String[]</li>
-    </ul>
-    <p>Annotation types to display as a tooltip when clicked instead of in the sidebar. These types will be excluded from the filters.</p>
-    <hr>
-    <h4>Panel Views</h4>
-    <hr>
     <h5><code>panelViews</code></h5>
     <ul>
     <li><strong>Type:</strong> PanelViewConfig[]</li>
@@ -295,7 +249,40 @@
     </ul>
     <p>Controls whether this view is visible in the panel. When false, the view will be hidden but can be toggled on via the &quot;View&quot; dropdown.</p>
     <hr>
-    <h4>Theme</h4>
+    <h5><code>rootCollections</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String[]</li>
+    <li><strong>Default:</strong> <code>[]</code></li>
+    </ul>
+    <p>Specifies a list of TextAPI collection URLs that appear in the global tree on the left. Users navigate and open new panels from those collections.</p>
+    <hr>
+    <h5><code>showAddNewPanelButton</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Toggles the display of the &quot;add new panel&quot; button.</p>
+    <hr>
+    <h5><code>showContentTypeToggle</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Toggles the display of the content type toggle in TextViews. When false, the whole bar is hidden.</p>
+    <hr>
+    <h5><code>showGlobalTree</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Toggles the display of the global tree on the left. When false the toggle button in the header is hidden.</p>
+    <hr>
+    <h5><code>showSynopsisNavigation</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Controls whether the Sync Target Navigation is rendered in panels. Set to <code>false</code> to hide it in all panels - can be overridden per panel via <code>panels[i].showSynopsisNavigation</code>.</p>
     <hr>
     <h5><code>theme</code></h5>
     <ul>
@@ -311,7 +298,12 @@
     </ul>
     <p>Primary color of UI elements. Used on buttons and other interactive elements. The value can be provided as string in the following color systems: hex, rgb, hsl, oklch. Alpha channel is not supported.</p>
     <hr>
-    <h4>Translations</h4>
+    <h5><code>title</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String</li>
+    <li><strong>Default:</strong> <em>(empty)</em></li>
+    </ul>
+    <p>Specifies the main title of the app in the header. Translatable.</p>
     <hr>
     <h5><code>translations</code></h5>
     <ul>

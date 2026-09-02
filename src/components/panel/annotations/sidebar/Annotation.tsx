@@ -153,8 +153,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     {...(isSelected ? { 'data-selected': true } : {})}
     className={` flex flex-col pt-2 rounded-lg border border-border h-fit overflow-x-hidden transition-[top]
       ${annotationsMode === 'aligned' && !isNested ? 'absolute' : 'mb-2'}
-      ${annotationsMode === 'aligned' ? 'w-[calc(100%-1.3rem)]': !isNested ? 'w-[100%]': 'w-[calc(100%-0.3rem)]' }
-      ${isSelected ? 'shadow-md bg-background outline-primary outline-2' : 'bg-muted border-border hover:bg-background cursor-pointer'}
+      ${annotationsMode === 'aligned' ? 'w-[calc(100%-1.3rem)]': !isNested ? 'w-full': 'w-[calc(100%-0.3rem)]' }
+      ${isSelected ? 'shadow-md bg-background outline-primary outline-2' : 'border-border hover:bg-background cursor-pointer'}
       ${isHovered ? 'border-primary' : ''}`}
     onClick={handleClick}
     onMouseEnter={handleMouseEnter}
@@ -162,7 +162,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     style={{ top }}
   >
     <div className="px-3 pb-2">
-      <Badge variant="accent" className="mb-1">{ typeLabel }</Badge>
+      <Badge variant="muted" className="mb-1">{ typeLabel }</Badge>
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
         { type === 'Variant' && <VariantContent body={data.body as AnnotationBody} /> }
         { type !== 'Variant' && <GenericTextRenderer

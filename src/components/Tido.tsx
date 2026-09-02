@@ -1,7 +1,6 @@
 import { FC, Suspense, useEffect } from 'react'
 
-import TopBar from '@/components/header/TopBar.tsx'
-import GlobalTree from '@/components/tree/GlobalTree.tsx'
+import RailSidebar from '@/components/rail/RailSidebar.tsx'
 
 import PanelsWrapper from '@/components/PanelsWrapper.tsx'
 import { TidoProps } from '@/types'
@@ -27,18 +26,19 @@ export const Tido: FC<TidoProps> = ({ config: customConfig, theme, onReady, onTh
 
   return (
     <div className="tido flex flex-col h-full" data-cy="app">
-      <ThemeProvider  onThemeChange={onThemeChange}>
-        <Suspense fallback={<Loading />}>
-          <ConfigProvider userConfig={customConfig}>
-            <TopBar />
-            <div className="flex-1 flex overflow-hidden">
-              <GlobalTree />
-              <PanelsWrapper onPanelsLoaded={dataLoaded} />
-              <Toaster position="bottom-center" richColors expand={true}  />
-            </div>
-          </ConfigProvider>
-        </Suspense>
-      </ThemeProvider>
+      <div className="flex flex-col bg-muted h-full rounded-2xl">
+        <ThemeProvider  onThemeChange={onThemeChange}>
+          <Suspense fallback={<Loading />}>
+            <ConfigProvider userConfig={customConfig}>
+              <div className="flex-1 flex overflow-hidden">
+                <RailSidebar />
+                <PanelsWrapper onPanelsLoaded={dataLoaded} />
+                <Toaster position="bottom-center" richColors expand={true}  />
+              </div>
+            </ConfigProvider>
+          </Suspense>
+        </ThemeProvider>
+      </div>
     </div>
   )
 }

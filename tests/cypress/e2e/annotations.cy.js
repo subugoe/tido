@@ -40,9 +40,9 @@ describe('Annotations', () => {
     sidebarLoading: '[data-cy="sidebar-loading"]',
     panel: '[data-cy="panel"]',
     textContainer: '[data-text-container]',
-    viewsSelect: '[data-cy="panel-mode-select"]',
-    viewsMenu: '[data-cy="panel-mode-menu"]',
-    viewSwitch: '[data-slot="switch"]'
+    viewsMenuToggle: '[data-cy="panel-menu"]',
+    viewsMenu: '[data-cy="panel-menu-dropdown"]',
+    viewSwitch: '[data-cy="panel-view-toggle"]'
   }
 
   const sidebar = () => cy.get(selectors.sidebarContainer)
@@ -75,14 +75,14 @@ describe('Annotations', () => {
     cy.get(selectors.sidebarLoading).should('not.exist')
   }
 
-  // Toggle a text view from the "View" menu and assert the resulting switch state so the next step
-  // doesn't race with the relayout.
+  // Toggle a text view from the panel's "…" menu and assert the resulting switch state so the next
+  // step doesn't race with the relayout.
   const setView = (index, visible) => {
-    cy.get(selectors.viewsSelect).click()
+    cy.get(selectors.viewsMenuToggle).click()
     cy.get(selectors.viewsMenu).should('be.visible')
     cy.get(`${selectors.viewsMenu} ${selectors.viewSwitch}`).eq(index).click()
       .should('have.attr', 'data-state', visible ? 'checked' : 'unchecked')
-    cy.get(selectors.viewsSelect).click()
+    cy.get('body').type('{esc}')
     cy.get(selectors.viewsMenu).should('not.exist')
   }
 
@@ -172,15 +172,20 @@ describe('Annotations', () => {
   it('Should toggle annotation mode list/aligned', () => {
     openSidebar()
 
-    sidebar().within(() => {
-      cy.get('[data-cy="list"]').should('have.attr', 'data-state', 'on')
-      cy.get('[data-cy="aligned"]').should('have.attr', 'data-state', 'off').click()
-    })
+    // The mode toggle now lives behind the "…" menu of the annotations header. The trigger is
+    // inside a layered overlay, so the trigger clicks use force to bypass scroll-lock.
+    cy.get('[data-cy="annotations-menu"]').click({ force: true })
+    cy.get('[data-cy="aligned"]').should('have.attr', 'data-state', 'off')
+    cy.get('[data-cy="list"]').should('have.attr', 'data-state', 'on')
 
-    sidebar().within(() => {
-      cy.get('[data-cy="aligned"]').should('have.attr', 'data-state', 'on')
-      cy.get('[data-cy="list"]').should('have.attr', 'data-state', 'off')
-    })
+    // Selecting an item closes the menu - wait until it is really gone before reopening
+    cy.get('[data-cy="aligned"]').click({ force: true })
+    cy.get('[data-cy="aligned"]').should('not.exist')
+
+    cy.get('[data-cy="annotations-menu"]').click({ force: true })
+    cy.get('[data-cy="list"]').should('have.attr', 'data-state', 'off')
+    cy.get('[data-cy="aligned"]').should('have.attr', 'data-state', 'on')
+    cy.get('body').type('{esc}')
   })
 
   it('Should select exactly one annotation at a time', () => {

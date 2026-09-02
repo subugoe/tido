@@ -28,7 +28,7 @@ const PanelsWrapper: FC<Props> = ({ onPanelsLoaded }) => {
   }
 
 
-  return <div id="panels-wrapper" className="bg-background flex-1 flex h-full pt-8 pb-4 space-x-4 overflow-x-auto pr-2" data-cy="panels-wrapper">
+  return <div id="panels-wrapper" className="flex-1 flex h-full space-x-4 overflow-x-auto pr-2 py-6 px-6 rounded-2xl" data-cy="panels-wrapper">
     { panels.map((state) => <Panel state={state} key={state.id} onPanelLoaded={incrementPanelLoaded}  />) }
     { showPanelPlaceholder && <AddPanel /> }
   </div>

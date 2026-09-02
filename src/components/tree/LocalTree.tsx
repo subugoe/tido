@@ -34,7 +34,7 @@ const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
 
   return <div className="flex flex-col">
     <div className="max-h-[60vh] overflow-y-auto pr-2">
-      <TreeProvider onSelect={onNodeSelect} getChildren={getChildren} elevation={1}>
+      <TreeProvider onSelect={onNodeSelect} getChildren={getChildren}>
         <Tree nodes={treeNodes} />
       </TreeProvider>
     </div>

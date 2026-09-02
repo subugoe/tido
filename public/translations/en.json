@@ -11,9 +11,10 @@
     "item_opened_in_panels": "The item is opened in panel(s) {{panelNumbers}}",
     "manifest_not_found": "$t(manifest) not found",
     "item_not_found": "$t(item) not found",
-    "add_new_panel": "Add New Panel",
+    "open_new_panel": "Open New Panel",
     "choose_your_panel_content": "Choose your panel content",
     "enter_collection_url": "Enter a collection URL",
+    "collection_added": "Collection added. A new panel was created.",
     "or_choose": "Or choose",
     "no_image_available": "No image available",
     "no_items_found": "There are no items found.",
@@ -63,6 +64,8 @@
     "split_mode": "Split mode",
     "text_mode": "Text mode",
     "image_mode": "Image mode",
+    "library": "Library",
+    "settings": "Settings",
     "toggle_theme": "Toggle theme",
     "light": "Light",
     "dark": "Dark",
@@ -75,6 +78,7 @@
     "jump_to": "Jump to",
     "text_type": "Text type",
     "select_item_to_continue": "A new manifest is selected. Now, please select a new item to continue.",
+    "select_item_from_selected_manifest": "You selected a new manifest. Please also select an item from it to continue.",
     "about_tido": "About TIDO",
     "tido_description": "Slim, easy-to-use and mobile-friendly text and image viewer.",
     "version": "Version",
@@ -147,6 +151,11 @@
     "previous_synoptic_target": "Previous synoptic target",
     "next_synoptic_target": "Next synoptic target",
     "open_synoptic_targets_navigation": "Open to navigate synoptic targets",
-    "collapse": "Collapse"
+    "collapse": "Collapse",
+    "sync_panel": "Sync panel",
+    "lock_scrolling": "Lock scrolling",
+    "sync_annotations": "Sync annotations",
+    "sync_item_selection": "Sync item selection",
+    "new_collection": "New Collection"
   }
 }

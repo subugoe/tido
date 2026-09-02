@@ -87,7 +87,7 @@ export function getDirectChildByLabel($node, label) {
  * @returns {Cypress.Chainable<JQuery<HTMLElement>>}
  */
 export function openGlobalTree() {
-  return cy.get('[data-cy="global-tree-toggle"]')
+  return cy.get('[data-cy="rail-menu-toggle"]')
     .should('be.visible')
     .click()
 }

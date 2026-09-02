@@ -16,7 +16,6 @@ export const ACTIVE_TARGET_STYLE = ['bg-annotation-selected']
 export const SYNC_TARGET_HOVER_STYLE = ['!bg-sync-annotation-hover']
 export const SYNC_ANNOTATION_ID_ATTRIBUTE = 'data-sync-annotation-id'
 export const SYNC_HIGHLIGHT_STYLE = ['cursor-pointer']
-export const SYNC_NAVIGATION_POSITION = 'absolute top-0 z-50 -translate-x-1/2'
 
 export const MIN_PANEL_WIDTH = 800
 export const DEFAULT_PANEL_WIDTH = MIN_PANEL_WIDTH
@@ -24,6 +23,10 @@ export const SIDEBAR_DEFAULT_WIDTH = 400
 export const PANEL_BORDER_WIDTH = 1
 export const PANEL_GAP = 16
 export const PANEL_HEADER_HEIGHT = 48
+export const PANEL_FOOTER_HEIGHT = 38
+
+export const RAIL_WIDTH = 72
+export const RAIL_EXPANDED_WIDTH = 340
 
 export const SUPPORTED_MIME_TYPES = [
   'text/html',

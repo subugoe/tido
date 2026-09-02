@@ -11,7 +11,7 @@ const TextOptions: FC<{ scrolled: boolean }> = ({ scrolled }) => {
       <div className={`w-full flex rounded-full transition-shadow ${scrolled ? 'shadow-md' : ''}`}>
         <ContentTypesToggle />
         <div className="border-l border-border">
-          <Button variant="ghost" size="icon" className="rounded-r-full rounded-l-none" onClick={() => setVisible(false)}>
+          <Button variant="ghost" size="iconSm" className="rounded-r-full rounded-l-none pl-2 pr-3" onClick={() => setVisible(false)}>
             <EyeOff />
           </Button>
         </div>
