@@ -70,7 +70,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "globals": "^15.11.0",
     "http-server": "^14.1.1",
-    "lucide-react": "^0.539.0",
+    "lucide-react": "^0.577.0",
     "marked": "^18.0.4",
     "ncp": "^2.0.0",
     "openseadragon": "^5.0.0",

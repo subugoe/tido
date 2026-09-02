@@ -150,4 +150,70 @@ describe('Tree', () => {
     cy.get('[data-cy="global-tree-modal"]').should('not.exist')
   })
 
+  it('Should show the quick-view icon on hover for collection and manifest nodes only', () => {
+    Tree.open()
+
+    // Root collection is expanded by default
+    Tree.getRootNodes().first().then(($root) => {
+      // Expand the nested collection to reveal manifests
+      Tree.clickNode('example.json', $root).then(($collection) => {
+        // Collection node has the quick-view icon (non-leaf)
+        Tree.getQuickViewIcon($collection).should('exist')
+
+        // Expand first manifest to reveal items
+        Tree.clickNode('book1.json', $collection).then(($manifest) => {
+          // Manifest node has the quick-view icon (non-leaf)
+          Tree.getQuickViewIcon($manifest).should('exist')
+
+          // Item nodes are leaf nodes -> they must NOT have the quick-view icon
+          Tree.getChildAt($manifest, 0).then(($item) => {
+            Tree.getQuickViewIcon($item).should('not.exist')
+          })
+        })
+      })
+    })
+  })
+
+  it('Should open a panel with first item by clicking the quick-view icon on a collection', () => {
+    Tree.open()
+
+    Tree.getRootNodes().first().then(($root) => {
+      Tree.clickNode('example.json', $root).then(($collection) => {
+        // first manifest = book1, first item = book1-page1
+        Tree.getQuickViewIcon($collection).click()
+      })
+    })
+
+    // A new panel opens with the first item of the first manifest
+    cy.get('[data-cy="panels-wrapper"]')
+      .find('[data-cy="panel"]')
+      .should('have.length', 2)
+
+    expectPanelWithText(1, 'Page 1', 'It is a truth universally acknowledged')
+
+    // No popover should have opened
+    cy.get('[data-cy="global-tree-modal"]').should('not.exist')
+  })
+
+  it('Should open a panel with first item by clicking the quick-view icon on a manifest', () => {
+    Tree.open()
+
+    Tree.getRootNodes().first().then(($root) => {
+      Tree.clickNode('example.json', $root).then(($collection) => {
+        Tree.clickNode('book2.json', $collection).then(($manifest) => {
+          // first item of book2 = book2-page1 (Moby-Dick)
+          Tree.getQuickViewIcon($manifest).click()
+        })
+      })
+    })
+
+    cy.get('[data-cy="panels-wrapper"]')
+      .find('[data-cy="panel"]')
+      .should('have.length', 2)
+
+    expectPanelWithText(1, 'Page 1', 'Call me Ishmael')
+
+    cy.get('[data-cy="global-tree-modal"]').should('not.exist')
+  })
+
 })

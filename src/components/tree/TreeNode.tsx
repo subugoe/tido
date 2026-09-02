@@ -1,22 +1,26 @@
 import { FC, MouseEvent, useEffect, useState } from 'react'
 import { useTree } from '@/contexts/TreeContext'
 import { useTranslation } from 'react-i18next'
-import { ChevronRight, Folder, LibraryBig, File, FolderOpen } from 'lucide-react'
+import { ChevronRight, Folder, LibraryBig, File, FolderOpen, SquareArrowRightEnter } from 'lucide-react'
 
 import EmptyNode from '@/components/tree/EmptyNode.tsx'
 import ErrorNode from '@/components/tree/ErrorNode.tsx'
 import OpenedIcon from '@/components/tree/OpenedIcon.tsx'
+import { Button } from '@/components/ui/button.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
-import { getRootChildrenCollectionsIds } from '@/utils/tree.ts'
+import { usePanelStore } from '@/store/PanelStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
+import { getPanelConfigFromNode, getRootChildrenCollectionsIds } from '@/utils/tree.ts'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
 
 interface TreeNodeProps {
   node: TreeNode,
+  showQuickView?: boolean
 }
 
 
-const TreeNode: FC<TreeNodeProps> = ({ node }) => {
+const TreeNode: FC<TreeNodeProps> = ({ node, showQuickView = false }) => {
   const { onSelect, getChildren, selectedNodeId, setSelectedNodeId, elevation, panels } = useTree()
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(node.expanded)
@@ -81,6 +85,14 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
     updatePanelsNumbersOpened()
   }, [panels])
 
+  function openPanel(e: MouseEvent<HTMLElement>) {
+    e.stopPropagation()
+    const config = getPanelConfigFromNode(node)
+    const newPanelId = crypto.randomUUID()
+    useUIStore.getState().updateNewestPanelId(newPanelId)
+    usePanelStore.getState().addPanel(config, newPanelId)
+  }
+
   const toggleExpand = () => {
     setIsExpanded(!isExpanded)
   }
@@ -131,7 +143,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
   return <div {...(node.leaf ? { 'data-cy': 'tree-node-leaf' } : { 'data-cy': 'tree-node' })} data-node-key={node.key} className="mb-1">
     <div
-      className={`flex relative items-start h-8 px-2 py-1 rounded-lg cursor-pointer ${selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover}`}
+      className={`group flex relative items-start h-8 px-2 py-1 rounded-lg cursor-pointer ${selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover}`}
       onClick={(e) => handleNodeClick(e)}
     >
       {!node.leaf &&
@@ -145,20 +157,38 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
       <TooltipProvider skipDelayDuration={600}>
         <Tooltip delayDuration={1000}>
           <TooltipTrigger asChild>
-            <span data-cy="node-label" className="w-[80%] pr-2 truncate">{label}</span>
+            <span data-cy="node-label" className="flex-1 min-w-0 pr-2 truncate">{label}</span>
           </TooltipTrigger>
           <TooltipContent>{label}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <div data-cy="tree-node-actions" className="w-6 shrink-0 grow-1 flex justify-end items-center h-full">
+      <div data-cy="tree-node-actions" className="shrink-0 flex items-center gap-2 h-full">
+        {showQuickView && !node.leaf &&
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="secondary"
+                  size="iconXs"
+                  className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  onClick={(e) => openPanel(e)}
+                  data-cy="quick-view-icon"
+                >
+                  <SquareArrowRightEnter size={14} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{t('quick_view')}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        }
         {panelsNumbersOpened.length > 0 &&
-            <OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} />}
+          <OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} />}
       </div>
     </div>
     <div className="flex-col" data-cy="node-children">
       {isExpanded && children?.map((item: TreeNode, i) => (
         <ul data-cy="tree-node-child" className="ml-3" key={i}>
-          <TreeNode node={item} />
+          <TreeNode node={item} showQuickView={showQuickView} />
         </ul>
       ))}
     </div>

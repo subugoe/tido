@@ -12,6 +12,7 @@
     "manifest_not_found": "$t(manifest) not found",
     "item_not_found": "$t(item) not found",
     "open_new_panel": "Open New Panel",
+    "quick_view": "Quick view",
     "choose_your_panel_content": "Choose your panel content",
     "enter_collection_url": "Enter a collection URL",
     "collection_added": "Collection added. A new panel was created.",

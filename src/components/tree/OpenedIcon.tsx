@@ -34,7 +34,7 @@ const OpenedIcon: FC<Props> = ({ panelsNumbers, nodeType }) => {
       <TooltipTrigger asChild>
         <div
           data-cy="tree-node-marker"
-          className="bg-primary w-2 h-2 hover:scale-130 transition-all duration-200 rounded-full"
+          className="bg-primary w-2 h-2 ml-1 hover:scale-130 transition-all duration-200 rounded-full"
           onClick={(e) => scrollToPanel(e)}
         ></div>
       </TooltipTrigger>

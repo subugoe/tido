@@ -16,6 +16,7 @@
     "manifest_not_found": "$t(manifest) konnte nicht gefunden werden",
     "item_not_found": "$t(item) konnte nicht gefunden werden",
     "open_new_panel": "Neues Panel öffnen",
+    "quick_view": "Schnellansicht",
     "choose_your_panel_content": "Bitte wählen Sie Ihren Inhalt",
     "enter_collection_url": "Geben eine Collection-URL ein",
     "collection_added": "Kollektion hinzugefügt. Es wurde ein neues Panel erstellt.",

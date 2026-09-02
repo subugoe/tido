@@ -193,6 +193,16 @@ export function shouldHaveMarker($node, visible=true) {
       .should('not.exist')
 }
 
+/**
+ * Returns the quick-view icon of a node
+ * @param {JQuery<HTMLElement>} $node
+ * @returns {Cypress.Chainable<JQuery<HTMLElement>>}
+ */
+export function getQuickViewIcon($node) {
+  return getNodeActions($node)
+    .find('[data-cy="quick-view-icon"]')
+}
+
 /* ------------------------------------------------------------------ */
 /* Convenience namespace                                     */
 /* ------------------------------------------------------------------ */
@@ -205,6 +215,7 @@ export const Tree = {
   getDirectChildByLabel,
   getChildAt,
   getNodeActions,
+  getQuickViewIcon,
 
   // actions
   open: openGlobalTree,

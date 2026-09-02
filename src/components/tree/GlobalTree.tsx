@@ -46,7 +46,7 @@ const GlobalTree: FC<GlobalTreeProps> = ({ open = true }) => {
   return <div className={`${open ? 'opacity-100 visible' : 'opacity-0 invisible'} flex-1 flex transition-all duration-300 overflow-hidden`}>
     <div className="shrink-0 overflow-auto [scrollbar-gutter:stable] flex-1 min-w-0">
       <TreeProvider onSelect={onSelectNode} getChildren={getChildren} elevation={1}>
-        <Tree nodes={treeNodes} />
+        <Tree nodes={treeNodes} showQuickView />
         {showSelectionModal && (
           <Popover
             open={showSelectionModal}

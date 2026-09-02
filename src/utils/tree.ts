@@ -138,11 +138,23 @@ function getNodeIndices(nodeKey: string) {
 
 function getPanelConfigFromNode(node: TreeNode): PanelConfig {
   const ids = getNodeIndices(node.key)
-  const collection = ids[ids.length - 3]
-  const manifest = ids[ids.length - 2]
-  const item = ids[ids.length - 1]
 
-  return { collection, manifest, item }
+  if (node.type === 'item') {
+    return {
+      collection: ids[ids.length - 3],
+      manifest: ids[ids.length - 2],
+      item: ids[ids.length - 1]
+    }
+  }
+
+  if (node.type === 'manifest') {
+    return {
+      collection: ids[ids.length - 2],
+      manifest: ids[ids.length - 1]
+    }
+  }
+
+  return { collection: ids[ids.length - 1] }
 }
 
 async function getExpandedNode(node: TreeNode): Promise<TreeNode> {
