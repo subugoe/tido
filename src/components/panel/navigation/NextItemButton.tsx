@@ -89,6 +89,7 @@ const NextItemButton: FC = () => {
     isDisabled={isDisabled}
     navigate={navigate}
     dataCy="next-item-button"
+    tooltipKey="next_item"
   />
 
 }

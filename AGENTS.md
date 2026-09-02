@@ -30,8 +30,15 @@ No unit tests. All tests run against production builds only.
 - Mock API needed: start `npm run api` (port 8181) before tests
 - Default command timeout: 4000ms
 
-**Quick run**: `npm run api & npm run test`  
-**Interactive**: `npm run api && npm run preview:examples`, then `npm run cypress`
+**Quick run**: `tests/run-e2e.sh` (starts API, builds + serves examples on :2222, then runs Cypress headless).
+
+`tests/run-e2e.sh [--no-serve] [--spec "..."]` picks an available Chrome/Chromium (system, Playwright or Puppeteer cache) and sets `LD_LIBRARY_PATH` to locally-extracted NSS/NSPR libs when the system packages are missing. On a properly set-up machine the plain `npm run test` works instead — it needs system libs + a Chrome install:
+
+```bash
+sudo apt-get install -y libnss3 libnspr4   # Cypress/Electron NSS libs
+# full headless GUI stack if not present:
+sudo apt-get install -y libgtk-3-0 libgbm-dev libnotify-dev libxss1 libasound2 libxtst6 xauth xvfb
+```
 
 ## Architecture
 

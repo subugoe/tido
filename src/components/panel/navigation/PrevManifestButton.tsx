@@ -59,6 +59,7 @@ const PrevManifestButton: FC = () => {
     isDisabled={isDisabled}
     navigate={navigate}
     dataCy="prev-manifest-button"
+    tooltipKey="previous_manifest"
   />
 
 }

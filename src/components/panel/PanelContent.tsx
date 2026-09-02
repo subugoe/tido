@@ -3,6 +3,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 import PanelHeader from '@/components/panel/header/PanelHeader.tsx'
+import PanelFooter from '@/components/panel/footer/PanelFooter.tsx'
 import ImageView from '@/components/panel/views/image/ImageView.tsx'
 import { TextProvider } from '@/contexts/TextContext.tsx'
 import TextView from '@/components/panel/views/text/TextView.tsx'
@@ -95,6 +96,7 @@ const PanelContent: FC = React.memo(() => {
               })}
             </Allotment>
           </div>
+          <PanelFooter />
         </div>
         <div className="absolute h-full top-0" data-sidebar-container>
           <div className={`absolute ${panelState.showSidebar ? 'inset-y-0' : ''} left-0 w-px bg-border z-40`} />

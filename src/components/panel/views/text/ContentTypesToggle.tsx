@@ -23,7 +23,10 @@ const ContentTypesToggle: FC = () => {
   function renderButton(isTrigger: boolean) {
     const buttonLabel = isTrigger ? t(label) + ': ' + t(activeContentType) : t(label ?? activeContentType)
 
-    return <Button variant="ghost" size="sm" className={(!isTrigger ? 'hover:bg-muted' : '') + ' rounded-l-full rounded-r-none'} data-cy="content-type">
+    return <Button
+      variant="ghost"
+      size="sm"
+      className={(isTrigger ? 'hover:bg-accent' : '') + ' rounded-l-full rounded-r-none pl-3'} data-cy="content-type">
       {buttonLabel} {isTrigger && <ChevronDown />}
     </Button>
   }

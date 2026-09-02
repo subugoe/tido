@@ -131,7 +131,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
 
   return <div {...(node.leaf ? { 'data-cy': 'tree-node-leaf' } : { 'data-cy': 'tree-node' })} data-node-key={node.key} className="mb-1">
     <div
-      className={`flex relative items-start h-8 px-2 py-1 rounded-md cursor-pointer ${selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover}`}
+      className={`flex relative items-start h-8 px-2 py-1 rounded-lg cursor-pointer ${selectedNodeId === node.id ? `border border-border active ${bg.selected}` : bg.hover}`}
       onClick={(e) => handleNodeClick(e)}
     >
       {!node.leaf &&
@@ -150,7 +150,7 @@ const TreeNode: FC<TreeNodeProps> = ({ node }) => {
           <TooltipContent>{label}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <div data-cy="tree-node-actions" className="w-6 shrink-0 grow-1 flex justify-end items-center h-[100%]">
+      <div data-cy="tree-node-actions" className="w-6 shrink-0 grow-1 flex justify-end items-center h-full">
         {panelsNumbersOpened.length > 0 &&
             <OpenedIcon panelsNumbers={panelsNumbersOpened} nodeType={node.type} />}
       </div>

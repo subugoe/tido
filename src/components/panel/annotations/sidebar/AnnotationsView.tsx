@@ -19,7 +19,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({ children }, ref)
   // after trackTopChange has already measured their heights. With `auto` alone the scrollbar would
   // appear at that point, narrow the content box and re-wrap every card one line taller than the
   // height the stacking math was based on.
-  return <div ref={ref} data-sidebar-scroll-container className="relative flex-1 overflow-y-auto [scrollbar-gutter:stable] px-3 bg-muted">
+  return <div ref={ref} data-sidebar-scroll-container className="relative flex-1 overflow-y-auto [scrollbar-gutter:stable] px-3 bg-muted/60">
     { children }
   </div>
 })

@@ -103,6 +103,7 @@ const PrevItemButton: FC = () => {
     isDisabled={isDisabled}
     navigate={navigate}
     dataCy="prev-item-button"
+    tooltipKey="previous_item"
   />
 
 }

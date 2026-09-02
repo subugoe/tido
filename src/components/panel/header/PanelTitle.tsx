@@ -8,9 +8,8 @@ import PrevItemButton from '@/components/panel/navigation/PrevItemButton.tsx'
 import NextItemButton from '@/components/panel/navigation/NextItemButton.tsx'
 import PrevManifestButton from '@/components/panel/navigation/PrevManifestButton.tsx'
 import NextManifestButton from '@/components/panel/navigation/NextManifestButton.tsx'
-import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
-import TitleAlertIcon from '@/components/panel/header/TitleAlertIcon.tsx'
+import { ButtonGroup } from '@/components/ui/button-group.tsx'
 
 const PanelTitle: FC = () => {
   const { panelState, usePanelTranslation, init } = usePanel()
@@ -92,52 +91,44 @@ const PanelTitle: FC = () => {
     setIsSelecting(false)
   }, [manifest])
 
+  const hasManifest = panelState && panelState.manifest
+
   return (
-    <>
-      <div className="flex items-center">
-        { (!panelState || !panelState.item) && <Skeleton className="w-[100px] h-6" />  }
-        { panelState && panelState.item  &&
-          <div className="flex gap-1">
-            <BaseTooltip message={t('previous_manifest')}>
-              <PrevManifestButton />
-            </BaseTooltip>
-            <div className="relative">
-              <ManifestLabel
-                options={manifestOptions}
-                selectedLabel={selectedLabel}
-                onSelect={onManifestSelect}
-                isSelecting={isSelecting}
-              />
-              {isSelecting && <TitleAlertIcon />}
-            </div>
-            <BaseTooltip message={t('next_manifest')}>
-              <NextManifestButton />
-            </BaseTooltip>
-          </div>
-        }
-        <span className="w-[1px] h-[80%] grow-0 shrink-0  bg-gray-400 mx-2"></span>
-        <div>
-          {(!panelState || !panelState.item) && <Skeleton className="w-[40px] h-6" />}
-          { panelState && panelState.item &&
-            <div className="flex items-center gap-1">
-              <BaseTooltip message={t('previous_item')}>
-                <PrevItemButton />
-              </BaseTooltip>
-              <ItemLabel
-                options={itemOptions}
-                onSelect={onItemSelect}
-                onDropdownClose={onItemDropdownClose}
-                showDropdown={showItemDropdown}
-                setShowDropdown={setShowItemDropdown}
-              />
-              <BaseTooltip message={t('next_item')}>
-                <NextItemButton />
-              </BaseTooltip>
-            </div>
-          }
+    <div className="flex items-center gap-1 min-w-0">
+      {(!panelState || !panelState.manifest) && !collection && (
+        <Skeleton className="w-[100px] h-6" />
+      )}
+      {hasManifest && (
+        <div className="flex items-center shrink-0">
+          <ButtonGroup className="h-7">
+            <PrevManifestButton />
+            <ManifestLabel
+              options={manifestOptions}
+              selectedLabel={selectedLabel}
+              onSelect={onManifestSelect}
+              isSelecting={isSelecting}
+            />
+            <NextManifestButton />
+          </ButtonGroup>
         </div>
-      </div>
-    </>
+      )}
+      {(!panelState || !panelState.manifest) && collection && (
+        <Skeleton className="w-[60px] h-6" />
+      )}
+      {panelState && panelState.manifest && (
+        <ButtonGroup className="h-7 shrink-0">
+          <PrevItemButton />
+          <ItemLabel
+            options={itemOptions}
+            onSelect={onItemSelect}
+            onDropdownClose={onItemDropdownClose}
+            showDropdown={showItemDropdown}
+            setShowDropdown={setShowItemDropdown}
+          />
+          <NextItemButton />
+        </ButtonGroup>
+      )}
+    </div>
   )
 }
 

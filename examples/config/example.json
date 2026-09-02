@@ -15,6 +15,7 @@
   "annotations": {
     "crossRefContentType": "CrossRef"
   },
+  "showSynopsisNavigation": true,
   "panelViews": [
     {
       "label": "Text",

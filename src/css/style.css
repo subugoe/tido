@@ -77,9 +77,9 @@ Elevation hierarchy:
   --primary-foreground: oklch(0.985 0 0);
   --secondary: var(--color-gray-700);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(97.8% 0 0);
+  --muted: oklch(96.5% 0 0);
   --muted-foreground: var(--color-gray-600);
-  --accent: oklch(94% 0.004 286.32);;
+  --accent: oklch(92% 0.004 286.32);;
   --accent-foreground: oklch(0.205 0 0);
   --destructive: var(--color-red-500);
   --success: var(--color-green-600);
@@ -94,7 +94,7 @@ Elevation hierarchy:
   --annotation-selected: var(--tido-color-primary-shade-3);
 
   --background: var(--color-gray-900);
-  --foreground: var(--color-gray-200);
+  --foreground: var(--color-gray-100);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: var(--color-gray-800);
@@ -104,12 +104,12 @@ Elevation hierarchy:
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: var(--color-gray-800);
-  --muted-foreground: var(--color-gray-200);
-  --accent: var(--color-gray-700);
+  --muted: oklch(23% 0.006 285.885);;
+  --muted-foreground: var(--color-gray-400);
+  --accent: var(--color-gray-800);
   --accent-foreground: var(--color-gray-100);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 15%);
+  --border: oklch(1 0 0 / 8%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
 
