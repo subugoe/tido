@@ -13,6 +13,7 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import GenericTextRenderer from '@/components/panel/renderers/text/GenericTextRenderer.tsx'
 import { flipMatchedAnnotationsMap } from '@/utils/text.ts'
+import { getSource } from '@/utils/annotations.ts'
 
 const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 72
 
@@ -69,7 +70,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
     const children = annotations.filter((a) => {
       const childType = (a.body as AnnotationBody)?.annotationType
-      return a.target?.[0].source === data.id
+      return a.target && getSource(a.target[0]).id === data.id
         && childType !== 'CrossRef'
         && !tooltipTypes.includes(childType)
     })
