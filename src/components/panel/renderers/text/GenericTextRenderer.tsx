@@ -295,10 +295,12 @@ const GenericTextRenderer: FC<Props> = memo(({
         const isSource = getSource(cur.target[0]).id === source
         const selector = getSelectorValue(cur.target[0])
 
-        if (!isSource || !selector) {
-          if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
+        if (!selector || selector === '#') {
+          console.error('Annotation error','Selector value of target is empty for this annotation', cur)
           return acc
         }
+
+        if (!isSource) return acc
 
         if (cur.body.annotationType === annotationsConfig?.crossRefContentType) {
           Array.from(parsedDom.querySelectorAll(selector)).forEach(el => {
