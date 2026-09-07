@@ -38,6 +38,7 @@ class Scroller {
   private sidebar: HTMLElement | null = null
   private texts: {[contentUrl: string]: HTMLElement} = {}
   private isSyncing = false
+  private syncEnabled = false
   private originSelection: 'text' | 'annotation' | 'config' = 'text'
   private focusedAnnotationId: string | null = null
   private matchedMap: {[contentUrl: string]: MatchedAnnotationsMap} = {}
@@ -193,7 +194,24 @@ class Scroller {
     }
   }
 
+  // Sidebar and text scroll in lockstep only while the aligned annotation list is mounted - it is
+  // what positions its cards against their targets. Everywhere else the two scroll independently,
+  // so the listeners stay off and a text view registering in the meantime does not turn them back
+  // on by itself.
+  startSync() {
+    this.syncEnabled = true
+    this.startSidebar()
+    Object.keys(this.texts).forEach(contentUrl => this.startText(contentUrl))
+  }
+
+  stopSync() {
+    this.syncEnabled = false
+    this.stopSidebar()
+    Object.keys(this.texts).forEach(contentUrl => this.stopText(contentUrl))
+  }
+
   startSidebar() {
+    if (!this.syncEnabled) return
     this.sidebar?.addEventListener('scroll', this.handleSidebarScrollBound)
   }
 
@@ -202,11 +220,12 @@ class Scroller {
   }
 
   startText(contentUrl: string) {
-    this.texts[contentUrl].addEventListener('scroll', this.handleTextScrollBound)
+    if (!this.syncEnabled) return
+    this.texts[contentUrl]?.addEventListener('scroll', this.handleTextScrollBound)
   }
 
   stopText(contentUrl: string) {
-    this.texts[contentUrl].removeEventListener('scroll', this.handleTextScrollBound)
+    this.texts[contentUrl]?.removeEventListener('scroll', this.handleTextScrollBound)
   }
 
   // Scrolls the text by delta. The scroll is deliberate, so handleTextScroll must not treat it as a

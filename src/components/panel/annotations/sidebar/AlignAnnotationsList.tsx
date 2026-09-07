@@ -2,8 +2,8 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
-import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { getSource } from '@/utils/annotations.ts'
+import { alignTextToAnnotation, handleExternalSelection } from '@/utils/annotation-alignment.ts'
 
 const ANNOTATION_GAP = 5
 
@@ -34,45 +34,16 @@ const AlignAnnotationsList: FC = () => {
     return clickedEl.closest('[data-annotation]')
   }
 
-  // The card in the sidebar and the target in whichever text view holds it. Null when either is
-  // missing - the view showing that content type may not be open, or the card may be filtered out.
-  function getAlignmentPair(panelEl: HTMLElement, annotation: Annotation) {
-    const target = annotation.target[0]
-    const targetSourceUrl = getSource(target).id
-    const textScrollContainer = getScroller().getText(targetSourceUrl)
-    if (!textScrollContainer) return null
+  // The scroller keeps the sidebar and the text views scrolling in lockstep, which is what this
+  // list - and only this list - needs: its cards are positioned against their targets, so the two
+  // sides have to move together. The plain list scrolls both containers independently, so the sync
+  // runs for exactly as long as this component is mounted and is stopped again on unmount.
+  useEffect(() => {
+    const scroller = getScroller()
+    scroller.startSync()
 
-    const targetEl = textScrollContainer.querySelector((target.selector as CssSelector).value) as HTMLElement
-    const annotationEl = panelEl.querySelector(`[data-annotation="${annotation.id}"]`) as HTMLElement
-    if (!targetEl || !annotationEl) return null
-
-    return { targetEl, annotationEl, targetSourceUrl }
-  }
-
-
-  function alignTextToAnnotation(panelEl: HTMLElement, annotation: Annotation) {
-    const pair = getAlignmentPair(panelEl, annotation)
-    if (!pair) return
-
-    const delta = pair.targetEl.getBoundingClientRect().top - pair.annotationEl.getBoundingClientRect().top
-    getScroller().scrollText(pair.targetSourceUrl, delta)
-  }
-
-  // Brings the card into the sidebar viewport, then lines the text up with it. Only call this once
-  // the sidebar is scrollable - see isSidebarScrollable above.
-  function scrollSidebarToAnnotation(panelEl: HTMLElement, annotation: Annotation, signal: AbortSignal) {
-    const sidebar = getScroller().getSidebar()
-    const pair = getAlignmentPair(panelEl, annotation)
-    if (!sidebar || !pair) return
-
-    // Returns the scrollTop the sidebar settles at. Getting the current one back means the card was
-    // already in view and no scroll was started, so there is no scrollend to wait for and the card
-    // is already standing still.
-    const settledScrollTop = scrollIntoViewIfNeeded(pair.annotationEl, sidebar)
-    // we align text once the sidebar scroll to the selectedAnnotation has finished
-    if (settledScrollTop === sidebar.scrollTop) alignTextToAnnotation(panelEl, annotation)
-    else sidebar.addEventListener('scrollend', () => alignTextToAnnotation(panelEl, annotation), { once: true, signal })
-  }
+    return () => scroller.stopSync()
+  }, [])
 
   useEffect(() => {
     const panelEl = document.getElementById(panelId) as HTMLElement
@@ -100,9 +71,13 @@ const AlignAnnotationsList: FC = () => {
     const controller = new AbortController()
     const scroller = getScroller()
 
+    // The scroller's own scrollText: the sidebar and the text scroll in lockstep in this mode, so a
+    // scroll started here has to keep the sync listeners out until it has come to a stop.
+    const scrollText = (contentUrl: string, delta: number) => scroller.scrollText(contentUrl, delta)
+
     if (selectedAnnotation.origin === 'annotation') {
       scroller.setIsSyncing(true)
-      alignTextToAnnotation(panelEl, selectedAnnotation.annotation)
+      alignTextToAnnotation(panelEl, selectedAnnotation.annotation, scrollText)
       return
     }
 
@@ -122,7 +97,7 @@ const AlignAnnotationsList: FC = () => {
     }
 
     scroller.setIsSyncing(true)
-    scrollSidebarToAnnotation(panelEl, selectedAnnotation.annotation, controller.signal)
+    handleExternalSelection(panelEl, selectedAnnotation.annotation, controller.signal, scrollText)
 
     return () => controller.abort()
   }, [selectedAnnotation, isSidebarScrollable])
