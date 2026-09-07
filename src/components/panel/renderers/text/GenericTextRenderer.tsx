@@ -55,6 +55,7 @@ interface Props {
   onReady?: () => void
   onUpdateMatchedAnnotationsMap?: (map: MatchedAnnotationsMap) => void
   source: string
+  sourceType: 'text' | 'annotation'
   onSelect?: () => void
   ignoreFilters?: boolean
   paddingTop?: number // tailwind scale value i.e 16 for pt-16
@@ -64,6 +65,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   onReady,
   onUpdateMatchedAnnotationsMap,
   source,
+  sourceType,
   onSelect,
   ignoreFilters = false,
   paddingTop = 0
@@ -149,6 +151,8 @@ const GenericTextRenderer: FC<Props> = memo(({
   // text's synced target so it sits at the same y-position as the navigated target does in its own
   // panel. The cleanup drops the highlight from the connection this one replaces.
   useEffect(() => {
+    if (sourceType === 'annotation') return
+
     if (!parsedDom || !textWrapperRef.current) return
     if (!activeSynopsisConnection) return
 
@@ -156,8 +160,9 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!navigatedTarget) return
 
     const isScrollSource = synopsisSource === 'scroll'
+    const ownsNavigatedTarget = textWrapperRef.current.contains(navigatedTarget)
 
-    if (!isScrollSource) addSynopsisSelectedStyle(navigatedTarget)
+    if (!isScrollSource && ownsNavigatedTarget) addSynopsisSelectedStyle(navigatedTarget)
 
     // the connection's targets that live in this text, resolved from their selector
     const ownTargets = otherSyncedTargets
@@ -180,11 +185,13 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     // before the next connection is applied / on unmount: drop the style from this connection's targets
     return () => {
-      removeSynopsisSelectedStyle(navigatedTarget)
-      removeActiveTargetStyle(navigatedTarget)
+      if (ownsNavigatedTarget) {
+        removeSynopsisSelectedStyle(navigatedTarget)
+        removeActiveTargetStyle(navigatedTarget)
+      }
       ownTargets.forEach((targetEl) => removeSynopsisSelectedStyle(targetEl))
     }
-  }, [activeSynopsisConnection, parsedDom, source])
+  }, [activeSynopsisConnection.navigatedTarget, parsedDom, source, sourceType])
 
   // While a target is hovered, highlight the synced targets that belong to this renderer's source.
   // Same as the connection effect above but with the hover style and without scrolling.

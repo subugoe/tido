@@ -50,6 +50,7 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
       htmlString={htmlString}
       onReady={onReady}
       source={activeContentUrl.current}
+      sourceType="text"
       onSelect={onSelect}
       onUpdateMatchedAnnotationsMap={onMatchedMapUpdate}
       paddingTop={showContentTypeToggle ? 16 : 2}
