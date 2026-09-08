@@ -60,6 +60,7 @@ const PrevManifestButton: FC = () => {
     navigate={navigate}
     dataCy="prev-manifest-button"
     tooltipKey="previous_manifest"
+    className="hidden @min-[600px]/panel:inline-flex"
   />
 
 }

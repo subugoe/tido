@@ -20,8 +20,8 @@ export const SYNC_TARGET_HOVER_STYLE = ['!bg-sync-annotation-hover']
 export const SYNC_ANNOTATION_ID_ATTRIBUTE = 'data-sync-annotation-id'
 export const SYNC_HIGHLIGHT_STYLE = ['cursor-pointer']
 
-export const MIN_PANEL_WIDTH = 800
-export const DEFAULT_PANEL_WIDTH = MIN_PANEL_WIDTH
+export const MIN_PANEL_WIDTH = 400
+export const DEFAULT_PANEL_WIDTH = 800
 export const SIDEBAR_DEFAULT_WIDTH = 400
 export const PANEL_BORDER_WIDTH = 1
 export const PANEL_GAP = 16

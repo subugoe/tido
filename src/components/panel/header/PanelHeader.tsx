@@ -12,12 +12,16 @@ import {
 import { Switch } from '@/components/ui/switch.tsx'
 
 import PanelTitle from '@/components/panel/header/PanelTitle.tsx'
+import { useManifestSwitcher } from '@/components/panel/header/useManifestSwitcher.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { PANEL_HEADER_HEIGHT } from '@/utils/constants.ts'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 import { getFilteredAnnotations } from '@/utils/annotations.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import CollectionTitle from '@/components/panel/header/CollectionTitle.tsx'
+import CollectionIconButton from '@/components/panel/header/CollectionIconButton.tsx'
+import ManifestLabel from '@/components/panel/header/ManifestLabel.tsx'
+import { ButtonGroup } from '@/components/ui/button-group.tsx'
 import { cn } from '@/lib/utils'
 
 interface PanelView {
@@ -72,6 +76,7 @@ const PanelHeader: FC = () => {
   const { panelState, usePanelTranslation, updatePanel, remove } = usePanel()
   const { t } = usePanelTranslation()
   const [views, setViews] = useState<PanelView[]>([])
+  const switcher = useManifestSwitcher()
 
   useEffect(() => {
     const data = panelState.panelViews.map(({ view, label, visible }) => ({
@@ -91,13 +96,35 @@ const PanelHeader: FC = () => {
     })
   }
 
+  const hasManifest = panelState && panelState.manifest
+
   return (
-    <div className="relative flex items-center border-b border-border px-2 bg-background" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
-      <CollectionTitle />
-      <div className="mx-auto flex items-center gap-1 overflow-x-clip" data-cy="panel-title-and-nav-arrows">
-        <PanelTitle />
+    <div className="flex items-center border-b border-border px-2 bg-background" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
+      <div className="flex items-center shrink-0">
+        <div className="hidden @min-[600px]/panel:inline-flex">
+          <CollectionTitle />
+        </div>
+        <div className="flex items-center @min-[600px]/panel:hidden">
+          {hasManifest ? (
+            <ButtonGroup className="h-7">
+              <CollectionIconButton />
+              <ManifestLabel
+                dataCy="manifest-label-compact"
+                options={switcher.manifestOptions}
+                selectedLabel={switcher.selectedLabel}
+                onSelect={switcher.onManifestSelect}
+                isSelecting={switcher.isSelecting}
+              />
+            </ButtonGroup>
+          ) : (
+            <CollectionTitle />
+          )}
+        </div>
       </div>
-      <div className="absolute h-full top-0 right-2 flex items-center gap-1 @min-[600px]/panel:gap-2">
+      <div className="flex-1 flex items-center justify-center gap-1 min-w-0 overflow-hidden @min-[600px]/panel:gap-2" data-cy="panel-title-and-nav-arrows">
+        <PanelTitle switcher={switcher} />
+      </div>
+      <div className="flex items-center gap-1 shrink-0 @min-[600px]/panel:gap-2">
         <SidebarToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild data-cy="panel-menu">

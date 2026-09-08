@@ -9,9 +9,10 @@ interface Props {
   navigate: () => void
   dataCy?: string
   tooltipKey: string
+  className?: string
 }
 
-const NavigationButton: FC<Props> = ({ isPrev = false, isDisabled = false, navigate, dataCy, tooltipKey }) => {
+const NavigationButton: FC<Props> = ({ isPrev = false, isDisabled = false, navigate, dataCy, tooltipKey, className }) => {
   const { usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
 
@@ -22,6 +23,7 @@ const NavigationButton: FC<Props> = ({ isPrev = false, isDisabled = false, navig
         size="iconSm"
         disabled={isDisabled}
         onClick={navigate}
+        className={className}
         data-cy={dataCy}>
         { isPrev ? <ChevronLeft /> : <ChevronRight /> }
       </Button>

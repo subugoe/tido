@@ -48,7 +48,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowD
             <Button
               variant="outline"
               size="sm"
-              className={`max-w-[120px] @min-[1200px]/panel:max-w-[300px] truncate ${showDropdown ? 'bg-muted' : ''}`}
+              className={`max-w-[120px] @max-[600px]/panel:max-w-[60px] @min-[1200px]/panel:max-w-[300px] truncate ${showDropdown ? 'bg-muted' : ''}`}
               data-cy="item-label">
               <span className="truncate">{ getItemLabel() }</span>
             </Button>

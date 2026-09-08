@@ -10,9 +10,10 @@ interface ManifestLabelProps {
   onSelect: (manifestId: string) => void,
   options: DropdownOption[]
   selectedLabel: string
+  dataCy?: string
 }
 
-const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelecting, onSelect }) => {
+const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelecting, onSelect, dataCy = 'manifest-label' }) => {
   const { panelState, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
   const [showModal, setShowModal] = useState(false)
@@ -38,8 +39,8 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelec
             <Button
               variant="outline"
               size="sm"
-              className={`relative max-w-[120px] @min-[1200px]/panel:max-w-[300px] h-full truncate ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
-              data-cy="manifest-label">
+              className={`relative max-w-[120px] @max-[600px]/panel:max-w-[60px] @min-[1200px]/panel:max-w-[300px] h-full truncate ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
+              data-cy={dataCy}>
               <span className="truncate">{ selectedLabel }</span>
             </Button>
           </TooltipTrigger>

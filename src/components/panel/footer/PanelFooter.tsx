@@ -32,7 +32,7 @@ const PanelFooter: FC = () => {
               data-cy="metadata-toggle"
             >
               {<Info />}
-              Metadata
+              <span className="@max-[560px]/panel:hidden">Metadata</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent side="top" align="end" className="w-[400px] pr-0">

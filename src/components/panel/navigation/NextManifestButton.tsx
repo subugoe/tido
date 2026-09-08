@@ -66,6 +66,7 @@ const NextManifestButton: FC = () => {
     navigate={navigate}
     dataCy="next-manifest-button"
     tooltipKey="next_manifest"
+    className="hidden @min-[600px]/panel:inline-flex"
   />
 
 }

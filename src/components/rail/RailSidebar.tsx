@@ -56,8 +56,12 @@ const RailSidebar: FC = () => {
       icon: <Menu />
     })
   }
+
+
+  const bottomActions: RailAction[] = []
+
   if (showAddNewPanelButton) {
-    topActions.push({
+    bottomActions.push({
       id: 'add',
       active: isAddActive,
       onClick: () => toggleView('add'),
@@ -68,24 +72,25 @@ const RailSidebar: FC = () => {
     })
   }
 
-  const bottomActions: RailAction[] = [
-    {
-      id: 'share',
-      active: false,
-      onClick: () => setShareOpen(true),
-      dataCy: 'share',
-      tooltip: t('generate_share_url'),
-      icon: <Share2 />
-    },
-    {
-      id: 'settings',
-      active: isSettingsActive,
-      onClick: () => toggleView('settings'),
-      dataCy: 'settings',
-      tooltip: t('settings'),
-      icon: <Settings />
-    }
-  ]
+  bottomActions.push({
+    id: 'share',
+    active: false,
+    onClick: () => setShareOpen(true),
+    dataCy: 'share',
+    tooltip: t('generate_share_url'),
+    icon: <Share2 />
+  })
+
+
+
+  bottomActions.push({
+    id: 'settings',
+    active: isSettingsActive,
+    onClick: () => toggleView('settings'),
+    dataCy: 'settings',
+    tooltip: t('settings'),
+    icon: <Settings />
+  })
 
   const renderActions = (actions: RailAction[]) =>
     actions.map(({ id, active, onClick, dataCy, tooltip, icon, variant }) => (
@@ -102,7 +107,15 @@ const RailSidebar: FC = () => {
     ))
 
   return (
-    <div className="flex" data-cy="rail-sidebar">
+    <div className="flex relative" data-cy="rail-sidebar">
+      <div
+        className="pointer-events-none absolute inset-y-0 z-10"
+        style={{
+          left: '100%',
+          width: 64,
+          background: 'linear-gradient(to right, var(--muted), transparent)'
+        }}
+      />
       <div
         style={{ width: RAIL_WIDTH }}
         className="shrink-0 flex flex-col border-r border-border"
@@ -110,7 +123,7 @@ const RailSidebar: FC = () => {
         <div className="flex flex-col items-center h-full py-4 gap-6">
           {renderActions(topActions)}
 
-          <div className="mt-auto flex flex-col gap-3 px-2 pb-1">
+          <div className="mt-auto flex flex-col gap-5 px-2 pb-1">
             {renderActions(bottomActions)}
           </div>
         </div>

@@ -1,7 +1,7 @@
 import {
   SIDEBAR_DEFAULT_WIDTH,
   MIN_PANEL_WIDTH,
-  PANEL_GAP,
+  DEFAULT_PANEL_WIDTH,
   PANEL_BORDER_WIDTH
 } from '@/utils/constants'
 
@@ -40,48 +40,47 @@ class PanelResizer {
 
     this.panelEl.style.minWidth = `${MIN_PANEL_WIDTH}px`
 
-    this.resize()
+    const currentWidth = parseFloat(this.panelEl.style.width)
+
+    if (Number.isFinite(currentWidth) && currentWidth > 0) {
+      // Keep the panel's own existing width (e.g. it was resized before, or is a duplicate)
+      this.onResizePanel(Math.max(MIN_PANEL_WIDTH, currentWidth))
+    } else {
+      // New panel -> open at the default/initial width
+      this.onResizePanel(this.getInitialWidth())
+    }
+
     this.dragToResize()
   }
 
   // ─── Panel edge resize ───────────────────────────────────────────────────────
 
-  resize() {
-    const width = this.calculateWidth(this.wrapper)
-    this.onResizePanel(width)
+  // New panels always open at DEFAULT_PANEL_WIDTH. If the sidebar is already open,
+  // that sidebar width is added on top of the initial width.
+  getInitialWidth(): number {
+    return DEFAULT_PANEL_WIDTH + (this.showSidebar ? this.sidebarWidth : 0)
   }
 
   onResizePanel(newWidth: number) {
-    this.lastWidth = newWidth
-    this.panelEl.style.width = `${newWidth}px`
+    const clamped = Math.max(MIN_PANEL_WIDTH + (this.showSidebar ? this.sidebarWidth : 0), newWidth)
+    this.lastWidth = clamped
+    this.panelEl.style.width = `${clamped}px`
 
     if (this.showSidebar) {
-      const mainWidth = newWidth - this.sidebarWidth
+      const mainWidth = clamped - this.sidebarWidth
       this.mainContentEl.style.width = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
-      this.sidebarEl.style.left = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
-      this.sidebarEl.style.width = `${this.sidebarWidth}px`
+      if (this.sidebarEl) {
+        this.sidebarEl.style.left = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
+        this.sidebarEl.style.width = `${this.sidebarWidth}px`
+      }
     } else {
-      this.mainContentEl.style.width = `${newWidth - PANEL_BORDER_WIDTH * 2}px`
+      this.mainContentEl.style.width = `${clamped - PANEL_BORDER_WIDTH * 2}px`
       if (this.sidebarEl) {
         // when Panel is in error state -> PanelError is shown, Sidebar view is not mounted -> we need this check
-        this.sidebarEl.style.left = `${newWidth - PANEL_BORDER_WIDTH * 2}px`
+        this.sidebarEl.style.left = `${clamped - PANEL_BORDER_WIDTH * 2}px`
         this.sidebarEl.style.width = '0px'
       }
     }
-  }
-
-  calculateWidth(wrapper: HTMLElement): number {
-    const wrapperStyle = window.getComputedStyle(wrapper)
-    const totalWidth = parseFloat(wrapperStyle.width)
-    const paddingLeft = parseFloat(wrapperStyle.paddingLeft) || 0
-    const paddingRight = parseFloat(wrapperStyle.paddingRight) || 0
-    const wrapperWidth = totalWidth - paddingLeft - paddingRight
-
-    const panels = ([...wrapper.querySelectorAll('.panel')] as HTMLElement[])
-    const placeholderWidth = (wrapper.querySelector('[data-panel-placeholder]') as HTMLElement)?.offsetWidth ?? 0
-    const amountGaps = placeholderWidth > 0 ? panels.length : panels.length - 1
-    const baseWidth = (wrapperWidth - placeholderWidth - this.sidebarWidth - (PANEL_GAP * amountGaps)) / panels.length
-    return Math.max(baseWidth, MIN_PANEL_WIDTH)
   }
 
   dragToResize() {
