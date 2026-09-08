@@ -5,7 +5,7 @@
   "partOf": {
     "id": "http://localhost:8181/example/annotations/annotationCollection/book3-page2.json",
     "label": "Annotations for The Great Gatsby, Chapter 2",
-    "total": 4
+    "total": 7
   },
   "next": null,
   "prev": null,
@@ -16,8 +16,8 @@
       "type": "Annotation",
       "body": {
         "type": "TextualBody",
-        "value": "The valley of ashes symbolizes the moral and social decay hidden beneath the wealth and glamour of the era.",
-        "format": "text/plain",
+        "value": "The valley of ashes symbolizes the <span id=\"ash-valley-decay\">moral and social decay</span> hidden beneath the wealth and glamour of the era.",
+        "format": "text/html",
         "annotationType": "Symbol"
       },
       "target": [
@@ -94,6 +94,99 @@
           "language": "eng"
         }
       ]
+    },
+    {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      "id": "http://localhost:8181/example/book3/page2/rev1/annotation-L2-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "<p>The decay motif is not merely social: it places the chapter in the <span id=\"wasteland-tradition\">post-war wasteland tradition</span> that dominated Anglo-American writing after 1922.</p>",
+        "format": "text/html",
+        "annotationType": "EditorialCommentary"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": "http://localhost:8181/example/book3/page2/rev1/annotation-1",
+          "selector": {
+            "type": "JsonPathSelector",
+            "value": "$.body.value",
+            "conformsTo": "http://tools.ietf.org/rfc/rfc9535",
+            "refinedBy": {
+              "type": "CssSelector",
+              "value": "#ash-valley-decay",
+              "conformsTo": "http://tools.ietf.org/rfc/rfc3236"
+            }
+          },
+          "format": "application/ld+json",
+          "language": "eng"
+        }
+      ],
+      "created": "2026-07-13T09:32:11.884644+00:00",
+      "modified": "2026-07-13T09:32:11.884644+00:00"
+    },
+    {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      "id": "http://localhost:8181/example/book3/page2/rev1/annotation-L3-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "<p>The link to that tradition rests above all on <span id=\"eliot-reception\">Fitzgerald's reading of T. S. Eliot</span>, whose imagery of dust and sterile ground he adapted to a specifically American landscape of industrial refuse.</p>",
+        "format": "text/html",
+        "annotationType": "EditorialCommentary"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": "http://localhost:8181/example/book3/page2/rev1/annotation-L2-1",
+          "selector": {
+            "type": "JsonPathSelector",
+            "value": "$.body.value",
+            "conformsTo": "http://tools.ietf.org/rfc/rfc9535",
+            "refinedBy": {
+              "type": "CssSelector",
+              "value": "#wasteland-tradition",
+              "conformsTo": "http://tools.ietf.org/rfc/rfc3236"
+            }
+          },
+          "format": "application/ld+json",
+          "language": "eng"
+        }
+      ],
+      "created": "2026-07-13T09:34:02.117285+00:00",
+      "modified": "2026-07-13T09:34:02.117285+00:00"
+    },
+    {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      "id": "http://localhost:8181/example/book3/page2/rev1/annotation-L4-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "<p>That reception is documented in <span id=\"letter-evidence\">the surviving correspondence with Maxwell Perkins</span>, in which Fitzgerald discusses the poem shortly before revising the opening of Chapter 2.</p>",
+        "format": "text/html",
+        "annotationType": "EditorialCommentary"
+      },
+      "target": [
+        {
+          "type": "SpecificResource",
+          "source": "http://localhost:8181/example/book3/page2/rev1/annotation-L3-1",
+          "selector": {
+            "type": "JsonPathSelector",
+            "value": "$.body.value",
+            "conformsTo": "http://tools.ietf.org/rfc/rfc9535",
+            "refinedBy": {
+              "type": "CssSelector",
+              "value": "#eliot-reception",
+              "conformsTo": "http://tools.ietf.org/rfc/rfc3236"
+            }
+          },
+          "format": "application/ld+json",
+          "language": "eng"
+        }
+      ],
+      "created": "2026-07-13T09:35:47.902411+00:00",
+      "modified": "2026-07-13T09:35:47.902411+00:00"
     }
   ]
 }

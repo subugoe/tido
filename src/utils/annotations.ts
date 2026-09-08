@@ -4,6 +4,7 @@ import { getTypeValue } from '@/utils/filter-tree.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import type { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
+import { ANNOTATION_TARGET_JSON_FORMAT } from '@/utils/constants.ts'
 
 function getSelectedTypes(config: AnnotationFiltersConfig): AnnotationTypesDict {
   let types: AnnotationTypesDict = {}
@@ -73,23 +74,16 @@ function findTargetsInsideAnnotation(annotationId: string, itemAnnotations: Anno
   const selectors: string[] = []
 
   nestedAnnotations.forEach((annot) => {
-    const target = annot.target[0]
-    if (!target?.selector) return {}
-    const { selector } = target
-    let cssValue: string | null = null
-
-    if (selector.type === 'CssSelector')  cssValue = selector.value
     // TODO: we need to handle Range selectors
+    const cssValue = getSelectorValue(annot.target[0])
     if (cssValue) selectors.push(cssValue)
   })
   return selectors
 }
 
-function findTargets(annotation: Annotation): string[] {
-  return annotation.target.map((target) => {
-    if (target.selector.type === 'CssSelector') return target.selector.value
-    // TODO: include case of Range Selectors
-  })
+function findTargets(annotation: Annotation): (string | null)[] {
+  // TODO: include case of Range Selectors
+  return annotation.target.map((target) => getSelectorValue(target))
 }
 
 function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, tooltipTypes: string[] = []) {
@@ -158,10 +152,28 @@ function getSource(target: AnnotationTarget): AnnotationTargetSource {
   return { id: target.source }
 }
 
-// Only CssSelectors carry a `value`. RangeSelectors are not handled yet (see findTargets in utils/annotations).
+// The css selector of a target sits at a different place depending on what the target references,
+// which we tell apart by its format:
+// - `application/ld+json`: the target references another annotation. Its JsonPathSelector points at
+//   the field holding the markup (`$.body.value`) and the css selector applying within that markup
+//   sits in `refinedBy`.
+// - anything else (`text/html`, or absent on older data): the target references a text content file
+//   and carries the css selector directly.
+// Only CssSelectors carry a `value`. RangeSelectors are not handled yet (see findTargets below).
 function getSelectorValue(target: AnnotationTarget): string | null {
-  if (target.selector?.type === 'CssSelector') return target.selector.value
-  return null
+  if (!target?.selector) return null
+
+  if (isAnnotationTarget(target)) {
+    const { refinedBy } = target.selector
+    return refinedBy?.type === 'CssSelector' ? refinedBy.value : null
+  }
+
+  return target.selector.type === 'CssSelector' ? target.selector.value : null
+}
+
+// Whether the target references another annotation rather than a text content file.
+function isAnnotationTarget(target: AnnotationTarget): target is AnnotationInAnnotationTarget {
+  return target?.format === ANNOTATION_TARGET_JSON_FORMAT
 }
 
 // Resolve the targets that `clickedEl` (which lives in `source`) is synced with, on demand: from
@@ -217,6 +229,7 @@ export {
   getCrossRefInfo,
   getSource,
   getSelectorValue,
+  isAnnotationTarget,
   getSyncedTargets,
   isPartOfActiveSynopsisConnection
 }

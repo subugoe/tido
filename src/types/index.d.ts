@@ -64,13 +64,30 @@ declare global {
     item?: string
   }
 
-  interface AnnotationTarget {
-    selector: CssSelector | RangeSelector
-    format: string
+  interface AnnotationTargetBase {
+    type?: string
+    format?: string
     language?: string
     source: string | AnnotationTargetSource
     motivation?: string
   }
+
+  // Target referencing a text content file: the selector applies to that file's DOM directly.
+  // `format` is absent on older data, so anything that is not `application/ld+json` is read this way.
+  interface HtmlAnnotationTarget extends AnnotationTargetBase {
+    format?: 'text/html'
+    selector: CssSelector | RangeSelector
+  }
+
+  // Target referencing another annotation (annotation in annotation): the JsonPathSelector points at
+  // the field of the referenced annotation that holds the markup (`$.body.value`), and `refinedBy`
+  // carries the CssSelector that applies within that markup.
+  interface AnnotationInAnnotationTarget extends AnnotationTargetBase {
+    format: 'application/ld+json'
+    selector: JsonPathSelector
+  }
+
+  type AnnotationTarget = HtmlAnnotationTarget | AnnotationInAnnotationTarget
 
   interface AnnotationTypesDict {
     [annotationType: string]: string[]
@@ -86,6 +103,13 @@ declare global {
     type: 'CssSelector'
     value: string,
     conformsTo?: string
+  }
+
+  type JsonPathSelector = {
+    type: 'JsonPathSelector'
+    value: string,
+    conformsTo?: string
+    refinedBy: CssSelector
   }
 
   interface CrossRefInfo {

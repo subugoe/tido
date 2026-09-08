@@ -287,13 +287,13 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (!parsedDom) return
 
     if (annotations) {
-      const annotationsInText = annotations.filter(annotation => annotation.target?.[0].source === source)
+      const annotationsInText = annotations.filter(annotation => annotation.target && getSource(annotation.target[0]).id === source)
 
       const result = annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
         if (!cur.target) return acc
 
         const isSource = getSource(cur.target[0]).id === source
-        const selector = (cur.target[0].selector as CssSelector)?.value
+        const selector = getSelectorValue(cur.target[0])
 
         if (!isSource || !selector) {
           if (!selector) console.error('Annotation error','Selector value of target is empty for this annotation', cur)
@@ -606,12 +606,12 @@ const GenericTextRenderer: FC<Props> = memo(({
       : 0
 
     const crossRefAnnotations = (annotations?.filter(a => {
-      const isInSource = a.target?.[0].source === source
+      const isInSource = a.target && getSource(a.target[0]).id === source
       const isCrossRef = a.body.annotationType === annotationsConfig?.crossRefContentType
       return isInSource && isCrossRef
     })
       .filter(a => {
-        const selector = (a.target[0].selector as CssSelector)?.value
+        const selector = getSelectorValue(a.target[0])
         if (!selector) return false
         return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
       })) ?? []

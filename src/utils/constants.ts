@@ -1,4 +1,7 @@
 export const ANNOTATION_IDS_ATTRIBUTE = 'data-annotation-ids'
+// A target with this format references another annotation instead of a text content file,
+// which changes how its selector has to be read (see getSelectorValue in utils/annotations).
+export const ANNOTATION_TARGET_JSON_FORMAT = 'application/ld+json'
 export const ANNOTATION_BASE_STYLE = ['rounded']
 export const ANNOTATION_HOVER_CLASSES = ['bg-annotation-hover', 'cursor-pointer']
 export const NESTED_TARGET_HOVER_CLASSES = ['outline', 'dark:outline-gray-400']
