@@ -309,14 +309,46 @@ function validateAnnotations(input: unknown, defaultCfg: Partial<TidoConfig>): V
   return { result: result as TidoConfig['annotations'], errors }
 }
 
+type I18nConfig = {
+  lang: TidoConfig['lang'];
+  translations: TidoConfig['translations'];
+}
+
+// Validating and merging the i18n part of the config on its own, so that i18n can be initialised
+// before mergeAndValidateConfig runs. That function fetches collections and manifests, which throw
+// translated errors, so the language and the translations have to be known before it starts. The
+// result is passed back into mergeAndValidateConfig instead of being validated there a second time.
+export function mergeAndValidateI18nConfig(
+  userConfig: Partial<TidoConfig>
+): I18nConfig & { errors: Record<string, string | object> } {
+  const lang = validateLang(userConfig.lang)
+  const translations = validateTranslations(userConfig.translations)
+
+  const mergedTranslations = {
+    en: deepMerge(enTranslations, translations.result.en ?? {}),
+    de: deepMerge(deTranslations, translations.result.de ?? {}),
+    ...Object.keys(translations.result)
+      .filter(key => key !== 'en' && key !== 'de')
+      .reduce((acc, cur) => {
+        acc[cur] = translations.result[cur]
+        return acc
+      }, {} as Record<string, unknown>)
+  } as TidoConfig['translations']
+
+  return {
+    lang: lang.result,
+    translations: mergedTranslations,
+    errors: { ...lang.errors, ...translations.errors }
+  }
+}
+
 export async function mergeAndValidateConfig(
-  userConfig: Partial<TidoConfig>, defaultConfig: Partial<TidoConfig>
+  userConfig: Partial<TidoConfig>, defaultConfig: Partial<TidoConfig>, i18nConfig: I18nConfig
 ): Promise<{ config: TidoConfig; errors: Record<string, object | string> }> {
 
   const allowNewCollections = validateAllowNewCollections(userConfig.allowNewCollections)
   const container = validateContainer(userConfig.container)
   const panelViews = validatePanelViews(userConfig.panelViews)
-  const lang = validateLang(userConfig.lang)
   const panels = validatePanels(userConfig.panels)
   const showAddNewPanelButton = validateShowNewCollectionButton(userConfig.showAddNewPanelButton)
   const showContentTypeToggle = validateShowContentTypeToggle(userConfig.showContentTypeToggle)
@@ -328,26 +360,12 @@ export async function mergeAndValidateConfig(
   const rootCollections = validateRootCollections(userConfig.rootCollections)
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
-  const translations = validateTranslations(userConfig.translations)
   const annotations = validateAnnotations(userConfig.annotations, defaultConfig)
-
-
-  const mergedTranslations = {
-    en: deepMerge(enTranslations, translations.result.en ?? {}),
-    de: deepMerge(deTranslations, translations.result.de ?? {}),
-    ...Object.keys(translations.result)
-      .filter(key => key !== 'en' && key !== 'de')
-      .reduce((acc, cur) => {
-        acc[cur] = translations.result[cur]
-        return acc
-      }, {} as Record<string, unknown>)
-  }
 
 
   const errors = {
     ...allowNewCollections.errors,
     ...container.errors,
-    ...lang.errors,
     ...panels.errors,
     ...rootCollections.errors,
     ...showAddNewPanelButton.errors,
@@ -359,7 +377,6 @@ export async function mergeAndValidateConfig(
     ...showSynopsisNavigation.errors,
     ...theme.errors,
     ...title.errors,
-    ...translations.errors,
     ...panelViews.errors,
     ...annotations.errors
   }
@@ -445,7 +462,7 @@ export async function mergeAndValidateConfig(
     allowNewCollections: allowNewCollections.result,
     container: container.result,
     panels: panelsFromContentState ?? panels.result,
-    lang: lang.result,
+    lang: i18nConfig.lang,
     rootCollections: mergedRootCollections,
     showAddNewPanelButton: showAddNewPanelButton.result,
     showContentTypeToggle: showContentTypeToggle.result,
@@ -456,7 +473,7 @@ export async function mergeAndValidateConfig(
     showSynopsisNavigation: showSynopsisNavigation.result,
     theme: theme.result,
     title: title.result,
-    translations: mergedTranslations,
+    translations: i18nConfig.translations,
     panelViews: panelViews.result,
     annotations: annotations.result
   }
