@@ -415,8 +415,10 @@ const GenericTextRenderer: FC<Props> = memo(({
         someFiltered = !someFiltered ? fa.filtered[i] : true
       })
 
-      const allDisabled = annotations.length > 0 &&
-        annotations.every(a => disabledHighlightTypes.has(a.body.annotationType))
+      const filteredAnnotations = annotations.filter((_, i) => fa.filtered[i])
+      // we need to check only the filtered annotations types if they belong to disabledHighlightTypes
+      const allDisabled = filteredAnnotations.length > 0 &&
+        filteredAnnotations.every(a => disabledHighlightTypes.has(a.body.annotationType))
 
       if (allDisabled) disabledTargets.add(target)
 

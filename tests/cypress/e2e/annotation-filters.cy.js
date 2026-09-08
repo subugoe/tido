@@ -69,6 +69,45 @@ describe('Annotation filters derived from the rendered texts', () => {
     labels.forEach((label) => filterRow(label).should('exist'));
   };
 
+  const target = (selector) => cy.get(selectors.textContainer).find(selector);
+
+  // Pride and Prejudice, page 1, rendered as a single transcription view. Used by the tests below
+  // because it holds targets carrying only annotations of one type.
+  const book1Item = `${apiUrl}/example/items/book1-page1.json`;
+  const transcriptionView = {
+    label: 'Text',
+    view: 'text',
+    activeContentType: 'transcription',
+    contentTypes: ['transcription', 'diplomatic', 'normalized'],
+  };
+
+  // Open that text with the given type set both as tooltip type and as disabled highlighting type,
+  // i.e. the config shape
+  //   "annotations": { "tooltipTypes": ["Character"], "disableHighlighting": ["Character"] }
+  // Still no "annotations.filters", so the filter list stays the one discovered from the text (a
+  // tooltip type never appears in it).
+  const openBook1Page1 = (type) => {
+    const params = new URLSearchParams();
+    params.set('annotations.defaultMode', 'list');
+    params.set('panels[0].collection', collection);
+    params.set('panels[0].manifest', `${apiUrl}/example/manifests/book1.json`);
+    params.set('panels[0].item', book1Item);
+    params.append('panelViews[]', JSON.stringify(transcriptionView));
+    params.append('annotations.tooltipTypes[]', type);
+    params.append('annotations.disableHighlighting[]', type);
+
+    cy.visit(`/e2e.html?${params.toString()}`);
+    cy.get('[data-cy="item-label"]').contains('Page 1');
+    target('#bennet').should('exist');
+  };
+
+  const deselectAll = () => {
+    cy.get(`${selectors.popover} ${selectors.checkbox}[data-state="checked"]`).each(($checkbox) => {
+      cy.wrap($checkbox).click({ force: true });
+    });
+    cy.get(`${selectors.popover} ${selectors.checkbox}[data-state="checked"]`).should('not.exist');
+  };
+
   beforeEach(() => {
     cy.visit('/e2e.html?' + config);
 
@@ -166,6 +205,57 @@ describe('Annotation filters derived from the rendered texts', () => {
 
     // Only the transcription text is visible, so only its 4 types are derived.
     expectFilters(4, ['Character', 'Artistic Object', 'Historical Context', 'Setting']);
+  });
+
+  it('does not highlight a target whose only annotation is of the disabled type once all filters are deselected', () => {
+    openBook1Page1('Character');
+    openFilters();
+
+    // #netherfield (Place) is highlighted while its type is selected - asserting it first proves the
+    // highlight effect has run. #bennet is only targeted by a Character annotation, so it stays
+    // unhighlighted even before any filter is touched.
+    target('#netherfield').should('have.class', 'bg-gray-200');
+    target('#bennet').should('exist').and('not.have.class', 'bg-gray-200');
+
+    deselectAll();
+
+    // With every discovered type deselected the Character annotation is the only one left visible on
+    // #bennet (tooltip types ignore the filters), and its type is disabled - so no grey highlight.
+    target('#bennet').should('not.have.class', 'bg-gray-200');
+
+    // The annotation itself is still attached to the target, so clicking it can still open the tooltip.
+    target('#bennet').should('have.attr', 'data-annotation-ids');
+
+    // The targets of the deselected types lose their highlight as well.
+    target('#netherfield').should('not.have.class', 'bg-gray-200');
+    target('#truth').should('not.have.class', 'bg-gray-200');
+  });
+
+  it('keeps a target with several annotations of the disabled type unhighlighted after deselecting all filters', () => {
+    openBook1Page1('Character');
+    openFilters();
+    deselectAll();
+
+    // #mrs-long carries two Character annotations - every visible annotation on it is of the disabled
+    // type, so the target stays unhighlighted.
+    target('#mrs-long').should('exist').and('not.have.class', 'bg-gray-200');
+  });
+
+  it('leaves no target highlighted when all discovered types are deselected', () => {
+    openBook1Page1('Historical Context');
+    openFilters();
+
+    // #neighbourhood is only targeted by a Historical Context annotation (plus a cross reference,
+    // which never counts as filtered), so the disabled type suppresses its highlight from the start.
+    target('#neighbourhood').should('not.have.class', 'bg-gray-200');
+
+    deselectAll();
+
+    // #man carries an enabled Economic Context annotation next to its disabled Historical Context one,
+    // so it only stays unhighlighted while the filtered out annotations are ignored.
+    ['#truth', '#man', '#neighbourhood', '#netherfield', '#para4', '#bennet'].forEach((selector) => {
+      target(selector).should('not.have.class', 'bg-gray-200');
+    });
   });
 });
 
