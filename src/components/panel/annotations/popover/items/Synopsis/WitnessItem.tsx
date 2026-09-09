@@ -25,7 +25,6 @@ const WitnessItem: FC<Props> = ({ syncedTarget, isOpened, isSelected, onSelect, 
       if (!syncedTarget.source.manifest) return
       try {
         const manifest = await useDataStore.getState().initManifest(syncedTarget.source.manifest)
-        console.log(manifest)
         setLabel(manifest.titles?.[0] ?? t('unknown_witness'))
       } catch {
         setLabel(t('unknown_witness'))

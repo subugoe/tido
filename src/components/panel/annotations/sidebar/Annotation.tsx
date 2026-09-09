@@ -169,6 +169,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
         { type !== 'Variant' && <GenericTextRenderer
           htmlString={(data.body as AnnotationBody).value}
           source={data.id}
+          sourceType="annotation"
           ignoreFilters={true}
           onSelect={openChildAnnotations}
           onUpdateMatchedAnnotationsMap={onUpdateMatchedMap}

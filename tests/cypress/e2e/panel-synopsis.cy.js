@@ -53,7 +53,8 @@ const config = [
   ...panelViews.map(view => `panelViews[]=${encodeURIComponent(JSON.stringify(view))}`)
 ].join('&')
 
-const SYNOPSIS_STYLE_CLASS = 'bg-yellow-300'
+// utils/constants.ts - SYNOPSIS_SELECTED_STYLE, the background of a target of the active connection
+const SYNOPSIS_STYLE_CLASS = 'bg-yellow-500'
 // utils/constants.ts - ACTIVE_TARGET_STYLE is a tailwind variant of this background, the one a
 // clicked target carries while its popover is open
 const ACTIVE_STYLE_BACKGROUND = 'bg-annotation-selected'
@@ -613,4 +614,56 @@ describe('Panel Synopsis', () => {
   })
 
 */
+
+  // Opening and closing the sidebar mounts and unmounts the annotation cards, and every card
+  // renders a GenericTextRenderer of its own. Those renderers must leave the active connection
+  // alone: its targets live in the texts of the panels, never in the sidebar.
+  it('Should keep the styles of a sync connection spanning two panels when the sidebar of the clicked target is opened and closed', () => {
+    const transcription = findText(SYNOPSIS_PANEL, 'transcription')
+    // the witness panel the connection is opened into, appended after the configured ones
+    const WITNESS_PANEL = panels.length
+
+    // 1. click '#ocean' in Panel 2 and open its 'Country Manners' witness in a third panel, so the
+    // connection spans two panels: the clicked target here, its synced '#man' over there
+    scrollTargetIntoSyncBand(transcription.contentUrl, OCEAN)
+    getTextPane(transcription.contentUrl).find(OCEAN).click({ scrollBehavior: false })
+
+    getPopover().should('be.visible')
+    getPopover().find('[data-cy="witness-item"]').click()
+    getPopover().find('[data-cy="synoptical-witnesses-counter"]').should('have.text', '1/1')
+    getPopover().find('[data-cy="open-synced-panels"]').click()
+
+    cy.get('[data-cy="annotation-popover-content"]').should('not.exist')
+    cy.get('[data-cy="panel"]').should('have.length', WITNESS_PANEL + 1)
+
+    // The clicked target carries the active style, its synced target the synopsis style - the two
+    // styles the sidebar must not touch, asserted after every step below.
+    const expectConnectionStyled = (label) => {
+      getTextPane(transcription.contentUrl).find(OCEAN).should($target =>
+        expect(hasActiveStyle($target[0]), `clicked '${OCEAN}' of Panel 2 keeps the active style ${label}`).to.be.true)
+
+      getPanel(WITNESS_PANEL)
+        .find(`[data-text-container][data-content-url="${MAN_CONTENT_URL}"]`)
+        .find(MAN)
+        .should($target => expect($target[0].classList.contains(SYNOPSIS_STYLE_CLASS),
+          `synced '${MAN}' of Panel 3 keeps the synopsis style ${label}`).to.be.true)
+    }
+
+    expectConnectionStyled('after opening the witness panel')
+
+    // 2. open the sidebar of Panel 2 - the panel the clicked target lives in - and wait until its
+    // annotation cards have actually rendered, so their renderers have run
+    getPanel(SYNOPSIS_PANEL).find('[data-cy="sidebar-toggle"]').click()
+    getPanel(SYNOPSIS_PANEL).find('[data-sidebar-view]').should('be.visible')
+    getPanel(SYNOPSIS_PANEL).find('[data-sidebar-view] [data-annotation]').should('exist')
+
+    expectConnectionStyled('while the sidebar is open')
+
+    // 3. close it again: unmounting the cards runs their cleanups, which must not reach the
+    // connection - the regression this test covers
+    getPanel(SYNOPSIS_PANEL).find('[data-cy="close-sidebar"]').click()
+    getPanel(SYNOPSIS_PANEL).find('[data-sidebar-view]').should('not.exist')
+
+    expectConnectionStyled('after closing the sidebar')
+  })
 })
