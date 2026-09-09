@@ -214,21 +214,21 @@ describe('Annotation filters derived from the rendered texts', () => {
     // #netherfield (Place) is highlighted while its type is selected - asserting it first proves the
     // highlight effect has run. #bennet is only targeted by a Character annotation, so it stays
     // unhighlighted even before any filter is touched.
-    target('#netherfield').should('have.class', 'bg-gray-200');
-    target('#bennet').should('exist').and('not.have.class', 'bg-gray-200');
+    target('#netherfield').should('have.class', 'bg-accent');
+    target('#bennet').should('exist').and('not.have.class', 'bg-accent');
 
     deselectAll();
 
     // With every discovered type deselected the Character annotation is the only one left visible on
     // #bennet (tooltip types ignore the filters), and its type is disabled - so no grey highlight.
-    target('#bennet').should('not.have.class', 'bg-gray-200');
+    target('#bennet').should('not.have.class', 'bg-accent');
 
     // The annotation itself is still attached to the target, so clicking it can still open the tooltip.
     target('#bennet').should('have.attr', 'data-annotation-ids');
 
     // The targets of the deselected types lose their highlight as well.
-    target('#netherfield').should('not.have.class', 'bg-gray-200');
-    target('#truth').should('not.have.class', 'bg-gray-200');
+    target('#netherfield').should('not.have.class', 'bg-accent');
+    target('#truth').should('not.have.class', 'bg-accent');
   });
 
   it('keeps a target with several annotations of the disabled type unhighlighted after deselecting all filters', () => {
@@ -238,7 +238,7 @@ describe('Annotation filters derived from the rendered texts', () => {
 
     // #mrs-long carries two Character annotations - every visible annotation on it is of the disabled
     // type, so the target stays unhighlighted.
-    target('#mrs-long').should('exist').and('not.have.class', 'bg-gray-200');
+    target('#mrs-long').should('exist').and('not.have.class', 'bg-accent');
   });
 
   it('leaves no target highlighted when all discovered types are deselected', () => {
@@ -247,14 +247,14 @@ describe('Annotation filters derived from the rendered texts', () => {
 
     // #neighbourhood is only targeted by a Historical Context annotation (plus a cross reference,
     // which never counts as filtered), so the disabled type suppresses its highlight from the start.
-    target('#neighbourhood').should('not.have.class', 'bg-gray-200');
+    target('#neighbourhood').should('not.have.class', 'bg-accent');
 
     deselectAll();
 
     // #man carries an enabled Economic Context annotation next to its disabled Historical Context one,
     // so it only stays unhighlighted while the filtered out annotations are ignored.
     ['#truth', '#man', '#neighbourhood', '#netherfield', '#para4', '#bennet'].forEach((selector) => {
-      target(selector).should('not.have.class', 'bg-gray-200');
+      target(selector).should('not.have.class', 'bg-accent');
     });
   });
 });

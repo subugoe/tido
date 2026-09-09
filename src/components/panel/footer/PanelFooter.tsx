@@ -38,7 +38,7 @@ const PanelFooter: FC = () => {
           <PopoverContent side="top" align="end" className="w-[400px] pr-0">
             <Metadata />
             <X
-              className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"
+              className="absolute right-3 top-4 text-muted-foreground hover:text-foreground hover:cursor-pointer"
               size={15} onClick={() => setShowMetadataModal(false)}
             />
           </PopoverContent>

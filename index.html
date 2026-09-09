@@ -37,7 +37,14 @@
     <!-- CONFIG PLACEHOLDER -->
     <script type="module" src="/src/index.embed.tsx"></script>
     <script>
-      const config = JSON.parse(document.getElementById('config')?.textContent ?? '{}');
+      const config = {
+        container: "#app",
+        rootCollections: ['https://textapi-prod.textgrid.d.sub.uni-goettingen.de/textapi/v2/collections/project/TGPR-d862e14d-4df7-052b-00fe-661cb242231c/'],
+        lang: "en",
+        showGlobalTree: true,
+        title: "Multilingual Bible",
+        theme: { primaryColor: "#1E40AF" },
+      };
       window.addEventListener("load", function () {
         new window.Tido(config)
       });

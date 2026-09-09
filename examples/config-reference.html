@@ -298,6 +298,24 @@
     </ul>
     <p>Primary color of UI elements. Used on buttons and other interactive elements. The value can be provided as string in the following color systems: hex, rgb, hsl, oklch. Alpha channel is not supported.</p>
     <hr>
+    <h5>Theming with CSS variables</h5>
+    <p>The whole TIDO UI is driven by CSS custom properties defined on the <code>.tido</code> root (light) and <code>.tido.dark</code> (dark). Every component resolves colors through them, so you can apply a complete theme by overriding a few variables in your own stylesheet (loaded after the bundle):</p>
+    <pre><code class="language-css">.tido {
+      --background: oklch(0.95 0.01 250);
+      --foreground: oklch(0.2 0.02 250);
+      --accent: oklch(0.9 0.03 250);
+      --border: oklch(0.75 0.01 250);
+    }
+    .tido.dark {
+      --background: oklch(0.18 0.01 250);
+      --foreground: oklch(0.9 0.01 250);
+      --accent: oklch(0.28 0.02 250);
+      --border: oklch(1 0 0 / 8%);
+    }
+    </code></pre>
+    <p>Available variables: <code>--background</code>, <code>--foreground</code>, <code>--primary</code>, <code>--primary-foreground</code>, <code>--accent</code>, <code>--accent-foreground</code>, <code>--muted</code>, <code>--muted-foreground</code>, <code>--card</code>, <code>--card-foreground</code>, <code>--popover</code>, <code>--popover-foreground</code>, <code>--tooltip</code>, <code>--tooltip-foreground</code>, <code>--secondary</code>, <code>--secondary-foreground</code>, <code>--border</code>, <code>--input</code>, <code>--ring</code>, <code>--destructive</code>, <code>--success</code>.</p>
+    <p><code>--primary</code> resolves to <code>--tido-color-primary</code>, which is injected from <code>theme.primaryColor</code>; it can also be overridden via CSS. The primary foreground is chosen automatically for contrast based on the primary color&#39;s lightness.</p>
+    <hr>
     <h5><code>title</code></h5>
     <ul>
     <li><strong>Type:</strong> String</li>

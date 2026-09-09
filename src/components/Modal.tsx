@@ -30,7 +30,7 @@ const Modal: FC<ModalProps> = ({
     { TriggerButton ? (<PopoverTrigger asChild>{TriggerButton}</PopoverTrigger>) : <PopoverAnchor /> }
     <PopoverContent side="bottom" align="start"  sideOffset={8} className="w-[300px]">
       {children}
-      <X className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"  size={15} onClick={() => setIsOpen(false)} />
+      <X className="absolute right-3 top-4 text-muted-foreground hover:text-foreground hover:cursor-pointer"  size={15} onClick={() => setIsOpen(false)} />
     </PopoverContent>
   </Popover>
 }

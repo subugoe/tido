@@ -520,6 +520,31 @@ Primary color of UI elements. Used on buttons and other interactive elements. Th
 
 ---
 
+##### Theming with CSS variables
+
+The whole TIDO UI is driven by CSS custom properties defined on the `.tido` root (light) and `.tido.dark` (dark). Every component resolves colors through them, so you can apply a complete theme by overriding a few variables in your own stylesheet (loaded after the bundle):
+
+```css
+.tido {
+  --background: oklch(0.95 0.01 250);
+  --foreground: oklch(0.2 0.02 250);
+  --accent: oklch(0.9 0.03 250);
+  --border: oklch(0.75 0.01 250);
+}
+.tido.dark {
+  --background: oklch(0.18 0.01 250);
+  --foreground: oklch(0.9 0.01 250);
+  --accent: oklch(0.28 0.02 250);
+  --border: oklch(1 0 0 / 8%);
+}
+```
+
+Available variables: `--background`, `--foreground`, `--primary`, `--primary-foreground`, `--accent`, `--accent-foreground`, `--muted`, `--muted-foreground`, `--card`, `--card-foreground`, `--popover`, `--popover-foreground`, `--tooltip`, `--tooltip-foreground`, `--secondary`, `--secondary-foreground`, `--border`, `--input`, `--ring`, `--destructive`, `--success`.
+
+`--primary` resolves to `--tido-color-primary`, which is injected from `theme.primaryColor`; it can also be overridden via CSS. The primary foreground is chosen automatically for contrast based on the primary color's lightness.
+
+---
+
 ##### `title`
 
 - **Type:** String

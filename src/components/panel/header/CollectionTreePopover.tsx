@@ -25,7 +25,7 @@ const CollectionTreePopover: FC<Props> = ({ trigger, collectionId }) => {
         <div className="font-semibold mb-2">{t('choose_your_panel_content')}</div>
         <LocalTree collectionId={collectionId} onSelect={close} />
         <X
-          className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 cursor-pointer"
+          className="absolute right-3 top-4 text-muted-foreground hover:text-foreground cursor-pointer"
           size={15} onClick={close}
         />
       </PopoverContent>

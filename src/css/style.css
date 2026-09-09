@@ -1,3 +1,47 @@
+/*
+Theming via CSS variables
+==========================
+
+The whole TIDO UI is driven by a set of customizable CSS custom properties defined
+on the `.tido` root (light) and `.tido.dark` (dark). They map to Tailwind utilities
+through the `@theme inline` block below, so every component resolves colors through
+them — no raw gray/zinc values are used in components.
+
+Master variables (override in your own stylesheet loaded after tido.min.css):
+
+  --background, --foreground        page canvas + text
+  --primary, --primary-foreground   interactive elements (or set via config `theme.primaryColor`)
+  --accent, --accent-foreground     hover/selected surfaces
+  --muted, --muted-foreground       subtle backgrounds and secondary text
+  --card, --popover, --tooltip      elevated surfaces (+ their -foreground variants)
+  --secondary, --secondary-foreground, --border, --input, --ring
+  --destructive, --success          functional colors
+
+Example (load after the bundle, e.g. in your HTML page):
+
+  .tido {
+    --background: oklch(0.95 0.01 250);
+    --foreground: oklch(0.2 0.02 250);
+    --accent: oklch(0.9 0.03 250);
+    --border: oklch(0.75 0.01 250);
+  }
+  .tido.dark {
+    --background: oklch(0.18 0.01 250);
+    --foreground: oklch(0.9 0.01 250);
+    --accent: oklch(0.28 0.02 250);
+    --border: oklch(1 0 0 / 8%);
+  }
+
+The primary color can alternatively be provided through the config
+(`theme.primaryColor`, see README); the resulting value lands on
+`--tido-color-primary`, which `--primary` resolves to.
+
+Elevation hierarchy:
+  - Background
+  - Muted
+  - Accent
+*/
+
 @import "./preflight.css" layer(tido-preflight);
 @import "tailwindcss/theme.css";
 @import "tailwindcss/utilities.css";
@@ -35,7 +79,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-tooltip: var(--tooltip);
   --color-tooltip-foreground: var(--tooltip-foreground);
-  --color-secondary: var(--color-gray-700);
+  --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -102,7 +146,7 @@ Elevation hierarchy:
   --tooltip: var(--color-gray-700);
   --tooltip-foreground: var(--color-gray-300);
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
+  --secondary: var(--color-gray-700);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(23% 0.006 285.885);;
   --muted-foreground: var(--color-gray-400);

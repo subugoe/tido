@@ -14,7 +14,7 @@ const Loading: FC<Props> = ({ size = 32 }) => {
       className="flex w-full h-full justify-center items-center gap-1"
     >
       <div
-        className="rounded-full bg-gray-400"
+        className="rounded-full bg-muted-foreground/50"
         style={{
           width: dotSize,
           height: dotSize,
@@ -26,7 +26,7 @@ const Loading: FC<Props> = ({ size = 32 }) => {
         }}
       />
       <div
-        className="rounded-full bg-gray-400"
+        className="rounded-full bg-muted-foreground/50"
         style={{
           width: dotSize,
           height: dotSize,
@@ -39,7 +39,7 @@ const Loading: FC<Props> = ({ size = 32 }) => {
         }}
       />
       <div
-        className="rounded-full bg-gray-400"
+        className="rounded-full bg-muted-foreground/50"
         style={{
           width: dotSize,
           height: dotSize,

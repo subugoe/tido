@@ -41,10 +41,10 @@ describe('Annotation disableHighlighting', () => {
     // #man is only targeted by Historical Context and Economic Context annotations -> both stay
     // enabled, so the merged target keeps its grey highlight. Asserting it first also proves the
     // highlight effect has run before the negative check on #bennet.
-    target('#man').should('exist').and('have.class', 'bg-gray-200')
+    target('#man').should('exist').and('have.class', 'bg-accent')
 
     // #bennet is only targeted by a Character annotation -> its highlight is suppressed.
-    target('#bennet').should('exist').and('not.have.class', 'bg-gray-200')
+    target('#bennet').should('exist').and('not.have.class', 'bg-accent')
   })
 
   it('Keeps the click handling and sidebar selection for disabled type targets', () => {
@@ -65,7 +65,7 @@ describe('Annotation disableHighlighting', () => {
     openPage1({ disableHighlighting: ['Character'] })
 
     target('#bennet').trigger('mouseenter')
-    target('#bennet').should('have.class', 'bg-annotation-hover').and('not.have.class', 'bg-gray-200')
+    target('#bennet').should('have.class', 'bg-annotation-hover').and('not.have.class', 'bg-accent')
   })
 
   it('Renders a grey highlight instead of the border for an enabled target nested in a disabled parent', () => {
@@ -73,13 +73,13 @@ describe('Annotation disableHighlighting', () => {
 
     // ...while the enabled child nested inside it renders the plain grey highlight. Asserting the
     // child first proves the highlight effect has run before the negative check on the parent.
-    target('#dipl-however-nested').should('exist').and('have.class', 'bg-gray-200')
-    target('#dipl-however').should('exist').and('not.have.class', 'bg-gray-200')
+    target('#dipl-however-nested').should('exist').and('have.class', 'bg-accent')
+    target('#dipl-however').should('exist').and('not.have.class', 'bg-accent')
 
     // Hovering the child keeps it grey instead of applying the nested border.
     target('#dipl-however-nested').trigger('mouseenter')
     target('#dipl-however-nested')
-      .should('have.class', 'bg-gray-200')
+      .should('have.class', 'bg-accent')
       .and('not.have.class', 'outline')
       .and('not.have.class', 'bg-annotation-hover')
   })
@@ -87,7 +87,7 @@ describe('Annotation disableHighlighting', () => {
   it('Keeps the nested border when the parent stays highlighted', () => {
     openPage1({ view: 'diplomatic' })
 
-    target('#dipl-however').should('exist').and('have.class', 'bg-gray-200')
+    target('#dipl-however').should('exist').and('have.class', 'bg-accent')
 
     target('#dipl-however-nested').trigger('mouseenter')
     target('#dipl-however-nested')

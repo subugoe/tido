@@ -57,7 +57,7 @@ const FilterTreeNode: FC<Props> = ({ node, path, onToggle, indented = false }) =
           <Checkbox checked={node.selected} onCheckedChange={handleCheckboxChange} />
           <span className="text-sm">{label}</span>
           {node.types && node.types.length > 1 &&
-            <span className={`text-sm text-gray-500 italic`}>
+            <span className={`text-sm text-muted-foreground italic`}>
               &nbsp; ({node.types.map(type => t(getTypeLabel(getTypeValue(type)))).join(', ')})
             </span>}
         </label>
