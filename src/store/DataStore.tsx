@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 import { apiRequest } from '@/utils/api.ts'
 import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
-import { getI18n } from 'react-i18next'
 import { CustomError } from '@/utils/custom-error.ts'
 import { createCollectionNodes } from '@/utils/tree.ts'
+import { t } from '@/utils/translations.ts'
 
 
 interface AnnotationMap {
@@ -85,7 +85,6 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   },
   initCollection: async (url: string) => {
     if (url in get().collections) return get().collections[url]
-    const { t } = getI18n()
 
     if (!isCollectionUrl(url)) throw new CustomError(null, t('error_collection_url', { url }))
 
@@ -114,7 +113,6 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   },
   initManifest: async (url: string) => {
     if (url in get().manifests) return get().manifests[url]
-    const { t } = getI18n()
 
     if (!isManifestUrl(url)) throw new CustomError(null, t('error_invalid_manifest_url', { url }))
 
@@ -143,7 +141,6 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   },
   initItem: async (url: string) => {
     if (url in get().items) return get().items[url]
-    const { t } = getI18n()
 
     if (!isItemUrl(url)) throw new CustomError(null, t('error_invalid_item_url', { url }))
 

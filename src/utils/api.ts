@@ -2,9 +2,7 @@ import { request } from '@/utils/http.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { hasItems, hasManifests, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
-import i18n from 'i18next'
-
-const { t } = i18n
+import { t } from '@/utils/translations.ts'
 
 // Helper to extract ID string from collection/manifest/item array elements
 function getIdFromElement(element: string | { id: string }): string {

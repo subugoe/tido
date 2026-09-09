@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { TidoConfig } from '@/types'
-import { mergeAndValidateConfig } from '@/utils/config/config.ts'
+import { mergeAndValidateConfig, mergeAndValidateI18nConfig } from '@/utils/config/config.ts'
 import { getColors } from '@/utils/colors.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { initI18n } from '@/utils/translations.ts'
@@ -40,9 +40,17 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
     async function initApp() {
       try {
         setLoading(true)
-        const { config, errors } = await mergeAndValidateConfig(userConfig, defaultConfig)
-        if (Object.keys(errors).length > 0) console.error(errors)
-        initI18n(config.translations, config.lang)
+
+        // i18n first: mergeAndValidateConfig fetches collections and manifests, and the errors
+        // those throw are translated.
+        const { errors: i18nErrors, ...i18nConfig } = mergeAndValidateI18nConfig(userConfig)
+        initI18n(i18nConfig.translations, i18nConfig.lang)
+
+        const { config, errors } = await mergeAndValidateConfig(userConfig, defaultConfig, i18nConfig)
+
+        const allErrors = { ...i18nErrors, ...errors }
+        if (Object.keys(allErrors).length > 0) console.error(allErrors)
+
         createThemeStyles(config)
 
         await Promise.all(
