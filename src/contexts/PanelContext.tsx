@@ -215,7 +215,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
       // next line we prioritize the views changed from the user on the current panel. I.e toggle off views and navigate to a new item on same panel
       // we should preserve the selected views from user for this panel
-      const resultPanelViews: PanelView[] = panelState.panelViews && panelState.panelViews.length > 0 ? panelState.panelViews:
+      let resultPanelViews: PanelView[] = panelState.panelViews && panelState.panelViews.length > 0 ? panelState.panelViews:
         config.views && config.views.length > 0
           ? config.views.map((view, i) => ({
             ...(globalPanelViewsConfig[i] ?? {}),
@@ -223,17 +223,10 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
           }))
           : globalPanelViewsConfig.map((view: PanelView, i: number) => enhanceView(view, i))
 
-      // Auto-hide image pane when item has no images, unless explicitly configured
-      if (!item?.images) {
-        const hasExplicitImageConfig =
-          config.views?.some(v => v.view === 'image') ||
-          (isPanelViewsUserExplicit() && globalPanelViewsConfig?.some((v: PanelView) => v.view === 'image'))
-
-        if (!hasExplicitImageConfig) {
-          for (const v of resultPanelViews) {
-            if (v.view === 'image') v.visible = false
-          }
-        }
+      // Remove the image pane when the item has no images, unless the user explicitly configured an image view.
+      // This is done before the views are stored, so no image view exists at all - not even from the default config.
+      if (!item?.images && !isPanelViewsUserExplicit()) {
+        resultPanelViews = resultPanelViews.filter(v => v.view !== 'image')
       }
 
       // 5. We update the panel state with the data.
