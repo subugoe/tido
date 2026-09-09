@@ -88,6 +88,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
     else if (isManifestUrl(id)) type = 'manifest'
     else if (isItemUrl(id)) type = 'item'
 
+    console.log(label)
     return {
       id,
       type,

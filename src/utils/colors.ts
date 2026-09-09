@@ -221,9 +221,11 @@ function colorStringToOKLCH(colorString: string): OKLCH {
 
 const getColors = (color: string) => {
   const oklch = colorStringToOKLCH(color)
+  // Pick the foreground color by relative lightness so any primary color keeps readable text
+  const primaryForegroundLightness = (oklch?.l ?? 0) < 0.5 ? 0.985 : 0.145
   return `
     --tido-color-primary: oklch(${oklch?.l} ${oklch?.c} ${oklch?.h} / 1);
-    --tido-color-primary-foreground: oklch(0.985 0 0);
+    --tido-color-primary-foreground: oklch(${primaryForegroundLightness} 0 0);
     --tido-color-primary-shade-1: oklch(0.95 0.04 ${oklch?.h});
     --tido-color-primary-shade-2: oklch(0.8 0.07 ${oklch?.h});
     --tido-color-primary-shade-3: oklch(0.5 0.06 ${oklch?.h});

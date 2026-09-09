@@ -24,9 +24,9 @@ const AddPanel: FC = () => {
         data-cy="panel-placeholder"
       >
         <div className="p-6 bg-muted rounded-full leading-none">
-          <Plus className="text-gray-400 group-hover:text-primary" size="40" />
+          <Plus className="text-muted-foreground group-hover:text-primary" size="40" />
         </div>
-        <span className="mt-4 text-gray-400 font-semibold group-hover:text-primary">{t('open_new_panel')}</span>
+        <span className="mt-4 text-muted-foreground font-semibold group-hover:text-primary">{t('open_new_panel')}</span>
       </div>
       <Dialog
         open={isDialogOpen}

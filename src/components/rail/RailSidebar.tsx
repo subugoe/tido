@@ -109,14 +109,6 @@ const RailSidebar: FC = () => {
   return (
     <div className="flex relative" data-cy="rail-sidebar">
       <div
-        className="pointer-events-none absolute inset-y-0 z-10"
-        style={{
-          left: '100%',
-          width: 64,
-          background: 'linear-gradient(to right, var(--muted), transparent)'
-        }}
-      />
-      <div
         style={{ width: RAIL_WIDTH }}
         className="shrink-0 flex flex-col border-r border-border"
       >
@@ -141,7 +133,7 @@ const RailSidebar: FC = () => {
             <h2 className="text-lg font-semibold" data-cy="rail-title">{activeTitle}</h2>
             {activeView && (
               <Button
-                variant="ghost"
+                variant="ghostAccent"
                 size="icon"
                 onClick={() => setActiveView(null)}
                 data-cy="rail-close"

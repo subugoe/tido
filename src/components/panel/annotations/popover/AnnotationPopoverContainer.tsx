@@ -1,5 +1,6 @@
 import React, { FC, memo } from 'react'
 import { Popover, PopoverContent, PopoverAnchor } from '@/components/ui/popover.tsx'
+import { Button } from '@/components/ui/button.tsx'
 import { X } from 'lucide-react'
 
 interface Props {
@@ -44,13 +45,16 @@ const AnnotationPopoverContainer: FC<Props> = memo(({
         hideWhenDetached={true}
         className="relative flex max-h-(--radix-popover-content-available-height) max-w-(--radix-popover-content-available-width) flex-col overflow-hidden p-0"
       >
-        <div
+        <Button
+          variant="ghost"
+          size="iconSm"
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 text-muted-foreground hover:text-foreground hover:cursor-pointer"
+          className="absolute top-4 right-4 z-10"
           aria-label="Close"
+          data-cy="annotation-popover-close"
         >
           <X size={16} />
-        </div>
+        </Button>
         <div
           data-cy="annotation-popover-scroll-area"
           className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 break-words"

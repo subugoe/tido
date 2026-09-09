@@ -35,7 +35,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-tooltip: var(--tooltip);
   --color-tooltip-foreground: var(--tooltip-foreground);
-  --color-secondary: var(--color-gray-700);
+  --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -87,6 +87,26 @@ Elevation hierarchy:
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --container-lg: 32rem;
+
+  --scrollbar-thumb: color-mix(in oklab, var(--muted-foreground) 40%, transparent);
+  --scrollbar-track: var(--background);
+
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
+}
+
+.tido::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.tido::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.tido::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
 }
 
 .tido.dark {
@@ -113,7 +133,16 @@ Elevation hierarchy:
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
 
-  scrollbar-color: var(--color-gray-600) var(--color-gray-800);
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
+}
+
+.tido.dark::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.tido.dark::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
 }
 
 @keyframes tido-bounce {

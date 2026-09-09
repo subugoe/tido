@@ -1,6 +1,7 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, PopoverAnchor } from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 
 interface ModalProps {
@@ -30,7 +31,9 @@ const Modal: FC<ModalProps> = ({
     { TriggerButton ? (<PopoverTrigger asChild>{TriggerButton}</PopoverTrigger>) : <PopoverAnchor /> }
     <PopoverContent side="bottom" align="start"  sideOffset={8} className="w-[300px]">
       {children}
-      <X className="absolute right-3 top-4 text-zinc-600 hover:text-zinc-700 hover:cursor-pointer"  size={15} onClick={() => setIsOpen(false)} />
+      <Button variant="ghost" size="iconSm" onClick={() => setIsOpen(false)} className="absolute right-3 top-4" aria-label="Close">
+        <X size={15} />
+      </Button>
     </PopoverContent>
   </Popover>
 }
