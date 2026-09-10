@@ -13,6 +13,7 @@ and also view our production examples.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [Features](#features)
 - [Getting Started](#getting-started)
   - [Get the Viewer](#get-the-viewer)
     - [Installation](#installation)
@@ -58,6 +59,21 @@ and also view our production examples.
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+## Features
+
+- **Multi-Panel Viewer** — Open and compare multiple texts side-by-side in resizable panels
+- **Text Viewing** — Render transcriptions, editions, and translations with content type switching
+- **Image Viewing** — Deep-zoom image viewer with IIIF support via OpenSeadragon
+- **Annotations** — Interactive annotation sidebar with highlighting, filtering, and aligned/list display modes
+- **Synoptical Comparison** — Sync and align corresponding text passages across panels for witness comparison
+- **Library & Navigation** — Global collection tree for browsing and opening items, manifests, and collections
+- **Sharing & Bookmarking** — Save and share the current view state via a URL-encoded link
+- **Internationalization** — Built-in English and German with customizable translations per collection
+- **Theming** — Light, dark, and system themes with custom primary color
+- **Highly Configurable** — Tailor panels, views, annotations, and UI visibility through a JSON config
+
+For a full list of options, see [Configuration](#configuration).
 
 ## Getting Started
 
