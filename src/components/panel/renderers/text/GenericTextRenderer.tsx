@@ -87,12 +87,13 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   const {
     selectedAnnotation,
-    selectedAnnotationTypes,
+    activeAnnotationTypes,
     setSelectedAnnotation,
     updateAnnotationTypesBySource,
+    setDynamicAnnotationTypes,
     annotations,
     addSyncedTargets,
-    getScroller
+    getScroller,
   } = usePanel()
 
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
@@ -110,7 +111,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
-  const selectedAnnotationTypesRef = useRef<AnnotationTypesDict | null>(null)
+  const activeAnnotationTypesRef = useRef<AnnotationTypesDict | null>(null)
   // Targets whose annotations are all types in annotations.disableHighlighting. Built for free in
   // the main highlight effect's loop (the flipped map only changes when matchedMap does), and read
   // by the hover/selected effects to skip the grey/nested-border styles for those targets.
@@ -330,7 +331,7 @@ const GenericTextRenderer: FC<Props> = memo(({
 
           acc[cur.id] = {
             target: matchedNodes,
-            filtered: (cur.body.annotationType && annotationsConfig?.crossRefContentType !== cur.body?.annotationType) ? (!selectedAnnotationTypes || ignoreFilters || isFiltered(cur, selectedAnnotationTypes, tooltipTypes)) : false,
+            filtered: (cur.body.annotationType && annotationsConfig?.crossRefContentType !== cur.body?.annotationType) ? (!activeAnnotationTypesRef.current || ignoreFilters || isFiltered(cur, activeAnnotationTypesRef.current, tooltipTypes)) : false,
             annotation: cur,
             nestedAnnotations
           }
@@ -338,15 +339,29 @@ const GenericTextRenderer: FC<Props> = memo(({
         return acc
       }, {})
 
-      selectedAnnotationTypesRef.current = selectedAnnotationTypes
-
       setMatchedMap(result)
       if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
 
       // When no annotation filters were configured, store the types this text contains keyed by its
       // contentUrl (source). PanelContext derives the flat annotationFilters from these per-text entries.
       if (!annotationsConfig?.filters) {
-        updateAnnotationTypesBySource(source, getDiscoveredAnnotationTypes(result, annotationsConfig))
+        const discoveredTypes = getDiscoveredAnnotationTypes(result, annotationsConfig)
+        updateAnnotationTypesBySource(source, discoveredTypes)
+
+        const discovered = discoveredTypes
+          .flatMap(node => node.types ?? [])
+          .filter((type): type is string => typeof type === 'string')
+
+        // The aggregated list is extended with the types seen here for the first time (e.g. this item
+        // introduced them) as selected; types already in it keep the state the user gave them.
+        setDynamicAnnotationTypes(previous => {
+          const knownTypes = new Set(previous.map(entry => entry.type))
+          const added = discovered
+            .filter(type => !knownTypes.has(type))
+            .map(type => ({ type, selected: true }))
+
+          return added.length > 0 ? [...previous, ...added] : previous
+        })
       }
 
       flippedMatchedMapRef.current = flipMatchedAnnotationsMap(result)
@@ -524,22 +539,26 @@ const GenericTextRenderer: FC<Props> = memo(({
     })
   }, [selectedAnnotation, matchedMap])
 
-  useEffect(() => {
-    if (Object.keys(matchedMap).length === 0) return
 
+  useEffect(() => {
+    if (Object.keys(matchedMap).length === 0 || !activeAnnotationTypes) return
+
+    activeAnnotationTypesRef.current = activeAnnotationTypes
     const resultMap = { ...matchedMap }
+
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-    if (selectedAnnotationTypes) {
+    if (activeAnnotationTypes) {
       Object.keys(resultMap).forEach(id => {
         const { annotation } = resultMap[id]
-        resultMap[id].filtered = isFiltered(annotation, selectedAnnotationTypes, tooltipTypes)
+        resultMap[id].filtered = isFiltered(annotation, activeAnnotationTypes, tooltipTypes)
       })
     }
 
     setMatchedMap(resultMap)
+
     if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(resultMap)
-    selectedAnnotationTypesRef.current = selectedAnnotationTypes
-  }, [selectedAnnotationTypes])
+  }, [activeAnnotationTypes])
+
 
   const onMouseEnterTarget = (e: Event) => {
     const target = e.currentTarget as HTMLElement
@@ -632,7 +651,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
       .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
       .flatMap(entry => entry.annotations)
-      .filter(a => !seen.has(a.id) && seen.add(a.id) && a.body.annotationType !== annotationsConfig?.crossRefContentType && isFilteredAnnotation(a, selectedAnnotationTypesRef.current))
+      .filter(a => !seen.has(a.id) && seen.add(a.id) && a.body.annotationType !== annotationsConfig?.crossRefContentType && isFilteredAnnotation(a, activeAnnotationTypesRef.current))
 
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 

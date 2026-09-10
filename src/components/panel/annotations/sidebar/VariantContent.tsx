@@ -39,10 +39,10 @@ const convertNodeToReact = (node: ChildNode, key: string | number): React.ReactN
 
 const VariantContent: FC<Props> = React.memo(({ body }) => {
   const { value, witnesses } = body
-  const { selectedAnnotationTypes } = usePanel()
+  const { activeAnnotationTypes } = usePanel()
 
-  const filteredWitnesses = selectedAnnotationTypes && selectedAnnotationTypes['Variant']
-    ? witnesses.filter(witness => selectedAnnotationTypes['Variant'].includes(witness))
+  const filteredWitnesses = activeAnnotationTypes && activeAnnotationTypes['Variant']
+    ? witnesses.filter(witness => activeAnnotationTypes['Variant'].includes(witness))
     : witnesses
 
   const parsedDom = React.useMemo(() => {
