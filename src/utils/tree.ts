@@ -72,7 +72,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
       else if (item.textapiType === 'TextApiItem' || (item as Item).division) label = item.division
     } else {
       id = item
-      label = id.split('/').pop()
+      label = id.split('/').filter(Boolean).pop()
     }
 
     return { id, label }
