@@ -89,7 +89,7 @@ Elevation hierarchy:
   --container-lg: 32rem;
 
   --scrollbar-thumb: color-mix(in oklab, var(--muted-foreground) 40%, transparent);
-  --scrollbar-track: var(--background);
+  --scrollbar-track: transparent;
 
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   scrollbar-width: thin;
