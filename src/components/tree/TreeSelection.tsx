@@ -61,7 +61,7 @@ const TreeSelection: FC<Props> = ({ onConfirm }) => {
   return <div className="flex flex-col max-w-full overflow-x-hidden">
     <div className="max-h-80 overflow-y-auto">
       <TreeProvider onSelect={onSelect} getChildren={getChildren}>
-        <Tree nodes={treeNodes} />
+        <Tree nodes={treeNodes} showQuickView={true} />
       </TreeProvider>
     </div>
     <Button
