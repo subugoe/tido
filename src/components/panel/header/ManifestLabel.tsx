@@ -11,9 +11,10 @@ interface ManifestLabelProps {
   options: DropdownOption[]
   selectedLabel: string
   dataCy?: string
+  merged?: boolean
 }
 
-const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelecting, onSelect, dataCy = 'manifest-label' }) => {
+const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelecting, onSelect, dataCy = 'manifest-label', merged = false }) => {
   const { panelState, usePanelTranslation } = usePanel()
   const { t } = usePanelTranslation()
   const [showModal, setShowModal] = useState(false)
@@ -28,6 +29,11 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelec
     setShowModal(open)
   }
 
+  // When the item label is merged into the manifest label, the combined label needs more room.
+  const widthClasses = merged
+    ? 'max-w-[240px] @max-[600px]/panel:max-w-[180px] @min-[1200px]/panel:max-w-[420px]'
+    : 'max-w-[120px] @max-[600px]/panel:max-w-[80px] @min-[1200px]/panel:max-w-[420px]'
+
   return (
     <DropdownMenu
       open={showModal}
@@ -39,7 +45,7 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelec
             <Button
               variant="outline"
               size="sm"
-              className={`relative max-w-[120px] @max-[600px]/panel:max-w-[60px] @min-[1200px]/panel:max-w-[300px] h-full truncate ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
+              className={`relative h-full truncate ${widthClasses} ${isSelecting ? 'text-muted-foreground animate-pulse' : ''}`}
               data-cy={dataCy}>
               <span className="truncate">{ selectedLabel }</span>
             </Button>

@@ -37,6 +37,31 @@ const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowD
     return t(panelState?.item?.division ?? 'unknown')
   }
 
+  const buttonClasses = 'max-w-[120px] @max-[600px]/panel:max-w-[60px] @min-[1200px]/panel:max-w-[300px] truncate'
+
+  if (options.length <= 1) {
+    // Nothing to select from: render the label as a plain, non-interactive button
+    // without a dropdown.
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className={`${buttonClasses} cursor-default`}
+            data-cy="item-label"
+            aria-disabled="true"
+          >
+            <span className="truncate">{ getItemLabel() }</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <span className="leading-none">{ getItemLabel() }</span>
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
   return (
     <DropdownMenu
       open={showDropdown}
@@ -48,7 +73,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowD
             <Button
               variant="outline"
               size="sm"
-              className={`max-w-[120px] @max-[600px]/panel:max-w-[60px] @min-[1200px]/panel:max-w-[300px] truncate ${showDropdown ? 'bg-muted' : ''}`}
+              className={`${buttonClasses} ${showDropdown ? 'bg-muted' : ''}`}
               data-cy="item-label">
               <span className="truncate">{ getItemLabel() }</span>
             </Button>

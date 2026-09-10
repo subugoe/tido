@@ -36,6 +36,7 @@ const PanelTitle: FC<PanelTitleProps> = ({ switcher }) => {
               selectedLabel={switcher.selectedLabel}
               onSelect={switcher.onManifestSelect}
               isSelecting={switcher.isSelecting}
+              merged={switcher.isSingleItem}
             />
             <NextManifestButton />
           </ButtonGroup>
@@ -44,7 +45,7 @@ const PanelTitle: FC<PanelTitleProps> = ({ switcher }) => {
       {noManifest && collection && (
         <Skeleton className="w-[60px] h-6" />
       )}
-      {hasManifest && (
+      {hasManifest && !switcher.isSingleItem && (
         <ButtonGroup className="h-7 shrink-0">
           <PrevItemButton />
           <ItemLabel

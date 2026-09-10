@@ -6,6 +6,7 @@ interface ManifestSwitcher {
   manifestOptions: DropdownOption[]
   selectedLabel: string
   isSelecting: boolean
+  isSingleItem: boolean
   onManifestSelect: (manifestId: string) => void
   itemOptions: DropdownOption[]
   showItemDropdown: boolean
@@ -28,10 +29,17 @@ function useManifestSwitcher(): ManifestSwitcher {
 
   const targetManifest = selectedManifest || manifest
 
-  const selectedLabel = useMemo(
-    () => selectedManifest?.titles?.[0] ?? panelState?.manifest?.titles?.[0] ?? '',
-    [selectedManifest, panelState?.manifest?.titles]
-  )
+  const isSingleItem = (targetManifest?.items?.length ?? 0) === 1
+
+  const selectedLabel = useMemo(() => {
+    const manifestLabel = selectedManifest?.titles?.[0] ?? panelState?.manifest?.titles?.[0] ?? ''
+    if (!isSingleItem) return manifestLabel
+
+    // With only one item there is nothing to select, so the item label is merged into the
+    // manifest label and the item navigation is hidden entirely.
+    const itemLabel = t(panelState?.item?.division ?? '')
+    return itemLabel ? `${manifestLabel} - ${itemLabel}` : manifestLabel
+  }, [selectedManifest, panelState?.manifest?.titles, panelState?.item, isSingleItem, t])
 
   useEffect(() => {
     async function loadManifestOptions() {
@@ -57,18 +65,11 @@ function useManifestSwitcher(): ManifestSwitcher {
     })
   }, [targetManifest, t])
 
-  const onManifestSelect = useCallback(async (manifestId: string) => {
-    const manifest = await useDataStore.getState().initManifest(manifestId)
-    setSelectedManifest(manifest)
-    setIsSelecting(true)
-    setShowItemDropdown(true)
-  }, [])
-
-  const onItemSelect = useCallback(async (itemId: string) => {
+  const onItemSelect = useCallback(async (itemId: string, targetManifestOverride?: Manifest) => {
     setIsSelecting(false)
     setSelectedItemId(itemId)
 
-    const targetManifest = selectedManifest || panelState.manifest
+    const targetManifest = targetManifestOverride || selectedManifest || panelState.manifest
     if (!targetManifest) return
 
     const item = await useDataStore.getState().initItem(itemId)
@@ -78,6 +79,24 @@ function useManifestSwitcher(): ManifestSwitcher {
     setShowItemDropdown(false)
     await init({ ...panelState.config, manifest: targetManifest.id, item: item.id, selectedAnnotationId: null })
   }, [selectedManifest, panelState, init])
+
+  const onManifestSelect = useCallback(async (manifestId: string) => {
+    const manifest = await useDataStore.getState().initManifest(manifestId)
+    setSelectedManifest(manifest)
+    setSelectedItemId(null)
+
+    const items = manifest.items || []
+    if (items.length === 1) {
+      // A manifest with a single item leaves nothing to select, so load the item directly
+      // instead of showing the item dropdown.
+      const item = items[0]
+      const itemId = typeof item === 'object' ? item.id : item
+      await onItemSelect(itemId, manifest)
+    } else {
+      setIsSelecting(true)
+      setShowItemDropdown(true)
+    }
+  }, [onItemSelect])
 
   const onItemDropdownClose = useCallback(() => {
     setIsSelecting(false)
@@ -98,6 +117,7 @@ function useManifestSwitcher(): ManifestSwitcher {
     manifestOptions,
     selectedLabel,
     isSelecting,
+    isSingleItem,
     onManifestSelect,
     itemOptions,
     showItemDropdown,

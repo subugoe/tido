@@ -114,6 +114,7 @@ const PanelHeader: FC = () => {
                 selectedLabel={switcher.selectedLabel}
                 onSelect={switcher.onManifestSelect}
                 isSelecting={switcher.isSelecting}
+                merged={switcher.isSingleItem}
               />
             </ButtonGroup>
           ) : (

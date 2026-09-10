@@ -13,6 +13,7 @@
 const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181'
 const collection = `${apiUrl}/example/collections/example.json`
 const manifest = `${apiUrl}/example/manifests/book2.json`
+const singleItemCollection = `${apiUrl}/example/collections/example-single-item.json`
 const config = `panels[0].collection=${collection}&panels[0].manifest=${manifest}`
 
 // Widths for switching the panel between the small (<600px) and large (>=600px) layout.
@@ -141,6 +142,31 @@ describe('Panel header at small panel sizes', () => {
       // the compact resources stay hidden
       cy.get('[data-cy="collection-icon-button"]').should('not.be.visible')
       cy.get('[data-cy="manifest-label-compact"]').should('not.be.visible')
+    })
+  })
+
+  it('should merge the item label into the compact manifest title for a single-item manifest', () => {
+    cy.visit('/e2e.html?panels[0].collection=' + singleItemCollection)
+    resizePanel(SMALL_PANEL_WIDTH)
+
+    // the compact manifest title opens the same dropdown; select the single-item manifest
+    getPanel()
+      .find('[data-cy="manifest-label-compact"]')
+      .should('contain.text', 'Pride and Prejudice')
+      .click()
+    cy.get('[data-cy="manifests-dropdown"]')
+      .contains('Single Item Book')
+      .click()
+
+    getPanel().within(() => {
+      // the only item is loaded directly and its label is merged into the compact manifest title
+      cy.get('[data-cy="items-dropdown"]').should('not.exist')
+      cy.get('[data-cy="manifest-label-compact"]').should('contain.text', 'Single Item Book - Page 2')
+
+      // no item selector and no item arrows when there is only one item
+      cy.get('[data-cy="item-label"]').should('not.exist')
+      cy.get('[data-cy="prev-item-button"]').should('not.exist')
+      cy.get('[data-cy="next-item-button"]').should('not.exist')
     })
   })
 })

@@ -1,0 +1,14 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example/manifests/book-single.json",
+  "items": [
+    "http://localhost:8181/example/items/book2-page2.json"
+  ],
+  "textapiType": "TextApiManifest",
+  "revision": "1",
+  "license": "CC0-1.0",
+  "titles": [
+    "Single Item Book"
+  ]
+}

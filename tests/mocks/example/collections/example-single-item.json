@@ -1,0 +1,17 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example/collections/example-single-item.json",
+  "titles": [
+    "Single Item Collection"
+  ],
+  "created": "2024-01-01T00:00:00Z",
+  "revision": "1",
+  "total": 2,
+  "textapiType": "TextApiCollection",
+  "manifests": [
+    "http://localhost:8181/example/manifests/book1.json",
+    "http://localhost:8181/example/manifests/book-single.json"
+  ],
+  "annotationCollection": "http://localhost:8181/example/annotations/annotationCollection/example.json"
+}
