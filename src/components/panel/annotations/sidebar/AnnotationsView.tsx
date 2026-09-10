@@ -6,7 +6,6 @@ import AlignAnnotationsList from '@/components/panel/annotations/sidebar/AlignAn
 import AnnotationsList from '@/components/panel/annotations/sidebar/AnnotationsList.tsx'
 import EmptyAnnotations from '@/components/panel/annotations/sidebar/EmptyAnnotations.tsx'
 import { useErrorBoundary } from 'react-error-boundary'
-import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 
 interface ContainerProps {
@@ -24,28 +23,19 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({ children }, ref)
   </div>
 })
 const AnnotationsView: FC = () => {
-  const { annotationsError, annotationsMode, selectedAnnotation, getScroller } = usePanel()
+  const { annotationsError, annotationsMode, getScroller } = usePanel()
   const { filteredAnnotations } = useAnnotations()
   const scrollContainer = useRef<HTMLDivElement>(null)
   const { showBoundary } = useErrorBoundary()
 
   if (annotationsError) showBoundary(annotationsError)
 
+  // The scroller only has to know which element the sidebar is. Whether it is actually synced with
+  // the text is the aligned list's business - it starts that sync on mount and stops it on unmount.
   useEffect(() => {
     if (!scrollContainer.current) return
-    const scroller = getScroller()
-    scroller.setSidebar(scrollContainer.current)
-    scroller.startSidebar()
-    return () => scroller.stopSidebar()
+    getScroller().setSidebar(scrollContainer.current)
   }, [scrollContainer])
-
-  useEffect(() => {
-    if (!selectedAnnotation || annotationsMode !== 'list') return
-    const selectedAnnotationEl = (scrollContainer.current as HTMLElement).querySelector(`div[data-annotation="${selectedAnnotation.annotation.id}"]`) as HTMLElement
-    if (!selectedAnnotationEl) return
-    scrollIntoViewIfNeeded(selectedAnnotationEl, scrollContainer.current)
-  }, [selectedAnnotation])
-
 
   function getContent() {
     if (filteredAnnotations.length === 0) return <EmptyAnnotations />
