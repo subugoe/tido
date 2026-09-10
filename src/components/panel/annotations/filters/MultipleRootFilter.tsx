@@ -9,7 +9,7 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 
 const MultipleRootFilter: FC = () => {
-  const { setSelectedAnnotationTypes, witnesses, panelState, annotationTypesBySource, annotationFilters: contextFilters, setAnnotationFilters: setContextFilters } = usePanel()
+  const { setSelectedAnnotationTypes, dynamicAnnotationTypes, setDynamicAnnotationTypes, witnesses, panelState, annotationTypesBySource, annotationFilters: contextFilters, setAnnotationFilters: setContextFilters } = usePanel()
   const { annotations: annotationsConfig } = useConfig()
 
   const [localFilters, setLocalFilters] = useState<FilterNodeWithSelection[]>([])
@@ -22,20 +22,32 @@ const MultipleRootFilter: FC = () => {
   useEffect(() => {
     if (annotationsConfig.filters) return
 
-    setLocalFilters(previous => {
-      const types = getVisibleAnnotationTypes(annotationTypesBySource, panelState.panelViews, panelState?.item?.contents ?? [])
+    const types = getVisibleAnnotationTypes(annotationTypesBySource, panelState.panelViews, panelState?.item?.contents ?? [])
 
-      return types.map(type => {
-        const existing = previous.find(node => node.types?.length === 1 && node.types[0] === type)
-        return { types: [type], selected: existing?.selected ?? true }
-      })
-    })
-  }, [panelState.panelViews, annotationTypesBySource])
+    // The visible types come from the texts on screen, their selection state from the aggregated
+    // dynamicAnnotationTypes, so a type keeps the state the user gave it across item navigation.
+    setLocalFilters(types.map(type => ({
+      types: [type],
+      selected: dynamicAnnotationTypes.find(entry => entry.type === type)?.selected ?? true
+    })))
+  }, [panelState.panelViews, annotationTypesBySource, dynamicAnnotationTypes])
 
   const handleToggle = (path: number[]) => {
     let newFilters: FilterNodeWithSelection[] = [...annotationFilters]
     newFilters = updateNodesSelection(path, newFilters)
     setAnnotationFilters(newFilters)
+
+    if (!annotationsConfig.filters) {
+      // Without configured filters the selection state lives in dynamicAnnotationTypes. Only the types on
+      // screen are touched; the ones contributed by other items keep their state.
+      const toggledTypes = new Map<string, boolean>()
+      newFilters.forEach(node => (node.types ?? []).forEach(type => toggledTypes.set(type as string, !!node.selected)))
+
+      setDynamicAnnotationTypes(previous => previous.map(entry => (
+        toggledTypes.has(entry.type) ? { ...entry, selected: toggledTypes.get(entry.type) } : entry
+      )))
+      return
+    }
 
     let types: AnnotationTypesDict = {}
     newFilters.forEach(node => {

@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useState, FC, useEffect, useRef, SetStateAction, Dispatch } from 'react'
+import { ReactNode, createContext, useContext, useState, FC, useEffect, useMemo, useRef, SetStateAction, Dispatch } from 'react'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
@@ -34,7 +34,15 @@ interface PanelContextType {
   annotationFilters: FilterNodeWithSelection[],
   setAnnotationFilters:  Dispatch<SetStateAction<FilterNodeWithSelection[]>>,
   selectedAnnotationTypes: AnnotationTypesDict | null,
-  setSelectedAnnotationTypes: (value: AnnotationTypesDict) => void,
+  setSelectedAnnotationTypes: Dispatch<SetStateAction<AnnotationTypesDict | null>>,
+  // The types the renderers actually filter with - selectedAnnotationTypes with configured filters,
+  // dynamicAnnotationTypes otherwise. Derived, never set directly.
+  activeAnnotationTypes: AnnotationTypesDict | null,
+  // Every annotation type the panel has come across so far, with its selection state. Aggregated: item
+  // navigation extends the list with newly discovered types instead of replacing it, so a type the user
+  // deselected keeps that state when a later item contains it again.
+  dynamicAnnotationTypes: DynamicAnnotationType[],
+  setDynamicAnnotationTypes: Dispatch<SetStateAction<DynamicAnnotationType[]>>,
   setError : (error: CustomError | null) => void,
   annotations: Annotation[] | null,
   selectedAnnotation: SelectedAnnotation | null,
@@ -82,7 +90,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [matchedAnnotationsMaps, setMatchedAnnotationsMaps] = useState<{[contentUrl: string]: MatchedAnnotationsMap}>({})
   const [annotationTypesBySource, setAnnotationTypesBySource] = useState<{[contentUrl: string]: FilterNodeWithSelection[]}>({})
   const [annotationFilters, setAnnotationFilters] = useState<FilterNodeWithSelection[]>( null)
-  const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState(null)
+  const [selectedAnnotationTypes, setSelectedAnnotationTypes] = useState<AnnotationTypesDict | null>(null)
+  const [dynamicAnnotationTypes, setDynamicAnnotationTypes] = useState<DynamicAnnotationType[]>([])
   const [showTextOptions, setShowTextOptions] = useState(false)
   const [annotations, setAnnotations] = useState<Annotation[] | null>(null)
   const [witnesses, setWitnesses] = useState<WitnessWithColor[]>([])
@@ -120,9 +129,6 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     setSelectedAnnotation(null)
 
     if (!annotationsConfig.filters) {
-      // We have to reset the selected types if no filters config is given, in order to re-discover types again on-the-fly.
-      // TODO: This way maintaining selected types thoughout item change is not possible. We need a way to fix this.
-      setSelectedAnnotationTypes(null)
       // Clear the per-text discovered types so a new item starts from a clean slate; the visible filter
       // list is derived from these in MultipleRootFilter.
       setAnnotationTypesBySource({})
@@ -355,6 +361,23 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     }
   }, [])
 
+  // What the renderers filter with: with configured filters that is selectedAnnotationTypes, without one
+  // it is the aggregated dynamicAnnotationTypes in the same dict shape (the shape isFiltered and the
+  // annotation sidebar expect). Null means no filtering at all - nothing has been discovered yet.
+  const activeAnnotationTypes = useMemo<AnnotationTypesDict | null>(() => {
+    if (annotationsConfig.filters) return selectedAnnotationTypes
+    if (dynamicAnnotationTypes.length === 0) return null
+
+    const types: AnnotationTypesDict = {}
+    dynamicAnnotationTypes
+      .filter(entry => entry.selected)
+      .forEach(entry => {
+        types[entry.type] = entry.type === 'Variant' ? witnesses.map(witness => witness.idno) : []
+      })
+
+    return types
+  }, [annotationsConfig.filters, selectedAnnotationTypes, dynamicAnnotationTypes, witnesses])
+
   useEffect(() => {
     init(panelState.config)
   }, [panelState.config, panelId])
@@ -407,6 +430,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       setAnnotationFilters,
       selectedAnnotationTypes,
       setSelectedAnnotationTypes,
+      activeAnnotationTypes,
+      dynamicAnnotationTypes,
+      setDynamicAnnotationTypes,
       annotations,
       selectedAnnotation: panelState.selectedAnnotation,
       setSelectedAnnotation,

@@ -93,6 +93,12 @@ declare global {
     [annotationType: string]: string[]
   }
 
+  // One annotation type the panel has discovered, with the selection state the user gave it.
+  interface DynamicAnnotationType {
+    type: string
+    selected: boolean
+  }
+
   interface Content {
     id: string
     contentType: string

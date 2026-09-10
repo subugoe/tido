@@ -214,9 +214,7 @@ describe('Annotations', () => {
       }
     })
 
-    cy.get('@initialCount').then((initialCount) => {
-      sidebar().find('[data-annotation]').should('have.length.lessThan', initialCount)
-    })
+    sidebar().find('[data-annotation]').should('not.exist')
 
     cy.get('[data-slot="popover-content"] [data-slot="checkbox"]').each(($checkbox) => {
       if ($checkbox.attr('data-state') !== 'checked') {
