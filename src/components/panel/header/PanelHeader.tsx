@@ -55,6 +55,10 @@ const SidebarToggle = memo((props) => {
     })
   }
 
+  // Without any annotations there is nothing to display in the sidebar,
+  // so the toggle is hidden entirely.
+  if (filteredAnnotations.length === 0) return null
+
   return <BaseTooltip message={tooltipMessage}>
     <Button
       variant="outline"
