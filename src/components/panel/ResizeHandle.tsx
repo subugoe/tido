@@ -11,7 +11,7 @@ const ResizeHandle: FC<Props> = ({ className = '', ...props }) => {
   return (
     <div
       {...props}
-      className={`z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-muted -translate-y-1/2 top-1/2 ${className}`}
+      className={`z-10 absolute flex h-6 w-3 items-center justify-center rounded-sm border border-border bg-background -translate-y-1/2 top-1/2 ${className}`}
     >
       <GripVertical className="h-4 w-2.5 text-muted-foreground" />
     </div>
