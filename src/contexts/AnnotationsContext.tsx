@@ -1,11 +1,13 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { getFilteredAnnotations } from '@/utils/annotations.ts'
+import { getContentUrlByType } from '@/utils/text.ts'
+import { PanelView } from '@/types'
 
 type MatchedMaps = {[id: string]: MatchedAnnotationsMap}
 
 type State = {
+  // Computed in PanelContext via useFilteredAnnotations, passed through for the sidebar components
   filteredAnnotations: Annotation[],
   matchedMaps: MatchedMaps,
   updateMatchedMap: (id: string, map: MatchedAnnotationsMap) => void,
@@ -15,31 +17,43 @@ type State = {
 
 const AnnotationsContext = createContext<State>(null)
 
+// Derives the filtered annotations of the visible text views (in panelViews order), without tooltip types.
+// It is called from PanelProvider, so the result is part of PanelContext and available outside the sidebar
+// (e.g. for the header badge)
+export function useFilteredAnnotations(
+  textMatchedMaps: MatchedMaps,
+  panelViews: PanelView[] | undefined,
+  contents: Content[] | undefined,
+  tooltipTypes: string[] | undefined
+): Annotation[] {
+  return useMemo(() => {
+    // Deduplicated in case two views show the same text.
+    const visibleContentUrls = [...new Set(
+      (panelViews ?? [])
+        .filter(view => view.view === 'text' && (view.visible ?? true))
+        .map(view => getContentUrlByType(contents ?? [], view.activeContentType))
+        .filter(Boolean)
+    )]
+
+    return visibleContentUrls.flatMap(contentUrl => {
+      const map = textMatchedMaps[contentUrl]
+      if (!map) return []
+      return getFilteredAnnotations(map).filter(a => {
+        const body = a.body as AnnotationBody
+        return !(tooltipTypes ?? []).includes(body.annotationType)
+      })
+    })
+  }, [textMatchedMaps, panelViews, contents, tooltipTypes])
+}
+
 export const AnnotationsProvider = ({ children }: { children: ReactNode }) => {
-  const { annotations: annotationsConfig } = useConfig()
-  const { matchedAnnotationsMaps: textMatchedMaps, annotationsMode } = usePanel()
-  const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([])
+  const { annotationsMode, filteredAnnotations } = usePanel()
   const [alignmentLoading, setAlignmentLoading] = useState(false)
   const [matchedMaps, setMatchedMaps ] = useState<MatchedMaps>({})
 
   useEffect(() => {
     if (annotationsMode === 'aligned') setAlignmentLoading(true)
   }, [annotationsMode])
-
-  useEffect(() => {
-    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-    const newFiltered: Annotation[] = []
-    Object
-      .keys(textMatchedMaps)
-      .forEach(contentUrl => {
-        const filtered = getFilteredAnnotations(textMatchedMaps[contentUrl])
-        newFiltered.push(...filtered.filter(a => {
-          const body = a.body as AnnotationBody
-          return !tooltipTypes.includes(body.annotationType)
-        }))
-      })
-    setFilteredAnnotations(newFiltered)
-  }, [textMatchedMaps])
 
   function updateMatchedMap(id: string, map: MatchedAnnotationsMap) {
     setMatchedMaps((prev) => {

@@ -18,6 +18,7 @@ import { CustomError } from '@/utils/custom-error.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { isPanelViewsUserExplicit } from '@/utils/config/config.ts'
+import { useFilteredAnnotations } from '@/contexts/AnnotationsContext.tsx'
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
@@ -62,6 +63,9 @@ interface PanelContextType {
   annotationsLoading: boolean
   matchedAnnotationsMaps: {[contentUrl: string]: MatchedAnnotationsMap}
   updateMatchedAnnotationsMap: (contentUrl: string, map: MatchedAnnotationsMap) => void
+  // Filtered annotations of the visible text views, in panelViews order. Computed by useFilteredAnnotations
+  // (AnnotationsContext), read by the sidebar list and the header badge.
+  filteredAnnotations: Annotation[]
   // Discovered annotation types keyed per text (contentUrl), used only when no annotation filters are
   // configured. The flat annotationFilters list is derived from these entries.
   annotationTypesBySource: {[contentUrl: string]: FilterNodeWithSelection[]}
@@ -112,6 +116,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const getManifest = useDataStore(state => state.initManifest)
   const getItem = useDataStore(state => state.initItem)
   const panelState = usePanelStore(state => state.getPanel(panelId))
+
+  const filteredAnnotations = useFilteredAnnotations(
+    matchedAnnotationsMaps,
+    panelState?.panelViews,
+    panelState?.item?.contents,
+    annotationsConfig?.tooltipTypes
+  )
 
   function usePanelTranslation(): UseTranslationResponse<'common', never> {
     const ns = panelState?.collectionId ? getCollectionSlug(panelState.collectionId) : 'common'
@@ -452,6 +463,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       annotationsLoading,
       matchedAnnotationsMaps,
       updateMatchedAnnotationsMap,
+      filteredAnnotations,
       annotationTypesBySource,
       updateAnnotationTypesBySource,
       syncedTargetsMap,
