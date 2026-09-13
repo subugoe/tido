@@ -21,12 +21,12 @@ export interface ItemMap {
 function cacheEmbeddedManifests(
   get: () => DataStoreType,
   set: (partial: Partial<DataStoreType>) => void,
-  manifests: (Manifest | string)[]
+  manifests: (Manifest | MinimalResource | string)[]
 ) {
   const next = { ...get().manifests }
   let changed = false
   for (const m of manifests) {
-    if (typeof m === 'object') {
+    if (typeof m === 'object' && 'items' in m) {
       next[m.id] = m
       changed = true
       if (m.items) {

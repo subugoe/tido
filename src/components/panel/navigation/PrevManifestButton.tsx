@@ -45,8 +45,8 @@ const PrevManifestButton: FC = () => {
     if (prevIndex < 0) return
 
     const manifestId = typeof manifests[prevIndex] === 'object'
-      ? (manifests[prevIndex] as Manifest).id
-      : (manifests[prevIndex] as string)
+      ? manifests[prevIndex].id
+      : manifests[prevIndex]
 
     init({
       collection: collectionId,

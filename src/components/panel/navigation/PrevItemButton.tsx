@@ -61,8 +61,8 @@ const PrevItemButton: FC = () => {
       if (prevManifestIndex < 0) return
 
       const prevManifestId = typeof manifests[prevManifestIndex] === 'object'
-        ? (manifests[prevManifestIndex] as Manifest).id
-        : (manifests[prevManifestIndex] as string)
+        ? manifests[prevManifestIndex].id
+        : manifests[prevManifestIndex]
 
       const prevManifest = await useDataStore.getState().initManifest(prevManifestId)
 

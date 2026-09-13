@@ -65,6 +65,7 @@ Elevation hierarchy:
   height: 100%;
   color: var(--foreground);
 
+  --df: #373761;
   --annotation-hover: var(--tido-color-primary-shade-1);
   --annotation-selected: var(--tido-color-primary-shade-2);
 

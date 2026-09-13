@@ -9,9 +9,7 @@ export function getManifestUrl(documentData: Manifest | Collection, documentType
   let manifestUrl = ''
   if (documentType === 'collection') {
     const manifest = (documentData as Collection).manifests[index]
-    manifestUrl = typeof manifest === 'object'
-      ? (manifest as Manifest).id
-      : (manifest as string)
+    manifestUrl = typeof manifest === 'object' ? manifest?.id ?? '' : manifest
   } else if (documentType === 'manifest') {
     manifestUrl = documentData?.id
   }

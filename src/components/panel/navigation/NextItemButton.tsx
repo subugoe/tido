@@ -60,8 +60,8 @@ const NextItemButton: FC = () => {
       if (nextManifestIndex > manifests.length - 1) return
 
       const manifestId = typeof manifests[nextManifestIndex] === 'object'
-        ? (manifests[nextManifestIndex] as Manifest).id
-        : (manifests[nextManifestIndex] as string)
+        ? manifests[nextManifestIndex].id
+        : manifests[nextManifestIndex]
 
       newConfig = {
         ...newConfig,

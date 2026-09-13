@@ -47,7 +47,6 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   }
 
   // Handle both Collection (manifests) and Manifest (items)
-  // Both are now string arrays (IDs)
   let sequenceKey
 
   if ('collections' in data) sequenceKey = 'collections'
@@ -57,7 +56,7 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
   if (!sequenceKey) return []
 
   const sequence =
-    data[sequenceKey as keyof typeof data] as Collection[] | Manifest[] | Item[] | string[] | undefined
+    data[sequenceKey as keyof typeof data] as Collection[] | Manifest[] | MinimalResource[] | Item[] | string[] | undefined
   if (!sequence) return []
 
   const idsAndLabels = sequence.map(item => {
@@ -67,7 +66,8 @@ async function getChildren(node: TreeNode): Promise<TreeNode[]> {
 
     if (typeof item === 'object') {
       id = item.id
-      if (item.textapiType === 'TextApiCollection') label = item.titles[0]
+      if ('shortTitle' in item) label = item.shortTitle
+      else if (item.textapiType === 'TextApiCollection') label = item.titles[0]
       else if (item.textapiType === 'TextApiManifest' || item.titles && item.titles.length > 0) label = item.titles?.[0]
       else if (item.textapiType === 'TextApiItem' || (item as Item).division) label = item.division
     } else {

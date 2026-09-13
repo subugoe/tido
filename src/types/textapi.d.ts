@@ -464,6 +464,23 @@ declare global {
     textapiType: 'TextApiRepository'
   }
   /**
+   * MinimalResource
+   * @description A minimal representation of a manifest, providing only an ID and a short title.
+   */
+  interface MinimalResource {
+    /**
+     * Id
+     * Format: uri
+     * @description IRI pointing to the manifest.
+     */
+    id: string
+    /**
+     * Shorttitle
+     * @description A short human-readable title of the manifest.
+     */
+    shortTitle: string
+  }
+  /**
    * Collection
    * @description A collection contains a curated list of texts or other collections.
    * @example {
@@ -570,7 +587,7 @@ declare global {
      * Manifests
      * @description A set of manifests included in this collection. If `manifests` is set, the holding collection MUST NOT contain `collections`.
      */
-    manifests?: Manifest[] | string[] | null
+    manifests?: Manifest[] | MinimalResource[] | null
     /**
      * Modified
      * @description The time this Collection Object was modified.

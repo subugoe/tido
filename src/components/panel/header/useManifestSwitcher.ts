@@ -47,6 +47,7 @@ function useManifestSwitcher(): ManifestSwitcher {
       const manifests = await Promise.all(
         collection.manifests.map(async (cur) => {
           const id = typeof cur === 'object' ? cur.id : cur
+          if (typeof cur === 'object' && 'shortTitle' in cur) return { id: cur.id, label: cur.shortTitle }
           const m = await useDataStore.getState().initManifest(id)
           return { id: m.id, label: m.titles?.length > 0 && m.titles[0] || '' }
         })
