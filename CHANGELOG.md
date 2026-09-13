@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.9](https://github.com/subugoe/tido/compare/v5.0.0-beta.8...v5.0.0-beta.9) (2026-09-11)
+
+
+### Features
+
+* add preservation of selection of dynamic annotation types (no filters provided in config) ([00223c7](https://github.com/subugoe/tido/commit/00223c7bf63c168089e72e48ae1409f650b1716a))
+* add quick view also to add panel dialog ([999e992](https://github.com/subugoe/tido/commit/999e992b1e5fca6591e93e1276efabfe62d4448b))
+* add quick view to global tree ([2be2053](https://github.com/subugoe/tido/commit/2be20532d0309a1dd71700fb163c4b8a16393c94))
+* implement the same scroll and align functionalities (text-annotation) for List Mode as in Aligned one ([2245568](https://github.com/subugoe/tido/commit/224556853152acac3528c756058bc515bde608d8))
+* introduce a minimal panel width and adaptive panel header ([accbfa8](https://github.com/subugoe/tido/commit/accbfa8f984dbe96f73cecea5ea36c60318383bb))
+* make header more adaptable to manifests with single item - hide item selection, merge item label into manifest label ([4ce945b](https://github.com/subugoe/tido/commit/4ce945ba65d8e0f12d6b92cd13daee0641c710c5))
+* make scrollbar track color transparent to embrace different backgrounds ([57b394c](https://github.com/subugoe/tido/commit/57b394cc2ec4ee90109c1d968d4b7fcb519ec876))
+* update design - remove top header and use rail sidebar instead, reduce amount of visible buttons in panel, add panel footer ([c2b4121](https://github.com/subugoe/tido/commit/c2b41217f2e3725371c9759780957f229bd475fe))
+* use consistent colors from css variables to stay fully customizable by external websites ([b4a86c6](https://github.com/subugoe/tido/commit/b4a86c6fe21be7b6019627effff9049f27b85649))
+
+
+### Bug Fixes
+
+* check correctly for unnecessary image panel view ([2307752](https://github.com/subugoe/tido/commit/2307752b9e2455bd7651948605f70894d5c0ab95))
+* display slug labels in tree nodes even with trailing slashes at IDs ([0b2d053](https://github.com/subugoe/tido/commit/0b2d053580c50f977f4ad383db29deaa4f7e768c))
+* do not remove synopsis style when opening/close sidebar ([#1167](https://github.com/subugoe/tido/issues/1167)) ([afd1c58](https://github.com/subugoe/tido/commit/afd1c582037a368e33b9758f1b4e16590275410d))
+* navigate correctly to the right manifest and item provided from bookmarking ([#1164](https://github.com/subugoe/tido/issues/1164)) ([5bd28ff](https://github.com/subugoe/tido/commit/5bd28fff3ad8fa27e2130982dd0a18a9e1eef6c6))
+* remove highlighting of target when deselecting all annotation types in filters ([#1165](https://github.com/subugoe/tido/issues/1165)) ([ddfdc0b](https://github.com/subugoe/tido/commit/ddfdc0bc82ff7bf10e2583cd20bf2306451885a3))
+* show the text even when annotation selectors have not a full value (i.e only "#") ([437d044](https://github.com/subugoe/tido/commit/437d044030f5575d77e9f14e6b2be45698f98089))
+* support new data structure of annotation in annotation ([#1065](https://github.com/subugoe/tido/issues/1065)) ([6f37412](https://github.com/subugoe/tido/commit/6f37412f066b9d51600ef578a714bfe639a5e8ae))
+* update correctly the annotations when toggling the content type and move filteredAnnotations in PanelContext ([#1171](https://github.com/subugoe/tido/issues/1171)) ([17da912](https://github.com/subugoe/tido/commit/17da912d7ec21a79b14e8153616ef5d05aa9b340))
+
+
+### Docs
+
+* add features section ([dd01d02](https://github.com/subugoe/tido/commit/dd01d0231a36baa380a19395fc0584aebf4c9577))
+
 ## [5.0.0-beta.8](https://github.com/subugoe/tido/compare/v5.0.0-beta.7...v5.0.0-beta.8) (2026-08-31)
 
 
