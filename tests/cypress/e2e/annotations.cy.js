@@ -13,9 +13,14 @@ describe('Annotations', () => {
   // Aligned mode is what positions each annotation card against its target in the text - in list
   // mode the cards render in normal flow and there is nothing to align. The manifest and the item
   // are added by openItem.
+  const viewsQuery = (views) => views.map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
   const alignedConfig = `annotations.defaultMode=aligned`
     + `&panels[0].collection=${collection}`
-    + twoTextViews.map((view) => `&panelViews[]=${encodeURIComponent(JSON.stringify(view))}`).join('');
+    + viewsQuery(twoTextViews);
+
+  // List mode with the given text views - used by the content type tests, which only care about which
+  // annotations are listed, not where their cards sit.
+  const listConfig = (views) => `annotations.defaultMode=list&panels[0].collection=${collection}` + viewsQuery(views);
 
   const cardFor = (annotation) => `[data-annotation="${apiUrl}/example/book2/page3/rev1/${annotation}"]`;
 
@@ -42,7 +47,11 @@ describe('Annotations', () => {
     textContainer: '[data-text-container]',
     viewsMenuToggle: '[data-cy="panel-menu"]',
     viewsMenu: '[data-cy="panel-menu-dropdown"]',
-    viewSwitch: '[data-cy="panel-view-toggle"]'
+    viewSwitch: '[data-cy="panel-view-toggle"]',
+    contentType: '[data-cy="content-type"]',
+    contentTypesDropdown: '[data-cy="content-types-dropdown"]',
+    sidebarBadge: '[data-cy="sidebar-toggle"] [data-slot="badge"]',
+    nextItemButton: '[data-cy="next-item-button"]'
   }
 
   const sidebar = () => cy.get(selectors.sidebarContainer)
@@ -149,6 +158,54 @@ describe('Annotations', () => {
           .to.be.closeTo(ANNOTATION_GAP, 1)
       })
     })
+  }
+
+  const textView = (activeContentType) => ({
+    label: 'Text', view: 'text', activeContentType, contentTypes: ['transcription', 'diplomatic', 'normalized']
+  })
+
+  // The annotations of Chapter 2 whose targets exist in each of its texts: every transcription annotation
+  // (annotation-1 to annotation-28) and a single one for each of the other two texts.
+  const chapter2Annotations = {
+    transcription: Array.from({ length: 28 }, (_, i) => `annotation-${i + 1}`),
+    diplomatic: ['annotation-diplomatic-1'],
+    normalized: ['annotation-normalized-1'],
+  }
+
+  // The annotations of Chapter 3 whose targets exist in each of its texts. annotation-diplomatic-1
+  // targets #dipl-gable, which the diplomatic text doesn't contain, so it is never listed.
+  const chapter3Annotations = {
+    transcription: ['annotation-2', 'annotation-3', 'annotation-4', 'annotation-5'],
+    diplomatic: ['annotation-1', 'annotation-diplomatic-2', 'annotation-diplomatic-3', 'annotation-diplomatic-4'],
+    normalized: ['annotation-normalized-1', 'annotation-normalized-2', 'annotation-normalized-3'],
+  }
+
+  // Chapter 3 in list mode with the given text views, all texts rendered. The sidebar stays closed.
+  const openChapter3InList = (views) => {
+    openItem(1, 2, listConfig(views))
+    cy.get('[data-cy="item-label"]').contains('Page 3')
+    cy.get(selectors.textContainer).should('have.length', views.length)
+  }
+
+  // Picks a content type in the dropdown of the text view at viewIndex and waits until the view shows it.
+  const switchContentType = (viewIndex, contentType) => {
+    cy.get(selectors.contentType).eq(viewIndex).click()
+    cy.get(selectors.contentTypesDropdown).contains(contentType).click()
+    cy.get(selectors.contentTypesDropdown).should('not.exist')
+    cy.get(selectors.contentType).eq(viewIndex).should('contain.text', contentType)
+  }
+
+  const expectBadgeCount = (count) => cy.get(selectors.sidebarBadge).should('have.text', String(count))
+
+  // The sidebar lists exactly the given annotations of a Moby-Dick page (Chapter 3 by default) - no
+  // leftovers of a previously active content type or item - and the badge on the sidebar toggle counts the same.
+  const expectListedAnnotations = (names, page = 'page3') => {
+    const ids = names.map((name) => `${apiUrl}/example/book2/${page}/rev1/${name}`)
+    sidebar().find('[data-annotation]').should(($cards) => {
+      const listed = [...$cards].map((card) => card.getAttribute('data-annotation'))
+      expect(listed).to.have.members(ids)
+    })
+    expectBadgeCount(names.length)
   }
 
   beforeEach(() => {
@@ -359,5 +416,79 @@ describe('Annotations', () => {
       cy.wrap($checkbox).click({force: true})
     })
     cy.contains('No annotations found').should('be.visible')
+  })
+
+  it('Should list only the annotations of the active content type when switching content types', () => {
+    openChapter3InList([textView('transcription')])
+    openSidebar()
+    sidebar().should('be.visible')
+
+    expectListedAnnotations(chapter3Annotations.transcription)
+
+    switchContentType(0, 'diplomatic')
+    expectListedAnnotations(chapter3Annotations.diplomatic)
+
+    switchContentType(0, 'normalized')
+    expectListedAnnotations(chapter3Annotations.normalized)
+
+    // Back to the first text: its annotations are listed again, without those of the texts shown in between.
+    switchContentType(0, 'transcription')
+    expectListedAnnotations(chapter3Annotations.transcription)
+  })
+
+  it('Should update the badge count when switching content types with the sidebar closed', () => {
+    openChapter3InList([textView('transcription')])
+    cy.get(selectors.sidebarContainer).should('not.exist')
+
+    // Every switch changes the count (4 -> 3 -> 4), so each assertion waits for the new text's annotations.
+    expectBadgeCount(chapter3Annotations.transcription.length)
+
+    switchContentType(0, 'normalized')
+    expectBadgeCount(chapter3Annotations.normalized.length)
+
+    switchContentType(0, 'diplomatic')
+    expectBadgeCount(chapter3Annotations.diplomatic.length)
+
+    // Opening the sidebar shows the list the badge counted.
+    openSidebar()
+    expectListedAnnotations(chapter3Annotations.diplomatic)
+  })
+
+  it('Should list the annotations of each visible text view only for its active content type', () => {
+    openChapter3InList([textView('transcription'), textView('diplomatic')])
+    openSidebar()
+    sidebar().should('be.visible')
+
+    expectListedAnnotations([...chapter3Annotations.transcription, ...chapter3Annotations.diplomatic])
+
+    switchContentType(1, 'normalized')
+    expectListedAnnotations([...chapter3Annotations.transcription, ...chapter3Annotations.normalized])
+
+    // Both views show the same text now - its annotations are listed once, not once per view.
+    switchContentType(0, 'normalized')
+    expectListedAnnotations(chapter3Annotations.normalized)
+  })
+
+  it('Should list the annotations of the active content types after navigating to a new item', () => {
+    // Chapter 2 with the normalized text in the first view and the diplomatic text in the second.
+    openItem(1, 1, listConfig([textView('normalized'), textView('diplomatic')]))
+    cy.get('[data-cy="item-label"]').contains('Page 2')
+    cy.get(selectors.textContainer).should('have.length', 2)
+    openSidebar()
+    sidebar().should('be.visible')
+
+    expectListedAnnotations([...chapter2Annotations.normalized, ...chapter2Annotations.diplomatic], 'page2')
+
+    switchContentType(1, 'transcription')
+    expectListedAnnotations([...chapter2Annotations.normalized, ...chapter2Annotations.transcription], 'page2')
+
+    // The views keep their content types on the new item, so Chapter 3 lists the normalized and the
+    // transcription annotations - nothing of the diplomatic text the second view showed before.
+    cy.get(selectors.nextItemButton).click()
+    cy.get('[data-cy="item-label"]').contains('Page 3')
+    cy.get(selectors.contentType).eq(0).should('contain.text', 'normalized')
+    cy.get(selectors.contentType).eq(1).should('contain.text', 'transcription')
+
+    expectListedAnnotations([...chapter3Annotations.normalized, ...chapter3Annotations.transcription])
   })
 })

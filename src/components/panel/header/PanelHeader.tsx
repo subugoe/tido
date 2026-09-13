@@ -16,8 +16,6 @@ import { useManifestSwitcher } from '@/components/panel/header/useManifestSwitch
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { PANEL_HEADER_HEIGHT } from '@/utils/constants.ts'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
-import { getFilteredAnnotations } from '@/utils/annotations.ts'
-import { useConfig } from '@/contexts/ConfigContext.tsx'
 import CollectionTitle from '@/components/panel/header/CollectionTitle.tsx'
 import CollectionIconButton from '@/components/panel/header/CollectionIconButton.tsx'
 import ManifestLabel from '@/components/panel/header/ManifestLabel.tsx'
@@ -31,19 +29,9 @@ interface PanelView {
 }
 
 const SidebarToggle = memo((props) => {
-  const { annotations: annotationsConfig } = useConfig()
-  const { panelState, updatePanel, usePanelTranslation, matchedAnnotationsMaps } = usePanel()
+  const { panelState, updatePanel, usePanelTranslation, filteredAnnotations } = usePanel()
   const [tooltipMessage, setTooltipMessage] = useState('')
   const { t } = usePanelTranslation()
-
-  const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-  const filteredAnnotations: Annotation[] = []
-  Object
-    .keys(matchedAnnotationsMaps)
-    .forEach(contentUrl => {
-      const filtered = getFilteredAnnotations(matchedAnnotationsMaps[contentUrl])
-      filteredAnnotations.push(...filtered.filter(a => !tooltipTypes.includes((a.body as AnnotationBody).annotationType)))
-    })
 
   useEffect(() => {
     setTooltipMessage(t(panelState.showSidebar ? 'hide_annotations' : 'display_annotations'))
