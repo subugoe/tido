@@ -13,7 +13,7 @@ const textView = (activeContentType) => ({
 const BOOK2_PAGE1_TRANSCRIPTION = `${apiUrl}/example-synopsis-2/html/book2-page1_transcription.html`
 const OCEAN_SELECTOR = '#ocean'
 const OCEAN_ANNOTATION_TEXT = 'The ocean as a universal'
-const SYNOPSIS_SELECTED_STYLE = 'bg-yellow-500'
+const SYNOPSIS_SELECTED_STYLE = 'bg-synopsis-selected'
 
 function getPanel(index) {
   return cy.get('[data-cy="panels-wrapper"]')

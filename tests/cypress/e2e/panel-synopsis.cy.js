@@ -54,7 +54,7 @@ const config = [
 ].join('&')
 
 // utils/constants.ts - SYNOPSIS_SELECTED_STYLE, the background of a target of the active connection
-const SYNOPSIS_STYLE_CLASS = 'bg-yellow-500'
+const SYNOPSIS_STYLE_CLASS = 'bg-synopsis-selected'
 // utils/constants.ts - ACTIVE_TARGET_STYLE is a tailwind variant of this background, the one a
 // clicked target carries while its popover is open
 const ACTIVE_STYLE_BACKGROUND = 'bg-annotation-selected'
