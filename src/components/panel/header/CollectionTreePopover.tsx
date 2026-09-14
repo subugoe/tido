@@ -11,7 +11,7 @@ interface Props {
 }
 
 const CollectionTreePopover: FC<Props> = ({ trigger, collectionId }) => {
-  const { usePanelTranslation } = usePanel()
+  const { usePanelTranslation, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
   const [open, setOpen] = useState(false)
 
@@ -22,7 +22,7 @@ const CollectionTreePopover: FC<Props> = ({ trigger, collectionId }) => {
   return (
     <Popover open={open} onOpenChange={setOpen} modal={true}>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent side="bottom" align="start" className="w-[400px] pr-0">
+      <PopoverContent side="bottom" align="start" className="w-[400px] pr-0" container={panelRootRef.current}>
         <div className="font-semibold mb-2">{t('choose_your_panel_content')}</div>
         <LocalTree collectionId={collectionId} onSelect={close} />
         <Button

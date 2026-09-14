@@ -19,7 +19,7 @@ interface ItemLabelProps {
 }
 
 const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowDropdown, onSelect, onDropdownClose }) => {
-  const { panelState, usePanelTranslation } = usePanel()
+  const { panelState, usePanelTranslation, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
 
   const handleOpenChange = (open: boolean) => {
@@ -55,7 +55,7 @@ const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowD
             <span className="truncate">{ getItemLabel() }</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent container={panelRootRef.current}>
           <span className="leading-none">{ getItemLabel() }</span>
         </TooltipContent>
       </Tooltip>
@@ -79,11 +79,11 @@ const ItemLabel: FC<ItemLabelProps> = ({ options, showDropdown = false, setShowD
             </Button>
           </TooltipTrigger>
         </DropdownMenuTrigger>
-        <TooltipContent>
+        <TooltipContent container={panelRootRef.current}>
           <span className="leading-none">{ getItemLabel() }</span>
         </TooltipContent>
       </Tooltip>
-      <DropdownMenuContent data-cy="items-dropdown" className="max-w-80">
+      <DropdownMenuContent data-cy="items-dropdown" className="max-w-80" container={panelRootRef.current}>
         {options.map(({ id, label }, i) => <DropdownMenuItem
           key={id + '_'+i}
           className={`cursor-pointer ${panelState.item?.id === id ? 'data-[highlighted]:text-primary text-primary' : ''} `}

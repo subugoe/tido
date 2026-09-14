@@ -15,7 +15,7 @@ interface ManifestLabelProps {
 }
 
 const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelecting, onSelect, dataCy = 'manifest-label', merged = false }) => {
-  const { panelState, usePanelTranslation } = usePanel()
+  const { panelState, usePanelTranslation, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
   const [showModal, setShowModal] = useState(false)
 
@@ -51,11 +51,11 @@ const ManifestLabel: FC<ManifestLabelProps> = ({ options, selectedLabel, isSelec
             </Button>
           </TooltipTrigger>
         </DropdownMenuTrigger>
-        <TooltipContent>
+        <TooltipContent container={panelRootRef.current}>
           <span className="leading-none">{ isSelecting ? t('select_item_from_selected_manifest') : selectedLabel }</span>
         </TooltipContent>
       </Tooltip>
-      <DropdownMenuContent data-cy="manifests-dropdown" className="max-w-80">
+      <DropdownMenuContent data-cy="manifests-dropdown" className="max-w-80" container={panelRootRef.current}>
         {options.map(({ id, label }, i) => <DropdownMenuItem
           key={id + '_'+i}
           className={`cursor-pointer ${panelState.manifest?.id === id ? 'text-primary' : ''} `}

@@ -9,7 +9,7 @@ import { PANEL_FOOTER_HEIGHT } from '@/utils/constants.ts'
 import SyncTargetNavigation from '@/components/panel/synopsis/TargetNavigation.tsx'
 
 const PanelFooter: FC = () => {
-  const { usePanelTranslation } = usePanel()
+  const { usePanelTranslation, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
   const [showMetadataModal, setShowMetadataModal] = useState(false)
   const handleOpenChange = (open: boolean) => {
@@ -35,7 +35,7 @@ const PanelFooter: FC = () => {
               <span className="@max-[560px]/panel:hidden">Metadata</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent side="top" align="end" className="w-[400px] pr-0">
+          <PopoverContent side="top" align="end" className="w-[400px] pr-0" container={panelRootRef.current}>
             <Metadata />
             <Button
               variant="ghost"

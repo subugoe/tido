@@ -15,7 +15,7 @@ interface Props {
 }
 
 const AnnotationsModeToggle: FC<Props> = ({ className }) => {
-  const { annotationsMode, setAnnotationsMode, usePanelTranslation } = usePanel()
+  const { annotationsMode, setAnnotationsMode, usePanelTranslation, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
   const [_mode, _setMode] = useState<AnnotationsMode>(annotationsMode)
 
@@ -37,7 +37,7 @@ const AnnotationsModeToggle: FC<Props> = ({ className }) => {
             <MoreVertical />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" container={panelRootRef.current}>
           <DropdownMenuItem
             className={_mode === 'list' ? 'text-primary font-medium' : ''}
             onClick={() => updateMode('list')}

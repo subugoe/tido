@@ -13,7 +13,7 @@ interface Props {
   className?: string
 }
 const AnnotationFilters: FC<Props> = ({ className }) => {
-  const { usePanelTranslation, annotationFilters, annotationTypesBySource, panelState } = usePanel()
+  const { usePanelTranslation, annotationFilters, annotationTypesBySource, panelState, panelRootRef } = usePanel()
   const { annotations: annotationsConfig } = useConfig()
   const { t } = usePanelTranslation()
   const [open, setOpen] = useState(false)
@@ -33,6 +33,7 @@ const AnnotationFilters: FC<Props> = ({ className }) => {
         align="start"
         className="h-fit overflow-y-auto flex flex-col overflow-hidden"
         style={{ 'width': `calc(${SIDEBAR_DEFAULT_WIDTH}px - 2 * 0.75rem)` }}
+        container={panelRootRef.current}
       >
         <AnnotationFiltersContent />
       </PopoverContent>

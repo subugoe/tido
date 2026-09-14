@@ -32,10 +32,11 @@ const DropdownMenuTrigger = ({
 const DropdownMenuContent = ({
   className,
   sideOffset = 4,
+  container,
   ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) => {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Content> & { container?: HTMLElement | null }) => {
   return (
-    <DropdownMenuPrimitive.Portal container={document.querySelector('.tido')}>
+    <DropdownMenuPrimitive.Portal container={container ?? document.querySelector('.tido')}>
       <DropdownMenuPrimitive.Content
         data-slot="dropdown-menu-content"
         sideOffset={sideOffset}

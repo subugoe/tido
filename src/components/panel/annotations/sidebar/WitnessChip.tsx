@@ -7,7 +7,7 @@ interface Props {
 }
 
 const WitnessChip: FC<Props> = React.memo(({ idno }) => {
-  const { witnesses, usePanelTranslation } = usePanel()
+  const { witnesses, usePanelTranslation, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
 
   function getWitnessLabel(idno: string) {
@@ -33,7 +33,7 @@ const WitnessChip: FC<Props> = React.memo(({ idno }) => {
           {getWitnessLabel(idno)}
         </div>
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent container={panelRootRef.current}>
         <span className="leading-none">{getWitnessTitle(idno)}</span>
       </TooltipContent>
     </Tooltip>

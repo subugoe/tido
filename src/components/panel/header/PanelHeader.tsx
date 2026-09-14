@@ -18,6 +18,7 @@ import { PANEL_HEADER_HEIGHT } from '@/utils/constants.ts'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 import CollectionTitle from '@/components/panel/header/CollectionTitle.tsx'
 import CollectionIconButton from '@/components/panel/header/CollectionIconButton.tsx'
+import FullScreenToggle from '@/components/panel/header/FullScreenToggle.tsx'
 import ManifestLabel from '@/components/panel/header/ManifestLabel.tsx'
 import { ButtonGroup } from '@/components/ui/button-group.tsx'
 import { cn } from '@/lib/utils'
@@ -65,7 +66,7 @@ const SidebarToggle = memo((props) => {
 })
 
 const PanelHeader: FC = () => {
-  const { panelState, usePanelTranslation, updatePanel, remove } = usePanel()
+  const { panelState, usePanelTranslation, updatePanel, remove, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
   const [views, setViews] = useState<PanelView[]>([])
   const switcher = useManifestSwitcher()
@@ -125,7 +126,7 @@ const PanelHeader: FC = () => {
               <MoreVertical />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" data-cy="panel-menu-dropdown">
+          <DropdownMenuContent align="end" data-cy="panel-menu-dropdown" container={panelRootRef.current}>
             {views.length > 1 && views.map((view, i) => {
               const Icon = view.icon
               return (
@@ -142,6 +143,7 @@ const PanelHeader: FC = () => {
               )
             })}
             {views.length > 1 && <DropdownMenuSeparator />}
+            <FullScreenToggle />
             <DropdownMenuItem
               className="text-destructive focus:text-destructive cursor-pointer"
               onClick={remove}

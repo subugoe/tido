@@ -20,10 +20,11 @@ const PopoverContent = ({
   className,
   align = 'center',
   sideOffset = 4,
+  container,
   ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Content>) => {
+}: React.ComponentProps<typeof PopoverPrimitive.Content> & { container?: HTMLElement | null }) => {
   return (
-    <PopoverPortal container={document.querySelector('.tido')}>
+    <PopoverPortal container={container ?? document.querySelector('.tido')}>
       <PopoverPrimitive.Content
         data-slot="popover-content"
         align={align}
