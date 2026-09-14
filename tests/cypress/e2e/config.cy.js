@@ -330,3 +330,71 @@ describe('Config', () => {
       cy.get('[data-cy="content-type"]').should('contain.text', 'genau')
   });
 });
+
+describe('Config theme.mode', () => {
+  beforeEach(() => {
+    // ensure a previously persisted theme toggle choice does not leak into the next test
+    cy.clearLocalStorage()
+  })
+
+  // Stub prefers-color-scheme so 'system' resolves deterministically instead of
+  // depending on the OS the test browser runs in.
+  function stubColorScheme(prefersDark) {
+    return (win) => {
+      cy.stub(win, 'matchMedia').callsFake((query) => ({
+        matches: query.startsWith('(prefers-color-scheme:')
+          ? (query.includes('dark') ? prefersDark : !prefersDark)
+          : false,
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      }))
+    }
+  }
+
+  it('theme[mode]=light applies the light class', () => {
+    cy.visit('/e2e.html?theme[mode]=light')
+    cy.get('[data-cy="app"]')
+      .should('have.class', 'light')
+      .should('not.have.class', 'dark')
+  });
+
+  it('theme[mode]=dark applies the dark class', () => {
+    cy.visit('/e2e.html?theme[mode]=dark')
+    cy.get('[data-cy="app"]')
+      .should('have.class', 'dark')
+      .should('not.have.class', 'light')
+  });
+
+  it('theme[mode]=system resolves dark when the OS prefers dark', () => {
+    cy.visit('/e2e.html?theme[mode]=system', { onBeforeLoad: stubColorScheme(true) })
+    cy.get('[data-cy="app"]').should('have.class', 'dark')
+  });
+
+  it('theme[mode]=system resolves light when the OS prefers light', () => {
+    cy.visit('/e2e.html?theme[mode]=system', { onBeforeLoad: stubColorScheme(false) })
+    cy.get('[data-cy="app"]').should('have.class', 'light')
+  });
+
+  it('an invalid theme[mode] falls back to system', () => {
+    cy.visit('/e2e.html?theme[mode]=weird', { onBeforeLoad: stubColorScheme(true) })
+    cy.get('[data-cy="app"]').should('have.class', 'dark')
+  });
+
+  it('a theme persisted by the toggle wins over theme[mode]', () => {
+    // establish the localStorage origin, persist a user choice, then reload with
+    // a conflicting config mode
+    cy.visit('/e2e.html')
+    cy.get('[data-cy="app"]').should('exist')
+    cy.window().its('localStorage').invoke('setItem', 'tido-theme', 'dark')
+
+    cy.visit('/e2e.html?theme[mode]=light')
+    cy.get('[data-cy="app"]')
+      .should('have.class', 'dark')
+      .should('not.have.class', 'light')
+  });
+});

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import type { ThemeConfig } from '@/types'
 
-type Theme = ThemeConfig['theme']
+type Theme = ThemeConfig['mode']
 
 interface UIStoreTypes {
   newestPanelId: string,

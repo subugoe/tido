@@ -536,6 +536,15 @@ Primary color of UI elements. Used on buttons and other interactive elements. Th
 
 ---
 
+##### `theme.mode`
+
+- **Type:** String: `"light"` | `"dark"` | `"system"`
+- **Default:** `"system"`
+
+Initial color scheme of the UI. `"system"` follows the `prefers-color-scheme` media query. Applies only when the user has not explicitly chosen a theme via the theme toggle — a persisted choice always takes precedence.
+
+---
+
 ##### Theming with CSS variables
 
 The whole TIDO UI is driven by CSS custom properties defined on the `.tido` root (light) and `.tido.dark` (dark). Every component resolves colors through them, so you can apply a complete theme by overriding a few variables in your own stylesheet (loaded after the bundle):

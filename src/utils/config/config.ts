@@ -144,10 +144,10 @@ function validateTheme(input: unknown): ValidationResult<TidoConfig['theme']> {
           if (input !== undefined && inputObj && inputObj['primaryColor'] !== undefined) errors['theme.primaryColor'] = 'must be a valid rgb, hex, hsl or oklch color'
           return defaultConfig.theme?.primaryColor
         })(),
-    theme:
-      inputObj && (inputObj['theme'] === 'light' || inputObj['theme'] === 'dark' || inputObj['theme'] === 'system')
-        ? inputObj['theme'] as 'light' | 'dark' | 'system'
-        : defaultConfig.theme.theme
+    mode:
+      inputObj && (inputObj['mode'] === 'light' || inputObj['mode'] === 'dark' || inputObj['mode'] === 'system')
+        ? inputObj['mode'] as 'light' | 'dark' | 'system'
+        : defaultConfig.theme.mode
   }
   return { result, errors }
 }

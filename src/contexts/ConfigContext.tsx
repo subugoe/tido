@@ -3,6 +3,7 @@ import { TidoConfig } from '@/types'
 import { mergeAndValidateConfig, mergeAndValidateI18nConfig } from '@/utils/config/config.ts'
 import { getColors } from '@/utils/colors.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
+import { useUIStore } from '@/store/UIStore.tsx'
 import { initI18n } from '@/utils/translations.ts'
 import Loading from '@/components/ui/loading.tsx'
 import { defaultConfig } from '@/utils/config/default-config.ts'
@@ -52,6 +53,12 @@ export const ConfigProvider = ({ userConfig, children }: ConfigProviderProps) =>
         if (Object.keys(allErrors).length > 0) console.error(allErrors)
 
         createThemeStyles(config)
+
+        // Use the configured theme mode as the instance default, unless the user has
+        // already picked a theme (persisted by the theme toggle in localStorage).
+        if (!localStorage.getItem('tido-theme')) {
+          useUIStore.getState().updateTheme(config.theme.mode)
+        }
 
         await Promise.all(
           config.rootCollections.map(url => useDataStore.getState().initCollection(url))

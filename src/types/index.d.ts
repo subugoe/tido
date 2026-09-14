@@ -245,7 +245,7 @@ export interface PanelView {
 
 export interface ThemeConfig {
   primaryColor: string,
-  theme: 'light' | 'dark' | 'system'
+  mode: 'light' | 'dark' | 'system'
 }
 
 
@@ -322,8 +322,8 @@ export interface FilterNodeWithSelection extends FilterNode {
 export interface TidoProps {
   config: Partial<TidoConfig>,
   onReady?: () => void;
-  theme?: ThemeConfig.theme,
-  onThemeChange?: (theme: ThemeConfig.theme) => void;
+  theme?: ThemeConfig['mode'],
+  onThemeChange?: (theme: ThemeConfig['mode']) => void;
 }
 
 export interface TidoContentState {
@@ -356,8 +356,8 @@ export type SelectionRule = 'single' | 'multiple'
 
 export interface TidoInstance {
   onReady?: () => void,
-  setTheme?: (newTheme: ThemeConfig.theme) => void,
-  onThemeChange?: (newTheme: ThemeConfig.theme) => void,
+  setTheme?: (newTheme: ThemeConfig['mode']) => void,
+  onThemeChange?: (newTheme: ThemeConfig['mode']) => void,
 }
 export declare class Tido extends React.Component<TidoProps, never> {}
 export declare function encodeState(state: TidoContentState): Promise<string>

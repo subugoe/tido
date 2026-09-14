@@ -14,8 +14,8 @@ const defaultConfig: TidoConfig = {
   showCrossRefLabels: true,
   showSynopsisNavigation: true,
   theme: {
-    primaryColor: '#3456aa',
-    theme: 'system'
+    primaryColor: '#4929ab',
+    mode: 'system'
   },
   title: '',
   translations: {},

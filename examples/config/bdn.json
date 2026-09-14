@@ -4,7 +4,7 @@
   "lang": "de",
   "theme": {
     "primaryColor": "#2b7fff",
-    "theme": "system"
+    "mode": "system"
   },
   "showPanelPlaceholder": false,
   "showContentTypeToggle": false,

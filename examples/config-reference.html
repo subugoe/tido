@@ -298,6 +298,13 @@
     </ul>
     <p>Primary color of UI elements. Used on buttons and other interactive elements. The value can be provided as string in the following color systems: hex, rgb, hsl, oklch. Alpha channel is not supported.</p>
     <hr>
+    <h5><code>theme.mode</code></h5>
+    <ul>
+    <li><strong>Type:</strong> String: <code>&quot;light&quot;</code> | <code>&quot;dark&quot;</code> | <code>&quot;system&quot;</code></li>
+    <li><strong>Default:</strong> <code>&quot;system&quot;</code></li>
+    </ul>
+    <p>Initial color scheme of the UI. <code>&quot;system&quot;</code> follows the <code>prefers-color-scheme</code> media query. Applies only when the user has not explicitly chosen a theme via the theme toggle — a persisted choice always takes precedence.</p>
+    <hr>
     <h5>Theming with CSS variables</h5>
     <p>The whole TIDO UI is driven by CSS custom properties defined on the <code>.tido</code> root (light) and <code>.tido.dark</code> (dark). Every component resolves colors through them, so you can apply a complete theme by overriding a few variables in your own stylesheet (loaded after the bundle):</p>
     <pre><code class="language-css">.tido {

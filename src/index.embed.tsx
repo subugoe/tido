@@ -26,12 +26,12 @@ function Tido(this: TidoInstance, config: Partial<TidoConfig> = {}) {
     throw new Error('Container element not found')
   }
 
-  this.setTheme = (newTheme: ThemeConfig['theme']) => {
+  this.setTheme = (newTheme: ThemeConfig['mode']) => {
     updateTheme(newTheme)
   }
 
   const handleReady = () => this.onReady?.()
-  const handleThemeChange = (theme: ThemeConfig['theme']) => this.onThemeChange?.(theme)
+  const handleThemeChange = (theme: ThemeConfig['mode']) => this.onThemeChange?.(theme)
 
   createRoot(containerEl).render(
     <TidoApp
