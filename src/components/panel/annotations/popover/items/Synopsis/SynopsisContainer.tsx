@@ -133,7 +133,7 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
       // panel opens the text view that shows exactly that content instead of the default one.
       const content = item.contents?.find((c) => c.id === source.id)
       const [, activeContentType] = content ? splitMIMEType(content.contentType) : []
-      const textViewIndex = panelViewsConfig.findIndex((view: PanelView) => view.view === 'text' && view.contentTypes.includes(activeContentType))
+      const textViewIndex = panelViewsConfig.findIndex((view: PanelView) => view.view === 'text' && view.contentTypes?.includes(activeContentType))
 
       const newPanelId = crypto.randomUUID()
       await createNewPanel(
