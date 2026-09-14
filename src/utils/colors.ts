@@ -144,17 +144,6 @@ function parseOklchStringOklch(oklchString: string): OKLCH {
   return { l, c: cClamped, h }
 }
 
-function parseHexStringToOklch(hexString: string) {
-  return rgbToOklch(hexStringToRgb(hexString))
-}
-
-function parseRgbStringToOklch(rgbString: string) {
-  return rgbToOklch(rgbStringToRgb(rgbString))
-}
-
-function parseHslStringToOklch(hslString: string) {
-  return rgbToOklch(hslStringToRgb(hslString))
-}
 
 function oklabToOklch({ l, a, b }: OKLAB): OKLCH {
   const c = Math.sqrt(a * a + b * b)
@@ -197,6 +186,18 @@ function rgbToOklch(rgb: RGB): OKLCH {
   return oklabToOklch(oklab)
 }
 
+function parseHexStringToOklch(hexString: string) {
+  return rgbToOklch(hexStringToRgb(hexString))
+}
+
+function parseRgbStringToOklch(rgbString: string) {
+  return rgbToOklch(rgbStringToRgb(rgbString))
+}
+
+function parseHslStringToOklch(hslString: string) {
+  return rgbToOklch(hslStringToRgb(hslString))
+}
+
 function colorStringToOKLCH(colorString: string): OKLCH {
   const lcColor = colorString.trim().toLowerCase()
 
@@ -221,14 +222,14 @@ function colorStringToOKLCH(colorString: string): OKLCH {
 
 const getColors = (color: string) => {
   const oklch = colorStringToOKLCH(color)
-  // Pick the foreground color by relative lightness so any primary color keeps readable text
-  const primaryForegroundLightness = (oklch?.l ?? 0) < 0.5 ? 0.985 : 0.145
+  // Pick the foreground by OKLab lightness so any primary color keeps readable text
+  const primaryForegroundLightness = (oklch?.l ?? 0) < 0.66 ? 1 : 0.145
   return `
     --tido-color-primary: oklch(${oklch?.l} ${oklch?.c} ${oklch?.h} / 1);
     --tido-color-primary-foreground: oklch(${primaryForegroundLightness} 0 0);
     --tido-color-primary-shade-1: oklch(0.95 0.04 ${oklch?.h});
-    --tido-color-primary-shade-2: oklch(0.8 0.07 ${oklch?.h});
-    --tido-color-primary-shade-3: oklch(0.5 0.06 ${oklch?.h});
+    --tido-color-primary-shade-2: oklch(0.85 0.07 ${oklch?.h});
+    --tido-color-primary-shade-3: oklch(0.6 0.06 ${oklch?.h});
     --tido-color-primary-shade-4: oklch(0.35 0.03 ${oklch?.h});
   `
 }
