@@ -19,7 +19,7 @@ const TooltipItem: FC<Props> = ({ annotation }) => {
         dangerouslySetInnerHTML={{ __html: content }}
       />
       <Badge
-        variant="accent"
+        variant="muted"
         className="ml-auto self-start truncate group-hover:not-group-data-selected:invisible">
         {typeLabel}
       </Badge>

@@ -55,7 +55,7 @@ const BaseItem: FC<Props> = ({ annotation, source, onSelect }) => {
     >
       <div className="flex gap-4">
         <div className="whitespace-nowrap truncate overflow-hidden text-sm">{text}</div>
-        <Badge variant="accent" className="ml-auto truncate group-hover:not-group-data-selected:invisible">{typeLabel}</Badge>
+        <Badge variant="muted" className="ml-auto truncate group-hover:not-group-data-selected:invisible">{typeLabel}</Badge>
         <Button size="xs" className="absolute top-1.5 right-2 hidden group-hover:not-group-data-selected:flex">
           {t('show_in_sidebar')} <MoveRight />
         </Button>

@@ -82,7 +82,7 @@ const WitnessesArea: FC<Props> = ({ syncTargets, onSelect }) => {
       {/* title + badge */}
       <div className="flex items-center gap-2">
         <h3 data-cy="synoptical-witnesses-title" className="text-sm font-semibold">{t('synoptical_witnesses')}</h3>
-        <Badge data-cy="synoptical-witnesses-counter" variant="accent" className="font-semibold">{selectedCount}/{total}</Badge>
+        <Badge data-cy="synoptical-witnesses-counter" variant="muted" className="font-semibold">{selectedCount}/{total}</Badge>
       </div>
 
       {/* select-all checkbox + gray count label */}
