@@ -64,23 +64,42 @@ class PanelResizer {
   onResizePanel(newWidth: number) {
     const clamped = Math.max(MIN_PANEL_WIDTH + (this.showSidebar ? this.sidebarWidth : 0), newWidth)
     this.lastWidth = clamped
-    this.panelEl.style.width = `${clamped}px`
+    this.applyWidths(clamped)
+  }
+
+  // These inline widths are the windowed layout. In fullscreen they are overridden by the
+  // :fullscreen rules in style.css rather than recalculated here - see publishSidebarWidth.
+  private applyWidths(totalWidth: number) {
+    this.publishSidebarWidth()
+    this.panelEl.style.width = `${totalWidth}px`
 
     if (this.showSidebar) {
-      const mainWidth = clamped - this.sidebarWidth
+      const mainWidth = totalWidth - this.sidebarWidth
       this.mainContentEl.style.width = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
       if (this.sidebarEl) {
         this.sidebarEl.style.left = `${mainWidth - PANEL_BORDER_WIDTH * 2}px`
         this.sidebarEl.style.width = `${this.sidebarWidth}px`
       }
     } else {
-      this.mainContentEl.style.width = `${clamped - PANEL_BORDER_WIDTH * 2}px`
+      this.mainContentEl.style.width = `${totalWidth - PANEL_BORDER_WIDTH * 2}px`
       if (this.sidebarEl) {
         // when Panel is in error state -> PanelError is shown, Sidebar view is not mounted -> we need this check
-        this.sidebarEl.style.left = `${clamped - PANEL_BORDER_WIDTH * 2}px`
+        this.sidebarEl.style.left = `${totalWidth - PANEL_BORDER_WIDTH * 2}px`
         this.sidebarEl.style.width = '0px'
       }
     }
+  }
+
+  // ─── Fullscreen ──────────────────────────────────────────────────────────────
+
+  // The fullscreen layout is pure CSS so that it applies in the same style recalculation that makes
+  // the panel fullscreen. The split point is the one value CSS cannot know by itself (the sidebar
+  // is user-resizable), so it is published as a custom property for the :fullscreen rules to read.
+  private publishSidebarWidth() {
+    this.panelEl.style.setProperty(
+      '--panel-sidebar-width',
+      `${this.showSidebar ? this.sidebarWidth : 0}px`
+    )
   }
 
   dragToResize() {
@@ -88,6 +107,10 @@ class PanelResizer {
     this.isDragToResizeInitialized = true
 
     const handleMouseMove = (e: MouseEvent) => {
+      // In fullscreen the panel edge is the screen edge and widths are CSS-driven; a drag here would
+      // only corrupt lastWidth, i.e. the width the panel returns to on exit.
+      if (document.fullscreenElement) return
+
       if (this.isResizing) {
         const rect = this.panelEl.getBoundingClientRect()
         const newWidth = e.clientX - rect.left
@@ -108,6 +131,8 @@ class PanelResizer {
     const handleMouseUp = () => this.setIsResizing(false)
 
     const handleMouseDown = (e: MouseEvent) => {
+      if (document.fullscreenElement) return
+
       const rect = this.panelEl.getBoundingClientRect()
       const offsetX = e.clientX - rect.left
       if (offsetX > rect.width - 12) {
@@ -186,6 +211,7 @@ class PanelResizer {
       this.sidebarEl.style.left = `${newMainWidth - PANEL_BORDER_WIDTH * 2}px`
       this.sidebarEl.style.width = `${newSidebarWidth}px`
       this.sidebarWidth = newSidebarWidth
+      this.publishSidebarWidth()
     }
 
     const handleMouseUp = () => {
@@ -244,6 +270,7 @@ class PanelResizer {
 
   setSidebarWidth(value: number) {
     this.sidebarWidth = value
+    this.publishSidebarWidth()
   }
 
   // ─── Cleanup ─────────────────────────────────────────────────────────────────

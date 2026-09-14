@@ -13,7 +13,7 @@ interface Props {
 }
 
 const NavigationButton: FC<Props> = ({ isPrev = false, isDisabled = false, navigate, dataCy, tooltipKey, className }) => {
-  const { usePanelTranslation } = usePanel()
+  const { usePanelTranslation, panelRootRef } = usePanel()
   const { t } = usePanelTranslation()
 
   return <Tooltip>
@@ -28,7 +28,7 @@ const NavigationButton: FC<Props> = ({ isPrev = false, isDisabled = false, navig
         { isPrev ? <ChevronLeft /> : <ChevronRight /> }
       </Button>
     </TooltipTrigger>
-    <TooltipContent>
+    <TooltipContent container={panelRootRef.current}>
       <span className="leading-none">{ t(tooltipKey) }</span>
     </TooltipContent>
   </Tooltip>

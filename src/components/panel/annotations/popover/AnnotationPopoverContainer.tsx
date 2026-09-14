@@ -2,6 +2,7 @@ import React, { FC, memo } from 'react'
 import { Popover, PopoverContent, PopoverAnchor } from '@/components/ui/popover.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { X } from 'lucide-react'
+import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
   target: HTMLElement | null
@@ -19,6 +20,7 @@ const AnnotationPopoverContainer: FC<Props> = memo(({
   onClose
 }) => {
 
+  const { panelRootRef } = usePanel()
   const wrapperRect = wrapper?.getBoundingClientRect()
   const targetRect = target?.getBoundingClientRect()
 
@@ -43,6 +45,7 @@ const AnnotationPopoverContainer: FC<Props> = memo(({
         collisionPadding={8}
         onOpenAutoFocus={(e) => e.preventDefault()}
         hideWhenDetached={true}
+        container={panelRootRef.current}
         className="relative flex max-h-(--radix-popover-content-available-height) max-w-(--radix-popover-content-available-width) flex-col overflow-hidden p-0"
       >
         <Button

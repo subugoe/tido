@@ -164,3 +164,64 @@ Elevation hierarchy:
   }
 }
 
+
+/* ─── Panel fullscreen ───────────────────────────────────────────────────────
+   The element that goes fullscreen is the panel root (panelRootRef, see PanelProvider).
+   The panel itself sits inside it and takes its width from inline styles
+   written by PanelResizer, which going fullscreen does not touch.
+
+   This has to be CSS rather than a React effect: these rules start matching in
+   the same style recalculation that makes the panel root fullscreen, so the panel
+   is already the right size in the first fullscreen frame. An effect can only
+   correct the width a frame later, which is visible as a pop.
+
+   The inline widths are the windowed layout - here they are only overridden,
+   never rewritten, so leaving fullscreen restores them in one recalculation
+   with no JS and no reverse pop.
+
+   [data-fullscreen] is a seam: PanelProvider mirrors :fullscreen onto the panel root as an attribute,
+   because Chrome refuses fullscreen inside the Cypress AUT iframe and these rules - the whole
+   fullscreen layout - would otherwise be untestable. It is set from isFullscreen, which only turns
+   true once a fullscreenchange event confirmed the browser granted fullscreen, so it never applies
+   to a panel that is not really fullscreen. Both selectors carry identical declarations.
+
+   --panel-sidebar-width is published by PanelResizer: the sidebar is
+   user-resizable, so the split point is the one value CSS cannot derive on its
+   own. Percentages below resolve against the card's content box, which already
+   excludes its border, so no border arithmetic is needed. */
+
+.tido :fullscreen .panel,
+.tido [data-fullscreen] .panel {
+  width: 100% !important;
+}
+
+.tido :fullscreen .panel .main-content,
+.tido [data-fullscreen] .panel .main-content {
+  width: calc(100% - var(--panel-sidebar-width, 0px)) !important;
+}
+
+.tido :fullscreen .panel [data-sidebar-container],
+.tido [data-fullscreen] .panel [data-sidebar-container] {
+  left: calc(100% - var(--panel-sidebar-width, 0px)) !important;
+  width: var(--panel-sidebar-width, 0px) !important;
+}
+
+/* A fullscreen panel is the whole screen, so the windowed card chrome only
+   survives as artefacts against the screen edge. */
+.tido :fullscreen .panel-card,
+.tido [data-fullscreen] .panel-card {
+  border-width: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.tido :fullscreen [data-panel-resize-handle],
+.tido [data-fullscreen] [data-panel-resize-handle] {
+  display: none !important;
+}
+
+/* Painted behind the element while the browser transitions into fullscreen.
+   Black by default, which reads as a flash. */
+.tido :fullscreen::backdrop {
+  background: var(--background);
+}

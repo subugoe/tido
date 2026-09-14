@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useState, FC, useEffect, useMemo, useRef, SetStateAction, Dispatch } from 'react'
+import React, { ReactNode, createContext, useContext, useState, FC, useEffect, useMemo, useRef, SetStateAction, Dispatch } from 'react'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
@@ -28,6 +28,11 @@ interface PanelContextType {
   loading: boolean
   updatePanel: (data: Partial<PanelState>) => void
   remove: () => void
+  // The outermost element of this panel - the one that goes fullscreen, and the one portalled content
+  // (popovers, dropdowns, tooltips) must render into, since only the fullscreen element gets painted.
+  panelRootRef: React.RefObject<HTMLDivElement>
+  isFullscreen: boolean
+  enterFullscreen: () => void
   resizer: PanelResizer
   initResizer: (el: HTMLElement) => void
   hoveredAnnotation: string | null
@@ -88,8 +93,23 @@ interface PanelProviderProps {
 const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) => {
   const { annotations: annotationsConfig, panelViews: globalPanelViewsConfig } = useConfig()
 
+  const panelRootRef = useRef<HTMLDivElement>(null)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
   const [loading, setLoading] = useState(true)
   const [resizer, setResizer] = useState<PanelResizer | null>(null)
+
+  // without this listener isFullscreen would stay true while the panel is no longer fullscreen.
+  useEffect(() => {
+    const handler = () => setIsFullscreen(document.fullscreenElement === panelRootRef.current)
+    document.addEventListener('fullscreenchange', handler)
+    return () => document.removeEventListener('fullscreenchange', handler)
+  }, [])
+
+  function enterFullscreen() {
+    panelRootRef.current?.requestFullscreen()
+  }
+
   const [hoveredAnnotation, setHoveredAnnotation] = useState(null)
   const [matchedAnnotationsMaps, setMatchedAnnotationsMaps] = useState<{[contentUrl: string]: MatchedAnnotationsMap}>({})
   const [annotationTypesBySource, setAnnotationTypesBySource] = useState<{[contentUrl: string]: FilterNodeWithSelection[]}>({})
@@ -433,6 +453,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       updatePanel,
       loading,
       remove,
+      panelRootRef,
+      isFullscreen,
+      enterFullscreen,
       resizer,
       initResizer,
       hoveredAnnotation,
@@ -471,7 +494,13 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
       syncedTargets,
       setSyncedTargets,
     }}>
-      {children}
+      <div
+        ref={panelRootRef}
+        data-fullscreen={isFullscreen || undefined}
+        className="flex items-stretch shrink-0 [&:fullscreen]:bg-background"
+      >
+        {children}
+      </div>
     </PanelContext.Provider>
   )
 }
@@ -485,4 +514,4 @@ function usePanel(): PanelContextType {
   return context
 }
 
-export { PanelProvider, usePanel }
+export { PanelContext, PanelProvider, usePanel }
