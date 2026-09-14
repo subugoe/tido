@@ -282,8 +282,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
         try {
           const page = await getAnnotationPage(item.annotationCollection)
-          const annotations = page.items ?? []
-          const witnesses = page.partOf.refs ?? []
+          const annotations = page?.items ?? []
+          const witnesses = page?.partOf.refs ?? []
 
           if (witnesses.length > 0) {
             const witnessesWithColor = setColors(witnesses)
