@@ -1,6 +1,5 @@
 import React, { FC, memo, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  addActiveTargetStyle,
   addAnnotationBaseStyle,
   addAnnotationId,
   addCrossRefTargetStyle,
@@ -38,14 +37,11 @@ import {
 } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useSynopsisStore, SynopsisConnection, EMPTY_SYNOPSIS_CONNECTION } from '@/store/SynopsisStore.tsx'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { findFocusedTarget } from '@/utils/scroller.ts'
 import { useShallow } from 'zustand/react/shallow'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
-import AnnotationPopoverContent from '@/components/panel/annotations/popover/AnnotationPopoverContent.tsx'
-import { SelectedAnnotation } from '@/types'
-import SynopsisContainer from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContainer.tsx'
+import { useAnnotationPopover } from '@/components/panel/annotations/popover/useAnnotationPopover.tsx'
 import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
 
 
@@ -86,27 +82,16 @@ const GenericTextRenderer: FC<Props> = memo(({
   const {
     selectedAnnotation,
     activeAnnotationTypes,
-    setSelectedAnnotation,
     updateAnnotationTypesBySource,
     setDynamicAnnotationTypes,
     annotations,
     addSyncedTargets,
-    getScroller,
   } = usePanel()
 
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
-  const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
-  const [tooltipOpen, setTooltipOpen] = useState(false)
-  const [crossRefAnnotations, setCrossRefAnnotations] = useState<Annotation[]>([])
-  const [relatedAnnotations, setRelatedAnnotations] = useState<Annotation[]>([])
-  const [tooltipAnnotations, setTooltipAnnotations] = useState<Annotation[]>([])
-  // the connection the popover offers for selection - not yet the active one
-  const [syncTargets, setSyncTargets] = useState<SynopsisConnection>(EMPTY_SYNOPSIS_CONNECTION)
-
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
-  const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
   const targetsRef = useRef<HTMLElement[]>(null)
   const hoveredAnnotationsRef = useRef<string[] | null>(null)
   const activeAnnotationTypesRef = useRef<AnnotationTypesDict | null>(null)
@@ -125,6 +110,16 @@ const GenericTextRenderer: FC<Props> = memo(({
   const isPointerDownRef = useRef(false)
   // the last focused target we published while scrolling, to avoid re-publishing within the same target
   const lastScrolledFocusTargetRef = useRef<HTMLElement | null>(null)
+
+  // The popover a target click opens, with the click handling that fills it. It reads this
+  // renderer's targets and annotation state through the refs above.
+  const { annotationPopover, onTargetClick } = useAnnotationPopover({
+    wrapperRef: textWrapperRef,
+    flippedMatchedMapRef,
+    targetsSyncMapRef,
+    activeAnnotationTypesRef,
+    onSelect
+  })
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
   const parsedDom: Element = React.useMemo(() => {
@@ -480,7 +475,6 @@ const GenericTextRenderer: FC<Props> = memo(({
   useEffect(() =>   {
     if (!matchedMap) return
 
-    selectedAnnotationRef.current = selectedAnnotation
     const targetsOfSelectedAnnotation = selectedAnnotation && !!(matchedMap[selectedAnnotation.annotation.id])
       ? matchedMap[selectedAnnotation.annotation.id].target
       : []
@@ -559,26 +553,12 @@ const GenericTextRenderer: FC<Props> = memo(({
     onHoverEnd()
   }
 
-  function isFilteredAnnotation(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict) {
-    // filter Variant Annotations based on witnesses in selectedAnnotationTypes
-    // filter all other annotations which have type as key in selectedAnnotation types
-    const annotationType = annotation.body.annotationType
-    if (!selectedAnnotationTypes || annotationsConfig.tooltipTypes?.includes(annotationType)) return true
-
-    if (annotationType === 'Variant') {
-      return selectedAnnotationTypes?.['Variant']?.some(witness => annotation.body.witnesses.includes(witness))
-    } else {
-      return Object.keys(selectedAnnotationTypes).includes(annotationType)
-    }
-  }
-
-
-  const onClickTarget = async (e: Event) => {
+  const onClickTarget = (e: Event) => {
     // Generic click listener
     // TODO:  Be careful with state here. This listener will be added once a new map is created.
     //  So this function will be called with those state values which existed at the time of adding.
 
-    const target = e.currentTarget as Element
+    const target = e.currentTarget as HTMLElement
 
     // e.target = the deepest DOM node the user actually clicked
     // e.currentTarget (target) = the annotation target this listener is attached to
@@ -586,7 +566,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     // that should not process the event — the child's handler will take care of it.
     const clickTarget = e.target as HTMLElement
     const isClickInsideChildTarget = targetsRef.current?.some(
-      t => t !== target && (target as HTMLElement).contains(t) && t.contains(clickTarget)
+      t => t !== target && target.contains(t) && t.contains(clickTarget)
     )
 
     if (isClickInsideChildTarget) return
@@ -595,155 +575,11 @@ const GenericTextRenderer: FC<Props> = memo(({
     // ancestors from also reacting.
     e.stopPropagation()
 
-    getScroller().setOriginSelection('text')
-
-    // Resolve the targets the clicked element is synced with on demand, using the clicked target's
-    // sync annotations recorded in targetsSyncMapRef (read via ref to avoid stale closure state).
-    // With disableSynopsisSelection a sync target still goes through the regular click handling -
-    // only its synopsis behavior (connection, action area) is skipped below.
-    const synopsisSelectionDisabled = !!annotationsConfig?.disableSynopsisSelection
-    const targetSyncAnnotations = targetsSyncMapRef.current.get(target as HTMLElement) ?? []
-    const newSyncTargets = getSyncedTargets(target as HTMLElement, source, targetSyncAnnotations)
-
-    // TODO: Fix bug: Click at a new target should check if there are syncedTargets -> if yes -> should make them null or so
-
-    // y-position of the clicked target within its scroll container's visible height
-    // (ignoring scroll position), so each synced panel can scroll its own synced target
-    // to the same y-position and align it with this one.
-    const clickedScrollContainer = (target as HTMLElement).closest('[data-text-container]') as HTMLElement | null
-    const clickedYPos = clickedScrollContainer
-      ? target.getBoundingClientRect().top - clickedScrollContainer.getBoundingClientRect().top
-      : 0
-
-    const crossRefAnnotations = (annotations?.filter(a => {
-      const isInSource = a.target && getSource(a.target[0]).id === source
-      const isCrossRef = a.body.annotationType === annotationsConfig?.crossRefContentType
-      return isInSource && isCrossRef
-    })
-      .filter(a => {
-        const selector = getSelectorValue(a.target[0])
-        if (!selector) return false
-        return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
-      })) ?? []
-
-    const seen = new Set<string>()
-    // compute related annotations: all annotations for the clicked target and its parent targets
-    const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
-      .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
-      .flatMap(entry => entry.annotations)
-      .filter(a => !seen.has(a.id) && seen.add(a.id) && a.body.annotationType !== annotationsConfig?.crossRefContentType && isFilteredAnnotation(a, activeAnnotationTypesRef.current))
-
-    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-
-    let normalAnnotations = []
-    const _tooltipAnnotations = [] as Annotation[]
-
-    if (tooltipTypes.length === 0) {
-      normalAnnotations = newRelatedAnnotations
-    } else {
-      normalAnnotations = (newRelatedAnnotations.filter(a => {
-        const isTooltipAnnotation = tooltipTypes.includes(a.body.annotationType)
-        if (!isTooltipAnnotation) return true
-        _tooltipAnnotations.push(a)
-        return false
-      })) ?? []
-    }
-
-    // Sync-target-based clauses only apply when the synopsis is enabled - with it disabled the
-    // popover's synopsis area is hidden, so witness counts alone must not open (an empty) popover.
-    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1
-      || (!synopsisSelectionDisabled && (newSyncTargets.length > 1 || newSyncTargets.length === 1 && normalAnnotations.length === 1))
-
-    if (openTooltip) {
-      setTooltipOpen(true)
-      setTooltipTargetElement(target as HTMLElement)
-      setRelatedAnnotations(normalAnnotations)
-      setTooltipAnnotations(_tooltipAnnotations)
-      addActiveTargetStyle(target)
-      // pass the synced targets of this entry (and the clicked target's y-position) to the popover content
-    }
-
-    const areOnlySyncedTargets = !synopsisSelectionDisabled && _tooltipAnnotations.length === 0 && crossRefAnnotations.length === 0 && normalAnnotations.length === 0
-    const clickedConnection: SynopsisConnection = {
-      navigatedTarget: target as HTMLElement,
-      otherSyncedTargets: newSyncTargets,
-      yPos: clickedYPos
-    }
-    if (!synopsisSelectionDisabled) setSyncTargets(clickedConnection)
-
-    // a plain sync target - nothing to show in the popover, so the click establishes the connection
-    // right away (the effect above styles and aligns it)
-    if (areOnlySyncedTargets && newSyncTargets.length === 1) {
-      useSynopsisStore.getState().setActiveSynopsisConnection(clickedConnection)
-    }
-    if (areOnlySyncedTargets && newSyncTargets.length > 1) {
-      addSynopsisSelectedStyle(target)
-    }
-
-    setCrossRefAnnotations(crossRefAnnotations)
-
-    // when we have only one normal annotation then we should select the annotation in Sidebar and not open tooltip. (select + deselect annotation)
-    if (!openTooltip && normalAnnotations.length === 1) {
-      // we need selectedAnnotationRef since the click listener has not an updated value of selectedAnnotation, it has the 'null' when it was initially created
-      if (normalAnnotations[0].id === selectedAnnotationRef.current?.annotation.id) {
-        setSelectedAnnotation(null)
-        selectedAnnotationRef.current = null
-      } else {
-        const selectedAnnotation = {
-          annotation: normalAnnotations[0],
-          origin: 'text',
-          contentUrl: source
-        } as SelectedAnnotation
-
-        setSelectedAnnotation(selectedAnnotation)
-        selectedAnnotationRef.current = selectedAnnotation
-        if (onSelect) onSelect()
-      }
-    }
-
+    onTargetClick(target, source, annotations)
   }
-
-  const closeTooltip = () => {
-    setTooltipOpen(false)
-    setTooltipTargetElement(null)
-    setCrossRefAnnotations([])
-    setRelatedAnnotations([])
-    setSyncTargets(EMPTY_SYNOPSIS_CONNECTION)
-    setHoveredAnnotations([])
-    removeActiveTargetStyle(tooltipTargetElement)
-    removeSynopsisSelectedStyle(tooltipTargetElement)
-  }
-
-  // Close the popover when the synopsis is opened. The witness selection publishes the new active
-  // connection, whose effect takes care of dropping the style left by the one it replaces.
-  const onSynopsisItemClick = () => {
-    setTooltipOpen(false)
-    setCrossRefAnnotations([])
-    setRelatedAnnotations([])
-  }
-
-
-
 
   return <div data-text-wrapper ref={textWrapperRef} className="relative" style={{ paddingTop: `${paddingTop * 0.25}rem` }}>
-    <AnnotationPopoverContainer
-      target={tooltipTargetElement}
-      wrapper={textWrapperRef.current}
-      open={tooltipOpen}
-      onClose={closeTooltip}>
-      <AnnotationPopoverContent
-        target={tooltipTargetElement}
-        source={source}
-        crossRefAnnotations={crossRefAnnotations}
-        relatedAnnotations={relatedAnnotations}
-        tooltipAnnotations={tooltipAnnotations}
-        onBaseItemSelection={onSelect}
-        onClose={closeTooltip}
-      >
-        {!annotationsConfig?.disableSynopsisSelection && syncTargets.otherSyncedTargets.length > 0 &&
-          <SynopsisContainer syncTargets={syncTargets} onSelect={onSynopsisItemClick} />}
-      </AnnotationPopoverContent>
-    </AnnotationPopoverContainer>
+    {annotationPopover}
   </div>
 })
 
