@@ -1,11 +1,8 @@
 import React, { FC, memo, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  addActiveTargetStyle,
   addAnnotationBaseStyle,
   addAnnotationId,
   addCrossRefTargetStyle,
-  addSynopsisSelectedStyle,
-  addSynopsisHoverStyle,
   addHighlightStyle,
   addHoverStyle,
   addNestedTargetStyle,
@@ -21,13 +18,10 @@ import {
   getTextTargets,
   isParentHovered,
   partOfSelectedTargets,
-  removeActiveTargetStyle,
   removeAnnotationBaseStyle,
   removeAnnotationIds,
   removeHighlightStyle,
   removeHoverStyle,
-  removeSynopsisSelectedStyle,
-  removeSynopsisHoverStyle,
   removeNestedTargetStyle,
   removeSelectedStyle
 } from '@/utils/text.ts'
@@ -35,19 +29,17 @@ import {
   getNestedAnnotations,
   getSelectorValue,
   getSource,
-  getSyncedTargets,
   isFiltered
 } from '@/utils/annotations.ts'
 import { useText } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useSynopsisStore, SynopsisConnection, EMPTY_SYNOPSIS_CONNECTION } from '@/store/SynopsisStore.tsx'
-import { findFocusedTarget } from '@/utils/scroller.ts'
+import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { useShallow } from 'zustand/react/shallow'
+import { isProgrammaticScroll } from '@/utils/dom.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
-import AnnotationPopoverContainer from '@/components/panel/annotations/popover/AnnotationPopoverContainer.tsx'
-import AnnotationPopoverContent from '@/components/panel/annotations/popover/AnnotationPopoverContent.tsx'
 import { SelectedAnnotation } from '@/types'
-import SynopsisContainer from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContainer.tsx'
+import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
+import { useAnnotationPopover } from '@/components/panel/annotations/popover/useAnnotationPopover.tsx'
 
 
 interface Props {
@@ -76,11 +68,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     [annotationsConfig]
   )
   const { hoveredAnnotations, setHoveredAnnotations } = useText()
-  const activeSynopsisConnection = useSynopsisStore(state => state.activeSynopsisConnection)
-  const hoveredSyncedTargets = useSynopsisStore(state => state.hoveredSyncedTargets)
-  const setHoveredSyncedTargets = useSynopsisStore.getState().setHoveredSyncedTargets
-  // only the sync annotations touching this renderer's source. useShallow so a store update for a
-  // different source (which produces a new bySource map) doesn't re-render/re-run this renderer.
+  const { handleScroll, onHover, onHoverEnd, setText } = useSynopsis()
   const sourceSyncAnnotations = useSynopsisStore(
     useShallow(state => state.syncAnnotationsBySource.get(source) ?? [])
   )
@@ -98,14 +86,6 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   const [matchedMap, setMatchedMap] = useState<MatchedAnnotationsMap>({})
 
-  const [tooltipTargetElement, setTooltipTargetElement] = useState<HTMLElement | null>(null)
-  const [tooltipOpen, setTooltipOpen] = useState(false)
-  const [crossRefAnnotations, setCrossRefAnnotations] = useState<Annotation[]>([])
-  const [relatedAnnotations, setRelatedAnnotations] = useState<Annotation[]>([])
-  const [tooltipAnnotations, setTooltipAnnotations] = useState<Annotation[]>([])
-  // the connection the popover offers for selection - not yet the active one
-  const [syncTargets, setSyncTargets] = useState<SynopsisConnection>(EMPTY_SYNOPSIS_CONNECTION)
-
   const textWrapperRef = useRef<HTMLDivElement>(null)
   const flippedMatchedMapRef = useRef<MergedAnnotationEntry[]>(null)
   const selectedAnnotationRef = useRef<SelectedAnnotation | null>(null)
@@ -120,13 +100,11 @@ const GenericTextRenderer: FC<Props> = memo(({
   // the sourceSyncAnnotations effect and read by the click/hover/scroll listeners to resolve synced targets.
   const targetsSyncMapRef = useRef<Map<HTMLElement, Annotation[]>>(new Map())
 
-  // Distinguish user-driven scrolling from programmatic (sync) scrolling: a programmatic scrollTo
-  // emits scroll events but never a wheel/touch/keyboard gesture or a pointer (scrollbar) drag, so
-  // only scrolls backed by a recent user gesture publish a sync. See the scroll listener effect.
-  const lastUserScrollAtRef = useRef(0)
-  const isPointerDownRef = useRef(false)
-  // the last focused target we published while scrolling, to avoid re-publishing within the same target
-  const lastScrolledFocusTargetRef = useRef<HTMLElement | null>(null)
+  const { popover, onTargetClick } = useAnnotationPopover({
+    source,
+    wrapper: textWrapperRef.current,
+    onBaseItemSelection: onSelect
+  })
 
   // Document object that is only recreated when htmlString changes - e.g. on item change or content type change
   const parsedDom: Element = React.useMemo(() => {
@@ -148,151 +126,19 @@ const GenericTextRenderer: FC<Props> = memo(({
     if (onReady) onReady()
   }, [parsedDom])
 
-  // The active synopsis connection: highlight the targets it holds in this text and scroll this
-  // text's synced target so it sits at the same y-position as the navigated target does in its own
-  // panel. The cleanup drops the highlight from the connection this one replaces.
-  useEffect(() => {
-    if (sourceType === 'annotation') return
-
-    if (!parsedDom || !textWrapperRef.current) return
-    if (!activeSynopsisConnection) return
-
-    const { navigatedTarget, otherSyncedTargets, yPos, source: synopsisSource } = activeSynopsisConnection
-    if (!navigatedTarget) return
-
-    const isScrollSource = synopsisSource === 'scroll'
-    const ownsNavigatedTarget = textWrapperRef.current.contains(navigatedTarget)
-
-    if (!isScrollSource && ownsNavigatedTarget) addSynopsisSelectedStyle(navigatedTarget)
-
-    // the connection's targets that live in this text, resolved from their selector
-    const ownTargets = otherSyncedTargets
-      .filter((syncedTarget) => syncedTarget.source.id === source)
-      .map((syncedTarget) => textWrapperRef.current.querySelector(syncedTarget.selector) as HTMLElement)
-      .filter(Boolean)
-
-    ownTargets.forEach((targetEl) => {
-      if (!isScrollSource) addSynopsisSelectedStyle(targetEl)
-
-      // scroll so this target's y-position within the container matches the navigated target's
-      const scrollContainer = targetEl.closest('[data-text-container]') as HTMLElement
-      if (!scrollContainer) return
-
-      const currentY = targetEl.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
-      const desiredScrollTop = scrollContainer.scrollTop + currentY - yPos
-      const maxScrollTop = scrollContainer.scrollHeight - scrollContainer.clientHeight
-      scrollContainer.scrollTo({ top: Math.max(0, Math.min(desiredScrollTop, maxScrollTop)), behavior: 'smooth' })
-    })
-
-    // before the next connection is applied / on unmount: drop the style from this connection's targets
-    return () => {
-      if (ownsNavigatedTarget) {
-        removeSynopsisSelectedStyle(navigatedTarget)
-        removeActiveTargetStyle(navigatedTarget)
-      }
-      ownTargets.forEach((targetEl) => removeSynopsisSelectedStyle(targetEl))
-    }
-  }, [activeSynopsisConnection.navigatedTarget, parsedDom, source, sourceType])
-
-  // While a target is hovered, highlight the synced targets that belong to this renderer's source.
-  // Same as the connection effect above but with the hover style and without scrolling.
-  useEffect(() => {
-    if (!parsedDom || !textWrapperRef.current) return
-    if (!hoveredSyncedTargets || hoveredSyncedTargets.length === 0) return
-
-    // track the elements we highlight so the cleanup can remove their style afterwards
-    const highlightedEls: HTMLElement[] = []
-
-    hoveredSyncedTargets.forEach((syncedTarget) => {
-      // only handle synced targets that belong to the content rendered here
-      if (syncedTarget.source.id !== source) return
-
-      const targetEl = textWrapperRef.current.querySelector(syncedTarget.selector) as HTMLElement
-      if (!targetEl) return
-
-      addAnnotationBaseStyle(targetEl)
-      addSynopsisHoverStyle(targetEl)
-      highlightedEls.push(targetEl)
-    })
-
-    // the hover style is its own class, so dropping it never touches the highlight a target carries
-    // as part of the active connection
-    return () => highlightedEls.forEach((el) => removeSynopsisHoverStyle(el))
-  }, [hoveredSyncedTargets, parsedDom, source])
-
-  // Sync the other panels while the user scrolls this one: when a sync target enters this source's
-  // focused band, resolve its synced targets and publish them as the active connection, so each
-  // other panel scrolls its own target into alignment (see the activeSynopsisConnection effect).
-  useEffect(() => {
-    if (!parsedDom || !textWrapperRef.current) return
-    const scrollContainer = textWrapperRef.current.closest('[data-text-container]') as HTMLElement | null
-    if (!scrollContainer) return
-
-    // Only genuine user scrolling should drive the sync. A programmatic scrollTo (the alignment) and
-    // a layout shift both emit scroll events but neither emits a wheel/touch/keyboard gesture nor a
-    // pointer (scrollbar) drag, so we record those gestures and require a recent one in onScroll.
-    const USER_SCROLL_WINDOW = 200
-    const SCROLL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Spacebar'])
-    const markUserScroll = () => { lastUserScrollAtRef.current = performance.now() }
-    // keydown fires on the focused element and bubbles to the container only when focus is inside it -
-    // exactly when the user is keyboard-scrolling this panel (onPointerDown focuses the container, which
-    // carries tabIndex={-1}). Filter to the keys that actually scroll so unrelated typing isn't counted.
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (SCROLL_KEYS.has(e.key)) markUserScroll()
-    }
-    const onPointerDown = (e: PointerEvent) => {
-      if (e.button === 0) isPointerDownRef.current = true
-      // Make this panel the keyboard scroll target so arrow/page keys scroll it and their keydown
-      // is recognised as a user gesture (the container carries tabIndex={-1} to be focusable).
-      scrollContainer.focus({ preventScroll: true })
-    }
-    const onPointerUp = () => { isPointerDownRef.current = false }
-
-    const onScroll = () => {
-      const isUserScroll = isPointerDownRef.current || performance.now() - lastUserScrollAtRef.current < USER_SCROLL_WINDOW
-      if (!isUserScroll) return
-
-      const focusedTarget = findFocusedTarget(scrollContainer, Array.from(targetsSyncMapRef.current.keys()))
-      if (!focusedTarget || focusedTarget === lastScrolledFocusTargetRef.current) return
-      lastScrolledFocusTargetRef.current = focusedTarget
-
-      const targetSyncAnnotations = targetsSyncMapRef.current.get(focusedTarget) ?? []
-      const newSyncTargets = getSyncedTargets(focusedTarget, source, targetSyncAnnotations)
-      if (newSyncTargets.length === 0) return
-
-      // y-position of the focused target within the scroll container's visible height, so every other
-      // panel can scroll its own synced target to the same y-position and align it with this one.
-      const yPos = focusedTarget.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
-
-      useSynopsisStore.getState().setActiveSynopsisConnection({
-        navigatedTarget: focusedTarget,
-        otherSyncedTargets: newSyncTargets,
-        yPos,
-        source: 'scroll'
-      })
-    }
-
-    scrollContainer.addEventListener('wheel', markUserScroll, { passive: true })
-    scrollContainer.addEventListener('touchmove', markUserScroll, { passive: true })
-    scrollContainer.addEventListener('keydown', onKeyDown)
-    scrollContainer.addEventListener('pointerdown', onPointerDown)
-    // a scrollbar drag can release outside the container, so clear the flag on a window-level pointerup
-    window.addEventListener('pointerup', onPointerUp)
-    scrollContainer.addEventListener('scroll', onScroll, { passive: true })
-
-    return () => {
-      scrollContainer.removeEventListener('wheel', markUserScroll)
-      scrollContainer.removeEventListener('touchmove', markUserScroll)
-      scrollContainer.removeEventListener('keydown', onKeyDown)
-      scrollContainer.removeEventListener('pointerdown', onPointerDown)
-      window.removeEventListener('pointerup', onPointerUp)
-      scrollContainer.removeEventListener('scroll', onScroll)
-    }
-  }, [parsedDom, source])
-
   // Create and set matchedMap by identifying target nodes. Add listeners to targets.
   useEffect(() => {
     if (!parsedDom) return
+
+    setText(sourceType === 'text' ? parsedDom : null, source)
+
+    const scrollContainer = textWrapperRef.current?.closest('[data-text-container]') as HTMLElement | null
+    const onScroll = () => {
+      if (!scrollContainer || isProgrammaticScroll(scrollContainer)) return
+
+      handleScroll(source)
+    }
+    scrollContainer?.addEventListener('scroll', onScroll, { passive: true })
 
     if (annotations) {
       const annotationsInText = annotations.filter(annotation => annotation.target && getSource(annotation.target[0]).id === source)
@@ -368,6 +214,7 @@ const GenericTextRenderer: FC<Props> = memo(({
       targetsRef.current = getTextTargets(flippedMatchedMapRef.current)
     }
 
+    return () => scrollContainer?.removeEventListener('scroll', onScroll)
   }, [parsedDom, annotations, annotationsConfig])
 
   // Style and bind listeners on this source's sync targets so they become clickable. Runs when the
@@ -396,8 +243,8 @@ const GenericTextRenderer: FC<Props> = memo(({
         // addHighlightStyle(targetEl)
         addAnnotationBaseStyle(targetEl)
         targetEl.addEventListener('click', onClickTarget)
-        targetEl.addEventListener('mouseenter', onMouseEnterSyncTarget)
-        targetEl.addEventListener('mouseleave', onMouseLeaveSyncTarget)
+        targetEl.addEventListener('mouseenter', onMouseEnterTarget)
+        targetEl.addEventListener('mouseleave', onMouseLeaveTarget)
       })
     })
 
@@ -505,7 +352,7 @@ const GenericTextRenderer: FC<Props> = memo(({
   }, [hoveredAnnotations])
 
   // Apply selected styles on every selectedAnnotation update
-  useEffect(() => {
+  useEffect(() =>   {
     if (!matchedMap) return
 
     selectedAnnotationRef.current = selectedAnnotation
@@ -562,43 +409,37 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   const onMouseEnterTarget = (e: Event) => {
     const target = e.currentTarget as HTMLElement
-    const idsArray = getHoveredAnnotationsIds(target, targetsRef.current)
-    if (idsArray.length === 0) return
-    hoveredAnnotationsRef.current = idsArray
-    setHoveredAnnotations(hoveredAnnotationsRef.current)
+
+    // the annotations of the target and of its parent targets, read from their data-annotation-ids
+    const idsArray = getHoveredAnnotationsIds(target, targetsRef.current ?? [])
+    if (idsArray.length > 0) {
+      hoveredAnnotationsRef.current = idsArray
+      setHoveredAnnotations(hoveredAnnotationsRef.current)
+    }
+
+    onHover(target, source)
   }
 
   const onMouseLeaveTarget = (e: Event) => {
-    // hoveredAnnotations can contain parent targets.
-    // So on mouse leave, we want to remove the hover style only for the current target's annotation IDs.
     const target = e.currentTarget as HTMLElement
+
+    // hoveredAnnotations can contain parent targets. So on mouse leave, we want to remove the hover
+    // style only for the current target's annotation IDs, read from its data-annotation-ids.
     const idsArray = getAnnotationIds(target)
-    if (idsArray.length === 0) return
-
-    hoveredAnnotationsRef.current = hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null
-    setHoveredAnnotations(hoveredAnnotationsRef.current)
-  }
-
-  function isFilteredAnnotation(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict) {
-    // filter Variant Annotations based on witnesses in selectedAnnotationTypes
-    // filter all other annotations which have type as key in selectedAnnotation types
-    const annotationType = annotation.body.annotationType
-    if (!selectedAnnotationTypes || annotationsConfig.tooltipTypes?.includes(annotationType)) return true
-
-    if (annotationType === 'Variant') {
-      return selectedAnnotationTypes?.['Variant']?.some(witness => annotation.body.witnesses.includes(witness))
-    } else {
-      return Object.keys(selectedAnnotationTypes).includes(annotationType)
+    if (idsArray.length > 0) {
+      hoveredAnnotationsRef.current = hoveredAnnotationsRef.current?.filter(a => !idsArray.includes(a)) ?? null
+      setHoveredAnnotations(hoveredAnnotationsRef.current)
     }
-  }
 
+    onHoverEnd()
+  }
 
   const onClickTarget = async (e: Event) => {
     // Generic click listener
     // TODO:  Be careful with state here. This listener will be added once a new map is created.
     //  So this function will be called with those state values which existed at the time of adding.
 
-    const target = e.currentTarget as Element
+    const target = e.currentTarget as HTMLElement
 
     // e.target = the deepest DOM node the user actually clicked
     // e.currentTarget (target) = the annotation target this listener is attached to
@@ -606,7 +447,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     // that should not process the event — the child's handler will take care of it.
     const clickTarget = e.target as HTMLElement
     const isClickInsideChildTarget = targetsRef.current?.some(
-      t => t !== target && (target as HTMLElement).contains(t) && t.contains(clickTarget)
+      t => t !== target && target.contains(t) && t.contains(clickTarget)
     )
 
     if (isClickInsideChildTarget) return
@@ -617,90 +458,19 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     getScroller().setOriginSelection('text')
 
-    // Resolve the targets the clicked element is synced with on demand, using the clicked target's
-    // sync annotations recorded in targetsSyncMapRef (read via ref to avoid stale closure state).
-    // With disableSynopsisSelection a sync target still goes through the regular click handling -
-    // only its synopsis behavior (connection, action area) is skipped below.
-    const synopsisSelectionDisabled = !!annotationsConfig?.disableSynopsisSelection
-    const targetSyncAnnotations = targetsSyncMapRef.current.get(target as HTMLElement) ?? []
-    const newSyncTargets = getSyncedTargets(target as HTMLElement, source, targetSyncAnnotations)
+    // The annotations of the clicked target and of its parent targets - the popover sorts them
+    // into the areas it shows (cross references, tooltip items, sidebar items).
+    const targetAnnotations = (annotations ?? []).filter(annotation => {
+      if (!annotation.target || getSource(annotation.target[0]).id !== source) return false
 
-    // TODO: Fix bug: Click at a new target should check if there are syncedTargets -> if yes -> should make them null or so
+      const selector = getSelectorValue(annotation.target[0])
+      if (!selector) return false
 
-    // y-position of the clicked target within its scroll container's visible height
-    // (ignoring scroll position), so each synced panel can scroll its own synced target
-    // to the same y-position and align it with this one.
-    const clickedScrollContainer = (target as HTMLElement).closest('[data-text-container]') as HTMLElement | null
-    const clickedYPos = clickedScrollContainer
-      ? target.getBoundingClientRect().top - clickedScrollContainer.getBoundingClientRect().top
-      : 0
-
-    const crossRefAnnotations = (annotations?.filter(a => {
-      const isInSource = a.target && getSource(a.target[0]).id === source
-      const isCrossRef = a.body.annotationType === annotationsConfig?.crossRefContentType
-      return isInSource && isCrossRef
+      return Array.from(parsedDom.querySelectorAll(selector))
+        .some(el => el === target || el.contains(target))
     })
-      .filter(a => {
-        const selector = getSelectorValue(a.target[0])
-        if (!selector) return false
-        return Array.from(parsedDom.querySelectorAll(selector)).includes(target)
-      })) ?? []
 
-    const seen = new Set<string>()
-    // compute related annotations: all annotations for the clicked target and its parent targets
-    const newRelatedAnnotations = (flippedMatchedMapRef.current ?? [])
-      .filter(entry => entry.target === target || entry.target.contains(target as HTMLElement))
-      .flatMap(entry => entry.annotations)
-      .filter(a => !seen.has(a.id) && seen.add(a.id) && a.body.annotationType !== annotationsConfig?.crossRefContentType && isFilteredAnnotation(a, activeAnnotationTypesRef.current))
-
-    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-
-    let normalAnnotations = []
-    const _tooltipAnnotations = [] as Annotation[]
-
-    if (tooltipTypes.length === 0) {
-      normalAnnotations = newRelatedAnnotations
-    } else {
-      normalAnnotations = (newRelatedAnnotations.filter(a => {
-        const isTooltipAnnotation = tooltipTypes.includes(a.body.annotationType)
-        if (!isTooltipAnnotation) return true
-        _tooltipAnnotations.push(a)
-        return false
-      })) ?? []
-    }
-
-    // Sync-target-based clauses only apply when the synopsis is enabled - with it disabled the
-    // popover's synopsis area is hidden, so witness counts alone must not open (an empty) popover.
-    const openTooltip = _tooltipAnnotations.length > 0 || crossRefAnnotations.length > 0 || normalAnnotations.length > 1
-      || (!synopsisSelectionDisabled && (newSyncTargets.length > 1 || newSyncTargets.length === 1 && normalAnnotations.length === 1))
-
-    if (openTooltip) {
-      setTooltipOpen(true)
-      setTooltipTargetElement(target as HTMLElement)
-      setRelatedAnnotations(normalAnnotations)
-      setTooltipAnnotations(_tooltipAnnotations)
-      addActiveTargetStyle(target)
-      // pass the synced targets of this entry (and the clicked target's y-position) to the popover content
-    }
-
-    const areOnlySyncedTargets = !synopsisSelectionDisabled && _tooltipAnnotations.length === 0 && crossRefAnnotations.length === 0 && normalAnnotations.length === 0
-    const clickedConnection: SynopsisConnection = {
-      navigatedTarget: target as HTMLElement,
-      otherSyncedTargets: newSyncTargets,
-      yPos: clickedYPos
-    }
-    if (!synopsisSelectionDisabled) setSyncTargets(clickedConnection)
-
-    // a plain sync target - nothing to show in the popover, so the click establishes the connection
-    // right away (the effect above styles and aligns it)
-    if (areOnlySyncedTargets && newSyncTargets.length === 1) {
-      useSynopsisStore.getState().setActiveSynopsisConnection(clickedConnection)
-    }
-    if (areOnlySyncedTargets && newSyncTargets.length > 1) {
-      addSynopsisSelectedStyle(target)
-    }
-
-    setCrossRefAnnotations(crossRefAnnotations)
+    const { openTooltip, normalAnnotations } = onTargetClick(target, source, targetAnnotations)
 
     // when we have only one normal annotation then we should select the annotation in Sidebar and not open tooltip. (select + deselect annotation)
     if (!openTooltip && normalAnnotations.length === 1) {
@@ -723,68 +493,13 @@ const GenericTextRenderer: FC<Props> = memo(({
 
   }
 
-  const onMouseEnterSyncTarget = (e: Event) => {
-    const target = e.currentTarget as HTMLElement
-
-    addSynopsisHoverStyle(target)
-
-    // Find the targets this hovered target is synced with and publish them so every renderer can
-    // highlight its own synced targets (without scrolling - see the hoveredSyncedTargets effect).
-    const targetSyncAnnotations = targetsSyncMapRef.current.get(target) ?? []
-    const newSyncTargets = getSyncedTargets(target, source, targetSyncAnnotations)
-    setHoveredSyncedTargets(newSyncTargets)
-  }
-
-  const onMouseLeaveSyncTarget = (e: Event) => {
-    // the hover style is its own class, so a target that belongs to the active connection keeps
-    // its connection highlight when the hover one is dropped here
-    const target = e.currentTarget as HTMLElement
-
-    removeSynopsisHoverStyle(target)
-    setHoveredSyncedTargets([])
-  }
-
-  const closeTooltip = () => {
-    setTooltipOpen(false)
-    setTooltipTargetElement(null)
-    setCrossRefAnnotations([])
-    setRelatedAnnotations([])
-    setSyncTargets(EMPTY_SYNOPSIS_CONNECTION)
-    setHoveredAnnotations([])
-    removeActiveTargetStyle(tooltipTargetElement)
-    removeSynopsisSelectedStyle(tooltipTargetElement)
-  }
-
-  // Close the popover when the synopsis is opened. The witness selection publishes the new active
-  // connection, whose effect takes care of dropping the style left by the one it replaces.
-  const onSynopsisItemClick = () => {
-    setTooltipOpen(false)
-    setCrossRefAnnotations([])
-    setRelatedAnnotations([])
-  }
-
-
-
-
-  return <div data-text-wrapper ref={textWrapperRef} className="relative" style={{ paddingTop: `${paddingTop * 0.25}rem` }}>
-    <AnnotationPopoverContainer
-      target={tooltipTargetElement}
-      wrapper={textWrapperRef.current}
-      open={tooltipOpen}
-      onClose={closeTooltip}>
-      <AnnotationPopoverContent
-        target={tooltipTargetElement}
-        source={source}
-        crossRefAnnotations={crossRefAnnotations}
-        relatedAnnotations={relatedAnnotations}
-        tooltipAnnotations={tooltipAnnotations}
-        onBaseItemSelection={onSelect}
-        onClose={closeTooltip}
-      >
-        {!annotationsConfig?.disableSynopsisSelection && syncTargets.otherSyncedTargets.length > 0 &&
-          <SynopsisContainer syncTargets={syncTargets} onSelect={onSynopsisItemClick} />}
-      </AnnotationPopoverContent>
-    </AnnotationPopoverContainer>
+  return <div
+    data-text-wrapper
+    data-text-source={sourceType === 'text' ? source : undefined}
+    ref={textWrapperRef}
+    className="relative"
+    style={{ paddingTop: `${paddingTop * 0.25}rem` }}>
+    {popover}
   </div>
 })
 
