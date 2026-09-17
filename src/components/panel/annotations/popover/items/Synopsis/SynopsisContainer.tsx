@@ -5,8 +5,9 @@ import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { createNewPanel, getContentTypes, setNewActiveContentType, splitMIMEType } from '@/utils/panel.ts'
 import { PanelView } from '@/types'
-import { SyncedTargetRef, SynopsisConnection, useSynopsisStore } from '@/store/SynopsisStore.tsx'
+import { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import SynopsisContent from '@/components/panel/annotations/popover/items/Synopsis/SynopsisContent.tsx'
+import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
 
 interface Props {
   syncTargets: SynopsisConnection,
@@ -27,7 +28,7 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
   const { usePanelTranslation, panelId } = usePanel()
   const { t } = usePanelTranslation()
   const { panelViews: panelViewsConfig } = useConfig()
-  const setActiveSynopsisConnection = useSynopsisStore((state) => state.setActiveSynopsisConnection)
+  const { handleSynopsisSelection } = useSynopsis()
 
   const targets = syncTargets.otherSyncedTargets
 
@@ -39,15 +40,14 @@ const SynopsisContainer: FC<Props> = ({ syncTargets, onSelect }) => {
 
   function onSelectTarget(target: SyncedTargetRef) {
     onSelect()
-    setActiveSynopsisConnection({ ...syncTargets, otherSyncedTargets: [target] })
+    handleSynopsisSelection({ ...syncTargets, otherSyncedTargets: [target] })
   }
 
   function onOpenPanelsClick(selectedTargets: SyncedTargetRef[], replacePanels: boolean) {
     onSelect()
     if (replacePanels) openWithSubstitute(selectedTargets)
     else openAdditionalPanel(selectedTargets)
-    // publish the connection so each panel can highlight and scroll to its own target
-    setActiveSynopsisConnection({ ...syncTargets, otherSyncedTargets: selectedTargets })
+    handleSynopsisSelection({ ...syncTargets, otherSyncedTargets: selectedTargets })
   }
 
   // The index of the panel's text view showing the synced content (source.id), or -1 when the panel

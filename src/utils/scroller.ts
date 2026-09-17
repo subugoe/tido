@@ -1,4 +1,5 @@
 import { getSource } from '@/utils/annotations.ts'
+import { markProgrammaticScroll } from '@/utils/dom.ts'
 
 export const SYNC_SCROLL_THRESHOLD_TOP = 0.35
 const SYNC_SCROLL_THRESHOLD_BOTTOM = 0.45
@@ -91,6 +92,7 @@ class Scroller {
   syncScroll(source: HTMLElement, target: HTMLElement) {
     if (!source || !target) return
     this.isSyncing = true
+    markProgrammaticScroll(target)
     target.scrollTop = source.scrollTop
     requestAnimationFrame(() => (this.isSyncing = false))
   }
@@ -133,6 +135,7 @@ class Scroller {
 
       const targetTop = targetRect.top - otherTextRect.top + otherText.scrollTop
       const targetOffset = otherText.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
+      markProgrammaticScroll(otherText)
       otherText.scrollTop = isNearBottom ? scrollTop : targetTop - targetOffset
     }
 
@@ -179,6 +182,7 @@ class Scroller {
       const targetRect = targetElement.getBoundingClientRect()
       const targetTop = targetRect.top - textRect.top + text.scrollTop
       const targetOffset = text.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
+      markProgrammaticScroll(text)
       text.scrollTop = targetTop - targetOffset
       this.scrollOtherTexts(contentUrl)
     }
@@ -246,6 +250,7 @@ class Scroller {
     }
 
     text.addEventListener('scrollend', () => (this.isSyncing = false), { once: true })
+    markProgrammaticScroll(text)
     text.scrollTo({ top, behavior: 'smooth' })
   }
 }
