@@ -2,7 +2,6 @@ import { createContext, RefObject, useContext, useEffect, useMemo, useRef, useSt
 import { apiRequest } from '@/utils/api.ts'
 import { sanitize } from '@/utils/text-sanitize.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useText } from '@/contexts/TextContext.tsx'
 import { useErrorBoundary } from 'react-error-boundary'
 
 type State = {
@@ -14,6 +13,8 @@ type State = {
   setActiveContentType: (contentType: string) => void
   label: string
   text: string
+  loadingText: boolean
+  setLoadingText: (value: boolean) => void
   visible: boolean
 }
 
@@ -30,13 +31,13 @@ export const TextViewProvider = ({
 }) => {
   const { panelState, loading: loadingPanel, usePanelTranslation, updatePanel } = usePanel()
   const { contentTypes, activeContentType, label } = panelState.panelViews[viewIndex] ?? {}
-  const { setLoadingText } = useText()
   const { showBoundary } = useErrorBoundary()
   const { t } = usePanelTranslation()
 
   const [textWarning, setTextWarning] = useState('')
   // const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState<MatchedAnnotationsMap>(null)
   const [text, setText] = useState<string>('')
+  const [loadingText, setLoadingText] = useState(false)
 
   const activeContentUrl = useRef(null)
 
@@ -122,6 +123,8 @@ export const TextViewProvider = ({
       setActiveContentType,
       label,
       text,
+      loadingText,
+      setLoadingText,
       visible
     }}>
       {children}

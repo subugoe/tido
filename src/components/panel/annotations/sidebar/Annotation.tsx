@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import VariantContent from '@/components/panel/annotations/sidebar/VariantContent.tsx'
-import { useText } from '@/contexts/TextContext.tsx'
+import { useIsAnnotationHovered, useSetHoveredAnnotations } from '@/contexts/TextContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslation } from 'react-i18next'
 
@@ -28,9 +28,10 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   const { annotations: annotationsConfig } = useConfig()
   const { selectedAnnotation, setSelectedAnnotation, annotationsMode, annotations, getScroller } = usePanel()
   const { updateMatchedMap } = useAnnotations()
-  const { setHoveredAnnotations, hoveredAnnotations } = useText()
+  const setHoveredAnnotations = useSetHoveredAnnotations()
 
-  const [isHovered, setIsHovered] = useState(false)
+  // subscribed on its own id, so a hover anywhere else in the panel does not render this card
+  const isHovered = useIsAnnotationHovered(data.id)
   const [isSelected, setIsSelected] = useState(false)
   const [isLong, setIsLong] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -45,10 +46,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
 
   const type = (data.body as AnnotationBody).annotationType
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
-
-  useEffect(() => {
-    setIsHovered(hoveredAnnotations?.includes(data.id))
-  }, [data, hoveredAnnotations])
 
   useEffect(() => {
     setIsSelected(selectedAnnotation && selectedAnnotation.annotation.id === data.id)
@@ -111,7 +108,6 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
   }
 
   function handleMouseLeave() {
-    setIsHovered(false)
     setHoveredAnnotations(null)
   }
 

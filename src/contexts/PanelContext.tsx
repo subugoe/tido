@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useContext, useState, FC, useEffect, useMemo, useRef, SetStateAction, Dispatch } from 'react'
+import React, { ReactNode, createContext, useContext, useState, FC, useCallback, useEffect, useMemo, useRef, SetStateAction, Dispatch } from 'react'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 
@@ -332,7 +332,9 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   }
 
 
-  function addSyncedTargets(targets: HTMLElement[], source: string) {
+  // Stable, so an effect that publishes a text's sync targets can depend on it without rerunning on
+  // every render of this provider - the state setter it closes over is the only thing it needs.
+  const addSyncedTargets = useCallback((targets: HTMLElement[], source: string) => {
     if (!source) return
     setSyncedTargetsMap((prev) => {
       const existing = prev[source]
@@ -341,7 +343,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
       return { ...prev, [source]: next }
     })
-  }
+  }, [])
 
   function updateMatchedAnnotationsMap(contentUrl: string, map: MatchedAnnotationsMap) {
     setMatchedAnnotationsMaps((prev) => {

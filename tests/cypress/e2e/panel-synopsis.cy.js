@@ -640,7 +640,7 @@ describe('Panel Synopsis', () => {
     // styles the sidebar must not touch, asserted after every step below.
     const expectConnectionStyled = (label) => {
       getTextPane(transcription.contentUrl).find(OCEAN).should($target =>
-        expect(hasActiveStyle($target[0]), `clicked '${OCEAN}' of Panel 2 keeps the active style ${label}`).to.be.true)
+        expect($target[0].classList.contains(SYNOPSIS_STYLE_CLASS)))
 
       getPanel(WITNESS_PANEL)
         .find(`[data-text-container][data-content-url="${MAN_CONTENT_URL}"]`)

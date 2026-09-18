@@ -2,7 +2,6 @@ import { FC, UIEvent, useEffect, useRef, useState } from 'react'
 import TextRenderer from '@/components/panel/renderers/text/TextRenderer.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import Loading from '@/components/ui/loading.tsx'
-import { useText } from '@/contexts/TextContext.tsx'
 import TextOptions from '@/components/panel/views/text/TextOptions.tsx'
 import TextViewWarning from '@/components/panel/views/text/TextViewWarning.tsx'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
@@ -10,8 +9,7 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const TextViewContent: FC = () => {
   const { panelState, getScroller } = usePanel()
-  const { loadingText, setLoadingText } = useText()
-  const { text, activeContentUrl } = useTextView()
+  const { text, activeContentUrl, loadingText, setLoadingText } = useTextView()
   const { showContentTypeToggle } = useConfig()
   const scrollContainer = useRef<HTMLDivElement>(null)
   const [scrolled, setScrolled] = useState(false)
