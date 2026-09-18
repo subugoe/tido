@@ -5,7 +5,7 @@ import SynopsisContainer from '@/components/panel/annotations/popover/items/Syno
 import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
-import { useText } from '@/contexts/TextContext.tsx'
+import { useSetHoveredAnnotations } from '@/contexts/TextContext.tsx'
 import { EMPTY_SYNOPSIS_CONNECTION, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import { getSelectorValue } from '@/utils/annotations.ts'
 import {
@@ -39,7 +39,7 @@ export interface AnnotationPopover {
 function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): AnnotationPopover {
   const { annotations: annotationsConfig } = useConfig()
   const { activeAnnotationTypes } = usePanel()
-  const { setHoveredAnnotations } = useText()
+  const setHoveredAnnotations = useSetHoveredAnnotations()
   const { getOtherSyncedTargets, handleSynopsisSelection } = useSynopsis()
 
   const [open, setOpen] = useState(false)
