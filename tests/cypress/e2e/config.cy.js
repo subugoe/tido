@@ -169,6 +169,78 @@ describe('Config', () => {
   //       .should('have.attr', 'data-state', 'unchecked')
   //   }
   // );
+  // The first item of this collection has a single content type, the second one has three other
+  // ones - so navigating in either direction has to rebuild the content types instead of keeping
+  // the ones of the item that was left.
+  runConfigTest('panels[0].collection=http://localhost:8181/example/collections/content-types.json',
+    'Should update the content types and the active content type when navigating between items', () => {
+      cy.get('[data-cy="item-label"]').should('contain.text', 'One Content Type Page')
+      cy.get('[data-text-container]').find('#page1-transcription').should('exist')
+
+      //a single content type is rendered as a plain label, so there is nothing to open
+      cy.get('[data-cy="content-type"]')
+        .should('be.visible')
+        .click()
+      cy.get('[data-cy="content-types-dropdown"]').should('not.exist')
+
+      cy.get('[data-cy="next-item-button"]').click()
+
+      //the panel shows the new item ...
+      cy.get('[data-cy="item-label"]').should('contain.text', 'Three Content Types Page')
+
+      //... with the text of its first content type, not the one of the item that was left
+      cy.get('[data-text-container]').find('#page2-diplomatic').should('exist')
+      cy.get('[data-text-container]').find('#page1-transcription').should('not.exist')
+
+      //the toggle turned into a dropdown announcing the new active content type
+      cy.get('[data-cy="content-type"]')
+        .should('contain.text', 'diplomatic')
+        .click()
+
+      cy.get('[data-cy="content-types-dropdown"]')
+        .find('[role="menuitemradio"]')
+        .as('contentTypeOptions')
+
+      //exactly the three content types of the new item are offered, the first one preselected
+      cy.get('@contentTypeOptions').should('have.length', 3)
+
+      cy.get('@contentTypeOptions').eq(0)
+        .should('contain.text', 'diplomatic')
+        .should('have.attr', 'data-state', 'checked')
+
+      cy.get('@contentTypeOptions').eq(1)
+        .should('contain.text', 'normalized')
+        .should('have.attr', 'data-state', 'unchecked')
+
+      cy.get('@contentTypeOptions').eq(2)
+        .should('contain.text', 'translation')
+        .should('have.attr', 'data-state', 'unchecked')
+
+      //the content type of the previous item is gone
+      cy.get('[data-cy="content-types-dropdown"]').should('not.contain.text', 'transcription')
+
+      cy.get('body').type('{esc}')
+      cy.get('[data-cy="content-types-dropdown"]').should('not.exist')
+
+      //navigating back has to shrink the content types again instead of keeping the three of the
+      //item that was left
+      cy.get('[data-cy="prev-item-button"]').click()
+
+      cy.get('[data-cy="item-label"]').should('contain.text', 'One Content Type Page')
+
+      //the text of the first item is loaded again
+      cy.get('[data-text-container]').find('#page1-transcription').should('exist')
+      cy.get('[data-text-container]').find('#page2-diplomatic').should('not.exist')
+
+      //with a single content type left, the toggle is a plain label again: it no longer names an
+      //active content type and opens nothing
+      cy.get('[data-cy="content-type"]')
+        .should('be.visible')
+        .should('not.contain.text', 'diplomatic')
+        .click()
+
+      cy.get('[data-cy="content-types-dropdown"]').should('not.exist')
+  });
   runConfigTest('rootCollections[]=http://localhost:8181/4w/collections/transcriptions.json&panels[0].collection=http://localhost:8181/4w/collections/transcriptions.json',
     'Should show markers in tree for open panel', () => {
       Tree.open()

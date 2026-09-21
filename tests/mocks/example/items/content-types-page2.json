@@ -1,0 +1,32 @@
+{
+  "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/v2.jsonld",
+  "textapi": "2.0.0",
+  "id": "http://localhost:8181/example/items/content-types-page2.json",
+  "textapiType": "TextApiItem",
+  "revision": "1",
+  "division": "Three Content Types Page",
+  "titles": [
+    "2"
+  ],
+  "languages": [
+    "eng"
+  ],
+  "contents": [
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "id": "http://localhost:8181/example/html/content-types-page2_diplomatic.html",
+      "contentType": "text/html;type=diplomatic"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "id": "http://localhost:8181/example/html/content-types-page2_normalized.html",
+      "contentType": "text/html;type=normalized"
+    },
+    {
+      "@context": "https://gitlab.gwdg.de/subugoe/textapi/specs/-/raw/main/jsonld/content.jsonld",
+      "id": "http://localhost:8181/example/html/content-types-page2_translation.html",
+      "contentType": "text/html;type=translation"
+    }
+  ],
+  "textItemType": "page"
+}
