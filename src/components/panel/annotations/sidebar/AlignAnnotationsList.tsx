@@ -40,9 +40,9 @@ const AlignAnnotationsList: FC = () => {
   // runs for exactly as long as this component is mounted and is stopped again on unmount.
   useEffect(() => {
     const scroller = getScroller()
-    scroller.startSync()
+    scroller.startSync(panelId)
 
-    return () => scroller.stopSync()
+    return () => scroller.stopSync(panelId)
   }, [])
 
   useEffect(() => {
@@ -72,12 +72,12 @@ const AlignAnnotationsList: FC = () => {
     const scroller = getScroller()
 
     // The scroller's own scrollText: the sidebar and the text scroll in lockstep in this mode, so a
-    // scroll started here has to keep the sync listeners out until it has come to a stop.
-    const scrollText = (contentUrl: string, delta: number) => scroller.scrollText(contentUrl, delta)
+    // scroll started here has to keep the sync listeners out - which the mark on the write does.
+    const scrollText = (contentUrl: string, delta: number, targetEl: HTMLElement) =>
+      scroller.scrollText(panelId, contentUrl, delta, targetEl)
 
     if (selectedAnnotation.origin === 'annotation') {
-      scroller.setIsSyncing(true)
-      alignTextToAnnotation(panelEl, selectedAnnotation.annotation, scrollText)
+      alignTextToAnnotation(panelId, panelEl, selectedAnnotation.annotation, scrollText)
       return
     }
 
@@ -96,8 +96,7 @@ const AlignAnnotationsList: FC = () => {
       return
     }
 
-    scroller.setIsSyncing(true)
-    handleExternalSelection(panelEl, selectedAnnotation.annotation, controller.signal, scrollText)
+    handleExternalSelection(panelId, panelEl, selectedAnnotation.annotation, controller.signal, scrollText)
 
     return () => controller.abort()
   }, [selectedAnnotation, isSidebarScrollable])
@@ -105,12 +104,12 @@ const AlignAnnotationsList: FC = () => {
   // Runs after yMap is committed - i.e. once the annotations are positioned and the sidebar has its
   // full scrollable height. Only then is it safe to sync the sidebar scroll to the text.
   useEffect(() => {
-    const sidebar = getScroller().getSidebar()
+    const sidebar = getScroller().getSidebar(panelId)
     if (sidebar) setIsSidebarScrollable(sidebar.scrollHeight > sidebar.clientHeight)
 
-    if (getScroller().getOriginSelection() !== 'text') return
+    if (getScroller().getOriginSelection(panelId) !== 'text') return
     if (!selectedAnnotation?.contentUrl) return
-    getScroller().syncSidebarToText(selectedAnnotation.contentUrl)
+    getScroller().syncSidebarToText(panelId, selectedAnnotation.contentUrl)
   }, [yMap])
 
 
@@ -133,7 +132,7 @@ const AlignAnnotationsList: FC = () => {
       // a target of an annotation may lie in different panel views, i.e when 2 panel view are opened and target lies in 2 pane
       // we should be able to locate the textContainer in the 2nd pane
       const contentUrl = getSource(elements[i].annotation.target[0]).id
-      const scrollParent = document.getElementById(panelId).querySelector(`[data-content-url="${contentUrl}"]`) as HTMLElement
+      const scrollParent = getScroller().getText(panelId, contentUrl)
       if (!scrollParent) continue
 
       const parentRect = scrollParent.getBoundingClientRect()
@@ -214,7 +213,7 @@ const AlignAnnotationsList: FC = () => {
         // up in the text the annotation points at - the one carrying its content url - and not
         // panel wide.
         const contentUrl = getSource(annotation.target[0]).id
-        const textEl = document.getElementById(panelId).querySelector(`[data-content-url="${contentUrl}"]`) as HTMLElement
+        const textEl = getScroller().getText(panelId, contentUrl)
         if (!textEl) return
 
         const target = textEl.querySelector((annotation.target[0].selector as CssSelector).value) as HTMLElement

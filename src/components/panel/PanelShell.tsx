@@ -20,6 +20,10 @@ const PanelShell: FC<Props> = ({ children }) => {
 
     return () => {
       resizer?.clean()
+      // The scroller is one engine for the whole app and lives longer than any single panel, so a
+      // panel has to give back what it registered on the way out - its containers are DOM nodes of a
+      // closed panel, and the listeners the engine attached to them would outlive it otherwise.
+      getScroller().removePanel(panelId)
     }
   }, [])
 

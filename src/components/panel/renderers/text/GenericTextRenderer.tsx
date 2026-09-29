@@ -63,6 +63,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     updateAnnotationTypesBySource,
     setDynamicAnnotationTypes,
     annotations,
+    panelId,
     getScroller,
   } = usePanel()
 
@@ -279,7 +280,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     // ancestors from also reacting.
     e.stopPropagation()
 
-    getScroller().setOriginSelection('text')
+    getScroller().setOriginSelection(panelId, 'text')
 
     // The annotations of the clicked target and of its parent targets - the popover sorts them
     // into the areas it shows (cross references, tooltip items, sidebar items).

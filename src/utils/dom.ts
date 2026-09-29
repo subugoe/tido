@@ -67,6 +67,28 @@ function isProgrammaticScroll(container: Element): boolean {
   return programmaticScrolls.has(container)
 }
 
+// 'instant' jumps to the position in one step, 'smooth' animates towards it.
+type ScrollBehavior = 'instant' | 'smooth'
+
+// The single place a scroll position is written. Every scroll in the app goes through here, so the
+// clamp and the programmatic mark cannot be forgotten by one caller: a scroll we start is ours, and
+// the listeners that only care about the user's own scrolling skip it (see isProgrammaticScroll).
+// Returns the scrollTop the container ends up at.
+function alignContainer(container: HTMLElement, top: number, behavior: ScrollBehavior = 'instant'): number {
+  const maxScrollTop = container.scrollHeight - container.clientHeight
+  const clamped = Math.max(0, Math.min(top, maxScrollTop))
+
+  // Landing on the scrollTop the container already has scrolls nothing, so it never reaches
+  // scrollend and the mark would have to be lifted by time instead - so it is not set at all.
+  if (clamped === container.scrollTop) return container.scrollTop
+
+  markProgrammaticScroll(container)
+  if (behavior === 'smooth') container.scrollTo({ top: clamped, behavior: 'smooth' })
+  else container.scrollTop = clamped
+
+  return clamped
+}
+
 // Scrolls the target to the vertical center of the container if it is out of view. Returns the
 // scrollTop the container ends up at (the current scrollTop when no scroll was needed), so callers
 // can derive the target's final y-position within the container.
@@ -85,9 +107,7 @@ function scrollIntoViewIfNeeded(target: HTMLElement, container: HTMLElement): nu
   const finalScrollTop = Math.max(0, Math.min(desiredScrollTop, maxScrollTop))
 
   if (targetBottom > containerHeight || targetTop < containerTop) {
-    markProgrammaticScroll(container)
-    container.scrollTo({ top: finalScrollTop, behavior: 'smooth' })
-    return finalScrollTop
+    return alignContainer(container, finalScrollTop, 'smooth')
   }
   return container.scrollTop
 }
@@ -96,4 +116,13 @@ function validateSelector(selector: string) {
   return selector.startsWith('#') || selector.startsWith('.')
 }
 
-export { waitForElementInDom, scrollIntoViewIfNeeded, validateSelector, markProgrammaticScroll, isProgrammaticScroll }
+export {
+  waitForElementInDom,
+  scrollIntoViewIfNeeded,
+  validateSelector,
+  markProgrammaticScroll,
+  isProgrammaticScroll,
+  alignContainer
+}
+
+export type { ScrollBehavior }

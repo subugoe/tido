@@ -45,5 +45,3 @@ export const TEXT_CONTENT_TYPES = ['text/xhtml+xml', 'text/plain', 'text/html', 
 
 export const FORBID_TAGS = ['input', 'script', 'noscript', 'iframe', 'frame', 'frameset', 'noframes', 'applet', 'base', 'meta', 'form']
 export const ADD_ATTR = ['target', 'rel']
-
-export const AUTO_SCROLLING_ATTR_NAME = 'data-auto-scrolling'

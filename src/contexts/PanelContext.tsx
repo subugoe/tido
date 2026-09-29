@@ -13,7 +13,7 @@ import { getCollectionSlug } from '@/utils/tree.ts'
 import { setColors } from '@/utils/witness-colors.ts'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
-import { Scroller } from '@/utils/scroller.ts'
+import { Scroller, getScroller as getAppScroller } from '@/utils/scroller.ts'
 import { CustomError } from '@/utils/custom-error.ts'
 import { updateNodeSelection } from '@/utils/filter-tree.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
@@ -123,10 +123,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   const [annotationsMode, setAnnotationsMode] = useState<AnnotationsMode>(annotationsConfig.singleMode ?? annotationsConfig.defaultMode)
   const [error, setError] = useState<CustomError>(null)
   const [annotationsError, setAnnotationsError] = useState<CustomError>(null)
-  const scroller = useRef<Scroller>(null)
   const [annotationsLoading, setAnnotationsLoading] = useState(false)
 
-  const [syncMaps] = useState<{[contentUrl: string]: SyncMap}>({})
   const [syncedTargetsMap, setSyncedTargetsMap] = useState<{[contentUrl: string]: HTMLElement[]}>({})
   const [syncedTargets, setSyncedTargets] = useState<HTMLElement[]>([])
 
@@ -295,7 +293,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
           setAnnotations(annotations)
           if (config.selectedAnnotationId) {
-            getScroller().setOriginSelection('config')
+            getScroller().setOriginSelection(panelId, 'config')
             updatePanel({ selectedAnnotation: {
               annotation: annotations.find(a => a.id === config.selectedAnnotationId) ?? null,
               origin: 'config'
@@ -418,12 +416,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   }, [panelState.config, panelId])
 
   useEffect(() => {
-    getScroller().setSyncMaps(syncMaps)
-  }, [syncMaps])
-
-
-  useEffect(() => {
-    getScroller().setMatchedMap(matchedAnnotationsMaps)
+    getScroller().setMatchedMap(panelId, matchedAnnotationsMaps)
   }, [matchedAnnotationsMaps])
 
 
@@ -440,10 +433,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
   }
 
   function getScroller() {
-    if (!scroller.current) {
-      scroller.current = new Scroller()
-    }
-    return scroller.current
+    return getAppScroller()
   }
 
   function setSelectedAnnotation(selectedAnnotation: SelectedAnnotation | null) {

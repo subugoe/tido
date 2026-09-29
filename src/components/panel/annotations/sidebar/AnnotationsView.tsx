@@ -23,7 +23,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(({ children }, ref)
   </div>
 })
 const AnnotationsView: FC = () => {
-  const { annotationsError, annotationsMode, getScroller } = usePanel()
+  const { annotationsError, annotationsMode, panelId, getScroller } = usePanel()
   const { filteredAnnotations } = useAnnotations()
   const scrollContainer = useRef<HTMLDivElement>(null)
   const { showBoundary } = useErrorBoundary()
@@ -34,7 +34,7 @@ const AnnotationsView: FC = () => {
   // the text is the aligned list's business - it starts that sync on mount and stops it on unmount.
   useEffect(() => {
     if (!scrollContainer.current) return
-    getScroller().setSidebar(scrollContainer.current)
+    getScroller().setSidebar(panelId, scrollContainer.current)
   }, [scrollContainer])
 
   function getContent() {

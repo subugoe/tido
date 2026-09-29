@@ -25,7 +25,7 @@ const AnnotationsList: FC = () => {
     // The card was clicked in the sidebar, so it is already where the user put it - only the text
     // has to follow.
     if (selectedAnnotation.origin === 'annotation') {
-      alignTextToAnnotation(panelEl, selectedAnnotation.annotation)
+      alignTextToAnnotation(panelId, panelEl, selectedAnnotation.annotation)
       return
     }
 
@@ -33,13 +33,13 @@ const AnnotationsList: FC = () => {
     // user, so the sidebar is the side that moves - far enough for the card to sit at the height of
     // the clicked target, the way the aligned list positions it there.
     if (selectedAnnotation.origin === 'text') {
-      alignSidebarToAnnotation(panelEl, selectedAnnotation.annotation)
+      alignSidebarToAnnotation(panelId, panelEl, selectedAnnotation.annotation)
       return
     }
 
     // Everything else - cross ref, bookmarking, a selectedAnnotationId in the config - scrolls the
     // sidebar to the card and waits for that scroll to end before aligning the text.
-    handleExternalSelection(panelEl, selectedAnnotation.annotation, controller.signal)
+    handleExternalSelection(panelId, panelEl, selectedAnnotation.annotation, controller.signal)
 
     return () => controller.abort()
   }, [selectedAnnotation, filteredAnnotations])

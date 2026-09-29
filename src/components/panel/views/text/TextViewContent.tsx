@@ -8,7 +8,7 @@ import { useTextView } from '@/contexts/TextViewContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 
 const TextViewContent: FC = () => {
-  const { panelState, getScroller } = usePanel()
+  const { panelId, panelState, getScroller } = usePanel()
   const { text, activeContentUrl, loadingText, setLoadingText } = useTextView()
   const { showContentTypeToggle } = useConfig()
   const scrollContainer = useRef<HTMLDivElement>(null)
@@ -18,9 +18,9 @@ const TextViewContent: FC = () => {
     const url = activeContentUrl.current
     if (!scrollContainer.current || !url) return
     const scroller = getScroller()
-    scroller.setText(url, scrollContainer.current)
-    scroller.startText(url)
-    return () => scroller.stopText(url)
+    scroller.setText(panelId, url, scrollContainer.current)
+    scroller.startText(panelId, url)
+    return () => scroller.stopText(panelId, url)
   }, [scrollContainer.current, activeContentUrl.current])
 
   useEffect(() => {

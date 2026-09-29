@@ -26,7 +26,7 @@ interface Props {
 
 const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = false }) => {
   const { annotations: annotationsConfig } = useConfig()
-  const { selectedAnnotation, setSelectedAnnotation, annotationsMode, annotations, getScroller } = usePanel()
+  const { selectedAnnotation, setSelectedAnnotation, annotationsMode, annotations, panelId, getScroller } = usePanel()
   const { updateMatchedMap } = useAnnotations()
   const setHoveredAnnotations = useSetHoveredAnnotations()
 
@@ -96,7 +96,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     }
 
     setIsSelected(true)
-    getScroller().setOriginSelection('annotation')
+    getScroller().setOriginSelection(panelId, 'annotation')
     setTimeout(() => setSelectedAnnotation({
       annotation: data,
       origin: 'annotation'
