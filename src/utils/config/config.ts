@@ -120,6 +120,19 @@ function validateShowNewCollectionButton(input: unknown): ValidationResult<TidoC
   return { result, errors }
 }
 
+function validateShowCollectionTitle(input: unknown): ValidationResult<TidoConfig['showCollectionTitle']> {
+  const errors: Record<string, string> = {}
+  const result =
+    typeof input === 'boolean'
+      ? input
+      : (() => {
+        if (input !== undefined)
+          errors['showCollectionTitle'] = 'must be a boolean'
+        return defaultConfig.showCollectionTitle
+      })()
+  return { result, errors }
+}
+
 function validateShowContentTypeToggle(input: unknown): ValidationResult<TidoConfig['showContentTypeToggle']> {
   const errors: Record<string, string> = {}
   const result =
@@ -351,6 +364,7 @@ export async function mergeAndValidateConfig(
   const panelViews = validatePanelViews(userConfig.panelViews)
   const panels = validatePanels(userConfig.panels)
   const showAddNewPanelButton = validateShowNewCollectionButton(userConfig.showAddNewPanelButton)
+  const showCollectionTitle = validateShowCollectionTitle(userConfig.showCollectionTitle)
   const showContentTypeToggle = validateShowContentTypeToggle(userConfig.showContentTypeToggle)
   const showGlobalTree = validateGlobalTree(userConfig.showGlobalTree)
   const showPanelPlaceholder = validateShowPanelPlaceholder(userConfig.showPanelPlaceholder)
@@ -369,6 +383,7 @@ export async function mergeAndValidateConfig(
     ...panels.errors,
     ...rootCollections.errors,
     ...showAddNewPanelButton.errors,
+    ...showCollectionTitle.errors,
     ...showContentTypeToggle.errors,
     ...showGlobalTree.errors,
     ...showPanelPlaceholder.errors,
@@ -465,6 +480,7 @@ export async function mergeAndValidateConfig(
     lang: i18nConfig.lang,
     rootCollections: mergedRootCollections,
     showAddNewPanelButton: showAddNewPanelButton.result,
+    showCollectionTitle: showCollectionTitle.result,
     showContentTypeToggle: showContentTypeToggle.result,
     showGlobalTree: showGlobalTree.result,
     showPanelPlaceholder: showPanelPlaceholder.result,

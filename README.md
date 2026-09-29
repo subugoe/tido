@@ -491,6 +491,15 @@ Toggles the display of the "add new panel" button.
 
 ---
 
+##### `showCollectionTitle`
+
+- **Type:** Boolean
+- **Default:** `true`
+
+Toggles the display of the collection title button in the panel header. When false, the collection title (and its compact icon variant on narrow panels) is hidden.
+
+---
+
 ##### `showContentTypeToggle`
 
 - **Type:** Boolean

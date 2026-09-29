@@ -14,6 +14,7 @@ import { Switch } from '@/components/ui/switch.tsx'
 import PanelTitle from '@/components/panel/header/PanelTitle.tsx'
 import { useManifestSwitcher } from '@/components/panel/header/useManifestSwitcher.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { PANEL_HEADER_HEIGHT } from '@/utils/constants.ts'
 import BaseTooltip from '@/components/base/BaseTooltip.tsx'
 import CollectionTitle from '@/components/panel/header/CollectionTitle.tsx'
@@ -70,6 +71,7 @@ const PanelHeader: FC = () => {
   const { t } = usePanelTranslation()
   const [views, setViews] = useState<PanelView[]>([])
   const switcher = useManifestSwitcher()
+  const { showCollectionTitle } = useConfig()
 
   useEffect(() => {
     const data = panelState.panelViews.map(({ view, label, visible }) => ({
@@ -94,13 +96,15 @@ const PanelHeader: FC = () => {
   return (
     <div className="flex items-center border-b border-border px-2 bg-background" style={{ height: `${PANEL_HEADER_HEIGHT}px` }}>
       <div className="flex items-center shrink-0">
-        <div className="hidden @min-[600px]/panel:inline-flex">
-          <CollectionTitle />
-        </div>
+        {showCollectionTitle && (
+          <div className="hidden @min-[600px]/panel:inline-flex">
+            <CollectionTitle />
+          </div>
+        )}
         <div className="flex items-center @min-[600px]/panel:hidden">
           {hasManifest ? (
             <ButtonGroup className="h-7">
-              <CollectionIconButton />
+              {showCollectionTitle && <CollectionIconButton />}
               <ManifestLabel
                 dataCy="manifest-label-compact"
                 options={switcher.manifestOptions}
@@ -111,7 +115,7 @@ const PanelHeader: FC = () => {
               />
             </ButtonGroup>
           ) : (
-            <CollectionTitle />
+            showCollectionTitle && <CollectionTitle />
           )}
         </div>
       </div>
