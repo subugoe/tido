@@ -13,6 +13,7 @@ function alignTargets(targetEls: HTMLElement[], yPos: number) {
     if (!container) return
 
     const currentY = targetEl.getBoundingClientRect().top - container.getBoundingClientRect().top
+    console.log('scroll')
     alignContainer(container, container.scrollTop + currentY - yPos)
   })
 }

@@ -56,6 +56,17 @@ const ISHMAEL_CARD = 'http://localhost:8181/example-synopsis-2/book2/page1/rev1/
 // How far apart the two targets may end up after the propagation. Far below the height of a pane, so
 // a spec fails when a counterpart was not moved at all rather than when it was moved a little.
 const PROPAGATION_TOLERANCE = 10
+// How long the texts of the panel may still be settling before a spec stops waiting. This belongs to
+// the query the assertion is built on, not to the assertion: .should() takes no timeout of its own
+// and silently ignores one passed to it, so the assertion would otherwise give up after the 4s
+// default while the panel was still perfectly on its way to being aligned.
+const SETTLE_TIMEOUT = 20000
+// Consecutive samples the two texts have to keep the same scroll positions for before the alignment
+// is read at all - see expectAligned.
+const STABLE_SAMPLES = 3
+// The options a query of a wait carries. Only the query in front of an assertion passes them on, so
+// a chain of queries has to name them on each of its own - see getPanel.
+const patient = { timeout: SETTLE_TIMEOUT }
 // The middle of the sync band: the target landing there is the focused one, the first of the targets
 // overlapping the band (findFocusedTarget of utils/scroller.ts)
 const SYNC_BAND_RATIO = 0.4
@@ -79,20 +90,24 @@ function config(extra = []) {
   ].join('&')
 }
 
-function getPanel(index) {
+// The options are handed to the last query of the chain, and that is the only place a timeout can be
+// set: .should() takes none of its own and silently ignores one passed to it, and an earlier query's
+// options do not reach it either - only the query right in front of the assertion does. Getting this
+// wrong is quiet, since the assertion then simply falls back to the 4s default.
+function getPanel(index, options) {
   return cy.get('[data-cy="panels-wrapper"]')
     .find('[data-cy="panel"]')
-    .eq(index)
+    .eq(index, options)
 }
 
-function getTextPane(contentUrl) {
-  return getPanel(PANEL).find(`[data-text-container][data-content-url="${contentUrl}"]`)
+function getTextPane(contentUrl, options) {
+  return getPanel(PANEL).find(`[data-text-container][data-content-url="${contentUrl}"]`, options)
 }
 
 // The scroll container of the annotation list - the same element the app scrolls and the one the
 // alignment measures against (getSidebarEl of utils/annotation-alignment.ts)
-function getSidebar() {
-  return getPanel(PANEL).find('[data-sidebar-scroll-container]')
+function getSidebar(options) {
+  return getPanel(PANEL).find('[data-sidebar-scroll-container]', options)
 }
 
 function findText(contentType) {
@@ -135,26 +150,73 @@ function getCard($sidebar, annotationId) {
   return { card, top: parseInt(card.style.top) || card.offsetTop }
 }
 
-// Scrolls the annotation list so the card of the given annotation sits at the given fraction of the
-// sidebar height. A forced click does not scroll an element into view, and the card of '#ishmael'
-// starts well below the fold of the aligned list, so the specs place it themselves - which is also
-// the app's own situation: the list is long and the interesting card is rarely the first on screen.
-// The plain list needs no scrolling, its cards fit, so the scroll is skipped where there is nothing
-// to scroll.
-function scrollCardIntoView(annotationId, ratio = 0.2) {
+// How many samples in a row the card has to come out the same before its position is taken to be the
+// one the click will find it at.
+const CARD_SETTLED_SAMPLES = 3
+
+// Waits until the card of the given annotation has stopped moving inside the sidebar.
+//
+// The aligned list positions its cards absolutely and computes those positions in effects of its
+// own - once it has collected the elements, and again whenever the text or its width changes - and
+// the cards animate into every new position. Each of those rounds moves the card the specs are
+// about to click, so a position read too early is one the card is only passing through: the scroll
+// aimed at it puts the card somewhere else, and the click fails with 'the center of this element is
+// hidden from view'. Nothing announces those rounds, so the specs wait for the card to come to rest -
+// both the position it is laid out at and the one it is being drawn at, so the transition into it
+// counts as movement too. The plain list lays its cards out in the flow and leaves them where they
+// are, so it is at rest from the first sample and this costs a single round trip.
+function waitForCardToSettle(annotationId, settledSamples = 0, samplesLeft = 20, previous = null) {
   return getSidebar().then($sidebar => {
     const sidebar = $sidebar[0]
-    if (sidebar.scrollHeight <= sidebar.clientHeight) return
+    const { card, top } = getCard($sidebar, annotationId)
 
-    const { top } = getCard($sidebar, annotationId)
+    // The scroll height travels along: the sidebar is exactly as tall as its cards reach, so a round
+    // that moves the last one down changes it even when this card itself does not.
+    const current = `${top}/${Math.round(card.getBoundingClientRect().top)}/${sidebar.scrollHeight}`
+    const samples = current === previous ? settledSamples + 1 : 0
 
-    cy.wrap($sidebar).scrollTo(0, Math.max(0, top - sidebar.clientHeight * ratio))
+    if (samples >= CARD_SETTLED_SAMPLES) return
+    if (samplesLeft <= 0) throw new Error(`the card of '${annotationId}' never came to rest in the sidebar`)
+
+    return cy.wait(100).then(() => waitForCardToSettle(annotationId, samples, samplesLeft - 1, current))
+  })
+}
+
+// Scrolls the annotation list until the card of the given annotation lies inside its visible area,
+// and only then returns. A forced click does not scroll an element into view, and the card of
+// '#ishmael' starts well below the fold of the aligned list, so the specs place it themselves - which
+// is also the app's own situation: the list is long and the interesting card is rarely the first on
+// screen.
+//
+// Rather than scrolling once against the position the card happens to have, this scrolls and looks:
+// as long as the card is not in view, the scroll did not put it there and is repeated against the
+// position it has by then. The plain list lays its cards out in the flow, so they are in view as they
+// are and this returns at once.
+function scrollCardIntoView(annotationId, ratio = 0.2, attemptsLeft = 20) {
+  return getSidebar().then($sidebar => {
+    const sidebar = $sidebar[0]
+    const { card, top } = getCard($sidebar, annotationId)
+
+    const { top: visibleTop, bottom: visibleBottom } = sidebar.getBoundingClientRect()
+    const { top: cardTop, bottom: cardBottom } = card.getBoundingClientRect()
+
+    if (cardTop >= visibleTop && cardBottom <= visibleBottom) return
+
+    if (attemptsLeft <= 0) throw new Error(`the card of '${annotationId}' never came into view of the sidebar`)
+
+    const maxScrollTop = sidebar.scrollHeight - sidebar.clientHeight
+    const target = Math.max(0, Math.min(top - sidebar.clientHeight * ratio, maxScrollTop))
+
+    return cy.wrap($sidebar).scrollTo(0, target)
+      .then(() => cy.wait(50))
+      .then(() => scrollCardIntoView(annotationId, ratio, attemptsLeft - 1))
   })
 }
 
 // Clicks the card of the given annotation - the way a card is reached in the app, and the one that
 // tells the specs which annotation the connection they assert is about.
 function clickCard(annotationId) {
+  waitForCardToSettle(annotationId)
   scrollCardIntoView(annotationId)
 
   cy.get(`[data-annotation="${annotationId}"]`)
@@ -204,17 +266,40 @@ function scrollSidebarUntilTheTextFollows(annotationId, attemptsLeft = 20) {
 // matched map to the scroller in effects of its own - and a scroll that arrives before the engine
 // knows the panel is not what is under test here. Retrying asks the question until the panel is ready
 // to answer it, and still fails on an implementation that never propagates.
+//
+// The retry only counts once the texts have stopped moving, which is the other half of it. Every
+// action these specs drive ends in a smooth scroll that keeps running for a few hundred milliseconds
+// after the command returned, and the positions the texts pass through on the way are not the state
+// the specs are about: the two texts start out a little over a hundred pixels apart, so a scroll of
+// the origin that is only a few frames old can line its target up with the counterpart's by
+// coincidence. Reading the alignment then would let a spec pass on that coincidence - and fail
+// moments later on the propagation it never got to see, since that only happens once the scroll has
+// come to a stop. So the positions have to hold still across STABLE_SAMPLES retries first; any
+// movement in between resets the count and the wait starts over. This can only ever cost retries -
+// a text that never stops moving fails with a message saying so - and it never turns into a pass the
+// steady state would not have produced.
 function expectAligned() {
-  return getPanel(PANEL).should(($panels) => {
+  let stillSamples = 0
+  let lastScrollTops = null
+
+  return getPanel(PANEL, patient).should($panels => {
     const origin = $panels.find(`[data-text-container][data-content-url="${findText(ORIGIN).contentUrl}"]`)[0]
     const counterpart = $panels.find(`[data-text-container][data-content-url="${findText(COUNTERPART).contentUrl}"]`)[0]
+
+    const scrollTops = `${origin.scrollTop}/${counterpart.scrollTop}`
+    stillSamples = scrollTops === lastScrollTops ? stillSamples + 1 : 0
+    lastScrollTops = scrollTops
+
+    if (stillSamples < STABLE_SAMPLES) {
+      throw new Error(`the texts of the panel are still scrolling (${scrollTops})`)
+    }
 
     const originY = targetY(origin, ISHMAEL)
     const counterpartY = targetY(counterpart, ISHMAEL)
 
     expect(Math.abs(counterpartY - originY), `y distance of both '${ISHMAEL}' targets (${originY} vs ${counterpartY})`)
       .to.be.lessThan(PROPAGATION_TOLERANCE)
-  }, { timeout: 20000 })
+  })
 }
 
 describe('Synopsis propagation', () => {
@@ -237,11 +322,11 @@ describe('Synopsis propagation', () => {
     // The texts and the annotations of a panel arrive one after the other, so the specs wait for the
     // whole panel rather than for the first thing that renders: the assertions below are the
     // preconditions of the behaviour under test, and a spec that fails on a half loaded panel says
-    // nothing about it.
-    getPanel(PANEL).find('[data-text-container]').should('have.length', panelViews.length, { timeout: 20000 })
-    getTextPane(findText(ORIGIN).contentUrl).find(ISHMAEL).should('exist', { timeout: 20000 })
-    getTextPane(findText(COUNTERPART).contentUrl).find(ISHMAEL).should('exist', { timeout: 20000 })
-    getSidebar().find(`[data-annotation="${ISHMAEL_CARD}"]`).should('exist', { timeout: 20000 })
+    // nothing about it. Every query of a wait carries the timeout, see getPanel.
+    getPanel(PANEL, patient).find('[data-text-container]', patient).should('have.length', panelViews.length)
+    getTextPane(findText(ORIGIN).contentUrl, patient).find(ISHMAEL, patient).should('exist')
+    getTextPane(findText(COUNTERPART).contentUrl, patient).find(ISHMAEL, patient).should('exist')
+    getSidebar(patient).find(`[data-annotation="${ISHMAEL_CARD}"]`, patient).should('exist')
   })
 
   it('Should align the target of the other text when a target is scrolled into the sync band', () => {
@@ -278,10 +363,11 @@ describe('Synopsis propagation', () => {
   })
 
   it('Should align the target of the other text when a card of the plain list sidebar is clicked', () => {
-    // Unlike the aligned list above, the plain list scrolls the text with a plain scroll write that
-    // the band detection of that text sees as a user scroll - so the counterpart follows through
-    // handleSynopticScroll rather than through the explicit propagation. This spec does not
-    // discriminate between the two, it guards that the plain list keeps following at all.
+    // This mode keeps the sidebar and the texts off each other's scroll, but the text still moves
+    // through the scroller - which is what carries the connection: the counterpart follows through
+    // the explicit propagation of the target the scroll was for, not through the band detection of
+    // the text, which skips a scroll the engine started itself. The spec does not discriminate
+    // between the two, it guards that the plain list keeps following at all.
     switchMode('list')
 
     clickCard(ISHMAEL_CARD)

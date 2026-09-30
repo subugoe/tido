@@ -7,12 +7,12 @@ import { alignSidebarToAnnotation, alignTextToAnnotation, handleExternalSelectio
 
 const AnnotationsList: FC = () => {
   const { filteredAnnotations } = useAnnotations()
-  const { panelId, selectedAnnotation } = usePanel()
+  const { panelId, selectedAnnotation, getScroller } = usePanel()
 
   // Same reaction to a selection as in AlignAnnotationsList: the side the selection did not come
-  // from moves, so the card and its target end up at the same height. Nothing here goes through the
-  // scroller - the sidebar and the text views keep their own scroll positions in this mode, and only
-  // a selection moves either of them. The cards sit in the normal document flow, so the sidebar has
+  // from moves, so the card and its target end up at the same height. What this list does not do is
+  // keep the sidebar and the text views in lockstep - they scroll independently here, and only a
+  // selection moves either of them. The cards sit in the normal document flow, so the sidebar has
   // its full scrollable height as soon as they render and there is nothing to wait for.
   // filteredAnnotations is in the deps because a selection can arrive - through the config or a
   // bookmarked state - before the cards this effect looks up are in the DOM.
@@ -21,11 +21,22 @@ const AnnotationsList: FC = () => {
 
     const panelEl = document.getElementById(panelId) as HTMLElement
     const controller = new AbortController()
+    const scroller = getScroller()
+
+    // The text is still scrolled by the scroller, for the one thing the independent scrolling of
+    // this mode does not change: a scroll started here is ours, so the synopsis band detection of
+    // that text treats it as a programmatic one and ignores it - which is why the target it is
+    // bringing into view has to be handed over, so the scroller can carry its synoptic connection
+    // along once the text has come to a stop. Without it the counterparts in the other texts stay
+    // where they were. The sidebar is untouched by this: the lockstep sync of the aligned list is
+    // off in this mode, so nothing drags the sidebar along.
+    const scrollText = (contentUrl: string, delta: number, targetEl: HTMLElement) =>
+      scroller.scrollText(panelId, contentUrl, delta, targetEl)
 
     // The card was clicked in the sidebar, so it is already where the user put it - only the text
     // has to follow.
     if (selectedAnnotation.origin === 'annotation') {
-      alignTextToAnnotation(panelId, panelEl, selectedAnnotation.annotation)
+      alignTextToAnnotation(panelId, panelEl, selectedAnnotation.annotation, scrollText)
       return
     }
 
@@ -39,7 +50,7 @@ const AnnotationsList: FC = () => {
 
     // Everything else - cross ref, bookmarking, a selectedAnnotationId in the config - scrolls the
     // sidebar to the card and waits for that scroll to end before aligning the text.
-    handleExternalSelection(panelId, panelEl, selectedAnnotation.annotation, controller.signal)
+    handleExternalSelection(panelId, panelEl, selectedAnnotation.annotation, controller.signal, scrollText)
 
     return () => controller.abort()
   }, [selectedAnnotation, filteredAnnotations])
