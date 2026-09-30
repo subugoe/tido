@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.10](https://github.com/subugoe/tido/compare/v5.0.0-beta.9...v5.0.0-beta.10) (2026-09-30)
+
+
+### Features
+
+* add support for minimal resource format at collections and manifests ([79e62c8](https://github.com/subugoe/tido/commit/79e62c8b05396a5549b906ab77350a867b17ba25))
+* expose synopsis colors as CSS variables ([4121255](https://github.com/subugoe/tido/commit/4121255d4a9406cf55ca1a5c749471a5aef04523))
+* hide sidebar toggle when no annotations ([db5fc66](https://github.com/subugoe/tido/commit/db5fc6607930b31796380caac7c0f4652c9005d8))
+* implement Panel FullScreen Mode ([#1047](https://github.com/subugoe/tido/issues/1047)) ([45d9644](https://github.com/subugoe/tido/commit/45d9644c974cbe7302748906ad246b243fac5904))
+* show/hide the CollectionTitle in PanelHeader based on config option ([a97f214](https://github.com/subugoe/tido/commit/a97f2145f31ad6d7bf9ba4506c492406ea6de899))
+* update and fix theme "mode" in config ([c282b17](https://github.com/subugoe/tido/commit/c282b17ba3ef1ec178c25dbc917f9a035595d818))
+* update primary color shading and foreground lightness threshold ([65d5303](https://github.com/subugoe/tido/commit/65d530352144b8864b4220626e904555dcec252c))
+
+
+### Bug Fixes
+
+* avoid console error when annotations page is null ([318361a](https://github.com/subugoe/tido/commit/318361ae5a1888fa24848abb6b63cb30f668f8d5))
+* navigate to new item should update the text correctly ([#1195](https://github.com/subugoe/tido/issues/1195)) ([0b637b8](https://github.com/subugoe/tido/commit/0b637b82b2484184af634ab892fbca3d6c6a90b6))
+* prevent error when opening synoptic targets without configured content types ([4867305](https://github.com/subugoe/tido/commit/486730598791ced288a839a06048a9847bcb8fed))
+* set badges in annotation popover to muted instead of old accent ([22ca72e](https://github.com/subugoe/tido/commit/22ca72ec444725757814797d1343e150e86365f6))
+* update resize handle style ([54fae63](https://github.com/subugoe/tido/commit/54fae632f47a1b3b9d85796ee2c20a94a5bd510a))
+
+
+### Refactoring
+
+* relieve GenericTextRenderer from AnnotationPopover, most Synopsis logic, keep basic onMouseEnter, onMouseLeave, onClick ([9d50525](https://github.com/subugoe/tido/commit/9d50525ec1bda211f70ab650563b361efd6ebfc1))
+* update the style of target based on a single state object (isHovered, isSelected, isParentHovered..) in one useEffect + rerender only the annotations for which their style should be updated on hovering a target or another annotation ([#1194](https://github.com/subugoe/tido/issues/1194)) ([6467165](https://github.com/subugoe/tido/commit/6467165818031f0745fa1eb65f7e29d352330526))
+
 ## [5.0.0-beta.9](https://github.com/subugoe/tido/compare/v5.0.0-beta.8...v5.0.0-beta.9) (2026-09-11)
 
 
