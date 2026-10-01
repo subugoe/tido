@@ -50,7 +50,7 @@ function resolveSyncedTargetElements(syncedTargets: SyncedTargetRef[]): HTMLElem
 }
 
 function scrollInOtherTexts(targetEls: HTMLElement[], yPos: number, scrolledText: Element) {
-  scrollToTargets(targetEls.filter((targetEl) => !scrolledText.contains(targetEl)), yPos)
+  scrollToTargets(targetEls.filter((targetEl) => !scrolledText.contains(targetEl)), yPos, 'instant')
 }
 
 function useSynopsis(): SynopsisLogic {
@@ -61,6 +61,16 @@ function useSynopsis(): SynopsisLogic {
   const [synopsisText, setSynopsisText] = useState<SynopsisText | null>(null)
   const [syncTargets, setSyncTargets] = useState<HTMLElement[]>(NO_SYNC_TARGETS)
   const syncTargetElsRef = useRef<{ text: Element, syncAnnotations: Annotation[], targetEls: HTMLElement[] } | null>(null)
+  // What the currently focused target syncs with, resolved once per line instead of once per pixel of
+  // scrolling - see syncScrolledConnection
+  const anchorCacheRef = useRef<{
+    anchor: HTMLElement
+    source: string
+    // the identity of syncTargetElsRef when the cache was filled, so a rebuilt target set drops it
+    targetElsRef: { text: Element, syncAnnotations: Annotation[], targetEls: HTMLElement[] } | null
+    syncedTargets: SyncedTargetRef[]
+    targetEls: HTMLElement[]
+  } | null>(null)
 
   // The sync annotations of the source this hook was given a text for - they are what turns
   // elements of that text into sync targets.
@@ -202,19 +212,40 @@ function useSynopsis(): SynopsisLogic {
     const focusedTarget = findFocusedTarget(scrollContainer, getSourceTargetElements(text, source))
     if (!focusedTarget) return
 
-    const syncedTargets = getOtherSyncedTargets(focusedTarget, source)
-    if (syncedTargets.length === 0) return
-
     const yPos = focusedTarget.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
 
-    useSynopsisStore.getState().setActiveSynopsisConnection({
-      navigatedTarget: focusedTarget,
-      otherSyncedTargets: syncedTargets,
-      yPos,
-      source: 'scroll'
-    })
+    // Which line the panes are synced on is a property of the focused target, so everything derived
+    // from it - matching it against the sync annotations of the source, resolving their elements, and
+    // republishing the connection that re-renders every useSynopsis() subscriber - is redone only
+    // when the focused target changes, once per line crossed rather than once per pixel. yPos is the
+    // exception: it drifts with every pixel, which is why the other panes are realigned below on every
+    // scroll event - holding that back would leave them up to a line behind, the focused target moves
+    // out from under them for as long as its line stays in the band.
+    let cache = anchorCacheRef.current
+    if (!cache || cache.anchor !== focusedTarget || cache.source !== source
+      || cache.targetElsRef !== syncTargetElsRef.current) {
+      const syncedTargets = getOtherSyncedTargets(focusedTarget, source)
+      if (syncedTargets.length === 0) return
 
-    scrollInOtherTexts(resolveSyncedTargetElements(syncedTargets), yPos, text)
+      cache = {
+        anchor: focusedTarget,
+        source,
+        targetElsRef: syncTargetElsRef.current,
+        syncedTargets,
+        targetEls: resolveSyncedTargetElements(syncedTargets)
+      }
+      anchorCacheRef.current = cache
+
+      useSynopsisStore.getState().setActiveSynopsisConnection({
+        navigatedTarget: focusedTarget,
+        otherSyncedTargets: syncedTargets,
+        yPos,
+        source: 'scroll'
+      })
+      console.log(cache.targetEls, yPos)
+    }
+    scrollInOtherTexts(cache.targetEls, yPos, text)
+
   }, [getOtherSyncedTargets, getSourceTargetElements])
 
   // Bound here rather than by the component that renders the text, because the listener has to hold
@@ -224,6 +255,9 @@ function useSynopsis(): SynopsisLogic {
   useEffect(() => {
     if (!synopsisText?.text) return
     const { text, source } = synopsisText
+
+    // the anchor of the previous text says nothing about this one
+    anchorCacheRef.current = null
 
     const scrollContainer = text.closest('[data-text-container]') as HTMLElement | null
     if (!scrollContainer) return
