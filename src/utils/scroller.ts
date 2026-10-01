@@ -5,16 +5,30 @@ import { SyncedTargetRef, SynopsisConnection, useSynopsisStore } from '@/store/S
 const SYNC_SCROLL_THRESHOLD_TOP = 0.35
 const SYNC_SCROLL_THRESHOLD_BOTTOM = 0.45
 
+// A scroll gesture sends a burst of events for as long as it goes - one per frame, hundreds over a
+// fling - and each of them would resolve the whole app and write a scroll position. The first event
+// of a window is handled right away, so the texts follow along while the user scrolls; the rest of
+// the window is collapsed into one trailing call, so a long gesture costs a call per window instead
+// of a call per frame. The trailing call is what lands the texts on the position the scroll ended at.
+const SYNC_SCROLL_WINDOW = 50
+
 // Scrolls each target's own container so the target lands at yPos - the distance from the top of the
 // container that the target it is synced with has in its one, which is what keeps the texts aligned.
+// The targets handed in are already one per text - see focusedTargetsPerText - so this writes one
+// scroll position per text and nothing more. Writing more than one moved the scrollbar as often as
+// there were counterparts and left it wherever the last write pointed, which read as a scrollbar
+// that jumps.
 function alignTargets(targetEls: HTMLElement[], yPos: number) {
   targetEls.forEach((targetEl) => {
     const container = targetEl.closest('[data-text-container]') as HTMLElement | null
     if (!container) return
 
     const currentY = targetEl.getBoundingClientRect().top - container.getBoundingClientRect().top
-    console.log('scroll')
-    alignContainer(container, container.scrollTop + currentY - yPos)
+    const top = container.scrollTop + currentY - yPos
+    console.log('scroll', targetEl, container.scrollTop + currentY - yPos)
+
+    if (top > 6000) return
+    alignContainer(container, top)
   })
 }
 
@@ -49,6 +63,13 @@ function findFocusedTarget(scrollContainer: HTMLElement, targets: Element[]): HT
   return focusedTarget
 }
 
+// What the debounce of one scroll listener remembers: when it last ran, and the timer of the
+// trailing call waiting for the window to be over.
+interface ScrollDebounce {
+  lastHandled: number
+  timer: number
+}
+
 // One text view's place in the synoptic graph: the text element the renderer handed over, the
 // container that scrolls, and the elements of that text the sync annotations of its source target.
 // Kept per panel and per source, because the same source can be open in several panels at once and
@@ -58,13 +79,18 @@ interface SynopticView {
   container: HTMLElement
   targetEls: HTMLElement[]
   listener: EventListener
+  // what the band detection last acted on, so a scroll event that changes neither of them is a no-op
+  focusedTarget: HTMLElement | null
+  yPos: number | null
+  // the debounce of this view's scroll listener
+  debounce: ScrollDebounce
 }
 
 // One panel's slice of the engine: the elements it has registered and the state that belongs to it
 // alone. Everything is kept per panel rather than global, because a panel is the unit that can be
 // opened, closed and scrolled on its own - two panels showing the same text must not overwrite each
 // other's containers, and one panel's scroll origin must not be read by another.
-interface PanelState {
+interface ScrollerPanelState {
   sidebar: HTMLElement | null
   texts: {[contentUrl: string]: HTMLElement}
   synoptics: {[source: string]: SynopticView}
@@ -74,7 +100,7 @@ interface PanelState {
   focusedAnnotationId: string | null
 }
 
-function createPanelState(): PanelState {
+function createPanelState(): ScrollerPanelState {
   return {
     sidebar: null,
     texts: {},
@@ -100,12 +126,68 @@ function resolveSyncedTargetElements(syncedTargets: SyncedTargetRef[]): HTMLElem
   return [...new Set(targetEls)]
 }
 
+// The one target per text a connection is carried by. A single connection can point at several
+// counterparts in the same text: two sync annotations that share the target the connection started
+// from each have their own counterpart elsewhere in it, and the texts of one source can even be open
+// more than once. Handing all of them on made a text move once per counterpart - the scrollbar was
+// written as often as there were targets and ended up wherever the last write pointed, which read as
+// the scrollbar jumping - so they are grouped by their text and only one of them is kept: the one in
+// that text's focus band, the same rule a scrolled text is read with, falling back to the first when
+// the text is scrolled somewhere none of its targets is on screen.
+function focusedTargetsPerText(elements: HTMLElement[]): HTMLElement[] {
+  const elementsByContainer = new Map<HTMLElement, HTMLElement[]>()
+
+  elements.forEach((targetEl) => {
+    const container = targetEl.closest('[data-text-container]') as HTMLElement | null
+    if (!container) return
+
+    const containerTargets = elementsByContainer.get(container)
+    if (containerTargets) containerTargets.push(targetEl)
+    else elementsByContainer.set(container, [targetEl])
+  })
+
+  return [...elementsByContainer].map(([container, containerTargets]) => {
+    // Two counterparts of one connection often share a row in the same text - they are the same
+    // words, only split differently - and one of them has to be the one that counts, or the write
+    // would still happen twice. The band is what says which: it is where the text is being read.
+    const rows = new Map<number, HTMLElement>()
+    containerTargets.forEach((targetEl) => {
+      const top = Math.round(targetEl.getBoundingClientRect().top)
+      if (!rows.has(top)) rows.set(top, targetEl)
+    })
+    const rowTargets = [...rows.values()]
+
+    return findFocusedTarget(container, rowTargets) ?? rowTargets[0]
+  }).filter(Boolean)
+}
+
+// Whether aligning the two connections would move the same targets to the same height. The store
+// hands out a new object whenever anything of a connection changes, and several paths publish the
+// same one - so what has to be compared is what an alignment would do with it, not the object.
+function isSameConnection(a: SynopsisConnection | null, b: SynopsisConnection) {
+  if (!a) return false
+  if (a.navigatedTarget !== b.navigatedTarget || a.yPos !== b.yPos || a.source !== b.source) return false
+  if (a.otherSyncedTargets.length !== b.otherSyncedTargets.length) return false
+
+  return a.otherSyncedTargets.every((syncedTarget, index) => {
+    const other = b.otherSyncedTargets[index]
+    return other.source.id === syncedTarget.source.id && other.selector === syncedTarget.selector
+  })
+}
+
 class Scroller {
-  private panels: {[panelId: string]: PanelState} = {}
+  private panels: {[panelId: string]: ScrollerPanelState} = {}
 
   // The last connection this engine moved for. The store notifies on every change of any of its
   // fields, and aligning the same connection twice would write a scrollTop it has already reached.
   private alignedConnection: SynopsisConnection | null = null
+
+  // The elements the last resolution came back with, and the refs they were resolved for. Scrolling
+  // runs the same connection past the engine again and again - once per event, with the same refs -
+  // and resolving is a query over every text of the app, too much to redo for each of them. Dropped
+  // as soon as a text registers or a panel is closed, because that is when the elements a ref can
+  // point at change.
+  private resolvedTargets: { refs: string; elements: HTMLElement[] } | null = null
 
   constructor() {
     // A connection the user navigated to - a cross ref, a bookmark, the target list - scrolls the
@@ -117,12 +199,24 @@ class Scroller {
     })
   }
 
+  // The elements the given refs point at right now, reusing the last resolution while it is the
+  // answer to the same question.
+  private resolve(syncedTargets: SyncedTargetRef[]) {
+    const refs = syncedTargets.map((syncedTarget) => `${syncedTarget.source.id}|${syncedTarget.selector}`).join('\n')
+    if (this.resolvedTargets?.refs === refs) return this.resolvedTargets.elements
+
+    const elements = focusedTargetsPerText(resolveSyncedTargetElements(syncedTargets))
+    this.resolvedTargets = { refs, elements }
+    return elements
+  }
+
   // Moves the counterparts of the connection to yPos, leaving the text the user navigated in place.
   private alignConnection(connection: SynopsisConnection) {
     if (!connection.navigatedTarget) return
-    if (connection === this.alignedConnection) return
+    if (isSameConnection(this.alignedConnection, connection)) return
 
     this.alignedConnection = connection
+    console.log('alignConnection')
     this.alignSyncedTargets(connection.otherSyncedTargets, connection.yPos, connection.navigatedTarget)
   }
 
@@ -142,13 +236,14 @@ class Scroller {
 
     const yPos = targetEl.getBoundingClientRect().top - text.getBoundingClientRect().top
 
+    console.log('propagateToSyncedTargets')
     // the text that was moved keeps its own position - the others are the ones that follow
     this.alignSyncedTargets(syncedTargets, yPos, text)
   }
 
   // The slice for this panel, created on first use. Every accessor goes through it, so callers never
   // have to deal with an unregistered panel.
-  private panel(panelId: string): PanelState {
+  private panel(panelId: string): ScrollerPanelState {
     if (!this.panels[panelId]) this.panels[panelId] = createPanelState()
     return this.panels[panelId]
   }
@@ -165,6 +260,7 @@ class Scroller {
     delete this.panels[panelId]
     delete this.sidebarScrollListeners[panelId]
     delete this.textScrollListeners[panelId]
+    this.resolvedTargets = null
   }
 
   setSidebar(panelId: string, element: HTMLElement) {
@@ -256,6 +352,11 @@ class Scroller {
     const text = e.target as HTMLElement
     if (isProgrammaticScroll(text)) return
     const contentUrl = text.getAttribute('data-content-url')
+
+    // The user took a text out of the position the last alignment put it in, so that alignment no
+    // longer holds - selecting the same connection again has to move the texts after all.
+    this.alignedConnection = null
+
     if (this.panel(panelId).originSelection === 'text')  {
       this.syncScroll(this.getText(panelId, contentUrl), this.getSidebar(panelId))
     }
@@ -360,14 +461,38 @@ class Scroller {
 
     if (previous && previous.text === text && previous.targetEls === targetEls) return
 
+    console.log(text, targetEls)
     this.clearSynoptic(panelId, source)
+    // a text entering or leaving the graph is what makes a resolved ref point at something else
+    this.resolvedTargets = null
 
     const container = text.closest('[data-text-container]') as HTMLElement | null
     if (!container) return
 
-    const listener: EventListener = () => this.handleSynopticScroll(panelId, source)
+    const debounce: ScrollDebounce = { lastHandled: 0, timer: 0 }
+
+    // The debounce of the scroll listener: one call per SYNC_SCROLL_WINDOW, the first of them
+    // without delay so the texts keep up with the scrolling, the last of them after the window is
+    // over so they end up where the scroll ended.
+    const listener: EventListener = () => {
+      const waited = Date.now() - debounce.lastHandled
+      if (waited >= SYNC_SCROLL_WINDOW) {
+        debounce.lastHandled = Date.now()
+        this.handleSynopticScroll(panelId, source)
+        return
+      }
+
+      if (debounce.timer) return
+      debounce.timer = window.setTimeout(() => {
+        debounce.timer = 0
+        debounce.lastHandled = Date.now()
+        this.handleSynopticScroll(panelId, source)
+      }, SYNC_SCROLL_WINDOW - waited)
+    }
+
+    const view: SynopticView = { text, container, targetEls, listener, focusedTarget: null, yPos: null, debounce }
     container.addEventListener('scroll', listener, { passive: true })
-    panel.synoptics[source] = { text, container, targetEls, listener }
+    panel.synoptics[source] = view
   }
 
   private clearSynoptic(panelId: string, source: string) {
@@ -375,6 +500,7 @@ class Scroller {
     if (!previous) return
 
     previous.container.removeEventListener('scroll', previous.listener)
+    if (previous.debounce.timer) window.clearTimeout(previous.debounce.timer)
     delete this.panel(panelId).synoptics[source]
   }
 
@@ -389,11 +515,20 @@ class Scroller {
     const focusedTarget = findFocusedTarget(view.container, view.targetEls)
     if (!focusedTarget) return
 
+    const yPos = focusedTarget.getBoundingClientRect().top - view.container.getBoundingClientRect().top
+
+    // A scroll reports far more events than it changes anything: the trailing ones of a smooth
+    // scroll, the ones a text view sends while its content settles, the ones a trackpad sends
+    // between two pixels. Resolving and writing for those would set the very same scroll position
+    // again, so what the last event acted on is remembered and only a change of it goes on.
+    if (view.focusedTarget === focusedTarget && view.yPos !== null && Math.abs(view.yPos - yPos) < 1) return
+
+    view.focusedTarget = focusedTarget
+    view.yPos = yPos
+
     const { syncAnnotationsBySource, setActiveSynopsisConnection } = useSynopsisStore.getState()
     const syncedTargets = getSyncedTargets(focusedTarget, source, syncAnnotationsBySource.get(source) ?? [])
     if (syncedTargets.length === 0) return
-
-    const yPos = focusedTarget.getBoundingClientRect().top - view.container.getBoundingClientRect().top
 
     setActiveSynopsisConnection({
       navigatedTarget: focusedTarget,
@@ -402,6 +537,7 @@ class Scroller {
       source: 'scroll'
     })
 
+    console.log('handleSynopticScroll')
     // The text that was scrolled is left where the user put it - the others move to match it.
     this.alignSyncedTargets(syncedTargets, yPos, view.text)
   }
@@ -410,7 +546,9 @@ class Scroller {
   // text the connection was navigated from is skipped when one is given: the user's own scroll is
   // the reference the others are following, not something to be overridden.
   alignSyncedTargets(syncedTargets: SyncedTargetRef[], yPos: number, skipText?: Element) {
-    const targetEls = resolveSyncedTargetElements(syncedTargets)
+    console.log('resolve')
+    const targetEls = this.resolve(syncedTargets)
+    console.log(targetEls)
     alignTargets(skipText ? targetEls.filter((targetEl) => !skipText.contains(targetEl)) : targetEls, yPos)
   }
 }
@@ -418,7 +556,7 @@ class Scroller {
 // One engine for the whole app. The scroller is not per panel: a synoptic connection reaches from
 // one panel into another, so a single instance holding every panel's elements is what lets a scroll
 // in one pane be resolved against the targets of every other. Panels stay separate inside it - see
-// PanelState.
+// ScrollerPanelState.
 let scroller: Scroller | null = null
 
 function getScroller(): Scroller {

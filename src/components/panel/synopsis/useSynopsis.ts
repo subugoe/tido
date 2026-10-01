@@ -149,13 +149,18 @@ function useSynopsis(): SynopsisLogic {
   }, [])
 
   const onHover = useCallback((targetEl: HTMLElement, source: string) => {
+    // Entering a target that is part of the current highlight - a target nested in the one already
+    // hovered, or the same one entered again - has nothing to add to it. Resolving walks every text
+    // of the app, so it is only worth doing for a hover that changes what is highlighted.
+    if (hoveredTargetsRef.current.includes(targetEl)) return
+
     const otherSyncedTargets = getOtherSyncedTargets(targetEl, source)
     if (otherSyncedTargets.length === 0) return
 
     // remove first the previous hover styles
     onHoverEnd()
     addSynopsisHoverStyles([targetEl, ...resolveSyncedTargetElements(otherSyncedTargets)])
-  }, [addSynopsisHoverStyles, getOtherSyncedTargets])
+  }, [addSynopsisHoverStyles, getOtherSyncedTargets, onHoverEnd])
 
 
   // The text and the targets of the synoptic graph go to the scroller, which owns the scroll

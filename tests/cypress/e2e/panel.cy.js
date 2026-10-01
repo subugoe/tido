@@ -78,7 +78,8 @@ describe('Panel', () => {
   //   cy.validateText('fol. 280a')
   // })
 
-  it('Should switch to next manifest', () => {
+  // the next item arrow on the last item of a manifest continues with the first item of the next manifest
+  it('Should switch to next item and continue in the next manifest', () => {
     cy.validateLabel('item', 'Page 1')
       .click()
     cy.get('[data-cy="items-dropdown"]')
