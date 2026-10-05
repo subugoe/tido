@@ -99,6 +99,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "types:annotation": "node .build/generate-annotation-types.js",
     "build": "npm run build:lib && npm run build:embed",
     "build:lib": "vite build --config vite.lib.config.js && cp src/types/index.d.ts dist/types.d.ts",
     "build:embed": "vite build",
