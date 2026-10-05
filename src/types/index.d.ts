@@ -5,22 +5,12 @@ declare global {
 
   type AnnotationsMode = 'aligned' | 'list'
 
-  interface AnnotationCollection {
-    id: string
-    first: string
-    label: string
-    type: string
-  }
+  // TIDO extensions of the Annotation API types in annotation.d.ts. The spec describes the base shape
+  // of annotations, the fields added here are not part of it but are delivered by TIDO projects.
+  // Read bodies, targets and pages through the helpers in utils/annotation-data.ts, which normalise
+  // the spec shapes to these types.
 
-  interface AnnotationPage {
-    partOf: {
-      id: string
-      label: string
-      refs: Witness[]
-    }
-    items: Annotation[]
-  }
-
+  // A witness of the text, listed in the `partOf.refs` of an annotation page.
   interface Witness {
     idno: string
     idnoAlt: string
@@ -32,51 +22,40 @@ declare global {
     color: string
   }
 
-
-  interface Annotation {
-    body: AnnotationBody
-    target: AnnotationTarget[]
-    type: string
-    id: string
+  // The collection an annotation page is part of, extended by its label and the witnesses it refers to.
+  interface AnnotationPagePartOf extends EmbeddedAnnotationCollection {
+    label?: string
+    refs?: Witness[]
   }
 
-  interface AnnotationBody {
-    type: 'TextualBody'
-    value: string
-    format: AnnotationContentFormat
-    annotationType: string
+  // Body holding the annotation content. Variant bodies list the witnesses (`idno`s) they apply to.
+  interface AnnotationTextualBody extends EmbeddedTextualBody {
+    type?: 'TextualBody'
     witnesses?: string[]
-    source?: {
-      id: string
-      collection: string
-      manifest: string
-      item: string
-    }
+  }
+
+  // Body referencing another resource, e.g. the text or annotation a cross reference points at.
+  interface AnnotationResourceBody extends Omit<SpecificResource, 'source' | 'selector'> {
+    annotationType?: string | null
+    format?: string
+    source: AnnotationTargetSource
     selector?: CssSelector
   }
 
-  type AnnotationContentFormat = 'text/plain' | 'text/html'
+  type AnnotationBody = AnnotationTextualBody | AnnotationResourceBody
 
-  interface AnnotationTargetSource {
-    id: string
-    collection?: string
-    manifest?: string
-    item?: string
-  }
-
-  interface AnnotationTargetBase {
-    type?: string
+  interface AnnotationTargetBase extends Omit<SpecificResource, 'selector'> {
     format?: string
     language?: string
-    source: string | AnnotationTargetSource
     motivation?: string
   }
 
   // Target referencing a text content file: the selector applies to that file's DOM directly.
   // `format` is absent on older data, so anything that is not `application/ld+json` is read this way.
+  // A target given as plain IRI in the spec has no selector.
   interface HtmlAnnotationTarget extends AnnotationTargetBase {
     format?: 'text/html'
-    selector: CssSelector | RangeSelector
+    selector?: CssSelector | RangeSelector
   }
 
   // Target referencing another annotation (annotation in annotation): the JsonPathSelector points at
@@ -103,12 +82,6 @@ declare global {
     id: string
     contentType: string
     integrity: DataIntegrity | null
-  }
-
-  type CssSelector = {
-    type: 'CssSelector'
-    value: string,
-    conformsTo?: string
   }
 
   type JsonPathSelector = {

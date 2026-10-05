@@ -3,6 +3,7 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { getFilteredAnnotations } from '@/utils/annotations.ts'
 import { getContentUrlByType } from '@/utils/text.ts'
 import { PanelView } from '@/types'
+import { getAnnotationType } from '@/utils/annotation-data.ts'
 
 type MatchedMaps = {[id: string]: MatchedAnnotationsMap}
 
@@ -38,10 +39,7 @@ export function useFilteredAnnotations(
     return visibleContentUrls.flatMap(contentUrl => {
       const map = textMatchedMaps[contentUrl]
       if (!map) return []
-      return getFilteredAnnotations(map).filter(a => {
-        const body = a.body as AnnotationBody
-        return !(tooltipTypes ?? []).includes(body.annotationType)
-      })
+      return getFilteredAnnotations(map).filter(a => !(tooltipTypes ?? []).includes(getAnnotationType(a)))
     })
   }, [textMatchedMaps, panelViews, contents, tooltipTypes])
 }

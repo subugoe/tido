@@ -14,6 +14,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import GenericTextRenderer from '@/components/panel/renderers/text/GenericTextRenderer.tsx'
 import { flipMatchedAnnotationsMap } from '@/utils/text.ts'
 import { getSource } from '@/utils/annotations.ts'
+import { getAnnotationTargets, getAnnotationType, getTextualBody } from '@/utils/annotation-data.ts'
 
 const THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT = 72
 
@@ -44,7 +45,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
 
   const { t } = useTranslation()
 
-  const type = (data.body as AnnotationBody).annotationType
+  const type = getAnnotationType(data)
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
 
   useEffect(() => {
@@ -66,8 +67,8 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     if (annotBodyHeight > THRESHOLD_LONG_ANNOTATION_BODY_HEIGHT) setIsLong(true)
     const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
     const children = annotations.filter((a) => {
-      const childType = (a.body as AnnotationBody)?.annotationType
-      return a.target && getSource(a.target[0]).id === data.id
+      const childType = getAnnotationType(a)
+      return a.target && getSource(getAnnotationTargets(a)[0]).id === data.id
         && childType !== 'CrossRef'
         && !tooltipTypes.includes(childType)
     })
@@ -161,9 +162,9 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     <div className="px-3 pb-2">
       <Badge variant="muted" className="mb-1">{ typeLabel }</Badge>
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
-        { type === 'Variant' && <VariantContent body={data.body as AnnotationBody} /> }
+        { type === 'Variant' && <VariantContent body={getTextualBody(data)} /> }
         { type !== 'Variant' && <GenericTextRenderer
-          htmlString={(data.body as AnnotationBody).value}
+          htmlString={getTextualBody(data)?.value}
           source={data.id}
           sourceType="annotation"
           ignoreFilters={true}

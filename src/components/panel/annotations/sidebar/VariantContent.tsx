@@ -4,7 +4,7 @@ import WitnessChip from '@/components/panel/annotations/sidebar/WitnessChip.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
 interface Props {
-  body: AnnotationBody
+  body: AnnotationTextualBody
 }
 
 const convertNodeToReact = (node: ChildNode, key: string | number): React.ReactNode => {

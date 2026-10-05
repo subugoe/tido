@@ -14,6 +14,7 @@ import {
   removeSynopsisHoverStyle,
   removeSynopsisSelectedStyle
 } from '@/utils/text.ts'
+import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 
 
 interface SynopsisText {
@@ -83,7 +84,7 @@ function useSynopsis(): SynopsisLogic {
     if (cached && cached.text === text && cached.syncAnnotations === syncAnnotations) return cached.targetEls
 
     const targetEls = syncAnnotations.flatMap((annotation) => {
-      const target = annotation.target.find((t) => getSource(t).id === source)
+      const target = getAnnotationTargets(annotation).find((t) => getSource(t).id === source)
       const selector = target ? getSelectorValue(target) : null
       return selector ? Array.from(text.querySelectorAll(selector)) as HTMLElement[] : []
     })
@@ -101,7 +102,7 @@ function useSynopsis(): SynopsisLogic {
     const targetEls: HTMLElement[] = []
 
     sourceSyncAnnotations.forEach((annotation) => {
-      const target = annotation.target.find((t) => getSource(t).id === source)
+      const target = getAnnotationTargets(annotation).find((t) => getSource(t).id === source)
       const selector = target ? getSelectorValue(target) : null
       if (!selector) return
 

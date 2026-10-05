@@ -8,6 +8,7 @@ import {
   SELECTED_ANNOTATION_CLASSES
 } from '@/utils/constants.ts'
 import { isParentHovered, partOfSelectedTargets } from '@/utils/text.ts'
+import { getAnnotationType } from '@/utils/annotation-data.ts'
 
 // Styling used to be split over three effects - one per state that could change it - and because
 // the element's class list was the only record of what a target looked like, each of them had to
@@ -55,7 +56,7 @@ function getDisabledTargets(entries: MergedAnnotationEntry[], disabledHighlightT
 
   entries.forEach((entry) => {
     const visible = getVisibleAnnotations(entry)
-    const allDisabled = visible.length > 0 && visible.every((a) => disabledHighlightTypes.has(a.body.annotationType))
+    const allDisabled = visible.length > 0 && visible.every((a) => disabledHighlightTypes.has(getAnnotationType(a)))
 
     if (allDisabled) disabledTargets.add(entry.target)
   })

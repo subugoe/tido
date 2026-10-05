@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { parseStyleString } from '@/utils/html-to-react.ts'
 
 interface Props {
-  body: AnnotationBody
+  body: AnnotationTextualBody
 }
 
 const convertNodeToReact = (node: ChildNode, key: string | number): React.ReactNode => {

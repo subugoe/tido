@@ -14,6 +14,7 @@ import {
   removeActiveTargetStyle,
   removeSynopsisSelectedStyle
 } from '@/utils/text.ts'
+import { getAnnotationTargets, getAnnotationType, getTextualBody } from '@/utils/annotation-data.ts'
 
 interface Props {
   source: string
@@ -60,11 +61,11 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
   function isFilteredAnnotation(annotation: Annotation, selectedAnnotationTypes: AnnotationTypesDict) {
     // filter Variant Annotations based on witnesses in selectedAnnotationTypes
     // filter all other annotations which have type as key in selectedAnnotation types
-    const annotationType = annotation.body.annotationType
+    const annotationType = getAnnotationType(annotation)
     if (!selectedAnnotationTypes || annotationsConfig.tooltipTypes?.includes(annotationType)) return true
 
     if (annotationType === 'Variant') {
-      return selectedAnnotationTypes?.['Variant']?.some(witness => annotation.body.witnesses.includes(witness))
+      return selectedAnnotationTypes?.['Variant']?.some(witness => (getTextualBody(annotation)?.witnesses ?? []).includes(witness))
     } else {
       return Object.keys(selectedAnnotationTypes).includes(annotationType)
     }
@@ -81,20 +82,20 @@ function useAnnotationPopover({ source, wrapper, onBaseItemSelection }: Props): 
     const synopsisSelectionDisabled = !!annotationsConfig?.disableSynopsisSelection
 
     const newCrossRefAnnotations = annotations.filter((annotation) =>
-      annotation.body.annotationType === crossRefContentType &&
-      annotation.target.some((target) => {
+      getAnnotationType(annotation) === crossRefContentType &&
+      getAnnotationTargets(annotation).some((target) => {
         const selector = getSelectorValue(target)
         return selector && targetEl.matches(selector)
       })
     )
 
     const newRelatedAnnotations = annotations.filter((annotation) =>
-      annotation.body.annotationType !== crossRefContentType &&
+      getAnnotationType(annotation) !== crossRefContentType &&
       isFilteredAnnotation(annotation, activeAnnotationTypesRef.current)
     )
 
-    const newTooltipAnnotations = newRelatedAnnotations.filter((a) => tooltipTypes.includes(a.body.annotationType))
-    const normalAnnotations = newRelatedAnnotations.filter((a) => !tooltipTypes.includes(a.body.annotationType))
+    const newTooltipAnnotations = newRelatedAnnotations.filter((a) => tooltipTypes.includes(getAnnotationType(a)))
+    const normalAnnotations = newRelatedAnnotations.filter((a) => !tooltipTypes.includes(getAnnotationType(a)))
 
     // the targets the clicked one is synced with, from the sync annotations in the SynopsisStore
     const otherSyncedTargets = synopsisSelectionDisabled ? [] : getOtherSyncedTargets(targetEl, source)

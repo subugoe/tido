@@ -4,6 +4,7 @@ import Annotation from '@/components/panel/annotations/sidebar/Annotation.tsx'
 import { useAnnotations } from '@/contexts/AnnotationsContext.tsx'
 import { getSource } from '@/utils/annotations.ts'
 import { alignTextToAnnotation, handleExternalSelection } from '@/utils/annotation-alignment.ts'
+import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 
 const ANNOTATION_GAP = 5
 
@@ -213,11 +214,12 @@ const AlignAnnotationsList: FC = () => {
         // The same selector can match in several texts of the item, so the target has to be looked
         // up in the text the annotation points at - the one carrying its content url - and not
         // panel wide.
-        const contentUrl = getSource(annotation.target[0]).id
+        const annotationTarget = getAnnotationTargets(annotation)[0]
+        const contentUrl = getSource(annotationTarget).id
         const textEl = document.getElementById(panelId).querySelector(`[data-content-url="${contentUrl}"]`) as HTMLElement
         if (!textEl) return
 
-        const target = textEl.querySelector((annotation.target[0].selector as CssSelector).value) as HTMLElement
+        const target = textEl.querySelector((annotationTarget.selector as CssSelector).value) as HTMLElement
         if (!target) {
           console.error('There exists no target in text from the selector value of this annotation', annotation)
           return

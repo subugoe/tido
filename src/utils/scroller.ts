@@ -1,5 +1,6 @@
 import { getSource } from '@/utils/annotations.ts'
 import { markProgrammaticScroll } from '@/utils/dom.ts'
+import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 
 export const SYNC_SCROLL_THRESHOLD_TOP = 0.35
 const SYNC_SCROLL_THRESHOLD_BOTTOM = 0.45
@@ -176,8 +177,8 @@ class Scroller {
     const targetElement = entry.target[0]
 
     if (targetElement) {
-      const contentUrl = getSource(entry.annotation.target[0]).id
-      const text = this.texts[getSource(entry.annotation.target[0]).id]
+      const contentUrl = getSource(getAnnotationTargets(entry.annotation)[0]).id
+      const text = this.texts[contentUrl]
       const textRect = text.getBoundingClientRect()
       const targetRect = targetElement.getBoundingClientRect()
       const targetTop = targetRect.top - textRect.top + text.scrollTop

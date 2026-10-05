@@ -18,6 +18,7 @@ import {
   ACTIVE_TARGET_STYLE
 } from './constants'
 import { AnnotationsConfig, FilterNodeWithSelection, FilterType, PanelView } from '@/types'
+import { getAnnotationType } from '@/utils/annotation-data.ts'
 
 function addAnnotationId(target: Element, id: string) {
   const ids = getAnnotationIds(target)
@@ -334,7 +335,7 @@ function getDiscoveredAnnotationTypes(
   const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
   const types = Object
     .values(matchedAnnotationsMap)
-    .map(item => (item.annotation.body as AnnotationBody).annotationType)
+    .map(item => getAnnotationType(item.annotation))
     .filter(type => type !== undefined && !tooltipTypes.includes(type) && type !== annotationsConfig?.crossRefContentType)
 
   return [...new Set(types)].map(type => ({ types: [type], selected: true }))

@@ -3,6 +3,7 @@ import TooltipItem from '@/components/panel/annotations/popover/items/TooltipIte
 import CrossRefItem from '@/components/panel/annotations/popover/items/CrossRefItem.tsx'
 import BaseItem from '@/components/panel/annotations/popover/items/BaseItem.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 
 interface Props {
   target: Element,
@@ -40,7 +41,7 @@ const AnnotationPopoverContent : FC<Props> = ({
   useEffect(() => {
     const panelEl = panelId ? document.getElementById(panelId) : null
     const deepestTargetAnnotation = (annotation: Annotation) =>
-      annotation.target.some(t => Array.from(panelEl?.querySelectorAll((t.selector as CssSelector).value)
+      getAnnotationTargets(annotation).some(t => Array.from(panelEl?.querySelectorAll((t.selector as CssSelector).value)
         ?? []).includes(target as Element))
 
     function sortByDirectTarget(a: Annotation, b: Annotation) {

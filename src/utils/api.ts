@@ -3,6 +3,7 @@ import { CustomError } from '@/utils/custom-error.ts'
 import { hasItems, hasManifests, isItemUrl, isManifestUrl } from '@/utils/api-validate.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { t } from '@/utils/translations.ts'
+import { getFirstPageUrl } from '@/utils/annotation-data.ts'
 
 // Helper to extract ID string from collection/manifest/item array elements
 function getIdFromElement(element: string | { id: string }): string {
@@ -39,7 +40,7 @@ async function getAnnotationPage(annotationCollectionUrl: string): Promise<Annot
     if (typeof collection !== 'object' || !Object.hasOwn(collection, 'first')) {
       throw new CustomError(t('annotations_init_error'), t('annotation_collection_response_error'))
     }
-    return await apiRequest<AnnotationPage>(collection.first)
+    return await apiRequest<AnnotationPage>(getFirstPageUrl(collection))
   })()
 
   inflightAnnotationPages.set(annotationCollectionUrl, promise)
