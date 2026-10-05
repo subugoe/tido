@@ -1,64 +1,34 @@
 import React, { FC } from 'react'
-import { parseStyleString } from '@/utils/html-to-react.ts'
 import WitnessChip from '@/components/panel/annotations/sidebar/WitnessChip.tsx'
+import GenericTextRenderer from '@/components/panel/renderers/text/GenericTextRenderer.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { getTextualBody } from '@/utils/annotation-data.ts'
 
 interface Props {
-  body: AnnotationTextualBody
+  annotation: Annotation
+  onSelect?: () => void
+  onUpdateMatchedAnnotationsMap?: (map: MatchedAnnotationsMap) => void
 }
 
-const convertNodeToReact = (node: ChildNode, key: string | number): React.ReactNode => {
-  if (node.nodeType === Node.TEXT_NODE) {
-    return node.textContent
-  }
-
-  if (node.nodeType !== Node.ELEMENT_NODE) return null
-
-  const element = node as Element
-  const tagName = element.tagName.toLowerCase()
-  const children = Array.from(node.childNodes).map((child, i) =>
-    convertNodeToReact(child, `${key}-${i}`)
-  )
-
-  const props: Record<string, unknown> = {}
-  for (const attr of element.attributes) {
-    if (attr.name === 'style') {
-      props.style = parseStyleString(attr.value)
-    } else {
-      props[attr.name === 'class' ? 'className' : attr.name] = attr.value
-    }
-  }
-
-  const childrenArray = children as React.ReactElement[]
-  return React.createElement(
-    tagName,
-    { key: 'node-' + key, ...props, className: (props.className as string) || '' },
-    ...childrenArray
-  )
-}
-
-const VariantContent: FC<Props> = React.memo(({ body }) => {
-  const { value, witnesses } = body
+const VariantContent: FC<Props> = React.memo(({ annotation, onSelect, onUpdateMatchedAnnotationsMap }) => {
+  const { value, witnesses = [] } = getTextualBody(annotation) ?? {}
   const { activeAnnotationTypes } = usePanel()
 
   const filteredWitnesses = activeAnnotationTypes && activeAnnotationTypes['Variant']
     ? witnesses.filter(witness => activeAnnotationTypes['Variant'].includes(witness))
     : witnesses
 
-  const parsedDom = React.useMemo(() => {
-    const parser = new DOMParser()
-    return parser.parseFromString(`${value}`, 'text/html')
-  }, [value])
-
-  const children = React.useMemo(() => {
-    if (!parsedDom) return
-    return Array.from(parsedDom.body.childNodes).map((node, i) =>
-      convertNodeToReact(node, i)
-    )
-  }, [parsedDom])
-
   return <div className="flex">
-    <div>{children}</div>
+    <div>
+      <GenericTextRenderer
+        htmlString={value}
+        source={annotation.id}
+        sourceType="annotation"
+        ignoreFilters={true}
+        onSelect={onSelect}
+        onUpdateMatchedAnnotationsMap={onUpdateMatchedAnnotationsMap}
+      />
+    </div>
     <div className="ml-auto flex gap-1">
       {filteredWitnesses.map((witness, i) => <WitnessChip idno={witness} key={'witness' + i} />)}
     </div>
