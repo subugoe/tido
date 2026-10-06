@@ -19,6 +19,7 @@ import { updateNodeSelection } from '@/utils/filter-tree.ts'
 import { useSynopsisStore } from '@/store/SynopsisStore.tsx'
 import { isPanelViewsUserExplicit } from '@/utils/config/config.ts'
 import { useFilteredAnnotations } from '@/contexts/AnnotationsContext.tsx'
+import { getPageAnnotations, getPageWitnesses } from '@/utils/annotation-data.ts'
 
 const PanelContext = createContext<PanelContextType | undefined>(undefined)
 
@@ -284,8 +285,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
 
         try {
           const page = await getAnnotationPage(item.annotationCollection)
-          const annotations = page?.items ?? []
-          const witnesses = page?.partOf.refs ?? []
+          const annotations = getPageAnnotations(page)
+          const witnesses = getPageWitnesses(page)
 
           if (witnesses.length > 0) {
             const witnessesWithColor = setColors(witnesses)
@@ -317,7 +318,7 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
         // append them into the global (deduped) store, so every GenericTextRenderer can build
         // its local syncMap from the global set plus its own panel's annotations
         const page = await getAnnotationPage(collection.annotationCollection)
-        const newSyncAnnotations = page.items ?? []
+        const newSyncAnnotations = getPageAnnotations(page)
         useSynopsisStore.getState().addSyncAnnotations(newSyncAnnotations)
       }
 

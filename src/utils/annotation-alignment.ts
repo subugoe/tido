@@ -1,5 +1,6 @@
 import { getSource } from '@/utils/annotations.ts'
 import { scrollIntoViewIfNeeded } from '@/utils/dom.ts'
+import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 
 // How a text container is moved by delta pixels. The default scrolls it directly.
 type ScrollText = (contentUrl: string, delta: number) => void
@@ -32,7 +33,7 @@ function scrollBy(container: HTMLElement, delta: number): number {
 // The card in the sidebar and the target in whichever text view holds it. Null when either is
 // missing - the view showing that content type may not be open, or the card may be filtered out.
 function getAlignmentPair(panelEl: HTMLElement, annotation: Annotation) {
-  const target = annotation.target[0]
+  const target = getAnnotationTargets(annotation)[0]
   const targetSourceUrl = getSource(target).id
   const textScrollContainer = getTextEl(panelEl, targetSourceUrl)
   if (!textScrollContainer) return null

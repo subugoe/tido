@@ -4,6 +4,7 @@ import { isCollectionUrl, isItemUrl, isManifestUrl } from '@/utils/api-validate.
 import { CustomError } from '@/utils/custom-error.ts'
 import { createCollectionNodes } from '@/utils/tree.ts'
 import { t } from '@/utils/translations.ts'
+import { getFirstPageUrl, getPageAnnotations } from '@/utils/annotation-data.ts'
 
 
 interface AnnotationMap {
@@ -165,8 +166,8 @@ export const useDataStore = create<DataStoreType>((set, get) => ({
   },
   initAnnotations: async (collectionId: string, url: string) => {
     const annotationsCollection = await apiRequest<AnnotationCollection>(url)
-    const annotationPage = await apiRequest<AnnotationPage>(annotationsCollection.first)
-    set({ annotations: { ...get().annotations, [collectionId]: annotationPage.items } })
+    const annotationPage = await apiRequest<AnnotationPage>(getFirstPageUrl(annotationsCollection))
+    set({ annotations: { ...get().annotations, [collectionId]: getPageAnnotations(annotationPage) } })
   },
   createTreeNodes: async (rootCollections: string[]) => {
     const nodes = await createCollectionNodes(rootCollections)

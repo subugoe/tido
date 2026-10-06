@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { MoveRight } from 'lucide-react'
+import { getAnnotationType, getTextualBody } from '@/utils/annotation-data.ts'
 
 interface Props {
   annotation: Annotation | null,
@@ -18,9 +19,9 @@ const BaseItem: FC<Props> = ({ annotation, source, onSelect }) => {
 
   const [text, setText] = useState('')
 
-  const type = annotation.body.annotationType
+  const type = getAnnotationType(annotation)
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
-  const content = (annotation.body as AnnotationBody).value
+  const content = getTextualBody(annotation)?.value
   const isSelected = selectedAnnotation?.annotation.id === annotation.id
 
   function handleSelection(e: MouseEvent) {

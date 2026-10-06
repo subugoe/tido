@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
+import { getAnnotationType, getTextualBody } from '@/utils/annotation-data.ts'
 
 interface Props {
   annotation: Annotation | null
@@ -8,9 +9,9 @@ interface Props {
 
 const TooltipItem: FC<Props> = ({ annotation }) => {
   const { annotations: annotationsConfig } = useConfig()
-  const type = (annotation.body as AnnotationBody).annotationType
+  const type = getAnnotationType(annotation)
   const typeLabel = annotationsConfig?.types?.[type]?.label ?? type
-  const content = (annotation.body as AnnotationBody).value
+  const content = getTextualBody(annotation)?.value
 
   return <div className="flex flex-col px-3 py-1.5 min-w-80 max-w-95 border border-border rounded-lg">
     <div className="flex align-start gap-4">

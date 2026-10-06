@@ -1,5 +1,6 @@
 import { AnnotationsConfig } from '@/types'
 import { getNestedAnnotations, getSelectorValue, getSource, isFiltered } from '@/utils/annotations.ts'
+import { getAnnotationTargets, getAnnotationType } from '@/utils/annotation-data.ts'
 
 interface MatchOptions {
   // the filters as they stand - annotations of a type the user switched off are matched as usual
@@ -21,14 +22,15 @@ function matchAnnotations(
   annotationsConfig: AnnotationsConfig,
   { activeAnnotationTypes, ignoreFilters }: MatchOptions
 ): MatchedAnnotationsMap {
-  const annotationsInText = annotations.filter(annotation => annotation.target && getSource(annotation.target[0]).id === source)
+  const annotationsInText = annotations.filter(annotation => annotation.target && getSource(getAnnotationTargets(annotation)[0]).id === source)
   const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
   return annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
     if (!cur.target) return acc
 
-    const isSource = getSource(cur.target[0]).id === source
-    const selector = getSelectorValue(cur.target[0])
+    const target = getAnnotationTargets(cur)[0]
+    const isSource = getSource(target).id === source
+    const selector = getSelectorValue(target)
 
     // reported for the annotations of every source, not only this one - kept that way so the error
     // does not silently disappear for a text that is not the one being rendered here
@@ -42,9 +44,10 @@ function matchAnnotations(
     const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
     if (matchedNodes.length === 0) return acc
 
+    const annotationType = getAnnotationType(cur)
     acc[cur.id] = {
       target: matchedNodes,
-      filtered: (cur.body.annotationType && annotationsConfig?.crossRefContentType !== cur.body?.annotationType)
+      filtered: (annotationType && annotationsConfig?.crossRefContentType !== annotationType)
         ? (!activeAnnotationTypes || ignoreFilters || isFiltered(cur, activeAnnotationTypes, tooltipTypes))
         : false,
       annotation: cur,
@@ -58,7 +61,7 @@ function matchAnnotations(
 // Whether an annotation's targets are the elements a cross reference points at, which the text
 // renders in its own style.
 function isCrossRefAnnotation(annotation: Annotation, annotationsConfig: AnnotationsConfig) {
-  return annotation.body.annotationType === annotationsConfig?.crossRefContentType
+  return getAnnotationType(annotation) === annotationsConfig?.crossRefContentType
 }
 
 export { matchAnnotations, isCrossRefAnnotation }

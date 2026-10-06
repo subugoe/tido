@@ -5,6 +5,14 @@ import { CustomError } from '@/utils/custom-error.ts'
 import type { SyncedTargetRef, SynopsisConnection } from '@/store/SynopsisStore.tsx'
 import { useDataStore } from '@/store/DataStore.tsx'
 import { ANNOTATION_TARGET_JSON_FORMAT } from '@/utils/constants.ts'
+import {
+  getAnnotationTargets,
+  getAnnotationType,
+  getFirstPageUrl,
+  getPageAnnotations,
+  getResourceBody,
+  getTextualBody
+} from '@/utils/annotation-data.ts'
 
 function getSelectedTypes(config: AnnotationFiltersConfig): AnnotationTypesDict {
   let types: AnnotationTypesDict = {}
@@ -66,16 +74,16 @@ function getFilteredAnnotations(matchedAnnotationsMap: MatchedAnnotationsMap) {
 
 function getNestedAnnotations(annotation: Annotation, itemAnnotations: Annotation[]) {
   if (itemAnnotations.length === 0) return []
-  return itemAnnotations.filter((annot)  => getSource(annot.target[0]).id === annotation.id)
+  return itemAnnotations.filter((annot)  => getSource(getAnnotationTargets(annot)[0]).id === annotation.id)
 }
 
 function findTargetsInsideAnnotation(annotationId: string, itemAnnotations: Annotation[]) {
-  const nestedAnnotations = itemAnnotations.filter((annot) => getSource(annot.target[0])?.id === annotationId)
+  const nestedAnnotations = itemAnnotations.filter((annot) => getSource(getAnnotationTargets(annot)[0])?.id === annotationId)
   const selectors: string[] = []
 
   nestedAnnotations.forEach((annot) => {
     // TODO: we need to handle Range selectors
-    const cssValue = getSelectorValue(annot.target[0])
+    const cssValue = getSelectorValue(getAnnotationTargets(annot)[0])
     if (cssValue) selectors.push(cssValue)
   })
   return selectors
@@ -83,17 +91,17 @@ function findTargetsInsideAnnotation(annotationId: string, itemAnnotations: Anno
 
 function findTargets(annotation: Annotation): (string | null)[] {
   // TODO: include case of Range Selectors
-  return annotation.target.map((target) => getSelectorValue(target))
+  return getAnnotationTargets(annotation).map((target) => getSelectorValue(target))
 }
 
 function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, tooltipTypes: string[] = []) {
-  const type = (annotation.body as AnnotationBody).annotationType
+  const type = getAnnotationType(annotation)
   if (tooltipTypes.includes(type)) return true
 
   if (!selectedTypes || !selectedTypes[type]) return false
 
   if (type === 'Variant') {
-    const witnesses = (annotation.body as AnnotationBody).witnesses
+    const witnesses = getTextualBody(annotation)?.witnesses ?? []
     return witnesses.some(witness => selectedTypes['Variant'].includes(witness))
   }
 
@@ -102,9 +110,10 @@ function isFiltered(annotation: Annotation, selectedTypes: AnnotationTypesDict, 
 
 async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
   // annotation: CrossRefAnnotation which contains the cross ref data, from which we extract the desired information
-  const isCrossRefInAnnotation = !annotation.body.source.id.endsWith('.html')
+  const body = getResourceBody(annotation)
+  const isCrossRefInAnnotation = !body.source.id.endsWith('.html')
 
-  const source = annotation.body.source
+  const source = body.source
   let refItemData: Item = null
   const refAnnotationId = source?.id
   let refAnnotation
@@ -119,11 +128,11 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
       failedRequestUrl = refItemData.annotationCollection
       const annotationCollection = await apiRequest<AnnotationCollection>(refItemData.annotationCollection)
 
-      failedRequestUrl = annotationCollection.first
-      const annotationPage = await apiRequest<AnnotationPage>(annotationCollection.first)
+      failedRequestUrl = getFirstPageUrl(annotationCollection)
+      const annotationPage = await apiRequest<AnnotationPage>(getFirstPageUrl(annotationCollection))
 
-      refAnnotation = annotationPage.items.find(annotation => annotation.id === refAnnotationId)
-      contentUrl = getSource(refAnnotation?.target?.[0]).id
+      refAnnotation = getPageAnnotations(annotationPage).find(annotation => annotation.id === refAnnotationId)
+      contentUrl = getSource(getAnnotationTargets(refAnnotation)[0]).id
     } else {
       contentUrl = source?.id
     }
@@ -140,7 +149,7 @@ async function getCrossRefInfo(annotation: Annotation): Promise<CrossRefInfo> {
     textType: isCrossRefInAnnotation ? 'annotation': 'text',
     contentType: refContentType,
     ...(isCrossRefInAnnotation && { selectedAnnotation: { annotation: refAnnotation, origin: 'cross-ref' } }),
-    ...(!isCrossRefInAnnotation && { selector: annotation.body.selector?.value }),
+    ...(!isCrossRefInAnnotation && { selector: body.selector?.value }),
     refItemData
   }
 }
@@ -184,13 +193,14 @@ function getSyncedTargets(clickedEl: HTMLElement, source: string, targetSyncAnno
 
   targetSyncAnnotations.forEach((annotation) => {
     // the annotation's target that belongs to this source and is the clicked element
-    const ownTarget = annotation.target.find((t) => {
+    const targets = getAnnotationTargets(annotation)
+    const ownTarget = targets.find((t) => {
       const selector = getSelectorValue(t)
       return getSource(t).id === source && selector && clickedEl.matches(selector)
     })
     if (!ownTarget) return
 
-    annotation.target
+    targets
       .filter((sibling) => sibling !== ownTarget)
       .map((sibling) => ({ source: getSource(sibling), selector: getSelectorValue(sibling) }))
       .filter((ref): ref is SyncedTargetRef => Boolean(ref.source?.id && ref.selector))

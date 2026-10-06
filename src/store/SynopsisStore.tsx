@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { getAnnotationPage } from '@/utils/api.ts'
 import { getSource } from '@/utils/annotations.ts'
 import { useDataStore } from '@/store/DataStore.tsx'
+import { getAnnotationTargets, getPageAnnotations } from '@/utils/annotation-data.ts'
 
 export interface SyncedTargetRef {
   source: AnnotationTargetSource
@@ -82,7 +83,7 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
     const cloned = new Set<string>() // sources whose array we already copied in this call
     unique.forEach((annotation) => {
       // an annotation may target a source more than once - add it to that source only once
-      const sourceIds = new Set(annotation.target.map((t) => getSource(t).id).filter(Boolean))
+      const sourceIds = new Set(getAnnotationTargets(annotation).map((t) => getSource(t).id).filter(Boolean))
       sourceIds.forEach((sourceId) => {
         if (!cloned.has(sourceId)) {
           bySource.set(sourceId, [...(bySource.get(sourceId) ?? [])])
@@ -102,6 +103,6 @@ export const useSynopsisStore = create<SynopsisStoreTypes>((set, get) => ({
     if (!annotationCollectionUrl) return
 
     const page = await getAnnotationPage(annotationCollectionUrl)
-    get().addSyncAnnotations(page.items ?? [])
+    get().addSyncAnnotations(getPageAnnotations(page))
   },
 }))

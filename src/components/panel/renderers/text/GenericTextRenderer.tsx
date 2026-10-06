@@ -26,6 +26,7 @@ import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { SelectedAnnotation } from '@/types'
 import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
 import { useAnnotationPopover } from '@/components/panel/annotations/popover/useAnnotationPopover.tsx'
+import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 
 
 interface Props {
@@ -284,9 +285,10 @@ const GenericTextRenderer: FC<Props> = memo(({
     // The annotations of the clicked target and of its parent targets - the popover sorts them
     // into the areas it shows (cross references, tooltip items, sidebar items).
     const targetAnnotations = (annotations ?? []).filter(annotation => {
-      if (!annotation.target || getSource(annotation.target[0]).id !== source) return false
+      const annotationTarget = getAnnotationTargets(annotation)[0]
+      if (!annotationTarget || getSource(annotationTarget).id !== source) return false
 
-      const selector = getSelectorValue(annotation.target[0])
+      const selector = getSelectorValue(annotationTarget)
       if (!selector) return false
 
       return Array.from(parsedDom.querySelectorAll(selector))
