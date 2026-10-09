@@ -50,9 +50,9 @@ function resolveSyncedTargetElements(syncedTargets: SyncedTargetRef[]): HTMLElem
   return [...new Set(targetEls)]
 }
 
-function scrollInOtherTexts(targetEls: HTMLElement[], yPos: number, scrolledText: Element) {
+function scrollInOtherTexts(targetEls: HTMLElement[], yPos: number, scrolledText: Element, direction: number) {
   // instant, as this runs on every frame of the user's scrolling and the other texts move along with it
-  scrollToTargets(targetEls.filter((targetEl) => !scrolledText.contains(targetEl)), yPos, 'instant')
+  scrollToTargets(targetEls.filter((targetEl) => !scrolledText.contains(targetEl)), yPos, 'instant', direction)
 }
 
 function useSynopsis(): SynopsisLogic {
@@ -210,7 +210,7 @@ function useSynopsis(): SynopsisLogic {
 
     // The sync target closest to the top of the scrolled text becomes the active connection, and the
     // texts it is synced with are moved to their side of it.
-    const syncScrolledConnection = () => {
+    const syncScrolledConnection = (direction: number) => {
       const focusedTarget = findFocusedTarget(scrollContainer, getSourceTargetElements(text, source))
       if (!focusedTarget) return
 
@@ -229,15 +229,22 @@ function useSynopsis(): SynopsisLogic {
           yPos,
           source: 'scroll'
         })
-        scrollInOtherTexts(resolveSyncedTargetElements(syncedTargets), yPos, text)
+        scrollInOtherTexts(resolveSyncedTargetElements(syncedTargets), yPos, text, direction)
       }
 
     }
 
+    // the scrollTop the direction of the next scroll is read against - kept up to date through
+    // programmatic scrolls too, so the user's next scroll is measured from where the text really is
+    let lastScrollTop = scrollContainer.scrollTop
+
     const onScroll = () => {
+      const direction = Math.sign(scrollContainer.scrollTop - lastScrollTop)
+      lastScrollTop = scrollContainer.scrollTop
+
       // ours, so a scroll we caused does not sync the panels back on top of it
-      if (isProgrammaticScroll(scrollContainer)) return
-      syncScrolledConnection()
+      if (isProgrammaticScroll(scrollContainer) || direction === 0) return
+      syncScrolledConnection(direction)
     }
 
     scrollContainer.addEventListener('scroll', onScroll, { passive: true })
