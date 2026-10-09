@@ -50,8 +50,9 @@ function resolveSyncedTargetElements(syncedTargets: SyncedTargetRef[]): HTMLElem
   return [...new Set(targetEls)]
 }
 
-function scrollInOtherTexts(targetEls: HTMLElement[], yPos: number, scrolledText: Element) {
-  scrollToTargets(targetEls.filter((targetEl) => !scrolledText.contains(targetEl)), yPos)
+function scrollInOtherTexts(targetEls: HTMLElement[], yPos: number, scrolledText: Element, direction: number) {
+  // instant, as this runs on every frame of the user's scrolling and the other texts move along with it
+  scrollToTargets(targetEls.filter((targetEl) => !scrolledText.contains(targetEl)), yPos, 'instant', direction)
 }
 
 function useSynopsis(): SynopsisLogic {
@@ -196,28 +197,6 @@ function useSynopsis(): SynopsisLogic {
     addSynopsisHoverStyles([targetEl, ...resolveSyncedTargetElements(otherSyncedTargets)])
   }, [addSynopsisHoverStyles, getOtherSyncedTargets])
 
-
-  // The sync target closest to the top of the scrolled text becomes the active connection, and the
-  // texts it is synced with are moved to their side of it.
-  const syncScrolledConnection = useCallback((text: Element, source: string, scrollContainer: HTMLElement) => {
-    const focusedTarget = findFocusedTarget(scrollContainer, getSourceTargetElements(text, source))
-    if (!focusedTarget) return
-
-    const syncedTargets = getOtherSyncedTargets(focusedTarget, source)
-    if (syncedTargets.length === 0) return
-
-    const yPos = focusedTarget.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
-
-    useSynopsisStore.getState().setActiveSynopsisConnection({
-      navigatedTarget: focusedTarget,
-      otherSyncedTargets: syncedTargets,
-      yPos,
-      source: 'scroll'
-    })
-
-    scrollInOtherTexts(resolveSyncedTargetElements(syncedTargets), yPos, text)
-  }, [getOtherSyncedTargets, getSourceTargetElements])
-
   // Bound here rather than by the component that renders the text, because the listener has to hold
   // the text it belongs to and this is where that text arrives: the effect reruns with every text
   // handed over, so the listener is replaced by one that closes over the current one. By the time it
@@ -229,15 +208,48 @@ function useSynopsis(): SynopsisLogic {
     const scrollContainer = text.closest('[data-text-container]') as HTMLElement | null
     if (!scrollContainer) return
 
+    // The sync target closest to the top of the scrolled text becomes the active connection, and the
+    // texts it is synced with are moved to their side of it.
+    const syncScrolledConnection = (direction: number) => {
+      const focusedTarget = findFocusedTarget(scrollContainer, getSourceTargetElements(text, source))
+      if (!focusedTarget) return
+
+      const syncedTargets = getOtherSyncedTargets(focusedTarget, source)
+      if (syncedTargets.length === 0) return
+
+      const yPos = focusedTarget.getBoundingClientRect().top - scrollContainer.getBoundingClientRect().top
+
+      // published only when the focused target changes - this runs on every frame of the scrolling,
+      // and every new connection re-renders its subscribers
+      const { activeSynopsisConnection, setActiveSynopsisConnection } = useSynopsisStore.getState()
+      if (activeSynopsisConnection.navigatedTarget !== focusedTarget) {
+        setActiveSynopsisConnection({
+          navigatedTarget: focusedTarget,
+          otherSyncedTargets: syncedTargets,
+          yPos,
+          source: 'scroll'
+        })
+        scrollInOtherTexts(resolveSyncedTargetElements(syncedTargets), yPos, text, direction)
+      }
+
+    }
+
+    // the scrollTop the direction of the next scroll is read against - kept up to date through
+    // programmatic scrolls too, so the user's next scroll is measured from where the text really is
+    let lastScrollTop = scrollContainer.scrollTop
+
     const onScroll = () => {
+      const direction = Math.sign(scrollContainer.scrollTop - lastScrollTop)
+      lastScrollTop = scrollContainer.scrollTop
+
       // ours, so a scroll we caused does not sync the panels back on top of it
-      if (isProgrammaticScroll(scrollContainer)) return
-      syncScrolledConnection(text, source, scrollContainer)
+      if (isProgrammaticScroll(scrollContainer) || direction === 0) return
+      syncScrolledConnection(direction)
     }
 
     scrollContainer.addEventListener('scroll', onScroll, { passive: true })
     return () => scrollContainer.removeEventListener('scroll', onScroll)
-  }, [synopsisText, syncScrolledConnection])
+  }, [synopsisText, getOtherSyncedTargets, getSourceTargetElements])
 
   return { getOtherSyncedTargets, handleSynopsisSelection, onHover, onHoverEnd, setText, syncTargets }
 }
