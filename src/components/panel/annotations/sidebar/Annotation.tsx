@@ -162,7 +162,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     <div className="px-3 pb-2">
       <Badge variant="muted" className="mb-1">{ typeLabel }</Badge>
       <div ref={annotationBodyRef} className={`transition-[height] duration-400 ease-in-out ${isLong && !isExpanded ? 'h-18 overflow-y-hidden' : 'h-fit'}`}  >
-        { type === 'Variant' && <VariantContent body={getTextualBody(data)} /> }
+        { type === 'Variant' && <VariantContent annotation={data} onSelect={openChildAnnotations} onUpdateMatchedAnnotationsMap={onUpdateMatchedMap} /> }
         { type !== 'Variant' && <GenericTextRenderer
           htmlString={getTextualBody(data)?.value}
           source={data.id}
