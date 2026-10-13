@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-beta.11](https://github.com/subugoe/tido/compare/v5.0.0-beta.10...v5.0.0-beta.11) (2026-10-13)
+
+
+### Bug Fixes
+
+* prevent text jumping up when we scroll down due to synoptic targets ([d03ef51](https://github.com/subugoe/tido/commit/d03ef511652f29b4470367deacc57d94be2d0f1f))
+* restore instant scroll in text due to current delay ([2193a1b](https://github.com/subugoe/tido/commit/2193a1b22c11df66141c0cfa16aa520526b233a3))
+* show the list of annotations in sidebar ([1fd31e4](https://github.com/subugoe/tido/commit/1fd31e4170d5a24c36df0dd8db2df20c510e9d30))
+
+
+### Refactoring
+
+* add a new annotation types file using a script + adapt code accordingly ([#1065](https://github.com/subugoe/tido/issues/1065)) ([e2f2292](https://github.com/subugoe/tido/commit/e2f2292d300dd3c4e5376cf2b5dc90ccb601ab61))
+* render VariantAnnotation using GenericTextRenderer ([814451c](https://github.com/subugoe/tido/commit/814451c55d204a79e6f848e5e0a6f023c7682604))
+
 ## [5.0.0-beta.10](https://github.com/subugoe/tido/compare/v5.0.0-beta.9...v5.0.0-beta.10) (2026-09-30)
 
 
