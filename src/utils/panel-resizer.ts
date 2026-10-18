@@ -2,8 +2,37 @@ import {
   SIDEBAR_DEFAULT_WIDTH,
   MIN_PANEL_WIDTH,
   DEFAULT_PANEL_WIDTH,
-  PANEL_BORDER_WIDTH
+  PANEL_BORDER_WIDTH,
+  PANEL_GAP
 } from '@/utils/constants'
+import { PanelConfig } from '@/types'
+
+// ─── Initial widths ──────────────────────────────────────────────────────────
+// The panels that exist at the start share the room the panels wrapper leaves for them instead of
+// each opening at DEFAULT_PANEL_WIDTH, so the first layout uses all the room available. They split
+// it equally. Room is kept for a sidebar, because a sidebar takes additional width out of the
+// panel when it is opened. The "open new panel" placeholder is not subtracted - it simply keeps
+// the width it needs, so it stays visible as long as the panels do not fill the whole row.
+// When the room left is too small for a minimum width, the panels fall back to MIN_PANEL_WIDTH.
+function getInitialPanelWidths(wrapper: HTMLElement, configs: PanelConfig[]): number[] {
+  if (configs.length === 0) return []
+
+  const wrapperStyle = window.getComputedStyle(wrapper)
+  const contentWidth = wrapper.clientWidth
+    - (parseFloat(wrapperStyle.paddingLeft) || 0)
+    - (parseFloat(wrapperStyle.paddingRight) || 0)
+
+  // One gap between each pair of panels, plus one before the visible placeholder.
+  const hasPlaceholder = wrapper.querySelector('[data-panel-placeholder]') !== null
+  const gutters = PANEL_GAP * (configs.length - 1 + (hasPlaceholder ? 1 : 0))
+
+  // Keep room for a sidebar: when it is opened, it is added to the width of its panel.
+  const sidebarRoom = SIDEBAR_DEFAULT_WIDTH
+
+  const contentPerPanel = (contentWidth - gutters - sidebarRoom) / configs.length
+
+  return configs.map(() => Math.max(MIN_PANEL_WIDTH, contentPerPanel))
+}
 
 class PanelResizer {
   wrapper: HTMLElement
@@ -26,11 +55,11 @@ class PanelResizer {
   private isDragToResizeInitialized = false
   private isSidebarResizeInitialized = false
 
-  constructor(panelEl: HTMLElement) {
-    this.init(panelEl)
+  constructor(panelEl: HTMLElement, initialWidth?: number | string) {
+    this.init(panelEl, initialWidth)
   }
 
-  init(panelEl: HTMLElement) {
+  init(panelEl: HTMLElement, initialWidth?: number | string) {
     this.wrapper = document.getElementById('panels-wrapper')
     this.panelEl = panelEl
     this.mainContentEl = panelEl.querySelector('.main-content')
@@ -41,12 +70,26 @@ class PanelResizer {
     this.panelEl.style.minWidth = `${MIN_PANEL_WIDTH}px`
 
     const currentWidth = parseFloat(this.panelEl.style.width)
+    const datasetInitialWidth = this.panelEl.dataset.initialWidth
+    const candidate = initialWidth !== undefined && initialWidth !== '' ? initialWidth : datasetInitialWidth
 
     if (Number.isFinite(currentWidth) && currentWidth > 0) {
+      if (datasetInitialWidth !== undefined) {
+        delete this.panelEl.dataset.initialWidth
+      }
       // Keep the panel's own existing width (e.g. it was resized before, or is a duplicate)
       this.onResizePanel(Math.max(MIN_PANEL_WIDTH, currentWidth))
+    } else if (candidate !== undefined && candidate !== '') {
+      const parsed = typeof candidate === 'number' ? candidate : parseFloat(candidate)
+      if (datasetInitialWidth !== undefined) {
+        delete this.panelEl.dataset.initialWidth
+      }
+      if (Number.isFinite(parsed) && parsed > 0) {
+        this.onResizePanel(parsed)
+      } else {
+        this.onResizePanel(this.getInitialWidth())
+      }
     } else {
-      // New panel -> open at the default/initial width
       this.onResizePanel(this.getInitialWidth())
     }
 
@@ -286,4 +329,4 @@ class PanelResizer {
   }
 }
 
-export { PanelResizer }
+export { PanelResizer, getInitialPanelWidths }

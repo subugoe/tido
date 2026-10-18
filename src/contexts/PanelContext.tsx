@@ -35,7 +35,7 @@ interface PanelContextType {
   isFullscreen: boolean
   enterFullscreen: () => void
   resizer: PanelResizer
-  initResizer: (el: HTMLElement) => void
+  initResizer: (el: HTMLElement, initialWidth?: number | string) => void
   hoveredAnnotation: string | null
   setHoveredAnnotation: (value: string | null) => void,
   annotationFilters: FilterNodeWithSelection[],
@@ -436,8 +436,8 @@ const PanelProvider: FC<PanelProviderProps> = ({ children, panelId, onLoaded }) 
     usePanelStore.getState().removePanel(panelId)
   }
 
-  function initResizer(el: HTMLElement) {
-    setResizer(new PanelResizer(el))
+  function initResizer(el: HTMLElement, initialWidth?: number | string) {
+    setResizer(new PanelResizer(el, initialWidth))
   }
 
   function getScroller() {

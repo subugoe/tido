@@ -6,8 +6,9 @@
  * and the clickable manifest title. This spec verifies the switch and that each button keeps its
  * original functionality (collection icon -> local tree, manifest title -> manifest dropdown).
  *
- * Note: panels always open at 800px (the default width), so this spec resizes the panel below the
- * 600px breakpoint in `beforeEach`; the large-layout test resizes it back above the breakpoint.
+ * Note: panels loaded from the config open with the width available to them (the default is only
+ * used by panels opened later), so this spec resizes the panel explicitly: below the 600px
+ * breakpoint in `beforeEach`, and back above it in the large-layout test.
  */
 
 const apiUrl = Cypress.env('API_URL') || 'http://localhost:8181'
@@ -38,7 +39,7 @@ function resizePanel(width, panelIndex = 0) {
 describe('Panel header at small panel sizes', () => {
   beforeEach(() => {
     cy.visit('/e2e.html?' + config)
-    // Panels open at 800px; shrink the panel below the breakpoint so the compact header renders,
+    // Shrink the panel below the breakpoint so the compact header renders,
     // then wait for it (means the panel loaded).
     resizePanel(SMALL_PANEL_WIDTH)
     getPanel().find('[data-cy="manifest-label-compact"]').should('be.visible')

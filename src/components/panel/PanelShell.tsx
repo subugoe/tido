@@ -7,7 +7,7 @@ interface Props {
 }
 const PanelShell: FC<Props> = ({ children }) => {
   const { panelId, initResizer, getScroller, resizer } = usePanel()
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!ref.current) return
