@@ -22,13 +22,20 @@ function getSelectedTypes(config: AnnotationFiltersConfig): AnnotationTypesDict 
   if (isSingleRoot) {
     return getSelectedTypesFromNode(config.items[config.selectedIndex])
   } else {
-    config.items.forEach(node => {
-      const nodeTypes = getSelectedTypesFromNode(node)
-      types = { ...types, ...nodeTypes }
-    })
+    for (const node of config.items) {
+      types = mergeTypes(types, getSelectedTypesFromNode(node))
+    }
   }
 
   return types
+}
+
+function mergeTypes(target: AnnotationTypesDict, source: AnnotationTypesDict): AnnotationTypesDict {
+  const result: AnnotationTypesDict = { ...target }
+  Object.keys(source).forEach(key => {
+    result[key] = [...(result[key] ?? []), ...(source[key] ?? [])]
+  })
+  return result
 }
 
 function getSelectedTypesFromNode(node: FilterNodeWithSelection): AnnotationTypesDict {
@@ -53,12 +60,8 @@ function getSelectedTypesFromNode(node: FilterNodeWithSelection): AnnotationType
 
   if (node.items) {
     node.items.forEach(child => {
-      const childTypes = getSelectedTypesFromNode(child)
-      Object.keys(childTypes).forEach(key => {
-        const existing = types[key] || []
-        const incoming = childTypes[key] || []
-        types[key] = [...existing, ...incoming]
-      })
+      // mergeTypes(target, source), which joins the arrays for each key instead of overwriting them.
+      types = mergeTypes(types, getSelectedTypesFromNode(child))
     })
   }
 
@@ -231,6 +234,7 @@ function isPartOfActiveSynopsisConnection(
 export {
   getSelectedTypes,
   getSelectedTypesFromNode,
+  mergeTypes,
   getFilteredAnnotations,
   isFiltered,
   findTargetsInsideAnnotation,

@@ -27,6 +27,7 @@ const WitnessChip: FC<Props> = React.memo(({ idno }) => {
     <Tooltip>
       <TooltipTrigger asChild>
         <div
+          data-cy="witness-chip"
           className="rounded-full h-5 px-2 leading-none flex items-center justify-center bg-muted text-xs font-semibold"
           style={getWitnessStyle(idno)}
         >
