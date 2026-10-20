@@ -1,6 +1,6 @@
 import FilterTree from '@/components/panel/annotations/filters/FilterTree.tsx'
 import { updateNodesSelection } from '@/utils/filter-tree.ts'
-import { getSelectedTypesFromNode } from '@/utils/annotations.ts'
+import { getSelectedTypesFromNode, mergeTypes } from '@/utils/annotations.ts'
 import { getVisibleAnnotationTypes } from '@/utils/text.ts'
 import { FC, useEffect, useState } from 'react'
 import { FilterNodeWithSelection } from '@/types'
@@ -52,8 +52,11 @@ const MultipleRootFilter: FC = () => {
     let types: AnnotationTypesDict = {}
     newFilters.forEach(node => {
       const nodeTypes = getSelectedTypesFromNode(node)
-      if (Object.hasOwn(nodeTypes, 'Variant')) nodeTypes['Variant'] = witnesses.map(w => w.idno)
-      types = { ...types, ...nodeTypes }
+      if (Object.hasOwn(nodeTypes, 'Variant')) {
+        const selectedWitnesses = nodeTypes['Variant']
+        nodeTypes['Variant'] = witnesses.map(w => w.idno).filter(idno => selectedWitnesses.includes(idno))
+      }
+      types = mergeTypes(types, nodeTypes)
     })
     setTimeout(() => setSelectedAnnotationTypes(types), 100)
   }

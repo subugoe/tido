@@ -1,0 +1,151 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/annotations/annotationPage/variants-page1.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/annotations/annotationCollection/variants-page1.json",
+    "label": "Annotations for the Variants Page",
+    "total": 5,
+    "refs": [
+      {
+        "idno": "a",
+        "idnoAlt": "A",
+        "title": "Auflage a"
+      },
+      {
+        "idno": "b",
+        "idnoAlt": "B",
+        "title": "Auflage b"
+      },
+      {
+        "idno": "d",
+        "idnoAlt": "D",
+        "title": "Auflage d"
+      }
+    ]
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/variants/page1/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Religionslehre",
+        "format": "text/plain",
+        "annotationType": "Variant",
+        "witnesses": [
+          "a"
+        ]
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/variants-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#var-a"
+          },
+          "format": "text/html",
+          "language": "deu"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/variants/page1/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Anbetung",
+        "format": "text/plain",
+        "annotationType": "Variant",
+        "witnesses": [
+          "b"
+        ]
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/variants-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#var-b"
+          },
+          "format": "text/html",
+          "language": "deu"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/variants/page1/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Vernunfft",
+        "format": "text/plain",
+        "annotationType": "Variant",
+        "witnesses": [
+          "a",
+          "d"
+        ]
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/variants-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#var-ad"
+          },
+          "format": "text/html",
+          "language": "deu"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/variants/page1/annotation-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Offenbahrung",
+        "format": "text/plain",
+        "annotationType": "Variant",
+        "witnesses": [
+          "b",
+          "d"
+        ]
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/variants-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#var-bd"
+          },
+          "format": "text/html",
+          "language": "deu"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/variants/page1/annotation-5",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "Schrifft] Schrift",
+        "format": "text/plain",
+        "annotationType": "EditorialCorrection"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/variants-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#correction"
+          },
+          "format": "text/html",
+          "language": "deu"
+        }
+      ]
+    }
+  ]
+}
