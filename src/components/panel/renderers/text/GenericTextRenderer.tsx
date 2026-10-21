@@ -22,6 +22,7 @@ import {
 import { isCrossRefAnnotation, matchAnnotations } from '@/utils/annotation-matching.ts'
 import { useHoveredAnnotations, useSetHoveredAnnotations } from '@/contexts/TextContext.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { useTextView } from '@/contexts/TextViewContext.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { SelectedAnnotation } from '@/types'
 import { useSynopsis } from '@/components/panel/synopsis/useSynopsis.ts'
@@ -65,7 +66,11 @@ const GenericTextRenderer: FC<Props> = memo(({
     setDynamicAnnotationTypes,
     annotations,
     getScroller,
+    usePanelTranslation,
   } = usePanel()
+  const { t } = usePanelTranslation()
+  // null when this text is not rendered inside a text view (e.g. in the annotations sidebar)
+  const textView = useTextView()
 
   // The hook finds this text's sync targets once it has the text and hands them back - what a
   // target does when it is clicked or hovered is decided here, the same for them as for the
@@ -111,47 +116,53 @@ const GenericTextRenderer: FC<Props> = memo(({
     setText(sourceType === 'text' ? parsedDom : null, source)
 
     if (annotations) {
-      const result = matchAnnotations(parsedDom, annotations, source, annotationsConfig, {
-        activeAnnotationTypes: activeAnnotationTypesRef.current,
-        ignoreFilters
-      })
-
-      // What the matching itself no longer does: give the cross reference targets their style and
-      // make every target react to the pointer.
-      Object.values(result).forEach(({ annotation, target }) => {
-        const isCrossRef = isCrossRefAnnotation(annotation, annotationsConfig)
-
-        target.forEach(targetEl => {
-          if (isCrossRef) addCrossRefTargetStyle(targetEl)
-          targetEl.addEventListener('click', onClickTarget)
-          targetEl.addEventListener('mouseenter', onMouseEnterTarget)
-          targetEl.addEventListener('mouseleave', onMouseLeaveTarget)
+      // A failure in matching the annotations must not prevent the text from being displayed
+      try {
+        const result = matchAnnotations(parsedDom, annotations, source, annotationsConfig, {
+          activeAnnotationTypes: activeAnnotationTypesRef.current,
+          ignoreFilters
         })
-      })
 
-      setMatchedMap(result)
-      if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
+        // What the matching itself no longer does: give the cross reference targets their style and
+        // make every target react to the pointer.
+        Object.values(result).forEach(({ annotation, target }) => {
+          const isCrossRef = isCrossRefAnnotation(annotation, annotationsConfig)
 
-      // When no annotation filters were configured, store the types this text contains keyed by its
-      // contentUrl (source). PanelContext derives the flat annotationFilters from these per-text entries.
-      if (!annotationsConfig?.filters) {
-        const discoveredTypes = getDiscoveredAnnotationTypes(result, annotationsConfig)
-        updateAnnotationTypesBySource(source, discoveredTypes)
-
-        const discovered = discoveredTypes
-          .flatMap(node => node.types ?? [])
-          .filter((type): type is string => typeof type === 'string')
-
-        // The aggregated list is extended with the types seen here for the first time (e.g. this item
-        // introduced them) as selected; types already in it keep the state the user gave them.
-        setDynamicAnnotationTypes(previous => {
-          const knownTypes = new Set(previous.map(entry => entry.type))
-          const added = discovered
-            .filter(type => !knownTypes.has(type))
-            .map(type => ({ type, selected: true }))
-
-          return added.length > 0 ? [...previous, ...added] : previous
+          target.forEach(targetEl => {
+            if (isCrossRef) addCrossRefTargetStyle(targetEl)
+            targetEl.addEventListener('click', onClickTarget)
+            targetEl.addEventListener('mouseenter', onMouseEnterTarget)
+            targetEl.addEventListener('mouseleave', onMouseLeaveTarget)
+          })
         })
+
+        setMatchedMap(result)
+        if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
+
+        // When no annotation filters were configured, store the types this text contains keyed by its
+        // contentUrl (source). PanelContext derives the flat annotationFilters from these per-text entries.
+        if (!annotationsConfig?.filters) {
+          const discoveredTypes = getDiscoveredAnnotationTypes(result, annotationsConfig)
+          updateAnnotationTypesBySource(source, discoveredTypes)
+
+          const discovered = discoveredTypes
+            .flatMap(node => node.types ?? [])
+            .filter((type): type is string => typeof type === 'string')
+
+          // The aggregated list is extended with the types seen here for the first time (e.g. this item
+          // introduced them) as selected; types already in it keep the state the user gave them.
+          setDynamicAnnotationTypes(previous => {
+            const knownTypes = new Set(previous.map(entry => entry.type))
+            const added = discovered
+              .filter(type => !knownTypes.has(type))
+              .map(type => ({ type, selected: true }))
+
+            return added.length > 0 ? [...previous, ...added] : previous
+          })
+        }
+      } catch (e) {
+        console.error('There occurred errors in annotation matching and/or filter types discovery', e)
+        textView?.setTextWarning(t('annotation_matching_error'))
       }
     }
   }, [parsedDom, annotations, annotationsConfig])
