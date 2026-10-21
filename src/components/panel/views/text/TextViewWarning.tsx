@@ -3,9 +3,10 @@ import { usePanel } from '@/contexts/PanelContext.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { TriangleAlert } from 'lucide-react'
 import { useTextView } from '@/contexts/TextViewContext.tsx'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip.tsx'
 
 const TextViewWarning: FC = () => {
-  const { usePanelTranslation } = usePanel()
+  const { usePanelTranslation, panelRootRef } = usePanel()
   const { textWarning, setTextWarning } = useTextView()
   const [visible, setVisible] = useState(false)
 
@@ -18,7 +19,14 @@ const TextViewWarning: FC = () => {
   return <>
     { visible && <div className="flex bg-amber-100 dark:bg-amber-800 text-amber-700 dark:text-amber-100 items-center p-2 w-full">
       <TriangleAlert size={15} className="shrink-0" />
-      <span className="ml-2 mr-3 truncate text-sm" title={textWarning}>{ textWarning }</span>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="ml-2 mr-3 truncate text-sm">{ textWarning }</span>
+        </TooltipTrigger>
+        <TooltipContent container={panelRootRef.current} className="max-w-80">
+          <span>{ textWarning }</span>
+        </TooltipContent>
+      </Tooltip>
       <Button variant="ghostAmber" className="ml-auto" size="sm" onClick={() => setTextWarning('')}>{ t('dismiss') }</Button>
     </div> }
   </>
