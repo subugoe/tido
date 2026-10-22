@@ -120,8 +120,7 @@ function useSynopsis(): SynopsisLogic {
 
       for (const annotation of sourceSyncAnnotations) {
         const target = getAnnotationTargets(annotation).find((t) => getSource(t).id === source)
-        //const selector = target ? getSelectorValue(target) : null
-        const selector = null
+        const selector = target ? getSelectorValue(target) : null
         if (!selector) {
           report.add('empty_selector', annotation, { selector })
           continue
