@@ -75,7 +75,7 @@ const Annotation: FC<Props> = React.memo(({ data, top, onToggle, isNested = fals
     setChildAnnotations(children)
   }, [])
 
-  function onUpdateMatchedMap(map: MatchedAnnotationsMap){
+  function onUpdateMatchedMap(_source: string, map: MatchedAnnotationsMap){
     updateMatchedMap(data.id, map)
     targetsRef.current = flipMatchedAnnotationsMap(map).map(entry => entry.target)
   }

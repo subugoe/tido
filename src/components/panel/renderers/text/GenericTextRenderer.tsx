@@ -33,7 +33,7 @@ import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 interface Props {
   htmlString?: string
   onReady?: () => void
-  onUpdateMatchedAnnotationsMap?: (map: MatchedAnnotationsMap) => void
+  onUpdateMatchedAnnotationsMap?: (source: string, map: MatchedAnnotationsMap) => void
   source: string
   sourceType: 'text' | 'annotation'
   onSelect?: () => void
@@ -67,6 +67,7 @@ const GenericTextRenderer: FC<Props> = memo(({
     annotations,
     getScroller,
     usePanelTranslation,
+    updateMatchedAnnotationsMap
   } = usePanel()
   const { t } = usePanelTranslation()
   // null when this text is not rendered inside a text view (e.g. in the annotations sidebar)
@@ -137,7 +138,7 @@ const GenericTextRenderer: FC<Props> = memo(({
         })
 
         setMatchedMap(result)
-        if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(result)
+        updateMatchedMap(result)
 
         // When no annotation filters were configured, store the types this text contains keyed by its
         // contentUrl (source). PanelContext derives the flat annotationFilters from these per-text entries.
@@ -238,8 +239,14 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     setMatchedMap(resultMap)
 
-    if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(resultMap)
+    updateMatchedMap(resultMap)
   }, [activeAnnotationTypes])
+
+  // A text stores its map in the panel itself, an annotation in the sidebar hands it to its caller
+  function updateMatchedMap(map: MatchedAnnotationsMap) {
+    if (sourceType === 'text') updateMatchedAnnotationsMap(source, textView?.visible ? map : {})
+    if (onUpdateMatchedAnnotationsMap) onUpdateMatchedAnnotationsMap(source, map)
+  }
 
 
   function onMouseEnterTarget(e: Event) {
