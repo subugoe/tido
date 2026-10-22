@@ -25,7 +25,7 @@ function matchAnnotations(
   annotationsConfig: AnnotationsConfig,
   { activeAnnotationTypes, ignoreFilters, onMatchError }: MatchOptions
 ): MatchedAnnotationsMap {
-  const annotationsInText = annotations.filter(annotation => annotation.target && getSource(getAnnotationTargets(annotation)[0]).id === source)
+  const annotationsInText = annotations.filter(annotation => getTargetsInSource(annotation, source).length > 0)
   const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
   return annotationsInText.reduce<MatchedAnnotationsMap>((acc, cur) => {
@@ -38,38 +38,48 @@ function matchAnnotations(
       nestedAnnotations: getNestedAnnotations(cur, annotationsInText)
     }
 
-    // an annotation whose selector cannot be resolved in the text is still part of the map - without
-    // targets and shown regardless of the filters, so it does not disappear from the sidebar
-    acc[cur.id] = { ...matchedAnnotation, filtered: true, target: [] as Element[] }
+    // Every target of the annotation in this text is matched on its own: a broken one is reported
+    // and skipped, the elements of the correct ones are kept.
+    const matchedNodes = new Set<Element>()
 
-    const target = getAnnotationTargets(cur)[0]
-    if (!cur.target) return acc
+    getTargetsInSource(cur, source).forEach(target => {
+      const selector = getSelectorValue(target)
 
-    const isSource = getSource(target).id === source
-    const selector = 'dfdf'//getSelectorValue(target)
+      if (!selector) {
+        onMatchError?.(cur, 'empty_selector', { selector })
+        return
+      }
 
-    if (!selector || !isSource) {
-      onMatchError?.(cur, 'empty_selector', { selector })
-      return acc
-    }
+      let targetNodes: Element[]
+      try {
+        targetNodes = Array.from(parsedDom.querySelectorAll(selector))
+      } catch (e) {
+        onMatchError?.(cur, 'invalid_selector', { selector, error: e })
+        return
+      }
 
-    let matchedNodes: Element[]
-    try {
-      matchedNodes = 'dfkjh' // Array.from(parsedDom.querySelectorAll(selector))
-    } catch (e) {
-      onMatchError?.(cur, 'invalid_selector', { selector, error: e })
-      return acc
-    }
+      if (targetNodes.length === 0) {
+        onMatchError?.(cur, 'no_match', { selector })
+        return
+      }
 
-    if (matchedNodes.length === 0) {
-      onMatchError?.(cur, 'no_match', { selector })
-      return acc
-    }
+      targetNodes.forEach(node => matchedNodes.add(node))
+    })
 
-    acc[cur.id] = { ...matchedAnnotation, target: matchedNodes }
+    // an annotation none of whose targets can be resolved in the text is still part of the map -
+    // without targets and shown regardless of the filters, so it does not disappear from the sidebar
+    acc[cur.id] = matchedNodes.size > 0
+      ? { ...matchedAnnotation, target: [...matchedNodes] }
+      : { ...matchedAnnotation, filtered: true, target: [] }
 
     return acc
   }, {})
+}
+
+// The targets of an annotation that point into the given source. A malformed target (e.g. null)
+// points nowhere rather than making the whole annotation fail.
+function getTargetsInSource(annotation: Annotation, source: string): AnnotationTarget[] {
+  return getAnnotationTargets(annotation).filter(target => target && getSource(target).id === source)
 }
 
 // Whether an annotation's targets are the elements a cross reference points at, which the text
