@@ -19,22 +19,12 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
   const { showContentTypeToggle } = useConfig()
   const {
     updatePanel,
-    annotationsMode,
-    updateMatchedAnnotationsMap
+    annotationsMode
   } = usePanel()
 
-  const { activeContentUrl, visible } = useTextView()
+  const { activeContentUrl } = useTextView()
 
-  const matchedMapRef = useRef<MatchedAnnotationsMap>({})
   const annotationsModeRef = useRef<'aligned' | 'list'>(null)
-
-  // We switch the map when visible state changes to
-  useEffect(() => updateMatchedAnnotationsMap(activeContentUrl.current, visible ? matchedMapRef.current : {}), [visible])
-
-  function onMatchedMapUpdate(map: MatchedAnnotationsMap) {
-    matchedMapRef.current = map
-    updateMatchedAnnotationsMap(activeContentUrl.current, visible ? map : {})
-  }
 
   function onSelect() {
     updatePanel({ showSidebar: true })
@@ -52,7 +42,6 @@ const TextRenderer: FC<Props> = memo(({ htmlString, onReady }) => {
       source={activeContentUrl.current}
       sourceType="text"
       onSelect={onSelect}
-      onUpdateMatchedAnnotationsMap={onMatchedMapUpdate}
       paddingTop={showContentTypeToggle ? 16 : 2}
     />
   </div>
