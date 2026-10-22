@@ -101,6 +101,7 @@
     "dismiss": "Verwerfen",
     "text_not_displayed_correctly": "Der Text wird vermutlich nicht korrekt dargestellt, da er unerlaubte HTML-Elemente enthielt.",
     "annotation_matching_error": "Die Daten, die die Annotationen den Textstellen zuordnen, enthalten Fehler, daher können die entsprechenden annotierten Textstellen nicht hervorgehoben werden.",
+    "annotation_styling_error": "Die annotierten Textstellen werden nicht korrekt hervorgehoben, da Fehler in den Daten aufgetreten sind.",
     "synoptic_targets_compute_error": "Die synoptischen Textstellen werden nicht vollständig angezeigt, da Probleme mit den Daten aufgetreten sind.",
     "witnesses": "Textzeugen",
     "selected_witnesses": "{{selected}} von {{total}} Textzeugen ausgewählt",

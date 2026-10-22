@@ -209,43 +209,52 @@ const GenericTextRenderer: FC<Props> = memo(({
   // rather than added and removed by whoever changed it, so nothing has to undo anyone else's work -
   // see getTargetVisualState.
   useEffect(() => {
-    hoveredAnnotationsRef.current = hoveredAnnotations
-    selectedAnnotationRef.current = selectedAnnotation
-    // the pointer listeners resolve a hovered target against this list
-    targetsRef.current = targets
+    try {
+      hoveredAnnotationsRef.current = hoveredAnnotations
+      selectedAnnotationRef.current = selectedAnnotation
+      // the pointer listeners resolve a hovered target against this list
+      targetsRef.current = targets
 
-    if (entries.length === 0) return
+      if (entries.length === 0) return
 
-    const context = {
-      hoveredTargets: getTargetsHoveredAnnotations(hoveredAnnotations, targets, matchedMap),
-      selectedTargets: selectedAnnotation && matchedMap[selectedAnnotation.annotation.id]
-        ? matchedMap[selectedAnnotation.annotation.id].target
-        : [],
-      disabledTargets
+      // A failure in styling the targets must not prevent the text from being displayed
+      const context = {
+        hoveredTargets: getTargetsHoveredAnnotations(hoveredAnnotations, targets, matchedMap),
+        selectedTargets: selectedAnnotation && matchedMap[selectedAnnotation.annotation.id]
+          ? matchedMap[selectedAnnotation.annotation.id].target
+          : [],
+        disabledTargets
+      }
+
+      entries.forEach((entry) =>
+        applyTargetVisualState(entry.target, getTargetVisualState(entry, context)))
+    } catch(e) {
+      console.error('There occurred errors updating matched map when updating style of annotation targets in text', e)
     }
-
-    entries.forEach((entry) =>
-      applyTargetVisualState(entry.target, getTargetVisualState(entry, context)))
   }, [entries, targets, disabledTargets, matchedMap, hoveredAnnotations, selectedAnnotation])
 
 
   useEffect(() => {
-    if (Object.keys(matchedMap).length === 0 || !activeAnnotationTypes) return
+    try {
+      if (Object.keys(matchedMap).length === 0 || !activeAnnotationTypes) return
 
-    activeAnnotationTypesRef.current = activeAnnotationTypes
-    const resultMap = { ...matchedMap }
+      activeAnnotationTypesRef.current = activeAnnotationTypes
+      const resultMap = { ...matchedMap }
 
-    const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
-    if (activeAnnotationTypes) {
-      Object.keys(resultMap).forEach(id => {
-        const { annotation } = resultMap[id]
-        resultMap[id].filtered = isFiltered(annotation, activeAnnotationTypes, tooltipTypes)
-      })
+      const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
+      if (activeAnnotationTypes) {
+        Object.keys(resultMap).forEach(id => {
+          const { annotation } = resultMap[id]
+          resultMap[id].filtered = isFiltered(annotation, activeAnnotationTypes, tooltipTypes)
+        })
+      }
+
+      setMatchedMap(resultMap)
+
+      updateMatchedMap(resultMap)
+    } catch(e) {
+      console.error('There occurred errors updating matched map when updating annotation filters', e)
     }
-
-    setMatchedMap(resultMap)
-
-    updateMatchedMap(resultMap)
   }, [activeAnnotationTypes])
 
   // A text stores its map in the panel itself, an annotation in the sidebar hands it to its caller
