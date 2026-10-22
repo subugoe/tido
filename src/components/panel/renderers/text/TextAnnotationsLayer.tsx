@@ -109,21 +109,36 @@ const TextAnnotationsLayer: FC<Props> = ({
         onMatchError: (annotation, kind, detail) => report.add(kind, annotation, detail)
       })
 
-      // warn once, after all annotations of the text have been matched
-      if (report.hasProblems()) textView?.addTextWarning('annotation_matching_error')
+      // An entry whose targets are not elements of the text is kept without them - like an annotation
+      // whose selector matches nothing - so it neither breaks the binding below nor the styling later.
+      // Checked before binding anything, so the listeners only ever go on targets that stay in the map.
+      resultMap = Object.fromEntries(Object.entries(resultMap).map(([id, entry]) => {
+        if (Array.isArray(entry.target) && entry.target.every(el => el instanceof Element)) return [id, entry]
+
+        report.add('unexpected', entry.annotation, { error: new Error('The matched targets are not elements of the text') })
+        return [id, { ...entry, filtered: true, target: [] as Element[] }]
+      }))
 
       // What the matching itself no longer does: give the cross reference targets their style and
-      // make every target react to the pointer.
+      // make every target react to the pointer. Each annotation on its own, so a failure in one of
+      // them leaves the others working.
       Object.values(resultMap).forEach(({ annotation, target }) => {
-        const isCrossRef = isCrossRefAnnotation(annotation, annotationsConfig)
+        try {
+          const isCrossRef = isCrossRefAnnotation(annotation, annotationsConfig)
 
-        target.forEach(targetEl => {
-          if (isCrossRef) addCrossRefTargetStyle(targetEl)
-          targetEl.addEventListener('click', onClickTarget)
-          targetEl.addEventListener('mouseenter', onMouseEnterTarget)
-          targetEl.addEventListener('mouseleave', onMouseLeaveTarget)
-        })
+          target.forEach(targetEl => {
+            if (isCrossRef) addCrossRefTargetStyle(targetEl)
+            targetEl.addEventListener('click', onClickTarget)
+            targetEl.addEventListener('mouseenter', onMouseEnterTarget)
+            targetEl.addEventListener('mouseleave', onMouseLeaveTarget)
+          })
+        } catch (e) {
+          report.add('unexpected', annotation, { error: e })
+        }
       })
+
+      // warn once, after all annotations of the text have been matched and bound
+      if (report.hasProblems()) textView?.addTextWarning('annotation_matching_error')
 
       // When no annotation filters were configured, store the types this text contains keyed by its
       // contentUrl (source). PanelContext derives the flat annotationFilters from these per-text entries.
@@ -147,6 +162,8 @@ const TextAnnotationsLayer: FC<Props> = ({
         })
       }
     } catch (e) {
+      // only the matching as a whole or the type discovery end up here - the map holds no broken
+      // targets by now, so it is passed on as it is
       report.add('unexpected', null, { error: e })
       textView?.addTextWarning('annotation_matching_error')
     } finally {
@@ -332,22 +349,22 @@ const TextAnnotationsLayer: FC<Props> = ({
     getScroller().setOriginSelection('text')
 
     // The annotations of the clicked target and of its parent targets - the popover sorts them
-    // into the areas it shows (cross references, tooltip items, sidebar items). An annotation with
-    // an invalid selector cannot be one of them.
-    const targetAnnotations = (annotations ?? []).filter(annotation => {
-      const annotationTarget = getAnnotationTargets(annotation)[0]
-      if (!annotationTarget || getSource(annotationTarget).id !== source) return false
+    // into the areas it shows (cross references, tooltip items, sidebar items). Any target of an
+    // annotation in this text may be the clicked one; a target with an invalid selector cannot.
+    const targetAnnotations = (annotations ?? []).filter(annotation =>
+      getAnnotationTargets(annotation).some(annotationTarget => {
+        if (!annotationTarget || getSource(annotationTarget).id !== source) return false
 
-      const selector = getSelectorValue(annotationTarget)
-      if (!selector) return false
+        const selector = getSelectorValue(annotationTarget)
+        if (!selector) return false
 
-      try {
-        return Array.from(parsedDom.querySelectorAll(selector))
-          .some(el => el === target || el.contains(target))
-      } catch {
-        return false
-      }
-    })
+        try {
+          return Array.from(parsedDom.querySelectorAll(selector))
+            .some(el => el === target || el.contains(target))
+        } catch {
+          return false
+        }
+      }))
 
     const { openTooltip, normalAnnotations } = onTargetClick(target, source, targetAnnotations)
 
