@@ -1,12 +1,15 @@
-import { createContext, RefObject, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react'
+import { createContext, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react'
 import { apiRequest } from '@/utils/api.ts'
 import { sanitize } from '@/utils/text-sanitize.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 import { useErrorBoundary } from 'react-error-boundary'
 
 type State = {
-  textWarning: string
-  setTextWarning: (warning: string) => void
+  // translation keys of the problems found for this text, each one listed once
+  textWarnings: string[]
+  addTextWarning: (key: string) => void
+  removeTextWarning: (key: string) => void
+  clearTextWarnings: () => void
   contentTypes: string[]
   activeContentType: string
   activeContentUrl: RefObject<string>
@@ -29,12 +32,25 @@ export const TextViewProvider = ({
   visible: boolean
   children: ReactNode
 }) => {
-  const { panelState, loading: loadingPanel, usePanelTranslation, updatePanel } = usePanel()
+  const { panelState, loading: loadingPanel, usePanelTranslation, updatePanel, annotationsError } = usePanel()
   const { contentTypes, activeContentType, label } = panelState.panelViews[viewIndex] ?? {}
   const { showBoundary } = useErrorBoundary()
   const { t } = usePanelTranslation()
 
-  const [textWarning, setTextWarning] = useState('')
+  const [textWarnings, setTextWarnings] = useState<string[]>([])
+
+  // Stable, so effects and listeners that hold on to them do not have to be rebound. Adding a
+  // warning that is already listed keeps the state as is - the same problem found again (e.g. on
+  // every hover) neither re-renders nor brings back a warning the visitor has not dismissed.
+  const addTextWarning = useCallback((key: string) => {
+    setTextWarnings(current => current.includes(key) ? current : [...current, key])
+  }, [])
+
+  const removeTextWarning = useCallback((key: string) => {
+    setTextWarnings(current => current.includes(key) ? current.filter(k => k !== key) : current)
+  }, [])
+
+  const clearTextWarnings = useCallback(() => setTextWarnings([]), [])
   // const [matchedAnnotationsMap, setMatchedAnnotationsMap] = useState<MatchedAnnotationsMap>(null)
   const [text, setText] = useState<string>('')
   const [loadingText, setLoadingText] = useState(false)
@@ -55,7 +71,7 @@ export const TextViewProvider = ({
     let stale = false
 
     async function updateText(url: string) {
-      setTextWarning('')
+      clearTextWarnings()
       try {
         const response = await apiRequest<string>(url)
         if (stale) return
@@ -67,9 +83,10 @@ export const TextViewProvider = ({
         // This is a fix for that.
         if (text === output) setLoadingText(false)
 
-        const hasRemoved = removed.length > 0
-        setTextWarning(hasRemoved ? t('text_not_displayed_correctly') : '')
-        if (hasRemoved) console.error('Removed HTML elements during text sanitization: ', removed)
+        if (removed.length > 0) {
+          addTextWarning('text_not_displayed_correctly')
+          console.error('Removed HTML elements during text sanitization: ', removed)
+        }
       } catch (e) {
         if (stale) return
         showBoundary(e)
@@ -94,6 +111,13 @@ export const TextViewProvider = ({
 
   }, [loadingPanel, activeContentType, contentUrl])
 
+  // The text is shown without annotations when they could not be loaded - the sidebar shows the
+  // error itself, this tells a visitor who has it closed. Listed again with every new text, as
+  // loading one clears the warnings of the previous.
+  useEffect(() => {
+    if (annotationsError) addTextWarning('annotations_loading_error')
+  }, [annotationsError, text, addTextWarning])
+
   useEffect(() => {
     if (contentTypes.length === 0) {
       showBoundary(t('no_content_found'))
@@ -115,8 +139,10 @@ export const TextViewProvider = ({
 
   return (
     <TextViewContext.Provider value={{
-      textWarning,
-      setTextWarning,
+      textWarnings,
+      addTextWarning,
+      removeTextWarning,
+      clearTextWarnings,
       contentTypes,
       activeContentType,
       activeContentUrl,
