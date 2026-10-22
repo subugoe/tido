@@ -5,6 +5,7 @@ import { getSelectorValue, getSource, getSyncedTargets } from '@/utils/annotatio
 import { findFocusedTarget } from '@/utils/scroller.ts'
 import { isProgrammaticScroll } from '@/utils/dom.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { useTextView } from '@/contexts/TextViewContext.tsx'
 import { scrollToTargets } from '@/utils/scroll.ts'
 import {
   addAnnotationBaseStyle,
@@ -15,6 +16,7 @@ import {
   removeSynopsisSelectedStyle
 } from '@/utils/text.ts'
 import { getAnnotationTargets } from '@/utils/annotation-data.ts'
+import { createAnnotationErrorReport, reportAnnotationError } from '@/utils/annotation-errors.ts'
 
 
 interface SynopsisText {
@@ -57,6 +59,8 @@ function scrollInOtherTexts(targetEls: HTMLElement[], yPos: number, scrolledText
 
 function useSynopsis(): SynopsisLogic {
   const { addSyncedTargets } = usePanel()
+  // null when the text is not rendered inside a text view (e.g. in the annotations sidebar)
+  const textView = useTextView()
   const activeSynopsisConnection = useSynopsisStore((state) => state.activeSynopsisConnection)
   // the targets we gave the hover style, so onHoverEnd can drop it from exactly those again
   const hoveredTargetsRef = useRef<HTMLElement[]>([])
@@ -87,7 +91,15 @@ function useSynopsis(): SynopsisLogic {
     const targetEls = syncAnnotations.flatMap((annotation) => {
       const target = getAnnotationTargets(annotation).find((t) => getSource(t).id === source)
       const selector = target ? getSelectorValue(target) : null
-      return selector ? Array.from(text.querySelectorAll(selector)) as HTMLElement[] : []
+      if (!selector) return []
+
+      // an invalid selector throws - only this target is skipped, the others are still computed.
+      // The text warning for it is set by the effect computing the sync targets.
+      try {
+        return Array.from(text.querySelectorAll(selector)) as HTMLElement[]
+      } catch {
+        return []
+      }
     })
 
     syncTargetElsRef.current = { text, syncAnnotations, targetEls: [...new Set(targetEls)] }
@@ -100,30 +112,58 @@ function useSynopsis(): SynopsisLogic {
     if (!synopsisText?.text || sourceSyncAnnotations.length === 0) return
 
     const { text, source } = synopsisText
-    const targetEls: HTMLElement[] = []
+    const report = createAnnotationErrorReport(source)
 
-    sourceSyncAnnotations.forEach((annotation) => {
-      const target = getAnnotationTargets(annotation).find((t) => getSource(t).id === source)
-      const selector = target ? getSelectorValue(target) : null
-      if (!selector) return
+    // A failure in computing the sync targets must not prevent the text from being displayed
+    try {
+      const targetEls: HTMLElement[] = []
 
-      text.querySelectorAll(selector).forEach((el) => {
-        const targetEl = el as HTMLElement
-        // TODO: the synopsis style should be added based on annotation types we allow for default highlighting
-        // addHighlightStyle(targetEl)
-        addAnnotationBaseStyle(targetEl)
-        targetEls.push(targetEl)
+      for (const annotation of sourceSyncAnnotations) {
+        const target = getAnnotationTargets(annotation).find((t) => getSource(t).id === source)
+        const selector = target ? getSelectorValue(target) : null
+        if (!selector) {
+          report.add('empty_selector', annotation, { selector })
+          continue
+        }
+
+        // an invalid selector throws - only this target is skipped, the others are still computed
+        let matchedEls: NodeListOf<Element>
+        try {
+          matchedEls = text.querySelectorAll(selector)
+        } catch (e) {
+          report.add('invalid_selector', annotation, { selector, error: e })
+          continue
+        }
+
+        if (matchedEls.length === 0) {
+          report.add('no_match', annotation, { selector })
+          continue
+        }
+
+        matchedEls.forEach((el) => {
+          const targetEl = el as HTMLElement
+          // TODO: the synopsis style should be added based on annotation types we allow for default highlighting
+          // addHighlightStyle(targetEl)
+          addAnnotationBaseStyle(targetEl)
+          targetEls.push(targetEl)
+        })
+      }
+
+      const sortedTargets = [...new Set(targetEls)].sort((a, b) => {
+        const aRect = a.getBoundingClientRect()
+        const bRect = b.getBoundingClientRect()
+        return aRect.top - bRect.top || aRect.left - bRect.left
       })
-    })
 
-    const sortedTargets = [...new Set(targetEls)].sort((a, b) => {
-      const aRect = a.getBoundingClientRect()
-      const bRect = b.getBoundingClientRect()
-      return aRect.top - bRect.top || aRect.left - bRect.left
-    })
+      setSyncTargets(sortedTargets)
+      addSyncedTargets(sortedTargets, source)
+    } catch (e) {
+      report.add('synopsis', null, { error: e })
+    }
 
-    setSyncTargets(sortedTargets)
-    addSyncedTargets(sortedTargets, source)
+    // warn once, after the targets of all sync annotations have been computed
+    if (report.hasProblems()) textView?.addTextWarning('synoptic_targets_compute_error')
+    report.flush()
   }, [synopsisText, sourceSyncAnnotations, addSyncedTargets])
 
   useEffect(() => {
@@ -237,6 +277,8 @@ function useSynopsis(): SynopsisLogic {
     // the scrollTop the direction of the next scroll is read against - kept up to date through
     // programmatic scrolls too, so the user's next scroll is measured from where the text really is
     let lastScrollTop = scrollContainer.scrollTop
+    // this runs on every frame of the scrolling - a failure is reported once, not on every frame
+    let hasReportedError = false
 
     const onScroll = () => {
       const direction = Math.sign(scrollContainer.scrollTop - lastScrollTop)
@@ -244,7 +286,16 @@ function useSynopsis(): SynopsisLogic {
 
       // ours, so a scroll we caused does not sync the panels back on top of it
       if (isProgrammaticScroll(scrollContainer) || direction === 0) return
-      syncScrolledConnection(direction)
+
+      // errors thrown in a DOM listener reach no error boundary, so the scroll sync catches its own
+      try {
+        syncScrolledConnection(direction)
+      } catch (e) {
+        if (hasReportedError) return
+        hasReportedError = true
+        reportAnnotationError(source, 'synopsis', e)
+        textView?.addTextWarning('synoptic_targets_compute_error')
+      }
     }
 
     scrollContainer.addEventListener('scroll', onScroll, { passive: true })
