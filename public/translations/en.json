@@ -97,6 +97,7 @@
     "dismiss": "Dismiss",
     "text_not_displayed_correctly": "The text is probably not displayed correctly because it contained unallowed HTML elements.",
     "annotation_matching_error": "The data that matches the annotations with the text parts contains errors, therefore the respective annotated text parts can not be shown.",
+    "annotation_styling_error": "The annotated text parts are not highlighted correctly, since there were errors in the data.",
     "synoptic_targets_compute_error": "The synoptic targets are not shown completely, since there were problems with data",
     "witnesses": "Witnesses",
     "selected_witnesses": "{{selected}} of {{total}} witnesses selected",

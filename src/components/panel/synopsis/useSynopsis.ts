@@ -5,6 +5,7 @@ import { getSelectorValue, getSource, getSyncedTargets } from '@/utils/annotatio
 import { findFocusedTarget } from '@/utils/scroller.ts'
 import { isProgrammaticScroll } from '@/utils/dom.ts'
 import { usePanel } from '@/contexts/PanelContext.tsx'
+import { useTextView } from '@/contexts/TextViewContext.tsx'
 import { scrollToTargets } from '@/utils/scroll.ts'
 import {
   addAnnotationBaseStyle,
@@ -56,7 +57,10 @@ function scrollInOtherTexts(targetEls: HTMLElement[], yPos: number, scrolledText
 }
 
 function useSynopsis(): SynopsisLogic {
-  const { addSyncedTargets } = usePanel()
+  const { addSyncedTargets, usePanelTranslation } = usePanel()
+  const { t } = usePanelTranslation()
+  // null when the text is not rendered inside a text view (e.g. in the annotations sidebar)
+  const textView = useTextView()
   const activeSynopsisConnection = useSynopsisStore((state) => state.activeSynopsisConnection)
   // the targets we gave the hover style, so onHoverEnd can drop it from exactly those again
   const hoveredTargetsRef = useRef<HTMLElement[]>([])
@@ -87,7 +91,16 @@ function useSynopsis(): SynopsisLogic {
     const targetEls = syncAnnotations.flatMap((annotation) => {
       const target = getAnnotationTargets(annotation).find((t) => getSource(t).id === source)
       const selector = target ? getSelectorValue(target) : null
-      return selector ? Array.from(text.querySelectorAll(selector)) as HTMLElement[] : []
+      if (!selector) return []
+
+      // an invalid selector throws - only this target is skipped, the others are still computed.
+      // The text warning for it is set by the effect computing the sync targets.
+      try {
+        return Array.from(text.querySelectorAll(selector)) as HTMLElement[]
+      } catch (e) {
+        console.error('Invalid selector of synoptic target', selector, e)
+        return []
+      }
     })
 
     syncTargetElsRef.current = { text, syncAnnotations, targetEls: [...new Set(targetEls)] }
@@ -99,31 +112,62 @@ function useSynopsis(): SynopsisLogic {
   useEffect(() => {
     if (!synopsisText?.text || sourceSyncAnnotations.length === 0) return
 
-    const { text, source } = synopsisText
-    const targetEls: HTMLElement[] = []
+    let hasErrors = false
 
-    sourceSyncAnnotations.forEach((annotation) => {
-      const target = getAnnotationTargets(annotation).find((t) => getSource(t).id === source)
-      const selector = target ? getSelectorValue(target) : null
-      if (!selector) return
+    // A failure in computing the sync targets must not prevent the text from being displayed
+    try {
+      const { text, source } = synopsisText
+      const targetEls: HTMLElement[] = []
 
-      text.querySelectorAll(selector).forEach((el) => {
-        const targetEl = el as HTMLElement
-        // TODO: the synopsis style should be added based on annotation types we allow for default highlighting
-        // addHighlightStyle(targetEl)
-        addAnnotationBaseStyle(targetEl)
-        targetEls.push(targetEl)
+
+      for (const annotation of sourceSyncAnnotations) {
+        const target = getAnnotationTargets(annotation).find((t) => getSource(t).id === source)
+        const selector = target ? getSelectorValue(target) : null
+        if (!selector) {
+          hasErrors = true
+          continue
+        }
+
+        // an invalid selector throws - only this target is skipped, the others are still computed
+        let matchedEls: NodeListOf<Element>
+        try {
+          matchedEls = text.querySelectorAll(selector)
+        } catch (e) {
+          console.error('Invalid selector of synoptic target', selector, e)
+          hasErrors = true
+          continue
+        }
+
+        if (matchedEls.length === 0) {
+          hasErrors = true
+          continue
+        }
+
+        matchedEls.forEach((el) => {
+          const targetEl = el as HTMLElement
+          // TODO: the synopsis style should be added based on annotation types we allow for default highlighting
+          // addHighlightStyle(targetEl)
+          addAnnotationBaseStyle(targetEl)
+          targetEls.push(targetEl)
+        })
+      }
+
+      const sortedTargets = [...new Set(targetEls)].sort((a, b) => {
+        const aRect = a.getBoundingClientRect()
+        const bRect = b.getBoundingClientRect()
+        return aRect.top - bRect.top || aRect.left - bRect.left
       })
-    })
 
-    const sortedTargets = [...new Set(targetEls)].sort((a, b) => {
-      const aRect = a.getBoundingClientRect()
-      const bRect = b.getBoundingClientRect()
-      return aRect.top - bRect.top || aRect.left - bRect.left
-    })
+      setSyncTargets(sortedTargets)
+      addSyncedTargets(sortedTargets, source)
+      if (hasErrors) {
+        textView?.setTextWarning(t('synoptic_targets_compute_error'))
+      }
 
-    setSyncTargets(sortedTargets)
-    addSyncedTargets(sortedTargets, source)
+    } catch (e) {
+      console.error('Computing synoptic targets failed', e)
+      textView?.setTextWarning(t('synoptic_targets_compute_error'))
+    }
   }, [synopsisText, sourceSyncAnnotations, addSyncedTargets])
 
   useEffect(() => {
