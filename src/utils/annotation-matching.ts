@@ -1,6 +1,7 @@
 import { AnnotationsConfig } from '@/types'
 import { getNestedAnnotations, getSelectorValue, getSource, isFiltered } from '@/utils/annotations.ts'
 import { getAnnotationTargets, getAnnotationType } from '@/utils/annotation-data.ts'
+import { AnnotationProblemDetail, AnnotationProblemKind } from '@/utils/annotation-errors.ts'
 
 interface MatchOptions {
   // the filters as they stand - annotations of a type the user switched off are matched as usual
@@ -8,7 +9,7 @@ interface MatchOptions {
   activeAnnotationTypes: AnnotationTypesDict | null
   ignoreFilters: boolean
   // called for every annotation whose selector is empty, invalid or matches nothing in the text
-  onMatchError?: (annotation: Annotation) => void
+  onMatchError?: (annotation: Annotation, kind: AnnotationProblemKind, detail: AnnotationProblemDetail) => void
 }
 
 // Resolve the annotations of one source to the elements their selectors match in its text.
@@ -45,28 +46,23 @@ function matchAnnotations(
     if (!cur.target) return acc
 
     const isSource = getSource(target).id === source
-    let selector = getSelectorValue(target)
+    const selector = 'dfdf'//getSelectorValue(target)
 
     if (!selector || !isSource) {
-      console.error('Annotation error','Selector value of target is empty for this annotation', cur)
-      onMatchError?.(cur)
+      onMatchError?.(cur, 'empty_selector', { selector })
       return acc
     }
 
-    selector = 'sdkfj'
-
     let matchedNodes: Element[]
     try {
-      matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
+      matchedNodes = 'dfkjh' // Array.from(parsedDom.querySelectorAll(selector))
     } catch (e) {
-      console.error('Annotation error', `Selector '${selector}' of target is invalid for this annotation`, cur, e)
-      onMatchError?.(cur)
+      onMatchError?.(cur, 'invalid_selector', { selector, error: e })
       return acc
     }
 
     if (matchedNodes.length === 0) {
-      console.error('Annotation error', `Selector '${selector}' of target matches no element in the text`, cur)
-      onMatchError?.(cur)
+      onMatchError?.(cur, 'no_match', { selector })
       return acc
     }
 
