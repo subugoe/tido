@@ -120,12 +120,15 @@ const GenericTextRenderer: FC<Props> = memo(({
       // A failure in matching the annotations must not prevent the text from being displayed
       let resultMap
       try {
+        let hasMatchErrors = false
         resultMap = matchAnnotations(parsedDom, annotations, source, annotationsConfig, {
           activeAnnotationTypes: activeAnnotationTypesRef.current,
-          ignoreFilters
+          ignoreFilters,
+          onMatchError: () => { hasMatchErrors = true }
         })
 
-        console.log('resultMap', resultMap)
+        // warn once, after all annotations of the text have been matched
+        if (hasMatchErrors) textView?.setTextWarning(t('annotation_matching_error'))
 
         // What the matching itself no longer does: give the cross reference targets their style and
         // make every target react to the pointer.

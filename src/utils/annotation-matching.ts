@@ -7,6 +7,8 @@ interface MatchOptions {
   // and only marked as filtered out
   activeAnnotationTypes: AnnotationTypesDict | null
   ignoreFilters: boolean
+  // called for every annotation whose selector is empty, invalid or matches nothing in the text
+  onMatchError?: (annotation: Annotation) => void
 }
 
 // Resolve the annotations of one source to the elements their selectors match in its text.
@@ -20,7 +22,7 @@ function matchAnnotations(
   annotations: Annotation[],
   source: string,
   annotationsConfig: AnnotationsConfig,
-  { activeAnnotationTypes, ignoreFilters }: MatchOptions
+  { activeAnnotationTypes, ignoreFilters, onMatchError }: MatchOptions
 ): MatchedAnnotationsMap {
   const annotationsInText = annotations.filter(annotation => annotation.target && getSource(getAnnotationTargets(annotation)[0]).id === source)
   const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
@@ -47,6 +49,7 @@ function matchAnnotations(
 
     if (!selector || !isSource) {
       console.error('Annotation error','Selector value of target is empty for this annotation', cur)
+      onMatchError?.(cur)
       return acc
     }
 
@@ -57,7 +60,16 @@ function matchAnnotations(
       matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
     } catch (e) {
       console.error('Annotation error', `Selector '${selector}' of target is invalid for this annotation`, cur, e)
+      onMatchError?.(cur)
+      return acc
     }
+
+    if (matchedNodes.length === 0) {
+      console.error('Annotation error', `Selector '${selector}' of target matches no element in the text`, cur)
+      onMatchError?.(cur)
+      return acc
+    }
+
     acc[cur.id] = { ...matchedAnnotation, target: matchedNodes }
 
     return acc
