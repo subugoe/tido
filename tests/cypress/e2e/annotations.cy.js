@@ -172,11 +172,12 @@ describe('Annotations', () => {
     normalized: ['annotation-normalized-1'],
   }
 
-  // The annotations of Chapter 3 whose targets exist in each of its texts. annotation-diplomatic-1
-  // targets #dipl-gable, which the diplomatic text doesn't contain, so it is never listed.
+  // The annotations of Chapter 3 for each of its texts. annotation-diplomatic-1 targets #dipl-gable,
+  // which the diplomatic text doesn't contain - it is listed all the same, as an annotation whose
+  // target cannot be found is kept in the sidebar rather than dropped.
   const chapter3Annotations = {
     transcription: ['annotation-2', 'annotation-3', 'annotation-4', 'annotation-5'],
-    diplomatic: ['annotation-1', 'annotation-diplomatic-2', 'annotation-diplomatic-3', 'annotation-diplomatic-4'],
+    diplomatic: ['annotation-1', 'annotation-diplomatic-1', 'annotation-diplomatic-2', 'annotation-diplomatic-3', 'annotation-diplomatic-4'],
     normalized: ['annotation-normalized-1', 'annotation-normalized-2', 'annotation-normalized-3'],
   }
 
@@ -440,7 +441,7 @@ describe('Annotations', () => {
     openChapter3InList([textView('transcription')])
     cy.get(selectors.sidebarContainer).should('not.exist')
 
-    // Every switch changes the count (4 -> 3 -> 4), so each assertion waits for the new text's annotations.
+    // Every switch changes the count (4 -> 3 -> 5), so each assertion waits for the new text's annotations.
     expectBadgeCount(chapter3Annotations.transcription.length)
 
     switchContentType(0, 'normalized')

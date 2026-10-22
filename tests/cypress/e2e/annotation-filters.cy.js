@@ -126,10 +126,10 @@ describe('Annotation filters derived from the rendered texts', () => {
     sidebar().contains('button', /filters/i).should('not.be.disabled').click();
     cy.get(selectors.popover).should('be.visible');
 
-    // 8 types: transcription contributes Character, Artistic Object, Historical Context, Setting;
-    // diplomatic contributes Place, Textual Variant, Editorial Note, Orthographic Feature (Descriptive
-    // Detail is skipped because its target #dipl-gable is not present in the diplomatic text).
-    cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 8);
+    // 9 types: transcription contributes Character, Artistic Object, Historical Context, Setting;
+    // diplomatic contributes Place, Textual Variant, Editorial Note, Orthographic Feature and Descriptive
+    // Detail (its target #dipl-gable is not present in the diplomatic text, but the annotation is kept).
+    cy.get(`${selectors.popover} ${selectors.checkbox}`).should('have.length', 9);
 
     ['Place', 'Textual Variant', 'Historical Context', 'Setting'].forEach((label) => {
       filterRow(label).should('exist');
@@ -156,8 +156,8 @@ describe('Annotation filters derived from the rendered texts', () => {
 
     openFilters();
 
-    // Only the diplomatic text remains, so only its 4 types are derived.
-    expectFilters(4, ['Place', 'Textual Variant', 'Editorial Note', 'Orthographic Feature']);
+    // Only the diplomatic text remains, so only its 5 types are derived.
+    expectFilters(5, ['Place', 'Textual Variant', 'Editorial Note', 'Orthographic Feature', 'Descriptive Detail']);
   });
 
   it('restores the hidden view\'s types once it is shown again', () => {
@@ -168,9 +168,9 @@ describe('Annotation filters derived from the rendered texts', () => {
 
     openFilters();
 
-    // Both texts contribute again: the 4 diplomatic types plus the 4 transcription types.
-    expectFilters(8, [
-      'Place', 'Textual Variant', 'Editorial Note', 'Orthographic Feature',
+    // Both texts contribute again: the 5 diplomatic types plus the 4 transcription types.
+    expectFilters(9, [
+      'Place', 'Textual Variant', 'Editorial Note', 'Orthographic Feature', 'Descriptive Detail',
       'Character', 'Artistic Object', 'Historical Context', 'Setting',
     ]);
   });
@@ -605,7 +605,7 @@ describe('Preservation of the selected annotation types across item navigation (
   it('selects the types that the new item introduces for the first time', () => {
     openFilters();
 
-    // Deselect all 8 types of Chapter 3.
+    // Deselect all 9 types of Chapter 3.
     cy.get(`${selectors.popover} ${selectors.checkbox}[data-state="checked"]`).each(($checkbox) => {
       cy.wrap($checkbox).click({ force: true });
     });

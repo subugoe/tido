@@ -1,0 +1,99 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/annotations/annotationPage/broken-annotations-page.json",
+  "type": "AnnotationPage",
+  "partOf": {
+    "id": "http://localhost:8181/example/annotations/annotationCollection/broken-annotations-page.json",
+    "label": "Broken annotations",
+    "total": 4
+  },
+  "next": null,
+  "prev": null,
+  "startIndex": 0,
+  "items": [
+    {
+      "id": "http://localhost:8181/example/broken-annotations/annotation-1",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "A valid annotation.",
+        "format": "text/html",
+        "annotationType": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#truth"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/broken-annotations/annotation-2",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "An annotation with an empty selector.",
+        "format": "text/html",
+        "annotationType": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": ""
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/broken-annotations/annotation-3",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "An annotation with an invalid selector.",
+        "format": "text/html",
+        "annotationType": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#truth["
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    },
+    {
+      "id": "http://localhost:8181/example/broken-annotations/annotation-4",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": "An annotation whose selector matches nothing.",
+        "format": "text/html",
+        "annotationType": "Literary Analysis"
+      },
+      "target": [
+        {
+          "source": "http://localhost:8181/example/html/book1-page1_transcription.html",
+          "selector": {
+            "type": "CssSelector",
+            "value": "#does-not-exist"
+          },
+          "format": "text/html",
+          "language": "eng"
+        }
+      ]
+    }
+  ]
+}

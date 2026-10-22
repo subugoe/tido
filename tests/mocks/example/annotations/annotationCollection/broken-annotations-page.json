@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "http://localhost:8181/example/annotations/annotationCollection/broken-annotations-page.json",
+  "type": "AnnotationCollection",
+  "label": "Broken annotations",
+  "total": 4,
+  "first": "http://localhost:8181/example/annotations/annotationPage/broken-annotations-page.json",
+  "last": "http://localhost:8181/example/annotations/annotationPage/broken-annotations-page.json"
+}
