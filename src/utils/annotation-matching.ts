@@ -25,34 +25,40 @@ function matchAnnotations(
   const annotationsInText = annotations.filter(annotation => annotation.target && getSource(getAnnotationTargets(annotation)[0]).id === source)
   const tooltipTypes = annotationsConfig?.tooltipTypes ?? []
 
-  return annotations.reduce<MatchedAnnotationsMap>((acc, cur) => {
-    if (!cur.target) return acc
-
-    const target = getAnnotationTargets(cur)[0]
-    const isSource = getSource(target).id === source
-    const selector = getSelectorValue(target)
-
-    // reported for the annotations of every source, not only this one - kept that way so the error
-    // does not silently disappear for a text that is not the one being rendered here
-    if (!selector || selector === '#') {
-      console.error('Annotation error','Selector value of target is empty for this annotation', cur)
-      return acc
-    }
-
-    if (!isSource) return acc
-
-    const matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
-    if (matchedNodes.length === 0) return acc
-
+  return annotationsInText.reduce<MatchedAnnotationsMap>((acc, cur) => {
     const annotationType = getAnnotationType(cur)
-    acc[cur.id] = {
-      target: matchedNodes,
+    const matchedAnnotation: Omit<MatchedAnnotationsMap[string], 'target'> = {
       filtered: (annotationType && annotationsConfig?.crossRefContentType !== annotationType)
         ? (!activeAnnotationTypes || ignoreFilters || isFiltered(cur, activeAnnotationTypes, tooltipTypes))
         : false,
       annotation: cur,
       nestedAnnotations: getNestedAnnotations(cur, annotationsInText)
     }
+
+    // an annotation whose selector cannot be resolved in the text is still part of the map - without
+    // targets and shown regardless of the filters, so it does not disappear from the sidebar
+    acc[cur.id] = { ...matchedAnnotation, filtered: true, target: [] as Element[] }
+
+    const target = getAnnotationTargets(cur)[0]
+    if (!cur.target) return acc
+
+    const isSource = getSource(target).id === source
+    let selector = getSelectorValue(target)
+
+    if (!selector || !isSource) {
+      console.error('Annotation error','Selector value of target is empty for this annotation', cur)
+      return acc
+    }
+
+    selector = 'sdkfj'
+
+    let matchedNodes: Element[]
+    try {
+      matchedNodes = Array.from(parsedDom.querySelectorAll(selector))
+    } catch (e) {
+      console.error('Annotation error', `Selector '${selector}' of target is invalid for this annotation`, cur, e)
+    }
+    acc[cur.id] = { ...matchedAnnotation, target: matchedNodes }
 
     return acc
   }, {})

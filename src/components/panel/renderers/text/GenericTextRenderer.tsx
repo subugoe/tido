@@ -118,15 +118,18 @@ const GenericTextRenderer: FC<Props> = memo(({
 
     if (annotations) {
       // A failure in matching the annotations must not prevent the text from being displayed
+      let resultMap
       try {
-        const result = matchAnnotations(parsedDom, annotations, source, annotationsConfig, {
+        resultMap = matchAnnotations(parsedDom, annotations, source, annotationsConfig, {
           activeAnnotationTypes: activeAnnotationTypesRef.current,
           ignoreFilters
         })
 
+        console.log('resultMap', resultMap)
+
         // What the matching itself no longer does: give the cross reference targets their style and
         // make every target react to the pointer.
-        Object.values(result).forEach(({ annotation, target }) => {
+        Object.values(resultMap).forEach(({ annotation, target }) => {
           const isCrossRef = isCrossRefAnnotation(annotation, annotationsConfig)
 
           target.forEach(targetEl => {
@@ -137,13 +140,10 @@ const GenericTextRenderer: FC<Props> = memo(({
           })
         })
 
-        setMatchedMap(result)
-        updateMatchedMap(result)
-
         // When no annotation filters were configured, store the types this text contains keyed by its
         // contentUrl (source). PanelContext derives the flat annotationFilters from these per-text entries.
         if (!annotationsConfig?.filters) {
-          const discoveredTypes = getDiscoveredAnnotationTypes(result, annotationsConfig)
+          const discoveredTypes = getDiscoveredAnnotationTypes(resultMap, annotationsConfig)
           updateAnnotationTypesBySource(source, discoveredTypes)
 
           const discovered = discoveredTypes
@@ -164,6 +164,9 @@ const GenericTextRenderer: FC<Props> = memo(({
       } catch (e) {
         console.error('There occurred errors in annotation matching and/or filter types discovery', e)
         textView?.setTextWarning(t('annotation_matching_error'))
+      } finally {
+        setMatchedMap(resultMap)
+        updateMatchedMap(resultMap)
       }
     }
   }, [parsedDom, annotations, annotationsConfig])
