@@ -1,5 +1,5 @@
 import { getSource } from '@/utils/annotations.ts'
-import { markProgrammaticScroll } from '@/utils/dom.ts'
+import { isProgrammaticScroll, markProgrammaticScroll } from '@/utils/dom.ts'
 import { getAnnotationTargets } from '@/utils/annotation-data.ts'
 
 export const SYNC_SCROLL_THRESHOLD_TOP = 0.35
@@ -95,7 +95,7 @@ class Scroller {
     this.isSyncing = true
     markProgrammaticScroll(target)
     target.scrollTop = source.scrollTop
-    requestAnimationFrame(() => (this.isSyncing = false))
+    requestAnimationFrame(() => ( this.isSyncing = false))
   }
 
   scrollOtherTexts(contentUrl: string) {
@@ -150,7 +150,9 @@ class Scroller {
 
 
   handleSidebarScroll() {
-    if (this.isSyncing || !this.sidebar) return
+    // isSyncing alone misses the sidebar scroll caused by syncScroll: that scroll event fires a frame
+    // after the rAF has already lifted the flag.
+    if (this.isSyncing || !this.sidebar || isProgrammaticScroll(this.sidebar)) return
     const refY = this.sidebar.scrollTop + this.sidebar.clientHeight * SYNC_SCROLL_THRESHOLD_TOP
 
     const mapEntries = Object
