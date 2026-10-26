@@ -3,7 +3,7 @@ import { Blocks, ListTree, Plus } from 'lucide-react'
 import { Input } from '@/components/ui/input.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx'
-import TreeSelection from '@/components/tree/TreeSelection.tsx'
+import ExistingCollectionDialog from '@/components/rail/ExistingCollectionDialog.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { useTranslation } from 'react-i18next'
 import { createCollectionNode } from '@/utils/tree.ts'
@@ -113,14 +113,11 @@ const AddNewPanelContent: FC = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={dialog === 'existing'} onOpenChange={(isOpen) => !isOpen && setDialog(null)}>
-        <DialogContent data-cy="existing-collection-modal">
-          <DialogHeader>
-            <DialogTitle>{t('from_existing_collections')}</DialogTitle>
-          </DialogHeader>
-          <TreeSelection onConfirm={closeAndCollapse} />
-        </DialogContent>
-      </Dialog>
+      <ExistingCollectionDialog
+        open={dialog === 'existing'}
+        onOpenChange={(isOpen) => !isOpen && setDialog(null)}
+        onConfirm={closeAndCollapse}
+      />
     </>
   )
 }

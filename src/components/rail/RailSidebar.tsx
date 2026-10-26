@@ -8,6 +8,7 @@ import AddNewPanelContent from '@/components/rail/AddNewPanelContent.tsx'
 import SettingsContent from '@/components/rail/SettingsContent.tsx'
 import RailIconButton from '@/components/rail/RailIconButton.tsx'
 import ShareDialog from '@/components/rail/ShareDialog.tsx'
+import ExistingCollectionDialog from '@/components/rail/ExistingCollectionDialog.tsx'
 import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { useRailStore } from '@/store/RailStore.tsx'
 import { useTranslation } from 'react-i18next'
@@ -24,12 +25,13 @@ interface RailAction {
 }
 
 const RailSidebar: FC = () => {
-  const { showGlobalTree, showAddNewPanelButton, title: configuredTitle } = useConfig()
+  const { showGlobalTree, showAddNewPanelButton, allowNewCollections, title: configuredTitle } = useConfig()
   const activeView = useRailStore(state => state.activeView)
   const toggleView = useRailStore(state => state.toggleView)
   const setActiveView = useRailStore(state => state.setActiveView)
 
   const [shareOpen, setShareOpen] = useState(false)
+  const [existingCollectionOpen, setExistingCollectionOpen] = useState(false)
 
   const { t } = useTranslation()
 
@@ -63,8 +65,9 @@ const RailSidebar: FC = () => {
   if (showAddNewPanelButton) {
     bottomActions.push({
       id: 'add',
-      active: isAddActive,
-      onClick: () => toggleView('add'),
+      active: isAddActive || existingCollectionOpen,
+      // Without new collections the intermediate view has only one option, so skip it
+      onClick: allowNewCollections ? () => toggleView('add') : () => setExistingCollectionOpen(true),
       dataCy: 'new-panel',
       tooltip: t('open_new_panel'),
       variant: 'primary',
@@ -150,6 +153,11 @@ const RailSidebar: FC = () => {
         </div>
       </div>
       <ShareDialog open={shareOpen} onOpenChange={setShareOpen} />
+      <ExistingCollectionDialog
+        open={existingCollectionOpen}
+        onOpenChange={setExistingCollectionOpen}
+        onConfirm={() => setExistingCollectionOpen(false)}
+      />
     </div>
   )
 }
