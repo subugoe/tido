@@ -361,6 +361,20 @@
     <li><strong>Type:</strong> String</li>
     </ul>
     <p>Defines a translation key/value pair for a supported language. You can override existing key/value pairs or define custom key/value pairs. There is a <a href="#translations">list</a> that we expose for overriding in the configuration.</p>
+    <hr>
+    <h5><code>tree</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Object</li>
+    <li><strong>Default:</strong> <code>{}</code></li>
+    </ul>
+    <p>Specifies settings for the trees (global tree and collection selection).</p>
+    <hr>
+    <h5><code>tree.showItemLevel</code></h5>
+    <ul>
+    <li><strong>Type:</strong> Boolean</li>
+    <li><strong>Default:</strong> <code>true</code></li>
+    </ul>
+    <p>Toggles the display of items in the trees. When false, manifests are the last level of the tree and selecting one opens its first item.</p>
     <h3>Panel Views</h3>
     <p>This array of <code>PanelViewConfig</code> objects defines the actual visible content inside a panel. It is a list of
     objects, each of which creates a resizable split pane inside the panel. This configuration will be applied to all

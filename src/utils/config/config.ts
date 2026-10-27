@@ -204,6 +204,23 @@ function validateTranslations(input: unknown): ValidationResult<TidoConfig['tran
   return { result, errors }
 }
 
+function validateTree(input: unknown): ValidationResult<TidoConfig['tree']> {
+  const errors: Record<string, string> = {}
+  const inputObj = typeof input === 'object' && input !== null ? input as Record<string, unknown> : null
+  if (input !== undefined && !inputObj) errors['tree'] = 'tree needs to be an object'
+
+  const result = {
+    showItemLevel:
+      inputObj && typeof inputObj['showItemLevel'] === 'boolean'
+        ? inputObj['showItemLevel'] as boolean
+        : (() => {
+          if (inputObj && inputObj['showItemLevel'] !== undefined) errors['tree.showItemLevel'] = 'must be a boolean'
+          return defaultConfig.tree.showItemLevel
+        })()
+  }
+  return { result, errors }
+}
+
 function validatePanelViews(input: unknown): ValidationResult<TidoConfig['panelViews']> {
   const errors: Record<string, string> = {}
 
@@ -374,6 +391,7 @@ export async function mergeAndValidateConfig(
   const rootCollections = validateRootCollections(userConfig.rootCollections)
   const title = validateTitle(userConfig.title)
   const theme = validateTheme(userConfig.theme)
+  const tree = validateTree(userConfig.tree)
   const annotations = validateAnnotations(userConfig.annotations, defaultConfig)
 
 
@@ -392,6 +410,7 @@ export async function mergeAndValidateConfig(
     ...showSynopsisNavigation.errors,
     ...theme.errors,
     ...title.errors,
+    ...tree.errors,
     ...panelViews.errors,
     ...annotations.errors
   }
@@ -490,6 +509,7 @@ export async function mergeAndValidateConfig(
     theme: theme.result,
     title: title.result,
     translations: i18nConfig.translations,
+    tree: tree.result,
     panelViews: panelViews.result,
     annotations: annotations.result
   }

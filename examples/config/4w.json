@@ -8,9 +8,12 @@
   "lang": "de",
   "panels": [
     {
-      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/versions"
+      "collection": "https://textapi.dev.vierwachen.d.sub.uni-goettingen.de/api/4w/collections/transcriptions"
     }
   ],
+  "tree": {
+    "showItemLevel": false
+  },
   "theme": {
     "primaryColor": "#2b7fff"
   },
@@ -29,18 +32,5 @@
         "einsiedeln_278_1040": "E: 3. Viertel 14. Jh."
       }
     }
-  },
-  "panelViews": [
-    {
-      "label": "Text",
-      "view": "text",
-      "activeContentType": "ebene2_versionen",
-      "contentTypes": [
-        "accurate",
-        "simplified",
-        "edited",
-        "ebene2_versionen"
-      ]
-    }
-  ]
+  }
 }

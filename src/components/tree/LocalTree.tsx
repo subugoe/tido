@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 
 import { TreeProvider } from '@/contexts/TreeContext.tsx'
+import { useConfig } from '@/contexts/ConfigContext.tsx'
 import { usePanelStore } from '@/store/PanelStore.tsx'
 import { usePanel } from '@/contexts/PanelContext.tsx'
 
@@ -15,6 +16,7 @@ interface Props {
 
 const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
   const { panelId } = usePanel()
+  const { tree: { showItemLevel } } = useConfig()
   const updatePanel = usePanelStore(state => state.updatePanel)
   const [treeNodes, setTreeNodes] = useState([])
 
@@ -27,14 +29,14 @@ const LocalTree: FC<Props> = ( { collectionId, onSelect } ) => {
   useEffect(() => {
     async function initTreeNode(collectionId: string) {
       const collectionNode = await createCollectionNode(collectionId)
-      setTreeNodes([await getExpandedNode(collectionNode)])
+      setTreeNodes([await getExpandedNode(collectionNode, showItemLevel)])
     }
     initTreeNode(collectionId)
   }, [])
 
   return <div className="flex flex-col">
     <div className="max-h-[60vh] overflow-y-auto pr-2">
-      <TreeProvider onSelect={onNodeSelect} getChildren={getChildren}>
+      <TreeProvider onSelect={onNodeSelect} getChildren={(node) => getChildren(node, showItemLevel)}>
         <Tree nodes={treeNodes} />
       </TreeProvider>
     </div>
