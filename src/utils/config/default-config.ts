@@ -20,6 +20,9 @@ const defaultConfig: TidoConfig = {
   },
   title: '',
   translations: {},
+  tree: {
+    showItemLevel: true
+  },
   panelViews: [
     {
       label: 'Image',

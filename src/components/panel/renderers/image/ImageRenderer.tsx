@@ -26,11 +26,15 @@ const ImageRenderer: FC = () => {
       fullPageButton: 'full-screen-' + panelId,
       homeButton: 'exit-full-screen-' + panelId,
 
-      minZoomLevel: 0.5,
+      // relative to the "fit" zoom, so the image can always be fully contained regardless of container size
+      minZoomImageRatio: 0.5,
       maxZoomLevel: 10,
       defaultZoomLevel: 0,
       visibilityRatio: 1.0,
-      constrainDuringPan: true
+      constrainDuringPan: true,
+      // OSD's built-in auto resize scales the zoom by the container's diagonal change, which makes the image
+      // overflow the container when only one dimension grows. We handle resizing ourselves below.
+      autoResize: false
     })
 
     viewerRef.current.addHandler('open-failed', (e: { message: string }) => {
@@ -44,14 +48,37 @@ const ImageRenderer: FC = () => {
     })
 
     const resize = new ResizeObserver(() => {
-      setTimeout(() => viewerRef.current.viewport.ensureVisible(true), 100)
+      const viewer = viewerRef.current
+      if (!viewer) return
+      const { container, viewport } = viewer
+      const newSize = new OpenSeadragon.Point(container.clientWidth, container.clientHeight)
+      if (newSize.x === 0 || newSize.y === 0 || newSize.equals(viewport.getContainerSize())) return
+
+      // Keep the user's zoom relative to the "fit" zoom, so the image scales proportionally with the container
+      const relativeZoom = viewport.getZoom(true) / viewport.getHomeZoom()
+      const center = viewport.getCenter(true)
+
+      // @types/openseadragon declares resize() without params, but OSD accepts (newContainerSize, maintain)
+      const resizableViewport = viewport as unknown as { resize: (size: OpenSeadragon.Point, maintain: boolean) => void }
+      resizableViewport.resize(newSize, true)
+      viewport.zoomTo(viewport.getHomeZoom() * relativeZoom, undefined, true)
+      viewport.panTo(center, true)
+      viewport.applyConstraints(true)
+
+      // Resizing clears the canvas. Draw synchronously (ResizeObserver runs before paint),
+      // otherwise the browser paints an empty/stretched frame before OSD's next animation frame.
+      // @types/openseadragon declares update() without params, but World accepts (viewportChanged)
+      const world = viewer.world as unknown as { update: (viewportChanged: boolean) => boolean, draw: () => void }
+      viewport.update()
+      world.update(true)
+      world.draw()
     })
 
     resize.observe(viewerContainerRef.current)
 
     return () => {
-      if (viewerRef.current) viewerRef.current.destroy()
       resize.disconnect()
+      if (viewerRef.current) viewerRef.current.destroy()
     }
   }, [])
 
@@ -87,7 +114,9 @@ const ImageRenderer: FC = () => {
 
   function setInitialZoom() {
     if (!viewerRef.current) return
-    viewerRef.current.viewport.zoomTo(viewerRef.current.viewport.getHomeZoom() * 0.9, undefined, true)
+    const { viewport } = viewerRef.current
+    viewport.zoomTo(viewport.getHomeZoom() * 0.9, undefined, true)
+    viewport.panTo(viewport.getHomeBounds().getCenter(), true)
   }
 
 
